@@ -4,8 +4,9 @@ import { requireBotChannelPermissions } from "../permissions.ts";
 export default function editWebhook(bot: BotWithCache) {
   const editWebhookOld = bot.helpers.editWebhook;
 
-  bot.helpers.editWebhook = async function (channelId, webhookId, options) {
-    requireBotChannelPermissions(bot, channelId, ["MANAGE_WEBHOOKS"]);
+  bot.helpers.editWebhook = async function (webhookId, options) {
+    if (options.channelId) requireBotChannelPermissions(bot, options.channelId, ["MANAGE_WEBHOOKS"]);
+
     if (options.name) {
       if (
         // Specific usernames that discord does not allow
@@ -18,6 +19,6 @@ export default function editWebhook(bot: BotWithCache) {
       }
     }
 
-    return await editWebhookOld(channelId, webhookId, options);
+    return await editWebhookOld(webhookId, options);
   };
 }

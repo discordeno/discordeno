@@ -1,11 +1,11 @@
-import { Bot, GatewayPayload } from "../deps.ts";
+import { Bot, DiscordGatewayPayload } from "../deps.ts";
 import { BotWithCache } from "./addCacheCollections.ts";
 
 const processing = new Set<bigint>();
 
 export async function dispatchRequirements<B extends Bot>(
   bot: BotWithCache<B>,
-  data: GatewayPayload,
+  data: DiscordGatewayPayload,
 ) {
   // DELETE MEANS WE DONT NEED TO FETCH. CREATE SHOULD HAVE DATA TO CACHE
   if (data.t && ["GUILD_CREATE", "GUILD_DELETE"].includes(data.t)) return;

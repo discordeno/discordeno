@@ -20,11 +20,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
     reactions: payload.reactions?.map((reaction) => ({
       me: reaction.me,
       count: reaction.count,
-      emoji: {
-        id: reaction.emoji.id ? bot.transformers.snowflake(reaction.emoji.id) : undefined,
-        name: reaction.emoji.name,
-        animated: reaction.emoji.animated,
-      },
+      emoji: bot.transformers.emoji(bot, reaction.emoji),
     })),
     type: payload.type,
     activity: payload.activity

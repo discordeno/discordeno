@@ -1,4 +1,4 @@
-import { Bot } from "../deps.ts";
+import { Bot, Member } from "../deps.ts";
 import { BotWithCache } from "./addCacheCollections.ts";
 import { dispatchRequirements } from "./dispatchRequirements.ts";
 
@@ -39,13 +39,20 @@ export function enableCacheSweepers<B extends Bot>(bot: BotWithCache<B>) {
     bot,
   });
 
+  const setMember = bot.members.set;
+  bot.members.set = (id, member) => {
+    return setMember(id, {
+      ...member,
+      cachedAt: Date.now(),
+    } as Member);
+  };
   bot.members.startSweeper({
     filter: function memberSweeper(member, _, bot: BotWithCache<B>) {
       // Don't sweep the bot else strange things will happen
       if (member.id === bot.id) return false;
 
       // Only sweep members who were not active the last 30 minutes
-      return Date.now() - member.cachedAt > 1800000;
+      return Date.now() - (member as Member & { cachedAt: number }).cachedAt > 1800000;
     },
     interval: 300000,
     bot,

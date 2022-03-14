@@ -1,23 +1,23 @@
 import {
   Bot,
   Collection,
-  DiscordenoChannel,
-  DiscordenoGuild,
-  DiscordenoMember,
-  DiscordenoMessage,
-  DiscordenoPresence,
-  DiscordenoUser,
+  Channel,
+  Guild,
+  Member,
+  Message,
+  PresenceUpdate,
+  User,
 } from "../deps.ts";
 
 export type BotWithCache<B extends Bot = Bot> = B & CacheProps;
 
 export interface CacheProps extends Bot {
-  guilds: Collection<bigint, DiscordenoGuild>;
-  users: Collection<bigint, DiscordenoUser>;
-  members: Collection<bigint, DiscordenoMember>;
-  channels: Collection<bigint, DiscordenoChannel>;
-  messages: Collection<bigint, DiscordenoMessage>;
-  presences: Collection<bigint, DiscordenoPresence>;
+  guilds: Collection<bigint, Guild>;
+  users: Collection<bigint, User>;
+  members: Collection<bigint, Member>;
+  channels: Collection<bigint, Channel>;
+  messages: Collection<bigint, Message>;
+  presences: Collection<bigint, PresenceUpdate>;
   dispatchedGuildIds: Set<bigint>;
   dispatchedChannelIds: Set<bigint>;
   activeGuildIds: Set<bigint>;
