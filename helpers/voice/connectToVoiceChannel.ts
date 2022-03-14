@@ -1,6 +1,5 @@
-import type { AtLeastOne } from "../../types/util.ts";
 import type { Bot } from "../../bot.ts";
-import { GatewayOpcodes } from "../../types/shared.ts";
+import { AtLeastOne, GatewayOpcodes } from "../../types/shared.ts";
 
 /** Connect or join a voice channel inside a guild. By default, the "selfDeaf" option is true. Requires `CONNECT` and `VIEW_CHANNEL` permissions. */
 export async function connectToVoiceChannel(
