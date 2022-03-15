@@ -1,6 +1,6 @@
+import { ActivityTypes } from "../../types/shared.ts";
 import { assertExists } from "../deps.ts";
 import { bot } from "../mod.ts";
-import { ActivityTypes } from "../../types/activity/activityTypes.ts";
 import { delayUntil } from "../utils.ts";
 
 Deno.test("[misc] edit the bot's status", async function () {
