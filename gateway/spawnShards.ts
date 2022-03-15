@@ -38,6 +38,12 @@ export function prepareBuckets(gateway: GatewayManager, firstShardId: number, la
 }
 
 export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
+  // PREPARES THE MAX SHARD COUNT BY CONCURRENCY
+  if (gateway.useOptimalLargeBotSharding) {
+    gateway.debug("[Resharding] Using optimal large bot sharding solution.");
+    gateway.maxShards = gateway.calculateMaxShards(gateway.maxShards, gateway.maxConcurrency);
+  }
+
   // PREPARES ALL SHARDS IN SPECIFIC BUCKETS
   prepareBuckets(gateway, firstShardId, gateway.lastShardId ? gateway.lastShardId + 1 : gateway.maxShards);
 

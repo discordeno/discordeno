@@ -38,12 +38,9 @@ export async function resharder(
   gateway.sessionStartLimitResetAfter = results.sessionStartLimit.resetAfter;
   gateway.maxConcurrency = results.sessionStartLimit.maxConcurrency;
   // If more than 100K servers, begin switching to 16x sharding
-  if (gateway.maxShards > 60 && gateway.useOptimalLargeBotSharding) {
+  if (gateway.useOptimalLargeBotSharding) {
     gateway.debug("[Resharding] Using optimal large bot sharding solution.");
-    gateway.maxShards = Math.ceil(
-      gateway.maxShards /
-        (results.sessionStartLimit.maxConcurrency === 1 ? 16 : results.sessionStartLimit.maxConcurrency),
-    );
+    gateway.maxShards = gateway.calculateMaxShards(gateway.maxShards, results.sessionStartLimit.maxConcurrency);
   }
 
   gateway.spawnShards(gateway, gateway.firstShardId);

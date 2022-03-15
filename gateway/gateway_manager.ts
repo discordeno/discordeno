@@ -23,6 +23,7 @@ import { DiscordenoShard } from "./shard.ts";
 import { GatewayIntents } from "../types/shared.ts";
 import { StatusUpdate } from "../helpers/misc/editBotStatus.ts";
 import { DiscordGatewayPayload } from "../types/discord.ts";
+import { calculateMaxShards } from "./calculateMaxShards.ts";
 
 /** Create a new Gateway Manager.
  *
@@ -97,6 +98,7 @@ export function createGatewayManager(
     resume: options.resume ?? resume,
     safeRequestsPerShard: options.safeRequestsPerShard ?? safeRequestsPerShard,
     handleDiscordPayload: options.handleDiscordPayload,
+    calculateMaxShards: options.calculateMaxShards ?? calculateMaxShards,
   };
 }
 
@@ -222,4 +224,6 @@ export interface GatewayManager {
   resume: typeof resume;
   /** Calculates the number of requests in a shard that are safe to be used. */
   safeRequestsPerShard: typeof safeRequestsPerShard;
+  /** Calculates the number of shards to use based on the max concurrency */
+  calculateMaxShards: typeof calculateMaxShards;
 }
