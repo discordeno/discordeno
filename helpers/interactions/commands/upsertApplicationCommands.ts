@@ -1,9 +1,9 @@
-import type { ApplicationCommand } from "../../../types/interactions/commands/applicationCommand.ts";
-import type { EditGlobalApplicationCommand } from "../../../types/interactions/commands/editGlobalApplicationCommand.ts";
-import type { MakeRequired } from "../../../types/util.ts";
 import type { Bot } from "../../../bot.ts";
 import { Collection } from "../../../util/collection.ts";
 import { makeOptionsForCommand } from "./createApplicationCommand.ts";
+import { DiscordApplicationCommand } from "../../../types/discord.ts";
+import { EditGlobalApplicationCommand } from "./upsertApplicationCommand.ts";
+import { MakeRequired } from "../../../types/shared.ts";
 
 /**
  * Bulk edit existing application commands. If a command does not exist, it will create it.
@@ -15,7 +15,7 @@ export async function upsertApplicationCommands(
   options: MakeRequired<EditGlobalApplicationCommand, "name">[],
   guildId?: bigint,
 ) {
-  const result = await bot.rest.runMethod<ApplicationCommand[]>(
+  const result = await bot.rest.runMethod<DiscordApplicationCommand[]>(
     bot.rest,
     "put",
     guildId

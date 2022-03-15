@@ -1,9 +1,9 @@
-import type { ApplicationCommand } from "../../../types/interactions/commands/applicationCommand.ts";
 import type { Bot } from "../../../bot.ts";
+import { DiscordApplicationCommand } from "../../../types/discord.ts";
 
 /** Fetches the global command for the given Id. If a guildId is provided, the guild command will be fetched. */
 export async function getApplicationCommand(bot: Bot, commandId: bigint, guildId?: bigint) {
-  const result = await bot.rest.runMethod<ApplicationCommand>(
+  const result = await bot.rest.runMethod<DiscordApplicationCommand>(
     bot.rest,
     "get",
     guildId

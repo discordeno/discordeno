@@ -1,9 +1,7 @@
 import type { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import type { UnavailableGuild } from "../../types/guilds/unavailableGuild.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import { DiscordGatewayPayload, DiscordUnavailableGuild } from "../../types/discord.ts";
 
 export async function handleGuildDelete(bot: Bot, data: DiscordGatewayPayload, shardId: number) {
-  const payload = data.d as SnakeCasedPropertiesDeep<UnavailableGuild>;
+  const payload = data.d as DiscordUnavailableGuild;
   bot.events.guildDelete(bot, bot.transformers.snowflake(payload.id), shardId);
 }

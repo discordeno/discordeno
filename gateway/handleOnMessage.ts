@@ -1,15 +1,16 @@
 import { GatewayManager } from "./gateway_manager.ts";
-import { GatewayOpcodes } from "../types/codes/gatewayOpcodes.ts";
-import type { DiscordGatewayPayload } from "../types/gateway/gatewayPayload.ts";
-import type { DiscordHello } from "../types/gateway/hello.ts";
-import type { DiscordReady } from "../types/gateway/ready.ts";
-import { Guild } from "../types/guilds/guild.ts";
-import { UnavailableGuild } from "../types/guilds/unavailableGuild.ts";
-import { Message } from "../types/messages/mod.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";
+import {
+  DiscordGatewayPayload,
+  DiscordGuild,
+  DiscordHello,
+  DiscordMessage,
+  DiscordReady,
+  DiscordUnavailableGuild,
+} from "../types/discord.ts";
+import { GatewayOpcodes } from "../types/shared.ts";
 
 /** Handler for handling every message event from websocket. */
 // deno-lint-ignore no-explicit-any
@@ -125,7 +126,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
 
       // MUST HANDLE GUILD_CREATE EVENTS AS THEY ARE EXPENSIVE WITHOUT GATEWAY CACHE
       if (messageData.t === "GUILD_CREATE") {
-        const id = snowflakeToBigint((messageData.d as SnakeCasedPropertiesDeep<Guild>).id);
+        const id = snowflakeToBigint((messageData.d as DiscordGuild).id);
 
         // SHARD RESUMED MOST LIKELY, THEY EMIT GUILD CREATES. OR GUILD BECAME AVAILABLE AGAIN
         if (gateway.cache.guildIds.has(id)) return;
@@ -142,7 +143,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
 
       // MESSAGE_UPDATE CAN SPAM FOR NO REASON USE THIS TO IGNORE
       if (messageData.t === "MESSAGE_UPDATE") {
-        const payload = messageData.d as SnakeCasedPropertiesDeep<Message>;
+        const payload = messageData.d as DiscordMessage;
 
         const id = snowflakeToBigint(payload.id);
         const content = payload.content || "";
@@ -161,7 +162,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
 
       // MUST HANDLE GUILD_DELETE EVENTS FOR UNAVAILABLE
       if (messageData.t === "GUILD_DELETE") {
-        if ((messageData.d as UnavailableGuild).unavailable) return;
+        if ((messageData.d as DiscordUnavailableGuild).unavailable) return;
       }
 
       // IF NO TYPE THEN THIS SHOULD NOT BE SENT FORWARD

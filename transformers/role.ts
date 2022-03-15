@@ -1,25 +1,20 @@
 import { Bot } from "../bot.ts";
-import { Role } from "../types/permissions/role.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordRole } from "../types/discord.ts";
+import { RoleToggles } from "./toggles/role.ts";
 
 export function transformRole(
   bot: Bot,
-  payload: { role: SnakeCasedPropertiesDeep<Role> } & {
+  payload: { role: DiscordRole } & {
     guildId: bigint;
   },
-): DiscordenoRole {
+) {
   return {
-    // UNTRANSFORMED STUFF HERE
     name: payload.role.name,
     guildId: payload.guildId,
     position: payload.role.position,
     color: payload.role.color,
-    bitfield: (payload.role.hoist ? 1n : 0n) |
-      (payload.role.managed ? 2n : 0n) |
-      (payload.role.mentionable ? 4n : 0n) |
-      (payload.role.tags?.premium_subscriber ? 8n : 0n),
+    toggles: new RoleToggles(payload.role),
 
-    // TRANSFORMED STUFF BELOW
     id: bot.transformers.snowflake(payload.role.id),
     botId: payload.role.tags?.bot_id ? bot.transformers.snowflake(payload.role.tags.bot_id) : undefined,
     integrationId: payload.role.tags?.integration_id
@@ -31,22 +26,4 @@ export function transformRole(
   };
 }
 
-export interface DiscordenoRole
-  extends Omit<Role, "tags" | "id" | "permissions" | "hoist" | "mentionable" | "managed" | "icon"> {
-  /** The role id */
-  id: bigint;
-  /** The bot id that is associated with this role. */
-  botId?: bigint;
-  /** The integration id that is associated with this role */
-  integrationId?: bigint;
-  /** The roles guildId */
-  guildId: bigint;
-  /** Permission bit set */
-  permissions: bigint;
-  /** Holds all the boolean toggles. */
-  bitfield: bigint;
-  /** The role icon emoji icon */
-  icon?: bigint;
-  /** The role icon emoji unicode */
-  unicodeEmoji?: string;
-}
+export interface Role extends ReturnType<typeof transformRole> {}

@@ -1,9 +1,9 @@
 import type { Bot } from "../../../bot.ts";
-import { ThreadMember } from "../../../types/channels/threads/threadMember.ts";
+import { DiscordThreadMember } from "../../../types/discord.ts";
 
 /** Returns thread members objects that are members of the thread. */
 export async function getThreadMember(bot: Bot, threadId: bigint, userId: bigint) {
-  const result = await bot.rest.runMethod<ThreadMember>(
+  const result = await bot.rest.runMethod<DiscordThreadMember>(
     bot.rest,
     "get",
     bot.constants.endpoints.THREAD_USER(threadId, userId),

@@ -1,11 +1,12 @@
-import type { CreateMessage } from "../../types/messages/createMessage.ts";
-import type { Message } from "../../types/messages/message.ts";
 import type { Bot } from "../../bot.ts";
-import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
+import { AllowedMentions, FileContent, MessageComponents } from "../../types/mod.ts";
+import { DiscordMessage } from "../../types/discord.ts";
+import { MessageComponentTypes } from "../../types/shared.ts";
+import { Embed } from "../../transformers/embed.ts";
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
 export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMessage) {
-  const result = await bot.rest.runMethod<Message>(
+  const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "post",
     bot.constants.endpoints.CHANNEL_MESSAGES(channelId),
@@ -139,4 +140,33 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMe
   );
 
   return bot.transformers.message(bot, result);
+}
+
+export interface CreateMessage {
+  /** The message contents (up to 2000 characters) */
+  content?: string;
+  /** true if this is a TTS message */
+  tts?: boolean;
+  /** Embedded `rich` content (up to 6000 characters) */
+  embeds?: Embed[];
+  /** Allowed mentions for the message */
+  allowedMentions?: AllowedMentions;
+  /** Include to make your message a reply */
+  messageReference?: {
+    /** id of the originating message */
+    messageId?: bigint;
+    /**
+     * id of the originating message's channel
+     * Note: `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model.
+     */
+    channelId?: bigint;
+    /** id of the originating message's guild */
+    guildId?: bigint;
+    /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
+    failIfNotExists: boolean;
+  };
+  /** The contents of the file being sent */
+  file?: FileContent | FileContent[];
+  /** The components you would like to have sent in this message */
+  components?: MessageComponents;
 }

@@ -1,8 +1,6 @@
 import { Bot } from "../../../bot.ts";
-import { DiscordenoMember, DiscordenoUser } from "../../../transformers/member.ts";
-import { GetScheduledEventUsers } from "../../../types/guilds/scheduledEvents.ts";
-import { GuildMember } from "../../../types/members/guildMember.ts";
-import { User } from "../../../types/users/user.ts";
+import { Member, User } from "../../../transformers/member.ts";
+import { DiscordMember, DiscordUser } from "../../../types/discord.ts";
 import { Collection } from "../../../util/collection.ts";
 
 export async function getScheduledEventUsers(
@@ -10,24 +8,22 @@ export async function getScheduledEventUsers(
   guildId: bigint,
   eventId: bigint,
   options?: GetScheduledEventUsers & { withMember?: false },
-): Promise<Collection<bigint, DiscordenoUser>>;
+): Promise<Collection<bigint, User>>;
 export async function getScheduledEventUsers(
   bot: Bot,
   guildId: bigint,
   eventId: bigint,
   options?: GetScheduledEventUsers & { withMember: true },
-): Promise<Collection<bigint, { user: DiscordenoUser; member: DiscordenoMember }>>;
+): Promise<Collection<bigint, { user: User; member: Member }>>;
 export async function getScheduledEventUsers(
   bot: Bot,
   guildId: bigint,
   eventId: bigint,
   options?: GetScheduledEventUsers,
 ): Promise<
-  Collection<bigint, DiscordenoUser> | Collection<bigint, { user: DiscordenoUser; member: DiscordenoMember }>
+  Collection<bigint, User> | Collection<bigint, { user: User; member: Member }>
 > {
-  // TODO: is the guild member omit user
-
-  const result = await bot.rest.runMethod<{ user: User; member?: GuildMember }[]>(
+  const result = await bot.rest.runMethod<{ user: DiscordUser; member?: DiscordMember }[]>(
     bot.rest,
     "get",
     bot.constants.endpoints.GUILD_SCHEDULED_EVENT_USERS(guildId, eventId),
@@ -54,4 +50,15 @@ export async function getScheduledEventUsers(
       return [user.id, { member, user }];
     }),
   );
+}
+
+export interface GetScheduledEventUsers {
+  /** number of users to return (up to maximum 100), defaults to 100 */
+  limit?: number;
+  /** whether to also have member objects provided, defaults to false */
+  withMember?: boolean;
+  /** consider only users before given user id */
+  before?: bigint;
+  /** consider only users after given user id */
+  after?: bigint;
 }

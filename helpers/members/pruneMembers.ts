@@ -1,4 +1,3 @@
-import type { BeginGuildPrune } from "../../types/guilds/beginGuildPrune.ts";
 import type { Bot } from "../../bot.ts";
 
 /**
@@ -22,4 +21,14 @@ export async function pruneMembers(bot: Bot, guildId: bigint, options: BeginGuil
   );
 
   return result.pruned;
+}
+
+/** https://discord.com/developers/docs/resources/guild#begin-guild-prune */
+export interface BeginGuildPrune {
+  /** Number of days to prune (1 or more), default: 7 */
+  days?: number;
+  /** Whether 'pruned' is returned, discouraged for large guilds, default: true */
+  computePruneCount?: boolean;
+  /** Role(s) ro include, default: none */
+  includeRoles?: string[];
 }

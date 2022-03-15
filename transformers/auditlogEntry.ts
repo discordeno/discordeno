@@ -1,13 +1,10 @@
 import { Bot } from "../bot.ts";
-import { AuditLogEntry } from "../types/auditLog/auditLogEntry.ts";
-import { AuditLogEvents } from "../types/auditLog/auditLogEvents.ts";
-import { DiscordOverwrite } from "../types/channels/overwrite.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordAuditLogEntry } from "../types/discord.ts";
 
 export function transformAuditlogEntry(
   bot: Bot,
-  payload: SnakeCasedPropertiesDeep<AuditLogEntry>,
-): DiscordenoAuditLogEntry {
+  payload: DiscordAuditLogEntry,
+) {
   return {
     id: bot.transformers.snowflake(payload.id),
     // @ts-ignore TODO FIX THIS
@@ -133,122 +130,4 @@ export function transformAuditlogEntry(
   };
 }
 
-export interface DiscordenoAuditLogEntry {
-  /** id of the affected entity (webhook, user, role, etc.) */
-  targetId?: bigint;
-  /** Changes made to the `target_id` */
-  changes?: DiscordenoAuditLogChange[];
-  /** The user who made the changes */
-  userId?: bigint;
-  /** id of the entry */
-  id: bigint;
-  /** Type of action that occured */
-  actionType: AuditLogEvents;
-  /** Additional info for certain action types */
-  options?: {
-    /** Number of days after which inactive members were kicked */
-    deleteMemberDays: number;
-    /** Number of members removed by the prune */
-    membersRemoved: number;
-    /** Channel in which the entities were targeted */
-    channelId?: bigint;
-    /** id of the message that was targeted, types: MESSAGE_PIN & MESSAGE_UNPIN & STAGE_INSTANCE_CREATE & STAGE_INSTANCE_UPDATE & STAGE_INSTANCE_DELETE */
-    messageId?: bigint;
-    /** Number of entities that were targeted */
-    count: number;
-    /** id of the overwritten entity */
-    id?: bigint;
-    /** type of overwritten entity - "0", for "role", or "1" for "member" */
-    type?: number;
-    /** Name of the role if type is "0" (not present if type is "1") */
-    roleName?: string;
-  };
-  /** The reason for the change (0-512 characters) */
-  reason?: string;
-}
-
-export type DiscordenoAuditLogChange =
-  | {
-    new: bigint;
-    old: bigint;
-    key:
-      | "discovery_splash_hash"
-      | "banner_hash"
-      | "rules_channel_id"
-      | "public_updates_channel_id"
-      | "icon_hash"
-      | "splash_hash"
-      | "owner_id"
-      | "widget_channel_id"
-      | "system_channel_id"
-      | "application_id"
-      | "permissions"
-      | "allow"
-      | "deny"
-      | "channel_id"
-      | "inviter_id"
-      | "avatar_hash"
-      | "id";
-  }
-  | {
-    new: string;
-    old: string;
-    key:
-      | "name"
-      | "description"
-      | "preferred_locale"
-      | "region"
-      | "afk_channel_id"
-      | "vanity_url_code"
-      | "topic"
-      | "code"
-      | "nick";
-  }
-  | {
-    new: number;
-    old: number;
-    key:
-      | "afk_timeout"
-      | "mfa_level"
-      | "verification_level"
-      | "explicit_content_filter"
-      | "default_messagae_notifications"
-      | "prune_delete_days"
-      | "position"
-      | "bitrate"
-      | "rate_limit_per_user"
-      | "color"
-      | "max_uses"
-      | "uses"
-      | "max_age"
-      | "expire_behavior"
-      | "expire_grace_period"
-      | "user_limit"
-      | "privacy_level";
-  }
-  | {
-    new: {
-      name: string;
-      id: bigint;
-    }[];
-    old: {
-      name: string;
-      id: bigint;
-    }[];
-    key: "$add" | "$remove";
-  }
-  | {
-    new: boolean;
-    old: boolean;
-    key: "widget_enabled" | "nsfw" | "hoist" | "mentionable" | "temporary" | "deaf" | "mute" | "enable_emoticons";
-  }
-  | {
-    new: DiscordOverwrite[];
-    old: DiscordOverwrite[];
-    key: "permission_overwrites";
-  }
-  | {
-    new: string | number;
-    old: string | number;
-    key: "type";
-  };
+export interface AuditLogEntry extends ReturnType<typeof transformAuditlogEntry> {}

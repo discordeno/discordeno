@@ -1,5 +1,6 @@
 import { Bot } from "../../../bot.ts";
-import { EditScheduledEvent, ScheduledEvent } from "../../../types/guilds/scheduledEvents.ts";
+import { DiscordScheduledEvent } from "../../../types/discord.ts";
+import { ScheduledEventEntityType, ScheduledEventPrivacyLevel, ScheduledEventStatus } from "../../../types/shared.ts";
 
 /** Modify a guild scheduled event. To start or end an event, use this endpoint to modify the event's status. */
 export async function editScheduledEvent(
@@ -21,7 +22,7 @@ export async function editScheduledEvent(
     throw new Error("Cannot schedule event to end before starting.");
   }
 
-  const event = await bot.rest.runMethod<ScheduledEvent>(
+  const event = await bot.rest.runMethod<DiscordScheduledEvent>(
     bot.rest,
     "patch",
     bot.constants.endpoints.GUILD_SCHEDULED_EVENT(guildId, eventId),
@@ -40,4 +41,26 @@ export async function editScheduledEvent(
   );
 
   return bot.transformers.scheduledEvent(bot, event);
+}
+
+export interface EditScheduledEvent {
+  /** the channel id of the scheduled event. null if switching to external event. */
+  channelId: bigint | null;
+  /** location of the event */
+  location: string;
+  /** the name of the scheduled event */
+  name: string;
+  /** the description of the scheduled event */
+  description: string;
+  /** the time the scheduled event will start */
+  scheduledStartTime: number;
+  /** the time the scheduled event will end if it does end. */
+  scheduledEndTime?: number;
+  /** the privacy level of the scheduled event */
+  privacyLevel: ScheduledEventPrivacyLevel;
+  /** the type of hosting entity associated with a scheduled event */
+  entityType: ScheduledEventEntityType;
+  /** the status of the scheduled event */
+  status: ScheduledEventStatus;
+  reason?: string;
 }

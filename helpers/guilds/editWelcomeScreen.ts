@@ -1,9 +1,8 @@
-import type { ModifyGuildWelcomeScreen } from "../../types/guilds/modifyGuildWelcomeScreen.ts";
-import type { WelcomeScreen } from "../../types/guilds/welcomeScreen.ts";
 import type { Bot } from "../../bot.ts";
+import { DiscordWelcomeScreen } from "../../types/discord.ts";
 
 export async function editWelcomeScreen(bot: Bot, guildId: bigint, options: ModifyGuildWelcomeScreen) {
-  const result = await bot.rest.runMethod<WelcomeScreen>(
+  const result = await bot.rest.runMethod<DiscordWelcomeScreen>(
     bot.rest,
     "patch",
     bot.constants.endpoints.GUILD_WELCOME_SCREEN(guildId),
@@ -20,4 +19,25 @@ export async function editWelcomeScreen(bot: Bot, guildId: bigint, options: Modi
   );
 
   return bot.transformers.welcomeScreen(bot, result);
+}
+
+/** https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen */
+export interface ModifyGuildWelcomeScreen {
+  /** Whether the welcome screen is enabled */
+  enabled?: boolean | null;
+  /** Channels linked in the welcome screen and their display options */
+  welcomeScreen?: WelcomeScreenChannel[] | null;
+  /** The server description to show in the welcome screen */
+  description?: string | null;
+}
+
+export interface WelcomeScreenChannel {
+  /** The channel's id */
+  channelId: bigint;
+  /** The emoji id, if the emoji is custom */
+  emojiId?: bigint;
+  /** The emoji name if custom, the unicode character if standard, or `null` if no emoji is set */
+  emojiName?: string;
+  /** The description shown for the channel */
+  description: string;
 }

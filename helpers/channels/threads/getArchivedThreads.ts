@@ -1,7 +1,6 @@
-import { ListActiveThreads } from "../../../types/channels/threads/listActiveThreads.ts";
-import { ListPublicArchivedThreads } from "../../../types/channels/threads/listPublicArchivedThreads.ts";
 import { Collection } from "../../../util/collection.ts";
 import type { Bot } from "../../../bot.ts";
+import { DiscordListActiveThreads } from "../../../types/discord.ts";
 
 /** Get the archived threads for this channel, defaults to public */
 export async function getArchivedThreads(
@@ -11,7 +10,7 @@ export async function getArchivedThreads(
     type?: "public" | "private" | "privateJoinedThreads";
   },
 ) {
-  const result = (await bot.rest.runMethod<ListActiveThreads>(
+  const result = (await bot.rest.runMethod<DiscordListActiveThreads>(
     bot.rest,
     "get",
     options?.type === "privateJoinedThreads"
@@ -42,4 +41,13 @@ export async function getArchivedThreads(
       }),
     ),
   };
+}
+
+// TODO: add docs link
+export interface ListPublicArchivedThreads {
+  // TODO: convert unix to ISO9601 timestamp
+  /** Returns threads before this timestamp. UNIX or ISO8601 timestamp */
+  before?: number | string;
+  /** Optional maximum number of threads to return */
+  limit?: number;
 }

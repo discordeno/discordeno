@@ -8,14 +8,14 @@ import { Bot, Collection, DiscordenoMember, GuildMemberWithUser, ListGuildMember
 export async function getMembersPaginated(
   bot: Bot,
   guildId: bigint,
-  options: ListGuildMembers & { memberCount: number },
+  options: ListGuildMembers,
 ) {
   const members = new Collection<bigint, DiscordenoMember>();
 
-  let membersLeft = options?.limit ?? options.memberCount;
+  let membersLeft = options?.limit ?? 1000;
   let loops = 1;
   while (
-    (options?.limit ?? options.memberCount) > members.size &&
+    (options?.limit ?? 1000) > members.size &&
     membersLeft > 0
   ) {
     bot.events.debug("Running while loop in getMembers function.");
@@ -57,7 +57,6 @@ export async function getMembersPaginated(
     options = {
       limit: options?.limit,
       after: discordenoMembers[discordenoMembers.length - 1].id.toString(),
-      memberCount: options.memberCount,
     };
 
     membersLeft -= 1000;

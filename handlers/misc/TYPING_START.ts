@@ -1,10 +1,8 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import type { TypingStart } from "../../types/misc/typingStart.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import { DiscordGatewayPayload, DiscordTypingStart } from "../../types/discord.ts";
 
 export function handleTypingStart(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as SnakeCasedPropertiesDeep<TypingStart>;
+  const payload = data.d as DiscordTypingStart;
 
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
   const userId = bot.transformers.snowflake(payload.user_id);

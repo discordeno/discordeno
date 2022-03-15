@@ -1,10 +1,8 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import type { MessageDeleteBulk } from "../../types/messages/messageDeleteBulk.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import { DiscordGatewayPayload, DiscordMessageDeleteBulk } from "../../types/discord.ts";
 
 export async function handleMessageDeleteBulk(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as SnakeCasedPropertiesDeep<MessageDeleteBulk>;
+  const payload = data.d as DiscordMessageDeleteBulk;
 
   return {
     ids: payload.ids.map((id) => bot.transformers.snowflake(id)),

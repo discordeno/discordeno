@@ -1,4 +1,4 @@
-import { GatewayOpcodes } from "../types/codes/gatewayOpcodes.ts";
+import { GatewayOpcodes } from "../types/shared.ts";
 
 export interface DiscordenoShard {
   /** The shard id number. */

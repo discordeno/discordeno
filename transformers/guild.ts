@@ -1,15 +1,11 @@
 import { Bot } from "../bot.ts";
-import type { Guild } from "../types/guilds/guild.ts";
 import { Collection } from "../util/collection.ts";
-import { DiscordenoRole } from "./role.ts";
-import { DiscordenoVoiceState } from "./voiceState.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { DiscordenoEmoji } from "./emoji.ts";
+import { DiscordGuild } from "../types/discord.ts";
 
 export function transformGuild(
   bot: Bot,
-  payload: { guild: SnakeCasedPropertiesDeep<Guild> } & { shardId: number },
-): DiscordenoGuild {
+  payload: { guild: DiscordGuild } & { shardId: number },
+) {
   const guildId = bot.transformers.snowflake(payload.guild.id);
 
   return {
@@ -53,12 +49,9 @@ export function transformGuild(
         })),
       }
       : undefined,
-    discoverySplash: payload.guild.discovery_splash,
-
-    bitfield: (payload.guild.owner ? 1n : 0n) |
-      (payload.guild.widget_enabled ? 2n : 0n) |
-      (payload.guild.large ? 4n : 0n) |
-      (payload.guild.unavailable ? 8n : 0n),
+    discoverySplash: payload.guild.discovery_splash
+      ? bot.utils.iconHashToBigInt(payload.guild.discovery_splash)
+      : undefined,
 
     joinedAt: payload.guild.joined_at ? Date.parse(payload.guild.joined_at) : undefined,
     memberCount: payload.guild.member_count ?? 0,
@@ -89,9 +82,8 @@ export function transformGuild(
     ownerId: payload.guild.owner_id ? bot.transformers.snowflake(payload.guild.owner_id) : 0n,
     permissions: payload.guild.permissions ? bot.transformers.snowflake(payload.guild.permissions) : 0n,
     afkChannelId: payload.guild.afk_channel_id ? bot.transformers.snowflake(payload.guild.afk_channel_id) : undefined,
-    widgetChannelId: payload.guild.widget_channel_id
-      ? bot.transformers.snowflake(payload.guild.widget_channel_id)
-      : undefined,
+    widgetChannelId: payload.guild.widget_channel_id ? bot.transformers.snowflake(payload.guild.widget_channel_id)
+    : undefined,
     applicationId: payload.guild.application_id ? bot.transformers.snowflake(payload.guild.application_id) : undefined,
     systemChannelId: payload.guild.system_channel_id ? bot.transformers.snowflake(payload.guild.system_channel_id)
     : undefined,
@@ -104,98 +96,4 @@ export function transformGuild(
   };
 }
 
-export interface DiscordenoGuild extends
-  Omit<
-    Guild,
-    | "roles"
-    | "presences"
-    | "voiceStates"
-    | "members"
-    | "channels"
-    | "memberCount"
-    | "owner"
-    | "emojis"
-    | "id"
-    | "ownerId"
-    | "permissions"
-    | "afkChannelId"
-    | "widgetChannelId"
-    | "applicationId"
-    | "systemChannelId"
-    | "rulesChannelId"
-    | "publicUpdatesChannelId"
-    | "joinedAt"
-    | "icon"
-    | "banner"
-    | "splash"
-    | "stageInstances"
-    | "welcomeScreen"
-    | "channels"
-  > {
-  /** Guild id */
-  id: bigint;
-  /** Id of the owner */
-  ownerId: bigint;
-  /** Total permissions for the user in the guild (excludes overwrites) */
-  permissions: bigint;
-  /** Id of afk channel */
-  afkChannelId?: bigint;
-  /** The channel id that the widget will generate an invite to, or null if set to no invite */
-  widgetChannelId?: bigint;
-  /** Application id of the guild creator if it is bot-created */
-  applicationId?: bigint;
-  /** The id of the channel where guild notices such as welcome messages and boost events are posted */
-  systemChannelId?: bigint;
-  /** The id of the channel where community guilds can display rules and/or guidelines */
-  rulesChannelId?: bigint;
-  /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
-  publicUpdatesChannelId?: bigint;
-  /** The id of the shard this guild is bound to */
-  shardId: number;
-  /** Total number of members in this guild */
-  memberCount: number;
-  /** The roles in the guild */
-  roles: Collection<bigint, DiscordenoRole>;
-  /** The presences of all the users in the guild. */
-  // presences: Collection<bigint, DiscordenoPresence>;
-  /** The Voice State data for each user in a voice channel in this server. */
-  voiceStates: Collection<bigint, DiscordenoVoiceState>;
-  /** Custom guild emojis */
-  emojis: Collection<bigint, DiscordenoEmoji>;
-  /** Holds all the boolean toggles. */
-  bitfield: bigint;
-  /** When this guild was joined at */
-  joinedAt?: number;
-  /** Icon hash */
-  icon?: bigint;
-  /** Splash hash */
-  splash?: bigint;
-  /** Banner hash */
-  banner?: bigint;
-  /** The stage instances in this guild */
-  stageInstances?: {
-    /** The id of this Stage instance */
-    id: bigint;
-    /** The guild id of the associated Stage channel */
-    guildId: bigint;
-    /** The id of the associated Stage channel */
-    channelId: bigint;
-    /** The topic of the Stage instance (1-120 characters) */
-    topic: string;
-  }[];
-  welcomeScreen?: {
-    /** The server description shown in the welcome screen */
-    description?: string;
-    /** The channels shown in the welcome screen, up to 5 */
-    welcomeChannels: {
-      /** The channel's id */
-      channelId: bigint;
-      /** The descriptino schown for the channel */
-      description: string;
-      /** The emoji id, if the emoji is custom */
-      emojiId?: bigint;
-      /** The emoji name if custom, the unicode character if standard, or `null` if no emoji is set */
-      emojiName?: string;
-    }[];
-  };
-}
+export interface Guild extends ReturnType<typeof transformGuild> {}

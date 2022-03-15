@@ -1,11 +1,13 @@
-import type { EditMessage } from "../../types/messages/editMessage.ts";
-import type { Message } from "../../types/messages/message.ts";
 import type { Bot } from "../../bot.ts";
-import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
+import { Attachment } from "../../transformers/attachment.ts";
+import { Embed } from "../../transformers/embed.ts";
+import { DiscordMessage } from "../../types/discord.ts";
+import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
+import { MessageComponentTypes } from "../../types/shared.ts";
 
 /** Edit the message. */
 export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint, content: EditMessage) {
-  const result = await bot.rest.runMethod<Message>(
+  const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "patch",
     bot.constants.endpoints.CHANNEL_MESSAGE(channelId, messageId),
@@ -136,4 +138,22 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
   );
 
   return bot.transformers.message(bot, result);
+}
+
+/** https://discord.com/developers/docs/resources/channel#edit-message-json-params */
+export interface EditMessage {
+  /** The new message contents (up to 2000 characters) */
+  content?: string | null;
+  /** Embedded `rich` content (up to 6000 characters) */
+  embeds?: Embed[] | null;
+  /** Edit the flags of the message (only `SUPRESS_EMBEDS` can currently be set/unset) */
+  flags?: 4 | null;
+  /** The contents of the file being sent/edited */
+  file?: FileContent | FileContent[] | null;
+  /** Allowed mentions for the message */
+  allowedMentions?: AllowedMentions;
+  /** When specified (adding new attachments), attachments which are not provided in this list will be removed. */
+  attachments?: Attachment[];
+  /** The components you would like to have sent in this message */
+  components?: MessageComponents;
 }

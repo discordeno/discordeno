@@ -1,10 +1,8 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import type { InviteDelete } from "../../types/invites/inviteDelete.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import { DiscordGatewayPayload, DiscordInviteDelete } from "../../types/discord.ts";
 
 export function handleInviteDelete(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as SnakeCasedPropertiesDeep<InviteDelete>;
+  const payload = data.d as DiscordInviteDelete;
 
   bot.events.inviteDelete(bot, {
     /** The channel of the invite */

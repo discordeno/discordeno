@@ -1,11 +1,9 @@
 import type { Bot } from "../../bot.ts";
-import type { GuildEmojisUpdate } from "../../types/emojis/guildEmojisUpdate.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import { DiscordGatewayPayload, DiscordGuildEmojisUpdate } from "../../types/discord.ts";
 import { Collection } from "../../util/collection.ts";
 
 export async function handleGuildEmojisUpdate(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as SnakeCasedPropertiesDeep<GuildEmojisUpdate>;
+  const payload = data.d as DiscordGuildEmojisUpdate;
 
   bot.events.guildEmojisUpdate(bot, {
     guildId: bot.transformers.snowflake(payload.guild_id),

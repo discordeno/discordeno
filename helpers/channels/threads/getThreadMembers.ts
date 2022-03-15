@@ -1,20 +1,18 @@
 import type { Bot } from "../../../bot.ts";
-import { ThreadMember } from "../../../types/channels/threads/threadMember.ts";
+import { DiscordThreadMember } from "../../../types/discord.ts";
+import { Collection } from "../../../util/collection.ts";
 
 /** Returns thread members objects that are members of the thread. */
 export async function getThreadMembers(bot: Bot, threadId: bigint) {
-  const result = await bot.rest.runMethod<ThreadMember[]>(
+  const result = await bot.rest.runMethod<DiscordThreadMember[]>(
     bot.rest,
     "get",
     bot.constants.endpoints.THREAD_MEMBERS(threadId),
   );
-  return result;
+  // return result;
 
-  // return new Collection(result.map((res) => [bot.transformers.snowflake(result.userId), {
-  // id?: string;
-  // /** The id of the user */
-  // userId?: string;
-  // /** The time the current user last joined the thread */
-  // joinTimestamp: string;
-  // }]));
+  return new Collection(result.map((res) => {
+    const member = bot.transformers.threadMember(bot, res);
+    return [member.id, member];
+  }));
 }

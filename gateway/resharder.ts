@@ -1,6 +1,5 @@
-import { transformGatewayBot } from "../transformers/gatewayBot.ts";
-import { GetGatewayBot } from "../types/gateway/getGatewayBot.ts";
-import { DiscordReady } from "../types/gateway/ready.ts";
+import { GetGatewayBot, transformGatewayBot } from "../transformers/gatewayBot.ts";
+import { DiscordReady } from "../types/discord.ts";
 import { createGatewayManager, GatewayManager } from "./gateway_manager.ts";
 
 /** The handler to automatically reshard when necessary. */
