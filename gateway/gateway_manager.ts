@@ -62,6 +62,7 @@ export function createGatewayManager(
         ? options.intents.reduce((bits, next) => (bits |= GatewayIntents[next]), 0)
         : options.intents) ?? 0,
     shard: options.shard ?? [0, options.shardsRecommended ?? 1],
+    presence: options.presence,
     urlWSS: options.urlWSS ?? "wss://gateway.discord.gg/?v=9&encoding=json",
     shardsRecommended: options.shardsRecommended ?? 1,
     sessionStartLimitTotal: options.sessionStartLimitTotal ?? 1000,

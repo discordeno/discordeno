@@ -238,10 +238,10 @@ try again in one second by calling the `handleQueue` function.
 
 ```ts
 .catch(() => {
-  if (data.t === "INTERACTION_CREATE") return handleInteractionQueueing(gateway, data, shardId);
-
   // IF FAILED TRY TO QUEUE MAYBE LISTENER IS DOWN
-  queue.events.push({ shardId, data });
+  if (data.t === "INTERACTION_CREATE") handleInteractionQueueing(gateway, data, shardId);
+  else queue.events.push({ shardId, data });
+
   setTimeout(handleQueue, 1000);
 });
 ```
@@ -316,7 +316,10 @@ async function handleInteractionQueueing(gateway: GatewayManager, data: GatewayP
   }
 
   await rest.runMethod(rest, "post", endpoints.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token), {
-    type: InteractionResponseTypes.DeferredChannelMessageWithSource,
+    // MESSAGE COMPONENTS NEED SPECIAL DEFER
+    type: InteractionTypes.MessageComponent === interaction.type
+      ? InteractionResponseTypes.DeferredUpdateMessage
+      : InteractionResponseTypes.DeferredChannelMessageWithSource,
   });
 
   // ADD EVENT TO QUEUE
@@ -422,10 +425,10 @@ const gateway = createGatewayManager({
       // THIS IS FOR DENO MEMORY LEAK
       .then((res) => res.text())
       .catch(() => {
-        if (data.t === "INTERACTION_CREATE") return handleInteractionQueueing(gateway, data, shardId);
-
         // IF FAILED TRY TO QUEUE MAYBE LISTENER IS DOWN
-        queue.events.push({ shardId, data });
+        if (data.t === "INTERACTION_CREATE") handleInteractionQueueing(gateway, data, shardId);
+        else queue.events.push({ shardId, data });
+
         setTimeout(handleQueue, 1000);
       });
   },
@@ -454,10 +457,9 @@ async function handleQueue() {
   })
     .then((res) => {
       res.text();
+      handleQueue();
     })
     .catch(() => {
-      if (data.t === "INTERACTION_CREATE") return handleInteractionQueueing(gateway, data, shardId);
-
       // EVENT HANDLER STILL NOT ACCEPTING REQUEST. SO ADD BACK TO QUEUE
       queue.events.unshift(event);
       // RETRY IN ONE SECOND
@@ -465,8 +467,9 @@ async function handleQueue() {
     });
 }
 
-async function handleInteractionQueueing(gateway, data: GatewayPayload, shardId: number) {
+async function handleInteractionQueueing(gateway: GatewayManager, data: GatewayPayload, shardId: number) {
   if (data.t !== "INTERACTION_CREATE") return;
+
   const interaction = data.d as SnakeCasedPropertiesDeep<Interaction>;
   // IF THIS INTERACTION IS NOT DEFERABLE
   if ([InteractionTypes.ModalSubmit, InteractionTypes.ApplicationCommandAutocomplete].includes(interaction.type)) {
@@ -522,7 +525,7 @@ option was added to allow you to choose how many shards should be managed by eac
 When shards are spawn they are triggered by a method on gateway.
 
 ```ts
-gateway.tellClusterToIdentify = async function (gateway, workerId, shardId, bucketId) {
+gateway.tellWorkerToIdentify = async function (gateway, workerId, shardId, bucketId) {
   await gateway.identify(gateway, shardId, gateway.maxShards);
 };
 ```
