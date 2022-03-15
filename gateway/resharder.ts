@@ -13,7 +13,7 @@ export async function resharder(
     ...oldGateway,
   });
 
-  for (const key of Object.keys(oldGateway)) {
+  for (const [key, value] of Object.entries(oldGateway)) {
     if (key === "handleDiscordPayload") {
       gateway.handleDiscordPayload = async function (_, data, shardId) {
         if (data.t === "READY") {
@@ -24,8 +24,9 @@ export async function resharder(
       continue;
     }
 
-    // USE ANY CUSTOMIZED HANDLERS FROM OLD GATEWAY
-    if (typeof key === "function") gateway[key] = oldGateway[key];
+    // USE ANY CUSTOMIZED OPTIONS FROM OLD GATEWAY
+    // @ts-ignore TODO: fix this dynamica assignment
+    gateway[key] = oldGateway[key as keyof typeof oldGateway];
   }
 
   // Begin resharding
