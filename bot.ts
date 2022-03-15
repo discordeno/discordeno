@@ -181,6 +181,7 @@ export function createEventHandlers(
     webhooksUpdate: events.webhooksUpdate ?? ignore,
     botUpdate: events.botUpdate ?? ignore,
     typingStart: events.typingStart ?? ignore,
+    messageDeleteBulk: events.messageDeleteBulk ?? ignore,
   };
 }
 
@@ -478,6 +479,11 @@ export interface EventHandlers {
     message: DiscordenoMessage,
     oldMessage?: DiscordenoMessage,
   ) => any;
+  messageDeleteBulk: (bot: Bot, message: {
+    ids: bigint[];
+    channelId: bigint;
+    guildId?: bigint;
+  }) => any;
   reactionAdd: (
     bot: Bot,
     payload: {
