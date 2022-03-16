@@ -52,7 +52,7 @@ module.exports = pingCommand;
 ```
 
 - The `BaseCommand` is extended with the `CommandResponses` class.
-- The ping command class is been extended with the `BaseCommand` class.
+- The ping command class is extended with the `BaseCommand` class.
 - Some static properties are assigned to the ping command class, in order to access it in the cache, such as `name`,
   `description`, `usage`, `category` and `slash`...
 - The `execute()` function will be called, when the command has been run by the user.

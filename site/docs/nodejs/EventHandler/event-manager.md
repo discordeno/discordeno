@@ -113,7 +113,7 @@ const client = Discord.createBot({
 Discord.startBot(client);
 ```
 
-Moreover, you can customize the `EventManager` and add more functionality to it and make it exactly fit your your needs
+Moreover, you can customize the `EventManager` and add more functionality to it and make it exactly fit your needs
 or even emit events, by extending it.
 
 Of course you wonder what you can do with all of this now. We will explain this further on the next page.
