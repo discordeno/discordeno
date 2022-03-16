@@ -1,70 +1,70 @@
 import { DiscordGuild } from "../../types/discord.ts";
 import { GuildFeatures } from "../../types/shared.ts";
-import { ToggleBitfield } from "./ToggleBitfield.ts";
+import { ToggleBitfield, ToggleBitfieldBigint } from "./ToggleBitfield.ts";
 
 export const GuildToggle = {
   /** Whether the bot is the owner of the guild */
-  owner: 1 << 0,
+  owner: 1n << 0n,
   /** Whether the server widget is enabled */
-  widgetEnabled: 1 << 1,
+  widgetEnabled: 1n << 1n,
   /** Whether this is considered a large guild */
-  large: 1 << 2,
+  large: 1n << 2n,
   /** Whether this guild is unavailable due to an outage */
-  unavailable: 1 << 3,
+  unavailable: 1n << 3n,
   /** Whether the guild has the boost progress bar enabled */
-  premiumProgressBarEnabled: 1 << 4,
+  premiumProgressBarEnabled: 1n << 4n,
 
   // GUILD FEATURES ARE BELOW THIS
 
   /** Whether the guild has access to set an invite splash background */
-  inviteSplash: 1 << 5,
+  inviteSplash: 1n << 5n,
   /** Whether the guild has access to set 384kbps bitrate in voice (previously VIP voice servers) */
-  vipRegions: 1 << 6,
+  vipRegions: 1n << 6n,
   /** Whether the guild has access to set a vanity URL */
-  vanityUrl: 1 << 7,
+  vanityUrl: 1n << 7n,
   /** Whether the guild is verified */
-  verified: 1 << 8,
+  verified: 1n << 8n,
   /** Whether the guild is partnered */
-  partnered: 1 << 9,
+  partnered: 1n << 9n,
   /** Whether the guild can enable welcome screen, Membership Screening, stage channels and discovery, and recives community updates */
-  community: 1 << 10,
+  community: 1n << 10n,
   /** Whether the guild has access to use commerce features (i.e. create store channels) */
-  commerce: 1 << 11,
+  commerce: 1n << 11n,
   /** Whether the guild has access to create news channels */
-  news: 1 << 12,
+  news: 1n << 12n,
   /** Whether the guild is able to be discovered in the directory */
-  discoverable: 1 << 13,
+  discoverable: 1n << 13n,
   /** Whether the guild cannot be discoverable */
-  discoverableDisabled: 1 << 14,
+  discoverableDisabled: 1n << 14n,
   /** Whether the guild is able to be featured in the directory */
-  feature: 1 << 15,
+  feature: 1n << 15n,
   /** Whether the guild has access to set an animated guild icon */
-  animatedIcon: 1 << 16,
+  animatedIcon: 1n << 16n,
   /** Whether the guild has access to set a guild banner image */
-  banner: 1 << 17,
+  banner: 1n << 17n,
   /** Whether the guild has enabled the welcome screen */
-  welcomeScreenEnabled: 1 << 18,
+  welcomeScreenEnabled: 1n << 18n,
   /** Whether the guild has enabled [Membership Screening](https://discord.com/developers/docs/resources/guild#membership-screening-object) */
-  memberVerificationGateEnabled: 1 << 19,
+  memberVerificationGateEnabled: 1n << 19n,
   /** Whether the guild can be previewed before joining via Membership Screening or the directory */
-  previewEnabled: 1 << 20,
+  previewEnabled: 1n << 20n,
   /** Whether the guild has enabled ticketed events */
-  ticketedEventsEnabled: 1 << 21,
+  ticketedEventsEnabled: 1n << 21n,
   /** Whether the guild has enabled monetization */
-  monetizationEnabled: 1 << 22,
+  monetizationEnabled: 1n << 22n,
   /** Whether the guild has increased custom sticker slots */
-  moreStickers: 1 << 23,
+  moreStickers: 1n << 23n,
   /** Whether the guild has access to the three day archive time for threads */
-  threeDayThreadArchive: 1 << 24,
+  threeDayThreadArchive: 1n << 24n,
   /** Whether the guild has access to the seven day archive time for threads */
-  sevenDayThreadArchive: 1 << 25,
+  sevenDayThreadArchive: 1n << 25n,
   /** Whether the guild has access to create private threads */
-  privateThreads: 1 << 26,
+  privateThreads: 1n << 26n,
   /** Whether the guild is able to set role icons */
-  roleIcons: 1 << 27,
+  roleIcons: 1n << 27n,
 };
 
-export class GuildToggles extends ToggleBitfield {
+export class GuildToggles extends ToggleBitfieldBigint {
   constructor(guild: DiscordGuild) {
     super();
 
@@ -127,95 +127,95 @@ export class GuildToggles extends ToggleBitfield {
   }
 
   /** Whether the guild has access to set an invite splash background */
-  get InviteSplash() {
+  get inviteSplash() {
     return this.has("inviteSplash");
   }
   /** Whether the guild has access to set 384kbps bitrate in voice (previously VIP voice servers) */
-  get VipRegions() {
+  get vipRegions() {
     return this.has("vipRegions");
   }
   /** Whether the guild has access to set a vanity URL */
-  get VanityUrl() {
+  get vanityUrl() {
     return this.has("vanityUrl");
   }
   /** Whether the guild is verified */
-  get Verified() {
+  get verified() {
     return this.has("verified");
   }
   /** Whether the guild is partnered */
-  get Partnered() {
+  get partnered() {
     return this.has("partnered");
   }
   /** Whether the guild can enable welcome screen, Membership Screening, stage channels and discovery, and recives community updates */
-  get Community() {
+  get community() {
     return this.has("community");
   }
   /** Whether the guild has access to use commerce features (i.e. create store channels) */
-  get Commerce() {
+  get commerce() {
     return this.has("commerce");
   }
   /** Whether the guild has access to create news channels */
-  get News() {
+  get news() {
     return this.has("news");
   }
   /** Whether the guild is able to be discovered in the directory */
-  get Discoverable() {
+  get discoverable() {
     return this.has("discoverable");
   }
   /** Whether the guild cannot be discoverable */
-  get DiscoverableDisabled() {
+  get discoverableDisabled() {
     return this.has("discoverableDisabled");
   }
   /** Whether the guild is able to be featured in the directory */
-  get Feature() {
+  get feature() {
     return this.has("feature");
   }
   /** Whether the guild has access to set an animated guild icon */
-  get AnimatedIcon() {
+  get animatedIcon() {
     return this.has("animatedIcon");
   }
   /** Whether the guild has access to set a guild banner image */
-  get Banner() {
+  get banner() {
     return this.has("banner");
   }
   /** Whether the guild has enabled the welcome screen */
-  get WelcomeScreenEnabled() {
+  get welcomeScreenEnabled() {
     return this.has("welcomeScreenEnabled");
   }
   /** Whether the guild has enabled [Membership Screening](https://discord.com/developers/docs/resources/guild#membership-screening-object) */
-  get MemberVerificationGateEnabled() {
+  get memberVerificationGateEnabled() {
     return this.has("memberVerificationGateEnabled");
   }
   /** Whether the guild can be previewed before joining via Membership Screening or the directory */
-  get PreviewEnabled() {
+  get previewEnabled() {
     return this.has("previewEnabled");
   }
   /** Whether the guild has enabled ticketed events */
-  get TicketedEventsEnabled() {
+  get ticketedEventsEnabled() {
     return this.has("ticketedEventsEnabled");
   }
   /** Whether the guild has enabled monetization */
-  get MonetizationEnabled() {
+  get monetizationEnabled() {
     return this.has("monetizationEnabled");
   }
   /** Whether the guild has increased custom sticker slots */
-  get MoreStickers() {
+  get moreStickers() {
     return this.has("moreStickers");
   }
   /** Whether the guild has access to the three day archive time for threads */
-  get ThreeDayThreadArchive() {
+  get threeDayThreadArchive() {
     return this.has("threeDayThreadArchive");
   }
   /** Whether the guild has access to the seven day archive time for threads */
-  get SevenDayThreadArchive() {
+  get sevenDayThreadArchive() {
     return this.has("sevenDayThreadArchive");
   }
   /** Whether the guild has access to create private threads */
-  get PrivateThreads() {
+  get privateThreads() {
     return this.has("privateThreads");
   }
   /** Whether the guild is able to set role icons */
-  get RoleIcons() {
+  get roleIcons() {
     return this.has("roleIcons");
   }
 
@@ -223,7 +223,7 @@ export class GuildToggles extends ToggleBitfield {
   has(permissions: GuildToggleKeys | GuildToggleKeys[]) {
     if (!Array.isArray(permissions)) return super.contains(GuildToggle[permissions]);
 
-    return super.contains(permissions.reduce((a, b) => (a |= GuildToggle[b]), 0));
+    return super.contains(permissions.reduce((a, b) => (a |= GuildToggle[b]), 0n));
   }
 
   /** Lists all the toggles for the role and whether or not each is true or false. */
