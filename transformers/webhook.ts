@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { DiscordWebhook } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformWebhook(bot: Bot, payload: DiscordWebhook) {
   return {
@@ -31,4 +32,4 @@ export function transformWebhook(bot: Bot, payload: DiscordWebhook) {
   };
 }
 
-export interface Webhook extends ReturnType<typeof transformWebhook> {}
+export interface Webhook extends Optionalize<ReturnType<typeof transformWebhook>> {}

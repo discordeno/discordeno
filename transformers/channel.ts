@@ -1,7 +1,6 @@
 import { Bot } from "../bot.ts";
-import { Collection } from "../util/collection.ts";
-import { ChannelTypes } from "../types/shared.ts";
 import { DiscordChannel } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 const Mask = (1n << 64n) - 1n;
 
@@ -68,4 +67,4 @@ export function transformChannel(
   };
 }
 
-export interface Channel extends ReturnType<typeof transformChannel> {}
+export interface Channel extends Optionalize<ReturnType<typeof transformChannel>> {}

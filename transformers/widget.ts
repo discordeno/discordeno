@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { DiscordGuildWidget } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformWidget(bot: Bot, payload: DiscordGuildWidget) {
   return {
@@ -23,4 +24,4 @@ export function transformWidget(bot: Bot, payload: DiscordGuildWidget) {
   };
 }
 
-export interface GuildWidget extends ReturnType<typeof transformWidget> {}
+export interface GuildWidget extends Optionalize<ReturnType<typeof transformWidget>> {}

@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { DiscordVoiceRegion } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformVoiceRegion(bot: Bot, payload: DiscordVoiceRegion) {
   return {
@@ -11,4 +12,4 @@ export function transformVoiceRegion(bot: Bot, payload: DiscordVoiceRegion) {
   };
 }
 
-export interface VoiceRegions extends ReturnType<typeof transformVoiceRegion> {}
+export interface VoiceRegions extends Optionalize<ReturnType<typeof transformVoiceRegion>> {}

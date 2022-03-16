@@ -1,6 +1,7 @@
 import { Bot } from "../bot.ts";
 import { DiscordRole } from "../types/discord.ts";
 import { RoleToggles } from "./toggles/role.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformRole(
   bot: Bot,
@@ -26,4 +27,4 @@ export function transformRole(
   };
 }
 
-export interface Role extends ReturnType<typeof transformRole> {}
+export interface Role extends Optionalize<ReturnType<typeof transformRole>> {}

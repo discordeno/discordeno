@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { DiscordGuildApplicationCommandPermissions } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformApplicationCommandPermission(
   bot: Bot,
@@ -17,4 +18,5 @@ export function transformApplicationCommandPermission(
   };
 }
 
-export interface ApplicationCommandPermission extends ReturnType<typeof transformApplicationCommandPermission> {}
+export interface ApplicationCommandPermission
+  extends Optionalize<ReturnType<typeof transformApplicationCommandPermission>> {}
