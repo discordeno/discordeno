@@ -1,4 +1,4 @@
-import { Bot, Collection, DiscordGuildEmojisUpdate, } from "./deps.ts";
+import { Bot, Collection, DiscordGuildEmojisUpdate } from "./deps.ts";
 import { setupCacheRemovals } from "./src/setupCacheRemovals.ts";
 import { addCacheCollections, BotWithCache } from "./src/addCacheCollections.ts";
 import { setupCacheEdits } from "./src/setupCacheEdits.ts";

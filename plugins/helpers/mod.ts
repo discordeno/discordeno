@@ -1,13 +1,13 @@
 import {
   ApplicationCommandOptionChoice,
   Bot,
+  Channel,
   Collection,
   CreateMessage,
-  Channel,
-  Member,
-  Message,
   FinalHelpers,
   ListGuildMembers,
+  Member,
+  Message,
 } from "./deps.ts";
 import { cloneChannel } from "./src/channels.ts";
 import { sendAutocompleteChoices } from "./src/sendAutoCompleteChoices.ts";

@@ -155,11 +155,13 @@ function makeEmojiFromString(
 ) {
   if (!emoji) return;
 
-  if (typeof emoji !== "string") return {
-    id: emoji.id ? BigInt(emoji.id) : undefined,
-    name: emoji.name,
-    animated: emoji.animated,
-  };
+  if (typeof emoji !== "string") {
+    return {
+      id: emoji.id ? BigInt(emoji.id) : undefined,
+      name: emoji.name,
+      animated: emoji.animated,
+    };
+  }
 
   // A snowflake id was provided
   if (/^[0-9]+$/.test(emoji)) {

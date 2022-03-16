@@ -1,4 +1,11 @@
-import type { Bot, DiscordGuildMemberAdd, DiscordGuildMemberRemove, DiscordMessageReactionAdd, DiscordMessageReactionRemove, DiscordMessageReactionRemoveAll } from "../deps.ts";
+import type {
+  Bot,
+  DiscordGuildMemberAdd,
+  DiscordGuildMemberRemove,
+  DiscordMessageReactionAdd,
+  DiscordMessageReactionRemove,
+  DiscordMessageReactionRemoveAll,
+} from "../deps.ts";
 import type { BotWithCache } from "./addCacheCollections.ts";
 
 export function setupCacheEdits<B extends Bot>(bot: BotWithCache<B>) {

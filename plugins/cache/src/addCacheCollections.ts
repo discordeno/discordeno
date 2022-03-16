@@ -1,13 +1,4 @@
-import {
-  Bot,
-  Collection,
-  Channel,
-  Guild,
-  Member,
-  Message,
-  PresenceUpdate,
-  User,
-} from "../deps.ts";
+import { Bot, Channel, Collection, Guild, Member, Message, PresenceUpdate, User } from "../deps.ts";
 
 export type BotWithCache<B extends Bot = Bot> = B & CacheProps;
 

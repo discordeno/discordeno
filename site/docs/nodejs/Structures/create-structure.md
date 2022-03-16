@@ -25,15 +25,15 @@ However, you probably want to use something shorter, such as the following:
 
 ```js
 class Channel {
-    constructor(client, data) {
-        this.client = client;
-        this.id = data.id;
-        this.name = data.name;
-    }
+  constructor(client, data) {
+    this.client = client;
+    this.id = data.id;
+    this.name = data.name;
+  }
 
-    async send(options) {
-        return await client.helpers.sendMessage(this.id, options);
-    }
+  async send(options) {
+    return await client.helpers.sendMessage(this.id, options);
+  }
 }
 ```
 
