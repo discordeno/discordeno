@@ -147,6 +147,7 @@ export function createEventHandlers(
     guildMemberUpdate: events.guildMemberUpdate ?? ignore,
     messageCreate: events.messageCreate ?? ignore,
     messageDelete: events.messageDelete ?? ignore,
+    messageDeleteBulk: events.messageDeleteBulk ?? ignore,
     messageUpdate: events.messageUpdate ?? ignore,
     reactionAdd: events.reactionAdd ?? ignore,
     reactionRemove: events.reactionRemove ?? ignore,
@@ -466,8 +467,8 @@ export interface EventHandlers {
   messageDelete: (
     bot: Bot,
     payload: { id: bigint; channelId: bigint; guildId?: bigint },
-    message?: Message,
   ) => any;
+  messageDeleteBulk: (bot: Bot, payload: { ids: bigint[]; channelId: bigint; guildId?: bigint; }) => any;
   messageUpdate: (
     bot: Bot,
     message: Message,
