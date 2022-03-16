@@ -181,7 +181,6 @@ export function createEventHandlers(
     webhooksUpdate: events.webhooksUpdate ?? ignore,
     botUpdate: events.botUpdate ?? ignore,
     typingStart: events.typingStart ?? ignore,
-    messageDeleteBulk: events.messageDeleteBulk ?? ignore,
   };
 }
 
@@ -479,11 +478,6 @@ export interface EventHandlers {
     message: DiscordenoMessage,
     oldMessage?: DiscordenoMessage,
   ) => any;
-  messageDeleteBulk: (bot: Bot, message: {
-    ids: bigint[];
-    channelId: bigint;
-    guildId?: bigint;
-  }) => any;
   reactionAdd: (
     bot: Bot,
     payload: {
@@ -686,7 +680,6 @@ export interface BotGatewayHandlerOptions {
   INVITE_CREATE: typeof handlers.handleInviteCreate;
   INVITE_DELETE: typeof handlers.handleInviteCreate;
   MESSAGE_CREATE: typeof handlers.handleMessageCreate;
-  MESSAGE_DELETE_BULK: typeof handlers.handleMessageDeleteBulk;
   MESSAGE_DELETE: typeof handlers.handleMessageDelete;
   MESSAGE_REACTION_ADD: typeof handlers.handleMessageReactionAdd;
   MESSAGE_REACTION_REMOVE_ALL: typeof handlers.handleMessageReactionRemoveAll;
@@ -775,8 +768,6 @@ export function createBotGatewayHandlers(
     INVITE_DELETE: options.INVITE_DELETE ?? handlers.handleInviteCreate,
     // messages
     MESSAGE_CREATE: options.MESSAGE_CREATE ?? handlers.handleMessageCreate,
-    MESSAGE_DELETE_BULK: options.MESSAGE_DELETE_BULK ??
-      handlers.handleMessageDeleteBulk,
     MESSAGE_DELETE: options.MESSAGE_DELETE ?? handlers.handleMessageDelete,
     MESSAGE_REACTION_ADD: options.MESSAGE_REACTION_ADD ??
       handlers.handleMessageReactionAdd,
