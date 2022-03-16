@@ -681,6 +681,7 @@ export interface BotGatewayHandlerOptions {
   INVITE_DELETE: typeof handlers.handleInviteCreate;
   MESSAGE_CREATE: typeof handlers.handleMessageCreate;
   MESSAGE_DELETE: typeof handlers.handleMessageDelete;
+  MESSAGE_DELETE_BULK: typeof handlers.handleMessageDeleteBulk;
   MESSAGE_REACTION_ADD: typeof handlers.handleMessageReactionAdd;
   MESSAGE_REACTION_REMOVE_ALL: typeof handlers.handleMessageReactionRemoveAll;
   MESSAGE_REACTION_REMOVE_EMOJI: typeof handlers.handleMessageReactionRemoveEmoji;
@@ -769,6 +770,8 @@ export function createBotGatewayHandlers(
     // messages
     MESSAGE_CREATE: options.MESSAGE_CREATE ?? handlers.handleMessageCreate,
     MESSAGE_DELETE: options.MESSAGE_DELETE ?? handlers.handleMessageDelete,
+    MESSAGE_DELETE_BULK: options.MESSAGE_DELETE_BULK ??
+      handlers.handleMessageDeleteBulk,
     MESSAGE_REACTION_ADD: options.MESSAGE_REACTION_ADD ??
       handlers.handleMessageReactionAdd,
     MESSAGE_REACTION_REMOVE_ALL: options.MESSAGE_REACTION_REMOVE_ALL ??
