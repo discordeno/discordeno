@@ -1246,11 +1246,21 @@ export type KeysWithUndefined<T> = {
   [K in keyof T]-?: undefined extends T[K] ? K : never;
 }[keyof T];
 
-export type Optionalize<T> = T extends object ? 
-  & {
-    [K in KeysWithUndefined<T>]?: Optionalize<T[K]>;
-  }
-  & {
-    [K in Exclude<keyof T, KeysWithUndefined<T>>]: Optionalize<T[K]>;
-  }
-  : T;
+// export type Optionalize<T> = T extends object ? 
+//   & {
+//     [K in KeysWithUndefined<T>]?: Optionalize<T[K]>;
+//   }
+//   & {
+//     [K in Exclude<keyof T, KeysWithUndefined<T>>]: Optionalize<T[K]>;
+//   }
+//   : T;
+
+export type Optionalize<T> = {
+  [K in KeysWithUndefined<T>]?: Optionalize<T[K]>
+} & {
+  [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends object
+    ? {} extends Pick<T[K], keyof T[K]>
+      ? T[K]
+      : Optionalize<T[K]>
+    : T[K]
+}
