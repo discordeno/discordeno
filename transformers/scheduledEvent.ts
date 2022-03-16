@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { DiscordScheduledEvent } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformScheduledEvent(
   bot: Bot,
@@ -26,4 +27,4 @@ export function transformScheduledEvent(
   };
 }
 
-export interface ScheduledEvent extends ReturnType<typeof transformScheduledEvent> {}
+export interface ScheduledEvent extends Optionalize<ReturnType<typeof transformScheduledEvent>> {}

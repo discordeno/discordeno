@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { DiscordThreadMember, DiscordThreadMemberGuildCreate } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformThreadMember(
   bot: Bot,
@@ -21,5 +22,5 @@ export function transformThreadMemberGuildCreate(
   };
 }
 
-export interface ThreadMember extends ReturnType<typeof transformThreadMember> {}
-export interface ThreadMemberGuildCreate extends ReturnType<typeof transformThreadMemberGuildCreate> {}
+export interface ThreadMember extends Optionalize<ReturnType<typeof transformThreadMember>> {}
+export interface ThreadMemberGuildCreate extends Optionalize<ReturnType<typeof transformThreadMemberGuildCreate>> {}

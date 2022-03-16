@@ -1,6 +1,7 @@
 import { Bot } from "../bot.ts";
 import { Collection } from "../util/collection.ts";
 import { DiscordGuild } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformGuild(
   bot: Bot,
@@ -96,4 +97,4 @@ export function transformGuild(
   };
 }
 
-export interface Guild extends ReturnType<typeof transformGuild> {}
+export interface Guild extends Optionalize<ReturnType<typeof transformGuild>> {}

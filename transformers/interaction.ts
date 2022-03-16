@@ -6,6 +6,7 @@ import { Attachment } from "./attachment.ts";
 import { Member, User } from "./member.ts";
 import { Message } from "./message.ts";
 import { Role } from "./role.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformInteraction(bot: Bot, payload: DiscordInteraction) {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
@@ -128,5 +129,5 @@ export function transformInteractionDataResolved(
   return transformed;
 }
 
-export interface Interaction extends ReturnType<typeof transformInteraction> {}
-export interface InteractionDataResolved extends ReturnType<typeof transformInteractionDataResolved> {}
+export interface Interaction extends Optionalize<ReturnType<typeof transformInteraction>> {}
+export interface InteractionDataResolved extends Optionalize<ReturnType<typeof transformInteractionDataResolved>> {}

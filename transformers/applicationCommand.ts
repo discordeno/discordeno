@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { DiscordApplicationCommand } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformApplicationCommand(
   bot: Bot,
@@ -19,4 +20,4 @@ export function transformApplicationCommand(
   };
 }
 
-export interface ApplicationCommand extends ReturnType<typeof transformApplicationCommand> {}
+export interface ApplicationCommand extends Optionalize<ReturnType<typeof transformApplicationCommand>> {}

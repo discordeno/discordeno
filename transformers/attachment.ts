@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { DiscordAttachment } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformAttachment(bot: Bot, payload: DiscordAttachment) {
   return {
@@ -15,4 +16,4 @@ export function transformAttachment(bot: Bot, payload: DiscordAttachment) {
   };
 }
 
-export interface Attachment extends ReturnType<typeof transformAttachment> {}
+export interface Attachment extends Optionalize<ReturnType<typeof transformAttachment>> {}

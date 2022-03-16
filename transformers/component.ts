@@ -1,6 +1,6 @@
 import { Bot } from "../bot.ts";
 import { ButtonStyles, MessageComponentTypes, TextStyles } from "../mod.ts";
-import { DiscordComponent, DiscordSelectOption } from "../types/discord.ts";
+import { DiscordComponent } from "../types/discord.ts";
 
 export function transformComponent(bot: Bot, payload: DiscordComponent): Component {
   return {
@@ -37,7 +37,6 @@ export function transformComponent(bot: Bot, payload: DiscordComponent): Compone
   };
 }
 
-// export interface Component extends ReturnType<typeof transformComponent> {};
 // THIS TRANSFORMER HAS A CIRCULAR REFERENCE TO CALL ITSELF FOR COMPONENTS SO AN AUTOMATED TYPE CAN NOT BE CREATED!
 
 export interface Component {

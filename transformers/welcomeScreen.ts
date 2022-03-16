@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { DiscordWelcomeScreen } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformWelcomeScreen(
   bot: Bot,
@@ -16,4 +17,4 @@ export function transformWelcomeScreen(
   };
 }
 
-export interface WelcomeScreen extends ReturnType<typeof transformWelcomeScreen> {}
+export interface WelcomeScreen extends Optionalize<ReturnType<typeof transformWelcomeScreen>> {}

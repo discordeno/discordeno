@@ -1,6 +1,7 @@
 import { Bot } from "../bot.ts";
 import { DiscordVoiceState } from "../types/discord.ts";
 import { VoiceStateToggles } from "./toggles/voice.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformVoiceState(
   bot: Bot,
@@ -21,4 +22,4 @@ export function transformVoiceState(
   };
 }
 
-export interface VoiceState extends ReturnType<typeof transformVoiceState> {}
+export interface VoiceState extends Optionalize<ReturnType<typeof transformVoiceState>> {}

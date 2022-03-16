@@ -1,6 +1,7 @@
 import { Bot } from "../bot.ts";
 import { DiscordEmoji } from "../types/discord.ts";
 import { EmojiToggles } from "./toggles/emoji.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformEmoji(bot: Bot, payload: DiscordEmoji) {
   return {
@@ -12,4 +13,4 @@ export function transformEmoji(bot: Bot, payload: DiscordEmoji) {
   };
 }
 
-export interface Emoji extends ReturnType<typeof transformEmoji> {}
+export interface Emoji extends Optionalize<ReturnType<typeof transformEmoji>> {}

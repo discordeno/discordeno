@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { DiscordActivity } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformActivity(bot: Bot, payload: DiscordActivity) {
   return {
@@ -35,4 +36,4 @@ export function transformActivity(bot: Bot, payload: DiscordActivity) {
   };
 }
 
-export interface Activity extends ReturnType<typeof transformActivity> {}
+export interface Activity extends Optionalize<ReturnType<typeof transformActivity>> {}

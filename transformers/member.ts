@@ -2,6 +2,7 @@ import type { Bot } from "../bot.ts";
 import { DiscordMember, DiscordUser } from "../types/discord.ts";
 import { MemberToggles } from "./toggles/member.ts";
 import { UserToggles } from "./toggles/user.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformUser(bot: Bot, payload: DiscordUser) {
   return {
@@ -40,5 +41,5 @@ export function transformMember(
   };
 }
 
-export interface Member extends ReturnType<typeof transformMember> {}
-export interface User extends ReturnType<typeof transformUser> {}
+export interface Member extends Optionalize<ReturnType<typeof transformMember>> {}
+export interface User extends Optionalize<ReturnType<typeof transformUser>> {}
