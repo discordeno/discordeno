@@ -469,7 +469,7 @@ export interface EventHandlers {
     payload: { id: bigint; channelId: bigint; guildId?: bigint },
     message?: Message,
   ) => any;
-  messageDeleteBulk: (bot: Bot, payload: { ids: bigint[]; channelId: bigint; guildId?: bigint; }) => any;
+  messageDeleteBulk: (bot: Bot, payload: { ids: bigint[]; channelId: bigint; guildId?: bigint }) => any;
   messageUpdate: (
     bot: Bot,
     message: Message,
