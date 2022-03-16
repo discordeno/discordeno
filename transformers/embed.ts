@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { DiscordEmbed } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformEmbed(bot: Bot, payload: DiscordEmbed) {
   return {
@@ -53,4 +54,4 @@ export function transformEmbed(bot: Bot, payload: DiscordEmbed) {
   };
 }
 
-export interface Embed extends ReturnType<typeof transformEmbed> {}
+export interface Embed extends Optionalize<ReturnType<typeof transformEmbed>> {}

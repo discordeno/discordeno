@@ -1241,3 +1241,13 @@ export type Camelize<T> = {
     : T[K] extends {} ? Camelize<T[K]>
     : never;
 };
+
+export type KeysWithUndefined<T> = {
+  [K in keyof T]-?: undefined extends T[K] ? K : never
+}[keyof T]
+
+export type Optionalize<T> = {
+  [K in KeysWithUndefined<T>]?: Optionalize<T[K]>
+} & {
+  [K in Exclude<keyof T, KeysWithUndefined<T>>]: Optionalize<T[K]>
+}
