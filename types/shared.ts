@@ -1070,6 +1070,10 @@ export enum GatewayIntents {
   DirectMessageTyping = 1 << 14,
 
   /**
+   * This intent will add `content` values to all message objects.
+   */
+  MessageContent = 1 << 15,
+  /**
    * - GUILD_SCHEDULED_EVENT_CREATE
    * - GUILD_SCHEDULED_EVENT_UPDATE
    * - GUILD_SCHEDULED_EVENT_DELETE
