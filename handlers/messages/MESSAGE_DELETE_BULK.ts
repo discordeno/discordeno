@@ -4,9 +4,14 @@ import { DiscordGatewayPayload, DiscordMessageDeleteBulk } from "../../types/dis
 export async function handleMessageDeleteBulk(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordMessageDeleteBulk;
 
-  return {
-    ids: payload.ids.map((id) => bot.transformers.snowflake(id)),
-    channelId: bot.transformers.snowflake(payload.channel_id),
-    guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
-  };
+  const channelId = bot.transformers.snowflake(payload.channel_id);
+  const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
+
+  payload.ids.forEach((id) =>
+    bot.events.messageDelete(bot, {
+      id: bot.transformers.snowflake(id),
+      channelId,
+      guildId,
+    })
+  );
 }
