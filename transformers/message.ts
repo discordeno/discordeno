@@ -2,6 +2,7 @@ import { Bot } from "../bot.ts";
 import { DiscordMessage } from "../types/discord.ts";
 import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
 import { MemberToggles } from "./toggles/member.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformMessage(bot: Bot, payload: DiscordMessage) {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
@@ -102,4 +103,4 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
   };
 }
 
-export interface Message extends ReturnType<typeof transformMessage> {}
+export interface Message extends Optionalize<ReturnType<typeof transformMessage>> {}

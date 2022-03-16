@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { DiscordIntegrationCreateUpdate } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreateUpdate) {
   return {
@@ -34,4 +35,4 @@ export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreate
   };
 }
 
-export interface Integration extends ReturnType<typeof transformIntegration> {}
+export interface Integration extends Optionalize<ReturnType<typeof transformIntegration>> {}

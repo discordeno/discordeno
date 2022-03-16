@@ -1,4 +1,5 @@
 import { DiscordGetGatewayBot } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformGatewayBot(payload: DiscordGetGatewayBot) {
   return {
@@ -13,4 +14,4 @@ export function transformGatewayBot(payload: DiscordGetGatewayBot) {
   };
 }
 
-export interface GetGatewayBot extends ReturnType<typeof transformGatewayBot> {}
+export interface GetGatewayBot extends Optionalize<ReturnType<typeof transformGatewayBot>> {}

@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { DiscordAuditLogEntry } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformAuditlogEntry(
   bot: Bot,
@@ -130,4 +131,4 @@ export function transformAuditlogEntry(
   };
 }
 
-export interface AuditLogEntry extends ReturnType<typeof transformAuditlogEntry> {}
+export interface AuditLogEntry extends Optionalize<ReturnType<typeof transformAuditlogEntry>> {}

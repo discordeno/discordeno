@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { DiscordInviteCreate } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformInvite(bot: Bot, invite: DiscordInviteCreate) {
   return {
@@ -33,4 +34,4 @@ export function transformInvite(bot: Bot, invite: DiscordInviteCreate) {
   };
 }
 
-export interface Invite extends ReturnType<typeof transformInvite> {}
+export interface Invite extends Optionalize<ReturnType<typeof transformInvite>> {}

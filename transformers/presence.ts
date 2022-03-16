@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { DiscordPresenceUpdate } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export const statusTypes = {
   online: 0,
@@ -21,5 +22,5 @@ export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate) {
   };
 }
 
-export interface PresenceUpdate extends ReturnType<typeof transformPresence> {}
+export interface PresenceUpdate extends Optionalize<ReturnType<typeof transformPresence>> {}
 export type StatusTypes = keyof typeof statusTypes;

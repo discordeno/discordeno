@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { DiscordStageInstance } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformStageInstance(
   bot: Bot,
@@ -13,4 +14,4 @@ export function transformStageInstance(
   };
 }
 
-export interface StageInstance extends ReturnType<typeof transformStageInstance> {}
+export interface StageInstance extends Optionalize<ReturnType<typeof transformStageInstance>> {}

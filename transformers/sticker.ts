@@ -1,5 +1,6 @@
 import { Bot } from "../bot.ts";
 import { DiscordSticker } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformSticker(bot: Bot, payload: DiscordSticker) {
   return {
@@ -17,4 +18,4 @@ export function transformSticker(bot: Bot, payload: DiscordSticker) {
   };
 }
 
-export interface Sticker extends ReturnType<typeof transformSticker> {}
+export interface Sticker extends Optionalize<ReturnType<typeof transformSticker>> {}
