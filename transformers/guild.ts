@@ -2,6 +2,7 @@ import { Bot } from "../bot.ts";
 import { Collection } from "../util/collection.ts";
 import { DiscordGuild } from "../types/discord.ts";
 import { Optionalize } from "../types/shared.ts";
+import { GuildToggles } from "./toggles/guild.ts";
 
 export function transformGuild(
   bot: Bot,
@@ -16,9 +17,9 @@ export function transformGuild(
     defaultMessageNotifications: payload.guild.default_message_notifications,
     description: payload.guild.description,
     explicitContentFilter: payload.guild.explicit_content_filter,
-    features: payload.guild.features,
+    toggles: new GuildToggles(payload.guild),
     maxMembers: payload.guild.max_members,
-    maxPresences: payload.guild.max_presences,
+    maxPresences: payload.guild.max_presences ?? undefined,
     maxVideoChannelUsers: payload.guild.max_video_channel_users,
     mfaLevel: payload.guild.mfa_level,
     name: payload.guild.name,
