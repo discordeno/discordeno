@@ -1,3 +1,4 @@
+import type { Guild } from "../deps.ts";
 import { Bot, DiscordGatewayPayload } from "../deps.ts";
 import { BotWithCache } from "./addCacheCollections.ts";
 
@@ -55,7 +56,7 @@ export async function dispatchRequirements<B extends Bot>(
     .getGuild(id, {
       counts: true,
     })
-    .catch(console.log));
+    .catch(console.log)) as Guild;
 
   if (!guild) {
     processing.delete(id);

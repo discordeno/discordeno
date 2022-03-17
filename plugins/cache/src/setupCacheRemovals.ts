@@ -1,3 +1,5 @@
+import type { Emoji, Guild } from "../deps.ts";
+import type { BotWithCache } from "./addCacheCollections.ts";
 import {
   Bot,
   Collection,
@@ -10,7 +12,6 @@ import {
   DiscordMessageDeleteBulk,
   DiscordUnavailableGuild,
 } from "../deps.ts";
-import { BotWithCache } from "./addCacheCollections.ts";
 
 export function setupCacheRemovals<B extends Bot>(bot: BotWithCache<B>) {
   const {
@@ -67,10 +68,11 @@ export function setupCacheRemovals<B extends Bot>(bot: BotWithCache<B>) {
   bot.handlers.GUILD_EMOJIS_UPDATE = function (_, data, shardId) {
     const payload = data.d as DiscordGuildEmojisUpdate;
 
-    const guild = bot.guilds.get(bot.transformers.snowflake(payload.guild_id));
+    const guild= bot.guilds.get(bot.transformers.snowflake(payload.guild_id));
+
     if (guild) {
-      guild.emojis = new Collection(payload.emojis.map((e) => {
-        const emoji = bot.transformers.emoji(bot, e);
+      guild.emojis! = new Collection(payload.emojis.map((e) => {
+        const emoji: Emoji = bot.transformers.emoji(bot, e);
         return [emoji.id!, emoji];
       }));
     }

@@ -1,3 +1,4 @@
+import type { Emoji } from "../transformers/emoji.ts";
 import { Bot } from "../bot.ts";
 import { Collection } from "../util/collection.ts";
 import { DiscordGuild } from "../types/discord.ts";
@@ -69,7 +70,7 @@ export function transformGuild(
     ),
     emojis: new Collection(
       (payload.guild.emojis || []).map((emoji) => {
-        const em = bot.transformers.emoji(bot, emoji);
+        const em: Emoji = bot.transformers.emoji(bot, emoji);
         return [em.id!, em];
       }),
     ),
