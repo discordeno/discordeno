@@ -67,8 +67,7 @@ export function setupCacheRemovals<B extends Bot>(bot: BotWithCache<B>) {
 
   bot.handlers.GUILD_EMOJIS_UPDATE = function (_, data, shardId) {
     const payload = data.d as DiscordGuildEmojisUpdate;
-
-    const guild= bot.guilds.get(bot.transformers.snowflake(payload.guild_id));
+    const guild = bot.guilds.get(bot.transformers.snowflake(payload.guild_id));
 
     if (guild) {
       guild.emojis! = new Collection(payload.emojis.map((e) => {
