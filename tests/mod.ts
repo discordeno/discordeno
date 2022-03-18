@@ -27,7 +27,7 @@ import { delayUntil } from "./utils.ts";
 // import { editChannelTests } from "./helpers/channels/editChannel.ts";
 import { CACHED_COMMUNITY_GUILD_ID, sanitizeMode } from "./constants.ts";
 
-console.log("[Tests] Starting test preparation")
+console.log("[Tests] Starting test preparation");
 dotenv({ export: true, path: `${Deno.cwd()}/.env` });
 
 let TOKEN = Deno.env.get("DISCORD_TOKEN");

@@ -23,7 +23,6 @@ export class ToggleBitfield {
   }
 }
 
-
 export class ToggleBitfieldBigint {
   bitfield = 0n;
 

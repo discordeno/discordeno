@@ -1242,7 +1242,7 @@ export type Camelize<T> = {
     : never;
 };
 
-// export type Optionalize<T> = T extends object ? 
+// export type Optionalize<T> = T extends object ?
 //   & {
 //     [K in KeysWithUndefined<T>]?: Optionalize<T[K]>;
 //   }
