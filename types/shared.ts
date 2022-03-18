@@ -1252,8 +1252,12 @@ export type Camelize<T> = {
 //   : T;
 
 export type KeysWithUndefined<T> = {
-  [K in keyof T]-?: (undefined & null) extends T[K] ? K : never
-}[keyof T]
+  [K in keyof T]-?: undefined extends T[K]
+    ? K
+    : null extends T[K]
+      ? K
+      : never;
+}[keyof T];
 
 export type Optionalize<T> = (
   &{
