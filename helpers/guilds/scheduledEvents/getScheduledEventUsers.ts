@@ -45,7 +45,7 @@ export async function getScheduledEventUsers(
   return new Collection(
     result.map((res) => {
       const user = bot.transformers.user(bot, res.user);
-      const member = bot.transformers.member(bot, res.member!, guildId, user.id);
+      const member: Member = bot.transformers.member(bot, res.member!, guildId, user.id);
 
       return [user.id, { member, user }];
     }),

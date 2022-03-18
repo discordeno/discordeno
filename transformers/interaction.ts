@@ -66,7 +66,7 @@ export function transformInteractionDataResolved(
   if (resolved.messages) {
     transformed.messages = new Collection(
       Object.entries(resolved.messages).map(([id, value]) => {
-        const message = bot.transformers.message(bot, value);
+        const message: Message = bot.transformers.message(bot, value);
         return [message.id, message];
       }),
     );
@@ -84,7 +84,7 @@ export function transformInteractionDataResolved(
   if (guildId && resolved.members) {
     transformed.members = new Collection(
       Object.entries(resolved.members).map(([id, value]) => {
-        const member = bot.transformers.member(bot, value, guildId, bot.transformers.snowflake(id));
+        const member: Member = bot.transformers.member(bot, value, guildId, bot.transformers.snowflake(id));
         return [member.id, member];
       }),
     );
