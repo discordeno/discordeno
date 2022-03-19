@@ -1242,7 +1242,7 @@ export type Camelize<T> = {
     : never;
 };
 
-// export type Optionalize<T> = T extends object ?
+// export type Optionalize<T> = T extends object ? 
 //   & {
 //     [K in KeysWithUndefined<T>]?: Optionalize<T[K]>;
 //   }
@@ -1268,16 +1268,17 @@ export type Camelize<T> = {
 // );
 
 export type KeysWithUndefined<T> = {
-  [K in keyof T]-?: undefined extends T[K] ? K
-    : null extends T[K] ? K
-    : never;
+  [K in keyof T]-?: undefined extends T[K]
+    ? K
+    : null extends T[K]
+      ? K
+      : never;
 }[keyof T];
 
 export type Optionalize<T> = (
-  & {
-    [K in KeysWithUndefined<T>]?: T[K];
-  }
-  & {
+  &{
+    [K in KeysWithUndefined<T>]?: T[K]
+  } & {
     [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends object
       ? Object extends Pick<T[K], keyof T[K]> ? T[K] : Optionalize<T[K]>
       : T[K];
