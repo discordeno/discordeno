@@ -13,7 +13,7 @@ export async function createWebhook(bot: Bot, channelId: bigint, options: Create
     bot.constants.endpoints.CHANNEL_WEBHOOKS(channelId),
     {
       name: options.name,
-      avatar: options.avatar ? await bot.utils.urlToBase64(bot.utils.iconBigintToHash(options.avatar)) : undefined,
+      avatar: options.avatar ? await bot.utils.urlToBase64(options.avatar) : undefined,
       reason: options.reason,
     },
   );
@@ -24,8 +24,8 @@ export async function createWebhook(bot: Bot, channelId: bigint, options: Create
 export interface CreateWebhook {
   /** Name of the webhook (1-80 characters) */
   name: string;
-  /** Image for the default webhook avatar */
-  avatar?: bigint | null;
+  /** Image url for the default webhook avatar */
+  avatar?: string | null;
   /** The reason you are creating this webhook */
   reason?: string;
 }
