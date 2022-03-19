@@ -3,7 +3,7 @@ import { DiscordAttachment } from "../types/discord.ts";
 import { Optionalize } from "../types/shared.ts";
 
 export function transformAttachment(bot: Bot, payload: DiscordAttachment) {
-  return {
+  const attachment = {
     id: bot.transformers.snowflake(payload.id),
     filename: payload.filename,
     contentType: payload.content_type,
@@ -14,6 +14,8 @@ export function transformAttachment(bot: Bot, payload: DiscordAttachment) {
     width: payload.width ?? undefined,
     ephemeral: payload.ephemeral,
   };
+
+  return attachment as Optionalize<typeof attachment>;
 }
 
 export interface Attachment extends Optionalize<ReturnType<typeof transformAttachment>> {}

@@ -5,7 +5,7 @@ import { UserToggles } from "./toggles/user.ts";
 import { Optionalize } from "../types/shared.ts";
 
 export function transformUser(bot: Bot, payload: DiscordUser) {
-  return {
+  const user = {
     id: bot.transformers.snowflake(payload.id || ""),
     username: payload.username,
     discriminator: Number(payload.discriminator),
@@ -17,6 +17,8 @@ export function transformUser(bot: Bot, payload: DiscordUser) {
     publicFlags: payload.public_flags,
     toggles: new UserToggles(payload),
   };
+
+  return user as Optionalize<typeof user>;
 }
 
 export function transformMember(

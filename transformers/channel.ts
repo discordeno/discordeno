@@ -23,7 +23,7 @@ export function transformChannel(
   bot: Bot,
   payload: { channel: DiscordChannel } & { guildId?: bigint },
 ) {
-  return {
+  const channel = {
     // UNTRANSFORMED STUFF HERE
     type: payload.channel.type,
     position: payload.channel.position,
@@ -65,6 +65,8 @@ export function transformChannel(
       ? Date.parse(payload.channel.thread_metadata.create_timestamp)
       : undefined,
   };
+
+  return channel as Optionalize<typeof channel>;
 }
 
 export interface Channel extends Optionalize<ReturnType<typeof transformChannel>> {}

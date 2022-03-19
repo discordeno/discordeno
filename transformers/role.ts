@@ -9,7 +9,7 @@ export function transformRole(
     guildId: bigint;
   },
 ) {
-  return {
+  const role = {
     name: payload.role.name,
     guildId: payload.guildId,
     position: payload.role.position,
@@ -25,6 +25,8 @@ export function transformRole(
     icon: payload.role.icon ? bot.utils.iconHashToBigInt(payload.role.icon) : undefined,
     unicodeEmoji: payload.role.unicode_emoji,
   };
+
+  return role as Optionalize<typeof role>;
 }
 
 export interface Role extends Optionalize<ReturnType<typeof transformRole>> {}

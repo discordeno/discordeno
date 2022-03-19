@@ -3,7 +3,7 @@ import { DiscordEmbed } from "../types/discord.ts";
 import { Optionalize } from "../types/shared.ts";
 
 export function transformEmbed(bot: Bot, payload: DiscordEmbed) {
-  return {
+  const embed = {
     title: payload.title,
     type: payload.type,
     description: payload.description,
@@ -52,6 +52,8 @@ export function transformEmbed(bot: Bot, payload: DiscordEmbed) {
       : undefined,
     fields: payload.fields,
   };
+
+  return embed as Optionalize<typeof embed>;
 }
 
 export interface Embed extends Optionalize<ReturnType<typeof transformEmbed>> {}
