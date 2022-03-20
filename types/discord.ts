@@ -740,6 +740,8 @@ export interface DiscordChannel {
   member?: DiscordThreadMember;
   /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a application command interaction */
   permissions?: string;
+  /** When a thread is created this will be true on that channel payload for the thread. */
+  newly_created?: boolean;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#presence-update */

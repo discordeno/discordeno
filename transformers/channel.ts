@@ -64,6 +64,7 @@ export function transformChannel(
     createTimestamp: payload.channel.thread_metadata?.create_timestamp
       ? Date.parse(payload.channel.thread_metadata.create_timestamp)
       : undefined,
+    newlyCreated: payload.channel.newly_created,
   };
 
   return channel as Optionalize<typeof channel>;
