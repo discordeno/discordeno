@@ -3,7 +3,7 @@ import { DiscordSticker } from "../types/discord.ts";
 import { Optionalize } from "../types/shared.ts";
 
 export function transformSticker(bot: Bot, payload: DiscordSticker) {
-  return {
+  const sticker = {
     id: bot.utils.snowflakeToBigint(payload.id),
     packId: payload.pack_id ? bot.utils.snowflakeToBigint(payload.pack_id) : undefined,
     name: payload.name,
@@ -16,6 +16,8 @@ export function transformSticker(bot: Bot, payload: DiscordSticker) {
     user: payload.user ? bot.transformers.user(bot, payload.user) : undefined,
     sortValue: payload.sort_value,
   };
+
+  return sticker as Optionalize<typeof sticker>;
 }
 
-export interface Sticker extends Optionalize<ReturnType<typeof transformSticker>> {}
+export interface Sticker extends ReturnType<typeof transformSticker> {}

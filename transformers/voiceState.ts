@@ -3,11 +3,8 @@ import { DiscordVoiceState } from "../types/discord.ts";
 import { VoiceStateToggles } from "./toggles/voice.ts";
 import { Optionalize } from "../types/shared.ts";
 
-export function transformVoiceState(
-  bot: Bot,
-  payload: { voiceState: DiscordVoiceState } & { guildId: bigint },
-) {
-  return {
+export function transformVoiceState(bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) {
+  const voiceState = {
     toggles: new VoiceStateToggles(payload.voiceState),
 
     requestToSpeakTimestamp: payload.voiceState.request_to_speak_timestamp
@@ -20,6 +17,8 @@ export function transformVoiceState(
       (payload.voiceState.guild_id ? bot.transformers.snowflake(payload.voiceState.guild_id) : 0n),
     userId: payload.voiceState.user_id ? bot.transformers.snowflake(payload.voiceState.user_id) : 0n,
   };
+
+  return voiceState as Optionalize<typeof voiceState>;
 }
 
-export interface VoiceState extends Optionalize<ReturnType<typeof transformVoiceState>> {}
+export interface VoiceState extends ReturnType<typeof transformVoiceState> {}

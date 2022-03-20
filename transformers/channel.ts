@@ -19,10 +19,7 @@ export function separateOverwrites(v: bigint) {
   return [Number(unpack64(v, 3)), unpack64(v, 2), unpack64(v, 0), unpack64(v, 1)] as [number, bigint, bigint, bigint];
 }
 
-export function transformChannel(
-  bot: Bot,
-  payload: { channel: DiscordChannel } & { guildId?: bigint },
-) {
+export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }) {
   const channel = {
     // UNTRANSFORMED STUFF HERE
     type: payload.channel.type,
@@ -69,4 +66,4 @@ export function transformChannel(
   return channel as Optionalize<typeof channel>;
 }
 
-export interface Channel extends Optionalize<ReturnType<typeof transformChannel>> {}
+export interface Channel extends ReturnType<typeof transformChannel> {}

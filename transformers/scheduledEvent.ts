@@ -6,7 +6,7 @@ export function transformScheduledEvent(
   bot: Bot,
   payload: DiscordScheduledEvent,
 ) {
-  return {
+  const scheduledEvent = {
     id: bot.transformers.snowflake(payload.id),
     guildId: bot.transformers.snowflake(payload.guild_id),
     channelId: payload.channel_id ? bot.transformers.snowflake(payload.channel_id) : undefined,
@@ -25,6 +25,8 @@ export function transformScheduledEvent(
     location: payload.entity_metadata?.location,
     image: payload.image ? bot.utils.iconHashToBigInt(payload.image) : undefined,
   };
+
+  return scheduledEvent as Optionalize<typeof scheduledEvent>;
 }
 
-export interface ScheduledEvent extends Optionalize<ReturnType<typeof transformScheduledEvent>> {}
+export interface ScheduledEvent extends ReturnType<typeof transformScheduledEvent> {}

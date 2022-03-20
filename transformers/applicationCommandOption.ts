@@ -1,6 +1,7 @@
 import { Bot } from "../bot.ts";
 import { DiscordApplicationCommandOption, DiscordApplicationCommandOptionChoice } from "../types/discord.ts";
 import { ApplicationCommandOptionTypes, ChannelTypes } from "../types/shared.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformApplicationCommandOption(
   bot: Bot,
