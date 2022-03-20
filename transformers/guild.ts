@@ -63,7 +63,7 @@ export function transformGuild(
     banner: payload.guild.banner ? bot.utils.iconHashToBigInt(payload.guild.banner) : undefined,
     splash: payload.guild.splash ? bot.utils.iconHashToBigInt(payload.guild.splash) : undefined,
     channels: new Collection(
-      payload.guild.channels?.map(channel => {
+      payload.guild.channels?.map((channel) => {
         const result = bot.transformers.channel(bot, { channel, guildId });
         return [result.id, result];
       }),
