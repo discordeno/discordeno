@@ -6,7 +6,8 @@ sidebar_position: 3
 
 When an event is fired, Discordeno sends two important things: the `client` instance and the `payload`.
 
-As mentioned in the `Structure` section, the `payload` object does not contain any functions as it's a plain json object.
+As mentioned in the `Structure` section, the `payload` object does not contain any functions as it's a plain json
+object.
 
 In order to take use of our nice built structures, we need to transform the payload into a structure.
 
