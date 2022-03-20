@@ -5,8 +5,6 @@ export interface DiscordenoShard {
   id: number;
   /** The websocket for this shard. */
   ws: WebSocket;
-  /** The amount of milliseconds to wait between heartbeats. */
-  resumeInterval: number;
   /** The session id important for resuming connections. */
   sessionId: string;
   /** The previous sequence number, important for resuming connections. */

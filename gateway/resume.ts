@@ -25,7 +25,6 @@ export function resume(gateway: GatewayManager, shardId: number) {
   gateway.shards.set(shardId, {
     id: shardId,
     ws: socket,
-    resumeInterval: 0,
     sessionId: sessionId,
     previousSequenceNumber: previousSequenceNumber,
     resuming: false,

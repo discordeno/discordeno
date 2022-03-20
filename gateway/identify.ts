@@ -18,7 +18,6 @@ export function identify(gateway: GatewayManager, shardId: number, maxShards: nu
   gateway.shards.set(shardId, {
     id: shardId,
     ws: socket,
-    resumeInterval: 0,
     sessionId: "",
     previousSequenceNumber: 0,
     resuming: false,
