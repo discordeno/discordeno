@@ -1,4 +1,4 @@
-import { Bot, CreateGuildChannel, Channel, separateOverwrites } from "../deps.ts";
+import { Bot, Channel, CreateGuildChannel, separateOverwrites } from "../deps.ts";
 
 /** Create a copy of a channel */
 export async function cloneChannel(

@@ -27,7 +27,7 @@ export function transformMember(
   guildId: bigint,
   userId: bigint,
 ) {
-  return {
+  const member = {
     id: userId,
     guildId,
     nick: payload.nick ?? undefined,
@@ -41,6 +41,8 @@ export function transformMember(
       : undefined,
     toggles: new MemberToggles(payload),
   };
+
+  return member as Optionalize<typeof member>;
 }
 
 export interface Member extends Optionalize<ReturnType<typeof transformMember>> {}
