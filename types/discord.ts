@@ -781,13 +781,14 @@ export interface DiscordWelcomeScreenChannel {
 export interface DiscordStageInstance {
   /** The topic of the Stage instance (1-120 characters) */
   topic: string;
-
   /** The id of this Stage instance */
   id: string;
   /** The guild id of the associated Stage channel */
   guild_id: string;
   /** The id of the associated Stage channel */
   channel_id: string;
+  /** The id of the scheduled event for this Stage instance */
+  guild_scheduled_event_id?: string
 }
 
 export interface DiscordThreadMetadata {
