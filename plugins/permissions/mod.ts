@@ -44,5 +44,6 @@ export function enablePermissionsPlugin(bot: BotWithCache) {
 
 // EXPORT ALL UTIL FUNCTIONS
 export * from "./src/permissions.ts";
+export * from "./src/components.ts";
 // DEFAULT MAKES IT SLIGHTLY EASIER TO USE
 export default enablePermissionsPlugin;

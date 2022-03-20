@@ -1,7 +1,8 @@
-import type { DiscordenoInteractionResponse } from "../../types/discordeno/interactionResponse.ts";
 import type { Bot } from "../../bot.ts";
-import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
-import { Message } from "../../types/messages/message.ts";
+import { Embed } from "../../mod.ts";
+import { DiscordMessage } from "../../types/discord.ts";
+import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
+import { InteractionResponseTypes, MessageComponentTypes } from "../../types/shared.ts";
 
 /**
  * Send a response to a users application command. The command data will have the id and token necessary to respond.
@@ -13,13 +14,8 @@ export async function sendInteractionResponse(
   bot: Bot,
   id: bigint,
   token: string,
-  options: DiscordenoInteractionResponse,
+  options: InteractionResponse,
 ) {
-  // If the user wants this as a private message mark it ephemeral
-  if (options.private) {
-    options.data = { ...options.data, flags: 64 };
-  }
-
   // If no mentions are provided, force disable mentions
   if (!options.data?.allowedMentions) {
     options.data = { ...options.data, allowedMentions: { parse: [] } };
@@ -160,7 +156,7 @@ export async function sendInteractionResponse(
   }
 
   // If its already been executed, we need to send a followup response
-  const result = await bot.rest.runMethod<Message>(
+  const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "post",
     bot.constants.endpoints.WEBHOOK(bot.applicationId, token),
@@ -168,4 +164,44 @@ export async function sendInteractionResponse(
   );
 
   return bot.transformers.message(bot, result);
+}
+
+/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
+export interface InteractionResponse {
+  /** The type of response */
+  type: InteractionResponseTypes;
+  /** An optional response message */
+  data?: InteractionApplicationCommandCallbackData;
+}
+
+/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionapplicationcommandcallbackdata */
+export interface InteractionApplicationCommandCallbackData {
+  /** The message contents (up to 2000 characters) */
+  content?: string;
+  /** true if this is a TTS message */
+  tts?: boolean;
+  /** Embedded `rich` content (up to 6000 characters) */
+  embeds?: Embed[];
+  /** Allowed mentions for the message */
+  allowedMentions?: AllowedMentions;
+  /** The contents of the file being sent */
+  file?: FileContent | FileContent[];
+  /** The customId you want to use for this modal response. */
+  customId?: string;
+  /** The title you want to use for this modal response. */
+  title?: string;
+  /** The components you would like to have sent in this message */
+  components?: MessageComponents;
+  /** message flags combined as a bitfield (only SUPPRESS_EMBEDS and EPHEMERAL can be set) */
+  flags?: number;
+  /** autocomplete choices (max of 25 choices) */
+  choices?: ApplicationCommandOptionChoice[];
+}
+
+/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptionchoice */
+export interface ApplicationCommandOptionChoice {
+  /** 1-100 character choice name */
+  name: string;
+  /** Value of the choice, up to 100 characters if string */
+  value: string | number;
 }

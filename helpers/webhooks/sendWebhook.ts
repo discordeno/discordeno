@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
-import type { Message } from "../../types/messages/message.ts";
-import type { ExecuteWebhook } from "../../types/webhooks/executeWebhook.ts";
+import { Embed } from "../../transformers/embed.ts";
+import { DiscordMessage } from "../../types/discord.ts";
+import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
 
 /** Send a webhook with webhook Id and webhook token */
 export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: string, options: ExecuteWebhook) {
@@ -13,7 +14,7 @@ export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: str
     }
     : { parse: [] };
 
-  const result = await bot.rest.runMethod<Message>(
+  const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "post",
     `${bot.constants.endpoints.WEBHOOK(webhookId, webhookToken)}?wait=${options.wait ?? false}${
@@ -35,4 +36,28 @@ export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: str
   if (!options.wait) return;
 
   return bot.transformers.message(bot, result);
+}
+
+/** https://discord.com/developers/docs/resources/webhook#execute-webhook */
+export interface ExecuteWebhook {
+  /** Waits for server confirmation of message send before response, and returns the created message body (defaults to `false`; when `false` a message that is not saved does not return an error) */
+  wait?: boolean;
+  /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. */
+  threadId?: bigint;
+  /** The message contents (up to 2000 characters) */
+  content?: string;
+  /** Override the default username of the webhook */
+  username?: string;
+  /** Override the default avatar of the webhook */
+  avatarUrl?: string;
+  /** True if this is a TTS message */
+  tts?: boolean;
+  /** The contents of the file being sent */
+  file?: FileContent | FileContent[];
+  /** Embedded `rich` content */
+  embeds?: Embed[];
+  /** Allowed mentions for the message */
+  allowedMentions?: AllowedMentions;
+  /** the components to include with the message */
+  components?: MessageComponents;
 }

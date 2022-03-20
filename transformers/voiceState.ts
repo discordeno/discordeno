@@ -1,19 +1,11 @@
-import type { VoiceState } from "../types/voice/voiceState.ts";
 import { Bot } from "../bot.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordVoiceState } from "../types/discord.ts";
+import { VoiceStateToggles } from "./toggles/voice.ts";
+import { Optionalize } from "../types/shared.ts";
 
-export function transformVoiceState(
-  bot: Bot,
-  payload: { voiceState: SnakeCasedPropertiesDeep<VoiceState> } & { guildId: bigint },
-): DiscordenoVoiceState {
-  return {
-    bitfield: (payload.voiceState.deaf ? 1n : 0n) |
-      (payload.voiceState.mute ? 2n : 0n) |
-      (payload.voiceState.self_deaf ? 4n : 0n) |
-      (payload.voiceState.self_mute ? 8n : 0n) |
-      (payload.voiceState.self_stream ? 16n : 0n) |
-      (payload.voiceState.self_video ? 32n : 0n) |
-      (payload.voiceState.suppress ? 64n : 0n),
+export function transformVoiceState(bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) {
+  const voiceState = {
+    toggles: new VoiceStateToggles(payload.voiceState),
 
     requestToSpeakTimestamp: payload.voiceState.request_to_speak_timestamp
       ? Date.parse(payload.voiceState.request_to_speak_timestamp)
@@ -25,19 +17,8 @@ export function transformVoiceState(
       (payload.voiceState.guild_id ? bot.transformers.snowflake(payload.voiceState.guild_id) : 0n),
     userId: payload.voiceState.user_id ? bot.transformers.snowflake(payload.voiceState.user_id) : 0n,
   };
+
+  return voiceState as Optionalize<typeof voiceState>;
 }
 
-export interface DiscordenoVoiceState {
-  /** The guild id */
-  guildId: bigint;
-  /** The channel id this user is connected to */
-  channelId?: bigint;
-  /** The user id this voice state is for */
-  userId: bigint;
-  /** Holds all the boolean toggles. */
-  bitfield: bigint;
-  /** The time at which the user requested to speak */
-  requestToSpeakTimestamp?: number;
-  /** The unique session id */
-  sessionId: string;
-}
+export interface VoiceState extends ReturnType<typeof transformVoiceState> {}

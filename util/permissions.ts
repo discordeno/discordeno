@@ -1,5 +1,4 @@
-import { BitwisePermissionFlags } from "../types/permissions/bitwisePermissionFlags.ts";
-import { PermissionStrings } from "../types/permissions/permissionStrings.ts";
+import { BitwisePermissionFlags, PermissionStrings } from "../types/shared.ts";
 
 /** This function converts a bitwise string to permission strings */
 export function calculatePermissions(permissionBits: bigint) {

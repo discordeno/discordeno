@@ -1,94 +1,44 @@
 import type { Bot } from "../bot.ts";
-import type { GuildMember } from "../types/members/guildMember.ts";
-import type { PremiumTypes } from "../types/users/premiumTypes.ts";
-import type { User } from "../types/users/user.ts";
-import type { UserFlags } from "../types/users/userFlags.ts";
-import type { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordMember, DiscordUser } from "../types/discord.ts";
+import { MemberToggles } from "./toggles/member.ts";
+import { UserToggles } from "./toggles/user.ts";
+import { Optionalize } from "../types/shared.ts";
 
-export interface DiscordenoUser {
-  id: bigint;
-  username: string;
-  discriminator: number;
-  avatar?: bigint;
-  bot?: boolean;
-  system?: boolean;
-  locale?: string;
-  verified?: boolean;
-  email?: string | null;
-  flags?: UserFlags;
-  mfaEnabled?: boolean;
-  premiumType?: PremiumTypes;
-  publicFlags?: UserFlags;
-}
-
-export function transformUser(bot: Bot, payload: SnakeCasedPropertiesDeep<User>): DiscordenoUser {
-  return {
+export function transformUser(bot: Bot, payload: DiscordUser) {
+  const user = {
     id: bot.transformers.snowflake(payload.id || ""),
     username: payload.username,
     discriminator: Number(payload.discriminator),
     avatar: payload.avatar ? bot.utils.iconHashToBigInt(payload.avatar) : undefined,
-    bot: payload.bot,
-    system: payload.system,
     locale: payload.locale,
-    verified: payload.verified,
-    email: payload.email,
+    email: payload.email ?? undefined,
     flags: payload.flags,
-    mfaEnabled: payload.mfa_enabled,
     premiumType: payload.premium_type,
     publicFlags: payload.public_flags,
+    toggles: new UserToggles(payload),
   };
+
+  return user as Optionalize<typeof user>;
 }
 
-export function transformMember(
-  bot: Bot,
-  payload: SnakeCasedPropertiesDeep<GuildMember>,
-  guildId: bigint,
-  userId: bigint,
-): DiscordenoMember {
-  return {
+export function transformMember(bot: Bot, payload: DiscordMember, guildId: bigint, userId: bigint) {
+  const member = {
     id: userId,
     guildId,
     nick: payload.nick ?? undefined,
     roles: payload.roles.map((id) => BigInt(id)),
     joinedAt: Date.parse(payload.joined_at),
     premiumSince: payload.premium_since ? Date.parse(payload.premium_since) : undefined,
-    deaf: payload.deaf,
-    mute: payload.mute,
-    pending: payload.pending,
-    cachedAt: Date.now(),
     avatar: payload.avatar ? bot.utils.iconHashToBigInt(payload.avatar) : undefined,
     permissions: payload.permissions ? bot.transformers.snowflake(payload.permissions) : undefined,
     communicationDisabledUntil: payload.communication_disabled_until
       ? Date.parse(payload.communication_disabled_until)
       : undefined,
+    toggles: new MemberToggles(payload),
   };
+
+  return member as Optionalize<typeof member>;
 }
 
-export interface DiscordenoMember {
-  /** The user's id */
-  id: bigint;
-  /** When the member has been cached the last time. */
-  cachedAt: number;
-  /** The guild id where this member exists */
-  guildId: bigint;
-  /** The nickname for this member in this server */
-  nick?: string;
-  /** The role ids this user has */
-  roles: bigint[];
-  /** When this member joined */
-  joinedAt: number;
-  /** When this member began boosting this server if this member is boosting the server. */
-  premiumSince?: number;
-  /** Whether or not the member is deafened. */
-  deaf?: boolean;
-  /** Whether or not the member is muted. */
-  mute?: boolean;
-  /** Whether or not this member is pending in server verification. */
-  pending?: boolean;
-  /** The members avatar for this server. */
-  avatar?: bigint;
-  /** The permissions this member has in the guild. Only present on interaction events. */
-  permissions?: bigint;
-  /** when the user's timeout will expire and the user will be able to communicate in the guild again, undefined or a time in the past if the user is not timed out */
-  communicationDisabledUntil?: number;
-}
+export interface Member extends ReturnType<typeof transformMember> {}
+export interface User extends ReturnType<typeof transformUser> {}

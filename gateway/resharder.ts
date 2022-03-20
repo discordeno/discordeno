@@ -1,6 +1,5 @@
-import { transformGatewayBot } from "../transformers/gatewayBot.ts";
-import { GetGatewayBot } from "../types/gateway/getGatewayBot.ts";
-import { DiscordReady } from "../types/gateway/ready.ts";
+import { GetGatewayBot, transformGatewayBot } from "../transformers/gatewayBot.ts";
+import { DiscordReady } from "../types/discord.ts";
 import { createGatewayManager, GatewayManager } from "./gateway_manager.ts";
 
 /** The handler to automatically reshard when necessary. */
@@ -8,13 +7,13 @@ export async function resharder(
   oldGateway: GatewayManager,
   results: GetGatewayBot,
 ) {
-  oldGateway.debug("[Resharding] Starting the reshard process.");
+  oldGateway.debug("GW DEBUG", "[Resharding] Starting the reshard process.");
 
   const gateway = createGatewayManager({
     ...oldGateway,
   });
 
-  for (const key of Object.keys(oldGateway)) {
+  for (const [key, value] of Object.entries(oldGateway)) {
     if (key === "handleDiscordPayload") {
       gateway.handleDiscordPayload = async function (_, data, shardId) {
         if (data.t === "READY") {
@@ -25,8 +24,9 @@ export async function resharder(
       continue;
     }
 
-    // USE ANY CUSTOMIZED HANDLERS FROM OLD GATEWAY
-    if (typeof key === "function") gateway[key] = oldGateway[key];
+    // USE ANY CUSTOMIZED OPTIONS FROM OLD GATEWAY
+    // @ts-ignore TODO: fix this dynamica assignment
+    gateway[key] = oldGateway[key as keyof typeof oldGateway];
   }
 
   // Begin resharding
@@ -39,12 +39,9 @@ export async function resharder(
   gateway.sessionStartLimitResetAfter = results.sessionStartLimit.resetAfter;
   gateway.maxConcurrency = results.sessionStartLimit.maxConcurrency;
   // If more than 100K servers, begin switching to 16x sharding
-  if (gateway.maxShards > 60 && gateway.useOptimalLargeBotSharding) {
-    gateway.debug("[Resharding] Using optimal large bot sharding solution.");
-    gateway.maxShards = Math.ceil(
-      gateway.maxShards /
-        (results.sessionStartLimit.maxConcurrency === 1 ? 16 : results.sessionStartLimit.maxConcurrency),
-    );
+  if (gateway.useOptimalLargeBotSharding) {
+    gateway.debug("GW DEBUG", "[Resharding] Using optimal large bot sharding solution.");
+    gateway.maxShards = gateway.calculateMaxShards(gateway.maxShards, results.sessionStartLimit.maxConcurrency);
   }
 
   gateway.spawnShards(gateway, gateway.firstShardId);
@@ -69,7 +66,7 @@ export async function resharder(
       clearInterval(timer);
       await gateway.resharding.editGuildShardIds();
       await gateway.resharding.closeOldShards(oldGateway);
-      gateway.debug("[Resharding] Complete.");
+      gateway.debug("GW DEBUG", "[Resharding] Complete.");
       resolve(gateway);
     }, 30000);
   }) as Promise<GatewayManager>;
@@ -116,7 +113,7 @@ export async function resharderCloseOldShards(oldGateway: GatewayManager) {
 
 /** Handler that by default will check to see if resharding should occur. Can be overriden if you have multiple servers and you want to communicate through redis pubsub or whatever you prefer. */
 export async function startReshardingChecks(gateway: GatewayManager) {
-  gateway.debug("[Resharding] Checking if resharding is needed.");
+  gateway.debug("GW DEBUG", "[Resharding] Checking if resharding is needed.");
 
   // TODO: is it possible to route this to REST?
   const results = (await fetch(`https://discord.com/api/gateway/bot`, {

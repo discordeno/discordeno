@@ -27,6 +27,7 @@ import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOve
 import { editChannelTests } from "./helpers/channels/editChannel.ts";
 import { CACHED_COMMUNITY_GUILD_ID, sanitizeMode } from "./constants.ts";
 
+console.log("[Tests] Starting test preparation");
 dotenv({ export: true, path: `${Deno.cwd()}/.env` });
 
 let TOKEN = Deno.env.get("DISCORD_TOKEN");
@@ -289,7 +290,7 @@ Deno.test({
 });
 
 // channels
-import "./channels/connectToVoice.ts";
+// import "./channels/connectToVoice.ts";
 import "./channels/createChannel.ts";
 import "./channels/deleteChannel.ts";
 import "./channels/getChannel.ts";
@@ -318,7 +319,7 @@ import "./invite/createInvite.ts";
 
 // members
 import "./members/avatarlUrl.ts";
-import "./members/ban.ts";
+// import "./members/ban.ts";
 import "./members/editBotNickname.ts";
 import "./members/getDmChannel.ts";
 import "./members/getMember.ts";
@@ -334,7 +335,7 @@ import "./misc/getUser.ts";
 import "./misc/snowflake.ts";
 import "./misc/typing.ts";
 import "./misc/validateDiscovery.ts";
-import "./misc/editBotStatus.ts";
+// import "./misc/editBotStatus.ts";
 
 // role
 import "./role/addRole.ts";
@@ -365,5 +366,5 @@ import "./webhooks/deleteWebhookWithToken.ts";
 // TESTS THAT DON'T REQUIRE API CONNECTION
 import "./local.ts";
 
-// // BENCHMARK TESTING
-import "./benchmark.ts";
+// BENCHMARK TESTING
+// import "./benchmark.ts";

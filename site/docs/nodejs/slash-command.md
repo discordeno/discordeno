@@ -32,7 +32,7 @@ This is just very simple example, you can also add sub commands, select options 
 
 ## Handling Slash Commands
 
-Discord sends a WebSocket Event, when a user runs a slash command. You can listen to this event by add the
+Discord sends a WebSocket Event when a user runs a slash command. You can listen to this event by adding the
 `interactionCreate` function in the client.
 
 ```js

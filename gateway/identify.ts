@@ -1,4 +1,4 @@
-import { GatewayOpcodes } from "../types/codes/gatewayOpcodes.ts";
+import { GatewayOpcodes } from "../types/shared.ts";
 import { GatewayManager } from "./gateway_manager.ts";
 
 export function identify(gateway: GatewayManager, shardId: number, maxShards: number) {
@@ -18,7 +18,6 @@ export function identify(gateway: GatewayManager, shardId: number, maxShards: nu
   gateway.shards.set(shardId, {
     id: shardId,
     ws: socket,
-    resumeInterval: 0,
     sessionId: "",
     previousSequenceNumber: 0,
     resuming: false,

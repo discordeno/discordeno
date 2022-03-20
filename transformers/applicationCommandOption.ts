@@ -1,14 +1,12 @@
 import { Bot } from "../bot.ts";
-import { ChannelTypes } from "../types/channels/channelTypes.ts";
-import { ApplicationCommandOption } from "../types/interactions/commands/applicationCommandOption.ts";
-import { ApplicationCommandOptionChoice } from "../types/interactions/commands/applicationCommandOptionChoice.ts";
-import { ApplicationCommandOptionTypes } from "../types/interactions/commands/applicationCommandOptionTypes.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordApplicationCommandOption, DiscordApplicationCommandOptionChoice } from "../types/discord.ts";
+import { ApplicationCommandOptionTypes, ChannelTypes } from "../types/shared.ts";
+import { Optionalize } from "../types/shared.ts";
 
 export function transformApplicationCommandOption(
   bot: Bot,
-  payload: SnakeCasedPropertiesDeep<ApplicationCommandOption>,
-): DiscordenoApplicationCommandOption {
+  payload: DiscordApplicationCommandOption,
+): ApplicationCommandOption {
   return {
     type: payload.type,
     name: payload.name,
@@ -24,7 +22,9 @@ export function transformApplicationCommandOption(
   };
 }
 
-export interface DiscordenoApplicationCommandOption {
+// THIS TRANSFORMER HAS A CIRCULAR REFERENCE TO CALL ITSELF FOR OPTIONS SO AN AUTOMATED TYPE CAN NOT BE CREATED!
+
+export interface ApplicationCommandOption {
   /** Value of Application Command Option Type */
   type: ApplicationCommandOptionTypes;
   /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
@@ -32,12 +32,12 @@ export interface DiscordenoApplicationCommandOption {
   /** 1-100 character description */
   description: string;
   /** If the parameter is required or optional--default `false` */
-  required?: boolean;
+  required: boolean;
   /** Choices for `string` and `int` types for the user to pick from */
-  choices?: ApplicationCommandOptionChoice[];
+  choices?: DiscordApplicationCommandOptionChoice[];
   /** If the option is a subcommand or subcommand group type, this nested options will be the parameters */
   options?: ApplicationCommandOption[];
-  /** Whether this option should make autocomplete interactions. */
+  /** if autocomplete interactions are enabled for this `String`, `Integer`, or `Number` type option */
   autocomplete?: boolean;
   /** If the option is a channel type, the channels shown will be restricted to these types */
   channelTypes?: ChannelTypes[];

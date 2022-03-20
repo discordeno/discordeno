@@ -1,19 +1,17 @@
 import { Bot } from "../bot.ts";
-import { PresenceUpdate } from "../types/activity/presenceUpdate.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { DiscordenoActivity } from "./activity.ts";
-import { DiscordenoUser } from "./member.ts";
+import { DiscordPresenceUpdate } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
-export const statusTypes = {
+export const statusTypes = Object.freeze({
   online: 0,
   dnd: 1,
   idle: 2,
   invisible: 3,
   offline: 4,
-} as const;
+});
 
-export function transformPresence(bot: Bot, payload: SnakeCasedPropertiesDeep<PresenceUpdate>): DiscordenoPresence {
-  return {
+export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate) {
+  const presence = {
     user: bot.transformers.user(bot, payload.user),
     guildId: bot.transformers.snowflake(payload.guild_id),
     status: statusTypes[payload.status],
@@ -22,21 +20,9 @@ export function transformPresence(bot: Bot, payload: SnakeCasedPropertiesDeep<Pr
     mobile: payload.client_status.mobile,
     web: payload.client_status.web,
   };
+
+  return presence as Optionalize<typeof presence>;
 }
 
-export interface DiscordenoPresence {
-  /** The user presence is being updated for */
-  user: DiscordenoUser;
-  /** id of the guild */
-  guildId: bigint;
-  /** Either online: 0, dnd: 1, idle: 2, invisible: 3, offline: 4 */
-  status: 0 | 1 | 2 | 3 | 4;
-  /** User's current activities */
-  activities: DiscordenoActivity[];
-  /** The user's status set for an active desktop (Windows, Linux, Mac) application session */
-  desktop?: string;
-  /** The user's status set for an active mobile (iOS, Android) application session */
-  mobile?: string;
-  /** The user's status set for an active web (browser, bot account) application session */
-  web?: string;
-}
+export interface PresenceUpdate extends ReturnType<typeof transformPresence> {}
+export type StatusTypes = keyof typeof statusTypes;

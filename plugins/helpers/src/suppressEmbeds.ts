@@ -1,4 +1,4 @@
-import { Bot, Message } from "../deps.ts";
+import { Bot, DiscordMessage } from "../deps.ts";
 
 /** Suppress all the embeds in this message */
 export async function suppressEmbeds(
@@ -6,7 +6,7 @@ export async function suppressEmbeds(
   channelId: bigint,
   messageId: bigint,
 ) {
-  const result = await bot.rest.runMethod<Message>(
+  const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "patch",
     bot.constants.endpoints.CHANNEL_MESSAGE(channelId, messageId),

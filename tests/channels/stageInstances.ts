@@ -1,4 +1,4 @@
-import { ChannelTypes } from "../../types/channels/channelTypes.ts";
+import { ChannelTypes } from "../../types/shared.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../constants.ts";
 import { assertExists, assertNotEquals } from "../deps.ts";
 import { bot } from "../mod.ts";

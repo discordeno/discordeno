@@ -1,8 +1,8 @@
 import { Bot } from "../bot.ts";
 
 export class Collection<K, V> extends Map<K, V> {
-  maxSize?: number;
-  sweeper?: CollectionSweeper<K, V> & { intervalId?: number };
+  maxSize: number | undefined;
+  sweeper: CollectionSweeper<K, V> & { intervalId?: number } | undefined;
 
   constructor(entries?: (readonly (readonly [K, V])[] | null) | Map<K, V>, options?: CollectionOptions<K, V>) {
     super(entries ?? []);

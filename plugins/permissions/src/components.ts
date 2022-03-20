@@ -1,4 +1,4 @@
-import { Bot, ButtonStyles, MessageComponents, MessageComponentTypes } from "../deps.ts";
+import { Bot, ButtonStyles, Emoji, MessageComponents, MessageComponentTypes } from "../deps.ts";
 
 export function validateComponents(bot: Bot, components: MessageComponents) {
   if (!components?.length) return;
@@ -148,17 +148,25 @@ function makeEmojiFromString(
   emoji?:
     | string
     | {
-      id?: string | undefined;
+      id?: string | bigint | undefined;
       name?: string | undefined;
       animated?: boolean | undefined;
     },
 ) {
-  if (typeof emoji !== "string") return emoji;
+  if (!emoji) return;
+
+  if (typeof emoji !== "string") {
+    return {
+      id: emoji.id ? BigInt(emoji.id) : undefined,
+      name: emoji.name,
+      animated: emoji.animated,
+    };
+  }
 
   // A snowflake id was provided
   if (/^[0-9]+$/.test(emoji)) {
     emoji = {
-      id: emoji,
+      id: BigInt(emoji),
     };
   } else {
     // A unicode emoji was provided
@@ -167,5 +175,5 @@ function makeEmojiFromString(
     };
   }
 
-  return emoji;
+  return emoji as Emoji;
 }

@@ -1,5 +1,3 @@
-import type { ImageFormat } from "../../types/misc/imageFormat.ts";
-import type { ImageSize } from "../../types/misc/imageSize.ts";
 import type { Bot } from "../../bot.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */
@@ -24,3 +22,12 @@ export function avatarURL(
     )
     : bot.constants.endpoints.USER_DEFAULT_AVATAR(Number(discriminator) % 5);
 }
+
+/**
+ * https://discord.com/developers/docs/reference#image-formatting
+ * json is only for stickers
+ */
+export type ImageFormat = "jpg" | "jpeg" | "png" | "webp" | "gif" | "json";
+
+/** https://discord.com/developers/docs/reference#image-formatting */
+export type ImageSize = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048;

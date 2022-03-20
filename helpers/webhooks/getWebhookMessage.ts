@@ -1,5 +1,5 @@
-import type { Message } from "../../types/messages/message.ts";
 import type { Bot } from "../../bot.ts";
+import { DiscordMessage } from "../../types/discord.ts";
 
 export interface GetWebhookMessageOptions {
   threadId: bigint;
@@ -20,7 +20,7 @@ export async function getWebhookMessage(
     url += `?thread_id=${options.threadId}`;
   }
 
-  const result = await bot.rest.runMethod<Message>(bot.rest, "get", url);
+  const result = await bot.rest.runMethod<DiscordMessage>(bot.rest, "get", url);
 
   return bot.transformers.message(bot, result);
 }

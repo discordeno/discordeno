@@ -1,13 +1,11 @@
 import { Bot } from "../bot.ts";
-import { Team } from "../types/teams/team.ts";
-import { TeamMembershipStates } from "../types/teams/teamMembershipStates.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { DiscordenoUser } from "./member.ts";
+import { DiscordTeam } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
-export function transformTeam(bot: Bot, payload: SnakeCasedPropertiesDeep<Team>): DiscordenoTeam {
+export function transformTeam(bot: Bot, payload: DiscordTeam) {
   const id = bot.transformers.snowflake(payload.id);
 
-  return {
+  const team = {
     name: payload.name,
 
     id,
@@ -15,33 +13,13 @@ export function transformTeam(bot: Bot, payload: SnakeCasedPropertiesDeep<Team>)
     ownerUserId: bot.transformers.snowflake(payload.owner_user_id),
     members: payload.members.map((member) => ({
       membershipState: member.membership_state,
-      // TODO: think about this seems useless to add ["*"] to everything
       permissions: member.permissions,
-      // TODO: think about this seems useless to add another id here when its also on the one above
       teamId: id,
       user: bot.transformers.user(bot, member.user),
     })),
   };
+
+  return team as Optionalize<typeof team>;
 }
 
-export interface DiscordenoTeam {
-  /** A hash of the image of the team's icon */
-  icon?: bigint;
-  /** The unique id of the team */
-  id: bigint;
-  /** The members of the team */
-  members: {
-    /** The user's membership state on the team */
-    membershipState: TeamMembershipStates;
-    /** Will always be `["*"]` */
-    permissions: "*"[];
-    /** The id of the parent team of which they are a member */
-    teamId: bigint;
-    /** The avatar, discriminator, id, and username of the user */
-    user: Partial<DiscordenoUser>;
-  }[];
-  /** The name of the team */
-  name: string;
-  /** The user id of the current team owner */
-  ownerUserId: bigint;
-}
+export interface Team extends ReturnType<typeof transformTeam> {}

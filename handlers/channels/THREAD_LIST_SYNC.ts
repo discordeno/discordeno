@@ -1,10 +1,8 @@
 import { Bot } from "../../bot.ts";
-import { ThreadListSync } from "../../types/channels/threads/threadListSync.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import { DiscordGatewayPayload, DiscordThreadListSync } from "../../types/discord.ts";
 
 export async function handleThreadListSync(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as SnakeCasedPropertiesDeep<ThreadListSync>;
+  const payload = data.d as DiscordThreadListSync;
 
   const guildId = bot.transformers.snowflake(payload.guild_id);
   return {

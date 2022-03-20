@@ -1,10 +1,8 @@
 import type { Bot } from "../../../bot.ts";
-import type { DiscordGatewayPayload } from "../../../types/gateway/gatewayPayload.ts";
-import { ScheduledEventUserAdd } from "../../../types/guilds/scheduledEvents.ts";
-import { SnakeCasedPropertiesDeep } from "../../../types/util.ts";
+import { DiscordGatewayPayload, DiscordScheduledEventUserAdd } from "../../../types/discord.ts";
 
 export function handleGuildScheduledEventUserAdd(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as SnakeCasedPropertiesDeep<ScheduledEventUserAdd>;
+  const payload = data.d as DiscordScheduledEventUserAdd;
 
   return bot.events.scheduledEventUserAdd(bot, {
     guildScheduledEventId: bot.transformers.snowflake(payload.guild_scheduled_event_id),

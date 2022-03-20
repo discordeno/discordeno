@@ -1,11 +1,10 @@
 import type { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import type { Guild } from "../../types/guilds/guild.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import type { Guild } from "../../transformers/guild.ts";
+import { DiscordGatewayPayload, DiscordGuild } from "../../types/discord.ts";
 
 export function handleGuildLoaded(bot: Bot, data: DiscordGatewayPayload, shardId: number) {
-  const payload = data.d as SnakeCasedPropertiesDeep<Guild>;
+  const payload = data.d as DiscordGuild;
 
   const guild = bot.transformers.guild(bot, { guild: payload, shardId });
-  bot.events.guildLoaded(bot, guild);
+  bot.events.guildLoaded(bot, guild as Guild);
 }

@@ -1,4 +1,3 @@
-import { GatewayIntents, GatewayPayload, StatusUpdate } from "../types/mod.ts";
 import { Collection } from "../util/collection.ts";
 import { safeRequestsPerShard } from "./safeRequestsPerShard.ts";
 import { closeWS } from "./closeWs.ts";
@@ -21,6 +20,10 @@ import { prepareBuckets, spawnShards } from "./spawnShards.ts";
 import { stopGateway } from "./stopGateway.ts";
 import { tellWorkerToIdentify } from "./tellWorkerToIdentify.ts";
 import { DiscordenoShard } from "./shard.ts";
+import { GatewayIntents } from "../types/shared.ts";
+import { StatusUpdate } from "../helpers/misc/editBotStatus.ts";
+import { DiscordGatewayPayload } from "../types/discord.ts";
+import { calculateMaxShards } from "./calculateMaxShards.ts";
 
 /** Create a new Gateway Manager.
  *
@@ -60,6 +63,7 @@ export function createGatewayManager(
         ? options.intents.reduce((bits, next) => (bits |= GatewayIntents[next]), 0)
         : options.intents) ?? 0,
     shard: options.shard ?? [0, options.shardsRecommended ?? 1],
+    presence: options.presence,
     urlWSS: options.urlWSS ?? "wss://gateway.discord.gg/?v=9&encoding=json",
     shardsRecommended: options.shardsRecommended ?? 1,
     sessionStartLimitTotal: options.sessionStartLimitTotal ?? 1000,
@@ -94,6 +98,7 @@ export function createGatewayManager(
     resume: options.resume ?? resume,
     safeRequestsPerShard: options.safeRequestsPerShard ?? safeRequestsPerShard,
     handleDiscordPayload: options.handleDiscordPayload,
+    calculateMaxShards: options.calculateMaxShards ?? calculateMaxShards,
   };
 }
 
@@ -185,11 +190,11 @@ export interface GatewayManager {
   /** Begins heartbeating of the shard to keep it alive. */
   heartbeat: typeof heartbeat;
   /** Sends the discord payload to another server. */
-  handleDiscordPayload: (gateway: GatewayManager, data: GatewayPayload, shardId: number) => any;
+  handleDiscordPayload: (gateway: GatewayManager, data: DiscordGatewayPayload, shardId: number) => any;
   /** Tell the worker to begin identifying this shard  */
   tellWorkerToIdentify: typeof tellWorkerToIdentify;
   /** Handle the different logs. Used for debugging. */
-  debug: (text: string, ...args: any[]) => unknown;
+  debug: (text: GatewayDebugEvents, ...args: any[]) => unknown;
   /** The methods related to resharding. */
   resharding: {
     /** Handles resharding the bot when necessary. */
@@ -219,4 +224,24 @@ export interface GatewayManager {
   resume: typeof resume;
   /** Calculates the number of requests in a shard that are safe to be used. */
   safeRequestsPerShard: typeof safeRequestsPerShard;
+  /** Calculates the number of shards to use based on the max concurrency */
+  calculateMaxShards: typeof calculateMaxShards;
 }
+
+export type GatewayDebugEvents =
+  | "GW ERROR"
+  | "GW CLOSED"
+  | "GW CLOSED_RECONNECT"
+  | "GW RAW"
+  | "GW RECONNECT"
+  | "GW INVALID_SESSION"
+  | "GW RESUMED"
+  | "GW RESUMING"
+  | "GW IDENTIFYING"
+  | "GW RAW_SEND"
+  | "GW MAX REQUESTS"
+  | "GW DEBUG"
+  | "GW HEARTBEATING"
+  | "GW HEARTBEATING_STARTED"
+  | "GW HEARTBEATING_DETAILS"
+  | "GW HEARTBEATING_CLOSED";

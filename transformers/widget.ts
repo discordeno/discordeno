@@ -1,17 +1,29 @@
 import { Bot } from "../bot.ts";
-import { GuildWidget } from "../types/guilds/guildWidget.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordGuildWidget } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
-export function transformWidget(bot: Bot, payload: SnakeCasedPropertiesDeep<GuildWidget>): DiscordenoWidget {
-  return {
-    channelId: payload.channel_id ? bot.transformers.snowflake(payload.channel_id) : undefined,
-    enabled: payload.enabled,
+export function transformWidget(bot: Bot, payload: DiscordGuildWidget) {
+  const widget = {
+    id: bot.transformers.snowflake(payload.id),
+    name: payload.name,
+    instant_invite: payload.instant_invite,
+    channels: payload.channels.map((channel) => ({
+      id: bot.transformers.snowflake(channel.id),
+      name: channel.name,
+      position: channel.position,
+    })),
+    members: payload.members.map((member) => ({
+      id: bot.transformers.snowflake(member.id),
+      username: member.username,
+      discriminator: Number(member.discriminator),
+      avatar: member.avatar ? bot.utils.iconHashToBigInt(member.avatar) : undefined,
+      status: member.status,
+      avatarUrl: member.avatar_url,
+    })),
+    presenceCount: payload.presence_count,
   };
+
+  return widget as Optionalize<typeof widget>;
 }
 
-export interface DiscordenoWidget {
-  /** Whether the widget is enabled */
-  enabled: boolean;
-  /** The widget channel id */
-  channelId?: bigint;
-}
+export interface GuildWidget extends ReturnType<typeof transformWidget> {}

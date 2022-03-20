@@ -1,8 +1,9 @@
 import type { Bot } from "../../bot.ts";
-import { GatewayOpcodes } from "../../types/codes/gatewayOpcodes.ts";
-import type { StatusUpdate } from "../../types/gateway/statusUpdate.ts";
+import { Activity } from "../../transformers/activity.ts";
+import { StatusTypes } from "../../transformers/presence.ts";
+import { GatewayOpcodes } from "../../types/shared.ts";
 
-export function editBotStatus(bot: Bot, data: Omit<StatusUpdate, "afk" | "since">) {
+export function editBotStatus(bot: Bot, data: StatusUpdate) {
   bot.gateway.shards.forEach((shard) => {
     bot.events.debug(`Running forEach loop in editBotStatus function.`);
 
@@ -16,13 +17,13 @@ export function editBotStatus(bot: Bot, data: Omit<StatusUpdate, "afk" | "since"
           type: activity.type,
           url: activity.url,
           created_at: activity.createdAt,
-          timestamps: activity.timestamps
+          timestamps: activity.startedAt || activity.endedAt
             ? {
-              start: activity.timestamps.start,
-              end: activity.timestamps.end,
+              start: activity.startedAt,
+              end: activity.endedAt,
             }
             : undefined,
-          applicationId: activity.applicationId?.toString(),
+          application_id: activity.applicationId?.toString(),
           details: activity.details,
           state: activity.state,
           emoji: activity.emoji
@@ -32,21 +33,27 @@ export function editBotStatus(bot: Bot, data: Omit<StatusUpdate, "afk" | "since"
               animated: activity.emoji.animated,
             }
             : undefined,
-          party: activity.party
+          party: activity.partyId
             ? {
-              id: activity.party.id?.toString(),
-              size: activity.party.size,
+              id: activity.partyId.toString(),
+              size: activity.partyMaxSize,
             }
             : undefined,
-          assets: activity.assets
+          assets: activity.largeImage || activity.largeText || activity.smallImage || activity.smallText
             ? {
-              large_image: activity.assets.largeImage,
-              large_text: activity.assets.largeText,
-              small_image: activity.assets.smallImage,
-              small_text: activity.assets.smallText,
+              large_image: activity.largeImage,
+              large_text: activity.largeText,
+              small_image: activity.smallImage,
+              small_text: activity.smallText,
             }
             : undefined,
-          secrets: activity.secrets,
+          secrets: activity.join || activity.spectate || activity.match
+            ? {
+              join: activity.join,
+              spectate: activity.spectate,
+              match: activity.match,
+            }
+            : undefined,
           instance: activity.instance,
           flags: activity.flags,
           buttons: activity.buttons,
@@ -55,4 +62,16 @@ export function editBotStatus(bot: Bot, data: Omit<StatusUpdate, "afk" | "since"
       },
     });
   });
+}
+
+/** https://discord.com/developers/docs/topics/gateway#update-status */
+export interface StatusUpdate {
+  // /** Unix time (in milliseconds) of when the client went idle, or null if the client is not idle */
+  // since: number | null;
+  /** The user's activities */
+  activities: Activity[];
+  /** The user's new status */
+  status: StatusTypes;
+  // /** Whether or not the client is afk */
+  // afk: boolean;
 }

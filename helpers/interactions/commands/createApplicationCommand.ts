@@ -1,7 +1,6 @@
-import type { ApplicationCommand } from "../../../types/interactions/commands/applicationCommand.ts";
-import type { CreateApplicationCommand } from "../../../types/interactions/commands/createGlobalApplicationCommand.ts";
 import type { Bot } from "../../../bot.ts";
-import { ApplicationCommandOption } from "../../../types/interactions/commands/applicationCommandOption.ts";
+import { ApplicationCommandOption, ApplicationCommandTypes } from "../../../mod.ts";
+import { DiscordApplicationCommand } from "../../../types/discord.ts";
 
 /**
  * There are two kinds of Application Commands: global commands and guild commands. Global commands are available for every guild that adds your app; guild commands are specific to the guild you specify when making them. Command names are unique per application within each scope (global and guild). That means:
@@ -15,7 +14,7 @@ import { ApplicationCommandOption } from "../../../types/interactions/commands/a
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
 export async function createApplicationCommand(bot: Bot, options: CreateApplicationCommand, guildId?: bigint) {
-  const result = await bot.rest.runMethod<ApplicationCommand>(
+  const result = await bot.rest.runMethod<DiscordApplicationCommand>(
     bot.rest,
     "post",
     guildId
@@ -46,4 +45,16 @@ export function makeOptionsForCommand(options: ApplicationCommandOption[]) {
     min_value: option.minValue,
     max_value: option.maxValue,
   }));
+}
+
+/** https://discord.com/developers/docs/interactions/slash-commands#create-global-application-command-json-params */
+export interface CreateApplicationCommand {
+  /** 1-31 character name matching lowercase `^[\w-]{1,32}$` */
+  name: string;
+  /** 1-100 character description */
+  description: string;
+  /** The type of the command */
+  type?: ApplicationCommandTypes;
+  /** The parameters for the command */
+  options?: ApplicationCommandOption[];
 }

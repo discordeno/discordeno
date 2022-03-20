@@ -1,4 +1,4 @@
-import { GatewayOpcodes } from "../types/codes/gatewayOpcodes.ts";
+import { GatewayOpcodes } from "../types/shared.ts";
 import { delay } from "../util/utils.ts";
 import { GatewayManager } from "./gateway_manager.ts";
 

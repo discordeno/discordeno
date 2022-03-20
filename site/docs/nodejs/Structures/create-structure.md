@@ -25,15 +25,15 @@ However, you probably want to use something shorter, such as the following:
 
 ```js
 class Channel {
-    constructor(client, data) {
-        this.client = client;
-        this.id = data.id;
-        this.name = data.name;
-    }
+  constructor(client, data) {
+    this.client = client;
+    this.id = data.id;
+    this.name = data.name;
+  }
 
-    async send(options) {
-        return await client.helpers.sendMessage(this.id, options);
-    }
+  async send(options) {
+    return await this.client.helpers.sendMessage(this.id, options);
+  }
 }
 ```
 
@@ -55,13 +55,13 @@ the data, how the methods are named and how you want to process the request.
 When you are migrating from another library, you'll likely choose to continue using special structures. Therefore why we
 have ready-made structures in our template repo:
 
-- [Guild](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Guild.js)
-- [Channel](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Channel.js)
-- [Role](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Role.js)
-- [Member](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Member.js)
-- [User](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/User.js)
-- [Message](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Message.js)
-- [Interaction](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Interaction.js)
+- [Guild](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Structures/Guild.js)
+- [Channel](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Structures/Channel.js)
+- [Role](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Structures/Role.js)
+- [Member](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Structures/Member.js)
+- [User](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Structures/User.js)
+- [Message](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Structures/Message.js)
+- [Interaction](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Structures/Interaction.js)
 
 We recommend that you clone the whole template repo, since some structures are based on other files.
 

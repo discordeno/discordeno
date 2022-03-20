@@ -1,10 +1,8 @@
 import { Bot } from "../../bot.ts";
-import { ThreadMembersUpdate } from "../../types/channels/threads/threadMembersUpdate.ts";
-import { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import { DiscordGatewayPayload, DiscordThreadMembersUpdate } from "../../types/discord.ts";
 
 export async function handleThreadMembersUpdate(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as SnakeCasedPropertiesDeep<ThreadMembersUpdate>;
+  const payload = data.d as DiscordThreadMembersUpdate;
   bot.events.threadMembersUpdate(bot, {
     id: bot.transformers.snowflake(payload.id),
     guildId: bot.transformers.snowflake(payload.guild_id),

@@ -1,5 +1,5 @@
 import { RestManager } from "../bot.ts";
-import { HTTPResponseCodes } from "../types/codes/httpResponseCodes.ts";
+import { HTTPResponseCodes } from "../types/shared.ts";
 
 export async function processGlobalQueue(rest: RestManager) {
   // IF QUEUE IS EMPTY EXIT
