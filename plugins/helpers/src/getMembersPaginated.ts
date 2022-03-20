@@ -1,4 +1,4 @@
-import { Bot, Collection, DiscordenoMember, GuildMemberWithUser, ListGuildMembers } from "../deps.ts";
+import { Bot, Collection, Member, DiscordMemberWithUser, ListGuildMembers } from "../deps.ts";
 
 /**
  * Highly recommended to **NOT** use this function to get members instead use fetchMembers().
@@ -10,7 +10,7 @@ export async function getMembersPaginated(
   guildId: bigint,
   options: ListGuildMembers,
 ) {
-  const members = new Collection<bigint, DiscordenoMember>();
+  const members = new Collection<bigint, Member>();
 
   let membersLeft = options?.limit ?? 1000;
   let loops = 1;
@@ -30,7 +30,7 @@ export async function getMembersPaginated(
       );
     }
 
-    const result = await bot.rest.runMethod<GuildMemberWithUser[]>(
+    const result = await bot.rest.runMethod<DiscordMemberWithUser[]>(
       bot.rest,
       "get",
       `${bot.constants.endpoints.GUILD_MEMBERS(guildId)}?limit=${membersLeft > 1000 ? 1000 : membersLeft}${
