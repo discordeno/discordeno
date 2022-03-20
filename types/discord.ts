@@ -1835,6 +1835,8 @@ export interface DiscordComponent {
   style?: ButtonStyles | TextStyles;
   /** text that appears on the button (max 80 characters) */
   label?: string;
+  /** the dev-define value of the option, max 100 characters for select or 4000 for input. */
+  value?: string;
   /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
   emoji?: {
     /** Emoji id */
