@@ -3,7 +3,7 @@ import { DiscordInviteCreate } from "../types/discord.ts";
 import { Optionalize } from "../types/shared.ts";
 
 export function transformInvite(bot: Bot, invite: DiscordInviteCreate) {
-  return {
+  const transformedInvite = {
     /** The channel the invite is for */
     channelId: bot.transformers.snowflake(invite.channel_id),
     /** The unique invite code */
@@ -32,6 +32,8 @@ export function transformInvite(bot: Bot, invite: DiscordInviteCreate) {
     /** How many times the invite has been used (always will be 0) */
     uses: invite.uses,
   };
+
+  return transformedInvite as Optionalize<typeof transformedInvite>;
 }
 
-export interface Invite extends Optionalize<ReturnType<typeof transformInvite>> {}
+export interface Invite extends ReturnType<typeof transformInvite> {}

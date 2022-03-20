@@ -56,4 +56,4 @@ export function transformEmbed(bot: Bot, payload: DiscordEmbed) {
   return embed as Optionalize<typeof embed>;
 }
 
-export interface Embed extends Optionalize<ReturnType<typeof transformEmbed>> {}
+export interface Embed extends ReturnType<typeof transformEmbed> {}

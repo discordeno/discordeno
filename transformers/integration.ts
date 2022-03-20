@@ -3,7 +3,7 @@ import { DiscordIntegrationCreateUpdate } from "../types/discord.ts";
 import { Optionalize } from "../types/shared.ts";
 
 export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreateUpdate) {
-  return {
+  const integration = {
     guildId: bot.transformers.snowflake(payload.guild_id),
     id: bot.transformers.snowflake(payload.id),
     name: payload.name,
@@ -33,6 +33,8 @@ export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreate
       }
       : undefined,
   };
+
+  return integration as Optionalize<typeof integration>;
 }
 
-export interface Integration extends Optionalize<ReturnType<typeof transformIntegration>> {}
+export interface Integration extends ReturnType<typeof transformIntegration> {}

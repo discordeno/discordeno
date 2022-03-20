@@ -5,7 +5,7 @@ import { Optionalize } from "../types/shared.ts";
 export function transformTeam(bot: Bot, payload: DiscordTeam) {
   const id = bot.transformers.snowflake(payload.id);
 
-  return {
+  const team = {
     name: payload.name,
 
     id,
@@ -18,6 +18,8 @@ export function transformTeam(bot: Bot, payload: DiscordTeam) {
       user: bot.transformers.user(bot, member.user),
     })),
   };
+
+  return team as Optionalize<typeof team>;
 }
 
-export interface Team extends Optionalize<ReturnType<typeof transformTeam>> {}
+export interface Team extends ReturnType<typeof transformTeam> {}

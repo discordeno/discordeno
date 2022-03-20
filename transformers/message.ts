@@ -8,7 +8,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
   const userId = bot.transformers.snowflake(payload.author.id);
 
-  return {
+  const message = {
     // UNTRANSFORMED STUFF HERE
     content: payload.content || "",
     isBot: payload.author.bot || false,
@@ -101,6 +101,8 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
     ],
     member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined,
   };
+
+  return message as Optionalize<typeof message>;
 }
 
-export interface Message extends Optionalize<ReturnType<typeof transformMessage>> {}
+export interface Message extends ReturnType<typeof transformMessage> {}
