@@ -101,6 +101,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
         const payload = messageData.d as DiscordReady;
         if (shard) {
           shard.sessionId = payload.session_id;
+          shard.ready = true;
         }
 
         payload.guilds.forEach((g) => gateway.cache.loadingGuildIds.add(snowflakeToBigint(g.id)));
