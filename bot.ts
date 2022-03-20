@@ -64,6 +64,56 @@ import { GetGatewayBot, transformGatewayBot } from "./transformers/gatewayBot.ts
 import { DiscordEmoji, DiscordGatewayPayload, DiscordReady } from "./types/discord.ts";
 import { Errors, GatewayDispatchEventNames, GatewayIntents } from "./types/shared.ts";
 
+import {
+  DiscordActivity,
+  DiscordApplication,
+  DiscordApplicationCommand,
+  DiscordApplicationCommandOption,
+  DiscordAttachment,
+  DiscordAuditLogEntry,
+  DiscordChannel,
+  DiscordComponent,
+  DiscordEmbed,
+  DiscordGetGatewayBot,
+  DiscordGuild,
+  DiscordGuildApplicationCommandPermissions,
+  DiscordGuildWidget,
+  DiscordIntegrationCreateUpdate,
+  DiscordInteraction,
+  DiscordInviteCreate,
+  DiscordMember,
+  DiscordMessage,
+  DiscordPresenceUpdate,
+  DiscordRole,
+  DiscordScheduledEvent,
+  DiscordStageInstance,
+  DiscordSticker,
+  DiscordTeam,
+  DiscordThreadMember,
+  DiscordUser,
+  DiscordVoiceRegion,
+  DiscordVoiceState,
+  DiscordWebhook,
+  DiscordWelcomeScreen,
+} from "./types/discord.ts";
+
+import { Application } from "./transformers/application.ts";
+import { Team } from "./transformers/team.ts";
+import { Activity } from "./transformers/activity.ts";
+import { Attachment } from "./transformers/attachment.ts";
+import { Embed } from "./transformers/embed.ts";
+import { Webhook } from "./transformers/webhook.ts";
+import { Component } from "./transformers/component.ts";
+import { ApplicationCommand } from "./transformers/applicationCommand.ts";
+import { AuditLogEntry } from "./transformers/auditlogEntry.ts";
+import { ApplicationCommandOption } from "./transformers/applicationCommandOption.ts";
+import { ApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
+import { WelcomeScreen } from "./transformers/welcomeScreen.ts";
+import { VoiceRegions } from "./transformers/voiceRegion.ts";
+import { GuildWidget } from "./transformers/widget.ts";
+import { StageInstance } from "./transformers/stageInstance.ts";
+import { Sticker } from "./transformers/sticker.ts";
+
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
     id: options.botId,
@@ -312,38 +362,41 @@ export function createBaseHelpers(options: Partial<Helpers>) {
 }
 
 export interface Transformers {
-  snowflake: typeof snowflakeToBigint;
-  gatewayBot: typeof transformGatewayBot;
-  channel: typeof transformChannel;
-  guild: typeof transformGuild;
-  user: typeof transformUser;
-  member: typeof transformMember;
-  message: typeof transformMessage;
-  role: typeof transformRole;
-  voiceState: typeof transformVoiceState;
-  interaction: typeof transformInteraction;
-  integration: typeof transformIntegration;
-  invite: typeof transformInvite;
-  application: typeof transformApplication;
-  team: typeof transformTeam;
+  snowflake: (snowflake: string) => bigint;
+  gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
+  channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }) => Channel;
+  guild: (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) => Guild;
+  user: (bot: Bot, payload: DiscordUser) => User;
+  member: (bot: Bot, payload: DiscordMember, guildId: bigint, userId: bigint) => Member;
+  message: (bot: Bot, payload: DiscordMessage) => Message;
+  role: (bot: Bot, payload: { role: DiscordRole } & { guildId: bigint }) => Role;
+  voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) => VoiceState;
+  interaction: (bot: Bot, payload: DiscordInteraction) => Interaction;
+  integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration;
+  invite: (bot: Bot, invite: DiscordInviteCreate) => Invite;
+  application: (bot: Bot, payload: DiscordApplication) => Application;
+  team: (bot: Bot, payload: DiscordTeam) => Team;
   emoji: (bot: Bot, payload: DiscordEmoji) => Emoji;
-  activity: typeof transformActivity;
-  presence: typeof transformPresence;
-  attachment: typeof transformAttachment;
-  embed: typeof transformEmbed;
-  component: typeof transformComponent;
-  webhook: typeof transformWebhook;
-  auditlogEntry: typeof transformAuditlogEntry;
-  applicationCommand: typeof transformApplicationCommand;
-  applicationCommandOption: typeof transformApplicationCommandOption;
-  applicationCommandPermission: typeof transformApplicationCommandPermission;
-  scheduledEvent: typeof transformScheduledEvent;
-  threadMember: typeof transformThreadMember;
-  welcomeScreen: typeof transformWelcomeScreen;
-  voiceRegion: typeof transformVoiceRegion;
-  widget: typeof transformWidget;
-  stageInstance: typeof transformStageInstance;
-  sticker: typeof transformSticker;
+  activity: (bot: Bot, payload: DiscordActivity) => Activity;
+  presence: (bot: Bot, payload: DiscordPresenceUpdate) => PresenceUpdate;
+  attachment: (bot: Bot, payload: DiscordAttachment) => Attachment;
+  embed: (bot: Bot, payload: DiscordEmbed) => Embed;
+  component: (bot: Bot, payload: DiscordComponent) => Component;
+  webhook: (bot: Bot, payload: DiscordWebhook) => Webhook;
+  auditlogEntry: (bot: Bot, payload: DiscordAuditLogEntry) => AuditLogEntry;
+  applicationCommand: (bot: Bot, payload: DiscordApplicationCommand) => ApplicationCommand;
+  applicationCommandOption: (bot: Bot, payload: DiscordApplicationCommandOption) => ApplicationCommandOption;
+  applicationCommandPermission: (
+    bot: Bot,
+    payload: DiscordGuildApplicationCommandPermissions,
+  ) => ApplicationCommandPermission;
+  scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent) => ScheduledEvent;
+  threadMember: (bot: Bot, payload: DiscordThreadMember) => ThreadMember;
+  welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen) => WelcomeScreen;
+  voiceRegion: (bot: Bot, payload: DiscordVoiceRegion) => VoiceRegions;
+  widget: (bot: Bot, payload: DiscordGuildWidget) => GuildWidget;
+  stageInstance: (bot: Bot, payload: DiscordStageInstance) => StageInstance;
+  sticker: (bot: Bot, payload: DiscordSticker) => Sticker;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
