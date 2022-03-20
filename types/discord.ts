@@ -788,7 +788,7 @@ export interface DiscordStageInstance {
   /** The id of the associated Stage channel */
   channel_id: string;
   /** The id of the scheduled event for this Stage instance */
-  guild_scheduled_event_id?: string
+  guild_scheduled_event_id?: string;
 }
 
 export interface DiscordThreadMetadata {
