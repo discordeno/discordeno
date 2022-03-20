@@ -6,7 +6,7 @@ import { Optionalize } from "../types/shared.ts";
 export function transformApplicationCommandOption(
   bot: Bot,
   payload: DiscordApplicationCommandOption,
-): Optionalize<ApplicationCommandOption> {
+): ApplicationCommandOption {
   return {
     type: payload.type,
     name: payload.name,

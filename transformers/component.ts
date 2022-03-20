@@ -1,9 +1,8 @@
 import { Bot } from "../bot.ts";
 import { ButtonStyles, MessageComponentTypes, TextStyles } from "../mod.ts";
 import { DiscordComponent } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
 
-export function transformComponent(bot: Bot, payload: DiscordComponent): Optionalize<Component> {
+export function transformComponent(bot: Bot, payload: DiscordComponent): Component {
   return {
     type: payload.type,
     customId: payload.custom_id,
