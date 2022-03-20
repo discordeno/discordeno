@@ -158,13 +158,13 @@ export async function processGlobalQueue(rest: RestManager) {
         });
       } else {
         // CONVERT THE RESPONSE TO JSON
-        const json = await response.json();
+        const json = JSON.stringify(await response.json());
 
         rest.debug(`[REST - fetchSuccess] ${JSON.stringify(request.payload)}`);
         request.request.respond({
           ok: true,
           status: 200,
-          body: JSON.stringify(json),
+          body: json,
         });
       }
     } catch (error) {
@@ -172,7 +172,7 @@ export async function processGlobalQueue(rest: RestManager) {
       rest.debug(`[REST - fetchFailed] Payload: ${JSON.stringify(request.payload)} | Error: ${error}`);
       request.request.reject({
         ok: false,
-        status: 500, // TODO?
+        status: 599,
         error: "Internal Proxy Error",
       });
     }

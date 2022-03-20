@@ -13,7 +13,7 @@ export async function runProxyMethod<T = any>(
   body?: unknown,
   retryCount = 0,
   bucketId?: string,
-): Promise<ProxyMethodResponse<SnakeCasedPropertiesDeep<T>>> {
+): Promise<Omit<(RestRequestResponse | RestRequestRejection), "body"> & { body?: Record<string, unknown> }> {
   rest.debug(
     `[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${retryCount} | Bucket ID: ${bucketId} | Body: ${
       JSON.stringify(
@@ -30,14 +30,12 @@ export async function runProxyMethod<T = any>(
         url,
         method,
         reject: (data) => {
-          //TODO: if OK gets removed, set it here to false;
           const { body: b, ...r } = data;
-          return { body: b ? JSON.parse(b) : undefined, ...r };
+          return { body: data.status !== 204 ? JSON.parse(b ?? "{}") : (undefined as unknown as T), ...r };
         },
         respond: (data) => {
-          //TODO: if OK gets removed, set it here to true;
           const { body: b, ...r } = data;
-          return { body: b ? JSON.parse(b) : undefined, ...r };
+          return { body: data.status !== 204 ? JSON.parse(b ?? "{}") : (undefined as unknown as T), ...r };
         },
       },
       {
