@@ -68,7 +68,7 @@ export default function editChannel(bot: BotWithCache) {
             throw new Error("Only news and text types can be modified.");
           }
 
-          if (guild && !guild.features.includes(GuildFeatures.News)) {
+          if (guild && !guild.toggles.has("news")) {
             throw new Error(
               "The NEWS feature is missing in this guild to be able to modify the channel type.",
             );
@@ -104,10 +104,8 @@ export default function editChannel(bot: BotWithCache) {
       if (options.autoArchiveDuration) {
         if (guild) {
           if (
-            !guild.features.includes(
-              options.autoArchiveDuration === 4320
-                ? GuildFeatures.ThreeDayThreadArchive
-                : GuildFeatures.SevenDayThreadArchive,
+            !guild.toggles.has(
+              options.autoArchiveDuration === 4320 ? "threeDayThreadArchive" : "sevenDayThreadArchive",
             )
           ) {
             throw new Error(
