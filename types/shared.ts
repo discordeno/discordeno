@@ -496,7 +496,7 @@ export enum BitwisePermissionFlags {
   PRIORITY_SPEAKER = 0x0000000000000100,
   /** Allows the user to go live */
   STREAM = 0x0000000000000200,
-  /** Allows guild members to view a channel, which includes reading messages in text channels */
+  /** Allows guild members to view a channel, which includes reading messages in text channels and joining voice channels */
   VIEW_CHANNEL = 0x0000000000000400,
   /** Allows for sending messages in a channel. (does not allow sending messages in threads) */
   SEND_MESSAGES = 0x0000000000000800,

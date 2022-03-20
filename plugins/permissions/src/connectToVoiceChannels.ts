@@ -9,7 +9,7 @@ export default function connectToVoiceChannel(bot: BotWithCache) {
     channelId,
     options,
   ) {
-    const channel = await bot.channels.get(channelId);
+    const channel = bot.channels.get(channelId);
     if (!channel) throw new Error("CHANNEL_NOT_FOUND");
 
     if (
@@ -25,7 +25,7 @@ export default function connectToVoiceChannel(bot: BotWithCache) {
 
     // Permissions needed for the bot to connect
     // CONNECT is needed
-    const permsNeeded: PermissionStrings[] = ["CONNECT"];
+    const permsNeeded: PermissionStrings[] = ["CONNECT", "VIEW_CHANNEL"];
 
     // Check if there is space for the bot if channel has user limit
     // Having MANAGE_CHANNELS permissions bypasses the limit
@@ -38,7 +38,7 @@ export default function connectToVoiceChannel(bot: BotWithCache) {
       permsNeeded.push("MANAGE_CHANNELS");
     }
 
-    await requireBotChannelPermissions(bot, channel, permsNeeded);
+    requireBotChannelPermissions(bot, channel, permsNeeded);
 
     return await connectToVoiceChannelOld(guildId, channelId, options);
   };
