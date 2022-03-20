@@ -1269,22 +1269,49 @@ export type Camelize<T> = {
 //   }
 // );
 
+// export type KeysWithUndefined<T> = {
+//   [K in keyof T]-?: undefined extends T[K] ? K
+//     : null extends T[K] ? K
+//     : never;
+// }[keyof T];
+
+// export type Optionalize<T> = T extends object ? (
+//   & {
+//     [K in KeysWithUndefined<T>]?: T[K] extends Collection<any, any> ? T[K]
+//       : T[K] extends any[] ? T[K]
+//       : Optionalize<T[K]>;
+//   }
+//   & {
+//     [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends object ? Object extends Pick<T[K], keyof T[K]> ? T[K]
+//     : T[K] extends Collection<any, any> ? T[K]
+//     : T[K] extends any[] ? T[K]
+//     : Optionalize<T[K]>
+//       : T[K];
+//   }
+// )
+//   : T;
+
+export type Id<T> = T extends infer U ? {
+  [K in keyof U]: U[K];
+}
+  : never;
+
 export type KeysWithUndefined<T> = {
   [K in keyof T]-?: undefined extends T[K] ? K
     : null extends T[K] ? K
     : never;
 }[keyof T];
 
-export type Optionalize<T> = T extends object ? (
+export type Optionalize<T> = T extends Collection<any, any> ? T : T extends object ? Id<
   & {
-    [K in KeysWithUndefined<T>]?: T[K];
+    [K in KeysWithUndefined<T>]?: T[K] extends Collection<any, any> ? T[K] : Optionalize<T[K]>;
   }
   & {
-    [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends object ? Object extends Pick<T[K], keyof T[K]> ? T[K]
+    [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends object ? {} extends Pick<T[K], keyof T[K]> ? T[K]
     : T[K] extends Collection<any, any> ? T[K]
-    : T[K] extends any[] ? T[K]
+    : T[K] extends unknown[] ? T[K]
     : Optionalize<T[K]>
       : T[K];
   }
-)
-  : T;
+>
+: T;

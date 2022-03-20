@@ -63,8 +63,8 @@ export function setupCacheEdits<B extends Bot>(bot: BotWithCache<B>) {
         const current = message.reactions?.[reactions.indexOf(emoji.name)];
 
         // rewrite
-        if (current && message.reactions?.[message.reactions.indexOf(current)]) {
-          message.reactions[message.reactions.indexOf(current)].count++;
+        if (current) {
+          current.count++;
         }
       }
     }

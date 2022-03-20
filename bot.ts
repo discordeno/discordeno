@@ -262,7 +262,7 @@ export interface Bot {
   urlWSS: string;
   botGatewayData?: GetGatewayBot;
   utils: ReturnType<typeof createUtils>;
-  transformers: ReturnType<typeof createTransformers>;
+  transformers: Transformers;
   helpers: ReturnType<typeof createHelpers>;
   rest: ReturnType<typeof createRestManager>;
   gateway: ReturnType<typeof createGatewayManager>;
@@ -326,7 +326,7 @@ export interface Transformers {
   invite: typeof transformInvite;
   application: typeof transformApplication;
   team: typeof transformTeam;
-  emoji: typeof transformEmoji;
+  emoji: (bot: Bot, payload: DiscordEmoji) => Emoji;
   activity: typeof transformActivity;
   presence: typeof transformPresence;
   attachment: typeof transformAttachment;
