@@ -32,7 +32,7 @@ class Channel {
   }
 
   async send(options) {
-    return await client.helpers.sendMessage(this.id, options);
+    return await this.client.helpers.sendMessage(this.id, options);
   }
 }
 ```
