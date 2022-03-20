@@ -555,7 +555,7 @@ export enum BitwisePermissionFlags {
   /** Allows for sending messages in threads */
   SEND_MESSAGES_IN_THREADS = 0x0000004000000000,
   /** Allows for launching activities (applications with the `EMBEDDED` flag) in a voice channel. */
-  START_EMBEDDED_ACTIVITIES = 0x0000008000000000,
+  USE_EMBEDDED_ACTIVITIES = 0x0000008000000000,
   /** Allows for timing out users to prevent them from sending or reacting to messages in chat and threads, and from speaking in voice and stage channels */
   MODERATE_MEMBERS = 0x0000010000000000,
 }
