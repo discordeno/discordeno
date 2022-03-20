@@ -40,7 +40,7 @@ export function enableCacheSweepers<B extends Bot>(bot: BotWithCache<B>) {
   });
 
   const setMember = bot.members.set;
-  bot.members.set = (id, member) => {
+  bot.members.set = function (id, member) {
     return setMember(id, {
       ...member,
       cachedAt: Date.now(),
