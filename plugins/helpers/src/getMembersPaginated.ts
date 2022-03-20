@@ -1,4 +1,4 @@
-import { Bot, Collection, Member, DiscordMemberWithUser, ListGuildMembers } from "../deps.ts";
+import { Bot, Collection, DiscordMemberWithUser, ListGuildMembers, Member } from "../deps.ts";
 
 /**
  * Highly recommended to **NOT** use this function to get members instead use fetchMembers().

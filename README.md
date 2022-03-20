@@ -6,13 +6,11 @@ Discord API library for [Deno](https://deno.land)
 
 Discordeno follows [semantic versioning](https://semver.org/)
 
+<!-- TODO: add coverage back when it is stable -->
+
 [![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
-
-<!--
-TODO: add coverage back when it is stable
 [![Coverage](https://img.shields.io/codecov/c/gh/discordeno/discordeno)](https://codecov.io/gh/discordeno/discordeno)
--->
 
 ## Features
 

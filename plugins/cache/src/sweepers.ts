@@ -39,13 +39,14 @@ export function enableCacheSweepers<B extends Bot>(bot: BotWithCache<B>) {
     bot,
   });
 
-  const setMember = bot.members.set;
-  bot.members.set = (id, member) => {
+  const setMember = bot.members.set.bind(bot.members);
+  bot.members.set = function (id, member) {
     return setMember(id, {
       ...member,
       cachedAt: Date.now(),
     } as Member);
   };
+
   bot.members.startSweeper({
     filter: function memberSweeper(member, _, bot: BotWithCache<B>) {
       // Don't sweep the bot else strange things will happen

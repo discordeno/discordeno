@@ -12,7 +12,7 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction) {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
   const user = bot.transformers.user(bot, payload.member?.user || payload.user!);
 
-  return {
+  const interaction = {
     // UNTRANSFORMED STUFF HERE
     type: payload.type,
     token: payload.token,
@@ -47,13 +47,11 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction) {
       }
       : undefined,
   };
+
+  return interaction as Optionalize<typeof interaction>;
 }
 
-export function transformInteractionDataResolved(
-  bot: Bot,
-  resolved: DiscordInteractionDataResolved,
-  guildId?: bigint,
-) {
+export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInteractionDataResolved, guildId?: bigint) {
   const transformed: {
     messages?: Collection<bigint, Message>;
     users?: Collection<bigint, User>;
@@ -126,8 +124,8 @@ export function transformInteractionDataResolved(
     );
   }
 
-  return transformed;
+  return transformed as Optionalize<typeof transformed>;
 }
 
-export interface Interaction extends Optionalize<ReturnType<typeof transformInteraction>> {}
-export interface InteractionDataResolved extends Optionalize<ReturnType<typeof transformInteractionDataResolved>> {}
+export interface Interaction extends ReturnType<typeof transformInteraction> {}
+export interface InteractionDataResolved extends ReturnType<typeof transformInteractionDataResolved> {}

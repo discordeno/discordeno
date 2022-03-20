@@ -21,13 +21,8 @@ export function transformUser(bot: Bot, payload: DiscordUser) {
   return user as Optionalize<typeof user>;
 }
 
-export function transformMember(
-  bot: Bot,
-  payload: DiscordMember,
-  guildId: bigint,
-  userId: bigint,
-) {
-  return {
+export function transformMember(bot: Bot, payload: DiscordMember, guildId: bigint, userId: bigint) {
+  const member = {
     id: userId,
     guildId,
     nick: payload.nick ?? undefined,
@@ -41,7 +36,9 @@ export function transformMember(
       : undefined,
     toggles: new MemberToggles(payload),
   };
+
+  return member as Optionalize<typeof member>;
 }
 
-export interface Member extends Optionalize<ReturnType<typeof transformMember>> {}
-export interface User extends Optionalize<ReturnType<typeof transformUser>> {}
+export interface Member extends ReturnType<typeof transformMember> {}
+export interface User extends ReturnType<typeof transformUser> {}
