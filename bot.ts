@@ -483,6 +483,7 @@ export interface EventHandlers {
       messageId: bigint;
       guildId?: bigint;
       member?: Member;
+      user?: User;
       emoji: Emoji;
     },
   ) => any;

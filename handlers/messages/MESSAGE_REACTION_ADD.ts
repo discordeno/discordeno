@@ -12,6 +12,7 @@ export async function handleMessageReactionAdd(bot: Bot, data: DiscordGatewayPay
     messageId: bot.transformers.snowflake(payload.message_id),
     guildId,
     member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined,
+    user: payload.member ? bot.transformers.user(bot, payload.member.user) : undefined,
     emoji: bot.transformers.emoji(bot, payload.emoji),
   });
 }
