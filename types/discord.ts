@@ -1530,7 +1530,7 @@ export interface DiscordScheduledEvent {
   /** the name of the scheduled event */
   name: string;
   /** the description of the scheduled event */
-  description: string;
+  description?: string;
   /** the time the scheduled event will start */
   scheduled_start_time: string;
   /** the time the scheduled event will end if it does end. */
