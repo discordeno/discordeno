@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test:
+  publish:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -24,4 +24,14 @@ jobs:
       - name: Create tag
         if: ${{ env.DISCORDENO_VERSION != env.DISCORDENO_VERSION_OLD }}
         run: git tag ${{ env.DISCORDENO_VERSION }} && git push --tags
-
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: build npm
+        run: deno run -A ./dnt.ts ${{ env.DISCORDENO_VERSION }}
+      - name: npm publish
+        if: ${{ env.DISCORDENO_VERSION != env.DISCORDENO_VERSION_OLD }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: cd npm && npm publish
