@@ -194,7 +194,7 @@ export interface GatewayManager {
   /** Tell the worker to begin identifying this shard  */
   tellWorkerToIdentify: typeof tellWorkerToIdentify;
   /** Handle the different logs. Used for debugging. */
-  debug: (text: string, ...args: any[]) => unknown;
+  debug: (text: GatewayDebugEvents, ...args: any[]) => unknown;
   /** The methods related to resharding. */
   resharding: {
     /** Handles resharding the bot when necessary. */
@@ -227,3 +227,21 @@ export interface GatewayManager {
   /** Calculates the number of shards to use based on the max concurrency */
   calculateMaxShards: typeof calculateMaxShards;
 }
+
+export type GatewayDebugEvents =
+  | "GW ERROR"
+  | "GW CLOSED"
+  | "GW CLOSED_RECONNECT"
+  | "GW RAW"
+  | "GW RECONNECT"
+  | "GW INVALID_SESSION"
+  | "GW RESUMED"
+  | "GW RESUMING"
+  | "GW IDENTIFYING"
+  | "GW RAW_SEND"
+  | "GW MAX REQUESTS"
+  | "GW DEBUG"
+  | "GW HEARTBEATING"
+  | "GW HEARTBEATING_STARTED"
+  | "GW HEARTBEATING_DETAILS"
+  | "GW HEARTBEATING_CLOSED";

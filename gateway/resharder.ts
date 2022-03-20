@@ -7,7 +7,7 @@ export async function resharder(
   oldGateway: GatewayManager,
   results: GetGatewayBot,
 ) {
-  oldGateway.debug("[Resharding] Starting the reshard process.");
+  oldGateway.debug("GW DEBUG", "[Resharding] Starting the reshard process.");
 
   const gateway = createGatewayManager({
     ...oldGateway,
@@ -40,7 +40,7 @@ export async function resharder(
   gateway.maxConcurrency = results.sessionStartLimit.maxConcurrency;
   // If more than 100K servers, begin switching to 16x sharding
   if (gateway.useOptimalLargeBotSharding) {
-    gateway.debug("[Resharding] Using optimal large bot sharding solution.");
+    gateway.debug("GW DEBUG", "[Resharding] Using optimal large bot sharding solution.");
     gateway.maxShards = gateway.calculateMaxShards(gateway.maxShards, results.sessionStartLimit.maxConcurrency);
   }
 
@@ -66,7 +66,7 @@ export async function resharder(
       clearInterval(timer);
       await gateway.resharding.editGuildShardIds();
       await gateway.resharding.closeOldShards(oldGateway);
-      gateway.debug("[Resharding] Complete.");
+      gateway.debug("GW DEBUG", "[Resharding] Complete.");
       resolve(gateway);
     }, 30000);
   }) as Promise<GatewayManager>;
@@ -113,7 +113,7 @@ export async function resharderCloseOldShards(oldGateway: GatewayManager) {
 
 /** Handler that by default will check to see if resharding should occur. Can be overriden if you have multiple servers and you want to communicate through redis pubsub or whatever you prefer. */
 export async function startReshardingChecks(gateway: GatewayManager) {
-  gateway.debug("[Resharding] Checking if resharding is needed.");
+  gateway.debug("GW DEBUG", "[Resharding] Checking if resharding is needed.");
 
   // TODO: is it possible to route this to REST?
   const results = (await fetch(`https://discord.com/api/gateway/bot`, {

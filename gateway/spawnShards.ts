@@ -15,7 +15,7 @@ export function prepareBuckets(gateway: GatewayManager, firstShardId: number, la
 
   // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
   for (let i = firstShardId; i < lastShardId; i++) {
-    gateway.debug(`1. Running for loop in spawnShards function for shardId ${i}.`);
+    gateway.debug("GW DEBUG", `1. Running for loop in spawnShards function for shardId ${i}.`);
     if (i >= gateway.maxShards) {
       continue;
     }
@@ -40,7 +40,7 @@ export function prepareBuckets(gateway: GatewayManager, firstShardId: number, la
 export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
   // PREPARES THE MAX SHARD COUNT BY CONCURRENCY
   if (gateway.useOptimalLargeBotSharding) {
-    gateway.debug("[Spawning] Using optimal large bot sharding solution.");
+    gateway.debug("GW DEBUG", "[Spawning] Using optimal large bot sharding solution.");
     gateway.maxShards = gateway.calculateMaxShards(gateway.maxShards, gateway.maxConcurrency);
   }
 
@@ -49,9 +49,9 @@ export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
 
   // SPREAD THIS OUT TO DIFFERENT WORKERS TO BEGIN STARTING UP
   gateway.buckets.forEach(async (bucket, bucketId) => {
-    gateway.debug(`2. Running forEach loop in spawnShards function.`);
+    gateway.debug("GW DEBUG", `2. Running forEach loop in spawnShards function.`);
     for (const [workerId, ...queue] of bucket.workers) {
-      gateway.debug(`3. Running for of loop in spawnShards function.`);
+      gateway.debug("GW DEBUG", `3. Running for of loop in spawnShards function.`);
 
       for (const shardId of queue) {
         bucket.createNextShard.push(async () => {
