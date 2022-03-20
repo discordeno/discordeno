@@ -3,7 +3,7 @@ import { DiscordApplication } from "../types/discord.ts";
 import { Optionalize } from "../types/shared.ts";
 
 export function transformApplication(bot: Bot, payload: DiscordApplication) {
-  return {
+  const application = {
     name: payload.name,
     description: payload.description,
     rpcOrigins: payload.rpc_origins,
@@ -24,6 +24,8 @@ export function transformApplication(bot: Bot, payload: DiscordApplication) {
     team: payload.team ? bot.transformers.team(bot, payload.team) : undefined,
     guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
   };
+
+  return application as Optionalize<typeof application>;
 }
 
-export interface Application extends Optionalize<ReturnType<typeof transformApplication>> {}
+export interface Application extends ReturnType<typeof transformApplication> {}

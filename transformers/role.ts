@@ -3,12 +3,7 @@ import { DiscordRole } from "../types/discord.ts";
 import { RoleToggles } from "./toggles/role.ts";
 import { Optionalize } from "../types/shared.ts";
 
-export function transformRole(
-  bot: Bot,
-  payload: { role: DiscordRole } & {
-    guildId: bigint;
-  },
-) {
+export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guildId: bigint }) {
   const role = {
     name: payload.role.name,
     guildId: payload.guildId,
@@ -29,4 +24,4 @@ export function transformRole(
   return role as Optionalize<typeof role>;
 }
 
-export interface Role extends Optionalize<ReturnType<typeof transformRole>> {}
+export interface Role extends ReturnType<typeof transformRole> {}

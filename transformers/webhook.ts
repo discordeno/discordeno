@@ -3,7 +3,7 @@ import { DiscordWebhook } from "../types/discord.ts";
 import { Optionalize } from "../types/shared.ts";
 
 export function transformWebhook(bot: Bot, payload: DiscordWebhook) {
-  return {
+  const webhook = {
     id: bot.transformers.snowflake(payload.id),
     type: payload.type,
     guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
@@ -30,6 +30,8 @@ export function transformWebhook(bot: Bot, payload: DiscordWebhook) {
     /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
     url: payload.url,
   };
+
+  return webhook as Optionalize<typeof webhook>;
 }
 
-export interface Webhook extends Optionalize<ReturnType<typeof transformWebhook>> {}
+export interface Webhook extends ReturnType<typeof transformWebhook> {}

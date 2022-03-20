@@ -15,4 +15,4 @@ export function transformEmoji(bot: Bot, payload: DiscordEmoji) {
   return emoji as Optionalize<typeof emoji>;
 }
 
-export interface Emoji extends Optionalize<ReturnType<typeof transformEmoji>> {}
+export interface Emoji extends ReturnType<typeof transformEmoji> {}

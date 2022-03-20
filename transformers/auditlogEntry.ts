@@ -2,11 +2,8 @@ import { Bot } from "../bot.ts";
 import { DiscordAuditLogEntry } from "../types/discord.ts";
 import { Optionalize } from "../types/shared.ts";
 
-export function transformAuditlogEntry(
-  bot: Bot,
-  payload: DiscordAuditLogEntry,
-) {
-  return {
+export function transformAuditlogEntry(bot: Bot, payload: DiscordAuditLogEntry) {
+  const auditlogEntry = {
     id: bot.transformers.snowflake(payload.id),
     // @ts-ignore TODO FIX THIS
     changes: payload.changes?.map((change) => {
@@ -129,6 +126,8 @@ export function transformAuditlogEntry(
       : undefined,
     reason: payload.reason,
   };
+
+  return auditlogEntry as Optionalize<typeof auditlogEntry>;
 }
 
-export interface AuditLogEntry extends Optionalize<ReturnType<typeof transformAuditlogEntry>> {}
+export interface AuditLogEntry extends ReturnType<typeof transformAuditlogEntry> {}

@@ -3,7 +3,7 @@ import { DiscordGuildWidget } from "../types/discord.ts";
 import { Optionalize } from "../types/shared.ts";
 
 export function transformWidget(bot: Bot, payload: DiscordGuildWidget) {
-  return {
+  const widget = {
     id: bot.transformers.snowflake(payload.id),
     name: payload.name,
     instant_invite: payload.instant_invite,
@@ -22,6 +22,8 @@ export function transformWidget(bot: Bot, payload: DiscordGuildWidget) {
     })),
     presenceCount: payload.presence_count,
   };
+
+  return widget as Optionalize<typeof widget>;
 }
 
-export interface GuildWidget extends Optionalize<ReturnType<typeof transformWidget>> {}
+export interface GuildWidget extends ReturnType<typeof transformWidget> {}

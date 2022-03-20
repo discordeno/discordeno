@@ -2,7 +2,7 @@ import { DiscordGetGatewayBot } from "../types/discord.ts";
 import { Optionalize } from "../types/shared.ts";
 
 export function transformGatewayBot(payload: DiscordGetGatewayBot) {
-  return {
+  const gatewayBot = {
     url: payload.url,
     shards: payload.shards,
     sessionStartLimit: {
@@ -12,6 +12,8 @@ export function transformGatewayBot(payload: DiscordGetGatewayBot) {
       maxConcurrency: payload.session_start_limit.max_concurrency,
     },
   };
+
+  return gatewayBot as Optionalize<typeof gatewayBot>;
 }
 
-export interface GetGatewayBot extends Optionalize<ReturnType<typeof transformGatewayBot>> {}
+export interface GetGatewayBot extends ReturnType<typeof transformGatewayBot> {}

@@ -18,4 +18,4 @@ export function transformAttachment(bot: Bot, payload: DiscordAttachment) {
   return attachment as Optionalize<typeof attachment>;
 }
 
-export interface Attachment extends Optionalize<ReturnType<typeof transformAttachment>> {}
+export interface Attachment extends ReturnType<typeof transformAttachment> {}
