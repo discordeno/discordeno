@@ -62,16 +62,13 @@ export interface RestRequest {
 }
 
 export interface RestRequestResponse {
-  ok: boolean; // TODO: do we even need this?
+  ok: boolean;
   status: number;
   body?: string;
 }
 
 export interface RestRequestRejection extends RestRequestResponse {
-  error: {
-    raw: Error;
-    name?: string;
-  };
+  error: string;
 }
 
 export interface RestPayload {

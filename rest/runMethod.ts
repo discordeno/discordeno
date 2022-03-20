@@ -54,7 +54,7 @@ export async function runMethod<T = any>(
         url,
         method,
         reject: (data) => {
-          errorStack.message = (data.error.raw).message;
+          errorStack.message = `[${data.status}] ${data.error}`;
           reject(errorStack);
         },
         respond: (data) => resolve(data.status !== 204 ? JSON.parse(data.body ?? "{}") : (undefined as unknown as T)),

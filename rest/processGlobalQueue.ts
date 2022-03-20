@@ -120,18 +120,15 @@ export async function processGlobalQueue(rest: RestManager) {
         if (response.status !== 429) {
           let json = undefined;
           if (response.type) {
-            json = await response.json();
-            console.log(JSON.stringify(json));
+            json = JSON.stringify(await response.json());
+            console.log(json);
           }
 
           request.request.reject({
             ok: false,
             status: response.status,
-            error: {
-              raw: new Error(`[${response.status}] ${error}`),
-              name: error,
-            },
-            body: json ? JSON.stringify(json) : undefined,
+            error,
+            body: json,
           });
         } else {
           if (request.payload.retryCount++ >= rest.maxRetryCount) {
@@ -139,11 +136,8 @@ export async function processGlobalQueue(rest: RestManager) {
             // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
             request.request.reject({
               ok: false,
-              status: 429,
-              error: {
-                raw: new Error(`[${response.status}] The request was rate limited and it maxed out the retries limit.`),
-                name: "The request was rate limited and it maxed out the retries limit.",
-              },
+              status: response.status,
+              error: "The request was rate limited and it maxed out the retries limit.",
             });
             continue;
           }
@@ -179,9 +173,7 @@ export async function processGlobalQueue(rest: RestManager) {
       request.request.reject({
         ok: false,
         status: 500, // TODO?
-        error: {
-          raw: error,
-        },
+        error: "Internal Proxy Error",
       });
     }
   }
