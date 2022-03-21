@@ -19,3 +19,5 @@ exports.Colors = {
     GREYPLE: 0x99aab5,
     BLURPLE: 0x5865f2,
   }
+
+  exports.DISCORD_EPOCH = 1_420_070_400_000;

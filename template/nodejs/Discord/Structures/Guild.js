@@ -1,8 +1,12 @@
 const DestructObject = require("./DestructObject");
 const {transformOptions} = require("../Util/transformOptions");
 const Collection = require("./Collection");
+const {SnowFlake} = require("../Util/Util");
 
 class Guild extends DestructObject {
+  /** 
+  * @param {import('discordeno').Bot} client
+  */
   constructor(client, guild = {}, options = {}) {
     super(guild);
     this.client = client;
@@ -26,6 +30,14 @@ class Guild extends DestructObject {
       entries.set(x.id, x)
     });
     return {...audit, entries};
+  }
+
+  iconURL({size, format} = {}) {
+    return this.client.helpers.guildIconURL(this.id, this.icon, {size, format});
+  }
+
+  get createdTimestamp() {
+    return SnowFlake(this.id).timestamp;
   }
 }
 module.exports = Guild;

@@ -1,5 +1,5 @@
 const Mask = (1n << 64n) - 1n;
-const {Colors} = require('./Constants');
+const {Colors, DISCORD_EPOCH} = require('./Constants');
 
 
 module.exports = {
@@ -9,6 +9,17 @@ module.exports = {
         if (!str.includes(':')) return { animated: false, name: str, id: null };
         const [_, animated, name, id] = /^<(a?):([a-z0-9_-]{2,}):(\d{18})>/i.exec(str)
         return { animated: new Boolean(animated), name, id };
+    },
+
+    SnowFlake(id) {
+        const snowflake = BigInt(id);
+        return {
+          timestamp: Number(snowflake>> 22n) + DISCORD_EPOCH,
+          workerId: Number((snowflake >> 17n) & 0b11111n),
+          binary: snowflake.toString(2).padStart(64, '0'),
+          increment: Number(snowflake & 0b111111111111n),
+          processId: Number((snowflake >> 12n) & 0b11111n),
+        }
     },
 
     convertColor(color) {
