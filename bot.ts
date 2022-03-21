@@ -59,9 +59,9 @@ import { transformWelcomeScreen } from "./transformers/welcomeScreen.ts";
 import { transformVoiceRegion } from "./transformers/voiceRegion.ts";
 import { transformWidget } from "./transformers/widget.ts";
 import { transformStageInstance } from "./transformers/stageInstance.ts";
-import { transformSticker } from "./transformers/sticker.ts";
+import { StickerPack, transformSticker, transformStickerPack } from "./transformers/sticker.ts";
 import { GetGatewayBot, transformGatewayBot } from "./transformers/gatewayBot.ts";
-import { DiscordEmoji, DiscordGatewayPayload, DiscordReady } from "./types/discord.ts";
+import { DiscordEmoji, DiscordGatewayPayload, DiscordReady, DiscordStickerPack } from "./types/discord.ts";
 import { Errors, GatewayDispatchEventNames, GatewayIntents } from "./types/shared.ts";
 
 import {
@@ -343,6 +343,7 @@ export function createHelpers(
       ...createBaseHelpers(customHelpers || {}),
     })
   ) {
+    // @ts-ignore - TODO: make the types better
     converted[name as keyof FinalHelpers] = (
       // @ts-ignore - TODO: make the types better
       ...args: RemoveFirstFromTuple<Parameters<typeof fun>>
@@ -397,6 +398,7 @@ export interface Transformers {
   widget: (bot: Bot, payload: DiscordGuildWidget) => GuildWidget;
   stageInstance: (bot: Bot, payload: DiscordStageInstance) => StageInstance;
   sticker: (bot: Bot, payload: DiscordSticker) => Sticker;
+  stickerPack: (bot: Bot, payload: DiscordStickerPack) => StickerPack;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -435,6 +437,7 @@ export function createTransformers(options: Partial<Transformers>) {
     widget: options.widget || transformWidget,
     stageInstance: options.stageInstance || transformStageInstance,
     sticker: options.sticker || transformSticker,
+    stickerPack: options.stickerPack || transformStickerPack,
     gatewayBot: options.gatewayBot || transformGatewayBot,
   };
 }

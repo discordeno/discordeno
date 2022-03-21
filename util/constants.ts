@@ -169,6 +169,9 @@ export const endpoints = {
   // Stage instances
   STAGE_INSTANCES: `${baseEndpoints.BASE_URL}/stage-instances`,
   STAGE_INSTANCE: (channelId: bigint) => `${baseEndpoints.BASE_URL}/stage-instances/${channelId}`,
+
+  // Misc Endpoints
+  NITRO_STICKER_PACKS: `${baseEndpoints.BASE_URL}/sticker-packs`,
 };
 
 export const SLASH_COMMANDS_NAME_REGEX = /^[\w-]{1,32}$/;
