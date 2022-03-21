@@ -19,7 +19,7 @@ export default function editMember(bot: BotWithCache) {
         if (guild.ownerId === memberId) throw new Error("You can not timeout the servers owner.");
       }
 
-      if (!hasGuildPermissions(bot, guildId, memberId, ["ADMINISTRATOR"])) {
+      if (hasGuildPermissions(bot, guildId, memberId, ["ADMINISTRATOR"])) {
         throw new Error("You can not timeout a server administrator.");
       }
     }
