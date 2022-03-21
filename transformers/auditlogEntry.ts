@@ -5,7 +5,6 @@ import { Optionalize } from "../types/shared.ts";
 export function transformAuditlogEntry(bot: Bot, payload: DiscordAuditLogEntry) {
   const auditlogEntry = {
     id: bot.transformers.snowflake(payload.id),
-    // @ts-ignore TODO FIX THIS
     changes: payload.changes?.map((change) => {
       switch (change.key) {
         case "$add":

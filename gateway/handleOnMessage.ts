@@ -10,7 +10,7 @@ import {
   DiscordReady,
   DiscordUnavailableGuild,
 } from "../types/discord.ts";
-import { GatewayOpcodes } from "../types/shared.ts";
+import { GatewayEventNames, GatewayOpcodes } from "../types/shared.ts";
 
 /** Handler for handling every message event from websocket. */
 // deno-lint-ignore no-explicit-any
@@ -134,8 +134,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
 
         // GUILD WAS MARKED LOADING IN READY EVENT, THIS WAS THE FIRST GUILD_CREATE TO ARRIVE
         if (gateway.cache.loadingGuildIds.has(id)) {
-          // @ts-ignore override with a custom event
-          messageData.t = "GUILD_LOADED_DD";
+          messageData.t = "GUILD_LOADED_DD" as GatewayEventNames;
           gateway.cache.loadingGuildIds.delete(id);
         }
 
