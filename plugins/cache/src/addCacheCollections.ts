@@ -1,6 +1,23 @@
-import { Bot, Channel, Collection, Guild, Member, Message, PresenceUpdate, User } from "../deps.ts";
+import {
+  Bot,
+  Channel,
+  Collection,
+  FinalHelpers,
+  Guild,
+  Member,
+  Message,
+  ModifyWebhook,
+  PresenceUpdate,
+  User,
+  Webhook,
+} from "../deps.ts";
 
-export type BotWithCache<B extends Bot = Bot> = B & CacheProps;
+export type BotWithCache<B extends Bot = Bot> = B & CacheProps & { helpers: BotHelpersWithCache };
+
+export interface BotHelpersWithCache extends FinalHelpers {
+  /** The added channelId argument at the end is used to validate permission checks */
+  editWebhook: (webhookId: bigint, options: ModifyWebhook, channelId?: bigint) => Promise<Webhook>;
+}
 
 export interface CacheProps extends Bot {
   guilds: Collection<bigint, Guild>;
