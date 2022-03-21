@@ -29,7 +29,6 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction) {
     channelId: payload.channel_id ? bot.transformers.snowflake(payload.channel_id) : undefined,
     member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, user.id) : undefined,
 
-    // @ts-ignore figure this out
     data: payload.data
       ? {
         componentType: payload.data.component_type,
@@ -41,7 +40,6 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction) {
         resolved: payload.data.resolved
           ? transformInteractionDataResolved(bot, payload.data.resolved, guildId)
           : undefined,
-        // @ts-ignore TODO: figure this out
         options: payload.data.options,
         targetId: payload.data.target_id ? bot.transformers.snowflake(payload.data.target_id) : undefined,
       }
