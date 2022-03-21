@@ -14,7 +14,8 @@ class RoleManager {
   }
 
   async create(options = {}, reason) {
-    return new Role(this.client, options).create(options, reason);
+    options = transformOptions(options);
+    return new Role(this.client, options, {guild: this.guild}).create(options, reason);
   }
 
   async fetch(options = {}) {

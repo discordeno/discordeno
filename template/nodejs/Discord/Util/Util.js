@@ -1,4 +1,7 @@
 const Mask = (1n << 64n) - 1n;
+const {Colors} = require('./Constants');
+
+
 module.exports = {
     getEmoji(str) {
         if (!str) return null;
@@ -8,7 +11,16 @@ module.exports = {
         return { animated: new Boolean(animated), name, id };
     },
 
-    
+    convertColor(color) {
+        if (typeof color === 'string') {
+            if (color === 'DEFAULT') return 0;
+            if (color === 'RANDOM') return Math.floor(Math.random() * (0xffffff + 1));
+            color = Colors[color] ?? parseInt(color.replace('#', ''), 16);
+        } else if (Array.isArray(color)) {
+            color = (color[0] << 16) + (color[1] << 8) + color[2];
+        }
+        return color;
+    },    
 
     packOverwrites(allow, deny, id, type) {
         return pack64(allow, 0) | pack64(deny, 1) | pack64(id, 2) | pack64(type, 3);

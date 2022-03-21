@@ -71,9 +71,33 @@ class CacheManager {
     bot.transformers.message = function (_, payload) {
       const channel = bot.channels.cache.base({ id: payload.channel_id });
       const result = message(bot, payload);
+  
       channel.messages = [result];
+
       ///console.log(channel.messages)
       bot.channels.cache.patch(channel.id, channel);
+
+      if(!result.author) {
+        const author = {
+          id: payload.author.id,
+          username: payload.author.username,
+          discriminator: String(payload.author.discriminator),
+          avatar: payload.author.avatar ? payload.author.avatar : undefined,
+          bot: payload.author.bot, 
+          flags: payload.author.flags,
+          public_flags: payload.author.public_flags,
+        }
+        result.author = bot.transformers.user(bot, author);
+      }
+
+      if(payload.member){
+        bot.transformers.member(bot, payload.member, BigInt(payload.guild_id), BigInt(payload.author.id));
+      }
+
+      if(!result.mentionUsers){
+        result.mentionedUsers = payload.mentions?.map((x) => bot.transformers.user(bot, x));
+      }
+
       return result;
     };
 
@@ -89,6 +113,16 @@ class CacheManager {
       // @ no op
       return emoji(bot, payload);
     };
+    bot.transformers.member = function (_, payload, guildId, userId) {
+      const result = member(bot, payload, guildId, userId);
+      const guild = bot.guilds.cache.base({ id: guildId });
+      guild.members = [result];
+      bot.guilds.cache.patch(guild.id, guild);
+      if(payload.user) {
+        result.user = bot.transformers.user(bot, payload.user);
+      }
+      return result;
+    }
 
     bot.transformers.user = function (_, payload) {
       const result = user(bot, payload);

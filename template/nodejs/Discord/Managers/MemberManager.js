@@ -17,7 +17,8 @@ class Members {
 
     if (options.guild && data.id) {
       if (options.guild.members.cache?.has(data.id)) {
-        return options.guild.members.cache.get(data.id, { guild: options.guild });
+        const user = this.client.users.cache._get(data.id);
+        return options.guild.members.cache.get(data.id, { guild: options.guild, user });
       }
     }
     return new Member(this.client, data, { guild: options.guild });
@@ -41,9 +42,10 @@ class Members {
       return members;
     }
 
-    if (this.cache?.has(id)) return this.cache.get(id, { guild: this.guild });
-    const member = await this.client.helpers.getMember(this.guild.id, id);
-    return this.forge(member, { guild: this.guild });
+    if (this.cache?.has(memberId)) return this.forge(memberId, { guild: this.guild });
+    const member = await this.client.helpers.getMember(guildId, memberId);
+    console.log(member)
+    return this.forge(member, { guild: this.guild, user: member.user });
   }
 
   async edit(options = {}) {

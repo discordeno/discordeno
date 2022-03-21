@@ -2,13 +2,16 @@ const DestructObject = require("./DestructObject");
 const {transformOptions} = require("../Util/transformOptions");
 
 class User extends DestructObject {
+  /** 
+  * @param {import('discordeno').Bot} client
+  */
   constructor(client, user = {}) {
     super(user);
     this.client = client;
   }
 
   get tag() {
-    return `#${this.username}#${this.discriminator}`;
+    return `${this.username}#${this.discriminator}`;
   }
 
   avatarURL(options = {}) {

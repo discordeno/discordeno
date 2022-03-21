@@ -14,7 +14,15 @@ class Member extends DestructObject {
     if (options.guild) this.guild = options.guild;
     else this.guild = client.guilds.forge({ id: this.guildId });
 
-    this.user = client.users.forge({ id: member.id, username: member.username, discriminator: member.discriminator, avatar: member.avatar, bot: member.bot });
+    if(options.user) member.user = options.user;
+    if(!member.user) member.user = { id: this.id };
+    ///Hard Coding property check
+    if(!member.user.username) member.user.username = this.username;
+    if(!member.user.discriminator) member.user.discriminator = this.discriminator;
+    if(!member.user.avatar) member.user.avatar = this.avatar;
+    if(!member.user.bot) member.user.bot = this.bot;
+
+    this.user = client.users.forge(member.user);
 
     this.roles = client.roles.forgeManager({}, {
       guild: options.guild,
@@ -30,9 +38,34 @@ class Member extends DestructObject {
     return new Permissions(permissions).freeze();
   }
 
+  get manageable(){
+    if (this.id === this.guild.ownerId) return false;
+    if (this.id === this.client.userId) return false;
+    if (this.client.userId === this.guild.ownerId) return true;
+    return new Boolean(this.guild.me.roles.highest > this.roles.highest);
+  }
+
+  get kickable(){
+    return this.manageable && this.guild.me.permissions.has(Permissions.FLAGS.KICK_MEMBERS);
+  }
+
+  get bannable(){
+    return this.manageable && this.guild.me.permissions.has(Permissions.FLAGS.BAN_MEMBERS);
+  }
+
   async send(options = {}) {
     options = transformOptions(options, {content: true});
     return this.client.users.forge({ id: this.id }).send(options);
+  }
+
+  async fetch(options = {}){
+    options = transformOptions(options);
+
+    const id = options.id || this.id;
+    const guildId = options.guildId || this.guildId || this.guild?.id;
+
+    const member = await this.client.helpers.getMember(guildId, id);
+    return this.client.members.forge(member, {guild: this.guild});
   }
 
   async kick(options = {}){

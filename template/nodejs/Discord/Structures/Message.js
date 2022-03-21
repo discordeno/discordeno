@@ -10,12 +10,7 @@ class Message extends DestructObject {
     else this.guild = client.guilds.forge({ id: this.guildId });
     this.channel = this.guild.channels.forge({ id: this.channelId }, { guild: this.guild });
     this.member = this.guild.members.forge({ ...message.member, id: this.authorId }, { guild: this.guild });
-    this.author = client.users.forge({
-      id: this.authorId,
-      username: this.tag?.split("#")[0],
-      discriminator: this.tag?.split("#")[1],
-      bot: this.isBot,
-    });
+    this.author = client.users.forge(message.author);
   }
 
   async edit(options) {
@@ -67,8 +62,8 @@ class Message extends DestructObject {
     const roles = new Collection();
     const users = new Collection();
   
-    this.mentionedUserIds.forEach((u)=> {
-      users.set(u, this.client.users.forge({ id: u }));
+    this.mentionedUsers.forEach((u)=> {
+      users.set(u, this.client.users.forge(u));
     })
 
     this.mentionedRoleIds.forEach((r)=> {

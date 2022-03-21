@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "discordeno": "^13.0.0-rc20",
+    "discordeno": "^13.0.0-rc26",
     "discordeno.js": "file:Discord"
   }
 }

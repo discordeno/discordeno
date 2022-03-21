@@ -1,5 +1,6 @@
 const DestructObject = require("./DestructObject");
 const Permissions = require("./Permissions");
+const {convertColor} = require("../Util/Util");
 
 class Role extends DestructObject {
   constructor(client, role = {}, options = {}) {
@@ -17,6 +18,13 @@ class Role extends DestructObject {
     const guildId = this.guildId || this.guilld?.id;
     const role = await this.client.helpers.deleteRole(guildId, this.id);
     return role;
+  }
+
+  async create(options = {}, reason) {
+    const guildId = this.guildId || this.guild?.id;
+    if(options.color) options.color = convertColor(options.color);
+    const role = await this.client.helpers.createRole(guildId, options, reason);
+    return this.client.roles.forge(role, { guild: this.guild });
   }
 
 }

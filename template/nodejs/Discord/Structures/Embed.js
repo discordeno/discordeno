@@ -1,4 +1,7 @@
 // @todo add color support, and .toJSON() on Embed
+
+const {convertColor} = require('../Util/Util');
+
 class Embed {
   constructor(options = {}) {
     this.title = options.title;
@@ -42,7 +45,7 @@ class Embed {
   }
 
   setColor(color) {
-    if(typeof color === "string") color = HEXToVBColor(color);
+    if(typeof color === "string") color = convertColor(color);
     this.color = color;
     return this;
   }
@@ -69,8 +72,12 @@ class Embed {
   }
 
   addFields(...fields) {
-    fields.map((x) => this.addField(x));
+    this.fields.push(...this.constructor.flatFields(fields));
     return this;
+  }
+
+  static flatFields(...fields) {
+    return fields.flat(2);
   }
 
   toJSON() {
@@ -103,8 +110,3 @@ class Embed {
   }
 }
 module.exports = Embed;
-
-function HEXToVBColor(rrggbb) {
-  var bbggrr = rrggbb.substr(4, 2) + rrggbb.substr(2, 2) + rrggbb.substr(0, 2);
-  return parseInt(bbggrr, 16);
-}
