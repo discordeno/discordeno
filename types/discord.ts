@@ -1150,7 +1150,7 @@ export interface DiscordSelectMenuComponent {
   type: MessageComponentTypes.SelectMenu;
   /** A custom identifier for this component. Maximum 100 characters. */
   custom_id: string;
-  /** A custom placeholder text if nothing is selected. Maximum 100 characters. */
+  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string;
   /** The minimum number of items that must be selected. Default 1. Between 1-25. */
   min_values?: number;
@@ -1853,7 +1853,7 @@ export interface DiscordComponent {
   url?: string;
   /** The choices! Maximum of 25 items. */
   options?: DiscordSelectOption[];
-  /** A custom placeholder text if nothing is selected. Maximum 100 characters. */
+  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string;
   /** The minimum number of items that must be selected. Default 1. Between 1-25. */
   min_values?: number;
@@ -2090,7 +2090,7 @@ export interface DiscordGuildMemberUpdate {
   mute?: boolean;
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
   pending?: boolean;
-  /** when the user's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out */
+  /** when the user's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out. Will throw a 403 error if the user has the ADMINISTRATOR permission or is the owner of the guild */
   communication_disabled_until?: string;
 }
 

@@ -52,10 +52,10 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
       if (subcomponent.type === MessageComponentTypes.SelectMenu) {
         if (
           subcomponent.placeholder &&
-          !bot.utils.validateLength(subcomponent.placeholder, { max: 100 })
+          !bot.utils.validateLength(subcomponent.placeholder, { max: 150 })
         ) {
           throw new Error(
-            "The component placeholder can not be longer than 100 characters.",
+            "The component placeholder can not be longer than 150 characters.",
           );
         }
 
