@@ -1,4 +1,4 @@
-import { GatewayManager } from "./gateway_manager.ts";
+import { GatewayManager } from "./gatewayManager.ts";
 import { snowflakeToBigint } from "../util/bigint.ts";
 import { delay } from "../util/utils.ts";
 import { decompressWith } from "./deps.ts";

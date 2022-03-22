@@ -1,5 +1,5 @@
 import { GatewayOpcodes } from "../types/shared.ts";
-import { GatewayManager } from "./gateway_manager.ts";
+import { GatewayManager } from "./gatewayManager.ts";
 
 export function identify(gateway: GatewayManager, shardId: number, maxShards: number) {
   gateway.debug("GW IDENTIFYING", { shardId, maxShards });

@@ -1,4 +1,4 @@
-import { GatewayManager } from "./gateway_manager.ts";
+import { GatewayManager } from "./gatewayManager.ts";
 import { DiscordenoShard } from "./shard.ts";
 
 export function safeRequestsPerShard(gateway: GatewayManager, shard: DiscordenoShard) {

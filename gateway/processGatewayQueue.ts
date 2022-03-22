@@ -1,5 +1,5 @@
 import { delay } from "../util/utils.ts";
-import { GatewayManager } from "./gateway_manager.ts";
+import { GatewayManager } from "./gatewayManager.ts";
 
 export async function processGatewayQueue(gateway: GatewayManager, id: number) {
   const shard = gateway.shards.get(id);

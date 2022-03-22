@@ -1,5 +1,5 @@
 import { delay } from "../util/utils.ts";
-import { GatewayManager } from "./gateway_manager.ts";
+import { GatewayManager } from "./gatewayManager.ts";
 
 /** Use this function to stop the gateway properly */
 export async function stopGateway(
