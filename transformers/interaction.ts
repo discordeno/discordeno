@@ -1,5 +1,5 @@
 import { Bot } from "../bot.ts";
-import { DiscordAttachment, DiscordInteraction, DiscordInteractionDataResolved } from "../types/discord.ts";
+import { DiscordAttachment, DiscordInteraction, DiscordInteractionDataOption, DiscordInteractionDataResolved } from "../types/discord.ts";
 import { ChannelTypes } from "../types/shared.ts";
 import { Collection } from "../util/collection.ts";
 import { Attachment } from "./attachment.ts";
@@ -40,13 +40,25 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction) {
         resolved: payload.data.resolved
           ? transformInteractionDataResolved(bot, payload.data.resolved, guildId)
           : undefined,
-        options: payload.data.options,
+        options: payload.data.options?.map(opt => bot.transformers.interactionDataOptions(bot, opt)),
         targetId: payload.data.target_id ? bot.transformers.snowflake(payload.data.target_id) : undefined,
       }
       : undefined,
   };
 
   return interaction as Optionalize<typeof interaction>;
+}
+
+export function transformInteractionDataOption(bot: Bot, option: DiscordInteractionDataOption) {
+  const opt = {
+    name: option.name,
+    type: option.type,
+    value: option.value,
+    options: option.options,
+    focused: option.focused,
+  }
+
+  return opt as Optionalize<typeof opt>;
 }
 
 export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInteractionDataResolved, guildId?: bigint) {
@@ -127,3 +139,4 @@ export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInte
 
 export interface Interaction extends ReturnType<typeof transformInteraction> {}
 export interface InteractionDataResolved extends ReturnType<typeof transformInteractionDataResolved> {}
+export interface InteractionDataOption extends ReturnType<typeof transformInteractionDataOption> {}

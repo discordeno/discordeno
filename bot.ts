@@ -34,7 +34,7 @@ import { delay, formatImageURL, hasProperty } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
 import { calculateShardId } from "./util/calculateShardId.ts";
 import * as handlers from "./handlers/mod.ts";
-import { Interaction, transformInteraction } from "./transformers/interaction.ts";
+import { Interaction, InteractionDataOption, transformInteraction } from "./transformers/interaction.ts";
 import { Integration, transformIntegration } from "./transformers/integration.ts";
 import { transformApplication } from "./transformers/application.ts";
 import { transformTeam } from "./transformers/team.ts";
@@ -61,7 +61,7 @@ import { transformWidget } from "./transformers/widget.ts";
 import { transformStageInstance } from "./transformers/stageInstance.ts";
 import { StickerPack, transformSticker, transformStickerPack } from "./transformers/sticker.ts";
 import { GetGatewayBot, transformGatewayBot } from "./transformers/gatewayBot.ts";
-import { DiscordEmoji, DiscordGatewayPayload, DiscordReady, DiscordStickerPack } from "./types/discord.ts";
+import { DiscordEmoji, DiscordGatewayPayload, DiscordInteractionDataOption, DiscordReady, DiscordStickerPack } from "./types/discord.ts";
 import { Errors, GatewayDispatchEventNames, GatewayIntents } from "./types/shared.ts";
 
 import {
@@ -373,6 +373,7 @@ export interface Transformers {
   role: (bot: Bot, payload: { role: DiscordRole } & { guildId: bigint }) => Role;
   voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) => VoiceState;
   interaction: (bot: Bot, payload: DiscordInteraction) => Interaction;
+  interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption;
   integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration;
   invite: (bot: Bot, invite: DiscordInviteCreate) => Invite;
   application: (bot: Bot, payload: DiscordApplication) => Application;
