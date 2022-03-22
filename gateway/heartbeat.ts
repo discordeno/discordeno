@@ -49,6 +49,7 @@ export async function heartbeat(gateway: GatewayManager, shardId: number, interv
     if (currentShard.ws.readyState !== WebSocket.OPEN) return;
 
     currentShard.heartbeat.acknowledged = false;
+    currentShard.heartbeat.lastSentAt = Date.now();
 
     currentShard.ws.send(
       JSON.stringify({
