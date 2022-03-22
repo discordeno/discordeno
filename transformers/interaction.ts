@@ -1,5 +1,10 @@
 import { Bot } from "../bot.ts";
-import { DiscordAttachment, DiscordInteraction, DiscordInteractionDataOption, DiscordInteractionDataResolved } from "../types/discord.ts";
+import {
+  DiscordAttachment,
+  DiscordInteraction,
+  DiscordInteractionDataOption,
+  DiscordInteractionDataResolved,
+} from "../types/discord.ts";
 import { ChannelTypes } from "../types/shared.ts";
 import { Collection } from "../util/collection.ts";
 import { Attachment } from "./attachment.ts";
@@ -40,7 +45,7 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction) {
         resolved: payload.data.resolved
           ? transformInteractionDataResolved(bot, payload.data.resolved, guildId)
           : undefined,
-        options: payload.data.options?.map(opt => bot.transformers.interactionDataOptions(bot, opt)),
+        options: payload.data.options?.map((opt) => bot.transformers.interactionDataOptions(bot, opt)),
         targetId: payload.data.target_id ? bot.transformers.snowflake(payload.data.target_id) : undefined,
       }
       : undefined,
@@ -56,7 +61,7 @@ export function transformInteractionDataOption(bot: Bot, option: DiscordInteract
     value: option.value,
     options: option.options,
     focused: option.focused,
-  }
+  };
 
   return opt as Optionalize<typeof opt>;
 }
