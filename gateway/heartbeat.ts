@@ -1,6 +1,6 @@
 import { GatewayOpcodes } from "../types/shared.ts";
 import { delay } from "../util/utils.ts";
-import { GatewayManager } from "./gateway_manager.ts";
+import { GatewayManager } from "./gatewayManager.ts";
 
 export async function heartbeat(gateway: GatewayManager, shardId: number, interval: number) {
   gateway.debug("GW HEARTBEATING_STARTED", { shardId, interval });

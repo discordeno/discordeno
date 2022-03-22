@@ -1,5 +1,6 @@
-import type { GuildMemberWithUser } from "../../types/members/guildMember.ts";
-import type { SearchGuildMembers } from "../../types/members/searchGuildMembers.ts";
+import type { SearchMembers } from "../../types/discordeno.ts";
+import type { DiscordMemberWithUser } from "../../types/discord.ts";
+
 import { Collection } from "../../util/collection.ts";
 import { Bot } from "../../bot.ts";
 
@@ -10,7 +11,7 @@ export async function searchMembers(
   bot: Bot,
   guildId: bigint,
   query: string,
-  options?: Omit<SearchGuildMembers, "query">,
+  options?: Omit<SearchMembers, "query">,
 ) {
   if (options?.limit) {
     if (options.limit < 1) throw new Error(bot.constants.Errors.MEMBER_SEARCH_LIMIT_TOO_LOW);
@@ -19,7 +20,7 @@ export async function searchMembers(
     }
   }
 
-  const result = await bot.rest.runMethod<GuildMemberWithUser[]>(
+  const result = await bot.rest.runMethod<DiscordMemberWithUser[]>(
     bot.rest,
     "get",
     bot.constants.endpoints.GUILD_MEMBERS_SEARCH(guildId),

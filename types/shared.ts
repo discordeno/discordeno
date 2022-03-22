@@ -976,7 +976,6 @@ export type GatewayDispatchEventNames =
   | "THREAD_UPDATE"
   | "THREAD_DELETE"
   | "THREAD_LIST_SYNC"
-  | "THREAD_MEMBER_UPDATE"
   | "THREAD_MEMBERS_UPDATE";
 
 export type GatewayEventNames = GatewayDispatchEventNames | "READY" | "RESUMED";

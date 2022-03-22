@@ -1,5 +1,5 @@
 import { GatewayCloseEventCodes } from "../types/shared.ts";
-import { GatewayManager } from "./gateway_manager.ts";
+import { GatewayManager } from "./gatewayManager.ts";
 
 export function createShard(gateway: GatewayManager, shardId: number) {
   const socket = new WebSocket(`${gateway.urlWSS}/?v=9&encoding=json`);

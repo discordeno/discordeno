@@ -61,7 +61,13 @@ import { transformWidget } from "./transformers/widget.ts";
 import { transformStageInstance } from "./transformers/stageInstance.ts";
 import { StickerPack, transformSticker, transformStickerPack } from "./transformers/sticker.ts";
 import { GetGatewayBot, transformGatewayBot } from "./transformers/gatewayBot.ts";
-import { DiscordEmoji, DiscordGatewayPayload, DiscordInteractionDataOption, DiscordReady, DiscordStickerPack } from "./types/discord.ts";
+import {
+  DiscordEmoji,
+  DiscordGatewayPayload,
+  DiscordInteractionDataOption,
+  DiscordReady,
+  DiscordStickerPack,
+} from "./types/discord.ts";
 import { Errors, GatewayDispatchEventNames, GatewayIntents } from "./types/shared.ts";
 
 import {
@@ -684,7 +690,6 @@ export interface BotGatewayHandlerOptions {
   THREAD_UPDATE: typeof handlers.handleThreadUpdate;
   THREAD_DELETE: typeof handlers.handleThreadDelete;
   THREAD_LIST_SYNC: typeof handlers.handleThreadListSync;
-  THREAD_MEMBER_UPDATE: typeof handlers.handleThreadMemberUpdate;
   THREAD_MEMBERS_UPDATE: typeof handlers.handleThreadMembersUpdate;
   STAGE_INSTANCE_CREATE: typeof handlers.handleStageInstanceCreate;
   STAGE_INSTANCE_UPDATE: typeof handlers.handleStageInstanceUpdate;
@@ -750,7 +755,6 @@ export function createBotGatewayHandlers(
     THREAD_UPDATE: options.THREAD_UPDATE ?? handlers.handleThreadUpdate,
     THREAD_DELETE: options.THREAD_DELETE ?? handlers.handleThreadDelete,
     THREAD_LIST_SYNC: options.THREAD_LIST_SYNC ?? handlers.handleThreadListSync,
-    THREAD_MEMBER_UPDATE: options.THREAD_MEMBER_UPDATE ?? handlers.handleThreadMemberUpdate,
     THREAD_MEMBERS_UPDATE: options.THREAD_MEMBERS_UPDATE ?? handlers.handleThreadMembersUpdate,
     STAGE_INSTANCE_CREATE: options.STAGE_INSTANCE_CREATE ??
       handlers.handleStageInstanceCreate,
