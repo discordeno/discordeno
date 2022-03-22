@@ -2,7 +2,6 @@ import {
   Bot,
   Channel,
   Collection,
-  FinalHelpers,
   Guild,
   Member,
   Message,
@@ -12,14 +11,16 @@ import {
   Webhook,
 } from "../deps.ts";
 
-export type BotWithCache<B extends Bot = Bot> = B & CacheProps & { helpers: BotHelpersWithCache };
+export type BotWithCache<B extends Bot = Bot> = Omit<B, "helpers"> & CacheProps & {
+  helpers: BotHelpersWithCache<B["helpers"]>;
+};
 
-export interface BotHelpersWithCache extends FinalHelpers {
+export type BotHelpersWithCache<T> = Omit<T, "editWebhook"> & {
   /** The added channelId argument at the end is used to validate permission checks */
-  editWebhook: (webhookId: bigint, options: ModifyWebhook, channelId?: bigint) => Promise<Webhook>;
-}
+  editWebhook: (webhookId: bigint, options: ModifyWebhook, fromChannelId?: bigint) => Promise<Webhook>;
+};
 
-export interface CacheProps extends Bot {
+export interface CacheProps {
   guilds: Collection<bigint, Guild>;
   users: Collection<bigint, User>;
   members: Collection<bigint, Member>;
@@ -32,7 +33,7 @@ export interface CacheProps extends Bot {
 }
 
 export function addCacheCollections<B extends Bot>(bot: B): BotWithCache<B> {
-  const cacheBot = bot as BotWithCache<B>;
+  const cacheBot = bot as unknown as BotWithCache<B>;
   cacheBot.guilds = new Collection();
   cacheBot.users = new Collection();
   cacheBot.members = new Collection();
@@ -43,5 +44,5 @@ export function addCacheCollections<B extends Bot>(bot: B): BotWithCache<B> {
   cacheBot.dispatchedChannelIds = new Set();
   cacheBot.activeGuildIds = new Set();
 
-  return bot as BotWithCache<B>;
+  return cacheBot;
 }
