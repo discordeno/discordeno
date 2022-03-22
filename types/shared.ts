@@ -978,7 +978,12 @@ export type GatewayDispatchEventNames =
   | "THREAD_LIST_SYNC"
   | "THREAD_MEMBERS_UPDATE";
 
-export type GatewayEventNames = GatewayDispatchEventNames | "READY" | "RESUMED";
+export type GatewayEventNames =
+  | GatewayDispatchEventNames
+  | "READY"
+  | "RESUMED"
+  // THIS IS A CUSTOM DD EVENT NOT A DISCORD EVENT
+  | "GUILD_LOADED_DD";
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
 export enum GatewayIntents {
@@ -1313,11 +1318,11 @@ export type KeysWithUndefined<T> = {
 export type Optionalize<T> =
   // Collections don't need optionalizing
   T extends Collection<any, any> ? T
-    // If an array only optionalize objects in arrays
-    : T extends unknown[] ? T[number] extends Record<any, any> ? Array<Optionalize<T[number]>>
+    : // If an array only optionalize objects in arrays
+    T extends unknown[] ? T[number] extends Record<any, any> ? Array<Optionalize<T[number]>>
     : T
-    // Specific optionalizing of {} go here
-    : T extends object ? Id<
+    : // Specific optionalizing of {} go here
+    T extends object ? Id<
       & {
         [K in KeysWithUndefined<T>]?: T[K] extends Collection<any, any> ? T[K] : Optionalize<T[K]>;
       }
