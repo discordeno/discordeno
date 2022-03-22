@@ -2023,7 +2023,7 @@ export interface DiscordMessageDelete {
   guild_id?: string;
 }
 
-// TODO: add docs link
+/** https://discord.com/developers/docs/topics/gateway#thread-members-update-thread-members-update-event-fields */
 export interface DiscordThreadMembersUpdate {
   /** The id of the thread */
   id: string;
@@ -2035,6 +2035,18 @@ export interface DiscordThreadMembersUpdate {
   removed_member_ids?: string[];
   /** the approximate number of members in the thread, capped at 50 */
   member_count: number;
+}
+
+/** https://discord.com/developers/docs/topics/gateway#thread-member-update */
+export interface DiscordThreadMemberUpdate {
+  /** The id of the thread */
+  id: string;
+  /** The id of the guild */
+  guild_id: string;
+  /** The timestamp when the bot joined this thread. */
+  joined_at: string;
+  /** The flags this user has for this thread. Not useful for bots. */
+  flags: number;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-role-create */

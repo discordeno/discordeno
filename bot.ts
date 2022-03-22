@@ -183,6 +183,7 @@ export function createEventHandlers(
     debug: events.debug ?? ignore,
     threadCreate: events.threadCreate ?? ignore,
     threadDelete: events.threadDelete ?? ignore,
+    threadMemberUpdate: events.threadMemberUpdate ?? ignore,
     threadMembersUpdate: events.threadMembersUpdate ?? ignore,
     threadUpdate: events.threadUpdate ?? ignore,
     scheduledEventCreate: events.scheduledEventCreate ?? ignore,
@@ -455,6 +456,12 @@ export interface EventHandlers {
   debug: (text: string, ...args: any[]) => unknown;
   threadCreate: (bot: Bot, thread: Channel) => unknown;
   threadDelete: (bot: Bot, thread: Channel) => unknown;
+  threadMemberUpdate: (bot: Bot, payload: {
+    id: bigint;
+    guildId: bigint;
+    joinedAt: number;
+    flags: number;
+  }) => unknown;
   threadMembersUpdate: (
     bot: Bot,
     payload: {
