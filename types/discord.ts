@@ -150,8 +150,6 @@ export interface DiscordIntegrationApplication {
   icon: string | null;
   /** The description of the app */
   description: string;
-  /** The summary of the app */
-  summary: string;
 
   /** The bot associated with this application */
   bot?: DiscordUser;

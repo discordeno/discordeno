@@ -43,7 +43,6 @@ export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuild
           name: integration.application.name,
           icon: integration.application.icon ? bot.utils.iconHashToBigInt(integration.application.icon) : undefined,
           description: integration.application.description,
-          summary: integration.application.summary,
           bot: integration.application.bot ? bot.transformers.user(bot, integration.application.bot) : undefined,
         }
         : undefined,
