@@ -12,6 +12,7 @@ on:
       - "types/**"
       - "util/**"
       - "ws/**"
+      - "template/**"
 
 jobs:
   test:
