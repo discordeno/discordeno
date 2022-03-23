@@ -9,10 +9,10 @@ on:
       - "rest/**"
       - "tests/**"
       - "transformers/**"
+      - "template/**"
       - "types/**"
       - "util/**"
       - "ws/**"
-      - "template/**"
 
 jobs:
   test:
