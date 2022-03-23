@@ -16,6 +16,7 @@ import {
   GuildNsfwLevel,
   IntegrationExpireBehaviors,
   InteractionTypes,
+  Locales,
   MessageActivityTypes,
   MessageComponentTypes,
   MessageTypes,
@@ -1631,7 +1632,7 @@ export interface DiscordInviteStageInstance {
   topic: string;
 }
 
-/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommand */
+/** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure */
 export interface DiscordApplicationCommand {
   /** Unique id of the command */
   id: string;
@@ -1641,8 +1642,16 @@ export interface DiscordApplicationCommand {
   guild_id?: string;
   /** 1-32 character name matching */
   name: string;
+  /** Localization object for the `name` field. Values follow the same restrictions as `name` */
+  name_localizations?: {
+    [key in Locales]?: string;
+  };
   /** 1-100 character description */
-  description?: string;
+  description: string;
+  /** Localization object for the `description` field. Values follow the same restrictions as `description` */
+  description_localizations?: {
+    [key in Locales]?: string;
+  };
   /** The parameters for the command */
   options?: DiscordApplicationCommandOption[];
   /** Whether the command is enbaled by default when the app is added to a guild */
@@ -1653,14 +1662,22 @@ export interface DiscordApplicationCommand {
   version: string;
 }
 
-/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoption */
+/** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure */
 export interface DiscordApplicationCommandOption {
   /** Value of Application Command Option Type */
   type: ApplicationCommandOptionTypes;
   /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
   name: string;
+  /** Localization object for the `name` field. Values follow the same restrictions as `name` */
+  name_localizations?: {
+    [key in Locales]?: string;
+  };
   /** 1-100 character description */
   description: string;
+  /** Localization object for the `description` field. Values follow the same restrictions as `description` */
+  description_localizations?: {
+    [key in Locales]?: string;
+  };
   /** If the parameter is required or optional--default `false` */
   required?: boolean;
   /** Choices for `string` and `int` types for the user to pick from */
@@ -1677,10 +1694,14 @@ export interface DiscordApplicationCommandOption {
   max_value?: number;
 }
 
-/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptionchoice */
+/** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-choice-structure */
 export interface DiscordApplicationCommandOptionChoice {
   /** 1-100 character choice name */
   name: string;
+  /** Localization object for the `name` field. Values follow the same restrictions as `name` */
+  name_localizations?: {
+    [key in Locales]?: string;
+  };
   /** Value of the choice, up to 100 characters if string */
   value: string | number;
 }
