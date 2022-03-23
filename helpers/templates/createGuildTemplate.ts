@@ -4,7 +4,7 @@ import { User } from "../../transformers/member.ts";
 import { DiscordTemplate } from "../../types/discord.ts";
 
 /** Creates a template for the guild. Requires the `MANAGE_GUILD` permission. */
-export async function createGuildTemplate(bot: Bot, guildId: bigint, data: Template) {
+export async function createGuildTemplate(bot: Bot, guildId: bigint, data: CreateTemplate) {
   if (data.name.length < 1 || data.name.length > 100) {
     throw new Error("The name can only be in between 1-100 characters.");
   }
@@ -28,7 +28,7 @@ export async function createGuildTemplate(bot: Bot, guildId: bigint, data: Templ
   });
 }
 
-export interface Template {
+export interface CreateTemplate {
   /** The template code (unique Id) */
   code: string;
   /** Template name */

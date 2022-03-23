@@ -8,11 +8,13 @@ import {
   Message,
   Role,
   ScheduledEvent,
+  Template,
   transformChannel,
   transformGuild,
   transformMember,
   transformMessage,
   transformRole,
+  transformTemplate,
   transformUser,
   transformVoiceState,
   User,
@@ -67,6 +69,7 @@ import {
   DiscordInteractionDataOption,
   DiscordReady,
   DiscordStickerPack,
+  DiscordTemplate,
 } from "./types/discord.ts";
 import { Errors, GatewayDispatchEventNames, GatewayIntents } from "./types/shared.ts";
 
@@ -407,6 +410,7 @@ export interface Transformers {
   stageInstance: (bot: Bot, payload: DiscordStageInstance) => StageInstance;
   sticker: (bot: Bot, payload: DiscordSticker) => Sticker;
   stickerPack: (bot: Bot, payload: DiscordStickerPack) => StickerPack;
+  template: (bot: Bot, payload: DiscordTemplate) => Template;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -447,6 +451,7 @@ export function createTransformers(options: Partial<Transformers>) {
     sticker: options.sticker || transformSticker,
     stickerPack: options.stickerPack || transformStickerPack,
     gatewayBot: options.gatewayBot || transformGatewayBot,
+    template: options.template || transformTemplate,
   };
 }
 

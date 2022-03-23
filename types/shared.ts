@@ -1335,3 +1335,9 @@ export type Optionalize<T> =
       }
     >
     : T;
+
+export type PickPartial<T, K extends keyof T> =
+  & {
+    [P in keyof T]?: T[P] | undefined;
+  }
+  & { [P in K]: T[P] };
