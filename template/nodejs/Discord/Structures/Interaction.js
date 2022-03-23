@@ -64,9 +64,12 @@ class Interaction extends DestructObject {
             options.file = transformAttachments(options.attachments);
         }
 
+        if (options.ephemeral) {
+            delete options.ephemeral;
+            this.ephemeral = true;
+            options.flags = options.flags ? options.flags | Constants.FLAGS.EPHEMERAL : Constants.FLAGS.EPHEMERAL;
+        }
         const Payload = { data: options, type: Constants.CHANNEL_MESSAGE_WITH_SOURCE };
-        if (options.ephemeral) Payload.private = true;
-        this.ephemeral = Payload.private;
 
         this.replied = true;
         return this.client.helpers.sendInteractionResponse(this.id, this.token, Payload);
@@ -103,6 +106,12 @@ class Interaction extends DestructObject {
 
         if (options.attachments) {
             options.file = transformAttachments(options.attachments);
+        }
+
+        if (options.ephemeral) {
+            delete options.ephemeral;
+            this.ephemeral = true;
+            options.flags = options.flags ? options.flags | Constants.FLAGS.EPHEMERAL : Constants.FLAGS.EPHEMERAL;
         }
 
         const Payload = { data: options, type: Constants.CHANNEL_MESSAGE_WITH_SOURCE };

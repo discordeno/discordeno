@@ -5,6 +5,7 @@ const {Colors, DISCORD_EPOCH} = require('./Constants');
 module.exports = {
     getEmoji(str) {
         if (!str) return null;
+        if(isBigInt(str)) str = `<:testname:${str}>`;
         if (str.includes('%')) return decodeURIComponent(str);
         if (!str.includes(':')) return { animated: false, name: str, id: null };
         const [_, animated, name, id] = /^<(a?):([a-z0-9_-]{2,}):(\d{18})>/i.exec(str)
@@ -53,3 +54,12 @@ function pack64(v, shift) {
     if (b < 0 || b > Mask) throw new Error("should have been a 64 bit unsigned integer: " + v);
     return b << BigInt(shift * 64);
 };
+
+function isBigInt(v) {
+    try{
+        v = BigInt(v);
+        return true;
+    }catch(e){
+        return false;
+    }
+}

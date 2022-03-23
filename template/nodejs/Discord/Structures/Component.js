@@ -146,7 +146,7 @@ class Component {
       type: this.type,
     };
     if (this.type === 1) {
-      json.components = this.components.map((c) => c.toJSON?.()).filter((c) => c);
+      json.components = this.components.map((c) => c.toJSON ? c.toJSON() : c).filter((c) => c?.type);
     }
 
     if (this.type === 2) {

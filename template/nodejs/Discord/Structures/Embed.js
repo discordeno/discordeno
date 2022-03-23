@@ -85,7 +85,7 @@ class Embed {
       title: this.title,
       type: "rich",
       description: this.description,
-      color: this.color,
+      color: typeof this.color === "string" ? convertColor(this.color) : this.color,
       timestamp: this.timestamp ? new Date(this.timestamp).toISOString() : null,
       thumbnail: this.thumbnail,
       image: this.image,

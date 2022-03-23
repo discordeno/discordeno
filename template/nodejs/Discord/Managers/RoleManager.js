@@ -52,17 +52,21 @@ class RoleManager {
   async add(options = {}, reason) {
     options = transformOptions(options);
 
+    const roleId = options.id ?? options.roleId;
     const guildId = (this.guild ? this.guild.id : options.guildId);
     const memberId = (this.member ? this.member.id : options.memberId);
-    return this.client.helpers.addRole(guildId, memberId, options.roleId, reason);
+    const op = await this.client.helpers.addRole(guildId, memberId, roleId, reason);
+    return op ?? true;
   }
 
   async remove(options = {}, reason) {
     options = transformOptions(options);
 
+    const roleId = options.id ?? options.roleId;
     const guildId = (this.guild ? this.guild.id : options.guildId);
     const memberId = (this.member ? this.member.id : options.memberId);
-    return this.client.helpers.removeRole(guildId, memberId, options.roleId, reason);
+    const op = await this.client.helpers.removeRole(guildId, memberId, roleId, reason);
+    return op ?? true;
   }
 
   forgeManager(data = {}, options = {}) {

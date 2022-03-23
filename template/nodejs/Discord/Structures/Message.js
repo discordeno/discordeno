@@ -1,5 +1,6 @@
 const DestructObject = require("./DestructObject");
 const Collection = require("./Collection");
+const Embed = require("./Embed");
 const {transformOptions, transformAttachments} = require("../Util/transformOptions");
 
 class Message extends DestructObject {
@@ -18,6 +19,12 @@ class Message extends DestructObject {
 
     if(options.attachments){
       options.file = transformAttachments(options.attachments);
+    }
+
+    if(options.embeds){
+      options.embeds = options.embeds.map((e)=> {
+        return new Embed(e).toJSON();
+      });
     }
 
     return this.client.helpers.editMessage(this.channel.id, this.id, options);

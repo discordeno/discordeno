@@ -28,6 +28,7 @@ module.exports = {
   Emoji: require("./Structures/Emoji"),
   Interaction: require("./Structures/Interaction"),
   Webhook: require("./Structures/Webhook"),
+  Websocket: require("./Structures/Websocket"),
 
   DestructObject: require("./Structures/DestructObject"),
   CacheCollection: require("./Structures/CacheCollection"),

@@ -26,7 +26,7 @@ const Actions = require("./Actions");
 class CacheManager {
   // : import('discordeno').Bot
   static overwriteHandlers(bot) {
-    const { guild, user, member, channel, message, role, emoji } = bot.transformers;
+    const { guild, user, member, channel, message, role, emoji , embed} = bot.transformers;
     const { handleDiscordPayload } = bot.gateway;
 
     bot.gateway.handleDiscordPayload = function (_bot, packet, shardId) {
@@ -129,6 +129,14 @@ class CacheManager {
       bot.users.cache.patch(result.id, result);
       return result;
     };
+
+    bot.transformers.embed = function (_, payload) {
+      const result = embed(bot, payload);
+      if(!result.fields) {
+        result.fields = [];
+      }
+      return result;
+    }
 
     return bot;
   }

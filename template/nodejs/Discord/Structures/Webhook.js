@@ -13,7 +13,7 @@ class Webhook extends DestructObject {
     const id = options.id || this.id;
     const token = options.token || this.token;
     const message = await this.client.helpers.sendWebhook(id,token, options);
-    return this.client.messages.forge(message);
+    return this.client.messages ? this.client.messages.forge(message) : message;
   }
 
   async edit(options = {}){
@@ -33,7 +33,7 @@ class Webhook extends DestructObject {
     const messageId = typeof options.messageId === "string" ? BigInt(options.messageId) : options.messageId;
 
     const message = await this.client.helpers.getWebhookMessage(id,token,messageId, options);
-    return this.client.messages.forge(message);
+    return this.client.messages ? this.client.messages.forge(message) : message;
   }
 
 
@@ -47,7 +47,7 @@ class Webhook extends DestructObject {
     options.messageId = messageId;
 
     const message = await this.client.helpers.editWebhookMessage(id, token, options);
-    return this.client.messages.forge(message);
+    return this.client.messages ? this.client.messages.forge(message) : message;
   }
 
   async delete(options = {}){
