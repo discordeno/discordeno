@@ -23,4 +23,3 @@ export interface ModifyRolePositions {
   /** The sorting position for the role. */
   position?: number | null;
 }
-
