@@ -29,4 +29,3 @@ export default function editRole(bot: BotWithCache) {
     return await editRoleOld(guildId, id, options);
   };
 }
-
