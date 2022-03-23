@@ -2020,10 +2020,16 @@ export interface DiscordTemplate {
       "roles"
     >
     & {
-      roles: (Omit<PickPartial<
-        DiscordRole,
-        "name" | "color" | "hoist" | "mentionable" | "permissions" | "icon" | "unicode_emoji"
-      >, "id"> & { id: number })[];
+      roles: (
+        & Omit<
+          PickPartial<
+            DiscordRole,
+            "name" | "color" | "hoist" | "mentionable" | "permissions" | "icon" | "unicode_emoji"
+          >,
+          "id"
+        >
+        & { id: number }
+      )[];
     };
   /** Whether the template has unsynced changes */
   is_dirty: boolean | null;
