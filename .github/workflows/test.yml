@@ -11,7 +11,7 @@ on:
       - "transformers/**"
       - "types/**"
       - "util/**"
-      - "ws/**"
+      - "gateway/**"
 
 jobs:
   test:
