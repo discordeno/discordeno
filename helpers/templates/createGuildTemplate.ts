@@ -14,41 +14,14 @@ export async function createGuildTemplate(bot: Bot, guildId: bigint, data: Creat
   }
 
   return await bot.rest.runMethod<DiscordTemplate>(bot.rest, "post", bot.constants.endpoints.GUILD_TEMPLATES(guildId), {
-    code: data.code,
     name: data.name,
     description: data.description,
-    usage_count: data.usageCount,
-    creator_id: data.creatorId,
-    creator: data.creator,
-    created_at: data.createdAt,
-    updated_at: data.updatedAt,
-    source_guild_id: data.sourceGuildId,
-    serialized_source_guild: data.serializedSourceGuild,
-    is_dirty: data.isDirty,
   });
 }
 
 export interface CreateTemplate {
-  /** The template code (unique Id) */
-  code: string;
-  /** Template name */
+  /** Name which the template should have */
   name: string;
-  /** The description for the template */
-  description: string;
-  /** Number of times this template has been used */
-  usageCount: number;
-  /** The Id of the user who created the template */
-  creatorId: string;
-  /** The user who created the template */
-  creator: User;
-  /** When this template was created */
-  createdAt: string;
-  /** When this template was last synced to the source guild */
-  updatedAt: string;
-  /** The Id of the guild this template is based on */
-  sourceGuildId: string;
-  /** The guild snapshot this template contains */
-  serializedSourceGuild: Partial<Guild>;
-  /** Whether the template has unsynced changes */
-  isDirty: boolean;
+  /** Description of the template */
+  description?: string;
 }
