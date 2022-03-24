@@ -62,6 +62,7 @@ import { transformStageInstance } from "./transformers/stageInstance.ts";
 import { StickerPack, transformSticker, transformStickerPack } from "./transformers/sticker.ts";
 import { GetGatewayBot, transformGatewayBot } from "./transformers/gatewayBot.ts";
 import {
+  DiscordApplicationCommandOptionChoice,
   DiscordEmoji,
   DiscordGatewayPayload,
   DiscordInteractionDataOption,
@@ -119,6 +120,10 @@ import { VoiceRegions } from "./transformers/voiceRegion.ts";
 import { GuildWidget } from "./transformers/widget.ts";
 import { StageInstance } from "./transformers/stageInstance.ts";
 import { Sticker } from "./transformers/sticker.ts";
+import {
+  ApplicationCommandOptionChoice,
+  transformApplicationCommandOptionChoice,
+} from "./transformers/applicationCommandOptionChoice.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -407,6 +412,10 @@ export interface Transformers {
   stageInstance: (bot: Bot, payload: DiscordStageInstance) => StageInstance;
   sticker: (bot: Bot, payload: DiscordSticker) => Sticker;
   stickerPack: (bot: Bot, payload: DiscordStickerPack) => StickerPack;
+  applicationCommandOptionChoice: (
+    bot: Bot,
+    payload: DiscordApplicationCommandOptionChoice,
+  ) => ApplicationCommandOptionChoice;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -447,6 +456,7 @@ export function createTransformers(options: Partial<Transformers>) {
     sticker: options.sticker || transformSticker,
     stickerPack: options.stickerPack || transformStickerPack,
     gatewayBot: options.gatewayBot || transformGatewayBot,
+    applicationCommandOptionChoice: options.applicationCommandOptionChoice || transformApplicationCommandOptionChoice,
   };
 }
 
