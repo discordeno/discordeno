@@ -47,7 +47,11 @@ export function makeOptionsForCommand(options: ApplicationCommandOption[]): Disc
     description: option.description,
     description_localizations: option.descriptionLocalizations,
     required: option.required,
-    choices: option.choices,
+    choices: option.choices?.map((choice) => ({
+      name: choice.name,
+      name_localizations: choice.nameLocalizations,
+      value: choice.value,
+    })),
     options: option.options ? makeOptionsForCommand(option.options) : undefined,
     channel_types: option.channelTypes,
     autocomplete: option.autocomplete,
