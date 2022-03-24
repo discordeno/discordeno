@@ -6,6 +6,14 @@ export function sendInteractionResponse(bot: BotWithCache) {
   const sendInteractionResponseOld = bot.helpers.sendInteractionResponse;
 
   bot.helpers.sendInteractionResponse = function (id, token, options) {
+    if (options.data?.title !== undefined) {
+      if (!bot.utils.validateLength(options.data.title, { min: 1, max: 45 })) {
+        throw new Error(
+          "Invalid modal title. Must be between 1-45 characters long.",
+        );
+      }
+    }
+
     options.data?.choices?.every((choice) => {
       if (!bot.utils.validateLength(choice.name, { min: 1, max: 100 })) {
         throw new Error(
