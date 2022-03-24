@@ -1273,6 +1273,8 @@ export enum Locales {
   Korean = "ko",
 }
 
+export type Localization = Partial<Record<Locales, string>>;
+
 // UTILS
 
 export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];

@@ -17,6 +17,7 @@ import {
   IntegrationExpireBehaviors,
   InteractionTypes,
   Locales,
+  Localization,
   MessageActivityTypes,
   MessageComponentTypes,
   MessageTypes,
@@ -1643,15 +1644,11 @@ export interface DiscordApplicationCommand {
   /** 1-32 character name matching */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  name_localizations?: {
-    [key in Locales]?: string;
-  };
+  name_localizations?: Localization;
   /** 1-100 character description */
   description: string;
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-  description_localizations?: {
-    [key in Locales]?: string;
-  };
+  description_localizations?: Localization;
   /** The parameters for the command */
   options?: DiscordApplicationCommandOption[];
   /** Whether the command is enbaled by default when the app is added to a guild */
@@ -1669,15 +1666,11 @@ export interface DiscordApplicationCommandOption {
   /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  name_localizations?: {
-    [key in Locales]?: string;
-  };
+  name_localizations?: Localization;
   /** 1-100 character description */
   description: string;
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-  description_localizations?: {
-    [key in Locales]?: string;
-  };
+  description_localizations?: Localization;
   /** If the parameter is required or optional--default `false` */
   required?: boolean;
   /** Choices for `string` and `int` types for the user to pick from */
@@ -1699,9 +1692,7 @@ export interface DiscordApplicationCommandOptionChoice {
   /** 1-100 character choice name */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  name_localizations?: {
-    [key in Locales]?: string;
-  };
+  name_localizations?: Localization;
   /** Value of the choice, up to 100 characters if string */
   value: string | number;
 }
