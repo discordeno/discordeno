@@ -9,7 +9,9 @@ export async function getApplicationCommand(bot: Bot, commandId: bigint, options
     options?.guildId
       ? bot.constants.endpoints.COMMANDS_GUILD_ID(bot.applicationId, options.guildId, commandId)
       : bot.constants.endpoints.COMMANDS_ID(bot.applicationId, commandId),
-    options,
+    {
+      with_localizations: options?.withLocalizations,
+    },
   );
 
   return bot.transformers.applicationCommand(bot, result);
