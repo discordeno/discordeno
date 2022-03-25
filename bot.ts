@@ -36,7 +36,7 @@ import { delay, formatImageURL, hasProperty } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
 import { calculateShardId } from "./util/calculateShardId.ts";
 import * as handlers from "./handlers/mod.ts";
-import { Interaction, InteractionDataOption, transformInteraction } from "./transformers/interaction.ts";
+import { Interaction, InteractionDataOption, transformInteraction, transformInteractionDataOption } from "./transformers/interaction.ts";
 import { Integration, transformIntegration } from "./transformers/integration.ts";
 import { transformApplication } from "./transformers/application.ts";
 import { transformTeam } from "./transformers/team.ts";
@@ -429,6 +429,7 @@ export function createTransformers(options: Partial<Transformers>) {
     guild: options.guild || transformGuild,
     integration: options.integration || transformIntegration,
     interaction: options.interaction || transformInteraction,
+    interactionDataOptions: options.interactionDataOptions || transformInteractionDataOption,
     invite: options.invite || transformInvite,
     member: options.member || transformMember,
     message: options.message || transformMessage,
