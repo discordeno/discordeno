@@ -15,9 +15,14 @@ import { API_VERSION } from "../util/constants.ts";
 export function createRestManager(options: CreateRestManagerOptions) {
   const version = options.version || API_VERSION;
 
+  console.log('url1', baseEndpoints.BASE_URL)
+
   if (options.customUrl) {
+    console.log('url2', baseEndpoints.BASE_URL)
     baseEndpoints.BASE_URL = `${options.customUrl}/v${version}`;
   }
+
+  console.log('url3', baseEndpoints.BASE_URL)
 
   return {
     // current invalid amount
