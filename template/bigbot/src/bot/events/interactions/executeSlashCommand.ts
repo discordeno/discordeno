@@ -13,7 +13,7 @@ import {
 } from "../../../../deps.ts";
 import logger from "../../../../src/utils/logger.ts";
 import { optionParser, translateOptionNames } from "../../../utils/options.ts";
-import { replyToInteraction } from "../../../utils/replies.ts";
+import { privateReplyToInteraction, replyToInteraction } from "../../../utils/replies.ts";
 import slashLogWebhook from "../../../utils/slashWebhook.ts";
 import { BotClient } from "../../botClient.ts";
 import { loadLanguage, serverLanguages, translate } from "../../languages/translate.ts";
@@ -110,9 +110,8 @@ export async function executeSlashCommand(
     console.error(error);
     logCommand(interaction, "Failure", name);
     await slashLogWebhook(bot, interaction, name).catch(logger.error);
-    return await replyToInteraction(bot, interaction, {
+    return await privateReplyToInteraction(bot, interaction, {
       content: translate(bot, interaction.id, "EXECUTE_COMMAND_ERROR"),
-      private: true,
     }).catch(logger.error);
   }
 }
