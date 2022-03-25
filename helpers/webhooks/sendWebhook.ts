@@ -8,7 +8,7 @@ export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: str
   const allowedMentions = options.allowedMentions
     ? {
       parse: options.allowedMentions.parse,
-      repliedUser: options.allowedMentions.repliedUser,
+      replied_user: options.allowedMentions.repliedUser,
       users: options.allowedMentions.users?.map((id) => id.toString()),
       roles: options.allowedMentions.roles?.map((id) => id.toString()),
     }
@@ -28,9 +28,9 @@ export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: str
       avatar_url: options.avatarUrl,
       tts: options.tts,
       file: options.file,
-      embeds: options.embeds,
+      embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
       allowed_mentions: allowedMentions,
-      component: options.components,
+      components: options.components?.map((component) => bot.transformers.reverse.component(bot, component)),
     },
   );
   if (!options.wait) return;

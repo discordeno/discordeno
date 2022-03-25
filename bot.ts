@@ -370,6 +370,10 @@ export function createBaseHelpers(options: Partial<Helpers>) {
 }
 
 export interface Transformers {
+  reverse: {
+    embed: (bot: Bot, payload: Embed) => DiscordEmbed;
+    component: (bot: Bot, payload: Component) => DiscordComponent;
+  };
   snowflake: (snowflake: string) => bigint;
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
   channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }) => Channel;
