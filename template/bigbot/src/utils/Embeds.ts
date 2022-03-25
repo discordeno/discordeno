@@ -1,4 +1,4 @@
-import { Bot, DiscordenoUser, Embed } from "../../deps.ts";
+import { Bot, Embed, User } from "../../deps.ts";
 
 const embedLimits = {
   title: 256,
@@ -44,7 +44,7 @@ export class Embeds extends Array<Embed> {
     return data;
   }
 
-  setAuthor(name: string, iconUrl?: string | DiscordenoUser, url?: string) {
+  setAuthor(name: string, iconUrl?: string | User, url?: string) {
     const embed = this.#getLastEmbed();
     const finalName = this.enforceLimits ? this.fitData(name, embedLimits.authorName) : name;
 
@@ -126,7 +126,7 @@ export class Embeds extends Array<Embed> {
     return this;
   }
 
-  setImage(url: string | DiscordenoUser) {
+  setImage(url: string | User) {
     if (typeof url === "string") this.#getLastEmbed().image = { url };
     else {
       this.#getLastEmbed().image = {
@@ -140,8 +140,8 @@ export class Embeds extends Array<Embed> {
     return this;
   }
 
-  setTimestamp(time = Date.now()) {
-    this.#getLastEmbed().timestamp = new Date(time).toISOString();
+  setTimestamp(time: number | string = Date.now()) {
+    this.#getLastEmbed().timestamp = typeof time === "string" ? Date.parse(time) : time;
 
     return this;
   }

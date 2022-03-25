@@ -1,4 +1,4 @@
-import { ButtonData, InteractionTypes, MessageComponentTypes } from "../../../../deps.ts";
+import { InteractionTypes, MessageComponentTypes } from "../../../../deps.ts";
 import { bot } from "../../mod.ts";
 import { executeSlashCommand } from "../interactions/executeSlashCommand.ts";
 
@@ -14,7 +14,7 @@ export function setInteractionCreateEvent() {
 
       // THE INTERACTION CAME FROM A BUTTON
       if (
-        (interaction.data as ButtonData).componentType ===
+        interaction.data.componentType ===
           MessageComponentTypes.Button
       ) {
         // processButtonCollectors(bot, interaction)

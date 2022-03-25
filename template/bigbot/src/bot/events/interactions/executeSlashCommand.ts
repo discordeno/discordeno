@@ -4,10 +4,11 @@ import {
   bgMagenta,
   bgYellow,
   black,
-  DiscordenoInteraction,
   green,
+  Interaction,
   InteractionResponseTypes,
   red,
+  sendPrivateInteractionResponse,
   white,
 } from "../../../../deps.ts";
 import logger from "../../../../src/utils/logger.ts";
@@ -20,7 +21,7 @@ import { Command, ConvertArgumentDefinitionsToArgs } from "../../types/command.t
 import commands from "./mod.ts";
 
 function logCommand(
-  info: DiscordenoInteraction,
+  info: Interaction,
   type: "Failure" | "Success" | "Trigger" | "Slowmode" | "Missing" | "Inhibit",
   commandName: string,
 ) {
@@ -32,7 +33,7 @@ function logCommand(
 
   const user = bgGreen(
     black(
-      `${info.user.username}#${info.user.discriminator.toString().padStart(4, "0")}(${info.id})`,
+      `${info.user.username}#${info.user.discriminator}(${info.id})`,
     ),
   );
   const guild = bgMagenta(
@@ -44,7 +45,7 @@ function logCommand(
 
 export async function executeSlashCommand(
   bot: BotClient,
-  interaction: DiscordenoInteraction,
+  interaction: Interaction,
 ) {
   const data = interaction.data;
   const name = data?.name as keyof typeof commands;
@@ -54,18 +55,16 @@ export async function executeSlashCommand(
 
   // Command could not be found
   if (!command?.execute) {
-    return await bot.helpers
-      .sendInteractionResponse(interaction.id, interaction.token, {
-        type: InteractionResponseTypes.ChannelMessageWithSource,
-        private: true,
-        data: {
-          content: translate(
-            bot,
-            interaction.guildId!,
-            "EXECUTE_COMMAND_NOT_FOUND",
-          ),
-        },
-      })
+    return await sendPrivateInteractionResponse(bot, interaction.id, interaction.token, {
+      type: InteractionResponseTypes.ChannelMessageWithSource,
+      data: {
+        content: translate(
+          bot,
+          interaction.guildId!,
+          "EXECUTE_COMMAND_NOT_FOUND",
+        ),
+      },
+    })
       .catch(logger.error);
   }
 

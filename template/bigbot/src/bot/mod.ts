@@ -8,7 +8,7 @@ import {
   REST_AUTHORIZATION_KEY,
   REST_PORT,
 } from "../../configs.ts";
-import { createBot, createRestManager, GatewayPayload, SnakeCasedPropertiesDeep } from "../../deps.ts";
+import { createBot, createRestManager, DiscordGatewayPayload } from "../../deps.ts";
 import logger from "../utils/logger.ts";
 import { updateDevCommands } from "../utils/updateSlash.ts";
 import { BotClient, setupBotClient } from "./botClient.ts";
@@ -80,7 +80,7 @@ async function handleRequest(conn: Deno.Conn) {
     }
 
     const json = (await requestEvent.request.json()) as {
-      data: SnakeCasedPropertiesDeep<GatewayPayload>;
+      data: DiscordGatewayPayload;
       shardId: number;
     };
     // EMITS RAW EVENT
