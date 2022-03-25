@@ -127,6 +127,8 @@ import { VoiceRegions } from "./transformers/voiceRegion.ts";
 import { GuildWidget } from "./transformers/widget.ts";
 import { StageInstance } from "./transformers/stageInstance.ts";
 import { Sticker } from "./transformers/sticker.ts";
+import { transformEmbedToDiscordEmbed } from "./transformers/reverse/embed.ts";
+import { transformComponentToDiscordComponent } from "./transformers/reverse/component.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -424,6 +426,10 @@ export interface Transformers {
 
 export function createTransformers(options: Partial<Transformers>) {
   return {
+    reverse: {
+      embed: options.reverse?.embed || transformEmbedToDiscordEmbed,
+      component: options.reverse?.component || transformComponentToDiscordComponent,
+    },
     activity: options.activity || transformActivity,
     application: options.application || transformApplication,
     attachment: options.attachment || transformAttachment,
