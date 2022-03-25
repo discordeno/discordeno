@@ -17,7 +17,7 @@ const rest = createRestManager({
 });
 
 // CALL THE REST PROCESS TO GET GATEWAY DATA
-const result = await rest.runMethod(rest, "get", endpoints.GATEWAY_BOT).then((
+const result = await rest.runMethod(rest, "get", endpoints.GATEWAY_BOT()).then((
   res,
 ) => ({
   url: res.url,
