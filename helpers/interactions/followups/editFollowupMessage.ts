@@ -16,7 +16,7 @@ export async function editFollowupMessage(
     bot.constants.endpoints.WEBHOOK_MESSAGE(bot.applicationId, interactionToken, messageId),
     {
       content: options.content,
-      embeds: options.embeds,
+      embeds: options.embeds?.map(embed => bot.transformers.reverse.embed(bot, embed)),
       file: options.file,
       allowed_mentions: options.allowedMentions
         ? {

@@ -22,7 +22,7 @@ export async function editWebhookMessage(
 
   const result = await bot.rest.runMethod<DiscordMessage>(bot.rest, "patch", url, {
     content: options.content,
-    embeds: options.embeds,
+    embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
     file: options.file,
     allowed_mentions: options.allowedMentions
       ? {
