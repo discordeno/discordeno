@@ -4,9 +4,9 @@ import {
   Channel,
   Interaction,
   Member,
+  PermissionStrings,
   Role,
   User,
-  PermissionStrings,
 } from "../../../deps.ts";
 import { PermissionLevelHandlers } from "../../utils/permLevels.ts";
 import { BotClient } from "../botClient.ts";

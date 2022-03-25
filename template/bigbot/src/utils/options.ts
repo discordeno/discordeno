@@ -2,14 +2,14 @@ import {
   ApplicationCommandOption,
   ApplicationCommandOptionTypes,
   Bot,
+  Channel,
   ChannelTypes,
   Collection,
-  Channel,
+  InteractionDataOption,
   Member,
   Message,
   Role,
   User,
-  InteractionDataOption,
 } from "../../deps.ts";
 import { getLanguage, translate } from "../bot/languages/translate.ts";
 import { SNOWFLAKE_REGEX } from "../constants/regexes.ts";
