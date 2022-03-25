@@ -21,6 +21,7 @@ import {
   MessageTypes,
   MfaLevels,
   OverwriteTypes,
+  PickPartial,
   PremiumTiers,
   PremiumTypes,
   ScheduledEventEntityType,
@@ -2000,7 +2001,36 @@ export interface DiscordTemplate {
   /** The Id of the guild this template is based on */
   source_guild_id: string;
   /** The guild snapshot this template contains */
-  serialized_source_guild: Partial<DiscordGuild>;
+  serialized_source_guild:
+    & Omit<
+      PickPartial<
+        DiscordGuild,
+        | "name"
+        | "description"
+        | "verification_level"
+        | "default_message_notifications"
+        | "explicit_content_filter"
+        | "preferred_locale"
+        | "afk_timeout"
+        | "channels"
+        | "afk_channel_id"
+        | "system_channel_id"
+        | "system_channel_flags"
+      >,
+      "roles"
+    >
+    & {
+      roles: (
+        & Omit<
+          PickPartial<
+            DiscordRole,
+            "name" | "color" | "hoist" | "mentionable" | "permissions" | "icon" | "unicode_emoji"
+          >,
+          "id"
+        >
+        & { id: number }
+      )[];
+    };
   /** Whether the template has unsynced changes */
   is_dirty: boolean | null;
 }
