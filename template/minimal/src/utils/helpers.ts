@@ -1,9 +1,9 @@
 import {
   Bot,
   BotWithCache,
-  Guild,
   CreateApplicationCommand,
   getGuild,
+  Guild,
   MakeRequired,
   upsertApplicationCommands,
 } from "../../deps.ts";
