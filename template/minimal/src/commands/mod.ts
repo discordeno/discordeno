@@ -3,7 +3,7 @@ import {
   ApplicationCommandTypes,
   Bot,
   Collection,
-  DiscordenoInteraction,
+  Interaction,
 } from "../../deps.ts";
 
 export type subCommand = Omit<Command, "subcommands">;
@@ -19,7 +19,7 @@ export interface Command {
   type: ApplicationCommandTypes;
   /** Defaults to `Guild` */
   scope?: "Global" | "Guild";
-  execute: (bot: Bot, interaction: DiscordenoInteraction) => unknown;
+  execute: (bot: Bot, interaction: Interaction) => unknown;
   subcommands?: Array<subCommandGroup | subCommand>;
 }
 
