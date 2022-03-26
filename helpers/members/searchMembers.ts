@@ -20,14 +20,14 @@ export async function searchMembers(
     }
   }
 
+  let url = `${bot.constants.endpoints.GUILD_MEMBERS_SEARCH(guildId)}?query=${query}`;
+
+  if (options?.limit) url += `&limit=${options?.limit}`;
+
   const result = await bot.rest.runMethod<DiscordMemberWithUser[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_MEMBERS_SEARCH(guildId),
-    {
-      ...options,
-      query,
-    },
+    url,
   );
 
   return new Collection(

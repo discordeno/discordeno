@@ -5,23 +5,26 @@ import { DiscordMessage } from "../../types/discord.ts";
 export async function getMessages(
   bot: Bot,
   channelId: bigint,
-  options?: GetMessagesAfter | GetMessagesBefore | GetMessagesAround | GetMessagesLimit,
+  options?: GetMessagesOptions,
 ) {
   if (options?.limit && (options.limit < 0 || options.limit > 100)) {
     throw new Error(bot.constants.Errors.INVALID_GET_MESSAGES_LIMIT);
   }
 
+  let url = bot.constants.endpoints.CHANNEL_MESSAGES(channelId);
+
   if (options) {
-    if (bot.utils.hasProperty(options, "around")) options.around = (options.around as bigint).toString();
-    if (bot.utils.hasProperty(options, "before")) options.before = (options.before as bigint).toString();
-    if (bot.utils.hasProperty(options, "after")) options.after = (options.after as bigint).toString();
+    url += "?"
+    if (isGetMessagesAfter(options) && options.after) url += `after=${options.after}`;
+    if (isGetMessagesBefore(options) && options.before) url += `&before=${options.before}`;
+    if (isGetMessagesAround(options) && options.around) url += `&around=${options.around}`;
+    if (isGetMessagesLimit(options) && options.limit) url += `&limit=${options.limit}`;
   }
 
   const result = await bot.rest.runMethod<DiscordMessage[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.CHANNEL_MESSAGES(channelId),
-    options,
+    url
   );
 
   return await Promise.all(result.map((res) => bot.transformers.message(bot, res)));
@@ -49,4 +52,22 @@ export interface GetMessagesBefore extends GetMessagesLimit {
 export interface GetMessagesAfter extends GetMessagesLimit {
   /** Get messages after this message id */
   after?: bigint;
+}
+
+export type GetMessagesOptions = GetMessagesAfter | GetMessagesBefore | GetMessagesAround | GetMessagesLimit;
+
+export function isGetMessagesAfter(options: GetMessagesOptions): options is GetMessagesAfter {
+  return Reflect.has(options, "after");
+}
+
+export function isGetMessagesBefore(options: GetMessagesOptions): options is GetMessagesBefore {
+  return Reflect.has(options, "before");
+}
+
+export function isGetMessagesAround(options: GetMessagesOptions): options is GetMessagesAround {
+  return Reflect.has(options, "around");
+}
+
+export function isGetMessagesLimit(options: GetMessagesOptions): options is GetMessagesLimit {
+  return Reflect.has(options, "limit");
 }
