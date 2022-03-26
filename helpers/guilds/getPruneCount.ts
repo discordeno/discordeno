@@ -15,7 +15,7 @@ export async function getPruneCount(bot: Bot, guildId: bigint, options?: GetGuil
     if (options.days) url += `days=${options.days}`;
     if (options.includeRoles) url += `&include_roles=${options.includeRoles}`;
   }
-  
+
   const result = await bot.rest.runMethod(
     bot.rest,
     "get",

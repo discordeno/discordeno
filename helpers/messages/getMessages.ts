@@ -14,7 +14,7 @@ export async function getMessages(
   let url = bot.constants.endpoints.CHANNEL_MESSAGES(channelId);
 
   if (options) {
-    url += "?"
+    url += "?";
     if (isGetMessagesAfter(options) && options.after) url += `after=${options.after}`;
     if (isGetMessagesBefore(options) && options.before) url += `&before=${options.before}`;
     if (isGetMessagesAround(options) && options.around) url += `&around=${options.around}`;
@@ -24,7 +24,7 @@ export async function getMessages(
   const result = await bot.rest.runMethod<DiscordMessage[]>(
     bot.rest,
     "get",
-    url
+    url,
   );
 
   return await Promise.all(result.map((res) => bot.transformers.message(bot, res)));
