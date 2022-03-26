@@ -9,7 +9,7 @@ export async function getApplicationCommand(bot: Bot, commandId: bigint, options
       : bot.constants.endpoints.COMMANDS_ID(bot.applicationId, commandId)
   }?`;
 
-  if (options?.withLocalizations) {
+  if (options?.withLocalizations !== undefined) {
     url += `with_localizations=${options.withLocalizations}`;
   }
 
