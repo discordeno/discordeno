@@ -3,9 +3,11 @@ import { DiscordTemplate } from "../../types/discord.ts";
 
 /** Returns the guild template if it exists */
 export async function getTemplate(bot: Bot, templateCode: string) {
-  return await bot.rest.runMethod<DiscordTemplate>(
+  const result = await bot.rest.runMethod<DiscordTemplate>(
     bot.rest,
     "get",
     bot.constants.endpoints.GUILD_TEMPLATE(templateCode),
   );
+
+  return bot.transformers.template(bot, result);
 }

@@ -23,14 +23,21 @@ export async function getScheduledEventUsers(
 ): Promise<
   Collection<bigint, User> | Collection<bigint, { user: User; member: Member }>
 > {
+  let url = bot.constants.endpoints.GUILD_SCHEDULED_EVENT_USERS(guildId, eventId);
+
+  if (options) {
+    url = "?";
+
+    if (options.limit) url += `limit=${options.limit}`;
+    if (options.withMember) url += `&with_member=${options.withMember}`;
+    if (options.after) url += `&after=${options.after}`;
+    if (options.before) url += `&before=${options.before}`;
+  }
+
   const result = await bot.rest.runMethod<{ user: DiscordUser; member?: DiscordMember }[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_SCHEDULED_EVENT_USERS(guildId, eventId),
-    {
-      limit: options?.limit,
-      with_members: options?.withMember,
-    },
+    url,
   );
 
   if (!options?.withMember) {
@@ -59,6 +66,6 @@ export interface GetScheduledEventUsers {
   withMember?: boolean;
   /** consider only users before given user id */
   before?: bigint;
-  /** consider only users after given user id */
+  /** consider only users after given user id. If both before and after are provided, only before is respected. Fetching users in-between before and after is not supported. */
   after?: bigint;
 }

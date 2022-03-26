@@ -19,7 +19,7 @@ export async function editInteractionResponse(
       : bot.constants.endpoints.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token),
     {
       content: options.content,
-      embeds: options.embeds,
+      embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
       file: options.file,
       allowed_mentions: options.allowedMentions
         ? {

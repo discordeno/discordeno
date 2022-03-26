@@ -1,9 +1,9 @@
 import {
   Bot,
   BotWithCache,
-  DiscordenoGuild,
-  EditGlobalApplicationCommand,
+  CreateApplicationCommand,
   getGuild,
+  Guild,
   MakeRequired,
   upsertApplicationCommands,
 } from "../../deps.ts";
@@ -18,8 +18,8 @@ export async function updateCommands(
   bot: BotWithCache,
   scope?: "Guild" | "Global",
 ) {
-  const globalCommands: MakeRequired<EditGlobalApplicationCommand, "name">[] = [];
-  const perGuildCommands: MakeRequired<EditGlobalApplicationCommand, "name">[] = [];
+  const globalCommands: MakeRequired<CreateApplicationCommand, "name">[] = [];
+  const perGuildCommands: MakeRequired<CreateApplicationCommand, "name">[] = [];
 
   for (const command of commands.values()) {
     if (command.scope) {
@@ -65,8 +65,8 @@ export async function updateCommands(
 }
 
 /** Update commands for a guild */
-export async function updateGuildCommands(bot: Bot, guild: DiscordenoGuild) {
-  const perGuildCommands: MakeRequired<EditGlobalApplicationCommand, "name">[] = [];
+export async function updateGuildCommands(bot: Bot, guild: Guild) {
+  const perGuildCommands: MakeRequired<CreateApplicationCommand, "name">[] = [];
 
   for (const command of commands.values()) {
     if (command.scope) {
@@ -89,12 +89,12 @@ export async function updateGuildCommands(bot: Bot, guild: DiscordenoGuild) {
 export async function getGuildFromId(
   bot: BotWithCache,
   guildId: bigint,
-): Promise<DiscordenoGuild> {
-  let returnValue: DiscordenoGuild = {} as DiscordenoGuild;
+): Promise<Guild> {
+  let returnValue: Guild = {} as Guild;
 
   if (guildId !== 0n) {
     if (bot.guilds.get(guildId)) {
-      returnValue = bot.guilds.get(guildId) as DiscordenoGuild;
+      returnValue = bot.guilds.get(guildId) as Guild;
     }
 
     await getGuild(bot, guildId).then((guild) => {

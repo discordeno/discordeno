@@ -12,7 +12,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
     // UNTRANSFORMED STUFF HERE
     content: payload.content || "",
     isBot: payload.author.bot || false,
-    tag: `${payload.author.username}#${payload.author.discriminator.toString().padStart(4, "0")}`,
+    tag: `${payload.author.username}#${payload.author.discriminator}`,
     timestamp: Date.parse(payload.timestamp),
     editedTimestamp: payload.edited_timestamp ? Date.parse(payload.edited_timestamp) : undefined,
     bitfield: (payload.tts ? 1n : 0n) | (payload.mention_everyone ? 2n : 0n) | (payload.pinned ? 4n : 0n),

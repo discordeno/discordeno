@@ -10,21 +10,23 @@ export async function getArchivedThreads(
     type?: "public" | "private" | "privateJoinedThreads";
   },
 ) {
+  let url = options?.type === "privateJoinedThreads"
+    ? bot.constants.endpoints.THREAD_ARCHIVED_PRIVATE_JOINED(channelId)
+    : options?.type === "private"
+    ? bot.constants.endpoints.THREAD_ARCHIVED_PRIVATE(channelId)
+    : bot.constants.endpoints.THREAD_ARCHIVED_PUBLIC(channelId);
+
+  if (options) {
+    url += "?";
+
+    if (options.before) url += `before=${options.before}`;
+    if (options.limit) url += `&limit=${options.limit}`;
+    if (options.type) url += `&type=${options.type}`;
+  }
   const result = (await bot.rest.runMethod<DiscordListActiveThreads>(
     bot.rest,
     "get",
-    options?.type === "privateJoinedThreads"
-      ? bot.constants.endpoints.THREAD_ARCHIVED_PRIVATE_JOINED(channelId)
-      : options?.type === "private"
-      ? bot.constants.endpoints.THREAD_ARCHIVED_PRIVATE(channelId)
-      : bot.constants.endpoints.THREAD_ARCHIVED_PUBLIC(channelId),
-    options
-      ? {
-        before: options.before,
-        limit: options.limit,
-        type: options.type,
-      }
-      : {},
+    url,
   ));
 
   return {

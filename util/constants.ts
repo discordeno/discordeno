@@ -9,7 +9,7 @@ export const GATEWAY_VERSION = 10;
 
 // TODO: update this version
 /** https://github.com/discordeno/discordeno/releases */
-export const DISCORDENO_VERSION = "13.0.0-rc27";
+export const DISCORDENO_VERSION = "13.0.0-rc31";
 
 /** https://discord.com/developers/docs/reference#user-agent */
 export const USER_AGENT = `DiscordBot (https://github.com/discordeno/discordeno, v${DISCORDENO_VERSION})`;
@@ -30,7 +30,7 @@ export const endpoints = {
   GUILDS_BASE,
   CHANNEL_BASE,
 
-  GATEWAY_BOT: `${baseEndpoints.BASE_URL}/gateway/bot`,
+  GATEWAY_BOT: () => `${baseEndpoints.BASE_URL}/gateway/bot`,
 
   // Channel Endpoints
   CHANNEL_MESSAGE: (channelId: bigint, messageId: bigint) => `${CHANNEL_BASE(channelId)}/messages/${messageId}`,
@@ -71,7 +71,7 @@ export const endpoints = {
     `${CHANNEL_BASE(channelId)}/users/@me/threads/archived/private`,
 
   // Guild Endpoints
-  GUILDS: `${baseEndpoints.BASE_URL}/guilds`,
+  GUILDS: () => `${baseEndpoints.BASE_URL}/guilds`,
   GUILD_AUDIT_LOGS: (guildId: bigint) => `${GUILDS_BASE(guildId)}/audit-logs`,
   GUILD_BAN: (guildId: bigint, userId: bigint) => `${GUILDS_BASE(guildId)}/bans/${userId}`,
   GUILD_BANS: (guildId: bigint) => `${GUILDS_BASE(guildId)}/bans`,
@@ -111,7 +111,7 @@ export const endpoints = {
     `${GUILDS_BASE(guildId)}/scheduled-events/${eventId}/users`,
 
   // Voice
-  VOICE_REGIONS: `${baseEndpoints.BASE_URL}/voice/regions`,
+  VOICE_REGIONS: () => `${baseEndpoints.BASE_URL}/voice/regions`,
 
   INVITE: (inviteCode: string) => `${baseEndpoints.BASE_URL}/invites/${inviteCode}`,
 
@@ -148,30 +148,30 @@ export const endpoints = {
 
   // User endpoints
   USER: (userId: bigint) => `${baseEndpoints.BASE_URL}/users/${userId}`,
-  USER_BOT: `${baseEndpoints.BASE_URL}/users/@me`,
-  USER_GUILDS: `${baseEndpoints.BASE_URL}/@me/guilds`,
+  USER_BOT: () => `${baseEndpoints.BASE_URL}/users/@me`,
+  USER_GUILDS: () => `${baseEndpoints.BASE_URL}/@me/guilds`,
   USER_AVATAR: (userId: bigint, icon: string) => `${baseEndpoints.CDN_URL}/avatars/${userId}/${icon}`,
   USER_DEFAULT_AVATAR: (icon: number) => `${baseEndpoints.CDN_URL}/embed/avatars/${icon}.png`,
-  USER_DM: `${baseEndpoints.BASE_URL}/users/@me/channels`,
-  USER_CONNECTIONS: `${baseEndpoints.BASE_URL}/users/@me/connections`,
+  USER_DM: () => `${baseEndpoints.BASE_URL}/users/@me/channels`,
+  USER_CONNECTIONS: () => `${baseEndpoints.BASE_URL}/users/@me/connections`,
   USER_NICK: (guildId: bigint) => `${GUILDS_BASE(guildId)}/members/@me`,
 
   // Discovery Endpoints
-  DISCOVERY_CATEGORIES: `${baseEndpoints.BASE_URL}/discovery/categories`,
-  DISCOVERY_VALID_TERM: `${baseEndpoints.BASE_URL}/discovery/valid-term`,
+  DISCOVERY_CATEGORIES: () => `${baseEndpoints.BASE_URL}/discovery/categories`,
+  DISCOVERY_VALID_TERM: () => `${baseEndpoints.BASE_URL}/discovery/valid-term`,
   DISCOVERY_METADATA: (guildId: bigint) => `${GUILDS_BASE(guildId)}/discovery-metadata`,
   DISCOVERY_SUBCATEGORY: (guildId: bigint, categoryId: number) =>
     `${GUILDS_BASE(guildId)}/discovery-categories/${categoryId}`,
 
   // OAuth2
-  OAUTH2_APPLICATION: `${baseEndpoints.BASE_URL}/oauth2/applications/@me`,
+  OAUTH2_APPLICATION: () => `${baseEndpoints.BASE_URL}/oauth2/applications/@me`,
 
   // Stage instances
-  STAGE_INSTANCES: `${baseEndpoints.BASE_URL}/stage-instances`,
+  STAGE_INSTANCES: () => `${baseEndpoints.BASE_URL}/stage-instances`,
   STAGE_INSTANCE: (channelId: bigint) => `${baseEndpoints.BASE_URL}/stage-instances/${channelId}`,
 
   // Misc Endpoints
-  NITRO_STICKER_PACKS: `${baseEndpoints.BASE_URL}/sticker-packs`,
+  NITRO_STICKER_PACKS: () => `${baseEndpoints.BASE_URL}/sticker-packs`,
 };
 
 export const SLASH_COMMANDS_NAME_REGEX = /^[\w-]{1,32}$/;

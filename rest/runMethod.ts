@@ -3,6 +3,17 @@ import { API_VERSION, BASE_URL, IMAGE_BASE_URL } from "../util/constants.ts";
 
 export async function runMethod<T = any>(
   rest: RestManager,
+  method: "get",
+  url: string,
+): Promise<T>;
+export async function runMethod<T = any>(
+  rest: RestManager,
+  method: "post" | "put" | "delete" | "patch",
+  url: string,
+  body?: unknown,
+): Promise<T>;
+export async function runMethod<T = any>(
+  rest: RestManager,
   method: "get" | "post" | "put" | "delete" | "patch",
   url: string,
   body?: unknown,

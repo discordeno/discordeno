@@ -1,6 +1,6 @@
 # Allows quick testing of changes and keeps stuff like tokens private
 debug.ts
-configs.ts
+./configs.ts
 .env
 
 # npm stuff

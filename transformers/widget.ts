@@ -15,7 +15,7 @@ export function transformWidget(bot: Bot, payload: DiscordGuildWidget) {
     members: payload.members.map((member) => ({
       id: bot.transformers.snowflake(member.id),
       username: member.username,
-      discriminator: Number(member.discriminator),
+      discriminator: member.discriminator,
       avatar: member.avatar ? bot.utils.iconHashToBigInt(member.avatar) : undefined,
       status: member.status,
       avatarUrl: member.avatar_url,

@@ -7,7 +7,7 @@ export async function getDiscoveryCategories(bot: Bot) {
   const result = await bot.rest.runMethod<DiscordDiscoveryCategory[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.DISCOVERY_CATEGORIES,
+    bot.constants.endpoints.DISCOVERY_CATEGORIES(),
   );
 
   return new Collection<number, DiscordDiscoveryCategory>(

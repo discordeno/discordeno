@@ -8,11 +8,13 @@ import {
   Message,
   Role,
   ScheduledEvent,
+  Template,
   transformChannel,
   transformGuild,
   transformMember,
   transformMessage,
   transformRole,
+  transformTemplate,
   transformUser,
   transformVoiceState,
   User,
@@ -34,7 +36,12 @@ import { delay, formatImageURL, hasProperty } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
 import { calculateShardId } from "./util/calculateShardId.ts";
 import * as handlers from "./handlers/mod.ts";
-import { Interaction, InteractionDataOption, transformInteraction } from "./transformers/interaction.ts";
+import {
+  Interaction,
+  InteractionDataOption,
+  transformInteraction,
+  transformInteractionDataOption,
+} from "./transformers/interaction.ts";
 import { Integration, transformIntegration } from "./transformers/integration.ts";
 import { transformApplication } from "./transformers/application.ts";
 import { transformTeam } from "./transformers/team.ts";
@@ -68,6 +75,7 @@ import {
   DiscordInteractionDataOption,
   DiscordReady,
   DiscordStickerPack,
+  DiscordTemplate,
 } from "./types/discord.ts";
 import { Errors, GatewayDispatchEventNames, GatewayIntents } from "./types/shared.ts";
 
@@ -124,6 +132,8 @@ import {
   ApplicationCommandOptionChoice,
   transformApplicationCommandOptionChoice,
 } from "./transformers/applicationCommandOptionChoice.ts";
+import { transformEmbedToDiscordEmbed } from "./transformers/reverse/embed.ts";
+import { transformComponentToDiscordComponent } from "./transformers/reverse/component.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -375,6 +385,10 @@ export function createBaseHelpers(options: Partial<Helpers>) {
 }
 
 export interface Transformers {
+  reverse: {
+    embed: (bot: Bot, payload: Embed) => DiscordEmbed;
+    component: (bot: Bot, payload: Component) => DiscordComponent;
+  };
   snowflake: (snowflake: string) => bigint;
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
   channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }) => Channel;
@@ -416,10 +430,15 @@ export interface Transformers {
     bot: Bot,
     payload: DiscordApplicationCommandOptionChoice,
   ) => ApplicationCommandOptionChoice;
+  template: (bot: Bot, payload: DiscordTemplate) => Template;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
   return {
+    reverse: {
+      embed: options.reverse?.embed || transformEmbedToDiscordEmbed,
+      component: options.reverse?.component || transformComponentToDiscordComponent,
+    },
     activity: options.activity || transformActivity,
     application: options.application || transformApplication,
     attachment: options.attachment || transformAttachment,
@@ -430,6 +449,7 @@ export function createTransformers(options: Partial<Transformers>) {
     guild: options.guild || transformGuild,
     integration: options.integration || transformIntegration,
     interaction: options.interaction || transformInteraction,
+    interactionDataOptions: options.interactionDataOptions || transformInteractionDataOption,
     invite: options.invite || transformInvite,
     member: options.member || transformMember,
     message: options.message || transformMessage,
@@ -457,6 +477,7 @@ export function createTransformers(options: Partial<Transformers>) {
     stickerPack: options.stickerPack || transformStickerPack,
     gatewayBot: options.gatewayBot || transformGatewayBot,
     applicationCommandOptionChoice: options.applicationCommandOptionChoice || transformApplicationCommandOptionChoice,
+    template: options.template || transformTemplate,
   };
 }
 
