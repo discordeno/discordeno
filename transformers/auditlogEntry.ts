@@ -25,6 +25,7 @@ export function transformAuditlogEntry(bot: Bot, payload: DiscordAuditLogEntry) 
         case "rules_channel_id":
         case "public_updates_channel_id":
         case "icon_hash":
+        case "image_hash":
         case "splash_hash":
         case "owner_id":
         case "widget_channel_id":
