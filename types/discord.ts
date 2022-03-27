@@ -1418,6 +1418,7 @@ export type DiscordAuditLogChange =
       | "rules_channel_id"
       | "public_updates_channel_id"
       | "icon_hash"
+      | "image_hash"
       | "splash_hash"
       | "owner_id"
       | "region"
