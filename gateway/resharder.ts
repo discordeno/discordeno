@@ -1,5 +1,6 @@
 import { GetGatewayBot, transformGatewayBot } from "../transformers/gatewayBot.ts";
 import { DiscordReady } from "../types/discord.ts";
+import { Collection } from "../util/collection.ts";
 import { createGatewayManager, GatewayManager } from "./gatewayManager.ts";
 
 /** The handler to automatically reshard when necessary. */
@@ -11,6 +12,16 @@ export async function resharder(
 
   const gateway = createGatewayManager({
     ...oldGateway,
+    // RESET THE SETS AND COLLECTIONS
+    cache: {
+      guildIds: new Set(),
+      loadingGuildIds: new Set(),
+      editedMessages: new Collection(),
+    },
+    shards: new Collection(),
+    loadingShards: new Collection(),
+    buckets: new Collection(),
+    utf8decoder: new TextDecoder(),
   });
 
   for (const [key, value] of Object.entries(oldGateway)) {
