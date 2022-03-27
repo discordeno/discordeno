@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
 import { bold, cyan, gray, italic, red, yellow } from "../../deps.ts";
 
-export enum Loglevels {
+export enum LogLevels {
   Debug,
   Info,
   Warn,
@@ -9,31 +9,31 @@ export enum Loglevels {
   Fatal,
 }
 
-const prefixes = new Map<Loglevels, string>([
-  [Loglevels.Debug, "DEBUG"],
-  [Loglevels.Info, "INFO"],
-  [Loglevels.Warn, "WARN"],
-  [Loglevels.Error, "ERROR"],
-  [Loglevels.Fatal, "FATAL"],
+const prefixes = new Map<LogLevels, string>([
+  [LogLevels.Debug, "DEBUG"],
+  [LogLevels.Info, "INFO"],
+  [LogLevels.Warn, "WARN"],
+  [LogLevels.Error, "ERROR"],
+  [LogLevels.Fatal, "FATAL"],
 ]);
 
 const noColor: (str: string) => string = (msg) => msg;
-const colorFunctions = new Map<Loglevels, (str: string) => string>([
-  [Loglevels.Debug, gray],
-  [Loglevels.Info, cyan],
-  [Loglevels.Warn, yellow],
-  [Loglevels.Error, (str: string) => red(str)],
-  [Loglevels.Fatal, (str: string) => red(bold(italic(str)))],
+const colorFunctions = new Map<LogLevels, (str: string) => string>([
+  [LogLevels.Debug, gray],
+  [LogLevels.Info, cyan],
+  [LogLevels.Warn, yellow],
+  [LogLevels.Error, (str: string) => red(str)],
+  [LogLevels.Fatal, (str: string) => red(bold(italic(str)))],
 ]);
 
 export function logger({
-  logLevel = Loglevels.Info,
+  logLevel = LogLevels.Info,
   name,
 }: {
-  logLevel?: Loglevels;
+  logLevel?: LogLevels;
   name?: string;
 } = {}) {
-  function log(level: Loglevels, ...args: any[]) {
+  function log(level: LogLevels, ...args: any[]) {
     if (level < logLevel) return;
 
     let color = colorFunctions.get(level);
@@ -48,43 +48,43 @@ export function logger({
     ];
 
     switch (level) {
-      case Loglevels.Debug:
+      case LogLevels.Debug:
         return console.debug(...log);
-      case Loglevels.Info:
+      case LogLevels.Info:
         return console.info(...log);
-      case Loglevels.Warn:
+      case LogLevels.Warn:
         return console.warn(...log);
-      case Loglevels.Error:
+      case LogLevels.Error:
         return console.error(...log);
-      case Loglevels.Fatal:
+      case LogLevels.Fatal:
         return console.error(...log);
       default:
         return console.log(...log);
     }
   }
 
-  function setLevel(level: Loglevels) {
+  function setLevel(level: LogLevels) {
     logLevel = level;
   }
 
   function debug(...args: any[]) {
-    log(Loglevels.Debug, ...args);
+    log(LogLevels.Debug, ...args);
   }
 
   function info(...args: any[]) {
-    log(Loglevels.Info, ...args);
+    log(LogLevels.Info, ...args);
   }
 
   function warn(...args: any[]) {
-    log(Loglevels.Warn, ...args);
+    log(LogLevels.Warn, ...args);
   }
 
   function error(...args: any[]) {
-    log(Loglevels.Error, ...args);
+    log(LogLevels.Error, ...args);
   }
 
   function fatal(...args: any[]) {
-    log(Loglevels.Fatal, ...args);
+    log(LogLevels.Fatal, ...args);
   }
 
   return {

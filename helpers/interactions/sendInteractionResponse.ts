@@ -37,27 +37,27 @@ export async function sendInteractionResponse(
     title: options.data.title,
     components: options.data.components?.map((component) => ({
       type: component.type,
-      components: component.components.map((subcomponent) => {
-        if (subcomponent.type === MessageComponentTypes.InputText) {
+      components: component.components.map((component) => {
+        if (component.type === MessageComponentTypes.InputText) {
           return {
-            type: subcomponent.type,
-            style: subcomponent.style,
-            custom_id: subcomponent.customId,
-            label: subcomponent.label,
-            placeholder: subcomponent.placeholder,
-            min_length: subcomponent.minLength ?? subcomponent.required === false ? 0 : subcomponent.minLength,
-            max_length: subcomponent.maxLength,
+            type: component.type,
+            style: component.style,
+            custom_id: component.customId,
+            label: component.label,
+            placeholder: component.placeholder,
+            min_length: component.minLength ?? component.required === false ? 0 : component.minLength,
+            max_length: component.maxLength,
           };
         }
 
-        if (subcomponent.type === MessageComponentTypes.SelectMenu) {
+        if (component.type === MessageComponentTypes.SelectMenu) {
           return {
-            type: subcomponent.type,
-            custom_id: subcomponent.customId,
-            placeholder: subcomponent.placeholder,
-            min_values: subcomponent.minValues,
-            max_values: subcomponent.maxValues,
-            options: subcomponent.options.map((option) => ({
+            type: component.type,
+            custom_id: component.customId,
+            placeholder: component.placeholder,
+            min_values: component.minValues,
+            max_values: component.maxValues,
+            options: component.options.map((option) => ({
               label: option.label,
               value: option.value,
               description: option.description,
@@ -74,19 +74,19 @@ export async function sendInteractionResponse(
         }
 
         return {
-          type: subcomponent.type,
-          custom_id: subcomponent.customId,
-          label: subcomponent.label,
-          style: subcomponent.style,
-          emoji: "emoji" in subcomponent && subcomponent.emoji
+          type: component.type,
+          custom_id: component.customId,
+          label: component.label,
+          style: component.style,
+          emoji: "emoji" in component && component.emoji
             ? {
-              id: subcomponent.emoji.id?.toString(),
-              name: subcomponent.emoji.name,
-              animated: subcomponent.emoji.animated,
+              id: component.emoji.id?.toString(),
+              name: component.emoji.name,
+              animated: component.emoji.animated,
             }
             : undefined,
-          url: "url" in subcomponent ? subcomponent.url : undefined,
-          disabled: "disabled" in subcomponent ? subcomponent.disabled : undefined,
+          url: "url" in component ? component.url : undefined,
+          disabled: "disabled" in component ? component.disabled : undefined,
         };
       }),
     })),
@@ -130,7 +130,7 @@ export interface InteractionResponse {
 export interface InteractionApplicationCommandCallbackData {
   /** The message contents (up to 2000 characters) */
   content?: string;
-  /** true if this is a TTS message */
+  /** True if this is a TTS message */
   tts?: boolean;
   /** Embedded `rich` content (up to 6000 characters) */
   embeds?: Embed[];
@@ -144,9 +144,9 @@ export interface InteractionApplicationCommandCallbackData {
   title?: string;
   /** The components you would like to have sent in this message */
   components?: MessageComponents;
-  /** message flags combined as a bitfield (only SUPPRESS_EMBEDS and EPHEMERAL can be set) */
+  /** Message flags combined as a bit field (only SUPPRESS_EMBEDS and EPHEMERAL can be set) */
   flags?: number;
-  /** autocomplete choices (max of 25 choices) */
+  /** Autocomplete choices (max of 25 choices) */
   choices?: ApplicationCommandOptionChoice[];
 }
 

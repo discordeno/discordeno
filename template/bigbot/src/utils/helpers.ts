@@ -117,12 +117,12 @@ export function stringToMilliseconds(text: string) {
 export function chunkStrings(
   array: string[],
   size = 2000,
-  lineSeperator = "\n",
+  lineSeparator = "\n",
 ) {
   const responses: string[] = [];
   let response = "";
   for (const text of array) {
-    const nextText = response.length && lineSeperator ? `${lineSeperator}${text}` : text;
+    const nextText = response.length && lineSeparator ? `${lineSeparator}${text}` : text;
     if (response.length + nextText.length >= size) {
       responses.push(response);
       response = "";

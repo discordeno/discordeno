@@ -24,7 +24,7 @@ export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuild
   return {
     users: auditlog.users.map((user) => bot.transformers.user(bot, user)),
     webhook: auditlog.webhooks.map((hook) => bot.transformers.webhook(bot, hook)),
-    auditLogEntries: auditlog.audit_log_entries.map((entry) => bot.transformers.auditlogEntry(bot, entry)),
+    auditLogEntries: auditlog.audit_log_entries.map((entry) => bot.transformers.auditLogEntry(bot, entry)),
     integrations: auditlog.integrations.map((integration) => ({
       id: integration.id ? bot.transformers.snowflake(integration.id) : undefined,
       name: integration.name,

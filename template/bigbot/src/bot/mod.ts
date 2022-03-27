@@ -36,7 +36,7 @@ if (DEVELOPMENT) {
   logger.info(`[DEV MODE] Updating slash commands for dev server.`);
   await updateDevCommands(bot);
 } else {
-  // THIS WILL UPDATE ALL YOUR GLOBAL COMMANDS ON BOOTUP
+  // THIS WILL UPDATE ALL YOUR GLOBAL COMMANDS ON STARTUP
   // await updateGlobalCommands(bot);
 }
 
@@ -87,7 +87,7 @@ async function handleRequest(conn: Deno.Conn) {
     bot.events.raw(bot, json.data, json.shardId);
 
     if (json.data.t && json.data.t !== "RESUMED") {
-      // When a guild or something isnt in cache this will fetch it before doing anything else
+      // When a guild or something isn't in cache this will fetch it before doing anything else
       if (!["READY", "GUILD_LOADED_DD"].includes(json.data.t)) {
         await bot.events.dispatchRequirements(bot, json.data, json.shardId);
         // WE ALSO WANT TO UPDATE GUILD SLASH IF NECESSARY AT THIS POINT

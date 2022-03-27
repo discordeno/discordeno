@@ -251,7 +251,7 @@ export type ConvertArgumentDefinitionsToArgs<
             : // deno-lint-ignore ban-types
             {};
         }
-        : // SUBCOMMANDGROUP
+        : // SUBCOMMAND GROUP
         T[P] extends SubcommandGroupArgumentDefinition<infer N> ? {
           [_ in getName<N>]?: ConvertArgumentDefinitionsToArgs<
             T[P]["options"]

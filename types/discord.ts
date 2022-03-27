@@ -214,7 +214,7 @@ export interface DiscordMember {
   roles: string[];
   /** When the user joined the guild */
   joined_at: string;
-  /** When the user started boosing the guild */
+  /** When the user started boosting the guild */
   premium_since?: string | null;
   /** The permissions this member has in the guild. Only present on interaction events. */
   permissions?: string;
@@ -444,7 +444,7 @@ export type DiscordWebhook = DiscordIncomingWebhook | DiscordApplicationWebhook;
 export interface DiscordIncomingWebhook {
   /** The type of the webhook */
   type: WebhookTypes;
-  /** The secure token of the webhook (returned for Incomming Webhooks) */
+  /** The secure token of the webhook (returned for Incoming Webhooks) */
   token?: string;
   /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
   url?: string;
@@ -472,7 +472,7 @@ export interface DiscordIncomingWebhook {
 export interface DiscordApplicationWebhook {
   /** The type of the webhook */
   type: WebhookTypes.Application;
-  /** The secure token of the webhook (returned for Incomming Webhooks) */
+  /** The secure token of the webhook (returned for Incoming Webhooks) */
   token?: string;
   /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
   url?: string;
@@ -499,7 +499,7 @@ export interface DiscordApplicationWebhook {
 
 /** https://discord.com/developers/docs/resources/guild#guild-object */
 export interface DiscordGuild {
-  /** Guild name (2-100 characaters, excluding trailing and leading whitespace) */
+  /** Guild name (2-100 characters, excluding trailing and leading whitespace) */
   name: string;
   /** True if the user is the owner of the guild */
   owner?: boolean;
@@ -529,7 +529,7 @@ export interface DiscordGuild {
   max_presences?: number | null;
   /** The maximum number of members for the guild */
   max_members?: number;
-  /** The vaniy url code for the guild */
+  /** The vanity url code for the guild */
   vanity_url_code: string | null;
   /** The description of a Community guild */
   description: string | null;
@@ -606,7 +606,7 @@ export interface DiscordGuild {
 export interface DiscordRole {
   /** Role id */
   id: string;
-  /** If this role is showed seperately in the user listing */
+  /** If this role is showed separately in the user listing */
   hoist: boolean;
   /** Permission bit set */
   permissions: string;
@@ -735,7 +735,7 @@ export interface DiscordChannel {
   parent_id?: string | null;
   /** When the last pinned message was pinned. This may be null in events such as GUILD_CREATE when a message is not pinned. */
   last_pin_timestamp?: string | null;
-  /** Thread-specifig fields not needed by other channels */
+  /** Thread-specific fields not needed by other channels */
   thread_metadata?: DiscordThreadMetadata;
   /** Thread member object for the current user, if they have joined the thread, only included on certain API endpoints */
   member?: DiscordThreadMember;
@@ -803,7 +803,6 @@ export interface DiscordThreadMetadata {
   locked: boolean;
   /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
   invitable?: boolean;
-
   /** Timestamp when the thread's archive status was last changed, used for calculating recent activity */
   archive_timestamp: string;
   /** Timestamp when the thread was created; only populated for threads created after 2022-01-09 */
@@ -818,7 +817,6 @@ export interface DiscordThreadMemberBase {
 export interface DiscordThreadMember {
   /** Any user-thread settings, currently only used for notifications */
   flags: number;
-
   /** The id of the thread */
   id: string;
   /** The id of the user */
@@ -830,7 +828,6 @@ export interface DiscordThreadMember {
 export interface DiscordThreadMemberGuildCreate {
   /** Any user-thread settings, currently only used for notifications */
   flags: number;
-
   /** The time the current user last joined the thread */
   join_timestamp: string;
 }
@@ -853,7 +850,6 @@ export interface DiscordActivity {
   instance?: boolean;
   /** Activity flags `OR`d together, describes what the payload includes */
   flags?: number;
-
   /** Unix timestamps for start and/or end of the game */
   timestamps?: DiscordActivityTimestamps;
   /** Application id for the game */
@@ -894,7 +890,6 @@ export interface DiscordActivityEmoji {
   name: string;
   /** Whether this emoji is animated */
   animated?: boolean;
-
   /** The id of the emoji */
   id?: string;
 }
@@ -903,7 +898,6 @@ export interface DiscordActivityEmoji {
 export interface DiscordActivityParty {
   /** Used to show the party's current and maximum size */
   size?: [currentSize: number, maxSize: number];
-
   /** The id of the party */
   id?: string;
 }
@@ -914,7 +908,6 @@ export interface DiscordActivityAssets {
   large_text?: string;
   /** Text displayed when hovering over the small image of the activity */
   small_text?: string;
-
   /** The id for a large asset of the activity, usually a snowflake */
   large_image?: string;
   /** The id for a small asset of the activity, usually a snowflake */
@@ -943,7 +936,6 @@ export interface DiscordActivityButton {
 export interface DiscordOverwrite {
   /** Either 0 (role) or 1 (member) */
   type: OverwriteTypes;
-
   /** Role or user id */
   id: string;
   /** Permission bit set */
@@ -1277,9 +1269,7 @@ export interface DiscordInteraction {
   version: 1;
   /** For the message the button was attached to */
   message?: DiscordMessage;
-
   data?: DiscordInteractionData;
-
   /** The selected language of the invoking user */
   locale?: string;
   /** The guild's preferred locale, if invoked in a guild */
@@ -1398,7 +1388,7 @@ export interface DiscordAuditLogEntry {
   user_id: string | null;
   /** id of the entry */
   id: string;
-  /** Type of action that occured */
+  /** Type of action that occurred */
   action_type: AuditLogEvents;
   /** Additional info for certain action types */
   options?: DiscordOptionalAuditEntryInfo;
@@ -1449,7 +1439,7 @@ export type DiscordAuditLogChange =
       | "mfa_level"
       | "verification_level"
       | "explicit_content_filter"
-      | "default_messagae_notifications"
+      | "default_message_notifications"
       | "prune_delete_days"
       | "position"
       | "bitrate"
@@ -1653,11 +1643,11 @@ export interface DiscordApplicationCommand {
   description_localizations?: Localization;
   /** The parameters for the command */
   options?: DiscordApplicationCommandOption[];
-  /** Whether the command is enbaled by default when the app is added to a guild */
+  /** Whether the command is enabled by default when the app is added to a guild */
   default_permission?: boolean;
   /** The type of command. By default this is a application command(ChatInput). */
   type?: ApplicationCommandTypes;
-  /** Autoincrementing version identifier updated during substantial record changes */
+  /** Auto incrementing version identifier updated during substantial record changes */
   version: string;
 }
 
@@ -1771,7 +1761,7 @@ export interface DiscordGuildPreview {
 export interface DiscordDiscoveryCategory {
   /** Numeric id of the category */
   id: number;
-  /** The name of this category, in mutliple languages */
+  /** The name of this category, in multiple languages */
   name: DiscordDiscoveryName;
   /** Whether this category can be set as a guild's primary category */
   is_primary: boolean;
@@ -1793,7 +1783,7 @@ export interface DiscordDiscoveryMetadata {
   keywords: string[] | null;
   /** Whether guild info is shown when custom emojis from this guild are clicked */
   emoji_discoverability_enabled: boolean;
-  /** When the server's partner applicationo was accepted or denied, for applications via Server Settings */
+  /** When the server's partner application was accepted or denied, for applications via Server Settings */
   partner_actioned_timestamp: string | null;
   /** When the server applied for partnership, if it has a pending application */
   partner_application_timestamp: string | null;
@@ -2044,7 +2034,7 @@ export interface DiscordTemplate {
         & { id: number }
       )[];
     };
-  /** Whether the template has unsynced changes */
+  /** Whether the template has un-synced changes */
   is_dirty: boolean | null;
 }
 
@@ -2223,7 +2213,7 @@ export interface DiscordVoiceRegion {
   name: string;
   /** true for a single server that is closest to the current user's client */
   optimal: boolean;
-  /** Whether this is a deprecated voice region (avoid swithing to these) */
+  /** Whether this is a deprecated voice region (avoid switching to these) */
   deprecated: boolean;
   /** Whether this is a custom voice region (used for events/etc) */
   custom: boolean;
