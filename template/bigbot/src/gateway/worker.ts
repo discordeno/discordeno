@@ -1,10 +1,4 @@
-import {
-  BOT_ID,
-  DISCORD_TOKEN,
-  EVENT_HANDLER_PORT,
-  EVENT_HANDLER_SECRET_KEY,
-  EVENT_HANDLER_URL,
-} from "../../configs.ts";
+import { DISCORD_TOKEN, EVENT_HANDLER_PORT, EVENT_HANDLER_SECRET_KEY, EVENT_HANDLER_URL } from "../../configs.ts";
 import { Collection, createGatewayManager, DiscordReady, GatewayManager, GetGatewayBot } from "../../deps.ts";
 
 let gateway: GatewayManager;
@@ -53,7 +47,9 @@ function spawnGateway(shardId: number, options: Partial<GatewayManager>) {
       }
 
       // DONT SEND THESE EVENTS USELESS TO BOT
-      if (["GUILD_LOADED_DD"].includes(data.t)) return;
+      if (["GUILD_LOADED_DD"].includes(data.t)) {
+        return;
+      }
 
       await fetch(`${EVENT_HANDLER_URL}:${EVENT_HANDLER_PORT}`, {
         headers: {
@@ -67,7 +63,9 @@ function spawnGateway(shardId: number, options: Partial<GatewayManager>) {
         }),
       })
         // BELOW IS FOR DENO MEMORY LEAK
-        .then((res) => res.text())
+        .then((res) =>
+          res.text()
+        )
         .catch(() => null);
     },
   });

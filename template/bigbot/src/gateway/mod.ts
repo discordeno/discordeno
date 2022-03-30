@@ -1,10 +1,5 @@
 import { Collection, createGatewayManager, createRestManager, endpoints } from "../../deps.ts";
-import {
-  DISCORD_TOKEN,
-  EVENT_HANDLER_SECRET_KEY,
-  REST_AUTHORIZATION_KEY,
-  REST_PORT,
-} from "../../configs.ts";
+import { DISCORD_TOKEN, EVENT_HANDLER_SECRET_KEY, REST_AUTHORIZATION_KEY, REST_PORT } from "../../configs.ts";
 
 // CREATE A SIMPLE MANAGER FOR REST
 const rest = createRestManager({
@@ -43,8 +38,8 @@ async function startGateway() {
   gateway.sessionStartLimitRemaining = result.sessionStartLimit.remaining;
   gateway.sessionStartLimitResetAfter = result.sessionStartLimit.resetAfter;
   gateway.maxConcurrency = result.sessionStartLimit.maxConcurrency;
-  gateway.maxShards = result.shards
-  gateway.lastShardId = result.shards
+  gateway.maxShards = result.shards;
+  gateway.lastShardId = result.shards;
 
   // PREPARE BUCKETS FOR IDENTIFYING
   gateway.prepareBuckets(gateway, 0, result.shards);
@@ -123,7 +118,6 @@ async function startGateway() {
 }
 
 startGateway();
-
 
 setInterval(async () => {
   console.log("GW DEBUG", "[Resharding] Checking if resharding is needed.");
