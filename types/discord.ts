@@ -531,7 +531,7 @@ export interface DiscordGuild {
   max_members?: number;
   /** The vanity url code for the guild */
   vanity_url_code: string | null;
-  /** The description of a Community guild */
+  /** The description of a guild */
   description: string | null;
   /** Premium tier (Server Boost level) */
   premium_tier: PremiumTiers;
