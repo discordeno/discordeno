@@ -30,7 +30,7 @@ export interface DiscordenoShard {
     /** The id of the interval, useful for stopping the interval if ws closed. */
     intervalId: number;
   };
-  /** The items/requestst that are in queue to be sent to this shard websocket. */
+  /** The items/requests that are in queue to be sent to this shard websocket. */
   queue: WebSocketRequest[];
   /** Whether or not the queue for this shard is being processed. */
   processingQueue: boolean;

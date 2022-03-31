@@ -141,7 +141,7 @@ function convertOptionValue(
     return [translateOptions?.[option.name] ?? option.name, final];
   }
 
-  // THE REST OF OPTIONS DON'T NEED ANY CONVERTION
+  // THE REST OF OPTIONS DON'T NEED ANY CONVERSION
   // SAVE THE ARGUMENT WITH THE CORRECT NAME
   // @ts-ignore ts leave me alone
   return [translateOptions?.[option.name] ?? option.name, option.value];

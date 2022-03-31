@@ -200,7 +200,7 @@ events.interactionCreate = async (rawBot, interaction) => {
     // Check if command has execute
     if (!cmd.execute) {
       logger.error(`Command ${cmdName} is missing execute.`);
-      sendBasicReponse(data.id, data.token, "This command is not configured to be executed.");
+      sendBasicResponse(data.id, data.token, "This command is not configured to be executed.");
       return;
     }
 

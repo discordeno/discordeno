@@ -4,19 +4,19 @@ import { RestManager } from "../bot.ts";
 export function processRateLimitedPaths(rest: RestManager) {
   const now = Date.now();
 
-  for (const [key, value] of rest.ratelimitedPaths.entries()) {
+  for (const [key, value] of rest.rateLimitedPaths.entries()) {
     rest.debug(`[REST - processRateLimitedPaths] Running for of loop. ${value.resetTimestamp - now}`);
     // IF THE TIME HAS NOT REACHED CANCEL
     if (value.resetTimestamp > now) continue;
 
     // RATE LIMIT IS OVER, DELETE THE RATE LIMITER
-    rest.ratelimitedPaths.delete(key);
+    rest.rateLimitedPaths.delete(key);
     // IF IT WAS GLOBAL ALSO MARK THE GLOBAL VALUE AS FALSE
     if (key === "global") rest.globallyRateLimited = false;
   }
 
   // ALL PATHS ARE CLEARED CAN CANCEL OUT!
-  if (!rest.ratelimitedPaths.size) {
+  if (!rest.rateLimitedPaths.size) {
     rest.processingRateLimitedPaths = false;
   } else {
     rest.processingRateLimitedPaths = true;

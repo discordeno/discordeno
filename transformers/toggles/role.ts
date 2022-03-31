@@ -2,7 +2,7 @@ import { DiscordRole } from "../../types/discord.ts";
 import { ToggleBitfield } from "./ToggleBitfield.ts";
 
 export const RoleToggle = {
-  /** If this role is showed seperately in the user listing */
+  /** If this role is showed separately in the user listing */
   hoist: 1 << 0,
   /** Whether this role is managed by an integration */
   managed: 1 << 1,
@@ -22,7 +22,7 @@ export class RoleToggles extends ToggleBitfield {
     if (role.tags?.premium_subscriber === null) this.add(RoleToggle.premiumSubscriber);
   }
 
-  /** If this role is showed seperately in the user listing */
+  /** If this role is showed separately in the user listing */
   get hoist() {
     return this.has("hoist");
   }

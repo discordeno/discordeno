@@ -9,7 +9,7 @@ export async function editChannel(bot: Bot, channelId: bigint, options: ModifyCh
   if (options.name || options.topic) {
     const request = editChannelNameTopicQueue.get(channelId);
     if (!request) {
-      // If this hasnt been done before simply add 1 for it
+      // If this hasn't been done before simply add 1 for it
       editChannelNameTopicQueue.set(channelId, {
         channelId: channelId,
         amount: 1,

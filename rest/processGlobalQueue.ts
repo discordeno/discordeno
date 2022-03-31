@@ -11,7 +11,7 @@ export async function processGlobalQueue(rest: RestManager) {
   rest.globalQueueProcessing = true;
 
   while (rest.globalQueue.length) {
-    // IF THE BOT IS GLOBALLY RATELIMITED TRY AGAIN
+    // IF THE BOT IS GLOBALLY RATE LIMITED TRY AGAIN
     if (rest.globallyRateLimited) {
       setTimeout(() => {
         rest.debug(`[REST - processGlobalQueue] Globally rate limited, running setTimeout.`);
@@ -41,7 +41,7 @@ export async function processGlobalQueue(rest: RestManager) {
     // REMOVES ANY POTENTIAL INVALID CONFLICTS
     if (!request) continue;
 
-    // CHECK RATELIMITS FOR 429 REPEATS
+    // CHECK RATE LIMITS FOR 429 REPEATS
     // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
     const urlResetIn = rest.checkRateLimits(rest, request.basicURL);
     // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS

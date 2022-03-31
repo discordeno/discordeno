@@ -29,4 +29,4 @@ bot.fastFileLoader([
 startBot(bot);
 ```
 
-Make sure to ignore `fileloader.ts` in git as it is (re)generated whever you (re)start the bot.
+Make sure to ignore `fileloader.ts` in git as it is (re)generated where you (re)start the bot.

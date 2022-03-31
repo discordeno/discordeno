@@ -6,7 +6,7 @@ export * from "./applicationCommand.ts";
 export * from "./applicationCommandOption.ts";
 export * from "./applicationCommandPermission.ts";
 export * from "./attachment.ts";
-export * from "./auditlogEntry.ts";
+export * from "./auditLogEntry.ts";
 export * from "./channel.ts";
 export * from "./component.ts";
 export * from "./embed.ts";

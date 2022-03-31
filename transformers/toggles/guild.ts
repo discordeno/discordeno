@@ -18,7 +18,7 @@ export const GuildToggle = {
 
   /** Whether the guild has access to set an invite splash background */
   inviteSplash: 1n << 5n,
-  /** Whether the guild has access to set 384kbps bitrate in voice (previously VIP voice servers) */
+  /** Whether the guild has access to set 384 kbps bitrate in voice (previously VIP voice servers) */
   vipRegions: 1n << 6n,
   /** Whether the guild has access to set a vanity URL */
   vanityUrl: 1n << 7n,
@@ -26,7 +26,7 @@ export const GuildToggle = {
   verified: 1n << 8n,
   /** Whether the guild is partnered */
   partnered: 1n << 9n,
-  /** Whether the guild can enable welcome screen, Membership Screening, stage channels and discovery, and recives community updates */
+  /** Whether the guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
   community: 1n << 10n,
   /** Whether the guild has access to use commerce features (i.e. create store channels) */
   commerce: 1n << 11n,
@@ -130,7 +130,7 @@ export class GuildToggles extends ToggleBitfieldBigint {
   get inviteSplash() {
     return this.has("inviteSplash");
   }
-  /** Whether the guild has access to set 384kbps bitrate in voice (previously VIP voice servers) */
+  /** Whether the guild has access to set 384 kbps bitrate in voice (previously VIP voice servers) */
   get vipRegions() {
     return this.has("vipRegions");
   }
@@ -146,7 +146,7 @@ export class GuildToggles extends ToggleBitfieldBigint {
   get partnered() {
     return this.has("partnered");
   }
-  /** Whether the guild can enable welcome screen, Membership Screening, stage channels and discovery, and recives community updates */
+  /** Whether the guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
   get community() {
     return this.has("community");
   }
