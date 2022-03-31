@@ -1,5 +1,3 @@
-/** Begin spawning shards. */
-
 import { GatewayManager } from "./gatewayManager.ts";
 
 export function prepareBuckets(gateway: GatewayManager, firstShardId: number, lastShardId: number) {
@@ -25,6 +23,7 @@ export function prepareBuckets(gateway: GatewayManager, firstShardId: number, la
     if (!bucket) throw new Error("Bucket not found when spawning shards.");
 
     // FIND A QUEUE IN THIS BUCKET THAT HAS SPACE
+    // + 1 cause .workers first item is worker id [workerId, shardId, shardId2...]
     const queue = bucket.workers.find((q) => q.length < gateway.shardsPerWorker + 1);
     if (queue) {
       // IF THE QUEUE HAS SPACE JUST ADD IT TO THIS QUEUE
@@ -37,6 +36,7 @@ export function prepareBuckets(gateway: GatewayManager, firstShardId: number, la
   }
 }
 
+/** Begin spawning shards. */
 export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
   // PREPARES THE MAX SHARD COUNT BY CONCURRENCY
   if (gateway.useOptimalLargeBotSharding) {
@@ -45,7 +45,7 @@ export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
   }
 
   // PREPARES ALL SHARDS IN SPECIFIC BUCKETS
-  prepareBuckets(gateway, firstShardId, gateway.lastShardId ? gateway.lastShardId + 1 : gateway.maxShards);
+  prepareBuckets(gateway, firstShardId, gateway.lastShardId ? gateway.lastShardId : gateway.maxShards);
 
   // SPREAD THIS OUT TO DIFFERENT WORKERS TO BEGIN STARTING UP
   gateway.buckets.forEach(async (bucket, bucketId) => {
