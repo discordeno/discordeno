@@ -1,8 +1,8 @@
 import { RestManager } from "../bot.ts";
 
-/** Processes the rate limit headers and determines if it needs to be ratelimited and returns the bucket id if available */
+/** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
 export function processRequestHeaders(rest: RestManager, url: string, headers: Headers) {
-  let ratelimited = false;
+  let rateLimited = false;
 
   // GET ALL NECESSARY HEADERS
   const remaining = headers.get("x-ratelimit-remaining");
@@ -14,10 +14,10 @@ export function processRequestHeaders(rest: RestManager, url: string, headers: H
 
   // IF THERE IS NO REMAINING RATE LIMIT, MARK IT AS RATE LIMITED
   if (remaining === "0") {
-    ratelimited = true;
+    rateLimited = true;
 
     // SAVE THE URL AS LIMITED, IMPORTANT FOR NEW REQUESTS BY USER WITHOUT BUCKET
-    rest.ratelimitedPaths.set(url, {
+    rest.rateLimitedPaths.set(url, {
       url,
       resetTimestamp: reset,
       bucketId,
@@ -25,7 +25,7 @@ export function processRequestHeaders(rest: RestManager, url: string, headers: H
 
     // SAVE THE BUCKET AS LIMITED SINCE DIFFERENT URLS MAY SHARE A BUCKET
     if (bucketId) {
-      rest.ratelimitedPaths.set(bucketId, {
+      rest.rateLimitedPaths.set(bucketId, {
         url,
         resetTimestamp: reset,
         bucketId,
@@ -39,16 +39,16 @@ export function processRequestHeaders(rest: RestManager, url: string, headers: H
     const globalReset = Date.now() + Number(retryAfter) * 1000;
     rest.debug(`[REST = Globally Rate Limited] URL: ${url} | Global Rest: ${globalReset}`);
     rest.globallyRateLimited = true;
-    ratelimited = true;
+    rateLimited = true;
 
-    rest.ratelimitedPaths.set("global", {
+    rest.rateLimitedPaths.set("global", {
       url: "global",
       resetTimestamp: globalReset,
       bucketId,
     });
 
     if (bucketId) {
-      rest.ratelimitedPaths.set(bucketId, {
+      rest.rateLimitedPaths.set(bucketId, {
         url: "global",
         resetTimestamp: globalReset,
         bucketId,
@@ -56,8 +56,8 @@ export function processRequestHeaders(rest: RestManager, url: string, headers: H
     }
   }
 
-  if (ratelimited && !rest.processingRateLimitedPaths) {
+  if (rateLimited && !rest.processingRateLimitedPaths) {
     rest.processRateLimitedPaths(rest);
   }
-  return ratelimited ? bucketId : undefined;
+  return rateLimited ? bucketId : undefined;
 }

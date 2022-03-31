@@ -43,7 +43,7 @@ export function setupCacheRemovals<B extends Bot>(bot: BotWithCache<B>) {
 
   bot.handlers.CHANNEL_DELETE = function (_, data, shardId) {
     const payload = data.d as DiscordChannel;
-    // HANDLER BEFORE DELETING, BECAUSE HANDLER RUNS TRANSFORMER WHICH RECACHES
+    // HANDLER BEFORE DELETING, BECAUSE HANDLER RUNS TRANSFORMER WHICH REACHES
     CHANNEL_DELETE(bot, data, shardId);
 
     const id = bot.transformers.snowflake(payload.id);

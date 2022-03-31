@@ -6,7 +6,7 @@ export default async function hasPermissionLevel(
   command: Command<any>,
   payload: Interaction,
 ) {
-  // This command doesnt require a perm level so allow the command.
+  // This command doesn't require a perm level so allow the command.
   if (!command.permissionLevels) return true;
 
   // If a custom function was provided
@@ -15,9 +15,9 @@ export default async function hasPermissionLevel(
   }
 
   // If an array of perm levels was provided
-  for (const permlevel of command.permissionLevels) {
+  for (const permLevel of command.permissionLevels) {
     // If this user has one of the allowed perm level, the loop is canceled and command is allowed.
-    if (await PermissionLevelHandlers[permlevel](payload, command)) return true;
+    if (await PermissionLevelHandlers[permLevel](payload, command)) return true;
   }
 
   // None of the perm levels were met. So cancel the command

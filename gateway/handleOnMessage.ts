@@ -73,7 +73,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
       // We need to wait for a random amount of time between 1 and 5: https://discord.com/developers/docs/topics/gateway#resuming
       await delay(Math.floor((Math.random() * 4 + 1) * 1000));
 
-      // When d is false we need to reidentify
+      // When d is false we need to re-identify
       if (!messageData.d) {
         await gateway.identify(gateway, shardId, gateway.maxShards);
         break;

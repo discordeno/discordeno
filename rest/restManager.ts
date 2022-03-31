@@ -58,7 +58,7 @@ export function createRestManager(options: CreateRestManagerOptions) {
       urlToUse: string;
     }[],
     globalQueueProcessing: false,
-    ratelimitedPaths: new Map<string, RestRateLimitedPath>(),
+    rateLimitedPaths: new Map<string, RestRateLimitedPath>(),
     debug: options.debug || function (_text: string) {},
     checkRateLimits: options.checkRateLimits || checkRateLimits,
     cleanupQueues: options.cleanupQueues || cleanupQueues,

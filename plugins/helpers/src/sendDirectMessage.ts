@@ -16,7 +16,7 @@ export async function sendDirectMessage(
   // IF ID IS CACHED SEND MESSAGE DIRECTLY
   if (cachedChannelId) return bot.helpers.sendMessage(cachedChannelId, content);
 
-  // CREATE A NEW DM CHANNEL AND PULCK ITS ID
+  // CREATE A NEW DM CHANNEL AND PLUCK ITS ID
   const channel = (await bot.helpers.getDmChannel(userId));
 
   // CACHE IT FOR FUTURE REQUESTS

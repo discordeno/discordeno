@@ -37,27 +37,27 @@ export async function sendInteractionResponse(
     title: options.data.title,
     components: options.data.components?.map((component) => ({
       type: component.type,
-      components: component.components.map((subcomponent) => {
-        if (subcomponent.type === MessageComponentTypes.InputText) {
+      components: component.components.map((subComponent) => {
+        if (subComponent.type === MessageComponentTypes.InputText) {
           return {
-            type: subcomponent.type,
-            style: subcomponent.style,
-            custom_id: subcomponent.customId,
-            label: subcomponent.label,
-            placeholder: subcomponent.placeholder,
-            min_length: subcomponent.minLength ?? subcomponent.required === false ? 0 : subcomponent.minLength,
-            max_length: subcomponent.maxLength,
+            type: subComponent.type,
+            style: subComponent.style,
+            custom_id: subComponent.customId,
+            label: subComponent.label,
+            placeholder: subComponent.placeholder,
+            min_length: subComponent.minLength ?? subComponent.required === false ? 0 : subComponent.minLength,
+            max_length: subComponent.maxLength,
           };
         }
 
-        if (subcomponent.type === MessageComponentTypes.SelectMenu) {
+        if (subComponent.type === MessageComponentTypes.SelectMenu) {
           return {
-            type: subcomponent.type,
-            custom_id: subcomponent.customId,
-            placeholder: subcomponent.placeholder,
-            min_values: subcomponent.minValues,
-            max_values: subcomponent.maxValues,
-            options: subcomponent.options.map((option) => ({
+            type: subComponent.type,
+            custom_id: subComponent.customId,
+            placeholder: subComponent.placeholder,
+            min_values: subComponent.minValues,
+            max_values: subComponent.maxValues,
+            options: subComponent.options.map((option) => ({
               label: option.label,
               value: option.value,
               description: option.description,
@@ -74,19 +74,19 @@ export async function sendInteractionResponse(
         }
 
         return {
-          type: subcomponent.type,
-          custom_id: subcomponent.customId,
-          label: subcomponent.label,
-          style: subcomponent.style,
-          emoji: "emoji" in subcomponent && subcomponent.emoji
+          type: subComponent.type,
+          custom_id: subComponent.customId,
+          label: subComponent.label,
+          style: subComponent.style,
+          emoji: "emoji" in subComponent && subComponent.emoji
             ? {
-              id: subcomponent.emoji.id?.toString(),
-              name: subcomponent.emoji.name,
-              animated: subcomponent.emoji.animated,
+              id: subComponent.emoji.id?.toString(),
+              name: subComponent.emoji.name,
+              animated: subComponent.emoji.animated,
             }
             : undefined,
-          url: "url" in subcomponent ? subcomponent.url : undefined,
-          disabled: "disabled" in subcomponent ? subcomponent.disabled : undefined,
+          url: "url" in subComponent ? subComponent.url : undefined,
+          disabled: "disabled" in subComponent ? subComponent.disabled : undefined,
         };
       }),
     })),
@@ -130,7 +130,7 @@ export interface InteractionResponse {
 export interface InteractionApplicationCommandCallbackData {
   /** The message contents (up to 2000 characters) */
   content?: string;
-  /** true if this is a TTS message */
+  /** True if this is a TTS message */
   tts?: boolean;
   /** Embedded `rich` content (up to 6000 characters) */
   embeds?: Embed[];
@@ -144,9 +144,9 @@ export interface InteractionApplicationCommandCallbackData {
   title?: string;
   /** The components you would like to have sent in this message */
   components?: MessageComponents;
-  /** message flags combined as a bitfield (only SUPPRESS_EMBEDS and EPHEMERAL can be set) */
+  /** Message flags combined as a bit field (only SUPPRESS_EMBEDS and EPHEMERAL can be set) */
   flags?: number;
-  /** autocomplete choices (max of 25 choices) */
+  /** Autocomplete choices (max of 25 choices) */
   choices?: ApplicationCommandOptionChoice[];
 }
 
