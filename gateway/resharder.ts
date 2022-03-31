@@ -88,7 +88,7 @@ export async function resharderIsPending(
   gateway: GatewayManager,
   oldGateway: GatewayManager,
 ) {
-  for (let i = gateway.firstShardId; i < gateway.maxShards; i++) {
+  for (let i = gateway.firstShardId; i < gateway.lastShardId; i++) {
     const shard = gateway.shards.get(i);
     if (!shard?.ready) {
       return true;
