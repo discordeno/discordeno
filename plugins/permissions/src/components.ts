@@ -15,7 +15,7 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
       throw new Error("Too many components.");
     } else if (
       component.components?.length > 1 &&
-      component.components.some((component) => component.type === MessageComponentTypes.SelectMenu)
+      component.components.some((subComponent) => subComponent.type === MessageComponentTypes.SelectMenu)
     ) {
       throw new Error("Select component must be alone.");
     }

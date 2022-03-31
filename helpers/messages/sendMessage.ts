@@ -25,27 +25,27 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMe
       file: content.file,
       components: content.components?.map((component) => ({
         type: component.type,
-        components: component.components.map((component) => {
-          if (component.type === MessageComponentTypes.InputText) {
+        components: component.components.map((subComponent) => {
+          if (subComponent.type === MessageComponentTypes.InputText) {
             return {
-              type: component.type,
-              style: component.style,
-              custom_id: component.customId,
-              label: component.label,
-              placeholder: component.placeholder,
-              min_length: component.minLength ?? component.required === false ? 0 : component.minLength,
-              max_length: component.maxLength,
+              type: subComponent.type,
+              style: subComponent.style,
+              custom_id: subComponent.customId,
+              label: subComponent.label,
+              placeholder: subComponent.placeholder,
+              min_length: subComponent.minLength ?? subComponent.required === false ? 0 : subComponent.minLength,
+              max_length: subComponent.maxLength,
             };
           }
 
-          if (component.type === MessageComponentTypes.SelectMenu) {
+          if (subComponent.type === MessageComponentTypes.SelectMenu) {
             return {
-              type: component.type,
-              custom_id: component.customId,
-              placeholder: component.placeholder,
-              min_values: component.minValues,
-              max_values: component.maxValues,
-              options: component.options.map((option) => ({
+              type: subComponent.type,
+              custom_id: subComponent.customId,
+              placeholder: subComponent.placeholder,
+              min_values: subComponent.minValues,
+              max_values: subComponent.maxValues,
+              options: subComponent.options.map((option) => ({
                 label: option.label,
                 value: option.value,
                 description: option.description,
@@ -62,19 +62,19 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMe
           }
 
           return {
-            type: component.type,
-            custom_id: component.customId,
-            label: component.label,
-            style: component.style,
-            emoji: "emoji" in component && component.emoji
+            type: subComponent.type,
+            custom_id: subComponent.customId,
+            label: subComponent.label,
+            style: subComponent.style,
+            emoji: "emoji" in subComponent && subComponent.emoji
               ? {
-                id: component.emoji.id?.toString(),
-                name: component.emoji.name,
-                animated: component.emoji.animated,
+                id: subComponent.emoji.id?.toString(),
+                name: subComponent.emoji.name,
+                animated: subComponent.emoji.animated,
               }
               : undefined,
-            url: "url" in component ? component.url : undefined,
-            disabled: "disabled" in component ? component.disabled : undefined,
+            url: "url" in subComponent ? subComponent.url : undefined,
+            disabled: "disabled" in subComponent ? subComponent.disabled : undefined,
           };
         }),
       })),
