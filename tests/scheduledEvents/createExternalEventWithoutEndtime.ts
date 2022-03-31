@@ -1,4 +1,4 @@
-import { ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../../types/guilds/scheduledEvents.ts";
+import { ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../../mod.ts";
 import { assertEquals, assertExists } from "../deps.ts";
 import { bot, guild } from "../mod.ts";
 

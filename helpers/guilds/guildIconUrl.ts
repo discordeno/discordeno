@@ -1,6 +1,5 @@
-import type { ImageFormat } from "../../types/misc/imageFormat.ts";
-import type { ImageSize } from "../../types/misc/imageSize.ts";
 import type { Bot } from "../../bot.ts";
+import { ImageFormat, ImageSize } from "../members/avatarUrl.ts";
 
 /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
 export function guildIconURL(

@@ -1,6 +1,5 @@
-import type { GuildMemberWithUser } from "../../types/members/guildMember.ts";
-import type { ListGuildMembers } from "../../types/members/listGuildMembers.ts";
 import type { Bot } from "../../bot.ts";
+import { DiscordMemberWithUser } from "../../types/discord.ts";
 import { Collection } from "../../util/collection.ts";
 
 /**
@@ -8,15 +7,15 @@ import { Collection } from "../../util/collection.ts";
  * REST(this function): 50/s global(across all shards) rate limit with ALL requests this included
  * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
  */
-export async function getMembers(bot: Bot, guildId: bigint, options: ListGuildMembers & { memberCount: number }) {
-  const result = await bot.rest.runMethod<GuildMemberWithUser[]>(
+export async function getMembers(bot: Bot, guildId: bigint, options: ListGuildMembers) {
+  let url = `${bot.constants.endpoints.GUILD_MEMBERS(guildId)}?limit=${options.limit || 1000}`;
+
+  if (options.after) url += `&after=${options.after}`;
+
+  const result = await bot.rest.runMethod<DiscordMemberWithUser[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_MEMBERS(guildId),
-    {
-      limit: options?.limit ?? options.memberCount,
-      after: options?.after,
-    },
+    url,
   );
 
   return new Collection(
@@ -25,4 +24,12 @@ export async function getMembers(bot: Bot, guildId: bigint, options: ListGuildMe
       return [member.id, member];
     }),
   );
+}
+
+/** https://discord.com/developers/docs/resources/guild#list-guild-members */
+export interface ListGuildMembers {
+  /** Max number of members to return (1-1000). Default: 1000 */
+  limit?: number;
+  /** The highest user id in the previous page. Default: 0 */
+  after?: string;
 }

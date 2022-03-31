@@ -1,12 +1,10 @@
-import { GatewayOpcodes } from "../types/codes/gatewayOpcodes.ts";
+import { GatewayOpcodes } from "../types/shared.ts";
 
 export interface DiscordenoShard {
   /** The shard id number. */
   id: number;
   /** The websocket for this shard. */
   ws: WebSocket;
-  /** The amount of milliseconds to wait between heartbeats. */
-  resumeInterval: number;
   /** The session id important for resuming connections. */
   sessionId: string;
   /** The previous sequence number, important for resuming connections. */

@@ -1,7 +1,17 @@
 import { RestManager } from "../bot.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { API_VERSION, BASE_URL, IMAGE_BASE_URL } from "../util/constants.ts";
 
+export async function runMethod<T = any>(
+  rest: RestManager,
+  method: "get",
+  url: string,
+): Promise<T>;
+export async function runMethod<T = any>(
+  rest: RestManager,
+  method: "post" | "put" | "delete" | "patch",
+  url: string,
+  body?: unknown,
+): Promise<T>;
 export async function runMethod<T = any>(
   rest: RestManager,
   method: "get" | "post" | "put" | "delete" | "patch",
@@ -9,7 +19,7 @@ export async function runMethod<T = any>(
   body?: unknown,
   retryCount = 0,
   bucketId?: string,
-): Promise<SnakeCasedPropertiesDeep<T>> {
+): Promise<T> {
   rest.debug(
     `[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${retryCount} | Bucket ID: ${bucketId} | Body: ${
       JSON.stringify(

@@ -1,11 +1,11 @@
-import type { Emoji } from "../../types/emojis/emoji.ts";
 import type { Bot } from "../../bot.ts";
+import { DiscordEmoji } from "../../types/discord.ts";
 
 /**
  * Returns an emoji for the given guild and emoji Id.
  */
 export async function getEmoji(bot: Bot, guildId: bigint, emojiId: bigint) {
-  const result = await bot.rest.runMethod<Emoji>(
+  const result = await bot.rest.runMethod<DiscordEmoji>(
     bot.rest,
     "get",
     bot.constants.endpoints.GUILD_EMOJI(guildId, emojiId),

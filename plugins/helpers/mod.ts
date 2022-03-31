@@ -1,56 +1,56 @@
 import {
   ApplicationCommandOptionChoice,
   Bot,
+  Channel,
   Collection,
   CreateMessage,
-  DiscordenoChannel,
-  DiscordenoMember,
-  DiscordenoMessage,
   FinalHelpers,
   ListGuildMembers,
-  ModifyThread,
+  Member,
+  Message,
 } from "./deps.ts";
 import { cloneChannel } from "./src/channels.ts";
 import { sendAutocompleteChoices } from "./src/sendAutoCompleteChoices.ts";
 import { sendDirectMessage } from "./src/sendDirectMessage.ts";
 import { suppressEmbeds } from "./src/suppressEmbeds.ts";
-import { archiveThread, editThread, lockThread, unarchiveThread, unlockThread } from "./src/threads.ts";
+import { archiveThread, editThread, lockThread, ModifyThread, unarchiveThread, unlockThread } from "./src/threads.ts";
 import { disconnectMember } from "./src/disconnectMember.ts";
 import { getMembersPaginated } from "./src/getMembersPaginated.ts";
 import { moveMember } from "./src/moveMember.ts";
 import { fetchAndRetrieveMembers } from "./src/fetchAndRetrieveMembers.ts";
 import { BotWithCache } from "../cache/src/addCacheCollections.ts";
+import { sendTextMessage } from "./src/sendTextMessage.ts";
 
 export interface BotWithHelpersPlugin extends Bot {
   helpers: FinalHelpers & {
     fetchAndRetrieveMembers: (
       guildId: bigint,
-    ) => Promise<Collection<bigint, DiscordenoMember>>;
+    ) => Promise<Collection<bigint, Member>>;
     sendDirectMessage: (
       userId: bigint,
       content: string | CreateMessage,
-    ) => Promise<DiscordenoMessage>;
+    ) => Promise<Message>;
     sendTextMessage: (
       channelId: bigint,
       content: string | CreateMessage,
-    ) => Promise<DiscordenoMessage>;
+    ) => Promise<Message>;
     suppressEmbeds: (
       channelId: bigint,
       messageId: bigint,
-    ) => Promise<DiscordenoMessage>;
-    archiveThread: (threadId: bigint) => Promise<DiscordenoChannel>;
-    unarchiveThread: (threadId: bigint) => Promise<DiscordenoChannel>;
-    lockThread: (threadId: bigint) => Promise<DiscordenoChannel>;
-    unlockThread: (threadId: bigint) => Promise<DiscordenoChannel>;
+    ) => Promise<Message>;
+    archiveThread: (threadId: bigint) => Promise<Channel>;
+    unarchiveThread: (threadId: bigint) => Promise<Channel>;
+    lockThread: (threadId: bigint) => Promise<Channel>;
+    unlockThread: (threadId: bigint) => Promise<Channel>;
     editThread: (
       threadId: bigint,
       options: ModifyThread,
       reason?: string,
-    ) => Promise<DiscordenoChannel>;
+    ) => Promise<Channel>;
     cloneChannel: (
-      channel: DiscordenoChannel,
+      channel: Channel,
       reason?: string,
-    ) => Promise<DiscordenoChannel>;
+    ) => Promise<Channel>;
     sendAutocompleteChoices: (
       interactionId: bigint,
       interactionToken: string,
@@ -59,16 +59,16 @@ export interface BotWithHelpersPlugin extends Bot {
     disconnectMember: (
       guildId: bigint,
       memberId: bigint,
-    ) => Promise<DiscordenoMember>;
+    ) => Promise<Member>;
     getMembersPaginated: (
       guildId: bigint,
-      options: ListGuildMembers & { memberCount: number },
-    ) => Promise<Collection<bigint, DiscordenoMember>>;
+      options: ListGuildMembers,
+    ) => Promise<Collection<bigint, Member>>;
     moveMember: (
       guildId: bigint,
       memberId: bigint,
       channelId: bigint,
-    ) => Promise<DiscordenoMember>;
+    ) => Promise<Member>;
   };
 }
 
@@ -96,7 +96,7 @@ export function enableHelpersPlugin(rawBot: Bot): BotWithHelpersPlugin {
     options: ModifyThread,
     reason?: string,
   ) => editThread(bot, threadId, options, reason);
-  bot.helpers.cloneChannel = (channel: DiscordenoChannel, reason?: string) => cloneChannel(bot, channel, reason);
+  bot.helpers.cloneChannel = (channel: Channel, reason?: string) => cloneChannel(bot, channel, reason);
   bot.helpers.sendAutocompleteChoices = (
     interactionId: bigint,
     interactionToken: string,
@@ -105,7 +105,7 @@ export function enableHelpersPlugin(rawBot: Bot): BotWithHelpersPlugin {
   bot.helpers.disconnectMember = (guildId: bigint, memberId: bigint) => disconnectMember(bot, guildId, memberId);
   bot.helpers.getMembersPaginated = (
     guildId: bigint,
-    options: ListGuildMembers & { memberCount: number },
+    options: ListGuildMembers,
   ) => getMembersPaginated(bot, guildId, options);
   bot.helpers.moveMember = (
     guildId: bigint,

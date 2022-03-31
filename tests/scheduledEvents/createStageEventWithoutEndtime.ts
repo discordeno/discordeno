@@ -1,5 +1,4 @@
-import { ChannelTypes } from "../../mod.ts";
-import { ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../../types/guilds/scheduledEvents.ts";
+import { ChannelTypes, ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../../mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../constants.ts";
 import { assertEquals, assertExists } from "../deps.ts";
 import { bot } from "../mod.ts";

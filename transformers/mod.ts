@@ -1,3 +1,5 @@
+export * from "./toggles/mod.ts";
+
 export * from "./activity.ts";
 export * from "./application.ts";
 export * from "./applicationCommand.ts";
@@ -9,6 +11,7 @@ export * from "./channel.ts";
 export * from "./component.ts";
 export * from "./embed.ts";
 export * from "./emoji.ts";
+export * from "./gatewayBot.ts";
 export * from "./guild.ts";
 export * from "./integration.ts";
 export * from "./interaction.ts";
@@ -18,8 +21,13 @@ export * from "./message.ts";
 export * from "./presence.ts";
 export * from "./role.ts";
 export * from "./scheduledEvent.ts";
+export * from "./stageInstance.ts";
+export * from "./sticker.ts";
 export * from "./team.ts";
 export * from "./threadMember.ts";
+export * from "./voiceRegion.ts";
 export * from "./voiceState.ts";
 export * from "./webhook.ts";
-export * from "./sticker.ts";
+export * from "./welcomeScreen.ts";
+export * from "./widget.ts";
+export * from "./template.ts";

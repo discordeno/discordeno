@@ -83,6 +83,7 @@ export function createApplicationCommand(bot: BotWithCache) {
     if (!options.name) {
       throw new Error("A name is required to create a options.");
     }
+
     if (isChatInput) {
       if (!SLASH_COMMANDS_NAME_REGEX.test(options.name)) {
         throw new Error(
@@ -92,47 +93,31 @@ export function createApplicationCommand(bot: BotWithCache) {
 
       // Only slash need to be lowercase
       options.name = options.name.toLowerCase();
+
+      // Slash commands require description
+      if (!options.description) {
+        throw new Error(
+          "Slash commands require some form of a description be provided.",
+        );
+      } else if (!bot.utils.validateLength(options.description, { min: 1, max: 100 })) {
+        throw new Error(
+          "Application command descriptions must be between 1 and 100 characters.",
+        );
+      }
+
+      if (options.options?.length) {
+        if (options.options.length > 25) {
+          throw new Error("Only 25 options are allowed to be provided.");
+        }
+
+        options.options = validateApplicationCommandOptions(bot, options.options);
+      }
     } else {
       if (!CONTEXT_MENU_COMMANDS_NAME_REGEX.test(options.name)) {
         throw new Error(
           "The name of the context menu did not match the required regex.",
         );
       }
-    }
-
-    // Slash commands require description
-    if (
-      !options.description &&
-      (isChatInput)
-    ) {
-      throw new Error(
-        "Slash commands require some form of a description be provided.",
-      );
-    }
-
-    if (
-      options.description &&
-      ((options.type === ApplicationCommandTypes.User) ||
-        (options.type === ApplicationCommandTypes.Message))
-    ) {
-      throw new Error("Context menu commands do not allow a description.");
-    }
-
-    if (
-      options.description &&
-      !bot.utils.validateLength(options.description, { min: 1, max: 100 })
-    ) {
-      throw new Error(
-        "Application command descriptions must be between 1 and 100 characters.",
-      );
-    }
-
-    if (options.options?.length) {
-      if (options.options.length > 25) {
-        throw new Error("Only 25 options are allowed to be provided.");
-      }
-
-      options.options = validateApplicationCommandOptions(bot, options.options);
     }
 
     return await createApplicationCommandOld(options, guildId);

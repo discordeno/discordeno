@@ -1,10 +1,8 @@
 import { Bot } from "../../bot.ts";
-import type { DiscordGatewayPayload } from "../../types/gateway/gatewayPayload.ts";
-import type { GuildMemberUpdate } from "../../types/members/guildMemberUpdate.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import { DiscordGatewayPayload, DiscordGuildMemberUpdate } from "../../types/discord.ts";
 
 export async function handleGuildMemberUpdate(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as SnakeCasedPropertiesDeep<GuildMemberUpdate>;
+  const payload = data.d as DiscordGuildMemberUpdate;
 
   const user = bot.transformers.user(bot, payload.user);
   bot.events.guildMemberUpdate(

@@ -1,16 +1,16 @@
 import { DEV_GUILD_ID } from "../../../../../configs.ts";
-import { GatewayPayload, UnavailableGuild } from "../../../../../deps.ts";
+import { DiscordGatewayPayload, DiscordUnavailableGuild } from "../../../../../deps.ts";
 import logger from "../../../../utils/logger.ts";
 import { updateGuildCommands } from "../../../../utils/updateSlash.ts";
 import { BotClient } from "../../../botClient.ts";
 import { usesLatestCommandVersion } from "../../../database/commandVersion.ts";
 import { commandVersions } from "../../../database/kwik.ts";
 
-export async function setGuildCommands(bot: BotClient, data: GatewayPayload) {
+export async function setGuildCommands(bot: BotClient, data: DiscordGatewayPayload) {
   if (!data.t) return;
 
   if (data.t === "GUILD_DELETE") {
-    const id = (data.d as UnavailableGuild).id;
+    const id = (data.d as DiscordUnavailableGuild).id;
     await commandVersions.delete(id);
     bot.commandVersions.delete(bot.transformers.snowflake(id));
     return;

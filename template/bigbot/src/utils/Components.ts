@@ -60,7 +60,7 @@ export class Components extends Array<ActionRow> {
     // A snowflake id was provided
     if (SNOWFLAKE_REGEX.test(emoji)) {
       return {
-        id: emoji.match(SNOWFLAKE_REGEX)![0],
+        id: BigInt(emoji.match(SNOWFLAKE_REGEX)![0]),
       };
     }
 

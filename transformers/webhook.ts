@@ -1,11 +1,9 @@
 import { Bot } from "../bot.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { WebhookTypes } from "../types/webhooks/webhookTypes.ts";
-import { Webhook } from "../types/webhooks/webhook.ts";
-import { DiscordenoUser } from "./member.ts";
+import { DiscordWebhook } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
-export function transformWebhook(bot: Bot, payload: SnakeCasedPropertiesDeep<Webhook>): DiscordenoWebhook {
-  return {
+export function transformWebhook(bot: Bot, payload: DiscordWebhook) {
+  const webhook = {
     id: bot.transformers.snowflake(payload.id),
     type: payload.type,
     guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
@@ -32,38 +30,8 @@ export function transformWebhook(bot: Bot, payload: SnakeCasedPropertiesDeep<Web
     /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
     url: payload.url,
   };
+
+  return webhook as Optionalize<typeof webhook>;
 }
 
-export interface DiscordenoWebhook {
-  /** The id of the webhook */
-  id: bigint;
-  /** The type of the webhook */
-  type: WebhookTypes;
-  /** The guild id this webhook is for */
-  guildId?: bigint;
-  /** The channel id this webhook is for */
-  channelId?: bigint;
-  /** The user this webhook was created by (not returned when getting a webhook with its token) */
-  user?: DiscordenoUser;
-  /** The default name of the webhook */
-  name?: string;
-  /** The default user avatar hash of the webhook */
-  avatar?: bigint;
-  /** The secure token of the webhook (returned for Incomming Webhooks) */
-  token?: string;
-  /** The bot/OAuth2 application that created this webhook */
-  applicationId?: bigint;
-  /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks) */
-  sourceGuild?: {
-    id: bigint;
-    name: string;
-    icon?: bigint;
-  };
-  /** The channel that this webhook is following (returned for Channel Follower Webhooks) */
-  sourceChannel?: {
-    id: bigint;
-    name: string;
-  };
-  /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
-  url?: string;
-}
+export interface Webhook extends ReturnType<typeof transformWebhook> {}

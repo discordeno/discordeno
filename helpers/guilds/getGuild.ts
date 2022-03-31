@@ -1,5 +1,5 @@
-import type { Guild } from "../../types/guilds/guild.ts";
 import type { Bot } from "../../bot.ts";
+import { DiscordGuild } from "../../types/discord.ts";
 
 /**
  * This function fetches a guild's data. This is not the same data as a GUILD_CREATE.
@@ -12,9 +12,11 @@ export async function getGuild(
     counts: true,
   },
 ) {
-  const result = await bot.rest.runMethod<Guild>(bot.rest, "get", bot.constants.endpoints.GUILDS_BASE(guildId), {
-    with_counts: options.counts,
-  });
+  const result = await bot.rest.runMethod<DiscordGuild>(
+    bot.rest,
+    "get",
+    `${bot.constants.endpoints.GUILDS_BASE(guildId)}?with_counts=${options.counts ?? false}`,
+  );
 
   return bot.transformers.guild(bot, {
     guild: result,

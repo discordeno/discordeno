@@ -1,65 +1,19 @@
-import type { EditMessage } from "../../types/messages/editMessage.ts";
-import type { Message } from "../../types/messages/message.ts";
 import type { Bot } from "../../bot.ts";
-import { MessageComponentTypes } from "../../types/messages/components/messageComponentTypes.ts";
+import { Attachment } from "../../transformers/attachment.ts";
+import { Embed } from "../../transformers/embed.ts";
+import { DiscordMessage } from "../../types/discord.ts";
+import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
+import { MessageComponentTypes } from "../../types/shared.ts";
 
 /** Edit the message. */
 export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint, content: EditMessage) {
-  const result = await bot.rest.runMethod<Message>(
+  const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "patch",
     bot.constants.endpoints.CHANNEL_MESSAGE(channelId, messageId),
     {
       content: content.content,
-      embeds: content.embeds?.map((embed) => ({
-        title: embed.title,
-        type: embed.type,
-        description: embed.description,
-        url: embed.url,
-        timestamp: embed.timestamp ? new Date(embed.timestamp).toISOString() : undefined,
-        color: embed.color,
-        footer: embed.footer
-          ? {
-            text: embed.footer.text,
-            icon_url: embed.footer.iconUrl,
-            proxy_icon_url: embed.footer.proxyIconUrl,
-          }
-          : undefined,
-        image: embed.image
-          ? {
-            url: embed.image.url,
-            proxy_url: embed.image.proxyUrl,
-            height: embed.image.height,
-            width: embed.image.width,
-          }
-          : undefined,
-        thumbnail: embed.thumbnail
-          ? {
-            url: embed.thumbnail.url,
-            proxy_url: embed.thumbnail.proxyUrl,
-            height: embed.thumbnail.height,
-            width: embed.thumbnail.width,
-          }
-          : undefined,
-        video: embed.video
-          ? {
-            url: embed.video.url,
-            proxy_url: embed.video.proxyUrl,
-            height: embed.video.height,
-            width: embed.video.width,
-          }
-          : undefined,
-        provider: embed.provider,
-        author: embed.author
-          ? {
-            name: embed.author.name,
-            url: embed.author.url,
-            icon_url: embed.author.iconUrl,
-            proxy_icon_url: embed.author.proxyIconUrl,
-          }
-          : undefined,
-        fields: embed.fields,
-      })),
+      embeds: content.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
       allowed_mentions: {
         parse: content.allowedMentions?.parse,
         roles: content.allowedMentions?.roles?.map((id) => id.toString()),
@@ -136,4 +90,22 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
   );
 
   return bot.transformers.message(bot, result);
+}
+
+/** https://discord.com/developers/docs/resources/channel#edit-message-json-params */
+export interface EditMessage {
+  /** The new message contents (up to 2000 characters) */
+  content?: string | null;
+  /** Embedded `rich` content (up to 6000 characters) */
+  embeds?: Embed[] | null;
+  /** Edit the flags of the message (only `SUPRESS_EMBEDS` can currently be set/unset) */
+  flags?: 4 | null;
+  /** The contents of the file being sent/edited */
+  file?: FileContent | FileContent[] | null;
+  /** Allowed mentions for the message */
+  allowedMentions?: AllowedMentions;
+  /** When specified (adding new attachments), attachments which are not provided in this list will be removed. */
+  attachments?: Attachment[];
+  /** The components you would like to have sent in this message */
+  components?: MessageComponents;
 }

@@ -1,4 +1,4 @@
-import { Bot, Collection, DiscordenoMember, GuildMemberWithUser, ListGuildMembers } from "../deps.ts";
+import { Bot, Collection, DiscordMemberWithUser, ListGuildMembers, Member } from "../deps.ts";
 
 /**
  * Highly recommended to **NOT** use this function to get members instead use fetchMembers().
@@ -8,14 +8,14 @@ import { Bot, Collection, DiscordenoMember, GuildMemberWithUser, ListGuildMember
 export async function getMembersPaginated(
   bot: Bot,
   guildId: bigint,
-  options: ListGuildMembers & { memberCount: number },
+  options: ListGuildMembers,
 ) {
-  const members = new Collection<bigint, DiscordenoMember>();
+  const members = new Collection<bigint, Member>();
 
-  let membersLeft = options?.limit ?? options.memberCount;
+  let membersLeft = options?.limit ?? 1000;
   let loops = 1;
   while (
-    (options?.limit ?? options.memberCount) > members.size &&
+    (options?.limit ?? 1000) > members.size &&
     membersLeft > 0
   ) {
     bot.events.debug("Running while loop in getMembers function.");
@@ -30,7 +30,7 @@ export async function getMembersPaginated(
       );
     }
 
-    const result = await bot.rest.runMethod<GuildMemberWithUser[]>(
+    const result = await bot.rest.runMethod<DiscordMemberWithUser[]>(
       bot.rest,
       "get",
       `${bot.constants.endpoints.GUILD_MEMBERS(guildId)}?limit=${membersLeft > 1000 ? 1000 : membersLeft}${
@@ -57,7 +57,6 @@ export async function getMembersPaginated(
     options = {
       limit: options?.limit,
       after: discordenoMembers[discordenoMembers.length - 1].id.toString(),
-      memberCount: options.memberCount,
     };
 
     membersLeft -= 1000;

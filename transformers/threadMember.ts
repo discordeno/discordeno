@@ -1,26 +1,24 @@
 import { Bot } from "../bot.ts";
-import { ThreadMember } from "../types/channels/threads/threadMember.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordThreadMember, DiscordThreadMemberGuildCreate } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
-export function transformThreadMember(
-  bot: Bot,
-  payload: SnakeCasedPropertiesDeep<ThreadMember>,
-): DiscordenoThreadMember {
-  return {
+export function transformThreadMember(bot: Bot, payload: DiscordThreadMember) {
+  const threadMember = {
     id: payload.user_id ? bot.transformers.snowflake(payload.user_id) : undefined,
     threadId: payload.id ? bot.transformers.snowflake(payload.id) : undefined,
     joinTimestamp: Date.parse(payload.join_timestamp),
   };
+
+  return threadMember as Optionalize<typeof threadMember>;
 }
 
-export interface DiscordenoThreadMember {
-  /** The id of the user */
-  id?: bigint;
-  /** The id of the thread */
-  threadId?: bigint;
-  /** The time the current user last joined the thread */
-  joinTimestamp: number;
-  // COMMENTED OUT AS THIS IS USELESS FOR BOTS ATM
-  /** Any user-thread settings, currently only used for notifications */
-  //   flags: number;
+export function transformThreadMemberGuildCreate(bot: Bot, payload: DiscordThreadMemberGuildCreate) {
+  const threadMember = {
+    joinTimestamp: Date.parse(payload.join_timestamp),
+  };
+
+  return threadMember as Optionalize<typeof threadMember>;
 }
+
+export interface ThreadMember extends ReturnType<typeof transformThreadMember> {}
+export interface ThreadMemberGuildCreate extends ReturnType<typeof transformThreadMemberGuildCreate> {}

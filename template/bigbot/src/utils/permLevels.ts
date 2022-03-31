@@ -1,10 +1,10 @@
-import { DiscordenoInteraction, validatePermissions } from "../../deps.ts";
+import { Interaction, validatePermissions } from "../../deps.ts";
 import { Command } from "../bot/types/command.ts";
 
 export default async function hasPermissionLevel(
   // deno-lint-ignore no-explicit-any
   command: Command<any>,
-  payload: DiscordenoInteraction,
+  payload: Interaction,
 ) {
   // This command doesnt require a perm level so allow the command.
   if (!command.permissionLevels) return true;
@@ -27,7 +27,7 @@ export default async function hasPermissionLevel(
 export const PermissionLevelHandlers: Record<
   keyof typeof PermissionLevels,
   (
-    payload: DiscordenoInteraction,
+    payload: Interaction,
     // deno-lint-ignore no-explicit-any
     command: Command<any>,
   ) => boolean | Promise<boolean>

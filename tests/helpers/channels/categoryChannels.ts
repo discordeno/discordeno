@@ -1,4 +1,4 @@
-import { ChannelTypes } from "../../../types/channels/channelTypes.ts";
+import { ChannelTypes } from "../../../types/shared.ts";
 import { assertExists } from "../../deps.ts";
 import { bot } from "../../mod.ts";
 import { delayUntil } from "../../utils.ts";

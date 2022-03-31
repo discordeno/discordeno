@@ -1,9 +1,7 @@
 import { assertExists } from "../../deps.ts";
 import { delayUntil } from "../../utils.ts";
-import { CreateMessage } from "../../../types/messages/createMessage.ts";
-import { MessageComponentTypes } from "../../../types/messages/components/messageComponentTypes.ts";
-import { ButtonStyles } from "../../../types/messages/components/buttonStyles.ts";
 import { bot } from "../../mod.ts";
+import { ButtonStyles, CreateMessage, MessageComponentTypes } from "../../../mod.ts";
 
 async function ifItFailsBlameWolf(channelId: bigint, content: CreateMessage) {
   const message = await bot.helpers.sendMessage(channelId, content);

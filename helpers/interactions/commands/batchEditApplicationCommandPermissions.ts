@@ -1,6 +1,6 @@
 import type { Bot } from "../../../bot.ts";
-import type { ApplicationCommandPermissions } from "../../../types/interactions/commands/applicationCommandPermissions.ts";
-import { GuildApplicationCommandPermissions } from "../../../types/interactions/commands/guildApplicationCommandPermissions.ts";
+import { DiscordGuildApplicationCommandPermissions } from "../../../types/discord.ts";
+import { ApplicationCommandPermissionTypes } from "../../../types/shared.ts";
 
 /** Batch edits permissions for all commands in a guild. Takes an array of partial GuildApplicationCommandPermissions objects including `id` and `permissions`. */
 export async function batchEditApplicationCommandPermissions(
@@ -8,7 +8,7 @@ export async function batchEditApplicationCommandPermissions(
   guildId: bigint,
   options: { id: string; permissions: ApplicationCommandPermissions[] }[],
 ) {
-  const result = await bot.rest.runMethod<GuildApplicationCommandPermissions[]>(
+  const result = await bot.rest.runMethod<DiscordGuildApplicationCommandPermissions[]>(
     bot.rest,
     "put",
     bot.constants.endpoints.COMMANDS_PERMISSIONS(bot.applicationId, guildId),
@@ -16,4 +16,14 @@ export async function batchEditApplicationCommandPermissions(
   );
 
   return result.map((res) => bot.transformers.applicationCommandPermission(bot, res));
+}
+
+/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandpermissions */
+export interface ApplicationCommandPermissions {
+  /** The id of the role or user */
+  id: string;
+  /** Role or User */
+  type: ApplicationCommandPermissionTypes;
+  /** `true` to allow, `false`, to disallow */
+  permission: boolean;
 }

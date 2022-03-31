@@ -1,12 +1,12 @@
 import {
   ApplicationCommandOptionTypes,
   ApplicationCommandTypes,
-  DiscordenoChannel,
-  DiscordenoInteraction,
-  DiscordenoMember,
-  DiscordenoRole,
-  DiscordenoUser,
-  Permission,
+  Channel,
+  Interaction,
+  Member,
+  PermissionStrings,
+  Role,
+  User,
 } from "../../../deps.ts";
 import { PermissionLevelHandlers } from "../../utils/permLevels.ts";
 import { BotClient } from "../botClient.ts";
@@ -215,33 +215,33 @@ export type ConvertArgumentDefinitionsToArgs<
         : // USER
         T[P] extends UserOptionalArgumentDefinition<infer N> ? {
           [_ in getName<N>]?: {
-            user: DiscordenoUser;
-            member: DiscordenoMember;
+            user: User;
+            member: Member;
           };
         }
         : T[P] extends UserArgumentDefinition<infer N> ? {
           [_ in getName<N>]: {
-            user: DiscordenoUser;
-            member: DiscordenoMember;
+            user: User;
+            member: Member;
           };
         }
         : // CHANNEL
-        T[P] extends ChannelOptionalArgumentDefinition<infer N> ? { [_ in getName<N>]?: DiscordenoChannel }
-        : T[P] extends ChannelArgumentDefinition<infer N> ? { [_ in getName<N>]: DiscordenoChannel }
+        T[P] extends ChannelOptionalArgumentDefinition<infer N> ? { [_ in getName<N>]?: Channel }
+        : T[P] extends ChannelArgumentDefinition<infer N> ? { [_ in getName<N>]: Channel }
         : // ROLE
-        T[P] extends RoleOptionalArgumentDefinition<infer N> ? { [_ in getName<N>]?: DiscordenoRole }
-        : T[P] extends RoleArgumentDefinition<infer N> ? { [_ in getName<N>]: DiscordenoRole }
+        T[P] extends RoleOptionalArgumentDefinition<infer N> ? { [_ in getName<N>]?: Role }
+        : T[P] extends RoleArgumentDefinition<infer N> ? { [_ in getName<N>]: Role }
         : // MENTIONABLE
         T[P] extends MentionableOptionalArgumentDefinition<infer N> ? {
-          [_ in getName<N>]?: DiscordenoRole | {
-            user: DiscordenoUser;
-            member: DiscordenoMember;
+          [_ in getName<N>]?: Role | {
+            user: User;
+            member: Member;
           };
         }
         : T[P] extends MentionableArgumentDefinition<infer N> ? {
-          [_ in getName<N>]: DiscordenoRole | {
-            user: DiscordenoUser;
-            member: DiscordenoMember;
+          [_ in getName<N>]: Role | {
+            user: User;
+            member: Member;
           };
         }
         : // SUBCOMMAND
@@ -275,7 +275,7 @@ export interface Command<T extends readonly ArgumentDefinition[]> {
   options?: T;
   execute: (
     bot: BotClient,
-    data: DiscordenoInteraction,
+    data: Interaction,
     args: ConvertArgumentDefinitionsToArgs<T>,
   ) => unknown;
   subcommands?: Record<
@@ -308,13 +308,13 @@ export interface Command<T extends readonly ArgumentDefinition[]> {
   permissionLevels?:
     | (keyof typeof PermissionLevelHandlers)[]
     | ((
-      data: DiscordenoInteraction,
+      data: Interaction,
       command: Command<T>,
     ) => boolean | Promise<boolean>);
-  botServerPermissions?: Permission[];
-  botChannelPermissions?: Permission[];
-  userServerPermissions?: Permission[];
-  userChannelPermissions?: Permission[];
+  botServerPermissions?: PermissionStrings[];
+  botChannelPermissions?: PermissionStrings[];
+  userServerPermissions?: PermissionStrings[];
+  userChannelPermissions?: PermissionStrings[];
 }
 
 export enum PermissionLevels {

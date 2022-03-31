@@ -1,9 +1,16 @@
-import type { DiscordenoEditWebhookMessage } from "../../../types/discordeno/editWebhookMessage.ts";
 import type { Bot } from "../../../bot.ts";
-import { MessageComponentTypes } from "../../../types/messages/components/messageComponentTypes.ts";
+import { MessageComponentTypes } from "../../../types/shared.ts";
+import { EditWebhookMessage } from "../../webhooks/editWebhookMessage.ts";
 
 /** To edit your response to a application command. If a messageId is not provided it will default to editing the original response. */
-export async function editInteractionResponse(bot: Bot, token: string, options: DiscordenoEditWebhookMessage) {
+export async function editInteractionResponse(
+  bot: Bot,
+  token: string,
+  options: EditWebhookMessage & {
+    /** Id of the message you want to edit if undefined the initial response message will be edited */
+    messageId?: bigint;
+  },
+) {
   const result = await bot.rest.runMethod(
     bot.rest,
     "patch",
@@ -12,7 +19,7 @@ export async function editInteractionResponse(bot: Bot, token: string, options: 
       : bot.constants.endpoints.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token),
     {
       content: options.content,
-      embeds: options.embeds,
+      embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
       file: options.file,
       allowed_mentions: options.allowedMentions
         ? {

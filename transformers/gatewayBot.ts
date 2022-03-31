@@ -1,8 +1,8 @@
-import { GetGatewayBot } from "../types/gateway/getGatewayBot.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordGetGatewayBot } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
-export function transformGatewayBot(payload: SnakeCasedPropertiesDeep<GetGatewayBot>): GetGatewayBot {
-  return {
+export function transformGatewayBot(payload: DiscordGetGatewayBot) {
+  const gatewayBot = {
     url: payload.url,
     shards: payload.shards,
     sessionStartLimit: {
@@ -12,4 +12,8 @@ export function transformGatewayBot(payload: SnakeCasedPropertiesDeep<GetGateway
       maxConcurrency: payload.session_start_limit.max_concurrency,
     },
   };
+
+  return gatewayBot as Optionalize<typeof gatewayBot>;
 }
+
+export interface GetGatewayBot extends ReturnType<typeof transformGatewayBot> {}

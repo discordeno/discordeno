@@ -1,11 +1,11 @@
-import { Bot, DiscordenoInteraction } from "../../deps.ts";
+import { Bot, Interaction } from "../../deps.ts";
 import Embeds from "./Embeds.ts";
 import { getUserTag } from "./helpers.ts";
 import logger from "./logger.ts";
 
 export async function slashLogWebhook(
   bot: Bot,
-  payload: DiscordenoInteraction,
+  payload: Interaction,
   name: string,
 ) {
   const webhook = Deno.env.get("DISCORD_LOGS_WEBHOOK");

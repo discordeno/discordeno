@@ -1,5 +1,5 @@
 import { BotWithCache, PermissionStrings } from "../../deps.ts";
-import { requireBotGuildPermissions } from "../permissions.ts";
+import { hasGuildPermissions, requireBotGuildPermissions, requireGuildPermissions } from "../permissions.ts";
 
 export default function editMember(bot: BotWithCache) {
   const editMemberOld = bot.helpers.editMember;
@@ -12,6 +12,17 @@ export default function editMember(bot: BotWithCache) {
     if (options.channelId !== undefined) requiredPerms.push("MOVE_MEMBERS");
     if (options.mute !== undefined) requiredPerms.push("MUTE_MEMBERS");
     if (options.deaf !== undefined) requiredPerms.push("DEAFEN_MEMBERS");
+
+    if (options.communicationDisabledUntil) {
+      const guild = bot.guilds.get(guildId);
+      if (guild) {
+        if (guild.ownerId === memberId) throw new Error("You can not timeout the servers owner.");
+      }
+
+      if (hasGuildPermissions(bot, guildId, memberId, ["ADMINISTRATOR"])) {
+        throw new Error("You can not timeout a server administrator.");
+      }
+    }
 
     if (requiredPerms.length) {
       requireBotGuildPermissions(bot, guildId, requiredPerms);

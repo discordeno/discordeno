@@ -1,11 +1,10 @@
 import type {
   Bot,
-  GuildMemberAdd,
-  GuildMemberRemove,
-  MessageReactionAdd,
-  MessageReactionRemove,
-  MessageReactionRemoveAll,
-  SnakeCasedPropertiesDeep,
+  DiscordGuildMemberAdd,
+  DiscordGuildMemberRemove,
+  DiscordMessageReactionAdd,
+  DiscordMessageReactionRemove,
+  DiscordMessageReactionRemoveAll,
 } from "../deps.ts";
 import type { BotWithCache } from "./addCacheCollections.ts";
 
@@ -19,7 +18,7 @@ export function setupCacheEdits<B extends Bot>(bot: BotWithCache<B>) {
   } = bot.handlers;
 
   bot.handlers.GUILD_MEMBER_ADD = function (_, data, shardId) {
-    const payload = data.d as SnakeCasedPropertiesDeep<GuildMemberAdd>;
+    const payload = data.d as DiscordGuildMemberAdd;
 
     const guild = bot.guilds.get(bot.transformers.snowflake(payload.guild_id));
 
@@ -29,7 +28,7 @@ export function setupCacheEdits<B extends Bot>(bot: BotWithCache<B>) {
   };
 
   bot.handlers.GUILD_MEMBER_REMOVE = function (_, data, shardId) {
-    const payload = data.d as SnakeCasedPropertiesDeep<GuildMemberRemove>;
+    const payload = data.d as DiscordGuildMemberRemove;
 
     const guild = bot.guilds.get(bot.transformers.snowflake(payload.guild_id));
 
@@ -39,7 +38,7 @@ export function setupCacheEdits<B extends Bot>(bot: BotWithCache<B>) {
   };
 
   bot.handlers.MESSAGE_REACTION_ADD = function (_, data, shardId) {
-    const payload = data.d as SnakeCasedPropertiesDeep<MessageReactionAdd>;
+    const payload = data.d as DiscordMessageReactionAdd;
 
     const messageId = bot.transformers.snowflake(payload.message_id);
     const message = bot.messages.get(messageId);
@@ -64,8 +63,8 @@ export function setupCacheEdits<B extends Bot>(bot: BotWithCache<B>) {
         const current = message.reactions?.[reactions.indexOf(emoji.name)];
 
         // rewrite
-        if (current && message.reactions?.[message.reactions.indexOf(current)]) {
-          message.reactions[message.reactions.indexOf(current)].count++;
+        if (current) {
+          current.count++;
         }
       }
     }
@@ -74,7 +73,7 @@ export function setupCacheEdits<B extends Bot>(bot: BotWithCache<B>) {
   };
 
   bot.handlers.MESSAGE_REACTION_REMOVE = function (_, data, shardId) {
-    const payload = data.d as SnakeCasedPropertiesDeep<MessageReactionRemove>;
+    const payload = data.d as DiscordMessageReactionRemove;
 
     const messageId = bot.transformers.snowflake(payload.message_id);
     const message = bot.messages.get(messageId);
@@ -105,7 +104,7 @@ export function setupCacheEdits<B extends Bot>(bot: BotWithCache<B>) {
   };
 
   bot.handlers.MESSAGE_REACTION_REMOVE_ALL = function (_, data, shardId) {
-    const payload = data.d as SnakeCasedPropertiesDeep<MessageReactionRemoveAll>;
+    const payload = data.d as DiscordMessageReactionRemoveAll;
 
     const messageId = bot.transformers.snowflake(payload.message_id);
     const message = bot.messages.get(messageId);

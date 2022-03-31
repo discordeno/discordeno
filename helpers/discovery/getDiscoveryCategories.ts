@@ -1,17 +1,16 @@
-import type { DiscoveryCategory } from "../../types/discovery/discoveryCategory.ts";
 import { Collection } from "../../util/collection.ts";
 import type { Bot } from "../../bot.ts";
-import { SnakeCasedPropertiesDeep } from "../../types/util.ts";
+import { DiscordDiscoveryCategory } from "../../types/discord.ts";
 
 /** Returns a Collection (mapped by Id of the discovery category object) of discovery category objects that can be used when editing guilds */
 export async function getDiscoveryCategories(bot: Bot) {
-  const result = await bot.rest.runMethod<DiscoveryCategory[]>(
+  const result = await bot.rest.runMethod<DiscordDiscoveryCategory[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.DISCOVERY_CATEGORIES,
+    bot.constants.endpoints.DISCOVERY_CATEGORIES(),
   );
 
-  return new Collection<number, SnakeCasedPropertiesDeep<DiscoveryCategory>>(
+  return new Collection<number, DiscordDiscoveryCategory>(
     result.map((category) => [category.id, category]),
   );
 }

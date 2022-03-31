@@ -166,8 +166,7 @@ If your bot is going to be run on one process, you can re-use the data that disc
 - `reshard`: Whether or not to automatically reshard the bot when necessary with zero downtime deployment strategy.
   Default: true.
 - `reshardPercentage`: The % of servers to trigger a reshard. Default: 80%.
-- `spawnShardDelay`: The delay in milliseconds to wait before spawning next shard. OPTIMAL IS ABOVE 2500. YOU DON"T WANT
-  TO HIT THE RATE LIMIT!!! This is mainly if you are changing internals a lot and need to modify this behavior.
+- `spawnShardDelay`: The delay in milliseconds to wait before spawning next shard.
 - `useOptimalLargeBotSharding`: Whether or not the resharder should automatically switch to LARGE BOT SHARDING when you
   are above 100K servers.
 - `shardsPerCluster`: The amount of shards to load per worker. Discussed in detail below.

@@ -1,12 +1,9 @@
 import { Bot } from "../bot.ts";
-import { InviteCreate } from "../types/invites/inviteCreate.ts";
-import { TargetTypes } from "../types/invites/targetTypes.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
-import { DiscordenoApplication } from "./application.ts";
-import { DiscordenoUser } from "./member.ts";
+import { DiscordInviteCreate } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
-export function transformInvite(bot: Bot, invite: SnakeCasedPropertiesDeep<InviteCreate>): DiscordenoInvite {
-  return {
+export function transformInvite(bot: Bot, invite: DiscordInviteCreate) {
+  const transformedInvite = {
     /** The channel the invite is for */
     channelId: bot.transformers.snowflake(invite.channel_id),
     /** The unique invite code */
@@ -35,31 +32,8 @@ export function transformInvite(bot: Bot, invite: SnakeCasedPropertiesDeep<Invit
     /** How many times the invite has been used (always will be 0) */
     uses: invite.uses,
   };
+
+  return transformedInvite as Optionalize<typeof transformedInvite>;
 }
 
-export interface DiscordenoInvite {
-  /** The channel the invite is for */
-  channelId: bigint;
-  /** The unique invite code */
-  code: string;
-  /** The time at which the invite was created */
-  createdAt: number;
-  /** The guild of the invite */
-  guildId?: bigint;
-  /** The user that created the invite */
-  inviter?: DiscordenoUser;
-  /** How long the invite is valid for (in seconds) */
-  maxAge: number;
-  /** The maximum number of times the invite can be used */
-  maxUses: number;
-  /** The type of target for this voice channel invite */
-  targetType: TargetTypes;
-  /** The target user for this invite */
-  targetUser?: DiscordenoUser;
-  /** The embedded application to open for this voice channel embedded application invite */
-  targetApplication?: Partial<DiscordenoApplication>;
-  /** Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
-  temporary: boolean;
-  /** How many times the invite has been used (always will be 0) */
-  uses: number;
-}
+export interface Invite extends ReturnType<typeof transformInvite> {}

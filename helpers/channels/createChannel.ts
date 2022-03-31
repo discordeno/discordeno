@@ -1,14 +1,14 @@
-import type { Channel } from "../../types/channels/channel.ts";
-import { ChannelTypes } from "../../types/channels/channelTypes.ts";
-import type { CreateGuildChannel } from "../../types/guilds/createGuildChannel.ts";
 import type { Bot } from "../../bot.ts";
+import { ChannelTypes } from "../../types/shared.ts";
+import { DiscordChannel } from "../../types/discord.ts";
+import { OverwriteReadable } from "./editChannelOverwrite.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(bot: Bot, guildId: bigint, options?: CreateGuildChannel, reason?: string) {
   // BITRATES ARE IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
   if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000;
 
-  const result = await bot.rest.runMethod<Channel>(
+  const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
     "post",
     bot.constants.endpoints.GUILD_CHANNELS(guildId),
@@ -35,4 +35,27 @@ export async function createChannel(bot: Bot, guildId: bigint, options?: CreateG
   );
 
   return bot.transformers.channel(bot, { channel: result, guildId });
+}
+
+export interface CreateGuildChannel {
+  /** Channel name (1-100 characters) */
+  name: string;
+  /** The type of channel */
+  type?: ChannelTypes;
+  /** Channel topic (0-1024 characters) */
+  topic?: string;
+  /** The bitrate (in bits) of the voice channel (voice only) */
+  bitrate?: number;
+  /** The user limit of the voice channel (voice only) */
+  userLimit?: number;
+  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
+  rateLimitPerUser?: number;
+  /** Sorting position of the channel */
+  position?: number;
+  /** The channel's permission overwrites */
+  permissionOverwrites?: OverwriteReadable[];
+  /** Id of the parent category for a channel */
+  parentId?: bigint;
+  /** Whether the channel is nsfw */
+  nsfw?: boolean;
 }

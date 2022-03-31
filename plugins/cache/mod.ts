@@ -1,4 +1,4 @@
-import { Bot, Collection, GuildEmojisUpdate, SnakeCasedPropertiesDeep } from "./deps.ts";
+import { Bot, Collection, DiscordGuildEmojisUpdate } from "./deps.ts";
 import { setupCacheRemovals } from "./src/setupCacheRemovals.ts";
 import { addCacheCollections, BotWithCache } from "./src/addCacheCollections.ts";
 import { setupCacheEdits } from "./src/setupCacheEdits.ts";
@@ -122,7 +122,7 @@ export function enableCachePlugin<B extends Bot = Bot>(rawBot: B): BotWithCache<
 
   const { GUILD_EMOJIS_UPDATE } = bot.handlers;
   bot.handlers.GUILD_EMOJIS_UPDATE = function (_, data, shardId) {
-    const payload = data.d as SnakeCasedPropertiesDeep<GuildEmojisUpdate>;
+    const payload = data.d as DiscordGuildEmojisUpdate;
 
     const guild = bot.guilds.get(bot.transformers.snowflake(payload.guild_id));
     if (guild) {

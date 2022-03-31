@@ -1,7 +1,13 @@
-import type { ApplicationCommand } from "../../../types/interactions/commands/applicationCommand.ts";
-import type { EditGlobalApplicationCommand } from "../../../types/interactions/commands/editGlobalApplicationCommand.ts";
 import type { Bot } from "../../../bot.ts";
-import { makeOptionsForCommand } from "./createApplicationCommand.ts";
+import {
+  CreateApplicationCommand,
+  CreateContextApplicationCommand,
+  isContextApplicationCommand,
+  makeOptionsForCommand,
+} from "./createApplicationCommand.ts";
+import { DiscordApplicationCommand } from "../../../types/discord.ts";
+import { ApplicationCommandOption } from "../../../transformers/applicationCommandOption.ts";
+import { ApplicationCommandTypes } from "../../../types/shared.ts";
 
 /**
  * Edit an existing application command. If this command did not exist, it will create it.
@@ -9,21 +15,26 @@ import { makeOptionsForCommand } from "./createApplicationCommand.ts";
 export async function upsertApplicationCommand(
   bot: Bot,
   commandId: bigint,
-  options: EditGlobalApplicationCommand,
+  options: CreateApplicationCommand | CreateContextApplicationCommand,
   guildId?: bigint,
 ) {
-  const result = await bot.rest.runMethod<ApplicationCommand>(
+  const result = await bot.rest.runMethod<DiscordApplicationCommand>(
     bot.rest,
     "patch",
     guildId
       ? bot.constants.endpoints.COMMANDS_GUILD_ID(bot.applicationId, guildId, commandId)
       : bot.constants.endpoints.COMMANDS_ID(bot.applicationId, commandId),
-    {
-      name: options.name,
-      description: options.description,
-      type: options.type,
-      options: options.options ? makeOptionsForCommand(options.options) : undefined,
-    },
+    isContextApplicationCommand(options)
+      ? {
+        name: options.name,
+        type: options.type,
+      }
+      : {
+        name: options.name,
+        description: options.description,
+        type: options.type,
+        options: options.options ? makeOptionsForCommand(options.options) : undefined,
+      },
   );
 
   return bot.transformers.applicationCommand(bot, result);

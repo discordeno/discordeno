@@ -1,6 +1,6 @@
-import type { ApplicationCommandPermissions } from "../../../types/interactions/commands/applicationCommandPermissions.ts";
 import type { Bot } from "../../../bot.ts";
-import { GuildApplicationCommandPermissions } from "../../../types/interactions/commands/guildApplicationCommandPermissions.ts";
+import { DiscordGuildApplicationCommandPermissions } from "../../../types/discord.ts";
+import { ApplicationCommandPermissions } from "./batchEditApplicationCommandPermissions.ts";
 
 /** Edits command permissions for a specific command for your application in a guild. */
 export async function editApplicationCommandPermissions(
@@ -9,7 +9,7 @@ export async function editApplicationCommandPermissions(
   commandId: bigint,
   options: ApplicationCommandPermissions[],
 ) {
-  const result = await bot.rest.runMethod<GuildApplicationCommandPermissions>(
+  const result = await bot.rest.runMethod<DiscordGuildApplicationCommandPermissions>(
     bot.rest,
     "put",
     bot.constants.endpoints.COMMANDS_PERMISSION(bot.applicationId, guildId, commandId),

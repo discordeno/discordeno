@@ -1,26 +1,19 @@
 import { Bot } from "../bot.ts";
-import { StageInstance } from "../types/channels/stageInstance.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
+import { DiscordStageInstance } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 
-export function transformStageInstance(
-  bot: Bot,
-  payload: SnakeCasedPropertiesDeep<StageInstance>,
-): DiscordenoStageInstance {
-  return {
+export function transformStageInstance(bot: Bot, payload: DiscordStageInstance) {
+  const stageInstance = {
     id: bot.transformers.snowflake(payload.id),
     guildId: bot.transformers.snowflake(payload.guild_id),
     channelId: bot.transformers.snowflake(payload.channel_id),
     topic: payload.topic,
+    guildScheduledEventId: payload.guild_scheduled_event_id
+      ? bot.transformers.snowflake(payload.guild_scheduled_event_id)
+      : undefined,
   };
+
+  return stageInstance as Optionalize<typeof stageInstance>;
 }
 
-export interface DiscordenoStageInstance {
-  /** The id of this Stage instance */
-  id: bigint;
-  /** The guild id of the associated Stage channel */
-  guildId: bigint;
-  /** The id of the associated Stage channel */
-  channelId: bigint;
-  /** The topic of the Stage instance (1-120 characters) */
-  topic: string;
-}
+export interface StageInstance extends ReturnType<typeof transformStageInstance> {}
