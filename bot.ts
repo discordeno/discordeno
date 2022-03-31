@@ -264,7 +264,7 @@ export async function startBot(bot: Bot) {
   bot.gateway.sessionStartLimitRemaining = bot.botGatewayData.sessionStartLimit.remaining;
   bot.gateway.sessionStartLimitResetAfter = bot.botGatewayData.sessionStartLimit.resetAfter;
   bot.gateway.maxConcurrency = bot.botGatewayData.sessionStartLimit.maxConcurrency;
-  bot.gateway.lastShardId = bot.botGatewayData.shards;
+  bot.gateway.lastShardId = bot.botGatewayData.shards === 1 ? 0 : bot.botGatewayData.shards - 1;
   bot.gateway.maxShards = bot.botGatewayData.shards;
 
   bot.gateway.spawnShards(bot.gateway);
