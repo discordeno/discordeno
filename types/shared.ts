@@ -270,8 +270,6 @@ export enum ChannelTypes {
   GuildCategory,
   /** A channel that users can follow and crosspost into their own server */
   GuildNews,
-  /** A channel in which game developers can sell their game on Discord */
-  GuildStore,
   /** A temporary sub-channel within a GUILD_NEWS channel */
   GuildNewsThread = 10,
   /** A temporary sub-channel within a GUILD_TEXT channel */

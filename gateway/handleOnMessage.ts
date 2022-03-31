@@ -97,8 +97,19 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
 
       // Important for RESUME
       if (messageData.t === "READY") {
+        // Wait few seconds to spawn next shard
+        const bucket = gateway.buckets.get(shardId % gateway.maxConcurrency);
+        if (bucket?.createNextShard.length) {
+          // await delay(gateway.spawnShardDelay);
+          // setTimeout(() => {
+          console.log("shifting to create new shard");
+          bucket.createNextShard.shift()?.();
+          // }, gateway.spawnShardDelay);
+        }
+
         const shard = gateway.shards.get(shardId);
         const payload = messageData.d as DiscordReady;
+
         if (shard) {
           shard.sessionId = payload.session_id;
           shard.ready = true;
@@ -108,13 +119,6 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
 
         gateway.loadingShards.get(shardId)?.resolve(true);
         gateway.loadingShards.delete(shardId);
-        // Wait few seconds to spawn next shard
-        const bucket = gateway.buckets.get(shardId % gateway.maxConcurrency);
-        if (bucket?.createNextShard.length) {
-          setTimeout(() => {
-            bucket.createNextShard.shift()?.();
-          }, gateway.spawnShardDelay);
-        }
       }
 
       // Update the sequence number if it is present
