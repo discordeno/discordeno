@@ -303,7 +303,7 @@ export interface HelperUtils {
 }
 
 export async function stopBot(bot: Bot) {
-  await bot.gateway.stopGateway(bot.gateway);
+  await bot.gateway.stopGateway(bot.gateway, 1000, "User requested bot stop");
 
   return bot;
 }

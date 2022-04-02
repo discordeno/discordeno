@@ -4,8 +4,8 @@ import { GatewayManager } from "./gatewayManager.ts";
 /** Use this function to stop the gateway properly */
 export async function stopGateway(
   gateway: GatewayManager,
-  code = 3061,
-  reason = "Discordeno Testing Finished! Do Not RESUME!",
+  code: number,
+  reason: string,
 ) {
   // STOP WS
   gateway.shards.forEach((shard) => {
