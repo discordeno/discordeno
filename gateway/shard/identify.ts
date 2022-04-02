@@ -39,5 +39,12 @@ export async function identify(shard: Shard): Promise<void> {
       shard.event.identified?.(shard);
       resolve();
     });
+    // When identifying too fast,
+    // Discord sends an invalid session payload.
+    // This can safely be ignored though and the shard starts a new identify action.
+    shard.resolves.set("INVALID_SESSION", () => {
+      shard.resolves.delete("READY");
+      resolve();
+    });
   });
 }

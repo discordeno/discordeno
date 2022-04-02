@@ -130,9 +130,7 @@ export function createShard(
     },
 
     requestIdentify: async function () {
-      console.time(`requesting #${this.id}`);
-      await options.requestIdentify(this.id);
-      console.timeEnd(`requesting #${this.id}`);
+      return await options.requestIdentify(this.id);
     },
   };
 }

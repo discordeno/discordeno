@@ -1,7 +1,9 @@
 import { createLeakyBucket, LeakyBucket } from "../../util/bucket.ts";
 import { Collection } from "../../util/collection.ts";
+import { delay } from "../../util/utils.ts";
 import { GAMER, TOKEN } from "../debug.ts";
 import { censor, createShard } from "../shard/createShard.ts";
+import { Shard } from "../shard/types.ts";
 
 const gateway = {
   maxConcurrency: 1,
@@ -61,7 +63,7 @@ export function prepareBuckets(firstShardId: number, lastShardId: number) {
   }
 }
 
-const shards = new Map();
+const shards = new Map<number, Shard>();
 /** Begin spawning shards. */
 export function spawnShards(firstShardId = 0) {
   // PREPARES THE MAX SHARD COUNT BY CONCURRENCY
@@ -84,6 +86,8 @@ export function spawnShards(firstShardId = 0) {
     for (const [workerId, ...queue] of bucket.workers) {
       // gateway.debug("GW DEBUG", `3. Running for of loop in spawnShards function.`);
 
+      let pSt = performance.now();
+      const waitingConnects = [];
       for (const shardId of queue) {
         const shard = createShard({
           id: shardId,
@@ -91,7 +95,7 @@ export function spawnShards(firstShardId = 0) {
             compress: true,
             url: "wss://gateway.discord.gg",
             version: 10,
-            intents: 0,
+            intents: 1 << 0,
             properties: {
               $os: "Discordeno",
               $browser: "Discordeno",
@@ -124,7 +128,7 @@ export function spawnShards(firstShardId = 0) {
             //   console.log({ type: "hello", shard: shard.id });
             // },
             invalidSession: (shard, resumable: boolean) => {
-              console.log({ type: "invalidSession", shard: shard.id, resumable });
+              throw console.log({ type: "invalidSession", shard: shard.id, resumable });
             },
             // resuming: (shard) => {
             //   console.log({ type: "resuming", shard: shard.id });
@@ -162,7 +166,8 @@ export function spawnShards(firstShardId = 0) {
           },
         });
 
-        shard.identify();
+        // shard.identify();
+        waitingConnects.push(shard);
 
         shards.set(shardId, shard);
 
@@ -171,8 +176,18 @@ export function spawnShards(firstShardId = 0) {
         // });
       }
 
+      await Promise.all(waitingConnects.map(async (c) => c.connect()));
+
+      console.log("FINISHED SHARD PREPARATION TOOK: ", performance.now() - pSt);
+
+      setInterval(() => {
+        for (const shardId of queue) {
+          console.log({ shard: shardId, state: shards.get(shardId)?.state });
+        }
+      }, 60_000);
+
       for (const shardId of queue) {
-        // await shards.get(shardId)?.identify();
+        shards.get(shardId)?.identify();
       }
     }
     // await bucket.createNextShard.shift()?.();
