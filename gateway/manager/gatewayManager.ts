@@ -1,11 +1,11 @@
 import { GetGatewayBot } from "../../transformers/gatewayBot.ts";
 import { DiscordGatewayPayload } from "../../types/discord.ts";
-import { OmitFirstFnArg, PickPartial } from "../../types/shared.ts";
+import { GatewayIntents, MakeRequired, OmitFirstFnArg, PickPartial } from "../../types/shared.ts";
 import { LeakyBucket } from "../../util/bucket.ts";
 import { Collection } from "../../util/collection.ts";
 import { CreateShard, createShard } from "../shard/createShard.ts";
-import { Shard } from "../shard/types.ts";
-import { calculateMaxShards } from "./calculateMaxShards.ts";
+import { Shard, ShardGatewayConfig } from "../shard/types.ts";
+import { calculateTotalShards } from "./calculateTotalShards.ts";
 import { calculateWorkerId } from "./calculateWorkerId.ts";
 import {
   markNewGuildShardId,
@@ -15,8 +15,10 @@ import {
   reshardingEditGuildShardIds,
   startReshardingChecks,
 } from "./resharder.ts";
-import { prepareBuckets, spawnShards } from "./spawnShards.ts";
+import { spawnShards } from "./spawnShards.ts";
+import { prepareBuckets } from "./prepareBuckets.ts";
 import { tellWorkerToIdentify } from "./tellWorkerToIdentify.ts";
+import { createShardManager, ShardManager } from "./shardManager.ts";
 
 export type GatewayManager = ReturnType<typeof createGatewayManager>;
 
@@ -27,23 +29,18 @@ export type GatewayManager = ReturnType<typeof createGatewayManager>;
  * bots.
  */
 export function createGatewayManager(
-  options: PickPartial<CreateGatewayManager, "handleDiscordPayload" | "gatewayBot">,
+  options: PickPartial<CreateGatewayManager, "handleDiscordPayload" | "gatewayBot" | "gatewayConfig">,
 ) {
-  return {
-    // SHARDING DATA
+  const totalShards = options.totalShards ?? options.gatewayBot.shards ?? 1;
 
-    spawnShardDelay: options.spawnShardDelay ?? 5100,
-    totalShards: options.totalShards ?? options.gatewayBot.shards ?? 1,
-    firstShardId: options.firstShardId ?? 0,
-    lastShardId: options.lastShardId ?? (options.totalShards ?? options.gatewayBot.shards) - 1 ?? 1,
-    shards: options.shards ?? new Collection<number, Shard>(),
+  const gatewayManager = {
+    // ----------
+    // PROPERTIES
+    // ----------
 
-    gatewayBot: options.gatewayBot,
-
-    createShardOptions: options.createShardOptions,
-
-    shardsPerWorker: options.shardsPerWorker ?? 25,
-    totalWorkers: options.totalWorkers ?? 4,
+    /** The max concurrency buckets.
+     * Those will be created when the `spawnShards` (which calls `prepareBuckets` under the hood) function gets called.
+     */
     buckets: new Collection<
       number,
       {
@@ -51,31 +48,132 @@ export function createGatewayManager(
         leak: LeakyBucket;
       }
     >(),
+    /** Id of the first Shard which should get controlled by this manager.
+     *
+     * NOTE: Usually this does not need to be used,
+     * since ideally one gatewayManager controls all Workers.
+     */
+    firstShardId: options.firstShardId ?? 0,
+    /** Important data which is used by the manager to connect shards to the gateway. */
+    gatewayBot: options.gatewayBot,
+    /** Id of the last Shard which should get controlled by this manager.
+     *
+     * NOTE: Usually this does not need to be used,
+     * since ideally one gatewayManager controls all Workers.
+     */
+    lastShardId: options.lastShardId ?? totalShards - 1 ?? 1,
+    /** This is where the Shards get stored.
+     * This will not be used when having a custom workers solution.
+     */
+    manager: {} as ShardManager,
+    /** Delay in milliseconds to wait before spawning next shard.
+     * OPTIMAL IS ABOVE 5100. YOU DON'T WANT TO HIT THE RATE LIMIT!!!
+     */
+    spawnShardDelay: options.spawnShardDelay ?? 5100,
+    /** How many Shards should get assigned to a Worker.
+     *
+     * IMPORTANT: Discordeno will NOT spawn Workers for you.
+     * Instead you have to overwrite the `tellWorkerToIdentify` function to make that for you.
+     * Look at the [BigBot template gateway solution](https://github.com/discordeno/discordeno/tree/main/template/bigbot/src/gateway) for reference.
+     *
+     * NOTE: The last Worker will IGNORE this value,
+     * which means that the last worker can get assigned an unlimited amount of shards.
+     * This is not a bug but intended behavior and means you have to assign more workers to this manager.
+     */
+    shardsPerWorker: options.shardsPerWorker ?? 25,
+    /** The total amount of Workers which get controlled by this manager.
+     *
+     * IMPORTANT: Discordeno will NOT spawn Workers for you.
+     * Instead you have to overwrite the `tellWorkerToIdentify` function to make that for you.
+     * Look at the [BigBot template gateway solution](https://github.com/discordeno/discordeno/tree/main/template/bigbot/src/gateway) for reference.
+     */
+    totalWorkers: options.totalWorkers ?? 4,
 
+    // ----------
+    // PROPERTIES
+    // ----------
+    /** Prepares the buckets for identifying.
+     *
+     * NOTE: Most of the time this function does not need to be called,
+     * since it gets called by the `spawnShards` function indirectly.
+     */
     prepareBuckets: options.prepareBuckets ?? prepareBuckets,
+    /** This function starts to spawn the Shards assigned to this manager.
+     *
+     * The managers `buckets` will be created and
+     *
+     * if `resharding.useOptimalLargeBotSharding` is set to true,
+     * `totalShards` gets double checked and adjusted accordingly if wrong.
+     */
     spawnShards: options.spawnShards ?? spawnShards,
-    createShard: options.createShard ?? createShard,
+    /** Tell the Worker with this Id to identify this Shard.
+     *
+     * Useful if a custom Worker solution should be used.
+     *
+     * IMPORTANT: Discordeno will NOT spawn Workers for you.
+     * Instead you have to overwrite the `tellWorkerToIdentify` function to make that for you.
+     * Look at the [BigBot template gateway solution](https://github.com/discordeno/discordeno/tree/main/template/bigbot/src/gateway) for reference.
+     */
     tellWorkerToIdentify,
+    // TODO: fix debug
+    /** Handle the different logs. Used for debugging. */
     debug: options.debug || function () {},
+
+    /** The methods related to resharding. */
     resharding: {
+      /** Whether the resharder should automatically switch to LARGE BOT SHARDING when the bot is above 100K servers. */
       useOptimalLargeBotSharding: options.resharding?.useOptimalLargeBotSharding ?? true,
+      /** Whether or not to automatically reshard.
+       *
+       * @default true
+       */
       reshard: options.resharding?.reshard ?? true,
+      /** The percentage at which resharding should occur.
+       *
+       * @default 80
+       */
       reshardPercentage: options.resharding?.reshardPercentage ?? 80,
+      /** Handles resharding the bot when necessary. */
       resharder: options.resharding?.resharder ?? resharder,
+      /** Handles checking if all new shards are online in the new gateway. */
       isPending: options.resharding?.isPending ?? resharderIsPending,
+      /** Handles closing all shards in the old gateway. */
       closeOldShards: options.resharding?.closeOldShards ?? resharderCloseOldShards,
+      /** Handles checking if it is time to reshard and triggers the resharder. */
       check: options.resharding?.check ?? startReshardingChecks,
+      /** Handler to mark a guild id with its new shard id in cache. */
       markNewGuildShardId: options.resharding?.markNewGuildShardId ?? markNewGuildShardId,
+      /** Handler to update all guilds in cache with the new shard id. */
       editGuildShardIds: options.resharding?.editGuildShardIds ?? reshardingEditGuildShardIds,
     },
 
-    handleDiscordPayload: options.handleDiscordPayload,
-    calculateMaxShards: options.calculateMaxShards ?? calculateMaxShards,
+    /** Calculate the amount of Shards which should be used based on the bot's max concurrency. */
+    calculateTotalShards: options.calculateTotalShards ?? calculateTotalShards,
 
+    /** Calculate the Id of the Worker related to this Shard. */
     calculateWorkerId: function (shardId: number) {
       return options.calculateWorkerId?.(this, shardId) ?? calculateWorkerId(this, shardId);
     },
   };
+
+  gatewayManager.manager = createShardManager({
+    createShardOptions: options.createShardOptions,
+    gatewayConfig: options.gatewayConfig,
+    shardIds: [],
+    totalShards,
+
+    handleMessage: function (shard, message) {
+      return options.handleDiscordPayload(shard, message);
+    },
+
+    requestIdentify: async (shardId) => {
+      // TODO: improve
+      await gatewayManager.buckets.get(shardId % gatewayManager.gatewayBot.sessionStartLimit.maxConcurrency)!.leak
+        .acquire(1);
+    },
+  });
+
+  return gatewayManager;
 }
 
 export interface CreateGatewayManager {
@@ -94,6 +192,8 @@ export interface CreateGatewayManager {
 
   /** Important data which is used by the manager to connect shards to the gateway. */
   gatewayBot: GetGatewayBot;
+
+  gatewayConfig: ShardGatewayConfig;
 
   /** Options which are used to create a new shard. */
   createShardOptions?: Omit<CreateShard, "id" | "totalShards" | "requestIdentify" | "gatewayConfig">;
@@ -117,7 +217,7 @@ export interface CreateGatewayManager {
   /** Create the websocket and adds the proper handlers to the websocket. */
   createShard: typeof createShard;
   /** Sends the discord payload to another server. */
-  handleDiscordPayload: (gateway: GatewayManager, data: DiscordGatewayPayload, shardId: number) => any;
+  handleDiscordPayload: (shard: Shard, data: DiscordGatewayPayload) => any;
   /** Tell the worker to begin identifying this shard  */
   tellWorkerToIdentify: typeof tellWorkerToIdentify;
   /** Handle the different logs. Used for debugging. */
@@ -144,7 +244,7 @@ export interface CreateGatewayManager {
     editGuildShardIds: typeof reshardingEditGuildShardIds;
   };
   /** Calculates the number of shards to use based on the max concurrency */
-  calculateMaxShards: typeof calculateMaxShards;
+  calculateTotalShards: typeof calculateTotalShards;
 
   /** Calculate the id of the worker related ot this Shard. */
   calculateWorkerId: typeof calculateWorkerId;

@@ -14,7 +14,7 @@ export async function handleClose(shard: Shard, close: CloseEvent): Promise<void
     }
     case ShardSocketCloseCodes.TestingFinished: {
       shard.state = ShardState.Offline;
-      shard.event.disconnected?.(shard);
+      shard.events.disconnected?.(shard);
 
       return;
     }
@@ -25,7 +25,7 @@ export async function handleClose(shard: Shard, close: CloseEvent): Promise<void
     case ShardSocketCloseCodes.ZombiedConnection:
     case ShardSocketCloseCodes.Shutdown: {
       shard.state = ShardState.Disconnected;
-      shard.event.disconnected?.(shard);
+      shard.events.disconnected?.(shard);
 
       // gateway.debug("GW CLOSED_RECONNECT", { shardId, payload: event });
       return;
@@ -37,7 +37,7 @@ export async function handleClose(shard: Shard, close: CloseEvent): Promise<void
     case GatewayCloseEventCodes.RateLimited:
     case GatewayCloseEventCodes.SessionTimedOut: {
       shard.state = ShardState.Identifying;
-      shard.event.disconnected?.(shard);
+      shard.events.disconnected?.(shard);
 
       return await shard.identify();
     }
@@ -50,7 +50,7 @@ export async function handleClose(shard: Shard, close: CloseEvent): Promise<void
     case GatewayCloseEventCodes.InvalidIntents:
     case GatewayCloseEventCodes.DisallowedIntents: {
       shard.state = ShardState.Offline;
-      shard.event.disconnected?.(shard);
+      shard.events.disconnected?.(shard);
 
       throw new Error(close.reason || "Discord gave no reason! GG! You broke Discord!");
     }
@@ -60,7 +60,7 @@ export async function handleClose(shard: Shard, close: CloseEvent): Promise<void
     case GatewayCloseEventCodes.AlreadyAuthenticated:
     default: {
       shard.state = ShardState.Resuming;
-      shard.event.disconnected?.(shard);
+      shard.events.disconnected?.(shard);
 
       return await shard.resume();
     }

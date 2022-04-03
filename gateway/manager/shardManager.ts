@@ -1,6 +1,7 @@
+import { DiscordGatewayPayload } from "../../types/discord.ts";
 import { Collection } from "../../util/collection.ts";
 import { CreateShard, createShard } from "../shard/createShard.ts";
-import { ShardGatewayConfig } from "../shard/types.ts";
+import { Shard, ShardGatewayConfig } from "../shard/types.ts";
 
 // TODO: debug
 
@@ -15,33 +16,37 @@ export type ShardManager = ReturnType<typeof createShardManager>;
  * The aim of this is to provide an easy to use manager which can be used by workers or any other kind of separate process.
  */
 export function createShardManager(options: CreateShardManager) {
-  const shards = new Collection(
-    options.shardIds.map((shardId) => {
-      const shard = createShard({
-        ...options.createShardOptions,
-        id: shardId,
-        totalShards: options.totalShards,
-        gatewayConfig: options.gatewayConfig,
-        requestIdentify: async function () {
-          return await options.requestIdentify(shardId);
-        },
-      });
-
-      return [shardId, shard] as const;
-    }),
-  );
-
   return {
     // ----------
     // PROPERTIES
     // ----------
 
     /** Options which are used to create a new Shard. */
-    createShardOptions: options.createShardOptions,
+    createShardOptions: {
+      ...options.createShardOptions,
+      events: {
+        ...options.createShardOptions?.events,
+        message: options.createShardOptions?.events?.message ?? options.handleMessage,
+      },
+    },
     /** Gateway configuration which is used when creating a Shard. */
     gatewayConfig: options.gatewayConfig,
     /** Managed Shards. */
-    shards,
+    shards: new Collection(
+      options.shardIds.map((shardId) => {
+        const shard = createShard({
+          ...options.createShardOptions,
+          id: shardId,
+          totalShards: options.totalShards,
+          gatewayConfig: options.gatewayConfig,
+          requestIdentify: async function () {
+            return await options.requestIdentify(shardId);
+          },
+        });
+
+        return [shardId, shard] as const;
+      }),
+    ),
     /** Total amount of Shards used by the bot. */
     totalShards: options.totalShards,
 
@@ -105,6 +110,9 @@ export interface CreateShardManager {
   // ----------
   // METHODS
   // ----------
+
+  /** This function is used when a shard receives any message from Discord. */
+  handleMessage(shard: Shard, message: DiscordGatewayPayload): unknown;
 
   /** This function communicates with the parent manager,
    * in order to know whether this manager is allowed to identify a new shard. #

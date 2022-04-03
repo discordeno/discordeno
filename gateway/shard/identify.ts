@@ -10,7 +10,7 @@ export async function identify(shard: Shard): Promise<void> {
   }
 
   shard.state = ShardState.Identifying;
-  shard.event.identifying?.(shard);
+  shard.events.identifying?.(shard);
 
   // It is possible that the shard is in Heartbeating state but not identified,
   // so check whether there is already a gateway connection existing.
@@ -36,7 +36,7 @@ export async function identify(shard: Shard): Promise<void> {
 
   return new Promise((resolve) => {
     shard.resolves.set("READY", () => {
-      shard.event.identified?.(shard);
+      shard.events.identified?.(shard);
       resolve();
     });
     // When identifying too fast,

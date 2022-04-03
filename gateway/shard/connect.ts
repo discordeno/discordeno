@@ -6,7 +6,7 @@ export async function connect(shard: Shard): Promise<void> {
   if (![ShardState.Identifying, ShardState.Resuming].includes(shard.state)) {
     shard.state = ShardState.Connecting;
   }
-  shard.event.connecting?.(shard);
+  shard.events.connecting?.(shard);
 
   // Explicitly setting the encoding to json, since we do not support ETF.
   const socket = new WebSocket(`${shard.gatewayConfig.url}/?v=${shard.gatewayConfig.version}&encoding=json`);
@@ -26,7 +26,7 @@ export async function connect(shard: Shard): Promise<void> {
       if (![ShardState.Identifying, ShardState.Resuming].includes(shard.state)) {
         shard.state = ShardState.Unidentified;
       }
-      shard.event.connected?.(shard);
+      shard.events.connected?.(shard);
 
       resolve();
     };

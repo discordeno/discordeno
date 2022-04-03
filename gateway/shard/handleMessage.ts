@@ -44,13 +44,12 @@ export async function handleMessage(shard: Shard, message: MessageEvent<any>): P
           d: shard.previousSequenceNumber,
         }),
       );
-      shard.event.heartbeat?.(shard);
+      shard.events.heartbeat?.(shard);
 
       break;
     }
     case GatewayOpcodes.Hello: {
       const interval = (messageData.d as DiscordHello).heartbeat_interval;
-      shard.event.hello?.(shard);
 
       shard.startHeartbeating(interval);
 
@@ -67,11 +66,11 @@ export async function handleMessage(shard: Shard, message: MessageEvent<any>): P
         });
       }
 
+      shard.events.hello?.(shard);
+
       break;
     }
     case GatewayOpcodes.HeartbeatACK: {
-      shard.event.heartbeatAck?.(shard);
-
       shard.heart.acknowledged = true;
       shard.heart.lastAck = Date.now();
       // Manually calculating the round trip time for users who need it.
@@ -79,13 +78,16 @@ export async function handleMessage(shard: Shard, message: MessageEvent<any>): P
         shard.heart.rtt = shard.heart.lastAck - shard.heart.lastBeat;
       }
 
+      shard.events.heartbeatAck?.(shard);
+
       break;
     }
     case GatewayOpcodes.Reconnect: {
       //   gateway.debug("GW RECONNECT", { shardId });
-      shard.event.requestedReconnect?.(shard);
 
-      shard.resume();
+      shard.events.requestedReconnect?.(shard);
+
+      await shard.resume();
 
       break;
     }
@@ -93,7 +95,7 @@ export async function handleMessage(shard: Shard, message: MessageEvent<any>): P
       //   gateway.debug("GW INVALID_SESSION", { shardId, payload: messageData });
       const resumable = messageData.d as boolean;
 
-      shard.event.invalidSession?.(shard, resumable);
+      shard.events.invalidSession?.(shard, resumable);
 
       // We need to wait for a random amount of time between 1 and 5
       // Reference: https://discord.com/developers/docs/topics/gateway#resuming
@@ -120,7 +122,7 @@ export async function handleMessage(shard: Shard, message: MessageEvent<any>): P
     // gateway.debug("GW RESUMED", { shardId });
 
     shard.state = ShardState.Connected;
-    shard.event.resumed?.(shard);
+    shard.events.resumed?.(shard);
 
     // Continue the requests which have been queued since the shard went offline.
     shard.offlineSendQueue.map((resolve) => resolve());
@@ -151,5 +153,5 @@ export async function handleMessage(shard: Shard, message: MessageEvent<any>): P
 
   // The necessary handling required for the Shards connection has been finished.
   // Now the event can be safely forwarded.
-  shard.event.message?.(shard, messageData);
+  shard.events.message?.(shard, messageData);
 }

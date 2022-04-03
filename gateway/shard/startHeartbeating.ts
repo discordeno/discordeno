@@ -58,7 +58,7 @@ export function startHeartbeating(shard: Shard, interval: number) {
 
       shard.heart.lastBeat = Date.now();
 
-      shard.event.heartbeat?.(shard);
+      shard.events.heartbeat?.(shard);
     }, shard.heart.interval);
   }, jitter);
 }

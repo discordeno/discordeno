@@ -15,7 +15,6 @@ import {
 import { StatusUpdate } from "../../helpers/misc/editBotStatus.ts";
 import { startHeartbeating } from "./startHeartbeating.ts";
 import { stopHeartbeating } from "./stopHeartbeating.ts";
-import { TOKEN } from "../debug.ts";
 import { resume } from "./resume.ts";
 import { createLeakyBucket, LeakyBucket } from "../../util/bucket.ts";
 import { calculateSafeRequests } from "./calculateSafeRequests.ts";
@@ -91,7 +90,7 @@ export function createShard(
     // ----------
 
     /** The shard related event handlers. */
-    event: options.event ?? {} as ShardEvents,
+    events: options.events ?? {} as ShardEvents,
 
     /** Calculate the amount of requests which can safely be made per rate limit interval,
      * before the gateway gets disconnected due to an exceeded rate limit.
@@ -342,7 +341,7 @@ export interface CreateShard {
   stopHeartbeating?: typeof stopHeartbeating;
 
   /** The shard related event handlers. */
-  event?: ShardEvents;
+  events?: ShardEvents;
   /** This contains all the heartbeat information */
   heart?: ShardHeart;
   /** Bucket for handling shard request rate limits. */
