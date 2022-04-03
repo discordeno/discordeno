@@ -1,101 +1,108 @@
-import { createLeakyBucket, LeakyBucket } from "../../util/bucket.ts";
-import { Collection } from "../../util/collection.ts";
-import { delay } from "../../util/utils.ts";
+import { GatewayIntents } from "../../types/shared.ts";
+import { createLeakyBucket } from "../../util/bucket.ts";
 import { GAMER, TOKEN } from "../debug.ts";
-import { censor, createShard } from "../shard/createShard.ts";
+import { createShard } from "../shard/createShard.ts";
 import { Shard } from "../shard/types.ts";
+import { calculateWorkerId } from "./calculateWorkerId.ts";
+import { createGatewayManager, GatewayManager } from "./gatewayManager.ts";
 
-const gateway = {
-  maxConcurrency: 1,
-  buckets: new Collection<
-    number,
-    {
-      workers: number[][];
-      leak: LeakyBucket;
-      createNextShard: (() => Promise<unknown>)[];
-    }
-  >(),
-  maxShards: 10,
-  lastShardId: 10,
-  shardsPerWorker: 100,
-  maxWorkers: 1,
-  useOptimalLargeBotSharding: false,
-};
-
-export function prepareBuckets(firstShardId: number, lastShardId: number) {
-  /** Stored as bucketId: [workerId, [ShardIds]] */
-  let worker = 0;
-
-  for (let i = 0; i < gateway.maxConcurrency; i++) {
-    gateway.buckets.set(i, {
+export function prepareBuckets(manager: GatewayManager, firstShardId: number, lastShardId: number) {
+  for (let i = 0; i < manager.gatewayBot.sessionStartLimit.maxConcurrency; ++i) {
+    manager.buckets.set(i, {
       workers: [],
       leak: createLeakyBucket({
         max: 1,
         refillAmount: 1,
-        refillInterval: 5100,
+        // special number which is proven to be working dont change
+        refillInterval: manager.spawnShardDelay,
       }),
-      createNextShard: [],
     });
   }
 
   // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
-  for (let i = firstShardId; i < lastShardId; i++) {
+  for (let shardId = firstShardId; shardId <= lastShardId; ++shardId) {
     // gateway.debug("GW DEBUG", `1. Running for loop in spawnShards function for shardId ${i}.`);
-    if (i >= gateway.maxShards) {
-      continue;
+    if (shardId >= manager.totalShards) {
+      throw new Error(
+        `Shard (id: ${shardId}) is bigger or equal to the used amount of used shards which is ${manager.totalShards}`,
+      );
     }
 
-    const bucketId = i % gateway.maxConcurrency;
-    const bucket = gateway.buckets.get(bucketId);
-    if (!bucket) throw new Error("Bucket not found when spawning shards.");
+    const bucketId = shardId % manager.gatewayBot.sessionStartLimit.maxConcurrency;
+    const bucket = manager.buckets.get(bucketId);
+    if (!bucket) {
+      throw new Error(
+        `Shard (id: ${shardId}) got assigned to an illegal bucket id: ${bucketId}, expected a bucket id between 0 and ${
+          manager.gatewayBot.sessionStartLimit.maxConcurrency - 1
+        }`,
+      );
+    }
 
     // FIND A QUEUE IN THIS BUCKET THAT HAS SPACE
-    // + 1 cause .workers first item is worker id [workerId, shardId, shardId2...]
-    const queue = bucket.workers.find((q) => q.length < gateway.shardsPerWorker + 1);
-    if (queue) {
+    // const worker = bucket.workers.find((w) => w.queue.length < gateway.shardsPerWorker);
+    const workerId = manager.calculateWorkerId(shardId);
+    const worker = bucket.workers.find((w) => w.id === workerId);
+    if (worker) {
       // IF THE QUEUE HAS SPACE JUST ADD IT TO THIS QUEUE
-      queue.push(i);
+      worker.queue.push(shardId);
     } else {
-      if (worker + 1 <= gateway.maxWorkers) worker++;
-      // ADD A NEW QUEUE FOR THIS SHARD
-      bucket.workers.push([worker, i]);
+      bucket.workers.push({ id: workerId, queue: [shardId] });
     }
   }
 }
 
 const shards = new Map<number, Shard>();
 /** Begin spawning shards. */
-export function spawnShards(firstShardId = 0) {
+export function spawnShards(manager: GatewayManager, firstShardId = 0) {
   // PREPARES THE MAX SHARD COUNT BY CONCURRENCY
-  if (gateway.useOptimalLargeBotSharding) {
+  if (manager.resharding.useOptimalLargeBotSharding) {
     // gateway.debug("GW DEBUG", "[Spawning] Using optimal large bot sharding solution.");
     // gateway.maxShards = gateway.calculateMaxShards(gateway.maxShards, gateway.maxConcurrency);
   }
 
   // PREPARES ALL SHARDS IN SPECIFIC BUCKETS
-  prepareBuckets(firstShardId, gateway.lastShardId ? gateway.lastShardId : gateway.maxShards);
+  prepareBuckets(manager, firstShardId, manager.lastShardId ? manager.lastShardId : manager.totalShards);
 
-  console.log(Deno.inspect(gateway.buckets, { depth: 10 }));
+  console.log(Deno.inspect(manager.buckets, { depth: 10 }));
 
   // return;
 
   // SPREAD THIS OUT TO DIFFERENT WORKERS TO BEGIN STARTING UP
-  gateway.buckets.forEach(async (bucket, bucketId) => {
+  manager.buckets.forEach(async (bucket, bucketId) => {
     // gateway.debug("GW DEBUG", `2. Running forEach loop in spawnShards function.`);
     let startedAt = performance.now();
-    for (const [workerId, ...queue] of bucket.workers) {
+
+    // Special startup bucket,
+    // Important for custom worker identify system
+    const startBucket = createLeakyBucket({
+      max: 1,
+      refillAmount: 1,
+      // special number which is proven to be working dont change
+      refillInterval: manager.spawnShardDelay,
+    });
+
+    for (const worker of bucket.workers) {
       // gateway.debug("GW DEBUG", `3. Running for of loop in spawnShards function.`);
 
       let pSt = performance.now();
       const waitingConnects = [];
-      for (const shardId of queue) {
+      for (const shardId of worker.queue) {
         const shard = createShard({
           id: shardId,
           gatewayConfig: {
             compress: true,
             url: "wss://gateway.discord.gg",
             version: 10,
-            intents: 1 << 0,
+            intents: GatewayIntents.Guilds |
+              GatewayIntents.GuildMessages |
+              GatewayIntents.DirectMessages |
+              GatewayIntents.GuildMembers |
+              GatewayIntents.GuildBans |
+              GatewayIntents.GuildEmojis |
+              GatewayIntents.GuildVoiceStates |
+              GatewayIntents.GuildInvites |
+              GatewayIntents.GuildMessageReactions |
+              GatewayIntents.DirectMessageReactions,
             properties: {
               $os: "Discordeno",
               $browser: "Discordeno",
@@ -103,17 +110,7 @@ export function spawnShards(firstShardId = 0) {
             },
             token: GAMER,
           },
-          totalShards: gateway.maxShards,
-          // makePresence: (shardId) => ({
-          //   activities: [
-          //     {
-          //       name: `Cards Against Humanity #${shardId}`,
-          //       type: 0,
-          //       createdAt: Date.now(),
-          //     },
-          //   ],
-          //   status: "dnd",
-          // }),
+          totalShards: manager.totalShards,
           requestIdentify: async () => {
             await bucket.leak.acquire(1);
           },
@@ -166,32 +163,39 @@ export function spawnShards(firstShardId = 0) {
           },
         });
 
-        // shard.identify();
-        waitingConnects.push(shard);
-
         shards.set(shardId, shard);
-
-        // bucket.createNextShard.push(async () => {
-        //   await tellWorkerToIdentify(gateway, workerId, shardId, bucketId);
-        // });
       }
 
-      await Promise.all(waitingConnects.map(async (c) => c.connect()));
-
-      console.log("FINISHED SHARD PREPARATION TOOK: ", performance.now() - pSt);
-
       setInterval(() => {
-        for (const shardId of queue) {
+        for (const shardId of worker.queue) {
           console.log({ shard: shardId, state: shards.get(shardId)?.state });
         }
       }, 60_000);
 
-      for (const shardId of queue) {
-        shards.get(shardId)?.identify();
+      console.log(bucket);
+
+      for (const shardId of worker.queue) {
+        const shard = shards.get(shardId)!;
+        await startBucket.acquire(1);
+        shard.identify();
       }
     }
-    // await bucket.createNextShard.shift()?.();
   });
 }
 
-spawnShards();
+const manager = createGatewayManager({
+  handleDiscordPayload: () => {},
+  gatewayBot: {
+    url: "wss://gateway.discord.gg",
+    shards: 10,
+    sessionStartLimit: {
+      total: 2000,
+      remaining: 100,
+      resetAfter: 10000,
+      maxConcurrency: 1,
+    },
+  },
+  createShardOptions: {},
+});
+
+spawnShards(manager);
