@@ -36,6 +36,7 @@ import {
   TeamMembershipStates,
   TextStyles,
   UserFlags,
+  ChannelFlags,
   VerificationLevels,
   VideoQualityModes,
   VisibilityTypes,
@@ -694,6 +695,8 @@ export interface DiscordVoiceState {
 export interface DiscordChannel {
   /** The type of channel */
   type: ChannelTypes;
+  /** The flags of the channel */
+  flags?: ChannelFlags;
   /** Sorting position of the channel */
   position?: number;
   /** The name of the channel (1-100 characters) */

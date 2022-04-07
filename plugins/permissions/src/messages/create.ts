@@ -20,6 +20,7 @@ export function sendMessage(bot: BotWithCache) {
         ChannelTypes.GuildCategory,
         ChannelTypes.GuildStore,
         ChannelTypes.GuildStageVoice,
+        ChannelTypes.GuildForum,
       ].includes(channel.type)
     ) {
       throw new Error(

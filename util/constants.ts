@@ -70,6 +70,10 @@ export const endpoints = {
   THREAD_ARCHIVED_PRIVATE_JOINED: (channelId: bigint) =>
     `${CHANNEL_BASE(channelId)}/users/@me/threads/archived/private`,
 
+  // Thread -> Forum Endpoints
+  FORUM_START: (channelId: bigint) =>
+    `${CHANNEL_BASE(channelId)}/threads`,
+
   // Guild Endpoints
   GUILDS: () => `${baseEndpoints.BASE_URL}/guilds`,
   GUILD_AUDIT_LOGS: (guildId: bigint) => `${GUILDS_BASE(guildId)}/audit-logs`,
