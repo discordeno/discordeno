@@ -55,7 +55,7 @@ import { transformAttachment } from "./transformers/attachment.ts";
 import { transformEmbed } from "./transformers/embed.ts";
 import { transformComponent } from "./transformers/component.ts";
 import { transformWebhook } from "./transformers/webhook.ts";
-import { transformAuditlogEntry } from "./transformers/auditlogEntry.ts";
+import { transformAuditLogEntry } from "./transformers/auditLogEntry.ts";
 import { transformApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
 import { calculateBits, calculatePermissions } from "./util/permissions.ts";
 import { transformScheduledEvent } from "./transformers/scheduledEvent.ts";
@@ -120,7 +120,7 @@ import { Embed } from "./transformers/embed.ts";
 import { Webhook } from "./transformers/webhook.ts";
 import { Component } from "./transformers/component.ts";
 import { ApplicationCommand } from "./transformers/applicationCommand.ts";
-import { AuditLogEntry } from "./transformers/auditlogEntry.ts";
+import { AuditLogEntry } from "./transformers/auditLogEntry.ts";
 import { ApplicationCommandOption } from "./transformers/applicationCommandOption.ts";
 import { ApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
 import { WelcomeScreen } from "./transformers/welcomeScreen.ts";
@@ -264,7 +264,7 @@ export async function startBot(bot: Bot) {
   bot.gateway.sessionStartLimitRemaining = bot.botGatewayData.sessionStartLimit.remaining;
   bot.gateway.sessionStartLimitResetAfter = bot.botGatewayData.sessionStartLimit.resetAfter;
   bot.gateway.maxConcurrency = bot.botGatewayData.sessionStartLimit.maxConcurrency;
-  bot.gateway.lastShardId = bot.botGatewayData.shards;
+  bot.gateway.lastShardId = bot.botGatewayData.shards === 1 ? 0 : bot.botGatewayData.shards - 1;
   bot.gateway.maxShards = bot.botGatewayData.shards;
 
   bot.gateway.spawnShards(bot.gateway);
@@ -411,7 +411,7 @@ export interface Transformers {
   embed: (bot: Bot, payload: DiscordEmbed) => Embed;
   component: (bot: Bot, payload: DiscordComponent) => Component;
   webhook: (bot: Bot, payload: DiscordWebhook) => Webhook;
-  auditlogEntry: (bot: Bot, payload: DiscordAuditLogEntry) => AuditLogEntry;
+  auditLogEntry: (bot: Bot, payload: DiscordAuditLogEntry) => AuditLogEntry;
   applicationCommand: (bot: Bot, payload: DiscordApplicationCommand) => ApplicationCommand;
   applicationCommandOption: (bot: Bot, payload: DiscordApplicationCommandOption) => ApplicationCommandOption;
   applicationCommandPermission: (
@@ -460,7 +460,7 @@ export function createTransformers(options: Partial<Transformers>) {
     voiceState: options.voiceState || transformVoiceState,
     snowflake: options.snowflake || snowflakeToBigint,
     webhook: options.webhook || transformWebhook,
-    auditlogEntry: options.auditlogEntry || transformAuditlogEntry,
+    auditLogEntry: options.auditLogEntry || transformAuditLogEntry,
     applicationCommand: options.applicationCommand ||
       transformApplicationCommand,
     applicationCommandOption: options.applicationCommandOption ||

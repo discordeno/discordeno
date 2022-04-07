@@ -9,7 +9,7 @@ export function enableCacheSweepers<B extends Bot>(bot: BotWithCache<B>) {
       // Reset activity for next interval
       if (bot.activeGuildIds.delete(guild.id)) return false;
 
-      // This is inactive guild. Not a single thing has happened for atleast 30 minutes.
+      // This is inactive guild. Not a single thing has happened for at least 30 minutes.
       // Not a reaction, not a message, not any event!
       bot.dispatchedGuildIds.add(guild.id);
 

@@ -27,7 +27,7 @@ export function createShard(gateway: GatewayManager, shardId: number) {
         return;
       case 3063: // Resharded
       case 3064: // Resuming
-      case 3065: // Reidentifying
+      case 3065: // Re-identifying
       case 3066: // Missing ACK
         // Will restart shard manually
         return gateway.debug("GW CLOSED_RECONNECT", { shardId, payload: event });

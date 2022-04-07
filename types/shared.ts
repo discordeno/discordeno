@@ -11,8 +11,8 @@ export enum PremiumTypes {
 export enum UserFlags {
   None,
   DiscordEmployee = 1 << 0,
-  ParteneredServerOwner = 1 << 1,
-  HypeSquadEvents = 1 << 2,
+  PartneredServerOwner = 1 << 1,
+  HypeSquadEventsMember = 1 << 2,
   BugHunterLevel1 = 1 << 3,
   HouseBravery = 1 << 6,
   HouseBrilliance = 1 << 7,
@@ -176,7 +176,7 @@ export interface BaseRole {
 export enum GuildFeatures {
   /** Guild has access to set an invite splash background */
   InviteSplash = "INVITE_SPLASH",
-  /** Guild has access to set 384kbps bitrate in voice (previously VIP voice servers) */
+  /** Guild has access to set 384 kbps bitrate in voice (previously VIP voice servers) */
   VipRegions = "VIP_REGIONS",
   /** Guild has access to set a vanity URL */
   VanityUrl = "VANITY_URL",
@@ -184,7 +184,7 @@ export enum GuildFeatures {
   Verified = "VERIFIED",
   /** Guild is partnered */
   Partnered = "PARTNERED",
-  /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and recives community updates */
+  /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
   Community = "COMMUNITY",
   /** Guild has access to use commerce features (i.e. create store channels) */
   Commerce = "COMMERCE",
@@ -276,8 +276,6 @@ export enum ChannelTypes {
   GuildCategory,
   /** A channel that users can follow and crosspost into their own server */
   GuildNews,
-  /** A channel in which game developers can sell their game on Discord */
-  GuildStore,
   /** A temporary sub-channel within a GUILD_NEWS channel */
   GuildNewsThread = 10,
   /** A temporary sub-channel within a GUILD_TEXT channel */
@@ -360,7 +358,7 @@ export enum StickerTypes {
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types */
 export enum StickerFormatTypes {
   Png = 1,
-  Apng,
+  APng,
   Lottie,
 }
 
@@ -1234,10 +1232,10 @@ export enum Errors {
   BUTTON_REQUIRES_CUSTOM_ID = "BUTTON_REQUIRES_CUSTOM_ID",
   COMPONENT_SELECT_MUST_BE_ALONE = "COMPONENT_SELECT_MUST_BE_ALONE",
   COMPONENT_PLACEHOLDER_TOO_BIG = "COMPONENT_PLACEHOLDER_TOO_BIG",
-  COMPONENT_SELECT_MINVALUE_TOO_LOW = "COMPONENT_SELECT_MINVALUE_TOO_LOW",
-  COMPONENT_SELECT_MINVALUE_TOO_MANY = "COMPONENT_SELECT_MINVALUE_TOO_MANY",
-  COMPONENT_SELECT_MAXVALUE_TOO_LOW = "COMPONENT_SELECT_MAXVALUE_TOO_LOW",
-  COMPONENT_SELECT_MAXVALUE_TOO_MANY = "COMPONENT_SELECT_MAXVALUE_TOO_MANY",
+  COMPONENT_SELECT_MIN_VALUE_TOO_LOW = "COMPONENT_SELECT_MIN_VALUE_TOO_LOW",
+  COMPONENT_SELECT_MIN_VALUE_TOO_MANY = "COMPONENT_SELECT_MIN_VALUE_TOO_MANY",
+  COMPONENT_SELECT_MAX_VALUE_TOO_LOW = "COMPONENT_SELECT_MAX_VALUE_TOO_LOW",
+  COMPONENT_SELECT_MAX_VALUE_TOO_MANY = "COMPONENT_SELECT_MAX_VALUE_TOO_MANY",
   COMPONENT_SELECT_OPTIONS_TOO_LOW = "COMPONENT_SELECT_OPTIONS_TOO_LOW",
   COMPONENT_SELECT_OPTIONS_TOO_MANY = "COMPONENT_SELECT_OPTIONS_TOO_MANY",
   SELECT_OPTION_LABEL_TOO_BIG = "SELECT_OPTION_LABEL_TOO_BIG",

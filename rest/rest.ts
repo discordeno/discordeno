@@ -27,7 +27,7 @@ export const rest = {
   processingQueue: false,
   processingRateLimitedPaths: false,
   globallyRateLimited: false,
-  ratelimitedPaths: new Map<string, RestRateLimitedPath>(),
+  rateLimitedPaths: new Map<string, RestRateLimitedPath>(),
   eventHandlers: {
     // BY DEFAULT WE WILL LOG ALL ERRORS TO CONSOLE. USER CAN CHOOSE TO OVERRIDE
     error: function (...args: unknown[]) {},

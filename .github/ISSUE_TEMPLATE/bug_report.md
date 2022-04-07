@@ -8,12 +8,27 @@ assignees: ""
 
 **Describe the bug** A clear and concise description of what the bug is.
 
-**To Reproduce** Steps to reproduce the behavior:
+**To Reproduce** Write a small mod.ts example to replicate the behavior.
 
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+```ts
+import { createBot, startBot } from "https://deno.land/x/discordeno/mod.ts";
+
+const token = "DO NOT PUT TOKEN HERE!!!";
+const botId = BigInt(atob(TOKEN.split(".")[0]));
+
+const bot = createBot({
+  token,
+  botId,
+  events: {
+    // ADD EVENTS NEEDED TO SHOW THE BUG HERE
+  },
+  intents: [
+    // ADD INTENTS NEEDED HERE FOR YOUR TEST
+  ],
+});
+
+await startBot(bot);
+```
 
 **Expected behavior** A clear and concise description of what you expected to happen.
 

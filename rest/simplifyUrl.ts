@@ -1,6 +1,6 @@
 /**
  * Credits: github.com/abalabahaha/eris lib/rest/RequestHandler.js#L397
- * Modified for our usecase
+ * Modified for our use-case
  */
 
 /** Split a url to separate rate limit buckets based on major/minor parameters. */
@@ -16,7 +16,7 @@ export function simplifyUrl(url: string, method: string) {
     route = route.substring(0, route.indexOf("/reactions") + "/reactions".length);
   }
 
-  // Delete Messsage endpoint has its own ratelimit
+  // Delete Message endpoint has its own rate limit
   if (method === "DELETE" && route.endsWith("/messages/skillzPrefersID")) {
     route = method + route;
   }

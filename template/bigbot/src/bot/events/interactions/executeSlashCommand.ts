@@ -74,7 +74,7 @@ export async function executeSlashCommand(
 
     // Load the language for this guild
     if (interaction.guildId && !serverLanguages.has(interaction.guildId)) {
-      // TODO: Check if this is deferable
+      // TODO: Check if this is deferrable
       await replyToInteraction(bot, interaction, {
         type: InteractionResponseTypes.DeferredChannelMessageWithSource,
       });

@@ -42,7 +42,7 @@ export interface CreateChannelInvite {
   maxUses?: number;
   /** Whether this invite only grants temporary membership. Default: false */
   temporary?: boolean;
-  /** If true, don't try to reuse simmilar invite (useful for creating many unique one time use invites). Default: false */
+  /** If true, don't try to reuse similar invite (useful for creating many unique one time use invites). Default: false */
   unique?: boolean;
   /** The type of target for this voice channel invite */
   targetType?: InviteTargetTypes;
