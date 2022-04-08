@@ -42,13 +42,7 @@ async function handleRequest(conn: Deno.Conn) {
       );
     }
 
-    // deno-lint-ignore no-explicit-any
-    let json: any;
-    if (requestEvent.request.body) {
-        json = (await requestEvent.request.json());
-    } else {
-        json = undefined
-    }
+    const json = requestEvent.request.body ? (await requestEvent.request.json()) : undefined;
 
     try {
       const result = await rest.runMethod(
