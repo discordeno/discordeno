@@ -47,7 +47,7 @@ async function handleRequest(conn: Deno.Conn) {
     if (requestEvent.request.body) {
         json = (await requestEvent.request.json());
     } else {
-        json = ""
+        json = undefined
     }
 
     try {
