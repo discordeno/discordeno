@@ -1,5 +1,4 @@
 import { RestManager } from "../bot.ts";
-import { SnakeCasedPropertiesDeep } from "../types/util.ts";
 import { RestRequestRejection, RestRequestResponse } from "./rest.ts";
 
 export type ProxyMethodResponse<T> = Omit<RestRequestResponse | RestRequestRejection, "body"> & { body?: T };
@@ -13,7 +12,7 @@ export async function runProxyMethod<T = any>(
   body?: unknown,
   retryCount = 0,
   bucketId?: string,
-  ): Promise<ProxyMethodResponse<T>> {
+): Promise<ProxyMethodResponse<T>> {
   rest.debug(
     `[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${retryCount} | Bucket ID: ${bucketId} | Body: ${
       JSON.stringify(

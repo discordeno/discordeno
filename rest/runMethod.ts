@@ -68,7 +68,8 @@ export async function runMethod<T = any>(
           errorStack.message = `[${data.status}] ${data.error}`;
           reject(errorStack);
         },
-        respond: (data: RestRequestResponse) => resolve(data.status !== 204 ? JSON.parse(data.body ?? "{}") : (undefined as unknown as T)),
+        respond: (data: RestRequestResponse) =>
+          resolve(data.status !== 204 ? JSON.parse(data.body ?? "{}") : (undefined as unknown as T)),
       },
       {
         bucketId,
