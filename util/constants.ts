@@ -71,8 +71,7 @@ export const endpoints = {
     `${CHANNEL_BASE(channelId)}/users/@me/threads/archived/private`,
 
   // Thread -> Forum Endpoints
-  FORUM_START: (channelId: bigint) =>
-    `${CHANNEL_BASE(channelId)}/threads`,
+  FORUM_START: (channelId: bigint) => `${CHANNEL_BASE(channelId)}/threads?has_message=true`,
 
   // Guild Endpoints
   GUILDS: () => `${baseEndpoints.BASE_URL}/guilds`,
