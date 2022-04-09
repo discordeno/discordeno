@@ -1,5 +1,6 @@
 import { RestManager } from "../bot.ts";
 import { API_VERSION, BASE_URL, IMAGE_BASE_URL } from "../util/constants.ts";
+import { RestRequestRejection, RestRequestResponse } from "./rest.ts";
 
 export async function runMethod<T = any>(
   rest: RestManager,
@@ -63,11 +64,11 @@ export async function runMethod<T = any>(
       {
         url,
         method,
-        reject: (data) => {
+        reject: (data: RestRequestRejection) => {
           errorStack.message = `[${data.status}] ${data.error}`;
           reject(errorStack);
         },
-        respond: (data) => resolve(data.status !== 204 ? JSON.parse(data.body ?? "{}") : (undefined as unknown as T)),
+        respond: (data: RestRequestResponse) => resolve(data.status !== 204 ? JSON.parse(data.body ?? "{}") : (undefined as unknown as T)),
       },
       {
         bucketId,

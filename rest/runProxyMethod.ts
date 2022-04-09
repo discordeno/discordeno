@@ -13,7 +13,7 @@ export async function runProxyMethod<T = any>(
   body?: unknown,
   retryCount = 0,
   bucketId?: string,
-): Promise<Omit<(RestRequestResponse | RestRequestRejection), "body"> & { body?: Record<string, unknown> }> {
+  ): Promise<ProxyMethodResponse<T>> {
   rest.debug(
     `[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${retryCount} | Bucket ID: ${bucketId} | Body: ${
       JSON.stringify(
