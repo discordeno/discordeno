@@ -29,13 +29,13 @@ export async function runProxyMethod<T = any>(
       {
         url,
         method,
-        reject: (data) => {
+        reject: (data: RestRequestRejection) => {
           const { body: b, ...r } = data;
-          return { body: data.status !== 204 ? JSON.parse(b ?? "{}") : (undefined as unknown as T), ...r };
+          reject({ body: data.status !== 204 ? JSON.parse(b ?? "{}") : (undefined as unknown as T), ...r });
         },
-        respond: (data) => {
+        respond: (data: RestRequestResponse) => {
           const { body: b, ...r } = data;
-          return { body: data.status !== 204 ? JSON.parse(b ?? "{}") : (undefined as unknown as T), ...r };
+          resolve({ body: data.status !== 204 ? JSON.parse(b ?? "{}") : (undefined as unknown as T), ...r });
         },
       },
       {
