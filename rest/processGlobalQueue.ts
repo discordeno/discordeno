@@ -118,18 +118,27 @@ export async function processGlobalQueue(rest: RestManager) {
 
         // If NOT rate limited remove from queue
         if (response.status !== 429) {
+          let json = undefined;
           if (response.type) {
-            console.log(JSON.stringify(await response.json()));
+            json = JSON.stringify(await response.json());
+            console.log(json);
           }
 
-          request.request.reject(new Error(`[${response.status}] ${error}`));
+          request.request.reject({
+            ok: false,
+            status: response.status,
+            error,
+            body: json,
+          });
         } else {
           if (request.payload.retryCount++ >= rest.maxRetryCount) {
             rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(request.payload)}`);
             // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
-            request.request.reject(
-              new Error(`[${response.status}] The request was rate limited and it maxed out the retries limit.`),
-            );
+            request.request.reject({
+              ok: false,
+              status: response.status,
+              error: "The request was rate limited and it maxed out the retries limit.",
+            });
             continue;
           }
 
@@ -143,21 +152,29 @@ export async function processGlobalQueue(rest: RestManager) {
       // SOMETIMES DISCORD RETURNS AN EMPTY 204 RESPONSE THAT CAN'T BE MADE TO JSON
       if (response.status === 204) {
         rest.debug(`[REST - FetchSuccess] URL: ${request.urlToUse} | ${JSON.stringify(request.payload)}`);
-        request.request.respond({ status: 204 });
+        request.request.respond({
+          ok: true,
+          status: 204,
+        });
       } else {
         // CONVERT THE RESPONSE TO JSON
-        const json = await response.json();
+        const json = JSON.stringify(await response.json());
 
         rest.debug(`[REST - fetchSuccess] ${JSON.stringify(request.payload)}`);
         request.request.respond({
+          ok: true,
           status: 200,
-          body: JSON.stringify(json),
+          body: json,
         });
       }
     } catch (error) {
       // SOMETHING WENT WRONG, LOG AND RESPOND WITH ERROR
       rest.debug(`[REST - fetchFailed] Payload: ${JSON.stringify(request.payload)} | Error: ${error}`);
-      request.request.reject(error);
+      request.request.reject({
+        ok: false,
+        status: 599,
+        error: "Internal Proxy Error",
+      });
     }
   }
 
