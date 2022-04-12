@@ -45,6 +45,7 @@ export async function sendInteractionResponse(
             custom_id: subComponent.customId,
             label: subComponent.label,
             placeholder: subComponent.placeholder,
+            value: subComponent.value,
             min_length: subComponent.minLength,
             max_length: subComponent.maxLength,
             required: subComponent.required,
