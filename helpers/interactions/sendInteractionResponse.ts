@@ -46,8 +46,9 @@ export async function sendInteractionResponse(
             label: subComponent.label,
             placeholder: subComponent.placeholder,
             value: subComponent.value,
-            min_length: subComponent.minLength ?? subComponent.required === false ? 0 : subComponent.minLength,
+            min_length: subComponent.minLength,
             max_length: subComponent.maxLength,
+            required: subComponent.required,
           };
         }
 
