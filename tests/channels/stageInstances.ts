@@ -8,7 +8,7 @@ Deno.test("[stage] Create a stage instance", async (t) => {
     name: "createinstance",
     type: ChannelTypes.GuildStageVoice,
   });
-  const instance = await bot.helpers.createStageInstance(stage.id, "test it");
+  const instance = await bot.helpers.createStageInstance({ channelId: stage.id, topic: "test it" });
   assertExists(instance);
 
   await t.step("[stage] Edit a stage instance", async () => {
