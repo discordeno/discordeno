@@ -89,7 +89,7 @@ await build({
     homepage: "https://discordeno.mod.land",
     repository: {
       type: "git",
-      url: "https://github.com/discordeno/discordeno"
+      url: "https://github.com/discordeno/discordeno",
     },
     typesVersions: {
       "*": {
