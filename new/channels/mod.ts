@@ -23,7 +23,7 @@ Deno.test({
       stage: Channel;
     };
     await t.step({
-      name: "createChannel",
+      name: "createChannel: Create a channel",
       async fn(t) {
         channels = await createChannel(t);
       },
@@ -36,25 +36,25 @@ Deno.test({
     //   },
     // });
     await t.step({
-      name: "createStageInstance",
+      name: "createStageInstance: Create a stage instance",
       async fn() {
         await createStageInstance(channels.stage);
       },
     });
     await t.step({
-      name: "updateStageInstance",
+      name: "updateStageInstance: Update a stage instance",
       async fn() {
         await updateStageInstance(channels.stage);
       },
     });
     await t.step({
-      name: "deleteStageInstance",
+      name: "deleteStageInstance: Delete a stage instance",
       async fn() {
         await deleteStageInstance(channels.stage);
       },
     });
     await t.step({
-      name: "getChannel",
+      name: "getChannel: Get a channel",
       fn() {
         Object.values(channels).forEach(async (channel) => {
           await getChannel(channel);
@@ -69,7 +69,7 @@ Deno.test({
     //   },
     // });
     await t.step({
-      name: "deleteChannel",
+      name: "deleteChannel: Delete a channel",
       fn() {
         Object.values(channels).forEach(async (channel) => {
           await deleteChannel(channel);

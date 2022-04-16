@@ -12,18 +12,13 @@ You do not need to push to the github repo to have the CI do the tests for you. 
 following:
 
 ```shell
-DISCORD_TOKEN=YOUR_BOT_TOKEN_HERE deno test --no-check -A tests/mod.ts
+TOKEN=YOUR_TEST_TOKEN BOT_ID=YOUR_TEST_BOT_ID GUILD_ID=YOUR_TEST_GUILD_ID deno test --no-check -A tests/mod.ts
 ```
 
-> Please note that the token you use should be for a trivial unused bot. Never use your main bot tokens for this.
+> You should use a test bot for the `TOKEN` and `BOT_ID`. You should use a community enabled server for the `GUILD_ID`.
+> **Never use your main bot or your main server**
 
 ## Ordering
 
 The order of unit tests is very important. Please do not move/change the order of the tests unless you know what you are
 doing. Certain tests depend on other previous tests. You may add a test but becareful where you add it.
-
-## Naming
-
-Each function should have it's own separate file for it's tests. The file should be organized under it's main category
-which will be the `[]` portion of the tests name. For example, `[guild] create a new guild` will be found in
-`tests/guilds/create_guild.ts`

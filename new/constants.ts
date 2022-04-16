@@ -2,7 +2,7 @@
 export const sanitizeMode = {
   sanitizeResources: false,
   sanitizeOps: false,
-  sanitizeExit: true,
+  sanitizeExit: false,
 };
 
 // USED FOR ROLE CHANGE EVENTS

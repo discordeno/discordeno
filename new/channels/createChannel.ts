@@ -14,13 +14,13 @@ export default async function (t: Deno.TestContext) {
   let textRateLimitPerUser: Channel | undefined;
   let stage: Channel | undefined;
   await t.step({
-    name: "text",
+    name: "text: Create a text channel",
     async fn() {
       text = await createChannelTests(guild.id, { name: "text" });
     },
   });
   await t.step({
-    name: "category",
+    name: "category: Create a category channel",
     async fn() {
       category = await createChannelTests(guild.id, {
         name: "category",
@@ -29,7 +29,7 @@ export default async function (t: Deno.TestContext) {
     },
   });
   await t.step({
-    name: "news",
+    name: "news: Create a news channel",
     async fn() {
       news = await createChannelTests(
         guild.id,
@@ -39,7 +39,7 @@ export default async function (t: Deno.TestContext) {
     },
   });
   await t.step({
-    name: "voice",
+    name: "voice: Create a voice channel",
     async fn() {
       voice = await createChannelTests(
         guild.id,
@@ -48,7 +48,7 @@ export default async function (t: Deno.TestContext) {
     },
   });
   await t.step({
-    name: "voice bitrate",
+    name: "voice bitrate: Create a voice channel with bitrate",
     async fn() {
       voiceBitRate = await createChannelTests(guild.id, {
         name: "voice-bitrate",
@@ -58,7 +58,7 @@ export default async function (t: Deno.TestContext) {
     },
   });
   await t.step({
-    name: "voice userLimit",
+    name: "voice userLimit: Create a voice channel with user limit",
     async fn() {
       voiceUserLimit = await createChannelTests(guild.id, {
         name: "voice-user-limit",
@@ -68,7 +68,7 @@ export default async function (t: Deno.TestContext) {
     },
   });
   await t.step({
-    name: "text rateLimitPerUser",
+    name: "text rateLimitPerUser: Create a text channel with rate limit per user",
     async fn() {
       textRateLimitPerUser = await createChannelTests(guild.id, {
         name: "text-rate-limit-per-user",
@@ -77,7 +77,7 @@ export default async function (t: Deno.TestContext) {
     },
   });
   await t.step({
-    name: "stage",
+    name: "stage: Create a stage channel",
     async fn() {
       stage = await createChannelTests(guild.id, {
         name: "stage",
@@ -112,18 +112,12 @@ async function createChannelTests(guildId: bigint, options: CreateGuildChannel, 
     throw new Error("The channel seemed to be created but it was not cached.");
   }
 
-  if (options.topic && channel.topic !== options.topic) {
-    throw new Error("The channel was supposed to have a topic but it does not appear to be the same topic.");
-  }
+  if (options.topic) assertEquals(channel.topic, options.topic);
 
-  if (options.bitrate && channel.bitrate !== options.bitrate) {
-    throw new Error("The channel was supposed to have a bitrate but it does not appear to be the same bitrate.");
-  }
+  if (options.bitrate) assertEquals(channel.bitrate, options.bitrate);
 
-  if (options.permissionOverwrites && channel.permissionOverwrites?.length !== options.permissionOverwrites.length) {
-    throw new Error(
-      "The channel was supposed to have a permissionOverwrites but it does not appear to be the same permissionOverwrites.",
-    );
+  if (options.permissionOverwrites) {
+    assertEquals(channel.permissionOverwrites.length, options.permissionOverwrites.length);
   }
 
   if (autoDelete) {
