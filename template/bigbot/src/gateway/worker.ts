@@ -33,7 +33,9 @@ function spawnGateway(shardId: number, options: Partial<GatewayManager>) {
         : (data.d as any)?.guild_id) ?? "000000000000000000";
 
       // IF FINAL SHARD BECAME READY TRIGGER NEXT WORKER
-      if (data.t === "READY") {
+      if (
+        data.t === "READY"
+      ) {
         console.log(`[Worker #${workerId}]`, `[Worker] Shard #${shardId} online`);
 
         if (shardId === gateway.lastShardId) {
@@ -63,9 +65,7 @@ function spawnGateway(shardId: number, options: Partial<GatewayManager>) {
         }),
       })
         // BELOW IS FOR DENO MEMORY LEAK
-        .then((res) =>
-          res.text()
-        )
+        .then((res) => res.text())
         .catch(() => null);
     },
   });

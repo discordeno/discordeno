@@ -1,10 +1,8 @@
-export const CACHED_COMMUNITY_GUILD_ID = 907350958810480671n;
-
 // CHANGE TO TRUE WHEN DEBUGGING SANITIZATION ERRORS
 export const sanitizeMode = {
   sanitizeResources: false,
   sanitizeOps: false,
-  sanitizeExit: false,
+  sanitizeExit: true,
 };
 
 // USED FOR ROLE CHANGE EVENTS
