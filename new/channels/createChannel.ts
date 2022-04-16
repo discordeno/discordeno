@@ -34,7 +34,6 @@ export default async function (t: Deno.TestContext) {
       news = await createChannelTests(
         guild.id,
         { name: "news", type: ChannelTypes.GuildNews },
-        true,
       );
     },
   });
@@ -98,7 +97,7 @@ export default async function (t: Deno.TestContext) {
   return { text, category, news, voice, voiceBitRate, voiceUserLimit, textRateLimitPerUser, stage };
 }
 
-async function createChannelTests(guildId: bigint, options: CreateGuildChannel, autoDelete?: boolean) {
+async function createChannelTests(guildId: bigint, options: CreateGuildChannel) {
   const channel = await bot.helpers.createChannel(guildId, options);
 
   // Assertions
@@ -118,10 +117,6 @@ async function createChannelTests(guildId: bigint, options: CreateGuildChannel, 
 
   if (options.permissionOverwrites) {
     assertEquals(channel.permissionOverwrites.length, options.permissionOverwrites.length);
-  }
-
-  if (autoDelete) {
-    await bot.helpers.deleteChannel(channel.id);
   }
 
   return channel;

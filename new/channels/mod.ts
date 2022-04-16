@@ -1,5 +1,5 @@
-// import connectToVoiceChannel from "./connectToVoiceChannel.ts";
-// import getChannels from "./getChannels.ts";
+import connectToVoiceChannel from "./connectToVoiceChannel.ts";
+import getChannels from "./getChannels.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { sanitizeMode } from "../constants.ts";
 import createChannel from "./createChannel.ts";
@@ -28,13 +28,12 @@ Deno.test({
         channels = await createChannel(t);
       },
     });
-    // lts20050703: This test fails because the bot is not started.
-    // await t.step({
-    //   name: "connectToVoiceChannel",
-    //   async fn() {
-    //     await connectToVoiceChannel(channels.voice);
-    //   },
-    // });
+    await t.step({
+      name: "connectToVoiceChannel: Connect to a voice channel",
+      async fn() {
+        await connectToVoiceChannel(channels.voice);
+      },
+    });
     await t.step({
       name: "createStageInstance: Create a stage instance",
       async fn() {
@@ -55,19 +54,18 @@ Deno.test({
     });
     await t.step({
       name: "getChannel: Get a channel",
-      fn() {
-        Object.values(channels).forEach(async (channel) => {
+      async fn() {
+        for await (const channel of Object.values(channels)) {
           await getChannel(channel);
-        });
+        }
       },
     });
-    // lts20050703: This test fails because the bot is not started.
-    // await t.step({
-    //   name: "getChannels",
-    //   async fn() {
-    //     await getChannels(Object.values(channels).length);
-    //   },
-    // });
+    await t.step({
+      name: "getChannels: Get channels",
+      async fn() {
+        await getChannels(Object.values(channels).length);
+      },
+    });
     await t.step({
       name: "deleteChannel: Delete a channel",
       fn() {

@@ -5,7 +5,7 @@ import editEmoji from "./editEmoji.ts";
 import emojiUrl from "./emojiUrl.ts";
 import getEmoji from "./getEmoji.ts";
 import getEmojis from "./getEmojis.ts";
-
+import { sanitizeMode } from "../constants.ts";
 Deno.test({
   name: "Emojis",
   async fn(t) {
@@ -47,4 +47,7 @@ Deno.test({
       },
     });
   },
+  sanitizeOps: sanitizeMode.sanitizeOps,
+  sanitizeExit: sanitizeMode.sanitizeExit,
+  sanitizeResources: sanitizeMode.sanitizeResources,
 });

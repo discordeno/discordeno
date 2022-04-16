@@ -3,4 +3,5 @@ import { Channel } from "../../transformers/channel.ts";
 
 export default async function (channel: Channel) {
   await bot.helpers.deleteStageInstance(channel.id);
+  // TODO: Assert that the stage instance has been deleted
 }

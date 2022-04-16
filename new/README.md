@@ -16,7 +16,7 @@ TOKEN=YOUR_TEST_TOKEN BOT_ID=YOUR_TEST_BOT_ID GUILD_ID=YOUR_TEST_GUILD_ID deno t
 ```
 
 > You should use a test bot for the `TOKEN` and `BOT_ID`. You should use a community enabled server for the `GUILD_ID`.
-> **Never use your main bot or your main server**
+> **Never use your main bot. Never use your main server**
 
 ## Ordering
 
