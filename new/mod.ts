@@ -33,3 +33,4 @@ export const bot = enableCachePlugin(createBot({
 export const guild = await bot.helpers.getGuild(BigInt(GUILD_ID));
 
 import "./channels/mod.ts";
+import "./emojis/mod.ts";
