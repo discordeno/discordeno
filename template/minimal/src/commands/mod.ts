@@ -1,10 +1,4 @@
-import {
-  ApplicationCommandOption,
-  ApplicationCommandTypes,
-  Bot,
-  Collection,
-  DiscordenoInteraction,
-} from "../../deps.ts";
+import { ApplicationCommandOption, ApplicationCommandTypes, Bot, Collection, Interaction } from "../../deps.ts";
 
 export type subCommand = Omit<Command, "subcommands">;
 export type subCommandGroup = {
@@ -19,7 +13,7 @@ export interface Command {
   type: ApplicationCommandTypes;
   /** Defaults to `Guild` */
   scope?: "Global" | "Guild";
-  execute: (bot: Bot, interaction: DiscordenoInteraction) => unknown;
+  execute: (bot: Bot, interaction: Interaction) => unknown;
   subcommands?: Array<subCommandGroup | subCommand>;
 }
 

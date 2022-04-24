@@ -10,5 +10,5 @@ export async function getGuildTemplates(bot: Bot, guildId: bigint) {
     bot.constants.endpoints.GUILD_TEMPLATES(guildId),
   );
 
-  return new Collection(templates.map((template) => [template.code, template]));
+  return new Collection(templates.map((template) => [template.code, bot.transformers.template(bot, template)]));
 }

@@ -7,6 +7,7 @@ import { processRateLimitedPaths } from "./processRateLimitedPaths.ts";
 import { processRequest } from "./processRequest.ts";
 import { processRequestHeaders } from "./processRequestHeaders.ts";
 import { runMethod } from "./runMethod.ts";
+import { runProxyMethod } from "./runProxyMethod.ts";
 import { simplifyUrl } from "./simplifyUrl.ts";
 
 export const rest = {
@@ -27,7 +28,7 @@ export const rest = {
   processingQueue: false,
   processingRateLimitedPaths: false,
   globallyRateLimited: false,
-  ratelimitedPaths: new Map<string, RestRateLimitedPath>(),
+  rateLimitedPaths: new Map<string, RestRateLimitedPath>(),
   eventHandlers: {
     // BY DEFAULT WE WILL LOG ALL ERRORS TO CONSOLE. USER CAN CHOOSE TO OVERRIDE
     error: function (...args: unknown[]) {},
@@ -49,14 +50,25 @@ export const rest = {
   processRequest,
   createRequestBody,
   runMethod,
+  runProxyMethod,
   simplifyUrl,
 };
 
 export interface RestRequest {
   url: string;
   method: string;
-  respond: (payload: { status: number; body?: string }) => unknown;
-  reject: (error: unknown) => unknown;
+  respond: (payload: RestRequestResponse) => unknown;
+  reject: (payload: RestRequestRejection) => unknown;
+}
+
+export interface RestRequestResponse {
+  ok: boolean;
+  status: number;
+  body?: string;
+}
+
+export interface RestRequestRejection extends RestRequestResponse {
+  error: string;
 }
 
 export interface RestPayload {

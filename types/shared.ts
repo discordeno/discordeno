@@ -11,8 +11,8 @@ export enum PremiumTypes {
 export enum UserFlags {
   None,
   DiscordEmployee = 1 << 0,
-  ParteneredServerOwner = 1 << 1,
-  HypeSquadEvents = 1 << 2,
+  PartneredServerOwner = 1 << 1,
+  HypeSquadEventsMember = 1 << 2,
   BugHunterLevel1 = 1 << 3,
   HouseBravery = 1 << 6,
   HouseBrilliance = 1 << 7,
@@ -48,13 +48,21 @@ export enum TeamMembershipStates {
 
 /** https://discord.com/developers/docs/topics/oauth2#application-application-flags */
 export enum ApplicationFlags {
+  /** Intent required for bots in **100 or more servers** to receive [`presence_update` events](#DOCS_TOPICS_GATEWAY/presence-update) */
   GatewayPresence = 1 << 12,
+  /** Intent required for bots in under 100 servers to receive [`presence_update` events](#DOCS_TOPICS_GATEWAY/presence-update), found in Bot Settings */
   GatewayPresenceLimited = 1 << 13,
+  /** Intent required for bots in **100 or more servers** to receive member-related events like `guild_member_add`. See list of member-related events [under `GUILD_MEMBERS`](#DOCS_TOPICS_GATEWAY/list-of-intents) */
   GatewayGuildMembers = 1 << 14,
+  /** Intent required for bots in under 100 servers to receive member-related events like `guild_member_add`, found in Bot Settings. See list of member-related events [under `GUILD_MEMBERS`](#DOCS_TOPICS_GATEWAY/list-of-intents) */
   GatewayGuildMembersLimited = 1 << 15,
+  /** Indicates unusual growth of an app that prevents verification */
   VerificationPendingGuildLimit = 1 << 16,
+  /** Indicates if an app is embedded within the Discord client (currently unavailable publicly) */
   Embedded = 1 << 17,
+  /** Intent required for bots in **100 or more servers** to receive [message content](https://support-dev.discord.com/hc/en-us/articles/4404772028055) */
   GatewayMessageCount = 1 << 18,
+  /** Intent required for bots in under 100 servers to receive [message content](https://support-dev.discord.com/hc/en-us/articles/4404772028055), found in Bot Settings */
   GatewayMessageContentLimited = 1 << 19,
 }
 
@@ -162,7 +170,7 @@ export interface BaseRole {
 export enum GuildFeatures {
   /** Guild has access to set an invite splash background */
   InviteSplash = "INVITE_SPLASH",
-  /** Guild has access to set 384kbps bitrate in voice (previously VIP voice servers) */
+  /** Guild has access to set 384 kbps bitrate in voice (previously VIP voice servers) */
   VipRegions = "VIP_REGIONS",
   /** Guild has access to set a vanity URL */
   VanityUrl = "VANITY_URL",
@@ -170,7 +178,7 @@ export enum GuildFeatures {
   Verified = "VERIFIED",
   /** Guild is partnered */
   Partnered = "PARTNERED",
-  /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and recives community updates */
+  /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
   Community = "COMMUNITY",
   /** Guild has access to use commerce features (i.e. create store channels) */
   Commerce = "COMMERCE",
@@ -262,8 +270,6 @@ export enum ChannelTypes {
   GuildCategory,
   /** A channel that users can follow and crosspost into their own server */
   GuildNews,
-  /** A channel in which game developers can sell their game on Discord */
-  GuildStore,
   /** A temporary sub-channel within a GUILD_NEWS channel */
   GuildNewsThread = 10,
   /** A temporary sub-channel within a GUILD_TEXT channel */
@@ -342,7 +348,7 @@ export enum StickerTypes {
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types */
 export enum StickerFormatTypes {
   Png = 1,
-  Apng,
+  APng,
   Lottie,
 }
 
@@ -968,10 +974,14 @@ export type GatewayDispatchEventNames =
   | "THREAD_UPDATE"
   | "THREAD_DELETE"
   | "THREAD_LIST_SYNC"
-  | "THREAD_MEMBER_UPDATE"
   | "THREAD_MEMBERS_UPDATE";
 
-export type GatewayEventNames = GatewayDispatchEventNames | "READY" | "RESUMED";
+export type GatewayEventNames =
+  | GatewayDispatchEventNames
+  | "READY"
+  | "RESUMED"
+  // THIS IS A CUSTOM DD EVENT NOT A DISCORD EVENT
+  | "GUILD_LOADED_DD";
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
 export enum GatewayIntents {
@@ -1212,10 +1222,10 @@ export enum Errors {
   BUTTON_REQUIRES_CUSTOM_ID = "BUTTON_REQUIRES_CUSTOM_ID",
   COMPONENT_SELECT_MUST_BE_ALONE = "COMPONENT_SELECT_MUST_BE_ALONE",
   COMPONENT_PLACEHOLDER_TOO_BIG = "COMPONENT_PLACEHOLDER_TOO_BIG",
-  COMPONENT_SELECT_MINVALUE_TOO_LOW = "COMPONENT_SELECT_MINVALUE_TOO_LOW",
-  COMPONENT_SELECT_MINVALUE_TOO_MANY = "COMPONENT_SELECT_MINVALUE_TOO_MANY",
-  COMPONENT_SELECT_MAXVALUE_TOO_LOW = "COMPONENT_SELECT_MAXVALUE_TOO_LOW",
-  COMPONENT_SELECT_MAXVALUE_TOO_MANY = "COMPONENT_SELECT_MAXVALUE_TOO_MANY",
+  COMPONENT_SELECT_MIN_VALUE_TOO_LOW = "COMPONENT_SELECT_MIN_VALUE_TOO_LOW",
+  COMPONENT_SELECT_MIN_VALUE_TOO_MANY = "COMPONENT_SELECT_MIN_VALUE_TOO_MANY",
+  COMPONENT_SELECT_MAX_VALUE_TOO_LOW = "COMPONENT_SELECT_MAX_VALUE_TOO_LOW",
+  COMPONENT_SELECT_MAX_VALUE_TOO_MANY = "COMPONENT_SELECT_MAX_VALUE_TOO_MANY",
   COMPONENT_SELECT_OPTIONS_TOO_LOW = "COMPONENT_SELECT_OPTIONS_TOO_LOW",
   COMPONENT_SELECT_OPTIONS_TOO_MANY = "COMPONENT_SELECT_OPTIONS_TOO_MANY",
   SELECT_OPTION_LABEL_TOO_BIG = "SELECT_OPTION_LABEL_TOO_BIG",
@@ -1227,6 +1237,41 @@ export enum Errors {
   CANNOT_REMOVE_FROM_ARCHIVED_THREAD = "CANNOT_REMOVE_FROM_ARCHIVED_THREAD",
   YOU_CAN_NOT_DM_THE_BOT_ITSELF = "YOU_CAN_NOT_DM_THE_BOT_ITSELF",
 }
+
+export enum Locales {
+  Danish = "da",
+  German = "de",
+  EnglishUk = "en-GB",
+  EnglishUs = "en-US",
+  Spanish = "es-ES",
+  French = "fr",
+  Croatian = "hr",
+  Italian = "it",
+  Lithuanian = "lt",
+  Hungarian = "hu",
+  Dutch = "nl",
+  Norwegian = "no",
+  Polish = "pl",
+  PortugueseBrazilian = "pt-BR",
+  RomanianRomania = "ro",
+  Finnish = "fi",
+  Swedish = "sv-SE",
+  Vietnamese = "vi",
+  Turkish = "tr",
+  Czech = "cs",
+  Greek = "el",
+  Bulgarian = "bg",
+  Russian = "ru",
+  Ukrainian = "uk",
+  Hindi = "hi",
+  Thai = "th",
+  ChineseChina = "zh-CN",
+  Japanese = "ja",
+  ChineseTaiwan = "zh-TW",
+  Korean = "ko",
+}
+
+export type Localization = Partial<Record<Locales, string>>;
 
 // UTILS
 
@@ -1303,16 +1348,29 @@ export type KeysWithUndefined<T> = {
     : never;
 }[keyof T];
 
-export type Optionalize<T> = T extends Collection<any, any> ? T : T extends object ? Id<
+export type Optionalize<T> =
+  // Collections don't need optionalizing
+  T extends Collection<any, any> ? T
+    : // If an array only optionalize objects in arrays
+    T extends unknown[] ? T[number] extends Record<any, any> ? Array<Optionalize<T[number]>>
+    : T
+    : // Specific optionalizing of {} go here
+    T extends object ? Id<
+      & {
+        [K in KeysWithUndefined<T>]?: T[K] extends Collection<any, any> ? T[K] : Optionalize<T[K]>;
+      }
+      & {
+        [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends object ? {} extends Pick<T[K], keyof T[K]> ? T[K]
+        : T[K] extends Collection<any, any> ? T[K]
+        : T[K] extends unknown[] ? T[K]
+        : Optionalize<T[K]>
+          : T[K];
+      }
+    >
+    : T;
+
+export type PickPartial<T, K extends keyof T> =
   & {
-    [K in KeysWithUndefined<T>]?: T[K] extends Collection<any, any> ? T[K] : Optionalize<T[K]>;
+    [P in keyof T]?: T[P] | undefined;
   }
-  & {
-    [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends object ? {} extends Pick<T[K], keyof T[K]> ? T[K]
-    : T[K] extends Collection<any, any> ? T[K]
-    : T[K] extends unknown[] ? T[K]
-    : Optionalize<T[K]>
-      : T[K];
-  }
->
-: T;
+  & { [P in K]: T[P] };

@@ -8,13 +8,14 @@ import { Collection } from "../../util/collection.ts";
  * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
  */
 export async function getMembers(bot: Bot, guildId: bigint, options: ListGuildMembers) {
+  let url = `${bot.constants.endpoints.GUILD_MEMBERS(guildId)}?limit=${options.limit || 1000}`;
+
+  if (options.after) url += `&after=${options.after}`;
+
   const result = await bot.rest.runMethod<DiscordMemberWithUser[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_MEMBERS(guildId),
-    {
-      limit: 1000,
-    },
+    url,
   );
 
   return new Collection(

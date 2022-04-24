@@ -23,7 +23,7 @@ export function calculateBasePermissions(
   if (!guild || !member) return 8n;
 
   let permissions = 0n;
-  // Calculate the role permissions bits, @everyone role is not in memberRoleIds so we need to pass guildId manualy
+  // Calculate the role permissions bits, @everyone role is not in memberRoleIds so we need to pass guildId manually
   permissions |= [...member.roles, guild.id]
     .map((id) => guild.roles.get(id)?.permissions)
     // Removes any edge case undefined
@@ -211,13 +211,13 @@ export function getMissingChannelPermissions(
   member: bigint | Member,
   permissions: PermissionStrings[],
 ) {
-  // First we need the role permissino bits this member has
+  // First we need the role permission bits this member has
   const permissionBits = calculateChannelOverwrites(
     bot,
     channel,
     member,
   );
-  // Second returnn the members missing permissions
+  // Second return the members missing permissions
   return missingPermissions(permissionBits, permissions);
 }
 

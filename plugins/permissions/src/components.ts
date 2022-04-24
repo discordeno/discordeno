@@ -15,92 +15,92 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
       throw new Error("Too many components.");
     } else if (
       component.components?.length > 1 &&
-      component.components.some((subcomponent) => subcomponent.type === MessageComponentTypes.SelectMenu)
+      component.components.some((subComponent) => subComponent.type === MessageComponentTypes.SelectMenu)
     ) {
       throw new Error("Select component must be alone.");
     }
 
-    for (const subcomponent of component.components) {
+    for (const subComponent of component.components) {
       if (
-        subcomponent.customId &&
-        !bot.utils.validateLength(subcomponent.customId, { max: 100 })
+        subComponent.customId &&
+        !bot.utils.validateLength(subComponent.customId, { max: 100 })
       ) {
         throw new Error("The custom id in the component is too big.");
       }
 
       // 5 Link buttons can not have a customId
-      if (subcomponent.type === MessageComponentTypes.Button) {
-        if (subcomponent.style === ButtonStyles.Link && subcomponent.customId) {
+      if (subComponent.type === MessageComponentTypes.Button) {
+        if (subComponent.style === ButtonStyles.Link && subComponent.customId) {
           throw new Error("Link buttons can not have custom ids.");
         }
         // Other buttons must have a customId
         if (
-          !subcomponent.customId && subcomponent.style !== ButtonStyles.Link
+          !subComponent.customId && subComponent.style !== ButtonStyles.Link
         ) {
           throw new Error(
             "The button requires a custom id if it is not a link button.",
           );
         }
 
-        if (!bot.utils.validateLength(subcomponent.label, { max: 80 })) {
+        if (!bot.utils.validateLength(subComponent.label, { max: 80 })) {
           throw new Error("The label can not be longer than 80 characters.");
         }
 
-        subcomponent.emoji = makeEmojiFromString(subcomponent.emoji);
+        subComponent.emoji = makeEmojiFromString(subComponent.emoji);
       }
 
-      if (subcomponent.type === MessageComponentTypes.SelectMenu) {
+      if (subComponent.type === MessageComponentTypes.SelectMenu) {
         if (
-          subcomponent.placeholder &&
-          !bot.utils.validateLength(subcomponent.placeholder, { max: 100 })
+          subComponent.placeholder &&
+          !bot.utils.validateLength(subComponent.placeholder, { max: 150 })
         ) {
           throw new Error(
-            "The component placeholder can not be longer than 100 characters.",
+            "The component placeholder can not be longer than 150 characters.",
           );
         }
 
-        if (subcomponent.minValues) {
-          if (subcomponent.minValues < 1) {
+        if (subComponent.minValues) {
+          if (subComponent.minValues < 1) {
             throw new Error(
               "The min values must be more than 1 in a select component.",
             );
           }
 
-          if (subcomponent.minValues > 25) {
+          if (subComponent.minValues > 25) {
             throw new Error(
               "The min values must be less than 25 in a select component.",
             );
           }
 
-          if (!subcomponent.maxValues) {
-            subcomponent.maxValues = subcomponent.minValues;
+          if (!subComponent.maxValues) {
+            subComponent.maxValues = subComponent.minValues;
           }
-          if (subcomponent.minValues > subcomponent.maxValues) {
+          if (subComponent.minValues > subComponent.maxValues) {
             throw new Error(
               "The select component can not have a min values higher than a max values.",
             );
           }
         }
 
-        if (subcomponent.maxValues) {
-          if (subcomponent.maxValues < 1) {
+        if (subComponent.maxValues) {
+          if (subComponent.maxValues < 1) {
             throw new Error(
               "The max values must be more than 1 in a select component.",
             );
           }
 
-          if (subcomponent.maxValues > 25) {
+          if (subComponent.maxValues > 25) {
             throw new Error(
               "The max values must be less than 25 in a select component.",
             );
           }
         }
 
-        if (subcomponent.options.length < 1) {
-          throw new Error("You need atleast 1 option in the select component.");
+        if (subComponent.options.length < 1) {
+          throw new Error("You need at least 1 option in the select component.");
         }
 
-        if (subcomponent.options.length > 25) {
+        if (subComponent.options.length > 25) {
           throw new Error(
             "You can not have more than 25 options in the select component.",
           );
@@ -108,10 +108,10 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
 
         let defaults = 0;
 
-        for (const option of subcomponent.options) {
+        for (const option of subComponent.options) {
           if (option.default) {
             defaults++;
-            if (defaults > (subcomponent.maxValues || 25)) {
+            if (defaults > (subComponent.maxValues || 25)) {
               throw new Error("You chose too many default options.");
             }
           }

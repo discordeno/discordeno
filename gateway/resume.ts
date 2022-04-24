@@ -1,5 +1,5 @@
 import { GatewayOpcodes } from "../types/shared.ts";
-import { GatewayManager } from "./gateway_manager.ts";
+import { GatewayManager } from "./gatewayManager.ts";
 
 export function resume(gateway: GatewayManager, shardId: number) {
   gateway.debug("GW RESUMING", { shardId });

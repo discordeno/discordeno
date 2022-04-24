@@ -1,6 +1,7 @@
 import { GetGatewayBot, transformGatewayBot } from "../transformers/gatewayBot.ts";
 import { DiscordReady } from "../types/discord.ts";
-import { createGatewayManager, GatewayManager } from "./gateway_manager.ts";
+import { Collection } from "../util/collection.ts";
+import { createGatewayManager, GatewayManager } from "./gatewayManager.ts";
 
 /** The handler to automatically reshard when necessary. */
 export async function resharder(
@@ -11,6 +12,16 @@ export async function resharder(
 
   const gateway = createGatewayManager({
     ...oldGateway,
+    // RESET THE SETS AND COLLECTIONS
+    cache: {
+      guildIds: new Set(),
+      loadingGuildIds: new Set(),
+      editedMessages: new Collection(),
+    },
+    shards: new Collection(),
+    loadingShards: new Collection(),
+    buckets: new Collection(),
+    utf8decoder: new TextDecoder(),
   });
 
   for (const [key, value] of Object.entries(oldGateway)) {
@@ -25,7 +36,7 @@ export async function resharder(
     }
 
     // USE ANY CUSTOMIZED OPTIONS FROM OLD GATEWAY
-    // @ts-ignore TODO: fix this dynamica assignment
+    // @ts-ignore TODO: fix this dynamical assignment
     gateway[key] = oldGateway[key as keyof typeof oldGateway];
   }
 
@@ -72,12 +83,12 @@ export async function resharder(
   }) as Promise<GatewayManager>;
 }
 
-/** Handler that by default will check all new shards are online in the new gateway. The handler can be overriden if you have multiple servers to communicate through redis pubsub or whatever you prefer. */
+/** Handler that by default will check all new shards are online in the new gateway. The handler can be overridden if you have multiple servers to communicate through redis pubsub or whatever you prefer. */
 export async function resharderIsPending(
   gateway: GatewayManager,
   oldGateway: GatewayManager,
 ) {
-  for (let i = gateway.firstShardId; i < gateway.maxShards; i++) {
+  for (let i = gateway.firstShardId; i < gateway.lastShardId; i++) {
     const shard = gateway.shards.get(i);
     if (!shard?.ready) {
       return true;
@@ -87,7 +98,7 @@ export async function resharderIsPending(
   return false;
 }
 
-/** Handler that by default closes all shards in the old gateway. Can be overriden if you have multiple servers and you want to communicate through redis pubsub or whatever you prefer. */
+/** Handler that by default closes all shards in the old gateway. Can be overridden if you have multiple servers and you want to communicate through redis pubsub or whatever you prefer. */
 export async function resharderCloseOldShards(oldGateway: GatewayManager) {
   // SHUT DOWN ALL SHARDS IF NOTHING IN QUEUE
   oldGateway.shards.forEach((shard) => {
@@ -111,7 +122,7 @@ export async function resharderCloseOldShards(oldGateway: GatewayManager) {
   });
 }
 
-/** Handler that by default will check to see if resharding should occur. Can be overriden if you have multiple servers and you want to communicate through redis pubsub or whatever you prefer. */
+/** Handler that by default will check to see if resharding should occur. Can be overridden if you have multiple servers and you want to communicate through redis pubsub or whatever you prefer. */
 export async function startReshardingChecks(gateway: GatewayManager) {
   gateway.debug("GW DEBUG", "[Resharding] Checking if resharding is needed.");
 
@@ -133,9 +144,9 @@ export async function startReshardingChecks(gateway: GatewayManager) {
   return gateway.resharding.resharder(gateway, results);
 }
 
-/** Handler that by default will save the new shard id for each guild this becomes ready in new gateway. This can be overriden to save the shard ids in a redis cache layer or whatever you prefer. These ids will be used later to update all guilds. */
+/** Handler that by default will save the new shard id for each guild this becomes ready in new gateway. This can be overridden to save the shard ids in a redis cache layer or whatever you prefer. These ids will be used later to update all guilds. */
 export async function markNewGuildShardId(guildIds: bigint[], shardId: number) {
-  // PLACEHOLDER TO LET YOU MARK A GUILD ID AND SHARDID FOR LATER USE ONCE RESHARDED
+  // PLACEHOLDER TO LET YOU MARK A GUILD ID AND SHARD ID FOR LATER USE ONCE RESHARDED
 }
 
 /** Handler that by default does not do anything since by default the library will not cache. */

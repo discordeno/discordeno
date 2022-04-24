@@ -4,7 +4,7 @@ import type { Bot } from "../../bot.ts";
 export function avatarURL(
   bot: Bot,
   userId: bigint,
-  discriminator: number,
+  discriminator: string,
   options?: {
     avatar: bigint | undefined;
     size?: ImageSize;

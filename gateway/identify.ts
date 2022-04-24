@@ -1,5 +1,5 @@
 import { GatewayOpcodes } from "../types/shared.ts";
-import { GatewayManager } from "./gateway_manager.ts";
+import { GatewayManager } from "./gatewayManager.ts";
 
 export function identify(gateway: GatewayManager, shardId: number, maxShards: number) {
   gateway.debug("GW IDENTIFYING", { shardId, maxShards });
@@ -7,7 +7,7 @@ export function identify(gateway: GatewayManager, shardId: number, maxShards: nu
   // Need to clear the old heartbeat interval
   const oldShard = gateway.shards.get(shardId);
   if (oldShard) {
-    gateway.closeWS(oldShard.ws, 3065, "Reidentifying closure of old shard");
+    gateway.closeWS(oldShard.ws, 3065, "Re-identifying closure of old shard");
     clearInterval(oldShard.heartbeat.intervalId);
   }
 

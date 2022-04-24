@@ -1,23 +1,29 @@
-import { BotWithCache } from "../../deps.ts";
+import { BotWithCache, PermissionStrings } from "../../deps.ts";
 import { requireBotChannelPermissions } from "../permissions.ts";
 
 export function createStageInstance(bot: BotWithCache) {
   const createStageInstanceOld = bot.helpers.createStageInstance;
 
-  bot.helpers.createStageInstance = async function (channelId, topic) {
-    if (!bot.utils.validateLength(topic, { max: 120, min: 1 })) {
+  bot.helpers.createStageInstance = async function (options) {
+    if (!bot.utils.validateLength(options.topic, { max: 120, min: 1 })) {
       throw new Error(
         "The topic length for creating a stage instance must be between 1-120.",
       );
     }
 
-    requireBotChannelPermissions(bot, channelId, [
+    const perms = new Set<PermissionStrings>([
       "MANAGE_CHANNELS",
       "MUTE_MEMBERS",
       "MOVE_MEMBERS",
     ]);
 
-    return await createStageInstanceOld(channelId, topic);
+    if (options.sendStartNotification) {
+      perms.add("MENTION_EVERYONE");
+    }
+
+    requireBotChannelPermissions(bot, options.channelId, [...perms.values()]);
+
+    return await createStageInstanceOld(options);
   };
 }
 

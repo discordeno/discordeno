@@ -8,7 +8,7 @@ export function transformUser(bot: Bot, payload: DiscordUser) {
   const user = {
     id: bot.transformers.snowflake(payload.id || ""),
     username: payload.username,
-    discriminator: Number(payload.discriminator),
+    discriminator: payload.discriminator,
     avatar: payload.avatar ? bot.utils.iconHashToBigInt(payload.avatar) : undefined,
     locale: payload.locale,
     email: payload.email ?? undefined,

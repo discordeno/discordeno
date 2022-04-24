@@ -2,14 +2,14 @@ import {
   ApplicationCommandOption,
   ApplicationCommandOptionTypes,
   Bot,
+  Channel,
   ChannelTypes,
   Collection,
-  DiscordenoChannel,
-  DiscordenoMember,
-  DiscordenoMessage,
-  DiscordenoRole,
-  DiscordenoUser,
   InteractionDataOption,
+  Member,
+  Message,
+  Role,
+  User,
 } from "../../deps.ts";
 import { getLanguage, translate } from "../bot/languages/translate.ts";
 import { SNOWFLAKE_REGEX } from "../constants/regexes.ts";
@@ -62,13 +62,13 @@ function convertOptionValue(
   option: InteractionDataOption,
   resolved?: {
     /** The Ids and Message objects */
-    messages?: Collection<bigint, DiscordenoMessage>;
+    messages?: Collection<bigint, Message>;
     /** The Ids and User objects */
-    users?: Collection<bigint, DiscordenoUser>;
+    users?: Collection<bigint, User>;
     /** The Ids and partial Member objects */
-    members?: Collection<bigint, DiscordenoMember>;
+    members?: Collection<bigint, Member>;
     /** The Ids and Role objects */
-    roles?: Collection<bigint, DiscordenoRole>;
+    roles?: Collection<bigint, Role>;
     /** The Ids and partial Channel objects */
     channels?: Collection<
       bigint,
@@ -84,8 +84,8 @@ function convertOptionValue(
 ): [
   string,
   (
-    | { user: DiscordenoUser; member: DiscordenoMember }
-    | DiscordenoRole
+    | { user: User; member: Member }
+    | Role
     | {
       id: bigint;
       name: string;
@@ -141,7 +141,7 @@ function convertOptionValue(
     return [translateOptions?.[option.name] ?? option.name, final];
   }
 
-  // THE REST OF OPTIONS DON'T NEED ANY CONVERTION
+  // THE REST OF OPTIONS DON'T NEED ANY CONVERSION
   // SAVE THE ARGUMENT WITH THE CORRECT NAME
   // @ts-ignore ts leave me alone
   return [translateOptions?.[option.name] ?? option.name, option.value];
@@ -154,13 +154,13 @@ export function optionParser(
   options?: InteractionDataOption[],
   resolved?: {
     /** The Ids and Message objects */
-    messages?: Collection<bigint, DiscordenoMessage>;
+    messages?: Collection<bigint, Message>;
     /** The Ids and User objects */
-    users?: Collection<bigint, DiscordenoUser>;
+    users?: Collection<bigint, User>;
     /** The Ids and partial Member objects */
-    members?: Collection<bigint, DiscordenoMember>;
+    members?: Collection<bigint, Member>;
     /** The Ids and Role objects */
-    roles?: Collection<bigint, DiscordenoRole>;
+    roles?: Collection<bigint, Role>;
     /** The Ids and partial Channel objects */
     channels?: Collection<
       bigint,
@@ -184,8 +184,8 @@ export function optionParser(
   if (options[0].type === ApplicationCommandOptionTypes.SubCommand) {
     const convertedOptions: Record<
       string,
-      | { user: DiscordenoUser; member: DiscordenoMember }
-      | DiscordenoRole
+      | { user: User; member: Member }
+      | Role
       | {
         id: bigint;
         name: string;
@@ -216,9 +216,9 @@ export function optionParser(
   if (options[0].type === ApplicationCommandOptionTypes.SubCommandGroup) {
     const convertedOptions: Record<
       string,
-      | DiscordenoMember
-      | DiscordenoRole
-      | DiscordenoChannel
+      | Member
+      | Role
+      | Channel
       | boolean
       | string
       | number
@@ -248,11 +248,11 @@ export function optionParser(
   // A NORMAL COMMAND WAS USED
   const convertedOptions: Record<
     string,
-    | DiscordenoMember
-    | DiscordenoRole
+    | Member
+    | Role
     | Record<
       string,
-      Pick<DiscordenoChannel, "id" | "name" | "type" | "permissions">
+      Pick<Channel, "id" | "name" | "type" | "permissions">
     >
     | boolean
     | string
@@ -276,11 +276,11 @@ export function optionParser(
  */
 export type InteractionCommandArgs = Record<
   string,
-  | DiscordenoMember
-  | DiscordenoRole
+  | Member
+  | Role
   | Record<
     string,
-    Pick<DiscordenoChannel, "id" | "name" | "type" | "permissions">
+    Pick<Channel, "id" | "name" | "type" | "permissions">
   >
   | boolean
   | string

@@ -7,16 +7,19 @@ export async function getPruneCount(bot: Bot, guildId: bigint, options?: GetGuil
     throw new Error(bot.constants.Errors.PRUNE_MAX_DAYS);
   }
 
+  let url = bot.constants.endpoints.GUILD_PRUNE(guildId);
+
+  if (options) {
+    url += "?";
+
+    if (options.days) url += `days=${options.days}`;
+    if (options.includeRoles) url += `&include_roles=${options.includeRoles}`;
+  }
+
   const result = await bot.rest.runMethod(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_PRUNE(guildId),
-    options
-      ? {
-        days: options.days,
-        include_roles: options.includeRoles,
-      }
-      : {},
+    url,
   );
 
   return result.pruned as number;

@@ -36,7 +36,7 @@ export class Components extends Array<ActionRow> {
       this.addActionRow();
       row = this[this.length - 1];
 
-      // Apperandly there are already 5 Full Action Rows so don't add the button
+      // Apparently there are already 5 Full Action Rows so don't add the button
       if (row.components.length === 5) return this;
     }
 
@@ -60,7 +60,7 @@ export class Components extends Array<ActionRow> {
     // A snowflake id was provided
     if (SNOWFLAKE_REGEX.test(emoji)) {
       return {
-        id: emoji.match(SNOWFLAKE_REGEX)![0],
+        id: BigInt(emoji.match(SNOWFLAKE_REGEX)![0]),
       };
     }
 

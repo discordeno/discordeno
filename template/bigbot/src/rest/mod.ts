@@ -42,7 +42,7 @@ async function handleRequest(conn: Deno.Conn) {
       );
     }
 
-    const json = (await requestEvent.request.json());
+    const json = requestEvent.request.body ? (await requestEvent.request.json()) : undefined;
 
     try {
       const result = await rest.runMethod(
@@ -80,4 +80,4 @@ async function handleRequest(conn: Deno.Conn) {
   }
 }
 
-type RequestMethod = "get" | "post" | "put" | "delete" | "patch";
+type RequestMethod = "post" | "put" | "delete" | "patch";

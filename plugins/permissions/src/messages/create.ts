@@ -18,7 +18,6 @@ export function sendMessage(bot: BotWithCache) {
       channel &&
       [
         ChannelTypes.GuildCategory,
-        ChannelTypes.GuildStore,
         ChannelTypes.GuildStageVoice,
       ].includes(channel.type)
     ) {

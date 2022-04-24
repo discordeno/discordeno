@@ -5,7 +5,7 @@ import { DiscordChannel } from "../../types/discord.ts";
 export async function getDmChannel(bot: Bot, userId: bigint) {
   if (userId === bot.id) throw new Error(bot.constants.Errors.YOU_CAN_NOT_DM_THE_BOT_ITSELF);
 
-  const dmChannelData = await bot.rest.runMethod<DiscordChannel>(bot.rest, "post", bot.constants.endpoints.USER_DM, {
+  const dmChannelData = await bot.rest.runMethod<DiscordChannel>(bot.rest, "post", bot.constants.endpoints.USER_DM(), {
     recipient_id: userId.toString(),
   });
 

@@ -16,7 +16,7 @@ export async function editFollowupMessage(
     bot.constants.endpoints.WEBHOOK_MESSAGE(bot.applicationId, interactionToken, messageId),
     {
       content: options.content,
-      embeds: options.embeds,
+      embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
       file: options.file,
       allowed_mentions: options.allowedMentions
         ? {
@@ -39,27 +39,27 @@ export async function editFollowupMessage(
       })),
       components: options.components?.map((component) => ({
         type: component.type,
-        components: component.components.map((subcomponent) => {
-          if (subcomponent.type === MessageComponentTypes.InputText) {
+        components: component.components.map((subComponent) => {
+          if (subComponent.type === MessageComponentTypes.InputText) {
             return {
-              type: subcomponent.type,
-              style: subcomponent.style,
-              custom_id: subcomponent.customId,
-              label: subcomponent.label,
-              placeholder: subcomponent.placeholder,
-              min_length: subcomponent.minLength ?? subcomponent.required === false ? 0 : subcomponent.minLength,
-              max_length: subcomponent.maxLength,
+              type: subComponent.type,
+              style: subComponent.style,
+              custom_id: subComponent.customId,
+              label: subComponent.label,
+              placeholder: subComponent.placeholder,
+              min_length: subComponent.minLength ?? subComponent.required === false ? 0 : subComponent.minLength,
+              max_length: subComponent.maxLength,
             };
           }
 
-          if (subcomponent.type === MessageComponentTypes.SelectMenu) {
+          if (subComponent.type === MessageComponentTypes.SelectMenu) {
             return {
-              type: subcomponent.type,
-              custom_id: subcomponent.customId,
-              placeholder: subcomponent.placeholder,
-              min_values: subcomponent.minValues,
-              max_values: subcomponent.maxValues,
-              options: subcomponent.options.map((option) => ({
+              type: subComponent.type,
+              custom_id: subComponent.customId,
+              placeholder: subComponent.placeholder,
+              min_values: subComponent.minValues,
+              max_values: subComponent.maxValues,
+              options: subComponent.options.map((option) => ({
                 label: option.label,
                 value: option.value,
                 description: option.description,
@@ -76,19 +76,19 @@ export async function editFollowupMessage(
           }
 
           return {
-            type: subcomponent.type,
-            custom_id: subcomponent.customId,
-            label: subcomponent.label,
-            style: subcomponent.style,
-            emoji: subcomponent.emoji
+            type: subComponent.type,
+            custom_id: subComponent.customId,
+            label: subComponent.label,
+            style: subComponent.style,
+            emoji: subComponent.emoji
               ? {
-                id: subcomponent.emoji.id?.toString(),
-                name: subcomponent.emoji.name,
-                animated: subcomponent.emoji.animated,
+                id: subComponent.emoji.id?.toString(),
+                name: subComponent.emoji.name,
+                animated: subComponent.emoji.animated,
               }
               : undefined,
-            url: subcomponent.url,
-            disabled: subcomponent.disabled,
+            url: subComponent.url,
+            disabled: subComponent.disabled,
           };
         }),
       })),

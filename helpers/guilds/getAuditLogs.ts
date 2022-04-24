@@ -4,21 +4,27 @@ import { AuditLogEvents } from "../../types/shared.ts";
 
 /** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
 export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuildAuditLog) {
-  if (options?.userId) options.userId = options.userId.toString();
-  if (options?.before) options.before = options.before.toString();
   if (options?.limit) options.limit = options.limit >= 1 && options.limit <= 100 ? options.limit : 50;
 
+  let url = bot.constants.endpoints.GUILD_AUDIT_LOGS(guildId);
+  if (options) {
+    url += "?";
+
+    if (options.actionType) url += `action_type=${options.actionType}`;
+    if (options.before) url += `&before=${options.before}`;
+    if (options.limit) url += `&limit=${options.limit}`;
+    if (options.userId) url += `&user_id=${options.userId}`;
+  }
   const auditlog = await bot.rest.runMethod<DiscordAuditLog>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_AUDIT_LOGS(guildId),
-    options,
+    url,
   );
 
   return {
     users: auditlog.users.map((user) => bot.transformers.user(bot, user)),
     webhook: auditlog.webhooks.map((hook) => bot.transformers.webhook(bot, hook)),
-    auditLogEntries: auditlog.audit_log_entries.map((entry) => bot.transformers.auditlogEntry(bot, entry)),
+    auditLogEntries: auditlog.audit_log_entries.map((entry) => bot.transformers.auditLogEntry(bot, entry)),
     integrations: auditlog.integrations.map((integration) => ({
       id: integration.id ? bot.transformers.snowflake(integration.id) : undefined,
       name: integration.name,
@@ -43,7 +49,6 @@ export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuild
           name: integration.application.name,
           icon: integration.application.icon ? bot.utils.iconHashToBigInt(integration.application.icon) : undefined,
           description: integration.application.description,
-          summary: integration.application.summary,
           bot: integration.application.bot ? bot.transformers.user(bot, integration.application.bot) : undefined,
         }
         : undefined,

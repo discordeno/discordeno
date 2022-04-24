@@ -9,9 +9,10 @@ on:
       - "rest/**"
       - "tests/**"
       - "transformers/**"
+      - "template/**"
       - "types/**"
       - "util/**"
-      - "ws/**"
+      - "gateway/**"
 
 jobs:
   test:
@@ -27,6 +28,8 @@ jobs:
           deno-version: ${{ matrix.deno }}
       - name: Cache dependencies
         run: deno cache mod.ts
+      - name: Cache Templates
+        run: deno cache template/beginner/mod.ts template/bigbot/src/bot/mod.ts template/bigbot/src/gateway/mod.ts template/bigbot/src/rest/mod.ts template/minimal/mod.ts
       - name: Run test script for maintainers
         if: ${{ github.actor == 'Skillz4Killz' || github.actor == 'itohatweb' }}
         run: deno test --unstable --coverage=coverage -A tests/mod.ts

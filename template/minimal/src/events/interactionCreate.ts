@@ -4,8 +4,8 @@ import {
   bgYellow,
   black,
   BotWithCache,
-  DiscordenoGuild,
   green,
+  Guild,
   red,
   white,
   yellow,
@@ -22,7 +22,7 @@ events.interactionCreate = async (rawBot, interaction) => {
 
   if (interaction.data && interaction.id) {
     let guildName = "Direct Message";
-    let guild = {} as DiscordenoGuild;
+    let guild = {} as Guild;
 
     // Set guild, if there was an error getting the guild, then just say it was a DM. (What else are we going to do?)
     if (interaction.guildId) {
@@ -200,7 +200,7 @@ events.interactionCreate = async (rawBot, interaction) => {
     // Check if command has execute
     if (!cmd.execute) {
       logger.error(`Command ${cmdName} is missing execute.`);
-      sendBasicReponse(data.id, data.token, "This command is not configured to be executed.");
+      sendBasicResponse(data.id, data.token, "This command is not configured to be executed.");
       return;
     }
 

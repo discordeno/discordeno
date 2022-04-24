@@ -16,11 +16,19 @@ export async function getReactions(
     reaction = reaction.substring(3, reaction.length - 1);
   }
 
+  let url = bot.constants.endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, encodeURIComponent(reaction));
+
+  if (options) {
+    url += "?";
+
+    if (options.after) url += `after=${options.after}`;
+    if (options.limit) url += `&limit=${options.limit}`;
+  }
+
   const users = await bot.rest.runMethod<DiscordUser[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.CHANNEL_MESSAGE_REACTION(channelId, messageId, encodeURIComponent(reaction)),
-    options,
+    url,
   );
 
   return new Collection(users.map((u) => {

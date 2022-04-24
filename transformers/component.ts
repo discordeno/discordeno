@@ -66,7 +66,7 @@ export interface Component {
   url?: string;
   /** The choices! Maximum of 25 items. */
   options?: SelectOption[];
-  /** A custom placeholder text if nothing is selected. Maximum 100 characters. */
+  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string;
   /** The minimum number of items that must be selected. Default 1. Between 1-25. */
   minValues?: number;

@@ -4,15 +4,16 @@ import {
   bgMagenta,
   bgYellow,
   black,
-  DiscordenoInteraction,
   green,
+  Interaction,
   InteractionResponseTypes,
   red,
+  sendPrivateInteractionResponse,
   white,
 } from "../../../../deps.ts";
 import logger from "../../../../src/utils/logger.ts";
 import { optionParser, translateOptionNames } from "../../../utils/options.ts";
-import { replyToInteraction } from "../../../utils/replies.ts";
+import { privateReplyToInteraction, replyToInteraction } from "../../../utils/replies.ts";
 import slashLogWebhook from "../../../utils/slashWebhook.ts";
 import { BotClient } from "../../botClient.ts";
 import { loadLanguage, serverLanguages, translate } from "../../languages/translate.ts";
@@ -20,7 +21,7 @@ import { Command, ConvertArgumentDefinitionsToArgs } from "../../types/command.t
 import commands from "./mod.ts";
 
 function logCommand(
-  info: DiscordenoInteraction,
+  info: Interaction,
   type: "Failure" | "Success" | "Trigger" | "Slowmode" | "Missing" | "Inhibit",
   commandName: string,
 ) {
@@ -32,7 +33,7 @@ function logCommand(
 
   const user = bgGreen(
     black(
-      `${info.user.username}#${info.user.discriminator.toString().padStart(4, "0")}(${info.id})`,
+      `${info.user.username}#${info.user.discriminator}(${info.id})`,
     ),
   );
   const guild = bgMagenta(
@@ -44,7 +45,7 @@ function logCommand(
 
 export async function executeSlashCommand(
   bot: BotClient,
-  interaction: DiscordenoInteraction,
+  interaction: Interaction,
 ) {
   const data = interaction.data;
   const name = data?.name as keyof typeof commands;
@@ -54,18 +55,16 @@ export async function executeSlashCommand(
 
   // Command could not be found
   if (!command?.execute) {
-    return await bot.helpers
-      .sendInteractionResponse(interaction.id, interaction.token, {
-        type: InteractionResponseTypes.ChannelMessageWithSource,
-        private: true,
-        data: {
-          content: translate(
-            bot,
-            interaction.guildId!,
-            "EXECUTE_COMMAND_NOT_FOUND",
-          ),
-        },
-      })
+    return await sendPrivateInteractionResponse(bot, interaction.id, interaction.token, {
+      type: InteractionResponseTypes.ChannelMessageWithSource,
+      data: {
+        content: translate(
+          bot,
+          interaction.guildId!,
+          "EXECUTE_COMMAND_NOT_FOUND",
+        ),
+      },
+    })
       .catch(logger.error);
   }
 
@@ -75,7 +74,7 @@ export async function executeSlashCommand(
 
     // Load the language for this guild
     if (interaction.guildId && !serverLanguages.has(interaction.guildId)) {
-      // TODO: Check if this is deferable
+      // TODO: Check if this is deferrable
       await replyToInteraction(bot, interaction, {
         type: InteractionResponseTypes.DeferredChannelMessageWithSource,
       });
@@ -111,9 +110,8 @@ export async function executeSlashCommand(
     console.error(error);
     logCommand(interaction, "Failure", name);
     await slashLogWebhook(bot, interaction, name).catch(logger.error);
-    return await replyToInteraction(bot, interaction, {
+    return await privateReplyToInteraction(bot, interaction, {
       content: translate(bot, interaction.id, "EXECUTE_COMMAND_ERROR"),
-      private: true,
     }).catch(logger.error);
   }
 }

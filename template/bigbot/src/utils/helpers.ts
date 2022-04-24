@@ -1,12 +1,12 @@
-import { DiscordenoUser } from "../../deps.ts";
+import { User } from "../../deps.ts";
 import { Milliseconds } from "../constants/milliseconds.ts";
 
 export function chooseRandom<T>(array: T[]) {
   return array[Math.floor(Math.random() * array.length)]!;
 }
 
-export function getUserTag(user: DiscordenoUser) {
-  return `${user.username}#${user.discriminator.toString().padStart(4, "0")}`;
+export function getUserTag(user: User) {
+  return `${user.username}#${user.discriminator}`;
 }
 
 export function toTitleCase(text: string) {
@@ -117,12 +117,12 @@ export function stringToMilliseconds(text: string) {
 export function chunkStrings(
   array: string[],
   size = 2000,
-  lineSeperator = "\n",
+  lineSeparator = "\n",
 ) {
   const responses: string[] = [];
   let response = "";
   for (const text of array) {
-    const nextText = response.length && lineSeperator ? `${lineSeperator}${text}` : text;
+    const nextText = response.length && lineSeparator ? `${lineSeparator}${text}` : text;
     if (response.length + nextText.length >= size) {
       responses.push(response);
       response = "";

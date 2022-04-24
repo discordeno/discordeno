@@ -1,5 +1,10 @@
 import type { Bot } from "../../../bot.ts";
-import { makeOptionsForCommand } from "./createApplicationCommand.ts";
+import {
+  CreateApplicationCommand,
+  CreateContextApplicationCommand,
+  isContextApplicationCommand,
+  makeOptionsForCommand,
+} from "./createApplicationCommand.ts";
 import { DiscordApplicationCommand } from "../../../types/discord.ts";
 import { ApplicationCommandOption } from "../../../transformers/applicationCommandOption.ts";
 import { ApplicationCommandTypes } from "../../../types/shared.ts";
@@ -10,7 +15,7 @@ import { ApplicationCommandTypes } from "../../../types/shared.ts";
 export async function upsertApplicationCommand(
   bot: Bot,
   commandId: bigint,
-  options: EditGlobalApplicationCommand,
+  options: CreateApplicationCommand | CreateContextApplicationCommand,
   guildId?: bigint,
 ) {
   const result = await bot.rest.runMethod<DiscordApplicationCommand>(
@@ -19,27 +24,18 @@ export async function upsertApplicationCommand(
     guildId
       ? bot.constants.endpoints.COMMANDS_GUILD_ID(bot.applicationId, guildId, commandId)
       : bot.constants.endpoints.COMMANDS_ID(bot.applicationId, commandId),
-    {
-      name: options.name,
-      description: options.description,
-      type: options.type,
-      options: options.options ? makeOptionsForCommand(options.options) : undefined,
-    },
+    isContextApplicationCommand(options)
+      ? {
+        name: options.name,
+        type: options.type,
+      }
+      : {
+        name: options.name,
+        description: options.description,
+        type: options.type,
+        options: options.options ? makeOptionsForCommand(options.options) : undefined,
+      },
   );
 
   return bot.transformers.applicationCommand(bot, result);
-}
-
-/** https://discord.com/developers/docs/interactions/slash-commands#edit-global-application-command-json-params */
-export interface EditGlobalApplicationCommand {
-  /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
-  name?: string;
-  /** 1-100 character description */
-  description?: string;
-  /** The type of the command */
-  type?: ApplicationCommandTypes;
-  /** The parameters for the command */
-  options?: ApplicationCommandOption[] | null;
-  /** Whether the command is enabled by default when the app is added to a guild. Default: true */
-  defaultPermission?: boolean;
 }

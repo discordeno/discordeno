@@ -1,6 +1,18 @@
 import { RestManager } from "../bot.ts";
 import { API_VERSION, BASE_URL, IMAGE_BASE_URL } from "../util/constants.ts";
+import { RestRequestRejection, RestRequestResponse } from "./rest.ts";
 
+export async function runMethod<T = any>(
+  rest: RestManager,
+  method: "get",
+  url: string,
+): Promise<T>;
+export async function runMethod<T = any>(
+  rest: RestManager,
+  method: "post" | "put" | "delete" | "patch",
+  url: string,
+  body?: unknown,
+): Promise<T>;
 export async function runMethod<T = any>(
   rest: RestManager,
   method: "get" | "post" | "put" | "delete" | "patch",
@@ -18,7 +30,7 @@ export async function runMethod<T = any>(
   );
 
   const errorStack = new Error("Location:");
-  // @ts-ignore Breaks deno deploy. Luca said add tsignore until it's fixed
+  // @ts-ignore Breaks deno deploy. Luca said add ts-ignore until it's fixed
   Error.captureStackTrace(errorStack);
 
   // For proxies we don't need to do any of the legwork so we just forward the request
@@ -52,11 +64,11 @@ export async function runMethod<T = any>(
       {
         url,
         method,
-        reject: (error: unknown) => {
-          errorStack.message = (error as Error)?.message;
+        reject: (data: RestRequestRejection) => {
+          errorStack.message = `[${data.status}] ${data.error}`;
           reject(errorStack);
         },
-        respond: (data: { status: number; body?: string }) =>
+        respond: (data: RestRequestResponse) =>
           resolve(data.status !== 204 ? JSON.parse(data.body ?? "{}") : (undefined as unknown as T)),
       },
       {

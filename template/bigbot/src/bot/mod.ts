@@ -8,7 +8,7 @@ import {
   REST_AUTHORIZATION_KEY,
   REST_PORT,
 } from "../../configs.ts";
-import { createBot, createRestManager, GatewayPayload, SnakeCasedPropertiesDeep } from "../../deps.ts";
+import { createBot, createRestManager, DiscordGatewayPayload } from "../../deps.ts";
 import logger from "../utils/logger.ts";
 import { updateDevCommands } from "../utils/updateSlash.ts";
 import { BotClient, setupBotClient } from "./botClient.ts";
@@ -36,7 +36,7 @@ if (DEVELOPMENT) {
   logger.info(`[DEV MODE] Updating slash commands for dev server.`);
   await updateDevCommands(bot);
 } else {
-  // THIS WILL UPDATE ALL YOUR GLOBAL COMMANDS ON BOOTUP
+  // THIS WILL UPDATE ALL YOUR GLOBAL COMMANDS ON STARTUP
   // await updateGlobalCommands(bot);
 }
 
@@ -80,14 +80,14 @@ async function handleRequest(conn: Deno.Conn) {
     }
 
     const json = (await requestEvent.request.json()) as {
-      data: SnakeCasedPropertiesDeep<GatewayPayload>;
+      data: DiscordGatewayPayload;
       shardId: number;
     };
     // EMITS RAW EVENT
     bot.events.raw(bot, json.data, json.shardId);
 
     if (json.data.t && json.data.t !== "RESUMED") {
-      // When a guild or something isnt in cache this will fetch it before doing anything else
+      // When a guild or something isn't in cache this will fetch it before doing anything else
       if (!["READY", "GUILD_LOADED_DD"].includes(json.data.t)) {
         await bot.events.dispatchRequirements(bot, json.data, json.shardId);
         // WE ALSO WANT TO UPDATE GUILD SLASH IF NECESSARY AT THIS POINT

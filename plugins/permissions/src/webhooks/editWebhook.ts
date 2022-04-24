@@ -4,8 +4,9 @@ import { requireBotChannelPermissions } from "../permissions.ts";
 export default function editWebhook(bot: BotWithCache) {
   const editWebhookOld = bot.helpers.editWebhook;
 
-  bot.helpers.editWebhook = async function (webhookId, options) {
+  bot.helpers.editWebhook = async function (webhookId, options, fromChannelId) {
     if (options.channelId) requireBotChannelPermissions(bot, options.channelId, ["MANAGE_WEBHOOKS"]);
+    if (fromChannelId) requireBotChannelPermissions(bot, fromChannelId, ["MANAGE_WEBHOOKS"]);
 
     if (options.name) {
       if (

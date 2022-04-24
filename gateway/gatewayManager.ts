@@ -46,7 +46,7 @@ export function createGatewayManager(
     url: options.url ?? "",
     reshard: options.reshard ?? true,
     reshardPercentage: options.reshardPercentage ?? 80,
-    spawnShardDelay: options.spawnShardDelay ?? 2600,
+    spawnShardDelay: options.spawnShardDelay ?? 5000,
     maxShards: options.maxShards ?? options.shardsRecommended ?? 0,
     useOptimalLargeBotSharding: options.useOptimalLargeBotSharding ?? true,
     shardsPerWorker: options.shardsPerWorker ?? 25,

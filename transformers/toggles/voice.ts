@@ -75,9 +75,8 @@ export class VoiceStateToggles extends ToggleBitfield {
 
   /** Lists all the toggles for the role and whether or not each is true or false. */
   list() {
-    const json = {};
+    const json: Record<string, boolean> = {};
     for (const [key, value] of Object.entries(VoiceStateToggle)) {
-      // @ts-ignore
       json[key] = super.contains(value);
     }
 

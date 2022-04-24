@@ -8,11 +8,13 @@ import {
   Message,
   Role,
   ScheduledEvent,
+  Template,
   transformChannel,
   transformGuild,
   transformMember,
   transformMessage,
   transformRole,
+  transformTemplate,
   transformUser,
   transformVoiceState,
   User,
@@ -34,7 +36,12 @@ import { delay, formatImageURL, hasProperty } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
 import { calculateShardId } from "./util/calculateShardId.ts";
 import * as handlers from "./handlers/mod.ts";
-import { Interaction, transformInteraction } from "./transformers/interaction.ts";
+import {
+  Interaction,
+  InteractionDataOption,
+  transformInteraction,
+  transformInteractionDataOption,
+} from "./transformers/interaction.ts";
 import { Integration, transformIntegration } from "./transformers/integration.ts";
 import { transformApplication } from "./transformers/application.ts";
 import { transformTeam } from "./transformers/team.ts";
@@ -48,7 +55,7 @@ import { transformAttachment } from "./transformers/attachment.ts";
 import { transformEmbed } from "./transformers/embed.ts";
 import { transformComponent } from "./transformers/component.ts";
 import { transformWebhook } from "./transformers/webhook.ts";
-import { transformAuditlogEntry } from "./transformers/auditlogEntry.ts";
+import { transformAuditLogEntry } from "./transformers/auditLogEntry.ts";
 import { transformApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
 import { calculateBits, calculatePermissions } from "./util/permissions.ts";
 import { transformScheduledEvent } from "./transformers/scheduledEvent.ts";
@@ -59,9 +66,17 @@ import { transformWelcomeScreen } from "./transformers/welcomeScreen.ts";
 import { transformVoiceRegion } from "./transformers/voiceRegion.ts";
 import { transformWidget } from "./transformers/widget.ts";
 import { transformStageInstance } from "./transformers/stageInstance.ts";
-import { transformSticker } from "./transformers/sticker.ts";
+import { StickerPack, transformSticker, transformStickerPack } from "./transformers/sticker.ts";
 import { GetGatewayBot, transformGatewayBot } from "./transformers/gatewayBot.ts";
-import { DiscordEmoji, DiscordGatewayPayload, DiscordReady } from "./types/discord.ts";
+import {
+  DiscordApplicationCommandOptionChoice,
+  DiscordEmoji,
+  DiscordGatewayPayload,
+  DiscordInteractionDataOption,
+  DiscordReady,
+  DiscordStickerPack,
+  DiscordTemplate,
+} from "./types/discord.ts";
 import { Errors, GatewayDispatchEventNames, GatewayIntents } from "./types/shared.ts";
 
 import {
@@ -105,7 +120,7 @@ import { Embed } from "./transformers/embed.ts";
 import { Webhook } from "./transformers/webhook.ts";
 import { Component } from "./transformers/component.ts";
 import { ApplicationCommand } from "./transformers/applicationCommand.ts";
-import { AuditLogEntry } from "./transformers/auditlogEntry.ts";
+import { AuditLogEntry } from "./transformers/auditLogEntry.ts";
 import { ApplicationCommandOption } from "./transformers/applicationCommandOption.ts";
 import { ApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
 import { WelcomeScreen } from "./transformers/welcomeScreen.ts";
@@ -113,6 +128,12 @@ import { VoiceRegions } from "./transformers/voiceRegion.ts";
 import { GuildWidget } from "./transformers/widget.ts";
 import { StageInstance } from "./transformers/stageInstance.ts";
 import { Sticker } from "./transformers/sticker.ts";
+import {
+  ApplicationCommandOptionChoice,
+  transformApplicationCommandOptionChoice,
+} from "./transformers/applicationCommandOptionChoice.ts";
+import { transformEmbedToDiscordEmbed } from "./transformers/reverse/embed.ts";
+import { transformComponentToDiscordComponent } from "./transformers/reverse/component.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -177,6 +198,7 @@ export function createEventHandlers(
     debug: events.debug ?? ignore,
     threadCreate: events.threadCreate ?? ignore,
     threadDelete: events.threadDelete ?? ignore,
+    threadMemberUpdate: events.threadMemberUpdate ?? ignore,
     threadMembersUpdate: events.threadMembersUpdate ?? ignore,
     threadUpdate: events.threadUpdate ?? ignore,
     scheduledEventCreate: events.scheduledEventCreate ?? ignore,
@@ -242,7 +264,7 @@ export async function startBot(bot: Bot) {
   bot.gateway.sessionStartLimitRemaining = bot.botGatewayData.sessionStartLimit.remaining;
   bot.gateway.sessionStartLimitResetAfter = bot.botGatewayData.sessionStartLimit.resetAfter;
   bot.gateway.maxConcurrency = bot.botGatewayData.sessionStartLimit.maxConcurrency;
-  bot.gateway.lastShardId = bot.botGatewayData.shards;
+  bot.gateway.lastShardId = bot.botGatewayData.shards === 1 ? 0 : bot.botGatewayData.shards - 1;
   bot.gateway.maxShards = bot.botGatewayData.shards;
 
   bot.gateway.spawnShards(bot.gateway);
@@ -343,6 +365,7 @@ export function createHelpers(
       ...createBaseHelpers(customHelpers || {}),
     })
   ) {
+    // @ts-ignore - TODO: make the types better
     converted[name as keyof FinalHelpers] = (
       // @ts-ignore - TODO: make the types better
       ...args: RemoveFirstFromTuple<Parameters<typeof fun>>
@@ -362,6 +385,10 @@ export function createBaseHelpers(options: Partial<Helpers>) {
 }
 
 export interface Transformers {
+  reverse: {
+    embed: (bot: Bot, payload: Embed) => DiscordEmbed;
+    component: (bot: Bot, payload: Component) => DiscordComponent;
+  };
   snowflake: (snowflake: string) => bigint;
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
   channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }) => Channel;
@@ -372,6 +399,7 @@ export interface Transformers {
   role: (bot: Bot, payload: { role: DiscordRole } & { guildId: bigint }) => Role;
   voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) => VoiceState;
   interaction: (bot: Bot, payload: DiscordInteraction) => Interaction;
+  interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption;
   integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration;
   invite: (bot: Bot, invite: DiscordInviteCreate) => Invite;
   application: (bot: Bot, payload: DiscordApplication) => Application;
@@ -383,7 +411,7 @@ export interface Transformers {
   embed: (bot: Bot, payload: DiscordEmbed) => Embed;
   component: (bot: Bot, payload: DiscordComponent) => Component;
   webhook: (bot: Bot, payload: DiscordWebhook) => Webhook;
-  auditlogEntry: (bot: Bot, payload: DiscordAuditLogEntry) => AuditLogEntry;
+  auditLogEntry: (bot: Bot, payload: DiscordAuditLogEntry) => AuditLogEntry;
   applicationCommand: (bot: Bot, payload: DiscordApplicationCommand) => ApplicationCommand;
   applicationCommandOption: (bot: Bot, payload: DiscordApplicationCommandOption) => ApplicationCommandOption;
   applicationCommandPermission: (
@@ -397,10 +425,20 @@ export interface Transformers {
   widget: (bot: Bot, payload: DiscordGuildWidget) => GuildWidget;
   stageInstance: (bot: Bot, payload: DiscordStageInstance) => StageInstance;
   sticker: (bot: Bot, payload: DiscordSticker) => Sticker;
+  stickerPack: (bot: Bot, payload: DiscordStickerPack) => StickerPack;
+  applicationCommandOptionChoice: (
+    bot: Bot,
+    payload: DiscordApplicationCommandOptionChoice,
+  ) => ApplicationCommandOptionChoice;
+  template: (bot: Bot, payload: DiscordTemplate) => Template;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
   return {
+    reverse: {
+      embed: options.reverse?.embed || transformEmbedToDiscordEmbed,
+      component: options.reverse?.component || transformComponentToDiscordComponent,
+    },
     activity: options.activity || transformActivity,
     application: options.application || transformApplication,
     attachment: options.attachment || transformAttachment,
@@ -411,6 +449,7 @@ export function createTransformers(options: Partial<Transformers>) {
     guild: options.guild || transformGuild,
     integration: options.integration || transformIntegration,
     interaction: options.interaction || transformInteraction,
+    interactionDataOptions: options.interactionDataOptions || transformInteractionDataOption,
     invite: options.invite || transformInvite,
     member: options.member || transformMember,
     message: options.message || transformMessage,
@@ -421,7 +460,7 @@ export function createTransformers(options: Partial<Transformers>) {
     voiceState: options.voiceState || transformVoiceState,
     snowflake: options.snowflake || snowflakeToBigint,
     webhook: options.webhook || transformWebhook,
-    auditlogEntry: options.auditlogEntry || transformAuditlogEntry,
+    auditLogEntry: options.auditLogEntry || transformAuditLogEntry,
     applicationCommand: options.applicationCommand ||
       transformApplicationCommand,
     applicationCommandOption: options.applicationCommandOption ||
@@ -435,7 +474,10 @@ export function createTransformers(options: Partial<Transformers>) {
     widget: options.widget || transformWidget,
     stageInstance: options.stageInstance || transformStageInstance,
     sticker: options.sticker || transformSticker,
+    stickerPack: options.stickerPack || transformStickerPack,
     gatewayBot: options.gatewayBot || transformGatewayBot,
+    applicationCommandOptionChoice: options.applicationCommandOptionChoice || transformApplicationCommandOptionChoice,
+    template: options.template || transformTemplate,
   };
 }
 
@@ -445,6 +487,12 @@ export interface EventHandlers {
   debug: (text: string, ...args: any[]) => unknown;
   threadCreate: (bot: Bot, thread: Channel) => unknown;
   threadDelete: (bot: Bot, thread: Channel) => unknown;
+  threadMemberUpdate: (bot: Bot, payload: {
+    id: bigint;
+    guildId: bigint;
+    joinedAt: number;
+    flags: number;
+  }) => unknown;
   threadMembersUpdate: (
     bot: Bot,
     payload: {
@@ -680,7 +728,6 @@ export interface BotGatewayHandlerOptions {
   THREAD_UPDATE: typeof handlers.handleThreadUpdate;
   THREAD_DELETE: typeof handlers.handleThreadDelete;
   THREAD_LIST_SYNC: typeof handlers.handleThreadListSync;
-  THREAD_MEMBER_UPDATE: typeof handlers.handleThreadMemberUpdate;
   THREAD_MEMBERS_UPDATE: typeof handlers.handleThreadMembersUpdate;
   STAGE_INSTANCE_CREATE: typeof handlers.handleStageInstanceCreate;
   STAGE_INSTANCE_UPDATE: typeof handlers.handleStageInstanceUpdate;
@@ -746,7 +793,6 @@ export function createBotGatewayHandlers(
     THREAD_UPDATE: options.THREAD_UPDATE ?? handlers.handleThreadUpdate,
     THREAD_DELETE: options.THREAD_DELETE ?? handlers.handleThreadDelete,
     THREAD_LIST_SYNC: options.THREAD_LIST_SYNC ?? handlers.handleThreadListSync,
-    THREAD_MEMBER_UPDATE: options.THREAD_MEMBER_UPDATE ?? handlers.handleThreadMemberUpdate,
     THREAD_MEMBERS_UPDATE: options.THREAD_MEMBERS_UPDATE ?? handlers.handleThreadMembersUpdate,
     STAGE_INSTANCE_CREATE: options.STAGE_INSTANCE_CREATE ??
       handlers.handleStageInstanceCreate,

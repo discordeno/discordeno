@@ -5,7 +5,7 @@ import { OverwriteReadable } from "./editChannelOverwrite.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(bot: Bot, guildId: bigint, options?: CreateGuildChannel, reason?: string) {
-  // BITRATES ARE IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
+  // BITRATE IS IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
   if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000;
 
   const result = await bot.rest.runMethod<DiscordChannel>(

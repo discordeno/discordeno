@@ -13,55 +13,7 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
     bot.constants.endpoints.CHANNEL_MESSAGE(channelId, messageId),
     {
       content: content.content,
-      embeds: content.embeds?.map((embed) => ({
-        title: embed.title,
-        type: embed.type,
-        description: embed.description,
-        url: embed.url,
-        timestamp: embed.timestamp ? new Date(embed.timestamp).toISOString() : undefined,
-        color: embed.color,
-        footer: embed.footer
-          ? {
-            text: embed.footer.text,
-            icon_url: embed.footer.iconUrl,
-            proxy_icon_url: embed.footer.proxyIconUrl,
-          }
-          : undefined,
-        image: embed.image
-          ? {
-            url: embed.image.url,
-            proxy_url: embed.image.proxyUrl,
-            height: embed.image.height,
-            width: embed.image.width,
-          }
-          : undefined,
-        thumbnail: embed.thumbnail
-          ? {
-            url: embed.thumbnail.url,
-            proxy_url: embed.thumbnail.proxyUrl,
-            height: embed.thumbnail.height,
-            width: embed.thumbnail.width,
-          }
-          : undefined,
-        video: embed.video
-          ? {
-            url: embed.video.url,
-            proxy_url: embed.video.proxyUrl,
-            height: embed.video.height,
-            width: embed.video.width,
-          }
-          : undefined,
-        provider: embed.provider,
-        author: embed.author
-          ? {
-            name: embed.author.name,
-            url: embed.author.url,
-            icon_url: embed.author.iconUrl,
-            proxy_icon_url: embed.author.proxyIconUrl,
-          }
-          : undefined,
-        fields: embed.fields,
-      })),
+      embeds: content.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
       allowed_mentions: {
         parse: content.allowedMentions?.parse,
         roles: content.allowedMentions?.roles?.map((id) => id.toString()),
@@ -81,27 +33,27 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
       file: content.file,
       components: content.components?.map((component) => ({
         type: component.type,
-        components: component.components.map((subcomponent) => {
-          if (subcomponent.type === MessageComponentTypes.InputText) {
+        components: component.components.map((subComponent) => {
+          if (subComponent.type === MessageComponentTypes.InputText) {
             return {
-              type: subcomponent.type,
-              style: subcomponent.style,
-              custom_id: subcomponent.customId,
-              label: subcomponent.label,
-              placeholder: subcomponent.placeholder,
-              min_length: subcomponent.minLength ?? subcomponent.required === false ? 0 : subcomponent.minLength,
-              max_length: subcomponent.maxLength,
+              type: subComponent.type,
+              style: subComponent.style,
+              custom_id: subComponent.customId,
+              label: subComponent.label,
+              placeholder: subComponent.placeholder,
+              min_length: subComponent.minLength ?? subComponent.required === false ? 0 : subComponent.minLength,
+              max_length: subComponent.maxLength,
             };
           }
 
-          if (subcomponent.type === MessageComponentTypes.SelectMenu) {
+          if (subComponent.type === MessageComponentTypes.SelectMenu) {
             return {
-              type: subcomponent.type,
-              custom_id: subcomponent.customId,
-              placeholder: subcomponent.placeholder,
-              min_values: subcomponent.minValues,
-              max_values: subcomponent.maxValues,
-              options: subcomponent.options.map((option) => ({
+              type: subComponent.type,
+              custom_id: subComponent.customId,
+              placeholder: subComponent.placeholder,
+              min_values: subComponent.minValues,
+              max_values: subComponent.maxValues,
+              options: subComponent.options.map((option) => ({
                 label: option.label,
                 value: option.value,
                 description: option.description,
@@ -118,19 +70,19 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
           }
 
           return {
-            type: subcomponent.type,
-            custom_id: subcomponent.customId,
-            label: subcomponent.label,
-            style: subcomponent.style,
-            emoji: "emoji" in subcomponent && subcomponent.emoji
+            type: subComponent.type,
+            custom_id: subComponent.customId,
+            label: subComponent.label,
+            style: subComponent.style,
+            emoji: "emoji" in subComponent && subComponent.emoji
               ? {
-                id: subcomponent.emoji.id?.toString(),
-                name: subcomponent.emoji.name,
-                animated: subcomponent.emoji.animated,
+                id: subComponent.emoji.id?.toString(),
+                name: subComponent.emoji.name,
+                animated: subComponent.emoji.animated,
               }
               : undefined,
-            url: "url" in subcomponent ? subcomponent.url : undefined,
-            disabled: "disabled" in subcomponent ? subcomponent.disabled : undefined,
+            url: "url" in subComponent ? subComponent.url : undefined,
+            disabled: "disabled" in subComponent ? subComponent.disabled : undefined,
           };
         }),
       })),
@@ -146,7 +98,7 @@ export interface EditMessage {
   content?: string | null;
   /** Embedded `rich` content (up to 6000 characters) */
   embeds?: Embed[] | null;
-  /** Edit the flags of the message (only `SUPRESS_EMBEDS` can currently be set/unset) */
+  /** Edit the flags of the message (only `SUPPRESS_EMBEDS` can currently be set/unset) */
   flags?: 4 | null;
   /** The contents of the file being sent/edited */
   file?: FileContent | FileContent[] | null;

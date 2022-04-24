@@ -1,6 +1,6 @@
 import type { Bot } from "../../../bot.ts";
-import { ApplicationCommandOption, ApplicationCommandTypes } from "../../../mod.ts";
-import { DiscordApplicationCommand } from "../../../types/discord.ts";
+import { ApplicationCommandOption, ApplicationCommandTypes, Localization } from "../../../mod.ts";
+import { DiscordApplicationCommand, DiscordApplicationCommandOption } from "../../../types/discord.ts";
 
 /**
  * There are two kinds of Application Commands: global commands and guild commands. Global commands are available for every guild that adds your app; guild commands are specific to the guild you specify when making them. Command names are unique per application within each scope (global and guild). That means:
@@ -13,32 +13,45 @@ import { DiscordApplicationCommand } from "../../../types/discord.ts";
  * Global commands are cached for **1 hour**. That means that new global commands will fan out slowly across all guilds, and will be guaranteed to be updated in an hour.
  * Guild commands update **instantly**. We recommend you use guild commands for quick testing, and global commands when they're ready for public use.
  */
-export async function createApplicationCommand(bot: Bot, options: CreateApplicationCommand, guildId?: bigint) {
+export async function createApplicationCommand(
+  bot: Bot,
+  options: CreateApplicationCommand | CreateContextApplicationCommand,
+  guildId?: bigint,
+) {
   const result = await bot.rest.runMethod<DiscordApplicationCommand>(
     bot.rest,
     "post",
     guildId
       ? bot.constants.endpoints.COMMANDS_GUILD(bot.applicationId, guildId)
       : bot.constants.endpoints.COMMANDS(bot.applicationId),
-    {
-      name: options.name,
-      description: options.description,
-      type: options.type,
-      options: options.options ? makeOptionsForCommand(options.options) : undefined,
-    },
+    isContextApplicationCommand(options)
+      ? { name: options.name, name_localizations: options.nameLocalizations, type: options.type }
+      : {
+        name: options.name,
+        name_localizations: options.nameLocalizations,
+        description: options.description,
+        description_localizations: options.descriptionLocalizations,
+        type: options.type,
+        options: options.options ? makeOptionsForCommand(options.options) : undefined,
+      },
   );
 
   return bot.transformers.applicationCommand(bot, result);
 }
 
-// @ts-ignore TODO: see if we can make this not circular
-export function makeOptionsForCommand(options: ApplicationCommandOption[]) {
+export function makeOptionsForCommand(options: ApplicationCommandOption[]): DiscordApplicationCommandOption[] {
   return options.map((option) => ({
     type: option.type,
     name: option.name,
+    name_localizations: option.nameLocalizations,
     description: option.description,
+    description_localizations: option.descriptionLocalizations,
     required: option.required,
-    choices: option.choices,
+    choices: option.choices?.map((choice) => ({
+      name: choice.name,
+      name_localizations: choice.nameLocalizations,
+      value: choice.value,
+    })),
     options: option.options ? makeOptionsForCommand(option.options) : undefined,
     channel_types: option.channelTypes,
     autocomplete: option.autocomplete,
@@ -47,14 +60,36 @@ export function makeOptionsForCommand(options: ApplicationCommandOption[]) {
   }));
 }
 
-/** https://discord.com/developers/docs/interactions/slash-commands#create-global-application-command-json-params */
+/** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
 export interface CreateApplicationCommand {
   /** 1-31 character name matching lowercase `^[\w-]{1,32}$` */
   name: string;
+  /** Localization object for the `name` field. Values follow the same restrictions as `name` */
+  nameLocalizations?: Localization;
   /** 1-100 character description */
   description: string;
+  /** Localization object for the `description` field. Values follow the same restrictions as `description` */
+  descriptionLocalizations?: Localization;
   /** The type of the command */
   type?: ApplicationCommandTypes;
   /** The parameters for the command */
   options?: ApplicationCommandOption[];
+  /** Whether the command is enabled by default when the app is added to a guild. Default: true */
+  defaultPermission?: boolean;
+}
+
+/** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
+export interface CreateContextApplicationCommand {
+  /** 1-31 character name matching lowercase `^[\w-]{1,32}$` */
+  name: string;
+  /** Localization object for the `name` field. Values follow the same restrictions as `name` */
+  nameLocalizations?: Localization;
+  /** The type of the command */
+  type: ApplicationCommandTypes.Message | ApplicationCommandTypes.User;
+}
+
+export function isContextApplicationCommand(
+  cmd: CreateContextApplicationCommand | CreateApplicationCommand,
+): cmd is CreateContextApplicationCommand {
+  return cmd.type === ApplicationCommandTypes.Message || cmd.type === ApplicationCommandTypes.User;
 }

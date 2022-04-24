@@ -2,10 +2,9 @@ import { Bot } from "../bot.ts";
 import { DiscordAuditLogEntry } from "../types/discord.ts";
 import { Optionalize } from "../types/shared.ts";
 
-export function transformAuditlogEntry(bot: Bot, payload: DiscordAuditLogEntry) {
-  const auditlogEntry = {
+export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry) {
+  const auditLogEntry = {
     id: bot.transformers.snowflake(payload.id),
-    // @ts-ignore TODO FIX THIS
     changes: payload.changes?.map((change) => {
       switch (change.key) {
         case "$add":
@@ -26,6 +25,7 @@ export function transformAuditlogEntry(bot: Bot, payload: DiscordAuditLogEntry) 
         case "rules_channel_id":
         case "public_updates_channel_id":
         case "icon_hash":
+        case "image_hash":
         case "splash_hash":
         case "owner_id":
         case "widget_channel_id":
@@ -62,7 +62,7 @@ export function transformAuditlogEntry(bot: Bot, payload: DiscordAuditLogEntry) 
         case "mfa_level":
         case "verification_level":
         case "explicit_content_filter":
-        case "default_messagae_notifications":
+        case "default_message_notifications":
         case "prune_delete_days":
         case "position":
         case "bitrate":
@@ -127,7 +127,7 @@ export function transformAuditlogEntry(bot: Bot, payload: DiscordAuditLogEntry) 
     reason: payload.reason,
   };
 
-  return auditlogEntry as Optionalize<typeof auditlogEntry>;
+  return auditLogEntry as Optionalize<typeof auditLogEntry>;
 }
 
-export interface AuditLogEntry extends ReturnType<typeof transformAuditlogEntry> {}
+export interface AuditLogEntry extends ReturnType<typeof transformAuditLogEntry> {}

@@ -1,7 +1,13 @@
 import { Bot } from "../../bot.ts";
-import { DiscordGatewayPayload } from "../../types/discord.ts";
+import { DiscordGatewayPayload, DiscordThreadMemberUpdate } from "../../types/discord.ts";
 
 export async function handleThreadMemberUpdate(bot: Bot, data: DiscordGatewayPayload) {
-  // This event is documented for completeness, but unlikely to be used by most bots
-  return;
+  const payload = data.d as DiscordThreadMemberUpdate;
+
+  bot.events.threadMemberUpdate(bot, {
+    id: bot.transformers.snowflake(payload.id),
+    guildId: bot.transformers.snowflake(payload.guild_id),
+    joinedAt: Date.parse(payload.joined_at),
+    flags: payload.flags,
+  });
 }
