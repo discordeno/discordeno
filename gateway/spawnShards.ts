@@ -45,7 +45,7 @@ export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
   }
 
   // PREPARES ALL SHARDS IN SPECIFIC BUCKETS
-  prepareBuckets(gateway, firstShardId, gateway.lastShardId ? gateway.lastShardId : gateway.maxShards);
+  prepareBuckets(gateway, firstShardId, gateway.lastShardId ? gateway.lastShardId + 1 : gateway.maxShards);
 
   // SPREAD THIS OUT TO DIFFERENT WORKERS TO BEGIN STARTING UP
   gateway.buckets.forEach(async (bucket, bucketId) => {
