@@ -9,7 +9,6 @@ export enum PremiumTypes {
 
 /** https://discord.com/developers/docs/resources/user#user-object-user-flags */
 export enum UserFlags {
-  None,
   DiscordEmployee = 1 << 0,
   PartneredServerOwner = 1 << 1,
   HypeSquadEventsMember = 1 << 2,
