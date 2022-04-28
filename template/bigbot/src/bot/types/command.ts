@@ -188,11 +188,11 @@ export type ConvertArgumentDefinitionsToArgs<
   UnionToIntersection<
     {
       [P in keyof T]: T[P] extends StringOptionalArgumentDefinition<infer N> // STRING
-      ? {
-        [_ in getName<N>]?: T[P]["choices"] extends readonly { name: string; value: string }[] ? // @ts-ignore ts being dumb
-        T[P]["choices"][number]["value"]
-          : string;
-      }
+        ? {
+          [_ in getName<N>]?: T[P]["choices"] extends readonly { name: string; value: string }[] ? // @ts-ignore ts being dumb
+          T[P]["choices"][number]["value"]
+            : string;
+        }
         : T[P] extends StringArgumentDefinition<infer N> ? {
           [_ in getName<N>]: T[P]["choices"] extends readonly { name: string; value: string }[] ? // @ts-ignore ts being dumb
           T[P]["choices"][number]["value"]
