@@ -110,7 +110,6 @@ export interface CreateForumMessage {
   embeds?: Embed[];
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions;
-  /** Include to make your message a reply */
   /** The contents of the file being sent */
   file?: FileContent | FileContent[];
   /** The components you would like to have sent in this message */
