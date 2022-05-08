@@ -54,10 +54,6 @@ export const GuildToggle = {
   monetizationEnabled: 1n << 22n,
   /** Whether the guild has increased custom sticker slots */
   moreStickers: 1n << 23n,
-  /** Whether the guild has access to the three day archive time for threads */
-  threeDayThreadArchive: 1n << 24n,
-  /** Whether the guild has access to the seven day archive time for threads */
-  sevenDayThreadArchive: 1n << 25n,
   /** Whether the guild has access to create private threads */
   privateThreads: 1n << 26n,
   /** Whether the guild is able to set role icons */
@@ -95,8 +91,6 @@ export class GuildToggles extends ToggleBitfieldBigint {
     if (guild.features.includes(GuildFeatures.TicketedEventsEnabled)) this.add(GuildToggle.ticketedEventsEnabled);
     if (guild.features.includes(GuildFeatures.MonetizationEnabled)) this.add(GuildToggle.monetizationEnabled);
     if (guild.features.includes(GuildFeatures.MoreStickers)) this.add(GuildToggle.moreStickers);
-    if (guild.features.includes(GuildFeatures.ThreeDayThreadArchive)) this.add(GuildToggle.threeDayThreadArchive);
-    if (guild.features.includes(GuildFeatures.SevenDayThreadArchive)) this.add(GuildToggle.sevenDayThreadArchive);
     if (guild.features.includes(GuildFeatures.PrivateThreads)) this.add(GuildToggle.privateThreads);
     if (guild.features.includes(GuildFeatures.RoleIcons)) this.add(GuildToggle.roleIcons);
   }
@@ -202,14 +196,7 @@ export class GuildToggles extends ToggleBitfieldBigint {
   get moreStickers() {
     return this.has("moreStickers");
   }
-  /** Whether the guild has access to the three day archive time for threads */
-  get threeDayThreadArchive() {
-    return this.has("threeDayThreadArchive");
-  }
-  /** Whether the guild has access to the seven day archive time for threads */
-  get sevenDayThreadArchive() {
-    return this.has("sevenDayThreadArchive");
-  }
+
   /** Whether the guild has access to create private threads */
   get privateThreads() {
     return this.has("privateThreads");
