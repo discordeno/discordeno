@@ -11,6 +11,7 @@ import { runMethod } from "./runMethod.ts";
 import { simplifyUrl } from "./simplifyUrl.ts";
 import { baseEndpoints } from "../util/constants.ts";
 import { API_VERSION } from "../util/constants.ts";
+import { removeTokenPrefix } from "../util/token.ts";
 
 export function createRestManager(options: CreateRestManagerOptions) {
   const version = options.version || API_VERSION;
@@ -34,7 +35,7 @@ export function createRestManager(options: CreateRestManagerOptions) {
     invalidRequestFrozenAt: 0,
     invalidRequestErrorStatuses: [401, 403, 429],
     version,
-    token: options.token,
+    token: removeTokenPrefix(options.token),
     maxRetryCount: options.maxRetryCount || 10,
     secretKey: options.secretKey || "discordeno_best_lib_ever",
     customUrl: options.customUrl || "",
