@@ -1,4 +1,4 @@
-export const CACHED_COMMUNITY_GUILD_ID = 907350958810480671n;
+export const CACHED_COMMUNITY_GUILD_ID = Deno.env.get("UNIT_TEST_GUILD_ID") ?? 907350958810480671n;
 
 export function delayUntil(
   maxMs: number,
