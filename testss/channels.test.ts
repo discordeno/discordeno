@@ -4,6 +4,21 @@ import { loadBot } from "./mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "./utils.ts";
 
 Deno.test({
+  name: "[channel] Get a channel",
+  async fn(t) {
+    const bot = loadBot();
+    const channel = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, {
+      name: "fetching",
+    });
+
+    const fetched = await bot.helpers.getChannel(channel.id);
+    assertExists(fetched);
+    assertEquals(channel.id, fetched.id);
+    assertEquals(channel.name, fetched.name);
+  },
+});
+
+Deno.test({
   name: "[channel] delete a channel without a reason",
   async fn(t) {
     const bot = loadBot();
