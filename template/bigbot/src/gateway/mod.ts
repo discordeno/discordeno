@@ -73,9 +73,6 @@ async function startGateway() {
         {
           name: `w-${workerId}-b${bucketId}`,
           type: "module",
-          deno: {
-            namespace: true,
-          },
         },
       );
       workers.set(workerId, worker);
