@@ -7,7 +7,7 @@ on:
       - "helpers/**"
       - "plugins/**"
       - "rest/**"
-      - "tests/**"
+      - "testss/**"
       - "transformers/**"
       - "template/**"
       - "types/**"
