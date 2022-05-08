@@ -205,10 +205,6 @@ export enum GuildFeatures {
   MonetizationEnabled = "MONETIZATION_ENABLED",
   /** Guild has increased custom sticker slots */
   MoreStickers = "MORE_STICKERS",
-  /** Guild has access to the three day archive time for threads */
-  ThreeDayThreadArchive = "THREE_DAY_THREAD_ARCHIVE",
-  /** Guild has access to the seven day archive time for threads */
-  SevenDayThreadArchive = "SEVEN_DAY_THREAD_ARCHIVE",
   /** Guild has access to create private threads */
   PrivateThreads = "PRIVATE_THREADS",
   /** Guild is able to set role icons */
