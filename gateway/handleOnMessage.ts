@@ -26,7 +26,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
   if (typeof message !== "string") return;
 
   const shard = gateway.shards.get(shardId);
-  
+
   if (shard) {
     // Edge case for big bots when too many events that 45 seconds are not enough for receving the heartbeat ack. As long as we are receving events no point in closing a connection.
     shard.heartbeat.acknowledged = true;
