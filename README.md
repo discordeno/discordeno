@@ -133,6 +133,7 @@ these awesome official and unofficial templates:
 
 - [Discordeno Template (official)](https://github.com/discordeno/discordeno/tree/main/template)
 - [Serverless Slash Commands Template (official)](https://github.com/discordeno/serverless-deno-deploy-template)
+- [`create-discordeno-bot` (WIP, unoffical)](https://github.com/Reboot-Codes/create-discordeno-bot/)
 - [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
 
 ### Frameworks

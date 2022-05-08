@@ -26,6 +26,11 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
   if (typeof message !== "string") return;
 
   const shard = gateway.shards.get(shardId);
+  
+  if (shard) {
+    // Edge case for big bots when too many events that 45 seconds are not enough for receving the heartbeat ack. As long as we are receving events no point in closing a connection.
+    shard.heartbeat.acknowledged = true;
+  }
 
   const messageData = JSON.parse(message) as DiscordGatewayPayload;
   gateway.debug("GW RAW", { shardId, payload: messageData });
@@ -52,8 +57,7 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
       if (shard) shard.safeRequestsPerShard = gateway.safeRequestsPerShard(gateway, shard);
       break;
     case GatewayOpcodes.HeartbeatACK:
-      if (gateway.shards.has(shardId)) {
-        const shard = gateway.shards.get(shardId)!;
+      if (shard) {
         shard.heartbeat.acknowledged = true;
         shard.heartbeat.lastReceivedAt = Date.now();
       }

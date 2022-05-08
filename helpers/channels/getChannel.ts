@@ -9,8 +9,11 @@ export async function getChannel(bot: Bot, channelId: bigint) {
     bot.constants.endpoints.CHANNEL_BASE(channelId),
   );
 
-  return bot.transformers.channel(bot, {
-    channel: result,
-    guildId: result.guild_id ? bot.transformers.snowflake(result.guild_id) : undefined,
-  });
+  // IF A CHANNEL DOESN'T EXIST, DISCORD RETURNS `{}`
+  return result.id
+    ? bot.transformers.channel(bot, {
+      channel: result,
+      guildId: result.guild_id ? bot.transformers.snowflake(result.guild_id) : undefined,
+    })
+    : undefined;
 }
