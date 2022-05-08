@@ -5,5 +5,5 @@ export function removeTokenPrefix(token?: string, type: "GATEWAY" | "REST" = "RE
   // If the token does not have a prefix just return token
   if (!token.startsWith("Bot ")) return token;
   // Remove the prefix and return only the token.
-  return token.substring(0, token.indexOf(" ") + 1);
+  return token.substring(token.indexOf(" ") + 1);
 }
