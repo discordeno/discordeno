@@ -134,12 +134,13 @@ import {
 } from "./transformers/applicationCommandOptionChoice.ts";
 import { transformEmbedToDiscordEmbed } from "./transformers/reverse/embed.ts";
 import { transformComponentToDiscordComponent } from "./transformers/reverse/component.ts";
+import { removeTokenPrefix } from "./util/token.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
     id: options.botId,
     applicationId: options.applicationId || options.botId,
-    token: options.token,
+    token: removeTokenPrefix(options.token),
     events: createEventHandlers(options.events),
     intents: options.intents.reduce(
       (bits, next) => (bits |= GatewayIntents[next]),
