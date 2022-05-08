@@ -1,4 +1,4 @@
-import { assertEquals, assertExists, assertThrows, assertThrowsAsync } from "../deps.ts";
+import { assertEquals, assertExists } from "../deps.ts";
 import { loadBot } from "../mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../utils.ts";
 
