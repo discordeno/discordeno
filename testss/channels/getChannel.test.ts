@@ -14,5 +14,7 @@ Deno.test({
     assertExists(fetched);
     assertEquals(channel.id, fetched.id);
     assertEquals(channel.name, fetched.name);
+
+    await bot.helpers.deleteChannel(channel.id);
   },
 });
