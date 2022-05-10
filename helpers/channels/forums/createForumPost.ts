@@ -2,8 +2,6 @@ import type { Bot } from "../../../bot.ts";
 import { DiscordChannel } from "../../../types/discord.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../../types/mod.ts";
 import { Embed } from "../../../transformers/embed.ts";
-import { DiscordMessage } from "../../../types/discord.ts";
-import { MessageComponentTypes } from "../../../types/shared.ts";
 
 /** Creates a new public thread from an existing message. Returns a thread channel. */
 export async function createForumPost(
