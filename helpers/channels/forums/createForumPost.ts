@@ -9,7 +9,7 @@ import { MessageComponentTypes } from "../../../types/shared.ts";
 export async function createForumPost(
   bot: Bot,
   channelId: bigint,
-  options: createForumPostWithMessage,
+  options: CreateForumPostWithMessage,
 ) {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
