@@ -38,7 +38,7 @@ export async function createForumPost(
   return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(result.guild_id!) });
 }
 
-export interface createForumPostWithMessage extends CreateForumMessage {
+export interface CreateForumPostWithMessage extends CreateForumMessage {
   /** 1-100 character thread name */
   name: string;
   /** Duration in minutes to automatically archive the thread after recent activity */
