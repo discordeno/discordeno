@@ -29,7 +29,7 @@ export async function createForumPost(
         }
         : undefined,
       file: options.file,
-      components: options.components?.map((component) => bot.transformers.reverse.component(component)),
+      components: options.components?.map((component) => bot.transformers.reverse.component(bot, component)),
     }
   );
 
