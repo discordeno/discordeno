@@ -1,5 +1,4 @@
 import { createBot, createRestManager, runMethod } from "../mod.ts";
-import enableCachePlugin from "../plugins/cache/mod.ts";
 import { dotenv } from "./deps.ts";
 
 dotenv({ export: true, path: `${Deno.cwd()}/.env` });
@@ -9,12 +8,12 @@ export function loadBot() {
   if (!token) throw new Error("Token was not provided.");
 
   const botId = BigInt(atob(token.split(".")[0]));
-  const bot = enableCachePlugin(createBot({
+  const bot = createBot({
     events: {},
     intents: [],
     botId,
     token,
-  }));
+  });
 
   bot.rest = createRestManager({
     token,
