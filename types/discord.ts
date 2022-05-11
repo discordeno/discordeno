@@ -955,7 +955,10 @@ export interface DiscordMessage {
   id: string;
   /** id of the channel the message was sent in */
   channel_id: string;
-  /** id of the guild the message was sent in */
+  /**
+   * id of the guild the message was sent in
+   * Note: For MESSAGE_CREATE and MESSAGE_UPDATE events, the message object may not contain a guild_id or member field since the events are sent directly to the receiving user and the bot who sent the message, rather than being sent through the guild like non-ephemeral messages.
+   */
   guild_id?: string;
   /**
    * The author of this message (not guaranteed to be a valid user)
