@@ -1629,6 +1629,8 @@ export interface DiscordInviteStageInstance {
 export interface DiscordApplicationCommand {
   /** Unique id of the command */
   id: string;
+  /** The type of command. By default this is a application command(ChatInput). */
+  type?: ApplicationCommandTypes;
   /** Unique id of the parent application */
   application_id: string;
   /** Guild id of the command, if not global */
@@ -1636,17 +1638,15 @@ export interface DiscordApplicationCommand {
   /** 1-32 character name matching */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  name_localizations?: Localization;
+  name_localizations?: Localization | null;
   /** 1-100 character description */
   description: string;
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-  description_localizations?: Localization;
+  description_localizations?: Localization | null;
   /** The parameters for the command */
   options?: DiscordApplicationCommandOption[];
   /** Whether the command is enabled by default when the app is added to a guild */
   default_permission?: boolean;
-  /** The type of command. By default this is a application command(ChatInput). */
-  type?: ApplicationCommandTypes;
   /** Auto incrementing version identifier updated during substantial record changes */
   version: string;
 }
@@ -1658,11 +1658,11 @@ export interface DiscordApplicationCommandOption {
   /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  name_localizations?: Localization;
+  name_localizations?: Localization | null;
   /** 1-100 character description */
   description: string;
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-  description_localizations?: Localization;
+  description_localizations?: Localization | null;
   /** If the parameter is required or optional--default `false` */
   required?: boolean;
   /** Choices for `string` and `int` types for the user to pick from */
@@ -1684,7 +1684,7 @@ export interface DiscordApplicationCommandOptionChoice {
   /** 1-100 character choice name */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  name_localizations?: Localization;
+  name_localizations?: Localization | null;
   /** Value of the choice, up to 100 characters if string */
   value: string | number;
 }
