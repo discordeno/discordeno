@@ -1542,7 +1542,7 @@ export interface DiscordScheduledEvent {
   /** the number of users subscribed to the scheduled event */
   user_count?: number;
   /** the cover image hash of the scheduled event */
-  image: string | null;
+  image?: string | null;
 }
 
 export interface DiscordScheduledEventEntityMetadata {

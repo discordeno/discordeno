@@ -47,11 +47,11 @@ export interface EditScheduledEvent {
   /** the channel id of the scheduled event. null if switching to external event. */
   channelId: bigint | null;
   /** location of the event */
-  location: string;
+  location?: string;
   /** the name of the scheduled event */
   name: string;
   /** the description of the scheduled event */
-  description: string;
+  description?: string;
   /** the time the scheduled event will start */
   scheduledStartTime: number;
   /** the time the scheduled event will end if it does end. */
