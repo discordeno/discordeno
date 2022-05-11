@@ -2218,3 +2218,10 @@ export interface DiscordVoiceRegion {
   /** Whether this is a custom voice region (used for events/etc) */
   custom: boolean;
 }
+
+export interface DiscordGuildWidgetSettings {
+  /** whether the widget is enabled */
+  enabled: boolean;
+  /** the widget channel id */
+  channel_id: string | null;
+}

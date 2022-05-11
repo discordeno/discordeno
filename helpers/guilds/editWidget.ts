@@ -1,9 +1,9 @@
 import type { Bot } from "../../bot.ts";
-import { DiscordGuildWidget } from "../../types/discord.ts";
+import { DiscordGuildWidgetSettings } from "../../types/discord.ts";
 
 /** Modify a guild widget object for the guild. Requires the MANAGE_GUILD permission. */
 export async function editWidget(bot: Bot, guildId: bigint, enabled: boolean, channelId?: string | null) {
-  const result = await bot.rest.runMethod<DiscordGuildWidget>(
+  const result = await bot.rest.runMethod<DiscordGuildWidgetSettings>(
     bot.rest,
     "patch",
     bot.constants.endpoints.GUILD_WIDGET(guildId),
@@ -13,5 +13,5 @@ export async function editWidget(bot: Bot, guildId: bigint, enabled: boolean, ch
     },
   );
 
-  return bot.transformers.widget(bot, result);
+  return bot.transformers.widgetSettings(bot, result);
 }

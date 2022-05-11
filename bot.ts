@@ -93,6 +93,7 @@ import {
   DiscordGuild,
   DiscordGuildApplicationCommandPermissions,
   DiscordGuildWidget,
+  DiscordGuildWidgetSettings,
   DiscordIntegrationCreateUpdate,
   DiscordInteraction,
   DiscordInviteCreate,
@@ -126,6 +127,7 @@ import { ApplicationCommandPermission } from "./transformers/applicationCommandP
 import { WelcomeScreen } from "./transformers/welcomeScreen.ts";
 import { VoiceRegions } from "./transformers/voiceRegion.ts";
 import { GuildWidget } from "./transformers/widget.ts";
+import { GuildWidgetSettings } from "./transformers/widgetSettings.ts";
 import { StageInstance } from "./transformers/stageInstance.ts";
 import { Sticker } from "./transformers/sticker.ts";
 import {
@@ -424,6 +426,7 @@ export interface Transformers {
   welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen) => WelcomeScreen;
   voiceRegion: (bot: Bot, payload: DiscordVoiceRegion) => VoiceRegions;
   widget: (bot: Bot, payload: DiscordGuildWidget) => GuildWidget;
+  widgetSettings: (bot: Bot, payload: DiscordGuildWidgetSettings) => GuildWidgetSettings;
   stageInstance: (bot: Bot, payload: DiscordStageInstance) => StageInstance;
   sticker: (bot: Bot, payload: DiscordSticker) => Sticker;
   stickerPack: (bot: Bot, payload: DiscordStickerPack) => StickerPack;
