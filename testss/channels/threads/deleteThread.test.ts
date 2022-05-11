@@ -1,8 +1,8 @@
-import { assertEquals, assertExists, assertNotEquals } from "../../deps.ts";
+import { assertExists } from "../../deps.ts";
 import { loadBot } from "../../mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../../utils.ts";
 
-Deno.test("[thread] Start a thread", async (t) => {
+Deno.test("[thread] Delete a thread", async (t) => {
   const bot = loadBot();
   const channel = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, { name: "threads" });
   const message = await bot.helpers.sendMessage(channel.id, { content: "thread message" });
@@ -13,7 +13,10 @@ Deno.test("[thread] Start a thread", async (t) => {
     autoArchiveDuration: 60,
   });
 
-  assertExists(thread.id);
+  const threadMessage = await bot.helpers.sendMessage(thread.id, { content: "message in a bottle" });
+  assertExists(threadMessage.id);
+
+  await bot.helpers.deleteChannel(thread.id);
 
   await bot.helpers.deleteChannel(channel.id);
 });
