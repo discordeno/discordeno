@@ -8,6 +8,7 @@ import {
   SystemChannelFlags,
   VerificationLevels,
 } from "../../types/shared.ts";
+import { iconBigintToHash } from "../../util/hash.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
 export async function createGuild(bot: Bot, options: CreateGuild) {
@@ -18,7 +19,7 @@ export async function createGuild(bot: Bot, options: CreateGuild) {
     channels: options.channels,
     default_message_notifications: options.defaultMessageNotifications,
     explicit_content_filter: options.explicitContentFilter,
-    icon: options.icon,
+    icon: options.icon ? iconBigintToHash(options.icon) : null,
     roles: options.roles,
     system_channel_flags: options.systemChannelFlags,
     system_channel_id: options.systemChannelId,
@@ -33,7 +34,7 @@ export interface CreateGuild {
   /** Name of the guild (1-100 characters) */
   name: string;
   /** Base64 128x128 image for the guild icon */
-  icon?: string;
+  icon?: bigint;
   /** Verification level */
   verificationLevel?: VerificationLevels;
   /** Default message notification level */
