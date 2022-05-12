@@ -5,17 +5,17 @@ import { User } from "../../transformers/member.ts";
 
 /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
 export async function getBans(bot: Bot, guildId: bigint, options?: GetBans) {
-  const queries = [];
+  let url = bot.constants.endpoints.GUILD_BANS(guildId);
 
-  if (options?.limit) queries.push(`limit=${options.limit}`);
-  if (options?.after) queries.push(`after=${options.after}`);
-  if (options?.before) queries.push(`before=${options.before}`);
+  if (options) {
+    url += "?";
 
-  const results = await bot.rest.runMethod<DiscordBan[]>(
-    bot.rest,
-    "get",
-    `${bot.constants.endpoints.GUILD_BANS(guildId)}${queries.length ? `?${queries.join("&")}` : ""}`,
-  );
+    if (options.limit) url += `limit=${options.limit}`;
+    if (options.after) url += `&after=${options.after}`;
+    if (options.before) url += `&before=${options.before}`;
+  }
+
+  const results = await bot.rest.runMethod<DiscordBan[]>(bot.rest, "get", url);
 
   return new Collection<bigint, { reason?: string; user: User }>(
     results.map((res) => [
