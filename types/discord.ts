@@ -226,7 +226,7 @@ export interface DiscordMember {
 export interface DiscordApplication {
   /** The name of the app */
   name: string;
-  /** The icon hash of the app */
+  /** The description of the app */
   description: string;
   /** An array of rpc origin urls, if rpc is enabled */
   rpc_origins?: string[];
