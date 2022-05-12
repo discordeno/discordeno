@@ -1255,6 +1255,8 @@ export interface DiscordInteraction {
   application_id: string;
   /** The type of interaction */
   type: InteractionTypes;
+  /** the command data payload */
+  data?: DiscordInteractionData;
   /** The guild it was sent from */
   guild_id?: string;
   /** The channel it was sent from */
@@ -1269,7 +1271,6 @@ export interface DiscordInteraction {
   version: 1;
   /** For the message the button was attached to */
   message?: DiscordMessage;
-  data?: DiscordInteractionData;
   /** The selected language of the invoking user */
   locale?: string;
   /** The guild's preferred locale, if invoked in a guild */
@@ -1283,22 +1284,14 @@ export interface DiscordInteractionMember extends DiscordMemberWithUser {
 }
 
 export interface DiscordInteractionData {
-  /** The type of component */
-  component_type?: MessageComponentTypes;
-  /** The custom id provided for this component. */
-  custom_id?: string;
-  /** The components if its a Modal Submit interaction. */
-  components?: DiscordMessageComponents;
-  /** The values chosen by the user. */
-  values?: string[];
   /** The Id of the invoked command */
   id: string;
   /** The name of the invoked command */
   name: string;
+  /** the type of the invoked command */
+  type: ApplicationCommandTypes;
   /** Converted users + roles + channels + attachments */
   resolved?: {
-    /** The Ids and Message objects */
-    messages?: Record<string, DiscordMessage>;
     /** The Ids and User objects */
     users?: Record<string, DiscordUser>;
     /** The Ids and partial Member objects */
@@ -1307,13 +1300,25 @@ export interface DiscordInteractionData {
     roles?: Record<string, DiscordRole>;
     /** The Ids and partial Channel objects */
     channels?: Record<string, Pick<DiscordChannel, "id" | "name" | "type" | "permissions">>;
+    /** The Ids and Message objects */
+    messages?: Record<string, DiscordMessage>;
     /** The ids and attachment objects */
     attachments: Record<string, DiscordAttachment>;
   };
   /** The params + values from the user */
   options?: DiscordInteractionDataOption[];
+  /** the id of the guild the command is registered to */
+  guild_id?: string;
+  /** The custom id provided for this component. */
+  custom_id?: string;
+  /** The type of component */
+  component_type?: MessageComponentTypes;
+  /** The values chosen by the user. */
+  values?: string[];
   /** The target id if this is a context menu command. */
   target_id?: string;
+  /** The components if its a Modal Submit interaction. */
+  components?: DiscordMessageComponents;
 }
 
 export type DiscordInteractionDataOption = {
