@@ -109,7 +109,7 @@ export interface DiscordIntegration {
   /** Integration type (twitch, youtube or discord) */
   type: "twitch" | "youtube" | "discord";
   /** Is this integration enabled */
-  enabled: boolean;
+  enabled?: boolean;
   /** Is this integration syncing */
   syncing?: boolean;
   /** Role Id that this integration uses for "subscribers" */
