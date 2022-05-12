@@ -273,7 +273,7 @@ export enum ChannelTypes {
   GuildPrivateThread,
   /** A voice channel for hosting events with an audience */
   GuildStageVoice,
-  /** the channel in a hub containing the listed servers */
+  /** A channel in a hub containing the listed servers */
   GuildDirectory,
 }
 
