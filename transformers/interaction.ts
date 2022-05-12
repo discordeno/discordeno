@@ -47,7 +47,6 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction) {
           : undefined,
         options: payload.data.options?.map((opt) => bot.transformers.interactionDataOptions(bot, opt)),
         targetId: payload.data.target_id ? bot.transformers.snowflake(payload.data.target_id) : undefined,
-        guildId: payload.data.guild_id ? bot.transformers.snowflake(payload.data.guild_id) : undefined,
       }
       : undefined,
   };
