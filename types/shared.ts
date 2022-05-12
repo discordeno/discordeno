@@ -272,7 +272,9 @@ export enum ChannelTypes {
   /** A temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission */
   GuildPrivateThread,
   /** A voice channel for hosting events with an audience */
-  GuildStageVoice = 13,
+  GuildStageVoice,
+  /** A channel in a hub containing the listed servers */
+  GuildDirectory,
 }
 
 export enum OverwriteTypes {
@@ -796,7 +798,8 @@ export enum JsonErrorCodes {
   InvalidMessageType = 50068,
   PaymentSourceRequiredToRedeemGift = 50070,
   CannotDeleteAChannelRequiredForCommunityGuilds = 50074,
-  InvalidStickerSent = 50081,
+  CannotEditStickersWithinAMessage = 50080,
+  InvalidStickerSent,
   TriedToPerformAnOperationOnAnArchivedThreadSuchAsEditingAMessageOrAddingAUserToTheThread = 50083,
   InvalidThreadNotificationSettings,
   BeforeValueIsEarlierThanTheThreadCreationDate,
