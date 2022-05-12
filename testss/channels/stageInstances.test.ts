@@ -21,10 +21,9 @@ Deno.test({
       assertNotEquals(edited.topic, stage.topic);
     });
 
-    // TODO: why doesnt this specific test work?
-    // await t.step("[stage] Delete a stage instance", async () => {
-    //   await bot.helpers.deleteStageInstance(stage.id);
-    // });
+    await t.step("[stage] Delete a stage instance", async () => {
+      await bot.helpers.deleteStageInstance(stage.id);
+    });
 
     await bot.helpers.deleteChannel(stage.id);
   },
