@@ -59,6 +59,6 @@ export interface CreateGuildChannel {
   parentId?: bigint;
   /** Whether the channel is nsfw */
   nsfw?: boolean;
-  /** the default duration that the clients use (not the API) for newly created threads in the channel, in minutes, to automatically archive the thread after recent activity */
+  /** Default duration (in minutes) that clients (not the API) use for newly created threads in this channel, to determine when to automatically archive the thread after the last activity */
   defaultAutoArchiveDuration?: number;
 }
