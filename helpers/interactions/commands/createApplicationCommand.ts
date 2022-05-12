@@ -89,7 +89,7 @@ export interface CreateContextApplicationCommand {
 }
 
 export function isContextApplicationCommand(
-  cmd: CreateContextApplicationCommand | CreateApplicationCommand,
-): cmd is CreateContextApplicationCommand {
+  cmd: Partial<CreateContextApplicationCommand> | Partial<CreateApplicationCommand>,
+): cmd is Partial<CreateContextApplicationCommand> {
   return cmd.type === ApplicationCommandTypes.Message || cmd.type === ApplicationCommandTypes.User;
 }

@@ -924,8 +924,7 @@ export interface DiscordActivitySecrets {
   match?: string;
 }
 
-// https://github.com/discord/discord-api-docs/pull/2219
-// TODO: add documentation link
+/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-buttons */
 export interface DiscordActivityButton {
   /** The text shown on the button (1-32 characters) */
   label: string;
@@ -1633,7 +1632,7 @@ export interface DiscordApplicationCommand {
   application_id: string;
   /** Guild id of the command, if not global */
   guild_id?: string;
-  /** 1-32 character name matching */
+  /** `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set. If there is a lowercase variant of any letters used, you must use those. Characters with no lowercase variants and/or uncased letters are still allowed. `ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces. */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
   name_localizations?: Localization;
@@ -1645,7 +1644,7 @@ export interface DiscordApplicationCommand {
   options?: DiscordApplicationCommandOption[];
   /** Whether the command is enabled by default when the app is added to a guild */
   default_permission?: boolean;
-  /** The type of command. By default this is a application command(ChatInput). */
+  /** The type of command. By default this is a application command (ApplicationCommandTypes.ChatInput). */
   type?: ApplicationCommandTypes;
   /** Auto incrementing version identifier updated during substantial record changes */
   version: string;
@@ -1655,7 +1654,7 @@ export interface DiscordApplicationCommand {
 export interface DiscordApplicationCommandOption {
   /** Value of Application Command Option Type */
   type: ApplicationCommandOptionTypes;
-  /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
+  /** Command option name must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set. If there is a lowercase variant of any letters used, you must use those. Characters with no lowercase variants and/or uncased letters are still allowed. */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
   name_localizations?: Localization;
