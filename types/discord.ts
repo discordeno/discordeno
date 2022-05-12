@@ -259,6 +259,12 @@ export interface DiscordApplication {
   guild_id?: string;
   /** If this application is a game sold on Discord, this field will be the hash of the image on store embeds */
   cover_image?: string;
+  /** up to 5 tags describing the content and functionality of the application */
+  tags?: string[];
+  /** settings for the application's default in-app authorization link, if enabled */
+  install_params?: DiscordInstallParams;
+  /** the application's default custom authorization link, if enabled */
+  custom_install_url?: string;
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-object */
@@ -2217,4 +2223,11 @@ export interface DiscordVoiceRegion {
   deprecated: boolean;
   /** Whether this is a custom voice region (used for events/etc) */
   custom: boolean;
+}
+
+export interface DiscordInstallParams {
+  /** he scopes to add the application to the server with */
+  scopes: string[];
+  /** the permissions to request for the bot role */
+  permissions: string;
 }
