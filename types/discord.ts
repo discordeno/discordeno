@@ -1275,6 +1275,7 @@ export interface DiscordInteraction {
   version: 1;
   /** For the message the button was attached to */
   message?: DiscordMessage;
+  /** the command data payload */
   data?: DiscordInteractionData;
   /** The selected language of the invoking user */
   locale?: string;
@@ -1301,6 +1302,8 @@ export interface DiscordInteractionData {
   id: string;
   /** The name of the invoked command */
   name: string;
+  /** the type of the invoked command */
+  type: ApplicationCommandTypes;
   /** Converted users + roles + channels + attachments */
   resolved?: {
     /** The Ids and Message objects */
@@ -1320,6 +1323,8 @@ export interface DiscordInteractionData {
   options?: DiscordInteractionDataOption[];
   /** The target id if this is a context menu command. */
   target_id?: string;
+  /** the id of the guild the command is registered to */
+  guild_id?: string;
 }
 
 export type DiscordInteractionDataOption = {
