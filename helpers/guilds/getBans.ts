@@ -29,10 +29,10 @@ export async function getBans(bot: Bot, guildId: bigint, options?: GetBans) {
 }
 
 export interface GetBans {
-  /** number of users to return (up to maximum 1000). Default: 1000 */
+  /** Number of users to return (up to maximum 1000). Default: 1000 */
   limit?: number;
-  /** consider only users before given user id */
+  /** Consider only users before given user id */
   before?: bigint;
-  /** consider only users after given user id */
+  /** Consider only users after given user id */
   after?: bigint;
 }
