@@ -259,6 +259,12 @@ export interface DiscordApplication {
   guild_id?: string;
   /** If this application is a game sold on Discord, this field will be the hash of the image on store embeds */
   cover_image?: string;
+  /** up to 5 tags describing the content and functionality of the application */
+  tags?: string[];
+  /** settings for the application's default in-app authorization link, if enabled */
+  install_params?: DiscordInstallParams;
+  /** the application's default custom authorization link, if enabled */
+  custom_install_url?: string;
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-object */
@@ -1634,6 +1640,8 @@ export interface DiscordInviteStageInstance {
 export interface DiscordApplicationCommand {
   /** Unique id of the command */
   id: string;
+  /** The type of command. By default this is a application command(ChatInput). */
+  type?: ApplicationCommandTypes;
   /** Unique id of the parent application */
   application_id: string;
   /** Guild id of the command, if not global */
@@ -1641,17 +1649,15 @@ export interface DiscordApplicationCommand {
   /** 1-32 character name matching */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  name_localizations?: Localization;
+  name_localizations?: Localization | null;
   /** 1-100 character description */
   description: string;
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-  description_localizations?: Localization;
+  description_localizations?: Localization | null;
   /** The parameters for the command */
   options?: DiscordApplicationCommandOption[];
   /** Whether the command is enabled by default when the app is added to a guild */
   default_permission?: boolean;
-  /** The type of command. By default this is a application command(ChatInput). */
-  type?: ApplicationCommandTypes;
   /** Auto incrementing version identifier updated during substantial record changes */
   version: string;
 }
@@ -1663,11 +1669,11 @@ export interface DiscordApplicationCommandOption {
   /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  name_localizations?: Localization;
+  name_localizations?: Localization | null;
   /** 1-100 character description */
   description: string;
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-  description_localizations?: Localization;
+  description_localizations?: Localization | null;
   /** If the parameter is required or optional--default `false` */
   required?: boolean;
   /** Choices for `string` and `int` types for the user to pick from */
@@ -1689,7 +1695,7 @@ export interface DiscordApplicationCommandOptionChoice {
   /** 1-100 character choice name */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  name_localizations?: Localization;
+  name_localizations?: Localization | null;
   /** Value of the choice, up to 100 characters if string */
   value: string | number;
 }
@@ -2222,4 +2228,11 @@ export interface DiscordVoiceRegion {
   deprecated: boolean;
   /** Whether this is a custom voice region (used for events/etc) */
   custom: boolean;
+}
+
+export interface DiscordInstallParams {
+  /** he scopes to add the application to the server with */
+  scopes: string[];
+  /** the permissions to request for the bot role */
+  permissions: string;
 }

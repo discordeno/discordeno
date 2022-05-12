@@ -19,10 +19,7 @@ export async function createEmoji(bot: Bot, guildId: bigint, options: CreateGuil
     },
   );
 
-  return {
-    ...emoji,
-    id: bot.transformers.snowflake(emoji.id!),
-  };
+  return bot.transformers.emoji(bot, emoji);
 }
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
