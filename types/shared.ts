@@ -272,7 +272,9 @@ export enum ChannelTypes {
   /** A temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission */
   GuildPrivateThread,
   /** A voice channel for hosting events with an audience */
-  GuildStageVoice = 13,
+  GuildStageVoice,
+  /** the channel in a hub containing the listed servers */
+  GuildDirectory,
 }
 
 export enum OverwriteTypes {
