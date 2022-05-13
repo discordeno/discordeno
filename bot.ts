@@ -65,6 +65,7 @@ import { transformApplicationCommand } from "./transformers/applicationCommand.t
 import { transformWelcomeScreen } from "./transformers/welcomeScreen.ts";
 import { transformVoiceRegion } from "./transformers/voiceRegion.ts";
 import { transformWidget } from "./transformers/widget.ts";
+import { transformWidgetSettings } from "./transformers/widgetSettings.ts";
 import { transformStageInstance } from "./transformers/stageInstance.ts";
 import { StickerPack, transformSticker, transformStickerPack } from "./transformers/sticker.ts";
 import { GetGatewayBot, transformGatewayBot } from "./transformers/gatewayBot.ts";
@@ -476,6 +477,7 @@ export function createTransformers(options: Partial<Transformers>) {
     welcomeScreen: options.welcomeScreen || transformWelcomeScreen,
     voiceRegion: options.voiceRegion || transformVoiceRegion,
     widget: options.widget || transformWidget,
+    widgetSettings: options.widgetSettings || transformWidgetSettings,
     stageInstance: options.stageInstance || transformStageInstance,
     sticker: options.sticker || transformSticker,
     stickerPack: options.stickerPack || transformStickerPack,
