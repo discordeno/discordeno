@@ -1,6 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { ApplicationCommandOption, ApplicationCommandTypes, Localization } from "../../../mod.ts";
 import { DiscordApplicationCommand, DiscordApplicationCommandOption } from "../../../types/discord.ts";
+import { AtLeastOne } from "../../../types/shared.ts";
 
 /**
  * There are two kinds of Application Commands: global commands and guild commands. Global commands are available for every guild that adds your app; guild commands are specific to the guild you specify when making them. Command names are unique per application within each scope (global and guild). That means:
@@ -89,7 +90,7 @@ export interface CreateContextApplicationCommand {
 }
 
 export function isContextApplicationCommand(
-  cmd: Partial<CreateContextApplicationCommand> | Partial<CreateApplicationCommand>,
-): cmd is Partial<CreateContextApplicationCommand> {
+  cmd: AtLeastOne<CreateContextApplicationCommand> | AtLeastOne<CreateApplicationCommand>,
+): cmd is AtLeastOne<CreateContextApplicationCommand> {
   return cmd.type === ApplicationCommandTypes.Message || cmd.type === ApplicationCommandTypes.User;
 }
