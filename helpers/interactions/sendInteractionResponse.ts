@@ -45,8 +45,10 @@ export async function sendInteractionResponse(
             custom_id: subComponent.customId,
             label: subComponent.label,
             placeholder: subComponent.placeholder,
-            min_length: subComponent.minLength ?? subComponent.required === false ? 0 : subComponent.minLength,
+            value: subComponent.value,
+            min_length: subComponent.minLength,
             max_length: subComponent.maxLength,
+            required: subComponent.required,
           };
         }
 

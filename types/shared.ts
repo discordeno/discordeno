@@ -9,7 +9,6 @@ export enum PremiumTypes {
 
 /** https://discord.com/developers/docs/resources/user#user-object-user-flags */
 export enum UserFlags {
-  None,
   DiscordEmployee = 1 << 0,
   PartneredServerOwner = 1 << 1,
   HypeSquadEventsMember = 1 << 2,
@@ -212,10 +211,6 @@ export enum GuildFeatures {
   MonetizationEnabled = "MONETIZATION_ENABLED",
   /** Guild has increased custom sticker slots */
   MoreStickers = "MORE_STICKERS",
-  /** Guild has access to the three day archive time for threads */
-  ThreeDayThreadArchive = "THREE_DAY_THREAD_ARCHIVE",
-  /** Guild has access to the seven day archive time for threads */
-  SevenDayThreadArchive = "SEVEN_DAY_THREAD_ARCHIVE",
   /** Guild has access to create private threads */
   PrivateThreads = "PRIVATE_THREADS",
   /** Guild is able to set role icons */
@@ -283,11 +278,11 @@ export enum ChannelTypes {
   /** A temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission */
   GuildPrivateThread,
   /** A voice channel for hosting events with an audience */
-  GuildStageVoice = 13,
+  GuildStageVoice,
   /** A channel in a hub containing the listed servers */
-  GuildDirectory = 14,
+  GuildDirectory,
   /** A channel which can only contains threads */
-  GuildForum = 15,
+  GuildForum,
 }
 
 export enum OverwriteTypes {
@@ -811,7 +806,8 @@ export enum JsonErrorCodes {
   InvalidMessageType = 50068,
   PaymentSourceRequiredToRedeemGift = 50070,
   CannotDeleteAChannelRequiredForCommunityGuilds = 50074,
-  InvalidStickerSent = 50081,
+  CannotEditStickersWithinAMessage = 50080,
+  InvalidStickerSent,
   TriedToPerformAnOperationOnAnArchivedThreadSuchAsEditingAMessageOrAddingAUserToTheThread = 50083,
   InvalidThreadNotificationSettings,
   BeforeValueIsEarlierThanTheThreadCreationDate,

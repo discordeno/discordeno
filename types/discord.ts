@@ -110,7 +110,7 @@ export interface DiscordIntegration {
   /** Integration type (twitch, youtube or discord) */
   type: "twitch" | "youtube" | "discord";
   /** Is this integration enabled */
-  enabled: boolean;
+  enabled?: boolean;
   /** Is this integration syncing */
   syncing?: boolean;
   /** Role Id that this integration uses for "subscribers" */
@@ -260,6 +260,12 @@ export interface DiscordApplication {
   guild_id?: string;
   /** If this application is a game sold on Discord, this field will be the hash of the image on store embeds */
   cover_image?: string;
+  /** up to 5 tags describing the content and functionality of the application */
+  tags?: string[];
+  /** settings for the application's default in-app authorization link, if enabled */
+  install_params?: DiscordInstallParams;
+  /** the application's default custom authorization link, if enabled */
+  custom_install_url?: string;
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-object */
@@ -958,7 +964,10 @@ export interface DiscordMessage {
   id: string;
   /** id of the channel the message was sent in */
   channel_id: string;
-  /** id of the guild the message was sent in */
+  /**
+   * id of the guild the message was sent in
+   * Note: For MESSAGE_CREATE and MESSAGE_UPDATE events, the message object may not contain a guild_id or member field since the events are sent directly to the receiving user and the bot who sent the message, rather than being sent through the guild like non-ephemeral messages.
+   */
   guild_id?: string;
   /**
    * The author of this message (not guaranteed to be a valid user)
@@ -1272,6 +1281,7 @@ export interface DiscordInteraction {
   version: 1;
   /** For the message the button was attached to */
   message?: DiscordMessage;
+  /** the command data payload */
   data?: DiscordInteractionData;
   /** The selected language of the invoking user */
   locale?: string;
@@ -1298,6 +1308,8 @@ export interface DiscordInteractionData {
   id: string;
   /** The name of the invoked command */
   name: string;
+  /** the type of the invoked command */
+  type: ApplicationCommandTypes;
   /** Converted users + roles + channels + attachments */
   resolved?: {
     /** The Ids and Message objects */
@@ -1317,6 +1329,8 @@ export interface DiscordInteractionData {
   options?: DiscordInteractionDataOption[];
   /** The target id if this is a context menu command. */
   target_id?: string;
+  /** the id of the guild the command is registered to */
+  guild_id?: string;
 }
 
 export type DiscordInteractionDataOption = {
@@ -1545,7 +1559,7 @@ export interface DiscordScheduledEvent {
   /** the number of users subscribed to the scheduled event */
   user_count?: number;
   /** the cover image hash of the scheduled event */
-  image: string | null;
+  image?: string | null;
 }
 
 export interface DiscordScheduledEventEntityMetadata {
@@ -1632,24 +1646,26 @@ export interface DiscordInviteStageInstance {
 export interface DiscordApplicationCommand {
   /** Unique id of the command */
   id: string;
+  /** The type of command. By default this is a application command(ChatInput). */
+  type?: ApplicationCommandTypes;
   /** Unique id of the parent application */
   application_id: string;
   /** Guild id of the command, if not global */
   guild_id?: string;
-  /** 1-32 character name matching */
+  /** `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set. If there is a lowercase variant of any letters used, you must use those. Characters with no lowercase variants and/or uncased letters are still allowed. `ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces. */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  name_localizations?: Localization;
+  name_localizations?: Localization | null;
   /** 1-100 character description */
   description: string;
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-  description_localizations?: Localization;
+  description_localizations?: Localization | null;
   /** The parameters for the command */
   options?: DiscordApplicationCommandOption[];
-  /** Whether the command is enabled by default when the app is added to a guild */
-  default_permission?: boolean;
-  /** The type of command. By default this is a application command(ChatInput). */
-  type?: ApplicationCommandTypes;
+  /** Set of permissions represented as a bit set */
+  default_member_permissions?: string | null;
+  /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
+  dm_permission?: boolean | null;
   /** Auto incrementing version identifier updated during substantial record changes */
   version: string;
 }
@@ -1658,14 +1674,14 @@ export interface DiscordApplicationCommand {
 export interface DiscordApplicationCommandOption {
   /** Value of Application Command Option Type */
   type: ApplicationCommandOptionTypes;
-  /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
+  /** Command option name must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set. If there is a lowercase variant of any letters used, you must use those. Characters with no lowercase variants and/or uncased letters are still allowed. */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  name_localizations?: Localization;
+  name_localizations?: Localization | null;
   /** 1-100 character description */
   description: string;
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-  description_localizations?: Localization;
+  description_localizations?: Localization | null;
   /** If the parameter is required or optional--default `false` */
   required?: boolean;
   /** Choices for `string` and `int` types for the user to pick from */
@@ -1687,7 +1703,7 @@ export interface DiscordApplicationCommandOptionChoice {
   /** 1-100 character choice name */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  name_localizations?: Localization;
+  name_localizations?: Localization | null;
   /** Value of the choice, up to 100 characters if string */
   value: string | number;
 }
@@ -2220,4 +2236,18 @@ export interface DiscordVoiceRegion {
   deprecated: boolean;
   /** Whether this is a custom voice region (used for events/etc) */
   custom: boolean;
+}
+
+export interface DiscordGuildWidgetSettings {
+  /** whether the widget is enabled */
+  enabled: boolean;
+  /** the widget channel id */
+  channel_id: string | null;
+}
+
+export interface DiscordInstallParams {
+  /** he scopes to add the application to the server with */
+  scopes: string[];
+  /** the permissions to request for the bot role */
+  permissions: string;
 }

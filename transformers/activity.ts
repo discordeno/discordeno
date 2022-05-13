@@ -20,7 +20,7 @@ export function transformActivity(bot: Bot, payload: DiscordActivity) {
         id: payload.emoji.id ? bot.transformers.snowflake(payload.emoji.id) : undefined,
       }
       : undefined,
-    partyId: payload.party?.id ? bot.transformers.snowflake(payload.party.id) : undefined,
+    partyId: payload.party?.id,
     partyCurrentSize: payload.party?.size?.[0],
     partyMaxSize: payload.party?.size?.[1],
     largeImage: payload.assets?.large_image,

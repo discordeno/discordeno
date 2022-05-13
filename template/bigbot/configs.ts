@@ -25,7 +25,7 @@ export const GATEWAY_INTENTS: (keyof typeof GatewayIntents)[] = [
 if (!env.DISCORD_TOKEN) {
   throw new Error("DUDE! You did not provide a Discord token!");
 }
-export const DISCORD_TOKEN = `Bot ${env.DISCORD_TOKEN!}`;
+export const DISCORD_TOKEN = env.DISCORD_TOKEN!;
 
 // Set as 0 to make it use default values. NOT RECOMMENDED TO DEFAULT FOR BIG BOTS!!!!
 export const MAX_SHARDS = env.MAX_SHARDS ? parseInt(env.MAX_SHARDS, 10) : 0;

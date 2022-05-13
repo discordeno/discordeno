@@ -42,7 +42,7 @@ async function handleRequest(conn: Deno.Conn) {
       );
     }
 
-    const json = (await requestEvent.request.json());
+    const json = requestEvent.request.body ? (await requestEvent.request.json()) : undefined;
 
     try {
       const result = await rest.runMethod(

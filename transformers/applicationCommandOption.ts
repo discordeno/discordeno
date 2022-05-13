@@ -11,9 +11,9 @@ export function transformApplicationCommandOption(
   return {
     type: payload.type,
     name: payload.name,
-    nameLocalizations: payload.name_localizations,
+    nameLocalizations: payload.name_localizations ?? undefined,
     description: payload.description,
-    descriptionLocalizations: payload.description_localizations,
+    descriptionLocalizations: payload.description_localizations ?? undefined,
     required: payload.required ?? false,
     choices: payload.choices?.map((choice) => bot.transformers.applicationCommandOptionChoice(bot, choice)),
     autocomplete: payload.autocomplete,
