@@ -17,6 +17,7 @@ export async function createForumPost(
       name: options.name,
       auto_archive_duration: options.autoArchiveDuration,
       rate_limit_per_user: options.rateLimitPerUser,
+      reason: options.reason,
 
       content: options.content,
       embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
