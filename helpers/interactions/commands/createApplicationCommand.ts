@@ -33,6 +33,9 @@ export async function createApplicationCommand(
         description_localizations: options.descriptionLocalizations,
         type: options.type,
         options: options.options ? makeOptionsForCommand(options.options) : undefined,
+        default_member_permissions: options.defaultMemberPermissions,
+        dm_permission: options.dmPermission,
+        default_permission: options.defaultPermission,
       },
   );
 
@@ -74,7 +77,11 @@ export interface CreateApplicationCommand {
   type?: ApplicationCommandTypes;
   /** The parameters for the command */
   options?: ApplicationCommandOption[];
-  /** Whether the command is enabled by default when the app is added to a guild. Default: true */
+  /** Set of permissions represented as a bit set */
+  defaultMemberPermissions?: string;
+  /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
+  dmPermission?: boolean;
+  /** Replaced by default_member_permissions and will be deprecated in the future. Indicates whether the command is enabled by default when the app is added to a guild. */
   defaultPermission?: boolean;
 }
 

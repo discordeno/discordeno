@@ -11,6 +11,8 @@ export function transformApplicationCommand(bot: Bot, payload: DiscordApplicatio
     nameLocalizations: payload.name_localizations ?? undefined,
     description: payload.description,
     descriptionLocalizations: payload.description_localizations ?? undefined,
+    defaultMemberPermissions: payload.default_member_permissions ?? undefined,
+    dmPermission: payload.dm_permission ?? undefined,
     defaultPermission: payload.default_permission ?? false,
     type: payload.type,
     version: payload.version,
