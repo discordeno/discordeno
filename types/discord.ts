@@ -961,7 +961,10 @@ export interface DiscordMessage {
   id: string;
   /** id of the channel the message was sent in */
   channel_id: string;
-  /** id of the guild the message was sent in */
+  /**
+   * id of the guild the message was sent in
+   * Note: For MESSAGE_CREATE and MESSAGE_UPDATE events, the message object may not contain a guild_id or member field since the events are sent directly to the receiving user and the bot who sent the message, rather than being sent through the guild like non-ephemeral messages.
+   */
   guild_id?: string;
   /**
    * The author of this message (not guaranteed to be a valid user)
@@ -1553,7 +1556,7 @@ export interface DiscordScheduledEvent {
   /** the number of users subscribed to the scheduled event */
   user_count?: number;
   /** the cover image hash of the scheduled event */
-  image: string | null;
+  image?: string | null;
 }
 
 export interface DiscordScheduledEventEntityMetadata {
@@ -1646,7 +1649,7 @@ export interface DiscordApplicationCommand {
   application_id: string;
   /** Guild id of the command, if not global */
   guild_id?: string;
-  /** 1-32 character name matching */
+  /** `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set. If there is a lowercase variant of any letters used, you must use those. Characters with no lowercase variants and/or uncased letters are still allowed. `ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces. */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
   name_localizations?: Localization | null;
@@ -1670,7 +1673,7 @@ export interface DiscordApplicationCommand {
 export interface DiscordApplicationCommandOption {
   /** Value of Application Command Option Type */
   type: ApplicationCommandOptionTypes;
-  /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
+  /** Command option name must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set. If there is a lowercase variant of any letters used, you must use those. Characters with no lowercase variants and/or uncased letters are still allowed. */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
   name_localizations?: Localization | null;
@@ -2232,6 +2235,13 @@ export interface DiscordVoiceRegion {
   deprecated: boolean;
   /** Whether this is a custom voice region (used for events/etc) */
   custom: boolean;
+}
+
+export interface DiscordGuildWidgetSettings {
+  /** whether the widget is enabled */
+  enabled: boolean;
+  /** the widget channel id */
+  channel_id: string | null;
 }
 
 export interface DiscordInstallParams {

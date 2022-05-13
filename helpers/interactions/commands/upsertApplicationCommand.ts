@@ -6,8 +6,7 @@ import {
   makeOptionsForCommand,
 } from "./createApplicationCommand.ts";
 import { DiscordApplicationCommand } from "../../../types/discord.ts";
-import { ApplicationCommandOption } from "../../../transformers/applicationCommandOption.ts";
-import { ApplicationCommandTypes } from "../../../types/shared.ts";
+import { AtLeastOne } from "../../../types/shared.ts";
 
 /**
  * Edit an existing application command. If this command did not exist, it will create it.
@@ -15,7 +14,7 @@ import { ApplicationCommandTypes } from "../../../types/shared.ts";
 export async function upsertApplicationCommand(
   bot: Bot,
   commandId: bigint,
-  options: CreateApplicationCommand | CreateContextApplicationCommand,
+  options: AtLeastOne<CreateApplicationCommand> | AtLeastOne<CreateContextApplicationCommand>,
   guildId?: bigint,
 ) {
   const result = await bot.rest.runMethod<DiscordApplicationCommand>(
