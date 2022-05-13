@@ -924,7 +924,8 @@ export interface DiscordActivitySecrets {
   match?: string;
 }
 
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-buttons */
+// https://github.com/discord/discord-api-docs/pull/2219
+// TODO: add documentation link
 export interface DiscordActivityButton {
   /** The text shown on the button (1-32 characters) */
   label: string;
@@ -1644,7 +1645,7 @@ export interface DiscordApplicationCommand {
   options?: DiscordApplicationCommandOption[];
   /** Whether the command is enabled by default when the app is added to a guild */
   default_permission?: boolean;
-  /** The type of command. By default this is a application command (ApplicationCommandTypes.ChatInput). */
+  /** The type of command. By default this is a application command(ChatInput). */
   type?: ApplicationCommandTypes;
   /** Auto incrementing version identifier updated during substantial record changes */
   version: string;
