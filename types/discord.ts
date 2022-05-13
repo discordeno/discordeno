@@ -1663,8 +1663,6 @@ export interface DiscordApplicationCommand {
   default_member_permissions?: string | null;
   /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
   dm_permission?: boolean | null;
-  /** Not recommended for use as field will soon be deprecated. Indicates whether the command is enabled by default when the app is added to a guild, defaults to true */
-  default_permission?: boolean;
   /** Auto incrementing version identifier updated during substantial record changes */
   version: string;
 }

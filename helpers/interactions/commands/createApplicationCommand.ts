@@ -1,7 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { ApplicationCommandOption, ApplicationCommandTypes, Localization } from "../../../mod.ts";
 import { DiscordApplicationCommand, DiscordApplicationCommandOption } from "../../../types/discord.ts";
-import { AtLeastOne } from "../../../types/shared.ts";
+import { AtLeastOne, PermissionStrings } from "../../../types/shared.ts";
 
 /**
  * There are two kinds of Application Commands: global commands and guild commands. Global commands are available for every guild that adds your app; guild commands are specific to the guild you specify when making them. Command names are unique per application within each scope (global and guild). That means:
@@ -34,9 +34,10 @@ export async function createApplicationCommand(
         description_localizations: options.descriptionLocalizations,
         type: options.type,
         options: options.options ? makeOptionsForCommand(options.options) : undefined,
-        default_member_permissions: options.defaultMemberPermissions,
+        default_member_permissions: options.defaultMemberPermissions
+          ? bot.utils.calculateBits(options.defaultMemberPermissions)
+          : undefined,
         dm_permission: options.dmPermission,
-        default_permission: options.defaultPermission,
       },
   );
 
@@ -79,11 +80,9 @@ export interface CreateApplicationCommand {
   /** The parameters for the command */
   options?: ApplicationCommandOption[];
   /** Set of permissions represented as a bit set */
-  defaultMemberPermissions?: string;
+  defaultMemberPermissions?: PermissionStrings[];
   /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
   dmPermission?: boolean;
-  /** Replaced by default_member_permissions and will be deprecated in the future. Indicates whether the command is enabled by default when the app is added to a guild. */
-  defaultPermission?: boolean;
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
