@@ -3,9 +3,11 @@ import { Activity } from "../../transformers/activity.ts";
 import { StatusTypes } from "../../transformers/presence.ts";
 import { GatewayOpcodes } from "../../types/shared.ts";
 
-export function editBotStatus(bot: Bot, data: StatusUpdate) {
-  bot.gateway.shards.forEach((shard) => {
-    bot.events.debug(`Running forEach loop in editBotStatus function.`);
+export function editBotStatus(bot: Bot, data: StatusUpdate, shardId?: number) {
+  const shards  = shardId !== undefined ? [bot.gateway.shards.get(shardId)] : bot.gateway.shards;
+
+  shards.forEach((shard) => {
+    bot.events.debug(`Running forEach loop in editBotStatus function for shard ${shard.id}`);
 
     bot.gateway.sendShardMessage(bot.gateway, shard, {
       op: GatewayOpcodes.PresenceUpdate,
