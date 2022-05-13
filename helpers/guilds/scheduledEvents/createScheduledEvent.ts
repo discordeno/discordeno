@@ -49,7 +49,7 @@ export async function createScheduledEvent(bot: Bot, guildId: bigint, options: C
 export interface CreateScheduledEvent {
   /** the channel id of the scheduled event. */
   channelId?: bigint;
-  /** location of the event */
+  /** location of the event. Required for events with `entityType: ScheduledEventEntityType.External` */
   location?: string;
   /** the name of the scheduled event */
   name: string;
@@ -57,7 +57,7 @@ export interface CreateScheduledEvent {
   description: string;
   /** the time the scheduled event will start */
   scheduledStartTime: number;
-  /** the time the scheduled event will end if it does end. */
+  /** the time the scheduled event will end if it does end. Required for events with `entityType: ScheduledEventEntityType.External` */
   scheduledEndTime?: number;
   /** the privacy level of the scheduled event */
   privacyLevel?: ScheduledEventPrivacyLevel;
