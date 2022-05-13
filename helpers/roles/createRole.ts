@@ -6,12 +6,12 @@ import { PermissionStrings } from "../../types/shared.ts";
 export async function createRole(bot: Bot, guildId: bigint, options: CreateGuildRole, reason?: string) {
   const result = await bot.rest.runMethod<DiscordRole>(bot.rest, "post", bot.constants.endpoints.GUILD_ROLES(guildId), {
     name: options.name,
-    permissions: bot.utils.calculateBits(options?.permissions || []),
     color: options.color,
     hoist: options.hoist,
+    mentionable: options.mentionable,
+    permissions: bot.utils.calculateBits(options?.permissions || []),
     icon: options.icon,
     unicode_emoji: options.unicodeEmoji,
-    mentionable: options.mentionable,
     reason,
   });
 
@@ -30,10 +30,10 @@ export interface CreateGuildRole {
   color?: number;
   /** Whether the role should be displayed separately in the sidebar, default: false */
   hoist?: boolean;
-  /** the role's icon image (if the guild has the `ROLE_ICONS` feature) */
-  icon?: string;
-  /** The role's unicode emoji (if the guild has the `ROLE_ICONS` feature) */
-  unicodeEmoji?: string;
   /** Whether the role should be mentionable, default: false */
   mentionable?: boolean;
+  /** The role's unicode emoji (if the guild has the `ROLE_ICONS` feature) */
+  unicodeEmoji?: string;
+  /** the role's icon image (if the guild has the `ROLE_ICONS` feature) */
+  icon?: string;
 }
