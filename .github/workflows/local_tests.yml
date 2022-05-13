@@ -42,4 +42,4 @@ jobs:
       - name: Cache Templates
         run: deno cache template/beginner/mod.ts template/bigbot/src/bot/mod.ts template/bigbot/src/gateway/mod.ts template/bigbot/src/rest/mod.ts template/minimal/mod.ts
       - name: Run Local tests that don't need Discord's API
-        run: deno test -A tests/local.ts
+        run: deno test -A testss/utils.test.ts
