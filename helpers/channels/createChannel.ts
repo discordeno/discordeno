@@ -30,6 +30,7 @@ export async function createChannel(bot: Bot, guildId: bigint, options?: CreateG
         })),
         type: options?.type || ChannelTypes.GuildText,
         reason,
+        default_auto_archive_duration: options?.defaultAutoArchiveDuration,
       }
       : {},
   );
@@ -58,4 +59,6 @@ export interface CreateGuildChannel {
   parentId?: bigint;
   /** Whether the channel is nsfw */
   nsfw?: boolean;
+  /** Default duration (in minutes) that clients (not the API) use for newly created threads in this channel, to determine when to automatically archive the thread after the last activity */
+  defaultAutoArchiveDuration?: number;
 }

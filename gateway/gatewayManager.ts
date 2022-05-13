@@ -24,6 +24,7 @@ import { GatewayIntents } from "../types/shared.ts";
 import { StatusUpdate } from "../helpers/misc/editBotStatus.ts";
 import { DiscordGatewayPayload } from "../types/discord.ts";
 import { calculateMaxShards } from "./calculateMaxShards.ts";
+import { removeTokenPrefix } from "../util/token.ts";
 
 /** Create a new Gateway Manager.
  *
@@ -53,7 +54,7 @@ export function createGatewayManager(
     maxWorkers: options.maxWorkers ?? 4,
     firstShardId: options.firstShardId ?? 0,
     lastShardId: options.lastShardId ?? options.maxShards ?? options.shardsRecommended ?? 1,
-    token: options.token ?? "",
+    token: removeTokenPrefix(options.token, "GATEWAY"),
     compress: options.compress ?? false,
     $os: options.$os ?? "linux",
     $browser: options.$browser ?? "Discordeno",
