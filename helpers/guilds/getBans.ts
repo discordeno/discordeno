@@ -4,8 +4,18 @@ import { DiscordBan } from "../../types/discord.ts";
 import { User } from "../../transformers/member.ts";
 
 /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
-export async function getBans(bot: Bot, guildId: bigint) {
-  const results = await bot.rest.runMethod<DiscordBan[]>(bot.rest, "get", bot.constants.endpoints.GUILD_BANS(guildId));
+export async function getBans(bot: Bot, guildId: bigint, options?: GetBans) {
+  let url = bot.constants.endpoints.GUILD_BANS(guildId);
+
+  if (options) {
+    url += "?";
+
+    if (options.limit) url += `limit=${options.limit}`;
+    if (options.after) url += `&after=${options.after}`;
+    if (options.before) url += `&before=${options.before}`;
+  }
+
+  const results = await bot.rest.runMethod<DiscordBan[]>(bot.rest, "get", url);
 
   return new Collection<bigint, { reason?: string; user: User }>(
     results.map((res) => [
@@ -16,4 +26,13 @@ export async function getBans(bot: Bot, guildId: bigint) {
       },
     ]),
   );
+}
+
+export interface GetBans {
+  /** Number of users to return (up to maximum 1000). Default: 1000 */
+  limit?: number;
+  /** Consider only users before given user id */
+  before?: bigint;
+  /** Consider only users after given user id */
+  after?: bigint;
 }

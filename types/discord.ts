@@ -961,7 +961,10 @@ export interface DiscordMessage {
   id: string;
   /** id of the channel the message was sent in */
   channel_id: string;
-  /** id of the guild the message was sent in */
+  /**
+   * id of the guild the message was sent in
+   * Note: For MESSAGE_CREATE and MESSAGE_UPDATE events, the message object may not contain a guild_id or member field since the events are sent directly to the receiving user and the bot who sent the message, rather than being sent through the guild like non-ephemeral messages.
+   */
   guild_id?: string;
   /**
    * The author of this message (not guaranteed to be a valid user)
@@ -1553,7 +1556,7 @@ export interface DiscordScheduledEvent {
   /** the number of users subscribed to the scheduled event */
   user_count?: number;
   /** the cover image hash of the scheduled event */
-  image: string | null;
+  image?: string | null;
 }
 
 export interface DiscordScheduledEventEntityMetadata {
@@ -2228,6 +2231,13 @@ export interface DiscordVoiceRegion {
   deprecated: boolean;
   /** Whether this is a custom voice region (used for events/etc) */
   custom: boolean;
+}
+
+export interface DiscordGuildWidgetSettings {
+  /** whether the widget is enabled */
+  enabled: boolean;
+  /** the widget channel id */
+  channel_id: string | null;
 }
 
 export interface DiscordInstallParams {

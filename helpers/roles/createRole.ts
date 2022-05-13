@@ -10,6 +10,8 @@ export async function createRole(bot: Bot, guildId: bigint, options: CreateGuild
     hoist: options.hoist,
     mentionable: options.mentionable,
     permissions: bot.utils.calculateBits(options?.permissions || []),
+    icon: options.icon,
+    unicode_emoji: options.unicodeEmoji,
     reason,
   });
 
@@ -32,4 +34,6 @@ export interface CreateGuildRole {
   mentionable?: boolean;
   /** The role's unicode emoji (if the guild has the `ROLE_ICONS` feature) */
   unicodeEmoji?: string;
+  /** the role's icon image (if the guild has the `ROLE_ICONS` feature) */
+  icon?: string;
 }
