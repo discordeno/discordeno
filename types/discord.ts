@@ -2230,6 +2230,13 @@ export interface DiscordVoiceRegion {
   custom: boolean;
 }
 
+export interface DiscordGuildWidgetSettings {
+  /** whether the widget is enabled */
+  enabled: boolean;
+  /** the widget channel id */
+  channel_id: string | null;
+}
+
 export interface DiscordInstallParams {
   /** he scopes to add the application to the server with */
   scopes: string[];
