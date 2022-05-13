@@ -63,6 +63,7 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } 
       ? Date.parse(payload.channel.thread_metadata.create_timestamp)
       : undefined,
     newlyCreated: payload.channel.newly_created,
+    flags: payload.channel.flags,
   };
 
   return channel as Optionalize<typeof channel>;

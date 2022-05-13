@@ -25,6 +25,12 @@ export enum UserFlags {
   BotHttpInteractions = 1 << 19,
 }
 
+/** https://discord.com/developers/docs/resources/channel#channels-resource */
+export enum ChannelFlags {
+  None,
+  Pinned = 1 << 1,
+}
+
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
 export enum IntegrationExpireBehaviors {
   RemoveRole,
@@ -275,6 +281,8 @@ export enum ChannelTypes {
   GuildStageVoice,
   /** A channel in a hub containing the listed servers */
   GuildDirectory,
+  /** A channel which can only contains threads */
+  GuildForum,
 }
 
 export enum OverwriteTypes {
