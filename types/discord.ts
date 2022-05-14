@@ -526,12 +526,6 @@ export interface DiscordGuild {
   mfa_level: MfaLevels;
   /** System channel flags */
   system_channel_flags: SystemChannelFlags;
-  /** True if this is considered a large guild */
-  large?: boolean;
-  /** True if this guild is unavailable due to an outage */
-  unavailable?: boolean;
-  /** Total number of members in this guild */
-  member_count?: number;
   /** The maximum number of presences for the guild (the default value, currently 25000, is in effect when null is returned) */
   max_presences?: number | null;
   /** The maximum number of members for the guild */
@@ -583,19 +577,6 @@ export interface DiscordGuild {
   system_channel_id: string | null;
   /** The id of the channel where community guilds can display rules and/or guidelines */
   rules_channel_id: string | null;
-  /** When this guild was joined at */
-  joined_at?: string;
-  /** States of members currently in voice channels; lacks the guild_id key */
-  voice_states?: Omit<DiscordVoiceState, "guildId">[];
-  /** Users in the guild */
-  members?: DiscordMember[];
-  /** Channels in the guild */
-  channels?: DiscordChannel[];
-  // TODO: check if need to omit
-  /** All active threads in the guild that the current user has permission to view */
-  threads?: DiscordChannel[];
-  /** Presences of the members in the guild, will only include non-offline members if the size is greater than large threshold */
-  presences?: Partial<DiscordPresenceUpdate>[];
   /** Banner hash */
   banner: string | null;
   // TODO: Can be optimized to a number but is it worth it?
@@ -605,8 +586,31 @@ export interface DiscordGuild {
   public_updates_channel_id: string | null;
   /** The welcome screen of a Community guild, shown to new members, returned in an Invite's guild object */
   welcome_screen?: DiscordWelcomeScreen;
+}
+
+export interface DiscordGuildCreate extends DiscordGuild {
+  /** when this guild was joined at */
+  joined_at: string;
+  /** true if this is considered a large guild */
+  large: boolean;
+  /** true if this guild is unavailable due to an outage */
+  unavailable: boolean;
+  /** total number of members in this guild */
+  member_count: number;
+  /** states of members currently in voice channels; lacks the `guild_id` key */
+  voice_states: Omit<DiscordVoiceState, "guild_id">[];
+  /** users in the guild */
+  members: DiscordMember[];
+  /** channels in the guild */
+  channels: DiscordChannel[];
+  /** all active threads in the guild that current user has permission to view */
+  threads: DiscordChannel[];
+  /** presences of the members in the guild, will only include non-offline members if the size is greater than `large threshold` */
+  presences: Partial<DiscordPresenceUpdate>[];
   /** Stage instances in the guild */
-  stage_instances?: DiscordStageInstance[];
+  stage_instances: DiscordStageInstance[];
+  /** the scheduled events in the guild */
+  guild_scheduled_events: DiscordScheduledEvent[];
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
@@ -1990,7 +1994,7 @@ export interface DiscordReady {
 }
 
 /** https://discord.com/developers/docs/resources/guild#unavailable-guild-object */
-export interface DiscordUnavailableGuild extends Pick<DiscordGuild, "id" | "unavailable"> {}
+export interface DiscordUnavailableGuild extends Pick<DiscordGuildCreate, "id" | "unavailable"> {}
 
 /** https://discord.com/developers/docs/topics/gateway#message-delete-bulk */
 export interface DiscordMessageDeleteBulk {
@@ -2026,7 +2030,7 @@ export interface DiscordTemplate {
   serialized_source_guild:
     & Omit<
       PickPartial<
-        DiscordGuild,
+        DiscordGuildCreate,
         | "name"
         | "description"
         | "verification_level"

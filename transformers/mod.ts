@@ -13,6 +13,7 @@ export * from "./embed.ts";
 export * from "./emoji.ts";
 export * from "./gatewayBot.ts";
 export * from "./guild.ts";
+export * from "./guildCreate.ts";
 export * from "./integration.ts";
 export * from "./interaction.ts";
 export * from "./invite.ts";

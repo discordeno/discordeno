@@ -4,6 +4,7 @@ import { Collection } from "./util/collection.ts";
 import {
   Channel,
   Guild,
+  GuildCreate,
   Member,
   Message,
   Role,
@@ -93,6 +94,7 @@ import {
   DiscordGetGatewayBot,
   DiscordGuild,
   DiscordGuildApplicationCommandPermissions,
+  DiscordGuildCreate,
   DiscordGuildWidget,
   DiscordGuildWidgetSettings,
   DiscordIntegrationCreateUpdate,
@@ -397,6 +399,7 @@ export interface Transformers {
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
   channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }) => Channel;
   guild: (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) => Guild;
+  guildCreate: (bot: Bot, payload: { guild: DiscordGuildCreate } & { shardId: number }) => GuildCreate;
   user: (bot: Bot, payload: DiscordUser) => User;
   member: (bot: Bot, payload: DiscordMember, guildId: bigint, userId: bigint) => Member;
   message: (bot: Bot, payload: DiscordMessage) => Message;

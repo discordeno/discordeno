@@ -1,11 +1,11 @@
 import type { Emoji } from "../transformers/emoji.ts";
 import { Bot } from "../bot.ts";
 import { Collection } from "../util/collection.ts";
-import { DiscordGuild } from "../types/discord.ts";
+import { DiscordGuildCreate } from "../types/discord.ts";
 import { Optionalize } from "../types/shared.ts";
-import { GuildToggles } from "./toggles/guild.ts";
+import { GuildCreateToggles } from "./toggles/guild.ts";
 
-export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) {
+export function transformGuildCreate(bot: Bot, payload: { guild: DiscordGuildCreate } & { shardId: number }) {
   const guildId = bot.transformers.snowflake(payload.guild.id);
 
   const guild = {
@@ -15,7 +15,7 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
     defaultMessageNotifications: payload.guild.default_message_notifications,
     description: payload.guild.description,
     explicitContentFilter: payload.guild.explicit_content_filter,
-    toggles: new GuildToggles(payload.guild),
+    toggles: new GuildCreateToggles(payload.guild),
     maxMembers: payload.guild.max_members,
     maxPresences: payload.guild.max_presences ?? undefined,
     maxVideoChannelUsers: payload.guild.max_video_channel_users,
@@ -25,6 +25,16 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
     preferredLocale: payload.guild.preferred_locale,
     premiumSubscriptionCount: payload.guild.premium_subscription_count,
     premiumTier: payload.guild.premium_tier,
+    stageInstances: payload.guild.stage_instances?.map((si) => ({
+      /** The id of this Stage instance */
+      id: bot.transformers.snowflake(si.id),
+      /** The guild id of the associated Stage channel */
+      guildId,
+      /** The id of the associated Stage channel */
+      channelId: bot.transformers.snowflake(si.channel_id),
+      /** The topic of the Stage instance (1-120 characters) */
+      topic: si.topic,
+    })),
     systemChannelFlags: payload.guild.system_channel_flags,
     vanityUrlCode: payload.guild.vanity_url_code,
     verificationLevel: payload.guild.verification_level,
@@ -43,10 +53,18 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
       ? bot.utils.iconHashToBigInt(payload.guild.discovery_splash)
       : undefined,
 
+    joinedAt: payload.guild.joined_at ? Date.parse(payload.guild.joined_at) : undefined,
+    memberCount: payload.guild.member_count ?? 0,
     shardId: payload.shardId,
     icon: payload.guild.icon ? bot.utils.iconHashToBigInt(payload.guild.icon) : undefined,
     banner: payload.guild.banner ? bot.utils.iconHashToBigInt(payload.guild.banner) : undefined,
     splash: payload.guild.splash ? bot.utils.iconHashToBigInt(payload.guild.splash) : undefined,
+    channels: new Collection(
+      payload.guild.channels?.map((channel) => {
+        const result = bot.transformers.channel(bot, { channel, guildId });
+        return [result.id, result];
+      }),
+    ),
     roles: new Collection(
       payload.guild.roles?.map((role) => {
         const result = bot.transformers.role(bot, { role, guildId });
@@ -58,6 +76,11 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
         const em: Emoji = bot.transformers.emoji(bot, emoji);
         return [em.id!, em];
       }),
+    ),
+    voiceStates: new Collection(
+      (payload.guild.voice_states || [])
+        .map((vs) => bot.transformers.voiceState(bot, { voiceState: vs, guildId }))
+        .map((vs) => [vs.userId, vs]),
     ),
 
     id: guildId,
@@ -84,4 +107,4 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
   return guild as Optionalize<typeof guild>;
 }
 
-export interface Guild extends ReturnType<typeof transformGuild> {}
+export interface GuildCreate extends ReturnType<typeof transformGuildCreate> {}
