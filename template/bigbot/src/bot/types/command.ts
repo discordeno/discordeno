@@ -44,7 +44,7 @@ type SubcommandGroupArgumentDefinition<
 };
 
 // String
-export type StringArgumentDefinition<N extends translationKeys = translationKeys> =
+type StringArgumentDefinition<N extends translationKeys = translationKeys> =
   & BaseDefinition
   & {
     name: N;
@@ -52,7 +52,7 @@ export type StringArgumentDefinition<N extends translationKeys = translationKeys
     choices?: readonly { name: string; value: string }[];
     required?: true;
   };
-export type StringOptionalArgumentDefinition<
+type StringOptionalArgumentDefinition<
   N extends translationKeys = translationKeys,
 > = BaseDefinition & {
   name: N;
@@ -62,7 +62,7 @@ export type StringOptionalArgumentDefinition<
 };
 
 // Integer
-export type IntegerArgumentDefinition<N extends translationKeys = translationKeys> =
+type IntegerArgumentDefinition<N extends translationKeys = translationKeys> =
   & BaseDefinition
   & {
     name: N;
@@ -70,7 +70,7 @@ export type IntegerArgumentDefinition<N extends translationKeys = translationKey
     choices?: readonly { name: string; value: number }[];
     required: true;
   };
-export type IntegerOptionalArgumentDefinition<
+type IntegerOptionalArgumentDefinition<
   N extends translationKeys = translationKeys,
 > = BaseDefinition & {
   name: N;
