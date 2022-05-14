@@ -18,7 +18,7 @@ export async function getArchivedThreads(
   if (options) {
     url += "?";
 
-    if (options.before) url += `before=${options.before}`;
+    if (options.before) url += `before=${new Date(options.before).toISOString()}`;
     if (options.limit) url += `&limit=${options.limit}`;
   }
   const result = (await bot.rest.runMethod<DiscordListArchivedThreads>(
