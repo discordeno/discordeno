@@ -1369,7 +1369,7 @@ export interface DiscordListActiveThreads {
 }
 
 export interface DiscordListArchivedThreads extends DiscordListActiveThreads {
-  /** whether there are potentially additional threads that could be returned on a subsequent call */
+  /** Whether there are potentially additional threads that could be returned on a subsequent call */
   has_more: boolean;
 }
 
