@@ -933,8 +933,7 @@ export interface DiscordActivitySecrets {
   match?: string;
 }
 
-// https://github.com/discord/discord-api-docs/pull/2219
-// TODO: add documentation link
+/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-buttons */
 export interface DiscordActivityButton {
   /** The text shown on the button (1-32 characters) */
   label: string;
@@ -1366,6 +1365,10 @@ export interface DiscordListActiveThreads {
   threads: DiscordChannel[];
   /** A thread member object for each returned thread the current user has joined */
   members: DiscordThreadMember[];
+}
+
+export interface DiscordListArchivedThreads extends DiscordListActiveThreads {
+  has_more: boolean;
 }
 
 export interface DiscordThreadListSync {
@@ -2161,6 +2164,7 @@ export interface DiscordMessageReactionRemoveAll
   extends Pick<DiscordMessageReactionAdd, "channel_id" | "message_id" | "guild_id"> {}
 
 // TODO: add docs link
+/** https://github.com/discord/discord-api-docs/pull/1762 */
 export interface DiscordValidateDiscoverySearchTerm {
   /** Whether the provided term is valid */
   valid: boolean;

@@ -3,8 +3,14 @@ import { ApplicationCommandOption, ApplicationCommandTypes, Bot } from "../../de
 import { BotClient } from "../bot/botClient.ts";
 import { updateCommandVersion } from "../bot/database/commandVersion.ts";
 import commands from "../bot/events/interactions/mod.ts";
-import { serverLanguages, translate } from "../bot/languages/translate.ts";
-import { ArgumentDefinition } from "../bot/types/command.ts";
+import { serverLanguages, translate, translationKeys } from "../bot/languages/translate.ts";
+import {
+  ArgumentDefinition,
+  IntegerArgumentDefinition,
+  IntegerOptionalArgumentDefinition,
+  StringArgumentDefinition,
+  StringOptionalArgumentDefinition,
+} from "../bot/types/command.ts";
 
 export async function updateDevCommands(bot: Bot) {
   if (!DEV_GUILD_ID) return;
@@ -59,12 +65,14 @@ function createOptions(
     const optionName = translate(bot, guildId, option.name);
     const optionDescription = translate(bot, guildId, option.description);
 
-    // TODO: remove this ts ignore
-    // @ts-ignore ts stop being dumb
-    const choices = option.choices?.map((choice) => ({
-      ...choice,
-      name: translate(bot, guildId, choice.name),
-    }));
+    const choices = (option as
+      | StringArgumentDefinition
+      | StringOptionalArgumentDefinition
+      | IntegerArgumentDefinition
+      | IntegerOptionalArgumentDefinition).choices?.map((choice) => ({
+        ...choice,
+        name: translate(bot, guildId, choice.name as translationKeys),
+      }));
 
     newOptions.push({
       ...option,
