@@ -1,4 +1,4 @@
-import { DiscordGuild, DiscordGuildCreate } from "../../types/discord.ts";
+import { DiscordGuild } from "../../types/discord.ts";
 import { GuildFeatures } from "../../types/shared.ts";
 import { ToggleBitfieldBigint } from "./ToggleBitfield.ts";
 
@@ -91,15 +91,6 @@ export class GuildToggles extends ToggleBitfieldBigint {
     if (guild.features.includes(GuildFeatures.MoreStickers)) this.add(GuildToggle.moreStickers);
     if (guild.features.includes(GuildFeatures.PrivateThreads)) this.add(GuildToggle.privateThreads);
     if (guild.features.includes(GuildFeatures.RoleIcons)) this.add(GuildToggle.roleIcons);
-  }
-}
-
-export class GuildCreateToggles extends GuildToggles {
-  constructor(guild: DiscordGuildCreate) {
-    super(guild);
-
-    if (guild.large) this.add(GuildToggle.large);
-    if (guild.unavailable) this.add(GuildToggle.unavailable);
   }
 
   /** Whether the bot is the owner of the guild */
