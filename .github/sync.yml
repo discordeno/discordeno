@@ -4,6 +4,7 @@ discordeno/guide:
     exclude: |
       README.md
       LICENSE
+    deleteOrphaned: true
 
 discordeno/template:
   - source: template/
@@ -11,3 +12,4 @@ discordeno/template:
     exclude: |
       README.md
       LICENSE
+    deleteOrphaned: true
