@@ -31,7 +31,7 @@ export async function createForumPost(
         : undefined,
       file: options.file,
       components: options.components?.map((component) => bot.transformers.reverse.component(bot, component)),
-    }
+    },
   );
 
   return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(result.guild_id!) });
