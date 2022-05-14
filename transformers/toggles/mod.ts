@@ -5,3 +5,4 @@ export * from "./role.ts";
 export * from "./ToggleBitfield.ts";
 export * from "./user.ts";
 export * from "./voice.ts";
+export * from "./guildCreate.ts";

@@ -2,7 +2,7 @@ import { Bot } from "../bot.ts";
 import { Collection } from "../util/collection.ts";
 import { DiscordGuildCreate } from "../types/discord.ts";
 import { Optionalize } from "../types/shared.ts";
-import { GuildCreateToggles } from "./toggles/GuildCreate.ts";
+import { GuildCreateToggles } from "./toggles/guildCreate.ts";
 
 export function transformGuildCreate(bot: Bot, payload: { guild: DiscordGuildCreate } & { shardId: number }) {
   const guildId = bot.transformers.snowflake(payload.guild.id);
