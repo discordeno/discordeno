@@ -43,7 +43,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
             id: userId,
             guildId,
             nick: payload.interaction.member.nick ?? undefined,
-            roles: payload.interaction.member.roles?.map((id) => BigInt(id)),
+            roles: payload.interaction.member.roles?.map((id) => bot.transformers.snowflake(id)),
             joinedAt: payload.interaction.member.joined_at
               ? Date.parse(payload.interaction.member.joined_at)
               : undefined,
