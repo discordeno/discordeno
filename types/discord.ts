@@ -2160,7 +2160,6 @@ export interface DiscordMessageReactionRemoveAll
   extends Pick<DiscordMessageReactionAdd, "channel_id" | "message_id" | "guild_id"> {}
 
 // TODO: add docs link
-/** https://github.com/discord/discord-api-docs/pull/1762 */
 export interface DiscordValidateDiscoverySearchTerm {
   /** Whether the provided term is valid */
   valid: boolean;

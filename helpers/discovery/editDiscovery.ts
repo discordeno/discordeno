@@ -30,7 +30,6 @@ export async function editDiscovery(bot: Bot, guildId: bigint, data: ModifyGuild
 }
 
 // TODO: add docs link
-/** https://github.com/discord/discord-api-docs/pull/1762 */
 export interface ModifyGuildDiscoveryMetadata {
   /** The id of the primary discovery category. Default: 0 */
   primaryCategoryId?: number | null;
