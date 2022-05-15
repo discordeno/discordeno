@@ -1667,7 +1667,7 @@ export interface DiscordApplicationCommand {
   default_member_permissions?: string | null;
   /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
   dm_permission?: boolean | null;
-  /** Autoincrementing version identifier updated during substantial record changes */
+  /** Auto incrementing version identifier updated during substantial record changes */
   version: string;
 }
 
@@ -1685,17 +1685,21 @@ export interface DiscordApplicationCommandOption {
   description_localizations?: Localization | null;
   /** If the parameter is required or optional--default `false` */
   required?: boolean;
-  /** Choices for `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer`, and `ApplicationCommandOptionTypes.Number` types for the user to pick from, max 25 */
+  /** Choices for the option types `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer`, and `ApplicationCommandOptionTypes.Number`, from which the user can choose, max 25 */
   choices?: DiscordApplicationCommandOptionChoice[];
   /** If the option is a subcommand or subcommand group type, these nested options will be the parameters */
   options?: DiscordApplicationCommandOption[];
-  /** If autocomplete interactions are enabled for this `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer`, or `ApplicationCommandOptionTypes.Number` type option */
+  /** 
+    * If autocomplete interactions are enabled for this option. 
+    *
+    * Only available for `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer` and `ApplicationCommandOptionTypes.Number` option types
+    */
   autocomplete?: boolean;
   /** If the option is a channel type, the channels shown will be restricted to these types */
   channel_types?: ChannelTypes[];
-  /** If the option is an `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number` type, the minimum value permitted */
+  /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the minimum permitted value */
   min_value?: number;
-  /** If the option is an `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number` type, the maximum value permitted */
+  /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the maximum permitted value */
   max_value?: number;
 }
 

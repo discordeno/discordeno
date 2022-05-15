@@ -48,6 +48,6 @@ export async function upsertApplicationCommands(
 }
 
 export interface UpsertApplicationCommands extends CreateApplicationCommand {
-  /** ID of command, if known */
+  /** ID of the command, if known */
   id?: bigint;
 }
