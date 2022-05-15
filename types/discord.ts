@@ -1505,11 +1505,6 @@ export type DiscordAuditLogChange =
     new_value: string | number;
     old_value: string | number;
     key: "type";
-  }
-  | {
-    new_value: DiscordApplicationCommandPermissions;
-    old_value: DiscordApplicationCommandPermissions;
-    key: string;
   };
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
