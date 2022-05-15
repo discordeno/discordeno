@@ -43,6 +43,7 @@ import {
   transformInteractionDataOption,
 } from "./transformers/interaction.ts";
 import { Integration, transformIntegration } from "./transformers/integration.ts";
+import { IntegrationCreateUpdate, transformIntegrationCreateUpdate } from "./transformers/integrationCreateUpdate.ts";
 import { transformApplication } from "./transformers/application.ts";
 import { transformTeam } from "./transformers/team.ts";
 import { Invite, transformInvite } from "./transformers/invite.ts";
@@ -74,6 +75,7 @@ import {
   DiscordEmoji,
   DiscordGatewayPayload,
   DiscordInteractionDataOption,
+  DiscordIntegration,
   DiscordReady,
   DiscordStickerPack,
   DiscordTemplate,
@@ -404,7 +406,8 @@ export interface Transformers {
   voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) => VoiceState;
   interaction: (bot: Bot, payload: DiscordInteraction) => Interaction;
   interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption;
-  integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration;
+  integration: (bot: Bot, payload: DiscordIntegration) => Integration;
+  integrationCreateUpdate: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => IntegrationCreateUpdate;
   invite: (bot: Bot, invite: DiscordInviteCreate) => Invite;
   application: (bot: Bot, payload: DiscordApplication) => Application;
   team: (bot: Bot, payload: DiscordTeam) => Team;
@@ -453,6 +456,7 @@ export function createTransformers(options: Partial<Transformers>) {
     emoji: options.emoji || transformEmoji,
     guild: options.guild || transformGuild,
     integration: options.integration || transformIntegration,
+    integrationCreateUpdate: options.integrationCreateUpdate || transformIntegrationCreateUpdate,
     interaction: options.interaction || transformInteraction,
     interactionDataOptions: options.interactionDataOptions || transformInteractionDataOption,
     invite: options.invite || transformInvite,

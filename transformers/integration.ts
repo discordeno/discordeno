@@ -1,10 +1,9 @@
 import { Bot } from "../bot.ts";
-import { DiscordIntegrationCreateUpdate } from "../types/discord.ts";
+import { DiscordIntegration } from "../types/discord.ts";
 import { Optionalize } from "../types/shared.ts";
 
-export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreateUpdate) {
+export function transformIntegration(bot: Bot, payload: DiscordIntegration) {
   const integration = {
-    guildId: bot.transformers.snowflake(payload.guild_id),
     id: bot.transformers.snowflake(payload.id),
     name: payload.name,
     type: payload.type,

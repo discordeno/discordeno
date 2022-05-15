@@ -12,7 +12,7 @@ export async function getIntegrations(bot: Bot, guildId: bigint) {
 
   return new Collection(
     result.map((res) => {
-      const integration = bot.transformers.integration(bot, {
+      const integration = bot.transformers.integrationCreateUpdate(bot, {
         guild_id: guildId.toString(),
         id: res.id,
         name: res.name,
