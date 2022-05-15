@@ -1389,9 +1389,9 @@ export interface DiscordAuditLog {
   audit_log_entries: DiscordAuditLogEntry[];
   /** List of partial integration objects */
   integrations: Partial<DiscordIntegration>[];
-  /** 
+  /**
    * List of threads found in the audit log.
-   * Threads referenced in `THREAD_CREATE` and `THREAD_UPDATE` events are included in the threads map since archived threads might not be kept in memory by clients. 
+   * Threads referenced in `THREAD_CREATE` and `THREAD_UPDATE` events are included in the threads map since archived threads might not be kept in memory by clients.
    */
   threads: DiscordChannel[];
   /** List of guild scheduled events found in the audit log */
