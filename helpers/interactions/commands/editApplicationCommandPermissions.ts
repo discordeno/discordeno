@@ -1,6 +1,6 @@
 import type { Bot } from "../../../bot.ts";
 import { DiscordGuildApplicationCommandPermissions } from "../../../types/discord.ts";
-import { ApplicationCommandPermissions } from "./batchEditApplicationCommandPermissions.ts";
+import { ApplicationCommandPermissionTypes } from "../../../types/shared.ts";
 
 /** Edits command permissions for a specific command for your application in a guild. */
 export async function editApplicationCommandPermissions(
@@ -19,4 +19,14 @@ export async function editApplicationCommandPermissions(
   );
 
   return bot.transformers.applicationCommandPermission(bot, result);
+}
+
+/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandpermissions */
+export interface ApplicationCommandPermissions {
+  /** The id of the role or user */
+  id: string;
+  /** Role or User */
+  type: ApplicationCommandPermissionTypes;
+  /** `true` to allow, `false`, to disallow */
+  permission: boolean;
 }
