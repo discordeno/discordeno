@@ -13,7 +13,6 @@ import {
   resharderCloseOldShards,
   resharderIsPending,
   reshardingEditGuildShardIds,
-  startReshardingChecks,
 } from "./resharder.ts";
 import { spawnShards } from "./spawnShards.ts";
 import { prepareBuckets } from "./prepareBuckets.ts";
@@ -50,16 +49,18 @@ export function createGatewayManager(
     >(),
     /** Id of the first Shard which should get controlled by this manager.
      *
-     * NOTE: Usually this does not need to be used,
-     * since ideally one gatewayManager controls all Workers.
+     * NOTE: This is intended for testing purposes
+     * if big bots want to test the gateway on smaller scale.
+     * This is not recommended to be used in production.
      */
     firstShardId: options.firstShardId ?? 0,
     /** Important data which is used by the manager to connect shards to the gateway. */
     gatewayBot: options.gatewayBot,
     /** Id of the last Shard which should get controlled by this manager.
      *
-     * NOTE: Usually this does not need to be used,
-     * since ideally one gatewayManager controls all Workers.
+     * NOTE: This is intended for testing purposes
+     * if big bots want to test the gateway on smaller scale.
+     * This is not recommended to be used in production.
      */
     lastShardId: options.lastShardId ?? totalShards - 1 ?? 1,
     /** This is where the Shards get stored.
@@ -69,7 +70,7 @@ export function createGatewayManager(
     /** Delay in milliseconds to wait before spawning next shard.
      * OPTIMAL IS ABOVE 5100. YOU DON'T WANT TO HIT THE RATE LIMIT!!!
      */
-    spawnShardDelay: options.spawnShardDelay ?? 5100,
+    spawnShardDelay: options.spawnShardDelay ?? 5300,
     /** How many Shards should get assigned to a Worker.
      *
      * IMPORTANT: Discordeno will NOT spawn Workers for you.
@@ -119,33 +120,33 @@ export function createGatewayManager(
     /** Handle the different logs. Used for debugging. */
     debug: options.debug || function () {},
 
-    /** The methods related to resharding. */
-    resharding: {
-      /** Whether the resharder should automatically switch to LARGE BOT SHARDING when the bot is above 100K servers. */
-      useOptimalLargeBotSharding: options.resharding?.useOptimalLargeBotSharding ?? true,
-      /** Whether or not to automatically reshard.
-       *
-       * @default true
-       */
-      reshard: options.resharding?.reshard ?? true,
-      /** The percentage at which resharding should occur.
-       *
-       * @default 80
-       */
-      reshardPercentage: options.resharding?.reshardPercentage ?? 80,
-      /** Handles resharding the bot when necessary. */
-      resharder: options.resharding?.resharder ?? resharder,
-      /** Handles checking if all new shards are online in the new gateway. */
-      isPending: options.resharding?.isPending ?? resharderIsPending,
-      /** Handles closing all shards in the old gateway. */
-      closeOldShards: options.resharding?.closeOldShards ?? resharderCloseOldShards,
-      /** Handles checking if it is time to reshard and triggers the resharder. */
-      check: options.resharding?.check ?? startReshardingChecks,
-      /** Handler to mark a guild id with its new shard id in cache. */
-      markNewGuildShardId: options.resharding?.markNewGuildShardId ?? markNewGuildShardId,
-      /** Handler to update all guilds in cache with the new shard id. */
-      editGuildShardIds: options.resharding?.editGuildShardIds ?? reshardingEditGuildShardIds,
-    },
+    // /** The methods related to resharding. */
+    // resharding: {
+    //   /** Whether the resharder should automatically switch to LARGE BOT SHARDING when the bot is above 100K servers. */
+    //   useOptimalLargeBotSharding: options.resharding?.useOptimalLargeBotSharding ?? true,
+    //   /** Whether or not to automatically reshard.
+    //    *
+    //    * @default true
+    //    */
+    //   reshard: options.resharding?.reshard ?? true,
+    //   /** The percentage at which resharding should occur.
+    //    *
+    //    * @default 80
+    //    */
+    //   reshardPercentage: options.resharding?.reshardPercentage ?? 80,
+    //   /** Handles resharding the bot when necessary. */
+    //   resharder: options.resharding?.resharder ?? resharder,
+    //   /** Handles checking if all new shards are online in the new gateway. */
+    //   isPending: options.resharding?.isPending ?? resharderIsPending,
+    //   /** Handles closing all shards in the old gateway. */
+    //   closeOldShards: options.resharding?.closeOldShards ?? resharderCloseOldShards,
+    //   /** Handles checking if it is time to reshard and triggers the resharder. */
+    //   check: options.resharding?.check ?? startReshardingChecks,
+    //   /** Handler to mark a guild id with its new shard id in cache. */
+    //   markNewGuildShardId: options.resharding?.markNewGuildShardId ?? markNewGuildShardId,
+    //   /** Handler to update all guilds in cache with the new shard id. */
+    //   editGuildShardIds: options.resharding?.editGuildShardIds ?? reshardingEditGuildShardIds,
+    // },
 
     /** Calculate the amount of Shards which should be used based on the bot's max concurrency. */
     calculateTotalShards: options.calculateTotalShards ?? calculateTotalShards,
@@ -185,9 +186,19 @@ export interface CreateGatewayManager {
   shardsPerWorker: number;
   /** The total amount of workers to use for your bot. */
   totalWorkers: number;
-  /** Id of the first Shard assigned to this manager. */
+  /** Id of the first Shard which should get controlled by this manager.
+   *
+   * NOTE: This is intended for testing purposes
+   * if big bots want to test the gateway on smaller scale.
+   * This is not recommended to be used in production.
+   */
   firstShardId: number;
-  /** Id of the last Shard assigned to this manager. */
+  /** Id of the last Shard which should get controlled by this manager.
+   *
+   * NOTE: This is intended for testing purposes
+   * if big bots want to test the gateway on smaller scale.
+   * This is not recommended to be used in production.
+   */
   lastShardId: number;
 
   /** Important data which is used by the manager to connect shards to the gateway. */
@@ -197,8 +208,6 @@ export interface CreateGatewayManager {
 
   /** Options which are used to create a new shard. */
   createShardOptions?: Omit<CreateShard, "id" | "totalShards" | "requestIdentify" | "gatewayConfig">;
-
-  shards: Collection<number, Shard>;
 
   /** Stored as bucketId: { workers: [workerId, [ShardIds]], createNextShard: boolean } */
   buckets: Collection<
@@ -214,8 +223,6 @@ export interface CreateGatewayManager {
   prepareBuckets: typeof prepareBuckets;
   /** The handler for spawning ALL the shards. */
   spawnShards: typeof spawnShards;
-  /** Create the websocket and adds the proper handlers to the websocket. */
-  createShard: typeof createShard;
   /** Sends the discord payload to another server. */
   handleDiscordPayload: (shard: Shard, data: DiscordGatewayPayload) => any;
   /** Tell the worker to begin identifying this shard  */
@@ -236,8 +243,6 @@ export interface CreateGatewayManager {
     isPending: typeof resharderIsPending;
     /** Handles closing all shards in the old gateway. */
     closeOldShards: typeof resharderCloseOldShards;
-    /** Handles checking if it is time to reshard and triggers the resharder. */
-    check: typeof startReshardingChecks;
     /** Handler to mark a guild id with its new shard id in cache. */
     markNewGuildShardId: typeof markNewGuildShardId;
     /** Handler to update all guilds in cache with the new shard id. */

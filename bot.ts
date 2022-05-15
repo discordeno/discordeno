@@ -30,7 +30,7 @@ import {
   SLASH_COMMANDS_NAME_REGEX,
   USER_AGENT,
 } from "./util/constants.ts";
-import { createGatewayManager, GatewayManager } from "./gateway/mod.ts";
+import { createGatewayManager, GatewayManager } from "./gateway/manager/gatewayManager.ts";
 import { validateLength } from "./util/validateLength.ts";
 import { delay, formatImageURL, hasProperty } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
@@ -166,9 +166,11 @@ export function createBot(options: CreateBotOptions): Bot {
 
   bot.helpers = createHelpers(bot, options.helpers ?? {});
   bot.gateway = createGatewayManager({
-    token: bot.token,
-    intents: bot.intents,
+    gatewayBot: {} as any,
+    gatewayConfig: {},
+
     debug: bot.events.debug,
+
     handleDiscordPayload: bot.handleDiscordPayload ??
       async function (_, data: DiscordGatewayPayload, shardId: number) {
         // TRIGGER RAW EVENT

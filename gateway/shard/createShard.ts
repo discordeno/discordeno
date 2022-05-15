@@ -31,11 +31,6 @@ import { GatewayIntents } from "../../types/shared.ts";
 // TODO: function overwrite
 // TODO: improve shard event resolving
 
-// TODO: remove
-export function censor(message: any) {
-  return JSON.parse(JSON.stringify(message).replace(TOKEN, "[CENSORED]"));
-}
-
 /** */
 export function createShard(
   options: CreateShard,

@@ -1,7 +1,7 @@
 import { createLeakyBucket } from "../../util/bucket.ts";
 import { GatewayManager } from "./gatewayManager.ts";
 
-export function prepareBuckets(manager: GatewayManager, firstShardId: number, lastShardId: number) {
+export function prepareBuckets(manager: GatewayManager) {
   for (let i = 0; i < manager.gatewayBot.sessionStartLimit.maxConcurrency; ++i) {
     manager.buckets.set(i, {
       workers: [],
@@ -15,11 +15,11 @@ export function prepareBuckets(manager: GatewayManager, firstShardId: number, la
   }
 
   // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
-  for (let shardId = firstShardId; shardId <= lastShardId; ++shardId) {
+  for (let shardId = manager.firstShardId; shardId <= manager.lastShardId; ++shardId) {
     // gateway.debug("GW DEBUG", `1. Running for loop in spawnShards function for shardId ${i}.`);
-    if (shardId >= manager.totalShards) {
+    if (shardId >= manager.manager.totalShards) {
       throw new Error(
-        `Shard (id: ${shardId}) is bigger or equal to the used amount of used shards which is ${manager.totalShards}`,
+        `Shard (id: ${shardId}) is bigger or equal to the used amount of used shards which is ${manager.manager.totalShards}`,
       );
     }
 

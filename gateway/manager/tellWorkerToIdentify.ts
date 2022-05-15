@@ -9,23 +9,6 @@ export async function tellWorkerToIdentify(
   _workerId: number,
   shardId: number,
   _bucketId: number,
-) {
+): Promise<void> {
   return await manager.manager.identify(shardId);
-
-  // let shard = manager.shards.get(shardId);
-  // if (!shard) {
-  //   shard = manager.createShard({
-  //     ...manager.createShardOptions,
-  //     id: shardId,
-  //     gatewayConfig: manager.gatewayConfig,
-  //     totalShards: manager.totalShards,
-  //     requestIdentify: async function () {
-  //       return await bucket.leak.acquire(1);
-  //     },
-  //   });
-
-  //   manager.shards.set(shardId, shard);
-  // }
-
-  // return await shard.identify();
 }
