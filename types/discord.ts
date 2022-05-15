@@ -1653,7 +1653,13 @@ export interface DiscordApplicationCommand {
   application_id: string;
   /** Guild id of the command, if not global */
   guild_id?: string;
-  /**	Name of command, 1-32 characters */
+  /**
+   * Name of command, 1-32 characters.
+   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   * If there is a lowercase variant of any letters used, you must use those.
+   * Characters with no lowercase variants and/or uncased letters are still allowed.
+   * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
+   */
   name: string;
   /** Localization object for `name` field. Values follow the same restrictions as `name` */
   name_localizations?: Localization | null;
@@ -1675,7 +1681,13 @@ export interface DiscordApplicationCommand {
 export interface DiscordApplicationCommandOption {
   /** Type of option */
   type: ApplicationCommandOptionTypes;
-  /** 1-32 character name */
+  /**
+   * Name of command, 1-32 characters.
+   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   * If there is a lowercase variant of any letters used, you must use those.
+   * Characters with no lowercase variants and/or uncased letters are still allowed.
+   * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
+   */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
   name_localizations?: Localization | null;
@@ -1689,11 +1701,11 @@ export interface DiscordApplicationCommandOption {
   choices?: DiscordApplicationCommandOptionChoice[];
   /** If the option is a subcommand or subcommand group type, these nested options will be the parameters */
   options?: DiscordApplicationCommandOption[];
-  /** 
-    * If autocomplete interactions are enabled for this option. 
-    *
-    * Only available for `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer` and `ApplicationCommandOptionTypes.Number` option types
-    */
+  /**
+   * If autocomplete interactions are enabled for this option.
+   *
+   * Only available for `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer` and `ApplicationCommandOptionTypes.Number` option types
+   */
   autocomplete?: boolean;
   /** If the option is a channel type, the channels shown will be restricted to these types */
   channel_types?: ChannelTypes[];
