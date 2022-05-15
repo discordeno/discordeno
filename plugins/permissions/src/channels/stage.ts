@@ -16,7 +16,7 @@ export function createStageInstance(bot: BotWithCache) {
       "MUTE_MEMBERS",
       "MOVE_MEMBERS",
     ]);
-    
+
     if (options.sendStartNotification) {
       perms.add("MENTION_EVERYONE");
     }
