@@ -391,11 +391,11 @@ export enum AuditLogEvents {
   ChannelUpdate,
   /** Channel was deleted */
   ChannelDelete,
-  /** Permission overwrite was added to a channel	 */
+  /** Permission overwrite was added to a channel */
   ChannelOverwriteCreate,
   /** Permission overwrite was updated for a channel */
   ChannelOverwriteUpdate,
-  /** Permission overwrite was deleted from a channel	 */
+  /** Permission overwrite was deleted from a channel */
   ChannelOverwriteDelete,
   /** Member was removed from server */
   MemberKick = 20,
@@ -403,7 +403,7 @@ export enum AuditLogEvents {
   MemberPrune,
   /** Member was banned from server */
   MemberBanAdd,
-  /** Server ban was lifted for a member	 */
+  /** Server ban was lifted for a member */
   MemberBanRemove,
   /** Member was updated in server */
   MemberUpdate,
@@ -411,7 +411,7 @@ export enum AuditLogEvents {
   MemberRoleUpdate,
   /** Member was moved to a different voice channel */
   MemberMove,
-  /** Member was disconnected from a voice channel	 */
+  /** Member was disconnected from a voice channel */
   MemberDisconnect,
   /** Bot user was added to server */
   BotAdd,
@@ -445,7 +445,7 @@ export enum AuditLogEvents {
   MessageBulkDelete,
   /** Messaged was pinned to a channel */
   MessagePin,
-  /** Message was unpinned from a channel	 */
+  /** Message was unpinned from a channel */
   MessageUnpin,
   /** App was added to server */
   IntegrationCreate = 80,

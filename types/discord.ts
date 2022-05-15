@@ -1389,7 +1389,10 @@ export interface DiscordAuditLog {
   audit_log_entries: DiscordAuditLogEntry[];
   /** List of partial integration objects */
   integrations: Partial<DiscordIntegration>[];
-  /** List of threads found in the audit log. * Threads referenced in THREAD_CREATE and THREAD_UPDATE events are included in the threads map since archived threads might not be kept in memory by clients. */
+  /** 
+   * List of threads found in the audit log.
+   * Threads referenced in `THREAD_CREATE` and `THREAD_UPDATE` events are included in the threads map since archived threads might not be kept in memory by clients. 
+   */
   threads: DiscordChannel[];
   /** List of guild scheduled events found in the audit log */
   guild_scheduled_events?: DiscordScheduledEvent[];
@@ -1511,47 +1514,56 @@ export type DiscordAuditLogChange =
 export interface DiscordOptionalAuditEntryInfo {
   /**
    * Number of days after which inactive members were kicked.
-   * Event types: MEMBER_PRUNE
+   *
+   * Event types: `MEMBER_PRUNE`
    */
   delete_member_days: string;
   /**
    * Number of members removed by the prune.
-   * Event types: MEMBER_PRUNE
+   *
+   * Event types: `MEMBER_PRUNE`
    */
   members_removed: string;
   /**
    * Channel in which the entities were targeted.
-   * Event types: MEMBER_MOVE & MESSAGE_PIN & MESSAGE_UNPIN & MESSAGE_DELETE & STAGE_INSTANCE_CREATE & STAGE_INSTANCE_UPDATE & STAGE_INSTANCE_DELETE
+   *
+   * Event types: `MEMBER_MOVE`, `MESSAGE_PIN`, `MESSAGE_UNPIN`, `MESSAGE_DELETE`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
    */
   channel_id: string;
   /**
    * ID of the message that was targeted.
-   * Event types: MESSAGE_PIN & MESSAGE_UNPIN & STAGE_INSTANCE_CREATE & STAGE_INSTANCE_UPDATE & STAGE_INSTANCE_DELETE
+   *
+   * Event types: `MESSAGE_PIN`, `MESSAGE_UNPIN`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
    */
   message_id: string;
   /**
    * Number of entities that were targeted.
-   * Event types: MESSAGE_DELETE & MESSAGE_BULK_DELETE & MEMBER_DISCONNECT & MEMBER_MOVE
+   *
+   * Event types: `MESSAGE_DELETE`, `MESSAGE_BULK_DELETE`, `MEMBER_DISCONNECT`, `MEMBER_MOVE`
    */
   count: string;
   /**
    * ID of the overwritten entity.
-   * Event types: CHANNEL_OVERWRITE_CREATE & CHANNEL_OVERWRITE_UPDATE & CHANNEL_OVERWRITE_DELETE
+   *
+   * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
    */
   id: string;
   /**
    * Type of overwritten entity - "0", for "role", or "1" for "member".
-   * Event types: CHANNEL_OVERWRITE_CREATE & CHANNEL_OVERWRITE_UPDATE & CHANNEL_OVERWRITE_DELETE
+   *
+   * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
    */
   type: string;
   /**
    * Name of the role if type is "0" (not present if type is "1").
-   * Event types: CHANNEL_OVERWRITE_CREATE & CHANNEL_OVERWRITE_UPDATE & CHANNEL_OVERWRITE_DELETE
+   *
+   * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
    */
   role_name: string;
   /**
    * ID of the app whose permissions were targeted.
-   * Event types: APPLICATION_COMMAND_PERMISSION_UPDATE
+   *
+   * Event types: `APPLICATION_COMMAND_PERMISSION_UPDATE`
    */
   application_id: string;
 }
