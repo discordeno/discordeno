@@ -1368,6 +1368,11 @@ export interface DiscordListActiveThreads {
   members: DiscordThreadMember[];
 }
 
+export interface DiscordListArchivedThreads extends DiscordListActiveThreads {
+  /** Whether there are potentially additional threads that could be returned on a subsequent call */
+  has_more: boolean;
+}
+
 export interface DiscordThreadListSync {
   /** The id of the guild */
   guild_id: string;
