@@ -249,7 +249,7 @@ export enum PremiumTiers {
   Tier3,
 }
 
-// TODO: add resource link
+/** https://discord.com/developers/docs/resources/guild#guild-object-guild-nsfw-level */
 export enum GuildNsfwLevel {
   Default,
   Explicit,
@@ -1295,53 +1295,6 @@ export type Camelize<T> = {
     : T[K] extends {} ? Camelize<T[K]>
     : never;
 };
-
-// export type Optionalize<T> = T extends object ?
-//   & {
-//     [K in KeysWithUndefined<T>]?: Optionalize<T[K]>;
-//   }
-//   & {
-//     [K in Exclude<keyof T, KeysWithUndefined<T>>]: Optionalize<T[K]>;
-//   }
-//   : T;
-
-// export type KeysWithUndefined<T> = {
-//   [K in keyof T]-?: (undefined | null) extends T[K] ? K : never;
-// }[keyof T];
-
-// export type Optionalize<T> = (
-//   & {
-//     [K in KeysWithUndefined<T>]?: Optionalize<T[K]>;
-//   }
-//   & {
-//     [K in Exclude<keyof T, KeysWithUndefined<T>>]: (
-//       // deno-lint-ignore ban-types
-//       T[K] extends object ? Object extends Pick<T[K], keyof T[K]> ? T[K] : Optionalize<T[K]> : T[K]
-//     );
-//   }
-// );
-
-// export type KeysWithUndefined<T> = {
-//   [K in keyof T]-?: undefined extends T[K] ? K
-//     : null extends T[K] ? K
-//     : never;
-// }[keyof T];
-
-// export type Optionalize<T> = T extends object ? (
-//   & {
-//     [K in KeysWithUndefined<T>]?: T[K] extends Collection<any, any> ? T[K]
-//       : T[K] extends any[] ? T[K]
-//       : Optionalize<T[K]>;
-//   }
-//   & {
-//     [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends object ? Object extends Pick<T[K], keyof T[K]> ? T[K]
-//     : T[K] extends Collection<any, any> ? T[K]
-//     : T[K] extends any[] ? T[K]
-//     : Optionalize<T[K]>
-//       : T[K];
-//   }
-// )
-//   : T;
 
 export type Id<T> = T extends infer U ? {
   [K in keyof U]: U[K];
