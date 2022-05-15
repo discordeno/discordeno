@@ -9,17 +9,5 @@ export async function getDiscovery(bot: Bot, guildId: bigint) {
     bot.constants.endpoints.DISCOVERY_METADATA(guildId),
   );
 
-  return {
-    guildId,
-    primaryCategoryId: result.primary_category_id,
-    keywords: result.keywords ?? undefined,
-    emojiDiscoverabilityEnabled: result.emoji_discoverability_enabled,
-    partnerActionedTimestamp: result.partner_actioned_timestamp
-      ? Date.parse(result.partner_actioned_timestamp)
-      : undefined,
-    partnerApplicationTimestamp: result.partner_application_timestamp
-      ? Date.parse(result.partner_application_timestamp)
-      : undefined,
-    categoryIds: result.category_ids,
-  };
+  return bot.transformers.discoveryMetadata(bot, { ...result, guildId });
 }

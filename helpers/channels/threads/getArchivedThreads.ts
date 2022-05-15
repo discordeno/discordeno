@@ -1,6 +1,6 @@
 import { Collection } from "../../../util/collection.ts";
 import type { Bot } from "../../../bot.ts";
-import { DiscordListActiveThreads } from "../../../types/discord.ts";
+import { DiscordListThreads } from "../../../types/discord.ts";
 
 /** Get the archived threads for this channel, defaults to public */
 export async function getArchivedThreads(
@@ -23,26 +23,13 @@ export async function getArchivedThreads(
     if (options.limit) url += `&limit=${options.limit}`;
     if (options.type) url += `&type=${options.type}`;
   }
-  const result = (await bot.rest.runMethod<DiscordListActiveThreads>(
+  const result = (await bot.rest.runMethod<DiscordListThreads>(
     bot.rest,
     "get",
     url,
   ));
 
-  return {
-    threads: new Collection(
-      result.threads.map((t) => {
-        const thread = bot.transformers.channel(bot, { channel: t });
-        return [thread.id, thread];
-      }),
-    ),
-    members: new Collection(
-      result.members.map((m) => {
-        const member = bot.transformers.threadMember(bot, m);
-        return [member.id, member];
-      }),
-    ),
-  };
+  return bot.transformers.listThreads(bot, result);
 }
 
 // TODO: add docs link

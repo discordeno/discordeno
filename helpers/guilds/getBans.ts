@@ -20,10 +20,7 @@ export async function getBans(bot: Bot, guildId: bigint, options?: GetBans) {
   return new Collection<bigint, { reason?: string; user: User }>(
     results.map((res) => [
       bot.transformers.snowflake(res.user.id),
-      {
-        reason: res.reason ?? undefined,
-        user: bot.transformers.user(bot, res.user),
-      },
+      bot.transformers.ban(bot, res),
     ]),
   );
 }

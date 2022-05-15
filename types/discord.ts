@@ -827,9 +827,9 @@ export interface DiscordThreadMember {
   /** Any user-thread settings, currently only used for notifications */
   flags: number;
   /** The id of the thread */
-  id: string;
+  id?: string;
   /** The id of the user */
-  user_id: string;
+  user_id?: string;
   /** The time the current user last joined the thread */
   join_timestamp: string;
 }
@@ -1361,7 +1361,7 @@ export interface DiscordInteractionDataResolved {
   attachments?: Record<string, DiscordAttachment>;
 }
 
-export interface DiscordListActiveThreads {
+export interface DiscordListThreads {
   /** The active threads */
   threads: DiscordChannel[];
   /** A thread member object for each returned thread the current user has joined */
@@ -2251,3 +2251,5 @@ export interface DiscordInstallParams {
   /** the permissions to request for the bot role */
   permissions: string;
 }
+
+export interface DiscordGuildVanity extends Pick<DiscordInviteMetadata, "code" | "uses"> {}

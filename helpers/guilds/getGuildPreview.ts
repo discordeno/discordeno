@@ -9,17 +9,5 @@ export async function getGuildPreview(bot: Bot, guildId: bigint) {
     bot.constants.endpoints.GUILD_PREVIEW(guildId),
   );
 
-  return {
-    id: bot.transformers.snowflake(result.id),
-    name: result.name,
-    icon: result.icon ?? undefined,
-    splash: result.splash ?? undefined,
-    discoverySplash: result.discovery_splash ?? undefined,
-    emojis: result.emojis.map((emoji) => bot.transformers.emoji(bot, emoji)),
-    features: result.features,
-    approximateMemberCount: result.approximate_member_count,
-    approximatePresenceCount: result.approximate_presence_count,
-    description: result.description ?? undefined,
-    stickers: result.stickers.map((sticker) => bot.transformers.sticker(bot, sticker)),
-  };
+  return bot.transformers.guildPreview(bot, result);
 }

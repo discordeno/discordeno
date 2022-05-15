@@ -19,20 +19,7 @@ export async function createInvite(bot: Bot, channelId: bigint, options: CreateC
     },
   );
 
-  return {
-    code: result.code,
-    guildId: result.guild?.id ? bot.transformers.snowflake(result.guild.id) : undefined,
-    channelId: result.channel?.id ? bot.transformers.snowflake(result.channel.id) : undefined,
-    inviter: result.inviter ? bot.transformers.user(bot, result.inviter) : undefined,
-    targetType: result.target_type,
-    targetUser: result.target_user ? bot.transformers.user(bot, result.target_user) : undefined,
-    targetApplicationId: result.target_application?.id
-      ? bot.transformers.snowflake(result.target_application.id)
-      : undefined,
-    approximatePresenceCount: result.approximate_presence_count,
-    approximateMemberCount: result.approximate_member_count,
-    expiresAt: result.expires_at ? Date.parse(result.expires_at) : undefined,
-  };
+  return bot.transformers.invite(bot, result);
 }
 
 export interface CreateChannelInvite {
