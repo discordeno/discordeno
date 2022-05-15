@@ -8,10 +8,13 @@ export function transformApplicationCommand(bot: Bot, payload: DiscordApplicatio
     applicationId: bot.transformers.snowflake(payload.application_id),
     guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
     name: payload.name,
-    nameLocalizations: payload.name_localizations,
+    nameLocalizations: payload.name_localizations ?? undefined,
     description: payload.description,
-    descriptionLocalizations: payload.description_localizations,
-    defaultPermission: payload.default_permission ?? false,
+    descriptionLocalizations: payload.description_localizations ?? undefined,
+    defaultMemberPermissions: payload.default_member_permissions
+      ? bot.transformers.snowflake(payload.default_member_permissions)
+      : undefined,
+    dmPermission: payload.dm_permission ?? false,
     type: payload.type,
     version: payload.version,
 

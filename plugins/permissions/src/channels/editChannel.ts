@@ -100,20 +100,6 @@ export default function editChannel(bot: BotWithCache) {
         channel,
         requiredPerms,
       );
-
-      if (options.autoArchiveDuration) {
-        if (guild) {
-          if (
-            !guild.toggles.has(
-              options.autoArchiveDuration === 4320 ? "threeDayThreadArchive" : "sevenDayThreadArchive",
-            )
-          ) {
-            throw new Error(
-              "The 3 day and 7 day archive durations require the server to be boosted",
-            );
-          }
-        }
-      }
     }
 
     return await editChannelOld(channelId, options, reason);

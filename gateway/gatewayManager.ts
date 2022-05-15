@@ -74,7 +74,6 @@
 //     loadingShards: options.loadingShards ?? new Collection(),
 //     buckets: new Collection(),
 //     utf8decoder: new TextDecoder(),
-
 //     prepareBuckets: options.prepareBuckets ?? prepareBuckets,
 //     spawnShards: options.spawnShards ?? spawnShards,
 //     createShard: options.createShard ?? createShard,

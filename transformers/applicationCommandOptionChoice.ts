@@ -5,7 +5,7 @@ import { Camelize, Localization, Optionalize } from "../types/shared.ts";
 export function transformApplicationCommandOptionChoice(bot: Bot, payload: DiscordApplicationCommandOptionChoice) {
   const applicationCommandChoice = {
     name: payload.name,
-    nameLocalizations: payload.name_localizations,
+    nameLocalizations: payload.name_localizations ?? undefined,
     value: payload.value,
   };
 

@@ -43,17 +43,20 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
             id: userId,
             guildId,
             nick: payload.interaction.member.nick ?? undefined,
-            roles: payload.interaction.member.roles?.map((id) => BigInt(id)),
+            roles: payload.interaction.member.roles?.map((id) => bot.transformers.snowflake(id)),
             joinedAt: payload.interaction.member.joined_at
               ? Date.parse(payload.interaction.member.joined_at)
               : undefined,
             premiumSince: payload.interaction.member.premium_since
-              ? Date.parse(payload.interaction.member.premium_since) : undefined,
+              ? Date.parse(payload.interaction.member.premium_since)
+              : undefined,
             toggles: new MemberToggles(payload.interaction.member),
-            avatar: payload.interaction.member.avatar ? bot.utils.iconHashToBigInt(payload.interaction.member.avatar)
-            : undefined,
+            avatar: payload.interaction.member.avatar
+              ? bot.utils.iconHashToBigInt(payload.interaction.member.avatar)
+              : undefined,
             permissions: payload.interaction.member.permissions
-              ? bot.transformers.snowflake(payload.interaction.member.permissions) : undefined,
+              ? bot.transformers.snowflake(payload.interaction.member.permissions)
+              : undefined,
             communicationDisabledUntil: payload.interaction.member.communication_disabled_until
               ? Date.parse(payload.interaction.member.communication_disabled_until)
               : undefined,
@@ -84,8 +87,9 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
         channelId: payload.message_reference.channel_id
           ? bot.transformers.snowflake(payload.message_reference.channel_id)
           : undefined,
-        guildId: payload.message_reference.guild_id ? bot.transformers.snowflake(payload.message_reference.guild_id)
-        : undefined,
+        guildId: payload.message_reference.guild_id
+          ? bot.transformers.snowflake(payload.message_reference.guild_id)
+          : undefined,
       }
       : undefined,
     mentionedUserIds: payload.mentions ? payload.mentions.map((m) => bot.transformers.snowflake(m.id)) : [],

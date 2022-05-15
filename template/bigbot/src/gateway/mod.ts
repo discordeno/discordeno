@@ -68,10 +68,13 @@ async function startGateway() {
   gateway.buckets.forEach((bucket, bucketId) => {
     for (let i = 0; i < bucket.workers.length; i++) {
       const workerId = bucket.workers[i][0];
-      const worker = new Worker(new URL("./worker.js", import.meta.url).href, {
-        name: `w-${workerId}-b${bucketId}`,
-        type: "module",
-      });
+      const worker = new Worker(
+        new URL("./worker.ts", import.meta.url).href,
+        {
+          name: `w-${workerId}-b${bucketId}`,
+          type: "module",
+        },
+      );
       workers.set(workerId, worker);
 
       if (bucket.workers[i + 1]) {
