@@ -933,8 +933,7 @@ export interface DiscordActivitySecrets {
   match?: string;
 }
 
-// https://github.com/discord/discord-api-docs/pull/2219
-// TODO: add documentation link
+/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-buttons */
 export interface DiscordActivityButton {
   /** The text shown on the button (1-32 characters) */
   label: string;
@@ -1368,6 +1367,11 @@ export interface DiscordListActiveThreads {
   members: DiscordThreadMember[];
 }
 
+export interface DiscordListArchivedThreads extends DiscordListActiveThreads {
+  /** Whether there are potentially additional threads that could be returned on a subsequent call */
+  has_more: boolean;
+}
+
 export interface DiscordThreadListSync {
   /** The id of the guild */
   guild_id: string;
@@ -1385,11 +1389,14 @@ export interface DiscordAuditLog {
   webhooks: DiscordWebhook[];
   /** List of users found in the audit log */
   users: DiscordUser[];
-  /** List of audit log entries */
+  /** List of audit log entries, sorted from most to least recent */
   audit_log_entries: DiscordAuditLogEntry[];
   /** List of partial integration objects */
   integrations: Partial<DiscordIntegration>[];
-  /** List of threads found in the audit log. */
+  /**
+   * List of threads found in the audit log.
+   * Threads referenced in `THREAD_CREATE` and `THREAD_UPDATE` events are included in the threads map since archived threads might not be kept in memory by clients.
+   */
   threads: DiscordChannel[];
   /** List of guild scheduled events found in the audit log */
   guild_scheduled_events?: DiscordScheduledEvent[];
@@ -1397,19 +1404,19 @@ export interface DiscordAuditLog {
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-entry-structure */
 export interface DiscordAuditLogEntry {
-  /** id of the affected entity (webhook, user, role, etc.) */
+  /** ID of the affected entity (webhook, user, role, etc.) */
   target_id: string | null;
   /** Changes made to the `target_id` */
   changes?: DiscordAuditLogChange[];
-  /** The user who made the changes */
+  /** User or app that made the changes */
   user_id: string | null;
-  /** id of the entry */
+  /** ID of the entry */
   id: string;
   /** Type of action that occurred */
   action_type: AuditLogEvents;
-  /** Additional info for certain action types */
+  /** Additional info for certain event types */
   options?: DiscordOptionalAuditEntryInfo;
-  /** The reason for the change (0-512 characters) */
+  /** Reason for the change (1-512 characters) */
   reason?: string;
 }
 
@@ -1510,22 +1517,60 @@ export type DiscordAuditLogChange =
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
 export interface DiscordOptionalAuditEntryInfo {
-  /** Number of days after which inactive members were kicked */
+  /**
+   * Number of days after which inactive members were kicked.
+   *
+   * Event types: `MEMBER_PRUNE`
+   */
   delete_member_days: string;
-  /** Number of members removed by the prune */
+  /**
+   * Number of members removed by the prune.
+   *
+   * Event types: `MEMBER_PRUNE`
+   */
   members_removed: string;
-  /** Channel in which the entities were targeted */
+  /**
+   * Channel in which the entities were targeted.
+   *
+   * Event types: `MEMBER_MOVE`, `MESSAGE_PIN`, `MESSAGE_UNPIN`, `MESSAGE_DELETE`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
+   */
   channel_id: string;
-  /** id of the message that was targeted, types: MESSAGE_PIN & MESSAGE_UNPIN & STAGE_INSTANCE_CREATE & STAGE_INSTANCE_UPDATE & STAGE_INSTANCE_DELETE */
+  /**
+   * ID of the message that was targeted.
+   *
+   * Event types: `MESSAGE_PIN`, `MESSAGE_UNPIN`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
+   */
   message_id: string;
-  /** Number of entities that were targeted */
+  /**
+   * Number of entities that were targeted.
+   *
+   * Event types: `MESSAGE_DELETE`, `MESSAGE_BULK_DELETE`, `MEMBER_DISCONNECT`, `MEMBER_MOVE`
+   */
   count: string;
-  /** id of the overwritten entity */
+  /**
+   * ID of the overwritten entity.
+   *
+   * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
+   */
   id: string;
-  /** type of overwritten entity - "0", for "role", or "1" for "member" */
+  /**
+   * Type of overwritten entity - "0", for "role", or "1" for "member".
+   *
+   * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
+   */
   type: string;
-  /** Name of the role if type is "0" (not present if type is "1") */
+  /**
+   * Name of the role if type is "0" (not present if type is "1").
+   *
+   * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
+   */
   role_name: string;
+  /**
+   * ID of the app whose permissions were targeted.
+   *
+   * Event types: `APPLICATION_COMMAND_PERMISSION_UPDATE`
+   */
+  application_id: string;
 }
 
 export interface DiscordScheduledEvent {

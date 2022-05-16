@@ -249,7 +249,7 @@ export enum PremiumTiers {
   Tier3,
 }
 
-// TODO: add resource link
+/** https://discord.com/developers/docs/resources/guild#guild-object-guild-nsfw-level */
 export enum GuildNsfwLevel {
   Default,
   Explicit,
@@ -383,53 +383,102 @@ export enum ApplicationCommandOptionTypes {
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events */
 export enum AuditLogEvents {
+  /** Server settings were updated */
   GuildUpdate = 1,
+  /** Channel was created */
   ChannelCreate = 10,
+  /** Channel settings were updated */
   ChannelUpdate,
+  /** Channel was deleted */
   ChannelDelete,
+  /** Permission overwrite was added to a channel */
   ChannelOverwriteCreate,
+  /** Permission overwrite was updated for a channel */
   ChannelOverwriteUpdate,
+  /** Permission overwrite was deleted from a channel */
   ChannelOverwriteDelete,
+  /** Member was removed from server */
   MemberKick = 20,
+  /** Members were pruned from server */
   MemberPrune,
+  /** Member was banned from server */
   MemberBanAdd,
+  /** Server ban was lifted for a member */
   MemberBanRemove,
+  /** Member was updated in server */
   MemberUpdate,
+  /** Member was added or removed from a role */
   MemberRoleUpdate,
+  /** Member was moved to a different voice channel */
   MemberMove,
+  /** Member was disconnected from a voice channel */
   MemberDisconnect,
+  /** Bot user was added to server */
   BotAdd,
+  /** Role was created */
   RoleCreate = 30,
+  /** Role was edited */
   RoleUpdate,
+  /** Role was deleted */
   RoleDelete,
+  /** Server invite was created */
   InviteCreate = 40,
+  /** Server invite was updated */
   InviteUpdate,
+  /** Server invite was deleted */
   InviteDelete,
+  /** Webhook was created */
   WebhookCreate = 50,
+  /** Webhook properties or channel were updated */
   WebhookUpdate,
+  /** Webhook was deleted */
   WebhookDelete,
+  /** Emoji was created */
   EmojiCreate = 60,
+  /** Emoji name was updated */
   EmojiUpdate,
+  /** Emoji was deleted */
   EmojiDelete,
+  /** Single message was deleted */
   MessageDelete = 72,
+  /** Multiple messages were deleted */
   MessageBulkDelete,
+  /** Messaged was pinned to a channel */
   MessagePin,
+  /** Message was unpinned from a channel */
   MessageUnpin,
+  /** App was added to server */
   IntegrationCreate = 80,
+  /** App was updated (as an example, its scopes were updated) */
   IntegrationUpdate,
+  /** App was removed from server */
   IntegrationDelete,
+  /** Stage instance was created (stage channel becomes live) */
   StageInstanceCreate,
+  /** Stage instace details were updated */
   StageInstanceUpdate,
+  /** Stage instance was deleted (stage channel no longer live) */
   StageInstanceDelete,
+  /** Sticker was created */
   StickerCreate = 90,
+  /** Sticker details were updated */
   StickerUpdate,
+  /** Sticker was deleted */
   StickerDelete,
+  /** Event was created */
   GuildScheduledEventCreate = 100,
+  /** Event was updated */
   GuildScheduledEventUpdate,
+  /** Event was cancelled */
   GuildScheduledEventDelete,
+  /** Thread was created in a channel */
   ThreadCreate = 110,
+  /** Thread was updated */
   ThreadUpdate,
+  /** Thread was deleted */
   ThreadDelete,
+  /** Permissions were updated for a command */
+  ApplicationCommandPermissionUpdate = 121,
 }
 
 export enum ScheduledEventPrivacyLevel {
@@ -1296,53 +1345,6 @@ export type Camelize<T> = {
     : T[K] extends {} ? Camelize<T[K]>
     : never;
 };
-
-// export type Optionalize<T> = T extends object ?
-//   & {
-//     [K in KeysWithUndefined<T>]?: Optionalize<T[K]>;
-//   }
-//   & {
-//     [K in Exclude<keyof T, KeysWithUndefined<T>>]: Optionalize<T[K]>;
-//   }
-//   : T;
-
-// export type KeysWithUndefined<T> = {
-//   [K in keyof T]-?: (undefined | null) extends T[K] ? K : never;
-// }[keyof T];
-
-// export type Optionalize<T> = (
-//   & {
-//     [K in KeysWithUndefined<T>]?: Optionalize<T[K]>;
-//   }
-//   & {
-//     [K in Exclude<keyof T, KeysWithUndefined<T>>]: (
-//       // deno-lint-ignore ban-types
-//       T[K] extends object ? Object extends Pick<T[K], keyof T[K]> ? T[K] : Optionalize<T[K]> : T[K]
-//     );
-//   }
-// );
-
-// export type KeysWithUndefined<T> = {
-//   [K in keyof T]-?: undefined extends T[K] ? K
-//     : null extends T[K] ? K
-//     : never;
-// }[keyof T];
-
-// export type Optionalize<T> = T extends object ? (
-//   & {
-//     [K in KeysWithUndefined<T>]?: T[K] extends Collection<any, any> ? T[K]
-//       : T[K] extends any[] ? T[K]
-//       : Optionalize<T[K]>;
-//   }
-//   & {
-//     [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends object ? Object extends Pick<T[K], keyof T[K]> ? T[K]
-//     : T[K] extends Collection<any, any> ? T[K]
-//     : T[K] extends any[] ? T[K]
-//     : Optionalize<T[K]>
-//       : T[K];
-//   }
-// )
-//   : T;
 
 export type Id<T> = T extends infer U ? {
   [K in keyof U]: U[K];
