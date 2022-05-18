@@ -122,11 +122,13 @@ export function enableHelpersPlugin<B extends Bot = Bot>(rawBot: B): BotWithHelp
 // EXPORT EVERYTHING HERE SO USERS CAN OPT TO USE FUNCTIONS DIRECTLY
 export * from "./src/channels.ts";
 export * from "./src/disconnectMember.ts";
+export * from "./src/fetchAndRetrieveMembers.ts";
 export * from "./src/getMembersPaginated.ts";
 export * from "./src/moveMember.ts";
 export * from "./src/sendAutoCompleteChoices.ts";
 export * from "./src/sendDirectMessage.ts";
 export * from "./src/sendPrivateInteractionResponse.ts";
+export * from "./src/sendTextMessage.ts";
 export * from "./src/suppressEmbeds.ts";
 export * from "./src/threads.ts";
 export default enableHelpersPlugin;
