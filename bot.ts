@@ -137,11 +137,11 @@ import {
 } from "./transformers/applicationCommandOptionChoice.ts";
 import { transformEmbedToDiscordEmbed } from "./transformers/reverse/embed.ts";
 import { transformComponentToDiscordComponent } from "./transformers/reverse/component.ts";
-import { removeTokenPrefix } from "./util/token.ts";
+import { getBotIdFromToken, removeTokenPrefix } from "./util/token.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
-    id: options.botId,
+    id: options.botId ?? getBotIdFromToken(options.token),
     applicationId: options.applicationId || options.botId,
     token: removeTokenPrefix(options.token),
     events: createEventHandlers(options.events ?? {}),
@@ -314,7 +314,7 @@ export async function stopBot(bot: Bot) {
 
 export interface CreateBotOptions {
   token: string;
-  botId: bigint;
+  botId?: bigint;
   applicationId?: bigint;
   secretKey?: string;
   events?: Partial<EventHandlers>;
