@@ -13,10 +13,13 @@ export function startProxy(options: ProxyOptions) {
   // Setup cache add/remove on events
   setupEventsCaching(gateway);
 
+  gateway.spawnShards(gateway, options.firstShardId);
   return gateway;
 }
 
-export interface ProxyOptions extends GatewayManager {
+export type NecessaryGatewayManagerOptions = Partial<GatewayManager> & Pick<GatewayManager, "handleDiscordPayload">;
+
+export interface ProxyOptions extends NecessaryGatewayManagerOptions {
   /** The bot token */
   token: string;
 }
