@@ -144,8 +144,8 @@ export function createBot(options: CreateBotOptions): Bot {
     id: options.botId,
     applicationId: options.applicationId || options.botId,
     token: removeTokenPrefix(options.token),
-    events: createEventHandlers(options.events),
-    intents: options.intents.reduce(
+    events: createEventHandlers(options.events ?? {}),
+    intents: (options.intents ?? []).reduce(
       (bits, next) => (bits |= GatewayIntents[next]),
       0,
     ),
@@ -163,7 +163,7 @@ export function createBot(options: CreateBotOptions): Bot {
     },
     rest: createRestManager({
       token: options.token,
-      debug: options.events.debug,
+      debug: options.events?.debug,
       secretKey: options.secretKey ?? undefined,
     }),
   } as Bot;
@@ -317,8 +317,8 @@ export interface CreateBotOptions {
   botId: bigint;
   applicationId?: bigint;
   secretKey?: string;
-  events: Partial<EventHandlers>;
-  intents: (keyof typeof GatewayIntents)[];
+  events?: Partial<EventHandlers>;
+  intents?: (keyof typeof GatewayIntents)[];
   botGatewayData?: GetGatewayBot;
   rest?: Omit<CreateRestManagerOptions, "token">;
   handleDiscordPayload?: GatewayManager["handleDiscordPayload"];
