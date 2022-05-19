@@ -6,6 +6,7 @@ import { processQueue } from "./processQueue.ts";
 import { processRateLimitedPaths } from "./processRateLimitedPaths.ts";
 import { processRequest } from "./processRequest.ts";
 import { processRequestHeaders } from "./processRequestHeaders.ts";
+import { convertRestError } from "./convertRestError.ts";
 import { RestPayload, RestRateLimitedPath, RestRequest } from "./rest.ts";
 import { runMethod } from "./runMethod.ts";
 import { simplifyUrl } from "./simplifyUrl.ts";
@@ -70,6 +71,7 @@ export function createRestManager(options: CreateRestManagerOptions) {
     runMethod: options.runMethod || runMethod,
     simplifyUrl: options.simplifyUrl || simplifyUrl,
     processGlobalQueue: options.processGlobalQueue || processGlobalQueue,
+    convertRestError: options.convertRestError || convertRestError,
   };
 }
 
@@ -90,4 +92,5 @@ export interface CreateRestManagerOptions {
   runMethod?: typeof runMethod;
   simplifyUrl?: typeof simplifyUrl;
   processGlobalQueue?: typeof processGlobalQueue;
+  convertRestError?: typeof convertRestError;
 }

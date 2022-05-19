@@ -121,9 +121,7 @@ export async function processGlobalQueue(rest: RestManager) {
           let json = undefined;
           if (response.type) {
             json = JSON.stringify(await response.json());
-            console.log(json);
           }
-
           request.request.reject({
             ok: false,
             status: response.status,
