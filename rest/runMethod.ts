@@ -65,8 +65,8 @@ export async function runMethod<T = any>(
         url,
         method,
         reject: (data: RestRequestRejection) => {
-          errorStack.message = `[${data.status}] ${data.error}`;
-          reject(errorStack);
+          const restError = rest.convertRestError(errorStack, data);
+          reject(restError);
         },
         respond: (data: RestRequestResponse) =>
           resolve(data.status !== 204 ? JSON.parse(data.body ?? "{}") : (undefined as unknown as T)),
