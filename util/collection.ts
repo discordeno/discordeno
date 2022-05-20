@@ -8,6 +8,7 @@ export class Collection<K, V> extends Map<K, V> {
     super(entries ?? []);
 
     this.maxSize = options?.maxSize;
+
     if (!options?.sweeper) return;
 
     this.startSweeper(options.sweeper);
@@ -45,9 +46,9 @@ export class Collection<K, V> extends Map<K, V> {
     this.startSweeper({ filter: newFilter, interval: this.sweeper.interval });
   }
 
-  set(key: K, value: V) {
+  set(key: K, value: V, options: CollectionSetOptions = {}) {
     // When this collection is maxSized make sure we can add first
-    if ((this.maxSize || this.maxSize === 0) && this.size >= this.maxSize) {
+    if ((this.maxSize || this.maxSize === 0) && this.size >= this.maxSize && !options.forceSet) {
       return this;
     }
 
@@ -141,4 +142,9 @@ export interface CollectionSweeper<K, V> {
   interval: number;
   /** The bot object itself */
   bot?: Bot;
+}
+
+export interface CollectionSetOptions{
+  /** Ignores maxSize of Collection, when adding element to map */
+  forceSet?: boolean;
 }
