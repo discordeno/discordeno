@@ -8,11 +8,7 @@ import {
   REST_AUTHORIZATION_KEY,
   REST_PORT,
 } from "../../configs.ts";
-import {
-  createBot,
-  createRestManager,
-  DiscordGatewayPayload,
-} from "../../deps.ts";
+import { createBot, createRestManager, DiscordGatewayPayload } from "../../deps.ts";
 import logger from "../utils/logger.ts";
 import { updateDevCommands } from "../utils/updateSlash.ts";
 import { BotClient, setupBotClient } from "./botClient.ts";
@@ -47,7 +43,7 @@ if (DEVELOPMENT) {
 // Start listening on localhost.
 const server = Deno.listen({ port: EVENT_HANDLER_PORT });
 logger.info(
-  `HTTP webserver running.  Access it at:  http://localhost:${EVENT_HANDLER_PORT}/`,
+  `HTTP webserver running. Access it at: http://localhost:${EVENT_HANDLER_PORT}/`,
 );
 
 // Connections to the server will be yielded up as an async iterable.

@@ -1,15 +1,8 @@
-import {
-  Collection,
-  createGatewayManager,
-  createRestManager,
-  endpoints,
-} from "../../deps.ts";
-import {
-  DISCORD_TOKEN,
-  EVENT_HANDLER_SECRET_KEY,
-  REST_AUTHORIZATION_KEY,
-  REST_PORT,
-} from "../../configs.ts";
+import { Collection, createGatewayManager, createRestManager, endpoints } from "../../deps.ts";
+import { DISCORD_TOKEN, EVENT_HANDLER_SECRET_KEY, REST_AUTHORIZATION_KEY, REST_PORT } from "../../configs.ts";
+import { logger } from "../utils/logger.ts";
+
+const log = logger({ name: "Gateway" });
 
 // CREATE A SIMPLE MANAGER FOR REST
 const rest = createRestManager({
@@ -24,7 +17,7 @@ const gateway = createGatewayManager({
   token: DISCORD_TOKEN,
   intents: ["GuildMessages", "Guilds"],
   // THIS WILL BASICALLY BE YOUR HANDLER FOR YOUR EVENTS.
-  handleDiscordPayload: async function (_, data, shardId) {},
+  handleDiscordPayload: async (_, data, shardId) => {},
 });
 
 const workers = new Collection<number, Worker>();
@@ -159,8 +152,7 @@ setInterval(async () => {
         maxConcurrency: res.session_start_limit.max_concurrency,
       },
     }));
-  const percentage =
-    ((results.shards - gateway.maxShards) / gateway.maxShards) * 100;
+  const percentage = ((results.shards - gateway.maxShards) / gateway.maxShards) * 100;
   // Less than necessary% being used so do nothing
   if (percentage < gateway.reshardPercentage) return;
 
