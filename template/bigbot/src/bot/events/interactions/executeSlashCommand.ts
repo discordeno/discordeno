@@ -12,11 +12,21 @@ import {
   white,
 } from "../../../../deps.ts";
 import { optionParser, translateOptionNames } from "../../../utils/options.ts";
-import { privateReplyToInteraction, replyToInteraction } from "../../../utils/replies.ts";
+import {
+  privateReplyToInteraction,
+  replyToInteraction,
+} from "../../../utils/replies.ts";
 import slashLogWebhook from "../../../utils/slashWebhook.ts";
 import { BotClient } from "../../botClient.ts";
-import { loadLanguage, serverLanguages, translate } from "../../languages/translate.ts";
-import { Command, ConvertArgumentDefinitionsToArgs } from "../../types/command.ts";
+import {
+  loadLanguage,
+  serverLanguages,
+  translate,
+} from "../../languages/translate.ts";
+import {
+  Command,
+  ConvertArgumentDefinitionsToArgs,
+} from "../../types/command.ts";
 import commands from "./mod.ts";
 import { logger, LogLevels } from "../../../utils/logger.ts";
 
@@ -29,7 +39,11 @@ function logCommand(
 ) {
   const command = `[COMMAND: ${bgYellow(black(commandName || "Unknown"))} - ${
     bgBlack(
-      ["Failure", "Slowmode", "Missing"].includes(type) ? red(type) : type === "Success" ? green(type) : white(type),
+      ["Failure", "Slowmode", "Missing"].includes(type)
+        ? red(type)
+        : type === "Success"
+        ? green(type)
+        : white(type),
     )
   }]`;
 

@@ -5,7 +5,13 @@ import {
   EVENT_HANDLER_SECRET_KEY,
   EVENT_HANDLER_URL,
 } from "../../configs.ts";
-import { Collection, createGatewayManager, DiscordReady, GatewayManager, GetGatewayBot } from "../../deps.ts";
+import {
+  Collection,
+  createGatewayManager,
+  DiscordReady,
+  GatewayManager,
+  GetGatewayBot,
+} from "../../deps.ts";
 import { logger } from "../utils/logger.ts";
 
 let gateway: GatewayManager;
@@ -126,7 +132,11 @@ interface FullyReshardedPayload {
 // @ts-ignore this should not be erroring
 self.onmessage = async function (message: MessageEvent<string>) {
   const log = logger({
-    name: `GatewayWorker${JSON.parse(message.data).workerId ? `: ${JSON.parse(message.data).workerId}` : undefined}`,
+    name: `GatewayWorker${
+      JSON.parse(message.data).workerId
+        ? `: ${JSON.parse(message.data).workerId}`
+        : undefined
+    }`,
   });
 
   log.debug(`New Message:\n`, message.data);
@@ -253,7 +263,8 @@ self.onmessage = async function (message: MessageEvent<string>) {
       gateway.shardsRecommended = results.shards;
       gateway.sessionStartLimitTotal = results.sessionStartLimit.total;
       gateway.sessionStartLimitRemaining = results.sessionStartLimit.remaining;
-      gateway.sessionStartLimitResetAfter = results.sessionStartLimit.resetAfter;
+      gateway.sessionStartLimitResetAfter =
+        results.sessionStartLimit.resetAfter;
       gateway.maxConcurrency = results.sessionStartLimit.maxConcurrency;
 
       gateway.spawnShards(gateway, gateway.firstShardId);

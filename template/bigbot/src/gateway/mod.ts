@@ -1,5 +1,15 @@
-import { Collection, createGatewayManager, createRestManager, endpoints } from "../../deps.ts";
-import { DISCORD_TOKEN, EVENT_HANDLER_SECRET_KEY, REST_AUTHORIZATION_KEY, REST_PORT } from "../../configs.ts";
+import {
+  Collection,
+  createGatewayManager,
+  createRestManager,
+  endpoints,
+} from "../../deps.ts";
+import {
+  DISCORD_TOKEN,
+  EVENT_HANDLER_SECRET_KEY,
+  REST_AUTHORIZATION_KEY,
+  REST_PORT,
+} from "../../configs.ts";
 import { logger } from "../utils/logger.ts";
 
 const log = logger({ name: "Gateway" });
@@ -152,7 +162,8 @@ setInterval(async () => {
         maxConcurrency: res.session_start_limit.max_concurrency,
       },
     }));
-  const percentage = ((results.shards - gateway.maxShards) / gateway.maxShards) * 100;
+  const percentage =
+    ((results.shards - gateway.maxShards) / gateway.maxShards) * 100;
   // Less than necessary% being used so do nothing
   if (percentage < gateway.reshardPercentage) return;
 

@@ -1,5 +1,9 @@
 // START FILE FOR REST PROCESS
-import { DISCORD_TOKEN, REST_AUTHORIZATION_KEY, REST_PORT } from "../../configs.ts";
+import {
+  DISCORD_TOKEN,
+  REST_AUTHORIZATION_KEY,
+  REST_PORT,
+} from "../../configs.ts";
 import { BASE_URL, createRestManager } from "../../deps.ts";
 import { logger } from "../utils/logger.ts";
 
@@ -44,7 +48,9 @@ async function handleRequest(conn: Deno.Conn) {
       );
     }
 
-    const json = requestEvent.request.body ? (await requestEvent.request.json()) : undefined;
+    const json = requestEvent.request.body
+      ? (await requestEvent.request.json())
+      : undefined;
 
     try {
       const result = await rest.runMethod(
