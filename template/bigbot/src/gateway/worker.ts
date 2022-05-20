@@ -1,5 +1,16 @@
-import { DISCORD_TOKEN, EVENT_HANDLER_PORT, EVENT_HANDLER_SECRET_KEY, EVENT_HANDLER_URL } from "../../configs.ts";
-import { Collection, createGatewayManager, DiscordReady, GatewayManager, GetGatewayBot } from "../../deps.ts";
+import {
+  DISCORD_TOKEN,
+  EVENT_HANDLER_PORT,
+  EVENT_HANDLER_SECRET_KEY,
+  EVENT_HANDLER_URL,
+} from "../../configs.ts";
+import {
+  Collection,
+  createGatewayManager,
+  DiscordReady,
+  GatewayManager,
+  GetGatewayBot,
+} from "../../deps.ts";
 
 let gateway: GatewayManager;
 // FOR RESHARDED
@@ -7,7 +18,12 @@ let gatewayPendingClosing: GatewayManager;
 let workerId: number;
 
 function spawnGateway(shardId: number, options: Partial<GatewayManager>) {
-  console.log(`[Worker #${workerId}]`, "[Worker] Spawning the worker gateway.", shardId, options);
+  console.log(
+    `[Worker #${workerId}]`,
+    "[Worker] Spawning the worker gateway.",
+    shardId,
+    options,
+  );
   gateway = createGatewayManager({
     // LOAD DATA FROM DISCORDS RECOMMENDATIONS OR YOUR OWN CUSTOM ONES HERE
     shardsRecommended: options.shardsRecommended,
@@ -28,13 +44,17 @@ function spawnGateway(shardId: number, options: Partial<GatewayManager>) {
       // TRIGGER RAW EVENT
       if (!data.t) return;
 
-      const id = (data.t && ["GUILD_CREATE", "GUILD_DELETE", "GUILD_UPDATE"].includes(data.t)
+      const id = (data.t &&
+          ["GUILD_CREATE", "GUILD_DELETE", "GUILD_UPDATE"].includes(data.t)
         ? (data.d as any)?.id
         : (data.d as any)?.guild_id) ?? "000000000000000000";
 
       // IF FINAL SHARD BECAME READY TRIGGER NEXT WORKER
       if (data.t === "READY") {
-        console.log(`[Worker #${workerId}]`, `[Worker] Shard #${shardId} online`);
+        console.log(
+          `[Worker #${workerId}]`,
+          `[Worker] Shard #${shardId} online`,
+        );
 
         if (shardId === gateway.lastShardId) {
           // @ts-ignore
@@ -63,9 +83,7 @@ function spawnGateway(shardId: number, options: Partial<GatewayManager>) {
         }),
       })
         // BELOW IS FOR DENO MEMORY LEAK
-        .then((res) =>
-          res.text()
-        )
+        .then((res) => res.text())
         .catch(() => null);
     },
   });
@@ -107,7 +125,10 @@ interface FullyReshardedPayload {
 
 // @ts-ignore this should not be erroring
 self.onmessage = async function (message: MessageEvent<string>) {
-  const data = JSON.parse(message.data) as IdentifyPayload | ReshardPayload | FullyReshardedPayload;
+  const data = JSON.parse(message.data) as
+    | IdentifyPayload
+    | ReshardPayload
+    | FullyReshardedPayload;
 
   if (data.type === "IDENTIFY") {
     workerId = data.workerId;
@@ -142,8 +163,14 @@ self.onmessage = async function (message: MessageEvent<string>) {
       return false;
     };
 
-    async function processResharding(oldGateway: GatewayManager, results: GetGatewayBot) {
-      oldGateway.debug("GW DEBUG", "[Resharding] Starting the reshard process.");
+    async function processResharding(
+      oldGateway: GatewayManager,
+      results: GetGatewayBot,
+    ) {
+      oldGateway.debug(
+        "GW DEBUG",
+        "[Resharding] Starting the reshard process.",
+      );
 
       const gateway = createGatewayManager({
         ...oldGateway,
@@ -164,7 +191,9 @@ self.onmessage = async function (message: MessageEvent<string>) {
           gateway.handleDiscordPayload = async function (_, data, shardId) {
             if (data.t === "READY") {
               const payload = data.d as DiscordReady;
-              console.log(`[Worker - ${workerId}] Shard #${payload.shard?.[0]} online`);
+              console.log(
+                `[Worker - ${workerId}] Shard #${payload.shard?.[0]} online`,
+              );
               if (shardId === gateway.lastShardId) {
                 // @ts-ignore
                 postMessage(
@@ -185,7 +214,12 @@ self.onmessage = async function (message: MessageEvent<string>) {
         }
 
         // DON"T OVERRIDE THESE
-        if (["cache", "shards", "loadingShards", "buckets", "utf8decoder"].includes(key)) continue;
+        if (
+          ["cache", "shards", "loadingShards", "buckets", "utf8decoder"]
+            .includes(key)
+        ) {
+          continue;
+        }
 
         // USE ANY CUSTOMIZED OPTIONS FROM OLD GATEWAY
         // @ts-ignore silly ts error
@@ -195,8 +229,14 @@ self.onmessage = async function (message: MessageEvent<string>) {
       // Begin resharding
       // If more than 100K servers, begin switching to 16x sharding
       if (gateway.useOptimalLargeBotSharding) {
-        console.log(`[Worker - ${workerId}]`, "[Resharding] Using optimal large bot sharding solution.");
-        gateway.maxShards = gateway.calculateMaxShards(results.shards, results.sessionStartLimit.maxConcurrency);
+        console.log(
+          `[Worker - ${workerId}]`,
+          "[Resharding] Using optimal large bot sharding solution.",
+        );
+        gateway.maxShards = gateway.calculateMaxShards(
+          results.shards,
+          results.sessionStartLimit.maxConcurrency,
+        );
       } else {
         gateway.maxShards = results.shards;
       }
@@ -208,7 +248,8 @@ self.onmessage = async function (message: MessageEvent<string>) {
       gateway.shardsRecommended = results.shards;
       gateway.sessionStartLimitTotal = results.sessionStartLimit.total;
       gateway.sessionStartLimitRemaining = results.sessionStartLimit.remaining;
-      gateway.sessionStartLimitResetAfter = results.sessionStartLimit.resetAfter;
+      gateway.sessionStartLimitResetAfter =
+        results.sessionStartLimit.resetAfter;
       gateway.maxConcurrency = results.sessionStartLimit.maxConcurrency;
 
       gateway.spawnShards(gateway, gateway.firstShardId);
@@ -216,7 +257,10 @@ self.onmessage = async function (message: MessageEvent<string>) {
       return new Promise((resolve) => {
         // TIMER TO KEEP CHECKING WHEN ALL SHARDS HAVE RESHARDED
         const timer = setInterval(async () => {
-          const pending = await gateway.resharding.isPending(gateway, oldGateway);
+          const pending = await gateway.resharding.isPending(
+            gateway,
+            oldGateway,
+          );
           // STILL PENDING ON SOME SHARDS TO BE CREATED
           if (pending) return;
 

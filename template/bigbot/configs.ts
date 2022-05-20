@@ -36,15 +36,15 @@ export const SHARDS_PER_CLUSTER = env.SHARDS_PER_CLUSTER ? parseInt(env.SHARDS_P
 export const MAX_CLUSTERS = parseInt(env.MAX_CLUSTERS!, 10);
 if (!MAX_CLUSTERS) {
   throw new Error(
-    "Please for the love of god, tell me how many clusters your machine can handle!",
+    "How many clusters can you run on your machine (MAX_CLUSTERS)? Check your .env file!",
   );
 }
 
-export const URL_GATEWAY_PROXY_WILL_FORWARD_TO = env
-  .URL_GATEWAY_PROXY_WILL_FORWARD_TO!;
-if (!URL_GATEWAY_PROXY_WILL_FORWARD_TO) {
+export const GATEWAY_PROXY_URL = env
+  .GATEWAY_PROXY_URL!;
+if (!GATEWAY_PROXY_URL) {
   throw new Error(
-    "Don't you think you need to give a URL where you want your gateway proxy to send events to?",
+    "Hmm, it seems like you don't have somewhere to send gateway events to (GATEWAY_PROXY_URL). Please check your .env file!",
   );
 }
 
@@ -52,34 +52,34 @@ export const EVENT_HANDLER_URL = env
   .EVENT_HANDLER_URL!;
 if (!EVENT_HANDLER_URL) {
   throw new Error(
-    "Don't you think you need to give a URL where you want your events sent to?",
+    "Hmm, it seems like you don't have somewhere to send events to (EVENT_HANDLER_URL). Please check your .env file!",
   );
 }
 
 export const GATEWAY_SECRET_KEY = env.GATEWAY_SECRET_KEY!;
 if (!GATEWAY_SECRET_KEY) {
   throw new Error(
-    "Do you want to be hacked? Add a secret authorization key that can be used to identify requests are from you.",
+    "You need to add a GATEWAY_SECRET_KEY to your .env file!",
   );
 }
 
 export const REST_AUTHORIZATION_KEY = env.REST_AUTHORIZATION_KEY!;
 if (!REST_AUTHORIZATION_KEY) {
   throw new Error(
-    "Do you want to be hacked? Add a secret authorization key to make sure requests are only made by you.",
+    "You need to add a REST_AUTHORIZATION_KEY to your .env file!",
   );
 }
 
 export const EVENT_HANDLER_SECRET_KEY = env.EVENT_HANDLER_SECRET_KEY!;
 if (!EVENT_HANDLER_SECRET_KEY) {
   throw new Error(
-    "Do you want to be hacked? Add a secret authorization key to make sure requests are only made by you.",
+    "You need to add an EVENT_HANDLER_SECRET_KEY to your .env file!",
   );
 }
 
 export const BOT_ID = BigInt(atob(env.DISCORD_TOKEN.split(".")[0]));
 if (!BOT_ID) {
-  throw new Error("Please enter the BOT ID you want to run this with.");
+  throw new Error("Hmm, it seems like you didn't put in a valid DISCORD_TOKEN. Check your .env file!");
 }
 
 export const REST_PORT = env.REST_PORT ? parseInt(env.REST_PORT, 10) : 5000;

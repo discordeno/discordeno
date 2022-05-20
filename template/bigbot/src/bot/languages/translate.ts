@@ -16,7 +16,8 @@ export function translate<K extends translationKeys>(
 ): string {
   const language = getLanguage(guildIdOrLanguage);
   // deno-lint-ignore no-explicit-any
-  let value: string | ((...any: any[]) => string) | string[] = languages[language][key];
+  let value: string | ((...any: any[]) => string) | string[] =
+    languages[language][key];
 
   // Was not able to be translated
   if (!value) {

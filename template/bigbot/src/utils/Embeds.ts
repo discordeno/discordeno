@@ -46,7 +46,9 @@ export class Embeds extends Array<Embed> {
 
   setAuthor(name: string, iconUrl?: string | User, url?: string) {
     const embed = this.#getLastEmbed();
-    const finalName = this.enforceLimits ? this.fitData(name, embedLimits.authorName) : name;
+    const finalName = this.enforceLimits
+      ? this.fitData(name, embedLimits.authorName)
+      : name;
 
     if (typeof iconUrl === "string") {
       embed.author = { name: finalName, iconUrl, url };
@@ -141,7 +143,9 @@ export class Embeds extends Array<Embed> {
   }
 
   setTimestamp(time: number | string = Date.now()) {
-    this.#getLastEmbed().timestamp = typeof time === "string" ? Date.parse(time) : time;
+    this.#getLastEmbed().timestamp = typeof time === "string"
+      ? Date.parse(time)
+      : time;
 
     return this;
   }

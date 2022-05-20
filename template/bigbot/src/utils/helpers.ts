@@ -14,7 +14,10 @@ export function toTitleCase(text: string) {
     .split(" ")
     .map((
       word,
-    ) => (word[0] ? `${word[0].toUpperCase()}${word.substring(1).toLowerCase()}` : word))
+    ) => (word[0]
+      ? `${word[0].toUpperCase()}${word.substring(1).toLowerCase()}`
+      : word)
+    )
     .join(" ");
 }
 
@@ -122,7 +125,9 @@ export function chunkStrings(
   const responses: string[] = [];
   let response = "";
   for (const text of array) {
-    const nextText = response.length && lineSeparator ? `${lineSeparator}${text}` : text;
+    const nextText = response.length && lineSeparator
+      ? `${lineSeparator}${text}`
+      : text;
     if (response.length + nextText.length >= size) {
       responses.push(response);
       response = "";

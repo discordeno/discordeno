@@ -13,11 +13,21 @@ import {
 } from "../../../../deps.ts";
 import logger from "../../../../src/utils/logger.ts";
 import { optionParser, translateOptionNames } from "../../../utils/options.ts";
-import { privateReplyToInteraction, replyToInteraction } from "../../../utils/replies.ts";
+import {
+  privateReplyToInteraction,
+  replyToInteraction,
+} from "../../../utils/replies.ts";
 import slashLogWebhook from "../../../utils/slashWebhook.ts";
 import { BotClient } from "../../botClient.ts";
-import { loadLanguage, serverLanguages, translate } from "../../languages/translate.ts";
-import { Command, ConvertArgumentDefinitionsToArgs } from "../../types/command.ts";
+import {
+  loadLanguage,
+  serverLanguages,
+  translate,
+} from "../../languages/translate.ts";
+import {
+  Command,
+  ConvertArgumentDefinitionsToArgs,
+} from "../../types/command.ts";
 import commands from "./mod.ts";
 
 function logCommand(
@@ -27,7 +37,11 @@ function logCommand(
 ) {
   const command = `[COMMAND: ${bgYellow(black(commandName || "Unknown"))} - ${
     bgBlack(
-      ["Failure", "Slowmode", "Missing"].includes(type) ? red(type) : type === "Success" ? green(type) : white(type),
+      ["Failure", "Slowmode", "Missing"].includes(type)
+        ? red(type)
+        : type === "Success"
+        ? green(type)
+        : white(type),
     )
   }]`;
 
@@ -55,16 +69,21 @@ export async function executeSlashCommand(
 
   // Command could not be found
   if (!command?.execute) {
-    return await sendPrivateInteractionResponse(bot, interaction.id, interaction.token, {
-      type: InteractionResponseTypes.ChannelMessageWithSource,
-      data: {
-        content: translate(
-          bot,
-          interaction.guildId!,
-          "EXECUTE_COMMAND_NOT_FOUND",
-        ),
+    return await sendPrivateInteractionResponse(
+      bot,
+      interaction.id,
+      interaction.token,
+      {
+        type: InteractionResponseTypes.ChannelMessageWithSource,
+        data: {
+          content: translate(
+            bot,
+            interaction.guildId!,
+            "EXECUTE_COMMAND_NOT_FOUND",
+          ),
+        },
       },
-    })
+    )
       .catch(logger.error);
   }
 

@@ -1,6 +1,9 @@
 import { ApplicationCommandOptionTypes } from "../../../../../../deps.ts";
 import { replyToInteraction } from "../../../../../utils/replies.ts";
-import { updateGlobalCommands, updateGuildCommands } from "../../../../../utils/updateSlash.ts";
+import {
+  updateGlobalCommands,
+  updateGuildCommands,
+} from "../../../../../utils/updateSlash.ts";
 import { createCommand } from "../createCommand.ts";
 
 const command = createCommand({
