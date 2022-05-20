@@ -6,7 +6,7 @@ Deno.test({
   name: "[channel] Get all channels",
   async fn() {
     const bot = loadBot();
-    await Promise.all([
+    const [first, second] = await Promise.all([
       bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, { name: "first" }),
       bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, { name: "second" }),
     ]);
@@ -14,5 +14,9 @@ Deno.test({
     const channels = await bot.helpers.getChannels(CACHED_COMMUNITY_GUILD_ID);
 
     assertEquals(channels.size > 1, true);
+
+    await Promise.all(
+      [bot.helpers.deleteChannel(first.id), bot.helpers.deleteChannel(second.id)],
+    );
   },
 });
