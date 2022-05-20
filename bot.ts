@@ -65,6 +65,7 @@ import { transformApplicationCommand } from "./transformers/applicationCommand.t
 import { transformWelcomeScreen } from "./transformers/welcomeScreen.ts";
 import { transformVoiceRegion } from "./transformers/voiceRegion.ts";
 import { transformWidget } from "./transformers/widget.ts";
+import { transformWidgetSettings } from "./transformers/widgetSettings.ts";
 import { transformStageInstance } from "./transformers/stageInstance.ts";
 import { StickerPack, transformSticker, transformStickerPack } from "./transformers/sticker.ts";
 import { GetGatewayBot, transformGatewayBot } from "./transformers/gatewayBot.ts";
@@ -93,6 +94,7 @@ import {
   DiscordGuild,
   DiscordGuildApplicationCommandPermissions,
   DiscordGuildWidget,
+  DiscordGuildWidgetSettings,
   DiscordIntegrationCreateUpdate,
   DiscordInteraction,
   DiscordInviteCreate,
@@ -126,6 +128,7 @@ import { ApplicationCommandPermission } from "./transformers/applicationCommandP
 import { WelcomeScreen } from "./transformers/welcomeScreen.ts";
 import { VoiceRegions } from "./transformers/voiceRegion.ts";
 import { GuildWidget } from "./transformers/widget.ts";
+import { GuildWidgetSettings } from "./transformers/widgetSettings.ts";
 import { StageInstance } from "./transformers/stageInstance.ts";
 import { Sticker } from "./transformers/sticker.ts";
 import {
@@ -134,15 +137,15 @@ import {
 } from "./transformers/applicationCommandOptionChoice.ts";
 import { transformEmbedToDiscordEmbed } from "./transformers/reverse/embed.ts";
 import { transformComponentToDiscordComponent } from "./transformers/reverse/component.ts";
-import { removeTokenPrefix } from "./util/token.ts";
+import { getBotIdFromToken, removeTokenPrefix } from "./util/token.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
-    id: options.botId,
+    id: options.botId ?? getBotIdFromToken(options.token),
     applicationId: options.applicationId || options.botId,
     token: removeTokenPrefix(options.token),
-    events: createEventHandlers(options.events),
-    intents: options.intents.reduce(
+    events: createEventHandlers(options.events ?? {}),
+    intents: (options.intents ?? []).reduce(
       (bits, next) => (bits |= GatewayIntents[next]),
       0,
     ),
@@ -160,7 +163,7 @@ export function createBot(options: CreateBotOptions): Bot {
     },
     rest: createRestManager({
       token: options.token,
-      debug: options.events.debug,
+      debug: options.events?.debug,
       secretKey: options.secretKey ?? undefined,
     }),
   } as Bot;
@@ -311,11 +314,11 @@ export async function stopBot(bot: Bot) {
 
 export interface CreateBotOptions {
   token: string;
-  botId: bigint;
+  botId?: bigint;
   applicationId?: bigint;
   secretKey?: string;
-  events: Partial<EventHandlers>;
-  intents: (keyof typeof GatewayIntents)[];
+  events?: Partial<EventHandlers>;
+  intents?: (keyof typeof GatewayIntents)[];
   botGatewayData?: GetGatewayBot;
   rest?: Omit<CreateRestManagerOptions, "token">;
   handleDiscordPayload?: GatewayManager["handleDiscordPayload"];
@@ -424,6 +427,7 @@ export interface Transformers {
   welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen) => WelcomeScreen;
   voiceRegion: (bot: Bot, payload: DiscordVoiceRegion) => VoiceRegions;
   widget: (bot: Bot, payload: DiscordGuildWidget) => GuildWidget;
+  widgetSettings: (bot: Bot, payload: DiscordGuildWidgetSettings) => GuildWidgetSettings;
   stageInstance: (bot: Bot, payload: DiscordStageInstance) => StageInstance;
   sticker: (bot: Bot, payload: DiscordSticker) => Sticker;
   stickerPack: (bot: Bot, payload: DiscordStickerPack) => StickerPack;
@@ -473,6 +477,7 @@ export function createTransformers(options: Partial<Transformers>) {
     welcomeScreen: options.welcomeScreen || transformWelcomeScreen,
     voiceRegion: options.voiceRegion || transformVoiceRegion,
     widget: options.widget || transformWidget,
+    widgetSettings: options.widgetSettings || transformWidgetSettings,
     stageInstance: options.stageInstance || transformStageInstance,
     sticker: options.sticker || transformSticker,
     stickerPack: options.stickerPack || transformStickerPack,

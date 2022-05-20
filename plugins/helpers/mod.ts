@@ -21,7 +21,9 @@ import { fetchAndRetrieveMembers } from "./src/fetchAndRetrieveMembers.ts";
 import { BotWithCache } from "../cache/src/addCacheCollections.ts";
 import { sendTextMessage } from "./src/sendTextMessage.ts";
 
-export interface BotWithHelpersPlugin extends Bot {
+export type BotWithHelpersPlugin<B extends Bot = Bot> = Omit<B, "helpers"> & HelperFunctionsFromHelperPlugin;
+
+export interface HelperFunctionsFromHelperPlugin {
   helpers: FinalHelpers & {
     fetchAndRetrieveMembers: (
       guildId: bigint,
@@ -72,8 +74,9 @@ export interface BotWithHelpersPlugin extends Bot {
   };
 }
 
-export function enableHelpersPlugin(rawBot: Bot): BotWithHelpersPlugin {
-  const bot = rawBot as BotWithHelpersPlugin;
+export function enableHelpersPlugin<B extends Bot = Bot>(rawBot: B): BotWithHelpersPlugin<B> {
+  // FORCE OVERRIDE THE TYPE SO WE CAN SETUP FUNCTIONS
+  const bot = rawBot as unknown as BotWithHelpersPlugin;
 
   bot.helpers.fetchAndRetrieveMembers = (
     guildId: bigint,
@@ -113,17 +116,19 @@ export function enableHelpersPlugin(rawBot: Bot): BotWithHelpersPlugin {
     channelId: bigint,
   ) => moveMember(bot, guildId, memberId, channelId);
 
-  return bot as BotWithHelpersPlugin;
+  return bot as BotWithHelpersPlugin<B>;
 }
 
 // EXPORT EVERYTHING HERE SO USERS CAN OPT TO USE FUNCTIONS DIRECTLY
 export * from "./src/channels.ts";
 export * from "./src/disconnectMember.ts";
+export * from "./src/fetchAndRetrieveMembers.ts";
 export * from "./src/getMembersPaginated.ts";
 export * from "./src/moveMember.ts";
 export * from "./src/sendAutoCompleteChoices.ts";
 export * from "./src/sendDirectMessage.ts";
 export * from "./src/sendPrivateInteractionResponse.ts";
+export * from "./src/sendTextMessage.ts";
 export * from "./src/suppressEmbeds.ts";
 export * from "./src/threads.ts";
 export default enableHelpersPlugin;

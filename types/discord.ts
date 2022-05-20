@@ -7,6 +7,7 @@ import {
   ApplicationFlags,
   AuditLogEvents,
   ButtonStyles,
+  ChannelFlags,
   ChannelTypes,
   DefaultMessageNotificationLevels,
   EmbedTypes,
@@ -109,7 +110,7 @@ export interface DiscordIntegration {
   /** Integration type (twitch, youtube or discord) */
   type: "twitch" | "youtube" | "discord";
   /** Is this integration enabled */
-  enabled: boolean;
+  enabled?: boolean;
   /** Is this integration syncing */
   syncing?: boolean;
   /** Role Id that this integration uses for "subscribers" */
@@ -259,6 +260,12 @@ export interface DiscordApplication {
   guild_id?: string;
   /** If this application is a game sold on Discord, this field will be the hash of the image on store embeds */
   cover_image?: string;
+  /** up to 5 tags describing the content and functionality of the application */
+  tags?: string[];
+  /** settings for the application's default in-app authorization link, if enabled */
+  install_params?: DiscordInstallParams;
+  /** the application's default custom authorization link, if enabled */
+  custom_install_url?: string;
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-object */
@@ -694,6 +701,8 @@ export interface DiscordVoiceState {
 export interface DiscordChannel {
   /** The type of channel */
   type: ChannelTypes;
+  /** The flags of the channel */
+  flags?: ChannelFlags;
   /** Sorting position of the channel */
   position?: number;
   /** The name of the channel (1-100 characters) */
@@ -924,8 +933,7 @@ export interface DiscordActivitySecrets {
   match?: string;
 }
 
-// https://github.com/discord/discord-api-docs/pull/2219
-// TODO: add documentation link
+/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-buttons */
 export interface DiscordActivityButton {
   /** The text shown on the button (1-32 characters) */
   label: string;
@@ -955,7 +963,10 @@ export interface DiscordMessage {
   id: string;
   /** id of the channel the message was sent in */
   channel_id: string;
-  /** id of the guild the message was sent in */
+  /**
+   * id of the guild the message was sent in
+   * Note: For MESSAGE_CREATE and MESSAGE_UPDATE events, the message object may not contain a guild_id or member field since the events are sent directly to the receiving user and the bot who sent the message, rather than being sent through the guild like non-ephemeral messages.
+   */
   guild_id?: string;
   /**
    * The author of this message (not guaranteed to be a valid user)
@@ -1269,6 +1280,7 @@ export interface DiscordInteraction {
   version: 1;
   /** For the message the button was attached to */
   message?: DiscordMessage;
+  /** the command data payload */
   data?: DiscordInteractionData;
   /** The selected language of the invoking user */
   locale?: string;
@@ -1295,6 +1307,8 @@ export interface DiscordInteractionData {
   id: string;
   /** The name of the invoked command */
   name: string;
+  /** the type of the invoked command */
+  type: ApplicationCommandTypes;
   /** Converted users + roles + channels + attachments */
   resolved?: {
     /** The Ids and Message objects */
@@ -1314,6 +1328,8 @@ export interface DiscordInteractionData {
   options?: DiscordInteractionDataOption[];
   /** The target id if this is a context menu command. */
   target_id?: string;
+  /** the id of the guild the command is registered to */
+  guild_id?: string;
 }
 
 export type DiscordInteractionDataOption = {
@@ -1351,6 +1367,11 @@ export interface DiscordListActiveThreads {
   members: DiscordThreadMember[];
 }
 
+export interface DiscordListArchivedThreads extends DiscordListActiveThreads {
+  /** Whether there are potentially additional threads that could be returned on a subsequent call */
+  has_more: boolean;
+}
+
 export interface DiscordThreadListSync {
   /** The id of the guild */
   guild_id: string;
@@ -1368,11 +1389,14 @@ export interface DiscordAuditLog {
   webhooks: DiscordWebhook[];
   /** List of users found in the audit log */
   users: DiscordUser[];
-  /** List of audit log entries */
+  /** List of audit log entries, sorted from most to least recent */
   audit_log_entries: DiscordAuditLogEntry[];
   /** List of partial integration objects */
   integrations: Partial<DiscordIntegration>[];
-  /** List of threads found in the audit log. */
+  /**
+   * List of threads found in the audit log.
+   * Threads referenced in `THREAD_CREATE` and `THREAD_UPDATE` events are included in the threads map since archived threads might not be kept in memory by clients.
+   */
   threads: DiscordChannel[];
   /** List of guild scheduled events found in the audit log */
   guild_scheduled_events?: DiscordScheduledEvent[];
@@ -1380,19 +1404,19 @@ export interface DiscordAuditLog {
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-entry-structure */
 export interface DiscordAuditLogEntry {
-  /** id of the affected entity (webhook, user, role, etc.) */
+  /** ID of the affected entity (webhook, user, role, etc.) */
   target_id: string | null;
   /** Changes made to the `target_id` */
   changes?: DiscordAuditLogChange[];
-  /** The user who made the changes */
+  /** User or app that made the changes */
   user_id: string | null;
-  /** id of the entry */
+  /** ID of the entry */
   id: string;
   /** Type of action that occurred */
   action_type: AuditLogEvents;
-  /** Additional info for certain action types */
+  /** Additional info for certain event types */
   options?: DiscordOptionalAuditEntryInfo;
-  /** The reason for the change (0-512 characters) */
+  /** Reason for the change (1-512 characters) */
   reason?: string;
 }
 
@@ -1492,22 +1516,60 @@ export type DiscordAuditLogChange =
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
 export interface DiscordOptionalAuditEntryInfo {
-  /** Number of days after which inactive members were kicked */
+  /**
+   * Number of days after which inactive members were kicked.
+   *
+   * Event types: `MEMBER_PRUNE`
+   */
   delete_member_days: string;
-  /** Number of members removed by the prune */
+  /**
+   * Number of members removed by the prune.
+   *
+   * Event types: `MEMBER_PRUNE`
+   */
   members_removed: string;
-  /** Channel in which the entities were targeted */
+  /**
+   * Channel in which the entities were targeted.
+   *
+   * Event types: `MEMBER_MOVE`, `MESSAGE_PIN`, `MESSAGE_UNPIN`, `MESSAGE_DELETE`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
+   */
   channel_id: string;
-  /** id of the message that was targeted, types: MESSAGE_PIN & MESSAGE_UNPIN & STAGE_INSTANCE_CREATE & STAGE_INSTANCE_UPDATE & STAGE_INSTANCE_DELETE */
+  /**
+   * ID of the message that was targeted.
+   *
+   * Event types: `MESSAGE_PIN`, `MESSAGE_UNPIN`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
+   */
   message_id: string;
-  /** Number of entities that were targeted */
+  /**
+   * Number of entities that were targeted.
+   *
+   * Event types: `MESSAGE_DELETE`, `MESSAGE_BULK_DELETE`, `MEMBER_DISCONNECT`, `MEMBER_MOVE`
+   */
   count: string;
-  /** id of the overwritten entity */
+  /**
+   * ID of the overwritten entity.
+   *
+   * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
+   */
   id: string;
-  /** type of overwritten entity - "0", for "role", or "1" for "member" */
+  /**
+   * Type of overwritten entity - "0", for "role", or "1" for "member".
+   *
+   * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
+   */
   type: string;
-  /** Name of the role if type is "0" (not present if type is "1") */
+  /**
+   * Name of the role if type is "0" (not present if type is "1").
+   *
+   * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
+   */
   role_name: string;
+  /**
+   * ID of the app whose permissions were targeted.
+   *
+   * Event types: `APPLICATION_COMMAND_PERMISSION_UPDATE`
+   */
+  application_id: string;
 }
 
 export interface DiscordScheduledEvent {
@@ -1542,7 +1604,7 @@ export interface DiscordScheduledEvent {
   /** the number of users subscribed to the scheduled event */
   user_count?: number;
   /** the cover image hash of the scheduled event */
-  image: string | null;
+  image?: string | null;
 }
 
 export interface DiscordScheduledEventEntityMetadata {
@@ -1629,24 +1691,26 @@ export interface DiscordInviteStageInstance {
 export interface DiscordApplicationCommand {
   /** Unique id of the command */
   id: string;
+  /** The type of command. By default this is a application command(ChatInput). */
+  type?: ApplicationCommandTypes;
   /** Unique id of the parent application */
   application_id: string;
   /** Guild id of the command, if not global */
   guild_id?: string;
-  /** 1-32 character name matching */
+  /** `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set. If there is a lowercase variant of any letters used, you must use those. Characters with no lowercase variants and/or uncased letters are still allowed. `ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces. */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  name_localizations?: Localization;
+  name_localizations?: Localization | null;
   /** 1-100 character description */
   description: string;
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-  description_localizations?: Localization;
+  description_localizations?: Localization | null;
   /** The parameters for the command */
   options?: DiscordApplicationCommandOption[];
-  /** Whether the command is enabled by default when the app is added to a guild */
-  default_permission?: boolean;
-  /** The type of command. By default this is a application command(ChatInput). */
-  type?: ApplicationCommandTypes;
+  /** Set of permissions represented as a bit set */
+  default_member_permissions?: string | null;
+  /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
+  dm_permission?: boolean | null;
   /** Auto incrementing version identifier updated during substantial record changes */
   version: string;
 }
@@ -1655,14 +1719,14 @@ export interface DiscordApplicationCommand {
 export interface DiscordApplicationCommandOption {
   /** Value of Application Command Option Type */
   type: ApplicationCommandOptionTypes;
-  /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
+  /** Command option name must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set. If there is a lowercase variant of any letters used, you must use those. Characters with no lowercase variants and/or uncased letters are still allowed. */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  name_localizations?: Localization;
+  name_localizations?: Localization | null;
   /** 1-100 character description */
   description: string;
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-  description_localizations?: Localization;
+  description_localizations?: Localization | null;
   /** If the parameter is required or optional--default `false` */
   required?: boolean;
   /** Choices for `string` and `int` types for the user to pick from */
@@ -1684,7 +1748,7 @@ export interface DiscordApplicationCommandOptionChoice {
   /** 1-100 character choice name */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  name_localizations?: Localization;
+  name_localizations?: Localization | null;
   /** Value of the choice, up to 100 characters if string */
   value: string | number;
 }
@@ -2217,4 +2281,18 @@ export interface DiscordVoiceRegion {
   deprecated: boolean;
   /** Whether this is a custom voice region (used for events/etc) */
   custom: boolean;
+}
+
+export interface DiscordGuildWidgetSettings {
+  /** whether the widget is enabled */
+  enabled: boolean;
+  /** the widget channel id */
+  channel_id: string | null;
+}
+
+export interface DiscordInstallParams {
+  /** he scopes to add the application to the server with */
+  scopes: string[];
+  /** the permissions to request for the bot role */
+  permissions: string;
 }

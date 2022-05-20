@@ -35,7 +35,6 @@ export async function upsertApplicationCommands(
         description: option.description,
         type: option.type,
         options: option.options ? makeOptionsForCommand(option.options) : undefined,
-        default_permission: option.defaultPermission,
       })
     ),
   );

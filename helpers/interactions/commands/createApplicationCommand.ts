@@ -1,6 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { ApplicationCommandOption, ApplicationCommandTypes, Localization } from "../../../mod.ts";
 import { DiscordApplicationCommand, DiscordApplicationCommandOption } from "../../../types/discord.ts";
+import { AtLeastOne, PermissionStrings } from "../../../types/shared.ts";
 
 /**
  * There are two kinds of Application Commands: global commands and guild commands. Global commands are available for every guild that adds your app; guild commands are specific to the guild you specify when making them. Command names are unique per application within each scope (global and guild). That means:
@@ -33,6 +34,10 @@ export async function createApplicationCommand(
         description_localizations: options.descriptionLocalizations,
         type: options.type,
         options: options.options ? makeOptionsForCommand(options.options) : undefined,
+        default_member_permissions: options.defaultMemberPermissions
+          ? bot.utils.calculateBits(options.defaultMemberPermissions)
+          : undefined,
+        dm_permission: options.dmPermission,
       },
   );
 
@@ -74,8 +79,10 @@ export interface CreateApplicationCommand {
   type?: ApplicationCommandTypes;
   /** The parameters for the command */
   options?: ApplicationCommandOption[];
-  /** Whether the command is enabled by default when the app is added to a guild. Default: true */
-  defaultPermission?: boolean;
+  /** Set of permissions represented as a bit set */
+  defaultMemberPermissions?: PermissionStrings[];
+  /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
+  dmPermission?: boolean;
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
@@ -89,7 +96,7 @@ export interface CreateContextApplicationCommand {
 }
 
 export function isContextApplicationCommand(
-  cmd: CreateContextApplicationCommand | CreateApplicationCommand,
-): cmd is CreateContextApplicationCommand {
+  cmd: AtLeastOne<CreateContextApplicationCommand> | AtLeastOne<CreateApplicationCommand>,
+): cmd is AtLeastOne<CreateContextApplicationCommand> {
   return cmd.type === ApplicationCommandTypes.Message || cmd.type === ApplicationCommandTypes.User;
 }

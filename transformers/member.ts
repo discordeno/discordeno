@@ -26,7 +26,7 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: bigin
     id: userId,
     guildId,
     nick: payload.nick ?? undefined,
-    roles: payload.roles.map((id) => BigInt(id)),
+    roles: payload.roles.map((id) => bot.transformers.snowflake(id)),
     joinedAt: Date.parse(payload.joined_at),
     premiumSince: payload.premium_since ? Date.parse(payload.premium_since) : undefined,
     avatar: payload.avatar ? bot.utils.iconHashToBigInt(payload.avatar) : undefined,

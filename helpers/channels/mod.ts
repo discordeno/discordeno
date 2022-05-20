@@ -1,4 +1,5 @@
 export * from "./threads/mod.ts";
+export * from "./forums/mod.ts";
 
 export * from "./createChannel.ts";
 export * from "./createStageInstance.ts";
