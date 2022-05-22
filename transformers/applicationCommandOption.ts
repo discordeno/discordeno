@@ -39,7 +39,7 @@ export interface ApplicationCommandOption {
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
   descriptionLocalizations?: Localization;
   /** If the parameter is required or optional--default `false` */
-  required: boolean;
+  required?: boolean;
   /** Choices for `string` and `int` types for the user to pick from */
   choices?: ApplicationCommandOptionChoice[];
   /** If the option is a subcommand or subcommand group type, this nested options will be the parameters */
