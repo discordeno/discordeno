@@ -46,12 +46,16 @@ export class Collection<K, V> extends Map<K, V> {
     this.startSweeper({ filter: newFilter, interval: this.sweeper.interval });
   }
 
-  set(key: K, value: V, options: CollectionSetOptions = {}) {
+  set(key: K, value: V) {
     // When this collection is maxSized make sure we can add first
-    if ((this.maxSize || this.maxSize === 0) && this.size >= this.maxSize && !options.forceSet) {
+    if ((this.maxSize || this.maxSize === 0) && this.size >= this.maxSize) {
       return this;
     }
 
+    return super.set(key, value);
+  }
+
+  forceSet(key: K, value: V) {
     return super.set(key, value);
   }
 
@@ -142,9 +146,4 @@ export interface CollectionSweeper<K, V> {
   interval: number;
   /** The bot object itself */
   bot?: Bot;
-}
-
-export interface CollectionSetOptions{
-  /** Ignores maxSize of Collection, when adding element to map */
-  forceSet?: boolean;
 }
