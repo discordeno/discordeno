@@ -12,7 +12,7 @@ export function prepareBuckets(gateway: GatewayManager, firstShardId: number, la
   }
 
   // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
-  for (let i = firstShardId; i < lastShardId; i++) {
+  for (let i = firstShardId; i <= lastShardId; i++) {
     gateway.debug("GW DEBUG", `1. Running for loop in spawnShards function for shardId ${i}.`);
     if (i >= gateway.maxShards) {
       continue;
@@ -45,7 +45,7 @@ export function spawnShards(gateway: GatewayManager, firstShardId = 0) {
   }
 
   // PREPARES ALL SHARDS IN SPECIFIC BUCKETS
-  prepareBuckets(gateway, firstShardId, gateway.lastShardId ? gateway.lastShardId : gateway.maxShards);
+  prepareBuckets(gateway, firstShardId, gateway.lastShardId ? gateway.lastShardId : gateway.maxShards - 1);
 
   // SPREAD THIS OUT TO DIFFERENT WORKERS TO BEGIN STARTING UP
   gateway.buckets.forEach(async (bucket, bucketId) => {

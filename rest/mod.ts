@@ -10,3 +10,4 @@ export * from "./rest.ts";
 export * from "./restManager.ts";
 export * from "./runMethod.ts";
 export * from "./simplifyUrl.ts";
+export * from "./convertRestError.ts";

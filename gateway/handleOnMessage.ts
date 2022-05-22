@@ -106,7 +106,6 @@ export async function handleOnMessage(gateway: GatewayManager, message: any, sha
         if (bucket?.createNextShard.length) {
           // await delay(gateway.spawnShardDelay);
           // setTimeout(() => {
-          console.log("shifting to create new shard");
           bucket.createNextShard.shift()?.();
           // }, gateway.spawnShardDelay);
         }
