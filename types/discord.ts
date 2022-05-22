@@ -1367,7 +1367,7 @@ export interface DiscordListThreads {
   members: DiscordThreadMember[];
 }
 
-export interface DiscordListArchivedThreads extends DiscordListActiveThreads {
+export interface DiscordListArchivedThreads extends DiscordListThreads {
   /** Whether there are potentially additional threads that could be returned on a subsequent call */
   has_more: boolean;
 }
