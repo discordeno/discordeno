@@ -26,12 +26,12 @@ export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuild
 
 /** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
 export interface GetGuildAuditLog {
-  /** Filter the log for actions made by a user */
+  /** Entries from a specific user ID */
   userId?: bigint | string;
-  /** The type of audit log event */
+  /** Entries for a specific audit log event */
   actionType?: AuditLogEvents;
-  /** Filter the log before a certain entry id */
+  /** Entries that preceded a specific audit log entry ID */
   before?: bigint | string;
-  /** How many entries are returned (default 50, minimum 1, maximum 100) */
+  /** Maximum number of entries (between 1-100) to return, defaults to 50 */
   limit?: number;
 }

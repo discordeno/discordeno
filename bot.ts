@@ -160,15 +160,15 @@ import {
 } from "./transformers/applicationCommandOptionChoice.ts";
 import { transformEmbedToDiscordEmbed } from "./transformers/reverse/embed.ts";
 import { transformComponentToDiscordComponent } from "./transformers/reverse/component.ts";
-import { removeTokenPrefix } from "./util/token.ts";
+import { getBotIdFromToken, removeTokenPrefix } from "./util/token.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
-    id: options.botId,
+    id: options.botId ?? getBotIdFromToken(options.token),
     applicationId: options.applicationId || options.botId,
     token: removeTokenPrefix(options.token),
-    events: createEventHandlers(options.events),
-    intents: options.intents.reduce(
+    events: createEventHandlers(options.events ?? {}),
+    intents: (options.intents ?? []).reduce(
       (bits, next) => (bits |= GatewayIntents[next]),
       0,
     ),
@@ -186,7 +186,7 @@ export function createBot(options: CreateBotOptions): Bot {
     },
     rest: createRestManager({
       token: options.token,
-      debug: options.events.debug,
+      debug: options.events?.debug,
       secretKey: options.secretKey ?? undefined,
     }),
   } as Bot;
@@ -337,11 +337,11 @@ export async function stopBot(bot: Bot) {
 
 export interface CreateBotOptions {
   token: string;
-  botId: bigint;
+  botId?: bigint;
   applicationId?: bigint;
   secretKey?: string;
-  events: Partial<EventHandlers>;
-  intents: (keyof typeof GatewayIntents)[];
+  events?: Partial<EventHandlers>;
+  intents?: (keyof typeof GatewayIntents)[];
   botGatewayData?: GetGatewayBot;
   rest?: Omit<CreateRestManagerOptions, "token">;
   handleDiscordPayload?: GatewayManager["handleDiscordPayload"];

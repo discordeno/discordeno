@@ -9,6 +9,7 @@ import { processRequestHeaders } from "./processRequestHeaders.ts";
 import { runMethod } from "./runMethod.ts";
 import { runProxyMethod } from "./runProxyMethod.ts";
 import { simplifyUrl } from "./simplifyUrl.ts";
+import { convertRestError } from "./convertRestError.ts"
 
 export const rest = {
   /** The bot token for this rest client. */
@@ -52,6 +53,7 @@ export const rest = {
   runMethod,
   runProxyMethod,
   simplifyUrl,
+  convertRestError,
 };
 
 export interface RestRequest {

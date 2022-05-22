@@ -7,3 +7,8 @@ export function removeTokenPrefix(token?: string, type: "GATEWAY" | "REST" = "RE
   // Remove the prefix and return only the token.
   return token.substring(token.indexOf(" ") + 1);
 }
+
+/** Get the bot id from the bot token. WARNING: Discord staff has mentioned this may not be stable forever. Use at your own risk. However, note for over 5 years this has never broken. */
+export function getBotIdFromToken(token: string) {
+  return BigInt(atob(token.split(".")[0]));
+}
