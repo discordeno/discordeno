@@ -19,7 +19,7 @@ export async function editApplicationCommandPermissions(
       permissions: options,
     },
     {
-      headers: { authorization: bearerToken },
+      headers: { authorization: `Bearer ${bearerToken}` },
     },
   );
 
