@@ -32,7 +32,6 @@ export async function sendInteractionResponse(
       users: options.data.allowedMentions!.users?.map((id) => id.toString()),
       roles: options.data.allowedMentions!.roles?.map((id) => id.toString()),
     },
-    file: options.data.file,
     custom_id: options.data.customId,
     title: options.data.title,
     components: options.data.components?.map((component) => ({
@@ -105,6 +104,7 @@ export async function sendInteractionResponse(
       {
         type: options.type,
         data,
+        file: options.data.file,
       },
     );
   }
@@ -114,7 +114,7 @@ export async function sendInteractionResponse(
     bot.rest,
     "post",
     bot.constants.endpoints.WEBHOOK(bot.applicationId, token),
-    data,
+    { data, file: options.data.file },
   );
 
   return bot.transformers.message(bot, result);
