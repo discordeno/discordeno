@@ -1151,6 +1151,12 @@ export enum GatewayIntents {
   GuildScheduledEvents = (1 << 16),
 }
 
+// ALIASES JUST FOR BETTER UX IN THIS CASE
+
+/** https://discord.com/developers/docs/topics/gateway#list-of-intents */
+export const Intents = GatewayIntents;
+export type Intents = GatewayIntents;
+
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype */
 export enum InteractionResponseTypes {
   /** ACK a `Ping` */
