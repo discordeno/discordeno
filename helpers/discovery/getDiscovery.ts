@@ -5,7 +5,7 @@ import { DiscordDiscoveryMetadata } from "../../types/discord.ts";
 export async function getDiscovery(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordDiscoveryMetadata>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.endpoints.DISCOVERY_METADATA(guildId),
   );
 

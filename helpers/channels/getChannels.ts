@@ -6,7 +6,7 @@ import { DiscordChannel } from "../../types/discord.ts";
 export async function getChannels(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordChannel[]>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.endpoints.GUILD_CHANNELS(guildId),
   );
 

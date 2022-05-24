@@ -5,7 +5,7 @@ import { DiscordMemberWithUser } from "../../types/discord.ts";
 export async function editMember(bot: Bot, guildId: bigint, memberId: bigint, options: ModifyGuildMember) {
   const result = await bot.rest.runMethod<DiscordMemberWithUser>(
     bot.rest,
-    "patch",
+    "PATCH",
     bot.constants.endpoints.GUILD_MEMBER(guildId, memberId),
     {
       nick: options.nick,

@@ -11,7 +11,7 @@ export async function createForumPost(
 ) {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
-    "post",
+    "POST",
     bot.constants.endpoints.FORUM_START(channelId),
     {
       name: options.name,

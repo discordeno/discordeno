@@ -5,7 +5,7 @@ import { DiscordChannel } from "../../types/discord.ts";
 export async function deleteChannel(bot: Bot, channelId: bigint, reason?: string) {
   await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
-    "delete",
+    "DELETE",
     bot.constants.endpoints.CHANNEL_BASE(channelId),
     {
       reason,

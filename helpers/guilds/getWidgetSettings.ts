@@ -5,7 +5,7 @@ import { DiscordGuildWidgetSettings } from "../../types/discord.ts";
 export async function getWidgetSettings(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordGuildWidgetSettings>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.endpoints.GUILD_WIDGET(guildId),
   );
 

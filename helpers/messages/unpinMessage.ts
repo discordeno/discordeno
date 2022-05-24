@@ -2,5 +2,5 @@
 import type { Bot } from "../../bot.ts";
 
 export async function unpinMessage(bot: Bot, channelId: bigint, messageId: bigint) {
-  await bot.rest.runMethod<undefined>(bot.rest, "delete", bot.constants.endpoints.CHANNEL_PIN(channelId, messageId));
+  await bot.rest.runMethod<undefined>(bot.rest, "DELETE", bot.constants.endpoints.CHANNEL_PIN(channelId, messageId));
 }

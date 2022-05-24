@@ -5,7 +5,7 @@ import { DiscordGuildWidget } from "../../types/discord.ts";
 export async function getWidget(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordGuildWidget>(
     bot.rest,
-    "get",
+    "GET",
     `${bot.constants.endpoints.GUILD_WIDGET(guildId)}.json`,
   );
 

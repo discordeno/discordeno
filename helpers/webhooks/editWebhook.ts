@@ -5,7 +5,7 @@ import { DiscordWebhook } from "../../types/discord.ts";
 export async function editWebhook(bot: Bot, webhookId: bigint, options: ModifyWebhook) {
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
-    "patch",
+    "PATCH",
     bot.constants.endpoints.WEBHOOK_ID(webhookId),
     {
       name: options.name,

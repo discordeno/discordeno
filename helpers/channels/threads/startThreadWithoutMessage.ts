@@ -6,7 +6,7 @@ import { ChannelTypes } from "../../../types/shared.ts";
 export async function startThreadWithoutMessage(bot: Bot, channelId: bigint, options: StartThreadWithoutMessage) {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
-    "post",
+    "POST",
     bot.constants.endpoints.THREAD_START_PRIVATE(channelId),
     {
       name: options.name,

@@ -13,7 +13,7 @@ export async function createGuildTemplate(bot: Bot, guildId: bigint, data: Creat
 
   return await bot.rest.runMethod<DiscordTemplate>(
     bot.rest,
-    "post",
+    "POST",
     bot.constants.endpoints.GUILD_TEMPLATES(guildId),
     data,
   );

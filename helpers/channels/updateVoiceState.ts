@@ -11,7 +11,7 @@ import type { Bot } from "../../bot.ts";
  *  - When suppressed, the user will have their `request_to_speak_timestamp` removed.
  */
 export async function updateBotVoiceState(bot: Bot, guildId: bigint, options: UpdateSelfVoiceState) {
-  await bot.rest.runMethod(bot.rest, "patch", bot.constants.endpoints.UPDATE_VOICE_STATE(guildId), {
+  await bot.rest.runMethod(bot.rest, "PATCH", bot.constants.endpoints.UPDATE_VOICE_STATE(guildId), {
     channel_id: options.channelId,
     suppress: options.suppress,
     request_to_speak_timestamp: options.requestToSpeakTimestamp
@@ -34,7 +34,7 @@ export async function updateBotVoiceState(bot: Bot, guildId: bigint, options: Up
 export async function updateUserVoiceState(bot: Bot, guildId: bigint, options: UpdateOthersVoiceState) {
   await bot.rest.runMethod(
     bot.rest,
-    "patch",
+    "PATCH",
     bot.constants.endpoints.UPDATE_VOICE_STATE(guildId, options.userId),
     {
       channel_id: options.channelId,

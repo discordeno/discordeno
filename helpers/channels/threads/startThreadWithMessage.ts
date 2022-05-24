@@ -10,7 +10,7 @@ export async function startThreadWithMessage(
 ) {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
-    "post",
+    "POST",
     bot.constants.endpoints.THREAD_START_PUBLIC(channelId, messageId),
     {
       name: options.name,

@@ -15,7 +15,7 @@ export async function getBans(bot: Bot, guildId: bigint, options?: GetBans) {
     if (options.before) url += `&before=${options.before}`;
   }
 
-  const results = await bot.rest.runMethod<DiscordBan[]>(bot.rest, "get", url);
+  const results = await bot.rest.runMethod<DiscordBan[]>(bot.rest, "GET", url);
 
   return new Collection<bigint, { reason?: string; user: User }>(
     results.map((res) => [

@@ -23,7 +23,7 @@ export async function getMessages(
 
   const result = await bot.rest.runMethod<DiscordMessage[]>(
     bot.rest,
-    "get",
+    "GET",
     url,
   );
 

@@ -9,7 +9,7 @@ export async function editChannelOverwrite(
 ) {
   await bot.rest.runMethod<undefined>(
     bot.rest,
-    "put",
+    "PUT",
     bot.constants.endpoints.CHANNEL_OVERWRITE(channelId, overwrite.id),
     {
       allow: overwrite.allow ? bot.utils.calculateBits(overwrite.allow) : "0",

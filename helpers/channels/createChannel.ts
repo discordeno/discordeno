@@ -10,7 +10,7 @@ export async function createChannel(bot: Bot, guildId: bigint, options?: CreateG
 
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
-    "post",
+    "POST",
     bot.constants.endpoints.GUILD_CHANNELS(guildId),
     options
       ? {

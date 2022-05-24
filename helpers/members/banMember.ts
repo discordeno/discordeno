@@ -4,7 +4,7 @@ import type { Bot } from "../../bot.ts";
 export async function banMember(bot: Bot, guildId: bigint, id: bigint, options?: CreateGuildBan) {
   await bot.rest.runMethod<undefined>(
     bot.rest,
-    "put",
+    "PUT",
     bot.constants.endpoints.GUILD_BAN(guildId, id),
     options
       ? {

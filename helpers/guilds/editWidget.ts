@@ -5,7 +5,7 @@ import { DiscordGuildWidgetSettings } from "../../types/discord.ts";
 export async function editWidget(bot: Bot, guildId: bigint, enabled: boolean, channelId?: string | null) {
   const result = await bot.rest.runMethod<DiscordGuildWidgetSettings>(
     bot.rest,
-    "patch",
+    "PATCH",
     bot.constants.endpoints.GUILD_WIDGET(guildId),
     {
       enabled,

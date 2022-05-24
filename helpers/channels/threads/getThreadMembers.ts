@@ -6,7 +6,7 @@ import { Collection } from "../../../util/collection.ts";
 export async function getThreadMembers(bot: Bot, threadId: bigint) {
   const result = await bot.rest.runMethod<DiscordThreadMember[]>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.endpoints.THREAD_MEMBERS(threadId),
   );
   // return result;

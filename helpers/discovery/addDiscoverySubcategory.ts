@@ -5,7 +5,7 @@ import { DiscordAddGuildDiscoverySubcategory } from "../../types/discord.ts";
 export async function addDiscoverySubcategory(bot: Bot, guildId: bigint, categoryId: number) {
   await bot.rest.runMethod<DiscordAddGuildDiscoverySubcategory>(
     bot.rest,
-    "post",
+    "POST",
     bot.constants.endpoints.DISCOVERY_SUBCATEGORY(guildId, categoryId),
   );
 }

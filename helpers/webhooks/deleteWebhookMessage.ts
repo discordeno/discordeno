@@ -18,5 +18,5 @@ export async function deleteWebhookMessage(
   if (options?.threadId) {
     url += `?threadId=${options.threadId}`;
   }
-  await bot.rest.runMethod<undefined>(bot.rest, "delete", url);
+  await bot.rest.runMethod<undefined>(bot.rest, "DELETE", url);
 }

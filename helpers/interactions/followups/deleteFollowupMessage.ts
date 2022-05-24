@@ -4,7 +4,7 @@ import { Bot } from "../../../bot.ts";
 export async function deleteFollowupMessage(bot: Bot, interactionToken: string, messageId: bigint) {
   await bot.rest.runMethod<undefined>(
     bot.rest,
-    "delete",
+    "DELETE",
     bot.constants.endpoints.WEBHOOK_MESSAGE(bot.applicationId, interactionToken, messageId),
   );
 }

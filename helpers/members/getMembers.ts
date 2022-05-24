@@ -14,7 +14,7 @@ export async function getMembers(bot: Bot, guildId: bigint, options: ListGuildMe
 
   const result = await bot.rest.runMethod<DiscordMemberWithUser[]>(
     bot.rest,
-    "get",
+    "GET",
     url,
   );
 

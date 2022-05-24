@@ -14,7 +14,7 @@ export async function getInvite(bot: Bot, inviteCode: string, options?: GetInvit
   }
   const result = await bot.rest.runMethod<DiscordInviteMetadata>(
     bot.rest,
-    "get",
+    "GET",
     url,
   );
 

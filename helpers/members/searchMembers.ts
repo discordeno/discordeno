@@ -26,7 +26,7 @@ export async function searchMembers(
 
   const result = await bot.rest.runMethod<DiscordMemberWithUser[]>(
     bot.rest,
-    "get",
+    "GET",
     url,
   );
 

@@ -14,7 +14,7 @@ export async function getGuild(
 ) {
   const result = await bot.rest.runMethod<DiscordGuild>(
     bot.rest,
-    "get",
+    "GET",
     `${bot.constants.endpoints.GUILDS_BASE(guildId)}?with_counts=${options.counts ?? false}`,
   );
 

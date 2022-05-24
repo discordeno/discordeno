@@ -20,7 +20,7 @@ export async function getWebhookMessage(
     url += `?thread_id=${options.threadId}`;
   }
 
-  const result = await bot.rest.runMethod<DiscordMessage>(bot.rest, "get", url);
+  const result = await bot.rest.runMethod<DiscordMessage>(bot.rest, "GET", url);
 
   return bot.transformers.message(bot, result);
 }

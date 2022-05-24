@@ -20,7 +20,7 @@ export async function editWebhookMessage(
     url += `?thread_id=${options.threadId}`;
   }
 
-  const result = await bot.rest.runMethod<DiscordMessage>(bot.rest, "patch", url, {
+  const result = await bot.rest.runMethod<DiscordMessage>(bot.rest, "PATCH", url, {
     content: options.content,
     embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
     file: options.file,

@@ -16,7 +16,7 @@ export async function editGuildTemplate(bot: Bot, guildId: bigint, templateCode:
 
   return await bot.rest.runMethod<DiscordTemplate>(
     bot.rest,
-    "patch",
+    "PATCH",
     `${bot.constants.endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
     {
       name: data.name,

@@ -5,7 +5,7 @@ import { DiscordWelcomeScreen } from "../../types/discord.ts";
 export async function getWelcomeScreen(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordWelcomeScreen>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.endpoints.GUILD_WELCOME_SCREEN(guildId),
   );
 

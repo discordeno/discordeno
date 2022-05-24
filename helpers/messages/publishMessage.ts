@@ -5,7 +5,7 @@ import { DiscordMessage } from "../../types/discord.ts";
 export async function publishMessage(bot: Bot, channelId: bigint, messageId: bigint) {
   const data = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "post",
+    "POST",
     bot.constants.endpoints.CHANNEL_MESSAGE_CROSSPOST(channelId, messageId),
   );
 

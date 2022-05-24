@@ -5,7 +5,7 @@ import { DiscordMessage } from "../../types/discord.ts";
 export async function getOriginalInteractionResponse(bot: Bot, token: string) {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.endpoints.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token),
   );
 

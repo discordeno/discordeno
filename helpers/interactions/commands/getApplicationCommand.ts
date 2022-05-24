@@ -15,7 +15,7 @@ export async function getApplicationCommand(bot: Bot, commandId: bigint, options
 
   const result = await bot.rest.runMethod<DiscordApplicationCommand>(
     bot.rest,
-    "get",
+    "GET",
     url,
   );
 

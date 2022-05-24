@@ -5,7 +5,7 @@ import { DiscordThreadMember } from "../../../types/discord.ts";
 export async function getThreadMember(bot: Bot, threadId: bigint, userId: bigint) {
   const result = await bot.rest.runMethod<DiscordThreadMember>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.endpoints.THREAD_USER(threadId, userId),
   );
 

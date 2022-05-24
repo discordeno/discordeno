@@ -4,7 +4,7 @@ import type { Bot } from "../../bot.ts";
 export async function removeAllReactions(bot: Bot, channelId: bigint, messageId: bigint) {
   await bot.rest.runMethod<undefined>(
     bot.rest,
-    "delete",
+    "DELETE",
     bot.constants.endpoints.CHANNEL_MESSAGE_REACTIONS(channelId, messageId),
   );
 }

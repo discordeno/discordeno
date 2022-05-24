@@ -17,7 +17,7 @@ export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuild
   }
   const auditlog = await bot.rest.runMethod<DiscordAuditLog>(
     bot.rest,
-    "get",
+    "GET",
     url,
   );
 

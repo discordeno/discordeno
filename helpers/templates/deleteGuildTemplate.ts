@@ -8,7 +8,7 @@ import { DiscordTemplate } from "../../types/discord.ts";
 export async function deleteGuildTemplate(bot: Bot, guildId: bigint, templateCode: string) {
   await bot.rest.runMethod<DiscordTemplate>(
     bot.rest,
-    "delete",
+    "DELETE",
     `${bot.constants.endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
   );
 }

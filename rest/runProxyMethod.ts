@@ -7,7 +7,7 @@ export type ProxyMethodResponse<T> = Omit<RestRequestResponse | RestRequestRejec
 // this file could also be moved to a plugin.
 export async function runProxyMethod<T = any>(
   rest: RestManager,
-  method: "get" | "post" | "put" | "delete" | "patch",
+  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
   url: string,
   body?: unknown,
   retryCount = 0,

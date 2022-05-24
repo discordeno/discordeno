@@ -4,7 +4,7 @@ import { DiscordWelcomeScreen } from "../../types/discord.ts";
 export async function editWelcomeScreen(bot: Bot, guildId: bigint, options: ModifyGuildWelcomeScreen) {
   const result = await bot.rest.runMethod<DiscordWelcomeScreen>(
     bot.rest,
-    "patch",
+    "PATCH",
     bot.constants.endpoints.GUILD_WELCOME_SCREEN(guildId),
     {
       enabled: options.enabled,

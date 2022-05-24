@@ -28,7 +28,7 @@ export async function createScheduledEvent(bot: Bot, guildId: bigint, options: C
 
   const event = await bot.rest.runMethod<DiscordScheduledEvent>(
     bot.rest,
-    "post",
+    "POST",
     bot.constants.endpoints.GUILD_SCHEDULED_EVENTS(guildId),
     {
       channel_id: options.channelId?.toString(),

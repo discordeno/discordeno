@@ -12,7 +12,7 @@ export async function createGuildFromTemplate(bot: Bot, templateCode: string, da
 
   const createdGuild = await bot.rest.runMethod<DiscordGuild>(
     bot.rest,
-    "post",
+    "POST",
     bot.constants.endpoints.GUILD_TEMPLATE(templateCode),
     data,
   );

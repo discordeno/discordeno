@@ -5,7 +5,7 @@ import { DiscordTemplate } from "../../types/discord.ts";
 export async function getTemplate(bot: Bot, templateCode: string) {
   const result = await bot.rest.runMethod<DiscordTemplate>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.endpoints.GUILD_TEMPLATE(templateCode),
   );
 
