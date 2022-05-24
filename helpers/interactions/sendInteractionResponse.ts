@@ -114,7 +114,7 @@ export async function sendInteractionResponse(
     bot.rest,
     "post",
     bot.constants.endpoints.WEBHOOK(bot.applicationId, token),
-    { data, file: options.data.file },
+    { ...data, file: options.data.file },
   );
 
   return bot.transformers.message(bot, result);
