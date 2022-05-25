@@ -519,6 +519,7 @@ export enum ApplicationCommandTypes {
 export enum ApplicationCommandPermissionTypes {
   Role = 1,
   User,
+  Channel,
 }
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags */

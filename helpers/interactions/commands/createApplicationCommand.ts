@@ -67,7 +67,13 @@ export function makeOptionsForCommand(options: ApplicationCommandOption[]): Disc
 
 /** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
 export interface CreateApplicationCommand {
-  /** 1-31 character name matching lowercase `^[\w-]{1,32}$` */
+  /**
+   * Name of command, 1-32 characters.
+   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   * If there is a lowercase variant of any letters used, you must use those.
+   * Characters with no lowercase variants and/or uncased letters are still allowed.
+   * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
+   */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
   nameLocalizations?: Localization;
@@ -75,9 +81,9 @@ export interface CreateApplicationCommand {
   description: string;
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
   descriptionLocalizations?: Localization;
-  /** The type of the command */
+  /** Type of command, defaults `ApplicationCommandTypes.ChatInput` if not set  */
   type?: ApplicationCommandTypes;
-  /** The parameters for the command */
+  /** Parameters for the command */
   options?: ApplicationCommandOption[];
   /** Set of permissions represented as a bit set */
   defaultMemberPermissions?: PermissionStrings[];
@@ -86,11 +92,7 @@ export interface CreateApplicationCommand {
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
-export interface CreateContextApplicationCommand {
-  /** 1-31 character name matching lowercase `^[\w-]{1,32}$` */
-  name: string;
-  /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  nameLocalizations?: Localization;
+export interface CreateContextApplicationCommand extends Omit<CreateApplicationCommand, "options"> {
   /** The type of the command */
   type: ApplicationCommandTypes.Message | ApplicationCommandTypes.User;
 }

@@ -16,7 +16,7 @@ import { MakeRequired } from "../../../types/shared.ts";
  */
 export async function upsertApplicationCommands(
   bot: Bot,
-  options: (CreateApplicationCommand | CreateContextApplicationCommand)[],
+  options: (UpsertApplicationCommands | CreateContextApplicationCommand)[],
   guildId?: bigint,
 ) {
   const result = await bot.rest.runMethod<DiscordApplicationCommand[]>(
@@ -45,4 +45,9 @@ export async function upsertApplicationCommands(
       return [command.id, command];
     }),
   );
+}
+
+export interface UpsertApplicationCommands extends CreateApplicationCommand {
+  /** ID of the command, if known */
+  id?: bigint;
 }
