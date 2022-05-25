@@ -1,5 +1,5 @@
 export * from "./editBotProfile.ts";
-export * from "./editBotStatus.ts"
+export * from "./editBotStatus.ts";
 export * from "./editShardStatus.ts";
 export * from "./getGatewayBot.ts";
 export * from "./getUser.ts";
