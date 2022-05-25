@@ -97,10 +97,7 @@ function convertOptionValue(
     | number
   ),
 ] {
-  const value =
-    typeof option.value === "string" && SNOWFLAKE_REGEX.test(option.value)
-      ? BigInt(option.value)
-      : 0n;
+  const value = typeof option.value === "string" && SNOWFLAKE_REGEX.test(option.value) ? BigInt(option.value) : 0n;
   // THE OPTION IS A CHANNEL
   if (option.type === ApplicationCommandOptionTypes.Channel) {
     const channel = resolved?.channels?.get(value);
@@ -211,8 +208,7 @@ export function optionParser(
 
     // @ts-ignore ts leave me alone
     return {
-      [translateOptions?.[options[0].name] ?? options[0].name]:
-        convertedOptions,
+      [translateOptions?.[options[0].name] ?? options[0].name]: convertedOptions,
     };
   }
 

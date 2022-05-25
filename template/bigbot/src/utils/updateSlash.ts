@@ -1,9 +1,5 @@
 import { DEV_GUILD_ID } from "../../configs.ts";
-import {
-  ApplicationCommandOption,
-  ApplicationCommandTypes,
-  Bot,
-} from "../../deps.ts";
+import { ApplicationCommandOption, ApplicationCommandTypes, Bot } from "../../deps.ts";
 import { BotClient } from "../bot/botClient.ts";
 import { updateCommandVersion } from "../bot/database/commandVersion.ts";
 import commands from "../bot/events/interactions/mod.ts";
@@ -23,9 +19,7 @@ export async function updateDevCommands(bot: Bot) {
   await bot.helpers.upsertApplicationCommands(
     cmds.map(([name, command]) => {
       const translatedName = translate(bot, DEV_GUILD_ID, command.name);
-      const translatedDescription = command.description
-        ? translate(bot, DEV_GUILD_ID, command.description)
-        : "";
+      const translatedDescription = command.description ? translate(bot, DEV_GUILD_ID, command.description) : "";
 
       if (command.type && command.type !== ApplicationCommandTypes.ChatInput) {
         return {
@@ -37,9 +31,7 @@ export async function updateDevCommands(bot: Bot) {
       return {
         name: (translatedName || name).toLowerCase(),
         description: translatedDescription || command!.description,
-        options: command.options
-          ? createOptions(bot, DEV_GUILD_ID, command.options, command.name)
-          : undefined,
+        options: command.options ? createOptions(bot, DEV_GUILD_ID, command.options, command.name) : undefined,
       };
     }),
     DEV_GUILD_ID,
@@ -56,9 +48,7 @@ function createOptions(
   options: ArgumentDefinition[],
   commandName?: string,
 ): ApplicationCommandOption[] | undefined {
-  const language = guildId === "english"
-    ? "english"
-    : serverLanguages.get(guildId) ?? "english";
+  const language = guildId === "english" ? "english" : serverLanguages.get(guildId) ?? "english";
   if (commandName && convertedCache.has(`${language}-${commandName}`)) {
     return convertedCache.get(`${language}-${commandName}`)!;
   }

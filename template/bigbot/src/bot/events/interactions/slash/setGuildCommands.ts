@@ -1,8 +1,5 @@
 import { DEV_GUILD_ID } from "../../../../../configs.ts";
-import {
-  DiscordGatewayPayload,
-  DiscordUnavailableGuild,
-} from "../../../../../deps.ts";
+import { DiscordGatewayPayload, DiscordUnavailableGuild } from "../../../../../deps.ts";
 import logger from "../../../../utils/logger.ts";
 import { updateGuildCommands } from "../../../../utils/updateSlash.ts";
 import { BotClient } from "../../../botClient.ts";

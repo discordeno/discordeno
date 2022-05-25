@@ -1,9 +1,4 @@
-import {
-  Bot,
-  Interaction,
-  InteractionApplicationCommandCallbackData,
-  InteractionResponseTypes,
-} from "../../deps.ts";
+import { Bot, Interaction, InteractionApplicationCommandCallbackData, InteractionResponseTypes } from "../../deps.ts";
 
 export async function replyToInteraction(
   bot: Bot,

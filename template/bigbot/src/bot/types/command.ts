@@ -14,8 +14,7 @@ import english from "../languages/english.ts";
 import { translationKeys } from "../languages/translate.ts";
 
 // deno-lint-ignore no-explicit-any
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends
-  (k: infer I) => void ? I : never;
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
 
 type Identity<T> = { [P in keyof T]: T[P] };
 
@@ -179,8 +178,7 @@ export type ArgumentDefinition =
   | SubcommandArgumentDefinition
   | SubcommandGroupArgumentDefinition;
 
-type getName<K extends translationKeys> = typeof english[K] extends string
-  ? typeof english[K]
+type getName<K extends translationKeys> = typeof english[K] extends string ? typeof english[K]
   : never;
 
 // OPTIONALS MUST BE FIRST!!!
@@ -191,35 +189,29 @@ export type ConvertArgumentDefinitionsToArgs<
     {
       [P in keyof T]: T[P] extends StringOptionalArgumentDefinition<infer N> // STRING
         ? {
-          [_ in getName<N>]?: T[P]["choices"] extends
-            readonly { name: string; value: string }[] ? // @ts-ignore ts being dumb
+          [_ in getName<N>]?: T[P]["choices"] extends readonly { name: string; value: string }[] ? // @ts-ignore ts being dumb
           T[P]["choices"][number]["value"]
             : string;
         }
         : T[P] extends StringArgumentDefinition<infer N> ? {
-          [_ in getName<N>]: T[P]["choices"] extends
-            readonly { name: string; value: string }[] ? // @ts-ignore ts being dumb
+          [_ in getName<N>]: T[P]["choices"] extends readonly { name: string; value: string }[] ? // @ts-ignore ts being dumb
           T[P]["choices"][number]["value"]
             : string;
         }
         : // INTEGER
         T[P] extends IntegerOptionalArgumentDefinition<infer N> ? {
-          [_ in getName<N>]?: T[P]["choices"] extends
-            readonly { name: string; value: number }[] ? // @ts-ignore ts being dumb
+          [_ in getName<N>]?: T[P]["choices"] extends readonly { name: string; value: number }[] ? // @ts-ignore ts being dumb
           T[P]["choices"][number]["value"]
             : number;
         }
         : T[P] extends IntegerArgumentDefinition<infer N> ? {
-          [_ in getName<N>]: T[P]["choices"] extends
-            readonly { name: string; value: number }[] ? // @ts-ignore ts being dumb
+          [_ in getName<N>]: T[P]["choices"] extends readonly { name: string; value: number }[] ? // @ts-ignore ts being dumb
           T[P]["choices"][number]["value"]
             : number;
         }
         : // BOOLEAN
-        T[P] extends BooleanOptionalArgumentDefinition<infer N>
-          ? { [_ in getName<N>]?: boolean }
-        : T[P] extends BooleanArgumentDefinition<infer N>
-          ? { [_ in getName<N>]: boolean }
+        T[P] extends BooleanOptionalArgumentDefinition<infer N> ? { [_ in getName<N>]?: boolean }
+        : T[P] extends BooleanArgumentDefinition<infer N> ? { [_ in getName<N>]: boolean }
         : // USER
         T[P] extends UserOptionalArgumentDefinition<infer N> ? {
           [_ in getName<N>]?: {
@@ -234,15 +226,11 @@ export type ConvertArgumentDefinitionsToArgs<
           };
         }
         : // CHANNEL
-        T[P] extends ChannelOptionalArgumentDefinition<infer N>
-          ? { [_ in getName<N>]?: Channel }
-        : T[P] extends ChannelArgumentDefinition<infer N>
-          ? { [_ in getName<N>]: Channel }
+        T[P] extends ChannelOptionalArgumentDefinition<infer N> ? { [_ in getName<N>]?: Channel }
+        : T[P] extends ChannelArgumentDefinition<infer N> ? { [_ in getName<N>]: Channel }
         : // ROLE
-        T[P] extends RoleOptionalArgumentDefinition<infer N>
-          ? { [_ in getName<N>]?: Role }
-        : T[P] extends RoleArgumentDefinition<infer N>
-          ? { [_ in getName<N>]: Role }
+        T[P] extends RoleOptionalArgumentDefinition<infer N> ? { [_ in getName<N>]?: Role }
+        : T[P] extends RoleArgumentDefinition<infer N> ? { [_ in getName<N>]: Role }
         : // MENTIONABLE
         T[P] extends MentionableOptionalArgumentDefinition<infer N> ? {
           [_ in getName<N>]?: Role | {
@@ -258,8 +246,7 @@ export type ConvertArgumentDefinitionsToArgs<
         }
         : // SUBCOMMAND
         T[P] extends SubcommandArgumentDefinition<infer N> ? {
-          [_ in getName<N>]?: T[P]["options"] extends
-            readonly ArgumentDefinition[] ? // @ts-ignore ignore this for a bit
+          [_ in getName<N>]?: T[P]["options"] extends readonly ArgumentDefinition[] ? // @ts-ignore ignore this for a bit
           ConvertArgumentDefinitionsToArgs<T[P]["options"]>
             : // deno-lint-ignore ban-types
             {};
