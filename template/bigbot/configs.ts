@@ -29,16 +29,10 @@ export const DISCORD_TOKEN = env.DISCORD_TOKEN!;
 
 // Set as 0 to make it use default values. NOT RECOMMENDED TO DEFAULT FOR BIG BOTS!!!!
 export const MAX_SHARDS = env.MAX_SHARDS ? parseInt(env.MAX_SHARDS, 10) : 0;
-export const FIRST_SHARD_ID = env.FIRST_SHARD_ID
-  ? parseInt(env.FIRST_SHARD_ID, 10)
-  : 0;
-export const LAST_SHARD_ID = env.LAST_SHARD_ID
-  ? parseInt(env.LAST_SHARD_ID, 10)
-  : 0;
+export const FIRST_SHARD_ID = env.FIRST_SHARD_ID ? parseInt(env.FIRST_SHARD_ID, 10) : 0;
+export const LAST_SHARD_ID = env.LAST_SHARD_ID ? parseInt(env.LAST_SHARD_ID, 10) : 0;
 // Default to 10
-export const SHARDS_PER_CLUSTER = env.SHARDS_PER_CLUSTER
-  ? parseInt(env.SHARDS_PER_CLUSTER, 10)
-  : 10;
+export const SHARDS_PER_CLUSTER = env.SHARDS_PER_CLUSTER ? parseInt(env.SHARDS_PER_CLUSTER, 10) : 10;
 export const MAX_CLUSTERS = parseInt(env.MAX_CLUSTERS!, 10);
 if (!MAX_CLUSTERS) {
   throw new Error(
@@ -91,12 +85,8 @@ if (!BOT_ID) {
 }
 
 export const REST_PORT = env.REST_PORT ? parseInt(env.REST_PORT, 10) : 5000;
-export const GATEWAY_PORT = env.GATEWAY_PORT
-  ? parseInt(env.GATEWAY_PORT, 10)
-  : 8080;
-export const EVENT_HANDLER_PORT = env.EVENT_HANDLER_PORT
-  ? parseInt(env.EVENT_HANDLER_PORT, 10)
-  : 7050;
+export const GATEWAY_PORT = env.GATEWAY_PORT ? parseInt(env.GATEWAY_PORT, 10) : 8080;
+export const EVENT_HANDLER_PORT = env.EVENT_HANDLER_PORT ? parseInt(env.EVENT_HANDLER_PORT, 10) : 7050;
 
 export const DEVELOPMENT = env.DEVELOPMENT ?? true;
 export const MISSING_TRANSLATION_WEBHOOK = env.MISSING_TRANSLATION_WEBHOOK ||
