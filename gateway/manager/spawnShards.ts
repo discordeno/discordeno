@@ -5,7 +5,7 @@ import { Shard } from "../shard/types.ts";
 import { createGatewayManager, GatewayManager } from "./gatewayManager.ts";
 
 /** Begin spawning shards. */
-export function spawnShards(manager: GatewayManager) {
+export function spawnShards(gateway: GatewayManager) {
   // PREPARES THE MAX SHARD COUNT BY CONCURRENCY
   // if (manager.resharding.useOptimalLargeBotSharding) {
   //   // gateway.debug("GW DEBUG", "[Spawning] Using optimal large bot sharding solution.");
@@ -15,19 +15,19 @@ export function spawnShards(manager: GatewayManager) {
   // }
 
   // PREPARES ALL SHARDS IN SPECIFIC BUCKETS
-  manager.prepareBuckets(
-    manager,
+  gateway.prepareBuckets(
+    gateway,
   );
 
   // SPREAD THIS OUT TO DIFFERENT WORKERS TO BEGIN STARTING UP
-  manager.buckets.forEach(async (bucket, bucketId) => {
+  gateway.buckets.forEach(async (bucket, bucketId) => {
     // gateway.debug("GW DEBUG", `2. Running forEach loop in spawnShards function.`);
 
     for (const worker of bucket.workers) {
       // gateway.debug("GW DEBUG", `3. Running for of loop in spawnShards function.`);
 
       for (const shardId of worker.queue) {
-        await manager.tellWorkerToIdentify(manager, worker.id, shardId, bucketId);
+        await gateway.tellWorkerToIdentify(gateway, worker.id, shardId, bucketId);
       }
     }
   });
