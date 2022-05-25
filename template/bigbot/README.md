@@ -22,9 +22,11 @@ Discord servers.
 > Note: Please install at least `deno@^1.22` on your system. (This is due to the
 > requirement of the `Deno` namespace in workers for the `gateway` process.)
 
-- Always run the `rest` process first. `deno task rest`
-- Start the `bot` process next. `deno task bot`
-- Lastly, start the `gateway` process. `deno task gateway`
+- Always run the `rest` process first with `deno task rest`.
+- Start the `bot` process next with `deno task bot`. (If you are developing a
+  bot, use `deno task watch-bot` instead to auto reload any changes. This won't
+  restart any other processes, just your bot.)
+- Lastly, start the `gateway` process with `deno task gateway`.
 
 > Important: The `gateway` process and `rest` are designed not to be shut off.
 > So once those are on, the only thing you should be doing is restarting your
