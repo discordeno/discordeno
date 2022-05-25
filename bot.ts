@@ -3,6 +3,7 @@ import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.ts";
 import { Collection } from "./util/collection.ts";
 import {
   Channel,
+  Connection,
   Guild,
   Member,
   Message,
@@ -10,6 +11,7 @@ import {
   ScheduledEvent,
   Template,
   transformChannel,
+  transformConnection,
   transformGuild,
   transformMember,
   transformMessage,
@@ -69,15 +71,6 @@ import { transformWidgetSettings } from "./transformers/widgetSettings.ts";
 import { transformStageInstance } from "./transformers/stageInstance.ts";
 import { StickerPack, transformSticker, transformStickerPack } from "./transformers/sticker.ts";
 import { GetGatewayBot, transformGatewayBot } from "./transformers/gatewayBot.ts";
-import {
-  DiscordApplicationCommandOptionChoice,
-  DiscordEmoji,
-  DiscordGatewayPayload,
-  DiscordInteractionDataOption,
-  DiscordReady,
-  DiscordStickerPack,
-  DiscordTemplate,
-} from "./types/discord.ts";
 import { Errors, GatewayDispatchEventNames, GatewayIntents } from "./types/shared.ts";
 
 import {
@@ -85,11 +78,15 @@ import {
   DiscordApplication,
   DiscordApplicationCommand,
   DiscordApplicationCommandOption,
+  DiscordApplicationCommandOptionChoice,
   DiscordAttachment,
   DiscordAuditLogEntry,
   DiscordChannel,
   DiscordComponent,
+  DiscordConnection,
   DiscordEmbed,
+  DiscordEmoji,
+  DiscordGatewayPayload,
   DiscordGetGatewayBot,
   DiscordGuild,
   DiscordGuildApplicationCommandPermissions,
@@ -97,15 +94,19 @@ import {
   DiscordGuildWidgetSettings,
   DiscordIntegrationCreateUpdate,
   DiscordInteraction,
+  DiscordInteractionDataOption,
   DiscordInviteCreate,
   DiscordMember,
   DiscordMessage,
   DiscordPresenceUpdate,
+  DiscordReady,
   DiscordRole,
   DiscordScheduledEvent,
   DiscordStageInstance,
   DiscordSticker,
+  DiscordStickerPack,
   DiscordTeam,
+  DiscordTemplate,
   DiscordThreadMember,
   DiscordUser,
   DiscordVoiceRegion,
@@ -433,6 +434,7 @@ export interface Transformers {
     payload: DiscordApplicationCommandOptionChoice,
   ) => ApplicationCommandOptionChoice;
   template: (bot: Bot, payload: DiscordTemplate) => Template;
+  connection: (bot: Bot, payload: DiscordConnection) => Connection;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -481,6 +483,7 @@ export function createTransformers(options: Partial<Transformers>) {
     gatewayBot: options.gatewayBot || transformGatewayBot,
     applicationCommandOptionChoice: options.applicationCommandOptionChoice || transformApplicationCommandOptionChoice,
     template: options.template || transformTemplate,
+    connection: options.connection || transformConnection,
   };
 }
 
