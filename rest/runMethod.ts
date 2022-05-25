@@ -4,25 +4,19 @@ import { RestRequestRejection, RestRequestResponse } from "./rest.ts";
 
 export async function runMethod<T = any>(
   rest: RestManager,
-  method: "get",
-  route: string,
-): Promise<T>;
-export async function runMethod<T = any>(
-  rest: RestManager,
-  method: "post" | "put" | "delete" | "patch",
-  route: string,
-  body?: unknown,
-): Promise<T>;
-export async function runMethod<T = any>(
-  rest: RestManager,
   method: "get" | "post" | "put" | "delete" | "patch",
   route: string,
   body?: unknown,
-  retryCount = 0,
-  bucketId?: string,
+  options?: {
+    retryCount?: number;
+    bucketId?: string;
+    headers?: Record<string, string>;
+  },
 ): Promise<T> {
   rest.debug(
-    `[REST - RequestCreate] Method: ${method} | URL: ${route} | Retry Count: ${retryCount} | Bucket ID: ${bucketId} | Body: ${
+    `[REST - RequestCreate] Method: ${method} | URL: ${route} | Retry Count: ${
+      options?.retryCount ?? 0
+    } | Bucket ID: ${options?.bucketId} | Body: ${
       JSON.stringify(
         body,
       )
@@ -72,9 +66,10 @@ export async function runMethod<T = any>(
           resolve(data.status !== 204 ? JSON.parse(data.body ?? "{}") : (undefined as unknown as T)),
       },
       {
-        bucketId,
+        bucketId: options?.bucketId,
         body: body as Record<string, unknown> | undefined,
-        retryCount,
+        retryCount: options?.retryCount ?? 0,
+        headers: options?.headers,
       },
     );
   });
