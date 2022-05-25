@@ -1,4 +1,4 @@
-import { StatusUpdate } from "../../helpers/misc/editBotStatus.ts";
+import { StatusUpdate } from "../../helpers/misc/editShardStatus.ts";
 import { DiscordGatewayPayload } from "../../types/discord.ts";
 import { GatewayOpcodes } from "../../types/shared.ts";
 import { LeakyBucket } from "../../util/bucket.ts";

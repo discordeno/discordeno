@@ -12,7 +12,7 @@ import {
   ShardSocketRequest,
   ShardState,
 } from "./types.ts";
-import { StatusUpdate } from "../../helpers/misc/editBotStatus.ts";
+import { StatusUpdate } from "../../helpers/misc/editShardStatus.ts";
 import { startHeartbeating } from "./startHeartbeating.ts";
 import { stopHeartbeating } from "./stopHeartbeating.ts";
 import { resume } from "./resume.ts";

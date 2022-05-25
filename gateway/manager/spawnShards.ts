@@ -15,9 +15,7 @@ export function spawnShards(gateway: GatewayManager) {
   // }
 
   // PREPARES ALL SHARDS IN SPECIFIC BUCKETS
-  gateway.prepareBuckets(
-    gateway,
-  );
+  gateway.prepareBuckets();
 
   // SPREAD THIS OUT TO DIFFERENT WORKERS TO BEGIN STARTING UP
   gateway.buckets.forEach(async (bucket, bucketId) => {
@@ -27,7 +25,7 @@ export function spawnShards(gateway: GatewayManager) {
       // gateway.debug("GW DEBUG", `3. Running for of loop in spawnShards function.`);
 
       for (const shardId of worker.queue) {
-        await gateway.tellWorkerToIdentify(gateway, worker.id, shardId, bucketId);
+        await gateway.tellWorkerToIdentify(worker.id, shardId, bucketId);
       }
     }
   });

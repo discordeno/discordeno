@@ -259,7 +259,7 @@ export function createEventHandlers(
 }
 
 export function startBot(bot: Bot) {
-  bot.gateway.spawnShards(bot.gateway);
+  bot.gateway.spawnShards();
 }
 
 export function createUtils(options: Partial<HelperUtils>) {

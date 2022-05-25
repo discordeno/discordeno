@@ -1,4 +1,3 @@
-import { censor } from "./createShard.ts";
 import { Shard, ShardSocketRequest } from "./types.ts";
 
 async function checkOffline(shard: Shard, highPriority: boolean): Promise<void> {
