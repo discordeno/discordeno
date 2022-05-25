@@ -18,6 +18,7 @@ import { spawnShards } from "./spawnShards.ts";
 import { prepareBuckets } from "./prepareBuckets.ts";
 import { tellWorkerToIdentify } from "./tellWorkerToIdentify.ts";
 import { createShardManager, ShardManager } from "./shardManager.ts";
+import { stop } from "./stop.ts";
 
 export type GatewayManager = ReturnType<typeof createGatewayManager>;
 
@@ -30,6 +31,13 @@ export type GatewayManager = ReturnType<typeof createGatewayManager>;
 export function createGatewayManager(
   options: PickPartial<CreateGatewayManager, "handleDiscordPayload" | "gatewayBot" | "gatewayConfig">,
 ) {
+  const prepareBucketsOverwritten = options.prepareBuckets ?? prepareBuckets;
+  const spawnShardsOverwritten = options.spawnShards ?? spawnShards;
+  const stopOverwritten = options.stop ?? stop;
+  const tellWorkerToIdentifyOverwritten = options.tellWorkerToIdentify ?? tellWorkerToIdentify;
+  const calculateTotalShardsOverwritten = options.calculateTotalShards ?? calculateTotalShards;
+  const calculateWorkerIdOverwritten = options.calculateWorkerId ?? calculateWorkerId;
+
   const totalShards = options.totalShards ?? options.gatewayBot.shards ?? 1;
 
   const gatewayManager = {
@@ -98,7 +106,9 @@ export function createGatewayManager(
      * NOTE: Most of the time this function does not need to be called,
      * since it gets called by the `spawnShards` function indirectly.
      */
-    prepareBuckets: options.prepareBuckets ?? prepareBuckets,
+    prepareBuckets: function () {
+      return prepareBucketsOverwritten(this);
+    },
     /** This function starts to spawn the Shards assigned to this manager.
      *
      * The managers `buckets` will be created and
@@ -106,7 +116,13 @@ export function createGatewayManager(
      * if `resharding.useOptimalLargeBotSharding` is set to true,
      * `totalShards` gets double checked and adjusted accordingly if wrong.
      */
-    spawnShards: options.spawnShards ?? spawnShards,
+    spawnShards: function () {
+      return spawnShardsOverwritten(this);
+    },
+    /** Stop the gateway. This closes all shards. */
+    stop: function (code: number, reason: string) {
+      return stopOverwritten(this, code, reason);
+    },
     /** Tell the Worker with this Id to identify this Shard.
      *
      * Useful if a custom Worker solution should be used.
@@ -115,7 +131,9 @@ export function createGatewayManager(
      * Instead you have to overwrite the `tellWorkerToIdentify` function to make that for you.
      * Look at the [BigBot template gateway solution](https://github.com/discordeno/discordeno/tree/main/template/bigbot/src/gateway) for reference.
      */
-    tellWorkerToIdentify,
+    tellWorkerToIdentify: function (workerId: number, shardId: number, bucketId: number) {
+      return tellWorkerToIdentifyOverwritten(this, workerId, shardId, bucketId);
+    },
     // TODO: fix debug
     /** Handle the different logs. Used for debugging. */
     debug: options.debug || function () {},
@@ -149,11 +167,13 @@ export function createGatewayManager(
     // },
 
     /** Calculate the amount of Shards which should be used based on the bot's max concurrency. */
-    calculateTotalShards: options.calculateTotalShards ?? calculateTotalShards,
+    calculateTotalShards: function () {
+      return calculateTotalShardsOverwritten(this);
+    },
 
     /** Calculate the Id of the Worker related to this Shard. */
     calculateWorkerId: function (shardId: number) {
-      return options.calculateWorkerId?.(this, shardId) ?? calculateWorkerId(this, shardId);
+      return calculateWorkerIdOverwritten(this, shardId);
     },
   };
 
@@ -204,7 +224,7 @@ export interface CreateGatewayManager {
   /** Important data which is used by the manager to connect shards to the gateway. */
   gatewayBot: GetGatewayBot;
 
-  gatewayConfig: ShardGatewayConfig;
+  gatewayConfig: PickPartial<ShardGatewayConfig, "token">;
 
   /** Options which are used to create a new shard. */
   createShardOptions?: Omit<CreateShard, "id" | "totalShards" | "requestIdentify" | "gatewayConfig">;
@@ -223,6 +243,8 @@ export interface CreateGatewayManager {
   prepareBuckets: typeof prepareBuckets;
   /** The handler for spawning ALL the shards. */
   spawnShards: typeof spawnShards;
+  /** The handler to close all shards. */
+  stop: typeof stop;
   /** Sends the discord payload to another server. */
   handleDiscordPayload: (shard: Shard, data: DiscordGatewayPayload) => any;
   /** Tell the worker to begin identifying this shard  */

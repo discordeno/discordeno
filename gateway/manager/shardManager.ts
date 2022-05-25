@@ -1,4 +1,5 @@
 import { DiscordGatewayPayload } from "../../types/discord.ts";
+import { PickPartial } from "../../types/shared.ts";
 import { Collection } from "../../util/collection.ts";
 import { CreateShard, createShard } from "../shard/createShard.ts";
 import { Shard, ShardGatewayConfig } from "../shard/types.ts";
@@ -101,7 +102,7 @@ export interface CreateShardManager {
   /** Options which are used to create a new Shard. */
   createShardOptions?: Omit<CreateShard, "id" | "totalShards" | "requestIdentify" | "gatewayConfig">;
   /** Gateway configuration which is used when creating a Shard. */
-  gatewayConfig: ShardGatewayConfig;
+  gatewayConfig: PickPartial<ShardGatewayConfig, "token">;
   /** Ids of the Shards which should be managed. */
   shardIds: number[];
   /** Total amount of Shard used by the bot. */

@@ -25,7 +25,8 @@ import { close } from "./close.ts";
 import { shutdown } from "./shutdown.ts";
 import { isOpen } from "./isOpen.ts";
 import { DiscordGatewayPayload } from "../../types/discord.ts";
-import { GatewayIntents } from "../../types/shared.ts";
+import { GatewayIntents, PickPartial } from "../../types/shared.ts";
+import { API_VERSION } from "../../util/constants.ts";
 
 // TODO: debug
 // TODO: function overwrite
@@ -55,7 +56,18 @@ export function createShard(
     // ----------
 
     /** The gateway configuration which is used to connect to Discord. */
-    gatewayConfig: options.gatewayConfig,
+    gatewayConfig: {
+      compress: options.gatewayConfig.compress ?? false,
+      intents: options.gatewayConfig.intents ?? 0,
+      properties: {
+        $os: options.gatewayConfig?.properties?.$os ?? Deno.build.os,
+        $browser: options.gatewayConfig?.properties?.$browser ?? "Discordeno",
+        $device: options.gatewayConfig?.properties?.$device ?? "Discordeno",
+      },
+      token: options.gatewayConfig.token,
+      url: options.gatewayConfig.url ?? "wss://gateway.discord.gg",
+      version: options.gatewayConfig.version ?? API_VERSION,
+    } as ShardGatewayConfig,
     /** This contains all the heartbeat information */
     heart: {
       acknowledged: false,
@@ -245,7 +257,7 @@ export interface CreateShard {
   id: number;
 
   /** Gateway configuration for the shard. */
-  gatewayConfig: ShardGatewayConfig;
+  gatewayConfig: PickPartial<ShardGatewayConfig, "token">;
 
   /** The total amount of shards which are used to communicate with Discord. */
   totalShards: number;

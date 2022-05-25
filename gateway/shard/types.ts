@@ -34,24 +34,45 @@ export enum ShardState {
 }
 
 export interface ShardGatewayConfig {
-  /** Whether incoming payloads are compressed using zlib. */
+  /** Whether incoming payloads are compressed using zlib.
+   *
+   * @default false
+   */
   compress: boolean;
-  /** The calculated intent value of the events which the shard should receive. */
+  /** The calculated intent value of the events which the shard should receive.
+   *
+   * @default 0
+   */
   intents: number;
   /** Identify properties to use */
   properties: {
-    /** Operating system the shard runs on. */
+    /** Operating system the shard runs on.
+     *
+     * @default "darwin" | "linux" | "windows"
+     */
     $os: string;
-    /** The "browser" where this shard is running on. */
+    /** The "browser" where this shard is running on.
+     *
+     * @default "Discordeno"
+     */
     $browser: string;
-    /** The device on which the shard is running. */
+    /** The device on which the shard is running.
+     *
+     * @default "Discordeno"
+     */
     $device: string;
   };
   /** Bot token which is used to connect to Discord */
   token: string;
-  /** The URL of the gateway which should be connected to. */
+  /** The URL of the gateway which should be connected to.
+   *
+   * @default "wss://gateway.discord.gg"
+   */
   url: string;
-  /** The gateway version which should be used. */
+  /** The gateway version which should be used.
+   *
+   * @default 10
+   */
   version: number;
 }
 
