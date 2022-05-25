@@ -43,7 +43,7 @@ if (DEVELOPMENT) {
 // Start listening on localhost.
 const server = Deno.listen({ port: EVENT_HANDLER_PORT });
 logger.info(
-  `HTTP webserver running.  Access it at:  http://localhost:${EVENT_HANDLER_PORT}/`,
+  `HTTP webserver running. Access it at: http://localhost:${EVENT_HANDLER_PORT}/`,
 );
 
 // Connections to the server will be yielded up as an async iterable.
