@@ -13,7 +13,7 @@ export async function editWebhookMessage(
 ) {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "patch",
+    "PATCH",
     options.messageId
       ? bot.constants.routes.WEBHOOK_MESSAGE(webhookId, webhookToken, options.messageId, options)
       : bot.constants.routes.WEBHOOK_MESSAGE_ORIGINAL(webhookId, webhookToken, options),

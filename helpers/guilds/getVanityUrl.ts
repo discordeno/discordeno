@@ -5,7 +5,7 @@ import { DiscordInviteMetadata } from "../../types/discord.ts";
 export async function getVanityUrl(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<Partial<DiscordInviteMetadata>>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.routes.GUILD_VANITY_URL(guildId),
   );
 

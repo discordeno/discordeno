@@ -24,7 +24,7 @@ export async function editScheduledEvent(
 
   const event = await bot.rest.runMethod<DiscordScheduledEvent>(
     bot.rest,
-    "patch",
+    "PATCH",
     bot.constants.routes.GUILD_SCHEDULED_EVENT(guildId, eventId),
     {
       channel_id: options.channelId === null ? null : options.channelId?.toString(),

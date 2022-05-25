@@ -13,7 +13,7 @@ export async function editInteractionResponse(
 ) {
   const result = await bot.rest.runMethod(
     bot.rest,
-    "patch",
+    "PATCH",
     options.messageId
       ? bot.constants.routes.WEBHOOK_MESSAGE(bot.applicationId, token, options.messageId)
       : bot.constants.routes.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token),

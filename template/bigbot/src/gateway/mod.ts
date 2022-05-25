@@ -21,7 +21,7 @@ const workers = new Collection<number, Worker>();
 
 async function startGateway() {
   // CALL THE REST PROCESS TO GET GATEWAY DATA
-  const result = await rest.runMethod(rest, "get", endpoints.GATEWAY_BOT()).then((res) => ({
+  const result = await rest.runMethod(rest, "GET", endpoints.GATEWAY_BOT()).then((res) => ({
     url: res.url,
     shards: res.shards,
     sessionStartLimit: {
@@ -125,7 +125,7 @@ startGateway();
 setInterval(async () => {
   console.log("GW DEBUG", "[Resharding] Checking if resharding is needed.");
 
-  const results = await rest.runMethod(rest, "get", endpoints.GATEWAY_BOT()).then((res) => ({
+  const results = await rest.runMethod(rest, "GET", endpoints.GATEWAY_BOT()).then((res) => ({
     url: res.url,
     shards: res.shards,
     sessionStartLimit: {

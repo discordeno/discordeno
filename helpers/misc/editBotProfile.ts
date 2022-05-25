@@ -7,7 +7,7 @@ import { DiscordUser } from "../../types/discord.ts";
 export async function editBotProfile(bot: Bot, options: { username?: string; botAvatarURL?: string | null }) {
   const avatar = options?.botAvatarURL ? await bot.utils.urlToBase64(options?.botAvatarURL) : options?.botAvatarURL;
 
-  const result = await bot.rest.runMethod<DiscordUser>(bot.rest, "patch", bot.constants.routes.USER_BOT(), {
+  const result = await bot.rest.runMethod<DiscordUser>(bot.rest, "PATCH", bot.constants.routes.USER_BOT(), {
     username: options.username?.trim(),
     avatar,
   });

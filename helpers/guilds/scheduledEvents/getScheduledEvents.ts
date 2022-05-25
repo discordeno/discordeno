@@ -7,7 +7,7 @@ import { Collection } from "../../../util/collection.ts";
 export async function getScheduledEvents(bot: Bot, guildId: bigint, options?: GetScheduledEvents) {
   const events = await bot.rest.runMethod<DiscordScheduledEvent[]>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.routes.GUILD_SCHEDULED_EVENTS(guildId, options?.withUserCount),
   );
 

@@ -16,7 +16,7 @@ export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: str
 
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "post",
+    "POST",
     bot.constants.routes.WEBHOOK(webhookId, webhookToken, options),
     {
       wait: options.wait,

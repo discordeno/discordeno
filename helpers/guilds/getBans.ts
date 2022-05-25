@@ -7,7 +7,7 @@ import { User } from "../../transformers/member.ts";
 export async function getBans(bot: Bot, guildId: bigint, options?: GetBans) {
   const results = await bot.rest.runMethod<DiscordBan[]>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.routes.GUILD_BANS(guildId, options),
   );
 

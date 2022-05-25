@@ -4,7 +4,7 @@ import type { Bot } from "../../bot.ts";
 export async function deleteChannelOverwrite(bot: Bot, channelId: bigint, overwriteId: bigint) {
   await bot.rest.runMethod<undefined>(
     bot.rest,
-    "delete",
+    "DELETE",
     bot.constants.routes.CHANNEL_OVERWRITE(channelId, overwriteId),
   );
 }

@@ -7,7 +7,7 @@ export async function getPruneCount(bot: Bot, guildId: bigint, options?: GetGuil
 
   const result = await bot.rest.runMethod(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.routes.GUILD_PRUNE(guildId),
   );
 

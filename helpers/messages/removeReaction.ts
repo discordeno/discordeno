@@ -16,7 +16,7 @@ export async function removeReaction(
 
   await bot.rest.runMethod<undefined>(
     bot.rest,
-    "delete",
+    "DELETE",
     options?.userId
       ? bot.constants.routes.CHANNEL_MESSAGE_REACTION_USER(
         channelId,

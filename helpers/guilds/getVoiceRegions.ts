@@ -6,7 +6,7 @@ import { DiscordVoiceRegion } from "../../types/discord.ts";
 export async function getVoiceRegions(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordVoiceRegion[]>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.routes.GUILD_REGIONS(guildId),
   );
 

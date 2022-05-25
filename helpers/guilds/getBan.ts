@@ -5,7 +5,7 @@ import { DiscordBan } from "../../types/discord.ts";
 export async function getBan(bot: Bot, guildId: bigint, memberId: bigint) {
   const result = await bot.rest.runMethod<DiscordBan>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.routes.GUILD_BAN(guildId, memberId),
   );
 
