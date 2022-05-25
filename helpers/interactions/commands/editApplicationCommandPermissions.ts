@@ -7,6 +7,8 @@ export async function editApplicationCommandPermissions(
   bot: Bot,
   guildId: bigint,
   commandId: bigint,
+  /** Bearer token which has the `applications.commands.permissions.update` scope and also access to this guild.  */
+  bearerToken: string,
   options: ApplicationCommandPermissions[],
 ) {
   const result = await bot.rest.runMethod<DiscordGuildApplicationCommandPermissions>(
@@ -16,12 +18,15 @@ export async function editApplicationCommandPermissions(
     {
       permissions: options,
     },
+    {
+      headers: { authorization: `Bearer ${bearerToken}` },
+    },
   );
 
   return bot.transformers.applicationCommandPermission(bot, result);
 }
 
-/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandpermissions */
+/** https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions */
 export interface ApplicationCommandPermissions {
   /** The id of the role or user */
   id: string;

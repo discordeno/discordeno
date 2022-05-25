@@ -26,6 +26,7 @@ import { categoryChildrenTest } from "./helpers/channels/categoryChannels.ts";
 import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOverwrite.ts";
 import { editChannelTests } from "./helpers/channels/editChannel.ts";
 import { CACHED_COMMUNITY_GUILD_ID, sanitizeMode } from "./constants.ts";
+import { Intents } from "../types/shared.ts";
 
 console.log("[Tests] Starting test preparation");
 dotenv({ export: true, path: `${Deno.cwd()}/.env` });
@@ -45,17 +46,15 @@ const baseBot = createBot({
     },
     // debug: console.log,
   }),
-  intents: [
-    "Guilds",
-    "GuildEmojis",
-    "GuildMessages",
-    "GuildMessageReactions",
-    "GuildBans",
-    "GuildMembers",
-    "GuildScheduledEvents",
-    "GuildVoiceStates",
-    "GuildPresences",
-  ],
+  intents: Intents.Guilds |
+    Intents.GuildEmojis |
+    Intents.GuildMessages |
+    Intents.GuildMessageReactions |
+    Intents.GuildBans |
+    Intents.GuildMembers |
+    Intents.GuildScheduledEvents |
+    Intents.GuildVoiceStates |
+    Intents.GuildPresences,
 });
 
 export const bot = enableCachePlugin(baseBot);
