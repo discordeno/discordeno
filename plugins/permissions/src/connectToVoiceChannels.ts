@@ -25,7 +25,7 @@ export default function connectToVoiceChannel(bot: BotWithCache) {
 
     // Permissions needed for the bot to connect
     // CONNECT is needed
-    const permsNeeded: PermissionStrings[] = ["CONNECT", "VIEW_CHANNEL"];
+    const permsNeeded: PermissionStrings[] = ["CONNECT"];
 
     // Check if there is space for the bot if channel has user limit
     // Having MANAGE_CHANNELS permissions bypasses the limit

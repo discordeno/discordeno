@@ -12,6 +12,7 @@ export function createStageInstance(bot: BotWithCache) {
     }
 
     const perms = new Set<PermissionStrings>([
+      "VIEW_CHANNEL",
       "MANAGE_CHANNELS",
       "MUTE_MEMBERS",
       "MOVE_MEMBERS",
@@ -31,11 +32,7 @@ export function deleteStageInstance(bot: BotWithCache) {
   const deleteStageInstanceOld = bot.helpers.deleteStageInstance;
 
   bot.helpers.deleteStageInstance = async function (channelId) {
-    requireBotChannelPermissions(bot, channelId, [
-      "MANAGE_CHANNELS",
-      "MUTE_MEMBERS",
-      "MOVE_MEMBERS",
-    ]);
+    requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "MANAGE_CHANNELS", "MUTE_MEMBERS", "MOVE_MEMBERS"]);
 
     return await deleteStageInstanceOld(channelId);
   };
@@ -45,11 +42,7 @@ export function updateStageInstance(bot: BotWithCache) {
   const updateStageInstanceOld = bot.helpers.updateStageInstance;
 
   bot.helpers.updateStageInstance = async function (channelId, data) {
-    requireBotChannelPermissions(bot, channelId, [
-      "MANAGE_CHANNELS",
-      "MUTE_MEMBERS",
-      "MOVE_MEMBERS",
-    ]);
+    requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "MANAGE_CHANNELS", "MUTE_MEMBERS", "MOVE_MEMBERS"]);
 
     return await updateStageInstanceOld(channelId, data);
   };

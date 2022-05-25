@@ -5,10 +5,7 @@ export function addReaction(bot: BotWithCache) {
   const addReactionOld = bot.helpers.addReaction;
 
   bot.helpers.addReaction = async function (channelId, messageId, reaction) {
-    requireBotChannelPermissions(bot, channelId, [
-      "READ_MESSAGE_HISTORY",
-      "ADD_REACTIONS",
-    ]);
+    requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY", "ADD_REACTIONS"]);
 
     return await addReactionOld(channelId, messageId, reaction);
   };
@@ -23,10 +20,7 @@ export function addReactions(bot: BotWithCache) {
     reactions,
     ordered,
   ) {
-    requireBotChannelPermissions(bot, channelId, [
-      "READ_MESSAGE_HISTORY",
-      "ADD_REACTIONS",
-    ]);
+    requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY", "ADD_REACTIONS"]);
 
     return await addReactionsOld(channelId, messageId, reactions, ordered);
   };
@@ -43,9 +37,7 @@ export function removeReaction(bot: BotWithCache) {
   ) {
     // IF REMOVING OTHER USER PERMS MANAGE MESSAGES IS REQUIRED
     if (options?.userId) {
-      requireBotChannelPermissions(bot, channelId, [
-        "MANAGE_MESSAGES",
-      ]);
+      requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "MANAGE_MESSAGES"]);
     }
 
     return await removeReactionOld(channelId, messageId, reactions, options);

@@ -5,7 +5,7 @@ export default function createWebhook(bot: BotWithCache) {
   const createWebhookOld = bot.helpers.createWebhook;
 
   bot.helpers.createWebhook = async function (channelId, options) {
-    requireBotChannelPermissions(bot, channelId, ["MANAGE_WEBHOOKS"]);
+    requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "MANAGE_WEBHOOKS"]);
 
     if (
       // Specific usernames that discord does not allow

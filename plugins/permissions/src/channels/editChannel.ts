@@ -95,6 +95,8 @@ export default function editChannel(bot: BotWithCache) {
         }
       }
 
+      requiredPerms.push("VIEW_CHANNEL");
+
       requireBotChannelPermissions(
         bot,
         channel,

@@ -13,6 +13,7 @@ export function createScheduledEvent(bot: BotWithCache) {
       }
 
       requireBotChannelPermissions(bot, options.channelId, [
+        "VIEW_CHANNEL",
         "MANAGE_CHANNELS",
         "MUTE_MEMBERS",
         "MOVE_MEMBERS",
@@ -80,6 +81,7 @@ export function editScheduledEvent(bot: BotWithCache) {
       }
 
       requireBotChannelPermissions(bot, options.channelId, [
+        "VIEW_CHANNEL",
         "MANAGE_CHANNELS",
         "MUTE_MEMBERS",
         "MOVE_MEMBERS",

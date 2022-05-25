@@ -28,7 +28,7 @@ export default function deleteChannel(bot: BotWithCache) {
       requireBotGuildPermissions(
         bot,
         guild,
-        isThread ? ["MANAGE_THREADS"] : ["MANAGE_CHANNELS"],
+        isThread ? ["VIEW_CHANNEL", "MANAGE_THREADS"] : ["VIEW_CHANNEL", "MANAGE_CHANNELS"],
       );
     }
 
