@@ -6,7 +6,7 @@ export async function nitroStickerPacks(bot: Bot) {
   const packs = await bot.rest.runMethod<DiscordStickerPack[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.NITRO_STICKER_PACKS(),
+    bot.constants.routes.NITRO_STICKER_PACKS(),
   );
 
   return packs.map((pack) => bot.transformers.stickerPack(bot, pack));

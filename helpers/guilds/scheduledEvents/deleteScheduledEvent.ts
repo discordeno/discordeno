@@ -5,6 +5,6 @@ export async function deleteScheduledEvent(bot: Bot, guildId: bigint, eventId: b
   await bot.rest.runMethod<undefined>(
     bot.rest,
     "delete",
-    bot.constants.endpoints.GUILD_SCHEDULED_EVENT(guildId, eventId),
+    bot.constants.routes.GUILD_SCHEDULED_EVENT(guildId, eventId),
   );
 }

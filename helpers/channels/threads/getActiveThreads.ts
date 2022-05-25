@@ -7,7 +7,7 @@ export async function getActiveThreads(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordListActiveThreads>(
     bot.rest,
     "get",
-    bot.constants.endpoints.THREAD_ACTIVE(guildId),
+    bot.constants.routes.THREAD_ACTIVE(guildId),
   );
 
   return {

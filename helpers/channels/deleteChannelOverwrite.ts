@@ -5,6 +5,6 @@ export async function deleteChannelOverwrite(bot: Bot, channelId: bigint, overwr
   await bot.rest.runMethod<undefined>(
     bot.rest,
     "delete",
-    bot.constants.endpoints.CHANNEL_OVERWRITE(channelId, overwriteId),
+    bot.constants.routes.CHANNEL_OVERWRITE(channelId, overwriteId),
   );
 }

@@ -13,7 +13,7 @@ export async function deleteMessage(
   await bot.rest.runMethod<undefined>(
     bot.rest,
     "delete",
-    bot.constants.endpoints.CHANNEL_MESSAGE(channelId, messageId),
+    bot.constants.routes.CHANNEL_MESSAGE(channelId, messageId),
     { reason },
   );
 }

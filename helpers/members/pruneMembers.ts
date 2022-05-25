@@ -12,7 +12,7 @@ export async function pruneMembers(bot: Bot, guildId: bigint, options: BeginGuil
   const result = await bot.rest.runMethod<{ pruned: number }>(
     bot.rest,
     "post",
-    bot.constants.endpoints.GUILD_PRUNE(guildId),
+    bot.constants.routes.GUILD_PRUNE(guildId),
     {
       days: options.days,
       compute_prune_count: options.computePruneCount,

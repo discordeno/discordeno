@@ -6,7 +6,7 @@ export async function getTemplate(bot: Bot, templateCode: string) {
   const result = await bot.rest.runMethod<DiscordTemplate>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_TEMPLATE(templateCode),
+    bot.constants.routes.TEMPLATE(templateCode),
   );
 
   return bot.transformers.template(bot, result);

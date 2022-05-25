@@ -5,7 +5,7 @@ export async function addRole(bot: Bot, guildId: bigint, memberId: bigint, roleI
   await bot.rest.runMethod<undefined>(
     bot.rest,
     "put",
-    bot.constants.endpoints.GUILD_MEMBER_ROLE(guildId, memberId, roleId),
+    bot.constants.routes.GUILD_MEMBER_ROLE(guildId, memberId, roleId),
     { reason },
   );
 }

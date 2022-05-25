@@ -5,7 +5,7 @@ export async function removeRole(bot: Bot, guildId: bigint, memberId: bigint, ro
   await bot.rest.runMethod<undefined>(
     bot.rest,
     "delete",
-    bot.constants.endpoints.GUILD_MEMBER_ROLE(guildId, memberId, roleId),
+    bot.constants.routes.GUILD_MEMBER_ROLE(guildId, memberId, roleId),
     { reason },
   );
 }

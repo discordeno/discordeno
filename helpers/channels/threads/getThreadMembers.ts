@@ -7,7 +7,7 @@ export async function getThreadMembers(bot: Bot, threadId: bigint) {
   const result = await bot.rest.runMethod<DiscordThreadMember[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.THREAD_MEMBERS(threadId),
+    bot.constants.routes.THREAD_MEMBERS(threadId),
   );
   // return result;
 

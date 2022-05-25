@@ -7,7 +7,7 @@ export async function getIntegrations(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordIntegration[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_INTEGRATIONS(guildId),
+    bot.constants.routes.GUILD_INTEGRATIONS(guildId),
   );
 
   return new Collection(

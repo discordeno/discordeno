@@ -6,7 +6,7 @@ export async function getWidgetSettings(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordGuildWidgetSettings>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_WIDGET(guildId),
+    bot.constants.routes.GUILD_WIDGET(guildId),
   );
 
   return bot.transformers.widgetSettings(bot, result);

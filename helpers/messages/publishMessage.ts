@@ -6,7 +6,7 @@ export async function publishMessage(bot: Bot, channelId: bigint, messageId: big
   const data = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "post",
-    bot.constants.endpoints.CHANNEL_MESSAGE_CROSSPOST(channelId, messageId),
+    bot.constants.routes.CHANNEL_MESSAGE_CROSSPOST(channelId, messageId),
   );
 
   return bot.transformers.message(bot, data);

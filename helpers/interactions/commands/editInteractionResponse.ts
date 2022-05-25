@@ -15,8 +15,8 @@ export async function editInteractionResponse(
     bot.rest,
     "patch",
     options.messageId
-      ? bot.constants.endpoints.WEBHOOK_MESSAGE(bot.applicationId, token, options.messageId)
-      : bot.constants.endpoints.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token),
+      ? bot.constants.routes.WEBHOOK_MESSAGE(bot.applicationId, token, options.messageId)
+      : bot.constants.routes.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token),
     {
       content: options.content,
       embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),

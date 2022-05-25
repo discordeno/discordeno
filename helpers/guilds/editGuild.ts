@@ -25,7 +25,7 @@ export async function editGuild(bot: Bot, guildId: bigint, options: ModifyGuild,
   const result = await bot.rest.runMethod<DiscordGuild>(
     bot.rest,
     "patch",
-    bot.constants.endpoints.GUILDS_BASE(guildId),
+    bot.constants.routes.GUILD(guildId),
     options,
   );
 

@@ -10,7 +10,7 @@ export async function createWebhook(bot: Bot, channelId: bigint, options: Create
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
     "post",
-    bot.constants.endpoints.CHANNEL_WEBHOOKS(channelId),
+    bot.constants.routes.CHANNEL_WEBHOOKS(channelId),
     {
       name: options.name,
       avatar: options.avatar ? await bot.utils.urlToBase64(options.avatar) : undefined,

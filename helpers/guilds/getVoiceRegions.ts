@@ -7,7 +7,7 @@ export async function getVoiceRegions(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordVoiceRegion[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_REGIONS(guildId),
+    bot.constants.routes.GUILD_REGIONS(guildId),
   );
 
   return new Collection(

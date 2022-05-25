@@ -5,7 +5,7 @@ export async function banMember(bot: Bot, guildId: bigint, id: bigint, options?:
   await bot.rest.runMethod<undefined>(
     bot.rest,
     "put",
-    bot.constants.endpoints.GUILD_BAN(guildId, id),
+    bot.constants.routes.GUILD_BAN(guildId, id),
     options
       ? {
         delete_message_days: options.deleteMessageDays,

@@ -6,7 +6,7 @@ export async function editWidget(bot: Bot, guildId: bigint, enabled: boolean, ch
   const result = await bot.rest.runMethod<DiscordGuildWidgetSettings>(
     bot.rest,
     "patch",
-    bot.constants.endpoints.GUILD_WIDGET(guildId),
+    bot.constants.routes.GUILD_WIDGET(guildId),
     {
       enabled,
       channel_id: channelId,

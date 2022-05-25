@@ -7,7 +7,7 @@ export async function createInvite(bot: Bot, channelId: bigint, options: CreateC
   const result = await bot.rest.runMethod<DiscordInvite>(
     bot.rest,
     "post",
-    bot.constants.endpoints.CHANNEL_INVITES(channelId),
+    bot.constants.routes.CHANNEL_INVITES(channelId),
     {
       max_age: options.maxAge,
       max_uses: options.maxUses,

@@ -6,7 +6,7 @@ export async function getVanityUrl(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<Partial<DiscordInviteMetadata>>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_VANITY_URL(guildId),
+    bot.constants.routes.GUILD_VANITY_URL(guildId),
   );
 
   return {

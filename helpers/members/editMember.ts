@@ -6,7 +6,7 @@ export async function editMember(bot: Bot, guildId: bigint, memberId: bigint, op
   const result = await bot.rest.runMethod<DiscordMemberWithUser>(
     bot.rest,
     "patch",
-    bot.constants.endpoints.GUILD_MEMBER(guildId, memberId),
+    bot.constants.routes.GUILD_MEMBER(guildId, memberId),
     {
       nick: options.nick,
       roles: options.roles?.map((id) => id.toString()),

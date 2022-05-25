@@ -6,7 +6,7 @@ export async function editDiscovery(bot: Bot, guildId: bigint, data: ModifyGuild
   const result = await bot.rest.runMethod<DiscordDiscoveryMetadata>(
     bot.rest,
     "patch",
-    bot.constants.endpoints.DISCOVERY_METADATA(guildId),
+    bot.constants.routes.DISCOVERY_METADATA(guildId),
     {
       primary_category_id: data.primaryCategoryId,
       keywords: data.keywords,

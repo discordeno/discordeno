@@ -7,7 +7,7 @@ export async function getWebhooks(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordWebhook[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_WEBHOOKS(guildId),
+    bot.constants.routes.GUILD_WEBHOOKS(guildId),
   );
 
   return new Collection(result.map((hook) => {

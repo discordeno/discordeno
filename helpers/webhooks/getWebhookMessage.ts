@@ -13,14 +13,11 @@ export async function getWebhookMessage(
   messageId: bigint,
   options?: GetWebhookMessageOptions,
 ) {
-  let url = bot.constants.endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId);
-
-  // QUERY PARAMS
-  if (options?.threadId) {
-    url += `?thread_id=${options.threadId}`;
-  }
-
-  const result = await bot.rest.runMethod<DiscordMessage>(bot.rest, "get", url);
+  const result = await bot.rest.runMethod<DiscordMessage>(
+    bot.rest,
+    "get",
+    bot.constants.routes.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId, options),
+  );
 
   return bot.transformers.message(bot, result);
 }
