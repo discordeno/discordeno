@@ -80,4 +80,4 @@ async function handleRequest(conn: Deno.Conn) {
   }
 }
 
-type RequestMethod = "POST" | "PUT" | "DELETE" | "PATCH";
+type RequestMethod = "post" | "put" | "delete" | "patch";
