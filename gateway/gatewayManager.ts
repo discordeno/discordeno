@@ -59,10 +59,7 @@ export function createGatewayManager(
     $os: options.$os ?? "linux",
     $browser: options.$browser ?? "Discordeno",
     $device: options.$device ?? "Discordeno",
-    intents:
-      (Array.isArray(options.intents)
-        ? options.intents.reduce((bits, next) => (bits |= GatewayIntents[next]), 0)
-        : options.intents) ?? 0,
+    intents: options.intents ?? 0,
     shard: options.shard ?? [0, options.shardsRecommended ?? 1],
     presence: options.presence,
     urlWSS: options.urlWSS ?? "wss://gateway.discord.gg/?v=9&encoding=json",
@@ -131,7 +128,7 @@ export interface GatewayManager {
   $os: string;
   $browser: string;
   $device: string;
-  intents: number | (keyof typeof GatewayIntents)[];
+  intents: GatewayIntents;
   shard: [number, number];
   presence?: Omit<StatusUpdate, "afk" | "since">;
 

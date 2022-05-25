@@ -57,7 +57,7 @@ startGateway({
   /** Whether or not to use compression for gateway payloads. */
   compress: true,
   /** The intents you would like to enable. */
-  intents: ["GUILDS", "GUILD_MESSAGES"],
+  intents: Intents.Guilds | Intents.GuildMessages,
   /** The max amount of shards used for identifying. This can be useful for zero-downtime updates or resharding. */
   maxShards: 885,
   /** The first shard Id for this group of shards. */

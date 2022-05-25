@@ -111,7 +111,7 @@ With this info, we can now create our gateway manager.
 const gateway = createGatewayManager({
   secretKey: EVENT_HANDLER_SECRET_KEY,
   token: DISCORD_TOKEN,
-  intents: ["GuildMessages", "Guilds"],
+  intents: Intents.Guilds | Intents.GuildMessages,
   shardsRecommended: result.shards,
   sessionStartLimitTotal: result.sessionStartLimit.total,
   sessionStartLimitRemaining: result.sessionStartLimit.remaining,

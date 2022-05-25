@@ -5,10 +5,17 @@ import { RestPayload, RestRequest } from "./rest.ts";
 
 /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
 export function createRequestBody(rest: RestManager, queuedRequest: { request: RestRequest; payload: RestPayload }) {
-  const headers: { [key: string]: string } = {
-    Authorization: `Bot ${rest.token}`,
-    "User-Agent": USER_AGENT,
+  const headers: Record<string, string> = {
+    authorization: `Bot ${rest.token}`,
+    "user-agent": USER_AGENT,
   };
+
+  // SOMETIMES SPECIAL HEADERS (E.G. CUSTOM AUTHORIZATION) NEED TO BE USED
+  if (queuedRequest.payload.headers) {
+    for (const key in queuedRequest.payload.headers) {
+      headers[key] = queuedRequest.payload.headers[key];
+    }
+  }
 
   // GET METHODS SHOULD NOT HAVE A BODY
   if (queuedRequest.request.method.toUpperCase() === "GET") {

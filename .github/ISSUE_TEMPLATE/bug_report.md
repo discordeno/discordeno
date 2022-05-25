@@ -22,9 +22,7 @@ const bot = createBot({
   events: {
     // ADD EVENTS NEEDED TO SHOW THE BUG HERE
   },
-  intents: [
-    // ADD INTENTS NEEDED HERE FOR YOUR TEST
-  ],
+  intents: 0, // ADD INTENTS NEEDED HERE FOR YOUR TEST IF NECESSARY
 });
 
 await startBot(bot);

@@ -10,7 +10,7 @@ export function loadBot() {
   const botId = BigInt(atob(token.split(".")[0]));
   const bot = createBot({
     events: {},
-    intents: [],
+    intents: 0,
     botId,
     token,
   });
