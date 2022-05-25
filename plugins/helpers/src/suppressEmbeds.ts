@@ -8,7 +8,7 @@ export async function suppressEmbeds(
 ) {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "patch",
+    "PATCH",
     bot.constants.routes.CHANNEL_MESSAGE(channelId, messageId),
     { flags: 4 },
   );

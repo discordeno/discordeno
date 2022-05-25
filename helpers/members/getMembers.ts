@@ -11,7 +11,7 @@ import { Collection } from "../../util/collection.ts";
 export async function getMembers(bot: Bot, guildId: bigint, options: ListGuildMembers) {
   const result = await bot.rest.runMethod<DiscordMemberWithUser[]>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.routes.GUILD_MEMBERS(guildId, options),
   );
 

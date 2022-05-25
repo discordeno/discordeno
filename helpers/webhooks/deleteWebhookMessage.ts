@@ -14,7 +14,7 @@ export async function deleteWebhookMessage(
 ) {
   await bot.rest.runMethod<undefined>(
     bot.rest,
-    "delete",
+    "DELETE",
     bot.constants.routes.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId, options),
   );
 }

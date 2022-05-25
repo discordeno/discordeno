@@ -5,7 +5,7 @@ import { DiscordChannel } from "../../types/discord.ts";
 export async function getChannel(bot: Bot, channelId: bigint) {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.routes.CHANNEL(channelId),
   );
 

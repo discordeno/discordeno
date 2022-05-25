@@ -5,7 +5,7 @@ import { DiscordStageInstance } from "../../types/discord.ts";
 export async function getStageInstance(bot: Bot, channelId: bigint) {
   const result = await bot.rest.runMethod<DiscordStageInstance>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.routes.STAGE_INSTANCE(channelId),
   );
 

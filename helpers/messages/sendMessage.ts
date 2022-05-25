@@ -8,7 +8,7 @@ import { Embed } from "../../transformers/embed.ts";
 export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMessage) {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "post",
+    "POST",
     bot.constants.routes.CHANNEL_MESSAGES(channelId),
     {
       content: content.content,

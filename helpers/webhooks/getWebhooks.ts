@@ -6,7 +6,7 @@ import { Collection } from "../../util/collection.ts";
 export async function getWebhooks(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordWebhook[]>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.routes.GUILD_WEBHOOKS(guildId),
   );
 

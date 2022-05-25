@@ -9,7 +9,7 @@ import { MessageComponentTypes } from "../../types/shared.ts";
 export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint, content: EditMessage) {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "patch",
+    "PATCH",
     bot.constants.routes.CHANNEL_MESSAGE(channelId, messageId),
     {
       content: content.content,

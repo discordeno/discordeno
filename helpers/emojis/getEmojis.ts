@@ -8,7 +8,7 @@ import { Collection } from "../../util/collection.ts";
 export async function getEmojis(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordEmoji[]>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.routes.GUILD_EMOJIS(guildId),
   );
 

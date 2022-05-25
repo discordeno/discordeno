@@ -18,7 +18,7 @@ export async function getArchivedThreads(
 
   const result = (await bot.rest.runMethod<DiscordListArchivedThreads>(
     bot.rest,
-    "get",
+    "GET",
     url,
   ));
 

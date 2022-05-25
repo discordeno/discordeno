@@ -32,7 +32,7 @@ export async function getMembersPaginated(
 
     const result = await bot.rest.runMethod<DiscordMemberWithUser[]>(
       bot.rest,
-      "get",
+      "GET",
       bot.constants.routes.GUILD_MEMBERS(guildId, {
         limit: membersLeft > 1000 ? 1000 : membersLeft,
         after: options.after,

@@ -4,7 +4,7 @@ import { RestRequestRejection, RestRequestResponse } from "./rest.ts";
 
 export async function runMethod<T = any>(
   rest: RestManager,
-  method: "get" | "post" | "put" | "delete" | "patch",
+  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
   route: string,
   body?: unknown,
   options?: {
@@ -35,7 +35,7 @@ export async function runMethod<T = any>(
         Authorization: rest.secretKey,
         "Content-Type": "application/json",
       },
-      method: method.toUpperCase(),
+      method,
     }).catch((error) => {
       errorStack.message = (error as Error)?.message;
       console.error(error);

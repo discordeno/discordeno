@@ -36,7 +36,7 @@ export async function getScheduledEventUsers(
 
   const result = await bot.rest.runMethod<{ user: DiscordUser; member?: DiscordMember }[]>(
     bot.rest,
-    "get",
+    "GET",
     url,
   );
 

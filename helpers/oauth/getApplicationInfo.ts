@@ -5,7 +5,7 @@ import { DiscordApplication } from "../../types/discord.ts";
 export async function getApplicationInfo(bot: Bot) {
   const result = await bot.rest.runMethod<DiscordApplication>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.routes.OAUTH2_APPLICATION(),
   );
 

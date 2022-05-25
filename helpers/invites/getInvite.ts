@@ -5,7 +5,7 @@ import { DiscordInviteMetadata } from "../../types/discord.ts";
 export async function getInvite(bot: Bot, inviteCode: string, options?: GetInvite) {
   const result = await bot.rest.runMethod<DiscordInviteMetadata>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.routes.INVITE(inviteCode, options),
   );
 

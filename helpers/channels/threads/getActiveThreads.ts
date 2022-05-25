@@ -6,7 +6,7 @@ import { Collection } from "../../../util/collection.ts";
 export async function getActiveThreads(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordListActiveThreads>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.routes.THREAD_ACTIVE(guildId),
   );
 

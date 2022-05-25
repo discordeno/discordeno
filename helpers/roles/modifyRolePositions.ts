@@ -6,7 +6,7 @@ import { Collection } from "../../util/collection.ts";
 export async function modifyRolePositions(bot: Bot, guildId: bigint, options: ModifyRolePositions[]) {
   const roles = await bot.rest.runMethod<DiscordRole[]>(
     bot.rest,
-    "patch",
+    "PATCH",
     bot.constants.routes.GUILD_ROLES(guildId),
     options,
   );

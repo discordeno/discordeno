@@ -10,7 +10,7 @@ export async function getScheduledEvent(
 ) {
   const event = await bot.rest.runMethod<DiscordScheduledEvent>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.routes.GUILD_SCHEDULED_EVENT(guildId, eventId, options?.withUserCount),
   );
 

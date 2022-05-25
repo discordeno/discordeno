@@ -6,7 +6,7 @@ import { DiscordIntegration } from "../../types/discord.ts";
 export async function getIntegrations(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordIntegration[]>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.routes.GUILD_INTEGRATIONS(guildId),
   );
 

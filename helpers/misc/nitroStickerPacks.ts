@@ -5,7 +5,7 @@ import { DiscordStickerPack } from "../../types/discord.ts";
 export async function nitroStickerPacks(bot: Bot) {
   const packs = await bot.rest.runMethod<DiscordStickerPack[]>(
     bot.rest,
-    "get",
+    "GET",
     bot.constants.routes.NITRO_STICKER_PACKS(),
   );
 
