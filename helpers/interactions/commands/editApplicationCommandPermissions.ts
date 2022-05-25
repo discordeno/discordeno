@@ -13,8 +13,8 @@ export async function editApplicationCommandPermissions(
 ) {
   const result = await bot.rest.runMethod<DiscordGuildApplicationCommandPermissions>(
     bot.rest,
-    "put",
-    bot.constants.endpoints.COMMANDS_PERMISSION(bot.applicationId, guildId, commandId),
+    "PUT",
+    bot.constants.routes.COMMANDS_PERMISSION(bot.applicationId, guildId, commandId),
     {
       permissions: options,
     },

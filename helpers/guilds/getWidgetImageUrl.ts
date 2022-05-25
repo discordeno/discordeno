@@ -2,7 +2,7 @@ import type { Bot } from "../../bot.ts";
 
 /** Returns the widget image URL for the guild. */
 export async function getWidgetImageURL(bot: Bot, guildId: bigint, options?: GetGuildWidgetImageQuery) {
-  return `${bot.constants.endpoints.GUILD_WIDGET(guildId)}.png?style=${options?.style ?? "shield"}`;
+  return bot.constants.routes.GUILD_WIDGET_IMAGE(guildId, options?.style);
 }
 
 /** https://discord.com/developers/docs/resources/guild#get-guild-widget-image-query-string-params */

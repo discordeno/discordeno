@@ -8,7 +8,13 @@ export async function connectToVoiceChannel(
   channelId: bigint,
   options?: AtLeastOne<Omit<UpdateVoiceState, "guildId" | "channelId">>,
 ) {
-  bot.gateway.sendShardMessage(bot.gateway, bot.utils.calculateShardId(bot.gateway, guildId), {
+  const shardId = bot.utils.calculateShardId(bot.gateway, guildId);
+  const shard = bot.gateway.manager.shards.get(shardId);
+  if (!shard) {
+    throw new Error(`Shard (id: ${shardId} not found`);
+  }
+
+  shard.send({
     op: GatewayOpcodes.VoiceStateUpdate,
     d: {
       guild_id: guildId.toString(),

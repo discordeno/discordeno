@@ -99,8 +99,8 @@ export async function sendInteractionResponse(
   if (bot.cache.unrepliedInteractions.delete(id)) {
     return await bot.rest.runMethod<undefined>(
       bot.rest,
-      "post",
-      bot.constants.endpoints.INTERACTION_ID_TOKEN(id, token),
+      "POST",
+      bot.constants.routes.INTERACTION_ID_TOKEN(id, token),
       {
         type: options.type,
         data,
@@ -112,8 +112,8 @@ export async function sendInteractionResponse(
   // If its already been executed, we need to send a followup response
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "post",
-    bot.constants.endpoints.WEBHOOK(bot.applicationId, token),
+    "POST",
+    bot.constants.routes.WEBHOOK(bot.applicationId, token),
     { ...data, file: options.data.file },
   );
 

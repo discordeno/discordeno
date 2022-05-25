@@ -5,8 +5,8 @@ import { DiscordMessage } from "../../types/discord.ts";
 export async function getMessage(bot: Bot, channelId: bigint, id: bigint) {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "get",
-    bot.constants.endpoints.CHANNEL_MESSAGE(channelId, id),
+    "GET",
+    bot.constants.routes.CHANNEL_MESSAGE(channelId, id),
   );
 
   return bot.transformers.message(bot, result);

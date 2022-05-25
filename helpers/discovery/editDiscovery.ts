@@ -5,8 +5,8 @@ import { DiscordDiscoveryMetadata } from "../../types/discord.ts";
 export async function editDiscovery(bot: Bot, guildId: bigint, data: ModifyGuildDiscoveryMetadata) {
   const result = await bot.rest.runMethod<DiscordDiscoveryMetadata>(
     bot.rest,
-    "patch",
-    bot.constants.endpoints.DISCOVERY_METADATA(guildId),
+    "PATCH",
+    bot.constants.routes.DISCOVERY_METADATA(guildId),
     {
       primary_category_id: data.primaryCategoryId,
       keywords: data.keywords,

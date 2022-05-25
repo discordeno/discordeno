@@ -32,10 +32,11 @@ export async function getMembersPaginated(
 
     const result = await bot.rest.runMethod<DiscordMemberWithUser[]>(
       bot.rest,
-      "get",
-      `${bot.constants.endpoints.GUILD_MEMBERS(guildId)}?limit=${membersLeft > 1000 ? 1000 : membersLeft}${
-        options?.after ? `&after=${options.after}` : ""
-      }`,
+      "GET",
+      bot.constants.routes.GUILD_MEMBERS(guildId, {
+        limit: membersLeft > 1000 ? 1000 : membersLeft,
+        after: options.after,
+      }),
     );
 
     const discordenoMembers = result.map((member) =>

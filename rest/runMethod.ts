@@ -1,11 +1,11 @@
 import { RestManager } from "../bot.ts";
-import { API_VERSION, BASE_URL, IMAGE_BASE_URL } from "../util/constants.ts";
+import { API_VERSION, BASE_URL, baseEndpoints, IMAGE_BASE_URL } from "../util/constants.ts";
 import { RestRequestRejection, RestRequestResponse } from "./rest.ts";
 
 export async function runMethod<T = any>(
   rest: RestManager,
-  method: "get" | "post" | "put" | "delete" | "patch",
-  url: string,
+  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
+  route: string,
   body?: unknown,
   options?: {
     retryCount?: number;
@@ -14,7 +14,7 @@ export async function runMethod<T = any>(
   },
 ): Promise<T> {
   rest.debug(
-    `[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${
+    `[REST - RequestCreate] Method: ${method} | URL: ${route} | Retry Count: ${
       options?.retryCount ?? 0
     } | Bucket ID: ${options?.bucketId} | Body: ${
       JSON.stringify(
@@ -28,14 +28,14 @@ export async function runMethod<T = any>(
   Error.captureStackTrace(errorStack);
 
   // For proxies we don't need to do any of the legwork so we just forward the request
-  if (!url.startsWith(`${BASE_URL}/v${API_VERSION}`) && !url.startsWith(IMAGE_BASE_URL)) {
-    const result = await fetch(url, {
+  if (!baseEndpoints.BASE_URL.startsWith(BASE_URL) && route[0] === "/") {
+    const result = await fetch(`${baseEndpoints.BASE_URL}${route}`, {
       body: body ? JSON.stringify(body) : undefined,
       headers: {
         Authorization: rest.secretKey,
         "Content-Type": "application/json",
       },
-      method: method.toUpperCase(),
+      method,
     }).catch((error) => {
       errorStack.message = (error as Error)?.message;
       console.error(error);
@@ -56,7 +56,7 @@ export async function runMethod<T = any>(
     rest.processRequest(
       rest,
       {
-        url,
+        url: route[0] === "/" ? `${BASE_URL}/v${API_VERSION}${route}` : route,
         method,
         reject: (data: RestRequestRejection) => {
           const restError = rest.convertRestError(errorStack, data);

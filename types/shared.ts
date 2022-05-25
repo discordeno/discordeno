@@ -519,6 +519,7 @@ export enum ApplicationCommandTypes {
 export enum ApplicationCommandPermissionTypes {
   Role = 1,
   User,
+  Channel,
 }
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags */
@@ -1388,3 +1389,5 @@ export type PickPartial<T, K extends keyof T> =
     [P in keyof T]?: T[P] | undefined;
   }
   & { [P in K]: T[P] };
+
+export type OmitFirstFnArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...args: P) => R : never;

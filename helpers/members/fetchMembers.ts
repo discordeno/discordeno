@@ -26,7 +26,12 @@ export function fetchMembers(
     const nonce = `${guildId}-${Date.now()}`;
     bot.cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
 
-    bot.gateway.sendShardMessage(bot.gateway, shardId, {
+    const shard = bot.gateway.manager.shards.get(shardId);
+    if (!shard) {
+      throw new Error(`Shard (id: ${shardId}) not found.`);
+    }
+
+    shard.send({
       op: GatewayOpcodes.RequestGuildMembers,
       d: {
         guild_id: guildId.toString(),
