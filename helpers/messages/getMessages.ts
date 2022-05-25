@@ -11,20 +11,10 @@ export async function getMessages(
     throw new Error(bot.constants.Errors.INVALID_GET_MESSAGES_LIMIT);
   }
 
-  let url = bot.constants.endpoints.CHANNEL_MESSAGES(channelId);
-
-  if (options) {
-    url += "?";
-    if (isGetMessagesAfter(options) && options.after) url += `after=${options.after}`;
-    if (isGetMessagesBefore(options) && options.before) url += `&before=${options.before}`;
-    if (isGetMessagesAround(options) && options.around) url += `&around=${options.around}`;
-    if (isGetMessagesLimit(options) && options.limit) url += `&limit=${options.limit}`;
-  }
-
   const result = await bot.rest.runMethod<DiscordMessage[]>(
     bot.rest,
-    "get",
-    url,
+    "GET",
+    bot.constants.routes.CHANNEL_MESSAGES(channelId, options),
   );
 
   return await Promise.all(result.map((res) => bot.transformers.message(bot, res)));

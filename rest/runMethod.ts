@@ -1,28 +1,22 @@
 import { RestManager } from "../bot.ts";
-import { API_VERSION, BASE_URL, IMAGE_BASE_URL } from "../util/constants.ts";
+import { API_VERSION, BASE_URL, baseEndpoints, IMAGE_BASE_URL } from "../util/constants.ts";
 import { RestRequestRejection, RestRequestResponse } from "./rest.ts";
 
 export async function runMethod<T = any>(
   rest: RestManager,
-  method: "get",
-  url: string,
-): Promise<T>;
-export async function runMethod<T = any>(
-  rest: RestManager,
-  method: "post" | "put" | "delete" | "patch",
-  url: string,
+  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
+  route: string,
   body?: unknown,
-): Promise<T>;
-export async function runMethod<T = any>(
-  rest: RestManager,
-  method: "get" | "post" | "put" | "delete" | "patch",
-  url: string,
-  body?: unknown,
-  retryCount = 0,
-  bucketId?: string,
+  options?: {
+    retryCount?: number;
+    bucketId?: string;
+    headers?: Record<string, string>;
+  },
 ): Promise<T> {
   rest.debug(
-    `[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${retryCount} | Bucket ID: ${bucketId} | Body: ${
+    `[REST - RequestCreate] Method: ${method} | URL: ${route} | Retry Count: ${
+      options?.retryCount ?? 0
+    } | Bucket ID: ${options?.bucketId} | Body: ${
       JSON.stringify(
         body,
       )
@@ -34,14 +28,14 @@ export async function runMethod<T = any>(
   Error.captureStackTrace(errorStack);
 
   // For proxies we don't need to do any of the legwork so we just forward the request
-  if (!url.startsWith(`${BASE_URL}/v${API_VERSION}`) && !url.startsWith(IMAGE_BASE_URL)) {
-    const result = await fetch(url, {
+  if (!baseEndpoints.BASE_URL.startsWith(BASE_URL) && route[0] === "/") {
+    const result = await fetch(`${baseEndpoints.BASE_URL}${route}`, {
       body: body ? JSON.stringify(body) : undefined,
       headers: {
         Authorization: rest.secretKey,
         "Content-Type": "application/json",
       },
-      method: method.toUpperCase(),
+      method,
     }).catch((error) => {
       errorStack.message = (error as Error)?.message;
       console.error(error);
@@ -62,19 +56,20 @@ export async function runMethod<T = any>(
     rest.processRequest(
       rest,
       {
-        url,
+        url: route[0] === "/" ? `${BASE_URL}/v${API_VERSION}${route}` : route,
         method,
         reject: (data: RestRequestRejection) => {
-          errorStack.message = `[${data.status}] ${data.error}`;
-          reject(errorStack);
+          const restError = rest.convertRestError(errorStack, data);
+          reject(restError);
         },
         respond: (data: RestRequestResponse) =>
           resolve(data.status !== 204 ? JSON.parse(data.body ?? "{}") : (undefined as unknown as T)),
       },
       {
-        bucketId,
+        bucketId: options?.bucketId,
         body: body as Record<string, unknown> | undefined,
-        retryCount,
+        retryCount: options?.retryCount ?? 0,
+        headers: options?.headers,
       },
     );
   });

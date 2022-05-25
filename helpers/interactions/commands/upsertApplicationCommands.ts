@@ -21,10 +21,10 @@ export async function upsertApplicationCommands(
 ) {
   const result = await bot.rest.runMethod<DiscordApplicationCommand[]>(
     bot.rest,
-    "put",
+    "PUT",
     guildId
-      ? bot.constants.endpoints.COMMANDS_GUILD(bot.applicationId, guildId)
-      : bot.constants.endpoints.COMMANDS(bot.applicationId),
+      ? bot.constants.routes.COMMANDS_GUILD(bot.applicationId, guildId)
+      : bot.constants.routes.COMMANDS(bot.applicationId),
     options.map((option) => (isContextApplicationCommand(option)
       ? {
         name: option.name,

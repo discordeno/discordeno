@@ -5,8 +5,8 @@ import { DiscordMessage } from "../../types/discord.ts";
 export async function getPins(bot: Bot, channelId: bigint) {
   const result = await bot.rest.runMethod<DiscordMessage[]>(
     bot.rest,
-    "get",
-    bot.constants.endpoints.CHANNEL_PINS(channelId),
+    "GET",
+    bot.constants.routes.CHANNEL_PINS(channelId),
   );
 
   return result.map((msg) => bot.transformers.message(bot, msg));

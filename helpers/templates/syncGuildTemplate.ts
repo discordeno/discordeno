@@ -8,7 +8,7 @@ import { DiscordTemplate } from "../../types/discord.ts";
 export async function syncGuildTemplate(bot: Bot, guildId: bigint, templateCode: string) {
   return await bot.rest.runMethod<DiscordTemplate>(
     bot.rest,
-    "put",
-    `${bot.constants.endpoints.GUILD_TEMPLATES(guildId)}/${templateCode}`,
+    "PUT",
+    bot.constants.routes.GUILD_TEMPLATE(guildId, templateCode),
   );
 }

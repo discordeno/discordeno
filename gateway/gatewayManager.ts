@@ -23,7 +23,7 @@
 // import { GatewayIntents } from "../types/shared.ts";
 // import { StatusUpdate } from "../helpers/misc/editBotStatus.ts";
 // import { DiscordGatewayPayload } from "../types/discord.ts";
-// import { calculateMaxShards } from "./calculateMaxShards.ts";
+// import { calculateMaxShards } from "./calculateMaxShards.ts"
 
 // /** Create a new Gateway Manager.
 //  *
@@ -100,6 +100,54 @@
 //     calculateMaxShards: options.calculateMaxShards ?? calculateMaxShards,
 //   };
 // }
+=======
+/** Create a new Gateway Manager.
+ *
+ * @param options: Customize every bit of the manager. If something is not
+ * provided, it will fallback to a default which should be suitable for most
+ * bots.
+ */
+export function createGatewayManager(
+  options: Partial<GatewayManager> & Pick<GatewayManager, "handleDiscordPayload">,
+): GatewayManager {
+  return {
+    queueResetInterval: 60000,
+    maxRequestsPerInterval: 120,
+    cache: {
+      guildIds: new Set(),
+      loadingGuildIds: new Set(),
+      editedMessages: new Collection(),
+    },
+    secretKey: options.secretKey ?? "",
+    url: options.url ?? "",
+    reshard: options.reshard ?? true,
+    reshardPercentage: options.reshardPercentage ?? 80,
+    spawnShardDelay: options.spawnShardDelay ?? 5000,
+    maxShards: options.maxShards ?? options.shardsRecommended ?? 0,
+    useOptimalLargeBotSharding: options.useOptimalLargeBotSharding ?? true,
+    shardsPerWorker: options.shardsPerWorker ?? 25,
+    maxWorkers: options.maxWorkers ?? 4,
+    firstShardId: options.firstShardId ?? 0,
+    lastShardId: options.lastShardId ?? options.maxShards ?? options.shardsRecommended ?? 1,
+    token: removeTokenPrefix(options.token, "GATEWAY"),
+    compress: options.compress ?? false,
+    $os: options.$os ?? "linux",
+    $browser: options.$browser ?? "Discordeno",
+    $device: options.$device ?? "Discordeno",
+    intents: options.intents ?? 0,
+    shard: options.shard ?? [0, options.shardsRecommended ?? 1],
+    presence: options.presence,
+    urlWSS: options.urlWSS ?? "wss://gateway.discord.gg/?v=9&encoding=json",
+    shardsRecommended: options.shardsRecommended ?? 1,
+    sessionStartLimitTotal: options.sessionStartLimitTotal ?? 1000,
+    sessionStartLimitRemaining: options.sessionStartLimitRemaining ?? 1000,
+    sessionStartLimitResetAfter: options.sessionStartLimitResetAfter ?? 0,
+    maxConcurrency: options.maxConcurrency ?? 1,
+    shards: options.shards ?? new Collection(),
+    loadingShards: options.loadingShards ?? new Collection(),
+    buckets: new Collection(),
+    utf8decoder: new TextDecoder(),
+>>>>>>> main
 
 // export interface GatewayManager {
 //   /** The secret key authorization header the bot will expect when sending payloads. */
@@ -169,6 +217,38 @@
 //   queueResetInterval: number;
 //   /** The maximum amount of requests that the gateway can make before being rate limited. By default 120. */
 //   maxRequestsPerInterval: number;
+export interface GatewayManager {
+  /** The secret key authorization header the bot will expect when sending payloads. */
+  secretKey: string;
+  /** The url that all discord payloads for the dispatch type should be sent to. */
+  url: string;
+  /** Whether or not to automatically reshard. */
+  reshard: boolean;
+  /** The percentage at which resharding should occur. */
+  reshardPercentage: number;
+  /** The delay in milliseconds to wait before spawning next shard. OPTIMAL IS ABOVE 2500. YOU DON"T WANT TO HIT THE RATE LIMIT!!! */
+  spawnShardDelay: number;
+  /** The maximum shard Id number. Useful for zero-downtime updates or resharding. */
+  maxShards: number;
+  /** Whether or not the resharder should automatically switch to LARGE BOT SHARDING when you are above 100K servers. */
+  useOptimalLargeBotSharding: boolean;
+  /** The amount of shards to load per worker. */
+  shardsPerWorker: number;
+  /** The maximum amount of workers to use for your bot. */
+  maxWorkers: number;
+  /** The first shard Id to start spawning. */
+  firstShardId: number;
+  /** The last shard Id for this worker. */
+  lastShardId: number;
+  token: string;
+  compress: boolean;
+  $os: string;
+  $browser: string;
+  $device: string;
+  intents: GatewayIntents;
+  shard: [number, number];
+  presence?: Omit<StatusUpdate, "afk" | "since">;
+>>>>>>> main
 
 //   cache: {
 //     guildIds: Set<bigint>;

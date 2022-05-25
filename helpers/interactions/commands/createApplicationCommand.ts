@@ -21,10 +21,10 @@ export async function createApplicationCommand(
 ) {
   const result = await bot.rest.runMethod<DiscordApplicationCommand>(
     bot.rest,
-    "post",
+    "POST",
     guildId
-      ? bot.constants.endpoints.COMMANDS_GUILD(bot.applicationId, guildId)
-      : bot.constants.endpoints.COMMANDS(bot.applicationId),
+      ? bot.constants.routes.COMMANDS_GUILD(bot.applicationId, guildId)
+      : bot.constants.routes.COMMANDS(bot.applicationId),
     isContextApplicationCommand(options)
       ? { name: options.name, name_localizations: options.nameLocalizations, type: options.type }
       : {

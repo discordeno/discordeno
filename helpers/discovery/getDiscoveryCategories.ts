@@ -6,8 +6,8 @@ import { DiscordDiscoveryCategory } from "../../types/discord.ts";
 export async function getDiscoveryCategories(bot: Bot) {
   const result = await bot.rest.runMethod<DiscordDiscoveryCategory[]>(
     bot.rest,
-    "get",
-    bot.constants.endpoints.DISCOVERY_CATEGORIES(),
+    "GET",
+    bot.constants.routes.DISCOVERY_CATEGORIES(),
   );
 
   return new Collection<number, DiscordDiscoveryCategory>(

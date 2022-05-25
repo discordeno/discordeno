@@ -6,8 +6,8 @@ import { DiscordTemplate } from "../../types/discord.ts";
 export async function getGuildTemplates(bot: Bot, guildId: bigint) {
   const templates = await bot.rest.runMethod<DiscordTemplate[]>(
     bot.rest,
-    "get",
-    bot.constants.endpoints.GUILD_TEMPLATES(guildId),
+    "GET",
+    bot.constants.routes.GUILD_TEMPLATES(guildId),
   );
 
   return new Collection(templates.map((template) => [template.code, bot.transformers.template(bot, template)]));

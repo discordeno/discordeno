@@ -4,8 +4,8 @@ import type { Bot } from "../../bot.ts";
 export async function editBotNickname(bot: Bot, guildId: bigint, options: { nick: string | null; reason?: string }) {
   const response = await bot.rest.runMethod<{ nick: string }>(
     bot.rest,
-    "patch",
-    bot.constants.endpoints.USER_NICK(guildId),
+    "PATCH",
+    bot.constants.routes.USER_NICK(guildId),
     options,
   );
 

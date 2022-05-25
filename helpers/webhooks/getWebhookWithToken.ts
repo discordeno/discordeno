@@ -5,8 +5,8 @@ import { DiscordWebhook } from "../../types/discord.ts";
 export async function getWebhookWithToken(bot: Bot, webhookId: bigint, token: string) {
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
-    "get",
-    bot.constants.endpoints.WEBHOOK(webhookId, token),
+    "GET",
+    bot.constants.routes.WEBHOOK(webhookId, token),
   );
 
   return bot.transformers.webhook(bot, result);

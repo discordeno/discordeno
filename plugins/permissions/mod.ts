@@ -1,4 +1,4 @@
-import { BotWithCache } from "./deps.ts";
+import { Bot, BotWithCache } from "./deps.ts";
 import setupChannelPermChecks from "./src/channels/mod.ts";
 import setupDiscoveryPermChecks from "./src/discovery.ts";
 import setupEditMember from "./src/editMember.ts";
@@ -14,7 +14,7 @@ import setupRolePermChecks from "./src/roles/mod.ts";
 import setupWebhooksPermChecks from "./src/webhooks/mod.ts";
 
 // PLUGINS MUST TAKE A BOT ARGUMENT WHICH WILL BE MODIFIED
-export function enablePermissionsPlugin(bot: BotWithCache) {
+export function enablePermissionsPlugin<B extends BotWithCache = BotWithCache>(bot: B): B {
   // PERM CHECKS REQUIRE CACHE DUH!
   if (!bot.enabledPlugins?.has("CACHE")) {
     throw new Error("The PERMISSIONS plugin requires the CACHE plugin first.");

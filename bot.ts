@@ -26,7 +26,7 @@ import {
   CONTEXT_MENU_COMMANDS_NAME_REGEX,
   DISCORD_SNOWFLAKE_REGEX,
   DISCORDENO_VERSION,
-  endpoints,
+  routes,
   SLASH_COMMANDS_NAME_REGEX,
   USER_AGENT,
 } from "./util/constants.ts";
@@ -137,18 +137,15 @@ import {
 } from "./transformers/applicationCommandOptionChoice.ts";
 import { transformEmbedToDiscordEmbed } from "./transformers/reverse/embed.ts";
 import { transformComponentToDiscordComponent } from "./transformers/reverse/component.ts";
-import { removeTokenPrefix } from "./util/token.ts";
+import { getBotIdFromToken, removeTokenPrefix } from "./util/token.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
-    id: options.botId,
+    id: options.botId ?? getBotIdFromToken(options.token),
     applicationId: options.applicationId || options.botId,
     token: removeTokenPrefix(options.token),
-    events: createEventHandlers(options.events),
-    intents: options.intents.reduce(
-      (bits, next) => (bits |= GatewayIntents[next]),
-      0,
-    ),
+    events: createEventHandlers(options.events ?? {}),
+    intents: options.intents,
     botGatewayData: options.botGatewayData,
     activeGuildIds: new Set<bigint>(),
     constants: createBotConstants(),
@@ -163,7 +160,7 @@ export function createBot(options: CreateBotOptions): Bot {
     },
     rest: createRestManager({
       token: options.token,
-      debug: options.events.debug,
+      debug: options.events?.debug,
       secretKey: options.secretKey ?? undefined,
     }),
   } as Bot;
@@ -316,11 +313,11 @@ export async function stopBot(bot: Bot) {
 
 export interface CreateBotOptions {
   token: string;
-  botId: bigint;
+  botId?: bigint;
   applicationId?: bigint;
   secretKey?: string;
-  events: Partial<EventHandlers>;
-  intents: (keyof typeof GatewayIntents)[];
+  events?: Partial<EventHandlers>;
+  intents?: GatewayIntents;
   botGatewayData?: GetGatewayBot;
   rest?: Omit<CreateRestManagerOptions, "token">;
   handleDiscordPayload?: GatewayManager["handleDiscordPayload"];
@@ -715,7 +712,7 @@ export function createBotConstants() {
     USER_AGENT,
     BASE_URL: baseEndpoints.BASE_URL,
     CDN_URL: baseEndpoints.CDN_URL,
-    endpoints,
+    routes,
     regexes: {
       SLASH_COMMANDS_NAME_REGEX,
       CONTEXT_MENU_COMMANDS_NAME_REGEX,

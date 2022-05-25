@@ -25,14 +25,14 @@ Create a file path like `src/bot/mod.ts`.
 
 ```ts
 import { DISCORD_TOKEN } from "../../configs.ts";
-import { Collection, createBot } from "../../deps.ts";
+import { Collection, createBot, Intents } from "../../deps.ts";
 import { psql } from "./cache/mod.ts";
 
 export const bot = createBot({
   token: DISCORD_TOKEN,
   botId: 270010330782892032n,
   // applicationId: 270010330782892032,
-  intents: ["Guilds", "GuildMessages"],
+  intents: Intents.Guilds | Intents.GuildMessages,
   events: {
     messageCreate: function (bot, message) {
       console.log("message arrived");
@@ -126,7 +126,8 @@ Alright that was a lot of code. Now let's break it down little by little.
   developers have mentioned that this behavior is not documented and not supposed to be relied on to remain stable. Due
   to these reasons, we chose to just require the bot id be passed here.
 - `applicationId` is an optional choice if your bot is old and has a unique id different from it's bot id.
-- `intents`: Provide the intents you like using strings or a number. String form supports autocomplete and type safety.
+- `intents`: Provide the intents you like using a bitwise OR operation (eg. `Intents.Guilds | Intents.GuildsMessages`).
+  String form supports autocomplete and type safety.
 - `events`: These are your event handler functions. When a MESSAGE_CREATE event arrives from Discord it will be
   processed here. We will set up the routing to run these functions later in the guide but for now you can see how to
   set it up. Note, you can create these functions in separate files and just import them here as you wish.
