@@ -171,6 +171,7 @@ export async function createBot(options: CreateBotOptions): Promise<Bot> {
     gatewayBot: bot.botGatewayData ?? await bot.helpers.getGatewayBot(),
     gatewayConfig: {
       token: options.token,
+      intents: options.intents,
     },
 
     debug: bot.events.debug,
