@@ -13,7 +13,7 @@ export async function editFollowupMessage(
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "patch",
-    bot.constants.endpoints.WEBHOOK_MESSAGE(bot.applicationId, interactionToken, messageId),
+    bot.constants.routes.WEBHOOK_MESSAGE(bot.applicationId, interactionToken, messageId),
     {
       content: options.content,
       embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),

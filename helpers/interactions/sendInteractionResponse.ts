@@ -101,7 +101,7 @@ export async function sendInteractionResponse(
     return await bot.rest.runMethod<undefined>(
       bot.rest,
       "post",
-      bot.constants.endpoints.INTERACTION_ID_TOKEN(id, token),
+      bot.constants.routes.INTERACTION_ID_TOKEN(id, token),
       {
         type: options.type,
         data,
@@ -113,7 +113,7 @@ export async function sendInteractionResponse(
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "post",
-    bot.constants.endpoints.WEBHOOK(bot.applicationId, token),
+    bot.constants.routes.WEBHOOK(bot.applicationId, token),
     data,
   );
 

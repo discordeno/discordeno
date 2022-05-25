@@ -13,7 +13,7 @@ export function guildIconURL(
 ) {
   return icon
     ? bot.utils.formatImageURL(
-      bot.constants.endpoints.GUILD_ICON(
+      bot.constants.routes.GUILD_ICON(
         id,
         typeof icon === "string" ? icon : bot.utils.iconBigintToHash(icon),
       ),

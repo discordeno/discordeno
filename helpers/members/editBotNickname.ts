@@ -5,7 +5,7 @@ export async function editBotNickname(bot: Bot, guildId: bigint, options: { nick
   const response = await bot.rest.runMethod<{ nick: string }>(
     bot.rest,
     "patch",
-    bot.constants.endpoints.USER_NICK(guildId),
+    bot.constants.routes.USER_NICK(guildId),
     options,
   );
 

@@ -11,7 +11,7 @@ export async function batchEditApplicationCommandPermissions(
   const result = await bot.rest.runMethod<DiscordGuildApplicationCommandPermissions[]>(
     bot.rest,
     "put",
-    bot.constants.endpoints.COMMANDS_PERMISSIONS(bot.applicationId, guildId),
+    bot.constants.routes.COMMANDS_PERMISSIONS(bot.applicationId, guildId),
     options,
   );
 

@@ -10,7 +10,7 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "patch",
-    bot.constants.endpoints.CHANNEL_MESSAGE(channelId, messageId),
+    bot.constants.routes.CHANNEL_MESSAGE(channelId, messageId),
     {
       content: content.content,
       embeds: content.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),

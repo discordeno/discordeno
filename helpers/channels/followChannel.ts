@@ -6,7 +6,7 @@ export async function followChannel(bot: Bot, sourceChannelId: bigint, targetCha
   const data = await bot.rest.runMethod<DiscordFollowedChannel>(
     bot.rest,
     "post",
-    bot.constants.endpoints.CHANNEL_FOLLOW(sourceChannelId),
+    bot.constants.routes.CHANNEL_FOLLOW(sourceChannelId),
     {
       webhook_channel_id: targetChannelId,
     },

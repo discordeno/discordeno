@@ -9,7 +9,7 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMe
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "post",
-    bot.constants.endpoints.CHANNEL_MESSAGES(channelId),
+    bot.constants.routes.CHANNEL_MESSAGES(channelId),
     {
       content: content.content,
       tts: content.tts,

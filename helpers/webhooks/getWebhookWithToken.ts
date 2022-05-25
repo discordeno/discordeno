@@ -6,7 +6,7 @@ export async function getWebhookWithToken(bot: Bot, webhookId: bigint, token: st
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
     "get",
-    bot.constants.endpoints.WEBHOOK(webhookId, token),
+    bot.constants.routes.WEBHOOK(webhookId, token),
   );
 
   return bot.transformers.webhook(bot, result);

@@ -7,7 +7,7 @@ export async function getInvites(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordInviteMetadata[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_INVITES(guildId),
+    bot.constants.routes.GUILD_INVITES(guildId),
   );
 
   return new Collection(

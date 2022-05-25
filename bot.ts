@@ -26,7 +26,7 @@ import {
   CONTEXT_MENU_COMMANDS_NAME_REGEX,
   DISCORD_SNOWFLAKE_REGEX,
   DISCORDENO_VERSION,
-  endpoints,
+  routes,
   SLASH_COMMANDS_NAME_REGEX,
   USER_AGENT,
 } from "./util/constants.ts";
@@ -710,7 +710,7 @@ export function createBotConstants() {
     USER_AGENT,
     BASE_URL: baseEndpoints.BASE_URL,
     CDN_URL: baseEndpoints.CDN_URL,
-    endpoints,
+    routes,
     regexes: {
       SLASH_COMMANDS_NAME_REGEX,
       CONTEXT_MENU_COMMANDS_NAME_REGEX,

@@ -11,7 +11,7 @@ export async function startThreadWithMessage(
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
     "post",
-    bot.constants.endpoints.THREAD_START_PUBLIC(channelId, messageId),
+    bot.constants.routes.THREAD_START_PUBLIC(channelId, messageId),
     {
       name: options.name,
       auto_archive_duration: options.autoArchiveDuration,

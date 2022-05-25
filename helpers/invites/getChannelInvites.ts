@@ -7,7 +7,7 @@ export async function getChannelInvites(bot: Bot, channelId: bigint) {
   const result = await bot.rest.runMethod<DiscordInviteMetadata[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.CHANNEL_INVITES(channelId),
+    bot.constants.routes.CHANNEL_INVITES(channelId),
   );
 
   return new Collection(

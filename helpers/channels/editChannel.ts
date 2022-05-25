@@ -35,7 +35,7 @@ export async function editChannel(bot: Bot, channelId: bigint, options: ModifyCh
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
     "patch",
-    bot.constants.endpoints.CHANNEL_BASE(channelId),
+    bot.constants.routes.CHANNEL(channelId),
     {
       name: options.name,
       topic: options.topic,

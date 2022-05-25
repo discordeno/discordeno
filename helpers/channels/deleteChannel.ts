@@ -6,7 +6,7 @@ export async function deleteChannel(bot: Bot, channelId: bigint, reason?: string
   await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
     "delete",
-    bot.constants.endpoints.CHANNEL_BASE(channelId),
+    bot.constants.routes.CHANNEL_BASE(channelId),
     {
       reason,
     },

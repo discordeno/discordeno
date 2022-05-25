@@ -8,7 +8,7 @@ export async function getScheduledEvents(bot: Bot, guildId: bigint, options?: Ge
   const events = await bot.rest.runMethod<DiscordScheduledEvent[]>(
     bot.rest,
     "get",
-    `${bot.constants.endpoints.GUILD_SCHEDULED_EVENTS(guildId)}?with_user_count=${options?.withUserCount ?? false}`,
+    bot.constants.routes.GUILD_SCHEDULED_EVENTS(guildId, options?.withUserCount)
   );
 
   return new Collection<bigint, ScheduledEvent>(

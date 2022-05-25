@@ -6,7 +6,7 @@ export async function getApplicationCommandPermission(bot: Bot, guildId: bigint,
   const result = await bot.rest.runMethod<DiscordGuildApplicationCommandPermissions>(
     bot.rest,
     "get",
-    bot.constants.endpoints.COMMANDS_PERMISSION(bot.applicationId, guildId, commandId),
+    bot.constants.routes.COMMANDS_PERMISSION(bot.applicationId, guildId, commandId),
   );
 
   return bot.transformers.applicationCommandPermission(bot, result);

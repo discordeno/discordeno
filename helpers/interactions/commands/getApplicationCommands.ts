@@ -8,8 +8,8 @@ export async function getApplicationCommands(bot: Bot, guildId?: bigint) {
     bot.rest,
     "get",
     guildId
-      ? bot.constants.endpoints.COMMANDS_GUILD(bot.applicationId, guildId)
-      : bot.constants.endpoints.COMMANDS(bot.applicationId),
+      ? bot.constants.routes.COMMANDS_GUILD(bot.applicationId, guildId)
+      : bot.constants.routes.COMMANDS(bot.applicationId),
   );
 
   return new Collection(

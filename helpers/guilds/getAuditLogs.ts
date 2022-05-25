@@ -6,19 +6,10 @@ import { AuditLogEvents } from "../../types/shared.ts";
 export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuildAuditLog) {
   if (options?.limit) options.limit = options.limit >= 1 && options.limit <= 100 ? options.limit : 50;
 
-  let url = bot.constants.endpoints.GUILD_AUDIT_LOGS(guildId);
-  if (options) {
-    url += "?";
-
-    if (options.actionType) url += `action_type=${options.actionType}`;
-    if (options.before) url += `&before=${options.before}`;
-    if (options.limit) url += `&limit=${options.limit}`;
-    if (options.userId) url += `&user_id=${options.userId}`;
-  }
   const auditlog = await bot.rest.runMethod<DiscordAuditLog>(
     bot.rest,
     "get",
-    url,
+    bot.constants.routes.GUILD_AUDIT_LOGS(guildId),
   );
 
   return {

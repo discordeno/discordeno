@@ -6,7 +6,7 @@ export async function getDiscovery(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordDiscoveryMetadata>(
     bot.rest,
     "get",
-    bot.constants.endpoints.DISCOVERY_METADATA(guildId),
+    bot.constants.routes.DISCOVERY_METADATA(guildId),
   );
 
   return {

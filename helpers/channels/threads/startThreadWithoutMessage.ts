@@ -7,7 +7,7 @@ export async function startThreadWithoutMessage(bot: Bot, channelId: bigint, opt
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
     "post",
-    bot.constants.endpoints.THREAD_START_PRIVATE(channelId),
+    bot.constants.routes.THREAD_START_PRIVATE(channelId),
     {
       name: options.name,
       auto_archive_duration: options.autoArchiveDuration,

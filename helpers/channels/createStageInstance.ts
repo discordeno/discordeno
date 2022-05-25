@@ -6,7 +6,7 @@ export async function createStageInstance(bot: Bot, options: CreateStageInstance
   const result = await bot.rest.runMethod<DiscordStageInstance>(
     bot.rest,
     "post",
-    bot.constants.endpoints.STAGE_INSTANCES(),
+    bot.constants.routes.STAGE_INSTANCES(),
     {
       channel_id: options.channelId.toString(),
       topic: options.topic,

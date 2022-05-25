@@ -13,14 +13,14 @@ export function avatarURL(
 ) {
   return options?.avatar
     ? bot.utils.formatImageURL(
-      bot.constants.endpoints.USER_AVATAR(
+      bot.constants.routes.USER_AVATAR(
         userId,
         typeof options?.avatar === "string" ? options.avatar : bot.utils.iconBigintToHash(options?.avatar),
       ),
       options?.size || 128,
       options?.format,
     )
-    : bot.constants.endpoints.USER_DEFAULT_AVATAR(Number(discriminator) % 5);
+    : bot.constants.routes.USER_DEFAULT_AVATAR(Number(discriminator) % 5);
 }
 
 /**

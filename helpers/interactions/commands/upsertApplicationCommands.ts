@@ -23,8 +23,8 @@ export async function upsertApplicationCommands(
     bot.rest,
     "put",
     guildId
-      ? bot.constants.endpoints.COMMANDS_GUILD(bot.applicationId, guildId)
-      : bot.constants.endpoints.COMMANDS(bot.applicationId),
+      ? bot.constants.routes.COMMANDS_GUILD(bot.applicationId, guildId)
+      : bot.constants.routes.COMMANDS(bot.applicationId),
     options.map((option) => (isContextApplicationCommand(option)
       ? {
         name: option.name,

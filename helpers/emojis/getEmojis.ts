@@ -9,7 +9,7 @@ export async function getEmojis(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordEmoji[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.GUILD_EMOJIS(guildId),
+    bot.constants.routes.GUILD_EMOJIS(guildId),
   );
 
   return new Collection(result.map((e) => [bot.transformers.snowflake(e.id!), bot.transformers.emoji(bot, e)]));

@@ -11,7 +11,7 @@ export async function updateStageInstance(
   const result = await bot.rest.runMethod<DiscordStageInstance>(
     bot.rest,
     "patch",
-    bot.constants.endpoints.STAGE_INSTANCE(channelId),
+    bot.constants.routes.STAGE_INSTANCE(channelId),
     {
       topic: data.topic,
     },

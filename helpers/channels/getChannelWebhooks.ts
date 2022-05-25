@@ -7,7 +7,7 @@ export async function getChannelWebhooks(bot: Bot, channelId: bigint) {
   const result = await bot.rest.runMethod<DiscordWebhook[]>(
     bot.rest,
     "get",
-    bot.constants.endpoints.CHANNEL_WEBHOOKS(channelId),
+    bot.constants.routes.CHANNEL_WEBHOOKS(channelId),
   );
 
   return new Collection(result.map((hook) => {

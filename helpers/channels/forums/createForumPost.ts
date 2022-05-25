@@ -12,7 +12,7 @@ export async function createForumPost(
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
     "post",
-    bot.constants.endpoints.FORUM_START(channelId),
+    bot.constants.routes.FORUM_START(channelId),
     {
       name: options.name,
       auto_archive_duration: options.autoArchiveDuration,

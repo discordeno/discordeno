@@ -6,7 +6,7 @@ export async function deleteInteractionResponse(bot: Bot, token: string, message
     bot.rest,
     "delete",
     messageId
-      ? bot.constants.endpoints.INTERACTION_ID_TOKEN_MESSAGE_ID(bot.applicationId, token, messageId)
-      : bot.constants.endpoints.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token),
+      ? bot.constants.routes.INTERACTION_ID_TOKEN_MESSAGE_ID(bot.applicationId, token, messageId)
+      : bot.constants.routes.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token),
   );
 }
