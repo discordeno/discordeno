@@ -279,11 +279,11 @@ export const routes = {
   GUILD_MEMBER_ROLE: (guildId: bigint, memberId: bigint, roleId: bigint) => {
     return `/guilds/${guildId}/members/${memberId}/roles/${roleId}`;
   },
-  GUILD_MEMBERS_SEARCH: (guildId: bigint, query: string, limit?: number) => {
+  GUILD_MEMBERS_SEARCH: (guildId: bigint, query: string, options?: { limit?: number }) => {
     let url = `/guilds/${guildId}/members/search?query=${encodeURIComponent(query)}`;
 
-    if (limit !== undefined) {
-      url += `&limit=${limit}`;
+    if (options) {
+      if (options.limit !== undefined) url += `&limit=${options.limit}`;
     }
 
     return url;
@@ -394,20 +394,20 @@ export const routes = {
   WEBHOOK_ID: (webhookId: bigint) => {
     return `/webhooks/${webhookId}`;
   },
-  WEBHOOK_MESSAGE: (webhookId: bigint, token: string, messageId: bigint, threadId?: bigint) => {
+  WEBHOOK_MESSAGE: (webhookId: bigint, token: string, messageId: bigint, options?: { threadId?: bigint }) => {
     let url = `/webhooks/${webhookId}/${token}/messages/${messageId}?`;
 
-    if (threadId) {
-      url += `threadId=${threadId}`;
+    if (options) {
+      if (options.threadId) url += `threadId=${options.threadId}`;
     }
 
     return url;
   },
-  WEBHOOK_MESSAGE_ORIGINAL: (webhookId: bigint, token: string, threadId?: bigint) => {
+  WEBHOOK_MESSAGE_ORIGINAL: (webhookId: bigint, token: string, options?: { threadId?: bigint }) => {
     let url = `/webhooks/${webhookId}/${token}/messages/@original?`;
 
-    if (threadId) {
-      url += `threadId=${threadId}`;
+    if (options) {
+      if (options.threadId) url += `threadId=${options.threadId}`;
     }
 
     return url;

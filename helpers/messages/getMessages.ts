@@ -14,7 +14,7 @@ export async function getMessages(
   const result = await bot.rest.runMethod<DiscordMessage[]>(
     bot.rest,
     "get",
-    bot.constants.routes.CHANNEL_MESSAGES(channelId),
+    bot.constants.routes.CHANNEL_MESSAGES(channelId, options),
   );
 
   return await Promise.all(result.map((res) => bot.transformers.message(bot, res)));

@@ -15,8 +15,8 @@ export async function editWebhookMessage(
     bot.rest,
     "patch",
     options.messageId
-      ? bot.constants.routes.WEBHOOK_MESSAGE(webhookId, webhookToken, options.messageId, options.threadId)
-      : bot.constants.routes.WEBHOOK_MESSAGE_ORIGINAL(webhookId, webhookToken, options.threadId),
+      ? bot.constants.routes.WEBHOOK_MESSAGE(webhookId, webhookToken, options.messageId, options)
+      : bot.constants.routes.WEBHOOK_MESSAGE_ORIGINAL(webhookId, webhookToken, options),
     {
       content: options.content,
       embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),

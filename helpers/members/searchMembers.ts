@@ -23,7 +23,7 @@ export async function searchMembers(
   const result = await bot.rest.runMethod<DiscordMemberWithUser[]>(
     bot.rest,
     "get",
-    bot.constants.routes.GUILD_MEMBERS_SEARCH(guildId, query, options?.limit),
+    bot.constants.routes.GUILD_MEMBERS_SEARCH(guildId, query, options),
   );
 
   return new Collection(

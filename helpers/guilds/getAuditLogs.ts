@@ -9,7 +9,7 @@ export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuild
   const auditlog = await bot.rest.runMethod<DiscordAuditLog>(
     bot.rest,
     "get",
-    bot.constants.routes.GUILD_AUDIT_LOGS(guildId),
+    bot.constants.routes.GUILD_AUDIT_LOGS(guildId, options),
   );
 
   return {
