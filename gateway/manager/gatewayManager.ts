@@ -7,13 +7,13 @@ import { CreateShard, createShard } from "../shard/createShard.ts";
 import { Shard, ShardGatewayConfig } from "../shard/types.ts";
 import { calculateTotalShards } from "./calculateTotalShards.ts";
 import { calculateWorkerId } from "./calculateWorkerId.ts";
-import {
-  markNewGuildShardId,
-  resharder,
-  resharderCloseOldShards,
-  resharderIsPending,
-  reshardingEditGuildShardIds,
-} from "./resharder.ts";
+// import {
+// markNewGuildShardId,
+// resharder,
+// resharderCloseOldShards,
+// resharderIsPending,
+// reshardingEditGuildShardIds,
+// } from "./resharder.ts";
 import { spawnShards } from "./spawnShards.ts";
 import { prepareBuckets } from "./prepareBuckets.ts";
 import { tellWorkerToIdentify } from "./tellWorkerToIdentify.ts";
@@ -230,24 +230,24 @@ export interface CreateGatewayManager {
   /** Handle the different logs. Used for debugging. */
   debug: (text: GatewayDebugEvents, ...args: any[]) => unknown;
   /** The methods related to resharding. */
-  resharding: {
-    /** Whether the resharder should automatically switch to LARGE BOT SHARDING when you are above 100K servers. */
-    useOptimalLargeBotSharding: boolean;
-    /** Whether or not to automatically reshard. */
-    reshard: boolean;
-    /** The percentage at which resharding should occur. */
-    reshardPercentage: number;
-    /** Handles resharding the bot when necessary. */
-    resharder: typeof resharder;
-    /** Handles checking if all new shards are online in the new gateway. */
-    isPending: typeof resharderIsPending;
-    /** Handles closing all shards in the old gateway. */
-    closeOldShards: typeof resharderCloseOldShards;
-    /** Handler to mark a guild id with its new shard id in cache. */
-    markNewGuildShardId: typeof markNewGuildShardId;
-    /** Handler to update all guilds in cache with the new shard id. */
-    editGuildShardIds: typeof reshardingEditGuildShardIds;
-  };
+  // resharding: {
+  //   /** Whether the resharder should automatically switch to LARGE BOT SHARDING when you are above 100K servers. */
+  //   useOptimalLargeBotSharding: boolean;
+  //   /** Whether or not to automatically reshard. */
+  //   reshard: boolean;
+  //   /** The percentage at which resharding should occur. */
+  //   reshardPercentage: number;
+  //   /** Handles resharding the bot when necessary. */
+  //   resharder: typeof resharder;
+  //   /** Handles checking if all new shards are online in the new gateway. */
+  //   isPending: typeof resharderIsPending;
+  //   /** Handles closing all shards in the old gateway. */
+  //   closeOldShards: typeof resharderCloseOldShards;
+  //   /** Handler to mark a guild id with its new shard id in cache. */
+  //   markNewGuildShardId: typeof markNewGuildShardId;
+  //   /** Handler to update all guilds in cache with the new shard id. */
+  //   editGuildShardIds: typeof reshardingEditGuildShardIds;
+  // };
   /** Calculates the number of shards to use based on the max concurrency */
   calculateTotalShards: typeof calculateTotalShards;
 
