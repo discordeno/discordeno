@@ -45,11 +45,11 @@ Starting with Discordeno is very simple, you can start from scratch without any 
 of code into a new TypeScript file:
 
 ```ts
-import { startBot } from "https://deno.land/x/discordeno/mod.ts";
+import { Intents, startBot } from "https://deno.land/x/discordeno/mod.ts";
 
 startBot({
   token: "BOT TOKEN",
-  intents: ["GUILDS", "GUILD_MESSAGES"],
+  intents: Intents.Guilds | Intents.GuildMessages,
   eventHandlers: {
     ready() {
       console.log("Successfully connected to gateway");
