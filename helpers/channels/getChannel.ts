@@ -6,7 +6,7 @@ export async function getChannel(bot: Bot, channelId: bigint) {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
     "get",
-    bot.constants.routes.CHANNEL_BASE(channelId),
+    bot.constants.routes.CHANNEL(channelId),
   );
 
   // IF A CHANNEL DOESN'T EXIST, DISCORD RETURNS `{}`
