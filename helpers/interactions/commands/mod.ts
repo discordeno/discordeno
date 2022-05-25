@@ -1,4 +1,3 @@
-export * from "./batchEditApplicationCommandPermissions.ts";
 export * from "./createApplicationCommand.ts";
 export * from "./deleteApplicationCommand.ts";
 export * from "./deleteInteractionResponse.ts";
