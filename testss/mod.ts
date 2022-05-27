@@ -3,16 +3,22 @@ import { dotenv } from "./deps.ts";
 
 dotenv({ export: true, path: `${Deno.cwd()}/.env` });
 
-export function loadBot() {
+export async function loadBot() {
   const token = Deno.env.get("DISCORD_TOKEN");
   if (!token) throw new Error("Token was not provided.");
 
-  const botId = BigInt(atob(token.split(".")[0]));
-  const bot = createBot({
-    events: {},
-    intents: 0,
-    botId,
+  const bot = await createBot({
     token,
+    botGatewayData: {
+      url: "wss://gateway.discord.gg",
+      shards: 1,
+      sessionStartLimit: {
+        maxConcurrency: 1,
+        remaining: 1000,
+        resetAfter: Date.now() + 1000 * 60 * 60 * 24,
+        total: 1000,
+      },
+    },
   });
 
   bot.rest = createRestManager({
