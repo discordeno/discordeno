@@ -2,6 +2,7 @@ import { formatImageURL, iconBigintToHash, iconHashToBigInt, validateLength } fr
 import { bigintToSnowflake, snowflakeToBigint } from "../util/bigint.ts";
 import { removeTokenPrefix } from "../util/token.ts";
 import { assertEquals, assertNotEquals } from "./deps.ts";
+import { loadBot } from "./mod.ts";
 
 Deno.test({
   name: "[token] Remove token prefix when Bot is prefixed.",
@@ -33,6 +34,18 @@ Deno.test("[bigint] - Transform a bigint to a string", () => {
 
   assertEquals(text, result);
   assertNotEquals(big, result);
+});
+
+Deno.test("[emoji] Create an emoji url", async () => {
+  const bot = await loadBot();
+  assertEquals(
+    bot.helpers.emojiUrl(785403373817823272n, false),
+    "https://cdn.discordapp.com/emojis/785403373817823272.png",
+  );
+  assertEquals(
+    bot.helpers.emojiUrl(785403373817823272n, true),
+    "https://cdn.discordapp.com/emojis/785403373817823272.gif",
+  );
 });
 
 Deno.test({
