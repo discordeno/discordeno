@@ -140,7 +140,7 @@ import { transformComponentToDiscordComponent } from "./transformers/reverse/com
 import { getBotIdFromToken, removeTokenPrefix } from "./util/token.ts";
 import { CreateShardManager } from "./gateway/manager/shardManager.ts";
 
-export async function createBot(options: CreateBotOptions): Promise<Bot> {
+export function createBot(options: CreateBotOptions): Bot {
   const bot = {
     id: options.botId ?? getBotIdFromToken(options.token),
     applicationId: options.applicationId || options.botId,
@@ -168,7 +168,7 @@ export async function createBot(options: CreateBotOptions): Promise<Bot> {
 
   bot.helpers = createHelpers(bot, options.helpers ?? {});
   bot.gateway = createGatewayManager({
-    gatewayBot: bot.botGatewayData ?? await bot.helpers.getGatewayBot(),
+    gatewayBot: bot.botGatewayData ?? {} as any,
     gatewayConfig: {
       token: options.token,
       intents: options.intents,
@@ -259,7 +259,11 @@ export function createEventHandlers(
   };
 }
 
-export function startBot(bot: Bot) {
+export async function startBot(bot: Bot) {
+  if (!bot.botGatewayData) {
+    bot.gateway.gatewayBot = await bot.helpers.getGatewayBot();
+  }
+
   bot.gateway.spawnShards();
 }
 
