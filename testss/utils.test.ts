@@ -1,4 +1,4 @@
-import { formatImageURL, iconBigintToHash, iconHashToBigInt, validateLength } from "../mod.ts";
+import { formatImageURL, hasProperty, iconBigintToHash, iconHashToBigInt, validateLength } from "../mod.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "../util/bigint.ts";
 import { removeTokenPrefix } from "../util/token.ts";
 import { assertEquals, assertNotEquals } from "./deps.ts";
@@ -166,5 +166,21 @@ Deno.test({
   name: "[utils] Validate length is just right in between.",
   fn() {
     assertEquals(validateLength("test", { min: 3, max: 6 }), true);
+  },
+});
+
+const obj = { prop: "lts372005" };
+
+Deno.test({
+  name: "[utils] hasProperty does HAVE property",
+  fn() {
+    assertEquals(hasProperty(obj, "prop"), true);
+  },
+});
+
+Deno.test({
+  name: "[utils] hasProperty does NOT HAVE property",
+  fn() {
+    assertEquals(hasProperty(obj, "lts372005"), false);
   },
 });
