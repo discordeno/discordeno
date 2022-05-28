@@ -13,15 +13,3 @@ export function delay(ms: number): Promise<void> {
 export function formatImageURL(url: string, size: ImageSize = 128, format?: ImageFormat) {
   return `${url}.${format || (url.includes("/a_") ? "gif" : "jpg")}?size=${size}`;
 }
-
-// Typescript is not so good as we developers so we need this little utility function to help it out
-// Taken from https://fettblog.eu/typescript-hasownproperty/
-/** TS save way to check if a property exists in an object */
-// deno-lint-ignore ban-types
-export function hasProperty<T extends {}, Y extends PropertyKey = string>(
-  obj: T,
-  prop: Y,
-): obj is T & Record<Y, unknown> {
-  // deno-lint-ignore no-prototype-builtins
-  return obj.hasOwnProperty(prop);
-}

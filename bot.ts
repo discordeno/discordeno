@@ -32,7 +32,7 @@ import {
 } from "./util/constants.ts";
 import { createGatewayManager, GatewayManager } from "./gateway/manager/gatewayManager.ts";
 import { validateLength } from "./util/validateLength.ts";
-import { delay, formatImageURL, hasProperty } from "./util/utils.ts";
+import { delay, formatImageURL } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
 import { calculateShardId } from "./util/calculateShardId.ts";
 import * as handlers from "./handlers/mod.ts";
@@ -276,7 +276,6 @@ export function createUtils(options: Partial<HelperUtils>) {
     iconHashToBigInt,
     iconBigintToHash,
     validateLength,
-    hasProperty,
     urlToBase64,
     formatImageURL,
     calculateBits,
@@ -292,7 +291,6 @@ export interface HelperUtils {
   iconHashToBigInt: typeof iconHashToBigInt;
   iconBigintToHash: typeof iconBigintToHash;
   validateLength: typeof validateLength;
-  hasProperty: typeof hasProperty;
   urlToBase64: typeof urlToBase64;
   formatImageURL: typeof formatImageURL;
   calculateBits: typeof calculateBits;
