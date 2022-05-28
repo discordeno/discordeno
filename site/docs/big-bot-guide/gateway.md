@@ -91,7 +91,7 @@ const rest = createRestManager({
 });
 
 // CALL THE REST PROCESS TO GET GATEWAY DATA
-const result = await rest.runMethod(rest, "get", endpoints.GATEWAY_BOT).then((res) => ({
+const result = await rest.runMethod(rest, "GET", endpoints.GATEWAY_BOT).then((res) => ({
   url: res.url,
   shards: res.shards,
   sessionStartLimit: {
@@ -302,7 +302,7 @@ async function handleInteractionQueueing(gateway: GatewayManager, data: GatewayP
   if ([InteractionTypes.ModalSubmit, InteractionTypes.ApplicationCommandAutocomplete].includes(interaction.type)) {
     return await rest.runMethod(
       rest,
-      "post",
+      "POST",
       endpoints.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token),
       {
         type: InteractionResponseTypes.ChannelMessageWithSource,
@@ -314,7 +314,7 @@ async function handleInteractionQueueing(gateway: GatewayManager, data: GatewayP
     );
   }
 
-  await rest.runMethod(rest, "post", endpoints.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token), {
+  await rest.runMethod(rest, "POST", endpoints.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token), {
     // MESSAGE COMPONENTS NEED SPECIAL DEFER
     type: InteractionTypes.MessageComponent === interaction.type
       ? InteractionResponseTypes.DeferredUpdateMessage
@@ -474,7 +474,7 @@ async function handleInteractionQueueing(gateway: GatewayManager, data: GatewayP
   if ([InteractionTypes.ModalSubmit, InteractionTypes.ApplicationCommandAutocomplete].includes(interaction.type)) {
     return await rest.runMethod(
       rest,
-      "post",
+      "POST",
       endpoints.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token),
       {
         type: InteractionResponseTypes.ChannelMessageWithSource,
@@ -486,7 +486,7 @@ async function handleInteractionQueueing(gateway: GatewayManager, data: GatewayP
     );
   }
 
-  await rest.runMethod(rest, "post", endpoints.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token), {
+  await rest.runMethod(rest, "POST", endpoints.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token), {
     // MESSAGE COMPONENTS NEED SPECIAL DEFER
     type: InteractionTypes.MessageComponent === interaction.type
       ? InteractionResponseTypes.DeferredUpdateMessage

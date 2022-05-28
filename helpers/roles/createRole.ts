@@ -4,7 +4,7 @@ import { PermissionStrings } from "../../types/shared.ts";
 
 /** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
 export async function createRole(bot: Bot, guildId: bigint, options: CreateGuildRole, reason?: string) {
-  const result = await bot.rest.runMethod<DiscordRole>(bot.rest, "post", bot.constants.endpoints.GUILD_ROLES(guildId), {
+  const result = await bot.rest.runMethod<DiscordRole>(bot.rest, "POST", bot.constants.routes.GUILD_ROLES(guildId), {
     name: options.name,
     color: options.color,
     hoist: options.hoist,

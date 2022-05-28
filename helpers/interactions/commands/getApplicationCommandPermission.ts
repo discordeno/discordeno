@@ -5,8 +5,8 @@ import { DiscordGuildApplicationCommandPermissions } from "../../../types/discor
 export async function getApplicationCommandPermission(bot: Bot, guildId: bigint, commandId: bigint) {
   const result = await bot.rest.runMethod<DiscordGuildApplicationCommandPermissions>(
     bot.rest,
-    "get",
-    bot.constants.endpoints.COMMANDS_PERMISSION(bot.applicationId, guildId, commandId),
+    "GET",
+    bot.constants.routes.COMMANDS_PERMISSION(bot.applicationId, guildId, commandId),
   );
 
   return bot.transformers.applicationCommandPermission(bot, result);

@@ -11,8 +11,8 @@ export async function editWebhookWithToken(
 ) {
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
-    "patch",
-    bot.constants.endpoints.WEBHOOK(webhookId, webhookToken),
+    "PATCH",
+    bot.constants.routes.WEBHOOK(webhookId, webhookToken),
     {
       name: options.name,
       avatar: options.avatar,

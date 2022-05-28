@@ -12,11 +12,9 @@ export async function deleteWebhookMessage(
   messageId: bigint,
   options?: DeleteWebhookMessageOptions,
 ) {
-  let url = bot.constants.endpoints.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId);
-
-  // QUERY PARAMS
-  if (options?.threadId) {
-    url += `?threadId=${options.threadId}`;
-  }
-  await bot.rest.runMethod<undefined>(bot.rest, "delete", url);
+  await bot.rest.runMethod<undefined>(
+    bot.rest,
+    "DELETE",
+    bot.constants.routes.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId, options),
+  );
 }

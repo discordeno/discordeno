@@ -5,7 +5,7 @@ import { CACHED_COMMUNITY_GUILD_ID } from "../utils.ts";
 Deno.test({
   name: "[channel] delete a channel without a reason",
   async fn(t) {
-    const bot = loadBot();
+    const bot = await loadBot();
     // Create a channel to delete
     const channel = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, {
       name: "delete-channel",

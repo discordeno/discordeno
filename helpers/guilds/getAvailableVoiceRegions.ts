@@ -6,8 +6,8 @@ import { Collection } from "../../util/collection.ts";
 export async function getAvailableVoiceRegions(bot: Bot) {
   const result = await bot.rest.runMethod<DiscordVoiceRegion[]>(
     bot.rest,
-    "get",
-    bot.constants.endpoints.VOICE_REGIONS(),
+    "GET",
+    bot.constants.routes.VOICE_REGIONS(),
   );
 
   return new Collection(

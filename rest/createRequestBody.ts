@@ -18,7 +18,7 @@ export function createRequestBody(rest: RestManager, queuedRequest: { request: R
   }
 
   // GET METHODS SHOULD NOT HAVE A BODY
-  if (queuedRequest.request.method.toUpperCase() === "GET") {
+  if (queuedRequest.request.method === "GET") {
     queuedRequest.payload.body = undefined;
   }
 
@@ -53,6 +53,6 @@ export function createRequestBody(rest: RestManager, queuedRequest: { request: R
   return {
     headers,
     body: (queuedRequest.payload.body?.file ?? JSON.stringify(queuedRequest.payload.body)) as FormData | string,
-    method: queuedRequest.request.method.toUpperCase(),
+    method: queuedRequest.request.method,
   };
 }
