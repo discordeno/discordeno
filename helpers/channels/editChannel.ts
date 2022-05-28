@@ -3,7 +3,7 @@ import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
 import { ChannelTypes, VideoQualityModes } from "../../types/shared.ts";
 import { OverwriteReadable } from "./editChannelOverwrite.ts";
-import { PermissionStrings } from "../../types/shared.ts";
+import { ChannelFlags } from "../../types/shared.ts";
 
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
 export async function editChannel(bot: Bot, channelId: bigint, options: ModifyChannel, reason?: string) {
@@ -51,7 +51,7 @@ export async function editChannel(bot: Bot, channelId: bigint, options: ModifyCh
       auto_archive_duration: options.autoArchiveDuration,
       locked: options.locked,
       invitable: options.invitable,
-      flags: bot.utils.calculateBits(options.flags),
+      flags: options.flags,
       permission_overwrites: options.permissionOverwrites
         ? options.permissionOverwrites?.map((overwrite) => ({
           id: overwrite.id.toString(),
@@ -158,5 +158,5 @@ export interface ModifyChannel {
   /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
   invitable?: boolean;
   /** channel flags; PINNED can only be set for threads in forum channels */
-  flags: PermissionStrings[];
+  flags: ChannelFlags;
 }
