@@ -12,8 +12,8 @@ export async function createGuildFromTemplate(bot: Bot, templateCode: string, da
 
   const createdGuild = await bot.rest.runMethod<DiscordGuild>(
     bot.rest,
-    "post",
-    bot.constants.endpoints.GUILD_TEMPLATE(templateCode),
+    "POST",
+    bot.constants.routes.TEMPLATE(templateCode),
     data,
   );
 

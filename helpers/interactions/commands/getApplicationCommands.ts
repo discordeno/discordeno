@@ -6,10 +6,10 @@ import { DiscordApplicationCommand } from "../../../types/discord.ts";
 export async function getApplicationCommands(bot: Bot, guildId?: bigint) {
   const result = await bot.rest.runMethod<DiscordApplicationCommand[]>(
     bot.rest,
-    "get",
+    "GET",
     guildId
-      ? bot.constants.endpoints.COMMANDS_GUILD(bot.applicationId, guildId)
-      : bot.constants.endpoints.COMMANDS(bot.applicationId),
+      ? bot.constants.routes.COMMANDS_GUILD(bot.applicationId, guildId)
+      : bot.constants.routes.COMMANDS(bot.applicationId),
   );
 
   return new Collection(

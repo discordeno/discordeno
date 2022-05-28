@@ -4,7 +4,7 @@ import type { Bot } from "../../bot.ts";
 export async function removeDiscoverySubcategory(bot: Bot, guildId: bigint, categoryId: number) {
   await bot.rest.runMethod<undefined>(
     bot.rest,
-    "delete",
-    bot.constants.endpoints.DISCOVERY_SUBCATEGORY(guildId, categoryId),
+    "DELETE",
+    bot.constants.routes.DISCOVERY_SUBCATEGORY(guildId, categoryId),
   );
 }

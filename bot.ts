@@ -42,11 +42,11 @@ import {
   CONTEXT_MENU_COMMANDS_NAME_REGEX,
   DISCORD_SNOWFLAKE_REGEX,
   DISCORDENO_VERSION,
-  endpoints,
+  routes,
   SLASH_COMMANDS_NAME_REGEX,
   USER_AGENT,
 } from "./util/constants.ts";
-import { createGatewayManager, GatewayManager } from "./gateway/mod.ts";
+import { createGatewayManager, GatewayManager } from "./gateway/manager/gatewayManager.ts";
 import { validateLength } from "./util/validateLength.ts";
 import { delay, formatImageURL, hasProperty } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
@@ -161,6 +161,7 @@ import {
 import { transformEmbedToDiscordEmbed } from "./transformers/reverse/embed.ts";
 import { transformComponentToDiscordComponent } from "./transformers/reverse/component.ts";
 import { getBotIdFromToken, removeTokenPrefix } from "./util/token.ts";
+import { CreateShardManager } from "./gateway/manager/shardManager.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -168,10 +169,7 @@ export function createBot(options: CreateBotOptions): Bot {
     applicationId: options.applicationId || options.botId,
     token: removeTokenPrefix(options.token),
     events: createEventHandlers(options.events ?? {}),
-    intents: (options.intents ?? []).reduce(
-      (bits, next) => (bits |= GatewayIntents[next]),
-      0,
-    ),
+    intents: options.intents,
     botGatewayData: options.botGatewayData,
     activeGuildIds: new Set<bigint>(),
     constants: createBotConstants(),
@@ -193,22 +191,27 @@ export function createBot(options: CreateBotOptions): Bot {
 
   bot.helpers = createHelpers(bot, options.helpers ?? {});
   bot.gateway = createGatewayManager({
-    token: bot.token,
-    intents: bot.intents,
+    gatewayBot: bot.botGatewayData ?? {} as any,
+    gatewayConfig: {
+      token: options.token,
+      intents: options.intents,
+    },
+
     debug: bot.events.debug,
+
     handleDiscordPayload: bot.handleDiscordPayload ??
-      async function (_, data: DiscordGatewayPayload, shardId: number) {
+      async function (shard, data: DiscordGatewayPayload) {
         // TRIGGER RAW EVENT
-        bot.events.raw(bot as Bot, data, shardId);
+        bot.events.raw(bot as Bot, data, shard.id);
 
         if (!data.t) return;
 
         // RUN DISPATCH CHECK
-        await bot.events.dispatchRequirements(bot as Bot, data, shardId);
+        await bot.events.dispatchRequirements(bot as Bot, data, shard.id);
         bot.handlers[data.t as GatewayDispatchEventNames]?.(
           bot as Bot,
           data,
-          shardId,
+          shard.id,
         );
       },
   });
@@ -281,20 +284,10 @@ export function createEventHandlers(
 
 export async function startBot(bot: Bot) {
   if (!bot.botGatewayData) {
-    bot.botGatewayData = await bot.helpers.getGatewayBot();
+    bot.gateway.gatewayBot = await bot.helpers.getGatewayBot();
   }
 
-  // SETUP GATEWAY LOGIN INFO
-  bot.gateway.urlWSS = bot.botGatewayData.url;
-  bot.gateway.shardsRecommended = bot.botGatewayData.shards;
-  bot.gateway.sessionStartLimitTotal = bot.botGatewayData.sessionStartLimit.total;
-  bot.gateway.sessionStartLimitRemaining = bot.botGatewayData.sessionStartLimit.remaining;
-  bot.gateway.sessionStartLimitResetAfter = bot.botGatewayData.sessionStartLimit.resetAfter;
-  bot.gateway.maxConcurrency = bot.botGatewayData.sessionStartLimit.maxConcurrency;
-  bot.gateway.lastShardId = bot.botGatewayData.shards === 1 ? 0 : bot.botGatewayData.shards - 1;
-  bot.gateway.maxShards = bot.botGatewayData.shards;
-
-  bot.gateway.spawnShards(bot.gateway);
+  bot.gateway.spawnShards();
 }
 
 export function createUtils(options: Partial<HelperUtils>) {
@@ -330,7 +323,7 @@ export interface HelperUtils {
 }
 
 export async function stopBot(bot: Bot) {
-  await bot.gateway.stopGateway(bot.gateway);
+  await bot.gateway.stop(1000, "User requested bot stop");
 
   return bot;
 }
@@ -341,10 +334,10 @@ export interface CreateBotOptions {
   applicationId?: bigint;
   secretKey?: string;
   events?: Partial<EventHandlers>;
-  intents?: (keyof typeof GatewayIntents)[];
+  intents?: GatewayIntents;
   botGatewayData?: GetGatewayBot;
   rest?: Omit<CreateRestManagerOptions, "token">;
-  handleDiscordPayload?: GatewayManager["handleDiscordPayload"];
+  handleDiscordPayload?: CreateShardManager["handleMessage"];
   utils?: Partial<ReturnType<typeof createUtils>>;
   transformers?: Partial<ReturnType<typeof createTransformers>>;
   helpers?: Partial<Helpers>;
@@ -374,7 +367,7 @@ export interface Bot {
     fetchAllMembersProcessingRequests: Map<string, Function>;
   };
   enabledPlugins: Set<string>;
-  handleDiscordPayload?: GatewayManager["handleDiscordPayload"];
+  handleDiscordPayload?: CreateShardManager["handleMessage"];
 }
 
 export const defaultHelpers = { ...helpers };
@@ -752,7 +745,7 @@ export function createBotConstants() {
     USER_AGENT,
     BASE_URL: baseEndpoints.BASE_URL,
     CDN_URL: baseEndpoints.CDN_URL,
-    endpoints,
+    routes,
     regexes: {
       SLASH_COMMANDS_NAME_REGEX,
       CONTEXT_MENU_COMMANDS_NAME_REGEX,

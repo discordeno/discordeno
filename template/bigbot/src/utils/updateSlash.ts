@@ -119,7 +119,11 @@ export async function updateGuildCommands(bot: BotClient, guildId: bigint) {
 
       // ADVANCED VERSION WILL ALLOW TRANSLATION
       const translatedName = translate(bot, guildId, command.name);
-      const translatedDescription = translate(bot, guildId, command.description);
+      const translatedDescription = translate(
+        bot,
+        guildId,
+        command.description,
+      );
 
       return {
         name: translatedName.toLowerCase(),
@@ -144,7 +148,11 @@ export async function updateGuildCommands(bot: BotClient, guildId: bigint) {
 
           // ADVANCED VERSION WILL ALLOW TRANSLATION
           const translatedName = translate(bot, guildId, command.name);
-          const translatedDescription = translate(bot, guildId, command.description);
+          const translatedDescription = translate(
+            bot,
+            guildId,
+            command.description,
+          );
 
           return {
             name: (translatedName || name).toLowerCase(),

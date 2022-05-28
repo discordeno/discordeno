@@ -4,7 +4,7 @@ import { Bot } from "../../../bot.ts";
 export async function deleteScheduledEvent(bot: Bot, guildId: bigint, eventId: bigint) {
   await bot.rest.runMethod<undefined>(
     bot.rest,
-    "delete",
-    bot.constants.endpoints.GUILD_SCHEDULED_EVENT(guildId, eventId),
+    "DELETE",
+    bot.constants.routes.GUILD_SCHEDULED_EVENT(guildId, eventId),
   );
 }

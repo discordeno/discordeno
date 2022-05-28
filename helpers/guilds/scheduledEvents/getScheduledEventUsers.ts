@@ -23,7 +23,7 @@ export async function getScheduledEventUsers(
 ): Promise<
   Collection<bigint, User> | Collection<bigint, { user: User; member: Member }>
 > {
-  let url = bot.constants.endpoints.GUILD_SCHEDULED_EVENT_USERS(guildId, eventId);
+  let url = bot.constants.routes.GUILD_SCHEDULED_EVENT_USERS(guildId, eventId, options);
 
   if (options) {
     url = "?";
@@ -36,7 +36,7 @@ export async function getScheduledEventUsers(
 
   const result = await bot.rest.runMethod<{ user: DiscordUser; member?: DiscordMember }[]>(
     bot.rest,
-    "get",
+    "GET",
     url,
   );
 

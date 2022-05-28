@@ -4,8 +4,8 @@ import type { Bot } from "../../bot.ts";
 export async function addRole(bot: Bot, guildId: bigint, memberId: bigint, roleId: bigint, reason?: string) {
   await bot.rest.runMethod<undefined>(
     bot.rest,
-    "put",
-    bot.constants.endpoints.GUILD_MEMBER_ROLE(guildId, memberId, roleId),
+    "PUT",
+    bot.constants.routes.GUILD_MEMBER_ROLE(guildId, memberId, roleId),
     { reason },
   );
 }

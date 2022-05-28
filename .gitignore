@@ -6,3 +6,6 @@ debug.ts
 # npm stuff
 .npmignore
 npm/
+
+# MacOS is weird
+.DS_Store

@@ -13,7 +13,7 @@ export function guildSplashURL(
 ) {
   return splash
     ? bot.utils.formatImageURL(
-      bot.constants.endpoints.GUILD_SPLASH(
+      bot.constants.routes.GUILD_SPLASH(
         id,
         typeof splash === "string" ? splash : bot.utils.iconBigintToHash(splash),
       ),

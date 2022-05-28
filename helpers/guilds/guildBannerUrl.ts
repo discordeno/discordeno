@@ -13,7 +13,7 @@ export function guildBannerURL(
 ) {
   return options.banner
     ? bot.utils.formatImageURL(
-      bot.constants.endpoints.GUILD_BANNER(
+      bot.constants.routes.GUILD_BANNER(
         id,
         typeof options.banner === "string" ? options.banner : bot.utils.iconBigintToHash(options.banner),
       ),

@@ -1,7 +1,7 @@
-import { GatewayManager } from "../gateway/gatewayManager.ts";
+import { GatewayManager } from "../gateway/manager/gatewayManager.ts";
 
 export function calculateShardId(gateway: GatewayManager, guildId: bigint) {
-  if (gateway.maxShards === 1) return 0;
+  if (gateway.manager.totalShards === 1) return 0;
 
-  return Number((guildId >> 22n) % BigInt(gateway.maxShards - 1));
+  return Number((guildId >> 22n) % BigInt(gateway.manager.totalShards - 1));
 }

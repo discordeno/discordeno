@@ -6,8 +6,8 @@ import { InviteTargetTypes } from "../../types/shared.ts";
 export async function createInvite(bot: Bot, channelId: bigint, options: CreateChannelInvite = {}) {
   const result = await bot.rest.runMethod<DiscordInvite>(
     bot.rest,
-    "post",
-    bot.constants.endpoints.CHANNEL_INVITES(channelId),
+    "POST",
+    bot.constants.routes.CHANNEL_INVITES(channelId),
     {
       max_age: options.maxAge,
       max_uses: options.maxUses,
@@ -15,7 +15,7 @@ export async function createInvite(bot: Bot, channelId: bigint, options: CreateC
       unique: options.unique,
       target_type: options.targetType,
       target_user_id: options.targetUserId,
-      target_application_id: options.targetUserId,
+      target_application_id: options.targetApplicationId,
     },
   );
 

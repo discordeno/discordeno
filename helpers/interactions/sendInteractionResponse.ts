@@ -32,7 +32,6 @@ export async function sendInteractionResponse(
       users: options.data.allowedMentions!.users?.map((id) => id.toString()),
       roles: options.data.allowedMentions!.roles?.map((id) => id.toString()),
     },
-    file: options.data.file,
     custom_id: options.data.customId,
     title: options.data.title,
     components: options.data.components?.map((component) => ({
@@ -100,11 +99,12 @@ export async function sendInteractionResponse(
   if (bot.cache.unrepliedInteractions.delete(id)) {
     return await bot.rest.runMethod<undefined>(
       bot.rest,
-      "post",
-      bot.constants.endpoints.INTERACTION_ID_TOKEN(id, token),
+      "POST",
+      bot.constants.routes.INTERACTION_ID_TOKEN(id, token),
       {
         type: options.type,
         data,
+        file: options.data.file,
       },
     );
   }
@@ -112,9 +112,9 @@ export async function sendInteractionResponse(
   // If its already been executed, we need to send a followup response
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "post",
-    bot.constants.endpoints.WEBHOOK(bot.applicationId, token),
-    data,
+    "POST",
+    bot.constants.routes.WEBHOOK(bot.applicationId, token),
+    { ...data, file: options.data.file },
   );
 
   return bot.transformers.message(bot, result);

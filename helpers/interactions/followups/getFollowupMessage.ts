@@ -5,8 +5,8 @@ import { DiscordMessage } from "../../../types/discord.ts";
 export async function getFollowupMessage(bot: Bot, interactionToken: string, messageId: bigint) {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "get",
-    bot.constants.endpoints.WEBHOOK_MESSAGE(bot.applicationId, interactionToken, messageId),
+    "GET",
+    bot.constants.routes.WEBHOOK_MESSAGE(bot.applicationId, interactionToken, messageId),
   );
 
   return bot.transformers.message(bot, result);

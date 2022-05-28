@@ -1333,15 +1333,15 @@ export interface DiscordInteractionData {
 }
 
 export type DiscordInteractionDataOption = {
-  /** the name of the parameter */
+  /** Name of the parameter */
   name: string;
-  /** value of application command option type */
+  /** Value of application command option type */
   type: ApplicationCommandOptionTypes;
-  /** the value of the pair */
+  /** Value of the option resulting from user input */
   value?: string | boolean | number | DiscordMember | DiscordChannel | DiscordRole;
-  /** present if this option is a group or subcommand */
+  /** Present if this option is a group or subcommand */
   options?: DiscordInteractionDataOption[];
-  /** true if this option is the currently focused option for autocomplete */
+  /** `true` if this option is the currently focused option for autocomplete */
   focused?: boolean;
 };
 
@@ -1453,7 +1453,8 @@ export type DiscordAuditLogChange =
       | "nick"
       | "avatar_hash"
       | "id"
-      | "location";
+      | "location"
+      | "command_id";
   }
   | {
     new_value: number;
@@ -1689,23 +1690,29 @@ export interface DiscordInviteStageInstance {
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure */
 export interface DiscordApplicationCommand {
-  /** Unique id of the command */
+  /** Unique ID of command */
   id: string;
-  /** The type of command. By default this is a application command(ChatInput). */
+  /** Type of command, defaults to `ApplicationCommandTypes.ChatInput` */
   type?: ApplicationCommandTypes;
-  /** Unique id of the parent application */
+  /** ID of the parent application */
   application_id: string;
   /** Guild id of the command, if not global */
   guild_id?: string;
-  /** `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set. If there is a lowercase variant of any letters used, you must use those. Characters with no lowercase variants and/or uncased letters are still allowed. `ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces. */
+  /**
+   * Name of command, 1-32 characters.
+   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   * If there is a lowercase variant of any letters used, you must use those.
+   * Characters with no lowercase variants and/or uncased letters are still allowed.
+   * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
+   */
   name: string;
-  /** Localization object for the `name` field. Values follow the same restrictions as `name` */
+  /** Localization object for `name` field. Values follow the same restrictions as `name` */
   name_localizations?: Localization | null;
-  /** 1-100 character description */
+  /** Description for `ApplicationCommandTypes.ChatInput` commands, 1-100 characters. Empty string for `ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands */
   description: string;
-  /** Localization object for the `description` field. Values follow the same restrictions as `description` */
+  /** Localization object for `description` field. Values follow the same restrictions as `description` */
   description_localizations?: Localization | null;
-  /** The parameters for the command */
+  /** Parameters for the command, max of 25 */
   options?: DiscordApplicationCommandOption[];
   /** Set of permissions represented as a bit set */
   default_member_permissions?: string | null;
@@ -1717,9 +1724,15 @@ export interface DiscordApplicationCommand {
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure */
 export interface DiscordApplicationCommandOption {
-  /** Value of Application Command Option Type */
+  /** Type of option */
   type: ApplicationCommandOptionTypes;
-  /** Command option name must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set. If there is a lowercase variant of any letters used, you must use those. Characters with no lowercase variants and/or uncased letters are still allowed. */
+  /**
+   * Name of command, 1-32 characters.
+   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   * If there is a lowercase variant of any letters used, you must use those.
+   * Characters with no lowercase variants and/or uncased letters are still allowed.
+   * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
+   */
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
   name_localizations?: Localization | null;
@@ -1729,17 +1742,21 @@ export interface DiscordApplicationCommandOption {
   description_localizations?: Localization | null;
   /** If the parameter is required or optional--default `false` */
   required?: boolean;
-  /** Choices for `string` and `int` types for the user to pick from */
+  /** Choices for the option types `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer`, and `ApplicationCommandOptionTypes.Number`, from which the user can choose, max 25 */
   choices?: DiscordApplicationCommandOptionChoice[];
-  /** If the option is a subcommand or subcommand group type, this nested options will be the parameters */
+  /** If the option is a subcommand or subcommand group type, these nested options will be the parameters */
   options?: DiscordApplicationCommandOption[];
-  /** if autocomplete interactions are enabled for this `String`, `Integer`, or `Number` type option */
+  /**
+   * If autocomplete interactions are enabled for this option.
+   *
+   * Only available for `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer` and `ApplicationCommandOptionTypes.Number` option types
+   */
   autocomplete?: boolean;
   /** If the option is a channel type, the channels shown will be restricted to these types */
   channel_types?: ChannelTypes[];
-  /** Minimum number desired. */
+  /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the minimum permitted value */
   min_value?: number;
-  /** Maximum number desired. */
+  /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the maximum permitted value */
   max_value?: number;
 }
 
@@ -1749,27 +1766,27 @@ export interface DiscordApplicationCommandOptionChoice {
   name: string;
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
   name_localizations?: Localization | null;
-  /** Value of the choice, up to 100 characters if string */
+  /** Value for the choice, up to 100 characters if string */
   value: string | number;
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#guildapplicationcommandpermissions */
 export interface DiscordGuildApplicationCommandPermissions {
-  /** The id of the command */
+  /** ID of the command */
   id: string;
-  /** The id of the application to command belongs to */
+  /** ID of the application the command belongs to */
   application_id: string;
-  /** The id of the guild */
+  /** ID of the guild */
   guild_id: string;
-  /** The permissions for the command in the guild */
+  /** Permissions for the command in the guild, max of 100 */
   permissions: DiscordApplicationCommandPermissions[];
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandpermissions */
 export interface DiscordApplicationCommandPermissions {
-  /** The id of the role or user */
+  /** ID of the role, user, or channel. It can also be a permission constant */
   id: string;
-  /** Role or User */
+  /** ApplicationCommandPermissionTypes.Role, ApplicationCommandPermissionTypes.User, or ApplicationCommandPermissionTypes.Channel */
   type: ApplicationCommandPermissionTypes;
   /** `true` to allow, `false`, to disallow */
   permission: boolean;

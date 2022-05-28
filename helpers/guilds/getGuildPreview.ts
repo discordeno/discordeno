@@ -5,8 +5,8 @@ import { DiscordGuildPreview } from "../../types/discord.ts";
 export async function getGuildPreview(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordGuildPreview>(
     bot.rest,
-    "get",
-    bot.constants.endpoints.GUILD_PREVIEW(guildId),
+    "GET",
+    bot.constants.routes.GUILD_PREVIEW(guildId),
   );
 
   return bot.transformers.guildPreview(bot, result);
