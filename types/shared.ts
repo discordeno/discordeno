@@ -866,6 +866,7 @@ export enum JsonErrorCodes {
   ThisServerNeedsMonetizationEnabledInOrderToPerformThisAction = 50097,
   ThisServerNeedsMoreBoostsToPerformThisAction = 50101,
   TheRequestBodyContainsInvalidJSON = 50109,
+  YouDoNotHavePermissionToSendThisSticker = 50600,
   TwoFactorIsRequiredForThisOperation = 60003,
   NoUsersWithDiscordTagExist = 80004,
   ReactionWasBlocked = 90001,
