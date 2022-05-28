@@ -17,7 +17,7 @@ Deno.test({
 
     const exists = await bot.helpers.getEmoji(CACHED_COMMUNITY_GUILD_ID, emoji.id);
     assertExists(exists.id);
-    assertEquals(emoji.id, exists.id)
+    assertEquals(emoji.id, exists.id);
 
     await bot.helpers.deleteEmoji(CACHED_COMMUNITY_GUILD_ID, emoji.id);
   },

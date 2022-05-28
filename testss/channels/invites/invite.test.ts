@@ -67,7 +67,7 @@ Deno.test({
 
     await t.step("[invite] Delete an invite", async () => {
       await bot.helpers.deleteInvite(invite.code);
-      
+
       // THERE IS NO WAY TO VALIDATE IT DELETED SO WE JUST ASSUME IT DID
       // If you fetched a deleted invite, you get a full invite object. Thx discord.
     });
