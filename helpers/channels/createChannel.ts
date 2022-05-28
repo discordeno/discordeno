@@ -45,7 +45,7 @@ export interface CreateGuildChannel {
   type?: ChannelTypes;
   /** Channel topic (0-1024 characters) */
   topic?: string;
-  /** The bitrate (in bits) of the voice channel (voice only) */
+  /** The bitrate (in bits) of the voice channel (voice only). Normal servers can set bitrate up to 96000, servers with Boost level 1 can set up to 128000, servers with Boost level 2 can set up to 256000, and servers with Boost level 3 or the VIP_REGIONS guild feature can set up to 384000. For stage channels, bitrate can be set up to 64000. */
   bitrate?: number;
   /** The user limit of the voice channel (voice only) */
   userLimit?: number;
