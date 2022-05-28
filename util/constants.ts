@@ -521,6 +521,18 @@ export const routes = {
   NITRO_STICKER_PACKS: () => {
     return `/sticker-packs`;
   },
+
+  GUILD_MEMBER_AVATAR: (guildId: bigint, memberId: bigint, icon: string) => {
+    return `${baseEndpoints.CDN_URL}/guilds/${guildId}/users/${memberId}/avatars/${icon}`;
+  },
+
+  USER_BANNER: (userId: bigint, banner: string) => {
+    return `${baseEndpoints.CDN_URL}/banners/${userId}/${banner}`;
+  },
+
+  GUILD_MEMBER_BANNER: (guildId: bigint, memberId: bigint, banner: string) => {
+    return `${baseEndpoints.CDN_URL}/guilds/${guildId}/users/${memberId}/banners/${banner}`;
+  },
 };
 
 export const SLASH_COMMANDS_NAME_REGEX = /^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u;
