@@ -6,12 +6,8 @@ export async function handleClose(shard: Shard, close: CloseEvent): Promise<void
 
   shard.stopHeartbeating();
 
-  console.log({ id: shard.id, close });
-
   switch (close.code) {
-    case ShardSocketCloseCodes.Shutdown: {
-      throw new Error("SHUTDOWN");
-    }
+    // These events
     case ShardSocketCloseCodes.TestingFinished: {
       shard.state = ShardState.Offline;
       shard.events.disconnected?.(shard);
