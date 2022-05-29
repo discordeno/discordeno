@@ -92,6 +92,9 @@ Deno.test({
         assertEquals(vanityUrl.code, undefined);
       });
 
+      // Emoji related tests
+
+      // Create an emoji
       await t.step({
         name: "[emoji] create an emoji",
         fn: async (t) => {
@@ -109,6 +112,7 @@ Deno.test({
         },
       });
 
+      // delete an emoji without a reason
       await t.step({
         name: "[emoji] delete an emoji without a reason",
         fn: async (t) => {
@@ -129,6 +133,7 @@ Deno.test({
         },
       });
 
+      // delete an emoji with a reason
       await t.step({
         name: "[emoji] delete an emoji with a reason",
         fn: async (t) => {
@@ -149,6 +154,7 @@ Deno.test({
         },
       });
 
+      // edit an emoji name
       await t.step({
         name: "[emoji] Edit an emoji name",
         fn: async (t) => {
@@ -175,6 +181,7 @@ Deno.test({
         },
       });
 
+      // edit an emoji roles
       await t.step({
         name: "[emoji] Edit an emoji's roles",
         fn: async (t) => {
@@ -205,6 +212,7 @@ Deno.test({
         },
       });
 
+      // get an emoji
       await t.step({
         name: "[emoji] get an emoji",
         fn: async (t) => {
@@ -254,6 +262,7 @@ Deno.test({
         },
       });
 
+      // Delete a guild
       await t.step("[guild] Delete a guild", async () => {
         await bot.helpers.deleteGuild(guild.id);
         //
