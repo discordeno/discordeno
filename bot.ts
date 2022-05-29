@@ -262,6 +262,8 @@ export function createEventHandlers(
 export async function startBot(bot: Bot) {
   if (!bot.botGatewayData) {
     bot.gateway.gatewayBot = await bot.helpers.getGatewayBot();
+    bot.gateway.lastShardId = bot.gateway.gatewayBot.shards - 1;
+    bot.gateway.manager.totalShards = bot.gateway.gatewayBot.shards;
   }
 
   bot.gateway.spawnShards();
