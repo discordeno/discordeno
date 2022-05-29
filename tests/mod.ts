@@ -290,31 +290,6 @@ Deno.test({
 
 // channels
 // import "./channels/connectToVoice.ts";
-import "./channels/createChannel.ts";
-import "./channels/deleteChannel.ts";
-import "./channels/getChannel.ts";
-import "./channels/getChannels.ts";
-import "./channels/stageInstances.ts";
-// import "./channels/threads.ts";
-
-// emoji
-import "./emoji/createEmoji.ts";
-import "./emoji/deleteEmojiWithReason.ts";
-import "./emoji/deleteEmojiWithoutReason.ts";
-import "./emoji/editEmoji.ts";
-import "./emoji/emojiUrl.ts";
-import "./emoji/getEmoji.ts";
-import "./emoji/getMultipleEmojis.ts";
-
-// guilds
-import "./guilds/urls.ts";
-
-// invite
-import "./invite/createInvite.ts";
-// import "./invite/deleteInvite.ts";
-// import "./invite/getChannelInvites.ts";
-// import "./invite/getInvite.ts";
-// import "./invite/getInvites.ts";
 
 // members
 import "./members/avatarlUrl.ts";
@@ -361,9 +336,6 @@ import "./webhooks/deleteWebhook.ts";
 import "./webhooks/deleteWebhookWithToken.ts";
 // import "./webhooks/sendWebhook.ts";
 // import "./webhooks/webhooks.ts";
-
-// TESTS THAT DON'T REQUIRE API CONNECTION
-import "./local.ts";
 
 // BENCHMARK TESTING
 // import "./benchmark.ts";
