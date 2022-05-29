@@ -13,15 +13,6 @@ import {
 import { getMessageTest } from "./helpers/messages/getMessage.ts";
 import { editMessageTest } from "./helpers/messages/editMessage.ts";
 import { pinMessageTests } from "./helpers/messages/pin.ts";
-import { createGuildTests } from "./helpers/guilds/createGuild.ts";
-import { deleteGuildTests } from "./helpers/guilds/deleteGuild.ts";
-import { editGuildTests } from "./helpers/guilds/editGuild.ts";
-import { getAuditLogsTests } from "./helpers/guilds/getAuditLogs.ts";
-import { getAvailableVoiceRegionsTests } from "./helpers/guilds/getAvailableVoiceRegions.ts";
-import { getBanTests } from "./helpers/guilds/getBan.ts";
-import { getBansTests } from "./helpers/guilds/getBans.ts";
-import { getGuildTests } from "./helpers/guilds/getGuild.ts";
-import { getVanityURLTests } from "./helpers/guilds/getVanityUrl.ts";
 import { categoryChildrenTest } from "./helpers/channels/categoryChannels.ts";
 import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOverwrite.ts";
 import { editChannelTests } from "./helpers/channels/editChannel.ts";
@@ -106,70 +97,6 @@ assertEquals(channel.type, ChannelTypes.GuildText);
 console.log("[SETUP] Preparing the message on which tests will be done.");
 export const message = await bot.helpers.sendMessage(channel.id, {
   content: "Hello Skillz",
-});
-
-Deno.test({
-  name: "[guild] create a guild",
-  fn: async (t) => {
-    await createGuildTests();
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[guild] delete a guild",
-  fn: async (t) => {
-    await deleteGuildTests();
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[guild] edit a guild",
-  fn: async (t) => {
-    await editGuildTests(guild.id);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[guild] get audit logs",
-  fn: async (t) => {
-    await getAuditLogsTests(guild.id);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[guild] get available voice regions",
-  fn: async (t) => {
-    await getAvailableVoiceRegionsTests();
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[guild] get a ban",
-  fn: async (t) => {
-    await getBanTests(guild.id);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[guild] get bans",
-  fn: async (t) => {
-    await getBansTests(guild.id);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[guild] get guilds",
-  fn: async (t) => {
-    await getGuildTests(guild.id);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[guild] get vanity url",
-  fn: async (t) => {
-    await getVanityURLTests(guild.id);
-  },
-  ...sanitizeMode,
 });
 
 Deno.test({
