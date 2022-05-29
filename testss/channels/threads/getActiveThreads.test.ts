@@ -23,7 +23,6 @@ Deno.test("[thread] Get active threads", async (t) => {
 
   const activeThreads = await bot.helpers.getActiveThreads(CACHED_COMMUNITY_GUILD_ID);
   assertEquals(Boolean(activeThreads.threads.size), true);
-  assertEquals(Boolean(activeThreads.members.size), true);
 
   await bot.helpers.deleteChannel(channel.id);
 });
