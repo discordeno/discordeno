@@ -1,19 +1,7 @@
 import enableCachePlugin from "../plugins/cache/mod.ts";
 import { ChannelTypes, createBot, createEventHandlers, startBot } from "../mod.ts";
 import { assertEquals, assertExists, dotenv } from "./deps.ts";
-import { deleteMessageWithoutReasonTest, deleteMessageWithReasonTest } from "./helpers/messages/deleteMessage.ts";
-import { getMessagesTest } from "./helpers/messages/getMessages.ts";
-import { deleteMessagesWithoutReasonTest, deleteMessagesWithReasonTest } from "./helpers/messages/deleteMessages.ts";
 import { delayUntil } from "./utils.ts";
-import {
-  sendMessageWithComponents,
-  sendMessageWithEmbedsTest,
-  sendMessageWithTextTest,
-} from "./helpers/messages/sendMessage.ts";
-import { getMessageTest } from "./helpers/messages/getMessage.ts";
-import { editMessageTest } from "./helpers/messages/editMessage.ts";
-import { pinMessageTests } from "./helpers/messages/pin.ts";
-import { categoryChildrenTest } from "./helpers/channels/categoryChannels.ts";
 import { deleteChannelOverwriteTests } from "./helpers/channels/deleteChannelOverwrite.ts";
 import { editChannelTests } from "./helpers/channels/editChannel.ts";
 import { CACHED_COMMUNITY_GUILD_ID, sanitizeMode } from "./constants.ts";
@@ -99,100 +87,6 @@ export const message = await bot.helpers.sendMessage(channel.id, {
   content: "Hello Skillz",
 });
 
-Deno.test({
-  name: "[message] send message with text",
-  fn: async (t) => {
-    await sendMessageWithTextTest(channel.id);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[message] send message with embeds",
-  fn: async (t) => {
-    await sendMessageWithEmbedsTest(channel.id);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[message] send message with components",
-  fn: async (t) => {
-    await sendMessageWithComponents(channel.id);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[message] edit message",
-  fn: async (t) => {
-    await editMessageTest(channel.id);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[message] delete message without a reason",
-  fn: async (t) => {
-    await deleteMessageWithoutReasonTest(channel.id);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[message] delete message with a reason",
-  fn: async (t) => {
-    await deleteMessageWithReasonTest(channel.id);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[message] delete messages without a reason",
-  fn: async (t) => {
-    await deleteMessagesWithoutReasonTest(channel.id);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[message] delete messages with a reason",
-  fn: async (t) => {
-    await deleteMessagesWithReasonTest(channel.id);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[message] fetch a message",
-  fn: async (t) => {
-    await getMessageTest(channel.id);
-  },
-  ...sanitizeMode,
-});
-Deno.test({
-  name: "[message] fetch messages",
-  fn: async (t) => {
-    await getMessagesTest(channel.id);
-  },
-  ...sanitizeMode,
-});
-
-Deno.test({
-  name: "[message] pin a message",
-  fn: async (t) => {
-    await pinMessageTests(channel.id, message.id);
-  },
-  ...sanitizeMode,
-});
-
-Deno.test({
-  name: "[channel] send message with text",
-  fn: async (t) => {
-    await sendMessageWithTextTest(channel.id);
-  },
-  ...sanitizeMode,
-});
-
-Deno.test({
-  name: "[channel] filter all category channels",
-  async fn(t) {
-    await categoryChildrenTest(guild.id);
-  },
-  ...sanitizeMode,
-});
 Deno.test({
   name: "[channel] delete a channel overwrite",
   async fn(t) {

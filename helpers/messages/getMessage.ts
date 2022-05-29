@@ -9,5 +9,8 @@ export async function getMessage(bot: Bot, channelId: bigint, id: bigint) {
     bot.constants.routes.CHANNEL_MESSAGE(channelId, id),
   );
 
+  // If the message does not exist
+  if (!result?.id) return;
+
   return bot.transformers.message(bot, result);
 }

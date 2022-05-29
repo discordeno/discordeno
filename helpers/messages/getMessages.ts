@@ -1,5 +1,6 @@
 import type { Bot } from "../../bot.ts";
 import { DiscordMessage } from "../../types/discord.ts";
+import { Collection } from "../../util/collection.ts";
 import { hasProperty } from "../../util/utils.ts";
 
 /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
@@ -18,7 +19,10 @@ export async function getMessages(
     bot.constants.routes.CHANNEL_MESSAGES(channelId, options),
   );
 
-  return await Promise.all(result.map((res) => bot.transformers.message(bot, res)));
+  return new Collection(result.map((res) => {
+    const msg = bot.transformers.message(bot, res);
+    return [msg.id, msg];
+  }));
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
