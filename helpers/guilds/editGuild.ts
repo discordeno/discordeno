@@ -41,7 +41,9 @@ export async function editGuild(bot: Bot, guildId: bigint, options: ModifyGuild,
       system_channel_id: options.systemChannelId ? options.systemChannelId.toString() : options.systemChannelId,
       system_channel_flags: options.systemChannelFlags,
       rules_channel_id: options.rulesChannelId ? options.rulesChannelId.toString() : options.rulesChannelId,
-      public_updates_channel_id: options.publicUpdatesChannelId ? options.publicUpdatesChannelId.toString() : options.publicUpdatesChannelId,
+      public_updates_channel_id: options.publicUpdatesChannelId
+        ? options.publicUpdatesChannelId.toString()
+        : options.publicUpdatesChannelId,
       preferred_locale: options.preferredLocale,
       features: options.features,
       premium_progress_bar_enabled: options.premiumProgressBarEnabled,
