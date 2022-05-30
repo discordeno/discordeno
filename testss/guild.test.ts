@@ -5,7 +5,7 @@ import { loadBot } from "./mod.ts";
 Deno.test({
   name: "[guild] Create a guild",
   async fn(t) {
-    const bot = await loadBot();
+    const bot = loadBot();
 
     // Delete the oldest guild(most likely to have finished tests).
 
@@ -98,7 +98,7 @@ Deno.test({
       await t.step({
         name: "[emoji] create an emoji",
         fn: async (t) => {
-          const bot = await loadBot();
+          const bot = loadBot();
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: "blamewolf",
             image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
@@ -116,7 +116,7 @@ Deno.test({
       await t.step({
         name: "[emoji] delete an emoji without a reason",
         fn: async (t) => {
-          const bot = await loadBot();
+          const bot = loadBot();
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: "blamewolf",
             image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
@@ -137,7 +137,7 @@ Deno.test({
       await t.step({
         name: "[emoji] delete an emoji with a reason",
         fn: async (t) => {
-          const bot = await loadBot();
+          const bot = loadBot();
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: "blamewolf",
             image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
@@ -158,7 +158,7 @@ Deno.test({
       await t.step({
         name: "[emoji] Edit an emoji name",
         fn: async (t) => {
-          const bot = await loadBot();
+          const bot = loadBot();
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: "blamewolf",
             image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
@@ -185,7 +185,7 @@ Deno.test({
       await t.step({
         name: "[emoji] Edit an emoji's roles",
         fn: async (t) => {
-          const bot = await loadBot();
+          const bot = loadBot();
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: "blamewolf",
             image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
@@ -216,7 +216,7 @@ Deno.test({
       await t.step({
         name: "[emoji] get an emoji",
         fn: async (t) => {
-          const bot = await loadBot();
+          const bot = loadBot();
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: "blamewolf",
             image: "https://cdn.discordapp.com/emojis/814955268123000832.png",
@@ -237,7 +237,7 @@ Deno.test({
       await t.step({
         name: "[emoji] get all guild emojis",
         fn: async (t) => {
-          const bot = await loadBot();
+          const bot = loadBot();
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: "blamewolf",
             image: "https://cdn.discordapp.com/emojis/814955268123000832.png",

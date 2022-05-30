@@ -3,7 +3,7 @@ import { dotenv } from "./deps.ts";
 
 dotenv({ export: true, path: `${Deno.cwd()}/.env` });
 
-export async function loadBot() {
+export function loadBot() {
   const token = Deno.env.get("DISCORD_TOKEN");
   if (!token) throw new Error("Token was not provided.");
 

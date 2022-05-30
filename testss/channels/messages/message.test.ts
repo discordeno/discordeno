@@ -6,7 +6,7 @@ import { CACHED_COMMUNITY_GUILD_ID } from "../../utils.ts";
 Deno.test({
   name: "[messages] Run message related unit tests",
   async fn(t) {
-    const bot = await loadBot();
+    const bot = loadBot();
     const channel = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, {
       name: "Discordeno-test",
       type: ChannelTypes.GuildText,
