@@ -9,5 +9,7 @@ export async function getMember(bot: Bot, guildId: bigint, id: bigint) {
     bot.constants.routes.GUILD_MEMBER(guildId, id),
   );
 
+  if (!data?.user.id) return;
+
   return bot.transformers.member(bot, data, guildId, id);
 }
