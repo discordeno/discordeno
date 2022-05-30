@@ -9,5 +9,7 @@ export async function getDmChannel(bot: Bot, userId: bigint) {
     recipient_id: userId.toString(),
   });
 
+  if (!dmChannelData?.id) return;
+
   return bot.transformers.channel(bot, { channel: dmChannelData });
 }
