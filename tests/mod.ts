@@ -112,13 +112,6 @@ Deno.test({
 // channels
 // import "./channels/connectToVoice.ts";
 
-// members
-import "./members/avatarlUrl.ts";
-// import "./members/ban.ts";
-import "./members/editBotNickname.ts";
-import "./members/getDmChannel.ts";
-import "./members/getMember.ts";
-
 // messages
 // import "./messages/reactions.ts";
 
@@ -141,16 +134,6 @@ import "./role/deleteRoleWithReason.ts";
 import "./role/editRole.ts";
 import "./role/getAllRoles.ts";
 import "./role/removeRole.ts";
-
-// scheduledEvents
-import "./scheduledEvents/createExternalEventWithEndtime.ts";
-import "./scheduledEvents/createExternalEventWithoutEndtime.ts";
-import "./scheduledEvents/createStageEventWithEndtime.ts";
-import "./scheduledEvents/createStageEventWithoutEndtime.ts";
-import "./scheduledEvents/createVoiceEventWithEndtime.ts";
-import "./scheduledEvents/createVoiceEventWithoutEndtime.ts";
-// import "./scheduledEvents/deleteEvent.ts";
-// import "./scheduledEvents/editEvent.ts";
 
 // webhooks
 import "./webhooks/deleteWebhook.ts";
