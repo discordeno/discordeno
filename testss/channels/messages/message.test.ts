@@ -1,4 +1,4 @@
-import { ButtonStyles, ChannelTypes, MessageComponentTypes } from "../../../mod.ts";
+import { ButtonStyles, ChannelTypes, delay, MessageComponentTypes } from "../../../mod.ts";
 import { assertEquals, assertExists, assertNotEquals } from "../../deps.ts";
 import { loadBot } from "../../mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../../utils.ts";
@@ -220,6 +220,7 @@ Deno.test({
       assertEquals(message2.content, "Hello Skillz 2");
 
       await bot.helpers.deleteMessages(channel.id, [message1.id, message2.id]);
+      await delay(3000);
       const deletedMessage1 = await bot.helpers.getMessage(channel.id, message1.id);
       assertEquals(deletedMessage1, undefined);
       const deletedMessage2 = await bot.helpers.getMessage(channel.id, message2.id);

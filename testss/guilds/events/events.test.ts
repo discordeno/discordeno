@@ -205,57 +205,83 @@ Deno.test({
             entityType: ScheduledEventEntityType.StageInstance,
             channelId: channel.id,
           });
-          let edited = await bot.helpers.editScheduledEvent(CACHED_COMMUNITY_GUILD_ID, event.id, {
-            name: "lfg2",
+
+          await t.step("[scheduled event] edit the scheduled event name.", async () => {
+            const edited = await bot.helpers.editScheduledEvent(CACHED_COMMUNITY_GUILD_ID, event.id, {
+              name: "lfg2",
+            });
+
+            assertEquals(event.name, "lfg");
+            assertEquals(edited.name, "lfg2");
+            assertEquals(edited.description, "itoh is an imposter");
           });
 
-          assertEquals(event.name, "lfg");
-          assertEquals(edited.name, "lfg2");
-          assertEquals(edited.description, "itoh is an imposter");
-
-          edited = await bot.helpers.editScheduledEvent(CACHED_COMMUNITY_GUILD_ID, event.id, {
-            description: "skillz is not an imposter",
+          await t.step("[scheduled event] edit the scheduled event description.", async () => {
+            const edited = await bot.helpers.editScheduledEvent(CACHED_COMMUNITY_GUILD_ID, event.id, {
+              description: "skillz is not an imposter",
+            });
+            assertEquals(edited.description, "skillz is not an imposter");
           });
-          assertEquals(edited.description, "skillz is not an imposter");
 
-          let edited2 = await bot.helpers.editScheduledEvent(CACHED_COMMUNITY_GUILD_ID, event.id, {
-            scheduledStartTime: edited.scheduledStartTime - 60000,
-          });
-          assertEquals(edited.scheduledStartTime > edited2.scheduledStartTime, true);
+          await t.step("[scheduled event] edit the scheduled event start time to before previous time.", async (t) => {
+            const edited = await bot.helpers.editScheduledEvent(CACHED_COMMUNITY_GUILD_ID, event.id, {
+              scheduledStartTime: event.scheduledStartTime - 60000,
+            });
+            assertEquals(event.scheduledStartTime > edited.scheduledStartTime, true);
 
-          let edited3 = await bot.helpers.editScheduledEvent(CACHED_COMMUNITY_GUILD_ID, event.id, {
-            scheduledStartTime: edited.scheduledStartTime + 600000,
+            await t.step("[scheduled event] edit the scheduled event start time to after previous time.", async () => {
+              const editedAfter = await bot.helpers.editScheduledEvent(CACHED_COMMUNITY_GUILD_ID, event.id, {
+                scheduledStartTime: edited.scheduledStartTime + 600000,
+              });
+              assertEquals(edited.scheduledStartTime < editedAfter.scheduledStartTime, true);
+            });
           });
-          assertEquals(edited2.scheduledStartTime < edited3.scheduledStartTime, true);
 
-          const voice = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, {
-            name: "xxx",
-            type: ChannelTypes.GuildVoice,
-          });
-          edited2 = await bot.helpers.editScheduledEvent(CACHED_COMMUNITY_GUILD_ID, event.id, {
-            entityType: ScheduledEventEntityType.Voice,
-            channelId: voice.id,
-          });
-          assertEquals(edited.entityType, ScheduledEventEntityType.StageInstance);
-          assertEquals(edited2.entityType, ScheduledEventEntityType.Voice);
+          await t.step("[scheduled events] voice channel events tests", async (t) => {
+            const voice = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, {
+              name: "xxx",
+              type: ChannelTypes.GuildVoice,
+            });
 
-          edited2 = await bot.helpers.editScheduledEvent(CACHED_COMMUNITY_GUILD_ID, event.id, {
-            entityType: ScheduledEventEntityType.External,
-            channelId: null,
-            scheduledStartTime: Date.now() + 60000,
-            scheduledEndTime: Date.now() + 600000,
-            location: "heaven",
-          });
-          assertEquals(edited2.entityType, ScheduledEventEntityType.External);
+            await t.step("[scheduled event] edit the scheduled event entity type to voice channel.", async () => {
+              const edited = await bot.helpers.editScheduledEvent(CACHED_COMMUNITY_GUILD_ID, event.id, {
+                entityType: ScheduledEventEntityType.Voice,
+                channelId: voice.id,
+              });
+              assertEquals(edited.entityType, ScheduledEventEntityType.Voice);
+              assertEquals(edited.channelId, voice.id);
+            });
 
-          edited3 = await bot.helpers.editScheduledEvent(CACHED_COMMUNITY_GUILD_ID, event.id, {
-            entityType: ScheduledEventEntityType.Voice,
-            channelId: voice.id,
-          });
-          assertEquals(edited2.entityType, ScheduledEventEntityType.External);
-          assertEquals(edited3.entityType, ScheduledEventEntityType.Voice);
+            await t.step(
+              "[scheduled event] edit the scheduled event entity type to external from voice channel.",
+              async () => {
+                const edited = await bot.helpers.editScheduledEvent(CACHED_COMMUNITY_GUILD_ID, event.id, {
+                  entityType: ScheduledEventEntityType.External,
+                  channelId: null,
+                  scheduledStartTime: Date.now() + 60000,
+                  scheduledEndTime: Date.now() + 600000,
+                  location: "heaven",
+                });
+                assertEquals(edited.entityType, ScheduledEventEntityType.External);
+                assertEquals(edited.channelId, undefined);
+              },
+            );
 
-          await bot.helpers.deleteChannel(voice.id);
+            await t.step(
+              "[scheduled event] edit the scheduled event entity type to voice channel from external type.",
+              async () => {
+                const edited = await bot.helpers.editScheduledEvent(CACHED_COMMUNITY_GUILD_ID, event.id, {
+                  entityType: ScheduledEventEntityType.Voice,
+                  channelId: voice.id,
+                });
+                assertEquals(edited.entityType, ScheduledEventEntityType.Voice);
+                assertEquals(edited.channelId, voice.id);
+              },
+            );
+
+            await bot.helpers.deleteChannel(voice.id);
+          });
+
           await bot.helpers.deleteChannel(channel.id);
         },
       },
