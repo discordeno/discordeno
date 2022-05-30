@@ -7,7 +7,7 @@ export async function loadBot() {
   const token = Deno.env.get("DISCORD_TOKEN");
   if (!token) throw new Error("Token was not provided.");
 
-  const bot = await createBot({
+  const bot = createBot({
     token,
     botGatewayData: {
       url: "wss://gateway.discord.gg",
