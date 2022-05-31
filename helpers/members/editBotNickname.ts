@@ -9,5 +9,7 @@ export async function editBotNickname(bot: Bot, guildId: bigint, options: { nick
     options,
   );
 
+  if (!response?.nick) return;
+
   return response.nick;
 }
