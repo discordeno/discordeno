@@ -4,6 +4,7 @@ import {
   DISCORD_TOKEN,
   EVENT_HANDLER_PORT,
   EVENT_HANDLER_SECRET_KEY,
+  EVENT_HANDLER_URL,
   GATEWAY_INTENTS,
   REST_AUTHORIZATION_KEY,
   REST_URL,
@@ -41,10 +42,10 @@ if (DEVELOPMENT) {
   // await updateGlobalCommands(bot);
 }
 
-// Start listening on localhost.
+// Start listening on EVENT_HANDLER_URL.
 const server = Deno.listen({ port: EVENT_HANDLER_PORT });
 logger.info(
-  `HTTP webserver running. Access it at: http://localhost:${EVENT_HANDLER_PORT}/`,
+  `HTTP webserver running. Access it at: http://${EVENT_HANDLER_URL}:${EVENT_HANDLER_PORT}/`,
 );
 
 // Connections to the server will be yielded up as an async iterable.
