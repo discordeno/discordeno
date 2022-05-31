@@ -5,5 +5,7 @@ import { DiscordUser } from "../../types/discord.ts";
 export async function getUser(bot: Bot, userId: bigint) {
   const result = await bot.rest.runMethod<DiscordUser>(bot.rest, "GET", bot.constants.routes.USER(userId));
 
+  if (!result.id) return;
+
   return bot.transformers.user(bot, result);
 }

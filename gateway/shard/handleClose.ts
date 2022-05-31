@@ -6,12 +6,7 @@ export async function handleClose(shard: Shard, close: CloseEvent): Promise<void
 
   shard.stopHeartbeating();
 
-  console.log({ id: shard.id, close });
-
   switch (close.code) {
-    case ShardSocketCloseCodes.Shutdown: {
-      throw new Error("SHUTDOWN");
-    }
     case ShardSocketCloseCodes.TestingFinished: {
       shard.state = ShardState.Offline;
       shard.events.disconnected?.(shard);
@@ -19,11 +14,11 @@ export async function handleClose(shard: Shard, close: CloseEvent): Promise<void
       return;
     }
     // On these codes a manual start will be done.
+    case ShardSocketCloseCodes.Shutdown:
     case ShardSocketCloseCodes.ReIdentifying:
     case ShardSocketCloseCodes.Resharded:
     case ShardSocketCloseCodes.ResumeClosingOldConnection:
-    case ShardSocketCloseCodes.ZombiedConnection:
-    case ShardSocketCloseCodes.Shutdown: {
+    case ShardSocketCloseCodes.ZombiedConnection: {
       shard.state = ShardState.Disconnected;
       shard.events.disconnected?.(shard);
 

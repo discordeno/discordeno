@@ -126,10 +126,8 @@ export interface ShardEvents {
 }
 
 export enum ShardSocketCloseCodes {
-  /** A regular Shard shutdown.
-   * Discord will display this Shard as offline for other users.
-   */
-  Shutdown = 1000,
+  /** A regular Shard shutdown. */
+  Shutdown = 3000,
   /** A resume has been requested and therefore the old connection needs to be closed. */
   ResumeClosingOldConnection = 3024,
   /** Did not receive a heartbeat ACK in time.

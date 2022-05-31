@@ -4,6 +4,7 @@ import {
   CreateApplicationCommand,
   getGuild,
   Guild,
+  hasProperty,
   MakeRequired,
   upsertApplicationCommands,
 } from "../../deps.ts";
@@ -131,11 +132,11 @@ export function humanizeMilliseconds(milliseconds: number) {
 export function isSubCommand(
   data: subCommand | subCommandGroup,
 ): data is subCommand {
-  return !Reflect.has(data, "subCommands");
+  return !hasProperty(data, "subCommands");
 }
 
 export function isSubCommandGroup(
   data: subCommand | subCommandGroup,
 ): data is subCommandGroup {
-  return Reflect.has(data, "subCommands");
+  return hasProperty(data, "subCommands");
 }

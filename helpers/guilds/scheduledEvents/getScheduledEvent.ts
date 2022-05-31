@@ -14,5 +14,7 @@ export async function getScheduledEvent(
     bot.constants.routes.GUILD_SCHEDULED_EVENT(guildId, eventId, options?.withUserCount),
   );
 
+  if (!event?.id) return;
+
   return bot.transformers.scheduledEvent(bot, event);
 }
