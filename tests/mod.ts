@@ -125,16 +125,6 @@ import "./misc/typing.ts";
 import "./misc/validateDiscovery.ts";
 // import "./misc/editBotStatus.ts";
 
-// role
-import "./role/addRole.ts";
-import "./role/createRoleWithoutReason.ts";
-import "./role/createRoleWithReason.ts";
-import "./role/deleteRoleWithoutReason.ts";
-import "./role/deleteRoleWithReason.ts";
-import "./role/editRole.ts";
-import "./role/getAllRoles.ts";
-import "./role/removeRole.ts";
-
 // webhooks
 import "./webhooks/deleteWebhook.ts";
 import "./webhooks/deleteWebhookWithToken.ts";
