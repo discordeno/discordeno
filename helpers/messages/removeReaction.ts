@@ -16,14 +16,14 @@ export async function removeReaction(
 
   await bot.rest.runMethod<undefined>(
     bot.rest,
-    "delete",
+    "DELETE",
     options?.userId
-      ? bot.constants.endpoints.CHANNEL_MESSAGE_REACTION_USER(
+      ? bot.constants.routes.CHANNEL_MESSAGE_REACTION_USER(
         channelId,
         messageId,
-        encodeURIComponent(reaction),
+        reaction,
         options.userId,
       )
-      : bot.constants.endpoints.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, encodeURIComponent(reaction)),
+      : bot.constants.routes.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction),
   );
 }

@@ -5,8 +5,8 @@ import { DiscordEmoji } from "../../types/discord.ts";
 export async function editEmoji(bot: Bot, guildId: bigint, id: bigint, options: ModifyGuildEmoji) {
   const result = await bot.rest.runMethod<DiscordEmoji>(
     bot.rest,
-    "patch",
-    bot.constants.endpoints.GUILD_EMOJI(guildId, id),
+    "PATCH",
+    bot.constants.routes.GUILD_EMOJI(guildId, id),
     {
       name: options.name,
       // NEED TERNARY TO SUPPORT NULL AS VALID

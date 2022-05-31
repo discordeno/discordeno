@@ -519,6 +519,7 @@ export enum ApplicationCommandTypes {
 export enum ApplicationCommandPermissionTypes {
   Role = 1,
   User,
+  Channel,
 }
 
 /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags */
@@ -914,6 +915,10 @@ export enum HTTPResponseCodes {
 
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#opcodes-and-status-codes */
 export enum GatewayCloseEventCodes {
+  /** A normal closure of the gateway.
+   * You may attempt to reconnect.
+   */
+  NormalClosure = 1000,
   /** We're not sure what went wrong. Try reconnecting? */
   UnknownError = 4000,
   /** You sent an invalid [Gateway opcode](https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes) or an invalid payload for an opcode. Don't do that! */
@@ -1151,6 +1156,12 @@ export enum GatewayIntents {
   GuildScheduledEvents = (1 << 16),
 }
 
+// ALIASES JUST FOR BETTER UX IN THIS CASE
+
+/** https://discord.com/developers/docs/topics/gateway#list-of-intents */
+export const Intents = GatewayIntents;
+export type Intents = GatewayIntents;
+
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype */
 export enum InteractionResponseTypes {
   /** ACK a `Ping` */
@@ -1382,3 +1393,5 @@ export type PickPartial<T, K extends keyof T> =
     [P in keyof T]?: T[P] | undefined;
   }
   & { [P in K]: T[P] };
+
+export type OmitFirstFnArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...args: P) => R : never;

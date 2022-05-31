@@ -8,8 +8,8 @@ export async function swapChannels(bot: Bot, guildId: bigint, channelPositions: 
 
   await bot.rest.runMethod<undefined>(
     bot.rest,
-    "patch",
-    bot.constants.endpoints.GUILD_CHANNELS(guildId),
+    "PATCH",
+    bot.constants.routes.GUILD_CHANNELS(guildId),
     channelPositions.map((channelPosition) => {
       return {
         id: channelPosition.id,

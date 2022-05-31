@@ -5,9 +5,11 @@ import { DiscordWebhook } from "../../types/discord.ts";
 export async function getWebhook(bot: Bot, webhookId: bigint) {
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
-    "get",
-    bot.constants.endpoints.WEBHOOK_ID(webhookId),
+    "GET",
+    bot.constants.routes.WEBHOOK_ID(webhookId),
   );
+
+  if (!result?.id) return;
 
   return bot.transformers.webhook(bot, result);
 }

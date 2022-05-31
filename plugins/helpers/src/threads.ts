@@ -24,8 +24,8 @@ export async function unlockThread(bot: Bot, threadId: bigint) {
 export async function editThread(bot: Bot, threadId: bigint, options: ModifyThread, reason?: string) {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
-    "patch",
-    bot.constants.endpoints.CHANNEL_BASE(threadId),
+    "PATCH",
+    bot.constants.routes.CHANNEL(threadId),
     {
       name: options.name,
       archived: options.archived,

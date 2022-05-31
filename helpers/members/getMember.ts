@@ -5,9 +5,11 @@ import { DiscordMemberWithUser } from "../../types/discord.ts";
 export async function getMember(bot: Bot, guildId: bigint, id: bigint) {
   const data = await bot.rest.runMethod<DiscordMemberWithUser>(
     bot.rest,
-    "get",
-    bot.constants.endpoints.GUILD_MEMBER(guildId, id),
+    "GET",
+    bot.constants.routes.GUILD_MEMBER(guildId, id),
   );
+
+  if (!data?.user.id) return;
 
   return bot.transformers.member(bot, data, guildId, id);
 }

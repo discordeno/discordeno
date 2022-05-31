@@ -5,8 +5,8 @@ import { DiscordChannel } from "../../types/discord.ts";
 export async function getChannel(bot: Bot, channelId: bigint) {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
-    "get",
-    bot.constants.endpoints.CHANNEL_BASE(channelId),
+    "GET",
+    bot.constants.routes.CHANNEL(channelId),
   );
 
   // IF A CHANNEL DOESN'T EXIST, DISCORD RETURNS `{}`
