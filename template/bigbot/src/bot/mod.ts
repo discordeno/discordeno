@@ -6,6 +6,7 @@ import {
   EVENT_HANDLER_SECRET_KEY,
   GATEWAY_INTENTS,
   REST_AUTHORIZATION_KEY,
+  REST_URL,
   REST_PORT,
 } from "../../configs.ts";
 import { createBot, createRestManager, DiscordGatewayPayload } from "../../deps.ts";
@@ -29,7 +30,7 @@ setupBotClient(bot);
 bot.rest = createRestManager({
   token: DISCORD_TOKEN,
   secretKey: REST_AUTHORIZATION_KEY,
-  customUrl: `http://localhost:${REST_PORT}`,
+  customUrl: `http://${REST_URL}:${REST_PORT}`,
 });
 
 if (DEVELOPMENT) {

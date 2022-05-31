@@ -40,6 +40,14 @@ if (!MAX_CLUSTERS) {
   );
 }
 
+export const REST_URL = env
+  .REST_URL!;
+if (!REST_URL) {
+  throw new Error(
+    "Hmm, it seems like you don't have somewhere to send rest requests to (REST_URL). Please check your .env file!",
+  );
+}
+
 export const GATEWAY_PROXY_URL = env
   .GATEWAY_PROXY_URL!;
 if (!GATEWAY_PROXY_URL) {
@@ -63,10 +71,10 @@ if (!GATEWAY_SECRET_KEY) {
   );
 }
 
-export const REST_AUTHORIZATION_KEY = env.REST_AUTHORIZATION_KEY!;
-if (!REST_AUTHORIZATION_KEY) {
+export const REST_SECRET_KEY = env.REST_SECRET_KEY!;
+if (!REST_SECRET_KEY) {
   throw new Error(
-    "You need to add a REST_AUTHORIZATION_KEY to your .env file!",
+    "You need to add a REST_SECRET_KEY to your .env file!",
   );
 }
 
