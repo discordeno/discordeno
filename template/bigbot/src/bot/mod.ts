@@ -6,7 +6,7 @@ import {
   EVENT_HANDLER_SECRET_KEY,
   EVENT_HANDLER_URL,
   GATEWAY_INTENTS,
-  REST_AUTHORIZATION_KEY,
+  REST_SECRET_KEY,
   REST_URL,
   REST_PORT,
 } from "../../configs.ts";
@@ -30,7 +30,7 @@ setupBotClient(bot);
 
 bot.rest = createRestManager({
   token: DISCORD_TOKEN,
-  secretKey: REST_AUTHORIZATION_KEY,
+  secretKey: REST_SECRET_KEY,
   customUrl: `http://${REST_URL}:${REST_PORT}`,
 });
 

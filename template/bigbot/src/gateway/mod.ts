@@ -1,5 +1,5 @@
 import { Collection, createGatewayManager, createRestManager, endpoints } from "../../deps.ts";
-import { DISCORD_TOKEN, EVENT_HANDLER_SECRET_KEY, REST_AUTHORIZATION_KEY, REST_URL, REST_PORT } from "../../configs.ts";
+import { DISCORD_TOKEN, EVENT_HANDLER_SECRET_KEY, REST_SECRET_KEY, REST_URL, REST_PORT } from "../../configs.ts";
 import { logger } from "../utils/logger.ts";
 
 const log = logger({ name: "Gateway" });
@@ -7,7 +7,7 @@ const log = logger({ name: "Gateway" });
 // CREATE A SIMPLE MANAGER FOR REST
 const rest = createRestManager({
   token: DISCORD_TOKEN,
-  secretKey: REST_AUTHORIZATION_KEY,
+  secretKey: REST_SECRET_KEY,
   customUrl: `http://${REST_URL}:${REST_PORT}`,
 });
 
