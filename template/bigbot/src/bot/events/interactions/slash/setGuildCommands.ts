@@ -6,7 +6,10 @@ import { BotClient } from "../../../botClient.ts";
 import { usesLatestCommandVersion } from "../../../database/commandVersion.ts";
 import { commandVersions } from "../../../database/kwik.ts";
 
-export async function setGuildCommands(bot: BotClient, data: DiscordGatewayPayload) {
+export async function setGuildCommands(
+  bot: BotClient,
+  data: DiscordGatewayPayload,
+) {
   if (!data.t) return;
 
   if (data.t === "GUILD_DELETE") {

@@ -1,5 +1,7 @@
-import log from "../../utils/logger.ts";
+import { logger } from "../../utils/logger.ts";
 import { decode, encode, Kwik, KwikTable } from "../../../deps.ts";
+
+const log = logger({ name: "DB" });
 
 log.info("Initializing KwikDB Database.");
 

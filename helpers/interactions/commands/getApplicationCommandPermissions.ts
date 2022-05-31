@@ -6,8 +6,8 @@ import { Collection } from "../../../util/collection.ts";
 export async function getApplicationCommandPermissions(bot: Bot, guildId: bigint) {
   const result = await bot.rest.runMethod<DiscordGuildApplicationCommandPermissions[]>(
     bot.rest,
-    "get",
-    bot.constants.endpoints.COMMANDS_PERMISSIONS(bot.applicationId, guildId),
+    "GET",
+    bot.constants.routes.COMMANDS_PERMISSIONS(bot.applicationId, guildId),
   );
 
   return new Collection(

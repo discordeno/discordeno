@@ -6,8 +6,7 @@ This template is designed for bots that aim or are already in millions of Discor
 
 ## Setup
 
-- Use the template generator button to make your own copy.
-- Delete all the template folders except the `bigbot` folder.
+- Clone this repository can move this directory into your desired project location.
 - Move all files from the `bigbot` folder to the root of the project.
   - You may encounter an issue with .vscode but force move the files to the root of the project. We have setup special
     import maps in this template that should override the general .vscode folder already in the root folder.
@@ -17,12 +16,16 @@ This template is designed for bots that aim or are already in millions of Discor
 
 ## Usage
 
-- Always run the `rest` process first. `deno task rest`
-- Start the `bot` process next. `deno task bot`
-- Lastly, start the `gateway` process. `deno task gateway`
+> Note: Please install at least `deno@^1.22` on your system. (This is due to the requirement of the `Deno` namespace in
+> workers for the `gateway` process.)
 
-Note: The `gateway` process and `rest` are designed not to be shut off. So once those are on, the only thing you should
-be doing is restarting your `bot` process.
+- Always run the `rest` process first with `deno task rest`.
+- Start the `bot` process next with `deno task bot`. (If you are developing a bot, use `deno task watch-bot` instead to
+  auto reload any changes. This won't restart any other processes, just your bot.)
+- Lastly, start the `gateway` process with `deno task gateway`.
+
+> Important: The `gateway` process and `rest` are designed not to be shut off. So once those are on, the only thing you
+> should be doing is restarting your `bot` process. This saves API requests
 
 ## Details
 

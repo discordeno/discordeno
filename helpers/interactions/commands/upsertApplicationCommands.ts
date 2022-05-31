@@ -16,15 +16,15 @@ import { MakeRequired } from "../../../types/shared.ts";
  */
 export async function upsertApplicationCommands(
   bot: Bot,
-  options: (CreateApplicationCommand | CreateContextApplicationCommand)[],
+  options: (UpsertApplicationCommands | CreateContextApplicationCommand)[],
   guildId?: bigint,
 ) {
   const result = await bot.rest.runMethod<DiscordApplicationCommand[]>(
     bot.rest,
-    "put",
+    "PUT",
     guildId
-      ? bot.constants.endpoints.COMMANDS_GUILD(bot.applicationId, guildId)
-      : bot.constants.endpoints.COMMANDS(bot.applicationId),
+      ? bot.constants.routes.COMMANDS_GUILD(bot.applicationId, guildId)
+      : bot.constants.routes.COMMANDS(bot.applicationId),
     options.map((option) => (isContextApplicationCommand(option)
       ? {
         name: option.name,
@@ -45,4 +45,9 @@ export async function upsertApplicationCommands(
       return [command.id, command];
     }),
   );
+}
+
+export interface UpsertApplicationCommands extends CreateApplicationCommand {
+  /** ID of the command, if known */
+  id?: bigint;
 }

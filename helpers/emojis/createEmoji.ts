@@ -9,8 +9,8 @@ export async function createEmoji(bot: Bot, guildId: bigint, options: CreateGuil
 
   const emoji = await bot.rest.runMethod<DiscordEmoji>(
     bot.rest,
-    "post",
-    bot.constants.endpoints.GUILD_EMOJIS(guildId),
+    "POST",
+    bot.constants.routes.GUILD_EMOJIS(guildId),
     {
       name: options.name,
       image: options.image,

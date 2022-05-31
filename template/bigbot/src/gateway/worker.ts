@@ -1,5 +1,12 @@
-import { DISCORD_TOKEN, EVENT_HANDLER_PORT, EVENT_HANDLER_SECRET_KEY, EVENT_HANDLER_URL } from "../../configs.ts";
+import {
+  DEVELOPMENT,
+  DISCORD_TOKEN,
+  EVENT_HANDLER_PORT,
+  EVENT_HANDLER_SECRET_KEY,
+  EVENT_HANDLER_URL,
+} from "../../configs.ts";
 import { Collection, createGatewayManager, DiscordReady, GatewayManager, GetGatewayBot } from "../../deps.ts";
+import { logger } from "../utils/logger.ts";
 
 let gateway: GatewayManager;
 // FOR RESHARDED
@@ -7,7 +14,14 @@ let gatewayPendingClosing: GatewayManager;
 let workerId: number;
 
 function spawnGateway(shardId: number, options: Partial<GatewayManager>) {
-  console.log(`[Worker #${workerId}]`, "[Worker] Spawning the worker gateway.", shardId, options);
+  const log = logger({
+    name: `GatewayWorker: ${workerId}`,
+  });
+
+  log.info(
+    `Spawning the worker gateway for shard #${shardId}\n`,
+    options,
+  );
   gateway = createGatewayManager({
     // LOAD DATA FROM DISCORDS RECOMMENDATIONS OR YOUR OWN CUSTOM ONES HERE
     shardsRecommended: options.shardsRecommended,
@@ -28,13 +42,16 @@ function spawnGateway(shardId: number, options: Partial<GatewayManager>) {
       // TRIGGER RAW EVENT
       if (!data.t) return;
 
-      const id = (data.t && ["GUILD_CREATE", "GUILD_DELETE", "GUILD_UPDATE"].includes(data.t)
+      const id = (data.t &&
+          ["GUILD_CREATE", "GUILD_DELETE", "GUILD_UPDATE"].includes(data.t)
         ? (data.d as any)?.id
         : (data.d as any)?.guild_id) ?? "000000000000000000";
 
       // IF FINAL SHARD BECAME READY TRIGGER NEXT WORKER
       if (data.t === "READY") {
-        console.log(`[Worker #${workerId}]`, `[Worker] Shard #${shardId} online`);
+        log.info(
+          `Shard online`,
+        );
 
         if (shardId === gateway.lastShardId) {
           // @ts-ignore
@@ -47,11 +64,12 @@ function spawnGateway(shardId: number, options: Partial<GatewayManager>) {
       }
 
       // DONT SEND THESE EVENTS USELESS TO BOT
-      if (["GUILD_LOADED_DD"].includes(data.t)) {
-        return;
-      }
+      if (["GUILD_LOADED_DD"].includes(data.t)) return;
 
-      await fetch(`${EVENT_HANDLER_URL}:${EVENT_HANDLER_PORT}`, {
+      // Debug mode only
+      log.debug(`New Event:\n`, data);
+
+      await fetch(`http://${EVENT_HANDLER_URL}:${EVENT_HANDLER_PORT}`, {
         headers: {
           Authorization: gateway.secretKey,
           "Content-Type": "application/json",
@@ -62,11 +80,11 @@ function spawnGateway(shardId: number, options: Partial<GatewayManager>) {
           data,
         }),
       })
-        // BELOW IS FOR DENO MEMORY LEAK
-        .then((res) =>
-          res.text()
-        )
-        .catch(() => null);
+        .then((res) => {
+          // BELOW IS FOR DENO MEMORY LEAK
+          return res.text();
+        })
+        .catch((err) => log.error("Error Sending Event:\n", err));
     },
   });
 
@@ -107,7 +125,16 @@ interface FullyReshardedPayload {
 
 // @ts-ignore this should not be erroring
 self.onmessage = async function (message: MessageEvent<string>) {
-  const data = JSON.parse(message.data) as IdentifyPayload | ReshardPayload | FullyReshardedPayload;
+  const log = logger({
+    name: `GatewayWorker${JSON.parse(message.data).workerId ? `: ${JSON.parse(message.data).workerId}` : undefined}`,
+  });
+
+  log.debug(`New Message:\n`, message.data);
+
+  const data = JSON.parse(message.data) as
+    | IdentifyPayload
+    | ReshardPayload
+    | FullyReshardedPayload;
 
   if (data.type === "IDENTIFY") {
     workerId = data.workerId;
@@ -125,12 +152,12 @@ self.onmessage = async function (message: MessageEvent<string>) {
   }
 
   if (data.type === "RESHARDED-CLOSEOLD") {
-    console.log(`[Worker #${workerId}]`, "[Resharding] Closing old gateways.");
+    log.info("[Resharding] Closing old gateways.");
     await gateway.resharding.closeOldShards(gatewayPendingClosing);
   }
 
   if (data.type === "RESHARD") {
-    console.log(`[Worker #${workerId}]`, "[Worker] Resharding the worker.");
+    log.info("[Worker] Resharding the worker.");
     gateway.resharding.isPending = async function (gateway: GatewayManager) {
       for (let i = gateway.firstShardId; i < gateway.lastShardId; i++) {
         const shard = gateway.shards.get(i);
@@ -142,8 +169,14 @@ self.onmessage = async function (message: MessageEvent<string>) {
       return false;
     };
 
-    async function processResharding(oldGateway: GatewayManager, results: GetGatewayBot) {
-      oldGateway.debug("GW DEBUG", "[Resharding] Starting the reshard process.");
+    async function processResharding(
+      oldGateway: GatewayManager,
+      results: GetGatewayBot,
+    ) {
+      oldGateway.debug(
+        "GW DEBUG",
+        "[Resharding] Starting the reshard process.",
+      );
 
       const gateway = createGatewayManager({
         ...oldGateway,
@@ -164,7 +197,9 @@ self.onmessage = async function (message: MessageEvent<string>) {
           gateway.handleDiscordPayload = async function (_, data, shardId) {
             if (data.t === "READY") {
               const payload = data.d as DiscordReady;
-              console.log(`[Worker - ${workerId}] Shard #${payload.shard?.[0]} online`);
+              log.info(
+                `Shard #${payload.shard?.[0]} online`,
+              );
               if (shardId === gateway.lastShardId) {
                 // @ts-ignore
                 postMessage(
@@ -185,7 +220,12 @@ self.onmessage = async function (message: MessageEvent<string>) {
         }
 
         // DON"T OVERRIDE THESE
-        if (["cache", "shards", "loadingShards", "buckets", "utf8decoder"].includes(key)) continue;
+        if (
+          ["cache", "shards", "loadingShards", "buckets", "utf8decoder"]
+            .includes(key)
+        ) {
+          continue;
+        }
 
         // USE ANY CUSTOMIZED OPTIONS FROM OLD GATEWAY
         // @ts-ignore silly ts error
@@ -195,8 +235,13 @@ self.onmessage = async function (message: MessageEvent<string>) {
       // Begin resharding
       // If more than 100K servers, begin switching to 16x sharding
       if (gateway.useOptimalLargeBotSharding) {
-        console.log(`[Worker - ${workerId}]`, "[Resharding] Using optimal large bot sharding solution.");
-        gateway.maxShards = gateway.calculateMaxShards(results.shards, results.sessionStartLimit.maxConcurrency);
+        log.info(
+          "[Resharding] Using optimal large bot sharding solution.",
+        );
+        gateway.maxShards = gateway.calculateMaxShards(
+          results.shards,
+          results.sessionStartLimit.maxConcurrency,
+        );
       } else {
         gateway.maxShards = results.shards;
       }
@@ -216,7 +261,10 @@ self.onmessage = async function (message: MessageEvent<string>) {
       return new Promise((resolve) => {
         // TIMER TO KEEP CHECKING WHEN ALL SHARDS HAVE RESHARDED
         const timer = setInterval(async () => {
-          const pending = await gateway.resharding.isPending(gateway, oldGateway);
+          const pending = await gateway.resharding.isPending(
+            gateway,
+            oldGateway,
+          );
           // STILL PENDING ON SOME SHARDS TO BE CREATED
           if (pending) return;
 
@@ -240,7 +288,7 @@ self.onmessage = async function (message: MessageEvent<string>) {
     }
 
     gateway = await processResharding(gateway, data.results);
-    console.log(`[Worker - ${workerId}] Resharded the worker.`);
+    log.info(`Resharded the worker.`);
     // @ts-ignore this should not be erroring
     postMessage(
       JSON.stringify({

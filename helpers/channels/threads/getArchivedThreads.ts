@@ -11,21 +11,17 @@ export async function getArchivedThreads(
   },
 ) {
   let url = options?.type === "privateJoinedThreads"
-    ? bot.constants.endpoints.THREAD_ARCHIVED_PRIVATE_JOINED(channelId)
+    ? bot.constants.routes.THREAD_ARCHIVED_PRIVATE_JOINED(channelId, options)
     : options?.type === "private"
-    ? bot.constants.endpoints.THREAD_ARCHIVED_PRIVATE(channelId)
-    : bot.constants.endpoints.THREAD_ARCHIVED_PUBLIC(channelId);
-  if (options) {
-    url += "?";
+    ? bot.constants.routes.THREAD_ARCHIVED_PRIVATE(channelId, options)
+    : bot.constants.routes.THREAD_ARCHIVED_PUBLIC(channelId, options);
 
-    if (options.before) url += `before=${new Date(options.before).toISOString()}`;
-    if (options.limit) url += `&limit=${options.limit}`;
-  }
   const result = (await bot.rest.runMethod<DiscordListArchivedThreads>(
     bot.rest,
-    "get",
+    "GET",
     url,
   ));
+
   return {
     threads: new Collection(
       result.threads.map((t) => {

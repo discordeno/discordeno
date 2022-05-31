@@ -11,7 +11,6 @@ import {
   sendPrivateInteractionResponse,
   white,
 } from "../../../../deps.ts";
-import logger from "../../../../src/utils/logger.ts";
 import { optionParser, translateOptionNames } from "../../../utils/options.ts";
 import { privateReplyToInteraction, replyToInteraction } from "../../../utils/replies.ts";
 import slashLogWebhook from "../../../utils/slashWebhook.ts";
@@ -19,6 +18,9 @@ import { BotClient } from "../../botClient.ts";
 import { loadLanguage, serverLanguages, translate } from "../../languages/translate.ts";
 import { Command, ConvertArgumentDefinitionsToArgs } from "../../types/command.ts";
 import commands from "./mod.ts";
+import { logger, LogLevels } from "../../../utils/logger.ts";
+
+const log = logger({ name: "CommandHandler" });
 
 function logCommand(
   info: Interaction,
@@ -40,13 +42,15 @@ function logCommand(
     black(`${info.guildId ? `Guild ID: (${info.guildId})` : "DM"}`),
   );
 
-  logger.info(`${command} by ${user} in ${guild} with MessageID: ${info.id}`);
+  log.info(`${command} by ${user} in ${guild} with MessageID: ${info.id}`);
 }
 
 export async function executeSlashCommand(
   bot: BotClient,
   interaction: Interaction,
 ) {
+  log.debug(`New interaction:\n`, interaction);
+
   const data = interaction.data;
   const name = data?.name as keyof typeof commands;
 
@@ -55,17 +59,22 @@ export async function executeSlashCommand(
 
   // Command could not be found
   if (!command?.execute) {
-    return await sendPrivateInteractionResponse(bot, interaction.id, interaction.token, {
-      type: InteractionResponseTypes.ChannelMessageWithSource,
-      data: {
-        content: translate(
-          bot,
-          interaction.guildId!,
-          "EXECUTE_COMMAND_NOT_FOUND",
-        ),
+    return await sendPrivateInteractionResponse(
+      bot,
+      interaction.id,
+      interaction.token,
+      {
+        type: InteractionResponseTypes.ChannelMessageWithSource,
+        data: {
+          content: translate(
+            bot,
+            interaction.guildId!,
+            "EXECUTE_COMMAND_NOT_FOUND",
+          ),
+        },
       },
-    })
-      .catch(logger.error);
+    )
+      .catch(log.error);
   }
 
   // HAVE TO CONVERT OUTSIDE OF TRY SO IT CAN BE USED IN CATCH TOO
@@ -107,11 +116,11 @@ export async function executeSlashCommand(
     );
     logCommand(interaction, "Success", name);
   } catch (error) {
-    console.error(error);
+    log.error(error);
     logCommand(interaction, "Failure", name);
-    await slashLogWebhook(bot, interaction, name).catch(logger.error);
+    await slashLogWebhook(bot, interaction, name).catch(log.error);
     return await privateReplyToInteraction(bot, interaction, {
       content: translate(bot, interaction.id, "EXECUTE_COMMAND_ERROR"),
-    }).catch(logger.error);
+    }).catch(log.error);
   }
 }

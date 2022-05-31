@@ -6,8 +6,8 @@ import { PermissionStrings } from "../../types/shared.ts";
 export async function editRole(bot: Bot, guildId: bigint, id: bigint, options: EditGuildRole) {
   const result = await bot.rest.runMethod<DiscordRole>(
     bot.rest,
-    "patch",
-    bot.constants.endpoints.GUILD_ROLE(guildId, id),
+    "PATCH",
+    bot.constants.routes.GUILD_ROLE(guildId, id),
     {
       name: options.name,
       color: options.color,

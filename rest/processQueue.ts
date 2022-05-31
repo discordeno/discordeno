@@ -12,7 +12,7 @@ export function processQueue(rest: RestManager, id: string) {
     // IF THIS DOESN'T HAVE ANY ITEMS JUST CANCEL, THE CLEANER WILL REMOVE IT.
     if (!queuedRequest) break;
 
-    const basicURL = rest.simplifyUrl(queuedRequest.request.url, queuedRequest.request.method.toUpperCase());
+    const basicURL = rest.simplifyUrl(queuedRequest.request.url, queuedRequest.request.method);
 
     // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
     const urlResetIn = rest.checkRateLimits(rest, basicURL);
