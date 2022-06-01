@@ -60,28 +60,7 @@ export function createRestManager(options: CreateRestManagerOptions) {
       urlToUse: string;
     }[],
     globalQueueProcessing: false,
-    // get notice if request get or clear rate limited 
-    rateLimitedPaths: options.rateLimitedPaths ? {
-      map: new Map<string, RestRateLimitedPath>(),
-      get(this: { map: Map<string, RestRateLimitedPath> }, key: string) { return this.map.get(key) },
-      set(this: { map: Map<string, RestRateLimitedPath> }, key: string, value: RestRateLimitedPath) {
-        options.rateLimitedPaths?.set(key, value)
-        return this.map.set(key, value)
-      },
-      delete(this: { map: Map<string, RestRateLimitedPath> }, key: string) {
-        options.rateLimitedPaths?.delete(key)
-        return this.map.delete(key)
-      },
-      size(this: { map: Map<string, RestRateLimitedPath> }) { return this.map.size },
-      entries(this: { map: Map<string, RestRateLimitedPath> }) { return this.map.entries() },
-    } : {
-      map: new Map<string, RestRateLimitedPath>(),
-      get(this: { map: Map<string, RestRateLimitedPath> }, key: string) { return this.map.get(key) },
-      set(this: { map: Map<string, RestRateLimitedPath> }, key: string, value: RestRateLimitedPath) { return this.map.set(key, value) },
-      delete(this: { map: Map<string, RestRateLimitedPath> }, key: string) { return this.map.delete(key) },
-      size(this: { map: Map<string, RestRateLimitedPath> }) { return this.map.size },
-      entries(this: { map: Map<string, RestRateLimitedPath> }) { return this.map.entries() },
-    },
+    rateLimitedPaths: new Map<string, RestRateLimitedPath>(),
     debug: options.debug || function (_text: string) {},
     checkRateLimits: options.checkRateLimits || checkRateLimits,
     cleanupQueues: options.cleanupQueues || cleanupQueues,
@@ -103,10 +82,6 @@ export interface CreateRestManagerOptions {
   maxRetryCount?: number;
   version?: number;
   secretKey?: string;
-  rateLimitedPaths?: {
-    set: (key: string, value: RestRateLimitedPath) => any,
-    delete: (key: string) => any,
-  }
   debug?: (text: string) => unknown;
   checkRateLimits?: typeof checkRateLimits;
   cleanupQueues?: typeof cleanupQueues;
