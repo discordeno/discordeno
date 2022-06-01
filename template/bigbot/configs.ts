@@ -48,11 +48,11 @@ if (!REST_URL) {
   );
 }
 
-export const GATEWAY_PROXY_URL = env
-  .GATEWAY_PROXY_URL!;
-if (!GATEWAY_PROXY_URL) {
+export const GATEWAY_URL = env
+  .GATEWAY_URL!;
+if (!GATEWAY_URL) {
   throw new Error(
-    "Hmm, it seems like you don't have somewhere to send gateway events to (GATEWAY_PROXY_URL). Please check your .env file!",
+    "Hmm, it seems like you don't have somewhere to send gateway events to (GATEWAY_URL). Please check your .env file!",
   );
 }
 
