@@ -33,8 +33,8 @@ async function handleRequest(conn: Deno.Conn) {
   // iterator from the HTTP connection.
   for await (const requestEvent of httpConn) {
     if (
-      !REST_AUTHORIZATION_KEY ||
-      REST_AUTHORIZATION_KEY !==
+      !REST_SECRET_KEY ||
+      REST_SECRET_KEY !==
         requestEvent.request.headers.get("AUTHORIZATION")
     ) {
       return requestEvent.respondWith(
