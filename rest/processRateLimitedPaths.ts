@@ -16,7 +16,7 @@ export function processRateLimitedPaths(rest: RestManager) {
   }
 
   // ALL PATHS ARE CLEARED CAN CANCEL OUT!
-  if (!rest.rateLimitedPaths.size) {
+  if (!rest.rateLimitedPaths.size()) {
     rest.processingRateLimitedPaths = false;
   } else {
     rest.processingRateLimitedPaths = true;
