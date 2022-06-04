@@ -17,7 +17,7 @@ Discordeno follows [semantic versioning](https://semver.org/)
 - **Secure & stable**: Discordeno is actively maintained to ensure great performance and convenience.
 - **Simple, Efficient, & Lightweight**: Discordeno is simplistic, easy-to-use and versatile while being efficient and
   lightweight. No caching by default.
-- [**Functional API**](https://en.wikipedia.org/wiki/Functional_programming): The functional API ensures overall concise
+- **Functional API**: The functional API ensures overall concise
   yet performant code while removing the difficulties of extending built-in classes and inheritance.
 - **Cross Runtime**: Supports both Deno and Node.js runtimes.
 - **Standalone REST, Gateway, Custom Cache & more**: Discordeno provides the ability to have almost every part of a bot
