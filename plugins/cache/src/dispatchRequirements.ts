@@ -1,5 +1,4 @@
-import type { Guild } from "../deps.ts";
-import { Bot, DiscordGatewayPayload } from "../deps.ts";
+import type { Guild, Shard, Bot, DiscordGatewayPayload } from "../deps.ts";
 import { BotWithCache } from "./addCacheCollections.ts";
 
 const processing = new Set<bigint>();
@@ -7,6 +6,7 @@ const processing = new Set<bigint>();
 export async function dispatchRequirements<B extends Bot>(
   bot: BotWithCache<B>,
   data: DiscordGatewayPayload,
+  shard: Shard
 ) {
   // DELETE MEANS WE DONT NEED TO FETCH. CREATE SHOULD HAVE DATA TO CACHE
   if (data.t && ["GUILD_CREATE", "GUILD_DELETE"].includes(data.t)) return;
