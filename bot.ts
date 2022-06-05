@@ -141,8 +141,8 @@ import { transformEmbedToDiscordEmbed } from "./transformers/reverse/embed.ts";
 import { transformComponentToDiscordComponent } from "./transformers/reverse/component.ts";
 import { getBotIdFromToken, removeTokenPrefix } from "./util/token.ts";
 import { CreateShardManager } from "./gateway/manager/shardManager.ts";
-import { AutoModerationRule } from "./transformers/automodRule.ts";
-import { AutoModerationActionExecution } from "./transformers/automodActionExecution.ts";
+import { AutoModerationRule, transformAutoModerationRule } from "./transformers/automodRule.ts";
+import { AutoModerationActionExecution, transformAutoModerationActionExecution } from "./transformers/automodActionExecution.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -447,6 +447,8 @@ export function createTransformers(options: Partial<Transformers>) {
       embed: options.reverse?.embed || transformEmbedToDiscordEmbed,
       component: options.reverse?.component || transformComponentToDiscordComponent,
     },
+    automodRule: options.automodRule || transformAutoModerationRule,
+    automodActionExecution: options.automodActionExecution || transformAutoModerationActionExecution,
     activity: options.activity || transformActivity,
     application: options.application || transformApplication,
     attachment: options.attachment || transformAttachment,
