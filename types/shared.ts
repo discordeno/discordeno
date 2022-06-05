@@ -216,7 +216,7 @@ export enum GuildFeatures {
   /** Guild is able to set role icons */
   RoleIcons = "ROLE_ICONS",
   /** Guild has set up auto moderation rules */
-  AutoModeration = "ANIMATED_BANNER",
+  AutoModeration = "AUTO_MODERATION",
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-mfa-level */
