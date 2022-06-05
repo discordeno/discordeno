@@ -1431,7 +1431,7 @@ export interface DiscordAutoModerationRule {
 
 export enum AutoModerationEventTypes {
   /** When a user sends a message */
-  MessageSend,
+  MessageSend = 1,
 }
 
 export enum AutoModerationTriggerTypes {
