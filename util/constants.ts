@@ -44,6 +44,14 @@ export const routes = {
     return `/gateway/bot`;
   },
 
+  // Automod Endpoints
+  AUTOMOD_RULES: (guildId: bigint) => {
+    return `/guilds/${guildId}/auto-moderation/rules`;
+  },
+  AUTOMOD_RULE: (guildId: bigint, ruleId: bigint) => {
+    return `/guilds/${guildId}/auto-moderation/rules/${ruleId}`;
+  },
+
   // Channel Endpoints
   CHANNEL: (channelId: bigint) => {
     return `/channels/${channelId}`;

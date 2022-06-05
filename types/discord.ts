@@ -1400,6 +1400,113 @@ export interface DiscordAuditLog {
   threads: DiscordChannel[];
   /** List of guild scheduled events found in the audit log */
   guild_scheduled_events?: DiscordScheduledEvent[];
+  /** List of auto moderation rules referenced in the audit log */
+  auto_moderation_rules?: DiscordAutoModerationRule[];
+}
+
+export interface DiscordAutoModerationRule {
+  /** The id of this rule */
+  id: string;
+  /** The guild id */
+  guild_id: string;
+  /** The name of the rule */
+  name: string;
+  /** The id of the user who created this rule. */
+  creator_id: string;
+  /** Indicates in what event context a rule should be checked. */
+  event_type: AutoModerationEventTypes;
+  /** The type of trigger for this rule */
+  trigger_type: AutoModerationTriggerTypes;
+  /** The metadata used to determine whether a rule should be triggered. */
+  trigger_metadata: DiscordAutoModerationRuleTriggerMetadata;
+  /** Actions which will execute whenever a rule is triggered. */
+  actions: DiscordAutoModerationAction[];
+  /** Whether the rule is enabled. */
+  enabled: boolean;
+  /** The role ids that are whitelisted. Max 20. */
+  exempt_roles: string[];
+  /** The channel ids that are whitelisted. Max 50. */
+  exempt_channels: string[];
+}
+
+export enum AutoModerationEventTypes {
+  /** When a user sends a message */
+  MessageSend,
+}
+
+export enum AutoModerationTriggerTypes {
+  Keyword = 1,
+  HarmfulLink,
+  Spam,
+  KeywordPreset,
+}
+
+export interface DiscordAutoModerationRuleTriggerMetadata {
+  // TODO: discord is considering renaming this before release
+  /** The keywords needed to match. Only present when TriggerType.Keyword */
+  keyword_filter?: string[];
+  // TODO: discord is considering renaming this before release
+  // TODO: This may need a special type or enum
+  /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
+  keyword_list?: DiscordAutoModerationRuleTriggerMetadataKeywordList[];
+}
+
+export enum DiscordAutoModerationRuleTriggerMetadataKeywordList {
+  /** Words that may be considered forms of swearing or cursing */
+  // TODO: Discord will make this into numbers before release.
+  Profanity = "PROFANITY",
+  /** Words that refer to sexually explicit behavior or activity */
+  // TODO: Discord will make this into numbers before release.
+  SexualContent = "SEXUAL_CONTENT",
+  /** Personal insults or words that may be considered hate speech */
+  // TODO: Discord will make this into numbers before release.
+  Slurs = "SLURS",
+}
+
+export interface DiscordAutoModerationAction {
+  /** The type of action to take when a rule is triggered */
+  type: AutoModerationActionType;
+  /** additional metadata needed during execution for this specific action type */
+  metadata: DiscordAutoModerationActionMetadata;
+}
+
+export enum AutoModerationActionType {
+  /** Blocks the content of a message according to the rule */
+  BlockMessage = 1,
+  /** Logs user content to a specified channel */
+  SendAlertMessage,
+  /** Times out user for specified duration */
+  Timeout,
+}
+
+export interface DiscordAutoModerationActionMetadata {
+  /** The id of channel to which user content should be logged. Only in SendAlertMessage */
+  channel_id?: string;
+  /** Timeout duration in seconds. Only supported for TriggerType.Keyword */
+  duration_seconds?: number;
+}
+
+export interface DiscordAutoModerationActionExecution {
+  /** The id of the guild */
+  guild_id: string;
+  /** The id of the rule that was executed */
+  rule_id: string;
+  /** The content from the user */
+  content: string;
+  /** Action which was executed */
+  action: DiscordAutoModerationAction;
+  /** The trigger type of the rule that was executed. */
+  rule_trigger_type: AutoModerationTriggerTypes;
+  /** The id of the channel in which user content was posted */
+  channel_id: string | null;
+  /** The id of the message. Will not exist if message was blocked by automod or content was not part of any message */
+  message_id: string | null;
+  /** The id of any system auto moderation messages posted as a result of this action */
+  alert_system_message_id: string | null;
+  /** The word or phrase that triggerred the rule. */
+  matched_keyword: string | null;
+  /** The substring in content that triggered rule */
+  matched_content: string | null;
 }
 
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-entry-structure */

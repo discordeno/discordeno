@@ -71,6 +71,8 @@ import { StickerPack, transformSticker, transformStickerPack } from "./transform
 import { GetGatewayBot, transformGatewayBot } from "./transformers/gatewayBot.ts";
 import {
   DiscordApplicationCommandOptionChoice,
+  DiscordAutoModerationActionExecution,
+  DiscordAutoModerationRule,
   DiscordEmoji,
   DiscordGatewayPayload,
   DiscordInteractionDataOption,
@@ -139,6 +141,8 @@ import { transformEmbedToDiscordEmbed } from "./transformers/reverse/embed.ts";
 import { transformComponentToDiscordComponent } from "./transformers/reverse/component.ts";
 import { getBotIdFromToken, removeTokenPrefix } from "./util/token.ts";
 import { CreateShardManager } from "./gateway/manager/shardManager.ts";
+import { AutoModerationRule } from "./transformers/automodRule.ts";
+import { AutoModerationActionExecution } from "./transformers/automodActionExecution.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -203,6 +207,10 @@ export function createEventHandlers(
 
   return {
     debug: events.debug ?? ignore,
+    automodRuleCreate: events.automodRuleCreate ?? ignore,
+    automodRuleUpdate: events.automodRuleUpdate ?? ignore,
+    automodRuleDelete: events.automodRuleDelete ?? ignore,
+    automodActionExecution: events.automodActionExecution ?? ignore,
     threadCreate: events.threadCreate ?? ignore,
     threadDelete: events.threadDelete ?? ignore,
     threadMemberUpdate: events.threadMemberUpdate ?? ignore,
@@ -388,6 +396,8 @@ export interface Transformers {
   };
   snowflake: (snowflake: string) => bigint;
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
+  automodRule: (bot: Bot, payload: DiscordAutoModerationRule) => AutoModerationRule;
+  automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution) => AutoModerationActionExecution;
   channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }) => Channel;
   guild: (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) => Guild;
   user: (bot: Bot, payload: DiscordUser) => User;
@@ -484,6 +494,10 @@ export type RestManager = ReturnType<typeof createRestManager>;
 
 export interface EventHandlers {
   debug: (text: string, ...args: any[]) => unknown;
+  automodRuleCreate: (bot: Bot, rule: AutoModerationRule) => unknown;
+  automodRuleUpdate: (bot: Bot, rule: AutoModerationRule) => unknown;
+  automodRuleDelete: (bot: Bot, rule: AutoModerationRule) => unknown;
+  automodActionExecution: (bot: Bot, payload: AutoModerationActionExecution) => unknown;
   threadCreate: (bot: Bot, thread: Channel) => unknown;
   threadDelete: (bot: Bot, thread: Channel) => unknown;
   threadMemberUpdate: (bot: Bot, payload: {
