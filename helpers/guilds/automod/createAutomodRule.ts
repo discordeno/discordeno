@@ -23,10 +23,12 @@ export async function createAutomodRule(bot: Bot, guildId: bigint, options: Crea
       },
       actions: options.actions.map((action) => ({
         type: action.type,
-        metadata: {
-          channel_id: action.metadata.channelId?.toString(),
-          duration_seconds: action.metadata.durationSeconds,
-        },
+        metadata: action.metadata
+          ? {
+            channel_id: action.metadata.channelId?.toString(),
+            duration_seconds: action.metadata.durationSeconds,
+          }
+          : undefined,
       })),
       enabled: options.enabled ?? true,
       exempt_roles: options.exemptRoles?.map((id) => id.toString()),
@@ -59,7 +61,7 @@ export interface CreateAutoModerationRuleOptions {
     /** The type of action to take when a rule is triggered */
     type: AutoModerationActionType;
     /** additional metadata needed during execution for this specific action type */
-    metadata: {
+    metadata?: {
       /** The id of channel to which user content should be logged. Only in SendAlertMessage */
       channelId?: bigint;
       /** Timeout duration in seconds. Only supported for TriggerType.Keyword */
