@@ -1388,7 +1388,11 @@ export type ArrayWithNoPrototype<T> = {
  * @example
  * export type RequestData = Record<string, AnythingBut<bigint>>;
  */
-export type AnythingBut<T> = Exclude<Primitive | { [K in PropertyKey]: AnythingBut<T>; } | ArrayWithNoPrototype<Primitive>, T>;
+export type AnythingBut<T> = Exclude<Primitive | {
+  [K in PropertyKey]: AnythingBut<T>;
+} | ArrayWithNoPrototype<Primitive | {
+  [K in PropertyKey]: AnythingBut<T>
+}>, T>;
 
 /**
  * object identity type
