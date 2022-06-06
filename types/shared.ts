@@ -1379,7 +1379,7 @@ export type ObjectLiteral<T = unknown> = {
 
 /** Array with no utilty methods, aka Object.create(null) */
 export type ArrayWithNoPrototype<T> = {
-    [index:number]: T;
+    [index:number]: T | ArrayWithNoPrototype<T>;
 };
 
 /**
