@@ -13,13 +13,7 @@ export async function getInvites(bot: Bot, guildId: bigint) {
   return new Collection(
     result.map((invite) => [
       invite.code,
-      {
-        uses: invite.uses,
-        maxUses: invite.max_uses,
-        maxAge: invite.max_age,
-        temporary: invite.temporary,
-        createdAt: Date.parse(invite.created_at),
-      },
+      bot.transformers.inviteMetadata(bot, invite),
     ]),
   );
 }

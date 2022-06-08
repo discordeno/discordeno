@@ -2,15 +2,31 @@ import { createRestManager, CreateRestManagerOptions } from "./rest/mod.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.ts";
 import { Collection } from "./util/collection.ts";
 import {
+  AuditLog,
+  Ban,
   Channel,
+  DiscoveryMetadata,
   Guild,
+  GuildPreview,
+  GuildVanity,
+  InviteCreate,
+  InviteMetadata,
+  ListThreads,
   Member,
   Message,
   Role,
   ScheduledEvent,
   Template,
+  transformAuditLog,
+  transformBan,
   transformChannel,
+  transformDiscoveryMetadata,
   transformGuild,
+  transformGuildPreview,
+  transformGuildVanity,
+  transformInviteCreate,
+  transformInviteMetadata,
+  transformListThreads,
   transformMember,
   transformMessage,
   transformRole,
@@ -69,15 +85,7 @@ import { transformWidgetSettings } from "./transformers/widgetSettings.ts";
 import { transformStageInstance } from "./transformers/stageInstance.ts";
 import { StickerPack, transformSticker, transformStickerPack } from "./transformers/sticker.ts";
 import { GetGatewayBot, transformGatewayBot } from "./transformers/gatewayBot.ts";
-import {
-  DiscordApplicationCommandOptionChoice,
-  DiscordEmoji,
-  DiscordGatewayPayload,
-  DiscordInteractionDataOption,
-  DiscordReady,
-  DiscordStickerPack,
-  DiscordTemplate,
-} from "./types/discord.ts";
+
 import { Errors, GatewayDispatchEventNames, GatewayIntents } from "./types/shared.ts";
 
 import {
@@ -85,27 +93,42 @@ import {
   DiscordApplication,
   DiscordApplicationCommand,
   DiscordApplicationCommandOption,
+  DiscordApplicationCommandOptionChoice,
   DiscordAttachment,
+  DiscordAuditLog,
   DiscordAuditLogEntry,
+  DiscordBan,
   DiscordChannel,
   DiscordComponent,
+  DiscordDiscoveryMetadata,
   DiscordEmbed,
+  DiscordEmoji,
+  DiscordGatewayPayload,
   DiscordGetGatewayBot,
   DiscordGuild,
   DiscordGuildApplicationCommandPermissions,
+  DiscordGuildPreview,
+  DiscordGuildVanity,
   DiscordGuildWidget,
   DiscordGuildWidgetSettings,
   DiscordIntegrationCreateUpdate,
   DiscordInteraction,
+  DiscordInteractionDataOption,
+  DiscordInvite,
   DiscordInviteCreate,
+  DiscordInviteMetadata,
+  DiscordListThreads,
   DiscordMember,
   DiscordMessage,
   DiscordPresenceUpdate,
+  DiscordReady,
   DiscordRole,
   DiscordScheduledEvent,
   DiscordStageInstance,
   DiscordSticker,
+  DiscordStickerPack,
   DiscordTeam,
+  DiscordTemplate,
   DiscordThreadMember,
   DiscordUser,
   DiscordVoiceRegion,
@@ -398,7 +421,7 @@ export interface Transformers {
   interaction: (bot: Bot, payload: DiscordInteraction) => Interaction;
   interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption;
   integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration;
-  invite: (bot: Bot, invite: DiscordInviteCreate) => Invite;
+  invite: (bot: Bot, invite: DiscordInvite) => Invite;
   application: (bot: Bot, payload: DiscordApplication) => Application;
   team: (bot: Bot, payload: DiscordTeam) => Team;
   emoji: (bot: Bot, payload: DiscordEmoji) => Emoji;
@@ -429,6 +452,14 @@ export interface Transformers {
     payload: DiscordApplicationCommandOptionChoice,
   ) => ApplicationCommandOptionChoice;
   template: (bot: Bot, payload: DiscordTemplate) => Template;
+  listThreads: (bot: Bot, payload: DiscordListThreads) => ListThreads;
+  discoveryMetadata: (bot: Bot, payload: DiscordDiscoveryMetadata & { guildId: bigint }) => DiscoveryMetadata;
+  auditLog: (bot: Bot, payload: DiscordAuditLog & { guildId: bigint }) => AuditLog;
+  ban: (bot: Bot, payload: DiscordBan) => Ban;
+  guildPreview: (bot: Bot, payload: DiscordGuildPreview) => GuildPreview;
+  guildVanity: (bot: Bot, payload: DiscordGuildVanity) => GuildVanity;
+  inviteCreate: (bot: Bot, payload: DiscordInviteCreate) => InviteCreate;
+  inviteMetadata: (bot: Bot, payload: DiscordInviteMetadata) => InviteMetadata;
 }
 
 export function createTransformers(options: Partial<Transformers>) {
@@ -477,6 +508,14 @@ export function createTransformers(options: Partial<Transformers>) {
     gatewayBot: options.gatewayBot || transformGatewayBot,
     applicationCommandOptionChoice: options.applicationCommandOptionChoice || transformApplicationCommandOptionChoice,
     template: options.template || transformTemplate,
+    listThreads: options.listThreads || transformListThreads,
+    discoveryMetadata: options.discoveryMetadata || transformDiscoveryMetadata,
+    auditLog: options.auditLog || transformAuditLog,
+    ban: options.ban || transformBan,
+    guildPreview: options.guildPreview || transformGuildPreview,
+    guildVanity: options.guildVanity || transformGuildVanity,
+    inviteCreate: options.inviteCreate || transformInviteCreate,
+    inviteMetadata: options.inviteMetadata || transformInviteMetadata,
   };
 }
 
