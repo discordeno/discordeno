@@ -81,7 +81,7 @@ export function sendMessage(bot: BotWithCache) {
     if (channel) {
       const requiredPerms: PermissionStrings[] = [];
       if (channel.guildId) {
-        requiredPerms.push("SEND_MESSAGES");
+        requiredPerms.push("VIEW_CHANNEL", "SEND_MESSAGES");
       }
       if (content.tts) requiredPerms.push("SEND_TTS_MESSAGES");
       if (content.messageReference) requiredPerms.push("READ_MESSAGE_HISTORY");
@@ -110,7 +110,7 @@ export function editMessage(bot: BotWithCache) {
     if (message) {
       if (message.authorId !== bot.id) {
         content = { flags: content.flags };
-        requireBotChannelPermissions(bot, channelId, ["MANAGE_MESSAGES"]);
+        requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "MANAGE_MESSAGES"]);
       }
     }
 
@@ -181,7 +181,7 @@ export function publishMessage(bot: BotWithCache) {
     requireBotChannelPermissions(
       bot,
       channelId,
-      message?.authorId === bot.id ? ["SEND_MESSAGES"] : ["MANAGE_MESSAGES"],
+      message?.authorId === bot.id ? ["VIEW_CHANNEL", "SEND_MESSAGES"] : ["VIEW_CHANNEL", "MANAGE_MESSAGES"],
     );
 
     return publishMessageOld(channelId, messageId);

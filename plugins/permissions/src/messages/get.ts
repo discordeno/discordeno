@@ -10,9 +10,7 @@ export function getMessage(bot: BotWithCache) {
   ) {
     const channel = bot.channels.get(channelId);
     if (channel?.guildId) {
-      requireBotChannelPermissions(bot, channel, [
-        "READ_MESSAGE_HISTORY",
-      ]);
+      requireBotChannelPermissions(bot, channel, ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]);
     }
 
     return await getMessageOld(channelId, messageId);
@@ -28,10 +26,7 @@ export function getMessages(bot: BotWithCache) {
   ) {
     const channel = bot.channels.get(channelId);
     if (channel?.guildId) {
-      requireBotChannelPermissions(bot, channel, [
-        "READ_MESSAGE_HISTORY",
-        "VIEW_CHANNEL",
-      ]);
+      requireBotChannelPermissions(bot, channel, ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]);
     }
 
     return await getMessagesOld(channelId, options);

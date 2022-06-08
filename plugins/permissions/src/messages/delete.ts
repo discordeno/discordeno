@@ -18,9 +18,7 @@ export function deleteMessage(bot: BotWithCache) {
 
     const channel = bot.channels.get(channelId);
     if (channel?.guildId) {
-      requireBotChannelPermissions(bot, channel, [
-        "MANAGE_MESSAGES",
-      ]);
+      requireBotChannelPermissions(bot, channel, ["VIEW_CHANNEL", "MANAGE_MESSAGES"]);
     } else {
       throw new Error(
         `You can only delete messages in a channel which has a guild id. Channel ID: ${channelId} Message Id: ${messageId}`,
@@ -66,9 +64,7 @@ export function deleteMessages(bot: BotWithCache) {
       throw new Error("Bulk message delete requires at least 2 messages.");
     }
 
-    requireBotChannelPermissions(bot, channel, [
-      "MANAGE_MESSAGES",
-    ]);
+    requireBotChannelPermissions(bot, channel, ["VIEW_CHANNEL", "MANAGE_MESSAGES"]);
 
     return await deleteMessagesOld(channelId, ids, reason);
   };

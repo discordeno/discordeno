@@ -14,6 +14,14 @@ export default function removeThreadMember(bot: BotWithCache) {
     const channel = bot.channels.get(threadId);
 
     if (channel) {
+      if (
+        channel.type !== ChannelTypes.GuildNewsThread &&
+        channel.type !== ChannelTypes.GuildPublicThread &&
+        channel.type !== ChannelTypes.GuildPrivateThread
+      ) {
+        throw new Error("Channel is not a guild thread");
+      }
+
       if (channel.archived) {
         throw new Error(
           "Cannot remove user from thread if thread is archived.",
@@ -24,7 +32,7 @@ export default function removeThreadMember(bot: BotWithCache) {
         !(bot.id === channel.ownerId &&
           channel.type === ChannelTypes.GuildPrivateThread)
       ) {
-        await requireBotChannelPermissions(bot, channel, ["MANAGE_MESSAGES"]);
+        requireBotChannelPermissions(bot, channel, ["VIEW_CHANNEL", "MANAGE_MESSAGES"]);
       }
     }
 

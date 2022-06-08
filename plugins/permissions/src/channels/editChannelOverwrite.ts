@@ -7,7 +7,7 @@ export default function editChannelOverwrite(bot: BotWithCache) {
   bot.helpers.editChannelOverwrite = async function (channelId, overwrite) {
     const channel = bot.channels.get(channelId);
     if (channel?.guildId) {
-      requireBotChannelPermissions(bot, channelId, ["MANAGE_ROLES"]);
+      requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "MANAGE_ROLES"]);
     }
 
     return await editChannelOverwriteOld(channelId, overwrite);

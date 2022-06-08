@@ -8,7 +8,7 @@ export default function deleteChannelOverwrite(bot: BotWithCache) {
     const channel = bot.channels.get(channelId);
 
     if (channel?.guildId) {
-      requireBotChannelPermissions(bot, channelId, ["MANAGE_ROLES"]);
+      requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "MANAGE_ROLES"]);
     }
 
     return await deleteChannelOverwriteOld(channelId, overwriteId);

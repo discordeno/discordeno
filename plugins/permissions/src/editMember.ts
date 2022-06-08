@@ -20,8 +20,7 @@ export default function editMember(bot: BotWithCache) {
       options.mute !== undefined || options.deaf !== undefined ||
       options.channelId !== undefined
     ) {
-      const memberVoiceState = (await bot.guilds.get(guildId))
-        ?.voiceStates.get(memberId);
+      const memberVoiceState = bot.guilds.get(guildId)?.voiceStates.get(memberId);
 
       if (!memberVoiceState?.channelId) {
         throw new Error("MEMBER_NOT_IN_VOICE_CHANNEL");
@@ -41,7 +40,7 @@ export default function editMember(bot: BotWithCache) {
           "MOVE_MEMBERS",
         ]);
         if (memberVoiceState) {
-          await requireBotChannelPermissions(
+          requireBotChannelPermissions(
             bot,
             memberVoiceState?.channelId,
             [
@@ -49,15 +48,13 @@ export default function editMember(bot: BotWithCache) {
             ],
           );
         }
-        await requireBotChannelPermissions(bot, options.channelId, [
+        requireBotChannelPermissions(bot, options.channelId, [
           ...requiredVoicePerms,
         ]);
       }
     }
 
-    await requireBotGuildPermissions(bot, guildId, [
-      ...requiredPerms,
-    ]);
+    requireBotGuildPermissions(bot, guildId, [...requiredPerms]);
 
     return await editMemberOld(guildId, memberId, options);
   };

@@ -8,9 +8,7 @@ export function pinMessage(bot: BotWithCache) {
     channelId,
     messageId,
   ) {
-    requireBotChannelPermissions(bot, channelId, [
-      "MANAGE_MESSAGES",
-    ]);
+    requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "MANAGE_MESSAGES"]);
 
     return await pinMessageOld(channelId, messageId);
   };
@@ -23,9 +21,7 @@ export function unpinMessage(bot: BotWithCache) {
     channelId,
     messageId,
   ) {
-    requireBotChannelPermissions(bot, channelId, [
-      "MANAGE_MESSAGES",
-    ]);
+    requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "MANAGE_MESSAGES"]);
 
     return await unpinMessageOld(channelId, messageId);
   };
