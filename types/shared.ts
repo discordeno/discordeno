@@ -1408,7 +1408,7 @@ export type KeysWithUndefined<T> = {
 }[keyof T];
 
 type OptionalizeAux<T extends object> = Id<{
-    [K in KeysWithUndefined<T>]?: T[K] extends ObjectLiteral ? Optionalize<T[K]> : T[K];
+    [K in KeysWithUndefined<T>]?: Optionalize<T[K]>;
 } & {
     [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends ObjectLiteral ? Optionalize<T[K]> : T[K];
 }>;
@@ -1425,7 +1425,7 @@ export type Optionalize<T> = T extends object
                 : T
             : Partial<T>
         : OptionalizeAux<T>
-: T;
+    : T;
 
 export type PickPartial<T, K extends keyof T> =
   & {
