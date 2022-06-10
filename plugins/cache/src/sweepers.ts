@@ -74,11 +74,11 @@ export function enableCacheSweepers<B extends Bot>(bot: BotWithCache<B>) {
   bot.presences.startSweeper({ filter: () => true, interval: 300000, bot });
 
   // DISPATCH REQUIREMENTS
-  const handleDiscordPayloadOld = bot.gateway.handleDiscordPayload;
-  bot.gateway.handleDiscordPayload = async function (_, data, shardId) {
+  const handleDiscordPayloadOld = bot.gateway.manager.createShardOptions.events.message;
+  bot.gateway.manager.createShardOptions.events.message = async function (shard, data) {
     // RUN DISPATCH CHECK
-    await dispatchRequirements(bot, data);
+    await dispatchRequirements(bot, data, shard);
     // RUN OLD HANDLER
-    handleDiscordPayloadOld(_, data, shardId);
+    handleDiscordPayloadOld(shard, data);
   };
 }
