@@ -79,6 +79,7 @@ export interface DiscordUser {
   banner?: string;
 }
 
+/**  https://discord.com/developers/docs/topics/gateway#presence-update */
 export type PartialDiscordUser = Optionalize<DiscordUser>
 
 /** https://discord.com/developers/docs/resources/user#connection-object */
