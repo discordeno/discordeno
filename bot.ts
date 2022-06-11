@@ -108,6 +108,7 @@ import {
   DiscordTeam,
   DiscordThreadMember,
   DiscordUser,
+  PartialDiscordUser,
   DiscordVoiceRegion,
   DiscordVoiceState,
   DiscordWebhook,
@@ -390,7 +391,7 @@ export interface Transformers {
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
   channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }) => Channel;
   guild: (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) => Guild;
-  user: (bot: Bot, payload: DiscordUser) => User;
+  user: (bot: Bot, payload: DiscordUser | PartialDiscordUser) => User;
   member: (bot: Bot, payload: DiscordMember, guildId: bigint, userId: bigint) => Member;
   message: (bot: Bot, payload: DiscordMessage) => Message;
   role: (bot: Bot, payload: { role: DiscordRole } & { guildId: bigint }) => Role;

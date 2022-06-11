@@ -23,6 +23,7 @@ import {
   MessageComponentTypes,
   MessageTypes,
   MfaLevels,
+  Optionalize,
   OverwriteTypes,
   PickPartial,
   PremiumTiers,
@@ -77,6 +78,8 @@ export interface DiscordUser {
   /** the user's banner, or null if unset */
   banner?: string;
 }
+
+export type PartialDiscordUser = Optionalize<DiscordUser>
 
 /** https://discord.com/developers/docs/resources/user#connection-object */
 export interface DiscordConnection {
@@ -759,7 +762,7 @@ export interface DiscordPresenceUpdate {
   /** Either "idle", "dnd", "online", or "offline" */
   status: "idle" | "dnd" | "online" | "offline";
   /** The user presence is being updated for */
-  user: DiscordUser;
+  user: PartialDiscordUser;
   /** id of the guild */
   guild_id: string;
   /** User's current activities */

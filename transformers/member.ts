@@ -1,20 +1,20 @@
 import type { Bot } from "../bot.ts";
-import { DiscordMember, DiscordUser } from "../types/discord.ts";
+import { DiscordMember, DiscordUser, PartialDiscordUser } from "../types/discord.ts";
 import { MemberToggles } from "./toggles/member.ts";
 import { UserToggles } from "./toggles/user.ts";
 import { Optionalize } from "../types/shared.ts";
 
-export function transformUser(bot: Bot, payload: DiscordUser) {
+export function transformUser(bot: Bot, payload: DiscordUser | PartialDiscordUser) {
   const user = {
     id: bot.transformers.snowflake(payload.id || ""),
-    username: payload.username,
-    discriminator: payload.discriminator,
-    avatar: payload.avatar ? bot.utils.iconHashToBigInt(payload.avatar) : undefined,
-    locale: payload.locale,
-    email: payload.email ?? undefined,
-    flags: payload.flags,
-    premiumType: payload.premium_type,
-    publicFlags: payload.public_flags,
+    username: "username" in payload ? payload.username : undefined,
+    discriminator: "discriminator" in payload ? payload.discriminator : undefined,
+    avatar: "avatar" in payload ? bot.utils.iconHashToBigInt(payload.avatar) : undefined,
+    locale: "locale" in payload ? payload.locale : undefined,
+    email: "email" in payload ? payload.email : undefined,
+    flags: "flags" in payload ? payload.flags : undefined,
+    premiumType: "premium_type" in payload ? payload.premium_type : undefined,
+    publicFlags: "public_flags" in payload ? payload.public_flags : undefined,
     toggles: new UserToggles(payload),
   };
 
