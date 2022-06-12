@@ -79,7 +79,7 @@ export interface DiscordUser {
 }
 
 /**  https://discord.com/developers/docs/topics/gateway#presence-update */
-export type PartialDiscordUser = PickPartial<DiscordUser, "id">
+export type PartialDiscordUser = PickPartial<DiscordUser, "id">;
 
 /** https://discord.com/developers/docs/resources/user#connection-object */
 export interface DiscordConnection {

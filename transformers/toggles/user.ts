@@ -16,7 +16,7 @@ export class UserToggles extends ToggleBitfield {
   constructor(user: DiscordUser | PartialDiscordUser) {
     super();
 
-    if (!("username" in user)) return
+    if (!("username" in user)) return;
     if (user.bot) this.add(UserToggle.bot);
     if (user.system) this.add(UserToggle.system);
     if (user.mfa_enabled) this.add(UserToggle.mfaEnabled);

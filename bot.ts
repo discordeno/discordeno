@@ -108,11 +108,11 @@ import {
   DiscordTeam,
   DiscordThreadMember,
   DiscordUser,
-  PartialDiscordUser,
   DiscordVoiceRegion,
   DiscordVoiceState,
   DiscordWebhook,
   DiscordWelcomeScreen,
+  PartialDiscordUser,
 } from "./types/discord.ts";
 
 import { Application } from "./transformers/application.ts";
