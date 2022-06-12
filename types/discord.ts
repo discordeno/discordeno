@@ -23,7 +23,6 @@ import {
   MessageComponentTypes,
   MessageTypes,
   MfaLevels,
-  Optionalize,
   OverwriteTypes,
   PickPartial,
   PremiumTiers,
@@ -80,7 +79,7 @@ export interface DiscordUser {
 }
 
 /**  https://discord.com/developers/docs/topics/gateway#presence-update */
-export type PartialDiscordUser = Optionalize<DiscordUser>
+export type PartialDiscordUser = PickPartial<DiscordUser, "id">
 
 /** https://discord.com/developers/docs/resources/user#connection-object */
 export interface DiscordConnection {
