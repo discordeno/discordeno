@@ -9,6 +9,7 @@ export * from "./attachment.ts";
 export * from "./auditLogEntry.ts";
 export * from "./channel.ts";
 export * from "./component.ts";
+export * from "./connection.ts";
 export * from "./embed.ts";
 export * from "./emoji.ts";
 export * from "./gatewayBot.ts";
