@@ -7,14 +7,14 @@ import { Optionalize } from "../types/shared.ts";
 export function transformUser(bot: Bot, payload: DiscordUser | PartialDiscordUser) {
   const user = {
     id: bot.transformers.snowflake(payload.id || ""),
-    username: "username" in payload ? payload.username : undefined,
-    discriminator: "discriminator" in payload ? payload.discriminator : undefined,
-    avatar: "avatar" in payload ? bot.utils.iconHashToBigInt(payload.avatar) : undefined,
-    locale: "locale" in payload ? payload.locale : undefined,
-    email: "email" in payload ? payload.email : undefined,
-    flags: "flags" in payload ? payload.flags : undefined,
-    premiumType: "premium_type" in payload ? payload.premium_type : undefined,
-    publicFlags: "public_flags" in payload ? payload.public_flags : undefined,
+    username: payload.username ?? undefined,
+    discriminator: payload.discriminator ?? undefined,
+    avatar: payload.avatar ? bot.utils.iconHashToBigInt(payload.avatar) : undefined,
+    locale: payload.locale ?? undefined,
+    email: payload.email ?? undefined,
+    flags: payload.flags ?? undefined,
+    premiumType: payload.premium_type ?? undefined,
+    publicFlags: payload.public_flags ?? undefined,
     toggles: new UserToggles(payload),
   };
 
