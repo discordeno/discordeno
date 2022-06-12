@@ -23,6 +23,7 @@ import {
   MessageComponentTypes,
   MessageTypes,
   MfaLevels,
+  Optionalize,
   OverwriteTypes,
   PickPartial,
   PremiumTiers,
@@ -79,7 +80,7 @@ export interface DiscordUser {
 }
 
 /**  https://discord.com/developers/docs/topics/gateway#presence-update */
-export type PartialDiscordUser = PickPartial<DiscordUser, "id">
+export type PartialDiscordUser = Optionalize<DiscordUser>
 
 /** https://discord.com/developers/docs/resources/user#connection-object */
 export interface DiscordConnection {
@@ -1140,17 +1141,17 @@ export interface DiscordActionRow {
   type: 1;
   /** The components in this row */
   components:
-  | [DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent]
-  | [DiscordButtonComponent, DiscordButtonComponent]
-  | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
-  | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
-  | [
-    DiscordButtonComponent,
-    DiscordButtonComponent,
-    DiscordButtonComponent,
-    DiscordButtonComponent,
-    DiscordButtonComponent,
-  ];
+    | [DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent]
+    | [DiscordButtonComponent, DiscordButtonComponent]
+    | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
+    | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
+    | [
+      DiscordButtonComponent,
+      DiscordButtonComponent,
+      DiscordButtonComponent,
+      DiscordButtonComponent,
+      DiscordButtonComponent,
+    ];
 }
 
 export interface DiscordSelectMenuComponent {
@@ -1429,62 +1430,62 @@ export type DiscordAuditLogChange =
     new_value: string;
     old_value: string;
     key:
-    | "name"
-    | "description"
-    | "discovery_splash_hash"
-    | "banner_hash"
-    | "preferred_locale"
-    | "rules_channel_id"
-    | "public_updates_channel_id"
-    | "icon_hash"
-    | "image_hash"
-    | "splash_hash"
-    | "owner_id"
-    | "region"
-    | "afk_channel_id"
-    | "vanity_url_code"
-    | "widget_channel_id"
-    | "system_channel_id"
-    | "topic"
-    | "application_id"
-    | "permissions"
-    | "allow"
-    | "deny"
-    | "code"
-    | "channel_id"
-    | "inviter_id"
-    | "nick"
-    | "avatar_hash"
-    | "id"
-    | "location"
-    | "command_id";
+      | "name"
+      | "description"
+      | "discovery_splash_hash"
+      | "banner_hash"
+      | "preferred_locale"
+      | "rules_channel_id"
+      | "public_updates_channel_id"
+      | "icon_hash"
+      | "image_hash"
+      | "splash_hash"
+      | "owner_id"
+      | "region"
+      | "afk_channel_id"
+      | "vanity_url_code"
+      | "widget_channel_id"
+      | "system_channel_id"
+      | "topic"
+      | "application_id"
+      | "permissions"
+      | "allow"
+      | "deny"
+      | "code"
+      | "channel_id"
+      | "inviter_id"
+      | "nick"
+      | "avatar_hash"
+      | "id"
+      | "location"
+      | "command_id";
   }
   | {
     new_value: number;
     old_value: number;
     key:
-    | "afk_timeout"
-    | "mfa_level"
-    | "verification_level"
-    | "explicit_content_filter"
-    | "default_message_notifications"
-    | "prune_delete_days"
-    | "position"
-    | "bitrate"
-    | "rate_limit_per_user"
-    | "color"
-    | "max_uses"
-    | "uses"
-    | "max_age"
-    | "expire_behavior"
-    | "expire_grace_period"
-    | "user_limit"
-    | "privacy_level"
-    | "auto_archive_duration"
-    | "default_auto_archive_duration"
-    | "entity_type"
-    | "status"
-    | "communication_disabled_until";
+      | "afk_timeout"
+      | "mfa_level"
+      | "verification_level"
+      | "explicit_content_filter"
+      | "default_message_notifications"
+      | "prune_delete_days"
+      | "position"
+      | "bitrate"
+      | "rate_limit_per_user"
+      | "color"
+      | "max_uses"
+      | "uses"
+      | "max_age"
+      | "expire_behavior"
+      | "expire_grace_period"
+      | "user_limit"
+      | "privacy_level"
+      | "auto_archive_duration"
+      | "default_auto_archive_duration"
+      | "entity_type"
+      | "status"
+      | "communication_disabled_until";
   }
   | {
     new_value: Partial<DiscordRole>[];
@@ -1495,17 +1496,17 @@ export type DiscordAuditLogChange =
     new_value: boolean;
     old_value: boolean;
     key:
-    | "widget_enabled"
-    | "nsfw"
-    | "hoist"
-    | "mentionable"
-    | "temporary"
-    | "deaf"
-    | "mute"
-    | "enable_emoticons"
-    | "archived"
-    | "locked"
-    | "invitable";
+      | "widget_enabled"
+      | "nsfw"
+      | "hoist"
+      | "mentionable"
+      | "temporary"
+      | "deaf"
+      | "mute"
+      | "enable_emoticons"
+      | "archived"
+      | "locked"
+      | "invitable";
   }
   | {
     new_value: DiscordOverwrite[];
@@ -1976,7 +1977,7 @@ export interface DiscordGuildBanAddRemove {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove */
-export interface DiscordMessageReactionRemove extends Omit<DiscordMessageReactionAdd, "member"> { }
+export interface DiscordMessageReactionRemove extends Omit<DiscordMessageReactionAdd, "member"> {}
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-add */
 export interface DiscordMessageReactionAdd {
@@ -2055,7 +2056,7 @@ export interface DiscordReady {
 }
 
 /** https://discord.com/developers/docs/resources/guild#unavailable-guild-object */
-export interface DiscordUnavailableGuild extends Pick<DiscordGuild, "id" | "unavailable"> { }
+export interface DiscordUnavailableGuild extends Pick<DiscordGuild, "id" | "unavailable"> {}
 
 /** https://discord.com/developers/docs/topics/gateway#message-delete-bulk */
 export interface DiscordMessageDeleteBulk {
@@ -2089,35 +2090,35 @@ export interface DiscordTemplate {
   source_guild_id: string;
   /** The guild snapshot this template contains */
   serialized_source_guild:
-  & Omit<
-    PickPartial<
-      DiscordGuild,
-      | "name"
-      | "description"
-      | "verification_level"
-      | "default_message_notifications"
-      | "explicit_content_filter"
-      | "preferred_locale"
-      | "afk_timeout"
-      | "channels"
-      | "afk_channel_id"
-      | "system_channel_id"
-      | "system_channel_flags"
-    >,
-    "roles"
-  >
-  & {
-    roles: (
-      & Omit<
-        PickPartial<
-          DiscordRole,
-          "name" | "color" | "hoist" | "mentionable" | "permissions" | "icon" | "unicode_emoji"
-        >,
-        "id"
-      >
-      & { id: number }
-    )[];
-  };
+    & Omit<
+      PickPartial<
+        DiscordGuild,
+        | "name"
+        | "description"
+        | "verification_level"
+        | "default_message_notifications"
+        | "explicit_content_filter"
+        | "preferred_locale"
+        | "afk_timeout"
+        | "channels"
+        | "afk_channel_id"
+        | "system_channel_id"
+        | "system_channel_flags"
+      >,
+      "roles"
+    >
+    & {
+      roles: (
+        & Omit<
+          PickPartial<
+            DiscordRole,
+            "name" | "color" | "hoist" | "mentionable" | "permissions" | "icon" | "unicode_emoji"
+          >,
+          "id"
+        >
+        & { id: number }
+      )[];
+    };
   /** Whether the template has un-synced changes */
   is_dirty: boolean | null;
 }
@@ -2223,7 +2224,7 @@ export interface DiscordGuildMemberUpdate {
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-all */
 export interface DiscordMessageReactionRemoveAll
-  extends Pick<DiscordMessageReactionAdd, "channel_id" | "message_id" | "guild_id"> { }
+  extends Pick<DiscordMessageReactionAdd, "channel_id" | "message_id" | "guild_id"> {}
 
 // TODO: add docs link
 export interface DiscordValidateDiscoverySearchTerm {
