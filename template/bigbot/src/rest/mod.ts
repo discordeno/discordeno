@@ -1,5 +1,5 @@
 // START FILE FOR REST PROCESS
-import { DISCORD_TOKEN, REST_SECRET_KEY, REST_URL, REST_PORT } from "../../configs.ts";
+import { DISCORD_TOKEN, REST_AUTHORIZATION_KEY, REST_PORT } from "../../configs.ts";
 import { BASE_URL, createRestManager } from "../../deps.ts";
 import { logger } from "../utils/logger.ts";
 
@@ -8,15 +8,15 @@ const log = logger({ name: "REST" });
 // CREATES THE FUNCTIONALITY FOR MANAGING THE REST REQUESTS
 const rest = createRestManager({
   token: DISCORD_TOKEN,
-  secretKey: REST_SECRET_KEY,
-  customUrl: `http://${REST_URL}:${REST_PORT}`,
+  secretKey: REST_AUTHORIZATION_KEY,
+  customUrl: `http://localhost:${REST_PORT}`,
   debug: console.log,
 });
 
-// START LISTENING TO THE URL(REST_URL)
+// START LISTENING TO THE URL(localhost)
 const server = Deno.listen({ port: REST_PORT });
 log.info(
-  `HTTP webserver running.  Access it at:  http://${REST_URL}:${REST_PORT}/`,
+  `HTTP webserver running.  Access it at:  http://localhost:${REST_PORT}/`,
 );
 
 // Connections to the server will be yielded up as an async iterable.
@@ -33,8 +33,8 @@ async function handleRequest(conn: Deno.Conn) {
   // iterator from the HTTP connection.
   for await (const requestEvent of httpConn) {
     if (
-      !REST_SECRET_KEY ||
-      REST_SECRET_KEY !==
+      !REST_AUTHORIZATION_KEY ||
+      REST_AUTHORIZATION_KEY !==
         requestEvent.request.headers.get("AUTHORIZATION")
     ) {
       return requestEvent.respondWith(
@@ -50,9 +50,10 @@ async function handleRequest(conn: Deno.Conn) {
       const result = await rest.runMethod(
         rest,
         requestEvent.request.method as RequestMethod,
-        `${BASE_URL}${requestEvent.request.url.substring(
-          `http://${REST_URL}:${REST_PORT}`.length,
-        )
+        `${BASE_URL}${
+          requestEvent.request.url.substring(
+            `http://localhost:${REST_PORT}`.length,
+          )
         }`,
         json,
       );

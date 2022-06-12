@@ -4,10 +4,8 @@ import {
   DISCORD_TOKEN,
   EVENT_HANDLER_PORT,
   EVENT_HANDLER_SECRET_KEY,
-  EVENT_HANDLER_URL,
   GATEWAY_INTENTS,
-  REST_SECRET_KEY,
-  REST_URL,
+  REST_AUTHORIZATION_KEY,
   REST_PORT,
 } from "../../configs.ts";
 import { createBot, createRestManager, DiscordGatewayPayload } from "../../deps.ts";
@@ -30,8 +28,8 @@ setupBotClient(bot);
 
 bot.rest = createRestManager({
   token: DISCORD_TOKEN,
-  secretKey: REST_SECRET_KEY,
-  customUrl: `http://${REST_URL}:${REST_PORT}`,
+  secretKey: REST_AUTHORIZATION_KEY,
+  customUrl: `http://localhost:${REST_PORT}`,
 });
 
 if (DEVELOPMENT) {
@@ -42,10 +40,10 @@ if (DEVELOPMENT) {
   // await updateGlobalCommands(bot);
 }
 
-// Start listening on EVENT_HANDLER_URL.
+// Start listening on localhost.
 const server = Deno.listen({ port: EVENT_HANDLER_PORT });
 logger.info(
-  `HTTP webserver running. Access it at: http://${EVENT_HANDLER_URL}:${EVENT_HANDLER_PORT}/`,
+  `HTTP webserver running. Access it at: http://localhost:${EVENT_HANDLER_PORT}/`,
 );
 
 // Connections to the server will be yielded up as an async iterable.
