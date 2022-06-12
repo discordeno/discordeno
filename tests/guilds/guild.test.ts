@@ -1,6 +1,6 @@
-import { ChannelTypes } from "../mod.ts";
-import { assertEquals, assertExists, assertNotEquals } from "./deps.ts";
-import { loadBot } from "./mod.ts";
+import { ChannelTypes } from "../../mod.ts";
+import { assertEquals, assertExists, assertNotEquals } from "../deps.ts";
+import { loadBot } from "../mod.ts";
 
 Deno.test({
   name: "[guild] Create a guild",
