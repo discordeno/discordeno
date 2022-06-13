@@ -10,15 +10,21 @@ class pingcommand extends BaseCommand {
     super(data);
   }
   async execute() {
+    const time1 = Date.now();
+    
     const msg = await this.reply({ content: `Pinging...` });
-    //Assign properties to the response
-    const ping = msg.timestamp - this.message.timestamp;
-
+    
+    const ping = Date.now() - time1;
+    
     const embed = new Embed()
       .setTitle(`The Bots ping is ${ping} ms`)
       .toJSON();
-    //Edit Message with the Embed
-    return msg.edit({ embeds: [embed] });
+
+    if(this.interaction) { // if it's an interaction, edit reply
+      return this.interaction.editReply({ content: "Pinged!", embeds: [embed] });
+    } else {
+      return msg.edit({ embeds: [embed] })
+    }
   }
 }
 module.exports = pingcommand;
