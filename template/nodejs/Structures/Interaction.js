@@ -101,7 +101,7 @@ class Interaction extends DestructObject {
   }
 
   async followUp(options = {}) {
-    if (!this.replied || !this.deferred) throw new Error("Interaction has not been replied");
+    if (!this.replied && !this.deferred) throw new Error("Interaction has not been replied");
     const Payload = { data: options, type: Constants.CHANNEL_MESSAGE_WITH_SOURCE };
     return this.client.helpers.sendInteractionResponse(this.id, this.token, Payload);
   }
