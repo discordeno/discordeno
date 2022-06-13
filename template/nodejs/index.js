@@ -9,7 +9,7 @@ const events = new EventManager({});
 
 const client = Discord.createBot({
   events: events.load({}),
-  intents: ["Guilds", "GuildMessages"],
+  intents: Discord.Intents.Guilds | Discord.Intents.GuildMessages | Discord.Intents.MessageContent,
   token: config.token,
 });
 
