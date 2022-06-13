@@ -106,8 +106,9 @@ class CommandManager {
     if (!command) return;
 
     const args = [];
-    //Map all Values and Args
-    interaction.data.options.map((o) => {
+    const args = [];
+    //loop through all options, if there are some
+    interaction.data.options?.forEach((o) => {
       if (o.name) args.push(o.name);
       if (o.options) {
         o.options.map((o2) => {
