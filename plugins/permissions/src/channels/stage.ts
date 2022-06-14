@@ -1,4 +1,4 @@
-import { BotWithCache, PermissionStrings } from "../../deps.ts";
+import { BotWithCache, ChannelTypes, PermissionStrings } from "../../deps.ts";
 import { requireBotChannelPermissions } from "../permissions.ts";
 
 export function createStageInstance(bot: BotWithCache) {
@@ -23,6 +23,11 @@ export function createStageInstance(bot: BotWithCache) {
 
     requireBotChannelPermissions(bot, options.channelId, [...perms.values()]);
 
+    const channel = bot.channels.get(options.channelId);
+    if (channel && channel.type !== ChannelTypes.GuildStageVoice) {
+      throw new Error("Channel must be a stage voice channel.");
+    }
+
     return await createStageInstanceOld(options);
   };
 }
@@ -37,6 +42,11 @@ export function deleteStageInstance(bot: BotWithCache) {
       "MOVE_MEMBERS",
     ]);
 
+    const channel = bot.channels.get(channelId);
+    if (channel && channel.type !== ChannelTypes.GuildStageVoice) {
+      throw new Error("Channel must be a stage voice channel.");
+    }
+
     return await deleteStageInstanceOld(channelId);
   };
 }
@@ -50,6 +60,11 @@ export function updateStageInstance(bot: BotWithCache) {
       "MUTE_MEMBERS",
       "MOVE_MEMBERS",
     ]);
+
+    const channel = bot.channels.get(channelId);
+    if (channel && channel.type !== ChannelTypes.GuildStageVoice) {
+      throw new Error("Channel must be a stage voice channel.");
+    }
 
     return await updateStageInstanceOld(channelId, data);
   };
