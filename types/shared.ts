@@ -1378,6 +1378,55 @@ export type Camelize<T> = {
     : never;
 };
 
+/** Non object primitives */
+export type Primitive =
+  | string
+  | number
+  | symbol
+  | bigint
+  | boolean
+  | undefined
+  | null;
+//  | object <- don't make object a primitive
+
+/**
+ * alternative to 'object' or '{}'
+ * @example:
+ * export const o: ObjectLiteral = [] as object; // error
+ * export const o: object = []; // no error
+ */
+export type ObjectLiteral<T = unknown> = {
+  [K in PropertyKey]: T;
+};
+
+/** Array with no utilty methods, aka Object.create(null) */
+export type ArrayWithNoPrototype<T> = {
+  [index: number]: T | ArrayWithNoPrototype<T>;
+};
+
+/**
+ * Allows any type but T
+ * it is recursive
+ * @example
+ * export type RequestData = Record<string, AnythingBut<bigint>>;
+ */
+export type AnythingBut<T> = Exclude<
+  | Primitive
+  | {
+    [K in PropertyKey]: AnythingBut<T>;
+  }
+  | ArrayWithNoPrototype<
+    | Primitive
+    | {
+      [K in PropertyKey]: AnythingBut<T>;
+    }
+  >,
+  T
+>;
+
+/**
+ * object identity type
+ */
 export type Id<T> = T extends infer U ? {
   [K in keyof U]: U[K];
 }
@@ -1389,26 +1438,25 @@ export type KeysWithUndefined<T> = {
     : never;
 }[keyof T];
 
-export type Optionalize<T> =
-  // Collections don't need optionalizing
-  T extends Collection<any, any> ? T
-    : // If an array only optionalize objects in arrays
-    T extends unknown[] ? T[number] extends Record<any, any> ? Array<Optionalize<T[number]>>
-    : T
-    : // Specific optionalizing of {} go here
-    T extends object ? Id<
-      & {
-        [K in KeysWithUndefined<T>]?: T[K] extends Collection<any, any> ? T[K] : Optionalize<T[K]>;
-      }
-      & {
-        [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends object ? {} extends Pick<T[K], keyof T[K]> ? T[K]
-        : T[K] extends Collection<any, any> ? T[K]
-        : T[K] extends unknown[] ? T[K]
-        : Optionalize<T[K]>
-          : T[K];
-      }
-    >
-    : T;
+type OptionalizeAux<T extends object> = Id<
+  & {
+    [K in KeysWithUndefined<T>]?: Optionalize<T[K]>;
+  }
+  & {
+    [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends ObjectLiteral ? Optionalize<T[K]> : T[K];
+  }
+>;
+
+/**
+ * Makes all of properties in T optional when they're null | undefined
+ * it is recursive
+ */
+export type Optionalize<T> = T extends object
+  ? T extends Array<unknown> ? number extends T["length"] ? T[number] extends object ? Array<OptionalizeAux<T[number]>>
+  : T
+  : Partial<T>
+  : OptionalizeAux<T>
+  : T;
 
 export type PickPartial<T, K extends keyof T> =
   & {
