@@ -1,7 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
-import { ChannelTypes, VideoQualityModes } from "../../types/shared.ts";
+import { ChannelFlags, ChannelTypes, VideoQualityModes } from "../../types/shared.ts";
 import { OverwriteReadable } from "./editChannelOverwrite.ts";
 
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
@@ -58,6 +58,7 @@ export async function editChannel(bot: Bot, channelId: bigint, options: ModifyCh
           deny: overwrite.deny ? bot.utils.calculateBits(overwrite.deny) : null,
         }))
         : undefined,
+      flags: options.flags,
       reason,
     },
   );
@@ -135,7 +136,7 @@ export interface ModifyChannel {
   nsfw?: boolean | null;
   /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
   rateLimitPerUser?: number | null;
-  /** The bitrate (in bits) of the voice channel; 8000 to 96000 (128000 for VIP servers) */
+  /** The bitrate (in bits) of the voice channel (voice only). Normal servers can set bitrate up to 96000, servers with Boost level 1 can set up to 128000, servers with Boost level 2 can set up to 256000, and servers with Boost level 3 or the VIP_REGIONS guild feature can set up to 384000. For stage channels, bitrate can be set up to 64000. */
   bitrate?: number | null;
   /** The user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit */
   userLimit?: number | null;
@@ -155,4 +156,6 @@ export interface ModifyChannel {
   locked?: boolean;
   /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
   invitable?: boolean;
+  /** channel flags; PINNED can only be set for threads in forum channels */
+  flags: ChannelFlags;
 }
