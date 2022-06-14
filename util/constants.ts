@@ -208,10 +208,6 @@ export const routes = {
 
     return url;
   },
-  // TODO: move this away
-  GUILD_BANNER: (guildId: bigint, icon: string) => {
-    return `${baseEndpoints.CDN_URL}/banners/${guildId}/${icon}`;
-  },
   GUILD_CHANNELS: (guildId: bigint) => {
     return `/guilds/${guildId}/channels`;
   },
@@ -243,10 +239,6 @@ export const routes = {
   },
   GUILD_EMOJIS: (guildId: bigint) => {
     return `/guilds/${guildId}/emojis`;
-  },
-  // TODO: move this away
-  GUILD_ICON: (guildId: bigint, icon: string) => {
-    return `${baseEndpoints.CDN_URL}/icons/${guildId}/${icon}`;
   },
   GUILD_INTEGRATION: (guildId: bigint, integrationId: bigint) => {
     return `/guilds/${guildId}/integrations/${integrationId}`;
@@ -306,10 +298,6 @@ export const routes = {
   },
   GUILD_ROLES: (guildId: bigint) => {
     return `/guilds/${guildId}/roles`;
-  },
-  // TODO: move this away
-  GUILD_SPLASH: (guildId: bigint, icon: string) => {
-    return `${baseEndpoints.CDN_URL}/splashes/${guildId}/${icon}`;
   },
   GUILD_VANITY_URL: (guildId: bigint) => {
     return `/guilds/${guildId}/vanity-url`;
@@ -472,14 +460,6 @@ export const routes = {
   USER_GUILDS: () => {
     return `/@me/guilds`;
   },
-  // TODO: move this away
-  USER_AVATAR: (userId: bigint, icon: string) => {
-    return `${baseEndpoints.CDN_URL}/avatars/${userId}/${icon}`;
-  },
-  // TODO: move this away
-  USER_DEFAULT_AVATAR: (icon: number) => {
-    return `${baseEndpoints.CDN_URL}/embed/avatars/${icon}.png`;
-  },
   USER_DM: () => {
     return `/users/@me/channels`;
   },
@@ -520,6 +500,32 @@ export const routes = {
   // Misc Endpoints
   NITRO_STICKER_PACKS: () => {
     return `/sticker-packs`;
+  },
+
+  // TODO: move this away
+  GUILD_BANNER: (guildId: bigint, icon: string) => {
+    return `${baseEndpoints.CDN_URL}/banners/${guildId}/${icon}`;
+  },
+  GUILD_ICON: (guildId: bigint, icon: string) => {
+    return `${baseEndpoints.CDN_URL}/icons/${guildId}/${icon}`;
+  },
+  GUILD_SPLASH: (guildId: bigint, icon: string) => {
+    return `${baseEndpoints.CDN_URL}/splashes/${guildId}/${icon}`;
+  },
+  USER_AVATAR: (userId: bigint, icon: string) => {
+    return `${baseEndpoints.CDN_URL}/avatars/${userId}/${icon}`;
+  },
+  USER_DEFAULT_AVATAR: (icon: number) => {
+    return `${baseEndpoints.CDN_URL}/embed/avatars/${icon}.png`;
+  },
+  USER_BANNER: (userId: bigint, banner: string) => {
+    return `${baseEndpoints.CDN_URL}/banners/${userId}/${banner}`;
+  },
+  GUILD_MEMBER_AVATAR: (guildId: bigint, memberId: bigint, icon: string) => {
+    return `${baseEndpoints.CDN_URL}/guilds/${guildId}/users/${memberId}/avatars/${icon}`;
+  },
+  GUILD_MEMBER_BANNER: (guildId: bigint, memberId: bigint, banner: string) => {
+    return `${baseEndpoints.CDN_URL}/guilds/${guildId}/users/${memberId}/banners/${banner}`;
   },
 };
 

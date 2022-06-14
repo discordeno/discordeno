@@ -9,15 +9,15 @@ export function avatarURL(
     avatar: bigint | undefined;
     size?: ImageSize;
     format?: ImageFormat;
+    guildId?: bigint;
   },
 ) {
   return options?.avatar
     ? bot.utils.formatImageURL(
-      bot.constants.routes.USER_AVATAR(
-        userId,
-        typeof options?.avatar === "string" ? options.avatar : bot.utils.iconBigintToHash(options?.avatar),
-      ),
-      options?.size || 128,
+      options.guildId
+        ? bot.constants.routes.GUILD_MEMBER_AVATAR(options.guildId, userId, bot.utils.iconBigintToHash(options.avatar))
+        : bot.constants.routes.USER_AVATAR(userId, bot.utils.iconBigintToHash(options.avatar)),
+      options?.size ?? 128,
       options?.format,
     )
     : bot.constants.routes.USER_DEFAULT_AVATAR(Number(discriminator) % 5);

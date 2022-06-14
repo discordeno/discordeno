@@ -1,5 +1,6 @@
 export * from "./avatarUrl.ts";
 export * from "./banMember.ts";
+export * from "./bannerUrl.ts";
 export * from "./editBotNickname.ts";
 export * from "./editMember.ts";
 export * from "./fetchMembers.ts";
