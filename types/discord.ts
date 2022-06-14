@@ -1715,9 +1715,9 @@ export interface DiscordApplicationCommand {
   /** Parameters for the command, max of 25 */
   options?: DiscordApplicationCommandOption[];
   /** Set of permissions represented as a bit set */
-  default_member_permissions?: string | null;
+  default_member_permissions: string | null;
   /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
-  dm_permission?: boolean | null;
+  dm_permission?: boolean;
   /** Auto incrementing version identifier updated during substantial record changes */
   version: string;
 }
