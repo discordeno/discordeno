@@ -14,6 +14,14 @@ export default function removeThreadMember(bot: BotWithCache) {
     const channel = bot.channels.get(threadId);
 
     if (channel) {
+      if (
+        channel.type !== ChannelTypes.GuildNewsThread &&
+        channel.type !== ChannelTypes.GuildPublicThread &&
+        channel.type !== ChannelTypes.GuildPrivateThread
+      ) {
+        throw new Error("Channel must be a guild news thread, public thread, or private thread");
+      }
+
       if (channel.archived) {
         throw new Error(
           "Cannot remove user from thread if thread is archived.",

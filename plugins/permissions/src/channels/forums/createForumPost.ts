@@ -1,4 +1,4 @@
-import { BotWithCache } from "../../../deps.ts";
+import { BotWithCache, ChannelTypes } from "../../../deps.ts";
 import { requireBotChannelPermissions } from "../../permissions.ts";
 
 export default function createForumPosts(bot: BotWithCache) {
@@ -8,6 +8,9 @@ export default function createForumPosts(bot: BotWithCache) {
     const channel = bot.channels.get(channelId);
 
     if (channel) {
+      if (channel.type !== ChannelTypes.GuildForum) {
+        throw new Error("Channel must be a guild forum channel");
+      }
       requireBotChannelPermissions(bot, channel, ["SEND_MESSAGES"]);
     }
 
