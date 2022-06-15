@@ -1,5 +1,3 @@
-
-
 /** https://discord.com/developers/docs/reference#api-reference-base-url */
 export const BASE_URL = "https://discord.com/api";
 
