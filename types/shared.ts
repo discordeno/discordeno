@@ -215,6 +215,8 @@ export enum GuildFeatures {
   PrivateThreads = "PRIVATE_THREADS",
   /** Guild is able to set role icons */
   RoleIcons = "ROLE_ICONS",
+  /** Guild has set up auto moderation rules */
+  AutoModeration = "AUTO_MODERATION",
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-mfa-level */
@@ -332,6 +334,7 @@ export enum MessageTypes {
   ThreadStarterMessage,
   GuildInviteReminder,
   ContextMenuCommand,
+  AutoModerationAction,
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
@@ -479,6 +482,14 @@ export enum AuditLogEvents {
   ThreadDelete,
   /** Permissions were updated for a command */
   ApplicationCommandPermissionUpdate = 121,
+  /** Auto moderation rule was created */
+  AutoModerationRuleCreate = 140,
+  /** Auto moderation rule was updated */
+  AutoModerationRuleUpdate,
+  /** Auto moderation rule was deleted */
+  AutoModerationRuleDelete,
+  /** Message was blocked by AutoMod according to a rule. */
+  AutoModerationBlockMessage,
 }
 
 export enum ScheduledEventPrivacyLevel {
@@ -996,6 +1007,17 @@ export enum GatewayIntents {
    * - GUILD_SCHEDULED_EVENT_USER_REMOVE this is experimental and unstable.
    */
   GuildScheduledEvents = (1 << 16),
+
+  /**
+   * - AUTO_MODERATION_RULE_CREATE
+   * - AUTO_MODERATION_RULE_UPDATE
+   * - AUTO_MODERATION_RULE_DELETE
+   */
+  AutoModerationConfiguration = (1 << 20),
+  /**
+   * - AUTO_MODERATION_ACTION_EXECUTION
+   */
+  AutoModerationExecution = (1 << 21),
 }
 
 // ALIASES JUST FOR BETTER UX IN THIS CASE
