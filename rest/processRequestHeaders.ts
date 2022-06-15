@@ -1,4 +1,4 @@
-import { RestManager } from "../bot.ts";
+import { RestManager } from "./restManager.ts";
 
 /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
 export function processRequestHeaders(rest: RestManager, url: string, headers: Headers) {

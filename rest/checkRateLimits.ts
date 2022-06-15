@@ -1,4 +1,4 @@
-import { RestManager } from "../bot.ts";
+import { RestManager } from "./restManager.ts";
 
 /** Check the rate limits for a url or a bucket. */
 export function checkRateLimits(rest: RestManager, url: string) {
