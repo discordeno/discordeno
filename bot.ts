@@ -71,6 +71,8 @@ import { StickerPack, transformSticker, transformStickerPack } from "./transform
 import { GetGatewayBot, transformGatewayBot } from "./transformers/gatewayBot.ts";
 import {
   DiscordApplicationCommandOptionChoice,
+  DiscordAutoModerationActionExecution,
+  DiscordAutoModerationRule,
   DiscordEmoji,
   DiscordGatewayPayload,
   DiscordInteractionDataOption,
@@ -139,6 +141,11 @@ import { transformEmbedToDiscordEmbed } from "./transformers/reverse/embed.ts";
 import { transformComponentToDiscordComponent } from "./transformers/reverse/component.ts";
 import { getBotIdFromToken, removeTokenPrefix } from "./util/token.ts";
 import { CreateShardManager } from "./gateway/manager/shardManager.ts";
+import { AutoModerationRule, transformAutoModerationRule } from "./transformers/automodRule.ts";
+import {
+  AutoModerationActionExecution,
+  transformAutoModerationActionExecution,
+} from "./transformers/automodActionExecution.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -203,6 +210,10 @@ export function createEventHandlers(
 
   return {
     debug: events.debug ?? ignore,
+    automodRuleCreate: events.automodRuleCreate ?? ignore,
+    automodRuleUpdate: events.automodRuleUpdate ?? ignore,
+    automodRuleDelete: events.automodRuleDelete ?? ignore,
+    automodActionExecution: events.automodActionExecution ?? ignore,
     threadCreate: events.threadCreate ?? ignore,
     threadDelete: events.threadDelete ?? ignore,
     threadMemberUpdate: events.threadMemberUpdate ?? ignore,
@@ -388,6 +399,8 @@ export interface Transformers {
   };
   snowflake: (snowflake: string) => bigint;
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
+  automodRule: (bot: Bot, payload: DiscordAutoModerationRule) => AutoModerationRule;
+  automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution) => AutoModerationActionExecution;
   channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }) => Channel;
   guild: (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) => Guild;
   user: (bot: Bot, payload: DiscordUser) => User;
@@ -437,6 +450,8 @@ export function createTransformers(options: Partial<Transformers>) {
       embed: options.reverse?.embed || transformEmbedToDiscordEmbed,
       component: options.reverse?.component || transformComponentToDiscordComponent,
     },
+    automodRule: options.automodRule || transformAutoModerationRule,
+    automodActionExecution: options.automodActionExecution || transformAutoModerationActionExecution,
     activity: options.activity || transformActivity,
     application: options.application || transformApplication,
     attachment: options.attachment || transformAttachment,
@@ -480,10 +495,12 @@ export function createTransformers(options: Partial<Transformers>) {
   };
 }
 
-export type RestManager = ReturnType<typeof createRestManager>;
-
 export interface EventHandlers {
   debug: (text: string, ...args: any[]) => unknown;
+  automodRuleCreate: (bot: Bot, rule: AutoModerationRule) => unknown;
+  automodRuleUpdate: (bot: Bot, rule: AutoModerationRule) => unknown;
+  automodRuleDelete: (bot: Bot, rule: AutoModerationRule) => unknown;
+  automodActionExecution: (bot: Bot, payload: AutoModerationActionExecution) => unknown;
   threadCreate: (bot: Bot, thread: Channel) => unknown;
   threadDelete: (bot: Bot, thread: Channel) => unknown;
   threadMemberUpdate: (bot: Bot, payload: {
@@ -535,15 +552,15 @@ export interface EventHandlers {
       applicationId: bigint;
     },
     rawPayload: DiscordReady,
-  ) => any;
-  interactionCreate: (bot: Bot, interaction: Interaction) => any;
-  integrationCreate: (bot: Bot, integration: Integration) => any;
+  ) => unknown;
+  interactionCreate: (bot: Bot, interaction: Interaction) => unknown;
+  integrationCreate: (bot: Bot, integration: Integration) => unknown;
   integrationDelete: (
     bot: Bot,
     payload: { id: bigint; guildId: bigint; applicationId?: bigint },
-  ) => any;
-  integrationUpdate: (bot: Bot, payload: { guildId: bigint }) => any;
-  inviteCreate: (bot: Bot, invite: Invite) => any;
+  ) => unknown;
+  integrationUpdate: (bot: Bot, payload: { guildId: bigint }) => unknown;
+  inviteCreate: (bot: Bot, invite: Invite) => unknown;
   inviteDelete: (
     bot: Bot,
     payload: {
@@ -551,30 +568,30 @@ export interface EventHandlers {
       guildId?: bigint;
       code: string;
     },
-  ) => any;
+  ) => unknown;
   guildMemberAdd: (
     bot: Bot,
     member: Member,
     user: User,
-  ) => any;
-  guildMemberRemove: (bot: Bot, user: User, guildId: bigint) => any;
+  ) => unknown;
+  guildMemberRemove: (bot: Bot, user: User, guildId: bigint) => unknown;
   guildMemberUpdate: (
     bot: Bot,
     member: Member,
     user: User,
-  ) => any;
-  messageCreate: (bot: Bot, message: Message) => any;
+  ) => unknown;
+  messageCreate: (bot: Bot, message: Message) => unknown;
   messageDelete: (
     bot: Bot,
     payload: { id: bigint; channelId: bigint; guildId?: bigint },
     message?: Message,
-  ) => any;
-  messageDeleteBulk: (bot: Bot, payload: { ids: bigint[]; channelId: bigint; guildId?: bigint }) => any;
+  ) => unknown;
+  messageDeleteBulk: (bot: Bot, payload: { ids: bigint[]; channelId: bigint; guildId?: bigint }) => unknown;
   messageUpdate: (
     bot: Bot,
     message: Message,
     oldMessage?: Message,
-  ) => any;
+  ) => unknown;
   reactionAdd: (
     bot: Bot,
     payload: {
@@ -586,7 +603,7 @@ export interface EventHandlers {
       user?: User;
       emoji: Emoji;
     },
-  ) => any;
+  ) => unknown;
   reactionRemove: (
     bot: Bot,
     payload: {
@@ -596,7 +613,7 @@ export interface EventHandlers {
       guildId?: bigint;
       emoji: Emoji;
     },
-  ) => any;
+  ) => unknown;
   reactionRemoveEmoji: (
     bot: Bot,
     payload: {
@@ -605,7 +622,7 @@ export interface EventHandlers {
       guildId?: bigint;
       emoji: Emoji;
     },
-  ) => any;
+  ) => unknown;
   reactionRemoveAll: (
     bot: Bot,
     payload: {
@@ -613,32 +630,32 @@ export interface EventHandlers {
       messageId: bigint;
       guildId?: bigint;
     },
-  ) => any;
+  ) => unknown;
   presenceUpdate: (
     bot: Bot,
     presence: PresenceUpdate,
     oldPresence?: PresenceUpdate,
-  ) => any;
+  ) => unknown;
   voiceServerUpdate: (
     bot: Bot,
     payload: { token: string; endpoint?: string; guildId: bigint },
-  ) => any;
+  ) => unknown;
   voiceStateUpdate: (
     bot: Bot,
     voiceState: VoiceState,
-  ) => any;
-  channelCreate: (bot: Bot, channel: Channel) => any;
+  ) => unknown;
+  channelCreate: (bot: Bot, channel: Channel) => unknown;
   dispatchRequirements: (
     bot: Bot,
     data: DiscordGatewayPayload,
     shardId: number,
-  ) => any;
-  channelDelete: (bot: Bot, channel: Channel) => any;
+  ) => unknown;
+  channelDelete: (bot: Bot, channel: Channel) => unknown;
   channelPinsUpdate: (
     bot: Bot,
     data: { guildId?: bigint; channelId: bigint; lastPinTimestamp?: number },
-  ) => any;
-  channelUpdate: (bot: Bot, channel: Channel) => any;
+  ) => unknown;
+  channelUpdate: (bot: Bot, channel: Channel) => unknown;
   stageInstanceCreate: (
     bot: Bot,
     data: {
@@ -647,7 +664,7 @@ export interface EventHandlers {
       channelId: bigint;
       topic: string;
     },
-  ) => any;
+  ) => unknown;
   stageInstanceDelete: (
     bot: Bot,
     data: {
@@ -656,7 +673,7 @@ export interface EventHandlers {
       channelId: bigint;
       topic: string;
     },
-  ) => any;
+  ) => unknown;
   stageInstanceUpdate: (
     bot: Bot,
     data: {
@@ -665,29 +682,29 @@ export interface EventHandlers {
       channelId: bigint;
       topic: string;
     },
-  ) => any;
+  ) => unknown;
   guildEmojisUpdate: (
     bot: Bot,
     payload: {
       guildId: bigint;
       emojis: Collection<bigint, DiscordEmoji>;
     },
-  ) => any;
-  guildBanAdd: (bot: Bot, user: User, guildId: bigint) => any;
-  guildBanRemove: (bot: Bot, user: User, guildId: bigint) => any;
-  guildLoaded: (bot: Bot, guild: Guild) => any;
-  guildCreate: (bot: Bot, guild: Guild) => any;
-  guildDelete: (bot: Bot, id: bigint, shardId: number) => any;
-  guildUpdate: (bot: Bot, guild: Guild) => any;
-  raw: (bot: Bot, data: DiscordGatewayPayload, shardId: number) => any;
-  roleCreate: (bot: Bot, role: Role) => any;
-  roleDelete: (bot: Bot, payload: { guildId: bigint; roleId: bigint }) => any;
-  roleUpdate: (bot: Bot, role: Role) => any;
+  ) => unknown;
+  guildBanAdd: (bot: Bot, user: User, guildId: bigint) => unknown;
+  guildBanRemove: (bot: Bot, user: User, guildId: bigint) => unknown;
+  guildLoaded: (bot: Bot, guild: Guild) => unknown;
+  guildCreate: (bot: Bot, guild: Guild) => unknown;
+  guildDelete: (bot: Bot, id: bigint, shardId: number) => unknown;
+  guildUpdate: (bot: Bot, guild: Guild) => unknown;
+  raw: (bot: Bot, data: DiscordGatewayPayload, shardId: number) => unknown;
+  roleCreate: (bot: Bot, role: Role) => unknown;
+  roleDelete: (bot: Bot, payload: { guildId: bigint; roleId: bigint }) => unknown;
+  roleUpdate: (bot: Bot, role: Role) => unknown;
   webhooksUpdate: (
     bot: Bot,
     payload: { channelId: bigint; guildId: bigint },
-  ) => any;
-  botUpdate: (bot: Bot, user: User) => any;
+  ) => unknown;
+  botUpdate: (bot: Bot, user: User) => unknown;
   typingStart: (
     bot: Bot,
     payload: {
@@ -697,7 +714,7 @@ export interface EventHandlers {
       timestamp: number;
       member: Member | undefined;
     },
-  ) => any;
+  ) => unknown;
 }
 
 export function createBotConstants() {

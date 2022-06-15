@@ -1,4 +1,4 @@
-import { RestManager } from "../bot.ts";
+import { RestManager } from "./restManager.ts";
 import { HTTPResponseCodes } from "../types/shared.ts";
 
 export async function processGlobalQueue(rest: RestManager) {

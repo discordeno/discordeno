@@ -1,4 +1,5 @@
 export * from "./scheduledEvents/mod.ts";
+export * from "./automod/mod.ts";
 
 export * from "./createGuild.ts";
 export * from "./deleteGuild.ts";

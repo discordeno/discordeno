@@ -1,4 +1,4 @@
-import { RestManager } from "../bot.ts";
+import { RestManager } from "./restManager.ts";
 import { API_VERSION, BASE_URL, baseEndpoints, IMAGE_BASE_URL } from "../util/constants.ts";
 import { RestRequestRejection, RestRequestResponse } from "./rest.ts";
 
