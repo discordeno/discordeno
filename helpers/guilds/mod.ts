@@ -3,6 +3,7 @@ export * from "./scheduledEvents/mod.ts";
 export * from "./createGuild.ts";
 export * from "./deleteGuild.ts";
 export * from "./editGuild.ts";
+export * from "./editGuildMfa.ts";
 export * from "./editWelcomeScreen.ts";
 export * from "./editWidget.ts";
 export * from "./getAuditLogs.ts";

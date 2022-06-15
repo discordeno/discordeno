@@ -364,6 +364,8 @@ export const routes = {
 
     return url;
   },
+  MODIFY_GUILD_MFA_LEVEL: (guildId: bigint) => `/guilds/${guildId}/mfa`,
+
   // Voice
   VOICE_REGIONS: () => {
     return `/voice/regions`;
