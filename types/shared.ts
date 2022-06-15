@@ -729,164 +729,6 @@ export enum RpcCloseEventCodes {
   InvalidEncoding,
 }
 
-/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#json */
-export enum JsonErrorCodes {
-  /** General error (such as a malformed request body, amongst other things) */
-  GeneralError,
-  UnknownAccount = 10001,
-  UnknownApplication,
-  UnknownChannel,
-  UnknownGuild,
-  UnknownIntegration,
-  UnknownInvite,
-  UnknownMember,
-  UnknownMessage,
-  UnknownPermissionOverwrite,
-  UnknownProvider,
-  UnknownRole,
-  UnknownToken,
-  UnknownUser,
-  UnknownEmoji,
-  UnknownWebhook,
-  UnknownWebhookService,
-  UnknownSession = 10020,
-  UnknownBan = 10026,
-  UnknownSKU,
-  UnknownStoreListing,
-  UnknownEntitlement,
-  UnknownBuild,
-  UnknownLobby,
-  UnknownBranch,
-  UnknownStoreDirectoryLayout,
-  UnknownRedistributable = 10036,
-  UnknownGiftCode = 10038,
-  UnknownStream = 10049,
-  UnknownPremiumServerSubscribeCooldown,
-  UnknownGuildTemplate = 10057,
-  UnknownDiscoveryCategory = 10059,
-  UnknownSticker,
-  UnknownInteraction = 10062,
-  UnknownApplicationCommand = 10063,
-  UnknownVoiceState = 10065,
-  UnknownApplicationCommandPermissions,
-  UnknownStageInstance,
-  UnknownGuildMemberVerificationForm,
-  UnknownGuildWelcomeScreen,
-  UnknownGuildScheduledEvent,
-  UnknownGuildScheduledEventUser,
-  BotsCannotUseThisEndpoint = 20001,
-  OnlyBotsCanUseThisEndpoint,
-  ExplicitContentCannotBeSentToTheDesiredRecipient = 20009,
-  YouAreNotAuthorizedToPerformThisActionOnThisApplication = 20012,
-  ThisActionCannotBePerformedDueToSlowmodeRateLimit = 20016,
-  OnlyTheOwnerOfThisAccountCanPerformThisAction = 20018,
-  ThisMessageCannotBeEditedDueToAnnouncementRateLimits = 20022,
-  TheChannelYouAreWritingHasHitTheWriteRateLimit = 20028,
-  TheWriteActionYouArePerformingOnTheServerHasHitTheWriteRateLimit,
-  YourStageTopicOrServerNameOrServerDescriptionOrChannelNamesContainsWordsThatAreNotAllowedForPublicStages = 20031,
-  GuildPremiumSubscriptionLevelTooLow = 20035,
-  MaximumNumberOfGuildsReached = 30001,
-  MaximumNumberOfFriendsReached,
-  MaximumNumberOfPinsReachedForTheChannel,
-  MaximumNumberOfRecipientsReached,
-  MaximumNumberOfGuildRolesReached,
-  MaximumNumberOfWebhooksReached = 30007,
-  MaximumNumberOfEmojisReached,
-  MaximumNumberOfReactionsReached = 30010,
-  MaximumNumberOfGuildChannelsReached = 30013,
-  MaximumNumberOfAttachmentsInAMessageReached = 30015,
-  MaximumNumberOfInvitesReached,
-  MaximumNumberOfAnimatedEmojisReached = 30018,
-  MaximumNumberOfServerMembersReached,
-  MaximumNumberOfServerCategoriesHasBeenReached = 30030,
-  GuildAlreadyHasTemplate = 30031,
-  MaxNumberOfThreadParticipantsHasBeenReached = 30033,
-  MaximumNumberOfBansForNonGuildMembersHaveBeenExceeded = 30035,
-  MaximumNumberOfBansFetchesHasBeenReached = 30037,
-  MaximumNumberOfUncompletedGuildScheduledEventsReached = 30038,
-  MaximumNumberOfStickersReached = 30039,
-  MaximumNumberOfPruneRequestsHasBeenReachedTryAgainLater,
-  MaximumNumberOfGuildWidgetSettingsUpdatesHasBeenReachedTryAgainLater = 30042,
-  MaximumNumberOfEditsToMessagesOlderThan1HourReachedTryAgainLater = 30046,
-  UnauthorizedProvideAValidTokenAndTryAgain = 40001,
-  YouNeedToVerifyYourAccountInOrderToPerformThisAction,
-  YouAreOpeningDirectMessagesTooFast,
-  SendMessagesHasBeenTemporarilyDisabled,
-  RequestEntityTooLargeTrySendingSomethingSmallerInSize,
-  ThisFeatureHasBeenTemporarilyDisabledServerSide,
-  ThisUserBannedFromThisGuild,
-  TargetUserIsNotConnectedToVoice = 40032,
-  ThisMessageHasAlreadyBeenCrossposted = 40033,
-  AnApplicationCommandWithThatNameAlreadyExists = 40041,
-  InteractionHasAlreadyBeenAcknowledged = 40060,
-  MissingAccess = 50001,
-  InvalidAccountType,
-  CannotExecuteActionOnADMChannel,
-  GuildWidgetDisabled,
-  CannotEditMessageAuthoredByAnotherUser,
-  CannotSendAnEmptyMessage,
-  CannotSendMessagesToThisUser,
-  CannotSendMessagesInANonTextChannel,
-  ChannelVerificationLevelIsTooHighForYouToGainAccess,
-  OAuth2ApplicationDoesNotHaveABot,
-  OAuth2ApplicationLimitReached,
-  InvalidOAuth2State,
-  YouLackPermissionsToPerformThatAction,
-  InvalidAuthenticationTokenProvided,
-  NoteWasTooLong,
-  ProvidedTooFewOrTooManyMessagesToDeleteMustProvideAtLeast2AndFewerThan100MessagesToDelete,
-  AMessageCanOnlyBePinnedInTheChannelItWasSentIn = 50019,
-  InviteCodeWasEitherInvalidOrTaken,
-  CannotExecuteActionOnASystemMessage,
-  CannotExecuteActionOnThisChannelType = 50024,
-  InvalidOAuth2AccessTokenProvided,
-  MissingRequiredOAuth2Scope,
-  InvalidWebhookTokenProvided,
-  InvalidRole,
-  InvalidRecipients = 50033,
-  AMessageProvidedWasTooOldToBulkDelete,
-  /** Invalid form body (returned for both `application/json` and `multipart/form-data` bodies), or invalid `Content-Type` provided */
-  InvalidFormBodyOrContentTypeProvided,
-  AnInviteWasAcceptedToAGuildTheApplicationsBotIsNotIn,
-  InvalidApiVersionProvided = 50041,
-  FileUploadedExceedsTheMaximumSize = 50045,
-  InvalidFileUploaded,
-  CannotSelfRedeemThisGift = 50054,
-  InvalidGuild,
-  InvalidMessageType = 50068,
-  PaymentSourceRequiredToRedeemGift = 50070,
-  CannotDeleteAChannelRequiredForCommunityGuilds = 50074,
-  CannotEditStickersWithinAMessage = 50080,
-  InvalidStickerSent,
-  TriedToPerformAnOperationOnAnArchivedThreadSuchAsEditingAMessageOrAddingAUserToTheThread = 50083,
-  InvalidThreadNotificationSettings,
-  BeforeValueIsEarlierThanTheThreadCreationDate,
-  CommunityServerChannelsMustBeTextChannels,
-  ThisServerIsNotAvailableInYourLocation = 50095,
-  ThisServerNeedsMonetizationEnabledInOrderToPerformThisAction = 50097,
-  ThisServerNeedsMoreBoostsToPerformThisAction = 50101,
-  TheRequestBodyContainsInvalidJSON = 50109,
-  TwoFactorIsRequiredForThisOperation = 60003,
-  NoUsersWithDiscordTagExist = 80004,
-  ReactionWasBlocked = 90001,
-  ApiResourceIsCurrentlyOverloadedTryAgainALittleLater = 130000,
-  TheStageIsAlreadyOpen = 150006,
-  CannotReplyWithoutPermissionToReadMessageHistory = 160002,
-  AThreadHasAlreadyBeenCreatedForThisMessage = 160004,
-  ThreadIsLocked = 160005,
-  MaximumNumberOfActiveThreadsReached = 160006,
-  MaximumNumberOfActiveAnnouncementThreadsReached = 160007,
-  InvalidJsonForUploadedLottieFile = 170001,
-  UploadedLottiesCannotContainRasterizedImagesSuchAsPngOrJpeg,
-  StickerMaximumFramerateExceeded,
-  StickerFrameCountExceedsMaximumOf1000Frames,
-  LottieAnimationMaximumDimensionsExceeded,
-  StickerFrameRateIsEitherTooSmallOrTooLarge,
-  StickerAnimationDurationExceedsMaximumOf5Seconds,
-  CannotUpdateAFinishedEvent = 180000,
-  FailedToCreateStageNeededForStageEvent = 180002,
-}
-
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#http */
 export enum HTTPResponseCodes {
   /** The request completed successfully. */
@@ -1356,6 +1198,55 @@ export type Camelize<T> = {
     : never;
 };
 
+/** Non object primitives */
+export type Primitive =
+  | string
+  | number
+  | symbol
+  | bigint
+  | boolean
+  | undefined
+  | null;
+//  | object <- don't make object a primitive
+
+/**
+ * alternative to 'object' or '{}'
+ * @example:
+ * export const o: ObjectLiteral = [] as object; // error
+ * export const o: object = []; // no error
+ */
+export type ObjectLiteral<T = unknown> = {
+  [K in PropertyKey]: T;
+};
+
+/** Array with no utilty methods, aka Object.create(null) */
+export type ArrayWithNoPrototype<T> = {
+  [index: number]: T | ArrayWithNoPrototype<T>;
+};
+
+/**
+ * Allows any type but T
+ * it is recursive
+ * @example
+ * export type RequestData = Record<string, AnythingBut<bigint>>;
+ */
+export type AnythingBut<T> = Exclude<
+  | Primitive
+  | {
+    [K in PropertyKey]: AnythingBut<T>;
+  }
+  | ArrayWithNoPrototype<
+    | Primitive
+    | {
+      [K in PropertyKey]: AnythingBut<T>;
+    }
+  >,
+  T
+>;
+
+/**
+ * object identity type
+ */
 export type Id<T> = T extends infer U ? {
   [K in keyof U]: U[K];
 }
@@ -1367,26 +1258,25 @@ export type KeysWithUndefined<T> = {
     : never;
 }[keyof T];
 
-export type Optionalize<T> =
-  // Collections don't need optionalizing
-  T extends Collection<any, any> ? T
-    : // If an array only optionalize objects in arrays
-    T extends unknown[] ? T[number] extends Record<any, any> ? Array<Optionalize<T[number]>>
-    : T
-    : // Specific optionalizing of {} go here
-    T extends object ? Id<
-      & {
-        [K in KeysWithUndefined<T>]?: T[K] extends Collection<any, any> ? T[K] : Optionalize<T[K]>;
-      }
-      & {
-        [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends object ? {} extends Pick<T[K], keyof T[K]> ? T[K]
-        : T[K] extends Collection<any, any> ? T[K]
-        : T[K] extends unknown[] ? T[K]
-        : Optionalize<T[K]>
-          : T[K];
-      }
-    >
-    : T;
+type OptionalizeAux<T extends object> = Id<
+  & {
+    [K in KeysWithUndefined<T>]?: Optionalize<T[K]>;
+  }
+  & {
+    [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends ObjectLiteral ? Optionalize<T[K]> : T[K];
+  }
+>;
+
+/**
+ * Makes all of properties in T optional when they're null | undefined
+ * it is recursive
+ */
+export type Optionalize<T> = T extends object
+  ? T extends Array<unknown> ? number extends T["length"] ? T[number] extends object ? Array<OptionalizeAux<T[number]>>
+  : T
+  : Partial<T>
+  : OptionalizeAux<T>
+  : T;
 
 export type PickPartial<T, K extends keyof T> =
   & {
