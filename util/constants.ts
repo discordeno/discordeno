@@ -506,8 +506,6 @@ export const routes = {
   NITRO_STICKER_PACKS: () => {
     return `/sticker-packs`;
   },
-
-  // TODO: move this away
   GUILD_BANNER: (guildId: bigint, icon: string) => {
     return `${baseEndpoints.CDN_URL}/banners/${guildId}/${icon}`;
   },
