@@ -1,4 +1,4 @@
-import { SelectOption } from "../transformers/component.ts";
+import type { SelectOption } from "../transformers/component.ts";
 import { AllowedMentionsTypes, ButtonStyles, MessageComponentTypes, TextStyles } from "./shared.ts";
 
 export type MessageComponents = ActionRow[];
