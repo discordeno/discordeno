@@ -480,8 +480,6 @@ export function createTransformers(options: Partial<Transformers>) {
   };
 }
 
-export type RestManager = ReturnType<typeof createRestManager>;
-
 export interface EventHandlers {
   debug: (text: string, ...args: any[]) => unknown;
   threadCreate: (bot: Bot, thread: Channel) => unknown;
