@@ -59,6 +59,6 @@ export interface ExecuteWebhook {
   allowedMentions?: AllowedMentions;
   /** the components to include with the message */
   components?: MessageComponents;
-  /** name of thread to create (requires the webhook channel to be a forum channel). If the webhook channel is a forum channel, you must provide either `threadId` or `threadName`. If `threadName` is provided, a thread with that name will be created in the forum channel. */
+  /** Create a thread in a forum channel with this name. */
   threadName?: string;
 }
