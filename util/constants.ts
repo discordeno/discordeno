@@ -20,9 +20,6 @@ export const BASE_URL = "https://discord.com/api";
 /** https://discord.com/developers/docs/reference#api-versioning-api-versions */
 export const API_VERSION = 10;
 
-/** https://discord.com/developers/docs/topics/gateway#gateways-gateway-versions */
-export const GATEWAY_VERSION = 10;
-
 // TODO: update this version
 /** https://github.com/discordeno/discordeno/releases */
 export const DISCORDENO_VERSION = "13.0.0-rc45";
@@ -478,7 +475,7 @@ export const routes = {
     return `/users/@me`;
   },
   USER_GUILDS: () => {
-    return `/@me/guilds`;
+    return `/users/@me/guilds`;
   },
   // TODO: move this away
   USER_AVATAR: (userId: bigint, icon: string) => {

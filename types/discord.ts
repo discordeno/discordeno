@@ -1876,7 +1876,7 @@ export interface DiscordApplicationCommandOptionChoice {
 
 /** https://discord.com/developers/docs/interactions/slash-commands#guildapplicationcommandpermissions */
 export interface DiscordGuildApplicationCommandPermissions {
-  /** ID of the command */
+  /** ID of the command or the application ID. When the `id` field is the application ID instead of a command ID, the permissions apply to all commands that do not contain explicit overwrites. */
   id: string;
   /** ID of the application the command belongs to */
   application_id: string;

@@ -1,6 +1,7 @@
 import { Bot } from "../bot.ts";
 import { DiscordPresenceUpdate } from "../types/discord.ts";
 import { Optionalize } from "../types/shared.ts";
+import { UserToggles } from "./toggles/user.ts";
 
 export const statusTypes = Object.freeze({
   online: 0,
@@ -12,7 +13,18 @@ export const statusTypes = Object.freeze({
 
 export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate) {
   const presence = {
-    user: bot.transformers.user(bot, payload.user),
+    user: {
+      id: bot.transformers.snowflake(payload.user.id || ""),
+      username: payload.user.username ?? undefined,
+      discriminator: payload.user.discriminator ?? undefined,
+      avatar: payload.user.avatar ? bot.utils.iconHashToBigInt(payload.user.avatar) : undefined,
+      locale: payload.user.locale ?? undefined,
+      email: payload.user.email ?? undefined,
+      flags: payload.user.flags ?? undefined,
+      premiumType: payload.user.premium_type ?? undefined,
+      publicFlags: payload.user.public_flags ?? undefined,
+      toggles: new UserToggles(payload.user),
+    },
     guildId: bot.transformers.snowflake(payload.guild_id),
     status: statusTypes[payload.status],
     activities: payload.activities.map((activity) => bot.transformers.activity(bot, activity)),
