@@ -29,6 +29,7 @@ export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: str
       embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
       allowed_mentions: allowedMentions,
       components: options.components?.map((component) => bot.transformers.reverse.component(bot, component)),
+      thread_name: options.threadName,
     },
   );
   if (!options.wait) return;
@@ -40,7 +41,7 @@ export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: str
 export interface ExecuteWebhook {
   /** Waits for server confirmation of message send before response, and returns the created message body (defaults to `false`; when `false` a message that is not saved does not return an error) */
   wait?: boolean;
-  /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. */
+  /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. If the webhook channel is a forum channel, you must provide either `threadId` or `threadName`. If `threadId` is provided, the message will send in that thread. */
   threadId?: bigint;
   /** The message contents (up to 2000 characters) */
   content?: string;
@@ -58,4 +59,6 @@ export interface ExecuteWebhook {
   allowedMentions?: AllowedMentions;
   /** the components to include with the message */
   components?: MessageComponents;
+  /** name of thread to create (requires the webhook channel to be a forum channel). If the webhook channel is a forum channel, you must provide either `threadId` or `threadName`. If `threadName` is provided, a thread with that name will be created in the forum channel. */
+  threadName?: string;
 }
