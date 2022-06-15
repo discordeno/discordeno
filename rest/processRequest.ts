@@ -1,4 +1,4 @@
-import { RestManager } from "../bot.ts";
+import { RestManager } from "./restManager.ts";
 import { BASE_URL } from "../util/constants.ts";
 import { RestPayload, RestRequest } from "./rest.ts";
 

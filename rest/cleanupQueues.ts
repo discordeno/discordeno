@@ -1,4 +1,4 @@
-import { RestManager } from "../bot.ts";
+import { RestManager } from "./restManager.ts";
 
 /** Cleans up the queues by checking if there is nothing left and removing it. */
 export function cleanupQueues(rest: RestManager) {
