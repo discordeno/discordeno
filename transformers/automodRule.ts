@@ -16,7 +16,7 @@ export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModera
     triggerMetadata: payload.trigger_metadata
       ? {
         keywordFilter: payload.trigger_metadata.keyword_filter,
-        keywordList: payload.trigger_metadata.keyword_list,
+        presets: payload.trigger_metadata.presets,
       }
       : undefined,
     actions: payload.actions.map((action) => ({

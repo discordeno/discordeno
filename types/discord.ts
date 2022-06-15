@@ -1445,22 +1445,17 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
   // TODO: discord is considering renaming this before release
   /** The keywords needed to match. Only present when TriggerType.Keyword */
   keyword_filter?: string[];
-  // TODO: discord is considering renaming this before release
-  // TODO: This may need a special type or enum
   /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
-  keyword_list?: DiscordAutoModerationRuleTriggerMetadataKeywordList[];
+  presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
 }
 
-export enum DiscordAutoModerationRuleTriggerMetadataKeywordList {
+export enum DiscordAutoModerationRuleTriggerMetadataPresets {
   /** Words that may be considered forms of swearing or cursing */
-  // TODO: Discord will make this into numbers before release.
-  Profanity = "PROFANITY",
+  Profanity = 1,
   /** Words that refer to sexually explicit behavior or activity */
-  // TODO: Discord will make this into numbers before release.
-  SexualContent = "SEXUAL_CONTENT",
+  SexualContent,
   /** Personal insults or words that may be considered hate speech */
-  // TODO: Discord will make this into numbers before release.
-  Slurs = "SLURS",
+  Slurs,
 }
 
 export interface DiscordAutoModerationAction {
@@ -1480,9 +1475,9 @@ export enum AutoModerationActionType {
 }
 
 export interface DiscordAutoModerationActionMetadata {
-  /** The id of channel to which user content should be logged. Only in SendAlertMessage */
+  /** The id of channel to which user content should be logged. Only in ActionType.SendAlertMessage */
   channel_id?: string;
-  /** Timeout duration in seconds. Only supported for TriggerType.Keyword */
+  /** Timeout duration in seconds maximum of 2419200 seconds (4 weeks). Only supported for TriggerType.Keyword && Only in ActionType.Timeout */
   duration_seconds?: number;
 }
 
@@ -1491,6 +1486,8 @@ export interface DiscordAutoModerationActionExecution {
   guild_id: string;
   /** The id of the rule that was executed */
   rule_id: string;
+  /** The id of the user which generated the content which triggered the rule */
+  user_id: string;
   /** The content from the user */
   content: string;
   /** Action which was executed */
@@ -1498,11 +1495,11 @@ export interface DiscordAutoModerationActionExecution {
   /** The trigger type of the rule that was executed. */
   rule_trigger_type: AutoModerationTriggerTypes;
   /** The id of the channel in which user content was posted */
-  channel_id: string | null;
+  channel_id?: string | null;
   /** The id of the message. Will not exist if message was blocked by automod or content was not part of any message */
-  message_id: string | null;
+  message_id?: string | null;
   /** The id of any system auto moderation messages posted as a result of this action */
-  alert_system_message_id: string | null;
+  alert_system_message_id?: string | null;
   /** The word or phrase that triggerred the rule. */
   matched_keyword: string | null;
   /** The substring in content that triggered rule */

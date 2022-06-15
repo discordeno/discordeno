@@ -3,7 +3,7 @@ import {
   AutoModerationActionType,
   AutoModerationEventTypes,
   DiscordAutoModerationRule,
-  DiscordAutoModerationRuleTriggerMetadataKeywordList,
+  DiscordAutoModerationRuleTriggerMetadataPresets,
 } from "../../../types/discord.ts";
 
 /** Edit a rule currently configured for guild. */
@@ -18,7 +18,7 @@ export async function editAutomodRule(bot: Bot, guildId: bigint, options: Partia
       trigger_metadata: options.triggerMetadata
         ? {
           keyword_filter: options.triggerMetadata.keywordFilter,
-          keyword_list: options.triggerMetadata.keywordList,
+          presets: options.triggerMetadata.presets,
         }
         : undefined,
       actions: options.actions?.map((action) => ({
@@ -50,7 +50,7 @@ export interface EditAutoModerationRuleOptions {
     // TODO: discord is considering renaming this before release
     // TODO: This may need a special type or enum
     /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
-    keywordList?: DiscordAutoModerationRuleTriggerMetadataKeywordList[];
+    presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
   };
   /** The actions that will trigger for this rule */
   actions: {

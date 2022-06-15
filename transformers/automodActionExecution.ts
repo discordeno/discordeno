@@ -8,6 +8,7 @@ export function transformAutoModerationActionExecution(bot: Bot, payload: Discor
     ruleTriggerType: payload.rule_trigger_type,
     guildId: bot.transformers.snowflake(payload.guild_id),
     ruleId: bot.transformers.snowflake(payload.rule_id),
+    userId: bot.transformers.snowflake(payload.user_id),
     channelId: payload.channel_id ? bot.transformers.snowflake(payload.channel_id) : undefined,
     messageId: payload.message_id ? bot.transformers.snowflake(payload.message_id) : undefined,
     alertSystemMessageId: payload.alert_system_message_id

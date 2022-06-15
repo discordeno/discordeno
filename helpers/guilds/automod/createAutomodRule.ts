@@ -4,7 +4,7 @@ import {
   AutoModerationEventTypes,
   AutoModerationTriggerTypes,
   DiscordAutoModerationRule,
-  DiscordAutoModerationRuleTriggerMetadataKeywordList,
+  DiscordAutoModerationRuleTriggerMetadataPresets,
 } from "../../../types/discord.ts";
 
 /** Get a rule currently configured for guild. */
@@ -19,7 +19,7 @@ export async function createAutomodRule(bot: Bot, guildId: bigint, options: Crea
       trigger_type: options.triggerType,
       trigger_metadata: {
         keyword_filter: options.triggerMetadata.keywordFilter,
-        keyword_list: options.triggerMetadata.keywordList,
+        presets: options.triggerMetadata.presets,
       },
       actions: options.actions.map((action) => ({
         type: action.type,
@@ -51,10 +51,8 @@ export interface CreateAutoModerationRuleOptions {
     // TODO: discord is considering renaming this before release
     /** The keywords needed to match. Only present when TriggerType.Keyword */
     keywordFilter?: string[];
-    // TODO: discord is considering renaming this before release
-    // TODO: This may need a special type or enum
     /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
-    keywordList?: DiscordAutoModerationRuleTriggerMetadataKeywordList[];
+    presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
   };
   /** The actions that will trigger for this rule */
   actions: {
@@ -64,7 +62,7 @@ export interface CreateAutoModerationRuleOptions {
     metadata?: {
       /** The id of channel to which user content should be logged. Only in SendAlertMessage */
       channelId?: bigint;
-      /** Timeout duration in seconds. Only supported for TriggerType.Keyword */
+      /** Timeout duration in seconds. Max is 2419200(4 weeks). Only supported for TriggerType.Keyword */
       durationSeconds?: number;
     };
   }[];
