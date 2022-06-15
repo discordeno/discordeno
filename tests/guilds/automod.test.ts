@@ -242,6 +242,4 @@ Deno.test("[automod] Run automod tests", async (t) => {
       await bot.helpers.deleteChannel(channel.id);
     },
   );
-
-  
 });

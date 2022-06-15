@@ -1,5 +1,5 @@
 import type { Bot } from "../../../bot.ts";
-import { DiscordGatewayPayload, DiscordAutoModerationActionExecution } from "../../../types/discord.ts";
+import { DiscordAutoModerationActionExecution, DiscordGatewayPayload } from "../../../types/discord.ts";
 
 /** Requires the MANAGE_GUILD permission. */
 export function handleAutoModerationActionExecution(bot: Bot, data: DiscordGatewayPayload, shardId: number) {

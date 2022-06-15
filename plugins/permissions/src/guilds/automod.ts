@@ -63,8 +63,8 @@ export function editAutomodRule(bot: BotWithCache) {
         action.metadata.durationSeconds = 2419200;
       }
 
-       // Timeout actions require perm check
-       if (action.type === AutoModerationActionType.Timeout) {
+      // Timeout actions require perm check
+      if (action.type === AutoModerationActionType.Timeout) {
         requireBotGuildPermissions(bot, guildId, ["MODERATE_MEMBERS"]);
       }
     }

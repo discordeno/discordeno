@@ -1,5 +1,5 @@
 import type { Bot } from "../../../bot.ts";
-import { DiscordGatewayPayload, DiscordAutoModerationRule } from "../../../types/discord.ts";
+import { DiscordAutoModerationRule, DiscordGatewayPayload } from "../../../types/discord.ts";
 
 /** Requires the MANAGE_GUILD permission. */
 export function handleAutoModerationRuleDelete(bot: Bot, data: DiscordGatewayPayload, shardId: number) {

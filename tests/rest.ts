@@ -79,7 +79,14 @@ async function handleRequest(conn: Deno.Conn) {
         );
       }
     } catch (error) {
-      console.log("CATCH", requestEvent.request.url, requestEvent.request.method, requestEvent.request.body, error.code, error);
+      console.log(
+        "CATCH",
+        requestEvent.request.url,
+        requestEvent.request.method,
+        requestEvent.request.body,
+        error.code,
+        error,
+      );
       requestEvent.respondWith(
         new Response(JSON.stringify(error), {
           status: error.code ?? 469,

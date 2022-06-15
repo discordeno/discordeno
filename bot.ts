@@ -142,7 +142,10 @@ import { transformComponentToDiscordComponent } from "./transformers/reverse/com
 import { getBotIdFromToken, removeTokenPrefix } from "./util/token.ts";
 import { CreateShardManager } from "./gateway/manager/shardManager.ts";
 import { AutoModerationRule, transformAutoModerationRule } from "./transformers/automodRule.ts";
-import { AutoModerationActionExecution, transformAutoModerationActionExecution } from "./transformers/automodActionExecution.ts";
+import {
+  AutoModerationActionExecution,
+  transformAutoModerationActionExecution,
+} from "./transformers/automodActionExecution.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
