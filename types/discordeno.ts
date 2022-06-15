@@ -1,4 +1,3 @@
-import type { SelectOption } from "../transformers/component.ts";
 import { AllowedMentionsTypes, ButtonStyles, MessageComponentTypes, TextStyles } from "./shared.ts";
 
 export type MessageComponents = ActionRow[];
@@ -55,6 +54,26 @@ export interface SelectMenuComponent {
   maxValues?: number;
   /** The choices! Maximum of 25 items. */
   options: SelectOption[];
+}
+
+export interface SelectOption {
+  /** The user-facing name of the option. Maximum 25 characters. */
+  label: string;
+  /** The dev-defined value of the option. Maximum 100 characters. */
+  value: string;
+  /** An additional description of the option. Maximum 50 characters. */
+  description?: string;
+  /** The id, name, and animated properties of an emoji. */
+  emoji?: {
+    /** Emoji id */
+    id?: bigint;
+    /** Emoji name */
+    name?: string;
+    /** Whether this emoji is animated */
+    animated?: boolean;
+  };
+  /** Will render this option as already-selected by default. */
+  default?: boolean;
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#text-inputs-text-input-structure */
