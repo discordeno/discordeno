@@ -16,11 +16,6 @@ Deno.test("[thread] Get active threads", async (t) => {
   const threadMessage = await bot.helpers.sendMessage(thread.id, { content: "message in a bottle" });
   assertExists(threadMessage.id);
 
-  const edited = await bot.helpers.editChannel(thread.id, {
-    archived: true,
-  });
-  assertNotEquals(thread.archived, edited.archived);
-
   const activeThreads = await bot.helpers.getActiveThreads(CACHED_COMMUNITY_GUILD_ID);
   assertEquals(Boolean(activeThreads.threads.size), true);
 
