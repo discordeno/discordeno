@@ -95,3 +95,5 @@ export interface CreateRestManagerOptions {
   processGlobalQueue?: typeof processGlobalQueue;
   convertRestError?: typeof convertRestError;
 }
+
+export type RestManager = ReturnType<typeof createRestManager>;
