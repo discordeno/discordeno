@@ -41,7 +41,7 @@ export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: str
 export interface ExecuteWebhook {
   /** Waits for server confirmation of message send before response, and returns the created message body (defaults to `false`; when `false` a message that is not saved does not return an error) */
   wait?: boolean;
-  /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. If the webhook channel is a forum channel, you must provide either `threadId` or `threadName`. If `threadId` is provided, the message will send in that thread. */
+  /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. */
   threadId?: bigint;
   /** The message contents (up to 2000 characters) */
   content?: string;
