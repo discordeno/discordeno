@@ -467,7 +467,7 @@ export const routes = {
     return `/users/@me`;
   },
   USER_GUILDS: () => {
-    return `/@me/guilds`;
+    return `/users/@me/guilds`;
   },
   // TODO: move this away
   USER_AVATAR: (userId: bigint, icon: string) => {
