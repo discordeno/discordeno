@@ -30,4 +30,4 @@ export function avatarURL(
 export type ImageFormat = "jpg" | "jpeg" | "png" | "webp" | "gif" | "json";
 
 /** https://discord.com/developers/docs/reference#image-formatting */
-export type ImageSize = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048;
+export type ImageSize = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096;
