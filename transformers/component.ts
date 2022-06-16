@@ -1,5 +1,5 @@
 import { Bot } from "../bot.ts";
-import { ButtonStyles, MessageComponentTypes, TextStyles } from "../mod.ts";
+import { ButtonStyles, MessageComponentTypes, SelectOption, TextStyles } from "../mod.ts";
 import { DiscordComponent } from "../types/discord.ts";
 
 export function transformComponent(bot: Bot, payload: DiscordComponent): Component {
@@ -76,22 +76,4 @@ export interface Component {
   components?: Component[];
 }
 
-export interface SelectOption {
-  /** The user-facing name of the option. Maximum 25 characters. */
-  label: string;
-  /** The dev-defined value of the option. Maximum 100 characters. */
-  value: string;
-  /** An additional description of the option. Maximum 50 characters. */
-  description?: string;
-  /** The id, name, and animated properties of an emoji. */
-  emoji?: {
-    /** Emoji id */
-    id?: bigint;
-    /** Emoji name */
-    name?: string;
-    /** Whether this emoji is animated */
-    animated?: boolean;
-  };
-  /** Will render this option as already-selected by default. */
-  default?: boolean;
-}
+
