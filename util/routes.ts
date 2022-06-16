@@ -192,7 +192,6 @@ export const routes = {
 
     return url;
   },
-  // TODO: move this away
   GUILD_BANNER: (guildId: bigint, icon: string) => {
     return `${baseEndpoints.CDN_URL}/banners/${guildId}/${icon}`;
   },
@@ -228,7 +227,6 @@ export const routes = {
   GUILD_EMOJIS: (guildId: bigint) => {
     return `/guilds/${guildId}/emojis`;
   },
-  // TODO: move this away
   GUILD_ICON: (guildId: bigint, icon: string) => {
     return `${baseEndpoints.CDN_URL}/icons/${guildId}/${icon}`;
   },
@@ -272,6 +270,12 @@ export const routes = {
 
     return url;
   },
+  GUILD_MEMBER_AVATAR: (guildId: bigint, memberId: bigint, icon: string) => {
+    return `${baseEndpoints.CDN_URL}/guilds/${guildId}/users/${memberId}/avatars/${icon}`;
+  },
+  GUILD_MEMBER_BANNER: (guildId: bigint, memberId: bigint, banner: string) => {
+    return `${baseEndpoints.CDN_URL}/guilds/${guildId}/users/${memberId}/banners/${banner}`;
+  },
   GUILD_PRUNE: (guildId: bigint, options?: GetGuildPruneCountQuery) => {
     let url = `/guilds/${guildId}/prune?`;
 
@@ -291,7 +295,6 @@ export const routes = {
   GUILD_ROLES: (guildId: bigint) => {
     return `/guilds/${guildId}/roles`;
   },
-  // TODO: move this away
   GUILD_SPLASH: (guildId: bigint, icon: string) => {
     return `${baseEndpoints.CDN_URL}/splashes/${guildId}/${icon}`;
   },
@@ -456,13 +459,14 @@ export const routes = {
   USER_GUILDS: () => {
     return `/users/@me/guilds`;
   },
-  // TODO: move this away
   USER_AVATAR: (userId: bigint, icon: string) => {
     return `${baseEndpoints.CDN_URL}/avatars/${userId}/${icon}`;
   },
-  // TODO: move this away
   USER_DEFAULT_AVATAR: (icon: number) => {
     return `${baseEndpoints.CDN_URL}/embed/avatars/${icon}.png`;
+  },
+  USER_BANNER: (userId: bigint, banner: string) => {
+    return `${baseEndpoints.CDN_URL}/banners/${userId}/${banner}`;
   },
   USER_DM: () => {
     return `/users/@me/channels`;
