@@ -26,7 +26,6 @@ import {
   CONTEXT_MENU_COMMANDS_NAME_REGEX,
   DISCORD_SNOWFLAKE_REGEX,
   DISCORDENO_VERSION,
-  routes,
   SLASH_COMMANDS_NAME_REGEX,
   USER_AGENT,
 } from "./util/constants.ts";
@@ -146,6 +145,7 @@ import {
   AutoModerationActionExecution,
   transformAutoModerationActionExecution,
 } from "./transformers/automodActionExecution.ts";
+import { routes } from "./util/routes.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
