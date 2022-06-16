@@ -21,7 +21,7 @@ export function createRequestBody(rest: RestManager, options: CreateRequestBodyO
 
   // GET METHODS SHOULD NOT HAVE A BODY
   if (options.method === "GET") {
-   options.body = undefined;
+    options.body = undefined;
   }
 
   // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
@@ -58,7 +58,6 @@ export function createRequestBody(rest: RestManager, options: CreateRequestBodyO
     method: options.method,
   };
 }
-
 
 export interface CreateRequestBodyOptions {
   headers?: Record<string, string>;
