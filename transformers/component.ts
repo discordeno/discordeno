@@ -75,5 +75,3 @@ export interface Component {
   /** a list of child components */
   components?: Component[];
 }
-
-
