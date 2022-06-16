@@ -144,6 +144,8 @@ export async function sendRequest<T>(rest: RestManager, options: RestSendRequest
       error: "Internal Proxy Error",
     });
 
-    throw new Error(JSON.stringify(error));
+    throw new Error("Something went wrong in sendRequest", {
+      cause: error,
+    });
   }
 }
