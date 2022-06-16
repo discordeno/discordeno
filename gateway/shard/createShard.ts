@@ -60,9 +60,9 @@ export function createShard(
       compress: options.gatewayConfig.compress ?? false,
       intents: options.gatewayConfig.intents ?? 0,
       properties: {
-        $os: options.gatewayConfig?.properties?.$os ?? Deno.build.os,
-        $browser: options.gatewayConfig?.properties?.$browser ?? "Discordeno",
-        $device: options.gatewayConfig?.properties?.$device ?? "Discordeno",
+        os: options.gatewayConfig?.properties?.os ?? Deno.build.os,
+        browser: options.gatewayConfig?.properties?.browser ?? "Discordeno",
+        device: options.gatewayConfig?.properties?.device ?? "Discordeno",
       },
       token: options.gatewayConfig.token,
       url: options.gatewayConfig.url ?? "wss://gateway.discord.gg",
@@ -223,34 +223,6 @@ export function createShard(
     },
   };
 }
-
-// const shard = createShard({
-//   id: 0,
-//   gatewayConfig: {
-//     compress: true,
-//     url: "wss://gateway.discord.gg",
-//     version: 10,
-//     intents: 1 << 1,
-//     properties: {
-//       $os: "Discordeno",
-//       $browser: "Discordeno",
-//       $device: "Discordeno",
-//     },
-//     token: TOKEN,
-//   },
-//   totalShards: 1,
-//   makePresence: (shardId) => ({
-//     activities: [
-//       {
-//         name: `Cards Against Humanity #${shardId}`,
-//         type: 0,
-//         createdAt: Date.now(),
-//       },
-//     ],
-//     status: "dnd",
-//   }),
-//   requestIdentify: async () => {},
-// });
 
 export interface CreateShard {
   /** Id of the shard which should be created. */
