@@ -60,120 +60,20 @@ export async function processGlobalQueue(rest: RestManager) {
       continue;
     }
 
-    try {
-      // CUSTOM HANDLER FOR USER TO LOG OR WHATEVER WHENEVER A FETCH IS MADE
-      rest.debug(`[REST - fetching] URL: ${request.urlToUse} | ${JSON.stringify(request.payload)}`);
-
-      const response = await fetch(request.urlToUse, rest.createRequestBody(rest, request));
-      rest.debug(`[REST - fetched] URL: ${request.urlToUse} | ${JSON.stringify(request.payload)}`);
-
-      const bucketIdFromHeaders = rest.processRequestHeaders(rest, request.basicURL, response.headers);
-      // SET THE BUCKET Id IF IT WAS PRESENT
-      if (bucketIdFromHeaders) {
-        request.payload.bucketId = bucketIdFromHeaders;
-      }
-
-      if (response.status < 200 || response.status >= 400) {
-        rest.debug(
-          `[REST - httpError] Payload: ${JSON.stringify(request.payload)} | Response: ${JSON.stringify(response)}`,
-        );
-
-        let error = "REQUEST_UNKNOWN_ERROR";
-        switch (response.status) {
-          case HTTPResponseCodes.BadRequest:
-            error = "The request was improperly formatted, or the server couldn't understand it.";
-            break;
-          case HTTPResponseCodes.Unauthorized:
-            error = "The Authorization header was missing or invalid.";
-            break;
-          case HTTPResponseCodes.Forbidden:
-            error = "The Authorization token you passed did not have permission to the resource.";
-            break;
-          case HTTPResponseCodes.NotFound:
-            error = "The resource at the location specified doesn't exist.";
-            break;
-          case HTTPResponseCodes.MethodNotAllowed:
-            error = "The HTTP method used is not valid for the location specified.";
-            break;
-          case HTTPResponseCodes.GatewayUnavailable:
-            error = "There was not a gateway available to process your request. Wait a bit and retry.";
-            break;
-        }
-
-        if (
-          rest.invalidRequestErrorStatuses.includes(response.status) &&
-          !(response.status === 429 && response.headers.get("X-RateLimit-Scope"))
-        ) {
-          // INCREMENT CURRENT INVALID REQUESTS
-          ++rest.invalidRequests;
-
-          if (!rest.invalidRequestsTimeoutId) {
-            rest.invalidRequestsTimeoutId = setTimeout(() => {
-              rest.debug(`[REST - processGlobalQueue] Resetting invalid requests counter in setTimeout.`);
-              rest.invalidRequests = 0;
-              rest.invalidRequestsTimeoutId = 0;
-            }, rest.invalidRequestsInterval);
-          }
-        }
-
-        // If NOT rate limited remove from queue
-        if (response.status !== 429) {
-          let json = undefined;
-          if (response.type) {
-            json = JSON.stringify(await response.json());
-          }
-          request.request.reject({
-            ok: false,
-            status: response.status,
-            error,
-            body: json,
-          });
-        } else {
-          if (request.payload.retryCount++ >= rest.maxRetryCount) {
-            rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(request.payload)}`);
-            // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
-            request.request.reject({
-              ok: false,
-              status: response.status,
-              error: "The request was rate limited and it maxed out the retries limit.",
-            });
-            continue;
-          }
-
-          // WAS RATE LIMITED. PUSH TO END OF GLOBAL QUEUE, SO WE DON'T BLOCK OTHER REQUESTS.
-          rest.globalQueue.push(request);
-        }
-
-        continue;
-      }
-
-      // SOMETIMES DISCORD RETURNS AN EMPTY 204 RESPONSE THAT CAN'T BE MADE TO JSON
-      if (response.status === 204) {
-        rest.debug(`[REST - FetchSuccess] URL: ${request.urlToUse} | ${JSON.stringify(request.payload)}`);
-        request.request.respond({
-          ok: true,
-          status: 204,
-        });
-      } else {
-        // CONVERT THE RESPONSE TO JSON
-        const json = JSON.stringify(await response.json());
-
-        rest.debug(`[REST - fetchSuccess] ${JSON.stringify(request.payload)}`);
-        request.request.respond({
-          ok: true,
-          status: 200,
-          body: json,
-        });
-      }
-    } catch (error) {
-      // SOMETHING WENT WRONG, LOG AND RESPOND WITH ERROR
-      rest.debug(`[REST - fetchFailed] Payload: ${JSON.stringify(request.payload)} | Error: ${error}`);
-      request.request.reject({
-        ok: false,
-        status: 599,
-        error: "Internal Proxy Error",
-      });
-    }
+    await rest.sendRequest(rest, {
+      url: request.urlToUse,
+      method: request.request.method,
+      bucketId: request.payload.bucketId,
+      reject: request.request.reject,
+      respond: request.request.respond,
+      retryCount: request.payload.retryCount ?? 0,
+      payload: rest.createRequestBody(rest, {
+        method: request.request.method,
+        body: request.payload.body,
+      }),
+    })
+      // Should be handled in sendRequest, this catch just prevents bots from dying
+      .catch(() => null);
   }
 
   // ALLOW OTHER QUEUES TO START WHEN NEW REQUEST IS MADE

@@ -97,25 +97,31 @@ export async function sendInteractionResponse(
 
   // A reply has never been send
   if (bot.cache.unrepliedInteractions.delete(id)) {
-    return await bot.rest.runMethod<undefined>(
-      bot.rest,
-      "POST",
-      bot.constants.routes.INTERACTION_ID_TOKEN(id, token),
-      {
-        type: options.type,
-        data,
-        file: options.data.file,
+    return await bot.rest.sendRequest<undefined>(bot.rest, {
+      url: bot.constants.routes.INTERACTION_ID_TOKEN(id, token),
+      method: "POST",
+      payload: {
+        headers: {
+          // remove authorization header
+          Authorization: "",
+        },
+        body: JSON.stringify({ type: options.type, data, file: options.data.file }),
       },
-    );
+    });
   }
 
   // If its already been executed, we need to send a followup response
-  const result = await bot.rest.runMethod<DiscordMessage>(
-    bot.rest,
-    "POST",
-    bot.constants.routes.WEBHOOK(bot.applicationId, token),
-    { ...data, file: options.data.file },
-  );
+  const result = await bot.rest.sendRequest<DiscordMessage>(bot.rest, {
+    url: bot.constants.routes.WEBHOOK(bot.applicationId, token),
+    method: "POST",
+    payload: {
+      headers: {
+        // remove authorization header
+        Authorization: "",
+      },
+      body: JSON.stringify({ ...data, file: options.data.file }),
+    },
+  });
 
   return bot.transformers.message(bot, result);
 }
