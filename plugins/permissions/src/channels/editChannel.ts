@@ -1,4 +1,4 @@
-import { PermissionStrings } from "../../deps.ts";
+import { ChannelFlags, PermissionStrings } from "../../deps.ts";
 import { BotWithCache, ChannelTypes, GuildFeatures } from "../../deps.ts";
 import { requireBotChannelPermissions } from "../permissions.ts";
 
@@ -93,6 +93,10 @@ export default function editChannel(bot: BotWithCache) {
             );
           }
         }
+      }
+
+      if (options.flags === ChannelFlags.Pinned && !isThread) {
+        throw new Error("PINNED can only be set for threads in forum channels");
       }
 
       requireBotChannelPermissions(
