@@ -203,7 +203,7 @@ export function createBot(options: CreateBotOptions): Bot {
 export function createEventHandlers(
   events: Partial<EventHandlers>,
 ): EventHandlers {
-  function ignore() { }
+  function ignore() {}
 
   return {
     debug: events.debug ?? ignore,
@@ -354,7 +354,7 @@ export interface Bot {
 export const defaultHelpers = { ...helpers };
 export type DefaultHelpers = typeof defaultHelpers;
 // deno-lint-ignore no-empty-interface
-export interface Helpers extends DefaultHelpers { } // Use interface for declaration merging
+export interface Helpers extends DefaultHelpers {} // Use interface for declaration merging
 
 export function createHelpers(
   bot: Bot,
