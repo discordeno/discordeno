@@ -203,7 +203,7 @@ export function createBot(options: CreateBotOptions): Bot {
 export function createEventHandlers(
   events: Partial<EventHandlers>,
 ): EventHandlers {
-  function ignore() {}
+  function ignore() { }
 
   return {
     debug: events.debug ?? ignore,
@@ -354,7 +354,7 @@ export interface Bot {
 export const defaultHelpers = { ...helpers };
 export type DefaultHelpers = typeof defaultHelpers;
 // deno-lint-ignore no-empty-interface
-export interface Helpers extends DefaultHelpers {} // Use interface for declaration merging
+export interface Helpers extends DefaultHelpers { } // Use interface for declaration merging
 
 export function createHelpers(
   bot: Bot,
@@ -393,7 +393,7 @@ export interface Transformers {
     member: (bot: Bot, payload: Member) => DiscordMember;
     user: (bot: Bot, payload: User) => DiscordUser;
     team: (bot: Bot, payload: Team) => DiscordTeam;
-    application: (bot: Bot, payload: Component) => DiscordApplication;
+    application: (bot: Bot, payload: Application) => DiscordApplication;
   };
   snowflake: (snowflake: string) => bigint;
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
@@ -447,9 +447,9 @@ export function createTransformers(options: Partial<Transformers>) {
       component: options.reverse?.component || transformComponentToDiscordComponent,
       activity: options.reverse?.activity || transformActivityToDiscordActivity,
       member: options.reverse?.member || transformMemberToDiscordMember,
-      User: options.reverse?.user || transformUserToDiscordUser,
-      Team: options.reverse?.team || transformTeamToDiscordTeam,
-      Application: options.reverse?.application || transformApplicationToDiscordApplication,
+      user: options.reverse?.user || transformUserToDiscordUser,
+      team: options.reverse?.team || transformTeamToDiscordTeam,
+      application: options.reverse?.application || transformApplicationToDiscordApplication,
     },
     activity: options.activity || transformActivity,
     application: options.application || transformApplication,
