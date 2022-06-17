@@ -1,10 +1,10 @@
 import { RestManager } from "./restManager.ts";
 import { API_VERSION, BASE_URL, baseEndpoints } from "../util/constants.ts";
-import { RestRequestRejection, RestRequestResponse } from "./rest.ts";
+import { RequestMethod, RestRequestRejection, RestRequestResponse } from "./rest.ts";
 
 export async function runMethod<T = any>(
   rest: RestManager,
-  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
+  method: RequestMethod,
   route: string,
   body?: unknown,
   options?: {

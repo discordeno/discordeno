@@ -1,6 +1,6 @@
 export interface RestRequest {
   url: string;
-  method: string;
+  method: RequestMethod;
   respond: (payload: RestRequestResponse) => unknown;
   reject: (payload: RestRequestRejection) => unknown;
 }
@@ -27,3 +27,5 @@ export interface RestRateLimitedPath {
   resetTimestamp: number;
   bucketId?: string;
 }
+
+export type RequestMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";

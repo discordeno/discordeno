@@ -11,3 +11,4 @@ export * from "./restManager.ts";
 export * from "./runMethod.ts";
 export * from "./simplifyUrl.ts";
 export * from "./convertRestError.ts";
+export * from "./sendRequest.ts";

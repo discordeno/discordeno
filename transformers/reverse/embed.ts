@@ -1,6 +1,5 @@
 import { Bot } from "../../bot.ts";
 import { DiscordEmbed } from "../../types/discord.ts";
-import { Optionalize } from "../../types/shared.ts";
 import { Embed } from "../embed.ts";
 
 export function transformEmbedToDiscordEmbed(bot: Bot, payload: Embed): DiscordEmbed {
