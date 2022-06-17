@@ -13,7 +13,10 @@ export function transformUserToDiscordUser(bot: Bot, payload: User): DiscordUser
     flags: payload.flags,
     premium_type: payload.premiumType,
     public_flags: payload.publicFlags,
-    ...payload.toggles.list(),
+    bot: payload.toggles.bot,
+    system: payload.toggles.system,
+    mfa_enabled: payload.toggles.mfaEnabled,
+    verified: payload.toggles.verified,
   };
 }
 
@@ -28,6 +31,8 @@ export function transformMemberToDiscordMember(bot: Bot, payload: Member): Disco
     communication_disabled_until: payload.communicationDisabledUntil
       ? new Date(payload.communicationDisabledUntil).toISOString()
       : undefined,
-    ...payload.toggles.list(),
+    deaf: payload.toggles.deaf,
+    mute: payload.toggles.mute,
+    pending: payload.toggles.pending,
   };
 }
