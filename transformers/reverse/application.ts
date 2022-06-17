@@ -19,8 +19,7 @@ export function transformApplicationToDiscordApplication(bot: Bot, payload: Appl
 
     id: bot.utils.bigintToSnowflake(payload.id),
     icon: payload.icon ? bot.utils.iconBigintToHash(payload.icon) : null,
-    // @ts-ignore the partial here wont break anything
-    owner: payload.owner ? bot.transformers.user(bot, payload.owner) : undefined,
+    owner: payload.owner ? bot.transformers.reverse.user(bot, payload.owner) : undefined,
     team: payload.team ? bot.transformers.reverse.team(bot, payload.team) : null,
     guild_id: payload.guildId ? bot.utils.bigintToSnowflake(payload.guildId) : undefined,
   };
