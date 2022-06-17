@@ -100,13 +100,14 @@ export async function sendInteractionResponse(
     return await bot.rest.sendRequest<undefined>(bot.rest, {
       url: bot.constants.routes.INTERACTION_ID_TOKEN(id, token),
       method: "POST",
-      payload: {
+      payload: bot.rest.createRequestBody(bot.rest, {
+        method: "POST",
+        body: { type: options.type, data, file: options.data.file },
         headers: {
           // remove authorization header
           Authorization: "",
         },
-        body: JSON.stringify({ type: options.type, data, file: options.data.file }),
-      },
+      }),
     });
   }
 
@@ -114,13 +115,14 @@ export async function sendInteractionResponse(
   const result = await bot.rest.sendRequest<DiscordMessage>(bot.rest, {
     url: bot.constants.routes.WEBHOOK(bot.applicationId, token),
     method: "POST",
-    payload: {
+    payload: bot.rest.createRequestBody(bot.rest, {
+      method: "POST",
+      body: { ...data, file: options.data.file },
       headers: {
         // remove authorization header
         Authorization: "",
       },
-      body: JSON.stringify({ ...data, file: options.data.file }),
-    },
+    }),
   });
 
   return bot.transformers.message(bot, result);
