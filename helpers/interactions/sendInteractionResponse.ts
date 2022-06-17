@@ -23,76 +23,15 @@ export async function sendInteractionResponse(
 
   // DRY code a little bit
   const data = {
-    content: options.data.content,
     tts: options.data.tts,
-    embeds: options.data.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
-    allowed_mentions: {
-      parse: options.data.allowedMentions!.parse,
-      replied_user: options.data.allowedMentions!.repliedUser,
-      users: options.data.allowedMentions!.users?.map((id) => id.toString()),
-      roles: options.data.allowedMentions!.roles?.map((id) => id.toString()),
-    },
-    custom_id: options.data.customId,
     title: options.data.title,
-    components: options.data.components?.map((component) => ({
-      type: component.type,
-      components: component.components.map((subComponent) => {
-        if (subComponent.type === MessageComponentTypes.InputText) {
-          return {
-            type: subComponent.type,
-            style: subComponent.style,
-            custom_id: subComponent.customId,
-            label: subComponent.label,
-            placeholder: subComponent.placeholder,
-            value: subComponent.value,
-            min_length: subComponent.minLength,
-            max_length: subComponent.maxLength,
-            required: subComponent.required,
-          };
-        }
-
-        if (subComponent.type === MessageComponentTypes.SelectMenu) {
-          return {
-            type: subComponent.type,
-            custom_id: subComponent.customId,
-            placeholder: subComponent.placeholder,
-            min_values: subComponent.minValues,
-            max_values: subComponent.maxValues,
-            options: subComponent.options.map((option) => ({
-              label: option.label,
-              value: option.value,
-              description: option.description,
-              emoji: option.emoji
-                ? {
-                  id: option.emoji.id?.toString(),
-                  name: option.emoji.name,
-                  animated: option.emoji.animated,
-                }
-                : undefined,
-              default: option.default,
-            })),
-          };
-        }
-
-        return {
-          type: subComponent.type,
-          custom_id: subComponent.customId,
-          label: subComponent.label,
-          style: subComponent.style,
-          emoji: "emoji" in subComponent && subComponent.emoji
-            ? {
-              id: subComponent.emoji.id?.toString(),
-              name: subComponent.emoji.name,
-              animated: subComponent.emoji.animated,
-            }
-            : undefined,
-          url: "url" in subComponent ? subComponent.url : undefined,
-          disabled: "disabled" in subComponent ? subComponent.disabled : undefined,
-        };
-      }),
-    })),
     flags: options.data.flags,
+    content: options.data.content,
     choices: options.data.choices,
+    custom_id: options.data.customId,
+    embeds: options.data.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
+    allowed_mentions: bot.transformers.reverse.allowedMentions(bot, options.data.allowedMentions!),
+    components: options.data.components?.map((component) => bot.transformers.reverse.component(bot, component)),
   };
 
   // A reply has never been send

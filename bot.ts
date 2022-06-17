@@ -69,6 +69,7 @@ import { transformStageInstance } from "./transformers/stageInstance.ts";
 import { StickerPack, transformSticker, transformStickerPack } from "./transformers/sticker.ts";
 import { GetGatewayBot, transformGatewayBot } from "./transformers/gatewayBot.ts";
 import {
+  DiscordAllowedMentions,
   DiscordApplicationCommandOptionChoice,
   DiscordAutoModerationActionExecution,
   DiscordAutoModerationRule,
@@ -146,6 +147,8 @@ import {
   transformAutoModerationActionExecution,
 } from "./transformers/automodActionExecution.ts";
 import { routes } from "./util/routes.ts";
+import { transformAllowedMentionsToDiscordAllowedMentions } from "./transformers/reverse/allowedMentions.ts";
+import { AllowedMentions } from "./mod.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -394,6 +397,7 @@ export function createBaseHelpers(options: Partial<Helpers>) {
 
 export interface Transformers {
   reverse: {
+    allowedMentions: (bot: Bot, payload: AllowedMentions) => DiscordAllowedMentions;
     embed: (bot: Bot, payload: Embed) => DiscordEmbed;
     component: (bot: Bot, payload: Component) => DiscordComponent;
   };
@@ -447,6 +451,7 @@ export interface Transformers {
 export function createTransformers(options: Partial<Transformers>) {
   return {
     reverse: {
+      allowedMentions: options.reverse?.allowedMentions || transformAllowedMentionsToDiscordAllowedMentions,
       embed: options.reverse?.embed || transformEmbedToDiscordEmbed,
       component: options.reverse?.component || transformComponentToDiscordComponent,
     },
