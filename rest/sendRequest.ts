@@ -1,4 +1,5 @@
 import { HTTPResponseCodes } from "../types/shared.ts";
+import { BASE_URL } from "../util/constants.ts";
 import { RequestMethod } from "./rest.ts";
 import { RestManager } from "./restManager.ts";
 
@@ -20,11 +21,14 @@ export async function sendRequest<T>(rest: RestManager, options: RestSendRequest
     // CUSTOM HANDLER FOR USER TO LOG OR WHATEVER WHENEVER A FETCH IS MADE
     rest.debug(`[REST - fetching] URL: ${options.url} | ${JSON.stringify(options)}`);
 
-    const response = await fetch(options.url, {
-      method: options.method,
-      headers: options.payload?.headers,
-      body: options.payload?.body,
-    });
+    const response = await fetch(
+      options.url.startsWith(BASE_URL) ? options.url : `${BASE_URL}/v${rest.version}/${options.url}`,
+      {
+        method: options.method,
+        headers: options.payload?.headers,
+        body: options.payload?.body,
+      },
+    );
     rest.debug(`[REST - fetched] URL: ${options.url} | ${JSON.stringify(options)}`);
 
     const bucketIdFromHeaders = rest.processRequestHeaders(
