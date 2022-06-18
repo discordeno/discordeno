@@ -1,3 +1,4 @@
+import { baseEndpoints } from "../deps.ts";
 import { ListArchivedThreads } from "../helpers/channels/threads/getArchivedThreads.ts";
 import { GetGuildAuditLog } from "../helpers/guilds/getAuditLogs.ts";
 import { GetBans } from "../helpers/guilds/getBans.ts";
@@ -13,7 +14,6 @@ import {
   isGetMessagesLimit,
 } from "../helpers/messages/getMessages.ts";
 import { GetReactions } from "../helpers/messages/getReactions.ts";
-import { baseEndpoints } from "./constants.ts";
 
 export const routes = {
   GATEWAY_BOT: () => {

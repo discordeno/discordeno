@@ -1,7 +1,7 @@
 import { DiscordGatewayPayload, DiscordHello, DiscordReady } from "../../types/discord.ts";
 import { GatewayOpcodes } from "../../types/shared.ts";
 import { createLeakyBucket } from "../../util/bucket.ts";
-import { delay } from "../../util/utils.ts";
+import { delay } from "../../util/delay.ts";
 import { decompressWith } from "./deps.ts";
 import { GATEWAY_RATE_LIMIT_RESET_INTERVAL, Shard, ShardState } from "./types.ts";
 

@@ -1,5 +1,5 @@
 import { Bot } from "../../bot.ts";
-import { Collection } from "../../util/collection.ts";
+import { BotCollection as Collection } from "../../util/collection.ts";
 import { DiscordIntegration } from "../../deps.ts";
 
 /** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */

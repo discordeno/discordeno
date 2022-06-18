@@ -1,4 +1,4 @@
-import { assertEquals, assertExists } from "../deps.ts";
+import { assertEquals, assertExists, assertRejects } from "../deps.ts";
 import { loadBot } from "../mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../utils.ts";
 
@@ -17,9 +17,9 @@ Deno.test({
     await bot.helpers.deleteWebhookWithToken(webhook.id, webhook.token);
 
     // Fetch the webhook to validate it was deleted
-    const deletedWebhook = await bot.helpers.getWebhook(webhook.id);
-
-    assertEquals(deletedWebhook, undefined);
+    await assertRejects(
+      () => bot.helpers.getWebhook(webhook.id),
+    );
 
     await bot.helpers.deleteChannel(channel.id);
   },

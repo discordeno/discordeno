@@ -1,7 +1,7 @@
 import { Bot } from "../../../bot.ts";
 import { Member, User } from "../../../transformers/member.ts";
 import { DiscordMember, DiscordUser } from "../../../deps.ts";
-import { Collection } from "../../../util/collection.ts";
+import { BotCollection as Collection } from "../../../util/collection.ts";
 
 export async function getScheduledEventUsers(
   bot: Bot,

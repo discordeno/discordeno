@@ -1,6 +1,6 @@
 import type { Emoji } from "../transformers/emoji.ts";
 import { Bot } from "../bot.ts";
-import { Collection } from "../util/collection.ts";
+import { BotCollection as Collection } from "../util/collection.ts";
 import { GuildToggles } from "./toggles/guild.ts";
 import { DiscordGuild, Optionalize } from "../deps.ts";
 

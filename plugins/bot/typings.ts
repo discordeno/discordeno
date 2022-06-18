@@ -111,13 +111,6 @@ export interface AllowedMentions {
   users?: bigint[];
 }
 
-export interface FileContent {
-  /** The file blob */
-  blob: Blob;
-  /** The name of the file */
-  name: string;
-}
-
 /** https://discord.com/developers/docs/resources/guild#search-guild-members-query-string-params */
 export interface SearchMembers {
   /** Query string to match username(s) and nickname(s) against */

@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
 import { DiscordWebhook } from "../../deps.ts";
-import { Collection } from "../../util/collection.ts";
+import { BotCollection as Collection } from "../../util/collection.ts";
 
 /** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
 export async function getWebhooks(bot: Bot, guildId: bigint) {

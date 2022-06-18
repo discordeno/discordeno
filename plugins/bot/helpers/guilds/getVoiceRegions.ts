@@ -1,4 +1,4 @@
-import { Collection } from "../../util/collection.ts";
+import { BotCollection as Collection } from "../../util/collection.ts";
 import { Bot } from "../../bot.ts";
 import { DiscordVoiceRegion } from "../../deps.ts";
 

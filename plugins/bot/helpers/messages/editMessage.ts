@@ -1,8 +1,8 @@
 import { Bot } from "../../bot.ts";
 import { Attachment } from "../../transformers/attachment.ts";
 import { Embed } from "../../transformers/embed.ts";
-import { DiscordMessage, MessageComponentTypes } from "../../deps.ts";
-import { AllowedMentions, FileContent, MessageComponents } from "../../typings.ts";
+import { DiscordMessage, FileContent, MessageComponentTypes } from "../../deps.ts";
+import { AllowedMentions, MessageComponents } from "../../typings.ts";
 
 /** Edit the message. */
 export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint, content: EditMessage) {

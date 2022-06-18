@@ -1,6 +1,6 @@
 import type { DiscordMemberWithUser } from "../../deps.ts";
 
-import { Collection } from "../../util/collection.ts";
+import { BotCollection as Collection } from "../../util/collection.ts";
 import { Bot } from "../../bot.ts";
 import { SearchMembers } from "../../typings.ts";
 

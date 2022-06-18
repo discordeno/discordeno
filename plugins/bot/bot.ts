@@ -2,10 +2,15 @@ import * as handlers from "./handlers/mod.ts";
 import * as helpers from "./helpers/mod.ts";
 import { calculateShardId } from "../../gateway/calculateShardId.ts";
 import {
+  baseEndpoints,
+  CHANNEL_MENTION_REGEX,
+  CONTEXT_MENU_COMMANDS_NAME_REGEX,
   createGatewayManager,
   createRestManager,
   CreateRestManagerOptions,
   CreateShardManager,
+  delay,
+  DISCORD_SNOWFLAKE_REGEX,
   DiscordActivity,
   DiscordAllowedMentions,
   DiscordApplication,
@@ -20,6 +25,7 @@ import {
   DiscordComponent,
   DiscordEmbed,
   DiscordEmoji,
+  DISCORDENO_VERSION,
   DiscordGatewayPayload,
   DiscordGetGatewayBot,
   DiscordGuild,
@@ -50,6 +56,10 @@ import {
   Errors,
   GatewayDispatchEventNames,
   GatewayIntents,
+  getBotIdFromToken,
+  removeTokenPrefix,
+  SLASH_COMMANDS_NAME_REGEX,
+  USER_AGENT,
 } from "./deps.ts";
 import { Activity, transformActivity } from "./transformers/activity.ts";
 import { Application, transformApplication } from "./transformers/application.ts";
@@ -112,22 +122,12 @@ import { GuildWidget, transformWidget } from "./transformers/widget.ts";
 import { GuildWidgetSettings, transformWidgetSettings } from "./transformers/widgetSettings.ts";
 import { AllowedMentions } from "./typings.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.ts";
-import { Collection } from "./util/collection.ts";
-import {
-  baseEndpoints,
-  CHANNEL_MENTION_REGEX,
-  CONTEXT_MENU_COMMANDS_NAME_REGEX,
-  DISCORD_SNOWFLAKE_REGEX,
-  DISCORDENO_VERSION,
-  SLASH_COMMANDS_NAME_REGEX,
-  USER_AGENT,
-} from "./util/constants.ts";
+import { BotCollection } from "./util/collection.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
 import { calculateBits, calculatePermissions } from "./util/permissions.ts";
 import { routes } from "./util/routes.ts";
-import { getBotIdFromToken, removeTokenPrefix } from "./util/token.ts";
 import { urlToBase64 } from "./util/urlToBase64.ts";
-import { delay, formatImageURL } from "./util/utils.ts";
+import { formatImageURL } from "./util/utils.ts";
 import { validateLength } from "./util/validateLength.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
@@ -681,7 +681,7 @@ export interface EventHandlers {
     bot: Bot,
     payload: {
       guildId: bigint;
-      emojis: Collection<bigint, DiscordEmoji>;
+      emojis: BotCollection<bigint, DiscordEmoji>;
     },
   ) => unknown;
   guildBanAdd: (bot: Bot, user: User, guildId: bigint) => unknown;

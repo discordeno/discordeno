@@ -1,6 +1,6 @@
 import { Bot } from "../../../bot.ts";
 import { DiscordAutoModerationRule } from "../../../deps.ts";
-import { Collection } from "../../../util/collection.ts";
+import { BotCollection as Collection } from "../../../util/collection.ts";
 
 /** Get a list of all rules currently configured for guild. */
 export async function getAutomodRules(bot: Bot, guildId: bigint) {

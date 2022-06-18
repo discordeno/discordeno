@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
 import { DiscordGatewayPayload, DiscordGuildEmojisUpdate } from "../../deps.ts";
-import { Collection } from "../../util/collection.ts";
+import { BotCollection as Collection } from "../../util/collection.ts";
 
 export async function handleGuildEmojisUpdate(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordGuildEmojisUpdate;

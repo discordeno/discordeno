@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
 import { DiscordMemberWithUser } from "../../deps.ts";
-import { Collection } from "../../util/collection.ts";
+import { BotCollection as Collection } from "../../util/collection.ts";
 
 // TODO: make options optional
 /**

@@ -1,6 +1,6 @@
 import { Bot } from "../../../bot.ts";
 import { DiscordThreadMember } from "../../../deps.ts";
-import { Collection } from "../../../util/collection.ts";
+import { BotCollection as Collection } from "../../../util/collection.ts";
 
 /** Returns thread members objects that are members of the thread. */
 export async function getThreadMembers(bot: Bot, threadId: bigint) {

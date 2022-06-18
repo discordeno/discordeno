@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
 import { DiscordEmoji } from "../../deps.ts";
-import { Collection } from "../../util/collection.ts";
+import { BotCollection as Collection } from "../../util/collection.ts";
 
 /**
  * Returns a list of emojis for the given guild.

@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
 import { DiscordMessage } from "../../deps.ts";
-import { Collection } from "../../util/collection.ts";
+import { BotCollection as Collection } from "../../util/collection.ts";
 import { hasProperty } from "../../util/utils.ts";
 
 /** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */

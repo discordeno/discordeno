@@ -7,7 +7,7 @@ import {
   DiscordInteractionDataResolved,
   Optionalize,
 } from "../deps.ts";
-import { Collection } from "../util/collection.ts";
+import { BotCollection as Collection } from "../util/collection.ts";
 import { Attachment } from "./attachment.ts";
 import { Member, User } from "./member.ts";
 import { Message } from "./message.ts";

@@ -1,7 +1,7 @@
 import { Bot } from "../../../bot.ts";
 import { ScheduledEvent } from "../../../transformers/scheduledEvent.ts";
 import { DiscordScheduledEvent } from "../../../deps.ts";
-import { Collection } from "../../../util/collection.ts";
+import { BotCollection as Collection } from "../../../util/collection.ts";
 
 /** Get a list of guild scheduled event for the given guild. */
 export async function getScheduledEvents(bot: Bot, guildId: bigint, options?: GetScheduledEvents) {

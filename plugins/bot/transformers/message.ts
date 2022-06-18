@@ -1,6 +1,5 @@
 import { Bot } from "../bot.ts";
-import { DiscordMessage, Optionalize } from "../deps.ts";
-import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
+import { CHANNEL_MENTION_REGEX, DiscordMessage, Optionalize } from "../deps.ts";
 import { MemberToggles } from "./toggles/member.ts";
 
 export function transformMessage(bot: Bot, payload: DiscordMessage) {

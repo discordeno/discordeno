@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
 import { DiscordRole } from "../../deps.ts";
-import { Collection } from "../../util/collection.ts";
+import { BotCollection as Collection } from "../../util/collection.ts";
 
 /** Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission. Returns a list of all of the guild's role objects on success. Fires multiple Guild Role Update Gateway events. */
 export async function modifyRolePositions(bot: Bot, guildId: bigint, options: ModifyRolePositions[]) {

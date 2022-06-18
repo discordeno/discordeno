@@ -1,8 +1,6 @@
-import { GetGatewayBot } from "../../transformers/gatewayBot.ts";
 import { DiscordGatewayPayload } from "../../types/discord.ts";
-import { GatewayIntents, MakeRequired, OmitFirstFnArg, PickPartial } from "../../types/shared.ts";
+import { GatewayBot, PickPartial } from "../../types/shared.ts";
 import { LeakyBucket } from "../../util/bucket.ts";
-import { Collection } from "../../util/collection.ts";
 import { CreateShard, createShard } from "../shard/createShard.ts";
 import { Shard, ShardGatewayConfig } from "../shard/types.ts";
 import { calculateTotalShards } from "./calculateTotalShards.ts";
@@ -48,7 +46,7 @@ export function createGatewayManager(
     /** The max concurrency buckets.
      * Those will be created when the `spawnShards` (which calls `prepareBuckets` under the hood) function gets called.
      */
-    buckets: new Collection<
+    buckets: new Map<
       number,
       {
         workers: { id: number; queue: number[] }[];
@@ -222,7 +220,7 @@ export interface CreateGatewayManager {
   lastShardId: number;
 
   /** Important data which is used by the manager to connect shards to the gateway. */
-  gatewayBot: GetGatewayBot;
+  gatewayBot: GatewayBot;
 
   gatewayConfig: PickPartial<ShardGatewayConfig, "token">;
 
@@ -230,7 +228,7 @@ export interface CreateGatewayManager {
   createShardOptions?: Omit<CreateShard, "id" | "totalShards" | "requestIdentify" | "gatewayConfig">;
 
   /** Stored as bucketId: { workers: [workerId, [ShardIds]], createNextShard: boolean } */
-  buckets: Collection<
+  buckets: Map<
     number,
     {
       workers: { id: number; queue: number[] }[];

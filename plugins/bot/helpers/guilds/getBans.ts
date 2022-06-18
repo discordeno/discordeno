@@ -1,5 +1,5 @@
 import { Bot } from "../../bot.ts";
-import { Collection } from "../../util/collection.ts";
+import { BotCollection as Collection } from "../../util/collection.ts";
 import { DiscordBan } from "../../deps.ts";
 import { User } from "../../transformers/member.ts";
 

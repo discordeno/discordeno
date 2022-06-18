@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
 import { DiscordVoiceRegion } from "../../deps.ts";
-import { Collection } from "../../util/collection.ts";
+import { BotCollection as Collection } from "../../util/collection.ts";
 
 /** Returns an array of voice regions that can be used when creating servers. */
 export async function getAvailableVoiceRegions(bot: Bot) {

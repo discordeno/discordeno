@@ -1,8 +1,8 @@
 import { Bot } from "../../bot.ts";
-import { DiscordMessage, MessageComponentTypes } from "../../deps.ts";
+import { DiscordMessage, FileContent, MessageComponentTypes } from "../../deps.ts";
 import { Attachment } from "../../transformers/attachment.ts";
 import { Embed } from "../../transformers/embed.ts";
-import { AllowedMentions, FileContent, MessageComponents } from "../../typings.ts";
+import { AllowedMentions, MessageComponents } from "../../typings.ts";
 
 export async function editWebhookMessage(
   bot: Bot,

@@ -1,49 +1,10 @@
-import { Bot } from "../bot.ts";
-
-export class BotCollection<K, V> extends Map<K, V> {
+export class Collection<K, V> extends Map<K, V> {
   maxSize: number | undefined;
-  sweeper: BotCollectionSweeper<K, V> & { intervalId?: number } | undefined;
 
-  constructor(entries?: (readonly (readonly [K, V])[] | null) | Map<K, V>, options?: BotCollectionOptions<K, V>) {
+  constructor(entries?: (readonly (readonly [K, V])[] | null) | Map<K, V>, options?: CollectionOptions<K, V>) {
     super(entries ?? []);
 
     this.maxSize = options?.maxSize;
-
-    if (!options?.sweeper) return;
-
-    this.startSweeper(options.sweeper);
-  }
-
-  startSweeper(options: BotCollectionSweeper<K, V>): number {
-    if (this.sweeper?.intervalId) clearInterval(this.sweeper.intervalId);
-
-    this.sweeper = options;
-    this.sweeper.intervalId = setInterval(() => {
-      this.forEach((value, key) => {
-        if (!this.sweeper?.filter(value, key, options.bot)) return;
-
-        this.delete(key);
-        return key;
-      });
-    }, options.interval);
-
-    return this.sweeper.intervalId!;
-  }
-
-  stopSweeper(): void {
-    return clearInterval(this.sweeper?.intervalId);
-  }
-
-  changeSweeperInterval(newInterval: number) {
-    if (!this.sweeper) return;
-
-    this.startSweeper({ filter: this.sweeper.filter, interval: newInterval });
-  }
-
-  changeSweeperFilter(newFilter: (value: V, key: K, bot: Bot) => boolean) {
-    if (!this.sweeper) return;
-
-    this.startSweeper({ filter: newFilter, interval: this.sweeper.interval });
   }
 
   set(key: K, value: V) {
@@ -87,7 +48,7 @@ export class BotCollection<K, V> extends Map<K, V> {
   }
 
   filter(callback: (value: V, key: K) => boolean) {
-    const relevant = new BotCollection<K, V>();
+    const relevant = new Collection<K, V>();
     this.forEach((value, key) => {
       if (callback(value, key)) relevant.set(key, value);
     });
@@ -134,16 +95,6 @@ export class BotCollection<K, V> extends Map<K, V> {
   }
 }
 
-export interface BotCollectionOptions<K, V> {
-  sweeper?: BotCollectionSweeper<K, V>;
+export interface CollectionOptions<K, V> {
   maxSize?: number;
-}
-
-export interface BotCollectionSweeper<K, V> {
-  /** The filter to determine whether an element should be deleted or not */
-  filter: (value: V, key: K, ...args: any[]) => boolean;
-  /** The interval in which the sweeper should run */
-  interval: number;
-  /** The bot object itself */
-  bot?: Bot;
 }
