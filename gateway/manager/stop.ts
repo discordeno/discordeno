@@ -1,4 +1,4 @@
-import { delay } from "../../util/utils.ts";
+import { delay } from "../../util/delay.ts";
 import { GatewayManager } from "./gatewayManager.ts";
 
 export async function stop(gateway: GatewayManager, code: number, reason: string) {

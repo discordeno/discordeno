@@ -12,7 +12,6 @@ import {
   ShardSocketRequest,
   ShardState,
 } from "./types.ts";
-import { StatusUpdate } from "../../helpers/misc/editShardStatus.ts";
 import { startHeartbeating } from "./startHeartbeating.ts";
 import { stopHeartbeating } from "./stopHeartbeating.ts";
 import { resume } from "./resume.ts";
@@ -24,7 +23,7 @@ import { connect } from "./connect.ts";
 import { close } from "./close.ts";
 import { shutdown } from "./shutdown.ts";
 import { isOpen } from "./isOpen.ts";
-import { DiscordGatewayPayload } from "../../types/discord.ts";
+import { DiscordGatewayPayload, DiscordStatusUpdate } from "../../types/discord.ts";
 import { GatewayIntents, PickPartial } from "../../types/shared.ts";
 import { API_VERSION } from "../../util/constants.ts";
 
@@ -275,7 +274,7 @@ export interface CreateShard {
   isOpen?: typeof isOpen;
 
   /** Function which can be overwritten in order to get the shards presence. */
-  makePresence?(shardId: number): Promise<StatusUpdate> | StatusUpdate;
+  makePresence?(shardId: number): Promise<DiscordStatusUpdate> | DiscordStatusUpdate;
 
   /** The maximum of requests which can be send to discord per rate limit tick.
    * Typically this value should not be changed.

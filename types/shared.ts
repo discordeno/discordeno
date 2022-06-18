@@ -1201,6 +1201,31 @@ export enum Locales {
 
 export type Localization = Partial<Record<Locales, string>>;
 
+export interface FileContent {
+  /** The file blob */
+  blob: Blob;
+  /** The name of the file */
+  name: string;
+}
+
+export interface GatewayBot {
+  /** The WSS URL that can be used for connecting to the gateway */
+  url: string;
+  /** The recommended number of shards to use when connecting */
+  shards: number;
+  /** Information on the current session start limit */
+  sessionStartLimit: {
+    /** The total number of session starts the current user is allowed */
+    total: number;
+    /** The remaining number of session starts the current user is allowed */
+    remaining: number;
+    /** The number of milliseconds after which the limit resets */
+    resetAfter: number;
+    /** The number of identify requests allowed per 5 seconds */
+    maxConcurrency: number;
+  };
+}
+
 // UTILS
 
 export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];

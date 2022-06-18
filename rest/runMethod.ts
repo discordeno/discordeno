@@ -43,8 +43,10 @@ export async function runMethod<T = any>(
     });
 
     if (!result.ok) {
-      errorStack.message = result.statusText as Error["message"];
-      console.error(`Error: ${errorStack.message}`);
+      errorStack.message = result.statusText;
+      rest.debug(`[ERROR] ${errorStack.message}`);
+      // Closes the response to prevent memory leak
+      await result.text();
       throw errorStack;
     }
 
