@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
 import { Channel } from "../../transformers/channel.ts";
-import { DiscordChannel, ChannelTypes, VideoQualityModes } from "../../deps.ts";
+import { ChannelTypes, DiscordChannel, VideoQualityModes } from "../../deps.ts";
 import { OverwriteReadable } from "./editChannelOverwrite.ts";
 
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */

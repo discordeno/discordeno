@@ -1,7 +1,7 @@
 import { Bot } from "../../bot.ts";
-import { DiscordMessage,InteractionResponseTypes } from "../../deps.ts";
+import { DiscordMessage, InteractionResponseTypes } from "../../deps.ts";
 import { Embed } from "../../transformers/embed.ts";
-import { AllowedMentions,FileContent,MessageComponents } from "../../typings.ts";
+import { AllowedMentions, FileContent, MessageComponents } from "../../typings.ts";
 
 /**
  * Send a response to a users application command. The command data will have the id and token necessary to respond.

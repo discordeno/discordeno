@@ -1,5 +1,5 @@
 import { Bot } from "../../bot.ts";
-import { DiscordGatewayPayload,DiscordChannelPinsUpdate } from "../../deps.ts";
+import { DiscordChannelPinsUpdate, DiscordGatewayPayload } from "../../deps.ts";
 
 export async function handleChannelPinsUpdate(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordChannelPinsUpdate;

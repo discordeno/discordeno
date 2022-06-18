@@ -1,5 +1,5 @@
 import { Bot } from "../../../bot.ts";
-import { DiscordChannel, ChannelTypes } from "../../../deps.ts";
+import { ChannelTypes, DiscordChannel } from "../../../deps.ts";
 
 /** Creates a new private thread. Returns a thread channel. */
 export async function startThreadWithoutMessage(bot: Bot, channelId: bigint, options: StartThreadWithoutMessage) {

@@ -1,5 +1,5 @@
 import { Bot } from "../../../bot.ts";
-import { DiscordGuildApplicationCommandPermissions,ApplicationCommandPermissionTypes } from "../../../deps.ts";
+import { ApplicationCommandPermissionTypes, DiscordGuildApplicationCommandPermissions } from "../../../deps.ts";
 
 /** Edits command permissions for a specific command for your application in a guild. */
 export async function editApplicationCommandPermissions(

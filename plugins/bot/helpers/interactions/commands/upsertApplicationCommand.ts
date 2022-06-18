@@ -5,7 +5,7 @@ import {
   isContextApplicationCommand,
   makeOptionsForCommand,
 } from "./createApplicationCommand.ts";
-import { DiscordApplicationCommand, AtLeastOne } from "../../../deps.ts";
+import { AtLeastOne, DiscordApplicationCommand } from "../../../deps.ts";
 
 /**
  * Edit an existing application command. If this command did not exist, it will create it.

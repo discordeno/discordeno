@@ -1,5 +1,5 @@
 import { Bot } from "../../bot.ts";
-import { DiscordGatewayPayload,DiscordChannel } from "../../deps.ts";
+import { DiscordChannel, DiscordGatewayPayload } from "../../deps.ts";
 
 export async function handleChannelCreate(bot: Bot, payload: DiscordGatewayPayload) {
   const channel = bot.transformers.channel(bot, { channel: payload.d as DiscordChannel });

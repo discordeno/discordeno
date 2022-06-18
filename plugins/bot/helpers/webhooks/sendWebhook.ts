@@ -1,7 +1,7 @@
 import { Bot } from "../../bot.ts";
 import { DiscordMessage } from "../../deps.ts";
 import { Embed } from "../../transformers/embed.ts";
-import { FileContent,AllowedMentions,MessageComponents } from "../../typings.ts";
+import { AllowedMentions, FileContent, MessageComponents } from "../../typings.ts";
 
 /** Send a webhook with webhook Id and webhook token */
 export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: string, options: ExecuteWebhook) {

@@ -1,5 +1,5 @@
 import { Bot } from "../../bot.ts";
-import { DiscordChannel, ChannelTypes } from "../../deps.ts";
+import { ChannelTypes, DiscordChannel } from "../../deps.ts";
 import { OverwriteReadable } from "./editChannelOverwrite.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */

@@ -1,5 +1,5 @@
 import { Bot } from "../../bot.ts";
-import { DiscordStageInstance, AtLeastOne } from "../../deps.ts";
+import { AtLeastOne, DiscordStageInstance } from "../../deps.ts";
 
 /** Updates fields of an existing Stage instance. Requires the user to be a moderator of the Stage channel. */
 export async function updateStageInstance(

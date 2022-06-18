@@ -1,5 +1,5 @@
 import { Bot } from "../../bot.ts";
-import { DiscordGatewayPayload,DiscordChannel } from "../../deps.ts";
+import { DiscordChannel, DiscordGatewayPayload } from "../../deps.ts";
 
 export async function handleChannelDelete(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordChannel;
