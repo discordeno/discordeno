@@ -13,6 +13,7 @@ import { simplifyUrl } from "./simplifyUrl.ts";
 import { baseEndpoints } from "../util/constants.ts";
 import { API_VERSION } from "../util/constants.ts";
 import { removeTokenPrefix } from "../util/token.ts";
+import { sendRequest } from "./sendRequest.ts";
 
 export function createRestManager(options: CreateRestManagerOptions) {
   const version = options.version || API_VERSION;
@@ -73,6 +74,7 @@ export function createRestManager(options: CreateRestManagerOptions) {
     simplifyUrl: options.simplifyUrl || simplifyUrl,
     processGlobalQueue: options.processGlobalQueue || processGlobalQueue,
     convertRestError: options.convertRestError || convertRestError,
+    sendRequest: options.sendRequest || sendRequest,
   };
 }
 
@@ -94,6 +96,7 @@ export interface CreateRestManagerOptions {
   simplifyUrl?: typeof simplifyUrl;
   processGlobalQueue?: typeof processGlobalQueue;
   convertRestError?: typeof convertRestError;
+  sendRequest?: typeof sendRequest;
 }
 
 export type RestManager = ReturnType<typeof createRestManager>;

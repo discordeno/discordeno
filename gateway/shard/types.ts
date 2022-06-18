@@ -50,17 +50,17 @@ export interface ShardGatewayConfig {
      *
      * @default "darwin" | "linux" | "windows"
      */
-    $os: string;
+    os: string;
     /** The "browser" where this shard is running on.
      *
      * @default "Discordeno"
      */
-    $browser: string;
+    browser: string;
     /** The device on which the shard is running.
      *
      * @default "Discordeno"
      */
-    $device: string;
+    device: string;
   };
   /** Bot token which is used to connect to Discord */
   token: string;
