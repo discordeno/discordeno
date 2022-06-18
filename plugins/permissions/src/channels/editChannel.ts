@@ -1,5 +1,5 @@
 import { ChannelFlags, PermissionStrings } from "../../deps.ts";
-import { BotWithCache, ChannelTypes, GuildFeatures } from "../../deps.ts";
+import { BotWithCache, ChannelTypes, PremiumTiers } from "../../deps.ts";
 import { requireBotChannelPermissions } from "../permissions.ts";
 
 export default function editChannel(bot: BotWithCache) {
@@ -97,6 +97,19 @@ export default function editChannel(bot: BotWithCache) {
 
       if (options.flags === ChannelFlags.Pinned && !isThread) {
         throw new Error("PINNED can only be set for threads in forum channels");
+      }
+
+      if (options.bitrate) {
+        if (channel.type !== ChannelTypes.GuildVoice && channel.type !== ChannelTypes.GuildStageVoice) {
+          throw new Error("Bitrate can only be set for voice channels");
+        }
+        const limit = channel.type === ChannelTypes.GuildStageVoice ? 64000 : guild?.toggles.vipRegions ? 384000 : {
+          [PremiumTiers.None]: 96000,
+          [PremiumTiers.Tier1]: 128000,
+          [PremiumTiers.Tier2]: 256000,
+          [PremiumTiers.Tier3]: 384000,
+        }[guild?.premiumTier ?? PremiumTiers.Tier3];
+        if (options.bitrate > limit) throw new Error(`The bitrate must be less than ${limit}`);
       }
 
       requireBotChannelPermissions(
