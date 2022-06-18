@@ -69,6 +69,7 @@ import { transformStageInstance } from "./transformers/stageInstance.ts";
 import { StickerPack, transformSticker, transformStickerPack } from "./transformers/sticker.ts";
 import { GetGatewayBot, transformGatewayBot } from "./transformers/gatewayBot.ts";
 import {
+  DiscordAllowedMentions,
   DiscordApplicationCommandOptionChoice,
   DiscordAutoModerationActionExecution,
   DiscordAutoModerationRule,
@@ -138,6 +139,10 @@ import {
 } from "./transformers/applicationCommandOptionChoice.ts";
 import { transformEmbedToDiscordEmbed } from "./transformers/reverse/embed.ts";
 import { transformComponentToDiscordComponent } from "./transformers/reverse/component.ts";
+import { transformActivityToDiscordActivity } from "./transformers/reverse/activity.ts";
+import { transformTeamToDiscordTeam } from "./transformers/reverse/team.ts";
+import { transformMemberToDiscordMember, transformUserToDiscordUser } from "./transformers/reverse/member.ts";
+import { transformApplicationToDiscordApplication } from "./transformers/reverse/application.ts";
 import { getBotIdFromToken, removeTokenPrefix } from "./util/token.ts";
 import { CreateShardManager } from "./gateway/manager/shardManager.ts";
 import { AutoModerationRule, transformAutoModerationRule } from "./transformers/automodRule.ts";
@@ -146,6 +151,8 @@ import {
   transformAutoModerationActionExecution,
 } from "./transformers/automodActionExecution.ts";
 import { routes } from "./util/routes.ts";
+import { transformAllowedMentionsToDiscordAllowedMentions } from "./transformers/reverse/allowedMentions.ts";
+import { AllowedMentions } from "./mod.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -394,8 +401,14 @@ export function createBaseHelpers(options: Partial<Helpers>) {
 
 export interface Transformers {
   reverse: {
+    allowedMentions: (bot: Bot, payload: AllowedMentions) => DiscordAllowedMentions;
     embed: (bot: Bot, payload: Embed) => DiscordEmbed;
     component: (bot: Bot, payload: Component) => DiscordComponent;
+    activity: (bot: Bot, payload: Activity) => DiscordActivity;
+    member: (bot: Bot, payload: Member) => DiscordMember;
+    user: (bot: Bot, payload: User) => DiscordUser;
+    team: (bot: Bot, payload: Team) => DiscordTeam;
+    application: (bot: Bot, payload: Application) => DiscordApplication;
   };
   snowflake: (snowflake: string) => bigint;
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
@@ -447,8 +460,14 @@ export interface Transformers {
 export function createTransformers(options: Partial<Transformers>) {
   return {
     reverse: {
+      allowedMentions: options.reverse?.allowedMentions || transformAllowedMentionsToDiscordAllowedMentions,
       embed: options.reverse?.embed || transformEmbedToDiscordEmbed,
       component: options.reverse?.component || transformComponentToDiscordComponent,
+      activity: options.reverse?.activity || transformActivityToDiscordActivity,
+      member: options.reverse?.member || transformMemberToDiscordMember,
+      user: options.reverse?.user || transformUserToDiscordUser,
+      team: options.reverse?.team || transformTeamToDiscordTeam,
+      application: options.reverse?.application || transformApplicationToDiscordApplication,
     },
     automodRule: options.automodRule || transformAutoModerationRule,
     automodActionExecution: options.automodActionExecution || transformAutoModerationActionExecution,

@@ -5,6 +5,7 @@ import {
   Collection,
   CreateMessage,
   FinalHelpers,
+  InteractionResponse,
   ListGuildMembers,
   Member,
   Message,
@@ -20,6 +21,7 @@ import { moveMember } from "./src/moveMember.ts";
 import { fetchAndRetrieveMembers } from "./src/fetchAndRetrieveMembers.ts";
 import { BotWithCache } from "../cache/src/addCacheCollections.ts";
 import { sendTextMessage } from "./src/sendTextMessage.ts";
+import { sendPrivateInteractionResponse } from "./src/sendPrivateInteractionResponse.ts";
 
 export type BotWithHelpersPlugin<B extends Bot = Bot> = Omit<B, "helpers"> & HelperFunctionsFromHelperPlugin;
 
@@ -36,6 +38,11 @@ export interface HelperFunctionsFromHelperPlugin {
       channelId: bigint,
       content: string | CreateMessage,
     ) => Promise<Message>;
+    sendPrivateInteractionResponse: (
+      id: bigint,
+      token: string,
+      options: InteractionResponse,
+    ) => Promise<Message | undefined>;
     suppressEmbeds: (
       channelId: bigint,
       messageId: bigint,
@@ -89,6 +96,11 @@ export function enableHelpersPlugin<B extends Bot = Bot>(rawBot: B): BotWithHelp
     channelId: bigint,
     content: string | CreateMessage,
   ) => sendTextMessage(bot, channelId, content);
+  bot.helpers.sendPrivateInteractionResponse = (
+    id: bigint,
+    token: string,
+    options: InteractionResponse,
+  ) => sendPrivateInteractionResponse(bot, id, token, options);
   bot.helpers.suppressEmbeds = (channelId: bigint, messageId: bigint) => suppressEmbeds(bot, channelId, messageId);
   bot.helpers.archiveThread = (threadId: bigint) => archiveThread(bot, threadId);
   bot.helpers.unarchiveThread = (threadId: bigint) => unarchiveThread(bot, threadId);
