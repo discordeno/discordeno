@@ -1,6 +1,4 @@
-import { GetGatewayBot, transformGatewayBot } from "../../transformers/gatewayBot.ts";
-import { DiscordReady } from "../../types/discord.ts";
-import { Collection } from "../../util/collection.ts";
+import { GatewayBot } from "../../types/shared.ts";
 import { createGatewayManager, GatewayManager } from "./gatewayManager.ts";
 
 export type Resharder = ReturnType<typeof activateResharder>;
@@ -46,7 +44,7 @@ export function activateResharder(options: ActivateResharderOptions) {
     getGatewayBot: options.getGatewayBot,
 
     /** Reshard the bots gateway. */
-    reshard: function (gatewayBot: GetGatewayBot) {
+    reshard: function (gatewayBot: GatewayBot) {
       return reshard(this, gatewayBot);
     },
 
@@ -104,7 +102,7 @@ export interface ActivateResharderOptions {
   /** Function which can be used to fetch the current gateway information of the bot.
    * This function is mainly used by the reshard checker.
    */
-  getGatewayBot(): Promise<GetGatewayBot>;
+  getGatewayBot(): Promise<GatewayBot>;
 
   /** Function which is used to tell a Worker that it should identify a resharder Shard to the gateway and wait for further instructions.
    * The worker should **NOT** process any events coming from this Shard.
@@ -142,7 +140,7 @@ export function activate(resharder: Resharder): void {
   }, resharder.checkInterval);
 }
 
-export async function reshard(resharder: Resharder, gatewayBot: GetGatewayBot) {
+export async function reshard(resharder: Resharder, gatewayBot: GatewayBot) {
   // oldGateway.debug("GW DEBUG", "[Resharding] Starting the reshard process.");
 
   // Create a temporary gateway manager for easier handling.
@@ -192,7 +190,7 @@ export async function reshard(resharder: Resharder, gatewayBot: GetGatewayBot) {
 // /** The handler to automatically reshard when necessary. */
 // export async function resharder(
 //   oldGateway: GatewayManager,
-//   results: GetGatewayBot,
+//   results: GatewayBot,
 // ) {
 //   oldGateway.debug("GW DEBUG", "[Resharding] Starting the reshard process.");
 
@@ -317,7 +315,7 @@ export async function resharderCloseOldShards(oldGateway: GatewayManager) {
 //     headers: {
 //       Authorization: `Bot ${gateway.token}`,
 //     },
-//   }).then((res) => res.json()).then((res) => transformGatewayBot(res))) as GetGatewayBot;
+//   }).then((res) => res.json()).then((res) => transformGatewayBot(res))) as GatewayBot;
 //
 //   const percentage = ((results.shards - gateway.maxShards) / gateway.maxShards) * 100;
 //   // Less than necessary% being used so do nothing
