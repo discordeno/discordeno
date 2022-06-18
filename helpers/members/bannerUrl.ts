@@ -5,16 +5,16 @@ import type { ImageFormat } from "./avatarUrl.ts";
 export function bannerURL(
   bot: Bot,
   userId: bigint,
-  options: {
-    banner: bigint;
+  banner: bigint,
+  options?: {
     format?: ImageFormat;
     guildId?: bigint;
   },
 ) {
   return bot.utils.formatImageURL(
-    options.guildId
-      ? bot.constants.routes.GUILD_MEMBER_BANNER(options.guildId, userId, bot.utils.iconBigintToHash(options.banner))
-      : bot.constants.routes.USER_BANNER(userId, bot.utils.iconBigintToHash(options.banner)),
+    options?.guildId
+      ? bot.constants.routes.GUILD_MEMBER_BANNER(options.guildId, userId, bot.utils.iconBigintToHash(banner))
+      : bot.constants.routes.USER_BANNER(userId, bot.utils.iconBigintToHash(banner)),
     undefined,
     options?.format,
   );
