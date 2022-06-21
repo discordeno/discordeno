@@ -44,6 +44,7 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMe
               placeholder: subComponent.placeholder,
               min_values: subComponent.minValues,
               max_values: subComponent.maxValues,
+              disabled: "disabled" in subComponent ? subComponent.disabled : undefined,
               options: subComponent.options.map((option) => ({
                 label: option.label,
                 value: option.value,
