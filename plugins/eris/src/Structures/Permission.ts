@@ -1,4 +1,4 @@
-import { BigString } from "../typings.ts";
+import { BigString } from "../Client.ts";
 
 export class Permission {
     allow: bigint;

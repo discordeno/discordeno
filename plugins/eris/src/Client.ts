@@ -1,7 +1,6 @@
 import {
-AllowedMentionsTypes,
+  AllowedMentionsTypes,
   ChannelTypes,
-  Collection,
   delay,
   DiscordAllowedMentions,
   DiscordAuditLogEntry,
@@ -16,13 +15,13 @@ AllowedMentionsTypes,
   DiscordTemplate,
   DiscordThreadMember,
   DiscordUser,
-  GatewayOpcodes,
+  EventEmitter,
   getBotIdFromToken,
   OverwriteTypes,
   RequestMethod,
-} from "../../../mod.ts";
-import { EventEmitter } from "../deps.ts";
+} from "../deps.ts";
 import { Base } from "./Base.ts";
+import { Collection } from "./Collection.ts";
 import {
   CHANNEL,
   CHANNEL_BULK_DELETE,
@@ -34,11 +33,9 @@ import {
   CHANNEL_MESSAGE_REACTION_USER,
   CHANNEL_MESSAGE_REACTIONS,
   CHANNEL_MESSAGES,
-  CHANNEL_MESSAGES_SEARCH,
   CHANNEL_PERMISSION,
   CHANNEL_PIN,
   CHANNEL_PINS,
-  CHANNEL_RECIPIENT,
   CHANNEL_TYPING,
   CHANNEL_WEBHOOKS,
   COMMAND,
@@ -66,11 +63,9 @@ import {
   GUILD_INTEGRATIONS,
   GUILD_INVITES,
   GUILD_MEMBER,
-  GUILD_MEMBER_NICK,
   GUILD_MEMBER_ROLE,
   GUILD_MEMBERS,
   GUILD_MEMBERS_SEARCH,
-  GUILD_MESSAGES_SEARCH,
   GUILD_PREVIEW,
   GUILD_PRUNE,
   GUILD_ROLE,
@@ -99,26 +94,13 @@ import {
   THREAD_MEMBERS,
   THREAD_WITH_MESSAGE,
   THREAD_WITHOUT_MESSAGE,
-  THREADS_ACTIVE,
   THREADS_ARCHIVED,
   THREADS_ARCHIVED_JOINED,
   THREADS_GUILD_ACTIVE,
   USER,
-  USER_BILLING,
-  USER_BILLING_PAYMENTS,
-  USER_BILLING_PREMIUM_SUBSCRIPTION,
   USER_CHANNELS,
-  USER_CONNECTION_PLATFORM,
-  USER_CONNECTIONS,
   USER_GUILD,
   USER_GUILDS,
-  USER_MFA_CODES,
-  USER_MFA_TOTP_DISABLE,
-  USER_MFA_TOTP_ENABLE,
-  USER_NOTE,
-  USER_PROFILE,
-  USER_RELATIONSHIP,
-  USER_SETTINGS,
   VOICE_REGIONS,
   WEBHOOK,
   WEBHOOK_MESSAGE,
@@ -445,35 +427,7 @@ export class Client extends EventEmitter {
     return await this.put(GUILD_COMMANDS(this.applicationId, guildID), { body: commands });
   }
 
-  /** Closes a voice connection with a guild ID */
-  closeVoiceConnection(guildID: BigString): void {
-    // TODO: fix this
-    // this.shards.get(this.guildShardMap[guildID] || 0).sendWS(GatewayOpcodes.VoiceStateUpdate, {
-    //   guild_id: guildID,
-    //   channel_id: null,
-    //   self_mute: false,
-    //   self_deaf: false,
-    // });
-    // this.voiceConnections.leave(guildID);
-  }
-
-  /**
-   * Create a channel in a guild
-   * @arg {String} guildID The ID of the guild to create the channel in
-   * @arg {String} name The name of the channel
-   * @arg {String} [type=0] The type of the channel, either 0 (text), 2 (voice), 4 (category), 5 (news), 6 (store), or 13 (stage)
-   * @arg {Object | String} [options] The properties the channel should have. If `options` is a string, it will be treated as `options.parentID` (see below). Passing a string is deprecated and will not be supported in future versions.
-   * @arg {Number} [options.bitrate] The bitrate of the channel (voice channels only)
-   * @arg {Boolean} [options.nsfw] The nsfw status of the channel
-   * @arg {String?} [options.parentID] The ID of the parent category channel for this channel
-   * @arg {Array<Object>} [options.permissionOverwrites] An array containing permission overwrite objects
-   * @arg {Number} [options.position] The sorting position of the channel
-   * @arg {Number} [options.rateLimitPerUser] The time in seconds a user has to wait before sending another message (does not affect bots or users with manageMessages/manageChannel permissions) (text channels only)
-   * @arg {String} [options.reason] The reason to be displayed in audit logs
-   * @arg {String} [options.topic] The topic of the channel (text channels only)
-   * @arg {Number} [options.userLimit] The channel user limit (voice channels only)
-   * @returns {Promise<CategoryChannel | TextChannel | TextVoiceChannel>}
-   */
+  /** Create a channel in a guild */
   async createChannel(guildID: BigString, name: string): Promise<TextChannel>;
   async createChannel(
     guildID: BigString,
@@ -764,16 +718,7 @@ export class Client extends EventEmitter {
     }).then((channel) => Channel.from(channel, this));
   }
 
-  /**
-   * Create a thread without an existing message
-   * @arg {String} channelID: BigString The ID of the channel
-   * @arg {Object} options The thread options
-   * @arg {Number} options.autoArchiveDuration Duration in minutes to automatically archive the thread after recent activity, either 60, 1440, 4320 or 10080
-   * @arg {Boolean} [options.invitable] Whether non-moderators can add other non-moderators to the thread (private threads only)
-   * @arg {String} options.name The thread channel name
-   * @arg {Number} [options.type] The channel type of the thread to create. It is recommended to explicitly set this property as this will be a required property in API v10
-   * @returns {Promise<PrivateThreadChannel>}
-   */
+  /** Create a thread without an existing message */
   async createThreadWithoutMessage(
     channelID: BigString,
     options: CreateThreadWithoutMessageOptions,
@@ -1743,18 +1688,7 @@ export class Client extends EventEmitter {
     return await this.get(CHANNEL_MESSAGE(channelID, messageID)).then((message) => new Message(message, this));
   }
 
-  /**
-   * Get a list of users who reacted with a specific reaction
-   * @arg {String} channelID: BigString The ID of the channel
-   * @arg {String} messageID The ID of the message
-   * @arg {String} reaction The reaction (Unicode string if Unicode emoji, `emojiName:emojiID` if custom emoji)
-   * @arg {Object} [options] Options for the request. If this is a number ([DEPRECATED] behavior), it is treated as `options.limit`
-   * @arg {Number} [options.limit=100] The maximum number of users to get
-   * @arg {String} [options.after] Get users after this user ID
-   * @arg {String} [before] [DEPRECATED] Get users before this user ID. Discord no longer supports this parameter
-   * @arg {String} [after] [DEPRECATED] Get users after this user ID
-   * @returns {Promise<Array<User>>}
-   */
+  /** Get a list of users who reacted with a specific reaction */
   async getMessageReaction(
     channelID: BigString,
     messageID: BigString,
@@ -1796,7 +1730,7 @@ export class Client extends EventEmitter {
     let limit = options.limit;
     if (limit && limit > 100) {
       let logs: Message[] = [];
-      const get: Promise<Message[]> = async (_before?: BigString, _after?: BigString) => {
+      const get: (_before?: BigString, _after?: BigString) => Promise<Message[]> = async (_before?: BigString, _after?: BigString) => {
         let qs = "";
         qs += `&limit=${100}`;
         if (_before) qs += `&before=${_before}`;
@@ -2197,7 +2131,7 @@ export class Client extends EventEmitter {
   }
 
   /** Validate discovery search term */
-  async validateDiscoverySearchTerm(term: string): Promise<{ valid: boolean}> {
+  async validateDiscoverySearchTerm(term: string): Promise<{ valid: boolean }> {
     return await this.get(DISCOVERY_VALIDATION + `?term=${encodeURI(term)}`);
   }
 
@@ -2258,17 +2192,16 @@ export class Client extends EventEmitter {
       // The icon is not animated but it could be that it starts with a 0 so we just put a `b` in front so nothing breaks
       hash = `b${hash}`;
     }
-  
+
     return BigInt(`0x${hash}`);
   }
-  
+
   iconBigintToHash(icon: bigint): string {
     // Convert the bigint back to a hash
     const hash = icon.toString(16);
     // Hashes starting with a are animated and with b are not so need to handle that
     return hash.startsWith("a") ? `a_${hash.substring(1)}` : hash.substring(1);
   }
-  
 
   /** Splits a large array into chunks of smaller arrays */
   chunkArray<T>(array: T[], size = 100): T[][] {

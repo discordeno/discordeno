@@ -1,4 +1,4 @@
-import { BigString } from "./typings.ts";
+import { BigString } from "./Client.ts";
 
 export class Base {
   /** Internal storage of the id done in bigint to preserve memory */
