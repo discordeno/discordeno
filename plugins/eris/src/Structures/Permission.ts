@@ -7,9 +7,13 @@ export class Permission {
   deny: bigint;
   _json?: Record<string, boolean>;
 
-  constructor(allow: BigString | number, deny: BigString | number = 0) {
+  constructor(allow: BigString | number = 0, deny: BigString | number = 0) {
     this.allow = BigInt(allow);
     this.deny = BigInt(deny);
+  }
+
+  get isAdmin(): boolean {
+    return !!(this.allow & BigInt(BitwisePermissionFlags.ADMINISTRATOR));
   }
 
   get json() {
@@ -32,6 +36,8 @@ export class Permission {
 
   /** Check if this permission allows a specific permission */
   has(permission: bigint | keyof typeof BitwisePermissionFlags): boolean {
+    if (this.isAdmin) return true;
+
     if (typeof permission === "bigint") {
       return (this.allow & permission) === permission;
     }

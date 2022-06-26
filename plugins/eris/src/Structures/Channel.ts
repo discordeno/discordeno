@@ -22,6 +22,10 @@ export class Channel extends Base {
     this.client = client;
   }
 
+  get mention() {
+    return `<#${this.id}>`;
+  }
+
   static from(data: DiscordChannel, client: Client) {
     switch (data.type) {
       case ChannelTypes.GuildText: {
@@ -62,6 +66,13 @@ export class Channel extends Base {
     }
     client.emit("warn", new Error(`Unknown channel type: ${data.type}\n${JSON.stringify(data)}`));
     return new Channel(data, client);
+  }
+
+  toJSON(props: string[] = []) {
+    return super.toJSON([
+      "type",
+      ...props,
+    ]);
   }
 }
 

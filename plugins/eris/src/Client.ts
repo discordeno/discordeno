@@ -10,6 +10,7 @@ import {
   DiscordIntegration,
   DiscordInvite,
   DiscordMember,
+  DiscordMemberWithUser,
   DiscordMessage,
   DiscordRole,
   DiscordTemplate,
@@ -1730,7 +1731,10 @@ export class Client extends EventEmitter {
     let limit = options.limit;
     if (limit && limit > 100) {
       let logs: Message[] = [];
-      const get: (_before?: BigString, _after?: BigString) => Promise<Message[]> = async (_before?: BigString, _after?: BigString) => {
+      const get: (_before?: BigString, _after?: BigString) => Promise<Message[]> = async (
+        _before?: BigString,
+        _after?: BigString,
+      ) => {
         let qs = "";
         qs += `&limit=${100}`;
         if (_before) qs += `&before=${_before}`;
@@ -2246,6 +2250,17 @@ export class Client extends EventEmitter {
       "voiceConnections",
       ...props,
     ]);
+  }
+
+  // Typescript is not so good as we developers so we need this little utility function to help it out
+  // Taken from https://fettblog.eu/typescript-hasownproperty/
+  /** TS save way to check if a property exists in an object */
+  hasProperty<T extends {}, Y extends PropertyKey = string, Z = unknown>(obj: T, prop: Y): obj is T & Record<Y, Z> {
+    return obj.hasOwnProperty(prop);
+  }
+
+  isDiscordMemberWithUser(member: DiscordMember | DiscordMemberWithUser): member is DiscordMemberWithUser {
+    return this.hasProperty(member, "user");
   }
 }
 
