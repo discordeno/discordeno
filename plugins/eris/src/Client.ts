@@ -2249,6 +2249,27 @@ export class Client extends EventEmitter {
     return Number(BigInt(snowflake) / 4194304n + 1420070400000n);
   }
 
+  iconHashToBigInt(hash: string): bigint {
+    // The icon is animated so it needs special handling
+    if (hash.startsWith("a_")) {
+      // Change the `a_` to just be `a`
+      hash = `a${hash.substring(2)}`;
+    } else {
+      // The icon is not animated but it could be that it starts with a 0 so we just put a `b` in front so nothing breaks
+      hash = `b${hash}`;
+    }
+  
+    return BigInt(`0x${hash}`);
+  }
+  
+  iconBigintToHash(icon: bigint): string {
+    // Convert the bigint back to a hash
+    const hash = icon.toString(16);
+    // Hashes starting with a are animated and with b are not so need to handle that
+    return hash.startsWith("a") ? `a_${hash.substring(1)}` : hash.substring(1);
+  }
+  
+
   /** Splits a large array into chunks of smaller arrays */
   chunkArray<T>(array: T[], size = 100): T[][] {
     const box: T[][] = [];
