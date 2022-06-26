@@ -41,13 +41,15 @@ export class Collection<K, V> extends Map<K, V> {
     return;
   }
 
-  filter(callback: (value: V, key: K) => boolean): V[] {
+  filter(callback: (value: V, key: K) => boolean, returnArray?: true): V[];
+  filter(callback: (value: V, key: K) => boolean, returnArray: false): Collection<K, V>;
+  filter(callback: (value: V, key: K) => boolean, returnArray = true): Collection<K, V> | V[] {
     const relevant = new Collection<K, V>();
     this.forEach((value, key) => {
       if (callback(value, key)) relevant.set(key, value);
     });
 
-    return relevant.array();
+    return returnArray ? relevant.array() : relevant;
   }
 
   map<T>(callback: (value: V, key: K) => T) {
