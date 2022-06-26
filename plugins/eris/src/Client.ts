@@ -1136,7 +1136,7 @@ export class Client extends EventEmitter {
   }
 
   /** Update a user's voice state - See [caveats](https://discord.com/developers/docs/resources/guild#modify-user-voice-state-caveats) */
-  async editGuildVoiceState(guildID: BigString, options: VoiceStateOptions, userID = "@me"): Promise<void> {
+  async editGuildVoiceState(guildID: BigString, options: VoiceStateOptions, userID: BigString = "@me"): Promise<void> {
     return await this.patch(GUILD_VOICE_STATE(guildID, userID), {
       body: {
         channel_id: options.channelID,
@@ -1948,7 +1948,7 @@ export class Client extends EventEmitter {
   }
 
   /** Join a thread */
-  async joinThread(channelID: BigString, userID = "@me"): Promise<void> {
+  async joinThread(channelID: BigString, userID: BigString = "@me"): Promise<void> {
     return this.put(THREAD_MEMBER(channelID, userID));
   }
 
@@ -1965,7 +1965,7 @@ export class Client extends EventEmitter {
   }
 
   /** Leave a thread */
-  async leaveThread(channelID: BigString, userID = "@me"): Promise<void> {
+  async leaveThread(channelID: BigString, userID: BigString = "@me"): Promise<void> {
     return await this.delete(THREAD_MEMBER(channelID, userID));
   }
 
