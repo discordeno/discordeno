@@ -2,6 +2,19 @@
 
 This plugins helps provide a close to 1:1 api with Eris library. This is intended to help make it easier to migrate from Eris library.
 
+## Differences
+
+The following is a list of known differences at the time of writing this plugin.
+
+- This plugin does not support small bots. It does not have REST/Sharding functionality. Instead it requires you to provide a proxy rest url and a proxy rest authorization. 
+- Deleted any properties/methods/options related to REST/Sharding managers.
+- Deleted [Client.bulkEditCommandPermissions](https://discord.com/developers/docs/interactions/application-commands#batch-edit-application-command-permissions)
+- Deleted Client.getActiveThreads
+- Deleted all User bot functionality.
+- Deleted Client.editNickname
+- Deleted Client.getGuildAuditLogs
+- Deleted Client.joinVoiceChannel
+
 ## Credits
 
 https://github.com/abalabahaha/eris
