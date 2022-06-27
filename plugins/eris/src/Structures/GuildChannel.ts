@@ -10,7 +10,7 @@ import PermissionOverwrite from "./PermissionOverwrite.ts";
 import ThreadChannel from "./ThreadChannel.ts";
 
 export class GuildChannel extends Channel {
-  position?: number;
+  position: number;
   name: string;
   parentID?: BigString | null;
   guild: Guild;
@@ -20,7 +20,7 @@ export class GuildChannel extends Channel {
   constructor(data: DiscordChannel, client: Client) {
     super(data, client);
 
-    this.position = data.position;
+    this.position = data.position ?? 0;
     this.guild = client.guilds.get(data.guild_id!)!;
     this.name = data.name ?? "";
     this.parentID = data.parent_id;

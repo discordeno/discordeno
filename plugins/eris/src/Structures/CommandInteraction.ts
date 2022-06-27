@@ -205,16 +205,9 @@ export class CommandInteraction extends Interaction {
       content.content = "" + content.content;
     }
 
-    const allowed_mentions = content.content !== undefined || content.embeds || content.allowedMentions
-      ? this.client._formatAllowedMentions(content.allowedMentions)
-      : undefined;
-
     return this.client.createInteractionResponse.call(this.client, this.id, this.token, {
       type: InteractionResponseTypes.ChannelMessageWithSource,
-      data: {
-        ...content,
-        allowed_mentions,
-      },
+      data: content,
     }, file).then(() => this.update());
   }
 

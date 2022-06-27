@@ -32,6 +32,8 @@ import PublicThreadChannel from "./Structures/PublicThreadChannel.ts";
 import StageChannel from "./Structures/StageChannel.ts";
 import TextChannel from "./Structures/TextChannel.ts";
 import TextVoiceChannel from "./Structures/TextVoiceChannel.ts";
+import ThreadChannel from "./Structures/ThreadChannel.ts";
+import ThreadMember from "./Structures/ThreadMember.ts";
 import User from "./Structures/User.ts";
 
 // // TYPES
@@ -1537,13 +1539,13 @@ export interface GetArchivedThreadsOptions {
   before?: Date;
   limit?: number;
 }
-// export interface ListedChannelThreads<T extends ThreadChannel = AnyThreadChannel> extends ListedGuildThreads<T> {
-//   hasMore: boolean;
-// }
-// export interface ListedGuildThreads<T extends ThreadChannel = AnyThreadChannel> {
-//   members: ThreadMember[];
-//   threads: T[];
-// }
+export interface ListedChannelThreads<T extends ThreadChannel = AnyThreadChannel> extends ListedGuildThreads<T> {
+  hasMore: boolean;
+}
+export interface ListedGuildThreads<T extends ThreadChannel = AnyThreadChannel> {
+  members: ThreadMember[];
+  threads: T[];
+}
 // export interface PrivateThreadMetadata extends ThreadMetadata {
 //   invitable: boolean;
 // }
@@ -2392,7 +2394,7 @@ export enum InviteTargetTypes {
 //   createInteractionResponse(
 //     interactionID: string,
 //     interactionToken: string,
-//     options: InteractionOptions,
+//     options: InteractionResponse,
 //     file?: FileContent | FileContent[],
 //   ): Promise<void>;
 //   createMessage(channelID: string, content: MessageContent, file?: FileContent | FileContent[]): Promise<Message>;
@@ -3200,7 +3202,7 @@ export enum InviteTargetTypes {
 //   message?: Message;
 //   type: number;
 //   user?: User;
-//   acknowledge(data: InteractionOptions): Promise<void>;
+//   acknowledge(data: InteractionResponse): Promise<void>;
 //   createFollowup(content: string | InteractionContent, file?: FileContent | FileContent[]): Promise<Message>;
 //   createMessage(content: string | InteractionContent, file?: FileContent | FileContent[]): Promise<void>;
 //   defer(flags?: number): Promise<void>;

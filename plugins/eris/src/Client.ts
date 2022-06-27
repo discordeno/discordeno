@@ -171,7 +171,7 @@ import {
   GuildTemplateOptions,
   GuildVanity,
   IntegrationOptions,
-  InteractionOptions,
+  InteractionResponse,
   ListedChannelThreads,
   ListedGuildThreads,
   MemberOptions,
@@ -597,7 +597,7 @@ export class Client extends EventEmitter {
   async createInteractionResponse(
     interactionID: BigString,
     interactionToken: string,
-    options: InteractionOptions,
+    options: InteractionResponse,
     file?: FileContent | FileContent[],
   ): Promise<void> {
     return await this.post(INTERACTION_RESPOND(interactionID, interactionToken), {
@@ -847,7 +847,7 @@ export class Client extends EventEmitter {
   }
 
   /** Edit a channel's properties */
-  async editChannel(channelID: BigString, options: EditChannelOptions, reason?: string) {
+  async editChannel(channelID: BigString, options: EditChannelOptions, reason?: string): Promise<AnyGuildChannel> {
     return await this.patch(CHANNEL(channelID), {
       reason,
       body: {
@@ -1489,7 +1489,7 @@ export class Client extends EventEmitter {
 
     return await this.get(GUILD_AUDIT_LOGS(guildID) + (qs ? "?" + qs : "")).then((data) => {
       const guild = this.guilds.get(guildID);
-      const users = data.users.map((u) => {
+      const users = data.users.map((u: DiscordUser) => {
         const user = new User(u, this);
         this.users.set(user.id, user);
         return user;
@@ -1502,9 +1502,9 @@ export class Client extends EventEmitter {
       });
 
       return {
-        entries: data.audit_log_entries.map((entry: DiscordAuditLogEntry) => new GuildAuditLogEntry(entry, guild)),
+        entries: data.audit_log_entries.map((entry: DiscordAuditLogEntry) => new GuildAuditLogEntry(entry, guild!)),
         integrations: data.integrations.map((integration: DiscordIntegration) =>
-          new GuildIntegration(integration, guild)
+          new GuildIntegration(integration, guild!)
         ),
         threads: threads,
         users: users,
@@ -1583,7 +1583,7 @@ export class Client extends EventEmitter {
   async getGuildIntegrations(guildID: BigString): Promise<GuildIntegration[]> {
     const guild = this.guilds.get(guildID);
     return await this.get(GUILD_INTEGRATIONS(guildID)).then((integrations) =>
-      integrations.map((integration: DiscordIntegration) => new GuildIntegration(integration, guild))
+      integrations.map((integration: DiscordIntegration) => new GuildIntegration(integration, guild!))
     );
   }
 
@@ -1830,8 +1830,8 @@ export class Client extends EventEmitter {
 
   /** Get a guild's members via the REST API. */
   async getRESTGuildMember(guildID: BigString, memberID: BigString): Promise<Member> {
-    return await this.get(GUILD_MEMBER(guildID, memberID)).then((member: DiscordMember) =>
-      new Member(member, this.guilds.get(guildID), this)
+    return await this.get(GUILD_MEMBER(guildID, memberID)).then((member: DiscordMemberWithUser) =>
+      new Member(member, this.guilds.get(guildID)!, this)
     );
   }
 
@@ -1852,13 +1852,13 @@ export class Client extends EventEmitter {
     }
 
     return await this.get(GUILD_MEMBERS(guildID) + (qs ? "?" + qs : "")).then((members) =>
-      members.map((member: DiscordMember) => new Member(member, this.guilds.get(guildID), this))
+      members.map((member: DiscordMemberWithUser) => new Member(member, this.guilds.get(guildID)!, this))
     );
   }
 
   /** Get a guild's roles via the REST API. */
   async getRESTGuildRoles(guildID: BigString): Promise<Role[]> {
-    return await this.get(GUILD_ROLES(guildID)).then((roles) => roles.map((role: DiscordRole) => new Role(role)));
+    return await this.get(GUILD_ROLES(guildID)).then((roles) => roles.map((role: DiscordRole) => new Role(role, this.guilds.get(guildID)!)));
   }
 
   /** Get a list of the user's guilds via the REST API. */
@@ -2088,7 +2088,7 @@ export class Client extends EventEmitter {
 
     return await this.get(GUILD_MEMBERS_SEARCH(guildID) + qs).then((members) => {
       const guild = this.guilds.get(guildID);
-      return members.map((member: DiscordMember) => new Member(member, guild, this));
+      return members.map((member: DiscordMemberWithUser) => new Member(member, guild!, this));
     });
   }
 
