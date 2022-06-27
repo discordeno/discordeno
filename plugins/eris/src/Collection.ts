@@ -125,4 +125,18 @@ export class Collection<K, V> extends Map<K, V> {
     item.update?.(obj, extra);
     return item;
   }
+
+  toRecord(): Record<string, V> {
+    const record: Record<string, V> = {};
+    for (const [key, value] of this.entries()) {
+      // @ts-ignore should work fine
+      const finalKey = typeof key === 'string' ? key : key.toString();
+       // @ts-ignore should work fine
+      record[finalKey] = value;
+    }
+
+    return record;
+  }
 }
+
+export default Collection;

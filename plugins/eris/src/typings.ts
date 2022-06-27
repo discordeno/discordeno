@@ -206,11 +206,11 @@ export type GuildTextableChannel = TextChannel | TextVoiceChannel | NewsChannel;
 // // Interaction
 // export type AnyInteraction = PingInteraction | CommandInteraction | ComponentInteraction | AutocompleteInteraction;
 // export type InteractionCallbackData = InteractionAutocomplete | InteractionContent;
-// export type InteractionContent = Pick<
-//   WebhookPayload,
-//   "content" | "embeds" | "allowedMentions" | "tts" | "flags" | "components"
-// >;
-// export type InteractionContentEdit = Pick<WebhookPayload, "content" | "embeds" | "allowedMentions" | "components">;
+export type InteractionContent = Pick<
+  WebhookPayload,
+  "content" | "embeds" | "allowedMentions" | "tts" | "flags" | "components"
+>;
+export type InteractionContentEdit = Pick<WebhookPayload, "content" | "embeds" | "allowedMentions" | "components">;
 // export type InteractionDataOptions =
 //   | InteractionDataOptionsSubCommand
 //   | InteractionDataOptionsSubCommandGroup

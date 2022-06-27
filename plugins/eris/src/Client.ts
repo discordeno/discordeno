@@ -235,34 +235,19 @@ export class Client extends EventEmitter {
     return getBotIdFromToken(this.token);
   }
 
-  get channelGuildMap(): Record<string, string> {
-    const map: Record<string, string> = {};
-    for (const [channelId, guildId] of this._channelGuildMap.entries()) {
-      map[channelId.toString()] = guildId.toString();
-    }
-
-    return map;
+  get channelGuildMap(): Record<string, BigString> {
+    return this._channelGuildMap.toRecord();
   }
 
-  get threadGuildMap(): Record<string, string> {
-    const map: Record<string, string> = {};
-    for (const [threadId, guildId] of this._threadGuildMap.entries()) {
-      map[threadId.toString()] = guildId.toString();
-    }
-
-    return map;
+  get threadGuildMap(): Record<string, BigString> {
+    return this._threadGuildMap.toRecord();
   }
 
-  get privateChannelMap() {
-    const map: Record<string, string> = {};
-    for (const [userId, channelId] of this._privateChannelMap.entries()) {
-      map[userId.toString()] = channelId.toString();
-    }
-
-    return map;
+  get privateChannelMap(): Record<string, BigString> {
+    return this._privateChannelMap.toRecord();
   }
 
-  /** THe amount of time in milliseconds that this client has been online for. */
+  /** The amount of time in milliseconds that this client has been online for. */
   get uptime() {
     return Date.now() - this.startTime;
   }
@@ -1293,7 +1278,7 @@ export class Client extends EventEmitter {
 
   /** Execute a slack-style webhook */
   async executeSlackWebhook(
-    webhookID: string,
+    webhookID: BigString,
     token: string,
     options: Record<string, unknown> & { auth?: boolean; threadID?: string },
   ): Promise<void>;
@@ -1322,16 +1307,16 @@ export class Client extends EventEmitter {
   }
 
   /** Execute a webhook */
-  async executeWebhook(
-    webhookID: string,
-    token: string,
-    options: WebhookPayload & { wait: true },
-  ): Promise<Message>;
-  async executeWebhook(webhookID: string, token: string, options: WebhookPayload): Promise<void>;
+  async executeWebhook(webhookID: BigString, token: string, options: WebhookPayload): Promise<void>;
   async executeWebhook(
     webhookID: BigString,
     token: string,
-    options: WebhookPayload & { wait?: true },
+    options: WebhookPayload & { wait: true },
+  ): Promise<Message>;
+  async executeWebhook(
+    webhookID: BigString,
+    token: string,
+    options: WebhookPayload & { wait?: boolean; },
   ): Promise<unknown> {
     let qs = "";
     if (options.wait) {
