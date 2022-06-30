@@ -53,7 +53,7 @@ const client = Discord.createBot({
       }
     },
   },
-  intents: ["Guilds"],
+  intents: Discord.Intents.Guilds | Discord.Intents.GuildMessages,
   token: config.token,
 });
 

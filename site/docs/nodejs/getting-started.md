@@ -13,6 +13,8 @@ different language.
 
 This guide will help you making your first Discord Bot using Node.js or even migrating your Bot from a other Library.
 
+Moreover this guide will utilize two different options. One option to use the Discordeno package without any frameworks and one, which uses the wrapper called `Discordeno.js`, which aims to achieve a djs-like interface.
+
 :::important Disclaimer
 
 Some features are not documented yet. If you want to know more about them, kindly ask for help in the

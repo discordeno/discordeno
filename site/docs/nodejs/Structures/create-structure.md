@@ -52,28 +52,46 @@ the data, how the methods are named and how you want to process the request.
 
 ## Using Template Structures:
 
-When you are migrating from another library, you'll likely choose to continue using special structures. Therefore why we
-have ready-made structures in our template repo:
+When you are migrating from another library and you want to utilize the djs-like wrapper, you'll likely choose to continue using special structures. Therefore we have ready-made structures for the wrapper `Discordeno.js`.
 
-- [Guild](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Structures/Guild.js)
-- [Channel](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Structures/Channel.js)
-- [Role](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Structures/Role.js)
-- [Member](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Structures/Member.js)
-- [User](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Structures/User.js)
-- [Message](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Structures/Message.js)
-- [Interaction](https://github.com/discordeno/discordeno/tree/main/template/nodejs/Structures/Interaction.js)
+- [Guild](https://github.com/meister03/discordeno.js/tree/master/Structures/Guild.js)
+- [Channel](https://github.com/meister03/discordeno.js/tree/master/Structures/Channel.js)
+- [Role](https://github.com/meister03/discordeno.js/tree/master/Structures/Role.js)
+- [Member](https://github.com/meister03/discordeno.js/tree/master/Structures/Member.js)
+- [User](https://github.com/meister03/discordeno.js/tree/master/Structures/User.js)
+- [Message](https://github.com/meister03/discordeno.js/tree/master/Structures/Message.js)
+- [Interaction](https://github.com/meister03/discordeno.js/tree/master/Structures/Interaction.js)
+- [Emoji](https://github.com/meister03/discordeno.js/tree/master/Structures/Emoji.js)
+- [Webhook](https://github.com/meister03/discordeno.js/tree/master/Structures/Webhook.js)
+- [Embed](https://github.com/meister03/discordeno.js/tree/master/Structures/Embed.js)
+- [Component](https://github.com/meister03/discordeno.js/tree/master/Structures/Component.js)
+- [Collection](https://github.com/meister03/discordeno.js/tree/master/Structures/Collection.js)
 
-We recommend that you clone the whole template repo, since some structures are based on other files.
+We recommend that you check the wrappers [Readme](https://github.com/meister03/discordeno.js#discordclient) in order to construct the client for following the Guide
 
 **Using the Structures:**
 
 ```js
-const Guild = require("./structures/Guild"); // Path to your structure
-const guild = new Guild(client, data); // DiscordenoClient and DiscordenoPayloadData
+const Discord = require("discordeno.js");
+const client = new Discord.Client(clientOptions, cacheOptions); //See the Readme above
+Discord.startBot(client);
+const guild = client.guilds.forge(guildData);
+const channel = guild.channels.forge(channelData);
+const role = guild.roles.forge(roleData);
+const member = guild.members.forge(memberData);
+const user = guild.users.forge(userData);
+const message = guild.messages.forge(messageData);
+const interaction = guild.interactions.forge(interactionData);
+const emoji = guild.emojis.forge(emojiData);
+
+const webhook = new Discord.Webhook(client, webhookData);
+const embed = new Discord.Embed(embedData) ;// embedData is optional
+const component = new Discord.Component(componentData); // componentData is optional
+const collection = new Discord.Collection();
 ```
 
 Some popular methods have been added to the structures so that you can use them without having to come up with your own.
-Of course, you can add your own methods and customize the structures to fit your needs.
+In order to use the Structures from the Wrapper, you need to invoke the `.forge` method with the raw discord data, whereas it will construct the structure for you.
 
 Next we're going to give a better insight into how create [`Embeds`](embeds) and [`Components`](components) with the
-template structures.
+wrappers structures.

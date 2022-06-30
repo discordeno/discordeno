@@ -19,7 +19,7 @@ just using raw data because they still execute methods, which takes more time to
 :::
 
 We already have a Template for `Components`, which can be found
-[here](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Component.js).
+[here](https://github.com/meister03/discordeno.js/tree/master/Structures/Component.js).
 
 ## Different Components:
 
@@ -102,12 +102,15 @@ This code will obviously not work because it's a missing a lot required of data.
 a class to Discord, we need sth. to transform it to a json object.
 
 We have a pre-made class for components which you can find
-[here](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Component.js).
+[here](https://github.com/meister03/discordeno.js/tree/master/Structures/Component.js).
 
 ### Button
 
 ```js
-const button = new Component()
+const Discord = require('discordeno.js');
+const message = client.messages.forge(rawMessage);
+
+const button = new Discord.Component()
   .setType("BUTTON")
   .setStyle("LINK")
   .setLabel("Click me!")
@@ -115,14 +118,14 @@ const button = new Component()
   .toJSON();
 
 // Button with raw types
-const button2 = new Component()
+const button2 = new Discord.Component()
   .setType(2)
   .setStyle(4)
   .setLabel("DO NOT CLICK")
   .setCustomId("12345")
   .toJSON();
 
-const actionRow = new Component()
+const actionRow = new Discord.Component()
   .setType("ACTION_ROW")
   .setComponents(button, button2)
   .toJSON();
@@ -130,7 +133,8 @@ const actionRow = new Component()
 // Message to send
 const messageOptions = { content: "hello", components: [actionRow] };
 
-await client.helpers.sendMessage(channelId, messageOptions); // You can also use the Message Structure
+// await client.helpers.sendMessage(channelId, messageOptions); // Do it the raw way
+message.channel.send(messageOptions); // Do it with the structure
 ```
 
 As you can see, for simplicity you can use strings instead of numbers (types), which are hard to remember.
@@ -138,7 +142,10 @@ As you can see, for simplicity you can use strings instead of numbers (types), w
 ### Select Menu
 
 ```js
-const selectMenu = new Component()
+const Discord = require('discordeno.js');
+const message = client.messages.forge(rawMessage);
+
+const selectMenu = new Discord.Component()
   .setType("SELECT_MENU")
   .setCustomId("12345")
   .setOptions([
@@ -162,19 +169,23 @@ const selectMenu = new Component()
   .setPlaceholder("Select an option")
   .toJSON();
 
-const actionRow = new Component()
+const actionRow = new Discord.Component()
   .setType("ACTION_ROW")
   .setComponents(selectMenu)
   .toJSON();
 
 const messageOptions = { content: "hello", components: [actionRow] };
 
-client.helpers.sendMessage(channelId, messageOptions); // You can also use the Message Structure
+// await client.helpers.sendMessage(channelId, messageOptions); // Do it the raw way
+message.channel.send(messageOptions); // Do it with the structure
 ```
 
 ### Text Input
 
 ```js
+const Discord = require('discordeno.js');
+const interaction = client.messages.forge(rawInteraction);
+
 const textInput = new Component()
   .setType("TEXT_INPUT")
   .setStyle("SHORT")
@@ -199,7 +210,7 @@ const textInput2 = new Component()
 const actionRow = new Component().setType("ACTION_ROW").setComponents(textInput).toJSON();
 const actionRow2 = new Component().setType("ACTION_ROW").setComponents(textInput2).toJSON();
 
-new Interaction(client, interaction).popupModal({
+interaction.popupModal({
   customId: "ban_modal",
   title: "Ban User",
   components: [actionRow, actionRow2],
@@ -210,10 +221,3 @@ new Interaction(client, interaction).popupModal({
 
 When a user clicks a button or selects an option from a Select Menu, Discord sends an `interactionCreate` event, which
 contains the information necessary to process it.
-
-:::note Collecting
-
-An `InteractionCollector` can also be used to handle prompts, which requires some tweaks, but will be added soon in the
-guide and the template repo.
-
-:::

@@ -7,11 +7,11 @@ sidebar_position: 2
 Currently, you probably have something like this in your code:
 
 ```js
-const Discord = require("discordeno");
+const Discord = require("discordeno.js");
 // Ideally you should move to an `.env` file
 const config = require("./config.json");
 
-const client = Discord.createBot({
+const bot = Discord.createBot({
   events: {
     messageCreate(client, message) {
       if (message.content === "!ping") {
@@ -19,9 +19,10 @@ const client = Discord.createBot({
       }
     },
   },
-  intents: ["Guilds", "GuildMessages"],
+  intents: Discord.Intents.Guilds | Discord.Intents.GuildMessages,
   token: config.token,
 });
+const client = Discord.enableCachePlugin(bot, {});
 
 Discord.startBot(client);
 ```

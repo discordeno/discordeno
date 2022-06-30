@@ -1,5 +1,3 @@
-const Message = require("./Message");
-
 class Responses {
   constructor(data) {
     this.manager = data.manager;
@@ -12,13 +10,9 @@ class Responses {
     if (typeof content === "string") content = { content };
     if (this.interaction) {
       if (this.replied) return this.followUp(content);
-      const reply = await this.interaction.reply(content);
-
-      //Assign properties to the response
-      const response = new Message(this.client, reply);
-
+      const reply = await this.interaction.reply(content)
       this.replied = true;
-      return response;
+      return {};
     }
     if (this.message) {
       if (this.replied) return this.followUp(content);
@@ -26,7 +20,7 @@ class Responses {
       const msg = await this.message.channel.send(content);
 
       //Assign properties to the response
-      const response = new Message(this.client, msg);
+      const response = this.client.messages.forge(msg);
       this.replied = true;
       return response;
     }
@@ -35,12 +29,11 @@ class Responses {
   async followUp(content) {
     if (this.interaction) {
       const reply = await this.interaction.followUp(content);
-      const response = new Message(this.client, reply);
-      return response;
+      return {};
     }
     if (this.message) {
       const msg = await this.message.channel.send(content);
-      const response = new Message(this.client, msg);
+      const response = this.client.messages.forge(msg);
       return response;
     }
   }
