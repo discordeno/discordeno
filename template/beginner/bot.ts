@@ -4,6 +4,7 @@ import {
   BotWithHelpersPlugin,
   Collection,
   createBot,
+  GatewayIntents,
   enableCachePlugin,
   enableCacheSweepers,
   enableHelpersPlugin,
@@ -15,7 +16,7 @@ import { Command } from "./src/types/commands.ts";
 const bot = createBot({
   token: configs.token,
   botId: configs.botId,
-  intents: [],
+  intents: GatewayIntents.Guilds,
   events: {},
 });
 

@@ -1,7 +1,7 @@
 import { dotEnvConfig } from "./deps.ts";
 
 // Get the .env file that the user should have created, and get the token
-const env = dotEnvConfig({ export: true });
+const env = dotEnvConfig({ export: true , path: './.env.example' });
 const token = env.BOT_TOKEN || "";
 
 export interface Config {
