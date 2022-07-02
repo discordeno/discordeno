@@ -1201,31 +1201,6 @@ export enum Locales {
 
 export type Localization = Partial<Record<Locales, string>>;
 
-export interface FileContent {
-  /** The file blob */
-  blob: Blob;
-  /** The name of the file */
-  name: string;
-}
-
-export interface GatewayBot {
-  /** The WSS URL that can be used for connecting to the gateway */
-  url: string;
-  /** The recommended number of shards to use when connecting */
-  shards: number;
-  /** Information on the current session start limit */
-  sessionStartLimit: {
-    /** The total number of session starts the current user is allowed */
-    total: number;
-    /** The remaining number of session starts the current user is allowed */
-    remaining: number;
-    /** The number of milliseconds after which the limit resets */
-    resetAfter: number;
-    /** The number of identify requests allowed per 5 seconds */
-    maxConcurrency: number;
-  };
-}
-
 // UTILS
 
 export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
@@ -1238,7 +1213,7 @@ export type CamelCase<S extends string> = S extends `${infer P1}_${infer P2}${in
   : Lowercase<S>;
 export type Camelize<T> = {
   [K in keyof T as CamelCase<string & K>]: T[K] extends Array<infer U> ? U extends {} ? Array<Camelize<U>>
-  : T[K]
+    : T[K]
     : T[K] extends {} ? Camelize<T[K]>
     : never;
 };
@@ -1293,8 +1268,8 @@ export type AnythingBut<T> = Exclude<
  * object identity type
  */
 export type Id<T> = T extends infer U ? {
-  [K in keyof U]: U[K];
-}
+    [K in keyof U]: U[K];
+  }
   : never;
 
 export type KeysWithUndefined<T> = {
@@ -1318,8 +1293,8 @@ type OptionalizeAux<T extends object> = Id<
  */
 export type Optionalize<T> = T extends object
   ? T extends Array<unknown> ? number extends T["length"] ? T[number] extends object ? Array<OptionalizeAux<T[number]>>
-  : T
-  : Partial<T>
+      : T
+    : Partial<T>
   : OptionalizeAux<T>
   : T;
 
