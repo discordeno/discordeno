@@ -5,4 +5,5 @@ Deno.test("[typing] start typing", async () => {
   const bot = loadBot();
   const channel = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, { name: "typing" });
   await bot.helpers.startTyping(channel.id);
+  await bot.helpers.deleteChannel(channel.id);
 });
