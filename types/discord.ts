@@ -1866,7 +1866,6 @@ export interface DiscordApplicationCommandOption {
   min_length?: number;
   /** If the option type is `ApplicationCommandOptionTypes.String`, the maximum permitted length  */
   max_length?: number;
-  
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-choice-structure */
