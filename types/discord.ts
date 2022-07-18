@@ -1217,7 +1217,7 @@ export interface DiscordInputTextComponent {
   style: TextStyles;
   /** The customId of the InputText */
   custom_id: string;
-  /** The label of the InputText */
+  /** The label of the InputText (max 45 characters)*/
   label: string;
   /** The placeholder of the InputText */
   placeholder?: string;

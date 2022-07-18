@@ -140,6 +140,55 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
           option.emoji = makeEmojiFromString(option.emoji);
         }
       }
+
+      if (subComponent.type === MessageComponentTypes.InputText) {
+        // Other buttons must have a customId
+        if (
+          !subComponent.customId
+        ) {
+          throw new Error(
+            "The text input requires a custom id",
+          );
+        }
+
+        if (!bot.utils.validateLength(subComponent.label, { max: 45 })) {
+          throw new Error("The label can not be longer than 45 characters.");
+        }
+
+        if (subComponent.minLength) {
+          if (subComponent.minLength < 0) {
+            throw new Error(
+              "The min length must be more than 0 in a text input component.",
+            );
+          }
+
+          if (subComponent.minLength > 4000) {
+            throw new Error(
+              "The min length must be less than 4000 in a text input component.",
+            );
+          }
+
+          if (subComponent.maxLength && subComponent.minLength > subComponent.maxLength) {
+            throw new Error(
+              "The text input component can not have a higher min length than the max length.",
+            );
+          }
+        }
+
+        if (subComponent.maxLength) {
+          if (subComponent.maxLength < 1) {
+            throw new Error(
+              "The max length must be more than 1 in a text input component.",
+            );
+          }
+
+          if (subComponent.maxLength > 4000) {
+            throw new Error(
+              "The max length must be less than 4000 in a text input component.",
+            );
+          }
+        }
+      }
     }
   }
 }
