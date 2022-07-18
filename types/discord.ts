@@ -1121,7 +1121,7 @@ export interface DiscordMessageInteraction {
   id: string;
   /** The type of interaction */
   type: InteractionTypes;
-  /** The name of the ApplicationCommand */
+  /** The name of the ApplicationCommand including the name of the subcommand/subcommandgroup*/
   name: string;
   /** The user who invoked the interaction */
   user: DiscordUser;
