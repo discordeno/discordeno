@@ -1407,7 +1407,7 @@ export interface DiscordAuditLog {
 export interface DiscordAutoModerationRule {
   /** The id of this rule */
   id: string;
-  /** The guild id */
+  /** The guild id of the rule */
   guild_id: string;
   /** The name of the rule */
   name: string;
