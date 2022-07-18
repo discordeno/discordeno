@@ -1447,6 +1447,8 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
   keyword_filter?: string[];
   /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
   presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
+  /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
+  allow_list: string[];
 }
 
 export enum DiscordAutoModerationRuleTriggerMetadataPresets {

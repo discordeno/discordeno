@@ -20,6 +20,7 @@ export async function createAutomodRule(bot: Bot, guildId: bigint, options: Crea
       trigger_metadata: {
         keyword_filter: options.triggerMetadata.keywordFilter,
         presets: options.triggerMetadata.presets,
+        allow_list: options.triggerMetadata.allowList,
       },
       actions: options.actions.map((action) => ({
         type: action.type,
@@ -48,11 +49,12 @@ export interface CreateAutoModerationRuleOptions {
   triggerType: AutoModerationTriggerTypes;
   /** The metadata to use for the trigger. */
   triggerMetadata: {
-    // TODO: discord is considering renaming this before release
     /** The keywords needed to match. Only present when TriggerType.Keyword */
     keywordFilter?: string[];
     /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
     presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
+    /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
+    allowList?: string[];
   };
   /** The actions that will trigger for this rule */
   actions: {
