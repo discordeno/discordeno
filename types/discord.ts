@@ -1504,7 +1504,7 @@ export interface DiscordAutoModerationActionExecution {
   alert_system_message_id?: string | null;
   /** The word or phrase that triggerred the rule. */
   matched_keyword: string | null;
-  /** The substring in content that triggered rule */
+  /** The substring in content that triggered the rule */
   matched_content: string | null;
 }
 
