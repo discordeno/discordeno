@@ -1286,6 +1286,8 @@ export interface DiscordInteraction {
   locale?: string;
   /** The guild's preferred locale, if invoked in a guild */
   guild_locale?: string;
+  /** The computed permissions for a bot or app in the context of a specific interaction (including channel overwrites) */
+  app_permissions: string;
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-member-object */

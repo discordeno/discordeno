@@ -30,6 +30,7 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction) {
     user,
     id: bot.transformers.snowflake(payload.id),
     applicationId: bot.transformers.snowflake(payload.application_id),
+    appPermissions: payload.app_permissions ? bot.transformers.snowflake(payload.app_permissions) : undefined,
     message: payload.message ? bot.transformers.message(bot, payload.message) : undefined,
     channelId: payload.channel_id ? bot.transformers.snowflake(payload.channel_id) : undefined,
     member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, user.id) : undefined,
