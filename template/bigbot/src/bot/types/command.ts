@@ -188,43 +188,43 @@ export type ConvertArgumentDefinitionsToArgs<
   UnionToIntersection<
     {
       [P in keyof T]: T[P] extends StringOptionalArgumentDefinition<infer N> // STRING
-        ? {
-          [_ in getName<N>]?: T[P]["choices"] extends readonly { name: string; value: string }[] ? // @ts-ignore ts being dumb
-            T[P]["choices"][number]["value"]
+      ? {
+        [_ in getName<N>]?: T[P]["choices"] extends readonly { name: string; value: string }[] ? // @ts-ignore ts being dumb
+        T[P]["choices"][number]["value"]
+          : string;
+      }
+        : T[P] extends StringArgumentDefinition<infer N> ? {
+          [_ in getName<N>]: T[P]["choices"] extends readonly { name: string; value: string }[] ? // @ts-ignore ts being dumb
+          T[P]["choices"][number]["value"]
             : string;
         }
-        : T[P] extends StringArgumentDefinition<infer N> ? {
-            [_ in getName<N>]: T[P]["choices"] extends readonly { name: string; value: string }[] ? // @ts-ignore ts being dumb
-              T[P]["choices"][number]["value"]
-              : string;
-          }
         : // INTEGER
         T[P] extends IntegerOptionalArgumentDefinition<infer N> ? {
-            [_ in getName<N>]?: T[P]["choices"] extends readonly { name: string; value: number }[] ? // @ts-ignore ts being dumb
-              T[P]["choices"][number]["value"]
-              : number;
-          }
+          [_ in getName<N>]?: T[P]["choices"] extends readonly { name: string; value: number }[] ? // @ts-ignore ts being dumb
+          T[P]["choices"][number]["value"]
+            : number;
+        }
         : T[P] extends IntegerArgumentDefinition<infer N> ? {
-            [_ in getName<N>]: T[P]["choices"] extends readonly { name: string; value: number }[] ? // @ts-ignore ts being dumb
-              T[P]["choices"][number]["value"]
-              : number;
-          }
+          [_ in getName<N>]: T[P]["choices"] extends readonly { name: string; value: number }[] ? // @ts-ignore ts being dumb
+          T[P]["choices"][number]["value"]
+            : number;
+        }
         : // BOOLEAN
         T[P] extends BooleanOptionalArgumentDefinition<infer N> ? { [_ in getName<N>]?: boolean }
         : T[P] extends BooleanArgumentDefinition<infer N> ? { [_ in getName<N>]: boolean }
         : // USER
         T[P] extends UserOptionalArgumentDefinition<infer N> ? {
-            [_ in getName<N>]?: {
-              user: User;
-              member: Member;
-            };
-          }
+          [_ in getName<N>]?: {
+            user: User;
+            member: Member;
+          };
+        }
         : T[P] extends UserArgumentDefinition<infer N> ? {
-            [_ in getName<N>]: {
-              user: User;
-              member: Member;
-            };
-          }
+          [_ in getName<N>]: {
+            user: User;
+            member: Member;
+          };
+        }
         : // CHANNEL
         T[P] extends ChannelOptionalArgumentDefinition<infer N> ? { [_ in getName<N>]?: Channel }
         : T[P] extends ChannelArgumentDefinition<infer N> ? { [_ in getName<N>]: Channel }
@@ -233,30 +233,30 @@ export type ConvertArgumentDefinitionsToArgs<
         : T[P] extends RoleArgumentDefinition<infer N> ? { [_ in getName<N>]: Role }
         : // MENTIONABLE
         T[P] extends MentionableOptionalArgumentDefinition<infer N> ? {
-            [_ in getName<N>]?: Role | {
-              user: User;
-              member: Member;
-            };
-          }
+          [_ in getName<N>]?: Role | {
+            user: User;
+            member: Member;
+          };
+        }
         : T[P] extends MentionableArgumentDefinition<infer N> ? {
-            [_ in getName<N>]: Role | {
-              user: User;
-              member: Member;
-            };
-          }
+          [_ in getName<N>]: Role | {
+            user: User;
+            member: Member;
+          };
+        }
         : // SUBCOMMAND
         T[P] extends SubcommandArgumentDefinition<infer N> ? {
-            [_ in getName<N>]?: T[P]["options"] extends readonly ArgumentDefinition[] ? // @ts-ignore ignore this for a bit
-              ConvertArgumentDefinitionsToArgs<T[P]["options"]>
-              : // deno-lint-ignore ban-types
-              {};
-          }
+          [_ in getName<N>]?: T[P]["options"] extends readonly ArgumentDefinition[] ? // @ts-ignore ignore this for a bit
+          ConvertArgumentDefinitionsToArgs<T[P]["options"]>
+            : // deno-lint-ignore ban-types
+            {};
+        }
         : // SUBCOMMAND GROUP
         T[P] extends SubcommandGroupArgumentDefinition<infer N> ? {
-            [_ in getName<N>]?: ConvertArgumentDefinitionsToArgs<
-              T[P]["options"]
-            >;
-          }
+          [_ in getName<N>]?: ConvertArgumentDefinitionsToArgs<
+            T[P]["options"]
+          >;
+        }
         : never;
     }[number]
   >

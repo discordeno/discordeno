@@ -12,15 +12,15 @@ export default function createWebhook(bot: BotWithCache) {
       options.name === "clyde" ||
       options.name === "everyone" ||
       options.name === "here" ||
-      options.name.includes('discord') ||
-      options.name.includes('@') ||
-      options.name.includes('#') ||
-      options.name.includes(':') ||
-      options.name.includes('\/') ||
+      options.name.includes("discord") ||
+      options.name.includes("@") ||
+      options.name.includes("#") ||
+      options.name.includes(":") ||
+      options.name.includes("\/") ||
       !bot.utils.validateLength(options.name, { min: 2, max: 32 })
     ) {
       throw new Error(
-        "The webhook name can not be clyde, everyone, here or include 'discord, @, #, :, \' and it must be between 2 and 32 characters long.",
+        "The webhook name can not be clyde, everyone, here or include 'discord, @, #, :, ' and it must be between 2 and 32 characters long.",
       );
     }
 
