@@ -219,7 +219,7 @@ export interface DiscordMember {
   premium_since?: string | null;
   /** The permissions this member has in the guild. Only present on interaction events. */
   permissions?: string;
-  /** when the user's timeout will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out */
+  /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
   communication_disabled_until?: string | null;
 }
 
