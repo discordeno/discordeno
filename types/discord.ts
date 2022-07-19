@@ -709,13 +709,13 @@ export interface DiscordChannel {
   name?: string;
   /** The channel topic (0-1024 characters) */
   topic?: string | null;
-  /** The bitrate (in bits) of the voice channel */
+  /** The bitrate (in bits) of the voice or stage channel */
   bitrate?: number;
-  /** The user limit of the voice channel */
+  /** The user limit of the voice or stage channel */
   user_limit?: number;
   /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
   rate_limit_per_user?: number;
-  /** Voice region id for the voice channel, automatic when set to null */
+  /** Voice region id for the voice or stage channel, automatic when set to null */
   rtc_region?: string | null;
   /** The camera video quality mode of the voice channel, 1 when not present */
   video_quality_mode?: VideoQualityModes;
