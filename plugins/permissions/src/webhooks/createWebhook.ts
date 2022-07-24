@@ -9,9 +9,7 @@ export default function createWebhook(bot: BotWithCache) {
 
     if (
       // Specific usernames that discord does not allow
-      options.name === "clyde" ||
-      options.name === "everyone" ||
-      options.name === "here" ||
+      ["clyde", "everyone", "here"].includes(options.name) ||
       options.name.includes("discord") ||
       options.name.includes("@") ||
       options.name.includes("#") ||
