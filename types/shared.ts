@@ -835,7 +835,7 @@ export enum JsonErrorCodes {
   TargetUserIsNotConnectedToVoice = 40032,
   ThisMessageHasAlreadyBeenCrossposted,
   AnApplicationCommandWithThatNameAlreadyExists = 40041,
-  ApplicationInteractionFailedToSend =  40043,
+  ApplicationInteractionFailedToSend = 40043,
   InteractionHasAlreadyBeenAcknowledged = 40060,
   MissingAccess = 50001,
   InvalidAccountType,
@@ -910,7 +910,7 @@ export enum JsonErrorCodes {
   FailedToCreateStageNeededForStageEvent = 180002,
   MessageWasBlockedByAutomaticModeration = 200000,
   TitleWasBlockedByAutomaticModeration,
-  WebhooksCanOnlyCreateThreadsInForumChannels = 220003 
+  WebhooksCanOnlyCreateThreadsInForumChannels = 220003,
 }
 
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#http */
