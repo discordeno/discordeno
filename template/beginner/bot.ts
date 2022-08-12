@@ -15,7 +15,7 @@ import { Command } from "./src/types/commands.ts";
 const bot = createBot({
   token: configs.token,
   botId: configs.botId,
-  intents: [],
+  intents: undefined,
   events: {},
 });
 
