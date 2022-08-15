@@ -1,4 +1,4 @@
-import { assertEquals, assertExists, assertRejects } from "../deps.ts";
+import { assertEquals, assertExists } from "../deps.ts";
 import { loadBot } from "../mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../utils.ts";
 
@@ -18,8 +18,7 @@ Deno.test({
     await bot.helpers.deleteChannel(channel.id);
 
     // Check if channel still exists
-    await assertRejects(
-      () => bot.helpers.getChannel(channel.id),
-    );
+    const exists = await bot.helpers.getChannel(channel.id);
+    assertEquals(exists, undefined);
   },
 });

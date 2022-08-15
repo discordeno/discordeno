@@ -768,13 +768,6 @@ export interface DiscordPresenceUpdate {
   client_status: DiscordClientStatus;
 }
 
-export interface DiscordStatusUpdate {
-  /** User's current activities */
-  activities: DiscordActivity[];
-  /** Either "idle", "dnd", "online", or "offline" */
-  status: "idle" | "dnd" | "online" | "offline";
-}
-
 /** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure */
 export interface DiscordWelcomeScreen {
   /** The server description shown in the welcome screen */
