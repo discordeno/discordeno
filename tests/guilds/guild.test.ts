@@ -1,11 +1,14 @@
 import { ChannelTypes } from "../../mod.ts";
-import { assertEquals, assertExists, assertNotEquals, assertRejects } from "../deps.ts";
+import { assertEquals, assertExists, assertNotEquals } from "../deps.ts";
 import { loadBot } from "../mod.ts";
 
 Deno.test({
   name: "[guild] Create a guild",
   async fn(t) {
     const bot = loadBot();
+
+    // Delete the oldest guild(most likely to have finished tests).
+
     const guild = await bot.helpers.createGuild({
       name: "Discordeno-test",
     });
@@ -85,7 +88,8 @@ Deno.test({
 
       // Get vanity URL
       await t.step("[guild] Get vanity URL", async () => {
-        await assertRejects(() => bot.helpers.getVanityUrl(guild.id));
+        const vanityUrl = await bot.helpers.getVanityUrl(guild.id);
+        assertEquals(vanityUrl.code, undefined);
       });
 
       // Emoji related tests
@@ -124,9 +128,8 @@ Deno.test({
 
           await bot.helpers.deleteEmoji(guild.id, emoji.id);
 
-          await assertRejects(
-            () => bot.helpers.getEmoji(guild.id, emoji.id!),
-          );
+          const exists = await bot.helpers.getEmoji(guild.id, emoji.id);
+          assertEquals(exists.id, undefined);
         },
       });
 
@@ -146,9 +149,8 @@ Deno.test({
 
           await bot.helpers.deleteEmoji(guild.id, emoji.id, "with a reason");
 
-          await assertRejects(
-            () => bot.helpers.getEmoji(guild.id, emoji.id!),
-          );
+          const exists = await bot.helpers.getEmoji(guild.id, emoji.id);
+          assertEquals(exists.id, undefined);
         },
       });
 
@@ -263,10 +265,9 @@ Deno.test({
       // Delete a guild
       await t.step("[guild] Delete a guild", async () => {
         await bot.helpers.deleteGuild(guild.id);
-
-        await assertRejects(
-          () => bot.helpers.getGuild(guild.id),
-        );
+        //
+        const exists = await bot.helpers.getGuild(guild.id);
+        assertEquals(exists, undefined);
       });
     } catch (error) {
       // If any errors arise, delete the guild
