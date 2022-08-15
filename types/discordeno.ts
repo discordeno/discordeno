@@ -54,6 +54,8 @@ export interface SelectMenuComponent {
   maxValues?: number;
   /** The choices! Maximum of 25 items. */
   options: SelectOption[];
+  /** Whether or not this select is disabled */
+  disabled?: boolean;
 }
 
 export interface SelectOption {

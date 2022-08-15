@@ -1286,6 +1286,8 @@ export interface DiscordInteraction {
   locale?: string;
   /** The guild's preferred locale, if invoked in a guild */
   guild_locale?: string;
+  /** The computed permissions for a bot or app in the context of a specific interaction (including channel overwrites) */
+  app_permissions: string;
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-member-object */
@@ -1864,6 +1866,10 @@ export interface DiscordApplicationCommandOption {
   min_value?: number;
   /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the maximum permitted value */
   max_value?: number;
+  /** If the option type is `ApplicationCommandOptionTypes.String`, the minimum permitted length */
+  min_length?: number;
+  /** If the option type is `ApplicationCommandOptionTypes.String`, the maximum permitted length  */
+  max_length?: number;
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-choice-structure */
