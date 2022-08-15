@@ -1,13 +1,6 @@
-import {
-  bigintToSnowflake,
-  formatImageURL,
-  hasProperty,
-  iconBigintToHash,
-  iconHashToBigInt,
-  removeTokenPrefix,
-  snowflakeToBigint,
-  validateLength,
-} from "../plugins/bot/mod.ts";
+import { formatImageURL, hasProperty, iconBigintToHash, iconHashToBigInt, validateLength } from "../mod.ts";
+import { bigintToSnowflake, snowflakeToBigint } from "../util/bigint.ts";
+import { removeTokenPrefix } from "../util/token.ts";
 import { assertEquals, assertNotEquals } from "./deps.ts";
 import { loadBot } from "./mod.ts";
 
