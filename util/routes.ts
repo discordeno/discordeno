@@ -370,7 +370,7 @@ export const routes = {
 
     if (options) {
       if (options?.wait !== undefined) url += `wait=${options.wait}`;
-      if (options.threadId) url += `threadId=${options.threadId}`;
+      if (options.threadId) url += `thread_id=${options.threadId}`;
     }
 
     return url;
@@ -382,7 +382,7 @@ export const routes = {
     let url = `/webhooks/${webhookId}/${token}/messages/${messageId}?`;
 
     if (options) {
-      if (options.threadId) url += `threadId=${options.threadId}`;
+      if (options.threadId) url += `thread_id=${options.threadId}`;
     }
 
     return url;
@@ -391,7 +391,7 @@ export const routes = {
     let url = `/webhooks/${webhookId}/${token}/messages/@original?`;
 
     if (options) {
-      if (options.threadId) url += `threadId=${options.threadId}`;
+      if (options.threadId) url += `thread_id=${options.threadId}`;
     }
 
     return url;

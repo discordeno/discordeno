@@ -54,6 +54,8 @@ export interface SelectMenuComponent {
   maxValues?: number;
   /** The choices! Maximum of 25 items. */
   options: SelectOption[];
+  /** Whether or not this select is disabled */
+  disabled?: boolean;
 }
 
 export interface SelectOption {
@@ -84,7 +86,7 @@ export interface InputTextComponent {
   style: TextStyles;
   /** The customId of the InputText */
   customId: string;
-  /** The label of the InputText */
+  /** The label of the InputText. Maximum 45 characters */
   label: string;
   /** The placeholder of the InputText */
   placeholder?: string;
