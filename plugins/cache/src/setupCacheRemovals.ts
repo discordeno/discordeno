@@ -1,5 +1,4 @@
-import type { Emoji, Guild } from "../deps.ts";
-import type { BotWithCache } from "./addCacheCollections.ts";
+import type { Emoji } from "../deps.ts";
 import {
   Bot,
   Collection,
@@ -11,7 +10,9 @@ import {
   DiscordMessageDelete,
   DiscordMessageDeleteBulk,
   DiscordUnavailableGuild,
+  DiscordVoiceState,
 } from "../deps.ts";
+import type { BotWithCache } from "./addCacheCollections.ts";
 
 export function setupCacheRemovals<B extends Bot>(bot: BotWithCache<B>) {
   const {
@@ -22,6 +23,7 @@ export function setupCacheRemovals<B extends Bot>(bot: BotWithCache<B>) {
     GUILD_MEMBER_REMOVE,
     GUILD_ROLE_DELETE,
     MESSAGE_DELETE_BULK,
+    VOICE_STATE_UPDATE,
   } = bot.handlers;
 
   bot.handlers.GUILD_DELETE = function (_, data, shardId) {
@@ -117,5 +119,19 @@ export function setupCacheRemovals<B extends Bot>(bot: BotWithCache<B>) {
     }
 
     GUILD_ROLE_DELETE(bot, data, shardId);
+  };
+
+  bot.handlers.VOICE_STATE_UPDATE = (_, data, shardId) => {
+    const payload = data.d as DiscordVoiceState;
+    if (!payload.guild_id) return;
+
+    const vs = bot.transformers.voiceState(bot, {
+      voiceState: payload,
+      guildId: bot.transformers.snowflake(payload.guild_id),
+    });
+
+    bot.guilds.get(vs.guildId)?.voiceStates.set(vs.userId, vs);
+
+    VOICE_STATE_UPDATE(bot, data, shardId);
   };
 }
