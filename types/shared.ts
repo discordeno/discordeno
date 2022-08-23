@@ -2,7 +2,6 @@ export enum PresenceStatus {
   online,
   dnd,
   idle,
-  invisible,
   offline,
 }
 
