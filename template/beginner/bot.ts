@@ -4,11 +4,11 @@ import {
   BotWithHelpersPlugin,
   Collection,
   createBot,
-  GatewayIntents,
   enableCachePlugin,
   enableCacheSweepers,
   enableHelpersPlugin,
   enablePermissionsPlugin,
+  GatewayIntents,
 } from "./deps.ts";
 import { Command } from "./src/types/commands.ts";
 
