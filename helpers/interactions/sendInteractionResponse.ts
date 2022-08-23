@@ -99,14 +99,6 @@ export interface InteractionApplicationCommandCallbackData {
   choices?: ApplicationCommandOptionChoice[];
 }
 
-/* https://discord.com/developers/docs/resources/channel#message-object-message-flags */
-export enum ApplicationCommandFlags {
-  /* Do not include any embeds when serialising this message */
-  SuppressEmbeds = 1 << 2,
-  /** Only visible to the user who invoked the interaction */
-  Ephemeral = 1 << 6,
-}
-
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptionchoice */
 export interface ApplicationCommandOptionChoice {
   /** 1-100 character choice name */

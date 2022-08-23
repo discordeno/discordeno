@@ -1,5 +1,5 @@
 import { Bot } from "../../bot.ts";
-import { DiscordEmoji } from "../../deps.ts";
+import { DiscordEmoji } from "../../types/discord.ts";
 import { Emoji } from "../emoji.ts";
 
 export function transformEmojiToDiscordEmoji(bot: Bot, payload: Emoji): DiscordEmoji {
