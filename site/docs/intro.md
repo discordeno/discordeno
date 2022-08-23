@@ -5,6 +5,8 @@ title: Intro
 
 # Discordeno
 
+![Discordeno Logo](https://raw.githubusercontent.com/discordeno/discordeno/main/site/static/img/logo.png)
+
 > Discord API library for [Deno](https://deno.land)
 
 - [API Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)

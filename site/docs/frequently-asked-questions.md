@@ -22,7 +22,7 @@ library!
 
 ## How Stable Is Discordeno?
 
-One of the biggest issues with almost every library (that I have used) is stability. None of the libraries gave much
+One of the biggest issues with a lot of libraries is stability. None of the libraries gave much
 love and attention to TypeScript developers the way it deserves. Sometimes TypeScript projects would break because
 breaking changes to typings did not make a MAJOR bump so TypeScript bots in production would break. Sometimes I was
 personally maintaining the typings because no one else was for that lib. Some libs were pre 1.0 and didn't even have a
@@ -85,11 +85,11 @@ internally. The End! No fuss! No Muss! Just good stuff!
 
 Now, I understand that there are times when it's necessary to be able to customize this and fetch them all. If you are
 advanced enough to need these options, you should be able to simply do it yourself. For most users, this is just an
-unnecessary option. The main module should remain minimalistic and easy to use for 99% of users.
+unnecessary option. The main module should remain minimalist and easy to use for 99% of users.
 
 ## Why Do I See errors Like "MISSING_VIEW_CHANNEL" or "BOTS_HIGHEST_ROLE_TOO_LOW"?
 
-Discordeno is the only library(that I have used), that has built in permission handling. A lot of bots get automatically
+Discordeno is one of the only libraries that has built in permission handling. A lot of bots get automatically
 banned by Discord because they forget to handle permissions. When bots don't check permissions and continue to send
 requests to the API, this leads to bots being banned. I have tried to request adding this feature into libraries but
 they were reluctant to do so because it would require the devs to maintain the library whenever an update was made by
@@ -97,16 +97,16 @@ Discord.
 
 Discordeno provides you specific keywords that you can use to send a clean response to the end user of your choosing. I
 have even seen some bots have hundreds of thousands of Missing Permission or Missing Access errors because libraries
-don't handle it. IMO, this is a crucial part of any good library as much as it is to handle rate limiting.
+don't handle it. We consider this a crucial part of any good library.
 
 ```typescript
-import { Errors, Message } from "https://deno.land/x/discordeno@10.0.0/mod.ts";
+import { Errors, Message } from "https://deno.land/x/discordeno/mod.ts";
 
 export function handleCommandError(message: Message, type: Errors) {
   switch (type) {
     case Errors.MISSING_MANAGE_NICKNAMES:
       return message.channel.sendMessage(
-        "The bot does not have the necessary permission to manage/edit other user's nicknames. Grant the **MANAGE_NICKNAME** permission to the bot and try again.",
+        "The bot does not have the necessary permission to manage/edit other user's nicknames. Grant the `MANAGE_NICKNAME` permission to the bot and try again.",
       );
     case Errors.MISSING_MANAGE_ROLES:
       // Note: i18n is not part of the library. This is just an example of how you could use i18n for custom error responses.

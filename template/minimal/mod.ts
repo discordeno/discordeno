@@ -1,3 +1,4 @@
+import { BOT_ID, BOT_TOKEN } from "./configs.ts";
 import {
   ActivityTypes,
   createBot,
@@ -7,10 +8,9 @@ import {
   GatewayIntents,
   startBot,
 } from "./deps.ts";
-import { BOT_ID, BOT_TOKEN } from "./configs.ts";
-import { logger } from "./src/utils/logger.ts";
 import { events } from "./src/events/mod.ts";
 import { updateCommands } from "./src/utils/helpers.ts";
+import { logger } from "./src/utils/logger.ts";
 
 const log = logger({ name: "Main" });
 

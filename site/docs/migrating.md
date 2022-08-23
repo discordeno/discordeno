@@ -1,10 +1,15 @@
 ---
-sidebar_position: 10
+sidebar_position: 6
+title: Migrating
 ---
 
-# Migrating
+:::danger Old Code Warning
 
-## Migrating from Discord.js
+This migration guide is quite old, and will be either removed or revised soon. Please look over the [starter](/docs/starter/getting-started) and [Big Bot](/docs/big-bot-guide/getting-started) guides to learn how discordeno works; and then use those principles to migrate your bot to discordeno. We also have a [node.js](/docs/nodejs/getting-started) guide specifically for those who still want to use node.js.
+
+:::
+
+# Migrating from Discord.js
 
 This migration guide is not intended to discredit Discord.js authors/maintainers or Discord.js itself. In fact,
 Discord.js is the most popular Node.js library, admired and praised by a lot of JavaScript developers.
