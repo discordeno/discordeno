@@ -34,8 +34,12 @@ export const bot = createBot({
   }
 });
 
-// Start the bot
-await startBot(bot);
+if (BOT_TOKEN) {
+  // Start the bot
+  await startBot(bot);
+} else {
+  throw "Error: No Token!";
+}
 ```
 
 Let's go over what this file does before we start the bot.
@@ -90,13 +94,17 @@ use the bot object to contain their helpers and stored values.
 ## Starting the Bot
 
 ```typescript title="mod.ts, Lines 24-25"
-// Start the bot
-await startBot(bot);
+if (BOT_TOKEN) {
+  // Start the bot
+  await startBot(bot);
+} else {
+  throw "Error: No Token!";
+}
 ```
 
-This function actually connects the bot to the discord API. You can get a better understanding of what this function
-does in [the big bot guide](/docs/big-bot-guide/big-bot-structure), but you don't really need to know much more about it
-for right now. Just know that it connects your bot to discord.
+This snippet actually connects the bot to the discord API if we have a `BOT_TOKEN`; else, we error out. You can get a
+better understanding of what this function does in [the big bot guide](/docs/big-bot-guide/big-bot-structure), but you
+don't really need to know much more about it for right now. Just know that it connects your bot to discord.
 
 ---
 

@@ -39,8 +39,12 @@ export const bot = createBot({
   }
 });
 
-// Start the bot
-await startBot(bot);
+if (BOT_TOKEN) {
+  // Start the bot
+  await startBot(bot);
+} else {
+  throw "Error: No Token!";
+}
 ```
 
 ## Intents

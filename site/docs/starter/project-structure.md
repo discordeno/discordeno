@@ -52,3 +52,83 @@ import { config as dotEnvConfig } from "https://deno.land/x/dotenv@v3.1.0/mod.ts
 // After
 import { dotEnvConfig, createBot, GatewayIntents, startBot } from "./deps.ts";
 ```
+
+## `src/events/`
+
+This directory contains all of our events and the code that glues them together. We'll setup an object to hold our
+events which will then be imported into the main file.
+
+First, define all our events:
+
+```typescript title="src/events/ready.ts"
+import { events } from "./mod.ts";
+
+events.ready = () => {
+  console.log("");
+}
+```
+
+```typescript title="src/events/guildCreate.ts"
+import { events } from "./mod.ts";
+
+events.guildCreate = () => {
+  
+}
+```
+
+```typescript title="src/events/interactionCreate.ts"
+import { events } from "./mod.ts";
+
+events.interactionCreate = () => {
+
+}
+```
+
+Then, import all of these files into `src/events/mod.ts` to load their handlers:
+
+```typescript title="src/events/mod.ts"
+import { EventHandlers } from "../../../deps.ts";
+
+// Our actual event handler object.
+export const events: Partial<EventHandlers> = {};
+
+// We'll use a dynamic file loader for this later...
+import "./ready.ts";
+import "./guildCreate.ts";
+import "./interactionCreate.ts";
+```
+
+And now we can import that into `mod.ts`:
+
+```typescript title="mod.ts" {4,18}
+// Imports
+import { createBot, GatewayIntents, startBot } from "https://deno.land/x/discordeno@v13.0.0-rc45/mod.ts";
+import { config as dotEnvConfig } from "https://deno.land/x/dotenv@v3.1.0/mod.ts";
+import { events } from "./src/events/mod.ts";
+
+// Secrets
+dotEnvConfig({ export: true });
+export const BOT_TOKEN = Deno.env.get("BOT_TOKEN") || "";
+export const BOT_ID = BigInt(atob(BOT_TOKEN.split(".")[0]));
+
+console.log("Starting Bot, this might take a while...");
+
+// Create the Bot Object
+export const bot = createBot({
+  token: BOT_TOKEN,
+  botId: BOT_ID,
+  intents: GatewayIntents.Guilds | GatewayIntents.GuildMembers | GatewayIntents.GuildMessages | GatewayIntents.DirectMessages,
+  events
+});
+
+if (BOT_TOKEN) {
+  // Start the bot
+  await startBot(bot);
+} else {
+  throw "Error: No Token!";
+}
+```
+
+---
+
+We'll cover the `src/commands/` directory next...
