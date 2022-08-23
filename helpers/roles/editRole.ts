@@ -13,7 +13,9 @@ export async function editRole(bot: Bot, guildId: bigint, id: bigint, options: E
       color: options.color,
       hoist: options.hoist,
       mentionable: options.mentionable,
-      permissions: options.permissions ? bot.utils.calculateBits(options.permissions) : undefined,
+      permissions: bot.utils.calculateBits(options?.permissions || []),
+      icon: options.icon,
+      unicode_emoji: options.unicodeEmoji,
     },
   );
 
@@ -33,4 +35,6 @@ export interface EditGuildRole {
   mentionable?: boolean;
   /** The role's unicode emoji (if the guild has the `ROLE_ICONS` feature) */
   unicodeEmoji?: string;
+  /** the role's icon image (if the guild has the `ROLE_ICONS` feature) */
+  icon?: string;
 }
