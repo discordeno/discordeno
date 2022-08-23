@@ -51,7 +51,7 @@ export async function updateCommands(
 
   if (globalCommands.length && (scope === "Global" || scope === undefined)) {
     log.info(
-      "Updating Global Commands, this takes up to 1 hour to take effect...",
+      "Updating Global Commands, changes should apply in short...",
     );
     await bot.helpers.upsertApplicationCommands(globalCommands).catch(
       log.error,
@@ -59,7 +59,7 @@ export async function updateCommands(
   }
 
   if (perGuildCommands.length && (scope === "Guild" || scope === undefined)) {
-    await bot.guilds.forEach(async (guild) => {
+    await bot.guilds.forEach(async (guild: Guild) => {
       await upsertApplicationCommands(bot, perGuildCommands, guild.id);
     });
   }
@@ -99,8 +99,8 @@ export async function getGuildFromId(
     }
 
     await getGuild(bot, guildId).then((guild) => {
-      bot.guilds.set(guildId, guild);
-      returnValue = guild;
+      if (guild) bot.guilds.set(guildId, guild);
+      if (guild) returnValue = guild;
     });
   }
 

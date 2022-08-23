@@ -22,7 +22,8 @@ In order to keep track of the dependencies, you need to initialize NPM, which ge
 $ npm init --yes
 ```
 
-Then you need to install Discordeno. Go to your terminal and run the following command:
+Then you need to install Discordeno. When you want to go along with the wrapper named `Discordeno.js`, then install it
+too. Go to your terminal and run the following command:
 
 ```cli
 $ npm install discordeno
