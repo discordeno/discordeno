@@ -107,7 +107,7 @@ We have a pre-made class for components which you can find
 ### Button
 
 ```js
-const Discord = require('discordeno.js');
+const Discord = require("discordeno.js");
 const message = client.messages.forge(rawMessage);
 
 const button = new Discord.Component()
@@ -142,7 +142,7 @@ As you can see, for simplicity you can use strings instead of numbers (types), w
 ### Select Menu
 
 ```js
-const Discord = require('discordeno.js');
+const Discord = require("discordeno.js");
 const message = client.messages.forge(rawMessage);
 
 const selectMenu = new Discord.Component()
@@ -183,7 +183,7 @@ message.channel.send(messageOptions); // Do it with the structure
 ### Text Input
 
 ```js
-const Discord = require('discordeno.js');
+const Discord = require("discordeno.js");
 const interaction = client.messages.forge(rawInteraction);
 
 const textInput = new Component()

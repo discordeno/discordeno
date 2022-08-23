@@ -52,7 +52,8 @@ the data, how the methods are named and how you want to process the request.
 
 ## Using Template Structures:
 
-When you are migrating from another library and you want to utilize the djs-like wrapper, you'll likely choose to continue using special structures. Therefore we have ready-made structures for the wrapper `Discordeno.js`.
+When you are migrating from another library and you want to utilize the djs-like wrapper, you'll likely choose to
+continue using special structures. Therefore we have ready-made structures for the wrapper `Discordeno.js`.
 
 - [Guild](https://github.com/meister03/discordeno.js/tree/master/Structures/Guild.js)
 - [Channel](https://github.com/meister03/discordeno.js/tree/master/Structures/Channel.js)
@@ -67,7 +68,8 @@ When you are migrating from another library and you want to utilize the djs-like
 - [Component](https://github.com/meister03/discordeno.js/tree/master/Structures/Component.js)
 - [Collection](https://github.com/meister03/discordeno.js/tree/master/Structures/Collection.js)
 
-We recommend that you check the wrappers [Readme](https://github.com/meister03/discordeno.js#discordclient) in order to construct the client for following the Guide
+We recommend that you check the wrappers [Readme](https://github.com/meister03/discordeno.js#discordclient) in order to
+construct the client for following the Guide
 
 **Using the Structures:**
 
@@ -85,13 +87,14 @@ const interaction = guild.interactions.forge(interactionData);
 const emoji = guild.emojis.forge(emojiData);
 
 const webhook = new Discord.Webhook(client, webhookData);
-const embed = new Discord.Embed(embedData) ;// embedData is optional
+const embed = new Discord.Embed(embedData); // embedData is optional
 const component = new Discord.Component(componentData); // componentData is optional
 const collection = new Discord.Collection();
 ```
 
 Some popular methods have been added to the structures so that you can use them without having to come up with your own.
-In order to use the Structures from the Wrapper, you need to invoke the `.forge` method with the raw discord data, whereas it will construct the structure for you.
+In order to use the Structures from the Wrapper, you need to invoke the `.forge` method with the raw discord data,
+whereas it will construct the structure for you.
 
 Next we're going to give a better insight into how create [`Embeds`](embeds) and [`Components`](components) with the
 wrappers structures.

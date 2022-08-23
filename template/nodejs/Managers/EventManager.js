@@ -16,7 +16,7 @@ class EventManager extends EventEmitter {
     let i = 0;
     fs.readdirSync(eventsFolder).map(async (file) => {
       if (!file.endsWith(".js")) return;
-      i++
+      i++;
       const fileName = path.join(eventsFolder, file);
       const event = require(fileName);
       const eventName = file.split(".")[0];
