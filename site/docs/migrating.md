@@ -5,7 +5,10 @@ title: Migrating
 
 :::danger Old Code Warning
 
-This migration guide is quite old, and will be either removed or revised soon. Please look over the [starter](/docs/starter/getting-started) and [Big Bot](/docs/big-bot-guide/getting-started) guides to learn how discordeno works; and then use those principles to migrate your bot to discordeno. We also have a [node.js](/docs/nodejs/getting-started) guide specifically for those who still want to use node.js.
+This migration guide is quite old, and will be either removed or revised soon. Please look over the
+[starter](/docs/starter/getting-started) and [Big Bot](/docs/big-bot-guide/getting-started) guides to learn how
+discordeno works; and then use those principles to migrate your bot to discordeno. We also have a
+[node.js](/docs/nodejs/getting-started) guide specifically for those who still want to use node.js.
 
 :::
 
