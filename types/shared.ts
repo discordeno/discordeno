@@ -1,3 +1,18 @@
+export enum PresenceStatus {
+  online,
+  dnd,
+  idle,
+  offline,
+}
+
+/* https://discord.com/developers/docs/resources/channel#message-object-message-flags */
+export enum ApplicationCommandFlags {
+  /** Do not include any embeds when serialising this message */
+  SuppressEmbeds = 1 << 2,
+  /** Only visible to the user who invoked the interaction */
+  Ephemeral = 1 << 6,
+}
+
 /** https://discord.com/developers/docs/resources/user#user-object-premium-types */
 export enum PremiumTypes {
   None,

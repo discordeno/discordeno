@@ -5,26 +5,26 @@ const resolveFolder = (folderName) => path.resolve(__dirname, ".", folderName);
 const EventEmitter = require("events");
 
 class EventManager extends EventEmitter {
-  constructor(client) {
+  constructor() {
     super();
     this.cache = new Map();
-    this._events = {};
+    this.allEvents = {};
   }
 
   load(options = {}) {
     const eventsFolder = resolveFolder("../events");
+    let i = 0;
     fs.readdirSync(eventsFolder).map(async (file) => {
       if (!file.endsWith(".js")) return;
+      i++;
       const fileName = path.join(eventsFolder, file);
       const event = require(fileName);
       const eventName = file.split(".")[0];
-      this._events[`${eventName}`] = event;
-      /* When the event should be emitted on client.events.on(eventName, (...args) => {...})
-                this._events[`${eventName}`] = function(...args) {
-                    this.emit(eventName, ...args);
-                    return event(...args);
-                };
-            */
+
+      this.allEvents[`${eventName}`] = (...args) => {
+        this.emit(eventName, ...args);
+        return event(...args);
+      };
     });
     return this._events;
   }

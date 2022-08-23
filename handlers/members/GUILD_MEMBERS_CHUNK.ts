@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
-import { statusTypes } from "../../transformers/presence.ts";
 import { DiscordGatewayPayload, DiscordGuildMembersChunk } from "../../types/discord.ts";
+import { PresenceStatus } from "../../types/shared.ts";
 
 export async function handleGuildMembersChunk(bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordGuildMembersChunk;
@@ -24,7 +24,7 @@ export async function handleGuildMembersChunk(bot: Bot, data: DiscordGatewayPayl
     presences: payload.presences?.map((presence) => ({
       user: bot.transformers.user(bot, presence.user),
       guildId,
-      status: statusTypes[presence.status],
+      status: PresenceStatus[presence.status],
       activities: presence.activities.map((activity) => bot.transformers.activity(bot, activity)),
       clientStatus: {
         desktop: presence.client_status.desktop,

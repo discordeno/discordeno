@@ -1,7 +1,6 @@
 import type { Bot } from "../../bot.ts";
 import { Activity } from "../../transformers/activity.ts";
-import { StatusTypes } from "../../transformers/presence.ts";
-import { GatewayOpcodes } from "../../types/shared.ts";
+import { GatewayOpcodes, PresenceStatus } from "../../types/shared.ts";
 
 export function editShardStatus(bot: Bot, shardId: number, data: StatusUpdate) {
   const shard = bot.gateway.manager.shards.get(shardId);
@@ -72,7 +71,7 @@ export interface StatusUpdate {
   /** The user's activities */
   activities: Activity[];
   /** The user's new status */
-  status: StatusTypes;
+  status: keyof typeof PresenceStatus;
   // /** Whether or not the client is afk */
   // afk: boolean;
 }
