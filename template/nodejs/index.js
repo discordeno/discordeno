@@ -1,4 +1,4 @@
-const Discord = require("discordeno");
+const Discord = require("discordeno.js");
 
 // Ideally you should switch this to .env but for a template a config json is enough
 const config = require("../config.json");
@@ -7,11 +7,12 @@ const EventManager = require("./Managers/EventManager.js");
 // looping through all events and registering them
 const events = new EventManager({});
 
-const client = Discord.createBot({
+const baseBot = Discord.createBot({
   events: events.load({}),
-  intents: ["Guilds", "GuildMessages"],
+  intents: Discord.Intents.Guilds | Discord.Intents.GuildMessages | Discord.Intents.MessageContent,
   token: config.token,
 });
+const client = Discord.enableCachePlugin(baseBot, {});
 
 client.config = config;
 

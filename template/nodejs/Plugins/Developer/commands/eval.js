@@ -1,5 +1,6 @@
+const Discord = require("discordeno.js");
+
 const BaseCommand = require("../../../Structures/BaseCommand.js");
-const Embed = require("../../../Structures/Embed.js");
 class evalcommand extends BaseCommand {
   static name = "eval";
   static description = "danger !!!";
@@ -40,7 +41,7 @@ class evalcommand extends BaseCommand {
       }, 1)
       : outputOfEval;
 
-    const embed = new Embed()
+    const embed = new Discord.Embed()
       .addField({ name: "Input", value: "```js\n" + inputOfEval + "```" })
       .addField({ name: "Output", value: "```json\n" + `${outputOfEval}`.slice(0, 1000) + "```" });
     this.reply({ embeds: [embed] });

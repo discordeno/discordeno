@@ -27,9 +27,9 @@ This file should be called `messageCreate.js`.
 const Message = require("./structures/Message");
 
 module.exports = async (client, payload) => {
-  const message = new Message(client, payload);
+  const message = client.messages.forge(payload);
 
-  if (message.isBot) return;
+  if (message.author.bot) return;
   if (message.content === "!ping") return await message.reply("pong");
 };
 ```
@@ -42,7 +42,7 @@ This file should be called `interactionCreate.js`.
 const Interaction = require("./structures/Interaction");
 
 module.exports = async (client, payload) => {
-  const interaction = new Interaction(client, payload);
+  const interaction = client.interactions.forge(payload);
 
   if (interaction.data.name === "ping") return await interaction.reply({ content: "pong" });
 };
@@ -65,7 +65,7 @@ In order to fire the "real event" a small code snippet has to be added to the `r
 const User = require("../Structures/User");
 
 module.exports = async (client, payload) => {
-  client.user = new User(client, payload.user);
+  client.user = client.users.forge(payload.user);
 
   if (payload.shardId + 1 === client.gateway.maxShards) {
     // All Shards are ready
