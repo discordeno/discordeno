@@ -1,4 +1,8 @@
 {
   "label": "Big Bot Guide",
-  "position": 2
+  "position": 4,
+  "link": {
+    "type": "doc",
+    "id": "step-by-step"
+  }
 }

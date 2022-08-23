@@ -1,6 +1,6 @@
 # Discordeno Big Bot Template
 
-Support: <https://discord.gg/ddeno>
+Support: <https://discord.gg/ddeno> Template Documentation: <http://discordeno.mod.land/docs/big-bot-guide/step-by-step>
 
 This template is designed for bots that aim or are already in millions of Discord servers.
 
@@ -21,11 +21,11 @@ This template is designed for bots that aim or are already in millions of Discor
 
 - Always run the `rest` process first with `deno task rest`.
 - Start the `bot` process next with `deno task bot`. (If you are developing a bot, use `deno task watch-bot` instead to
-  auto reload any changes. This won't restart any other processes, just your bot.)
+  automatically reload any changes. This won't restart any other processes, just your bot.)
 - Lastly, start the `gateway` process with `deno task gateway`.
 
 > Important: The `gateway` process and `rest` are designed not to be shut off. So once those are on, the only thing you
-> should be doing is restarting your `bot` process. This saves API requests
+> should be doing is restarting your `bot` process. This saves API requests and headaches in general.
 
 ## Details
 

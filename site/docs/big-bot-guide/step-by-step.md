@@ -1,21 +1,20 @@
----
-sidebar_position: 1
----
+# Big Bot Guide
 
-# Step By Step Guide
+:::caution
 
-THIS IS A WORK IN PROGRESS GUIDE USING THE NEW v13 OF DISCORDENO.
+Please note, this guide is a work in progress as it's being improved and updated to v13.
 
-## Understanding The Goals of This Guide
+:::
 
-This guide is a quick-paced walkthrough meant for big bot developers. It is expected that you have a decent amount of
-understanding of how to code your bots.
+This guide is meant to introduce you to the standard conventions when creating a scalable bot meant for millions of
+servers using Discordeno. Discordeno is heavily opinionated to scale for large and popular bots; so you should already
+have a good understanding of the methodology to creating a bot before starting this guide. If you don't already have
+this knowlage, **we recommend starting with the [starter](/docs/starter/getting-started) guide first**, then come back
+here.
 
-## Is This Guide Meant For You?
-
-If your goal is not to have a bot in millions of discord servers, please find another guide/library. Discordeno is
-heavily opinionated towards optimizing for bots at scale. If you do not know what a Map or a Set is without having to
-google it, you are at the wrong place.
+If you would like to just get the code, we have a
+[big bot template](https://github.com/discordeno/discordeno/blob/main/template/bigbot) ready for you to use; make sure
+to follow the [setup instructions](https://github.com/discordeno/discordeno/tree/main/template/bigbot#setup).
 
 ## Why You Should Use Discordeno?
 
