@@ -219,7 +219,7 @@ export interface DiscordMember {
   premium_since?: string | null;
   /** The permissions this member has in the guild. Only present on interaction events. */
   permissions?: string;
-  /** when the user's timeout will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out */
+  /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
   communication_disabled_until?: string | null;
 }
 
@@ -709,13 +709,13 @@ export interface DiscordChannel {
   name?: string;
   /** The channel topic (0-1024 characters) */
   topic?: string | null;
-  /** The bitrate (in bits) of the voice channel */
+  /** The bitrate (in bits) of the voice or stage channel */
   bitrate?: number;
-  /** The user limit of the voice channel */
+  /** The user limit of the voice or stage channel */
   user_limit?: number;
   /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
   rate_limit_per_user?: number;
-  /** Voice region id for the voice channel, automatic when set to null */
+  /** Voice region id for the voice or stage channel, automatic when set to null */
   rtc_region?: string | null;
   /** The camera video quality mode of the voice channel, 1 when not present */
   video_quality_mode?: VideoQualityModes;
@@ -766,13 +766,6 @@ export interface DiscordPresenceUpdate {
   activities: DiscordActivity[];
   /** User's platform-dependent status */
   client_status: DiscordClientStatus;
-}
-
-export interface DiscordStatusUpdate {
-  /** User's current activities */
-  activities: DiscordActivity[];
-  /** Either "idle", "dnd", "online", or "offline" */
-  status: "idle" | "dnd" | "online" | "offline";
 }
 
 /** https://discord.com/developers/docs/resources/guild#welcome-screen-object-welcome-screen-structure */
@@ -1128,7 +1121,7 @@ export interface DiscordMessageInteraction {
   id: string;
   /** The type of interaction */
   type: InteractionTypes;
-  /** The name of the ApplicationCommand */
+  /** The name of the ApplicationCommand including the name of the subcommand/subcommand group*/
   name: string;
   /** The user who invoked the interaction */
   user: DiscordUser;
@@ -1224,7 +1217,7 @@ export interface DiscordInputTextComponent {
   style: TextStyles;
   /** The customId of the InputText */
   custom_id: string;
-  /** The label of the InputText */
+  /** The label of the InputText (max 45 characters)*/
   label: string;
   /** The placeholder of the InputText */
   placeholder?: string;
@@ -1293,6 +1286,8 @@ export interface DiscordInteraction {
   locale?: string;
   /** The guild's preferred locale, if invoked in a guild */
   guild_locale?: string;
+  /** The computed permissions for a bot or app in the context of a specific interaction (including channel overwrites) */
+  app_permissions: string;
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-member-object */
@@ -1414,7 +1409,7 @@ export interface DiscordAuditLog {
 export interface DiscordAutoModerationRule {
   /** The id of this rule */
   id: string;
-  /** The guild id */
+  /** The guild id of the rule */
   guild_id: string;
   /** The name of the rule */
   name: string;
@@ -1454,6 +1449,8 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
   keyword_filter?: string[];
   /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
   presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
+  /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
+  allow_list: string[];
 }
 
 export enum DiscordAutoModerationRuleTriggerMetadataPresets {
@@ -1509,7 +1506,7 @@ export interface DiscordAutoModerationActionExecution {
   alert_system_message_id?: string | null;
   /** The word or phrase that triggerred the rule. */
   matched_keyword: string | null;
-  /** The substring in content that triggered rule */
+  /** The substring in content that triggered the rule */
   matched_content: string | null;
 }
 
@@ -1869,6 +1866,10 @@ export interface DiscordApplicationCommandOption {
   min_value?: number;
   /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the maximum permitted value */
   max_value?: number;
+  /** If the option type is `ApplicationCommandOptionTypes.String`, the minimum permitted length */
+  min_length?: number;
+  /** If the option type is `ApplicationCommandOptionTypes.String`, the maximum permitted length  */
+  max_length?: number;
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-choice-structure */

@@ -5,8 +5,8 @@ export default function editWebhook(bot: BotWithCache) {
   const editWebhookOld = bot.helpers.editWebhook;
 
   bot.helpers.editWebhook = async function (webhookId, options, fromChannelId) {
-    if (options.channelId) requireBotChannelPermissions(bot, options.channelId, ["MANAGE_WEBHOOKS"]);
-    if (fromChannelId) requireBotChannelPermissions(bot, fromChannelId, ["MANAGE_WEBHOOKS"]);
+    if (options.channelId) requireBotChannelPermissions(bot, options.channelId, ["MANAGE_WEBHOOKS", "VIEW_CHANNEL"]);
+    if (fromChannelId) requireBotChannelPermissions(bot, fromChannelId, ["MANAGE_WEBHOOKS", "VIEW_CHANNEL"]);
 
     if (options.name) {
       if (

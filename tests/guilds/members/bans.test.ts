@@ -1,4 +1,4 @@
-import { assertEquals, assertExists, assertRejects } from "../../deps.ts";
+import { assertEquals, assertExists } from "../../deps.ts";
 import { loadBot } from "../../mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../../utils.ts";
 
@@ -66,9 +66,7 @@ Deno.test({
           bot.helpers.unbanMember(CACHED_COMMUNITY_GUILD_ID, ianID),
         ]);
 
-        await assertRejects(
-          () => bot.helpers.getBan(CACHED_COMMUNITY_GUILD_ID, wolfID),
-        );
+        assertEquals(await bot.helpers.getBan(CACHED_COMMUNITY_GUILD_ID, wolfID), undefined);
       },
     });
   },

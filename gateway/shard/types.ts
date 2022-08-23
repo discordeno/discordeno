@@ -1,5 +1,7 @@
+import { StatusUpdate } from "../../helpers/misc/editShardStatus.ts";
 import { DiscordGatewayPayload } from "../../types/discord.ts";
 import { GatewayOpcodes } from "../../types/shared.ts";
+import { LeakyBucket } from "../../util/bucket.ts";
 import { createShard } from "./createShard.ts";
 
 // TODO: think whether we also need an identifiedShard function
