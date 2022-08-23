@@ -112,7 +112,7 @@ const baseBot = createBot({
       console.log("Successfully connected to gateway");
     },
     messageCreate(bot, message) {
-      // Process the message with your command handler here
+      // Process the message here with your command handler
     },
   },
 });
