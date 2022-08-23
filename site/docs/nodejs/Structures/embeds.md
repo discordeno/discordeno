@@ -57,16 +57,15 @@ await channel.send({ embeds: [embed] });
 ```
 
 You probably want more methods which you can use to create embeds.
-[We also have a Template for this](https://github.com/discordeno/discordeno/tree/main/template/nodejs/structures/Embed.js)
+[Here is how the Embed Structure looks like](https://github.com/meister03/discordeno.js/blob/master/Structures/Embed.js)
 
 ### Using the Embed Structure:
 
 ```js
-const Embed = require("./structures/Embed"); // Path to structure
-const Channel = require("./structures/Channel"); // Path to structure
+const Discord = require("discordeno.js");
 
-const channel = new Channel(client, data);
-const showCaseEmbed = new Embed()
+const channel = client.channels.forge(channelData);
+const showCaseEmbed = new Discord.Embed()
   .setColor(0x00AE86)
   .setTitle("A Random Title")
   .setURL("https://github.com/discordeno")

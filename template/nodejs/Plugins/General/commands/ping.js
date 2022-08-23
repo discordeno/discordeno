@@ -1,5 +1,5 @@
 const BaseCommand = require("../../../Structures/BaseCommand.js");
-const Embed = require("../../../Structures/Embed.js");
+const Discord = require("discordeno.js");
 class pingcommand extends BaseCommand {
   static name = "ping";
   static description = "See if the bot latency is okay";
@@ -14,7 +14,7 @@ class pingcommand extends BaseCommand {
     //Assign properties to the response
     const ping = msg.timestamp - this.message.timestamp;
 
-    const embed = new Embed()
+    const embed = new Discord.Embed()
       .setTitle(`The Bots ping is ${ping} ms`)
       .toJSON();
     //Edit Message with the Embed
