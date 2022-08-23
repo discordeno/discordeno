@@ -62,6 +62,8 @@ export function makeOptionsForCommand(options: ApplicationCommandOption[]): Disc
     autocomplete: option.autocomplete,
     min_value: option.minValue,
     max_value: option.maxValue,
+    min_length: option.minLength,
+    max_length: option.maxLength,
   }));
 }
 

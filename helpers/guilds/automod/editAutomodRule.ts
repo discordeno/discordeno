@@ -19,6 +19,7 @@ export async function editAutomodRule(bot: Bot, guildId: bigint, options: Partia
         ? {
           keyword_filter: options.triggerMetadata.keywordFilter,
           presets: options.triggerMetadata.presets,
+          allow_list: options.triggerMetadata.allowList,
         }
         : undefined,
       actions: options.actions?.map((action) => ({
@@ -44,13 +45,13 @@ export interface EditAutoModerationRuleOptions {
   eventType: AutoModerationEventTypes;
   /** The metadata to use for the trigger. */
   triggerMetadata: {
-    // TODO: discord is considering renaming this before release
     /** The keywords needed to match. Only present when TriggerType.Keyword */
     keywordFilter?: string[];
-    // TODO: discord is considering renaming this before release
     // TODO: This may need a special type or enum
     /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
     presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
+    /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
+    allowList?: string[];
   };
   /** The actions that will trigger for this rule */
   actions: {

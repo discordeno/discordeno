@@ -2,7 +2,7 @@ import type { Bot } from "../../bot.ts";
 import { Embed } from "../../mod.ts";
 import { DiscordMessage } from "../../types/discord.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
-import { InteractionResponseTypes, MessageComponentTypes } from "../../types/shared.ts";
+import { InteractionResponseTypes } from "../../types/shared.ts";
 
 /**
  * Send a response to a users application command. The command data will have the id and token necessary to respond.
@@ -97,6 +97,14 @@ export interface InteractionApplicationCommandCallbackData {
   flags?: number;
   /** Autocomplete choices (max of 25 choices) */
   choices?: ApplicationCommandOptionChoice[];
+}
+
+/* https://discord.com/developers/docs/resources/channel#message-object-message-flags */
+export enum ApplicationCommandFlags {
+  /* Do not include any embeds when serialising this message */
+  SuppressEmbeds = 1 << 2,
+  /** Only visible to the user who invoked the interaction */
+  Ephemeral = 1 << 6,
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptionchoice */

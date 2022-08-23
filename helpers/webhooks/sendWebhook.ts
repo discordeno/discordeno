@@ -21,6 +21,7 @@ export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: str
     {
       wait: options.wait,
       thread_id: options.threadId,
+      thread_name: options.threadName,
       content: options.content,
       username: options.username,
       avatar_url: options.avatarUrl,
@@ -42,6 +43,8 @@ export interface ExecuteWebhook {
   wait?: boolean;
   /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. */
   threadId?: bigint;
+  /** Name of the thread to create (target channel has to be type of forum channel) */
+  threadName?: string;
   /** The message contents (up to 2000 characters) */
   content?: string;
   /** Override the default username of the webhook */
