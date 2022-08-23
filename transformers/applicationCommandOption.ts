@@ -20,7 +20,8 @@ export function transformApplicationCommandOption(
     channelTypes: payload.channel_types,
     minValue: payload.min_value,
     maxValue: payload.max_value,
-
+    minLength: payload.min_length,
+    maxLength: payload.max_length,
     options: payload.options?.map((option) => bot.transformers.applicationCommandOption(bot, option)),
   };
 }
@@ -52,4 +53,8 @@ export interface ApplicationCommandOption {
   minValue?: number;
   /** Maximum number desired. */
   maxValue?: number;
+  /** Minimum length desired. */
+  minLength?: number;
+  /** Maximum length desired. */
+  maxLength?: number;
 }
