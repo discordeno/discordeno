@@ -409,6 +409,7 @@ export interface Transformers {
     user: (bot: Bot, payload: User) => DiscordUser;
     team: (bot: Bot, payload: Team) => DiscordTeam;
     application: (bot: Bot, payload: Application) => DiscordApplication;
+    snowflake: (snowflake: bigint) => string;
   };
   snowflake: (snowflake: string) => bigint;
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
@@ -468,6 +469,7 @@ export function createTransformers(options: Partial<Transformers>) {
       user: options.reverse?.user || transformUserToDiscordUser,
       team: options.reverse?.team || transformTeamToDiscordTeam,
       application: options.reverse?.application || transformApplicationToDiscordApplication,
+      snowflake: options.reverse?.snowflake || bigintToSnowflake,
     },
     automodRule: options.automodRule || transformAutoModerationRule,
     automodActionExecution: options.automodActionExecution || transformAutoModerationActionExecution,

@@ -1,5 +1,6 @@
 import { Bot } from "../../bot.ts";
-import { DiscordPresenceUpdate } from "../../deps.ts";
+import { DiscordPresenceUpdate } from "../../types/discord.ts";
+import { PresenceStatus } from "../../types/shared.ts";
 import { PresenceUpdate } from "../presence.ts";
 
 export const reverseStatusTypes = Object.freeze(
@@ -15,7 +16,8 @@ export function transformPresenceToDiscordPresence(bot: Bot, payload: PresenceUp
   return {
     user: bot.transformers.reverse.user(bot, payload.user),
     guild_id: bot.transformers.reverse.snowflake(payload.guildId),
-    status: reverseStatusTypes[payload.status] ?? "offline",
+    // TODO: find better way
+    status: (PresenceStatus[payload.status] ?? "offline") as "offline",
     activities: payload.activities.map((activity) => bot.transformers.reverse.activity(bot, activity)),
     client_status: {
       desktop: payload.desktop,

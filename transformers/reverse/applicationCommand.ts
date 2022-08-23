@@ -1,5 +1,5 @@
 import { Bot } from "../../bot.ts";
-import { DiscordApplicationCommand } from "../../deps.ts";
+import { DiscordApplicationCommand } from "../../types/discord.ts";
 import { ApplicationCommand } from "../applicationCommand.ts";
 
 export function transformApplicationCommandToDiscordApplicationCommand(

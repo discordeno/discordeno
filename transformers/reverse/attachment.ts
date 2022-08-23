@@ -1,5 +1,5 @@
 import { Bot } from "../../bot.ts";
-import { DiscordAttachment } from "../../deps.ts";
+import { DiscordAttachment } from "../../types/discord.ts";
 import { Attachment } from "../attachment.ts";
 
 export function transformAttachmentToDiscordAttachment(bot: Bot, payload: Attachment): DiscordAttachment {

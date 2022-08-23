@@ -1,4 +1,4 @@
-import { DiscordGetGatewayBot } from "../../deps.ts";
+import { DiscordGetGatewayBot } from "../../types/discord.ts";
 import { GetGatewayBot } from "../gatewayBot.ts";
 
 export function transformGatewayBotToDiscordGatewayBot(payload: GetGatewayBot): DiscordGetGatewayBot {

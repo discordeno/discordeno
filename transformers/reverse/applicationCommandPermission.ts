@@ -1,5 +1,5 @@
 import { Bot } from "../../bot.ts";
-import { DiscordGuildApplicationCommandPermissions } from "../../deps.ts";
+import { DiscordGuildApplicationCommandPermissions } from "../../types/discord.ts";
 import { ApplicationCommandPermission } from "../applicationCommandPermission.ts";
 
 export function transformApplicationCommandPermissionToDiscordApplicationCommandPermission(

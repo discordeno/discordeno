@@ -1,5 +1,5 @@
 import { Bot } from "../../bot.ts";
-import { DiscordGuildWidgetSettings } from "../../deps.ts";
+import { DiscordGuildWidgetSettings } from "../../types/discord.ts";
 import { GuildWidgetSettings } from "../widgetSettings.ts";
 
 export function transformWidgetSettingsToDiscordWidgetSettings(
