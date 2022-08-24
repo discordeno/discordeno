@@ -1,6 +1,6 @@
 // START FILE FOR REST PROCESS
-import { dotenv } from "./deps.ts";
 import { BASE_URL, createRestManager } from "../mod.ts";
+import { dotenv } from "./deps.ts";
 
 dotenv({ export: true, path: `${Deno.cwd()}/.env` });
 
@@ -88,9 +88,14 @@ async function handleRequest(conn: Deno.Conn) {
         error,
       );
       requestEvent.respondWith(
-        new Response(JSON.stringify(error), {
-          status: error.code ?? 469,
-        }),
+        new Response(
+          JSON.stringify({
+            message: error.message,
+          }),
+          {
+            status: error.code ?? 469,
+          },
+        ),
       );
     }
   }

@@ -9,7 +9,5 @@ export async function getWebhook(bot: Bot, webhookId: bigint) {
     bot.constants.routes.WEBHOOK_ID(webhookId),
   );
 
-  if (!result?.id) return;
-
   return bot.transformers.webhook(bot, result);
 }
