@@ -43,7 +43,8 @@ export async function runMethod<T = any>(
     });
 
     if (!result.ok) {
-      errorStack.message = result.statusText as Error["message"];
+      const err = await result.json().catch(() => {});
+      errorStack.message = err.message ?? result.statusText as Error["message"];
       console.error(`Error: ${errorStack.message}`);
       throw errorStack;
     }
