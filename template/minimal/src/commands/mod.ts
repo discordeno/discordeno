@@ -21,4 +21,5 @@ export const commands = new Collection<string, Command>();
 
 export function createCommand(command: Command) {
   commands.set(command.name, command);
+  return command;
 }
