@@ -10,7 +10,7 @@ TypeScript contained within. (This is a very simple explanation of what Deno act
 
 So we'll create a file called `mod.ts` in the project root containing the following:
 
-```typescript showLineNumbers title="mod.ts"
+```typescript title="mod.ts"
 // Imports
 import { createBot, startBot } from "https://deno.land/x/discordeno@v13.0.0-rc45/mod.ts";
 import { config as dotEnvConfig } from "https://deno.land/x/dotenv@v3.1.0/mod.ts";
