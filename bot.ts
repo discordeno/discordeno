@@ -349,6 +349,7 @@ export interface Bot {
   id: bigint;
   applicationId: bigint;
   token: string;
+  /** Add intents like: `GatewayIntents.Guilds | GatewayIntents.DirectMessages | GatewayIntents...` */
   intents: GatewayIntents;
   urlWSS: string;
   botGatewayData?: GetGatewayBot;
