@@ -18,9 +18,6 @@ export async function getGuild(
     bot.constants.routes.GUILD(guildId, options.counts),
   );
 
-  // Sometimes the guild is not found, so we need to check for it.
-  if (!result.id) return;
-
   return bot.transformers.guild(bot, {
     guild: result,
     shardId: bot.utils.calculateShardId(bot.gateway, guildId),

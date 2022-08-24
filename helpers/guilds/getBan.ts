@@ -9,8 +9,6 @@ export async function getBan(bot: Bot, guildId: bigint, memberId: bigint) {
     bot.constants.routes.GUILD_BAN(guildId, memberId),
   );
 
-  if (!result?.user) return;
-
   return {
     reason: result.reason,
     user: bot.transformers.user(bot, result.user),
