@@ -88,12 +88,14 @@ async function handleRequest(conn: Deno.Conn) {
         error,
       );
       requestEvent.respondWith(
-        new Response(JSON.stringify({
-          message: error.message,
-          
-        }), {
-          status: error.code ?? 469,          
-        }),
+        new Response(
+          JSON.stringify({
+            message: error.message,
+          }),
+          {
+            status: error.code ?? 469,
+          },
+        ),
       );
     }
   }
