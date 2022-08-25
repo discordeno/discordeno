@@ -5,6 +5,7 @@ import type {
   DiscordMessageReactionAdd,
   DiscordMessageReactionRemove,
   DiscordMessageReactionRemoveAll,
+  DiscordVoiceState,
 } from "../deps.ts";
 import type { BotWithCache } from "./addCacheCollections.ts";
 
@@ -15,6 +16,7 @@ export function setupCacheEdits<B extends Bot>(bot: BotWithCache<B>) {
     MESSAGE_REACTION_ADD,
     MESSAGE_REACTION_REMOVE,
     MESSAGE_REACTION_REMOVE_ALL,
+    VOICE_STATE_UPDATE,
   } = bot.handlers;
 
   bot.handlers.GUILD_MEMBER_ADD = function (_, data, shardId) {
@@ -115,5 +117,19 @@ export function setupCacheEdits<B extends Bot>(bot: BotWithCache<B>) {
     }
 
     MESSAGE_REACTION_REMOVE_ALL(bot, data, shardId);
+  };
+
+  bot.handlers.VOICE_STATE_UPDATE = (_, data, shardId) => {
+    const payload = data.d as DiscordVoiceState;
+    if (!payload.guild_id) return;
+
+    const vs = bot.transformers.voiceState(bot, {
+      voiceState: payload,
+      guildId: bot.transformers.snowflake(payload.guild_id),
+    });
+
+    bot.guilds.get(vs.guildId)?.voiceStates.set(vs.userId, vs);
+
+    VOICE_STATE_UPDATE(bot, data, shardId);
   };
 }
