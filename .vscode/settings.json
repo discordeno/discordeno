@@ -2,6 +2,20 @@
   "deno.enable": true,
   "deno.lint": false,
   "deno.unstable": true,
+  "deno.enablePaths": [
+    "./benchmarks",
+    "./gateway",
+    "./handlers",
+    "./helpers",
+    "./plugins",
+    "./rest",
+    "./template/beginner",
+    "./template/minimal",
+    "./tests",
+    "./transformers",
+    "./types",
+    "./util"
+  ],
   "editor.defaultFormatter": "denoland.vscode-deno",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {

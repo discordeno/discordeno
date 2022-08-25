@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "es2020",
+    "module": "esnext",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "allowUnusedLabels": false,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+    "strict": true,
+    "stripInternal": true,
+    "noFallthroughCasesInSwitch": true,
+    "useUnknownInCatchVariables": false,
+    "allowUnreachableCode": false
+  },
+  "include": ["./src/**/*", ".env"]
+}
