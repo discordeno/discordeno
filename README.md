@@ -2,44 +2,13 @@
 
 <img align="right" src="https://raw.githubusercontent.com/discordeno/discordeno/main/site/static/img/logo.png" height="150px">
 
-[![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
-![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
-[![Coverage](https://img.shields.io/codecov/c/gh/discordeno/discordeno)](https://codecov.io/gh/discordeno/discordeno)
-
 Discord API library for [Deno](https://deno.land)
-
-- [Website](https://discordeno.mod.land)
-- [Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
-- [Discord](https://discord.com/invite/5vBgXk3UcZ)
 
 Discordeno follows [semantic versioning](https://semver.org/)
 
 <!-- TODO: add coverage back when it is stable -->
 
-Using discordeno can be as simple as running the following TypeScript snippet using deno run (with a valid bot token):
-
-```typescript
-import { createBot, startBot } from "https://deno.land/x/discordeno/mod.ts";
-
-// Import this from something like `.env`
-const BOT_TOKEN = "";
-const BOT_ID = BigInt(atob(BOT_TOKEN.split(".")[0]));
-
-console.log("Bot starting...");
-
-export const bot = createBot({
-  token: BOT_TOKEN,
-  botId: BOT_ID,
-  intents: [],
-  events: {
-    ready: () => {
-      console.log("Bot ready!");
-    },
-  },
-});
-
-await startBot(bot);
-```
+Checkout the tutorial on [the website](https://discordeno.mod.land/docs/intro).
 
 ## Features
 
@@ -148,3 +117,9 @@ We also have a (very much work in progress) CLI to bootstrap new bots called
 
 We appreciate your help! Before contributing, please read the
 [Contributing Guide](https://github.com/discordeno/discordeno/blob/main/.github/CONTRIBUTING.md).
+
+---
+
+[![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
+![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
+[![Coverage](https://img.shields.io/codecov/c/gh/discordeno/discordeno)](https://codecov.io/gh/discordeno/discordeno)

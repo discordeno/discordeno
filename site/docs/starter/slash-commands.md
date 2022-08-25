@@ -338,6 +338,21 @@ if (BOT_TOKEN) {
 
 Then add the following to the `guildCreate` event handler to make sure new guilds also get our guild only commands:
 
+```typescript title="src/events/guildCreate.ts"
+import { events } from "./mod.ts";
+import { logger } from "../utils/logger.ts";
+import { updateGuildCommands } from "../utils/helpers.ts";
+
+const log = logger({ name: "Events: guildCreate", });
+
+events.guildCreate = (rawBot, guild) => {
+  const bot = rawBot as BotWithCache;
+
+  log.info(`Bot joined guild ${guild.name} (${guild.id})`);
+  updateGuildCommands(bot, guild);
+}
+```
+
 ## Handling Commands
 
 We're nearly there! Our bot can now define and register commands; which is great, but it can't actually run any

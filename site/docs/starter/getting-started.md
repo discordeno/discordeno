@@ -17,9 +17,11 @@ sure to follow the [setup instructions](https://github.com/discordeno/discordeno
 
 ## Requirements
 
-- The latest version of [Deno](https://deno.land/).
-- A text editor (we like [Visual Studio Code](https://code.visualstudio.com/) with the
-  [deno extension](https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno).) and terminal (the one
+- The latest version of a sever side JavaScript interpreter.
+  - This lib was originally developed with, and still uses [Deno](https://deno.land).
+  - However, we have great support for [Node.js](https://nodejs.org)
+  - And are experimenting with [Bun](https://bun.sh/) support!
+- A text editor (we like [Visual Studio Code](https://code.visualstudio.com/)) and terminal (the one
   integrated with VS Code is good enough for now).
 - A directory on your computer to contain your project files. Every path in this tutorial will start at the project's
   root directory. Example: `~/dev/starter-project/mod.ts` -> `mod.ts` or `~/dev/starter-project/src/utils/logger.ts` ->
@@ -30,4 +32,3 @@ sure to follow the [setup instructions](https://github.com/discordeno/discordeno
   a refresher? Check out these tutorials:
   - [JavaScript Tutorial](https://www.w3schools.com/js/default.asp)
   - [TypeScript Tutorial](https://www.w3schools.com/typescript/index.php)
-  - [Deno Manual](https://deno.land/manual)
