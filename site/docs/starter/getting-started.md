@@ -26,7 +26,8 @@ sure to follow the [setup instructions](https://github.com/discordeno/discordeno
   `src/utils/logger.ts`.
 - Git to serve as the project's version management system. (This isn't a discordeno requirement, but it is extremely
   useful.)
-- Knowledge of how to write JavaScript and/or TypeScript (we won't explain everything, just the discordeno stuff). Need a refresher? Check out these tutorials:
+- Knowledge of how to write JavaScript and/or TypeScript (we won't explain everything, just the discordeno stuff). Need
+  a refresher? Check out these tutorials:
   - [JavaScript Tutorial](https://www.w3schools.com/js/default.asp)
   - [TypeScript Tutorial](https://www.w3schools.com/typescript/index.php)
   - [Deno Manual](https://deno.land/manual)

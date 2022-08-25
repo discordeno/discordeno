@@ -177,9 +177,12 @@ export function humanizeMilliseconds(milliseconds: number) {
 
 ## Registering Slash Commands
 
-You may have noticed the `Command.scope` option when defining a command. This is because discord provides two scopes when defining a slash command, one for just Guilds and one for Global commands. Guild commands need to be registered per-guild, while Global commands can be used in any guild, and in DMs.
+You may have noticed the `Command.scope` option when defining a command. This is because discord provides two scopes
+when defining a slash command, one for just Guilds and one for Global commands. Guild commands need to be registered
+per-guild, while Global commands can be used in any guild, and in DMs.
 
-We need to tell discord about our commands, so we need to register them. We can do that on bot startup, and when the bot joins a new guild (read the comments as they explain what each function does):
+We need to tell discord about our commands, so we need to register them. We can do that on bot startup, and when the bot
+joins a new guild (read the comments as they explain what each function does):
 
 ```typescript title="src/utils/helpers.ts, Lines 1-88"
 import {
@@ -337,7 +340,9 @@ Then add the following to the `guildCreate` event handler to make sure new guild
 
 ## Handling Commands
 
-We're nearly there! Our bot can now define and register commands; which is great, but it can't actually run any commands. If we were to start the bot and run `/ping` in discord, it would show an error message and we would only log that the interaction happened (see step 4). Let's fix that by adding onto the `interactionCreate` event handler:
+We're nearly there! Our bot can now define and register commands; which is great, but it can't actually run any
+commands. If we were to start the bot and run `/ping` in discord, it would show an error message and we would only log
+that the interaction happened (see step 4). Let's fix that by adding onto the `interactionCreate` event handler:
 
 ```typescript title="src/events/interactionCreate.ts"
 import {
@@ -478,7 +483,9 @@ events.interactionCreate = async (rawBot, interaction) => {
 };
 ```
 
-That might seem scary, however, we've included a lot of comments to help you understand what it does. We also need to add some more helpers to the `src/utils/helpers.ts` file (make sure to import types from `src/commands/mod.ts` and `deps.ts`):
+That might seem scary, however, we've included a lot of comments to help you understand what it does. We also need to
+add some more helpers to the `src/utils/helpers.ts` file (make sure to import types from `src/commands/mod.ts` and
+`deps.ts`):
 
 ```typescript title="src/utils/helpers.ts"
 // ...
@@ -518,7 +525,8 @@ export function isSubCommandGroup(
 
 ## Using Commands
 
-Now that we have all of these files in place, we can test out the `/ping` command. So, restart the bot, and you should see something like when you start up and run `/ping` in discord:
+Now that we have all of these files in place, we can test out the `/ping` command. So, restart the bot, and you should
+see something like when you start up and run `/ping` in discord:
 
 ```txt
 [8/25/2022 9:33:56 AM] INFO Main > Starting Bot, this might take a while...
@@ -536,4 +544,7 @@ And the response in discord would be something like:
 
 ---
 
-Amazing, You just created a working discord bot! This could be used for a small amount of guilds, or just for you and your friends. However, this bot is definitely not optimized to work in many guilds with a large number of users per guild. In this case, we need to manually write logic to handle these cases; but first, we should cover what goes into building a bigger bot...
+Amazing, You just created a working discord bot! This could be used for a small amount of guilds, or just for you and
+your friends. However, this bot is definitely not optimized to work in many guilds with a large number of users per
+guild. In this case, we need to manually write logic to handle these cases; but first, we should cover what goes into
+building a bigger bot...
