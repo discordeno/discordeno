@@ -24,10 +24,15 @@ export async function handleMessage(shard: Shard, message: MessageEvent<any>): P
   if (typeof message !== "string") return;
 
   const messageData = JSON.parse(message) as DiscordGatewayPayload;
-  //   gateway.debug("GW RAW", { shardId, payload: messageData });
 
-  // TODO: remove
-  // console.log({ messageData: censor(messageData) });
+  // Edge case start: https://github.com/discordeno/discordeno/issues/2311
+  shard.heart.acknowledged = true;
+  shard.heart.lastAck = Date.now();
+  // Manually calculating the round trip time for users who need it.
+  if (shard.heart.lastBeat) {
+    shard.heart.rtt = shard.heart.lastAck - shard.heart.lastBeat;
+  }
+  // Edge case end!
 
   switch (messageData.op) {
     case GatewayOpcodes.Heartbeat: {
@@ -70,13 +75,6 @@ export async function handleMessage(shard: Shard, message: MessageEvent<any>): P
       break;
     }
     case GatewayOpcodes.HeartbeatACK: {
-      shard.heart.acknowledged = true;
-      shard.heart.lastAck = Date.now();
-      // Manually calculating the round trip time for users who need it.
-      if (shard.heart.lastBeat) {
-        shard.heart.rtt = shard.heart.lastAck - shard.heart.lastBeat;
-      }
-
       shard.events.heartbeatAck?.(shard);
 
       break;
