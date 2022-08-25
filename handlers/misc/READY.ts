@@ -18,6 +18,6 @@ export function handleReady(bot: Bot, data: DiscordGatewayPayload, shardId: numb
     payload,
   );
 
-  if (!bot.id) bot.id = bot.transformers.snowflake(payload.user.id);
-  if (!bot.applicationId) bot.applicationId = bot.transformers.snowflake(payload.application.id);
+  bot.id = bot.transformers.snowflake(payload.user.id);
+  bot.applicationId = bot.transformers.snowflake(payload.application.id);
 }
