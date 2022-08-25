@@ -161,7 +161,7 @@ import {
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
     id: options.botId ?? getBotIdFromToken(options.token),
-    applicationId: options.applicationId || options.botId,
+    applicationId: options.applicationId || options.botId || getBotIdFromToken(options.token),
     token: removeTokenPrefix(options.token),
     events: createEventHandlers(options.events ?? {}),
     intents: options.intents,
