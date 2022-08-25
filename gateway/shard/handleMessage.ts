@@ -24,7 +24,7 @@ export async function handleMessage(shard: Shard, message: MessageEvent<any>): P
   if (typeof message !== "string") return;
 
   const messageData = JSON.parse(message) as DiscordGatewayPayload;
-  
+
   // Edge case start: https://github.com/discordeno/discordeno/issues/2311
   shard.heart.acknowledged = true;
   shard.heart.lastAck = Date.now();

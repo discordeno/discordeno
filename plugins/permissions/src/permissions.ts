@@ -337,8 +337,11 @@ export function highestRole(
   if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
   // Get the roles from the member
-  const memberRoles = (typeof memberOrId === "bigint" ? bot.members.get(bot.transformers.snowflake(`${memberOrId}${guild.id}`)) : memberOrId)
-    ?.roles;
+  const memberRoles =
+    (typeof memberOrId === "bigint"
+      ? bot.members.get(bot.transformers.snowflake(`${memberOrId}${guild.id}`))
+      : memberOrId)
+      ?.roles;
   // This member has no roles so the highest one is the @everyone role
   if (!memberRoles) return guild.roles.get(guild.id)!;
 
