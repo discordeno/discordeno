@@ -21,8 +21,8 @@ sure to follow the [setup instructions](https://github.com/discordeno/discordeno
   - This lib was originally developed with, and still uses [Deno](https://deno.land).
   - However, we have great support for [Node.js](https://nodejs.org)
   - And are experimenting with [Bun](https://bun.sh/) support!
-- A text editor (we like [Visual Studio Code](https://code.visualstudio.com/)) and terminal (the one
-  integrated with VS Code is good enough for now).
+- A text editor (we like [Visual Studio Code](https://code.visualstudio.com/)) and terminal (the one integrated with VS
+  Code is good enough for now).
 - A directory on your computer to contain your project files. Every path in this tutorial will start at the project's
   root directory. Example: `~/dev/starter-project/mod.ts` -> `mod.ts` or `~/dev/starter-project/src/utils/logger.ts` ->
   `src/utils/logger.ts`.
