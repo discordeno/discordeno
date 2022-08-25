@@ -32,6 +32,7 @@ export async function editAutomodRule(bot: Bot, guildId: bigint, options: Partia
       enabled: options.enabled ?? true,
       exempt_roles: options.exemptRoles?.map((id) => id.toString()),
       exempt_channels: options.exemptChannels?.map((id) => id.toString()),
+      reason: options.reason,
     },
   );
 
@@ -71,4 +72,6 @@ export interface EditAutoModerationRuleOptions {
   exemptRoles?: bigint[];
   /** The channel ids that should not be effected by the rule. */
   exemptChannels?: bigint[];
+  /** The reason to add to the audit logs. */
+  reason?: string;
 }
