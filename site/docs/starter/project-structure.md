@@ -65,23 +65,23 @@ First, define all our events:
 import { events } from "./mod.ts";
 
 events.ready = () => {
-  console.log("Bot Ready.");
+  console.log("Bot Ready!");
 }
 ```
 
 ```typescript title="src/events/guildCreate.ts"
 import { events } from "./mod.ts";
 
-events.guildCreate = () => {
-  
+events.guildCreate = (_, guild) => {
+  console.log(`Bot Joined Guild ${guild.name} (${guild.id})`);
 }
 ```
 
 ```typescript title="src/events/interactionCreate.ts"
 import { events } from "./mod.ts";
 
-events.interactionCreate = () => {
-
+events.interactionCreate = (_, interaction) => {
+  console.log(`Interaction ${interaction.id} created by ${interaction.user.username}#${interaction.user.discriminator} (${interaction.user.id})`);
 }
 ```
 
@@ -247,6 +247,7 @@ import { logger } from "./src/utils/logger.ts";
 import { dotEnvConfig, createBot, GatewayIntents, startBot } from "./deps.ts";
 import { events } from "./src/events/mod.ts";
 
+// highlight-next-line
 const log = logger({ name: "Main" });
 
 // Secrets
@@ -254,6 +255,7 @@ dotEnvConfig({ export: true });
 export const BOT_TOKEN = Deno.env.get("BOT_TOKEN") || "";
 export const BOT_ID = BigInt(atob(BOT_TOKEN.split(".")[0]));
 
+// highlight-next-line
 log.info("Starting Bot, this might take a while...");
 
 // Create the Bot Object
@@ -269,6 +271,39 @@ if (BOT_TOKEN) {
   await startBot(bot);
 } else {
   throw "Error: No Token!";
+}
+```
+
+```typescript title="src/events/ready.ts"
+import { events } from "./mod.ts";
+import { logger } from "../utils/logger.ts";
+
+const log = logger({ name: "Events: ready" });
+
+events.ready = () => {
+  log.info("Bot Ready!");
+}
+```
+
+```typescript title="src/events/guildCreate.ts"
+import { events } from "./mod.ts";
+import { logger } from "../utils/logger.ts";
+
+const log = logger({ name: "Events: guildCreate", });
+
+events.guildCreate = (_, guild) => {
+  log.info(`Bot joined guild ${guild.name} (${guild.id})`);
+}
+```
+
+```typescript title="src/events/interactionCreate.ts"
+import { events } from "./mod.ts";
+import { logger } from "../utils/logger.ts";
+
+const log = logger({ name: "Events: interactionCreate" });
+
+events.interactionCreate = () => {
+  log.info(`Interaction ${interaction.id} created by ${interaction.user.username}#${interaction.user.discriminator} (${interaction.user.id})`);
 }
 ```
 
