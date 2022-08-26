@@ -1,7 +1,7 @@
 import type { Bot } from "../../bot.ts";
 
-/** Removes a reaction from the given user on this message, defaults to bot. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
-export async function removeReaction(
+/** Deletes a reaction from the given user on this message, defaults to bot. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
+export async function deleteReaction(
   bot: Bot,
   channelId: bigint,
   messageId: bigint,
