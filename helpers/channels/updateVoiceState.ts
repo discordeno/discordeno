@@ -10,8 +10,8 @@ import type { Bot } from "../../bot.ts";
  *  - You are able to set `request_to_speak_timestamp` to any present or future time.
  *  - When suppressed, the user will have their `request_to_speak_timestamp` removed.
  */
-export async function updateBotVoiceState(bot: Bot, guildId: bigint, options: UpdateSelfVoiceState) {
-  await bot.rest.runMethod(bot.rest, "PATCH", bot.constants.routes.UPDATE_VOICE_STATE(guildId), {
+export async function updateBotVoiceState(bot: Bot, guildId: bigint, options: UpdateSelfVoiceState): Promise<void> {
+  return void await bot.rest.runMethod(bot.rest, "PATCH", bot.constants.routes.UPDATE_VOICE_STATE(guildId), {
     channel_id: options.channelId,
     suppress: options.suppress,
     request_to_speak_timestamp: options.requestToSpeakTimestamp
@@ -31,8 +31,8 @@ export async function updateBotVoiceState(bot: Bot, guildId: bigint, options: Up
  *  - You are able to set `request_to_speak_timestamp` to any present or future time.
  *  - When suppressed, the user will have their `request_to_speak_timestamp` removed.
  */
-export async function updateUserVoiceState(bot: Bot, guildId: bigint, options: UpdateOthersVoiceState) {
-  await bot.rest.runMethod(
+export async function updateUserVoiceState(bot: Bot, guildId: bigint, options: UpdateOthersVoiceState): Promise<void> {
+  return void await bot.rest.runMethod(
     bot.rest,
     "PATCH",
     bot.constants.routes.UPDATE_VOICE_STATE(guildId, options.userId),

@@ -5,6 +5,6 @@ import type { Bot } from "../../bot.ts";
  * However, if a bot is responding to a command and expects the computation to take a few seconds,
  * this endpoint may be called to let the user know that the bot is processing their message.
  */
-export async function startTyping(bot: Bot, channelId: bigint) {
-  await bot.rest.runMethod<undefined>(bot.rest, "POST", bot.constants.routes.CHANNEL_TYPING(channelId));
+export async function startTyping(bot: Bot, channelId: bigint): Promise<void> {
+  return void await bot.rest.runMethod(bot.rest, "POST", bot.constants.routes.CHANNEL_TYPING(channelId));
 }

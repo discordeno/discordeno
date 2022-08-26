@@ -1,10 +1,16 @@
 import type { Bot } from "../../bot.ts";
-import { ChannelTypes } from "../../types/shared.ts";
+import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
+import { ChannelTypes } from "../../types/shared.ts";
 import { OverwriteReadable } from "./editChannelOverwrite.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
-export async function createChannel(bot: Bot, guildId: bigint, options?: CreateGuildChannel, reason?: string) {
+export async function createChannel(
+  bot: Bot,
+  guildId: bigint,
+  options?: CreateGuildChannel,
+  reason?: string,
+): Promise<Channel> {
   // BITRATE IS IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
   if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000;
 

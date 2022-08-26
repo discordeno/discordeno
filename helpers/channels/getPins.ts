@@ -1,8 +1,9 @@
 import type { Bot } from "../../bot.ts";
+import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
 
 /** Get pinned messages in this channel. */
-export async function getPins(bot: Bot, channelId: bigint) {
+export async function getPins(bot: Bot, channelId: bigint): Promise<Message[]> {
   const result = await bot.rest.runMethod<DiscordMessage[]>(
     bot.rest,
     "GET",

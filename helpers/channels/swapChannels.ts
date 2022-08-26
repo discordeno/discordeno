@@ -1,12 +1,16 @@
 import type { Bot } from "../../bot.ts";
 
 /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permission. Only channels to be modified are required. */
-export async function swapChannels(bot: Bot, guildId: bigint, channelPositions: ModifyGuildChannelPositions[]) {
+export async function swapChannels(
+  bot: Bot,
+  guildId: bigint,
+  channelPositions: ModifyGuildChannelPositions[],
+): Promise<void> {
   if (!channelPositions.length) {
     throw "You must provide at least one channels to be moved.";
   }
 
-  await bot.rest.runMethod<undefined>(
+  return void await bot.rest.runMethod(
     bot.rest,
     "PATCH",
     bot.constants.routes.GUILD_CHANNELS(guildId),
