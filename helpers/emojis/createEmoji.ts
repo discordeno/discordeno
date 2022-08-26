@@ -1,8 +1,9 @@
 import type { Bot } from "../../bot.ts";
+import { Emoji } from "../../transformers/emoji.ts";
 import { DiscordEmoji } from "../../types/discord.ts";
 
 /** Create an emoji in the server */
-export async function createEmoji(bot: Bot, guildId: bigint, options: CreateGuildEmoji) {
+export async function createEmoji(bot: Bot, guildId: bigint, options: CreateGuildEmoji): Promise<Emoji> {
   if (options.image && !options.image.startsWith("data:image/")) {
     options.image = await bot.utils.urlToBase64(options.image);
   }
