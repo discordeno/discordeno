@@ -1,5 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import { ImageFormat, ImageSize } from "../members/avatarUrl.ts";
+import { ImageFormat, ImageSize } from "../members/getAvatarUrl.ts";
 
 /** The full URL of the splash from Discords CDN. Undefined if no splash is set. */
 export function getGuildSplashURL(
