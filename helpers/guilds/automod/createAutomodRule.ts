@@ -1,4 +1,5 @@
 import { Bot } from "../../../bot.ts";
+import { AutoModerationRule } from "../../../transformers/automodRule.ts";
 import {
   AutoModerationActionType,
   AutoModerationEventTypes,
@@ -8,7 +9,11 @@ import {
 } from "../../../types/discord.ts";
 
 /** Get a rule currently configured for guild. */
-export async function createAutomodRule(bot: Bot, guildId: bigint, options: CreateAutoModerationRuleOptions) {
+export async function createAutomodRule(
+  bot: Bot,
+  guildId: bigint,
+  options: CreateAutoModerationRuleOptions,
+): Promise<AutoModerationRule> {
   const rule = await bot.rest.runMethod<DiscordAutoModerationRule>(
     bot.rest,
     "POST",

@@ -1,4 +1,5 @@
 import { Bot } from "../../../bot.ts";
+import { AutoModerationRule } from "../../../transformers/automodRule.ts";
 import {
   AutoModerationActionType,
   AutoModerationEventTypes,
@@ -7,7 +8,11 @@ import {
 } from "../../../types/discord.ts";
 
 /** Edit a rule currently configured for guild. */
-export async function editAutomodRule(bot: Bot, guildId: bigint, options: Partial<EditAutoModerationRuleOptions>) {
+export async function editAutomodRule(
+  bot: Bot,
+  guildId: bigint,
+  options: Partial<EditAutoModerationRuleOptions>,
+): Promise<AutoModerationRule> {
   const rule = await bot.rest.runMethod<DiscordAutoModerationRule>(
     bot.rest,
     "PATCH",
