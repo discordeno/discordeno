@@ -13,7 +13,7 @@ export async function editInteractionResponse(
     messageId?: bigint;
   },
 ): Promise<Message | undefined> {
-  const result = await bot.rest.runMethod<DiscordMessage | undefined>(
+  const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "PATCH",
     options.messageId
@@ -103,7 +103,7 @@ export async function editInteractionResponse(
   );
 
   // If the original message was edited, this will not return a message
-  if (!options.messageId || !result) return undefined;
+  if (!options.messageId) return undefined;
 
   return bot.transformers.message(bot, result);
 }
