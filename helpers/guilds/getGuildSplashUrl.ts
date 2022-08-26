@@ -2,7 +2,7 @@ import type { Bot } from "../../bot.ts";
 import { ImageFormat, ImageSize } from "../members/avatarUrl.ts";
 
 /** The full URL of the splash from Discords CDN. Undefined if no splash is set. */
-export function guildSplashURL(
+export function getGuildSplashURL(
   bot: Bot,
   id: bigint,
   splash: bigint | undefined,

@@ -2,7 +2,7 @@ import type { Bot } from "../../bot.ts";
 import { ImageFormat, ImageSize } from "../members/avatarUrl.ts";
 
 /** The full URL of the banner from Discords CDN. Undefined if no banner is set. */
-export function guildBannerURL(
+export function getGuildBannerURL(
   bot: Bot,
   id: bigint,
   options: {
