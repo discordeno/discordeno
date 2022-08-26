@@ -1,6 +1,11 @@
-import { Collection } from "../../../util/collection.ts";
 import type { Bot } from "../../../bot.ts";
 import { DiscordListArchivedThreads } from "../../../types/discord.ts";
+import { Collection } from "../../../util/collection.ts";
+import { ActiveThreads } from "./getActiveThreads.ts";
+
+export type ArchivedThreads = ActiveThreads & {
+  hasMore: boolean;
+};
 
 /** Get the archived threads for this channel, defaults to public */
 export async function getArchivedThreads(
@@ -9,7 +14,7 @@ export async function getArchivedThreads(
   options?: ListArchivedThreads & {
     type?: "public" | "private" | "privateJoinedThreads";
   },
-) {
+): Promise<ArchivedThreads> {
   let url = options?.type === "privateJoinedThreads"
     ? bot.constants.routes.THREAD_ARCHIVED_PRIVATE_JOINED(channelId, options)
     : options?.type === "private"
@@ -32,7 +37,7 @@ export async function getArchivedThreads(
     members: new Collection(
       result.members.map((m) => {
         const member = bot.transformers.threadMember(bot, m);
-        return [member.id, member];
+        return [member.id!, member];
       }),
     ),
     hasMore: result.has_more,

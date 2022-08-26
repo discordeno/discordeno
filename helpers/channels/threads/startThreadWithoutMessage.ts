@@ -1,9 +1,14 @@
 import type { Bot } from "../../../bot.ts";
+import { Channel } from "../../../transformers/channel.ts";
 import { DiscordChannel } from "../../../types/discord.ts";
 import { ChannelTypes } from "../../../types/shared.ts";
 
 /** Creates a new private thread. Returns a thread channel. */
-export async function startThreadWithoutMessage(bot: Bot, channelId: bigint, options: StartThreadWithoutMessage) {
+export async function startThreadWithoutMessage(
+  bot: Bot,
+  channelId: bigint,
+  options: StartThreadWithoutMessage,
+): Promise<Channel> {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
     "POST",
