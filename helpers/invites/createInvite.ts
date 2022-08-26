@@ -1,6 +1,6 @@
 import type { Bot } from "../../bot.ts";
 import { DiscordInvite } from "../../types/discord.ts";
-import { InviteTargetTypes } from "../../types/shared.ts";
+import { TargetTypes } from "../../types/shared.ts";
 
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
 export async function createInvite(bot: Bot, channelId: bigint, options: CreateChannelInvite = {}) {
@@ -14,8 +14,8 @@ export async function createInvite(bot: Bot, channelId: bigint, options: CreateC
       temporary: options.temporary,
       unique: options.unique,
       target_type: options.targetType,
-      target_user_id: options.targetUserId,
-      target_application_id: options.targetApplicationId,
+      target_user_id: options.targetUserId?.toString(),
+      target_application_id: options.targetApplicationId?.toString(),
     },
   );
 
@@ -45,9 +45,9 @@ export interface CreateChannelInvite {
   /** If true, don't try to reuse similar invite (useful for creating many unique one time use invites). Default: false */
   unique?: boolean;
   /** The type of target for this voice channel invite */
-  targetType?: InviteTargetTypes;
+  targetType?: TargetTypes;
   /** The id of the user whose stream to display for this invite, required if `target_type` is 1, the user must be streaming in the channel */
-  targetUserId?: string;
+  targetUserId?: bigint;
   /** The id of the embedded application to open for this invite, required if `target_type` is 2, the application must have the `EMBEDDED` flag */
-  targetApplicationId?: string;
+  targetApplicationId?: bigint;
 }
