@@ -1,9 +1,14 @@
 import { Bot } from "../../../bot.ts";
+import { ScheduledEvent } from "../../../transformers/scheduledEvent.ts";
 import { DiscordScheduledEvent } from "../../../types/discord.ts";
 import { ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../../../types/shared.ts";
 
 /** Create a guild scheduled event in the guild. A guild can have a maximum of 100 events with `SCHEDULED` or `ACTIVE` status at any time. */
-export async function createScheduledEvent(bot: Bot, guildId: bigint, options: CreateScheduledEvent) {
+export async function createScheduledEvent(
+  bot: Bot,
+  guildId: bigint,
+  options: CreateScheduledEvent,
+): Promise<ScheduledEvent> {
   if (!bot.utils.validateLength(options.name, { min: 1, max: 100 })) {
     throw new Error("Name must be between 1-100 characters.");
   }
