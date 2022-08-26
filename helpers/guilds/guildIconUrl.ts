@@ -10,7 +10,7 @@ export function guildIconURL(
     size?: ImageSize;
     format?: ImageFormat;
   },
-) {
+): string | undefined {
   return icon
     ? bot.utils.formatImageURL(
       bot.constants.routes.GUILD_ICON(

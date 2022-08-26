@@ -1,17 +1,17 @@
 import type { Bot } from "../../bot.ts";
-import { Collection } from "../../util/collection.ts";
 import { DiscordBan } from "../../types/discord.ts";
-import { User } from "../../transformers/member.ts";
+import { Collection } from "../../util/collection.ts";
+import { Ban } from "./getBan.ts";
 
 /** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
-export async function getBans(bot: Bot, guildId: bigint, options?: GetBans) {
+export async function getBans(bot: Bot, guildId: bigint, options?: GetBans): Promise<Collection<bigint, Ban>> {
   const results = await bot.rest.runMethod<DiscordBan[]>(
     bot.rest,
     "GET",
     bot.constants.routes.GUILD_BANS(guildId, options),
   );
 
-  return new Collection<bigint, { reason?: string; user: User }>(
+  return new Collection(
     results.map((res) => [
       bot.transformers.snowflake(res.user.id),
       {

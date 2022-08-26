@@ -10,7 +10,7 @@ export function guildBannerURL(
     size?: ImageSize;
     format?: ImageFormat;
   },
-) {
+): string | undefined {
   return options.banner
     ? bot.utils.formatImageURL(
       bot.constants.routes.GUILD_BANNER(

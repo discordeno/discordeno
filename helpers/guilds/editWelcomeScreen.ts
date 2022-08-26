@@ -1,7 +1,12 @@
 import type { Bot } from "../../bot.ts";
+import { WelcomeScreen } from "../../transformers/welcomeScreen.ts";
 import { DiscordWelcomeScreen } from "../../types/discord.ts";
 
-export async function editWelcomeScreen(bot: Bot, guildId: bigint, options: ModifyGuildWelcomeScreen) {
+export async function editWelcomeScreen(
+  bot: Bot,
+  guildId: bigint,
+  options: ModifyGuildWelcomeScreen,
+): Promise<WelcomeScreen> {
   const result = await bot.rest.runMethod<DiscordWelcomeScreen>(
     bot.rest,
     "PATCH",

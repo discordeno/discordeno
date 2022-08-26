@@ -10,7 +10,7 @@ export function guildSplashURL(
     size?: ImageSize;
     format?: ImageFormat;
   },
-) {
+): string | undefined {
   return splash
     ? bot.utils.formatImageURL(
       bot.constants.routes.GUILD_SPLASH(

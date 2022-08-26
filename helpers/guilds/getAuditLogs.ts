@@ -1,22 +1,41 @@
 import type { Bot } from "../../bot.ts";
+import { AuditLogEntry } from "../../transformers/auditLogEntry.ts";
+import { AutoModerationRule } from "../../transformers/automodRule.ts";
+import { Channel } from "../../transformers/channel.ts";
+import { Integration } from "../../transformers/integration.ts";
+import { User } from "../../transformers/member.ts";
+import { ScheduledEvent } from "../../transformers/scheduledEvent.ts";
+import { Webhook } from "../../transformers/webhook.ts";
 import { DiscordAuditLog } from "../../types/discord.ts";
 import { AuditLogEvents } from "../../types/shared.ts";
 
-/** Returns the audit logs for the guild. Requires VIEW AUDIT LOGS permission */
-export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuildAuditLog) {
-  if (options?.limit) options.limit = options.limit >= 1 && options.limit <= 100 ? options.limit : 50;
+export type AuditLog = {
+  auditLogEntries: AuditLogEntry[];
+  autoModerationRules?: AutoModerationRule[];
+  guildScheduledEvents?: ScheduledEvent[];
+  integrations: Partial<Omit<Integration, "guildId">>[];
+  threads: Channel[];
+  users: User[];
+  webhooks: Webhook[];
+};
 
-  const auditlog = await bot.rest.runMethod<DiscordAuditLog>(
+/** Returns the audit logs for the guild. Requires VIEW_AUDIT_LOGS permission */
+export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuildAuditLog): Promise<AuditLog> {
+  if (options?.limit) {
+    options.limit = options.limit >= 1 && options.limit <= 100 ? options.limit : 50;
+  }
+
+  const result = await bot.rest.runMethod<DiscordAuditLog>(
     bot.rest,
     "GET",
     bot.constants.routes.GUILD_AUDIT_LOGS(guildId, options),
   );
 
   return {
-    users: auditlog.users.map((user) => bot.transformers.user(bot, user)),
-    webhook: auditlog.webhooks.map((hook) => bot.transformers.webhook(bot, hook)),
-    auditLogEntries: auditlog.audit_log_entries.map((entry) => bot.transformers.auditLogEntry(bot, entry)),
-    integrations: auditlog.integrations.map((integration) => ({
+    auditLogEntries: result.audit_log_entries.map((entry) => bot.transformers.auditLogEntry(bot, entry)),
+    autoModerationRules: result.auto_moderation_rules?.map((rule) => bot.transformers.automodRule(bot, rule)),
+    guildScheduledEvents: result.guild_scheduled_events?.map((event) => bot.transformers.scheduledEvent(bot, event)),
+    integrations: result.integrations.map((integration) => ({
       id: integration.id ? bot.transformers.snowflake(integration.id) : undefined,
       name: integration.name,
       type: integration.type,
@@ -27,10 +46,12 @@ export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuild
       expireBehavior: integration.expire_behavior,
       expireGracePeriod: integration.expire_grace_period,
       user: integration.user ? bot.transformers.user(bot, integration.user) : undefined,
-      account: {
-        id: integration.account?.id ? bot.transformers.snowflake(integration.account.id) : undefined,
-        name: integration.account?.name,
-      },
+      account: integration.account
+        ? {
+          id: bot.transformers.snowflake(integration.account.id),
+          name: integration.account.name,
+        }
+        : undefined,
       syncedAt: integration.synced_at ? Date.parse(integration.synced_at) : undefined,
       subscriberCount: integration.subscriber_count,
       revoked: integration.revoked,
@@ -44,8 +65,9 @@ export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuild
         }
         : undefined,
     })),
-    threads: auditlog.threads.map((thread) => bot.transformers.channel(bot, { channel: thread, guildId })),
-    scheduledEvents: auditlog.guild_scheduled_events?.map((event) => bot.transformers.scheduledEvent(bot, event)),
+    threads: result.threads.map((thread) => bot.transformers.channel(bot, { channel: thread, guildId })),
+    users: result.users.map((user) => bot.transformers.user(bot, user)),
+    webhooks: result.webhooks.map((hook) => bot.transformers.webhook(bot, hook)),
   };
 }
 
