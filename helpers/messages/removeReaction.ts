@@ -7,14 +7,14 @@ export async function removeReaction(
   messageId: bigint,
   reaction: string,
   options?: { userId?: bigint },
-) {
+): Promise<void> {
   if (reaction.startsWith("<:")) {
     reaction = reaction.substring(2, reaction.length - 1);
   } else if (reaction.startsWith("<a:")) {
     reaction = reaction.substring(3, reaction.length - 1);
   }
 
-  await bot.rest.runMethod<undefined>(
+  return void await bot.rest.runMethod(
     bot.rest,
     "DELETE",
     options?.userId

@@ -1,8 +1,9 @@
 import type { Bot } from "../../bot.ts";
+import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
 
 /** Crosspost a message in a News Channel to following channels. */
-export async function publishMessage(bot: Bot, channelId: bigint, messageId: bigint) {
+export async function publishMessage(bot: Bot, channelId: bigint, messageId: bigint): Promise<Message> {
   const data = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "POST",

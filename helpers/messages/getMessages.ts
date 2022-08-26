@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
 import { Collection } from "../../util/collection.ts";
 import { hasProperty } from "../../util/utils.ts";
@@ -8,7 +9,7 @@ export async function getMessages(
   bot: Bot,
   channelId: bigint,
   options?: GetMessagesOptions,
-) {
+): Promise<Collection<bigint, Message>> {
   if (options?.limit && (options.limit < 0 || options.limit > 100)) {
     throw new Error(bot.constants.Errors.INVALID_GET_MESSAGES_LIMIT);
   }

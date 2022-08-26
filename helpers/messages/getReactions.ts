@@ -1,6 +1,7 @@
-import { Collection } from "../../util/collection.ts";
 import type { Bot } from "../../bot.ts";
+import { User } from "../../transformers/member.ts";
 import { DiscordUser } from "../../types/discord.ts";
+import { Collection } from "../../util/collection.ts";
 
 /** Get a list of users that reacted with this emoji. */
 export async function getReactions(
@@ -9,7 +10,7 @@ export async function getReactions(
   messageId: bigint,
   reaction: string,
   options?: GetReactions,
-) {
+): Promise<Collection<bigint, User>> {
   if (reaction.startsWith("<:")) {
     reaction = reaction.substring(2, reaction.length - 1);
   } else if (reaction.startsWith("<a:")) {
