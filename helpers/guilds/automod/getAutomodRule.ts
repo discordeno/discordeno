@@ -4,11 +4,11 @@ import { DiscordAutoModerationRule } from "../../../types/discord.ts";
 
 /** Get a rule currently configured for guild. */
 export async function getAutomodRule(bot: Bot, guildId: bigint, ruleId: bigint): Promise<AutoModerationRule> {
-  const rule = await bot.rest.runMethod<DiscordAutoModerationRule>(
+  const result = await bot.rest.runMethod<DiscordAutoModerationRule>(
     bot.rest,
     "GET",
     bot.constants.routes.AUTOMOD_RULE(guildId, ruleId),
   );
 
-  return bot.transformers.automodRule(bot, rule);
+  return bot.transformers.automodRule(bot, result);
 }

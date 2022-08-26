@@ -5,16 +5,16 @@ import { Collection } from "../../util/collection.ts";
 
 /** Returns an array of voice regions that can be used when creating servers. */
 export async function getAvailableVoiceRegions(bot: Bot): Promise<Collection<string, VoiceRegions>> {
-  const result = await bot.rest.runMethod<DiscordVoiceRegion[]>(
+  const results = await bot.rest.runMethod<DiscordVoiceRegion[]>(
     bot.rest,
     "GET",
     bot.constants.routes.VOICE_REGIONS(),
   );
 
   return new Collection(
-    result.map((region) => {
-      const voiceRegion = bot.transformers.voiceRegion(bot, region);
-      return [voiceRegion.id, voiceRegion];
+    results.map((result) => {
+      const region = bot.transformers.voiceRegion(bot, result);
+      return [region.id, region];
     }),
   );
 }

@@ -5,14 +5,16 @@ import { Collection } from "../../util/collection.ts";
 
 /** Gets the webhooks for this channel. Requires MANAGE_WEBHOOKS */
 export async function getChannelWebhooks(bot: Bot, channelId: bigint): Promise<Collection<bigint, Webhook>> {
-  const result = await bot.rest.runMethod<DiscordWebhook[]>(
+  const results = await bot.rest.runMethod<DiscordWebhook[]>(
     bot.rest,
     "GET",
     bot.constants.routes.CHANNEL_WEBHOOKS(channelId),
   );
 
-  return new Collection(result.map((hook) => {
-    const webhook = bot.transformers.webhook(bot, hook);
-    return [webhook.id, webhook];
-  }));
+  return new Collection(
+    results.map((result) => {
+      const webhook = bot.transformers.webhook(bot, result);
+      return [webhook.id, webhook];
+    }),
+  );
 }

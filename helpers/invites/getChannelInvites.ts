@@ -6,40 +6,40 @@ import { InviteMetadata } from "./getInvite.ts";
 
 /** Gets the invites for this channel. Requires MANAGE_CHANNEL */
 export async function getChannelInvites(bot: Bot, channelId: bigint): Promise<Collection<string, InviteMetadata>> {
-  const invites = await bot.rest.runMethod<DiscordInviteMetadata[]>(
+  const results = await bot.rest.runMethod<DiscordInviteMetadata[]>(
     bot.rest,
     "GET",
     bot.constants.routes.CHANNEL_INVITES(channelId),
   );
 
   return new Collection(
-    invites.map<[string, InviteMetadata]>((invite) => [
-      invite.code,
-      {
-        code: invite.code,
-        guildId: invite.guild?.id ? bot.transformers.snowflake(invite.guild.id) : undefined,
-        channelId: invite.channel?.id ? bot.transformers.snowflake(invite.channel.id) : undefined,
-        inviter: invite.inviter ? bot.transformers.user(bot, invite.inviter) : undefined,
-        targetType: invite.target_type
-          ? (invite.target_type === 1 ? TargetTypes.Stream : TargetTypes.EmbeddedApplication)
+    results.map<[string, InviteMetadata]>((result) => {
+      const invite = {
+        code: result.code,
+        guildId: result.guild?.id ? bot.transformers.snowflake(result.guild.id) : undefined,
+        channelId: result.channel?.id ? bot.transformers.snowflake(result.channel.id) : undefined,
+        inviter: result.inviter ? bot.transformers.user(bot, result.inviter) : undefined,
+        targetType: result.target_type
+          ? (result.target_type === 1 ? TargetTypes.Stream : TargetTypes.EmbeddedApplication)
           : undefined,
-        targetUser: invite.target_user ? bot.transformers.user(bot, invite.target_user) : undefined,
-        targetApplicationId: invite.target_application?.id
-          ? bot.transformers.snowflake(invite.target_application.id)
+        targetUser: result.target_user ? bot.transformers.user(bot, result.target_user) : undefined,
+        targetApplicationId: result.target_application?.id
+          ? bot.transformers.snowflake(result.target_application.id)
           : undefined,
-        approximatePresenceCount: invite.approximate_presence_count,
-        approximateMemberCount: invite.approximate_member_count,
-        expiresAt: invite.expires_at ? Date.parse(invite.expires_at) : undefined,
-        guildScheduledEvent: invite.guild_scheduled_event
-          ? bot.transformers.scheduledEvent(bot, invite.guild_scheduled_event)
+        approximatePresenceCount: result.approximate_presence_count,
+        approximateMemberCount: result.approximate_member_count,
+        expiresAt: result.expires_at ? Date.parse(result.expires_at) : undefined,
+        guildScheduledEvent: result.guild_scheduled_event
+          ? bot.transformers.scheduledEvent(bot, result.guild_scheduled_event)
           : undefined,
         // Metadata structure
-        uses: invite.uses,
-        maxUses: invite.max_uses,
-        maxAge: invite.max_age,
-        temporary: invite.temporary,
-        createdAt: Date.parse(invite.created_at),
-      },
-    ]),
+        uses: result.uses,
+        maxUses: result.max_uses,
+        maxAge: result.max_age,
+        temporary: result.temporary,
+        createdAt: Date.parse(result.created_at),
+      };
+      return [invite.code, invite];
+    }),
   );
 }

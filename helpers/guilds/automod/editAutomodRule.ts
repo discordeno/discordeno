@@ -13,7 +13,7 @@ export async function editAutomodRule(
   guildId: bigint,
   options: Partial<EditAutoModerationRuleOptions>,
 ): Promise<AutoModerationRule> {
-  const rule = await bot.rest.runMethod<DiscordAutoModerationRule>(
+  const result = await bot.rest.runMethod<DiscordAutoModerationRule>(
     bot.rest,
     "PATCH",
     bot.constants.routes.AUTOMOD_RULES(guildId),
@@ -41,7 +41,7 @@ export async function editAutomodRule(
     },
   );
 
-  return bot.transformers.automodRule(bot, rule);
+  return bot.transformers.automodRule(bot, result);
 }
 
 export interface EditAutoModerationRuleOptions {

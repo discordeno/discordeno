@@ -15,19 +15,20 @@ export type DiscoveryName = {
 
 /** Returns a Collection (mapped by Id of the discovery category object) of discovery category objects that can be used when editing guilds */
 export async function getDiscoveryCategories(bot: Bot): Promise<Collection<bigint, DiscoveryCategory>> {
-  const result = await bot.rest.runMethod<DiscordDiscoveryCategory[]>(
+  const results = await bot.rest.runMethod<DiscordDiscoveryCategory[]>(
     bot.rest,
     "GET",
     bot.constants.routes.DISCOVERY_CATEGORIES(),
   );
 
-  const categories = result.map<DiscoveryCategory>((category) => ({
-    id: BigInt(category.id),
-    name: category.name,
-    isPrimary: category.is_primary,
-  }));
-
   return new Collection(
-    categories.map((category) => [category.id, category]),
+    results.map((result) => {
+      const category = {
+        id: BigInt(result.id),
+        name: result.name,
+        isPrimary: result.is_primary,
+      };
+      return [category.id, category];
+    }),
   );
 }

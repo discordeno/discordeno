@@ -15,17 +15,17 @@ export async function getArchivedThreads(
     type?: "public" | "private" | "privateJoinedThreads";
   },
 ): Promise<ArchivedThreads> {
-  let url = options?.type === "privateJoinedThreads"
+  const url = options?.type === "privateJoinedThreads"
     ? bot.constants.routes.THREAD_ARCHIVED_PRIVATE_JOINED(channelId, options)
     : options?.type === "private"
     ? bot.constants.routes.THREAD_ARCHIVED_PRIVATE(channelId, options)
     : bot.constants.routes.THREAD_ARCHIVED_PUBLIC(channelId, options);
 
-  const result = (await bot.rest.runMethod<DiscordListArchivedThreads>(
+  const result = await bot.rest.runMethod<DiscordListArchivedThreads>(
     bot.rest,
     "GET",
     url,
-  ));
+  );
 
   return {
     threads: new Collection(

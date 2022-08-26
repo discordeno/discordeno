@@ -8,7 +8,7 @@ export async function createEmoji(bot: Bot, guildId: bigint, options: CreateGuil
     options.image = await bot.utils.urlToBase64(options.image);
   }
 
-  const emoji = await bot.rest.runMethod<DiscordEmoji>(
+  const result = await bot.rest.runMethod<DiscordEmoji>(
     bot.rest,
     "POST",
     bot.constants.routes.GUILD_EMOJIS(guildId),
@@ -20,7 +20,7 @@ export async function createEmoji(bot: Bot, guildId: bigint, options: CreateGuil
     },
   );
 
-  return bot.transformers.emoji(bot, emoji);
+  return bot.transformers.emoji(bot, result);
 }
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */

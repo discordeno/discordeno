@@ -14,7 +14,7 @@ export async function createAutomodRule(
   guildId: bigint,
   options: CreateAutoModerationRuleOptions,
 ): Promise<AutoModerationRule> {
-  const rule = await bot.rest.runMethod<DiscordAutoModerationRule>(
+  const result = await bot.rest.runMethod<DiscordAutoModerationRule>(
     bot.rest,
     "POST",
     bot.constants.routes.AUTOMOD_RULES(guildId),
@@ -43,7 +43,7 @@ export async function createAutomodRule(
     },
   );
 
-  return bot.transformers.automodRule(bot, rule);
+  return bot.transformers.automodRule(bot, result);
 }
 
 export interface CreateAutoModerationRuleOptions {

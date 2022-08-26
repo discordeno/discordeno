@@ -8,7 +8,7 @@ export async function getApplicationCommands(
   bot: Bot,
   guildId?: bigint,
 ): Promise<Collection<bigint, ApplicationCommand>> {
-  const result = await bot.rest.runMethod<DiscordApplicationCommand[]>(
+  const results = await bot.rest.runMethod<DiscordApplicationCommand[]>(
     bot.rest,
     "GET",
     guildId
@@ -17,8 +17,8 @@ export async function getApplicationCommands(
   );
 
   return new Collection(
-    result.map((res) => {
-      const command = bot.transformers.applicationCommand(bot, res);
+    results.map((result) => {
+      const command = bot.transformers.applicationCommand(bot, result);
       return [command.id, command];
     }),
   );

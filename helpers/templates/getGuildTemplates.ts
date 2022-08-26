@@ -5,11 +5,16 @@ import { Collection } from "../../util/collection.ts";
 
 /** Returns an array of templates. Requires the `MANAGE_GUILD` permission. */
 export async function getGuildTemplates(bot: Bot, guildId: bigint): Promise<Collection<string, Template>> {
-  const templates = await bot.rest.runMethod<DiscordTemplate[]>(
+  const results = await bot.rest.runMethod<DiscordTemplate[]>(
     bot.rest,
     "GET",
     bot.constants.routes.GUILD_TEMPLATES(guildId),
   );
 
-  return new Collection(templates.map((template) => [template.code, bot.transformers.template(bot, template)]));
+  return new Collection(
+    results.map((result) => {
+      const template = bot.transformers.template(bot, result);
+      return [template.code, template];
+    }),
+  );
 }

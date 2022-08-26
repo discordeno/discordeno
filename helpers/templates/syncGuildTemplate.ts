@@ -7,11 +7,11 @@ import { DiscordTemplate } from "../../types/discord.ts";
  * Requires the `MANAGE_GUILD` permission.
  */
 export async function syncGuildTemplate(bot: Bot, guildId: bigint, templateCode: string): Promise<Template> {
-  const template = await bot.rest.runMethod<DiscordTemplate>(
+  const result = await bot.rest.runMethod<DiscordTemplate>(
     bot.rest,
     "PUT",
     bot.constants.routes.GUILD_TEMPLATE(guildId, templateCode),
   );
 
-  return bot.transformers.template(bot, template);
+  return bot.transformers.template(bot, result);
 }

@@ -6,7 +6,7 @@ import {
   CreateApplicationCommand,
   CreateContextApplicationCommand,
   isContextApplicationCommand,
-  makeOptionsForCommand
+  makeOptionsForCommand,
 } from "./createApplicationCommand.ts";
 
 /**
@@ -19,7 +19,7 @@ export async function upsertApplicationCommands(
   options: (UpsertApplicationCommands | CreateContextApplicationCommand)[],
   guildId?: bigint,
 ): Promise<Collection<bigint, ApplicationCommand>> {
-  const result = await bot.rest.runMethod<DiscordApplicationCommand[]>(
+  const results = await bot.rest.runMethod<DiscordApplicationCommand[]>(
     bot.rest,
     "PUT",
     guildId
@@ -40,8 +40,8 @@ export async function upsertApplicationCommands(
   );
 
   return new Collection(
-    result.map((res) => {
-      const command = bot.transformers.applicationCommand(bot, res);
+    results.map((result) => {
+      const command = bot.transformers.applicationCommand(bot, result);
       return [command.id, command];
     }),
   );

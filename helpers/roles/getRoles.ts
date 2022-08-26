@@ -8,10 +8,12 @@ import { Collection } from "../../util/collection.ts";
  * ⚠️ **If you need this, you are probably doing something wrong. This is not intended for use. Your roles will be cached in your guild.**
  */
 export async function getRoles(bot: Bot, guildId: bigint): Promise<Collection<bigint, Role>> {
-  const result = await bot.rest.runMethod<DiscordRole[]>(bot.rest, "GET", bot.constants.routes.GUILD_ROLES(guildId));
+  const results = await bot.rest.runMethod<DiscordRole[]>(bot.rest, "GET", bot.constants.routes.GUILD_ROLES(guildId));
 
-  return new Collection(result.map((role) => {
-    const result = bot.transformers.role(bot, { role, guildId });
-    return [result.id, result];
-  }));
+  return new Collection(
+    results.map((result) => {
+      const role = bot.transformers.role(bot, { role: result, guildId });
+      return [role.id, role];
+    }),
+  );
 }

@@ -17,16 +17,18 @@ export async function getReactions(
     reaction = reaction.substring(3, reaction.length - 1);
   }
 
-  const users = await bot.rest.runMethod<DiscordUser[]>(
+  const results = await bot.rest.runMethod<DiscordUser[]>(
     bot.rest,
     "GET",
     bot.constants.routes.CHANNEL_MESSAGE_REACTION(channelId, messageId, encodeURIComponent(reaction), options),
   );
 
-  return new Collection(users.map((u) => {
-    const user = bot.transformers.user(bot, u);
-    return [user.id, user];
-  }));
+  return new Collection(
+    results.map((result) => {
+      const user = bot.transformers.user(bot, result);
+      return [user.id, user];
+    }),
+  );
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-reactions-query-string-params */

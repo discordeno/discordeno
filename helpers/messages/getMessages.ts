@@ -14,16 +14,18 @@ export async function getMessages(
     throw new Error(bot.constants.Errors.INVALID_GET_MESSAGES_LIMIT);
   }
 
-  const result = await bot.rest.runMethod<DiscordMessage[]>(
+  const results = await bot.rest.runMethod<DiscordMessage[]>(
     bot.rest,
     "GET",
     bot.constants.routes.CHANNEL_MESSAGES(channelId, options),
   );
 
-  return new Collection(result.map((res) => {
-    const msg = bot.transformers.message(bot, res);
-    return [msg.id, msg];
-  }));
+  return new Collection(
+    results.map((result) => {
+      const message = bot.transformers.message(bot, result);
+      return [message.id, message];
+    }),
+  );
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */

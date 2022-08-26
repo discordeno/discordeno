@@ -9,11 +9,11 @@ export async function getScheduledEvent(
   eventId: bigint,
   options?: { withUserCount?: boolean },
 ): Promise<ScheduledEvent> {
-  const event = await bot.rest.runMethod<DiscordScheduledEvent>(
+  const result = await bot.rest.runMethod<DiscordScheduledEvent>(
     bot.rest,
     "GET",
     bot.constants.routes.GUILD_SCHEDULED_EVENT(guildId, eventId, options?.withUserCount),
   );
 
-  return bot.transformers.scheduledEvent(bot, event);
+  return bot.transformers.scheduledEvent(bot, result);
 }

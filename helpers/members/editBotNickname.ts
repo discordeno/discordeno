@@ -6,14 +6,14 @@ export async function editBotNickname(
   guildId: bigint,
   options: { nick: string | null; reason?: string },
 ): Promise<string | undefined> {
-  const response = await bot.rest.runMethod<{ nick?: string }>(
+  const result = await bot.rest.runMethod<{ nick?: string }>(
     bot.rest,
     "PATCH",
     bot.constants.routes.USER_NICK(guildId),
     options,
   );
 
-  if (!response?.nick) return undefined;
+  if (!result?.nick) return undefined;
 
-  return response.nick;
+  return result.nick;
 }

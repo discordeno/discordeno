@@ -5,14 +5,16 @@ import { Collection } from "../../../util/collection.ts";
 
 /** Get a list of all rules currently configured for guild. */
 export async function getAutomodRules(bot: Bot, guildId: bigint): Promise<Collection<bigint, AutoModerationRule>> {
-  const rules = await bot.rest.runMethod<DiscordAutoModerationRule[]>(
+  const results = await bot.rest.runMethod<DiscordAutoModerationRule[]>(
     bot.rest,
     "GET",
     bot.constants.routes.AUTOMOD_RULES(guildId),
   );
 
-  return new Collection(rules.map((r) => {
-    const rule = bot.transformers.automodRule(bot, r);
-    return [rule.id, rule];
-  }));
+  return new Collection(
+    results.map((result) => {
+      const rule = bot.transformers.automodRule(bot, result);
+      return [rule.id, rule];
+    }),
+  );
 }

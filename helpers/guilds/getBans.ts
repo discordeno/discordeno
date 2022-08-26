@@ -12,13 +12,16 @@ export async function getBans(bot: Bot, guildId: bigint, options?: GetBans): Pro
   );
 
   return new Collection(
-    results.map((res) => [
-      bot.transformers.snowflake(res.user.id),
-      {
-        reason: res.reason ?? undefined,
-        user: bot.transformers.user(bot, res.user),
-      },
-    ]),
+    results.map((result) => {
+      const user = bot.transformers.user(bot, result.user);
+      return [
+        user.id,
+        {
+          reason: result.reason ?? undefined,
+          user: bot.transformers.user(bot, result.user),
+        },
+      ];
+    }),
   );
 }
 

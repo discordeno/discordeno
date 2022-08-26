@@ -7,21 +7,19 @@ export async function swapChannels(
   channelPositions: ModifyGuildChannelPositions[],
 ): Promise<void> {
   if (!channelPositions.length) {
-    throw "You must provide at least one channels to be moved.";
+    throw new Error("You must provide at least one channels to be moved.");
   }
 
   return void await bot.rest.runMethod(
     bot.rest,
     "PATCH",
     bot.constants.routes.GUILD_CHANNELS(guildId),
-    channelPositions.map((channelPosition) => {
-      return {
-        id: channelPosition.id,
-        position: channelPosition.position,
-        lock_positions: channelPosition.lockPositions,
-        parent_id: channelPosition.parentId,
-      };
-    }),
+    channelPositions.map((channelPosition) => ({
+      id: channelPosition.id,
+      position: channelPosition.position,
+      lock_positions: channelPosition.lockPositions,
+      parent_id: channelPosition.parentId,
+    })),
   );
 }
 

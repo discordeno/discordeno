@@ -8,15 +8,15 @@ export async function getApplicationCommandPermissions(
   bot: Bot,
   guildId: bigint,
 ): Promise<Collection<bigint, ApplicationCommandPermission>> {
-  const result = await bot.rest.runMethod<DiscordGuildApplicationCommandPermissions[]>(
+  const results = await bot.rest.runMethod<DiscordGuildApplicationCommandPermissions[]>(
     bot.rest,
     "GET",
     bot.constants.routes.COMMANDS_PERMISSIONS(bot.applicationId, guildId),
   );
 
   return new Collection(
-    result.map((res) => {
-      const permission = bot.transformers.applicationCommandPermission(bot, res);
+    results.map((result) => {
+      const permission = bot.transformers.applicationCommandPermission(bot, result);
       return [permission.id, permission];
     }),
   );

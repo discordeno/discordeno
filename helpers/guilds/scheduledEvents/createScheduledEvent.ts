@@ -31,7 +31,7 @@ export async function createScheduledEvent(
     throw new Error("Cannot schedule event to end before starting.");
   }
 
-  const event = await bot.rest.runMethod<DiscordScheduledEvent>(
+  const result = await bot.rest.runMethod<DiscordScheduledEvent>(
     bot.rest,
     "POST",
     bot.constants.routes.GUILD_SCHEDULED_EVENTS(guildId),
@@ -48,7 +48,7 @@ export async function createScheduledEvent(
     },
   );
 
-  return bot.transformers.scheduledEvent(bot, event);
+  return bot.transformers.scheduledEvent(bot, result);
 }
 
 export interface CreateScheduledEvent {

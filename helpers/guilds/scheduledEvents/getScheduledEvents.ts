@@ -9,15 +9,15 @@ export async function getScheduledEvents(
   guildId: bigint,
   options?: GetScheduledEvents,
 ): Promise<Collection<bigint, ScheduledEvent>> {
-  const events = await bot.rest.runMethod<DiscordScheduledEvent[]>(
+  const results = await bot.rest.runMethod<DiscordScheduledEvent[]>(
     bot.rest,
     "GET",
     bot.constants.routes.GUILD_SCHEDULED_EVENTS(guildId, options?.withUserCount),
   );
 
   return new Collection(
-    events.map((e) => {
-      const event = bot.transformers.scheduledEvent(bot, e);
+    results.map((result) => {
+      const event = bot.transformers.scheduledEvent(bot, result);
       return [event.id, event];
     }),
   );

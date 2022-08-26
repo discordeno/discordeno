@@ -6,16 +6,15 @@ import { InviteMetadata } from "./getInvite.ts";
 
 /** Get all the invites for this guild. Requires MANAGE_GUILD permission */
 export async function getInvites(bot: Bot, guildId: bigint): Promise<Collection<string, InviteMetadata>> {
-  const invites = await bot.rest.runMethod<DiscordInviteMetadata[]>(
+  const results = await bot.rest.runMethod<DiscordInviteMetadata[]>(
     bot.rest,
     "GET",
     bot.constants.routes.GUILD_INVITES(guildId),
   );
 
   return new Collection(
-    invites.map<[string, InviteMetadata]>((invite) => [
-      invite.code,
-      {
+    results.map<[string, InviteMetadata]>((invite) => {
+      const inviteMetadata = {
         code: invite.code,
         guildId: invite.guild?.id ? bot.transformers.snowflake(invite.guild.id) : undefined,
         channelId: invite.channel?.id ? bot.transformers.snowflake(invite.channel.id) : undefined,
@@ -39,7 +38,8 @@ export async function getInvites(bot: Bot, guildId: bigint): Promise<Collection<
         maxAge: invite.max_age,
         temporary: invite.temporary,
         createdAt: Date.parse(invite.created_at),
-      },
-    ]),
+      };
+      return [inviteMetadata.code, inviteMetadata];
+    }),
   );
 }
