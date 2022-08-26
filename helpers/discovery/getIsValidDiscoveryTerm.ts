@@ -1,7 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { DiscordValidateDiscoverySearchTerm } from "../../types/discord.ts";
 
-export async function validDiscoveryTerm(bot: Bot, term: string): Promise<boolean> {
+export async function getIsValidDiscoveryTerm(bot: Bot, term: string): Promise<boolean> {
   const result = await bot.rest.runMethod<DiscordValidateDiscoverySearchTerm>(
     bot.rest,
     "GET",
