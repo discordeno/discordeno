@@ -1,9 +1,10 @@
-import { Collection } from "../../util/collection.ts";
 import type { Bot } from "../../bot.ts";
+import { Template } from "../../transformers/template.ts";
 import { DiscordTemplate } from "../../types/discord.ts";
+import { Collection } from "../../util/collection.ts";
 
 /** Returns an array of templates. Requires the `MANAGE_GUILD` permission. */
-export async function getGuildTemplates(bot: Bot, guildId: bigint) {
+export async function getGuildTemplates(bot: Bot, guildId: bigint): Promise<Collection<string, Template>> {
   const templates = await bot.rest.runMethod<DiscordTemplate[]>(
     bot.rest,
     "GET",

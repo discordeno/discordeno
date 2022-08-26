@@ -1,8 +1,9 @@
 import type { Bot } from "../../bot.ts";
+import { Template } from "../../transformers/template.ts";
 import { DiscordTemplate } from "../../types/discord.ts";
 
 /** Returns the guild template if it exists */
-export async function getTemplate(bot: Bot, templateCode: string) {
+export async function getTemplate(bot: Bot, templateCode: string): Promise<Template> {
   const result = await bot.rest.runMethod<DiscordTemplate>(
     bot.rest,
     "GET",
