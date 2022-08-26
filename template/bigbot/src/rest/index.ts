@@ -3,13 +3,7 @@ import { BASE_URL, createRestManager } from "discordeno";
 import express, { Request, Response } from "express";
 
 import { Influx } from "../analytics";
-import {
-  DISCORD_TOKEN,
-  INFLUX_TOKEN,
-  REST_AUTHORIZATION,
-  REST_PORT,
-  REST_URL,
-} from "../configs";
+import { DISCORD_TOKEN, INFLUX_TOKEN, REST_AUTHORIZATION, REST_PORT, REST_URL } from "../configs";
 
 const rest = createRestManager({
   token: DISCORD_TOKEN,

@@ -1,5 +1,5 @@
 /** The discord bot token, without the BOT prefix. */
-// SETUP-DD-TEMP: Add the bot token here. 
+// SETUP-DD-TEMP: Add the bot token here.
 export const DISCORD_TOKEN = "";
 
 /** The authorization code that the REST proxy will check for to make sure the requests are coming from you.  */

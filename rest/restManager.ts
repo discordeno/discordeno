@@ -87,9 +87,7 @@ export function createRestManager(options: CreateRestManagerOptions) {
       response: Response,
     ) {
       options.debug?.(
-        `[REST - fetched] URL: ${opts.url} | Status: ${response.status} ${
-          JSON.stringify(opts)
-        }`,
+        `[REST - fetched] URL: ${opts.url} | Status: ${response.status} ${JSON.stringify(opts)}`,
       );
     },
   };
