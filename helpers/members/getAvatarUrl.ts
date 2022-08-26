@@ -1,7 +1,7 @@
 import type { Bot } from "../../bot.ts";
 
 /** The users custom avatar or the default avatar if you don't have a member object. */
-export function avatarURL(
+export function getAvatarURL(
   bot: Bot,
   userId: bigint,
   discriminator: string,
