@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { ApplicationCommandPermission } from "../../../transformers/applicationCommandPermission.ts";
 import { DiscordGuildApplicationCommandPermissions } from "../../../types/discord.ts";
 import { ApplicationCommandPermissionTypes } from "../../../types/shared.ts";
 
@@ -10,7 +11,7 @@ export async function editApplicationCommandPermissions(
   /** Bearer token which has the `applications.commands.permissions.update` scope and also access to this guild.  */
   bearerToken: string,
   options: ApplicationCommandPermissions[],
-) {
+): Promise<ApplicationCommandPermission> {
   const result = await bot.rest.runMethod<DiscordGuildApplicationCommandPermissions>(
     bot.rest,
     "PUT",

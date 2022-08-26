@@ -1,12 +1,13 @@
 import type { Bot } from "../../../bot.ts";
+import { ApplicationCommand } from "../../../transformers/applicationCommand.ts";
+import { DiscordApplicationCommand } from "../../../types/discord.ts";
+import { AtLeastOne } from "../../../types/shared.ts";
 import {
   CreateApplicationCommand,
   CreateContextApplicationCommand,
   isContextApplicationCommand,
-  makeOptionsForCommand,
+  makeOptionsForCommand
 } from "./createApplicationCommand.ts";
-import { DiscordApplicationCommand } from "../../../types/discord.ts";
-import { AtLeastOne } from "../../../types/shared.ts";
 
 /**
  * Edit an existing application command. If this command did not exist, it will create it.
@@ -16,7 +17,7 @@ export async function upsertApplicationCommand(
   commandId: bigint,
   options: AtLeastOne<CreateApplicationCommand> | AtLeastOne<CreateContextApplicationCommand>,
   guildId?: bigint,
-) {
+): Promise<ApplicationCommand> {
   const result = await bot.rest.runMethod<DiscordApplicationCommand>(
     bot.rest,
     "PATCH",

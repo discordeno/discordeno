@@ -1,4 +1,6 @@
 import type { Bot } from "../../../bot.ts";
+import { Message } from "../../../transformers/message.ts";
+import { DiscordMessage } from "../../../types/discord.ts";
 import { MessageComponentTypes } from "../../../types/shared.ts";
 import { EditWebhookMessage } from "../../webhooks/editWebhookMessage.ts";
 
@@ -10,8 +12,8 @@ export async function editInteractionResponse(
     /** Id of the message you want to edit if undefined the initial response message will be edited */
     messageId?: bigint;
   },
-) {
-  const result = await bot.rest.runMethod(
+): Promise<Message | undefined> {
+  const result = await bot.rest.runMethod<DiscordMessage | undefined>(
     bot.rest,
     "PATCH",
     options.messageId
@@ -101,7 +103,7 @@ export async function editInteractionResponse(
   );
 
   // If the original message was edited, this will not return a message
-  if (!options.messageId) return result as undefined;
+  if (!options.messageId || !result) return undefined;
 
   return bot.transformers.message(bot, result);
 }

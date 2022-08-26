@@ -1,13 +1,13 @@
 import type { Bot } from "../../../bot.ts";
+import { ApplicationCommand } from "../../../transformers/applicationCommand.ts";
+import { DiscordApplicationCommand } from "../../../types/discord.ts";
 import { Collection } from "../../../util/collection.ts";
 import {
   CreateApplicationCommand,
   CreateContextApplicationCommand,
   isContextApplicationCommand,
-  makeOptionsForCommand,
+  makeOptionsForCommand
 } from "./createApplicationCommand.ts";
-import { DiscordApplicationCommand } from "../../../types/discord.ts";
-import { MakeRequired } from "../../../types/shared.ts";
 
 /**
  * Bulk edit existing application commands. If a command does not exist, it will create it.
@@ -18,7 +18,7 @@ export async function upsertApplicationCommands(
   bot: Bot,
   options: (UpsertApplicationCommands | CreateContextApplicationCommand)[],
   guildId?: bigint,
-) {
+): Promise<Collection<bigint, ApplicationCommand>> {
   const result = await bot.rest.runMethod<DiscordApplicationCommand[]>(
     bot.rest,
     "PUT",

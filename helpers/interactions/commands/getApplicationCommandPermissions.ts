@@ -1,9 +1,13 @@
 import type { Bot } from "../../../bot.ts";
+import { ApplicationCommandPermission } from "../../../transformers/applicationCommandPermission.ts";
 import { DiscordGuildApplicationCommandPermissions } from "../../../types/discord.ts";
 import { Collection } from "../../../util/collection.ts";
 
 /** Fetches command permissions for all commands for your application in a guild. Returns an array of GuildApplicationCommandPermissions objects. */
-export async function getApplicationCommandPermissions(bot: Bot, guildId: bigint) {
+export async function getApplicationCommandPermissions(
+  bot: Bot,
+  guildId: bigint,
+): Promise<Collection<bigint, ApplicationCommandPermission>> {
   const result = await bot.rest.runMethod<DiscordGuildApplicationCommandPermissions[]>(
     bot.rest,
     "GET",
@@ -12,8 +16,8 @@ export async function getApplicationCommandPermissions(bot: Bot, guildId: bigint
 
   return new Collection(
     result.map((res) => {
-      const perms = bot.transformers.applicationCommandPermission(bot, res);
-      return [perms.id, perms];
+      const permission = bot.transformers.applicationCommandPermission(bot, res);
+      return [permission.id, permission];
     }),
   );
 }

@@ -1,8 +1,8 @@
 import type { Bot } from "../../../bot.ts";
 
 /** Deletes a application command. */
-export async function deleteApplicationCommand(bot: Bot, id: bigint, guildId?: bigint) {
-  await bot.rest.runMethod<undefined>(
+export async function deleteApplicationCommand(bot: Bot, id: bigint, guildId?: bigint): Promise<void> {
+  return void await bot.rest.runMethod(
     bot.rest,
     "DELETE",
     guildId
