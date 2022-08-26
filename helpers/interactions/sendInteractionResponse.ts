@@ -1,5 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import { Embed } from "../../mod.ts";
+import { Embed, Message } from "../../mod.ts";
 import { DiscordMessage } from "../../types/discord.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
 import { InteractionResponseTypes } from "../../types/shared.ts";
@@ -15,7 +15,7 @@ export async function sendInteractionResponse(
   id: bigint,
   token: string,
   options: InteractionResponse,
-) {
+): Promise<Message | undefined> {
   // If no mentions are provided, force disable mentions
   if (!options.data?.allowedMentions) {
     options.data = { ...options.data, allowedMentions: { parse: [] } };
@@ -36,7 +36,7 @@ export async function sendInteractionResponse(
 
   // A reply has never been send
   if (bot.cache.unrepliedInteractions.delete(id)) {
-    return await bot.rest.sendRequest<undefined>(bot.rest, {
+    return <undefined> await bot.rest.sendRequest(bot.rest, {
       url: bot.constants.routes.INTERACTION_ID_TOKEN(id, token),
       method: "POST",
       payload: bot.rest.createRequestBody(bot.rest, {
