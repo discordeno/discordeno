@@ -11,7 +11,7 @@ export function fetchMembers(
   bot: Bot,
   guildId: bigint,
   options?: Omit<RequestGuildMembers, "guildId">,
-) {
+): Promise<void> {
   // You can request 1 member without the intent
   // Check if intents is not 0 as proxy ws won't set intents in other instances
   if (bot.intents && (!options?.limit || options.limit > 1) && !(bot.intents & GatewayIntents.GuildMembers)) {
@@ -45,7 +45,7 @@ export function fetchMembers(
         nonce,
       },
     });
-  }) as Promise<void>;
+  });
 }
 
 /** https://discord.com/developers/docs/topics/gateway#request-guild-members */

@@ -10,7 +10,7 @@ export function avatarURL(
     size?: ImageSize;
     format?: ImageFormat;
   },
-) {
+): string {
   return options?.avatar
     ? bot.utils.formatImageURL(
       bot.constants.routes.USER_AVATAR(
