@@ -3,7 +3,7 @@ import { StickerPack } from "../../transformers/sticker.ts";
 import { DiscordStickerPack } from "../../types/discord.ts";
 
 /** Returns the list of sticker packs available to Nitro subscribers. */
-export async function nitroStickerPacks(bot: Bot): Promise<StickerPack[]> {
+export async function getNitroStickerPacks(bot: Bot): Promise<StickerPack[]> {
   const packs = await bot.rest.runMethod<DiscordStickerPack[]>(
     bot.rest,
     "GET",
