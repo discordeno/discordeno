@@ -23,7 +23,7 @@ if (INFLUX_TOKEN) {
         .stringField("type", "REQUEST_FETCHING")
         .tag("method", options.method)
         .tag("url", options.url)
-        .tag("bucket", options.bucketId),
+        .tag("bucket", options.bucketId ?? "NA"),
     );
   };
 
@@ -36,7 +36,7 @@ if (INFLUX_TOKEN) {
         .stringField("type", "REQUEST_FETCHED")
         .tag("method", options.method)
         .tag("url", options.url)
-        .tag("bucket", options.bucketId)
+        .tag("bucket", options.bucketId ?? "NA")
         .intField("status", response.status)
         .tag("statusText", response.statusText),
     );
