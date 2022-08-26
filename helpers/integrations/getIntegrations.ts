@@ -1,9 +1,10 @@
 import type { Bot } from "../../bot.ts";
-import { Collection } from "../../util/collection.ts";
+import { Integration } from "../../transformers/integration.ts";
 import { DiscordIntegration } from "../../types/discord.ts";
+import { Collection } from "../../util/collection.ts";
 
 /** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */
-export async function getIntegrations(bot: Bot, guildId: bigint) {
+export async function getIntegrations(bot: Bot, guildId: bigint): Promise<Collection<string, Integration>> {
   const result = await bot.rest.runMethod<DiscordIntegration[]>(
     bot.rest,
     "GET",
@@ -11,26 +12,26 @@ export async function getIntegrations(bot: Bot, guildId: bigint) {
   );
 
   return new Collection(
-    result.map((res) => {
-      const integration = bot.transformers.integration(bot, {
+    result.map<[string, Integration]>((integration) => [
+      integration.id,
+      bot.transformers.integration(bot, {
         guild_id: guildId.toString(),
-        id: res.id,
-        name: res.name,
-        type: res.type,
-        enabled: res.enabled,
-        syncing: res.syncing,
-        role_id: res.role_id,
-        enable_emoticons: res.enable_emoticons,
-        expire_behavior: res.expire_behavior,
-        expire_grace_period: res.expire_grace_period,
-        user: res.user,
-        account: res.account,
-        synced_at: res.synced_at,
-        subscriber_count: res.subscriber_count,
-        revoked: res.revoked,
-        application: res.application,
-      });
-      return [integration.id, integration];
-    }),
+        id: integration.id,
+        name: integration.name,
+        type: integration.type,
+        enabled: integration.enabled,
+        syncing: integration.syncing,
+        role_id: integration.role_id,
+        enable_emoticons: integration.enable_emoticons,
+        expire_behavior: integration.expire_behavior,
+        expire_grace_period: integration.expire_grace_period,
+        user: integration.user,
+        account: integration.account,
+        synced_at: integration.synced_at,
+        subscriber_count: integration.subscriber_count,
+        revoked: integration.revoked,
+        application: integration.application,
+      }),
+    ]),
   );
 }
