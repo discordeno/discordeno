@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { Webhook } from "../../transformers/webhook.ts";
 import { DiscordWebhook } from "../../types/discord.ts";
 
 /**
@@ -6,7 +7,7 @@ import { DiscordWebhook } from "../../types/discord.ts";
  *
  * Webhook names cannot be: 'clyde'
  */
-export async function createWebhook(bot: Bot, channelId: bigint, options: CreateWebhook) {
+export async function createWebhook(bot: Bot, channelId: bigint, options: CreateWebhook): Promise<Webhook> {
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
     "POST",

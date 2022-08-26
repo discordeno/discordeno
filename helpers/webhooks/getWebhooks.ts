@@ -1,9 +1,10 @@
 import type { Bot } from "../../bot.ts";
+import { Webhook } from "../../transformers/webhook.ts";
 import { DiscordWebhook } from "../../types/discord.ts";
 import { Collection } from "../../util/collection.ts";
 
 /** Returns a list of guild webhooks objects. Requires the MANAGE_WEBHOOKs permission. */
-export async function getWebhooks(bot: Bot, guildId: bigint) {
+export async function getWebhooks(bot: Bot, guildId: bigint): Promise<Collection<bigint, Webhook>> {
   const result = await bot.rest.runMethod<DiscordWebhook[]>(
     bot.rest,
     "GET",
