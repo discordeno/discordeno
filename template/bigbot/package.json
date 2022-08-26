@@ -9,6 +9,7 @@
     "fmt": "prettier -w ./src"
   },
   "dependencies": {
+    "@influxdata/influxdb-client": "^1.29.0",
     "@prisma/client": "^3.12.0",
     "discordeno": "^13.0.0-rc46",
     "express": "^4.18.1",

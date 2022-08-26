@@ -13,3 +13,10 @@ export const REST_PORT = 8000;
 /** The url where requests will be sent to from the bot. */
 // SETUP-DD-TEMP: Provide the url where you will host your REST proxy. If it is on the same server as others, you can use localhost but if it is on a separate server you should change this entirely.
 export const REST_URL = `http://localhost:${REST_PORT}`;
+
+/** These INFLUX configs are only if you wish to enable analytics. */
+// SETUP-DD-TEMP: This is optional. If you want to build analytics, add influxdb here.
+export const INFLUX_BUCKET = "";
+export const INFLUX_ORG = "";
+export const INFLUX_TOKEN = "";
+export const INFLUX_URL = "";

@@ -1,7 +1,11 @@
+import { Point } from "@influxdata/influxdb-client";
 import { BASE_URL, createRestManager } from "discordeno";
 import express, { Request, Response } from "express";
+
+import { Influx } from "../analytics";
 import {
   DISCORD_TOKEN,
+  INFLUX_TOKEN,
   REST_AUTHORIZATION,
   REST_PORT,
   REST_URL,
@@ -13,6 +17,49 @@ const rest = createRestManager({
   customUrl: REST_URL,
   debug: console.log,
 });
+
+// If influxdb data is provided, enable analytics in this proxy.
+if (INFLUX_TOKEN) {
+  rest.fetching = function (options) {
+    Influx.writePoint(
+      new Point("restEvents")
+        // MARK THE TIME WHEN EVENT ARRIVED
+        .timestamp(new Date())
+        // SET THE GUILD ID
+        .stringField("type", "REQUEST_FETCHING")
+        .tag("method", options.method)
+        .tag("url", options.url)
+        .tag("bucket", options.bucketId),
+    );
+  };
+
+  rest.fetched = function (options, response) {
+    Influx.writePoint(
+      new Point("restEvents")
+        // MARK THE TIME WHEN EVENT ARRIVED
+        .timestamp(new Date())
+        // SET THE GUILD ID
+        .stringField("type", "REQUEST_FETCHED")
+        .tag("method", options.method)
+        .tag("url", options.url)
+        .tag("bucket", options.bucketId)
+        .intField("status", response.status)
+        .tag("statusText", response.statusText),
+    );
+  };
+
+  setInterval(() => {
+    console.log(`[Influx - REST] Saving events...`);
+    Influx.flush()
+      .then(() => {
+        console.log(`[Influx - REST] Saved events!`);
+      })
+      .catch((error) => {
+        console.log(`[Influx - REST] Error saving events!`, error);
+      });
+    // Every 30seconds
+  }, 30000);
+}
 
 const app = express();
 
