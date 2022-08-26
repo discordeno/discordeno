@@ -1,9 +1,10 @@
 import { Bot } from "../../bot.ts";
+import { Role } from "../../transformers/role.ts";
 import { DiscordRole } from "../../types/discord.ts";
 import { Collection } from "../../util/collection.ts";
 
 /** Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission. Returns a list of all of the guild's role objects on success. Fires multiple Guild Role Update Gateway events. */
-export async function modifyRolePositions(bot: Bot, guildId: bigint, options: ModifyRolePositions[]) {
+export async function modifyRolePositions(bot: Bot, guildId: bigint, options: ModifyRolePositions[]): Promise<Collection<bigint, Role>> {
   const roles = await bot.rest.runMethod<DiscordRole[]>(
     bot.rest,
     "PATCH",
