@@ -1,8 +1,4 @@
-import { GatewayIntents } from "../../types/shared.ts";
-import { createLeakyBucket } from "../../util/bucket.ts";
-import { createShard } from "../shard/createShard.ts";
-import { Shard } from "../shard/types.ts";
-import { createGatewayManager, GatewayManager } from "./gatewayManager.ts";
+import { GatewayManager } from "./gatewayManager.ts";
 
 /** Begin spawning shards. */
 export function spawnShards(gateway: GatewayManager) {
@@ -19,11 +15,7 @@ export function spawnShards(gateway: GatewayManager) {
 
   // SPREAD THIS OUT TO DIFFERENT WORKERS TO BEGIN STARTING UP
   gateway.buckets.forEach(async (bucket, bucketId) => {
-    // gateway.debug("GW DEBUG", `2. Running forEach loop in spawnShards function.`);
-
     for (const worker of bucket.workers) {
-      // gateway.debug("GW DEBUG", `3. Running for of loop in spawnShards function.`);
-
       for (const shardId of worker.queue) {
         await gateway.tellWorkerToIdentify(worker.id, shardId, bucketId);
       }

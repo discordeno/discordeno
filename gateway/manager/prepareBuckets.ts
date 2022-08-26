@@ -16,7 +16,6 @@ export function prepareBuckets(gateway: GatewayManager) {
 
   // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
   for (let shardId = gateway.firstShardId; shardId <= gateway.lastShardId; ++shardId) {
-    // gateway.debug("GW DEBUG", `1. Running for loop in spawnShards function for shardId ${i}.`);
     if (shardId >= gateway.manager.totalShards) {
       throw new Error(
         `Shard (id: ${shardId}) is bigger or equal to the used amount of used shards which is ${gateway.manager.totalShards}`,
