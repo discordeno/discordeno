@@ -4,9 +4,10 @@ import { Optionalize } from "../types/shared.ts";
 
 export function transformThreadMember(bot: Bot, payload: DiscordThreadMember) {
   const threadMember = {
-    id: payload.user_id ? bot.transformers.snowflake(payload.user_id) : undefined,
-    threadId: payload.id ? bot.transformers.snowflake(payload.id) : undefined,
+    id: payload.id ? bot.transformers.snowflake(payload.id) : undefined,
+    userId: payload.user_id ? bot.transformers.snowflake(payload.user_id) : undefined,
     joinTimestamp: Date.parse(payload.join_timestamp),
+    flags: payload.flags,
   };
 
   return threadMember as Optionalize<typeof threadMember>;
