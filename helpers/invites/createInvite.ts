@@ -1,9 +1,10 @@
 import type { Bot } from "../../bot.ts";
 import { DiscordInvite } from "../../types/discord.ts";
 import { TargetTypes } from "../../types/shared.ts";
+import { Invite } from "./getInvite.ts";
 
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
-export async function createInvite(bot: Bot, channelId: bigint, options: CreateChannelInvite = {}) {
+export async function createInvite(bot: Bot, channelId: bigint, options: CreateChannelInvite = {}): Promise<Invite> {
   const result = await bot.rest.runMethod<DiscordInvite>(
     bot.rest,
     "POST",
