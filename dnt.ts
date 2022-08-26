@@ -50,6 +50,10 @@ await build({
       path: "packages/logger/mod.ts",
     },
     {
+      name: "./embeds",
+      path: "packages/embeds/mod.ts",
+    },
+    {
       name: "./plugins",
       path: "plugins/mod.ts",
     },
@@ -121,6 +125,9 @@ await build({
         ],
         "logger": [
           "./types/packages/logger/mod.d.ts",
+        ],
+        "embeds": [
+          "./types/packages/embeds/mod.d.ts",
         ],
         "plugins": [
           "./types/plugins/mod.d.ts",
