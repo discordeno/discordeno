@@ -103,7 +103,7 @@ export async function editInteractionResponse(
   );
 
   // If the original message was edited, this will not return a message
-  if (!options.messageId) return undefined;
+  if (!options.messageId) return;
 
   return bot.transformers.message(bot, result);
 }

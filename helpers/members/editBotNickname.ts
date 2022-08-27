@@ -13,7 +13,7 @@ export async function editBotNickname(
     options,
   );
 
-  if (!result?.nick) return undefined;
+  if (!result?.nick) return;
 
   return result.nick;
 }

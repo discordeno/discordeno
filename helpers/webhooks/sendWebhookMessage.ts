@@ -38,7 +38,7 @@ export async function sendWebhookMessage(
       components: options.components?.map((component) => bot.transformers.reverse.component(bot, component)),
     },
   );
-  if (!options.wait) return undefined;
+  if (!options.wait) return;
 
   return bot.transformers.message(bot, result);
 }
