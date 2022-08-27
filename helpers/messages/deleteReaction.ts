@@ -14,7 +14,7 @@ export async function deleteReaction(
     reaction = reaction.substring(3, reaction.length - 1);
   }
 
-  return void await bot.rest.runMethod(
+  return await bot.rest.runMethod<void>(
     bot.rest,
     "DELETE",
     options?.userId

@@ -10,7 +10,7 @@ export async function deleteMessage(
 ): Promise<void> {
   if (delayMilliseconds) await bot.utils.delay(delayMilliseconds);
 
-  return void await bot.rest.runMethod(
+  return await bot.rest.runMethod<void>(
     bot.rest,
     "DELETE",
     bot.constants.routes.CHANNEL_MESSAGE(channelId, messageId),

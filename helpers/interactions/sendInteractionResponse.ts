@@ -36,7 +36,7 @@ export async function sendInteractionResponse(
 
   // A reply has never been send
   if (bot.cache.unrepliedInteractions.delete(id)) {
-    return <undefined> await bot.rest.sendRequest(bot.rest, {
+    return await bot.rest.sendRequest<undefined>(bot.rest, {
       url: bot.constants.routes.INTERACTION_ID_TOKEN(id, token),
       method: "POST",
       payload: bot.rest.createRequestBody(bot.rest, {

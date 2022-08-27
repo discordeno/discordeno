@@ -10,7 +10,7 @@ export async function swapChannels(
     throw new Error("You must provide at least one channels to be moved.");
   }
 
-  return void await bot.rest.runMethod(
+  return await bot.rest.runMethod<void>(
     bot.rest,
     "PATCH",
     bot.constants.routes.GUILD_CHANNELS(guildId),

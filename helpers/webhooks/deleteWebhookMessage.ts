@@ -7,7 +7,7 @@ export async function deleteWebhookMessage(
   messageId: bigint,
   options?: DeleteWebhookMessageOptions,
 ): Promise<void> {
-  return void await bot.rest.runMethod(
+  return await bot.rest.runMethod<void>(
     bot.rest,
     "DELETE",
     bot.constants.routes.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId, options),

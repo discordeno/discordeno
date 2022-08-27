@@ -8,7 +8,7 @@ export async function addRole(
   roleId: bigint,
   reason?: string,
 ): Promise<void> {
-  return void await bot.rest.runMethod(
+  return await bot.rest.runMethod<void>(
     bot.rest,
     "PUT",
     bot.constants.routes.GUILD_MEMBER_ROLE(guildId, memberId, roleId),
