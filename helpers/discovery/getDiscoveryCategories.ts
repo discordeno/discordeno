@@ -23,11 +23,7 @@ export async function getDiscoveryCategories(bot: Bot): Promise<Collection<bigin
 
   return new Collection(
     results.map((result) => {
-      const category = {
-        id: BigInt(result.id),
-        name: result.name,
-        isPrimary: result.is_primary,
-      };
+      const category = { id: BigInt(result.id), name: result.name, isPrimary: result.is_primary };
       return [category.id, category];
     }),
   );

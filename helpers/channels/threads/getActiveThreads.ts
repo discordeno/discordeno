@@ -10,7 +10,7 @@ export type ActiveThreads = {
 
 /** Returns all active threads in the guild, including public and private threads. Threads are ordered by their `id`, in descending order. */
 export async function getActiveThreads(bot: Bot, guildId: bigint): Promise<ActiveThreads> {
-  const result = await bot.rest.runMethod<DiscordListActiveThreads>(
+  const results = await bot.rest.runMethod<DiscordListActiveThreads>(
     bot.rest,
     "GET",
     bot.constants.routes.THREAD_ACTIVE(guildId),
@@ -18,14 +18,14 @@ export async function getActiveThreads(bot: Bot, guildId: bigint): Promise<Activ
 
   return {
     threads: new Collection(
-      result.threads.map((t) => {
-        const thread = bot.transformers.channel(bot, { channel: t });
+      results.threads.map((result) => {
+        const thread = bot.transformers.channel(bot, { channel: result });
         return [thread.id, thread];
       }),
     ),
     members: new Collection(
-      result.members.map((m) => {
-        const member = bot.transformers.threadMember(bot, m);
+      results.members.map((result) => {
+        const member = bot.transformers.threadMember(bot, result);
         return [member.id!, member];
       }),
     ),

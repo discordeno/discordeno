@@ -21,7 +21,7 @@ export async function getArchivedThreads(
     ? bot.constants.routes.THREAD_ARCHIVED_PRIVATE(channelId, options)
     : bot.constants.routes.THREAD_ARCHIVED_PUBLIC(channelId, options);
 
-  const result = await bot.rest.runMethod<DiscordListArchivedThreads>(
+  const results = await bot.rest.runMethod<DiscordListArchivedThreads>(
     bot.rest,
     "GET",
     url,
@@ -29,18 +29,18 @@ export async function getArchivedThreads(
 
   return {
     threads: new Collection(
-      result.threads.map((t) => {
-        const thread = bot.transformers.channel(bot, { channel: t });
+      results.threads.map((result) => {
+        const thread = bot.transformers.channel(bot, { channel: result });
         return [thread.id, thread];
       }),
     ),
     members: new Collection(
-      result.members.map((m) => {
-        const member = bot.transformers.threadMember(bot, m);
+      results.members.map((result) => {
+        const member = bot.transformers.threadMember(bot, result);
         return [member.id!, member];
       }),
     ),
-    hasMore: result.has_more,
+    hasMore: results.has_more,
   };
 }
 
