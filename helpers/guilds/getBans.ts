@@ -18,7 +18,7 @@ export async function getBans(bot: Bot, guildId: bigint, options?: GetBans): Pro
         user.id,
         {
           reason: result.reason ?? undefined,
-          user: bot.transformers.user(bot, result.user),
+          user: user,
         },
       ];
     }),
