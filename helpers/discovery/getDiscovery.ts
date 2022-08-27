@@ -3,7 +3,7 @@ import { DiscordDiscoveryMetadata } from "../../types/discord.ts";
 
 export type DiscoveryMetadata = {
   guildId: bigint;
-  primaryCategoryId: bigint;
+  primaryCategoryId: number;
   keywords?: string[];
   emojiDiscoverabilityEnabled: boolean;
   partnerActionedTimestamp?: number;
@@ -21,7 +21,7 @@ export async function getDiscovery(bot: Bot, guildId: bigint): Promise<Discovery
 
   return {
     guildId,
-    primaryCategoryId: BigInt(result.primary_category_id),
+    primaryCategoryId: result.primary_category_id,
     keywords: result.keywords ?? undefined,
     emojiDiscoverabilityEnabled: result.emoji_discoverability_enabled,
     partnerActionedTimestamp: result.partner_actioned_timestamp
