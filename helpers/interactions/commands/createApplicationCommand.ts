@@ -94,7 +94,7 @@ export interface CreateApplicationCommand {
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
-export interface CreateContextApplicationCommand extends Omit<CreateApplicationCommand, "options"> {
+export interface CreateContextApplicationCommand extends Omit<CreateApplicationCommand, "options" | "description"> {
   /** The type of the command */
   type: ApplicationCommandTypes.Message | ApplicationCommandTypes.User;
 }
