@@ -26,7 +26,15 @@ export async function createApplicationCommand(
       ? bot.constants.routes.COMMANDS_GUILD(bot.applicationId, guildId)
       : bot.constants.routes.COMMANDS(bot.applicationId),
     isContextApplicationCommand(command)
-      ? { name: command.name, name_localizations: command.nameLocalizations, type: command.type }
+      ? {
+        name: command.name,
+        name_localizations: command.nameLocalizations,
+        type: command.type,
+        default_member_permissions: command.defaultMemberPermissions
+          ? bot.utils.calculateBits(command.defaultMemberPermissions)
+          : undefined,
+        dm_permission: command.dmPermission,
+      }
       : {
         name: command.name,
         name_localizations: command.nameLocalizations,

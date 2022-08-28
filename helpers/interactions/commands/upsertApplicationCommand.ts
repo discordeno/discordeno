@@ -27,13 +27,24 @@ export async function upsertApplicationCommand(
     isContextApplicationCommand(command)
       ? {
         name: command.name,
+        name_localizations: command.nameLocalizations,
         type: command.type,
+        default_member_permissions: command.defaultMemberPermissions
+          ? bot.utils.calculateBits(command.defaultMemberPermissions)
+          : undefined,
+        dm_permission: command.dmPermission,
       }
       : {
         name: command.name,
+        name_localizations: command.nameLocalizations,
         description: command.description,
+        description_localizations: command.descriptionLocalizations,
         type: command.type,
         options: command.options ? makeOptionsForCommand(command.options) : undefined,
+        default_member_permissions: command.defaultMemberPermissions
+          ? bot.utils.calculateBits(command.defaultMemberPermissions)
+          : undefined,
+        dm_permission: command.dmPermission,
       },
   );
 
