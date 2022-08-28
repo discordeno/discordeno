@@ -3,7 +3,7 @@ import { User } from "../../transformers/member.ts";
 import { DiscordBan } from "../../types/discord.ts";
 
 export type Ban = {
-  reason: string | undefined;
+  reason?: string;
   user: User;
 };
 

@@ -12,7 +12,7 @@ export async function getBans(bot: Bot, guildId: bigint, options?: GetBans): Pro
   );
 
   return new Collection(
-    results.map((result) => {
+    results.map<[bigint, Ban]>((result) => {
       const user = bot.transformers.user(bot, result.user);
       return [
         user.id,
