@@ -15,7 +15,11 @@
     "./tests",
     "./transformers",
     "./types",
-    "./util"
+    "./util",
+    "dnt.ts",
+    "mod.ts",
+    "debug.ts",
+    "bot.ts"
   ],
   "editor.defaultFormatter": "denoland.vscode-deno",
   "editor.formatOnSave": true,

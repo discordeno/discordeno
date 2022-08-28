@@ -2,7 +2,7 @@ import type { Bot } from "../../bot.ts";
 import { ScheduledEvent, TargetTypes, User } from "../../mod.ts";
 import { DiscordInviteMetadata } from "../../types/discord.ts";
 
-export type Invite = {
+export type BaseInvite = {
   code: string;
   guildId?: bigint;
   channelId?: bigint;
@@ -16,7 +16,7 @@ export type Invite = {
   guildScheduledEvent?: ScheduledEvent;
 };
 
-export type InviteMetadata = Invite & {
+export type InviteMetadata = BaseInvite & {
   uses: number;
   maxUses: number;
   maxAge: number;
@@ -25,7 +25,7 @@ export type InviteMetadata = Invite & {
 };
 
 /** Returns an invite for the given code or throws an error if the invite doesn't exists. */
-export async function getInvite(bot: Bot, inviteCode: string, options?: GetInvite): Promise<Invite> {
+export async function getInvite(bot: Bot, inviteCode: string, options?: GetInvite): Promise<BaseInvite> {
   const result = await bot.rest.runMethod<DiscordInviteMetadata>(
     bot.rest,
     "GET",
