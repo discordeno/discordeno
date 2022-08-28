@@ -15,7 +15,7 @@ import {
 export async function upsertApplicationCommand(
   bot: Bot,
   commandId: bigint,
-  options: AtLeastOne<CreateApplicationCommand> | AtLeastOne<CreateContextApplicationCommand>,
+  command: AtLeastOne<CreateApplicationCommand> | AtLeastOne<CreateContextApplicationCommand>,
   guildId?: bigint,
 ): Promise<ApplicationCommand> {
   const result = await bot.rest.runMethod<DiscordApplicationCommand>(
@@ -24,16 +24,16 @@ export async function upsertApplicationCommand(
     guildId
       ? bot.constants.routes.COMMANDS_GUILD_ID(bot.applicationId, guildId, commandId)
       : bot.constants.routes.COMMANDS_ID(bot.applicationId, commandId),
-    isContextApplicationCommand(options)
+    isContextApplicationCommand(command)
       ? {
-        name: options.name,
-        type: options.type,
+        name: command.name,
+        type: command.type,
       }
       : {
-        name: options.name,
-        description: options.description,
-        type: options.type,
-        options: options.options ? makeOptionsForCommand(options.options) : undefined,
+        name: command.name,
+        description: command.description,
+        type: command.type,
+        options: command.options ? makeOptionsForCommand(command.options) : undefined,
       },
   );
 
