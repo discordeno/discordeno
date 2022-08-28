@@ -16,7 +16,7 @@ import {
  */
 export async function upsertApplicationCommands(
   bot: Bot,
-  options: (UpsertApplicationCommands | CreateContextApplicationCommand)[],
+  commands: (UpsertApplicationCommands | CreateContextApplicationCommand)[],
   guildId?: bigint,
 ): Promise<Collection<bigint, ApplicationCommand>> {
   const results = await bot.rest.runMethod<DiscordApplicationCommand[]>(
@@ -25,16 +25,27 @@ export async function upsertApplicationCommands(
     guildId
       ? bot.constants.routes.COMMANDS_GUILD(bot.applicationId, guildId)
       : bot.constants.routes.COMMANDS(bot.applicationId),
-    options.map((option) => (isContextApplicationCommand(option)
+    commands.map((command) => (isContextApplicationCommand(command)
       ? {
-        name: option.name,
-        type: option.type,
+        name: command.name,
+        name_localizations: command.nameLocalizations,
+        type: command.type,
+        default_member_permissions: command.defaultMemberPermissions
+          ? bot.utils.calculateBits(command.defaultMemberPermissions)
+          : undefined,
+        dm_permission: command.dmPermission,
       }
       : {
-        name: option.name,
-        description: option.description,
-        type: option.type,
-        options: option.options ? makeOptionsForCommand(option.options) : undefined,
+        name: command.name,
+        name_localizations: command.nameLocalizations,
+        description: command.description,
+        description_localizations: command.descriptionLocalizations,
+        type: command.type,
+        options: command.options ? makeOptionsForCommand(command.options) : undefined,
+        default_member_permissions: command.defaultMemberPermissions
+          ? bot.utils.calculateBits(command.defaultMemberPermissions)
+          : undefined,
+        dm_permission: command.dmPermission,
       })
     ),
   );

@@ -16,7 +16,7 @@ import { AtLeastOne, PermissionStrings } from "../../../types/shared.ts";
  */
 export async function createApplicationCommand(
   bot: Bot,
-  options: CreateApplicationCommand | CreateContextApplicationCommand,
+  command: CreateApplicationCommand | CreateContextApplicationCommand,
   guildId?: bigint,
 ): Promise<ApplicationCommand> {
   const result = await bot.rest.runMethod<DiscordApplicationCommand>(
@@ -25,19 +25,27 @@ export async function createApplicationCommand(
     guildId
       ? bot.constants.routes.COMMANDS_GUILD(bot.applicationId, guildId)
       : bot.constants.routes.COMMANDS(bot.applicationId),
-    isContextApplicationCommand(options)
-      ? { name: options.name, name_localizations: options.nameLocalizations, type: options.type }
-      : {
-        name: options.name,
-        name_localizations: options.nameLocalizations,
-        description: options.description,
-        description_localizations: options.descriptionLocalizations,
-        type: options.type,
-        options: options.options ? makeOptionsForCommand(options.options) : undefined,
-        default_member_permissions: options.defaultMemberPermissions
-          ? bot.utils.calculateBits(options.defaultMemberPermissions)
+    isContextApplicationCommand(command)
+      ? {
+        name: command.name,
+        name_localizations: command.nameLocalizations,
+        type: command.type,
+        default_member_permissions: command.defaultMemberPermissions
+          ? bot.utils.calculateBits(command.defaultMemberPermissions)
           : undefined,
-        dm_permission: options.dmPermission,
+        dm_permission: command.dmPermission,
+      }
+      : {
+        name: command.name,
+        name_localizations: command.nameLocalizations,
+        description: command.description,
+        description_localizations: command.descriptionLocalizations,
+        type: command.type,
+        options: command.options ? makeOptionsForCommand(command.options) : undefined,
+        default_member_permissions: command.defaultMemberPermissions
+          ? bot.utils.calculateBits(command.defaultMemberPermissions)
+          : undefined,
+        dm_permission: command.dmPermission,
       },
   );
 
@@ -94,7 +102,8 @@ export interface CreateApplicationCommand {
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
-export interface CreateContextApplicationCommand extends Omit<CreateApplicationCommand, "options" | "description"> {
+export interface CreateContextApplicationCommand
+  extends Omit<CreateApplicationCommand, "options" | "description" | "descriptionLocalizations"> {
   /** The type of the command */
   type: ApplicationCommandTypes.Message | ApplicationCommandTypes.User;
 }
