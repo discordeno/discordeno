@@ -8,6 +8,7 @@
     "./handlers",
     "./helpers",
     "./plugins",
+    "./packages",
     "./rest",
     "./template/beginner",
     "./template/minimal",

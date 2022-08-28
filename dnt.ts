@@ -42,6 +42,18 @@ await build({
       path: "transformers/mod.ts",
     },
     {
+      name: "./packages",
+      path: "packages/mod.ts",
+    },
+    {
+      name: "./logger",
+      path: "packages/logger/mod.ts",
+    },
+    {
+      name: "./embeds",
+      path: "packages/embeds/mod.ts",
+    },
+    {
       name: "./plugins",
       path: "plugins/mod.ts",
     },
@@ -107,6 +119,15 @@ await build({
         ],
         "transformers": [
           "./types/transformers/mod.d.ts",
+        ],
+        "packages": [
+          "./types/packages/mod.d.ts",
+        ],
+        "logger": [
+          "./types/packages/logger/mod.d.ts",
+        ],
+        "embeds": [
+          "./types/packages/embeds/mod.d.ts",
         ],
         "plugins": [
           "./types/plugins/mod.d.ts",

@@ -6,6 +6,7 @@ on:
       - "handlers/**"
       - "helpers/**"
       - "plugins/**"
+      - "packages/**"
       - "rest/**"
       - "tests/**"
       - "transformers/**"
