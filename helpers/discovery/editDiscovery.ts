@@ -21,7 +21,7 @@ export async function editDiscovery(
 
   return {
     guildId,
-    primaryCategoryId: BigInt(result.primary_category_id),
+    primaryCategoryId: result.primary_category_id,
     keywords: result.keywords ?? undefined,
     emojiDiscoverabilityEnabled: result.emoji_discoverability_enabled,
     partnerActionedTimestamp: result.partner_actioned_timestamp
