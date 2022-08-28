@@ -29,7 +29,9 @@ export async function updateDevCommands(bot: Bot) {
       return {
         name: (translatedName || name).toLowerCase(),
         description: translatedDescription || command!.description,
-        options: command.options ? createOptions(bot.transformers.snowflake(DEV_SERVER_ID), command.options, command.name) : undefined,
+        options: command.options
+          ? createOptions(bot.transformers.snowflake(DEV_SERVER_ID), command.options, command.name)
+          : undefined,
       };
     }),
     bot.transformers.snowflake(DEV_SERVER_ID),
@@ -38,7 +40,6 @@ export async function updateDevCommands(bot: Bot) {
 
 // SETUP-DD-TEMP: You can make this able to be updated dynicamally by moving this value to something in the database and having a command to update it on the fly or as part of CI.
 export const CURRENT_SLASH_COMMAND_VERSION = 1;
-
 
 /** Whether the guild has the latest slash command version */
 export async function usesLatestCommandVersion(guildId: bigint): Promise<boolean> {

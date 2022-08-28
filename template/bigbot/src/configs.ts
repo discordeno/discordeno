@@ -1,4 +1,4 @@
-import { Intents, getBotIdFromToken } from "discordeno";
+import { getBotIdFromToken, Intents } from "discordeno";
 
 // General Configurations
 /** Whether or not this process is a local development version. Change to false for the main production bot. */

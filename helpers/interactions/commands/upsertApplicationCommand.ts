@@ -6,7 +6,7 @@ import {
   CreateApplicationCommand,
   CreateContextApplicationCommand,
   isContextApplicationCommand,
-  makeOptionsForCommand
+  makeOptionsForCommand,
 } from "./createApplicationCommand.ts";
 
 /**

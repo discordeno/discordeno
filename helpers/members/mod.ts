@@ -10,4 +10,3 @@ export * from "./kickMember.ts";
 export * from "./pruneMembers.ts";
 export * from "./searchMembers.ts";
 export * from "./unbanMember.ts";
-

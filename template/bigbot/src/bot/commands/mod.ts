@@ -1,7 +1,7 @@
 import ping from "./ping";
 
 export const COMMANDS = {
-    ping,
-}
+  ping,
+};
 
 export default COMMANDS;

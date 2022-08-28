@@ -7,7 +7,12 @@ import { AllowedMentions, FileContent, MessageComponents } from "../../types/dis
 import { MessageComponentTypes } from "../../types/shared.ts";
 
 /** Edit the message. */
-export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint, content: EditMessage): Promise<Message> {
+export async function editMessage(
+  bot: Bot,
+  channelId: bigint,
+  messageId: bigint,
+  content: EditMessage,
+): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "PATCH",

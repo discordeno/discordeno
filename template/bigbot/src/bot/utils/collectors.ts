@@ -27,7 +27,9 @@ export async function needMessage(memberId: bigint, channelId: bigint, options?:
 
 export function collectMessages(options: CollectMessagesOptions): Promise<Message[]> {
   return new Promise((resolve, reject) => {
-    bot.collectors.messages.get(options.key)?.reject("A new collector began before the user responded to the previous one.");
+    bot.collectors.messages.get(options.key)?.reject(
+      "A new collector began before the user responded to the previous one.",
+    );
 
     bot.collectors.messages.set(options.key, {
       ...options,

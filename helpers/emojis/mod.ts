@@ -4,4 +4,3 @@ export * from "./editEmoji.ts";
 export * from "./getEmoji.ts";
 export * from "./getEmojis.ts";
 export * from "./getEmojiUrl.ts";
-

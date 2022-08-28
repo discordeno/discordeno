@@ -4,4 +4,3 @@ export * from "./editShardStatus.ts";
 export * from "./getGatewayBot.ts";
 export * from "./getNitroStickerPacks.ts";
 export * from "./getUser.ts";
-
