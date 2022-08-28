@@ -1,8 +1,31 @@
 import type { Bot } from "../../bot.ts";
+import { ScheduledEvent, TargetTypes, User } from "../../mod.ts";
 import { DiscordInviteMetadata } from "../../types/discord.ts";
 
+export type Invite = {
+  code: string;
+  guildId?: bigint;
+  channelId?: bigint;
+  inviter?: User;
+  targetType?: TargetTypes;
+  targetUser?: User;
+  targetApplicationId?: bigint;
+  approximatePresenceCount?: number;
+  approximateMemberCount?: number;
+  expiresAt?: number;
+  guildScheduledEvent?: ScheduledEvent;
+};
+
+export type InviteMetadata = Invite & {
+  uses: number;
+  maxUses: number;
+  maxAge: number;
+  temporary: boolean;
+  createdAt: number;
+};
+
 /** Returns an invite for the given code or throws an error if the invite doesn't exists. */
-export async function getInvite(bot: Bot, inviteCode: string, options?: GetInvite) {
+export async function getInvite(bot: Bot, inviteCode: string, options?: GetInvite): Promise<Invite> {
   const result = await bot.rest.runMethod<DiscordInviteMetadata>(
     bot.rest,
     "GET",
@@ -14,7 +37,9 @@ export async function getInvite(bot: Bot, inviteCode: string, options?: GetInvit
     guildId: result.guild?.id ? bot.transformers.snowflake(result.guild.id) : undefined,
     channelId: result.channel?.id ? bot.transformers.snowflake(result.channel.id) : undefined,
     inviter: result.inviter ? bot.transformers.user(bot, result.inviter) : undefined,
-    targetType: result.target_type,
+    targetType: result.target_type
+      ? (result.target_type === 1 ? TargetTypes.Stream : TargetTypes.EmbeddedApplication)
+      : undefined,
     targetUser: result.target_user ? bot.transformers.user(bot, result.target_user) : undefined,
     targetApplicationId: result.target_application?.id
       ? bot.transformers.snowflake(result.target_application.id)

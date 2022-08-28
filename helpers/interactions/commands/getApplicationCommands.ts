@@ -1,10 +1,14 @@
-import { Collection } from "../../../util/collection.ts";
 import type { Bot } from "../../../bot.ts";
+import { ApplicationCommand } from "../../../transformers/applicationCommand.ts";
 import { DiscordApplicationCommand } from "../../../types/discord.ts";
+import { Collection } from "../../../util/collection.ts";
 
 /** Fetch all the commands for your application. If a guild id is not provided, it will fetch global commands. */
-export async function getApplicationCommands(bot: Bot, guildId?: bigint) {
-  const result = await bot.rest.runMethod<DiscordApplicationCommand[]>(
+export async function getApplicationCommands(
+  bot: Bot,
+  guildId?: bigint,
+): Promise<Collection<bigint, ApplicationCommand>> {
+  const results = await bot.rest.runMethod<DiscordApplicationCommand[]>(
     bot.rest,
     "GET",
     guildId
@@ -13,8 +17,8 @@ export async function getApplicationCommands(bot: Bot, guildId?: bigint) {
   );
 
   return new Collection(
-    result.map((res) => {
-      const command = bot.transformers.applicationCommand(bot, res);
+    results.map((result) => {
+      const command = bot.transformers.applicationCommand(bot, result);
       return [command.id, command];
     }),
   );

@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { Webhook } from "../../transformers/webhook.ts";
 import { DiscordWebhook } from "../../types/discord.ts";
 import { ModifyWebhook } from "./editWebhook.ts";
 
@@ -8,7 +9,7 @@ export async function editWebhookWithToken(
   webhookId: bigint,
   webhookToken: string,
   options: Omit<ModifyWebhook, "channelId">,
-) {
+): Promise<Webhook> {
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
     "PATCH",

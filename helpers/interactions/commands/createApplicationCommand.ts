@@ -1,5 +1,5 @@
 import type { Bot } from "../../../bot.ts";
-import { ApplicationCommandOption, ApplicationCommandTypes, Localization } from "../../../mod.ts";
+import { ApplicationCommand, ApplicationCommandOption, ApplicationCommandTypes, Localization } from "../../../mod.ts";
 import { DiscordApplicationCommand, DiscordApplicationCommandOption } from "../../../types/discord.ts";
 import { AtLeastOne, PermissionStrings } from "../../../types/shared.ts";
 
@@ -18,7 +18,7 @@ export async function createApplicationCommand(
   bot: Bot,
   options: CreateApplicationCommand | CreateContextApplicationCommand,
   guildId?: bigint,
-) {
+): Promise<ApplicationCommand> {
   const result = await bot.rest.runMethod<DiscordApplicationCommand>(
     bot.rest,
     "POST",

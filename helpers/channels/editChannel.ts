@@ -5,7 +5,12 @@ import { ChannelTypes, VideoQualityModes } from "../../types/shared.ts";
 import { OverwriteReadable } from "./editChannelOverwrite.ts";
 
 /** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
-export async function editChannel(bot: Bot, channelId: bigint, options: ModifyChannel, reason?: string) {
+export async function editChannel(
+  bot: Bot,
+  channelId: bigint,
+  options: ModifyChannel,
+  reason?: string,
+): Promise<Channel> {
   if (options.name || options.topic) {
     const request = editChannelNameTopicQueue.get(channelId);
     if (!request) {
@@ -81,7 +86,7 @@ interface EditChannelRequest {
 const editChannelNameTopicQueue = new Map<bigint, EditChannelRequest>();
 let editChannelProcessing = false;
 
-function processEditChannelQueue(bot: Bot) {
+function processEditChannelQueue(bot: Bot): void {
   if (!editChannelProcessing) return;
 
   const now = Date.now();

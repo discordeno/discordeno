@@ -1,9 +1,10 @@
 import type { Bot } from "../../bot.ts";
+import { Role } from "../../transformers/role.ts";
 import { DiscordRole } from "../../types/discord.ts";
 import { PermissionStrings } from "../../types/shared.ts";
 
 /** Edit a guild role. Requires the MANAGE_ROLES permission. */
-export async function editRole(bot: Bot, guildId: bigint, id: bigint, options: EditGuildRole) {
+export async function editRole(bot: Bot, guildId: bigint, id: bigint, options: EditGuildRole): Promise<Role> {
   const result = await bot.rest.runMethod<DiscordRole>(
     bot.rest,
     "PATCH",
