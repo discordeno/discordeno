@@ -7,13 +7,12 @@ export async function addReactions(
   messageId: bigint,
   reactions: string[],
   ordered = false,
-) {
+): Promise<void> {
   if (!ordered) {
-    await Promise.all(reactions.map((reaction) => bot.helpers.addReaction(channelId, messageId, reaction)));
-  } else {
-    for (const reaction of reactions) {
-      bot.events.debug("Running for of loop in addReactions function.");
-      await bot.helpers.addReaction(channelId, messageId, reaction);
-    }
+    return void await Promise.all(reactions.map((reaction) => bot.helpers.addReaction(channelId, messageId, reaction)));
+  }
+
+  for (const reaction of reactions) {
+    await bot.helpers.addReaction(channelId, messageId, reaction);
   }
 }

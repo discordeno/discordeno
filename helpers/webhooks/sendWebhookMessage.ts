@@ -1,10 +1,16 @@
 import type { Bot } from "../../bot.ts";
 import { Embed } from "../../transformers/embed.ts";
+import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
 
 /** Send a webhook with webhook Id and webhook token */
-export async function sendWebhook(bot: Bot, webhookId: bigint, webhookToken: string, options: ExecuteWebhook) {
+export async function sendWebhookMessage(
+  bot: Bot,
+  webhookId: bigint,
+  webhookToken: string,
+  options: ExecuteWebhook,
+): Promise<Message | undefined> {
   const allowedMentions = options.allowedMentions
     ? {
       parse: options.allowedMentions.parse,

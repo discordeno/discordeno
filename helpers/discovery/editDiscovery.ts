@@ -1,8 +1,13 @@
 import type { Bot } from "../../bot.ts";
 import { DiscordDiscoveryMetadata } from "../../types/discord.ts";
+import { DiscoveryMetadata } from "./getDiscovery.ts";
 
 /** Modify the discovery metadata for the guild. Requires the MANAGE_GUILD permission. Returns the updated discovery metadata object on success. */
-export async function editDiscovery(bot: Bot, guildId: bigint, data: ModifyGuildDiscoveryMetadata) {
+export async function editDiscovery(
+  bot: Bot,
+  guildId: bigint,
+  data: ModifyGuildDiscoveryMetadata,
+): Promise<DiscoveryMetadata> {
   const result = await bot.rest.runMethod<DiscordDiscoveryMetadata>(
     bot.rest,
     "PATCH",
@@ -16,7 +21,7 @@ export async function editDiscovery(bot: Bot, guildId: bigint, data: ModifyGuild
 
   return {
     guildId,
-    primaryCategoryId: result.primary_category_id,
+    primaryCategoryId: BigInt(result.primary_category_id),
     keywords: result.keywords ?? undefined,
     emojiDiscoverabilityEnabled: result.emoji_discoverability_enabled,
     partnerActionedTimestamp: result.partner_actioned_timestamp

@@ -1,8 +1,9 @@
 import type { Bot } from "../../bot.ts";
+import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
 
 /** Fetches a single channel object from the api. */
-export async function getChannel(bot: Bot, channelId: bigint) {
+export async function getChannel(bot: Bot, channelId: bigint): Promise<Channel> {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
     "GET",

@@ -1,8 +1,8 @@
 import type { Bot } from "../../bot.ts";
-import { ImageFormat, ImageSize } from "../members/avatarUrl.ts";
+import { ImageFormat, ImageSize } from "../members/getAvatarUrl.ts";
 
 /** The full URL of the icon from Discords CDN. Undefined when no icon is set. */
-export function guildIconURL(
+export function getGuildIconURL(
   bot: Bot,
   id: bigint,
   icon: bigint | undefined,
@@ -10,7 +10,7 @@ export function guildIconURL(
     size?: ImageSize;
     format?: ImageFormat;
   },
-) {
+): string | undefined {
   return icon
     ? bot.utils.formatImageURL(
       bot.constants.routes.GUILD_ICON(

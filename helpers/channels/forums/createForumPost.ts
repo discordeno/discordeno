@@ -1,14 +1,15 @@
 import type { Bot } from "../../../bot.ts";
+import { Channel } from "../../../transformers/channel.ts";
+import { Embed } from "../../../transformers/embed.ts";
 import { DiscordChannel } from "../../../types/discord.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../../types/mod.ts";
-import { Embed } from "../../../transformers/embed.ts";
 
 /** Creates a new public thread from an existing message. Returns a thread channel. */
 export async function createForumPost(
   bot: Bot,
   channelId: bigint,
   options: CreateForumPostWithMessage,
-) {
+): Promise<Channel> {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
     "POST",

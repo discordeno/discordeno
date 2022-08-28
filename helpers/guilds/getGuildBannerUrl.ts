@@ -1,8 +1,8 @@
 import type { Bot } from "../../bot.ts";
-import { ImageFormat, ImageSize } from "../members/avatarUrl.ts";
+import { ImageFormat, ImageSize } from "../members/getAvatarUrl.ts";
 
 /** The full URL of the banner from Discords CDN. Undefined if no banner is set. */
-export function guildBannerURL(
+export function getGuildBannerURL(
   bot: Bot,
   id: bigint,
   options: {
@@ -10,7 +10,7 @@ export function guildBannerURL(
     size?: ImageSize;
     format?: ImageFormat;
   },
-) {
+): string | undefined {
   return options.banner
     ? bot.utils.formatImageURL(
       bot.constants.routes.GUILD_BANNER(

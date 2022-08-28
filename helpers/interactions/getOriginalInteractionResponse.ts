@@ -1,8 +1,9 @@
 import type { Bot } from "../../bot.ts";
+import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
 
 /** Returns the initial Interaction response. Functions the same as Get Webhook Message */
-export async function getOriginalInteractionResponse(bot: Bot, token: string) {
+export async function getOriginalInteractionResponse(bot: Bot, token: string): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "GET",

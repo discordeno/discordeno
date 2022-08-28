@@ -1,4 +1,5 @@
 import { Bot } from "../../../bot.ts";
+import { ScheduledEvent } from "../../../transformers/scheduledEvent.ts";
 import { DiscordScheduledEvent } from "../../../types/discord.ts";
 import { ScheduledEventEntityType, ScheduledEventPrivacyLevel, ScheduledEventStatus } from "../../../types/shared.ts";
 
@@ -8,7 +9,7 @@ export async function editScheduledEvent(
   guildId: bigint,
   eventId: bigint,
   options: Partial<EditScheduledEvent>,
-) {
+): Promise<ScheduledEvent> {
   if (options.name && !bot.utils.validateLength(options.name, { min: 1, max: 100 })) {
     throw new Error("Name must be between 1-100 characters.");
   }
@@ -22,7 +23,7 @@ export async function editScheduledEvent(
     throw new Error("Cannot schedule event to end before starting.");
   }
 
-  const event = await bot.rest.runMethod<DiscordScheduledEvent>(
+  const result = await bot.rest.runMethod<DiscordScheduledEvent>(
     bot.rest,
     "PATCH",
     bot.constants.routes.GUILD_SCHEDULED_EVENT(guildId, eventId),
@@ -40,7 +41,7 @@ export async function editScheduledEvent(
     },
   );
 
-  return bot.transformers.scheduledEvent(bot, event);
+  return bot.transformers.scheduledEvent(bot, result);
 }
 
 export interface EditScheduledEvent {

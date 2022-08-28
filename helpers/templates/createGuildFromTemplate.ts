@@ -1,11 +1,16 @@
 import type { Bot } from "../../bot.ts";
+import { Guild } from "../../transformers/guild.ts";
 import { DiscordGuild } from "../../types/discord.ts";
 
 /**
  * Create a new guild based on a template
  * NOTE: This endpoint can be used only by bots in less than 10 guilds.
  */
-export async function createGuildFromTemplate(bot: Bot, templateCode: string, data: CreateGuildFromTemplate) {
+export async function createGuildFromTemplate(
+  bot: Bot,
+  templateCode: string,
+  data: CreateGuildFromTemplate,
+): Promise<Guild> {
   if (data.icon) {
     data.icon = await bot.utils.urlToBase64(data.icon);
   }
