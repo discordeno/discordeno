@@ -1,7 +1,7 @@
 import { DiscordUnavailableGuild } from "discordeno";
 import { prisma } from "../../prisma";
 import { bot } from "../bot";
-import { updateGuildCommands, usesLatestCommandVersion } from "../utils/slash/updateDevCommands";
+import { updateGuildCommands, usesLatestCommandVersion } from "../utils/slash/updateCommands";
 
 /** To prevent updating every guild when a shard goes ready we have to ignore them using this */
 // export const initialyLoadingGuildIds = new Set<bigint>()
@@ -11,8 +11,7 @@ export function setRawEvent() {
     if (data.t === "GUILD_DELETE") {
       const id = (data.d as DiscordUnavailableGuild).id;
 
-      await prisma.commands.deleteOne({ id });
-      return;
+      return await prisma.commands.delete({ where: { id: bot.transformers.snowflake(id) } });
     }
 
     const id = bot.transformers.snowflake(

@@ -50,7 +50,7 @@ export async function usesLatestCommandVersion(guildId: bigint): Promise<boolean
 export async function getCurrentCommandVersion(guildId: bigint): Promise<number> {
   if (bot.commandVersions.has(guildId)) return bot.commandVersions.get(guildId)!;
 
-  const commandVersion = await prisma.commands.findUnique({ guildId });
+  const commandVersion = await prisma.commands.findUnique({ where: { id: guildId } });
   if (commandVersion) bot.commandVersions.set(guildId, commandVersion.version);
 
   return commandVersion?.version ?? 0;
@@ -58,7 +58,11 @@ export async function getCurrentCommandVersion(guildId: bigint): Promise<number>
 
 export async function updateCommandVersion(guildId: bigint): Promise<number> {
   // UPDATE THE VERSION SAVED IN THE DB
-  await prisma.commands.updateOne({ guildId, version: CURRENT_SLASH_COMMAND_VERSION });
+  await prisma.commands.upsert({
+    where: { id: guildId },
+    create: { id: guildId, version: CURRENT_SLASH_COMMAND_VERSION },
+    update: { version: CURRENT_SLASH_COMMAND_VERSION },
+  });
 
   bot.commandVersions.set(guildId, CURRENT_SLASH_COMMAND_VERSION);
   return CURRENT_SLASH_COMMAND_VERSION;
@@ -80,7 +84,7 @@ export async function updateGuildCommands(bot: Bot, guildId: bigint) {
           return {
             name,
             description: translate("english", command.description),
-            options: command.options,
+            options: command.options ? createOptions("english", command.options, command.name) : undefined,
           };
         }
 
@@ -91,7 +95,7 @@ export async function updateGuildCommands(bot: Bot, guildId: bigint) {
         return {
           name: translatedName.toLowerCase(),
           description: translatedDescription,
-          options: createOptions(bot, guildId, command.options, command.name),
+          options: command.options ? createOptions(guildId, command.options, command.name) : undefined,
         };
       }),
     guildId,

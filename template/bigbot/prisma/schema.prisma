@@ -9,3 +9,17 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Guilds {
+  /// The server id
+  id BigInt @unique @id
+  /// The language the server uses.
+  language String @default("english")
+}
+
+model Commands {
+  /// The server id
+  id BigInt @unique @id
+  /// The version number this server is using for it's commands.
+  version Int
+}

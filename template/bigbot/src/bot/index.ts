@@ -10,7 +10,7 @@ import {
   EVENT_HANDLER_URL,
 } from "../configs.js";
 import { bot } from "./bot.js";
-import { updateDevCommands } from "./utils/slash/updateDevCommands.js";
+import { updateDevCommands } from "./utils/slash/updateCommands.js";
 import { webhookURLToIDAndToken } from "./utils/webhook.js";
 
 process
