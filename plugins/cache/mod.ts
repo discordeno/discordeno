@@ -1,7 +1,7 @@
 import { Bot, Collection, DiscordGuildEmojisUpdate } from "./deps.ts";
-import { setupCacheRemovals } from "./src/setupCacheRemovals.ts";
 import { addCacheCollections, BotWithCache } from "./src/addCacheCollections.ts";
 import { setupCacheEdits } from "./src/setupCacheEdits.ts";
+import { setupCacheRemovals } from "./src/setupCacheRemovals.ts";
 
 // PLUGINS MUST TAKE A BOT ARGUMENT WHICH WILL BE MODIFIED
 export function enableCachePlugin<B extends Bot = Bot>(rawBot: B): BotWithCache<B> {
@@ -25,6 +25,10 @@ export function enableCachePlugin<B extends Bot = Bot>(rawBot: B): BotWithCache<
 
       channels.forEach((channel) => {
         bot.transformers.channel(bot, { channel, guildId: result.id });
+      });
+
+      payload.guild.members?.forEach((member) => {
+        bot.transformers.member(bot, member, result.id, bot.transformers.snowflake(member.user!.id));
       });
     }
 
