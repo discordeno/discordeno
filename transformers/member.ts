@@ -1,8 +1,8 @@
 import type { Bot } from "../bot.ts";
 import { DiscordMember, DiscordUser } from "../types/discord.ts";
+import { Optionalize } from "../types/shared.ts";
 import { MemberToggles } from "./toggles/member.ts";
 import { UserToggles } from "./toggles/user.ts";
-import { Optionalize } from "../types/shared.ts";
 
 export function transformUser(bot: Bot, payload: DiscordUser) {
   const user = {
@@ -25,6 +25,7 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: bigin
   const member = {
     id: userId,
     guildId,
+    user: payload.user ? bot.transformers.user(bot, payload.user) : undefined,
     nick: payload.nick ?? undefined,
     roles: payload.roles.map((id) => bot.transformers.snowflake(id)),
     joinedAt: Date.parse(payload.joined_at),
