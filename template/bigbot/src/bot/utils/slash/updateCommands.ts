@@ -1,10 +1,10 @@
 import { ApplicationCommandOption, ApplicationCommandTypes, Bot } from "discordeno";
-import { DEV_SERVER_ID } from "../../../configs";
-import { prisma } from "../../../prisma";
-import { bot } from "../../bot";
-import COMMANDS from "../../commands/mod";
-import { serverLanguages, translate } from "../../languages/translate";
-import { ArgumentDefinition } from "./createCommand";
+import { DEV_SERVER_ID } from "../../../configs.js";
+import { prisma } from "../../../prisma.js";
+import { bot } from "../../bot.js";
+import COMMANDS from "../../commands/mod.js";
+import { serverLanguages, translate } from "../../languages/translate.js";
+import { ArgumentDefinition } from "./createCommand.js";
 
 export async function updateDevCommands(bot: Bot) {
   const cmds = Object.entries(COMMANDS)

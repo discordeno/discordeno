@@ -1,8 +1,8 @@
 import { ApplicationCommandOptionTypes } from "discordeno";
-import { prisma } from "../../prisma";
-import languages from "../languages/languages";
-import { serverLanguages, translate } from "../languages/translate";
-import { createCommand } from "../utils/slash/createCommand";
+import { prisma } from "../../prisma.js";
+import languages from "../languages/languages.js";
+import { serverLanguages, translate } from "../languages/translate.js";
+import { createCommand } from "../utils/slash/createCommand.js";
 
 export default createCommand({
   name: "LANGUAGE_NAME",

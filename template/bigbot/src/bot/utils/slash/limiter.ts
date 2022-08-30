@@ -1,4 +1,4 @@
-import COMMANDS from "../../commands/mod";
+import COMMANDS from "../../commands/mod.js";
 
 export async function validateSlashLimits() {
   const MAX_ALLOWED_CHARACTERS = 4000;

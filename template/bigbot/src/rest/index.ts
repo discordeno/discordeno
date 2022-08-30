@@ -2,8 +2,8 @@ import { Point } from "@influxdata/influxdb-client";
 import { BASE_URL, createRestManager } from "discordeno";
 import express, { Request, Response } from "express";
 
-import { Influx } from "../analytics";
-import { DISCORD_TOKEN, INFLUX_TOKEN, REST_AUTHORIZATION, REST_PORT, REST_URL } from "../configs";
+import { Influx } from "../analytics.js";
+import { DISCORD_TOKEN, INFLUX_TOKEN, REST_AUTHORIZATION, REST_PORT, REST_URL } from "../configs.js";
 
 const rest = createRestManager({
   token: DISCORD_TOKEN,

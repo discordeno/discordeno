@@ -1,6 +1,6 @@
 // SETUP-DD-TEMP: This file serves as an example, of how to customize internal discordeno objects. Feel free to use, add more or remove as desired.
 import { InteractionResponse, InteractionResponseTypes } from "discordeno";
-import { BotWithCustomProps } from "../../../bot";
+import { BotWithCustomProps } from "../../../bot.js";
 
 export function customizeInteractionTransformer(bot: BotWithCustomProps) {
   // Store the internal transformer function

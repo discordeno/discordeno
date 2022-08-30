@@ -35,7 +35,7 @@ process
 
     // SEND ERROR TO THE LOG CHANNEL ON THE GAMER DEV SERVER
     return bot.helpers
-      .sendWebhook(bot.transformers.snowflake(id), token, { embeds })
+      .sendWebhookMessage(bot.transformers.snowflake(id), token, { embeds })
       .catch(console.error);
   })
   .on("uncaughtException", async (error) => {
@@ -59,7 +59,7 @@ process
 
     // SEND ERROR TO THE LOG CHANNEL ON THE GAMER DEV SERVER
     await bot.helpers
-      .sendWebhook(bot.transformers.snowflake(id), token, { embeds })
+      .sendWebhookMessage(bot.transformers.snowflake(id), token, { embeds })
       .catch(console.error);
 
     process.exit(1);

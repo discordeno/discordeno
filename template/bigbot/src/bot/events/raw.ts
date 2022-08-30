@@ -1,7 +1,7 @@
 import { DiscordUnavailableGuild } from "discordeno";
-import { prisma } from "../../prisma";
-import { bot } from "../bot";
-import { updateGuildCommands, usesLatestCommandVersion } from "../utils/slash/updateCommands";
+import { prisma } from "../../prisma.js";
+import { bot } from "../bot.js";
+import { updateGuildCommands, usesLatestCommandVersion } from "../utils/slash/updateCommands.js";
 
 /** To prevent updating every guild when a shard goes ready we have to ignore them using this */
 // export const initialyLoadingGuildIds = new Set<bigint>()

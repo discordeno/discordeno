@@ -1,5 +1,5 @@
-import { translate } from "../languages/translate";
-import { createCommand } from "../utils/slash/createCommand";
+import { translate } from "../languages/translate.js";
+import { createCommand } from "../utils/slash/createCommand.js";
 
 export default createCommand({
   name: "PING_NAME",

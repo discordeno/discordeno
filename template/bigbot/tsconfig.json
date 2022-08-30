@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
     "target": "es2020",
     "module": "esnext",
     "experimentalDecorators": true,
@@ -19,7 +18,9 @@
     "stripInternal": true,
     "noFallthroughCasesInSwitch": true,
     "useUnknownInCatchVariables": false,
-    "allowUnreachableCode": false
+    "allowUnreachableCode": false,
+    "skipLibCheck": true,
+    "moduleResolution": "node"
   },
   "include": ["./src/**/*", ".env"]
 }

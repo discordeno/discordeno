@@ -9,9 +9,9 @@ import {
   Role,
   User,
 } from "discordeno";
-import english from "../../languages/english";
-import { translationKeys } from "../../languages/translate";
-import { PermissionLevelHandlers } from "./permLevels";
+import english from "../../languages/english.js";
+import { translationKeys } from "../../languages/translate.js";
+import { PermissionLevelHandlers } from "./permLevels.js";
 
 export function createCommand<T extends readonly ArgumentDefinition[]>(command: Command<T>) {
   return command;

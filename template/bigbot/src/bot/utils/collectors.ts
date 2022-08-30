@@ -1,5 +1,5 @@
 import { Interaction, Member, Message } from "discordeno";
-import { bot } from "../bot";
+import { bot } from "../bot.js";
 
 export async function needMessage(
   memberId: bigint,

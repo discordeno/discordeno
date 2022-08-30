@@ -1,5 +1,5 @@
-import { bot } from "../../bot";
-import { processMessageCollectors } from "../../utils/collectors";
+import { bot } from "../../bot.js";
+import { processMessageCollectors } from "../../utils/collectors.js";
 
 export function setMessageCreateEvent() {
   bot.events.messageCreate = async function (_, message) {

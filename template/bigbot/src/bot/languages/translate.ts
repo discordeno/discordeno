@@ -1,9 +1,9 @@
 import Embeds from "discordeno/embeds";
-import { bot } from "../bot";
-import { MISSING_TRANSLATION_WEBHOOK } from "../../configs";
-import { webhookURLToIDAndToken } from "../utils/webhook";
-import english from "./english";
-import languages from "./languages";
+import { MISSING_TRANSLATION_WEBHOOK } from "../../configs.js";
+import { bot } from "../bot.js";
+import { webhookURLToIDAndToken } from "../utils/webhook.js";
+import english from "./english.js";
+import languages from "./languages.js";
 
 /** This should hold the language names per guild id. <guildId, language> */
 export const serverLanguages = new Map<bigint, keyof typeof languages>();
@@ -66,7 +66,7 @@ export async function missingTranslation(language: keyof typeof languages, key: 
     .addField("Key", key, true);
 
   await bot.helpers
-    .sendWebhook(bot.transformers.snowflake(id), token, {
+    .sendWebhookMessage(bot.transformers.snowflake(id), token, {
       // SETUP-DD-TEMP: If you wish to make it @ mention you, please edit the next line.
       // content: `<@${owner id here}>`,
       embeds,

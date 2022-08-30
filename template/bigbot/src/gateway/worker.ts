@@ -1,7 +1,7 @@
 import { createShardManager, Shard, ShardSocketRequest, ShardState } from "discordeno";
 import { createLogger } from "discordeno/logger";
 import { parentPort, workerData } from "worker_threads";
-import { ManagerMessage } from ".";
+import { ManagerMessage } from "./index.js";
 
 if (!parentPort) {
   throw new Error("Parent port is null");

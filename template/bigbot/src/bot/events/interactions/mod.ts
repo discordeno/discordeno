@@ -1,8 +1,8 @@
 import { InteractionTypes, MessageComponentTypes } from "discordeno";
-import { bot } from "../../bot";
-import { executeButtonClick } from "./button";
-import { executeSlashCommand } from "./command";
-import { executeModalSubmit } from "./modal";
+import { bot } from "../../bot.js";
+import { executeButtonClick } from "./button.js";
+import { executeSlashCommand } from "./command.js";
+import { executeModalSubmit } from "./modal.js";
 
 export function setInteractionCreateEvent() {
   bot.events.interactionCreate = async function (_, interaction) {

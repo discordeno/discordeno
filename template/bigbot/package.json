@@ -6,7 +6,15 @@
     "dev": "nodemon -e ts --exec 'npm run start'",
     "start": "node --no-warnings dist/index.js",
     "devbg": "npx prisma generate && tsc --watch",
-    "fmt": "prettier -w ./src"
+    "fmt": "prettier -w ./src",
+    "dg": "ts-node src/gateway/index.ts",
+    "dr": "ts-node src/rest/index.js",
+    "db": "ts-node src/bot/index.ts",
+    "tsc": "tsc",
+    "tscw": "tsc --watch",
+    "devr": "node dist/rest/index",
+    "devg": "node dist/gateway/index",
+    "devb": "node dist/bot/index"
   },
   "dependencies": {
     "@influxdata/influxdb-client": "^1.29.0",
@@ -16,6 +24,7 @@
     "express": "^4.18.1",
     "fastify": "^4.5.3",
     "nanoid": "^4.0.0",
+    "ts-node": "^10.9.1",
     "tslib": "^2.3.1",
     "web-worker": "^1.2.0"
   },

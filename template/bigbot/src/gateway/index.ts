@@ -16,8 +16,8 @@ import {
   SHARDS_PER_WORKER,
   TOTAL_SHARDS,
   TOTAL_WORKERS,
-} from "../configs";
-import { WorkerCreateData, WorkerGetShardInfo, WorkerMessage, WorkerShardInfo, WorkerShardPayload } from "./worker";
+} from "../configs.js";
+import { WorkerCreateData, WorkerGetShardInfo, WorkerMessage, WorkerShardInfo, WorkerShardPayload } from "./worker.js";
 
 async function main() {
   const log = createLogger({ name: "[MANAGER]" });

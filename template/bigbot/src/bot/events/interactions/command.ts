@@ -12,10 +12,10 @@ import {
   Role,
   User,
 } from "discordeno";
-import { bot, BotWithCustomProps } from "../../bot";
-import COMMANDS from "../../commands/mod";
-import { getLanguage, loadLanguage, serverLanguages, translate } from "../../languages/translate";
-import { Command, ConvertArgumentDefinitionsToArgs } from "../../utils/slash/createCommand";
+import { bot, BotWithCustomProps } from "../../bot.js";
+import COMMANDS from "../../commands/mod.js";
+import { getLanguage, loadLanguage, serverLanguages, translate } from "../../languages/translate.js";
+import { Command, ConvertArgumentDefinitionsToArgs } from "../../utils/slash/createCommand.js";
 
 function logCommand(
   info: Interaction,

@@ -1,6 +1,6 @@
 import { Interaction } from "discordeno";
 import { validatePermissions } from "discordeno/permissions-plugin"
-import { Command } from "./createCommand";
+import { Command } from "./createCommand.js";
 
 export default async function hasPermissionLevel(command: Command<any>, payload: Interaction) {
   // This command doesnt require a perm level so allow the command.
