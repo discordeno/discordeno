@@ -154,6 +154,7 @@ import { routes } from "./util/routes.ts";
 import { transformAllowedMentionsToDiscordAllowedMentions } from "./transformers/reverse/allowedMentions.ts";
 import {
   AllowedMentions,
+  ShardSocketCloseCodes,
   transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
   transformApplicationCommandOptionToDiscordApplicationCommandOption,
 } from "./mod.ts";
@@ -322,7 +323,7 @@ export interface HelperUtils {
 }
 
 export async function stopBot(bot: Bot) {
-  await bot.gateway.stop(1000, "User requested bot stop");
+  await bot.gateway.stop(ShardSocketCloseCodes.Shutdown, "User requested bot stop");
 
   return bot;
 }
