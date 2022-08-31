@@ -26,12 +26,12 @@ export async function handleMessage(shard: Shard, message: MessageEvent<any>): P
   const messageData = JSON.parse(message) as DiscordGatewayPayload;
 
   // Edge case start: https://github.com/discordeno/discordeno/issues/2311
-  shard.heart.acknowledged = true;
   shard.heart.lastAck = Date.now();
   // Manually calculating the round trip time for users who need it.
-  if (shard.heart.lastBeat) {
+  if (shard.heart.lastBeat && !shard.heart.acknowledged) {
     shard.heart.rtt = shard.heart.lastAck - shard.heart.lastBeat;
   }
+  shard.heart.acknowledged = true;
   // Edge case end!
 
   switch (messageData.op) {
