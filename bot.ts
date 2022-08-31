@@ -265,7 +265,6 @@ export function createEventHandlers(
     guildEmojisUpdate: events.guildEmojisUpdate ?? ignore,
     guildBanAdd: events.guildBanAdd ?? ignore,
     guildBanRemove: events.guildBanRemove ?? ignore,
-    guildLoaded: events.guildLoaded ?? ignore,
     guildCreate: events.guildCreate ?? ignore,
     guildDelete: events.guildDelete ?? ignore,
     guildUpdate: events.guildUpdate ?? ignore,
@@ -727,7 +726,6 @@ export interface EventHandlers {
   ) => unknown;
   guildBanAdd: (bot: Bot, user: User, guildId: bigint) => unknown;
   guildBanRemove: (bot: Bot, user: User, guildId: bigint) => unknown;
-  guildLoaded: (bot: Bot, guild: Guild) => unknown;
   guildCreate: (bot: Bot, guild: Guild) => unknown;
   guildDelete: (bot: Bot, id: bigint, shardId: number) => unknown;
   guildUpdate: (bot: Bot, guild: Guild) => unknown;
@@ -786,7 +784,6 @@ export interface BotGatewayHandlerOptions {
   GUILD_BAN_ADD: typeof handlers.handleGuildBanAdd;
   GUILD_BAN_REMOVE: typeof handlers.handleGuildBanRemove;
   GUILD_CREATE: typeof handlers.handleGuildCreate;
-  GUILD_LOADED_DD: typeof handlers.handleGuildLoaded;
   GUILD_DELETE: typeof handlers.handleGuildDelete;
   GUILD_EMOJIS_UPDATE: typeof handlers.handleGuildEmojisUpdate;
   GUILD_INTEGRATIONS_UPDATE: typeof handlers.handleGuildIntegrationsUpdate;
@@ -828,7 +825,7 @@ export interface BotGatewayHandlerOptions {
 export function createBotGatewayHandlers(
   options: Partial<BotGatewayHandlerOptions>,
 ): Record<
-  GatewayDispatchEventNames | "GUILD_LOADED_DD",
+  GatewayDispatchEventNames,
   (bot: Bot, data: DiscordGatewayPayload, shardId: number) => any
 > {
   return {
@@ -856,7 +853,6 @@ export function createBotGatewayHandlers(
     GUILD_BAN_ADD: options.GUILD_BAN_ADD ?? handlers.handleGuildBanAdd,
     GUILD_BAN_REMOVE: options.GUILD_BAN_REMOVE ?? handlers.handleGuildBanRemove,
     GUILD_CREATE: options.GUILD_CREATE ?? handlers.handleGuildCreate,
-    GUILD_LOADED_DD: options.GUILD_LOADED_DD ?? handlers.handleGuildLoaded,
     GUILD_DELETE: options.GUILD_DELETE ?? handlers.handleGuildDelete,
     GUILD_EMOJIS_UPDATE: options.GUILD_EMOJIS_UPDATE ??
       handlers.handleGuildEmojisUpdate,
