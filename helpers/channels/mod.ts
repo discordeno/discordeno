@@ -9,6 +9,7 @@ export * from "./deleteChannelOverwrite.ts";
 export * from "./editChannel.ts";
 export * from "./editChannelOverwrite.ts";
 export * from "./getChannel.ts";
+export * from "./getChannelInvites.ts";
 export * from "./getChannels.ts";
 export * from "./getChannelWebhooks.ts";
 export * from "./startTyping.ts";
