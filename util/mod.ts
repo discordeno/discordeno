@@ -10,3 +10,5 @@ export * from "./token.ts";
 export * from "./urlToBase64.ts";
 export * from "./utils.ts";
 export * from "./validateLength.ts";
+export * from "./verifySignature.ts";
+
