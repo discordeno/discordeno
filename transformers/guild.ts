@@ -88,16 +88,13 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
     ownerId: payload.guild.owner_id ? bot.transformers.snowflake(payload.guild.owner_id) : 0n,
     permissions: payload.guild.permissions ? bot.transformers.snowflake(payload.guild.permissions) : 0n,
     afkChannelId: payload.guild.afk_channel_id ? bot.transformers.snowflake(payload.guild.afk_channel_id) : undefined,
-    widgetChannelId: payload.guild.widget_channel_id
-      ? bot.transformers.snowflake(payload.guild.widget_channel_id)
-      : undefined,
+    widgetChannelId: payload.guild.widget_channel_id ? bot.transformers.snowflake(payload.guild.widget_channel_id)
+    : undefined,
     applicationId: payload.guild.application_id ? bot.transformers.snowflake(payload.guild.application_id) : undefined,
-    systemChannelId: payload.guild.system_channel_id
-      ? bot.transformers.snowflake(payload.guild.system_channel_id)
-      : undefined,
-    rulesChannelId: payload.guild.rules_channel_id
-      ? bot.transformers.snowflake(payload.guild.rules_channel_id)
-      : undefined,
+    systemChannelId: payload.guild.system_channel_id ? bot.transformers.snowflake(payload.guild.system_channel_id)
+    : undefined,
+    rulesChannelId: payload.guild.rules_channel_id ? bot.transformers.snowflake(payload.guild.rules_channel_id)
+    : undefined,
     publicUpdatesChannelId: payload.guild.public_updates_channel_id
       ? bot.transformers.snowflake(payload.guild.public_updates_channel_id)
       : undefined,
