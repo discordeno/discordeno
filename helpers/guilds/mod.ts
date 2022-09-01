@@ -1,5 +1,5 @@
 export * from "./automod/mod.ts";
-export * from "./scheduledEvents/mod.ts";
+export * from "./events/mod.ts";
 export * from "./voice/mod.ts";
 
 export * from "./createGuild.ts";
