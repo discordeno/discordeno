@@ -25,9 +25,7 @@ const manager = createShardManager({
     if (!url) return console.log("ERROR: NO URL FOUND TO SEND MESSAGE");
 
     // MUST HANDLE GUILD_DELETE EVENTS FOR UNAVAILABLE
-    if (message.t === "GUILD_DELETE") {
-      if ((message.d as DiscordUnavailableGuild).unavailable) return;
-    }
+    if (message.t === "GUILD_DELETE" && (message.d as DiscordUnavailableGuild).unavailable) return
 
     await fetch(url, {
       method: "POST",
