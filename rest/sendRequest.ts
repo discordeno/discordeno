@@ -86,12 +86,12 @@ export async function sendRequest<T>(rest: RestManager, options: RestSendRequest
 
       // If NOT rate limited remove from queue
       if (response.status !== 429) {
-        const body = response.type ? JSON.stringify(await response.json()) : undefined
+        const body = response.type ? JSON.stringify(await response.json()) : undefined;
         options.reject?.({
           ok: false,
           status: response.status,
           error,
-          body
+          body,
         });
 
         throw new Error(
@@ -99,7 +99,7 @@ export async function sendRequest<T>(rest: RestManager, options: RestSendRequest
             ok: false,
             status: response.status,
             error,
-            body
+            body,
           }),
         );
       } else {

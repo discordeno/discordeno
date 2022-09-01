@@ -64,7 +64,7 @@ export async function runMethod<T = any>(
           newError.stack = errorStack.stack as Error["stack"];
           const restError = rest.convertRestError(
             newError,
-            data
+            data,
           );
           reject(restError);
         },
