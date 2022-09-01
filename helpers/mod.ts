@@ -2,7 +2,6 @@ export * from "./channels/mod.ts";
 export * from "./discovery/mod.ts";
 export * from "./emojis/mod.ts";
 export * from "./guilds/mod.ts";
-export * from "./integrations/mod.ts";
 export * from "./interactions/mod.ts";
 export * from "./invites/mod.ts";
 export * from "./members/mod.ts";

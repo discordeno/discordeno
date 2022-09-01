@@ -1,4 +1,5 @@
 export * from "./automod/mod.ts";
+export * from "./integrations/mod.ts";
 export * from "./events/mod.ts";
 export * from "./voice/mod.ts";
 export * from "./widgets/mod.ts";
