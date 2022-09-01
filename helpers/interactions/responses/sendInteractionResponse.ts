@@ -1,8 +1,8 @@
-import type { Bot } from "../../bot.ts";
-import { Embed, Message } from "../../mod.ts";
-import { DiscordMessage } from "../../types/discord.ts";
-import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
-import { InteractionResponseTypes } from "../../types/shared.ts";
+import type { Bot } from "../../../bot.ts";
+import { Embed, Message } from "../../../mod.ts";
+import { DiscordMessage } from "../../../types/discord.ts";
+import { AllowedMentions, FileContent, MessageComponents } from "../../../types/discordeno.ts";
+import { InteractionResponseTypes } from "../../../types/shared.ts";
 
 /**
  * Send a response to a users application command. The command data will have the id and token necessary to respond.
