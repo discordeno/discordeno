@@ -1,7 +1,7 @@
-import type { Bot } from "../../bot.ts";
-import { User } from "../../transformers/member.ts";
-import { DiscordUser } from "../../types/discord.ts";
-import { Collection } from "../../util/collection.ts";
+import type { Bot } from "../../../bot.ts";
+import { User } from "../../../transformers/member.ts";
+import { DiscordUser } from "../../../types/discord.ts";
+import { Collection } from "../../../util/collection.ts";
 
 /** Get a list of users that reacted with this emoji. */
 export async function getReactions(

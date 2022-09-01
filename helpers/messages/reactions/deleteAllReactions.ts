@@ -1,4 +1,4 @@
-import type { Bot } from "../../bot.ts";
+import type { Bot } from "../../../bot.ts";
 
 /** Deletes all reactions for all emojis on this message. */
 export async function deleteAllReactions(bot: Bot, channelId: bigint, messageId: bigint): Promise<void> {
