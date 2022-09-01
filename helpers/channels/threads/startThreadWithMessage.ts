@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { Channel } from "../../../transformers/channel.ts";
 import { DiscordChannel } from "../../../types/discord.ts";
 
 /** Creates a new public thread from an existing message. Returns a thread channel. */
@@ -7,7 +8,7 @@ export async function startThreadWithMessage(
   channelId: bigint,
   messageId: bigint,
   options: StartThreadWithMessage,
-) {
+): Promise<Channel> {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
     "POST",

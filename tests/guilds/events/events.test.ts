@@ -1,5 +1,5 @@
 import { ChannelTypes, ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../../../mod.ts";
-import { assertEquals, assertExists } from "../../deps.ts";
+import { assertEquals, assertExists, assertRejects } from "../../deps.ts";
 import { loadBot } from "../../mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../../utils.ts";
 
@@ -179,8 +179,7 @@ Deno.test({
           "[scheduled event] delete the guild scheduled event.",
           async () => {
             await bot.helpers.deleteScheduledEvent(CACHED_COMMUNITY_GUILD_ID, event.id);
-            const fetchedEvent = await bot.helpers.getScheduledEvent(CACHED_COMMUNITY_GUILD_ID, event.id);
-            assertEquals(fetchedEvent, undefined);
+            await assertRejects(() => bot.helpers.getScheduledEvent(CACHED_COMMUNITY_GUILD_ID, event.id));
           },
         );
 

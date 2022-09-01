@@ -1,11 +1,12 @@
 import type { Bot } from "../../bot.ts";
-import { AllowedMentions, FileContent, MessageComponents } from "../../types/mod.ts";
-import { DiscordMessage } from "../../types/discord.ts";
-import { MessageComponentTypes } from "../../types/shared.ts";
 import { Embed } from "../../transformers/embed.ts";
+import { Message } from "../../transformers/message.ts";
+import { DiscordMessage } from "../../types/discord.ts";
+import { AllowedMentions, FileContent, MessageComponents } from "../../types/mod.ts";
+import { MessageComponentTypes } from "../../types/shared.ts";
 
 /** Send a message to the channel. Requires SEND_MESSAGES permission. */
-export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMessage) {
+export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMessage): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "POST",
@@ -45,6 +46,7 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMe
               placeholder: subComponent.placeholder,
               min_values: subComponent.minValues,
               max_values: subComponent.maxValues,
+              disabled: "disabled" in subComponent ? subComponent.disabled : undefined,
               options: subComponent.options.map((option) => ({
                 label: option.label,
                 value: option.value,

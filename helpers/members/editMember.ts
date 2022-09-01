@@ -1,8 +1,14 @@
 import type { Bot } from "../../bot.ts";
+import { Member } from "../../transformers/member.ts";
 import { DiscordMemberWithUser } from "../../types/discord.ts";
 
 /** Edit the member */
-export async function editMember(bot: Bot, guildId: bigint, memberId: bigint, options: ModifyGuildMember) {
+export async function editMember(
+  bot: Bot,
+  guildId: bigint,
+  memberId: bigint,
+  options: ModifyGuildMember,
+): Promise<Member> {
   const result = await bot.rest.runMethod<DiscordMemberWithUser>(
     bot.rest,
     "PATCH",

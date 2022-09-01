@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { Guild } from "../../transformers/guild.ts";
 import { DiscordGuild } from "../../types/discord.ts";
 import {
   DefaultMessageNotificationLevels,
@@ -9,7 +10,7 @@ import {
 } from "../../types/shared.ts";
 
 /** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
-export async function editGuild(bot: Bot, guildId: bigint, options: ModifyGuild, shardId: number) {
+export async function editGuild(bot: Bot, guildId: bigint, options: ModifyGuild, shardId: number): Promise<Guild> {
   if (options.icon && !options.icon.startsWith("data:image/")) {
     options.icon = await bot.utils.urlToBase64(options.icon);
   }
@@ -50,10 +51,7 @@ export async function editGuild(bot: Bot, guildId: bigint, options: ModifyGuild,
     },
   );
 
-  return bot.transformers.guild(bot, {
-    guild: result,
-    shardId,
-  });
+  return bot.transformers.guild(bot, { guild: result, shardId });
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild */

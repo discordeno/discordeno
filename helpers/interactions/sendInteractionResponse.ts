@@ -1,8 +1,8 @@
 import type { Bot } from "../../bot.ts";
-import { Embed } from "../../mod.ts";
+import { Embed, Message } from "../../mod.ts";
 import { DiscordMessage } from "../../types/discord.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
-import { InteractionResponseTypes, MessageComponentTypes } from "../../types/shared.ts";
+import { InteractionResponseTypes } from "../../types/shared.ts";
 
 /**
  * Send a response to a users application command. The command data will have the id and token necessary to respond.
@@ -15,7 +15,7 @@ export async function sendInteractionResponse(
   id: bigint,
   token: string,
   options: InteractionResponse,
-) {
+): Promise<Message | undefined> {
   // If no mentions are provided, force disable mentions
   if (!options.data?.allowedMentions) {
     options.data = { ...options.data, allowedMentions: { parse: [] } };

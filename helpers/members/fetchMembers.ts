@@ -1,5 +1,6 @@
 import type { Bot } from "../../bot.ts";
 import { GatewayIntents, GatewayOpcodes } from "../../types/shared.ts";
+import { calculateShardId } from "../../util/calculateShardId.ts";
 
 /**
  * Highly recommended to use this function to fetch members instead of getMember from REST.
@@ -9,9 +10,8 @@ import { GatewayIntents, GatewayOpcodes } from "../../types/shared.ts";
 export function fetchMembers(
   bot: Bot,
   guildId: bigint,
-  shardId: number,
   options?: Omit<RequestGuildMembers, "guildId">,
-) {
+): Promise<void> {
   // You can request 1 member without the intent
   // Check if intents is not 0 as proxy ws won't set intents in other instances
   if (bot.intents && (!options?.limit || options.limit > 1) && !(bot.intents & GatewayIntents.GuildMembers)) {
@@ -21,6 +21,8 @@ export function fetchMembers(
   if (options?.userIds?.length) {
     options.limit = options.userIds.length;
   }
+
+  const shardId = calculateShardId(bot.gateway, guildId);
 
   return new Promise((resolve) => {
     const nonce = `${guildId}-${Date.now()}`;
@@ -43,7 +45,7 @@ export function fetchMembers(
         nonce,
       },
     });
-  }) as Promise<void>;
+  });
 }
 
 /** https://discord.com/developers/docs/topics/gateway#request-guild-members */

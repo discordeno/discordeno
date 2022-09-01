@@ -15,7 +15,7 @@ Deno.test({
   name: "[discovery] Validate a discovery search term",
   fn: async (t) => {
     const bot = loadBot();
-    const valid = await bot.helpers.validDiscoveryTerm("Bots");
+    const valid = await bot.helpers.getIsValidDiscoveryTerm("Bots");
 
     assertEquals(valid, true);
   },

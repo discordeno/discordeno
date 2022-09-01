@@ -1,9 +1,9 @@
-import { setInteractionCreateEvent } from "./handlers/interactionCreate.ts";
-import { logger } from "../../utils/logger.ts";
-
-const log = logger({ name: "EventHandlers" });
+import { setInteractionCreateEvent } from "./interactions/mod.js";
+import { setMessageCreateEvent } from "./messages/create.js";
+import { setRawEvent } from "./raw.js";
 
 export function setupEventHandlers() {
-  log.debug("Adding Event Handlers!");
   setInteractionCreateEvent();
+  setRawEvent();
+  setMessageCreateEvent();
 }

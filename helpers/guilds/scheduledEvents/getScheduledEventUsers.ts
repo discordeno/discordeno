@@ -34,7 +34,7 @@ export async function getScheduledEventUsers(
     if (options.before) url += `&before=${options.before}`;
   }
 
-  const result = await bot.rest.runMethod<{ user: DiscordUser; member?: DiscordMember }[]>(
+  const results = await bot.rest.runMethod<{ user: DiscordUser; member?: DiscordMember }[]>(
     bot.rest,
     "GET",
     url,
@@ -42,17 +42,17 @@ export async function getScheduledEventUsers(
 
   if (!options?.withMember) {
     return new Collection(
-      result.map((res) => {
-        const user = bot.transformers.user(bot, res.user);
+      results.map((result) => {
+        const user = bot.transformers.user(bot, result.user);
         return [user.id, user];
       }),
     );
   }
 
   return new Collection(
-    result.map((res) => {
-      const user = bot.transformers.user(bot, res.user);
-      const member: Member = bot.transformers.member(bot, res.member!, guildId, user.id);
+    results.map((result) => {
+      const user = bot.transformers.user(bot, result.user);
+      const member = bot.transformers.member(bot, result.member!, guildId, user.id);
 
       return [user.id, { member, user }];
     }),

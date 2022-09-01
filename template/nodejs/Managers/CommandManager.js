@@ -58,7 +58,7 @@ class CommandManager {
   }
 
   isCommand(message) {
-    if (message.isBot) return false;
+    if (message.isFromBot) return false;
     const prefix = "!";
     const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const prefixRegex = new RegExp(`^(<@!?${this.client.id}>|${escapeRegex(prefix)})\\s*`);

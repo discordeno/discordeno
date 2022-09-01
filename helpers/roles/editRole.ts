@@ -1,9 +1,10 @@
 import type { Bot } from "../../bot.ts";
+import { Role } from "../../transformers/role.ts";
 import { DiscordRole } from "../../types/discord.ts";
 import { PermissionStrings } from "../../types/shared.ts";
 
 /** Edit a guild role. Requires the MANAGE_ROLES permission. */
-export async function editRole(bot: Bot, guildId: bigint, id: bigint, options: EditGuildRole) {
+export async function editRole(bot: Bot, guildId: bigint, id: bigint, options: EditGuildRole): Promise<Role> {
   const result = await bot.rest.runMethod<DiscordRole>(
     bot.rest,
     "PATCH",
@@ -13,7 +14,9 @@ export async function editRole(bot: Bot, guildId: bigint, id: bigint, options: E
       color: options.color,
       hoist: options.hoist,
       mentionable: options.mentionable,
-      permissions: options.permissions ? bot.utils.calculateBits(options.permissions) : undefined,
+      permissions: bot.utils.calculateBits(options?.permissions || []),
+      icon: options.icon,
+      unicode_emoji: options.unicodeEmoji,
     },
   );
 
@@ -33,4 +36,6 @@ export interface EditGuildRole {
   mentionable?: boolean;
   /** The role's unicode emoji (if the guild has the `ROLE_ICONS` feature) */
   unicodeEmoji?: string;
+  /** the role's icon image (if the guild has the `ROLE_ICONS` feature) */
+  icon?: string;
 }

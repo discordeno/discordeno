@@ -1,4 +1,5 @@
 import { Bot } from "../../../bot.ts";
+import { AutoModerationRule } from "../../../transformers/automodRule.ts";
 import {
   AutoModerationActionType,
   AutoModerationEventTypes,
@@ -8,8 +9,12 @@ import {
 } from "../../../types/discord.ts";
 
 /** Get a rule currently configured for guild. */
-export async function createAutomodRule(bot: Bot, guildId: bigint, options: CreateAutoModerationRuleOptions) {
-  const rule = await bot.rest.runMethod<DiscordAutoModerationRule>(
+export async function createAutomodRule(
+  bot: Bot,
+  guildId: bigint,
+  options: CreateAutoModerationRuleOptions,
+): Promise<AutoModerationRule> {
+  const result = await bot.rest.runMethod<DiscordAutoModerationRule>(
     bot.rest,
     "POST",
     bot.constants.routes.AUTOMOD_RULES(guildId),
@@ -20,6 +25,7 @@ export async function createAutomodRule(bot: Bot, guildId: bigint, options: Crea
       trigger_metadata: {
         keyword_filter: options.triggerMetadata.keywordFilter,
         presets: options.triggerMetadata.presets,
+        allow_list: options.triggerMetadata.allowList,
       },
       actions: options.actions.map((action) => ({
         type: action.type,
@@ -33,10 +39,11 @@ export async function createAutomodRule(bot: Bot, guildId: bigint, options: Crea
       enabled: options.enabled ?? true,
       exempt_roles: options.exemptRoles?.map((id) => id.toString()),
       exempt_channels: options.exemptChannels?.map((id) => id.toString()),
+      reason: options.reason,
     },
   );
 
-  return bot.transformers.automodRule(bot, rule);
+  return bot.transformers.automodRule(bot, result);
 }
 
 export interface CreateAutoModerationRuleOptions {
@@ -48,11 +55,12 @@ export interface CreateAutoModerationRuleOptions {
   triggerType: AutoModerationTriggerTypes;
   /** The metadata to use for the trigger. */
   triggerMetadata: {
-    // TODO: discord is considering renaming this before release
     /** The keywords needed to match. Only present when TriggerType.Keyword */
     keywordFilter?: string[];
     /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
     presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
+    /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
+    allowList?: string[];
   };
   /** The actions that will trigger for this rule */
   actions: {
@@ -72,4 +80,6 @@ export interface CreateAutoModerationRuleOptions {
   exemptRoles?: bigint[];
   /** The channel ids that should not be effected by the rule. */
   exemptChannels?: bigint[];
+  /** The reason to add to the audit logs. */
+  reason?: string;
 }

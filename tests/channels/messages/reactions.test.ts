@@ -27,7 +27,7 @@ Deno.test({
 
     // Remove a reaction
     await t.step("[reactions] remove a reaction", async () => {
-      await bot.helpers.removeReaction(channel.id, message.id, "👍");
+      await bot.helpers.deleteReaction(channel.id, message.id, "👍");
 
       // fetch message to validate
       const fetched = await bot.helpers.getMessage(channel.id, message.id);
@@ -47,7 +47,7 @@ Deno.test({
 
     // Remove a custom reaction
     await t.step("[reactions] remove a custom reaction", async () => {
-      await bot.helpers.removeReaction(channel.id, message.id, "<:discordeno:785403373817823272>");
+      await bot.helpers.deleteReaction(channel.id, message.id, "<:discordeno:785403373817823272>");
 
       // fetch message to validate
       const fetched = await bot.helpers.getMessage(channel.id, message.id);
@@ -66,7 +66,7 @@ Deno.test({
 
       // Remove emoji reactions
       await t.step("[reactions] remove reactions by single emoji", async () => {
-        await bot.helpers.removeReactionEmoji(channel.id, message.id, "👍");
+        await bot.helpers.deleteReactionEmoji(channel.id, message.id, "👍");
 
         // fetch message to validate
         const fetched = await bot.helpers.getMessage(channel.id, message.id);

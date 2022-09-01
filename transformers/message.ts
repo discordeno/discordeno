@@ -11,7 +11,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
   const message = {
     // UNTRANSFORMED STUFF HERE
     content: payload.content || "",
-    isBot: payload.author.bot || false,
+    isFromBot: payload.author.bot || false,
     tag: `${payload.author.username}#${payload.author.discriminator}`,
     timestamp: Date.parse(payload.timestamp),
     editedTimestamp: payload.edited_timestamp ? Date.parse(payload.edited_timestamp) : undefined,

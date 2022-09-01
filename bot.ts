@@ -152,12 +152,17 @@ import {
 } from "./transformers/automodActionExecution.ts";
 import { routes } from "./util/routes.ts";
 import { transformAllowedMentionsToDiscordAllowedMentions } from "./transformers/reverse/allowedMentions.ts";
-import { AllowedMentions } from "./mod.ts";
+import {
+  AllowedMentions,
+  ShardSocketCloseCodes,
+  transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
+  transformApplicationCommandOptionToDiscordApplicationCommandOption,
+} from "./mod.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
     id: options.botId ?? getBotIdFromToken(options.token),
-    applicationId: options.applicationId || options.botId,
+    applicationId: options.applicationId || options.botId || getBotIdFromToken(options.token),
     token: removeTokenPrefix(options.token),
     events: createEventHandlers(options.events ?? {}),
     intents: options.intents,
@@ -318,7 +323,7 @@ export interface HelperUtils {
 }
 
 export async function stopBot(bot: Bot) {
-  await bot.gateway.stop(1000, "User requested bot stop");
+  await bot.gateway.stop(ShardSocketCloseCodes.Shutdown, "User requested bot stop");
 
   return bot;
 }
@@ -409,6 +414,12 @@ export interface Transformers {
     user: (bot: Bot, payload: User) => DiscordUser;
     team: (bot: Bot, payload: Team) => DiscordTeam;
     application: (bot: Bot, payload: Application) => DiscordApplication;
+    snowflake: (snowflake: bigint) => string;
+    applicationCommandOption: (bot: Bot, payload: ApplicationCommandOption) => DiscordApplicationCommandOption;
+    applicationCommandOptionChoice: (
+      bot: Bot,
+      payload: ApplicationCommandOptionChoice,
+    ) => DiscordApplicationCommandOptionChoice;
   };
   snowflake: (snowflake: string) => bigint;
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
@@ -468,6 +479,11 @@ export function createTransformers(options: Partial<Transformers>) {
       user: options.reverse?.user || transformUserToDiscordUser,
       team: options.reverse?.team || transformTeamToDiscordTeam,
       application: options.reverse?.application || transformApplicationToDiscordApplication,
+      snowflake: options.reverse?.snowflake || bigintToSnowflake,
+      applicationCommandOption: options.reverse?.applicationCommandOption ||
+        transformApplicationCommandOptionToDiscordApplicationCommandOption,
+      applicationCommandOptionChoice: options.reverse?.applicationCommandOptionChoice ||
+        transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
     },
     automodRule: options.automodRule || transformAutoModerationRule,
     automodActionExecution: options.automodActionExecution || transformAutoModerationActionExecution,

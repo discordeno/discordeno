@@ -1,6 +1,11 @@
-import { Collection } from "../../../util/collection.ts";
 import type { Bot } from "../../../bot.ts";
 import { DiscordListArchivedThreads } from "../../../types/discord.ts";
+import { Collection } from "../../../util/collection.ts";
+import { ActiveThreads } from "./getActiveThreads.ts";
+
+export type ArchivedThreads = ActiveThreads & {
+  hasMore: boolean;
+};
 
 /** Get the archived threads for this channel, defaults to public */
 export async function getArchivedThreads(
@@ -9,33 +14,33 @@ export async function getArchivedThreads(
   options?: ListArchivedThreads & {
     type?: "public" | "private" | "privateJoinedThreads";
   },
-) {
-  let url = options?.type === "privateJoinedThreads"
+): Promise<ArchivedThreads> {
+  const url = options?.type === "privateJoinedThreads"
     ? bot.constants.routes.THREAD_ARCHIVED_PRIVATE_JOINED(channelId, options)
     : options?.type === "private"
     ? bot.constants.routes.THREAD_ARCHIVED_PRIVATE(channelId, options)
     : bot.constants.routes.THREAD_ARCHIVED_PUBLIC(channelId, options);
 
-  const result = (await bot.rest.runMethod<DiscordListArchivedThreads>(
+  const results = await bot.rest.runMethod<DiscordListArchivedThreads>(
     bot.rest,
     "GET",
     url,
-  ));
+  );
 
   return {
     threads: new Collection(
-      result.threads.map((t) => {
-        const thread = bot.transformers.channel(bot, { channel: t });
+      results.threads.map((result) => {
+        const thread = bot.transformers.channel(bot, { channel: result });
         return [thread.id, thread];
       }),
     ),
     members: new Collection(
-      result.members.map((m) => {
-        const member = bot.transformers.threadMember(bot, m);
-        return [member.id, member];
+      results.members.map((result) => {
+        const member = bot.transformers.threadMember(bot, result);
+        return [member.id!, member];
       }),
     ),
-    hasMore: result.has_more,
+    hasMore: results.has_more,
   };
 }
 

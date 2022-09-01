@@ -1,16 +1,17 @@
 import type { Bot } from "../../bot.ts";
-import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
-import { DiscordMessage } from "../../types/discord.ts";
-import { MessageComponentTypes } from "../../types/shared.ts";
 import { Attachment } from "../../transformers/attachment.ts";
 import { Embed } from "../../transformers/embed.ts";
+import { Message } from "../../transformers/message.ts";
+import { DiscordMessage } from "../../types/discord.ts";
+import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
+import { MessageComponentTypes } from "../../types/shared.ts";
 
 export async function editWebhookMessage(
   bot: Bot,
   webhookId: bigint,
   webhookToken: string,
   options: EditWebhookMessage & { messageId?: bigint; threadId?: bigint },
-) {
+): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "PATCH",
@@ -62,6 +63,7 @@ export async function editWebhookMessage(
               placeholder: subComponent.placeholder,
               min_values: subComponent.minValues,
               max_values: subComponent.maxValues,
+              disabled: "disabled" in subComponent ? subComponent.disabled : undefined,
               options: subComponent.options.map((option) => ({
                 label: option.label,
                 value: option.value,

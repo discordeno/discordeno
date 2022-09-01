@@ -17,7 +17,7 @@ jobs:
       - name: Cache dependencies
         run: deno cache mod.ts
       - name: Cache Templates
-        run: deno cache template/beginner/mod.ts template/bigbot/src/bot/mod.ts template/bigbot/src/gateway/mod.ts template/bigbot/src/rest/mod.ts template/minimal/mod.ts
+        run: deno cache template/beginner/mod.ts template/minimal/mod.ts
       - name: Format code
         if: ${{ github.event.issue.pull_request && github.event.comment.body == 'run-fmt' && (github.actor == 'Skillz4Killz' || github.actor == 'itohatweb') }}
         run: deno fmt

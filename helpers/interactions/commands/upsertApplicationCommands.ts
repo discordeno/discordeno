@@ -1,4 +1,6 @@
 import type { Bot } from "../../../bot.ts";
+import { ApplicationCommand } from "../../../transformers/applicationCommand.ts";
+import { DiscordApplicationCommand } from "../../../types/discord.ts";
 import { Collection } from "../../../util/collection.ts";
 import {
   CreateApplicationCommand,
@@ -6,8 +8,6 @@ import {
   isContextApplicationCommand,
   makeOptionsForCommand,
 } from "./createApplicationCommand.ts";
-import { DiscordApplicationCommand } from "../../../types/discord.ts";
-import { MakeRequired } from "../../../types/shared.ts";
 
 /**
  * Bulk edit existing application commands. If a command does not exist, it will create it.
@@ -16,32 +16,43 @@ import { MakeRequired } from "../../../types/shared.ts";
  */
 export async function upsertApplicationCommands(
   bot: Bot,
-  options: (UpsertApplicationCommands | CreateContextApplicationCommand)[],
+  commands: (UpsertApplicationCommands | CreateContextApplicationCommand)[],
   guildId?: bigint,
-) {
-  const result = await bot.rest.runMethod<DiscordApplicationCommand[]>(
+): Promise<Collection<bigint, ApplicationCommand>> {
+  const results = await bot.rest.runMethod<DiscordApplicationCommand[]>(
     bot.rest,
     "PUT",
     guildId
       ? bot.constants.routes.COMMANDS_GUILD(bot.applicationId, guildId)
       : bot.constants.routes.COMMANDS(bot.applicationId),
-    options.map((option) => (isContextApplicationCommand(option)
+    commands.map((command) => (isContextApplicationCommand(command)
       ? {
-        name: option.name,
-        type: option.type,
+        name: command.name,
+        name_localizations: command.nameLocalizations,
+        type: command.type,
+        default_member_permissions: command.defaultMemberPermissions
+          ? bot.utils.calculateBits(command.defaultMemberPermissions)
+          : undefined,
+        dm_permission: command.dmPermission,
       }
       : {
-        name: option.name,
-        description: option.description,
-        type: option.type,
-        options: option.options ? makeOptionsForCommand(option.options) : undefined,
+        name: command.name,
+        name_localizations: command.nameLocalizations,
+        description: command.description,
+        description_localizations: command.descriptionLocalizations,
+        type: command.type,
+        options: command.options ? makeOptionsForCommand(command.options) : undefined,
+        default_member_permissions: command.defaultMemberPermissions
+          ? bot.utils.calculateBits(command.defaultMemberPermissions)
+          : undefined,
+        dm_permission: command.dmPermission,
       })
     ),
   );
 
   return new Collection(
-    result.map((res) => {
-      const command = bot.transformers.applicationCommand(bot, res);
+    results.map((result) => {
+      const command = bot.transformers.applicationCommand(bot, result);
       return [command.id, command];
     }),
   );

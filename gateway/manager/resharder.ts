@@ -1,5 +1,11 @@
-import { GatewayBot } from "../../types/shared.ts";
-import { createGatewayManager, GatewayManager } from "./gatewayManager.ts";
+import { GetGatewayBot } from "../../transformers/gatewayBot.ts";
+import { DiscordGatewayPayload, DiscordReady } from "../../types/discord.ts";
+import { Collection } from "../../util/collection.ts";
+import { createShard } from "../shard/createShard.ts";
+import { decompressWith } from "../shard/deps.ts";
+import { handleMessage } from "../shard/handleMessage.ts";
+import { Shard, ShardSocketCloseCodes } from "../shard/types.ts";
+import { GatewayManager } from "./gatewayManager.ts";
 
 export type Resharder = ReturnType<typeof activateResharder>;
 
@@ -29,6 +35,9 @@ export function activateResharder(options: ActivateResharderOptions) {
     /** Whether the resharder should automatically switch to LARGE BOT SHARDING when the bot is above 100K servers. */
     useOptimalLargeBotSharding: options.useOptimalLargeBotSharding ?? true,
 
+    /** The collection of shards that were created and identified by this resharder but are ignoring incoming events because all shards are not yet online. */
+    pendingShards: new Collection<number, Shard>(),
+
     // ----------
     // METHODS
     // ----------
@@ -44,45 +53,21 @@ export function activateResharder(options: ActivateResharderOptions) {
     getGatewayBot: options.getGatewayBot,
 
     /** Reshard the bots gateway. */
-    reshard: function (gatewayBot: GatewayBot) {
+    reshard: function (gatewayBot: GetGatewayBot) {
       return reshard(this, gatewayBot);
     },
 
     tellWorkerToPrepare: options.tellWorkerToPrepare,
+
+    shardIsPending: options.shardIsPending ?? shardIsPending,
+
+    markNewGuildShardId: options.markNewGuildShardId ?? markNewGuildShardId,
   };
 
   resharder.activate();
 
   return resharder;
 }
-
-//    /** The methods related to resharding. */
-//    resharding: {
-//      /** Whether the resharder should automatically switch to LARGE BOT SHARDING when the bot is above 100K servers. */
-//      useOptimalLargeBotSharding: options.resharding?.useOptimalLargeBotSharding ?? true,
-//      /** Whether or not to automatically reshard.
-//       *
-//       * @default true
-//       */
-//      reshard: options.resharding?.reshard ?? true,
-//      /** The percentage at which resharding should occur.
-//       *
-//       * @default 80
-//       */
-//      reshardPercentage: options.resharding?.reshardPercentage ?? 80,
-//      /** Handles resharding the bot when necessary. */
-//      resharder: options.resharding?.resharder ?? resharder,
-//      /** Handles checking if all new shards are online in the new gateway. */
-//      isPending: options.resharding?.isPending ?? resharderIsPending,
-//      /** Handles closing all shards in the old gateway. */
-//      closeOldShards: options.resharding?.closeOldShards ?? resharderCloseOldShards,
-//      /** Handles checking if it is time to reshard and triggers the resharder. */
-//      check: options.resharding?.check ?? startReshardingChecks,
-//      /** Handler to mark a guild id with its new shard id in cache. */
-//      markNewGuildShardId: options.resharding?.markNewGuildShardId ?? markNewGuildShardId,
-//      /** Handler to update all guilds in cache with the new shard id. */
-//      editGuildShardIds: options.resharding?.editGuildShardIds ?? reshardingEditGuildShardIds,
-//    },
 
 export interface ActivateResharderOptions {
   /** Interval in milliseconds of when to check whether it's time to reshard.
@@ -102,7 +87,7 @@ export interface ActivateResharderOptions {
   /** Function which can be used to fetch the current gateway information of the bot.
    * This function is mainly used by the reshard checker.
    */
-  getGatewayBot(): Promise<GatewayBot>;
+  getGatewayBot(): Promise<GetGatewayBot>;
 
   /** Function which is used to tell a Worker that it should identify a resharder Shard to the gateway and wait for further instructions.
    * The worker should **NOT** process any events coming from this Shard.
@@ -113,6 +98,12 @@ export interface ActivateResharderOptions {
     shardId: number,
     bucketId: number,
   ): Promise<void>;
+
+  /** Tell the resharder and manager that the a shard is created and identified using new settings but is currently pending by ignoring incoming events. This can be used to track all shards are online which is when old shards are closed and these new shards replace the old ones. */
+  shardIsPending(resharder: Resharder, shard: Shard): Promise<void>;
+
+  /** Used to update the shard ids of the cached guilds. When a bot is resharded, guilds can be moved around across shards to evenly distribute, so the shards need to be updated. */
+  markNewGuildShardId(guildIds: string[], shardId: number): Promise<void>;
 }
 
 /** Handler that by default will check to see if resharding should occur. Can be overridden if you have multiple servers and you want to communicate through redis pubsub or whatever you prefer. */
@@ -122,13 +113,15 @@ export function activate(resharder: Resharder): void {
   }
 
   resharder.intervalId = setInterval(async () => {
-    // gateway.debug("GW DEBUG", "[Resharding] Checking if resharding is needed.");
+    console.log("[Resharding] Checking if resharding is needed.");
 
-    // TODO: is it possible to route this to REST?
     const result = await resharder.getGatewayBot();
 
-    const percentage =
-      ((result.shards - resharder.gateway.manager.totalShards) / resharder.gateway.manager.totalShards) * 100;
+    // 2500 is the max amount of guilds a single shard can handle
+    // 1000 is the amount of guilds discord uses to determine how many shards to recommend.
+    // This algo helps check if your bot has grown enough to reshard.
+    const percentage = (2500 * result.shards) /
+      (resharder.gateway.manager.totalShards * 1000) * 100;
     // Less than necessary% being used so do nothing
     if (percentage < resharder.percentage) return;
 
@@ -140,193 +133,28 @@ export function activate(resharder: Resharder): void {
   }, resharder.checkInterval);
 }
 
-export async function reshard(resharder: Resharder, gatewayBot: GatewayBot) {
-  // oldGateway.debug("GW DEBUG", "[Resharding] Starting the reshard process.");
+export async function reshard(resharder: Resharder, gatewayBot: GetGatewayBot) {
+  console.log("[Resharding] Starting the reshard process.");
 
-  // Create a temporary gateway manager for easier handling.
-  const tmpManager = createGatewayManager({
-    gatewayBot: gatewayBot,
-    gatewayConfig: resharder.gateway.manager.gatewayConfig,
-    handleDiscordPayload: () => {},
-    tellWorkerToIdentify: resharder.tellWorkerToPrepare,
-  });
-
-  // Begin resharding
+  resharder.gateway.gatewayBot = gatewayBot;
 
   // If more than 100K servers, begin switching to 16x sharding
   if (resharder.useOptimalLargeBotSharding) {
-    // gateway.debug("GW DEBUG", "[Resharding] Using optimal large bot sharding solution.");
-    tmpManager.manager.totalShards = resharder.gateway.calculateTotalShards(resharder.gateway);
+    console.log("[Resharding] Using optimal large bot sharding solution.");
+    resharder.gateway.manager.totalShards = resharder.gateway.calculateTotalShards();
   }
 
-  tmpManager.spawnShards(tmpManager);
+  resharder.gateway.prepareBuckets();
 
-  return new Promise((resolve) => {
-    // TIMER TO KEEP CHECKING WHEN ALL SHARDS HAVE RESHARDED
-    const timer = setInterval(async () => {
-      const pending = await gateway.resharding.isPending(gateway, oldGateway);
-      // STILL PENDING ON SOME SHARDS TO BE CREATED
-      if (pending) return;
-
-      // ENABLE EVENTS ON NEW SHARDS AND IGNORE EVENTS ON OLD
-      const oldHandler = oldGateway.handleDiscordPayload;
-      gateway.handleDiscordPayload = oldHandler;
-      oldGateway.handleDiscordPayload = function (og, data, shardId) {
-        // ALLOW EXCEPTION FOR CHUNKING TO PREVENT REQUESTS FREEZING
-        if (data.t !== "GUILD_MEMBERS_CHUNK") return;
-        oldHandler(og, data, shardId);
-      };
-
-      // STOP TIMER
-      clearInterval(timer);
-      await gateway.resharding.editGuildShardIds();
-      await gateway.resharding.closeOldShards(oldGateway);
-      gateway.debug("GW DEBUG", "[Resharding] Complete.");
-      resolve(gateway);
-    }, 30000);
-  }) as Promise<GatewayManager>;
-}
-
-// /** The handler to automatically reshard when necessary. */
-// export async function resharder(
-//   oldGateway: GatewayManager,
-//   results: GatewayBot,
-// ) {
-//   oldGateway.debug("GW DEBUG", "[Resharding] Starting the reshard process.");
-
-//   const gateway = createGatewayManager({
-//     ...oldGateway,
-//     // RESET THE SETS AND COLLECTIONS
-//     // cache: {
-//     //   guildIds: new Set(),
-//     //   loadingGuildIds: new Set(),
-//     //   editedMessages: new Collection(),
-//     // },
-//     shards: new Collection(),
-//     // loadingShards: new Collection(),
-//     buckets: new Collection(),
-//     // utf8decoder: new TextDecoder(),
-//   });
-
-//   for (const [key, value] of Object.entries(oldGateway)) {
-//     if (key === "handleDiscordPayload") {
-//       gateway.handleDiscordPayload = async function (_, data, shardId) {
-//         if (data.t === "READY") {
-//           const payload = data.d as DiscordReady;
-//           await gateway.resharding.markNewGuildShardId(payload.guilds.map((g) => BigInt(g.id)), shardId);
-//         }
-//       };
-//       continue;
-//     }
-
-//     // USE ANY CUSTOMIZED OPTIONS FROM OLD GATEWAY
-//     // @ts-ignore TODO: fix this dynamical assignment
-//     gateway[key] = oldGateway[key as keyof typeof oldGateway];
-//   }
-
-//   // Begin resharding
-//   gateway.maxShards = results.shards;
-//   // FOR MANUAL SHARD CONTROL, OVERRIDE THIS SHARD ID!
-//   gateway.lastShardId = oldGateway.lastShardId === oldGateway.maxShards ? gateway.maxShards : oldGateway.lastShardId;
-//   gateway.shardsRecommended = results.shards;
-//   gateway.sessionStartLimitTotal = results.sessionStartLimit.total;
-//   gateway.sessionStartLimitRemaining = results.sessionStartLimit.remaining;
-//   gateway.sessionStartLimitResetAfter = results.sessionStartLimit.resetAfter;
-//   gateway.maxConcurrency = results.sessionStartLimit.maxConcurrency;
-//   // If more than 100K servers, begin switching to 16x sharding
-//   if (gateway.useOptimalLargeBotSharding) {
-//     gateway.debug("GW DEBUG", "[Resharding] Using optimal large bot sharding solution.");
-//     gateway.maxShards = gateway.calculateTotalShards(gateway.maxShards, results.sessionStartLimit.maxConcurrency);
-//   }
-
-//   gateway.spawnShards(gateway, gateway.firstShardId);
-
-//   return new Promise((resolve) => {
-//     // TIMER TO KEEP CHECKING WHEN ALL SHARDS HAVE RESHARDED
-//     const timer = setInterval(async () => {
-//       const pending = await gateway.resharding.isPending(gateway, oldGateway);
-//       // STILL PENDING ON SOME SHARDS TO BE CREATED
-//       if (pending) return;
-
-//       // ENABLE EVENTS ON NEW SHARDS AND IGNORE EVENTS ON OLD
-//       const oldHandler = oldGateway.handleDiscordPayload;
-//       gateway.handleDiscordPayload = oldHandler;
-//       oldGateway.handleDiscordPayload = function (og, data, shardId) {
-//         // ALLOW EXCEPTION FOR CHUNKING TO PREVENT REQUESTS FREEZING
-//         if (data.t !== "GUILD_MEMBERS_CHUNK") return;
-//         oldHandler(og, data, shardId);
-//       };
-
-//       // STOP TIMER
-//       clearInterval(timer);
-//       await gateway.resharding.editGuildShardIds();
-//       await gateway.resharding.closeOldShards(oldGateway);
-//       gateway.debug("GW DEBUG", "[Resharding] Complete.");
-//       resolve(gateway);
-//     }, 30000);
-//   }) as Promise<GatewayManager>;
-// }
-
-/** Handler that by default will check all new shards are online in the new gateway. The handler can be overridden if you have multiple servers to communicate through redis pubsub or whatever you prefer. */
-export async function resharderIsPending(
-  gateway: GatewayManager,
-  oldGateway: GatewayManager,
-) {
-  for (let i = gateway.firstShardId; i < gateway.lastShardId; i++) {
-    const shard = gateway.shards.get(i);
-    if (!shard?.ready) {
-      return true;
+  // SPREAD THIS OUT TO DIFFERENT WORKERS TO BEGIN STARTING UP
+  resharder.gateway.buckets.forEach(async (bucket, bucketId) => {
+    for (const worker of bucket.workers) {
+      for (const shardId of worker.queue) {
+        await resharder.tellWorkerToPrepare(resharder.gateway, worker.id, shardId, bucketId);
+      }
     }
-  }
-
-  return false;
-}
-
-/** Handler that by default closes all shards in the old gateway. Can be overridden if you have multiple servers and you want to communicate through redis pubsub or whatever you prefer. */
-export async function resharderCloseOldShards(oldGateway: GatewayManager) {
-  // SHUT DOWN ALL SHARDS IF NOTHING IN QUEUE
-  oldGateway.shards.forEach((shard) => {
-    // CLOSE THIS SHARD IT HAS NO QUEUE
-    if (!shard.processingQueue && !shard.queue.length) {
-      return oldGateway.closeWS(
-        shard.ws,
-        3066,
-        "Shard has been resharded. Closing shard since it has no queue.",
-      );
-    }
-
-    // IF QUEUE EXISTS GIVE IT 5 MINUTES TO COMPLETE
-    setTimeout(() => {
-      oldGateway.closeWS(
-        shard.ws,
-        3066,
-        "Shard has been resharded. Delayed closing shard since it had a queue.",
-      );
-    }, 300000);
   });
 }
-
-// /** Handler that by default will check to see if resharding should occur. Can be overridden if you have multiple servers and you want to communicate through redis pubsub or whatever you prefer. */
-// export async function startReshardingChecks(gateway: GatewayManager) {
-//   gateway.debug("GW DEBUG", "[Resharding] Checking if resharding is needed.");
-//
-//   // TODO: is it possible to route this to REST?
-//   const results = (await fetch(`https://discord.com/api/gateway/bot`, {
-//     headers: {
-//       Authorization: `Bot ${gateway.token}`,
-//     },
-//   }).then((res) => res.json()).then((res) => transformGatewayBot(res))) as GatewayBot;
-//
-//   const percentage = ((results.shards - gateway.maxShards) / gateway.maxShards) * 100;
-//   // Less than necessary% being used so do nothing
-//   if (percentage < gateway.reshardPercentage) return;
-//
-//   // Don't have enough identify rate limits to reshard
-//   if (results.sessionStartLimit.remaining < results.shards) return;
-//
-//   // MULTI-SERVER BOTS OVERRIDE THIS IF YOU NEED TO RESHARD SERVER BY SERVER
-//   return gateway.resharding.resharder(gateway, results);
-// }
 
 /** Handler that by default will save the new shard id for each guild this becomes ready in new gateway. This can be overridden to save the shard ids in a redis cache layer or whatever you prefer. These ids will be used later to update all guilds. */
 export async function markNewGuildShardId(guildIds: bigint[], shardId: number) {
@@ -336,4 +164,82 @@ export async function markNewGuildShardId(guildIds: bigint[], shardId: number) {
 /** Handler that by default does not do anything since by default the library will not cache. */
 export async function reshardingEditGuildShardIds() {
   // PLACEHOLDER TO LET YOU UPDATE CACHED GUILDS
+}
+
+export async function tellWorkerToPrepare(resharder: Resharder, shardId: number) {
+  // First create a shard without identifyin.
+  const shard = createShard({
+    ...resharder.gateway.manager.createShardOptions,
+    id: shardId,
+    totalShards: resharder.gateway.manager.totalShards,
+    gatewayConfig: resharder.gateway.manager.gatewayConfig,
+    requestIdentify: async function () {
+      return await resharder.gateway.manager.requestIdentify(shardId);
+    },
+    // Ignore events in this new shard for now
+    handleMessage: async function (shard, message) {
+      message = message.data;
+
+      // If message compression is enabled,
+      // Discord might send zlib compressed payloads.
+      if (shard.gatewayConfig.compress && message instanceof Blob) {
+        message = decompressWith(
+          new Uint8Array(await message.arrayBuffer()),
+          0,
+          (slice: Uint8Array) => new TextDecoder().decode(slice),
+        );
+      }
+
+      // Safeguard incase decompression failed to make a string.
+      if (typeof message !== "string") return;
+
+      const messageData = JSON.parse(message) as DiscordGatewayPayload;
+
+      if (messageData.t === "READY") {
+        const payload = messageData.d as DiscordReady;
+        await resharder.markNewGuildShardId(payload.guilds.map((g) => g.id), shardId);
+      }
+    },
+  });
+
+  // Now identify this shard(still ignoring events)
+  await shard.identify();
+
+  // Tell the manager that this shard is online
+  resharder.shardIsPending(resharder, shard);
+}
+
+export async function shardIsPending(resharder: Resharder, shard: Shard) {
+  // Save this in pending at the moment, until all shards are online
+  resharder.pendingShards.set(shard.id, shard);
+
+  // Check if all shards are now online.
+  if (resharder.gateway.gatewayBot.shards <= resharder.pendingShards.size) {
+    // Time to replace old shards
+
+    // New shards start processing events
+    for (const shard of resharder.pendingShards.values()) {
+      shard.handleMessage = async function (message) {
+        return await handleMessage(shard, message);
+      };
+    }
+
+    // Old shards stop processing events
+    for (const shard of resharder.gateway.manager.shards.values()) {
+      const oldHandler = shard.handleMessage;
+
+      shard.handleMessage = async function (message) {
+        // Member checks need to continue but others can stop
+        if (message.data.t !== "GUILD_MEMBERS_CHUNK") return;
+        // Process only the chunking events
+        oldHandler(message);
+      };
+    }
+
+    // Close old shards
+    await resharder.gateway.stop(ShardSocketCloseCodes.Resharded, "Resharded!");
+
+    // Replace old shards
+    resharder.gateway.manager.shards = resharder.pendingShards;
+  }
 }

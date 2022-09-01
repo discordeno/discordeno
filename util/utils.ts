@@ -1,4 +1,4 @@
-import { ImageFormat, ImageSize } from "../helpers/members/avatarUrl.ts";
+import { ImageFormat, ImageSize } from "../helpers/members/getAvatarUrl.ts";
 
 /** Pause the execution for a given amount of milliseconds. */
 export function delay(ms: number): Promise<void> {

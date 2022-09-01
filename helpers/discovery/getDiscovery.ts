@@ -1,8 +1,18 @@
 import type { Bot } from "../../bot.ts";
 import { DiscordDiscoveryMetadata } from "../../types/discord.ts";
 
+export type DiscoveryMetadata = {
+  guildId: bigint;
+  primaryCategoryId: number;
+  keywords?: string[];
+  emojiDiscoverabilityEnabled: boolean;
+  partnerActionedTimestamp?: number;
+  partnerApplicationTimestamp?: number;
+  categoryIds: number[];
+};
+
 /** Returns the discovery metadata object for the guild. Requires the `MANAGE_GUILD` permission. */
-export async function getDiscovery(bot: Bot, guildId: bigint) {
+export async function getDiscovery(bot: Bot, guildId: bigint): Promise<DiscoveryMetadata> {
   const result = await bot.rest.runMethod<DiscordDiscoveryMetadata>(
     bot.rest,
     "GET",

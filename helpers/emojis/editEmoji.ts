@@ -1,8 +1,9 @@
 import type { Bot } from "../../bot.ts";
+import { Emoji } from "../../transformers/emoji.ts";
 import { DiscordEmoji } from "../../types/discord.ts";
 
 /** Modify the given emoji. Requires the MANAGE_EMOJIS permission. */
-export async function editEmoji(bot: Bot, guildId: bigint, id: bigint, options: ModifyGuildEmoji) {
+export async function editEmoji(bot: Bot, guildId: bigint, id: bigint, options: ModifyGuildEmoji): Promise<Emoji> {
   const result = await bot.rest.runMethod<DiscordEmoji>(
     bot.rest,
     "PATCH",

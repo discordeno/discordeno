@@ -1,4 +1,12 @@
-import { ActivityTypes, createBot, enableCachePlugin, enableCacheSweepers, fastFileLoader, startBot } from "./deps.ts";
+import {
+  ActivityTypes,
+  createBot,
+  enableCachePlugin,
+  enableCacheSweepers,
+  fastFileLoader,
+  GatewayIntents,
+  startBot,
+} from "./deps.ts";
 import { BOT_ID, BOT_TOKEN } from "./configs.ts";
 import { logger } from "./src/utils/logger.ts";
 import { events } from "./src/events/mod.ts";
@@ -19,22 +27,26 @@ export const bot = enableCachePlugin(
   createBot({
     token: BOT_TOKEN,
     botId: BOT_ID,
-    intents: [],
+    intents: GatewayIntents.Guilds,
     events,
   }),
 );
 
+// @ts-nocheck: no-updated-depencdencies
 enableCacheSweepers(bot);
 
-bot.gateway.presence = {
-  status: "online",
-  activities: [
-    {
-      name: "Discordeno is Best Lib",
-      type: ActivityTypes.Game,
-      createdAt: Date.now(),
-    },
-  ],
+bot.gateway.manager.createShardOptions.makePresence = (shardId: number) => {
+  return {
+    shardId: shardId,
+    status: "online",
+    activities: [
+      {
+        name: "Discordeno is Best Lib",
+        type: ActivityTypes.Game,
+        createdAt: Date.now(),
+      },
+    ],
+  };
 };
 
 await startBot(bot);

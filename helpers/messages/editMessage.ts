@@ -1,12 +1,18 @@
 import type { Bot } from "../../bot.ts";
 import { Attachment } from "../../transformers/attachment.ts";
 import { Embed } from "../../transformers/embed.ts";
+import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
 import { MessageComponentTypes } from "../../types/shared.ts";
 
 /** Edit the message. */
-export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint, content: EditMessage) {
+export async function editMessage(
+  bot: Bot,
+  channelId: bigint,
+  messageId: bigint,
+  content: EditMessage,
+): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "PATCH",
@@ -53,6 +59,7 @@ export async function editMessage(bot: Bot, channelId: bigint, messageId: bigint
               placeholder: subComponent.placeholder,
               min_values: subComponent.minValues,
               max_values: subComponent.maxValues,
+              disabled: "disabled" in subComponent ? subComponent.disabled : undefined,
               options: subComponent.options.map((option) => ({
                 label: option.label,
                 value: option.value,
