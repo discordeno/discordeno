@@ -285,13 +285,13 @@ export enum ChannelTypes {
   /** An organizational category that contains up to 50 channels */
   GuildCategory,
   /** A channel that users can follow and crosspost into their own server */
-  GuildNews,
-  /** A temporary sub-channel within a GUILD_NEWS channel */
-  GuildNewsThread = 10,
+  GuildAnnouncement,
+  /** A temporary sub-channel within a GUILD_ANNOUNCEMENT channel */
+  AnnouncementThread = 10,
   /** A temporary sub-channel within a GUILD_TEXT channel */
-  GuildPublicThread,
+  PublicThread,
   /** A temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission */
-  GuildPrivateThread,
+  PrivateThread,
   /** A voice channel for hosting events with an audience */
   GuildStageVoice,
   /** A channel in a hub containing the listed servers */
