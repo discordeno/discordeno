@@ -1,5 +1,5 @@
-import type { Bot } from "../../bot.ts";
-import { GatewayOpcodes } from "../../types/shared.ts";
+import type { Bot } from "../../../bot.ts";
+import { GatewayOpcodes } from "../../../types/shared.ts";
 
 /** Leave a voice channel inside a guild. */
 export async function leaveVoiceChannel(
