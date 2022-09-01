@@ -1,4 +1,4 @@
-import type { Bot } from "../../bot.ts";
+import type { Bot } from "../../../bot.ts";
 
 /**
  * Updates the bot's voice state
