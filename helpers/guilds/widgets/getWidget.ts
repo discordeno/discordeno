@@ -1,6 +1,6 @@
-import type { Bot } from "../../bot.ts";
-import { GuildWidget } from "../../transformers/widget.ts";
-import { DiscordGuildWidget } from "../../types/discord.ts";
+import type { Bot } from "../../../bot.ts";
+import { GuildWidget } from "../../../transformers/widget.ts";
+import { DiscordGuildWidget } from "../../../types/discord.ts";
 
 /** Returns the widget for the guild. */
 export async function getWidget(bot: Bot, guildId: bigint): Promise<GuildWidget> {
