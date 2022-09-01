@@ -1,4 +1,5 @@
 import { Bot } from "../../../bot.ts";
+import { AutoModerationRule } from "../../../transformers/automodRule.ts";
 import {
   AutoModerationActionType,
   AutoModerationEventTypes,
@@ -7,8 +8,12 @@ import {
 } from "../../../types/discord.ts";
 
 /** Edit a rule currently configured for guild. */
-export async function editAutomodRule(bot: Bot, guildId: bigint, options: Partial<EditAutoModerationRuleOptions>) {
-  const rule = await bot.rest.runMethod<DiscordAutoModerationRule>(
+export async function editAutomodRule(
+  bot: Bot,
+  guildId: bigint,
+  options: Partial<EditAutoModerationRuleOptions>,
+): Promise<AutoModerationRule> {
+  const result = await bot.rest.runMethod<DiscordAutoModerationRule>(
     bot.rest,
     "PATCH",
     bot.constants.routes.AUTOMOD_RULES(guildId),
@@ -32,10 +37,11 @@ export async function editAutomodRule(bot: Bot, guildId: bigint, options: Partia
       enabled: options.enabled ?? true,
       exempt_roles: options.exemptRoles?.map((id) => id.toString()),
       exempt_channels: options.exemptChannels?.map((id) => id.toString()),
+      reason: options.reason,
     },
   );
 
-  return bot.transformers.automodRule(bot, rule);
+  return bot.transformers.automodRule(bot, result);
 }
 
 export interface EditAutoModerationRuleOptions {
@@ -71,4 +77,6 @@ export interface EditAutoModerationRuleOptions {
   exemptRoles?: bigint[];
   /** The channel ids that should not be effected by the rule. */
   exemptChannels?: bigint[];
+  /** The reason to add to the audit logs. */
+  reason?: string;
 }

@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { Guild } from "../../transformers/guild.ts";
 import { DiscordGuild } from "../../types/discord.ts";
 
 /**
@@ -11,15 +12,12 @@ export async function getGuild(
   options: { counts?: boolean } = {
     counts: true,
   },
-) {
+): Promise<Guild> {
   const result = await bot.rest.runMethod<DiscordGuild>(
     bot.rest,
     "GET",
     bot.constants.routes.GUILD(guildId, options.counts),
   );
-
-  // Sometimes the guild is not found, so we need to check for it.
-  if (!result.id) return;
 
   return bot.transformers.guild(bot, {
     guild: result,

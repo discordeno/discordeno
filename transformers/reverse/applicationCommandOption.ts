@@ -1,6 +1,6 @@
 import { Bot } from "../../bot.ts";
+import { DiscordApplicationCommandOption } from "../../types/discord.ts";
 import { ApplicationCommandOption } from "../applicationCommandOption.ts";
-import { DiscordApplicationCommandOption } from "../../deps.ts";
 
 export function transformApplicationCommandOptionToDiscordApplicationCommandOption(
   bot: Bot,

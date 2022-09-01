@@ -1,4 +1,5 @@
 import { Bot } from "../../../bot.ts";
+import { Message } from "../../../transformers/message.ts";
 import { DiscordMessage } from "../../../types/discord.ts";
 import { MessageComponentTypes } from "../../../types/shared.ts";
 import { EditWebhookMessage } from "../../webhooks/editWebhookMessage.ts";
@@ -9,7 +10,7 @@ export async function editFollowupMessage(
   interactionToken: string,
   messageId: bigint,
   options: EditWebhookMessage,
-) {
+): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "PATCH",

@@ -1,5 +1,6 @@
 import type { Bot } from "../../bot.ts";
 import { Channel } from "../../transformers/channel.ts";
+import { Guild } from "../../transformers/guild.ts";
 import { Role } from "../../transformers/role.ts";
 import { DiscordGuild } from "../../types/discord.ts";
 import {
@@ -10,7 +11,7 @@ import {
 } from "../../types/shared.ts";
 
 /** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
-export async function createGuild(bot: Bot, options: CreateGuild) {
+export async function createGuild(bot: Bot, options: CreateGuild): Promise<Guild> {
   const result = await bot.rest.runMethod<DiscordGuild>(bot.rest, "POST", bot.constants.routes.GUILDS(), {
     name: options.name,
     afk_channel_id: options.afkChannelId,

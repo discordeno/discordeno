@@ -1,9 +1,22 @@
-import { Command } from "../../types/command.ts";
-import ping from "./slash/general/ping.ts";
+import { InteractionTypes, MessageComponentTypes } from "discordeno";
+import { bot } from "../../bot.js";
+import { executeButtonClick } from "./button.js";
+import { executeSlashCommand } from "./command.js";
+import { executeModalSubmit } from "./modal.js";
 
-// deno-lint-ignore no-explicit-any
-export const commands: Record<string, Command<any>> = {
-  ping,
-};
+export function setInteractionCreateEvent() {
+  bot.events.interactionCreate = async function (_, interaction) {
+    if (interaction.type === InteractionTypes.ApplicationCommand) {
+      await executeSlashCommand(bot, interaction);
+    } else if (interaction.type === InteractionTypes.MessageComponent) {
+      if (!interaction.data) return;
 
-export default commands;
+      // THE INTERACTION CAME FROM A BUTTON
+      if (interaction.data.componentType === MessageComponentTypes.Button) {
+        await executeButtonClick(bot, interaction);
+      }
+    } else if (interaction.type === InteractionTypes.ModalSubmit) {
+      await executeModalSubmit(bot, interaction);
+    }
+  };
+}

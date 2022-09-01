@@ -1,5 +1,5 @@
 import { ButtonStyles, ChannelTypes, delay, MessageComponentTypes } from "../../../mod.ts";
-import { assertEquals, assertExists, assertNotEquals } from "../../deps.ts";
+import { assertEquals, assertExists, assertNotEquals, assertRejects } from "../../deps.ts";
 import { loadBot } from "../../mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../../utils.ts";
 
@@ -167,8 +167,7 @@ Deno.test({
       assertEquals(message.content, "Hello Skillz");
 
       await bot.helpers.deleteMessage(channel.id, message.id, "Test");
-      const deletedMessage = await bot.helpers.getMessage(channel.id, message.id);
-      assertEquals(deletedMessage, undefined);
+      await assertRejects(() => bot.helpers.getMessage(channel.id, message.id));
     });
 
     // Delete the message without a reason
@@ -180,8 +179,7 @@ Deno.test({
       assertEquals(message.content, "Hello Skillz");
 
       await bot.helpers.deleteMessage(channel.id, message.id);
-      const deletedMessage = await bot.helpers.getMessage(channel.id, message.id);
-      assertEquals(deletedMessage, undefined);
+      await assertRejects(() => bot.helpers.getMessage(channel.id, message.id));
     });
 
     // Bulk delete messages with a reason
@@ -199,10 +197,8 @@ Deno.test({
       assertEquals(message2.content, "Hello Skillz 2");
 
       await bot.helpers.deleteMessages(channel.id, [message1.id, message2.id], "Test");
-      const deletedMessage1 = await bot.helpers.getMessage(channel.id, message1.id);
-      assertEquals(deletedMessage1, undefined);
-      const deletedMessage2 = await bot.helpers.getMessage(channel.id, message2.id);
-      assertEquals(deletedMessage2, undefined);
+      await assertRejects(() => bot.helpers.getMessage(channel.id, message1.id));
+      await assertRejects(() => bot.helpers.getMessage(channel.id, message2.id));
     });
 
     // Bulk delete messages without a reason
@@ -221,10 +217,8 @@ Deno.test({
 
       await bot.helpers.deleteMessages(channel.id, [message1.id, message2.id]);
       await delay(3000);
-      const deletedMessage1 = await bot.helpers.getMessage(channel.id, message1.id);
-      assertEquals(deletedMessage1, undefined);
-      const deletedMessage2 = await bot.helpers.getMessage(channel.id, message2.id);
-      assertEquals(deletedMessage2, undefined);
+      await assertRejects(() => bot.helpers.getMessage(channel.id, message1.id));
+      await assertRejects(() => bot.helpers.getMessage(channel.id, message2.id));
     });
 
     // Get a message
@@ -251,15 +245,15 @@ Deno.test({
 
       await bot.helpers.pinMessage(channel.id, message.id);
       const pinnedMessages = await bot.helpers.getPins(channel.id);
-      assertEquals(pinnedMessages.length, 1);
-      assertEquals(pinnedMessages[0].content, message.content);
-      assertEquals(pinnedMessages[0].id, message.id);
+      assertEquals(pinnedMessages.size, 1);
+      assertEquals(pinnedMessages.first()?.content, message.content);
+      assertEquals(pinnedMessages.first()?.id, message.id);
 
       // Unpin a message
       await t.step("[message] Unpin a message", async () => {
         await bot.helpers.unpinMessage(channel.id, message.id);
         const pinnedMessages = await bot.helpers.getPins(channel.id);
-        assertEquals(pinnedMessages.length, 0);
+        assertEquals(pinnedMessages.size, 0);
       });
     });
 

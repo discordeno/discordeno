@@ -1,8 +1,9 @@
 import { Bot } from "../../../bot.ts";
+import { Message } from "../../../transformers/message.ts";
 import { DiscordMessage } from "../../../types/discord.ts";
 
 /** Returns a followup message for an Interaction. Functions the same as get webhook message, however this uses your interaction token instead of bot token. Does not support ephemeral followups. */
-export async function getFollowupMessage(bot: Bot, interactionToken: string, messageId: bigint) {
+export async function getFollowupMessage(bot: Bot, interactionToken: string, messageId: bigint): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "GET",

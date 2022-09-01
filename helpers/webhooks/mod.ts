@@ -9,4 +9,4 @@ export * from "./getWebhook.ts";
 export * from "./getWebhookMessage.ts";
 export * from "./getWebhooks.ts";
 export * from "./getWebhookWithToken.ts";
-export * from "./sendWebhook.ts";
+export * from "./sendWebhookMessage.ts";

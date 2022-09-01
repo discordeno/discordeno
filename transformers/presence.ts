@@ -1,15 +1,7 @@
 import { Bot } from "../bot.ts";
 import { DiscordPresenceUpdate } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
+import { Optionalize, PresenceStatus } from "../types/shared.ts";
 import { UserToggles } from "./toggles/user.ts";
-
-export const statusTypes = Object.freeze({
-  online: 0,
-  dnd: 1,
-  idle: 2,
-  invisible: 3,
-  offline: 4,
-});
 
 export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate) {
   const presence = {
@@ -26,7 +18,7 @@ export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate) {
       toggles: new UserToggles(payload.user),
     },
     guildId: bot.transformers.snowflake(payload.guild_id),
-    status: statusTypes[payload.status],
+    status: PresenceStatus[payload.status],
     activities: payload.activities.map((activity) => bot.transformers.activity(bot, activity)),
     desktop: payload.client_status.desktop,
     mobile: payload.client_status.mobile,
@@ -37,4 +29,3 @@ export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate) {
 }
 
 export interface PresenceUpdate extends ReturnType<typeof transformPresence> {}
-export type StatusTypes = keyof typeof statusTypes;

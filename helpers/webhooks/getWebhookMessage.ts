@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
 
 export interface GetWebhookMessageOptions {
@@ -12,7 +13,7 @@ export async function getWebhookMessage(
   webhookToken: string,
   messageId: bigint,
   options?: GetWebhookMessageOptions,
-) {
+): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "GET",

@@ -1,19 +1,18 @@
+import { API_VERSION, baseEndpoints } from "../util/constants.ts";
+import { removeTokenPrefix } from "../util/token.ts";
 import { checkRateLimits } from "./checkRateLimits.ts";
 import { cleanupQueues } from "./cleanupQueues.ts";
+import { convertRestError } from "./convertRestError.ts";
 import { createRequestBody } from "./createRequestBody.ts";
 import { processGlobalQueue } from "./processGlobalQueue.ts";
 import { processQueue } from "./processQueue.ts";
 import { processRateLimitedPaths } from "./processRateLimitedPaths.ts";
 import { processRequest } from "./processRequest.ts";
 import { processRequestHeaders } from "./processRequestHeaders.ts";
-import { convertRestError } from "./convertRestError.ts";
 import { RestPayload, RestRateLimitedPath, RestRequest } from "./rest.ts";
 import { runMethod } from "./runMethod.ts";
+import { RestSendRequestOptions, sendRequest } from "./sendRequest.ts";
 import { simplifyUrl } from "./simplifyUrl.ts";
-import { baseEndpoints } from "../util/constants.ts";
-import { API_VERSION } from "../util/constants.ts";
-import { removeTokenPrefix } from "../util/token.ts";
-import { sendRequest } from "./sendRequest.ts";
 
 export function createRestManager(options: CreateRestManagerOptions) {
   const version = options.version || API_VERSION;
@@ -66,8 +65,10 @@ export function createRestManager(options: CreateRestManagerOptions) {
     checkRateLimits: options.checkRateLimits || checkRateLimits,
     cleanupQueues: options.cleanupQueues || cleanupQueues,
     processQueue: options.processQueue || processQueue,
-    processRateLimitedPaths: options.processRateLimitedPaths || processRateLimitedPaths,
-    processRequestHeaders: options.processRequestHeaders || processRequestHeaders,
+    processRateLimitedPaths: options.processRateLimitedPaths ||
+      processRateLimitedPaths,
+    processRequestHeaders: options.processRequestHeaders ||
+      processRequestHeaders,
     processRequest: options.processRequest || processRequest,
     createRequestBody: options.createRequestBody || createRequestBody,
     runMethod: options.runMethod || runMethod,
@@ -75,6 +76,20 @@ export function createRestManager(options: CreateRestManagerOptions) {
     processGlobalQueue: options.processGlobalQueue || processGlobalQueue,
     convertRestError: options.convertRestError || convertRestError,
     sendRequest: options.sendRequest || sendRequest,
+
+    fetching: options.fetching || function (opts: RestSendRequestOptions) {
+      options.debug?.(
+        `[REST - fetching] URL: ${opts.url} | ${JSON.stringify(opts)}`,
+      );
+    },
+    fetched: options.fetched || function (
+      opts: RestSendRequestOptions,
+      response: Response,
+    ) {
+      options.debug?.(
+        `[REST - fetched] URL: ${opts.url} | Status: ${response.status} ${JSON.stringify(opts)}`,
+      );
+    },
   };
 }
 
@@ -97,6 +112,8 @@ export interface CreateRestManagerOptions {
   processGlobalQueue?: typeof processGlobalQueue;
   convertRestError?: typeof convertRestError;
   sendRequest?: typeof sendRequest;
+  fetching?: (options: RestSendRequestOptions) => void;
+  fetched?: (options: RestSendRequestOptions, response: Response) => void;
 }
 
 export type RestManager = ReturnType<typeof createRestManager>;

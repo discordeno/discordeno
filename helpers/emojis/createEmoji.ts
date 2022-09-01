@@ -1,13 +1,14 @@
 import type { Bot } from "../../bot.ts";
+import { Emoji } from "../../transformers/emoji.ts";
 import { DiscordEmoji } from "../../types/discord.ts";
 
 /** Create an emoji in the server */
-export async function createEmoji(bot: Bot, guildId: bigint, options: CreateGuildEmoji) {
+export async function createEmoji(bot: Bot, guildId: bigint, options: CreateGuildEmoji): Promise<Emoji> {
   if (options.image && !options.image.startsWith("data:image/")) {
     options.image = await bot.utils.urlToBase64(options.image);
   }
 
-  const emoji = await bot.rest.runMethod<DiscordEmoji>(
+  const result = await bot.rest.runMethod<DiscordEmoji>(
     bot.rest,
     "POST",
     bot.constants.routes.GUILD_EMOJIS(guildId),
@@ -19,7 +20,7 @@ export async function createEmoji(bot: Bot, guildId: bigint, options: CreateGuil
     },
   );
 
-  return bot.transformers.emoji(bot, emoji);
+  return bot.transformers.emoji(bot, result);
 }
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */

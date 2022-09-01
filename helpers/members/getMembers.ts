@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { Member } from "../../transformers/member.ts";
 import { DiscordMemberWithUser } from "../../types/discord.ts";
 import { Collection } from "../../util/collection.ts";
 
@@ -8,16 +9,20 @@ import { Collection } from "../../util/collection.ts";
  * REST(this function): 50/s global(across all shards) rate limit with ALL requests this included
  * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
  */
-export async function getMembers(bot: Bot, guildId: bigint, options: ListGuildMembers) {
-  const result = await bot.rest.runMethod<DiscordMemberWithUser[]>(
+export async function getMembers(
+  bot: Bot,
+  guildId: bigint,
+  options: ListGuildMembers,
+): Promise<Collection<bigint, Member>> {
+  const results = await bot.rest.runMethod<DiscordMemberWithUser[]>(
     bot.rest,
     "GET",
     bot.constants.routes.GUILD_MEMBERS(guildId, options),
   );
 
   return new Collection(
-    result.map((res) => {
-      const member = bot.transformers.member(bot, res, guildId, bot.transformers.snowflake(res.user.id));
+    results.map((result) => {
+      const member = bot.transformers.member(bot, result, guildId, bot.transformers.snowflake(result.user.id));
       return [member.id, member];
     }),
   );

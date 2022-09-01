@@ -1,22 +1,20 @@
-import { MISSING_TRANSLATION_WEBHOOK } from "../../../configs.ts";
-import { Bot } from "../../../deps.ts";
-import Embeds from "../../utils/Embeds.ts";
-import logger from "../../utils/logger.ts";
-import english from "./english.ts";
-import languages from "./languages.ts";
+import Embeds from "discordeno/embeds";
+import { MISSING_TRANSLATION_WEBHOOK } from "../../configs.js";
+import { bot } from "../bot.js";
+import { webhookURLToIDAndToken } from "../utils/webhook.js";
+import english from "./english.js";
+import languages from "./languages.js";
 
 /** This should hold the language names per guild id. <guildId, language> */
 export const serverLanguages = new Map<bigint, keyof typeof languages>();
 
 export function translate<K extends translationKeys>(
-  bot: Bot,
   guildIdOrLanguage: bigint | keyof typeof languages,
   key: K,
   ...params: getArgs<K>
 ): string {
   const language = getLanguage(guildIdOrLanguage);
-  // deno-lint-ignore no-explicit-any
-  let value: string | ((...any: any[]) => string) | string[] = languages[language][key];
+  let value: string | ((...any: any[]) => string) | string[] | undefined = languages[language]?.[key];
 
   // Was not able to be translated
   if (!value) {
@@ -29,7 +27,7 @@ export function translate<K extends translationKeys>(
     if (!value) value = key;
 
     // Send a log webhook so the devs know sth is missing
-    missingTranslation(bot, language, key);
+    missingTranslation(language, key);
   }
 
   if (Array.isArray(value)) return value.join("\n");
@@ -40,15 +38,13 @@ export function translate<K extends translationKeys>(
 }
 
 /** Get the language this guild has set, will always return "english" if it is not in cache */
-export function getLanguage(
-  guildIdOrLanguage: bigint | keyof typeof languages,
-) {
+export function getLanguage(guildIdOrLanguage: bigint | keyof typeof languages) {
   return typeof guildIdOrLanguage === "string"
     ? guildIdOrLanguage
     : serverLanguages.get(guildIdOrLanguage) ?? "english";
 }
 
-export function loadLanguage(guildId: bigint) {
+export async function loadLanguage(guildId: bigint) {
   // TODO: add this settings
   // const settings = await database.findOne('guilds', guildId)
   const settings = { language: "undefined" };
@@ -58,35 +54,29 @@ export function loadLanguage(guildId: bigint) {
   } else serverLanguages.set(guildId, "english");
 }
 
-const [id, token] = MISSING_TRANSLATION_WEBHOOK.substring(
-  MISSING_TRANSLATION_WEBHOOK.indexOf("webhooks/") + 9,
-).split(
-  "/",
-);
 /** Send a webhook for a missing translation key */
-export async function missingTranslation(
-  bot: Bot,
-  language: keyof typeof languages,
-  key: string,
-) {
+export async function missingTranslation(language: keyof typeof languages, key: string) {
+  const { id, token } = webhookURLToIDAndToken(MISSING_TRANSLATION_WEBHOOK);
   if (!id || !token) return;
 
-  const embeds = new Embeds(bot)
+  const embeds = new Embeds()
     .setTitle("Missing Translation")
     .setColor("RANDOM")
     .addField("Language", language, true)
     .addField("Key", key, true);
 
   await bot.helpers
-    .sendWebhook(bot.transformers.snowflake(id), token, {
+    .sendWebhookMessage(bot.transformers.snowflake(id), token, {
+      // SETUP-DD-TEMP: If you wish to make it @ mention you, please edit the next line.
+      // content: `<@${owner id here}>`,
       embeds,
       wait: false,
     })
-    .catch(logger.error);
+    .catch(bot.logger.error);
 }
 
 // type translationKeys = keyof typeof english | string
 export type translationKeys = keyof typeof english;
-type getArgs<K extends translationKeys> = typeof english[K] extends // deno-lint-ignore no-explicit-any
-(...any: any[]) => unknown ? Parameters<typeof english[K]>
+type getArgs<K extends translationKeys> = typeof english[K] extends (...any: any[]) => unknown
+  ? Parameters<typeof english[K]>
   : [];

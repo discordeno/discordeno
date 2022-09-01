@@ -1,8 +1,0 @@
-{
-  "imports": {
-    "/": "./",
-    "./": "./",
-    "@deps": "./deps.ts",
-    "@configs": "./configs.ts"
-  }
-}

@@ -1,5 +1,5 @@
 import { ChannelTypes } from "../../mod.ts";
-import { assertEquals, assertExists, assertNotEquals } from "../deps.ts";
+import { assertEquals, assertExists, assertNotEquals, assertRejects } from "../deps.ts";
 import { loadBot } from "../mod.ts";
 
 Deno.test({
@@ -88,8 +88,7 @@ Deno.test({
 
       // Get vanity URL
       await t.step("[guild] Get vanity URL", async () => {
-        const vanityUrl = await bot.helpers.getVanityUrl(guild.id);
-        assertEquals(vanityUrl.code, undefined);
+        await assertRejects(() => bot.helpers.getVanityUrl(guild.id));
       });
 
       // Emoji related tests
@@ -128,8 +127,7 @@ Deno.test({
 
           await bot.helpers.deleteEmoji(guild.id, emoji.id);
 
-          const exists = await bot.helpers.getEmoji(guild.id, emoji.id);
-          assertEquals(exists.id, undefined);
+          await assertRejects(() => bot.helpers.getEmoji(guild.id, emoji.id!));
         },
       });
 
@@ -149,8 +147,7 @@ Deno.test({
 
           await bot.helpers.deleteEmoji(guild.id, emoji.id, "with a reason");
 
-          const exists = await bot.helpers.getEmoji(guild.id, emoji.id);
-          assertEquals(exists.id, undefined);
+          await assertRejects(() => bot.helpers.getEmoji(guild.id, emoji.id!));
         },
       });
 
@@ -265,9 +262,8 @@ Deno.test({
       // Delete a guild
       await t.step("[guild] Delete a guild", async () => {
         await bot.helpers.deleteGuild(guild.id);
-        //
-        const exists = await bot.helpers.getGuild(guild.id);
-        assertEquals(exists, undefined);
+        // Make sure the guild was deleted
+        await assertRejects(() => bot.helpers.getGuild(guild.id));
       });
     } catch (error) {
       // If any errors arise, delete the guild

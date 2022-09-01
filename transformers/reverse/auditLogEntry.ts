@@ -1,5 +1,5 @@
 import { Bot } from "../../bot.ts";
-import { DiscordAuditLogEntry } from "../../deps.ts";
+import { DiscordAuditLogEntry } from "../../types/discord.ts";
 import { AuditLogEntry } from "../auditLogEntry.ts";
 
 export function transformAuditLogEntryToDiscordAuditLogEntry(bot: Bot, payload: AuditLogEntry): DiscordAuditLogEntry {
