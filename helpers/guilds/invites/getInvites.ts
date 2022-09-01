@@ -1,7 +1,7 @@
-import type { Bot } from "../../bot.ts";
-import { TargetTypes } from "../../mod.ts";
-import { DiscordInviteMetadata } from "../../types/discord.ts";
-import { Collection } from "../../util/collection.ts";
+import type { Bot } from "../../../bot.ts";
+import { TargetTypes } from "../../../mod.ts";
+import { DiscordInviteMetadata } from "../../../types/discord.ts";
+import { Collection } from "../../../util/collection.ts";
 import { InviteMetadata } from "./getInvite.ts";
 
 /** Get all the invites for this guild. Requires MANAGE_GUILD permission */

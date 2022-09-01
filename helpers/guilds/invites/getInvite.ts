@@ -1,6 +1,6 @@
-import type { Bot } from "../../bot.ts";
-import { ScheduledEvent, TargetTypes, User } from "../../mod.ts";
-import { DiscordInviteMetadata } from "../../types/discord.ts";
+import type { Bot } from "../../../bot.ts";
+import { ScheduledEvent, TargetTypes, User } from "../../../mod.ts";
+import { DiscordInviteMetadata } from "../../../types/discord.ts";
 
 export type BaseInvite = {
   code: string;

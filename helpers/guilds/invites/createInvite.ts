@@ -1,6 +1,6 @@
-import type { Bot } from "../../bot.ts";
-import { DiscordInvite } from "../../types/discord.ts";
-import { TargetTypes } from "../../types/shared.ts";
+import type { Bot } from "../../../bot.ts";
+import { DiscordInvite } from "../../../types/discord.ts";
+import { TargetTypes } from "../../../types/shared.ts";
 import { BaseInvite } from "./getInvite.ts";
 
 /** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */

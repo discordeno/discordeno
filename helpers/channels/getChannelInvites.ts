@@ -2,7 +2,7 @@ import type { Bot } from "../../bot.ts";
 import { DiscordInviteMetadata } from "../../types/discord.ts";
 import { TargetTypes } from "../../types/shared.ts";
 import { Collection } from "../../util/collection.ts";
-import { InviteMetadata } from "../invites/getInvite.ts";
+import { InviteMetadata } from "../guilds/invites/mod.ts";
 
 /** Gets the invites for this channel. Requires MANAGE_CHANNEL */
 export async function getChannelInvites(bot: Bot, channelId: bigint): Promise<Collection<string, InviteMetadata>> {
