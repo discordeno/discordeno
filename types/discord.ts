@@ -17,7 +17,6 @@ import {
   GuildNsfwLevel,
   IntegrationExpireBehaviors,
   InteractionTypes,
-  Locales,
   Localization,
   MessageActivityTypes,
   MessageComponentTypes,
@@ -437,6 +436,8 @@ export interface DiscordAttachment {
 
   /** Attachment id */
   id: string;
+  /** description for the file (max 1024 characters) */
+  description?: string;
   /** Height of file (if image) */
   height?: number | null;
   /** Width of file (if image) */
