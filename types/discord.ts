@@ -1441,6 +1441,7 @@ export enum AutoModerationTriggerTypes {
   HarmfulLink,
   Spam,
   KeywordPreset,
+  MentionSpam,
 }
 
 export interface DiscordAutoModerationRuleTriggerMetadata {
@@ -1451,6 +1452,8 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
   presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
   /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
   allow_list: string[];
+  /** Total number of mentions (role & user) allowed per message (Maximum of 50) */
+  mention_total_limit: number;
 }
 
 export enum DiscordAutoModerationRuleTriggerMetadataPresets {
