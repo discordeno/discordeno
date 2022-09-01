@@ -14,4 +14,3 @@ export * from "./getChannelWebhooks.ts";
 export * from "./getPins.ts";
 export * from "./startTyping.ts";
 export * from "./swapChannels.ts";
-export * from "./updateVoiceState.ts";
