@@ -11,6 +11,5 @@ export * from "./editChannelOverwrite.ts";
 export * from "./getChannel.ts";
 export * from "./getChannels.ts";
 export * from "./getChannelWebhooks.ts";
-export * from "./getPins.ts";
 export * from "./startTyping.ts";
 export * from "./swapChannels.ts";
