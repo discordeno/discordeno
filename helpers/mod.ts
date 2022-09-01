@@ -6,8 +6,8 @@ export * from "./interactions/mod.ts";
 export * from "./members/mod.ts";
 export * from "./messages/mod.ts";
 export * from "./misc/mod.ts";
-export * from "./oauth/mod.ts";
 export * from "./roles/mod.ts";
 export * from "./templates/mod.ts";
 export * from "./voice/mod.ts";
 export * from "./webhooks/mod.ts";
+
