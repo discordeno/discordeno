@@ -1,7 +1,7 @@
-/** Removes all reactions for a single emoji on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
 import type { Bot } from "../../../bot.ts";
 
-export async function deleteReactionEmoji(
+/** Removes all reactions for a single emoji on this message. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
+export async function deleteReactionsEmoji(
   bot: Bot,
   channelId: bigint,
   messageId: bigint,
