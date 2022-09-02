@@ -4,6 +4,7 @@ export * from "./editApplicationCommandPermissions.ts";
 export * from "./getApplicationCommand.ts";
 export * from "./getApplicationCommandPermission.ts";
 export * from "./getApplicationCommandPermissions.ts";
-export * from "./getApplicationCommands.ts";
+export * from "./getGlobalApplicationCommands.ts";
+export * from "./getGuildApplicationCommands.ts";
 export * from "./upsertApplicationCommand.ts";
 export * from "./upsertApplicationCommands.ts";
