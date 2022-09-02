@@ -5,7 +5,7 @@ import { DiscordChannel } from "../../../types/discord.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../../types/mod.ts";
 
 /** Creates a new public thread from an existing message. Returns a thread channel. */
-export async function createForumPost(
+export async function startForumThread(
   bot: Bot,
   channelId: bigint,
   options: CreateForumPostWithMessage,
