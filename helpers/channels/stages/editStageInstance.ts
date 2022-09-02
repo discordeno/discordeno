@@ -4,7 +4,7 @@ import { DiscordStageInstance } from "../../../types/discord.ts";
 import { AtLeastOne } from "../../../types/shared.ts";
 
 /** Updates fields of an existing Stage instance. Requires the user to be a moderator of the Stage channel. */
-export async function updateStageInstance(
+export async function editStageInstance(
   bot: Bot,
   channelId: bigint,
   data: AtLeastOne<Pick<DiscordStageInstance, "topic">>,
