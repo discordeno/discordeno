@@ -60,7 +60,12 @@ export async function runMethod<T = any>(
         url: route[0] === "/" ? `${BASE_URL}/v${API_VERSION}${route}` : route,
         method,
         reject: (data: RestRequestRejection) => {
-          const restError = rest.convertRestError(errorStack, data);
+          const newError = new Error("Location:");
+          newError.stack = errorStack.stack as Error["stack"];
+          const restError = rest.convertRestError(
+            newError,
+            data,
+          );
           reject(restError);
         },
         respond: (data: RestRequestResponse) =>
