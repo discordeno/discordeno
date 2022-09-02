@@ -12,6 +12,5 @@ export async function addReaction(bot: Bot, channelId: bigint, messageId: bigint
     bot.rest,
     "PUT",
     bot.constants.routes.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction),
-    {},
   );
 }
