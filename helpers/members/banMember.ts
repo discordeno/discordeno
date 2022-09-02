@@ -9,6 +9,7 @@ export async function banMember(bot: Bot, guildId: bigint, id: bigint, options?:
     {
       delete_message_days: options?.deleteMessageDays,
       delete_message_seconds: options?.deleteMessageSeconds,
+      reason: options?.reason,
     },
   );
 }
@@ -17,6 +18,8 @@ export async function banMember(bot: Bot, guildId: bigint, id: bigint, options?:
 export interface CreateGuildBan {
   /** Number of days to delete messages for (0-7) (deprecated) */
   deleteMessageDays?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
-  /** number of seconds to delete messages for, between 0 and 604800 (7 days) */
+  /** Number of seconds to delete messages for, between 0 and 604800 (7 days) */
   deleteMessageSeconds?: number;
+  /** Reason for the ban */
+  reason?: string;
 }
