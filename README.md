@@ -106,7 +106,6 @@ import { enableCachePlugin, enableCacheSweepers } from "https://deno.land/x/disc
 const baseBot = createBot({
   token: Deno.env.get("DISCORD_TOKEN"),
   intents: Intents.Guilds | Intents.GuildMessages,
-  botId: BigInt(Deno.env.get("BOT_ID") || 0),
   events: {
     ready() {
       console.log("Successfully connected to gateway");
