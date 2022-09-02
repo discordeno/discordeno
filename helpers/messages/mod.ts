@@ -5,7 +5,7 @@ export * from "./deleteMessages.ts";
 export * from "./editMessage.ts";
 export * from "./getMessage.ts";
 export * from "./getMessages.ts";
-export * from "./getPins.ts";
+export * from "./getPinnedMessages.ts";
 export * from "./pinMessage.ts";
 export * from "./publishMessage.ts";
 export * from "./sendMessage.ts";
