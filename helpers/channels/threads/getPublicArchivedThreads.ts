@@ -3,28 +3,16 @@ import { DiscordListArchivedThreads } from "../../../types/discord.ts";
 import { Collection } from "../../../util/collection.ts";
 import { ActiveThreads } from "./getActiveThreads.ts";
 
-export type ArchivedThreads = ActiveThreads & {
-  hasMore: boolean;
-};
-
-/** Get the archived threads for this channel, defaults to public */
-export async function getArchivedThreads(
+/** Get the public archived threads for this channel */
+export async function getPublicArchivedThreads(
   bot: Bot,
   channelId: bigint,
-  options?: ListArchivedThreads & {
-    type?: "public" | "private" | "privateJoinedThreads";
-  },
+  options?: ListArchivedThreads,
 ): Promise<ArchivedThreads> {
-  const url = options?.type === "privateJoinedThreads"
-    ? bot.constants.routes.THREAD_ARCHIVED_PRIVATE_JOINED(channelId, options)
-    : options?.type === "private"
-    ? bot.constants.routes.THREAD_ARCHIVED_PRIVATE(channelId, options)
-    : bot.constants.routes.THREAD_ARCHIVED_PUBLIC(channelId, options);
-
   const results = await bot.rest.runMethod<DiscordListArchivedThreads>(
     bot.rest,
     "GET",
-    url,
+    bot.constants.routes.THREAD_ARCHIVED_PUBLIC(channelId, options),
   );
 
   return {
@@ -51,3 +39,7 @@ export interface ListArchivedThreads {
   /** Optional maximum number of threads to return */
   limit?: number;
 }
+
+export type ArchivedThreads = ActiveThreads & {
+  hasMore: boolean;
+};
