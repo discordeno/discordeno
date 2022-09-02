@@ -1,4 +1,4 @@
-import { createShardManager, Shard, ShardSocketRequest, ShardState } from "discordeno";
+import { createShardManager, DiscordUnavailableGuild, Shard, ShardSocketRequest, ShardState } from "discordeno";
 import { createLogger } from "discordeno/logger";
 import { parentPort, workerData } from "worker_threads";
 import { ManagerMessage } from "./index.js";
@@ -23,6 +23,9 @@ const manager = createShardManager({
   handleMessage: async (shard, message) => {
     const url = script.handlerUrls[shard.id % script.handlerUrls.length];
     if (!url) return console.log("ERROR: NO URL FOUND TO SEND MESSAGE");
+
+    // MUST HANDLE GUILD_DELETE EVENTS FOR UNAVAILABLE
+    if (message.t === "GUILD_DELETE" && (message.d as DiscordUnavailableGuild).unavailable) return;
 
     await fetch(url, {
       method: "POST",
