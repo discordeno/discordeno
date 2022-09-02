@@ -752,11 +752,11 @@ export interface DiscordChannel {
   /** When a thread is created this will be true on that channel payload for the thread. */
   newly_created?: boolean;
   /** The set of tags that can be used in a GUILD_FORUM channel */
-  available_tags: ForumTag[];
+  available_tags: DiscordForumTag[];
   /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
   applied_tags: string[];
   /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */
-  default_reaction_emoji?: DefaultReactionEmoji | null;
+  default_reaction_emoji?: DiscordDefaultReactionEmoji | null;
   /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
   default_thread_rate_limit_per_user: number;
 }
@@ -2433,7 +2433,7 @@ export interface DiscordInstallParams {
   permissions: string;
 }
 
-export interface ForumTag {
+export interface DiscordForumTag {
   /** The id of the tag */
   id: string;
   /** The name of the tag (0-20 characters) */
@@ -2446,7 +2446,7 @@ export interface ForumTag {
   emoji_name: string | null;
 }
 
-export interface DefaultReactionEmoji {
+export interface DiscordDefaultReactionEmoji {
   /** The id of a guild's custom emoji */
   emoji_id: string;
   /** The unicode character of the emoji */
