@@ -17,7 +17,6 @@ import {
   GuildNsfwLevel,
   IntegrationExpireBehaviors,
   InteractionTypes,
-  Locales,
   Localization,
   MessageActivityTypes,
   MessageComponentTypes,
@@ -707,7 +706,7 @@ export interface DiscordChannel {
   position?: number;
   /** The name of the channel (1-100 characters) */
   name?: string;
-  /** The channel topic (0-1024 characters) */
+  /** The channel topic (0-4096 characters for GUILD_FORUM channels, 0-1024 characters for all others) */
   topic?: string | null;
   /** The bitrate (in bits) of the voice or stage channel */
   bitrate?: number;
@@ -752,6 +751,14 @@ export interface DiscordChannel {
   permissions?: string;
   /** When a thread is created this will be true on that channel payload for the thread. */
   newly_created?: boolean;
+  /** The set of tags that can be used in a GUILD_FORUM channel */
+  available_tags: DiscordForumTag[];
+  /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
+  applied_tags: string[];
+  /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */
+  default_reaction_emoji?: DiscordDefaultReactionEmoji | null;
+  /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
+  default_thread_rate_limit_per_user: number;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#presence-update */
@@ -2427,4 +2434,24 @@ export interface DiscordInstallParams {
   scopes: string[];
   /** the permissions to request for the bot role */
   permissions: string;
+}
+
+export interface DiscordForumTag {
+  /** The id of the tag */
+  id: string;
+  /** The name of the tag (0-20 characters) */
+  name: string;
+  /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
+  moderated: boolean;
+  /** The id of a guild's custom emoji At most one of emoji_id and emoji_name may be set. */
+  emoji_id: string;
+  /** The unicode character of the emoji */
+  emoji_name: string | null;
+}
+
+export interface DiscordDefaultReactionEmoji {
+  /** The id of a guild's custom emoji */
+  emoji_id: string;
+  /** The unicode character of the emoji */
+  emoji_name: string | null;
 }
