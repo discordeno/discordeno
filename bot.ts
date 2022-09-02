@@ -29,6 +29,7 @@ import {
   Role,
   ScheduledEvent,
   Template,
+  transformApplicationCommandToDiscordApplicationCommand,
   transformChannel,
   transformGuild,
   transformMember,
@@ -415,6 +416,7 @@ export interface Transformers {
     team: (bot: Bot, payload: Team) => DiscordTeam;
     application: (bot: Bot, payload: Application) => DiscordApplication;
     snowflake: (snowflake: bigint) => string;
+    applicationCommand: (bot: Bot, payload: ApplicationCommand) => DiscordApplicationCommand;
     applicationCommandOption: (bot: Bot, payload: ApplicationCommandOption) => DiscordApplicationCommandOption;
     applicationCommandOptionChoice: (
       bot: Bot,
@@ -480,6 +482,8 @@ export function createTransformers(options: Partial<Transformers>) {
       team: options.reverse?.team || transformTeamToDiscordTeam,
       application: options.reverse?.application || transformApplicationToDiscordApplication,
       snowflake: options.reverse?.snowflake || bigintToSnowflake,
+      applicationCommand: options.reverse?.applicationCommand ||
+        transformApplicationCommandToDiscordApplicationCommand,
       applicationCommandOption: options.reverse?.applicationCommandOption ||
         transformApplicationCommandOptionToDiscordApplicationCommandOption,
       applicationCommandOptionChoice: options.reverse?.applicationCommandOptionChoice ||
