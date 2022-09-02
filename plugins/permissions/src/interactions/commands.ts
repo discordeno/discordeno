@@ -7,6 +7,7 @@ import {
   CONTEXT_MENU_COMMANDS_NAME_REGEX,
   SLASH_COMMANDS_NAME_REGEX,
 } from "../../deps.ts";
+import { validateAttachments } from "../attachments.ts";
 
 export function validateApplicationCommandOptions(
   bot: BotWithCache,
@@ -175,6 +176,8 @@ export function editInteractionResponse(bot: BotWithCache) {
         }
       }
     }
+
+    if (options.attachments) validateAttachments(bot, options.attachments);
 
     return await editInteractionResponseOld(token, options);
   };
