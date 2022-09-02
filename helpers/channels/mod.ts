@@ -13,4 +13,4 @@ export * from "./getChannelInvites.ts";
 export * from "./getChannels.ts";
 export * from "./getChannelWebhooks.ts";
 export * from "./triggerTypingIndicator.ts";
-export * from "./swapChannels.ts";
+export * from "./editChannelPositions.ts";
