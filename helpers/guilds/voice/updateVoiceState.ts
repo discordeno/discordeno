@@ -10,7 +10,7 @@ import type { Bot } from "../../../bot.ts";
  *  - You are able to set `request_to_speak_timestamp` to any present or future time.
  *  - When suppressed, the user will have their `request_to_speak_timestamp` removed.
  */
-export async function updateBotVoiceState(bot: Bot, guildId: bigint, options: UpdateSelfVoiceState): Promise<void> {
+export async function updateOwnVoiceState(bot: Bot, guildId: bigint, options: UpdateOwnVoiceState): Promise<void> {
   return await bot.rest.runMethod<void>(bot.rest, "PATCH", bot.constants.routes.UPDATE_VOICE_STATE(guildId), {
     channel_id: options.channelId,
     suppress: options.suppress,
@@ -31,7 +31,7 @@ export async function updateBotVoiceState(bot: Bot, guildId: bigint, options: Up
  *  - You are able to set `request_to_speak_timestamp` to any present or future time.
  *  - When suppressed, the user will have their `request_to_speak_timestamp` removed.
  */
-export async function updateUserVoiceState(bot: Bot, guildId: bigint, options: UpdateOthersVoiceState): Promise<void> {
+export async function updateUserVoiceState(bot: Bot, guildId: bigint, options: UpdateUserVoiceState): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     "PATCH",
@@ -45,7 +45,7 @@ export async function updateUserVoiceState(bot: Bot, guildId: bigint, options: U
 }
 
 /** https://discord.com/developers/docs/resources/guild#update-current-user-voice-state */
-export interface UpdateSelfVoiceState {
+export interface UpdateOwnVoiceState {
   /** The id of the channel the user is currently in */
   channelId: bigint;
   /** Toggles the user's suppress state */
@@ -55,7 +55,7 @@ export interface UpdateSelfVoiceState {
 }
 
 /** https://discord.com/developers/docs/resources/guild#update-user-voice-state */
-export interface UpdateOthersVoiceState {
+export interface UpdateUserVoiceState {
   /** The id of the channel the user is currently in */
   channelId: bigint;
   /** Toggles the user's suppress state */
