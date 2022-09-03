@@ -1083,9 +1083,7 @@ export type GatewayDispatchEventNames =
 export type GatewayEventNames =
   | GatewayDispatchEventNames
   | "READY"
-  | "RESUMED"
-  // THIS IS A CUSTOM DD EVENT NOT A DISCORD EVENT
-  | "GUILD_LOADED_DD";
+  | "RESUMED";
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
 export enum GatewayIntents {

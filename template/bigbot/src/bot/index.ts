@@ -115,7 +115,7 @@ async function handleRequest(req: express.Request, res: express.Response) {
 
     if (json.data.t && json.data.t !== "RESUMED") {
       // When a guild or something isnt in cache this will fetch it before doing anything else
-      if (!["READY", "GUILD_LOADED_DD"].includes(json.data.t)) {
+      if (json.data.t !== "READY") {
         await bot.events.dispatchRequirements(bot, json.data, json.shardId);
       }
 
