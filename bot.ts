@@ -57,6 +57,7 @@ import {
   DiscordApplicationCommandOptionChoice,
   DiscordAutoModerationActionExecution,
   DiscordAutoModerationRule,
+  DiscordCreateApplicationCommand,
   DiscordEmoji,
   DiscordGatewayPayload,
   DiscordInteractionDataOption,
@@ -120,6 +121,7 @@ import {
 import { CreateShardManager } from "./gateway/manager/shardManager.ts";
 import {
   AllowedMentions,
+  CreateApplicationCommand,
   ShardSocketCloseCodes,
   transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
   transformApplicationCommandOptionToDiscordApplicationCommandOption,
@@ -146,6 +148,7 @@ import { transformActivityToDiscordActivity } from "./transformers/reverse/activ
 import { transformAllowedMentionsToDiscordAllowedMentions } from "./transformers/reverse/allowedMentions.ts";
 import { transformApplicationToDiscordApplication } from "./transformers/reverse/application.ts";
 import { transformComponentToDiscordComponent } from "./transformers/reverse/component.ts";
+import { transformCreateApplicationCommandToDiscordCreateApplicationCommand } from "./transformers/reverse/createApplicationCommand.ts";
 import { transformEmbedToDiscordEmbed } from "./transformers/reverse/embed.ts";
 import { transformMemberToDiscordMember, transformUserToDiscordUser } from "./transformers/reverse/member.ts";
 import { transformTeamToDiscordTeam } from "./transformers/reverse/team.ts";
@@ -416,6 +419,7 @@ export interface Transformers {
     team: (bot: Bot, payload: Team) => DiscordTeam;
     application: (bot: Bot, payload: Application) => DiscordApplication;
     snowflake: (snowflake: bigint) => string;
+    createApplicationCommand: (bot: Bot, payload: CreateApplicationCommand) => DiscordCreateApplicationCommand;
     applicationCommand: (bot: Bot, payload: ApplicationCommand) => DiscordApplicationCommand;
     applicationCommandOption: (bot: Bot, payload: ApplicationCommandOption) => DiscordApplicationCommandOption;
     applicationCommandOptionChoice: (
@@ -482,6 +486,8 @@ export function createTransformers(options: Partial<Transformers>) {
       team: options.reverse?.team || transformTeamToDiscordTeam,
       application: options.reverse?.application || transformApplicationToDiscordApplication,
       snowflake: options.reverse?.snowflake || bigintToSnowflake,
+      createApplicationCommand: options.reverse?.createApplicationCommand ||
+        transformCreateApplicationCommandToDiscordCreateApplicationCommand,
       applicationCommand: options.reverse?.applicationCommand ||
         transformApplicationCommandToDiscordApplicationCommand,
       applicationCommandOption: options.reverse?.applicationCommandOption ||
