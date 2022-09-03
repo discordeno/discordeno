@@ -1,5 +1,7 @@
 import type { Bot } from "../../bot.ts";
 
+export const swapChannels = editChannelPositions;
+
 /** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permission. Only channels to be modified are required. */
 export async function editChannelPositions(
   bot: Bot,

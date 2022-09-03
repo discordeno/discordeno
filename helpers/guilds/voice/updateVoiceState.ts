@@ -1,5 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 
+export const updateBotVoiceState = updateOwnVoiceState;
+
 /**
  * Updates the bot's voice state
  * Caveats:
