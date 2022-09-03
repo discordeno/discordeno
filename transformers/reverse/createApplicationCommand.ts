@@ -7,32 +7,32 @@ import {
 
 export function transformCreateApplicationCommandToDiscordCreateApplicationCommand(
   bot: Bot,
-  command: CreateApplicationCommand,
+  payload: CreateApplicationCommand,
 ): DiscordCreateApplicationCommand {
-  if (isContextApplicationCommand(command)) {
+  if (isContextApplicationCommand(payload)) {
     return {
-      name: command.name,
-      name_localizations: command.nameLocalizations,
+      name: payload.name,
+      name_localizations: payload.nameLocalizations,
       description: "",
       description_localizations: {},
-      type: command.type,
-      default_member_permissions: command.defaultMemberPermissions
-        ? bot.utils.calculateBits(command.defaultMemberPermissions)
+      type: payload.type,
+      default_member_permissions: payload.defaultMemberPermissions
+        ? bot.utils.calculateBits(payload.defaultMemberPermissions)
         : null,
-      dm_permission: command.dmPermission,
+      dm_permission: payload.dmPermission,
     };
   }
 
   return {
-    name: command.name,
-    name_localizations: command.nameLocalizations,
-    description: command.description,
-    description_localizations: command.descriptionLocalizations,
-    type: command.type,
-    options: command.options?.map((option) => bot.transformers.reverse.applicationCommandOption(bot, option)),
-    default_member_permissions: command.defaultMemberPermissions
-      ? bot.utils.calculateBits(command.defaultMemberPermissions)
+    name: payload.name,
+    name_localizations: payload.nameLocalizations,
+    description: payload.description,
+    description_localizations: payload.descriptionLocalizations,
+    type: payload.type,
+    options: payload.options?.map((option) => bot.transformers.reverse.applicationCommandOption(bot, option)),
+    default_member_permissions: payload.defaultMemberPermissions
+      ? bot.utils.calculateBits(payload.defaultMemberPermissions)
       : null,
-    dm_permission: command.dmPermission,
+    dm_permission: payload.dmPermission,
   };
 }
