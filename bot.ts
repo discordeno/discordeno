@@ -158,6 +158,7 @@ import {
   transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
   transformApplicationCommandOptionToDiscordApplicationCommandOption,
 } from "./mod.ts";
+import { transformAttachmentToDiscordAttachment } from "./transformers/reverse/attachment.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -419,6 +420,7 @@ export interface Transformers {
       bot: Bot,
       payload: ApplicationCommandOptionChoice,
     ) => DiscordApplicationCommandOptionChoice;
+    attachment: (bot: Bot, payload: Attachment) => DiscordAttachment;
   };
   snowflake: (snowflake: string) => bigint;
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
@@ -483,6 +485,7 @@ export function createTransformers(options: Partial<Transformers>) {
         transformApplicationCommandOptionToDiscordApplicationCommandOption,
       applicationCommandOptionChoice: options.reverse?.applicationCommandOptionChoice ||
         transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
+      attachment: options.reverse?.attachment || transformAttachmentToDiscordAttachment,
     },
     automodRule: options.automodRule || transformAutoModerationRule,
     automodActionExecution: options.automodActionExecution || transformAutoModerationActionExecution,
