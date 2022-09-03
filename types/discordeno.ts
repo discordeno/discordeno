@@ -1,8 +1,11 @@
 import { ApplicationCommandOption } from "../transformers/applicationCommandOption.ts";
+import { ApplicationCommandOptionChoice } from "../transformers/applicationCommandOptionChoice.ts";
+import { Embed } from "../transformers/embed.ts";
 import {
   AllowedMentionsTypes,
   ApplicationCommandTypes,
   ButtonStyles,
+  InteractionResponseTypes,
   Localization,
   MessageComponentTypes,
   PermissionStrings,
@@ -176,4 +179,36 @@ export function isContextApplicationCommand(
   command: CreateApplicationCommand,
 ): command is CreateContextApplicationCommand {
   return command.type === ApplicationCommandTypes.Message || command.type === ApplicationCommandTypes.User;
+}
+
+/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
+export interface InteractionResponse {
+  /** The type of response */
+  type: InteractionResponseTypes;
+  /** An optional response message */
+  data?: InteractionCallbackData;
+}
+
+/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionapplicationcommandcallbackdata */
+export interface InteractionCallbackData {
+  /** The message contents (up to 2000 characters) */
+  content?: string;
+  /** True if this is a TTS message */
+  tts?: boolean;
+  /** Embedded `rich` content (up to 6000 characters) */
+  embeds?: Embed[];
+  /** Allowed mentions for the message */
+  allowedMentions?: AllowedMentions;
+  /** The contents of the file being sent */
+  file?: FileContent | FileContent[];
+  /** The customId you want to use for this modal response. */
+  customId?: string;
+  /** The title you want to use for this modal response. */
+  title?: string;
+  /** The components you would like to have sent in this message */
+  components?: MessageComponents;
+  /** Message flags combined as a bit field (only SUPPRESS_EMBEDS and EPHEMERAL can be set) */
+  flags?: number;
+  /** Autocomplete choices (max of 25 choices) */
+  choices?: ApplicationCommandOptionChoice[];
 }

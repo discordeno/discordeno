@@ -16,6 +16,7 @@ import {
   GuildFeatures,
   GuildNsfwLevel,
   IntegrationExpireBehaviors,
+  InteractionResponseTypes,
   InteractionTypes,
   Localization,
   MessageActivityTypes,
@@ -2426,4 +2427,21 @@ export interface DiscordInstallParams {
   scopes: string[];
   /** the permissions to request for the bot role */
   permissions: string;
+}
+
+export interface DiscordInteractionResponse {
+  type: InteractionResponseTypes;
+  data?: DiscordInteractionCallbackData;
+}
+
+export interface DiscordInteractionCallbackData {
+  tts?: boolean;
+  title?: string;
+  flags?: number;
+  content?: string;
+  choices?: DiscordApplicationCommandOptionChoice[];
+  custom_id?: string;
+  embeds?: DiscordEmbed[];
+  allowed_mentions?: DiscordAllowedMentions;
+  components?: DiscordComponent[];
 }

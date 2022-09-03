@@ -61,6 +61,7 @@ import {
   DiscordEmoji,
   DiscordGatewayPayload,
   DiscordInteractionDataOption,
+  DiscordInteractionResponse,
   DiscordReady,
   DiscordStickerPack,
   DiscordTemplate,
@@ -122,6 +123,7 @@ import { CreateShardManager } from "./gateway/manager/shardManager.ts";
 import {
   AllowedMentions,
   CreateApplicationCommand,
+  InteractionResponse,
   ShardSocketCloseCodes,
   transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
   transformApplicationCommandOptionToDiscordApplicationCommandOption,
@@ -150,6 +152,7 @@ import { transformApplicationToDiscordApplication } from "./transformers/reverse
 import { transformComponentToDiscordComponent } from "./transformers/reverse/component.ts";
 import { transformCreateApplicationCommandToDiscordCreateApplicationCommand } from "./transformers/reverse/createApplicationCommand.ts";
 import { transformEmbedToDiscordEmbed } from "./transformers/reverse/embed.ts";
+import { transformInteractionResponseToDiscordInteractionResponse } from "./transformers/reverse/interactionResponse.ts";
 import { transformMemberToDiscordMember, transformUserToDiscordUser } from "./transformers/reverse/member.ts";
 import { transformTeamToDiscordTeam } from "./transformers/reverse/team.ts";
 import { StageInstance } from "./transformers/stageInstance.ts";
@@ -426,6 +429,7 @@ export interface Transformers {
       bot: Bot,
       payload: ApplicationCommandOptionChoice,
     ) => DiscordApplicationCommandOptionChoice;
+    interactionResponse: (bot: Bot, payload: InteractionResponse) => DiscordInteractionResponse;
   };
   snowflake: (snowflake: string) => bigint;
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
@@ -494,6 +498,8 @@ export function createTransformers(options: Partial<Transformers>) {
         transformApplicationCommandOptionToDiscordApplicationCommandOption,
       applicationCommandOptionChoice: options.reverse?.applicationCommandOptionChoice ||
         transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
+      interactionResponse: options.reverse?.interactionResponse ||
+        transformInteractionResponseToDiscordInteractionResponse,
     },
     automodRule: options.automodRule || transformAutoModerationRule,
     automodActionExecution: options.automodActionExecution || transformAutoModerationActionExecution,
