@@ -1,5 +1,5 @@
 import type { Bot } from "../../../bot.ts";
-import { Message, SendInteractionResponse } from "../../../mod.ts";
+import { InteractionResponse, Message } from "../../../mod.ts";
 import { DiscordMessage } from "../../../types/discord.ts";
 
 /**
@@ -10,7 +10,7 @@ import { DiscordMessage } from "../../../types/discord.ts";
 export async function sendFollowupMessage(
   bot: Bot,
   token: string,
-  options: SendInteractionResponse,
+  options: InteractionResponse,
 ): Promise<Message> {
   const result = await bot.rest.sendRequest<DiscordMessage>(bot.rest, {
     url: bot.constants.routes.WEBHOOK(bot.applicationId, token),
@@ -18,7 +18,7 @@ export async function sendFollowupMessage(
     payload: bot.rest.createRequestBody(bot.rest, {
       method: "POST",
       body: {
-        ...options.data,
+        ...bot.transformers.reverse.interactionResponse(bot, options).data,
         file: options.data?.file,
       },
       // remove authorization header
