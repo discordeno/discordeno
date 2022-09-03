@@ -1,1 +1,1 @@
-export * from "./startForumThread.ts";
+export * from "./createForumThread.ts";
