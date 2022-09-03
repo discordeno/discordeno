@@ -5,7 +5,7 @@ import { MessageComponentTypes } from "../../../types/shared.ts";
 import { EditWebhookMessage } from "../../webhooks/editWebhookMessage.ts";
 
 /** To edit your response to a application command. If a messageId is not provided it will default to editing the original response. */
-export async function editInteractionResponse(
+export async function editFollowupMessage(
   bot: Bot,
   token: string,
   messageId: bigint,
