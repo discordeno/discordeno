@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { processReactionString } from "./getReactions.ts";
 
 /** Deletes a reaction from the given user on this message, defaults to bot. Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. */
 export async function deleteOwnReaction(
@@ -35,16 +36,4 @@ export async function deleteUserReaction(
       userId,
     ),
   );
-}
-
-function processReactionString(reaction: string): string {
-  if (reaction.startsWith("<:")) {
-    return reaction.substring(2, reaction.length - 1);
-  }
-
-  if (reaction.startsWith("<a:")) {
-    return reaction.substring(3, reaction.length - 1);
-  }
-
-  return reaction;
 }

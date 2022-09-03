@@ -11,11 +11,7 @@ export async function getReactions(
   reaction: string,
   options?: GetReactions,
 ): Promise<Collection<bigint, User>> {
-  if (reaction.startsWith("<:")) {
-    reaction = reaction.substring(2, reaction.length - 1);
-  } else if (reaction.startsWith("<a:")) {
-    reaction = reaction.substring(3, reaction.length - 1);
-  }
+  reaction = processReactionString(reaction);
 
   const results = await bot.rest.runMethod<DiscordUser[]>(
     bot.rest,
@@ -29,6 +25,18 @@ export async function getReactions(
       return [user.id, user];
     }),
   );
+}
+
+export function processReactionString(reaction: string): string {
+  if (reaction.startsWith("<:")) {
+    return reaction.substring(2, reaction.length - 1);
+  }
+
+  if (reaction.startsWith("<a:")) {
+    return reaction.substring(3, reaction.length - 1);
+  }
+
+  return reaction;
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-reactions-query-string-params */
