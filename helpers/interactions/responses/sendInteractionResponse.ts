@@ -1,6 +1,5 @@
 import type { Bot } from "../../../bot.ts";
-import { Embed, Message } from "../../../mod.ts";
-import { DiscordMessage } from "../../../types/discord.ts";
+import { Embed } from "../../../mod.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../../types/discordeno.ts";
 import { InteractionResponseTypes } from "../../../types/shared.ts";
 
@@ -14,15 +13,35 @@ export async function sendInteractionResponse(
   bot: Bot,
   id: bigint,
   token: string,
-  options: InteractionResponse,
-): Promise<Message | undefined> {
+  options: SendInteractionResponse,
+): Promise<void> {
+  return await bot.rest.sendRequest<void>(bot.rest, {
+    url: bot.constants.routes.INTERACTION_ID_TOKEN(id, token),
+    method: "POST",
+    payload: bot.rest.createRequestBody(bot.rest, {
+      method: "POST",
+      body: {
+        type: options.type,
+        data: transformSendInteractionResponse(bot, options),
+        file: options.data?.file,
+      },
+      // Remove authorization header
+      headers: { Authorization: "" },
+    }),
+  });
+}
+
+export function transformSendInteractionResponse(bot: Bot, options: SendInteractionResponse) {
   // If no mentions are provided, force disable mentions
   if (!options.data?.allowedMentions) {
-    options.data = { ...options.data, allowedMentions: { parse: [] } };
+    if (!options.data) {
+      options.data = {};
+    }
+
+    options.data.allowedMentions = { parse: [] };
   }
 
-  // DRY code a little bit
-  const data = {
+  return {
     tts: options.data.tts,
     title: options.data.title,
     flags: options.data.flags,
@@ -33,42 +52,10 @@ export async function sendInteractionResponse(
     allowed_mentions: bot.transformers.reverse.allowedMentions(bot, options.data.allowedMentions!),
     components: options.data.components?.map((component) => bot.transformers.reverse.component(bot, component)),
   };
-
-  // A reply has never been send
-  if (bot.cache.unrepliedInteractions.delete(id)) {
-    return await bot.rest.sendRequest<undefined>(bot.rest, {
-      url: bot.constants.routes.INTERACTION_ID_TOKEN(id, token),
-      method: "POST",
-      payload: bot.rest.createRequestBody(bot.rest, {
-        method: "POST",
-        body: { type: options.type, data, file: options.data.file },
-        headers: {
-          // remove authorization header
-          Authorization: "",
-        },
-      }),
-    });
-  }
-
-  // If its already been executed, we need to send a followup response
-  const result = await bot.rest.sendRequest<DiscordMessage>(bot.rest, {
-    url: bot.constants.routes.WEBHOOK(bot.applicationId, token),
-    method: "POST",
-    payload: bot.rest.createRequestBody(bot.rest, {
-      method: "POST",
-      body: { ...data, file: options.data.file },
-      headers: {
-        // remove authorization header
-        Authorization: "",
-      },
-    }),
-  });
-
-  return bot.transformers.message(bot, result);
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
-export interface InteractionResponse {
+export interface SendInteractionResponse {
   /** The type of response */
   type: InteractionResponseTypes;
   /** An optional response message */
