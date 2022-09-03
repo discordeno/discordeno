@@ -1,6 +1,5 @@
 import { Bot } from "../../../bot.ts";
-import { ApplicationCommand, DiscordApplicationCommand } from "../../../mod.ts";
-import { CreateApplicationCommand, transformCreateApplicationCommand } from "./createGlobalApplicationCommand.ts";
+import { ApplicationCommand, CreateApplicationCommand, DiscordApplicationCommand } from "../../../mod.ts";
 
 export async function createGuildApplicationCommand(
   bot: Bot,
@@ -11,7 +10,7 @@ export async function createGuildApplicationCommand(
     bot.rest,
     "POST",
     bot.constants.routes.COMMANDS_GUILD(bot.applicationId, guildId),
-    transformCreateApplicationCommand(bot, command),
+    bot.transformers.reverse.createApplicationCommand(bot, command),
   );
 
   return bot.transformers.applicationCommand(bot, result);

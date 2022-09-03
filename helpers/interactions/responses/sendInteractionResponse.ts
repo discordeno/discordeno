@@ -59,11 +59,11 @@ export interface SendInteractionResponse {
   /** The type of response */
   type: InteractionResponseTypes;
   /** An optional response message */
-  data?: InteractionApplicationCommandCallbackData;
+  data?: InteractionCallbackData;
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionapplicationcommandcallbackdata */
-export interface InteractionApplicationCommandCallbackData {
+export interface InteractionCallbackData {
   /** The message contents (up to 2000 characters) */
   content?: string;
   /** True if this is a TTS message */

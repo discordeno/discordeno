@@ -1,8 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { ApplicationCommand } from "../../../transformers/applicationCommand.ts";
-import { DiscordApplicationCommand } from "../../../types/discord.ts";
+import { CreateApplicationCommand, DiscordApplicationCommand } from "../../../types/mod.ts";
 import { Collection } from "../../../util/collection.ts";
-import { CreateApplicationCommand, transformCreateApplicationCommand } from "./createGlobalApplicationCommand.ts";
 
 /**
  * Bulk edit existing global application commands. If a command does not exist, it will create it.
@@ -17,7 +16,7 @@ export async function upsertGlobalApplicationCommands(
     bot.rest,
     "PATCH",
     bot.constants.routes.COMMANDS(bot.applicationId),
-    commands.map((command) => transformCreateApplicationCommand(bot, command)),
+    commands.map((command) => bot.transformers.reverse.createApplicationCommand(bot, command)),
   );
 
   return new Collection(

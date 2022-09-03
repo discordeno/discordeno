@@ -1,8 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { ApplicationCommand } from "../../../transformers/applicationCommand.ts";
-import { DiscordApplicationCommand } from "../../../types/discord.ts";
+import { CreateApplicationCommand, DiscordApplicationCommand } from "../../../types/mod.ts";
 import { Collection } from "../../../util/collection.ts";
-import { CreateApplicationCommand, transformCreateApplicationCommand } from "./createGlobalApplicationCommand.ts";
 
 /**
  * Bulk edit existing guild application commands. If a command does not exist, it will create it.
@@ -18,7 +17,7 @@ export async function upsertGuildApplicationCommands(
     bot.rest,
     "PATCH",
     bot.constants.routes.COMMANDS_GUILD(bot.applicationId, guildId),
-    commands.map((command) => transformCreateApplicationCommand(bot, command)),
+    commands.map((command) => bot.transformers.reverse.createApplicationCommand(bot, command)),
   );
 
   return new Collection(
