@@ -1415,6 +1415,8 @@ export interface DiscordAuditLog {
   guild_scheduled_events?: DiscordScheduledEvent[];
   /** List of auto moderation rules referenced in the audit log */
   auto_moderation_rules?: DiscordAutoModerationRule[];
+  /** List of application commands referenced in the audit log */
+  application_commands: DiscordApplicationCommand[];
 }
 
 export interface DiscordAutoModerationRule {
