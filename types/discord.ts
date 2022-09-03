@@ -133,6 +133,8 @@ export interface DiscordIntegration {
   account: DiscordIntegrationAccount;
   /** The bot/OAuth2 application for discord integrations */
   application?: DiscordIntegrationApplication;
+  /** the scopes the application has been authorized for */
+  scopes: string[];
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-account-object-integration-account-structure */
@@ -2429,7 +2431,7 @@ export interface DiscordGuildWidgetSettings {
 }
 
 export interface DiscordInstallParams {
-  /** he scopes to add the application to the server with */
+  /** the scopes to add the application to the server with */
   scopes: string[];
   /** the permissions to request for the bot role */
   permissions: string;
