@@ -25,6 +25,7 @@ export async function editAutomodRule(
           keyword_filter: options.triggerMetadata.keywordFilter,
           presets: options.triggerMetadata.presets,
           allow_list: options.triggerMetadata.allowList,
+          mention_total_limit: options.triggerMetadata.mentionTotalLimit,
         }
         : undefined,
       actions: options.actions?.map((action) => ({
