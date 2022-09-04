@@ -1,4 +1,5 @@
 import { AllowedMentionsTypes, BotWithCache } from "../../deps.ts";
+import { validateAttachments } from "../attachments.ts";
 
 export default function editFollowupMessage(bot: BotWithCache) {
   const editFollowupMessageOld = bot.helpers.editFollowupMessage;
@@ -55,6 +56,8 @@ export default function editFollowupMessage(bot: BotWithCache) {
         }
       }
     }
+
+    if (options.attachments) validateAttachments(bot, options.attachments);
 
     return await editFollowupMessageOld(token, messageId, options);
   };

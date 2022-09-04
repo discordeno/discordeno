@@ -1,4 +1,5 @@
 import { AllowedMentionsTypes, BotWithCache, ChannelTypes, PermissionStrings } from "../../deps.ts";
+import { validateAttachments } from "../attachments.ts";
 import { validateComponents } from "../components.ts";
 import { requireBotChannelPermissions } from "../permissions.ts";
 
@@ -164,6 +165,8 @@ export function editMessage(bot: BotWithCache) {
         "A message content can not contain more than 2000 characters.",
       );
     }
+
+    if (content.attachments) validateAttachments(bot, content.attachments);
 
     return editMessageOld(channelId, messageId, content);
   };
