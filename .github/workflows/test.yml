@@ -33,7 +33,7 @@ jobs:
         run: deno cache template/beginner/mod.ts template/minimal/mod.ts
       - name: Run test script for maintainers
         if: ${{ github.actor == 'Skillz4Killz' || github.actor == 'itohatweb' }}
-        run: deno test --coverage=coverage -A tests/ --jobs
+        run: deno test --coverage=coverage -A tests/ --parallel
       - name: Create coverage report
         if: github.ref == 'refs/heads/main'
         run: deno coverage --exclude=tests ./coverage --lcov > coverage.lcov

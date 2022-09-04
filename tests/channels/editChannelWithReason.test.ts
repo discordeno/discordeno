@@ -23,8 +23,12 @@ Deno.test({
 
     // Change the channel to a news channel
     await t.step("[channel] change the channel to a news channel with a reason", async () => {
-      const editedChannel = await bot.helpers.editChannel(channel.id, { type: ChannelTypes.GuildNews }, "reason");
-      assertEquals(editedChannel.type, ChannelTypes.GuildNews);
+      const editedChannel = await bot.helpers.editChannel(
+        channel.id,
+        { type: ChannelTypes.GuildAnnouncement },
+        "reason",
+      );
+      assertEquals(editedChannel.type, ChannelTypes.GuildAnnouncement);
     });
 
     // Change from a news channel to a text channel
