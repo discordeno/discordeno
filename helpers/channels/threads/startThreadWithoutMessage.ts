@@ -35,7 +35,7 @@ export interface StartThreadWithoutMessage {
   /** The reason you are creating the thread */
   reason?: string;
   /** the type of thread to create */
-  type: ChannelTypes.GuildNewsThread | ChannelTypes.GuildPublicThread | ChannelTypes.GuildPrivateThread;
+  type: ChannelTypes.AnnouncementThread | ChannelTypes.PublicThread | ChannelTypes.PrivateThread;
   /** whether non-moderators can add other non-moderators to a thread; only available when creating a private thread */
   invitable?: boolean;
 }

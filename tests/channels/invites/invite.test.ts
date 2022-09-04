@@ -1,5 +1,5 @@
 import { ChannelTypes } from "../../../mod.ts";
-import { assertEquals, assertExists, assertNotEquals } from "../../deps.ts";
+import { assertExists, assertNotEquals } from "../../deps.ts";
 import { loadBot } from "../../mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../../utils.ts";
 
@@ -9,7 +9,7 @@ Deno.test({
     const bot = loadBot();
     const channel = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, {
       name: "Discordeno-test",
-      type: ChannelTypes.GuildNews,
+      type: ChannelTypes.GuildAnnouncement,
     });
 
     // Assertions
