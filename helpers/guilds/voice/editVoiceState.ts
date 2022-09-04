@@ -1,6 +1,6 @@
 import type { Bot } from "../../../bot.ts";
 
-export const updateBotVoiceState = updateOwnVoiceState;
+export const updateBotVoiceState = editOwnVoiceState;
 
 /**
  * Updates the bot's voice state
@@ -12,7 +12,7 @@ export const updateBotVoiceState = updateOwnVoiceState;
  *  - You are able to set `request_to_speak_timestamp` to any present or future time.
  *  - When suppressed, the user will have their `request_to_speak_timestamp` removed.
  */
-export async function updateOwnVoiceState(bot: Bot, guildId: bigint, options: UpdateOwnVoiceState): Promise<void> {
+export async function editOwnVoiceState(bot: Bot, guildId: bigint, options: EditOwnVoiceState): Promise<void> {
   return await bot.rest.runMethod<void>(bot.rest, "PATCH", bot.constants.routes.UPDATE_VOICE_STATE(guildId), {
     channel_id: options.channelId,
     suppress: options.suppress,
@@ -33,7 +33,7 @@ export async function updateOwnVoiceState(bot: Bot, guildId: bigint, options: Up
  *  - You are able to set `request_to_speak_timestamp` to any present or future time.
  *  - When suppressed, the user will have their `request_to_speak_timestamp` removed.
  */
-export async function updateUserVoiceState(bot: Bot, guildId: bigint, options: UpdateUserVoiceState): Promise<void> {
+export async function editUserVoiceState(bot: Bot, guildId: bigint, options: EditUserVoiceState): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     "PATCH",
@@ -47,7 +47,7 @@ export async function updateUserVoiceState(bot: Bot, guildId: bigint, options: U
 }
 
 /** https://discord.com/developers/docs/resources/guild#update-current-user-voice-state */
-export interface UpdateOwnVoiceState {
+export interface EditOwnVoiceState {
   /** The id of the channel the user is currently in */
   channelId: bigint;
   /** Toggles the user's suppress state */
@@ -57,7 +57,7 @@ export interface UpdateOwnVoiceState {
 }
 
 /** https://discord.com/developers/docs/resources/guild#update-user-voice-state */
-export interface UpdateUserVoiceState {
+export interface EditUserVoiceState {
   /** The id of the channel the user is currently in */
   channelId: bigint;
   /** Toggles the user's suppress state */
