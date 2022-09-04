@@ -5,9 +5,9 @@ export * from "./threads/mod.ts";
 
 export * from "./createChannel.ts";
 export * from "./deleteChannel.ts";
-export * from "./deleteChannelPermissions.ts";
+export * from "./deleteChannelPermissionOverride.ts";
 export * from "./editChannel.ts";
-export * from "./editChannelPermissions.ts";
+export * from "./editChannelPermissionOverrides.ts";
 export * from "./getChannel.ts";
 export * from "./getChannelInvites.ts";
 export * from "./getChannels.ts";
