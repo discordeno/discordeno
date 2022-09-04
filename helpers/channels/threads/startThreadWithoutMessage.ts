@@ -3,7 +3,21 @@ import { Channel } from "../../../transformers/channel.ts";
 import { DiscordChannel } from "../../../types/discord.ts";
 import { ChannelTypes } from "../../../types/shared.ts";
 
-/** Creates a new private thread. Returns a thread channel. */
+/**
+ * Creates a thread without using a message as the thread's point of origin.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param channelId - The ID of the channel in which to create the thread.
+ * @param options - The parameters to use for the creation of the thread.
+ * @returns An instance of the created {@link Channel | Thread}.
+ *
+ * @remarks
+ * Creating a private thread requires the server to be boosted.
+ *
+ * Fires a _Thread Create_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-without-message}
+ */
 export async function startThreadWithoutMessage(
   bot: Bot,
   channelId: bigint,
