@@ -3,9 +3,17 @@ import type { Bot } from "../../bot.ts";
 export const startTyping = triggerTypingIndicator;
 
 /**
- * Trigger a typing indicator for the specified channel. Generally bots should **NOT** implement this route.
- * However, if a bot is responding to a command and expects the computation to take a few seconds,
- * this endpoint may be called to let the user know that the bot is processing their message.
+ * Triggers a typing indicator for the bot user.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param channelId - The ID of the channel in which to trigger the typing indicator.
+ *
+ * @remarks
+ * Generally, bots should _not_ use this route.
+ *
+ * Fires a _Typing Start_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/channel#trigger-typing-indicator}
  */
 export async function triggerTypingIndicator(bot: Bot, channelId: bigint): Promise<void> {
   return await bot.rest.runMethod<void>(bot.rest, "POST", bot.constants.routes.CHANNEL_TYPING(channelId));

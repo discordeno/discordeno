@@ -4,7 +4,25 @@ import { DiscordChannel } from "../../types/discord.ts";
 import { ChannelTypes } from "../../types/shared.ts";
 import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
 
-/** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
+/**
+ * Creates a channel within a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to create the channel within.
+ * @param options - The options for the creation of the channel.
+ * @returns An instance of the created {@link Channel}.
+ *
+ * @remarks
+ * Requires the `MANAGE_CHANNELS` permission.
+ *
+ * If setting permission overwrites, only the permissions the bot user has in the guild can be allowed or denied.
+ *
+ * Setting the `MANAGE_ROLES` permission is only possible for guild administrators.
+ *
+ * Fires a _Channel Create_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-channel}
+ */
 export async function createChannel(
   bot: Bot,
   guildId: bigint,
