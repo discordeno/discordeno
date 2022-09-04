@@ -25,6 +25,7 @@ export async function editAutomodRule(
           keyword_filter: options.triggerMetadata.keywordFilter,
           presets: options.triggerMetadata.presets,
           allow_list: options.triggerMetadata.allowList,
+          mention_total_limit: options.triggerMetadata.mentionTotalLimit,
         }
         : undefined,
       actions: options.actions?.map((action) => ({
@@ -58,6 +59,8 @@ export interface EditAutoModerationRuleOptions {
     presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
     /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
     allowList?: string[];
+    /** Total number of mentions (role & user) allowed per message (Maximum of 50) */
+    mentionTotalLimit: number;
   };
   /** The actions that will trigger for this rule */
   actions: {

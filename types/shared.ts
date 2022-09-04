@@ -82,9 +82,11 @@ export enum ApplicationFlags {
   /** Indicates if an app is embedded within the Discord client (currently unavailable publicly) */
   Embedded = 1 << 17,
   /** Intent required for bots in **100 or more servers** to receive [message content](https://support-dev.discord.com/hc/en-us/articles/4404772028055) */
-  GatewayMessageCount = 1 << 18,
+  GatewayMessageContent = 1 << 18,
   /** Intent required for bots in under 100 servers to receive [message content](https://support-dev.discord.com/hc/en-us/articles/4404772028055), found in Bot Settings */
   GatewayMessageContentLimited = 1 << 19,
+  /** Indicates if an app has registered global application commands */
+  ApplicationCommandBadge = 1 << 23,
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#component-types */
@@ -288,13 +290,13 @@ export enum ChannelTypes {
   /** An organizational category that contains up to 50 channels */
   GuildCategory,
   /** A channel that users can follow and crosspost into their own server */
-  GuildNews,
-  /** A temporary sub-channel within a GUILD_NEWS channel */
-  GuildNewsThread = 10,
+  GuildAnnouncement,
+  /** A temporary sub-channel within a GUILD_ANNOUNCEMENT channel */
+  AnnouncementThread = 10,
   /** A temporary sub-channel within a GUILD_TEXT channel */
-  GuildPublicThread,
+  PublicThread,
   /** A temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission */
-  GuildPrivateThread,
+  PrivateThread,
   /** A voice channel for hosting events with an audience */
   GuildStageVoice,
   /** A channel in a hub containing the listed servers */
