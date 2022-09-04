@@ -90,10 +90,7 @@ export function createShard(
     state: ShardState.Offline,
     /** The total amount of shards which are used to communicate with Discord. */
     totalShards: options.totalShards,
-    // Explicitly setting the encoding to json, since we do not support ETF.
-    resumeGatewayUrl: `${options.gatewayConfig.url ?? "wss://gateway.discord.gg"}/?v=${
-      options.gatewayConfig.version ?? API_VERSION
-    }&encoding=json`,
+    resumeGatewayUrl: undefined as undefined | string,
 
     // ----------
     // METHODS
