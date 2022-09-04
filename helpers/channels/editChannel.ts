@@ -197,5 +197,5 @@ export interface ModifyChannel {
     emojiName: string | null;
   };
   /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
-  defaultThreadRateLimitPerUser: number;
+  defaultThreadRateLimitPerUser?: number;
 }
