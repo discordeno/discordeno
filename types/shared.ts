@@ -82,9 +82,11 @@ export enum ApplicationFlags {
   /** Indicates if an app is embedded within the Discord client (currently unavailable publicly) */
   Embedded = 1 << 17,
   /** Intent required for bots in **100 or more servers** to receive [message content](https://support-dev.discord.com/hc/en-us/articles/4404772028055) */
-  GatewayMessageCount = 1 << 18,
+  GatewayMessageContent = 1 << 18,
   /** Intent required for bots in under 100 servers to receive [message content](https://support-dev.discord.com/hc/en-us/articles/4404772028055), found in Bot Settings */
   GatewayMessageContentLimited = 1 << 19,
+  /** Indicates if an app has registered global application commands */
+  ApplicationCommandBadge = 1 << 23,
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#component-types */
