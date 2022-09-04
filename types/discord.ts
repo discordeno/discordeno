@@ -16,8 +16,8 @@ import {
   GuildFeatures,
   GuildNsfwLevel,
   IntegrationExpireBehaviors,
+  InteractionResponseTypes,
   InteractionTypes,
-  Locales,
   Localization,
   MessageActivityTypes,
   MessageComponentTypes,
@@ -1797,15 +1797,18 @@ export interface DiscordInviteStageInstance {
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure */
-export interface DiscordApplicationCommand {
+export interface DiscordApplicationCommand extends DiscordCreateApplicationCommand {
   /** Unique ID of command */
   id: string;
-  /** Type of command, defaults to `ApplicationCommandTypes.ChatInput` */
-  type?: ApplicationCommandTypes;
   /** ID of the parent application */
   application_id: string;
   /** Guild id of the command, if not global */
   guild_id?: string;
+}
+
+export interface DiscordCreateApplicationCommand {
+  /** Type of command, defaults to `ApplicationCommandTypes.ChatInput` */
+  type?: ApplicationCommandTypes;
   /**
    * Name of command, 1-32 characters.
    * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
@@ -1823,11 +1826,11 @@ export interface DiscordApplicationCommand {
   /** Parameters for the command, max of 25 */
   options?: DiscordApplicationCommandOption[];
   /** Set of permissions represented as a bit set */
-  default_member_permissions: string | null;
+  default_member_permissions?: string | null;
   /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
   dm_permission?: boolean;
   /** Auto incrementing version identifier updated during substantial record changes */
-  version: string;
+  version?: string;
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure */
@@ -2424,4 +2427,21 @@ export interface DiscordInstallParams {
   scopes: string[];
   /** the permissions to request for the bot role */
   permissions: string;
+}
+
+export interface DiscordInteractionResponse {
+  type: InteractionResponseTypes;
+  data?: DiscordInteractionCallbackData;
+}
+
+export interface DiscordInteractionCallbackData {
+  tts?: boolean;
+  title?: string;
+  flags?: number;
+  content?: string;
+  choices?: DiscordApplicationCommandOptionChoice[];
+  custom_id?: string;
+  embeds?: DiscordEmbed[];
+  allowed_mentions?: DiscordAllowedMentions;
+  components?: DiscordComponent[];
 }

@@ -3,11 +3,6 @@ import { Channel, ThreadMember } from "../../../mod.ts";
 import { DiscordListActiveThreads } from "../../../types/discord.ts";
 import { Collection } from "../../../util/collection.ts";
 
-export type ActiveThreads = {
-  threads: Collection<bigint, Channel>;
-  members: Collection<bigint, ThreadMember>;
-};
-
 /** Returns all active threads in the guild, including public and private threads. Threads are ordered by their `id`, in descending order. */
 export async function getActiveThreads(bot: Bot, guildId: bigint): Promise<ActiveThreads> {
   const results = await bot.rest.runMethod<DiscordListActiveThreads>(
@@ -31,3 +26,8 @@ export async function getActiveThreads(bot: Bot, guildId: bigint): Promise<Activ
     ),
   };
 }
+
+export type ActiveThreads = {
+  threads: Collection<bigint, Channel>;
+  members: Collection<bigint, ThreadMember>;
+};

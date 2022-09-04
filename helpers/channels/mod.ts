@@ -5,12 +5,12 @@ export * from "./threads/mod.ts";
 
 export * from "./createChannel.ts";
 export * from "./deleteChannel.ts";
-export * from "./deleteChannelOverwrite.ts";
+export * from "./deleteChannelPermissionOverride.ts";
 export * from "./editChannel.ts";
-export * from "./editChannelOverwrite.ts";
+export * from "./editChannelPermissionOverrides.ts";
 export * from "./getChannel.ts";
 export * from "./getChannelInvites.ts";
 export * from "./getChannels.ts";
 export * from "./getChannelWebhooks.ts";
-export * from "./startTyping.ts";
-export * from "./swapChannels.ts";
+export * from "./triggerTypingIndicator.ts";
+export * from "./editChannelPositions.ts";

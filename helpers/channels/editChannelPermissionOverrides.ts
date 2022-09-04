@@ -2,7 +2,7 @@ import type { Bot } from "../../bot.ts";
 import { OverwriteTypes, PermissionStrings } from "../../types/shared.ts";
 
 /** Edit the channel permission overwrites for a user or role in this channel. Requires `MANAGE_ROLES` permission. */
-export async function editChannelOverwrite(
+export async function editChannelPermissionOverrides(
   bot: Bot,
   channelId: bigint,
   overwrite: OverwriteReadable,
