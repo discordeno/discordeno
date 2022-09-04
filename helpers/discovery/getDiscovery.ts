@@ -11,7 +11,15 @@ export type DiscoveryMetadata = {
   categoryIds: number[];
 };
 
-/** Returns the discovery metadata object for the guild. Requires the `MANAGE_GUILD` permission. */
+/**
+ * Gets the discovery settings of a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to get the discovery settings of.
+ *
+ * @privateRemarks
+ * This endpoint is not formally documented.
+ */
 export async function getDiscovery(bot: Bot, guildId: bigint): Promise<DiscoveryMetadata> {
   const result = await bot.rest.runMethod<DiscordDiscoveryMetadata>(
     bot.rest,
