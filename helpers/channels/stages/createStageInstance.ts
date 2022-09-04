@@ -7,7 +7,7 @@ import { DiscordStageInstance } from "../../../types/discord.ts";
  *
  * @param bot - The bot instance to use to make the request.
  * @param options - The parameters for the creation of the stage instance.
- * @returns A {@link StageInstance} instance.
+ * @returns An instance of the created {@link StageInstance}.
  *
  * @remarks
  * Requires the user to be a moderator of the stage channel.

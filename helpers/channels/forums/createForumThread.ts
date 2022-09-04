@@ -10,7 +10,7 @@ import { AllowedMentions, FileContent, MessageComponents } from "../../../types/
  * @param bot - The bot instance to use to make the request.
  * @param channelId - The ID of the forum channel to create the thread within.
  * @param options - The parameters for the creation of the thread.
- * @returns A {@link Channel} instance with a nested {@link Message} object.
+ * @returns An instance of {@link Channel} with a nested {@link Message} object.
  *
  * @remarks
  * Requires the `CREATE_MESSAGES` permission.

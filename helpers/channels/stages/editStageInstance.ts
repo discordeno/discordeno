@@ -8,7 +8,7 @@ import { AtLeastOne } from "../../../types/shared.ts";
  *
  * @param bot - The bot instance to use to make the request.
  * @param channelId - The ID of the stage channel the stage instance is associated with.
- * @returns The updated {@link StageInstance} instance.
+ * @returns An instance of the updated {@link StageInstance}.
  *
  * @remarks
  * Requires the user to be a moderator of the stage channel.

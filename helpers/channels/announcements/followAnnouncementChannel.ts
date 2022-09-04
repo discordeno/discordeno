@@ -7,7 +7,7 @@ import { DiscordFollowedChannel } from "../../../types/discord.ts";
  * @param bot - The bot instance to use to make the request.
  * @param sourceChannelId - The ID of the announcement channel to follow.
  * @param targetChannelId - The ID of the target channel - the channel to cross-post to.
- * @returns A {@link FollowedChannel} object.
+ * @returns An instance of {@link FollowedChannel}.
  *
  * @remarks
  * Requires the `MANAGE_WEBHOOKS` permission in the __target channel__.

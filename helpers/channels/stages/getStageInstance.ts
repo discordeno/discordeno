@@ -7,7 +7,7 @@ import { DiscordStageInstance } from "../../../types/discord.ts";
  *
  * @param bot - The bot instance to use to make the request.
  * @param channelId - The ID of the stage channel the stage instance is associated with.
- * @returns A {@link StageInstance} instance.
+ * @returns An instance of {@link StageInstance}.
  *
  * @see {@link https://discord.com/developers/docs/resources/stage-instance#get-stage-instance}
  */
