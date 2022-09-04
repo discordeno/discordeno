@@ -2,7 +2,7 @@ import type { Bot } from "../../bot.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
 import { ChannelTypes } from "../../types/shared.ts";
-import { OverwriteReadable } from "./editChannelPermissions.ts";
+import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
 
 /** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
 export async function createChannel(
