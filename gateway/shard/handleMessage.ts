@@ -130,7 +130,7 @@ export async function handleMessage(shard: Shard, message: MessageEvent<any>): P
   else if (messageData.t === "READY") {
     const payload = messageData.d as DiscordReady;
 
-    shard.resumeGatewayUrl = payload.resume_gateway_url
+    shard.resumeGatewayUrl = payload.resume_gateway_url;
 
     shard.sessionId = payload.session_id;
     shard.state = ShardState.Connected;
