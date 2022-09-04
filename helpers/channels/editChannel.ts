@@ -9,7 +9,7 @@ import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
  *
  * @param bot - The bot instance to use to make the request.
  * @param channelId - The ID of the channel to edit.
- * @param options - The options for the edit of the channel.
+ * @param options - The parameters for the edit of the channel.
  * @returns An instance of the edited {@link Channel}.
  *
  * @remarks

@@ -9,7 +9,7 @@ import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
  *
  * @param bot - The bot instance to use to make the request.
  * @param guildId - The ID of the guild to create the channel within.
- * @param options - The options for the creation of the channel.
+ * @param options - The parameters for the creation of the channel.
  * @returns An instance of the created {@link Channel}.
  *
  * @remarks
