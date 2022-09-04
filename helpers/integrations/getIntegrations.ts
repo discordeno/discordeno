@@ -30,6 +30,7 @@ export async function getIntegrations(bot: Bot, guildId: bigint): Promise<Collec
         subscriber_count: result.subscriber_count,
         revoked: result.revoked,
         application: result.application,
+        scopes: result.scopes,
       });
       return [integration.id, integration];
     }),

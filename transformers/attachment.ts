@@ -13,6 +13,7 @@ export function transformAttachment(bot: Bot, payload: DiscordAttachment) {
     height: payload.height ?? undefined,
     width: payload.width ?? undefined,
     ephemeral: payload.ephemeral,
+    description: payload.description,
   };
 
   return attachment as Optionalize<typeof attachment>;
