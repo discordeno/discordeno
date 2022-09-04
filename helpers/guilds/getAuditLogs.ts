@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { ApplicationCommand } from "../../transformers/applicationCommand.ts";
 import { AuditLogEntry } from "../../transformers/auditLogEntry.ts";
 import { AutoModerationRule } from "../../transformers/automodRule.ts";
 import { Channel } from "../../transformers/channel.ts";
@@ -17,6 +18,7 @@ export type AuditLog = {
   threads: Channel[];
   users: User[];
   webhooks: Webhook[];
+  applicationCommands: ApplicationCommand[];
 };
 
 /** Returns the audit logs for the guild. Requires VIEW_AUDIT_LOGS permission */
@@ -68,6 +70,9 @@ export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuild
     threads: result.threads.map((thread) => bot.transformers.channel(bot, { channel: thread, guildId })),
     users: result.users.map((user) => bot.transformers.user(bot, user)),
     webhooks: result.webhooks.map((hook) => bot.transformers.webhook(bot, hook)),
+    applicationCommands: result.application_commands.map((applicationCommand) =>
+      bot.transformers.applicationCommand(bot, applicationCommand)
+    ),
   };
 }
 
