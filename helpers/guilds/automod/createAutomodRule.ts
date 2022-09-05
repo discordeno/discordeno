@@ -8,7 +8,21 @@ import {
   DiscordAutoModerationRuleTriggerMetadataPresets,
 } from "../../../types/discord.ts";
 
-/** Get a rule currently configured for guild. */
+/**
+ * Creates an automod rule in a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to create the rule in.
+ * @param options - The parameters for the creation of the rule.
+ * @returns An instance of the created {@link AutoModerationRule}.
+ *
+ * @remarks
+ * Requires the `MANAGE_GUILD` permission.
+ *
+ * Fires an _Auto Moderation Rule Create_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule}
+ */
 export async function createAutomodRule(
   bot: Bot,
   guildId: bigint,
