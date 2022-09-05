@@ -12,6 +12,8 @@ import { DiscordStageInstance } from "../../../types/discord.ts";
  * @remarks
  * Requires the user to be a moderator of the stage channel.
  *
+ * Fires a _Stage Instance Create_ gateway event.
+ *
  * @see {@link https://discord.com/developers/docs/resources/stage-instance#create-stage-instance}
  */
 export async function createStageInstance(bot: Bot, options: CreateStageInstance): Promise<StageInstance> {

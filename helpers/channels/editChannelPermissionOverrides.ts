@@ -13,6 +13,8 @@ import { OverwriteTypes, PermissionStrings } from "../../types/shared.ts";
  *
  * Only permissions the bot user has in the guild or parent channel can be allowed/denied __unless__ the bot user has a `MANAGE_ROLES` permission override in the channel.
  *
+ * Fires a _Channel Update_ gateway event.
+ *
  * @see {@link https://discord.com/developers/docs/resources/channel#edit-channel-permissions}
  */
 export async function editChannelPermissionOverrides(

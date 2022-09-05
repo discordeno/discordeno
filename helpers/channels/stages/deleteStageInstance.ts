@@ -9,6 +9,8 @@ import type { Bot } from "../../../bot.ts";
  * @remarks
  * Requires the user to be a moderator of the stage channel.
  *
+ * Fires a _Stage Instance Delete_ gateway event.
+ *
  * @see {@link https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance}
  */
 export async function deleteStageInstance(bot: Bot, channelId: bigint): Promise<void> {

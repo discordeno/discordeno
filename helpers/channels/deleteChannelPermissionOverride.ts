@@ -10,6 +10,8 @@ import type { Bot } from "../../bot.ts";
  * @remarks
  * Requires the `MANAGE_ROLES` permission.
  *
+ * Fires a _Channel Update_ gateway event.
+ *
  * @see {@link https://discord.com/developers/docs/resources/channel#delete-channel-permission}
  */
 export async function deleteChannelPermissionOverride(bot: Bot, channelId: bigint, overwriteId: bigint): Promise<void> {

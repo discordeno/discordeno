@@ -12,6 +12,8 @@ import { DiscordFollowedChannel } from "../../../types/discord.ts";
  * @remarks
  * Requires the `MANAGE_WEBHOOKS` permission in the __target channel__.
  *
+ * Fires a _Webhooks Update_ gateway event.
+ *
  * @see {@link https://discord.com/developers/docs/resources/channel#follow-announcement-channel}
  */
 export async function followAnnouncementChannel(

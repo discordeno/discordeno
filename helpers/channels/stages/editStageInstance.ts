@@ -13,6 +13,8 @@ import { AtLeastOne } from "../../../types/shared.ts";
  * @remarks
  * Requires the user to be a moderator of the stage channel.
  *
+ * Fires a _Stage Instance Update_ event.
+ *
  * @see {@link https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance}
  */
 export async function editStageInstance(
