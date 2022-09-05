@@ -24,7 +24,16 @@ export type InviteMetadata = BaseInvite & {
   createdAt: number;
 };
 
-/** Returns an invite for the given code or throws an error if the invite doesn't exists. */
+/**
+ * Gets an invite to a channel by its invite code.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param inviteCode - The invite code of the invite to get.
+ * @param options - The parameters for the fetching of the invite.
+ * @returns An instance of {@link BaseInvite | Invite}.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/invite#get-invite}
+ */
 export async function getInvite(bot: Bot, inviteCode: string, options?: GetInvite): Promise<BaseInvite> {
   const result = await bot.rest.runMethod<DiscordInviteMetadata>(
     bot.rest,
