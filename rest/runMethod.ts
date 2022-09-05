@@ -34,7 +34,6 @@ export async function runMethod<T = any>(
       method,
     });
 
-
     if (!result.ok) {
       const err = await result.json().catch(() => {});
       throw new Error(`Error: ${err.message ?? result.statusText}`);
