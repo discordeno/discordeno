@@ -3,7 +3,25 @@ import { ScheduledEvent } from "../../../transformers/scheduledEvent.ts";
 import { DiscordScheduledEvent } from "../../../types/discord.ts";
 import { ScheduledEventEntityType, ScheduledEventPrivacyLevel, ScheduledEventStatus } from "../../../types/shared.ts";
 
-/** Modify a guild scheduled event. To start or end an event, use this endpoint to modify the event's status. */
+/**
+ * Edits a scheduled event.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to edit the scheduled event in.
+ * @param eventId - The ID of the scheduled event to edit.
+ * @returns An instance of the edited {@link ScheduledEvent}.
+ *
+ * @remarks
+ * Requires the `MANAGE_EVENTS` permission.
+ *
+ * To start or end an event, modify the event's `status` property.
+ *
+ * The `entity_metadata` property is discarded for events whose `entity_type` is not {@link ScheduledEventEntityType.External}.
+ *
+ * Fires a _Guild Scheduled Event Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event}
+ */
 export async function editScheduledEvent(
   bot: Bot,
   guildId: bigint,

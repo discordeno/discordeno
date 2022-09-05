@@ -3,7 +3,16 @@ import { ScheduledEvent } from "../../../transformers/scheduledEvent.ts";
 import { DiscordScheduledEvent } from "../../../types/discord.ts";
 import { Collection } from "../../../util/collection.ts";
 
-/** Get a list of guild scheduled event for the given guild. */
+/**
+ * Gets the list of scheduled events for a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to get the scheduled events from.
+ * @param options - The parameters for the fetching of the scheduled events.
+ * @returns A collection of {@link ScheduledEvent} objects assorted by event ID.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#list-scheduled-events-for-guild}
+ */
 export async function getScheduledEvents(
   bot: Bot,
   guildId: bigint,

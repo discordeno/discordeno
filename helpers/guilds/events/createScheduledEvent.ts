@@ -3,7 +3,23 @@ import { ScheduledEvent } from "../../../transformers/scheduledEvent.ts";
 import { DiscordScheduledEvent } from "../../../types/discord.ts";
 import { ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../../../types/shared.ts";
 
-/** Create a guild scheduled event in the guild. A guild can have a maximum of 100 events with `SCHEDULED` or `ACTIVE` status at any time. */
+/**
+ * Creates a scheduled event in a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to create the scheduled event in.
+ * @param options - The parameters for the creation of the scheduled event.
+ * @returns An instance of the created {@link ScheduledEvent}.
+ *
+ * @remarks
+ * Requires the `MANAGE_EVENTS` permission.
+ *
+ * A guild can only have a maximum of 100 events with a status of {@link ScheduledEventStatus.Active} or {@link ScheduledEventStatus.Scheduled} (inclusive).
+ *
+ * Fires a _Guild Scheduled Event Create_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event}
+ */
 export async function createScheduledEvent(
   bot: Bot,
   guildId: bigint,
