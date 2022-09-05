@@ -3,7 +3,18 @@ import { Integration } from "../../../transformers/integration.ts";
 import { DiscordIntegration } from "../../../types/discord.ts";
 import { Collection } from "../../../util/collection.ts";
 
-/** Returns a list of integrations for the guild. Requires the MANAGE_GUILD permission. */
+/**
+ * Gets the list of integrations attached to a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to get the list of integrations from.
+ * @returns A collection of {@link Integration} objects assorted by integration ID.
+ *
+ * @remarks
+ * Requires the `MANAGE_GUILD` permission.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-integrations}
+ */
 export async function getIntegrations(bot: Bot, guildId: bigint): Promise<Collection<bigint, Integration>> {
   const results = await bot.rest.runMethod<DiscordIntegration[]>(
     bot.rest,
