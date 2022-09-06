@@ -19,6 +19,8 @@ import { DiscordMessage } from "../../../types/discord.ts";
  * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
  * - Requiring the `MESSAGE_CONTENT` intent.
  *
+ * Fires a _Message Create_ event.
+ *
  * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message}
  */
 export async function sendFollowupMessage(

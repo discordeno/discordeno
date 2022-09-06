@@ -11,6 +11,8 @@ import type { Bot } from "../../../bot.ts";
  *
  * Does not support ephemeral follow-up messages due to these being stateless.
  *
+ * Fires a _Message Delete_ event.
+ *
  * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response}
  */
 export async function deleteOriginalInteractionResponse(bot: Bot, token: string): Promise<void> {

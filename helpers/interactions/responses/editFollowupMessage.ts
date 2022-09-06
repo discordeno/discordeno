@@ -18,6 +18,8 @@ import { InteractionResponseTypes } from "../../../types/shared.ts";
  *
  * Does not support ephemeral follow-up messages due to these being stateless.
  *
+ * Fires a _Message Update_ event.
+ *
  * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message}
  */
 export async function editFollowupMessage(

@@ -16,6 +16,8 @@ import { InteractionCallbackData, InteractionResponseTypes } from "../../../type
  *
  * Does not support ephemeral follow-up messages due to these being stateless.
  *
+ * Fires a _Message Update_ event.
+ *
  * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response}
  */
 export async function editOriginalInteractionResponse(
