@@ -3,7 +3,7 @@ import { GuildWidgetSettings } from "../../../transformers/widgetSettings.ts";
 import { DiscordGuildWidgetSettings } from "../../../types/discord.ts";
 
 /** Modify a guild widget object for the guild. Requires the MANAGE_GUILD permission. */
-export async function editWidget(
+export async function editWidgetSettings(
   bot: Bot,
   guildId: bigint,
   enabled: boolean,
