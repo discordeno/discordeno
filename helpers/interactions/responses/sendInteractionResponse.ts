@@ -2,10 +2,24 @@ import type { Bot } from "../../../bot.ts";
 import { InteractionResponse } from "../../../types/discordeno.ts";
 
 /**
- * Send a response to a users application command. The command data will have the id and token necessary to respond.
- * Interaction `tokens` are valid for **15 minutes** and can be used to send followup messages.
+ * Sends a response to an interaction.
  *
- * NOTE: By default we will suppress mentions. To enable mentions, just pass any mentions object.
+ * @param bot - The bot instance to use to make the request.
+ * @param id - The ID of the interaction to respond to.
+ * @param token - The interaction token to use, provided in the original interaction.
+ * @param options - The parameters for the creation of the message.
+ * @returns An instance of the created {@link Message}.
+ *
+ * @remarks
+ * ⚠️ Interaction tokens are only valid for _15 minutes_.
+ *
+ * By default, mentions are suppressed. To enable mentions, pass a mention object with the callback data.
+ *
+ * Unlike `sendMessage()`, this endpoint allows the bot user to act without:
+ * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
+ * - Requiring the `MESSAGE_CONTENT` intent.
+ *
+ * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response}
  */
 export async function sendInteractionResponse(
   bot: Bot,
