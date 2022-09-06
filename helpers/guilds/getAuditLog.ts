@@ -20,7 +20,7 @@ export type AuditLog = {
 };
 
 /** Returns the audit logs for the guild. Requires VIEW_AUDIT_LOGS permission */
-export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuildAuditLog): Promise<AuditLog> {
+export async function getAuditLog(bot: Bot, guildId: bigint, options?: GetGuildAuditLog): Promise<AuditLog> {
   if (options?.limit) {
     options.limit = options.limit >= 1 && options.limit <= 100 ? options.limit : 50;
   }

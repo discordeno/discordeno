@@ -9,7 +9,7 @@ export * from "./createGuild.ts";
 export * from "./deleteGuild.ts";
 export * from "./editGuild.ts";
 export * from "./editWelcomeScreen.ts";
-export * from "./getAuditLogs.ts";
+export * from "./getAuditLog.ts";
 export * from "./getBan.ts";
 export * from "./getBans.ts";
 export * from "./getGuild.ts";
