@@ -3,9 +3,9 @@ import { ApplicationCommand } from "../../../transformers/applicationCommand.ts"
 import { CreateApplicationCommand, DiscordApplicationCommand } from "../../../types/mod.ts";
 
 /**
- * Edit an existing global application command. If this command did not exist, it will create it.
+ * Edit an existing global application command.
  */
-export async function upsertGlobalApplicationCommand(
+export async function editGlobalApplicationCommand(
   bot: Bot,
   commandId: bigint,
   command: CreateApplicationCommand,

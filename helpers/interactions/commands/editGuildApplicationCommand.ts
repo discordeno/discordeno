@@ -3,9 +3,9 @@ import { ApplicationCommand } from "../../../transformers/applicationCommand.ts"
 import { CreateApplicationCommand, DiscordApplicationCommand } from "../../../types/mod.ts";
 
 /**
- * Edit an existing guild application command. If this command did not exist, it will create it.
+ * Edit an existing guild application command.
  */
-export async function upsertGuildApplicationCommand(
+export async function editGuildApplicationCommand(
   bot: Bot,
   commandId: bigint,
   guildId: bigint,
