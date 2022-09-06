@@ -1,21 +1,28 @@
 import type { Bot } from "../../bot.ts";
 import { ImageFormat, ImageSize } from "../members/getAvatarUrl.ts";
 
-/** The full URL of the splash from Discords CDN. Undefined if no splash is set. */
+/**
+ * Builds the URL to a guild splash stored in the Discord CDN.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to get the splash of.
+ * @param imageHash - The hash identifying the splash image.
+ * @returns The link to the resource or `undefined` if the guild does not have a splash image set.
+ */
 export function getGuildSplashURL(
   bot: Bot,
-  id: bigint,
-  splash: bigint | undefined,
+  guildId: bigint,
+  imageHash: bigint | undefined,
   options?: {
     size?: ImageSize;
     format?: ImageFormat;
   },
 ): string | undefined {
-  return splash
+  return imageHash
     ? bot.utils.formatImageURL(
       bot.constants.routes.GUILD_SPLASH(
-        id,
-        typeof splash === "string" ? splash : bot.utils.iconBigintToHash(splash),
+        guildId,
+        typeof imageHash === "string" ? imageHash : bot.utils.iconBigintToHash(imageHash),
       ),
       options?.size || 128,
       options?.format,

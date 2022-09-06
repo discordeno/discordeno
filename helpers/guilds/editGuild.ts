@@ -9,7 +9,27 @@ import {
   VerificationLevels,
 } from "../../types/shared.ts";
 
-/** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
+// TODO: Put the `shardId` parameter before `options`.
+
+/**
+ * Edits a guild's settings.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to edit.
+ * @param shardId - The ID of the shard the guild is in.
+ * @param options - The parameters for the edit of the guild.
+ * @returns An instance of the edited {@link Guild}.
+ *
+ * @remarks
+ * Requires the `MANAGE_GUILD` permission.
+ *
+ * If attempting to add or remove the {@link GuildFeatures.Community} feature:
+ *   - Requires the `ADMINISTRATOR` permission.
+ *
+ * Fires a _Guild Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild}
+ */
 export async function editGuild(bot: Bot, guildId: bigint, options: ModifyGuild, shardId: number): Promise<Guild> {
   if (options.icon && !options.icon.startsWith("data:image/")) {
     options.icon = await bot.utils.urlToBase64(options.icon);
