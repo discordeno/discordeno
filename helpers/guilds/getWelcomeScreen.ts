@@ -11,7 +11,7 @@ import { DiscordWelcomeScreen } from "../../types/discord.ts";
  *
  * @remarks
  * If the welcome screen is not enabled:
- *   - Requires the `MANAGE_GUILD` permission.
+ * - Requires the `MANAGE_GUILD` permission.
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-welcome-screen}
  */

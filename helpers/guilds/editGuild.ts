@@ -24,7 +24,7 @@ import {
  * Requires the `MANAGE_GUILD` permission.
  *
  * If attempting to add or remove the {@link GuildFeatures.Community} feature:
- *   - Requires the `ADMINISTRATOR` permission.
+ * - Requires the `ADMINISTRATOR` permission.
  *
  * Fires a _Guild Update_ gateway event.
  *

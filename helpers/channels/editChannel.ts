@@ -14,24 +14,24 @@ import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
  *
  * @remarks
  * If editing a channel of type {@link ChannelTypes.GroupDm}:
- *   - Fires a _Channel Update_ gateway event.
+ * - Fires a _Channel Update_ gateway event.
  *
  * If editing a thread channel:
- *   - Requires the `MANAGE_THREADS` permission __unless__ if setting the `archived` property to `false` when the `locked` property is also `false`, in which case only the `SEND_MESSAGES` permission is required.
+ * - Requires the `MANAGE_THREADS` permission __unless__ if setting the `archived` property to `false` when the `locked` property is also `false`, in which case only the `SEND_MESSAGES` permission is required.
  *
- *   - Fires a _Thread Update_ gateway event.
+ * - Fires a _Thread Update_ gateway event.
  *
  * If editing a guild channel:
- *   - Requires the `MANAGE_CHANNELS` permission.
+ * - Requires the `MANAGE_CHANNELS` permission.
  *
- *   - If modifying permission overrides:
- *     - Requires the `MANAGE_ROLES` permission.
+ * - If modifying permission overrides:
+ *   - Requires the `MANAGE_ROLES` permission.
  *
- *     - Only permissions the bot user has in the guild or parent channel can be allowed/denied __unless__ the bot user has a `MANAGE_ROLES` permission override in the channel.
+ *   - Only permissions the bot user has in the guild or parent channel can be allowed/denied __unless__ the bot user has a `MANAGE_ROLES` permission override in the channel.
  *
- *   - If modifying a channel of type {@link ChannelTypes.GuildCategory}:
+ * - If modifying a channel of type {@link ChannelTypes.GuildCategory}:
  *     - Fires a _Channel Update_ gateway event for each child channel impacted in this change.
- *   - Otherwise:
+ * - Otherwise:
  *     - Fires a _Channel Update_ gateway event.
  */
 export async function editChannel(
