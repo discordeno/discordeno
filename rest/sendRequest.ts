@@ -87,21 +87,12 @@ export async function sendRequest<T>(rest: RestManager, options: RestSendRequest
       // If NOT rate limited remove from queue
       if (response.status !== 429) {
         const body = response.type ? JSON.stringify(await response.json()) : undefined;
-        options.reject?.({
+        return options.reject?.({
           ok: false,
           status: response.status,
           error,
           body,
         });
-
-        throw new Error(
-          JSON.stringify({
-            ok: false,
-            status: response.status,
-            error,
-            body,
-          }),
-        );
       } else {
         if (options.retryCount && options.retryCount++ >= rest.maxRetryCount) {
           rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(options)}`);
@@ -146,11 +137,9 @@ export async function sendRequest<T>(rest: RestManager, options: RestSendRequest
     options.reject?.({
       ok: false,
       status: 599,
-      error: "Internal Proxy Error",
+      error: `Internal Proxy Error\n${error}`,
     });
 
-    throw new Error("Something went wrong in sendRequest", {
-      cause: error,
-    });
+    throw new Error(`Something went wrong in sendRequest\n${error}`);
   }
 }
