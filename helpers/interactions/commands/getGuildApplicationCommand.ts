@@ -2,7 +2,18 @@ import type { Bot } from "../../../bot.ts";
 import { ApplicationCommand } from "../../../transformers/applicationCommand.ts";
 import { DiscordApplicationCommand } from "../../../types/discord.ts";
 
-/** Fetches the guild command for the given Id */
+// TODO: Swap `commandId` and `guildId` parameters.
+
+/**
+ * Gets a guild application command by its ID.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild the command is registered in.
+ * @param commandId - The ID of the command to get.
+ * @returns An instance of {@link ApplicationCommand}.
+ *
+ * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command}
+ */
 export async function getGuildApplicationCommand(
   bot: Bot,
   commandId: bigint,

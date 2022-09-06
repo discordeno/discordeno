@@ -3,7 +3,16 @@ import { ApplicationCommand } from "../../../transformers/applicationCommand.ts"
 import { DiscordApplicationCommand } from "../../../types/discord.ts";
 import { Collection } from "../../../util/collection.ts";
 
-/** Fetch all the global commands for your application */
+// TODO: Implement `with_localizations` options field.
+
+/**
+ * Gets the list of your bot's global application commands.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @returns A collection of {@link ApplicationCommand} objects assorted by command ID.
+ *
+ * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands}
+ */
 export async function getGlobalApplicationCommands(bot: Bot): Promise<Collection<bigint, ApplicationCommand>> {
   const results = await bot.rest.runMethod<DiscordApplicationCommand[]>(
     bot.rest,
