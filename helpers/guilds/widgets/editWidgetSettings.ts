@@ -14,7 +14,7 @@ import { DiscordGuildWidgetSettings } from "../../../types/discord.ts";
  * @remarks
  * Requires the `MANAGE_GUILD` permission.
  *
- * Fires a _Guild Update_ event.
+ * Fires a _Guild Update_ gateway event.
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-widget}
  */
