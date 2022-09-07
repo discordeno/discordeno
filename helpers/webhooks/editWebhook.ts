@@ -2,7 +2,20 @@ import type { Bot } from "../../bot.ts";
 import { Webhook } from "../../transformers/webhook.ts";
 import { DiscordWebhook } from "../../types/discord.ts";
 
-/** Edit a webhook. Requires the `MANAGE_WEBHOOKS` permission. Returns the updated webhook object on success. */
+/**
+ * Edits a webhook.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param webhookId - The ID of the webhook to edit.
+ * @returns An instance of the edited {@link Webhook}.
+ *
+ * @remarks
+ * Requires the `MANAGE_WEBHOOKS` permission.
+ *
+ * Fires a _Webhooks Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook}
+ */
 export async function editWebhook(bot: Bot, webhookId: bigint, options: ModifyWebhook): Promise<Webhook> {
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,

@@ -6,7 +6,20 @@ import { AllowedMentions, FileContent, MessageComponents } from "../../types/dis
 
 export const sendWebhookMessage = executeWebhook;
 
-/** Send a webhook with webhook Id and webhook token */
+/**
+ * Executes a webhook, causing a message to be posted in the channel configured for the webhook.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param webhookId - The ID of the webhook to execute.
+ * @param webhookToken - The webhook token, used to execute the webhook.
+ * @param options - The parameters for the execution of the webhook.
+ * @returns An instance of the created {@link Message}, or `undefined` if the {@link ExecuteWebhook.wait | wait} property of the {@link options} object parameter is set to `false`.
+ *
+ * @remarks
+ * If the webhook channel is a forum channel, you must provide a value for either `threadId` or `threadName`.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/webhook#execute-webhook}
+ */
 export async function executeWebhook(
   bot: Bot,
   webhookId: bigint,
