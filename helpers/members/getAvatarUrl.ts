@@ -1,7 +1,7 @@
 import type { Bot } from "../../bot.ts";
 
 /**
- * Builds a URL to a user's avatar in the Discord CDN.
+ * Builds a URL to a user's avatar stored in the Discord CDN.
  *
  * @param bot - The bot instance to use to build the URL.
  * @param userId - The ID of the user to get the avatar of.
