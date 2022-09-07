@@ -10,9 +10,7 @@ class pingcommand extends BaseCommand {
     super(data);
   }
   async execute() {
-    const msg = await this.channel.send({ content: `Pinging...` });
-    //Assign properties to the response
-    const ping = msg.timestamp - (this.message ? this.message.timestamp : this.interaction.timestamp);
+    const ping = Date.now() - (this.message ? this.message.timestamp : this.interaction.timestamp);
 
     const embed = new Discord.Embed()
       .setTitle(`The Bots ping is ${ping} ms`)
