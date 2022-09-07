@@ -4,8 +4,10 @@ import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
 
+export const sendWebhookMessage = executeWebhook;
+
 /** Send a webhook with webhook Id and webhook token */
-export async function sendWebhookMessage(
+export async function executeWebhook(
   bot: Bot,
   webhookId: bigint,
   webhookToken: string,
