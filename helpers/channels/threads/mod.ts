@@ -10,4 +10,3 @@ export * from "./leaveThread.ts";
 export * from "./removeThreadMember.ts";
 export * from "./startThreadWithMessage.ts";
 export * from "./startThreadWithoutMessage.ts";
-

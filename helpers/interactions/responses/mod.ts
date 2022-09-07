@@ -6,4 +6,3 @@ export * from "./getFollowupMessage.ts";
 export * from "./getOriginalInteractionResponse.ts";
 export * from "./sendFollowupMessage.ts";
 export * from "./sendInteractionResponse.ts";
-
