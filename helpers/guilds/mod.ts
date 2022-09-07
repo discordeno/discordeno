@@ -3,7 +3,7 @@ export * from "./integrations/mod.ts";
 export * from "./invites/mod.ts";
 export * from "./events/mod.ts";
 export * from "./voice/mod.ts";
-export * from "./widgets/mod.ts";
+export * from "./widget/mod.ts";
 
 export * from "./createGuild.ts";
 export * from "./deleteGuild.ts";
