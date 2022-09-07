@@ -1,7 +1,21 @@
 import type { Bot } from "../../../bot.ts";
 import { AtLeastOne, GatewayOpcodes } from "../../../types/shared.ts";
 
-/** Connect or join a voice channel inside a guild. By default, the "selfDeaf" option is true. Requires `CONNECT` and `VIEW_CHANNEL` permissions. */
+/**
+ * Connects the bot user to a voice or stage channel.
+ *
+ * This function sends the _Update Voice State_ gateway command over the gateway behind the scenes.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild the voice channel to leave is in.
+ *
+ * @remarks
+ * Requires the `CONNECT` permission.
+ *
+ * Fires a _Voice State Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/topics/gateway#update-voice-state}
+ */
 export async function connectToVoiceChannel(
   bot: Bot,
   guildId: bigint,

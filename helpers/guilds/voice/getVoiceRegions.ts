@@ -3,7 +3,15 @@ import { VoiceRegions } from "../../../transformers/voiceRegion.ts";
 import { DiscordVoiceRegion } from "../../../types/discord.ts";
 import { Collection } from "../../../util/collection.ts";
 
-/** Returns a list of voice region objects for the guild. Unlike the similar /voice route, this returns VIP servers when the guild is VIP-enabled. */
+/**
+ * Gets the list of voice regions for a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to get the voice regions for.
+ * @returns A collection of {@link VoiceRegions | VoiceRegion} objects assorted by voice region ID.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-voice-regions}
+ */
 export async function getVoiceRegions(bot: Bot, guildId: bigint): Promise<Collection<string, VoiceRegions>> {
   const results = await bot.rest.runMethod<DiscordVoiceRegion[]>(
     bot.rest,
