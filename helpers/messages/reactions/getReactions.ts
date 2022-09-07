@@ -4,6 +4,18 @@ import { DiscordUser } from "../../../types/discord.ts";
 import { Collection } from "../../../util/collection.ts";
 
 /** Get a list of users that reacted with this emoji. */
+/**
+ * Gets the list of users that reacted with an emoji to a message.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param channelId - The ID of the channel the message to get the users for is in.
+ * @param messageId - The ID of the message to get the users for.
+ * @param reaction - The reaction for which to get the users.
+ * @param options - The parameters for the fetching of the users.
+ * @returns A collection of {@link User} objects assorted by user ID.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/channel#get-reactions}
+ */
 export async function getReactions(
   bot: Bot,
   channelId: bigint,

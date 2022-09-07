@@ -1,6 +1,26 @@
 import type { Bot } from "../../../bot.ts";
 
-/** Adds multiple reactions to a message. If `ordered` is true(default is false), it will add the reactions one at a time in the order provided. Note: Reaction takes the form of **name:id** for custom guild emoji, or Unicode characters. Requires READ_MESSAGE_HISTORY and ADD_REACTIONS */
+// TODO: Improve typing of the `reactions` parameter.
+
+/**
+ * Adds multiple a reaction to a message.
+ *
+ * This function uses the `addReaction()` helper behind the scenes.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param channelId - The ID of the channel the message to add reactions to is in.
+ * @param messageId - The ID of the message to add the reactions to.
+ * @param reactions - The reactions to add to the message.
+ * @param ordered - Whether the reactions must be added in order or not.
+ *
+ * @remarks
+ * Requires the `READ_MESSAGE_HISTORY` permission.
+ *
+ * If nobody else has reacted to the message:
+ * - Requires the `ADD_REACTIONS` permission.
+ *
+ * Fires a _Message Reaction Add_ gateway event for every reaction added.
+ */
 export async function addReactions(
   bot: Bot,
   channelId: bigint,
