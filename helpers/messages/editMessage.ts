@@ -6,27 +6,44 @@ import { DiscordMessage } from "../../types/discord.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
 import { MessageComponentTypes } from "../../types/shared.ts";
 
-/** Edit the message. */
+/**
+ * Edits a message.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param channelId - The ID of the channel to edit the message in.
+ * @param messageId - The IDs of the message to edit.
+ * @param options - The parameters for the edit of the message.
+ * @returns An instance of the edited {@link Message}.
+ *
+ * @remarks
+ * If editing another user's message:
+ * - Requires the `MANAGE_MESSAGES` permission.
+ * - Only the {@link EditMessage.flags | flags} property of the {@link options} object parameter can be edited.
+ *
+ * Fires a _Message Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/channel#edit-message}
+ */
 export async function editMessage(
   bot: Bot,
   channelId: bigint,
   messageId: bigint,
-  content: EditMessage,
+  options: EditMessage,
 ): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "PATCH",
     bot.constants.routes.CHANNEL_MESSAGE(channelId, messageId),
     {
-      content: content.content,
-      embeds: content.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
+      content: options.content,
+      embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
       allowed_mentions: {
-        parse: content.allowedMentions?.parse,
-        roles: content.allowedMentions?.roles?.map((id) => id.toString()),
-        users: content.allowedMentions?.users?.map((id) => id.toString()),
-        replied_user: content.allowedMentions?.repliedUser,
+        parse: options.allowedMentions?.parse,
+        roles: options.allowedMentions?.roles?.map((id) => id.toString()),
+        users: options.allowedMentions?.users?.map((id) => id.toString()),
+        replied_user: options.allowedMentions?.repliedUser,
       },
-      attachments: content.attachments?.map((attachment) => ({
+      attachments: options.attachments?.map((attachment) => ({
         id: attachment.id.toString(),
         filename: attachment.filename,
         content_type: attachment.contentType,
@@ -36,8 +53,8 @@ export async function editMessage(
         height: attachment.height,
         width: attachment.width,
       })),
-      file: content.file,
-      components: content.components?.map((component) => ({
+      file: options.file,
+      components: options.components?.map((component) => ({
         type: component.type,
         components: component.components.map((subComponent) => {
           if (subComponent.type === MessageComponentTypes.InputText) {
