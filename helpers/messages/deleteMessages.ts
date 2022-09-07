@@ -12,7 +12,7 @@ import type { Bot } from "../../bot.ts";
  *
  * ⚠️ Messages older than 2 weeks old cannot be deleted.
  *
- * Fires a _Message Delete_ gateway event for every deleted message.
+ * Fires a _Message Delete Bulk_ gateway event.
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#bulk-delete-messages}
  */
