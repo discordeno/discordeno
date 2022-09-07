@@ -11,7 +11,7 @@ export const sendWebhookMessage = executeWebhook;
  *
  * @param bot - The bot instance to use to make the request.
  * @param webhookId - The ID of the webhook to execute.
- * @param webhookToken - The webhook token, used to execute the webhook.
+ * @param token - The webhook token, used to execute the webhook.
  * @param options - The parameters for the execution of the webhook.
  * @returns An instance of the created {@link Message}, or `undefined` if the {@link ExecuteWebhook.wait | wait} property of the {@link options} object parameter is set to `false`.
  *
@@ -23,7 +23,7 @@ export const sendWebhookMessage = executeWebhook;
 export async function executeWebhook(
   bot: Bot,
   webhookId: bigint,
-  webhookToken: string,
+  token: string,
   options: ExecuteWebhook,
 ): Promise<Message | undefined> {
   const allowedMentions = options.allowedMentions
@@ -38,7 +38,7 @@ export async function executeWebhook(
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "POST",
-    bot.constants.routes.WEBHOOK(webhookId, webhookToken, options),
+    bot.constants.routes.WEBHOOK(webhookId, token, options),
     {
       wait: options.wait,
       thread_id: options.threadId,

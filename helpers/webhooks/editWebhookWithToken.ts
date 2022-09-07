@@ -8,7 +8,7 @@ import { ModifyWebhook } from "./editWebhook.ts";
  *
  * @param bot - The bot instance to use to make the request.
  * @param webhookId - The ID of the webhook to edit.
- * @param webhookToken - The webhook token, used to edit the webhook.
+ * @param token - The webhook token, used to edit the webhook.
  * @returns An instance of the edited {@link Webhook}.
  *
  * @remarks
@@ -21,13 +21,13 @@ import { ModifyWebhook } from "./editWebhook.ts";
 export async function editWebhookWithToken(
   bot: Bot,
   webhookId: bigint,
-  webhookToken: string,
+  token: string,
   options: Omit<ModifyWebhook, "channelId">,
 ): Promise<Webhook> {
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
     "PATCH",
-    bot.constants.routes.WEBHOOK(webhookId, webhookToken),
+    bot.constants.routes.WEBHOOK(webhookId, token),
     {
       name: options.name,
       avatar: options.avatar,

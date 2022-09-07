@@ -5,7 +5,7 @@ import { InteractionResponse } from "../../../types/discordeno.ts";
  * Sends a response to an interaction.
  *
  * @param bot - The bot instance to use to make the request.
- * @param id - The ID of the interaction to respond to.
+ * @param interactionId - The ID of the interaction to respond to.
  * @param token - The interaction token to use, provided in the original interaction.
  * @param options - The parameters for the creation of the message.
  * @returns An instance of the created {@link Message}.
@@ -25,12 +25,12 @@ import { InteractionResponse } from "../../../types/discordeno.ts";
  */
 export async function sendInteractionResponse(
   bot: Bot,
-  id: bigint,
+  interactionId: bigint,
   token: string,
   options: InteractionResponse,
 ): Promise<void> {
   return await bot.rest.sendRequest<void>(bot.rest, {
-    url: bot.constants.routes.INTERACTION_ID_TOKEN(id, token),
+    url: bot.constants.routes.INTERACTION_ID_TOKEN(interactionId, token),
     method: "POST",
     payload: bot.rest.createRequestBody(bot.rest, {
       method: "POST",

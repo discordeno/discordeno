@@ -8,7 +8,7 @@ import { InteractionCallbackData, InteractionResponseTypes } from "../../types/m
  *
  * @param bot - The bot instance to use to make the request.
  * @param webhookId - The ID of the webhook to edit the original message of.
- * @param webhookToken - The webhook token, used to edit the message.
+ * @param token - The webhook token, used to edit the message.
  * @param options - The parameters for the edit of the message.
  * @returns An instance of the edited {@link Message}.
  *
@@ -20,13 +20,13 @@ import { InteractionCallbackData, InteractionResponseTypes } from "../../types/m
 export async function editOriginalWebhookMessage(
   bot: Bot,
   webhookId: bigint,
-  webhookToken: string,
+  token: string,
   options: InteractionCallbackData & { threadId?: bigint },
 ): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "PATCH",
-    bot.constants.routes.WEBHOOK_MESSAGE_ORIGINAL(webhookId, webhookToken, options),
+    bot.constants.routes.WEBHOOK_MESSAGE_ORIGINAL(webhookId, token, options),
     bot.transformers.reverse.interactionResponse(bot, {
       type: InteractionResponseTypes.UpdateMessage,
       data: options,
