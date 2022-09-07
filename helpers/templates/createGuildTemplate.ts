@@ -2,13 +2,27 @@ import type { Bot } from "../../bot.ts";
 import { Template } from "../../transformers/template.ts";
 import { DiscordTemplate } from "../../types/discord.ts";
 
-/** Creates a template for the guild. Requires the `MANAGE_GUILD` permission. */
-export async function createGuildTemplate(bot: Bot, guildId: bigint, data: CreateTemplate): Promise<Template> {
-  if (data.name.length < 1 || data.name.length > 100) {
+/**
+ * Creates a template from a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to create the template from.
+ * @param options - The parameters for the creation of the template.
+ * @returns An instance of the created {@link Template}.
+ *
+ * @remarks
+ * Requires the `MANAGE_GUILD` permission.
+ *
+ * Fires a _Guild Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild-template#create-guild-template}
+ */
+export async function createGuildTemplate(bot: Bot, guildId: bigint, options: CreateTemplate): Promise<Template> {
+  if (options.name.length < 1 || options.name.length > 100) {
     throw new Error("The name can only be in between 1-100 characters.");
   }
 
-  if (data.description?.length && data.description.length > 120) {
+  if (options.description?.length && options.description.length > 120) {
     throw new Error("The description can only be in between 0-120 characters.");
   }
 
@@ -16,7 +30,7 @@ export async function createGuildTemplate(bot: Bot, guildId: bigint, data: Creat
     bot.rest,
     "POST",
     bot.constants.routes.GUILD_TEMPLATES(guildId),
-    data,
+    options,
   );
 
   return bot.transformers.template(bot, result);
