@@ -90,7 +90,7 @@ export function createShard(
     state: ShardState.Offline,
     /** The total amount of shards which are used to communicate with Discord. */
     totalShards: options.totalShards,
-    resumeGatewayUrl: undefined as undefined | string,
+    resumeGatewayUrl: "",
 
     // ----------
     // METHODS
