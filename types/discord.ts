@@ -2173,6 +2173,8 @@ export interface DiscordReady {
   guilds: DiscordUnavailableGuild[];
   /** Used for resuming connections */
   session_id: string;
+  /** Gateway url for resuming connections */
+  resume_gateway_url: string;
   /** The shard information associated with this session, if sent when identifying */
   shard?: [number, number];
   /** Contains id and flags */
