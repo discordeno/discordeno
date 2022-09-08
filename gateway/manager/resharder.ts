@@ -197,6 +197,7 @@ export async function tellWorkerToPrepare(resharder: Resharder, shardId: number)
 
       if (messageData.t === "READY") {
         const payload = messageData.d as DiscordReady;
+        shard.resumeGatewayUrl = payload.resume_gateway_url;
         await resharder.markNewGuildShardId(payload.guilds.map((g) => g.id), shardId);
       }
     },

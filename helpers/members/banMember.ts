@@ -20,19 +20,17 @@ export async function banMember(bot: Bot, guildId: bigint, userId: bigint, optio
     bot.rest,
     "PUT",
     bot.constants.routes.GUILD_BAN(guildId, userId),
-    options
-      ? {
-        delete_message_days: options.deleteMessageDays,
-        reason: options.reason,
-      }
-      : {},
+    {
+      delete_message_seconds: options?.deleteMessageSeconds,
+      reason: options?.reason,
+    },
   );
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-ban */
 export interface CreateGuildBan {
-  /** Number of days to delete messages for (0-7) */
-  deleteMessageDays?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  /** Number of seconds to delete messages for, between 0 and 604800 (7 days) */
+  deleteMessageSeconds?: number;
   /** Reason for the ban */
   reason?: string;
 }

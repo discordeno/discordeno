@@ -4,8 +4,10 @@ import { CACHED_COMMUNITY_GUILD_ID } from "../../utils.ts";
 
 // THIS IS WOLF, IF ANYTHING BREAKS BLAME HIM!
 const wolfID = 270273690074087427n;
-// THIS IS IAN, HE PLAY'S GOLDEN SUN. BAN BEFORE HE MAKES US ADDICTED TO IT!!!
+// THIS IS IAN, HE PLAY GOLDEN SUN. BAN HIM BEFORE HE MAKES US ADDICTED TO IT!!!
 const ianID = 90339695967350784n;
+// THIS IS LTS, HE PLAY TETRIS EFFECT: CONNECTED. BAN HIM BEFORE HE MAKES US ADDICTED TO IT!!!
+const ltsID = 379643682984296448n;
 
 // THESE BAN TESTS SHOULD BE DONE ONE BY ONE
 Deno.test({
@@ -36,6 +38,12 @@ Deno.test({
         await bot.helpers.banMember(CACHED_COMMUNITY_GUILD_ID, ianID, { reason: "Blame Wolf" });
         assertExists(await bot.helpers.getBan(CACHED_COMMUNITY_GUILD_ID, ianID));
       },
+    });
+
+    // ban member from guild and delete messages
+    await t.step("[member] ban member from guild and delete messages", async () => {
+      await bot.helpers.banMember(CACHED_COMMUNITY_GUILD_ID, ltsID, { deleteMessageSeconds: 604800 });
+      assertExists(await bot.helpers.getBan(CACHED_COMMUNITY_GUILD_ID, ltsID));
     });
 
     // get bans on a server
