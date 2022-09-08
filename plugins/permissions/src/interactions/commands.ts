@@ -113,10 +113,123 @@ export function createApplicationCommand(bot: BotWithCache) {
 
         options.options = validateApplicationCommandOptions(bot, options.options);
       }
+
+      const length = (options.nameLocalizations
+        ? Math.max(
+          options.name.length,
+          ...Object.values(options.nameLocalizations).map((value) => value.length),
+        )
+        : options.name.length) +
+        (options.descriptionLocalizations
+          ? Math.max(
+            options.description.length,
+            ...Object.values(options.descriptionLocalizations).map((value) => value.length),
+          )
+          : options.description.length) +
+        (options.options
+          ? options.options.map((option) =>
+            (option.nameLocalizations
+              ? Math.max(
+                option.name.length,
+                ...Object.values(option.nameLocalizations).map((value) => value.length),
+              )
+              : option.name.length) +
+            (option.descriptionLocalizations
+              ? Math.max(
+                option.description.length,
+                ...Object.values(option.descriptionLocalizations).map((value) => value.length),
+              )
+              : option.description.length) +
+            (option.choices
+              ? option.choices.map((choice) =>
+                choice.value.toString().length +
+                (choice.nameLocalizations
+                  ? Math.max(
+                    choice.name.length,
+                    ...Object.values(choice.nameLocalizations).map((value) => value.length),
+                  )
+                  : choice.name.length)
+              ).reduce((prev, curr) => prev + curr)
+              : 0) +
+            (option.options
+              ? option.options.map((option) =>
+                (option.nameLocalizations
+                  ? Math.max(
+                    option.name.length,
+                    ...Object.values(option.nameLocalizations).map((value) => value.length),
+                  )
+                  : option.name.length) +
+                (option.descriptionLocalizations
+                  ? Math.max(
+                    option.description.length,
+                    ...Object.values(option.descriptionLocalizations).map((value) => value.length),
+                  )
+                  : option.description.length) +
+                (option.choices
+                  ? option.choices.map((choice) =>
+                    choice.value.toString().length +
+                    (choice.nameLocalizations
+                      ? Math.max(
+                        choice.name.length,
+                        ...Object.values(choice.nameLocalizations).map((value) => value.length),
+                      )
+                      : choice.name.length)
+                  ).reduce((prev, curr) => prev + curr)
+                  : 0) +
+                (option.options
+                  ? option.options.map((option) =>
+                    (option.nameLocalizations
+                      ? Math.max(
+                        option.name.length,
+                        ...Object.values(option.nameLocalizations).map((value) => value.length),
+                      )
+                      : option.name.length) +
+                    (option.descriptionLocalizations
+                      ? Math.max(
+                        option.description.length,
+                        ...Object.values(option.descriptionLocalizations).map((value) => value.length),
+                      )
+                      : option.description.length) +
+                    (option.choices
+                      ? option.choices.map((choice) =>
+                        choice.value.toString().length +
+                        (choice.nameLocalizations
+                          ? Math.max(
+                            choice.name.length,
+                            ...Object.values(choice.nameLocalizations).map((value) => value.length),
+                          )
+                          : choice.name.length)
+                      ).reduce((prev, curr) => prev + curr)
+                      : 0)
+                  ).reduce((prev, curr) => prev + curr)
+                  : 0)
+              ).reduce((prev, curr) => prev + curr)
+              : 0)
+          ).reduce((prev, curr) => prev + curr)
+          : 0);
+
+      if (length > 4000) {
+        throw new Error(
+          "Slash commands can have a maximum of 4000 characters for combined name, description, and value properties for each command, its options (including subcommands and groups), and choices. When localization fields are present, only the longest localization for each field (including the default value) is counted towards the size limit.",
+        );
+      }
     } else {
       if (!CONTEXT_MENU_COMMANDS_NAME_REGEX.test(options.name)) {
         throw new Error(
           "The name of the context menu did not match the required regex.",
+        );
+      }
+
+      const length = (options.nameLocalizations
+        ? Math.max(
+          options.name.length,
+          ...Object.values(options.nameLocalizations).map((value) => value.length),
+        )
+        : options.name.length);
+
+      if (length > 4000) {
+        throw new Error(
+          "Slash commands can have a maximum of 4000 characters for combined name, description, and value properties for each command, its options (including subcommands and groups), and choices. When localization fields are present, only the longest localization for each field (including the default value) is counted towards the size limit.",
         );
       }
     }
