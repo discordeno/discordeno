@@ -505,4 +505,6 @@ export const routes = {
   NITRO_STICKER_PACKS: () => {
     return `/sticker-packs`;
   },
+
+  EDIT_BOT_VOICE_STATE: (guildId: bigint) => `/guilds/${guildId}/voice-states/@me`,
 };
