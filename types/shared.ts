@@ -235,6 +235,8 @@ export enum GuildFeatures {
   RoleIcons = "ROLE_ICONS",
   /** Guild has set up auto moderation rules */
   AutoModeration = "AUTO_MODERATION",
+  /** Guild has paused invites, preventing new users from joining */
+  InvitesDisabled = "INVITES_DISABLED",
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-mfa-level */
