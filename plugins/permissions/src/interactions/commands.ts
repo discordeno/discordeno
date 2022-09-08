@@ -5,6 +5,7 @@ import {
   ApplicationCommandTypes,
   BotWithCache,
   CONTEXT_MENU_COMMANDS_NAME_REGEX,
+  CreateApplicationCommand,
   SLASH_COMMANDS_NAME_REGEX,
 } from "../../deps.ts";
 import { validateAttachments } from "../attachments.ts";
@@ -74,6 +75,66 @@ export function validateApplicationCommandOptions(
   return [...requiredOptions, ...optionalOptions];
 }
 
+function validateApplicationCommandLength(
+  bot: BotWithCache,
+  option: CreateApplicationCommand,
+) {
+  let length = 0;
+  if (option.nameLocalizations) {
+    length += Math.max(option.name.length, ...Object.values(option.nameLocalizations).map((name) => name.length));
+  } else {
+    length += option.name.length;
+  }
+  if (option.descriptionLocalizations) {
+    length += Math.max(
+      option.description.length,
+      ...Object.values(option.descriptionLocalizations).map((name) => name.length),
+    );
+  } else {
+    length += option.description.length;
+  }
+  if (option.options) length += validateApplicationCommandOptionLength(bot, option.options);
+
+  if (length > 4000) {
+    throw new Error(
+      "Slash commands can have a maximum of 4000 characters for combined name, description, and value properties for each command, its options (including subcommands and groups), and choices. When localization fields are present, only the longest localization for each field (including the default value) is counted towards the size limit.",
+    );
+  }
+}
+
+function validateApplicationCommandOptionLength(bot: BotWithCache, options: ApplicationCommandOption[]) {
+  let length = 0;
+  for (const option of options) {
+    if (option.nameLocalizations) {
+      length += Math.max(option.name.length, ...Object.values(option.nameLocalizations).map((name) => name.length));
+    } else {
+      length += option.name.length;
+    }
+    if (option.descriptionLocalizations) {
+      length += Math.max(
+        option.description.length,
+        ...Object.values(option.descriptionLocalizations).map((name) => name.length),
+      );
+    } else {
+      length += option.description.length;
+    }
+
+    if (option.choices) {
+      for (const choice of option.choices) {
+        length += choice.value.toString().length;
+        if (choice.nameLocalizations) {
+          length += Math.max(option.name.length, ...Object.values(choice.nameLocalizations).map((name) => name.length));
+        } else {
+          length += choice.name.length;
+        }
+      }
+    }
+
+    if (option.options) length += validateApplicationCommandOptionLength(bot, option.options);
+  }
+  return length;
+}
+
 export function createApplicationCommand(bot: BotWithCache) {
   const createApplicationCommandOld = bot.helpers.createApplicationCommand;
 
@@ -114,105 +175,7 @@ export function createApplicationCommand(bot: BotWithCache) {
         options.options = validateApplicationCommandOptions(bot, options.options);
       }
 
-      const length = (options.nameLocalizations
-        ? Math.max(
-          options.name.length,
-          ...Object.values(options.nameLocalizations).map((value) => value.length),
-        )
-        : options.name.length) +
-        (options.descriptionLocalizations
-          ? Math.max(
-            options.description.length,
-            ...Object.values(options.descriptionLocalizations).map((value) => value.length),
-          )
-          : options.description.length) +
-        (options.options
-          ? options.options.map((option) =>
-            (option.nameLocalizations
-              ? Math.max(
-                option.name.length,
-                ...Object.values(option.nameLocalizations).map((value) => value.length),
-              )
-              : option.name.length) +
-            (option.descriptionLocalizations
-              ? Math.max(
-                option.description.length,
-                ...Object.values(option.descriptionLocalizations).map((value) => value.length),
-              )
-              : option.description.length) +
-            (option.choices
-              ? option.choices.map((choice) =>
-                choice.value.toString().length +
-                (choice.nameLocalizations
-                  ? Math.max(
-                    choice.name.length,
-                    ...Object.values(choice.nameLocalizations).map((value) => value.length),
-                  )
-                  : choice.name.length)
-              ).reduce((prev, curr) => prev + curr)
-              : 0) +
-            (option.options
-              ? option.options.map((option) =>
-                (option.nameLocalizations
-                  ? Math.max(
-                    option.name.length,
-                    ...Object.values(option.nameLocalizations).map((value) => value.length),
-                  )
-                  : option.name.length) +
-                (option.descriptionLocalizations
-                  ? Math.max(
-                    option.description.length,
-                    ...Object.values(option.descriptionLocalizations).map((value) => value.length),
-                  )
-                  : option.description.length) +
-                (option.choices
-                  ? option.choices.map((choice) =>
-                    choice.value.toString().length +
-                    (choice.nameLocalizations
-                      ? Math.max(
-                        choice.name.length,
-                        ...Object.values(choice.nameLocalizations).map((value) => value.length),
-                      )
-                      : choice.name.length)
-                  ).reduce((prev, curr) => prev + curr)
-                  : 0) +
-                (option.options
-                  ? option.options.map((option) =>
-                    (option.nameLocalizations
-                      ? Math.max(
-                        option.name.length,
-                        ...Object.values(option.nameLocalizations).map((value) => value.length),
-                      )
-                      : option.name.length) +
-                    (option.descriptionLocalizations
-                      ? Math.max(
-                        option.description.length,
-                        ...Object.values(option.descriptionLocalizations).map((value) => value.length),
-                      )
-                      : option.description.length) +
-                    (option.choices
-                      ? option.choices.map((choice) =>
-                        choice.value.toString().length +
-                        (choice.nameLocalizations
-                          ? Math.max(
-                            choice.name.length,
-                            ...Object.values(choice.nameLocalizations).map((value) => value.length),
-                          )
-                          : choice.name.length)
-                      ).reduce((prev, curr) => prev + curr)
-                      : 0)
-                  ).reduce((prev, curr) => prev + curr)
-                  : 0)
-              ).reduce((prev, curr) => prev + curr)
-              : 0)
-          ).reduce((prev, curr) => prev + curr)
-          : 0);
-
-      if (length > 4000) {
-        throw new Error(
-          "Slash commands can have a maximum of 4000 characters for combined name, description, and value properties for each command, its options (including subcommands and groups), and choices. When localization fields are present, only the longest localization for each field (including the default value) is counted towards the size limit.",
-        );
-      }
+      validateApplicationCommandLength(bot, options);
     } else {
       if (!CONTEXT_MENU_COMMANDS_NAME_REGEX.test(options.name)) {
         throw new Error(
@@ -220,12 +183,12 @@ export function createApplicationCommand(bot: BotWithCache) {
         );
       }
 
-      const length = (options.nameLocalizations
-        ? Math.max(
-          options.name.length,
-          ...Object.values(options.nameLocalizations).map((value) => value.length),
-        )
-        : options.name.length);
+      let length = 0;
+      if (options.nameLocalizations) {
+        length += Math.max(options.name.length, ...Object.values(options.nameLocalizations).map((name) => name.length));
+      } else {
+        length += options.name.length;
+      }
 
       if (length > 4000) {
         throw new Error(
