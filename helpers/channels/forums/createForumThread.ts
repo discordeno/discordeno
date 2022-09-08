@@ -4,7 +4,24 @@ import { Embed } from "../../../transformers/embed.ts";
 import { DiscordChannel } from "../../../types/discord.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../../types/mod.ts";
 
-/** Creates a new public thread from an existing message. Returns a thread channel. */
+/**
+ * Creates a new thread in a forum channel, and sends a message within the created thread.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param channelId - The ID of the forum channel to create the thread within.
+ * @param options - The parameters for the creation of the thread.
+ * @returns An instance of {@link Channel} with a nested {@link Message} object.
+ *
+ * @remarks
+ * Requires the `CREATE_MESSAGES` permission.
+ *
+ * Fires a _Thread Create_ gateway event.
+ * Fires a _Message Create_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel}
+ *
+ * @experimental
+ */
 export async function createForumThread(
   bot: Bot,
   channelId: bigint,

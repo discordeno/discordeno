@@ -3,7 +3,18 @@ import { Template } from "../../transformers/template.ts";
 import { DiscordTemplate } from "../../types/discord.ts";
 import { Collection } from "../../util/collection.ts";
 
-/** Returns an array of templates. Requires the `MANAGE_GUILD` permission. */
+/**
+ * Gets the list of templates for a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to get the list of templates for.
+ * @returns A collection of {@link Template} objects assorted by template code.
+ *
+ * @remarks
+ * Requires the `MANAGE_GUILD` permission.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
+ */
 export async function getGuildTemplates(bot: Bot, guildId: bigint): Promise<Collection<string, Template>> {
   const results = await bot.rest.runMethod<DiscordTemplate[]>(
     bot.rest,

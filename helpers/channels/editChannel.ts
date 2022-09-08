@@ -4,7 +4,36 @@ import { DiscordChannel } from "../../types/discord.ts";
 import { ChannelTypes, VideoQualityModes } from "../../types/shared.ts";
 import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
 
-/** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
+/**
+ * Edits a channel's settings.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param channelId - The ID of the channel to edit.
+ * @param options - The parameters for the edit of the channel.
+ * @returns An instance of the edited {@link Channel}.
+ *
+ * @remarks
+ * If editing a channel of type {@link ChannelTypes.GroupDm}:
+ * - Fires a _Channel Update_ gateway event.
+ *
+ * If editing a thread channel:
+ * - Requires the `MANAGE_THREADS` permission __unless__ if setting the `archived` property to `false` when the `locked` property is also `false`, in which case only the `SEND_MESSAGES` permission is required.
+ *
+ * - Fires a _Thread Update_ gateway event.
+ *
+ * If editing a guild channel:
+ * - Requires the `MANAGE_CHANNELS` permission.
+ *
+ * - If modifying permission overrides:
+ *   - Requires the `MANAGE_ROLES` permission.
+ *
+ *   - Only permissions the bot user has in the guild or parent channel can be allowed/denied __unless__ the bot user has a `MANAGE_ROLES` permission override in the channel.
+ *
+ * - If modifying a channel of type {@link ChannelTypes.GuildCategory}:
+ *     - Fires a _Channel Update_ gateway event for each child channel impacted in this change.
+ * - Otherwise:
+ *     - Fires a _Channel Update_ gateway event.
+ */
 export async function editChannel(
   bot: Bot,
   channelId: bigint,

@@ -2,7 +2,20 @@ import type { Bot } from "../../bot.ts";
 
 export const swapChannels = editChannelPositions;
 
-/** Modify the positions of channels on the guild. Requires MANAGE_CHANNELS permission. Only channels to be modified are required. */
+/**
+ * Edits the positions of a set of channels in a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild in which to edit the positions of the channels.
+ * @param channelPositions - A set of objects defining the updated positions of the channels.
+ *
+ * @remarks
+ * Requires the `MANAGE_CHANNELS` permission.
+ *
+ * Fires a _Channel Update_ gateway event for every channel impacted in this change.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions}
+ */
 export async function editChannelPositions(
   bot: Bot,
   guildId: bigint,

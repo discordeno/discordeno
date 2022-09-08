@@ -3,7 +3,24 @@ import { DiscordInvite } from "../../../types/discord.ts";
 import { TargetTypes } from "../../../types/shared.ts";
 import { BaseInvite } from "./getInvite.ts";
 
-/** Creates a new invite for this channel. Requires CREATE_INSTANT_INVITE */
+/**
+ * Creates an invite to a channel in a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param channelId - The ID of the channel to create the invite to.
+ * @param options - The parameters for the creation of the invite.
+ * @returns An instance of the created {@link BaseInvite | Invite}.
+ *
+ * @remarks
+ * Requires the `CREATE_INSTANT_INVITE` permission.
+ *
+ * Fires an _Invite Create_ gateway event.
+ *
+ * @privateRemarks
+ * The request body is not optional, and an empty JSON object must be sent regardless of whether any fields are being transmitted.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/channel#create-channel-invite}
+ */
 export async function createInvite(
   bot: Bot,
   channelId: bigint,

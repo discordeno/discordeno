@@ -4,7 +4,20 @@ import { TargetTypes } from "../../types/shared.ts";
 import { Collection } from "../../util/collection.ts";
 import { InviteMetadata } from "../guilds/invites/mod.ts";
 
-/** Gets the invites for this channel. Requires MANAGE_CHANNEL */
+/**
+ * Gets the list of invites for a channel.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param channelId - The ID of the channel to get the invites of.
+ * @returns A collection of {@link InviteMetadata} objects assorted by invite code.
+ *
+ * @remarks
+ * Requires the `MANAGE_CHANNELS` permission.
+ *
+ * Only usable for guild channels.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/channel#get-channel-invites}
+ */
 export async function getChannelInvites(bot: Bot, channelId: bigint): Promise<Collection<string, InviteMetadata>> {
   const results = await bot.rest.runMethod<DiscordInviteMetadata[]>(
     bot.rest,

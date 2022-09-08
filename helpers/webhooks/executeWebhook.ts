@@ -4,11 +4,26 @@ import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
 
-/** Send a webhook with webhook Id and webhook token */
-export async function sendWebhookMessage(
+export const sendWebhookMessage = executeWebhook;
+
+/**
+ * Executes a webhook, causing a message to be posted in the channel configured for the webhook.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param webhookId - The ID of the webhook to execute.
+ * @param token - The webhook token, used to execute the webhook.
+ * @param options - The parameters for the execution of the webhook.
+ * @returns An instance of the created {@link Message}, or `undefined` if the {@link ExecuteWebhook.wait | wait} property of the {@link options} object parameter is set to `false`.
+ *
+ * @remarks
+ * If the webhook channel is a forum channel, you must provide a value for either `threadId` or `threadName`.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/webhook#execute-webhook}
+ */
+export async function executeWebhook(
   bot: Bot,
   webhookId: bigint,
-  webhookToken: string,
+  token: string,
   options: ExecuteWebhook,
 ): Promise<Message | undefined> {
   const allowedMentions = options.allowedMentions
@@ -23,7 +38,7 @@ export async function sendWebhookMessage(
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "POST",
-    bot.constants.routes.WEBHOOK(webhookId, webhookToken, options),
+    bot.constants.routes.WEBHOOK(webhookId, token, options),
     {
       wait: options.wait,
       thread_id: options.threadId,

@@ -4,7 +4,18 @@ import { DiscordInviteMetadata } from "../../../types/discord.ts";
 import { Collection } from "../../../util/collection.ts";
 import { InviteMetadata } from "./getInvite.ts";
 
-/** Get all the invites for this guild. Requires MANAGE_GUILD permission */
+/**
+ * Gets the list of invites for a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to get the invites from.
+ * @returns A collection of {@link InviteMetadata | Invite} objects assorted by invite code.
+ *
+ * @remarks
+ * Requires the `MANAGE_GUILD` permission.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/invite#get-invites}
+ */
 export async function getInvites(bot: Bot, guildId: bigint): Promise<Collection<string, InviteMetadata>> {
   const results = await bot.rest.runMethod<DiscordInviteMetadata[]>(
     bot.rest,

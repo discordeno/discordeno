@@ -19,8 +19,22 @@ export type AuditLog = {
   webhooks: Webhook[];
 };
 
-/** Returns the audit logs for the guild. Requires VIEW_AUDIT_LOGS permission */
-export async function getAuditLogs(bot: Bot, guildId: bigint, options?: GetGuildAuditLog): Promise<AuditLog> {
+// TODO: Move `AuditLog` into its own transformer file.
+
+/**
+ * Gets a guild's audit log.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to get the audit log of.
+ * @param options - The parameters for the fetching of the audit log.
+ * @returns An instance of {@link AuditLog}.
+ *
+ * @remarks
+ * Requires the `VIEW_AUDIT_LOG` permission.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log}
+ */
+export async function getAuditLog(bot: Bot, guildId: bigint, options?: GetGuildAuditLog): Promise<AuditLog> {
   if (options?.limit) {
     options.limit = options.limit >= 1 && options.limit <= 100 ? options.limit : 50;
   }

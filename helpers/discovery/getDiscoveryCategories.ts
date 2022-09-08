@@ -13,7 +13,14 @@ export type DiscoveryName = {
   localizations?: Record<string, string>;
 };
 
-/** Returns a Collection (mapped by Id of the discovery category object) of discovery category objects that can be used when editing guilds */
+/**
+ * Gets the list of available discovery categories.
+ *
+ * @param bot - The bot instance to use to make the request.
+ *
+ * @privateRemarks
+ * This endpoint is not formally documented.
+ */
 export async function getDiscoveryCategories(bot: Bot): Promise<Collection<bigint, DiscoveryCategory>> {
   const results = await bot.rest.runMethod<DiscordDiscoveryCategory[]>(
     bot.rest,

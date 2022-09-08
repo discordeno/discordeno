@@ -4,9 +4,18 @@ import { CreateApplicationCommand, DiscordApplicationCommand } from "../../../ty
 import { Collection } from "../../../util/collection.ts";
 
 /**
- * Bulk edit existing global application commands. If a command does not exist, it will create it.
+ * Re-registers the list of global application commands, overwriting the previous commands completely.
  *
- * **NOTE:** Any application commands that are not specified in this function will be **deleted**. If you don't provide the commandId and rename your command, the command gets a new Id.
+ * @param bot - The bot instance to use to make the request.
+ * @param commands - The list of commands to use to overwrite the previous list.
+ * @returns A collection of {@link ApplicationCommand} objects assorted by command ID.
+ *
+ * @remarks
+ * ❗ Commands that are not present in the `commands` array will be __deleted__.
+ *
+ * ⚠️ Commands that do not already exist will count towards the daily limit of _200_ new commands.
+ *
+ * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands}
  */
 export async function upsertGlobalApplicationCommands(
   bot: Bot,

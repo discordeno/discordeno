@@ -3,14 +3,22 @@ import type { Bot } from "../../../bot.ts";
 export const updateBotVoiceState = editOwnVoiceState;
 
 /**
- * Updates the bot's voice state
- * Caveats:
- *  - `channel_id` must currently point to a stage channel.
- *  - Bot must already have joined `channel_id`.
- *  - You must have the `MUTE_MEMBERS` permission. But can always suppress yourself.
- *  - You must have the `REQUEST_TO_SPEAK` permission to request to speak. You can always clear your own request to speak.
- *  - You are able to set `request_to_speak_timestamp` to any present or future time.
- *  - When suppressed, the user will have their `request_to_speak_timestamp` removed.
+ * Edits the voice state of the bot user.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild in which to edit the voice state of the bot user.
+ * @param options - The parameters for the edit of the voice state.
+ *
+ * @remarks
+ * The {@link EditOwnVoiceState.channelId | channelId} property of the {@link options} object parameter must point to a stage channel, and the bot user must already have joined it.
+ *
+ * If attempting to unmute oneself:
+ * - Requires the `MUTE_MEMBERS` permission.
+ *
+ * If attempting to request to speak:
+ * - Requires the `REQUEST_TO_SPEAK` permission.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state}
  */
 export async function editOwnVoiceState(bot: Bot, guildId: bigint, options: EditOwnVoiceState): Promise<void> {
   return await bot.rest.runMethod<void>(bot.rest, "PATCH", bot.constants.routes.UPDATE_VOICE_STATE(guildId), {
@@ -22,16 +30,21 @@ export async function editOwnVoiceState(bot: Bot, guildId: bigint, options: Edit
   });
 }
 
+// TODO: Make the `userId` property of `options` its own parameter.
+
 /**
- * Updates the a user's voice state
- * Caveats:
- *  - `channel_id` must currently point to a stage channel.
- *  - User must already have joined `channel_id`.
- *  - You must have the `MUTE_MEMBERS` permission. But can always suppress yourself.
- *  - When unsuppressed, non-bot users will have their `request_to_speak_timestamp` set to the current time. Bot users will not.
- *  - You must have the `REQUEST_TO_SPEAK` permission to request to speak. You can always clear your own request to speak.
- *  - You are able to set `request_to_speak_timestamp` to any present or future time.
- *  - When suppressed, the user will have their `request_to_speak_timestamp` removed.
+ * Edits the voice state of another user.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild in which to edit the voice state of the bot user.
+ * @param options - The parameters for the edit of the voice state.
+ *
+ * @remarks
+ * The {@link EditOwnVoiceState.channelId | channelId} property of the {@link options} object parameter must point to a stage channel, and the user must already have joined it.
+ *
+ * Requires the `MUTE_MEMBERS` permission.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state}
  */
 export async function editUserVoiceState(bot: Bot, guildId: bigint, options: EditUserVoiceState): Promise<void> {
   return await bot.rest.runMethod<void>(

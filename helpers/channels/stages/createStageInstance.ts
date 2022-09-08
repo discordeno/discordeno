@@ -2,7 +2,20 @@ import type { Bot } from "../../../bot.ts";
 import { StageInstance } from "../../../transformers/stageInstance.ts";
 import { DiscordStageInstance } from "../../../types/discord.ts";
 
-/** Creates a new Stage instance associated to a Stage channel. Requires the user to be a moderator of the Stage channel. */
+/**
+ * Creates a stage instance associated with a stage channel.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param options - The parameters for the creation of the stage instance.
+ * @returns An instance of the created {@link StageInstance}.
+ *
+ * @remarks
+ * Requires the user to be a moderator of the stage channel.
+ *
+ * Fires a _Stage Instance Create_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/stage-instance#create-stage-instance}
+ */
 export async function createStageInstance(bot: Bot, options: CreateStageInstance): Promise<StageInstance> {
   const result = await bot.rest.runMethod<DiscordStageInstance>(
     bot.rest,

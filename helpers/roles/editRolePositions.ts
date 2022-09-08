@@ -3,7 +3,21 @@ import { Role } from "../../transformers/role.ts";
 import { DiscordRole } from "../../types/discord.ts";
 import { Collection } from "../../util/collection.ts";
 
-/** Modify the positions of a set of role objects for the guild. Requires the MANAGE_ROLES permission. Returns a list of all of the guild's role objects on success. Fires multiple Guild Role Update Gateway events. */
+/**
+ * Edits the positions of a set of roles.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to edit the role positions in.
+ * @param options - The parameters for the edit of the role positions.
+ * @returns A collection of {@link Role} objects assorted by role ID.
+ *
+ * @remarks
+ * Requires the `MANAGE_ROLES` permission.
+ *
+ * Fires a _Guild Role Update_ gateway event for every role impacted in this change.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-role-positions}
+ */
 export async function modifyRolePositions(
   bot: Bot,
   guildId: bigint,

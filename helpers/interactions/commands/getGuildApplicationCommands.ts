@@ -3,7 +3,15 @@ import { ApplicationCommand } from "../../../transformers/applicationCommand.ts"
 import { DiscordApplicationCommand } from "../../../types/discord.ts";
 import { Collection } from "../../../util/collection.ts";
 
-/** Fetch all the commands for your application for a given guild */
+/**
+ * Gets the list of application commands registered by your bot in a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild the commands are registered in.
+ * @returns A collection of {@link ApplicationCommand} objects assorted by command ID.
+ *
+ * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commandss}
+ */
 export async function getGuildApplicationCommands(
   bot: Bot,
   guildId: bigint,

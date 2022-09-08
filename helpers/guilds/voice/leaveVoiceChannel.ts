@@ -1,7 +1,19 @@
 import type { Bot } from "../../../bot.ts";
 import { GatewayOpcodes } from "../../../types/shared.ts";
 
-/** Leave a voice channel inside a guild. */
+/**
+ * Leaves the voice channel the bot user is currently in.
+ *
+ * This function sends the _Update Voice State_ gateway command over the gateway behind the scenes.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild the voice channel to leave is in.
+ *
+ * @remarks
+ * Fires a _Voice State Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/topics/gateway#update-voice-state}
+ */
 export async function leaveVoiceChannel(
   bot: Bot,
   guildId: bigint,
