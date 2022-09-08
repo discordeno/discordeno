@@ -1,9 +1,8 @@
 export * from "./automod/mod.ts";
-export * from "./scheduledEvents/mod.ts";
-
 export * from "./createGuild.ts";
 export * from "./deleteGuild.ts";
 export * from "./editGuild.ts";
+export * from "./editGuildMfaLevel.ts";
 export * from "./editWelcomeScreen.ts";
 export * from "./editWidget.ts";
 export * from "./getAuditLogs.ts";
@@ -23,3 +22,4 @@ export * from "./getWidget.ts";
 export * from "./getWidgetImageUrl.ts";
 export * from "./getWidgetSettings.ts";
 export * from "./leaveGuild.ts";
+export * from "./scheduledEvents/mod.ts";
