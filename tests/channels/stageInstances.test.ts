@@ -15,7 +15,7 @@ Deno.test({
     assertExists(instance);
 
     await t.step("[stage] Edit a stage instance", async () => {
-      const edited = await bot.helpers.updateStageInstance(stage.id, {
+      const edited = await bot.helpers.editStageInstance(stage.id, {
         topic: "edited",
       });
       assertNotEquals(edited.topic, stage.topic);
