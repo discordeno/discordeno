@@ -2,17 +2,32 @@ import type { Bot } from "../../bot.ts";
 import { Member } from "../../transformers/member.ts";
 import { DiscordMemberWithUser } from "../../types/discord.ts";
 
-/** Edit the member */
+/**
+ * Edits a member's properties.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to edit the member of.
+ * @param userId - The user ID of the member to edit.
+ * @param options - The parameters for the edit of the user.
+ *
+ * @remarks
+ * This endpoint requires various permissions depending on what is edited about the member.
+ * To find out the required permission to enact a change, read the documentation of this endpoint's {@link ModifyGuildMember | parameters}.
+ *
+ * Fires a _Guild Member Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-member}
+ */
 export async function editMember(
   bot: Bot,
   guildId: bigint,
-  memberId: bigint,
+  userId: bigint,
   options: ModifyGuildMember,
 ): Promise<Member> {
   const result = await bot.rest.runMethod<DiscordMemberWithUser>(
     bot.rest,
     "PATCH",
-    bot.constants.routes.GUILD_MEMBER(guildId, memberId),
+    bot.constants.routes.GUILD_MEMBER(guildId, userId),
     {
       nick: options.nick,
       roles: options.roles?.map((id) => id.toString()),
@@ -25,7 +40,7 @@ export async function editMember(
     },
   );
 
-  return bot.transformers.member(bot, result, guildId, memberId);
+  return bot.transformers.member(bot, result, guildId, userId);
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-member */

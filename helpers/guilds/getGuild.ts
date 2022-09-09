@@ -3,8 +3,14 @@ import { Guild } from "../../transformers/guild.ts";
 import { DiscordGuild } from "../../types/discord.ts";
 
 /**
- * This function fetches a guild's data. This is not the same data as a GUILD_CREATE.
- * So it does not cache the guild, you must do it manually.
+ * Gets a guild by its ID.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to get.
+ * @param options - The parameters for the fetching of the guild.
+ * @returns An instance of {@link Guild}.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#get-guild}
  */
 export async function getGuild(
   bot: Bot,

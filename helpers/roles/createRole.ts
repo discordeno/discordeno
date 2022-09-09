@@ -3,7 +3,21 @@ import { Role } from "../../transformers/role.ts";
 import { DiscordRole } from "../../types/discord.ts";
 import { PermissionStrings } from "../../types/shared.ts";
 
-/** Create a new role for the guild. Requires the MANAGE_ROLES permission. */
+/**
+ * Creates a role in a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to create the role in.
+ * @param options - The parameters for the creation of the role.
+ * @returns An instance of the created {@link Role}.
+ *
+ * @remarks
+ * Requires the `MANAGE_ROLES` permission.
+ *
+ * Fires a _Guild Role Create_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-role}
+ */
 export async function createRole(bot: Bot, guildId: bigint, options: CreateGuildRole, reason?: string): Promise<Role> {
   const result = await bot.rest.runMethod<DiscordRole>(bot.rest, "POST", bot.constants.routes.GUILD_ROLES(guildId), {
     name: options.name,

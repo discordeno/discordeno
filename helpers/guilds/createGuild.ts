@@ -10,7 +10,20 @@ import {
   VerificationLevels,
 } from "../../types/shared.ts";
 
-/** Create a new guild. Returns a guild object on success. Fires a Guild Create Gateway event. This endpoint can be used only by bots in less than 10 guilds. */
+/**
+ * Creates a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param options - The parameters for the creation of the guild.
+ * @returns An instance of the created {@link Guild}.
+ *
+ * @remarks
+ * ⚠️ This route can only be used by bots in __fewer than 10 guilds__.
+ *
+ * Fires a _Guild Create_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#create-guild}
+ */
 export async function createGuild(bot: Bot, options: CreateGuild): Promise<Guild> {
   const result = await bot.rest.runMethod<DiscordGuild>(bot.rest, "POST", bot.constants.routes.GUILDS(), {
     name: options.name,

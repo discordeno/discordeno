@@ -29,8 +29,7 @@ Deno.test("[webhooks] Send a message with a webhook", async (t) => {
   });
 
   await t.step("[webhooks] Edit a webhook message", async () => {
-    const edited = await bot.helpers.editWebhookMessage(webhook.id, webhook.token!, {
-      messageId: message.id,
+    const edited = await bot.helpers.editWebhookMessage(webhook.id, webhook.token!, message.id, {
       content: "different",
     });
 

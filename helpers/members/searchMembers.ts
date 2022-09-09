@@ -6,7 +6,15 @@ import { Member } from "../../transformers/member.ts";
 import { Collection } from "../../util/collection.ts";
 
 /**
- * Query string to match username(s) and nickname(s) against
+ * Gets the list of members whose usernames or nicknames start with a provided string.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to search in.
+ * @param query - The string to match usernames or nicknames against.
+ * @param options - The parameters for searching through the members.
+ * @returns A collection of {@link Member} objects assorted by user ID.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#search-guild-members}
  */
 export async function searchMembers(
   bot: Bot,
