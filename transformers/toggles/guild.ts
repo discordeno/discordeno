@@ -59,9 +59,9 @@ export const GuildToggle = {
   /** Whether the guild is able to set role icons */
   roleIcons: 1n << 27n,
   /** Guild has set up auto moderation rules */
-  AutoModeration: 1n << 28n,
+  autoModeration: 1n << 28n,
   /** Guild has paused invites, preventing new users from joining */
-  InvitesDisabled: 1n << 29n,
+  invitesDisabled: 1n << 29n,
 };
 
 export class GuildToggles extends ToggleBitfieldBigint {
@@ -97,6 +97,8 @@ export class GuildToggles extends ToggleBitfieldBigint {
     if (guild.features.includes(GuildFeatures.MoreStickers)) this.add(GuildToggle.moreStickers);
     if (guild.features.includes(GuildFeatures.PrivateThreads)) this.add(GuildToggle.privateThreads);
     if (guild.features.includes(GuildFeatures.RoleIcons)) this.add(GuildToggle.roleIcons);
+    if (guild.features.includes(GuildFeatures.AutoModeration)) this.add(GuildToggle.autoModeration);
+    if (guild.features.includes(GuildFeatures.InvitesDisabled)) this.add(GuildToggle.invitesDisabled);
   }
 
   /** Whether the bot is the owner of the guild */
@@ -208,6 +210,14 @@ export class GuildToggles extends ToggleBitfieldBigint {
   /** Whether the guild is able to set role icons */
   get roleIcons() {
     return this.has("roleIcons");
+  }
+
+  get autoModeration() {
+    return this.has("autoModeration");
+  }
+
+  get invitesDisabled() {
+    return this.has("invitesDisabled");
   }
 
   /** Checks whether or not the permissions exist in this */
