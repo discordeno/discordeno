@@ -1,19 +1,11 @@
 import { AllowedMentionsTypes, BotWithCache } from "../../deps.ts";
-import { validateAttachments } from "../attachments.ts";
 import { validateComponents } from "../components.ts";
 
 export function editWebhookMessage(bot: BotWithCache) {
   const editWebhookMessageOld = bot.helpers.editWebhookMessage;
 
-  bot.helpers.editWebhookMessage = async function (
-    webhookId,
-    webhookToken,
-    options,
-  ) {
-    if (
-      options.content &&
-      !bot.utils.validateLength(options.content, { max: 2000 })
-    ) {
+  bot.helpers.editWebhookMessage = async function (webhookId, webhookToken, messageId, options) {
+    if (options.content && !bot.utils.validateLength(options.content, { max: 2000 })) {
       throw Error("The content can not exceed 2000 characters.");
     }
 
@@ -23,49 +15,29 @@ export function editWebhookMessage(bot: BotWithCache) {
 
     if (options.allowedMentions) {
       if (options.allowedMentions.users?.length) {
-        if (
-          options.allowedMentions.parse?.includes(
-            AllowedMentionsTypes.UserMentions,
-          )
-        ) {
-          options.allowedMentions.parse = options.allowedMentions.parse.filter((
-            p,
-          ) => p !== "users");
+        if (options.allowedMentions.parse?.includes(AllowedMentionsTypes.UserMentions)) {
+          options.allowedMentions.parse = options.allowedMentions.parse.filter((p) => p !== "users");
         }
 
         if (options.allowedMentions.users.length > 100) {
-          options.allowedMentions.users = options.allowedMentions.users.slice(
-            0,
-            100,
-          );
+          options.allowedMentions.users = options.allowedMentions.users.slice(0, 100);
         }
       }
 
       if (options.allowedMentions.roles?.length) {
-        if (
-          options.allowedMentions.parse?.includes(
-            AllowedMentionsTypes.RoleMentions,
-          )
-        ) {
-          options.allowedMentions.parse = options.allowedMentions.parse.filter((
-            p,
-          ) => p !== "roles");
+        if (options.allowedMentions.parse?.includes(AllowedMentionsTypes.RoleMentions)) {
+          options.allowedMentions.parse = options.allowedMentions.parse.filter((p) => p !== "roles");
         }
 
         if (options.allowedMentions.roles.length > 100) {
-          options.allowedMentions.roles = options.allowedMentions.roles.slice(
-            0,
-            100,
-          );
+          options.allowedMentions.roles = options.allowedMentions.roles.slice(0, 100);
         }
       }
     }
 
     if (options.components) validateComponents(bot, options.components);
 
-    if (options.attachments) validateAttachments(bot, options.attachments);
-
-    return await editWebhookMessageOld(webhookId, webhookToken, options);
+    return await editWebhookMessageOld(webhookId, webhookToken, messageId, options);
   };
 }
 
