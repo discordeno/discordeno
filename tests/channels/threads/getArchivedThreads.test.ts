@@ -13,7 +13,7 @@ Deno.test("[thread] Get archived threads", async (t) => {
     autoArchiveDuration: 60,
   });
 
-  const archived = await bot.helpers.getArchivedThreads(channel.id);
+  const archived = await bot.helpers.getPublicArchivedThreads(channel.id);
   assertEquals(archived.threads.size, 0);
   assertEquals(archived.members.size, 0);
 
@@ -25,7 +25,7 @@ Deno.test("[thread] Get archived threads", async (t) => {
   });
   assertNotEquals(thread.archived, edited.archived);
 
-  const archivedNow = await bot.helpers.getArchivedThreads(channel.id);
+  const archivedNow = await bot.helpers.getPublicArchivedThreads(channel.id);
   assertEquals(Boolean(archivedNow.threads.size), true);
   assertEquals(Boolean(archivedNow.members.size), true);
 

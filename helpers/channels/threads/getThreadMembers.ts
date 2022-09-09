@@ -3,12 +3,23 @@ import { ThreadMember } from "../../../transformers/threadMember.ts";
 import { DiscordThreadMember } from "../../../types/discord.ts";
 import { Collection } from "../../../util/collection.ts";
 
-/** Returns thread members objects that are members of the thread. */
-export async function getThreadMembers(bot: Bot, threadId: bigint): Promise<Collection<bigint, ThreadMember>> {
+/**
+ * Gets the list of thread members for a thread.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param channelId - The ID of the thread to get the thread members of.
+ * @returns A collection of {@link ThreadMember} assorted by user ID.
+ *
+ * @remarks
+ * Requires the application to have the `GUILD_MEMBERS` privileged intent enabled.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/channel#list-thread-members}
+ */
+export async function getThreadMembers(bot: Bot, channelId: bigint): Promise<Collection<bigint, ThreadMember>> {
   const results = await bot.rest.runMethod<DiscordThreadMember[]>(
     bot.rest,
     "GET",
-    bot.constants.routes.THREAD_MEMBERS(threadId),
+    bot.constants.routes.THREAD_MEMBERS(channelId),
   );
 
   return new Collection(

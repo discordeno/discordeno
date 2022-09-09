@@ -2,6 +2,8 @@ import { Bot } from "../bot.ts";
 import { DiscordVoiceRegion } from "../types/discord.ts";
 import { Optionalize } from "../types/shared.ts";
 
+// TODO: Rename `VoiceRegions` to `VoiceRegion`.
+
 export function transformVoiceRegion(bot: Bot, payload: DiscordVoiceRegion) {
   const voiceRegion = {
     id: payload.id,
