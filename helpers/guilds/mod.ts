@@ -8,6 +8,7 @@ export * from "./widget/mod.ts";
 export * from "./createGuild.ts";
 export * from "./deleteGuild.ts";
 export * from "./editGuild.ts";
+export * from "./editGuildMfaLevel.ts";
 export * from "./editWelcomeScreen.ts";
 export * from "./getAuditLog.ts";
 export * from "./getBan.ts";

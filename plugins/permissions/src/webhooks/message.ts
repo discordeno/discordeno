@@ -1,4 +1,5 @@
 import { AllowedMentionsTypes, BotWithCache } from "../../deps.ts";
+import { validateAttachments } from "../attachments.ts";
 import { validateComponents } from "../components.ts";
 
 export function editWebhookMessage(bot: BotWithCache) {
@@ -61,6 +62,8 @@ export function editWebhookMessage(bot: BotWithCache) {
     }
 
     if (options.components) validateComponents(bot, options.components);
+
+    if (options.attachments) validateAttachments(bot, options.attachments);
 
     return await editWebhookMessageOld(webhookId, webhookToken, options);
   };

@@ -1,6 +1,6 @@
-import { RestManager } from "./restManager.ts";
 import { API_VERSION, BASE_URL, baseEndpoints } from "../util/constants.ts";
 import { RequestMethod, RestRequestRejection, RestRequestResponse } from "./rest.ts";
+import { RestManager } from "./restManager.ts";
 
 export async function runMethod<T = any>(
   rest: RestManager,
@@ -23,10 +23,6 @@ export async function runMethod<T = any>(
     }`,
   );
 
-  const errorStack = new Error("Location:");
-  // @ts-ignore Breaks deno deploy. Luca said add ts-ignore until it's fixed
-  Error.captureStackTrace(errorStack);
-
   // For proxies we don't need to do any of the legwork so we just forward the request
   if (!baseEndpoints.BASE_URL.startsWith(BASE_URL) && route[0] === "/") {
     const result = await fetch(`${baseEndpoints.BASE_URL}${route}`, {
@@ -36,21 +32,19 @@ export async function runMethod<T = any>(
         "Content-Type": "application/json",
       },
       method,
-    }).catch((error) => {
-      errorStack.message = (error as Error)?.message;
-      console.error(error);
-      throw errorStack;
     });
 
     if (!result.ok) {
       const err = await result.json().catch(() => {});
-      errorStack.message = err.message ?? result.statusText as Error["message"];
-      console.error(`Error: ${errorStack.message}`);
-      throw errorStack;
+      throw new Error(`Error: ${err.message ?? result.statusText}`);
     }
 
     return result.status !== 204 ? await result.json() : undefined;
   }
+
+  const errorStack = new Error("Location:");
+  // @ts-ignore Breaks deno deploy. Luca said add ts-ignore until it's fixed
+  Error.captureStackTrace(errorStack);
 
   // No proxy so we need to handle all rate limiting and such
   return new Promise((resolve, reject) => {
@@ -60,10 +54,8 @@ export async function runMethod<T = any>(
         url: route[0] === "/" ? `${BASE_URL}/v${API_VERSION}${route}` : route,
         method,
         reject: (data: RestRequestRejection) => {
-          const newError = new Error("Location:");
-          newError.stack = errorStack.stack as Error["stack"];
           const restError = rest.convertRestError(
-            newError,
+            errorStack,
             data,
           );
           reject(restError);

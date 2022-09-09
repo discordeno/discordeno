@@ -92,6 +92,21 @@ export async function editChannel(
           deny: overwrite.deny ? bot.utils.calculateBits(overwrite.deny) : null,
         }))
         : undefined,
+      available_tags: options.availableTags
+        ? options.availableTags.map((availableTag) => ({
+          id: availableTag.id,
+          name: availableTag.name,
+          moderated: availableTag.moderated,
+          emoji_id: availableTag.emojiId,
+          emoji_name: availableTag.emojiName,
+        }))
+        : undefined,
+      default_reaction_emoji: options.defaultReactionEmoji
+        ? {
+          emoji_id: options.defaultReactionEmoji.emojiId,
+          emoji_name: options.defaultReactionEmoji.emojiName,
+        }
+        : undefined,
       reason,
     },
   );
@@ -189,4 +204,27 @@ export interface ModifyChannel {
   locked?: boolean;
   /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
   invitable?: boolean;
+
+  /** The set of tags that can be used in a GUILD_FORUM channel */
+  availableTags?: {
+    /** The id of the tag */
+    id: string;
+    /** The name of the tag (0-20 characters) */
+    name: string;
+    /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
+    moderated: boolean;
+    /** The id of a guild's custom emoji At most one of emoji_id and emoji_name may be set. */
+    emojiId: string;
+    /** The unicode character of the emoji */
+    emojiName: string;
+  }[];
+  /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */
+  defaultReactionEmoji?: {
+    /** The id of a guild's custom emoji */
+    emojiId: string;
+    /** The unicode character of the emoji */
+    emojiName: string | null;
+  };
+  /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
+  defaultThreadRateLimitPerUser?: number;
 }

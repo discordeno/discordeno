@@ -134,6 +134,8 @@ export interface DiscordIntegration {
   account: DiscordIntegrationAccount;
   /** The bot/OAuth2 application for discord integrations */
   application?: DiscordIntegrationApplication;
+  /** the scopes the application has been authorized for */
+  scopes: string[];
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-account-object-integration-account-structure */
@@ -437,6 +439,8 @@ export interface DiscordAttachment {
 
   /** Attachment id */
   id: string;
+  /** description for the file (max 1024 characters) */
+  description?: string;
   /** Height of file (if image) */
   height?: number | null;
   /** Width of file (if image) */
@@ -707,7 +711,7 @@ export interface DiscordChannel {
   position?: number;
   /** The name of the channel (1-100 characters) */
   name?: string;
-  /** The channel topic (0-1024 characters) */
+  /** The channel topic (0-4096 characters for GUILD_FORUM channels, 0-1024 characters for all others) */
   topic?: string | null;
   /** The bitrate (in bits) of the voice or stage channel */
   bitrate?: number;
@@ -752,6 +756,14 @@ export interface DiscordChannel {
   permissions?: string;
   /** When a thread is created this will be true on that channel payload for the thread. */
   newly_created?: boolean;
+  /** The set of tags that can be used in a GUILD_FORUM channel */
+  available_tags: DiscordForumTag[];
+  /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
+  applied_tags: string[];
+  /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */
+  default_reaction_emoji?: DiscordDefaultReactionEmoji | null;
+  /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
+  default_thread_rate_limit_per_user: number;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#presence-update */
@@ -1404,6 +1416,8 @@ export interface DiscordAuditLog {
   guild_scheduled_events?: DiscordScheduledEvent[];
   /** List of auto moderation rules referenced in the audit log */
   auto_moderation_rules?: DiscordAutoModerationRule[];
+  /** List of application commands referenced in the audit log */
+  application_commands: DiscordApplicationCommand[];
 }
 
 export interface DiscordAutoModerationRule {
@@ -1441,6 +1455,7 @@ export enum AutoModerationTriggerTypes {
   HarmfulLink,
   Spam,
   KeywordPreset,
+  MentionSpam,
 }
 
 export interface DiscordAutoModerationRuleTriggerMetadata {
@@ -1451,6 +1466,8 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
   presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
   /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
   allow_list: string[];
+  /** Total number of mentions (role & user) allowed per message (Maximum of 50) */
+  mention_total_limit: number;
 }
 
 export enum DiscordAutoModerationRuleTriggerMetadataPresets {
@@ -2160,6 +2177,8 @@ export interface DiscordReady {
   guilds: DiscordUnavailableGuild[];
   /** Used for resuming connections */
   session_id: string;
+  /** Gateway url for resuming connections */
+  resume_gateway_url: string;
   /** The shard information associated with this session, if sent when identifying */
   shard?: [number, number];
   /** Contains id and flags */
@@ -2423,7 +2442,7 @@ export interface DiscordGuildWidgetSettings {
 }
 
 export interface DiscordInstallParams {
-  /** he scopes to add the application to the server with */
+  /** the scopes to add the application to the server with */
   scopes: string[];
   /** the permissions to request for the bot role */
   permissions: string;
@@ -2444,4 +2463,24 @@ export interface DiscordInteractionCallbackData {
   embeds?: DiscordEmbed[];
   allowed_mentions?: DiscordAllowedMentions;
   components?: DiscordComponent[];
+}
+
+export interface DiscordForumTag {
+  /** The id of the tag */
+  id: string;
+  /** The name of the tag (0-20 characters) */
+  name: string;
+  /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
+  moderated: boolean;
+  /** The id of a guild's custom emoji At most one of emoji_id and emoji_name may be set. */
+  emoji_id: string;
+  /** The unicode character of the emoji */
+  emoji_name: string | null;
+}
+
+export interface DiscordDefaultReactionEmoji {
+  /** The id of a guild's custom emoji */
+  emoji_id: string;
+  /** The unicode character of the emoji */
+  emoji_name: string | null;
 }

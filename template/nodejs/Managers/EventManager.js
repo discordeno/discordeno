@@ -26,7 +26,7 @@ class EventManager extends EventEmitter {
         return event(...args);
       };
     });
-    return this._events;
+    return this.allEvents;
   }
 }
 module.exports = EventManager;

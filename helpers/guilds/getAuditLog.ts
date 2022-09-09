@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { ApplicationCommand } from "../../transformers/applicationCommand.ts";
 import { AuditLogEntry } from "../../transformers/auditLogEntry.ts";
 import { AutoModerationRule } from "../../transformers/automodRule.ts";
 import { Channel } from "../../transformers/channel.ts";
@@ -17,6 +18,7 @@ export type AuditLog = {
   threads: Channel[];
   users: User[];
   webhooks: Webhook[];
+  applicationCommands: ApplicationCommand[];
 };
 
 // TODO: Move `AuditLog` into its own transformer file.
@@ -82,6 +84,9 @@ export async function getAuditLog(bot: Bot, guildId: bigint, options?: GetGuildA
     threads: result.threads.map((thread) => bot.transformers.channel(bot, { channel: thread, guildId })),
     users: result.users.map((user) => bot.transformers.user(bot, user)),
     webhooks: result.webhooks.map((hook) => bot.transformers.webhook(bot, hook)),
+    applicationCommands: result.application_commands.map((applicationCommand) =>
+      bot.transformers.applicationCommand(bot, applicationCommand)
+    ),
   };
 }
 

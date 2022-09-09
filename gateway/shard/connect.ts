@@ -8,8 +8,16 @@ export async function connect(shard: Shard): Promise<void> {
   }
   shard.events.connecting?.(shard);
 
-  // Explicitly setting the encoding to json, since we do not support ETF.
-  const socket = new WebSocket(`${shard.gatewayConfig.url}/?v=${shard.gatewayConfig.version}&encoding=json`);
+  const socket = new WebSocket(
+    `${
+      shard.gatewayConfig.url === "wss://gateway.discord.gg"
+        ? shard.state === ShardState.Resuming
+          ? shard.resumeGatewayUrl
+          : `${shard.gatewayConfig.url}/?v=${shard.gatewayConfig.version}&encoding=json`
+        : shard.gatewayConfig.url
+    }`,
+  );
+
   shard.socket = socket;
 
   // TODO: proper event handling
