@@ -7,12 +7,8 @@ import {
   CONTEXT_MENU_COMMANDS_NAME_REGEX,
   SLASH_COMMANDS_NAME_REGEX,
 } from "../../deps.ts";
-import { validateAttachments } from "../attachments.ts";
 
-export function validateApplicationCommandOptions(
-  bot: BotWithCache,
-  options: ApplicationCommandOption[],
-) {
+export function validateApplicationCommandOptions(bot: BotWithCache, options: ApplicationCommandOption[]) {
   const requiredOptions: ApplicationCommandOption[] = [];
   const optionalOptions: ApplicationCommandOption[] = [];
 
@@ -25,8 +21,7 @@ export function validateApplicationCommandOptions(
       }
 
       if (
-        option.type !== ApplicationCommandOptionTypes.String &&
-        option.type !== ApplicationCommandOptionTypes.Integer
+        option.type !== ApplicationCommandOptionTypes.String && option.type !== ApplicationCommandOptionTypes.Integer
       ) {
         throw new Error("Only string or integer options can have choices.");
       }
@@ -42,23 +37,17 @@ export function validateApplicationCommandOptions(
 
     option.choices?.every((choice) => {
       if (!bot.utils.validateLength(choice.name, { min: 1, max: 100 })) {
-        throw new Error(
-          "Invalid application command option choice name. Must be between 1-100 characters long.",
-        );
+        throw new Error("Invalid application command option choice name. Must be between 1-100 characters long.");
       }
 
       if (
         option.type === ApplicationCommandOptionTypes.String &&
-        (typeof choice.value !== "string" || choice.value.length < 1 ||
-          choice.value.length > 100)
+        (typeof choice.value !== "string" || choice.value.length < 1 || choice.value.length > 100)
       ) {
         throw new Error("Invalid slash options choice value type.");
       }
 
-      if (
-        option.type === ApplicationCommandOptionTypes.Integer &&
-        typeof choice.value !== "number"
-      ) {
+      if (option.type === ApplicationCommandOptionTypes.Integer && typeof choice.value !== "number") {
         throw new Error("A number must be set for Integer types.");
       }
     });
@@ -74,12 +63,11 @@ export function validateApplicationCommandOptions(
   return [...requiredOptions, ...optionalOptions];
 }
 
-export function createApplicationCommand(bot: BotWithCache) {
-  const createApplicationCommandOld = bot.helpers.createApplicationCommand;
+export function createGuildApplicationCommand(bot: BotWithCache) {
+  const createGuildApplicationCommandOld = bot.helpers.createGuildApplicationCommand;
 
-  bot.helpers.createApplicationCommand = async function (options, guildId) {
-    const isChatInput = !options.type ||
-      options.type === ApplicationCommandTypes.ChatInput;
+  bot.helpers.createGuildApplicationCommand = async function (options, guildId) {
+    const isChatInput = !options.type || options.type === ApplicationCommandTypes.ChatInput;
 
     if (!options.name) {
       throw new Error("A name is required to create a options.");
@@ -87,9 +75,7 @@ export function createApplicationCommand(bot: BotWithCache) {
 
     if (isChatInput) {
       if (!SLASH_COMMANDS_NAME_REGEX.test(options.name)) {
-        throw new Error(
-          "The name of the slash command did not match the required regex.",
-        );
+        throw new Error("The name of the slash command did not match the required regex.");
       }
 
       // Only slash need to be lowercase
@@ -97,13 +83,9 @@ export function createApplicationCommand(bot: BotWithCache) {
 
       // Slash commands require description
       if (!options.description) {
-        throw new Error(
-          "Slash commands require some form of a description be provided.",
-        );
+        throw new Error("Slash commands require some form of a description be provided.");
       } else if (!bot.utils.validateLength(options.description, { min: 1, max: 100 })) {
-        throw new Error(
-          "Application command descriptions must be between 1 and 100 characters.",
-        );
+        throw new Error("Application command descriptions must be between 1 and 100 characters.");
       }
 
       if (options.options?.length) {
@@ -115,20 +97,60 @@ export function createApplicationCommand(bot: BotWithCache) {
       }
     } else {
       if (!CONTEXT_MENU_COMMANDS_NAME_REGEX.test(options.name)) {
-        throw new Error(
-          "The name of the context menu did not match the required regex.",
-        );
+        throw new Error("The name of the context menu did not match the required regex.");
       }
     }
 
-    return await createApplicationCommandOld(options, guildId);
+    return await createGuildApplicationCommandOld(options, guildId);
   };
 }
 
-export function editInteractionResponse(bot: BotWithCache) {
-  const editInteractionResponseOld = bot.helpers.editInteractionResponse;
+export function createGlobalApplicationCommand(bot: BotWithCache) {
+  const createGlobalApplicationCommandOld = bot.helpers.createGlobalApplicationCommand;
 
-  bot.helpers.editInteractionResponse = async function (token, options) {
+  bot.helpers.createGlobalApplicationCommand = async function (options) {
+    const isChatInput = !options.type || options.type === ApplicationCommandTypes.ChatInput;
+
+    if (!options.name) {
+      throw new Error("A name is required to create a options.");
+    }
+
+    if (isChatInput) {
+      if (!SLASH_COMMANDS_NAME_REGEX.test(options.name)) {
+        throw new Error("The name of the slash command did not match the required regex.");
+      }
+
+      // Only slash need to be lowercase
+      options.name = options.name.toLowerCase();
+
+      // Slash commands require description
+      if (!options.description) {
+        throw new Error("Slash commands require some form of a description be provided.");
+      } else if (!bot.utils.validateLength(options.description, { min: 1, max: 100 })) {
+        throw new Error("Application command descriptions must be between 1 and 100 characters.");
+      }
+
+      if (options.options?.length) {
+        if (options.options.length > 25) {
+          throw new Error("Only 25 options are allowed to be provided.");
+        }
+
+        options.options = validateApplicationCommandOptions(bot, options.options);
+      }
+    } else {
+      if (!CONTEXT_MENU_COMMANDS_NAME_REGEX.test(options.name)) {
+        throw new Error("The name of the context menu did not match the required regex.");
+      }
+    }
+
+    return await createGlobalApplicationCommandOld(options);
+  };
+}
+
+export function editOriginalInteractionResponse(bot: BotWithCache) {
+  const editOriginalInteractionResponseOld = bot.helpers.editOriginalInteractionResponse;
+
+  bot.helpers.editOriginalInteractionResponse = async function (token, options) {
     if (options.content && options.content.length > 2000) {
       throw Error(bot.constants.Errors.MESSAGE_MAX_LENGTH);
     }
@@ -139,51 +161,32 @@ export function editInteractionResponse(bot: BotWithCache) {
 
     if (options.allowedMentions) {
       if (options.allowedMentions.users?.length) {
-        if (
-          options.allowedMentions.parse?.includes(
-            AllowedMentionsTypes.UserMentions,
-          )
-        ) {
-          options.allowedMentions.parse = options.allowedMentions.parse.filter((
-            p,
-          ) => p !== "users");
+        if (options.allowedMentions.parse?.includes(AllowedMentionsTypes.UserMentions)) {
+          options.allowedMentions.parse = options.allowedMentions.parse.filter((p) => p !== "users");
         }
 
         if (options.allowedMentions.users.length > 100) {
-          options.allowedMentions.users = options.allowedMentions.users.slice(
-            0,
-            100,
-          );
+          options.allowedMentions.users = options.allowedMentions.users.slice(0, 100);
         }
       }
 
       if (options.allowedMentions.roles?.length) {
-        if (
-          options.allowedMentions.parse?.includes(
-            AllowedMentionsTypes.RoleMentions,
-          )
-        ) {
-          options.allowedMentions.parse = options.allowedMentions.parse.filter((
-            p,
-          ) => p !== "roles");
+        if (options.allowedMentions.parse?.includes(AllowedMentionsTypes.RoleMentions)) {
+          options.allowedMentions.parse = options.allowedMentions.parse.filter((p) => p !== "roles");
         }
 
         if (options.allowedMentions.roles.length > 100) {
-          options.allowedMentions.roles = options.allowedMentions.roles.slice(
-            0,
-            100,
-          );
+          options.allowedMentions.roles = options.allowedMentions.roles.slice(0, 100);
         }
       }
     }
 
-    if (options.attachments) validateAttachments(bot, options.attachments);
-
-    return await editInteractionResponseOld(token, options);
+    return await editOriginalInteractionResponseOld(token, options);
   };
 }
 
 export default function setupInteractionCommandPermChecks(bot: BotWithCache) {
-  createApplicationCommand(bot);
-  editInteractionResponse(bot);
+  createGlobalApplicationCommand(bot);
+  createGuildApplicationCommand(bot);
+  editOriginalInteractionResponse(bot);
 }

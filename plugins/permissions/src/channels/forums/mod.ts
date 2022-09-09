@@ -1,6 +1,6 @@
 import { BotWithCache } from "../../../deps.ts";
-import createForumPost from "./createForumPost.ts";
+import createForumThread from "./createForumThread.ts";
 
 export default function setupThreadPermChecks(bot: BotWithCache) {
-  createForumPost(bot);
+  createForumThread(bot);
 }
