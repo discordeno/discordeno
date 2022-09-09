@@ -2,7 +2,7 @@ import type { Bot } from "../../../bot.ts";
 import { Channel } from "../../../transformers/channel.ts";
 import { Embed } from "../../../transformers/embed.ts";
 import { DiscordChannel } from "../../../types/discord.ts";
-import { AllowedMentions, FileContent, MessageComponents } from "../../../types/mod.ts";
+import { AllowedMentions, FileContent, MessageComponents, WithReason } from "../../../types/mod.ts";
 
 /**
  * Creates a new thread in a forum channel, and sends a message within the created thread.
@@ -25,7 +25,7 @@ import { AllowedMentions, FileContent, MessageComponents } from "../../../types/
 export async function createForumThread(
   bot: Bot,
   channelId: bigint,
-  options: CreateForumPostWithMessage,
+  options: WithReason<CreateForumPostWithMessage>,
 ): Promise<Channel> {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
@@ -62,8 +62,6 @@ export interface CreateForumPostWithMessage extends CreateForumMessage {
   autoArchiveDuration: 60 | 1440 | 4320 | 10080;
   /** Amount of seconds a user has to wait before sending another message (0-21600) */
   rateLimitPerUser?: number | null;
-  /** The reason you are creating the thread */
-  reason?: string;
 }
 
 export interface CreateForumMessage {

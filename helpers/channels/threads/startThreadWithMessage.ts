@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { WithReason } from "../../../mod.ts";
 import { Channel } from "../../../transformers/channel.ts";
 import { DiscordChannel } from "../../../types/discord.ts";
 
@@ -26,7 +27,7 @@ export async function startThreadWithMessage(
   bot: Bot,
   channelId: bigint,
   messageId: bigint,
-  options: StartThreadWithMessage,
+  options: WithReason<StartThreadWithMessage>,
 ): Promise<Channel> {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
@@ -48,6 +49,4 @@ export interface StartThreadWithMessage {
   autoArchiveDuration: 60 | 1440 | 4320 | 10080;
   /** Amount of seconds a user has to wait before sending another message (0-21600) */
   rateLimitPerUser?: number | null;
-  /** The reason you are creating the thread */
-  reason?: string;
 }

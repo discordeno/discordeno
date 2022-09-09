@@ -1,7 +1,12 @@
 import { Bot } from "../../../bot.ts";
 import { ScheduledEvent } from "../../../transformers/scheduledEvent.ts";
 import { DiscordScheduledEvent } from "../../../types/discord.ts";
-import { ScheduledEventEntityType, ScheduledEventPrivacyLevel, ScheduledEventStatus } from "../../../types/shared.ts";
+import {
+  ScheduledEventEntityType,
+  ScheduledEventPrivacyLevel,
+  ScheduledEventStatus,
+  WithReason,
+} from "../../../types/shared.ts";
 
 /**
  * Edits a scheduled event.
@@ -26,7 +31,7 @@ export async function editScheduledEvent(
   bot: Bot,
   guildId: bigint,
   eventId: bigint,
-  options: Partial<EditScheduledEvent>,
+  options: WithReason<Partial<EditScheduledEvent>>,
 ): Promise<ScheduledEvent> {
   if (options.name && !bot.utils.validateLength(options.name, { min: 1, max: 100 })) {
     throw new Error("Name must be between 1-100 characters.");
@@ -81,5 +86,4 @@ export interface EditScheduledEvent {
   entityType: ScheduledEventEntityType;
   /** the status of the scheduled event */
   status: ScheduledEventStatus;
-  reason?: string;
 }

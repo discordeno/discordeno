@@ -1,7 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
-import { ChannelTypes, VideoQualityModes } from "../../types/shared.ts";
+import { ChannelTypes, VideoQualityModes, WithReason } from "../../types/shared.ts";
 import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
 
 /**
@@ -37,8 +37,7 @@ import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
 export async function editChannel(
   bot: Bot,
   channelId: bigint,
-  options: ModifyChannel,
-  reason?: string,
+  options: WithReason<ModifyChannel>,
 ): Promise<Channel> {
   if (options.name || options.topic) {
     const request = editChannelNameTopicQueue.get(channelId);
@@ -107,7 +106,7 @@ export async function editChannel(
           emoji_name: options.defaultReactionEmoji.emojiName,
         }
         : undefined,
-      reason,
+      reason: options.reason,
     },
   );
 

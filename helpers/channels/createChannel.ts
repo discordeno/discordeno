@@ -1,7 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
-import { ChannelTypes } from "../../types/shared.ts";
+import { ChannelTypes, WithReason } from "../../types/shared.ts";
 import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
 
 /**
@@ -26,8 +26,7 @@ import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
 export async function createChannel(
   bot: Bot,
   guildId: bigint,
-  options?: CreateGuildChannel,
-  reason?: string,
+  options?: WithReason<CreateGuildChannel>,
 ): Promise<Channel> {
   // BITRATE IS IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
   if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000;
@@ -53,7 +52,7 @@ export async function createChannel(
           deny: overwrite.deny ? bot.utils.calculateBits(overwrite.deny) : null,
         })),
         type: options?.type || ChannelTypes.GuildText,
-        reason,
+        reason: options.reason,
         default_auto_archive_duration: options?.defaultAutoArchiveDuration,
       }
       : {},

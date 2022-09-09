@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { WithReason } from "../../mod.ts";
 import { Emoji } from "../../transformers/emoji.ts";
 import { DiscordEmoji } from "../../types/discord.ts";
 
@@ -19,7 +20,7 @@ import { DiscordEmoji } from "../../types/discord.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/emoji#create-guild-emoji}
  */
-export async function createEmoji(bot: Bot, guildId: bigint, options: CreateGuildEmoji): Promise<Emoji> {
+export async function createEmoji(bot: Bot, guildId: bigint, options: WithReason<CreateGuildEmoji>): Promise<Emoji> {
   if (options.image && !options.image.startsWith("data:image/")) {
     options.image = await bot.utils.urlToBase64(options.image);
   }
@@ -47,6 +48,4 @@ export interface CreateGuildEmoji {
   image: string;
   /** Roles allowed to use this emoji */
   roles?: bigint[];
-  /** The reason you are creating this emoji */
-  reason?: string;
 }

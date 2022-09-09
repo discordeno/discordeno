@@ -1,7 +1,7 @@
 import { Bot } from "../../../bot.ts";
 import { ScheduledEvent } from "../../../transformers/scheduledEvent.ts";
 import { DiscordScheduledEvent } from "../../../types/discord.ts";
-import { ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../../../types/shared.ts";
+import { ScheduledEventEntityType, ScheduledEventPrivacyLevel, WithReason } from "../../../types/shared.ts";
 
 /**
  * Creates a scheduled event in a guild.
@@ -23,7 +23,7 @@ import { ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../../../t
 export async function createScheduledEvent(
   bot: Bot,
   guildId: bigint,
-  options: CreateScheduledEvent,
+  options: WithReason<CreateScheduledEvent>,
 ): Promise<ScheduledEvent> {
   if (!bot.utils.validateLength(options.name, { min: 1, max: 100 })) {
     throw new Error("Name must be between 1-100 characters.");
@@ -84,5 +84,4 @@ export interface CreateScheduledEvent {
   privacyLevel?: ScheduledEventPrivacyLevel;
   /** the type of hosting entity associated with a scheduled event */
   entityType: ScheduledEventEntityType;
-  reason?: string;
 }
