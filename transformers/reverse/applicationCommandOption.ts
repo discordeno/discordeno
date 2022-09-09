@@ -14,11 +14,12 @@ export function transformApplicationCommandOptionToDiscordApplicationCommandOpti
     description_localizations: payload.descriptionLocalizations,
     required: payload.required,
     choices: payload.choices?.map((choice) => bot.transformers.reverse.applicationCommandOptionChoice(bot, choice)),
-    autocomplete: payload.autocomplete,
+    options: payload.options?.map((option) => bot.transformers.reverse.applicationCommandOption(bot, option)),
     channel_types: payload.channelTypes,
     min_value: payload.minValue,
     max_value: payload.maxValue,
-
-    options: payload.options?.map((option) => bot.transformers.reverse.applicationCommandOption(bot, option)),
+    min_length: payload.minLength,
+    max_length: payload.maxLength,
+    autocomplete: payload.autocomplete,
   };
 }

@@ -3,12 +3,27 @@ import { Role } from "../../transformers/role.ts";
 import { DiscordRole } from "../../types/discord.ts";
 import { PermissionStrings } from "../../types/shared.ts";
 
-/** Edit a guild role. Requires the MANAGE_ROLES permission. */
-export async function editRole(bot: Bot, guildId: bigint, id: bigint, options: EditGuildRole): Promise<Role> {
+/**
+ * Edits a role in a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to edit the role in.
+ * @param roleId - The ID of the role to edit.
+ * @param options - The parameters for the edit of the role.
+ * @returns An instance of the edited {@link Role}.
+ *
+ * @remarks
+ * Requires the `MANAGE_ROLES` permission.
+ *
+ * Fires a _Guild Role Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-role}
+ */
+export async function editRole(bot: Bot, guildId: bigint, roleId: bigint, options: EditGuildRole): Promise<Role> {
   const result = await bot.rest.runMethod<DiscordRole>(
     bot.rest,
     "PATCH",
-    bot.constants.routes.GUILD_ROLE(guildId, id),
+    bot.constants.routes.GUILD_ROLE(guildId, roleId),
     {
       name: options.name,
       color: options.color,

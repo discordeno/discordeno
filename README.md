@@ -101,47 +101,42 @@ Here is a minimal example to get started with:
 
 ```typescript
 import { createBot, Intents, startBot } from "https://deno.land/x/discordeno@13.0.0/mod.ts";
-import { enableCachePlugin, enableCacheSweepers } from "https://deno.land/x/discordeno@13.0.0/plugins/cache/mod.ts";
 
-const baseBot = createBot({
+const bot = createBot({
   token: Deno.env.get("DISCORD_TOKEN"),
   intents: Intents.Guilds | Intents.GuildMessages,
   events: {
     ready() {
       console.log("Successfully connected to gateway");
     },
-    messageCreate(bot, message) {
-      // Process the message here with your command handler
-    },
   },
 });
 
-const bot = enableCachePlugin(baseBot);
-
-enableCacheSweepers(bot);
+// Another way to do events
+bot.events.messageCreate = function (b, message) {
+  // Process the message here with your command handler.
+};
 
 await startBot(bot);
 ```
 
-### Templates
+### Tools
 
-Note to developers: don't worry, a lot of developers start out by building a Discord bot as their first project, and
-it's not easy. Discordeno is designed and built with all of the issues in mind that many developers have encountered
-when they initially started writing Discord bots using existing libraries. If you are a beginner, you can check out
+If you are a beginner, this library is not meant for you but you can check out if you still want to use this lib with
 these awesome official and unofficial templates:
+
+**Templates**
 
 - [Discordeno Template (official)](https://github.com/discordeno/discordeno/tree/main/template)
 - [Serverless Slash Commands Template (official)](https://github.com/discordeno/serverless-deno-deploy-template)
 - [`create-discordeno-bot` (WIP, unoffical)](https://github.com/Reboot-Codes/create-discordeno-bot/)
 - [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
 
-### Frameworks
+**Frameworks**
 
-- [Natico](https://github.com/naticoo/framework)
-- [Amethyst](https://github.com/AmethystFramework/framework)
 - [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
 
-### Plugins
+**Plugins**
 
 - [Cache Plugin](plugins/cache)
 - [Fileloader Plugin](plugins/fileloader)
@@ -153,8 +148,3 @@ these awesome official and unofficial templates:
 - [Website](https://discordeno.mod.land)
 - [Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
 - [Discord](https://discord.com/invite/5vBgXk3UcZ)
-
-## Contributing
-
-We appreciate your help! Before contributing, please read the
-[Contributing Guide](https://github.com/discordeno/discordeno/blob/main/.github/CONTRIBUTING.md).
