@@ -54,7 +54,7 @@ Deno.test({
       // });
 
       await t.step("[guild] Get audit logs", async () => {
-        const auditLogs = await bot.helpers.getAuditLogs(guild.id, { limit: 1 });
+        const auditLogs = await bot.helpers.getAuditLog(guild.id, { limit: 1 });
         assertExists(auditLogs.auditLogEntries.length);
       });
 

@@ -2,7 +2,23 @@ import type { Bot } from "../../bot.ts";
 import { Emoji } from "../../transformers/emoji.ts";
 import { DiscordEmoji } from "../../types/discord.ts";
 
-/** Create an emoji in the server */
+/**
+ * Creates an emoji in a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild in which to create the emoji.
+ * @param options - The parameters for the creation of the emoji.
+ * @returns An instance of the created {@link Emoji}.
+ *
+ * @remarks
+ * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+ *
+ * Emojis have a maximum file size of 256 kilobits. Attempting to upload a larger emoji will cause the route to return 400 Bad Request.
+ *
+ * Fires a _Guild Emojis Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/emoji#create-guild-emoji}
+ */
 export async function createEmoji(bot: Bot, guildId: bigint, options: CreateGuildEmoji): Promise<Emoji> {
   if (options.image && !options.image.startsWith("data:image/")) {
     options.image = await bot.utils.urlToBase64(options.image);

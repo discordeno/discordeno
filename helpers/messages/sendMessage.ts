@@ -5,26 +5,52 @@ import { DiscordMessage } from "../../types/discord.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../types/mod.ts";
 import { MessageComponentTypes } from "../../types/shared.ts";
 
-/** Send a message to the channel. Requires SEND_MESSAGES permission. */
-export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMessage): Promise<Message> {
+/**
+ * Sends a message to a channel.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param channelId - The ID of the channel to send the message in.
+ * @param options - The parameters for the creation of the message.
+ * @returns An instance of the created {@link Message}.
+ *
+ * @remarks
+ * Requires that the bot user be able to see the contents of the channel the message is to be sent in.
+ *
+ * If sending a message to a guild channel:
+ * - Requires the `SEND_MESSAGES` permission.
+ *
+ * If sending a TTS message:
+ * - Requires the `SEND_TTS_MESSAGES` permission.
+ *
+ * If sending a message as a reply to another message:
+ * - Requires the `READ_MESSAGE_HISTORY` permission.
+ * - The message being replied to cannot be a system message.
+ *
+ * ⚠️ The maximum size of a request (accounting for any attachments and message content) for bot users is _8 MiB_.
+ *
+ * Fires a _Message Create_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/channel#create-message}
+ */
+export async function sendMessage(bot: Bot, channelId: bigint, options: CreateMessage): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "POST",
     bot.constants.routes.CHANNEL_MESSAGES(channelId),
     {
-      content: content.content,
-      tts: content.tts,
-      embeds: content.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
-      allowed_mentions: content.allowedMentions
+      content: options.content,
+      tts: options.tts,
+      embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
+      allowed_mentions: options.allowedMentions
         ? {
-          parse: content.allowedMentions?.parse,
-          roles: content.allowedMentions?.roles?.map((id) => id.toString()),
-          users: content.allowedMentions?.users?.map((id) => id.toString()),
-          replied_user: content.allowedMentions?.repliedUser,
+          parse: options.allowedMentions?.parse,
+          roles: options.allowedMentions?.roles?.map((id) => id.toString()),
+          users: options.allowedMentions?.users?.map((id) => id.toString()),
+          replied_user: options.allowedMentions?.repliedUser,
         }
         : undefined,
-      file: content.file,
-      components: content.components?.map((component) => ({
+      file: options.file,
+      components: options.components?.map((component) => ({
         type: component.type,
         components: component.components.map((subComponent) => {
           if (subComponent.type === MessageComponentTypes.InputText) {
@@ -80,13 +106,13 @@ export async function sendMessage(bot: Bot, channelId: bigint, content: CreateMe
           };
         }),
       })),
-      ...(content.messageReference?.messageId
+      ...(options.messageReference?.messageId
         ? {
           message_reference: {
-            message_id: content.messageReference.messageId.toString(),
-            channel_id: content.messageReference.channelId?.toString(),
-            guild_id: content.messageReference.guildId?.toString(),
-            fail_if_not_exists: content.messageReference.failIfNotExists === true,
+            message_id: options.messageReference.messageId.toString(),
+            channel_id: options.messageReference.channelId?.toString(),
+            guild_id: options.messageReference.guildId?.toString(),
+            fail_if_not_exists: options.messageReference.failIfNotExists === true,
           },
         }
         : {}),

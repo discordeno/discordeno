@@ -6,10 +6,10 @@ Deno.test("[misc] edit a bot's nickname", async function () {
   const bot = loadBot();
 
   const nick = "lts20050703";
-  const nickname = await bot.helpers.editBotNickname(CACHED_COMMUNITY_GUILD_ID, { nick });
-  assertEquals(nickname, nick);
+  const member = await bot.helpers.editBotMember(CACHED_COMMUNITY_GUILD_ID, { nick });
+  assertEquals(member.nick, nick);
 
   // Change nickname back
-  const nickname2 = await bot.helpers.editBotNickname(CACHED_COMMUNITY_GUILD_ID, { nick: null });
-  assertEquals(nickname2, undefined);
+  const member2 = await bot.helpers.editBotMember(CACHED_COMMUNITY_GUILD_ID, { nick: null });
+  assertEquals(member2.nick, undefined);
 });
