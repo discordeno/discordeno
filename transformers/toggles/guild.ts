@@ -1,6 +1,6 @@
 import { DiscordGuild } from "../../types/discord.ts";
 import { GuildFeatures } from "../../types/shared.ts";
-import { ToggleBitfield, ToggleBitfieldBigint } from "./ToggleBitfield.ts";
+import { ToggleBitfieldBigint } from "./ToggleBitfield.ts";
 
 export const GuildToggle = {
   /** Whether the bot is the owner of the guild */
@@ -58,6 +58,10 @@ export const GuildToggle = {
   privateThreads: 1n << 26n,
   /** Whether the guild is able to set role icons */
   roleIcons: 1n << 27n,
+  /** Guild has set up auto moderation rules */
+  AutoModeration: 1n << 28n,
+  /** Guild has paused invites, preventing new users from joining */
+  InvitesDisabled: 1n << 29n,
 };
 
 export class GuildToggles extends ToggleBitfieldBigint {
