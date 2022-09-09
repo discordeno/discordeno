@@ -13,7 +13,7 @@ import type { Bot } from "../../bot.ts";
  * @remarks
  * Fires a _Guild Member Update_ gateway event.
  *
- * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-user-nick}
+ * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-member}
  */
 export async function editBotNickname(
   bot: Bot,
