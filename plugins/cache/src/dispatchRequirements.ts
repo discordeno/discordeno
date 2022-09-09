@@ -13,10 +13,10 @@ export async function dispatchRequirements<B extends Bot>(
 
   const id = bot.utils.snowflakeToBigint(
     (data.t && ["GUILD_UPDATE"].includes(data.t)
-      ? // deno-lint-ignore no-explicit-any
-        (data.d as any)?.id
-      : // deno-lint-ignore no-explicit-any
-        (data.d as any)?.guild_id) ?? "",
+      // deno-lint-ignore no-explicit-any
+      ? (data.d as any)?.id
+      // deno-lint-ignore no-explicit-any
+      : (data.d as any)?.guild_id) ?? "",
   );
 
   if (!id || bot.activeGuildIds.has(id)) return;

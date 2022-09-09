@@ -24,8 +24,8 @@ export function transformInvite(bot: Bot, invite: DiscordInviteCreate) {
     targetUser: invite.target_user ? bot.transformers.user(bot, invite.target_user) : undefined,
     /** The embedded application to open for this voice channel embedded application invite */
     targetApplication: invite.target_application
-      ? // @ts-ignore should not break anything even though its partial. if it does blame wolf :)
-        bot.transformers.application(bot, invite.target_application)
+      // @ts-ignore should not break anything even though its partial. if it does blame wolf :)
+      ? bot.transformers.application(bot, invite.target_application)
       : undefined,
     /** Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
     temporary: invite.temporary,
