@@ -1,16 +1,16 @@
 import { BotWithCache } from "../../../deps.ts";
 import { requireBotChannelPermissions } from "../../permissions.ts";
 
-export default function createForumPosts(bot: BotWithCache) {
-  const createForumPostsOld = bot.helpers.createForumPost;
+export default function createForumThread(bot: BotWithCache) {
+  const createForumThreadOld = bot.helpers.createForumThread;
 
-  bot.helpers.createForumPost = async function (channelId, options) {
+  bot.helpers.createForumThread = async function (channelId, options) {
     const channel = bot.channels.get(channelId);
 
     if (channel) {
       requireBotChannelPermissions(bot, channel, ["SEND_MESSAGES"]);
     }
 
-    return await createForumPostsOld(channelId, options);
+    return await createForumThreadOld(channelId, options);
   };
 }
