@@ -1,15 +1,29 @@
 import { Bot } from "../../bot.ts";
 
-export function editBotVoiceState(
+/**
+ * Updates the current user's voice state.
+ * `channelId` must currently point to a stage channel.
+ * bot must already have joined `channelId`.
+ * You must have the `MUTE_MEMBERS` permission to unsuppress yourself. You can always suppress yourself.
+ * You must have the `REQUEST_TO_SPEAK` permission to request to speak. You can always clear your own request to speak.
+ * You are able to set requestToSpeakTimestamp to any present or future time.
+ */
+export async function editBotVoiceState(
   bot: Bot,
   guildId: bigint,
-  options: { channelId?: bigint; suppress?: boolean; requestToSpeakTimestamp?: number },
+  options: EditBotVoiceStateOptions,
 ) {
-  return bot.rest.runMethod<void>(bot.rest, "PATCH", bot.constants.routes.EDIT_BOT_VOICE_STATE(guildId), {
+  return await bot.rest.runMethod<void>(bot.rest, "PATCH", bot.constants.routes.EDIT_BOT_VOICE_STATE(guildId), {
     channel_id: options.channelId?.toString(),
     suppress: options.suppress,
     request_to_speak_timestamp: options.requestToSpeakTimestamp
-      ? new Date(options.requestToSpeakTimestamp).toUTCString()
+      ? new Date(options.requestToSpeakTimestamp).toISOString()
       : undefined,
   });
+}
+
+export interface EditBotVoiceStateOptions {
+  channelId?: bigint;
+  suppress?: boolean;
+  requestToSpeakTimestamp?: number;
 }

@@ -1,5 +1,4 @@
 export * from "./banMember.ts";
-export * from "./editBotMember.ts";
 export * from "./editMember.ts";
 export * from "./fetchMembers.ts";
 export * from "./getAvatarUrl.ts";

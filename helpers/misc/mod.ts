@@ -1,3 +1,4 @@
+export * from "./editBotMember.ts";
 export * from "./editBotProfile.ts";
 export * from "./editBotStatus.ts";
 export * from "./editBotVoiceState.ts";
