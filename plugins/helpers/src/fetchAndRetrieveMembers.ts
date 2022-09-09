@@ -11,6 +11,6 @@ export async function fetchAndRetrieveMembers(bot: BotWithCache, guildId: bigint
     throw new Error("The guild was not found in cache. Unable to fetch members for uncached guild.");
   }
 
-  await bot.helpers.fetchMembers(guildId, guild.shardId);
+  await bot.helpers.fetchMembers(guildId, { limit: 0 });
   return bot.members.filter((member) => member.guildId === guildId);
 }
