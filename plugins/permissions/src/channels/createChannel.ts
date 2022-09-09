@@ -22,7 +22,7 @@ export default function createChannel(bot: BotWithCache) {
 
       if (options?.permissionOverwrites) requiredPerms.push("MANAGE_ROLES");
 
-      if (options?.type === ChannelTypes.GuildNews && !guild.toggles.has("news")) {
+      if (options?.type === ChannelTypes.GuildAnnouncement && !guild.toggles.has("news")) {
         throw new Error("The NEWS feature is missing in this guild to be able to modify the channel type.");
       }
 
