@@ -115,14 +115,15 @@ const bot = createBot({
 // Another way to do events
 bot.events.messageCreate = function (b, message) {
   // Process the message here with your command handler.
-}
+};
 
 await startBot(bot);
 ```
 
 ### Tools
 
-If you are a beginner, this library is not meant for you but you can check out if you still want to use this lib with these awesome official and unofficial templates:
+If you are a beginner, this library is not meant for you but you can check out if you still want to use this lib with
+these awesome official and unofficial templates:
 
 **Templates**
 
