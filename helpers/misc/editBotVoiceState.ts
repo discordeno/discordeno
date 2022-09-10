@@ -1,12 +1,6 @@
 import { Bot } from "../../bot.ts";
 
-/**
- * Updates the current user's voice state.
- * `channelId` must currently point to a stage channel.
- * bot must already have joined `channelId`.
- * You must have the `MUTE_MEMBERS` permission to unsuppress yourself. You can always suppress yourself.
- * You must have the `REQUEST_TO_SPEAK` permission to request to speak. You can always clear your own request to speak.
- * You are able to set requestToSpeakTimestamp to any present or future time.
+/** Updates the current user's voice state. `channelId` must currently point to a stage channel. Bot must already have joined `channelId`. You must have the `MUTE_MEMBERS` permission to unsuppress yourself. You can always suppress yourself. You must have the `REQUEST_TO_SPEAK` permission to request to speak. You can always clear your own request to speak. You are able to set `requestToSpeakTimestamp` to any present or future time.
  */
 export async function editBotVoiceState(
   bot: Bot,
@@ -23,7 +17,10 @@ export async function editBotVoiceState(
 }
 
 export interface EditBotVoiceStateOptions {
+  /** The id of the channel the bot is currently in */
   channelId?: bigint;
+  /** Toggles the bot's suppress state */
   suppress?: boolean;
+  /** Sets the bot's request to speak */
   requestToSpeakTimestamp?: number;
 }
