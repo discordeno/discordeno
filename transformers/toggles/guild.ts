@@ -58,9 +58,9 @@ export const GuildToggle = {
   privateThreads: 1n << 26n,
   /** Whether the guild is able to set role icons */
   roleIcons: 1n << 27n,
-  /** Guild has set up auto moderation rules */
+  /** Whether the guild has set up auto moderation rules */
   autoModeration: 1n << 28n,
-  /** Guild has paused invites, preventing new users from joining */
+  /** Whether the guild has paused invites, preventing new users from joining */
   invitesDisabled: 1n << 29n,
 };
 
@@ -212,10 +212,12 @@ export class GuildToggles extends ToggleBitfieldBigint {
     return this.has("roleIcons");
   }
 
+  /** Whether the guild has set up auto moderation rules */
   get autoModeration() {
     return this.has("autoModeration");
   }
 
+  /** Whether the guild has paused invites, preventing new users from joining */
   get invitesDisabled() {
     return this.has("invitesDisabled");
   }
