@@ -1,9 +1,10 @@
 import type { Bot } from "../../bot.ts";
 import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 
 export interface GetWebhookMessageOptions {
-  threadId: bigint;
+  threadId: BigString;
 }
 
 /**
@@ -20,9 +21,9 @@ export interface GetWebhookMessageOptions {
  */
 export async function getWebhookMessage(
   bot: Bot,
-  webhookId: bigint,
+  webhookId: BigString,
   token: string,
-  messageId: bigint,
+  messageId: BigString,
   options?: GetWebhookMessageOptions,
 ): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(

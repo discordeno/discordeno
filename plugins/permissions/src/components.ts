@@ -1,4 +1,4 @@
-import { Bot, ButtonStyles, Emoji, MessageComponents, MessageComponentTypes } from "../deps.ts";
+import { Bot, ButtonStyles, Emoji, MessageComponents, MessageComponentTypes, BigString } from "../deps.ts";
 
 export function validateComponents(bot: Bot, components: MessageComponents) {
   if (!components?.length) return;
@@ -46,7 +46,7 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
           throw new Error("The label can not be longer than 80 characters.");
         }
 
-        subComponent.emoji = makeEmojiFromString(subComponent.emoji);
+        subComponent.emoji = makeEmojiFromString(bot, subComponent.emoji);
       }
 
       if (subComponent.type === MessageComponentTypes.SelectMenu) {
@@ -137,7 +137,7 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
             );
           }
 
-          option.emoji = makeEmojiFromString(option.emoji);
+          option.emoji = makeEmojiFromString(bot, option.emoji);
         }
       }
 
@@ -194,6 +194,7 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
 }
 
 function makeEmojiFromString(
+  bot: Bot,
   emoji?:
     | string
     | {
@@ -215,7 +216,7 @@ function makeEmojiFromString(
   // A snowflake id was provided
   if (/^[0-9]+$/.test(emoji)) {
     emoji = {
-      id: BigInt(emoji),
+      id: bot.transformers.snowflake(emoji),
     };
   } else {
     // A unicode emoji was provided

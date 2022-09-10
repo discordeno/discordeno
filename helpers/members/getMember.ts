@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Member } from "../../transformers/member.ts";
 import { DiscordMemberWithUser } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Gets the member object by user ID.
@@ -12,7 +13,7 @@ import { DiscordMemberWithUser } from "../../types/discord.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-member}
  */
-export async function getMember(bot: Bot, guildId: bigint, userId: bigint): Promise<Member> {
+export async function getMember(bot: Bot, guildId: BigString, userId: BigString): Promise<Member> {
   const result = await bot.rest.runMethod<DiscordMemberWithUser>(
     bot.rest,
     "GET",

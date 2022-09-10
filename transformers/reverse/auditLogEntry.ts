@@ -1,5 +1,6 @@
 import { Bot } from "../../bot.ts";
 import { DiscordAuditLogEntry } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 import { AuditLogEntry } from "../auditLogEntry.ts";
 
 export function transformAuditLogEntryToDiscordAuditLogEntry(bot: Bot, payload: AuditLogEntry): DiscordAuditLogEntry {
@@ -13,14 +14,14 @@ export function transformAuditLogEntryToDiscordAuditLogEntry(bot: Bot, payload: 
           return {
             key: change.key,
             new_value: (change.new as {
-              id: bigint | undefined;
+              id: BigString | undefined;
               name: string | undefined;
             }[])?.map((val) => ({
               id: val.id ? bot.transformers.reverse.snowflake(val.id) : undefined,
               name: val.name,
             })),
             old_value: (change.old as {
-              id: bigint | undefined;
+              id: BigString | undefined;
               name: string | undefined;
             }[] | undefined)?.map((val) => ({
               id: val?.id ? bot.transformers.reverse.snowflake(val.id) : undefined,

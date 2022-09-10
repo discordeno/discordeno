@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Deletes a permission override for a user or role in a channel.
@@ -14,7 +15,11 @@ import type { Bot } from "../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#delete-channel-permission}
  */
-export async function deleteChannelPermissionOverride(bot: Bot, channelId: bigint, overwriteId: bigint): Promise<void> {
+export async function deleteChannelPermissionOverride(
+  bot: Bot,
+  channelId: BigString,
+  overwriteId: BigString,
+): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     "DELETE",

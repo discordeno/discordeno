@@ -33,10 +33,10 @@ export type BotWithCustomProps<B extends Bot = Bot> = B & {
   /** Collectors that can be used to get input from users. */
   collectors: {
     /** Holds the pending messages collectors that users can respond to. */
-    messages: Collection<bigint, MessageCollector>;
+    messages: Collection<BigString, MessageCollector>;
   };
   /** The command versions for each guild id. */
-  commandVersions: Collection<bigint, number>;
+  commandVersions: Collection<BigString, number>;
 };
 
 // Example of how to customize internal discordeno stuff easily.

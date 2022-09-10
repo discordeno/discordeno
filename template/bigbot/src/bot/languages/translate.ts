@@ -9,7 +9,7 @@ import languages from "./languages.js";
 export const serverLanguages = new Map<bigint, keyof typeof languages>();
 
 export function translate<K extends translationKeys>(
-  guildIdOrLanguage: bigint | keyof typeof languages,
+  guildIdOrLanguage: BigString | keyof typeof languages,
   key: K,
   ...params: getArgs<K>
 ): string {
@@ -38,13 +38,13 @@ export function translate<K extends translationKeys>(
 }
 
 /** Get the language this guild has set, will always return "english" if it is not in cache */
-export function getLanguage(guildIdOrLanguage: bigint | keyof typeof languages) {
+export function getLanguage(guildIdOrLanguage: BigString | keyof typeof languages) {
   return typeof guildIdOrLanguage === "string"
     ? guildIdOrLanguage
     : serverLanguages.get(guildIdOrLanguage) ?? "english";
 }
 
-export async function loadLanguage(guildId: bigint) {
+export async function loadLanguage(guildId: BigString) {
   // TODO: add this settings
   // const settings = await database.findOne('guilds', guildId)
   const settings = { language: "undefined" };

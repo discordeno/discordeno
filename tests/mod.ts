@@ -8,6 +8,7 @@ export function loadBot() {
   if (!token) throw new Error("Token was not provided.");
 
   const bot = createBot({
+    useBigints: !!Deno.env.get("USE_BIGINTS"),
     token,
     botGatewayData: {
       url: "wss://gateway.discord.gg",

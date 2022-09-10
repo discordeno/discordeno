@@ -1,6 +1,7 @@
 import { Bot } from "../../../bot.ts";
 import { Member, User } from "../../../transformers/member.ts";
 import { DiscordMember, DiscordUser } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 import { Collection } from "../../../util/collection.ts";
 
 // TODO: This endpoint discards certain data from the result.
@@ -24,23 +25,23 @@ import { Collection } from "../../../util/collection.ts";
  */
 export async function getScheduledEventUsers(
   bot: Bot,
-  guildId: bigint,
-  eventId: bigint,
+  guildId: BigString,
+  eventId: BigString,
   options?: GetScheduledEventUsers & { withMember?: false },
-): Promise<Collection<bigint, User>>;
+): Promise<Collection<BigString, User>>;
 export async function getScheduledEventUsers(
   bot: Bot,
-  guildId: bigint,
-  eventId: bigint,
+  guildId: BigString,
+  eventId: BigString,
   options?: GetScheduledEventUsers & { withMember: true },
-): Promise<Collection<bigint, { user: User; member: Member }>>;
+): Promise<Collection<BigString, { user: User; member: Member }>>;
 export async function getScheduledEventUsers(
   bot: Bot,
-  guildId: bigint,
-  eventId: bigint,
+  guildId: BigString,
+  eventId: BigString,
   options?: GetScheduledEventUsers,
 ): Promise<
-  Collection<bigint, User> | Collection<bigint, { user: User; member: Member }>
+  Collection<BigString, User> | Collection<BigString, { user: User; member: Member }>
 > {
   let url = bot.constants.routes.GUILD_SCHEDULED_EVENT_USERS(guildId, eventId, options);
 
@@ -84,7 +85,7 @@ export interface GetScheduledEventUsers {
   /** whether to also have member objects provided, defaults to false */
   withMember?: boolean;
   /** consider only users before given user id */
-  before?: bigint;
+  before?: BigString;
   /** consider only users after given user id. If both before and after are provided, only before is respected. Fetching users in-between before and after is not supported. */
-  after?: bigint;
+  after?: BigString;
 }

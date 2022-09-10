@@ -1,5 +1,5 @@
 import type { Bot } from "../../../bot.ts";
-import { AtLeastOne, GatewayOpcodes } from "../../../types/shared.ts";
+import { AtLeastOne, BigString, GatewayOpcodes } from "../../../types/shared.ts";
 
 /**
  * Connects the bot user to a voice or stage channel.
@@ -18,8 +18,8 @@ import { AtLeastOne, GatewayOpcodes } from "../../../types/shared.ts";
  */
 export async function connectToVoiceChannel(
   bot: Bot,
-  guildId: bigint,
-  channelId: bigint,
+  guildId: BigString,
+  channelId: BigString,
   options?: AtLeastOne<Omit<UpdateVoiceState, "guildId" | "channelId">>,
 ): Promise<void> {
   const shardId = bot.utils.calculateShardId(bot.gateway, guildId);

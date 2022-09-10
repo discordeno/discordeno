@@ -1,5 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import { OverwriteTypes, PermissionStrings } from "../../types/shared.ts";
+import { BigString, OverwriteTypes, PermissionStrings } from "../../types/shared.ts";
 
 /**
  * Edits the permission overrides for a user or role in a channel.
@@ -19,7 +19,7 @@ import { OverwriteTypes, PermissionStrings } from "../../types/shared.ts";
  */
 export async function editChannelPermissionOverrides(
   bot: Bot,
-  channelId: bigint,
+  channelId: BigString,
   overwrite: OverwriteReadable,
 ): Promise<void> {
   return await bot.rest.runMethod<void>(
@@ -36,7 +36,7 @@ export async function editChannelPermissionOverrides(
 
 export interface OverwriteReadable {
   /** Role or user id */
-  id: bigint;
+  id: BigString;
   /** Either 0 (role) or 1 (member) */
   type: OverwriteTypes;
   /** Permission bit set */
@@ -47,11 +47,11 @@ export interface OverwriteReadable {
 
 export interface Overwrite {
   /** Role or user id */
-  id: bigint;
+  id: BigString;
   /** Either 0 (role) or 1 (member) */
   type: OverwriteTypes;
   /** Permission bit set */
-  allow?: bigint;
+  allow?: BigString;
   /** Permission bit set */
-  deny?: bigint;
+  deny?: BigString;
 }

@@ -1,3 +1,5 @@
+import { BigString } from "../../types/shared.ts";
+
 export class ToggleBitfield {
   bitfield = 0;
 
@@ -26,24 +28,24 @@ export class ToggleBitfield {
 export class ToggleBitfieldBigint {
   bitfield = 0n;
 
-  constructor(bitfield?: bigint) {
-    if (bitfield) this.bitfield = bitfield;
+  constructor(bitfield?: BigString) {
+    if (bitfield) this.bitfield = BigInt(bitfield);
   }
 
   /** Tests whether or not this bitfield has the permission requested. */
-  contains(bits: bigint) {
-    return Boolean(this.bitfield & bits);
+  contains(bits: BigString) {
+    return Boolean(this.bitfield & BigInt(bits));
   }
 
   /** Adds some bits to the bitfield. */
-  add(bits: bigint) {
-    this.bitfield |= bits;
+  add(bits: BigString) {
+    this.bitfield |= BigInt(bits);
     return this;
   }
 
   /** Removes some bits from the bitfield. */
-  remove(bits: bigint) {
-    this.bitfield &= ~bits;
+  remove(bits: BigString) {
+    this.bitfield &= ~BigInt(bits);
     return this;
   }
 }

@@ -1,5 +1,6 @@
 import type { Bot } from "../../bot.ts";
 import { DiscordBan } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 import { Collection } from "../../util/collection.ts";
 import { Ban } from "./getBan.ts";
 
@@ -18,7 +19,7 @@ import { Ban } from "./getBan.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-bans}
  */
-export async function getBans(bot: Bot, guildId: bigint, options?: GetBans): Promise<Collection<bigint, Ban>> {
+export async function getBans(bot: Bot, guildId: BigString, options?: GetBans): Promise<Collection<BigString, Ban>> {
   const results = await bot.rest.runMethod<DiscordBan[]>(
     bot.rest,
     "GET",
@@ -26,7 +27,7 @@ export async function getBans(bot: Bot, guildId: bigint, options?: GetBans): Pro
   );
 
   return new Collection(
-    results.map<[bigint, Ban]>((result) => {
+    results.map<[BigString, Ban]>((result) => {
       const user = bot.transformers.user(bot, result.user);
       return [
         user.id,
@@ -43,7 +44,7 @@ export interface GetBans {
   /** Number of users to return (up to maximum 1000). Default: 1000 */
   limit?: number;
   /** Consider only users before given user id */
-  before?: bigint;
+  before?: BigString;
   /** Consider only users after given user id */
-  after?: bigint;
+  after?: BigString;
 }

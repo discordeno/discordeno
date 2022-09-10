@@ -14,6 +14,6 @@ export default createCommand({
 });
 
 // TODO: This should be deleted once this is available in the helpers plugin.
-export function snowflakeToTimestamp(id: bigint) {
+export function snowflakeToTimestamp(id: BigString) {
   return Number(id / 4194304n + 1420070400000n);
 }

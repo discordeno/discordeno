@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Deletes a webhook message.
@@ -16,9 +17,9 @@ import type { Bot } from "../../bot.ts";
  */
 export async function deleteWebhookMessage(
   bot: Bot,
-  webhookId: bigint,
+  webhookId: BigString,
   token: string,
-  messageId: bigint,
+  messageId: BigString,
   options?: DeleteWebhookMessageOptions,
 ): Promise<void> {
   return await bot.rest.runMethod<void>(
@@ -30,5 +31,5 @@ export async function deleteWebhookMessage(
 
 export interface DeleteWebhookMessageOptions {
   /** id of the thread the message is in */
-  threadId: bigint;
+  threadId: BigString;
 }

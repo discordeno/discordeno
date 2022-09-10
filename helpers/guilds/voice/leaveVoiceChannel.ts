@@ -1,5 +1,5 @@
 import type { Bot } from "../../../bot.ts";
-import { GatewayOpcodes } from "../../../types/shared.ts";
+import { BigString, GatewayOpcodes } from "../../../types/shared.ts";
 
 /**
  * Leaves the voice channel the bot user is currently in.
@@ -16,7 +16,7 @@ import { GatewayOpcodes } from "../../../types/shared.ts";
  */
 export async function leaveVoiceChannel(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
 ): Promise<void> {
   const shardId = bot.utils.calculateShardId(bot.gateway, guildId);
   const shard = bot.gateway.manager.shards.get(shardId);

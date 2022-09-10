@@ -1,6 +1,6 @@
 import type { Bot } from "../../../bot.ts";
 import { ApplicationCommand } from "../../../transformers/applicationCommand.ts";
-import { CreateApplicationCommand, DiscordApplicationCommand } from "../../../types/mod.ts";
+import { BigString, CreateApplicationCommand, DiscordApplicationCommand } from "../../../types/mod.ts";
 import { Collection } from "../../../util/collection.ts";
 
 /**
@@ -20,7 +20,7 @@ import { Collection } from "../../../util/collection.ts";
 export async function upsertGlobalApplicationCommands(
   bot: Bot,
   commands: CreateApplicationCommand[],
-): Promise<Collection<bigint, ApplicationCommand>> {
+): Promise<Collection<BigString, ApplicationCommand>> {
   const results = await bot.rest.runMethod<DiscordApplicationCommand[]>(
     bot.rest,
     "PATCH",

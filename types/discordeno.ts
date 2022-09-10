@@ -2,14 +2,15 @@ import { ApplicationCommandOption } from "../transformers/applicationCommandOpti
 import { ApplicationCommandOptionChoice } from "../transformers/applicationCommandOptionChoice.ts";
 import { Embed } from "../transformers/embed.ts";
 import {
-  AllowedMentionsTypes,
-  ApplicationCommandTypes,
-  ButtonStyles,
-  InteractionResponseTypes,
-  Localization,
-  MessageComponentTypes,
-  PermissionStrings,
-  TextStyles,
+    AllowedMentionsTypes,
+    ApplicationCommandTypes,
+    BigString,
+    ButtonStyles,
+    InteractionResponseTypes,
+    Localization,
+    MessageComponentTypes,
+    PermissionStrings,
+    TextStyles
 } from "./shared.ts";
 
 export type MessageComponents = ActionRow[];
@@ -40,7 +41,7 @@ export interface ButtonComponent {
   /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
   emoji?: {
     /** Emoji id */
-    id?: bigint;
+    id?: BigString;
     /** Emoji name */
     name?: string;
     /** Whether this emoji is animated */
@@ -80,7 +81,7 @@ export interface SelectOption {
   /** The id, name, and animated properties of an emoji. */
   emoji?: {
     /** Emoji id */
-    id?: bigint;
+    id?: BigString;
     /** Emoji name */
     name?: string;
     /** Whether this emoji is animated */
@@ -120,9 +121,9 @@ export interface AllowedMentions {
   repliedUser?: boolean;
 
   /** Array of role_ids to mention (Max size of 100) */
-  roles?: bigint[];
+  roles?: BigString[];
   /** Array of user_ids to mention (Max size of 100) */
-  users?: bigint[];
+  users?: BigString[];
 }
 
 export interface FileContent {

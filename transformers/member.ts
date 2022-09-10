@@ -1,6 +1,6 @@
 import type { Bot } from "../bot.ts";
 import { DiscordMember, DiscordUser } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
+import { BigString, Optionalize } from "../types/shared.ts";
 import { MemberToggles } from "./toggles/member.ts";
 import { UserToggles } from "./toggles/user.ts";
 
@@ -21,7 +21,7 @@ export function transformUser(bot: Bot, payload: DiscordUser) {
   return user as Optionalize<typeof user>;
 }
 
-export function transformMember(bot: Bot, payload: DiscordMember, guildId: bigint, userId: bigint) {
+export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString) {
   const member = {
     id: userId,
     guildId,

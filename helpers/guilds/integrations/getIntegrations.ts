@@ -1,6 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { Integration } from "../../../transformers/integration.ts";
 import { DiscordIntegration } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 import { Collection } from "../../../util/collection.ts";
 
 /**
@@ -15,7 +16,7 @@ import { Collection } from "../../../util/collection.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-integrations}
  */
-export async function getIntegrations(bot: Bot, guildId: bigint): Promise<Collection<bigint, Integration>> {
+export async function getIntegrations(bot: Bot, guildId: BigString): Promise<Collection<BigString, Integration>> {
   const results = await bot.rest.runMethod<DiscordIntegration[]>(
     bot.rest,
     "GET",

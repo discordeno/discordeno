@@ -67,7 +67,7 @@ import {
   DiscordStickerPack,
   DiscordTemplate,
 } from "./types/discord.ts";
-import { Errors, GatewayDispatchEventNames, GatewayIntents } from "./types/shared.ts";
+import { BigString, Errors, GatewayDispatchEventNames, GatewayIntents } from "./types/shared.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.ts";
 import { calculateShardId } from "./util/calculateShardId.ts";
 import { Collection } from "./util/collection.ts";
@@ -174,11 +174,11 @@ export function createBot(options: CreateBotOptions): Bot {
     token: removeTokenPrefix(options.token),
     events: createEventHandlers(options.events ?? {}),
     intents: options.intents,
+    useBigints: options.useBigints ?? true,
     botGatewayData: options.botGatewayData,
-    activeGuildIds: new Set<bigint>(),
+    activeGuildIds: new Set<BigString>(),
     constants: createBotConstants(),
     handlers: createBotGatewayHandlers({}),
-    utils: createUtils(options.utils ?? {}),
     transformers: createTransformers(options.transformers ?? {}),
     enabledPlugins: new Set(),
     handleDiscordPayload: options.handleDiscordPayload,
@@ -193,6 +193,7 @@ export function createBot(options: CreateBotOptions): Bot {
     }),
   } as Bot;
 
+  bot.utils = createUtils(bot, options.utils);
   bot.helpers = createHelpers(bot, options.helpers ?? {});
   bot.gateway = createGatewayManager({
     gatewayBot: bot.botGatewayData ?? {} as any,
@@ -299,14 +300,24 @@ export async function startBot(bot: Bot) {
   bot.gateway.spawnShards();
 }
 
-export function createUtils(options: Partial<HelperUtils>) {
+export function createUtils(bot: Bot, options?: Partial<HelperUtils>) {
   return {
-    snowflakeToBigint,
+    snowflakeToBigint: function (snowflake: BigString): BigString {
+      if (!bot.useBigints) return snowflake.toString();
+      return snowflakeToBigint(snowflake);
+    },
     bigintToSnowflake,
+    iconHashToBigInt: function (hash: BigString) {
+      if (!bot.useBigints) return hash.toString();
+      return iconHashToBigInt(hash.toString());
+    },
+    iconBigintToHash: function (hash: BigString) {
+      if (!bot.useBigints) return hash.toString();
+      return iconBigintToHash(hash);
+    },
+
     calculateShardId,
     delay,
-    iconHashToBigInt,
-    iconBigintToHash,
     validateLength,
     urlToBase64,
     formatImageURL,
@@ -316,11 +327,11 @@ export function createUtils(options: Partial<HelperUtils>) {
 }
 
 export interface HelperUtils {
-  snowflakeToBigint: typeof snowflakeToBigint;
+  snowflakeToBigint: (snowflake: BigString) => BigString;
   bigintToSnowflake: typeof bigintToSnowflake;
   calculateShardId: typeof calculateShardId;
   delay: typeof delay;
-  iconHashToBigInt: typeof iconHashToBigInt;
+  iconHashToBigInt: (hash: BigString) => BigString;
   iconBigintToHash: typeof iconBigintToHash;
   validateLength: typeof validateLength;
   urlToBase64: typeof urlToBase64;
@@ -337,8 +348,9 @@ export async function stopBot(bot: Bot) {
 
 export interface CreateBotOptions {
   token: string;
-  botId?: bigint;
-  applicationId?: bigint;
+  botId?: BigString;
+  applicationId?: BigString;
+  useBigints?: boolean;
   secretKey?: string;
   events?: Partial<EventHandlers>;
   intents?: GatewayIntents;
@@ -354,8 +366,9 @@ export type UnPromise<T extends Promise<unknown>> = T extends Promise<infer K> ?
   : never;
 
 export interface Bot {
-  id: bigint;
-  applicationId: bigint;
+  id: BigString;
+  applicationId: BigString;
+  useBigints: boolean;
   token: string;
   intents: GatewayIntents;
   urlWSS: string;
@@ -367,10 +380,10 @@ export interface Bot {
   gateway: ReturnType<typeof createGatewayManager>;
   events: EventHandlers;
   handlers: ReturnType<typeof createBotGatewayHandlers>;
-  activeGuildIds: Set<bigint>;
+  activeGuildIds: Set<BigString>;
   constants: ReturnType<typeof createBotConstants>;
   cache: {
-    unrepliedInteractions: Set<bigint>;
+    unrepliedInteractions: Set<BigString>;
     fetchAllMembersProcessingRequests: Map<string, Function>;
   };
   enabledPlugins: Set<string>;
@@ -421,7 +434,7 @@ export interface Transformers {
     user: (bot: Bot, payload: User) => DiscordUser;
     team: (bot: Bot, payload: Team) => DiscordTeam;
     application: (bot: Bot, payload: Application) => DiscordApplication;
-    snowflake: (snowflake: bigint) => string;
+    snowflake: (snowflake: BigString) => string;
     createApplicationCommand: (bot: Bot, payload: CreateApplicationCommand) => DiscordCreateApplicationCommand;
     applicationCommand: (bot: Bot, payload: ApplicationCommand) => DiscordApplicationCommand;
     applicationCommandOption: (bot: Bot, payload: ApplicationCommandOption) => DiscordApplicationCommandOption;
@@ -432,17 +445,17 @@ export interface Transformers {
     interactionResponse: (bot: Bot, payload: InteractionResponse) => DiscordInteractionResponse;
     attachment: (bot: Bot, payload: Attachment) => DiscordAttachment;
   };
-  snowflake: (snowflake: string) => bigint;
+  snowflake: (snowflake: string) => BigString;
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
   automodRule: (bot: Bot, payload: DiscordAutoModerationRule) => AutoModerationRule;
   automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution) => AutoModerationActionExecution;
-  channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }) => Channel;
+  channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }) => Channel;
   guild: (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) => Guild;
   user: (bot: Bot, payload: DiscordUser) => User;
-  member: (bot: Bot, payload: DiscordMember, guildId: bigint, userId: bigint) => Member;
+  member: (bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString) => Member;
   message: (bot: Bot, payload: DiscordMessage) => Message;
-  role: (bot: Bot, payload: { role: DiscordRole } & { guildId: bigint }) => Role;
-  voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) => VoiceState;
+  role: (bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }) => Role;
+  voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: BigString }) => VoiceState;
   interaction: (bot: Bot, payload: DiscordInteraction) => Interaction;
   interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption;
   integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration;
@@ -557,18 +570,18 @@ export interface EventHandlers {
   threadCreate: (bot: Bot, thread: Channel) => unknown;
   threadDelete: (bot: Bot, thread: Channel) => unknown;
   threadMemberUpdate: (bot: Bot, payload: {
-    id: bigint;
-    guildId: bigint;
+    id: BigString;
+    guildId: BigString;
     joinedAt: number;
     flags: number;
   }) => unknown;
   threadMembersUpdate: (
     bot: Bot,
     payload: {
-      id: bigint;
-      guildId: bigint;
+      id: BigString;
+      guildId: BigString;
       addedMembers?: ThreadMember[];
-      removedMemberIds?: bigint[];
+      removedMemberIds?: BigString[];
     },
   ) => unknown;
   threadUpdate: (bot: Bot, thread: Channel) => unknown;
@@ -579,18 +592,18 @@ export interface EventHandlers {
   scheduledEventUserAdd: (
     bot: Bot,
     payload: {
-      guildScheduledEventId: bigint;
-      guildId: bigint;
-      userId: bigint;
+      guildScheduledEventId: BigString;
+      guildId: BigString;
+      userId: BigString;
     },
   ) => unknown;
   /** Sent when a user has unsubscribed to a guild scheduled event. EXPERIMENTAL! */
   scheduledEventUserRemove: (
     bot: Bot,
     payload: {
-      guildScheduledEventId: bigint;
-      guildId: bigint;
-      userId: bigint;
+      guildScheduledEventId: BigString;
+      guildId: BigString;
+      userId: BigString;
     },
   ) => unknown;
   ready: (
@@ -599,10 +612,10 @@ export interface EventHandlers {
       shardId: number;
       v: number;
       user: User;
-      guilds: bigint[];
+      guilds: BigString[];
       sessionId: string;
       shard?: number[];
-      applicationId: bigint;
+      applicationId: BigString;
     },
     rawPayload: DiscordReady,
   ) => unknown;
@@ -610,15 +623,15 @@ export interface EventHandlers {
   integrationCreate: (bot: Bot, integration: Integration) => unknown;
   integrationDelete: (
     bot: Bot,
-    payload: { id: bigint; guildId: bigint; applicationId?: bigint },
+    payload: { id: BigString; guildId: BigString; applicationId?: BigString },
   ) => unknown;
-  integrationUpdate: (bot: Bot, payload: { guildId: bigint }) => unknown;
+  integrationUpdate: (bot: Bot, payload: { guildId: BigString }) => unknown;
   inviteCreate: (bot: Bot, invite: Invite) => unknown;
   inviteDelete: (
     bot: Bot,
     payload: {
-      channelId: bigint;
-      guildId?: bigint;
+      channelId: BigString;
+      guildId?: BigString;
       code: string;
     },
   ) => unknown;
@@ -627,7 +640,7 @@ export interface EventHandlers {
     member: Member,
     user: User,
   ) => unknown;
-  guildMemberRemove: (bot: Bot, user: User, guildId: bigint) => unknown;
+  guildMemberRemove: (bot: Bot, user: User, guildId: BigString) => unknown;
   guildMemberUpdate: (
     bot: Bot,
     member: Member,
@@ -636,10 +649,10 @@ export interface EventHandlers {
   messageCreate: (bot: Bot, message: Message) => unknown;
   messageDelete: (
     bot: Bot,
-    payload: { id: bigint; channelId: bigint; guildId?: bigint },
+    payload: { id: BigString; channelId: BigString; guildId?: BigString },
     message?: Message,
   ) => unknown;
-  messageDeleteBulk: (bot: Bot, payload: { ids: bigint[]; channelId: bigint; guildId?: bigint }) => unknown;
+  messageDeleteBulk: (bot: Bot, payload: { ids: BigString[]; channelId: BigString; guildId?: BigString }) => unknown;
   messageUpdate: (
     bot: Bot,
     message: Message,
@@ -648,10 +661,10 @@ export interface EventHandlers {
   reactionAdd: (
     bot: Bot,
     payload: {
-      userId: bigint;
-      channelId: bigint;
-      messageId: bigint;
-      guildId?: bigint;
+      userId: BigString;
+      channelId: BigString;
+      messageId: BigString;
+      guildId?: BigString;
       member?: Member;
       user?: User;
       emoji: Emoji;
@@ -660,28 +673,28 @@ export interface EventHandlers {
   reactionRemove: (
     bot: Bot,
     payload: {
-      userId: bigint;
-      channelId: bigint;
-      messageId: bigint;
-      guildId?: bigint;
+      userId: BigString;
+      channelId: BigString;
+      messageId: BigString;
+      guildId?: BigString;
       emoji: Emoji;
     },
   ) => unknown;
   reactionRemoveEmoji: (
     bot: Bot,
     payload: {
-      channelId: bigint;
-      messageId: bigint;
-      guildId?: bigint;
+      channelId: BigString;
+      messageId: BigString;
+      guildId?: BigString;
       emoji: Emoji;
     },
   ) => unknown;
   reactionRemoveAll: (
     bot: Bot,
     payload: {
-      channelId: bigint;
-      messageId: bigint;
-      guildId?: bigint;
+      channelId: BigString;
+      messageId: BigString;
+      guildId?: BigString;
     },
   ) => unknown;
   presenceUpdate: (
@@ -691,7 +704,7 @@ export interface EventHandlers {
   ) => unknown;
   voiceServerUpdate: (
     bot: Bot,
-    payload: { token: string; endpoint?: string; guildId: bigint },
+    payload: { token: string; endpoint?: string; guildId: BigString },
   ) => unknown;
   voiceStateUpdate: (
     bot: Bot,
@@ -706,63 +719,63 @@ export interface EventHandlers {
   channelDelete: (bot: Bot, channel: Channel) => unknown;
   channelPinsUpdate: (
     bot: Bot,
-    data: { guildId?: bigint; channelId: bigint; lastPinTimestamp?: number },
+    data: { guildId?: BigString; channelId: BigString; lastPinTimestamp?: number },
   ) => unknown;
   channelUpdate: (bot: Bot, channel: Channel) => unknown;
   stageInstanceCreate: (
     bot: Bot,
     data: {
-      id: bigint;
-      guildId: bigint;
-      channelId: bigint;
+      id: BigString;
+      guildId: BigString;
+      channelId: BigString;
       topic: string;
     },
   ) => unknown;
   stageInstanceDelete: (
     bot: Bot,
     data: {
-      id: bigint;
-      guildId: bigint;
-      channelId: bigint;
+      id: BigString;
+      guildId: BigString;
+      channelId: BigString;
       topic: string;
     },
   ) => unknown;
   stageInstanceUpdate: (
     bot: Bot,
     data: {
-      id: bigint;
-      guildId: bigint;
-      channelId: bigint;
+      id: BigString;
+      guildId: BigString;
+      channelId: BigString;
       topic: string;
     },
   ) => unknown;
   guildEmojisUpdate: (
     bot: Bot,
     payload: {
-      guildId: bigint;
-      emojis: Collection<bigint, DiscordEmoji>;
+      guildId: BigString;
+      emojis: Collection<BigString, DiscordEmoji>;
     },
   ) => unknown;
-  guildBanAdd: (bot: Bot, user: User, guildId: bigint) => unknown;
-  guildBanRemove: (bot: Bot, user: User, guildId: bigint) => unknown;
+  guildBanAdd: (bot: Bot, user: User, guildId: BigString) => unknown;
+  guildBanRemove: (bot: Bot, user: User, guildId: BigString) => unknown;
   guildCreate: (bot: Bot, guild: Guild) => unknown;
-  guildDelete: (bot: Bot, id: bigint, shardId: number) => unknown;
+  guildDelete: (bot: Bot, id: BigString, shardId: number) => unknown;
   guildUpdate: (bot: Bot, guild: Guild) => unknown;
   raw: (bot: Bot, data: DiscordGatewayPayload, shardId: number) => unknown;
   roleCreate: (bot: Bot, role: Role) => unknown;
-  roleDelete: (bot: Bot, payload: { guildId: bigint; roleId: bigint }) => unknown;
+  roleDelete: (bot: Bot, payload: { guildId: BigString; roleId: BigString }) => unknown;
   roleUpdate: (bot: Bot, role: Role) => unknown;
   webhooksUpdate: (
     bot: Bot,
-    payload: { channelId: bigint; guildId: bigint },
+    payload: { channelId: BigString; guildId: BigString },
   ) => unknown;
   botUpdate: (bot: Bot, user: User) => unknown;
   typingStart: (
     bot: Bot,
     payload: {
-      guildId: bigint | undefined;
-      channelId: bigint;
-      userId: bigint;
+      guildId: BigString | undefined;
+      channelId: BigString;
+      userId: BigString;
       timestamp: number;
       member: Member | undefined;
     },

@@ -1,7 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
-import { ChannelTypes, VideoQualityModes } from "../../types/shared.ts";
+import { BigString, ChannelTypes, VideoQualityModes } from "../../types/shared.ts";
 import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
 
 /**
@@ -36,7 +36,7 @@ import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
  */
 export async function editChannel(
   bot: Bot,
-  channelId: bigint,
+  channelId: BigString,
   options: ModifyChannel,
   reason?: string,
 ): Promise<Channel> {
@@ -117,9 +117,9 @@ export async function editChannel(
 interface EditChannelRequest {
   amount: number;
   timestamp: number;
-  channelId: bigint;
+  channelId: BigString;
   items: {
-    channelId: bigint;
+    channelId: BigString;
     options: ModifyChannel;
     resolve: (channel: Channel) => void;
     // deno-lint-ignore no-explicit-any
@@ -127,7 +127,7 @@ interface EditChannelRequest {
   }[];
 }
 
-const editChannelNameTopicQueue = new Map<bigint, EditChannelRequest>();
+const editChannelNameTopicQueue = new Map<BigString, EditChannelRequest>();
 let editChannelProcessing = false;
 
 function processEditChannelQueue(bot: Bot): void {
@@ -191,7 +191,7 @@ export interface ModifyChannel {
   /** Channel or category-specific permissions */
   permissionOverwrites?: OverwriteReadable[] | null;
   /** Id of the new parent category for a channel */
-  parentId?: bigint | null;
+  parentId?: BigString | null;
   /** Voice region id for the voice channel, automatic when set to null */
   rtcRegion?: string | null;
   /** The camera video quality mode of the voice channel */

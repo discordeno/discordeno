@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 import { Collection } from "../../util/collection.ts";
 
 /**
@@ -18,7 +19,7 @@ import { Collection } from "../../util/collection.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#get-pinned-messages}
  */
-export async function getPinnedMessages(bot: Bot, channelId: bigint): Promise<Collection<bigint, Message>> {
+export async function getPinnedMessages(bot: Bot, channelId: BigString): Promise<Collection<BigString, Message>> {
   const results = await bot.rest.runMethod<DiscordMessage[]>(
     bot.rest,
     "GET",

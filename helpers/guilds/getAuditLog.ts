@@ -8,7 +8,7 @@ import { User } from "../../transformers/member.ts";
 import { ScheduledEvent } from "../../transformers/scheduledEvent.ts";
 import { Webhook } from "../../transformers/webhook.ts";
 import { DiscordAuditLog } from "../../types/discord.ts";
-import { AuditLogEvents } from "../../types/shared.ts";
+import { AuditLogEvents, BigString } from "../../types/shared.ts";
 
 export type AuditLog = {
   auditLogEntries: AuditLogEntry[];
@@ -36,7 +36,7 @@ export type AuditLog = {
  *
  * @see {@link https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log}
  */
-export async function getAuditLog(bot: Bot, guildId: bigint, options?: GetGuildAuditLog): Promise<AuditLog> {
+export async function getAuditLog(bot: Bot, guildId: BigString, options?: GetGuildAuditLog): Promise<AuditLog> {
   if (options?.limit) {
     options.limit = options.limit >= 1 && options.limit <= 100 ? options.limit : 50;
   }
@@ -93,11 +93,11 @@ export async function getAuditLog(bot: Bot, guildId: bigint, options?: GetGuildA
 /** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
 export interface GetGuildAuditLog {
   /** Entries from a specific user ID */
-  userId?: bigint | string;
+  userId?: BigString | string;
   /** Entries for a specific audit log event */
   actionType?: AuditLogEvents;
   /** Entries that preceded a specific audit log entry ID */
-  before?: bigint | string;
+  before?: BigString | string;
   /** Maximum number of entries (between 1-100) to return, defaults to 50 */
   limit?: number;
 }

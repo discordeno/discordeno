@@ -1,7 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
-import { ChannelTypes } from "../../types/shared.ts";
+import { BigString, ChannelTypes } from "../../types/shared.ts";
 import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
 
 /**
@@ -25,7 +25,7 @@ import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
  */
 export async function createChannel(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   options?: CreateGuildChannel,
   reason?: string,
 ): Promise<Channel> {
@@ -80,7 +80,7 @@ export interface CreateGuildChannel {
   /** The channel's permission overwrites */
   permissionOverwrites?: OverwriteReadable[];
   /** Id of the parent category for a channel */
-  parentId?: bigint;
+  parentId?: BigString;
   /** Whether the channel is nsfw */
   nsfw?: boolean;
   /** Default duration (in minutes) that clients (not the API) use for newly created threads in this channel, to determine when to automatically archive the thread after the last activity */

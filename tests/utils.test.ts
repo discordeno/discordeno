@@ -52,8 +52,12 @@ Deno.test({
   name: "[guild] format a guild's icon url",
   fn: async () => {
     const bot = loadBot();
+
     assertEquals(
-      bot.helpers.getGuildIconURL(785384884197392384n, 3837424427068676005442449262648382018748n),
+      bot.helpers.getGuildIconURL(
+        bot.useBigints ? 785384884197392384n : "785384884197392384",
+        bot.useBigints ? 3837424427068676005442449262648382018748n : "46f50fb412eab14ec455d5cf777154bc",
+      ),
       "https://cdn.discordapp.com/icons/785384884197392384/46f50fb412eab14ec455d5cf777154bc.jpg?size=128",
     );
   },
@@ -65,8 +69,8 @@ Deno.test({
     const bot = loadBot();
 
     assertEquals(
-      bot.helpers.getGuildBannerURL(613425648685547541n, {
-        banner: 3919584870146358272366452115178209474142n,
+      bot.helpers.getGuildBannerURL(bot.useBigints ? 613425648685547541n : "613425648685547541", {
+        banner: bot.useBigints ? 3919584870146358272366452115178209474142n : "84c4964c115c128fb9100952c3b4f65e",
       }),
       "https://cdn.discordapp.com/banners/613425648685547541/84c4964c115c128fb9100952c3b4f65e.jpg?size=128",
     );
@@ -78,7 +82,10 @@ Deno.test({
   fn: async () => {
     const bot = loadBot();
     assertEquals(
-      bot.helpers.getGuildSplashURL(785384884197392384n, 3837424427068676005442449262648382018748n),
+      bot.helpers.getGuildSplashURL(
+        bot.useBigints ? 785384884197392384n : "785384884197392384",
+        bot.useBigints ? 3837424427068676005442449262648382018748n : "46f50fb412eab14ec455d5cf777154bc",
+      ),
       "https://cdn.discordapp.com/splashes/785384884197392384/46f50fb412eab14ec455d5cf777154bc.jpg?size=128",
     );
   },
@@ -191,8 +198,8 @@ Deno.test({
     const bot = loadBot();
 
     assertEquals(
-      bot.helpers.getAvatarURL(130136895395987456n, "8840", {
-        avatar: 4055337350987360625717955448021200177333n,
+      bot.helpers.getAvatarURL(bot.useBigints ? 130136895395987456n : "130136895395987456", "8840", {
+        avatar: bot.useBigints ? 4055337350987360625717955448021200177333n : "eae5905ad2d18d7c8deca20478b088b5",
       }),
       "https://cdn.discordapp.com/avatars/130136895395987456/eae5905ad2d18d7c8deca20478b088b5.jpg?size=128",
     );

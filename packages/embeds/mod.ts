@@ -15,10 +15,10 @@ export const embedLimits = {
 // COPIED FROM DISCORDENO AS A TEMP SOLUTION
 // TODO: remove when DD has improved utils
 function avatarURL(
-  userId: bigint,
+  userId: BigString,
   discriminator: string,
   options?: {
-    avatar: bigint | undefined;
+    avatar: BigString | undefined;
     size?: ImageSize;
     format?: ImageFormat;
   },

@@ -1,6 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { GuildWidget } from "../../../transformers/widget.ts";
 import { DiscordGuildWidget } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Gets the guild widget by guild ID.
@@ -11,7 +12,7 @@ import { DiscordGuildWidget } from "../../../types/discord.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-widget}
  */
-export async function getWidget(bot: Bot, guildId: bigint): Promise<GuildWidget> {
+export async function getWidget(bot: Bot, guildId: BigString): Promise<GuildWidget> {
   const result = await bot.rest.runMethod<DiscordGuildWidget>(
     bot.rest,
     "GET",

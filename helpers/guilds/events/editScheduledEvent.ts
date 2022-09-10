@@ -1,7 +1,7 @@
 import { Bot } from "../../../bot.ts";
 import { ScheduledEvent } from "../../../transformers/scheduledEvent.ts";
 import { DiscordScheduledEvent } from "../../../types/discord.ts";
-import { ScheduledEventEntityType, ScheduledEventPrivacyLevel, ScheduledEventStatus } from "../../../types/shared.ts";
+import { BigString, ScheduledEventEntityType, ScheduledEventPrivacyLevel, ScheduledEventStatus } from "../../../types/shared.ts";
 
 /**
  * Edits a scheduled event.
@@ -24,8 +24,8 @@ import { ScheduledEventEntityType, ScheduledEventPrivacyLevel, ScheduledEventSta
  */
 export async function editScheduledEvent(
   bot: Bot,
-  guildId: bigint,
-  eventId: bigint,
+  guildId: BigString,
+  eventId: BigString,
   options: Partial<EditScheduledEvent>,
 ): Promise<ScheduledEvent> {
   if (options.name && !bot.utils.validateLength(options.name, { min: 1, max: 100 })) {
@@ -64,7 +64,7 @@ export async function editScheduledEvent(
 
 export interface EditScheduledEvent {
   /** the channel id of the scheduled event. null if switching to external event. */
-  channelId: bigint | null;
+  channelId: BigString | null;
   /** location of the event */
   location?: string;
   /** the name of the scheduled event */

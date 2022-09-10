@@ -1,6 +1,7 @@
 import { Bot } from "../../bot.ts";
 import { Role } from "../../transformers/role.ts";
 import { DiscordRole } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 import { Collection } from "../../util/collection.ts";
 
 /**
@@ -20,9 +21,9 @@ import { Collection } from "../../util/collection.ts";
  */
 export async function modifyRolePositions(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   options: ModifyRolePositions[],
-): Promise<Collection<bigint, Role>> {
+): Promise<Collection<BigString, Role>> {
   const results = await bot.rest.runMethod<DiscordRole[]>(
     bot.rest,
     "PATCH",
@@ -40,7 +41,7 @@ export async function modifyRolePositions(
 
 export interface ModifyRolePositions {
   /** The role id */
-  id: bigint;
+  id: BigString;
   /** The sorting position for the role. */
   position?: number | null;
 }

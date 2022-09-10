@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 interface DiscordPrunedCount {
   pruned: number;
@@ -17,7 +18,7 @@ interface DiscordPrunedCount {
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-prune-count}
  */
-export async function getPruneCount(bot: Bot, guildId: bigint, options?: GetGuildPruneCountQuery): Promise<number> {
+export async function getPruneCount(bot: Bot, guildId: BigString, options?: GetGuildPruneCountQuery): Promise<number> {
   if (options?.days && options.days < 1) throw new Error(bot.constants.Errors.PRUNE_MIN_DAYS);
   if (options?.days && options.days > 30) throw new Error(bot.constants.Errors.PRUNE_MAX_DAYS);
 

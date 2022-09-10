@@ -42,12 +42,12 @@ export async function updateDevCommands(bot: Bot) {
 export const CURRENT_SLASH_COMMAND_VERSION = 1;
 
 /** Whether the guild has the latest slash command version */
-export async function usesLatestCommandVersion(guildId: bigint): Promise<boolean> {
+export async function usesLatestCommandVersion(guildId: BigString): Promise<boolean> {
   return (await getCurrentCommandVersion(guildId)) === CURRENT_SLASH_COMMAND_VERSION;
 }
 
 /** Get the current slash command version for this guild */
-export async function getCurrentCommandVersion(guildId: bigint): Promise<number> {
+export async function getCurrentCommandVersion(guildId: BigString): Promise<number> {
   if (bot.commandVersions.has(guildId)) return bot.commandVersions.get(guildId)!;
 
   const commandVersion = await prisma.commands.findUnique({ where: { id: guildId } });
@@ -56,7 +56,7 @@ export async function getCurrentCommandVersion(guildId: bigint): Promise<number>
   return commandVersion?.version ?? 0;
 }
 
-export async function updateCommandVersion(guildId: bigint): Promise<number> {
+export async function updateCommandVersion(guildId: BigString): Promise<number> {
   // UPDATE THE VERSION SAVED IN THE DB
   await prisma.commands.upsert({
     where: { id: guildId },
@@ -68,7 +68,7 @@ export async function updateCommandVersion(guildId: bigint): Promise<number> {
   return CURRENT_SLASH_COMMAND_VERSION;
 }
 
-export async function updateGuildCommands(bot: Bot, guildId: bigint) {
+export async function updateGuildCommands(bot: Bot, guildId: BigString) {
   if (guildId === 547046977578336286n) return await updateDevCommands(bot);
 
   await updateCommandVersion(guildId);
@@ -107,7 +107,7 @@ const convertedCache = new Map<string, ApplicationCommandOption[]>();
 
 /** Creates the commands options including subcommands. Also translates them. */
 function createOptions(
-  guildId: bigint | "english",
+  guildId: BigString | "english",
   options: readonly ArgumentDefinition[],
   commandName?: string,
 ): ApplicationCommandOption[] | undefined {

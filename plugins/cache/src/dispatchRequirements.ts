@@ -1,7 +1,7 @@
-import type { Bot, DiscordGatewayPayload, Guild, Shard } from "../deps.ts";
+import type { BigString, Bot, DiscordGatewayPayload, Guild, Shard } from "../deps.ts";
 import { BotWithCache } from "./addCacheCollections.ts";
 
-const processing = new Set<bigint>();
+const processing = new Set<BigString>();
 
 export async function dispatchRequirements<B extends Bot>(
   bot: BotWithCache<B>,
@@ -11,7 +11,7 @@ export async function dispatchRequirements<B extends Bot>(
   // DELETE MEANS WE DONT NEED TO FETCH. CREATE SHOULD HAVE DATA TO CACHE
   if (data.t && ["GUILD_CREATE", "GUILD_DELETE"].includes(data.t)) return;
 
-  const id = bot.utils.snowflakeToBigint(
+  const id = bot.transformers.snowflake(
     (data.t && ["GUILD_UPDATE"].includes(data.t)
       ? // deno-lint-ignore no-explicit-any
         (data.d as any)?.id

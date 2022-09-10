@@ -1,5 +1,5 @@
 import { Bot } from "../bot.ts";
-import { ButtonStyles, MessageComponentTypes, SelectOption, TextStyles } from "../mod.ts";
+import { BigString, ButtonStyles, MessageComponentTypes, SelectOption, TextStyles } from "../mod.ts";
 import { DiscordComponent } from "../types/discord.ts";
 
 export function transformComponent(bot: Bot, payload: DiscordComponent): Component {
@@ -56,7 +56,7 @@ export interface Component {
   /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
   emoji?: {
     /** Emoji id */
-    id?: bigint;
+    id?: BigString;
     /** Emoji name */
     name?: string;
     /** Whether this emoji is animated */

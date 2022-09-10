@@ -1,4 +1,5 @@
 import {
+  BigString,
   BitwisePermissionFlags,
   BotWithCache,
   Channel,
@@ -14,18 +15,20 @@ import {
 /** Calculates the permissions this member has in the given guild */
 export function calculateBasePermissions(
   bot: BotWithCache,
-  guildOrId: bigint | Guild,
-  memberOrId: bigint | Member,
+  guildOrId: BigString | Guild,
+  memberOrId: BigString | Member,
 ) {
-  const guild = typeof guildOrId === "bigint" ? bot.guilds.get(guildOrId) : guildOrId;
-  const member = typeof memberOrId === "bigint" ? bot.members.get(memberOrId) : memberOrId;
+  const guild = typeof guildOrId === "bigint" || typeof guildOrId === "string" ? bot.guilds.get(guildOrId) : guildOrId;
+  const member = typeof memberOrId === "bigint" || typeof memberOrId === "string"
+    ? bot.members.get(memberOrId)
+    : memberOrId;
 
   if (!guild || !member) return 8n;
 
   let permissions = 0n;
   // Calculate the role permissions bits, @everyone role is not in memberRoleIds so we need to pass guildId manually
   permissions |= [...member.roles, guild.id]
-    .map((id) => guild.roles.get(id)?.permissions)
+    .map((id) => guild.roles.get(id) ? 0n : BigInt(guild.roles.get(id)!.permissions))
     // Removes any edge case undefined
     .filter((perm) => perm)
     .reduce((bits, perms) => {
@@ -42,15 +45,19 @@ export function calculateBasePermissions(
 /** Calculates the permissions this member has for the given Channel */
 export function calculateChannelOverwrites(
   bot: BotWithCache,
-  channelOrId: bigint | Channel,
-  memberOrId: bigint | Member,
+  channelOrId: BigString | Channel,
+  memberOrId: BigString | Member,
 ) {
-  const channel = typeof channelOrId === "bigint" ? bot.channels.get(channelOrId) : channelOrId;
+  const channel = typeof channelOrId === "bigint" || typeof channelOrId === "string"
+    ? bot.channels.get(channelOrId)
+    : channelOrId;
 
   // This is a DM channel so return ADMINISTRATOR permission
   if (!channel?.guildId) return 8n;
 
-  const member = typeof memberOrId === "bigint" ? bot.members.get(memberOrId) : memberOrId;
+  const member = typeof memberOrId === "bigint" || typeof memberOrId === "string"
+    ? bot.members.get(memberOrId)
+    : memberOrId;
 
   if (!channel || !member) return 8n;
 
@@ -111,23 +118,25 @@ export function calculateChannelOverwrites(
 
 /** Checks if the given permission bits are matching the given permissions. `ADMINISTRATOR` always returns `true` */
 export function validatePermissions(
-  permissionBits: bigint,
+  permissionBits: BigString,
   permissions: PermissionStrings[],
 ) {
-  if (permissionBits & 8n) return true;
+  const bits = BigInt(permissionBits);
+
+  if (bits & 8n) return true;
 
   return permissions.every(
     (permission) =>
       // Check if permission is in permissionBits
-      permissionBits & BigInt(BitwisePermissionFlags[permission]),
+      bits & BigInt(BitwisePermissionFlags[permission]),
   );
 }
 
 /** Checks if the given member has these permissions in the given guild */
 export function hasGuildPermissions(
   bot: BotWithCache,
-  guild: bigint | Guild,
-  member: bigint | Member,
+  guild: BigString | Guild,
+  member: BigString | Member,
   permissions: PermissionStrings[],
 ) {
   // First we need the role permission bits this member has
@@ -143,7 +152,7 @@ export function hasGuildPermissions(
 /** Checks if the bot has these permissions in the given guild */
 export function botHasGuildPermissions(
   bot: BotWithCache,
-  guild: bigint | Guild,
+  guild: BigString | Guild,
   permissions: PermissionStrings[],
 ) {
   // Since Bot is a normal member we can use the hasRolePermissions() function
@@ -153,8 +162,8 @@ export function botHasGuildPermissions(
 /** Checks if the given member has these permissions for the given channel */
 export function hasChannelPermissions(
   bot: BotWithCache,
-  channel: bigint | Channel,
-  member: bigint | Member,
+  channel: BigString | Channel,
+  member: BigString | Member,
   permissions: PermissionStrings[],
 ) {
   // First we need the overwrite bits this member has
@@ -170,7 +179,7 @@ export function hasChannelPermissions(
 /** Checks if the bot has these permissions f0r the given channel */
 export function botHasChannelPermissions(
   bot: BotWithCache,
-  channel: bigint | Channel,
+  channel: BigString | Channel,
   permissions: PermissionStrings[],
 ) {
   // Since Bot is a normal member we can use the hasRolePermissions() function
@@ -179,19 +188,20 @@ export function botHasChannelPermissions(
 
 /** Returns the permissions that are not in the given permissionBits */
 export function missingPermissions(
-  permissionBits: bigint,
+  permissionBits: BigString,
   permissions: PermissionStrings[],
 ) {
-  if (permissionBits & 8n) return [];
+  const bits = BigInt(permissionBits);
+  if (bits & 8n) return [];
 
-  return permissions.filter((permission) => !(permissionBits & BigInt(BitwisePermissionFlags[permission])));
+  return permissions.filter((permission) => !(bits & BigInt(BitwisePermissionFlags[permission])));
 }
 
 /** Get the missing Guild permissions this member has */
 export function getMissingGuildPermissions(
   bot: BotWithCache,
-  guild: bigint | Guild,
-  member: bigint | Member,
+  guild: BigString | Guild,
+  member: BigString | Member,
   permissions: PermissionStrings[],
 ) {
   // First we need the role permission bits this member has
@@ -207,8 +217,8 @@ export function getMissingGuildPermissions(
 /** Get the missing Channel permissions this member has */
 export function getMissingChannelPermissions(
   bot: BotWithCache,
-  channel: bigint | Channel,
-  member: bigint | Member,
+  channel: BigString | Channel,
+  member: BigString | Member,
   permissions: PermissionStrings[],
 ) {
   // First we need the role permission bits this member has
@@ -224,8 +234,8 @@ export function getMissingChannelPermissions(
 /** Throws an error if this member has not all of the given permissions */
 export function requireGuildPermissions(
   bot: BotWithCache,
-  guild: bigint | Guild,
-  member: bigint | Member,
+  guild: BigString | Guild,
+  member: BigString | Member,
   permissions: PermissionStrings[],
 ) {
   const missing = getMissingGuildPermissions(
@@ -243,7 +253,7 @@ export function requireGuildPermissions(
 /** Throws an error if the bot does not have all permissions */
 export function requireBotGuildPermissions(
   bot: BotWithCache,
-  guild: bigint | Guild,
+  guild: BigString | Guild,
   permissions: PermissionStrings[],
 ) {
   // Since Bot is a normal member we can use the throwOnMissingGuildPermission() function
@@ -253,8 +263,8 @@ export function requireBotGuildPermissions(
 /** Throws an error if this member has not all of the given permissions */
 export function requireChannelPermissions(
   bot: BotWithCache,
-  channel: bigint | Channel,
-  member: bigint | Member,
+  channel: BigString | Channel,
+  member: BigString | Member,
   permissions: PermissionStrings[],
 ) {
   const missing = getMissingChannelPermissions(
@@ -272,7 +282,7 @@ export function requireChannelPermissions(
 /** Throws an error if the bot has not all of the given channel permissions */
 export function requireBotChannelPermissions(
   bot: BotWithCache,
-  channel: bigint | Channel,
+  channel: BigString | Channel,
   permissions: PermissionStrings[],
 ) {
   // Since Bot is a normal member we can use the throwOnMissingChannelPermission() function
@@ -280,12 +290,14 @@ export function requireBotChannelPermissions(
 }
 
 /** This function converts a bitwise string to permission strings */
-export function calculatePermissions(permissionBits: bigint) {
+export function calculatePermissions(permissionBits: BigString) {
+  const bits = BigInt(permissionBits);
+
   return Object.keys(BitwisePermissionFlags).filter((permission) => {
     // Since Object.keys() not only returns the permission names but also the bit values we need to return false if it is a Number
     if (Number(permission)) return false;
     // Check if permissionBits has this permission
-    return permissionBits &
+    return bits &
       BigInt(BitwisePermissionFlags[permission as PermissionStrings]);
   }) as PermissionStrings[];
 }
@@ -303,7 +315,7 @@ export function calculateBits(permissions: PermissionStrings[]) {
 /** Internal function to check if the bot has the permissions to set these overwrites */
 export function requireOverwritePermissions(
   bot: BotWithCache,
-  guildOrId: bigint | Guild,
+  guildOrId: BigString | Guild,
   overwrites: OverwriteReadable[],
 ) {
   let requiredPerms: Set<PermissionStrings> = new Set(["MANAGE_CHANNELS"]);
@@ -330,15 +342,15 @@ export function requireOverwritePermissions(
 /** Gets the highest role from the member in this guild */
 export function highestRole(
   bot: BotWithCache,
-  guildOrId: bigint | Guild,
-  memberOrId: bigint | Member,
+  guildOrId: BigString | Guild,
+  memberOrId: BigString | Member,
 ) {
-  const guild = typeof guildOrId === "bigint" ? bot.guilds.get(guildOrId) : guildOrId;
+  const guild = typeof guildOrId === "bigint" || typeof guildOrId === "string" ? bot.guilds.get(guildOrId) : guildOrId;
   if (!guild) throw new Error(Errors.GUILD_NOT_FOUND);
 
   // Get the roles from the member
   const memberRoles =
-    (typeof memberOrId === "bigint"
+    (typeof memberOrId === "bigint" || typeof memberOrId === "string"
       ? bot.members.get(bot.transformers.snowflake(`${memberOrId}${guild.id}`))
       : memberOrId)
       ?.roles;
@@ -370,11 +382,11 @@ export function highestRole(
 /** Checks if the first role is higher than the second role */
 export function higherRolePosition(
   bot: BotWithCache,
-  guildOrId: bigint | Guild,
-  roleId: bigint,
-  otherRoleId: bigint,
+  guildOrId: BigString | Guild,
+  roleId: BigString,
+  otherRoleId: BigString,
 ) {
-  const guild = typeof guildOrId === "bigint" ? bot.guilds.get(guildOrId) : guildOrId;
+  const guild = typeof guildOrId === "bigint" || typeof guildOrId === "string" ? bot.guilds.get(guildOrId) : guildOrId;
   if (!guild) return true;
 
   const role = guild.roles.get(roleId);
@@ -392,11 +404,11 @@ export function higherRolePosition(
 /** Checks if the member has a higher position than the given role */
 export function isHigherPosition(
   bot: BotWithCache,
-  guildOrId: bigint | Guild,
-  memberId: bigint,
-  compareRoleId: bigint,
+  guildOrId: BigString | Guild,
+  memberId: BigString,
+  compareRoleId: BigString,
 ) {
-  const guild = typeof guildOrId === "bigint" ? bot.guilds.get(guildOrId) : guildOrId;
+  const guild = typeof guildOrId === "bigint" || typeof guildOrId === "string" ? bot.guilds.get(guildOrId) : guildOrId;
 
   if (!guild || guild.ownerId === memberId) return true;
 
@@ -411,9 +423,9 @@ export function isHigherPosition(
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
 export function channelOverwriteHasPermission(
-  guildId: bigint,
-  id: bigint,
-  overwrites: bigint[],
+  guildId: BigString,
+  id: BigString,
+  overwrites: BigString[],
   permissions: PermissionStrings[],
 ) {
   const overwrite = overwrites.find((perm) => {

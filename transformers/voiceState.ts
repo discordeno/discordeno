@@ -1,9 +1,9 @@
 import { Bot } from "../bot.ts";
 import { DiscordVoiceState } from "../types/discord.ts";
+import { BigString, Optionalize } from "../types/shared.ts";
 import { VoiceStateToggles } from "./toggles/voice.ts";
-import { Optionalize } from "../types/shared.ts";
 
-export function transformVoiceState(bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) {
+export function transformVoiceState(bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: BigString }) {
   const voiceState = {
     toggles: new VoiceStateToggles(payload.voiceState),
 

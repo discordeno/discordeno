@@ -1,6 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { ApplicationCommand } from "../../../transformers/applicationCommand.ts";
 import { DiscordApplicationCommand } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 import { Collection } from "../../../util/collection.ts";
 
 /**
@@ -14,8 +15,8 @@ import { Collection } from "../../../util/collection.ts";
  */
 export async function getGuildApplicationCommands(
   bot: Bot,
-  guildId: bigint,
-): Promise<Collection<bigint, ApplicationCommand>> {
+  guildId: BigString,
+): Promise<Collection<BigString, ApplicationCommand>> {
   const results = await bot.rest.runMethod<DiscordApplicationCommand[]>(
     bot.rest,
     "GET",

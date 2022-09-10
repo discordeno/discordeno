@@ -1,16 +1,16 @@
 import { bgBlack, bgGreen, bgMagenta, bgYellow, black, green, red, white } from "colorette";
 import {
-  ApplicationCommandOption,
-  ApplicationCommandOptionTypes,
-  Bot,
-  Channel,
-  ChannelTypes,
-  Interaction,
-  InteractionDataOption,
-  InteractionResponseTypes,
-  Member,
-  Role,
-  User,
+    ApplicationCommandOption,
+    ApplicationCommandOptionTypes,
+    Bot,
+    Channel,
+    ChannelTypes,
+    Interaction,
+    InteractionDataOption,
+    InteractionResponseTypes,
+    Member,
+    Role,
+    User
 } from "discordeno";
 import { bot, BotWithCustomProps } from "../../bot.js";
 import COMMANDS from "../../commands/mod.js";
@@ -111,7 +111,7 @@ const translatedOptionNamesCache = new Map<string, Record<string, string>>();
 /** Translates all options of the command to an object: translatedOptionName: optionName */
 export function translateOptionNames(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   options: ApplicationCommandOption[],
   commandName?: string,
 ): Record<string, string> {
@@ -158,10 +158,10 @@ function convertOptionValue(
     | { user: User; member: Member }
     | Role
     | {
-      id: bigint;
+      id: BigString;
       name: string;
       type: ChannelTypes;
-      permissions: bigint;
+      permissions: BigString;
     }
     | boolean
     | string
@@ -237,10 +237,10 @@ export function optionParser(
       | { user: User; member: Member }
       | Role
       | {
-        id: bigint;
+        id: BigString;
         name: string;
         type: ChannelTypes;
-        permissions: bigint;
+        permissions: BigString;
       }
       | boolean
       | string

@@ -1,7 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Role } from "../../transformers/role.ts";
 import { DiscordRole } from "../../types/discord.ts";
-import { PermissionStrings } from "../../types/shared.ts";
+import { BigString, PermissionStrings } from "../../types/shared.ts";
 
 /**
  * Creates a role in a guild.
@@ -18,7 +18,7 @@ import { PermissionStrings } from "../../types/shared.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-role}
  */
-export async function createRole(bot: Bot, guildId: bigint, options: CreateGuildRole, reason?: string): Promise<Role> {
+export async function createRole(bot: Bot, guildId: BigString, options: CreateGuildRole, reason?: string): Promise<Role> {
   const result = await bot.rest.runMethod<DiscordRole>(bot.rest, "POST", bot.constants.routes.GUILD_ROLES(guildId), {
     name: options.name,
     color: options.color,

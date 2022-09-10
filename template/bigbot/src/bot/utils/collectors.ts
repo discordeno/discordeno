@@ -2,17 +2,17 @@ import { Interaction, Member, Message } from "discordeno";
 import { bot } from "../bot.js";
 
 export async function needMessage(
-  memberId: bigint,
-  channelId: bigint,
+  memberId: BigString,
+  channelId: BigString,
   options: MessageCollectorOptions & { amount?: 1 },
 ): Promise<Message>;
 export async function needMessage(
-  memberId: bigint,
-  channelId: bigint,
+  memberId: BigString,
+  channelId: BigString,
   options: MessageCollectorOptions & { amount?: number },
 ): Promise<Message[]>;
-export async function needMessage(memberId: bigint, channelId: bigint): Promise<Message>;
-export async function needMessage(memberId: bigint, channelId: bigint, options?: MessageCollectorOptions) {
+export async function needMessage(memberId: BigString, channelId: BigString): Promise<Message>;
+export async function needMessage(memberId: BigString, channelId: BigString, options?: MessageCollectorOptions) {
   const messages = await collectMessages({
     key: memberId,
     channelId,
@@ -80,12 +80,12 @@ export interface MessageCollectorOptions extends BaseCollectorOptions {
 
 export interface ReactionCollectorOptions extends BaseCollectorOptions {
   /** Function that will filter messages to determine whether to collect this message. Defaults to making sure the message is sent by the same member. */
-  filter?: (userId: bigint, reaction: string, message: Message | { id: string }) => boolean;
+  filter?: (userId: BigString, reaction: string, message: Message | { id: string }) => boolean;
 }
 
 export interface BaseCollectorCreateOptions {
   /** The unique key that will be used to get responses for this. Ideally, meant to be for member id. */
-  key: bigint;
+  key: BigString;
   /** The amount of messages to collect before resolving. */
   amount: number;
   /** The timestamp when this collector was created */
@@ -96,16 +96,16 @@ export interface BaseCollectorCreateOptions {
 
 export interface CollectMessagesOptions extends BaseCollectorCreateOptions {
   /** The channel Id where this is listening to */
-  channelId: bigint;
+  channelId: BigString;
   /** Function that will filter messages to determine whether to collect this message */
   filter: (message: Message) => boolean;
 }
 
 export interface CollectReactionsOptions extends BaseCollectorCreateOptions {
   /** The message Id where this is listening to */
-  messageId: bigint;
+  messageId: BigString;
   /** Function that will filter messages to determine whether to collect this message */
-  filter: (userId: bigint, reaction: string, message: Message | { id: string }) => boolean;
+  filter: (userId: BigString, reaction: string, message: Message | { id: string }) => boolean;
 }
 
 export interface MessageCollector extends CollectMessagesOptions {
@@ -126,7 +126,7 @@ export interface ReactionCollector extends CollectReactionsOptions {
 
 export interface CollectButtonOptions extends BaseCollectorCreateOptions {
   /** The message Id where this is listening to */
-  messageId: bigint;
+  messageId: BigString;
   /** Function that will filter messages to determine whether to collect this message */
   filter: (message: Message, member?: Member) => boolean;
 }

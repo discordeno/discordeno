@@ -7,10 +7,10 @@ import { Bot, Collection, DiscordMemberWithUser, ListGuildMembers, Member } from
  */
 export async function getMembersPaginated(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   options: ListGuildMembers,
 ) {
-  const members = new Collection<bigint, Member>();
+  const members = new Collection<BigString, Member>();
 
   let membersLeft = options?.limit ?? 1000;
   let loops = 1;

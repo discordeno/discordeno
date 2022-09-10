@@ -1,5 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import { DiscordMember, Member } from "../../mod.ts";
+import { BigString, DiscordMember, Member } from "../../mod.ts";
 
 /**
  * Edits the nickname of the bot user.
@@ -16,7 +16,7 @@ import { DiscordMember, Member } from "../../mod.ts";
  */
 export async function editBotMember(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   options: { nick: string | null; reason?: string },
 ): Promise<Member> {
   const result = await bot.rest.runMethod<DiscordMember>(

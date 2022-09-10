@@ -1,7 +1,9 @@
-export function snowflakeToBigint(snowflake: string) {
+import { BigString } from "../types/shared.ts";
+
+export function snowflakeToBigint(snowflake: BigString) {
   return BigInt(snowflake) | 0n;
 }
 
-export function bigintToSnowflake(snowflake: bigint) {
+export function bigintToSnowflake(snowflake: BigString) {
   return snowflake === 0n ? "" : snowflake.toString();
 }

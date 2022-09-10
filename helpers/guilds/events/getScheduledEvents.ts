@@ -1,6 +1,7 @@
 import { Bot } from "../../../bot.ts";
 import { ScheduledEvent } from "../../../transformers/scheduledEvent.ts";
 import { DiscordScheduledEvent } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 import { Collection } from "../../../util/collection.ts";
 
 /**
@@ -15,9 +16,9 @@ import { Collection } from "../../../util/collection.ts";
  */
 export async function getScheduledEvents(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   options?: GetScheduledEvents,
-): Promise<Collection<bigint, ScheduledEvent>> {
+): Promise<Collection<BigString, ScheduledEvent>> {
   const results = await bot.rest.runMethod<DiscordScheduledEvent[]>(
     bot.rest,
     "GET",

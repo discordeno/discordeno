@@ -1,5 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import { GatewayIntents, GatewayOpcodes } from "../../types/shared.ts";
+import { BigString, GatewayIntents, GatewayOpcodes } from "../../types/shared.ts";
 import { calculateShardId } from "../../util/calculateShardId.ts";
 
 /**
@@ -28,7 +28,7 @@ import { calculateShardId } from "../../util/calculateShardId.ts";
  */
 export function fetchMembers(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   options?: Omit<RequestGuildMembers, "guildId">,
 ): Promise<void> {
   // You can request 1 member without the intent
@@ -70,7 +70,7 @@ export function fetchMembers(
 /** https://discord.com/developers/docs/topics/gateway#request-guild-members */
 export interface RequestGuildMembers {
   /** id of the guild to get members for */
-  guildId: bigint;
+  guildId: BigString;
   /** String that username starts with, or an empty string to return all members */
   query?: string;
   /** Maximum number of members to send matching the query; a limit of 0 can be used with an empty string query to return all members */
@@ -78,7 +78,7 @@ export interface RequestGuildMembers {
   /** Used to specify if we want the presences of the matched members */
   presences?: boolean;
   /** Used to specify which users you wish to fetch */
-  userIds?: bigint[];
+  userIds?: BigString[];
   /** Nonce to identify the Guild Members Chunk response */
   nonce?: string;
 }

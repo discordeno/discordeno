@@ -12,5 +12,10 @@
     "options": {
       "lineWidth": 120
     }
+  },
+  "tasks": {
+    "rest": "deno run -A tests/rest.ts",
+    "test": "deno test -A tests/ --parallel",
+    "test-string": "USE_BIGINTS=false deno test -A tests/ --parallel"
   }
 }

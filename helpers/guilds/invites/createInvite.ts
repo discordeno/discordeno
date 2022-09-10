@@ -1,6 +1,6 @@
 import type { Bot } from "../../../bot.ts";
 import { DiscordInvite } from "../../../types/discord.ts";
-import { TargetTypes } from "../../../types/shared.ts";
+import { BigString, TargetTypes } from "../../../types/shared.ts";
 import { BaseInvite } from "./getInvite.ts";
 
 /**
@@ -23,7 +23,7 @@ import { BaseInvite } from "./getInvite.ts";
  */
 export async function createInvite(
   bot: Bot,
-  channelId: bigint,
+  channelId: BigString,
   options: CreateChannelInvite = {},
 ): Promise<BaseInvite> {
   const result = await bot.rest.runMethod<DiscordInvite>(
@@ -69,7 +69,7 @@ export interface CreateChannelInvite {
   /** The type of target for this voice channel invite */
   targetType?: TargetTypes;
   /** The id of the user whose stream to display for this invite, required if `target_type` is 1, the user must be streaming in the channel */
-  targetUserId?: bigint;
+  targetUserId?: BigString;
   /** The id of the embedded application to open for this invite, required if `target_type` is 2, the application must have the `EMBEDDED` flag */
-  targetApplicationId?: bigint;
+  targetApplicationId?: BigString;
 }

@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Bans a user from a guild.
@@ -15,7 +16,12 @@ import type { Bot } from "../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-ban}
  */
-export async function banMember(bot: Bot, guildId: bigint, userId: bigint, options?: CreateGuildBan): Promise<void> {
+export async function banMember(
+  bot: Bot,
+  guildId: BigString,
+  userId: BigString,
+  options?: CreateGuildBan,
+): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     "PUT",

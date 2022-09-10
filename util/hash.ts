@@ -1,3 +1,5 @@
+import { BigString } from "../types/shared.ts";
+
 export function iconHashToBigInt(hash: string) {
   // The icon is animated so it needs special handling
   if (hash.startsWith("a_")) {
@@ -11,7 +13,9 @@ export function iconHashToBigInt(hash: string) {
   return BigInt(`0x${hash}`);
 }
 
-export function iconBigintToHash(icon: bigint) {
+export function iconBigintToHash(icon: BigString) {
+  if (typeof icon === "string") return icon;
+  
   // Convert the bigint back to a hash
   const hash = icon.toString(16);
   // Hashes starting with a are animated and with b are not so need to handle that

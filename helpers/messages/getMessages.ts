@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 import { Collection } from "../../util/collection.ts";
 import { hasProperty } from "../../util/utils.ts";
 
@@ -22,9 +23,9 @@ import { hasProperty } from "../../util/utils.ts";
  */
 export async function getMessages(
   bot: Bot,
-  channelId: bigint,
+  channelId: BigString,
   options?: GetMessagesOptions,
-): Promise<Collection<bigint, Message>> {
+): Promise<Collection<BigString, Message>> {
   if (options?.limit && (options.limit < 0 || options.limit > 100)) {
     throw new Error(bot.constants.Errors.INVALID_GET_MESSAGES_LIMIT);
   }
@@ -52,19 +53,19 @@ export interface GetMessagesLimit {
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
 export interface GetMessagesAround extends GetMessagesLimit {
   /** Get messages around this message id */
-  around?: bigint;
+  around?: BigString;
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
 export interface GetMessagesBefore extends GetMessagesLimit {
   /** Get messages before this message id */
-  before?: bigint;
+  before?: BigString;
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
 export interface GetMessagesAfter extends GetMessagesLimit {
   /** Get messages after this message id */
-  after?: bigint;
+  after?: BigString;
 }
 
 export type GetMessagesOptions = GetMessagesAfter | GetMessagesBefore | GetMessagesAround | GetMessagesLimit;

@@ -1,3 +1,5 @@
+export type BigString = bigint | string;
+
 export enum PresenceStatus {
   online,
   dnd,

@@ -5,13 +5,12 @@ import {
   DiscordInteractionDataOption,
   DiscordInteractionDataResolved,
 } from "../types/discord.ts";
-import { ChannelTypes } from "../types/shared.ts";
+import { BigString, ChannelTypes, Optionalize } from "../types/shared.ts";
 import { Collection } from "../util/collection.ts";
 import { Attachment } from "./attachment.ts";
 import { Member, User } from "./member.ts";
 import { Message } from "./message.ts";
 import { Role } from "./role.ts";
-import { Optionalize } from "../types/shared.ts";
 
 export function transformInteraction(bot: Bot, payload: DiscordInteraction) {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
@@ -68,14 +67,18 @@ export function transformInteractionDataOption(bot: Bot, option: DiscordInteract
   return opt as Optionalize<typeof opt>;
 }
 
-export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInteractionDataResolved, guildId?: bigint) {
+export function transformInteractionDataResolved(
+  bot: Bot,
+  resolved: DiscordInteractionDataResolved,
+  guildId?: BigString,
+) {
   const transformed: {
-    messages?: Collection<bigint, Message>;
-    users?: Collection<bigint, User>;
-    members?: Collection<bigint, Member>;
-    roles?: Collection<bigint, Role>;
-    channels?: Collection<bigint, { id: bigint; name: string; type: ChannelTypes; permissions: bigint }>;
-    attachments?: Collection<bigint, Attachment>;
+    messages?: Collection<BigString, Message>;
+    users?: Collection<BigString, User>;
+    members?: Collection<BigString, Member>;
+    roles?: Collection<BigString, Role>;
+    channels?: Collection<BigString, { id: BigString; name: string; type: ChannelTypes; permissions: BigString }>;
+    attachments?: Collection<BigString, Attachment>;
   } = {};
 
   if (resolved.messages) {

@@ -1,6 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { ApplicationCommand } from "../../../transformers/applicationCommand.ts";
 import { DiscordApplicationCommand } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 import { Collection } from "../../../util/collection.ts";
 
 // TODO: Implement `with_localizations` options field.
@@ -13,7 +14,7 @@ import { Collection } from "../../../util/collection.ts";
  *
  * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands}
  */
-export async function getGlobalApplicationCommands(bot: Bot): Promise<Collection<bigint, ApplicationCommand>> {
+export async function getGlobalApplicationCommands(bot: Bot): Promise<Collection<BigString, ApplicationCommand>> {
   const results = await bot.rest.runMethod<DiscordApplicationCommand[]>(
     bot.rest,
     "GET",

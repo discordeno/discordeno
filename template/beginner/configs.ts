@@ -1,3 +1,4 @@
+import { BigString } from "../../types/shared.ts";
 import { dotEnvConfig } from "./deps.ts";
 
 // Get the .env file that the user should have created, and get the token
@@ -6,7 +7,7 @@ const token = env.BOT_TOKEN || "";
 
 export interface Config {
   token: string;
-  botId: bigint;
+  botId: BigString;
 }
 
 export const configs = {

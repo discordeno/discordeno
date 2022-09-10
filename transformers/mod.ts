@@ -4,6 +4,7 @@ export * from "./activity.ts";
 export * from "./application.ts";
 export * from "./applicationCommand.ts";
 export * from "./applicationCommandOption.ts";
+export * from "./applicationCommandOptionChoice.ts";
 export * from "./applicationCommandPermission.ts";
 export * from "./attachment.ts";
 export * from "./auditLogEntry.ts";

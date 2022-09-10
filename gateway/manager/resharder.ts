@@ -1,5 +1,6 @@
 import { GetGatewayBot } from "../../transformers/gatewayBot.ts";
 import { DiscordGatewayPayload, DiscordReady } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 import { Collection } from "../../util/collection.ts";
 import { createShard } from "../shard/createShard.ts";
 import { decompressWith } from "../shard/deps.ts";
@@ -157,7 +158,7 @@ export async function reshard(resharder: Resharder, gatewayBot: GetGatewayBot) {
 }
 
 /** Handler that by default will save the new shard id for each guild this becomes ready in new gateway. This can be overridden to save the shard ids in a redis cache layer or whatever you prefer. These ids will be used later to update all guilds. */
-export async function markNewGuildShardId(guildIds: bigint[], shardId: number) {
+export async function markNewGuildShardId(guildIds: BigString[], shardId: number) {
   // PLACEHOLDER TO LET YOU MARK A GUILD ID AND SHARD ID FOR LATER USE ONCE RESHARDED
 }
 

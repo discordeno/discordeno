@@ -1,7 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { Channel } from "../../../transformers/channel.ts";
 import { DiscordChannel } from "../../../types/discord.ts";
-import { ChannelTypes } from "../../../types/shared.ts";
+import { BigString, ChannelTypes } from "../../../types/shared.ts";
 
 /**
  * Creates a thread without using a message as the thread's point of origin.
@@ -20,7 +20,7 @@ import { ChannelTypes } from "../../../types/shared.ts";
  */
 export async function startThreadWithoutMessage(
   bot: Bot,
-  channelId: bigint,
+  channelId: BigString,
   options: StartThreadWithoutMessage,
 ): Promise<Channel> {
   const result = await bot.rest.runMethod<DiscordChannel>(

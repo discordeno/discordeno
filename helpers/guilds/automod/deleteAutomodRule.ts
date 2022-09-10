@@ -1,4 +1,5 @@
 import { Bot } from "../../../bot.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Deletes an automod rule.
@@ -14,7 +15,12 @@ import { Bot } from "../../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/auto-moderation#delete-auto-moderation-rule}
  */
-export async function deleteAutomodRule(bot: Bot, guildId: bigint, ruleId: bigint, reason?: string): Promise<void> {
+export async function deleteAutomodRule(
+  bot: Bot,
+  guildId: BigString,
+  ruleId: BigString,
+  reason?: string,
+): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     "DELETE",

@@ -1,9 +1,9 @@
 import { Bot } from "../bot.ts";
 import { DiscordRole } from "../types/discord.ts";
+import { BigString, Optionalize } from "../types/shared.ts";
 import { RoleToggles } from "./toggles/role.ts";
-import { Optionalize } from "../types/shared.ts";
 
-export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guildId: bigint }) {
+export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }) {
   const role = {
     name: payload.role.name,
     guildId: payload.guildId,

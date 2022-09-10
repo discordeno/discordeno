@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Member } from "../../transformers/member.ts";
 import { DiscordMemberWithUser } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 import { Collection } from "../../util/collection.ts";
 
 // TODO: make options optional
@@ -26,9 +27,9 @@ import { Collection } from "../../util/collection.ts";
  */
 export async function getMembers(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   options: ListGuildMembers,
-): Promise<Collection<bigint, Member>> {
+): Promise<Collection<BigString, Member>> {
   const results = await bot.rest.runMethod<DiscordMemberWithUser[]>(
     bot.rest,
     "GET",

@@ -1,11 +1,12 @@
 import { Bot } from "../../../bot.ts";
 import { AutoModerationRule } from "../../../transformers/automodRule.ts";
 import {
-  AutoModerationActionType,
-  AutoModerationEventTypes,
-  DiscordAutoModerationRule,
-  DiscordAutoModerationRuleTriggerMetadataPresets,
+    AutoModerationActionType,
+    AutoModerationEventTypes,
+    DiscordAutoModerationRule,
+    DiscordAutoModerationRuleTriggerMetadataPresets
 } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Edits an automod rule.
@@ -25,8 +26,8 @@ import {
  */
 export async function editAutomodRule(
   bot: Bot,
-  guildId: bigint,
-  ruleId: bigint,
+  guildId: BigString,
+  ruleId: BigString,
   options: Partial<EditAutoModerationRuleOptions>,
 ): Promise<AutoModerationRule> {
   const result = await bot.rest.runMethod<DiscordAutoModerationRule>(
@@ -85,7 +86,7 @@ export interface EditAutoModerationRuleOptions {
     /** additional metadata needed during execution for this specific action type */
     metadata: {
       /** The id of channel to which user content should be logged. Only in SendAlertMessage */
-      channelId?: bigint;
+      channelId?: BigString;
       /** Timeout duration in seconds. Only supported for TriggerType.Keyword */
       durationSeconds?: number;
     };
@@ -93,9 +94,9 @@ export interface EditAutoModerationRuleOptions {
   /** Whether the rule should be enabled. */
   enabled?: boolean;
   /** The role ids that should not be effected by the rule */
-  exemptRoles?: bigint[];
+  exemptRoles?: BigString[];
   /** The channel ids that should not be effected by the rule. */
-  exemptChannels?: bigint[];
+  exemptChannels?: BigString[];
   /** The reason to add to the audit logs. */
   reason?: string;
 }

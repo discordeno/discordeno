@@ -1,6 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { User } from "../../../transformers/member.ts";
 import { DiscordUser } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 import { Collection } from "../../../util/collection.ts";
 
 /** Get a list of users that reacted with this emoji. */
@@ -18,11 +19,11 @@ import { Collection } from "../../../util/collection.ts";
  */
 export async function getReactions(
   bot: Bot,
-  channelId: bigint,
-  messageId: bigint,
+  channelId: BigString,
+  messageId: BigString,
   reaction: string,
   options?: GetReactions,
-): Promise<Collection<bigint, User>> {
+): Promise<Collection<BigString, User>> {
   reaction = processReactionString(reaction);
 
   const results = await bot.rest.runMethod<DiscordUser[]>(

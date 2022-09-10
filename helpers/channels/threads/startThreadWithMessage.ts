@@ -1,6 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { Channel } from "../../../transformers/channel.ts";
 import { DiscordChannel } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Creates a thread, using an existing message as its point of origin.
@@ -24,8 +25,8 @@ import { DiscordChannel } from "../../../types/discord.ts";
  */
 export async function startThreadWithMessage(
   bot: Bot,
-  channelId: bigint,
-  messageId: bigint,
+  channelId: BigString,
+  messageId: BigString,
   options: StartThreadWithMessage,
 ): Promise<Channel> {
   const result = await bot.rest.runMethod<DiscordChannel>(

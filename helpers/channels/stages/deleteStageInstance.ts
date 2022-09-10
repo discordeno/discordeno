@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Deletes the stage instance associated with a stage channel, if one exists.
@@ -13,6 +14,6 @@ import type { Bot } from "../../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance}
  */
-export async function deleteStageInstance(bot: Bot, channelId: bigint): Promise<void> {
+export async function deleteStageInstance(bot: Bot, channelId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(bot.rest, "DELETE", bot.constants.routes.STAGE_INSTANCE(channelId));
 }

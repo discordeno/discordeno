@@ -1,7 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { StageInstance } from "../../../transformers/stageInstance.ts";
 import { DiscordStageInstance } from "../../../types/discord.ts";
-import { AtLeastOne } from "../../../types/shared.ts";
+import { AtLeastOne, BigString } from "../../../types/shared.ts";
 
 /**
  * Edits a stage instance.
@@ -19,7 +19,7 @@ import { AtLeastOne } from "../../../types/shared.ts";
  */
 export async function editStageInstance(
   bot: Bot,
-  channelId: bigint,
+  channelId: BigString,
   data: AtLeastOne<Pick<DiscordStageInstance, "topic">>,
 ): Promise<StageInstance> {
   const result = await bot.rest.runMethod<DiscordStageInstance>(

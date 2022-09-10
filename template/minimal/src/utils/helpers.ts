@@ -1,16 +1,15 @@
 import {
-  Bot,
-  BotWithCache,
-  CreateApplicationCommand,
-  getGuild,
-  Guild,
-  hasProperty,
-  MakeRequired,
-  upsertApplicationCommands,
+    Bot,
+    BotWithCache,
+    CreateApplicationCommand,
+    getGuild,
+    Guild,
+    hasProperty,
+    MakeRequired,
+    upsertApplicationCommands
 } from "../../deps.ts";
+import { commands, subCommand, subCommandGroup } from "../commands/mod.ts";
 import { logger } from "./logger.ts";
-import { commands } from "../commands/mod.ts";
-import { subCommand, subCommandGroup } from "../commands/mod.ts";
 
 const log = logger({ name: "Helpers" });
 
@@ -89,7 +88,7 @@ export async function updateGuildCommands(bot: Bot, guild: Guild) {
 
 export async function getGuildFromId(
   bot: BotWithCache,
-  guildId: bigint,
+  guildId: BigString,
 ): Promise<Guild> {
   let returnValue: Guild = {} as Guild;
 
@@ -107,7 +106,7 @@ export async function getGuildFromId(
   return returnValue;
 }
 
-export function snowflakeToTimestamp(id: bigint) {
+export function snowflakeToTimestamp(id: BigString) {
   return Number(id / 4194304n + 1420070400000n);
 }
 

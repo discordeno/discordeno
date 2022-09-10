@@ -1,7 +1,8 @@
 import { BotWithCache } from "../../cache/src/addCacheCollections.ts";
+import { BigString } from "../deps.ts";
 
 /** Fetch members for an entire guild then return the entire guilds cached members. */
-export async function fetchAndRetrieveMembers(bot: BotWithCache, guildId: bigint) {
+export async function fetchAndRetrieveMembers(bot: BotWithCache, guildId: BigString) {
   if (!bot.enabledPlugins?.has("CACHE")) {
     throw new Error("The fetchAndRetrieveMembers function requires the CACHE plugin first.");
   }
@@ -11,6 +12,6 @@ export async function fetchAndRetrieveMembers(bot: BotWithCache, guildId: bigint
     throw new Error("The guild was not found in cache. Unable to fetch members for uncached guild.");
   }
 
-  await bot.helpers.fetchMembers(guildId, guild.shardId);
+  await bot.helpers.fetchMembers(guildId);
   return bot.members.filter((member) => member.guildId === guildId);
 }

@@ -1,6 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { StageInstance } from "../../../transformers/stageInstance.ts";
 import { DiscordStageInstance } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Creates a stage instance associated with a stage channel.
@@ -32,7 +33,7 @@ export async function createStageInstance(bot: Bot, options: CreateStageInstance
 }
 
 export interface CreateStageInstance {
-  channelId: bigint;
+  channelId: BigString;
   topic: string;
   /** Notify @everyone that the stage instance has started. Requires the MENTION_EVERYONE permission. */
   sendStartNotification?: boolean;
