@@ -136,8 +136,8 @@ function createOptions(
       choices,
       // @ts-ignore fix this
       options: option.options
-        ? // @ts-ignore fix this
-          createOptions(bot, guildId, option.options)
+        // @ts-ignore fix this
+        ? createOptions(bot, guildId, option.options)
         : undefined,
     } as ApplicationCommandOption);
   }

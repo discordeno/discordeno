@@ -89,10 +89,10 @@ export class Embeds extends Array<Embed> {
 
   setColor(color: string) {
     this.getLastEmbed().color = color.toLowerCase() === `random`
-      ? // Random color
-        Math.floor(Math.random() * (0xffffff + 1))
-      : // Convert the hex to a acceptable color for discord
-        parseInt(color.replace("#", ""), 16);
+      // Random color
+      ? Math.floor(Math.random() * (0xffffff + 1))
+      // Convert the hex to a acceptable color for discord
+      : parseInt(color.replace("#", ""), 16);
 
     return this;
   }
