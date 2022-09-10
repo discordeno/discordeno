@@ -5,10 +5,6 @@ export function removeThreadMember(bot: BotWithCache) {
   const removeThreadMember = bot.helpers.removeThreadMember;
 
   bot.helpers.removeThreadMember = async function (threadId, userId) {
-    if (userId === bot.id) {
-      throw new Error("To remove the bot from a thread, you must use bot.helpers.leaveThread()");
-    }
-
     const channel = bot.channels.get(threadId);
 
     if (channel) {
