@@ -19,17 +19,10 @@ export default function deleteChannel(bot: BotWithCache) {
         throw new Error("UPDATES_CHANNEL_CANNOT_BE_DELETED");
       }
 
-      const isThread = [
-        ChannelTypes.GuildNewsThread,
-        ChannelTypes.GuildPublicThread,
-        ChannelTypes.GuildPrivateThread,
-      ].includes(channel.type);
+      const isThread = [ChannelTypes.AnnouncementThread, ChannelTypes.PublicThread, ChannelTypes.PrivateThread]
+        .includes(channel.type);
 
-      requireBotGuildPermissions(
-        bot,
-        guild,
-        isThread ? ["MANAGE_THREADS"] : ["MANAGE_CHANNELS"],
-      );
+      requireBotGuildPermissions(bot, guild, isThread ? ["MANAGE_THREADS"] : ["MANAGE_CHANNELS"]);
     }
 
     return await deleteChannelOld(channelId, reason);

@@ -7,7 +7,7 @@ export function sendPrivateInteractionResponse(
   id: BigString,
   token: string,
   options: InteractionResponse,
-): Promise<Message | undefined> {
+) {
   if (options.data && !options.data?.flags) options.data.flags = 64; // private: true
   return bot.helpers.replyToInteraction(id, token, options);
 }

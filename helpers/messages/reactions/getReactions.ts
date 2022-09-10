@@ -29,7 +29,7 @@ export async function getReactions(
   const results = await bot.rest.runMethod<DiscordUser[]>(
     bot.rest,
     "GET",
-    bot.constants.routes.CHANNEL_MESSAGE_REACTION(channelId, messageId, encodeURIComponent(reaction), options),
+    bot.constants.routes.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction, options),
   );
 
   return new Collection(
