@@ -1,8 +1,8 @@
 import { BotWithCache } from "../../deps.ts";
 import { requireBotChannelPermissions } from "../permissions.ts";
 
-export default function editWebhook(bot: BotWithCache) {
-  const editWebhookOld = bot.helpers.editWebhook;
+export function editWebhook(bot: BotWithCache) {
+  const editWebhook = bot.helpers.editWebhook;
 
   bot.helpers.editWebhook = async function (webhookId, options, fromChannelId) {
     if (options.channelId) requireBotChannelPermissions(bot, options.channelId, ["MANAGE_WEBHOOKS", "VIEW_CHANNEL"]);
@@ -20,6 +20,6 @@ export default function editWebhook(bot: BotWithCache) {
       }
     }
 
-    return await editWebhookOld(webhookId, options);
+    return await editWebhook(webhookId, options);
   };
 }

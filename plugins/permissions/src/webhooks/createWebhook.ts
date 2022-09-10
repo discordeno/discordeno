@@ -1,8 +1,8 @@
 import { BotWithCache } from "../../deps.ts";
 import { requireBotChannelPermissions } from "../permissions.ts";
 
-export default function createWebhook(bot: BotWithCache) {
-  const createWebhookOld = bot.helpers.createWebhook;
+export function createWebhook(bot: BotWithCache) {
+  const createWebhook = bot.helpers.createWebhook;
 
   bot.helpers.createWebhook = async function (channelId, options) {
     requireBotChannelPermissions(bot, channelId, ["MANAGE_WEBHOOKS", "VIEW_CHANNEL"]);
@@ -22,6 +22,6 @@ export default function createWebhook(bot: BotWithCache) {
       );
     }
 
-    return await createWebhookOld(channelId, options);
+    return await createWebhook(channelId, options);
   };
 }

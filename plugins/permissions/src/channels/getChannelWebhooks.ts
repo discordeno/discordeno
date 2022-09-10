@@ -1,8 +1,8 @@
 import { BotWithCache } from "../../deps.ts";
 import { requireBotChannelPermissions } from "../permissions.ts";
 
-export default function getChannelWebhooks(bot: BotWithCache) {
-  const getChannelWebhooksOld = bot.helpers.getChannelWebhooks;
+export function getChannelWebhooks(bot: BotWithCache) {
+  const getChannelWebhooks = bot.helpers.getChannelWebhooks;
 
   bot.helpers.getChannelWebhooks = async function (channelId) {
     const channel = bot.channels.get(channelId);
@@ -10,6 +10,6 @@ export default function getChannelWebhooks(bot: BotWithCache) {
       requireBotChannelPermissions(bot, channelId, ["MANAGE_WEBHOOKS"]);
     }
 
-    return await getChannelWebhooksOld(channelId);
+    return await getChannelWebhooks(channelId);
   };
 }

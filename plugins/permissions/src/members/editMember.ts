@@ -1,33 +1,51 @@
 import { BotWithCache, PermissionStrings } from "../../deps.ts";
-import { hasGuildPermissions, requireBotGuildPermissions, requireGuildPermissions } from "../permissions.ts";
+import { requireBotChannelPermissions, requireBotGuildPermissions } from "../permissions.ts";
 
-export default function editMember(bot: BotWithCache) {
-  const editMemberOld = bot.helpers.editMember;
+export function editMember(bot: BotWithCache) {
+  const editMember = bot.helpers.editMember;
 
   bot.helpers.editMember = async function (guildId, memberId, options) {
     const requiredPerms: PermissionStrings[] = [];
+
+    if (options.nick) {
+      if (options.nick.length > 32) {
+        throw new Error("NICKNAMES_MAX_LENGTH");
+      }
+      requiredPerms.push("MANAGE_NICKNAMES");
+    }
+
     if (options.roles) requiredPerms.push("MANAGE_ROLES");
-    // NULL IS ALLOWED
-    if (options.nick !== undefined) requiredPerms.push("MANAGE_NICKNAMES");
-    if (options.channelId !== undefined) requiredPerms.push("MOVE_MEMBERS");
-    if (options.mute !== undefined) requiredPerms.push("MUTE_MEMBERS");
-    if (options.deaf !== undefined) requiredPerms.push("DEAFEN_MEMBERS");
 
-    if (options.communicationDisabledUntil) {
-      const guild = bot.guilds.get(guildId);
-      if (guild) {
-        if (guild.ownerId === memberId) throw new Error("You can not timeout the servers owner.");
+    if (
+      options.mute !== undefined || options.deaf !== undefined ||
+      options.channelId !== undefined
+    ) {
+      const memberVoiceState = (await bot.guilds.get(guildId))
+        ?.voiceStates.get(memberId);
+
+      if (!memberVoiceState?.channelId) {
+        throw new Error("MEMBER_NOT_IN_VOICE_CHANNEL");
       }
 
-      if (hasGuildPermissions(bot, guildId, memberId, ["ADMINISTRATOR"])) {
-        throw new Error("You can not timeout a server administrator.");
+      if (options.mute !== undefined) {
+        requiredPerms.push("MUTE_MEMBERS");
+      }
+
+      if (options.deaf !== undefined) {
+        requiredPerms.push("DEAFEN_MEMBERS");
+      }
+
+      if (options.channelId) {
+        const requiredVoicePerms: PermissionStrings[] = ["CONNECT", "MOVE_MEMBERS"];
+        if (memberVoiceState) {
+          requireBotChannelPermissions(bot, memberVoiceState?.channelId, requiredVoicePerms);
+        }
+        requireBotChannelPermissions(bot, options.channelId, requiredVoicePerms);
       }
     }
 
-    if (requiredPerms.length) {
-      requireBotGuildPermissions(bot, guildId, requiredPerms);
-    }
+    requireBotGuildPermissions(bot, guildId, requiredPerms);
 
-    return await editMemberOld(guildId, memberId, options);
+    return await editMember(guildId, memberId, options);
   };
 }

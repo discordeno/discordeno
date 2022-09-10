@@ -1,8 +1,8 @@
 import { BotWithCache, ChannelTypes, PermissionStrings } from "../../deps.ts";
 import { requireBotChannelPermissions } from "../permissions.ts";
 
-export default function editChannel(bot: BotWithCache) {
-  const editChannelOld = bot.helpers.editChannel;
+export function editChannel(bot: BotWithCache) {
+  const editChannel = bot.helpers.editChannel;
 
   bot.helpers.editChannel = async function (channelId, options, reason) {
     const channel = bot.channels.get(channelId);
@@ -77,6 +77,6 @@ export default function editChannel(bot: BotWithCache) {
       requireBotChannelPermissions(bot, channel, requiredPerms);
     }
 
-    return await editChannelOld(channelId, options, reason);
+    return await editChannel(channelId, options, reason);
   };
 }

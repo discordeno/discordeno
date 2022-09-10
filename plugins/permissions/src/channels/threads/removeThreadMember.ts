@@ -1,8 +1,8 @@
 import { BotWithCache, ChannelTypes } from "../../../deps.ts";
 import { requireBotChannelPermissions } from "../../permissions.ts";
 
-export default function removeThreadMember(bot: BotWithCache) {
-  const removeThreadMemberOld = bot.helpers.removeThreadMember;
+export function removeThreadMember(bot: BotWithCache) {
+  const removeThreadMember = bot.helpers.removeThreadMember;
 
   bot.helpers.removeThreadMember = async function (threadId, userId) {
     if (userId === bot.id) {
@@ -21,6 +21,6 @@ export default function removeThreadMember(bot: BotWithCache) {
       }
     }
 
-    return await removeThreadMemberOld(threadId, userId);
+    return await removeThreadMember(threadId, userId);
   };
 }

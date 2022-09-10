@@ -1,7 +1,7 @@
 import { BotWithCache } from "../../deps.ts";
 
-export default function deleteGuild(bot: BotWithCache) {
-  const deleteGuildOld = bot.helpers.deleteGuild;
+export function deleteGuild(bot: BotWithCache) {
+  const deleteGuild = bot.helpers.deleteGuild;
 
   bot.helpers.deleteGuild = async function (guildId) {
     const guild = bot.guilds.get(guildId);
@@ -9,6 +9,6 @@ export default function deleteGuild(bot: BotWithCache) {
       throw new Error("A bot can only delete a guild it owns.");
     }
 
-    return await deleteGuildOld(guildId);
+    return await deleteGuild(guildId);
   };
 }

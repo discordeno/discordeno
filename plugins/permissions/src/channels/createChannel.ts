@@ -1,8 +1,8 @@
 import { BotWithCache, ChannelTypes, PermissionStrings } from "../../deps.ts";
 import { requireBotGuildPermissions } from "../permissions.ts";
 
-export default function createChannel(bot: BotWithCache) {
-  const createChannelOld = bot.helpers.createChannel;
+export function createChannel(bot: BotWithCache) {
+  const createChannel = bot.helpers.createChannel;
 
   bot.helpers.createChannel = async function (guildId, options, reason) {
     const guild = bot.guilds.get(guildId);
@@ -49,6 +49,6 @@ export default function createChannel(bot: BotWithCache) {
       requireBotGuildPermissions(bot, guild, requiredPerms);
     }
 
-    return await createChannelOld(guildId, options, reason);
+    return await createChannel(guildId, options, reason);
   };
 }

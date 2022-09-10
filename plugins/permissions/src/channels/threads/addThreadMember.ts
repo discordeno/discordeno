@@ -1,8 +1,8 @@
 import { BotWithCache } from "../../../deps.ts";
 import { requireBotChannelPermissions } from "../../permissions.ts";
 
-export default function addThreadMember(bot: BotWithCache) {
-  const addThreadMemberOld = bot.helpers.addThreadMember;
+export function addThreadMember(bot: BotWithCache) {
+  const addThreadMember = bot.helpers.addThreadMember;
 
   bot.helpers.addThreadMember = async function (threadId, userId) {
     if (userId === bot.id) {
@@ -19,6 +19,6 @@ export default function addThreadMember(bot: BotWithCache) {
       requireBotChannelPermissions(bot, channel, ["SEND_MESSAGES"]);
     }
 
-    return await addThreadMemberOld(threadId, userId);
+    return await addThreadMember(threadId, userId);
   };
 }

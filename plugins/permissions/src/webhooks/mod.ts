@@ -1,12 +1,14 @@
 import { BotWithCache } from "../../deps.ts";
-import createWebhook from "./createWebhook.ts";
-import deleteWebhook from "./deleteWebhook.ts";
-import editWebhook from "./editWebhook.ts";
-import setupMessageWebhookPermChecks from "./message.ts";
+import { createWebhook } from "./createWebhook.ts";
+import { deleteWebhook } from "./deleteWebhook.ts";
+import { editWebhook } from "./editWebhook.ts";
+import { editWebhookMessage } from "./editWebhookMessage.ts";
+import { sendWebhookMessage } from "./sendWebhook.ts";
 
-export default function setupWebhooksPermChecks(bot: BotWithCache) {
+export function webhooks(bot: BotWithCache) {
   createWebhook(bot);
   deleteWebhook(bot);
   editWebhook(bot);
-  setupMessageWebhookPermChecks(bot);
+  editWebhookMessage(bot);
+  sendWebhookMessage(bot);
 }

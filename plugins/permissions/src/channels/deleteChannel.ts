@@ -1,8 +1,8 @@
 import { BotWithCache, ChannelTypes } from "../../deps.ts";
 import { requireBotGuildPermissions } from "../permissions.ts";
 
-export default function deleteChannel(bot: BotWithCache) {
-  const deleteChannelOld = bot.helpers.deleteChannel;
+export function deleteChannel(bot: BotWithCache) {
+  const deleteChannel = bot.helpers.deleteChannel;
 
   bot.helpers.deleteChannel = async function (channelId, reason) {
     const channel = bot.channels.get(channelId);
@@ -25,6 +25,6 @@ export default function deleteChannel(bot: BotWithCache) {
       requireBotGuildPermissions(bot, guild, isThread ? ["MANAGE_THREADS"] : ["MANAGE_CHANNELS"]);
     }
 
-    return await deleteChannelOld(channelId, reason);
+    return await deleteChannel(channelId, reason);
   };
 }

@@ -1,7 +1,7 @@
 import { BotWithCache } from "../../../deps.ts";
 
-export default function joinThread(bot: BotWithCache) {
-  const joinThreadOld = bot.helpers.joinThread;
+export function joinThread(bot: BotWithCache) {
+  const joinThread = bot.helpers.joinThread;
 
   bot.helpers.joinThread = async function (threadId) {
     const channel = bot.channels.get(threadId);
@@ -10,6 +10,6 @@ export default function joinThread(bot: BotWithCache) {
       throw new Error("You can not join an archived channel.");
     }
 
-    return await joinThreadOld(threadId);
+    return await joinThread(threadId);
   };
 }
