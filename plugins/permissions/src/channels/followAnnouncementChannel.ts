@@ -6,9 +6,7 @@ export function followAnnouncementChannel(bot: BotWithCache) {
 
   bot.helpers.followAnnouncementChannel = async function (sourceChannelId, targetChannelId) {
     const channel = bot.channels.get(targetChannelId);
-    if (channel?.guildId) {
-      requireBotChannelPermissions(bot, channel, ["MANAGE_WEBHOOKS"]);
-    }
+    if (channel?.guildId) requireBotChannelPermissions(bot, channel, ["MANAGE_WEBHOOKS"]);
 
     return await followAnnouncementChannel(sourceChannelId, targetChannelId);
   };

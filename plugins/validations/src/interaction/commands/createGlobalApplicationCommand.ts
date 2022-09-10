@@ -1,20 +1,18 @@
 import {
   ApplicationCommandTypes,
-  BotWithCache,
+  Bot,
   CONTEXT_MENU_COMMANDS_NAME_REGEX,
   SLASH_COMMANDS_NAME_REGEX,
 } from "../../../deps.ts";
 import { validateApplicationCommandOptions } from "../../applicationCommandOptions.ts";
 
-export function createGuildApplicationCommand(bot: BotWithCache) {
-  const createGuildApplicationCommand = bot.helpers.createGuildApplicationCommand;
+export function createGlobalApplicationCommand(bot: Bot) {
+  const createGlobalApplicationCommand = bot.helpers.createGlobalApplicationCommand;
 
-  bot.helpers.createGuildApplicationCommand = async function (options, guildId) {
+  bot.helpers.createGlobalApplicationCommand = async function (options) {
     const isChatInput = !options.type || options.type === ApplicationCommandTypes.ChatInput;
 
-    if (!options.name) {
-      throw new Error("A name is required to create a options.");
-    }
+    if (!options.name) throw new Error("A name is required to create a options.");
 
     if (isChatInput) {
       if (!SLASH_COMMANDS_NAME_REGEX.test(options.name)) {
@@ -25,16 +23,13 @@ export function createGuildApplicationCommand(bot: BotWithCache) {
       options.name = options.name.toLowerCase();
 
       // Slash commands require description
-      if (!options.description) {
-        throw new Error("Slash commands require some form of a description be provided.");
-      } else if (!bot.utils.validateLength(options.description, { min: 1, max: 100 })) {
+      if (!options.description) throw new Error("Slash commands require some form of a description be provided.");
+      else if (!bot.utils.validateLength(options.description, { min: 1, max: 100 })) {
         throw new Error("Application command descriptions must be between 1 and 100 characters.");
       }
 
       if (options.options?.length) {
-        if (options.options.length > 25) {
-          throw new Error("Only 25 options are allowed to be provided.");
-        }
+        if (options.options.length > 25) throw new Error("Only 25 options are allowed to be provided.");
 
         options.options = validateApplicationCommandOptions(bot, options.options);
       }
@@ -44,6 +39,6 @@ export function createGuildApplicationCommand(bot: BotWithCache) {
       }
     }
 
-    return await createGuildApplicationCommand(options, guildId);
+    return await createGlobalApplicationCommand(options);
   };
 }

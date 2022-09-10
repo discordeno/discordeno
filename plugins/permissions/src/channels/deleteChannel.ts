@@ -11,13 +11,9 @@ export function deleteChannel(bot: BotWithCache) {
       const guild = bot.guilds.get(channel.guildId);
       if (!guild) throw new Error("GUILD_NOT_FOUND");
 
-      if (guild.rulesChannelId === channelId) {
-        throw new Error("RULES_CHANNEL_CANNOT_BE_DELETED");
-      }
+      if (guild.rulesChannelId === channelId) throw new Error("RULES_CHANNEL_CANNOT_BE_DELETED");
 
-      if (guild.publicUpdatesChannelId === channelId) {
-        throw new Error("UPDATES_CHANNEL_CANNOT_BE_DELETED");
-      }
+      if (guild.publicUpdatesChannelId === channelId) throw new Error("UPDATES_CHANNEL_CANNOT_BE_DELETED");
 
       const isThread = [ChannelTypes.AnnouncementThread, ChannelTypes.PublicThread, ChannelTypes.PrivateThread]
         .includes(channel.type);

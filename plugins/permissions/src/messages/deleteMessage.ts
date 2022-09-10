@@ -7,9 +7,7 @@ export function deleteMessage(bot: BotWithCache) {
   bot.helpers.deleteMessage = async function (channelId, messageId, reason, milliseconds) {
     const message = bot.messages.get(messageId);
     // DELETING SELF MESSAGES IS ALWAYS ALLOWED
-    if (message?.authorId === bot.id) {
-      return deleteMessage(channelId, messageId, reason, milliseconds);
-    }
+    if (message?.authorId === bot.id) return deleteMessage(channelId, messageId, reason, milliseconds);
 
     const channel = bot.channels.get(channelId);
     if (channel?.guildId) {

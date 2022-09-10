@@ -6,9 +6,7 @@ export function getMessage(bot: BotWithCache) {
 
   bot.helpers.getMessage = async function (channelId, messageId) {
     const channel = bot.channels.get(channelId);
-    if (channel?.guildId) {
-      requireBotChannelPermissions(bot, channel, ["READ_MESSAGE_HISTORY"]);
-    }
+    if (channel?.guildId) requireBotChannelPermissions(bot, channel, ["READ_MESSAGE_HISTORY"]);
 
     return await getMessage(channelId, messageId);
   };

@@ -7,9 +7,7 @@ export function editMember(bot: BotWithCache) {
   bot.helpers.editMember = async function (guildId, memberId, options) {
     const requiredPerms: PermissionStrings[] = [];
 
-    if (options.nick) {
-      requiredPerms.push("MANAGE_NICKNAMES");
-    }
+    if (options.nick) requiredPerms.push("MANAGE_NICKNAMES");
 
     if (options.roles) requiredPerms.push("MANAGE_ROLES");
 
@@ -20,23 +18,15 @@ export function editMember(bot: BotWithCache) {
       const memberVoiceState = (bot.guilds.get(guildId))
         ?.voiceStates.get(memberId);
 
-      if (!memberVoiceState?.channelId) {
-        throw new Error("MEMBER_NOT_IN_VOICE_CHANNEL");
-      }
+      if (!memberVoiceState?.channelId) throw new Error("MEMBER_NOT_IN_VOICE_CHANNEL");
 
-      if (options.mute !== undefined) {
-        requiredPerms.push("MUTE_MEMBERS");
-      }
+      if (options.mute !== undefined) requiredPerms.push("MUTE_MEMBERS");
 
-      if (options.deaf !== undefined) {
-        requiredPerms.push("DEAFEN_MEMBERS");
-      }
+      if (options.deaf !== undefined) requiredPerms.push("DEAFEN_MEMBERS");
 
       if (options.channelId) {
         const requiredVoicePerms: PermissionStrings[] = ["CONNECT", "MOVE_MEMBERS"];
-        if (memberVoiceState) {
-          requireBotChannelPermissions(bot, memberVoiceState?.channelId, requiredVoicePerms);
-        }
+        if (memberVoiceState) requireBotChannelPermissions(bot, memberVoiceState?.channelId, requiredVoicePerms);
         requireBotChannelPermissions(bot, options.channelId, requiredVoicePerms);
       }
     }

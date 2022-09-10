@@ -5,9 +5,7 @@ export function getPrivateArchivedThreads(bot: BotWithCache) {
   const getPrivateArchivedThreads = bot.helpers.getPrivateArchivedThreads;
   bot.helpers.getPrivateArchivedThreads = async function (channelId, options) {
     const channel = bot.channels.get(channelId);
-    if (channel) {
-      requireBotChannelPermissions(bot, channel, ["READ_MESSAGE_HISTORY", "MANAGE_MESSAGES"]);
-    }
+    if (channel) requireBotChannelPermissions(bot, channel, ["READ_MESSAGE_HISTORY", "MANAGE_MESSAGES"]);
     return await getPrivateArchivedThreads(channelId, options);
   };
 }

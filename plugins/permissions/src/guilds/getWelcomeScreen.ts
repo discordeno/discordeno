@@ -6,9 +6,7 @@ export function getWelcomeScreen(bot: BotWithCache) {
 
   bot.helpers.getWelcomeScreen = async function (guildId) {
     const guild = bot.guilds.get(guildId);
-    if (!guild?.welcomeScreen) {
-      requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
-    }
+    if (!guild?.welcomeScreen) requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
     return await getWelcomeScreen(guildId);
   };

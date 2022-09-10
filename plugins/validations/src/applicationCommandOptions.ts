@@ -1,6 +1,6 @@
-import { ApplicationCommandOption, ApplicationCommandOptionTypes, BotWithCache } from "../deps.ts";
+import { ApplicationCommandOption, ApplicationCommandOptionTypes, Bot } from "../deps.ts";
 
-export function validateApplicationCommandOptions(bot: BotWithCache, options: ApplicationCommandOption[]) {
+export function validateApplicationCommandOptions(bot: Bot, options: ApplicationCommandOption[]) {
   const requiredOptions: ApplicationCommandOption[] = [];
   const optionalOptions: ApplicationCommandOption[] = [];
 
@@ -8,9 +8,7 @@ export function validateApplicationCommandOptions(bot: BotWithCache, options: Ap
     option.name = option.name.toLowerCase();
 
     if (option.choices?.length) {
-      if (option.choices.length > 25) {
-        throw new Error("Too many application command options provided.");
-      }
+      if (option.choices.length > 25) throw new Error("Too many application command options provided.");
 
       if (
         option.type !== ApplicationCommandOptionTypes.String && option.type !== ApplicationCommandOptionTypes.Integer

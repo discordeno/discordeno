@@ -11,9 +11,8 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
     if (actionRowCounter > 5) throw new Error("Too many action rows.");
 
     // Max of 5 Buttons (or any component type) within an ActionRow
-    if (component.components?.length > 5) {
-      throw new Error("Too many components.");
-    } else if (
+    if (component.components?.length > 5) throw new Error("Too many components.");
+    else if (
       component.components?.length > 1 &&
       component.components.some((subComponent) => subComponent.type === MessageComponentTypes.SelectMenu)
     ) {
@@ -72,9 +71,7 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
             );
           }
 
-          if (!subComponent.maxValues) {
-            subComponent.maxValues = subComponent.minValues;
-          }
+          if (!subComponent.maxValues) subComponent.maxValues = subComponent.minValues;
           if (subComponent.minValues > subComponent.maxValues) {
             throw new Error(
               "The select component can not have a min values higher than a max values.",
@@ -96,9 +93,7 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
           }
         }
 
-        if (subComponent.options.length < 1) {
-          throw new Error("You need at least 1 option in the select component.");
-        }
+        if (subComponent.options.length < 1) throw new Error("You need at least 1 option in the select component.");
 
         if (subComponent.options.length > 25) {
           throw new Error(
@@ -111,9 +106,7 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
         for (const option of subComponent.options) {
           if (option.default) {
             defaults++;
-            if (defaults > (subComponent.maxValues || 25)) {
-              throw new Error("You chose too many default options.");
-            }
+            if (defaults > (subComponent.maxValues || 25)) throw new Error("You chose too many default options.");
           }
 
           if (!bot.utils.validateLength(option.label, { max: 25 })) {

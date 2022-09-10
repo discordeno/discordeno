@@ -15,14 +15,10 @@ export function sendMessage(bot: BotWithCache) {
 
     if (channel) {
       const requiredPerms: PermissionStrings[] = [];
-      if (channel.guildId) {
-        requiredPerms.push("SEND_MESSAGES");
-      }
+      if (channel.guildId) requiredPerms.push("SEND_MESSAGES");
       if (content.tts) requiredPerms.push("SEND_TTS_MESSAGES");
       if (content.messageReference) requiredPerms.push("READ_MESSAGE_HISTORY");
-      if (requiredPerms.length) {
-        requireBotChannelPermissions(bot, channel, requiredPerms);
-      }
+      if (requiredPerms.length) requireBotChannelPermissions(bot, channel, requiredPerms);
     }
 
     return await sendMessage(channelId, content);

@@ -7,9 +7,7 @@ export function deleteChannelPermissionOverride(bot: BotWithCache) {
   bot.helpers.deleteChannelPermissionOverride = async function (channelId, overwriteId) {
     const channel = bot.channels.get(channelId);
 
-    if (channel?.guildId) {
-      requireBotChannelPermissions(bot, channelId, ["MANAGE_ROLES"]);
-    }
+    if (channel?.guildId) requireBotChannelPermissions(bot, channelId, ["MANAGE_ROLES"]);
 
     return await deleteChannelPermissionOverride(channelId, overwriteId);
   };

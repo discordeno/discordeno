@@ -1,6 +1,6 @@
-import { BotWithCache } from "../../deps.ts";
+import { Bot } from "../../deps.ts";
 
-export function editBotProfile(bot: BotWithCache) {
+export function editBotProfile(bot: Bot) {
   const editBotProfile = bot.helpers.editBotProfile;
 
   bot.helpers.editBotProfile = async function (options) {

@@ -6,9 +6,7 @@ export function getChannelWebhooks(bot: BotWithCache) {
 
   bot.helpers.getChannelWebhooks = async function (channelId) {
     const channel = bot.channels.get(channelId);
-    if (channel?.guildId) {
-      requireBotChannelPermissions(bot, channelId, ["MANAGE_WEBHOOKS"]);
-    }
+    if (channel?.guildId) requireBotChannelPermissions(bot, channelId, ["MANAGE_WEBHOOKS"]);
 
     return await getChannelWebhooks(channelId);
   };

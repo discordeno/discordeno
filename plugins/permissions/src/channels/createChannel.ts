@@ -35,9 +35,7 @@ export function createChannel(bot: BotWithCache) {
         throw new Error("The topic length must be between 1 and 1024 (4096 if forum)");
       }
 
-      if (options?.userLimit && options.userLimit > 99) {
-        throw new Error("The user limit must be less than 99.");
-      }
+      if (options?.userLimit && options.userLimit > 99) throw new Error("The user limit must be less than 99.");
 
       if (options?.parentId) {
         const category = bot.channels.get(options.parentId);

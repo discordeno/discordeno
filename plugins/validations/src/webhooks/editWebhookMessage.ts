@@ -1,7 +1,7 @@
-import { AllowedMentionsTypes, BotWithCache } from "../../deps.ts";
+import { AllowedMentionsTypes, Bot } from "../../deps.ts";
 import { validateComponents } from "../components.ts";
 
-export function editWebhookMessage(bot: BotWithCache) {
+export function editWebhookMessage(bot: Bot) {
   const editWebhookMessage = bot.helpers.editWebhookMessage;
 
   bot.helpers.editWebhookMessage = async function (webhookId, webhookToken, messageId, options) {
@@ -9,9 +9,7 @@ export function editWebhookMessage(bot: BotWithCache) {
       throw Error("The content can not exceed 2000 characters.");
     }
 
-    if (options.embeds && options.embeds.length > 10) {
-      options.embeds.splice(10);
-    }
+    if (options.embeds && options.embeds.length > 10) options.embeds.splice(10);
 
     if (options.allowedMentions) {
       if (options.allowedMentions.users?.length) {

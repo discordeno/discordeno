@@ -8,9 +8,7 @@ export function removeThreadMember(bot: BotWithCache) {
     const channel = bot.channels.get(threadId);
 
     if (channel) {
-      if (channel.archived) {
-        throw new Error("Cannot remove user from thread if thread is archived.");
-      }
+      if (channel.archived) throw new Error("Cannot remove user from thread if thread is archived.");
 
       if (!(bot.id === channel.ownerId && channel.type === ChannelTypes.PrivateThread)) {
         requireBotChannelPermissions(bot, channel, ["MANAGE_MESSAGES"]);

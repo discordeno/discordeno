@@ -7,9 +7,7 @@ export function createStageInstance(bot: BotWithCache) {
   bot.helpers.createStageInstance = async function (options) {
     const perms: PermissionStrings[] = ["MANAGE_CHANNELS", "MUTE_MEMBERS", "MOVE_MEMBERS"];
 
-    if (options.sendStartNotification) {
-      perms.push("MENTION_EVERYONE");
-    }
+    if (options.sendStartNotification) perms.push("MENTION_EVERYONE");
 
     requireBotChannelPermissions(bot, options.channelId, perms);
 

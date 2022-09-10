@@ -8,9 +8,7 @@ export function addThreadMember(bot: BotWithCache) {
     const channel = bot.channels.get(threadId);
 
     if (channel) {
-      if (channel.archived) {
-        throw new Error("Cannot add user to thread if thread is archived.");
-      }
+      if (channel.archived) throw new Error("Cannot add user to thread if thread is archived.");
 
       requireBotChannelPermissions(bot, channel, ["SEND_MESSAGES"]);
     }
