@@ -39,6 +39,7 @@ export async function sendMessage(bot: Bot, channelId: bigint, options: CreateMe
     bot.constants.routes.CHANNEL_MESSAGES(channelId),
     {
       content: options.content,
+      nonce: options.nonce,
       tts: options.tts,
       embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
       allowed_mentions: options.allowedMentions
@@ -125,6 +126,8 @@ export async function sendMessage(bot: Bot, channelId: bigint, options: CreateMe
 export interface CreateMessage {
   /** The message contents (up to 2000 characters) */
   content?: string;
+  /** Can be used to verify a message was sent (up to 25 characters). Value will appear in the Message Create event. */
+  nonce?: string | number;
   /** true if this is a TTS message */
   tts?: boolean;
   /** Embedded `rich` content (up to 6000 characters) */
