@@ -85,20 +85,40 @@ export interface DiscordConnection {
   /** The username of the connection account */
   name: string;
   /** The service of the connection (twitch, youtube) */
-  type: string;
+  type: DiscordConnectionServices;
   /** Whether the connection is revoked */
   revoked?: boolean;
   /** Whether the connection is verified */
   verified: boolean;
   /** Whether friend sync is enabled for this connection */
-  friendSync: boolean;
+  friend_sync: boolean;
   /** Whether activities related to this connection will be shown in presence updates */
-  showActivity: boolean;
+  show_activity: boolean;
   /** Visibility of this connection */
   visibility: VisibilityTypes;
 
   /** An array of partial server integrations */
   integrations?: DiscordIntegration[];
+}
+
+/** https://discord.com/developers/docs/resources/user#connection-object-services */
+export enum DiscordConnectionServices {
+  "Battle.net" = "battlenet",
+  "eBay" = "ebay",
+  "Epic Games" = "epicgames",
+  "Facebook" = "facebook",
+  "GitHub" = "github",
+  "League of Legends" = "leagueoflegends",
+  "PlayStation Network" = "playstation",
+  "Reddit" = "reddit",
+  "Riot Games" = "riotgames",
+  "Spotify" = "spotify",
+  "Skype" = "skype",
+  "Steam" = "steam",
+  "Twitch" = "twitch",
+  "Twitter" = "twitter",
+  "Xbox" = "xbox",
+  "YouTube" = "youtube",
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
