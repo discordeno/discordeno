@@ -1499,7 +1499,7 @@ export type PickPartial<T, K extends keyof T> =
 
 export type OmitFirstFnArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...args: P) => R : never;
 
-export type WithReason<T> = T & { 
-    /** The reason which should be added in the audit logs for doing this action. */
-    reason?: string;
+export type WithReason<T> = T & {
+  /** The reason which should be added in the audit logs for doing this action. */
+  reason?: string;
 };
