@@ -27,7 +27,7 @@ import {
 export async function createAutomodRule(
   bot: Bot,
   guildId: bigint,
-  options: WithReason<CreateAutoModerationRuleOptions>,
+  options: CreateAutoModerationRuleOptions,
 ): Promise<AutoModerationRule> {
   const result = await bot.rest.runMethod<DiscordAutoModerationRule>(
     bot.rest,
@@ -62,7 +62,7 @@ export async function createAutomodRule(
   return bot.transformers.automodRule(bot, result);
 }
 
-export interface CreateAutoModerationRuleOptions {
+export interface CreateAutoModerationRuleOptions extends WithReason {
   /** The name of the rule. */
   name: string;
   /** The type of event to trigger the rule on. */

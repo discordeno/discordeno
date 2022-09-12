@@ -27,7 +27,7 @@ export async function startThreadWithMessage(
   bot: Bot,
   channelId: bigint,
   messageId: bigint,
-  options: WithReason<StartThreadWithMessage>,
+  options: StartThreadWithMessage,
 ): Promise<Channel> {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
@@ -36,13 +36,15 @@ export async function startThreadWithMessage(
     {
       name: options.name,
       auto_archive_duration: options.autoArchiveDuration,
+      rate_limit_per_user: options.rateLimitPerUser,
+      reason: options.reason,
     },
   );
 
   return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(result.guild_id!) });
 }
 
-export interface StartThreadWithMessage {
+export interface StartThreadWithMessage extends WithReason {
   /** 1-100 character thread name */
   name: string;
   /** Duration in minutes to automatically archive the thread after recent activity */

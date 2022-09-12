@@ -25,7 +25,7 @@ import { AllowedMentions, FileContent, MessageComponents, WithReason } from "../
 export async function createForumThread(
   bot: Bot,
   channelId: bigint,
-  options: WithReason<CreateForumPostWithMessage>,
+  options: CreateForumPostWithMessage,
 ): Promise<Channel> {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
@@ -64,7 +64,7 @@ export interface CreateForumPostWithMessage extends CreateForumMessage {
   rateLimitPerUser?: number | null;
 }
 
-export interface CreateForumMessage {
+export interface CreateForumMessage extends WithReason {
   /** The message contents (up to 2000 characters) */
   content?: string;
   /** Embedded `rich` content (up to 6000 characters) */

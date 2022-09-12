@@ -1,7 +1,8 @@
 import type { Bot } from "../../bot.ts";
+import { WithReason } from "../../mod.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
-import { ChannelTypes, VideoQualityModes, WithReason } from "../../types/shared.ts";
+import { ChannelTypes, VideoQualityModes } from "../../types/shared.ts";
 import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
 
 /**
@@ -34,11 +35,7 @@ import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
  * - Otherwise:
  *     - Fires a _Channel Update_ gateway event.
  */
-export async function editChannel(
-  bot: Bot,
-  channelId: bigint,
-  options: WithReason<ModifyChannel>,
-): Promise<Channel> {
+export async function editChannel(bot: Bot, channelId: bigint, options: ModifyChannel): Promise<Channel> {
   if (options.name || options.topic) {
     const request = editChannelNameTopicQueue.get(channelId);
     if (!request) {
@@ -170,7 +167,7 @@ function processEditChannelQueue(bot: Bot): void {
   }
 }
 
-export interface ModifyChannel {
+export interface ModifyChannel extends WithReason {
   /** 1-100 character channel name */
   name?: string;
   /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */

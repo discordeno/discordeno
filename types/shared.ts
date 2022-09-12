@@ -1500,8 +1500,3 @@ export type PickPartial<T, K extends keyof T> =
   & { [P in K]: T[P] };
 
 export type OmitFirstFnArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...args: P) => R : never;
-
-export type WithReason<T> = T & {
-  /** The reason which should be added in the audit logs for doing this action. */
-  reason?: string;
-};

@@ -17,7 +17,7 @@ import { DiscordMember, Member, WithReason } from "../../mod.ts";
 export async function editBotMember(
   bot: Bot,
   guildId: bigint,
-  options: WithReason<EditBotMemberOptions>,
+  options: EditBotMemberOptions,
 ): Promise<Member> {
   const result = await bot.rest.runMethod<DiscordMember>(
     bot.rest,
@@ -32,6 +32,6 @@ export async function editBotMember(
   return bot.transformers.member(bot, result, guildId, bot.id);
 }
 
-export interface EditBotMemberOptions {
+export interface EditBotMemberOptions extends WithReason {
   nick?: string | null;
 }

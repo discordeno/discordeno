@@ -212,3 +212,8 @@ export interface InteractionCallbackData {
   /** Autocomplete choices (max of 25 choices) */
   choices?: ApplicationCommandOptionChoice[];
 }
+
+export interface WithReason {
+  /** The reason which should be added in the audit logs for doing this action. */
+  reason?: string;
+}

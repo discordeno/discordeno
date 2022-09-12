@@ -17,7 +17,7 @@ import { DiscordWebhook } from "../../types/discord.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook}
  */
-export async function editWebhook(bot: Bot, webhookId: bigint, options: WithReason<ModifyWebhook>): Promise<Webhook> {
+export async function editWebhook(bot: Bot, webhookId: bigint, options: ModifyWebhook): Promise<Webhook> {
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
     "PATCH",
@@ -33,7 +33,7 @@ export async function editWebhook(bot: Bot, webhookId: bigint, options: WithReas
   return bot.transformers.webhook(bot, result);
 }
 
-export interface ModifyWebhook {
+export interface ModifyWebhook extends WithReason {
   /** The default name of the webhook */
   name?: string;
   /** Image for the default webhook avatar */

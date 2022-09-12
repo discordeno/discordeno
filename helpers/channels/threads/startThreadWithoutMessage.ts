@@ -1,7 +1,8 @@
 import type { Bot } from "../../../bot.ts";
+import { WithReason } from "../../../mod.ts";
 import { Channel } from "../../../transformers/channel.ts";
 import { DiscordChannel } from "../../../types/discord.ts";
-import { ChannelTypes, WithReason } from "../../../types/shared.ts";
+import { ChannelTypes } from "../../../types/shared.ts";
 
 /**
  * Creates a thread without using a message as the thread's point of origin.
@@ -21,7 +22,7 @@ import { ChannelTypes, WithReason } from "../../../types/shared.ts";
 export async function startThreadWithoutMessage(
   bot: Bot,
   channelId: bigint,
-  options: WithReason<StartThreadWithoutMessage>,
+  options: StartThreadWithoutMessage,
 ): Promise<Channel> {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
@@ -30,6 +31,10 @@ export async function startThreadWithoutMessage(
     {
       name: options.name,
       auto_archive_duration: options.autoArchiveDuration,
+      rate_limit_per_user: options.rateLimitPerUser,
+      type: options.type,
+      invitable: options.invitable,
+      reason: options.reason,
     },
   );
 
@@ -39,7 +44,7 @@ export async function startThreadWithoutMessage(
   });
 }
 
-export interface StartThreadWithoutMessage {
+export interface StartThreadWithoutMessage extends WithReason {
   /** 1-100 character thread name */
   name: string;
   /** Duration in minutes to automatically archive the thread after recent activity */

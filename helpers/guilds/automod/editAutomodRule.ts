@@ -28,7 +28,7 @@ export async function editAutomodRule(
   bot: Bot,
   guildId: bigint,
   ruleId: bigint,
-  options: WithReason<Partial<EditAutoModerationRuleOptions>>,
+  options: Partial<EditAutoModerationRuleOptions>,
 ): Promise<AutoModerationRule> {
   const result = await bot.rest.runMethod<DiscordAutoModerationRule>(
     bot.rest,
@@ -62,7 +62,7 @@ export async function editAutomodRule(
   return bot.transformers.automodRule(bot, result);
 }
 
-export interface EditAutoModerationRuleOptions {
+export interface EditAutoModerationRuleOptions extends WithReason {
   /** The name of the rule. */
   name: string;
   /** The type of event to trigger the rule on. */

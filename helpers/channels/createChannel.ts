@@ -1,7 +1,8 @@
 import type { Bot } from "../../bot.ts";
+import { WithReason } from "../../mod.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
-import { ChannelTypes, WithReason } from "../../types/shared.ts";
+import { ChannelTypes } from "../../types/shared.ts";
 import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
 
 /**
@@ -23,11 +24,7 @@ import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-channel}
  */
-export async function createChannel(
-  bot: Bot,
-  guildId: bigint,
-  options?: WithReason<CreateGuildChannel>,
-): Promise<Channel> {
+export async function createChannel(bot: Bot, guildId: bigint, options?: CreateGuildChannel): Promise<Channel> {
   // BITRATE IS IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
   if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000;
 
@@ -61,7 +58,7 @@ export async function createChannel(
   return bot.transformers.channel(bot, { channel: result, guildId });
 }
 
-export interface CreateGuildChannel {
+export interface CreateGuildChannel extends WithReason {
   /** Channel name (1-100 characters) */
   name: string;
   /** The type of channel */
