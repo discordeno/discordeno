@@ -1,8 +1,8 @@
 import { BotWithCache, ChannelTypes, PermissionStrings } from "../../deps.ts";
 import { requireBotChannelPermissions } from "../permissions.ts";
 
-export default function editChannel(bot: BotWithCache) {
-  const editChannelOld = bot.helpers.editChannel;
+export function editChannel(bot: BotWithCache) {
+  const editChannel = bot.helpers.editChannel;
 
   bot.helpers.editChannel = async function (channelId, options, reason) {
     const channel = bot.channels.get(channelId);
@@ -33,18 +33,14 @@ export default function editChannel(bot: BotWithCache) {
         if (!channel.locked && options.archived === false) {
           requiredPerms.push("SEND_MESSAGES");
           // MORE THAN ARCHIVE WAS MODIFIED
-          if (Object.keys(options).length > 1) {
-            requiredPerms.push("MANAGE_THREADS");
-          }
+          if (Object.keys(options).length > 1) requiredPerms.push("MANAGE_THREADS");
         } else {
           requiredPerms.push("MANAGE_THREADS");
         }
       } else {
         requiredPerms.push("MANAGE_CHANNELS");
 
-        if (options.permissionOverwrites) {
-          requiredPerms.push("MANAGE_ROLES");
-        }
+        if (options.permissionOverwrites) requiredPerms.push("MANAGE_ROLES");
 
         if (options.type) {
           if ([ChannelTypes.GuildAnnouncement, ChannelTypes.GuildText].includes(options.type)) {
@@ -62,9 +58,7 @@ export default function editChannel(bot: BotWithCache) {
           }
         }
 
-        if (options.userLimit && options.userLimit > 99) {
-          throw new Error("The user limit must be less than 99.");
-        }
+        if (options.userLimit && options.userLimit > 99) throw new Error("The user limit must be less than 99.");
 
         if (options.parentId) {
           const category = bot.channels.get(options.parentId);
@@ -77,6 +71,6 @@ export default function editChannel(bot: BotWithCache) {
       requireBotChannelPermissions(bot, channel, requiredPerms);
     }
 
-    return await editChannelOld(channelId, options, reason);
+    return await editChannel(channelId, options, reason);
   };
 }
