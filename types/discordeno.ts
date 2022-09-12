@@ -8,6 +8,7 @@ import {
   InteractionResponseTypes,
   Localization,
   MessageComponentTypes,
+  OverwriteTypes,
   PermissionStrings,
   TextStyles,
 } from "./shared.ts";
@@ -216,4 +217,15 @@ export interface InteractionCallbackData {
 export interface WithReason {
   /** The reason which should be added in the audit logs for doing this action. */
   reason?: string;
+}
+
+export interface OverwriteReadable {
+  /** Role or user id */
+  id: bigint;
+  /** Either 0 (role) or 1 (member) */
+  type: OverwriteTypes;
+  /** Permission bit set */
+  allow?: PermissionStrings[];
+  /** Permission bit set */
+  deny?: PermissionStrings[];
 }

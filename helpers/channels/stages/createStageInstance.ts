@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { WithReason } from "../../../mod.ts";
 import { StageInstance } from "../../../transformers/stageInstance.ts";
 import { DiscordStageInstance } from "../../../types/discord.ts";
 
@@ -25,13 +26,14 @@ export async function createStageInstance(bot: Bot, options: CreateStageInstance
       channel_id: options.channelId.toString(),
       topic: options.topic,
       send_start_notification: options.sendStartNotification,
+      reason: options.reason,
     },
   );
 
   return bot.transformers.stageInstance(bot, result);
 }
 
-export interface CreateStageInstance {
+export interface CreateStageInstance extends WithReason {
   channelId: bigint;
   topic: string;
   /** Notify @everyone that the stage instance has started. Requires the MENTION_EVERYONE permission. */

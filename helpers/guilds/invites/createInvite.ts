@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { WithReason } from "../../../mod.ts";
 import { DiscordInvite } from "../../../types/discord.ts";
 import { TargetTypes } from "../../../types/shared.ts";
 import { BaseInvite } from "./getInvite.ts";
@@ -57,7 +58,7 @@ export async function createInvite(
   };
 }
 
-export interface CreateChannelInvite {
+export interface CreateChannelInvite extends WithReason {
   /** Duration of invite in seconds before expiry, or 0 for never. Between 0 and 604800 (7 days). Default: 86400 (24 hours) */
   maxAge?: number;
   /** Max number of users or 0 for unlimited. Between 0 and 100. Default: 0 */

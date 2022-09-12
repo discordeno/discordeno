@@ -2,8 +2,8 @@ import type { Bot } from "../../bot.ts";
 import { WithReason } from "../../mod.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
+import { OverwriteReadable } from "../../types/discordeno.ts";
 import { ChannelTypes } from "../../types/shared.ts";
-import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
 
 /**
  * Creates a channel within a guild.

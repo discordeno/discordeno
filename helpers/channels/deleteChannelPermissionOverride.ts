@@ -14,10 +14,16 @@ import type { Bot } from "../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#delete-channel-permission}
  */
-export async function deleteChannelPermissionOverride(bot: Bot, channelId: bigint, overwriteId: bigint): Promise<void> {
+export async function deleteChannelPermissionOverride(
+  bot: Bot,
+  channelId: bigint,
+  overwriteId: bigint,
+  reason?: string,
+): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     "DELETE",
     bot.constants.routes.CHANNEL_OVERWRITE(channelId, overwriteId),
+    reason ? { reason } : undefined,
   );
 }
