@@ -25,8 +25,7 @@ Deno.test({
     await t.step("[channel] change the channel to a news channel with a reason", async () => {
       const editedChannel = await bot.helpers.editChannel(
         channel.id,
-        { type: ChannelTypes.GuildAnnouncement },
-        "reason",
+        { type: ChannelTypes.GuildAnnouncement, reason: "reason" },
       );
       assertEquals(editedChannel.type, ChannelTypes.GuildAnnouncement);
     });
