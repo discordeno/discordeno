@@ -16,10 +16,11 @@ import type { Bot } from "../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#unpin-message}
  */
-export async function unpinMessage(bot: Bot, channelId: bigint, messageId: bigint): Promise<void> {
+export async function unpinMessage(bot: Bot, channelId: bigint, messageId: bigint, reason?: string): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     "DELETE",
     bot.constants.routes.CHANNEL_PIN(channelId, messageId),
+    reason ? { reason } : undefined,
   );
 }

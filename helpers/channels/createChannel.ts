@@ -1,8 +1,9 @@
 import type { Bot } from "../../bot.ts";
+import { WithReason } from "../../mod.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
+import { OverwriteReadable } from "../../types/discordeno.ts";
 import { ChannelTypes } from "../../types/shared.ts";
-import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
 
 /**
  * Creates a channel within a guild.
@@ -23,12 +24,7 @@ import { OverwriteReadable } from "./editChannelPermissionOverrides.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-channel}
  */
-export async function createChannel(
-  bot: Bot,
-  guildId: bigint,
-  options?: CreateGuildChannel,
-  reason?: string,
-): Promise<Channel> {
+export async function createChannel(bot: Bot, guildId: bigint, options?: CreateGuildChannel): Promise<Channel> {
   // BITRATE IS IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
   if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000;
 
@@ -53,7 +49,7 @@ export async function createChannel(
           deny: overwrite.deny ? bot.utils.calculateBits(overwrite.deny) : null,
         })),
         type: options?.type || ChannelTypes.GuildText,
-        reason,
+        reason: options.reason,
         default_auto_archive_duration: options?.defaultAutoArchiveDuration,
       }
       : {},
@@ -62,7 +58,7 @@ export async function createChannel(
   return bot.transformers.channel(bot, { channel: result, guildId });
 }
 
-export interface CreateGuildChannel {
+export interface CreateGuildChannel extends WithReason {
   /** Channel name (1-100 characters) */
   name: string;
   /** The type of channel */

@@ -1,4 +1,5 @@
 import { Bot } from "../../../bot.ts";
+import { WithReason } from "../../../mod.ts";
 import { AutoModerationRule } from "../../../transformers/automodRule.ts";
 import {
   AutoModerationActionType,
@@ -61,7 +62,7 @@ export async function createAutomodRule(
   return bot.transformers.automodRule(bot, result);
 }
 
-export interface CreateAutoModerationRuleOptions {
+export interface CreateAutoModerationRuleOptions extends WithReason {
   /** The name of the rule. */
   name: string;
   /** The type of event to trigger the rule on. */
@@ -97,6 +98,4 @@ export interface CreateAutoModerationRuleOptions {
   exemptRoles?: bigint[];
   /** The channel ids that should not be effected by the rule. */
   exemptChannels?: bigint[];
-  /** The reason to add to the audit logs. */
-  reason?: string;
 }

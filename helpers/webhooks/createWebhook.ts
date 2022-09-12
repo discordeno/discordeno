@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { WithReason } from "../../mod.ts";
 import { Webhook } from "../../transformers/webhook.ts";
 import { DiscordWebhook } from "../../types/discord.ts";
 
@@ -34,11 +35,9 @@ export async function createWebhook(bot: Bot, channelId: bigint, options: Create
   return bot.transformers.webhook(bot, result);
 }
 
-export interface CreateWebhook {
+export interface CreateWebhook extends WithReason {
   /** Name of the webhook (1-80 characters) */
   name: string;
   /** Image url for the default webhook avatar */
   avatar?: string | null;
-  /** The reason you are creating this webhook */
-  reason?: string;
 }

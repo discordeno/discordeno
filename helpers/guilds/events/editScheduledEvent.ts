@@ -1,4 +1,5 @@
 import { Bot } from "../../../bot.ts";
+import { WithReason } from "../../../mod.ts";
 import { ScheduledEvent } from "../../../transformers/scheduledEvent.ts";
 import { DiscordScheduledEvent } from "../../../types/discord.ts";
 import { ScheduledEventEntityType, ScheduledEventPrivacyLevel, ScheduledEventStatus } from "../../../types/shared.ts";
@@ -62,7 +63,7 @@ export async function editScheduledEvent(
   return bot.transformers.scheduledEvent(bot, result);
 }
 
-export interface EditScheduledEvent {
+export interface EditScheduledEvent extends WithReason {
   /** the channel id of the scheduled event. null if switching to external event. */
   channelId: bigint | null;
   /** location of the event */
@@ -81,5 +82,4 @@ export interface EditScheduledEvent {
   entityType: ScheduledEventEntityType;
   /** the status of the scheduled event */
   status: ScheduledEventStatus;
-  reason?: string;
 }

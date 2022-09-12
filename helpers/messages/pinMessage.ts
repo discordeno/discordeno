@@ -18,6 +18,11 @@ import type { Bot } from "../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#pin-message}
  */
-export async function pinMessage(bot: Bot, channelId: bigint, messageId: bigint): Promise<void> {
-  return await bot.rest.runMethod<void>(bot.rest, "PUT", bot.constants.routes.CHANNEL_PIN(channelId, messageId));
+export async function pinMessage(bot: Bot, channelId: bigint, messageId: bigint, reason?: string): Promise<void> {
+  return await bot.rest.runMethod<void>(
+    bot.rest,
+    "PUT",
+    bot.constants.routes.CHANNEL_PIN(channelId, messageId),
+    reason ? { reason } : undefined,
+  );
 }

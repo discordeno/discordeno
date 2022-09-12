@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { WithReason } from "../../mod.ts";
 import { Emoji } from "../../transformers/emoji.ts";
 import { DiscordEmoji } from "../../types/discord.ts";
 
@@ -27,6 +28,7 @@ export async function editEmoji(bot: Bot, guildId: bigint, id: bigint, options: 
       name: options.name,
       // NEED TERNARY TO SUPPORT NULL AS VALID
       roles: options.roles ? options.roles.map((role) => role.toString()) : options.roles,
+      reason: options.reason,
     },
   );
 
@@ -34,7 +36,7 @@ export async function editEmoji(bot: Bot, guildId: bigint, id: bigint, options: 
 }
 
 /** https://discord.com/developers/docs/resources/emoji#modify-guild-emoji */
-export interface ModifyGuildEmoji {
+export interface ModifyGuildEmoji extends WithReason {
   /** Name of the emoji */
   name?: string;
   /** Roles allowed to use this emoji */

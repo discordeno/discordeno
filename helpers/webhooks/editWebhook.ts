@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { WithReason } from "../../mod.ts";
 import { Webhook } from "../../transformers/webhook.ts";
 import { DiscordWebhook } from "../../types/discord.ts";
 
@@ -32,13 +33,11 @@ export async function editWebhook(bot: Bot, webhookId: bigint, options: ModifyWe
   return bot.transformers.webhook(bot, result);
 }
 
-export interface ModifyWebhook {
+export interface ModifyWebhook extends WithReason {
   /** The default name of the webhook */
   name?: string;
   /** Image for the default webhook avatar */
   avatar?: bigint | null;
   /** The new channel id this webhook should be moved to */
   channelId?: bigint;
-  /** The reason you are modifying this webhook */
-  reason?: string;
 }

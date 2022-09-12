@@ -13,6 +13,11 @@ import type { Bot } from "../../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance}
  */
-export async function deleteStageInstance(bot: Bot, channelId: bigint): Promise<void> {
-  return await bot.rest.runMethod<void>(bot.rest, "DELETE", bot.constants.routes.STAGE_INSTANCE(channelId));
+export async function deleteStageInstance(bot: Bot, channelId: bigint, reason?: string): Promise<void> {
+  return await bot.rest.runMethod<void>(
+    bot.rest,
+    "DELETE",
+    bot.constants.routes.STAGE_INSTANCE(channelId),
+    reason ? { reason } : undefined,
+  );
 }
