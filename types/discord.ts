@@ -102,24 +102,23 @@ export interface DiscordConnection {
 }
 
 /** https://discord.com/developers/docs/resources/user#connection-object-services */
-export enum DiscordConnectionServices {
-  "Battle.net" = "battlenet",
-  "eBay" = "ebay",
-  "Epic Games" = "epicgames",
-  "Facebook" = "facebook",
-  "GitHub" = "github",
-  "League of Legends" = "leagueoflegends",
-  "PlayStation Network" = "playstation",
-  "Reddit" = "reddit",
-  "Riot Games" = "riotgames",
-  "Spotify" = "spotify",
-  "Skype" = "skype",
-  "Steam" = "steam",
-  "Twitch" = "twitch",
-  "Twitter" = "twitter",
-  "Xbox" = "xbox",
-  "YouTube" = "youtube",
-}
+export type DiscordConnectionServices =
+  | "battlenet"
+  | "ebay"
+  | "epicgames"
+  | "facebook"
+  | "github"
+  | "leagueoflegends"
+  | "playstation"
+  | "reddit"
+  | "riotgames"
+  | "spotify"
+  | "skype"
+  | "steam"
+  | "twitch"
+  | "twitter"
+  | "xbox"
+  | "youtube";
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
 export interface DiscordIntegration {
