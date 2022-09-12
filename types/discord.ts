@@ -522,9 +522,9 @@ export interface DiscordApplicationWebhook {
   avatar: string | null;
   /** The bot/OAuth2 application that created this webhook */
   application_id: string | null;
-  /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks) */
+  /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks), field will be absent if the webhook creator has since lost access to the guild where the followed channel resides */
   source_guild?: Partial<DiscordGuild>;
-  /** The channel that this webhook is following (returned for Channel Follower Webhooks) */
+  /** The channel that this webhook is following (returned for Channel Follower Webhooks), field will be absent if the webhook creator has since lost access to the guild where the followed channel resides */
   source_channel?: Partial<DiscordChannel>;
 }
 
