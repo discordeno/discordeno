@@ -9,7 +9,7 @@ import { misc } from "./src/misc/mod.ts";
 import { webhooks } from "./src/webhooks/mod.ts";
 
 // PLUGINS MUST TAKE A BOT ARGUMENT WHICH WILL BE MODIFIED
-export function enableValidationsPlugin(bot: Bot) {
+export function enableValidationsPlugin<B extends Bot>(bot: B): B {
   // MARK THIS PLUGIN BEING USED
   bot.enabledPlugins.add("VALIDATIONS");
 
