@@ -91,9 +91,12 @@ async function handleRequest(conn: Deno.Conn) {
         new Response(
           JSON.stringify({
             message: error.message,
+            code: error.code,
+            status: error.status ?? 469,
+            details: error.details,
           }),
           {
-            status: error.code ?? 469,
+            status: error.status ?? 469,
           },
         ),
       );

@@ -1,4 +1,5 @@
 import { API_VERSION, BASE_URL, baseEndpoints } from "../util/constants.ts";
+import { DiscordRestError } from "./convertRestError.ts";
 import { RequestMethod, RestRequestRejection, RestRequestResponse } from "./rest.ts";
 import { RestManager } from "./restManager.ts";
 
@@ -35,8 +36,13 @@ export async function runMethod<T = any>(
     });
 
     if (!result.ok) {
-      const err = await result.json().catch(() => {});
-      throw new Error(`Error: ${err.message ?? result.statusText}`);
+      const check = await result.json();
+      console.log("check", typeof check, check);
+      throw new DiscordRestError({
+        status: check.status,
+        body: { code: check.code, message: check.message },
+        details: check.details,
+      });
     }
 
     return result.status !== 204 ? await result.json() : undefined;
