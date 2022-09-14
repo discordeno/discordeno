@@ -117,6 +117,7 @@ export async function sendMessage(bot: Bot, channelId: bigint, options: CreateMe
           },
         }
         : {}),
+      sticker_ids: options.stickerIds?.map((sticker) => sticker.toString()),
     },
   );
 
@@ -152,4 +153,6 @@ export interface CreateMessage {
   file?: FileContent | FileContent[];
   /** The components you would like to have sent in this message */
   components?: MessageComponents;
+  /** IDs of up to 3 stickers in the server to send in the message */
+  stickerIds?: [bigint] | [bigint, bigint] | [bigint, bigint, bigint];
 }
