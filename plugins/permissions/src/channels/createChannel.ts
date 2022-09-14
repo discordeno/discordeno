@@ -1,8 +1,8 @@
 import { BotWithCache, ChannelTypes, PermissionStrings } from "../../deps.ts";
 import { requireBotGuildPermissions } from "../permissions.ts";
 
-export default function createChannel(bot: BotWithCache) {
-  const createChannelOld = bot.helpers.createChannel;
+export function createChannel(bot: BotWithCache) {
+  const createChannel = bot.helpers.createChannel;
 
   bot.helpers.createChannel = async function (guildId, options, reason) {
     const guild = bot.guilds.get(guildId);
@@ -35,9 +35,7 @@ export default function createChannel(bot: BotWithCache) {
         throw new Error("The topic length must be between 1 and 1024 (4096 if forum)");
       }
 
-      if (options?.userLimit && options.userLimit > 99) {
-        throw new Error("The user limit must be less than 99.");
-      }
+      if (options?.userLimit && options.userLimit > 99) throw new Error("The user limit must be less than 99.");
 
       if (options?.parentId) {
         const category = bot.channels.get(options.parentId);
@@ -49,6 +47,6 @@ export default function createChannel(bot: BotWithCache) {
       requireBotGuildPermissions(bot, guild, requiredPerms);
     }
 
-    return await createChannelOld(guildId, options, reason);
+    return await createChannel(guildId, options, reason);
   };
 }

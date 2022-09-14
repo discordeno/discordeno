@@ -2,7 +2,7 @@ import type { Bot } from "../../../bot.ts";
 import { Channel } from "../../../transformers/channel.ts";
 import { Embed } from "../../../transformers/embed.ts";
 import { DiscordChannel } from "../../../types/discord.ts";
-import { AllowedMentions, BigString, FileContent, MessageComponents } from "../../../types/mod.ts";
+import { AllowedMentions, BigString, FileContent, MessageComponents, WithReason } from "../../../types/mod.ts";
 
 /**
  * Creates a new thread in a forum channel, and sends a message within the created thread.
@@ -55,18 +55,13 @@ export async function createForumThread(
   return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(result.guild_id!) });
 }
 
-export interface CreateForumPostWithMessage extends CreateForumMessage {
+export interface CreateForumPostWithMessage extends WithReason {
   /** 1-100 character thread name */
   name: string;
   /** Duration in minutes to automatically archive the thread after recent activity */
   autoArchiveDuration: 60 | 1440 | 4320 | 10080;
   /** Amount of seconds a user has to wait before sending another message (0-21600) */
   rateLimitPerUser?: number | null;
-  /** The reason you are creating the thread */
-  reason?: string;
-}
-
-export interface CreateForumMessage {
   /** The message contents (up to 2000 characters) */
   content?: string;
   /** Embedded `rich` content (up to 6000 characters) */

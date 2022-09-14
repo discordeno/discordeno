@@ -1,5 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
+import { BigString, WithReason } from "../../mod.ts";
 
 /**
  * Bans a user from a guild.
@@ -34,9 +34,7 @@ export async function banMember(
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-ban */
-export interface CreateGuildBan {
+export interface CreateGuildBan extends WithReason {
   /** Number of seconds to delete messages for, between 0 and 604800 (7 days) */
   deleteMessageSeconds?: number;
-  /** Reason for the ban */
-  reason?: string;
 }

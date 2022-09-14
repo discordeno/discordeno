@@ -1,4 +1,5 @@
 import { Bot } from "../../../bot.ts";
+import { WithReason } from "../../../mod.ts";
 import { ScheduledEvent } from "../../../transformers/scheduledEvent.ts";
 import { DiscordScheduledEvent } from "../../../types/discord.ts";
 import { BigString, ScheduledEventEntityType, ScheduledEventPrivacyLevel } from "../../../types/shared.ts";
@@ -67,7 +68,7 @@ export async function createScheduledEvent(
   return bot.transformers.scheduledEvent(bot, result);
 }
 
-export interface CreateScheduledEvent {
+export interface CreateScheduledEvent extends WithReason {
   /** the channel id of the scheduled event. */
   channelId?: BigString;
   /** location of the event. Required for events with `entityType: ScheduledEventEntityType.External` */
@@ -84,5 +85,4 @@ export interface CreateScheduledEvent {
   privacyLevel?: ScheduledEventPrivacyLevel;
   /** the type of hosting entity associated with a scheduled event */
   entityType: ScheduledEventEntityType;
-  reason?: string;
 }

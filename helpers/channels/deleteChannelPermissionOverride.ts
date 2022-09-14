@@ -19,10 +19,12 @@ export async function deleteChannelPermissionOverride(
   bot: Bot,
   channelId: BigString,
   overwriteId: BigString,
+  reason?: string,
 ): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     "DELETE",
     bot.constants.routes.CHANNEL_OVERWRITE(channelId, overwriteId),
+    reason ? { reason } : undefined,
   );
 }

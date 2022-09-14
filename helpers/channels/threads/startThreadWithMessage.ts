@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { WithReason } from "../../../mod.ts";
 import { Channel } from "../../../transformers/channel.ts";
 import { DiscordChannel } from "../../../types/discord.ts";
 import { BigString } from "../../../types/shared.ts";
@@ -36,19 +37,19 @@ export async function startThreadWithMessage(
     {
       name: options.name,
       auto_archive_duration: options.autoArchiveDuration,
+      rate_limit_per_user: options.rateLimitPerUser,
+      reason: options.reason,
     },
   );
 
   return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(result.guild_id!) });
 }
 
-export interface StartThreadWithMessage {
+export interface StartThreadWithMessage extends WithReason {
   /** 1-100 character thread name */
   name: string;
   /** Duration in minutes to automatically archive the thread after recent activity */
   autoArchiveDuration: 60 | 1440 | 4320 | 10080;
   /** Amount of seconds a user has to wait before sending another message (0-21600) */
   rateLimitPerUser?: number | null;
-  /** The reason you are creating the thread */
-  reason?: string;
 }

@@ -6,7 +6,7 @@ export const API_VERSION = 10;
 
 // TODO: update this version
 /** https://github.com/discordeno/discordeno/releases */
-export const DISCORDENO_VERSION = "14.0.1";
+export const DISCORDENO_VERSION = "15.0.2";
 
 /** https://discord.com/developers/docs/reference#user-agent */
 export const USER_AGENT = `DiscordBot (https://github.com/discordeno/discordeno, v${DISCORDENO_VERSION})`;

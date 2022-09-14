@@ -13,6 +13,11 @@ import type { Bot } from "../../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#delete-channel-invite}
  */
-export async function deleteInvite(bot: Bot, inviteCode: string): Promise<void> {
-  return await bot.rest.runMethod<void>(bot.rest, "DELETE", bot.constants.routes.INVITE(inviteCode));
+export async function deleteInvite(bot: Bot, inviteCode: string, reason?: string): Promise<void> {
+  return await bot.rest.runMethod<void>(
+    bot.rest,
+    "DELETE",
+    bot.constants.routes.INVITE(inviteCode),
+    reason ? { reason } : undefined,
+  );
 }

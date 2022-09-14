@@ -85,21 +85,40 @@ export interface DiscordConnection {
   /** The username of the connection account */
   name: string;
   /** The service of the connection (twitch, youtube) */
-  type: string;
+  type: DiscordConnectionServices;
   /** Whether the connection is revoked */
   revoked?: boolean;
   /** Whether the connection is verified */
   verified: boolean;
   /** Whether friend sync is enabled for this connection */
-  friendSync: boolean;
+  friend_sync: boolean;
   /** Whether activities related to this connection will be shown in presence updates */
-  showActivity: boolean;
+  show_activity: boolean;
   /** Visibility of this connection */
   visibility: VisibilityTypes;
 
   /** An array of partial server integrations */
   integrations?: DiscordIntegration[];
 }
+
+/** https://discord.com/developers/docs/resources/user#connection-object-services */
+export type DiscordConnectionServices =
+  | "battlenet"
+  | "ebay"
+  | "epicgames"
+  | "facebook"
+  | "github"
+  | "leagueoflegends"
+  | "playstation"
+  | "reddit"
+  | "riotgames"
+  | "spotify"
+  | "skype"
+  | "steam"
+  | "twitch"
+  | "twitter"
+  | "xbox"
+  | "youtube";
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
 export interface DiscordIntegration {
@@ -502,9 +521,9 @@ export interface DiscordApplicationWebhook {
   avatar: string | null;
   /** The bot/OAuth2 application that created this webhook */
   application_id: string | null;
-  /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks) */
+  /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks), field will be absent if the webhook creator has since lost access to the guild where the followed channel resides */
   source_guild?: Partial<DiscordGuild>;
-  /** The channel that this webhook is following (returned for Channel Follower Webhooks) */
+  /** The channel that this webhook is following (returned for Channel Follower Webhooks), field will be absent if the webhook creator has since lost access to the guild where the followed channel resides */
   source_channel?: Partial<DiscordChannel>;
 }
 

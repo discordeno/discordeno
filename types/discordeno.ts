@@ -2,15 +2,15 @@ import { ApplicationCommandOption } from "../transformers/applicationCommandOpti
 import { ApplicationCommandOptionChoice } from "../transformers/applicationCommandOptionChoice.ts";
 import { Embed } from "../transformers/embed.ts";
 import {
-    AllowedMentionsTypes,
-    ApplicationCommandTypes,
-    BigString,
-    ButtonStyles,
-    InteractionResponseTypes,
-    Localization,
-    MessageComponentTypes,
-    PermissionStrings,
-    TextStyles
+  AllowedMentionsTypes,
+  ApplicationCommandTypes,
+  ButtonStyles,
+  InteractionResponseTypes,
+  Localization,
+  MessageComponentTypes,
+  OverwriteTypes,
+  PermissionStrings,
+  TextStyles,
 } from "./shared.ts";
 
 export type MessageComponents = ActionRow[];
@@ -212,4 +212,20 @@ export interface InteractionCallbackData {
   flags?: number;
   /** Autocomplete choices (max of 25 choices) */
   choices?: ApplicationCommandOptionChoice[];
+}
+
+export interface WithReason {
+  /** The reason which should be added in the audit logs for doing this action. */
+  reason?: string;
+}
+
+export interface OverwriteReadable {
+  /** Role or user id */
+  id: bigint;
+  /** Either 0 (role) or 1 (member) */
+  type: OverwriteTypes;
+  /** Permission bit set */
+  allow?: PermissionStrings[];
+  /** Permission bit set */
+  deny?: PermissionStrings[];
 }
