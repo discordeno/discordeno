@@ -56,9 +56,9 @@ if (INFLUX_TOKEN) {
 }
 
 rest.convertRestError = (errorStack, data) => {
-  if(!data) return {message: errorStack.message}
-  return {...data, message: errorStack.message};
-}
+  if (!data) return { message: errorStack.message };
+  return { ...data, message: errorStack.message };
+};
 
 const app = express();
 

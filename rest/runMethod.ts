@@ -41,7 +41,7 @@ export async function runMethod<T = any>(
     if (!result.ok) {
       const err = await result.json().catch(() => {});
       // Legacy Handling to not break old code or when body is missing
-      if(!err.body) throw new Error(`Error: ${err.message ?? result.statusText}`);
+      if (!err.body) throw new Error(`Error: ${err.message ?? result.statusText}`);
       throw rest.convertRestError(errorStack, err);
     }
 
