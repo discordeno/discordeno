@@ -16,6 +16,7 @@ import {
   GuildFeatures,
   GuildNsfwLevel,
   IntegrationExpireBehaviors,
+  InteractionResponseTypes,
   InteractionTypes,
   Localization,
   MessageActivityTypes,
@@ -84,21 +85,40 @@ export interface DiscordConnection {
   /** The username of the connection account */
   name: string;
   /** The service of the connection (twitch, youtube) */
-  type: string;
+  type: DiscordConnectionServices;
   /** Whether the connection is revoked */
   revoked?: boolean;
   /** Whether the connection is verified */
   verified: boolean;
   /** Whether friend sync is enabled for this connection */
-  friendSync: boolean;
+  friend_sync: boolean;
   /** Whether activities related to this connection will be shown in presence updates */
-  showActivity: boolean;
+  show_activity: boolean;
   /** Visibility of this connection */
   visibility: VisibilityTypes;
 
   /** An array of partial server integrations */
   integrations?: DiscordIntegration[];
 }
+
+/** https://discord.com/developers/docs/resources/user#connection-object-services */
+export type DiscordConnectionServices =
+  | "battlenet"
+  | "ebay"
+  | "epicgames"
+  | "facebook"
+  | "github"
+  | "leagueoflegends"
+  | "playstation"
+  | "reddit"
+  | "riotgames"
+  | "spotify"
+  | "skype"
+  | "steam"
+  | "twitch"
+  | "twitter"
+  | "xbox"
+  | "youtube";
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
 export interface DiscordIntegration {
@@ -501,9 +521,9 @@ export interface DiscordApplicationWebhook {
   avatar: string | null;
   /** The bot/OAuth2 application that created this webhook */
   application_id: string | null;
-  /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks) */
+  /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks), field will be absent if the webhook creator has since lost access to the guild where the followed channel resides */
   source_guild?: Partial<DiscordGuild>;
-  /** The channel that this webhook is following (returned for Channel Follower Webhooks) */
+  /** The channel that this webhook is following (returned for Channel Follower Webhooks), field will be absent if the webhook creator has since lost access to the guild where the followed channel resides */
   source_channel?: Partial<DiscordChannel>;
 }
 
@@ -1813,15 +1833,18 @@ export interface DiscordInviteStageInstance {
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure */
-export interface DiscordApplicationCommand {
+export interface DiscordApplicationCommand extends DiscordCreateApplicationCommand {
   /** Unique ID of command */
   id: string;
-  /** Type of command, defaults to `ApplicationCommandTypes.ChatInput` */
-  type?: ApplicationCommandTypes;
   /** ID of the parent application */
   application_id: string;
   /** Guild id of the command, if not global */
   guild_id?: string;
+}
+
+export interface DiscordCreateApplicationCommand {
+  /** Type of command, defaults to `ApplicationCommandTypes.ChatInput` */
+  type?: ApplicationCommandTypes;
   /**
    * Name of command, 1-32 characters.
    * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
@@ -1839,11 +1862,11 @@ export interface DiscordApplicationCommand {
   /** Parameters for the command, max of 25 */
   options?: DiscordApplicationCommandOption[];
   /** Set of permissions represented as a bit set */
-  default_member_permissions: string | null;
+  default_member_permissions?: string | null;
   /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
   dm_permission?: boolean;
   /** Auto incrementing version identifier updated during substantial record changes */
-  version: string;
+  version?: string;
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure */
@@ -2173,6 +2196,8 @@ export interface DiscordReady {
   guilds: DiscordUnavailableGuild[];
   /** Used for resuming connections */
   session_id: string;
+  /** Gateway url for resuming connections */
+  resume_gateway_url: string;
   /** The shard information associated with this session, if sent when identifying */
   shard?: [number, number];
   /** Contains id and flags */
@@ -2440,6 +2465,23 @@ export interface DiscordInstallParams {
   scopes: string[];
   /** the permissions to request for the bot role */
   permissions: string;
+}
+
+export interface DiscordInteractionResponse {
+  type: InteractionResponseTypes;
+  data?: DiscordInteractionCallbackData;
+}
+
+export interface DiscordInteractionCallbackData {
+  tts?: boolean;
+  title?: string;
+  flags?: number;
+  content?: string;
+  choices?: DiscordApplicationCommandOptionChoice[];
+  custom_id?: string;
+  embeds?: DiscordEmbed[];
+  allowed_mentions?: DiscordAllowedMentions;
+  components?: DiscordComponent[];
 }
 
 export interface DiscordForumTag {

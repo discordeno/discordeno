@@ -11,13 +11,13 @@ export function addDiscoverySubcategory(bot: BotWithCache) {
   };
 }
 
-export function removeDiscoverySubcategory(bot: BotWithCache) {
-  const removeDiscoverySubcategoryOld = bot.helpers.removeDiscoverySubcategory;
+export function deleteDiscoverySubcategory(bot: BotWithCache) {
+  const deleteDiscoverySubcategoryOld = bot.helpers.deleteDiscoverySubcategory;
 
-  bot.helpers.removeDiscoverySubcategory = async function (guildId, categoryId) {
+  bot.helpers.deleteDiscoverySubcategory = async function (guildId, categoryId) {
     requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
 
-    return await removeDiscoverySubcategoryOld(guildId, categoryId);
+    return await deleteDiscoverySubcategoryOld(guildId, categoryId);
   };
 }
 
@@ -45,5 +45,5 @@ export default function setupDiscoveryPermChecks(bot: BotWithCache) {
   addDiscoverySubcategory(bot);
   editDiscovery(bot);
   getDiscovery(bot);
-  removeDiscoverySubcategory(bot);
+  deleteDiscoverySubcategory(bot);
 }
