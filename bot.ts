@@ -179,7 +179,6 @@ export function createBot(options: CreateBotOptions): Bot {
     activeGuildIds: new Set<BigString>(),
     constants: createBotConstants(),
     handlers: createBotGatewayHandlers({}),
-    transformers: createTransformers(options.transformers ?? {}),
     enabledPlugins: new Set(),
     handleDiscordPayload: options.handleDiscordPayload,
     cache: {
@@ -194,6 +193,7 @@ export function createBot(options: CreateBotOptions): Bot {
   } as Bot;
 
   bot.utils = createUtils(bot, options.utils);
+  bot.transformers = createTransformers(bot, options.transformers ?? {})
   bot.helpers = createHelpers(bot, options.helpers ?? {});
   bot.gateway = createGatewayManager({
     gatewayBot: bot.botGatewayData ?? {} as any,
@@ -492,7 +492,7 @@ export interface Transformers {
   template: (bot: Bot, payload: DiscordTemplate) => Template;
 }
 
-export function createTransformers(options: Partial<Transformers>) {
+export function createTransformers(bot: Bot, options: Partial<Transformers>) {
   return {
     reverse: {
       allowedMentions: options.reverse?.allowedMentions || transformAllowedMentionsToDiscordAllowedMentions,
@@ -537,7 +537,7 @@ export function createTransformers(options: Partial<Transformers>) {
     user: options.user || transformUser,
     team: options.team || transformTeam,
     voiceState: options.voiceState || transformVoiceState,
-    snowflake: options.snowflake || snowflakeToBigint,
+    snowflake: options.snowflake || bot.utils.snowflakeToBigint,
     webhook: options.webhook || transformWebhook,
     auditLogEntry: options.auditLogEntry || transformAuditLogEntry,
     applicationCommand: options.applicationCommand ||
