@@ -1,4 +1,4 @@
-import { BotWithCache } from "../../../deps.ts";
+import { BotWithCache, ChannelTypes } from "../../../deps.ts";
 import { requireBotChannelPermissions } from "../../permissions.ts";
 
 export function createForumThread(bot: BotWithCache) {
@@ -7,7 +7,10 @@ export function createForumThread(bot: BotWithCache) {
   bot.helpers.createForumThread = async function (channelId, options) {
     const channel = bot.channels.get(channelId);
 
-    if (channel) requireBotChannelPermissions(bot, channel, ["SEND_MESSAGES"]);
+    if (channel) {
+      if (channel.type !== ChannelTypes.GuildForum) throw new Error("Channel must be a forum channel");
+      requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "SEND_MESSAGES"]);
+    }
 
     return await createForumThread(channelId, options);
   };

@@ -4,7 +4,7 @@ import { requireBotChannelPermissions } from "../permissions.ts";
 export function editChannel(bot: BotWithCache) {
   const editChannel = bot.helpers.editChannel;
 
-  bot.helpers.editChannel = async function (channelId, options, reason) {
+  bot.helpers.editChannel = async function (channelId, options) {
     const channel = bot.channels.get(channelId);
 
     if (channel?.guildId) {
@@ -23,7 +23,11 @@ export function editChannel(bot: BotWithCache) {
       const isThread = [ChannelTypes.AnnouncementThread, ChannelTypes.PublicThread, ChannelTypes.PrivateThread]
         .includes(channel.type);
 
-      const requiredPerms: PermissionStrings[] = [];
+      const requiredPerms: PermissionStrings[] =
+        [ChannelTypes.GuildVoice, ChannelTypes.GuildStageVoice].includes(channel.type)
+          ? ["VIEW_CHANNEL", "CONNECT"]
+          : ["VIEW_CHANNEL"];
+
       if (isThread) {
         if (options.invitable !== undefined && channel.type !== ChannelTypes.PrivateThread) {
           throw new Error("Invitable option is only allowed on private threads.");
@@ -71,6 +75,6 @@ export function editChannel(bot: BotWithCache) {
       requireBotChannelPermissions(bot, channel, requiredPerms);
     }
 
-    return await editChannel(channelId, options, reason);
+    return await editChannel(channelId, options);
   };
 }

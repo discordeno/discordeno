@@ -1,5 +1,5 @@
 import { BotWithCache, ChannelTypes } from "../../deps.ts";
-import { requireBotGuildPermissions } from "../permissions.ts";
+import { requireBotChannelPermissions, requireBotGuildPermissions } from "../permissions.ts";
 
 export function deleteChannel(bot: BotWithCache) {
   const deleteChannel = bot.helpers.deleteChannel;
@@ -15,10 +15,21 @@ export function deleteChannel(bot: BotWithCache) {
 
       if (guild.publicUpdatesChannelId === channelId) throw new Error("UPDATES_CHANNEL_CANNOT_BE_DELETED");
 
-      const isThread = [ChannelTypes.AnnouncementThread, ChannelTypes.PublicThread, ChannelTypes.PrivateThread]
-        .includes(channel.type);
+      requireBotGuildPermissions(
+        bot,
+        guild,
+        [ChannelTypes.AnnouncementThread, ChannelTypes.PublicThread, ChannelTypes.PrivateThread].includes(channel.type)
+          ? ["MANAGE_THREADS"]
+          : ["MANAGE_CHANNELS"],
+      );
 
-      requireBotGuildPermissions(bot, guild, isThread ? ["MANAGE_THREADS"] : ["MANAGE_CHANNELS"]);
+      requireBotChannelPermissions(
+        bot,
+        channelId,
+        [ChannelTypes.GuildVoice, ChannelTypes.GuildStageVoice].includes(channel.type)
+          ? ["VIEW_CHANNEL", "CONNECT"]
+          : ["VIEW_CHANNEL"],
+      );
     }
 
     return await deleteChannel(channelId, reason);
