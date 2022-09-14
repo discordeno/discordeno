@@ -1,6 +1,14 @@
 import type { Bot } from "../../bot.ts";
 
-/** The users custom avatar or the default avatar if you don't have a member object. */
+/**
+ * Builds a URL to a user's avatar stored in the Discord CDN.
+ *
+ * @param bot - The bot instance to use to build the URL.
+ * @param userId - The ID of the user to get the avatar of.
+ * @param discriminator - The user's discriminator. (4-digit tag after the hashtag.)
+ * @param options - The parameters for the building of the URL.
+ * @returns The link to the resource.
+ */
 export function getAvatarURL(
   bot: Bot,
   userId: bigint,

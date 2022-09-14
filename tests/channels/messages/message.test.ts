@@ -244,7 +244,7 @@ Deno.test({
       assertEquals(message.content, "Hello Skillz");
 
       await bot.helpers.pinMessage(channel.id, message.id);
-      const pinnedMessages = await bot.helpers.getPins(channel.id);
+      const pinnedMessages = await bot.helpers.getPinnedMessages(channel.id);
       assertEquals(pinnedMessages.size, 1);
       assertEquals(pinnedMessages.first()?.content, message.content);
       assertEquals(pinnedMessages.first()?.id, message.id);
@@ -252,7 +252,7 @@ Deno.test({
       // Unpin a message
       await t.step("[message] Unpin a message", async () => {
         await bot.helpers.unpinMessage(channel.id, message.id);
-        const pinnedMessages = await bot.helpers.getPins(channel.id);
+        const pinnedMessages = await bot.helpers.getPinnedMessages(channel.id);
         assertEquals(pinnedMessages.size, 0);
       });
     });

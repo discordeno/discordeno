@@ -1,4 +1,5 @@
 import { Bot } from "../../../bot.ts";
+import { WithReason } from "../../../mod.ts";
 import { AutoModerationRule } from "../../../transformers/automodRule.ts";
 import {
   AutoModerationActionType,
@@ -7,16 +8,32 @@ import {
   DiscordAutoModerationRuleTriggerMetadataPresets,
 } from "../../../types/discord.ts";
 
-/** Edit a rule currently configured for guild. */
+/**
+ * Edits an automod rule.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to edit the rule in.
+ * @param ruleId - The ID of the rule to edit.
+ * @param options - The parameters for the edit of the rule.
+ * @returns An instance of the edited {@link AutoModerationRule}.
+ *
+ * @remarks
+ * Requires the `MANAGE_GUILD` permission.
+ *
+ * Fires an _Auto Moderation Rule Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule}
+ */
 export async function editAutomodRule(
   bot: Bot,
   guildId: bigint,
+  ruleId: bigint,
   options: Partial<EditAutoModerationRuleOptions>,
 ): Promise<AutoModerationRule> {
   const result = await bot.rest.runMethod<DiscordAutoModerationRule>(
     bot.rest,
     "PATCH",
-    bot.constants.routes.AUTOMOD_RULES(guildId),
+    bot.constants.routes.AUTOMOD_RULE(guildId, ruleId),
     {
       name: options.name,
       event_type: options.eventType,
@@ -45,7 +62,7 @@ export async function editAutomodRule(
   return bot.transformers.automodRule(bot, result);
 }
 
-export interface EditAutoModerationRuleOptions {
+export interface EditAutoModerationRuleOptions extends WithReason {
   /** The name of the rule. */
   name: string;
   /** The type of event to trigger the rule on. */
@@ -80,6 +97,4 @@ export interface EditAutoModerationRuleOptions {
   exemptRoles?: bigint[];
   /** The channel ids that should not be effected by the rule. */
   exemptChannels?: bigint[];
-  /** The reason to add to the audit logs. */
-  reason?: string;
 }

@@ -3,9 +3,28 @@ import { GatewayIntents, GatewayOpcodes } from "../../types/shared.ts";
 import { calculateShardId } from "../../util/calculateShardId.ts";
 
 /**
- * Highly recommended to use this function to fetch members instead of getMember from REST.
- * REST: 50/s global(across all shards) rate limit with ALL requests this included
- * GW(this function): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is now 960/m.
+ * Fetches the list of members for a guild over the gateway.
+ *
+ * @param bot - The bot instance to use to make the requests.
+ * @param guildId - The ID of the guild to get the list of members for.
+ * @param options - The parameters for the fetching of the members.
+ *
+ * @remarks
+ * If requesting the entire member list:
+ * - Requires the `GUILD_MEMBERS` intent.
+ *
+ * If requesting presences ({@link RequestGuildMembers.presences | presences} set to `true`):
+ * - Requires the `GUILD_PRESENCES` intent.
+ *
+ * If requesting a prefix ({@link RequestGuildMembers.query | query} non-`undefined`):
+ * - Returns a maximum of 100 members.
+ *
+ * If requesting a users by ID ({@link RequestGuildMembers.userIds | userIds} non-`undefined`):
+ * - Returns a maximum of 100 members.
+ *
+ * Fires a _Guild Members Chunk_ gateway event for every 1000 members fetched.
+ *
+ * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
  */
 export function fetchMembers(
   bot: Bot,

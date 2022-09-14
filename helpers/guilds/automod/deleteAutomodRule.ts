@@ -1,6 +1,19 @@
 import { Bot } from "../../../bot.ts";
 
-/** Delete a rule currently configured for guild. */
+/**
+ * Deletes an automod rule.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to delete the rule from.
+ * @param ruleId - The ID of the automod rule to delete.
+ *
+ * @remarks
+ * Requires the `MANAGE_GUILD` permission.
+ *
+ * Fires an _Auto Moderation Rule Delete_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/auto-moderation#delete-auto-moderation-rule}
+ */
 export async function deleteAutomodRule(bot: Bot, guildId: bigint, ruleId: bigint, reason?: string): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,

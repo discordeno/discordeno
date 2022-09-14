@@ -1,9 +1,11 @@
 export * from "./toggles/mod.ts";
+export * from "./reverse/mod.ts";
 
 export * from "./activity.ts";
 export * from "./application.ts";
 export * from "./applicationCommand.ts";
 export * from "./applicationCommandOption.ts";
+export * from "./applicationCommandOptionChoice.ts";
 export * from "./applicationCommandPermission.ts";
 export * from "./attachment.ts";
 export * from "./auditLogEntry.ts";
@@ -32,5 +34,3 @@ export * from "./webhook.ts";
 export * from "./welcomeScreen.ts";
 export * from "./widget.ts";
 export * from "./widgetSettings.ts";
-
-export * from "./reverse/mod.ts";
