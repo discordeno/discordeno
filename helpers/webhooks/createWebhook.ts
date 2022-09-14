@@ -1,11 +1,24 @@
 import type { Bot } from "../../bot.ts";
+import { WithReason } from "../../mod.ts";
 import { Webhook } from "../../transformers/webhook.ts";
 import { DiscordWebhook } from "../../types/discord.ts";
 
 /**
- * Create a new webhook. Requires the MANAGE_WEBHOOKS permission. Returns a webhook object on success. Webhook names follow our naming restrictions that can be found in our Usernames and Nicknames documentation, with the following additional stipulations:
+ * Creates a webhook.
  *
- * Webhook names cannot be: 'clyde'
+ * @param bot - The bot instance to use to make the request.
+ * @param channelId - The ID of the channel to create the webhook in.
+ * @param options - The parameters for the creation of the webhook.
+ * @returns An instance of the created {@link Webhook}.
+ *
+ * @remarks
+ * Requires the `MANAGE_WEBHOOKS` permission.
+ *
+ * ⚠️ The webhook name must not contain the string 'clyde' (case-insensitive).
+ *
+ * Fires a _Webhooks Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/webhook#create-webhook}
  */
 export async function createWebhook(bot: Bot, channelId: bigint, options: CreateWebhook): Promise<Webhook> {
   const result = await bot.rest.runMethod<DiscordWebhook>(
@@ -22,11 +35,9 @@ export async function createWebhook(bot: Bot, channelId: bigint, options: Create
   return bot.transformers.webhook(bot, result);
 }
 
-export interface CreateWebhook {
+export interface CreateWebhook extends WithReason {
   /** Name of the webhook (1-80 characters) */
   name: string;
   /** Image url for the default webhook avatar */
   avatar?: string | null;
-  /** The reason you are creating this webhook */
-  reason?: string;
 }

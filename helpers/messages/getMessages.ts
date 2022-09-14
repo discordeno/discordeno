@@ -4,7 +4,22 @@ import { DiscordMessage } from "../../types/discord.ts";
 import { Collection } from "../../util/collection.ts";
 import { hasProperty } from "../../util/utils.ts";
 
-/** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
+/**
+ * Gets multiple messages from a channel.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param channelId - The ID of the channel from which to get the messages.
+ * @param options - The parameters for the fetching of the messages.
+ * @returns A collection of {@link Message} objects assorted by message ID.
+ *
+ * @remarks
+ * Requires that the bot user be able to see the contents of the channel in which the messages were posted.
+ *
+ * If getting a messages from a guild channel:
+ * - Requires the `READ_MESSAGE_HISTORY` permission.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/channel#get-channel-messages}
+ */
 export async function getMessages(
   bot: Bot,
   channelId: bigint,

@@ -24,7 +24,7 @@ Deno.test({
     assertEquals(channel.type, ChannelTypes.GuildText);
     assertEquals(channel.permissionOverwrites.length, 1);
 
-    await bot.helpers.deleteChannelOverwrite(channel.id, bot.id);
+    await bot.helpers.deleteChannelPermissionOverride(channel.id, bot.id);
 
     // Fetch the channel again to validate
     const fetchedChannel = await bot.helpers.getChannel(channel.id);

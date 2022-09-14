@@ -6,18 +6,29 @@ export interface GetWebhookMessageOptions {
   threadId: bigint;
 }
 
-/** Returns a previously-sent webhook message from the same token. Returns a message object on success. */
+/**
+ * Gets a webhook message by its ID.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param webhookId - The ID of the webhook to get a message of.
+ * @param token - The webhook token, used to get webhook messages.
+ * @param messageId - the ID of the webhook message to get.
+ * @param options - The parameters for the fetching of the message.
+ * @returns An instance of {@link Message}.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook-message}
+ */
 export async function getWebhookMessage(
   bot: Bot,
   webhookId: bigint,
-  webhookToken: string,
+  token: string,
   messageId: bigint,
   options?: GetWebhookMessageOptions,
 ): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "GET",
-    bot.constants.routes.WEBHOOK_MESSAGE(webhookId, webhookToken, messageId, options),
+    bot.constants.routes.WEBHOOK_MESSAGE(webhookId, token, messageId, options),
   );
 
   return bot.transformers.message(bot, result);

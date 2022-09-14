@@ -1,7 +1,7 @@
 const Discord = require("discordeno.js");
 
 // Ideally you should switch this to .env but for a template a config json is enough
-const config = require("../config.json");
+const config = require("./config.json");
 
 const EventManager = require("./Managers/EventManager.js");
 // looping through all events and registering them

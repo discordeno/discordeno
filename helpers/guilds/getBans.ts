@@ -3,7 +3,21 @@ import { DiscordBan } from "../../types/discord.ts";
 import { Collection } from "../../util/collection.ts";
 import { Ban } from "./getBan.ts";
 
-/** Returns a list of ban objects for the users banned from this guild. Requires the BAN_MEMBERS permission. */
+/**
+ * Gets the list of bans for a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to get the list of bans for.
+ * @param options - The parameters for the fetching of the list of bans.
+ * @returns A collection of {@link Ban} objects assorted by user ID.
+ *
+ * @remarks
+ * Requires the `BAN_MEMBERS` permission.
+ *
+ * Users are ordered by their IDs in _ascending_ order.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-bans}
+ */
 export async function getBans(bot: Bot, guildId: bigint, options?: GetBans): Promise<Collection<bigint, Ban>> {
   const results = await bot.rest.runMethod<DiscordBan[]>(
     bot.rest,
