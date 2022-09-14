@@ -1,5 +1,6 @@
 import { AllowedMentionsTypes, Bot } from "../../deps.ts";
 import { validateComponents } from "../components.ts";
+import { messages } from "./mod.ts";
 
 export function sendMessage(bot: Bot) {
   const sendMessage = bot.helpers.sendMessage;
@@ -53,6 +54,12 @@ export function sendMessage(bot: Bot) {
     }
 
     if (content.components) validateComponents(bot, content.components);
+
+    if (content.content || content.embeds || content.components || content.file || content.stickerIds) {
+      throw new Error(
+        "When sending a message, you must provide a value for at least one of content, embeds, stickerIds, components, or file.",
+      );
+    }
 
     return sendMessage(channelId, content);
   };
