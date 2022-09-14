@@ -55,7 +55,10 @@ export function sendMessage(bot: Bot) {
 
     if (content.components) validateComponents(bot, content.components);
 
-    if (!content.content?.length && !content.embeds?.length && !content.components?.length && !content.file && !content.stickerIds?.length) {
+    if (
+      !content.content?.length && !content.embeds?.length && !content.components?.length && !content.file &&
+      !content.stickerIds?.length
+    ) {
       throw new Error(
         "When sending a message, you must provide a value for at least one of content, embeds, stickerIds, components, or file.",
       );
