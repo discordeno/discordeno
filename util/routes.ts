@@ -348,7 +348,9 @@ export const routes = {
 
     return url;
   },
-  GUILD_MFA_LEVEL: (guildId: bigint) => `/guilds/${guildId}/mfa`,
+  GUILD_MFA_LEVEL: (guildId: bigint) => {
+    return `/guilds/${guildId}/mfa`;
+  },
   // Voice
   VOICE_REGIONS: () => {
     return `/voice/regions`;
@@ -502,8 +504,17 @@ export const routes = {
     return `/stage-instances/${channelId}`;
   },
 
-  // Misc Endpoints
+  // Stickers Endpoints
   NITRO_STICKER_PACKS: () => {
-    return `/sticker-packs`;
+    return "/sticker-packs";
+  },
+  STICKER: (stickerId: bigint) => {
+    return `/stickers/${stickerId}`;
+  },
+  GUILD_STICKERS: (guildId: bigint) => {
+    return `/guilds/${guildId}/stickers`;
+  },
+  GUILD_STICKER: (guildId: bigint, stickerId: bigint) => {
+    return `/guilds/${guildId}/stickers/${stickerId}`;
   },
 };

@@ -7,5 +7,6 @@ export * from "./members/mod.ts";
 export * from "./messages/mod.ts";
 export * from "./misc/mod.ts";
 export * from "./roles/mod.ts";
+export * from "./stickers/mod.ts";
 export * from "./templates/mod.ts";
 export * from "./webhooks/mod.ts";
