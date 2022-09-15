@@ -23,6 +23,10 @@ export async function runMethod<T = any>(
     }`,
   );
 
+  const errorStack = new Error("Location:");
+  // @ts-ignore Breaks deno deploy. Luca said add ts-ignore until it's fixed
+  Error.captureStackTrace(errorStack);
+
   // For proxies we don't need to do any of the legwork so we just forward the request
   if (!baseEndpoints.BASE_URL.startsWith(BASE_URL) && route[0] === "/") {
     const result = await fetch(`${baseEndpoints.BASE_URL}${route}`, {
@@ -36,15 +40,13 @@ export async function runMethod<T = any>(
 
     if (!result.ok) {
       const err = await result.json().catch(() => {});
-      throw new Error(`Error: ${err.message ?? result.statusText}`);
+      // Legacy Handling to not break old code or when body is missing
+      if (!err.body) throw new Error(`Error: ${err.message ?? result.statusText}`);
+      throw rest.convertRestError(errorStack, err);
     }
 
     return result.status !== 204 ? await result.json() : undefined;
   }
-
-  const errorStack = new Error("Location:");
-  // @ts-ignore Breaks deno deploy. Luca said add ts-ignore until it's fixed
-  Error.captureStackTrace(errorStack);
 
   // No proxy so we need to handle all rate limiting and such
   return new Promise((resolve, reject) => {
