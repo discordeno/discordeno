@@ -1,5 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import { WithReason } from "../../mod.ts";
+import { BigString, WithReason } from "../../mod.ts";
 
 /**
  * Bans a user from a guild.
@@ -18,8 +18,8 @@ import { WithReason } from "../../mod.ts";
  */
 export async function banMember(
   bot: Bot,
-  guildId: bigint,
-  userId: bigint,
+  guildId: BigString,
+  userId: BigString,
   options?: CreateGuildBan,
 ): Promise<void> {
   return await bot.rest.runMethod<void>(

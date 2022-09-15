@@ -1,6 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { ApplicationCommand } from "../../../transformers/applicationCommand.ts";
 import { DiscordApplicationCommand } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Gets a global application command by its ID.
@@ -11,7 +12,7 @@ import { DiscordApplicationCommand } from "../../../types/discord.ts";
  *
  * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-command}
  */
-export async function getGlobalApplicationCommand(bot: Bot, commandId: bigint): Promise<ApplicationCommand> {
+export async function getGlobalApplicationCommand(bot: Bot, commandId: BigString): Promise<ApplicationCommand> {
   const result = await bot.rest.runMethod<DiscordApplicationCommand>(
     bot.rest,
     "GET",

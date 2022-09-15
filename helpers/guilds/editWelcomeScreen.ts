@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { WelcomeScreen } from "../../transformers/welcomeScreen.ts";
 import { DiscordWelcomeScreen } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Edits a guild's welcome screen.
@@ -19,7 +20,7 @@ import { DiscordWelcomeScreen } from "../../types/discord.ts";
  */
 export async function editWelcomeScreen(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   options: ModifyGuildWelcomeScreen,
 ): Promise<WelcomeScreen> {
   const result = await bot.rest.runMethod<DiscordWelcomeScreen>(
@@ -53,9 +54,9 @@ export interface ModifyGuildWelcomeScreen {
 
 export interface WelcomeScreenChannel {
   /** The channel's id */
-  channelId: bigint;
+  channelId: BigString;
   /** The emoji id, if the emoji is custom */
-  emojiId?: bigint;
+  emojiId?: BigString;
   /** The emoji name if custom, the unicode character if standard, or `null` if no emoji is set */
   emojiName?: string;
   /** The description shown for the channel */

@@ -1,6 +1,7 @@
 import { Bot } from "../../../bot.ts";
 import { ScheduledEvent } from "../../../transformers/scheduledEvent.ts";
 import { DiscordScheduledEvent } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Gets a scheduled event by its ID.
@@ -15,8 +16,8 @@ import { DiscordScheduledEvent } from "../../../types/discord.ts";
  */
 export async function getScheduledEvent(
   bot: Bot,
-  guildId: bigint,
-  eventId: bigint,
+  guildId: BigString,
+  eventId: BigString,
   options?: { withUserCount?: boolean },
 ): Promise<ScheduledEvent> {
   const result = await bot.rest.runMethod<DiscordScheduledEvent>(

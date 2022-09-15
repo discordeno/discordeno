@@ -3,7 +3,7 @@ import { WithReason } from "../../mod.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
 import { OverwriteReadable } from "../../types/discordeno.ts";
-import { ChannelTypes, VideoQualityModes } from "../../types/shared.ts";
+import { BigString, ChannelTypes, VideoQualityModes } from "../../types/shared.ts";
 
 /**
  * Edits a channel's settings.
@@ -35,7 +35,7 @@ import { ChannelTypes, VideoQualityModes } from "../../types/shared.ts";
  * - Otherwise:
  *     - Fires a _Channel Update_ gateway event.
  */
-export async function editChannel(bot: Bot, channelId: bigint, options: ModifyChannel): Promise<Channel> {
+export async function editChannel(bot: Bot, channelId: BigString, options: ModifyChannel): Promise<Channel> {
   if (options.name || options.topic) {
     const request = editChannelNameTopicQueue.get(channelId);
     if (!request) {
@@ -113,9 +113,9 @@ export async function editChannel(bot: Bot, channelId: bigint, options: ModifyCh
 interface EditChannelRequest {
   amount: number;
   timestamp: number;
-  channelId: bigint;
+  channelId: BigString;
   items: {
-    channelId: bigint;
+    channelId: BigString;
     options: ModifyChannel;
     resolve: (channel: Channel) => void;
     // deno-lint-ignore no-explicit-any
@@ -123,7 +123,7 @@ interface EditChannelRequest {
   }[];
 }
 
-const editChannelNameTopicQueue = new Map<bigint, EditChannelRequest>();
+const editChannelNameTopicQueue = new Map<BigString, EditChannelRequest>();
 let editChannelProcessing = false;
 
 function processEditChannelQueue(bot: Bot): void {
@@ -187,7 +187,7 @@ export interface ModifyChannel extends WithReason {
   /** Channel or category-specific permissions */
   permissionOverwrites?: OverwriteReadable[] | null;
   /** Id of the new parent category for a channel */
-  parentId?: bigint | null;
+  parentId?: BigString | null;
   /** Voice region id for the voice channel, automatic when set to null */
   rtcRegion?: string | null;
   /** The camera video quality mode of the voice channel */

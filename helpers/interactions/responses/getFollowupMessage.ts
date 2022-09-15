@@ -1,6 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { Message } from "../../../transformers/message.ts";
 import { DiscordMessage } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Gets a follow-up message to an interaction by the ID of the message.
@@ -19,7 +20,7 @@ import { DiscordMessage } from "../../../types/discord.ts";
  *
  * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message}
  */
-export async function getFollowupMessage(bot: Bot, token: string, messageId: bigint): Promise<Message> {
+export async function getFollowupMessage(bot: Bot, token: string, messageId: BigString): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "GET",

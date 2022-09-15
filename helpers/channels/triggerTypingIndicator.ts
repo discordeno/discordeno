@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 export const startTyping = triggerTypingIndicator;
 
@@ -15,6 +16,6 @@ export const startTyping = triggerTypingIndicator;
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#trigger-typing-indicator}
  */
-export async function triggerTypingIndicator(bot: Bot, channelId: bigint): Promise<void> {
+export async function triggerTypingIndicator(bot: Bot, channelId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(bot.rest, "POST", bot.constants.routes.CHANNEL_TYPING(channelId));
 }

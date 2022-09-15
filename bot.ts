@@ -67,7 +67,7 @@ import {
   DiscordStickerPack,
   DiscordTemplate,
 } from "./types/discord.ts";
-import { Errors, GatewayDispatchEventNames, GatewayIntents } from "./types/shared.ts";
+import { BigString, Errors, GatewayDispatchEventNames, GatewayIntents } from "./types/shared.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.ts";
 import { calculateShardId } from "./util/calculateShardId.ts";
 import { Collection } from "./util/collection.ts";
@@ -432,7 +432,7 @@ export interface Transformers {
     interactionResponse: (bot: Bot, payload: InteractionResponse) => DiscordInteractionResponse;
     attachment: (bot: Bot, payload: Attachment) => DiscordAttachment;
   };
-  snowflake: (snowflake: string) => bigint;
+  snowflake: (snowflake: BigString) => bigint;
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
   automodRule: (bot: Bot, payload: DiscordAutoModerationRule) => AutoModerationRule;
   automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution) => AutoModerationActionExecution;

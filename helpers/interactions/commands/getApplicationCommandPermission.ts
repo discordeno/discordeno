@@ -1,6 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { ApplicationCommandPermission } from "../../../transformers/applicationCommandPermission.ts";
 import { DiscordGuildApplicationCommandPermissions } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Gets the permissions of a guild application command.
@@ -14,8 +15,8 @@ import { DiscordGuildApplicationCommandPermissions } from "../../../types/discor
  */
 export async function getApplicationCommandPermission(
   bot: Bot,
-  guildId: bigint,
-  commandId: bigint,
+  guildId: BigString,
+  commandId: BigString,
 ): Promise<ApplicationCommandPermission> {
   const result = await bot.rest.runMethod<DiscordGuildApplicationCommandPermissions>(
     bot.rest,

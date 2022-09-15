@@ -1,15 +1,15 @@
 import type { Bot } from "../../../bot.ts";
-import { ScheduledEvent, TargetTypes, User } from "../../../mod.ts";
+import { BigString, ScheduledEvent, TargetTypes, User } from "../../../mod.ts";
 import { DiscordInviteMetadata } from "../../../types/discord.ts";
 
 export type BaseInvite = {
   code: string;
-  guildId?: bigint;
-  channelId?: bigint;
+  guildId?: BigString;
+  channelId?: BigString;
   inviter?: User;
   targetType?: TargetTypes;
   targetUser?: User;
-  targetApplicationId?: bigint;
+  targetApplicationId?: BigString;
   approximatePresenceCount?: number;
   approximateMemberCount?: number;
   expiresAt?: number;
@@ -66,5 +66,5 @@ export interface GetInvite {
   /** Whether the invite should contain the expiration date */
   withExpiration?: boolean;
   /** the guild scheduled event to include with the invite */
-  scheduledEventId?: bigint;
+  scheduledEventId?: BigString;
 }

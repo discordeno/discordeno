@@ -1,6 +1,6 @@
 import type { Bot } from "../../../bot.ts";
 import { ApplicationCommand } from "../../../transformers/applicationCommand.ts";
-import { CreateApplicationCommand, DiscordApplicationCommand } from "../../../types/mod.ts";
+import { BigString, CreateApplicationCommand, DiscordApplicationCommand } from "../../../types/mod.ts";
 
 /**
  * Edits a global application command.
@@ -14,7 +14,7 @@ import { CreateApplicationCommand, DiscordApplicationCommand } from "../../../ty
  */
 export async function editGlobalApplicationCommand(
   bot: Bot,
-  commandId: bigint,
+  commandId: BigString,
   options: CreateApplicationCommand,
 ): Promise<ApplicationCommand> {
   const result = await bot.rest.runMethod<DiscordApplicationCommand>(

@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Deletes a webhook.
@@ -13,6 +14,6 @@ import type { Bot } from "../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/webhook#delete-webhook}
  */
-export async function deleteWebhook(bot: Bot, webhookId: bigint, reason?: string): Promise<void> {
+export async function deleteWebhook(bot: Bot, webhookId: BigString, reason?: string): Promise<void> {
   return await bot.rest.runMethod<void>(bot.rest, "DELETE", bot.constants.routes.WEBHOOK_ID(webhookId), { reason });
 }

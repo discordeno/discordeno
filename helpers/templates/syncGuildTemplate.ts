@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Template } from "../../transformers/template.ts";
 import { DiscordTemplate } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Synchronises a template with the current state of a guild.
@@ -16,7 +17,7 @@ import { DiscordTemplate } from "../../types/discord.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
  */
-export async function syncGuildTemplate(bot: Bot, guildId: bigint, templateCode: string): Promise<Template> {
+export async function syncGuildTemplate(bot: Bot, guildId: BigString, templateCode: string): Promise<Template> {
   const result = await bot.rest.runMethod<DiscordTemplate>(
     bot.rest,
     "PUT",

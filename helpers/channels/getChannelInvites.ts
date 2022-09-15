@@ -1,6 +1,6 @@
 import type { Bot } from "../../bot.ts";
 import { DiscordInviteMetadata } from "../../types/discord.ts";
-import { TargetTypes } from "../../types/shared.ts";
+import { BigString, TargetTypes } from "../../types/shared.ts";
 import { Collection } from "../../util/collection.ts";
 import { InviteMetadata } from "../guilds/invites/mod.ts";
 
@@ -18,7 +18,7 @@ import { InviteMetadata } from "../guilds/invites/mod.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#get-channel-invites}
  */
-export async function getChannelInvites(bot: Bot, channelId: bigint): Promise<Collection<string, InviteMetadata>> {
+export async function getChannelInvites(bot: Bot, channelId: BigString): Promise<Collection<string, InviteMetadata>> {
   const results = await bot.rest.runMethod<DiscordInviteMetadata[]>(
     bot.rest,
     "GET",

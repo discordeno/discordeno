@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Template } from "../../transformers/template.ts";
 import { DiscordTemplate } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Creates a template from a guild.
@@ -17,7 +18,7 @@ import { DiscordTemplate } from "../../types/discord.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-template#create-guild-template}
  */
-export async function createGuildTemplate(bot: Bot, guildId: bigint, options: CreateTemplate): Promise<Template> {
+export async function createGuildTemplate(bot: Bot, guildId: BigString, options: CreateTemplate): Promise<Template> {
   if (options.name.length < 1 || options.name.length > 100) {
     throw new Error("The name can only be in between 1-100 characters.");
   }
