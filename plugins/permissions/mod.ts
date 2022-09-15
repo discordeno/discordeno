@@ -7,6 +7,7 @@ import { integrations } from "./src/integrations/mod.ts";
 import { members } from "./src/members/mod.ts";
 import { messages } from "./src/messages/mod.ts";
 import { roles } from "./src/roles/mod.ts";
+import { stickers } from "./src/stickers/mod.ts";
 import { webhooks } from "./src/webhooks/mod.ts";
 
 // PLUGINS MUST TAKE A BOT ARGUMENT WHICH WILL BE MODIFIED
@@ -26,6 +27,7 @@ export function enablePermissionsPlugin<B extends BotWithCache = BotWithCache>(b
   members(bot);
   messages(bot);
   roles(bot);
+  stickers(bot);
   webhooks(bot);
 
   // PLUGINS MUST RETURN THE BOT
