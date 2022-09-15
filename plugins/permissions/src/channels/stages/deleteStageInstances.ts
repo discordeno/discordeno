@@ -6,8 +6,8 @@ export function deleteStageInstance(bot: BotWithCache) {
 
   bot.helpers.deleteStageInstance = async function (channelId) {
     const channel = bot.channels.get(channelId);
-    if (channel) {
-      if (channel.type !== ChannelTypes.GuildStageVoice) throw new Error("Channel must be a stage voice channel");
+    if (channel && channel.type !== ChannelTypes.GuildStageVoice) {
+      throw new Error("Channel must be a stage voice channel");
     }
     requireBotChannelPermissions(bot, channelId, [
       "VIEW_CHANNEL",

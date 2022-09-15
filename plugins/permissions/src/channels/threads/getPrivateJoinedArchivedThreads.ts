@@ -7,11 +7,14 @@ export function getPrivateJoinedArchivedThreads(bot: BotWithCache) {
     const channel = bot.channels.get(channelId);
 
     if (channel) {
-      if (![ChannelTypes.GuildText, ChannelTypes.GuildAnnouncement, ChannelTypes.GuildForum].includes(channel.type)) {
+      const isThreadParent = [ChannelTypes.GuildText, ChannelTypes.GuildAnnouncement, ChannelTypes.GuildForum]
+        .includes(channel.type);
+      if (!isThreadParent) {
         throw new Error("Channel must be a text channel, a forum channel, or an announcement channel");
       }
-      requireBotChannelPermissions(bot, channel, ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]);
     }
+    requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]);
+
     return await getPrivateJoinedArchivedThreads(channelId, options);
   };
 }

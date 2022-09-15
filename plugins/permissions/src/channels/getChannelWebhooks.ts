@@ -7,7 +7,8 @@ export function getChannelWebhooks(bot: BotWithCache) {
   bot.helpers.getChannelWebhooks = async function (channelId) {
     const channel = bot.channels.get(channelId);
     if (channel) {
-      if ([ChannelTypes.GuildAnnouncement, ChannelTypes.GuildText].includes(channel.type)) {
+      const isWebhookParent = [ChannelTypes.GuildAnnouncement, ChannelTypes.GuildText].includes(channel.type);
+      if (!isWebhookParent) {
         throw new Error("Target channel must be a text channel or an announcement channel");
       }
       requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "MANAGE_WEBHOOKS"]);

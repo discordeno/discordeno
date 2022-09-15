@@ -6,8 +6,8 @@ export function createStageInstance(bot: BotWithCache) {
 
   bot.helpers.createStageInstance = async function (options) {
     const channel = bot.channels.get(options.channelId);
-    if (channel) {
-      if (channel.type !== ChannelTypes.GuildStageVoice) throw new Error("Channel must be a stage voice channel");
+    if (channel && channel.type !== ChannelTypes.GuildStageVoice) {
+      throw new Error("Channel must be a stage voice channel");
     }
 
     const perms: PermissionStrings[] = ["VIEW_CHANNEL", "CONNECT", "MANAGE_CHANNELS", "MUTE_MEMBERS", "MOVE_MEMBERS"];

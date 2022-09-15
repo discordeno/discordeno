@@ -10,8 +10,11 @@ export function followAnnouncementChannel(bot: BotWithCache) {
       throw new Error("Source channel must be an announcement channel");
     }
     const targetChannel = bot.channels.get(targetChannelId);
-    if (targetChannel && [ChannelTypes.GuildAnnouncement, ChannelTypes.GuildText].includes(targetChannel.type)) {
-      throw new Error("Target channel must be a text channel or an announcement channel");
+    if (targetChannel) {
+      const isWebhookParent = [ChannelTypes.GuildAnnouncement, ChannelTypes.GuildText].includes(targetChannel.type);
+      if (!isWebhookParent) {
+        throw new Error("Target channel must be a text channel or an announcement channel");
+      }
     }
     requireBotChannelPermissions(bot, sourceChannelId, ["VIEW_CHANNEL"]);
     requireBotChannelPermissions(bot, targetChannelId, ["VIEW_CHANNEL", "MANAGE_WEBHOOKS"]);

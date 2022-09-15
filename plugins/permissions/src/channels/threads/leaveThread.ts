@@ -8,15 +8,15 @@ export function leaveThread(bot: BotWithCache) {
     const channel = bot.channels.get(threadId);
 
     if (channel) {
-      if (
-        ![ChannelTypes.PublicThread, ChannelTypes.PrivateThread, ChannelTypes.AnnouncementThread].includes(channel.type)
-      ) {
-        throw new Error("Channel must be a thread channel");
-      }
+      const isThread = ![ChannelTypes.PublicThread, ChannelTypes.PrivateThread, ChannelTypes.AnnouncementThread]
+        .includes(channel.type);
+
+      if (isThread) throw new Error("Channel must be a thread channel");
 
       if (channel.archived) throw new Error("You can not leave an archived channel.");
     }
     requireBotChannelPermissions(bot, threadId, ["VIEW_CHANNEL"]);
+
     return await leaveThread(threadId);
   };
 }
