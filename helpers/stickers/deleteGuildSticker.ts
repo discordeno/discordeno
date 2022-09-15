@@ -2,7 +2,7 @@ import { Bot } from "../../bot.ts";
 import { Sticker } from "../../transformers/sticker.ts";
 
 /**
- * Create a new sticker for the guild.
+ * Delete a new sticker for the guild.
  *
  * @param bot The bot instance to use to make the request.
  * @param guildId The ID of the guild to get
@@ -14,7 +14,7 @@ import { Sticker } from "../../transformers/sticker.ts";
  * Every guilds has five free sticker slots by default, and each Boost level will grant access to more slots.
  * Lottie stickers can only be uploaded on guilds that have either the `VERIFIED` and/or the `PARTNERED` guild feature.
  *
- * @see {@link https://discord.com/developers/docs/resources/sticker#get-guild-sticker}
+ * @see {@link https://discord.com/developers/docs/resources/sticker#delete-guild-sticker}
  */
 export async function deleteGuildSticker(
   bot: Bot,

@@ -15,7 +15,7 @@ import { FileContent, WithReason } from "../../types/discordeno.ts";
  * Every guilds has five free sticker slots by default, and each Boost level will grant access to more slots.
  * Lottie stickers can only be uploaded on guilds that have either the `VERIFIED` and/or the `PARTNERED` guild feature.
  *
- * @see {@link https://discord.com/developers/docs/resources/sticker#get-guild-sticker}
+ * @see {@link https://discord.com/developers/docs/resources/sticker#create-guild-sticker}
  */
 export async function createGuildSticker(
   bot: Bot,
