@@ -4,7 +4,7 @@ import { requireBotChannelPermissions } from "../permissions.ts";
 export function editChannel(bot: BotWithCache) {
   const editChannel = bot.helpers.editChannel;
 
-  bot.helpers.editChannel = async function (channelId, options, reason) {
+  bot.helpers.editChannel = async function (channelId, options) {
     const channel = bot.channels.get(channelId);
 
     if (channel?.guildId) {
@@ -71,6 +71,6 @@ export function editChannel(bot: BotWithCache) {
       requireBotChannelPermissions(bot, channel, requiredPerms);
     }
 
-    return await editChannel(channelId, options, reason);
+    return await editChannel(channelId, options);
   };
 }
