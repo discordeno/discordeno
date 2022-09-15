@@ -4,7 +4,7 @@ import { requireBotGuildPermissions } from "../permissions.ts";
 export function createChannel(bot: BotWithCache) {
   const createChannel = bot.helpers.createChannel;
 
-  bot.helpers.createChannel = async function (guildId, options, reason) {
+  bot.helpers.createChannel = async function (guildId, options) {
     const guild = bot.guilds.get(guildId);
 
     if (guild) {
@@ -47,6 +47,6 @@ export function createChannel(bot: BotWithCache) {
       requireBotGuildPermissions(bot, guild, requiredPerms);
     }
 
-    return await createChannel(guildId, options, reason);
+    return await createChannel(guildId, options);
   };
 }
