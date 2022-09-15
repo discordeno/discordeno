@@ -1,4 +1,4 @@
-import { BotWithCache } from "../../deps.ts";
+import { BotWithCache, ChannelTypes, PermissionStrings } from "../../deps.ts";
 import { requireBotChannelPermissions } from "../permissions.ts";
 
 export function deleteChannelPermissionOverride(bot: BotWithCache) {
@@ -7,7 +7,14 @@ export function deleteChannelPermissionOverride(bot: BotWithCache) {
   bot.helpers.deleteChannelPermissionOverride = async function (channelId, overwriteId) {
     const channel = bot.channels.get(channelId);
 
-    if (channel?.guildId) requireBotChannelPermissions(bot, channelId, ["MANAGE_ROLES"]);
+    if (channel?.guildId) {
+      const perms: PermissionStrings[] = ["VIEW_CHANNEL", "MANAGE_ROLES"];
+      const isVoice = [ChannelTypes.GuildVoice, ChannelTypes.GuildStageVoice].includes(channel.type);
+
+      if (isVoice) perms.push("CONNECT");
+
+      requireBotChannelPermissions(bot, channelId, perms);
+    }
 
     return await deleteChannelPermissionOverride(channelId, overwriteId);
   };

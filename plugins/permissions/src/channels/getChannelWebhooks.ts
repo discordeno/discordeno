@@ -1,4 +1,4 @@
-import { BotWithCache } from "../../deps.ts";
+import { BotWithCache, ChannelTypes } from "../../deps.ts";
 import { requireBotChannelPermissions } from "../permissions.ts";
 
 export function getChannelWebhooks(bot: BotWithCache) {
@@ -6,7 +6,13 @@ export function getChannelWebhooks(bot: BotWithCache) {
 
   bot.helpers.getChannelWebhooks = async function (channelId) {
     const channel = bot.channels.get(channelId);
-    if (channel?.guildId) requireBotChannelPermissions(bot, channelId, ["MANAGE_WEBHOOKS"]);
+    if (channel) {
+      const isWebhookParent = [ChannelTypes.GuildAnnouncement, ChannelTypes.GuildText].includes(channel.type);
+      if (!isWebhookParent) {
+        throw new Error("Target channel must be a text channel or an announcement channel");
+      }
+      requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "MANAGE_WEBHOOKS"]);
+    }
 
     return await getChannelWebhooks(channelId);
   };

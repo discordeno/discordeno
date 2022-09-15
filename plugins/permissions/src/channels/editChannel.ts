@@ -4,7 +4,7 @@ import { requireBotChannelPermissions } from "../permissions.ts";
 export function editChannel(bot: BotWithCache) {
   const editChannel = bot.helpers.editChannel;
 
-  bot.helpers.editChannel = async function (channelId, options, reason) {
+  bot.helpers.editChannel = async function (channelId, options) {
     const channel = bot.channels.get(channelId);
 
     if (channel?.guildId) {
@@ -20,10 +20,13 @@ export function editChannel(bot: BotWithCache) {
         }
       }
 
+      const perms: PermissionStrings[] = ["VIEW_CHANNEL"];
       const isThread = [ChannelTypes.AnnouncementThread, ChannelTypes.PublicThread, ChannelTypes.PrivateThread]
         .includes(channel.type);
+      const isVoice = [ChannelTypes.GuildVoice, ChannelTypes.GuildStageVoice].includes(channel.type);
 
-      const requiredPerms: PermissionStrings[] = [];
+      if (isVoice) perms.push("CONNECT");
+
       if (isThread) {
         if (options.invitable !== undefined && channel.type !== ChannelTypes.PrivateThread) {
           throw new Error("Invitable option is only allowed on private threads.");
@@ -31,16 +34,16 @@ export function editChannel(bot: BotWithCache) {
 
         // UNARCHIVING AN UNLOCKED CHANNEL SIMPLY REQUIRES SEND
         if (!channel.locked && options.archived === false) {
-          requiredPerms.push("SEND_MESSAGES");
+          perms.push("SEND_MESSAGES");
           // MORE THAN ARCHIVE WAS MODIFIED
-          if (Object.keys(options).length > 1) requiredPerms.push("MANAGE_THREADS");
+          if (Object.keys(options).length > 1) perms.push("MANAGE_THREADS");
         } else {
-          requiredPerms.push("MANAGE_THREADS");
+          perms.push("MANAGE_THREADS");
         }
       } else {
-        requiredPerms.push("MANAGE_CHANNELS");
+        perms.push("MANAGE_CHANNELS");
 
-        if (options.permissionOverwrites) requiredPerms.push("MANAGE_ROLES");
+        if (options.permissionOverwrites) perms.push("MANAGE_ROLES");
 
         if (options.type) {
           if ([ChannelTypes.GuildAnnouncement, ChannelTypes.GuildText].includes(options.type)) {
@@ -68,9 +71,9 @@ export function editChannel(bot: BotWithCache) {
         }
       }
 
-      requireBotChannelPermissions(bot, channel, requiredPerms);
+      requireBotChannelPermissions(bot, channel, perms);
     }
 
-    return await editChannel(channelId, options, reason);
+    return await editChannel(channelId, options);
   };
 }

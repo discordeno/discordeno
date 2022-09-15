@@ -1,11 +1,7 @@
 import { Bot, Channel, CreateGuildChannel, separateOverwrites } from "../deps.ts";
 
 /** Create a copy of a channel */
-export async function cloneChannel(
-  bot: Bot,
-  channel: Channel,
-  reason?: string,
-) {
+export async function cloneChannel(bot: Bot, channel: Channel, reason?: string) {
   if (!channel.guildId) {
     throw new Error(`Cannot clone a channel outside a guild`);
   }
@@ -30,12 +26,9 @@ export async function cloneChannel(
         deny: bot.utils.calculatePermissions(BigInt(deny)),
       };
     }),
+    reason,
   };
 
   //Create the channel (also handles permissions)
-  return await bot.helpers.createChannel(
-    channel.guildId!,
-    createChannelOptions,
-    reason,
-  );
+  return await bot.helpers.createChannel(channel.guildId!, createChannelOptions);
 }
