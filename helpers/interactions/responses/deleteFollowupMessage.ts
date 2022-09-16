@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Deletes a follow-up message to an interaction.
@@ -16,7 +17,7 @@ import type { Bot } from "../../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message}
  */
-export async function deleteFollowupMessage(bot: Bot, token: string, messageId: bigint): Promise<void> {
+export async function deleteFollowupMessage(bot: Bot, token: string, messageId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     "DELETE",

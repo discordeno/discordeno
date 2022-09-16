@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 export type VanityUrl = {
   code: string | null;
@@ -21,7 +22,7 @@ export type VanityUrl = {
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-vanity-url}
  */
-export async function getVanityUrl(bot: Bot, guildId: bigint): Promise<VanityUrl> {
+export async function getVanityUrl(bot: Bot, guildId: BigString): Promise<VanityUrl> {
   return await bot.rest.runMethod<VanityUrl>(
     bot.rest,
     "GET",

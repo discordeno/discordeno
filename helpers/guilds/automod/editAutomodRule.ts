@@ -1,5 +1,5 @@
 import { Bot } from "../../../bot.ts";
-import { WithReason } from "../../../mod.ts";
+import { BigString, WithReason } from "../../../mod.ts";
 import { AutoModerationRule } from "../../../transformers/automodRule.ts";
 import {
   AutoModerationActionType,
@@ -26,8 +26,8 @@ import {
  */
 export async function editAutomodRule(
   bot: Bot,
-  guildId: bigint,
-  ruleId: bigint,
+  guildId: BigString,
+  ruleId: BigString,
   options: Partial<EditAutoModerationRuleOptions>,
 ): Promise<AutoModerationRule> {
   const result = await bot.rest.runMethod<DiscordAutoModerationRule>(
@@ -86,7 +86,7 @@ export interface EditAutoModerationRuleOptions extends WithReason {
     /** additional metadata needed during execution for this specific action type */
     metadata: {
       /** The id of channel to which user content should be logged. Only in SendAlertMessage */
-      channelId?: bigint;
+      channelId?: BigString;
       /** Timeout duration in seconds. Only supported for TriggerType.Keyword */
       durationSeconds?: number;
     };
@@ -94,7 +94,7 @@ export interface EditAutoModerationRuleOptions extends WithReason {
   /** Whether the rule should be enabled. */
   enabled?: boolean;
   /** The role ids that should not be effected by the rule */
-  exemptRoles?: bigint[];
+  exemptRoles?: BigString[];
   /** The channel ids that should not be effected by the rule. */
-  exemptChannels?: bigint[];
+  exemptChannels?: BigString[];
 }

@@ -8,7 +8,7 @@ import { User } from "../../transformers/member.ts";
 import { ScheduledEvent } from "../../transformers/scheduledEvent.ts";
 import { Webhook } from "../../transformers/webhook.ts";
 import { DiscordAuditLog } from "../../types/discord.ts";
-import { AuditLogEvents } from "../../types/shared.ts";
+import { AuditLogEvents, BigString } from "../../types/shared.ts";
 
 export type AuditLog = {
   auditLogEntries: AuditLogEntry[];
@@ -36,7 +36,7 @@ export type AuditLog = {
  *
  * @see {@link https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log}
  */
-export async function getAuditLog(bot: Bot, guildId: bigint, options?: GetGuildAuditLog): Promise<AuditLog> {
+export async function getAuditLog(bot: Bot, guildId: BigString, options?: GetGuildAuditLog): Promise<AuditLog> {
   if (options?.limit) {
     options.limit = options.limit >= 1 && options.limit <= 100 ? options.limit : 50;
   }
@@ -47,6 +47,7 @@ export async function getAuditLog(bot: Bot, guildId: bigint, options?: GetGuildA
     bot.constants.routes.GUILD_AUDIT_LOGS(guildId, options),
   );
 
+  const id = bot.transformers.snowflake(guildId);
   return {
     auditLogEntries: result.audit_log_entries.map((entry) => bot.transformers.auditLogEntry(bot, entry)),
     autoModerationRules: result.auto_moderation_rules?.map((rule) => bot.transformers.automodRule(bot, rule)),
@@ -81,7 +82,7 @@ export async function getAuditLog(bot: Bot, guildId: bigint, options?: GetGuildA
         }
         : undefined,
     })),
-    threads: result.threads.map((thread) => bot.transformers.channel(bot, { channel: thread, guildId })),
+    threads: result.threads.map((thread) => bot.transformers.channel(bot, { channel: thread, guildId: id })),
     users: result.users.map((user) => bot.transformers.user(bot, user)),
     webhooks: result.webhooks.map((hook) => bot.transformers.webhook(bot, hook)),
     applicationCommands: result.application_commands.map((applicationCommand) =>
@@ -93,11 +94,11 @@ export async function getAuditLog(bot: Bot, guildId: bigint, options?: GetGuildA
 /** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
 export interface GetGuildAuditLog {
   /** Entries from a specific user ID */
-  userId?: bigint | string;
+  userId?: BigString | string;
   /** Entries for a specific audit log event */
   actionType?: AuditLogEvents;
   /** Entries that preceded a specific audit log entry ID */
-  before?: bigint | string;
+  before?: BigString | string;
   /** Maximum number of entries (between 1-100) to return, defaults to 50 */
   limit?: number;
 }

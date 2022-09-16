@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 export const swapChannels = editChannelPositions;
 
@@ -18,7 +19,7 @@ export const swapChannels = editChannelPositions;
  */
 export async function editChannelPositions(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   channelPositions: ModifyGuildChannelPositions[],
 ): Promise<void> {
   if (!channelPositions.length) {

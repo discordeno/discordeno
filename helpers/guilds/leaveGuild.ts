@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Leaves a guild.
@@ -11,6 +12,6 @@ import type { Bot } from "../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/user#leave-guild}
  */
-export async function leaveGuild(bot: Bot, guildId: bigint): Promise<void> {
+export async function leaveGuild(bot: Bot, guildId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(bot.rest, "DELETE", bot.constants.routes.GUILD_LEAVE(guildId));
 }

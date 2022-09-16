@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { BigString } from "../../../types/shared.ts";
 import { processReactionString } from "./getReactions.ts";
 
 /**
@@ -20,8 +21,8 @@ import { processReactionString } from "./getReactions.ts";
  */
 export async function deleteReactionsEmoji(
   bot: Bot,
-  channelId: bigint,
-  messageId: bigint,
+  channelId: BigString,
+  messageId: BigString,
   reaction: string,
 ): Promise<void> {
   reaction = processReactionString(reaction);

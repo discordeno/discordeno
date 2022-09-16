@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Template } from "../../transformers/template.ts";
 import { DiscordTemplate } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Edits a template's settings.
@@ -20,7 +21,7 @@ import { DiscordTemplate } from "../../types/discord.ts";
  */
 export async function editGuildTemplate(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   templateCode: string,
   options: ModifyGuildTemplate,
 ): Promise<Template> {

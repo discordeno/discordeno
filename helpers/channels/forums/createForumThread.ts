@@ -2,7 +2,7 @@ import type { Bot } from "../../../bot.ts";
 import { Channel } from "../../../transformers/channel.ts";
 import { Embed } from "../../../transformers/embed.ts";
 import { DiscordChannel } from "../../../types/discord.ts";
-import { AllowedMentions, FileContent, MessageComponents, WithReason } from "../../../types/mod.ts";
+import { AllowedMentions, BigString, FileContent, MessageComponents, WithReason } from "../../../types/mod.ts";
 
 /**
  * Creates a new thread in a forum channel, and sends a message within the created thread.
@@ -24,7 +24,7 @@ import { AllowedMentions, FileContent, MessageComponents, WithReason } from "../
  */
 export async function createForumThread(
   bot: Bot,
-  channelId: bigint,
+  channelId: BigString,
   options: CreateForumPostWithMessage,
 ): Promise<Channel> {
   const result = await bot.rest.runMethod<DiscordChannel>(

@@ -1,6 +1,6 @@
 import type { Bot } from "../../../bot.ts";
 import { ApplicationCommand } from "../../../transformers/applicationCommand.ts";
-import { CreateApplicationCommand, DiscordApplicationCommand } from "../../../types/mod.ts";
+import { BigString, CreateApplicationCommand, DiscordApplicationCommand } from "../../../types/mod.ts";
 
 // TODO: Swap `commandId` and `guildId` parameters.
 
@@ -17,8 +17,8 @@ import { CreateApplicationCommand, DiscordApplicationCommand } from "../../../ty
  */
 export async function editGuildApplicationCommand(
   bot: Bot,
-  commandId: bigint,
-  guildId: bigint,
+  commandId: BigString,
+  guildId: BigString,
   options: CreateApplicationCommand,
 ): Promise<ApplicationCommand> {
   const result = await bot.rest.runMethod<DiscordApplicationCommand>(

@@ -1,7 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { ApplicationCommandPermission } from "../../../transformers/applicationCommandPermission.ts";
 import { DiscordGuildApplicationCommandPermissions } from "../../../types/discord.ts";
-import { ApplicationCommandPermissionTypes } from "../../../types/shared.ts";
+import { ApplicationCommandPermissionTypes, BigString } from "../../../types/shared.ts";
 
 // TODO: Make `options` into an object with a `permissions` field.
 
@@ -22,8 +22,8 @@ import { ApplicationCommandPermissionTypes } from "../../../types/shared.ts";
  */
 export async function editApplicationCommandPermissions(
   bot: Bot,
-  guildId: bigint,
-  commandId: bigint,
+  guildId: BigString,
+  commandId: BigString,
   /** Bearer token which has the `applications.commands.permissions.update` scope and also access to this guild.  */
   bearerToken: string,
   options: ApplicationCommandPermissions[],

@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Emoji } from "../../transformers/emoji.ts";
 import { DiscordEmoji } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 import { Collection } from "../../util/collection.ts";
 
 /**
@@ -12,7 +13,7 @@ import { Collection } from "../../util/collection.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/emoji#list-guild-emojis}
  */
-export async function getEmojis(bot: Bot, guildId: bigint): Promise<Collection<bigint, Emoji>> {
+export async function getEmojis(bot: Bot, guildId: BigString): Promise<Collection<bigint, Emoji>> {
   const results = await bot.rest.runMethod<DiscordEmoji[]>(
     bot.rest,
     "GET",
