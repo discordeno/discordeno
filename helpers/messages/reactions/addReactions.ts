@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { BigString } from "../../../types/shared.ts";
 
 // TODO: Improve typing of the `reactions` parameter.
 
@@ -23,8 +24,8 @@ import type { Bot } from "../../../bot.ts";
  */
 export async function addReactions(
   bot: Bot,
-  channelId: bigint,
-  messageId: bigint,
+  channelId: BigString,
+  messageId: BigString,
   reactions: string[],
   ordered = false,
 ): Promise<void> {

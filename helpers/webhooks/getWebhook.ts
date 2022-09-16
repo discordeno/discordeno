@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Webhook } from "../../transformers/webhook.ts";
 import { DiscordWebhook } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Gets a webhook by its ID.
@@ -14,7 +15,7 @@ import { DiscordWebhook } from "../../types/discord.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook}
  */
-export async function getWebhook(bot: Bot, webhookId: bigint): Promise<Webhook> {
+export async function getWebhook(bot: Bot, webhookId: BigString): Promise<Webhook> {
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
     "GET",

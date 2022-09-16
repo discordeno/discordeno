@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Deletes an application command registered globally.
@@ -8,7 +9,7 @@ import type { Bot } from "../../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/interactions/application-commands#delete-global-application-command}
  */
-export async function deleteGlobalApplicationCommand(bot: Bot, commandId: bigint): Promise<void> {
+export async function deleteGlobalApplicationCommand(bot: Bot, commandId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     "DELETE",

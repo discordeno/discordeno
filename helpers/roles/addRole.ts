@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Adds a role to a member.
@@ -17,9 +18,9 @@ import type { Bot } from "../../bot.ts";
  */
 export async function addRole(
   bot: Bot,
-  guildId: bigint,
-  userId: bigint,
-  roleId: bigint,
+  guildId: BigString,
+  userId: BigString,
+  roleId: BigString,
   reason?: string,
 ): Promise<void> {
   return await bot.rest.runMethod<void>(

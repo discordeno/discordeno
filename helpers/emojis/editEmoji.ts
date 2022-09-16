@@ -1,5 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import { WithReason } from "../../mod.ts";
+import { BigString, WithReason } from "../../mod.ts";
 import { Emoji } from "../../transformers/emoji.ts";
 import { DiscordEmoji } from "../../types/discord.ts";
 
@@ -19,7 +19,12 @@ import { DiscordEmoji } from "../../types/discord.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/emoji#modify-guild-emoji}
  */
-export async function editEmoji(bot: Bot, guildId: bigint, id: bigint, options: ModifyGuildEmoji): Promise<Emoji> {
+export async function editEmoji(
+  bot: Bot,
+  guildId: BigString,
+  id: BigString,
+  options: ModifyGuildEmoji,
+): Promise<Emoji> {
   const result = await bot.rest.runMethod<DiscordEmoji>(
     bot.rest,
     "PATCH",
@@ -40,5 +45,5 @@ export interface ModifyGuildEmoji extends WithReason {
   /** Name of the emoji */
   name?: string;
   /** Roles allowed to use this emoji */
-  roles?: bigint[] | null;
+  roles?: BigString[] | null;
 }

@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Guild } from "../../transformers/guild.ts";
 import { DiscordGuild } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Gets a guild by its ID.
@@ -14,7 +15,7 @@ import { DiscordGuild } from "../../types/discord.ts";
  */
 export async function getGuild(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   options: { counts?: boolean } = {
     counts: true,
   },
@@ -27,6 +28,6 @@ export async function getGuild(
 
   return bot.transformers.guild(bot, {
     guild: result,
-    shardId: bot.utils.calculateShardId(bot.gateway, guildId),
+    shardId: bot.utils.calculateShardId(bot.gateway, bot.transformers.snowflake(guildId)),
   });
 }

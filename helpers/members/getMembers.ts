@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Member } from "../../transformers/member.ts";
 import { DiscordMemberWithUser } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 import { Collection } from "../../util/collection.ts";
 
 // TODO: make options optional
@@ -26,7 +27,7 @@ import { Collection } from "../../util/collection.ts";
  */
 export async function getMembers(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   options: ListGuildMembers,
 ): Promise<Collection<bigint, Member>> {
   const results = await bot.rest.runMethod<DiscordMemberWithUser[]>(
@@ -35,9 +36,11 @@ export async function getMembers(
     bot.constants.routes.GUILD_MEMBERS(guildId, options),
   );
 
+  const id = bot.transformers.snowflake(guildId);
+
   return new Collection(
     results.map((result) => {
-      const member = bot.transformers.member(bot, result, guildId, bot.transformers.snowflake(result.user.id));
+      const member = bot.transformers.member(bot, result, id, bot.transformers.snowflake(result.user.id));
       return [member.id, member];
     }),
   );

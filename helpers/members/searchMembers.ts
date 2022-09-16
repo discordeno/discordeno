@@ -4,6 +4,7 @@ import type { SearchMembers } from "../../types/discordeno.ts";
 import { Bot } from "../../bot.ts";
 import { Member } from "../../transformers/member.ts";
 import { Collection } from "../../util/collection.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Gets the list of members whose usernames or nicknames start with a provided string.
@@ -18,7 +19,7 @@ import { Collection } from "../../util/collection.ts";
  */
 export async function searchMembers(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   query: string,
   options?: Omit<SearchMembers, "query">,
 ): Promise<Collection<bigint, Member>> {
@@ -35,9 +36,11 @@ export async function searchMembers(
     bot.constants.routes.GUILD_MEMBERS_SEARCH(guildId, query, options),
   );
 
+  const id = bot.transformers.snowflake(guildId);
+
   return new Collection(
     results.map((result) => {
-      const member = bot.transformers.member(bot, result, guildId, bot.transformers.snowflake(result.user.id));
+      const member = bot.transformers.member(bot, result, id, bot.transformers.snowflake(result.user.id));
       return [member.id, member];
     }),
   );

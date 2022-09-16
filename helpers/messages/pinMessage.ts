@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Pins a message in a channel.
@@ -18,7 +19,7 @@ import type { Bot } from "../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#pin-message}
  */
-export async function pinMessage(bot: Bot, channelId: bigint, messageId: bigint, reason?: string): Promise<void> {
+export async function pinMessage(bot: Bot, channelId: BigString, messageId: BigString, reason?: string): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     "PUT",

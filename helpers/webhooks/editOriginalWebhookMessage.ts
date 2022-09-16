@@ -1,7 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
-import { InteractionCallbackData, InteractionResponseTypes } from "../../types/mod.ts";
+import { BigString, InteractionCallbackData, InteractionResponseTypes } from "../../types/mod.ts";
 
 /**
  * Edits the original webhook message.
@@ -19,9 +19,9 @@ import { InteractionCallbackData, InteractionResponseTypes } from "../../types/m
  */
 export async function editOriginalWebhookMessage(
   bot: Bot,
-  webhookId: bigint,
+  webhookId: BigString,
   token: string,
-  options: InteractionCallbackData & { threadId?: bigint },
+  options: InteractionCallbackData & { threadId?: BigString },
 ): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,

@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Gets a channel by its ID.
@@ -14,7 +15,7 @@ import { DiscordChannel } from "../../types/discord.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#get-channel}
  */
-export async function getChannel(bot: Bot, channelId: bigint): Promise<Channel> {
+export async function getChannel(bot: Bot, channelId: BigString): Promise<Channel> {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
     "GET",

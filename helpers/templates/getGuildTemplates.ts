@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Template } from "../../transformers/template.ts";
 import { DiscordTemplate } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 import { Collection } from "../../util/collection.ts";
 
 /**
@@ -15,7 +16,7 @@ import { Collection } from "../../util/collection.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
  */
-export async function getGuildTemplates(bot: Bot, guildId: bigint): Promise<Collection<string, Template>> {
+export async function getGuildTemplates(bot: Bot, guildId: BigString): Promise<Collection<string, Template>> {
   const results = await bot.rest.runMethod<DiscordTemplate[]>(
     bot.rest,
     "GET",

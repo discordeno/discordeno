@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { WelcomeScreen } from "../../transformers/welcomeScreen.ts";
 import { DiscordWelcomeScreen } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Gets the welcome screen for a guild.
@@ -15,7 +16,7 @@ import { DiscordWelcomeScreen } from "../../types/discord.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-welcome-screen}
  */
-export async function getWelcomeScreen(bot: Bot, guildId: bigint): Promise<WelcomeScreen> {
+export async function getWelcomeScreen(bot: Bot, guildId: BigString): Promise<WelcomeScreen> {
   const result = await bot.rest.runMethod<DiscordWelcomeScreen>(
     bot.rest,
     "GET",

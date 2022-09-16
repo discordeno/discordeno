@@ -1,5 +1,5 @@
 import type { Bot } from "../../../bot.ts";
-import { WithReason } from "../../../mod.ts";
+import { BigString, WithReason } from "../../../mod.ts";
 import { StageInstance } from "../../../transformers/stageInstance.ts";
 import { DiscordStageInstance } from "../../../types/discord.ts";
 
@@ -34,7 +34,7 @@ export async function createStageInstance(bot: Bot, options: CreateStageInstance
 }
 
 export interface CreateStageInstance extends WithReason {
-  channelId: bigint;
+  channelId: BigString;
   topic: string;
   /** Notify @everyone that the stage instance has started. Requires the MENTION_EVERYONE permission. */
   sendStartNotification?: boolean;

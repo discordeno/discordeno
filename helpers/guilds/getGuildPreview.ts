@@ -2,10 +2,10 @@ import type { Bot } from "../../bot.ts";
 import { Emoji } from "../../transformers/emoji.ts";
 import { Sticker } from "../../transformers/sticker.ts";
 import { DiscordGuildPreview } from "../../types/discord.ts";
-import { GuildFeatures } from "../../types/shared.ts";
+import { BigString, GuildFeatures } from "../../types/shared.ts";
 
 export type GuildPreview = {
-  id: bigint;
+  id: BigString;
   name?: string;
   icon?: string;
   splash?: string;
@@ -32,7 +32,7 @@ export type GuildPreview = {
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-preview}
  */
-export async function getGuildPreview(bot: Bot, guildId: bigint): Promise<GuildPreview> {
+export async function getGuildPreview(bot: Bot, guildId: BigString): Promise<GuildPreview> {
   const result = await bot.rest.runMethod<DiscordGuildPreview>(
     bot.rest,
     "GET",

@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Deletes a guild.
@@ -13,6 +14,6 @@ import type { Bot } from "../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild}
  */
-export async function deleteGuild(bot: Bot, guildId: bigint): Promise<void> {
+export async function deleteGuild(bot: Bot, guildId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(bot.rest, "DELETE", bot.constants.routes.GUILD(guildId));
 }
