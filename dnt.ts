@@ -19,6 +19,8 @@ await build({
             name: "WebSocket",
             exportName: "default",
           },
+          { name: "CloseEvent", typeOnly: true },
+          { name: "MessageEvent", typeOnly: true },
         ],
       },
     ],
