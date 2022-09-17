@@ -1,9 +1,9 @@
-import type { Bot, InteractionResponse } from "../deps.ts";
+import type { BigString, Bot, InteractionResponse } from "../deps.ts";
 
 /** sendInteractionResponse with ephemeral reply */
 export async function sendPrivateInteractionResponse(
   bot: Bot,
-  id: bigint,
+  id: BigString,
   token: string,
   options: InteractionResponse,
 ) {

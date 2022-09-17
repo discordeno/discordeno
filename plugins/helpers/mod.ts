@@ -1,6 +1,7 @@
 import { BotWithCache } from "../cache/src/addCacheCollections.ts";
 import {
   ApplicationCommandOptionChoice,
+  BigString,
   Bot,
   Channel,
   Collection,
