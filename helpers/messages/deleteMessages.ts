@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Deletes multiple messages from a channel.
@@ -18,8 +19,8 @@ import type { Bot } from "../../bot.ts";
  */
 export async function deleteMessages(
   bot: Bot,
-  channelId: bigint,
-  messageIds: bigint[],
+  channelId: BigString,
+  messageIds: BigString[],
   reason?: string,
 ): Promise<void> {
   if (messageIds.length < 2) {

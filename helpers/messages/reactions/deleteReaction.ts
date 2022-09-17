@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { BigString } from "../../../types/shared.ts";
 import { processReactionString } from "./getReactions.ts";
 
 // TODO: Improve typing of the `reaction` parameter.
@@ -20,8 +21,8 @@ import { processReactionString } from "./getReactions.ts";
  */
 export async function deleteOwnReaction(
   bot: Bot,
-  channelId: bigint,
-  messageId: bigint,
+  channelId: BigString,
+  messageId: BigString,
   reaction: string,
 ): Promise<void> {
   reaction = processReactionString(reaction);
@@ -53,9 +54,9 @@ export async function deleteOwnReaction(
  */
 export async function deleteUserReaction(
   bot: Bot,
-  channelId: bigint,
-  messageId: bigint,
-  userId: bigint,
+  channelId: BigString,
+  messageId: BigString,
+  userId: BigString,
   reaction: string,
 ): Promise<void> {
   reaction = processReactionString(reaction);

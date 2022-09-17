@@ -1,5 +1,5 @@
 import type { Bot } from "../../../bot.ts";
-import { WithReason } from "../../../mod.ts";
+import { BigString, WithReason } from "../../../mod.ts";
 import { StageInstance } from "../../../transformers/stageInstance.ts";
 import { DiscordStageInstance } from "../../../types/discord.ts";
 
@@ -19,7 +19,7 @@ import { DiscordStageInstance } from "../../../types/discord.ts";
  */
 export async function editStageInstance(
   bot: Bot,
-  channelId: bigint,
+  channelId: BigString,
   data: EditStageInstanceOptions,
 ): Promise<StageInstance> {
   const result = await bot.rest.runMethod<DiscordStageInstance>(

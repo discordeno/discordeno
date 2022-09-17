@@ -1,5 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import { WithReason } from "../../mod.ts";
+import { BigString, WithReason } from "../../mod.ts";
 import { Emoji } from "../../transformers/emoji.ts";
 import { DiscordEmoji } from "../../types/discord.ts";
 
@@ -20,7 +20,7 @@ import { DiscordEmoji } from "../../types/discord.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/emoji#create-guild-emoji}
  */
-export async function createEmoji(bot: Bot, guildId: bigint, options: CreateGuildEmoji): Promise<Emoji> {
+export async function createEmoji(bot: Bot, guildId: BigString, options: CreateGuildEmoji): Promise<Emoji> {
   if (options.image && !options.image.startsWith("data:image/")) {
     options.image = await bot.utils.urlToBase64(options.image);
   }
@@ -47,5 +47,5 @@ export interface CreateGuildEmoji extends WithReason {
   /** The 128x128 emoji image. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. */
   image: string;
   /** Roles allowed to use this emoji */
-  roles?: bigint[];
+  roles?: BigString[];
 }

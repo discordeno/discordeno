@@ -3,7 +3,7 @@ import { WithReason } from "../../mod.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
 import { OverwriteReadable } from "../../types/discordeno.ts";
-import { ChannelTypes } from "../../types/shared.ts";
+import { BigString, ChannelTypes } from "../../types/shared.ts";
 
 /**
  * Creates a channel within a guild.
@@ -24,7 +24,7 @@ import { ChannelTypes } from "../../types/shared.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-channel}
  */
-export async function createChannel(bot: Bot, guildId: bigint, options?: CreateGuildChannel): Promise<Channel> {
+export async function createChannel(bot: Bot, guildId: BigString, options?: CreateGuildChannel): Promise<Channel> {
   // BITRATE IS IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
   if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000;
 
@@ -55,7 +55,7 @@ export async function createChannel(bot: Bot, guildId: bigint, options?: CreateG
       : {},
   );
 
-  return bot.transformers.channel(bot, { channel: result, guildId });
+  return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(guildId) });
 }
 
 export interface CreateGuildChannel extends WithReason {
@@ -76,7 +76,7 @@ export interface CreateGuildChannel extends WithReason {
   /** The channel's permission overwrites */
   permissionOverwrites?: OverwriteReadable[];
   /** Id of the parent category for a channel */
-  parentId?: bigint;
+  parentId?: BigString;
   /** Whether the channel is nsfw */
   nsfw?: boolean;
   /** Default duration (in minutes) that clients (not the API) use for newly created threads in this channel, to determine when to automatically archive the thread after the last activity */

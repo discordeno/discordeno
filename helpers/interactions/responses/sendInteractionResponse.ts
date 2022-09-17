@@ -1,5 +1,6 @@
 import type { Bot } from "../../../bot.ts";
 import { InteractionResponse } from "../../../types/discordeno.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Sends a response to an interaction.
@@ -25,7 +26,7 @@ import { InteractionResponse } from "../../../types/discordeno.ts";
  */
 export async function sendInteractionResponse(
   bot: Bot,
-  interactionId: bigint,
+  interactionId: BigString,
   token: string,
   options: InteractionResponse,
 ): Promise<void> {

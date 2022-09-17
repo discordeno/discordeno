@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Builds a URL to the guild widget image stored in the Discord CDN.
@@ -8,7 +9,7 @@ import type { Bot } from "../../../bot.ts";
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource.
  */
-export function getWidgetImageURL(bot: Bot, guildId: bigint, options?: GetGuildWidgetImageQuery): string {
+export function getWidgetImageURL(bot: Bot, guildId: BigString, options?: GetGuildWidgetImageQuery): string {
   return bot.constants.routes.GUILD_WIDGET_IMAGE(guildId, options?.style);
 }
 

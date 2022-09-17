@@ -4,6 +4,7 @@ import { Embed } from "../../transformers/embed.ts";
 import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Edits a message.
@@ -25,8 +26,8 @@ import { AllowedMentions, FileContent, MessageComponents } from "../../types/dis
  */
 export async function editMessage(
   bot: Bot,
-  channelId: bigint,
-  messageId: bigint,
+  channelId: BigString,
+  messageId: BigString,
   options: EditMessage,
 ): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(

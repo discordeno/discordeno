@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { BigString } from "../../../types/shared.ts";
 
 export const updateBotVoiceState = editOwnVoiceState;
 
@@ -20,7 +21,7 @@ export const updateBotVoiceState = editOwnVoiceState;
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state}
  */
-export async function editOwnVoiceState(bot: Bot, guildId: bigint, options: EditOwnVoiceState): Promise<void> {
+export async function editOwnVoiceState(bot: Bot, guildId: BigString, options: EditOwnVoiceState): Promise<void> {
   return await bot.rest.runMethod<void>(bot.rest, "PATCH", bot.constants.routes.UPDATE_VOICE_STATE(guildId), {
     channel_id: options.channelId,
     suppress: options.suppress,
@@ -46,7 +47,7 @@ export async function editOwnVoiceState(bot: Bot, guildId: bigint, options: Edit
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state}
  */
-export async function editUserVoiceState(bot: Bot, guildId: bigint, options: EditUserVoiceState): Promise<void> {
+export async function editUserVoiceState(bot: Bot, guildId: BigString, options: EditUserVoiceState): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     "PATCH",
@@ -62,7 +63,7 @@ export async function editUserVoiceState(bot: Bot, guildId: bigint, options: Edi
 /** https://discord.com/developers/docs/resources/guild#update-current-user-voice-state */
 export interface EditOwnVoiceState {
   /** The id of the channel the user is currently in */
-  channelId: bigint;
+  channelId: BigString;
   /** Toggles the user's suppress state */
   suppress?: boolean;
   /** Sets the user's request to speak */
@@ -72,9 +73,9 @@ export interface EditOwnVoiceState {
 /** https://discord.com/developers/docs/resources/guild#update-user-voice-state */
 export interface EditUserVoiceState {
   /** The id of the channel the user is currently in */
-  channelId: bigint;
+  channelId: BigString;
   /** Toggles the user's suppress state */
   suppress?: boolean;
   /** The user id to target */
-  userId: bigint;
+  userId: BigString;
 }

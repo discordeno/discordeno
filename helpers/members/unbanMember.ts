@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Unbans a user from a guild.
@@ -14,6 +15,6 @@ import type { Bot } from "../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#remove-guild-ban}
  */
-export async function unbanMember(bot: Bot, guildId: bigint, userId: bigint): Promise<void> {
+export async function unbanMember(bot: Bot, guildId: BigString, userId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(bot.rest, "DELETE", bot.constants.routes.GUILD_BAN(guildId, userId));
 }
