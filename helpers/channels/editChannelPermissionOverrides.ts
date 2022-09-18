@@ -1,5 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import { WithReason } from "../../mod.ts";
+import { BigString, WithReason } from "../../mod.ts";
 import { OverwriteReadable } from "../../types/discordeno.ts";
 
 /**
@@ -20,7 +20,7 @@ import { OverwriteReadable } from "../../types/discordeno.ts";
  */
 export async function editChannelPermissionOverrides(
   bot: Bot,
-  channelId: bigint,
+  channelId: BigString,
   options: EditChannelPermissionOverridesOptions,
 ): Promise<void> {
   return await bot.rest.runMethod<void>(

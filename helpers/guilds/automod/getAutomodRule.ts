@@ -1,6 +1,7 @@
 import { Bot } from "../../../bot.ts";
 import { AutoModerationRule } from "../../../transformers/automodRule.ts";
 import { DiscordAutoModerationRule } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Gets an automod rule by its ID.
@@ -15,7 +16,7 @@ import { DiscordAutoModerationRule } from "../../../types/discord.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/auto-moderation#get-auto-moderation-rule}
  */
-export async function getAutomodRule(bot: Bot, guildId: bigint, ruleId: bigint): Promise<AutoModerationRule> {
+export async function getAutomodRule(bot: Bot, guildId: BigString, ruleId: BigString): Promise<AutoModerationRule> {
   const result = await bot.rest.runMethod<DiscordAutoModerationRule>(
     bot.rest,
     "GET",

@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Deletes a channel from within a guild.
@@ -25,7 +26,7 @@ import type { Bot } from "../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#deleteclose-channel}
  */
-export async function deleteChannel(bot: Bot, channelId: bigint, reason?: string): Promise<void> {
+export async function deleteChannel(bot: Bot, channelId: BigString, reason?: string): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     "DELETE",

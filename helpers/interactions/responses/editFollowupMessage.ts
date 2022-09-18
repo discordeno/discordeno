@@ -2,7 +2,7 @@ import type { Bot } from "../../../bot.ts";
 import { InteractionCallbackData } from "../../../mod.ts";
 import { Message } from "../../../transformers/message.ts";
 import { DiscordMessage } from "../../../types/discord.ts";
-import { InteractionResponseTypes } from "../../../types/shared.ts";
+import { BigString, InteractionResponseTypes } from "../../../types/shared.ts";
 
 /**
  * Edits a follow-up message to an interaction.
@@ -25,7 +25,7 @@ import { InteractionResponseTypes } from "../../../types/shared.ts";
 export async function editFollowupMessage(
   bot: Bot,
   token: string,
-  messageId: bigint,
+  messageId: BigString,
   options: InteractionCallbackData,
 ): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(

@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Adds the bot user to a thread.
@@ -13,6 +14,6 @@ import type { Bot } from "../../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#join-thread}
  */
-export async function joinThread(bot: Bot, channelId: bigint): Promise<void> {
+export async function joinThread(bot: Bot, channelId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(bot.rest, "PUT", bot.constants.routes.THREAD_ME(channelId));
 }

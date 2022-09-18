@@ -2,7 +2,7 @@ import type { Bot } from "../../bot.ts";
 import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
 import { InteractionCallbackData } from "../../types/discordeno.ts";
-import { InteractionResponseTypes } from "../../types/shared.ts";
+import { BigString, InteractionResponseTypes } from "../../types/shared.ts";
 
 /**
  * Edits a webhook message.
@@ -21,10 +21,10 @@ import { InteractionResponseTypes } from "../../types/shared.ts";
  */
 export async function editWebhookMessage(
   bot: Bot,
-  webhookId: bigint,
+  webhookId: BigString,
   token: string,
-  messageId: bigint,
-  options: InteractionCallbackData & { threadId?: bigint },
+  messageId: BigString,
+  options: InteractionCallbackData & { threadId?: BigString },
 ): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,

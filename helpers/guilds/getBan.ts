@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { User } from "../../transformers/member.ts";
 import { DiscordBan } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 
 export type Ban = {
   reason?: string;
@@ -22,7 +23,7 @@ export type Ban = {
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-ban}
  */
-export async function getBan(bot: Bot, guildId: bigint, userId: bigint): Promise<Ban> {
+export async function getBan(bot: Bot, guildId: BigString, userId: BigString): Promise<Ban> {
   const result = await bot.rest.runMethod<DiscordBan>(
     bot.rest,
     "GET",

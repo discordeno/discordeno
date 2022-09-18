@@ -3,6 +3,7 @@ import { Embed } from "../../transformers/embed.ts";
 import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
+import { BigString } from "../../types/shared.ts";
 
 export const sendWebhookMessage = executeWebhook;
 
@@ -22,7 +23,7 @@ export const sendWebhookMessage = executeWebhook;
  */
 export async function executeWebhook(
   bot: Bot,
-  webhookId: bigint,
+  webhookId: BigString,
   token: string,
   options: ExecuteWebhook,
 ): Promise<Message | undefined> {
@@ -63,7 +64,7 @@ export interface ExecuteWebhook {
   /** Waits for server confirmation of message send before response, and returns the created message body (defaults to `false`; when `false` a message that is not saved does not return an error) */
   wait?: boolean;
   /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. */
-  threadId?: bigint;
+  threadId?: BigString;
   /** Name of the thread to create (target channel has to be type of forum channel) */
   threadName?: string;
   /** The message contents (up to 2000 characters) */

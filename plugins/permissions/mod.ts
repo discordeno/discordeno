@@ -1,6 +1,5 @@
 import { BotWithCache } from "./deps.ts";
 import { channels } from "./src/channels/mod.ts";
-import setupDiscoveryPermChecks from "./src/discovery.ts";
 import { emojis } from "./src/emojis/mod.ts";
 import { guilds } from "./src/guilds/mod.ts";
 import { integrations } from "./src/integrations/mod.ts";
@@ -19,7 +18,6 @@ export function enablePermissionsPlugin<B extends BotWithCache = BotWithCache>(b
   bot.enabledPlugins.add("PERMISSIONS");
 
   // BEGIN OVERRIDING HELPER FUNCTIONS
-  setupDiscoveryPermChecks(bot);
   channels(bot);
   emojis(bot);
   guilds(bot);

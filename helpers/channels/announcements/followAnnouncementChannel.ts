@@ -1,5 +1,6 @@
 import type { Bot } from "../../../bot.ts";
 import { DiscordFollowedChannel } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Follows an announcement channel, allowing messages posted within it to be cross-posted into the target channel.
@@ -18,8 +19,8 @@ import { DiscordFollowedChannel } from "../../../types/discord.ts";
  */
 export async function followAnnouncementChannel(
   bot: Bot,
-  sourceChannelId: bigint,
-  targetChannelId: bigint,
+  sourceChannelId: BigString,
+  targetChannelId: BigString,
 ): Promise<bigint> {
   const result = await bot.rest.runMethod<DiscordFollowedChannel>(
     bot.rest,

@@ -1,6 +1,7 @@
 import { Bot } from "../../bot.ts";
 import { Role } from "../../transformers/role.ts";
 import { DiscordRole } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 import { Collection } from "../../util/collection.ts";
 
 /**
@@ -20,7 +21,7 @@ import { Collection } from "../../util/collection.ts";
  */
 export async function modifyRolePositions(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   options: ModifyRolePositions[],
 ): Promise<Collection<bigint, Role>> {
   const results = await bot.rest.runMethod<DiscordRole[]>(
@@ -30,9 +31,11 @@ export async function modifyRolePositions(
     options,
   );
 
+  const id = bot.transformers.snowflake(guildId);
+
   return new Collection(
     results.map((result) => {
-      const role = bot.transformers.role(bot, { role: result, guildId });
+      const role = bot.transformers.role(bot, { role: result, guildId: id });
       return [role.id, role];
     }),
   );
@@ -40,7 +43,7 @@ export async function modifyRolePositions(
 
 export interface ModifyRolePositions {
   /** The role id */
-  id: bigint;
+  id: BigString;
   /** The sorting position for the role. */
   position?: number | null;
 }

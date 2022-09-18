@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { BigString } from "../../../types/shared.ts";
 import { processReactionString } from "./getReactions.ts";
 
 // TODO: Improve typing of the `reaction` parameter.
@@ -22,7 +23,12 @@ import { processReactionString } from "./getReactions.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#create-reaction}
  */
-export async function addReaction(bot: Bot, channelId: bigint, messageId: bigint, reaction: string): Promise<void> {
+export async function addReaction(
+  bot: Bot,
+  channelId: BigString,
+  messageId: BigString,
+  reaction: string,
+): Promise<void> {
   reaction = processReactionString(reaction);
 
   return await bot.rest.runMethod<void>(
