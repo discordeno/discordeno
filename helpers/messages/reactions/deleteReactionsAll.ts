@@ -1,4 +1,5 @@
 import type { Bot } from "../../../bot.ts";
+import { BigString } from "../../../types/shared.ts";
 
 /**
  * Deletes all reactions for all emojis from a message.
@@ -16,7 +17,7 @@ import type { Bot } from "../../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#delete-all-reactions}
  */
-export async function deleteReactionsAll(bot: Bot, channelId: bigint, messageId: bigint): Promise<void> {
+export async function deleteReactionsAll(bot: Bot, channelId: BigString, messageId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     "DELETE",

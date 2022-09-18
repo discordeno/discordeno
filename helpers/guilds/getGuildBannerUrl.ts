@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 import { ImageFormat, ImageSize } from "../members/getAvatarUrl.ts";
 
 // TODO: Move `banner` from `options` into the parameters and rename to `imageHash`.
@@ -13,7 +14,7 @@ import { ImageFormat, ImageSize } from "../members/getAvatarUrl.ts";
  */
 export function getGuildBannerURL(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   options: {
     banner?: string | bigint;
     size?: ImageSize;

@@ -99,6 +99,8 @@ export interface DiscordConnection {
 
   /** An array of partial server integrations */
   integrations?: DiscordIntegration[];
+  /** Whether this connection has a corresponding third party OAuth2 token. */
+  two_way_link: boolean;
 }
 
 /** https://discord.com/developers/docs/resources/user#connection-object-services */

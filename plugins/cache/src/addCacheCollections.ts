@@ -29,7 +29,6 @@ export interface CacheProps {
   presences: Collection<bigint, PresenceUpdate>;
   dispatchedGuildIds: Set<bigint>;
   dispatchedChannelIds: Set<bigint>;
-  activeGuildIds: Set<bigint>;
 }
 
 export function addCacheCollections<B extends Bot>(bot: B): BotWithCache<B> {
@@ -42,7 +41,6 @@ export function addCacheCollections<B extends Bot>(bot: B): BotWithCache<B> {
   cacheBot.presences = new Collection();
   cacheBot.dispatchedGuildIds = new Set();
   cacheBot.dispatchedChannelIds = new Set();
-  cacheBot.activeGuildIds = new Set();
 
   return cacheBot;
 }

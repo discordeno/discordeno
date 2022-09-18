@@ -1,6 +1,7 @@
 import { Bot } from "../../../bot.ts";
 import { Member, User } from "../../../transformers/member.ts";
 import { DiscordMember, DiscordUser } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 import { Collection } from "../../../util/collection.ts";
 
 // TODO: This endpoint discards certain data from the result.
@@ -24,20 +25,20 @@ import { Collection } from "../../../util/collection.ts";
  */
 export async function getScheduledEventUsers(
   bot: Bot,
-  guildId: bigint,
-  eventId: bigint,
+  guildId: BigString,
+  eventId: BigString,
   options?: GetScheduledEventUsers & { withMember?: false },
 ): Promise<Collection<bigint, User>>;
 export async function getScheduledEventUsers(
   bot: Bot,
-  guildId: bigint,
-  eventId: bigint,
+  guildId: BigString,
+  eventId: BigString,
   options?: GetScheduledEventUsers & { withMember: true },
 ): Promise<Collection<bigint, { user: User; member: Member }>>;
 export async function getScheduledEventUsers(
   bot: Bot,
-  guildId: bigint,
-  eventId: bigint,
+  guildId: BigString,
+  eventId: BigString,
   options?: GetScheduledEventUsers,
 ): Promise<
   Collection<bigint, User> | Collection<bigint, { user: User; member: Member }>
@@ -68,10 +69,12 @@ export async function getScheduledEventUsers(
     );
   }
 
+  const id = bot.transformers.snowflake(guildId);
+
   return new Collection(
     results.map((result) => {
       const user = bot.transformers.user(bot, result.user);
-      const member = bot.transformers.member(bot, result.member!, guildId, user.id);
+      const member = bot.transformers.member(bot, result.member!, id, user.id);
 
       return [user.id, { member, user }];
     }),
@@ -84,7 +87,7 @@ export interface GetScheduledEventUsers {
   /** whether to also have member objects provided, defaults to false */
   withMember?: boolean;
   /** consider only users before given user id */
-  before?: bigint;
+  before?: BigString;
   /** consider only users after given user id. If both before and after are provided, only before is respected. Fetching users in-between before and after is not supported. */
-  after?: bigint;
+  after?: BigString;
 }

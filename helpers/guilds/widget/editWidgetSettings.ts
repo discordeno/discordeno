@@ -1,6 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { GuildWidgetSettings } from "../../../transformers/widgetSettings.ts";
 import { DiscordGuildWidgetSettings } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 
 // TODO: Use `options` instead of `enabled` and `channelId`.
 
@@ -20,7 +21,7 @@ import { DiscordGuildWidgetSettings } from "../../../types/discord.ts";
  */
 export async function editWidgetSettings(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   enabled: boolean,
   channelId?: string | null,
 ): Promise<GuildWidgetSettings> {

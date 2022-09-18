@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 // TODO: Remove `delayMilliseconds` parameter.
 
@@ -19,8 +20,8 @@ import type { Bot } from "../../bot.ts";
  */
 export async function deleteMessage(
   bot: Bot,
-  channelId: bigint,
-  messageId: bigint,
+  channelId: BigString,
+  messageId: BigString,
   reason?: string,
   delayMilliseconds = 0,
 ): Promise<void> {

@@ -1,7 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Role } from "../../transformers/role.ts";
 import { DiscordRole } from "../../types/discord.ts";
-import { PermissionStrings } from "../../types/shared.ts";
+import { BigString, PermissionStrings } from "../../types/shared.ts";
 
 /**
  * Edits a role in a guild.
@@ -19,7 +19,7 @@ import { PermissionStrings } from "../../types/shared.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-role}
  */
-export async function editRole(bot: Bot, guildId: bigint, roleId: bigint, options: EditGuildRole): Promise<Role> {
+export async function editRole(bot: Bot, guildId: BigString, roleId: BigString, options: EditGuildRole): Promise<Role> {
   const result = await bot.rest.runMethod<DiscordRole>(
     bot.rest,
     "PATCH",
@@ -35,7 +35,7 @@ export async function editRole(bot: Bot, guildId: bigint, roleId: bigint, option
     },
   );
 
-  return bot.transformers.role(bot, { role: result, guildId });
+  return bot.transformers.role(bot, { role: result, guildId: bot.transformers.snowflake(guildId) });
 }
 
 export interface EditGuildRole {

@@ -1,4 +1,4 @@
-import { Bot, Collection, DiscordMemberWithUser, ListGuildMembers, Member } from "../deps.ts";
+import { BigString, Bot, Collection, DiscordMemberWithUser, ListGuildMembers, Member } from "../deps.ts";
 
 /**
  * Highly recommended to **NOT** use this function to get members instead use fetchMembers().
@@ -7,7 +7,7 @@ import { Bot, Collection, DiscordMemberWithUser, ListGuildMembers, Member } from
  */
 export async function getMembersPaginated(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   options: ListGuildMembers,
 ) {
   const members = new Collection<bigint, Member>();
@@ -43,7 +43,7 @@ export async function getMembersPaginated(
       bot.transformers.member(
         bot,
         member,
-        guildId,
+        bot.transformers.snowflake(guildId),
         bot.transformers.snowflake(member.user.id),
       )
     );

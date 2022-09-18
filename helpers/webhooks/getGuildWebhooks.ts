@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Webhook } from "../../transformers/webhook.ts";
 import { DiscordWebhook } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 import { Collection } from "../../util/collection.ts";
 
 /**
@@ -15,7 +16,7 @@ import { Collection } from "../../util/collection.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/webhook#get-guild-webhooks}
  */
-export async function getGuildWebhooks(bot: Bot, guildId: bigint): Promise<Collection<bigint, Webhook>> {
+export async function getWebhooks(bot: Bot, guildId: BigString): Promise<Collection<bigint, Webhook>> {
   const results = await bot.rest.runMethod<DiscordWebhook[]>(
     bot.rest,
     "GET",

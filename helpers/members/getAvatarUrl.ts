@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Builds a URL to a user's avatar stored in the Discord CDN.
@@ -11,10 +12,10 @@ import type { Bot } from "../../bot.ts";
  */
 export function getAvatarURL(
   bot: Bot,
-  userId: bigint,
+  userId: BigString,
   discriminator: string,
   options?: {
-    avatar: bigint | undefined;
+    avatar: BigString | undefined;
     size?: ImageSize;
     format?: ImageFormat;
   },

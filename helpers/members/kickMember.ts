@@ -1,4 +1,5 @@
 import { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Kicks a member from a guild.
@@ -14,7 +15,7 @@ import { Bot } from "../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#remove-guild-member}
  */
-export async function kickMember(bot: Bot, guildId: bigint, userId: bigint, reason?: string): Promise<void> {
+export async function kickMember(bot: Bot, guildId: BigString, userId: BigString, reason?: string): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     "DELETE",

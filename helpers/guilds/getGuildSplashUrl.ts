@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 import { ImageFormat, ImageSize } from "../members/getAvatarUrl.ts";
 
 /**
@@ -12,8 +13,8 @@ import { ImageFormat, ImageSize } from "../members/getAvatarUrl.ts";
  */
 export function getGuildSplashURL(
   bot: Bot,
-  guildId: bigint,
-  imageHash: bigint | undefined,
+  guildId: BigString,
+  imageHash: BigString | undefined,
   options?: {
     size?: ImageSize;
     format?: ImageFormat;

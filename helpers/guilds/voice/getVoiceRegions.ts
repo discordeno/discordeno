@@ -1,6 +1,7 @@
 import type { Bot } from "../../../bot.ts";
 import { VoiceRegions } from "../../../transformers/voiceRegion.ts";
 import { DiscordVoiceRegion } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 import { Collection } from "../../../util/collection.ts";
 
 /**
@@ -12,7 +13,7 @@ import { Collection } from "../../../util/collection.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-voice-regions}
  */
-export async function getVoiceRegions(bot: Bot, guildId: bigint): Promise<Collection<string, VoiceRegions>> {
+export async function getVoiceRegions(bot: Bot, guildId: BigString): Promise<Collection<string, VoiceRegions>> {
   const results = await bot.rest.runMethod<DiscordVoiceRegion[]>(
     bot.rest,
     "GET",

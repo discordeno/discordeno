@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 
 export const publishMessage = crosspostMessage;
 
@@ -22,7 +23,7 @@ export const publishMessage = crosspostMessage;
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#crosspost-message}
  */
-export async function crosspostMessage(bot: Bot, channelId: bigint, messageId: bigint): Promise<Message> {
+export async function crosspostMessage(bot: Bot, channelId: BigString, messageId: BigString): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "POST",

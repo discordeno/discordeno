@@ -1,5 +1,6 @@
 import type { Bot } from "../../../bot.ts";
 import { DiscordListArchivedThreads } from "../../../types/discord.ts";
+import { BigString } from "../../../types/shared.ts";
 import { Collection } from "../../../util/collection.ts";
 import { ArchivedThreads, ListArchivedThreads } from "./getPublicArchivedThreads.ts";
 
@@ -22,7 +23,7 @@ import { ArchivedThreads, ListArchivedThreads } from "./getPublicArchivedThreads
  */
 export async function getPrivateJoinedArchivedThreads(
   bot: Bot,
-  channelId: bigint,
+  channelId: BigString,
   options?: ListArchivedThreads,
 ): Promise<ArchivedThreads> {
   const results = await bot.rest.runMethod<DiscordListArchivedThreads>(

@@ -1,6 +1,7 @@
 import type { Bot } from "../../bot.ts";
 import { Webhook } from "../../transformers/webhook.ts";
 import { DiscordWebhook } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 import { ModifyWebhook } from "./editWebhook.ts";
 
 /**
@@ -20,7 +21,7 @@ import { ModifyWebhook } from "./editWebhook.ts";
  */
 export async function editWebhookWithToken(
   bot: Bot,
-  webhookId: bigint,
+  webhookId: BigString,
   token: string,
   options: Omit<ModifyWebhook, "channelId">,
 ): Promise<Webhook> {

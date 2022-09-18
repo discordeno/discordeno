@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Deletes a permission override for a user or role in a channel.
@@ -16,8 +17,8 @@ import type { Bot } from "../../bot.ts";
  */
 export async function deleteChannelPermissionOverride(
   bot: Bot,
-  channelId: bigint,
-  overwriteId: bigint,
+  channelId: BigString,
+  overwriteId: BigString,
   reason?: string,
 ): Promise<void> {
   return await bot.rest.runMethod<void>(

@@ -1,4 +1,5 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 /**
  * Removes a role from a member.
@@ -15,7 +16,7 @@ import type { Bot } from "../../bot.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#remove-guild-member-role}
  */
-export async function removeRole(bot: Bot, guildId: bigint, userId: bigint, roleId: bigint, reason?: string) {
+export async function removeRole(bot: Bot, guildId: BigString, userId: BigString, roleId: BigString, reason?: string) {
   return await bot.rest.runMethod<void>(
     bot.rest,
     "DELETE",

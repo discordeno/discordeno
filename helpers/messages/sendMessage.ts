@@ -3,7 +3,7 @@ import { Embed } from "../../transformers/embed.ts";
 import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../types/mod.ts";
-import { MessageComponentTypes } from "../../types/shared.ts";
+import { BigString, MessageComponentTypes } from "../../types/shared.ts";
 
 /**
  * Sends a message to a channel.
@@ -32,7 +32,7 @@ import { MessageComponentTypes } from "../../types/shared.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#create-message}
  */
-export async function sendMessage(bot: Bot, channelId: bigint, options: CreateMessage): Promise<Message> {
+export async function sendMessage(bot: Bot, channelId: BigString, options: CreateMessage): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     "POST",
@@ -117,6 +117,7 @@ export async function sendMessage(bot: Bot, channelId: bigint, options: CreateMe
           },
         }
         : {}),
+      sticker_ids: options.stickerIds?.map((sticker) => sticker.toString()),
     },
   );
 
@@ -137,14 +138,14 @@ export interface CreateMessage {
   /** Include to make your message a reply */
   messageReference?: {
     /** id of the originating message */
-    messageId?: bigint;
+    messageId?: BigString;
     /**
      * id of the originating message's channel
      * Note: `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model.
      */
-    channelId?: bigint;
+    channelId?: BigString;
     /** id of the originating message's guild */
-    guildId?: bigint;
+    guildId?: BigString;
     /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
     failIfNotExists: boolean;
   };
@@ -152,4 +153,6 @@ export interface CreateMessage {
   file?: FileContent | FileContent[];
   /** The components you would like to have sent in this message */
   components?: MessageComponents;
+  /** IDs of up to 3 stickers in the server to send in the message */
+  stickerIds?: [bigint] | [bigint, bigint] | [bigint, bigint, bigint];
 }
