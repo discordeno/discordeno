@@ -38,6 +38,7 @@ export async function editFollowupMessage(
         type: InteractionResponseTypes.UpdateMessage,
         data: options,
       }).data,
+      file: options.file,
     },
   );
 

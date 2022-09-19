@@ -29,10 +29,13 @@ export async function editOriginalInteractionResponse(
     bot.rest,
     "PATCH",
     bot.constants.routes.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token),
-    bot.transformers.reverse.interactionResponse(bot, {
-      type: InteractionResponseTypes.UpdateMessage,
-      data: options,
-    }).data,
+    {
+      ...bot.transformers.reverse.interactionResponse(bot, {
+        type: InteractionResponseTypes.UpdateMessage,
+        data: options,
+      }).data,
+      file: options.file,
+    },
   );
 
   return bot.transformers.message(bot, result);

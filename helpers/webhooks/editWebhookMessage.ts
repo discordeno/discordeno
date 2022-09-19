@@ -30,10 +30,13 @@ export async function editWebhookMessage(
     bot.rest,
     "PATCH",
     bot.constants.routes.WEBHOOK_MESSAGE(webhookId, token, messageId, options),
-    bot.transformers.reverse.interactionResponse(bot, {
-      type: InteractionResponseTypes.UpdateMessage,
-      data: options,
-    }).data,
+    {
+      ...bot.transformers.reverse.interactionResponse(bot, {
+        type: InteractionResponseTypes.UpdateMessage,
+        data: options,
+      }).data,
+      file: options.file,
+    },
   );
 
   return bot.transformers.message(bot, result);
