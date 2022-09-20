@@ -66,7 +66,7 @@ export async function processGlobalQueue(rest: RestManager) {
       bucketId: request.payload.bucketId,
       reject: request.request.reject,
       respond: request.request.respond,
-      retryRequest: function() {
+      retryRequest: function () {
         rest.globalQueue.unshift(request);
       },
       retryCount: request.payload.retryCount ?? 0,
