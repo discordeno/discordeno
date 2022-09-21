@@ -14,56 +14,40 @@ Discordeno follows [semantic versioning](https://semver.org/)
 
 ## Features
 
-- **Secure & stable**: Discordeno is actively maintained to ensure great performance and convenience.
-- **Simple, Efficient, & Lightweight**: Discordeno is simplistic, easy-to-use and versatile while being efficient and
-  lightweight. No caching by default.
-- **Functional API**: The functional API ensures overall concise yet performant code while removing the difficulties of
-  extending built-in classes and inheritance.
-- **Cross Runtime**: Supports both Deno and Node.js runtimes.
-- **Standalone REST, Gateway, Custom Cache & more**: Discordeno provides the ability to have almost every part of a bot
-  as a standalone piece.
-- **Plugins:** Designed to let you plugin and override any part of the code. Never deal with the headaches of
-  maintaining your fork just to get something customized for your needs. You can use plugins for almost anything, for
-  example we have a few official plugins.
-  - Cache plugin that enables caching everything.
-  - Sweeper plugin that enables sweepers to clean the cache every once in a while.
-  - Permission plugin checks internally all missing permissions before forwarding a request to the Discord API so that
-    the client does not get globally banned by Discord.
-- **Flexibility:** If your bot does not need certain properties from objects then you can simply remove them. For
-  example, if your bot does not need `Channel.topic` you should not have to store it. This can save you GBs of memory.
-  Doing this for any property on any object is as simple as a few lines of code.
+Discordeno is actively maintained to guarantee **excellent performance and ease.**
+- **Simple, Efficient, and Lightweight**: Discordeno is lightweight, simple to use, and adaptable. By default, no caching.
+- **Functional API**: The functional API eliminates the challenges of extending built-in classes and inheritance while ensuring overall simple but performant code.
+- **Cross Runtime**: Supports the Node.js and Deno runtimes.
+- **Standalone components**: Discordeno offers the option to have practically any component of a bot as a separate piece, including standalone REST, gateways, custom caches, and more.
+- **Plugins:** Designed to allow you to overwrite any portion of the code with your own code. Never go through the hassle of maintaining your fork in order to acquire something that is specifically tailored to your requirements. Plugins may be used for nearly anything; for instance, we have a few authorised plugins.
+  - A caching plugin that makes anything cacheable.
+  - A plugin for sweepers that allows them to periodically clear the cache.
+  - The permission plugin internally verifies any missing permissions before sending a call to the Discord API to prevent the client from receiving a Discord global ban.
+
+- **Flexibility:** You may easily delete an object's attributes if your bot doesn't require them. For instance, you shouldn't be required to keep `Channel.topic` if your bot doesn't require it. You may save GBs of RAM in this way.
+A few lines of code are all that are needed to accomplish this for any property on any object.
 
 ### REST
 
-- ✅ Freedom from Invalid Request 1 Hour Downtimes
-  - ✅ Discordeno will protect your bot from going down for an hour and will instead decrease the maximum downtime to 10
-    minutes.
+- ✅ Freedom from 1 hour downtimes due to invalid requests
+  - ✅ By lowering the maximum downtime to 10 minutes, Discordeno will prevent your bot from being down for an hour.
 - ✅ Freedom from global rate limit errors
   - ✅ As your bot grows, you want to handle global rate limits better. Shards don't communicate fast enough to truly
     handle it properly so this allows 1 rest handler across the entire bot.
-  - ✅ In fact, you can host multiple instances of your bot and all connect to the same rest server.
+  - ✅ You may really run numerous instances of your bot on different hosts, all of which will connect to the same REST server.
 - ✅ REST does not rest!
-  - ✅ Separate rest means if your bot for whatever reason crashes, your requests that are queued will still keep going
-    and will not be lost.
-  - ✅ Seamless updates! When you want to update and reboot the bot, you could potentially lose tons of messages or
-    responses that are in queue. Using this you could restart your bot without ever worrying about losing any responses.
+  - ✅ Separate rest guarantees that your queued requests will continue to be processed even if your bot breaks for whatever reason.
+  - ✅ Seamless updates! There's a chance you'll lose a tonne of messages or replies that are waiting to be given when you wish to update and restart the bot. You may restart your bot using this technique and never have to worry about losing any answers.
 - ✅ Single source of contact to Discord API
-  - ✅ This will allow you to make requests to discord from anywhere including a bot dashboard. You no longer need to
-    have to communicate to your bot processes just to make a request or anything. Free up your bot process for
-    processing bot events.
+  - ✅ As a result, you will be able to send requests to Discord from any location, even a bot dashboard. You are no longer need to interact with your bot processes in order to submit a request or do anything else. Your bot process should be freed up to handle bot events.
 - ✅ Scalability! Scalability! Scalability!
 
 ### Gateway
 
 - ✅ **Zero Downtime Updates:**
-  - ✅ Your bot can be updated in a matter of seconds. With normal sharding, you have to restart which also has to
-    process identifying all your shards with a 1/~5s rate limit. With WS handling moved to a proxy process, this allows
-    you to instantly get the bot code restarted without any concerns of delays. If you have a bot on 200,000 servers
-    normally this would mean a 20 minute delay to restart your bot if you made a small change and restarted.
+  - ✅ A few seconds are needed to update your bot. When using conventional sharding, you must restart in addition to going through a 1/5s rate-limited process of identifying all of your shards. As WS processing has been relocated to a proxy process, you may resume the bot code right away without worrying about any delays. Normally, if you had a bot that was spread across 200,000 servers, restarting it after making a simple modification would take 20 minutes.
 - ✅ **Zero Downtime Resharding:**
-  - ✅ Discord stops letting your bot get added to new servers at certain points in time. For example, suppose you had
-    150,000 servers running 150 shards. The maximum amount of servers your shards could hold is 150 \* 2500 = 375,000.
-    If your bot reaches this, it can no longer join new servers until it re-shards.
+  - ✅ At various periods in time, Discord stops allowing your bot to be added to new servers. Consider 150 shards operating on 150,000 servers, for instance. Your shards may support a maximum of 150 * 2500 = 375,000 servers. Your bot will be unable to join new servers once it reaches this point until it re-shards.
   - ✅ DD proxy provides 2 types of re-sharding. Automated and manual. You can also have both.
     - ✅ Automated: This system will automatically begin a Zero-downtime resharding process behind the scenes when you
       reach 80% of your maximum servers allowed by your shards. For example, since 375,000 was the max, at 300,000 we
@@ -72,22 +56,14 @@ Discordeno follows [semantic versioning](https://semver.org/)
       - ✅ Identify limits have room to allow re-sharding. (Also customizable)
     - ✅ Manual: You can also trigger this manually should you choose.
 - ✅ **Horizontal Scaling:**
-  - ✅ The proxy system allows you to scale the bot horizontally. When you reach a huge size, you can either keep
-    spending more money to keep beefing up your server or you can buy several cheaper servers and scale horizontally.
-    The proxy means you can have WS handling on a completely separate system.
+  - ✅ The bot may be scaled horizontally thanks to the proxy mechanism. When your business grows significantly, you have two options: you can either keep investing money to upgrade your server or you may expand horizontally by purchasing numerous more affordable servers.
+The proxy enables WS handling on a totally other system.
 - ✅ **No Loss Restarts:**
-  - ✅ When you restart a bot without the proxy system, normally you would lose many events. Users may be using commands
-    or messages are sent that will not be filtered. As your bot's grow this number rises dramatically. Users may join
-    who wont get the auto-roles or any other actions your bot should take. With the proxy system, you can keep
-    restarting your bot and never lose any events. Events will be put into a queue while your bot is down(max size of
-    queue is customizable), once the bot is available the queue will begin processing all events.
+  - ✅ Without the proxy mechanism, you would typically lose numerous events while restarting a bot. Users could issue instructions or send messages that are not screened. As your bot population increases, this amount grows sharply. Users who don't receive the automatic roles or any other activities your bot should do may join. You may keep restarting your bot thanks to the proxy technology without ever losing any events. While your bot is unavailable, events will be added to a queue (the maximum size of the queue is configurable), and once the bot is back online, the queue will start processing all of the events.
 - ✅ **Controllers:**
-  - ✅ The controller aspect gives you full control over everything inside the proxy. You can provide a function to
-    simply override the handler. For example, if you would like a certain function to do something different, instead of
-    having to fork and maintain your fork, you can just provide a function to override.
+  - ✅ You have complete control over everything inside the proxy thanks to the controller aspect. To simply override the handler, you may supply a function. For instance, you may simply give a method to override a specific function if you want it to behave differently rather than forking and maintaining your fork.
 - ✅ **Clustering With Workers:**
-  - ✅ Take full advantage of all your CPU cores by using workers to spread the load. Control how many shards per worker
-    and how many workers to maximize efficiency!
+  - ✅ Utilize all of your CPU cores to their greatest potential by distributing the workload across employees. To enhance efficiency, manage how many employees and shards there are each worker!
 
 ### Custom Cache
 
@@ -122,8 +98,7 @@ await startBot(bot);
 
 ### Tools
 
-If you are a beginner, this library is not meant for you but you can check out if you still want to use this lib with
-these awesome official and unofficial templates:
+This library is not intended for beginners, however if you still want to utilise it, check out these excellent official and unofficial templates:
 
 **Templates**
 
@@ -134,6 +109,7 @@ these awesome official and unofficial templates:
 
 **Frameworks**
 
+- [Amethyst Framework](https://github.com/AmethystFramework/framework)
 - [Add Your Own!](https://github.com/discordeno/discordeno/pulls)
 
 **Plugins**
