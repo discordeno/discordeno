@@ -8,7 +8,7 @@ Deno.test("[stickers] Edit guild sticker", async () => {
     name: "test",
     description: "test",
     tags: "test",
-    file: { blob: new Blob(), name: "test" },
+    file: { blob: new Blob(), name: "test.png" },
   });
   const editSticker = await bot.helpers.editGuildSticker(CACHED_COMMUNITY_GUILD_ID, createSticker.id, {
     name: "sticker name",
@@ -18,4 +18,6 @@ Deno.test("[stickers] Edit guild sticker", async () => {
   assertEquals(editSticker.name, "sticker name");
   assertEquals(editSticker.description, "sticker description");
   assertEquals(editSticker.tags, "sticker tags");
+
+  await bot.helpers.deleteGuildSticker(CACHED_COMMUNITY_GUILD_ID, editSticker.id);
 });

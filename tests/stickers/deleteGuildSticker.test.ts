@@ -11,5 +11,5 @@ Deno.test("[stickers] Delete guild sticker", async () => {
     file: { blob: new Blob(), name: "sticker file name" },
   });
   await bot.helpers.deleteGuildSticker(CACHED_COMMUNITY_GUILD_ID, sticker.id);
-  assertRejects(() => bot.helpers.getGuildSticker(CACHED_COMMUNITY_GUILD_ID, sticker.id));
+  await assertRejects(() => bot.helpers.getGuildSticker(CACHED_COMMUNITY_GUILD_ID, sticker.id));
 });

@@ -14,4 +14,6 @@ Deno.test("[stickers] Get guild sticker", async () => {
   assertEquals(getSticker.name, "sticker name");
   assertEquals(getSticker.description, "sticker description");
   assertEquals(getSticker.tags, "sticker tags");
+
+  await bot.helpers.deleteGuildSticker(CACHED_COMMUNITY_GUILD_ID, getSticker.id);
 });
