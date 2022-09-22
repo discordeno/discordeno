@@ -5,7 +5,7 @@ export function getAutomodRules(bot: BotWithCache) {
   const getAutomodRules = bot.helpers.getAutomodRules;
 
   bot.helpers.getAutomodRules = async function (guildId) {
-    requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
+    requireBotGuildPermissions(bot, bot.transformers.snowflake(guildId), ["MANAGE_GUILD"]);
 
     return await getAutomodRules(guildId);
   };

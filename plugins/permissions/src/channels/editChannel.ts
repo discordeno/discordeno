@@ -5,7 +5,7 @@ export function editChannel(bot: BotWithCache) {
   const editChannel = bot.helpers.editChannel;
 
   bot.helpers.editChannel = async function (channelId, options) {
-    const channel = bot.channels.get(channelId);
+    const channel = bot.channels.get(bot.transformers.snowflake(channelId));
 
     if (channel?.guildId) {
       const guild = bot.guilds.get(channel.guildId);
@@ -64,7 +64,7 @@ export function editChannel(bot: BotWithCache) {
         if (options.userLimit && options.userLimit > 99) throw new Error("The user limit must be less than 99.");
 
         if (options.parentId) {
-          const category = bot.channels.get(options.parentId);
+          const category = bot.channels.get(bot.transformers.snowflake(options.parentId));
           if (category && category.type !== ChannelTypes.GuildCategory) {
             throw new Error("The parent id must be for a category channel type.");
           }

@@ -8,7 +8,7 @@ export function pinMessage(bot: BotWithCache) {
     channelId,
     messageId,
   ) {
-    requireBotChannelPermissions(bot, channelId, [
+    requireBotChannelPermissions(bot, bot.transformers.snowflake(channelId), [
       "MANAGE_MESSAGES",
     ]);
 

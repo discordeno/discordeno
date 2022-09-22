@@ -5,9 +5,9 @@ export function addRole(bot: BotWithCache) {
   const addRole = bot.helpers.addRole;
 
   bot.helpers.addRole = async function (guildId, memberId, roleId, reason) {
-    const guild = bot.guilds.get(guildId);
+    const guild = bot.guilds.get(bot.transformers.snowflake(guildId));
     if (guild) {
-      const role = guild.roles.get(roleId);
+      const role = guild.roles.get(bot.transformers.snowflake(roleId));
       if (role) {
         const botRole = highestRole(bot, guild, bot.id);
 

@@ -5,7 +5,7 @@ export function connectToVoiceChannel(bot: BotWithCache) {
   const connectToVoiceChannel = bot.helpers.connectToVoiceChannel;
 
   bot.helpers.connectToVoiceChannel = async function (guildId, channelId, options) {
-    const channel = bot.channels.get(channelId);
+    const channel = bot.channels.get(bot.transformers.snowflake(channelId));
     if (!channel) throw new Error("CHANNEL_NOT_FOUND");
 
     if (
