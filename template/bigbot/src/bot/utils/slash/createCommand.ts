@@ -168,7 +168,7 @@ export type ConvertArgumentDefinitionsToArgs<T extends readonly ArgumentDefiniti
               ? T[P]["choices"][number]["value"]
               : string;
           }
-        // INTEGER
+          // INTEGER
         : T[P] extends IntegerOptionalArgumentDefinition<infer N> ? {
             [_ in getName<N>]?: T[P]["choices"] extends readonly { name: string; value: number }[] // @ts-ignore
               ? T[P]["choices"][number]["value"]
@@ -179,10 +179,10 @@ export type ConvertArgumentDefinitionsToArgs<T extends readonly ArgumentDefiniti
               ? T[P]["choices"][number]["value"]
               : number;
           }
-        // BOOLEAN
+          // BOOLEAN
         : T[P] extends BooleanOptionalArgumentDefinition<infer N> ? { [_ in getName<N>]?: boolean }
         : T[P] extends BooleanArgumentDefinition<infer N> ? { [_ in getName<N>]: boolean }
-        // USER
+          // USER
         : T[P] extends UserOptionalArgumentDefinition<infer N> ? {
             [_ in getName<N>]?: {
               user: User;
@@ -195,13 +195,13 @@ export type ConvertArgumentDefinitionsToArgs<T extends readonly ArgumentDefiniti
               member: Member;
             };
           }
-        // CHANNEL
+          // CHANNEL
         : T[P] extends ChannelOptionalArgumentDefinition<infer N> ? { [_ in getName<N>]?: Channel }
         : T[P] extends ChannelArgumentDefinition<infer N> ? { [_ in getName<N>]: Channel }
-        // ROLE
+          // ROLE
         : T[P] extends RoleOptionalArgumentDefinition<infer N> ? { [_ in getName<N>]?: Role }
         : T[P] extends RoleArgumentDefinition<infer N> ? { [_ in getName<N>]: Role }
-        // MENTIONABLE
+          // MENTIONABLE
         : T[P] extends MentionableOptionalArgumentDefinition<infer N> ? {
             [_ in getName<N>]?:
               | Role
@@ -218,13 +218,13 @@ export type ConvertArgumentDefinitionsToArgs<T extends readonly ArgumentDefiniti
                 member: Member;
               };
           }
-        // SUBCOMMAND
+          // SUBCOMMAND
         : T[P] extends SubcommandArgumentDefinition<infer N> ? {
             [_ in getName<N>]?: T[P]["options"] extends readonly ArgumentDefinition[] // @ts-ignore somehow this check does not work
               ? ConvertArgumentDefinitionsToArgs<T[P]["options"]>
               : {};
           }
-        // SUBCOMMANDGROUP
+          // SUBCOMMANDGROUP
         : T[P] extends SubcommandGroupArgumentDefinition<infer N> ? {
             [_ in getName<N>]?: ConvertArgumentDefinitionsToArgs<T[P]["options"]>;
           }
