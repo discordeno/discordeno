@@ -5,7 +5,7 @@ export function editAutomodRule(bot: BotWithCache) {
   const editAutomodRule = bot.helpers.editAutomodRule;
 
   bot.helpers.editAutomodRule = async function (guildId, ruleId, options) {
-    requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
+    requireBotGuildPermissions(bot, bot.transformers.snowflake(guildId), ["MANAGE_GUILD"]);
 
     for (const action of options.actions ?? []) {
       // Check for maximum duration seconds
@@ -19,7 +19,7 @@ export function editAutomodRule(bot: BotWithCache) {
 
       // Timeout actions require perm check
       if (action.type === AutoModerationActionType.Timeout) {
-        requireBotGuildPermissions(bot, guildId, ["MODERATE_MEMBERS"]);
+        requireBotGuildPermissions(bot, bot.transformers.snowflake(guildId), ["MODERATE_MEMBERS"]);
       }
     }
 

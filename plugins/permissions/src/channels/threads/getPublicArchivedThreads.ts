@@ -4,7 +4,7 @@ import { requireBotChannelPermissions } from "../../permissions.ts";
 export function getPublicArchivedThreads(bot: BotWithCache) {
   const getPublicArchivedThreads = bot.helpers.getPublicArchivedThreads;
   bot.helpers.getPublicArchivedThreads = async function (channelId, options) {
-    const channel = bot.channels.get(channelId);
+    const channel = bot.channels.get(bot.transformers.snowflake(channelId));
 
     if (channel) {
       const isThreadParent = [ChannelTypes.GuildText, ChannelTypes.GuildAnnouncement, ChannelTypes.GuildForum]
@@ -13,7 +13,7 @@ export function getPublicArchivedThreads(bot: BotWithCache) {
         throw new Error("Channel must be a text channel, a forum channel, or an announcement channel");
       }
     }
-    requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]);
+    requireBotChannelPermissions(bot, bot.transformers.snowflake(channelId), ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY"]);
 
     return await getPublicArchivedThreads(channelId, options);
   };

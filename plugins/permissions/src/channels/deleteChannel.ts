@@ -5,7 +5,7 @@ export function deleteChannel(bot: BotWithCache) {
   const deleteChannel = bot.helpers.deleteChannel;
 
   bot.helpers.deleteChannel = async function (channelId, reason) {
-    const channel = bot.channels.get(channelId);
+    const channel = bot.channels.get(bot.transformers.snowflake(channelId));
 
     if (channel?.guildId) {
       const guild = bot.guilds.get(channel.guildId);
@@ -25,7 +25,7 @@ export function deleteChannel(bot: BotWithCache) {
 
       if (isVoice) perms.push("CONNECT");
 
-      requireBotChannelPermissions(bot, channelId, perms);
+      requireBotChannelPermissions(bot, bot.transformers.snowflake(channelId), perms);
     }
 
     return await deleteChannel(channelId, reason);
