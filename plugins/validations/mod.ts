@@ -6,6 +6,7 @@ import { invites } from "./src/invites/mod.ts";
 import { members } from "./src/members/mod.ts";
 import { messages } from "./src/messages/mod.ts";
 import { misc } from "./src/misc/mod.ts";
+import { stickers } from "./src/stickers/mod.ts";
 import { webhooks } from "./src/webhooks/mod.ts";
 
 // PLUGINS MUST TAKE A BOT ARGUMENT WHICH WILL BE MODIFIED
@@ -21,6 +22,7 @@ export function enableValidationsPlugin<B extends Bot>(bot: B): B {
   members(bot);
   messages(bot);
   misc(bot);
+  stickers(bot);
   webhooks(bot);
 
   // PLUGINS MUST RETURN THE BOT
