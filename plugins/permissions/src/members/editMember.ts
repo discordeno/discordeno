@@ -15,8 +15,8 @@ export function editMember(bot: BotWithCache) {
       options.mute !== undefined || options.deaf !== undefined ||
       options.channelId !== undefined
     ) {
-      const memberVoiceState = (bot.guilds.get(guildId))
-        ?.voiceStates.get(memberId);
+      const memberVoiceState = (bot.guilds.get(bot.transformers.snowflake(guildId)))
+        ?.voiceStates.get(bot.transformers.snowflake(memberId));
 
       if (!memberVoiceState?.channelId) throw new Error("MEMBER_NOT_IN_VOICE_CHANNEL");
 
@@ -27,11 +27,11 @@ export function editMember(bot: BotWithCache) {
       if (options.channelId) {
         const requiredVoicePerms: PermissionStrings[] = ["CONNECT", "MOVE_MEMBERS"];
         if (memberVoiceState) requireBotChannelPermissions(bot, memberVoiceState?.channelId, requiredVoicePerms);
-        requireBotChannelPermissions(bot, options.channelId, requiredVoicePerms);
+        requireBotChannelPermissions(bot, bot.transformers.snowflake(options.channelId), requiredVoicePerms);
       }
     }
 
-    requireBotGuildPermissions(bot, guildId, requiredPerms);
+    requireBotGuildPermissions(bot, bot.transformers.snowflake(guildId), requiredPerms);
 
     return await editMember(guildId, memberId, options);
   };

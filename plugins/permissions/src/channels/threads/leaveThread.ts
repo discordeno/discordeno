@@ -5,7 +5,7 @@ export function leaveThread(bot: BotWithCache) {
   const leaveThread = bot.helpers.leaveThread;
 
   bot.helpers.leaveThread = async function (threadId) {
-    const channel = bot.channels.get(threadId);
+    const channel = bot.channels.get(bot.transformers.snowflake(threadId));
 
     if (channel) {
       const isThread = ![ChannelTypes.PublicThread, ChannelTypes.PrivateThread, ChannelTypes.AnnouncementThread]
@@ -15,7 +15,7 @@ export function leaveThread(bot: BotWithCache) {
 
       if (channel.archived) throw new Error("You can not leave an archived channel.");
     }
-    requireBotChannelPermissions(bot, threadId, ["VIEW_CHANNEL"]);
+    requireBotChannelPermissions(bot, bot.transformers.snowflake(threadId), ["VIEW_CHANNEL"]);
 
     return await leaveThread(threadId);
   };

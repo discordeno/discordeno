@@ -4,7 +4,7 @@ import { requireBotChannelPermissions } from "../../permissions.ts";
 export function getPrivateArchivedThreads(bot: BotWithCache) {
   const getPrivateArchivedThreads = bot.helpers.getPrivateArchivedThreads;
   bot.helpers.getPrivateArchivedThreads = async function (channelId, options) {
-    const channel = bot.channels.get(channelId);
+    const channel = bot.channels.get(bot.transformers.snowflake(channelId));
 
     if (channel) {
       const isThreadParent = [ChannelTypes.GuildText, ChannelTypes.GuildAnnouncement, ChannelTypes.GuildForum]
@@ -14,7 +14,11 @@ export function getPrivateArchivedThreads(bot: BotWithCache) {
       }
     }
 
-    requireBotChannelPermissions(bot, channelId, ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY", "MANAGE_MESSAGES"]);
+    requireBotChannelPermissions(bot, bot.transformers.snowflake(channelId), [
+      "VIEW_CHANNEL",
+      "READ_MESSAGE_HISTORY",
+      "MANAGE_MESSAGES",
+    ]);
 
     return await getPrivateArchivedThreads(channelId, options);
   };

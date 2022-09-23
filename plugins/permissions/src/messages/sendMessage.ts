@@ -5,7 +5,7 @@ export function sendMessage(bot: BotWithCache) {
   const sendMessage = bot.helpers.sendMessage;
 
   bot.helpers.sendMessage = async function (channelId, content) {
-    const channel = bot.channels.get(channelId);
+    const channel = bot.channels.get(bot.transformers.snowflake(channelId));
     if (
       channel &&
       [ChannelTypes.GuildCategory, ChannelTypes.GuildStageVoice, ChannelTypes.GuildForum].includes(channel.type)

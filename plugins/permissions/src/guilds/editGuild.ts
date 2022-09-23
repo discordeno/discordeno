@@ -6,8 +6,8 @@ export function editGuild(bot: BotWithCache) {
 
   bot.helpers.editGuild = async function (guildId, options, shardId) {
     if (options.features?.includes(GuildFeatures.Community)) {
-      requireBotGuildPermissions(bot, guildId, ["ADMINISTRATOR"]);
-    } else requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
+      requireBotGuildPermissions(bot, bot.transformers.snowflake(guildId), ["ADMINISTRATOR"]);
+    } else requireBotGuildPermissions(bot, bot.transformers.snowflake(guildId), ["MANAGE_GUILD"]);
 
     return await editGuild(guildId, options, shardId);
   };
