@@ -2096,7 +2096,7 @@ export interface DiscordComponent {
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   max_values?: number;
   /** The minimum input length for a text input. Between 0-4000. */
-  min_length?: number
+  min_length?: number;
   /**The maximum input length for a text input. Between 1-4000. */
   max_length?: number;
   /** a list of child components */
