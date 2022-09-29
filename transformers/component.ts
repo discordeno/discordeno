@@ -72,6 +72,10 @@ export interface Component {
   minValues?: number;
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   maxValues?: number;
+  /** The minimum input length for a text input. Between 0-4000 */
+  minLength?: number
+  /**The maximum input length for a text input. Between 1-4000 */
+  maxLength?: number;
   /** a list of child components */
   components?: Component[];
 }

@@ -33,6 +33,8 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
     placeholder: payload.placeholder,
     min_values: payload.minValues,
     max_values: payload.maxValues,
+    min_length: payload.minLength,
+    max_length: payload.maxLength,
     value: payload.value,
     components: payload.components?.map((component) => bot.transformers.reverse.component(bot, component)),
   };
