@@ -33,6 +33,8 @@ export function transformComponent(bot: Bot, payload: DiscordComponent): Compone
     placeholder: payload.placeholder,
     minValues: payload.min_values,
     maxValues: payload.max_values,
+    minLength: payload.min_length,
+    maxLength: payload.max_length,
     value: payload.value,
     components: payload.components?.map((component) => bot.transformers.component(bot, component)),
   };
