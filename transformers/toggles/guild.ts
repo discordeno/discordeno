@@ -98,6 +98,35 @@ export class GuildToggles extends ToggleBitfieldBigint {
     if (guild.features.includes(GuildFeatures.InvitesDisabled)) this.add(GuildToggle.invitesDisabled);
   }
 
+  get features() {
+    return Object.entries(this.list()).filter(([key, value]) =>
+      [
+        "inviteSplash",
+        "vipRegions",
+        "vanityUrl",
+        "verified",
+        "partnered",
+        "community",
+        "news",
+        "discoverable",
+        "featurable",
+        "animatedIcon",
+        "banner",
+        "welcomeScreenEnabled",
+        "memberVerificationGateEnabled",
+        "previewEnabled",
+        "ticketedEventsEnabled",
+        "monetizationEnabled",
+        "moreStickers",
+        "privateThreads",
+        "roleIcons",
+        "autoModeration",
+        "invitesDisabled",
+        "animatedBanner",
+      ].includes(key) && value
+    ).map(([key, _]) => key) as GuildToggleKeys[];
+  }
+
   /** Whether the bot is the owner of the guild */
   get owner() {
     return this.has("owner");
