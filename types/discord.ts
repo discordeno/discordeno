@@ -1248,6 +1248,8 @@ export interface DiscordInputTextComponent {
   type: MessageComponentTypes.InputText;
   /** The style of the InputText */
   style: TextStyles;
+  /** whether this component is required to be filled, default true */
+  required?: boolean;
   /** The customId of the InputText */
   custom_id: string;
   /** The label of the InputText (max 45 characters)*/
