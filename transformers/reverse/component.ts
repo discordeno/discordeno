@@ -7,6 +7,7 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
     type: payload.type,
     custom_id: payload.customId,
     disabled: payload.disabled,
+    required: payload.required,
     style: payload.style,
     label: payload.label,
     emoji: payload.emoji
