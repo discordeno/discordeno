@@ -47,6 +47,8 @@ export interface Component {
   type: MessageComponentTypes;
   /** a developer-defined identifier for the component, max 100 characters */
   customId?: string;
+  /** whether this component is required to be filled, default true */
+  required?: boolean;
   /** whether the component is disabled, default false */
   disabled?: boolean;
   /** For different styles/colors of the buttons */
