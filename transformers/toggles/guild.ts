@@ -28,16 +28,14 @@ export const GuildToggle = {
   partnered: 1n << 9n,
   /** Whether the guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
   community: 1n << 10n,
-  /** Whether the guild has access to use commerce features (i.e. create store channels) */
-  commerce: 1n << 11n,
+  /** Whether the guild has access to set an animated guild banner image */
+  animatedBanner: 1n << 11n,
   /** Whether the guild has access to create news channels */
   news: 1n << 12n,
   /** Whether the guild is able to be discovered in the directory */
   discoverable: 1n << 13n,
-  /** Whether the guild cannot be discoverable */
-  discoverableDisabled: 1n << 14n,
   /** Whether the guild is able to be featured in the directory */
-  feature: 1n << 15n,
+  featurable: 1n << 15n,
   /** Whether the guild has access to set an animated guild icon */
   animatedIcon: 1n << 16n,
   /** Whether the guild has access to set a guild banner image */
@@ -80,11 +78,10 @@ export class GuildToggles extends ToggleBitfieldBigint {
     if (guild.features.includes(GuildFeatures.Verified)) this.add(GuildToggle.verified);
     if (guild.features.includes(GuildFeatures.Partnered)) this.add(GuildToggle.partnered);
     if (guild.features.includes(GuildFeatures.Community)) this.add(GuildToggle.community);
-    if (guild.features.includes(GuildFeatures.Commerce)) this.add(GuildToggle.commerce);
+    if (guild.features.includes(GuildFeatures.AnimatedBanner)) this.add(GuildToggle.animatedBanner);
     if (guild.features.includes(GuildFeatures.News)) this.add(GuildToggle.news);
     if (guild.features.includes(GuildFeatures.Discoverable)) this.add(GuildToggle.discoverable);
-    if (guild.features.includes(GuildFeatures.DiscoverableDisabled)) this.add(GuildToggle.discoverableDisabled);
-    if (guild.features.includes(GuildFeatures.Feature)) this.add(GuildToggle.feature);
+    if (guild.features.includes(GuildFeatures.Featurable)) this.add(GuildToggle.featurable);
     if (guild.features.includes(GuildFeatures.AnimatedIcon)) this.add(GuildToggle.animatedIcon);
     if (guild.features.includes(GuildFeatures.Banner)) this.add(GuildToggle.banner);
     if (guild.features.includes(GuildFeatures.WelcomeScreenEnabled)) this.add(GuildToggle.welcomeScreenEnabled);
@@ -99,6 +96,35 @@ export class GuildToggles extends ToggleBitfieldBigint {
     if (guild.features.includes(GuildFeatures.RoleIcons)) this.add(GuildToggle.roleIcons);
     if (guild.features.includes(GuildFeatures.AutoModeration)) this.add(GuildToggle.autoModeration);
     if (guild.features.includes(GuildFeatures.InvitesDisabled)) this.add(GuildToggle.invitesDisabled);
+  }
+
+  get features() {
+    return Object.entries(this.list()).filter(([key, value]) =>
+      [
+        "inviteSplash",
+        "vipRegions",
+        "vanityUrl",
+        "verified",
+        "partnered",
+        "community",
+        "news",
+        "discoverable",
+        "featurable",
+        "animatedIcon",
+        "banner",
+        "welcomeScreenEnabled",
+        "memberVerificationGateEnabled",
+        "previewEnabled",
+        "ticketedEventsEnabled",
+        "monetizationEnabled",
+        "moreStickers",
+        "privateThreads",
+        "roleIcons",
+        "autoModeration",
+        "invitesDisabled",
+        "animatedBanner",
+      ].includes(key) && value
+    ).map(([key, _]) => key) as GuildToggleKeys[];
   }
 
   /** Whether the bot is the owner of the guild */
@@ -150,9 +176,9 @@ export class GuildToggles extends ToggleBitfieldBigint {
   get community() {
     return this.has("community");
   }
-  /** Whether the guild has access to use commerce features (i.e. create store channels) */
-  get commerce() {
-    return this.has("commerce");
+  /** Whether the guild has access to set an animated guild banner image */
+  get animatedBanner() {
+    return this.has("animatedBanner");
   }
   /** Whether the guild has access to create news channels */
   get news() {
@@ -162,13 +188,9 @@ export class GuildToggles extends ToggleBitfieldBigint {
   get discoverable() {
     return this.has("discoverable");
   }
-  /** Whether the guild cannot be discoverable */
-  get discoverableDisabled() {
-    return this.has("discoverableDisabled");
-  }
   /** Whether the guild is able to be featured in the directory */
-  get feature() {
-    return this.has("feature");
+  get featurable() {
+    return this.has("featurable");
   }
   /** Whether the guild has access to set an animated guild icon */
   get animatedIcon() {

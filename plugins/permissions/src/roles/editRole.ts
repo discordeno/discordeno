@@ -10,9 +10,9 @@ export function editRole(bot: BotWithCache) {
     id,
     options,
   ) {
-    const guild = bot.guilds.get(guildId);
+    const guild = bot.guilds.get(bot.transformers.snowflake(guildId));
     if (guild) {
-      const role = guild.roles.get(id);
+      const role = guild.roles.get(bot.transformers.snowflake(id));
       if (role) {
         const botRole = highestRole(bot, guild, bot.id);
 

@@ -5,7 +5,7 @@ export function addThreadMember(bot: BotWithCache) {
   const addThreadMember = bot.helpers.addThreadMember;
 
   bot.helpers.addThreadMember = async function (threadId, userId) {
-    const channel = bot.channels.get(threadId);
+    const channel = bot.channels.get(bot.transformers.snowflake(threadId));
 
     if (channel) {
       const isThread = ![ChannelTypes.PublicThread, ChannelTypes.PrivateThread, ChannelTypes.AnnouncementThread]

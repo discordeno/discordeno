@@ -205,16 +205,12 @@ export enum GuildFeatures {
   Partnered = "PARTNERED",
   /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
   Community = "COMMUNITY",
-  /** Guild has access to use commerce features (i.e. create store channels) */
-  Commerce = "COMMERCE",
   /** Guild has access to create news channels */
   News = "NEWS",
   /** Guild is able to be discovered in the directory */
   Discoverable = "DISCOVERABLE",
-  /** guild cannot be discoverable */
-  DiscoverableDisabled = "DISCOVERABLE_DISABLED",
   /** Guild is able to be featured in the directory */
-  Feature = "FEATURABLE",
+  Featurable = "FEATURABLE",
   /** Guild has access to set an animated guild icon */
   AnimatedIcon = "ANIMATED_ICON",
   /** Guild has access to set a guild banner image */
@@ -239,6 +235,8 @@ export enum GuildFeatures {
   AutoModeration = "AUTO_MODERATION",
   /** Guild has paused invites, preventing new users from joining */
   InvitesDisabled = "INVITES_DISABLED",
+  /** Guild has access to set an animated guild banner image */
+  AnimatedBanner = "ANIMATED_BANNER",
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-mfa-level */

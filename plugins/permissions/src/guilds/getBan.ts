@@ -5,7 +5,7 @@ export function getBan(bot: BotWithCache) {
   const getBan = bot.helpers.getBan;
 
   bot.helpers.getBan = async function (guildId, memberId) {
-    requireBotGuildPermissions(bot, guildId, ["BAN_MEMBERS"]);
+    requireBotGuildPermissions(bot, bot.transformers.snowflake(guildId), ["BAN_MEMBERS"]);
 
     return await getBan(guildId, memberId);
   };

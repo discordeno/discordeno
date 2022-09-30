@@ -5,7 +5,7 @@ export function createChannel(bot: BotWithCache) {
   const createChannel = bot.helpers.createChannel;
 
   bot.helpers.createChannel = async function (guildId, options) {
-    const guild = bot.guilds.get(guildId);
+    const guild = bot.guilds.get(bot.transformers.snowflake(guildId));
 
     if (guild) {
       if (options?.rateLimitPerUser && !(0 < options.rateLimitPerUser && options.rateLimitPerUser < 21600)) {
@@ -38,7 +38,7 @@ export function createChannel(bot: BotWithCache) {
       if (options?.userLimit && options.userLimit > 99) throw new Error("The user limit must be less than 99.");
 
       if (options?.parentId) {
-        const category = bot.channels.get(options.parentId);
+        const category = bot.channels.get(bot.transformers.snowflake(options.parentId));
         if (category && category.type !== ChannelTypes.GuildCategory) {
           throw new Error("The parent id must be for a category channel type.");
         }

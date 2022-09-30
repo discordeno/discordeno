@@ -5,12 +5,12 @@ export function editStageInstance(bot: BotWithCache) {
   const editStageInstance = bot.helpers.editStageInstance;
 
   bot.helpers.editStageInstance = async function (channelId, data) {
-    const channel = bot.channels.get(channelId);
+    const channel = bot.channels.get(bot.transformers.snowflake(channelId));
     if (channel && channel.type !== ChannelTypes.GuildStageVoice) {
       throw new Error("Channel must be a stage voice channel");
     }
 
-    requireBotChannelPermissions(bot, channelId, [
+    requireBotChannelPermissions(bot, bot.transformers.snowflake(channelId), [
       "VIEW_CHANNEL",
       "CONNECT",
       "MANAGE_CHANNELS",

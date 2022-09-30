@@ -12,7 +12,7 @@ export function deleteMessages(bot: Bot) {
     const oldestAllowed = Date.now() - 1209600000;
 
     ids = ids.filter((id) => {
-      const createdAt = Number(id / 4194304n + 1420070400000n);
+      const createdAt = Number(bot.transformers.snowflake(id) / 4194304n + 1420070400000n);
       // IF MESSAGE IS OLDER THAN 2 WEEKS
       if (createdAt > oldestAllowed) return true;
 

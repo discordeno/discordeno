@@ -5,7 +5,7 @@ export function removeThreadMember(bot: BotWithCache) {
   const removeThreadMember = bot.helpers.removeThreadMember;
 
   bot.helpers.removeThreadMember = async function (threadId, userId) {
-    const channel = bot.channels.get(threadId);
+    const channel = bot.channels.get(bot.transformers.snowflake(threadId));
 
     if (channel) {
       const isThread = ![ChannelTypes.PublicThread, ChannelTypes.PrivateThread, ChannelTypes.AnnouncementThread]
