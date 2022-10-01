@@ -1260,8 +1260,6 @@ export interface DiscordInputTextComponent {
   min_length?: number;
   /** The maximum length of the text the user has to provide */
   max_length?: number;
-  /** Whether or not this input is required. */
-  required?: boolean;
   /** Pre-filled value for input text. */
   value?: string;
 }
@@ -2103,6 +2101,8 @@ export interface DiscordComponent {
   max_length?: number;
   /** a list of child components */
   components?: DiscordComponent[];
+  /** whether this component is required to be filled, default true */
+  required?: boolean;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#channel-pins-update */
