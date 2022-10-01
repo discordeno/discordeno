@@ -8,7 +8,10 @@ Deno.test("[stickers] Get guild sticker", async () => {
     name: "sticker name",
     description: "sticker description",
     tags: "sticker tags",
-    file: "https://cdn.discordapp.com/emojis/785403373817823272.png",
+    file: {
+      blob: await (await fetch("https://cdn.discordapp.com/emojis/785403373817823272.png")).blob(),
+      name: "ddlogo.png",
+    },
   });
   const getSticker = await bot.helpers.getGuildSticker(CACHED_COMMUNITY_GUILD_ID, createSticker.id);
   assertEquals(getSticker.name, "sticker name");

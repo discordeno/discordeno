@@ -8,7 +8,10 @@ Deno.test("[stickers] Delete guild sticker", async () => {
     name: "sticker name",
     description: "sticker description",
     tags: "sticker tags",
-    file: "https://cdn.discordapp.com/emojis/785403373817823272.png",
+    file: {
+      blob: await (await fetch("https://cdn.discordapp.com/emojis/785403373817823272.png")).blob(),
+      name: "ddlogo.png",
+    },
   });
   await bot.helpers.deleteGuildSticker(CACHED_COMMUNITY_GUILD_ID, sticker.id);
   await assertRejects(() => bot.helpers.getGuildSticker(CACHED_COMMUNITY_GUILD_ID, sticker.id));
