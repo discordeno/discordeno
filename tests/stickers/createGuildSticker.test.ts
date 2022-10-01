@@ -24,4 +24,5 @@ Deno.test("[stickers] Create guild sticker", async () => {
   assertEquals(message.stickerItems?.[0].name, sticker.name);
 
   await bot.helpers.deleteGuildSticker(CACHED_COMMUNITY_GUILD_ID, sticker.id);
+  await bot.helpers.deleteChannel(channel.id);
 });
