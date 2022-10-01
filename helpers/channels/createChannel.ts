@@ -24,7 +24,7 @@ import { BigString, ChannelTypes } from "../../types/shared.ts";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-channel}
  */
-export async function createChannel(bot: Bot, guildId: BigString, options?: CreateGuildChannel): Promise<Channel> {
+export async function createChannel(bot: Bot, guildId: BigString, options: CreateGuildChannel): Promise<Channel> {
   // BITRATE IS IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
   if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000;
 

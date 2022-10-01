@@ -8,7 +8,7 @@ Deno.test("[stickers] Edit guild sticker", async () => {
     name: "test",
     description: "test",
     tags: "test",
-    file: { blob: new Blob(), name: "test.png" },
+    file: "https://cdn.discordapp.com/emojis/785403373817823272.png",
   });
   const editSticker = await bot.helpers.editGuildSticker(CACHED_COMMUNITY_GUILD_ID, createSticker.id, {
     name: "sticker name",
