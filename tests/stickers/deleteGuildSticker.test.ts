@@ -1,6 +1,7 @@
 import { assertRejects } from "../deps.ts";
 import { loadBot } from "../mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../utils.ts";
+import { blob } from "./blob.ts";
 
 Deno.test("[stickers] Delete guild sticker", async () => {
   const bot = loadBot();
@@ -8,7 +9,7 @@ Deno.test("[stickers] Delete guild sticker", async () => {
     name: "sticker name",
     description: "sticker description",
     tags: "sticker tags",
-    file: { blob: new Blob(), name: "sticker file name" },
+    file: { blob, name: "dd_logo.png" },
   });
   await bot.helpers.deleteGuildSticker(CACHED_COMMUNITY_GUILD_ID, sticker.id);
   await assertRejects(() => bot.helpers.getGuildSticker(CACHED_COMMUNITY_GUILD_ID, sticker.id));

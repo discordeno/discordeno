@@ -2,6 +2,7 @@ import { StickerFormatTypes } from "../../mod.ts";
 import { assertEquals } from "../deps.ts";
 import { loadBot } from "../mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../utils.ts";
+import { blob } from "./blob.ts";
 
 Deno.test("[stickers] Create guild sticker", async () => {
   const bot = loadBot();
@@ -9,7 +10,7 @@ Deno.test("[stickers] Create guild sticker", async () => {
     name: "sticker name",
     description: "sticker description",
     tags: "sticker tags",
-    file: { blob: new Blob(), name: "test.png" },
+    file: { blob, name: "dd_logo.png" },
   });
 
   assertEquals(sticker.name, "sticker name");
