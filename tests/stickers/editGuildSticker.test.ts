@@ -1,7 +1,6 @@
 import { assertEquals } from "../deps.ts";
 import { loadBot } from "../mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../utils.ts";
-import { blob } from "./blob.ts";
 
 Deno.test("[stickers] Edit guild sticker", async () => {
   const bot = loadBot();
@@ -9,7 +8,7 @@ Deno.test("[stickers] Edit guild sticker", async () => {
     name: "test",
     description: "test",
     tags: "test",
-    file: { blob, name: "dd_logo.png" },
+    file: "https://cdn.discordapp.com/emojis/785403373817823272.png",
   });
   const editSticker = await bot.helpers.editGuildSticker(CACHED_COMMUNITY_GUILD_ID, createSticker.id, {
     name: "sticker name",
