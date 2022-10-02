@@ -9,7 +9,7 @@ Deno.test("[stickers] Get guild sticker", async () => {
     description: "sticker description",
     tags: "sticker tags",
     file: {
-      blob: await (await fetch("https://cdn.discordapp.com/emojis/785403373817823272.png")).blob(),
+      blob: await (await fetch("https://i.imgur.com/ejqd6Ro.png")).blob(),
       name: "ddlogo.png",
     },
   });
