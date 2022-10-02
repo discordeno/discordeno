@@ -47,22 +47,22 @@ Discordeno is actively maintained to guarantee **excellent performance and ease.
 - REST does not rest!
   - Separate rest guarantees that your queued requests will continue to be processed even if your bot breaks for
     whatever reason.
-  - Seamless updates! There's a chance you'll lose a tonne of messages or replies that are waiting to be given when
-    you wish to update and restart the bot. You may restart your bot using this technique and never have to worry about
+  - Seamless updates! There's a chance you'll lose a lot of messages or replies that are waiting to be given when you
+    wish to update and restart the bot. You may restart your bot using this technique and never have to worry about
     losing any answers.
 - Single source of contact to Discord API
-  - As a result, you will be able to send requests to Discord from any location, even a bot dashboard. You are no
-    longer need to interact with your bot processes in order to submit a request or do anything else. Your bot process
-    should be freed up to handle bot events.
+  - As a result, you will be able to send requests to Discord from any location, even a bot dashboard. You are no longer
+    need to interact with your bot processes in order to submit a request or do anything else. Your bot process should
+    be freed up to handle bot events.
 - Scalability! Scalability! Scalability!
 
 ### Gateway
 
 - **Zero Downtime Updates:**
-  - A few seconds are needed to update your bot. When using conventional sharding, you must restart in addition to
-    going through a 1/5s rate-limited process of identifying all of your shards. As WS processing has been relocated to
-    a proxy process, you may resume the bot code right away without worrying about any delays. Normally, if you had a
-    bot that was spread across 200,000 servers, restarting it after making a simple modification would take 20 minutes.
+  - A few seconds are needed to update your bot. When using conventional sharding, you must restart in addition to going
+    through a 1/5s rate-limited process of identifying all of your shards. As WS processing has been relocated to a
+    proxy process, you may resume the bot code right away without worrying about any delays. Normally, if you had a bot
+    that was spread across 200,000 servers, restarting it after making a simple modification would take 20 minutes.
 - **Zero Downtime Resharding:**
   - At various periods in time, Discord stops allowing your bot to be added to new servers. Consider 150 shards
     operating on 150,000 servers, for instance. Your shards may support a maximum of 150 * 2500 = 375,000 servers. Your
@@ -90,8 +90,8 @@ Discordeno is actively maintained to guarantee **excellent performance and ease.
     handler, you may supply a function. For instance, you may simply give a method to override a specific function if
     you want it to behave differently rather than forking and maintaining your fork.
 - **Clustering With Workers:**
-  - Utilize all of your CPU cores to their greatest potential by distributing the workload across employees. To
-    enhance efficiency, manage how many employees and shards there are each worker!
+  - Utilize all of your CPU cores to their greatest potential by distributing the workload across employees. To enhance
+    efficiency, manage how many employees and shards there are each worker!
 
 ### Custom Cache
 

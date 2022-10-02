@@ -22,10 +22,6 @@ export async function createGuildSticker(
   guildId: bigint,
   options: CreateGuildStickerOptions,
 ): Promise<Sticker> {
-  if (options.file && !options.file.startsWith("data:image/")) {
-    options.file = await bot.utils.urlToBase64(options.file);
-  }
-
   const result = await bot.rest.runMethod(bot.rest, "POST", bot.constants.routes.GUILD_STICKERS(guildId), {
     name: options.name,
     description: options.description,
@@ -44,5 +40,5 @@ export interface CreateGuildStickerOptions extends WithReason {
   /** Autocomplete/suggestion tags for the sticker (max 200 characters) */
   tags: string;
   /** The sticker file to upload, must be a PNG, APNG, or Lottie JSON file, max 500 KB */
-  file: string;
+  file: FileContent;
 }
