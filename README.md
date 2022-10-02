@@ -47,7 +47,7 @@ Discordeno is actively maintained to guarantee **excellent performance and ease.
 - REST does not rest!
   - Separate rest guarantees that your queued requests will continue to be processed even if your bot breaks for
     whatever reason.
-  - Seamless updates! There's a chance you'll lose a tonne of messages or replies that are waiting to be given when you
+  - Seamless updates! There's a chance you'll lose a lot of messages or replies that are waiting to be given when you
     wish to update and restart the bot. You may restart your bot using this technique and never have to worry about
     losing any answers.
 - Single source of contact to Discord API
