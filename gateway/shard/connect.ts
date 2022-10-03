@@ -8,8 +8,16 @@ export async function connect(shard: Shard): Promise<void> {
   }
   shard.events.connecting?.(shard);
 
-  // Explicitly setting the encoding to json, since we do not support ETF.
-  const socket = new WebSocket(`${shard.gatewayConfig.url}/?v=${shard.gatewayConfig.version}&encoding=json`);
+  let url = shard.gatewayConfig.url;
+  // If not connecting to a proxy but directly to discord need to handle resuming
+  if (url === "wss://gateway.discord.gg") {
+    url = `${
+      shard.state === ShardState.Resuming ? shard.resumeGatewayUrl : shard.gatewayConfig.url
+    }/?v=${shard.gatewayConfig.version}&encoding=json`;
+  }
+
+  const socket = new WebSocket(url);
+
   shard.socket = socket;
 
   // TODO: proper event handling

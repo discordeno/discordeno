@@ -3,23 +3,34 @@ import { Guild } from "../../transformers/guild.ts";
 import { DiscordGuild } from "../../types/discord.ts";
 
 /**
- * Create a new guild based on a template
- * NOTE: This endpoint can be used only by bots in less than 10 guilds.
+ * Creates a guild from a template.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param templateCode - The code of the template.
+ * @param options - The parameters for the creation of the guild.
+ * @returns An instance of the created {@link Guild}.
+ *
+ * @remarks
+ * ⚠️ This route can only be used by bots in __fewer than 10 guilds__.
+ *
+ * Fires a _Guild Create_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild-template#create-guild-from-guild-template}
  */
 export async function createGuildFromTemplate(
   bot: Bot,
   templateCode: string,
-  data: CreateGuildFromTemplate,
+  options: CreateGuildFromTemplate,
 ): Promise<Guild> {
-  if (data.icon) {
-    data.icon = await bot.utils.urlToBase64(data.icon);
+  if (options.icon) {
+    options.icon = await bot.utils.urlToBase64(options.icon);
   }
 
   const createdGuild = await bot.rest.runMethod<DiscordGuild>(
     bot.rest,
     "POST",
     bot.constants.routes.TEMPLATE(templateCode),
-    data,
+    options,
   );
 
   return bot.transformers.guild(bot, {

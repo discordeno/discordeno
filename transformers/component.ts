@@ -33,6 +33,8 @@ export function transformComponent(bot: Bot, payload: DiscordComponent): Compone
     placeholder: payload.placeholder,
     minValues: payload.min_values,
     maxValues: payload.max_values,
+    minLength: payload.min_length,
+    maxLength: payload.max_length,
     value: payload.value,
     components: payload.components?.map((component) => bot.transformers.component(bot, component)),
   };
@@ -45,6 +47,8 @@ export interface Component {
   type: MessageComponentTypes;
   /** a developer-defined identifier for the component, max 100 characters */
   customId?: string;
+  /** whether this component is required to be filled, default true */
+  required?: boolean;
   /** whether the component is disabled, default false */
   disabled?: boolean;
   /** For different styles/colors of the buttons */
@@ -72,6 +76,10 @@ export interface Component {
   minValues?: number;
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   maxValues?: number;
+  /** The minimum input length for a text input. Between 0-4000. */
+  minLength?: number;
+  /**The maximum input length for a text input. Between 1-4000. */
+  maxLength?: number;
   /** a list of child components */
   components?: Component[];
 }

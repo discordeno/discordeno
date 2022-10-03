@@ -55,6 +55,11 @@ if (Influx) {
   }, 30000);
 }
 
+rest.convertRestError = (errorStack, data) => {
+  if (!data) return { message: errorStack.message };
+  return { ...data, message: errorStack.message };
+};
+
 const app = express();
 
 app.use(
@@ -100,12 +105,7 @@ async function handleRequest(req: Request, res: Response) {
     }
   } catch (error: any) {
     console.log(error);
-    if (error?.code) res.status(500).json(error);
-    else {
-      res.status(500).json({
-        error: error.message ?? "No error found at all what the hell discord.",
-      });
-    }
+    res.status(500).json(error);
   }
 }
 

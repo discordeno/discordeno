@@ -1,14 +1,16 @@
 import { BotWithCache } from "../../deps.ts";
-import setupBanPermChecks from "./ban.ts";
-import editBotNickname from "./editBot.ts";
-import editMember from "./editMember.ts";
-import kickMember from "./kickMember.ts";
-import pruneMembers from "./pruneMembers.ts";
+import { banMember } from "./banMember.ts";
+import { editBotMember } from "./editBotMember.ts";
+import { editMember } from "./editMember.ts";
+import { kickMember } from "./kickMember.ts";
+import { pruneMembers } from "./pruneMembers.ts";
+import { unbanMember } from "./unbanMember.ts";
 
-export default function setupMemberPermChecks(bot: BotWithCache) {
-  setupBanPermChecks(bot);
-  editBotNickname(bot);
+export function members(bot: BotWithCache) {
+  banMember(bot);
+  editBotMember(bot);
   editMember(bot);
   kickMember(bot);
   pruneMembers(bot);
+  unbanMember(bot);
 }

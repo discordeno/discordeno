@@ -16,8 +16,8 @@ import {
   GuildFeatures,
   GuildNsfwLevel,
   IntegrationExpireBehaviors,
+  InteractionResponseTypes,
   InteractionTypes,
-  Locales,
   Localization,
   MessageActivityTypes,
   MessageComponentTypes,
@@ -85,21 +85,42 @@ export interface DiscordConnection {
   /** The username of the connection account */
   name: string;
   /** The service of the connection (twitch, youtube) */
-  type: string;
+  type: DiscordConnectionServices;
   /** Whether the connection is revoked */
   revoked?: boolean;
   /** Whether the connection is verified */
   verified: boolean;
   /** Whether friend sync is enabled for this connection */
-  friendSync: boolean;
+  friend_sync: boolean;
   /** Whether activities related to this connection will be shown in presence updates */
-  showActivity: boolean;
+  show_activity: boolean;
   /** Visibility of this connection */
   visibility: VisibilityTypes;
 
   /** An array of partial server integrations */
   integrations?: DiscordIntegration[];
+  /** Whether this connection has a corresponding third party OAuth2 token. */
+  two_way_link: boolean;
 }
+
+/** https://discord.com/developers/docs/resources/user#connection-object-services */
+export type DiscordConnectionServices =
+  | "battlenet"
+  | "ebay"
+  | "epicgames"
+  | "facebook"
+  | "github"
+  | "leagueoflegends"
+  | "playstation"
+  | "reddit"
+  | "riotgames"
+  | "spotify"
+  | "skype"
+  | "steam"
+  | "twitch"
+  | "twitter"
+  | "xbox"
+  | "youtube";
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
 export interface DiscordIntegration {
@@ -134,6 +155,8 @@ export interface DiscordIntegration {
   account: DiscordIntegrationAccount;
   /** The bot/OAuth2 application for discord integrations */
   application?: DiscordIntegrationApplication;
+  /** the scopes the application has been authorized for */
+  scopes: string[];
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-account-object-integration-account-structure */
@@ -437,6 +460,8 @@ export interface DiscordAttachment {
 
   /** Attachment id */
   id: string;
+  /** description for the file (max 1024 characters) */
+  description?: string;
   /** Height of file (if image) */
   height?: number | null;
   /** Width of file (if image) */
@@ -498,9 +523,9 @@ export interface DiscordApplicationWebhook {
   avatar: string | null;
   /** The bot/OAuth2 application that created this webhook */
   application_id: string | null;
-  /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks) */
+  /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks), field will be absent if the webhook creator has since lost access to the guild where the followed channel resides */
   source_guild?: Partial<DiscordGuild>;
-  /** The channel that this webhook is following (returned for Channel Follower Webhooks) */
+  /** The channel that this webhook is following (returned for Channel Follower Webhooks), field will be absent if the webhook creator has since lost access to the guild where the followed channel resides */
   source_channel?: Partial<DiscordChannel>;
 }
 
@@ -707,7 +732,7 @@ export interface DiscordChannel {
   position?: number;
   /** The name of the channel (1-100 characters) */
   name?: string;
-  /** The channel topic (0-1024 characters) */
+  /** The channel topic (0-4096 characters for GUILD_FORUM channels, 0-1024 characters for all others) */
   topic?: string | null;
   /** The bitrate (in bits) of the voice or stage channel */
   bitrate?: number;
@@ -752,6 +777,14 @@ export interface DiscordChannel {
   permissions?: string;
   /** When a thread is created this will be true on that channel payload for the thread. */
   newly_created?: boolean;
+  /** The set of tags that can be used in a GUILD_FORUM channel */
+  available_tags: DiscordForumTag[];
+  /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
+  applied_tags: string[];
+  /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */
+  default_reaction_emoji?: DiscordDefaultReactionEmoji | null;
+  /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
+  default_thread_rate_limit_per_user: number;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#presence-update */
@@ -1215,6 +1248,8 @@ export interface DiscordInputTextComponent {
   type: MessageComponentTypes.InputText;
   /** The style of the InputText */
   style: TextStyles;
+  /** whether this component is required to be filled, default true */
+  required?: boolean;
   /** The customId of the InputText */
   custom_id: string;
   /** The label of the InputText (max 45 characters)*/
@@ -1225,8 +1260,6 @@ export interface DiscordInputTextComponent {
   min_length?: number;
   /** The maximum length of the text the user has to provide */
   max_length?: number;
-  /** Whether or not this input is required. */
-  required?: boolean;
   /** Pre-filled value for input text. */
   value?: string;
 }
@@ -1404,6 +1437,8 @@ export interface DiscordAuditLog {
   guild_scheduled_events?: DiscordScheduledEvent[];
   /** List of auto moderation rules referenced in the audit log */
   auto_moderation_rules?: DiscordAutoModerationRule[];
+  /** List of application commands referenced in the audit log */
+  application_commands: DiscordApplicationCommand[];
 }
 
 export interface DiscordAutoModerationRule {
@@ -1441,6 +1476,7 @@ export enum AutoModerationTriggerTypes {
   HarmfulLink,
   Spam,
   KeywordPreset,
+  MentionSpam,
 }
 
 export interface DiscordAutoModerationRuleTriggerMetadata {
@@ -1451,6 +1487,8 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
   presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
   /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
   allow_list: string[];
+  /** Total number of mentions (role & user) allowed per message (Maximum of 50) */
+  mention_total_limit: number;
 }
 
 export enum DiscordAutoModerationRuleTriggerMetadataPresets {
@@ -1797,15 +1835,18 @@ export interface DiscordInviteStageInstance {
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure */
-export interface DiscordApplicationCommand {
+export interface DiscordApplicationCommand extends DiscordCreateApplicationCommand {
   /** Unique ID of command */
   id: string;
-  /** Type of command, defaults to `ApplicationCommandTypes.ChatInput` */
-  type?: ApplicationCommandTypes;
   /** ID of the parent application */
   application_id: string;
   /** Guild id of the command, if not global */
   guild_id?: string;
+}
+
+export interface DiscordCreateApplicationCommand {
+  /** Type of command, defaults to `ApplicationCommandTypes.ChatInput` */
+  type?: ApplicationCommandTypes;
   /**
    * Name of command, 1-32 characters.
    * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
@@ -1823,11 +1864,11 @@ export interface DiscordApplicationCommand {
   /** Parameters for the command, max of 25 */
   options?: DiscordApplicationCommandOption[];
   /** Set of permissions represented as a bit set */
-  default_member_permissions: string | null;
+  default_member_permissions?: string | null;
   /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
   dm_permission?: boolean;
   /** Auto incrementing version identifier updated during substantial record changes */
-  version: string;
+  version?: string;
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure */
@@ -2054,8 +2095,14 @@ export interface DiscordComponent {
   min_values?: number;
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   max_values?: number;
+  /** The minimum input length for a text input. Between 0-4000. */
+  min_length?: number;
+  /**The maximum input length for a text input. Between 1-4000. */
+  max_length?: number;
   /** a list of child components */
   components?: DiscordComponent[];
+  /** whether this component is required to be filled, default true */
+  required?: boolean;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#channel-pins-update */
@@ -2157,6 +2204,8 @@ export interface DiscordReady {
   guilds: DiscordUnavailableGuild[];
   /** Used for resuming connections */
   session_id: string;
+  /** Gateway url for resuming connections */
+  resume_gateway_url: string;
   /** The shard information associated with this session, if sent when identifying */
   shard?: [number, number];
   /** Contains id and flags */
@@ -2420,8 +2469,45 @@ export interface DiscordGuildWidgetSettings {
 }
 
 export interface DiscordInstallParams {
-  /** he scopes to add the application to the server with */
+  /** the scopes to add the application to the server with */
   scopes: string[];
   /** the permissions to request for the bot role */
   permissions: string;
+}
+
+export interface DiscordInteractionResponse {
+  type: InteractionResponseTypes;
+  data?: DiscordInteractionCallbackData;
+}
+
+export interface DiscordInteractionCallbackData {
+  tts?: boolean;
+  title?: string;
+  flags?: number;
+  content?: string;
+  choices?: DiscordApplicationCommandOptionChoice[];
+  custom_id?: string;
+  embeds?: DiscordEmbed[];
+  allowed_mentions?: DiscordAllowedMentions;
+  components?: DiscordComponent[];
+}
+
+export interface DiscordForumTag {
+  /** The id of the tag */
+  id: string;
+  /** The name of the tag (0-20 characters) */
+  name: string;
+  /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
+  moderated: boolean;
+  /** The id of a guild's custom emoji At most one of emoji_id and emoji_name may be set. */
+  emoji_id: string;
+  /** The unicode character of the emoji */
+  emoji_name: string | null;
+}
+
+export interface DiscordDefaultReactionEmoji {
+  /** The id of a guild's custom emoji */
+  emoji_id: string;
+  /** The unicode character of the emoji */
+  emoji_name: string | null;
 }

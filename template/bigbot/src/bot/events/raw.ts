@@ -16,14 +16,14 @@ export function setRawEvent() {
 
     const id = bot.transformers.snowflake(
       (data.t && ["GUILD_UPDATE", "GUILD_CREATE"].includes(data.t)
-        ? // deno-lint-ignore no-explicit-any
-          (data.d as any)?.id
-        : // deno-lint-ignore no-explicit-any
-          (data.d as any)?.guild_id) ?? "",
+        // deno-lint-ignore no-explicit-any
+        ? (data.d as any)?.id
+        // deno-lint-ignore no-explicit-any
+        : (data.d as any)?.guild_id) ?? "",
     );
 
     // The GUILD_CREATE event came from a shard loaded event so ignore it
-    if (["READY", "GUILD_LOADED_DD", "GUILD_CREATE", null].includes(data.t)) return;
+    if (["READY", "GUILD_CREATE", null].includes(data.t)) return;
 
     // console.log({ id, v: await usesLatestCommandVersion(id) })
 

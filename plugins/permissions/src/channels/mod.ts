@@ -1,24 +1,27 @@
 import { BotWithCache } from "../../deps.ts";
-import setupThreadPermChecks from "./threads/mod.ts";
-import setupForumPermChecks from "./forums/mod.ts";
-import setupStagePermChecks from "./stage.ts";
-import deleteChannel from "./deleteChannel.ts";
-import deleteChannelOverwrite from "./deleteChannelOverwrite.ts";
-import editChannel from "./editChannel.ts";
-import editChannelOverwrite from "./editChannelOverwrite.ts";
-import followChannel from "./followChannel.ts";
-import getChannelWebhooks from "./getChannelWebhooks.ts";
-import swapChannels from "./swapChannels.ts";
+import { createChannel } from "./createChannel.ts";
+import { deleteChannel } from "./deleteChannel.ts";
+import { deleteChannelPermissionOverride } from "./deleteChannelPermissionOverride.ts";
+import { editChannel } from "./editChannel.ts";
+import { editChannelPermissionOverrides } from "./editChannelPermissionOverrides.ts";
+import { followAnnouncementChannel } from "./followAnnouncementChannel.ts";
+import { forums } from "./forums/mod.ts";
+import { getChannelWebhooks } from "./getChannelWebhooks.ts";
+import { stages } from "./stages/mod.ts";
+import { swapChannels } from "./swapChannels.ts";
+import { threads } from "./threads/mod.ts";
 
-export default function setupChannelPermChecks(bot: BotWithCache) {
-  setupThreadPermChecks(bot);
-  setupForumPermChecks(bot);
-  setupStagePermChecks(bot);
+export function channels(bot: BotWithCache) {
+  forums(bot);
+  stages(bot);
+  threads(bot);
+
+  createChannel(bot);
   deleteChannel(bot);
-  deleteChannelOverwrite(bot);
+  deleteChannelPermissionOverride(bot);
   editChannel(bot);
-  editChannelOverwrite(bot);
-  followChannel(bot);
+  editChannelPermissionOverrides(bot);
+  followAnnouncementChannel(bot);
   getChannelWebhooks(bot);
   swapChannels(bot);
 }

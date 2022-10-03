@@ -2,6 +2,7 @@ import type { Bot } from "../../bot.ts";
 import { Guild } from "../../transformers/guild.ts";
 import { DiscordGuild } from "../../types/discord.ts";
 import {
+  BigString,
   DefaultMessageNotificationLevels,
   ExplicitContentFilterLevels,
   GuildFeatures,
@@ -9,8 +10,28 @@ import {
   VerificationLevels,
 } from "../../types/shared.ts";
 
-/** Modify a guilds settings. Requires the MANAGE_GUILD permission. */
-export async function editGuild(bot: Bot, guildId: bigint, options: ModifyGuild, shardId: number): Promise<Guild> {
+// TODO: Put the `shardId` parameter before `options`.
+
+/**
+ * Edits a guild's settings.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to edit.
+ * @param shardId - The ID of the shard the guild is in.
+ * @param options - The parameters for the edit of the guild.
+ * @returns An instance of the edited {@link Guild}.
+ *
+ * @remarks
+ * Requires the `MANAGE_GUILD` permission.
+ *
+ * If attempting to add or remove the {@link GuildFeatures.Community} feature:
+ * - Requires the `ADMINISTRATOR` permission.
+ *
+ * Fires a _Guild Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild}
+ */
+export async function editGuild(bot: Bot, guildId: BigString, options: ModifyGuild, shardId: number): Promise<Guild> {
   if (options.icon && !options.icon.startsWith("data:image/")) {
     options.icon = await bot.utils.urlToBase64(options.icon);
   }
@@ -65,13 +86,13 @@ export interface ModifyGuild {
   /** Explicit content filter level */
   explicitContentFilter?: ExplicitContentFilterLevels | null;
   /** Id for afk channel */
-  afkChannelId?: bigint | null;
+  afkChannelId?: BigString | null;
   /** Afk timeout in seconds */
   afkTimeout?: number;
   /** Base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has the `ANIMATED_ICON` feature) */
   icon?: string | null;
   /** User id to transfer guild ownership to (must be owner) */
-  ownerId?: bigint;
+  ownerId?: BigString;
   /** Base64 16:9 png/jpeg image for the guild splash (when the server has `INVITE_SPLASH` feature) */
   splash?: string | null;
   /** Base64 16:9 png/jpeg image for the guild discovery spash (when the server has the `DISCOVERABLE` feature) */
@@ -79,13 +100,13 @@ export interface ModifyGuild {
   /** Base64 16:9 png/jpeg image for the guild banner (when the server has BANNER feature) */
   banner?: string | null;
   /** The id of the channel where guild notices such as welcome messages and boost events are posted */
-  systemChannelId?: bigint | null;
+  systemChannelId?: BigString | null;
   /** System channel flags */
   systemChannelFlags?: SystemChannelFlags;
   /** The id of the channel where Community guilds display rules and/or guidelines */
-  rulesChannelId?: bigint | null;
+  rulesChannelId?: BigString | null;
   /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
-  publicUpdatesChannelId?: bigint | null;
+  publicUpdatesChannelId?: BigString | null;
   /** The preferred locale of a Community guild used in server discovery and notices from Discord; defaults to "en-US" */
   preferredLocale?: string | null;
   /** Enabled guild features */

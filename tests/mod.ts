@@ -1,4 +1,4 @@
-import { createBot, createRestManager, runMethod } from "../mod.ts";
+import { createBot, createRestManager } from "../mod.ts";
 import { dotenv } from "./deps.ts";
 
 dotenv({ export: true, path: `${Deno.cwd()}/.env` });
