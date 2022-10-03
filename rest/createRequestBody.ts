@@ -39,11 +39,11 @@ export function createRequestBody(rest: RestManager, options: CreateRequestBodyO
 
     // WHEN CREATING A STICKER, DISCORD WANTS FORM DATA ONLY
     if (options.url?.endsWith("/stickers") && options.method === "POST") {
-        form.append(
-          `file`,
-          (options.body.file as FileContent[])[0].blob,
-          (options.body.file as FileContent[])[0].name,
-        );
+      form.append(
+        `file`,
+        (options.body.file as FileContent[])[0].blob,
+        (options.body.file as FileContent[])[0].name,
+      );
       form.append(`name`, options.body.name as string);
       form.append(`description`, options.body.description as string);
       form.append(`tags`, options.body.tags as string);
