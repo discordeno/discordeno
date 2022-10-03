@@ -2,14 +2,17 @@ import { Bot, Collection, createBot, createRestManager } from "discordeno";
 import enableHelpersPlugin from "discordeno/helpers-plugin";
 import { createLogger } from "discordeno/logger";
 import { DISCORD_TOKEN, INTENTS, REST_AUTHORIZATION, REST_URL } from "../configs.js";
+import { setupEventHandlers } from "./events/mod.js";
 import { MessageCollector } from "./utils/collectors.js";
 import { customizeInternals } from "./utils/internals/mod.js";
 
 export const bot = enableHelpersPlugin(
-  customizeBot(createBot({
-    token: DISCORD_TOKEN,
-    intents: INTENTS,
-  })),
+  customizeBot(
+    createBot({
+      token: DISCORD_TOKEN,
+      intents: INTENTS,
+    }),
+  ),
 );
 
 /** Add custom props to your `bot` here */
@@ -41,6 +44,9 @@ export type BotWithCustomProps<B extends Bot = Bot> = B & {
 
 // Example of how to customize internal discordeno stuff easily.
 customizeInternals(bot);
+
+// Setup event handlers.
+setupEventHandlers();
 
 bot.rest = createRestManager({
   token: DISCORD_TOKEN,

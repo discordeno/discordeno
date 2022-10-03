@@ -1,4 +1,13 @@
-import { createShardManager, DiscordUnavailableGuild, Shard, ShardSocketRequest, ShardState } from "discordeno";
+import {
+  createShardManager,
+  DiscordGuild,
+  DiscordReady,
+  DiscordUnavailableGuild,
+  GatewayEventNames,
+  Shard,
+  ShardSocketRequest,
+  ShardState,
+} from "discordeno";
 import { createLogger } from "discordeno/logger";
 import { parentPort, workerData } from "worker_threads";
 import { ManagerMessage } from "./index.js";
@@ -13,6 +22,10 @@ const log = createLogger({ name: `[WORKER #${script.workerId}]` });
 
 const identifyPromises = new Map<number, () => void>();
 
+// Store guild ids, loading guild ids to change GUILD_CREATE event to GUILD_LOADED_DD if needed.
+const guildIds: Set<bigint> = new Set();
+const loadingGuildIds: Set<bigint> = new Set();
+
 const manager = createShardManager({
   gatewayConfig: {
     intents: script.intents,
@@ -24,14 +37,43 @@ const manager = createShardManager({
     const url = script.handlerUrls[shard.id % script.handlerUrls.length];
     if (!url) return console.log("ERROR: NO URL FOUND TO SEND MESSAGE");
 
-    // MUST HANDLE GUILD_DELETE EVENTS FOR UNAVAILABLE
-    if (message.t === "GUILD_DELETE" && (message.d as DiscordUnavailableGuild).unavailable) return;
+    if (message.t === "READY") {
+      // Marks which guilds the bot in when initial loading in cache.
+      (message.d as DiscordReady).guilds.forEach((g) => loadingGuildIds.add(BigInt(g.id)));
+    }
+
+    // If GUILD_CREATE event came from a shard loaded event, change event to GUILD_LOADED_DD.
+    if (message.t === "GUILD_CREATE") {
+      const guild = message.d as DiscordGuild;
+      const id = BigInt(guild.id);
+
+      const existing = guildIds.has(id);
+      if (existing) return;
+
+      if (loadingGuildIds.has(id)) {
+        (message.t as GatewayEventNames | "GUILD_LOADED_DD") = "GUILD_LOADED_DD";
+
+        loadingGuildIds.delete(id);
+      }
+
+      guildIds.add(id);
+    }
+
+    // Delete guild id from cache so GUILD_CREATE from the same guild later works properly.
+    if (message.t === "GUILD_DELETE") {
+      const guild = message.d as DiscordUnavailableGuild;
+
+      if (guild.unavailable) return;
+
+      guildIds.delete(BigInt(guild.id));
+    }
 
     await fetch(url, {
       method: "POST",
       body: JSON.stringify({ message, shardId: shard.id }),
       headers: { "Content-Type": "application/json", Authorization: script.handlerAuthorization },
     }).catch((error) => log.error(error));
+
     log.debug({ shardId: shard.id, message });
   },
   requestIdentify: async function (shardId: number): Promise<void> {
