@@ -33,7 +33,7 @@ process
       .setTimestamp()
       .setFooter("Unhandled Rejection Error Occurred");
 
-    // SEND ERROR TO THE LOG CHANNEL ON THE GAMER DEV SERVER
+    // SEND ERROR TO THE LOG CHANNEL ON THE DEV SERVER
     return bot.helpers.sendWebhookMessage(bot.transformers.snowflake(id), token, { embeds }).catch(console.error);
   })
   .on("uncaughtException", async (error) => {
@@ -55,7 +55,7 @@ process
       .setTimestamp()
       .setFooter("Unhandled Exception Error Occurred");
 
-    // SEND ERROR TO THE LOG CHANNEL ON THE GAMER DEV SERVER
+    // SEND ERROR TO THE LOG CHANNEL ON THE DEV SERVER
     await bot.helpers.sendWebhookMessage(bot.transformers.snowflake(id), token, { embeds }).catch(console.error);
 
     process.exit(1);
