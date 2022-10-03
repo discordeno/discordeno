@@ -34,9 +34,7 @@ process
       .setFooter("Unhandled Rejection Error Occurred");
 
     // SEND ERROR TO THE LOG CHANNEL ON THE GAMER DEV SERVER
-    return bot.helpers
-      .sendWebhookMessage(bot.transformers.snowflake(id), token, { embeds })
-      .catch(console.error);
+    return bot.helpers.sendWebhookMessage(bot.transformers.snowflake(id), token, { embeds }).catch(console.error);
   })
   .on("uncaughtException", async (error) => {
     const { id, token } = webhookURLToIDAndToken(BUGS_ERRORS_REPORT_WEBHOOK);
@@ -58,9 +56,7 @@ process
       .setFooter("Unhandled Exception Error Occurred");
 
     // SEND ERROR TO THE LOG CHANNEL ON THE GAMER DEV SERVER
-    await bot.helpers
-      .sendWebhookMessage(bot.transformers.snowflake(id), token, { embeds })
-      .catch(console.error);
+    await bot.helpers.sendWebhookMessage(bot.transformers.snowflake(id), token, { embeds }).catch(console.error);
 
     process.exit(1);
   });
@@ -107,19 +103,20 @@ async function handleRequest(req: express.Request, res: express.Response) {
     }
 
     const json = req.body as {
-      data: DiscordGatewayPayload;
+      message: DiscordGatewayPayload;
       shardId: number;
     };
-    // EMITS RAW EVENT
-    bot.events.raw(bot, json.data, json.shardId);
 
-    if (json.data.t && json.data.t !== "RESUMED") {
+    // EMITS RAW EVENT
+    bot.events.raw(bot, json.message, json.shardId);
+
+    if (json.message.t && json.message.t !== "RESUMED") {
       // When a guild or something isnt in cache this will fetch it before doing anything else
-      if (!["READY", "GUILD_LOADED_DD"].includes(json.data.t)) {
-        await bot.events.dispatchRequirements(bot, json.data, json.shardId);
+      if (!["READY", "GUILD_LOADED_DD"].includes(json.message.t)) {
+        await bot.events.dispatchRequirements(bot, json.message, json.shardId);
       }
 
-      bot.handlers[json.data.t]?.(bot, json.data, json.shardId);
+      bot.handlers[json.message.t]?.(bot, json.message, json.shardId);
     }
 
     res.status(200).json({ success: true });
