@@ -33,11 +33,12 @@ export async function editFollowupMessage(
     "PATCH",
     bot.constants.routes.WEBHOOK_MESSAGE(bot.applicationId, token, messageId),
     {
-      messageId,
+      messageId: messageId.toString(),
       ...bot.transformers.reverse.interactionResponse(bot, {
         type: InteractionResponseTypes.UpdateMessage,
         data: options,
       }).data,
+      file: options.file,
     },
   );
 

@@ -1248,6 +1248,8 @@ export interface DiscordInputTextComponent {
   type: MessageComponentTypes.InputText;
   /** The style of the InputText */
   style: TextStyles;
+  /** whether this component is required to be filled, default true */
+  required?: boolean;
   /** The customId of the InputText */
   custom_id: string;
   /** The label of the InputText (max 45 characters)*/
@@ -1258,8 +1260,6 @@ export interface DiscordInputTextComponent {
   min_length?: number;
   /** The maximum length of the text the user has to provide */
   max_length?: number;
-  /** Whether or not this input is required. */
-  required?: boolean;
   /** Pre-filled value for input text. */
   value?: string;
 }
@@ -2095,8 +2095,14 @@ export interface DiscordComponent {
   min_values?: number;
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   max_values?: number;
+  /** The minimum input length for a text input. Between 0-4000. */
+  min_length?: number;
+  /**The maximum input length for a text input. Between 1-4000. */
+  max_length?: number;
   /** a list of child components */
   components?: DiscordComponent[];
+  /** whether this component is required to be filled, default true */
+  required?: boolean;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#channel-pins-update */

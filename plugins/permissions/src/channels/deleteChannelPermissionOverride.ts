@@ -5,7 +5,7 @@ export function deleteChannelPermissionOverride(bot: BotWithCache) {
   const deleteChannelPermissionOverride = bot.helpers.deleteChannelPermissionOverride;
 
   bot.helpers.deleteChannelPermissionOverride = async function (channelId, overwriteId) {
-    const channel = bot.channels.get(channelId);
+    const channel = bot.channels.get(bot.transformers.snowflake(channelId));
 
     if (channel?.guildId) {
       const perms: PermissionStrings[] = ["VIEW_CHANNEL", "MANAGE_ROLES"];
@@ -13,7 +13,7 @@ export function deleteChannelPermissionOverride(bot: BotWithCache) {
 
       if (isVoice) perms.push("CONNECT");
 
-      requireBotChannelPermissions(bot, channelId, perms);
+      requireBotChannelPermissions(bot, bot.transformers.snowflake(channelId), perms);
     }
 
     return await deleteChannelPermissionOverride(channelId, overwriteId);

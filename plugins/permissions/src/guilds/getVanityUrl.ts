@@ -5,7 +5,7 @@ export function getVanityUrl(bot: BotWithCache) {
   const getVanityUrl = bot.helpers.getVanityUrl;
 
   bot.helpers.getVanityUrl = async function (guildId) {
-    requireBotGuildPermissions(bot, guildId, ["MANAGE_GUILD"]);
+    requireBotGuildPermissions(bot, bot.transformers.snowflake(guildId), ["MANAGE_GUILD"]);
 
     return await getVanityUrl(guildId);
   };

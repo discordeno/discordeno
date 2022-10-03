@@ -39,6 +39,7 @@ export async function createInvite(
       target_type: options.targetType,
       target_user_id: options.targetUserId?.toString(),
       target_application_id: options.targetApplicationId?.toString(),
+      reason: options.reason,
     },
   );
 

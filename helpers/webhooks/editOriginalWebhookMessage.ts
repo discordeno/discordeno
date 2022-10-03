@@ -27,10 +27,13 @@ export async function editOriginalWebhookMessage(
     bot.rest,
     "PATCH",
     bot.constants.routes.WEBHOOK_MESSAGE_ORIGINAL(webhookId, token, options),
-    bot.transformers.reverse.interactionResponse(bot, {
-      type: InteractionResponseTypes.UpdateMessage,
-      data: options,
-    }).data,
+    {
+      ...bot.transformers.reverse.interactionResponse(bot, {
+        type: InteractionResponseTypes.UpdateMessage,
+        data: options,
+      }).data,
+      file: options.file,
+    },
   );
 
   return bot.transformers.message(bot, result);
