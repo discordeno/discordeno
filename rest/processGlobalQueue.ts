@@ -73,6 +73,7 @@ export async function processGlobalQueue(rest: RestManager) {
       payload: rest.createRequestBody(rest, {
         method: request.request.method,
         body: request.payload.body,
+        url: request.urlToUse,
       }),
     })
       // Should be handled in sendRequest, this catch just prevents bots from dying

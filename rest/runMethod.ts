@@ -1,4 +1,6 @@
+import { FileContent } from "../mod.ts";
 import { API_VERSION, BASE_URL, baseEndpoints } from "../util/constants.ts";
+import { encode } from "../util/urlToBase64.ts";
 import { RequestMethod, RestRequestRejection, RestRequestResponse } from "./rest.ts";
 import { RestManager } from "./restManager.ts";
 
@@ -6,7 +8,7 @@ export async function runMethod<T = any>(
   rest: RestManager,
   method: RequestMethod,
   route: string,
-  body?: unknown,
+  body?: any,
   options?: {
     retryCount?: number;
     bucketId?: string;
@@ -29,6 +31,21 @@ export async function runMethod<T = any>(
 
   // For proxies we don't need to do any of the legwork so we just forward the request
   if (!baseEndpoints.BASE_URL.startsWith(BASE_URL) && route[0] === "/") {
+    // Special handling for sending blobs across http to proxy
+    if (body?.file) {
+      if (!Array.isArray(body.file)) {
+        body.file = [body.file];
+      }
+      // convert blobs to string before sending to proxy
+      body.file = await Promise.all(
+        body.file.map(async (f: FileContent) => {
+          const url = encode(await (f.blob).arrayBuffer());
+
+          return { name: f.name, blob: `data:${f.blob.type};base64,${url}` };
+        }),
+      );
+    }
+
     const result = await fetch(`${baseEndpoints.BASE_URL}${route}`, {
       body: body ? JSON.stringify(body) : undefined,
       headers: {

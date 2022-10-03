@@ -1,10 +1,9 @@
 import { RestManager } from "./restManager.ts";
 import { FileContent } from "../types/discordeno.ts";
 import { USER_AGENT } from "../util/constants.ts";
-import { RequestMethod, RestPayload, RestRequest } from "./rest.ts";
+import { RequestMethod } from "./rest.ts";
 
 /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
-// export function createRequestBody(rest: RestManager, queuedRequest: { request: RestRequest; payload: RestPayload }) {
 export function createRequestBody(rest: RestManager, options: CreateRequestBodyOptions) {
   const headers: Record<string, string> = {
     "user-agent": USER_AGENT,
@@ -38,15 +37,28 @@ export function createRequestBody(rest: RestManager, options: CreateRequestBodyO
 
     const form = new FormData();
 
-    for (let i = 0; i < (options.body.file as FileContent[]).length; i++) {
-      form.append(
-        `file${i}`,
-        (options.body.file as FileContent[])[i].blob,
-        (options.body.file as FileContent[])[i].name,
-      );
+    // WHEN CREATING A STICKER, DISCORD WANTS FORM DATA ONLY
+    if (options.url?.endsWith("/stickers") && options.method === "POST") {
+        form.append(
+          `file`,
+          (options.body.file as FileContent[])[0].blob,
+          (options.body.file as FileContent[])[0].name,
+        );
+      form.append(`name`, options.body.name as string);
+      form.append(`description`, options.body.description as string);
+      form.append(`tags`, options.body.tags as string);
+    } else {
+      for (let i = 0; i < (options.body.file as FileContent[]).length; i++) {
+        form.append(
+          `file${i}`,
+          (options.body.file as FileContent[])[i].blob,
+          (options.body.file as FileContent[])[i].name,
+        );
+      }
+
+      form.append("payload_json", JSON.stringify({ ...options.body, file: undefined }));
     }
 
-    form.append("payload_json", JSON.stringify({ ...options.body, file: undefined }));
     options.body.file = form;
   } else if (options.body && !["GET", "DELETE"].includes(options.method)) {
     headers["Content-Type"] = "application/json";
@@ -64,4 +76,5 @@ export interface CreateRequestBodyOptions {
   method: RequestMethod;
   body?: Record<string, unknown>;
   unauthorized?: boolean;
+  url?: string;
 }
