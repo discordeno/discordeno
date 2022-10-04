@@ -5,11 +5,9 @@ export default createCommand({
   name: "PING_NAME",
   description: "PING_DESCRIPTION",
   execute: async function (_, interaction) {
-    return await interaction.reply(translate(
-      interaction.guildId!,
-      "PING_RESPONSE_WITH_TIME",
-      Date.now() - snowflakeToTimestamp(interaction.id),
-    ));
+    return await interaction.reply(
+      translate(interaction.guildId!, "PING_RESPONSE_WITH_TIME", Date.now() - snowflakeToTimestamp(interaction.id)),
+    );
   },
 });
 

@@ -1,13 +1,29 @@
 import type { Bot } from "../../bot.ts";
 import { Message } from "../../transformers/message.ts";
 import { DiscordMessage } from "../../types/discord.ts";
+import { BigString } from "../../types/shared.ts";
 import { Collection } from "../../util/collection.ts";
 import { hasProperty } from "../../util/utils.ts";
 
-/** Fetches between 2-100 messages. Requires VIEW_CHANNEL and READ_MESSAGE_HISTORY */
+/**
+ * Gets multiple messages from a channel.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param channelId - The ID of the channel from which to get the messages.
+ * @param options - The parameters for the fetching of the messages.
+ * @returns A collection of {@link Message} objects assorted by message ID.
+ *
+ * @remarks
+ * Requires that the bot user be able to see the contents of the channel in which the messages were posted.
+ *
+ * If getting a messages from a guild channel:
+ * - Requires the `READ_MESSAGE_HISTORY` permission.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/channel#get-channel-messages}
+ */
 export async function getMessages(
   bot: Bot,
-  channelId: bigint,
+  channelId: BigString,
   options?: GetMessagesOptions,
 ): Promise<Collection<bigint, Message>> {
   if (options?.limit && (options.limit < 0 || options.limit > 100)) {
@@ -37,19 +53,19 @@ export interface GetMessagesLimit {
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
 export interface GetMessagesAround extends GetMessagesLimit {
   /** Get messages around this message id */
-  around?: bigint;
+  around?: BigString;
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
 export interface GetMessagesBefore extends GetMessagesLimit {
   /** Get messages before this message id */
-  before?: bigint;
+  before?: BigString;
 }
 
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
 export interface GetMessagesAfter extends GetMessagesLimit {
   /** Get messages after this message id */
-  after?: bigint;
+  after?: BigString;
 }
 
 export type GetMessagesOptions = GetMessagesAfter | GetMessagesBefore | GetMessagesAround | GetMessagesLimit;

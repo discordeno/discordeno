@@ -1,11 +1,24 @@
 import type { Bot } from "../../bot.ts";
+import { BigString } from "../../types/shared.ts";
 
 interface DiscordPrunedCount {
   pruned: number;
 }
 
-/** Check how many members would be removed from the server in a prune operation. Requires the KICK_MEMBERS permission */
-export async function getPruneCount(bot: Bot, guildId: bigint, options?: GetGuildPruneCountQuery): Promise<number> {
+/**
+ * Gets the number of members that would be kicked from a guild during pruning.
+ *
+ * @param bot - The bot instance used to make the request
+ * @param guildId - The ID of the guild to get the prune count of.
+ * @param options - The parameters for the fetching of the prune count.
+ * @returns A number indicating the number of members that would be kicked.
+ *
+ * @remarks
+ * Requires the `KICK_MEMBERS` permission.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-prune-count}
+ */
+export async function getPruneCount(bot: Bot, guildId: BigString, options?: GetGuildPruneCountQuery): Promise<number> {
   if (options?.days && options.days < 1) throw new Error(bot.constants.Errors.PRUNE_MIN_DAYS);
   if (options?.days && options.days > 30) throw new Error(bot.constants.Errors.PRUNE_MAX_DAYS);
 

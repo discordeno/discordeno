@@ -2,10 +2,10 @@ import type { Bot } from "../../bot.ts";
 import { Emoji } from "../../transformers/emoji.ts";
 import { Sticker } from "../../transformers/sticker.ts";
 import { DiscordGuildPreview } from "../../types/discord.ts";
-import { GuildFeatures } from "../../types/shared.ts";
+import { BigString, GuildFeatures } from "../../types/shared.ts";
 
 export type GuildPreview = {
-  id: bigint;
+  id: BigString;
   name?: string;
   icon?: string;
   splash?: string;
@@ -18,8 +18,21 @@ export type GuildPreview = {
   stickers: Sticker[];
 };
 
-/** Returns the guild preview object for the given id. If the bot is not in the guild, then the guild must be Discoverable. */
-export async function getGuildPreview(bot: Bot, guildId: bigint): Promise<GuildPreview> {
+// TODO: Move `GuildPreview` into its own transformer file.
+
+/**
+ * Gets the preview of a guild by a guild's ID.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to get the preview of.
+ * @returns An instance of {@link GuildPreview}.
+ *
+ * @remarks
+ * If the bot user is not in the guild, the guild must be lurkable.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-preview}
+ */
+export async function getGuildPreview(bot: Bot, guildId: BigString): Promise<GuildPreview> {
   const result = await bot.rest.runMethod<DiscordGuildPreview>(
     bot.rest,
     "GET",

@@ -31,6 +31,7 @@ export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreate
         bot: payload.application.bot ? bot.transformers.user(bot, payload.application.bot) : undefined,
       }
       : undefined,
+    scopes: payload.scopes,
   };
 
   return integration as Optionalize<typeof integration>;

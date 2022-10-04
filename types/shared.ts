@@ -1,3 +1,5 @@
+export type BigString = bigint | string;
+
 export enum PresenceStatus {
   online,
   dnd,
@@ -41,7 +43,10 @@ export enum UserFlags {
 /** https://discord.com/developers/docs/resources/channel#channels-resource */
 export enum ChannelFlags {
   None,
+  /** this thread is pinned to the top of its parent `GUILD_FORUM` channel */
   Pinned = 1 << 1,
+  /** Whether a tag is required to be specified when creating a thread in a `GUILD_FORUM` channel. Tags are specified in the `applied_tags` field. */
+  RequireTag,
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
@@ -79,9 +84,11 @@ export enum ApplicationFlags {
   /** Indicates if an app is embedded within the Discord client (currently unavailable publicly) */
   Embedded = 1 << 17,
   /** Intent required for bots in **100 or more servers** to receive [message content](https://support-dev.discord.com/hc/en-us/articles/4404772028055) */
-  GatewayMessageCount = 1 << 18,
+  GatewayMessageContent = 1 << 18,
   /** Intent required for bots in under 100 servers to receive [message content](https://support-dev.discord.com/hc/en-us/articles/4404772028055), found in Bot Settings */
   GatewayMessageContentLimited = 1 << 19,
+  /** Indicates if an app has registered global application commands */
+  ApplicationCommandBadge = 1 << 23,
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#component-types */
@@ -198,16 +205,12 @@ export enum GuildFeatures {
   Partnered = "PARTNERED",
   /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
   Community = "COMMUNITY",
-  /** Guild has access to use commerce features (i.e. create store channels) */
-  Commerce = "COMMERCE",
   /** Guild has access to create news channels */
   News = "NEWS",
   /** Guild is able to be discovered in the directory */
   Discoverable = "DISCOVERABLE",
-  /** guild cannot be discoverable */
-  DiscoverableDisabled = "DISCOVERABLE_DISABLED",
   /** Guild is able to be featured in the directory */
-  Feature = "FEATURABLE",
+  Featurable = "FEATURABLE",
   /** Guild has access to set an animated guild icon */
   AnimatedIcon = "ANIMATED_ICON",
   /** Guild has access to set a guild banner image */
@@ -230,6 +233,10 @@ export enum GuildFeatures {
   RoleIcons = "ROLE_ICONS",
   /** Guild has set up auto moderation rules */
   AutoModeration = "AUTO_MODERATION",
+  /** Guild has paused invites, preventing new users from joining */
+  InvitesDisabled = "INVITES_DISABLED",
+  /** Guild has access to set an animated guild banner image */
+  AnimatedBanner = "ANIMATED_BANNER",
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-mfa-level */
@@ -285,13 +292,13 @@ export enum ChannelTypes {
   /** An organizational category that contains up to 50 channels */
   GuildCategory,
   /** A channel that users can follow and crosspost into their own server */
-  GuildNews,
-  /** A temporary sub-channel within a GUILD_NEWS channel */
-  GuildNewsThread = 10,
+  GuildAnnouncement,
+  /** A temporary sub-channel within a GUILD_ANNOUNCEMENT channel */
+  AnnouncementThread = 10,
   /** A temporary sub-channel within a GUILD_TEXT channel */
-  GuildPublicThread,
+  PublicThread,
   /** A temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission */
-  GuildPrivateThread,
+  PrivateThread,
   /** A voice channel for hosting events with an audience */
   GuildStageVoice,
   /** A channel in a hub containing the listed servers */
@@ -621,8 +628,8 @@ export enum BitwisePermissionFlags {
   MANAGE_ROLES = 0x0000000010000000,
   /** Allows management and editing of webhooks */
   MANAGE_WEBHOOKS = 0x0000000020000000,
-  /** Allows management and editing of emojis */
-  MANAGE_EMOJIS = 0x0000000040000000,
+  /** Allows management and editing of emojis and stickers */
+  MANAGE_EMOJIS_AND_STICKERS = 0x0000000040000000,
   /** Allows members to use application commands in text channels */
   USE_SLASH_COMMANDS = 0x0000000080000000,
   /** Allows for requesting to speak in stage channels. */
@@ -1080,9 +1087,7 @@ export type GatewayDispatchEventNames =
 export type GatewayEventNames =
   | GatewayDispatchEventNames
   | "READY"
-  | "RESUMED"
-  // THIS IS A CUSTOM DD EVENT NOT A DISCORD EVENT
-  | "GUILD_LOADED_DD";
+  | "RESUMED";
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
 export enum GatewayIntents {

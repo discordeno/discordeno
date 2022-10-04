@@ -1,16 +1,30 @@
 import type { Bot } from "../../bot.ts";
+import { WithReason } from "../../mod.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
-import { ChannelTypes } from "../../types/shared.ts";
-import { OverwriteReadable } from "./editChannelOverwrite.ts";
+import { OverwriteReadable } from "../../types/discordeno.ts";
+import { BigString, ChannelTypes } from "../../types/shared.ts";
 
-/** Create a channel in your server. Bot needs MANAGE_CHANNEL permissions in the server. */
-export async function createChannel(
-  bot: Bot,
-  guildId: bigint,
-  options?: CreateGuildChannel,
-  reason?: string,
-): Promise<Channel> {
+/**
+ * Creates a channel within a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to create the channel within.
+ * @param options - The parameters for the creation of the channel.
+ * @returns An instance of the created {@link Channel}.
+ *
+ * @remarks
+ * Requires the `MANAGE_CHANNELS` permission.
+ *
+ * If setting permission overwrites, only the permissions the bot user has in the guild can be allowed or denied.
+ *
+ * Setting the `MANAGE_ROLES` permission is only possible for guild administrators.
+ *
+ * Fires a _Channel Create_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-channel}
+ */
+export async function createChannel(bot: Bot, guildId: BigString, options: CreateGuildChannel): Promise<Channel> {
   // BITRATE IS IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
   if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000;
 
@@ -35,16 +49,16 @@ export async function createChannel(
           deny: overwrite.deny ? bot.utils.calculateBits(overwrite.deny) : null,
         })),
         type: options?.type || ChannelTypes.GuildText,
-        reason,
+        reason: options.reason,
         default_auto_archive_duration: options?.defaultAutoArchiveDuration,
       }
       : {},
   );
 
-  return bot.transformers.channel(bot, { channel: result, guildId });
+  return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(guildId) });
 }
 
-export interface CreateGuildChannel {
+export interface CreateGuildChannel extends WithReason {
   /** Channel name (1-100 characters) */
   name: string;
   /** The type of channel */
@@ -62,7 +76,7 @@ export interface CreateGuildChannel {
   /** The channel's permission overwrites */
   permissionOverwrites?: OverwriteReadable[];
   /** Id of the parent category for a channel */
-  parentId?: bigint;
+  parentId?: BigString;
   /** Whether the channel is nsfw */
   nsfw?: boolean;
   /** Default duration (in minutes) that clients (not the API) use for newly created threads in this channel, to determine when to automatically archive the thread after the last activity */

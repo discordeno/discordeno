@@ -1,3 +1,4 @@
+import { delay } from "../mod.ts";
 import { HTTPResponseCodes } from "../types/shared.ts";
 import { BASE_URL } from "../util/constants.ts";
 import { RequestMethod } from "./rest.ts";
@@ -9,6 +10,7 @@ export interface RestSendRequestOptions {
   bucketId?: string;
   reject?: Function;
   respond?: Function;
+  retryRequest?: Function;
   retryCount?: number;
   payload?: {
     headers: Record<string, string>;
@@ -86,22 +88,15 @@ export async function sendRequest<T>(rest: RestManager, options: RestSendRequest
 
       // If NOT rate limited remove from queue
       if (response.status !== 429) {
-        options.reject?.({
+        const body = response.type ? JSON.stringify(await response.json()) : undefined;
+        return options.reject?.({
           ok: false,
           status: response.status,
           error,
-          body: response.type ? JSON.stringify(await response.json()) : undefined,
+          body,
         });
-
-        throw new Error(
-          JSON.stringify({
-            ok: false,
-            status: response.status,
-            error,
-            body: response.type ? JSON.stringify(await response.json()) : undefined,
-          }),
-        );
       } else {
+        // TOO MANY ATTEMPTS, GET RID OF REQUEST FROM QUEUE.
         if (options.retryCount && options.retryCount++ >= rest.maxRetryCount) {
           rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(options)}`);
           // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
@@ -113,6 +108,11 @@ export async function sendRequest<T>(rest: RestManager, options: RestSendRequest
 
           // @ts-ignore Code should never reach here
           return;
+        } // RATE LIMITED, ADD BACK TO QUEUE
+        else {
+          const json = await response.json();
+          await delay(json.retry_after * 1000);
+          return options.retryRequest?.();
         }
       }
     }
@@ -145,11 +145,9 @@ export async function sendRequest<T>(rest: RestManager, options: RestSendRequest
     options.reject?.({
       ok: false,
       status: 599,
-      error: "Internal Proxy Error",
+      error: `Internal Proxy Error\n${error}`,
     });
 
-    throw new Error("Something went wrong in sendRequest", {
-      cause: error,
-    });
+    throw new Error(`Something went wrong in sendRequest\n${error}`);
   }
 }

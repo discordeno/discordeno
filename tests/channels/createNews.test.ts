@@ -9,12 +9,12 @@ Deno.test({
     const bot = loadBot();
     const channel = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, {
       name: "Discordeno-test",
-      type: ChannelTypes.GuildNews,
+      type: ChannelTypes.GuildAnnouncement,
     });
 
     // Assertions
     assertExists(channel);
-    assertEquals(channel.type, ChannelTypes.GuildNews);
+    assertEquals(channel.type, ChannelTypes.GuildAnnouncement);
     assertEquals(channel.topic, undefined);
     assertEquals(channel.bitrate, undefined);
     assertEquals(channel.userLimit, undefined);

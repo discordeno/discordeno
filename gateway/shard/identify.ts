@@ -4,7 +4,7 @@ import { Shard, ShardSocketCloseCodes, ShardState } from "./types.ts";
 export async function identify(shard: Shard): Promise<void> {
   // A new identify has been requested even though there is already a connection open.
   // Therefore we need to close the old connection and heartbeating before creating a new one.
-  if (shard.state === ShardState.Connected) {
+  if (shard.isOpen()) {
     console.log("CLOSING EXISTING SHARD: #" + shard.id);
     shard.close(ShardSocketCloseCodes.ReIdentifying, "Re-identifying closure of old connection.");
   }

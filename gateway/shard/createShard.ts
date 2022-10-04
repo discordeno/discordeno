@@ -1,5 +1,20 @@
-import { identify } from "./identify.ts";
+import { StatusUpdate } from "../../helpers/misc/editShardStatus.ts";
+import { DiscordGatewayPayload } from "../../types/discord.ts";
+import { PickPartial } from "../../types/shared.ts";
+import { createLeakyBucket, LeakyBucket } from "../../util/bucket.ts";
+import { API_VERSION } from "../../util/constants.ts";
+import { calculateSafeRequests } from "./calculateSafeRequests.ts";
+import { close } from "./close.ts";
+import { connect } from "./connect.ts";
+import { handleClose } from "./handleClose.ts";
 import { handleMessage } from "./handleMessage.ts";
+import { identify } from "./identify.ts";
+import { isOpen } from "./isOpen.ts";
+import { resume } from "./resume.ts";
+import { send } from "./send.ts";
+import { shutdown } from "./shutdown.ts";
+import { startHeartbeating } from "./startHeartbeating.ts";
+import { stopHeartbeating } from "./stopHeartbeating.ts";
 import {
   DEFAULT_HEARTBEAT_INTERVAL,
   GATEWAY_RATE_LIMIT_RESET_INTERVAL,
@@ -8,25 +23,9 @@ import {
   ShardEvents,
   ShardGatewayConfig,
   ShardHeart,
-  ShardSocketCloseCodes,
   ShardSocketRequest,
   ShardState,
 } from "./types.ts";
-import { StatusUpdate } from "../../helpers/misc/editShardStatus.ts";
-import { startHeartbeating } from "./startHeartbeating.ts";
-import { stopHeartbeating } from "./stopHeartbeating.ts";
-import { resume } from "./resume.ts";
-import { createLeakyBucket, LeakyBucket } from "../../util/bucket.ts";
-import { calculateSafeRequests } from "./calculateSafeRequests.ts";
-import { send } from "./send.ts";
-import { handleClose } from "./handleClose.ts";
-import { connect } from "./connect.ts";
-import { close } from "./close.ts";
-import { shutdown } from "./shutdown.ts";
-import { isOpen } from "./isOpen.ts";
-import { DiscordGatewayPayload } from "../../types/discord.ts";
-import { GatewayIntents, PickPartial } from "../../types/shared.ts";
-import { API_VERSION } from "../../util/constants.ts";
 
 // TODO: debug
 // TODO: function overwrite
@@ -91,6 +90,7 @@ export function createShard(
     state: ShardState.Offline,
     /** The total amount of shards which are used to communicate with Discord. */
     totalShards: options.totalShards,
+    resumeGatewayUrl: "",
 
     // ----------
     // METHODS

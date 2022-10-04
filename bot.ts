@@ -1,6 +1,26 @@
+import { createGatewayManager } from "./gateway/manager/gatewayManager.ts";
+import * as handlers from "./handlers/mod.ts";
+import * as helpers from "./helpers/mod.ts";
 import { createRestManager, CreateRestManagerOptions } from "./rest/mod.ts";
-import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.ts";
-import { Collection } from "./util/collection.ts";
+import { transformActivity } from "./transformers/activity.ts";
+import { transformApplication } from "./transformers/application.ts";
+import { transformApplicationCommand } from "./transformers/applicationCommand.ts";
+import { transformApplicationCommandOption } from "./transformers/applicationCommandOption.ts";
+import { transformApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
+import { transformAttachment } from "./transformers/attachment.ts";
+import { transformAuditLogEntry } from "./transformers/auditLogEntry.ts";
+import { transformComponent } from "./transformers/component.ts";
+import { transformEmbed } from "./transformers/embed.ts";
+import { Emoji, transformEmoji } from "./transformers/emoji.ts";
+import { GetGatewayBot, transformGatewayBot } from "./transformers/gatewayBot.ts";
+import { Integration, transformIntegration } from "./transformers/integration.ts";
+import {
+  Interaction,
+  InteractionDataOption,
+  transformInteraction,
+  transformInteractionDataOption,
+} from "./transformers/interaction.ts";
+import { Invite, transformInvite } from "./transformers/invite.ts";
 import {
   Channel,
   Guild,
@@ -9,6 +29,8 @@ import {
   Role,
   ScheduledEvent,
   Template,
+  transformApplicationCommandToDiscordApplicationCommand,
+  transformAttachmentToDiscordAttachment,
   transformChannel,
   transformGuild,
   transformMember,
@@ -20,6 +42,35 @@ import {
   User,
   VoiceState,
 } from "./transformers/mod.ts";
+import { PresenceUpdate, transformPresence } from "./transformers/presence.ts";
+import { transformScheduledEvent } from "./transformers/scheduledEvent.ts";
+import { transformStageInstance } from "./transformers/stageInstance.ts";
+import { StickerPack, transformSticker, transformStickerPack } from "./transformers/sticker.ts";
+import { transformTeam } from "./transformers/team.ts";
+import { ThreadMember, transformThreadMember } from "./transformers/threadMember.ts";
+import { transformVoiceRegion } from "./transformers/voiceRegion.ts";
+import { transformWebhook } from "./transformers/webhook.ts";
+import { transformWelcomeScreen } from "./transformers/welcomeScreen.ts";
+import { transformWidget } from "./transformers/widget.ts";
+import { transformWidgetSettings } from "./transformers/widgetSettings.ts";
+import {
+  DiscordAllowedMentions,
+  DiscordApplicationCommandOptionChoice,
+  DiscordAutoModerationActionExecution,
+  DiscordAutoModerationRule,
+  DiscordCreateApplicationCommand,
+  DiscordEmoji,
+  DiscordGatewayPayload,
+  DiscordInteractionDataOption,
+  DiscordInteractionResponse,
+  DiscordReady,
+  DiscordStickerPack,
+  DiscordTemplate,
+} from "./types/discord.ts";
+import { BigString, Errors, GatewayDispatchEventNames, GatewayIntents } from "./types/shared.ts";
+import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.ts";
+import { calculateShardId } from "./util/calculateShardId.ts";
+import { Collection } from "./util/collection.ts";
 import {
   baseEndpoints,
   CHANNEL_MENTION_REGEX,
@@ -29,58 +80,11 @@ import {
   SLASH_COMMANDS_NAME_REGEX,
   USER_AGENT,
 } from "./util/constants.ts";
-import { createGatewayManager, GatewayManager } from "./gateway/manager/gatewayManager.ts";
-import { validateLength } from "./util/validateLength.ts";
-import { delay, formatImageURL } from "./util/utils.ts";
 import { iconBigintToHash, iconHashToBigInt } from "./util/hash.ts";
-import { calculateShardId } from "./util/calculateShardId.ts";
-import * as handlers from "./handlers/mod.ts";
-import {
-  Interaction,
-  InteractionDataOption,
-  transformInteraction,
-  transformInteractionDataOption,
-} from "./transformers/interaction.ts";
-import { Integration, transformIntegration } from "./transformers/integration.ts";
-import { transformApplication } from "./transformers/application.ts";
-import { transformTeam } from "./transformers/team.ts";
-import { Invite, transformInvite } from "./transformers/invite.ts";
-import * as helpers from "./helpers/mod.ts";
-import { Emoji, transformEmoji } from "./transformers/emoji.ts";
-import { transformActivity } from "./transformers/activity.ts";
-import { PresenceUpdate, transformPresence } from "./transformers/presence.ts";
-import { urlToBase64 } from "./util/urlToBase64.ts";
-import { transformAttachment } from "./transformers/attachment.ts";
-import { transformEmbed } from "./transformers/embed.ts";
-import { transformComponent } from "./transformers/component.ts";
-import { transformWebhook } from "./transformers/webhook.ts";
-import { transformAuditLogEntry } from "./transformers/auditLogEntry.ts";
-import { transformApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
 import { calculateBits, calculatePermissions } from "./util/permissions.ts";
-import { transformScheduledEvent } from "./transformers/scheduledEvent.ts";
-import { ThreadMember, transformThreadMember } from "./transformers/threadMember.ts";
-import { transformApplicationCommandOption } from "./transformers/applicationCommandOption.ts";
-import { transformApplicationCommand } from "./transformers/applicationCommand.ts";
-import { transformWelcomeScreen } from "./transformers/welcomeScreen.ts";
-import { transformVoiceRegion } from "./transformers/voiceRegion.ts";
-import { transformWidget } from "./transformers/widget.ts";
-import { transformWidgetSettings } from "./transformers/widgetSettings.ts";
-import { transformStageInstance } from "./transformers/stageInstance.ts";
-import { StickerPack, transformSticker, transformStickerPack } from "./transformers/sticker.ts";
-import { GetGatewayBot, transformGatewayBot } from "./transformers/gatewayBot.ts";
-import {
-  DiscordAllowedMentions,
-  DiscordApplicationCommandOptionChoice,
-  DiscordAutoModerationActionExecution,
-  DiscordAutoModerationRule,
-  DiscordEmoji,
-  DiscordGatewayPayload,
-  DiscordInteractionDataOption,
-  DiscordReady,
-  DiscordStickerPack,
-  DiscordTemplate,
-} from "./types/discord.ts";
-import { Errors, GatewayDispatchEventNames, GatewayIntents } from "./types/shared.ts";
+import { urlToBase64 } from "./util/urlToBase64.ts";
+import { delay, formatImageURL } from "./util/utils.ts";
+import { validateLength } from "./util/validateLength.ts";
 
 import {
   DiscordActivity,
@@ -116,48 +120,52 @@ import {
   DiscordWelcomeScreen,
 } from "./types/discord.ts";
 
-import { Application } from "./transformers/application.ts";
-import { Team } from "./transformers/team.ts";
-import { Activity } from "./transformers/activity.ts";
-import { Attachment } from "./transformers/attachment.ts";
-import { Embed } from "./transformers/embed.ts";
-import { Webhook } from "./transformers/webhook.ts";
-import { Component } from "./transformers/component.ts";
-import { ApplicationCommand } from "./transformers/applicationCommand.ts";
-import { AuditLogEntry } from "./transformers/auditLogEntry.ts";
-import { ApplicationCommandOption } from "./transformers/applicationCommandOption.ts";
-import { ApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
-import { WelcomeScreen } from "./transformers/welcomeScreen.ts";
-import { VoiceRegions } from "./transformers/voiceRegion.ts";
-import { GuildWidget } from "./transformers/widget.ts";
-import { GuildWidgetSettings } from "./transformers/widgetSettings.ts";
-import { StageInstance } from "./transformers/stageInstance.ts";
-import { Sticker } from "./transformers/sticker.ts";
-import {
-  ApplicationCommandOptionChoice,
-  transformApplicationCommandOptionChoice,
-} from "./transformers/applicationCommandOptionChoice.ts";
-import { transformEmbedToDiscordEmbed } from "./transformers/reverse/embed.ts";
-import { transformComponentToDiscordComponent } from "./transformers/reverse/component.ts";
-import { transformActivityToDiscordActivity } from "./transformers/reverse/activity.ts";
-import { transformTeamToDiscordTeam } from "./transformers/reverse/team.ts";
-import { transformMemberToDiscordMember, transformUserToDiscordUser } from "./transformers/reverse/member.ts";
-import { transformApplicationToDiscordApplication } from "./transformers/reverse/application.ts";
-import { getBotIdFromToken, removeTokenPrefix } from "./util/token.ts";
 import { CreateShardManager } from "./gateway/manager/shardManager.ts";
-import { AutoModerationRule, transformAutoModerationRule } from "./transformers/automodRule.ts";
-import {
-  AutoModerationActionExecution,
-  transformAutoModerationActionExecution,
-} from "./transformers/automodActionExecution.ts";
-import { routes } from "./util/routes.ts";
-import { transformAllowedMentionsToDiscordAllowedMentions } from "./transformers/reverse/allowedMentions.ts";
 import {
   AllowedMentions,
+  CreateApplicationCommand,
+  InteractionResponse,
   ShardSocketCloseCodes,
   transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
   transformApplicationCommandOptionToDiscordApplicationCommandOption,
 } from "./mod.ts";
+import { Activity } from "./transformers/activity.ts";
+import { Application } from "./transformers/application.ts";
+import { ApplicationCommand } from "./transformers/applicationCommand.ts";
+import { ApplicationCommandOption } from "./transformers/applicationCommandOption.ts";
+import {
+  ApplicationCommandOptionChoice,
+  transformApplicationCommandOptionChoice,
+} from "./transformers/applicationCommandOptionChoice.ts";
+import { ApplicationCommandPermission } from "./transformers/applicationCommandPermission.ts";
+import { Attachment } from "./transformers/attachment.ts";
+import { AuditLogEntry } from "./transformers/auditLogEntry.ts";
+import {
+  AutoModerationActionExecution,
+  transformAutoModerationActionExecution,
+} from "./transformers/automodActionExecution.ts";
+import { AutoModerationRule, transformAutoModerationRule } from "./transformers/automodRule.ts";
+import { Component } from "./transformers/component.ts";
+import { Embed } from "./transformers/embed.ts";
+import { transformActivityToDiscordActivity } from "./transformers/reverse/activity.ts";
+import { transformAllowedMentionsToDiscordAllowedMentions } from "./transformers/reverse/allowedMentions.ts";
+import { transformApplicationToDiscordApplication } from "./transformers/reverse/application.ts";
+import { transformComponentToDiscordComponent } from "./transformers/reverse/component.ts";
+import { transformCreateApplicationCommandToDiscordCreateApplicationCommand } from "./transformers/reverse/createApplicationCommand.ts";
+import { transformEmbedToDiscordEmbed } from "./transformers/reverse/embed.ts";
+import { transformInteractionResponseToDiscordInteractionResponse } from "./transformers/reverse/interactionResponse.ts";
+import { transformMemberToDiscordMember, transformUserToDiscordUser } from "./transformers/reverse/member.ts";
+import { transformTeamToDiscordTeam } from "./transformers/reverse/team.ts";
+import { StageInstance } from "./transformers/stageInstance.ts";
+import { Sticker } from "./transformers/sticker.ts";
+import { Team } from "./transformers/team.ts";
+import { VoiceRegions } from "./transformers/voiceRegion.ts";
+import { Webhook } from "./transformers/webhook.ts";
+import { WelcomeScreen } from "./transformers/welcomeScreen.ts";
+import { GuildWidget } from "./transformers/widget.ts";
+import { GuildWidgetSettings } from "./transformers/widgetSettings.ts";
+import { routes } from "./util/routes.ts";
+import { getBotIdFromToken, removeTokenPrefix } from "./util/token.ts";
 
 export function createBot(options: CreateBotOptions): Bot {
   const bot = {
@@ -265,7 +273,6 @@ export function createEventHandlers(
     guildEmojisUpdate: events.guildEmojisUpdate ?? ignore,
     guildBanAdd: events.guildBanAdd ?? ignore,
     guildBanRemove: events.guildBanRemove ?? ignore,
-    guildLoaded: events.guildLoaded ?? ignore,
     guildCreate: events.guildCreate ?? ignore,
     guildDelete: events.guildDelete ?? ignore,
     guildUpdate: events.guildUpdate ?? ignore,
@@ -415,13 +422,17 @@ export interface Transformers {
     team: (bot: Bot, payload: Team) => DiscordTeam;
     application: (bot: Bot, payload: Application) => DiscordApplication;
     snowflake: (snowflake: bigint) => string;
+    createApplicationCommand: (bot: Bot, payload: CreateApplicationCommand) => DiscordCreateApplicationCommand;
+    applicationCommand: (bot: Bot, payload: ApplicationCommand) => DiscordApplicationCommand;
     applicationCommandOption: (bot: Bot, payload: ApplicationCommandOption) => DiscordApplicationCommandOption;
     applicationCommandOptionChoice: (
       bot: Bot,
       payload: ApplicationCommandOptionChoice,
     ) => DiscordApplicationCommandOptionChoice;
+    interactionResponse: (bot: Bot, payload: InteractionResponse) => DiscordInteractionResponse;
+    attachment: (bot: Bot, payload: Attachment) => DiscordAttachment;
   };
-  snowflake: (snowflake: string) => bigint;
+  snowflake: (snowflake: BigString) => bigint;
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
   automodRule: (bot: Bot, payload: DiscordAutoModerationRule) => AutoModerationRule;
   automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution) => AutoModerationActionExecution;
@@ -480,10 +491,17 @@ export function createTransformers(options: Partial<Transformers>) {
       team: options.reverse?.team || transformTeamToDiscordTeam,
       application: options.reverse?.application || transformApplicationToDiscordApplication,
       snowflake: options.reverse?.snowflake || bigintToSnowflake,
+      createApplicationCommand: options.reverse?.createApplicationCommand ||
+        transformCreateApplicationCommandToDiscordCreateApplicationCommand,
+      applicationCommand: options.reverse?.applicationCommand ||
+        transformApplicationCommandToDiscordApplicationCommand,
       applicationCommandOption: options.reverse?.applicationCommandOption ||
         transformApplicationCommandOptionToDiscordApplicationCommandOption,
       applicationCommandOptionChoice: options.reverse?.applicationCommandOptionChoice ||
         transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
+      interactionResponse: options.reverse?.interactionResponse ||
+        transformInteractionResponseToDiscordInteractionResponse,
+      attachment: options.reverse?.attachment || transformAttachmentToDiscordAttachment,
     },
     automodRule: options.automodRule || transformAutoModerationRule,
     automodActionExecution: options.automodActionExecution || transformAutoModerationActionExecution,
@@ -727,7 +745,6 @@ export interface EventHandlers {
   ) => unknown;
   guildBanAdd: (bot: Bot, user: User, guildId: bigint) => unknown;
   guildBanRemove: (bot: Bot, user: User, guildId: bigint) => unknown;
-  guildLoaded: (bot: Bot, guild: Guild) => unknown;
   guildCreate: (bot: Bot, guild: Guild) => unknown;
   guildDelete: (bot: Bot, id: bigint, shardId: number) => unknown;
   guildUpdate: (bot: Bot, guild: Guild) => unknown;
@@ -786,7 +803,6 @@ export interface BotGatewayHandlerOptions {
   GUILD_BAN_ADD: typeof handlers.handleGuildBanAdd;
   GUILD_BAN_REMOVE: typeof handlers.handleGuildBanRemove;
   GUILD_CREATE: typeof handlers.handleGuildCreate;
-  GUILD_LOADED_DD: typeof handlers.handleGuildLoaded;
   GUILD_DELETE: typeof handlers.handleGuildDelete;
   GUILD_EMOJIS_UPDATE: typeof handlers.handleGuildEmojisUpdate;
   GUILD_INTEGRATIONS_UPDATE: typeof handlers.handleGuildIntegrationsUpdate;
@@ -828,7 +844,7 @@ export interface BotGatewayHandlerOptions {
 export function createBotGatewayHandlers(
   options: Partial<BotGatewayHandlerOptions>,
 ): Record<
-  GatewayDispatchEventNames | "GUILD_LOADED_DD",
+  GatewayDispatchEventNames,
   (bot: Bot, data: DiscordGatewayPayload, shardId: number) => any
 > {
   return {
@@ -856,7 +872,6 @@ export function createBotGatewayHandlers(
     GUILD_BAN_ADD: options.GUILD_BAN_ADD ?? handlers.handleGuildBanAdd,
     GUILD_BAN_REMOVE: options.GUILD_BAN_REMOVE ?? handlers.handleGuildBanRemove,
     GUILD_CREATE: options.GUILD_CREATE ?? handlers.handleGuildCreate,
-    GUILD_LOADED_DD: options.GUILD_LOADED_DD ?? handlers.handleGuildLoaded,
     GUILD_DELETE: options.GUILD_DELETE ?? handlers.handleGuildDelete,
     GUILD_EMOJIS_UPDATE: options.GUILD_EMOJIS_UPDATE ??
       handlers.handleGuildEmojisUpdate,

@@ -1,4 +1,5 @@
 import { Bot } from "../../../bot.ts";
+import { BigString, WithReason } from "../../../mod.ts";
 import { AutoModerationRule } from "../../../transformers/automodRule.ts";
 import {
   AutoModerationActionType,
@@ -7,16 +8,32 @@ import {
   DiscordAutoModerationRuleTriggerMetadataPresets,
 } from "../../../types/discord.ts";
 
-/** Edit a rule currently configured for guild. */
+/**
+ * Edits an automod rule.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to edit the rule in.
+ * @param ruleId - The ID of the rule to edit.
+ * @param options - The parameters for the edit of the rule.
+ * @returns An instance of the edited {@link AutoModerationRule}.
+ *
+ * @remarks
+ * Requires the `MANAGE_GUILD` permission.
+ *
+ * Fires an _Auto Moderation Rule Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule}
+ */
 export async function editAutomodRule(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
+  ruleId: BigString,
   options: Partial<EditAutoModerationRuleOptions>,
 ): Promise<AutoModerationRule> {
   const result = await bot.rest.runMethod<DiscordAutoModerationRule>(
     bot.rest,
     "PATCH",
-    bot.constants.routes.AUTOMOD_RULES(guildId),
+    bot.constants.routes.AUTOMOD_RULE(guildId, ruleId),
     {
       name: options.name,
       event_type: options.eventType,
@@ -25,6 +42,7 @@ export async function editAutomodRule(
           keyword_filter: options.triggerMetadata.keywordFilter,
           presets: options.triggerMetadata.presets,
           allow_list: options.triggerMetadata.allowList,
+          mention_total_limit: options.triggerMetadata.mentionTotalLimit,
         }
         : undefined,
       actions: options.actions?.map((action) => ({
@@ -44,7 +62,7 @@ export async function editAutomodRule(
   return bot.transformers.automodRule(bot, result);
 }
 
-export interface EditAutoModerationRuleOptions {
+export interface EditAutoModerationRuleOptions extends WithReason {
   /** The name of the rule. */
   name: string;
   /** The type of event to trigger the rule on. */
@@ -58,6 +76,8 @@ export interface EditAutoModerationRuleOptions {
     presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
     /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
     allowList?: string[];
+    /** Total number of mentions (role & user) allowed per message (Maximum of 50) */
+    mentionTotalLimit: number;
   };
   /** The actions that will trigger for this rule */
   actions: {
@@ -66,7 +86,7 @@ export interface EditAutoModerationRuleOptions {
     /** additional metadata needed during execution for this specific action type */
     metadata: {
       /** The id of channel to which user content should be logged. Only in SendAlertMessage */
-      channelId?: bigint;
+      channelId?: BigString;
       /** Timeout duration in seconds. Only supported for TriggerType.Keyword */
       durationSeconds?: number;
     };
@@ -74,9 +94,7 @@ export interface EditAutoModerationRuleOptions {
   /** Whether the rule should be enabled. */
   enabled?: boolean;
   /** The role ids that should not be effected by the rule */
-  exemptRoles?: bigint[];
+  exemptRoles?: BigString[];
   /** The channel ids that should not be effected by the rule. */
-  exemptChannels?: bigint[];
-  /** The reason to add to the audit logs. */
-  reason?: string;
+  exemptChannels?: BigString[];
 }

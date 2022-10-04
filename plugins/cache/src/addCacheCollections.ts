@@ -1,4 +1,5 @@
 import {
+  BigString,
   Bot,
   Channel,
   Collection,
@@ -17,7 +18,7 @@ export type BotWithCache<B extends Bot = Bot> = Omit<B, "helpers"> & CacheProps 
 
 export type BotHelpersWithCache<T> = Omit<T, "editWebhook"> & {
   /** The added channelId argument at the end is used to validate permission checks */
-  editWebhook: (webhookId: bigint, options: ModifyWebhook, fromChannelId?: bigint) => Promise<Webhook>;
+  editWebhook: (webhookId: BigString, options: ModifyWebhook, fromChannelId?: bigint) => Promise<Webhook>;
 };
 
 export interface CacheProps {
@@ -29,7 +30,6 @@ export interface CacheProps {
   presences: Collection<bigint, PresenceUpdate>;
   dispatchedGuildIds: Set<bigint>;
   dispatchedChannelIds: Set<bigint>;
-  activeGuildIds: Set<bigint>;
 }
 
 export function addCacheCollections<B extends Bot>(bot: B): BotWithCache<B> {
@@ -42,7 +42,6 @@ export function addCacheCollections<B extends Bot>(bot: B): BotWithCache<B> {
   cacheBot.presences = new Collection();
   cacheBot.dispatchedGuildIds = new Set();
   cacheBot.dispatchedChannelIds = new Set();
-  cacheBot.activeGuildIds = new Set();
 
   return cacheBot;
 }

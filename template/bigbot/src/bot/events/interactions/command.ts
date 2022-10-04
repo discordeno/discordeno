@@ -14,7 +14,7 @@ import {
 } from "discordeno";
 import { bot, BotWithCustomProps } from "../../bot.js";
 import COMMANDS from "../../commands/mod.js";
-import { getLanguage, loadLanguage, serverLanguages, translate } from "../../languages/translate.js";
+import { getLanguage, loadLanguage, serverLanguages, translate, translationKeys } from "../../languages/translate.js";
 import { Command, ConvertArgumentDefinitionsToArgs } from "../../utils/slash/createCommand.js";
 
 function logCommand(
@@ -44,9 +44,9 @@ export async function executeSlashCommand(bot: BotWithCustomProps, interaction: 
 
   // Command could not be found
   if (!command?.execute) {
-    return await interaction.reply(translate(interaction.guildId!, "EXECUTE_COMMAND_NOT_FOUND")).catch(
-      bot.logger.error,
-    );
+    return await interaction
+      .reply(translate(interaction.guildId!, "EXECUTE_COMMAND_NOT_FOUND"))
+      .catch(bot.logger.error);
   }
 
   // HAVE TO CONVERT OUTSIDE OF TRY SO IT CAN BE USED IN CATCH TOO
@@ -124,13 +124,9 @@ export function translateOptionNames(
   // TRANSLATE ALL OPTIONS
   let translated: Record<string, string> = {};
   for (const option of options) {
-    // TODO: fix this ignore
-    // @ts-ignore
-    translated[translate(bot, guildId, option.name).toLowerCase()] = translate(
-      bot,
+    translated[translate(guildId, option.name as translationKeys).toLowerCase()] = translate(
       "english",
-      // @ts-ignore
-      option.name,
+      option.name as translationKeys,
     );
     if (option.options) {
       translated = {

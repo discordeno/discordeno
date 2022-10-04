@@ -1,10 +1,10 @@
-import { Bot, DiscordMessage } from "../deps.ts";
+import { BigString, Bot, DiscordMessage } from "../deps.ts";
 
 /** Suppress all the embeds in this message */
 export async function suppressEmbeds(
   bot: Bot,
-  channelId: bigint,
-  messageId: bigint,
+  channelId: BigString,
+  messageId: BigString,
 ) {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
