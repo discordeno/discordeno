@@ -8,6 +8,6 @@ This template uses v16 of discordeno, make sure to install the latest version wh
 
 Just rename `.env.example` to `.env` and fill it with your bot token.
 
-## Startup
+## Run Bot
 
-Run `deno run mod.ts`
+- deno run -A mod.ts
