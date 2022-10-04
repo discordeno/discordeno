@@ -1,8 +1,10 @@
 import { formatImageURL, hasProperty, iconBigintToHash, iconHashToBigInt, validateLength } from "../mod.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "../util/bigint.ts";
 import { removeTokenPrefix } from "../util/token.ts";
-import { assertEquals, assertNotEquals } from "./deps.ts";
+import { assertEquals, assertExists, assertNotEquals } from "./deps.ts";
 import { loadBot } from "./mod.ts";
+import { Collection } from "../mod.ts";
+import { delayUntil } from "./utils.ts";
 
 Deno.test({
   name: "[token] Remove token prefix when Bot is prefixed.",
@@ -196,5 +198,170 @@ Deno.test({
       }),
       "https://cdn.discordapp.com/avatars/130136895395987456/eae5905ad2d18d7c8deca20478b088b5.jpg?size=128",
     );
+  },
+});
+
+Deno.test({
+  name: "[collection] Create a collection",
+  fn: async (t) => {
+    const collection = new Collection();
+
+    assertExists(collection);
+
+    await t.step({
+      name: "[collection] collection values to array",
+      fn: async (t) => {
+        const testCollection = new Collection([["best", "tri"], ["proficient", "yui"]]);
+
+        assertEquals(testCollection.array(), ["tri", "yui"]);
+      },
+    });
+
+    await t.step({
+      name: "[collection] get a random value",
+      fn: async (t) => {
+        const testCollection = new Collection([["best", "tri"]]);
+
+        assertEquals(testCollection.random(), "tri");
+        assertEquals(collection.random(), undefined);
+      },
+    });
+
+    await t.step({
+      name: "[collection] Set a value without maxSize",
+      fn: async (t) => {
+        collection.set("best developer", "triformine");
+        assertEquals(collection.size, 1);
+        assertEquals(collection.get("best developer"), "triformine");
+
+        collection.set("deno", "yes");
+
+        await t.step({
+          name: "[collection] get the value of the first element",
+          fn: async (t) => {
+            assertEquals(collection.first(), "triformine");
+          },
+        });
+
+        await t.step({
+          name: "[collection] get the value of the last element",
+          fn: async (t) => {
+            assertEquals(collection.last(), "yes");
+          },
+        });
+      },
+    });
+
+    await t.step({
+      name: "[collection] Create a collection with maxSize",
+      fn: async (t) => {
+        const maxSize = 2;
+
+        const maxCollection = new Collection([], {
+          maxSize,
+        });
+
+        assertExists(maxCollection);
+        assertExists(maxCollection.maxSize);
+        assertEquals(maxCollection.maxSize, maxSize);
+
+        await t.step({
+          name: "[collection] Test if maxSize works properly",
+          fn: async (t) => {
+            maxCollection.set("foo", "bar");
+            maxCollection.set("me", "you");
+
+            assertEquals(maxCollection.size, 2);
+
+            maxCollection.set("this", "not");
+
+            assertEquals(maxCollection.size, 2);
+
+            await t.step({
+              name: "[collection] Test if forceSet ignore maxSize",
+              fn: async (t) => {
+                maxCollection.forceSet("this", "not");
+
+                assertEquals(maxCollection.size, 3);
+              },
+            });
+          },
+        });
+      },
+    });
+
+    const testCollection = new Collection([["a", 1], ["b", 2], ["c", 3]]);
+
+    await t.step({
+      name: "[collection] find by key or value",
+      fn: async (t) => {
+        assertEquals(testCollection.find((v, k) => v === 2), 2);
+        assertEquals(testCollection.find((v, k) => k === "b"), 2);
+      },
+    });
+
+    await t.step({
+      name: "[collection] filter by key or value",
+      fn: async (t) => {
+        assertEquals(testCollection.filter((v, k) => v === 3).size, 1);
+        assertEquals(testCollection.filter((v, k) => k === "d").size, 0);
+      },
+    });
+
+    await t.step({
+      name: "[collection] map",
+      fn: async (t) => {
+        assertEquals(testCollection.map((k, v) => `${v}${k}`), ["a1", "b2", "c3"]);
+      },
+    });
+
+    await t.step({
+      name: "[collection] some",
+      fn: async (t) => {
+        assertEquals(testCollection.some((v, _) => v === 1), true);
+        assertEquals(testCollection.some((v, _) => v === 4), false);
+      },
+    });
+
+    await t.step({
+      name: "[collection] every",
+      fn: async (t) => {
+        assertEquals(testCollection.every((v, _) => v !== 0), true);
+        assertEquals(testCollection.every((v, _) => v === 1), false);
+      },
+    });
+
+    await t.step({
+      name: "[collection] reduce",
+      fn: async (t) => {
+        assertEquals(testCollection.reduce((acc, val) => acc + val, 0), 6);
+      },
+    });
+
+    await t.step({
+      name: "[collection] start sweeper",
+      fn: async (t) => {
+        const sweeperCollection = new Collection([["a", 1], ["b", 2]], {
+          sweeper: {
+            filter: (v, _) => v === 1,
+            interval: 50,
+          },
+        });
+
+        try {
+          assertEquals(sweeperCollection.size, 2);
+
+          await delayUntil(150, () => sweeperCollection.size !== 2, 50);
+
+          assertEquals(sweeperCollection.size, 1);
+        } catch (err) {
+          sweeperCollection.stopSweeper();
+
+          throw err;
+        }
+
+        sweeperCollection.stopSweeper();
+      },
+    });
   },
 });
