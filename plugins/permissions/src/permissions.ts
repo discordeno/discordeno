@@ -309,18 +309,12 @@ export function requireOverwritePermissions(
   let requiredPerms: Set<PermissionStrings> = new Set(["MANAGE_CHANNELS"]);
 
   overwrites?.forEach((overwrite) => {
-    if (overwrite.allow) {
-      overwrite.allow.forEach(requiredPerms.add, requiredPerms);
-    }
-    if (overwrite.deny) {
-      overwrite.deny.forEach(requiredPerms.add, requiredPerms);
-    }
+    if (overwrite.allow) overwrite.allow.forEach(requiredPerms.add, requiredPerms);
+    if (overwrite.deny) overwrite.deny.forEach(requiredPerms.add, requiredPerms);
   });
 
   // MANAGE_ROLES permission can only be set by administrators
-  if (requiredPerms.has("MANAGE_ROLES")) {
-    requiredPerms = new Set<PermissionStrings>(["ADMINISTRATOR"]);
-  }
+  if (requiredPerms.has("MANAGE_ROLES")) requiredPerms = new Set<PermissionStrings>(["ADMINISTRATOR"]);
 
   requireGuildPermissions(bot, guildOrId, bot.id, [
     ...requiredPerms,
@@ -382,9 +376,7 @@ export function higherRolePosition(
   if (!role || !otherRole) throw new Error(Errors.ROLE_NOT_FOUND);
 
   // Rare edge case handling
-  if (role.position === otherRole.position) {
-    return role.id < otherRole.id;
-  }
+  if (role.position === otherRole.position) return role.id < otherRole.id;
 
   return role.position > otherRole.position;
 }
@@ -429,11 +421,7 @@ export function channelOverwriteHasPermission(
 
   return permissions.every((perm) => {
     const [_type, _id, allowBits, denyBits] = separateOverwrites(overwrite);
-    if (BigInt(denyBits) & BigInt(BitwisePermissionFlags[perm])) {
-      return false;
-    }
-    if (BigInt(allowBits) & BigInt(BitwisePermissionFlags[perm])) {
-      return true;
-    }
+    if (BigInt(denyBits) & BigInt(BitwisePermissionFlags[perm])) return false;
+    if (BigInt(allowBits) & BigInt(BitwisePermissionFlags[perm])) return true;
   });
 }

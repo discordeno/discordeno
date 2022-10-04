@@ -1,4 +1,5 @@
 import { Bot } from "../../../bot.ts";
+import { BigString, WithReason } from "../../../mod.ts";
 import { AutoModerationRule } from "../../../transformers/automodRule.ts";
 import {
   AutoModerationActionType,
@@ -8,10 +9,24 @@ import {
   DiscordAutoModerationRuleTriggerMetadataPresets,
 } from "../../../types/discord.ts";
 
-/** Get a rule currently configured for guild. */
+/**
+ * Creates an automod rule in a guild.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param guildId - The ID of the guild to create the rule in.
+ * @param options - The parameters for the creation of the rule.
+ * @returns An instance of the created {@link AutoModerationRule}.
+ *
+ * @remarks
+ * Requires the `MANAGE_GUILD` permission.
+ *
+ * Fires an _Auto Moderation Rule Create_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule}
+ */
 export async function createAutomodRule(
   bot: Bot,
-  guildId: bigint,
+  guildId: BigString,
   options: CreateAutoModerationRuleOptions,
 ): Promise<AutoModerationRule> {
   const result = await bot.rest.runMethod<DiscordAutoModerationRule>(
@@ -26,6 +41,7 @@ export async function createAutomodRule(
         keyword_filter: options.triggerMetadata.keywordFilter,
         presets: options.triggerMetadata.presets,
         allow_list: options.triggerMetadata.allowList,
+        mention_total_limit: options.triggerMetadata.mentionTotalLimit,
       },
       actions: options.actions.map((action) => ({
         type: action.type,
@@ -46,7 +62,7 @@ export async function createAutomodRule(
   return bot.transformers.automodRule(bot, result);
 }
 
-export interface CreateAutoModerationRuleOptions {
+export interface CreateAutoModerationRuleOptions extends WithReason {
   /** The name of the rule. */
   name: string;
   /** The type of event to trigger the rule on. */
@@ -61,6 +77,8 @@ export interface CreateAutoModerationRuleOptions {
     presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
     /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
     allowList?: string[];
+    /** Total number of mentions (role & user) allowed per message (Maximum of 50). Only present when TriggerType.MentionSpam */
+    mentionTotalLimit?: number;
   };
   /** The actions that will trigger for this rule */
   actions: {
@@ -69,7 +87,7 @@ export interface CreateAutoModerationRuleOptions {
     /** additional metadata needed during execution for this specific action type */
     metadata?: {
       /** The id of channel to which user content should be logged. Only in SendAlertMessage */
-      channelId?: bigint;
+      channelId?: BigString;
       /** Timeout duration in seconds. Max is 2419200(4 weeks). Only supported for TriggerType.Keyword */
       durationSeconds?: number;
     };
@@ -77,9 +95,7 @@ export interface CreateAutoModerationRuleOptions {
   /** Whether the rule should be enabled, true by default. */
   enabled?: boolean;
   /** The role ids that should not be effected by the rule */
-  exemptRoles?: bigint[];
+  exemptRoles?: BigString[];
   /** The channel ids that should not be effected by the rule. */
-  exemptChannels?: bigint[];
-  /** The reason to add to the audit logs. */
-  reason?: string;
+  exemptChannels?: BigString[];
 }

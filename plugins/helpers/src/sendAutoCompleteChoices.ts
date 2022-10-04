@@ -1,8 +1,8 @@
-import { ApplicationCommandOptionChoice, Bot, InteractionResponseTypes } from "../deps.ts";
+import { ApplicationCommandOptionChoice, BigString, Bot, InteractionResponseTypes } from "../deps.ts";
 
 export async function sendAutocompleteChoices(
   bot: Bot,
-  interactionId: bigint,
+  interactionId: BigString,
   interactionToken: string,
   choices: ApplicationCommandOptionChoice[],
 ): Promise<void> {

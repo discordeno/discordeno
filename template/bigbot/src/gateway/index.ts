@@ -76,12 +76,12 @@ async function main() {
       token: DISCORD_TOKEN,
       handlerUrls: [EVENT_HANDLER_URL],
       handlerAuthorization: EVENT_HANDLER_AUTHORIZATION,
-      path: `${__dirname}/worker.ts`,
+      path: "./worker.ts",
       totalShards: gateway.manager.totalShards,
       workerId,
     };
 
-    const worker = new Worker(`${__dirname}/worker.js`, {
+    const worker = new Worker("./worker.js", {
       workerData,
     });
 

@@ -1,16 +1,41 @@
 import type { Bot } from "../../bot.ts";
+import { WithReason } from "../../mod.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
-import { ChannelTypes, VideoQualityModes } from "../../types/shared.ts";
-import { OverwriteReadable } from "./editChannelOverwrite.ts";
+import { OverwriteReadable } from "../../types/discordeno.ts";
+import { BigString, ChannelTypes, VideoQualityModes } from "../../types/shared.ts";
 
-/** Update a channel's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
-export async function editChannel(
-  bot: Bot,
-  channelId: bigint,
-  options: ModifyChannel,
-  reason?: string,
-): Promise<Channel> {
+/**
+ * Edits a channel's settings.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param channelId - The ID of the channel to edit.
+ * @param options - The parameters for the edit of the channel.
+ * @returns An instance of the edited {@link Channel}.
+ *
+ * @remarks
+ * If editing a channel of type {@link ChannelTypes.GroupDm}:
+ * - Fires a _Channel Update_ gateway event.
+ *
+ * If editing a thread channel:
+ * - Requires the `MANAGE_THREADS` permission __unless__ if setting the `archived` property to `false` when the `locked` property is also `false`, in which case only the `SEND_MESSAGES` permission is required.
+ *
+ * - Fires a _Thread Update_ gateway event.
+ *
+ * If editing a guild channel:
+ * - Requires the `MANAGE_CHANNELS` permission.
+ *
+ * - If modifying permission overrides:
+ *   - Requires the `MANAGE_ROLES` permission.
+ *
+ *   - Only permissions the bot user has in the guild or parent channel can be allowed/denied __unless__ the bot user has a `MANAGE_ROLES` permission override in the channel.
+ *
+ * - If modifying a channel of type {@link ChannelTypes.GuildCategory}:
+ *     - Fires a _Channel Update_ gateway event for each child channel impacted in this change.
+ * - Otherwise:
+ *     - Fires a _Channel Update_ gateway event.
+ */
+export async function editChannel(bot: Bot, channelId: BigString, options: ModifyChannel): Promise<Channel> {
   if (options.name || options.topic) {
     const request = editChannelNameTopicQueue.get(channelId);
     if (!request) {
@@ -63,7 +88,22 @@ export async function editChannel(
           deny: overwrite.deny ? bot.utils.calculateBits(overwrite.deny) : null,
         }))
         : undefined,
-      reason,
+      available_tags: options.availableTags
+        ? options.availableTags.map((availableTag) => ({
+          id: availableTag.id,
+          name: availableTag.name,
+          moderated: availableTag.moderated,
+          emoji_id: availableTag.emojiId,
+          emoji_name: availableTag.emojiName,
+        }))
+        : undefined,
+      default_reaction_emoji: options.defaultReactionEmoji
+        ? {
+          emoji_id: options.defaultReactionEmoji.emojiId,
+          emoji_name: options.defaultReactionEmoji.emojiName,
+        }
+        : undefined,
+      reason: options.reason,
     },
   );
 
@@ -73,9 +113,9 @@ export async function editChannel(
 interface EditChannelRequest {
   amount: number;
   timestamp: number;
-  channelId: bigint;
+  channelId: BigString;
   items: {
-    channelId: bigint;
+    channelId: BigString;
     options: ModifyChannel;
     resolve: (channel: Channel) => void;
     // deno-lint-ignore no-explicit-any
@@ -83,7 +123,7 @@ interface EditChannelRequest {
   }[];
 }
 
-const editChannelNameTopicQueue = new Map<bigint, EditChannelRequest>();
+const editChannelNameTopicQueue = new Map<BigString, EditChannelRequest>();
 let editChannelProcessing = false;
 
 function processEditChannelQueue(bot: Bot): void {
@@ -127,7 +167,7 @@ function processEditChannelQueue(bot: Bot): void {
   }
 }
 
-export interface ModifyChannel {
+export interface ModifyChannel extends WithReason {
   /** 1-100 character channel name */
   name?: string;
   /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
@@ -147,7 +187,7 @@ export interface ModifyChannel {
   /** Channel or category-specific permissions */
   permissionOverwrites?: OverwriteReadable[] | null;
   /** Id of the new parent category for a channel */
-  parentId?: bigint | null;
+  parentId?: BigString | null;
   /** Voice region id for the voice channel, automatic when set to null */
   rtcRegion?: string | null;
   /** The camera video quality mode of the voice channel */
@@ -160,4 +200,27 @@ export interface ModifyChannel {
   locked?: boolean;
   /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
   invitable?: boolean;
+
+  /** The set of tags that can be used in a GUILD_FORUM channel */
+  availableTags?: {
+    /** The id of the tag */
+    id: string;
+    /** The name of the tag (0-20 characters) */
+    name: string;
+    /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
+    moderated: boolean;
+    /** The id of a guild's custom emoji At most one of emoji_id and emoji_name may be set. */
+    emojiId: string;
+    /** The unicode character of the emoji */
+    emojiName: string;
+  }[];
+  /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */
+  defaultReactionEmoji?: {
+    /** The id of a guild's custom emoji */
+    emojiId: string;
+    /** The unicode character of the emoji */
+    emojiName: string | null;
+  };
+  /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
+  defaultThreadRateLimitPerUser?: number;
 }

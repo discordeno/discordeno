@@ -1,4 +1,4 @@
-import { build } from "https://deno.land/x/dnt@0.17.0/mod.ts";
+import { build } from "https://deno.land/x/dnt@0.30.0/mod.ts";
 
 await Deno.remove("npm", { recursive: true }).catch((_) => {});
 
@@ -19,6 +19,8 @@ await build({
             name: "WebSocket",
             exportName: "default",
           },
+          { name: "CloseEvent", typeOnly: true },
+          { name: "MessageEvent", typeOnly: true },
         ],
       },
     ],

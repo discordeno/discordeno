@@ -1,33 +1,25 @@
 import { BotWithCache, ChannelTypes } from "../../../deps.ts";
 import { requireBotChannelPermissions } from "../../permissions.ts";
 
-export default function removeThreadMember(bot: BotWithCache) {
-  const removeThreadMemberOld = bot.helpers.removeThreadMember;
+export function removeThreadMember(bot: BotWithCache) {
+  const removeThreadMember = bot.helpers.removeThreadMember;
 
   bot.helpers.removeThreadMember = async function (threadId, userId) {
-    if (userId === bot.id) {
-      throw new Error(
-        "To remove the bot from a thread, you must use bot.helpers.leaveThread()",
-      );
-    }
-
-    const channel = bot.channels.get(threadId);
+    const channel = bot.channels.get(bot.transformers.snowflake(threadId));
 
     if (channel) {
-      if (channel.archived) {
-        throw new Error(
-          "Cannot remove user from thread if thread is archived.",
-        );
-      }
+      const isThread = ![ChannelTypes.PublicThread, ChannelTypes.PrivateThread, ChannelTypes.AnnouncementThread]
+        .includes(channel.type);
 
-      if (
-        !(bot.id === channel.ownerId &&
-          channel.type === ChannelTypes.GuildPrivateThread)
-      ) {
-        await requireBotChannelPermissions(bot, channel, ["MANAGE_MESSAGES"]);
+      if (isThread) throw new Error("Channel must be a thread channel");
+
+      if (channel.archived) throw new Error("Cannot remove user from thread if thread is archived.");
+
+      if (!(bot.id === channel.ownerId && channel.type === ChannelTypes.PrivateThread)) {
+        requireBotChannelPermissions(bot, channel, ["VIEW_CHANNEL", "MANAGE_MESSAGES"]);
       }
     }
 
-    return await removeThreadMemberOld(threadId, userId);
+    return await removeThreadMember(threadId, userId);
   };
 }

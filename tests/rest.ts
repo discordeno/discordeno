@@ -54,6 +54,13 @@ async function handleRequest(conn: Deno.Conn) {
       const text = await requestEvent.request.text();
       const json = text ? JSON.parse(text) : undefined;
 
+      if (json?.file) {
+        json.file = await Promise.all(json.file.map(async (f: any) => ({
+          name: f.name,
+          blob: await (await fetch(f.blob)).blob(),
+        })));
+      }
+
       const result = await rest.runMethod(
         rest,
         requestEvent.request.method as RequestMethod,

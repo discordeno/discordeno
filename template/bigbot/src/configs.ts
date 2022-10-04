@@ -27,7 +27,7 @@ export const EVENT_HANDLER_PORT = 8081;
 
 /** The url where the bot code(event handler) will run. This is where the gateway will send its messages to. */
 // SETUP-DD-TEMP: Set the bot's url here.
-export const EVENT_HANDLER_URL = "http://localhost:8080";
+export const EVENT_HANDLER_URL = `http://localhost:${EVENT_HANDLER_PORT}`;
 
 /** The full webhook url where the bot can send errors to alert you that the bot is missing translations. */
 // SETUP-DD-TEMP: Set a full discord webhook url here.
@@ -86,9 +86,9 @@ export const TOTAL_WORKERS: number = 4;
 // SETUP-DD-TEMP: Add a secret passcode here.
 export const GATEWAY_AUTHORIZATION = "";
 
-/** The url where the gateway will run. */
+/** The host where the gateway will run. Must follow https://nodejs.org/api/net.html#serverlistenoptions-callback. */
 // SETUP-DD-TEMP: Set the gateways's host here.
-export const GATEWAY_HOST = "http://localhost";
+export const GATEWAY_HOST = "localhost";
 
 /** The port where the gateway will run. This is where the bot will send its messages to the gateway. */
 // SETUP-DD-TEMP: Set the gateways's port here.

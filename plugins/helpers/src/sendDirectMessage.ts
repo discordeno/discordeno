@@ -1,12 +1,12 @@
-import { Bot, Collection, CreateMessage } from "../deps.ts";
+import { BigString, Bot, Collection, CreateMessage } from "../deps.ts";
 
 /** Maps the <userId, channelId> for dm channels */
-export const dmChannelIds = new Collection<bigint, bigint>();
+export const dmChannelIds = new Collection<BigString, BigString>();
 
 /** Sends a direct message to a user. This can take two API calls. The first call is to create a dm channel. Then sending the message to that channel. Channel ids are cached as needed to prevent duplicate requests. */
 export async function sendDirectMessage(
   bot: Bot,
-  userId: bigint,
+  userId: BigString,
   content: string | CreateMessage,
 ) {
   if (typeof content === "string") content = { content };

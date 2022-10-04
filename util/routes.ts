@@ -1,18 +1,19 @@
-import { ListArchivedThreads } from "../helpers/channels/threads/getArchivedThreads.ts";
-import { GetGuildAuditLog } from "../helpers/guilds/getAuditLogs.ts";
-import { GetBans } from "../helpers/guilds/getBans.ts";
-import { GetGuildPruneCountQuery } from "../helpers/guilds/getPruneCount.ts";
-import { GetScheduledEventUsers } from "../helpers/guilds/scheduledEvents/getScheduledEventUsers.ts";
-import { GetInvite } from "../helpers/invites/getInvite.ts";
-import { ListGuildMembers } from "../helpers/members/getMembers.ts";
 import {
+  GetBans,
+  GetGuildAuditLog,
+  GetGuildPruneCountQuery,
+  GetInvite,
   GetMessagesOptions,
+  GetReactions,
+  GetScheduledEventUsers,
   isGetMessagesAfter,
   isGetMessagesAround,
   isGetMessagesBefore,
   isGetMessagesLimit,
-} from "../helpers/messages/getMessages.ts";
-import { GetReactions } from "../helpers/messages/getReactions.ts";
+  ListArchivedThreads,
+  ListGuildMembers,
+} from "../helpers/mod.ts";
+import { BigString } from "../types/shared.ts";
 import { baseEndpoints } from "./constants.ts";
 
 export const routes = {
@@ -21,21 +22,21 @@ export const routes = {
   },
 
   // Automod Endpoints
-  AUTOMOD_RULES: (guildId: bigint) => {
+  AUTOMOD_RULES: (guildId: BigString) => {
     return `/guilds/${guildId}/auto-moderation/rules`;
   },
-  AUTOMOD_RULE: (guildId: bigint, ruleId: bigint) => {
+  AUTOMOD_RULE: (guildId: BigString, ruleId: BigString) => {
     return `/guilds/${guildId}/auto-moderation/rules/${ruleId}`;
   },
 
   // Channel Endpoints
-  CHANNEL: (channelId: bigint) => {
+  CHANNEL: (channelId: BigString) => {
     return `/channels/${channelId}`;
   },
-  CHANNEL_MESSAGE: (channelId: bigint, messageId: bigint) => {
+  CHANNEL_MESSAGE: (channelId: BigString, messageId: BigString) => {
     return `/channels/${channelId}/messages/${messageId}`;
   },
-  CHANNEL_MESSAGES: (channelId: bigint, options?: GetMessagesOptions) => {
+  CHANNEL_MESSAGES: (channelId: BigString, options?: GetMessagesOptions) => {
     let url = `/channels/${channelId}/messages?`;
 
     if (options) {
@@ -47,31 +48,31 @@ export const routes = {
 
     return url;
   },
-  CHANNEL_PIN: (channelId: bigint, messageId: bigint) => {
+  CHANNEL_PIN: (channelId: BigString, messageId: BigString) => {
     return `/channels/${channelId}/pins/${messageId}`;
   },
-  CHANNEL_PINS: (channelId: bigint) => {
+  CHANNEL_PINS: (channelId: BigString) => {
     return `/channels/${channelId}/pins`;
   },
-  CHANNEL_BULK_DELETE: (channelId: bigint) => {
+  CHANNEL_BULK_DELETE: (channelId: BigString) => {
     return `/channels/${channelId}/messages/bulk-delete`;
   },
-  CHANNEL_INVITES: (channelId: bigint) => {
+  CHANNEL_INVITES: (channelId: BigString) => {
     return `/channels/${channelId}/invites`;
   },
-  CHANNEL_WEBHOOKS: (channelId: bigint) => {
+  CHANNEL_WEBHOOKS: (channelId: BigString) => {
     return `/channels/${channelId}/webhooks`;
   },
-  CHANNEL_MESSAGE_REACTION_ME: (channelId: bigint, messageId: bigint, emoji: string) => {
+  CHANNEL_MESSAGE_REACTION_ME: (channelId: BigString, messageId: BigString, emoji: string) => {
     return `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}/@me`;
   },
-  CHANNEL_MESSAGE_REACTION_USER: (channelId: bigint, messageId: bigint, emoji: string, userId: bigint) => {
+  CHANNEL_MESSAGE_REACTION_USER: (channelId: BigString, messageId: BigString, emoji: string, userId: BigString) => {
     return `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}/${userId}`;
   },
-  CHANNEL_MESSAGE_REACTIONS: (channelId: bigint, messageId: bigint) => {
+  CHANNEL_MESSAGE_REACTIONS: (channelId: BigString, messageId: BigString) => {
     return `/channels/${channelId}/messages/${messageId}/reactions`;
   },
-  CHANNEL_MESSAGE_REACTION: (channelId: bigint, messageId: bigint, emoji: string, options?: GetReactions) => {
+  CHANNEL_MESSAGE_REACTION: (channelId: BigString, messageId: BigString, emoji: string, options?: GetReactions) => {
     let url = `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}?`;
 
     if (options) {
@@ -81,43 +82,43 @@ export const routes = {
 
     return url;
   },
-  CHANNEL_FOLLOW: (channelId: bigint) => {
+  CHANNEL_FOLLOW: (channelId: BigString) => {
     return `/channels/${channelId}/followers`;
   },
-  CHANNEL_MESSAGE_CROSSPOST: (channelId: bigint, messageId: bigint) => {
+  CHANNEL_MESSAGE_CROSSPOST: (channelId: BigString, messageId: BigString) => {
     return `/channels/${channelId}/messages/${messageId}/crosspost`;
   },
-  CHANNEL_OVERWRITE: (channelId: bigint, overwriteId: bigint) => {
+  CHANNEL_OVERWRITE: (channelId: BigString, overwriteId: BigString) => {
     return `/channels/${channelId}/permissions/${overwriteId}`;
   },
   // Bots SHALL NOT use this endpoint but they can
-  CHANNEL_TYPING: (channelId: bigint) => {
+  CHANNEL_TYPING: (channelId: BigString) => {
     return `/channels/${channelId}/typing`;
   },
 
   // Thread Endpoints
-  THREAD_START_PUBLIC: (channelId: bigint, messageId: bigint) => {
+  THREAD_START_PUBLIC: (channelId: BigString, messageId: BigString) => {
     return `/channels/${channelId}/messages/${messageId}/threads`;
   },
-  THREAD_START_PRIVATE: (channelId: bigint) => {
+  THREAD_START_PRIVATE: (channelId: BigString) => {
     return `/channels/${channelId}/threads`;
   },
-  THREAD_ACTIVE: (guildId: bigint) => {
+  THREAD_ACTIVE: (guildId: BigString) => {
     return `/guilds/${guildId}/threads/active`;
   },
-  THREAD_MEMBERS: (channelId: bigint) => {
+  THREAD_MEMBERS: (channelId: BigString) => {
     return `/channels/${channelId}/thread-members`;
   },
-  THREAD_ME: (channelId: bigint) => {
+  THREAD_ME: (channelId: BigString) => {
     return `/channels/${channelId}/thread-members/@me`;
   },
-  THREAD_USER: (channelId: bigint, userId: bigint) => {
+  THREAD_USER: (channelId: BigString, userId: BigString) => {
     return `/channels/${channelId}/thread-members/${userId}`;
   },
-  THREAD_ARCHIVED: (channelId: bigint) => {
+  THREAD_ARCHIVED: (channelId: BigString) => {
     return `/channels/${channelId}/threads/archived`;
   },
-  THREAD_ARCHIVED_PUBLIC: (channelId: bigint, options?: ListArchivedThreads) => {
+  THREAD_ARCHIVED_PUBLIC: (channelId: BigString, options?: ListArchivedThreads) => {
     let url = `/channels/${channelId}/threads/archived/public?`;
 
     if (options) {
@@ -127,7 +128,7 @@ export const routes = {
 
     return url;
   },
-  THREAD_ARCHIVED_PRIVATE: (channelId: bigint, options?: ListArchivedThreads) => {
+  THREAD_ARCHIVED_PRIVATE: (channelId: BigString, options?: ListArchivedThreads) => {
     let url = `/channels/${channelId}/threads/archived/private?`;
 
     if (options) {
@@ -137,7 +138,7 @@ export const routes = {
 
     return url;
   },
-  THREAD_ARCHIVED_PRIVATE_JOINED: (channelId: bigint, options?: ListArchivedThreads) => {
+  THREAD_ARCHIVED_PRIVATE_JOINED: (channelId: BigString, options?: ListArchivedThreads) => {
     let url = `/channels/${channelId}/users/@me/threads/archived/private?`;
 
     if (options) {
@@ -149,12 +150,12 @@ export const routes = {
   },
 
   // Thread -> Forum Endpoints
-  FORUM_START: (channelId: bigint) => {
+  FORUM_START: (channelId: BigString) => {
     return `/channels/${channelId}/threads?has_message=true`;
   },
 
   // Guild Endpoints
-  GUILD: (guildId: bigint, withCounts?: boolean) => {
+  GUILD: (guildId: BigString, withCounts?: boolean) => {
     let url = `/guilds/${guildId}?`;
 
     if (withCounts !== undefined) {
@@ -166,7 +167,7 @@ export const routes = {
   GUILDS: () => {
     return `/guilds`;
   },
-  GUILD_AUDIT_LOGS: (guildId: bigint, options?: GetGuildAuditLog) => {
+  GUILD_AUDIT_LOGS: (guildId: BigString, options?: GetGuildAuditLog) => {
     let url = `/guilds/${guildId}/audit-logs?`;
 
     if (options) {
@@ -178,10 +179,10 @@ export const routes = {
 
     return url;
   },
-  GUILD_BAN: (guildId: bigint, userId: bigint) => {
+  GUILD_BAN: (guildId: BigString, userId: BigString) => {
     return `/guilds/${guildId}/bans/${userId}`;
   },
-  GUILD_BANS: (guildId: bigint, options?: GetBans) => {
+  GUILD_BANS: (guildId: BigString, options?: GetBans) => {
     let url = `/guilds/${guildId}/bans?`;
 
     if (options) {
@@ -193,20 +194,20 @@ export const routes = {
     return url;
   },
   // TODO: move this away
-  GUILD_BANNER: (guildId: bigint, icon: string) => {
+  GUILD_BANNER: (guildId: BigString, icon: string) => {
     return `${baseEndpoints.CDN_URL}/banners/${guildId}/${icon}`;
   },
-  GUILD_CHANNELS: (guildId: bigint) => {
+  GUILD_CHANNELS: (guildId: BigString) => {
     return `/guilds/${guildId}/channels`;
   },
-  GUILD_WIDGET: (guildId: bigint) => {
+  GUILD_WIDGET: (guildId: BigString) => {
     return `/guilds/${guildId}/widget`;
   },
-  GUILD_WIDGET_JSON: (guildId: bigint) => {
+  GUILD_WIDGET_JSON: (guildId: BigString) => {
     return `/guilds/${guildId}/widget.json`;
   },
   GUILD_WIDGET_IMAGE: (
-    guildId: bigint,
+    guildId: BigString,
     style?:
       | "shield"
       | "banner1"
@@ -222,35 +223,35 @@ export const routes = {
 
     return url;
   },
-  GUILD_EMOJI: (guildId: bigint, emojiId: bigint) => {
+  GUILD_EMOJI: (guildId: BigString, emojiId: BigString) => {
     return `/guilds/${guildId}/emojis/${emojiId}`;
   },
-  GUILD_EMOJIS: (guildId: bigint) => {
+  GUILD_EMOJIS: (guildId: BigString) => {
     return `/guilds/${guildId}/emojis`;
   },
   // TODO: move this away
-  GUILD_ICON: (guildId: bigint, icon: string) => {
+  GUILD_ICON: (guildId: BigString, icon: string) => {
     return `${baseEndpoints.CDN_URL}/icons/${guildId}/${icon}`;
   },
-  GUILD_INTEGRATION: (guildId: bigint, integrationId: bigint) => {
+  GUILD_INTEGRATION: (guildId: BigString, integrationId: BigString) => {
     return `/guilds/${guildId}/integrations/${integrationId}`;
   },
-  GUILD_INTEGRATION_SYNC: (guildId: bigint, integrationId: bigint) => {
+  GUILD_INTEGRATION_SYNC: (guildId: BigString, integrationId: BigString) => {
     return `/guilds/${guildId}/integrations/${integrationId}/sync`;
   },
-  GUILD_INTEGRATIONS: (guildId: bigint) => {
+  GUILD_INTEGRATIONS: (guildId: BigString) => {
     return `/guilds/${guildId}/integrations?include_applications=true`;
   },
-  GUILD_INVITES: (guildId: bigint) => {
+  GUILD_INVITES: (guildId: BigString) => {
     return `/guilds/${guildId}/invites`;
   },
-  GUILD_LEAVE: (guildId: bigint) => {
+  GUILD_LEAVE: (guildId: BigString) => {
     return `/users/@me/guilds/${guildId}`;
   },
-  GUILD_MEMBER: (guildId: bigint, userId: bigint) => {
+  GUILD_MEMBER: (guildId: BigString, userId: BigString) => {
     return `/guilds/${guildId}/members/${userId}`;
   },
-  GUILD_MEMBERS: (guildId: bigint, options?: ListGuildMembers) => {
+  GUILD_MEMBERS: (guildId: BigString, options?: ListGuildMembers) => {
     let url = `/guilds/${guildId}/members?`;
 
     if (options !== undefined) {
@@ -260,10 +261,10 @@ export const routes = {
 
     return url;
   },
-  GUILD_MEMBER_ROLE: (guildId: bigint, memberId: bigint, roleId: bigint) => {
+  GUILD_MEMBER_ROLE: (guildId: BigString, memberId: BigString, roleId: BigString) => {
     return `/guilds/${guildId}/members/${memberId}/roles/${roleId}`;
   },
-  GUILD_MEMBERS_SEARCH: (guildId: bigint, query: string, options?: { limit?: number }) => {
+  GUILD_MEMBERS_SEARCH: (guildId: BigString, query: string, options?: { limit?: number }) => {
     let url = `/guilds/${guildId}/members/search?query=${encodeURIComponent(query)}`;
 
     if (options) {
@@ -272,7 +273,7 @@ export const routes = {
 
     return url;
   },
-  GUILD_PRUNE: (guildId: bigint, options?: GetGuildPruneCountQuery) => {
+  GUILD_PRUNE: (guildId: BigString, options?: GetGuildPruneCountQuery) => {
     let url = `/guilds/${guildId}/prune?`;
 
     if (options) {
@@ -282,44 +283,44 @@ export const routes = {
 
     return url;
   },
-  GUILD_REGIONS: (guildId: bigint) => {
+  GUILD_REGIONS: (guildId: BigString) => {
     return `/guilds/${guildId}/regions`;
   },
-  GUILD_ROLE: (guildId: bigint, roleId: bigint) => {
+  GUILD_ROLE: (guildId: BigString, roleId: BigString) => {
     return `/guilds/${guildId}/roles/${roleId}`;
   },
-  GUILD_ROLES: (guildId: bigint) => {
+  GUILD_ROLES: (guildId: BigString) => {
     return `/guilds/${guildId}/roles`;
   },
   // TODO: move this away
-  GUILD_SPLASH: (guildId: bigint, icon: string) => {
+  GUILD_SPLASH: (guildId: BigString, icon: string) => {
     return `${baseEndpoints.CDN_URL}/splashes/${guildId}/${icon}`;
   },
-  GUILD_VANITY_URL: (guildId: bigint) => {
+  GUILD_VANITY_URL: (guildId: BigString) => {
     return `/guilds/${guildId}/vanity-url`;
   },
-  GUILD_WEBHOOKS: (guildId: bigint) => {
+  GUILD_WEBHOOKS: (guildId: BigString) => {
     return `/guilds/${guildId}/webhooks`;
   },
   TEMPLATE: (code: string) => {
     return `/guilds/templates/${code}`;
   },
-  GUILD_TEMPLATE: (guildId: bigint, code: string) => {
+  GUILD_TEMPLATE: (guildId: BigString, code: string) => {
     return `/guilds/${guildId}/templates/${code}`;
   },
-  GUILD_TEMPLATES: (guildId: bigint) => {
+  GUILD_TEMPLATES: (guildId: BigString) => {
     return `/guilds/${guildId}/templates`;
   },
-  GUILD_PREVIEW: (guildId: bigint) => {
+  GUILD_PREVIEW: (guildId: BigString) => {
     return `/guilds/${guildId}/preview`;
   },
-  UPDATE_VOICE_STATE: (guildId: bigint, userId?: bigint) => {
+  UPDATE_VOICE_STATE: (guildId: BigString, userId?: BigString) => {
     return `/guilds/${guildId}/voice-states/${userId ?? "@me"}`;
   },
-  GUILD_WELCOME_SCREEN: (guildId: bigint) => {
+  GUILD_WELCOME_SCREEN: (guildId: BigString) => {
     return `/guilds/${guildId}/welcome-screen`;
   },
-  GUILD_SCHEDULED_EVENTS: (guildId: bigint, withUserCount?: boolean) => {
+  GUILD_SCHEDULED_EVENTS: (guildId: BigString, withUserCount?: boolean) => {
     let url = `/guilds/${guildId}/scheduled-events?`;
 
     if (withUserCount !== undefined) {
@@ -327,7 +328,7 @@ export const routes = {
     }
     return url;
   },
-  GUILD_SCHEDULED_EVENT: (guildId: bigint, eventId: bigint, withUserCount?: boolean) => {
+  GUILD_SCHEDULED_EVENT: (guildId: BigString, eventId: BigString, withUserCount?: boolean) => {
     let url = `/guilds/${guildId}/scheduled-events/${eventId}`;
 
     if (withUserCount !== undefined) {
@@ -336,7 +337,7 @@ export const routes = {
 
     return url;
   },
-  GUILD_SCHEDULED_EVENT_USERS: (guildId: bigint, eventId: bigint, options?: GetScheduledEventUsers) => {
+  GUILD_SCHEDULED_EVENT_USERS: (guildId: BigString, eventId: BigString, options?: GetScheduledEventUsers) => {
     let url = `/guilds/${guildId}/scheduled-events/${eventId}/users?`;
 
     if (options) {
@@ -348,6 +349,7 @@ export const routes = {
 
     return url;
   },
+  GUILD_MFA_LEVEL: (guildId: BigString) => `/guilds/${guildId}/mfa`,
   // Voice
   VOICE_REGIONS: () => {
     return `/voice/regions`;
@@ -365,7 +367,7 @@ export const routes = {
     return url;
   },
 
-  WEBHOOK: (webhookId: bigint, token: string, options?: { wait?: boolean; threadId?: bigint }) => {
+  WEBHOOK: (webhookId: BigString, token: string, options?: { wait?: boolean; threadId?: BigString }) => {
     let url = `/webhooks/${webhookId}/${token}?`;
 
     if (options) {
@@ -375,10 +377,10 @@ export const routes = {
 
     return url;
   },
-  WEBHOOK_ID: (webhookId: bigint) => {
+  WEBHOOK_ID: (webhookId: BigString) => {
     return `/webhooks/${webhookId}`;
   },
-  WEBHOOK_MESSAGE: (webhookId: bigint, token: string, messageId: bigint, options?: { threadId?: bigint }) => {
+  WEBHOOK_MESSAGE: (webhookId: BigString, token: string, messageId: BigString, options?: { threadId?: BigString }) => {
     let url = `/webhooks/${webhookId}/${token}/messages/${messageId}?`;
 
     if (options) {
@@ -387,7 +389,7 @@ export const routes = {
 
     return url;
   },
-  WEBHOOK_MESSAGE_ORIGINAL: (webhookId: bigint, token: string, options?: { threadId?: bigint }) => {
+  WEBHOOK_MESSAGE_ORIGINAL: (webhookId: BigString, token: string, options?: { threadId?: BigString }) => {
     let url = `/webhooks/${webhookId}/${token}/messages/@original?`;
 
     if (options) {
@@ -396,27 +398,27 @@ export const routes = {
 
     return url;
   },
-  WEBHOOK_SLACK: (webhookId: bigint, token: string) => {
+  WEBHOOK_SLACK: (webhookId: BigString, token: string) => {
     return `/webhooks/${webhookId}/${token}/slack`;
   },
-  WEBHOOK_GITHUB: (webhookId: bigint, token: string) => {
+  WEBHOOK_GITHUB: (webhookId: BigString, token: string) => {
     return `/webhooks/${webhookId}/${token}/github`;
   },
 
   // Application Endpoints
-  COMMANDS: (applicationId: bigint) => {
+  COMMANDS: (applicationId: BigString) => {
     return `/applications/${applicationId}/commands`;
   },
-  COMMANDS_GUILD: (applicationId: bigint, guildId: bigint) => {
+  COMMANDS_GUILD: (applicationId: BigString, guildId: BigString) => {
     return `/applications/${applicationId}/guilds/${guildId}/commands`;
   },
-  COMMANDS_PERMISSIONS: (applicationId: bigint, guildId: bigint) => {
+  COMMANDS_PERMISSIONS: (applicationId: BigString, guildId: BigString) => {
     return `/applications/${applicationId}/guilds/${guildId}/commands/permissions`;
   },
-  COMMANDS_PERMISSION: (applicationId: bigint, guildId: bigint, commandId: bigint) => {
+  COMMANDS_PERMISSION: (applicationId: BigString, guildId: BigString, commandId: BigString) => {
     return `/applications/${applicationId}/guilds/${guildId}/commands/${commandId}/permissions`;
   },
-  COMMANDS_ID: (applicationId: bigint, commandId: bigint, withLocalizations?: boolean) => {
+  COMMANDS_ID: (applicationId: BigString, commandId: BigString, withLocalizations?: boolean) => {
     let url = `/applications/${applicationId}/commands/${commandId}?`;
 
     if (withLocalizations !== undefined) {
@@ -425,7 +427,12 @@ export const routes = {
 
     return url;
   },
-  COMMANDS_GUILD_ID: (applicationId: bigint, guildId: bigint, commandId: bigint, withLocalizations?: boolean) => {
+  COMMANDS_GUILD_ID: (
+    applicationId: BigString,
+    guildId: BigString,
+    commandId: BigString,
+    withLocalizations?: boolean,
+  ) => {
     let url = `/applications/${applicationId}/guilds/${guildId}/commands/${commandId}?`;
 
     if (withLocalizations !== undefined) {
@@ -436,18 +443,18 @@ export const routes = {
   },
 
   // Interaction Endpoints
-  INTERACTION_ID_TOKEN: (interactionId: bigint, token: string) => {
+  INTERACTION_ID_TOKEN: (interactionId: BigString, token: string) => {
     return `/interactions/${interactionId}/${token}/callback`;
   },
-  INTERACTION_ORIGINAL_ID_TOKEN: (interactionId: bigint, token: string) => {
+  INTERACTION_ORIGINAL_ID_TOKEN: (interactionId: BigString, token: string) => {
     return `/webhooks/${interactionId}/${token}/messages/@original`;
   },
-  INTERACTION_ID_TOKEN_MESSAGE_ID: (applicationId: bigint, token: string, messageId: bigint) => {
+  INTERACTION_ID_TOKEN_MESSAGE_ID: (applicationId: BigString, token: string, messageId: BigString) => {
     return `/webhooks/${applicationId}/${token}/messages/${messageId}`;
   },
 
   // User endpoints
-  USER: (userId: bigint) => {
+  USER: (userId: BigString) => {
     return `/users/${userId}`;
   },
   USER_BOT: () => {
@@ -457,7 +464,7 @@ export const routes = {
     return `/users/@me/guilds`;
   },
   // TODO: move this away
-  USER_AVATAR: (userId: bigint, icon: string) => {
+  USER_AVATAR: (userId: BigString, icon: string) => {
     return `${baseEndpoints.CDN_URL}/avatars/${userId}/${icon}`;
   },
   // TODO: move this away
@@ -470,7 +477,7 @@ export const routes = {
   USER_CONNECTIONS: () => {
     return `/users/@me/connections`;
   },
-  USER_NICK: (guildId: bigint) => {
+  USER_NICK: (guildId: BigString) => {
     return `/guilds/${guildId}/members/@me`;
   },
 
@@ -481,10 +488,10 @@ export const routes = {
   DISCOVERY_VALID_TERM: (term: string) => {
     return `/discovery/valid-term?term=${term}`;
   },
-  DISCOVERY_METADATA: (guildId: bigint) => {
+  DISCOVERY_METADATA: (guildId: BigString) => {
     return `/guilds/${guildId}/discovery-metadata`;
   },
-  DISCOVERY_SUBCATEGORY: (guildId: bigint, categoryId: number) => {
+  DISCOVERY_SUBCATEGORY: (guildId: BigString, categoryId: number) => {
     return `/guilds/${guildId}/discovery-categories/${categoryId}`;
   },
 
@@ -497,12 +504,21 @@ export const routes = {
   STAGE_INSTANCES: () => {
     return `/stage-instances`;
   },
-  STAGE_INSTANCE: (channelId: bigint) => {
+  STAGE_INSTANCE: (channelId: BigString) => {
     return `/stage-instances/${channelId}`;
   },
 
-  // Misc Endpoints
+  // Stickers Endpoints
   NITRO_STICKER_PACKS: () => {
-    return `/sticker-packs`;
+    return "/sticker-packs";
+  },
+  STICKER: (stickerId: bigint) => {
+    return `/stickers/${stickerId}`;
+  },
+  GUILD_STICKERS: (guildId: bigint) => {
+    return `/guilds/${guildId}/stickers`;
+  },
+  GUILD_STICKER: (guildId: bigint, stickerId: bigint) => {
+    return `/guilds/${guildId}/stickers/${stickerId}`;
   },
 };

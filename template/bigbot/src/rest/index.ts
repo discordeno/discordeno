@@ -3,7 +3,7 @@ import { BASE_URL, createRestManager } from "discordeno";
 import express, { Request, Response } from "express";
 
 import { Influx } from "../analytics.js";
-import { DISCORD_TOKEN, INFLUX_TOKEN, REST_AUTHORIZATION, REST_PORT, REST_URL } from "../configs.js";
+import { DISCORD_TOKEN, REST_AUTHORIZATION, REST_PORT, REST_URL } from "../configs.js";
 
 const rest = createRestManager({
   token: DISCORD_TOKEN,
@@ -13,9 +13,9 @@ const rest = createRestManager({
 });
 
 // If influxdb data is provided, enable analytics in this proxy.
-if (INFLUX_TOKEN) {
+if (Influx) {
   rest.fetching = function (options) {
-    Influx.writePoint(
+    Influx?.writePoint(
       new Point("restEvents")
         // MARK THE TIME WHEN EVENT ARRIVED
         .timestamp(new Date())
@@ -28,7 +28,7 @@ if (INFLUX_TOKEN) {
   };
 
   rest.fetched = function (options, response) {
-    Influx.writePoint(
+    Influx?.writePoint(
       new Point("restEvents")
         // MARK THE TIME WHEN EVENT ARRIVED
         .timestamp(new Date())
@@ -44,7 +44,7 @@ if (INFLUX_TOKEN) {
 
   setInterval(() => {
     console.log(`[Influx - REST] Saving events...`);
-    Influx.flush()
+    Influx?.flush()
       .then(() => {
         console.log(`[Influx - REST] Saved events!`);
       })
@@ -54,6 +54,11 @@ if (INFLUX_TOKEN) {
     // Every 30seconds
   }, 30000);
 }
+
+rest.convertRestError = (errorStack, data) => {
+  if (!data) return { message: errorStack.message };
+  return { ...data, message: errorStack.message };
+};
 
 const app = express();
 
@@ -91,12 +96,7 @@ async function handleRequest(req: Request, res: Response) {
   }
 
   try {
-    const result = await rest.runMethod(
-      rest,
-      req.method as any,
-      `${BASE_URL}${req.url}`,
-      req.body,
-    );
+    const result = await rest.runMethod(rest, req.method as any, `${BASE_URL}${req.url}`, req.body);
 
     if (result) {
       res.status(200).json(result);
@@ -105,12 +105,7 @@ async function handleRequest(req: Request, res: Response) {
     }
   } catch (error: any) {
     console.log(error);
-    if (error?.code) res.status(500).json(error);
-    else {
-      res.status(500).json({
-        error: error.message ?? "No error found at all what the hell discord.",
-      });
-    }
+    res.status(500).json(error);
   }
 }
 

@@ -1,5 +1,7 @@
+import { BotWithCache } from "../cache/src/addCacheCollections.ts";
 import {
   ApplicationCommandOptionChoice,
+  BigString,
   Bot,
   Channel,
   Collection,
@@ -11,73 +13,44 @@ import {
   Message,
 } from "./deps.ts";
 import { cloneChannel } from "./src/channels.ts";
-import { sendAutocompleteChoices } from "./src/sendAutoCompleteChoices.ts";
-import { sendDirectMessage } from "./src/sendDirectMessage.ts";
-import { suppressEmbeds } from "./src/suppressEmbeds.ts";
-import { archiveThread, editThread, lockThread, ModifyThread, unarchiveThread, unlockThread } from "./src/threads.ts";
 import { disconnectMember } from "./src/disconnectMember.ts";
+import { fetchAndRetrieveMembers } from "./src/fetchAndRetrieveMembers.ts";
 import { getMembersPaginated } from "./src/getMembersPaginated.ts";
 import { moveMember } from "./src/moveMember.ts";
-import { fetchAndRetrieveMembers } from "./src/fetchAndRetrieveMembers.ts";
-import { BotWithCache } from "../cache/src/addCacheCollections.ts";
-import { sendTextMessage } from "./src/sendTextMessage.ts";
+import { sendAutocompleteChoices } from "./src/sendAutoCompleteChoices.ts";
+import { sendDirectMessage } from "./src/sendDirectMessage.ts";
 import { sendPrivateInteractionResponse } from "./src/sendPrivateInteractionResponse.ts";
+import { sendTextMessage } from "./src/sendTextMessage.ts";
+import { suppressEmbeds } from "./src/suppressEmbeds.ts";
+import { archiveThread, editThread, lockThread, ModifyThread, unarchiveThread, unlockThread } from "./src/threads.ts";
 
 export type BotWithHelpersPlugin<B extends Bot = Bot> = Omit<B, "helpers"> & HelperFunctionsFromHelperPlugin;
 
 export interface HelperFunctionsFromHelperPlugin {
   helpers: FinalHelpers & {
-    fetchAndRetrieveMembers: (
-      guildId: bigint,
-    ) => Promise<Collection<bigint, Member>>;
-    sendDirectMessage: (
-      userId: bigint,
-      content: string | CreateMessage,
-    ) => Promise<Message>;
-    sendTextMessage: (
-      channelId: bigint,
-      content: string | CreateMessage,
-    ) => Promise<Message>;
+    fetchAndRetrieveMembers: (guildId: BigString) => Promise<Collection<bigint, Member>>;
+    sendDirectMessage: (userId: BigString, content: string | CreateMessage) => Promise<Message>;
+    sendTextMessage: (channelId: BigString, content: string | CreateMessage) => Promise<Message>;
     sendPrivateInteractionResponse: (
-      id: bigint,
+      id: BigString,
       token: string,
       options: InteractionResponse,
-    ) => Promise<Message | undefined>;
-    suppressEmbeds: (
-      channelId: bigint,
-      messageId: bigint,
-    ) => Promise<Message>;
-    archiveThread: (threadId: bigint) => Promise<Channel>;
-    unarchiveThread: (threadId: bigint) => Promise<Channel>;
-    lockThread: (threadId: bigint) => Promise<Channel>;
-    unlockThread: (threadId: bigint) => Promise<Channel>;
-    editThread: (
-      threadId: bigint,
-      options: ModifyThread,
-      reason?: string,
-    ) => Promise<Channel>;
-    cloneChannel: (
-      channel: Channel,
-      reason?: string,
-    ) => Promise<Channel>;
+    ) => Promise<void>;
+    suppressEmbeds: (channelId: BigString, messageId: BigString) => Promise<Message>;
+    archiveThread: (threadId: BigString) => Promise<Channel>;
+    unarchiveThread: (threadId: BigString) => Promise<Channel>;
+    lockThread: (threadId: BigString) => Promise<Channel>;
+    unlockThread: (threadId: BigString) => Promise<Channel>;
+    editThread: (threadId: BigString, options: ModifyThread, reason?: string) => Promise<Channel>;
+    cloneChannel: (channel: Channel, reason?: string) => Promise<Channel>;
     sendAutocompleteChoices: (
-      interactionId: bigint,
+      interactionId: BigString,
       interactionToken: string,
       choices: ApplicationCommandOptionChoice[],
     ) => Promise<void>;
-    disconnectMember: (
-      guildId: bigint,
-      memberId: bigint,
-    ) => Promise<Member>;
-    getMembersPaginated: (
-      guildId: bigint,
-      options: ListGuildMembers,
-    ) => Promise<Collection<bigint, Member>>;
-    moveMember: (
-      guildId: bigint,
-      memberId: bigint,
-      channelId: bigint,
-    ) => Promise<Member>;
+    disconnectMember: (guildId: BigString, memberId: BigString) => Promise<Member>;
+    getMembersPaginated: (guildId: BigString, options: ListGuildMembers) => Promise<Collection<bigint, Member>>;
+    moveMember: (guildId: BigString, memberId: BigString, channelId: BigString) => Promise<Member>;
   };
 }
 
@@ -85,48 +58,33 @@ export function enableHelpersPlugin<B extends Bot = Bot>(rawBot: B): BotWithHelp
   // FORCE OVERRIDE THE TYPE SO WE CAN SETUP FUNCTIONS
   const bot = rawBot as unknown as BotWithHelpersPlugin;
 
-  bot.helpers.fetchAndRetrieveMembers = (
-    guildId: bigint,
-  ) => fetchAndRetrieveMembers(bot as unknown as BotWithCache, guildId);
-  bot.helpers.sendDirectMessage = (
-    userId: bigint,
-    content: string | CreateMessage,
-  ) => sendDirectMessage(bot, userId, content);
-  bot.helpers.sendTextMessage = (
-    channelId: bigint,
-    content: string | CreateMessage,
-  ) => sendTextMessage(bot, channelId, content);
-  bot.helpers.sendPrivateInteractionResponse = (
-    id: bigint,
-    token: string,
-    options: InteractionResponse,
-  ) => sendPrivateInteractionResponse(bot, id, token, options);
-  bot.helpers.suppressEmbeds = (channelId: bigint, messageId: bigint) => suppressEmbeds(bot, channelId, messageId);
-  bot.helpers.archiveThread = (threadId: bigint) => archiveThread(bot, threadId);
-  bot.helpers.unarchiveThread = (threadId: bigint) => unarchiveThread(bot, threadId);
-  bot.helpers.lockThread = (threadId: bigint) => lockThread(bot, threadId);
-  bot.helpers.unlockThread = (threadId: bigint) => unlockThread(bot, threadId);
-  bot.helpers.editThread = (
-    threadId: bigint,
-    options: ModifyThread,
-    reason?: string,
-  ) => editThread(bot, threadId, options, reason);
+  bot.helpers.fetchAndRetrieveMembers = (guildId: BigString) =>
+    fetchAndRetrieveMembers(bot as unknown as BotWithCache, guildId);
+  bot.helpers.sendDirectMessage = (userId: BigString, content: string | CreateMessage) =>
+    sendDirectMessage(bot, userId, content);
+  bot.helpers.sendTextMessage = (channelId: BigString, content: string | CreateMessage) =>
+    sendTextMessage(bot, channelId, content);
+  bot.helpers.sendPrivateInteractionResponse = (id: BigString, token: string, options: InteractionResponse) =>
+    sendPrivateInteractionResponse(bot, id, token, options);
+  bot.helpers.suppressEmbeds = (channelId: BigString, messageId: BigString) =>
+    suppressEmbeds(bot, channelId, messageId);
+  bot.helpers.archiveThread = (threadId: BigString) => archiveThread(bot, threadId);
+  bot.helpers.unarchiveThread = (threadId: BigString) => unarchiveThread(bot, threadId);
+  bot.helpers.lockThread = (threadId: BigString) => lockThread(bot, threadId);
+  bot.helpers.unlockThread = (threadId: BigString) => unlockThread(bot, threadId);
+  bot.helpers.editThread = (threadId: BigString, options: ModifyThread, reason?: string) =>
+    editThread(bot, threadId, options, reason);
   bot.helpers.cloneChannel = (channel: Channel, reason?: string) => cloneChannel(bot, channel, reason);
   bot.helpers.sendAutocompleteChoices = (
-    interactionId: bigint,
+    interactionId: BigString,
     interactionToken: string,
     choices: ApplicationCommandOptionChoice[],
   ) => sendAutocompleteChoices(bot, interactionId, interactionToken, choices);
-  bot.helpers.disconnectMember = (guildId: bigint, memberId: bigint) => disconnectMember(bot, guildId, memberId);
-  bot.helpers.getMembersPaginated = (
-    guildId: bigint,
-    options: ListGuildMembers,
-  ) => getMembersPaginated(bot, guildId, options);
-  bot.helpers.moveMember = (
-    guildId: bigint,
-    memberId: bigint,
-    channelId: bigint,
-  ) => moveMember(bot, guildId, memberId, channelId);
+  bot.helpers.disconnectMember = (guildId: BigString, memberId: BigString) => disconnectMember(bot, guildId, memberId);
+  bot.helpers.getMembersPaginated = (guildId: BigString, options: ListGuildMembers) =>
+    getMembersPaginated(bot, guildId, options);
+  bot.helpers.moveMember = (guildId: BigString, memberId: BigString, channelId: BigString) =>
+    moveMember(bot, guildId, memberId, channelId);
 
   return bot as BotWithHelpersPlugin<B>;
 }
