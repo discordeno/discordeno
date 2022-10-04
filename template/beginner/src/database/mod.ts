@@ -10,7 +10,7 @@ const kwik = new Kwik();
 // Add BigInt Support
 kwik.msgpackExtensionCodec.register({
   type: 0,
-  KwikEncode: (object: unknown): Uint8Array | null => {
+  encode: (object: unknown): Uint8Array | null => {
     if (typeof object === "bigint") {
       if (object <= Number.MAX_SAFE_INTEGER && object >= Number.MIN_SAFE_INTEGER) {
         return KwikEncode(parseInt(object.toString(), 10), {});
@@ -21,7 +21,7 @@ kwik.msgpackExtensionCodec.register({
       return null;
     }
   },
-  KwikDecode: (data: Uint8Array) => {
+  decode: (data: Uint8Array) => {
     return BigInt(KwikDecode(data, {}) as string);
   },
 });
