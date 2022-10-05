@@ -16,7 +16,7 @@ play, when deciding where to keep your cache. Another reason to use this is, whe
 gateway process.
 
 - Start rest process
-- Start event handler process(bot)
+- Start event handler process (bot)
 - Start gateway process.
   - Guild create events arrive providing all the data needed to cache in the bot process.
 - Restart event handler process(maybe for an update/reboot)
@@ -53,6 +53,8 @@ CREATE TABLE IF NOT EXISTS "users" (
     CONSTRAINT "users_pkey" PRIMARY KEY (id)
 )
 ```
+
+Note that you can cache only properties you want and leave all other properties that you won't use.
 
 Now that we have this schema ready for our users cache. Go ahead and repeat this for all other cache tables.
 
