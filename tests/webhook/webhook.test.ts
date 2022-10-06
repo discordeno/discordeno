@@ -53,7 +53,7 @@ Deno.test("[webhooks] Webhook related tests", async (t) => {
     assertEquals(fetched.size > 1, true);
 
     await t.step("[webhooks] Get guild webhooks", async () => {
-      const guildWebhooks = await bot.helpers.getWebhooks(channel.guildId);
+      const guildWebhooks = await bot.helpers.getGuildWebhooks(channel.guildId);
       assertEquals(guildWebhooks.size > 1, true);
     });
   });
