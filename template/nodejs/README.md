@@ -6,7 +6,7 @@ Downtime Restart, Resharding...)
 
 ## Setup
 
-Fill your bot token in `config.json`
+Rename `.env.example` to `.env` and fill your bot token there.
 
 ## Run Bot
 
