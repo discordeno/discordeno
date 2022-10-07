@@ -222,7 +222,7 @@ Deno.test({
       fn: async (t) => {
         const testCollection = new Collection([["best", "tri"]]);
 
-        assertEquals(["best", "tri"].includes(testCollection.random()), true);
+        assertEquals(["best", "tri"].includes(testCollection.random() ?? ""), true);
         assertEquals(collection.random(), undefined);
       },
     });
