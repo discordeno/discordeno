@@ -11,6 +11,5 @@ export * from "./editChannelPermissionOverrides.ts";
 export * from "./getChannel.ts";
 export * from "./getChannelInvites.ts";
 export * from "./getChannels.ts";
-export * from "./getChannelWebhooks.ts";
 export * from "./triggerTypingIndicator.ts";
 export * from "./editChannelPositions.ts";
