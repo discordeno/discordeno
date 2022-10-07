@@ -1,4 +1,4 @@
-import { decode, encode, Kwik } from "../../deps.ts";
+import { Kwik, KwikDecode, KwikEncode } from "../../deps.ts";
 import { logger } from "../utils/logger.ts";
 
 const log = logger({ name: "DB Manager" });
@@ -12,19 +12,17 @@ kwik.msgpackExtensionCodec.register({
   type: 0,
   encode: (object: unknown): Uint8Array | null => {
     if (typeof object === "bigint") {
-      if (
-        object <= Number.MAX_SAFE_INTEGER && object >= Number.MIN_SAFE_INTEGER
-      ) {
-        return encode(parseInt(object.toString(), 10), {});
+      if (object <= Number.MAX_SAFE_INTEGER && object >= Number.MIN_SAFE_INTEGER) {
+        return KwikEncode(parseInt(object.toString(), 10), {});
       } else {
-        return encode(object.toString(), {});
+        return KwikEncode(object.toString(), {});
       }
     } else {
       return null;
     }
   },
   decode: (data: Uint8Array) => {
-    return BigInt(decode(data, {}) as string);
+    return BigInt(KwikDecode(data, {}) as string);
   },
 });
 

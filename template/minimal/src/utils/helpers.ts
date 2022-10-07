@@ -6,7 +6,7 @@ import {
   Guild,
   hasProperty,
   MakeRequired,
-  upsertApplicationCommands,
+  upsertGuildApplicationCommands,
 } from "../../deps.ts";
 import { logger } from "./logger.ts";
 import { commands } from "../commands/mod.ts";
@@ -15,10 +15,7 @@ import { subCommand, subCommandGroup } from "../commands/mod.ts";
 const log = logger({ name: "Helpers" });
 
 /** This function will update all commands, or the defined scope */
-export async function updateCommands(
-  bot: BotWithCache,
-  scope?: "Guild" | "Global",
-) {
+export async function updateCommands(bot: BotWithCache, scope?: "Guild" | "Global") {
   const globalCommands: MakeRequired<CreateApplicationCommand, "name">[] = [];
   const perGuildCommands: MakeRequired<CreateApplicationCommand, "name">[] = [];
 
@@ -50,17 +47,13 @@ export async function updateCommands(
   }
 
   if (globalCommands.length && (scope === "Global" || scope === undefined)) {
-    log.info(
-      "Updating Global Commands, changes should apply in short...",
-    );
-    await bot.helpers.upsertApplicationCommands(globalCommands).catch(
-      log.error,
-    );
+    log.info("Updating Global Commands, changes should apply in short...");
+    await bot.helpers.upsertGlobalApplicationCommands(globalCommands).catch(log.error);
   }
 
   if (perGuildCommands.length && (scope === "Guild" || scope === undefined)) {
     await bot.guilds.forEach(async (guild: Guild) => {
-      await upsertApplicationCommands(bot, perGuildCommands, guild.id);
+      await upsertGuildApplicationCommands(bot, guild.id, perGuildCommands);
     });
   }
 }
@@ -83,14 +76,11 @@ export async function updateGuildCommands(bot: Bot, guild: Guild) {
   }
 
   if (perGuildCommands.length) {
-    await upsertApplicationCommands(bot, perGuildCommands, guild.id);
+    await upsertGuildApplicationCommands(bot, guild.id, perGuildCommands);
   }
 }
 
-export async function getGuildFromId(
-  bot: BotWithCache,
-  guildId: bigint,
-): Promise<Guild> {
+export async function getGuildFromId(bot: BotWithCache, guildId: bigint): Promise<Guild> {
   let returnValue: Guild = {} as Guild;
 
   if (guildId !== 0n) {
@@ -129,14 +119,10 @@ export function humanizeMilliseconds(milliseconds: number) {
   return `${dayString}${hourString}${minuteString}${secondString}`;
 }
 
-export function isSubCommand(
-  data: subCommand | subCommandGroup,
-): data is subCommand {
+export function isSubCommand(data: subCommand | subCommandGroup): data is subCommand {
   return !hasProperty(data, "subCommands");
 }
 
-export function isSubCommandGroup(
-  data: subCommand | subCommandGroup,
-): data is subCommandGroup {
+export function isSubCommandGroup(data: subCommand | subCommandGroup): data is subCommandGroup {
   return hasProperty(data, "subCommands");
 }

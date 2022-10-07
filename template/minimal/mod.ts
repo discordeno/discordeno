@@ -41,7 +41,7 @@ bot.gateway.manager.createShardOptions.makePresence = (shardId: number) => {
     status: "online",
     activities: [
       {
-        name: "Discordeno is Best Lib",
+        name: "Discordeno is the Best Lib",
         type: ActivityTypes.Game,
         createdAt: Date.now(),
       },

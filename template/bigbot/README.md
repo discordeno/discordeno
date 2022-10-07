@@ -6,6 +6,8 @@ This template is designed for bots that aim or are already in millions of Discor
 currently Deno & Bun are not ready to run something at such a scale. The general idea of this template can be modified
 for any other runtime if this improves in the future.
 
+Make sure to install the latest version when you use it.
+
 ## Setup
 
 1. Run a find all for `// SETUP-DD-TEMP:` and follow all instructions and delete the comments as you finish them.
