@@ -13,8 +13,9 @@ export async function updateDevCommands(bot: Bot) {
 
   if (!cmds.length) return;
 
-  // DEV RELATED COMMANDS
-  await bot.helpers.upsertApplicationCommands(
+  // DEV RELATED COMMANDS, USE upsertGlobalApplicationCommands TO UPDATE GLOBALLY
+  await bot.helpers.upsertGuildApplicationCommands(
+    bot.transformers.snowflake(DEV_SERVER_ID),
     cmds.map(([name, command]) => {
       const translatedName = translate(DEV_SERVER_ID, command.name);
       const translatedDescription = command.description ? translate(DEV_SERVER_ID, command.description) : "";
@@ -34,7 +35,6 @@ export async function updateDevCommands(bot: Bot) {
           : undefined,
       };
     }),
-    bot.transformers.snowflake(DEV_SERVER_ID),
   );
 }
 
@@ -74,7 +74,8 @@ export async function updateGuildCommands(bot: Bot, guildId: bigint) {
   await updateCommandVersion(guildId);
 
   // GUILD RELATED COMMANDS
-  await bot.helpers.upsertApplicationCommands(
+  await bot.helpers.upsertGuildApplicationCommands(
+    guildId,
     Object.entries(COMMANDS)
       // ONLY GUILD COMMANDS
       .filter(([_name, command]) => !command.global && !command.dev)
@@ -98,7 +99,6 @@ export async function updateGuildCommands(bot: Bot, guildId: bigint) {
           options: command.options ? createOptions(guildId, command.options, command.name) : undefined,
         };
       }),
-    guildId,
   );
 }
 
