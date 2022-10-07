@@ -31,82 +31,10 @@ import { psql } from "./cache/mod.ts";
 export const bot = createBot({
   token: DISCORD_TOKEN,
   botId: 270010330782892032n,
-  // applicationId: 270010330782892032,
   intents: Intents.Guilds | Intents.GuildMessages,
   events: {
     messageCreate: function (bot, message) {
       console.log("message arrived");
-    },
-  },
-  cache: {
-    isAsync: true,
-    customTableCreator: function (table) {
-      const tables = {
-        users: "users",
-        channels: "channels",
-        guilds: "guilds",
-        messages: "messages",
-        presences: "presences",
-        threads: "threads",
-        unavailableGuilds: "unavailableGuilds",
-        members: "members",
-      };
-
-      if (!tables[table]) throw new Error("I HACKED ITOH!");
-
-      return {
-        /** Get a single item from the table */
-        async get(key) {
-          return await psql`SELECT * FROM ${
-            psql(
-              tables[table],
-            )
-          } WHERE "id" = ${psql.types.bigint(key)}`;
-        },
-        /** Completely empty this table. */
-        async clear() {
-          await psql`TRUNCATE TABLE ${psql(tables[table])}`;
-        },
-        /** Delete the data related to this key from table. */
-        async delete(key) {
-          await psql`DELETE FROM ${
-            psql(
-              tables[table],
-            )
-          } WHERE "id" = ${psql.types.bigint(key)}`;
-          return true;
-        },
-        /** Check if there is data assigned to this key. */
-        async has(key) {
-          return Boolean(
-            await psql`SELECT 1 FROM ${
-              psql(
-                tables[table],
-              )
-            } WHERE "id" = ${psql.types.bigint(key)}`,
-          );
-        },
-        /** Check how many items are stored in this table. */
-        async size() {
-          return (await psql`SELECT COUNT("id") FROM ${psql(tables[table])}`)
-            .count;
-        },
-        /** Store new data to this table. */
-        async set(key, data) {
-          await psql`INSERT INTO ${psql(tables[table])} ${
-            psql(
-              data,
-              ...Object.keys(data),
-            )
-          }`;
-          return true;
-        },
-        // THESE TWO ARE USELESS FOR CUSTOM CACHE BUT NEED TO SHUT UP TS ERRORS
-        async forEach(callback) {},
-        async filter(callback) {
-          return new Collection();
-        },
-      };
     },
   },
 });
@@ -131,50 +59,66 @@ Alright that was a lot of code. Now let's break it down little by little.
 - `events`: These are your event handler functions. When a MESSAGE_CREATE event arrives from Discord it will be
   processed here. We will set up the routing to run these functions later in the guide but for now you can see how to
   set it up. Note, you can create these functions in separate files and just import them here as you wish.
-- `cache`: This is going to be the cache part. We will discuss this more below.
 
-### Understanding Cache Option
+## Using Your Cache
 
-Since we are using a standalone gateway a custom cache is essentially required as explained in step 3 of this guide.
-Please remember, to mark the cache as `async`
-
-```ts
-cache: {
-    isAsync: true,
-}
-```
-
-When you opt into the async cache, you must also provide a table creator function. This will not actually create any
-tables but it will create an object with methods to manage your "tables". Man we need a better name for this. Please
-send recommendations to @Skillz4Killz in discord. Thanks. Until then, please blame wolf for the terrible name. :)
-
-Alrighty, now let's dig deeper into this function.
+Since we are using a standalone gateway, a custom cache is essentially required as explained in step 3 of this guide.
+Here we'll have some basic functions to make use of the cache we created in step 3.
 
 ```ts
-const tables = {
-  users: "users",
-  channels: "channels",
-  guilds: "guilds",
-  messages: "messages",
-  presences: "presences",
-  threads: "threads",
-  unavailableGuilds: "unavailableGuilds",
-  members: "members",
+const cache = {
+  /** Get a single item from the table */
+  async get(key) {
+    return await psql`SELECT * FROM ${
+      psql(
+        tables[table],
+      )
+    } WHERE "id" = ${psql.types.bigint(key)}`;
+  },
+  /** Completely empty this table. */
+  async clear() {
+    await psql`TRUNCATE TABLE ${psql(tables[table])}`;
+  },
+  /** Delete the data related to this key from table. */
+  async delete(key) {
+    await psql`DELETE FROM ${
+      psql(
+        tables[table],
+      )
+    } WHERE "id" = ${psql.types.bigint(key)}`;
+    return true;
+  },
+  /** Check if there is data assigned to this key. */
+  async has(key) {
+    return Boolean(
+      await psql`SELECT 1 FROM ${
+        psql(
+          tables[table],
+        )
+      } WHERE "id" = ${psql.types.bigint(key)}`,
+    );
+  },
+  /** Check how many items are stored in this table. */
+  async size() {
+    return (await psql`SELECT COUNT("id") FROM ${psql(tables[table])}`)
+      .count;
+  },
+  /** Store new data to this table. */
+  async set(key, data) {
+    await psql`INSERT INTO ${psql(tables[table])} ${
+      psql(
+        data,
+        ...Object.keys(data),
+      )
+    }`;
+    return true;
+  },
+  // THESE TWO ARE USELESS FOR CUSTOM CACHE BUT NEED TO SHUT UP TS ERRORS
+  async forEach(callback) {},
+  async filter(callback) {
+    return new Collection();
+  },
 };
-
-if (!tables[table]) throw new Error("I HACKED ITOH!");
-```
-
-This part of the code is only going to make sense if you are used to PGSQL. To prevent any attacks here we will forcibly
-control which table will be used.
-
-This function must return an object with several methods on it. You can see the methods above.
-
-```ts
-/** Get a single item from the table */
-async get(key) {
-    // WHATEVER CODE YOU WOULD LIKE TO USE HERE
-}
 ```
 
 You can insert any code you desire for your cache system here. Since we were using PGSQL, we used sql queries to make
@@ -260,3 +204,57 @@ yourself a headache trying to maintain your fork with updates.
 
 Remember, this is a separate process we need to make sure we are listening to incoming events from our gateway
 instances. Since we used http in our Gateway step, we can create an http listener here as well.
+
+Create a file in a path like `src/bot/gatewayEventsListener.ts`
+
+Now we should create a http listener, check for authorization in headers, run `bot.events.raw` and `bot.handlers[event]`
+
+```ts
+import { DiscordGatewayPayload } from "discordeno";
+import { EVENT_HANDLER_PORT, REST_AUTHORIZATION } from "../../configs.ts";
+
+const server = Deno.listen({ port: EVENT_HANDLER_PORT });
+
+// Connections to the server will be yielded up as an async iterable.
+for await (const conn of server) {
+  // In order to not be blocking, we need to handle each connection individually
+  // in its own async function.
+  handleRequest(conn);
+}
+
+async function handleRequest(conn: Deno.Conn) {
+  // This "upgrades" a network connection into an HTTP connection.
+  const httpConn = Deno.serveHttp(conn);
+  // Each request sent over the HTTP connection will be yielded as an async
+  // iterator from the HTTP connection.
+  for await (const requestEvent of httpConn) {
+    if (!REST_AUTHORIZATION || REST_AUTHORIZATION !== requestEvent.request.headers.get("AUTHORIZATION")) {
+      return requestEvent.respondWith(
+        new Response(JSON.stringify({ error: "Invalid authorization key." }), {
+          status: 401,
+        }),
+      );
+    }
+
+    const json = (await requestEvent.request.json()) as {
+      message: DiscordGatewayPayload;
+      shardId: number;
+    };
+
+    // Run raw event.
+    bot.events.raw(bot, json.message, json.shardId);
+
+    if (json.message.t && json.message.t !== "RESUMED") {
+      // When a guild or something isn't in cache this will fetch it before doing anything else.
+      if (!["READY", "GUILD_LOADED_DD"].includes(json.message.t)) {
+        await bot.events.dispatchRequirements(bot, json.message, json.shardId);
+      }
+
+      // Run event function provided in bot.events
+      bot.handlers[json.message.t]?.(bot, json.message, json.shardId);
+    }
+
+    new Response(undefined, { status: 200 });
+  }
+}
+```

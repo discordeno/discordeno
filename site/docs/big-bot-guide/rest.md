@@ -54,7 +54,7 @@ const rest = createRestManager({
 ```
 
 - `createRestManager` is imported from your deps file which should have exported everything from discordeno.
-- `DISCORD_TOKEN` is the bots token itself.
+- `DISCORD_TOKEN` is the bot's token itself.
 - `REST_AUTHORIZATION` is a special password you want to use to authenticate that requests being sent to your port are
   indeed from you.
 - `customUrl` the url where this rest process will be running. This can be localhost which we are using in this guide if

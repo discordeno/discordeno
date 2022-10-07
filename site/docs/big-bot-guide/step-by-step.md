@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Step By Step Guide
 
-THIS IS A WORK IN PROGRESS GUIDE USING THE NEW v13 OF DISCORDENO.
+THIS IS A WORK IN PROGRESS GUIDE USING THE NEW v16 OF DISCORDENO.
 
 ## Understanding The Goals of This Guide
 
