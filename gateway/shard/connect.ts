@@ -14,7 +14,7 @@ export async function connect(shard: Shard): Promise<void> {
     if (shard.state === ShardState.Resuming) {
       url = new URL(shard.resumeGatewayUrl);
     }
-    url.searchParams.set("v", shard.gatewayConfig.version);
+    url.searchParams.set("v", shard.gatewayConfig.version.toString());
     url.searchParams.set("encoding", "json");
   }
 
