@@ -8,12 +8,14 @@ export async function connect(shard: Shard): Promise<void> {
   }
   shard.events.connecting?.(shard);
 
-  let url = shard.gatewayConfig.url;
+  let url = new URL(shard.gatewayConfig.url);
   // If not connecting to a proxy but directly to discord need to handle resuming
-  if (url === "wss://gateway.discord.gg") {
-    url = `${
-      shard.state === ShardState.Resuming ? shard.resumeGatewayUrl : shard.gatewayConfig.url
-    }/?v=${shard.gatewayConfig.version}&encoding=json`;
+  if (url.origin === "wss://gateway.discord.gg") {
+    if (shard.state === ShardState.Resuming) {
+      url = new URL(shard.resumeGatewayUrl);
+    }
+    url.set("v", shard.gatewayConfig.version);
+    url.set('encoding', 'json');
   }
 
   const socket = new WebSocket(url);
