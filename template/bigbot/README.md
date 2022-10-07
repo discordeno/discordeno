@@ -6,7 +6,7 @@ This template is designed for bots that aim or are already in millions of Discor
 currently Deno & Bun are not ready to run something at such a scale. The general idea of this template can be modified
 for any other runtime if this improves in the future.
 
-This template uses v16 of discordeno, make sure to install the latest version when you use it.
+Make sure to install the latest version when you use it.
 
 ## Setup
 

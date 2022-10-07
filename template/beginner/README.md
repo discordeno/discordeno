@@ -2,7 +2,7 @@
 
 This template is designed for the beginner developer to start coding discord bots.
 
-It uses v16 of discordeno, make sure to install the latest version when you use it.
+Make sure to install the latest version when you use it.
 
 ## Setup
 
