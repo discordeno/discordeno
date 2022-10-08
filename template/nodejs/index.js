@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const Discord = require("discordeno.js");
 
 // Ideally you should switch this to .env but for a template a config json is enough
@@ -10,7 +12,7 @@ const events = new EventManager({});
 const baseBot = Discord.createBot({
   events: events.load({}),
   intents: Discord.Intents.Guilds | Discord.Intents.GuildMessages | Discord.Intents.MessageContent,
-  token: config.token,
+  token: process.env.TOKEN,
 });
 const client = Discord.enableCachePlugin(baseBot, {});
 
