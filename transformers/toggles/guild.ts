@@ -2,6 +2,31 @@ import { DiscordGuild } from "../../types/discord.ts";
 import { GuildFeatures } from "../../types/shared.ts";
 import { ToggleBitfieldBigint } from "./ToggleBitfield.ts";
 
+const featureNames = [
+  "inviteSplash",
+  "vipRegions",
+  "vanityUrl",
+  "verified",
+  "partnered",
+  "community",
+  "news",
+  "discoverable",
+  "featurable",
+  "animatedIcon",
+  "banner",
+  "welcomeScreenEnabled",
+  "memberVerificationGateEnabled",
+  "previewEnabled",
+  "ticketedEventsEnabled",
+  "monetizationEnabled",
+  "moreStickers",
+  "privateThreads",
+  "roleIcons",
+  "autoModeration",
+  "invitesDisabled",
+  "animatedBanner",
+];
+
 export const GuildToggle = {
   /** Whether the bot is the owner of the guild */
   owner: 1n << 0n,
@@ -99,32 +124,15 @@ export class GuildToggles extends ToggleBitfieldBigint {
   }
 
   get features() {
-    return Object.entries(this.list()).filter(([key, value]) =>
-      [
-        "inviteSplash",
-        "vipRegions",
-        "vanityUrl",
-        "verified",
-        "partnered",
-        "community",
-        "news",
-        "discoverable",
-        "featurable",
-        "animatedIcon",
-        "banner",
-        "welcomeScreenEnabled",
-        "memberVerificationGateEnabled",
-        "previewEnabled",
-        "ticketedEventsEnabled",
-        "monetizationEnabled",
-        "moreStickers",
-        "privateThreads",
-        "roleIcons",
-        "autoModeration",
-        "invitesDisabled",
-        "animatedBanner",
-      ].includes(key) && value
-    ).map(([key, _]) => key) as GuildToggleKeys[];
+    const features: GuildToggleKeys[] = [];
+    for (const key of Object.keys(GuildToggle)) {
+      if (!featureNames.includes(key)) continue;
+      if (!super.contains(GuildToggle[key as GuildToggleKeys])) continue;
+
+      features.push(key as GuildToggleKeys);
+    }
+
+    return features;
   }
 
   /** Whether the bot is the owner of the guild */

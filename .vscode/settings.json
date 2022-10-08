@@ -9,6 +9,7 @@
     "./helpers",
     "./plugins",
     "./packages",
+    "./performance",
     "./rest",
     "./template/beginner",
     "./template/minimal",
