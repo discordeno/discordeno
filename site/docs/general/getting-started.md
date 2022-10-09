@@ -36,7 +36,7 @@ in handy!
 You can install Discordeno by importing:
 
 ```ts
-import { startBot } from "https://deno.land/x/discordeno@10.0.0/mod.ts";
+import { startBot } from "https://deno.land/x/discordeno@16.0.0/mod.ts";
 ```
 
 ## Example Usage
@@ -45,22 +45,24 @@ Starting with Discordeno is very simple, you can start from scratch without any 
 of code into a new TypeScript file:
 
 ```ts
-import { Intents, startBot } from "https://deno.land/x/discordeno/mod.ts";
+import { createBot, Intents, startBot } from "https://deno.land/x/discordeno/mod.ts";
 
-startBot({
-  token: "BOT TOKEN",
-  intents: Intents.Guilds | Intents.GuildMessages,
-  eventHandlers: {
-    ready() {
-      console.log("Successfully connected to gateway");
+startBot(
+  createBot({
+    token: "BOT TOKEN",
+    intents: Intents.Guilds | Intents.GuildMessages,
+    events: {
+      ready() {
+        console.log("Successfully connected to gateway");
+      },
+      messageCreate(bot, message) {
+        if (message.content === "!ping") {
+          bot.helpers.sendMessage(message.channelId, { content: "Pong using Discordeno!" });
+        }
+      },
     },
-    messageCreate(message) {
-      if (message.content === "!ping") {
-        message.reply("Pong using Discordeno!");
-      }
-    },
-  },
-});
+  }),
+);
 ```
 
 ## Tutorials

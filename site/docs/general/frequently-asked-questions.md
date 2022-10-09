@@ -50,7 +50,7 @@ emitting some event to trigger that function.
 // EventEmitter Example
 EventEmitter.emit("guildCreate", guild);
 // Discordeno Example
-eventHandlers.guildCreate?.(guild);
+bot.events.guildCreate?.(bot, guild);
 ```
 
 There isn't really any difference especially for users when they use it. One bad thing about EventEmitter is that if
@@ -60,10 +60,10 @@ issues I had. It prevents anyone from having this as a potential issue. Another 
 update the code in those functions without having to deal with headaches left and right of removing and adding
 listeners. You don't need to worry about binding or not binding events. They are just pure functions
 
-In Discordeno, this is extremely simple, you just simply give it the new event handlers.
+In Discordeno, this is extremely simple, you just simply give it the new event handlers. For example:
 
 ```typescript
-updateEventHandlers(newEventHandlers);
+bot.events.guildCreate = newGuildCreateEventHandler;
 ```
 
 ## Why Do You Have A Class for Collection If Classes Are Bad?
@@ -99,17 +99,18 @@ have even seen some bots have hundreds of thousands of Missing Permission or Mis
 don't handle it. IMO, this is a crucial part of any good library as much as it is to handle rate limiting.
 
 ```typescript
-import { Errors, Message } from "https://deno.land/x/discordeno@10.0.0/mod.ts";
+import { Bot, Errors, Message } from "https://deno.land/x/discordeno@16.0.0/mod.ts";
 
-export function handleCommandError(message: Message, type: Errors) {
+export function handleCommandError(bot: Bot, message: Message, type: Errors) {
   switch (type) {
     case Errors.MISSING_MANAGE_NICKNAMES:
-      return message.channel.sendMessage(
-        "The bot does not have the necessary permission to manage/edit other user's nicknames. Grant the **MANAGE_NICKNAME** permission to the bot and try again.",
-      );
+      return bot.helpers.sendMessage(message.channelId, {
+        content:
+          "The bot does not have the necessary permission to manage/edit other user's nicknames. Grant the **MANAGE_NICKNAME** permission to the bot and try again.",
+      });
     case Errors.MISSING_MANAGE_ROLES:
       // Note: i18n is not part of the library. This is just an example of how you could use i18n for custom error responses.
-      return message.channel.sendMessage(i18n.translate(type));
+      return bot.helpers.sendMessage(message.channelId, { content: i18n.translate(type) });
   }
 }
 ```
