@@ -9,7 +9,7 @@ export function connectToVoiceChannel(bot: BotWithCache) {
     if (!channel) throw new Error("CHANNEL_NOT_FOUND");
 
     if (
-      [ChannelTypes.GuildStageVoice, ChannelTypes.GuildVoice].includes(
+      ![ChannelTypes.GuildStageVoice, ChannelTypes.GuildVoice].includes(
         channel.type,
       )
     ) {
