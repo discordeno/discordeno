@@ -1,10 +1,5 @@
-export * from "https://raw.githubusercontent.com/discordeno/discordeno/main/mod.ts";
-export * from "https://raw.githubusercontent.com/discordeno/discordeno/main/plugins/mod.ts";
-// export * from "../../plugins/cache/mod.ts";
-// export * from "../../plugins/fileloader/mod.ts";
-// export * from "../../plugins/helpers/mod.ts";
-// export * from "../../plugins/permissions/mod.ts";
-// export * from "../../plugins/validations/mod.ts";
+export * from "https://deno.land/x/discordeno@17.0.0/mod.ts";
+export * from "https://deno.land/x/discordeno@17.0.0/plugins/mod.ts";
 
 // Terminal Colors!
 export * from "https://deno.land/std@0.117.0/fmt/colors.ts";
