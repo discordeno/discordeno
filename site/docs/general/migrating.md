@@ -163,7 +163,7 @@ startBot({
   // For instance, to work with guild message reactions, you will have to pass the Intents.GUILD_MESSAGE_REACTIONS intent to the array.
   intents: Intents.Guilds | Intents.GuildMessages,
   // These are all your event handler functions. Imported from the events folder
-  eventHandlers: botCache.eventHandlers,
+  events: botCache.events,
 });
 ```
 
@@ -174,19 +174,19 @@ there is already a `ready.ts` file. We can just use that.
 In our `ready.ts` file we can add the `ready` event listener.
 
 ```ts
-import { ActivityType, botCache, cache, chooseRandom, editBotsStatus, StatusTypes } from "../../deps.ts";
+import { ActivityTypes, botCache, cache, chooseRandom, editBotStatus, StatusTypes } from "../../deps.ts";
 import { registerTasks } from "./../utils/taskHelper.ts";
 
-botCache.eventHandlers.ready = function () {
-  editBotsStatus(
+botCache.events.ready = function () {
+  editBotStatus(
     StatusTypes.DoNotDisturb,
     "Discordeno Best Lib",
-    ActivityType.Game,
+    ActivityTypes.Game,
   );
 
   console.log(`Loaded ${botCache.arguments.size} Argument(s)`);
   console.log(`Loaded ${botCache.commands.size} Command(s)`);
-  console.log(`Loaded ${Object.keys(botCache.eventHandlers).length} Event(s)`);
+  console.log(`Loaded ${Object.keys(botCache.events).length} Event(s)`);
   console.log(`Loaded ${botCache.inhibitors.size} Inhibitor(s)`);
   console.log(`Loaded ${botCache.monitors.size} Monitor(s)`);
   console.log(`Loaded ${botCache.tasks.size} Task(s)`);
@@ -200,18 +200,19 @@ botCache.eventHandlers.ready = function () {
   // list of activities that the bot goes through
   const activityArray = [`${configs.prefix}help | `];
   setInterval(() => {
-    editBotsStatus(
-      StatusType.Online,
-      chooseRandom(activityArray),
-      ActivityType.Game,
-    );
+    const randomActivity = activityArray[Math.floor(Math.random() * activityArray.length)];
+
+    editBotStatus(botCache, {
+      activities: [{ name: randomActivity, type: ActivityTypes.Game, createdAt: Date.now() }],
+      status: "online",
+    });
   }, 5000);
 };
 ```
 
-To understand this code, we are setting a function to be run when the bot is `ready`. Then the bot will edit the bots
-status every 5 seconds. Notice, that Discordeno provides a nice clean util function to choose a random item from an
-array. You also have beautiful enums provided that prevent you from making any typos/mistakes.
+To understand this code, we are setting a function to be run when the bot is `ready`. Then the bot will edit the bot's
+status every 5 seconds. Notice that you also have beautiful enums provided that prevents you from making any
+typos/mistakes.
 
 We have now converted the entire `main.js` file, in a matter of seconds. The Discordeno official generator took care of
 the majority of workload and we just modified the `ready.ts` file.
@@ -293,18 +294,17 @@ createCommand({
     { name: "member", type: "member" },
     { name: "role", type: "role" },
   ],
-  execute: (message, args) => {
+  execute: (bot, message, args) => {
     // checking to see if the user has the role or not
     if (!args.member.roles.includes(args.role.id)) {
-      args.member.addRole(message.guildId, args.role.id);
-      message.reply(
-        `${args.member.mention} has been given the role: ${args.role.name}`,
-        5,
-      );
+      bot.helpers.addRole(message.guildId, args.member.id, args.role.id);
+      bot.helpers.sendMessage(message.channelId, {
+        content: `${args.member.mention} has been given the role: ${args.role.name}`,
+      });
     } else {
-      message.reply(
-        `${args.member.mention} already has the role: ${args.role.name}`,
-      );
+      bot.helpers.sendMessage(message.channelId, {
+        content: `${args.member.mention} already has the role: ${args.role.name}`,
+      });
     }
   },
 });
@@ -427,7 +427,7 @@ createCommand({
       lowercase: true,
     },
   ],
-  execute: function (message, args: KickArgs) {
+  execute: function (bot, message, args: KickArgs) {
     // setting up the embed for report/log
     const embed = new Embed()
       .setDescription(`Report: ${args.member.mention} Kick`)
@@ -436,15 +436,15 @@ createCommand({
 
     const reportchannel = message.guild?.channels.find((channel) => channel.name === "report");
     if (!reportchannel) {
-      return message.reply("*`Report channel cannot be found!`*");
+      return bot.helpers.sendMessage(message.channelId, { content: "*`Report channel cannot be found!`*" });
     }
 
     // Delete the message command
-    message.delete("Remove kick command trigger.");
+    bot.helpers.deleteMessage(message.channelId, { content: "Remove kick command trigger." });
     // Kick the user with reason
-    args.member.kick(message.guildId, args.reason);
+    bot.helpers.kickMember(message.guildId, args.member.id, args.reason);
     // sends the kick report into log/report
-    reporchannel.send({ embed });
+    bot.helpers.sendMessage(message.channelId, { embeds: [embed] });
   },
 });
 
