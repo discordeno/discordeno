@@ -4,18 +4,18 @@ sidebar_position: 3
 
 # Lets Create a simple bot in Node.js
 
-* **Step 1**: Create a typescript project with index.ts as main file.
+- **Step 1**: Create a typescript project with index.ts as main file.
 
-* **Step 2**: Installing packages.
+- **Step 2**: Installing packages.
 Install following packages.
 
 ```bash
 npm i @thereallonewolf/amethystframework
 ```
 
-* **Step 3**: Create a index.ts file.
+- **Step 3**: Create a index.ts file.
 
-* **Step 4**: Add following code in index.ts file, replacing TOKEN with your bot token.
+- **Step 4**: Add following code in index.ts file, replacing TOKEN with your bot token.
 
 ```ts
 import { ActivityTypes, Bot, createBot,GatewayIntents,startBot  } from "discordeno";
@@ -67,10 +67,10 @@ client.amethystUtils.updateSlashCommands();
 startBot(client);
 ```
 
-* **Step 5**: Invite your bot and compile index.ts and run it.
+- **Step 5**: Invite your bot and compile index.ts and run it.
 Then you can use `/general ping` or `!ping`
 
-* **Step 6**: Useful links:
+- **Step 6**: Useful links:
 
 1. Command Options can be found [here](https://github.com/AmethystFramework/framework/blob/master/src/types/commandOptions.ts).
 2. Category Options [here](https://github.com/AmethystFramework/framework/blob/master/src/types/categoryOptions.ts)

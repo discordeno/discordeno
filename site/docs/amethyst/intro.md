@@ -4,11 +4,11 @@ sidebar_position: 1
 
 # Amethyst
 
-Amethyst is a [Discordeno](https://github.com/discordeno/discordeno) plugin that is incredibly robust and flexible.
-It promotes standard practices and is geared at bigger bots.
+Amethyst is a [Discordeno](https://github.com/discordeno/discordeno) plugin that is incredibly robust and flexible. It
+promotes standard practices and is geared at bigger bots.
 
-This framework is not for you if you cannot utilise Maps and Sets without reading them up.
-We presume you have a solid foundation in typescript/javascript and dicord bots.
+This framework is not for you if you cannot utilise Maps and Sets without reading them up. We
+presume you have a solid foundation in typescript/javascript and dicord bots.
 
 [Documentation](https://deno.land/x/amethyst)
 
@@ -22,7 +22,8 @@ We presume you have a solid foundation in typescript/javascript and dicord bots.
 
 ## Why Amethyst?
 
-Amethyst makes use of the [Discordeno](https://github.com/discordeno/discordeno) plugin system to streamline your coding process and help you get going more quickly. Support for message and slash commands that doesn't need altering any code.
+Amethyst makes use of the [Discordeno](https://github.com/discordeno/discordeno) plugin system to streamline your coding
+process and help you get going more quickly. Support for message and slash commands that doesn't need altering any code.
 
 - Fully programmable
 
@@ -32,7 +33,8 @@ Amethyst makes use of the [Discordeno](https://github.com/discordeno/discordeno)
 
 ## Ideas
 
-The objective is to provide a framework that can be used with both Node.js and Deno while minimising transitions and rewrites.
+The objective is to provide a framework that can be used with both Node.js and Deno while minimising transitions and
+rewrites.
 
 - Easy to understand and use.
 - Cover up complexity in the engine keeping the end user interface as simple as possible.
@@ -47,10 +49,6 @@ Deno: [link](https://deno.land/x/amethyst)
 
 Npm:
 
-- ```bash
-
-npm i @thereallonewolf/amethystframework
-
+```bash
+ npm i @thereallonewolf/amethystframework
 ```
-
-- We recomend installing [scalecord.ts](https://github.com/meister03/scalecord.ts)
