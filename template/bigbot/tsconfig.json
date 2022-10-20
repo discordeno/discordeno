@@ -10,7 +10,6 @@
     "importHelpers": true,
     "allowUnusedLabels": false,
     "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noUncheckedIndexedAccess": true,

@@ -1,10 +1,13 @@
 import { Bot, Collection, createBot, createRestManager } from "discordeno";
 import enableHelpersPlugin from "discordeno/helpers-plugin";
 import { createLogger } from "discordeno/logger";
-import { DISCORD_TOKEN, INTENTS, REST_AUTHORIZATION, REST_URL } from "../configs";
+import { INTENTS, REST_URL } from "../configs";
 import { setupEventHandlers } from "./events/mod";
 import { MessageCollector } from "./utils/collectors";
 import { customizeInternals } from "./utils/internals/mod";
+
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string
+const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION as string
 
 export const bot = enableHelpersPlugin(
   customizeBot(
