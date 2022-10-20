@@ -50,7 +50,7 @@ export async function runMethod<T = any>(
       body: body ? JSON.stringify(body) : undefined,
       headers: {
         Authorization: rest.secretKey,
-        "Content-Type": "application/json",
+        "Content-Type": body ? "application/json" : undefined,
       },
       method,
     });
