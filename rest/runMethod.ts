@@ -21,8 +21,8 @@ export async function runMethod<T = any>(
     } | Bucket ID: ${options?.bucketId} | Body: ${
       JSON.stringify(
         body,
-        )
-      }`,
+       )
+     }`,
   );
 
   const errorStack = new Error("Location:");
