@@ -21,8 +21,8 @@ export async function runMethod<T = any>(
     } | Bucket ID: ${options?.bucketId} | Body: ${
       JSON.stringify(
         body,
-      )
-    }`,
+        )
+      }`,
   );
 
   const errorStack = new Error("Location:");
@@ -46,12 +46,15 @@ export async function runMethod<T = any>(
       );
     }
 
+    const headers: HeadersInit = {
+      Authorization: rest.secretKey,
+    };
+    if (body) {
+      headers["Content-Type"] = "application/json";
+    }
     const result = await fetch(`${baseEndpoints.BASE_URL}${route}`, {
       body: body ? JSON.stringify(body) : undefined,
-      headers: {
-        Authorization: rest.secretKey,
-        "Content-Type": body ? "application/json" : undefined,
-      },
+      headers,
       method,
     });
 
