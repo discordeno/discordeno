@@ -10,11 +10,12 @@ import {
   InteractionResponseTypes,
   Member,
   Role,
-  User,
+  User
 } from "discordeno";
 import { bot, BotWithCustomProps } from "../../bot.js";
 import COMMANDS from "../../commands/mod.js";
 import { getLanguage, loadLanguage, serverLanguages, translate, translationKeys } from "../../languages/translate.js";
+import { InteractionWithCustomProps } from "../../typings/discordeno.js";
 import { Command, ConvertArgumentDefinitionsToArgs } from "../../utils/slash/createCommand.js";
 
 function logCommand(
@@ -22,11 +23,10 @@ function logCommand(
   type: "Failure" | "Success" | "Trigger" | "Slowmode" | "Missing" | "Inhibit",
   commandName: string,
 ) {
-  const command = `[COMMAND: ${bgYellow(black(commandName || "Unknown"))} - ${
-    bgBlack(
-      ["Failure", "Slowmode", "Missing"].includes(type) ? red(type) : type === "Success" ? green(type) : white(type),
-    )
-  }]`;
+  const command = `[COMMAND: ${bgYellow(black(commandName || "Unknown"))} - ${bgBlack(
+    ["Failure", "Slowmode", "Missing"].includes(type) ? red(type) : type === "Success" ? green(type) : white(type),
+  )
+    }]`;
 
   const user = bgGreen(
     black(`${info.user.username}#${info.user.discriminator.toString().padStart(4, "0")}(${info.id})`),
@@ -36,7 +36,7 @@ function logCommand(
   bot.logger.info(`${command} by ${user} in ${guild} with MessageID: ${info.id}`);
 }
 
-export async function executeSlashCommand(bot: BotWithCustomProps, interaction: Interaction) {
+export async function executeSlashCommand(bot: BotWithCustomProps, interaction: InteractionWithCustomProps) {
   const data = interaction.data;
   const name = data?.name as keyof typeof COMMANDS;
 
@@ -89,7 +89,7 @@ export async function executeSlashCommand(bot: BotWithCustomProps, interaction: 
 }
 
 /** Runs the inhibitors to see if a command is allowed to run. */
-export async function commandAllowed(interaction: Interaction, command: Command<any>) {
+export async function commandAllowed(interaction: InteractionWithCustomProps, command: Command<any>) {
   // CHECK WHETHER THE USER/GUILD IS VIP
   if (command.vipOnly) {
     // SETUP-DD-TEMP: Check if this server/user is a vip.
@@ -149,21 +149,21 @@ function convertOptionValue(
   option: InteractionDataOption,
   translateOptions?: Record<string, string>,
 ): [
-  string,
-  (
-    | { user: User; member: Member }
-    | Role
-    | {
-      id: bigint;
-      name: string;
-      type: ChannelTypes;
-      permissions: bigint;
-    }
-    | boolean
-    | string
-    | number
-  ),
-] {
+    string,
+    (
+      | { user: User; member: Member }
+      | Role
+      | {
+        id: bigint;
+        name: string;
+        type: ChannelTypes;
+        permissions: bigint;
+      }
+      | boolean
+      | string
+      | number
+    ),
+  ] {
   // THE OPTION IS A CHANNEL
   if (option.type === ApplicationCommandOptionTypes.Channel) {
     const channel = interaction.data?.resolved?.channels?.get(BigInt(option.value as string));
@@ -269,7 +269,7 @@ export function optionParser(
       [translateOptions?.[interaction.data.options[0].name] ?? interaction.data.options[0].name]: {
         [
           translateOptions?.[interaction.data.options[0]!.options![0]!.name] ??
-            interaction.data.options[0]!.options![0]!.name
+          interaction.data.options[0]!.options![0]!.name
         ]: convertedOptions,
       },
     };

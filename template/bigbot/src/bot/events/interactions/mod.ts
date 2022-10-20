@@ -1,5 +1,6 @@
 import { InteractionTypes, MessageComponentTypes } from "discordeno";
 import { bot } from "../../bot.js";
+import { InteractionWithCustomProps } from "../../typings/discordeno.js";
 import { executeButtonClick } from "./button.js";
 import { executeSlashCommand } from "./command.js";
 import { executeModalSubmit } from "./modal.js";
@@ -7,7 +8,7 @@ import { executeModalSubmit } from "./modal.js";
 export function setInteractionCreateEvent() {
   bot.events.interactionCreate = async function (_, interaction) {
     if (interaction.type === InteractionTypes.ApplicationCommand) {
-      await executeSlashCommand(bot, interaction);
+      await executeSlashCommand(bot, interaction as InteractionWithCustomProps);
     } else if (interaction.type === InteractionTypes.MessageComponent) {
       if (!interaction.data) return;
 

@@ -3,21 +3,21 @@ import { createLogger } from "discordeno/logger";
 import fastify from "fastify";
 import { nanoid } from "nanoid";
 import { Worker } from "worker_threads";
-import {
-  DISCORD_TOKEN,
-  EVENT_HANDLER_AUTHORIZATION,
-  EVENT_HANDLER_URL,
-  GATEWAY_AUTHORIZATION,
-  GATEWAY_HOST,
-  GATEWAY_PORT,
-  INTENTS,
-  REST_AUTHORIZATION,
-  REST_URL,
-  SHARDS_PER_WORKER,
-  TOTAL_SHARDS,
-  TOTAL_WORKERS,
-} from "../configs.js";
-import { WorkerCreateData, WorkerGetShardInfo, WorkerMessage, WorkerShardInfo, WorkerShardPayload } from "./worker.js";
+import { EVENT_HANDLER_URL, INTENTS, REST_URL } from "../configs.js";
+import { WorkerCreateData, WorkerGetShardInfo, WorkerMessage, WorkerShardInfo, WorkerShardPayload } from "./worker";
+
+import dotenv from "dotenv";
+dotenv.config()
+
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string
+const EVENT_HANDLER_AUTHORIZATION = process.env.EVENT_HANDLER_AUTHORIZATION as string
+const GATEWAY_AUTHORIZATION = process.env.GATEWAY_AUTHORIZATION as string
+const GATEWAY_HOST = process.env.GATEWAY_HOST as string
+const GATEWAY_PORT = Number(process.env.GATEWAY_PORT as string)
+const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION as string
+const SHARDS_PER_WORKER = Number(process.env.SHARDS_PER_WORKER as string)
+const TOTAL_SHARDS = process.env.TOTAL_SHARDS ? Number(process.env.TOTAL_SHARDS) : undefined
+const TOTAL_WORKERS = Number(process.env.TOTAL_WORKERS as string)
 
 async function main() {
   const log = createLogger({ name: "[MANAGER]" });
@@ -45,7 +45,7 @@ async function main() {
     shardsPerWorker: SHARDS_PER_WORKER,
     totalWorkers: TOTAL_WORKERS,
 
-    handleDiscordPayload: () => {},
+    handleDiscordPayload: () => { },
 
     tellWorkerToIdentify: async (_gateway, workerId, shardId, _bucketId) => {
       log.info("TELL TO IDENTIFY", { workerId, shardId, _bucketId });
@@ -81,7 +81,7 @@ async function main() {
       workerId,
     };
 
-    const worker = new Worker("./worker.js", {
+    const worker = new Worker("./dist/gateway/worker.js", {
       workerData,
     });
 
