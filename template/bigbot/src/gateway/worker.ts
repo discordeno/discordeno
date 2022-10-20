@@ -6,11 +6,12 @@ import {
   GatewayEventNames,
   Shard,
   ShardSocketRequest,
-  ShardState,
+  ShardState
 } from "discordeno";
 import { createLogger } from "discordeno/logger";
+import fetch from "node-fetch";
 import { parentPort, workerData } from "worker_threads";
-import { ManagerMessage } from "./index.js";
+import { ManagerMessage } from "./index";
 
 if (!parentPort) {
   throw new Error("Parent port is null");

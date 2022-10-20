@@ -1,5 +1,6 @@
 import { DiscordGatewayPayload } from "discordeno";
-import Embeds from "discordeno/embeds";
+// ReferenceError: publishMessage is not defined
+// import Embeds from "discordeno/embeds";
 import express from "express";
 import {
   BOT_ID,
@@ -7,7 +8,7 @@ import {
   DEVELOPMENT,
   EVENT_HANDLER_AUTHORIZATION,
   EVENT_HANDLER_PORT,
-  EVENT_HANDLER_URL,
+  EVENT_HANDLER_URL
 } from "../configs.js";
 import { bot } from "./bot.js";
 import { updateDevCommands } from "./utils/slash/updateCommands.js";
@@ -28,6 +29,8 @@ process
 
     if (!error) return;
 
+    // ReferenceError: publishMessage is not defined
+    /*
     const embeds = new Embeds()
       .setDescription(["```js", error, "```"].join(`\n`))
       .setTimestamp()
@@ -35,6 +38,7 @@ process
 
     // SEND ERROR TO THE LOG CHANNEL ON THE DEV SERVER
     return bot.helpers.sendWebhookMessage(bot.transformers.snowflake(id), token, { embeds }).catch(console.error);
+    */
   })
   .on("uncaughtException", async (error) => {
     const { id, token } = webhookURLToIDAndToken(BUGS_ERRORS_REPORT_WEBHOOK);
@@ -50,13 +54,14 @@ process
 
     if (!error) process.exit(1);
 
+    /*
     const embeds = new Embeds()
       .setDescription(["```js", error.stack, "```"].join(`\n`))
       .setTimestamp()
       .setFooter("Unhandled Exception Error Occurred");
-
-    // SEND ERROR TO THE LOG CHANNEL ON THE DEV SERVER
-    await bot.helpers.sendWebhookMessage(bot.transformers.snowflake(id), token, { embeds }).catch(console.error);
+      // SEND ERROR TO THE LOG CHANNEL ON THE DEV SERVER
+      await bot.helpers.sendWebhookMessage(bot.transformers.snowflake(id), token, { embeds }).catch(console.error);
+      */
 
     process.exit(1);
   });

@@ -15,9 +15,9 @@ import {
   REST_URL,
   SHARDS_PER_WORKER,
   TOTAL_SHARDS,
-  TOTAL_WORKERS,
+  TOTAL_WORKERS
 } from "../configs.js";
-import { WorkerCreateData, WorkerGetShardInfo, WorkerMessage, WorkerShardInfo, WorkerShardPayload } from "./worker.js";
+import { WorkerCreateData, WorkerGetShardInfo, WorkerMessage, WorkerShardInfo, WorkerShardPayload } from "./worker";
 
 async function main() {
   const log = createLogger({ name: "[MANAGER]" });
@@ -45,7 +45,7 @@ async function main() {
     shardsPerWorker: SHARDS_PER_WORKER,
     totalWorkers: TOTAL_WORKERS,
 
-    handleDiscordPayload: () => {},
+    handleDiscordPayload: () => { },
 
     tellWorkerToIdentify: async (_gateway, workerId, shardId, _bucketId) => {
       log.info("TELL TO IDENTIFY", { workerId, shardId, _bucketId });
@@ -81,7 +81,7 @@ async function main() {
       workerId,
     };
 
-    const worker = new Worker("./worker.js", {
+    const worker = new Worker("./dist/gateway/worker.js", {
       workerData,
     });
 

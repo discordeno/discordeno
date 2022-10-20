@@ -1,0 +1,5 @@
+{
+    "ignore": [],
+    "signal": "SIGKILL",
+    "exec": "yarn ts-node"
+}
