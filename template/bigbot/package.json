@@ -8,7 +8,7 @@
     "devbg": "npx prisma generate && tsc --watch",
     "fmt": "prettier -w ./src",
     "dg": "ts-node src/gateway/index.ts",
-    "dr": "ts-node src/rest/index.js",
+    "dr": "ts-node src/rest/index.ts",
     "db": "ts-node src/bot/index.ts",
     "tsc": "tsc",
     "tscw": "tsc --watch",
