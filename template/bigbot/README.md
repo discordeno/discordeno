@@ -17,15 +17,11 @@ Make sure to install the latest version when you use it.
 To start your bot, you will need to start a few processes. The instructions below will use `node` but you can use
 something like `pm2` to help keep your processes alive.
 
-Please compile everything first with `tsc`.
+Please compile everything first with `npm run build`.
 
 - Start REST
-  - `ts-node src/rest/index.ts`
+  - `npm run startr`
 - Start Gateway
-  - `ts-node src/gateway/index.ts`
+  - `npm run startg`
 - Start Bot
-  - `ts-node src/bot/index.ts`
-
-## Improvements
-
-- Change configs.ts file to use an .env file.
+  - `npm run startb`
