@@ -20,7 +20,6 @@ services:
       target: gateway
     depends_on:
       - rest
-      - bot
     env_file:
       - .env
   bot:
