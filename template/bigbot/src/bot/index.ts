@@ -43,6 +43,7 @@ process
     */
   })
   .on("uncaughtException", async (error) => {
+    if (!BUGS_ERRORS_REPORT_WEBHOOK) return;
     const { id, token } = webhookURLToIDAndToken(BUGS_ERRORS_REPORT_WEBHOOK);
     if (!id || !token) return;
 
