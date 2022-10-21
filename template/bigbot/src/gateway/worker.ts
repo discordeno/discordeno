@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+dotenv.config()
+
+
 import {
   createShardManager,
   DiscordGuild,

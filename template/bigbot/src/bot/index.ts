@@ -1,14 +1,15 @@
+import dotenv from 'dotenv';
+dotenv.config()
+
 import { DiscordGatewayPayload } from "discordeno";
 // ReferenceError: publishMessage is not defined
 // import Embeds from "discordeno/embeds";
-import dotenv from 'dotenv';
 import express from "express";
 import { BOT_ID, EVENT_HANDLER_URL } from "../configs.js";
 import { bot } from "./bot.js";
 import { updateDevCommands } from "./utils/slash/updateCommands.js";
 import { webhookURLToIDAndToken } from "./utils/webhook.js";
 
-dotenv.config()
 
 const BUGS_ERRORS_REPORT_WEBHOOK = process.env.BUGS_ERRORS_REPORT_WEBHOOK as string
 const DEVELOPMENT = process.env.DEVELOPMENT as string

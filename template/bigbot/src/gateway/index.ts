@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config()
+
 import { Collection, createBot, createGatewayManager, createRestManager } from "discordeno";
 import { createLogger } from "discordeno/logger";
 import fastify from "fastify";
@@ -6,8 +9,6 @@ import { Worker } from "worker_threads";
 import { EVENT_HANDLER_URL, INTENTS, REST_URL } from "../configs.js";
 import { WorkerCreateData, WorkerGetShardInfo, WorkerMessage, WorkerShardInfo, WorkerShardPayload } from "./worker";
 
-import dotenv from "dotenv";
-dotenv.config()
 
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string
 const EVENT_HANDLER_AUTHORIZATION = process.env.EVENT_HANDLER_AUTHORIZATION as string
