@@ -34,7 +34,7 @@ And, run ... to start
 - `docker-compose up -d`
 
 Your bot should be running now, and you can check the rest process fetch analytics in influxdb's webgui -
-<http://localhost:8086>
+<http://localhost:8086> with the username and password in the .env file.
 
 ### Using Node
 
