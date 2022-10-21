@@ -59,9 +59,10 @@ export async function executeSlashCommand(bot: BotWithCustomProps, interaction: 
 
     // Load the language for this guild
     if (interaction.guildId && !serverLanguages.has(interaction.guildId)) {
-      await interaction.reply({
-        type: InteractionResponseTypes.DeferredChannelMessageWithSource,
-      });
+      // Todo: make command.execute reply change to editReply after running this
+      // await interaction.reply({
+      //   type: InteractionResponseTypes.DeferredChannelMessageWithSource,
+      // });
       await loadLanguage(interaction.guildId);
     } // Load the language for this guild
     else if (command.acknowledge) {
@@ -85,7 +86,7 @@ export async function executeSlashCommand(bot: BotWithCustomProps, interaction: 
     console.error(error);
     logCommand(interaction, "Failure", name);
 
-    return await interaction.reply(translate(interaction.id, "EXECUTE_COMMAND_ERROR")).catch(bot.logger.error);
+    return await interaction.editReply(translate(interaction.id, "EXECUTE_COMMAND_ERROR")).catch(bot.logger.error);
   }
 }
 
