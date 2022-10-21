@@ -3,7 +3,7 @@ services:
   influxdb:
     image: "influxdb:2.4.0-alpine"
     ports:
-      - 8086:8086
+      - 127.0.0.1:8086:8086
     env_file:
       - .env
   rest:
