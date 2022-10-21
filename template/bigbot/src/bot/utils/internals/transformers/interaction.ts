@@ -17,7 +17,18 @@ export function customizeInteractionTransformer(bot: BotWithCustomProps) {
         if (typeof response === "string") {
           response = { type: InteractionResponseTypes.ChannelMessageWithSource, data: { content: response } };
         }
-        return bot.helpers.sendInteractionResponse(interaction.id, interaction.token, response);
+
+        // bot.helpers.sendInteractionResponse does not use customUrl, bypassing for now.
+        return bot.rest.runMethod(
+          bot.rest,
+          "POST",
+          bot.constants.routes.INTERACTION_ID_TOKEN(interaction.id, interaction.token),
+          {
+            ...bot.transformers.reverse.interactionResponse(bot, response),
+            file: response.data?.file,
+          },
+        );
+        //return bot.helpers.sendInteractionResponse(interaction.id, interaction.token, response);
       },
     });
     // Add as many properties or methods you would like here.
