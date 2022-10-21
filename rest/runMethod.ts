@@ -46,12 +46,15 @@ export async function runMethod<T = any>(
       );
     }
 
+    const headers: HeadersInit = {
+      Authorization: rest.secretKey,
+    };
+    if (body) {
+      headers["Content-Type"] = "application/json";
+    }
     const result = await fetch(`${baseEndpoints.BASE_URL}${route}`, {
       body: body ? JSON.stringify(body) : undefined,
-      headers: {
-        Authorization: rest.secretKey,
-        "Content-Type": "application/json",
-      },
+      headers,
       method,
     });
 
