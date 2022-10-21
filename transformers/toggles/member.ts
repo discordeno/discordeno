@@ -1,4 +1,4 @@
-import { DiscordMember, DiscordUser } from "../../types/discord.ts";
+import { DiscordMember } from "../../types/discord.ts";
 import { ToggleBitfield } from "./ToggleBitfield.ts";
 
 export const MemberToggle = {
@@ -11,12 +11,17 @@ export const MemberToggle = {
 };
 
 export class MemberToggles extends ToggleBitfield {
-  constructor(member: Partial<DiscordMember>) {
+  constructor(memberOrTogglesInt: Partial<DiscordMember> | number) {
     super();
 
-    if (member.deaf) this.add(MemberToggle.deaf);
-    if (member.mute) this.add(MemberToggle.mute);
-    if (member.pending) this.add(MemberToggle.pending);
+    if (typeof memberOrTogglesInt === "number") this.bitfield = memberOrTogglesInt;
+    else {
+      const member = memberOrTogglesInt;
+
+      if (member.deaf) this.add(MemberToggle.deaf);
+      if (member.mute) this.add(MemberToggle.mute);
+      if (member.pending) this.add(MemberToggle.pending);
+    }
   }
 
   /** Whether the user belongs to an OAuth2 application */

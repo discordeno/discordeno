@@ -1,4 +1,4 @@
-import { DiscordUser, DiscordVoiceState } from "../../types/discord.ts";
+import { DiscordVoiceState } from "../../types/discord.ts";
 import { ToggleBitfield } from "./ToggleBitfield.ts";
 
 export const VoiceStateToggle = {
@@ -19,16 +19,21 @@ export const VoiceStateToggle = {
 };
 
 export class VoiceStateToggles extends ToggleBitfield {
-  constructor(voice: DiscordVoiceState) {
+  constructor(voiceOrTogglesInt: DiscordVoiceState | number) {
     super();
 
-    if (voice.deaf) this.add(VoiceStateToggle.deaf);
-    if (voice.mute) this.add(VoiceStateToggle.mute);
-    if (voice.self_deaf) this.add(VoiceStateToggle.selfDeaf);
-    if (voice.self_mute) this.add(VoiceStateToggle.selfMute);
-    if (voice.self_stream) this.add(VoiceStateToggle.selfStream);
-    if (voice.self_video) this.add(VoiceStateToggle.selfVideo);
-    if (voice.suppress) this.add(VoiceStateToggle.suppress);
+    if (typeof voiceOrTogglesInt === "number") this.bitfield = voiceOrTogglesInt;
+    else {
+      const voice = voiceOrTogglesInt;
+
+      if (voice.deaf) this.add(VoiceStateToggle.deaf);
+      if (voice.mute) this.add(VoiceStateToggle.mute);
+      if (voice.self_deaf) this.add(VoiceStateToggle.selfDeaf);
+      if (voice.self_mute) this.add(VoiceStateToggle.selfMute);
+      if (voice.self_stream) this.add(VoiceStateToggle.selfStream);
+      if (voice.self_video) this.add(VoiceStateToggle.selfVideo);
+      if (voice.suppress) this.add(VoiceStateToggle.suppress);
+    }
   }
 
   /** Whether this user is deafened by the server */
