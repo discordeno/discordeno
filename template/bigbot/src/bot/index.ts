@@ -82,27 +82,7 @@ app.use(
 
 app.use(express.json());
 
-app.post("/", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.put("/", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.patch("/", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.delete("/", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.get("/", async (req, res) => {
-  handleRequest(req, res);
-});
-
-async function handleRequest(req: express.Request, res: express.Response) {
+app.all("/", async (req, res) => {
   try {
     if (!EVENT_HANDLER_AUTHORIZATION || EVENT_HANDLER_AUTHORIZATION !== req.headers.authorization) {
       return res.status(401).json({ error: "Invalid authorization key." });
@@ -130,7 +110,7 @@ async function handleRequest(req: express.Request, res: express.Response) {
     bot.logger.error(error);
     res.status(error.code).json(error);
   }
-}
+});
 
 app.listen(EVENT_HANDLER_PORT, () => {
   console.log(`Bot is listening at ${EVENT_HANDLER_URL};`);

@@ -3,7 +3,7 @@ dotenv.config();
 
 import { Point } from "@influxdata/influxdb-client";
 import { BASE_URL, createRestManager } from "discordeno";
-import express, { Request, Response } from "express";
+import express from "express";
 import { Influx } from "../analytics";
 import { REST_URL } from "../configs";
 
@@ -77,27 +77,7 @@ app.use(
 
 app.use(express.json());
 
-app.post("/*", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.get("/*", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.put("/*", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.delete("/*", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.patch("/*", async (req, res) => {
-  handleRequest(req, res);
-});
-
-async function handleRequest(req: Request, res: Response) {
+app.all("/*", async (req, res) => {
   if (!REST_AUTHORIZATION || REST_AUTHORIZATION !== req.headers.authorization) {
     return res.status(401).json({ error: "Invalid authorization key." });
   }
@@ -114,7 +94,7 @@ async function handleRequest(req: Request, res: Response) {
     console.log(error);
     res.status(500).json(error);
   }
-}
+});
 
 app.listen(REST_PORT, () => {
   console.log(`REST listening at ${REST_URL}`);
