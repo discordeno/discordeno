@@ -14,14 +14,37 @@ Make sure to install the latest version when you use it.
 
 ## Startup
 
-To start your bot, you will need to start a few processes. The instructions below will use `node` but you can use
-something like `pm2` to help keep your processes alive.
+There are two ways to start your bot, using docker and node. Using docker will be the simplest and easiest way to start your bot. The default configuation will be set for Docker.
 
-Please compile everything first with `npm run build`.
+### Using Docker
+
+The docker compose file include the discordeno bot and influxdb, this would create an enviroment more close to the production enviroment.
+
+First, rename the .env.example file to .env, and set the discord token and your dev guild id.
+
+Then, run ... to build/rebuild the bot
+
+- `docker-compose build`
+
+And, run ... to start
+
+- `docker-compose up -d`
+
+Your bot should be running now, and you can check the rest process fetch analytics in influxdb's webgui - <http://localhost:8086>
+
+### Using Node
+
+you will need to start a few processes. The instructions below will use `node` but you can use something like `pm2` to help keep your processes alive.
+
+First, rename the .env.example file to .env, and set the discord token and your dev guild id, change the `REST_URL` and `EVENT_HANDLER_URL` to `localhost`.
+
+Then compile everything with `npm run build`.
+
+After that, you can start your bot one by one with the following order.
 
 - Start REST
   - `npm run startr`
-- Start Gateway
-  - `npm run startg`
 - Start Bot
   - `npm run startb`
+- Start Gateway
+  - `npm run startg`
