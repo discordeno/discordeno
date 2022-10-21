@@ -10,7 +10,7 @@ import {
   InteractionResponseTypes,
   Member,
   Role,
-  User
+  User,
 } from "discordeno";
 import { bot, BotWithCustomProps } from "../../bot.js";
 import COMMANDS from "../../commands/mod.js";
@@ -23,10 +23,11 @@ function logCommand(
   type: "Failure" | "Success" | "Trigger" | "Slowmode" | "Missing" | "Inhibit",
   commandName: string,
 ) {
-  const command = `[COMMAND: ${bgYellow(black(commandName || "Unknown"))} - ${bgBlack(
-    ["Failure", "Slowmode", "Missing"].includes(type) ? red(type) : type === "Success" ? green(type) : white(type),
-  )
-    }]`;
+  const command = `[COMMAND: ${bgYellow(black(commandName || "Unknown"))} - ${
+    bgBlack(
+      ["Failure", "Slowmode", "Missing"].includes(type) ? red(type) : type === "Success" ? green(type) : white(type),
+    )
+  }]`;
 
   const user = bgGreen(
     black(`${info.user.username}#${info.user.discriminator.toString().padStart(4, "0")}(${info.id})`),
@@ -149,21 +150,21 @@ function convertOptionValue(
   option: InteractionDataOption,
   translateOptions?: Record<string, string>,
 ): [
-    string,
-    (
-      | { user: User; member: Member }
-      | Role
-      | {
-        id: bigint;
-        name: string;
-        type: ChannelTypes;
-        permissions: bigint;
-      }
-      | boolean
-      | string
-      | number
-    ),
-  ] {
+  string,
+  (
+    | { user: User; member: Member }
+    | Role
+    | {
+      id: bigint;
+      name: string;
+      type: ChannelTypes;
+      permissions: bigint;
+    }
+    | boolean
+    | string
+    | number
+  ),
+] {
   // THE OPTION IS A CHANNEL
   if (option.type === ApplicationCommandOptionTypes.Channel) {
     const channel = interaction.data?.resolved?.channels?.get(BigInt(option.value as string));
@@ -269,7 +270,7 @@ export function optionParser(
       [translateOptions?.[interaction.data.options[0].name] ?? interaction.data.options[0].name]: {
         [
           translateOptions?.[interaction.data.options[0]!.options![0]!.name] ??
-          interaction.data.options[0]!.options![0]!.name
+            interaction.data.options[0]!.options![0]!.name
         ]: convertedOptions,
       },
     };

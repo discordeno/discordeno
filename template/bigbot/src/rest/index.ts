@@ -1,15 +1,15 @@
 import dotenv from "dotenv";
-dotenv.config()
+dotenv.config();
 
 import { Point } from "@influxdata/influxdb-client";
 import { BASE_URL, createRestManager } from "discordeno";
 import express, { Request, Response } from "express";
 import { Influx } from "../analytics";
-import { REST_URL } from '../configs';
+import { REST_URL } from "../configs";
 
-const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string
-const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION as string
-const REST_PORT = process.env.REST_PORT as string
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string;
+const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION as string;
+const REST_PORT = process.env.REST_PORT as string;
 
 const rest = createRestManager({
   token: DISCORD_TOKEN,

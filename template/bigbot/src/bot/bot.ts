@@ -6,8 +6,8 @@ import { setupEventHandlers } from "./events/mod";
 import { MessageCollector } from "./utils/collectors";
 import { customizeInternals } from "./utils/internals/mod";
 
-const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string
-const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION as string
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string;
+const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION as string;
 
 export const bot = enableHelpersPlugin(
   customizeBot(

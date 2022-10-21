@@ -1,6 +1,6 @@
 import { getBotIdFromToken, Intents } from "discordeno";
-import dotenv from 'dotenv';
-dotenv.config()
+import dotenv from "dotenv";
+dotenv.config();
 
 /** The bot id, derived from the bot token. */
 export const BOT_ID = getBotIdFromToken(process.env.DISCORD_TOKEN as string);

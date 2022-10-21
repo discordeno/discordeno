@@ -1,6 +1,5 @@
-import dotenv from 'dotenv';
-dotenv.config()
-
+import dotenv from "dotenv";
+dotenv.config();
 
 import {
   createShardManager,
@@ -10,7 +9,7 @@ import {
   GatewayEventNames,
   Shard,
   ShardSocketRequest,
-  ShardState
+  ShardState,
 } from "discordeno";
 import { createLogger } from "discordeno/logger";
 import fetch from "node-fetch";

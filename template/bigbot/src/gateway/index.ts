@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config()
+dotenv.config();
 
 import { Collection, createBot, createGatewayManager, createRestManager } from "discordeno";
 import { createLogger } from "discordeno/logger";
@@ -9,16 +9,15 @@ import { Worker } from "worker_threads";
 import { EVENT_HANDLER_URL, INTENTS, REST_URL } from "../configs.js";
 import { WorkerCreateData, WorkerGetShardInfo, WorkerMessage, WorkerShardInfo, WorkerShardPayload } from "./worker";
 
-
-const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string
-const EVENT_HANDLER_AUTHORIZATION = process.env.EVENT_HANDLER_AUTHORIZATION as string
-const GATEWAY_AUTHORIZATION = process.env.GATEWAY_AUTHORIZATION as string
-const GATEWAY_HOST = process.env.GATEWAY_HOST as string
-const GATEWAY_PORT = Number(process.env.GATEWAY_PORT as string)
-const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION as string
-const SHARDS_PER_WORKER = Number(process.env.SHARDS_PER_WORKER as string)
-const TOTAL_SHARDS = process.env.TOTAL_SHARDS ? Number(process.env.TOTAL_SHARDS) : undefined
-const TOTAL_WORKERS = Number(process.env.TOTAL_WORKERS as string)
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string;
+const EVENT_HANDLER_AUTHORIZATION = process.env.EVENT_HANDLER_AUTHORIZATION as string;
+const GATEWAY_AUTHORIZATION = process.env.GATEWAY_AUTHORIZATION as string;
+const GATEWAY_HOST = process.env.GATEWAY_HOST as string;
+const GATEWAY_PORT = Number(process.env.GATEWAY_PORT as string);
+const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION as string;
+const SHARDS_PER_WORKER = Number(process.env.SHARDS_PER_WORKER as string);
+const TOTAL_SHARDS = process.env.TOTAL_SHARDS ? Number(process.env.TOTAL_SHARDS) : undefined;
+const TOTAL_WORKERS = Number(process.env.TOTAL_WORKERS as string);
 
 async function main() {
   const log = createLogger({ name: "[MANAGER]" });
@@ -46,7 +45,7 @@ async function main() {
     shardsPerWorker: SHARDS_PER_WORKER,
     totalWorkers: TOTAL_WORKERS,
 
-    handleDiscordPayload: () => { },
+    handleDiscordPayload: () => {},
 
     tellWorkerToIdentify: async (_gateway, workerId, shardId, _bucketId) => {
       log.info("TELL TO IDENTIFY", { workerId, shardId, _bucketId });
