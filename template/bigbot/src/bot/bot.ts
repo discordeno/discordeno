@@ -1,6 +1,7 @@
 import { Bot, Collection, createBot, createRestManager } from "discordeno";
 import enableHelpersPlugin from "discordeno/helpers-plugin";
 import { createLogger } from "discordeno/logger";
+import { setupAnalyticsHooks } from "../analytics";
 import { INTENTS, REST_URL } from "../configs";
 import { setupEventHandlers } from "./events/mod";
 import { MessageCollector } from "./utils/collectors";
@@ -56,3 +57,6 @@ bot.rest = createRestManager({
   secretKey: REST_AUTHORIZATION,
   customUrl: REST_URL,
 });
+
+// Add send fetching analytics hook to rest
+setupAnalyticsHooks(bot.rest);

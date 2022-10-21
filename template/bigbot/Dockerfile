@@ -26,7 +26,7 @@ COPY --from=deps /app /app
 WORKDIR /app
 COPY prisma prisma
 COPY node_modules/.prisma/client node_modules/.prisma/client
-COPY src/prisma.ts src/configs.ts src/
+COPY src/analytics.ts src/prisma.ts src/configs.ts src/
 COPY src/bot src/bot
 RUN npm run build
 EXPOSE 8080
