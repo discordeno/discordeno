@@ -86,7 +86,15 @@ export async function executeSlashCommand(bot: BotWithCustomProps, interaction: 
     console.error(error);
     logCommand(interaction, "Failure", name);
 
-    return await interaction.editReply(translate(interaction.id, "EXECUTE_COMMAND_ERROR")).catch(bot.logger.error);
+    try {
+      console.log("try");
+      // try to reply the interaction, becuase we don't know if it replied or deffered
+      return await interaction.reply(translate(interaction.id, "EXECUTE_COMMAND_ERROR"));
+    } catch {
+      console.log("catch");
+      // edit the reply or deffered reply of interaction
+      return await interaction.editReply(translate(interaction.id, "EXECUTE_COMMAND_ERROR")).catch(bot.logger.error);
+    }
   }
 }
 
