@@ -22,7 +22,8 @@ your bot. The default configuation will be set for Docker.
 The docker compose file include the discordeno bot and influxdb, this would create an enviroment more close to the
 production enviroment.
 
-First, rename the .env.example file to .env, and set the discord token and your dev guild id.
+First, rename the .env.example file to .env, and set the discord token and your dev guild id, change the `REST_URL` to
+`rest` and `EVENT_HANDLER_URL` to `bot`, copy the value of `DOCKER_INFLUXDB_INIT_xxxx` to `INFLUX_xxxx`
 
 Then, run ... to build/rebuild the bot
 
@@ -41,7 +42,7 @@ you will need to start a few processes. The instructions below will use `node` b
 help keep your processes alive.
 
 First, rename the .env.example file to .env, and set the discord token and your dev guild id, change the `REST_URL` and
-`EVENT_HANDLER_URL` to `localhost`.
+`EVENT_HANDLER_URL` to `localhost`, change value of `INFLUX_xxxx` to your influxdb config
 
 Then compile everything with `npm run build`.
 
