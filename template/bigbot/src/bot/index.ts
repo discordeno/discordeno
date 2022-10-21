@@ -10,13 +10,14 @@ import { bot } from "./bot.js";
 import { updateDevCommands } from "./utils/slash/updateCommands.js";
 import { webhookURLToIDAndToken } from "./utils/webhook.js";
 
-const BUGS_ERRORS_REPORT_WEBHOOK = process.env.BUGS_ERRORS_REPORT_WEBHOOK as string;
+const BUGS_ERRORS_REPORT_WEBHOOK = process.env.BUGS_ERRORS_REPORT_WEBHOOK;
 const DEVELOPMENT = process.env.DEVELOPMENT as string;
 const EVENT_HANDLER_AUTHORIZATION = process.env.EVENT_HANDLER_AUTHORIZATION as string;
 const EVENT_HANDLER_PORT = process.env.EVENT_HANDLER_PORT as string;
 
 process
   .on("unhandledRejection", (error) => {
+    if (!BUGS_ERRORS_REPORT_WEBHOOK) return;
     const { id, token } = webhookURLToIDAndToken(BUGS_ERRORS_REPORT_WEBHOOK);
     if (!id || !token) return;
 
