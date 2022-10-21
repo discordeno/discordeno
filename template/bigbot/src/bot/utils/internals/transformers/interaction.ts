@@ -18,17 +18,7 @@ export function customizeInteractionTransformer(bot: BotWithCustomProps) {
           response = { type: InteractionResponseTypes.ChannelMessageWithSource, data: { content: response } };
         }
 
-        // bot.helpers.sendInteractionResponse does not use customUrl, bypassing for now.
-        return bot.rest.runMethod(
-          bot.rest,
-          "POST",
-          bot.constants.routes.INTERACTION_ID_TOKEN(interaction.id, interaction.token),
-          {
-            ...bot.transformers.reverse.interactionResponse(bot, response),
-            file: response.data?.file,
-          },
-        );
-        //return bot.helpers.sendInteractionResponse(interaction.id, interaction.token, response);
+        return bot.helpers.sendInteractionResponse(interaction.id, interaction.token, response);
       },
     });
     Object.defineProperty(interaction, "editReply", {
