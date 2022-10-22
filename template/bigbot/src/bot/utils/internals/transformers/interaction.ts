@@ -1,5 +1,5 @@
 // SETUP-DD-TEMP: This file serves as an example, of how to customize internal discordeno objects. Feel free to use, add more or remove as desired.
-import { InteractionResponse, InteractionResponseTypes } from "discordeno";
+import { InteractionCallbackData, InteractionResponse, InteractionResponseTypes } from "discordeno";
 import { BotWithCustomProps } from "../../../bot.js";
 
 export function customizeInteractionTransformer(bot: BotWithCustomProps) {
@@ -17,7 +17,17 @@ export function customizeInteractionTransformer(bot: BotWithCustomProps) {
         if (typeof response === "string") {
           response = { type: InteractionResponseTypes.ChannelMessageWithSource, data: { content: response } };
         }
+
         return bot.helpers.sendInteractionResponse(interaction.id, interaction.token, response);
+      },
+    });
+    Object.defineProperty(interaction, "editReply", {
+      value: function (response: InteractionCallbackData | string) {
+        if (typeof response === "string") {
+          response = { content: response };
+        }
+
+        return bot.helpers.editOriginalInteractionResponse(interaction.token, response);
       },
     });
     // Add as many properties or methods you would like here.

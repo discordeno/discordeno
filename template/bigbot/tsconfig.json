@@ -19,7 +19,7 @@
     "useUnknownInCatchVariables": false,
     "allowUnreachableCode": false,
     "skipLibCheck": true,
-    "moduleResolution": "node",
+    "moduleResolution": "node"
   },
   "include": [
     "./src/**/*",

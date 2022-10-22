@@ -1,13 +1,14 @@
 import { Bot, Collection, createBot, createRestManager } from "discordeno";
 import enableHelpersPlugin from "discordeno/helpers-plugin";
 import { createLogger } from "discordeno/logger";
+import { setupAnalyticsHooks } from "../analytics";
 import { INTENTS, REST_URL } from "../configs";
 import { setupEventHandlers } from "./events/mod";
 import { MessageCollector } from "./utils/collectors";
 import { customizeInternals } from "./utils/internals/mod";
 
-const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string
-const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION as string
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string;
+const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION as string;
 
 export const bot = enableHelpersPlugin(
   customizeBot(
@@ -56,3 +57,6 @@ bot.rest = createRestManager({
   secretKey: REST_AUTHORIZATION,
   customUrl: REST_URL,
 });
+
+// Add send fetching analytics hook to rest
+setupAnalyticsHooks(bot.rest);

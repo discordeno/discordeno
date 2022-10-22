@@ -1,22 +1,23 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import { DiscordGatewayPayload } from "discordeno";
 // ReferenceError: publishMessage is not defined
 // import Embeds from "discordeno/embeds";
-import dotenv from 'dotenv';
 import express from "express";
 import { BOT_ID, EVENT_HANDLER_URL } from "../configs.js";
 import { bot } from "./bot.js";
 import { updateDevCommands } from "./utils/slash/updateCommands.js";
 import { webhookURLToIDAndToken } from "./utils/webhook.js";
 
-dotenv.config()
-
-const BUGS_ERRORS_REPORT_WEBHOOK = process.env.BUGS_ERRORS_REPORT_WEBHOOK as string
-const DEVELOPMENT = process.env.DEVELOPMENT as string
-const EVENT_HANDLER_AUTHORIZATION = process.env.EVENT_HANDLER_AUTHORIZATION as string
-const EVENT_HANDLER_PORT = process.env.EVENT_HANDLER_PORT as string
+const BUGS_ERRORS_REPORT_WEBHOOK = process.env.BUGS_ERRORS_REPORT_WEBHOOK;
+const DEVELOPMENT = process.env.DEVELOPMENT as string;
+const EVENT_HANDLER_AUTHORIZATION = process.env.EVENT_HANDLER_AUTHORIZATION as string;
+const EVENT_HANDLER_PORT = process.env.EVENT_HANDLER_PORT as string;
 
 process
   .on("unhandledRejection", (error) => {
+    if (!BUGS_ERRORS_REPORT_WEBHOOK) return;
     const { id, token } = webhookURLToIDAndToken(BUGS_ERRORS_REPORT_WEBHOOK);
     if (!id || !token) return;
 
@@ -42,6 +43,7 @@ process
     */
   })
   .on("uncaughtException", async (error) => {
+    if (!BUGS_ERRORS_REPORT_WEBHOOK) return;
     const { id, token } = webhookURLToIDAndToken(BUGS_ERRORS_REPORT_WEBHOOK);
     if (!id || !token) return;
 
@@ -82,27 +84,7 @@ app.use(
 
 app.use(express.json());
 
-app.post("/", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.put("/", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.patch("/", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.delete("/", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.get("/", async (req, res) => {
-  handleRequest(req, res);
-});
-
-async function handleRequest(req: express.Request, res: express.Response) {
+app.all("/", async (req, res) => {
   try {
     if (!EVENT_HANDLER_AUTHORIZATION || EVENT_HANDLER_AUTHORIZATION !== req.headers.authorization) {
       return res.status(401).json({ error: "Invalid authorization key." });
@@ -130,7 +112,7 @@ async function handleRequest(req: express.Request, res: express.Response) {
     bot.logger.error(error);
     res.status(error.code).json(error);
   }
-}
+});
 
 app.listen(EVENT_HANDLER_PORT, () => {
   console.log(`Bot is listening at ${EVENT_HANDLER_URL};`);

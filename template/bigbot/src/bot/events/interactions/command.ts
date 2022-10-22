@@ -10,7 +10,7 @@ import {
   InteractionResponseTypes,
   Member,
   Role,
-  User
+  User,
 } from "discordeno";
 import { bot, BotWithCustomProps } from "../../bot.js";
 import COMMANDS from "../../commands/mod.js";
@@ -23,10 +23,11 @@ function logCommand(
   type: "Failure" | "Success" | "Trigger" | "Slowmode" | "Missing" | "Inhibit",
   commandName: string,
 ) {
-  const command = `[COMMAND: ${bgYellow(black(commandName || "Unknown"))} - ${bgBlack(
-    ["Failure", "Slowmode", "Missing"].includes(type) ? red(type) : type === "Success" ? green(type) : white(type),
-  )
-    }]`;
+  const command = `[COMMAND: ${bgYellow(black(commandName || "Unknown"))} - ${
+    bgBlack(
+      ["Failure", "Slowmode", "Missing"].includes(type) ? red(type) : type === "Success" ? green(type) : white(type),
+    )
+  }]`;
 
   const user = bgGreen(
     black(`${info.user.username}#${info.user.discriminator.toString().padStart(4, "0")}(${info.id})`),
@@ -58,9 +59,10 @@ export async function executeSlashCommand(bot: BotWithCustomProps, interaction: 
 
     // Load the language for this guild
     if (interaction.guildId && !serverLanguages.has(interaction.guildId)) {
-      await interaction.reply({
-        type: InteractionResponseTypes.DeferredChannelMessageWithSource,
-      });
+      // Todo: make command.execute reply change to editReply after running this
+      // await interaction.reply({
+      //   type: InteractionResponseTypes.DeferredChannelMessageWithSource,
+      // });
       await loadLanguage(interaction.guildId);
     } // Load the language for this guild
     else if (command.acknowledge) {
@@ -84,7 +86,15 @@ export async function executeSlashCommand(bot: BotWithCustomProps, interaction: 
     console.error(error);
     logCommand(interaction, "Failure", name);
 
-    return await interaction.reply(translate(interaction.id, "EXECUTE_COMMAND_ERROR")).catch(bot.logger.error);
+    try {
+      console.log("try");
+      // try to reply the interaction, becuase we don't know if it replied or deffered
+      return await interaction.reply(translate(interaction.id, "EXECUTE_COMMAND_ERROR"));
+    } catch {
+      console.log("catch");
+      // edit the reply or deffered reply of interaction
+      return await interaction.editReply(translate(interaction.id, "EXECUTE_COMMAND_ERROR")).catch(bot.logger.error);
+    }
   }
 }
 
@@ -149,21 +159,21 @@ function convertOptionValue(
   option: InteractionDataOption,
   translateOptions?: Record<string, string>,
 ): [
-    string,
-    (
-      | { user: User; member: Member }
-      | Role
-      | {
-        id: bigint;
-        name: string;
-        type: ChannelTypes;
-        permissions: bigint;
-      }
-      | boolean
-      | string
-      | number
-    ),
-  ] {
+  string,
+  (
+    | { user: User; member: Member }
+    | Role
+    | {
+      id: bigint;
+      name: string;
+      type: ChannelTypes;
+      permissions: bigint;
+    }
+    | boolean
+    | string
+    | number
+  ),
+] {
   // THE OPTION IS A CHANNEL
   if (option.type === ApplicationCommandOptionTypes.Channel) {
     const channel = interaction.data?.resolved?.channels?.get(BigInt(option.value as string));
@@ -269,7 +279,7 @@ export function optionParser(
       [translateOptions?.[interaction.data.options[0].name] ?? interaction.data.options[0].name]: {
         [
           translateOptions?.[interaction.data.options[0]!.options![0]!.name] ??
-          interaction.data.options[0]!.options![0]!.name
+            interaction.data.options[0]!.options![0]!.name
         ]: convertedOptions,
       },
     };

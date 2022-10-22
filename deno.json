@@ -6,7 +6,8 @@
         "site/node_modules/",
         "site/build",
         "site/.docusaurus",
-        "site/.cache-loader"
+        "site/.cache-loader",
+        "template/bigbot/node_modules"
       ]
     },
     "options": {
