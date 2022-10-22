@@ -11,9 +11,9 @@
     "devb": "nodemon --ignore ./src/rest/**/* --ignore ./src/gateway/**/* --ignore ./dist/**/* -e ts dist/bot/index.js",
     "type": "tsc --noEmit",
     "build": "swc src --out-dir dist",
-    "startr": "node --experimental-specifier-resolution=node dist/rest/index.js",
-    "startg": "node --experimental-specifier-resolution=node dist/gateway/index.js",
-    "startb": "node --experimental-specifier-resolution=node dist/bot/index.js"
+    "startr": "node dist/rest/index.js",
+    "startg": "node dist/gateway/index.js",
+    "startb": "node dist/bot/index.js"
   },
   "dependencies": {
     "@influxdata/influxdb-client": "^1.29.0",

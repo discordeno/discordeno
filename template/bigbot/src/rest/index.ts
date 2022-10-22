@@ -3,8 +3,8 @@ dotenv.config();
 
 import { BASE_URL, createRestManager } from "discordeno";
 import express from "express";
-import { setupAnalyticsHooks } from "../analytics";
-import { REST_URL } from "../configs";
+import { setupAnalyticsHooks } from "../analytics.js";
+import { REST_URL } from "../configs.js";
 
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string;
 const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION as string;

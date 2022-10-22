@@ -7,7 +7,7 @@ import fastify from "fastify";
 import { nanoid } from "nanoid";
 import { Worker } from "worker_threads";
 import { EVENT_HANDLER_URL, INTENTS, REST_URL } from "../configs.js";
-import { WorkerCreateData, WorkerGetShardInfo, WorkerMessage, WorkerShardInfo, WorkerShardPayload } from "./worker";
+import { WorkerCreateData, WorkerGetShardInfo, WorkerMessage, WorkerShardInfo, WorkerShardPayload } from "./worker.js";
 
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string;
 const EVENT_HANDLER_AUTHORIZATION = process.env.EVENT_HANDLER_AUTHORIZATION as string;
@@ -45,7 +45,7 @@ async function main() {
     shardsPerWorker: SHARDS_PER_WORKER,
     totalWorkers: TOTAL_WORKERS,
 
-    handleDiscordPayload: () => {},
+    handleDiscordPayload: () => { },
 
     tellWorkerToIdentify: async (_gateway, workerId, shardId, _bucketId) => {
       log.info("TELL TO IDENTIFY", { workerId, shardId, _bucketId });
