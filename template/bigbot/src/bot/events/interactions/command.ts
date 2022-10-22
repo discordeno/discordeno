@@ -15,6 +15,7 @@ import {
 import { bot, BotWithCustomProps } from "../../bot.js";
 import COMMANDS from "../../commands/mod.js";
 import { getLanguage, loadLanguage, serverLanguages, translate, translationKeys } from "../../languages/translate.js";
+import { InteractionWithCustomProps } from "../../typings/discordeno.js";
 import { Command, ConvertArgumentDefinitionsToArgs } from "../../utils/slash/createCommand.js";
 
 function logCommand(
@@ -36,7 +37,7 @@ function logCommand(
   bot.logger.info(`${command} by ${user} in ${guild} with MessageID: ${info.id}`);
 }
 
-export async function executeSlashCommand(bot: BotWithCustomProps, interaction: Interaction) {
+export async function executeSlashCommand(bot: BotWithCustomProps, interaction: InteractionWithCustomProps) {
   const data = interaction.data;
   const name = data?.name as keyof typeof COMMANDS;
 
@@ -58,9 +59,10 @@ export async function executeSlashCommand(bot: BotWithCustomProps, interaction: 
 
     // Load the language for this guild
     if (interaction.guildId && !serverLanguages.has(interaction.guildId)) {
-      await interaction.reply({
-        type: InteractionResponseTypes.DeferredChannelMessageWithSource,
-      });
+      // Todo: make command.execute reply change to editReply after running this
+      // await interaction.reply({
+      //   type: InteractionResponseTypes.DeferredChannelMessageWithSource,
+      // });
       await loadLanguage(interaction.guildId);
     } // Load the language for this guild
     else if (command.acknowledge) {
@@ -84,12 +86,20 @@ export async function executeSlashCommand(bot: BotWithCustomProps, interaction: 
     console.error(error);
     logCommand(interaction, "Failure", name);
 
-    return await interaction.reply(translate(interaction.id, "EXECUTE_COMMAND_ERROR")).catch(bot.logger.error);
+    try {
+      console.log("try");
+      // try to reply the interaction, becuase we don't know if it replied or deffered
+      return await interaction.reply(translate(interaction.id, "EXECUTE_COMMAND_ERROR"));
+    } catch {
+      console.log("catch");
+      // edit the reply or deffered reply of interaction
+      return await interaction.editReply(translate(interaction.id, "EXECUTE_COMMAND_ERROR")).catch(bot.logger.error);
+    }
   }
 }
 
 /** Runs the inhibitors to see if a command is allowed to run. */
-export async function commandAllowed(interaction: Interaction, command: Command<any>) {
+export async function commandAllowed(interaction: InteractionWithCustomProps, command: Command<any>) {
   // CHECK WHETHER THE USER/GUILD IS VIP
   if (command.vipOnly) {
     // SETUP-DD-TEMP: Check if this server/user is a vip.

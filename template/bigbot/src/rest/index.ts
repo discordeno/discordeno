@@ -1,9 +1,14 @@
-import { Point } from "@influxdata/influxdb-client";
-import { BASE_URL, createRestManager } from "discordeno";
-import express, { Request, Response } from "express";
+import dotenv from "dotenv";
+dotenv.config();
 
-import { Influx } from "../analytics.js";
-import { DISCORD_TOKEN, REST_AUTHORIZATION, REST_PORT, REST_URL } from "../configs.js";
+import { BASE_URL, createRestManager } from "discordeno";
+import express from "express";
+import { setupAnalyticsHooks } from "../analytics";
+import { REST_URL } from "../configs";
+
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string;
+const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION as string;
+const REST_PORT = process.env.REST_PORT as string;
 
 const rest = createRestManager({
   token: DISCORD_TOKEN,
@@ -12,49 +17,10 @@ const rest = createRestManager({
   debug: console.log,
 });
 
-// If influxdb data is provided, enable analytics in this proxy.
-if (Influx) {
-  rest.fetching = function (options) {
-    Influx?.writePoint(
-      new Point("restEvents")
-        // MARK THE TIME WHEN EVENT ARRIVED
-        .timestamp(new Date())
-        // SET THE GUILD ID
-        .stringField("type", "REQUEST_FETCHING")
-        .tag("method", options.method)
-        .tag("url", options.url)
-        .tag("bucket", options.bucketId ?? "NA"),
-    );
-  };
+// Add send fetching analytics hook to rest
+setupAnalyticsHooks(rest);
 
-  rest.fetched = function (options, response) {
-    Influx?.writePoint(
-      new Point("restEvents")
-        // MARK THE TIME WHEN EVENT ARRIVED
-        .timestamp(new Date())
-        // SET THE GUILD ID
-        .stringField("type", "REQUEST_FETCHED")
-        .tag("method", options.method)
-        .tag("url", options.url)
-        .tag("bucket", options.bucketId ?? "NA")
-        .intField("status", response.status)
-        .tag("statusText", response.statusText),
-    );
-  };
-
-  setInterval(() => {
-    console.log(`[Influx - REST] Saving events...`);
-    Influx?.flush()
-      .then(() => {
-        console.log(`[Influx - REST] Saved events!`);
-      })
-      .catch((error) => {
-        console.log(`[Influx - REST] Error saving events!`, error);
-      });
-    // Every 30seconds
-  }, 30000);
-}
-
+//@ts-ignore
 rest.convertRestError = (errorStack, data) => {
   if (!data) return { message: errorStack.message };
   return { ...data, message: errorStack.message };
@@ -70,27 +36,7 @@ app.use(
 
 app.use(express.json());
 
-app.post("/*", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.get("/*", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.put("/*", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.delete("/*", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.patch("/*", async (req, res) => {
-  handleRequest(req, res);
-});
-
-async function handleRequest(req: Request, res: Response) {
+app.all("/*", async (req, res) => {
   if (!REST_AUTHORIZATION || REST_AUTHORIZATION !== req.headers.authorization) {
     return res.status(401).json({ error: "Invalid authorization key." });
   }
@@ -107,7 +53,7 @@ async function handleRequest(req: Request, res: Response) {
     console.log(error);
     res.status(500).json(error);
   }
-}
+});
 
 app.listen(REST_PORT, () => {
   console.log(`REST listening at ${REST_URL}`);

@@ -11,6 +11,7 @@ import {
 } from "discordeno";
 import english from "../../languages/english.js";
 import { translationKeys } from "../../languages/translate.js";
+import { InteractionWithCustomProps } from "../../typings/discordeno.js";
 import { PermissionLevelHandlers } from "./permLevels.js";
 
 export function createCommand<T extends readonly ArgumentDefinition[]>(command: Command<T>) {
@@ -244,7 +245,7 @@ export interface Command<T extends readonly ArgumentDefinition[]> {
   /** The options for the command, used for both slash and message commands. */
   // options?: ApplicationCommandOption[];
   options?: T;
-  execute: (bot: Bot, data: Interaction, args: ConvertArgumentDefinitionsToArgs<T>) => unknown;
+  execute: (bot: Bot, data: InteractionWithCustomProps, args: ConvertArgumentDefinitionsToArgs<T>) => unknown;
   subcommands?: Record<string, Omit<Command<any>, "subcommands"> & { group?: string }>;
   /** Whether the command should have a cooldown */
   cooldown?: {

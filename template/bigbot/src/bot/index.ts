@@ -1,20 +1,23 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import { DiscordGatewayPayload } from "discordeno";
-import Embeds from "discordeno/embeds";
+// ReferenceError: publishMessage is not defined
+// import Embeds from "discordeno/embeds";
 import express from "express";
-import {
-  BOT_ID,
-  BUGS_ERRORS_REPORT_WEBHOOK,
-  DEVELOPMENT,
-  EVENT_HANDLER_AUTHORIZATION,
-  EVENT_HANDLER_PORT,
-  EVENT_HANDLER_URL,
-} from "../configs.js";
+import { BOT_ID, EVENT_HANDLER_URL } from "../configs.js";
 import { bot } from "./bot.js";
 import { updateDevCommands } from "./utils/slash/updateCommands.js";
 import { webhookURLToIDAndToken } from "./utils/webhook.js";
 
+const BUGS_ERRORS_REPORT_WEBHOOK = process.env.BUGS_ERRORS_REPORT_WEBHOOK;
+const DEVELOPMENT = process.env.DEVELOPMENT as string;
+const EVENT_HANDLER_AUTHORIZATION = process.env.EVENT_HANDLER_AUTHORIZATION as string;
+const EVENT_HANDLER_PORT = process.env.EVENT_HANDLER_PORT as string;
+
 process
   .on("unhandledRejection", (error) => {
+    if (!BUGS_ERRORS_REPORT_WEBHOOK) return;
     const { id, token } = webhookURLToIDAndToken(BUGS_ERRORS_REPORT_WEBHOOK);
     if (!id || !token) return;
 
@@ -28,6 +31,8 @@ process
 
     if (!error) return;
 
+    // ReferenceError: publishMessage is not defined
+    /*
     const embeds = new Embeds()
       .setDescription(["```js", error, "```"].join(`\n`))
       .setTimestamp()
@@ -35,8 +40,10 @@ process
 
     // SEND ERROR TO THE LOG CHANNEL ON THE DEV SERVER
     return bot.helpers.sendWebhookMessage(bot.transformers.snowflake(id), token, { embeds }).catch(console.error);
+    */
   })
   .on("uncaughtException", async (error) => {
+    if (!BUGS_ERRORS_REPORT_WEBHOOK) return;
     const { id, token } = webhookURLToIDAndToken(BUGS_ERRORS_REPORT_WEBHOOK);
     if (!id || !token) return;
 
@@ -50,13 +57,14 @@ process
 
     if (!error) process.exit(1);
 
+    /*
     const embeds = new Embeds()
       .setDescription(["```js", error.stack, "```"].join(`\n`))
       .setTimestamp()
       .setFooter("Unhandled Exception Error Occurred");
-
-    // SEND ERROR TO THE LOG CHANNEL ON THE DEV SERVER
-    await bot.helpers.sendWebhookMessage(bot.transformers.snowflake(id), token, { embeds }).catch(console.error);
+      // SEND ERROR TO THE LOG CHANNEL ON THE DEV SERVER
+      await bot.helpers.sendWebhookMessage(bot.transformers.snowflake(id), token, { embeds }).catch(console.error);
+      */
 
     process.exit(1);
   });
@@ -76,27 +84,7 @@ app.use(
 
 app.use(express.json());
 
-app.post("/", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.put("/", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.patch("/", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.delete("/", async (req, res) => {
-  handleRequest(req, res);
-});
-
-app.get("/", async (req, res) => {
-  handleRequest(req, res);
-});
-
-async function handleRequest(req: express.Request, res: express.Response) {
+app.all("/", async (req, res) => {
   try {
     if (!EVENT_HANDLER_AUTHORIZATION || EVENT_HANDLER_AUTHORIZATION !== req.headers.authorization) {
       return res.status(401).json({ error: "Invalid authorization key." });
@@ -124,7 +112,7 @@ async function handleRequest(req: express.Request, res: express.Response) {
     bot.logger.error(error);
     res.status(error.code).json(error);
   }
-}
+});
 
 app.listen(EVENT_HANDLER_PORT, () => {
   console.log(`Bot is listening at ${EVENT_HANDLER_URL};`);

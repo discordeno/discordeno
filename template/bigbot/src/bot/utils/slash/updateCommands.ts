@@ -1,10 +1,11 @@
 import { ApplicationCommandOption, ApplicationCommandTypes, Bot } from "discordeno";
-import { DEV_SERVER_ID } from "../../../configs.js";
 import { prisma } from "../../../prisma.js";
 import { bot } from "../../bot.js";
 import COMMANDS from "../../commands/mod.js";
 import { serverLanguages, translate } from "../../languages/translate.js";
 import { ArgumentDefinition } from "./createCommand.js";
+
+const DEV_SERVER_ID = process.env.DEV_SERVER_ID as string;
 
 export async function updateDevCommands(bot: Bot) {
   const cmds = Object.entries(COMMANDS)

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "module": "CommonJS",
+    "module": "es2020",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "outDir": "./dist",
@@ -10,7 +10,6 @@
     "importHelpers": true,
     "allowUnusedLabels": false,
     "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noUncheckedIndexedAccess": true,
@@ -22,5 +21,13 @@
     "skipLibCheck": true,
     "moduleResolution": "node"
   },
-  "include": ["./src/**/*", ".env"]
+  "include": [
+    "./src/**/*",
+    ".env"
+  ],
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node",
+    "swc": true
+  }
 }

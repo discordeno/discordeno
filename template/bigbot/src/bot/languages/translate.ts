@@ -1,9 +1,10 @@
 import Embeds from "discordeno/embeds";
-import { MISSING_TRANSLATION_WEBHOOK } from "../../configs.js";
 import { bot } from "../bot.js";
 import { webhookURLToIDAndToken } from "../utils/webhook.js";
 import english from "./english.js";
 import languages from "./languages.js";
+
+const MISSING_TRANSLATION_WEBHOOK = process.env.MISSING_TRANSLATION_WEBHOOK;
 
 /** This should hold the language names per guild id. <guildId, language> */
 export const serverLanguages = new Map<bigint, keyof typeof languages>();
@@ -56,6 +57,7 @@ export async function loadLanguage(guildId: bigint) {
 
 /** Send a webhook for a missing translation key */
 export async function missingTranslation(language: keyof typeof languages, key: string) {
+  if (!MISSING_TRANSLATION_WEBHOOK) return;
   const { id, token } = webhookURLToIDAndToken(MISSING_TRANSLATION_WEBHOOK);
   if (!id || !token) return;
 
