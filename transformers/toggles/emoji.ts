@@ -1,4 +1,4 @@
-import { DiscordEmoji, DiscordRole } from "../../types/discord.ts";
+import { DiscordEmoji } from "../../types/discord.ts";
 import { ToggleBitfield } from "./ToggleBitfield.ts";
 
 export const EmojiToggle = {
@@ -13,13 +13,18 @@ export const EmojiToggle = {
 };
 
 export class EmojiToggles extends ToggleBitfield {
-  constructor(role: DiscordEmoji) {
+  constructor(roleOrTogglesInt: DiscordEmoji | number) {
     super();
 
-    if (role.require_colons) this.add(EmojiToggle.requireColons);
-    if (role.managed) this.add(EmojiToggle.managed);
-    if (role.animated) this.add(EmojiToggle.animated);
-    if (role.available) this.add(EmojiToggle.available);
+    if (typeof roleOrTogglesInt === "number") this.bitfield = roleOrTogglesInt;
+    else {
+      const role = roleOrTogglesInt;
+
+      if (role.require_colons) this.add(EmojiToggle.requireColons);
+      if (role.managed) this.add(EmojiToggle.managed);
+      if (role.animated) this.add(EmojiToggle.animated);
+      if (role.available) this.add(EmojiToggle.available);
+    }
   }
 
   /** Whether this emoji must be wrapped in colons */

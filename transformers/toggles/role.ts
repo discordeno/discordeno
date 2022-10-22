@@ -13,13 +13,18 @@ export const RoleToggle = {
 };
 
 export class RoleToggles extends ToggleBitfield {
-  constructor(role: DiscordRole) {
+  constructor(roleOrTogglesInt: DiscordRole | number) {
     super();
 
-    if (role.hoist) this.add(RoleToggle.hoist);
-    if (role.managed) this.add(RoleToggle.managed);
-    if (role.mentionable) this.add(RoleToggle.mentionable);
-    if (role.tags?.premium_subscriber === null) this.add(RoleToggle.premiumSubscriber);
+    if (typeof roleOrTogglesInt === "number") this.bitfield = roleOrTogglesInt;
+    else {
+      const role = roleOrTogglesInt;
+
+      if (role.hoist) this.add(RoleToggle.hoist);
+      if (role.managed) this.add(RoleToggle.managed);
+      if (role.mentionable) this.add(RoleToggle.mentionable);
+      if (role.tags?.premium_subscriber === null) this.add(RoleToggle.premiumSubscriber);
+    }
   }
 
   /** If this role is showed separately in the user listing */
