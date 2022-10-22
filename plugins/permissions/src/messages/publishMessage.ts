@@ -5,11 +5,11 @@ export function publishMessage(bot: BotWithCache) {
   const publishMessage = bot.helpers.publishMessage;
 
   bot.helpers.publishMessage = function (channelId, messageId) {
-    const message = bot.messages.get(messageId);
+    const message = bot.messages.get(bot.transformers.snowflake(messageId));
 
     requireBotChannelPermissions(
       bot,
-      channelId,
+      bot.transformers.snowflake(channelId),
       message?.authorId === bot.id ? ["SEND_MESSAGES"] : ["MANAGE_MESSAGES"],
     );
 
