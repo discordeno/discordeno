@@ -1,5 +1,7 @@
-import { routes } from "../../util/routes.ts";
+// The order of the import is important
 import { DiscordEmbed, Embed, formatImageURL, iconBigintToHash, ImageFormat, ImageSize, User } from "./deps.ts";
+
+import { routes } from "../../util/routes.ts";
 
 export const embedLimits = {
   title: 256,
