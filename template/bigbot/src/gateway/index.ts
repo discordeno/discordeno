@@ -12,7 +12,6 @@ import { WorkerCreateData, WorkerGetShardInfo, WorkerMessage, WorkerShardInfo, W
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string;
 const EVENT_HANDLER_AUTHORIZATION = process.env.EVENT_HANDLER_AUTHORIZATION as string;
 const GATEWAY_AUTHORIZATION = process.env.GATEWAY_AUTHORIZATION as string;
-const GATEWAY_HOST = process.env.GATEWAY_HOST as string;
 const GATEWAY_PORT = Number(process.env.GATEWAY_PORT as string);
 const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION as string;
 const SHARDS_PER_WORKER = Number(process.env.SHARDS_PER_WORKER as string);
@@ -45,7 +44,7 @@ async function main() {
     shardsPerWorker: SHARDS_PER_WORKER,
     totalWorkers: TOTAL_WORKERS,
 
-    handleDiscordPayload: () => { },
+    handleDiscordPayload: () => {},
 
     tellWorkerToIdentify: async (_gateway, workerId, shardId, _bucketId) => {
       log.info("TELL TO IDENTIFY", { workerId, shardId, _bucketId });
@@ -172,7 +171,7 @@ async function main() {
     }
   });
 
-  server.listen({ host: GATEWAY_HOST, port: GATEWAY_PORT }).catch((error) => {
+  server.listen({ port: GATEWAY_PORT }).catch((error) => {
     log.error(["[FASTIFY ERROR", error].join("\n"));
     process.exit(1);
   });
