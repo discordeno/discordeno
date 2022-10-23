@@ -1,6 +1,5 @@
 import type { Bot } from "../../../bot.ts";
 import { BigString } from "../../../types/shared.ts";
-import { processReactionString } from "./getReactions.ts";
 
 // TODO: Improve typing of the `reaction` parameter.
 
@@ -29,11 +28,5 @@ export async function addReaction(
   messageId: BigString,
   reaction: string,
 ): Promise<void> {
-  reaction = processReactionString(reaction);
-
-  return await bot.rest.runMethod<void>(
-    bot.rest,
-    "PUT",
-    bot.constants.routes.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction),
-  );
+  return await bot.rest.addReaction(channelId, messageId, reaction);
 }

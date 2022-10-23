@@ -2,7 +2,7 @@ import { Bot } from "../../bot.ts";
 import { DiscordEmbed } from "../../types/discord.ts";
 import { Embed } from "../embed.ts";
 
-export function transformEmbedToDiscordEmbed(bot: Bot, payload: Embed): DiscordEmbed {
+export function transformEmbedToDiscordEmbed(payload: Embed): DiscordEmbed {
   return {
     title: payload.title,
     type: payload.type,

@@ -1,4 +1,10 @@
-import { DiscordFollowedChannel } from "../types/discord.ts";
+import { EditMessage } from "../helpers/messages/editMessage.ts";
+import { processReactionString } from "../helpers/messages/reactions/getReactions.ts";
+import { transformAllowedMentionsToDiscordAllowedMentions } from "../transformers/reverse/allowedMentions.ts";
+import { transformAttachmentToDiscordAttachment } from "../transformers/reverse/attachment.ts";
+import { transformComponentToDiscordComponent } from "../transformers/reverse/component.ts";
+import { transformEmbedToDiscordEmbed } from "../transformers/reverse/embed.ts";
+import { DiscordFollowedChannel, DiscordMessage } from "../types/discord.ts";
 import { BigString } from "../types/shared.ts";
 import { API_VERSION, baseEndpoints } from "../util/constants.ts";
 import { routes } from "../util/routes.ts";
@@ -95,6 +101,104 @@ export function createRestManager(options: CreateRestManagerOptions) {
     },
 
     /**
+     * Adds a reaction to a message.
+     *
+     * @param channelId - The ID of the channel the message to add a reaction to is in.
+     * @param messageId - The ID of the message to add a reaction to.
+     * @param reaction - The reaction to add to the message.
+     * @returns
+     *
+     * @remarks
+     * Requires the `READ_MESSAGE_HISTORY` permission.
+     *
+     * If nobody else has reacted to the message:
+     * - Requires the `ADD_REACTIONS` permission.
+     *
+     * Fires a _Message Reaction Add_ gateway event.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/channel#create-reaction}
+     */
+    async addReaction(
+      channelId: BigString,
+      messageId: BigString,
+      reaction: string,
+    ): Promise<void> {
+      reaction = processReactionString(reaction);
+
+      return await manager.runMethod<void>(
+        manager,
+        "PUT",
+        routes.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction),
+      );
+    },
+
+    /**
+     * Deletes a message from a channel.
+     *
+     * @param channelId - The ID of the channel to delete the message from.
+     * @param messageId - The ID of the message to delete from the channel.
+     *
+     * @remarks
+     * If not deleting own message:
+     * - Requires the `MANAGE_MESSAGES` permission.
+     *
+     * Fires a _Message Delete_ gateway event.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/channel#delete-message}
+     */
+    async deleteMessage(
+      channelId: BigString,
+      messageId: BigString,
+      reason?: string,
+    ): Promise<void> {
+      return await manager.runMethod<void>(
+        manager,
+        "DELETE",
+        routes.CHANNEL_MESSAGE(channelId, messageId),
+        { reason },
+      );
+    },
+
+    /**
+     * Edits a message.
+     *
+     * @param channelId - The ID of the channel to edit the message in.
+     * @param messageId - The IDs of the message to edit.
+     * @param options - The parameters for the edit of the message.
+     * @returns An instance of the edited {@link DiscordMessage}.
+     *
+     * @remarks
+     * If editing another user's message:
+     * - Requires the `MANAGE_MESSAGES` permission.
+     * - Only the {@link EditMessage.flags | flags} property of the {@link options} object parameter can be edited.
+     *
+     * Fires a _Message Update_ gateway event.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/channel#edit-message}
+     */
+    async editMessage(
+      channelId: BigString,
+      messageId: BigString,
+      options: EditMessage,
+    ): Promise<DiscordMessage> {
+      return await manager.runMethod<DiscordMessage>(
+        manager,
+        "PATCH",
+        routes.CHANNEL_MESSAGE(channelId, messageId),
+        {
+          content: options.content,
+          embeds: options.embeds?.map((embed) => transformEmbedToDiscordEmbed(embed)),
+          allowed_mentions: options.allowedMentions
+            ? transformAllowedMentionsToDiscordAllowedMentions(options.allowedMentions)
+            : undefined,
+          attachments: options.attachments?.map((attachment) => transformAttachmentToDiscordAttachment(attachment)),
+          file: options.file,
+          components: options.components?.map((component) => transformComponentToDiscordComponent(component)),
+        },
+      );
+    },
+
+    /**
      * Follows an announcement channel, allowing messages posted within it to be cross-posted into the target channel.
      *
      * @param sourceChannelId - The ID of the announcement channel to follow.
@@ -112,7 +216,7 @@ export function createRestManager(options: CreateRestManagerOptions) {
       sourceChannelId: BigString,
       targetChannelId: BigString,
     ): Promise<string> {
-      const result = await this.runMethod<DiscordFollowedChannel>(
+      const result = await manager.runMethod<DiscordFollowedChannel>(
         manager,
         "POST",
         routes.CHANNEL_FOLLOW(sourceChannelId),

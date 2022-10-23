@@ -1,8 +1,7 @@
-import { Bot } from "../../bot.ts";
 import { DiscordComponent } from "../../types/discord.ts";
 import { Component } from "../component.ts";
 
-export function transformComponentToDiscordComponent(bot: Bot, payload: Component): DiscordComponent {
+export function transformComponentToDiscordComponent(payload: Component): DiscordComponent {
   return {
     type: payload.type,
     custom_id: payload.customId,
@@ -37,6 +36,6 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
     min_length: payload.minLength,
     max_length: payload.maxLength,
     value: payload.value,
-    components: payload.components?.map((component) => bot.transformers.reverse.component(bot, component)),
+    components: payload.components?.map((component) => transformComponentToDiscordComponent(component)),
   };
 }

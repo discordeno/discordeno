@@ -2,7 +2,6 @@ import type { Bot } from "../../bot.ts";
 import { Attachment } from "../../transformers/attachment.ts";
 import { Embed } from "../../transformers/embed.ts";
 import { Message } from "../../transformers/message.ts";
-import { DiscordMessage } from "../../types/discord.ts";
 import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
 import { BigString } from "../../types/shared.ts";
 
@@ -30,21 +29,7 @@ export async function editMessage(
   messageId: BigString,
   options: EditMessage,
 ): Promise<Message> {
-  const result = await bot.rest.runMethod<DiscordMessage>(
-    bot.rest,
-    "PATCH",
-    bot.constants.routes.CHANNEL_MESSAGE(channelId, messageId),
-    {
-      content: options.content,
-      embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
-      allowed_mentions: options.allowedMentions
-        ? bot.transformers.reverse.allowedMentions(bot, options.allowedMentions)
-        : undefined,
-      attachments: options.attachments?.map((attachment) => bot.transformers.reverse.attachment(bot, attachment)),
-      file: options.file,
-      components: options.components?.map((component) => bot.transformers.reverse.component(bot, component)),
-    },
-  );
+  const result = await bot.rest.editMessage(channelId, messageId, options);
 
   return bot.transformers.message(bot, result);
 }

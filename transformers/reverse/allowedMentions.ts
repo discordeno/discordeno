@@ -1,7 +1,6 @@
-import { AllowedMentions, Bot, DiscordAllowedMentions } from "../../mod.ts";
+import { AllowedMentions, DiscordAllowedMentions } from "../../mod.ts";
 
 export function transformAllowedMentionsToDiscordAllowedMentions(
-  bot: Bot,
   mentions: AllowedMentions,
 ): DiscordAllowedMentions {
   return {
