@@ -11,7 +11,6 @@ import { updateDevCommands } from "./utils/slash/updateCommands.js";
 import { webhookURLToIDAndToken } from "./utils/webhook.js";
 
 const BUGS_ERRORS_REPORT_WEBHOOK = process.env.BUGS_ERRORS_REPORT_WEBHOOK;
-const DEVELOPMENT = process.env.DEVELOPMENT as string;
 const EVENT_HANDLER_AUTHORIZATION = process.env.EVENT_HANDLER_AUTHORIZATION as string;
 const EVENT_HANDLER_PORT = process.env.EVENT_HANDLER_PORT as string;
 
@@ -69,7 +68,7 @@ process
     process.exit(1);
   });
 
-if (DEVELOPMENT) {
+if (process.env.DEVELOPMENT === "true") {
   bot.logger.info(`[DEV MODE] Updating slash commands for dev server.`);
   updateDevCommands(bot);
 }
