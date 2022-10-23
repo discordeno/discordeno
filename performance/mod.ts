@@ -1,6 +1,7 @@
 import { loadBot as oldLoadBot } from "https://raw.githubusercontent.com/discordeno/discordeno/main/tests/mod.ts";
 import { loadBot } from "../tests/mod.ts";
 
+Deno.env.set("DISCORD_TOKEN", `${btoa("316179474163171338")}.gbaodiwabn`);
 const bot = loadBot();
 const oldBot = oldLoadBot();
 
