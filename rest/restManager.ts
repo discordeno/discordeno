@@ -1,4 +1,7 @@
+import { DiscordFollowedChannel } from "../types/discord.ts";
+import { BigString } from "../types/shared.ts";
 import { API_VERSION, baseEndpoints } from "../util/constants.ts";
+import { routes } from "../util/routes.ts";
 import { removeTokenPrefix } from "../util/token.ts";
 import { checkRateLimits } from "./checkRateLimits.ts";
 import { cleanupQueues } from "./cleanupQueues.ts";
@@ -21,7 +24,7 @@ export function createRestManager(options: CreateRestManagerOptions) {
     baseEndpoints.BASE_URL = `${options.customUrl}/v${version}`;
   }
 
-  return {
+  const manager = {
     // current invalid amount
     invalidRequests: 0,
     // max invalid requests allowed until ban
@@ -90,7 +93,39 @@ export function createRestManager(options: CreateRestManagerOptions) {
         `[REST - fetched] URL: ${opts.url} | Status: ${response.status} ${JSON.stringify(opts)}`,
       );
     },
+
+    /**
+     * Follows an announcement channel, allowing messages posted within it to be cross-posted into the target channel.
+     *
+     * @param sourceChannelId - The ID of the announcement channel to follow.
+     * @param targetChannelId - The ID of the target channel - the channel to cross-post to.
+     * @returns An instance of {@link FollowedChannel}.
+     *
+     * @remarks
+     * Requires the `MANAGE_WEBHOOKS` permission in the __target channel__.
+     *
+     * Fires a _Webhooks Update_ gateway event.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/channel#follow-announcement-channel}
+     */
+    async followAnnouncementChannel(
+      sourceChannelId: BigString,
+      targetChannelId: BigString,
+    ): Promise<string> {
+      const result = await this.runMethod<DiscordFollowedChannel>(
+        manager,
+        "POST",
+        routes.CHANNEL_FOLLOW(sourceChannelId),
+        {
+          webhook_channel_id: targetChannelId,
+        },
+      );
+
+      return result.webhook_id;
+    },
   };
+
+  return manager;
 }
 
 export interface CreateRestManagerOptions {

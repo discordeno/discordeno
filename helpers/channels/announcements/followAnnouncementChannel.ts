@@ -22,14 +22,7 @@ export async function followAnnouncementChannel(
   sourceChannelId: BigString,
   targetChannelId: BigString,
 ): Promise<bigint> {
-  const result = await bot.rest.runMethod<DiscordFollowedChannel>(
-    bot.rest,
-    "POST",
-    bot.constants.routes.CHANNEL_FOLLOW(sourceChannelId),
-    {
-      webhook_channel_id: targetChannelId,
-    },
-  );
+  const webhookId = await bot.rest.followAnnouncementChannel(sourceChannelId, targetChannelId);
 
-  return bot.transformers.snowflake(result.webhook_id);
+  return bot.transformers.snowflake(webhookId);
 }
