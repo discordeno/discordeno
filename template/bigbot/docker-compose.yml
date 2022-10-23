@@ -26,6 +26,8 @@ services:
       target: gateway
     depends_on:
       - rest
+    deploy:
+      replicas: 2
     env_file:
       - .env
   bot:
@@ -34,5 +36,7 @@ services:
       target: bot
     depends_on:
       - rest
+    deploy:
+      replicas: 2
     env_file:
       - .env
