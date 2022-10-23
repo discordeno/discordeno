@@ -16,6 +16,8 @@ services:
     build:
       context: .
       target: rest
+    deploy:
+      replicas: 2
     depends_on:
       - influxdb
     env_file:
