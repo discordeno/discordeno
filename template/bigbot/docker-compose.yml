@@ -6,6 +6,12 @@ services:
       - 127.0.0.1:8086:8086
     env_file:
       - .env
+  rabbitmq:
+    build:
+      context: .
+      target: rabbitmq
+    ports:
+      - 127.0.0.1:15672:15672
   rest:
     build:
       context: .

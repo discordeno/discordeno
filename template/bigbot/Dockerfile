@@ -31,3 +31,7 @@ COPY src/bot src/bot
 RUN npm run build
 EXPOSE 8080
 CMD ["npm","run","startb"]
+
+FROM rabbitmq:3.11.2-management-alpine as rabbitmq
+COPY src/rabbitmq/plugins plugins
+RUN rabbitmq-plugins enable rabbitmq_message_deduplication
