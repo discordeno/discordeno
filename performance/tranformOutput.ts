@@ -13,7 +13,7 @@ for (const line of lines) {
     parseFloat(m[6].replace(/\s+/g, " ").trim().split(" ")[2]) -
       parseFloat(m[6].replace(/\s+/g, " ").trim().split(" ")[0]),
   );
-  const unit = parseFloat(m[3]);
+  const unit = m[3];
 
   ret.push(`test ${name} ... bench: ${value} ${unit} (+/- ${range})`);
 }
