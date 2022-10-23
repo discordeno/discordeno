@@ -1,0 +1,25 @@
+name: Benchmark
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: denoland/setup-deno@main
+        with:
+          deno-version: v1.x
+      - name: Check Formatting
+        run: deno fmt --check
+      - name: Run Benchmark
+        run: NO_COLOR=true deno bench --unstable -A performance/mod.ts > output.txt
+      - name: Format Benchmark Output
+        run: deno run -A performance/tranformOutput.ts
+      - name: Store benchmark result
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          tool: "cargo"
+          output-file-path: output.txt

@@ -9,3 +9,5 @@ npm/
 
 # MacOS is weird
 .DS_Store
+
+output.txt
