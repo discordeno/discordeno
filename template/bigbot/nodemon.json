@@ -2,5 +2,5 @@
   "watch": "./src/**/*.ts",
   "ext ": "env,ts",
   "signal": "SIGKILL",
-  "exec": "npm run build && node --experimental-specifier-resolution=node"
+  "exec": "npm run build && node"
 }

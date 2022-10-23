@@ -7,178 +7,173 @@ import fastify from "fastify";
 import { nanoid } from "nanoid";
 import { Worker } from "worker_threads";
 import { EVENT_HANDLER_URL, INTENTS, REST_URL } from "../configs.js";
-import { WorkerCreateData, WorkerGetShardInfo, WorkerMessage, WorkerShardInfo, WorkerShardPayload } from "./worker";
+import { WorkerCreateData, WorkerGetShardInfo, WorkerMessage, WorkerShardInfo, WorkerShardPayload } from "./worker.js";
 
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string;
 const EVENT_HANDLER_AUTHORIZATION = process.env.EVENT_HANDLER_AUTHORIZATION as string;
 const GATEWAY_AUTHORIZATION = process.env.GATEWAY_AUTHORIZATION as string;
-const GATEWAY_HOST = process.env.GATEWAY_HOST as string;
 const GATEWAY_PORT = Number(process.env.GATEWAY_PORT as string);
 const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION as string;
 const SHARDS_PER_WORKER = Number(process.env.SHARDS_PER_WORKER as string);
 const TOTAL_SHARDS = process.env.TOTAL_SHARDS ? Number(process.env.TOTAL_SHARDS) : undefined;
 const TOTAL_WORKERS = Number(process.env.TOTAL_WORKERS as string);
 
-async function main() {
-  const log = createLogger({ name: "[MANAGER]" });
+const log = createLogger({ name: "[MANAGER]" });
 
-  const bot = createBot({
+const bot = createBot({
+  token: DISCORD_TOKEN,
+});
+
+bot.rest = createRestManager({
+  token: DISCORD_TOKEN,
+  secretKey: REST_AUTHORIZATION,
+  customUrl: REST_URL,
+});
+
+const gatewayBot = await bot.helpers.getGatewayBot();
+
+const gateway = createGatewayManager({
+  gatewayBot,
+  gatewayConfig: {
     token: DISCORD_TOKEN,
-  });
+    intents: INTENTS,
+  },
+  // force the total amount of shards
+  totalShards: TOTAL_SHARDS,
+  shardsPerWorker: SHARDS_PER_WORKER,
+  totalWorkers: TOTAL_WORKERS,
 
-  bot.rest = createRestManager({
-    token: DISCORD_TOKEN,
-    secretKey: REST_AUTHORIZATION,
-    customUrl: REST_URL,
-  });
+  handleDiscordPayload: () => {},
 
-  const gatewayBot = await bot.helpers.getGatewayBot();
+  tellWorkerToIdentify: async (_gateway, workerId, shardId, _bucketId) => {
+    log.info("TELL TO IDENTIFY", { workerId, shardId, _bucketId });
 
-  const gateway = createGatewayManager({
-    gatewayBot,
-    gatewayConfig: {
-      token: DISCORD_TOKEN,
-      intents: INTENTS,
-    },
-    // force the total amount of shards
-    totalShards: TOTAL_SHARDS,
-    shardsPerWorker: SHARDS_PER_WORKER,
-    totalWorkers: TOTAL_WORKERS,
+    let worker = workers.get(workerId);
+    if (!worker) {
+      worker = createWorker(workerId);
+      workers.set(workerId, worker);
+    }
 
-    handleDiscordPayload: () => {},
-
-    tellWorkerToIdentify: async (_gateway, workerId, shardId, _bucketId) => {
-      log.info("TELL TO IDENTIFY", { workerId, shardId, _bucketId });
-
-      let worker = workers.get(workerId);
-      if (!worker) {
-        worker = createWorker(workerId);
-        workers.set(workerId, worker);
-      }
-
-      const identify: WorkerMessage = {
-        type: "IDENTIFY_SHARD",
-        shardId,
-      };
-
-      worker.postMessage(identify);
-    },
-  });
-
-  const workers = new Collection<number, Worker>();
-  const nonces = new Collection<string, (data: any) => void>();
-
-  function createWorker(workerId: number) {
-    console.log(TOTAL_SHARDS, gateway.manager.totalShards, "SHARDS");
-
-    const workerData: WorkerCreateData = {
-      intents: gateway.manager.gatewayConfig.intents ?? 0,
-      token: DISCORD_TOKEN,
-      handlerUrls: [EVENT_HANDLER_URL],
-      handlerAuthorization: EVENT_HANDLER_AUTHORIZATION,
-      path: "./worker.ts",
-      totalShards: gateway.manager.totalShards,
-      workerId,
+    const identify: WorkerMessage = {
+      type: "IDENTIFY_SHARD",
+      shardId,
     };
 
-    const worker = new Worker("./dist/gateway/worker.js", {
-      workerData,
-    });
+    worker.postMessage(identify);
+  },
+});
 
-    worker.on("message", async (data: ManagerMessage) => {
-      log.info({ data });
-      switch (data.type) {
-        case "REQUEST_IDENTIFY": {
-          log.info("REQUESTING IDENTIFY #", data.shardId);
-          await gateway.manager.requestIdentify(data.shardId);
+const workers = new Collection<number, Worker>();
+const nonces = new Collection<string, (data: any) => void>();
 
-          const allowIdentify: WorkerMessage = {
-            type: "ALLOW_IDENTIFY",
-            shardId: data.shardId,
-          };
+function createWorker(workerId: number) {
+  console.log(TOTAL_SHARDS, gateway.manager.totalShards, "SHARDS");
 
-          worker.postMessage(allowIdentify);
+  const workerData: WorkerCreateData = {
+    intents: gateway.manager.gatewayConfig.intents ?? 0,
+    token: DISCORD_TOKEN,
+    handlerUrls: [EVENT_HANDLER_URL],
+    handlerAuthorization: EVENT_HANDLER_AUTHORIZATION,
+    path: "./worker.ts",
+    totalShards: gateway.manager.totalShards,
+    workerId,
+  };
 
-          break;
-        }
-        case "NONCE_REPLY": {
-          nonces.get(data.nonce)?.(data.data);
-        }
+  const worker = new Worker("./dist/gateway/worker.js", {
+    workerData,
+  });
+
+  worker.on("message", async (data: ManagerMessage) => {
+    log.info({ data });
+    switch (data.type) {
+      case "REQUEST_IDENTIFY": {
+        log.info("REQUESTING IDENTIFY #", data.shardId);
+        await gateway.manager.requestIdentify(data.shardId);
+
+        const allowIdentify: WorkerMessage = {
+          type: "ALLOW_IDENTIFY",
+          shardId: data.shardId,
+        };
+
+        worker.postMessage(allowIdentify);
+
+        break;
       }
-    });
-
-    return worker;
-  }
-
-  gateway.spawnShards();
-
-  const server = fastify();
-
-  server.post("/", async (request, reply) => {
-    if (request.headers.authorization !== GATEWAY_AUTHORIZATION) {
-      reply.code(StatusCodes.Unauthorized);
-
-      return reply.send({ processing: false, error: false, message: "Invalid authorization header." });
-    }
-
-    if (!request.body) {
-      reply.code(StatusCodes.BadRequest);
-
-      return reply.send({ processing: false, error: false, message: "Empty body." });
-    }
-
-    try {
-      const data = request.body as WorkerShardPayload | Omit<WorkerGetShardInfo, "nonce">;
-      switch (data.type) {
-        case "SHARD_PAYLOAD": {
-          const workerId = gateway.calculateWorkerId(data.shardId);
-          const worker = workers.get(workerId);
-
-          worker?.postMessage(data);
-
-          break;
-        }
-        case "GET_SHARD_INFO": {
-          const infos = await Promise.all(
-            workers.map(async (worker) => {
-              const nonce = nanoid();
-
-              return new Promise<WorkerShardInfo[]>((resolve) => {
-                worker.postMessage({ type: "GET_SHARD_INFO", nonce });
-
-                nonces.set(nonce, resolve);
-              });
-            }),
-          ).then((res) =>
-            res.reduce((acc, cur) => {
-              acc.push(...cur);
-              return acc;
-            }, [] as WorkerShardInfo[])
-          );
-
-          reply.code(StatusCodes.Ok);
-
-          return reply.send(infos);
-        }
+      case "NONCE_REPLY": {
+        nonces.get(data.nonce)?.(data.data);
       }
-
-      reply.code(StatusCodes.Ok);
-
-      return reply.send({ processing: true });
-    } catch {
-      reply.code(StatusCodes.BadRequest);
-
-      return reply.send({ processing: false, error: true, message: "Failed to parse body." });
     }
   });
 
-  server.listen({ host: GATEWAY_HOST, port: GATEWAY_PORT }).catch((error) => {
-    log.error(["[FASTIFY ERROR", error].join("\n"));
-    process.exit(1);
-  });
+  return worker;
 }
 
-main();
+gateway.spawnShards();
+
+const server = fastify();
+
+server.post("/", async (request, reply) => {
+  if (request.headers.authorization !== GATEWAY_AUTHORIZATION) {
+    reply.code(StatusCodes.Unauthorized);
+
+    return reply.send({ processing: false, error: false, message: "Invalid authorization header." });
+  }
+
+  if (!request.body) {
+    reply.code(StatusCodes.BadRequest);
+
+    return reply.send({ processing: false, error: false, message: "Empty body." });
+  }
+
+  try {
+    const data = request.body as WorkerShardPayload | Omit<WorkerGetShardInfo, "nonce">;
+    switch (data.type) {
+      case "SHARD_PAYLOAD": {
+        const workerId = gateway.calculateWorkerId(data.shardId);
+        const worker = workers.get(workerId);
+
+        worker?.postMessage(data);
+
+        break;
+      }
+      case "GET_SHARD_INFO": {
+        const infos = await Promise.all(
+          workers.map(async (worker) => {
+            const nonce = nanoid();
+
+            return new Promise<WorkerShardInfo[]>((resolve) => {
+              worker.postMessage({ type: "GET_SHARD_INFO", nonce });
+
+              nonces.set(nonce, resolve);
+            });
+          }),
+        ).then((res) =>
+          res.reduce((acc, cur) => {
+            acc.push(...cur);
+            return acc;
+          }, [] as WorkerShardInfo[])
+        );
+
+        reply.code(StatusCodes.Ok);
+
+        return reply.send(infos);
+      }
+    }
+
+    reply.code(StatusCodes.Ok);
+
+    return reply.send({ processing: true });
+  } catch {
+    reply.code(StatusCodes.BadRequest);
+
+    return reply.send({ processing: false, error: true, message: "Failed to parse body." });
+  }
+});
+
+server.listen({ port: GATEWAY_PORT }).catch((error) => {
+  log.error(["[FASTIFY ERROR", error].join("\n"));
+  process.exit(1);
+});
 
 export type ManagerMessage = ManagerRequestIdentify | ManagerNonceReply<WorkerShardInfo[]>;
 

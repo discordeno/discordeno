@@ -6,10 +6,18 @@ services:
       - 127.0.0.1:8086:8086
     env_file:
       - .env
+  rabbitmq:
+    build:
+      context: .
+      target: rabbitmq
+    ports:
+      - 127.0.0.1:15672:15672
   rest:
     build:
       context: .
       target: rest
+    deploy:
+      replicas: 2
     depends_on:
       - influxdb
     env_file:
@@ -20,6 +28,8 @@ services:
       target: gateway
     depends_on:
       - rest
+    deploy:
+      replicas: 2
     env_file:
       - .env
   bot:
@@ -28,5 +38,7 @@ services:
       target: bot
     depends_on:
       - rest
+    deploy:
+      replicas: 2
     env_file:
       - .env

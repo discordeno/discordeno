@@ -1,6 +1,6 @@
-import { setInteractionCreateEvent } from "./interactions/mod";
-import { setMessageCreateEvent } from "./messages/create";
-import { setRawEvent } from "./raw";
+import { setInteractionCreateEvent } from "./interactions/mod.js";
+import { setMessageCreateEvent } from "./messages/create.js";
+import { setRawEvent } from "./raw.js";
 
 export function setupEventHandlers() {
   setInteractionCreateEvent();
