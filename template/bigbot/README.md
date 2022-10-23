@@ -44,7 +44,7 @@ you will need to start a few processes. The instructions below will use `node` b
 help keep your processes alive.
 
 First, rename the .env.example file to .env, and set the discord token and your dev guild id, change the `REST_URL` and
-`EVENT_HANDLER_URL` to `localhost`, change value of `INFLUX_xxxx` to your influxdb config
+`EVENT_HANDLER_URL` to `localhost`
 
 Then compile everything with `npm run build`.
 
@@ -56,3 +56,11 @@ After that, you can start your bot one by one with the following order.
   - `npm run startb`
 - Start Gateway
   - `npm run startg`
+
+Other things you can add:
+
+- InfluxDB for logging fetch analytics, by change value of `INFLUX_xxxx` to your influxdb config, leave it empty will
+  disable it.
+- RabbitMQ for using message queues instead of fetch calls, by change value of `MESSAGEQUEUE_ENABLE` to true, and
+  `MESSAGEQUEUE_xxx` of your rabbitmq config <br/> Note: the RabbitMQ must installed the
+  [RabbitMQ Message Deduplication Plugin](https://github.com/noxdafox/rabbitmq-message-deduplication)
