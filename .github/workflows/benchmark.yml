@@ -12,8 +12,6 @@ jobs:
       - uses: denoland/setup-deno@main
         with:
           deno-version: v1.x
-      - name: Check Formatting
-        run: deno fmt --check
       - name: Run Benchmark
         run: NO_COLOR=true deno bench --unstable -A performance/mod.ts > output.txt
       - name: Format Benchmark Output
