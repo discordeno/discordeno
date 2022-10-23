@@ -8,7 +8,7 @@ for (const line of lines) {
   if (m === null) continue;
 
   const name = m[1].trim();
-  const value = Math.round(m[2]);
+  const value = Math.round(parseFloat(m[2]));
   const range = Math.round(
     parseFloat(m[6].replace(/\s+/g, " ").trim().split(" ")[2]) -
       parseFloat(m[6].replace(/\s+/g, " ").trim().split(" ")[0]),
