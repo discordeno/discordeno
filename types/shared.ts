@@ -20,6 +20,7 @@ export enum PremiumTypes {
   None,
   NitroClassic,
   Nitro,
+  NitroBasic
 }
 
 /** https://discord.com/developers/docs/resources/user#user-object-user-flags */
