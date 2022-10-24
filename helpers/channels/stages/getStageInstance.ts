@@ -1,6 +1,5 @@
 import type { Bot } from "../../../bot.ts";
 import { StageInstance } from "../../../transformers/stageInstance.ts";
-import { DiscordStageInstance } from "../../../types/discord.ts";
 import { BigString } from "../../../types/shared.ts";
 
 /**
@@ -13,11 +12,7 @@ import { BigString } from "../../../types/shared.ts";
  * @see {@link https://discord.com/developers/docs/resources/stage-instance#get-stage-instance}
  */
 export async function getStageInstance(bot: Bot, channelId: BigString): Promise<StageInstance> {
-  const result = await bot.rest.runMethod<DiscordStageInstance>(
-    bot.rest,
-    "GET",
-    bot.constants.routes.STAGE_INSTANCE(channelId),
-  );
+  const result = await bot.rest.getStageInstance(channelId);
 
   return bot.transformers.stageInstance(bot, result);
 }

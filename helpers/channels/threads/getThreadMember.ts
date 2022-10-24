@@ -1,6 +1,5 @@
 import type { Bot } from "../../../bot.ts";
 import { ThreadMember } from "../../../transformers/threadMember.ts";
-import { DiscordThreadMember } from "../../../types/discord.ts";
 import { BigString } from "../../../types/shared.ts";
 
 /**
@@ -14,11 +13,7 @@ import { BigString } from "../../../types/shared.ts";
  * @see {@link https://discord.com/developers/docs/resources/channel#get-thread-member}
  */
 export async function getThreadMember(bot: Bot, channelId: BigString, userId: BigString): Promise<ThreadMember> {
-  const result = await bot.rest.runMethod<DiscordThreadMember>(
-    bot.rest,
-    "GET",
-    bot.constants.routes.THREAD_USER(channelId, userId),
-  );
+  const result = await bot.rest.getThreadMember(channelId, userId);
 
   return bot.transformers.threadMember(bot, result);
 }

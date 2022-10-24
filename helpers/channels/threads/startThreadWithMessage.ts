@@ -29,17 +29,7 @@ export async function startThreadWithMessage(
   messageId: BigString,
   options: StartThreadWithMessage,
 ): Promise<Channel> {
-  const result = await bot.rest.runMethod<DiscordChannel>(
-    bot.rest,
-    "POST",
-    bot.constants.routes.THREAD_START_PUBLIC(channelId, messageId),
-    {
-      name: options.name,
-      auto_archive_duration: options.autoArchiveDuration,
-      rate_limit_per_user: options.rateLimitPerUser,
-      reason: options.reason,
-    },
-  );
+  const result = await bot.rest.startThreadWithMessage(channelId, messageId, options);
 
   return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(result.guild_id!) });
 }

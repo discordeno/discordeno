@@ -17,5 +17,5 @@ import { BigString } from "../../../types/shared.ts";
  * @see {@link https://discord.com/developers/docs/resources/channel#add-thread-member}
  */
 export async function addThreadMember(bot: Bot, channelId: BigString, userId: BigString): Promise<void> {
-  return await bot.rest.runMethod<void>(bot.rest, "PUT", bot.constants.routes.THREAD_USER(channelId, userId));
+  return await bot.rest.addThreadMember(channelId, userId);
 }

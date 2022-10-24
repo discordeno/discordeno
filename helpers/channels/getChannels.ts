@@ -17,11 +17,7 @@ import { Collection } from "../../util/collection.ts";
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-channels}
  */
 export async function getChannels(bot: Bot, guildId: BigString): Promise<Collection<bigint, Channel>> {
-  const results = await bot.rest.runMethod<DiscordChannel[]>(
-    bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_CHANNELS(guildId),
-  );
+  const results = await bot.rest.getChannels(guildId);
 
   const id = bot.transformers.snowflake(guildId);
 

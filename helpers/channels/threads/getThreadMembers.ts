@@ -1,6 +1,5 @@
 import type { Bot } from "../../../bot.ts";
 import { ThreadMember } from "../../../transformers/threadMember.ts";
-import { DiscordThreadMember } from "../../../types/discord.ts";
 import { BigString } from "../../../types/shared.ts";
 import { Collection } from "../../../util/collection.ts";
 
@@ -17,11 +16,7 @@ import { Collection } from "../../../util/collection.ts";
  * @see {@link https://discord.com/developers/docs/resources/channel#list-thread-members}
  */
 export async function getThreadMembers(bot: Bot, channelId: BigString): Promise<Collection<bigint, ThreadMember>> {
-  const results = await bot.rest.runMethod<DiscordThreadMember[]>(
-    bot.rest,
-    "GET",
-    bot.constants.routes.THREAD_MEMBERS(channelId),
-  );
+  const results = await bot.rest.getThreadMembers(channelId);
 
   return new Collection(
     results.map((result) => {

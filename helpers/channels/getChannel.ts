@@ -16,11 +16,7 @@ import { BigString } from "../../types/shared.ts";
  * @see {@link https://discord.com/developers/docs/resources/channel#get-channel}
  */
 export async function getChannel(bot: Bot, channelId: BigString): Promise<Channel> {
-  const result = await bot.rest.runMethod<DiscordChannel>(
-    bot.rest,
-    "GET",
-    bot.constants.routes.CHANNEL(channelId),
-  );
+  const result = await bot.rest.getChannel(channelId);
 
   // IF A CHANNEL DOESN'T EXIST, DISCORD RETURNS `{}`
   return bot.transformers.channel(bot, {

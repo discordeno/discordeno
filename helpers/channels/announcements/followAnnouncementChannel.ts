@@ -1,5 +1,4 @@
 import type { Bot } from "../../../bot.ts";
-import { DiscordFollowedChannel } from "../../../types/discord.ts";
 import { BigString } from "../../../types/shared.ts";
 
 /**
@@ -22,7 +21,7 @@ export async function followAnnouncementChannel(
   sourceChannelId: BigString,
   targetChannelId: BigString,
 ): Promise<bigint> {
-  const webhookId = await bot.rest.followAnnouncementChannel(sourceChannelId, targetChannelId);
+  const hook = await bot.rest.followAnnouncementChannel(sourceChannelId, targetChannelId);
 
-  return bot.transformers.snowflake(webhookId);
+  return bot.transformers.snowflake(hook.webhook_id);
 }

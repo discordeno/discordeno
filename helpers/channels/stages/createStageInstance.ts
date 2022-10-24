@@ -1,7 +1,6 @@
 import type { Bot } from "../../../bot.ts";
 import { BigString, WithReason } from "../../../mod.ts";
 import { StageInstance } from "../../../transformers/stageInstance.ts";
-import { DiscordStageInstance } from "../../../types/discord.ts";
 
 /**
  * Creates a stage instance associated with a stage channel.
@@ -18,17 +17,7 @@ import { DiscordStageInstance } from "../../../types/discord.ts";
  * @see {@link https://discord.com/developers/docs/resources/stage-instance#create-stage-instance}
  */
 export async function createStageInstance(bot: Bot, options: CreateStageInstance): Promise<StageInstance> {
-  const result = await bot.rest.runMethod<DiscordStageInstance>(
-    bot.rest,
-    "POST",
-    bot.constants.routes.STAGE_INSTANCES(),
-    {
-      channel_id: options.channelId.toString(),
-      topic: options.topic,
-      send_start_notification: options.sendStartNotification,
-      reason: options.reason,
-    },
-  );
+  const result = await bot.rest.createStageInstance(options);
 
   return bot.transformers.stageInstance(bot, result);
 }

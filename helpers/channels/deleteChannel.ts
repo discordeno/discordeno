@@ -27,12 +27,5 @@ import { BigString } from "../../types/shared.ts";
  * @see {@link https://discord.com/developers/docs/resources/channel#deleteclose-channel}
  */
 export async function deleteChannel(bot: Bot, channelId: BigString, reason?: string): Promise<void> {
-  return await bot.rest.runMethod<void>(
-    bot.rest,
-    "DELETE",
-    bot.constants.routes.CHANNEL(channelId),
-    {
-      reason,
-    },
-  );
+  return await bot.rest.deleteChannel(channelId, reason);
 }

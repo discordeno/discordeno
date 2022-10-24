@@ -27,11 +27,7 @@ export async function getPrivateArchivedThreads(
   channelId: BigString,
   options?: ListArchivedThreads,
 ): Promise<ArchivedThreads> {
-  const results = await bot.rest.runMethod<DiscordListArchivedThreads>(
-    bot.rest,
-    "GET",
-    bot.constants.routes.THREAD_ARCHIVED_PRIVATE(channelId, options),
-  );
+  const results = await bot.rest.getPrivateArchivedThreads(channelId, options);
 
   return {
     threads: new Collection(

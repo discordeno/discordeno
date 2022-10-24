@@ -23,17 +23,7 @@ export async function editChannelPermissionOverrides(
   channelId: BigString,
   options: EditChannelPermissionOverridesOptions,
 ): Promise<void> {
-  return await bot.rest.runMethod<void>(
-    bot.rest,
-    "PUT",
-    bot.constants.routes.CHANNEL_OVERWRITE(channelId, options.id),
-    {
-      allow: options.allow ? bot.utils.calculateBits(options.allow) : "0",
-      deny: options.deny ? bot.utils.calculateBits(options.deny) : "0",
-      type: options.type,
-      reason: options.reason,
-    },
-  );
+  return await bot.rest.editChannelPermissionOverrides(channelId, options);
 }
 
 export interface EditChannelPermissionOverridesOptions extends OverwriteReadable, WithReason {}

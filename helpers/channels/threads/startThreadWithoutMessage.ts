@@ -24,19 +24,7 @@ export async function startThreadWithoutMessage(
   channelId: BigString,
   options: StartThreadWithoutMessage,
 ): Promise<Channel> {
-  const result = await bot.rest.runMethod<DiscordChannel>(
-    bot.rest,
-    "POST",
-    bot.constants.routes.THREAD_START_PRIVATE(channelId),
-    {
-      name: options.name,
-      auto_archive_duration: options.autoArchiveDuration,
-      rate_limit_per_user: options.rateLimitPerUser,
-      type: options.type,
-      invitable: options.invitable,
-      reason: options.reason,
-    },
-  );
+  const result = await bot.rest.startThreadWithoutMessage(channelId, options);
 
   return bot.transformers.channel(bot, {
     channel: result,

@@ -1,7 +1,6 @@
 import type { Bot } from "../../../bot.ts";
 import { Channel } from "../../../transformers/channel.ts";
 import { Embed } from "../../../transformers/embed.ts";
-import { DiscordChannel } from "../../../types/discord.ts";
 import { AllowedMentions, BigString, FileContent, MessageComponents, WithReason } from "../../../types/mod.ts";
 
 /**
@@ -27,30 +26,7 @@ export async function createForumThread(
   channelId: BigString,
   options: CreateForumPostWithMessage,
 ): Promise<Channel> {
-  const result = await bot.rest.runMethod<DiscordChannel>(
-    bot.rest,
-    "POST",
-    bot.constants.routes.FORUM_START(channelId),
-    {
-      name: options.name,
-      auto_archive_duration: options.autoArchiveDuration,
-      rate_limit_per_user: options.rateLimitPerUser,
-      reason: options.reason,
-
-      content: options.content,
-      embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
-      allowed_mentions: options.allowedMentions
-        ? {
-          parse: options.allowedMentions?.parse,
-          roles: options.allowedMentions?.roles?.map((id) => id.toString()),
-          users: options.allowedMentions?.users?.map((id) => id.toString()),
-          replied_user: options.allowedMentions?.repliedUser,
-        }
-        : undefined,
-      file: options.file,
-      components: options.components?.map((component) => bot.transformers.reverse.component(bot, component)),
-    },
-  );
+  const result = await bot.rest.createForumThread(channelId, options);
 
   return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(result.guild_id!) });
 }

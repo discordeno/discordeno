@@ -21,10 +21,5 @@ export async function deleteChannelPermissionOverride(
   overwriteId: BigString,
   reason?: string,
 ): Promise<void> {
-  return await bot.rest.runMethod<void>(
-    bot.rest,
-    "DELETE",
-    bot.constants.routes.CHANNEL_OVERWRITE(channelId, overwriteId),
-    reason ? { reason } : undefined,
-  );
+  return await bot.rest.deleteChannelPermissionOverride(channelId, overwriteId, reason);
 }

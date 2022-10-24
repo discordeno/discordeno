@@ -62,50 +62,7 @@ export async function editChannel(bot: Bot, channelId: BigString, options: Modif
     }
   }
 
-  const result = await bot.rest.runMethod<DiscordChannel>(
-    bot.rest,
-    "PATCH",
-    bot.constants.routes.CHANNEL(channelId),
-    {
-      name: options.name,
-      topic: options.topic,
-      bitrate: options.bitrate,
-      user_limit: options.userLimit,
-      rate_limit_per_user: options.rateLimitPerUser,
-      position: options.position,
-      parent_id: options.parentId === null ? null : options.parentId?.toString(),
-      nsfw: options.nsfw,
-      type: options.type,
-      archived: options.archived,
-      auto_archive_duration: options.autoArchiveDuration,
-      locked: options.locked,
-      invitable: options.invitable,
-      permission_overwrites: options.permissionOverwrites
-        ? options.permissionOverwrites?.map((overwrite) => ({
-          id: overwrite.id.toString(),
-          type: overwrite.type,
-          allow: overwrite.allow ? bot.utils.calculateBits(overwrite.allow) : null,
-          deny: overwrite.deny ? bot.utils.calculateBits(overwrite.deny) : null,
-        }))
-        : undefined,
-      available_tags: options.availableTags
-        ? options.availableTags.map((availableTag) => ({
-          id: availableTag.id,
-          name: availableTag.name,
-          moderated: availableTag.moderated,
-          emoji_id: availableTag.emojiId,
-          emoji_name: availableTag.emojiName,
-        }))
-        : undefined,
-      default_reaction_emoji: options.defaultReactionEmoji
-        ? {
-          emoji_id: options.defaultReactionEmoji.emojiId,
-          emoji_name: options.defaultReactionEmoji.emojiName,
-        }
-        : undefined,
-      reason: options.reason,
-    },
-  );
+  const result = await bot.rest.editChannel(channelId, options);
 
   return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(result.guild_id!) });
 }
