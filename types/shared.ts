@@ -892,6 +892,7 @@ export enum JsonErrorCodes {
   /** Invalid form body (returned for both `application/json` and `multipart/form-data` bodies), or invalid `Content-Type` provided */
   InvalidFormBodyOrContentTypeProvided,
   AnInviteWasAcceptedToAGuildTheApplicationsBotIsNotIn,
+  InvalidActivityAction = 50039,
   InvalidApiVersionProvided = 50041,
   FileUploadedExceedsTheMaximumSize = 50045,
   InvalidFileUploaded,
