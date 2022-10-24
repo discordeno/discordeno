@@ -413,9 +413,9 @@ export function createBaseHelpers(options: Partial<Helpers>) {
 
 export interface Transformers {
   reverse: {
-    allowedMentions: (bot: Bot, payload: AllowedMentions) => DiscordAllowedMentions;
-    embed: (bot: Bot, payload: Embed) => DiscordEmbed;
-    component: (bot: Bot, payload: Component) => DiscordComponent;
+    allowedMentions: (payload: AllowedMentions) => DiscordAllowedMentions;
+    embed: (payload: Embed) => DiscordEmbed;
+    component: (payload: Component) => DiscordComponent;
     activity: (bot: Bot, payload: Activity) => DiscordActivity;
     member: (bot: Bot, payload: Member) => DiscordMember;
     user: (bot: Bot, payload: User) => DiscordUser;
@@ -430,7 +430,7 @@ export interface Transformers {
       payload: ApplicationCommandOptionChoice,
     ) => DiscordApplicationCommandOptionChoice;
     interactionResponse: (bot: Bot, payload: InteractionResponse) => DiscordInteractionResponse;
-    attachment: (bot: Bot, payload: Attachment) => DiscordAttachment;
+    attachment: (payload: Attachment) => DiscordAttachment;
   };
   snowflake: (snowflake: BigString) => bigint;
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot;
