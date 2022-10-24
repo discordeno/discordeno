@@ -1,5 +1,5 @@
-import { ApplicationCommandOption, Bot, CreateSlashApplicationCommand } from "../deps.ts";
-export function validateApplicationCommandLength(bot: Bot, options: CreateSlashApplicationCommand) {
+import { ApplicationCommandOption, CreateSlashApplicationCommand } from "../deps.ts";
+export function validateApplicationCommandLength(options: CreateSlashApplicationCommand) {
   let length = 0;
   if (options.nameLocalizations) {
     length += Math.max(options.name.length, ...Object.values(options.nameLocalizations).map((name) => name.length));
@@ -12,7 +12,7 @@ export function validateApplicationCommandLength(bot: Bot, options: CreateSlashA
   } else {
     length += options.description.length;
   }
-  if (options.options) length += validateApplicationCommandOptionLength(bot, options.options);
+  if (options.options) length += validateApplicationCommandOptionLength(options.options);
 
   if (length > 4000) {
     throw new Error(
@@ -21,7 +21,7 @@ export function validateApplicationCommandLength(bot: Bot, options: CreateSlashA
   }
 }
 
-function validateApplicationCommandOptionLength(bot: Bot, options: ApplicationCommandOption[]) {
+function validateApplicationCommandOptionLength(options: ApplicationCommandOption[]) {
   let length = 0;
   for (const option of options) {
     if (option.nameLocalizations) {
@@ -45,7 +45,7 @@ function validateApplicationCommandOptionLength(bot: Bot, options: ApplicationCo
       }
     }
 
-    if (option.options) length += validateApplicationCommandOptionLength(bot, option.options);
+    if (option.options) length += validateApplicationCommandOptionLength(option.options);
   }
   return length;
 }
