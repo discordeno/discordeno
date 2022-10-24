@@ -20,7 +20,7 @@ export enum PremiumTypes {
   None,
   NitroClassic,
   Nitro,
-  NitroBasic
+  NitroBasic,
 }
 
 /** https://discord.com/developers/docs/resources/user#user-object-user-flags */
@@ -206,6 +206,8 @@ export enum GuildFeatures {
   Partnered = "PARTNERED",
   /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
   Community = "COMMUNITY",
+  /** Guild has been set as a support server on the App Directory */
+  DeveloperSupportServer = "DEVELOPER_SUPPORT_SERVER",
   /** Guild has access to create news channels */
   News = "NEWS",
   /** Guild is able to be discovered in the directory */

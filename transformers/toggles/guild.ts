@@ -9,6 +9,7 @@ const featureNames = [
   "verified",
   "partnered",
   "community",
+  "developerSupportServer",
   "news",
   "discoverable",
   "featurable",
@@ -85,6 +86,8 @@ export const GuildToggle = {
   autoModeration: 1n << 28n,
   /** Whether the guild has paused invites, preventing new users from joining */
   invitesDisabled: 1n << 29n,
+  /** Whether the guild has been set as a support server on the App Directory */
+  developerSupportServer: 1n << 30n,
 };
 
 export class GuildToggles extends ToggleBitfieldBigint {
@@ -107,6 +110,7 @@ export class GuildToggles extends ToggleBitfieldBigint {
       if (guild.features.includes(GuildFeatures.Verified)) this.add(GuildToggle.verified);
       if (guild.features.includes(GuildFeatures.Partnered)) this.add(GuildToggle.partnered);
       if (guild.features.includes(GuildFeatures.Community)) this.add(GuildToggle.community);
+      if (guild.features.includes(GuildFeatures.DeveloperSupportServer)) this.add(GuildToggle.developerSupportServer);
       if (guild.features.includes(GuildFeatures.AnimatedBanner)) this.add(GuildToggle.animatedBanner);
       if (guild.features.includes(GuildFeatures.News)) this.add(GuildToggle.news);
       if (guild.features.includes(GuildFeatures.Discoverable)) this.add(GuildToggle.discoverable);
@@ -188,6 +192,10 @@ export class GuildToggles extends ToggleBitfieldBigint {
   /** Whether the guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
   get community() {
     return this.has("community");
+  }
+  /** Whether the Guild has been set as a support server on the App Directory */
+  get developerSupportServer() {
+    return this.has("developerSupportServer");
   }
   /** Whether the guild has access to set an animated guild banner image */
   get animatedBanner() {
