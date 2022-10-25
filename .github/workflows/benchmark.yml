@@ -19,5 +19,7 @@ jobs:
       - name: Store benchmark result
         uses: benchmark-action/github-action-benchmark@v1
         with:
-          tool: "cargo"
+          tool: "customSmallerIsBetter"
           output-file-path: output.txt
+          gh-pages-branch: "main"
+          benchmark-data-dir-path: performance/benchmarkData
