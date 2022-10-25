@@ -6,13 +6,10 @@ const bot = loadBot();
 const oldBot = oldLoadBot();
 
 // Fetch the discord api docs Guild page
-const discordApiDocsGuildMd =
-  await (await fetch("https://raw.githubusercontent.com/discord/discord-api-docs/main/docs/resources/Guild.md")).text();
-
-// Get the first code block after the Get Guild section and remove ```json and ```
 const discordGuild = JSON.parse(
-  (discordApiDocsGuildMd.split("Get Guild %")[1].match(/```json([\S\s]*?)```/) as string[])[0].slice(8, -4),
+  await (await fetch("https://github.com/H01001000/benchmarks/raw/main/exampleObjects/objects/guild.json")).text(),
 );
+
 const currentGuild = bot.transformers.guild(bot, { guild: discordGuild, shardId: 0 });
 const previousGuild = oldBot.transformers.guild(bot, { guild: discordGuild, shardId: 0 });
 
@@ -25,11 +22,11 @@ Deno.bench("[Guild.toggles.features - Previous] Get the features of a guild", ()
 });
 
 // Fetch the discord api docs User page
-const discordApiDocsUserMd =
-  await (await fetch("https://raw.githubusercontent.com/discord/discord-api-docs/main/docs/resources/User.md")).text();
+const discordUser = JSON.parse(
+  await (await fetch("https://github.com/H01001000/benchmarks/raw/main/exampleObjects/objects/user.json")).text(),
+);
 
 // Get the first code block and remove ```json and ```
-const discordUser = JSON.parse((discordApiDocsUserMd.match(/```json([\S\s]*?)```/) as string[])[0].slice(8, -4));
 const newUser = bot.transformers.user(bot, discordUser);
 const oldUser = oldBot.transformers.user(oldBot, discordUser);
 
