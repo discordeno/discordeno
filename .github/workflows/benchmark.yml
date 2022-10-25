@@ -12,6 +12,8 @@ jobs:
       - uses: denoland/setup-deno@main
         with:
           deno-version: v1.x
+      - name: Cache deps
+        run: deno cache performance/mod.ts
       - name: Run Benchmark
         run: NO_COLOR=true deno bench --unstable -A performance/mod.ts | tee output.txt
       - name: Format Benchmark Output
