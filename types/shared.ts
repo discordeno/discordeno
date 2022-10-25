@@ -20,6 +20,7 @@ export enum PremiumTypes {
   None,
   NitroClassic,
   Nitro,
+  NitroBasic,
 }
 
 /** https://discord.com/developers/docs/resources/user#user-object-user-flags */
@@ -205,6 +206,8 @@ export enum GuildFeatures {
   Partnered = "PARTNERED",
   /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
   Community = "COMMUNITY",
+  /** Guild has been set as a support server on the App Directory */
+  DeveloperSupportServer = "DEVELOPER_SUPPORT_SERVER",
   /** Guild has access to create news channels */
   News = "NEWS",
   /** Guild is able to be discovered in the directory */
@@ -889,6 +892,7 @@ export enum JsonErrorCodes {
   /** Invalid form body (returned for both `application/json` and `multipart/form-data` bodies), or invalid `Content-Type` provided */
   InvalidFormBodyOrContentTypeProvided,
   AnInviteWasAcceptedToAGuildTheApplicationsBotIsNotIn,
+  InvalidActivityAction = 50039,
   InvalidApiVersionProvided = 50041,
   FileUploadedExceedsTheMaximumSize = 50045,
   InvalidFileUploaded,
