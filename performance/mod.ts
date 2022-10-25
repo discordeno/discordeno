@@ -11,7 +11,7 @@ const discordGuild = JSON.parse(
 );
 
 const currentGuild = bot.transformers.guild(bot, { guild: discordGuild, shardId: 0 });
-const previousGuild = oldBot.transformers.guild(bot, { guild: discordGuild, shardId: 0 });
+const previousGuild = oldBot.transformers.guild(oldBot, { guild: discordGuild, shardId: 0 });
 
 Deno.bench("[Guild.toggles.features - Current] Get the features of a guild", () => {
   currentGuild.toggles.features;
