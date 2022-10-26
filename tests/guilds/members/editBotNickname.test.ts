@@ -4,7 +4,7 @@ import { CACHED_COMMUNITY_GUILD_ID } from "../../utils.ts";
 
 Deno.test({
   name: "[misc] edit a bot's nickname",
-  async fn() {
+  async fn(t) {
     const bot = loadBot();
 
     const nick = "lts20050703";

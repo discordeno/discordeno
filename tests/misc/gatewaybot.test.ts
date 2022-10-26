@@ -3,7 +3,7 @@ import { loadBot } from "../mod.ts";
 
 Deno.test({
   name: "[misc] Get gateway bot information",
-  async fn() {
+  async fn(t) {
     const bot = loadBot();
     const data = await bot.helpers.getGatewayBot();
 

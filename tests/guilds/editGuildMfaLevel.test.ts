@@ -4,7 +4,7 @@ import { loadBot } from "../mod.ts";
 
 Deno.test({
   name: "[guild] edit guild mfa level",
-  async fn() {
+  async fn(t) {
     const bot = loadBot();
     const guild = await bot.helpers.createGuild({ name: "test" });
     await bot.helpers.editGuildMfaLevel(guild.id, MfaLevels.Elevated, "test");

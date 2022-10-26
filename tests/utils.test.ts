@@ -21,7 +21,7 @@ Deno.test({
 
 Deno.test({
   name: "[bigint] - Transform a snowflake string to bigint",
-  async fn() {
+  async fn(t) {
     const text = "130136895395987456";
     const big = 130136895395987456n;
     const result = snowflakeToBigint(text);
@@ -33,7 +33,7 @@ Deno.test({
 
 Deno.test({
   name: "[bigint] - Transform a bigint to a string",
-  async fn() {
+  async fn(t) {
     const text = "130136895395987456";
     const big = 130136895395987456n;
     const result = bigintToSnowflake(big);
@@ -45,7 +45,7 @@ Deno.test({
 
 Deno.test({
   name: "[emoji] Create an emoji url",
-  async fn() {
+  async fn(t) {
     const bot = loadBot();
     assertEquals(
       bot.helpers.getEmojiURL(785403373817823272n, false),
@@ -96,7 +96,7 @@ Deno.test({
 
 Deno.test({
   name: "[utils] format image url",
-  async fn() {
+  async fn(t) {
     assertEquals(formatImageURL(`https://skillz.is.pro`), "https://skillz.is.pro.jpg?size=128");
     assertEquals(formatImageURL(`https://skillz.is.pro`, 1024), "https://skillz.is.pro.jpg?size=1024");
     assertEquals(formatImageURL(`https://skillz.is.pro`, 1024, "gif"), "https://skillz.is.pro.gif?size=1024");
@@ -111,70 +111,70 @@ const a_iconBigInt = 3503487521485885045056617826984736090062n;
 
 Deno.test({
   name: "[utils] icon hash to bigint",
-  async fn() {
+  async fn(t) {
     assertEquals(iconHashToBigInt(iconHash), iconBigInt);
   },
 });
 
 Deno.test({
   name: "[utils] icon bigint to hash",
-  async fn() {
+  async fn(t) {
     assertEquals(iconBigintToHash(iconBigInt), iconHash);
   },
 });
 
 Deno.test({
   name: "[utils] icon hash to bigint a_ (animated)",
-  async fn() {
+  async fn(t) {
     assertEquals(iconHashToBigInt(a_iconHash), a_iconBigInt);
   },
 });
 
 Deno.test({
   name: "[utils] icon bigint to hash a_ (animated)",
-  async fn() {
+  async fn(t) {
     assertEquals(iconBigintToHash(a_iconBigInt), a_iconHash);
   },
 });
 
 Deno.test({
   name: "[utils] Validate length is too low",
-  async fn() {
+  async fn(t) {
     assertEquals(validateLength("test", { min: 5 }), false);
   },
 });
 
 Deno.test({
   name: "[utils] Validate length is too high",
-  async fn() {
+  async fn(t) {
     assertEquals(validateLength("test", { max: 3 }), false);
   },
 });
 
 Deno.test({
   name: "[utils] Validate length is NOT just right in between.",
-  async fn() {
+  async fn(t) {
     assertEquals(validateLength("test", { min: 5, max: 3 }), false);
   },
 });
 
 Deno.test({
   name: "[utils] Validate length is NOT too low",
-  async fn() {
+  async fn(t) {
     assertEquals(validateLength("test", { min: 3 }), true);
   },
 });
 
 Deno.test({
   name: "[utils] Validate length is NOT too high",
-  async fn() {
+  async fn(t) {
     assertEquals(validateLength("test", { max: 5 }), true);
   },
 });
 
 Deno.test({
   name: "[utils] Validate length is just right in between.",
-  async fn() {
+  async fn(t) {
     assertEquals(validateLength("test", { min: 3, max: 6 }), true);
   },
 });
@@ -183,14 +183,14 @@ const obj = { prop: "lts372005" };
 
 Deno.test({
   name: "[utils] hasProperty does HAVE property",
-  async fn() {
+  async fn(t) {
     assertEquals(hasProperty(obj, "prop"), true);
   },
 });
 
 Deno.test({
   name: "[utils] hasProperty does NOT HAVE property",
-  async fn() {
+  async fn(t) {
     assertEquals(hasProperty(obj, "lts372005"), false);
   },
 });

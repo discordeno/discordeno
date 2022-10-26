@@ -4,7 +4,7 @@ import { CACHED_COMMUNITY_GUILD_ID } from "../utils.ts";
 
 Deno.test({
   name: "[stickers] Get guild stickers",
-  async fn() {
+  async fn(t) {
     const bot = loadBot();
     const sticker1 = await bot.helpers.createGuildSticker(CACHED_COMMUNITY_GUILD_ID, {
       name: "sticker 1",

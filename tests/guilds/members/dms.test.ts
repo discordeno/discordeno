@@ -3,7 +3,7 @@ import { loadBot } from "../../mod.ts";
 
 Deno.test({
   name: "[member] get dm channel and send a message",
-  async fn() {
+  async fn(t) {
     const bot = loadBot();
     // Itoh Alt ID
     const channel = await bot.helpers.getDmChannel(750661528360845322n);
