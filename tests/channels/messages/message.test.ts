@@ -1,10 +1,11 @@
 import { ButtonStyles, ChannelTypes, delay, MessageComponentTypes } from "../../../mod.ts";
-import { assertEquals, assertExists, assertNotEquals, assertRejects } from "../../deps.ts";
+import { assertEquals, assertExists, assertRejects } from "../../deps.ts";
 import { loadBot } from "../../mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../../utils.ts";
 
 Deno.test({
   name: "[messages] Run message related unit tests",
+  ignore: Deno.env.get("TEST_ENV") === "UNIT",
   async fn(t) {
     const bot = loadBot();
     const channel = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, {

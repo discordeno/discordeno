@@ -5,6 +5,7 @@ import { CACHED_COMMUNITY_GUILD_ID } from "../utils.ts";
 
 Deno.test({
   name: "[stage] Create a stage instance",
+  ignore: Deno.env.get("TEST_ENV") === "UNIT",
   async fn(t) {
     const bot = loadBot();
     const stage = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, {

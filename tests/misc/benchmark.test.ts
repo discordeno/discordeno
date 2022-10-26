@@ -4,7 +4,7 @@
 
 // Deno.test({
 //   name: "[Memory] Benchmark memory tests",
-//   fn: async (t) => {
+//   async fn (t) {
 //     const bot = enableCachePlugin(loadBot());
 
 //     await memoryBenchmarks(bot, {
