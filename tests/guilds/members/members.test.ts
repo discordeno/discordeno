@@ -4,6 +4,7 @@ import { CACHED_COMMUNITY_GUILD_ID } from "../../utils.ts";
 
 Deno.test({
   name: "[member] fetches the bot and compares the bot's id with the fetched member's id",
+  ignore: Deno.env.get("TEST_ENV") === "UNIT",
   async fn(t) {
     const bot = loadBot();
     const member = await bot.helpers.getMember(CACHED_COMMUNITY_GUILD_ID, bot.id);
@@ -14,6 +15,7 @@ Deno.test({
 
 Deno.test({
   name: "[member] Gets a member list and checks if the bot is in the member list",
+  ignore: Deno.env.get("TEST_ENV") === "UNIT",
   async fn(t) {
     const bot = loadBot();
 

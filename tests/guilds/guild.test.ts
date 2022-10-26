@@ -4,6 +4,7 @@ import { loadBot } from "../mod.ts";
 
 Deno.test({
   name: "[guild] Create a guild",
+  ignore: Deno.env.get("TEST_ENV") === "UNIT",
   async fn(t) {
     const bot = loadBot();
 

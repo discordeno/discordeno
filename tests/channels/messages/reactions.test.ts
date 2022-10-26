@@ -4,6 +4,7 @@ import { CACHED_COMMUNITY_GUILD_ID } from "../../utils.ts";
 
 Deno.test({
   name: "[message] reaction related unit tests",
+  ignore: Deno.env.get("TEST_ENV") === "UNIT",
   async fn(t) {
     const bot = loadBot();
 

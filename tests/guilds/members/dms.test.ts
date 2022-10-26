@@ -3,6 +3,7 @@ import { loadBot } from "../../mod.ts";
 
 Deno.test({
   name: "[member] get dm channel and send a message",
+  ignore: Deno.env.get("TEST_ENV") === "UNIT",
   async fn(t) {
     const bot = loadBot();
     // Itoh Alt ID
