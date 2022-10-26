@@ -9,7 +9,7 @@ jobs:
     name: Format Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: denoland/setup-deno@main
         with:
           deno-version: v1.x
@@ -19,7 +19,7 @@ jobs:
     name: Type Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: denoland/setup-deno@main
         with:
           deno-version: v1.x
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     concurrency: integration-test
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: denoland/setup-deno@main
         with:
           deno-version: v1.x
@@ -59,7 +59,7 @@ jobs:
     name: Unit Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: denoland/setup-deno@main
         with:
           deno-version: v1.x
