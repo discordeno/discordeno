@@ -8,27 +8,21 @@ jobs:
   format-test:
     name: Format Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        deno: ["v1.x"]
     steps:
       - uses: actions/checkout@v2
       - uses: denoland/setup-deno@main
         with:
-          deno-version: ${{ matrix.deno }}
+          deno-version: v1.x
       - name: Check Formatting
         run: deno fmt --check
   type-test:
     name: Type Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        deno: ["v1.x"]
     steps:
       - uses: actions/checkout@v2
       - uses: denoland/setup-deno@main
         with:
-          deno-version: ${{ matrix.deno }}
+          deno-version: v1.x
       - name: Check dependencies
         run: deno check mod.ts
       - name: Check plugins
@@ -38,14 +32,11 @@ jobs:
   integration-test:
     name: Integration Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        deno: ["v1.x"]
     steps:
       - uses: actions/checkout@v2
       - uses: denoland/setup-deno@main
         with:
-          deno-version: ${{ matrix.deno }}
+          deno-version: v1.x
       - name: Run integration
         # if: ${{ github.actor == 'Skillz4Killz' || github.actor == 'itohatweb' }}
         run: deno test --coverage=coverage -A tests/
@@ -66,14 +57,11 @@ jobs:
   unit-test:
     name: Unit Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        deno: ["v1.x"]
     steps:
       - uses: actions/checkout@v2
       - uses: denoland/setup-deno@main
         with:
-          deno-version: ${{ matrix.deno }}
+          deno-version: v1.x
       - name: Run integration
         run: deno test --coverage=coverage --parallel -A tests/
         env:
