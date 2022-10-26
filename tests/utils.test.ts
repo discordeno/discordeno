@@ -19,22 +19,28 @@ Deno.test({
   },
 });
 
-Deno.test("[bigint] - Transform a snowflake string to bigint", () => {
-  const text = "130136895395987456";
-  const big = 130136895395987456n;
-  const result = snowflakeToBigint(text);
+Deno.test({
+  name: "[bigint] - Transform a snowflake string to bigint",
+  fn() {
+    const text = "130136895395987456";
+    const big = 130136895395987456n;
+    const result = snowflakeToBigint(text);
 
-  assertEquals(big, result);
-  assertNotEquals(text, result);
+    assertEquals(big, result);
+    assertNotEquals(text, result);
+  },
 });
 
-Deno.test("[bigint] - Transform a bigint to a string", () => {
-  const text = "130136895395987456";
-  const big = 130136895395987456n;
-  const result = bigintToSnowflake(big);
+Deno.test({
+  name: "[bigint] - Transform a bigint to a string",
+  fn() {
+    const text = "130136895395987456";
+    const big = 130136895395987456n;
+    const result = bigintToSnowflake(big);
 
-  assertEquals(text, result);
-  assertNotEquals(big, result);
+    assertEquals(text, result);
+    assertNotEquals(big, result);
+  },
 });
 
 Deno.test({
