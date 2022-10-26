@@ -3,7 +3,7 @@ import { loadBot } from "../mod.ts";
 
 Deno.test({
   name: "[User] get a user and transform",
-  fn: async (t) => {
+  async fn(t) {
     const bot = loadBot();
     const user = await bot.helpers.getUser(bot.id);
     assertExists(user?.id);

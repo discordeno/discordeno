@@ -4,7 +4,7 @@ import { CACHED_COMMUNITY_GUILD_ID } from "../../utils.ts";
 
 Deno.test({
   name: "[message] reaction related unit tests",
-  fn: async (t) => {
+  async fn(t) {
     const bot = loadBot();
 
     const channel = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, { name: "reactions" });

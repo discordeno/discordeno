@@ -60,7 +60,7 @@ Deno.test({
 
 Deno.test({
   name: "[guild] format a guild's icon url",
-  fn: async () => {
+  async fn(t) {
     const bot = loadBot();
     assertEquals(
       bot.helpers.getGuildIconURL(785384884197392384n, 3837424427068676005442449262648382018748n),
@@ -71,7 +71,7 @@ Deno.test({
 
 Deno.test({
   name: "[guild] format a guild's banner url",
-  fn: async () => {
+  async fn(t) {
     const bot = loadBot();
 
     assertEquals(
@@ -85,7 +85,7 @@ Deno.test({
 
 Deno.test({
   name: "[guild] format a guild's splash url",
-  fn: async () => {
+  async fn(t) {
     const bot = loadBot();
     assertEquals(
       bot.helpers.getGuildSplashURL(785384884197392384n, 3837424427068676005442449262648382018748n),
@@ -197,7 +197,7 @@ Deno.test({
 
 Deno.test({
   name: "[member] format a members avatar url",
-  fn: async (t) => {
+  async fn(t) {
     const bot = loadBot();
 
     assertEquals(
@@ -211,14 +211,14 @@ Deno.test({
 
 Deno.test({
   name: "[collection] Create a collection",
-  fn: async (t) => {
+  async fn(t) {
     const collection = new Collection();
 
     assertExists(collection);
 
     await t.step({
       name: "[collection] collection values to array",
-      fn: async (t) => {
+      async fn(t) {
         const testCollection = new Collection([["best", "tri"], ["proficient", "yui"]]);
 
         assertEquals(testCollection.array(), ["tri", "yui"]);
@@ -227,7 +227,7 @@ Deno.test({
 
     await t.step({
       name: "[collection] get a random value",
-      fn: async (t) => {
+      async fn(t) {
         const testCollection = new Collection([["best", "tri"]]);
 
         assertEquals(["best", "tri"].includes(testCollection.random() ?? ""), true);
@@ -237,7 +237,7 @@ Deno.test({
 
     await t.step({
       name: "[collection] Set a value without maxSize",
-      fn: async (t) => {
+      async fn(t) {
         collection.set("best developer", "triformine");
         assertEquals(collection.size, 1);
         assertEquals(collection.get("best developer"), "triformine");
@@ -246,14 +246,14 @@ Deno.test({
 
         await t.step({
           name: "[collection] get the value of the first element",
-          fn: async (t) => {
+          async fn(t) {
             assertEquals(collection.first(), "triformine");
           },
         });
 
         await t.step({
           name: "[collection] get the value of the last element",
-          fn: async (t) => {
+          async fn(t) {
             assertEquals(collection.last(), "yes");
           },
         });
@@ -262,7 +262,7 @@ Deno.test({
 
     await t.step({
       name: "[collection] Create a collection with maxSize",
-      fn: async (t) => {
+      async fn(t) {
         const maxSize = 2;
 
         const maxCollection = new Collection([], {
@@ -275,7 +275,7 @@ Deno.test({
 
         await t.step({
           name: "[collection] Test if maxSize works properly",
-          fn: async (t) => {
+          async fn(t) {
             maxCollection.set("foo", "bar");
             maxCollection.set("me", "you");
 
@@ -287,7 +287,7 @@ Deno.test({
 
             await t.step({
               name: "[collection] Test if forceSet ignore maxSize",
-              fn: async (t) => {
+              async fn(t) {
                 maxCollection.forceSet("this", "not");
 
                 assertEquals(maxCollection.size, 3);
@@ -302,7 +302,7 @@ Deno.test({
 
     await t.step({
       name: "[collection] find by key or value",
-      fn: async (t) => {
+      async fn(t) {
         assertEquals(testCollection.find((v, k) => v === 2), 2);
         assertEquals(testCollection.find((v, k) => k === "b"), 2);
       },
@@ -310,7 +310,7 @@ Deno.test({
 
     await t.step({
       name: "[collection] filter by key or value",
-      fn: async (t) => {
+      async fn(t) {
         assertEquals(testCollection.filter((v, k) => v === 3).size, 1);
         assertEquals(testCollection.filter((v, k) => k === "d").size, 0);
       },
@@ -318,14 +318,14 @@ Deno.test({
 
     await t.step({
       name: "[collection] map",
-      fn: async (t) => {
+      async fn(t) {
         assertEquals(testCollection.map((k, v) => `${v}${k}`), ["a1", "b2", "c3"]);
       },
     });
 
     await t.step({
       name: "[collection] some",
-      fn: async (t) => {
+      async fn(t) {
         assertEquals(testCollection.some((v, _) => v === 1), true);
         assertEquals(testCollection.some((v, _) => v === 4), false);
       },
@@ -333,7 +333,7 @@ Deno.test({
 
     await t.step({
       name: "[collection] every",
-      fn: async (t) => {
+      async fn(t) {
         assertEquals(testCollection.every((v, _) => v !== 0), true);
         assertEquals(testCollection.every((v, _) => v === 1), false);
       },
@@ -341,14 +341,14 @@ Deno.test({
 
     await t.step({
       name: "[collection] reduce",
-      fn: async (t) => {
+      async fn(t) {
         assertEquals(testCollection.reduce((acc, val) => acc + val, 0), 6);
       },
     });
 
     await t.step({
       name: "[collection] start sweeper",
-      fn: async (t) => {
+      async fn(t) {
         const sweeperCollection = new Collection([["a", 1], ["b", 2]], {
           sweeper: {
             filter: (v, _) => v === 1,

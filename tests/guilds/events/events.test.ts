@@ -5,7 +5,7 @@ import { CACHED_COMMUNITY_GUILD_ID } from "../../utils.ts";
 
 Deno.test({
   name: "[events] unit tests for events",
-  fn: async (t) => {
+  async fn(t) {
     const bot = loadBot();
 
     // create a guild scheduled event with external entity with an end time
@@ -191,7 +191,7 @@ Deno.test({
     await t.step(
       {
         name: "[scheduled event] edit a scheduled event",
-        fn: async (t) => {
+        async fn(t) {
           const channel = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, {
             name: "entity",
             type: ChannelTypes.GuildStageVoice,

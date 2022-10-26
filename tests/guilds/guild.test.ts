@@ -96,7 +96,7 @@ Deno.test({
       // Create an emoji
       await t.step({
         name: "[emoji] create an emoji",
-        fn: async (t) => {
+        async fn(t) {
           const bot = loadBot();
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: "blamewolf",
@@ -114,7 +114,7 @@ Deno.test({
       // delete an emoji without a reason
       await t.step({
         name: "[emoji] delete an emoji without a reason",
-        fn: async (t) => {
+        async fn(t) {
           const bot = loadBot();
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: "blamewolf",
@@ -134,7 +134,7 @@ Deno.test({
       // delete an emoji with a reason
       await t.step({
         name: "[emoji] delete an emoji with a reason",
-        fn: async (t) => {
+        async fn(t) {
           const bot = loadBot();
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: "blamewolf",
@@ -154,7 +154,7 @@ Deno.test({
       // edit an emoji name
       await t.step({
         name: "[emoji] Edit an emoji name",
-        fn: async (t) => {
+        async fn(t) {
           const bot = loadBot();
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: "blamewolf",
@@ -181,7 +181,7 @@ Deno.test({
       // edit an emoji roles
       await t.step({
         name: "[emoji] Edit an emoji's roles",
-        fn: async (t) => {
+        async fn(t) {
           const bot = loadBot();
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: "blamewolf",
@@ -212,7 +212,7 @@ Deno.test({
       // get an emoji
       await t.step({
         name: "[emoji] get an emoji",
-        fn: async (t) => {
+        async fn(t) {
           const bot = loadBot();
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: "blamewolf",
@@ -233,7 +233,7 @@ Deno.test({
 
       await t.step({
         name: "[emoji] get all guild emojis",
-        fn: async (t) => {
+        async fn(t) {
           const bot = loadBot();
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: "blamewolf",

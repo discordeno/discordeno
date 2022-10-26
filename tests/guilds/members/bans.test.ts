@@ -12,19 +12,19 @@ const ltsID = 379643682984296448n;
 // THESE BAN TESTS SHOULD BE DONE ONE BY ONE
 Deno.test({
   name: "[member] ban member test group",
-  fn: async (t) => {
+  async fn(t) {
     const bot = loadBot();
 
     // ban user from guild without reason
     await t.step({
       name: "[member] ban user from guild without reason",
-      fn: async (t) => {
+      async fn(t) {
         await bot.helpers.banMember(CACHED_COMMUNITY_GUILD_ID, wolfID);
 
         // get a single user's ban
         await t.step({
           name: "[member] get a single user's ban",
-          fn: async () => {
+          async fn(t) {
             assertExists(await bot.helpers.getBan(CACHED_COMMUNITY_GUILD_ID, wolfID));
           },
         });
@@ -34,7 +34,7 @@ Deno.test({
     // ban member from guild with a reason
     await t.step({
       name: "[member] ban member from guild with a reason",
-      fn: async () => {
+      async fn(t) {
         await bot.helpers.banMember(CACHED_COMMUNITY_GUILD_ID, ianID, { reason: "Blame Wolf" });
         assertExists(await bot.helpers.getBan(CACHED_COMMUNITY_GUILD_ID, ianID));
       },
@@ -49,7 +49,7 @@ Deno.test({
     // get bans on a server
     await t.step({
       name: "[member] get bans on a server",
-      fn: async () => {
+      async fn(t) {
         const bans = await bot.helpers.getBans(CACHED_COMMUNITY_GUILD_ID);
         assertEquals(bans.size > 1, true);
       },
@@ -58,7 +58,7 @@ Deno.test({
     // fetch a single member by id
     await t.step({
       name: "[member] fetch a single member by id",
-      fn: async () => {
+      async fn(t) {
         const member = await bot.helpers.getMember(CACHED_COMMUNITY_GUILD_ID, bot.id);
 
         assertExists(member?.id);
@@ -68,7 +68,7 @@ Deno.test({
     // unban member from guild
     await t.step({
       name: "[member] unban member from guild",
-      fn: async () => {
+      async fn(t) {
         await Promise.all([
           bot.helpers.unbanMember(CACHED_COMMUNITY_GUILD_ID, wolfID),
           bot.helpers.unbanMember(CACHED_COMMUNITY_GUILD_ID, ianID),

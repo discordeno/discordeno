@@ -1,10 +1,10 @@
-import { assertEquals, assertExists, assertRejects } from "../deps.ts";
+import { assertExists, assertRejects } from "../deps.ts";
 import { loadBot } from "../mod.ts";
 import { CACHED_COMMUNITY_GUILD_ID } from "../utils.ts";
 
 Deno.test({
   name: "[webhook] delete a webhook",
-  fn: async () => {
+  async fn(t) {
     const bot = loadBot();
 
     const channel = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, { name: "deleteWebhook" });
