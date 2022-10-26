@@ -51,6 +51,7 @@ jobs:
         run: deno test --coverage=coverage -A tests/
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          UNIT_TEST_GUILD_ID: ${{ secrets.UNIT_TEST_GUILD_ID }}
           TEST_ENV: INTEGRATION
           PROXY_REST_SECRET: ${{ secrets.PROXY_REST_SECRET }}
           PROXY_REST_URL: ${{ secrets.PROXY_REST_URL }}
