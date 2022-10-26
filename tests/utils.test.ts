@@ -1,9 +1,8 @@
-import { formatImageURL, hasProperty, iconBigintToHash, iconHashToBigInt, validateLength } from "../mod.ts";
+import { Collection, formatImageURL, hasProperty, iconBigintToHash, iconHashToBigInt, validateLength } from "../mod.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "../util/bigint.ts";
 import { removeTokenPrefix } from "../util/token.ts";
 import { assertEquals, assertExists, assertNotEquals } from "./deps.ts";
 import { loadBot } from "./mod.ts";
-import { Collection } from "../mod.ts";
 import { delayUntil } from "./utils.ts";
 
 Deno.test({
@@ -38,16 +37,19 @@ Deno.test("[bigint] - Transform a bigint to a string", () => {
   assertNotEquals(big, result);
 });
 
-Deno.test("[emoji] Create an emoji url", async () => {
-  const bot = loadBot();
-  assertEquals(
-    bot.helpers.getEmojiURL(785403373817823272n, false),
-    "https://cdn.discordapp.com/emojis/785403373817823272.png",
-  );
-  assertEquals(
-    bot.helpers.getEmojiURL(785403373817823272n, true),
-    "https://cdn.discordapp.com/emojis/785403373817823272.gif",
-  );
+Deno.test({
+  name: "[emoji] Create an emoji url",
+  async fn() {
+    const bot = loadBot();
+    assertEquals(
+      bot.helpers.getEmojiURL(785403373817823272n, false),
+      "https://cdn.discordapp.com/emojis/785403373817823272.png",
+    );
+    assertEquals(
+      bot.helpers.getEmojiURL(785403373817823272n, true),
+      "https://cdn.discordapp.com/emojis/785403373817823272.gif",
+    );
+  },
 });
 
 Deno.test({
