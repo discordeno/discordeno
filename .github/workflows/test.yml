@@ -38,7 +38,6 @@ jobs:
   integration-test:
     name: Integration Test
     runs-on: ubuntu-latest
-    if: ${{ secrets.DISCORD_TOKEN != '' }}
     strategy:
       matrix:
         deno: ["v1.x"]
