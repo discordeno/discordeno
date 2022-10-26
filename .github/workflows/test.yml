@@ -3,28 +3,29 @@ name: Test
 on:
   pull_request:
   push:
-    paths:
-      - "handlers/**"
-      - "helpers/**"
-      - "plugins/**"
-      - "packages/**"
-      - "rest/**"
-      - "tests/**"
-      - "transformers/**"
-      - "template/**"
-      - "types/**"
-      - "util/**"
-      - "gateway/**"
 
 jobs:
-  test:
+  format-test:
+    name: Format Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
         deno: ["v1.x"]
     steps:
       - uses: actions/checkout@v2
-      - run: git submodule update --init --recursive
+      - uses: denoland/setup-deno@main
+        with:
+          deno-version: ${{ matrix.deno }}
+      - name: Check Formatting
+        run: deno fmt --check
+  type-test:
+    name: Type Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        deno: ["v1.x"]
+    steps:
+      - uses: actions/checkout@v2
       - uses: denoland/setup-deno@main
         with:
           deno-version: ${{ matrix.deno }}
@@ -34,9 +35,26 @@ jobs:
         run: deno check plugins/mod.ts
       - name: Check Templates
         run: deno check template/beginner/mod.ts template/minimal/mod.ts
-      - name: Run test script for maintainers
+  integration-test:
+    name: Integration Test
+    runs-on: ubuntu-latest
+    if: ${{ secrets.DISCORD_TOKEN != '' }}
+    strategy:
+      matrix:
+        deno: ["v1.x"]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: denoland/setup-deno@main
+        with:
+          deno-version: ${{ matrix.deno }}
+      - name: Run integration
         # if: ${{ github.actor == 'Skillz4Killz' || github.actor == 'itohatweb' }}
         run: deno test --coverage=coverage -A tests/
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          TEST_ENV: INTEGRATION
+          PROXY_REST_SECRET: ${{ secrets.PROXY_REST_SECRET }}
+          PROXY_REST_URL: ${{ secrets.PROXY_REST_URL }}
       - name: Create coverage report
         if: github.ref == 'refs/heads/main'
         run: deno coverage --exclude=tests ./coverage --lcov > coverage.lcov
@@ -45,7 +63,26 @@ jobs:
         uses: codecov/codecov-action@v1.0.10
         with:
           file: ./coverage.lcov
-    env:
-      DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
-      PROXY_REST_SECRET: ${{ secrets.PROXY_REST_SECRET }}
-      PROXY_REST_URL: ${{ secrets.PROXY_REST_URL }}
+  unit-test:
+    name: Unit Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        deno: ["v1.x"]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: denoland/setup-deno@main
+        with:
+          deno-version: ${{ matrix.deno }}
+      - name: Run integration
+        run: deno test --coverage=coverage -A tests/
+        env:
+          TEST_ENV: UNIT
+      - name: Create coverage report
+        if: github.ref == 'refs/heads/main'
+        run: deno coverage --exclude=tests ./coverage --lcov > coverage.lcov
+      - name: Collect and upload the coverage report
+        if: github.ref == 'refs/heads/main'
+        uses: codecov/codecov-action@v1.0.10
+        with:
+          file: ./coverage.lcov
