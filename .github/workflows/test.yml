@@ -74,7 +74,7 @@ jobs:
         with:
           deno-version: ${{ matrix.deno }}
       - name: Run integration
-        run: deno test --coverage=coverage -A tests/
+        run: deno test --coverage=coverage --parallel -A tests/
         env:
           TEST_ENV: UNIT
       - name: Create coverage report
