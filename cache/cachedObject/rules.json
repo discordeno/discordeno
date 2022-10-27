@@ -1,0 +1,14 @@
+{
+  "id": "416411456883826242",
+  "last_message_id": null,
+  "type": 0,
+  "name": "nlwwr",
+  "position": 24,
+  "flags": 0,
+  "parent_id": "755744631629858513",
+  "topic": null,
+  "guild_id": "382715315380096491",
+  "permission_overwrites": [],
+  "rate_limit_per_user": 0,
+  "nsfw": false
+}

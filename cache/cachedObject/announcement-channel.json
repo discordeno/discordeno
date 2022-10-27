@@ -1,0 +1,21 @@
+{
+  "id": "6408834841185922970",
+  "last_message_id": null,
+  "type": 5,
+  "name": "spxreyvwlfrjfhewrcxz",
+  "position": 39,
+  "flags": 0,
+  "parent_id": "824289109811372888",
+  "topic": null,
+  "guild_id": "158539401019663225",
+  "permission_overwrites": [
+    {
+      "id": "951027878583809754",
+      "type": 0,
+      "allow": "3",
+      "deny": "9248"
+    }
+  ],
+  "rate_limit_per_user": 0,
+  "nsfw": false
+}

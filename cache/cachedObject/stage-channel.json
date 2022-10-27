@@ -1,0 +1,17 @@
+{
+  "id": "4834119747881056554",
+  "last_message_id": null,
+  "type": 13,
+  "name": "mgfmqoakespao",
+  "position": 1,
+  "flags": 0,
+  "parent_id": "899127261053087124",
+  "topic": null,
+  "bitrate": 64000,
+  "user_limit": 10000,
+  "rtc_region": null,
+  "guild_id": "768797409663728982",
+  "permission_overwrites": [],
+  "rate_limit_per_user": 0,
+  "nsfw": false
+}
