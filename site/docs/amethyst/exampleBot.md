@@ -17,11 +17,10 @@ npm i @thereallonewolf/amethystframework
 - **Step 4**: Add following code in index.ts file, replacing TOKEN with your bot token.
 
 ```ts
-import { ActivityTypes, Bot, createBot, GatewayIntents, startBot } from "discordeno";
+import {createBot, GatewayIntents, startBot } from "discordeno";
 import { enableCachePlugin, enableCacheSweepers } from "discordeno/cache-plugin";
-import { AmethystBot, Context, enableAmethystPlugin } from "@thereallonewolf/amethystframework";
+import { AmethystBot, Context, enableAmethystPlugin, Event,Category, Command } from "@thereallonewolf/amethystframework";
 
-config();
 let baseClient = createBot({
   token: "TOKEN",
   intents: GatewayIntents.Guilds | GatewayIntents.GuildMessages | GatewayIntents.MessageContent,
@@ -35,29 +34,32 @@ let client = enableAmethystPlugin(enableCachePlugin(baseClient), {
 });
 enableCacheSweepers(client);
 
-client.on("ready", () => {
-  console.log("I am up and running");
-});
+startBot(client);
 
-client.amethystUtils.createCategory({
-  name: "general",
+@Category({
+  name:"general",
   description: "My general commands",
   uniqueCommands: true,
-  default: "",
-});
-client.amethystUtils.createCommand({
-  name: "ping",
-  description: "Pong!",
-  commandType: ["application", "message"],
-  category: "general",
-  args: [],
-  async execute(bot: AmethystBot, ctx: Context) {
+  default: "", //As all the commands are unique so no need to set the default command.
+})
+export class General {
+  @Command({
+    name: "ping",
+    description: "Pong!",
+    commandType: ["application", "message"],
+    category: "general",
+    args: [],
+  })
+  async ping(bot: AmethystBot, ctx: Context) {
     ctx.reply({ content: "Pong!" });
-  },
-});
+  }
 
-client.amethystUtils.updateSlashCommands();
-startBot(client);
+  @Event("ready")
+  async ready() {
+    console.log("I am ready!");
+    client.amethystUtils.updateSlashCommands();
+  }
+}
 ```
 
 - **Step 5**: Invite your bot and compile index.ts and run it. Then you can use `/general ping` or `!ping`
