@@ -10,7 +10,7 @@ import {
 const token = Deno.env.get("DISCORD_TOKEN");
 if (!token) throw new Error("Token was not provided.");
 
-const guildId = 1034163795146330163n
+const guildId = 907350958810480671n
 
 const bot = createBot({
   token,
