@@ -44,7 +44,7 @@ jobs:
       - name: Run
         run: deno run -A performance/loadMessage.ts
         env:
-          INPUT: ${{ join(steps.benchmark-action.outputs.*, '\n') }}
+          INPUT: ${{ steps.benchmark-action.outputs.stdout }}
 #      - uses: actions/github-script@v5
 #        with:
 #          github-token: ${{secrets.GITHUB_TOKEN}}
