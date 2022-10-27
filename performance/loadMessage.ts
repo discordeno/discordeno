@@ -1,4 +1,4 @@
-const input = Deno.env.get('input')!;
+const input = Deno.env.get('INPUT')!;
 
 const match = input.match(/body: (.*?)+\n([\S\s]*?)  reaction/)
 
