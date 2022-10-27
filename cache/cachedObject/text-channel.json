@@ -1,0 +1,15 @@
+{
+  "id": "1034163796069072979",
+  "last_message_id": "1034166093012549673",
+  "default_thread_rate_limit_per_user": 0,
+  "type": 0,
+  "name": "text-channel",
+  "position": 3,
+  "flags": 0,
+  "parent_id": "1034163796069072977",
+  "topic": null,
+  "guild_id": "1034163795146330163",
+  "permission_overwrites": [],
+  "rate_limit_per_user": 120,
+  "nsfw": true
+}
