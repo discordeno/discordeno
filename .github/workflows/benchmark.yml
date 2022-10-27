@@ -33,6 +33,7 @@ jobs:
 
       - name: Store benchmark result
         uses: benchmark-action/github-action-benchmark@v1
+        id: benchmark-action
         with:
           tool: "customSmallerIsBetter"
           output-file-path: output.txt
@@ -41,3 +42,17 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           auto-push: ${{ github.ref == 'refs/heads/main' }}
           comment-always: true
+      - name: Run
+        run: deno run -A performance/loadMessage.ts
+        env:
+          INPUT: ${{join(steps.benchmark-action.outputs.*, '\n')}}
+#      - uses: actions/github-script@v5
+#        with:
+#          github-token: ${{secrets.GITHUB_TOKEN}}
+#          script: |
+#            github.rest.issues.createComment({
+#              issue_number: context.issue.number,
+#              owner: context.repo.owner,
+#              repo: context.repo.repo,
+#              body: ''
+#            })
