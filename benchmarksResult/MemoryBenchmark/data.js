@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1666843749857,
+  "lastUpdate": 1666843764001,
   "repoUrl": "https://github.com/H01001000/discordeno",
   "entries": {
     "Benchmark": [
@@ -126,6 +126,48 @@ window.BENCHMARK_DATA = {
             "value": 275.29,
             "unit": "MB",
             "range": 2.62
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "heiheiho000@gmail.com",
+            "name": "H01001000",
+            "username": "H01001000"
+          },
+          "committer": {
+            "email": "heiheiho000@gmail.com",
+            "name": "H01001000",
+            "username": "H01001000"
+          },
+          "distinct": true,
+          "id": "d6c362e108fde17d808a3eef4b2d4a523efe00bf",
+          "message": "style: deno fmt",
+          "timestamp": "2022-10-27T12:08:30+08:00",
+          "tree_id": "97e39c173ec1ad54ceefa14c0d453c235be5b8c9",
+          "url": "https://github.com/H01001000/discordeno/commit/d6c362e108fde17d808a3eef4b2d4a523efe00bf"
+        },
+        "date": 1666843762388,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "RSS",
+            "value": 276.95,
+            "unit": "MB",
+            "range": 7.87
+          },
+          {
+            "name": "Heap Used",
+            "value": 254.76,
+            "unit": "MB",
+            "range": 10.61
+          },
+          {
+            "name": "Heap Total",
+            "value": 274.43,
+            "unit": "MB",
+            "range": 11.74
           }
         ]
       }
