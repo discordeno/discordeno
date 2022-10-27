@@ -1,0 +1,27 @@
+name: Check Object
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        deno: ["v1.x"]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: denoland/setup-deno@main
+        with:
+          deno-version: ${{ matrix.deno }}
+      - name: Check And Update Objects
+        run: deno run -A cache/checkAndUpdateObjects.ts
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+      - name: Commit and push
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: exampleObjects/objects
+          message: "[Scheduled] Auto patch objects"
