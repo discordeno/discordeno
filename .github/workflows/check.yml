@@ -1,4 +1,4 @@
-name: Check Object
+name: Validate Cache
 
 on:
   schedule:
@@ -6,16 +6,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  validate-cache:
+    name: Validate Cache
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        deno: ["v1.x"]
     steps:
       - uses: actions/checkout@v2
       - uses: denoland/setup-deno@main
         with:
-          deno-version: ${{ matrix.deno }}
+          deno-version: "v1.x"
       - name: Check And Update Objects
         run: deno run -A cache/checkAndUpdateObjects.ts
         env:
@@ -23,5 +21,5 @@ jobs:
       - name: Commit and push
         uses: EndBug/add-and-commit@v9
         with:
-          add: exampleObjects/objects
+          add: cache/cachedObject
           message: "[Scheduled] Auto patch objects"
