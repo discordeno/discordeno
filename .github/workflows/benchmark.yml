@@ -14,7 +14,7 @@ jobs:
         with:
           deno-version: v1.x
 
-      - run: echo "${{ env.GITHUB_EVENT_NAME }}"
+      - run: echo "$env:GITHUB_EVENT_NAME"
         # this is the performance benchmark
       - name: Cache deps
         run: deno cache performance/mod.ts
