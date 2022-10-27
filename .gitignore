@@ -10,4 +10,7 @@ npm/
 # MacOS is weird
 .DS_Store
 
+# benchmark db and output
+db
+db.tar.gz
 output.txt
