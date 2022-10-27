@@ -1,4 +1,4 @@
-import { memoryBenchmarks } from "https://raw.githubusercontent.com/H01001000/benchmarks/fixMemoryBenchmark/index.ts";
+import { memoryBenchmarks } from "https://raw.githubusercontent.com/discordeno/benchmarks/main/index.ts";
 import { createBot } from "../mod.ts";
 import { enableCachePlugin } from "../plugins/mod.ts";
 

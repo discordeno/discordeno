@@ -5,9 +5,9 @@ Deno.env.set("DISCORD_TOKEN", `${btoa("316179474163171338")}.gbaodiwabn`);
 const bot = loadBot();
 const oldBot = oldLoadBot();
 
-// Fetch the discord api docs Guild page
+// Fetch the cached guild
 const discordGuild = JSON.parse(
-  await (await fetch("https://github.com/H01001000/benchmarks/raw/main/exampleObjects/objects/guild.json")).text(),
+  await (await fetch("https://raw.githubusercontent.com/discordeno/discordeno/benchies/cache/cachedObject/guild.json")).text(),
 );
 
 const currentGuild = bot.transformers.guild(bot, { guild: discordGuild, shardId: 0 });
@@ -21,12 +21,11 @@ Deno.bench("[Guild.toggles.features - Previous] Get the features of a guild", ()
   previousGuild.toggles.features;
 });
 
-// Fetch the discord api docs User page
+// Fetch the cached user
 const discordUser = JSON.parse(
-  await (await fetch("https://github.com/H01001000/benchmarks/raw/main/exampleObjects/objects/user.json")).text(),
+  await (await fetch("https://raw.githubusercontent.com/discordeno/discordeno/benchies/cache/cachedObject/user.json")).text(),
 );
 
-// Get the first code block and remove ```json and ```
 const newUser = bot.transformers.user(bot, discordUser);
 const oldUser = oldBot.transformers.user(oldBot, discordUser);
 
