@@ -14,7 +14,6 @@ jobs:
         with:
           deno-version: v1.x
 
-      - run: echo "$GITHUB_EVENT_NAME"
         # this is the performance benchmark
       - name: Cache deps
         run: deno cache performance/mod.ts
@@ -45,7 +44,7 @@ jobs:
       - name: Run
         run: deno run -A performance/loadMessage.ts
         env:
-          INPUT: ${{join(steps.benchmark-action.outputs.*, '\n')}}
+          INPUT: ${{ join(steps.benchmark-action.outputs.*, '\n') }}
 #      - uses: actions/github-script@v5
 #        with:
 #          github-token: ${{secrets.GITHUB_TOKEN}}
