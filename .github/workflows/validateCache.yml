@@ -1,0 +1,12 @@
+name: Validate Cache
+
+on:
+  workflow_dispatch:
+
+# This is just a dummy action for real one in benchies branch to run
+jobs:
+  validate-cache:
+    name: Validate Cache
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
