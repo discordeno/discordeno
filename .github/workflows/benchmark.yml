@@ -31,7 +31,7 @@ jobs:
         run: deno run --v8-flags="--expose-gc" -A performance/memory.ts
 
       - name: Store benchmark result
-        uses: benchmark-action/github-action-benchmark@v1
+        uses: H01001000/github-action-benchmark
         with:
           tool: "customSmallerIsBetter"
           output-file-path: output.txt
