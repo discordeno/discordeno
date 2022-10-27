@@ -1,0 +1,9 @@
+flags:
+  unit:
+    paths:
+      - ".*"
+    carryforward: false
+  integration:
+    paths:
+      - ".*"
+    carryforward: true
