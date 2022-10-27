@@ -88,6 +88,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           file: ./coverage.lcov
+          flags: integration
 
   unit-test:
     name: Unit Test
@@ -109,3 +110,4 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           file: ./coverage.lcov
+          flags: unit
