@@ -48,10 +48,8 @@ jobs:
           PROXY_REST_SECRET: ${{ secrets.PROXY_REST_SECRET }}
           PROXY_REST_URL: ${{ secrets.PROXY_REST_URL }}
       - name: Create coverage report
-        if: github.ref == 'refs/heads/main'
         run: deno coverage --exclude=tests ./coverage --lcov > coverage.lcov
       - name: Collect and upload the coverage report
-        if: github.ref == 'refs/heads/main'
         uses: codecov/codecov-action@v1.0.10
         with:
           file: ./coverage.lcov
@@ -68,10 +66,8 @@ jobs:
         env:
           TEST_ENV: UNIT
       - name: Create coverage report
-        if: github.ref == 'refs/heads/main'
         run: deno coverage --exclude=tests ./coverage --lcov > coverage.lcov
       - name: Collect and upload the coverage report
-        if: github.ref == 'refs/heads/main'
         uses: codecov/codecov-action@v1.0.10
         with:
           file: ./coverage.lcov
