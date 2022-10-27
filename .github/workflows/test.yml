@@ -15,9 +15,40 @@ jobs:
           deno-version: v1.x
       - name: Check Formatting
         run: deno fmt --check
+
+  # change if any prod code changed, skip test without chnage
+  path-filter:
+    name: Check Path Changes
+    runs-on: ubuntu-latest
+    outputs:
+      code-change: ${{ steps.changes.outputs.code-change }}
+    steps:
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            code-change:
+            - ".github/workflows/test.yml"
+            - "gateway/**"
+            - "handlers/**"
+            - "helpers/**"
+            - "packages/**"
+            - "plugins/**"
+            - "rest/**"
+            - "template/**"
+            - "tests/**"
+            - "transformers/**"
+            - "types/**"
+            - "util/**"
+            - "/bot.ts"
+            - "/mod.ts"
+            - "/dnt.ts"
+
   type-test:
     name: Type Test
     runs-on: ubuntu-latest
+    needs: path-filter
+    if: ${{ needs.path-filter.outputs.code-change == true }}
     steps:
       - uses: actions/checkout@v3
       - uses: denoland/setup-deno@main
@@ -29,9 +60,12 @@ jobs:
         run: deno check plugins/mod.ts
       - name: Check Templates
         run: deno check template/beginner/mod.ts template/minimal/mod.ts
+
   integration-test:
     name: Integration Test
     runs-on: ubuntu-latest
+    needs: path-filter
+    if: ${{ needs.path-filter.outputs.code-change == true }}
     concurrency: integration-test
     steps:
       - uses: actions/checkout@v3
@@ -53,9 +87,12 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           file: ./coverage.lcov
+
   unit-test:
     name: Unit Test
     runs-on: ubuntu-latest
+    needs: path-filter
+    if: ${{ needs.path-filter.outputs.code-change == true }}
     steps:
       - uses: actions/checkout@v3
       - uses: denoland/setup-deno@main
