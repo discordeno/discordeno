@@ -1,13 +1,13 @@
-import { formatImageURL, hasProperty, iconBigintToHash, iconHashToBigInt, validateLength } from "../mod.ts";
+import { Collection, formatImageURL, hasProperty, iconBigintToHash, iconHashToBigInt, validateLength } from "../mod.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "../util/bigint.ts";
 import { removeTokenPrefix } from "../util/token.ts";
 import { assertEquals, assertExists, assertNotEquals } from "./deps.ts";
 import { loadBot } from "./mod.ts";
-import { Collection } from "../mod.ts";
 import { delayUntil } from "./utils.ts";
 
 Deno.test({
   name: "[token] Remove token prefix when Bot is prefixed.",
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
   async fn(t) {
     assertEquals("discordeno is best lib", removeTokenPrefix("Bot discordeno is best lib"));
   },
@@ -15,44 +15,58 @@ Deno.test({
 
 Deno.test({
   name: "[token] Remove token prefix when Bot is NOT prefixed.",
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
   async fn(t) {
     assertEquals("discordeno is best lib", removeTokenPrefix("discordeno is best lib"));
   },
 });
 
-Deno.test("[bigint] - Transform a snowflake string to bigint", () => {
-  const text = "130136895395987456";
-  const big = 130136895395987456n;
-  const result = snowflakeToBigint(text);
+Deno.test({
+  name: "[bigint] - Transform a snowflake string to bigint",
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
+    const text = "130136895395987456";
+    const big = 130136895395987456n;
+    const result = snowflakeToBigint(text);
 
-  assertEquals(big, result);
-  assertNotEquals(text, result);
+    assertEquals(big, result);
+    assertNotEquals(text, result);
+  },
 });
 
-Deno.test("[bigint] - Transform a bigint to a string", () => {
-  const text = "130136895395987456";
-  const big = 130136895395987456n;
-  const result = bigintToSnowflake(big);
+Deno.test({
+  name: "[bigint] - Transform a bigint to a string",
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
+    const text = "130136895395987456";
+    const big = 130136895395987456n;
+    const result = bigintToSnowflake(big);
 
-  assertEquals(text, result);
-  assertNotEquals(big, result);
+    assertEquals(text, result);
+    assertNotEquals(big, result);
+  },
 });
 
-Deno.test("[emoji] Create an emoji url", async () => {
-  const bot = loadBot();
-  assertEquals(
-    bot.helpers.getEmojiURL(785403373817823272n, false),
-    "https://cdn.discordapp.com/emojis/785403373817823272.png",
-  );
-  assertEquals(
-    bot.helpers.getEmojiURL(785403373817823272n, true),
-    "https://cdn.discordapp.com/emojis/785403373817823272.gif",
-  );
+Deno.test({
+  name: "[emoji] Create an emoji url",
+  ignore: Deno.env.get("TEST_ENV") === "UNIT",
+  async fn(t) {
+    const bot = loadBot();
+    assertEquals(
+      bot.helpers.getEmojiURL(785403373817823272n, false),
+      "https://cdn.discordapp.com/emojis/785403373817823272.png",
+    );
+    assertEquals(
+      bot.helpers.getEmojiURL(785403373817823272n, true),
+      "https://cdn.discordapp.com/emojis/785403373817823272.gif",
+    );
+  },
 });
 
 Deno.test({
   name: "[guild] format a guild's icon url",
-  fn: async () => {
+  ignore: Deno.env.get("TEST_ENV") === "UNIT",
+  async fn(t) {
     const bot = loadBot();
     assertEquals(
       bot.helpers.getGuildIconURL(785384884197392384n, 3837424427068676005442449262648382018748n),
@@ -63,7 +77,8 @@ Deno.test({
 
 Deno.test({
   name: "[guild] format a guild's banner url",
-  fn: async () => {
+  ignore: Deno.env.get("TEST_ENV") === "UNIT",
+  async fn(t) {
     const bot = loadBot();
 
     assertEquals(
@@ -77,7 +92,8 @@ Deno.test({
 
 Deno.test({
   name: "[guild] format a guild's splash url",
-  fn: async () => {
+  ignore: Deno.env.get("TEST_ENV") === "UNIT",
+  async fn(t) {
     const bot = loadBot();
     assertEquals(
       bot.helpers.getGuildSplashURL(785384884197392384n, 3837424427068676005442449262648382018748n),
@@ -88,7 +104,8 @@ Deno.test({
 
 Deno.test({
   name: "[utils] format image url",
-  fn() {
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
     assertEquals(formatImageURL(`https://skillz.is.pro`), "https://skillz.is.pro.jpg?size=128");
     assertEquals(formatImageURL(`https://skillz.is.pro`, 1024), "https://skillz.is.pro.jpg?size=1024");
     assertEquals(formatImageURL(`https://skillz.is.pro`, 1024, "gif"), "https://skillz.is.pro.gif?size=1024");
@@ -103,70 +120,80 @@ const a_iconBigInt = 3503487521485885045056617826984736090062n;
 
 Deno.test({
   name: "[utils] icon hash to bigint",
-  fn() {
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
     assertEquals(iconHashToBigInt(iconHash), iconBigInt);
   },
 });
 
 Deno.test({
   name: "[utils] icon bigint to hash",
-  fn() {
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
     assertEquals(iconBigintToHash(iconBigInt), iconHash);
   },
 });
 
 Deno.test({
   name: "[utils] icon hash to bigint a_ (animated)",
-  fn() {
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
     assertEquals(iconHashToBigInt(a_iconHash), a_iconBigInt);
   },
 });
 
 Deno.test({
   name: "[utils] icon bigint to hash a_ (animated)",
-  fn() {
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
     assertEquals(iconBigintToHash(a_iconBigInt), a_iconHash);
   },
 });
 
 Deno.test({
   name: "[utils] Validate length is too low",
-  fn() {
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
     assertEquals(validateLength("test", { min: 5 }), false);
   },
 });
 
 Deno.test({
   name: "[utils] Validate length is too high",
-  fn() {
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
     assertEquals(validateLength("test", { max: 3 }), false);
   },
 });
 
 Deno.test({
   name: "[utils] Validate length is NOT just right in between.",
-  fn() {
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
     assertEquals(validateLength("test", { min: 5, max: 3 }), false);
   },
 });
 
 Deno.test({
   name: "[utils] Validate length is NOT too low",
-  fn() {
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
     assertEquals(validateLength("test", { min: 3 }), true);
   },
 });
 
 Deno.test({
   name: "[utils] Validate length is NOT too high",
-  fn() {
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
     assertEquals(validateLength("test", { max: 5 }), true);
   },
 });
 
 Deno.test({
   name: "[utils] Validate length is just right in between.",
-  fn() {
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
     assertEquals(validateLength("test", { min: 3, max: 6 }), true);
   },
 });
@@ -175,21 +202,24 @@ const obj = { prop: "lts372005" };
 
 Deno.test({
   name: "[utils] hasProperty does HAVE property",
-  fn() {
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
     assertEquals(hasProperty(obj, "prop"), true);
   },
 });
 
 Deno.test({
   name: "[utils] hasProperty does NOT HAVE property",
-  fn() {
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
     assertEquals(hasProperty(obj, "lts372005"), false);
   },
 });
 
 Deno.test({
   name: "[member] format a members avatar url",
-  fn: async (t) => {
+  ignore: Deno.env.get("TEST_ENV") === "UNIT",
+  async fn(t) {
     const bot = loadBot();
 
     assertEquals(
@@ -203,14 +233,16 @@ Deno.test({
 
 Deno.test({
   name: "[collection] Create a collection",
-  fn: async (t) => {
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
     const collection = new Collection();
 
     assertExists(collection);
 
     await t.step({
       name: "[collection] collection values to array",
-      fn: async (t) => {
+      ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+      async fn(t) {
         const testCollection = new Collection([["best", "tri"], ["proficient", "yui"]]);
 
         assertEquals(testCollection.array(), ["tri", "yui"]);
@@ -219,7 +251,8 @@ Deno.test({
 
     await t.step({
       name: "[collection] get a random value",
-      fn: async (t) => {
+      ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+      async fn(t) {
         const testCollection = new Collection([["best", "tri"]]);
 
         assertEquals(["best", "tri"].includes(testCollection.random() ?? ""), true);
@@ -229,7 +262,8 @@ Deno.test({
 
     await t.step({
       name: "[collection] Set a value without maxSize",
-      fn: async (t) => {
+      ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+      async fn(t) {
         collection.set("best developer", "triformine");
         assertEquals(collection.size, 1);
         assertEquals(collection.get("best developer"), "triformine");
@@ -238,14 +272,14 @@ Deno.test({
 
         await t.step({
           name: "[collection] get the value of the first element",
-          fn: async (t) => {
+          async fn(t) {
             assertEquals(collection.first(), "triformine");
           },
         });
 
         await t.step({
           name: "[collection] get the value of the last element",
-          fn: async (t) => {
+          async fn(t) {
             assertEquals(collection.last(), "yes");
           },
         });
@@ -254,7 +288,8 @@ Deno.test({
 
     await t.step({
       name: "[collection] Create a collection with maxSize",
-      fn: async (t) => {
+      ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+      async fn(t) {
         const maxSize = 2;
 
         const maxCollection = new Collection([], {
@@ -267,7 +302,7 @@ Deno.test({
 
         await t.step({
           name: "[collection] Test if maxSize works properly",
-          fn: async (t) => {
+          async fn(t) {
             maxCollection.set("foo", "bar");
             maxCollection.set("me", "you");
 
@@ -279,7 +314,7 @@ Deno.test({
 
             await t.step({
               name: "[collection] Test if forceSet ignore maxSize",
-              fn: async (t) => {
+              async fn(t) {
                 maxCollection.forceSet("this", "not");
 
                 assertEquals(maxCollection.size, 3);
@@ -294,7 +329,8 @@ Deno.test({
 
     await t.step({
       name: "[collection] find by key or value",
-      fn: async (t) => {
+      ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+      async fn(t) {
         assertEquals(testCollection.find((v, k) => v === 2), 2);
         assertEquals(testCollection.find((v, k) => k === "b"), 2);
       },
@@ -302,7 +338,8 @@ Deno.test({
 
     await t.step({
       name: "[collection] filter by key or value",
-      fn: async (t) => {
+      ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+      async fn(t) {
         assertEquals(testCollection.filter((v, k) => v === 3).size, 1);
         assertEquals(testCollection.filter((v, k) => k === "d").size, 0);
       },
@@ -310,14 +347,16 @@ Deno.test({
 
     await t.step({
       name: "[collection] map",
-      fn: async (t) => {
+      ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+      async fn(t) {
         assertEquals(testCollection.map((k, v) => `${v}${k}`), ["a1", "b2", "c3"]);
       },
     });
 
     await t.step({
       name: "[collection] some",
-      fn: async (t) => {
+      ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+      async fn(t) {
         assertEquals(testCollection.some((v, _) => v === 1), true);
         assertEquals(testCollection.some((v, _) => v === 4), false);
       },
@@ -325,7 +364,8 @@ Deno.test({
 
     await t.step({
       name: "[collection] every",
-      fn: async (t) => {
+      ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+      async fn(t) {
         assertEquals(testCollection.every((v, _) => v !== 0), true);
         assertEquals(testCollection.every((v, _) => v === 1), false);
       },
@@ -333,14 +373,16 @@ Deno.test({
 
     await t.step({
       name: "[collection] reduce",
-      fn: async (t) => {
+      ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+      async fn(t) {
         assertEquals(testCollection.reduce((acc, val) => acc + val, 0), 6);
       },
     });
 
     await t.step({
       name: "[collection] start sweeper",
-      fn: async (t) => {
+      ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+      async fn(t) {
         const sweeperCollection = new Collection([["a", 1], ["b", 2]], {
           sweeper: {
             filter: (v, _) => v === 1,
