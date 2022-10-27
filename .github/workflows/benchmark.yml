@@ -24,7 +24,7 @@ jobs:
 
         # this is the memory benchmark
       - name: Download db from benchmark repo
-        run: wget https://raw.githubusercontent.com/discordeno/benchmarks/main/db.tar.gz
+        run: wget https://github.com/discordeno/benchmarks/raw/main/db.tar.gz
       - name: Decompress db
         run: tar -xzvf db.tar.gz
       - name: Run memory benchmark
