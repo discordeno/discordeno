@@ -7,7 +7,8 @@ const oldBot = oldLoadBot();
 
 // Fetch the cached guild
 const discordGuild = JSON.parse(
-  await (await fetch("https://raw.githubusercontent.com/discordeno/discordeno/benchies/cache/cachedObject/guild.json")).text(),
+  await (await fetch("https://raw.githubusercontent.com/discordeno/discordeno/benchies/cache/cachedObject/guild.json"))
+    .text(),
 );
 
 const currentGuild = bot.transformers.guild(bot, { guild: discordGuild, shardId: 0 });
@@ -23,7 +24,8 @@ Deno.bench("[Guild.toggles.features - Previous] Get the features of a guild", ()
 
 // Fetch the cached user
 const discordUser = JSON.parse(
-  await (await fetch("https://raw.githubusercontent.com/discordeno/discordeno/benchies/cache/cachedObject/user.json")).text(),
+  await (await fetch("https://raw.githubusercontent.com/discordeno/discordeno/benchies/cache/cachedObject/user.json"))
+    .text(),
 );
 
 const newUser = bot.transformers.user(bot, discordUser);
