@@ -32,6 +32,7 @@ jobs:
 
       - name: Store benchmark result
         uses: benchmark-action/github-action-benchmark@v1
+        id: benchmark-action
         with:
           tool: "customSmallerIsBetter"
           output-file-path: output.txt
@@ -39,4 +40,13 @@ jobs:
           benchmark-data-dir-path: benchmarksResult/MemoryBenchmark
           github-token: ${{ secrets.GITHUB_TOKEN }}
           auto-push: ${{ github.ref == 'refs/heads/main' }}
-          comment-always: true
+
+      - name: Save Commmit SHA
+        run: |
+          mkdir -p ./commitData
+          echo $GITHUB_SHA > ./commitData/sha
+          echo $GITHUB_REPOSITORY > ./commitData/repo
+      - uses: actions/upload-artifact@v3
+        with:
+          name: commitData
+          path: commitData/
