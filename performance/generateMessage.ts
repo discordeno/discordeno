@@ -45,7 +45,7 @@ if (window.BENCHMARK_DATA) {
   for (const field of Object.keys(compare)) {
     message += `| \`${field}\` | ${compare[field].current.value ? `\`${compare[field].current.value}\`` : ''} ${compare[field].current.unit ?? ''} ${compare[field].current.range ? `(\`${compare[field].current.range ?? ''}\`)` : ''} | ${compare[field].previous.value ? `\`${compare[field].previous.value}\`` : ''} ${compare[field].previous.unit ?? ''} ${compare[field].previous.range ? `(\`${compare[field].previous.range ?? ''}\`)` : ''} | ${compare[field].previous.value && compare[field].current.value ? `\`${Math.round((parseFloat(compare[field].previous.value) / parseFloat(compare[field].current.value)) * 100) / 100}\`` : ''} |\n`
   }
-  console.log(message.replaceAll('%', '%25').replaceAll('\n', '%0A').replaceAll('\r', '%0D'))
+  console.log(message.replaceAll('`', "\\`"))
 
 }
 /*
