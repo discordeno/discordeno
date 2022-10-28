@@ -87,8 +87,7 @@ await build({
   package: {
     name: "discordeno",
     version: Deno.args[0],
-    description:
-      "Discordeno is simplistic, easy-to-use, versatile while being efficient and lightweight.",
+    description: "Discordeno is simplistic, easy-to-use, versatile while being efficient and lightweight.",
     keywords: [
       "javascript",
       "api",

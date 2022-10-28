@@ -1,21 +1,21 @@
-import { Bot } from "discordeno";
+import { Bot } from "../../mod.ts";
 import {
   DiscordChannel,
   DiscordGuild,
   DiscordGuildMemberAdd,
   DiscordGuildMemberRemove,
-  DiscordUnavailableGuild,
   DiscordGuildMemberUpdate,
   DiscordGuildRoleUpdate,
   DiscordMessage,
   DiscordMessageReactionAdd,
   DiscordMessageReactionRemove,
   DiscordMessageReactionRemoveAll,
+  DiscordUnavailableGuild,
   DiscordUser,
-} from "discordeno/types";
-import { BotWithProxyCache, ProxyCacheTypes } from "./index.js";
+} from "../../types/mod.ts";
+import { BotWithProxyCache, ProxyCacheTypes } from "./mod.ts";
 
-export const unavailablesGuilds = new Set<bigint>()
+export const unavailablesGuilds = new Set<bigint>();
 
 export function setupCacheEdits<B extends Bot>(
   bot: BotWithProxyCache<ProxyCacheTypes, B>,
@@ -224,9 +224,7 @@ export function setupCacheEdits<B extends Bot>(
   bot.handlers.USER_UPDATE = async function (_, data, shardId) {
     const payload = data.d as DiscordUser;
     const user = bot.transformers.user(bot, payload);
-    const oldUser = await bot.cache.users.get(
-      user.id,
-    );
+    const oldUser = await bot.cache.users.get(user.id);
 
     await bot.cache.users.set(user);
 
@@ -242,7 +240,7 @@ export function setupCacheEdits<B extends Bot>(
     // If Guild isn't available push to Set
     if (payload.unavailable) unavailablesGuilds.add(guildID);
     // otherwise remove from Set
-    else unavailablesGuilds.delete(guildID)
+    else unavailablesGuilds.delete(guildID);
 
     GUILD_UPDATE(bot, data, shardId);
   };

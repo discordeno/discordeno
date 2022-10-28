@@ -1,19 +1,11 @@
-import {
-  Bot,
-  Channel,
-  EventHandlers,
-  Guild,
-  Member,
-  Message,
-  Role,
-  User,
-} from "discordeno";
-import { BotWithProxyCache, ProxyCacheTypes } from ".";
+import { Bot, Channel, EventHandlers, Guild, Member, Message, Role, User } from "../../mod.ts";
+import { BotWithProxyCache, ProxyCacheTypes } from "./mod.ts";
 
 export type Events = {
-  [K in keyof EventHandlers]: EventHandlers[K] extends
-    (bot: infer T, ...rest: infer R) => infer U
-    ? Bot extends T ? (bot: Bot, ...rest: R) => U
+  [K in keyof EventHandlers]: EventHandlers[K] extends (
+    bot: infer T,
+    ...rest: infer R
+  ) => infer U ? Bot extends T ? (bot: Bot, ...rest: R) => U
     : (...rest: Parameters<EventHandlers[K]>) => U
     : never;
 };
