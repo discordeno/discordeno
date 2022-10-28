@@ -36,7 +36,7 @@ jobs:
           path: output.txt
 
       - name: Create banchies branch
-        if: ${{ github.repository != 'discordeno/discordeno' }}
+        if: ${{ github.ref != 'refs/heads/main' }}
         uses: peterjgrainger/action-create-branch@v2.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -44,19 +44,19 @@ jobs:
           branch: "banchies"
 
       - name: Store benchmark result (For Pull Request)
-        if: ${{ github.repository != 'discordeno/discordeno' }}
+        if: ${{ github.ref != 'refs/heads/main' }}
         uses: benchmark-action/github-action-benchmark@v1
         with:
           tool: "customSmallerIsBetter"
           output-file-path: output.txt
           gh-pages-branch: "benchies"
           benchmark-data-dir-path: benchmarksResult
-          gh-repository: ${{ github.repository }}
+          gh-repository: ${{ github.event.pull_request.head.repo.full_name != '' && github.event.pull_request.head.repo.full_name || github.event.push.repository.full_name }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           auto-push: true
 
       - name: Store benchmark result (On main repo)
-        if: ${{ github.ref == 'refs/heads/main' && github.repository == 'discordeno/discordeno' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         uses: benchmark-action/github-action-benchmark@v1
         with:
           tool: "customSmallerIsBetter"
