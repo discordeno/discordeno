@@ -49,7 +49,7 @@ if (window.BENCHMARK_DATA) {
     issue_number: context.issue.number,
     owner: context.repo.owner,
     repo: context.repo.repo,
-    body: '${message}'})`)
+    body: '${message}'})`.replaceAll('%', '%25').replaceAll('\n', '%0A').replaceAll('\r', '%0D'))
 }
 /*
 '# Benchmark\n' +
