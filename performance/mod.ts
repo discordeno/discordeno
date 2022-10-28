@@ -14,11 +14,13 @@ const discordGuild = JSON.parse(
 const currentGuild = bot.transformers.guild(bot, { guild: discordGuild, shardId: 0 });
 const previousGuild = oldBot.transformers.guild(oldBot, { guild: discordGuild, shardId: 0 });
 
-Deno.bench("[Guild.toggles.features - Current] Get the features of a guild", () => {
+Deno.bench("[Guild.toggles.features] Get the features of a guild", () => {
   currentGuild.toggles.features;
 });
 
-Deno.bench("[Guild.toggles.features - Previous] Get the features of a guild", () => {
+Deno.bench("[Guild.toggles.features - Previous] Get the features of a guild", {
+  ignore: Deno.env.get("CI") === "true",
+}, () => {
   previousGuild.toggles.features;
 });
 
@@ -31,18 +33,22 @@ const discordUser = JSON.parse(
 const newUser = bot.transformers.user(bot, discordUser);
 const oldUser = oldBot.transformers.user(oldBot, discordUser);
 
-Deno.bench("[Transformer - Current] Discord User to a User", () => {
+Deno.bench("[Transformer] Discord User to a User", () => {
   bot.transformers.user(bot, discordUser);
 });
 
-Deno.bench("[Transformer - Previous] Discord User to a User", () => {
+Deno.bench("[Transformer - Previous] Discord User to a User", {
+  ignore: Deno.env.get("CI") === "true",
+}, () => {
   oldBot.transformers.user(oldBot, discordUser);
 });
 
-Deno.bench("[Transformer - Current] User to a Discord User", () => {
+Deno.bench("[Transformer] User to a Discord User", () => {
   bot.transformers.reverse.user(bot, newUser);
 });
 
-Deno.bench("[Transformer - Previous] User to a Discord User", () => {
+Deno.bench("[Transformer - Previous] User to a Discord User", {
+  ignore: Deno.env.get("CI") === "true",
+}, () => {
   oldBot.transformers.reverse.user(oldBot, oldUser);
 });
