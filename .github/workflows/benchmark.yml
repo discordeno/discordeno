@@ -47,7 +47,7 @@ jobs:
           echo "MESSAGE<<EOF" >> $GITHUB_ENV
           echo "$MESSAGE" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-      - uses: actions/github-script@v5
+      - uses: actions/github-script@v6
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
