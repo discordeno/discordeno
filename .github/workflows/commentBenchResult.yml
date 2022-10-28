@@ -15,7 +15,7 @@ jobs:
       - uses: denoland/setup-deno@main
         with:
           deno-version: v1.x
-      - name: "Download artifact"
+      - name: Download Commit Data Artifact
         uses: actions/github-script@v6
         with:
           script: |
@@ -36,7 +36,31 @@ jobs:
             let fs = require('fs');
             fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/commitData.zip`, Buffer.from(download.data));
 
-      - name: "Unzip artifact"
+      - name: Unzip Commit Data Artifact
+        run: unzip commitData.zip
+
+      - name: Download Result Artifact
+        uses: actions/github-script@v6
+        with:
+          script: |
+            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: context.payload.workflow_run.id,
+            });
+            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "benchmarkResults"
+            })[0];
+            let download = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+            let fs = require('fs');
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/benchmarkResults.zip`, Buffer.from(download.data));
+
+      - name: Unzip Result Artifact
         run: unzip commitData.zip
 
       - name: Generate Message
