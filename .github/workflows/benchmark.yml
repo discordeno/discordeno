@@ -42,16 +42,9 @@ jobs:
           auto-push: ${{ github.ref == 'refs/heads/main' }}
           comment-always: true
       - name: Run
-        run: deno run -A performance/loadMessage.ts
-        env:
-          INPUT: ${{ steps.benchmark-action.outputs.stdout }}
-#      - uses: actions/github-script@v5
-#        with:
-#          github-token: ${{secrets.GITHUB_TOKEN}}
-#          script: |
-#            github.rest.issues.createComment({
-#              issue_number: context.issue.number,
-#              owner: context.repo.owner,
-#              repo: context.repo.repo,
-#              body: ''
-#            })
+        id: genMessage
+        run: echo "message=$(deno run -A performance/generateMessage.ts)" >> $GITHUB_OUTPUT
+      - uses: actions/github-script@v5
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: ${{ steps.genMessage.outputs.message }}
