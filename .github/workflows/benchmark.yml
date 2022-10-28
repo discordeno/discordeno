@@ -8,6 +8,9 @@ jobs:
   benchmark:
     name: Benchmark
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v3
       - uses: denoland/setup-deno@main
@@ -39,7 +42,7 @@ jobs:
           gh-pages-branch: "benchies"
           benchmark-data-dir-path: benchmarksResult/MemoryBenchmark
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          auto-push: ${{ github.ref == 'refs/heads/main' }}
+          auto-push: true
       - name: Run
         id: genMessage
         run: |
