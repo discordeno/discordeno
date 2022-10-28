@@ -18,7 +18,7 @@ const output: {
 
 for (const resultKey of Object.keys(results.Cached) as (keyof typeof results.Cached)[]) {
   output.push({
-    name: `[Cache Plugin Memory Usage After Loaded DB] - ${resultKey.toString()}`,
+    name: `[Cache Plugin Memory Usage After Loaded DB] ${resultKey.toString()}`,
     value: results.Cached[resultKey].value,
     range: `${results.Cached[resultKey].min} … ${results.Cached[resultKey].max}`,
     unit: "MB",
