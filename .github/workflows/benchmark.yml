@@ -30,21 +30,33 @@ jobs:
       - name: Run memory benchmark
         run: deno run --v8-flags="--expose-gc" -A performance/memory.ts
 
+      - name: Download previous benchmark data
+        uses: actions/cache@v3
+        with:
+          path: ./benchmarksResult
+          key: ${{ github.ref }}-benchmark
+      - name: Store benchmark result to cache
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          tool: "customSmallerIsBetter"
+          output-file-path: output.txt
+          external-data-json-path: benchmarksResult/data.json
       - uses: actions/upload-artifact@v3
+        if: ${{ github.ref != 'refs/heads/main' }}
         with:
           name: benchmarkResults
-          path: output.txt
+          path: benchmarksResult/data.json
 
-      - name: Store benchmark result
+      - name: Store benchmark result (Main)
         uses: benchmark-action/github-action-benchmark@v1
-        id: benchmark-action
+        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           tool: "customSmallerIsBetter"
           output-file-path: output.txt
           gh-pages-branch: "benchies"
           benchmark-data-dir-path: benchmarksResult
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          auto-push: ${{ github.ref == 'refs/heads/main' }}
+          auto-push: true
 
       - name: Save Commmit SHA
         run: |
