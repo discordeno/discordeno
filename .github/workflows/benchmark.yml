@@ -46,7 +46,6 @@ jobs:
       - name: Store benchmark result (For Pull Request)
         if: ${{ github.repository != 'discordeno/discordeno' }}
         uses: benchmark-action/github-action-benchmark@v1
-        id: benchmark-action
         with:
           tool: "customSmallerIsBetter"
           output-file-path: output.txt
@@ -59,7 +58,6 @@ jobs:
       - name: Store benchmark result (On main repo)
         if: ${{ github.ref == 'refs/heads/main' && github.repository == 'discordeno/discordeno' }}
         uses: benchmark-action/github-action-benchmark@v1
-        id: benchmark-action
         with:
           tool: "customSmallerIsBetter"
           output-file-path: output.txt
