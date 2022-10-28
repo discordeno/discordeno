@@ -37,7 +37,7 @@ jobs:
           tool: "customSmallerIsBetter"
           output-file-path: output.txt
           gh-pages-branch: "benchies"
-          benchmark-data-dir-path: benchmarksResult/MemoryBenchmark
+          benchmark-data-dir-path: benchmarksResult
           github-token: ${{ secrets.GITHUB_TOKEN }}
           auto-push: ${{ github.ref == 'refs/heads/main' }}
 

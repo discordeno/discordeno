@@ -1,6 +1,6 @@
 const repo = await Deno.readTextFile("./repo");
 
-await import(`https://raw.githubusercontent.com/${repo}/benchies/benchmarksResult/MemoryBenchmark/data.js`);
+await import(`https://raw.githubusercontent.com/${repo}/benchies/benchmarksResult/data.js`);
 
 if (window.BENCHMARK_DATA) {
   const benchmarks = JSON.parse(JSON.stringify(window.BENCHMARK_DATA.entries.Benchmark)).slice(-2) as {
