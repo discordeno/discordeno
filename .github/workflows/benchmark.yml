@@ -43,8 +43,12 @@ jobs:
           comment-always: true
       - name: Run
         id: genMessage
-        run: echo "message=$(deno run -A performance/generateMessage.ts)" >> $GITHUB_OUTPUT
+        run: |
+          MESSAGE=$(deno run -A performance/generateMessage.ts)
+          echo "MESSAGE<<EOF" >> $GITHUB_ENV
+          echo "$MESSAGE" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
       - uses: actions/github-script@v5
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          script: ${{ steps.genMessage.outputs.message }}
+          script: ${{ env.MESSAGE }}
