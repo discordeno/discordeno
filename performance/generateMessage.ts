@@ -56,18 +56,24 @@ if (window.BENCHMARK_DATA) {
       current: benchmark,
     };
   }
-  message += `\n\n| Benchmark suite | Current: ${benchmarks[1].commit.id} | Previous: ${benchmarks[0].commit.id
-    } | Ratio |\n | -| -| -| -|\n`;
+  message += `\n\n| Benchmark suite | Current: ${benchmarks[1].commit.id} | Previous: ${
+    benchmarks[0].commit.id
+  } | Ratio |\n | -| -| -| -|\n`;
   for (const field of Object.keys(compare)) {
-    message += `| \`${field}\` | ${compare[field].current.value ? `\`${compare[field].current.value}\`` : ""} ${compare[field].current.unit ?? ""
-      } ${compare[field].current.range ? `(\`${compare[field].current.range ?? ""}\`)` : ""} | ${compare[field].previous.value ? `\`${compare[field].previous.value}\`` : ""
-      } ${compare[field].previous.unit ?? ""} ${compare[field].previous.range ? `(\`${compare[field].previous.range ?? ""}\`)` : ""
-      } | ${compare[field].previous.value && compare[field].current.value
+    message += `| \`${field}\` | ${compare[field].current.value ? `\`${compare[field].current.value}\`` : ""} ${
+      compare[field].current.unit ?? ""
+    } ${compare[field].current.range ? `(\`${compare[field].current.range ?? ""}\`)` : ""} | ${
+      compare[field].previous.value ? `\`${compare[field].previous.value}\`` : ""
+    } ${compare[field].previous.unit ?? ""} ${
+      compare[field].previous.range ? `(\`${compare[field].previous.range ?? ""}\`)` : ""
+    } | ${
+      compare[field].previous.value && compare[field].current.value
         //@ts-ignore
-        ? `\`${Math.round((parseFloat(compare[field].previous.value) / parseFloat(compare[field].current.value)) * 100) / 100
+        ? `\`${
+          Math.round((parseFloat(compare[field].previous.value) / parseFloat(compare[field].current.value)) * 100) / 100
         }\``
         : ""
-      } |\n`;
+    } |\n`;
   }
 }
 
@@ -123,18 +129,24 @@ if (window.BENCHMARK_DATA) {
       current: benchmark,
     };
   }
-  message += `\n\n| Benchmark suite | Current (Head): ${commitSha.slice(-1)} | Previous (Base): ${benchmarks.commit.id
-    } | Ratio |\n | -| -| -| -|\n`;
+  message += `\n\n| Benchmark suite | Current (Head): ${
+    commitSha.slice(-1)
+  } | Previous (Base): ${benchmarks.commit.id} | Ratio |\n | -| -| -| -|\n`;
   for (const field of Object.keys(compare)) {
-    message += `| \`${field}\` | ${compare[field].current.value ? `\`${compare[field].current.value}\`` : ""} ${compare[field].current.unit ?? ""
-      } ${compare[field].current.range ? `(\`${compare[field].current.range ?? ""}\`)` : ""} | ${compare[field].previous.value ? `\`${compare[field].previous.value}\`` : ""
-      } ${compare[field].previous.unit ?? ""} ${compare[field].previous.range ? `(\`${compare[field].previous.range ?? ""}\`)` : ""
-      } | ${compare[field].previous.value && compare[field].current.value
+    message += `| \`${field}\` | ${compare[field].current.value ? `\`${compare[field].current.value}\`` : ""} ${
+      compare[field].current.unit ?? ""
+    } ${compare[field].current.range ? `(\`${compare[field].current.range ?? ""}\`)` : ""} | ${
+      compare[field].previous.value ? `\`${compare[field].previous.value}\`` : ""
+    } ${compare[field].previous.unit ?? ""} ${
+      compare[field].previous.range ? `(\`${compare[field].previous.range ?? ""}\`)` : ""
+    } | ${
+      compare[field].previous.value && compare[field].current.value
         //@ts-ignore
-        ? `\`${Math.round((parseFloat(compare[field].previous.value) / parseFloat(compare[field].current.value)) * 100) / 100
+        ? `\`${
+          Math.round((parseFloat(compare[field].previous.value) / parseFloat(compare[field].current.value)) * 100) / 100
         }\``
         : ""
-      } |\n`;
+    } |\n`;
   }
 }
 
@@ -183,15 +195,20 @@ if (message === "# Benchmark") {
 
   message += `\n\n| Benchmark suite | Current: ${commitSha.slice(-1)} | Previous:  | Ratio |\n | -| -| -| -|\n`;
   for (const field of Object.keys(compare)) {
-    message += `| \`${field}\` | ${compare[field].current.value ? `\`${compare[field].current.value}\`` : ""} ${compare[field].current.unit ?? ""
-      } ${compare[field].current.range ? `(\`${compare[field].current.range ?? ""}\`)` : ""} | ${compare[field].previous.value ? `\`${compare[field].previous.value}\`` : ""
-      } ${compare[field].previous.unit ?? ""} ${compare[field].previous.range ? `(\`${compare[field].previous.range ?? ""}\`)` : ""
-      } | ${compare[field].previous.value && compare[field].current.value
+    message += `| \`${field}\` | ${compare[field].current.value ? `\`${compare[field].current.value}\`` : ""} ${
+      compare[field].current.unit ?? ""
+    } ${compare[field].current.range ? `(\`${compare[field].current.range ?? ""}\`)` : ""} | ${
+      compare[field].previous.value ? `\`${compare[field].previous.value}\`` : ""
+    } ${compare[field].previous.unit ?? ""} ${
+      compare[field].previous.range ? `(\`${compare[field].previous.range ?? ""}\`)` : ""
+    } | ${
+      compare[field].previous.value && compare[field].current.value
         //@ts-ignore
-        ? `\`${Math.round((parseFloat(compare[field].previous.value) / parseFloat(compare[field].current.value)) * 100) / 100
+        ? `\`${
+          Math.round((parseFloat(compare[field].previous.value) / parseFloat(compare[field].current.value)) * 100) / 100
         }\``
         : ""
-      } |\n`;
+    } |\n`;
   }
 }
 
