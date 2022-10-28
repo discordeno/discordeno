@@ -68,10 +68,10 @@ if (window.BENCHMARK_DATA) {
       compare[field].previous.range ? `(\`${compare[field].previous.range ?? ""}\`)` : ""
     } | ${
       compare[field].previous.value && compare[field].current.value
-        //@ts-ignore
         ? `\`${
-          Math.round((parseFloat(compare[field].previous.value) / parseFloat(compare[field].current.value)) * 100) / 100
-        }\``
+          //@ts-ignore
+          Math.round((parseFloat(compare[field].previous.value) / parseFloat(compare[field].current.value)) * 100) /
+          100}\``
         : ""
     } |\n`;
   }
@@ -141,10 +141,10 @@ if (window.BENCHMARK_DATA) {
       compare[field].previous.range ? `(\`${compare[field].previous.range ?? ""}\`)` : ""
     } | ${
       compare[field].previous.value && compare[field].current.value
-        //@ts-ignore
         ? `\`${
-          Math.round((parseFloat(compare[field].previous.value) / parseFloat(compare[field].current.value)) * 100) / 100
-        }\``
+          //@ts-ignore
+          Math.round((parseFloat(compare[field].previous.value) / parseFloat(compare[field].current.value)) * 100) /
+          100}\``
         : ""
     } |\n`;
   }
@@ -203,10 +203,10 @@ if (message === "# Benchmark") {
       compare[field].previous.range ? `(\`${compare[field].previous.range ?? ""}\`)` : ""
     } | ${
       compare[field].previous.value && compare[field].current.value
-        //@ts-ignore
         ? `\`${
-          Math.round((parseFloat(compare[field].previous.value) / parseFloat(compare[field].current.value)) * 100) / 100
-        }\``
+          //@ts-ignore
+          Math.round((parseFloat(compare[field].previous.value) / parseFloat(compare[field].current.value)) * 100) /
+          100}\``
         : ""
     } |\n`;
   }
