@@ -61,7 +61,7 @@ jobs:
             fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/benchmarkResults.zip`, Buffer.from(download.data));
 
       - name: Unzip Result Artifact
-        run: unzip commitData.zip
+        run: unzip benchmarkResults.zip
 
       - name: Generate Message
         id: genMessage
