@@ -1,0 +1,68 @@
+name: Comment Benchmark Result
+
+on:
+  workflow_run:
+    workflows: [Benchmark]
+    types:
+      - completed
+
+jobs:
+  comment-benchmark-result:
+    name: Comment Benchmark Result
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: denoland/setup-deno@main
+        with:
+          deno-version: v1.x
+      - name: "Download artifact"
+        uses: actions/github-script@v6
+        with:
+          script: |
+            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: context.payload.workflow_run.id,
+            });
+            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "commitData"
+            })[0];
+            let download = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+            let fs = require('fs');
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/commitData.zip`, Buffer.from(download.data));
+
+      - name: "Unzip artifact"
+        run: unzip commitData.zip
+
+      - name: Run
+        id: genMessage
+        run: |
+          MESSAGE=$(deno run -A performance/generateMessage.ts)
+          echo "MESSAGE<<EOF" >> $GITHUB_ENV
+          echo "$MESSAGE" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: "Comment on PR"
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            let fs = require('fs');
+            let commit_sha = fs.readFileSync('./sha');
+            let repo = fs.readFileSync('./repo');
+            const pr = await client.repos.listPullRequestsAssociatedWithCommit({
+              commit_sha,
+              owner: repo.split('/')[0],
+              repo: repo.split('/')[1],
+            });
+            github.rest.issues.createComment({
+              issue_number: pr.data[0].number,
+              owner: repo.split('/')[0],
+              repo: repo.split('/')[1],
+              body: `${{ env.MESSAGE }}`
+            })

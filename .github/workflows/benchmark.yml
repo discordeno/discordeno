@@ -41,20 +41,16 @@ jobs:
           benchmark-data-dir-path: benchmarksResult/MemoryBenchmark
           github-token: ${{ secrets.GITHUB_TOKEN }}
           auto-push: ${{ github.ref == 'refs/heads/main' }}
-      - name: Run
-        id: genMessage
+
+      - name: Save Commmit SHA
+        env:
+          SHA: ${{ GITHUB_SHA }}
+          REPO: ${{ GITHUB_REPOSITORY }}
         run: |
-          MESSAGE=$(deno run -A performance/generateMessage.ts)
-          echo "MESSAGE<<EOF" >> $GITHUB_ENV
-          echo "$MESSAGE" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-      - uses: actions/github-script@v6
+          mkdir -p ./commitData
+          echo $SHA > ./commitData/sha
+          echo $REPO > ./commitData/repo
+      - uses: actions/upload-artifact@v3
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `${{ env.MESSAGE }}`
-            })
+          name: commitData
+          path: commitData/
