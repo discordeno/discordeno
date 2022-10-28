@@ -35,7 +35,29 @@ jobs:
           name: benchmarkResults
           path: output.txt
 
-      - name: Store benchmark result
+      - name: Create banchies branch
+        if: ${{ GITHUB_REPOSITORY != 'discordeno/discordeno' }}
+        uses: peterjgrainger/action-create-branch@v2.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: "banchies"
+
+      - name: Store benchmark result (For Pull Request)
+        if: ${{ GITHUB_REPOSITORY != 'discordeno/discordeno' }}
+        uses: benchmark-action/github-action-benchmark@v1
+        id: benchmark-action
+        with:
+          tool: "customSmallerIsBetter"
+          output-file-path: output.txt
+          gh-pages-branch: "benchies"
+          benchmark-data-dir-path: benchmarksResult
+          gh-repository: ${{ GITHUB_REPOSITORY }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+
+      - name: Store benchmark result (On main repo)
+        if: ${{ github.ref == 'refs/heads/main' && GITHUB_REPOSITORY == 'discordeno/discordeno' }}
         uses: benchmark-action/github-action-benchmark@v1
         id: benchmark-action
         with:
@@ -44,7 +66,7 @@ jobs:
           gh-pages-branch: "benchies"
           benchmark-data-dir-path: benchmarksResult
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          auto-push: ${{ github.ref == 'refs/heads/main' }}
+          auto-push: true
 
       - name: Save Commmit SHA
         run: |
