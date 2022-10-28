@@ -40,7 +40,6 @@ jobs:
           benchmark-data-dir-path: benchmarksResult/MemoryBenchmark
           github-token: ${{ secrets.GITHUB_TOKEN }}
           auto-push: ${{ github.ref == 'refs/heads/main' }}
-          comment-always: true
       - name: Run
         id: genMessage
         run: |
@@ -51,4 +50,10 @@ jobs:
       - uses: actions/github-script@v5
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          script: ${{ env.MESSAGE }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `${{ env.MESSAGE }}`
+            })
