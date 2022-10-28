@@ -64,6 +64,10 @@ await build({
       path: "plugins/cache/mod.ts",
     },
     {
+      name: "./cache-with-proxy",
+      path: "plugins/cache-with-proxy/mod.ts",
+    },
+    {
       name: "./fileloader-plugin",
       path: "plugins/fileloader/mod.ts",
     },
@@ -83,7 +87,8 @@ await build({
   package: {
     name: "discordeno",
     version: Deno.args[0],
-    description: "Discordeno is simplistic, easy-to-use, versatile while being efficient and lightweight.",
+    description:
+      "Discordeno is simplistic, easy-to-use, versatile while being efficient and lightweight.",
     keywords: [
       "javascript",
       "api",
@@ -107,45 +112,19 @@ await build({
     },
     typesVersions: {
       "*": {
-        "*": [
-          "./types/mod.d.ts",
-        ],
-        "rest": [
-          "./types/rest/mod.d.ts",
-        ],
-        "gateway": [
-          "./types/gateway/mod.d.ts",
-        ],
-        "types": [
-          "./types/types/mod.d.ts",
-        ],
-        "transformers": [
-          "./types/transformers/mod.d.ts",
-        ],
-        "packages": [
-          "./types/packages/mod.d.ts",
-        ],
-        "logger": [
-          "./types/packages/logger/mod.d.ts",
-        ],
-        "embeds": [
-          "./types/packages/embeds/mod.d.ts",
-        ],
-        "plugins": [
-          "./types/plugins/mod.d.ts",
-        ],
-        "cache-plugin": [
-          "./types/plugins/cache/mod.d.ts",
-        ],
-        "fileloader-plugin": [
-          "./types/plugins/fileloader/mod.d.ts",
-        ],
-        "helpers-plugin": [
-          "./types/plugins/helpers/mod.d.ts",
-        ],
-        "permissions-plugin": [
-          "./types/plugins/permissions/mod.d.ts",
-        ],
+        "*": ["./types/mod.d.ts"],
+        rest: ["./types/rest/mod.d.ts"],
+        gateway: ["./types/gateway/mod.d.ts"],
+        types: ["./types/types/mod.d.ts"],
+        transformers: ["./types/transformers/mod.d.ts"],
+        packages: ["./types/packages/mod.d.ts"],
+        logger: ["./types/packages/logger/mod.d.ts"],
+        embeds: ["./types/packages/embeds/mod.d.ts"],
+        plugins: ["./types/plugins/mod.d.ts"],
+        "cache-plugin": ["./types/plugins/cache/mod.d.ts"],
+        "fileloader-plugin": ["./types/plugins/fileloader/mod.d.ts"],
+        "helpers-plugin": ["./types/plugins/helpers/mod.d.ts"],
+        "permissions-plugin": ["./types/plugins/permissions/mod.d.ts"],
       },
     },
   },
