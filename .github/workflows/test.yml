@@ -16,7 +16,7 @@ jobs:
       - name: Check Formatting
         run: deno fmt --check
 
-  # change if any prod code changed, skip test without chnage
+  # change if any prod code changed, skip test without change
   path-filter:
     name: Check Path Changes
     runs-on: ubuntu-latest
