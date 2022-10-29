@@ -1,6 +1,6 @@
 await import(`https://raw.githubusercontent.com/discordeno/discordeno/benchies/benchmarksResult/data.js`);
 const commitSha = await Deno.readTextFile("./sha");
-const results = JSON.parse(await Deno.readTextFile("./data.txt"));
+const results = JSON.parse(await Deno.readTextFile("./data.json"));
 
 interface BenchmarksData {
   commit: {
@@ -51,21 +51,21 @@ for (const benchmark of lastHeadBenchmarks.benches) {
     previous: benchmark,
     current: {},
   };
+}
+for (const benchmark of latestBaseBenchmarks.benches) {
   compareWithBase[benchmark.name] = {
     previous: benchmark,
     current: {},
   };
 }
 for (const benchmark of latestHeadBenchmarks.benches) {
-  compareWithHead[benchmark.name] = {
+  compareWithBase[benchmark.name] = {
     //@ts-ignore
     previous: {},
-    ...compareWithHead[benchmark.name],
+    ...compareWithBase[benchmark.name],
     current: benchmark,
   };
-}
-for (const benchmark of latestBaseBenchmarks.benches) {
-  compareWithBase[benchmark.name] = {
+  compareWithHead[benchmark.name] = {
     //@ts-ignore
     previous: {},
     ...compareWithBase[benchmark.name],
@@ -75,12 +75,12 @@ for (const benchmark of latestBaseBenchmarks.benches) {
 
 let message = "";
 
+const compareTableInfo = [{ name: "last head", commit: lastHeadBenchmarks.commit.id }, {
+  name: "base",
+  commit: latestBaseBenchmarks.commit.id,
+}];
 for (const benchmarkType of ["Performance", "Memory"]) {
-  message = `# ${benchmarkType} Benchmark\n\n`;
-  const compareTableInfo = [{ name: "last head", commit: lastHeadBenchmarks.commit.id }, {
-    name: "base",
-    commit: latestBaseBenchmarks.commit.id,
-  }];
+  message += `# ${benchmarkType} Benchmark\n\n`;
   for (const [index, compare] of [compareWithHead, compareWithBase].entries()) {
     message += `## Compare with ${compareTableInfo[index].name}\n`;
     message += "<details><summary>Detail results of benchmarks</summary>\n\n";
@@ -89,7 +89,7 @@ for (const benchmarkType of ["Performance", "Memory"]) {
     } | Ratio |\n | -| -| -| -|\n`;
     for (
       const field of Object.keys(compare).filter((key) =>
-        benchmarkType === "Memory" && key.startsWith("[Cache Plugin]")
+        benchmarkType === "Performance" ? !key.startsWith("[Cache Plugin]") : key.startsWith("[Cache Plugin]")
       )
     ) {
       message += `| \`${field}\` | ${compare[field].current.value ? `\`${compare[field].current.value}\`` : ""} ${

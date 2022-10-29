@@ -17,8 +17,8 @@ for (const line of lines) {
   ret.push({
     name: m[1].trim(),
     value: Math.round(parseFloat(m[2]) * unitMultiplier[m[3] as keyof typeof unitMultiplier]),
-    range: `${parseFloat(m[4]) * unitMultiplier[m[5] as keyof typeof unitMultiplier]} … ${
-      parseFloat(m[6]) * unitMultiplier[m[7] as keyof typeof unitMultiplier]
+    range: `${Math.round(parseFloat(m[4]) * unitMultiplier[m[5] as keyof typeof unitMultiplier] * 100) / 100} … ${
+      Math.round(parseFloat(m[6]) * unitMultiplier[m[7] as keyof typeof unitMultiplier] * 100) / 100
     }`,
     unit: "ns/iter",
   });
