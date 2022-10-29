@@ -82,7 +82,7 @@ const compareTableInfo = [{ name: "last head", commit: lastHeadBenchmarks.commit
 for (const benchmarkType of ["Performance", "Memory"]) {
   message += `# ${benchmarkType} Benchmark\n\n`;
   for (const [index, compare] of [compareWithHead, compareWithBase].entries()) {
-    message += `## Compare with ${compareTableInfo[index].name}\n`;
+    message += `## Compared with ${compareTableInfo[index].name}\n`;
     message += "<details><summary>Detail results of benchmarks</summary>\n\n";
     message += `| Benchmark suite | Current: ${lastHeadBenchmarks.commit.id} | Previous: ${
       compareTableInfo[index].commit
