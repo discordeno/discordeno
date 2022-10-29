@@ -42,7 +42,6 @@ jobs:
           output-file-path: output.txt
           external-data-json-path: benchmarksResult/data.json
       - uses: actions/upload-artifact@v3
-        if: ${{ github.ref != 'refs/heads/main' }}
         with:
           name: benchmarkResults
           path: benchmarksResult/data.json

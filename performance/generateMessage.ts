@@ -36,8 +36,8 @@ interface CompareTable {
 }
 
 const benchmarks = results.entries.Benchmark.slice(-2) as BenchmarksData[];
-const latestHeadBenchmarks = benchmarks[1];
-const lastHeadBenchmarks = benchmarks[0];
+const latestHeadBenchmarks = benchmarks.length === 2 ? benchmarks[1] : benchmarks[0];
+const lastHeadBenchmarks = benchmarks.length === 2 ? benchmarks[0] : undefined;
 //@ts-ignore
 const latestBaseBenchmarks = JSON.parse(JSON.stringify(window.BENCHMARK_DATA.entries.Benchmark)).slice(
   -1,
@@ -46,11 +46,13 @@ const latestBaseBenchmarks = JSON.parse(JSON.stringify(window.BENCHMARK_DATA.ent
 const compareWithHead: CompareTable = {};
 const compareWithBase: CompareTable = {};
 
-for (const benchmark of lastHeadBenchmarks.benches) {
-  compareWithHead[benchmark.name] = {
-    previous: benchmark,
-    current: {},
-  };
+if (lastHeadBenchmarks) {
+  for (const benchmark of lastHeadBenchmarks.benches) {
+    compareWithHead[benchmark.name] = {
+      previous: benchmark,
+      current: {},
+    };
+  }
 }
 for (const benchmark of latestBaseBenchmarks.benches) {
   compareWithBase[benchmark.name] = {
@@ -75,7 +77,7 @@ for (const benchmark of latestHeadBenchmarks.benches) {
 
 let message = "";
 
-const compareTableInfo = [{ name: "last head", commit: lastHeadBenchmarks.commit.id }, {
+const compareTableInfo = [{ name: "last head", commit: lastHeadBenchmarks ? lastHeadBenchmarks.commit.id : "" }, {
   name: "base",
   commit: latestBaseBenchmarks.commit.id,
 }];
