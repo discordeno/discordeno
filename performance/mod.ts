@@ -70,7 +70,6 @@ for (
   );
   const formattedChannelType = channelType.split("-").map((word) => word[0].toUpperCase() + word.slice(1)).join(" ");
 
-
   Deno.bench(`[Transformer] Discord ${formattedChannelType} to a ${formattedChannelType}`, () => {
     bot.transformers.channel(bot, { channel: discordChannel });
   });
