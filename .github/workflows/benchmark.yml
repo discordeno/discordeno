@@ -9,6 +9,11 @@ jobs:
     name: Benchmark
     runs-on: ubuntu-latest
     steps:
+      - name: Dump github context
+        run: echo "$GITHUB_CONTEXT"
+        shell: bash
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
       - uses: actions/checkout@v3
       - uses: denoland/setup-deno@main
         with:
