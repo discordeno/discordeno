@@ -52,3 +52,47 @@ Deno.bench("[Transformer - Previous] User to a Discord User", {
 }, () => {
   oldBot.transformers.reverse.user(oldBot, oldUser);
 });
+
+for (
+  const channelType of [
+    "rules",
+    "announcement-channel",
+    "moderator-channel",
+    "text-channel",
+    "stage-channel",
+    "voice-channel",
+  ]
+) {
+  const discordChannel = JSON.parse(
+    await (await fetch(
+      `https://raw.githubusercontent.com/discordeno/discordeno/benchies/cache/cachedObject/${channelType}.json`,
+    )).text(),
+  );
+  const formattedChannelType = channelType.split("-").map((word) => word[0].toUpperCase() + word.slice(1)).join(" ");
+
+
+  Deno.bench(`[Transformer] Discord ${formattedChannelType} to a ${formattedChannelType}`, () => {
+    bot.transformers.channel(bot, { channel: discordChannel });
+  });
+
+  Deno.bench(`[Transformer - Previous] Discord ${formattedChannelType} to a ${formattedChannelType}`, {
+    ignore: Deno.env.get("CI") === "true",
+  }, () => {
+    oldBot.transformers.channel(oldBot, { channel: discordChannel });
+  });
+
+  /* Not implemented
+  const newChannel = bot.transformers.channel(bot, { channel: discordChannel });
+  const oldChannel = oldBot.transformers.channel(oldBot, { channel: discordChannel });
+
+  Deno.bench(`[Transformer] ${formattedChannelType} to a Discord ${formattedChannelType}`, () => {
+    bot.transformers.reverse.channel(bot, newChannel);
+  });
+
+  Deno.bench(`[Transformer - Previous] ${formattedChannelType} to a Discord ${formattedChannelType}`, {
+    ignore: Deno.env.get("CI") === "true",
+  }, () => {
+    oldBot.transformers.reverse.channel(oldBot, oldChannel);
+  });
+  */
+}
