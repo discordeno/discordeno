@@ -17,9 +17,16 @@ npm i @thereallonewolf/amethystframework
 - **Step 4**: Add following code in index.ts file, replacing TOKEN with your bot token.
 
 ```ts
-import {createBot, GatewayIntents, startBot } from "discordeno";
+import { createBot, GatewayIntents, startBot } from "discordeno";
 import { enableCachePlugin, enableCacheSweepers } from "discordeno/cache-plugin";
-import { AmethystBot, Context, enableAmethystPlugin, Event,Category, Command } from "@thereallonewolf/amethystframework";
+import {
+  AmethystBot,
+  Category,
+  Command,
+  Context,
+  enableAmethystPlugin,
+  Event,
+} from "@thereallonewolf/amethystframework";
 
 let baseClient = createBot({
   token: "TOKEN",
@@ -37,7 +44,7 @@ enableCacheSweepers(client);
 startBot(client);
 
 @Category({
-  name:"general",
+  name: "general",
   description: "My general commands",
   uniqueCommands: true,
   default: "", //As all the commands are unique so no need to set the default command.
