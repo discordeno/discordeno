@@ -84,7 +84,7 @@ for (const benchmarkType of ["Performance", "Memory"]) {
   for (const [index, compare] of [compareWithHead, compareWithBase].entries()) {
     message += `## Compared with ${compareTableInfo[index].name}\n`;
     message += "<details><summary>Detail results of benchmarks</summary>\n\n";
-    message += `| Benchmark suite | Current: ${lastHeadBenchmarks.commit.id} | Previous: ${
+    message += `| Benchmark suite | Current: ${latestHeadBenchmarks.commit.id} | Previous: ${
       compareTableInfo[index].commit
     } | Ratio |\n | -| -| -| -|\n`;
     for (
