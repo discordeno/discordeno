@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1667071400454,
+  "lastUpdate": 1667072815871,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -96,6 +96,102 @@ window.BENCHMARK_DATA = {
             "value": 275.48,
             "unit": "MB",
             "range": "271.31 … 278.75"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "48591478+H01001000@users.noreply.github.com",
+            "name": "Jonathan Ho",
+            "username": "H01001000"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fd82b12c170eda28f129cdc87cbbb095d521d28e",
+          "message": "Fix Ci (#2565)\n\n* fix: Validate not running cron\r\n\r\n* fix: always upload artifact\r\n\r\n* fix: generate fail on first comment",
+          "timestamp": "2022-10-29T14:45:58-05:00",
+          "tree_id": "ee5b8f3560a733536c86e420437e2d81be17405c",
+          "url": "https://github.com/discordeno/discordeno/commit/fd82b12c170eda28f129cdc87cbbb095d521d28e"
+        },
+        "date": 1667072813856,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "[Guild.toggles.features] Get the features of a guild",
+            "value": 1820,
+            "unit": "ns/iter",
+            "range": "1770 … 1920"
+          },
+          {
+            "name": "[Transformer] Discord User to a User",
+            "value": 128,
+            "unit": "ns/iter",
+            "range": "115.81 … 160.52"
+          },
+          {
+            "name": "[Transformer] User to a Discord User",
+            "value": 124,
+            "unit": "ns/iter",
+            "range": "112.77 … 140.17"
+          },
+          {
+            "name": "[Transformer] Discord Rules to a Rules",
+            "value": 409,
+            "unit": "ns/iter",
+            "range": "387.66 … 626.77"
+          },
+          {
+            "name": "[Transformer] Discord Announcement Channel to a Announcement Channel",
+            "value": 1140,
+            "unit": "ns/iter",
+            "range": "1110 … 1160"
+          },
+          {
+            "name": "[Transformer] Discord Moderator Channel to a Moderator Channel",
+            "value": 545,
+            "unit": "ns/iter",
+            "range": "525.85 … 558.21"
+          },
+          {
+            "name": "[Transformer] Discord Text Channel to a Text Channel",
+            "value": 419,
+            "unit": "ns/iter",
+            "range": "408.69 … 426.17"
+          },
+          {
+            "name": "[Transformer] Discord Stage Channel to a Stage Channel",
+            "value": 432,
+            "unit": "ns/iter",
+            "range": "417.24 … 446.19"
+          },
+          {
+            "name": "[Transformer] Discord Voice Channel to a Voice Channel",
+            "value": 442,
+            "unit": "ns/iter",
+            "range": "429.3 … 449.9"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 276.23,
+            "unit": "MB",
+            "range": "273.3 … 278.26"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 257.26,
+            "unit": "MB",
+            "range": "255.23 … 258.93"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 274.89,
+            "unit": "MB",
+            "range": "271.27 … 276.76"
           }
         ]
       }
