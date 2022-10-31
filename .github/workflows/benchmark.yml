@@ -60,8 +60,8 @@ jobs:
       - name: Save Commmit SHA
         run: |
           mkdir -p ./commitData
-          echo $GITHUB_SHA > ./commitData/sha
-          echo "$GITHUB_ACTOR"/discordeno > ./commitData/repo
+          echo ${{ github.event.pull_request.head.sha }} > ./commitData/sha
+          echo ${{ github.event.pull_request.head.repo.full_name }} > ./commitData/repo
       - uses: actions/upload-artifact@v3
         with:
           name: commitData
