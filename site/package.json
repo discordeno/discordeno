@@ -20,9 +20,11 @@
     "@docusaurus/preset-classic": "2.0.0-beta.15",
     "@easyops-cn/docusaurus-search-local": "^0.21.4",
     "@mdx-js/react": "^1.6.21",
+    "chart.js": "^2.9.4",
     "clsx": "^1.1.1",
     "prism-react-renderer": "^1.2.1",
     "react": "^17.0.1",
+    "react-chartjs-2": "^2.11.2",
     "react-dom": "^17.0.1"
   },
   "devDependencies": {
