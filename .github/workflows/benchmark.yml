@@ -61,7 +61,7 @@ jobs:
         run: |
           mkdir -p ./commitData
           echo $GITHUB_SHA > ./commitData/sha
-          echo $GITHUB_REPOSITORY > ./commitData/repo
+          echo "$GITHUB_ACTOR"/discordeno > ./commitData/repo
       - uses: actions/upload-artifact@v3
         with:
           name: commitData
