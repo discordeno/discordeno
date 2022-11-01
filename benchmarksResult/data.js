@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1667227028134,
+  "lastUpdate": 1667331076062,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -288,6 +288,102 @@ window.BENCHMARK_DATA = {
             "value": 274.2,
             "unit": "MB",
             "range": "272.77 … 275.12"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "48591478+H01001000@users.noreply.github.com",
+            "name": "Jonathan Ho",
+            "username": "H01001000"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d62e4422244af945a164c971c754626d6c098828",
+          "message": "enable inlay (#2568)\n\n* enable inlay\r\n\r\n* sneak in\r\n\r\n* feat: add lock file",
+          "timestamp": "2022-11-01T14:29:46-05:00",
+          "tree_id": "7f3d827d202faf3ece2993c2cd708a61ece7a16c",
+          "url": "https://github.com/discordeno/discordeno/commit/d62e4422244af945a164c971c754626d6c098828"
+        },
+        "date": 1667331072223,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "[Guild.toggles.features] Get the features of a guild",
+            "value": 1350,
+            "unit": "ns/iter",
+            "range": "1240 … 1610"
+          },
+          {
+            "name": "[Transformer] Discord User to a User",
+            "value": 165,
+            "unit": "ns/iter",
+            "range": "148.23 … 236.56"
+          },
+          {
+            "name": "[Transformer] User to a Discord User",
+            "value": 153,
+            "unit": "ns/iter",
+            "range": "134.52 … 726.5"
+          },
+          {
+            "name": "[Transformer] Discord Rules to a Rules",
+            "value": 816,
+            "unit": "ns/iter",
+            "range": "500 … 9870000"
+          },
+          {
+            "name": "[Transformer] Discord Announcement Channel to a Announcement Channel",
+            "value": 1920,
+            "unit": "ns/iter",
+            "range": "1400 … 8050000"
+          },
+          {
+            "name": "[Transformer] Discord Moderator Channel to a Moderator Channel",
+            "value": 748,
+            "unit": "ns/iter",
+            "range": "655.16 … 1630"
+          },
+          {
+            "name": "[Transformer] Discord Text Channel to a Text Channel",
+            "value": 583,
+            "unit": "ns/iter",
+            "range": "498.61 … 926.05"
+          },
+          {
+            "name": "[Transformer] Discord Stage Channel to a Stage Channel",
+            "value": 622,
+            "unit": "ns/iter",
+            "range": "533.74 … 1080"
+          },
+          {
+            "name": "[Transformer] Discord Voice Channel to a Voice Channel",
+            "value": 600,
+            "unit": "ns/iter",
+            "range": "528.6 … 953.16"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 274.98,
+            "unit": "MB",
+            "range": "271.83 … 278.26"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 257.6,
+            "unit": "MB",
+            "range": "255.51 … 259.43"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 274.99,
+            "unit": "MB",
+            "range": "271.57 … 276.76"
           }
         ]
       }
