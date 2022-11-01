@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1667331076062,
+  "lastUpdate": 1667332672717,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -384,6 +384,102 @@ window.BENCHMARK_DATA = {
             "value": 274.99,
             "unit": "MB",
             "range": "271.57 … 276.76"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "kiran121102@gmail.com",
+            "name": "Awesome Stickz",
+            "username": "AwesomeStickz"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "788bd852184b91e3e7b0cf0f7b0468dd1d2c41c7",
+          "message": "fix: add members collection to guild in guild transformer if available (#2569)",
+          "timestamp": "2022-11-01T14:56:38-05:00",
+          "tree_id": "35eb665d9cb6b3b9e6c865af21e2fe324aba9904",
+          "url": "https://github.com/discordeno/discordeno/commit/788bd852184b91e3e7b0cf0f7b0468dd1d2c41c7"
+        },
+        "date": 1667332670234,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "[Guild.toggles.features] Get the features of a guild",
+            "value": 2470,
+            "unit": "ns/iter",
+            "range": "2280 … 3470"
+          },
+          {
+            "name": "[Transformer] Discord User to a User",
+            "value": 166,
+            "unit": "ns/iter",
+            "range": "117.58 … 579.39"
+          },
+          {
+            "name": "[Transformer] User to a Discord User",
+            "value": 169,
+            "unit": "ns/iter",
+            "range": "122.65 … 1030"
+          },
+          {
+            "name": "[Transformer] Discord Rules to a Rules",
+            "value": 521,
+            "unit": "ns/iter",
+            "range": "430.93 … 1010"
+          },
+          {
+            "name": "[Transformer] Discord Announcement Channel to a Announcement Channel",
+            "value": 1420,
+            "unit": "ns/iter",
+            "range": "1340 … 1690"
+          },
+          {
+            "name": "[Transformer] Discord Moderator Channel to a Moderator Channel",
+            "value": 710,
+            "unit": "ns/iter",
+            "range": "584.72 … 1030"
+          },
+          {
+            "name": "[Transformer] Discord Text Channel to a Text Channel",
+            "value": 536,
+            "unit": "ns/iter",
+            "range": "438.72 … 590.63"
+          },
+          {
+            "name": "[Transformer] Discord Stage Channel to a Stage Channel",
+            "value": 509,
+            "unit": "ns/iter",
+            "range": "405.99 … 836.48"
+          },
+          {
+            "name": "[Transformer] Discord Voice Channel to a Voice Channel",
+            "value": 522,
+            "unit": "ns/iter",
+            "range": "414.18 … 696.77"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 279.25,
+            "unit": "MB",
+            "range": "277.67 … 281.6"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 262.7,
+            "unit": "MB",
+            "range": "256.91 … 268.66"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 278.82,
+            "unit": "MB",
+            "range": "275.96 … 280.32"
           }
         ]
       }
