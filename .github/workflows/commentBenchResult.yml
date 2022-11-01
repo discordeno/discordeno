@@ -89,7 +89,7 @@ jobs:
               github.rest.issues.createComment({
                 issue_number: pr.data[0].number,
                 owner: repo.split('/')[0],
-                repo: repo.split('/')[1].slice(0,-1),
+                repo: "discordeno",
                 body: `${{ env.MESSAGE }}`
               })
             }

@@ -65,6 +65,12 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
         return [result.id, result];
       }),
     ),
+    members: new Collection(
+      payload.guild.members?.map((member) => {
+        const result = bot.transformers.member(bot, member, guildId, bot.transformers.snowflake(member.user!.id));
+        return [result.id, result];
+      }),
+    ),
     roles: new Collection(
       payload.guild.roles?.map((role) => {
         const result = bot.transformers.role(bot, { role, guildId });
