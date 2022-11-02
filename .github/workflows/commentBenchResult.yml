@@ -80,6 +80,7 @@ jobs:
             const fs = require('fs');
             const commit_sha = fs.readFileSync('./sha', 'utf-8');
             const repo = fs.readFileSync('./repo', 'utf-8');
+            if (repo.split('/')[1] === undefined) process.exit(0)
             const pr = await github.rest.repos.listPullRequestsAssociatedWithCommit({
               commit_sha: commit_sha.slice(0,-1),
               owner: repo.split('/')[0],
@@ -88,7 +89,7 @@ jobs:
             if (pr.data[0]) {
               github.rest.issues.createComment({
                 issue_number: pr.data[0].number,
-                owner: repo.split('/')[0],
+                owner: "discordeno",
                 repo: "discordeno",
                 body: `${{ env.MESSAGE }}`
               })
