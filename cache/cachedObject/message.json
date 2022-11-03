@@ -1,0 +1,25 @@
+{
+  "id": "3976287345280849527",
+  "type": 0,
+  "content": "mrexsxg",
+  "channel_id": "9590128944383609093",
+  "author": {
+    "id": "579581530765784410",
+    "username": "6630461962933841",
+    "avatar": "eae5905ad2d18d7c8deca20478b088b5",
+    "avatar_decoration": null,
+    "discriminator": "5684",
+    "public_flags": 0
+  },
+  "attachments": [],
+  "embeds": [],
+  "mentions": [],
+  "mention_roles": [],
+  "pinned": false,
+  "mention_everyone": false,
+  "tts": false,
+  "timestamp": "2022-11-03T10:41:33.083Z",
+  "edited_timestamp": null,
+  "flags": 0,
+  "components": []
+}
