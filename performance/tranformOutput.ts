@@ -15,11 +15,11 @@ const lines = output.split(/\r?\n/g);
 const ret = [];
 
 const unitMultiplier = {
-  "s": 1000 * 1000 * 1000 * (baselineSysbenchScore / sysbenchScore),
-  "ms": 1000 * 1000 * (baselineSysbenchScore / sysbenchScore),
-  "µs": 1000 * (baselineSysbenchScore / sysbenchScore),
-  "ns": 1 * (baselineSysbenchScore / sysbenchScore),
-  "ps": 0.1 * (baselineSysbenchScore / sysbenchScore),
+  "s": 1000 * 1000 * 1000 * (sysbenchScore / baselineSysbenchScore),
+  "ms": 1000 * 1000 * (sysbenchScore / baselineSysbenchScore),
+  "µs": 1000 * (sysbenchScore / baselineSysbenchScore),
+  "ns": 1 * (sysbenchScore / baselineSysbenchScore),
+  "ps": 0.1 * (sysbenchScore / baselineSysbenchScore),
 };
 
 for (const line of lines) {
