@@ -86,23 +86,28 @@ for (const benchmarkType of ["Performance", "Memory"]) {
   for (const [index, compare] of [compareWithHead, compareWithBase].entries()) {
     message += `## Compared with ${compareTableInfo[index].name}\n`;
     message += "<details><summary>Detail results of benchmarks</summary>\n\n";
-    message += `| Benchmark suite | Current: ${latestHeadBenchmarks.commit.id} | Previous: ${compareTableInfo[index].commit
-      } | Ratio |\n | -| -| -| -|\n`;
+    message += `| Benchmark suite | Current: ${latestHeadBenchmarks.commit.id} | Previous: ${
+      compareTableInfo[index].commit
+    } | Ratio |\n | -| -| -| -|\n`;
     for (
       const field of Object.keys(compare).filter((key) =>
         benchmarkType === "Performance" ? !key.startsWith("[Cache Plugin]") : key.startsWith("[Cache Plugin]")
       )
     ) {
-      message += `| \`${field}\` | ${compare[field].current.value ? `\`${compare[field].current.value}\`` : ""} ${compare[field].current.unit ?? ""
-        } ${compare[field].current.range ? `(\`${compare[field].current.range ?? ""}\`)` : ""} | ${compare[field].previous.value ? `\`${compare[field].previous.value}\`` : ""
-        } ${compare[field].previous.unit ?? ""} ${compare[field].previous.range ? `(\`${compare[field].previous.range ?? ""}\`)` : ""
-        } | ${compare[field].previous.value && compare[field].current.value
+      message += `| \`${field}\` | ${compare[field].current.value ? `\`${compare[field].current.value}\`` : ""} ${
+        compare[field].current.unit ?? ""
+      } ${compare[field].current.range ? `(\`${compare[field].current.range ?? ""}\`)` : ""} | ${
+        compare[field].previous.value ? `\`${compare[field].previous.value}\`` : ""
+      } ${compare[field].previous.unit ?? ""} ${
+        compare[field].previous.range ? `(\`${compare[field].previous.range ?? ""}\`)` : ""
+      } | ${
+        compare[field].previous.value && compare[field].current.value
           ? `\`${
-          //@ts-ignore
-          Math.round((parseFloat(compare[field].previous.value) / parseFloat(compare[field].current.value)) * 100) /
-          100}\``
+            //@ts-ignore
+            Math.round((parseFloat(compare[field].previous.value) / parseFloat(compare[field].current.value)) * 100) /
+            100}\``
           : ""
-        } |\n`;
+      } |\n`;
     }
     message += "</details>\n\n";
   }
