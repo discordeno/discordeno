@@ -14,6 +14,16 @@ const discordGuild = JSON.parse(
 const currentGuild = bot.transformers.guild(bot, { guild: discordGuild, shardId: 0 });
 const previousGuild = oldBot.transformers.guild(oldBot, { guild: discordGuild, shardId: 0 });
 
+Deno.bench("[Transformer] Discord Guild to a Guild", () => {
+  bot.transformers.guild(bot, { guild: discordGuild, shardId: 0 });
+});
+
+Deno.bench("[Transformer - Previous] Discord Guild to a Guild", {
+  ignore: Deno.env.get("CI") === "true",
+}, () => {
+  oldBot.transformers.guild(oldBot, { guild: discordGuild, shardId: 0 });
+});
+
 Deno.bench("[Guild.toggles.features] Get the features of a guild", () => {
   currentGuild.toggles.features;
 });
@@ -68,7 +78,8 @@ for (
       `https://raw.githubusercontent.com/discordeno/discordeno/benchies/cache/cachedObject/${channelType}.json`,
     )).text(),
   );
-  const formattedChannelType = channelType.split("-").map((word) => word[0].toUpperCase() + word.slice(1)).join(" ");
+  let formattedChannelType = channelType.split("-").map((word) => word[0].toUpperCase() + word.slice(1)).join(" ");
+  if (formattedChannelType === "Rules") formattedChannelType = "Rules Channel";
 
   Deno.bench(`[Transformer] Discord ${formattedChannelType} to a ${formattedChannelType}`, () => {
     bot.transformers.channel(bot, { channel: discordChannel });
@@ -95,3 +106,96 @@ for (
   });
   */
 }
+
+// Fetch the cached member
+const discordMember = JSON.parse(
+  await (await fetch("https://raw.githubusercontent.com/discordeno/discordeno/benchies/cache/cachedObject/member.json"))
+    .text(),
+);
+
+const newMember = bot.transformers.member(bot, discordMember, 0n, 0n);
+const oldMember = oldBot.transformers.member(oldBot, discordMember, 0n, 0n);
+
+Deno.bench("[Transformer] Discord Member to a Member", () => {
+  bot.transformers.member(bot, discordMember, 0n, 0n);
+});
+
+Deno.bench("[Transformer - Previous] Discord Member to a Member", {
+  ignore: Deno.env.get("CI") === "true",
+}, () => {
+  oldBot.transformers.member(oldBot, discordMember, 0n, 0n);
+});
+
+Deno.bench("[Transformer] Member to a Discord Member", () => {
+  bot.transformers.reverse.member(bot, newMember);
+});
+
+Deno.bench("[Transformer - Previous] Member to a Discord Member", {
+  ignore: Deno.env.get("CI") === "true",
+}, () => {
+  oldBot.transformers.reverse.member(oldBot, oldMember);
+});
+
+// Fetch the cached role
+const discordRole = JSON.parse(
+  await (await fetch("https://raw.githubusercontent.com/discordeno/discordeno/benchies/cache/cachedObject/role.json"))
+    .text(),
+);
+
+const newRole = bot.transformers.role(bot, { role: discordRole, guildId: 0n });
+const oldRole = oldBot.transformers.role(oldBot, { role: discordRole, guildId: 0n });
+
+Deno.bench("[Transformer] Discord Role to a Role", () => {
+  bot.transformers.role(bot, { role: discordRole, guildId: 0n });
+});
+
+Deno.bench("[Transformer - Previous] Discord Role to a Role", {
+  ignore: Deno.env.get("CI") === "true",
+}, () => {
+  oldBot.transformers.role(oldBot, { role: discordRole, guildId: 0n });
+});
+
+/* Not implemented
+Deno.bench("[Transformer] Role to a Discord Role", () => {
+bot.transformers.reverse.role(bot, newRole);
+});
+
+Deno.bench("[Transformer - Previous] Role to a Discord Role", {
+ignore: Deno.env.get("CI") === "true",
+}, () => {
+oldBot.transformers.reverse.role(oldBot, oldRole);
+});
+*/
+
+// Fetch the cached message
+const discordMessage = JSON.parse(
+  await (await fetch(
+    "https://raw.githubusercontent.com/discordeno/discordeno/benchies/cache/cachedObject/message.json",
+  ))
+    .text(),
+);
+
+const newMessage = bot.transformers.message(bot, discordMessage);
+const oldMessage = oldBot.transformers.message(oldBot, discordMessage);
+
+Deno.bench("[Transformer] Discord Message to a Message", () => {
+  bot.transformers.message(bot, discordMessage);
+});
+
+Deno.bench("[Transformer - Previous] Discord Message to a Message", {
+  ignore: Deno.env.get("CI") === "true",
+}, () => {
+  oldBot.transformers.message(oldBot, discordMessage);
+});
+
+/* Not implemented
+Deno.bench("[Transformer] User to a Discord User", () => {
+  bot.transformers.reverse.message(bot, newUser);
+});
+
+Deno.bench("[Transformer - Previous] User to a Discord User", {
+  ignore: Deno.env.get("CI") === "true",
+}, () => {
+  oldBot.transformers.reverse.message(oldBot, oldUser);
+});
+*/

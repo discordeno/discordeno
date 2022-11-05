@@ -17,10 +17,12 @@ jobs:
         # this is the performance benchmark
       - name: Cache deps
         run: deno cache performance/mod.ts
+      - name: Download sysbench
+        run: sudo apt-get install -y sysbench
       - name: Run Benchmark
         run: NO_COLOR=true deno bench --unstable -A performance/mod.ts | tee output.txt
       - name: Format Benchmark Output
-        run: deno run -A performance/tranformOutput.ts
+        run: deno run --unstable -A performance/tranformOutput.ts
 
         # this is the memory benchmark
       - name: Download db from benchmark repo

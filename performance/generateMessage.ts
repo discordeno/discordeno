@@ -70,7 +70,7 @@ for (const benchmark of latestHeadBenchmarks.benches) {
   compareWithHead[benchmark.name] = {
     //@ts-ignore
     previous: {},
-    ...compareWithBase[benchmark.name],
+    ...compareWithHead[benchmark.name],
     current: benchmark,
   };
 }
