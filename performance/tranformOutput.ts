@@ -1,3 +1,4 @@
+// Just a constant sysbench sorce to compare against
 const baselineSysbenchScore = 2000;
 let sysbenchScore = 2000;
 
