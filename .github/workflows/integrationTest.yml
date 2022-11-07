@@ -1,0 +1,47 @@
+name: Integration Test
+
+on:
+  push:
+    paths:
+      - ".github/workflows/integrationTest.yml"
+      - "gateway/**"
+      - "handlers/**"
+      - "helpers/**"
+      - "packages/**"
+      - "plugins/**"
+      - "rest/**"
+      - "template/**"
+      - "tests/**"
+      - "transformers/**"
+      - "types/**"
+      - "util/**"
+      - "bot.ts"
+      - "mod.ts"
+      - "dnt.ts"
+
+jobs:
+  integration-test:
+    name: Integration Test
+    runs-on: ubuntu-latest
+    concurrency: integration-test
+    steps:
+      - uses: actions/checkout@v3
+      - uses: denoland/setup-deno@main
+        with:
+          deno-version: v1.x
+      - name: Run integration
+        # if: ${{ github.actor == 'Skillz4Killz' || github.actor == 'itohatweb' }}
+        run: deno test --coverage=coverage -A tests/
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          UNIT_TEST_GUILD_ID: ${{ secrets.UNIT_TEST_GUILD_ID }}
+          TEST_ENV: INTEGRATION
+          PROXY_REST_SECRET: ${{ secrets.PROXY_REST_SECRET }}
+          PROXY_REST_URL: ${{ secrets.PROXY_REST_URL }}
+      - name: Create coverage report
+        run: deno coverage --exclude=tests ./coverage --lcov > coverage.lcov
+      - name: Collect and upload the coverage report
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.lcov
+          flags: integration
