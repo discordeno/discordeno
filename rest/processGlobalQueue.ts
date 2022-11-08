@@ -1,5 +1,4 @@
 import { RestManager } from "./restManager.ts";
-import { HTTPResponseCodes } from "../types/shared.ts";
 
 export async function processGlobalQueue(rest: RestManager) {
   // IF QUEUE IS EMPTY EXIT
@@ -48,11 +47,12 @@ export async function processGlobalQueue(rest: RestManager) {
     const bucketResetIn = request.payload.bucketId ? rest.checkRateLimits(rest, request.payload.bucketId) : false;
 
     if (urlResetIn || bucketResetIn) {
+      // THIS REST IS RATE LIMITED, SO PUSH BACK TO START
+      rest.globalQueue.unshift(request);
+
       // ONLY ADD TIMEOUT IF ANOTHER QUEUE IS NOT PENDING
       setTimeout(() => {
         rest.debug(`[REST - processGlobalQueue] rate limited, running setTimeout.`);
-        // THIS REST IS RATE LIMITED, SO PUSH BACK TO START
-        rest.globalQueue.unshift(request);
         // START QUEUE IF NOT STARTED
         rest.processGlobalQueue(rest);
       }, urlResetIn || (bucketResetIn as number));
