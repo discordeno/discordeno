@@ -1,15 +1,15 @@
 {
-  "id": "8762594955418841535",
+  "id": "8195550914070514993",
   "type": 0,
-  "content": "gioygkz",
-  "channel_id": "9590560067794708725",
+  "content": "ulmlgkl",
+  "channel_id": "5521534647115460845",
   "author": {
-    "id": "212391533259848446",
-    "username": "3482598997055599",
+    "id": "543926099717898195",
+    "username": "1565904438328490",
     "avatar": "eae5905ad2d18d7c8deca20478b088b5",
     "avatar_decoration": null,
-    "discriminator": "7563",
-    "public_flags": 0
+    "discriminator": "8523",
+    "public_flags": 4194304
   },
   "attachments": [],
   "embeds": [],
@@ -18,7 +18,7 @@
   "pinned": false,
   "mention_everyone": false,
   "tts": false,
-  "timestamp": "2022-11-10T00:55:38.939Z",
+  "timestamp": "2022-11-11T00:57:15.286Z",
   "edited_timestamp": null,
   "flags": 0,
   "components": []
