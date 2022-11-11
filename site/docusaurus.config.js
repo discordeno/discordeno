@@ -27,10 +27,6 @@ const config = {
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl: "https://github.com/discordeno/discordeno/tree/main/site/",
         },
-        blog: {
-          showReadingTime: true,
-          editUrl: "https://github.com/discordeno/discordeno/tree/main/site/",
-        },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
         },
@@ -87,10 +83,6 @@ const config = {
             title: "More",
             items: [
               {
-                label: "Blog",
-                to: "/blog",
-              },
-              {
                 label: "GitHub",
                 href: "https://github.com/discordeno/discordeno",
               },
@@ -118,7 +110,6 @@ const config = {
         language: ["en"],
         hashed: true,
         docsDir: ["docs"],
-        blogDir: ["blog"],
         removeDefaultStopWordFilter: true,
         highlightSearchTermsOnTargetPage: true,
         searchResultLimits: 8,
