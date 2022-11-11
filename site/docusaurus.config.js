@@ -50,7 +50,10 @@ const config = {
             position: "left",
             label: "Docs",
           },
-          { to: "/blog", label: "Blog", position: "left" },
+          {
+            to: "/benchmark",
+            label: "Benchmark",
+          },
           {
             href: "https://github.com/discordeno/discordeno",
             label: "GitHub",
