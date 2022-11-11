@@ -45,10 +45,16 @@ const config = {
         },
         items: [
           {
-            type: "doc",
-            docId: "intro",
+            type: 'docSidebar',
+            sidebarId: 'docs',
             position: "left",
             label: "Docs",
+          },
+          {
+            type: 'docSidebar',
+            sidebarId: 'tutorial',
+            position: "left",
+            label: "Tutorial",
           },
           {
             to: "/benchmark",
@@ -68,8 +74,32 @@ const config = {
             title: "Docs",
             items: [
               {
-                label: "Docs",
-                to: "/docs/intro",
+                label: "Introduction",
+                to: "/docs/docs/intro",
+              },
+              {
+                label: "Getting Started",
+                to: "/docs/docs/getting-started",
+              },
+              {
+                label: "FAQ",
+                to: "/docs/docs/frequently-asked-questions",
+              },
+            ],
+          }, {
+            title: "Tutorial",
+            items: [
+              {
+                label: "Big Bot",
+                to: "/docs/tutorial/big-bot-guide/step-by-step",
+              },
+              {
+                label: "Node.js",
+                to: "/docs/tutorial/nodejs/getting-started",
+              },
+              {
+                label: "Amethyst",
+                to: "/docs/tutorial/amethyst/intro",
               },
             ],
           },
