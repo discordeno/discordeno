@@ -785,6 +785,8 @@ export interface DiscordChannel {
   default_reaction_emoji?: DiscordDefaultReactionEmoji | null;
   /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
   default_thread_rate_limit_per_user: number;
+  /** the default sort order type used to order posts in GUILD_FORUM channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
+  default_sort_order?: number | null;
 }
 
 /** https://discord.com/developers/docs/topics/gateway#presence-update */
