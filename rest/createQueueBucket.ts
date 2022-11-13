@@ -1,22 +1,25 @@
 import { delay } from "../util/utils.ts";
 import { RestPayload, RestRequest } from "./rest.ts";
+import { RestManager } from "./restManager.ts";
 
 /**
- * A invalid request bucket is used in a similar manner as a leaky bucket but a invalid request bucket can be refilled as needed.
- * It's purpose is to make sure the bot does not hit the limit to getting a 1 hr ban.
+ * A queue bucket is used in a similar manner as a leaky bucket.
  *
  * @param options The options used to configure this bucket.
  * @returns RefillingBucket
  */
-export function createQueueBucket(options: QueueBucketOptions): QueueBucket {
+export function createQueueBucket(rest: RestManager, options: QueueBucketOptions): QueueBucket {
   const bucket: QueueBucket = {
     used: options.used ?? 0,
     max: options.max ?? 1,
     interval: options.interval ?? 0,
     timeoutId: options.timeoutId ?? 0,
     processing: false,
+    processingPending: false,
+    firstRequest: true,
 
     waiting: [],
+    pending: [],
 
     requestsAllowed: function () {
       return bucket.max - bucket.used;
@@ -33,7 +36,6 @@ export function createQueueBucket(options: QueueBucketOptions): QueueBucket {
           bucket.used++;
           resolve();
         } else {
-          console.log("[BUCKET] Request NOT Allowed");
           bucket.waiting.push(resolve);
           await bucket.processWaiting();
         }
@@ -43,7 +45,6 @@ export function createQueueBucket(options: QueueBucketOptions): QueueBucket {
     processWaiting: async function () {
       // If already processing, that loop will handle all waiting requests.
       if (bucket.processing) {
-        console.log("[BUCKET] Bucket is processing.");
         return;
       }
 
@@ -51,30 +52,91 @@ export function createQueueBucket(options: QueueBucketOptions): QueueBucket {
       bucket.processing = true;
 
       while (bucket.waiting.length) {
-        console.log("[BUCKET] processing waiting loop");
         if (bucket.isRequestAllowed()) {
-          console.log("[BUCKET] processing waiting loop", true);
           bucket.used++;
           // Resolve the next item in the queue
           bucket.waiting.shift()?.();
         } else {
-          console.log("[BUCKET] processing waiting loop", false);
           await delay(1000);
         }
       }
 
-      console.log("[BUCKET] Finished waiting loop");
       // Mark as false so next pending request can be triggered by new loop.
       bucket.processing = false;
     },
 
-    handleCompletedRequest: function (code) {
-      console.log("[BUCKET] Completed request");
+    processPending: async function () {
+      // If already processing, that loop will handle all pending requests.
+      if (bucket.processingPending) {
+        return;
+      }
+
+      // Mark as processing so other loops don't start
+      bucket.processingPending = true;
+
+      while (bucket.pending.length) {
+        if (bucket.firstRequest || bucket.isRequestAllowed()) {
+          bucket.firstRequest = false;
+          bucket.used++;
+          const [queuedRequest] = bucket.pending;
+          if (queuedRequest) {
+            const basicURL = rest.simplifyUrl(queuedRequest.request.url, queuedRequest.request.method);
+
+            // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
+            const urlResetIn = rest.checkRateLimits(rest, basicURL);
+            if (urlResetIn) {
+              setTimeout(() => {
+                bucket.processPending();
+              }, urlResetIn);
+              break;
+            }
+
+            // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
+            const bucketResetIn = queuedRequest.payload.bucketId
+              ? rest.checkRateLimits(rest, queuedRequest.payload.bucketId)
+              : false;
+            if (bucketResetIn) {
+              setTimeout(() => {
+                bucket.processPending();
+              }, bucketResetIn);
+              break;
+            }
+
+            // Remove from queue, we are executing it.
+            bucket.pending.shift();
+
+            rest.processGlobalQueue(rest, {
+              ...queuedRequest,
+              urlToUse: queuedRequest.request.url,
+              basicURL,
+            });
+          }
+        } else {
+          await delay(1000);
+        }
+      }
+
+      // Mark as false so next pending request can be triggered by new loop.
+      bucket.processingPending = false;
+      rest.cleanupQueues(rest);
     },
 
-    makeRequest: function (options: BucketRequest) {
-      bucket.waiting.push(options);
-      bucket.processWaiting();
+    handleCompletedRequest: function (headers) {
+      bucket.max = headers.max;
+      bucket.interval = headers.interval;
+      bucket.used = bucket.max - headers.remaining;
+
+      if (!bucket.timeoutId) {
+        bucket.timeoutId = setTimeout(() => {
+          bucket.used = 0;
+        });
+      }
+    },
+
+    makeRequest: async function (options: BucketRequest) {
+      await bucket.waitUntilRequestAvailable();
+      bucket.pending.push(options);
+      bucket.processPending();
     },
   };
 
@@ -103,8 +165,14 @@ export interface QueueBucket {
   timeoutId: number;
   /** The requests that are currently pending. */
   waiting: ((value: void | PromiseLike<void>) => void)[];
+  /** The requests that are currently pending. */
+  pending: BucketRequest[];
   /** Whether or not the waiting queue is already processing. */
   processing: boolean;
+  /** Whether or not the pending queue is already processing. */
+  processingPending: boolean;
+  /** Whether the first request is pending. */
+  firstRequest: boolean;
 
   /** Gives the number of requests that are currently allowed. */
   requestsAllowed: () => number;
@@ -114,10 +182,12 @@ export interface QueueBucket {
   waitUntilRequestAvailable: () => Promise<void>;
   /** Begins processing the waiting queue of requests. */
   processWaiting: () => Promise<void>;
+  /** Begins processing the pending queue of requests. */
+  processPending: () => Promise<void>;
   /** Handler for whenever a request is validated. This should update the requested values or trigger any other necessary stuff. */
-  handleCompletedRequest: (code: number) => void;
+  handleCompletedRequest: (headers: { remaining: number; interval: number; max: number }) => void;
   /** Adds a request to the queue. */
-  makeRequest: (options: BucketRequest) => void;
+  makeRequest: (options: BucketRequest) => Promise<void>;
 }
 
 export interface BucketRequest {

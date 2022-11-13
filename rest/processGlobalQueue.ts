@@ -11,7 +11,7 @@ export async function processGlobalQueue(rest: RestManager, request: {
   await rest.invalidBucket.waitUntilRequestAvailable();
 
   // Check if this request is able to be made for it's specific bucket
-  await rest.buckets.get()
+  // await rest.buckets.get()
 
   await rest.sendRequest(rest, {
     url: request.urlToUse,

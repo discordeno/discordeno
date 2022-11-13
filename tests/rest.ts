@@ -18,27 +18,31 @@ const rest = createRestManager({
   token,
   secretKey: REST_AUTHORIZATION_KEY,
   customUrl: PROXY_REST_URL,
-  debug(text) {
-    if (text.startsWith("[REST - RequestCreate]")) {
-      const aaa = text.split(" ");
-      const method = aaa[4];
-      const url = aaa[7];
+  // debug(text) {
+  //   if (text.startsWith("[REST - RequestCreate]")) {
+  //     const aaa = text.split(" ");
+  //     const method = aaa[4];
+  //     const url = aaa[7];
 
-      col.set(method + url, Date.now());
+  //     col.set(method + url, Date.now());
 
-      // console.log("[DEBUG]", method, url);
-    }
+  //     // console.log("[DEBUG]", method, url);
+  //   }
 
-    if (text.startsWith("[REST - processGlobalQueue] rate limited, running setTimeout.")) {
-      console.log("[POSSIBLE BUCKET ISSUE]");
-    }
+  //   if (text.startsWith("[REST - processGlobalQueue] rate limited, running setTimeout.")) {
+  //     console.log("[POSSIBLE BUCKET ISSUE]");
+  //   }
 
-    // console.log(text)
-  },
-  fetching(options) {
-    console.log("[FETCHING]", options.method, options.url, Date.now() - col.get(options.method + options.url)!);
-  },
+  //   // console.log(text)
+  // },
+  // fetching(options) {
+  //   // console.log("[FETCHING]", options.method, options.url, Date.now() - col.get(options.method + options.url)!);
+  // },
 });
+
+setInterval(() => {
+  console.log("[DEBUGGING]", rest.pathQueues.size);
+}, 3000);
 
 // START LISTENING TO THE URL(localhost)
 const server = Deno.listen({ port: REST_PORT });

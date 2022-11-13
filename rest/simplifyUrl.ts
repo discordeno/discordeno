@@ -21,7 +21,5 @@ export function simplifyUrl(url: string, method: string) {
     route = method + route;
   }
 
-  console.log("ROUTE", route);
-
   return route;
 }

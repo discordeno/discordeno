@@ -23,7 +23,7 @@ export function processRequest(rest: RestManager, request: RestRequest, payload:
     queue.makeRequest({ request, payload });
   } else {
     // CREATES A NEW QUEUE
-    const bucketQueue = createQueueBucket({});
+    const bucketQueue = createQueueBucket(rest, {});
     // Add request to queue
     bucketQueue.makeRequest({
       request,

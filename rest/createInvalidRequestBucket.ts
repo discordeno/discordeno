@@ -33,11 +33,9 @@ export function createInvalidRequestBucket(options: InvalidRequestBucketOptions)
       return new Promise(async (resolve) => {
         // If whatever amount of requests is left is more than the safety margin, allow the request
         if (bucket.isRequestAllowed()) {
-          // console.log("[BUCKET] Request Allowed");
           bucket.requested++;
           resolve();
         } else {
-          console.log("[BUCKET] Request NOT Allowed");
           bucket.waiting.push(resolve);
           await bucket.processWaiting();
         }
@@ -47,7 +45,6 @@ export function createInvalidRequestBucket(options: InvalidRequestBucketOptions)
     processWaiting: async function () {
       // If already processing, that loop will handle all waiting requests.
       if (bucket.processing) {
-        console.log("[BUCKET] Bucket is processing.");
         return;
       }
 
@@ -55,30 +52,24 @@ export function createInvalidRequestBucket(options: InvalidRequestBucketOptions)
       bucket.processing = true;
 
       while (bucket.waiting.length) {
-        console.log("[BUCKET] processing waiting loop");
         if (bucket.isRequestAllowed()) {
-          console.log("[BUCKET] processing waiting loop", true);
           bucket.requested++;
           // Resolve the next item in the queue
           bucket.waiting.shift()?.();
         } else {
-          console.log("[BUCKET] processing waiting loop", false);
           await delay(1000);
         }
       }
 
-      console.log("[BUCKET] Finished waiting loop");
       // Mark as false so next pending request can be triggered by new loop.
       bucket.processing = false;
     },
 
     handleCompletedRequest: function (code) {
-      console.log("[BUCKET] Completed request");
       // Since request is complete, we can remove one from requested.
       bucket.requested--;
       // Since it is as a valid request, we don't need to do anything
       if (!bucket.errorStatuses.includes(code)) return;
-      console.log("[BUCKET] Invalid request found", code);
       // INVALID REQUEST WAS MADE
 
       // If it was not frozen before, mark it frozen
