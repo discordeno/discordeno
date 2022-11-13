@@ -1,6 +1,5 @@
 import { BotWithCache } from "../../deps.ts";
-import { higherRolePosition } from "../permissions.ts";
-import { highestRole, requireBotGuildPermissions } from "../permissions.ts";
+import { higherRolePosition, highestRole, requireBotGuildPermissions } from "../permissions.ts";
 
 export function editRole(bot: BotWithCache) {
   const editRole = bot.helpers.editRole;
@@ -24,6 +23,10 @@ export function editRole(bot: BotWithCache) {
       }
 
       requireBotGuildPermissions(bot, guild, ["MANAGE_ROLES"]);
+    }
+
+    if (options.name && !bot.utils.validateLength(options.name, { max: 100 })) {
+      throw new Error("Role name must be less than 100 characters");
     }
 
     return await editRole(guildId, id, options);

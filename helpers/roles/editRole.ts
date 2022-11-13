@@ -39,7 +39,7 @@ export async function editRole(bot: Bot, guildId: BigString, roleId: BigString, 
 }
 
 export interface EditGuildRole {
-  /** Name of the role, default: "new role" */
+  /** Name of the role, max 100 characters, default: "new role" */
   name?: string;
   /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
   permissions?: PermissionStrings[];
