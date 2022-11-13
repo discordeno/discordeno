@@ -298,7 +298,7 @@ export enum ChannelTypes {
   GuildAnnouncement,
   /** A temporary sub-channel within a GUILD_ANNOUNCEMENT channel */
   AnnouncementThread = 10,
-  /** A temporary sub-channel within a GUILD_TEXT channel */
+  /** a temporary sub-channel within a GUILD_TEXT or GUILD_FORUM channel */
   PublicThread,
   /** A temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission */
   PrivateThread,
