@@ -1,8 +1,11 @@
 // START FILE FOR REST PROCESS
-import { BASE_URL, Collection, createRestManager } from "../mod.ts";
-import { dotenv } from "./deps.ts";
+import { config as dotenv } from "https://deno.land/x/dotenv@v3.2.0/mod.ts";
+
+import { BASE_URL, Collection, createRestManager } from "./mod.ts";
 
 dotenv({ export: true, path: `${Deno.cwd()}/.env` });
+
+const col = new Collection<string, number>();
 
 const token = Deno.env.get("GAMER_TOKEN");
 if (!token) throw new Error("Token was not provided.");
@@ -10,8 +13,6 @@ if (!token) throw new Error("Token was not provided.");
 const REST_AUTHORIZATION_KEY = Deno.env.get("PROXY_REST_SECRET");
 const PROXY_REST_URL = Deno.env.get("PROXY_REST_URL");
 const REST_PORT = Number(PROXY_REST_URL?.substring(PROXY_REST_URL.lastIndexOf(":") + 1)) ?? 8080;
-
-const col = new Collection<string, number>();
 
 // CREATES THE FUNCTIONALITY FOR MANAGING THE REST REQUESTS
 const rest = createRestManager({
@@ -32,11 +33,9 @@ const rest = createRestManager({
     if (text.startsWith("[REST - processGlobalQueue] rate limited, running setTimeout.")) {
       console.log("[POSSIBLE BUCKET ISSUE]");
     }
-
-    // console.log(text)
   },
   fetching(options) {
-    console.log("[FETCHING]", options.method, options.url, Date.now() - col.get(options.method + options.url)!);
+    // console.log("[FETCHING]", options.method, options.url, Date.now() - col.get(options.method + options.url)!);
   },
 });
 
@@ -130,3 +129,10 @@ async function handleRequest(conn: Deno.Conn) {
 }
 
 type RequestMethod = "POST" | "PUT" | "DELETE" | "PATCH";
+
+// // @ts-ignore
+// rest.convertRestError = (errorStack, data) => {
+//   return data;
+// };
+
+// console.log(`Giveaway Boat REST Started At: ${new Date().toUTCString()}`);

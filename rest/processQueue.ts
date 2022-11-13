@@ -7,6 +7,11 @@ export function processQueue(rest: RestManager, id: string) {
 
   while (queue.requests.length) {
     rest.debug(`[REST - processQueue] Running while loop.`);
+    if (rest.globallyRateLimited) {
+      rest.debug(`[REST - processQueue] Globally rate limited.`);
+      continue;
+    }
+
     // SELECT THE FIRST ITEM FROM THIS QUEUE
     const queuedRequest = queue.requests[0];
     // IF THIS DOESN'T HAVE ANY ITEMS JUST CANCEL, THE CLEANER WILL REMOVE IT.
@@ -43,12 +48,16 @@ export function processQueue(rest: RestManager, id: string) {
 
     // CUSTOM HANDLER FOR USER TO LOG OR WHATEVER WHENEVER A FETCH IS MADE
     rest.debug(`[REST - Add To Global Queue] ${JSON.stringify(queuedRequest.payload)}`);
-    rest.globalQueue.push({
+    // rest.globalQueue.push({
+    //   ...queuedRequest,
+    //   urlToUse: queuedRequest.request.url,
+    //   basicURL,
+    // });
+    rest.processGlobalQueue(rest, {
       ...queuedRequest,
       urlToUse: queuedRequest.request.url,
       basicURL,
     });
-    rest.processGlobalQueue(rest);
     queue.requests.shift();
   }
 

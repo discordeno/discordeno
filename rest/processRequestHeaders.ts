@@ -41,6 +41,10 @@ export function processRequestHeaders(rest: RestManager, url: string, headers: H
     rest.globallyRateLimited = true;
     rateLimited = true;
 
+    setTimeout(() => {
+      rest.globallyRateLimited = false;
+    }, globalReset);
+
     rest.rateLimitedPaths.set("global", {
       url: "global",
       resetTimestamp: globalReset,

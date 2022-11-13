@@ -1,6 +1,7 @@
-import { RestManager } from "./restManager.ts";
 import { BASE_URL } from "../util/constants.ts";
+import { createQueueBucket } from "./createQueueBucket.ts";
 import { RestPayload, RestRequest } from "./rest.ts";
+import { RestManager } from "./restManager.ts";
 
 /** Processes a request and assigns it to a queue or creates a queue if none exists for it. */
 export function processRequest(rest: RestManager, request: RestRequest, payload: RestPayload) {
@@ -19,18 +20,16 @@ export function processRequest(rest: RestManager, request: RestRequest, payload:
 
   const queue = rest.pathQueues.get(url);
   if (queue) {
-    queue.requests.push({ request, payload });
+    queue.makeRequest({ request, payload });
   } else {
     // CREATES A NEW QUEUE
-    rest.pathQueues.set(url, {
-      isWaiting: false,
-      requests: [
-        {
-          request,
-          payload,
-        },
-      ],
+    const bucketQueue = createQueueBucket({});
+    // Add request to queue
+    bucketQueue.makeRequest({
+      request,
+      payload,
     });
-    rest.processQueue(rest, url);
+    // Save queue
+    rest.pathQueues.set(url, bucketQueue);
   }
 }

@@ -70,22 +70,8 @@ export async function sendRequest<T>(rest: RestManager, options: RestSendRequest
           break;
       }
 
-      if (
-        rest.invalidRequestErrorStatuses.includes(response.status) &&
-        !(response.status === 429 && response.headers.get("X-RateLimit-Scope"))
-      ) {
-        // INCREMENT CURRENT INVALID REQUESTS
-        ++rest.invalidRequests;
-
-        if (!rest.invalidRequestsTimeoutId) {
-          rest.invalidRequestsTimeoutId = setTimeout(() => {
-            rest.debug(`[REST - processGlobalQueue] Resetting invalid optionss counter in setTimeout.`);
-            rest.invalidRequests = 0;
-            rest.invalidRequestsTimeoutId = 0;
-          }, rest.invalidRequestsInterval);
-        }
-      }
-
+      rest.invalidBucket.handleCompletedRequest(response.status);
+      
       // If NOT rate limited remove from queue
       if (response.status !== 429) {
         const body = response.type ? JSON.stringify(await response.json()) : undefined;
