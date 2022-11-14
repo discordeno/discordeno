@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1668451011530,
+  "lastUpdate": 1668451051491,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -1290,6 +1290,48 @@ window.BENCHMARK_DATA = {
             "value": 280.04,
             "unit": "MB",
             "range": "277.86 … 281.52"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "lts20050703@gmail.com",
+            "name": "LTS20050703",
+            "username": "lts20050703"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "65b753455116e8109e2cb1fca62e7bd25f1c5cbd",
+          "message": "public thread can be in forum channel (#2586)\n\n* public thread can be in forum channel\r\n\r\n* Update types/shared.ts\r\n\r\nCo-authored-by: Skillz4Killz <23035000+Skillz4Killz@users.noreply.github.com>",
+          "timestamp": "2022-11-14T12:36:20-06:00",
+          "tree_id": "529a71fff92bf7f05bb547d076f7226f865549f4",
+          "url": "https://github.com/discordeno/discordeno/commit/65b753455116e8109e2cb1fca62e7bd25f1c5cbd"
+        },
+        "date": 1668451049144,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 279.84,
+            "unit": "MB",
+            "range": "278.58 … 281.16"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 265.8,
+            "unit": "MB",
+            "range": "262.14 … 271.81"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 279.99,
+            "unit": "MB",
+            "range": "277.86 … 281.63"
           }
         ]
       }
