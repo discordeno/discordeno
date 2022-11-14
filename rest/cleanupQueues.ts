@@ -30,6 +30,6 @@ export function isQueueClearable(queue: QueueBucket) {
   if (!queue.interval) return false;
   if (queue.processing) return false;
   if (queue.processingPending) return false;
-  
+
   return true;
 }

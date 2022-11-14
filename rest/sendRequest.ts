@@ -97,7 +97,10 @@ export async function sendRequest<T>(rest: RestManager, options: RestSendRequest
           return;
         } // RATE LIMITED, ADD BACK TO QUEUE
         else {
-          rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get('X-RateLimit-Scope') === 'shared');
+          rest.invalidBucket.handleCompletedRequest(
+            response.status,
+            response.headers.get("X-RateLimit-Scope") === "shared",
+          );
           await delay(json.retry_after * 1000);
           return options.retryRequest?.();
         }

@@ -30,6 +30,7 @@ import {
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
+  SortOrderTypes,
   StickerFormatTypes,
   StickerTypes,
   SystemChannelFlags,

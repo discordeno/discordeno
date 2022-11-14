@@ -421,7 +421,7 @@ export interface Transformers {
     user: (bot: Bot, payload: User) => DiscordUser;
     team: (bot: Bot, payload: Team) => DiscordTeam;
     application: (bot: Bot, payload: Application) => DiscordApplication;
-    snowflake: (snowflake: bigint) => string;
+    snowflake: (snowflake: BigString) => string;
     createApplicationCommand: (bot: Bot, payload: CreateApplicationCommand) => DiscordCreateApplicationCommand;
     applicationCommand: (bot: Bot, payload: ApplicationCommand) => DiscordApplicationCommand;
     applicationCommandOption: (bot: Bot, payload: ApplicationCommandOption) => DiscordApplicationCommandOption;
