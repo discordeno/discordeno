@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1668450780883,
+  "lastUpdate": 1668450830812,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -1122,6 +1122,48 @@ window.BENCHMARK_DATA = {
             "value": 281.33,
             "unit": "MB",
             "range": "281 … 281.78"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "lts20050703@gmail.com",
+            "name": "LTS20050703",
+            "username": "lts20050703"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "23897b7fcbdef2c67adaac79d6d7cf336e8f70f8",
+          "message": "helpers: Add missing properties for create guild channel (#2581)\n\n* helpers: Add missing properties for create guild channel\r\n\r\n* Update helpers/channels/createChannel.ts\r\n\r\n* Update helpers/channels/createChannel.ts\r\n\r\n* Update helpers/channels/createChannel.ts\r\n\r\nCo-authored-by: Skillz4Killz <23035000+Skillz4Killz@users.noreply.github.com>",
+          "timestamp": "2022-11-14T12:32:41-06:00",
+          "tree_id": "7a43b418070815b0eb228b65e57d027c0b18665a",
+          "url": "https://github.com/discordeno/discordeno/commit/23897b7fcbdef2c67adaac79d6d7cf336e8f70f8"
+        },
+        "date": 1668450828738,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 279.09,
+            "unit": "MB",
+            "range": "276.3 … 281.67"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 265.69,
+            "unit": "MB",
+            "range": "261.74 … 271.81"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 279.92,
+            "unit": "MB",
+            "range": "277.86 … 281.15"
           }
         ]
       }
