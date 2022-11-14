@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1668450830812,
+  "lastUpdate": 1668450950742,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -1164,6 +1164,48 @@ window.BENCHMARK_DATA = {
             "value": 279.92,
             "unit": "MB",
             "range": "277.86 … 281.15"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "lts20050703@gmail.com",
+            "name": "LTS20050703",
+            "username": "lts20050703"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cd5915c8b664bed1a7b5166745a034a74c42e7f6",
+          "message": "add new select menu components (#2583)\n\n* add new select menu components\r\n\r\n* fix: check for component type",
+          "timestamp": "2022-11-14T12:34:41-06:00",
+          "tree_id": "8c7b8e6af6a565944cf259687b3daf2481410ecd",
+          "url": "https://github.com/discordeno/discordeno/commit/cd5915c8b664bed1a7b5166745a034a74c42e7f6"
+        },
+        "date": 1668450948708,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 278.87,
+            "unit": "MB",
+            "range": "276.05 … 281.16"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 265.51,
+            "unit": "MB",
+            "range": "262.05 … 271.35"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 279.69,
+            "unit": "MB",
+            "range": "277.59 … 281"
           }
         ]
       }
