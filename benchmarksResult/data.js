@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1668450998758,
+  "lastUpdate": 1668451011530,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -1246,6 +1246,48 @@ window.BENCHMARK_DATA = {
           {
             "name": "[Cache Plugin] Heap Total",
             "value": 279.99,
+            "unit": "MB",
+            "range": "277.86 … 281.52"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "lts20050703@gmail.com",
+            "name": "LTS20050703",
+            "username": "lts20050703"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e1ba1ae90dbc4cabaa17876540b4bcf1ce855ba6",
+          "message": "delete follow up and original now support ephemeral (#2585)",
+          "timestamp": "2022-11-14T12:35:40-06:00",
+          "tree_id": "7a02c4c9f2833ea5fe4209e4bd302aea741a03b6",
+          "url": "https://github.com/discordeno/discordeno/commit/e1ba1ae90dbc4cabaa17876540b4bcf1ce855ba6"
+        },
+        "date": 1668451009116,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 280.14,
+            "unit": "MB",
+            "range": "276.3 … 282.7"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 265.4,
+            "unit": "MB",
+            "range": "260.93 … 271.76"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 280.04,
             "unit": "MB",
             "range": "277.86 … 281.52"
           }
