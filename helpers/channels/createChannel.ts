@@ -109,7 +109,7 @@ export interface CreateGuildChannel extends WithReason {
   /** Set of tags that can be used in a forum channel */
   availableTags?: {
     /** The id of the tag */
-    id: bigint;
+    id: BigString;
     /** The name of the tag (0-20 characters) */
     name: string;
     /** whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
