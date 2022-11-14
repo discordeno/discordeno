@@ -11,8 +11,6 @@ import { BigString } from "../../../types/shared.ts";
  * @remarks
  * Unlike `deleteMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
  *
- * Does not support ephemeral follow-up messages due to these being stateless.
- *
  * Fires a _Message Delete_ event.
  *
  * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message}
