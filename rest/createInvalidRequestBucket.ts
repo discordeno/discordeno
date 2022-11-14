@@ -72,7 +72,7 @@ export function createInvalidRequestBucket(options: InvalidRequestBucketOptions)
       if (!bucket.errorStatuses.includes(code)) return;
       // Shared scope is not considered invalid
       if (code === 429 && sharedScope) return;
-      
+
       // INVALID REQUEST WAS MADE
 
       // If it was not frozen before, mark it frozen

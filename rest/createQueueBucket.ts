@@ -70,9 +70,7 @@ export function createQueueBucket(rest: RestManager, options: QueueBucketOptions
       bucket.processingPending = true;
 
       while (bucket.pending.length) {
-       
         if (bucket.firstRequest || bucket.isRequestAllowed()) {
-
           const [queuedRequest] = bucket.pending;
           if (queuedRequest) {
             const basicURL = rest.simplifyUrl(queuedRequest.request.url, queuedRequest.request.method);

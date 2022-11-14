@@ -1,4 +1,4 @@
-import { RestRequest,RestPayload } from "./rest.ts";
+import { RestPayload, RestRequest } from "./rest.ts";
 import { RestManager } from "./restManager.ts";
 
 export async function processGlobalQueue(rest: RestManager, request: {
