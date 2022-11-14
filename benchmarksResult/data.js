@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1668451051491,
+  "lastUpdate": 1668452195506,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -1332,6 +1332,48 @@ window.BENCHMARK_DATA = {
             "value": 279.99,
             "unit": "MB",
             "range": "277.86 … 281.63"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "gankstarsleague@gmail.com",
+            "name": "Skillz",
+            "username": "Skillz4Killz"
+          },
+          "committer": {
+            "email": "gankstarsleague@gmail.com",
+            "name": "Skillz",
+            "username": "Skillz4Killz"
+          },
+          "distinct": true,
+          "id": "0628d849e4f1576db7c20bc947965fc94927654b",
+          "message": "fix: remove debugs",
+          "timestamp": "2022-11-14T12:54:55-06:00",
+          "tree_id": "102a8b96209597b52f9cc89c9cf7f8a3278b057e",
+          "url": "https://github.com/discordeno/discordeno/commit/0628d849e4f1576db7c20bc947965fc94927654b"
+        },
+        "date": 1668452192675,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 280.73,
+            "unit": "MB",
+            "range": "278.34 … 282.44"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 265.38,
+            "unit": "MB",
+            "range": "261.09 … 271.7"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 279.86,
+            "unit": "MB",
+            "range": "277.59 … 281.26"
           }
         ]
       }
