@@ -3,7 +3,7 @@ import { WithReason } from "../../mod.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
 import { OverwriteReadable } from "../../types/discordeno.ts";
-import { BigString, ChannelTypes } from "../../types/shared.ts";
+import { BigString, ChannelTypes, SortOrderTypes } from "../../types/shared.ts";
 
 /**
  * Creates a channel within a guild.
@@ -49,6 +49,7 @@ export async function createChannel(bot: Bot, guildId: BigString, options: Creat
           deny: overwrite.deny ? bot.utils.calculateBits(overwrite.deny) : null,
         })),
         type: options?.type || ChannelTypes.GuildText,
+        default_sort_order: options.defaultSortOrder,
         reason: options.reason,
         default_auto_archive_duration: options?.defaultAutoArchiveDuration,
       }
@@ -81,4 +82,6 @@ export interface CreateGuildChannel extends WithReason {
   nsfw?: boolean;
   /** Default duration (in minutes) that clients (not the API) use for newly created threads in this channel, to determine when to automatically archive the thread after the last activity */
   defaultAutoArchiveDuration?: number;
+  /** the default sort order type used to order posts in forum channels */
+  defaultSortOrder?: SortOrderTypes | null;
 }
