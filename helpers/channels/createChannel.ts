@@ -102,7 +102,7 @@ export interface CreateGuildChannel extends WithReason {
   /** Emoji to show in the add reaction button on a thread in a forum channel */
   defaultReactionEmoji?: {
     /** The id of a guild's custom emoji. Exactly one of `emojiId` and `emojiName` must be set. */
-    emojiId?: bigint | null;
+    emojiId?: BigString | null;
     /** The unicode character of the emoji. Exactly one of `emojiId` and `emojiName` must be set. */
     emojiName?: string | null;
   };
