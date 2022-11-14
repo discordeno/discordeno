@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1668449931234,
+  "lastUpdate": 1668449951127,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -828,6 +828,132 @@ window.BENCHMARK_DATA = {
             "value": 279.74,
             "unit": "MB",
             "range": "277.59 … 281.15"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "63b88ee9492ae595a1c6b59d9be1fbed13f405de",
+          "message": "chore(deps): bump loader-utils from 1.4.0 to 1.4.1 in /site (#2577)\n\nBumps [loader-utils](https://github.com/webpack/loader-utils) from 1.4.0 to 1.4.1.\r\n- [Release notes](https://github.com/webpack/loader-utils/releases)\r\n- [Changelog](https://github.com/webpack/loader-utils/blob/v1.4.1/CHANGELOG.md)\r\n- [Commits](https://github.com/webpack/loader-utils/compare/v1.4.0...v1.4.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: loader-utils\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2022-11-14T12:17:51-06:00",
+          "tree_id": "58a87fb2c28d1e87d92c9123b0e434513c9047b2",
+          "url": "https://github.com/discordeno/discordeno/commit/63b88ee9492ae595a1c6b59d9be1fbed13f405de"
+        },
+        "date": 1668449948643,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "[Transformer] Discord Guild to a Guild",
+            "value": 10414,
+            "unit": "ns/iter",
+            "range": "8026.85 … 12769034.85"
+          },
+          {
+            "name": "[Guild.toggles.features] Get the features of a guild",
+            "value": 1310,
+            "unit": "ns/iter",
+            "range": "1277.96 … 1468.07"
+          },
+          {
+            "name": "[Transformer] Discord User to a User",
+            "value": 171,
+            "unit": "ns/iter",
+            "range": "167.18 … 200.92"
+          },
+          {
+            "name": "[Transformer] User to a Discord User",
+            "value": 147,
+            "unit": "ns/iter",
+            "range": "139.6 … 570.39"
+          },
+          {
+            "name": "[Transformer] Discord Rules Channel to a Rules Channel",
+            "value": 458,
+            "unit": "ns/iter",
+            "range": "450.91 … 473.71"
+          },
+          {
+            "name": "[Transformer] Discord Announcement Channel to a Announcement Channel",
+            "value": 1341,
+            "unit": "ns/iter",
+            "range": "1341.33 … 1362.45"
+          },
+          {
+            "name": "[Transformer] Discord Moderator Channel to a Moderator Channel",
+            "value": 623,
+            "unit": "ns/iter",
+            "range": "614.41 … 638.1"
+          },
+          {
+            "name": "[Transformer] Discord Text Channel to a Text Channel",
+            "value": 612,
+            "unit": "ns/iter",
+            "range": "601.48 … 624.94"
+          },
+          {
+            "name": "[Transformer] Discord Stage Channel to a Stage Channel",
+            "value": 495,
+            "unit": "ns/iter",
+            "range": "486.77 … 511.34"
+          },
+          {
+            "name": "[Transformer] Discord Voice Channel to a Voice Channel",
+            "value": 503,
+            "unit": "ns/iter",
+            "range": "495.51 … 540.57"
+          },
+          {
+            "name": "[Transformer] Discord Member to a Member",
+            "value": 837,
+            "unit": "ns/iter",
+            "range": "827.27 … 1012.67"
+          },
+          {
+            "name": "[Transformer] Member to a Discord Member",
+            "value": 1162,
+            "unit": "ns/iter",
+            "range": "1151.22 … 1225.15"
+          },
+          {
+            "name": "[Transformer] Discord Role to a Role",
+            "value": 318,
+            "unit": "ns/iter",
+            "range": "312.99 … 334.7"
+          },
+          {
+            "name": "[Transformer] Discord Message to a Message",
+            "value": 1088,
+            "unit": "ns/iter",
+            "range": "1040.59 … 2735.47"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 278.35,
+            "unit": "MB",
+            "range": "277.18 … 279.34"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 263.2,
+            "unit": "MB",
+            "range": "260.65 … 264.67"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 277.98,
+            "unit": "MB",
+            "range": "277.32 … 278.75"
           }
         ]
       }
