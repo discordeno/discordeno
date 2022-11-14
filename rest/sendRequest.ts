@@ -23,16 +23,6 @@ export async function sendRequest<T>(rest: RestManager, options: RestSendRequest
     // CUSTOM HANDLER FOR USER TO LOG OR WHATEVER WHENEVER A FETCH IS MADE
     rest.fetching(options);
 
-    // @ts-ignore
-    if (options.url.startsWith(BASE_URL) && options.payload?.body) {
-      // @ts-ignore
-      options.payload.body = JSON.parse(options.payload.body);
-      // @ts-ignore
-      options.payload.body.content += ` ${Date.now()}`;
-      // @ts-ignore
-      options.payload.body = JSON.stringify(options.payload.body);
-    }
-
     const response = await fetch(
       options.url.startsWith(BASE_URL) ? options.url : `${BASE_URL}/v${rest.version}/${options.url}`,
       {
