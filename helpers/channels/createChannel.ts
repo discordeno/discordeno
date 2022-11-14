@@ -52,6 +52,24 @@ export async function createChannel(bot: Bot, guildId: BigString, options: Creat
         default_sort_order: options.defaultSortOrder,
         reason: options.reason,
         default_auto_archive_duration: options?.defaultAutoArchiveDuration,
+        default_reaction_emoji: options.defaultReactionEmoji
+          ? {
+            emoji_id: options.defaultReactionEmoji.emojiId
+              ? bot.transformers.reverse.snowflake(options.defaultReactionEmoji.emojiId)
+              : options.defaultReactionEmoji.emojiId,
+            emoji_name: options.defaultReactionEmoji.emojiName,
+          }
+          : undefined,
+
+        available_tags: options.availableTags
+          ? options.availableTags.map((availableTag) => ({
+            id: bot.transformers.reverse.snowflake(availableTag.id),
+            name: availableTag.name,
+            moderated: availableTag.moderated,
+            emoji_name: availableTag.emojiName,
+            emoji_id: availableTag.emojiId ? bot.transformers.reverse.snowflake(availableTag.emojiId) : undefined,
+          }))
+          : undefined,
       }
       : {},
   );
@@ -82,6 +100,26 @@ export interface CreateGuildChannel extends WithReason {
   nsfw?: boolean;
   /** Default duration (in minutes) that clients (not the API) use for newly created threads in this channel, to determine when to automatically archive the thread after the last activity */
   defaultAutoArchiveDuration?: number;
+  /** Emoji to show in the add reaction button on a thread in a forum channel */
+  defaultReactionEmoji?: {
+    /** The id of a guild's custom emoji. Exactly one of `emojiId` and `emojiName` must be set. */
+    emojiId?: BigString | null;
+    /** The unicode character of the emoji. Exactly one of `emojiId` and `emojiName` must be set. */
+    emojiName?: string | null;
+  };
+  /** Set of tags that can be used in a forum channel */
+  availableTags?: {
+    /** The id of the tag */
+    id: BigString;
+    /** The name of the tag (0-20 characters) */
+    name: string;
+    /** whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
+    moderated: boolean;
+    /** The id of a guild's custom emoji */
+    emojiId: BigString;
+    /** The unicode character of the emoji */
+    emojiName?: string;
+  }[];
   /** the default sort order type used to order posts in forum channels */
   defaultSortOrder?: SortOrderTypes | null;
 }
