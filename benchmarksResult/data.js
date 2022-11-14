@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1668450471955,
+  "lastUpdate": 1668450780883,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -1080,6 +1080,48 @@ window.BENCHMARK_DATA = {
             "value": 280.16,
             "unit": "MB",
             "range": "277.59 … 282.16"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "lts20050703@gmail.com",
+            "name": "LTS20050703",
+            "username": "lts20050703"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "84cd7165e23338d1f5d8ac5d29bd6256d400eaa0",
+          "message": "types: add SortOrderTypes and default_sort_order to DiscordChannel, helpers: add defaultSortOrder to createChannel and editChannel options (#2582)\n\n* types: add SortOrderTypes and default_sort_order to DiscordChannel\r\nhelpers: add defaultSortOrder to createChannel and editChannel options\r\n\r\n* Update types/discord.ts\r\n\r\nCo-authored-by: Skillz4Killz <23035000+Skillz4Killz@users.noreply.github.com>",
+          "timestamp": "2022-11-14T12:31:45-06:00",
+          "tree_id": "4ea47793fcac13eed5ab769c1213b8640630ac0d",
+          "url": "https://github.com/discordeno/discordeno/commit/84cd7165e23338d1f5d8ac5d29bd6256d400eaa0"
+        },
+        "date": 1668450778397,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 280.56,
+            "unit": "MB",
+            "range": "277.05 … 282.96"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 261.77,
+            "unit": "MB",
+            "range": "260.92 … 263.36"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 281.33,
+            "unit": "MB",
+            "range": "281 … 281.78"
           }
         ]
       }
