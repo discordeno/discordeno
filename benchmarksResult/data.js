@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1668452195506,
+  "lastUpdate": 1668452649251,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -1374,6 +1374,48 @@ window.BENCHMARK_DATA = {
             "value": 279.86,
             "unit": "MB",
             "range": "277.59 … 281.26"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "mail@afink.dev",
+            "name": "Andreas Fink",
+            "username": "AFink"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e59ec94f55202df6c8e3f6184c955e25a8c2132c",
+          "message": "BREAKING: fix(plugins/validations): remove bot arg from validateApplicationCommandLength, fixes #2543 (#2553)",
+          "timestamp": "2022-11-14T13:02:43-06:00",
+          "tree_id": "c10c114d3821c8e10ead6f69935627d1f68b5aa1",
+          "url": "https://github.com/discordeno/discordeno/commit/e59ec94f55202df6c8e3f6184c955e25a8c2132c"
+        },
+        "date": 1668452647049,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 277.95,
+            "unit": "MB",
+            "range": "276.31 … 280.28"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 265.16,
+            "unit": "MB",
+            "range": "261.16 … 272.18"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 279.8,
+            "unit": "MB",
+            "range": "277.86 … 281.89"
           }
         ]
       }
