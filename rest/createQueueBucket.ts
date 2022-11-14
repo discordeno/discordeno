@@ -92,8 +92,7 @@ export function createQueueBucket(rest: RestManager, options: QueueBucketOptions
         );
         if (bucket.firstRequest || bucket.isRequestAllowed()) {
           // console.log("[QUEUE BUCKET] pending 2");
-          bucket.firstRequest = false;
-          bucket.remaining--;
+
           const [queuedRequest] = bucket.pending;
           if (queuedRequest) {
             const basicURL = rest.simplifyUrl(queuedRequest.request.url, queuedRequest.request.method);
@@ -116,6 +115,16 @@ export function createQueueBucket(rest: RestManager, options: QueueBucketOptions
                 bucket.processPending();
               }, bucketResetIn);
               break;
+            }
+
+            bucket.firstRequest = false;
+            bucket.remaining--;
+
+            if (!bucket.timeoutId && !bucket.remaining && bucket.interval) {
+              bucket.timeoutId = setTimeout(() => {
+                bucket.remaining = bucket.max;
+                bucket.timeoutId = 0;
+              }, bucket.interval);
             }
 
             // Remove from queue, we are executing it.
@@ -147,10 +156,10 @@ export function createQueueBucket(rest: RestManager, options: QueueBucketOptions
 
       // if (bucket.timeoutId) clearTimeout(bucket.timeoutId);
 
-      if (bucket.remaining > 1) {
+      if (bucket.remaining <= 1) {
         bucket.timeoutId = setTimeout(() => {
           bucket.remaining = bucket.max;
-          // bucket.timeoutId = 0;
+          bucket.timeoutId = 0;
         }, headers.interval);
       }
     },

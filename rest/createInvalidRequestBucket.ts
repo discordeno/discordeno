@@ -65,13 +65,14 @@ export function createInvalidRequestBucket(options: InvalidRequestBucketOptions)
       bucket.processing = false;
     },
 
-    handleCompletedRequest: function (code) {
+    handleCompletedRequest: function (code, sharedScope) {
       // Since request is complete, we can remove one from requested.
       bucket.requested--;
       // Since it is as a valid request, we don't need to do anything
       if (!bucket.errorStatuses.includes(code)) return;
-      // TODO: handle shared scope
-      // if (code === 429 && ) return;
+      // Shared scope is not considered invalid
+      if (code === 429 && sharedScope) return;
+      
       // INVALID REQUEST WAS MADE
 
       // If it was not frozen before, mark it frozen
@@ -142,5 +143,5 @@ export interface InvalidRequestBucket {
   /** Begins processing the waiting queue of requests. */
   processWaiting: () => Promise<void>;
   /** Handler for whenever a request is validated. This should update the requested values or trigger any other necessary stuff. */
-  handleCompletedRequest: (code: number) => void;
+  handleCompletedRequest: (code: number, sharedScope: boolean) => void;
 }
