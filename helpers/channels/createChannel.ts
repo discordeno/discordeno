@@ -115,7 +115,7 @@ export interface CreateGuildChannel extends WithReason {
     /** whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
     moderated: boolean;
     /** The id of a guild's custom emoji */
-    emojiId: bigint;
+    emojiId: BigString;
     /** The unicode character of the emoji */
     emojiName?: string;
   }[];
