@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1668449951127,
+  "lastUpdate": 1668450471955,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -954,6 +954,132 @@ window.BENCHMARK_DATA = {
             "value": 277.98,
             "unit": "MB",
             "range": "277.32 … 278.75"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "RanAwaySuccessfully@users.noreply.github.com",
+            "name": "RanAS",
+            "username": "RanAwaySuccessfully"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "58ac893c3a5b96464f3f6be0f8fc45273b106812",
+          "message": "calculateBasePermissions may not correctly retrieve cached members (#2580)\n\n* fix: this might be an oversight\r\n\r\n* Update plugins/permissions/src/permissions.ts\r\n\r\n* Update plugins/permissions/src/permissions.ts\r\n\r\nCo-authored-by: Skillz4Killz <23035000+Skillz4Killz@users.noreply.github.com>",
+          "timestamp": "2022-11-14T12:26:30-06:00",
+          "tree_id": "988b0800f6a06a124ec679ac3f5fe3e98024e3d4",
+          "url": "https://github.com/discordeno/discordeno/commit/58ac893c3a5b96464f3f6be0f8fc45273b106812"
+        },
+        "date": 1668450469507,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "[Transformer] Discord Guild to a Guild",
+            "value": 4307,
+            "unit": "ns/iter",
+            "range": "3897.35 … 2920543.2"
+          },
+          {
+            "name": "[Guild.toggles.features] Get the features of a guild",
+            "value": 1026,
+            "unit": "ns/iter",
+            "range": "1006.4 … 1110"
+          },
+          {
+            "name": "[Transformer] Discord User to a User",
+            "value": 86,
+            "unit": "ns/iter",
+            "range": "84.56 … 94.72"
+          },
+          {
+            "name": "[Transformer] User to a Discord User",
+            "value": 72,
+            "unit": "ns/iter",
+            "range": "69.88 … 273.78"
+          },
+          {
+            "name": "[Transformer] Discord Rules Channel to a Rules Channel",
+            "value": 230,
+            "unit": "ns/iter",
+            "range": "225.25 … 245.84"
+          },
+          {
+            "name": "[Transformer] Discord Announcement Channel to a Announcement Channel",
+            "value": 651,
+            "unit": "ns/iter",
+            "range": "636.4 … 888"
+          },
+          {
+            "name": "[Transformer] Discord Moderator Channel to a Moderator Channel",
+            "value": 308,
+            "unit": "ns/iter",
+            "range": "301.61 … 312.2"
+          },
+          {
+            "name": "[Transformer] Discord Text Channel to a Text Channel",
+            "value": 308,
+            "unit": "ns/iter",
+            "range": "301.52 … 312.67"
+          },
+          {
+            "name": "[Transformer] Discord Stage Channel to a Stage Channel",
+            "value": 245,
+            "unit": "ns/iter",
+            "range": "239.25 … 263.18"
+          },
+          {
+            "name": "[Transformer] Discord Voice Channel to a Voice Channel",
+            "value": 248,
+            "unit": "ns/iter",
+            "range": "242.93 … 280.01"
+          },
+          {
+            "name": "[Transformer] Discord Member to a Member",
+            "value": 448,
+            "unit": "ns/iter",
+            "range": "444.55 … 498.27"
+          },
+          {
+            "name": "[Transformer] Member to a Discord Member",
+            "value": 562,
+            "unit": "ns/iter",
+            "range": "557.47 … 587.07"
+          },
+          {
+            "name": "[Transformer] Discord Role to a Role",
+            "value": 155,
+            "unit": "ns/iter",
+            "range": "152.98 … 164.41"
+          },
+          {
+            "name": "[Transformer] Discord Message to a Message",
+            "value": 513,
+            "unit": "ns/iter",
+            "range": "486.49 … 1213.6"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 279.33,
+            "unit": "MB",
+            "range": "276.04 … 281.42"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 265.64,
+            "unit": "MB",
+            "range": "261.34 … 271.73"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 280.16,
+            "unit": "MB",
+            "range": "277.59 … 282.16"
           }
         ]
       }
