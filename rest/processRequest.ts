@@ -19,7 +19,6 @@ export function processRequest(rest: RestManager, request: RestRequest, payload:
   const url = rest.simplifyUrl(request.url, request.method);
 
   const queue = rest.pathQueues.get(url);
-  console.log("[PROCESS REQUEST]", !!queue, url);
   if (queue) {
     queue.makeRequest({ request, payload });
   } else {

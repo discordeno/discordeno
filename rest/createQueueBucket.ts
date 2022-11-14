@@ -48,25 +48,14 @@ export function createQueueBucket(rest: RestManager, options: QueueBucketOptions
       bucket.processing = true;
 
       while (bucket.waiting.length) {
-        console.log(
-          "[QUEUE BUCKET] waiting 1",
-          bucket.isRequestAllowed(),
-          bucket.max,
-          bucket.interval,
-          bucket.remaining,
-        );
         if (bucket.isRequestAllowed()) {
-          // console.log("[QUEUE BUCKET] waiting 2");
-          // bucket.used++;
           // Resolve the next item in the queue
           bucket.waiting.shift()?.();
         } else {
-          // console.log("[QUEUE BUCKET] waiting 3");
           await delay(1000);
         }
       }
 
-      // console.log("[QUEUE BUCKET] waiting 4");
       // Mark as false so next pending request can be triggered by new loop.
       bucket.processing = false;
     },
@@ -81,17 +70,8 @@ export function createQueueBucket(rest: RestManager, options: QueueBucketOptions
       bucket.processingPending = true;
 
       while (bucket.pending.length) {
-        console.log(
-          "[QUEUE BUCKET] pending 1",
-          bucket.firstRequest,
-          bucket.isRequestAllowed(),
-          bucket.max,
-          bucket.interval,
-          bucket.remaining,
-          bucket.timeoutId,
-        );
+       
         if (bucket.firstRequest || bucket.isRequestAllowed()) {
-          // console.log("[QUEUE BUCKET] pending 2");
 
           const [queuedRequest] = bucket.pending;
           if (queuedRequest) {
@@ -129,7 +109,6 @@ export function createQueueBucket(rest: RestManager, options: QueueBucketOptions
 
             // Remove from queue, we are executing it.
             bucket.pending.shift();
-            // console.log("[QUEUE BUCKET] pending 3");
             rest.processGlobalQueue(rest, {
               ...queuedRequest,
               urlToUse: queuedRequest.request.url,
@@ -137,24 +116,19 @@ export function createQueueBucket(rest: RestManager, options: QueueBucketOptions
             });
           }
         } else {
-          // console.log("[QUEUE BUCKET] pending 4");
           await delay(1000);
         }
       }
 
-      // console.log("[QUEUE BUCKET] pending 5");
       // Mark as false so next pending request can be triggered by new loop.
       bucket.processingPending = false;
       rest.cleanupQueues(rest);
     },
 
     handleCompletedRequest: function (headers) {
-      // console.log("HEADERS", headers);
       bucket.max = headers.max;
       bucket.interval = headers.interval;
       bucket.remaining = headers.remaining;
-
-      // if (bucket.timeoutId) clearTimeout(bucket.timeoutId);
 
       if (bucket.remaining <= 1) {
         bucket.timeoutId = setTimeout(() => {
@@ -165,9 +139,7 @@ export function createQueueBucket(rest: RestManager, options: QueueBucketOptions
     },
 
     makeRequest: async function (options: BucketRequest) {
-      // console.log("[QUEUE BUCKET] makerequest 1");
       await bucket.waitUntilRequestAvailable();
-      // console.log("[QUEUE BUCKET] makerequest 2");
       bucket.pending.push(options);
       bucket.processPending();
     },

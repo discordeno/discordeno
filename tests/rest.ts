@@ -1,5 +1,5 @@
 // START FILE FOR REST PROCESS
-import { BASE_URL, Collection, createRestManager } from "../mod.ts";
+import { BASE_URL, createRestManager } from "../mod.ts";
 import { dotenv } from "./deps.ts";
 
 dotenv({ export: true, path: `${Deno.cwd()}/.env` });
@@ -11,43 +11,17 @@ const REST_AUTHORIZATION_KEY = Deno.env.get("PROXY_REST_SECRET");
 const PROXY_REST_URL = Deno.env.get("PROXY_REST_URL");
 const REST_PORT = Number(PROXY_REST_URL?.substring(PROXY_REST_URL.lastIndexOf(":") + 1)) ?? 8080;
 
-const col = new Collection<string, number>();
-
 // CREATES THE FUNCTIONALITY FOR MANAGING THE REST REQUESTS
 const rest = createRestManager({
   token,
   secretKey: REST_AUTHORIZATION_KEY,
   customUrl: PROXY_REST_URL,
-  // debug(text) {
-  //   if (text.startsWith("[REST - RequestCreate]")) {
-  //     const aaa = text.split(" ");
-  //     const method = aaa[4];
-  //     const url = aaa[7];
-
-  //     col.set(method + url, Date.now());
-
-  //     // console.log("[DEBUG]", method, url);
-  //   }
-
-  //   if (text.startsWith("[REST - processGlobalQueue] rate limited, running setTimeout.")) {
-  //     console.log("[POSSIBLE BUCKET ISSUE]");
-  //   }
-
-  //   // console.log(text)
-  // },
-  // fetching(options) {
-  //   // console.log("[FETCHING]", options.method, options.url, Date.now() - col.get(options.method + options.url)!);
-  // },
 });
-
-setInterval(() => {
-  console.log("[DEBUGGING]", rest.pathQueues.size);
-}, 3000);
 
 // START LISTENING TO THE URL(localhost)
 const server = Deno.listen({ port: REST_PORT });
 console.log(
-  `HTTP webserver running.  Access it at: ${PROXY_REST_URL}`,
+  `Rest Proxy running. Access it at: ${PROXY_REST_URL}`,
 );
 
 // Connections to the server will be yielded up as an async iterable.
