@@ -70,6 +70,8 @@ export function createInvalidRequestBucket(options: InvalidRequestBucketOptions)
       bucket.requested--;
       // Since it is as a valid request, we don't need to do anything
       if (!bucket.errorStatuses.includes(code)) return;
+      // TODO: handle shared scope
+      // if (code === 429 && ) return;
       // INVALID REQUEST WAS MADE
 
       // If it was not frozen before, mark it frozen

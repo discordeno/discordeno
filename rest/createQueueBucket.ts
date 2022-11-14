@@ -10,7 +10,7 @@ import { RestManager } from "./restManager.ts";
  */
 export function createQueueBucket(rest: RestManager, options: QueueBucketOptions): QueueBucket {
   const bucket: QueueBucket = {
-    used: options.used ?? 0,
+    remaining: options.remaining ?? 1,
     max: options.max ?? 1,
     interval: options.interval ?? 0,
     timeoutId: options.timeoutId ?? 0,
@@ -21,19 +21,15 @@ export function createQueueBucket(rest: RestManager, options: QueueBucketOptions
     waiting: [],
     pending: [],
 
-    requestsAllowed: function () {
-      return bucket.max - bucket.used;
-    },
-
     isRequestAllowed: function () {
-      return bucket.requestsAllowed() > 0;
+      return bucket.remaining > 0;
     },
 
     waitUntilRequestAvailable: async function () {
       return new Promise(async (resolve) => {
         // If whatever amount of requests is left is more than the safety margin, allow the request
         if (bucket.isRequestAllowed()) {
-          bucket.used++;
+          // bucket.remaining++;
           resolve();
         } else {
           bucket.waiting.push(resolve);
@@ -52,15 +48,25 @@ export function createQueueBucket(rest: RestManager, options: QueueBucketOptions
       bucket.processing = true;
 
       while (bucket.waiting.length) {
+        console.log(
+          "[QUEUE BUCKET] waiting 1",
+          bucket.isRequestAllowed(),
+          bucket.max,
+          bucket.interval,
+          bucket.remaining,
+        );
         if (bucket.isRequestAllowed()) {
-          bucket.used++;
+          // console.log("[QUEUE BUCKET] waiting 2");
+          // bucket.used++;
           // Resolve the next item in the queue
           bucket.waiting.shift()?.();
         } else {
+          // console.log("[QUEUE BUCKET] waiting 3");
           await delay(1000);
         }
       }
 
+      // console.log("[QUEUE BUCKET] waiting 4");
       // Mark as false so next pending request can be triggered by new loop.
       bucket.processing = false;
     },
@@ -75,9 +81,19 @@ export function createQueueBucket(rest: RestManager, options: QueueBucketOptions
       bucket.processingPending = true;
 
       while (bucket.pending.length) {
+        console.log(
+          "[QUEUE BUCKET] pending 1",
+          bucket.firstRequest,
+          bucket.isRequestAllowed(),
+          bucket.max,
+          bucket.interval,
+          bucket.remaining,
+          bucket.timeoutId,
+        );
         if (bucket.firstRequest || bucket.isRequestAllowed()) {
+          // console.log("[QUEUE BUCKET] pending 2");
           bucket.firstRequest = false;
-          bucket.used++;
+          bucket.remaining--;
           const [queuedRequest] = bucket.pending;
           if (queuedRequest) {
             const basicURL = rest.simplifyUrl(queuedRequest.request.url, queuedRequest.request.method);
@@ -104,7 +120,7 @@ export function createQueueBucket(rest: RestManager, options: QueueBucketOptions
 
             // Remove from queue, we are executing it.
             bucket.pending.shift();
-
+            // console.log("[QUEUE BUCKET] pending 3");
             rest.processGlobalQueue(rest, {
               ...queuedRequest,
               urlToUse: queuedRequest.request.url,
@@ -112,29 +128,37 @@ export function createQueueBucket(rest: RestManager, options: QueueBucketOptions
             });
           }
         } else {
+          // console.log("[QUEUE BUCKET] pending 4");
           await delay(1000);
         }
       }
 
+      // console.log("[QUEUE BUCKET] pending 5");
       // Mark as false so next pending request can be triggered by new loop.
       bucket.processingPending = false;
       rest.cleanupQueues(rest);
     },
 
     handleCompletedRequest: function (headers) {
+      // console.log("HEADERS", headers);
       bucket.max = headers.max;
       bucket.interval = headers.interval;
-      bucket.used = bucket.max - headers.remaining;
+      bucket.remaining = headers.remaining;
 
-      if (!bucket.timeoutId) {
+      // if (bucket.timeoutId) clearTimeout(bucket.timeoutId);
+
+      if (bucket.remaining > 1) {
         bucket.timeoutId = setTimeout(() => {
-          bucket.used = 0;
-        });
+          bucket.remaining = bucket.max;
+          // bucket.timeoutId = 0;
+        }, headers.interval);
       }
     },
 
     makeRequest: async function (options: BucketRequest) {
+      // console.log("[QUEUE BUCKET] makerequest 1");
       await bucket.waitUntilRequestAvailable();
+      // console.log("[QUEUE BUCKET] makerequest 2");
       bucket.pending.push(options);
       bucket.processPending();
     },
@@ -144,8 +168,8 @@ export function createQueueBucket(rest: RestManager, options: QueueBucketOptions
 }
 
 export interface QueueBucketOptions {
-  /** How many requests are already used up. Defaults to 0 */
-  used?: number;
+  /** How many requests are remaining. Defaults to 1 */
+  remaining?: number;
   /** Max number of requests allowed in this bucket. Defaults to 1. */
   max?: number;
   /** The time in milliseconds that discord allows to make the max number of invalid requests. Defaults to 0 */
@@ -155,8 +179,8 @@ export interface QueueBucketOptions {
 }
 
 export interface QueueBucket {
-  /** Amount of requests that have been used. */
-  used: number;
+  /** Amount of requests that have are remaining. Defaults to 1. */
+  remaining: number;
   /** Max requests for this bucket. Defaults to 1. */
   max: number;
   /** The time that discord allows to make the max number of requests. Defaults to 0 */
@@ -174,8 +198,6 @@ export interface QueueBucket {
   /** Whether the first request is pending. */
   firstRequest: boolean;
 
-  /** Gives the number of requests that are currently allowed. */
-  requestsAllowed: () => number;
   /** Checks if a request is allowed at this time. */
   isRequestAllowed: () => boolean;
   /** Waits until a request is available */
