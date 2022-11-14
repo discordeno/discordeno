@@ -14,7 +14,13 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
     if (component.components?.length > 5) throw new Error("Too many components.");
     else if (
       component.components?.length > 1 &&
-      component.components.some((subComponent) => subComponent.type === MessageComponentTypes.SelectMenu)
+      component.components.some((subComponent) =>
+        subComponent.type === MessageComponentTypes.SelectMenu ||
+        subComponent.type === MessageComponentTypes.SelectMenuChannels ||
+        subComponent.type === MessageComponentTypes.SelectMenuRoles ||
+        subComponent.type === MessageComponentTypes.SelectMenuUsers ||
+        subComponent.type === MessageComponentTypes.SelectMenuUsersAndRoles
+      )
     ) {
       throw new Error("Select component must be alone.");
     }
@@ -48,7 +54,13 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
         subComponent.emoji = makeEmojiFromString(subComponent.emoji);
       }
 
-      if (subComponent.type === MessageComponentTypes.SelectMenu) {
+      if (
+        subComponent.type === MessageComponentTypes.SelectMenu ||
+        subComponent.type === MessageComponentTypes.SelectMenuChannels ||
+        subComponent.type === MessageComponentTypes.SelectMenuRoles ||
+        subComponent.type === MessageComponentTypes.SelectMenuUsers ||
+        subComponent.type === MessageComponentTypes.SelectMenuUsersAndRoles
+      ) {
         if (
           subComponent.placeholder &&
           !bot.utils.validateLength(subComponent.placeholder, { max: 150 })
@@ -93,44 +105,46 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
           }
         }
 
-        if (subComponent.options.length < 1) throw new Error("You need at least 1 option in the select component.");
+        if (subComponent.type === MessageComponentTypes.SelectMenu) {
+          if (subComponent.options.length < 1) throw new Error("You need at least 1 option in the select component.");
 
-        if (subComponent.options.length > 25) {
-          throw new Error(
-            "You can not have more than 25 options in the select component.",
-          );
-        }
-
-        let defaults = 0;
-
-        for (const option of subComponent.options) {
-          if (option.default) {
-            defaults++;
-            if (defaults > (subComponent.maxValues || 25)) throw new Error("You chose too many default options.");
-          }
-
-          if (!bot.utils.validateLength(option.label, { max: 25 })) {
+          if (subComponent.options.length > 25) {
             throw new Error(
-              "The select component label can not exceed 25 characters.",
+              "You can not have more than 25 options in the select component.",
             );
           }
 
-          if (!bot.utils.validateLength(option.value, { max: 100 })) {
-            throw new Error(
-              "The select component value can not exceed 100 characters.",
-            );
-          }
+          let defaults = 0;
 
-          if (
-            option.description &&
-            !bot.utils.validateLength(option.description, { max: 50 })
-          ) {
-            throw new Error(
-              "The select option description can not exceed 50 characters.",
-            );
-          }
+          for (const option of subComponent.options) {
+            if (option.default) {
+              defaults++;
+              if (defaults > (subComponent.maxValues || 25)) throw new Error("You chose too many default options.");
+            }
 
-          option.emoji = makeEmojiFromString(option.emoji);
+            if (!bot.utils.validateLength(option.label, { max: 25 })) {
+              throw new Error(
+                "The select component label can not exceed 25 characters.",
+              );
+            }
+
+            if (!bot.utils.validateLength(option.value, { max: 100 })) {
+              throw new Error(
+                "The select component value can not exceed 100 characters.",
+              );
+            }
+
+            if (
+              option.description &&
+              !bot.utils.validateLength(option.description, { max: 50 })
+            ) {
+              throw new Error(
+                "The select option description can not exceed 50 characters.",
+              );
+            }
+
+            option.emoji = makeEmojiFromString(option.emoji);
+          }
         }
       }
 

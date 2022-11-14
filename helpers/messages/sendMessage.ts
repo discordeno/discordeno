@@ -90,6 +90,22 @@ export async function sendMessage(bot: Bot, channelId: BigString, options: Creat
             };
           }
 
+          if (
+            subComponent.type === MessageComponentTypes.SelectMenuChannels ||
+            subComponent.type === MessageComponentTypes.SelectMenuRoles ||
+            subComponent.type === MessageComponentTypes.SelectMenuUsers ||
+            subComponent.type === MessageComponentTypes.SelectMenuUsersAndRoles
+          ) {
+            return {
+              type: subComponent.type,
+              custom_id: subComponent.customId,
+              placeholder: subComponent.placeholder,
+              min_values: subComponent.minValues,
+              max_values: subComponent.maxValues,
+              disabled: "disabled" in subComponent ? subComponent.disabled : undefined,
+            };
+          }
+
           return {
             type: subComponent.type,
             custom_id: subComponent.customId,
