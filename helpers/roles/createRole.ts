@@ -42,7 +42,7 @@ export async function createRole(
 }
 
 export interface CreateGuildRole {
-  /** Name of the role, default: "new role" */
+  /** Name of the role, max 100 characters, default: "new role" */
   name?: string;
   /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
   permissions?: PermissionStrings[];
