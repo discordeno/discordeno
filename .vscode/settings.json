@@ -20,6 +20,7 @@
     "dnt.ts",
     "mod.ts",
     "debug.ts",
+    "debug.rest.ts",
     "bot.ts"
   ],
   "editor.defaultFormatter": "denoland.vscode-deno",

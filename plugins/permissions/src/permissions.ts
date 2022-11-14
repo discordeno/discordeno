@@ -18,7 +18,7 @@ export function calculateBasePermissions(
   memberOrId: bigint | Member,
 ) {
   const guild = typeof guildOrId === "bigint" ? bot.guilds.get(guildOrId) : guildOrId;
-  const member = typeof memberOrId === "bigint" ? bot.members.get(memberOrId) : memberOrId;
+  const member = typeof memberOrId === "bigint" ? bot.members.get(bot.transformers.snowflake(`${memberOrId}${guild?.id}`)) : memberOrId;
 
   if (!guild || !member) return 8n;
 

@@ -18,7 +18,7 @@ export async function connect(shard: Shard): Promise<void> {
     url.searchParams.set("encoding", "json");
   }
 
-  const socket = new WebSocket(url);
+  const socket = new WebSocket(url.toString());
 
   shard.socket = socket;
 

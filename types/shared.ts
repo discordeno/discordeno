@@ -1241,6 +1241,13 @@ export enum InteractionResponseTypes {
   Modal = 9,
 }
 
+export enum SortOrderTypes {
+  /** Sort forum posts by activity */
+  LatestActivity,
+  /** Sort forum posts by creation time (from most recent to oldest) */
+  CreationDate,
+}
+
 export enum Errors {
   // Bot Role errors
   BOTS_HIGHEST_ROLE_TOO_LOW = "BOTS_HIGHEST_ROLE_TOO_LOW",
