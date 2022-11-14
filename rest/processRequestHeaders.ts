@@ -12,6 +12,12 @@ export function processRequestHeaders(rest: RestManager, url: string, headers: H
   // undefined override null needed for typings
   const bucketId = headers.get("x-ratelimit-bucket") || undefined;
 
+  rest.pathQueues.get(url)?.handleCompletedRequest({
+    remaining: Number(remaining),
+    interval: Number(retryAfter) * 1000,
+    max: Number(headers.get("x-ratelimit-limit")),
+  });
+
   // IF THERE IS NO REMAINING RATE LIMIT, MARK IT AS RATE LIMITED
   if (remaining === "0") {
     rateLimited = true;
@@ -40,6 +46,10 @@ export function processRequestHeaders(rest: RestManager, url: string, headers: H
     rest.debug(`[REST = Globally Rate Limited] URL: ${url} | Global Rest: ${globalReset}`);
     rest.globallyRateLimited = true;
     rateLimited = true;
+
+    setTimeout(() => {
+      rest.globallyRateLimited = false;
+    }, globalReset);
 
     rest.rateLimitedPaths.set("global", {
       url: "global",
