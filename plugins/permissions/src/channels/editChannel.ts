@@ -40,6 +40,8 @@ export function editChannel(bot: BotWithCache) {
         } else {
           perms.push("MANAGE_THREADS");
         }
+
+        if (options.appliedTags && options.appliedTags.length > 5) throw new Error("thread applied tags is limit to 5");
       } else {
         perms.push("MANAGE_CHANNELS");
 
@@ -68,6 +70,10 @@ export function editChannel(bot: BotWithCache) {
           if (category && category.type !== ChannelTypes.GuildCategory) {
             throw new Error("The parent id must be for a category channel type.");
           }
+        }
+
+        if (options.availableTags && options.availableTags.length > 20) {
+          throw new Error("channel available tags is limited to 20");
         }
       }
 
