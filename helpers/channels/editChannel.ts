@@ -97,6 +97,7 @@ export async function editChannel(bot: Bot, channelId: BigString, options: Modif
           emoji_name: availableTag.emojiName,
         }))
         : undefined,
+      applied_tags: options.appliedTags?.map((appliedTag) => appliedTag.toString()),
       default_reaction_emoji: options.defaultReactionEmoji
         ? {
           emoji_id: options.defaultReactionEmoji.emojiId,
@@ -215,6 +216,8 @@ export interface ModifyChannel extends WithReason {
     /** The unicode character of the emoji */
     emojiName: string;
   }[];
+  /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel; limited to 5 */
+  appliedTags?: BigString[];
   /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */
   defaultReactionEmoji?: {
     /** The id of a guild's custom emoji */
