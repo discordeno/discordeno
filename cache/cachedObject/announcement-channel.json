@@ -1,18 +1,18 @@
 {
-  "id": "6222307914724037767",
+  "id": "2344983710695222920",
   "last_message_id": null,
   "type": 5,
-  "name": "iamnhkbbqzmeyekwufia",
+  "name": "lrtikgdgrfewpdpvtyfi",
   "position": 39,
   "flags": 0,
-  "parent_id": "456254190602265415",
+  "parent_id": "309724231199912629",
   "topic": null,
-  "guild_id": "612095800513245299",
+  "guild_id": "857293627756893947",
   "permission_overwrites": [
     {
-      "id": "904593143923009676",
+      "id": "717907731296201521",
       "type": 0,
-      "allow": "2",
+      "allow": "8",
       "deny": "7"
     }
   ],
