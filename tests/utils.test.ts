@@ -1,4 +1,5 @@
 import { Collection, formatImageURL, hasProperty, iconBigintToHash, iconHashToBigInt, validateLength } from "../mod.ts";
+import { decode, encode } from "../util/base64.ts";
 import { bigintToSnowflake, snowflakeToBigint } from "../util/bigint.ts";
 import { removeTokenPrefix } from "../util/token.ts";
 import { assertEquals, assertExists, assertNotEquals } from "./deps.ts";
@@ -407,3 +408,30 @@ Deno.test({
     });
   },
 });
+
+Deno.test({
+  name: '[utils] encode some bytes to base64',
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
+    assertEquals(encode(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])), 'AQIDBAUGBwgJCg==');
+  }
+})
+
+Deno.test({
+  name: '[utils] decode some base64 to bytes',
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
+    assertEquals(decode('AQIDBAUGBwgJCg=='), new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));
+  }
+})
+
+Deno.test({
+  name: '[utils] encode/decode base64 roundtrip should work',
+  ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
+  async fn(t) {
+    for (let i = 0; i < 10; i++) {
+      const data = new Uint8Array(new Array(10000).map(() => Math.floor(Math.random() * 256)));
+      assertEquals(decode(encode(data)), data);
+    }
+  }
+})
