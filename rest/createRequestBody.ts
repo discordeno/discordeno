@@ -1,7 +1,8 @@
-import { RestManager } from "./restManager.ts";
 import { FileContent } from "../types/discordeno.ts";
+import { decode } from "../util/base64.ts";
 import { USER_AGENT } from "../util/constants.ts";
 import { RequestMethod } from "./rest.ts";
+import { RestManager } from "./restManager.ts";
 
 /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
 export function createRequestBody(rest: RestManager, options: CreateRequestBodyOptions) {
@@ -31,29 +32,19 @@ export function createRequestBody(rest: RestManager, options: CreateRequestBodyO
 
   // IF A FILE/ATTACHMENT IS PRESENT WE NEED SPECIAL HANDLING
   if (options.body?.file) {
-    if (!Array.isArray(options.body.file)) {
-      options.body.file = [options.body.file];
-    }
+    const files = findFiles(options.body.file);
 
     const form = new FormData();
 
     // WHEN CREATING A STICKER, DISCORD WANTS FORM DATA ONLY
     if (options.url?.endsWith("/stickers") && options.method === "POST") {
-      form.append(
-        `file`,
-        (options.body.file as FileContent[])[0].blob,
-        (options.body.file as FileContent[])[0].name,
-      );
+      form.append(`file`, files[0].blob, files[0].name);
       form.append(`name`, options.body.name as string);
       form.append(`description`, options.body.description as string);
       form.append(`tags`, options.body.tags as string);
     } else {
-      for (let i = 0; i < (options.body.file as FileContent[]).length; i++) {
-        form.append(
-          `file${i}`,
-          (options.body.file as FileContent[])[i].blob,
-          (options.body.file as FileContent[])[i].name,
-        );
+      for (let i = 0; i < files.length; i++) {
+        form.append(`file${i}`, files[i].blob, files[i].name);
       }
 
       form.append("payload_json", JSON.stringify({ ...options.body, file: undefined }));
@@ -77,4 +68,35 @@ export interface CreateRequestBodyOptions {
   body?: Record<string, unknown>;
   unauthorized?: boolean;
   url?: string;
+}
+
+function findFiles(file: unknown): FileContent[] {
+  if (!file)
+    return [];
+
+  const files = Array.isArray(file) ? file : [file];
+  return files.filter(coerceToFileContent);
+}
+
+function coerceToFileContent(value: any): boolean {
+  if (!value || typeof value !== 'object')
+    return false;
+
+  if (typeof value.name !== 'string')
+    return false;
+
+  switch (typeof value.blob) {
+    case 'string': {
+      const match = value.blob.match(/^data:(?<mimeType>[a-zA-Z0-9\/]+);base64,(?<content>.*)$/);
+      if (match?.groups === undefined)
+        return false;
+      const { mimeType, content } = match.groups;
+      value.blob = new Blob([decode(content)], { type: mimeType });
+      return true;
+    }
+    case 'object':
+      return value.blob instanceof Blob;
+    default:
+      return false;
+  }
 }
