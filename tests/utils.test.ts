@@ -430,7 +430,10 @@ Deno.test({
   ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
   async fn(t) {
     for (let i = 0; i < 10; i++) {
-      const data = new Uint8Array(new Array(10000).map(() => Math.floor(Math.random() * 256)));
+      const bytes = [];
+      for (let i = 0; i < 10000; i++)
+        bytes.push(Math.floor(Math.random() * 256));
+      const data = new Uint8Array(bytes);
       assertEquals(decode(encode(data)), data);
     }
   }
