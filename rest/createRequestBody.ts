@@ -74,28 +74,29 @@ function findFiles(file: unknown): FileContent[] {
   if (!file)
     return [];
 
-  const files = Array.isArray(file) ? file : [file];
+  const files: unknown[] = Array.isArray(file) ? file : [file];
   return files.filter(coerceToFileContent);
 }
 
-function coerceToFileContent(value: any): boolean {
+function coerceToFileContent(value: unknown): value is FileContent {
   if (!value || typeof value !== 'object')
     return false;
 
-  if (typeof value.name !== 'string')
+  const file = value as Record<string, unknown>;
+  if (typeof file.name !== 'string')
     return false;
 
-  switch (typeof value.blob) {
+  switch (typeof file.blob) {
     case 'string': {
-      const match = value.blob.match(/^data:(?<mimeType>[a-zA-Z0-9\/]+);base64,(?<content>.*)$/);
+      const match = file.blob.match(/^data:(?<mimeType>[a-zA-Z0-9\/]+);base64,(?<content>.*)$/);
       if (match?.groups === undefined)
         return false;
       const { mimeType, content } = match.groups;
-      value.blob = new Blob([decode(content)], { type: mimeType });
+      file.blob = new Blob([decode(content)], { type: mimeType });
       return true;
     }
     case 'object':
-      return value.blob instanceof Blob;
+      return file.blob instanceof Blob;
     default:
       return false;
   }
