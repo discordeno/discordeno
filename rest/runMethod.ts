@@ -1,6 +1,6 @@
 import { FileContent } from "../mod.ts";
 import { API_VERSION, BASE_URL, baseEndpoints } from "../util/constants.ts";
-import { encode } from "../util/urlToBase64.ts";
+import { encode } from "../util/base64.ts";
 import { RequestMethod, RestRequestRejection, RestRequestResponse } from "./rest.ts";
 import { RestManager } from "./restManager.ts";
 
