@@ -7,4 +7,3 @@ export async function urlToBase64(url: string) {
   const type = url.substring(url.lastIndexOf(".") + 1);
   return `data:image/${type};base64,${imageStr}`;
 }
-

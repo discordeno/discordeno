@@ -410,31 +410,32 @@ Deno.test({
 });
 
 Deno.test({
-  name: '[utils] encode some bytes to base64',
+  name: "[utils] encode some bytes to base64",
   ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
   async fn(t) {
-    assertEquals(encode(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])), 'AQIDBAUGBwgJCg==');
-  }
-})
+    assertEquals(encode(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])), "AQIDBAUGBwgJCg==");
+  },
+});
 
 Deno.test({
-  name: '[utils] decode some base64 to bytes',
+  name: "[utils] decode some base64 to bytes",
   ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
   async fn(t) {
-    assertEquals(decode('AQIDBAUGBwgJCg=='), new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));
-  }
-})
+    assertEquals(decode("AQIDBAUGBwgJCg=="), new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));
+  },
+});
 
 Deno.test({
-  name: '[utils] encode/decode base64 roundtrip should work',
+  name: "[utils] encode/decode base64 roundtrip should work",
   ignore: Deno.env.get("TEST_ENV") === "INTEGRATION",
   async fn(t) {
     for (let i = 0; i < 10; i++) {
       const bytes = [];
-      for (let i = 0; i < 10000; i++)
+      for (let i = 0; i < 10000; i++) {
         bytes.push(Math.floor(Math.random() * 256));
+      }
       const data = new Uint8Array(bytes);
       assertEquals(decode(encode(data)), data);
     }
-  }
-})
+  },
+});
