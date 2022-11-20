@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1668697556748,
+  "lastUpdate": 1668984734561,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -1794,6 +1794,132 @@ window.BENCHMARK_DATA = {
             "value": 280.04,
             "unit": "MB",
             "range": "277.86 … 281.52"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "dannyjmay97@gmail.com",
+            "name": "Danny May",
+            "username": "danny-may"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0910965de54c21738d314d257cefdb4afcdc4cdd",
+          "message": "Fix sending files through a rest proxy (#2593)\n\n* Fix rest proxy not working with files\r\n\r\n* Fix some credits\r\n\r\n* Add tests\r\n\r\n* Fix test\r\n\r\n* Remove some usage of any\r\n\r\n* Fix mime matching\r\n\r\n* Fix formatting issues",
+          "timestamp": "2022-11-20T16:50:50-06:00",
+          "tree_id": "1530f0c1da09a69df17ed4eee56ae0d48c1ab2ba",
+          "url": "https://github.com/discordeno/discordeno/commit/0910965de54c21738d314d257cefdb4afcdc4cdd"
+        },
+        "date": 1668984732200,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "[Transformer] Discord Guild to a Guild",
+            "value": 9461,
+            "unit": "ns/iter",
+            "range": "8235.98 … 8668897.95"
+          },
+          {
+            "name": "[Guild.toggles.features] Get the features of a guild",
+            "value": 1309,
+            "unit": "ns/iter",
+            "range": "1277.63 … 1541.61"
+          },
+          {
+            "name": "[Transformer] Discord User to a User",
+            "value": 187,
+            "unit": "ns/iter",
+            "range": "184.03 … 215.97"
+          },
+          {
+            "name": "[Transformer] User to a Discord User",
+            "value": 150,
+            "unit": "ns/iter",
+            "range": "143.72 … 527.41"
+          },
+          {
+            "name": "[Transformer] Discord Rules Channel to a Rules Channel",
+            "value": 489,
+            "unit": "ns/iter",
+            "range": "481.7 … 511.25"
+          },
+          {
+            "name": "[Transformer] Discord Announcement Channel to a Announcement Channel",
+            "value": 1383,
+            "unit": "ns/iter",
+            "range": "1372.66 … 1404.34"
+          },
+          {
+            "name": "[Transformer] Discord Moderator Channel to a Moderator Channel",
+            "value": 620,
+            "unit": "ns/iter",
+            "range": "610.65 … 639.78"
+          },
+          {
+            "name": "[Transformer] Discord Text Channel to a Text Channel",
+            "value": 618,
+            "unit": "ns/iter",
+            "range": "609.28 … 624.09"
+          },
+          {
+            "name": "[Transformer] Discord Stage Channel to a Stage Channel",
+            "value": 494,
+            "unit": "ns/iter",
+            "range": "486.6 … 510.02"
+          },
+          {
+            "name": "[Transformer] Discord Voice Channel to a Voice Channel",
+            "value": 503,
+            "unit": "ns/iter",
+            "range": "496.21 … 510.93"
+          },
+          {
+            "name": "[Transformer] Discord Member to a Member",
+            "value": 981,
+            "unit": "ns/iter",
+            "range": "975.93 … 1066.45"
+          },
+          {
+            "name": "[Transformer] Member to a Discord Member",
+            "value": 1183,
+            "unit": "ns/iter",
+            "range": "1172.04 … 1203.72"
+          },
+          {
+            "name": "[Transformer] Discord Role to a Role",
+            "value": 321,
+            "unit": "ns/iter",
+            "range": "316.77 … 333.73"
+          },
+          {
+            "name": "[Transformer] Discord Message to a Message",
+            "value": 1088,
+            "unit": "ns/iter",
+            "range": "1038.67 … 2639.74"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 280.05,
+            "unit": "MB",
+            "range": "275.78 … 282.7"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 265.54,
+            "unit": "MB",
+            "range": "260.79 … 272.13"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 279.86,
+            "unit": "MB",
+            "range": "277.33 … 281.52"
           }
         ]
       }
