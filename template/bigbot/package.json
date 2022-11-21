@@ -23,7 +23,7 @@
     "discordeno": "^16.0.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.1",
-    "fastify": "^4.8.1",
+    "fastify": "^4.10.2",
     "nanoid": "^4.0.0",
     "node-fetch": "^3.2.10",
     "web-worker": "^1.2.0"
