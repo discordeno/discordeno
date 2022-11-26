@@ -1,14 +1,14 @@
 {
-  "id": "6486061064142461428",
+  "id": "4040072214500433885",
   "type": 0,
-  "content": "snfvtks",
-  "channel_id": "9579301469914240741",
+  "content": "cwvyixx",
+  "channel_id": "2116588991125519399",
   "author": {
-    "id": "742078862724377921",
-    "username": "6278649856965035",
+    "id": "495199792840608524",
+    "username": "1422343988975997",
     "avatar": "eae5905ad2d18d7c8deca20478b088b5",
     "avatar_decoration": null,
-    "discriminator": "8016",
+    "discriminator": "6444",
     "public_flags": 4194304
   },
   "attachments": [],
@@ -18,7 +18,7 @@
   "pinned": false,
   "mention_everyone": false,
   "tts": false,
-  "timestamp": "2022-11-25T00:47:11.296Z",
+  "timestamp": "2022-11-26T00:42:15.478Z",
   "edited_timestamp": null,
   "flags": 0,
   "components": []
