@@ -6,7 +6,7 @@ import {
   BigString,
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
-  ScheduledEventStatus
+  ScheduledEventStatus,
 } from "../../../types/shared.ts";
 
 /**
