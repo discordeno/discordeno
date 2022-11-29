@@ -53,7 +53,7 @@ export async function editScheduledEvent(
     bot.constants.routes.GUILD_SCHEDULED_EVENT(guildId, eventId),
     {
       channel_id: options.channelId === null ? null : options.channelId?.toString(),
-      entity_metadata: options.location ? { location: options.location } : undefined,
+      entity_metadata: options.location ? { location: options.location } : null,
       name: options.name,
       description: options.description,
       scheduled_start_time: options.scheduledStartTime ? new Date(options.scheduledStartTime).toISOString() : undefined,
