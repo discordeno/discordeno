@@ -35,7 +35,7 @@ import { BigString, ChannelTypes, SortOrderTypes, VideoQualityModes } from '../.
  * - Otherwise:
  *     - Fires a _Channel Update_ gateway event.
  */
-export async function editChannel(bot: Bot, channelId: BigString, options: ModifyChannel): Promise<Channel> {
+export async function editChannel (bot: Bot, channelId: BigString, options: ModifyChannel): Promise<Channel> {
   if (options.name || options.topic) {
     const request = editChannelNameTopicQueue.get(channelId)
     if (request == null) {
@@ -100,9 +100,9 @@ export async function editChannel(bot: Bot, channelId: BigString, options: Modif
       applied_tags: options.appliedTags?.map((appliedTag) => appliedTag.toString()),
       default_reaction_emoji: (options.defaultReactionEmoji != null)
         ? {
-          emoji_id: options.defaultReactionEmoji.emojiId,
-          emoji_name: options.defaultReactionEmoji.emojiName
-        }
+            emoji_id: options.defaultReactionEmoji.emojiId,
+            emoji_name: options.defaultReactionEmoji.emojiName
+          }
         : undefined,
       default_sort_order: options.defaultSortOrder,
       reason: options.reason
@@ -128,7 +128,7 @@ interface EditChannelRequest {
 const editChannelNameTopicQueue = new Map<BigString, EditChannelRequest>()
 let editChannelProcessing = false
 
-function processEditChannelQueue(bot: Bot): void {
+function processEditChannelQueue (bot: Bot): void {
   if (!editChannelProcessing) return
 
   const now = Date.now()

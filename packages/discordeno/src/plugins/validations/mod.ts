@@ -10,7 +10,7 @@ import { stickers } from './src/stickers/mod.js'
 import { webhooks } from './src/webhooks/mod.js'
 
 // PLUGINS MUST TAKE A BOT ARGUMENT WHICH WILL BE MODIFIED
-export function enableValidationsPlugin<B extends Bot>(bot: B): B {
+export function enableValidationsPlugin<B extends Bot> (bot: B): B {
   // MARK THIS PLUGIN BEING USED
   bot.enabledPlugins.add('VALIDATIONS')
 

@@ -5,7 +5,7 @@ import { RequestMethod } from './rest.js'
 import { RestManager } from './restManager.js'
 
 /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
-export function createRequestBody(rest: RestManager, options: CreateRequestBodyOptions) {
+export function createRequestBody (rest: RestManager, options: CreateRequestBodyOptions) {
   const headers: Record<string, string> = {
     'user-agent': USER_AGENT
   }
@@ -70,7 +70,7 @@ export interface CreateRequestBodyOptions {
   url?: string
 }
 
-function findFiles(file: unknown): FileContent[] {
+function findFiles (file: unknown): FileContent[] {
   if (!file) {
     return []
   }
@@ -79,7 +79,7 @@ function findFiles(file: unknown): FileContent[] {
   return files.filter(coerceToFileContent)
 }
 
-function coerceToFileContent(value: unknown): value is FileContent {
+function coerceToFileContent (value: unknown): value is FileContent {
   if (!value || typeof value !== 'object') {
     return false
   }

@@ -11,7 +11,7 @@ import { Member, User } from './member.js'
 import { Message } from './message.js'
 import { Role } from './role.js'
 
-export function transformInteraction(bot: Bot, payload: DiscordInteraction) {
+export function transformInteraction (bot: Bot, payload: DiscordInteraction) {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
   const user = bot.transformers.user(bot, ((payload.member?.user) != null) || payload.user!)
 
@@ -35,26 +35,26 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction) {
 
     data: (payload.data != null)
       ? {
-        componentType: payload.data.component_type,
-        customId: payload.data.custom_id,
-        components: payload.data.components?.map((component) => bot.transformers.component(bot, component)),
-        values: payload.data.values,
-        id: payload.data.id ? bot.transformers.snowflake(payload.data.id) : undefined,
-        name: payload.data.name,
-        resolved: (payload.data.resolved != null)
-          ? transformInteractionDataResolved(bot, payload.data.resolved, guildId)
-          : undefined,
-        options: payload.data.options?.map((opt) => bot.transformers.interactionDataOptions(bot, opt)),
-        targetId: payload.data.target_id ? bot.transformers.snowflake(payload.data.target_id) : undefined,
-        guildId: payload.data.guild_id ? bot.transformers.snowflake(payload.data.guild_id) : undefined
-      }
+          componentType: payload.data.component_type,
+          customId: payload.data.custom_id,
+          components: payload.data.components?.map((component) => bot.transformers.component(bot, component)),
+          values: payload.data.values,
+          id: payload.data.id ? bot.transformers.snowflake(payload.data.id) : undefined,
+          name: payload.data.name,
+          resolved: (payload.data.resolved != null)
+            ? transformInteractionDataResolved(bot, payload.data.resolved, guildId)
+            : undefined,
+          options: payload.data.options?.map((opt) => bot.transformers.interactionDataOptions(bot, opt)),
+          targetId: payload.data.target_id ? bot.transformers.snowflake(payload.data.target_id) : undefined,
+          guildId: payload.data.guild_id ? bot.transformers.snowflake(payload.data.guild_id) : undefined
+        }
       : undefined
   }
 
   return interaction as Optionalize<typeof interaction>
 }
 
-export function transformInteractionDataOption(bot: Bot, option: DiscordInteractionDataOption) {
+export function transformInteractionDataOption (bot: Bot, option: DiscordInteractionDataOption) {
   const opt = {
     name: option.name,
     type: option.type,
@@ -66,7 +66,7 @@ export function transformInteractionDataOption(bot: Bot, option: DiscordInteract
   return opt as Optionalize<typeof opt>
 }
 
-export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInteractionDataResolved, guildId?: bigint) {
+export function transformInteractionDataResolved (bot: Bot, resolved: DiscordInteractionDataResolved, guildId?: bigint) {
   const transformed: {
     messages?: Collection<bigint, Message>
     users?: Collection<bigint, User>

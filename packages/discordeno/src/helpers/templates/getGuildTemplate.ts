@@ -1,6 +1,6 @@
-import type { Bot } from "../../bot.js";
-import { Template } from "../../transformers/template.js";
-import { DiscordTemplate } from "../../types/discord.js";
+import type { Bot } from '../../bot.js'
+import { Template } from '../../transformers/template.js'
+import { DiscordTemplate } from '../../types/discord.js'
 
 /**
  * Gets a template by its code.
@@ -14,12 +14,12 @@ import { DiscordTemplate } from "../../types/discord.js";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-template}
  */
-export async function getGuildTemplate(bot: Bot, templateCode: string): Promise<Template> {
+export async function getGuildTemplate (bot: Bot, templateCode: string): Promise<Template> {
   const result = await bot.rest.runMethod<DiscordTemplate>(
     bot.rest,
-    "GET",
-    bot.constants.routes.TEMPLATE(templateCode),
-  );
+    'GET',
+    bot.constants.routes.TEMPLATE(templateCode)
+  )
 
-  return bot.transformers.template(bot, result);
+  return bot.transformers.template(bot, result)
 }

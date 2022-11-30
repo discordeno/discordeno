@@ -1,7 +1,7 @@
 import { BotWithCache, ChannelTypes, PermissionStrings } from '../../deps.js'
 import { requireBotChannelPermissions } from '../permissions.js'
 
-export function deleteChannelPermissionOverride(bot: BotWithCache) {
+export function deleteChannelPermissionOverride (bot: BotWithCache) {
   const deleteChannelPermissionOverride = bot.helpers.deleteChannelPermissionOverride
 
   bot.helpers.deleteChannelPermissionOverride = async function (channelId, overwriteId) {

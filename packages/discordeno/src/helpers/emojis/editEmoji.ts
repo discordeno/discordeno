@@ -19,7 +19,7 @@ import { DiscordEmoji } from '../../types/discord.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/emoji#modify-guild-emoji}
  */
-export async function editEmoji(
+export async function editEmoji (
   bot: Bot,
   guildId: BigString,
   id: BigString,

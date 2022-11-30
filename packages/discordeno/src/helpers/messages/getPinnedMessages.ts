@@ -19,7 +19,7 @@ import { Collection } from '../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#get-pinned-messages}
  */
-export async function getPinnedMessages(bot: Bot, channelId: BigString): Promise<Collection<bigint, Message>> {
+export async function getPinnedMessages (bot: Bot, channelId: BigString): Promise<Collection<bigint, Message>> {
   const results = await bot.rest.runMethod<DiscordMessage[]>(
     bot.rest,
     'GET',

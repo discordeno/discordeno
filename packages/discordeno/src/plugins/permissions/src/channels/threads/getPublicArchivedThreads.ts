@@ -1,7 +1,7 @@
 import { BotWithCache, ChannelTypes } from '../../../deps.js'
 import { requireBotChannelPermissions } from '../../permissions.js'
 
-export function getPublicArchivedThreads(bot: BotWithCache) {
+export function getPublicArchivedThreads (bot: BotWithCache) {
   const getPublicArchivedThreads = bot.helpers.getPublicArchivedThreads
   bot.helpers.getPublicArchivedThreads = async function (channelId, options) {
     const channel = bot.channels.get(bot.transformers.snowflake(channelId))

@@ -4,7 +4,7 @@ export class Collection<K, V> extends Map<K, V> {
   maxSize: number | undefined
   sweeper: CollectionSweeper<K, V> & { intervalId?: number } | undefined
 
-  constructor(entries?: (ReadonlyArray<readonly [K, V]> | null) | Map<K, V>, options?: CollectionOptions<K, V>) {
+  constructor (entries?: (ReadonlyArray<readonly [K, V]> | null) | Map<K, V>, options?: CollectionOptions<K, V>) {
     super(entries ?? [])
 
     this.maxSize = options?.maxSize
@@ -14,7 +14,7 @@ export class Collection<K, V> extends Map<K, V> {
     this.startSweeper(options.sweeper)
   }
 
-  startSweeper(options: CollectionSweeper<K, V>): number {
+  startSweeper (options: CollectionSweeper<K, V>): number {
     if (this.sweeper?.intervalId) clearInterval(this.sweeper.intervalId)
 
     this.sweeper = options
@@ -30,23 +30,23 @@ export class Collection<K, V> extends Map<K, V> {
     return this.sweeper.intervalId!
   }
 
-  stopSweeper(): void {
+  stopSweeper (): void {
     return clearInterval(this.sweeper?.intervalId)
   }
 
-  changeSweeperInterval(newInterval: number) {
+  changeSweeperInterval (newInterval: number) {
     if (this.sweeper == null) return
 
     this.startSweeper({ filter: this.sweeper.filter, interval: newInterval })
   }
 
-  changeSweeperFilter(newFilter: (value: V, key: K, bot: Bot) => boolean) {
+  changeSweeperFilter (newFilter: (value: V, key: K, bot: Bot) => boolean) {
     if (this.sweeper == null) return
 
     this.startSweeper({ filter: newFilter, interval: this.sweeper.interval })
   }
 
-  set(key: K, value: V) {
+  set (key: K, value: V) {
     // When this collection is maxSized make sure we can add first
     if ((this.maxSize || this.maxSize === 0) && this.size >= this.maxSize) {
       return this
@@ -55,29 +55,29 @@ export class Collection<K, V> extends Map<K, V> {
     return super.set(key, value)
   }
 
-  forceSet(key: K, value: V) {
+  forceSet (key: K, value: V) {
     return super.set(key, value)
   }
 
-  array() {
+  array () {
     return [...this.values()]
   }
 
   /** Retrieve the value of the first element in this collection */
-  first(): V | undefined {
+  first (): V | undefined {
     return this.values().next().value
   }
 
-  last(): V | undefined {
+  last (): V | undefined {
     return [...this.values()][this.size - 1]
   }
 
-  random(): V | undefined {
+  random (): V | undefined {
     const array = [...this.values()]
     return array[Math.floor(Math.random() * array.length)]
   }
 
-  find(callback: (value: V, key: K) => boolean) {
+  find (callback: (value: V, key: K) => boolean) {
     for (const key of this.keys()) {
       const value = this.get(key)!
       if (callback(value, key)) return value
@@ -85,7 +85,7 @@ export class Collection<K, V> extends Map<K, V> {
     // If nothing matched
   }
 
-  filter(callback: (value: V, key: K) => boolean) {
+  filter (callback: (value: V, key: K) => boolean) {
     const relevant = new Collection<K, V>()
     this.forEach((value, key) => {
       if (callback(value, key)) relevant.set(key, value)
@@ -103,7 +103,7 @@ export class Collection<K, V> extends Map<K, V> {
     return results
   }
 
-  some(callback: (value: V, key: K) => boolean) {
+  some (callback: (value: V, key: K) => boolean) {
     for (const key of this.keys()) {
       const value = this.get(key)!
       if (callback(value, key)) return true
@@ -112,7 +112,7 @@ export class Collection<K, V> extends Map<K, V> {
     return false
   }
 
-  every(callback: (value: V, key: K) => boolean) {
+  every (callback: (value: V, key: K) => boolean) {
     for (const key of this.keys()) {
       const value = this.get(key)!
       if (!callback(value, key)) return false

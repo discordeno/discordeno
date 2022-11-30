@@ -2,7 +2,7 @@ import { Bot } from '../bot.js'
 import { DiscordAutoModerationRule } from '../types/discord.js'
 import { Optionalize } from '../types/shared.js'
 
-export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModerationRule) {
+export function transformAutoModerationRule (bot: Bot, payload: DiscordAutoModerationRule) {
   const rule = {
     name: payload.name,
     eventType: payload.event_type,
@@ -15,19 +15,19 @@ export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModera
     exemptChannels: payload.exempt_channels.map((id) => bot.transformers.snowflake(id)),
     triggerMetadata: payload.trigger_metadata
       ? {
-        keywordFilter: payload.trigger_metadata.keyword_filter,
-        presets: payload.trigger_metadata.presets,
-        allowList: payload.trigger_metadata.allow_list,
-        mentionTotalLimit: payload.trigger_metadata.mention_total_limit
-      }
+          keywordFilter: payload.trigger_metadata.keyword_filter,
+          presets: payload.trigger_metadata.presets,
+          allowList: payload.trigger_metadata.allow_list,
+          mentionTotalLimit: payload.trigger_metadata.mention_total_limit
+        }
       : undefined,
     actions: payload.actions.map((action) => ({
       type: action.type,
       metadata: action.metadata
         ? {
-          channelId: action.metadata.channel_id ? bot.transformers.snowflake(action.metadata.channel_id) : undefined,
-          durationSeconds: action.metadata.duration_seconds
-        }
+            channelId: action.metadata.channel_id ? bot.transformers.snowflake(action.metadata.channel_id) : undefined,
+            durationSeconds: action.metadata.duration_seconds
+          }
         : undefined
     }))
   }

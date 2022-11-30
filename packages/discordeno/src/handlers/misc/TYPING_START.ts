@@ -1,7 +1,7 @@
 import { Bot } from '../../bot.js'
 import { DiscordGatewayPayload, DiscordTypingStart } from '../../types/discord.js'
 
-export function handleTypingStart(bot: Bot, data: DiscordGatewayPayload) {
+export function handleTypingStart (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordTypingStart
 
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined

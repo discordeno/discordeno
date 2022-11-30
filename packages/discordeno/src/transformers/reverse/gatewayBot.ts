@@ -1,7 +1,7 @@
 import { DiscordGetGatewayBot } from '../../types/discord.js'
 import { GetGatewayBot } from '../gatewayBot.js'
 
-export function transformGatewayBotToDiscordGatewayBot(payload: GetGatewayBot): DiscordGetGatewayBot {
+export function transformGatewayBotToDiscordGatewayBot (payload: GetGatewayBot): DiscordGetGatewayBot {
   return {
     url: payload.url,
     shards: payload.shards,

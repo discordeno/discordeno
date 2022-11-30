@@ -16,7 +16,7 @@ import { Collection } from '../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-channels}
  */
-export async function getChannels(bot: Bot, guildId: BigString): Promise<Collection<bigint, Channel>> {
+export async function getChannels (bot: Bot, guildId: BigString): Promise<Collection<bigint, Channel>> {
   const results = await bot.rest.runMethod<DiscordChannel[]>(
     bot.rest,
     'GET',

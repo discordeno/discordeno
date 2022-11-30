@@ -1,7 +1,7 @@
 import { Bot } from '../../bot.js'
 import { DiscordGatewayPayload, DiscordMessageReactionAdd } from '../../types/discord.js'
 
-export async function handleMessageReactionAdd(bot: Bot, data: DiscordGatewayPayload) {
+export async function handleMessageReactionAdd (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordMessageReactionAdd
 
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined

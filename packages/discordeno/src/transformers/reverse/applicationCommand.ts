@@ -2,7 +2,7 @@ import { Bot } from '../../bot.js'
 import { DiscordApplicationCommand } from '../../types/discord.js'
 import { ApplicationCommand } from '../applicationCommand.js'
 
-export function transformApplicationCommandToDiscordApplicationCommand(
+export function transformApplicationCommandToDiscordApplicationCommand (
   bot: Bot,
   payload: ApplicationCommand
 ): DiscordApplicationCommand {

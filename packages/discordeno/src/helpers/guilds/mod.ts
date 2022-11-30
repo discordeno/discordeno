@@ -21,5 +21,3 @@ export * from './invites/mod.js'
 export * from './leaveGuild.js'
 export * from './voice/mod.js'
 export * from './widget/mod.js'
-
-

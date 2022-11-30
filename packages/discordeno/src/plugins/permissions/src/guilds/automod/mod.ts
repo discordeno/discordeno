@@ -5,7 +5,7 @@ import { editAutomodRule } from './editAutomodRule.js'
 import { getAutomodRule } from './getAutomodRule.js'
 import { getAutomodRules } from './getAutomodRules.js'
 
-export function automod(bot: BotWithCache) {
+export function automod (bot: BotWithCache) {
   createAutomodRule(bot)
   deleteAutomodRule(bot)
   editAutomodRule(bot)

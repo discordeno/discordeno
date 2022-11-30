@@ -6,7 +6,7 @@ import { kickMember } from './kickMember.js'
 import { pruneMembers } from './pruneMembers.js'
 import { unbanMember } from './unbanMember.js'
 
-export function members(bot: BotWithCache) {
+export function members (bot: BotWithCache) {
   banMember(bot)
   editBotMember(bot)
   editMember(bot)

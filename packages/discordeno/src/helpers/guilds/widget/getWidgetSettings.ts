@@ -15,7 +15,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-widget-settings}
  */
-export async function getWidgetSettings(bot: Bot, guildId: BigString): Promise<GuildWidgetSettings> {
+export async function getWidgetSettings (bot: Bot, guildId: BigString): Promise<GuildWidgetSettings> {
   const result = await bot.rest.runMethod<DiscordGuildWidgetSettings>(
     bot.rest,
     'GET',

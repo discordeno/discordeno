@@ -18,7 +18,7 @@ import { BigString, PermissionStrings } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-role}
  */
-export async function createRole(
+export async function createRole (
   bot: Bot,
   guildId: BigString,
   options: CreateGuildRole,

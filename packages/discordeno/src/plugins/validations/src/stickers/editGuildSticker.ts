@@ -1,6 +1,6 @@
 import { Bot } from '../../../../bot.js'
 
-export function editGuildSticker(bot: Bot) {
+export function editGuildSticker (bot: Bot) {
   const editGuildSticker = bot.helpers.editGuildSticker
   bot.helpers.editGuildSticker = async (guildId, stickerId, options) => {
     if (options.name && !bot.utils.validateLength(options.name, { min: 2, max: 30 })) {

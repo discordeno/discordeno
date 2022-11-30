@@ -7,7 +7,7 @@ import { delay } from '../mod.js'
  * @param options The options used to configure this bucket.
  * @returns RefillingBucket
  */
-export function createInvalidRequestBucket(options: InvalidRequestBucketOptions): InvalidRequestBucket {
+export function createInvalidRequestBucket (options: InvalidRequestBucketOptions): InvalidRequestBucket {
   const bucket: InvalidRequestBucket = {
     current: options.current ?? 0,
     max: options.max ?? 10000,

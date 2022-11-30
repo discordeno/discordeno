@@ -12,7 +12,7 @@ import { BigString, CreateApplicationCommand, DiscordApplicationCommand } from '
  *
  * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command}
  */
-export async function editGlobalApplicationCommand(
+export async function editGlobalApplicationCommand (
   bot: Bot,
   commandId: BigString,
   options: CreateApplicationCommand

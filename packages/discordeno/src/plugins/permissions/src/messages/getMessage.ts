@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../deps.js'
 import { requireBotChannelPermissions } from '../permissions.js'
 
-export function getMessage(bot: BotWithCache) {
+export function getMessage (bot: BotWithCache) {
   const getMessage = bot.helpers.getMessage
 
   bot.helpers.getMessage = async function (channelId, messageId) {

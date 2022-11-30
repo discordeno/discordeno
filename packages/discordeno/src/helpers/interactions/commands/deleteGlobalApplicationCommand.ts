@@ -9,7 +9,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/interactions/application-commands#delete-global-application-command}
  */
-export async function deleteGlobalApplicationCommand(bot: Bot, commandId: BigString): Promise<void> {
+export async function deleteGlobalApplicationCommand (bot: Bot, commandId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     'DELETE',

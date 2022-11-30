@@ -1,7 +1,7 @@
 import { RestManager } from './restManager.js'
 
 /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
-export function processRequestHeaders(rest: RestManager, url: string, headers: Headers) {
+export function processRequestHeaders (rest: RestManager, url: string, headers: Headers) {
   let rateLimited = false
 
   // GET ALL NECESSARY HEADERS

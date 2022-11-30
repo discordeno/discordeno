@@ -3,7 +3,7 @@ import { DiscordVoiceState } from '../types/discord.js'
 import { Optionalize } from '../types/shared.js'
 import { VoiceStateToggles } from './toggles/voice.js'
 
-export function transformVoiceState(bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) {
+export function transformVoiceState (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) {
   const voiceState = {
     toggles: new VoiceStateToggles(payload.voiceState),
 

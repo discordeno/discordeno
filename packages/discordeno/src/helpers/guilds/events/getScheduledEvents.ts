@@ -14,7 +14,7 @@ import { Collection } from '../../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#list-scheduled-events-for-guild}
  */
-export async function getScheduledEvents(
+export async function getScheduledEvents (
   bot: Bot,
   guildId: BigString,
   options?: GetScheduledEvents

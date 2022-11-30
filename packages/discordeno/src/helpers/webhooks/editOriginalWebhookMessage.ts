@@ -17,7 +17,7 @@ import { BigString, InteractionCallbackData, InteractionResponseTypes } from '..
  *
  * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
  */
-export async function editOriginalWebhookMessage(
+export async function editOriginalWebhookMessage (
   bot: Bot,
   webhookId: BigString,
   token: string,

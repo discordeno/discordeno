@@ -1,7 +1,7 @@
 import { Bot } from '../../bot.js'
 import { DiscordGatewayPayload, DiscordThreadMembersUpdate } from '../../types/discord.js'
 
-export async function handleThreadMembersUpdate(bot: Bot, data: DiscordGatewayPayload) {
+export async function handleThreadMembersUpdate (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordThreadMembersUpdate
   bot.events.threadMembersUpdate(bot, {
     id: bot.transformers.snowflake(payload.id),

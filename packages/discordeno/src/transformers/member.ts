@@ -4,7 +4,7 @@ import { Optionalize } from '../types/shared.js'
 import { MemberToggles } from './toggles/member.js'
 import { UserToggles } from './toggles/user.js'
 
-export function transformUser(bot: Bot, payload: DiscordUser) {
+export function transformUser (bot: Bot, payload: DiscordUser) {
   const user = {
     id: bot.transformers.snowflake(payload.id || ''),
     username: payload.username,
@@ -21,7 +21,7 @@ export function transformUser(bot: Bot, payload: DiscordUser) {
   return user as Optionalize<typeof user>
 }
 
-export function transformMember(bot: Bot, payload: DiscordMember, guildId: bigint, userId: bigint) {
+export function transformMember (bot: Bot, payload: DiscordMember, guildId: bigint, userId: bigint) {
   const member = {
     id: userId,
     guildId,

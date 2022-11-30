@@ -4,4 +4,3 @@ export * from './editScheduledEvent.js'
 export * from './getScheduledEvent.js'
 export * from './getScheduledEvents.js'
 export * from './getScheduledEventUsers.js'
-

@@ -2,7 +2,7 @@ import { Bot } from '../../bot.js'
 import { DiscordComponent } from '../../types/discord.js'
 import { Component } from '../component.js'
 
-export function transformComponentToDiscordComponent(bot: Bot, payload: Component): DiscordComponent {
+export function transformComponentToDiscordComponent (bot: Bot, payload: Component): DiscordComponent {
   return {
     type: payload.type,
     custom_id: payload.customId,
@@ -12,10 +12,10 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
     label: payload.label,
     emoji: (payload.emoji != null)
       ? {
-        id: payload.emoji.id?.toString(),
-        name: payload.emoji.name,
-        animated: payload.emoji.animated
-      }
+          id: payload.emoji.id?.toString(),
+          name: payload.emoji.name,
+          animated: payload.emoji.animated
+        }
       : undefined,
     url: payload.url,
     options: payload.options?.map((option) => ({
@@ -24,10 +24,10 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
       description: option.description,
       emoji: (option.emoji != null)
         ? {
-          id: option.emoji.id?.toString(),
-          name: option.emoji.name,
-          animated: option.emoji.animated
-        }
+            id: option.emoji.id?.toString(),
+            name: option.emoji.name,
+            animated: option.emoji.animated
+          }
         : undefined,
       default: option.default
     })),

@@ -5,7 +5,7 @@ import { Optionalize } from '../types/shared.js'
 import { Collection } from '../util/collection.js'
 import { GuildToggles } from './toggles/guild.js'
 
-export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) {
+export function transformGuild (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) {
   const guildId = bot.transformers.snowflake(payload.guild.id)
 
   const guild = {
@@ -40,14 +40,14 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
     verificationLevel: payload.guild.verification_level,
     welcomeScreen: (payload.guild.welcome_screen != null)
       ? {
-        description: payload.guild.welcome_screen.description ?? undefined,
-        welcomeChannels: payload.guild.welcome_screen.welcome_channels.map((wc) => ({
-          channelId: bot.transformers.snowflake(wc.channel_id),
-          description: wc.description,
-          emojiId: wc.emoji_id ? bot.transformers.snowflake(wc.emoji_id) : undefined,
-          emojiName: wc.emoji_name ?? undefined
-        }))
-      }
+          description: payload.guild.welcome_screen.description ?? undefined,
+          welcomeChannels: payload.guild.welcome_screen.welcome_channels.map((wc) => ({
+            channelId: bot.transformers.snowflake(wc.channel_id),
+            description: wc.description,
+            emojiId: wc.emoji_id ? bot.transformers.snowflake(wc.emoji_id) : undefined,
+            emojiName: wc.emoji_name ?? undefined
+          }))
+        }
       : undefined,
     discoverySplash: payload.guild.discovery_splash
       ? bot.utils.iconHashToBigInt(payload.guild.discovery_splash)

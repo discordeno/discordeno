@@ -16,7 +16,7 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#add-guild-member-role}
  */
-export async function addRole(
+export async function addRole (
   bot: Bot,
   guildId: BigString,
   userId: BigString,

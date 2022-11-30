@@ -31,7 +31,7 @@ import {
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild}
  */
-export async function editGuild(bot: Bot, guildId: BigString, options: ModifyGuild, shardId: number): Promise<Guild> {
+export async function editGuild (bot: Bot, guildId: BigString, options: ModifyGuild, shardId: number): Promise<Guild> {
   if (options.icon && !options.icon.startsWith('data:image/')) {
     options.icon = await bot.utils.urlToBase64(options.icon)
   }

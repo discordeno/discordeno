@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../deps.js'
 import { higherRolePosition, highestRole, requireBotGuildPermissions } from '../permissions.js'
 
-export function removeRole(bot: BotWithCache) {
+export function removeRole (bot: BotWithCache) {
   const removeRole = bot.helpers.removeRole
 
   bot.helpers.removeRole = async function (

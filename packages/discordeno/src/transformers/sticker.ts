@@ -2,7 +2,7 @@ import { Bot } from '../bot.js'
 import { DiscordSticker, DiscordStickerPack } from '../types/discord.js'
 import { Optionalize } from '../types/shared.js'
 
-export function transformSticker(bot: Bot, payload: DiscordSticker) {
+export function transformSticker (bot: Bot, payload: DiscordSticker) {
   const sticker = {
     id: bot.utils.snowflakeToBigint(payload.id),
     packId: payload.pack_id ? bot.utils.snowflakeToBigint(payload.pack_id) : undefined,
@@ -20,7 +20,7 @@ export function transformSticker(bot: Bot, payload: DiscordSticker) {
   return sticker as Optionalize<typeof sticker>
 }
 
-export function transformStickerPack(bot: Bot, payload: DiscordStickerPack) {
+export function transformStickerPack (bot: Bot, payload: DiscordStickerPack) {
   const pack = {
     id: bot.transformers.snowflake(payload.id),
     stickers: payload.stickers.map((sticker) => bot.transformers.sticker(bot, sticker)),

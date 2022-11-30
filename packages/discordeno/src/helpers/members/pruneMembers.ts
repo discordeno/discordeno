@@ -20,7 +20,7 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#begin-guild-prune}
  */
-export async function pruneMembers(
+export async function pruneMembers (
   bot: Bot,
   guildId: BigString,
   options: BeginGuildPrune

@@ -20,7 +20,7 @@ import { DiscordEmoji } from '../../types/discord.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/emoji#create-guild-emoji}
  */
-export async function createEmoji(bot: Bot, guildId: BigString, options: CreateGuildEmoji): Promise<Emoji> {
+export async function createEmoji (bot: Bot, guildId: BigString, options: CreateGuildEmoji): Promise<Emoji> {
   if (options.image && !options.image.startsWith('data:image/')) {
     options.image = await bot.utils.urlToBase64(options.image)
   }

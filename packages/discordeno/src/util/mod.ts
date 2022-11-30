@@ -11,4 +11,3 @@ export * from './urlToBase64.js'
 export * from './utils.js'
 export * from './validateLength.js'
 export * from './verifySignature.js'
-

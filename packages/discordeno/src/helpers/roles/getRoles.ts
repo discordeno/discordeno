@@ -16,7 +16,7 @@ import { Collection } from '../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-roles}
  */
-export async function getRoles(bot: Bot, guildId: BigString): Promise<Collection<bigint, Role>> {
+export async function getRoles (bot: Bot, guildId: BigString): Promise<Collection<bigint, Role>> {
   const results = await bot.rest.runMethod<DiscordRole[]>(bot.rest, 'GET', bot.constants.routes.GUILD_ROLES(guildId))
   const id = bot.transformers.snowflake(guildId)
 

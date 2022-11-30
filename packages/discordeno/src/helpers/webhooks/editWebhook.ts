@@ -17,7 +17,7 @@ import { DiscordWebhook } from '../../types/discord.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook}
  */
-export async function editWebhook(bot: Bot, webhookId: BigString, options: ModifyWebhook): Promise<Webhook> {
+export async function editWebhook (bot: Bot, webhookId: BigString, options: ModifyWebhook): Promise<Webhook> {
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
     'PATCH',

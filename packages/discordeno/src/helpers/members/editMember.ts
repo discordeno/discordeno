@@ -19,7 +19,7 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-member}
  */
-export async function editMember(
+export async function editMember (
   bot: Bot,
   guildId: BigString,
   userId: BigString,

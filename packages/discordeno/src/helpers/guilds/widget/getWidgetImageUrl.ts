@@ -9,7 +9,7 @@ import { BigString } from '../../../types/shared.js'
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource.
  */
-export function getWidgetImageURL(bot: Bot, guildId: BigString, options?: GetGuildWidgetImageQuery): string {
+export function getWidgetImageURL (bot: Bot, guildId: BigString, options?: GetGuildWidgetImageQuery): string {
   return bot.constants.routes.GUILD_WIDGET_IMAGE(guildId, options?.style)
 }
 

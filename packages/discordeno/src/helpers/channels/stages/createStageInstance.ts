@@ -17,7 +17,7 @@ import { DiscordStageInstance } from '../../../types/discord.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/stage-instance#create-stage-instance}
  */
-export async function createStageInstance(bot: Bot, options: CreateStageInstance): Promise<StageInstance> {
+export async function createStageInstance (bot: Bot, options: CreateStageInstance): Promise<StageInstance> {
   const result = await bot.rest.runMethod<DiscordStageInstance>(
     bot.rest,
     'POST',

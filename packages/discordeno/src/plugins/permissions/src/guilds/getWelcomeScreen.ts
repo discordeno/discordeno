@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../deps.js'
 import { requireBotGuildPermissions } from '../permissions.js'
 
-export function getWelcomeScreen(bot: BotWithCache) {
+export function getWelcomeScreen (bot: BotWithCache) {
   const getWelcomeScreen = bot.helpers.getWelcomeScreen
 
   bot.helpers.getWelcomeScreen = async function (guildId) {

@@ -24,7 +24,7 @@ import { BigString, ChannelTypes, SortOrderTypes } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-channel}
  */
-export async function createChannel(bot: Bot, guildId: BigString, options: CreateGuildChannel): Promise<Channel> {
+export async function createChannel (bot: Bot, guildId: BigString, options: CreateGuildChannel): Promise<Channel> {
   // BITRATE IS IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
   if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000
 
@@ -34,43 +34,43 @@ export async function createChannel(bot: Bot, guildId: BigString, options: Creat
     bot.constants.routes.GUILD_CHANNELS(guildId),
     options
       ? {
-        name: options.name,
-        topic: options.topic,
-        bitrate: options.bitrate,
-        user_limit: options.userLimit,
-        rate_limit_per_user: options.rateLimitPerUser,
-        position: options.position,
-        parent_id: options.parentId?.toString(),
-        nsfw: options.nsfw,
-        permission_overwrites: options?.permissionOverwrites?.map((overwrite) => ({
-          id: overwrite.id.toString(),
-          type: overwrite.type,
-          allow: (overwrite.allow != null) ? bot.utils.calculateBits(overwrite.allow) : null,
-          deny: (overwrite.deny != null) ? bot.utils.calculateBits(overwrite.deny) : null
-        })),
-        type: options?.type || ChannelTypes.GuildText,
-        default_sort_order: options.defaultSortOrder,
-        reason: options.reason,
-        default_auto_archive_duration: options?.defaultAutoArchiveDuration,
-        default_reaction_emoji: (options.defaultReactionEmoji != null)
-          ? {
-            emoji_id: options.defaultReactionEmoji.emojiId
-              ? bot.transformers.reverse.snowflake(options.defaultReactionEmoji.emojiId)
-              : options.defaultReactionEmoji.emojiId,
-            emoji_name: options.defaultReactionEmoji.emojiName
-          }
-          : undefined,
+          name: options.name,
+          topic: options.topic,
+          bitrate: options.bitrate,
+          user_limit: options.userLimit,
+          rate_limit_per_user: options.rateLimitPerUser,
+          position: options.position,
+          parent_id: options.parentId?.toString(),
+          nsfw: options.nsfw,
+          permission_overwrites: options?.permissionOverwrites?.map((overwrite) => ({
+            id: overwrite.id.toString(),
+            type: overwrite.type,
+            allow: (overwrite.allow != null) ? bot.utils.calculateBits(overwrite.allow) : null,
+            deny: (overwrite.deny != null) ? bot.utils.calculateBits(overwrite.deny) : null
+          })),
+          type: options?.type || ChannelTypes.GuildText,
+          default_sort_order: options.defaultSortOrder,
+          reason: options.reason,
+          default_auto_archive_duration: options?.defaultAutoArchiveDuration,
+          default_reaction_emoji: (options.defaultReactionEmoji != null)
+            ? {
+                emoji_id: options.defaultReactionEmoji.emojiId
+                  ? bot.transformers.reverse.snowflake(options.defaultReactionEmoji.emojiId)
+                  : options.defaultReactionEmoji.emojiId,
+                emoji_name: options.defaultReactionEmoji.emojiName
+              }
+            : undefined,
 
-        available_tags: (options.availableTags != null)
-          ? options.availableTags.map((availableTag) => ({
-            id: bot.transformers.reverse.snowflake(availableTag.id),
-            name: availableTag.name,
-            moderated: availableTag.moderated,
-            emoji_name: availableTag.emojiName,
-            emoji_id: availableTag.emojiId ? bot.transformers.reverse.snowflake(availableTag.emojiId) : undefined
-          }))
-          : undefined
-      }
+          available_tags: (options.availableTags != null)
+            ? options.availableTags.map((availableTag) => ({
+              id: bot.transformers.reverse.snowflake(availableTag.id),
+              name: availableTag.name,
+              moderated: availableTag.moderated,
+              emoji_name: availableTag.emojiName,
+              emoji_id: availableTag.emojiId ? bot.transformers.reverse.snowflake(availableTag.emojiId) : undefined
+            }))
+            : undefined
+        }
       : {}
   )
 

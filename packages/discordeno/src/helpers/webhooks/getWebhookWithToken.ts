@@ -13,7 +13,7 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook-with-token}
  */
-export async function getWebhookWithToken(bot: Bot, webhookId: BigString, token: string): Promise<Webhook> {
+export async function getWebhookWithToken (bot: Bot, webhookId: BigString, token: string): Promise<Webhook> {
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
     'GET',

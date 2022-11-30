@@ -15,7 +15,7 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#get-channel}
  */
-export async function getChannel(bot: Bot, channelId: BigString): Promise<Channel> {
+export async function getChannel (bot: Bot, channelId: BigString): Promise<Channel> {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
     'GET',

@@ -7,7 +7,7 @@ import { GATEWAY_RATE_LIMIT_RESET_INTERVAL, Shard, ShardState } from './types.js
 
 const decoder = new TextDecoder()
 
-export async function handleMessage(shard: Shard, message: MessageEvent<any>): Promise<void> {
+export async function handleMessage (shard: Shard, message: MessageEvent<any>): Promise<void> {
   message = message.data
 
   // If message compression is enabled,

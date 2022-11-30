@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../deps.js'
 import { requireBotChannelPermissions } from '../permissions.js'
 
-export function deleteWebhook(bot: BotWithCache) {
+export function deleteWebhook (bot: BotWithCache) {
   const deleteWebhook = bot.helpers.deleteWebhook
 
   bot.helpers.deleteWebhook = async function (channelId, options) {

@@ -1,44 +1,44 @@
-import { Shard, ShardState } from "./types.js";
+import { Shard, ShardState } from './types.js'
 
-export async function connect(shard: Shard): Promise<void> {
+export async function connect (shard: Shard): Promise<void> {
   // Only set the shard to `Connecting` state,
   // if the connection request does not come from an identify or resume action.
   if (![ShardState.Identifying, ShardState.Resuming].includes(shard.state)) {
-    shard.state = ShardState.Connecting;
+    shard.state = ShardState.Connecting
   }
-  shard.events.connecting?.(shard);
+  shard.events.connecting?.(shard)
 
-  let url = new URL(shard.gatewayConfig.url);
+  let url = new URL(shard.gatewayConfig.url)
   // If not connecting to a proxy but directly to discord need to handle resuming
-  if (url.origin === "wss://gateway.discord.gg") {
+  if (url.origin === 'wss://gateway.discord.gg') {
     if (shard.state === ShardState.Resuming) {
-      url = new URL(shard.resumeGatewayUrl);
+      url = new URL(shard.resumeGatewayUrl)
     }
-    url.searchParams.set("v", shard.gatewayConfig.version.toString());
-    url.searchParams.set("encoding", "json");
+    url.searchParams.set('v', shard.gatewayConfig.version.toString())
+    url.searchParams.set('encoding', 'json')
   }
 
-  const socket = new WebSocket(url.toString());
+  const socket = new WebSocket(url.toString())
 
-  shard.socket = socket;
+  shard.socket = socket
 
   // TODO: proper event handling
-  socket.onerror = (event) => console.log({ error: event });
+  socket.onerror = (event) => console.log({ error: event })
 
-  socket.onclose = (event) => shard.handleClose(event);
+  socket.onclose = async (event) => await shard.handleClose(event)
 
-  socket.onmessage = (message) => shard.handleMessage(message);
+  socket.onmessage = async (message) => await shard.handleMessage(message)
 
-  return new Promise((resolve) => {
+  return await new Promise((resolve) => {
     socket.onopen = () => {
       // Only set the shard to `Unidentified` state,
       // if the connection request does not come from an identify or resume action.
       if (![ShardState.Identifying, ShardState.Resuming].includes(shard.state)) {
-        shard.state = ShardState.Unidentified;
+        shard.state = ShardState.Unidentified
       }
-      shard.events.connected?.(shard);
+      shard.events.connected?.(shard)
 
-      resolve();
-    };
-  });
+      resolve()
+    }
+  })
 }

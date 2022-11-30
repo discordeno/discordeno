@@ -1,7 +1,7 @@
 import { BotWithCache, ChannelTypes } from '../../../deps.js'
 import { requireBotChannelPermissions } from '../../permissions.js'
 
-export function addThreadMember(bot: BotWithCache) {
+export function addThreadMember (bot: BotWithCache) {
   const addThreadMember = bot.helpers.addThreadMember
 
   bot.helpers.addThreadMember = async function (threadId, userId) {

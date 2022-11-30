@@ -13,7 +13,7 @@ import { Collection } from '../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/emoji#list-guild-emojis}
  */
-export async function getEmojis(bot: Bot, guildId: BigString): Promise<Collection<bigint, Emoji>> {
+export async function getEmojis (bot: Bot, guildId: BigString): Promise<Collection<bigint, Emoji>> {
   const results = await bot.rest.runMethod<DiscordEmoji[]>(
     bot.rest,
     'GET',

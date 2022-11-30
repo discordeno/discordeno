@@ -1,4 +1,4 @@
-import type { Bot } from "../../../bot.js";
+import type { Bot } from '../../../bot.js'
 
 /**
  * Deletes an invite to a channel.
@@ -13,11 +13,11 @@ import type { Bot } from "../../../bot.js";
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#delete-channel-invite}
  */
-export async function deleteInvite(bot: Bot, inviteCode: string, reason?: string): Promise<void> {
+export async function deleteInvite (bot: Bot, inviteCode: string, reason?: string): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
+    'DELETE',
     bot.constants.routes.INVITE(inviteCode),
-    reason ? { reason } : undefined,
-  );
+    reason ? { reason } : undefined
+  )
 }

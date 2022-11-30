@@ -20,7 +20,7 @@ import { DiscordWebhook } from '../../types/discord.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/webhook#create-webhook}
  */
-export async function createWebhook(bot: Bot, channelId: BigString, options: CreateWebhook): Promise<Webhook> {
+export async function createWebhook (bot: Bot, channelId: BigString, options: CreateWebhook): Promise<Webhook> {
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
     'POST',

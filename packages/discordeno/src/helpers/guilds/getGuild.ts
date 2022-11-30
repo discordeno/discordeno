@@ -13,7 +13,7 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild}
  */
-export async function getGuild(
+export async function getGuild (
   bot: Bot,
   guildId: BigString,
   options: { counts?: boolean } = {

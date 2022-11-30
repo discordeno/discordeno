@@ -14,6 +14,6 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#leave-thread}
  */
-export async function leaveThread(bot: Bot, channelId: BigString): Promise<void> {
+export async function leaveThread (bot: Bot, channelId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(bot.rest, 'DELETE', bot.constants.routes.THREAD_ME(channelId))
 }

@@ -19,7 +19,7 @@ import { processReactionString } from './getReactions.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#delete-all-reactions-for-emoji}
  */
-export async function deleteReactionsEmoji(
+export async function deleteReactionsEmoji (
   bot: Bot,
   channelId: BigString,
   messageId: BigString,

@@ -24,7 +24,7 @@ import {
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#create-guild}
  */
-export async function createGuild(bot: Bot, options: CreateGuild): Promise<Guild> {
+export async function createGuild (bot: Bot, options: CreateGuild): Promise<Guild> {
   const result = await bot.rest.runMethod<DiscordGuild>(bot.rest, 'POST', bot.constants.routes.GUILDS(), {
     name: options.name,
     afk_channel_id: options.afkChannelId,

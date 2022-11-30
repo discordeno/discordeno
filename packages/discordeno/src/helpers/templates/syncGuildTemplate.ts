@@ -1,7 +1,7 @@
-import type { Bot } from "../../bot.js";
-import { Template } from "../../transformers/template.js";
-import { DiscordTemplate } from "../../types/discord.js";
-import { BigString } from "../../types/shared.js";
+import type { Bot } from '../../bot.js'
+import { Template } from '../../transformers/template.js'
+import { DiscordTemplate } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Synchronises a template with the current state of a guild.
@@ -17,12 +17,12 @@ import { BigString } from "../../types/shared.js";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
  */
-export async function syncGuildTemplate(bot: Bot, guildId: BigString, templateCode: string): Promise<Template> {
+export async function syncGuildTemplate (bot: Bot, guildId: BigString, templateCode: string): Promise<Template> {
   const result = await bot.rest.runMethod<DiscordTemplate>(
     bot.rest,
-    "PUT",
-    bot.constants.routes.GUILD_TEMPLATE(guildId, templateCode),
-  );
+    'PUT',
+    bot.constants.routes.GUILD_TEMPLATE(guildId, templateCode)
+  )
 
-  return bot.transformers.template(bot, result);
+  return bot.transformers.template(bot, result)
 }

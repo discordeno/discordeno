@@ -1,7 +1,7 @@
 import { Bot } from '../../bot.js'
 import { DiscordGatewayPayload, DiscordThreadMemberUpdate } from '../../types/discord.js'
 
-export async function handleThreadMemberUpdate(bot: Bot, data: DiscordGatewayPayload) {
+export async function handleThreadMemberUpdate (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordThreadMemberUpdate
 
   bot.events.threadMemberUpdate(bot, {

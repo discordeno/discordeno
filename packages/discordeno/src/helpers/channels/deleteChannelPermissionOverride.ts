@@ -15,7 +15,7 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#delete-channel-permission}
  */
-export async function deleteChannelPermissionOverride(
+export async function deleteChannelPermissionOverride (
   bot: Bot,
   channelId: BigString,
   overwriteId: BigString,

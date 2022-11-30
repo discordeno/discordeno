@@ -10,4 +10,3 @@ export * from './leaveThread.js'
 export * from './removeThreadMember.js'
 export * from './startThreadWithMessage.js'
 export * from './startThreadWithoutMessage.js'
-

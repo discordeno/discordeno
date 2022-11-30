@@ -2,7 +2,7 @@ import { Bot } from '../bot.js'
 import { DiscordActivity } from '../types/discord.js'
 import { Optionalize } from '../types/shared.js'
 
-export function transformActivity(bot: Bot, payload: DiscordActivity) {
+export function transformActivity (bot: Bot, payload: DiscordActivity) {
   const activity = {
     name: payload.name,
     type: payload.type,
@@ -15,10 +15,10 @@ export function transformActivity(bot: Bot, payload: DiscordActivity) {
     state: payload.state ?? undefined,
     emoji: (payload.emoji != null)
       ? {
-        name: payload.emoji.name,
-        animated: payload.emoji.animated,
-        id: payload.emoji.id ? bot.transformers.snowflake(payload.emoji.id) : undefined
-      }
+          name: payload.emoji.name,
+          animated: payload.emoji.animated,
+          id: payload.emoji.id ? bot.transformers.snowflake(payload.emoji.id) : undefined
+        }
       : undefined,
     partyId: payload.party?.id,
     partyCurrentSize: payload.party?.size?.[0],

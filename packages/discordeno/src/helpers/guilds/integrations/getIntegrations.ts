@@ -16,7 +16,7 @@ import { Collection } from '../../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-integrations}
  */
-export async function getIntegrations(bot: Bot, guildId: BigString): Promise<Collection<bigint, Integration>> {
+export async function getIntegrations (bot: Bot, guildId: BigString): Promise<Collection<bigint, Integration>> {
   const results = await bot.rest.runMethod<DiscordIntegration[]>(
     bot.rest,
     'GET',

@@ -1,7 +1,7 @@
 import { BotWithCache, ChannelTypes } from '../../../deps.js'
 import { requireBotChannelPermissions } from '../../permissions.js'
 
-export function deleteStageInstance(bot: BotWithCache) {
+export function deleteStageInstance (bot: BotWithCache) {
   const deleteStageInstance = bot.helpers.deleteStageInstance
 
   bot.helpers.deleteStageInstance = async function (channelId) {

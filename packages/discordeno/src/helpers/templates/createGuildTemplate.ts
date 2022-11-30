@@ -1,7 +1,7 @@
-import type { Bot } from "../../bot.js";
-import { Template } from "../../transformers/template.js";
-import { DiscordTemplate } from "../../types/discord.js";
-import { BigString } from "../../types/shared.js";
+import type { Bot } from '../../bot.js'
+import { Template } from '../../transformers/template.js'
+import { DiscordTemplate } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Creates a template from a guild.
@@ -18,28 +18,28 @@ import { BigString } from "../../types/shared.js";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-template#create-guild-template}
  */
-export async function createGuildTemplate(bot: Bot, guildId: BigString, options: CreateTemplate): Promise<Template> {
+export async function createGuildTemplate (bot: Bot, guildId: BigString, options: CreateTemplate): Promise<Template> {
   if (options.name.length < 1 || options.name.length > 100) {
-    throw new Error("The name can only be in between 1-100 characters.");
+    throw new Error('The name can only be in between 1-100 characters.')
   }
 
   if (options.description?.length && options.description.length > 120) {
-    throw new Error("The description can only be in between 0-120 characters.");
+    throw new Error('The description can only be in between 0-120 characters.')
   }
 
   const result = await bot.rest.runMethod<DiscordTemplate>(
     bot.rest,
-    "POST",
+    'POST',
     bot.constants.routes.GUILD_TEMPLATES(guildId),
-    options,
-  );
+    options
+  )
 
-  return bot.transformers.template(bot, result);
+  return bot.transformers.template(bot, result)
 }
 
 export interface CreateTemplate {
   /** Name which the template should have */
-  name: string;
+  name: string
   /** Description of the template */
-  description?: string;
+  description?: string
 }

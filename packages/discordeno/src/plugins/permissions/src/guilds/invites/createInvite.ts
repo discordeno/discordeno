@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../../deps.js'
 import { requireBotChannelPermissions } from '../../permissions.js'
 
-export function createInvite(bot: BotWithCache) {
+export function createInvite (bot: BotWithCache) {
   const createInvite = bot.helpers.createInvite
 
   bot.helpers.createInvite = async function (channelId, options = {}) {

@@ -3,7 +3,7 @@ import { Application } from '../../transformers/application.js'
 import { DiscordApplication } from '../../types/discord.js'
 
 /** Get the applications info */
-export async function getApplicationInfo(bot: Bot): Promise<Application> {
+export async function getApplicationInfo (bot: Bot): Promise<Application> {
   const result = await bot.rest.runMethod<DiscordApplication>(
     bot.rest,
     'GET',

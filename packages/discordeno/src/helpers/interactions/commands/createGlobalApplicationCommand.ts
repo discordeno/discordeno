@@ -16,7 +16,7 @@ import { DiscordApplicationCommand } from '../../../types/discord.js'
  *
  * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-global-application-command}
  */
-export async function createGlobalApplicationCommand(
+export async function createGlobalApplicationCommand (
   bot: Bot,
   command: CreateApplicationCommand
 ): Promise<ApplicationCommand> {

@@ -16,7 +16,7 @@ import { Collection } from '../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/webhook#get-channel-webhooks}
  */
-export async function getChannelWebhooks(bot: Bot, channelId: BigString): Promise<Collection<bigint, Webhook>> {
+export async function getChannelWebhooks (bot: Bot, channelId: BigString): Promise<Collection<bigint, Webhook>> {
   const results = await bot.rest.runMethod<DiscordWebhook[]>(
     bot.rest,
     'GET',

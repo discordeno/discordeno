@@ -28,7 +28,7 @@ export type GatewayManager = ReturnType<typeof createGatewayManager>
  * provided, it will fallback to a default which should be suitable for most
  * bots.
  */
-export function createGatewayManager(
+export function createGatewayManager (
   options: PickPartial<CreateGatewayManager, 'handleDiscordPayload' | 'gatewayBot' | 'gatewayConfig'>
 ) {
   const prepareBucketsOverwritten = options.prepareBuckets ?? prepareBuckets
@@ -49,11 +49,11 @@ export function createGatewayManager(
      * Those will be created when the `spawnShards` (which calls `prepareBuckets` under the hood) function gets called.
      */
     buckets: new Collection<
-      number,
-      {
-        workers: Array<{ id: number, queue: number[] }>
-        leak: LeakyBucket
-      }
+    number,
+    {
+      workers: Array<{ id: number, queue: number[] }>
+      leak: LeakyBucket
+    }
     >(),
     /** Id of the first Shard which should get controlled by this manager.
      *
@@ -231,11 +231,11 @@ export interface CreateGatewayManager {
 
   /** Stored as bucketId: { workers: [workerId, [ShardIds]], createNextShard: boolean } */
   buckets: Collection<
-    number,
-    {
-      workers: Array<{ id: number, queue: number[] }>
-      leak: LeakyBucket
-    }
+  number,
+  {
+    workers: Array<{ id: number, queue: number[] }>
+    leak: LeakyBucket
+  }
   >
   // METHODS
 

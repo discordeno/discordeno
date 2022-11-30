@@ -6,7 +6,7 @@ import { DiscordUser } from '../../types/discord.js'
  * Modifies the bot's username or avatar.
  * NOTE: username: if changed may cause the bot's discriminator to be randomized.
  */
-export async function editBotProfile(
+export async function editBotProfile (
   bot: Bot,
   options: { username?: string, botAvatarURL?: string | null }
 ): Promise<User> {

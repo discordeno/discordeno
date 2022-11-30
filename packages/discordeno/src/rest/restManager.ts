@@ -16,7 +16,7 @@ import { runMethod } from './runMethod.js'
 import { RestSendRequestOptions, sendRequest } from './sendRequest.js'
 import { simplifyUrl } from './simplifyUrl.js'
 
-export function createRestManager(options: CreateRestManagerOptions) {
+export function createRestManager (options: CreateRestManagerOptions) {
   const version = options.version || API_VERSION
 
   if (options.customUrl) {

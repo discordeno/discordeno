@@ -1,9 +1,9 @@
 import { Bot, ScheduledEventEntityType } from '../../../deps.js'
 
-export function createScheduledEvent(bot: Bot) {
+export function createScheduledEvent (bot: Bot) {
   const createScheduledEvent = bot.helpers.createScheduledEvent
 
-  bot.helpers.createScheduledEvent = function (guildId, options) {
+  bot.helpers.createScheduledEvent = async function (guildId, options) {
     if (options.entityType === ScheduledEventEntityType.StageInstance) {
       if (!options.channelId) {
         throw new Error(
@@ -11,7 +11,7 @@ export function createScheduledEvent(bot: Bot) {
         )
       }
 
-      return createScheduledEvent(guildId, options)
+      return await createScheduledEvent(guildId, options)
     }
 
     if (options.entityType === ScheduledEventEntityType.Voice) {
@@ -22,6 +22,6 @@ export function createScheduledEvent(bot: Bot) {
       }
     }
 
-    return createScheduledEvent(guildId, options)
+    return await createScheduledEvent(guildId, options)
   }
 }

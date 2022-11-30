@@ -26,7 +26,7 @@ import { calculateShardId } from '../../util/calculateShardId.js'
  *
  * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
  */
-export async function fetchMembers(
+export async function fetchMembers (
   bot: Bot,
   guildId: BigString,
   options?: Omit<RequestGuildMembers, 'guildId'>

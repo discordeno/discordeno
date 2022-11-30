@@ -7,7 +7,7 @@ import { joinThread } from './joinThread.js'
 import { leaveThread } from './leaveThread.js'
 import { removeThreadMember } from './removeThreadMember.js'
 
-export function threads(bot: BotWithCache) {
+export function threads (bot: BotWithCache) {
   addThreadMember(bot)
   getPublicArchivedThreads(bot)
   getPrivateArchivedThreads(bot)

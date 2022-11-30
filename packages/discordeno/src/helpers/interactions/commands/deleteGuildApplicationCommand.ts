@@ -12,7 +12,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/interactions/application-commands#delete-guild-application-command}
  */
-export async function deleteGuildApplicationCommand(bot: Bot, commandId: BigString, guildId: BigString): Promise<void> {
+export async function deleteGuildApplicationCommand (bot: Bot, commandId: BigString, guildId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     'DELETE',

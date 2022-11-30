@@ -16,7 +16,7 @@ import { AtLeastOne, BigString, GatewayOpcodes } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/topics/gateway#update-voice-state}
  */
-export async function connectToVoiceChannel(
+export async function connectToVoiceChannel (
   bot: Bot,
   guildId: BigString,
   channelId: BigString,

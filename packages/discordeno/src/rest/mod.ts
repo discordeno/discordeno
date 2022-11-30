@@ -12,4 +12,3 @@ export * from './restManager.js'
 export * from './runMethod.js'
 export * from './sendRequest.js'
 export * from './simplifyUrl.js'
-

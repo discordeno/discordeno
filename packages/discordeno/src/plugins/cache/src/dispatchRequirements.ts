@@ -3,7 +3,7 @@ import { BotWithCache } from './addCacheCollections.js'
 
 const processing = new Set<bigint>()
 
-export async function dispatchRequirements<B extends Bot>(
+export async function dispatchRequirements<B extends Bot> (
   bot: BotWithCache<B>,
   data: DiscordGatewayPayload,
   shard: Shard

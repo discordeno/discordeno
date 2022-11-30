@@ -15,7 +15,7 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/webhook#delete-webhook}
  */
-export async function deleteWebhookMessage(
+export async function deleteWebhookMessage (
   bot: Bot,
   webhookId: BigString,
   token: string,

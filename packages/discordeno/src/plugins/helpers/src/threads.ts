@@ -1,27 +1,27 @@
 import { BigString, Bot, DiscordChannel } from '../deps.js'
 
 /** Sets a thread channel to be archived. */
-export async function archiveThread(bot: Bot, threadId: BigString) {
+export async function archiveThread (bot: Bot, threadId: BigString) {
   return await editThread(bot, threadId, { archived: true })
 }
 
 /** Sets a thread channel to be unarchived. */
-export async function unarchiveThread(bot: Bot, threadId: BigString) {
+export async function unarchiveThread (bot: Bot, threadId: BigString) {
   return await editThread(bot, threadId, { archived: false })
 }
 
 /** Sets a thread channel to be locked. */
-export async function lockThread(bot: Bot, threadId: BigString) {
+export async function lockThread (bot: Bot, threadId: BigString) {
   return await editThread(bot, threadId, { locked: true })
 }
 
 /** Sets a thread channel to be unlocked. */
-export async function unlockThread(bot: Bot, threadId: BigString) {
+export async function unlockThread (bot: Bot, threadId: BigString) {
   return await editThread(bot, threadId, { locked: false })
 }
 
 /** Update a thread's settings. Requires the `MANAGE_CHANNELS` permission for the guild. */
-export async function editThread(bot: Bot, threadId: BigString, options: ModifyThread, reason?: string) {
+export async function editThread (bot: Bot, threadId: BigString, options: ModifyThread, reason?: string) {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
     'PATCH',

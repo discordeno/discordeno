@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../deps.js'
 import { higherRolePosition, highestRole, requireBotGuildPermissions } from '../permissions.js'
 
-export function editRole(bot: BotWithCache) {
+export function editRole (bot: BotWithCache) {
   const editRole = bot.helpers.editRole
 
   bot.helpers.editRole = async function (

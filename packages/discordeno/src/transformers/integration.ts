@@ -2,7 +2,7 @@ import { Bot } from '../bot.js'
 import { DiscordIntegrationCreateUpdate } from '../types/discord.js'
 import { Optionalize } from '../types/shared.js'
 
-export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreateUpdate) {
+export function transformIntegration (bot: Bot, payload: DiscordIntegrationCreateUpdate) {
   const integration = {
     guildId: bot.transformers.snowflake(payload.guild_id),
     id: bot.transformers.snowflake(payload.id),
@@ -24,12 +24,12 @@ export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreate
     revoked: payload.revoked,
     application: (payload.application != null)
       ? {
-        id: bot.transformers.snowflake(payload.application.id),
-        name: payload.application.name,
-        icon: payload.application.icon ? bot.utils.iconHashToBigInt(payload.application.icon) : undefined,
-        description: payload.application.description,
-        bot: (payload.application.bot != null) ? bot.transformers.user(bot, payload.application.bot) : undefined
-      }
+          id: bot.transformers.snowflake(payload.application.id),
+          name: payload.application.name,
+          icon: payload.application.icon ? bot.utils.iconHashToBigInt(payload.application.icon) : undefined,
+          description: payload.application.description,
+          bot: (payload.application.bot != null) ? bot.transformers.user(bot, payload.application.bot) : undefined
+        }
       : undefined,
     scopes: payload.scopes
   }

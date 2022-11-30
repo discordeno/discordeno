@@ -23,7 +23,7 @@ export interface Ban {
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-ban}
  */
-export async function getBan(bot: Bot, guildId: BigString, userId: BigString): Promise<Ban> {
+export async function getBan (bot: Bot, guildId: BigString, userId: BigString): Promise<Ban> {
   const result = await bot.rest.runMethod<DiscordBan>(
     bot.rest,
     'GET',

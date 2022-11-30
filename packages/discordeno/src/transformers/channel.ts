@@ -4,22 +4,22 @@ import { Optionalize } from '../types/shared.js'
 
 const Mask = (1n << 64n) - 1n
 
-export function packOverwrites(allow: string, deny: string, id: string, type: number) {
+export function packOverwrites (allow: string, deny: string, id: string, type: number) {
   return pack64(allow, 0) | pack64(deny, 1) | pack64(id, 2) | pack64(type, 3)
 }
-function unpack64(v: bigint, shift: number) {
+function unpack64 (v: bigint, shift: number) {
   return (v >> BigInt(shift * 64)) & Mask
 }
-function pack64(v: string | number, shift: number) {
+function pack64 (v: string | number, shift: number) {
   const b = BigInt(v)
   if (b < 0 || b > Mask) throw new Error('should have been a 64 bit unsigned integer: ' + v)
   return b << BigInt(shift * 64)
 }
-export function separateOverwrites(v: bigint) {
+export function separateOverwrites (v: bigint) {
   return [Number(unpack64(v, 3)), unpack64(v, 2), unpack64(v, 0), unpack64(v, 1)] as [number, bigint, bigint, bigint]
 }
 
-export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }) {
+export function transformChannel (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }) {
   const channel = {
     // UNTRANSFORMED STUFF HERE
     type: payload.channel.type,

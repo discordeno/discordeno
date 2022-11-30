@@ -18,7 +18,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#remove-thread-member}
  */
-export async function removeThreadMember(bot: Bot, channelId: BigString, userId: BigString): Promise<void> {
+export async function removeThreadMember (bot: Bot, channelId: BigString, userId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     'DELETE',

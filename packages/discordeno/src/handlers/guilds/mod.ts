@@ -5,5 +5,3 @@ export * from './GUILD_DELETE.js'
 export * from './GUILD_INTEGRATIONS_UPDATE.js'
 export * from './GUILD_UPDATE.js'
 export * from './scheduledEvents/mod.js'
-
-

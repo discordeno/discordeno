@@ -17,7 +17,7 @@ import { Collection } from '../../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands}
  */
-export async function upsertGlobalApplicationCommands(
+export async function upsertGlobalApplicationCommands (
   bot: Bot,
   commands: CreateApplicationCommand[]
 ): Promise<Collection<bigint, ApplicationCommand>> {

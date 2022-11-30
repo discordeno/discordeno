@@ -4,7 +4,7 @@ import { API_VERSION, baseEndpoints, BASE_URL } from '../util/constants.js'
 import { RequestMethod, RestRequestRejection, RestRequestResponse } from './rest.js'
 import { RestManager } from './restManager.js'
 
-export async function runMethod<T = any>(
+export async function runMethod<T = any> (
   rest: RestManager,
   method: RequestMethod,
   route: string,

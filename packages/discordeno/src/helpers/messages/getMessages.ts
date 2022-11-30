@@ -21,7 +21,7 @@ import { hasProperty } from '../../util/utils.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#get-channel-messages}
  */
-export async function getMessages(
+export async function getMessages (
   bot: Bot,
   channelId: BigString,
   options?: GetMessagesOptions
@@ -70,18 +70,18 @@ export interface GetMessagesAfter extends GetMessagesLimit {
 
 export type GetMessagesOptions = GetMessagesAfter | GetMessagesBefore | GetMessagesAround | GetMessagesLimit
 
-export function isGetMessagesAfter(options: GetMessagesOptions): options is GetMessagesAfter {
+export function isGetMessagesAfter (options: GetMessagesOptions): options is GetMessagesAfter {
   return hasProperty(options, 'after')
 }
 
-export function isGetMessagesBefore(options: GetMessagesOptions): options is GetMessagesBefore {
+export function isGetMessagesBefore (options: GetMessagesOptions): options is GetMessagesBefore {
   return hasProperty(options, 'before')
 }
 
-export function isGetMessagesAround(options: GetMessagesOptions): options is GetMessagesAround {
+export function isGetMessagesAround (options: GetMessagesOptions): options is GetMessagesAround {
   return hasProperty(options, 'around')
 }
 
-export function isGetMessagesLimit(options: GetMessagesOptions): options is GetMessagesLimit {
+export function isGetMessagesLimit (options: GetMessagesOptions): options is GetMessagesLimit {
   return hasProperty(options, 'limit')
 }

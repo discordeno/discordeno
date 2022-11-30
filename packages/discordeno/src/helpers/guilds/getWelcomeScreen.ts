@@ -16,7 +16,7 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-welcome-screen}
  */
-export async function getWelcomeScreen(bot: Bot, guildId: BigString): Promise<WelcomeScreen> {
+export async function getWelcomeScreen (bot: Bot, guildId: BigString): Promise<WelcomeScreen> {
   const result = await bot.rest.runMethod<DiscordWelcomeScreen>(
     bot.rest,
     'GET',

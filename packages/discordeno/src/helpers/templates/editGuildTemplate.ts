@@ -1,7 +1,7 @@
-import type { Bot } from "../../bot.js";
-import { Template } from "../../transformers/template.js";
-import { DiscordTemplate } from "../../types/discord.js";
-import { BigString } from "../../types/shared.js";
+import type { Bot } from '../../bot.js'
+import { Template } from '../../transformers/template.js'
+import { DiscordTemplate } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Edits a template's settings.
@@ -19,37 +19,37 @@ import { BigString } from "../../types/shared.js";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-template#modify-guild-template}
  */
-export async function editGuildTemplate(
+export async function editGuildTemplate (
   bot: Bot,
   guildId: BigString,
   templateCode: string,
-  options: ModifyGuildTemplate,
+  options: ModifyGuildTemplate
 ): Promise<Template> {
   if (options.name?.length && (options.name.length < 1 || options.name.length > 100)) {
-    throw new Error("The name can only be in between 1-100 characters.");
+    throw new Error('The name can only be in between 1-100 characters.')
   }
 
   if (options.description?.length && options.description.length > 120) {
-    throw new Error("The description can only be in between 0-120 characters.");
+    throw new Error('The description can only be in between 0-120 characters.')
   }
 
   const result = await bot.rest.runMethod<DiscordTemplate>(
     bot.rest,
-    "PATCH",
+    'PATCH',
     bot.constants.routes.GUILD_TEMPLATE(guildId, templateCode),
     {
       name: options.name,
-      description: options.description,
-    },
-  );
+      description: options.description
+    }
+  )
 
-  return bot.transformers.template(bot, result);
+  return bot.transformers.template(bot, result)
 }
 
 /** https://discord.com/developers/docs/resources/template#modify-guild-template */
 export interface ModifyGuildTemplate {
   /** Name of the template (1-100 characters) */
-  name?: string;
+  name?: string
   /** Description of the template (0-120 characters) */
-  description?: string | null;
+  description?: string | null
 }

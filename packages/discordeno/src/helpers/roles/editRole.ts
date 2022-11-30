@@ -19,7 +19,7 @@ import { BigString, PermissionStrings } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-role}
  */
-export async function editRole(bot: Bot, guildId: BigString, roleId: BigString, options: EditGuildRole): Promise<Role> {
+export async function editRole (bot: Bot, guildId: BigString, roleId: BigString, options: EditGuildRole): Promise<Role> {
   const result = await bot.rest.runMethod<DiscordRole>(
     bot.rest,
     'PATCH',

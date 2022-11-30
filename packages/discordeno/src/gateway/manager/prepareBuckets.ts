@@ -1,7 +1,7 @@
 import { createLeakyBucket } from '../../util/bucket.js'
 import { GatewayManager } from './gatewayManager.js'
 
-export function prepareBuckets(gateway: GatewayManager) {
+export function prepareBuckets (gateway: GatewayManager) {
   for (let i = 0; i < gateway.gatewayBot.sessionStartLimit.maxConcurrency; ++i) {
     gateway.buckets.set(i, {
       workers: [],

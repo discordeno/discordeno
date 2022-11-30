@@ -19,7 +19,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-widget}
  */
-export async function editWidgetSettings(
+export async function editWidgetSettings (
   bot: Bot,
   guildId: BigString,
   enabled: boolean,

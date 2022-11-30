@@ -1,4 +1,4 @@
-export type BigString = bigint | string;
+export type BigString = bigint | string
 
 export enum PresenceStatus {
   online,
@@ -136,11 +136,11 @@ export enum ButtonStyles {
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types */
 export enum AllowedMentionsTypes {
   /** Controls role mentions */
-  RoleMentions = "roles",
+  RoleMentions = 'roles',
   /** Controls user mentions */
-  UserMentions = "users",
+  UserMentions = 'users',
   /** Controls @everyone and @here mentions */
-  EveryoneMentions = "everyone",
+  EveryoneMentions = 'everyone',
 }
 
 /** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-types */
@@ -154,7 +154,7 @@ export enum WebhookTypes {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-types */
-export type EmbedTypes = "rich" | "image" | "video" | "gifv" | "article" | "link";
+export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link'
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level */
 export enum DefaultMessageNotificationLevels {
@@ -191,63 +191,63 @@ export enum VerificationLevels {
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
 export interface BaseRole {
   /** Role name */
-  name: string;
+  name: string
   /** Integer representation of hexadecimal color code */
-  color: number;
+  color: number
   /** Position of this role */
-  position: number;
+  position: number
   /** role unicode emoji */
-  unicodeEmoji?: string;
+  unicodeEmoji?: string
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-guild-features */
 export enum GuildFeatures {
   /** Guild has access to set an invite splash background */
-  InviteSplash = "INVITE_SPLASH",
+  InviteSplash = 'INVITE_SPLASH',
   /** Guild has access to set 384 kbps bitrate in voice (previously VIP voice servers) */
-  VipRegions = "VIP_REGIONS",
+  VipRegions = 'VIP_REGIONS',
   /** Guild has access to set a vanity URL */
-  VanityUrl = "VANITY_URL",
+  VanityUrl = 'VANITY_URL',
   /** Guild is verified */
-  Verified = "VERIFIED",
+  Verified = 'VERIFIED',
   /** Guild is partnered */
-  Partnered = "PARTNERED",
+  Partnered = 'PARTNERED',
   /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
-  Community = "COMMUNITY",
+  Community = 'COMMUNITY',
   /** Guild has been set as a support server on the App Directory */
-  DeveloperSupportServer = "DEVELOPER_SUPPORT_SERVER",
+  DeveloperSupportServer = 'DEVELOPER_SUPPORT_SERVER',
   /** Guild has access to create news channels */
-  News = "NEWS",
+  News = 'NEWS',
   /** Guild is able to be discovered in the directory */
-  Discoverable = "DISCOVERABLE",
+  Discoverable = 'DISCOVERABLE',
   /** Guild is able to be featured in the directory */
-  Featurable = "FEATURABLE",
+  Featurable = 'FEATURABLE',
   /** Guild has access to set an animated guild icon */
-  AnimatedIcon = "ANIMATED_ICON",
+  AnimatedIcon = 'ANIMATED_ICON',
   /** Guild has access to set a guild banner image */
-  Banner = "BANNER",
+  Banner = 'BANNER',
   /** Guild has enabled the welcome screen */
-  WelcomeScreenEnabled = "WELCOME_SCREEN_ENABLED",
+  WelcomeScreenEnabled = 'WELCOME_SCREEN_ENABLED',
   /** Guild has enabled [Membership Screening](https://discord.com/developers/docs/resources/guild#membership-screening-object) */
-  MemberVerificationGateEnabled = "MEMBER_VERIFICATION_GATE_ENABLED",
+  MemberVerificationGateEnabled = 'MEMBER_VERIFICATION_GATE_ENABLED',
   /** Guild can be previewed before joining via Membership Screening or the directory */
-  PreviewEnabled = "PREVIEW_ENABLED",
+  PreviewEnabled = 'PREVIEW_ENABLED',
   /** Guild has enabled ticketed events */
-  TicketedEventsEnabled = "TICKETED_EVENTS_ENABLED",
+  TicketedEventsEnabled = 'TICKETED_EVENTS_ENABLED',
   /** Guild has enabled monetization */
-  MonetizationEnabled = "MONETIZATION_ENABLED",
+  MonetizationEnabled = 'MONETIZATION_ENABLED',
   /** Guild has increased custom sticker slots */
-  MoreStickers = "MORE_STICKERS",
+  MoreStickers = 'MORE_STICKERS',
   /** Guild has access to create private threads */
-  PrivateThreads = "PRIVATE_THREADS",
+  PrivateThreads = 'PRIVATE_THREADS',
   /** Guild is able to set role icons */
-  RoleIcons = "ROLE_ICONS",
+  RoleIcons = 'ROLE_ICONS',
   /** Guild has set up auto moderation rules */
-  AutoModeration = "AUTO_MODERATION",
+  AutoModeration = 'AUTO_MODERATION',
   /** Guild has paused invites, preventing new users from joining */
-  InvitesDisabled = "INVITES_DISABLED",
+  InvitesDisabled = 'INVITES_DISABLED',
   /** Guild has access to set an animated guild banner image */
-  AnimatedBanner = "ANIMATED_BANNER",
+  AnimatedBanner = 'ANIMATED_BANNER',
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-mfa-level */
@@ -663,7 +663,7 @@ export enum BitwisePermissionFlags {
   MODERATE_MEMBERS = 0x0000010000000000,
 }
 
-export type PermissionStrings = keyof typeof BitwisePermissionFlags;
+export type PermissionStrings = keyof typeof BitwisePermissionFlags
 
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#voice */
 export enum VoiceOpcodes {
@@ -1043,63 +1043,63 @@ export enum GatewayOpcodes {
 }
 
 export type GatewayDispatchEventNames =
-  | "READY"
-  | "CHANNEL_CREATE"
-  | "CHANNEL_DELETE"
-  | "CHANNEL_PINS_UPDATE"
-  | "CHANNEL_UPDATE"
-  | "GUILD_BAN_ADD"
-  | "GUILD_BAN_REMOVE"
-  | "GUILD_CREATE"
-  | "GUILD_DELETE"
-  | "GUILD_EMOJIS_UPDATE"
-  | "GUILD_INTEGRATIONS_UPDATE"
-  | "GUILD_MEMBER_ADD"
-  | "GUILD_MEMBER_REMOVE"
-  | "GUILD_MEMBER_UPDATE"
-  | "GUILD_MEMBERS_CHUNK"
-  | "GUILD_ROLE_CREATE"
-  | "GUILD_ROLE_DELETE"
-  | "GUILD_ROLE_UPDATE"
-  | "GUILD_UPDATE"
-  | "GUILD_SCHEDULED_EVENT_CREATE"
-  | "GUILD_SCHEDULED_EVENT_DELETE"
-  | "GUILD_SCHEDULED_EVENT_UPDATE"
-  | "GUILD_SCHEDULED_EVENT_USER_ADD"
-  | "GUILD_SCHEDULED_EVENT_USER_REMOVE"
-  | "INTERACTION_CREATE"
-  | "INVITE_CREATE"
-  | "INVITE_DELETE"
-  | "MESSAGE_CREATE"
-  | "MESSAGE_DELETE_BULK"
-  | "MESSAGE_DELETE"
-  | "MESSAGE_REACTION_ADD"
-  | "MESSAGE_REACTION_REMOVE_ALL"
-  | "MESSAGE_REACTION_REMOVE_EMOJI"
-  | "MESSAGE_REACTION_REMOVE"
-  | "MESSAGE_UPDATE"
-  | "PRESENCE_UPDATE"
-  | "TYPING_START"
-  | "USER_UPDATE"
-  | "VOICE_SERVER_UPDATE"
-  | "VOICE_STATE_UPDATE"
-  | "WEBHOOKS_UPDATE"
-  | "INTEGRATION_CREATE"
-  | "INTEGRATION_UPDATE"
-  | "INTEGRATION_DELETE"
-  | "STAGE_INSTANCE_CREATE"
-  | "STAGE_INSTANCE_UPDATE"
-  | "STAGE_INSTANCE_DELETE"
-  | "THREAD_CREATE"
-  | "THREAD_UPDATE"
-  | "THREAD_DELETE"
-  | "THREAD_LIST_SYNC"
-  | "THREAD_MEMBERS_UPDATE";
+  | 'READY'
+  | 'CHANNEL_CREATE'
+  | 'CHANNEL_DELETE'
+  | 'CHANNEL_PINS_UPDATE'
+  | 'CHANNEL_UPDATE'
+  | 'GUILD_BAN_ADD'
+  | 'GUILD_BAN_REMOVE'
+  | 'GUILD_CREATE'
+  | 'GUILD_DELETE'
+  | 'GUILD_EMOJIS_UPDATE'
+  | 'GUILD_INTEGRATIONS_UPDATE'
+  | 'GUILD_MEMBER_ADD'
+  | 'GUILD_MEMBER_REMOVE'
+  | 'GUILD_MEMBER_UPDATE'
+  | 'GUILD_MEMBERS_CHUNK'
+  | 'GUILD_ROLE_CREATE'
+  | 'GUILD_ROLE_DELETE'
+  | 'GUILD_ROLE_UPDATE'
+  | 'GUILD_UPDATE'
+  | 'GUILD_SCHEDULED_EVENT_CREATE'
+  | 'GUILD_SCHEDULED_EVENT_DELETE'
+  | 'GUILD_SCHEDULED_EVENT_UPDATE'
+  | 'GUILD_SCHEDULED_EVENT_USER_ADD'
+  | 'GUILD_SCHEDULED_EVENT_USER_REMOVE'
+  | 'INTERACTION_CREATE'
+  | 'INVITE_CREATE'
+  | 'INVITE_DELETE'
+  | 'MESSAGE_CREATE'
+  | 'MESSAGE_DELETE_BULK'
+  | 'MESSAGE_DELETE'
+  | 'MESSAGE_REACTION_ADD'
+  | 'MESSAGE_REACTION_REMOVE_ALL'
+  | 'MESSAGE_REACTION_REMOVE_EMOJI'
+  | 'MESSAGE_REACTION_REMOVE'
+  | 'MESSAGE_UPDATE'
+  | 'PRESENCE_UPDATE'
+  | 'TYPING_START'
+  | 'USER_UPDATE'
+  | 'VOICE_SERVER_UPDATE'
+  | 'VOICE_STATE_UPDATE'
+  | 'WEBHOOKS_UPDATE'
+  | 'INTEGRATION_CREATE'
+  | 'INTEGRATION_UPDATE'
+  | 'INTEGRATION_DELETE'
+  | 'STAGE_INSTANCE_CREATE'
+  | 'STAGE_INSTANCE_UPDATE'
+  | 'STAGE_INSTANCE_DELETE'
+  | 'THREAD_CREATE'
+  | 'THREAD_UPDATE'
+  | 'THREAD_DELETE'
+  | 'THREAD_LIST_SYNC'
+  | 'THREAD_MEMBERS_UPDATE'
 
 export type GatewayEventNames =
   | GatewayDispatchEventNames
-  | "READY"
-  | "RESUMED";
+  | 'READY'
+  | 'RESUMED'
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
 export enum GatewayIntents {
@@ -1228,8 +1228,8 @@ export enum GatewayIntents {
 // ALIASES JUST FOR BETTER UX IN THIS CASE
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
-export const Intents = GatewayIntents;
-export type Intents = GatewayIntents;
+export const Intents = GatewayIntents
+export type Intents = GatewayIntents
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype */
 export enum InteractionResponseTypes {
@@ -1258,179 +1258,179 @@ export enum SortOrderTypes {
 
 export enum Errors {
   // Bot Role errors
-  BOTS_HIGHEST_ROLE_TOO_LOW = "BOTS_HIGHEST_ROLE_TOO_LOW",
+  BOTS_HIGHEST_ROLE_TOO_LOW = 'BOTS_HIGHEST_ROLE_TOO_LOW',
   // Channel Errors
-  CHANNEL_NOT_FOUND = "CHANNEL_NOT_FOUND",
-  CHANNEL_NOT_IN_GUILD = "CHANNEL_NOT_IN_GUILD",
-  CHANNEL_NOT_TEXT_BASED = "CHANNEL_NOT_TEXT_BASED",
-  CHANNEL_NOT_STAGE_VOICE = "CHANNEL_NOT_STAGE_VOICE",
-  MESSAGE_MAX_LENGTH = "MESSAGE_MAX_LENGTH",
-  RULES_CHANNEL_CANNOT_BE_DELETED = "RULES_CHANNEL_CANNOT_BE_DELETED",
-  UPDATES_CHANNEL_CANNOT_BE_DELETED = "UPDATES_CHANNEL_CANNOT_BE_DELETED",
-  INVALID_TOPIC_LENGTH = "INVALID_TOPIC_LENGTH",
+  CHANNEL_NOT_FOUND = 'CHANNEL_NOT_FOUND',
+  CHANNEL_NOT_IN_GUILD = 'CHANNEL_NOT_IN_GUILD',
+  CHANNEL_NOT_TEXT_BASED = 'CHANNEL_NOT_TEXT_BASED',
+  CHANNEL_NOT_STAGE_VOICE = 'CHANNEL_NOT_STAGE_VOICE',
+  MESSAGE_MAX_LENGTH = 'MESSAGE_MAX_LENGTH',
+  RULES_CHANNEL_CANNOT_BE_DELETED = 'RULES_CHANNEL_CANNOT_BE_DELETED',
+  UPDATES_CHANNEL_CANNOT_BE_DELETED = 'UPDATES_CHANNEL_CANNOT_BE_DELETED',
+  INVALID_TOPIC_LENGTH = 'INVALID_TOPIC_LENGTH',
   // Guild Errors
-  GUILD_NOT_DISCOVERABLE = "GUILD_NOT_DISCOVERABLE",
-  GUILD_WIDGET_NOT_ENABLED = "GUILD_WIDGET_NOT_ENABLED",
-  GUILD_NOT_FOUND = "GUILD_NOT_FOUND",
-  MEMBER_NOT_FOUND = "MEMBER_NOT_FOUND",
-  MEMBER_NOT_IN_VOICE_CHANNEL = "MEMBER_NOT_IN_VOICE_CHANNEL",
-  MEMBER_SEARCH_LIMIT_TOO_HIGH = "MEMBER_SEARCH_LIMIT_TOO_HIGH",
-  MEMBER_SEARCH_LIMIT_TOO_LOW = "MEMBER_SEARCH_LIMIT_TOO_LOW",
-  PRUNE_MAX_DAYS = "PRUNE_MAX_DAYS",
-  ROLE_NOT_FOUND = "ROLE_NOT_FOUND",
+  GUILD_NOT_DISCOVERABLE = 'GUILD_NOT_DISCOVERABLE',
+  GUILD_WIDGET_NOT_ENABLED = 'GUILD_WIDGET_NOT_ENABLED',
+  GUILD_NOT_FOUND = 'GUILD_NOT_FOUND',
+  MEMBER_NOT_FOUND = 'MEMBER_NOT_FOUND',
+  MEMBER_NOT_IN_VOICE_CHANNEL = 'MEMBER_NOT_IN_VOICE_CHANNEL',
+  MEMBER_SEARCH_LIMIT_TOO_HIGH = 'MEMBER_SEARCH_LIMIT_TOO_HIGH',
+  MEMBER_SEARCH_LIMIT_TOO_LOW = 'MEMBER_SEARCH_LIMIT_TOO_LOW',
+  PRUNE_MAX_DAYS = 'PRUNE_MAX_DAYS',
+  ROLE_NOT_FOUND = 'ROLE_NOT_FOUND',
   // Thread errors
-  INVALID_THREAD_PARENT_CHANNEL_TYPE = "INVALID_THREAD_PARENT_CHANNEL_TYPE",
-  GUILD_NEWS_CHANNEL_ONLY_SUPPORT_PUBLIC_THREADS = "GUILD_NEWS_CHANNEL_ONLY_SUPPORT_PUBLIC_THREADS",
-  NOT_A_THREAD_CHANNEL = "NOT_A_THREAD_CHANNEL",
-  MISSING_MANAGE_THREADS_AND_NOT_MEMBER = "MISSING_MANAGE_THREADS_AND_NOT_MEMBER",
-  CANNOT_GET_MEMBERS_OF_AN_UNJOINED_PRIVATE_THREAD = "CANNOT_GET_MEMBERS_OF_AN_UNJOINED_PRIVATE_THREAD",
+  INVALID_THREAD_PARENT_CHANNEL_TYPE = 'INVALID_THREAD_PARENT_CHANNEL_TYPE',
+  GUILD_NEWS_CHANNEL_ONLY_SUPPORT_PUBLIC_THREADS = 'GUILD_NEWS_CHANNEL_ONLY_SUPPORT_PUBLIC_THREADS',
+  NOT_A_THREAD_CHANNEL = 'NOT_A_THREAD_CHANNEL',
+  MISSING_MANAGE_THREADS_AND_NOT_MEMBER = 'MISSING_MANAGE_THREADS_AND_NOT_MEMBER',
+  CANNOT_GET_MEMBERS_OF_AN_UNJOINED_PRIVATE_THREAD = 'CANNOT_GET_MEMBERS_OF_AN_UNJOINED_PRIVATE_THREAD',
   HAVE_TO_BE_THE_CREATOR_OF_THE_THREAD_OR_HAVE_MANAGE_THREADS_TO_REMOVE_MEMBERS =
-    "HAVE_TO_BE_THE_CREATOR_OF_THE_THREAD_OR_HAVE_MANAGE_THREADS_TO_REMOVE_MEMBERS",
+  'HAVE_TO_BE_THE_CREATOR_OF_THE_THREAD_OR_HAVE_MANAGE_THREADS_TO_REMOVE_MEMBERS',
   // Message Get Errors
-  INVALID_GET_MESSAGES_LIMIT = "INVALID_GET_MESSAGES_LIMIT",
+  INVALID_GET_MESSAGES_LIMIT = 'INVALID_GET_MESSAGES_LIMIT',
   // Message Delete Errors
-  DELETE_MESSAGES_MIN = "DELETE_MESSAGES_MIN",
-  PRUNE_MIN_DAYS = "PRUNE_MIN_DAYS",
+  DELETE_MESSAGES_MIN = 'DELETE_MESSAGES_MIN',
+  PRUNE_MIN_DAYS = 'PRUNE_MIN_DAYS',
   // Interaction Errors
-  INVALID_SLASH_DESCRIPTION = "INVALID_SLASH_DESCRIPTION",
-  INVALID_SLASH_NAME = "INVALID_SLASH_NAME",
-  INVALID_SLASH_OPTIONS = "INVALID_SLASH_OPTIONS",
-  INVALID_SLASH_OPTIONS_CHOICES = "INVALID_SLASH_OPTIONS_CHOICES",
-  TOO_MANY_SLASH_OPTIONS = "TOO_MANY_SLASH_OPTIONS",
-  INVALID_SLASH_OPTION_CHOICE_NAME = "INVALID_SLASH_OPTION_CHOICE_NAME",
-  INVALID_SLASH_OPTIONS_CHOICE_VALUE_TYPE = "INVALID_SLASH_OPTIONS_CHOICE_VALUE_TYPE",
-  TOO_MANY_SLASH_OPTION_CHOICES = "TOO_MANY_SLASH_OPTION_CHOICES",
-  ONLY_STRING_OR_INTEGER_OPTIONS_CAN_HAVE_CHOICES = "ONLY_STRING_OR_INTEGER_OPTIONS_CAN_HAVE_CHOICES",
-  INVALID_SLASH_OPTION_NAME = "INVALID_SLASH_OPTION_NAME",
-  INVALID_SLASH_OPTION_DESCRIPTION = "INVALID_SLASH_OPTION_DESCRIPTION",
-  INVALID_CONTEXT_MENU_COMMAND_NAME = "INVALID_CONTEXT_MENU_COMMAND_NAME",
-  INVALID_CONTEXT_MENU_COMMAND_DESCRIPTION = "INVALID_CONTEXT_MENU_COMMAND_DESCRIPTION",
+  INVALID_SLASH_DESCRIPTION = 'INVALID_SLASH_DESCRIPTION',
+  INVALID_SLASH_NAME = 'INVALID_SLASH_NAME',
+  INVALID_SLASH_OPTIONS = 'INVALID_SLASH_OPTIONS',
+  INVALID_SLASH_OPTIONS_CHOICES = 'INVALID_SLASH_OPTIONS_CHOICES',
+  TOO_MANY_SLASH_OPTIONS = 'TOO_MANY_SLASH_OPTIONS',
+  INVALID_SLASH_OPTION_CHOICE_NAME = 'INVALID_SLASH_OPTION_CHOICE_NAME',
+  INVALID_SLASH_OPTIONS_CHOICE_VALUE_TYPE = 'INVALID_SLASH_OPTIONS_CHOICE_VALUE_TYPE',
+  TOO_MANY_SLASH_OPTION_CHOICES = 'TOO_MANY_SLASH_OPTION_CHOICES',
+  ONLY_STRING_OR_INTEGER_OPTIONS_CAN_HAVE_CHOICES = 'ONLY_STRING_OR_INTEGER_OPTIONS_CAN_HAVE_CHOICES',
+  INVALID_SLASH_OPTION_NAME = 'INVALID_SLASH_OPTION_NAME',
+  INVALID_SLASH_OPTION_DESCRIPTION = 'INVALID_SLASH_OPTION_DESCRIPTION',
+  INVALID_CONTEXT_MENU_COMMAND_NAME = 'INVALID_CONTEXT_MENU_COMMAND_NAME',
+  INVALID_CONTEXT_MENU_COMMAND_DESCRIPTION = 'INVALID_CONTEXT_MENU_COMMAND_DESCRIPTION',
   // Webhook Errors
-  INVALID_WEBHOOK_NAME = "INVALID_WEBHOOK_NAME",
-  INVALID_WEBHOOK_OPTIONS = "INVALID_WEBHOOK_OPTIONS",
+  INVALID_WEBHOOK_NAME = 'INVALID_WEBHOOK_NAME',
+  INVALID_WEBHOOK_OPTIONS = 'INVALID_WEBHOOK_OPTIONS',
   // Permission Errors
-  MISSING_ADD_REACTIONS = "MISSING_ADD_REACTIONS",
-  MISSING_ADMINISTRATOR = "MISSING_ADMINISTRATOR",
-  MISSING_ATTACH_FILES = "MISSING_ATTACH_FILES",
-  MISSING_BAN_MEMBERS = "MISSING_BAN_MEMBERS",
-  MISSING_CHANGE_NICKNAME = "MISSING_CHANGE_NICKNAME",
-  MISSING_CONNECT = "MISSING_CONNECT",
-  MISSING_CREATE_INSTANT_INVITE = "MISSING_CREATE_INSTANT_INVITE",
-  MISSING_DEAFEN_MEMBERS = "MISSING_DEAFEN_MEMBERS",
-  MISSING_EMBED_LINKS = "MISSING_EMBED_LINKS",
-  MISSING_INTENT_GUILD_MEMBERS = "MISSING_INTENT_GUILD_MEMBERS",
-  MISSING_KICK_MEMBERS = "MISSING_KICK_MEMBERS",
-  MISSING_MANAGE_CHANNELS = "MISSING_MANAGE_CHANNELS",
-  MISSING_MANAGE_EMOJIS = "MISSING_MANAGE_EMOJIS",
-  MISSING_MANAGE_GUILD = "MISSING_MANAGE_GUILD",
-  MISSING_MANAGE_MESSAGES = "MISSING_MANAGE_MESSAGES",
-  MISSING_MANAGE_NICKNAMES = "MISSING_MANAGE_NICKNAMES",
-  MISSING_MANAGE_ROLES = "MISSING_MANAGE_ROLES",
-  MISSING_MANAGE_WEBHOOKS = "MISSING_MANAGE_WEBHOOKS",
-  MISSING_MENTION_EVERYONE = "MISSING_MENTION_EVERYONE",
-  MISSING_MOVE_MEMBERS = "MISSING_MOVE_MEMBERS",
-  MISSING_MUTE_MEMBERS = "MISSING_MUTE_MEMBERS",
-  MISSING_PRIORITY_SPEAKER = "MISSING_PRIORITY_SPEAKER",
-  MISSING_READ_MESSAGE_HISTORY = "MISSING_READ_MESSAGE_HISTORY",
-  MISSING_SEND_MESSAGES = "MISSING_SEND_MESSAGES",
-  MISSING_SEND_TTS_MESSAGES = "MISSING_SEND_TTS_MESSAGES",
-  MISSING_SPEAK = "MISSING_SPEAK",
-  MISSING_STREAM = "MISSING_STREAM",
-  MISSING_USE_VAD = "MISSING_USE_VAD",
-  MISSING_USE_EXTERNAL_EMOJIS = "MISSING_USE_EXTERNAL_EMOJIS",
-  MISSING_VIEW_AUDIT_LOG = "MISSING_VIEW_AUDIT_LOG",
-  MISSING_VIEW_CHANNEL = "MISSING_VIEW_CHANNEL",
-  MISSING_VIEW_GUILD_INSIGHTS = "MISSING_VIEW_GUILD_INSIGHTS",
+  MISSING_ADD_REACTIONS = 'MISSING_ADD_REACTIONS',
+  MISSING_ADMINISTRATOR = 'MISSING_ADMINISTRATOR',
+  MISSING_ATTACH_FILES = 'MISSING_ATTACH_FILES',
+  MISSING_BAN_MEMBERS = 'MISSING_BAN_MEMBERS',
+  MISSING_CHANGE_NICKNAME = 'MISSING_CHANGE_NICKNAME',
+  MISSING_CONNECT = 'MISSING_CONNECT',
+  MISSING_CREATE_INSTANT_INVITE = 'MISSING_CREATE_INSTANT_INVITE',
+  MISSING_DEAFEN_MEMBERS = 'MISSING_DEAFEN_MEMBERS',
+  MISSING_EMBED_LINKS = 'MISSING_EMBED_LINKS',
+  MISSING_INTENT_GUILD_MEMBERS = 'MISSING_INTENT_GUILD_MEMBERS',
+  MISSING_KICK_MEMBERS = 'MISSING_KICK_MEMBERS',
+  MISSING_MANAGE_CHANNELS = 'MISSING_MANAGE_CHANNELS',
+  MISSING_MANAGE_EMOJIS = 'MISSING_MANAGE_EMOJIS',
+  MISSING_MANAGE_GUILD = 'MISSING_MANAGE_GUILD',
+  MISSING_MANAGE_MESSAGES = 'MISSING_MANAGE_MESSAGES',
+  MISSING_MANAGE_NICKNAMES = 'MISSING_MANAGE_NICKNAMES',
+  MISSING_MANAGE_ROLES = 'MISSING_MANAGE_ROLES',
+  MISSING_MANAGE_WEBHOOKS = 'MISSING_MANAGE_WEBHOOKS',
+  MISSING_MENTION_EVERYONE = 'MISSING_MENTION_EVERYONE',
+  MISSING_MOVE_MEMBERS = 'MISSING_MOVE_MEMBERS',
+  MISSING_MUTE_MEMBERS = 'MISSING_MUTE_MEMBERS',
+  MISSING_PRIORITY_SPEAKER = 'MISSING_PRIORITY_SPEAKER',
+  MISSING_READ_MESSAGE_HISTORY = 'MISSING_READ_MESSAGE_HISTORY',
+  MISSING_SEND_MESSAGES = 'MISSING_SEND_MESSAGES',
+  MISSING_SEND_TTS_MESSAGES = 'MISSING_SEND_TTS_MESSAGES',
+  MISSING_SPEAK = 'MISSING_SPEAK',
+  MISSING_STREAM = 'MISSING_STREAM',
+  MISSING_USE_VAD = 'MISSING_USE_VAD',
+  MISSING_USE_EXTERNAL_EMOJIS = 'MISSING_USE_EXTERNAL_EMOJIS',
+  MISSING_VIEW_AUDIT_LOG = 'MISSING_VIEW_AUDIT_LOG',
+  MISSING_VIEW_CHANNEL = 'MISSING_VIEW_CHANNEL',
+  MISSING_VIEW_GUILD_INSIGHTS = 'MISSING_VIEW_GUILD_INSIGHTS',
   // User Errors
-  NICKNAMES_MAX_LENGTH = "NICKNAMES_MAX_LENGTH",
-  USERNAME_INVALID_CHARACTER = "USERNAME_INVALID_CHARACTER",
-  USERNAME_INVALID_USERNAME = "USERNAME_INVALID_USERNAME",
-  USERNAME_MAX_LENGTH = "USERNAME_MAX_LENGTH",
-  USERNAME_MIN_LENGTH = "USERNAME_MIN_LENGTH",
-  NONCE_TOO_LONG = "NONCE_TOO_LONG",
-  INVITE_MAX_AGE_INVALID = "INVITE_MAX_AGE_INVALID",
-  INVITE_MAX_USES_INVALID = "INVITE_MAX_USES_INVALID",
+  NICKNAMES_MAX_LENGTH = 'NICKNAMES_MAX_LENGTH',
+  USERNAME_INVALID_CHARACTER = 'USERNAME_INVALID_CHARACTER',
+  USERNAME_INVALID_USERNAME = 'USERNAME_INVALID_USERNAME',
+  USERNAME_MAX_LENGTH = 'USERNAME_MAX_LENGTH',
+  USERNAME_MIN_LENGTH = 'USERNAME_MIN_LENGTH',
+  NONCE_TOO_LONG = 'NONCE_TOO_LONG',
+  INVITE_MAX_AGE_INVALID = 'INVITE_MAX_AGE_INVALID',
+  INVITE_MAX_USES_INVALID = 'INVITE_MAX_USES_INVALID',
   // API Errors
-  RATE_LIMIT_RETRY_MAXED = "RATE_LIMIT_RETRY_MAXED",
-  REQUEST_CLIENT_ERROR = "REQUEST_CLIENT_ERROR",
-  REQUEST_SERVER_ERROR = "REQUEST_SERVER_ERROR",
-  REQUEST_UNKNOWN_ERROR = "REQUEST_UNKNOWN_ERROR",
+  RATE_LIMIT_RETRY_MAXED = 'RATE_LIMIT_RETRY_MAXED',
+  REQUEST_CLIENT_ERROR = 'REQUEST_CLIENT_ERROR',
+  REQUEST_SERVER_ERROR = 'REQUEST_SERVER_ERROR',
+  REQUEST_UNKNOWN_ERROR = 'REQUEST_UNKNOWN_ERROR',
   // Component Errors
-  TOO_MANY_COMPONENTS = "TOO_MANY_COMPONENTS",
-  TOO_MANY_ACTION_ROWS = "TOO_MANY_ACTION_ROWS",
-  LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID = "LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID",
-  COMPONENT_LABEL_TOO_BIG = "COMPONENT_LABEL_TOO_BIG",
-  COMPONENT_CUSTOM_ID_TOO_BIG = "COMPONENT_CUSTOM_ID_TOO_BIG",
-  BUTTON_REQUIRES_CUSTOM_ID = "BUTTON_REQUIRES_CUSTOM_ID",
-  COMPONENT_SELECT_MUST_BE_ALONE = "COMPONENT_SELECT_MUST_BE_ALONE",
-  COMPONENT_PLACEHOLDER_TOO_BIG = "COMPONENT_PLACEHOLDER_TOO_BIG",
-  COMPONENT_SELECT_MIN_VALUE_TOO_LOW = "COMPONENT_SELECT_MIN_VALUE_TOO_LOW",
-  COMPONENT_SELECT_MIN_VALUE_TOO_MANY = "COMPONENT_SELECT_MIN_VALUE_TOO_MANY",
-  COMPONENT_SELECT_MAX_VALUE_TOO_LOW = "COMPONENT_SELECT_MAX_VALUE_TOO_LOW",
-  COMPONENT_SELECT_MAX_VALUE_TOO_MANY = "COMPONENT_SELECT_MAX_VALUE_TOO_MANY",
-  COMPONENT_SELECT_OPTIONS_TOO_LOW = "COMPONENT_SELECT_OPTIONS_TOO_LOW",
-  COMPONENT_SELECT_OPTIONS_TOO_MANY = "COMPONENT_SELECT_OPTIONS_TOO_MANY",
-  SELECT_OPTION_LABEL_TOO_BIG = "SELECT_OPTION_LABEL_TOO_BIG",
-  SELECT_OPTION_VALUE_TOO_BIG = "SELECT_OPTION_VALUE_TOO_BIG",
-  SELECT_OPTION_TOO_MANY_DEFAULTS = "SELECT_OPTION_TOO_MANY_DEFAULTS",
-  COMPONENT_SELECT_MIN_HIGHER_THAN_MAX = "COMPONENT_SELECT_MIN_HIGHER_THAN_MAX",
-  CANNOT_ADD_USER_TO_ARCHIVED_THREADS = "CANNOT_ADD_USER_TO_ARCHIVED_THREADS",
-  CANNOT_LEAVE_ARCHIVED_THREAD = "CANNOT_LEAVE_ARCHIVED_THREAD",
-  CANNOT_REMOVE_FROM_ARCHIVED_THREAD = "CANNOT_REMOVE_FROM_ARCHIVED_THREAD",
-  YOU_CAN_NOT_DM_THE_BOT_ITSELF = "YOU_CAN_NOT_DM_THE_BOT_ITSELF",
+  TOO_MANY_COMPONENTS = 'TOO_MANY_COMPONENTS',
+  TOO_MANY_ACTION_ROWS = 'TOO_MANY_ACTION_ROWS',
+  LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID = 'LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID',
+  COMPONENT_LABEL_TOO_BIG = 'COMPONENT_LABEL_TOO_BIG',
+  COMPONENT_CUSTOM_ID_TOO_BIG = 'COMPONENT_CUSTOM_ID_TOO_BIG',
+  BUTTON_REQUIRES_CUSTOM_ID = 'BUTTON_REQUIRES_CUSTOM_ID',
+  COMPONENT_SELECT_MUST_BE_ALONE = 'COMPONENT_SELECT_MUST_BE_ALONE',
+  COMPONENT_PLACEHOLDER_TOO_BIG = 'COMPONENT_PLACEHOLDER_TOO_BIG',
+  COMPONENT_SELECT_MIN_VALUE_TOO_LOW = 'COMPONENT_SELECT_MIN_VALUE_TOO_LOW',
+  COMPONENT_SELECT_MIN_VALUE_TOO_MANY = 'COMPONENT_SELECT_MIN_VALUE_TOO_MANY',
+  COMPONENT_SELECT_MAX_VALUE_TOO_LOW = 'COMPONENT_SELECT_MAX_VALUE_TOO_LOW',
+  COMPONENT_SELECT_MAX_VALUE_TOO_MANY = 'COMPONENT_SELECT_MAX_VALUE_TOO_MANY',
+  COMPONENT_SELECT_OPTIONS_TOO_LOW = 'COMPONENT_SELECT_OPTIONS_TOO_LOW',
+  COMPONENT_SELECT_OPTIONS_TOO_MANY = 'COMPONENT_SELECT_OPTIONS_TOO_MANY',
+  SELECT_OPTION_LABEL_TOO_BIG = 'SELECT_OPTION_LABEL_TOO_BIG',
+  SELECT_OPTION_VALUE_TOO_BIG = 'SELECT_OPTION_VALUE_TOO_BIG',
+  SELECT_OPTION_TOO_MANY_DEFAULTS = 'SELECT_OPTION_TOO_MANY_DEFAULTS',
+  COMPONENT_SELECT_MIN_HIGHER_THAN_MAX = 'COMPONENT_SELECT_MIN_HIGHER_THAN_MAX',
+  CANNOT_ADD_USER_TO_ARCHIVED_THREADS = 'CANNOT_ADD_USER_TO_ARCHIVED_THREADS',
+  CANNOT_LEAVE_ARCHIVED_THREAD = 'CANNOT_LEAVE_ARCHIVED_THREAD',
+  CANNOT_REMOVE_FROM_ARCHIVED_THREAD = 'CANNOT_REMOVE_FROM_ARCHIVED_THREAD',
+  YOU_CAN_NOT_DM_THE_BOT_ITSELF = 'YOU_CAN_NOT_DM_THE_BOT_ITSELF',
 }
 
 export enum Locales {
-  Danish = "da",
-  German = "de",
-  EnglishUk = "en-GB",
-  EnglishUs = "en-US",
-  Spanish = "es-ES",
-  French = "fr",
-  Croatian = "hr",
-  Italian = "it",
-  Lithuanian = "lt",
-  Hungarian = "hu",
-  Dutch = "nl",
-  Norwegian = "no",
-  Polish = "pl",
-  PortugueseBrazilian = "pt-BR",
-  RomanianRomania = "ro",
-  Finnish = "fi",
-  Swedish = "sv-SE",
-  Vietnamese = "vi",
-  Turkish = "tr",
-  Czech = "cs",
-  Greek = "el",
-  Bulgarian = "bg",
-  Russian = "ru",
-  Ukrainian = "uk",
-  Hindi = "hi",
-  Thai = "th",
-  ChineseChina = "zh-CN",
-  Japanese = "ja",
-  ChineseTaiwan = "zh-TW",
-  Korean = "ko",
+  Danish = 'da',
+  German = 'de',
+  EnglishUk = 'en-GB',
+  EnglishUs = 'en-US',
+  Spanish = 'es-ES',
+  French = 'fr',
+  Croatian = 'hr',
+  Italian = 'it',
+  Lithuanian = 'lt',
+  Hungarian = 'hu',
+  Dutch = 'nl',
+  Norwegian = 'no',
+  Polish = 'pl',
+  PortugueseBrazilian = 'pt-BR',
+  RomanianRomania = 'ro',
+  Finnish = 'fi',
+  Swedish = 'sv-SE',
+  Vietnamese = 'vi',
+  Turkish = 'tr',
+  Czech = 'cs',
+  Greek = 'el',
+  Bulgarian = 'bg',
+  Russian = 'ru',
+  Ukrainian = 'uk',
+  Hindi = 'hi',
+  Thai = 'th',
+  ChineseChina = 'zh-CN',
+  Japanese = 'ja',
+  ChineseTaiwan = 'zh-TW',
+  Korean = 'ko',
 }
 
-export type Localization = Partial<Record<Locales, string>>;
+export type Localization = Partial<Record<Locales, string>>
 
 // UTILS
 
-export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
+export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U]
 
-export type MakeRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
+export type MakeRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
 // THANK YOU YUI FOR SHARING THIS!
 export type CamelCase<S extends string> = S extends `${infer P1}_${infer P2}${infer P3}`
   ? `${Lowercase<P1>}${Uppercase<P2>}${CamelCase<P3>}`
-  : Lowercase<S>;
+  : Lowercase<S>
 export type Camelize<T> = {
   [K in keyof T as CamelCase<string & K>]: T[K] extends Array<infer U> ? U extends {} ? Array<Camelize<U>>
     : T[K]
     : T[K] extends {} ? Camelize<T[K]>
-    : never;
-};
+      : never;
+}
 
 /** Non object primitives */
 export type Primitive =
@@ -1440,7 +1440,7 @@ export type Primitive =
   | bigint
   | boolean
   | undefined
-  | null;
+  | null
 //  | object <- don't make object a primitive
 
 /**
@@ -1451,12 +1451,12 @@ export type Primitive =
  */
 export type ObjectLiteral<T = unknown> = {
   [K in PropertyKey]: T;
-};
+}
 
 /** Array with no utilty methods, aka Object.create(null) */
-export type ArrayWithNoPrototype<T> = {
-  [index: number]: T | ArrayWithNoPrototype<T>;
-};
+export interface ArrayWithNoPrototype<T> {
+  [index: number]: T | ArrayWithNoPrototype<T>
+}
 
 /**
  * Allows any type but T
@@ -1465,57 +1465,57 @@ export type ArrayWithNoPrototype<T> = {
  * export type RequestData = Record<string, AnythingBut<bigint>>;
  */
 export type AnythingBut<T> = Exclude<
-  | Primitive
-  | {
-    [K in PropertyKey]: AnythingBut<T>;
-  }
-  | ArrayWithNoPrototype<
-    | Primitive
-    | {
-      [K in PropertyKey]: AnythingBut<T>;
-    }
-  >,
-  T
->;
+| Primitive
+| {
+  [K in PropertyKey]: AnythingBut<T>;
+}
+| ArrayWithNoPrototype<
+| Primitive
+| {
+  [K in PropertyKey]: AnythingBut<T>;
+}
+>,
+T
+>
 
 /**
  * object identity type
  */
 export type Id<T> = T extends infer U ? {
-    [K in keyof U]: U[K];
-  }
-  : never;
+  [K in keyof U]: U[K];
+}
+  : never
 
 export type KeysWithUndefined<T> = {
   [K in keyof T]-?: undefined extends T[K] ? K
     : null extends T[K] ? K
-    : never;
-}[keyof T];
+      : never;
+}[keyof T]
 
 type OptionalizeAux<T extends object> = Id<
-  & {
-    [K in KeysWithUndefined<T>]?: Optionalize<T[K]>;
-  }
-  & {
-    [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends ObjectLiteral ? Optionalize<T[K]> : T[K];
-  }
->;
+& {
+  [K in KeysWithUndefined<T>]?: Optionalize<T[K]>;
+}
+& {
+  [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends ObjectLiteral ? Optionalize<T[K]> : T[K];
+}
+>
 
 /**
  * Makes all of properties in T optional when they're null | undefined
  * it is recursive
  */
 export type Optionalize<T> = T extends object
-  ? T extends Array<unknown> ? number extends T["length"] ? T[number] extends object ? Array<OptionalizeAux<T[number]>>
-      : T
+  ? T extends unknown[] ? number extends T['length'] ? T[number] extends object ? Array<OptionalizeAux<T[number]>>
+    : T
     : Partial<T>
-  : OptionalizeAux<T>
-  : T;
+    : OptionalizeAux<T>
+  : T
 
 export type PickPartial<T, K extends keyof T> =
   & {
     [P in keyof T]?: T[P] | undefined;
   }
-  & { [P in K]: T[P] };
+  & { [P in K]: T[P] }
 
-export type OmitFirstFnArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...args: P) => R : never;
+export type OmitFirstFnArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...args: P) => R : never

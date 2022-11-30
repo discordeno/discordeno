@@ -1,7 +1,7 @@
 import { BotWithCache, ChannelTypes, PermissionStrings } from '../../../deps.js'
 import { requireBotChannelPermissions } from '../../permissions.js'
 
-export function connectToVoiceChannel(bot: BotWithCache) {
+export function connectToVoiceChannel (bot: BotWithCache) {
   const connectToVoiceChannel = bot.helpers.connectToVoiceChannel
 
   bot.helpers.connectToVoiceChannel = async function (guildId, channelId, options) {

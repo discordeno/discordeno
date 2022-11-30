@@ -20,7 +20,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message}
  */
-export async function getFollowupMessage(bot: Bot, token: string, messageId: BigString): Promise<Message> {
+export async function getFollowupMessage (bot: Bot, token: string, messageId: BigString): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     'GET',

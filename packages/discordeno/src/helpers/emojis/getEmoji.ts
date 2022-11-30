@@ -13,7 +13,7 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/emoji#get-guild-emoji}
  */
-export async function getEmoji(bot: Bot, guildId: BigString, emojiId: BigString): Promise<Emoji> {
+export async function getEmoji (bot: Bot, guildId: BigString, emojiId: BigString): Promise<Emoji> {
   const result = await bot.rest.runMethod<DiscordEmoji>(
     bot.rest,
     'GET',

@@ -18,7 +18,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild-integration}
  */
-export async function deleteIntegration(bot: Bot, guildId: BigString, integrationId: BigString): Promise<void> {
+export async function deleteIntegration (bot: Bot, guildId: BigString, integrationId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     'DELETE',

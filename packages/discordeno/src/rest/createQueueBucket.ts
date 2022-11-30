@@ -8,7 +8,7 @@ import { RestManager } from './restManager.js'
  * @param options The options used to configure this bucket.
  * @returns RefillingBucket
  */
-export function createQueueBucket(rest: RestManager, options: QueueBucketOptions): QueueBucket {
+export function createQueueBucket (rest: RestManager, options: QueueBucketOptions): QueueBucket {
   const bucket: QueueBucket = {
     remaining: options.remaining ?? 1,
     max: options.max ?? 1,

@@ -1,7 +1,7 @@
 import { AllowedMentionsTypes, Bot } from '../../deps.js'
 import { validateComponents } from '../components.js'
 
-export function sendMessage(bot: Bot) {
+export function sendMessage (bot: Bot) {
   const sendMessage = bot.helpers.sendMessage
 
   bot.helpers.sendMessage = async function (channelId, content) {
@@ -12,7 +12,7 @@ export function sendMessage(bot: Bot) {
       throw new Error('The content should not exceed 2000 characters.')
     }
 
-    if (content.allowedMentions) {
+    if (content.allowedMentions != null) {
       if (content.allowedMentions.users?.length) {
         if (
           content.allowedMentions.parse?.includes(
@@ -52,10 +52,10 @@ export function sendMessage(bot: Bot) {
       }
     }
 
-    if (content.components) validateComponents(bot, content.components)
+    if (content.components != null) validateComponents(bot, content.components)
 
     if (
-      !content.content?.length && !content.embeds?.length && !content.components?.length && !content.file &&
+      !content.content?.length && !content.embeds?.length && !content.components?.length && (content.file == null) &&
       !content.stickerIds?.length
     ) {
       throw new Error(

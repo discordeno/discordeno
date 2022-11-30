@@ -12,4 +12,3 @@ export * from './shutdown.js'
 export * from './startHeartbeating.js'
 export * from './stopHeartbeating.js'
 export * from './types.js'
-

@@ -2,7 +2,7 @@ import { Bot } from '../bot.js'
 import { DiscordGuildApplicationCommandPermissions } from '../types/discord.js'
 import { Optionalize } from '../types/shared.js'
 
-export function transformApplicationCommandPermission(bot: Bot, payload: DiscordGuildApplicationCommandPermissions) {
+export function transformApplicationCommandPermission (bot: Bot, payload: DiscordGuildApplicationCommandPermissions) {
   const applicationCommandPermission = {
     id: bot.transformers.snowflake(payload.id),
     applicationId: bot.transformers.snowflake(payload.application_id),

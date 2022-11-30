@@ -17,7 +17,7 @@ import { DiscordStageInstance } from '../../../types/discord.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance}
  */
-export async function editStageInstance(
+export async function editStageInstance (
   bot: Bot,
   channelId: BigString,
   data: EditStageInstanceOptions

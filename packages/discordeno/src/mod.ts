@@ -6,5 +6,3 @@ export * from './rest/mod.js'
 export * from './transformers/mod.js'
 export * from './types/mod.js'
 export * from './util/mod.js'
-
-

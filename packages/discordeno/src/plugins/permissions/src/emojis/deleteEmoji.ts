@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../deps.js'
 import { requireBotGuildPermissions } from '../permissions.js'
 
-export function deleteEmoji(bot: BotWithCache) {
+export function deleteEmoji (bot: BotWithCache) {
   const deleteEmoji = bot.helpers.deleteEmoji
 
   bot.helpers.deleteEmoji = async function (guildId, id) {

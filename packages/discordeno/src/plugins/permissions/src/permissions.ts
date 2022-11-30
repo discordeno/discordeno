@@ -12,7 +12,7 @@ import {
 } from '../deps.js'
 
 /** Calculates the permissions this member has in the given guild */
-export function calculateBasePermissions(
+export function calculateBasePermissions (
   bot: BotWithCache,
   guildOrId: bigint | Guild,
   memberOrId: bigint | Member
@@ -42,7 +42,7 @@ export function calculateBasePermissions(
 }
 
 /** Calculates the permissions this member has for the given Channel */
-export function calculateChannelOverwrites(
+export function calculateChannelOverwrites (
   bot: BotWithCache,
   channelOrId: bigint | Channel,
   memberOrId: bigint | Member
@@ -112,7 +112,7 @@ export function calculateChannelOverwrites(
 }
 
 /** Checks if the given permission bits are matching the given permissions. `ADMINISTRATOR` always returns `true` */
-export function validatePermissions(
+export function validatePermissions (
   permissionBits: bigint,
   permissions: PermissionStrings[]
 ) {
@@ -126,7 +126,7 @@ export function validatePermissions(
 }
 
 /** Checks if the given member has these permissions in the given guild */
-export function hasGuildPermissions(
+export function hasGuildPermissions (
   bot: BotWithCache,
   guild: bigint | Guild,
   member: bigint | Member,
@@ -143,7 +143,7 @@ export function hasGuildPermissions(
 }
 
 /** Checks if the bot has these permissions in the given guild */
-export function botHasGuildPermissions(
+export function botHasGuildPermissions (
   bot: BotWithCache,
   guild: bigint | Guild,
   permissions: PermissionStrings[]
@@ -153,7 +153,7 @@ export function botHasGuildPermissions(
 }
 
 /** Checks if the given member has these permissions for the given channel */
-export function hasChannelPermissions(
+export function hasChannelPermissions (
   bot: BotWithCache,
   channel: bigint | Channel,
   member: bigint | Member,
@@ -170,7 +170,7 @@ export function hasChannelPermissions(
 }
 
 /** Checks if the bot has these permissions f0r the given channel */
-export function botHasChannelPermissions(
+export function botHasChannelPermissions (
   bot: BotWithCache,
   channel: bigint | Channel,
   permissions: PermissionStrings[]
@@ -180,7 +180,7 @@ export function botHasChannelPermissions(
 }
 
 /** Returns the permissions that are not in the given permissionBits */
-export function missingPermissions(
+export function missingPermissions (
   permissionBits: bigint,
   permissions: PermissionStrings[]
 ) {
@@ -190,7 +190,7 @@ export function missingPermissions(
 }
 
 /** Get the missing Guild permissions this member has */
-export function getMissingGuildPermissions(
+export function getMissingGuildPermissions (
   bot: BotWithCache,
   guild: bigint | Guild,
   member: bigint | Member,
@@ -207,7 +207,7 @@ export function getMissingGuildPermissions(
 }
 
 /** Get the missing Channel permissions this member has */
-export function getMissingChannelPermissions(
+export function getMissingChannelPermissions (
   bot: BotWithCache,
   channel: bigint | Channel,
   member: bigint | Member,
@@ -224,7 +224,7 @@ export function getMissingChannelPermissions(
 }
 
 /** Throws an error if this member has not all of the given permissions */
-export function requireGuildPermissions(
+export function requireGuildPermissions (
   bot: BotWithCache,
   guild: bigint | Guild,
   member: bigint | Member,
@@ -243,7 +243,7 @@ export function requireGuildPermissions(
 }
 
 /** Throws an error if the bot does not have all permissions */
-export function requireBotGuildPermissions(
+export function requireBotGuildPermissions (
   bot: BotWithCache,
   guild: bigint | Guild,
   permissions: PermissionStrings[]
@@ -253,7 +253,7 @@ export function requireBotGuildPermissions(
 }
 
 /** Throws an error if this member has not all of the given permissions */
-export function requireChannelPermissions(
+export function requireChannelPermissions (
   bot: BotWithCache,
   channel: bigint | Channel,
   member: bigint | Member,
@@ -272,7 +272,7 @@ export function requireChannelPermissions(
 }
 
 /** Throws an error if the bot has not all of the given channel permissions */
-export function requireBotChannelPermissions(
+export function requireBotChannelPermissions (
   bot: BotWithCache,
   channel: bigint | Channel,
   permissions: PermissionStrings[]
@@ -282,7 +282,7 @@ export function requireBotChannelPermissions(
 }
 
 /** Internal function to check if the bot has the permissions to set these overwrites */
-export function requireOverwritePermissions(
+export function requireOverwritePermissions (
   bot: BotWithCache,
   guildOrId: bigint | Guild,
   overwrites: OverwriteReadable[]
@@ -303,7 +303,7 @@ export function requireOverwritePermissions(
 }
 
 /** Gets the highest role from the member in this guild */
-export function highestRole(
+export function highestRole (
   bot: BotWithCache,
   guildOrId: bigint | Guild,
   memberOrId: bigint | Member
@@ -343,7 +343,7 @@ export function highestRole(
 }
 
 /** Checks if the first role is higher than the second role */
-export function higherRolePosition(
+export function higherRolePosition (
   bot: BotWithCache,
   guildOrId: bigint | Guild,
   roleId: bigint,
@@ -363,7 +363,7 @@ export function higherRolePosition(
 }
 
 /** Checks if the member has a higher position than the given role */
-export function isHigherPosition(
+export function isHigherPosition (
   bot: BotWithCache,
   guildOrId: bigint | Guild,
   memberId: bigint,
@@ -383,7 +383,7 @@ export function isHigherPosition(
 }
 
 /** Checks if a channel overwrite for a user id or a role id has permission in this channel */
-export function channelOverwriteHasPermission(
+export function channelOverwriteHasPermission (
   guildId: bigint,
   id: bigint,
   overwrites: bigint[],

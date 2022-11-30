@@ -1,7 +1,7 @@
 import { Bot } from '../../bot.js'
 import { DiscordGatewayPayload, DiscordMessageReactionRemove } from '../../types/discord.js'
 
-export async function handleMessageReactionRemove(bot: Bot, data: DiscordGatewayPayload) {
+export async function handleMessageReactionRemove (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordMessageReactionRemove
 
   bot.events.reactionRemove(bot, {

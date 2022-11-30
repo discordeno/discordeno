@@ -1,7 +1,7 @@
 import { BotWithCache, ChannelTypes, PermissionStrings } from '../../deps.js'
 import { requireBotGuildPermissions } from '../permissions.js'
 
-export function createChannel(bot: BotWithCache) {
+export function createChannel (bot: BotWithCache) {
   const createChannel = bot.helpers.createChannel
 
   bot.helpers.createChannel = async function (guildId, options) {
@@ -20,7 +20,7 @@ export function createChannel(bot: BotWithCache) {
 
       requiredPerms.push('MANAGE_CHANNELS')
 
-      if (options?.permissionOverwrites) requiredPerms.push('MANAGE_ROLES')
+      if ((options?.permissionOverwrites) != null) requiredPerms.push('MANAGE_ROLES')
 
       if (options?.type === ChannelTypes.GuildAnnouncement && !guild.toggles.has('news')) {
         throw new Error('The NEWS feature is missing in this guild to be able to modify the channel type.')

@@ -2,7 +2,7 @@ import { Bot } from '../bot.js'
 import { DiscordApplication } from '../types/discord.js'
 import { Optionalize } from '../types/shared.js'
 
-export function transformApplication(bot: Bot, payload: DiscordApplication) {
+export function transformApplication (bot: Bot, payload: DiscordApplication) {
   const application = {
     name: payload.name,
     description: payload.description,

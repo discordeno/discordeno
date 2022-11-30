@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../deps.js'
 import { requireBotChannelPermissions } from '../permissions.js'
 
-export function publishMessage(bot: BotWithCache) {
+export function publishMessage (bot: BotWithCache) {
   const publishMessage = bot.helpers.publishMessage
 
   bot.helpers.publishMessage = async function (channelId, messageId) {

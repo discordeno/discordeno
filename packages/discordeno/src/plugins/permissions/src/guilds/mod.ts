@@ -15,7 +15,7 @@ import { getWelcomeScreen } from './getWelcomeScreen.js'
 import { voice } from './voice/mod.js'
 import { widgets } from './widgets/mod.js'
 
-export function guilds(bot: BotWithCache) {
+export function guilds (bot: BotWithCache) {
   automod(bot)
   events(bot)
   voice(bot)

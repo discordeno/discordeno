@@ -1,7 +1,7 @@
 import { BotWithCache, ChannelTypes, PermissionStrings } from '../../../deps.js'
 import { requireBotChannelPermissions } from '../../permissions.js'
 
-export function createStageInstance(bot: BotWithCache) {
+export function createStageInstance (bot: BotWithCache) {
   const createStageInstance = bot.helpers.createStageInstance
 
   bot.helpers.createStageInstance = async function (options) {

@@ -5,7 +5,7 @@ import {
   isContextApplicationCommand
 } from '../../types/mod.js'
 
-export function transformCreateApplicationCommandToDiscordCreateApplicationCommand(
+export function transformCreateApplicationCommandToDiscordCreateApplicationCommand (
   bot: Bot,
   payload: CreateApplicationCommand
 ): DiscordCreateApplicationCommand {

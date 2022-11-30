@@ -23,7 +23,7 @@ import { DiscordMessage } from '../../../types/discord.js'
  *
  * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message}
  */
-export async function sendFollowupMessage(
+export async function sendFollowupMessage (
   bot: Bot,
   token: string,
   options: InteractionResponse

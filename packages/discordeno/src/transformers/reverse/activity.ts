@@ -2,7 +2,7 @@ import { Bot } from '../../bot.js'
 import { DiscordActivity } from '../../types/discord.js'
 import { Activity } from '../activity.js'
 
-export function transformActivityToDiscordActivity(bot: Bot, payload: Activity): DiscordActivity {
+export function transformActivityToDiscordActivity (bot: Bot, payload: Activity): DiscordActivity {
   return {
     name: payload.name,
     type: payload.type,
@@ -17,10 +17,10 @@ export function transformActivityToDiscordActivity(bot: Bot, payload: Activity):
     state: payload.state ?? undefined,
     emoji: (payload.emoji != null)
       ? {
-        name: payload.emoji.name,
-        animated: payload.emoji.animated,
-        id: payload.emoji.id ? bot.utils.bigintToSnowflake(payload.emoji.id) : undefined
-      }
+          name: payload.emoji.name,
+          animated: payload.emoji.animated,
+          id: payload.emoji.id ? bot.utils.bigintToSnowflake(payload.emoji.id) : undefined
+        }
       : undefined,
     party: {
       id: payload.partyId,

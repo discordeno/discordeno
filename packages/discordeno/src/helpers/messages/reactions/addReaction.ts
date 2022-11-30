@@ -23,7 +23,7 @@ import { processReactionString } from './getReactions.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#create-reaction}
  */
-export async function addReaction(
+export async function addReaction (
   bot: Bot,
   channelId: BigString,
   messageId: BigString,

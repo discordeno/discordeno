@@ -19,7 +19,7 @@ import { BigString, InteractionResponseTypes } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
  */
-export async function editWebhookMessage(
+export async function editWebhookMessage (
   bot: Bot,
   webhookId: BigString,
   token: string,

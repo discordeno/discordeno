@@ -15,7 +15,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#delete-guild-scheduled-event}
  */
-export async function deleteScheduledEvent(bot: Bot, guildId: BigString, eventId: BigString): Promise<void> {
+export async function deleteScheduledEvent (bot: Bot, guildId: BigString, eventId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     'DELETE',

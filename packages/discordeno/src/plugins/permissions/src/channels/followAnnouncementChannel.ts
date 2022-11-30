@@ -1,7 +1,7 @@
 import { BotWithCache, ChannelTypes } from '../../deps.js'
 import { requireBotChannelPermissions } from '../permissions.js'
 
-export function followAnnouncementChannel(bot: BotWithCache) {
+export function followAnnouncementChannel (bot: BotWithCache) {
   const followAnnouncementChannel = bot.helpers.followAnnouncementChannel
 
   bot.helpers.followAnnouncementChannel = async function (sourceChannelId, targetChannelId) {

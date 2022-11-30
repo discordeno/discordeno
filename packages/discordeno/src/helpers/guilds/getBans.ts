@@ -19,7 +19,7 @@ import { Ban } from './getBan.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-bans}
  */
-export async function getBans(bot: Bot, guildId: BigString, options?: GetBans): Promise<Collection<bigint, Ban>> {
+export async function getBans (bot: Bot, guildId: BigString, options?: GetBans): Promise<Collection<bigint, Ban>> {
   const results = await bot.rest.runMethod<DiscordBan[]>(
     bot.rest,
     'GET',

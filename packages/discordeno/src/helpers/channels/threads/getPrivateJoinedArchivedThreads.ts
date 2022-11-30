@@ -21,7 +21,7 @@ import { ArchivedThreads, ListArchivedThreads } from './getPublicArchivedThreads
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads}
  */
-export async function getPrivateJoinedArchivedThreads(
+export async function getPrivateJoinedArchivedThreads (
   bot: Bot,
   channelId: BigString,
   options?: ListArchivedThreads

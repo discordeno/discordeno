@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../deps.js'
 import { requireBotChannelPermissions } from '../permissions.js'
 
-export function deleteMessage(bot: BotWithCache) {
+export function deleteMessage (bot: BotWithCache) {
   const deleteMessage = bot.helpers.deleteMessage
 
   bot.helpers.deleteMessage = async function (channelId, messageId, reason, milliseconds) {

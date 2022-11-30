@@ -12,5 +12,3 @@ export * from './getChannels.js'
 export * from './stages/mod.js'
 export * from './threads/mod.js'
 export * from './triggerTypingIndicator.js'
-
-

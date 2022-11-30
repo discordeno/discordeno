@@ -8,6 +8,6 @@ import { BigString } from '../../types/shared.js'
  * @param animated - Whether the emoji is animated or static.
  * @returns The link to the resource.
  */
-export function getEmojiURL(_bot: Bot, emojiId: BigString, animated = false): string {
+export function getEmojiURL (_bot: Bot, emojiId: BigString, animated = false): string {
   return `https://cdn.discordapp.com/emojis/${emojiId}.${animated ? 'gif' : 'png'}`
 }

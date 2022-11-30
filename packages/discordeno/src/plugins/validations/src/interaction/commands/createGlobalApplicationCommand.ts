@@ -7,7 +7,7 @@ import {
 import { validateApplicationCommandLength } from '../../applicationCommandLength.js'
 import { validateApplicationCommandOptions } from '../../applicationCommandOptions.js'
 
-export function createGlobalApplicationCommand(bot: Bot) {
+export function createGlobalApplicationCommand (bot: Bot) {
   const createGlobalApplicationCommand = bot.helpers.createGlobalApplicationCommand
 
   bot.helpers.createGlobalApplicationCommand = async function (options) {
@@ -42,7 +42,7 @@ export function createGlobalApplicationCommand(bot: Bot) {
       }
 
       let length = 0
-      if (options.nameLocalizations) {
+      if (options.nameLocalizations != null) {
         length += Math.max(options.name.length, ...Object.values(options.nameLocalizations).map((name) => name.length))
       } else length += options.name.length
 

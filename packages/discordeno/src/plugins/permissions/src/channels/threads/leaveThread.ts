@@ -1,7 +1,7 @@
 import { BotWithCache, ChannelTypes } from '../../../deps.js'
 import { requireBotChannelPermissions } from '../../permissions.js'
 
-export function leaveThread(bot: BotWithCache) {
+export function leaveThread (bot: BotWithCache) {
   const leaveThread = bot.helpers.leaveThread
 
   bot.helpers.leaveThread = async function (threadId) {

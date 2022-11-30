@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../deps.js'
 import { requireBotChannelPermissions } from '../permissions.js'
 
-export function unpinMessage(bot: BotWithCache) {
+export function unpinMessage (bot: BotWithCache) {
   const unpinMessage = bot.helpers.unpinMessage
 
   bot.helpers.unpinMessage = async function (channelId, messageId) {

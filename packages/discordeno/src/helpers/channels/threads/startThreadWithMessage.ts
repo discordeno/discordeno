@@ -23,7 +23,7 @@ import { DiscordChannel } from '../../../types/discord.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-from-message}
  */
-export async function startThreadWithMessage(
+export async function startThreadWithMessage (
   bot: Bot,
   channelId: BigString,
   messageId: BigString,

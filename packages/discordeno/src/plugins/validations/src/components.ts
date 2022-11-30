@@ -1,6 +1,6 @@
 import { Bot, ButtonStyles, Emoji, MessageComponents, MessageComponentTypes } from '../deps.js'
 
-export function validateComponents(bot: Bot, components: MessageComponents) {
+export function validateComponents (bot: Bot, components: MessageComponents) {
   if (!components?.length) return
 
   let actionRowCounter = 0
@@ -200,14 +200,14 @@ export function validateComponents(bot: Bot, components: MessageComponents) {
   }
 }
 
-function makeEmojiFromString(
+function makeEmojiFromString (
   emoji?:
-    | string
-    | {
-      id?: string | bigint | undefined
-      name?: string | undefined
-      animated?: boolean | undefined
-    }
+  | string
+  | {
+    id?: string | bigint | undefined
+    name?: string | undefined
+    animated?: boolean | undefined
+  }
 ) {
   if (!emoji) return
 

@@ -28,7 +28,7 @@ import {
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event}
  */
-export async function editScheduledEvent(
+export async function editScheduledEvent (
   bot: Bot,
   guildId: BigString,
   eventId: BigString,

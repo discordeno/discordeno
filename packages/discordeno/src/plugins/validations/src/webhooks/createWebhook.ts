@@ -1,6 +1,6 @@
 import { Bot } from '../../deps.js'
 
-export function createWebhook(bot: Bot) {
+export function createWebhook (bot: Bot) {
   const createWebhook = bot.helpers.createWebhook
 
   bot.helpers.createWebhook = async function (channelId, options) {

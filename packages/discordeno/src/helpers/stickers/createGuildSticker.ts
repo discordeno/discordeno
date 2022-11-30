@@ -17,7 +17,7 @@ import { FileContent, WithReason } from '../../types/discordeno.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/sticker#create-guild-sticker}
  */
-export async function createGuildSticker(
+export async function createGuildSticker (
   bot: Bot,
   guildId: bigint,
   options: CreateGuildStickerOptions

@@ -15,7 +15,7 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook}
  */
-export async function getWebhook(bot: Bot, webhookId: BigString): Promise<Webhook> {
+export async function getWebhook (bot: Bot, webhookId: BigString): Promise<Webhook> {
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
     'GET',

@@ -23,26 +23,26 @@ import { Collection } from '../../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event-users}
  */
-export async function getScheduledEventUsers(
+export async function getScheduledEventUsers (
   bot: Bot,
   guildId: BigString,
   eventId: BigString,
   options?: GetScheduledEventUsers & { withMember?: false },
 ): Promise<Collection<bigint, User>>
-export async function getScheduledEventUsers(
+export async function getScheduledEventUsers (
   bot: Bot,
   guildId: BigString,
   eventId: BigString,
   options?: GetScheduledEventUsers & { withMember: true },
 ): Promise<Collection<bigint, { user: User, member: Member }>>
-export async function getScheduledEventUsers(
+export async function getScheduledEventUsers (
   bot: Bot,
   guildId: BigString,
   eventId: BigString,
   options?: GetScheduledEventUsers
 ): Promise<
   Collection<bigint, User> | Collection<bigint, { user: User, member: Member }>
-> {
+  > {
   let url = bot.constants.routes.GUILD_SCHEDULED_EVENT_USERS(guildId, eventId, options)
 
   if (options != null) {

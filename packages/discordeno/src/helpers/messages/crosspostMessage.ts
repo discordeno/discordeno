@@ -23,7 +23,7 @@ export const publishMessage = crosspostMessage
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#crosspost-message}
  */
-export async function crosspostMessage(bot: Bot, channelId: BigString, messageId: BigString): Promise<Message> {
+export async function crosspostMessage (bot: Bot, channelId: BigString, messageId: BigString): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     'POST',

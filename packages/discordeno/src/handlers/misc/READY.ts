@@ -1,7 +1,7 @@
 import { Bot } from '../../bot.js'
 import { DiscordGatewayPayload, DiscordReady } from '../../types/discord.js'
 
-export function handleReady(bot: Bot, data: DiscordGatewayPayload, shardId: number) {
+export function handleReady (bot: Bot, data: DiscordGatewayPayload, shardId: number) {
   const payload = data.d as DiscordReady
   // Triggered on each shard
   bot.events.ready(

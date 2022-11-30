@@ -15,7 +15,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command}
  */
-export async function getGuildApplicationCommand(
+export async function getGuildApplicationCommand (
   bot: Bot,
   commandId: BigString,
   guildId: BigString

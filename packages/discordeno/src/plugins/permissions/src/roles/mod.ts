@@ -6,7 +6,7 @@ import { editRole } from './editRole.js'
 import { modifyRolePositions } from './modifyRolePositions.js'
 import { removeRole } from './removeRole.js'
 
-export function roles(bot: BotWithCache) {
+export function roles (bot: BotWithCache) {
   addRole(bot)
   createRole(bot)
   deleteRole(bot)

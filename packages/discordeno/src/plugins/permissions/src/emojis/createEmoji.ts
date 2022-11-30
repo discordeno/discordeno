@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../deps.js'
 import { requireBotGuildPermissions } from '../permissions.js'
 
-export function createEmoji(bot: BotWithCache) {
+export function createEmoji (bot: BotWithCache) {
   const createEmoji = bot.helpers.createEmoji
 
   bot.helpers.createEmoji = async function (guildId, id) {

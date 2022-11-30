@@ -10,4 +10,3 @@ export * from './kickMember.js'
 export * from './pruneMembers.js'
 export * from './searchMembers.js'
 export * from './unbanMember.js'
-

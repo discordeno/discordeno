@@ -1,9 +1,9 @@
 import { Bot } from '../../deps.js'
 
-export function createInvite(bot: Bot) {
+export function createInvite (bot: Bot) {
   const createInvite = bot.helpers.createInvite
 
-  bot.helpers.createInvite = function (channelId, options = {}) {
+  bot.helpers.createInvite = async function (channelId, options = {}) {
     if (options.maxAge && (options.maxAge < 0 || options.maxAge > 604800)) {
       throw new Error('The max age for an invite must be between 0 and 604800.')
     }
@@ -11,6 +11,6 @@ export function createInvite(bot: Bot) {
       throw new Error('The max uses for an invite must be between 0 and 100.')
     }
 
-    return createInvite(channelId, options)
+    return await createInvite(channelId, options)
   }
 }

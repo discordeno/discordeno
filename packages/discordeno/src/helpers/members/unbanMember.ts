@@ -15,6 +15,6 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#remove-guild-ban}
  */
-export async function unbanMember(bot: Bot, guildId: BigString, userId: BigString): Promise<void> {
+export async function unbanMember (bot: Bot, guildId: BigString, userId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(bot.rest, 'DELETE', bot.constants.routes.GUILD_BAN(guildId, userId))
 }

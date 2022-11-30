@@ -13,7 +13,7 @@ export const RoleToggle = {
 }
 
 export class RoleToggles extends ToggleBitfield {
-  constructor(roleOrTogglesInt: DiscordRole | number) {
+  constructor (roleOrTogglesInt: DiscordRole | number) {
     super()
 
     if (typeof roleOrTogglesInt === 'number') this.bitfield = roleOrTogglesInt
@@ -28,34 +28,34 @@ export class RoleToggles extends ToggleBitfield {
   }
 
   /** If this role is showed separately in the user listing */
-  get hoist() {
+  get hoist () {
     return this.has('hoist')
   }
 
   /** Whether this role is managed by an integration */
-  get managed() {
+  get managed () {
     return this.has('managed')
   }
 
   /** Whether this role is mentionable */
-  get mentionable() {
+  get mentionable () {
     return this.has('mentionable')
   }
 
   /** Whether this is the guilds premium subscriber role */
-  get premiumSubscriber() {
+  get premiumSubscriber () {
     return this.has('premiumSubscriber')
   }
 
   /** Checks whether or not the permissions exist in this */
-  has(permissions: RoleToggleKeys | RoleToggleKeys[]) {
+  has (permissions: RoleToggleKeys | RoleToggleKeys[]) {
     if (!Array.isArray(permissions)) return super.contains(RoleToggle[permissions])
 
     return super.contains(permissions.reduce((a, b) => (a |= RoleToggle[b]), 0))
   }
 
   /** Lists all the toggles for the role and whether or not each is true or false. */
-  list() {
+  list () {
     const json: Record<string, boolean> = {}
     for (const [key, value] of Object.entries(RoleToggle)) {
       json[key] = super.contains(value)

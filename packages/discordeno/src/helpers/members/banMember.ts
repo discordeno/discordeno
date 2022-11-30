@@ -16,7 +16,7 @@ import { BigString, WithReason } from '../../mod.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-ban}
  */
-export async function banMember(
+export async function banMember (
   bot: Bot,
   guildId: BigString,
   userId: BigString,

@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionChoice, BigString, Bot, InteractionResponseTypes } from '../deps.js'
 
-export async function sendAutocompleteChoices(
+export async function sendAutocompleteChoices (
   bot: Bot,
   interactionId: BigString,
   interactionToken: string,

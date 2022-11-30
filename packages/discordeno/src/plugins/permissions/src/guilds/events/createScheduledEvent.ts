@@ -1,7 +1,7 @@
 import { BotWithCache, ScheduledEventEntityType } from '../../../deps.js'
 import { requireBotChannelPermissions, requireBotGuildPermissions } from '../../permissions.js'
 
-export function createScheduledEvent(bot: BotWithCache) {
+export function createScheduledEvent (bot: BotWithCache) {
   const createScheduledEvent = bot.helpers.createScheduledEvent
 
   bot.helpers.createScheduledEvent = async function (guildId, options) {
@@ -29,7 +29,7 @@ export function createScheduledEvent(bot: BotWithCache) {
         ])
       }
 
-      return createScheduledEvent(guildId, options)
+      return await createScheduledEvent(guildId, options)
     }
 
     if (options.entityType === ScheduledEventEntityType.Voice) {
@@ -55,7 +55,7 @@ export function createScheduledEvent(bot: BotWithCache) {
         ])
       }
 
-      return createScheduledEvent(guildId, options)
+      return await createScheduledEvent(guildId, options)
     }
 
     // EXTERNAL EVENTS

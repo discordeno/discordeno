@@ -9,7 +9,7 @@ import type {
 } from '../deps.js'
 import type { BotWithCache } from './addCacheCollections.js'
 
-export function setupCacheEdits<B extends Bot>(bot: BotWithCache<B>) {
+export function setupCacheEdits<B extends Bot> (bot: BotWithCache<B>) {
   const {
     GUILD_MEMBER_ADD,
     GUILD_MEMBER_REMOVE,

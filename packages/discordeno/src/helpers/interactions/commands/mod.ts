@@ -13,4 +13,3 @@ export * from './getGuildApplicationCommand.js'
 export * from './getGuildApplicationCommands.js'
 export * from './upsertGlobalApplicationCommands.js'
 export * from './upsertGuildApplicationCommands.js'
-

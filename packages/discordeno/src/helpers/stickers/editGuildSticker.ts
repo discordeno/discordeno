@@ -16,7 +16,7 @@ import { AtLeastOne } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/sticker#modify-guild-sticker}
  */
-export async function editGuildSticker(
+export async function editGuildSticker (
   bot: Bot,
   guildId: bigint,
   stickerId: bigint,

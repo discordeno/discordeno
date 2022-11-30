@@ -1,7 +1,7 @@
 import { AllowedMentionsTypes, Bot } from '../../deps.js'
 import { validateComponents } from '../components.js'
 
-export function editWebhookMessage(bot: Bot) {
+export function editWebhookMessage (bot: Bot) {
   const editWebhookMessage = bot.helpers.editWebhookMessage
 
   bot.helpers.editWebhookMessage = async function (webhookId, webhookToken, messageId, options) {

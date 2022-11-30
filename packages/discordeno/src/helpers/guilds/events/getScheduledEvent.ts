@@ -14,7 +14,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event}
  */
-export async function getScheduledEvent(
+export async function getScheduledEvent (
   bot: Bot,
   guildId: BigString,
   eventId: BigString,

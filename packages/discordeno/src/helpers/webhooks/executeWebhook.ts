@@ -21,7 +21,7 @@ export const sendWebhookMessage = executeWebhook
  *
  * @see {@link https://discord.com/developers/docs/resources/webhook#execute-webhook}
  */
-export async function executeWebhook(
+export async function executeWebhook (
   bot: Bot,
   webhookId: BigString,
   token: string,
@@ -29,11 +29,11 @@ export async function executeWebhook(
 ): Promise<Message | undefined> {
   const allowedMentions = (options.allowedMentions != null)
     ? {
-      parse: options.allowedMentions.parse,
-      replied_user: options.allowedMentions.repliedUser,
-      users: options.allowedMentions.users?.map((id) => id.toString()),
-      roles: options.allowedMentions.roles?.map((id) => id.toString())
-    }
+        parse: options.allowedMentions.parse,
+        replied_user: options.allowedMentions.repliedUser,
+        users: options.allowedMentions.users?.map((id) => id.toString()),
+        roles: options.allowedMentions.roles?.map((id) => id.toString())
+      }
     : { parse: [] }
 
   const result = await bot.rest.runMethod<DiscordMessage>(

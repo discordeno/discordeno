@@ -12,7 +12,7 @@ export const reverseStatusTypes = Object.freeze(
   } as const
 )
 
-export function transformPresenceToDiscordPresence(bot: Bot, payload: PresenceUpdate): DiscordPresenceUpdate {
+export function transformPresenceToDiscordPresence (bot: Bot, payload: PresenceUpdate): DiscordPresenceUpdate {
   return {
     user: bot.transformers.reverse.user(bot, payload.user),
     guild_id: bot.transformers.reverse.snowflake(payload.guildId),

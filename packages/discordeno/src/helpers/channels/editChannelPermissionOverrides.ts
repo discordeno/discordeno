@@ -18,7 +18,7 @@ import { OverwriteReadable } from '../../types/discordeno.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#edit-channel-permissions}
  */
-export async function editChannelPermissionOverrides(
+export async function editChannelPermissionOverrides (
   bot: Bot,
   channelId: BigString,
   options: EditChannelPermissionOverridesOptions

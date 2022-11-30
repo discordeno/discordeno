@@ -1,10 +1,10 @@
 import { AllowedMentionsTypes, Bot } from '../../deps.js'
 
-export function editMessage(bot: Bot) {
+export function editMessage (bot: Bot) {
   const editMessage = bot.helpers.editMessage
 
   bot.helpers.editMessage = async function (channelId, messageId, content) {
-    if (content.allowedMentions) {
+    if (content.allowedMentions != null) {
       if (content.allowedMentions.users?.length) {
         if (
           content.allowedMentions.parse?.includes(

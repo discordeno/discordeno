@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../deps.js'
 import { higherRolePosition, highestRole, requireBotGuildPermissions } from '../permissions.js'
 
-export function addRole(bot: BotWithCache) {
+export function addRole (bot: BotWithCache) {
   const addRole = bot.helpers.addRole
 
   bot.helpers.addRole = async function (guildId, memberId, roleId, reason) {

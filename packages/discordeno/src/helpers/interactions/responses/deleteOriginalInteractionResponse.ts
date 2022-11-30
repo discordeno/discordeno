@@ -1,4 +1,4 @@
-import type { Bot } from "../../../bot.js";
+import type { Bot } from '../../../bot.js'
 
 /**
  * Deletes the initial message response to an interaction.
@@ -13,10 +13,10 @@ import type { Bot } from "../../../bot.js";
  *
  * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response}
  */
-export async function deleteOriginalInteractionResponse(bot: Bot, token: string): Promise<void> {
+export async function deleteOriginalInteractionResponse (bot: Bot, token: string): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
-    bot.constants.routes.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token),
-  );
+    'DELETE',
+    bot.constants.routes.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token)
+  )
 }

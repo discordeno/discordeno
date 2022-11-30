@@ -15,7 +15,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/auto-moderation#delete-auto-moderation-rule}
  */
-export async function deleteAutomodRule(
+export async function deleteAutomodRule (
   bot: Bot,
   guildId: BigString,
   ruleId: BigString,

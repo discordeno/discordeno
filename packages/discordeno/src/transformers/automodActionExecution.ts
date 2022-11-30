@@ -2,7 +2,7 @@ import { Bot } from '../bot.js'
 import { DiscordAutoModerationActionExecution } from '../types/discord.js'
 import { Optionalize } from '../types/shared.js'
 
-export function transformAutoModerationActionExecution(bot: Bot, payload: DiscordAutoModerationActionExecution) {
+export function transformAutoModerationActionExecution (bot: Bot, payload: DiscordAutoModerationActionExecution) {
   const rule = {
     content: payload.content,
     ruleTriggerType: payload.rule_trigger_type,

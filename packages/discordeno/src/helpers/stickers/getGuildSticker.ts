@@ -1,4 +1,4 @@
-import { Bot, Sticker } from "../../mod.js";
+import { Bot, Sticker } from '../../mod.js'
 
 /**
  * Returns a sticker object for the given guild and sticker IDs.
@@ -12,7 +12,7 @@ import { Bot, Sticker } from "../../mod.js";
  *
  * @see {@link https://discord.com/developers/docs/resources/sticker#get-guild-sticker}
  */
-export async function getGuildSticker(bot: Bot, guildId: bigint, stickerId: bigint): Promise<Sticker> {
-  const result = await bot.rest.runMethod(bot.rest, "GET", bot.constants.routes.GUILD_STICKER(guildId, stickerId));
-  return bot.transformers.sticker(bot, result);
+export async function getGuildSticker (bot: Bot, guildId: bigint, stickerId: bigint): Promise<Sticker> {
+  const result = await bot.rest.runMethod(bot.rest, 'GET', bot.constants.routes.GUILD_STICKER(guildId, stickerId))
+  return bot.transformers.sticker(bot, result)
 }

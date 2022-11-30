@@ -12,7 +12,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-command}
  */
-export async function getGlobalApplicationCommand(bot: Bot, commandId: BigString): Promise<ApplicationCommand> {
+export async function getGlobalApplicationCommand (bot: Bot, commandId: BigString): Promise<ApplicationCommand> {
   const result = await bot.rest.runMethod<DiscordApplicationCommand>(
     bot.rest,
     'GET',

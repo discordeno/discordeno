@@ -17,7 +17,7 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#unpin-message}
  */
-export async function unpinMessage(
+export async function unpinMessage (
   bot: Bot,
   channelId: BigString,
   messageId: BigString,

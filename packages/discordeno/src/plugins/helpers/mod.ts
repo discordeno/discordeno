@@ -54,7 +54,7 @@ export interface HelperFunctionsFromHelperPlugin {
   }
 }
 
-export function enableHelpersPlugin<B extends Bot = Bot>(rawBot: B): BotWithHelpersPlugin<B> {
+export function enableHelpersPlugin<B extends Bot = Bot> (rawBot: B): BotWithHelpersPlugin<B> {
   // FORCE OVERRIDE THE TYPE SO WE CAN SETUP FUNCTIONS
   const bot = rawBot as unknown as BotWithHelpersPlugin
 

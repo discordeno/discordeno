@@ -1,7 +1,7 @@
 import { RestPayload, RestRequest } from './rest.js'
 import { RestManager } from './restManager.js'
 
-export async function processGlobalQueue(rest: RestManager, request: {
+export async function processGlobalQueue (rest: RestManager, request: {
   request: RestRequest
   payload: RestPayload
   basicURL: string

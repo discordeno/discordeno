@@ -2,7 +2,7 @@ import type { Bot } from '../../bot.js'
 import { DiscordMember, DiscordUser } from '../../types/discord.js'
 import { Member, User } from '../member.js'
 
-export function transformUserToDiscordUser(bot: Bot, payload: User): DiscordUser {
+export function transformUserToDiscordUser (bot: Bot, payload: User): DiscordUser {
   return {
     id: bot.utils.bigintToSnowflake(payload.id),
     username: payload.username,
@@ -20,7 +20,7 @@ export function transformUserToDiscordUser(bot: Bot, payload: User): DiscordUser
   }
 }
 
-export function transformMemberToDiscordMember(bot: Bot, payload: Member): DiscordMember {
+export function transformMemberToDiscordMember (bot: Bot, payload: Member): DiscordMember {
   return {
     nick: payload.nick ?? undefined,
     roles: payload.roles.map((id) => bot.utils.bigintToSnowflake(id)),

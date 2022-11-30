@@ -1,7 +1,7 @@
 import { GatewayOpcodes } from '../../types/shared.js'
 import { Shard, ShardSocketCloseCodes, ShardState } from './types.js'
 
-export async function identify(shard: Shard): Promise<void> {
+export async function identify (shard: Shard): Promise<void> {
   // A new identify has been requested even though there is already a connection open.
   // Therefore we need to close the old connection and heartbeating before creating a new one.
   if (shard.isOpen()) {

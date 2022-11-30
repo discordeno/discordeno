@@ -1,7 +1,7 @@
 import { GatewayOpcodes } from '../../types/shared.js'
 import { Shard, ShardSocketCloseCodes, ShardState } from './types.js'
 
-export async function resume(shard: Shard): Promise<void> {
+export async function resume (shard: Shard): Promise<void> {
   //   gateway.debug("GW RESUMING", { shardId });
   // It has been requested to resume the Shards session.
   // It's possible that the shard is still connected with Discord's gateway therefore we need to forcefully close it.

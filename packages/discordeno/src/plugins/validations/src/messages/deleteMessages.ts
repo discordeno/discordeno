@@ -1,6 +1,6 @@
 import { Bot } from '../../deps.js'
 
-export function deleteMessages(bot: Bot) {
+export function deleteMessages (bot: Bot) {
   const deleteMessages = bot.helpers.deleteMessages
 
   bot.helpers.deleteMessages = async function (

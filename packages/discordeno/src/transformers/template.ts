@@ -2,7 +2,7 @@ import { Bot } from '../bot.js'
 import { DiscordTemplate } from '../types/discord.js'
 import { Optionalize } from '../types/shared.js'
 
-export function transformTemplate(bot: Bot, payload: DiscordTemplate) {
+export function transformTemplate (bot: Bot, payload: DiscordTemplate) {
   const template = {
     code: payload.code,
     name: payload.name,

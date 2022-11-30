@@ -1,10 +1,10 @@
 import { ApplicationCommandOption, CreateSlashApplicationCommand } from '../deps.js'
-export function validateApplicationCommandLength(options: CreateSlashApplicationCommand) {
+export function validateApplicationCommandLength (options: CreateSlashApplicationCommand) {
   let length = 0
-  if (options.nameLocalizations) {
+  if (options.nameLocalizations != null) {
     length += Math.max(options.name.length, ...Object.values(options.nameLocalizations).map((name) => name.length))
   } else length += options.name.length
-  if (options.descriptionLocalizations) {
+  if (options.descriptionLocalizations != null) {
     length += Math.max(
       options.description.length,
       ...Object.values(options.descriptionLocalizations).map((name) => name.length)
@@ -21,7 +21,7 @@ export function validateApplicationCommandLength(options: CreateSlashApplication
   }
 }
 
-function validateApplicationCommandOptionLength(options: ApplicationCommandOption[]) {
+function validateApplicationCommandOptionLength (options: ApplicationCommandOption[]) {
   let length = 0
   for (const option of options) {
     if (option.nameLocalizations != null) {

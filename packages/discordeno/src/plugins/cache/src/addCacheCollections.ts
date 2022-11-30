@@ -32,7 +32,7 @@ export interface CacheProps {
   dispatchedChannelIds: Set<bigint>
 }
 
-export function addCacheCollections<B extends Bot>(bot: B): BotWithCache<B> {
+export function addCacheCollections<B extends Bot> (bot: B): BotWithCache<B> {
   const cacheBot = bot as unknown as BotWithCache<B>
   cacheBot.guilds = new Collection()
   cacheBot.users = new Collection()

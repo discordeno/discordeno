@@ -13,7 +13,7 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-member}
  */
-export async function getMember(bot: Bot, guildId: BigString, userId: BigString): Promise<Member> {
+export async function getMember (bot: Bot, guildId: BigString, userId: BigString): Promise<Member> {
   const result = await bot.rest.runMethod<DiscordMemberWithUser>(
     bot.rest,
     'GET',

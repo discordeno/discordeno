@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../deps.js'
 import { requireBotChannelPermissions } from '../permissions.js'
 
-export function pinMessage(bot: BotWithCache) {
+export function pinMessage (bot: BotWithCache) {
   const pinMessage = bot.helpers.pinMessage
 
   bot.helpers.pinMessage = async function (

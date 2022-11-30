@@ -19,7 +19,7 @@ const rest = createRestManager({
   token,
   secretKey: REST_AUTHORIZATION_KEY,
   customUrl: PROXY_REST_URL,
-  debug(text) {
+  debug (text) {
     if (text.startsWith('[REST - RequestCreate]')) {
       const aaa = text.split(' ')
       const method = aaa[4]
@@ -34,7 +34,7 @@ const rest = createRestManager({
       console.log('[POSSIBLE BUCKET ISSUE]')
     }
   },
-  fetching(options) {
+  fetching (options) {
     // console.log("[FETCHING]", options.method, options.url, Date.now() - col.get(options.method + options.url)!);
   }
 })
@@ -52,7 +52,7 @@ for await (const conn of server) {
   handleRequest(conn)
 }
 
-async function handleRequest(conn: Deno.Conn) {
+async function handleRequest (conn: Deno.Conn) {
   // This "upgrades" a network connection into an HTTP connection.
   const httpConn = Deno.serveHttp(conn)
   // Each request sent over the HTTP connection will be yielded as an async

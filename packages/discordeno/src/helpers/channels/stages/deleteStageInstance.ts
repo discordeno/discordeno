@@ -14,7 +14,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance}
  */
-export async function deleteStageInstance(bot: Bot, channelId: BigString, reason?: string): Promise<void> {
+export async function deleteStageInstance (bot: Bot, channelId: BigString, reason?: string): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     'DELETE',

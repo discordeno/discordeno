@@ -1,2 +1,1 @@
-export * from './createForumThread.js';
-
+export * from './createForumThread.js'

@@ -14,6 +14,6 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild}
  */
-export async function deleteGuild(bot: Bot, guildId: BigString): Promise<void> {
+export async function deleteGuild (bot: Bot, guildId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(bot.rest, 'DELETE', bot.constants.routes.GUILD(guildId))
 }

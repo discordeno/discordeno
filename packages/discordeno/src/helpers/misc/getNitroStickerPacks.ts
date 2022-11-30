@@ -11,7 +11,7 @@ import { Collection } from '../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/sticker#list-nitro-sticker-packs}
  */
-export async function getNitroStickerPacks(bot: Bot): Promise<Collection<bigint, StickerPack>> {
+export async function getNitroStickerPacks (bot: Bot): Promise<Collection<bigint, StickerPack>> {
   const results = await bot.rest.runMethod<DiscordStickerPack[]>(
     bot.rest,
     'GET',

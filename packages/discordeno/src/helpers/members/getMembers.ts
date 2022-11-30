@@ -25,7 +25,7 @@ import { Collection } from '../../util/collection.js'
  * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
  * @see {@link https://discord.com/developers/docs/topics/rate-limits#rate-limits}
  */
-export async function getMembers(
+export async function getMembers (
   bot: Bot,
   guildId: BigString,
   options: ListGuildMembers

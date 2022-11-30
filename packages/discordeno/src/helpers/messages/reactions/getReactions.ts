@@ -17,7 +17,7 @@ import { Collection } from '../../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#get-reactions}
  */
-export async function getReactions(
+export async function getReactions (
   bot: Bot,
   channelId: BigString,
   messageId: BigString,
@@ -40,7 +40,7 @@ export async function getReactions(
   )
 }
 
-export function processReactionString(reaction: string): string {
+export function processReactionString (reaction: string): string {
   if (reaction.startsWith('<:')) {
     return reaction.substring(2, reaction.length - 1)
   }

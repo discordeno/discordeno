@@ -24,7 +24,7 @@ import {
  *
  * @see {@link https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule}
  */
-export async function editAutomodRule(
+export async function editAutomodRule (
   bot: Bot,
   guildId: BigString,
   ruleId: BigString,
@@ -39,11 +39,11 @@ export async function editAutomodRule(
       event_type: options.eventType,
       trigger_metadata: (options.triggerMetadata != null)
         ? {
-          keyword_filter: options.triggerMetadata.keywordFilter,
-          presets: options.triggerMetadata.presets,
-          allow_list: options.triggerMetadata.allowList,
-          mention_total_limit: options.triggerMetadata.mentionTotalLimit
-        }
+            keyword_filter: options.triggerMetadata.keywordFilter,
+            presets: options.triggerMetadata.presets,
+            allow_list: options.triggerMetadata.allowList,
+            mention_total_limit: options.triggerMetadata.mentionTotalLimit
+          }
         : undefined,
       actions: options.actions?.map((action) => ({
         type: action.type,

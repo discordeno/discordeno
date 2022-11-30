@@ -14,7 +14,7 @@ import { BigString, GatewayOpcodes } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/topics/gateway#update-voice-state}
  */
-export async function leaveVoiceChannel(
+export async function leaveVoiceChannel (
   bot: Bot,
   guildId: BigString
 ): Promise<void> {

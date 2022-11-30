@@ -1,6 +1,6 @@
 import { Bot } from '../../../../bot.js'
 
-export function createGuildSticker(bot: Bot) {
+export function createGuildSticker (bot: Bot) {
   const createGuildSticker = bot.helpers.createGuildSticker
   bot.helpers.createGuildSticker = async (guildId, options) => {
     if (!bot.utils.validateLength(options.name, { min: 2, max: 30 })) {

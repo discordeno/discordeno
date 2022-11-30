@@ -13,7 +13,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions}
  */
-export async function getApplicationCommandPermission(
+export async function getApplicationCommandPermission (
   bot: Bot,
   guildId: BigString,
   commandId: BigString

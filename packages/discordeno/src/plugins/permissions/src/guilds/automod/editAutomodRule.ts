@@ -1,7 +1,7 @@
 import { AutoModerationActionType, BotWithCache } from '../../../deps.js'
 import { requireBotGuildPermissions } from '../../permissions.js'
 
-export function editAutomodRule(bot: BotWithCache) {
+export function editAutomodRule (bot: BotWithCache) {
   const editAutomodRule = bot.helpers.editAutomodRule
 
   bot.helpers.editAutomodRule = async function (guildId, ruleId, options) {

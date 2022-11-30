@@ -1,6 +1,6 @@
 import { BotWithCache } from '../../deps.js'
 
-export function editGuildMfaLevel(bot: BotWithCache) {
+export function editGuildMfaLevel (bot: BotWithCache) {
   const editGuildMfaLevel = bot.helpers.editGuildMfaLevel
 
   bot.helpers.editGuildMfaLevel = async function (guildId, mfaLevel, reason) {

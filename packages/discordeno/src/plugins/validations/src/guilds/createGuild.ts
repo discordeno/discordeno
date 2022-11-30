@@ -1,9 +1,9 @@
 import { Bot } from '../../deps.js'
 
-export function createGuild(bot: Bot) {
+export function createGuild (bot: Bot) {
   const createGuild = bot.helpers.createGuild
 
-  bot.helpers.createGuild = function (options) {
+  bot.helpers.createGuild = async function (options) {
     if (
       options.name &&
       !bot.utils.validateLength(options.name, { min: 2, max: 100 })
@@ -11,6 +11,6 @@ export function createGuild(bot: Bot) {
       throw new Error('The guild name must be between 2 and 100 characters.')
     }
 
-    return createGuild(options)
+    return await createGuild(options)
   }
 }

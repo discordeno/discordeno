@@ -8,7 +8,7 @@ import { reactions } from './reactions/mod.js'
 import { sendMessage } from './sendMessage.js'
 import { unpinMessage } from './unpinMessage.js'
 
-export function messages(bot: BotWithCache) {
+export function messages (bot: BotWithCache) {
   reactions(bot)
   deleteMessage(bot)
   deleteMessages(bot)

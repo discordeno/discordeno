@@ -22,7 +22,7 @@ import { ActiveThreads } from './getActiveThreads.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#list-public-archived-threads}
  */
-export async function getPublicArchivedThreads(
+export async function getPublicArchivedThreads (
   bot: Bot,
   channelId: BigString,
   options?: ListArchivedThreads

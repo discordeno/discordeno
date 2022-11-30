@@ -34,7 +34,7 @@ export type InviteMetadata = BaseInvite & {
  *
  * @see {@link https://discord.com/developers/docs/resources/invite#get-invite}
  */
-export async function getInvite(bot: Bot, inviteCode: string, options?: GetInvite): Promise<BaseInvite> {
+export async function getInvite (bot: Bot, inviteCode: string, options?: GetInvite): Promise<BaseInvite> {
   const result = await bot.rest.runMethod<DiscordInviteMetadata>(
     bot.rest,
     'GET',

@@ -2,7 +2,7 @@ import { Bot } from '../bot.js'
 import { DiscordScheduledEvent } from '../types/discord.js'
 import { Optionalize } from '../types/shared.js'
 
-export function transformScheduledEvent(
+export function transformScheduledEvent (
   bot: Bot,
   payload: DiscordScheduledEvent
 ) {

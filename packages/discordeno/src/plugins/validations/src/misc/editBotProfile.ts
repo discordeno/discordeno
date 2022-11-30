@@ -1,6 +1,6 @@
 import { Bot } from '../../deps.js'
 
-export function editBotProfile(bot: Bot) {
+export function editBotProfile (bot: Bot) {
   const editBotProfile = bot.helpers.editBotProfile
 
   bot.helpers.editBotProfile = async function (options) {

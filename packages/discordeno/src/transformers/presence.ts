@@ -3,7 +3,7 @@ import { DiscordPresenceUpdate } from '../types/discord.js'
 import { Optionalize, PresenceStatus } from '../types/shared.js'
 import { UserToggles } from './toggles/user.js'
 
-export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate) {
+export function transformPresence (bot: Bot, payload: DiscordPresenceUpdate) {
   const presence = {
     user: {
       id: bot.transformers.snowflake(payload.user.id || ''),

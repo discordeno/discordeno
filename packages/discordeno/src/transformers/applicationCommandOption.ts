@@ -3,7 +3,7 @@ import { DiscordApplicationCommandOption } from '../types/discord.js'
 import { ApplicationCommandOptionTypes, ChannelTypes, Localization } from '../types/shared.js'
 import { ApplicationCommandOptionChoice } from './applicationCommandOptionChoice.js'
 
-export function transformApplicationCommandOption(
+export function transformApplicationCommandOption (
   bot: Bot,
   payload: DiscordApplicationCommandOption
 ): ApplicationCommandOption {

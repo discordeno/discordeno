@@ -18,7 +18,7 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#delete-message}
  */
-export async function deleteMessage(
+export async function deleteMessage (
   bot: Bot,
   channelId: BigString,
   messageId: BigString,

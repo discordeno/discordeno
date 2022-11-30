@@ -36,7 +36,7 @@ export interface AuditLog {
  *
  * @see {@link https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log}
  */
-export async function getAuditLog(bot: Bot, guildId: BigString, options?: GetGuildAuditLog): Promise<AuditLog> {
+export async function getAuditLog (bot: Bot, guildId: BigString, options?: GetGuildAuditLog): Promise<AuditLog> {
   if (options?.limit) {
     options.limit = options.limit >= 1 && options.limit <= 100 ? options.limit : 50
   }
@@ -65,21 +65,21 @@ export async function getAuditLog(bot: Bot, guildId: BigString, options?: GetGui
       user: integration.user ? bot.transformers.user(bot, integration.user) : undefined,
       account: integration.account
         ? {
-          id: bot.transformers.snowflake(integration.account.id),
-          name: integration.account.name
-        }
+            id: bot.transformers.snowflake(integration.account.id),
+            name: integration.account.name
+          }
         : undefined,
       syncedAt: integration.synced_at ? Date.parse(integration.synced_at) : undefined,
       subscriberCount: integration.subscriber_count,
       revoked: integration.revoked,
       application: integration.application
         ? {
-          id: bot.transformers.snowflake(integration.application.id),
-          name: integration.application.name,
-          icon: integration.application.icon ? bot.utils.iconHashToBigInt(integration.application.icon) : undefined,
-          description: integration.application.description,
-          bot: integration.application.bot ? bot.transformers.user(bot, integration.application.bot) : undefined
-        }
+            id: bot.transformers.snowflake(integration.application.id),
+            name: integration.application.name,
+            icon: integration.application.icon ? bot.utils.iconHashToBigInt(integration.application.icon) : undefined,
+            description: integration.application.description,
+            bot: integration.application.bot ? bot.transformers.user(bot, integration.application.bot) : undefined
+          }
         : undefined
     })),
     threads: result.threads.map((thread) => bot.transformers.channel(bot, { channel: thread, guildId: id })),

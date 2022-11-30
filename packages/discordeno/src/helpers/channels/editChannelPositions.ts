@@ -17,7 +17,7 @@ export const swapChannels = editChannelPositions
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions}
  */
-export async function editChannelPositions(
+export async function editChannelPositions (
   bot: Bot,
   guildId: BigString,
   channelPositions: ModifyGuildChannelPositions[]

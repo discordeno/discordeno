@@ -1,7 +1,7 @@
 import { GatewayOpcodes } from '../../types/shared.js'
 import { Shard, ShardSocketCloseCodes, ShardState } from './types.js'
 
-export function startHeartbeating(shard: Shard, interval: number) {
+export function startHeartbeating (shard: Shard, interval: number) {
   //   gateway.debug("GW HEARTBEATING_STARTED", { shardId, interval });
 
   shard.heart.interval = interval

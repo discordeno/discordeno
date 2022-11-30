@@ -13,7 +13,7 @@ import { Collection } from '../../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commandss}
  */
-export async function getGuildApplicationCommands(
+export async function getGuildApplicationCommands (
   bot: Bot,
   guildId: BigString
 ): Promise<Collection<bigint, ApplicationCommand>> {

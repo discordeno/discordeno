@@ -1,7 +1,7 @@
 import type { BigString, Bot, InteractionResponse } from '../deps.js'
 
 /** sendInteractionResponse with ephemeral reply */
-export async function sendPrivateInteractionResponse(
+export async function sendPrivateInteractionResponse (
   bot: Bot,
   id: BigString,
   token: string,

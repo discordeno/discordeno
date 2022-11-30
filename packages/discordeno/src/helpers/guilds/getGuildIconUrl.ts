@@ -10,7 +10,7 @@ import { ImageFormat, ImageSize } from '../members/getAvatarUrl.js'
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined` if no banner has been set.
  */
-export function getGuildIconURL(
+export function getGuildIconURL (
   bot: Bot,
   guildId: BigString,
   imageHash: BigString | undefined,

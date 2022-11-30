@@ -11,7 +11,7 @@ import { ImageFormat, ImageSize } from '../members/getAvatarUrl.js'
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined` if the guild does not have a splash image set.
  */
-export function getGuildSplashURL(
+export function getGuildSplashURL (
   bot: Bot,
   guildId: BigString,
   imageHash: BigString | undefined,

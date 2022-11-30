@@ -10,7 +10,7 @@ import { stickers } from './src/stickers/mod.js'
 import { webhooks } from './src/webhooks/mod.js'
 
 // PLUGINS MUST TAKE A BOT ARGUMENT WHICH WILL BE MODIFIED
-export function enablePermissionsPlugin<B extends BotWithCache = BotWithCache>(bot: B): B {
+export function enablePermissionsPlugin<B extends BotWithCache = BotWithCache> (bot: B): B {
   // PERM CHECKS REQUIRE CACHE DUH!
   if (!bot.enabledPlugins?.has('CACHE')) throw new Error('The PERMISSIONS plugin requires the CACHE plugin first.')
 

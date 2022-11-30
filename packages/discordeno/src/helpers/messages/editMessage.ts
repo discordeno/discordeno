@@ -24,7 +24,7 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#edit-message}
  */
-export async function editMessage(
+export async function editMessage (
   bot: Bot,
   channelId: BigString,
   messageId: BigString,

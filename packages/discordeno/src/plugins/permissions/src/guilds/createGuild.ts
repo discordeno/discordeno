@@ -1,6 +1,6 @@
 import { BotWithCache } from '../../deps.js'
 
-export function createGuild(bot: BotWithCache) {
+export function createGuild (bot: BotWithCache) {
   const createGuild = bot.helpers.createGuild
 
   bot.helpers.createGuild = async function (options) {

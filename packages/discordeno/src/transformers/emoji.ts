@@ -3,7 +3,7 @@ import { DiscordEmoji } from '../types/discord.js'
 import { Optionalize } from '../types/shared.js'
 import { EmojiToggles } from './toggles/emoji.js'
 
-export function transformEmoji(bot: Bot, payload: DiscordEmoji) {
+export function transformEmoji (bot: Bot, payload: DiscordEmoji) {
   const emoji = {
     id: payload.id ? bot.transformers.snowflake(payload.id) : undefined,
     name: payload.name || undefined,

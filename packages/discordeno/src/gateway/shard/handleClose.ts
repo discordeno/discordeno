@@ -1,7 +1,7 @@
 import { GatewayCloseEventCodes } from '../../types/shared.js'
 import { Shard, ShardSocketCloseCodes, ShardState } from './types.js'
 
-export async function handleClose(shard: Shard, close: CloseEvent): Promise<void> {
+export async function handleClose (shard: Shard, close: CloseEvent): Promise<void> {
   //   gateway.debug("GW CLOSED", { shardId, payload: event });
 
   shard.stopHeartbeating()

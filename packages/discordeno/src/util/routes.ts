@@ -121,7 +121,7 @@ export const routes = {
   THREAD_ARCHIVED_PUBLIC: (channelId: BigString, options?: ListArchivedThreads) => {
     let url = `/channels/${channelId}/threads/archived/public?`
 
-    if (options) {
+    if (options != null) {
       if (options.before) url += `before=${new Date(options.before).toISOString()}`
       if (options.limit) url += `&limit=${options.limit}`
     }
@@ -131,7 +131,7 @@ export const routes = {
   THREAD_ARCHIVED_PRIVATE: (channelId: BigString, options?: ListArchivedThreads) => {
     let url = `/channels/${channelId}/threads/archived/private?`
 
-    if (options) {
+    if (options != null) {
       if (options.before) url += `before=${new Date(options.before).toISOString()}`
       if (options.limit) url += `&limit=${options.limit}`
     }
@@ -141,7 +141,7 @@ export const routes = {
   THREAD_ARCHIVED_PRIVATE_JOINED: (channelId: BigString, options?: ListArchivedThreads) => {
     let url = `/channels/${channelId}/users/@me/threads/archived/private?`
 
-    if (options) {
+    if (options != null) {
       if (options.before) url += `before=${new Date(options.before).toISOString()}`
       if (options.limit) url += `&limit=${options.limit}`
     }
@@ -170,7 +170,7 @@ export const routes = {
   GUILD_AUDIT_LOGS: (guildId: BigString, options?: GetGuildAuditLog) => {
     let url = `/guilds/${guildId}/audit-logs?`
 
-    if (options) {
+    if (options != null) {
       if (options.actionType) url += `action_type=${options.actionType}`
       if (options.before) url += `&before=${options.before}`
       if (options.limit) url += `&limit=${options.limit}`
@@ -185,7 +185,7 @@ export const routes = {
   GUILD_BANS: (guildId: BigString, options?: GetBans) => {
     let url = `/guilds/${guildId}/bans?`
 
-    if (options) {
+    if (options != null) {
       if (options.limit) url += `limit=${options.limit}`
       if (options.after) url += `&after=${options.after}`
       if (options.before) url += `&before=${options.before}`
@@ -209,11 +209,11 @@ export const routes = {
   GUILD_WIDGET_IMAGE: (
     guildId: BigString,
     style?:
-      | 'shield'
-      | 'banner1'
-      | 'banner2'
-      | 'banner3'
-      | 'banner4'
+    | 'shield'
+    | 'banner1'
+    | 'banner2'
+    | 'banner3'
+    | 'banner4'
   ) => {
     let url = `/guilds/${guildId}/widget.png?`
 
@@ -276,7 +276,7 @@ export const routes = {
   GUILD_PRUNE: (guildId: BigString, options?: GetGuildPruneCountQuery) => {
     let url = `/guilds/${guildId}/prune?`
 
-    if (options) {
+    if (options != null) {
       if (options.days) url += `days=${options.days}`
       if (options.includeRoles) url += `&include_roles=${options.includeRoles}`
     }
@@ -340,7 +340,7 @@ export const routes = {
   GUILD_SCHEDULED_EVENT_USERS: (guildId: BigString, eventId: BigString, options?: GetScheduledEventUsers) => {
     let url = `/guilds/${guildId}/scheduled-events/${eventId}/users?`
 
-    if (options) {
+    if (options != null) {
       if (options.limit) url += `limit=${options.limit}`
       if (options.withMember) url += `&with_member=${options.withMember}`
       if (options.after) url += `&after=${options.after}`
@@ -358,7 +358,7 @@ export const routes = {
   INVITE: (inviteCode: string, options?: GetInvite) => {
     let url = `/invites/${inviteCode}?`
 
-    if (options) {
+    if (options != null) {
       if (options.withCounts) url += `with_counts=${options.withCounts}`
       if (options.withExpiration) url += `&with_expiration=${options.withExpiration}`
       if (options.scheduledEventId) url += `&guild_scheduled_event_id=${options.scheduledEventId}`

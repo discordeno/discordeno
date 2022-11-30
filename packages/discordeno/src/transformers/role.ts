@@ -3,7 +3,7 @@ import { DiscordRole } from '../types/discord.js'
 import { Optionalize } from '../types/shared.js'
 import { RoleToggles } from './toggles/role.js'
 
-export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guildId: bigint }) {
+export function transformRole (bot: Bot, payload: { role: DiscordRole } & { guildId: bigint }) {
   const role = {
     name: payload.role.name,
     guildId: payload.guildId,

@@ -1,6 +1,6 @@
 import { BotWithCache } from '../../deps.js'
 
-export function deleteGuild(bot: BotWithCache) {
+export function deleteGuild (bot: BotWithCache) {
   const deleteGuild = bot.helpers.deleteGuild
 
   bot.helpers.deleteGuild = async function (guildId) {

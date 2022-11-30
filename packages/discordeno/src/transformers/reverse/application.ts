@@ -2,7 +2,7 @@ import { Bot } from '../../bot.js'
 import { DiscordApplication } from '../../types/discord.js'
 import { Application } from '../application.js'
 
-export function transformApplicationToDiscordApplication(bot: Bot, payload: Application): DiscordApplication {
+export function transformApplicationToDiscordApplication (bot: Bot, payload: Application): DiscordApplication {
   return {
     name: payload.name,
     description: payload.description,

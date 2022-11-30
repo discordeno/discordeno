@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../../deps.js'
 import { requireBotChannelPermissions } from '../../permissions.js'
 
-export function addReaction(bot: BotWithCache) {
+export function addReaction (bot: BotWithCache) {
   const addReaction = bot.helpers.addReaction
 
   bot.helpers.addReaction = async function (channelId, messageId, reaction) {

@@ -2,7 +2,7 @@ import { Bot } from '../bot.js'
 import { DiscordAuditLogEntry } from '../types/discord.js'
 import { Optionalize } from '../types/shared.js'
 
-export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry) {
+export function transformAuditLogEntry (bot: Bot, payload: DiscordAuditLogEntry) {
   const auditLogEntry = {
     id: bot.transformers.snowflake(payload.id),
     changes: payload.changes?.map((change) => {
@@ -114,15 +114,15 @@ export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry) 
     actionType: payload.action_type,
     options: (payload.options != null)
       ? {
-        deleteMemberDays: payload.options.delete_member_days ? Number(payload.options.delete_member_days) : 0,
-        membersRemoved: payload.options.members_removed ? Number(payload.options.members_removed) : 0,
-        channelId: payload.options.channel_id ? bot.transformers.snowflake(payload.options.channel_id) : undefined,
-        messageId: payload.options.message_id ? bot.transformers.snowflake(payload.options.message_id) : undefined,
-        count: payload.options.count ? Number(payload.options.count) : 0,
-        id: payload.options.id ? bot.transformers.snowflake(payload.options.id) : undefined,
-        type: Number(payload.options.type),
-        roleName: payload.options.role_name
-      }
+          deleteMemberDays: payload.options.delete_member_days ? Number(payload.options.delete_member_days) : 0,
+          membersRemoved: payload.options.members_removed ? Number(payload.options.members_removed) : 0,
+          channelId: payload.options.channel_id ? bot.transformers.snowflake(payload.options.channel_id) : undefined,
+          messageId: payload.options.message_id ? bot.transformers.snowflake(payload.options.message_id) : undefined,
+          count: payload.options.count ? Number(payload.options.count) : 0,
+          id: payload.options.id ? bot.transformers.snowflake(payload.options.id) : undefined,
+          type: Number(payload.options.type),
+          roleName: payload.options.role_name
+        }
       : undefined,
     reason: payload.reason
   }

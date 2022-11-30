@@ -11,7 +11,7 @@ export const MemberToggle = {
 }
 
 export class MemberToggles extends ToggleBitfield {
-  constructor(memberOrTogglesInt: Partial<DiscordMember> | number) {
+  constructor (memberOrTogglesInt: Partial<DiscordMember> | number) {
     super()
 
     if (typeof memberOrTogglesInt === 'number') this.bitfield = memberOrTogglesInt
@@ -25,29 +25,29 @@ export class MemberToggles extends ToggleBitfield {
   }
 
   /** Whether the user belongs to an OAuth2 application */
-  get deaf() {
+  get deaf () {
     return this.has('deaf')
   }
 
   /** Whether the user is muted in voice channels */
-  get mute() {
+  get mute () {
     return this.has('mute')
   }
 
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
-  get pending() {
+  get pending () {
     return this.has('pending')
   }
 
   /** Checks whether or not the permissions exist in this */
-  has(permissions: MemberToggleKeys | MemberToggleKeys[]) {
+  has (permissions: MemberToggleKeys | MemberToggleKeys[]) {
     if (!Array.isArray(permissions)) return super.contains(MemberToggle[permissions])
 
     return super.contains(permissions.reduce((a, b) => (a |= MemberToggle[b]), 0))
   }
 
   /** Lists all the toggles for the role and whether or not each is true or false. */
-  list() {
+  list () {
     const json: Record<string, boolean> = {}
     for (const [key, value] of Object.entries(MemberToggle)) {
       json[key] = super.contains(value)

@@ -16,7 +16,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/auto-moderation#get-auto-moderation-rule}
  */
-export async function getAutomodRule(bot: Bot, guildId: BigString, ruleId: BigString): Promise<AutoModerationRule> {
+export async function getAutomodRule (bot: Bot, guildId: BigString, ruleId: BigString): Promise<AutoModerationRule> {
   const result = await bot.rest.runMethod<DiscordAutoModerationRule>(
     bot.rest,
     'GET',

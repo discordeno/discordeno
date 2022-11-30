@@ -17,7 +17,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#follow-announcement-channel}
  */
-export async function followAnnouncementChannel(
+export async function followAnnouncementChannel (
   bot: Bot,
   sourceChannelId: BigString,
   targetChannelId: BigString

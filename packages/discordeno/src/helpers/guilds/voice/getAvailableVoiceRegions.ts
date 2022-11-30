@@ -9,7 +9,7 @@ import { Collection } from '../../../util/collection.js'
  * @param bot - The bot instance to use to make the request.
  * @returns A collection of {@link VoiceRegions | VoiceRegion} objects assorted by voice region ID.
  */
-export async function getAvailableVoiceRegions(bot: Bot): Promise<Collection<string, VoiceRegions>> {
+export async function getAvailableVoiceRegions (bot: Bot): Promise<Collection<string, VoiceRegions>> {
   const results = await bot.rest.runMethod<DiscordVoiceRegion[]>(
     bot.rest,
     'GET',

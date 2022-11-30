@@ -1,7 +1,7 @@
 import { BotWithCache, ChannelTypes, PermissionStrings } from '../../deps.js'
 import { requireBotChannelPermissions } from '../permissions.js'
 
-export function editChannelPermissionOverrides(bot: BotWithCache) {
+export function editChannelPermissionOverrides (bot: BotWithCache) {
   const editChannelPermissionOverrides = bot.helpers.editChannelPermissionOverrides
 
   bot.helpers.editChannelPermissionOverrides = async function (channelId, overwrite) {

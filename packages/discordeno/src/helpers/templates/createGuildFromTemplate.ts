@@ -1,6 +1,6 @@
-import type { Bot } from "../../bot.js";
-import { Guild } from "../../transformers/guild.js";
-import { DiscordGuild } from "../../types/discord.js";
+import type { Bot } from '../../bot.js'
+import { Guild } from '../../transformers/guild.js'
+import { DiscordGuild } from '../../types/discord.js'
 
 /**
  * Creates a guild from a template.
@@ -17,32 +17,32 @@ import { DiscordGuild } from "../../types/discord.js";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-template#create-guild-from-guild-template}
  */
-export async function createGuildFromTemplate(
+export async function createGuildFromTemplate (
   bot: Bot,
   templateCode: string,
-  options: CreateGuildFromTemplate,
+  options: CreateGuildFromTemplate
 ): Promise<Guild> {
   if (options.icon) {
-    options.icon = await bot.utils.urlToBase64(options.icon);
+    options.icon = await bot.utils.urlToBase64(options.icon)
   }
 
   const createdGuild = await bot.rest.runMethod<DiscordGuild>(
     bot.rest,
-    "POST",
+    'POST',
     bot.constants.routes.TEMPLATE(templateCode),
-    options,
-  );
+    options
+  )
 
   return bot.transformers.guild(bot, {
     guild: createdGuild,
-    shardId: bot.utils.calculateShardId(bot.gateway, bot.transformers.snowflake(createdGuild.id)),
-  });
+    shardId: bot.utils.calculateShardId(bot.gateway, bot.transformers.snowflake(createdGuild.id))
+  })
 }
 
 /** https://discord.com/developers/docs/resources/template#create-guild-from-template-json-params */
 export interface CreateGuildFromTemplate {
   /** Name of the guild (2-100 characters) */
-  name: string;
+  name: string
   /** base64 128x128 image for the guild icon */
-  icon?: string;
+  icon?: string
 }

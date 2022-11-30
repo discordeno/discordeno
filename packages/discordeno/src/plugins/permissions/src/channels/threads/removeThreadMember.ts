@@ -1,7 +1,7 @@
 import { BotWithCache, ChannelTypes } from '../../../deps.js'
 import { requireBotChannelPermissions } from '../../permissions.js'
 
-export function removeThreadMember(bot: BotWithCache) {
+export function removeThreadMember (bot: BotWithCache) {
   const removeThreadMember = bot.helpers.removeThreadMember
 
   bot.helpers.removeThreadMember = async function (threadId, userId) {

@@ -12,6 +12,6 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/user#leave-guild}
  */
-export async function leaveGuild(bot: Bot, guildId: BigString): Promise<void> {
+export async function leaveGuild (bot: Bot, guildId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(bot.rest, 'DELETE', bot.constants.routes.GUILD_LEAVE(guildId))
 }

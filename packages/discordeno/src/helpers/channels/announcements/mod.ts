@@ -1,1 +1,1 @@
-export * from "./followAnnouncementChannel.js";
+export * from './followAnnouncementChannel.js'

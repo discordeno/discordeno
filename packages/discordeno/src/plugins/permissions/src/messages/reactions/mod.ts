@@ -5,7 +5,7 @@ import { deleteReactionsAll } from './deleteReactionsAll.js'
 import { deleteReactionsEmoji } from './deleteReactionsEmoji.js'
 import { deleteUserReaction } from './deleteUserReaction.ts.js'
 
-export function reactions(bot: BotWithCache) {
+export function reactions (bot: BotWithCache) {
   addReaction(bot)
   addReactions(bot)
   deleteReactionsAll(bot)

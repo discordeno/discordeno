@@ -13,7 +13,7 @@ export const EmojiToggle = {
 }
 
 export class EmojiToggles extends ToggleBitfield {
-  constructor(roleOrTogglesInt: DiscordEmoji | number) {
+  constructor (roleOrTogglesInt: DiscordEmoji | number) {
     super()
 
     if (typeof roleOrTogglesInt === 'number') this.bitfield = roleOrTogglesInt
@@ -28,34 +28,34 @@ export class EmojiToggles extends ToggleBitfield {
   }
 
   /** Whether this emoji must be wrapped in colons */
-  get requireColons() {
+  get requireColons () {
     return this.has('requireColons')
   }
 
   /** Whether this emoji is managed */
-  get managed() {
+  get managed () {
     return this.has('managed')
   }
 
   /** Whether this emoji is animated */
-  get animated() {
+  get animated () {
     return this.has('animated')
   }
 
   /** Whether this emoji can be used, may be false due to loss of Server Boosts */
-  get available() {
+  get available () {
     return this.has('available')
   }
 
   /** Checks whether or not the permissions exist in this */
-  has(permissions: EmojiToggleKeys | EmojiToggleKeys[]) {
+  has (permissions: EmojiToggleKeys | EmojiToggleKeys[]) {
     if (!Array.isArray(permissions)) return super.contains(EmojiToggle[permissions])
 
     return super.contains(permissions.reduce((a, b) => (a |= EmojiToggle[b]), 0))
   }
 
   /** Lists all the toggles for the role and whether or not each is true or false. */
-  list() {
+  list () {
     const json: Record<string, boolean> = {}
     for (const [key, value] of Object.entries(EmojiToggle)) {
       json[key] = super.contains(value)

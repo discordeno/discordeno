@@ -12,4 +12,3 @@ export * from './getGuildWebhooks.js'
 export * from './getWebhook.js'
 export * from './getWebhookMessage.js'
 export * from './getWebhookWithToken.js'
-

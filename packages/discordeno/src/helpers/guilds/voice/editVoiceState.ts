@@ -21,7 +21,7 @@ export const updateBotVoiceState = editOwnVoiceState
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state}
  */
-export async function editOwnVoiceState(bot: Bot, guildId: BigString, options: EditOwnVoiceState): Promise<void> {
+export async function editOwnVoiceState (bot: Bot, guildId: BigString, options: EditOwnVoiceState): Promise<void> {
   return await bot.rest.runMethod<void>(bot.rest, 'PATCH', bot.constants.routes.UPDATE_VOICE_STATE(guildId), {
     channel_id: options.channelId,
     suppress: options.suppress,
@@ -47,7 +47,7 @@ export async function editOwnVoiceState(bot: Bot, guildId: BigString, options: E
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state}
  */
-export async function editUserVoiceState(bot: Bot, guildId: BigString, options: EditUserVoiceState): Promise<void> {
+export async function editUserVoiceState (bot: Bot, guildId: BigString, options: EditUserVoiceState): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     'PATCH',

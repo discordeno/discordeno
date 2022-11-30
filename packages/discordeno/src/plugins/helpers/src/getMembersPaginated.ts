@@ -5,7 +5,7 @@ import { BigString, Bot, Collection, DiscordMemberWithUser, ListGuildMembers, Me
  * REST(this function): 50/s global(across all shards) rate limit with ALL requests this included
  * GW(fetchMembers): 120/m(PER shard) rate limit. Meaning if you have 8 shards your limit is 960/m.
  */
-export async function getMembersPaginated(
+export async function getMembersPaginated (
   bot: Bot,
   guildId: BigString,
   options: ListGuildMembers

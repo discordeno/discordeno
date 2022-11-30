@@ -11,7 +11,7 @@ import { DiscordSticker } from '../../types/discord.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/sticker#get-sticker}
  */
-export async function getSticker(bot: Bot, stickerId: bigint): Promise<Sticker> {
+export async function getSticker (bot: Bot, stickerId: bigint): Promise<Sticker> {
   const result = await bot.rest.runMethod<DiscordSticker>(bot.rest, 'GET', bot.constants.routes.STICKER(stickerId))
 
   return bot.transformers.sticker(bot, result)

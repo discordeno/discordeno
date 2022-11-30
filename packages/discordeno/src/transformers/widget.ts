@@ -2,7 +2,7 @@ import { Bot } from '../bot.js'
 import { DiscordGuildWidget } from '../types/discord.js'
 import { Optionalize } from '../types/shared.js'
 
-export function transformWidget(bot: Bot, payload: DiscordGuildWidget) {
+export function transformWidget (bot: Bot, payload: DiscordGuildWidget) {
   const widget = {
     id: bot.transformers.snowflake(payload.id),
     name: payload.name,

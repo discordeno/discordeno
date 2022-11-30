@@ -20,7 +20,7 @@ import { InteractionCallbackData, InteractionResponseTypes } from '../../../type
  *
  * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response}
  */
-export async function editOriginalInteractionResponse(
+export async function editOriginalInteractionResponse (
   bot: Bot,
   token: string,
   options: InteractionCallbackData

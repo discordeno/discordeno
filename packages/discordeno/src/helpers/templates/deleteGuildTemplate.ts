@@ -1,5 +1,5 @@
-import type { Bot } from "../../bot.js";
-import { BigString } from "../../types/shared.js";
+import type { Bot } from '../../bot.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Deletes a template from a guild.
@@ -15,10 +15,10 @@ import { BigString } from "../../types/shared.js";
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-template#delete-guild-template}
  */
-export async function deleteGuildTemplate(bot: Bot, guildId: BigString, templateCode: string): Promise<void> {
+export async function deleteGuildTemplate (bot: Bot, guildId: BigString, templateCode: string): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
-    bot.constants.routes.GUILD_TEMPLATE(guildId, templateCode),
-  );
+    'DELETE',
+    bot.constants.routes.GUILD_TEMPLATE(guildId, templateCode)
+  )
 }

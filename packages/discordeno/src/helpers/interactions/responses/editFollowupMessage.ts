@@ -22,7 +22,7 @@ import { BigString, InteractionResponseTypes } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message}
  */
-export async function editFollowupMessage(
+export async function editFollowupMessage (
   bot: Bot,
   token: string,
   messageId: BigString,

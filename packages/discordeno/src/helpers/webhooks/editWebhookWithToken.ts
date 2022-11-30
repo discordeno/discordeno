@@ -19,7 +19,7 @@ import { ModifyWebhook } from './editWebhook.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token}
  */
-export async function editWebhookWithToken(
+export async function editWebhookWithToken (
   bot: Bot,
   webhookId: BigString,
   token: string,

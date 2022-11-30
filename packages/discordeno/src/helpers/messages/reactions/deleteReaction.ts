@@ -19,7 +19,7 @@ import { processReactionString } from './getReactions.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#delete-own-reaction}
  */
-export async function deleteOwnReaction(
+export async function deleteOwnReaction (
   bot: Bot,
   channelId: BigString,
   messageId: BigString,
@@ -52,7 +52,7 @@ export async function deleteOwnReaction(
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#delete-user-reaction}
  */
-export async function deleteUserReaction(
+export async function deleteUserReaction (
   bot: Bot,
   channelId: BigString,
   messageId: BigString,

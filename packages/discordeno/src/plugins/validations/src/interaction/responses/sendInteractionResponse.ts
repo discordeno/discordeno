@@ -1,6 +1,6 @@
 import { Bot } from '../../../deps.js'
 
-export function sendInteractionResponse(bot: Bot) {
+export function sendInteractionResponse (bot: Bot) {
   const sendInteractionResponse = bot.helpers.sendInteractionResponse
 
   bot.helpers.sendInteractionResponse = async function (id, token, options) {

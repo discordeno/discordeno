@@ -19,7 +19,7 @@ import { BigString, ChannelTypes } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-without-message}
  */
-export async function startThreadWithoutMessage(
+export async function startThreadWithoutMessage (
   bot: Bot,
   channelId: BigString,
   options: StartThreadWithoutMessage

@@ -4,7 +4,7 @@ import { setupCacheEdits } from './src/setupCacheEdits.js'
 import { setupCacheRemovals } from './src/setupCacheRemovals.js'
 
 // PLUGINS MUST TAKE A BOT ARGUMENT WHICH WILL BE MODIFIED
-export function enableCachePlugin<B extends Bot = Bot>(rawBot: B): BotWithCache<B> {
+export function enableCachePlugin<B extends Bot = Bot> (rawBot: B): BotWithCache<B> {
   // MARK THIS PLUGIN BEING USED
   rawBot.enabledPlugins.add('CACHE')
 
@@ -152,4 +152,3 @@ export * from './src/dispatchRequirements.js'
 export * from './src/setupCacheEdits.js'
 export * from './src/setupCacheRemovals.js'
 export * from './src/sweepers.js'
-

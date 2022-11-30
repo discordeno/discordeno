@@ -9,7 +9,7 @@ import { GatewayManager } from './gatewayManager.js'
 
 export type Resharder = ReturnType<typeof activateResharder>
 
-export function activateResharder(options: ActivateResharderOptions) {
+export function activateResharder (options: ActivateResharderOptions) {
   const resharder = {
     // ----------
     // PROPERTIES
@@ -107,7 +107,7 @@ export interface ActivateResharderOptions {
 }
 
 /** Handler that by default will check to see if resharding should occur. Can be overridden if you have multiple servers and you want to communicate through redis pubsub or whatever you prefer. */
-export function activate(resharder: Resharder): void {
+export function activate (resharder: Resharder): void {
   if (resharder.intervalId !== undefined) {
     throw new Error('[RESHARDER] Cannot activate the resharder more than one time.')
   }
@@ -133,7 +133,7 @@ export function activate(resharder: Resharder): void {
   }, resharder.checkInterval)
 }
 
-export async function reshard(resharder: Resharder, gatewayBot: GetGatewayBot) {
+export async function reshard (resharder: Resharder, gatewayBot: GetGatewayBot) {
   console.log('[Resharding] Starting the reshard process.')
 
   resharder.gateway.gatewayBot = gatewayBot
@@ -157,16 +157,16 @@ export async function reshard(resharder: Resharder, gatewayBot: GetGatewayBot) {
 }
 
 /** Handler that by default will save the new shard id for each guild this becomes ready in new gateway. This can be overridden to save the shard ids in a redis cache layer or whatever you prefer. These ids will be used later to update all guilds. */
-export async function markNewGuildShardId(guildIds: bigint[], shardId: number) {
+export async function markNewGuildShardId (guildIds: bigint[], shardId: number) {
   // PLACEHOLDER TO LET YOU MARK A GUILD ID AND SHARD ID FOR LATER USE ONCE RESHARDED
 }
 
 /** Handler that by default does not do anything since by default the library will not cache. */
-export async function reshardingEditGuildShardIds() {
+export async function reshardingEditGuildShardIds () {
   // PLACEHOLDER TO LET YOU UPDATE CACHED GUILDS
 }
 
-export async function tellWorkerToPrepare(resharder: Resharder, shardId: number) {
+export async function tellWorkerToPrepare (resharder: Resharder, shardId: number) {
   // First create a shard without identifyin.
   const shard = createShard({
     ...resharder.gateway.manager.createShardOptions,
@@ -210,7 +210,7 @@ export async function tellWorkerToPrepare(resharder: Resharder, shardId: number)
   resharder.shardIsPending(resharder, shard)
 }
 
-export async function shardIsPending(resharder: Resharder, shard: Shard) {
+export async function shardIsPending (resharder: Resharder, shard: Shard) {
   // Save this in pending at the moment, until all shards are online
   resharder.pendingShards.set(shard.id, shard)
 

@@ -1,7 +1,7 @@
 import { BotWithCache, ChannelTypes, PermissionStrings } from '../../deps.js'
 import { requireBotChannelPermissions } from '../permissions.js'
 
-export function sendMessage(bot: BotWithCache) {
+export function sendMessage (bot: BotWithCache) {
   const sendMessage = bot.helpers.sendMessage
 
   bot.helpers.sendMessage = async function (channelId, content) {

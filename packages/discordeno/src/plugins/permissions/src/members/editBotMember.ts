@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../deps.js'
 import { requireBotGuildPermissions } from '../permissions.js'
 
-export function editBotMember(bot: BotWithCache) {
+export function editBotMember (bot: BotWithCache) {
   const editBotMember = bot.helpers.editBotMember
 
   bot.helpers.editBotMember = async function (guildId, options) {

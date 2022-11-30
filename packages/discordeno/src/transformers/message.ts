@@ -4,7 +4,7 @@ import { Optionalize } from '../types/shared.js'
 import { CHANNEL_MENTION_REGEX } from '../util/constants.js'
 import { MemberToggles } from './toggles/member.js'
 
-export function transformMessage(bot: Bot, payload: DiscordMessage) {
+export function transformMessage (bot: Bot, payload: DiscordMessage) {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
   const userId = bot.transformers.snowflake(payload.author.id)
 
@@ -26,43 +26,43 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
     type: payload.type,
     activity: (payload.activity != null)
       ? {
-        type: payload.activity.type,
-        partyId: payload.activity.party_id
-      }
+          type: payload.activity.type,
+          partyId: payload.activity.party_id
+        }
       : undefined,
     application: payload.application,
     flags: payload.flags,
     interaction: (payload.interaction != null)
       ? {
-        id: bot.transformers.snowflake(payload.interaction.id),
-        type: payload.interaction.type,
-        name: payload.interaction.name,
-        user: bot.transformers.user(bot, payload.interaction.user),
-        member: (payload.interaction.member != null)
-          ? {
-            id: userId,
-            guildId,
-            nick: payload.interaction.member.nick ?? undefined,
-            roles: payload.interaction.member.roles?.map((id) => bot.transformers.snowflake(id)),
-            joinedAt: payload.interaction.member.joined_at
-              ? Date.parse(payload.interaction.member.joined_at)
-              : undefined,
-            premiumSince: payload.interaction.member.premium_since
-              ? Date.parse(payload.interaction.member.premium_since)
-              : undefined,
-            toggles: new MemberToggles(payload.interaction.member),
-            avatar: payload.interaction.member.avatar
-              ? bot.utils.iconHashToBigInt(payload.interaction.member.avatar)
-              : undefined,
-            permissions: payload.interaction.member.permissions
-              ? bot.transformers.snowflake(payload.interaction.member.permissions)
-              : undefined,
-            communicationDisabledUntil: payload.interaction.member.communication_disabled_until
-              ? Date.parse(payload.interaction.member.communication_disabled_until)
-              : undefined
-          }
-          : undefined
-      }
+          id: bot.transformers.snowflake(payload.interaction.id),
+          type: payload.interaction.type,
+          name: payload.interaction.name,
+          user: bot.transformers.user(bot, payload.interaction.user),
+          member: (payload.interaction.member != null)
+            ? {
+                id: userId,
+                guildId,
+                nick: payload.interaction.member.nick ?? undefined,
+                roles: payload.interaction.member.roles?.map((id) => bot.transformers.snowflake(id)),
+                joinedAt: payload.interaction.member.joined_at
+                  ? Date.parse(payload.interaction.member.joined_at)
+                  : undefined,
+                premiumSince: payload.interaction.member.premium_since
+                  ? Date.parse(payload.interaction.member.premium_since)
+                  : undefined,
+                toggles: new MemberToggles(payload.interaction.member),
+                avatar: payload.interaction.member.avatar
+                  ? bot.utils.iconHashToBigInt(payload.interaction.member.avatar)
+                  : undefined,
+                permissions: payload.interaction.member.permissions
+                  ? bot.transformers.snowflake(payload.interaction.member.permissions)
+                  : undefined,
+                communicationDisabledUntil: payload.interaction.member.communication_disabled_until
+                  ? Date.parse(payload.interaction.member.communication_disabled_until)
+                  : undefined
+              }
+            : undefined
+        }
       : undefined,
     thread: (payload.thread != null) ? bot.transformers.channel(bot, { channel: payload.thread, guildId }) : undefined,
     components: payload.components?.map((component) => bot.transformers.component(bot, component)),
@@ -81,16 +81,16 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
     applicationId: payload.application_id ? bot.transformers.snowflake(payload.application_id) : undefined,
     messageReference: (payload.message_reference != null)
       ? {
-        messageId: payload.message_reference.message_id
-          ? bot.transformers.snowflake(payload.message_reference.message_id)
-          : undefined,
-        channelId: payload.message_reference.channel_id
-          ? bot.transformers.snowflake(payload.message_reference.channel_id)
-          : undefined,
-        guildId: payload.message_reference.guild_id
-          ? bot.transformers.snowflake(payload.message_reference.guild_id)
-          : undefined
-      }
+          messageId: payload.message_reference.message_id
+            ? bot.transformers.snowflake(payload.message_reference.message_id)
+            : undefined,
+          channelId: payload.message_reference.channel_id
+            ? bot.transformers.snowflake(payload.message_reference.channel_id)
+            : undefined,
+          guildId: payload.message_reference.guild_id
+            ? bot.transformers.snowflake(payload.message_reference.guild_id)
+            : undefined
+        }
       : undefined,
     mentionedUserIds: (payload.mentions != null) ? payload.mentions.map((m) => bot.transformers.snowflake(m.id)) : [],
     mentionedRoleIds: (payload.mention_roles != null) ? payload.mention_roles.map((id) => bot.transformers.snowflake(id)) : [],

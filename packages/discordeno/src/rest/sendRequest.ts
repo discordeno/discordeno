@@ -18,7 +18,7 @@ export interface RestSendRequestOptions {
   }
 }
 
-export async function sendRequest<T>(rest: RestManager, options: RestSendRequestOptions): Promise<T> {
+export async function sendRequest<T> (rest: RestManager, options: RestSendRequestOptions): Promise<T> {
   try {
     // CUSTOM HANDLER FOR USER TO LOG OR WHATEVER WHENEVER A FETCH IS MADE
     rest.fetching(options)

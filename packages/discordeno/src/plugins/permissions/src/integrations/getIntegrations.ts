@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../deps.js'
 import { requireBotGuildPermissions } from '../permissions.js'
 
-export function getIntegrations(bot: BotWithCache) {
+export function getIntegrations (bot: BotWithCache) {
   const getIntegrations = bot.helpers.getIntegrations
 
   bot.helpers.getIntegrations = async function (guildId) {

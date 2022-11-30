@@ -32,7 +32,7 @@ import { BigString, MessageComponentTypes } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#create-message}
  */
-export async function sendMessage(bot: Bot, channelId: BigString, options: CreateMessage): Promise<Message> {
+export async function sendMessage (bot: Bot, channelId: BigString, options: CreateMessage): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     'POST',
@@ -44,11 +44,11 @@ export async function sendMessage(bot: Bot, channelId: BigString, options: Creat
       embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
       allowed_mentions: (options.allowedMentions != null)
         ? {
-          parse: options.allowedMentions?.parse,
-          roles: options.allowedMentions?.roles?.map((id) => id.toString()),
-          users: options.allowedMentions?.users?.map((id) => id.toString()),
-          replied_user: options.allowedMentions?.repliedUser
-        }
+            parse: options.allowedMentions?.parse,
+            roles: options.allowedMentions?.roles?.map((id) => id.toString()),
+            users: options.allowedMentions?.users?.map((id) => id.toString()),
+            replied_user: options.allowedMentions?.repliedUser
+          }
         : undefined,
       file: options.file,
       components: options.components?.map((component) => ({
@@ -78,12 +78,12 @@ export async function sendMessage(bot: Bot, channelId: BigString, options: Creat
                 label: option.label,
                 value: option.value,
                 description: option.description,
-                emoji: option.emoji
+                emoji: (option.emoji != null)
                   ? {
-                    id: option.emoji.id?.toString(),
-                    name: option.emoji.name,
-                    animated: option.emoji.animated
-                  }
+                      id: option.emoji.id?.toString(),
+                      name: option.emoji.name,
+                      animated: option.emoji.animated
+                    }
                   : undefined,
                 default: option.default
               }))
@@ -113,10 +113,10 @@ export async function sendMessage(bot: Bot, channelId: BigString, options: Creat
             style: subComponent.style,
             emoji: 'emoji' in subComponent && (subComponent.emoji != null)
               ? {
-                id: subComponent.emoji.id?.toString(),
-                name: subComponent.emoji.name,
-                animated: subComponent.emoji.animated
-              }
+                  id: subComponent.emoji.id?.toString(),
+                  name: subComponent.emoji.name,
+                  animated: subComponent.emoji.animated
+                }
               : undefined,
             url: 'url' in subComponent ? subComponent.url : undefined,
             disabled: 'disabled' in subComponent ? subComponent.disabled : undefined
@@ -125,13 +125,13 @@ export async function sendMessage(bot: Bot, channelId: BigString, options: Creat
       })),
       ...(options.messageReference?.messageId
         ? {
-          message_reference: {
-            message_id: options.messageReference.messageId.toString(),
-            channel_id: options.messageReference.channelId?.toString(),
-            guild_id: options.messageReference.guildId?.toString(),
-            fail_if_not_exists: options.messageReference.failIfNotExists
+            message_reference: {
+              message_id: options.messageReference.messageId.toString(),
+              channel_id: options.messageReference.channelId?.toString(),
+              guild_id: options.messageReference.guildId?.toString(),
+              fail_if_not_exists: options.messageReference.failIfNotExists
+            }
           }
-        }
         : {}),
       sticker_ids: options.stickerIds?.map((sticker) => sticker.toString())
     }

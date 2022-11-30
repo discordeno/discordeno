@@ -22,7 +22,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * Fires a _Message Reaction Add_ gateway event for every reaction added.
  */
-export async function addReactions(
+export async function addReactions (
   bot: Bot,
   channelId: BigString,
   messageId: BigString,

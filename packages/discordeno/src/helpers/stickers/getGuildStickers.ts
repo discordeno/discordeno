@@ -13,7 +13,7 @@ import { DiscordSticker } from '../../types/discord.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/sticker#list-guild-stickers}
  */
-export async function getGuildStickers(bot: Bot, guildId: bigint): Promise<Collection<bigint, Sticker>> {
+export async function getGuildStickers (bot: Bot, guildId: bigint): Promise<Collection<bigint, Sticker>> {
   const results = await bot.rest.runMethod<DiscordSticker[]>(
     bot.rest,
     'GET',

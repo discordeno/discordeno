@@ -3,7 +3,7 @@ import { BotWithCache } from './addCacheCollections.js'
 import { dispatchRequirements } from './dispatchRequirements.js'
 
 /** Enables sweepers for your bot but will require, enabling cache first. */
-export function enableCacheSweepers<B extends Bot>(bot: BotWithCache<B>) {
+export function enableCacheSweepers<B extends Bot> (bot: BotWithCache<B>) {
   bot.guilds.startSweeper({
     filter: function (guild, _, bot: BotWithCache<B>) {
       // Reset activity for next interval
@@ -19,7 +19,7 @@ export function enableCacheSweepers<B extends Bot>(bot: BotWithCache<B>) {
     bot
   })
   bot.channels.startSweeper({
-    filter: function channelSweeper(
+    filter: function channelSweeper (
       channel,
       key,
       bot: BotWithCache<B>
@@ -48,7 +48,7 @@ export function enableCacheSweepers<B extends Bot>(bot: BotWithCache<B>) {
   }
 
   bot.members.startSweeper({
-    filter: function memberSweeper(member, _, bot: BotWithCache<B>) {
+    filter: function memberSweeper (member, _, bot: BotWithCache<B>) {
       // Don't sweep the bot else strange things will happen
       if (member.id === bot.id) return false
 
@@ -60,7 +60,7 @@ export function enableCacheSweepers<B extends Bot>(bot: BotWithCache<B>) {
   })
 
   bot.messages.startSweeper({
-    filter: function messageSweeper(message) {
+    filter: function messageSweeper (message) {
       // DM messages aren't needed
       if (!message.guildId) return true
 

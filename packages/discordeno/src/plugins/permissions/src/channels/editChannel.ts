@@ -1,7 +1,7 @@
 import { BotWithCache, ChannelTypes, PermissionStrings } from '../../deps.js'
 import { requireBotChannelPermissions } from '../permissions.js'
 
-export function editChannel(bot: BotWithCache) {
+export function editChannel (bot: BotWithCache) {
   const editChannel = bot.helpers.editChannel
 
   bot.helpers.editChannel = async function (channelId, options) {
@@ -41,11 +41,11 @@ export function editChannel(bot: BotWithCache) {
           perms.push('MANAGE_THREADS')
         }
 
-        if (options.appliedTags && options.appliedTags.length > 5) throw new Error('thread applied tags is limit to 5')
+        if ((options.appliedTags != null) && options.appliedTags.length > 5) throw new Error('thread applied tags is limit to 5')
       } else {
         perms.push('MANAGE_CHANNELS')
 
-        if (options.permissionOverwrites) perms.push('MANAGE_ROLES')
+        if (options.permissionOverwrites != null) perms.push('MANAGE_ROLES')
 
         if (options.type) {
           if ([ChannelTypes.GuildAnnouncement, ChannelTypes.GuildText].includes(options.type)) {
@@ -72,7 +72,7 @@ export function editChannel(bot: BotWithCache) {
           }
         }
 
-        if (options.availableTags && options.availableTags.length > 20) {
+        if ((options.availableTags != null) && options.availableTags.length > 20) {
           throw new Error('channel available tags is limited to 20')
         }
       }

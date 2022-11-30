@@ -2,7 +2,7 @@ import { Bot } from '../bot.js'
 import { DiscordWelcomeScreen } from '../types/discord.js'
 import { Optionalize } from '../types/shared.js'
 
-export function transformWelcomeScreen(bot: Bot, payload: DiscordWelcomeScreen) {
+export function transformWelcomeScreen (bot: Bot, payload: DiscordWelcomeScreen) {
   const welcomeScreen = {
     description: payload.description ?? undefined,
     welcomeChannels: payload.welcome_channels.map((channel) => ({

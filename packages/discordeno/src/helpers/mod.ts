@@ -9,4 +9,3 @@ export * from './roles/mod.js'
 export * from './stickers/mod.js'
 export * from './templates/mod.js'
 export * from './webhooks/mod.js'
-

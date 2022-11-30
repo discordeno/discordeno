@@ -16,7 +16,7 @@ export type ShardManager = ReturnType<typeof createShardManager>
  * This does not manage a specific range of Shard but the provided Shards on create or when an identify is requested.
  * The aim of this is to provide an easy to use manager which can be used by workers or any other kind of separate process.
  */
-export function createShardManager(options: CreateShardManager) {
+export function createShardManager (options: CreateShardManager) {
   return {
     // ----------
     // PROPERTIES

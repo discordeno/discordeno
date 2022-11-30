@@ -22,7 +22,7 @@ import { BaseInvite } from './getInvite.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#create-channel-invite}
  */
-export async function createInvite(
+export async function createInvite (
   bot: Bot,
   channelId: BigString,
   options: CreateChannelInvite = {}

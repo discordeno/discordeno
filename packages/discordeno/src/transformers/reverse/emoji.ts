@@ -2,7 +2,7 @@ import { Bot } from '../../bot.js'
 import { DiscordEmoji } from '../../types/discord.js'
 import { Emoji } from '../emoji.js'
 
-export function transformEmojiToDiscordEmoji(bot: Bot, payload: Emoji): DiscordEmoji {
+export function transformEmojiToDiscordEmoji (bot: Bot, payload: Emoji): DiscordEmoji {
   return {
     id: payload.id ? bot.transformers.reverse.snowflake(payload.id) : undefined,
     name: payload.name || undefined,

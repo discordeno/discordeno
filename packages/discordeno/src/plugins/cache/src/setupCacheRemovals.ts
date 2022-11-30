@@ -14,7 +14,7 @@ import {
 } from '../deps.js'
 import type { BotWithCache } from './addCacheCollections.js'
 
-export function setupCacheRemovals<B extends Bot>(bot: BotWithCache<B>) {
+export function setupCacheRemovals<B extends Bot> (bot: BotWithCache<B>) {
   const {
     CHANNEL_DELETE,
     GUILD_BAN_ADD,

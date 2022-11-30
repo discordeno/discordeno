@@ -2,7 +2,7 @@ import { Bot } from '../bot.js'
 import { DiscordWebhook } from '../types/discord.js'
 import { Optionalize } from '../types/shared.js'
 
-export function transformWebhook(bot: Bot, payload: DiscordWebhook) {
+export function transformWebhook (bot: Bot, payload: DiscordWebhook) {
   const webhook = {
     id: bot.transformers.snowflake(payload.id),
     type: payload.type,
@@ -15,17 +15,17 @@ export function transformWebhook(bot: Bot, payload: DiscordWebhook) {
     applicationId: payload.application_id ? bot.transformers.snowflake(payload.application_id) : undefined,
     sourceGuild: (payload.source_guild != null)
       ? {
-        id: bot.transformers.snowflake(payload.source_guild.id!),
-        name: payload.source_guild.name!,
-        icon: payload.source_guild.icon ? bot.utils.iconHashToBigInt(payload.source_guild.icon) : undefined
-      }
+          id: bot.transformers.snowflake(payload.source_guild.id!),
+          name: payload.source_guild.name!,
+          icon: payload.source_guild.icon ? bot.utils.iconHashToBigInt(payload.source_guild.icon) : undefined
+        }
       : undefined,
     /** The channel that this webhook is following (returned for Channel Follower Webhooks) */
     sourceChannel: (payload.source_channel != null)
       ? {
-        id: bot.transformers.snowflake(payload.source_channel.id!),
-        name: payload.source_channel.name || ''
-      }
+          id: bot.transformers.snowflake(payload.source_channel.id!),
+          name: payload.source_channel.name || ''
+        }
       : undefined,
     /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
     url: payload.url

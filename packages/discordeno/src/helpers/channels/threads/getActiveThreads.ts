@@ -17,7 +17,7 @@ import { Collection } from '../../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#list-active-guild-threads}
  */
-export async function getActiveThreads(bot: Bot, guildId: BigString): Promise<ActiveThreads> {
+export async function getActiveThreads (bot: Bot, guildId: BigString): Promise<ActiveThreads> {
   const results = await bot.rest.runMethod<DiscordListActiveThreads>(
     bot.rest,
     'GET',

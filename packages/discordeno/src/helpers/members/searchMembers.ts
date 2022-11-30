@@ -17,7 +17,7 @@ import { Collection } from '../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#search-guild-members}
  */
-export async function searchMembers(
+export async function searchMembers (
   bot: Bot,
   guildId: BigString,
   query: string,

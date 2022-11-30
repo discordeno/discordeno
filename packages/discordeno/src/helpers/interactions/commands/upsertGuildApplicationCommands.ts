@@ -18,7 +18,7 @@ import { Collection } from '../../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands}
  */
-export async function upsertGuildApplicationCommands(
+export async function upsertGuildApplicationCommands (
   bot: Bot,
   guildId: BigString,
   commands: CreateApplicationCommand[]

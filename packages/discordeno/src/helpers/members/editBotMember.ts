@@ -14,7 +14,7 @@ import { BigString, DiscordMember, Member, WithReason } from '../../mod.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-member}
  */
-export async function editBotMember(
+export async function editBotMember (
   bot: Bot,
   guildId: BigString,
   options: EditBotMemberOptions

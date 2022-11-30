@@ -16,7 +16,7 @@ import { Collection } from '../../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#list-thread-members}
  */
-export async function getThreadMembers(bot: Bot, channelId: BigString): Promise<Collection<bigint, ThreadMember>> {
+export async function getThreadMembers (bot: Bot, channelId: BigString): Promise<Collection<bigint, ThreadMember>> {
   const results = await bot.rest.runMethod<DiscordThreadMember[]>(
     bot.rest,
     'GET',

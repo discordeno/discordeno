@@ -13,7 +13,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#get-thread-member}
  */
-export async function getThreadMember(bot: Bot, channelId: BigString, userId: BigString): Promise<ThreadMember> {
+export async function getThreadMember (bot: Bot, channelId: BigString, userId: BigString): Promise<ThreadMember> {
   const result = await bot.rest.runMethod<DiscordThreadMember>(
     bot.rest,
     'GET',

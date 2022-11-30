@@ -18,7 +18,7 @@ import { DiscordMessage } from '../../../types/discord.js'
  *
  * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response}
  */
-export async function getOriginalInteractionResponse(bot: Bot, token: string): Promise<Message> {
+export async function getOriginalInteractionResponse (bot: Bot, token: string): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
     'GET',

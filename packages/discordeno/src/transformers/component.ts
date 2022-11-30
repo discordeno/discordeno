@@ -2,7 +2,7 @@ import { Bot } from '../bot.js'
 import { ButtonStyles, MessageComponentTypes, SelectOption, TextStyles } from '../mod.js'
 import { DiscordComponent } from '../types/discord.js'
 
-export function transformComponent(bot: Bot, payload: DiscordComponent): Component {
+export function transformComponent (bot: Bot, payload: DiscordComponent): Component {
   return {
     type: payload.type,
     customId: payload.custom_id,
@@ -11,10 +11,10 @@ export function transformComponent(bot: Bot, payload: DiscordComponent): Compone
     label: payload.label,
     emoji: (payload.emoji != null)
       ? {
-        id: payload.emoji.id ? bot.transformers.snowflake(payload.emoji.id) : undefined,
-        name: payload.emoji.name,
-        animated: payload.emoji.animated
-      }
+          id: payload.emoji.id ? bot.transformers.snowflake(payload.emoji.id) : undefined,
+          name: payload.emoji.name,
+          animated: payload.emoji.animated
+        }
       : undefined,
     url: payload.url,
     options: payload.options?.map((option) => ({
@@ -23,10 +23,10 @@ export function transformComponent(bot: Bot, payload: DiscordComponent): Compone
       description: option.description,
       emoji: (option.emoji != null)
         ? {
-          id: option.emoji.id ? bot.transformers.snowflake(option.emoji.id) : undefined,
-          name: option.emoji.name,
-          animated: option.emoji.animated
-        }
+            id: option.emoji.id ? bot.transformers.snowflake(option.emoji.id) : undefined,
+            name: option.emoji.name,
+            animated: option.emoji.animated
+          }
         : undefined,
       default: option.default
     })),

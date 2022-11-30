@@ -45,14 +45,14 @@ import {
 import { PresenceUpdate, transformPresence } from './transformers/presence.js'
 import { transformScheduledEvent } from './transformers/scheduledEvent.js'
 import { StageInstance, transformStageInstance } from './transformers/stageInstance.js'
-import { Sticker, StickerPack, transformSticker, transformStickerPack } from "./transformers/sticker.js"
-import { transformTeam } from "./transformers/team.js"
-import { ThreadMember, transformThreadMember } from "./transformers/threadMember.js"
-import { transformVoiceRegion } from "./transformers/voiceRegion.js"
-import { transformWebhook } from "./transformers/webhook.js"
-import { transformWelcomeScreen } from "./transformers/welcomeScreen.js"
-import { transformWidget } from "./transformers/widget.js"
-import { transformWidgetSettings } from "./transformers/widgetSettings.js"
+import { Sticker, StickerPack, transformSticker, transformStickerPack } from './transformers/sticker.js'
+import { transformTeam, Team } from './transformers/team.js'
+import { ThreadMember, transformThreadMember } from './transformers/threadMember.js'
+import { transformVoiceRegion, VoiceRegions } from './transformers/voiceRegion.js'
+import { transformWebhook, Webhook } from './transformers/webhook.js'
+import { transformWelcomeScreen, WelcomeScreen } from './transformers/welcomeScreen.js'
+import { transformWidget, GuildWidget } from './transformers/widget.js'
+import { transformWidgetSettings, GuildWidgetSettings } from './transformers/widgetSettings.js'
 import {
   DiscordAllowedMentions,
   DiscordApplicationCommandOptionChoice,
@@ -66,24 +66,7 @@ import {
   DiscordReady,
   DiscordStickerPack,
   DiscordTemplate
-} from "./types/discord.js"
-import { BigString, Errors, GatewayDispatchEventNames, GatewayIntents } from "./types/shared.js"
-import { bigintToSnowflake, snowflakeToBigint } from "./util/bigint.js"
-import { calculateShardId } from "./util/calculateShardId.js"
-import { Collection } from "./util/collection.js"
-import {
-  baseEndpoints,
-  CHANNEL_MENTION_REGEX,
-  CONTEXT_MENU_COMMANDS_NAME_REGEX, DISCORDENO_VERSION, DISCORD_SNOWFLAKE_REGEX, SLASH_COMMANDS_NAME_REGEX,
-  USER_AGENT
-} from "./util/constants.js"
-import { iconBigintToHash, iconHashToBigInt } from "./util/hash.js"
-import { calculateBits, calculatePermissions } from "./util/permissions.js"
-import { urlToBase64 } from "./util/urlToBase64.js"
-import { delay, formatImageURL } from "./util/utils.js"
-import { validateLength } from "./util/validateLength.js"
-
-import {
+  ,
   DiscordActivity,
   DiscordApplication,
   DiscordApplicationCommand,
@@ -115,9 +98,24 @@ import {
   DiscordVoiceState,
   DiscordWebhook,
   DiscordWelcomeScreen
-} from "./types/discord.js"
+} from './types/discord.js'
+import { BigString, Errors, GatewayDispatchEventNames, GatewayIntents } from './types/shared.js'
+import { bigintToSnowflake, snowflakeToBigint } from './util/bigint.js'
+import { calculateShardId } from './util/calculateShardId.js'
+import { Collection } from './util/collection.js'
+import {
+  baseEndpoints,
+  CHANNEL_MENTION_REGEX,
+  CONTEXT_MENU_COMMANDS_NAME_REGEX, DISCORDENO_VERSION, DISCORD_SNOWFLAKE_REGEX, SLASH_COMMANDS_NAME_REGEX,
+  USER_AGENT
+} from './util/constants.js'
+import { iconBigintToHash, iconHashToBigInt } from './util/hash.js'
+import { calculateBits, calculatePermissions } from './util/permissions.js'
+import { urlToBase64 } from './util/urlToBase64.js'
+import { delay, formatImageURL } from './util/utils.js'
+import { validateLength } from './util/validateLength.js'
 
-import { CreateShardManager } from "./gateway/manager/shardManager.js"
+import { CreateShardManager } from './gateway/manager/shardManager.js'
 import {
   AllowedMentions,
   CreateApplicationCommand,
@@ -125,7 +123,7 @@ import {
   ShardSocketCloseCodes,
   transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
   transformApplicationCommandOptionToDiscordApplicationCommandOption
-} from "./mod.js"
+} from './mod.js'
 import {
   ApplicationCommandOptionChoice,
   transformApplicationCommandOptionChoice
@@ -144,16 +142,10 @@ import { transformEmbedToDiscordEmbed } from './transformers/reverse/embed.js'
 import { transformInteractionResponseToDiscordInteractionResponse } from './transformers/reverse/interactionResponse.js'
 import { transformMemberToDiscordMember, transformUserToDiscordUser } from './transformers/reverse/member.js'
 import { transformTeamToDiscordTeam } from './transformers/reverse/team.js'
-import { Team } from './transformers/team.js'
-import { VoiceRegions } from './transformers/voiceRegion.js'
-import { Webhook } from './transformers/webhook.js'
-import { WelcomeScreen } from './transformers/welcomeScreen.js'
-import { GuildWidget } from './transformers/widget.js'
-import { GuildWidgetSettings } from './transformers/widgetSettings.js'
 import { routes } from './util/routes.js'
 import { getBotIdFromToken, removeTokenPrefix } from './util/token.js'
 
-export function createBot(options: CreateBotOptions): Bot {
+export function createBot (options: CreateBotOptions): Bot {
   const bot = {
     id: options.botId ?? getBotIdFromToken(options.token),
     applicationId: options.applicationId || options.botId || getBotIdFromToken(options.token),
@@ -209,10 +201,10 @@ export function createBot(options: CreateBotOptions): Bot {
   return bot
 }
 
-export function createEventHandlers(
+export function createEventHandlers (
   events: Partial<EventHandlers>
 ): EventHandlers {
-  function ignore() { }
+  function ignore () { }
 
   return {
     debug: events.debug ?? ignore,
@@ -275,7 +267,7 @@ export function createEventHandlers(
   }
 }
 
-export async function startBot(bot: Bot) {
+export async function startBot (bot: Bot) {
   if (Object.keys(bot.botGatewayData ?? {}).length === 0) {
     bot.gateway.gatewayBot = await bot.helpers.getGatewayBot()
     bot.gateway.lastShardId = bot.gateway.gatewayBot.shards - 1
@@ -285,7 +277,7 @@ export async function startBot(bot: Bot) {
   bot.gateway.spawnShards()
 }
 
-export function createUtils(options: Partial<HelperUtils>) {
+export function createUtils (options: Partial<HelperUtils>) {
   return {
     snowflakeToBigint,
     bigintToSnowflake,
@@ -315,7 +307,7 @@ export interface HelperUtils {
   calculatePermissions: typeof calculatePermissions
 }
 
-export async function stopBot(bot: Bot) {
+export async function stopBot (bot: Bot) {
   await bot.gateway.stop(ShardSocketCloseCodes.Shutdown, 'User requested bot stop')
 
   return bot
@@ -368,7 +360,7 @@ export type DefaultHelpers = typeof defaultHelpers
 // deno-lint-ignore no-empty-interface
 export interface Helpers extends DefaultHelpers { } // Use interface for declaration merging
 
-export function createHelpers(
+export function createHelpers (
   bot: Bot,
   customHelpers?: Partial<Helpers>
 ): FinalHelpers {
@@ -390,7 +382,7 @@ export function createHelpers(
   return converted
 }
 
-export function createBaseHelpers(options: Partial<Helpers>) {
+export function createBaseHelpers (options: Partial<Helpers>) {
   return {
     ...defaultHelpers,
     ...options
@@ -465,7 +457,7 @@ export interface Transformers {
   template: (bot: Bot, payload: DiscordTemplate) => Template
 }
 
-export function createTransformers(options: Partial<Transformers>) {
+export function createTransformers (options: Partial<Transformers>) {
   return {
     reverse: {
       allowedMentions: ((options.reverse?.allowedMentions) != null) || transformAllowedMentionsToDiscordAllowedMentions,
@@ -755,7 +747,7 @@ export interface EventHandlers {
   ) => unknown
 }
 
-export function createBotConstants() {
+export function createBotConstants () {
   return {
     DISCORDENO_VERSION,
     USER_AGENT,
@@ -827,12 +819,12 @@ export interface BotGatewayHandlerOptions {
   INTEGRATION_DELETE: typeof handlers.handleIntegrationDelete
 }
 
-export function createBotGatewayHandlers(
+export function createBotGatewayHandlers (
   options: Partial<BotGatewayHandlerOptions>
 ): Record<
   GatewayDispatchEventNames,
   (bot: Bot, data: DiscordGatewayPayload, shardId: number) => any
-> {
+  > {
   return {
     // misc
     READY: options.READY ?? handlers.handleReady,
@@ -931,7 +923,7 @@ export function createBotGatewayHandlers(
 
 export type RemoveFirstFromTuple<T extends any[]> = T['length'] extends 0 ? []
   : ((...b: T) => void) extends (a: any, ...b: infer I) => void ? I
-  : []
+      : []
 export type FinalHelpers = {
   [K in keyof Helpers]: (
     ...args: RemoveFirstFromTuple<Parameters<Helpers[K]>>

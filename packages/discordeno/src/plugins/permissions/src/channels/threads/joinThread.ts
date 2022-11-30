@@ -1,7 +1,7 @@
 import { BotWithCache, ChannelTypes } from '../../../deps.js'
 import { requireBotChannelPermissions } from '../../permissions.js'
 
-export function joinThread(bot: BotWithCache) {
+export function joinThread (bot: BotWithCache) {
   const joinThread = bot.helpers.joinThread
 
   bot.helpers.joinThread = async function (threadId) {

@@ -7,7 +7,7 @@ export let paths: string[] = []
 /** Recursively generates an array of unique paths to import using `fileLoader()`
  * (**Is** windows compatible)
  */
-export async function importDirectory(path: string) {
+export async function importDirectory (path: string) {
   path = path.replaceAll('\\', '/')
   const files = Deno.readDirSync(Deno.realPathSync(path))
 
@@ -34,7 +34,7 @@ export async function importDirectory(path: string) {
 }
 
 /** Writes, then imports all everything in fileloader.ts */
-export async function fileLoader() {
+export async function fileLoader () {
   await Deno.writeTextFile('fileloader.js', paths.join('\n').replaceAll('\\', '/'))
   await import(
     `${Deno.mainModule.substring(0, Deno.mainModule.lastIndexOf('/'))}/fileloader.ts#${uniqueFilePathCounter}`
@@ -43,7 +43,7 @@ export async function fileLoader() {
 }
 
 /** This function will import the specified directories */
-export async function fastFileLoader(
+export async function fastFileLoader (
   /** An array of directories to import recursively. */
   paths: string[],
   /** A function that will run before recursively setting a part of `paths`.
@@ -89,7 +89,7 @@ export interface BotWithFileLoader extends Bot {
 /** Pass in a (compatible) bot instance, and get sweet file loader goodness.
  * Remember to capture the output of this function!
  */
-export function enableFileLoaderPlugin(rawBot: Bot): BotWithFileLoader {
+export function enableFileLoaderPlugin (rawBot: Bot): BotWithFileLoader {
   const bot = rawBot as BotWithFileLoader
 
   bot.importDirectory = importDirectory

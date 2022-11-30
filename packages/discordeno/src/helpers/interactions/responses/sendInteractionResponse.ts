@@ -24,7 +24,7 @@ import { BigString } from '../../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response}
  */
-export async function sendInteractionResponse(
+export async function sendInteractionResponse (
   bot: Bot,
   interactionId: BigString,
   token: string,

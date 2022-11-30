@@ -3,7 +3,7 @@ import { createStageInstance } from './createStageInstance.js'
 import { deleteStageInstance } from './deleteStageInstances.js'
 import { editStageInstance } from './editStageInstance.js'
 
-export function stages(bot: BotWithCache) {
+export function stages (bot: BotWithCache) {
   createStageInstance(bot)
   deleteStageInstance(bot)
   editStageInstance(bot)

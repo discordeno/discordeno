@@ -24,7 +24,7 @@ import {
  *
  * @see {@link https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule}
  */
-export async function createAutomodRule(
+export async function createAutomodRule (
   bot: Bot,
   guildId: BigString,
   options: CreateAutoModerationRuleOptions
@@ -47,9 +47,9 @@ export async function createAutomodRule(
         type: action.type,
         metadata: (action.metadata != null)
           ? {
-            channel_id: action.metadata.channelId?.toString(),
-            duration_seconds: action.metadata.durationSeconds
-          }
+              channel_id: action.metadata.channelId?.toString(),
+              duration_seconds: action.metadata.durationSeconds
+            }
           : undefined
       })),
       enabled: options.enabled ?? true,

@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../deps.js'
 import { requireBotGuildPermissions } from '../permissions.js'
 
-export function unbanMember(bot: BotWithCache) {
+export function unbanMember (bot: BotWithCache) {
   const unbanMember = bot.helpers.unbanMember
 
   bot.helpers.unbanMember = async function (guildId, id) {

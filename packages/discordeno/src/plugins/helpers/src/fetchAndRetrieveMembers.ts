@@ -2,7 +2,7 @@ import { BotWithCache } from '../../cache/src/addCacheCollections.js'
 import { BigString } from '../deps.js'
 
 /** Fetch members for an entire guild then return the entire guilds cached members. */
-export async function fetchAndRetrieveMembers(bot: BotWithCache, guildId: BigString) {
+export async function fetchAndRetrieveMembers (bot: BotWithCache, guildId: BigString) {
   if (!bot.enabledPlugins?.has('CACHE')) {
     throw new Error('The fetchAndRetrieveMembers function requires the CACHE plugin first.')
   }

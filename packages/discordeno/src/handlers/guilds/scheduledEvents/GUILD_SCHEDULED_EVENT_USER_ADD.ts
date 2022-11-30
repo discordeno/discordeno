@@ -1,7 +1,7 @@
 import type { Bot } from '../../../bot.js'
 import { DiscordGatewayPayload, DiscordScheduledEventUserAdd } from '../../../types/discord.js'
 
-export function handleGuildScheduledEventUserAdd(bot: Bot, data: DiscordGatewayPayload) {
+export function handleGuildScheduledEventUserAdd (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordScheduledEventUserAdd
 
   return bot.events.scheduledEventUserAdd(bot, {

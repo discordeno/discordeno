@@ -1,7 +1,7 @@
 import { Bot } from '../../bot.js'
 import { DiscordGatewayPayload, DiscordGuildRoleCreate } from '../../types/discord.js'
 
-export async function handleGuildRoleCreate(bot: Bot, data: DiscordGatewayPayload) {
+export async function handleGuildRoleCreate (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordGuildRoleCreate
   bot.events.roleCreate(
     bot,

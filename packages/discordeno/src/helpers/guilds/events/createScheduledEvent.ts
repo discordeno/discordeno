@@ -21,7 +21,7 @@ import { BigString, ScheduledEventEntityType, ScheduledEventPrivacyLevel } from 
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event}
  */
-export async function createScheduledEvent(
+export async function createScheduledEvent (
   bot: Bot,
   guildId: BigString,
   options: CreateScheduledEvent

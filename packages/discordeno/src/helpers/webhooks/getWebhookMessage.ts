@@ -19,7 +19,7 @@ export interface GetWebhookMessageOptions {
  *
  * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook-message}
  */
-export async function getWebhookMessage(
+export async function getWebhookMessage (
   bot: Bot,
   webhookId: BigString,
   token: string,

@@ -1,6 +1,6 @@
 import { AllowedMentions, Bot, DiscordAllowedMentions } from '../../mod.js'
 
-export function transformAllowedMentionsToDiscordAllowedMentions(
+export function transformAllowedMentionsToDiscordAllowedMentions (
   bot: Bot,
   mentions: AllowedMentions
 ): DiscordAllowedMentions {

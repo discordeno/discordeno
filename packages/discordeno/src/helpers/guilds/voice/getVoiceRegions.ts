@@ -13,7 +13,7 @@ import { Collection } from '../../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-voice-regions}
  */
-export async function getVoiceRegions(bot: Bot, guildId: BigString): Promise<Collection<string, VoiceRegions>> {
+export async function getVoiceRegions (bot: Bot, guildId: BigString): Promise<Collection<string, VoiceRegions>> {
   const results = await bot.rest.runMethod<DiscordVoiceRegion[]>(
     bot.rest,
     'GET',

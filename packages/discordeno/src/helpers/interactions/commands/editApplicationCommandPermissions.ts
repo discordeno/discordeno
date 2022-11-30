@@ -20,7 +20,7 @@ import { ApplicationCommandPermissionTypes, BigString } from '../../../types/sha
  *
  * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions}
  */
-export async function editApplicationCommandPermissions(
+export async function editApplicationCommandPermissions (
   bot: Bot,
   guildId: BigString,
   commandId: BigString,

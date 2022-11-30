@@ -6,7 +6,7 @@ import {
 } from '../../../deps.js'
 import { validateApplicationCommandOptions } from '../../applicationCommandOptions.js'
 
-export function createGuildApplicationCommand(bot: Bot) {
+export function createGuildApplicationCommand (bot: Bot) {
   const createGuildApplicationCommand = bot.helpers.createGuildApplicationCommand
 
   bot.helpers.createGuildApplicationCommand = async function (options, guildId) {

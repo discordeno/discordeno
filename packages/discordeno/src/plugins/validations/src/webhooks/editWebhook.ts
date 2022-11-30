@@ -1,6 +1,6 @@
 import { Bot } from '../../deps.js'
 
-export function editWebhook(bot: Bot) {
+export function editWebhook (bot: Bot) {
   const editWebhook = bot.helpers.editWebhook
 
   bot.helpers.editWebhook = async function (webhookId, options) {

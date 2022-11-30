@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../deps.js'
 import { requireBotChannelPermissions } from '../permissions.js'
 
-export function editWebhook(bot: BotWithCache) {
+export function editWebhook (bot: BotWithCache) {
   const editWebhook = bot.helpers.editWebhook
 
   bot.helpers.editWebhook = async function (webhookId, options, fromChannelId) {

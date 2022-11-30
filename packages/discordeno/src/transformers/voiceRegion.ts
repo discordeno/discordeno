@@ -4,7 +4,7 @@ import { Optionalize } from '../types/shared.js'
 
 // TODO: Rename `VoiceRegions` to `VoiceRegion`.
 
-export function transformVoiceRegion(bot: Bot, payload: DiscordVoiceRegion) {
+export function transformVoiceRegion (bot: Bot, payload: DiscordVoiceRegion) {
   const voiceRegion = {
     id: payload.id,
     name: payload.name,

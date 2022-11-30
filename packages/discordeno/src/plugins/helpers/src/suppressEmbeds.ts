@@ -1,7 +1,7 @@
 import { BigString, Bot, DiscordMessage } from '../deps.js'
 
 /** Suppress all the embeds in this message */
-export async function suppressEmbeds(
+export async function suppressEmbeds (
   bot: Bot,
   channelId: BigString,
   messageId: BigString

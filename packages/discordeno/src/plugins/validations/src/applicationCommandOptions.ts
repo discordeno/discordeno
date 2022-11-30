@@ -1,6 +1,6 @@
 import { ApplicationCommandOption, ApplicationCommandOptionTypes, Bot } from '../deps.js'
 
-export function validateApplicationCommandOptions(bot: Bot, options: ApplicationCommandOption[]) {
+export function validateApplicationCommandOptions (bot: Bot, options: ApplicationCommandOption[]) {
   const requiredOptions: ApplicationCommandOption[] = []
   const optionalOptions: ApplicationCommandOption[] = []
 

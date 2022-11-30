@@ -19,7 +19,7 @@ import { Collection } from '../../util/collection.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-role-positions}
  */
-export async function modifyRolePositions(
+export async function modifyRolePositions (
   bot: Bot,
   guildId: BigString,
   options: ModifyRolePositions[]

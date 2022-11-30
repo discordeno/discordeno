@@ -1,7 +1,7 @@
 import { DiscordGetGatewayBot } from '../types/discord.js'
 import { Optionalize } from '../types/shared.js'
 
-export function transformGatewayBot(payload: DiscordGetGatewayBot) {
+export function transformGatewayBot (payload: DiscordGetGatewayBot) {
   const gatewayBot = {
     url: payload.url,
     shards: payload.shards,

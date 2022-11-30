@@ -1,7 +1,7 @@
 import type { Bot } from '../../bot.js'
 import { DiscordGatewayPayload, DiscordStageInstance } from '../../types/discord.js'
 
-export function handleStageInstanceDelete(bot: Bot, data: DiscordGatewayPayload) {
+export function handleStageInstanceDelete (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordStageInstance
 
   bot.events.stageInstanceDelete(bot, {

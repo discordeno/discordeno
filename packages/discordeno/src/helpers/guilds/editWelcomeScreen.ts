@@ -18,7 +18,7 @@ import { BigString } from '../../types/shared.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen}
  */
-export async function editWelcomeScreen(
+export async function editWelcomeScreen (
   bot: Bot,
   guildId: BigString,
   options: ModifyGuildWelcomeScreen

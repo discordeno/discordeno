@@ -2,7 +2,7 @@ import { Bot } from '../../bot.js'
 import { DiscordAuditLogEntry } from '../../types/discord.js'
 import { AuditLogEntry } from '../auditLogEntry.js'
 
-export function transformAuditLogEntryToDiscordAuditLogEntry(bot: Bot, payload: AuditLogEntry): DiscordAuditLogEntry {
+export function transformAuditLogEntryToDiscordAuditLogEntry (bot: Bot, payload: AuditLogEntry): DiscordAuditLogEntry {
   return {
     id: bot.transformers.reverse.snowflake(payload.id),
     // @ts-expect-error: ts can't identify return type of switch case
@@ -122,17 +122,17 @@ export function transformAuditLogEntryToDiscordAuditLogEntry(bot: Bot, payload: 
     options: (payload.options != null)
       ? {
         // respect transformer as reference than type
-        delete_member_days: payload.options.deleteMemberDays === 0 ? payload.options.deleteMemberDays.toString() : '',
-        members_removed: payload.options.membersRemoved === 0 ? payload.options.membersRemoved.toString() : '',
-        channel_id: payload.options.channelId ? bot.transformers.reverse.snowflake(payload.options.channelId) : '',
-        message_id: payload.options.messageId ? bot.transformers.reverse.snowflake(payload.options.messageId) : '',
-        count: payload.options.count === 0 ? payload.options.count.toString() : '',
-        id: payload.options.id ? bot.transformers.reverse.snowflake(payload.options.id) : '',
-        type: payload.options.type.toString(),
-        role_name: payload.options.roleName,
-        // make up value to make ts shut up, the orginal value do not persevere in transformer
-        application_id: ''
-      }
+          delete_member_days: payload.options.deleteMemberDays === 0 ? payload.options.deleteMemberDays.toString() : '',
+          members_removed: payload.options.membersRemoved === 0 ? payload.options.membersRemoved.toString() : '',
+          channel_id: payload.options.channelId ? bot.transformers.reverse.snowflake(payload.options.channelId) : '',
+          message_id: payload.options.messageId ? bot.transformers.reverse.snowflake(payload.options.messageId) : '',
+          count: payload.options.count === 0 ? payload.options.count.toString() : '',
+          id: payload.options.id ? bot.transformers.reverse.snowflake(payload.options.id) : '',
+          type: payload.options.type.toString(),
+          role_name: payload.options.roleName,
+          // make up value to make ts shut up, the orginal value do not persevere in transformer
+          application_id: ''
+        }
       : undefined,
     reason: payload.reason
   }

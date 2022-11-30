@@ -32,7 +32,7 @@ import {
 // TODO: improve shard event resolving
 
 /** */
-export function createShard(
+export function createShard (
   options: CreateShard
 ) {
   // This is done for performance reasons

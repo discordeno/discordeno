@@ -1,7 +1,7 @@
 import { BotWithCache } from '../../deps.js'
 import { requireBotGuildPermissions } from '../permissions.js'
 
-export function getPruneCount(bot: BotWithCache) {
+export function getPruneCount (bot: BotWithCache) {
   const getPruneCount = bot.helpers.getPruneCount
 
   bot.helpers.getPruneCount = async function (guildId, options) {

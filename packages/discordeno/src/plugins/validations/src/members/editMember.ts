@@ -1,6 +1,6 @@
 import { Bot } from '../../deps.js'
 
-export function editMember(bot: Bot) {
+export function editMember (bot: Bot) {
   const editMember = bot.helpers.editMember
 
   bot.helpers.editMember = async function (guildId, memberId, options) {

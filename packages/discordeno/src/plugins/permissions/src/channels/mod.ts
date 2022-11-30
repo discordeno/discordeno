@@ -11,7 +11,7 @@ import { stages } from './stages/mod.js'
 import { swapChannels } from './swapChannels.js'
 import { threads } from './threads/mod.js'
 
-export function channels(bot: BotWithCache) {
+export function channels (bot: BotWithCache) {
   forums(bot)
   stages(bot)
   threads(bot)

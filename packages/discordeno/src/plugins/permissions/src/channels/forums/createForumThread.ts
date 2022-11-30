@@ -1,7 +1,7 @@
 import { BotWithCache, ChannelTypes } from '../../../deps.js'
 import { requireBotChannelPermissions } from '../../permissions.js'
 
-export function createForumThread(bot: BotWithCache) {
+export function createForumThread (bot: BotWithCache) {
   const createForumThread = bot.helpers.createForumThread
 
   bot.helpers.createForumThread = async function (channelId, options) {

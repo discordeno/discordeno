@@ -1,7 +1,7 @@
 import type { Bot } from '../../bot.js'
 import { DiscordChannelPinsUpdate, DiscordGatewayPayload } from '../../types/discord.js'
 
-export async function handleChannelPinsUpdate(bot: Bot, data: DiscordGatewayPayload) {
+export async function handleChannelPinsUpdate (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordChannelPinsUpdate
 
   bot.events.channelPinsUpdate(bot, {

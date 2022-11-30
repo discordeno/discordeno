@@ -15,7 +15,7 @@ import { BigString, CreateApplicationCommand, DiscordApplicationCommand } from '
  *
  * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-guild-application-command}
  */
-export async function editGuildApplicationCommand(
+export async function editGuildApplicationCommand (
   bot: Bot,
   commandId: BigString,
   guildId: BigString,

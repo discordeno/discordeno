@@ -10,7 +10,7 @@ import { BigString } from '../../types/shared.js'
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource.
  */
-export function getAvatarURL(
+export function getAvatarURL (
   bot: Bot,
   userId: BigString,
   discriminator: string,
