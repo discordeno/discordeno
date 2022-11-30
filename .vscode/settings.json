@@ -1,40 +1,8 @@
 {
-  "deno.enable": true,
-  "deno.lint": false,
-  "deno.unstable": true,
-  "deno.enablePaths": [
-    "./benchmarks",
-    "./gateway",
-    "./handlers",
-    "./helpers",
-    "./plugins",
-    "./packages",
-    "./performance",
-    "./rest",
-    "./template/beginner",
-    "./template/minimal",
-    "./tests",
-    "./transformers",
-    "./types",
-    "./util",
-    "dnt.ts",
-    "mod.ts",
-    "debug.ts",
-    "debug.rest.ts",
-    "bot.ts"
-  ],
-  "editor.defaultFormatter": "denoland.vscode-deno",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.organizeImports": true,
     "source.fixAll": true
-  },
-  "deno.inlayHints.enumMemberValues.enabled": true,
-  "deno.inlayHints.functionLikeReturnTypes.enabled": true,
-  "deno.inlayHints.parameterNames.enabled": "all",
-  "deno.inlayHints.parameterNames.suppressWhenArgumentMatchesName": false,
-  "deno.inlayHints.parameterTypes.enabled": true,
-  "deno.inlayHints.propertyDeclarationTypes.enabled": true,
-  "deno.inlayHints.variableTypes.enabled": true,
-  "deno.inlayHints.variableTypes.suppressWhenTypeMatchesName": false
+  }
 }
