@@ -1,7 +1,7 @@
-import type { Bot } from "../../../bot.ts";
-import { VoiceRegions } from "../../../transformers/voiceRegion.ts";
-import { DiscordVoiceRegion } from "../../../types/discord.ts";
-import { Collection } from "../../../util/collection.ts";
+import type { Bot } from '../../../bot.js'
+import { VoiceRegions } from '../../../transformers/voiceRegion.js'
+import { DiscordVoiceRegion } from '../../../types/discord.js'
+import { Collection } from '../../../util/collection.js'
 
 /**
  * Gets the list of available voice regions.
@@ -12,14 +12,14 @@ import { Collection } from "../../../util/collection.ts";
 export async function getAvailableVoiceRegions(bot: Bot): Promise<Collection<string, VoiceRegions>> {
   const results = await bot.rest.runMethod<DiscordVoiceRegion[]>(
     bot.rest,
-    "GET",
-    bot.constants.routes.VOICE_REGIONS(),
-  );
+    'GET',
+    bot.constants.routes.VOICE_REGIONS()
+  )
 
   return new Collection(
     results.map((result) => {
-      const region = bot.transformers.voiceRegion(bot, result);
-      return [region.id, region];
-    }),
-  );
+      const region = bot.transformers.voiceRegion(bot, result)
+      return [region.id, region]
+    })
+  )
 }

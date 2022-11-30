@@ -1,13 +1,13 @@
-import { Bot } from "../../bot.ts";
-import { DiscordGuildWidgetSettings } from "../../types/discord.ts";
-import { GuildWidgetSettings } from "../widgetSettings.ts";
+import { Bot } from '../../bot.js'
+import { DiscordGuildWidgetSettings } from '../../types/discord.js'
+import { GuildWidgetSettings } from '../widgetSettings.js'
 
 export function transformWidgetSettingsToDiscordWidgetSettings(
   bot: Bot,
-  payload: GuildWidgetSettings,
+  payload: GuildWidgetSettings
 ): DiscordGuildWidgetSettings {
   return {
     enabled: payload.enabled,
-    channel_id: payload.channelId ?? null,
-  };
+    channel_id: payload.channelId ?? null
+  }
 }

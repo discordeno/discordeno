@@ -1,2 +1,3 @@
-export * from "./manager/mod.ts";
-export * from "./shard/mod.ts";
+export * from './manager/mod.js'
+export * from './shard/mod.js'
+

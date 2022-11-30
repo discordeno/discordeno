@@ -1,22 +1,22 @@
-import type { Bot } from "../../bot.ts";
-import { Emoji } from "../../transformers/emoji.ts";
-import { Sticker } from "../../transformers/sticker.ts";
-import { DiscordGuildPreview } from "../../types/discord.ts";
-import { BigString, GuildFeatures } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { Emoji } from '../../transformers/emoji.js'
+import { Sticker } from '../../transformers/sticker.js'
+import { DiscordGuildPreview } from '../../types/discord.js'
+import { BigString, GuildFeatures } from '../../types/shared.js'
 
-export type GuildPreview = {
-  id: BigString;
-  name?: string;
-  icon?: string;
-  splash?: string;
-  discoverySplash?: string;
-  emojis?: Emoji[];
-  features: GuildFeatures[];
-  approximateMemberCount: number;
-  approximatePresenceCount: number;
-  description?: string;
-  stickers: Sticker[];
-};
+export interface GuildPreview {
+  id: BigString
+  name?: string
+  icon?: string
+  splash?: string
+  discoverySplash?: string
+  emojis?: Emoji[]
+  features: GuildFeatures[]
+  approximateMemberCount: number
+  approximatePresenceCount: number
+  description?: string
+  stickers: Sticker[]
+}
 
 // TODO: Move `GuildPreview` into its own transformer file.
 
@@ -35,9 +35,9 @@ export type GuildPreview = {
 export async function getGuildPreview(bot: Bot, guildId: BigString): Promise<GuildPreview> {
   const result = await bot.rest.runMethod<DiscordGuildPreview>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_PREVIEW(guildId),
-  );
+    'GET',
+    bot.constants.routes.GUILD_PREVIEW(guildId)
+  )
 
   return {
     id: bot.transformers.snowflake(result.id),
@@ -50,6 +50,6 @@ export async function getGuildPreview(bot: Bot, guildId: BigString): Promise<Gui
     approximateMemberCount: result.approximate_member_count,
     approximatePresenceCount: result.approximate_presence_count,
     description: result.description ?? undefined,
-    stickers: result.stickers.map((sticker) => bot.transformers.sticker(bot, sticker)),
-  };
+    stickers: result.stickers.map((sticker) => bot.transformers.sticker(bot, sticker))
+  }
 }

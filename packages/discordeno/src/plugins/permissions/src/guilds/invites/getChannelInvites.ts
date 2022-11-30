@@ -1,12 +1,12 @@
-import { BotWithCache } from "../../../deps.ts";
-import { requireBotChannelPermissions } from "../../permissions.ts";
+import { BotWithCache } from '../../../deps.js'
+import { requireBotChannelPermissions } from '../../permissions.js'
 
 export function getChannelInvites(bot: BotWithCache) {
-  const getChannelInvites = bot.helpers.getChannelInvites;
+  const getChannelInvites = bot.helpers.getChannelInvites
 
   bot.helpers.getChannelInvites = async function (channelId) {
-    requireBotChannelPermissions(bot, channelId, ["MANAGE_CHANNELS"]);
+    requireBotChannelPermissions(bot, channelId, ['MANAGE_CHANNELS'])
 
-    return await getChannelInvites(channelId);
-  };
+    return await getChannelInvites(channelId)
+  }
 }

@@ -1,8 +1,8 @@
-import type { Bot } from "../../../bot.ts";
-import { InteractionCallbackData } from "../../../mod.ts";
-import { Message } from "../../../transformers/message.ts";
-import { DiscordMessage } from "../../../types/discord.ts";
-import { BigString, InteractionResponseTypes } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { InteractionCallbackData } from '../../../mod.js'
+import { Message } from '../../../transformers/message.js'
+import { DiscordMessage } from '../../../types/discord.js'
+import { BigString, InteractionResponseTypes } from '../../../types/shared.js'
 
 /**
  * Edits a follow-up message to an interaction.
@@ -26,21 +26,21 @@ export async function editFollowupMessage(
   bot: Bot,
   token: string,
   messageId: BigString,
-  options: InteractionCallbackData,
+  options: InteractionCallbackData
 ): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "PATCH",
+    'PATCH',
     bot.constants.routes.WEBHOOK_MESSAGE(bot.applicationId, token, messageId),
     {
       messageId: messageId.toString(),
       ...bot.transformers.reverse.interactionResponse(bot, {
         type: InteractionResponseTypes.UpdateMessage,
-        data: options,
+        data: options
       }).data,
-      file: options.file,
-    },
-  );
+      file: options.file
+    }
+  )
 
-  return bot.transformers.message(bot, result);
+  return bot.transformers.message(bot, result)
 }

@@ -1,8 +1,8 @@
-import type { Bot } from "../../../bot.ts";
-import { ApplicationCommand } from "../../../transformers/applicationCommand.ts";
-import { DiscordApplicationCommand } from "../../../types/discord.ts";
-import { BigString } from "../../../types/shared.ts";
-import { Collection } from "../../../util/collection.ts";
+import type { Bot } from '../../../bot.js'
+import { ApplicationCommand } from '../../../transformers/applicationCommand.js'
+import { DiscordApplicationCommand } from '../../../types/discord.js'
+import { BigString } from '../../../types/shared.js'
+import { Collection } from '../../../util/collection.js'
 
 /**
  * Gets the list of application commands registered by your bot in a guild.
@@ -15,18 +15,18 @@ import { Collection } from "../../../util/collection.ts";
  */
 export async function getGuildApplicationCommands(
   bot: Bot,
-  guildId: BigString,
+  guildId: BigString
 ): Promise<Collection<bigint, ApplicationCommand>> {
   const results = await bot.rest.runMethod<DiscordApplicationCommand[]>(
     bot.rest,
-    "GET",
-    bot.constants.routes.COMMANDS_GUILD(bot.applicationId, guildId),
-  );
+    'GET',
+    bot.constants.routes.COMMANDS_GUILD(bot.applicationId, guildId)
+  )
 
   return new Collection(
     results.map((result) => {
-      const command = bot.transformers.applicationCommand(bot, result);
-      return [command.id, command];
-    }),
-  );
+      const command = bot.transformers.applicationCommand(bot, result)
+      return [command.id, command]
+    })
+  )
 }

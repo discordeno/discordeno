@@ -1,6 +1,6 @@
-import type { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
-import { ImageFormat, ImageSize } from "../members/getAvatarUrl.ts";
+import type { Bot } from '../../bot.js'
+import { BigString } from '../../types/shared.js'
+import { ImageFormat, ImageSize } from '../members/getAvatarUrl.js'
 
 // TODO: Move `banner` from `options` into the parameters and rename to `imageHash`.
 
@@ -16,19 +16,19 @@ export function getGuildBannerURL(
   bot: Bot,
   guildId: BigString,
   options: {
-    banner?: string | bigint;
-    size?: ImageSize;
-    format?: ImageFormat;
-  },
+    banner?: string | bigint
+    size?: ImageSize
+    format?: ImageFormat
+  }
 ): string | undefined {
   return options.banner
     ? bot.utils.formatImageURL(
       bot.constants.routes.GUILD_BANNER(
         guildId,
-        typeof options.banner === "string" ? options.banner : bot.utils.iconBigintToHash(options.banner),
+        typeof options.banner === 'string' ? options.banner : bot.utils.iconBigintToHash(options.banner)
       ),
       options.size || 128,
-      options.format,
+      options.format
     )
-    : undefined;
+    : undefined
 }

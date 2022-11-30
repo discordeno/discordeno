@@ -1,7 +1,7 @@
-import { Bot } from "../../bot.ts";
-import { StickerPack } from "../../transformers/sticker.ts";
-import { DiscordStickerPack } from "../../types/discord.ts";
-import { Collection } from "../../util/collection.ts";
+import { Bot } from '../../bot.js'
+import { StickerPack } from '../../transformers/sticker.js'
+import { DiscordStickerPack } from '../../types/discord.js'
+import { Collection } from '../../util/collection.js'
 
 /**
  * Returns the list of sticker packs available to Nitro subscribers.
@@ -14,14 +14,14 @@ import { Collection } from "../../util/collection.ts";
 export async function getNitroStickerPacks(bot: Bot): Promise<Collection<bigint, StickerPack>> {
   const results = await bot.rest.runMethod<DiscordStickerPack[]>(
     bot.rest,
-    "GET",
-    bot.constants.routes.NITRO_STICKER_PACKS(),
-  );
+    'GET',
+    bot.constants.routes.NITRO_STICKER_PACKS()
+  )
 
   return new Collection(
     results.map((result) => {
-      const pack = bot.transformers.stickerPack(bot, result);
-      return [pack.id, pack];
-    }),
-  );
+      const pack = bot.transformers.stickerPack(bot, result)
+      return [pack.id, pack]
+    })
+  )
 }

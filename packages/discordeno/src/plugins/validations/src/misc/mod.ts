@@ -1,6 +1,6 @@
-import { Bot } from "../../deps.ts";
-import { editBotProfile } from "./editBotProfile.ts";
+import { Bot } from '../../deps.js'
+import { editBotProfile } from './editBotProfile.js'
 
 export function misc(bot: Bot) {
-  editBotProfile(bot);
+  editBotProfile(bot)
 }

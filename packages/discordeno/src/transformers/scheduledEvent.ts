@@ -1,10 +1,10 @@
-import { Bot } from "../bot.ts";
-import { DiscordScheduledEvent } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
+import { Bot } from '../bot.js'
+import { DiscordScheduledEvent } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
 
 export function transformScheduledEvent(
   bot: Bot,
-  payload: DiscordScheduledEvent,
+  payload: DiscordScheduledEvent
 ) {
   const scheduledEvent = {
     id: bot.transformers.snowflake(payload.id),
@@ -14,7 +14,7 @@ export function transformScheduledEvent(
     scheduledStartTime: Date.parse(payload.scheduled_start_time),
     scheduledEndTime: payload.scheduled_end_time ? Date.parse(payload.scheduled_end_time) : undefined,
     entityId: payload.entity_id ? bot.transformers.snowflake(payload.entity_id) : undefined,
-    creator: payload.creator ? bot.transformers.user(bot, payload.creator) : undefined,
+    creator: (payload.creator != null) ? bot.transformers.user(bot, payload.creator) : undefined,
 
     name: payload.name,
     description: payload.description,
@@ -23,10 +23,10 @@ export function transformScheduledEvent(
     entityType: payload.entity_type,
     userCount: payload.user_count || 0,
     location: payload.entity_metadata?.location,
-    image: payload.image ? bot.utils.iconHashToBigInt(payload.image) : undefined,
-  };
+    image: payload.image ? bot.utils.iconHashToBigInt(payload.image) : undefined
+  }
 
-  return scheduledEvent as Optionalize<typeof scheduledEvent>;
+  return scheduledEvent as Optionalize<typeof scheduledEvent>
 }
 
-export interface ScheduledEvent extends ReturnType<typeof transformScheduledEvent> {}
+export interface ScheduledEvent extends ReturnType<typeof transformScheduledEvent> { }

@@ -1,8 +1,8 @@
-import type { Bot } from "../../../bot.ts";
-import { ThreadMember } from "../../../transformers/threadMember.ts";
-import { DiscordThreadMember } from "../../../types/discord.ts";
-import { BigString } from "../../../types/shared.ts";
-import { Collection } from "../../../util/collection.ts";
+import type { Bot } from '../../../bot.js'
+import { ThreadMember } from '../../../transformers/threadMember.js'
+import { DiscordThreadMember } from '../../../types/discord.js'
+import { BigString } from '../../../types/shared.js'
+import { Collection } from '../../../util/collection.js'
 
 /**
  * Gets the list of thread members for a thread.
@@ -19,14 +19,14 @@ import { Collection } from "../../../util/collection.ts";
 export async function getThreadMembers(bot: Bot, channelId: BigString): Promise<Collection<bigint, ThreadMember>> {
   const results = await bot.rest.runMethod<DiscordThreadMember[]>(
     bot.rest,
-    "GET",
-    bot.constants.routes.THREAD_MEMBERS(channelId),
-  );
+    'GET',
+    bot.constants.routes.THREAD_MEMBERS(channelId)
+  )
 
   return new Collection(
     results.map((result) => {
-      const member = bot.transformers.threadMember(bot, result);
-      return [member.id!, member];
-    }),
-  );
+      const member = bot.transformers.threadMember(bot, result)
+      return [member.id!, member]
+    })
+  )
 }

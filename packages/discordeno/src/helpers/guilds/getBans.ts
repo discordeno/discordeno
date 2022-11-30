@@ -1,8 +1,8 @@
-import type { Bot } from "../../bot.ts";
-import { DiscordBan } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
-import { Collection } from "../../util/collection.ts";
-import { Ban } from "./getBan.ts";
+import type { Bot } from '../../bot.js'
+import { DiscordBan } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
+import { Collection } from '../../util/collection.js'
+import { Ban } from './getBan.js'
 
 /**
  * Gets the list of bans for a guild.
@@ -22,29 +22,29 @@ import { Ban } from "./getBan.ts";
 export async function getBans(bot: Bot, guildId: BigString, options?: GetBans): Promise<Collection<bigint, Ban>> {
   const results = await bot.rest.runMethod<DiscordBan[]>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_BANS(guildId, options),
-  );
+    'GET',
+    bot.constants.routes.GUILD_BANS(guildId, options)
+  )
 
   return new Collection(
     results.map<[bigint, Ban]>((result) => {
-      const user = bot.transformers.user(bot, result.user);
+      const user = bot.transformers.user(bot, result.user)
       return [
         user.id,
         {
           reason: result.reason ?? undefined,
-          user: user,
-        },
-      ];
-    }),
-  );
+          user
+        }
+      ]
+    })
+  )
 }
 
 export interface GetBans {
   /** Number of users to return (up to maximum 1000). Default: 1000 */
-  limit?: number;
+  limit?: number
   /** Consider only users before given user id */
-  before?: BigString;
+  before?: BigString
   /** Consider only users after given user id */
-  after?: BigString;
+  after?: BigString
 }

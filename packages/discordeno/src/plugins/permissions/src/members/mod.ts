@@ -1,16 +1,16 @@
-import { BotWithCache } from "../../deps.ts";
-import { banMember } from "./banMember.ts";
-import { editBotMember } from "./editBotMember.ts";
-import { editMember } from "./editMember.ts";
-import { kickMember } from "./kickMember.ts";
-import { pruneMembers } from "./pruneMembers.ts";
-import { unbanMember } from "./unbanMember.ts";
+import { BotWithCache } from '../../deps.js'
+import { banMember } from './banMember.js'
+import { editBotMember } from './editBotMember.js'
+import { editMember } from './editMember.js'
+import { kickMember } from './kickMember.js'
+import { pruneMembers } from './pruneMembers.js'
+import { unbanMember } from './unbanMember.js'
 
 export function members(bot: BotWithCache) {
-  banMember(bot);
-  editBotMember(bot);
-  editMember(bot);
-  kickMember(bot);
-  pruneMembers(bot);
-  unbanMember(bot);
+  banMember(bot)
+  editBotMember(bot)
+  editMember(bot)
+  kickMember(bot)
+  pruneMembers(bot)
+  unbanMember(bot)
 }

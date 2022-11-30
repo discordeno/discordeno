@@ -1,5 +1,5 @@
-import type { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Removes a role from a member.
@@ -19,8 +19,8 @@ import { BigString } from "../../types/shared.ts";
 export async function removeRole(bot: Bot, guildId: BigString, userId: BigString, roleId: BigString, reason?: string) {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
+    'DELETE',
     bot.constants.routes.GUILD_MEMBER_ROLE(guildId, userId, roleId),
-    { reason },
-  );
+    { reason }
+  )
 }

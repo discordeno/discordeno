@@ -1,28 +1,28 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString, ScheduledEvent, TargetTypes, User } from "../../../mod.ts";
-import { DiscordInviteMetadata } from "../../../types/discord.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString, ScheduledEvent, TargetTypes, User } from '../../../mod.js'
+import { DiscordInviteMetadata } from '../../../types/discord.js'
 
-export type BaseInvite = {
-  code: string;
-  guildId?: BigString;
-  channelId?: BigString;
-  inviter?: User;
-  targetType?: TargetTypes;
-  targetUser?: User;
-  targetApplicationId?: BigString;
-  approximatePresenceCount?: number;
-  approximateMemberCount?: number;
-  expiresAt?: number;
-  guildScheduledEvent?: ScheduledEvent;
-};
+export interface BaseInvite {
+  code: string
+  guildId?: BigString
+  channelId?: BigString
+  inviter?: User
+  targetType?: TargetTypes
+  targetUser?: User
+  targetApplicationId?: BigString
+  approximatePresenceCount?: number
+  approximateMemberCount?: number
+  expiresAt?: number
+  guildScheduledEvent?: ScheduledEvent
+}
 
 export type InviteMetadata = BaseInvite & {
-  uses: number;
-  maxUses: number;
-  maxAge: number;
-  temporary: boolean;
-  createdAt: number;
-};
+  uses: number
+  maxUses: number
+  maxAge: number
+  temporary: boolean
+  createdAt: number
+}
 
 /**
  * Gets an invite to a channel by its invite code.
@@ -37,9 +37,9 @@ export type InviteMetadata = BaseInvite & {
 export async function getInvite(bot: Bot, inviteCode: string, options?: GetInvite): Promise<BaseInvite> {
   const result = await bot.rest.runMethod<DiscordInviteMetadata>(
     bot.rest,
-    "GET",
-    bot.constants.routes.INVITE(inviteCode, options),
-  );
+    'GET',
+    bot.constants.routes.INVITE(inviteCode, options)
+  )
 
   return {
     code: result.code,
@@ -55,16 +55,16 @@ export async function getInvite(bot: Bot, inviteCode: string, options?: GetInvit
       : undefined,
     approximatePresenceCount: result.approximate_presence_count,
     approximateMemberCount: result.approximate_member_count,
-    expiresAt: result.expires_at ? Date.parse(result.expires_at) : undefined,
-  };
+    expiresAt: result.expires_at ? Date.parse(result.expires_at) : undefined
+  }
 }
 
 /** https://discord.com/developers/docs/resources/invite#get-invite */
 export interface GetInvite {
   /** Whether the invite should contain approximate member counts */
-  withCounts?: boolean;
+  withCounts?: boolean
   /** Whether the invite should contain the expiration date */
-  withExpiration?: boolean;
+  withExpiration?: boolean
   /** the guild scheduled event to include with the invite */
-  scheduledEventId?: BigString;
+  scheduledEventId?: BigString
 }

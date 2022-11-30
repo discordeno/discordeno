@@ -1,7 +1,7 @@
-import type { Bot } from "../../bot.ts";
-import { BigString, WithReason } from "../../mod.ts";
-import { Webhook } from "../../transformers/webhook.ts";
-import { DiscordWebhook } from "../../types/discord.ts";
+import type { Bot } from '../../bot.js'
+import { BigString, WithReason } from '../../mod.js'
+import { Webhook } from '../../transformers/webhook.js'
+import { DiscordWebhook } from '../../types/discord.js'
 
 /**
  * Edits a webhook.
@@ -20,24 +20,24 @@ import { DiscordWebhook } from "../../types/discord.ts";
 export async function editWebhook(bot: Bot, webhookId: BigString, options: ModifyWebhook): Promise<Webhook> {
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
-    "PATCH",
+    'PATCH',
     bot.constants.routes.WEBHOOK_ID(webhookId),
     {
       name: options.name,
       avatar: options.avatar,
       channel_id: options.channelId,
-      reason: options.reason,
-    },
-  );
+      reason: options.reason
+    }
+  )
 
-  return bot.transformers.webhook(bot, result);
+  return bot.transformers.webhook(bot, result)
 }
 
 export interface ModifyWebhook extends WithReason {
   /** The default name of the webhook */
-  name?: string;
+  name?: string
   /** Image for the default webhook avatar */
-  avatar?: BigString | null;
+  avatar?: BigString | null
   /** The new channel id this webhook should be moved to */
-  channelId?: BigString;
+  channelId?: BigString
 }

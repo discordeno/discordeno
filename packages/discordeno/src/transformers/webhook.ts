@@ -1,6 +1,6 @@
-import { Bot } from "../bot.ts";
-import { DiscordWebhook } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
+import { Bot } from '../bot.js'
+import { DiscordWebhook } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
 
 export function transformWebhook(bot: Bot, payload: DiscordWebhook) {
   const webhook = {
@@ -8,30 +8,30 @@ export function transformWebhook(bot: Bot, payload: DiscordWebhook) {
     type: payload.type,
     guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
     channelId: payload.channel_id ? bot.transformers.snowflake(payload.channel_id) : undefined,
-    user: payload.user ? bot.transformers.user(bot, payload.user) : undefined,
-    name: payload.name || "",
+    user: (payload.user != null) ? bot.transformers.user(bot, payload.user) : undefined,
+    name: payload.name || '',
     avatar: payload.avatar ? bot.utils.iconHashToBigInt(payload.avatar) : undefined,
     token: payload.token,
     applicationId: payload.application_id ? bot.transformers.snowflake(payload.application_id) : undefined,
-    sourceGuild: payload.source_guild
+    sourceGuild: (payload.source_guild != null)
       ? {
         id: bot.transformers.snowflake(payload.source_guild.id!),
         name: payload.source_guild.name!,
-        icon: payload.source_guild.icon ? bot.utils.iconHashToBigInt(payload.source_guild.icon) : undefined,
+        icon: payload.source_guild.icon ? bot.utils.iconHashToBigInt(payload.source_guild.icon) : undefined
       }
       : undefined,
     /** The channel that this webhook is following (returned for Channel Follower Webhooks) */
-    sourceChannel: payload.source_channel
+    sourceChannel: (payload.source_channel != null)
       ? {
         id: bot.transformers.snowflake(payload.source_channel.id!),
-        name: payload.source_channel.name || "",
+        name: payload.source_channel.name || ''
       }
       : undefined,
     /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
-    url: payload.url,
-  };
+    url: payload.url
+  }
 
-  return webhook as Optionalize<typeof webhook>;
+  return webhook as Optionalize<typeof webhook>
 }
 
-export interface Webhook extends ReturnType<typeof transformWebhook> {}
+export interface Webhook extends ReturnType<typeof transformWebhook> { }

@@ -1,7 +1,7 @@
-import type { Bot } from "../../../bot.ts";
-import { Message } from "../../../transformers/message.ts";
-import { DiscordMessage } from "../../../types/discord.ts";
-import { InteractionCallbackData, InteractionResponseTypes } from "../../../types/mod.ts";
+import type { Bot } from '../../../bot.js'
+import { Message } from '../../../transformers/message.js'
+import { DiscordMessage } from '../../../types/discord.js'
+import { InteractionCallbackData, InteractionResponseTypes } from '../../../types/mod.js'
 
 /**
  * Edits the initial message response to an interaction.
@@ -23,20 +23,20 @@ import { InteractionCallbackData, InteractionResponseTypes } from "../../../type
 export async function editOriginalInteractionResponse(
   bot: Bot,
   token: string,
-  options: InteractionCallbackData,
+  options: InteractionCallbackData
 ): Promise<Message | undefined> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "PATCH",
+    'PATCH',
     bot.constants.routes.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token),
     {
       ...bot.transformers.reverse.interactionResponse(bot, {
         type: InteractionResponseTypes.UpdateMessage,
-        data: options,
+        data: options
       }).data,
-      file: options.file,
-    },
-  );
+      file: options.file
+    }
+  )
 
-  return bot.transformers.message(bot, result);
+  return bot.transformers.message(bot, result)
 }

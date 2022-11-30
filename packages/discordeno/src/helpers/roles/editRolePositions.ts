@@ -1,8 +1,8 @@
-import { Bot } from "../../bot.ts";
-import { Role } from "../../transformers/role.ts";
-import { DiscordRole } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
-import { Collection } from "../../util/collection.ts";
+import { Bot } from '../../bot.js'
+import { Role } from '../../transformers/role.js'
+import { DiscordRole } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
+import { Collection } from '../../util/collection.js'
 
 /**
  * Edits the positions of a set of roles.
@@ -22,28 +22,28 @@ import { Collection } from "../../util/collection.ts";
 export async function modifyRolePositions(
   bot: Bot,
   guildId: BigString,
-  options: ModifyRolePositions[],
+  options: ModifyRolePositions[]
 ): Promise<Collection<bigint, Role>> {
   const results = await bot.rest.runMethod<DiscordRole[]>(
     bot.rest,
-    "PATCH",
+    'PATCH',
     bot.constants.routes.GUILD_ROLES(guildId),
-    options,
-  );
+    options
+  )
 
-  const id = bot.transformers.snowflake(guildId);
+  const id = bot.transformers.snowflake(guildId)
 
   return new Collection(
     results.map((result) => {
-      const role = bot.transformers.role(bot, { role: result, guildId: id });
-      return [role.id, role];
-    }),
-  );
+      const role = bot.transformers.role(bot, { role: result, guildId: id })
+      return [role.id, role]
+    })
+  )
 }
 
 export interface ModifyRolePositions {
   /** The role id */
-  id: BigString;
+  id: BigString
   /** The sorting position for the role. */
-  position?: number | null;
+  position?: number | null
 }

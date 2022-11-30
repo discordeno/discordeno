@@ -1,7 +1,7 @@
-import type { Bot } from "../../bot.ts";
-import { Role } from "../../transformers/role.ts";
-import { DiscordRole } from "../../types/discord.ts";
-import { BigString, PermissionStrings } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { Role } from '../../transformers/role.js'
+import { DiscordRole } from '../../types/discord.js'
+import { BigString, PermissionStrings } from '../../types/shared.js'
 
 /**
  * Edits a role in a guild.
@@ -22,35 +22,35 @@ import { BigString, PermissionStrings } from "../../types/shared.ts";
 export async function editRole(bot: Bot, guildId: BigString, roleId: BigString, options: EditGuildRole): Promise<Role> {
   const result = await bot.rest.runMethod<DiscordRole>(
     bot.rest,
-    "PATCH",
+    'PATCH',
     bot.constants.routes.GUILD_ROLE(guildId, roleId),
     {
       name: options.name,
       color: options.color,
       hoist: options.hoist,
       mentionable: options.mentionable,
-      permissions: bot.utils.calculateBits(options?.permissions || []),
+      permissions: bot.utils.calculateBits(((options?.permissions) != null) || []),
       icon: options.icon,
-      unicode_emoji: options.unicodeEmoji,
-    },
-  );
+      unicode_emoji: options.unicodeEmoji
+    }
+  )
 
-  return bot.transformers.role(bot, { role: result, guildId: bot.transformers.snowflake(guildId) });
+  return bot.transformers.role(bot, { role: result, guildId: bot.transformers.snowflake(guildId) })
 }
 
 export interface EditGuildRole {
   /** Name of the role, max 100 characters, default: "new role" */
-  name?: string;
+  name?: string
   /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
-  permissions?: PermissionStrings[];
+  permissions?: PermissionStrings[]
   /** RGB color value, default: 0 */
-  color?: number;
+  color?: number
   /** Whether the role should be displayed separately in the sidebar, default: false */
-  hoist?: boolean;
+  hoist?: boolean
   /** Whether the role should be mentionable, default: false */
-  mentionable?: boolean;
+  mentionable?: boolean
   /** The role's unicode emoji (if the guild has the `ROLE_ICONS` feature) */
-  unicodeEmoji?: string;
+  unicodeEmoji?: string
   /** the role's icon image (if the guild has the `ROLE_ICONS` feature) */
-  icon?: string;
+  icon?: string
 }

@@ -1,5 +1,6 @@
-export * from "./connectToVoiceChannel.ts";
-export * from "./editVoiceState.ts";
-export * from "./getAvailableVoiceRegions.ts";
-export * from "./getVoiceRegions.ts";
-export * from "./leaveVoiceChannel.ts";
+export * from './connectToVoiceChannel.js'
+export * from './editVoiceState.js'
+export * from './getAvailableVoiceRegions.js'
+export * from './getVoiceRegions.js'
+export * from './leaveVoiceChannel.js'
+

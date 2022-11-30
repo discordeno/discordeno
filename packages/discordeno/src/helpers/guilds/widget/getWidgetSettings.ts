@@ -1,7 +1,7 @@
-import type { Bot } from "../../../bot.ts";
-import { GuildWidgetSettings } from "../../../transformers/widgetSettings.ts";
-import { DiscordGuildWidgetSettings } from "../../../types/discord.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { GuildWidgetSettings } from '../../../transformers/widgetSettings.js'
+import { DiscordGuildWidgetSettings } from '../../../types/discord.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Gets the settings of a guild's widget.
@@ -18,9 +18,9 @@ import { BigString } from "../../../types/shared.ts";
 export async function getWidgetSettings(bot: Bot, guildId: BigString): Promise<GuildWidgetSettings> {
   const result = await bot.rest.runMethod<DiscordGuildWidgetSettings>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_WIDGET(guildId),
-  );
+    'GET',
+    bot.constants.routes.GUILD_WIDGET(guildId)
+  )
 
-  return bot.transformers.widgetSettings(bot, result);
+  return bot.transformers.widgetSettings(bot, result)
 }

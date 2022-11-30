@@ -1,6 +1,6 @@
-import type { Bot } from "../../bot.ts";
-import { Template } from "../../transformers/template.ts";
-import { DiscordTemplate } from "../../types/discord.ts";
+import type { Bot } from "../../bot.js";
+import { Template } from "../../transformers/template.js";
+import { DiscordTemplate } from "../../types/discord.js";
 
 /**
  * Gets a template by its code.

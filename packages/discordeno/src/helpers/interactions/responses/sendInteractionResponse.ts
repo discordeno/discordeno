@@ -1,6 +1,6 @@
-import type { Bot } from "../../../bot.ts";
-import { InteractionResponse } from "../../../types/discordeno.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { InteractionResponse } from '../../../types/discordeno.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Sends a response to an interaction.
@@ -28,19 +28,19 @@ export async function sendInteractionResponse(
   bot: Bot,
   interactionId: BigString,
   token: string,
-  options: InteractionResponse,
+  options: InteractionResponse
 ): Promise<void> {
   return await bot.rest.sendRequest<void>(bot.rest, {
     url: bot.constants.routes.INTERACTION_ID_TOKEN(interactionId, token),
-    method: "POST",
+    method: 'POST',
     payload: bot.rest.createRequestBody(bot.rest, {
-      method: "POST",
+      method: 'POST',
       body: {
         ...bot.transformers.reverse.interactionResponse(bot, options),
-        file: options.data?.file,
+        file: options.data?.file
       },
       // Remove authorization header
-      headers: { Authorization: "" },
-    }),
-  });
+      headers: { Authorization: '' }
+    })
+  })
 }

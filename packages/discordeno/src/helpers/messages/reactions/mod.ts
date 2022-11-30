@@ -1,6 +1,7 @@
-export * from "./addReaction.ts";
-export * from "./addReactions.ts";
-export * from "./deleteReaction.ts";
-export * from "./deleteReactionsAll.ts";
-export * from "./deleteReactionsEmoji.ts";
-export * from "./getReactions.ts";
+export * from './addReaction.js'
+export * from './addReactions.js'
+export * from './deleteReaction.js'
+export * from './deleteReactionsAll.js'
+export * from './deleteReactionsEmoji.js'
+export * from './getReactions.js'
+

@@ -1,4 +1,5 @@
-export * from "./PRESENCE_UPDATE.ts";
-export * from "./READY.ts";
-export * from "./TYPING_START.ts";
-export * from "./USER_UPDATE.ts";
+export * from './PRESENCE_UPDATE.js'
+export * from './READY.js'
+export * from './TYPING_START.js'
+export * from './USER_UPDATE.js'
+

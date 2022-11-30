@@ -1,9 +1,9 @@
-import type { Bot } from "../../bot.ts";
-import { Message } from "../../transformers/message.ts";
-import { DiscordMessage } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { Message } from '../../transformers/message.js'
+import { DiscordMessage } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
 
-export const publishMessage = crosspostMessage;
+export const publishMessage = crosspostMessage
 
 /**
  * Cross-posts a message posted in an announcement channel to subscribed channels.
@@ -26,9 +26,9 @@ export const publishMessage = crosspostMessage;
 export async function crosspostMessage(bot: Bot, channelId: BigString, messageId: BigString): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "POST",
-    bot.constants.routes.CHANNEL_MESSAGE_CROSSPOST(channelId, messageId),
-  );
+    'POST',
+    bot.constants.routes.CHANNEL_MESSAGE_CROSSPOST(channelId, messageId)
+  )
 
-  return bot.transformers.message(bot, result);
+  return bot.transformers.message(bot, result)
 }

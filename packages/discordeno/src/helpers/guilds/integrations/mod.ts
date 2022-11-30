@@ -1,2 +1,3 @@
-export * from "./deleteIntegration.ts";
-export * from "./getIntegrations.ts";
+export * from './deleteIntegration.js'
+export * from './getIntegrations.js'
+

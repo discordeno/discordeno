@@ -1,6 +1,6 @@
-import { Bot } from "../../deps.ts";
-import { editMember } from "./editMember.ts";
+import { Bot } from '../../deps.js'
+import { editMember } from './editMember.js'
 
 export function members(bot: Bot) {
-  editMember(bot);
+  editMember(bot)
 }

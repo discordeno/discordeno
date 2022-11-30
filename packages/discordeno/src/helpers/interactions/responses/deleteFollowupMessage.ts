@@ -1,5 +1,5 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Deletes a follow-up message to an interaction.
@@ -18,7 +18,7 @@ import { BigString } from "../../../types/shared.ts";
 export async function deleteFollowupMessage(bot: Bot, token: string, messageId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
-    bot.constants.routes.INTERACTION_ID_TOKEN_MESSAGE_ID(bot.applicationId, token, messageId),
-  );
+    'DELETE',
+    bot.constants.routes.INTERACTION_ID_TOKEN_MESSAGE_ID(bot.applicationId, token, messageId)
+  )
 }

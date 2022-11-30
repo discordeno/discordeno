@@ -1,5 +1,5 @@
-import { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
+import { Bot } from '../../bot.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Kicks a member from a guild.
@@ -18,10 +18,10 @@ import { BigString } from "../../types/shared.ts";
 export async function kickMember(bot: Bot, guildId: BigString, userId: BigString, reason?: string): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
+    'DELETE',
     bot.constants.routes.GUILD_MEMBER(guildId, userId),
     {
-      reason,
-    },
-  );
+      reason
+    }
+  )
 }

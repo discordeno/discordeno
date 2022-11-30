@@ -1,8 +1,9 @@
-export * from "./deleteFollowupMessage.ts";
-export * from "./deleteOriginalInteractionResponse.ts";
-export * from "./editFollowupMessage.ts";
-export * from "./editOriginalInteractionResponse.ts";
-export * from "./getFollowupMessage.ts";
-export * from "./getOriginalInteractionResponse.ts";
-export * from "./sendFollowupMessage.ts";
-export * from "./sendInteractionResponse.ts";
+export * from './deleteFollowupMessage.js'
+export * from './deleteOriginalInteractionResponse.js'
+export * from './editFollowupMessage.js'
+export * from './editOriginalInteractionResponse.js'
+export * from './getFollowupMessage.js'
+export * from './getOriginalInteractionResponse.js'
+export * from './sendFollowupMessage.js'
+export * from './sendInteractionResponse.js'
+

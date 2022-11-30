@@ -1,8 +1,8 @@
-import { Bot } from "../../deps.ts";
-import { commands } from "./commands/mod.ts";
-import { responses } from "./responses/mod.ts";
+import { Bot } from '../../deps.js'
+import { commands } from './commands/mod.js'
+import { responses } from './responses/mod.js'
 
 export function interactions(bot: Bot) {
-  commands(bot);
-  responses(bot);
+  commands(bot)
+  responses(bot)
 }

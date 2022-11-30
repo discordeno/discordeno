@@ -1,8 +1,8 @@
-import type { Bot } from "../../../bot.ts";
-import { WithReason } from "../../../mod.ts";
-import { Channel } from "../../../transformers/channel.ts";
-import { DiscordChannel } from "../../../types/discord.ts";
-import { BigString, ChannelTypes } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { WithReason } from '../../../mod.js'
+import { Channel } from '../../../transformers/channel.js'
+import { DiscordChannel } from '../../../types/discord.js'
+import { BigString, ChannelTypes } from '../../../types/shared.js'
 
 /**
  * Creates a thread without using a message as the thread's point of origin.
@@ -22,11 +22,11 @@ import { BigString, ChannelTypes } from "../../../types/shared.ts";
 export async function startThreadWithoutMessage(
   bot: Bot,
   channelId: BigString,
-  options: StartThreadWithoutMessage,
+  options: StartThreadWithoutMessage
 ): Promise<Channel> {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
-    "POST",
+    'POST',
     bot.constants.routes.THREAD_START_PRIVATE(channelId),
     {
       name: options.name,
@@ -34,25 +34,25 @@ export async function startThreadWithoutMessage(
       rate_limit_per_user: options.rateLimitPerUser,
       type: options.type,
       invitable: options.invitable,
-      reason: options.reason,
-    },
-  );
+      reason: options.reason
+    }
+  )
 
   return bot.transformers.channel(bot, {
     channel: result,
-    guildId: result.guild_id ? bot.transformers.snowflake(result.guild_id) : undefined,
-  });
+    guildId: result.guild_id ? bot.transformers.snowflake(result.guild_id) : undefined
+  })
 }
 
 export interface StartThreadWithoutMessage extends WithReason {
   /** 1-100 character thread name */
-  name: string;
+  name: string
   /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration: 60 | 1440 | 4320 | 10080;
+  autoArchiveDuration: 60 | 1440 | 4320 | 10080
   /** Amount of seconds a user has to wait before sending another message (0-21600) */
-  rateLimitPerUser?: number | null;
+  rateLimitPerUser?: number | null
   /** the type of thread to create */
-  type: ChannelTypes.AnnouncementThread | ChannelTypes.PublicThread | ChannelTypes.PrivateThread;
+  type: ChannelTypes.AnnouncementThread | ChannelTypes.PublicThread | ChannelTypes.PrivateThread
   /** whether non-moderators can add other non-moderators to a thread; only available when creating a private thread */
-  invitable?: boolean;
+  invitable?: boolean
 }

@@ -1,8 +1,8 @@
-import type { Bot } from "../../../bot.ts";
-import { ApplicationCommandPermission } from "../../../transformers/applicationCommandPermission.ts";
-import { DiscordGuildApplicationCommandPermissions } from "../../../types/discord.ts";
-import { BigString } from "../../../types/shared.ts";
-import { Collection } from "../../../util/collection.ts";
+import type { Bot } from '../../../bot.js'
+import { ApplicationCommandPermission } from '../../../transformers/applicationCommandPermission.js'
+import { DiscordGuildApplicationCommandPermissions } from '../../../types/discord.js'
+import { BigString } from '../../../types/shared.js'
+import { Collection } from '../../../util/collection.js'
 
 /**
  * Gets the permissions of all application commands registered in a guild by the ID of the guild.
@@ -15,18 +15,18 @@ import { Collection } from "../../../util/collection.ts";
  */
 export async function getApplicationCommandPermissions(
   bot: Bot,
-  guildId: BigString,
+  guildId: BigString
 ): Promise<Collection<bigint, ApplicationCommandPermission>> {
   const results = await bot.rest.runMethod<DiscordGuildApplicationCommandPermissions[]>(
     bot.rest,
-    "GET",
-    bot.constants.routes.COMMANDS_PERMISSIONS(bot.applicationId, guildId),
-  );
+    'GET',
+    bot.constants.routes.COMMANDS_PERMISSIONS(bot.applicationId, guildId)
+  )
 
   return new Collection(
     results.map((result) => {
-      const permission = bot.transformers.applicationCommandPermission(bot, result);
-      return [permission.id, permission];
-    }),
-  );
+      const permission = bot.transformers.applicationCommandPermission(bot, result)
+      return [permission.id, permission]
+    })
+  )
 }

@@ -1,12 +1,12 @@
-import type { Bot } from "../../bot.ts";
-import { User } from "../../transformers/member.ts";
-import { DiscordBan } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { User } from '../../transformers/member.js'
+import { DiscordBan } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
 
-export type Ban = {
-  reason?: string;
-  user: User;
-};
+export interface Ban {
+  reason?: string
+  user: User
+}
 
 // TODO: Move `Ban` into its own transformer file.
 
@@ -26,12 +26,12 @@ export type Ban = {
 export async function getBan(bot: Bot, guildId: BigString, userId: BigString): Promise<Ban> {
   const result = await bot.rest.runMethod<DiscordBan>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_BAN(guildId, userId),
-  );
+    'GET',
+    bot.constants.routes.GUILD_BAN(guildId, userId)
+  )
 
   return {
     reason: result.reason ?? undefined,
-    user: bot.transformers.user(bot, result.user),
-  };
+    user: bot.transformers.user(bot, result.user)
+  }
 }

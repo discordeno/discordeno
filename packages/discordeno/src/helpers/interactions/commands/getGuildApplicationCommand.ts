@@ -1,7 +1,7 @@
-import type { Bot } from "../../../bot.ts";
-import { ApplicationCommand } from "../../../transformers/applicationCommand.ts";
-import { DiscordApplicationCommand } from "../../../types/discord.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { ApplicationCommand } from '../../../transformers/applicationCommand.js'
+import { DiscordApplicationCommand } from '../../../types/discord.js'
+import { BigString } from '../../../types/shared.js'
 
 // TODO: Swap `commandId` and `guildId` parameters.
 
@@ -18,13 +18,13 @@ import { BigString } from "../../../types/shared.ts";
 export async function getGuildApplicationCommand(
   bot: Bot,
   commandId: BigString,
-  guildId: BigString,
+  guildId: BigString
 ): Promise<ApplicationCommand> {
   const result = await bot.rest.runMethod<DiscordApplicationCommand>(
     bot.rest,
-    "GET",
-    bot.constants.routes.COMMANDS_GUILD_ID(bot.applicationId, guildId, commandId),
-  );
+    'GET',
+    bot.constants.routes.COMMANDS_GUILD_ID(bot.applicationId, guildId, commandId)
+  )
 
-  return bot.transformers.applicationCommand(bot, result);
+  return bot.transformers.applicationCommand(bot, result)
 }

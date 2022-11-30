@@ -1,7 +1,7 @@
-import { Bot } from "../bot.ts";
-import { DiscordVoiceState } from "../types/discord.ts";
-import { VoiceStateToggles } from "./toggles/voice.ts";
-import { Optionalize } from "../types/shared.ts";
+import { Bot } from '../bot.js'
+import { DiscordVoiceState } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
+import { VoiceStateToggles } from './toggles/voice.js'
 
 export function transformVoiceState(bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) {
   const voiceState = {
@@ -15,10 +15,10 @@ export function transformVoiceState(bot: Bot, payload: { voiceState: DiscordVoic
     channelId: payload.voiceState.channel_id ? bot.transformers.snowflake(payload.voiceState.channel_id) : undefined,
     guildId: payload.guildId ||
       (payload.voiceState.guild_id ? bot.transformers.snowflake(payload.voiceState.guild_id) : 0n),
-    userId: payload.voiceState.user_id ? bot.transformers.snowflake(payload.voiceState.user_id) : 0n,
-  };
+    userId: payload.voiceState.user_id ? bot.transformers.snowflake(payload.voiceState.user_id) : 0n
+  }
 
-  return voiceState as Optionalize<typeof voiceState>;
+  return voiceState as Optionalize<typeof voiceState>
 }
 
-export interface VoiceState extends ReturnType<typeof transformVoiceState> {}
+export interface VoiceState extends ReturnType<typeof transformVoiceState> { }

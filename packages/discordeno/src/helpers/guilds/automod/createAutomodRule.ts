@@ -1,13 +1,13 @@
-import { Bot } from "../../../bot.ts";
-import { BigString, WithReason } from "../../../mod.ts";
-import { AutoModerationRule } from "../../../transformers/automodRule.ts";
+import { Bot } from '../../../bot.js'
+import { BigString, WithReason } from '../../../mod.js'
+import { AutoModerationRule } from '../../../transformers/automodRule.js'
 import {
   AutoModerationActionType,
   AutoModerationEventTypes,
   AutoModerationTriggerTypes,
   DiscordAutoModerationRule,
-  DiscordAutoModerationRuleTriggerMetadataPresets,
-} from "../../../types/discord.ts";
+  DiscordAutoModerationRuleTriggerMetadataPresets
+} from '../../../types/discord.js'
 
 /**
  * Creates an automod rule in a guild.
@@ -27,11 +27,11 @@ import {
 export async function createAutomodRule(
   bot: Bot,
   guildId: BigString,
-  options: CreateAutoModerationRuleOptions,
+  options: CreateAutoModerationRuleOptions
 ): Promise<AutoModerationRule> {
   const result = await bot.rest.runMethod<DiscordAutoModerationRule>(
     bot.rest,
-    "POST",
+    'POST',
     bot.constants.routes.AUTOMOD_RULES(guildId),
     {
       name: options.name,
@@ -41,61 +41,61 @@ export async function createAutomodRule(
         keyword_filter: options.triggerMetadata.keywordFilter,
         presets: options.triggerMetadata.presets,
         allow_list: options.triggerMetadata.allowList,
-        mention_total_limit: options.triggerMetadata.mentionTotalLimit,
+        mention_total_limit: options.triggerMetadata.mentionTotalLimit
       },
       actions: options.actions.map((action) => ({
         type: action.type,
-        metadata: action.metadata
+        metadata: (action.metadata != null)
           ? {
             channel_id: action.metadata.channelId?.toString(),
-            duration_seconds: action.metadata.durationSeconds,
+            duration_seconds: action.metadata.durationSeconds
           }
-          : undefined,
+          : undefined
       })),
       enabled: options.enabled ?? true,
       exempt_roles: options.exemptRoles?.map((id) => id.toString()),
       exempt_channels: options.exemptChannels?.map((id) => id.toString()),
-      reason: options.reason,
-    },
-  );
+      reason: options.reason
+    }
+  )
 
-  return bot.transformers.automodRule(bot, result);
+  return bot.transformers.automodRule(bot, result)
 }
 
 export interface CreateAutoModerationRuleOptions extends WithReason {
   /** The name of the rule. */
-  name: string;
+  name: string
   /** The type of event to trigger the rule on. */
-  eventType: AutoModerationEventTypes;
+  eventType: AutoModerationEventTypes
   /** The type of trigger to use for the rule. */
-  triggerType: AutoModerationTriggerTypes;
+  triggerType: AutoModerationTriggerTypes
   /** The metadata to use for the trigger. */
   triggerMetadata: {
     /** The keywords needed to match. Only present when TriggerType.Keyword */
-    keywordFilter?: string[];
+    keywordFilter?: string[]
     /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
-    presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
+    presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
     /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
-    allowList?: string[];
+    allowList?: string[]
     /** Total number of mentions (role & user) allowed per message (Maximum of 50). Only present when TriggerType.MentionSpam */
-    mentionTotalLimit?: number;
-  };
+    mentionTotalLimit?: number
+  }
   /** The actions that will trigger for this rule */
-  actions: {
+  actions: Array<{
     /** The type of action to take when a rule is triggered */
-    type: AutoModerationActionType;
+    type: AutoModerationActionType
     /** additional metadata needed during execution for this specific action type */
     metadata?: {
       /** The id of channel to which user content should be logged. Only in SendAlertMessage */
-      channelId?: BigString;
+      channelId?: BigString
       /** Timeout duration in seconds. Max is 2419200(4 weeks). Only supported for TriggerType.Keyword */
-      durationSeconds?: number;
-    };
-  }[];
+      durationSeconds?: number
+    }
+  }>
   /** Whether the rule should be enabled, true by default. */
-  enabled?: boolean;
+  enabled?: boolean
   /** The role ids that should not be effected by the rule */
-  exemptRoles?: BigString[];
+  exemptRoles?: BigString[]
   /** The channel ids that should not be effected by the rule. */
-  exemptChannels?: BigString[];
+  exemptChannels?: BigString[]
 }

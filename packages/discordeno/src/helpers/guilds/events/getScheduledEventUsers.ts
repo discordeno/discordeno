@@ -1,8 +1,8 @@
-import { Bot } from "../../../bot.ts";
-import { Member, User } from "../../../transformers/member.ts";
-import { DiscordMember, DiscordUser } from "../../../types/discord.ts";
-import { BigString } from "../../../types/shared.ts";
-import { Collection } from "../../../util/collection.ts";
+import { Bot } from '../../../bot.js'
+import { Member, User } from '../../../transformers/member.js'
+import { DiscordMember, DiscordUser } from '../../../types/discord.js'
+import { BigString } from '../../../types/shared.js'
+import { Collection } from '../../../util/collection.js'
 
 // TODO: This endpoint discards certain data from the result.
 //  Create `ScheduledEventUser` type and parse the data to it.
@@ -28,66 +28,66 @@ export async function getScheduledEventUsers(
   guildId: BigString,
   eventId: BigString,
   options?: GetScheduledEventUsers & { withMember?: false },
-): Promise<Collection<bigint, User>>;
+): Promise<Collection<bigint, User>>
 export async function getScheduledEventUsers(
   bot: Bot,
   guildId: BigString,
   eventId: BigString,
   options?: GetScheduledEventUsers & { withMember: true },
-): Promise<Collection<bigint, { user: User; member: Member }>>;
+): Promise<Collection<bigint, { user: User, member: Member }>>
 export async function getScheduledEventUsers(
   bot: Bot,
   guildId: BigString,
   eventId: BigString,
-  options?: GetScheduledEventUsers,
+  options?: GetScheduledEventUsers
 ): Promise<
-  Collection<bigint, User> | Collection<bigint, { user: User; member: Member }>
+  Collection<bigint, User> | Collection<bigint, { user: User, member: Member }>
 > {
-  let url = bot.constants.routes.GUILD_SCHEDULED_EVENT_USERS(guildId, eventId, options);
+  let url = bot.constants.routes.GUILD_SCHEDULED_EVENT_USERS(guildId, eventId, options)
 
-  if (options) {
-    url = "?";
+  if (options != null) {
+    url = '?'
 
-    if (options.limit) url += `limit=${options.limit}`;
-    if (options.withMember) url += `&with_member=${options.withMember}`;
-    if (options.after) url += `&after=${options.after}`;
-    if (options.before) url += `&before=${options.before}`;
+    if (options.limit) url += `limit=${options.limit}`
+    if (options.withMember) url += `&with_member=${options.withMember}`
+    if (options.after) url += `&after=${options.after}`
+    if (options.before) url += `&before=${options.before}`
   }
 
-  const results = await bot.rest.runMethod<{ user: DiscordUser; member?: DiscordMember }[]>(
+  const results = await bot.rest.runMethod<Array<{ user: DiscordUser, member?: DiscordMember }>>(
     bot.rest,
-    "GET",
-    url,
-  );
+    'GET',
+    url
+  )
 
   if (!options?.withMember) {
     return new Collection(
       results.map((result) => {
-        const user = bot.transformers.user(bot, result.user);
-        return [user.id, user];
-      }),
-    );
+        const user = bot.transformers.user(bot, result.user)
+        return [user.id, user]
+      })
+    )
   }
 
-  const id = bot.transformers.snowflake(guildId);
+  const id = bot.transformers.snowflake(guildId)
 
   return new Collection(
     results.map((result) => {
-      const user = bot.transformers.user(bot, result.user);
-      const member = bot.transformers.member(bot, result.member!, id, user.id);
+      const user = bot.transformers.user(bot, result.user)
+      const member = bot.transformers.member(bot, result.member!, id, user.id)
 
-      return [user.id, { member, user }];
-    }),
-  );
+      return [user.id, { member, user }]
+    })
+  )
 }
 
 export interface GetScheduledEventUsers {
   /** number of users to return (up to maximum 100), defaults to 100 */
-  limit?: number;
+  limit?: number
   /** whether to also have member objects provided, defaults to false */
-  withMember?: boolean;
+  withMember?: boolean
   /** consider only users before given user id */
-  before?: BigString;
+  before?: BigString
   /** consider only users after given user id. If both before and after are provided, only before is respected. Fetching users in-between before and after is not supported. */
-  after?: BigString;
+  after?: BigString
 }

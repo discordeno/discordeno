@@ -1,6 +1,6 @@
-import type { Bot } from "../../../bot.ts";
-import { InteractionResponse, Message } from "../../../mod.ts";
-import { DiscordMessage } from "../../../types/discord.ts";
+import type { Bot } from '../../../bot.js'
+import { InteractionResponse, Message } from '../../../mod.js'
+import { DiscordMessage } from '../../../types/discord.js'
 
 /**
  * Sends a follow-up message to an interaction.
@@ -26,21 +26,21 @@ import { DiscordMessage } from "../../../types/discord.ts";
 export async function sendFollowupMessage(
   bot: Bot,
   token: string,
-  options: InteractionResponse,
+  options: InteractionResponse
 ): Promise<Message> {
   const result = await bot.rest.sendRequest<DiscordMessage>(bot.rest, {
     url: bot.constants.routes.WEBHOOK(bot.applicationId, token),
-    method: "POST",
+    method: 'POST',
     payload: bot.rest.createRequestBody(bot.rest, {
-      method: "POST",
+      method: 'POST',
       body: {
         ...bot.transformers.reverse.interactionResponse(bot, options).data,
-        file: options.data?.file,
+        file: options.data?.file
       },
       // remove authorization header
-      headers: { Authorization: "" },
-    }),
-  });
+      headers: { Authorization: '' }
+    })
+  })
 
-  return bot.transformers.message(bot, result);
+  return bot.transformers.message(bot, result)
 }

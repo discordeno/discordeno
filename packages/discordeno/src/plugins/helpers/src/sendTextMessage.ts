@@ -1,11 +1,11 @@
-import { BigString, Bot, CreateMessage } from "../deps.ts";
+import { BigString, Bot, CreateMessage } from '../deps.js'
 
 /** Sends a text message. */
 export async function sendTextMessage(
   bot: Bot,
   channelId: BigString,
-  content: string | CreateMessage,
+  content: string | CreateMessage
 ) {
-  if (typeof content === "string") content = { content };
-  return bot.helpers.sendMessage(channelId, content);
+  if (typeof content === 'string') content = { content }
+  return await bot.helpers.sendMessage(channelId, content)
 }

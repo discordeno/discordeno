@@ -1,6 +1,6 @@
-import { Bot } from "../bot.ts";
-import { DiscordApplicationCommand } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
+import { Bot } from '../bot.js'
+import { DiscordApplicationCommand } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
 
 export function transformApplicationCommand(bot: Bot, payload: DiscordApplicationCommand) {
   const applicationCommand = {
@@ -18,10 +18,10 @@ export function transformApplicationCommand(bot: Bot, payload: DiscordApplicatio
     type: payload.type,
     version: payload.version,
 
-    options: payload.options?.map((option) => bot.transformers.applicationCommandOption(bot, option)),
-  };
+    options: payload.options?.map((option) => bot.transformers.applicationCommandOption(bot, option))
+  }
 
-  return applicationCommand as Optionalize<typeof applicationCommand>;
+  return applicationCommand as Optionalize<typeof applicationCommand>
 }
 
-export interface ApplicationCommand extends ReturnType<typeof transformApplicationCommand> {}
+export interface ApplicationCommand extends ReturnType<typeof transformApplicationCommand> { }

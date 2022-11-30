@@ -1,5 +1,5 @@
-import type { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Initiates the process of pruning inactive members.
@@ -23,31 +23,31 @@ import { BigString } from "../../types/shared.ts";
 export async function pruneMembers(
   bot: Bot,
   guildId: BigString,
-  options: BeginGuildPrune,
+  options: BeginGuildPrune
 ): Promise<number | undefined> {
-  if (options.days && options.days < 1) throw new Error(bot.constants.Errors.PRUNE_MIN_DAYS);
-  if (options.days && options.days > 30) throw new Error(bot.constants.Errors.PRUNE_MAX_DAYS);
+  if (options.days && options.days < 1) throw new Error(bot.constants.Errors.PRUNE_MIN_DAYS)
+  if (options.days && options.days > 30) throw new Error(bot.constants.Errors.PRUNE_MAX_DAYS)
 
   const result = await bot.rest.runMethod<{ pruned: number | null }>(
     bot.rest,
-    "POST",
+    'POST',
     bot.constants.routes.GUILD_PRUNE(guildId),
     {
       days: options.days,
       compute_prune_count: options.computePruneCount,
-      include_roles: options.includeRoles,
-    },
-  );
+      include_roles: options.includeRoles
+    }
+  )
 
-  return result.pruned ?? undefined;
+  return result.pruned ?? undefined
 }
 
 /** https://discord.com/developers/docs/resources/guild#begin-guild-prune */
 export interface BeginGuildPrune {
   /** Number of days to prune (1 or more), default: 7 */
-  days?: number;
+  days?: number
   /** Whether 'pruned' is returned, discouraged for large guilds, default: true */
-  computePruneCount?: boolean;
+  computePruneCount?: boolean
   /** Role(s) ro include, default: none */
-  includeRoles?: string[];
+  includeRoles?: string[]
 }

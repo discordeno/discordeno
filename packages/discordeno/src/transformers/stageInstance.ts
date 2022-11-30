@@ -1,6 +1,6 @@
-import { Bot } from "../bot.ts";
-import { DiscordStageInstance } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
+import { Bot } from '../bot.js'
+import { DiscordStageInstance } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
 
 export function transformStageInstance(bot: Bot, payload: DiscordStageInstance) {
   const stageInstance = {
@@ -10,10 +10,10 @@ export function transformStageInstance(bot: Bot, payload: DiscordStageInstance) 
     topic: payload.topic,
     guildScheduledEventId: payload.guild_scheduled_event_id
       ? bot.transformers.snowflake(payload.guild_scheduled_event_id)
-      : undefined,
-  };
+      : undefined
+  }
 
-  return stageInstance as Optionalize<typeof stageInstance>;
+  return stageInstance as Optionalize<typeof stageInstance>
 }
 
-export interface StageInstance extends ReturnType<typeof transformStageInstance> {}
+export interface StageInstance extends ReturnType<typeof transformStageInstance> { }

@@ -1,8 +1,8 @@
-import type { Bot } from "../../bot.ts";
-import { Channel } from "../../transformers/channel.ts";
-import { DiscordChannel } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
-import { Collection } from "../../util/collection.ts";
+import type { Bot } from '../../bot.js'
+import { Channel } from '../../transformers/channel.js'
+import { DiscordChannel } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
+import { Collection } from '../../util/collection.js'
 
 /**
  * Gets the list of channels for a guild.
@@ -19,16 +19,16 @@ import { Collection } from "../../util/collection.ts";
 export async function getChannels(bot: Bot, guildId: BigString): Promise<Collection<bigint, Channel>> {
   const results = await bot.rest.runMethod<DiscordChannel[]>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_CHANNELS(guildId),
-  );
+    'GET',
+    bot.constants.routes.GUILD_CHANNELS(guildId)
+  )
 
-  const id = bot.transformers.snowflake(guildId);
+  const id = bot.transformers.snowflake(guildId)
 
   return new Collection(
     results.map((result) => {
-      const channel = bot.transformers.channel(bot, { channel: result, guildId: id });
-      return [channel.id, channel];
-    }),
-  );
+      const channel = bot.transformers.channel(bot, { channel: result, guildId: id })
+      return [channel.id, channel]
+    })
+  )
 }

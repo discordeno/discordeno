@@ -1,7 +1,7 @@
-import type { Bot } from "../../bot.ts";
-import { Member } from "../../transformers/member.ts";
-import { DiscordMemberWithUser } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { Member } from '../../transformers/member.js'
+import { DiscordMemberWithUser } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Gets the member object by user ID.
@@ -16,9 +16,9 @@ import { BigString } from "../../types/shared.ts";
 export async function getMember(bot: Bot, guildId: BigString, userId: BigString): Promise<Member> {
   const result = await bot.rest.runMethod<DiscordMemberWithUser>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_MEMBER(guildId, userId),
-  );
+    'GET',
+    bot.constants.routes.GUILD_MEMBER(guildId, userId)
+  )
 
-  return bot.transformers.member(bot, result, bot.transformers.snowflake(guildId), bot.transformers.snowflake(userId));
+  return bot.transformers.member(bot, result, bot.transformers.snowflake(guildId), bot.transformers.snowflake(userId))
 }

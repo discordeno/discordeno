@@ -1,6 +1,6 @@
-import { BotWithCache } from "../../../deps.ts";
-import { connectToVoiceChannel } from "./connectToVoiceChannels.ts";
+import { BotWithCache } from '../../../deps.js'
+import { connectToVoiceChannel } from './connectToVoiceChannels.js'
 
 export function voice(bot: BotWithCache) {
-  connectToVoiceChannel(bot);
+  connectToVoiceChannel(bot)
 }

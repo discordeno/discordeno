@@ -1,10 +1,10 @@
-import { BotWithCache } from "../../deps.ts";
-import { createEmoji } from "./createEmoji.ts";
-import { deleteEmoji } from "./deleteEmoji.ts";
-import { editEmoji } from "./editEmoji.ts";
+import { BotWithCache } from '../../deps.js'
+import { createEmoji } from './createEmoji.js'
+import { deleteEmoji } from './deleteEmoji.js'
+import { editEmoji } from './editEmoji.js'
 
 export function emojis(bot: BotWithCache) {
-  createEmoji(bot);
-  deleteEmoji(bot);
-  editEmoji(bot);
+  createEmoji(bot)
+  deleteEmoji(bot)
+  editEmoji(bot)
 }

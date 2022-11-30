@@ -1,7 +1,7 @@
-import { Bot } from "../../bot.ts";
-import { Sticker } from "../../transformers/sticker.ts";
-import { WithReason } from "../../types/discordeno.ts";
-import { AtLeastOne } from "../../types/shared.ts";
+import { Bot } from '../../bot.js'
+import { Sticker } from '../../transformers/sticker.js'
+import { WithReason } from '../../types/discordeno.js'
+import { AtLeastOne } from '../../types/shared.js'
 
 /**
  * Edit the given sticker.
@@ -20,22 +20,22 @@ export async function editGuildSticker(
   bot: Bot,
   guildId: bigint,
   stickerId: bigint,
-  options: AtLeastOne<EditGuildStickerOptions>,
+  options: AtLeastOne<EditGuildStickerOptions>
 ): Promise<Sticker> {
-  const result = await bot.rest.runMethod(bot.rest, "PATCH", bot.constants.routes.GUILD_STICKER(guildId, stickerId), {
+  const result = await bot.rest.runMethod(bot.rest, 'PATCH', bot.constants.routes.GUILD_STICKER(guildId, stickerId), {
     name: options.name,
     description: options.description,
     tags: options.tags,
-    reason: options.reason,
-  });
-  return bot.transformers.sticker(bot, result);
+    reason: options.reason
+  })
+  return bot.transformers.sticker(bot, result)
 }
 
 export interface EditGuildStickerOptions extends WithReason {
   /** Name of the sticker (2-30 characters) */
-  name?: string;
+  name?: string
   /** Description of the sticker (empty or 2-100 characters) */
-  description?: string | null;
+  description?: string | null
   /** Autocomplete/suggestion tags for the sticker (max 200 characters) */
-  tags?: string;
+  tags?: string
 }

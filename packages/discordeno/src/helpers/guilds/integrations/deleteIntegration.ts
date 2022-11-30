@@ -1,5 +1,5 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Deletes an integration attached to a guild.
@@ -21,7 +21,7 @@ import { BigString } from "../../../types/shared.ts";
 export async function deleteIntegration(bot: Bot, guildId: BigString, integrationId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
-    bot.constants.routes.GUILD_INTEGRATION(guildId, integrationId),
-  );
+    'DELETE',
+    bot.constants.routes.GUILD_INTEGRATION(guildId, integrationId)
+  )
 }

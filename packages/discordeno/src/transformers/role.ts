@@ -1,7 +1,7 @@
-import { Bot } from "../bot.ts";
-import { DiscordRole } from "../types/discord.ts";
-import { RoleToggles } from "./toggles/role.ts";
-import { Optionalize } from "../types/shared.ts";
+import { Bot } from '../bot.js'
+import { DiscordRole } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
+import { RoleToggles } from './toggles/role.js'
 
 export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guildId: bigint }) {
   const role = {
@@ -18,10 +18,10 @@ export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guild
       : undefined,
     permissions: bot.transformers.snowflake(payload.role.permissions),
     icon: payload.role.icon ? bot.utils.iconHashToBigInt(payload.role.icon) : undefined,
-    unicodeEmoji: payload.role.unicode_emoji,
-  };
+    unicodeEmoji: payload.role.unicode_emoji
+  }
 
-  return role as Optionalize<typeof role>;
+  return role as Optionalize<typeof role>
 }
 
-export interface Role extends ReturnType<typeof transformRole> {}
+export interface Role extends ReturnType<typeof transformRole> { }

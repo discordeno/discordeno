@@ -1,7 +1,7 @@
-import type { Bot } from "../../../bot.ts";
-import { Message } from "../../../transformers/message.ts";
-import { DiscordMessage } from "../../../types/discord.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { Message } from '../../../transformers/message.js'
+import { DiscordMessage } from '../../../types/discord.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Gets a follow-up message to an interaction by the ID of the message.
@@ -23,9 +23,9 @@ import { BigString } from "../../../types/shared.ts";
 export async function getFollowupMessage(bot: Bot, token: string, messageId: BigString): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "GET",
-    bot.constants.routes.INTERACTION_ID_TOKEN_MESSAGE_ID(bot.applicationId, token, messageId),
-  );
+    'GET',
+    bot.constants.routes.INTERACTION_ID_TOKEN_MESSAGE_ID(bot.applicationId, token, messageId)
+  )
 
-  return bot.transformers.message(bot, result);
+  return bot.transformers.message(bot, result)
 }

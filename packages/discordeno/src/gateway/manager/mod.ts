@@ -1,8 +1,9 @@
-export * from "./calculateTotalShards.ts";
-export * from "./calculateWorkerId.ts";
-export * from "./gatewayManager.ts";
-export * from "./prepareBuckets.ts";
-export * from "./shardManager.ts";
-export * from "./spawnShards.ts";
-export * from "./stop.ts";
-export * from "./tellWorkerToIdentify.ts";
+export * from './calculateTotalShards.js'
+export * from './calculateWorkerId.js'
+export * from './gatewayManager.js'
+export * from './prepareBuckets.js'
+export * from './shardManager.js'
+export * from './spawnShards.js'
+export * from './stop.js'
+export * from './tellWorkerToIdentify.js'
+

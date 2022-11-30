@@ -1,12 +1,12 @@
-import type { Bot } from "../bot.ts";
-import { DiscordMember, DiscordUser } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
-import { MemberToggles } from "./toggles/member.ts";
-import { UserToggles } from "./toggles/user.ts";
+import type { Bot } from '../bot.js'
+import { DiscordMember, DiscordUser } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
+import { MemberToggles } from './toggles/member.js'
+import { UserToggles } from './toggles/user.js'
 
 export function transformUser(bot: Bot, payload: DiscordUser) {
   const user = {
-    id: bot.transformers.snowflake(payload.id || ""),
+    id: bot.transformers.snowflake(payload.id || ''),
     username: payload.username,
     discriminator: payload.discriminator,
     avatar: payload.avatar ? bot.utils.iconHashToBigInt(payload.avatar) : undefined,
@@ -15,17 +15,17 @@ export function transformUser(bot: Bot, payload: DiscordUser) {
     flags: payload.flags,
     premiumType: payload.premium_type,
     publicFlags: payload.public_flags,
-    toggles: new UserToggles(payload),
-  };
+    toggles: new UserToggles(payload)
+  }
 
-  return user as Optionalize<typeof user>;
+  return user as Optionalize<typeof user>
 }
 
 export function transformMember(bot: Bot, payload: DiscordMember, guildId: bigint, userId: bigint) {
   const member = {
     id: userId,
     guildId,
-    user: payload.user ? bot.transformers.user(bot, payload.user) : undefined,
+    user: (payload.user != null) ? bot.transformers.user(bot, payload.user) : undefined,
     nick: payload.nick ?? undefined,
     roles: payload.roles.map((id) => bot.transformers.snowflake(id)),
     joinedAt: Date.parse(payload.joined_at),
@@ -35,11 +35,11 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: bigin
     communicationDisabledUntil: payload.communication_disabled_until
       ? Date.parse(payload.communication_disabled_until)
       : undefined,
-    toggles: new MemberToggles(payload),
-  };
+    toggles: new MemberToggles(payload)
+  }
 
-  return member as Optionalize<typeof member>;
+  return member as Optionalize<typeof member>
 }
 
-export interface Member extends ReturnType<typeof transformMember> {}
-export interface User extends ReturnType<typeof transformUser> {}
+export interface Member extends ReturnType<typeof transformMember> { }
+export interface User extends ReturnType<typeof transformUser> { }

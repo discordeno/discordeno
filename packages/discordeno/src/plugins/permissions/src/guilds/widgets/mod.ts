@@ -1,6 +1,6 @@
-import { BotWithCache } from "../../../deps.ts";
-import { editWidgetSettings } from "./editWidgetSettings.ts";
+import { BotWithCache } from '../../../deps.js'
+import { editWidgetSettings } from './editWidgetSettings.js'
 
 export function widgets(bot: BotWithCache) {
-  editWidgetSettings(bot);
+  editWidgetSettings(bot)
 }

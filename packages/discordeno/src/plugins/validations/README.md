@@ -8,7 +8,7 @@ functions.
 
 ```ts
 // MOVE TO DEPS.TS AND USE SPECIFIC VERSION
-import { enableValidationsPlugin } from "./deps.ts";
+import { enableValidationsPlugin } from "./deps.js";
 // Create the bot object, THIS WILL NEED YOUR OPTIONS.
 const bot = createBot({});
 // Enables the plugin on this bot

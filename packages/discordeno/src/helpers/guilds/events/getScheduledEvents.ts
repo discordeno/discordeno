@@ -1,8 +1,8 @@
-import { Bot } from "../../../bot.ts";
-import { ScheduledEvent } from "../../../transformers/scheduledEvent.ts";
-import { DiscordScheduledEvent } from "../../../types/discord.ts";
-import { BigString } from "../../../types/shared.ts";
-import { Collection } from "../../../util/collection.ts";
+import { Bot } from '../../../bot.js'
+import { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
+import { DiscordScheduledEvent } from '../../../types/discord.js'
+import { BigString } from '../../../types/shared.js'
+import { Collection } from '../../../util/collection.js'
 
 /**
  * Gets the list of scheduled events for a guild.
@@ -17,23 +17,23 @@ import { Collection } from "../../../util/collection.ts";
 export async function getScheduledEvents(
   bot: Bot,
   guildId: BigString,
-  options?: GetScheduledEvents,
+  options?: GetScheduledEvents
 ): Promise<Collection<bigint, ScheduledEvent>> {
   const results = await bot.rest.runMethod<DiscordScheduledEvent[]>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_SCHEDULED_EVENTS(guildId, options?.withUserCount),
-  );
+    'GET',
+    bot.constants.routes.GUILD_SCHEDULED_EVENTS(guildId, options?.withUserCount)
+  )
 
   return new Collection(
     results.map((result) => {
-      const event = bot.transformers.scheduledEvent(bot, result);
-      return [event.id, event];
-    }),
-  );
+      const event = bot.transformers.scheduledEvent(bot, result)
+      return [event.id, event]
+    })
+  )
 }
 
 export interface GetScheduledEvents {
   /** include number of users subscribed to each event */
-  withUserCount?: boolean;
+  withUserCount?: boolean
 }

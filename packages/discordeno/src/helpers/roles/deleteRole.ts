@@ -1,5 +1,5 @@
-import type { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Deletes a role from a guild.
@@ -16,5 +16,5 @@ import { BigString } from "../../types/shared.ts";
  * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild-role}
  */
 export async function deleteRole(bot: Bot, guildId: BigString, roleId: BigString): Promise<void> {
-  return await bot.rest.runMethod<void>(bot.rest, "DELETE", bot.constants.routes.GUILD_ROLE(guildId, roleId));
+  return await bot.rest.runMethod<void>(bot.rest, 'DELETE', bot.constants.routes.GUILD_ROLE(guildId, roleId))
 }

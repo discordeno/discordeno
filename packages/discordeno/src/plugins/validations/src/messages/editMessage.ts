@@ -1,60 +1,60 @@
-import { AllowedMentionsTypes, Bot } from "../../deps.ts";
+import { AllowedMentionsTypes, Bot } from '../../deps.js'
 
 export function editMessage(bot: Bot) {
-  const editMessage = bot.helpers.editMessage;
+  const editMessage = bot.helpers.editMessage
 
-  bot.helpers.editMessage = function (channelId, messageId, content) {
+  bot.helpers.editMessage = async function (channelId, messageId, content) {
     if (content.allowedMentions) {
       if (content.allowedMentions.users?.length) {
         if (
           content.allowedMentions.parse?.includes(
-            AllowedMentionsTypes.UserMentions,
+            AllowedMentionsTypes.UserMentions
           )
         ) {
           content.allowedMentions.parse = content.allowedMentions.parse.filter((
-            p,
-          ) => p !== "users");
+            p
+          ) => p !== 'users')
         }
 
         if (content.allowedMentions.users.length > 100) {
           content.allowedMentions.users = content.allowedMentions.users.slice(
             0,
-            100,
-          );
+            100
+          )
         }
       }
 
       if (content.allowedMentions.roles?.length) {
         if (
           content.allowedMentions.parse?.includes(
-            AllowedMentionsTypes.RoleMentions,
+            AllowedMentionsTypes.RoleMentions
           )
         ) {
           content.allowedMentions.parse = content.allowedMentions.parse.filter((
-            p,
-          ) => p !== "roles");
+            p
+          ) => p !== 'roles')
         }
 
         if (content.allowedMentions.roles.length > 100) {
           content.allowedMentions.roles = content.allowedMentions.roles.slice(
             0,
-            100,
-          );
+            100
+          )
         }
       }
     }
 
-    content.embeds?.splice(10);
+    content.embeds?.splice(10)
 
     if (
       content.content &&
       !bot.utils.validateLength(content.content, { max: 2000 })
     ) {
       throw new Error(
-        "A message content can not contain more than 2000 characters.",
-      );
+        'A message content can not contain more than 2000 characters.'
+      )
     }
 
-    return editMessage(channelId, messageId, content);
-  };
+    return await editMessage(channelId, messageId, content)
+  }
 }

@@ -1,5 +1,5 @@
-import { DiscordGetGatewayBot } from "../../types/discord.ts";
-import { GetGatewayBot } from "../gatewayBot.ts";
+import { DiscordGetGatewayBot } from '../../types/discord.js'
+import { GetGatewayBot } from '../gatewayBot.js'
 
 export function transformGatewayBotToDiscordGatewayBot(payload: GetGatewayBot): DiscordGetGatewayBot {
   return {
@@ -9,7 +9,7 @@ export function transformGatewayBotToDiscordGatewayBot(payload: GetGatewayBot): 
       total: payload.sessionStartLimit.total,
       remaining: payload.sessionStartLimit.remaining,
       reset_after: payload.sessionStartLimit.resetAfter,
-      max_concurrency: payload.sessionStartLimit.maxConcurrency,
-    },
-  };
+      max_concurrency: payload.sessionStartLimit.maxConcurrency
+    }
+  }
 }

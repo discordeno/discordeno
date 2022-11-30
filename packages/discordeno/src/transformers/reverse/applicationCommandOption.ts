@@ -1,10 +1,10 @@
-import { Bot } from "../../bot.ts";
-import { DiscordApplicationCommandOption } from "../../types/discord.ts";
-import { ApplicationCommandOption } from "../applicationCommandOption.ts";
+import { Bot } from '../../bot.js'
+import { DiscordApplicationCommandOption } from '../../types/discord.js'
+import { ApplicationCommandOption } from '../applicationCommandOption.js'
 
 export function transformApplicationCommandOptionToDiscordApplicationCommandOption(
   bot: Bot,
-  payload: ApplicationCommandOption,
+  payload: ApplicationCommandOption
 ): DiscordApplicationCommandOption {
   return {
     type: payload.type,
@@ -20,6 +20,6 @@ export function transformApplicationCommandOptionToDiscordApplicationCommandOpti
     max_value: payload.maxValue,
     min_length: payload.minLength,
     max_length: payload.maxLength,
-    autocomplete: payload.autocomplete,
-  };
+    autocomplete: payload.autocomplete
+  }
 }

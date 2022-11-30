@@ -1,6 +1,6 @@
-import type { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
-import { ImageFormat, ImageSize } from "../members/getAvatarUrl.ts";
+import type { Bot } from '../../bot.js'
+import { BigString } from '../../types/shared.js'
+import { ImageFormat, ImageSize } from '../members/getAvatarUrl.js'
 
 /**
  * Builds a URL to the guild icon stored in the Discord CDN.
@@ -15,18 +15,18 @@ export function getGuildIconURL(
   guildId: BigString,
   imageHash: BigString | undefined,
   options?: {
-    size?: ImageSize;
-    format?: ImageFormat;
-  },
+    size?: ImageSize
+    format?: ImageFormat
+  }
 ): string | undefined {
   return imageHash
     ? bot.utils.formatImageURL(
       bot.constants.routes.GUILD_ICON(
         guildId,
-        typeof imageHash === "string" ? imageHash : bot.utils.iconBigintToHash(imageHash),
+        typeof imageHash === 'string' ? imageHash : bot.utils.iconBigintToHash(imageHash)
       ),
       options?.size || 128,
-      options?.format,
+      options?.format
     )
-    : undefined;
+    : undefined
 }

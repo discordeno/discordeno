@@ -1,5 +1,5 @@
-import type { Bot } from "../../bot.ts";
-import { BigString, WithReason } from "../../mod.ts";
+import type { Bot } from '../../bot.js'
+import { BigString, WithReason } from '../../mod.js'
 
 /**
  * Bans a user from a guild.
@@ -20,21 +20,21 @@ export async function banMember(
   bot: Bot,
   guildId: BigString,
   userId: BigString,
-  options?: CreateGuildBan,
+  options?: CreateGuildBan
 ): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "PUT",
+    'PUT',
     bot.constants.routes.GUILD_BAN(guildId, userId),
     {
       delete_message_seconds: options?.deleteMessageSeconds,
-      reason: options?.reason,
-    },
-  );
+      reason: options?.reason
+    }
+  )
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-ban */
 export interface CreateGuildBan extends WithReason {
   /** Number of seconds to delete messages for, between 0 and 604800 (7 days) */
-  deleteMessageSeconds?: number;
+  deleteMessageSeconds?: number
 }

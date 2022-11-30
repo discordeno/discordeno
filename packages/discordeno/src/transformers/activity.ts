@@ -1,6 +1,6 @@
-import { Bot } from "../bot.ts";
-import { DiscordActivity } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
+import { Bot } from '../bot.js'
+import { DiscordActivity } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
 
 export function transformActivity(bot: Bot, payload: DiscordActivity) {
   const activity = {
@@ -13,11 +13,11 @@ export function transformActivity(bot: Bot, payload: DiscordActivity) {
     applicationId: payload.application_id ? bot.transformers.snowflake(payload.application_id) : undefined,
     details: payload.details ?? undefined,
     state: payload.state ?? undefined,
-    emoji: payload.emoji
+    emoji: (payload.emoji != null)
       ? {
         name: payload.emoji.name,
         animated: payload.emoji.animated,
-        id: payload.emoji.id ? bot.transformers.snowflake(payload.emoji.id) : undefined,
+        id: payload.emoji.id ? bot.transformers.snowflake(payload.emoji.id) : undefined
       }
       : undefined,
     partyId: payload.party?.id,
@@ -32,10 +32,10 @@ export function transformActivity(bot: Bot, payload: DiscordActivity) {
     match: payload.secrets?.match,
     instance: payload.instance,
     flags: payload.flags,
-    buttons: payload.buttons,
-  };
+    buttons: payload.buttons
+  }
 
-  return activity as Optionalize<typeof activity>;
+  return activity as Optionalize<typeof activity>
 }
 
-export interface Activity extends ReturnType<typeof transformActivity> {}
+export interface Activity extends ReturnType<typeof transformActivity> { }

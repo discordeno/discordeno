@@ -1,7 +1,7 @@
-import type { Bot } from "../../../bot.ts";
-import { GuildWidgetSettings } from "../../../transformers/widgetSettings.ts";
-import { DiscordGuildWidgetSettings } from "../../../types/discord.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { GuildWidgetSettings } from '../../../transformers/widgetSettings.js'
+import { DiscordGuildWidgetSettings } from '../../../types/discord.js'
+import { BigString } from '../../../types/shared.js'
 
 // TODO: Use `options` instead of `enabled` and `channelId`.
 
@@ -23,17 +23,17 @@ export async function editWidgetSettings(
   bot: Bot,
   guildId: BigString,
   enabled: boolean,
-  channelId?: string | null,
+  channelId?: string | null
 ): Promise<GuildWidgetSettings> {
   const result = await bot.rest.runMethod<DiscordGuildWidgetSettings>(
     bot.rest,
-    "PATCH",
+    'PATCH',
     bot.constants.routes.GUILD_WIDGET(guildId),
     {
       enabled,
-      channel_id: channelId,
-    },
-  );
+      channel_id: channelId
+    }
+  )
 
-  return bot.transformers.widgetSettings(bot, result);
+  return bot.transformers.widgetSettings(bot, result)
 }

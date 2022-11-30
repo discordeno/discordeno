@@ -1,4 +1,5 @@
-export * from "./createStageInstance.ts";
-export * from "./deleteStageInstance.ts";
-export * from "./editStageInstance.ts";
-export * from "./getStageInstance.ts";
+export * from './createStageInstance.js'
+export * from './deleteStageInstance.js'
+export * from './editStageInstance.js'
+export * from './getStageInstance.js'
+

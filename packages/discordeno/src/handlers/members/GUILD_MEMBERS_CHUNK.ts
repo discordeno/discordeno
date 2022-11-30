@@ -1,16 +1,16 @@
-import { Bot } from "../../bot.ts";
-import { DiscordGatewayPayload, DiscordGuildMembersChunk } from "../../types/discord.ts";
-import { PresenceStatus } from "../../types/shared.ts";
+import { Bot } from '../../bot.js'
+import { DiscordGatewayPayload, DiscordGuildMembersChunk } from '../../types/discord.js'
+import { PresenceStatus } from '../../types/shared.js'
 
 export async function handleGuildMembersChunk(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as DiscordGuildMembersChunk;
+  const payload = data.d as DiscordGuildMembersChunk
 
-  const guildId = bot.transformers.snowflake(payload.guild_id);
+  const guildId = bot.transformers.snowflake(payload.guild_id)
 
   if (payload.nonce && payload.chunk_index >= payload.chunk_count - 1) {
     bot.cache.fetchAllMembersProcessingRequests.get(payload.nonce)?.(
-      `Member fetching complete. Nonce: ${payload.nonce}`,
-    );
+      `Member fetching complete. Nonce: ${payload.nonce}`
+    )
   }
 
   return {
@@ -29,9 +29,9 @@ export async function handleGuildMembersChunk(bot: Bot, data: DiscordGatewayPayl
       clientStatus: {
         desktop: presence.client_status.desktop,
         mobile: presence.client_status.mobile,
-        web: presence.client_status.web,
-      },
+        web: presence.client_status.web
+      }
     })),
-    nonce: payload.nonce,
-  };
+    nonce: payload.nonce
+  }
 }

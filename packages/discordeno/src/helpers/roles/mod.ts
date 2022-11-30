@@ -1,7 +1,8 @@
-export * from "./addRole.ts";
-export * from "./createRole.ts";
-export * from "./deleteRole.ts";
-export * from "./editRole.ts";
-export * from "./editRolePositions.ts";
-export * from "./getRoles.ts";
-export * from "./removeRole.ts";
+export * from './addRole.js'
+export * from './createRole.js'
+export * from './deleteRole.js'
+export * from './editRole.js'
+export * from './editRolePositions.js'
+export * from './getRoles.js'
+export * from './removeRole.js'
+

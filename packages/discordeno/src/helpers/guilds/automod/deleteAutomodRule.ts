@@ -1,5 +1,5 @@
-import { Bot } from "../../../bot.ts";
-import { BigString } from "../../../types/shared.ts";
+import { Bot } from '../../../bot.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Deletes an automod rule.
@@ -19,12 +19,12 @@ export async function deleteAutomodRule(
   bot: Bot,
   guildId: BigString,
   ruleId: BigString,
-  reason?: string,
+  reason?: string
 ): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
+    'DELETE',
     bot.constants.routes.AUTOMOD_RULE(guildId, ruleId),
-    { reason },
-  );
+    { reason }
+  )
 }

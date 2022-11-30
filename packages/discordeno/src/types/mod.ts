@@ -1,3 +1,4 @@
-export * from "./discord.ts";
-export * from "./discordeno.ts";
-export * from "./shared.ts";
+export * from "./discord.js";
+export * from "./discordeno.js";
+export * from "./shared.js";
+

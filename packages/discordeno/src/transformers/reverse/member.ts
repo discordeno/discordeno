@@ -1,6 +1,6 @@
-import type { Bot } from "../../bot.ts";
-import { DiscordMember, DiscordUser } from "../../types/discord.ts";
-import { Member, User } from "../member.ts";
+import type { Bot } from '../../bot.js'
+import { DiscordMember, DiscordUser } from '../../types/discord.js'
+import { Member, User } from '../member.js'
 
 export function transformUserToDiscordUser(bot: Bot, payload: User): DiscordUser {
   return {
@@ -16,8 +16,8 @@ export function transformUserToDiscordUser(bot: Bot, payload: User): DiscordUser
     bot: payload.toggles.bot,
     system: payload.toggles.system,
     mfa_enabled: payload.toggles.mfaEnabled,
-    verified: payload.toggles.verified,
-  };
+    verified: payload.toggles.verified
+  }
 }
 
 export function transformMemberToDiscordMember(bot: Bot, payload: Member): DiscordMember {
@@ -33,6 +33,6 @@ export function transformMemberToDiscordMember(bot: Bot, payload: Member): Disco
       : undefined,
     deaf: payload.toggles.deaf,
     mute: payload.toggles.mute,
-    pending: payload.toggles.pending,
-  };
+    pending: payload.toggles.pending
+  }
 }

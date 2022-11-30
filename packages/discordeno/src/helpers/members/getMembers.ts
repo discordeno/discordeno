@@ -1,8 +1,8 @@
-import type { Bot } from "../../bot.ts";
-import { Member } from "../../transformers/member.ts";
-import { DiscordMemberWithUser } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
-import { Collection } from "../../util/collection.ts";
+import type { Bot } from '../../bot.js'
+import { Member } from '../../transformers/member.js'
+import { DiscordMemberWithUser } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
+import { Collection } from '../../util/collection.js'
 
 // TODO: make options optional
 
@@ -28,28 +28,28 @@ import { Collection } from "../../util/collection.ts";
 export async function getMembers(
   bot: Bot,
   guildId: BigString,
-  options: ListGuildMembers,
+  options: ListGuildMembers
 ): Promise<Collection<bigint, Member>> {
   const results = await bot.rest.runMethod<DiscordMemberWithUser[]>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_MEMBERS(guildId, options),
-  );
+    'GET',
+    bot.constants.routes.GUILD_MEMBERS(guildId, options)
+  )
 
-  const id = bot.transformers.snowflake(guildId);
+  const id = bot.transformers.snowflake(guildId)
 
   return new Collection(
     results.map((result) => {
-      const member = bot.transformers.member(bot, result, id, bot.transformers.snowflake(result.user.id));
-      return [member.id, member];
-    }),
-  );
+      const member = bot.transformers.member(bot, result, id, bot.transformers.snowflake(result.user.id))
+      return [member.id, member]
+    })
+  )
 }
 
 /** https://discord.com/developers/docs/resources/guild#list-guild-members */
 export interface ListGuildMembers {
   /** Max number of members to return (1-1000). Default: 1000 */
-  limit?: number;
+  limit?: number
   /** The highest user id in the previous page. Default: 0 */
-  after?: string;
+  after?: string
 }

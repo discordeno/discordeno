@@ -1,8 +1,8 @@
-import type { Bot } from "../../bot.ts";
-import { Message } from "../../transformers/message.ts";
-import { DiscordMessage } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
-import { Collection } from "../../util/collection.ts";
+import type { Bot } from '../../bot.js'
+import { Message } from '../../transformers/message.js'
+import { DiscordMessage } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
+import { Collection } from '../../util/collection.js'
 
 /**
  * Gets the pinned messages for a channel.
@@ -22,14 +22,14 @@ import { Collection } from "../../util/collection.ts";
 export async function getPinnedMessages(bot: Bot, channelId: BigString): Promise<Collection<bigint, Message>> {
   const results = await bot.rest.runMethod<DiscordMessage[]>(
     bot.rest,
-    "GET",
-    bot.constants.routes.CHANNEL_PINS(channelId),
-  );
+    'GET',
+    bot.constants.routes.CHANNEL_PINS(channelId)
+  )
 
   return new Collection(
     results.map((result) => {
-      const message = bot.transformers.message(bot, result);
-      return [message.id, message];
-    }),
-  );
+      const message = bot.transformers.message(bot, result)
+      return [message.id, message]
+    })
+  )
 }

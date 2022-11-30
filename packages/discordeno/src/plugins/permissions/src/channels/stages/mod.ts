@@ -1,10 +1,10 @@
-import { BotWithCache } from "../../../deps.ts";
-import { createStageInstance } from "./createStageInstance.ts";
-import { deleteStageInstance } from "./deleteStageInstances.ts";
-import { editStageInstance } from "./editStageInstance.ts";
+import { BotWithCache } from '../../../deps.js'
+import { createStageInstance } from './createStageInstance.js'
+import { deleteStageInstance } from './deleteStageInstances.js'
+import { editStageInstance } from './editStageInstance.js'
 
 export function stages(bot: BotWithCache) {
-  createStageInstance(bot);
-  deleteStageInstance(bot);
-  editStageInstance(bot);
+  createStageInstance(bot)
+  deleteStageInstance(bot)
+  editStageInstance(bot)
 }

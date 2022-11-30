@@ -1,5 +1,5 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString, GatewayOpcodes } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString, GatewayOpcodes } from '../../../types/shared.js'
 
 /**
  * Leaves the voice channel the bot user is currently in.
@@ -16,21 +16,21 @@ import { BigString, GatewayOpcodes } from "../../../types/shared.ts";
  */
 export async function leaveVoiceChannel(
   bot: Bot,
-  guildId: BigString,
+  guildId: BigString
 ): Promise<void> {
-  const shardId = bot.utils.calculateShardId(bot.gateway, bot.transformers.snowflake(guildId));
-  const shard = bot.gateway.manager.shards.get(shardId);
-  if (!shard) {
-    throw new Error(`Shard (id: ${shardId} not found`);
+  const shardId = bot.utils.calculateShardId(bot.gateway, bot.transformers.snowflake(guildId))
+  const shard = bot.gateway.manager.shards.get(shardId)
+  if (shard == null) {
+    throw new Error(`Shard (id: ${shardId} not found`)
   }
 
-  return shard.send({
+  return await shard.send({
     op: GatewayOpcodes.VoiceStateUpdate,
     d: {
       guild_id: guildId.toString(),
       channel_id: null,
       self_mute: false,
-      self_deaf: false,
-    },
-  });
+      self_deaf: false
+    }
+  })
 }

@@ -5,7 +5,7 @@ This plugin leverages the ability to write files, and then import them.
 ## Code Example
 
 ```typescript
-import { createBot, enableFileLoaderPlugin, Intents, startBot } from "./deps.ts"; // Import discordeno and this plugin.
+import { createBot, enableFileLoaderPlugin, Intents, startBot } from "./deps.js"; // Import discordeno and this plugin.
 
 console.log("Starting Up the Bot, this might take awhile...");
 

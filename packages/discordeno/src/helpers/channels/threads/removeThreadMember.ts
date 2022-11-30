@@ -1,5 +1,5 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Removes a member from a thread.
@@ -21,7 +21,7 @@ import { BigString } from "../../../types/shared.ts";
 export async function removeThreadMember(bot: Bot, channelId: BigString, userId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
-    bot.constants.routes.THREAD_USER(channelId, userId),
-  );
+    'DELETE',
+    bot.constants.routes.THREAD_USER(channelId, userId)
+  )
 }

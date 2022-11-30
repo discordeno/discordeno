@@ -1,7 +1,7 @@
-import type { Bot } from "../../bot.ts";
-import { BigString, WithReason } from "../../mod.ts";
-import { Webhook } from "../../transformers/webhook.ts";
-import { DiscordWebhook } from "../../types/discord.ts";
+import type { Bot } from '../../bot.js'
+import { BigString, WithReason } from '../../mod.js'
+import { Webhook } from '../../transformers/webhook.js'
+import { DiscordWebhook } from '../../types/discord.js'
 
 /**
  * Creates a webhook.
@@ -23,21 +23,21 @@ import { DiscordWebhook } from "../../types/discord.ts";
 export async function createWebhook(bot: Bot, channelId: BigString, options: CreateWebhook): Promise<Webhook> {
   const result = await bot.rest.runMethod<DiscordWebhook>(
     bot.rest,
-    "POST",
+    'POST',
     bot.constants.routes.CHANNEL_WEBHOOKS(channelId),
     {
       name: options.name,
       avatar: options.avatar ? await bot.utils.urlToBase64(options.avatar) : undefined,
-      reason: options.reason,
-    },
-  );
+      reason: options.reason
+    }
+  )
 
-  return bot.transformers.webhook(bot, result);
+  return bot.transformers.webhook(bot, result)
 }
 
 export interface CreateWebhook extends WithReason {
   /** Name of the webhook (1-80 characters) */
-  name: string;
+  name: string
   /** Image url for the default webhook avatar */
-  avatar?: string | null;
+  avatar?: string | null
 }

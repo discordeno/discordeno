@@ -1,7 +1,7 @@
-import type { Bot } from "../../../bot.ts";
-import { ApplicationCommandPermission } from "../../../transformers/applicationCommandPermission.ts";
-import { DiscordGuildApplicationCommandPermissions } from "../../../types/discord.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { ApplicationCommandPermission } from '../../../transformers/applicationCommandPermission.js'
+import { DiscordGuildApplicationCommandPermissions } from '../../../types/discord.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Gets the permissions of a guild application command.
@@ -16,13 +16,13 @@ import { BigString } from "../../../types/shared.ts";
 export async function getApplicationCommandPermission(
   bot: Bot,
   guildId: BigString,
-  commandId: BigString,
+  commandId: BigString
 ): Promise<ApplicationCommandPermission> {
   const result = await bot.rest.runMethod<DiscordGuildApplicationCommandPermissions>(
     bot.rest,
-    "GET",
-    bot.constants.routes.COMMANDS_PERMISSION(bot.applicationId, guildId, commandId),
-  );
+    'GET',
+    bot.constants.routes.COMMANDS_PERMISSION(bot.applicationId, guildId, commandId)
+  )
 
-  return bot.transformers.applicationCommandPermission(bot, result);
+  return bot.transformers.applicationCommandPermission(bot, result)
 }

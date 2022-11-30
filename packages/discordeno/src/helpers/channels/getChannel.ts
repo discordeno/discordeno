@@ -1,7 +1,7 @@
-import type { Bot } from "../../bot.ts";
-import { Channel } from "../../transformers/channel.ts";
-import { DiscordChannel } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { Channel } from '../../transformers/channel.js'
+import { DiscordChannel } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Gets a channel by its ID.
@@ -18,13 +18,13 @@ import { BigString } from "../../types/shared.ts";
 export async function getChannel(bot: Bot, channelId: BigString): Promise<Channel> {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
-    "GET",
-    bot.constants.routes.CHANNEL(channelId),
-  );
+    'GET',
+    bot.constants.routes.CHANNEL(channelId)
+  )
 
   // IF A CHANNEL DOESN'T EXIST, DISCORD RETURNS `{}`
   return bot.transformers.channel(bot, {
     channel: result,
-    guildId: result.guild_id ? bot.transformers.snowflake(result.guild_id) : undefined,
-  });
+    guildId: result.guild_id ? bot.transformers.snowflake(result.guild_id) : undefined
+  })
 }

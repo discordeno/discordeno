@@ -1,6 +1,6 @@
-import { Bot } from "../bot.ts";
-import { ButtonStyles, MessageComponentTypes, SelectOption, TextStyles } from "../mod.ts";
-import { DiscordComponent } from "../types/discord.ts";
+import { Bot } from '../bot.js'
+import { ButtonStyles, MessageComponentTypes, SelectOption, TextStyles } from '../mod.js'
+import { DiscordComponent } from '../types/discord.js'
 
 export function transformComponent(bot: Bot, payload: DiscordComponent): Component {
   return {
@@ -9,11 +9,11 @@ export function transformComponent(bot: Bot, payload: DiscordComponent): Compone
     disabled: payload.disabled,
     style: payload.style,
     label: payload.label,
-    emoji: payload.emoji
+    emoji: (payload.emoji != null)
       ? {
         id: payload.emoji.id ? bot.transformers.snowflake(payload.emoji.id) : undefined,
         name: payload.emoji.name,
-        animated: payload.emoji.animated,
+        animated: payload.emoji.animated
       }
       : undefined,
     url: payload.url,
@@ -21,14 +21,14 @@ export function transformComponent(bot: Bot, payload: DiscordComponent): Compone
       label: option.label,
       value: option.value,
       description: option.description,
-      emoji: option.emoji
+      emoji: (option.emoji != null)
         ? {
           id: option.emoji.id ? bot.transformers.snowflake(option.emoji.id) : undefined,
           name: option.emoji.name,
-          animated: option.emoji.animated,
+          animated: option.emoji.animated
         }
         : undefined,
-      default: option.default,
+      default: option.default
     })),
     placeholder: payload.placeholder,
     minValues: payload.min_values,
@@ -36,50 +36,50 @@ export function transformComponent(bot: Bot, payload: DiscordComponent): Compone
     minLength: payload.min_length,
     maxLength: payload.max_length,
     value: payload.value,
-    components: payload.components?.map((component) => bot.transformers.component(bot, component)),
-  };
+    components: payload.components?.map((component) => bot.transformers.component(bot, component))
+  }
 }
 
 // THIS TRANSFORMER HAS A CIRCULAR REFERENCE TO CALL ITSELF FOR COMPONENTS SO AN AUTOMATED TYPE CAN NOT BE CREATED!
 
 export interface Component {
   /** component type */
-  type: MessageComponentTypes;
+  type: MessageComponentTypes
   /** a developer-defined identifier for the component, max 100 characters */
-  customId?: string;
+  customId?: string
   /** whether this component is required to be filled, default true */
-  required?: boolean;
+  required?: boolean
   /** whether the component is disabled, default false */
-  disabled?: boolean;
+  disabled?: boolean
   /** For different styles/colors of the buttons */
-  style?: ButtonStyles | TextStyles;
+  style?: ButtonStyles | TextStyles
   /** text that appears on the button (max 80 characters) */
-  label?: string;
+  label?: string
   /** the dev-define value of the option, max 100 characters for select or 4000 for input. */
-  value?: string;
+  value?: string
   /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
   emoji?: {
     /** Emoji id */
-    id?: bigint;
+    id?: bigint
     /** Emoji name */
-    name?: string;
+    name?: string
     /** Whether this emoji is animated */
-    animated?: boolean;
-  };
+    animated?: boolean
+  }
   /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
-  url?: string;
+  url?: string
   /** The choices! Maximum of 25 items. */
-  options?: SelectOption[];
+  options?: SelectOption[]
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
-  placeholder?: string;
+  placeholder?: string
   /** The minimum number of items that must be selected. Default 1. Between 1-25. */
-  minValues?: number;
+  minValues?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
-  maxValues?: number;
+  maxValues?: number
   /** The minimum input length for a text input. Between 0-4000. */
-  minLength?: number;
-  /**The maximum input length for a text input. Between 1-4000. */
-  maxLength?: number;
+  minLength?: number
+  /** The maximum input length for a text input. Between 1-4000. */
+  maxLength?: number
   /** a list of child components */
-  components?: Component[];
+  components?: Component[]
 }

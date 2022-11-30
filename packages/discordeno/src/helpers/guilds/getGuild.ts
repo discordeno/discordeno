@@ -1,7 +1,7 @@
-import type { Bot } from "../../bot.ts";
-import { Guild } from "../../transformers/guild.ts";
-import { DiscordGuild } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { Guild } from '../../transformers/guild.js'
+import { DiscordGuild } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Gets a guild by its ID.
@@ -17,17 +17,17 @@ export async function getGuild(
   bot: Bot,
   guildId: BigString,
   options: { counts?: boolean } = {
-    counts: true,
-  },
+    counts: true
+  }
 ): Promise<Guild> {
   const result = await bot.rest.runMethod<DiscordGuild>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD(guildId, options.counts),
-  );
+    'GET',
+    bot.constants.routes.GUILD(guildId, options.counts)
+  )
 
   return bot.transformers.guild(bot, {
     guild: result,
-    shardId: bot.utils.calculateShardId(bot.gateway, bot.transformers.snowflake(guildId)),
-  });
+    shardId: bot.utils.calculateShardId(bot.gateway, bot.transformers.snowflake(guildId))
+  })
 }

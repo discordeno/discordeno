@@ -1,9 +1,9 @@
-import { Bot } from "../../bot.ts";
-import { DiscordTeam } from "../../types/discord.ts";
-import { Team } from "../team.ts";
+import { Bot } from '../../bot.js'
+import { DiscordTeam } from '../../types/discord.js'
+import { Team } from '../team.js'
 
 export function transformTeamToDiscordTeam(bot: Bot, payload: Team): DiscordTeam {
-  const id = bot.utils.bigintToSnowflake(payload.id);
+  const id = bot.utils.bigintToSnowflake(payload.id)
 
   return {
     name: payload.name,
@@ -15,7 +15,7 @@ export function transformTeamToDiscordTeam(bot: Bot, payload: Team): DiscordTeam
       membership_state: member.membershipState,
       permissions: member.permissions,
       team_id: id,
-      user: bot.transformers.reverse.user(bot, member.user),
-    })),
-  };
+      user: bot.transformers.reverse.user(bot, member.user)
+    }))
+  }
 }

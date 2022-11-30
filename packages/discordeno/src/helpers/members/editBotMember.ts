@@ -1,5 +1,5 @@
-import type { Bot } from "../../bot.ts";
-import { BigString, DiscordMember, Member, WithReason } from "../../mod.ts";
+import type { Bot } from '../../bot.js'
+import { BigString, DiscordMember, Member, WithReason } from '../../mod.js'
 
 /**
  * Edits the nickname of the bot user.
@@ -17,21 +17,21 @@ import { BigString, DiscordMember, Member, WithReason } from "../../mod.ts";
 export async function editBotMember(
   bot: Bot,
   guildId: BigString,
-  options: EditBotMemberOptions,
+  options: EditBotMemberOptions
 ): Promise<Member> {
   const result = await bot.rest.runMethod<DiscordMember>(
     bot.rest,
-    "PATCH",
+    'PATCH',
     bot.constants.routes.USER_NICK(guildId),
     {
       nick: options.nick,
-      reason: options.reason,
-    },
-  );
+      reason: options.reason
+    }
+  )
 
-  return bot.transformers.member(bot, result, bot.transformers.snowflake(guildId), bot.id);
+  return bot.transformers.member(bot, result, bot.transformers.snowflake(guildId), bot.id)
 }
 
 export interface EditBotMemberOptions extends WithReason {
-  nick?: string | null;
+  nick?: string | null
 }

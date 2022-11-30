@@ -1,4 +1,4 @@
-import { Shard, ShardSocketRequest } from "./types.ts";
+import { Shard, ShardSocketRequest } from "./types.js";
 
 async function checkOffline(shard: Shard, highPriority: boolean): Promise<void> {
   if (!shard.isOpen()) {

@@ -1,6 +1,7 @@
-export * from "./createEmoji.ts";
-export * from "./deleteEmoji.ts";
-export * from "./editEmoji.ts";
-export * from "./getEmoji.ts";
-export * from "./getEmojis.ts";
-export * from "./getEmojiUrl.ts";
+export * from './createEmoji.js'
+export * from './deleteEmoji.js'
+export * from './editEmoji.js'
+export * from './getEmoji.js'
+export * from './getEmojis.js'
+export * from './getEmojiUrl.js'
+

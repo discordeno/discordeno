@@ -1,6 +1,6 @@
-import type { Bot } from "../../bot.ts";
-import { BigString, WithReason } from "../../mod.ts";
-import { OverwriteReadable } from "../../types/discordeno.ts";
+import type { Bot } from '../../bot.js'
+import { BigString, WithReason } from '../../mod.js'
+import { OverwriteReadable } from '../../types/discordeno.js'
 
 /**
  * Edits the permission overrides for a user or role in a channel.
@@ -21,19 +21,19 @@ import { OverwriteReadable } from "../../types/discordeno.ts";
 export async function editChannelPermissionOverrides(
   bot: Bot,
   channelId: BigString,
-  options: EditChannelPermissionOverridesOptions,
+  options: EditChannelPermissionOverridesOptions
 ): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "PUT",
+    'PUT',
     bot.constants.routes.CHANNEL_OVERWRITE(channelId, options.id),
     {
-      allow: options.allow ? bot.utils.calculateBits(options.allow) : "0",
-      deny: options.deny ? bot.utils.calculateBits(options.deny) : "0",
+      allow: (options.allow != null) ? bot.utils.calculateBits(options.allow) : '0',
+      deny: (options.deny != null) ? bot.utils.calculateBits(options.deny) : '0',
       type: options.type,
-      reason: options.reason,
-    },
-  );
+      reason: options.reason
+    }
+  )
 }
 
-export interface EditChannelPermissionOverridesOptions extends OverwriteReadable, WithReason {}
+export interface EditChannelPermissionOverridesOptions extends OverwriteReadable, WithReason { }

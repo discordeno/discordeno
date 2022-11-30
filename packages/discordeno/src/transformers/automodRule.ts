@@ -1,6 +1,6 @@
-import { Bot } from "../bot.ts";
-import { DiscordAutoModerationRule } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
+import { Bot } from '../bot.js'
+import { DiscordAutoModerationRule } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
 
 export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModerationRule) {
   const rule = {
@@ -18,7 +18,7 @@ export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModera
         keywordFilter: payload.trigger_metadata.keyword_filter,
         presets: payload.trigger_metadata.presets,
         allowList: payload.trigger_metadata.allow_list,
-        mentionTotalLimit: payload.trigger_metadata.mention_total_limit,
+        mentionTotalLimit: payload.trigger_metadata.mention_total_limit
       }
       : undefined,
     actions: payload.actions.map((action) => ({
@@ -26,13 +26,13 @@ export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModera
       metadata: action.metadata
         ? {
           channelId: action.metadata.channel_id ? bot.transformers.snowflake(action.metadata.channel_id) : undefined,
-          durationSeconds: action.metadata.duration_seconds,
+          durationSeconds: action.metadata.duration_seconds
         }
-        : undefined,
-    })),
-  };
+        : undefined
+    }))
+  }
 
-  return rule as Optionalize<typeof rule>;
+  return rule as Optionalize<typeof rule>
 }
 
-export interface AutoModerationRule extends ReturnType<typeof transformAutoModerationRule> {}
+export interface AutoModerationRule extends ReturnType<typeof transformAutoModerationRule> { }

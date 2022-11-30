@@ -1,10 +1,10 @@
-import { Bot } from "../../bot.ts";
-import { DiscordApplicationCommand } from "../../types/discord.ts";
-import { ApplicationCommand } from "../applicationCommand.ts";
+import { Bot } from '../../bot.js'
+import { DiscordApplicationCommand } from '../../types/discord.js'
+import { ApplicationCommand } from '../applicationCommand.js'
 
 export function transformApplicationCommandToDiscordApplicationCommand(
   bot: Bot,
-  payload: ApplicationCommand,
+  payload: ApplicationCommand
 ): DiscordApplicationCommand {
   return {
     id: bot.transformers.reverse.snowflake(payload.id),
@@ -20,6 +20,6 @@ export function transformApplicationCommandToDiscordApplicationCommand(
       ? bot.transformers.reverse.snowflake(payload.defaultMemberPermissions)
       : null,
     dm_permission: payload.dmPermission,
-    version: payload.version,
-  };
+    version: payload.version
+  }
 }

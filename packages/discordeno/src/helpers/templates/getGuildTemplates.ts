@@ -1,8 +1,8 @@
-import type { Bot } from "../../bot.ts";
-import { Template } from "../../transformers/template.ts";
-import { DiscordTemplate } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
-import { Collection } from "../../util/collection.ts";
+import type { Bot } from "../../bot.js";
+import { Template } from "../../transformers/template.js";
+import { DiscordTemplate } from "../../types/discord.js";
+import { BigString } from "../../types/shared.js";
+import { Collection } from "../../util/collection.js";
 
 /**
  * Gets the list of templates for a guild.

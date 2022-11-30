@@ -1,12 +1,13 @@
-export * from "./reactions/mod.ts";
+export * from './crosspostMessage.js'
+export * from './deleteMessage.js'
+export * from './deleteMessages.js'
+export * from './editMessage.js'
+export * from './getMessage.js'
+export * from './getMessages.js'
+export * from './getPinnedMessages.js'
+export * from './pinMessage.js'
+export * from './reactions/mod.js'
+export * from './sendMessage.js'
+export * from './unpinMessage.js'
 
-export * from "./deleteMessage.ts";
-export * from "./deleteMessages.ts";
-export * from "./editMessage.ts";
-export * from "./getMessage.ts";
-export * from "./getMessages.ts";
-export * from "./getPinnedMessages.ts";
-export * from "./pinMessage.ts";
-export * from "./crosspostMessage.ts";
-export * from "./sendMessage.ts";
-export * from "./unpinMessage.ts";
+

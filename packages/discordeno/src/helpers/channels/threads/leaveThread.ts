@@ -1,5 +1,5 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Removes the bot user from a thread.
@@ -15,5 +15,5 @@ import { BigString } from "../../../types/shared.ts";
  * @see {@link https://discord.com/developers/docs/resources/channel#leave-thread}
  */
 export async function leaveThread(bot: Bot, channelId: BigString): Promise<void> {
-  return await bot.rest.runMethod<void>(bot.rest, "DELETE", bot.constants.routes.THREAD_ME(channelId));
+  return await bot.rest.runMethod<void>(bot.rest, 'DELETE', bot.constants.routes.THREAD_ME(channelId))
 }

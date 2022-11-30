@@ -1,35 +1,35 @@
-import { BotWithCache } from "../../deps.ts";
-import { automod } from "./automod/mod.ts";
-import { createGuild } from "./createGuild.ts";
-import { deleteGuild } from "./deleteGuild.ts";
-import { editGuild } from "./editGuild.ts";
-import { editGuildMfaLevel } from "./editGuildMfaLevel.ts";
-import { editWelcomeScreen } from "./editWelcomeScreen.ts";
-import { events } from "./events/mod.ts";
-import { getAuditLog } from "./getAuditLog.ts";
-import { getBan } from "./getBan.ts";
-import { getBans } from "./getBans.ts";
-import { getPruneCount } from "./getPruneCount.ts";
-import { getVanityUrl } from "./getVanityUrl.ts";
-import { getWelcomeScreen } from "./getWelcomeScreen.ts";
-import { voice } from "./voice/mod.ts";
-import { widgets } from "./widgets/mod.ts";
+import { BotWithCache } from '../../deps.js'
+import { automod } from './automod/mod.js'
+import { createGuild } from './createGuild.js'
+import { deleteGuild } from './deleteGuild.js'
+import { editGuild } from './editGuild.js'
+import { editGuildMfaLevel } from './editGuildMfaLevel.js'
+import { editWelcomeScreen } from './editWelcomeScreen.js'
+import { events } from './events/mod.js'
+import { getAuditLog } from './getAuditLog.js'
+import { getBan } from './getBan.js'
+import { getBans } from './getBans.js'
+import { getPruneCount } from './getPruneCount.js'
+import { getVanityUrl } from './getVanityUrl.js'
+import { getWelcomeScreen } from './getWelcomeScreen.js'
+import { voice } from './voice/mod.js'
+import { widgets } from './widgets/mod.js'
 
 export function guilds(bot: BotWithCache) {
-  automod(bot);
-  events(bot);
-  voice(bot);
-  widgets(bot);
+  automod(bot)
+  events(bot)
+  voice(bot)
+  widgets(bot)
 
-  createGuild(bot);
-  deleteGuild(bot);
-  editGuild(bot);
-  editGuildMfaLevel(bot);
-  editWelcomeScreen(bot);
-  getAuditLog(bot);
-  getBan(bot);
-  getBans(bot);
-  getPruneCount(bot);
-  getVanityUrl(bot);
-  getWelcomeScreen(bot);
+  createGuild(bot)
+  deleteGuild(bot)
+  editGuild(bot)
+  editGuildMfaLevel(bot)
+  editWelcomeScreen(bot)
+  getAuditLog(bot)
+  getBan(bot)
+  getBans(bot)
+  getPruneCount(bot)
+  getVanityUrl(bot)
+  getWelcomeScreen(bot)
 }

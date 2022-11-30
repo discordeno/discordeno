@@ -1,5 +1,5 @@
-import type { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Builds a URL to a user's avatar stored in the Discord CDN.
@@ -15,28 +15,28 @@ export function getAvatarURL(
   userId: BigString,
   discriminator: string,
   options?: {
-    avatar: BigString | undefined;
-    size?: ImageSize;
-    format?: ImageFormat;
-  },
+    avatar: BigString | undefined
+    size?: ImageSize
+    format?: ImageFormat
+  }
 ): string {
   return options?.avatar
     ? bot.utils.formatImageURL(
       bot.constants.routes.USER_AVATAR(
         userId,
-        typeof options?.avatar === "string" ? options.avatar : bot.utils.iconBigintToHash(options?.avatar),
+        typeof options?.avatar === 'string' ? options.avatar : bot.utils.iconBigintToHash(options?.avatar)
       ),
       options?.size || 128,
-      options?.format,
+      options?.format
     )
-    : bot.constants.routes.USER_DEFAULT_AVATAR(Number(discriminator) % 5);
+    : bot.constants.routes.USER_DEFAULT_AVATAR(Number(discriminator) % 5)
 }
 
 /**
  * https://discord.com/developers/docs/reference#image-formatting
  * json is only for stickers
  */
-export type ImageFormat = "jpg" | "jpeg" | "png" | "webp" | "gif" | "json";
+export type ImageFormat = 'jpg' | 'jpeg' | 'png' | 'webp' | 'gif' | 'json'
 
 /** https://discord.com/developers/docs/reference#image-formatting */
-export type ImageSize = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096;
+export type ImageSize = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096

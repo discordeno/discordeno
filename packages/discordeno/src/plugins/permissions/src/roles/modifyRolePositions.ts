@@ -1,12 +1,12 @@
-import { BotWithCache } from "../../deps.ts";
-import { requireBotGuildPermissions } from "../permissions.ts";
+import { BotWithCache } from '../../deps.js'
+import { requireBotGuildPermissions } from '../permissions.js'
 
 export function modifyRolePositions(bot: BotWithCache) {
-  const modifyRolePositions = bot.helpers.modifyRolePositions;
+  const modifyRolePositions = bot.helpers.modifyRolePositions
 
   bot.helpers.modifyRolePositions = async function (guildId, categoryId) {
-    requireBotGuildPermissions(bot, bot.transformers.snowflake(guildId), ["MANAGE_ROLES"]);
+    requireBotGuildPermissions(bot, bot.transformers.snowflake(guildId), ['MANAGE_ROLES'])
 
-    return await modifyRolePositions(guildId, categoryId);
-  };
+    return await modifyRolePositions(guildId, categoryId)
+  }
 }

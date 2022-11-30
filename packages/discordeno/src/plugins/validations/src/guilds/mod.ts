@@ -1,8 +1,8 @@
-import { Bot } from "../../deps.ts";
-import { createGuild } from "./createGuild.ts";
-import { events } from "./events/mod.ts";
+import { Bot } from '../../deps.js'
+import { createGuild } from './createGuild.js'
+import { events } from './events/mod.js'
 
 export function guilds(bot: Bot) {
-  events(bot);
-  createGuild(bot);
+  events(bot)
+  createGuild(bot)
 }

@@ -1,7 +1,7 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString, WithReason } from "../../../mod.ts";
-import { StageInstance } from "../../../transformers/stageInstance.ts";
-import { DiscordStageInstance } from "../../../types/discord.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString, WithReason } from '../../../mod.js'
+import { StageInstance } from '../../../transformers/stageInstance.js'
+import { DiscordStageInstance } from '../../../types/discord.js'
 
 /**
  * Edits a stage instance.
@@ -20,21 +20,21 @@ import { DiscordStageInstance } from "../../../types/discord.ts";
 export async function editStageInstance(
   bot: Bot,
   channelId: BigString,
-  data: EditStageInstanceOptions,
+  data: EditStageInstanceOptions
 ): Promise<StageInstance> {
   const result = await bot.rest.runMethod<DiscordStageInstance>(
     bot.rest,
-    "PATCH",
+    'PATCH',
     bot.constants.routes.STAGE_INSTANCE(channelId),
     {
-      topic: data.topic,
-    },
-  );
+      topic: data.topic
+    }
+  )
 
-  return bot.transformers.stageInstance(bot, result);
+  return bot.transformers.stageInstance(bot, result)
 }
 
 export interface EditStageInstanceOptions extends WithReason {
   /** The topic of the Stage instance (1-120 characters) */
-  topic: string;
+  topic: string
 }

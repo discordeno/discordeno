@@ -1,4 +1,5 @@
-export * from "./editWidgetSettings.ts";
-export * from "./getWidget.ts";
-export * from "./getWidgetImageUrl.ts";
-export * from "./getWidgetSettings.ts";
+export * from './editWidgetSettings.js'
+export * from './getWidget.js'
+export * from './getWidgetImageUrl.js'
+export * from './getWidgetSettings.js'
+

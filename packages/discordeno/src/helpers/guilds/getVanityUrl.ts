@@ -1,10 +1,10 @@
-import type { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { BigString } from '../../types/shared.js'
 
-export type VanityUrl = {
-  code: string | null;
-  uses: number;
-};
+export interface VanityUrl {
+  code: string | null
+  uses: number
+}
 
 // TODO: Move `VanityUrl` into its own transformer file.
 
@@ -25,7 +25,7 @@ export type VanityUrl = {
 export async function getVanityUrl(bot: Bot, guildId: BigString): Promise<VanityUrl> {
   return await bot.rest.runMethod<VanityUrl>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_VANITY_URL(guildId),
-  );
+    'GET',
+    bot.constants.routes.GUILD_VANITY_URL(guildId)
+  )
 }

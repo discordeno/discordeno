@@ -1,6 +1,6 @@
-import type { Bot } from "../../bot.ts";
-import { BigString, GatewayIntents, GatewayOpcodes } from "../../types/shared.ts";
-import { calculateShardId } from "../../util/calculateShardId.ts";
+import type { Bot } from '../../bot.js'
+import { BigString, GatewayIntents, GatewayOpcodes } from '../../types/shared.js'
+import { calculateShardId } from '../../util/calculateShardId.js'
 
 /**
  * Fetches the list of members for a guild over the gateway.
@@ -26,30 +26,30 @@ import { calculateShardId } from "../../util/calculateShardId.ts";
  *
  * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
  */
-export function fetchMembers(
+export async function fetchMembers(
   bot: Bot,
   guildId: BigString,
-  options?: Omit<RequestGuildMembers, "guildId">,
+  options?: Omit<RequestGuildMembers, 'guildId'>
 ): Promise<void> {
   // You can request 1 member without the intent
   // Check if intents is not 0 as proxy ws won't set intents in other instances
   if (bot.intents && (!options?.limit || options.limit > 1) && !(bot.intents & GatewayIntents.GuildMembers)) {
-    throw new Error(bot.constants.Errors.MISSING_INTENT_GUILD_MEMBERS);
+    throw new Error(bot.constants.Errors.MISSING_INTENT_GUILD_MEMBERS)
   }
 
   if (options?.userIds?.length) {
-    options.limit = options.userIds.length;
+    options.limit = options.userIds.length
   }
 
-  const shardId = calculateShardId(bot.gateway, bot.transformers.snowflake(guildId));
+  const shardId = calculateShardId(bot.gateway, bot.transformers.snowflake(guildId))
 
-  return new Promise((resolve) => {
-    const nonce = `${guildId}-${Date.now()}`;
-    bot.cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
+  return await new Promise((resolve) => {
+    const nonce = `${guildId}-${Date.now()}`
+    bot.cache.fetchAllMembersProcessingRequests.set(nonce, resolve)
 
-    const shard = bot.gateway.manager.shards.get(shardId);
-    if (!shard) {
-      throw new Error(`Shard (id: ${shardId}) not found.`);
+    const shard = bot.gateway.manager.shards.get(shardId)
+    if (shard == null) {
+      throw new Error(`Shard (id: ${shardId}) not found.`)
     }
 
     shard.send({
@@ -57,28 +57,28 @@ export function fetchMembers(
       d: {
         guild_id: guildId.toString(),
         // If a query is provided use it, OR if a limit is NOT provided use ""
-        query: options?.query || (options?.limit ? undefined : ""),
+        query: options?.query || (options?.limit ? undefined : ''),
         limit: options?.limit || 0,
         presences: options?.presences || false,
         user_ids: options?.userIds?.map((id) => id.toString()),
-        nonce,
-      },
-    });
-  });
+        nonce
+      }
+    })
+  })
 }
 
 /** https://discord.com/developers/docs/topics/gateway#request-guild-members */
 export interface RequestGuildMembers {
   /** id of the guild to get members for */
-  guildId: BigString;
+  guildId: BigString
   /** String that username starts with, or an empty string to return all members */
-  query?: string;
+  query?: string
   /** Maximum number of members to send matching the query; a limit of 0 can be used with an empty string query to return all members */
-  limit: number;
+  limit: number
   /** Used to specify if we want the presences of the matched members */
-  presences?: boolean;
+  presences?: boolean
   /** Used to specify which users you wish to fetch */
-  userIds?: BigString[];
+  userIds?: BigString[]
   /** Nonce to identify the Guild Members Chunk response */
-  nonce?: string;
+  nonce?: string
 }

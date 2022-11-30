@@ -1,7 +1,8 @@
-export * from "./editBotProfile.ts";
-export * from "./editBotStatus.ts";
-export * from "./editShardStatus.ts";
-export * from "./getApplicationInfo.ts";
-export * from "./getGatewayBot.ts";
-export * from "./getNitroStickerPacks.ts";
-export * from "./getUser.ts";
+export * from './editBotProfile.js'
+export * from './editBotStatus.js'
+export * from './editShardStatus.js'
+export * from './getApplicationInfo.js'
+export * from './getGatewayBot.js'
+export * from './getNitroStickerPacks.js'
+export * from './getUser.js'
+

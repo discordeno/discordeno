@@ -1,16 +1,16 @@
-import { BotWithCache } from "../../deps.ts";
-import { addRole } from "./addRole.ts";
-import { createRole } from "./createRole.ts";
-import { deleteRole } from "./deleteRole.ts";
-import { editRole } from "./editRole.ts";
-import { modifyRolePositions } from "./modifyRolePositions.ts";
-import { removeRole } from "./removeRole.ts";
+import { BotWithCache } from '../../deps.js'
+import { addRole } from './addRole.js'
+import { createRole } from './createRole.js'
+import { deleteRole } from './deleteRole.js'
+import { editRole } from './editRole.js'
+import { modifyRolePositions } from './modifyRolePositions.js'
+import { removeRole } from './removeRole.js'
 
 export function roles(bot: BotWithCache) {
-  addRole(bot);
-  createRole(bot);
-  deleteRole(bot);
-  editRole(bot);
-  modifyRolePositions(bot);
-  removeRole(bot);
+  addRole(bot)
+  createRole(bot)
+  deleteRole(bot)
+  editRole(bot)
+  modifyRolePositions(bot)
+  removeRole(bot)
 }

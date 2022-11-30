@@ -1,4 +1,4 @@
-import { GatewayManager } from "./gatewayManager.ts";
+import { GatewayManager } from "./gatewayManager.js";
 
 export function calculateWorkerId(manager: GatewayManager, shardId: number) {
   // Ignore decimal numbers.

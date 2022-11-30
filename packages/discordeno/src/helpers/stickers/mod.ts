@@ -1,6 +1,7 @@
-export * from "./createGuildSticker.ts";
-export * from "./deleteGuildSticker.ts";
-export * from "./editGuildSticker.ts";
-export * from "./getGuildSticker.ts";
-export * from "./getGuildStickers.ts";
-export * from "./getSticker.ts";
+export * from './createGuildSticker.js'
+export * from './deleteGuildSticker.js'
+export * from './editGuildSticker.js'
+export * from './getGuildSticker.js'
+export * from './getGuildStickers.js'
+export * from './getSticker.js'
+

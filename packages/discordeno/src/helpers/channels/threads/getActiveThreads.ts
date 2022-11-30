@@ -1,7 +1,7 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString, Channel, ThreadMember } from "../../../mod.ts";
-import { DiscordListActiveThreads } from "../../../types/discord.ts";
-import { Collection } from "../../../util/collection.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString, Channel, ThreadMember } from '../../../mod.js'
+import { DiscordListActiveThreads } from '../../../types/discord.js'
+import { Collection } from '../../../util/collection.js'
 
 /**
  * Gets the list of all active threads for a guild.
@@ -20,27 +20,27 @@ import { Collection } from "../../../util/collection.ts";
 export async function getActiveThreads(bot: Bot, guildId: BigString): Promise<ActiveThreads> {
   const results = await bot.rest.runMethod<DiscordListActiveThreads>(
     bot.rest,
-    "GET",
-    bot.constants.routes.THREAD_ACTIVE(guildId),
-  );
+    'GET',
+    bot.constants.routes.THREAD_ACTIVE(guildId)
+  )
 
   return {
     threads: new Collection(
       results.threads.map((result) => {
-        const thread = bot.transformers.channel(bot, { channel: result });
-        return [thread.id, thread];
-      }),
+        const thread = bot.transformers.channel(bot, { channel: result })
+        return [thread.id, thread]
+      })
     ),
     members: new Collection(
       results.members.map((result) => {
-        const member = bot.transformers.threadMember(bot, result);
-        return [member.id!, member];
-      }),
-    ),
-  };
+        const member = bot.transformers.threadMember(bot, result)
+        return [member.id!, member]
+      })
+    )
+  }
 }
 
-export type ActiveThreads = {
-  threads: Collection<bigint, Channel>;
-  members: Collection<bigint, ThreadMember>;
-};
+export interface ActiveThreads {
+  threads: Collection<bigint, Channel>
+  members: Collection<bigint, ThreadMember>
+}

@@ -1,4 +1,4 @@
-import type { Bot } from "../../../bot.ts";
+import type { Bot } from "../../../bot.js";
 
 /**
  * Deletes an invite to a channel.

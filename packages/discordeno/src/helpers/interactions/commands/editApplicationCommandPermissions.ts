@@ -1,7 +1,7 @@
-import type { Bot } from "../../../bot.ts";
-import { ApplicationCommandPermission } from "../../../transformers/applicationCommandPermission.ts";
-import { DiscordGuildApplicationCommandPermissions } from "../../../types/discord.ts";
-import { ApplicationCommandPermissionTypes, BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { ApplicationCommandPermission } from '../../../transformers/applicationCommandPermission.js'
+import { DiscordGuildApplicationCommandPermissions } from '../../../types/discord.js'
+import { ApplicationCommandPermissionTypes, BigString } from '../../../types/shared.js'
 
 // TODO: Make `options` into an object with a `permissions` field.
 
@@ -26,29 +26,29 @@ export async function editApplicationCommandPermissions(
   commandId: BigString,
   /** Bearer token which has the `applications.commands.permissions.update` scope and also access to this guild.  */
   bearerToken: string,
-  options: ApplicationCommandPermissions[],
+  options: ApplicationCommandPermissions[]
 ): Promise<ApplicationCommandPermission> {
   const result = await bot.rest.runMethod<DiscordGuildApplicationCommandPermissions>(
     bot.rest,
-    "PUT",
+    'PUT',
     bot.constants.routes.COMMANDS_PERMISSION(bot.applicationId, guildId, commandId),
     {
-      permissions: options,
+      permissions: options
     },
     {
-      headers: { authorization: `Bearer ${bearerToken}` },
-    },
-  );
+      headers: { authorization: `Bearer ${bearerToken}` }
+    }
+  )
 
-  return bot.transformers.applicationCommandPermission(bot, result);
+  return bot.transformers.applicationCommandPermission(bot, result)
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions */
 export interface ApplicationCommandPermissions {
   /** The id of the role or user */
-  id: string;
+  id: string
   /** Role or User */
-  type: ApplicationCommandPermissionTypes;
+  type: ApplicationCommandPermissionTypes
   /** `true` to allow, `false`, to disallow */
-  permission: boolean;
+  permission: boolean
 }

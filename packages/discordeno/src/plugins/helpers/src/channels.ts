@@ -1,9 +1,9 @@
-import { Bot, Channel, CreateGuildChannel, separateOverwrites } from "../deps.ts";
+import { Bot, Channel, CreateGuildChannel, separateOverwrites } from '../deps.js'
 
 /** Create a copy of a channel */
 export async function cloneChannel(bot: Bot, channel: Channel, reason?: string) {
   if (!channel.guildId) {
-    throw new Error(`Cannot clone a channel outside a guild`);
+    throw new Error('Cannot clone a channel outside a guild')
   }
 
   const createChannelOptions: CreateGuildChannel = {
@@ -17,18 +17,18 @@ export async function cloneChannel(bot: Bot, channel: Channel, reason?: string) 
     name: channel.name!,
     topic: channel.topic || undefined,
     permissionOverwrites: channel.permissionOverwrites.map((overwrite) => {
-      const [type, id, allow, deny] = separateOverwrites(overwrite);
+      const [type, id, allow, deny] = separateOverwrites(overwrite)
 
       return {
         id,
         type,
         allow: bot.utils.calculatePermissions(BigInt(allow)),
-        deny: bot.utils.calculatePermissions(BigInt(deny)),
-      };
+        deny: bot.utils.calculatePermissions(BigInt(deny))
+      }
     }),
-    reason,
-  };
+    reason
+  }
 
-  //Create the channel (also handles permissions)
-  return await bot.helpers.createChannel(channel.guildId!, createChannelOptions);
+  // Create the channel (also handles permissions)
+  return await bot.helpers.createChannel(channel.guildId!, createChannelOptions)
 }

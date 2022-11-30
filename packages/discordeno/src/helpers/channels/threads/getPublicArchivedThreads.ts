@@ -1,8 +1,8 @@
-import type { Bot } from "../../../bot.ts";
-import { DiscordListArchivedThreads } from "../../../types/discord.ts";
-import { BigString } from "../../../types/shared.ts";
-import { Collection } from "../../../util/collection.ts";
-import { ActiveThreads } from "./getActiveThreads.ts";
+import type { Bot } from '../../../bot.js'
+import { DiscordListArchivedThreads } from '../../../types/discord.js'
+import { BigString } from '../../../types/shared.js'
+import { Collection } from '../../../util/collection.js'
+import { ActiveThreads } from './getActiveThreads.js'
 
 /**
  * Gets the list of public archived threads for a channel.
@@ -25,39 +25,39 @@ import { ActiveThreads } from "./getActiveThreads.ts";
 export async function getPublicArchivedThreads(
   bot: Bot,
   channelId: BigString,
-  options?: ListArchivedThreads,
+  options?: ListArchivedThreads
 ): Promise<ArchivedThreads> {
   const results = await bot.rest.runMethod<DiscordListArchivedThreads>(
     bot.rest,
-    "GET",
-    bot.constants.routes.THREAD_ARCHIVED_PUBLIC(channelId, options),
-  );
+    'GET',
+    bot.constants.routes.THREAD_ARCHIVED_PUBLIC(channelId, options)
+  )
 
   return {
     threads: new Collection(
       results.threads.map((result) => {
-        const thread = bot.transformers.channel(bot, { channel: result });
-        return [thread.id, thread];
-      }),
+        const thread = bot.transformers.channel(bot, { channel: result })
+        return [thread.id, thread]
+      })
     ),
     members: new Collection(
       results.members.map((result) => {
-        const member = bot.transformers.threadMember(bot, result);
-        return [member.id!, member];
-      }),
+        const member = bot.transformers.threadMember(bot, result)
+        return [member.id!, member]
+      })
     ),
-    hasMore: results.has_more,
-  };
+    hasMore: results.has_more
+  }
 }
 
 /** https://discord.com/developers/docs/resources/channel#list-public-archived-threads-query-string-params */
 export interface ListArchivedThreads {
   /** Returns threads before this timestamp */
-  before?: number;
+  before?: number
   /** Optional maximum number of threads to return */
-  limit?: number;
+  limit?: number
 }
 
 export type ArchivedThreads = ActiveThreads & {
-  hasMore: boolean;
-};
+  hasMore: boolean
+}

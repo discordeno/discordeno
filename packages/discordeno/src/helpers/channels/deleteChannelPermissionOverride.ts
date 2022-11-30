@@ -1,5 +1,5 @@
-import type { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Deletes a permission override for a user or role in a channel.
@@ -19,12 +19,12 @@ export async function deleteChannelPermissionOverride(
   bot: Bot,
   channelId: BigString,
   overwriteId: BigString,
-  reason?: string,
+  reason?: string
 ): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
+    'DELETE',
     bot.constants.routes.CHANNEL_OVERWRITE(channelId, overwriteId),
-    reason ? { reason } : undefined,
-  );
+    reason ? { reason } : undefined
+  )
 }

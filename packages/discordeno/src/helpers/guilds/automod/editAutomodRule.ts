@@ -1,12 +1,12 @@
-import { Bot } from "../../../bot.ts";
-import { BigString, WithReason } from "../../../mod.ts";
-import { AutoModerationRule } from "../../../transformers/automodRule.ts";
+import { Bot } from '../../../bot.js'
+import { BigString, WithReason } from '../../../mod.js'
+import { AutoModerationRule } from '../../../transformers/automodRule.js'
 import {
   AutoModerationActionType,
   AutoModerationEventTypes,
   DiscordAutoModerationRule,
-  DiscordAutoModerationRuleTriggerMetadataPresets,
-} from "../../../types/discord.ts";
+  DiscordAutoModerationRuleTriggerMetadataPresets
+} from '../../../types/discord.js'
 
 /**
  * Edits an automod rule.
@@ -28,73 +28,73 @@ export async function editAutomodRule(
   bot: Bot,
   guildId: BigString,
   ruleId: BigString,
-  options: Partial<EditAutoModerationRuleOptions>,
+  options: Partial<EditAutoModerationRuleOptions>
 ): Promise<AutoModerationRule> {
   const result = await bot.rest.runMethod<DiscordAutoModerationRule>(
     bot.rest,
-    "PATCH",
+    'PATCH',
     bot.constants.routes.AUTOMOD_RULE(guildId, ruleId),
     {
       name: options.name,
       event_type: options.eventType,
-      trigger_metadata: options.triggerMetadata
+      trigger_metadata: (options.triggerMetadata != null)
         ? {
           keyword_filter: options.triggerMetadata.keywordFilter,
           presets: options.triggerMetadata.presets,
           allow_list: options.triggerMetadata.allowList,
-          mention_total_limit: options.triggerMetadata.mentionTotalLimit,
+          mention_total_limit: options.triggerMetadata.mentionTotalLimit
         }
         : undefined,
       actions: options.actions?.map((action) => ({
         type: action.type,
         metadata: {
           channel_id: action.metadata.channelId?.toString(),
-          duration_seconds: action.metadata.durationSeconds,
-        },
+          duration_seconds: action.metadata.durationSeconds
+        }
       })),
       enabled: options.enabled ?? true,
       exempt_roles: options.exemptRoles?.map((id) => id.toString()),
       exempt_channels: options.exemptChannels?.map((id) => id.toString()),
-      reason: options.reason,
-    },
-  );
+      reason: options.reason
+    }
+  )
 
-  return bot.transformers.automodRule(bot, result);
+  return bot.transformers.automodRule(bot, result)
 }
 
 export interface EditAutoModerationRuleOptions extends WithReason {
   /** The name of the rule. */
-  name: string;
+  name: string
   /** The type of event to trigger the rule on. */
-  eventType: AutoModerationEventTypes;
+  eventType: AutoModerationEventTypes
   /** The metadata to use for the trigger. */
   triggerMetadata: {
     /** The keywords needed to match. Only present when TriggerType.Keyword */
-    keywordFilter?: string[];
+    keywordFilter?: string[]
     // TODO: This may need a special type or enum
     /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
-    presets?: DiscordAutoModerationRuleTriggerMetadataPresets[];
+    presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
     /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
-    allowList?: string[];
+    allowList?: string[]
     /** Total number of mentions (role & user) allowed per message (Maximum of 50) */
-    mentionTotalLimit: number;
-  };
+    mentionTotalLimit: number
+  }
   /** The actions that will trigger for this rule */
-  actions: {
+  actions: Array<{
     /** The type of action to take when a rule is triggered */
-    type: AutoModerationActionType;
+    type: AutoModerationActionType
     /** additional metadata needed during execution for this specific action type */
     metadata: {
       /** The id of channel to which user content should be logged. Only in SendAlertMessage */
-      channelId?: BigString;
+      channelId?: BigString
       /** Timeout duration in seconds. Only supported for TriggerType.Keyword */
-      durationSeconds?: number;
-    };
-  }[];
+      durationSeconds?: number
+    }
+  }>
   /** Whether the rule should be enabled. */
-  enabled?: boolean;
+  enabled?: boolean
   /** The role ids that should not be effected by the rule */
-  exemptRoles?: BigString[];
+  exemptRoles?: BigString[]
   /** The channel ids that should not be effected by the rule. */
-  exemptChannels?: BigString[];
+  exemptChannels?: BigString[]
 }
