@@ -1,0 +1,17 @@
+{
+  "name": "logger",
+  "version": "18.0.0-alpha.1",
+  "main": "./src/index.tsx",
+  "types": "./src/index.tsx",
+  "type": "module",
+  "license": "Apache-2.0",
+  "scripts": {
+    "lint": "eslint \"**/*.ts*\""
+  },
+  "devDependencies": {
+    "eslint": "^8.0.1",
+    "eslint-config-discordeno": "*",
+    "tsconfig": "*",
+    "typescript": "^4.5.2"
+  }
+}
