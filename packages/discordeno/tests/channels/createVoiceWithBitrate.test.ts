@@ -5,7 +5,7 @@ import { CACHED_COMMUNITY_GUILD_ID } from "../utils.ts";
 
 Deno.test({
   name: "[channel] create a new voice channel with a bitrate",
-  ignore: Deno.env.get("TEST_ENV") === "UNIT",
+  ignore: process.env.TEST_ENV === "UNIT",
   async fn(t) {
     const bot = loadBot();
     const channel = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, {

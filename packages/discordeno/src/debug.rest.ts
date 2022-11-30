@@ -7,11 +7,11 @@ dotenv({ export: true, path: `${Deno.cwd()}/.env` })
 
 const col = new Collection<string, number>()
 
-const token = Deno.env.get('GAMER_TOKEN')
+const token = process.env.GAMER_TOKEN
 if (!token) throw new Error('Token was not provided.')
 
-const REST_AUTHORIZATION_KEY = Deno.env.get('PROXY_REST_SECRET')
-const PROXY_REST_URL = Deno.env.get('PROXY_REST_URL')
+const REST_AUTHORIZATION_KEY = process.env.PROXY_REST_SECRET
+const PROXY_REST_URL = process.env.PROXY_REST_URL
 const REST_PORT = Number(PROXY_REST_URL?.substring(PROXY_REST_URL.lastIndexOf(':') + 1)) ?? 8080
 
 // CREATES THE FUNCTIONALITY FOR MANAGING THE REST REQUESTS

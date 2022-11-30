@@ -105,7 +105,7 @@ Here is a minimal example to get started with:
 import { createBot, Intents, startBot } from "https://deno.land/x/discordeno@13.0.0/mod.ts";
 
 const bot = createBot({
-  token: Deno.env.get("DISCORD_TOKEN"),
+  token: process.env.DISCORD_TOKEN,
   intents: Intents.Guilds | Intents.GuildMessages,
   events: {
     ready() {

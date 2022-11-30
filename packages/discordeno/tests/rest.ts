@@ -4,11 +4,11 @@ import { dotenv } from "./deps.ts";
 
 dotenv({ export: true, path: `${Deno.cwd()}/.env` });
 
-const token = Deno.env.get("GAMER_TOKEN");
+const token = process.env.GAMER_TOKEN;
 if (!token) throw new Error("Token was not provided.");
 
-const REST_AUTHORIZATION_KEY = Deno.env.get("PROXY_REST_SECRET");
-const PROXY_REST_URL = Deno.env.get("PROXY_REST_URL");
+const REST_AUTHORIZATION_KEY = process.env.PROXY_REST_SECRET;
+const PROXY_REST_URL = process.env.PROXY_REST_URL;
 const REST_PORT = Number(PROXY_REST_URL?.substring(PROXY_REST_URL.lastIndexOf(":") + 1)) ?? 8080;
 
 // CREATES THE FUNCTIONALITY FOR MANAGING THE REST REQUESTS
@@ -40,7 +40,7 @@ async function handleRequest(conn: Deno.Conn) {
     if (
       !REST_AUTHORIZATION_KEY ||
       REST_AUTHORIZATION_KEY !==
-        requestEvent.request.headers.get("AUTHORIZATION")
+      requestEvent.request.headers.get("AUTHORIZATION")
     ) {
       return requestEvent.respondWith(
         new Response(JSON.stringify({ error: "Invalid authorization key." }), {
@@ -63,10 +63,9 @@ async function handleRequest(conn: Deno.Conn) {
       const result = await rest.runMethod(
         rest,
         requestEvent.request.method as RequestMethod,
-        `${BASE_URL}${
-          requestEvent.request.url.substring(
-            `http://localhost:${REST_PORT}`.length,
-          )
+        `${BASE_URL}${requestEvent.request.url.substring(
+          `http://localhost:${REST_PORT}`.length,
+        )
         }`,
         json,
       );

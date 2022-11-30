@@ -19,7 +19,7 @@ Deno.bench("[Transformer] Discord Guild to a Guild", () => {
 });
 
 Deno.bench("[Transformer - Previous] Discord Guild to a Guild", {
-  ignore: Deno.env.get("CI") === "true",
+  ignore: process.env.CI === "true",
 }, () => {
   oldBot.transformers.guild(oldBot, { guild: discordGuild, shardId: 0 });
 });
@@ -29,7 +29,7 @@ Deno.bench("[Guild.toggles.features] Get the features of a guild", () => {
 });
 
 Deno.bench("[Guild.toggles.features - Previous] Get the features of a guild", {
-  ignore: Deno.env.get("CI") === "true",
+  ignore: process.env.CI === "true",
 }, () => {
   previousGuild.toggles.features;
 });
@@ -48,7 +48,7 @@ Deno.bench("[Transformer] Discord User to a User", () => {
 });
 
 Deno.bench("[Transformer - Previous] Discord User to a User", {
-  ignore: Deno.env.get("CI") === "true",
+  ignore: process.env.CI === "true",
 }, () => {
   oldBot.transformers.user(oldBot, discordUser);
 });
@@ -58,7 +58,7 @@ Deno.bench("[Transformer] User to a Discord User", () => {
 });
 
 Deno.bench("[Transformer - Previous] User to a Discord User", {
-  ignore: Deno.env.get("CI") === "true",
+  ignore: process.env.CI === "true",
 }, () => {
   oldBot.transformers.reverse.user(oldBot, oldUser);
 });
@@ -86,7 +86,7 @@ for (
   });
 
   Deno.bench(`[Transformer - Previous] Discord ${formattedChannelType} to a ${formattedChannelType}`, {
-    ignore: Deno.env.get("CI") === "true",
+    ignore: process.env.CI === "true",
   }, () => {
     oldBot.transformers.channel(oldBot, { channel: discordChannel });
   });
@@ -100,7 +100,7 @@ for (
   });
 
   Deno.bench(`[Transformer - Previous] ${formattedChannelType} to a Discord ${formattedChannelType}`, {
-    ignore: Deno.env.get("CI") === "true",
+    ignore: process.env.CI === "true",
   }, () => {
     oldBot.transformers.reverse.channel(oldBot, oldChannel);
   });
@@ -121,7 +121,7 @@ Deno.bench("[Transformer] Discord Member to a Member", () => {
 });
 
 Deno.bench("[Transformer - Previous] Discord Member to a Member", {
-  ignore: Deno.env.get("CI") === "true",
+  ignore: process.env.CI === "true",
 }, () => {
   oldBot.transformers.member(oldBot, discordMember, 0n, 0n);
 });
@@ -131,7 +131,7 @@ Deno.bench("[Transformer] Member to a Discord Member", () => {
 });
 
 Deno.bench("[Transformer - Previous] Member to a Discord Member", {
-  ignore: Deno.env.get("CI") === "true",
+  ignore: process.env.CI === "true",
 }, () => {
   oldBot.transformers.reverse.member(oldBot, oldMember);
 });
@@ -150,7 +150,7 @@ Deno.bench("[Transformer] Discord Role to a Role", () => {
 });
 
 Deno.bench("[Transformer - Previous] Discord Role to a Role", {
-  ignore: Deno.env.get("CI") === "true",
+  ignore: process.env.CI === "true",
 }, () => {
   oldBot.transformers.role(oldBot, { role: discordRole, guildId: 0n });
 });
@@ -161,7 +161,7 @@ bot.transformers.reverse.role(bot, newRole);
 });
 
 Deno.bench("[Transformer - Previous] Role to a Discord Role", {
-ignore: Deno.env.get("CI") === "true",
+ignore: process.env.CI === "true",
 }, () => {
 oldBot.transformers.reverse.role(oldBot, oldRole);
 });
@@ -183,7 +183,7 @@ Deno.bench("[Transformer] Discord Message to a Message", () => {
 });
 
 Deno.bench("[Transformer - Previous] Discord Message to a Message", {
-  ignore: Deno.env.get("CI") === "true",
+  ignore: process.env.CI === "true",
 }, () => {
   oldBot.transformers.message(oldBot, discordMessage);
 });
@@ -194,7 +194,7 @@ Deno.bench("[Transformer] User to a Discord User", () => {
 });
 
 Deno.bench("[Transformer - Previous] User to a Discord User", {
-  ignore: Deno.env.get("CI") === "true",
+  ignore: process.env.CI === "true",
 }, () => {
   oldBot.transformers.reverse.message(oldBot, oldUser);
 });

@@ -3,7 +3,7 @@ import { loadBot } from "../mod.ts";
 
 Deno.test({
   name: "[misc] Get gateway bot information",
-  ignore: Deno.env.get("TEST_ENV") === "UNIT",
+  ignore: process.env.TEST_ENV === "UNIT",
   async fn(t) {
     const bot = loadBot();
     const data = await bot.helpers.getGatewayBot();

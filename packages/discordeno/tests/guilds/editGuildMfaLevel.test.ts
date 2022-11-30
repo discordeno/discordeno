@@ -4,7 +4,7 @@ import { loadBot } from "../mod.ts";
 
 Deno.test({
   name: "[guild] edit guild mfa level",
-  ignore: Deno.env.get("TEST_ENV") === "UNIT",
+  ignore: process.env.TEST_ENV === "UNIT",
   async fn(t) {
     const bot = loadBot();
     const guild = await bot.helpers.createGuild({ name: "test" });

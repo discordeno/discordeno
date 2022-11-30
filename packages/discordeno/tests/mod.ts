@@ -4,7 +4,7 @@ import { dotenv } from "./deps.ts";
 dotenv({ export: true, path: `${Deno.cwd()}/.env` });
 
 export function loadBot() {
-  const token = Deno.env.get("DISCORD_TOKEN");
+  const token = process.env.DISCORD_TOKEN;
   if (!token) throw new Error("Token was not provided.");
 
   const bot = createBot({
@@ -23,8 +23,8 @@ export function loadBot() {
 
   bot.rest = createRestManager({
     token,
-    customUrl: Deno.env.get("PROXY_REST_URL"),
-    secretKey: Deno.env.get("PROXY_REST_SECRET"),
+    customUrl: process.env.PROXY_REST_URL,
+    secretKey: process.env.PROXY_REST_SECRET,
   });
 
   return bot;
