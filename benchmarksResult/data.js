@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1669826559310,
+  "lastUpdate": 1669826672621,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -2172,6 +2172,132 @@ window.BENCHMARK_DATA = {
             "value": 143.16,
             "unit": "MB",
             "range": "37.42 … 280.02"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "42719cd2c1db54e4daed7cfef0f8edf6793f3ac2",
+          "message": "chore(deps): bump minimatch, recursive-readdir and serve-handler (#2596)\n\nBumps [minimatch](https://github.com/isaacs/minimatch), [recursive-readdir](https://github.com/jergason/recursive-readdir) and [serve-handler](https://github.com/zeit/serve-handler). These dependencies needed to be updated together.\r\n\r\nUpdates `minimatch` from 3.0.4 to 3.1.2\r\n- [Release notes](https://github.com/isaacs/minimatch/releases)\r\n- [Changelog](https://github.com/isaacs/minimatch/blob/main/changelog.md)\r\n- [Commits](https://github.com/isaacs/minimatch/compare/v3.0.4...v3.1.2)\r\n\r\nUpdates `recursive-readdir` from 2.2.2 to 2.2.3\r\n- [Release notes](https://github.com/jergason/recursive-readdir/releases)\r\n- [Changelog](https://github.com/jergason/recursive-readdir/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jergason/recursive-readdir/commits/v2.2.3)\r\n\r\nUpdates `serve-handler` from 6.1.3 to 6.1.5\r\n- [Release notes](https://github.com/zeit/serve-handler/releases)\r\n- [Commits](https://github.com/zeit/serve-handler/compare/6.1.3...6.1.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: minimatch\r\n  dependency-type: indirect\r\n- dependency-name: recursive-readdir\r\n  dependency-type: indirect\r\n- dependency-name: serve-handler\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2022-11-30T10:43:10-06:00",
+          "tree_id": "49e915175a63a48351df857d467bbcc4cd322bed",
+          "url": "https://github.com/discordeno/discordeno/commit/42719cd2c1db54e4daed7cfef0f8edf6793f3ac2"
+        },
+        "date": 1669826670394,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "[Transformer] Discord Guild to a Guild",
+            "value": 5117,
+            "unit": "ns/iter",
+            "range": "4091.69 … 6433323.75"
+          },
+          {
+            "name": "[Guild.toggles.features] Get the features of a guild",
+            "value": 1085,
+            "unit": "ns/iter",
+            "range": "1015.53 … 1474"
+          },
+          {
+            "name": "[Transformer] Discord User to a User",
+            "value": 86,
+            "unit": "ns/iter",
+            "range": "84.36 … 100.55"
+          },
+          {
+            "name": "[Transformer] User to a Discord User",
+            "value": 71,
+            "unit": "ns/iter",
+            "range": "68.38 … 242.96"
+          },
+          {
+            "name": "[Transformer] Discord Rules Channel to a Rules Channel",
+            "value": 228,
+            "unit": "ns/iter",
+            "range": "223.08 … 276.71"
+          },
+          {
+            "name": "[Transformer] Discord Announcement Channel to a Announcement Channel",
+            "value": 641,
+            "unit": "ns/iter",
+            "range": "635.94 … 655.66"
+          },
+          {
+            "name": "[Transformer] Discord Moderator Channel to a Moderator Channel",
+            "value": 307,
+            "unit": "ns/iter",
+            "range": "301.57 … 315.79"
+          },
+          {
+            "name": "[Transformer] Discord Text Channel to a Text Channel",
+            "value": 300,
+            "unit": "ns/iter",
+            "range": "295.43 … 304"
+          },
+          {
+            "name": "[Transformer] Discord Stage Channel to a Stage Channel",
+            "value": 240,
+            "unit": "ns/iter",
+            "range": "236.16 … 271.8"
+          },
+          {
+            "name": "[Transformer] Discord Voice Channel to a Voice Channel",
+            "value": 245,
+            "unit": "ns/iter",
+            "range": "241.07 … 280.51"
+          },
+          {
+            "name": "[Transformer] Discord Member to a Member",
+            "value": 375,
+            "unit": "ns/iter",
+            "range": "370.6 … 459.07"
+          },
+          {
+            "name": "[Transformer] Member to a Discord Member",
+            "value": 587,
+            "unit": "ns/iter",
+            "range": "581.71 … 606.36"
+          },
+          {
+            "name": "[Transformer] Discord Role to a Role",
+            "value": 155,
+            "unit": "ns/iter",
+            "range": "152.49 … 163.59"
+          },
+          {
+            "name": "[Transformer] Discord Message to a Message",
+            "value": 498,
+            "unit": "ns/iter",
+            "range": "473.04 … 1222.58"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 144.12,
+            "unit": "MB",
+            "range": "40.5 … 282.03"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 266.2,
+            "unit": "MB",
+            "range": "263.59 … 268.79"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 143.46,
+            "unit": "MB",
+            "range": "37.86 … 281.12"
           }
         ]
       }
