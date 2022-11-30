@@ -1,7 +1,7 @@
-import type { Bot } from "../../bot.ts";
-import { Member } from "../../transformers/member.ts";
-import { DiscordMemberWithUser } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { Member } from '../../transformers/member.js'
+import { DiscordMemberWithUser } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Edits a member's properties.
@@ -23,11 +23,11 @@ export async function editMember(
   bot: Bot,
   guildId: BigString,
   userId: BigString,
-  options: ModifyGuildMember,
+  options: ModifyGuildMember
 ): Promise<Member> {
   const result = await bot.rest.runMethod<DiscordMemberWithUser>(
     bot.rest,
-    "PATCH",
+    'PATCH',
     bot.constants.routes.GUILD_MEMBER(guildId, userId),
     {
       nick: options.nick,
@@ -37,25 +37,25 @@ export async function editMember(
       channel_id: options.channelId?.toString(),
       communication_disabled_until: options.communicationDisabledUntil
         ? new Date(options.communicationDisabledUntil).toISOString()
-        : options.communicationDisabledUntil,
-    },
-  );
+        : options.communicationDisabledUntil
+    }
+  )
 
-  return bot.transformers.member(bot, result, bot.transformers.snowflake(guildId), bot.transformers.snowflake(userId));
+  return bot.transformers.member(bot, result, bot.transformers.snowflake(guildId), bot.transformers.snowflake(userId))
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-member */
 export interface ModifyGuildMember {
   /** Value to set users nickname to. Requires the `MANAGE_NICKNAMES` permission */
-  nick?: string | null;
+  nick?: string | null
   /** Array of role ids the member is assigned. Requires the `MANAGE_ROLES` permission */
-  roles?: BigString[] | null;
+  roles?: BigString[] | null
   /** Whether the user is muted in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MUTE_MEMBERS` permission */
-  mute?: boolean | null;
+  mute?: boolean | null
   /** Whether the user is deafened in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MOVE_MEMBERS` permission */
-  deaf?: boolean | null;
+  deaf?: boolean | null
   /** Id of channel to move user to (if they are connected to voice). Requires the `MOVE_MEMBERS` permission */
-  channelId?: BigString | null;
+  channelId?: BigString | null
   /** when the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission */
-  communicationDisabledUntil?: number | null;
+  communicationDisabledUntil?: number | null
 }

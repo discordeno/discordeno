@@ -1,10 +1,10 @@
-import { BotWithCache } from "../../deps.ts";
-import { requireBotGuildPermissions } from "../permissions.ts";
+import { BotWithCache } from '../../deps.js'
+import { requireBotGuildPermissions } from '../permissions.js'
 
 export async function deleteGuildSticker(bot: BotWithCache) {
-  const deleteGuildSticker = bot.helpers.deleteGuildSticker;
-  bot.helpers.deleteGuildSticker = (guildId, stickerId, reason) => {
-    requireBotGuildPermissions(bot, guildId, ["MANAGE_EMOJIS_AND_STICKERS"]);
-    return deleteGuildSticker(guildId, stickerId, reason);
-  };
+  const deleteGuildSticker = bot.helpers.deleteGuildSticker
+  bot.helpers.deleteGuildSticker = async (guildId, stickerId, reason) => {
+    requireBotGuildPermissions(bot, guildId, ['MANAGE_EMOJIS_AND_STICKERS'])
+    return await deleteGuildSticker(guildId, stickerId, reason)
+  }
 }

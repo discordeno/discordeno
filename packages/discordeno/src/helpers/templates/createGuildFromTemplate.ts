@@ -1,6 +1,6 @@
-import type { Bot } from "../../bot.ts";
-import { Guild } from "../../transformers/guild.ts";
-import { DiscordGuild } from "../../types/discord.ts";
+import type { Bot } from "../../bot.js";
+import { Guild } from "../../transformers/guild.js";
+import { DiscordGuild } from "../../types/discord.js";
 
 /**
  * Creates a guild from a template.

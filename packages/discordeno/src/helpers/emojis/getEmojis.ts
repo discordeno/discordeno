@@ -1,8 +1,8 @@
-import type { Bot } from "../../bot.ts";
-import { Emoji } from "../../transformers/emoji.ts";
-import { DiscordEmoji } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
-import { Collection } from "../../util/collection.ts";
+import type { Bot } from '../../bot.js'
+import { Emoji } from '../../transformers/emoji.js'
+import { DiscordEmoji } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
+import { Collection } from '../../util/collection.js'
 
 /**
  * Gets the list of emojis for a guild.
@@ -16,14 +16,14 @@ import { Collection } from "../../util/collection.ts";
 export async function getEmojis(bot: Bot, guildId: BigString): Promise<Collection<bigint, Emoji>> {
   const results = await bot.rest.runMethod<DiscordEmoji[]>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_EMOJIS(guildId),
-  );
+    'GET',
+    bot.constants.routes.GUILD_EMOJIS(guildId)
+  )
 
   return new Collection(
     results.map((result) => {
-      const emoji = bot.transformers.emoji(bot, result);
-      return [emoji.id!, emoji];
-    }),
-  );
+      const emoji = bot.transformers.emoji(bot, result)
+      return [emoji.id!, emoji]
+    })
+  )
 }

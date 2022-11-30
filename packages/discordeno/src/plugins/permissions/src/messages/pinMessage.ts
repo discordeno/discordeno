@@ -1,17 +1,17 @@
-import { BotWithCache } from "../../deps.ts";
-import { requireBotChannelPermissions } from "../permissions.ts";
+import { BotWithCache } from '../../deps.js'
+import { requireBotChannelPermissions } from '../permissions.js'
 
 export function pinMessage(bot: BotWithCache) {
-  const pinMessage = bot.helpers.pinMessage;
+  const pinMessage = bot.helpers.pinMessage
 
   bot.helpers.pinMessage = async function (
     channelId,
-    messageId,
+    messageId
   ) {
     requireBotChannelPermissions(bot, bot.transformers.snowflake(channelId), [
-      "MANAGE_MESSAGES",
-    ]);
+      'MANAGE_MESSAGES'
+    ])
 
-    return await pinMessage(channelId, messageId);
-  };
+    return await pinMessage(channelId, messageId)
+  }
 }

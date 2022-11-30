@@ -1,10 +1,10 @@
-import type { DiscordMemberWithUser } from "../../types/discord.ts";
-import type { SearchMembers } from "../../types/discordeno.ts";
+import type { DiscordMemberWithUser } from '../../types/discord.js'
+import type { SearchMembers } from '../../types/discordeno.js'
 
-import { Bot } from "../../bot.ts";
-import { Member } from "../../transformers/member.ts";
-import { Collection } from "../../util/collection.ts";
-import { BigString } from "../../types/shared.ts";
+import { Bot } from '../../bot.js'
+import { Member } from '../../transformers/member.js'
+import { BigString } from '../../types/shared.js'
+import { Collection } from '../../util/collection.js'
 
 /**
  * Gets the list of members whose usernames or nicknames start with a provided string.
@@ -21,27 +21,27 @@ export async function searchMembers(
   bot: Bot,
   guildId: BigString,
   query: string,
-  options?: Omit<SearchMembers, "query">,
+  options?: Omit<SearchMembers, 'query'>
 ): Promise<Collection<bigint, Member>> {
   if (options?.limit) {
-    if (options.limit < 1) throw new Error(bot.constants.Errors.MEMBER_SEARCH_LIMIT_TOO_LOW);
+    if (options.limit < 1) throw new Error(bot.constants.Errors.MEMBER_SEARCH_LIMIT_TOO_LOW)
     if (options.limit > 1000) {
-      throw new Error(bot.constants.Errors.MEMBER_SEARCH_LIMIT_TOO_HIGH);
+      throw new Error(bot.constants.Errors.MEMBER_SEARCH_LIMIT_TOO_HIGH)
     }
   }
 
   const results = await bot.rest.runMethod<DiscordMemberWithUser[]>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_MEMBERS_SEARCH(guildId, query, options),
-  );
+    'GET',
+    bot.constants.routes.GUILD_MEMBERS_SEARCH(guildId, query, options)
+  )
 
-  const id = bot.transformers.snowflake(guildId);
+  const id = bot.transformers.snowflake(guildId)
 
   return new Collection(
     results.map((result) => {
-      const member = bot.transformers.member(bot, result, id, bot.transformers.snowflake(result.user.id));
-      return [member.id, member];
-    }),
-  );
+      const member = bot.transformers.member(bot, result, id, bot.transformers.snowflake(result.user.id))
+      return [member.id, member]
+    })
+  )
 }

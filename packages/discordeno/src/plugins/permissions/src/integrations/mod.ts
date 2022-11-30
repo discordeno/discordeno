@@ -1,8 +1,8 @@
-import { BotWithCache } from "../../deps.ts";
-import { deleteIntegration } from "./deleteIntegrations.ts";
-import { getIntegrations } from "./getIntegrations.ts";
+import { BotWithCache } from '../../deps.js'
+import { deleteIntegration } from './deleteIntegrations.js'
+import { getIntegrations } from './getIntegrations.js'
 
 export function integrations(bot: BotWithCache) {
-  deleteIntegration(bot);
-  getIntegrations(bot);
+  deleteIntegration(bot)
+  getIntegrations(bot)
 }

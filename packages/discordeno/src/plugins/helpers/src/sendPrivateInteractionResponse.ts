@@ -1,12 +1,12 @@
-import type { BigString, Bot, InteractionResponse } from "../deps.ts";
+import type { BigString, Bot, InteractionResponse } from '../deps.js'
 
 /** sendInteractionResponse with ephemeral reply */
 export async function sendPrivateInteractionResponse(
   bot: Bot,
   id: BigString,
   token: string,
-  options: InteractionResponse,
+  options: InteractionResponse
 ) {
-  if (options.data && !options.data?.flags) options.data.flags = 64; // private: true
-  return await bot.helpers.sendInteractionResponse(id, token, options);
+  if ((options.data != null) && !options.data?.flags) options.data.flags = 64 // private: true
+  return await bot.helpers.sendInteractionResponse(id, token, options)
 }

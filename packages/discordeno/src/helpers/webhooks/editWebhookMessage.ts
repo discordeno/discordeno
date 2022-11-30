@@ -1,8 +1,8 @@
-import type { Bot } from "../../bot.ts";
-import { Message } from "../../transformers/message.ts";
-import { DiscordMessage } from "../../types/discord.ts";
-import { InteractionCallbackData } from "../../types/discordeno.ts";
-import { BigString, InteractionResponseTypes } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { Message } from '../../transformers/message.js'
+import { DiscordMessage } from '../../types/discord.js'
+import { InteractionCallbackData } from '../../types/discordeno.js'
+import { BigString, InteractionResponseTypes } from '../../types/shared.js'
 
 /**
  * Edits a webhook message.
@@ -24,20 +24,20 @@ export async function editWebhookMessage(
   webhookId: BigString,
   token: string,
   messageId: BigString,
-  options: InteractionCallbackData & { threadId?: BigString },
+  options: InteractionCallbackData & { threadId?: BigString }
 ): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "PATCH",
+    'PATCH',
     bot.constants.routes.WEBHOOK_MESSAGE(webhookId, token, messageId, options),
     {
       ...bot.transformers.reverse.interactionResponse(bot, {
         type: InteractionResponseTypes.UpdateMessage,
-        data: options,
+        data: options
       }).data,
-      file: options.file,
-    },
-  );
+      file: options.file
+    }
+  )
 
-  return bot.transformers.message(bot, result);
+  return bot.transformers.message(bot, result)
 }

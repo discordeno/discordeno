@@ -1,7 +1,7 @@
-import type { Bot } from "../../../bot.ts";
-import { ApplicationCommand } from "../../../transformers/applicationCommand.ts";
-import { DiscordApplicationCommand } from "../../../types/discord.ts";
-import { Collection } from "../../../util/collection.ts";
+import type { Bot } from '../../../bot.js'
+import { ApplicationCommand } from '../../../transformers/applicationCommand.js'
+import { DiscordApplicationCommand } from '../../../types/discord.js'
+import { Collection } from '../../../util/collection.js'
 
 // TODO: Implement `with_localizations` options field.
 
@@ -16,14 +16,14 @@ import { Collection } from "../../../util/collection.ts";
 export async function getGlobalApplicationCommands(bot: Bot): Promise<Collection<bigint, ApplicationCommand>> {
   const results = await bot.rest.runMethod<DiscordApplicationCommand[]>(
     bot.rest,
-    "GET",
-    bot.constants.routes.COMMANDS(bot.applicationId),
-  );
+    'GET',
+    bot.constants.routes.COMMANDS(bot.applicationId)
+  )
 
   return new Collection(
     results.map((result) => {
-      const command = bot.transformers.applicationCommand(bot, result);
-      return [command.id, command];
-    }),
-  );
+      const command = bot.transformers.applicationCommand(bot, result)
+      return [command.id, command]
+    })
+  )
 }

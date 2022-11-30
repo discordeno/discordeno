@@ -1,7 +1,7 @@
-import type { Bot } from "../../bot.ts";
-import { Message } from "../../transformers/message.ts";
-import { DiscordMessage } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { Message } from '../../transformers/message.js'
+import { DiscordMessage } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Gets a message from a channel by the ID of the message.
@@ -22,9 +22,9 @@ import { BigString } from "../../types/shared.ts";
 export async function getMessage(bot: Bot, channelId: BigString, messageId: BigString): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "GET",
-    bot.constants.routes.CHANNEL_MESSAGE(channelId, messageId),
-  );
+    'GET',
+    bot.constants.routes.CHANNEL_MESSAGE(channelId, messageId)
+  )
 
-  return bot.transformers.message(bot, result);
+  return bot.transformers.message(bot, result)
 }

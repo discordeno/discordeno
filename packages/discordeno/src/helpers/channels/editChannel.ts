@@ -1,9 +1,9 @@
-import type { Bot } from "../../bot.ts";
-import { WithReason } from "../../mod.ts";
-import { Channel } from "../../transformers/channel.ts";
-import { DiscordChannel } from "../../types/discord.ts";
-import { OverwriteReadable } from "../../types/discordeno.ts";
-import { BigString, ChannelTypes, SortOrderTypes, VideoQualityModes } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { WithReason } from '../../mod.js'
+import { Channel } from '../../transformers/channel.js'
+import { DiscordChannel } from '../../types/discord.js'
+import { OverwriteReadable } from '../../types/discordeno.js'
+import { BigString, ChannelTypes, SortOrderTypes, VideoQualityModes } from '../../types/shared.js'
 
 /**
  * Edits a channel's settings.
@@ -37,34 +37,34 @@ import { BigString, ChannelTypes, SortOrderTypes, VideoQualityModes } from "../.
  */
 export async function editChannel(bot: Bot, channelId: BigString, options: ModifyChannel): Promise<Channel> {
   if (options.name || options.topic) {
-    const request = editChannelNameTopicQueue.get(channelId);
-    if (!request) {
+    const request = editChannelNameTopicQueue.get(channelId)
+    if (request == null) {
       // If this hasn't been done before simply add 1 for it
       editChannelNameTopicQueue.set(channelId, {
-        channelId: channelId,
+        channelId,
         amount: 1,
         // 10 minutes from now
         timestamp: Date.now() + 600000,
-        items: [],
-      });
+        items: []
+      })
     } else if (request.amount === 1) {
       // Start queuing future requests to this channel
-      request.amount = 2;
-      request.timestamp = Date.now() + 600000;
+      request.amount = 2
+      request.timestamp = Date.now() + 600000
     } else {
-      return new Promise<Channel>((resolve, reject) => {
+      return await new Promise<Channel>((resolve, reject) => {
         // 2 have already been used add to queue
-        request.items.push({ channelId, options, resolve, reject });
-        if (editChannelProcessing) return;
-        editChannelProcessing = true;
-        processEditChannelQueue(bot);
-      });
+        request.items.push({ channelId, options, resolve, reject })
+        if (editChannelProcessing) return
+        editChannelProcessing = true
+        processEditChannelQueue(bot)
+      })
     }
   }
 
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
-    "PATCH",
+    'PATCH',
     bot.constants.routes.CHANNEL(channelId),
     {
       name: options.name,
@@ -80,153 +80,152 @@ export async function editChannel(bot: Bot, channelId: BigString, options: Modif
       auto_archive_duration: options.autoArchiveDuration,
       locked: options.locked,
       invitable: options.invitable,
-      permission_overwrites: options.permissionOverwrites
+      permission_overwrites: (options.permissionOverwrites != null)
         ? options.permissionOverwrites?.map((overwrite) => ({
           id: overwrite.id.toString(),
           type: overwrite.type,
-          allow: overwrite.allow ? bot.utils.calculateBits(overwrite.allow) : null,
-          deny: overwrite.deny ? bot.utils.calculateBits(overwrite.deny) : null,
+          allow: (overwrite.allow != null) ? bot.utils.calculateBits(overwrite.allow) : null,
+          deny: (overwrite.deny != null) ? bot.utils.calculateBits(overwrite.deny) : null
         }))
         : undefined,
-      available_tags: options.availableTags
+      available_tags: (options.availableTags != null)
         ? options.availableTags.map((availableTag) => ({
           id: availableTag.id,
           name: availableTag.name,
           moderated: availableTag.moderated,
           emoji_id: availableTag.emojiId,
-          emoji_name: availableTag.emojiName,
+          emoji_name: availableTag.emojiName
         }))
         : undefined,
       applied_tags: options.appliedTags?.map((appliedTag) => appliedTag.toString()),
-      default_reaction_emoji: options.defaultReactionEmoji
+      default_reaction_emoji: (options.defaultReactionEmoji != null)
         ? {
           emoji_id: options.defaultReactionEmoji.emojiId,
-          emoji_name: options.defaultReactionEmoji.emojiName,
+          emoji_name: options.defaultReactionEmoji.emojiName
         }
         : undefined,
       default_sort_order: options.defaultSortOrder,
-      reason: options.reason,
-    },
-  );
+      reason: options.reason
+    }
+  )
 
-  return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(result.guild_id!) });
+  return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(result.guild_id!) })
 }
 
 interface EditChannelRequest {
-  amount: number;
-  timestamp: number;
-  channelId: BigString;
-  items: {
-    channelId: BigString;
-    options: ModifyChannel;
-    resolve: (channel: Channel) => void;
+  amount: number
+  timestamp: number
+  channelId: BigString
+  items: Array<{
+    channelId: BigString
+    options: ModifyChannel
+    resolve: (channel: Channel) => void
     // deno-lint-ignore no-explicit-any
-    reject: (error: any) => void;
-  }[];
+    reject: (error: any) => void
+  }>
 }
 
-const editChannelNameTopicQueue = new Map<BigString, EditChannelRequest>();
-let editChannelProcessing = false;
+const editChannelNameTopicQueue = new Map<BigString, EditChannelRequest>()
+let editChannelProcessing = false
 
 function processEditChannelQueue(bot: Bot): void {
-  if (!editChannelProcessing) return;
+  if (!editChannelProcessing) return
 
-  const now = Date.now();
+  const now = Date.now()
   editChannelNameTopicQueue.forEach(async (request) => {
-    bot.events.debug(`Running forEach loop in edit_channel file.`);
-    if (now < request.timestamp) return;
+    bot.events.debug('Running forEach loop in edit_channel file.')
+    if (now < request.timestamp) return
     // 10 minutes have passed so we can reset this channel again
-    if (!request.items.length) {
-      return editChannelNameTopicQueue.delete(request.channelId);
+    if (request.items.length === 0) {
+      return editChannelNameTopicQueue.delete(request.channelId)
     }
-    request.amount = 0;
+    request.amount = 0
     // There are items to process for this request
-    const details = request.items.shift();
+    const details = request.items.shift()
 
-    if (!details) return;
+    if (details == null) return
 
     await bot.helpers
       .editChannel(details.channelId, details.options)
       .then((result) => details.resolve(result))
-      .catch(details.reject);
-    const secondDetails = request.items.shift();
-    if (!secondDetails) return;
+      .catch(details.reject)
+    const secondDetails = request.items.shift()
+    if (secondDetails == null) return
 
     await bot.helpers
       .editChannel(secondDetails.channelId, secondDetails.options)
       .then((result) => secondDetails.resolve(result))
-      .catch(secondDetails.reject);
-    return;
-  });
+      .catch(secondDetails.reject)
+  })
 
   if (editChannelNameTopicQueue.size) {
     setTimeout(() => {
-      bot.events.debug(`Running setTimeout in EDIT_CHANNEL file.`);
-      processEditChannelQueue(bot);
-    }, 60000);
+      bot.events.debug('Running setTimeout in EDIT_CHANNEL file.')
+      processEditChannelQueue(bot)
+    }, 60000)
   } else {
-    editChannelProcessing = false;
+    editChannelProcessing = false
   }
 }
 
 export interface ModifyChannel extends WithReason {
   /** 1-100 character channel name */
-  name?: string;
+  name?: string
   /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
-  type?: ChannelTypes;
+  type?: ChannelTypes
   /** The position of the channel in the left-hand listing */
-  position?: number | null;
+  position?: number | null
   /** 0-1024 character channel topic */
-  topic?: string | null;
+  topic?: string | null
   /** Whether the channel is nsfw */
-  nsfw?: boolean | null;
+  nsfw?: boolean | null
   /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
-  rateLimitPerUser?: number | null;
+  rateLimitPerUser?: number | null
   /** The bitrate (in bits) of the voice channel; 8000 to 96000 (128000 for VIP servers) */
-  bitrate?: number | null;
+  bitrate?: number | null
   /** The user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit */
-  userLimit?: number | null;
+  userLimit?: number | null
   /** Channel or category-specific permissions */
-  permissionOverwrites?: OverwriteReadable[] | null;
+  permissionOverwrites?: OverwriteReadable[] | null
   /** Id of the new parent category for a channel */
-  parentId?: BigString | null;
+  parentId?: BigString | null
   /** Voice region id for the voice channel, automatic when set to null */
-  rtcRegion?: string | null;
+  rtcRegion?: string | null
   /** The camera video quality mode of the voice channel */
-  videoQualityMode?: VideoQualityModes;
+  videoQualityMode?: VideoQualityModes
   /** Whether the thread is archived */
-  archived?: boolean;
+  archived?: boolean
   /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration?: 60 | 1440 | 4320 | 10080;
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
   /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
-  locked?: boolean;
+  locked?: boolean
   /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
-  invitable?: boolean;
+  invitable?: boolean
 
   /** The set of tags that can be used in a GUILD_FORUM channel */
-  availableTags?: {
+  availableTags?: Array<{
     /** The id of the tag */
-    id: string;
+    id: string
     /** The name of the tag (0-20 characters) */
-    name: string;
+    name: string
     /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
-    moderated: boolean;
+    moderated: boolean
     /** The id of a guild's custom emoji At most one of emoji_id and emoji_name may be set. */
-    emojiId: string;
+    emojiId: string
     /** The unicode character of the emoji */
-    emojiName: string;
-  }[];
+    emojiName: string
+  }>
   /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel; limited to 5 */
-  appliedTags?: BigString[];
+  appliedTags?: BigString[]
   /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */
   defaultReactionEmoji?: {
     /** The id of a guild's custom emoji */
-    emojiId: string;
+    emojiId: string
     /** The unicode character of the emoji */
-    emojiName: string | null;
-  };
+    emojiName: string | null
+  }
   /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
-  defaultThreadRateLimitPerUser?: number;
+  defaultThreadRateLimitPerUser?: number
   /** the default sort order type used to order posts in forum channels */
-  defaultSortOrder?: SortOrderTypes | null;
+  defaultSortOrder?: SortOrderTypes | null
 }

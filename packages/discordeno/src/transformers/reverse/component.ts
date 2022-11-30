@@ -1,6 +1,6 @@
-import { Bot } from "../../bot.ts";
-import { DiscordComponent } from "../../types/discord.ts";
-import { Component } from "../component.ts";
+import { Bot } from '../../bot.js'
+import { DiscordComponent } from '../../types/discord.js'
+import { Component } from '../component.js'
 
 export function transformComponentToDiscordComponent(bot: Bot, payload: Component): DiscordComponent {
   return {
@@ -10,11 +10,11 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
     required: payload.required,
     style: payload.style,
     label: payload.label,
-    emoji: payload.emoji
+    emoji: (payload.emoji != null)
       ? {
         id: payload.emoji.id?.toString(),
         name: payload.emoji.name,
-        animated: payload.emoji.animated,
+        animated: payload.emoji.animated
       }
       : undefined,
     url: payload.url,
@@ -22,14 +22,14 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
       label: option.label,
       value: option.value,
       description: option.description,
-      emoji: option.emoji
+      emoji: (option.emoji != null)
         ? {
           id: option.emoji.id?.toString(),
           name: option.emoji.name,
-          animated: option.emoji.animated,
+          animated: option.emoji.animated
         }
         : undefined,
-      default: option.default,
+      default: option.default
     })),
     placeholder: payload.placeholder,
     min_values: payload.minValues,
@@ -37,6 +37,6 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
     min_length: payload.minLength,
     max_length: payload.maxLength,
     value: payload.value,
-    components: payload.components?.map((component) => bot.transformers.reverse.component(bot, component)),
-  };
+    components: payload.components?.map((component) => bot.transformers.reverse.component(bot, component))
+  }
 }

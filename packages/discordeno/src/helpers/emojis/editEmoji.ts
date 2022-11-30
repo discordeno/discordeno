@@ -1,7 +1,7 @@
-import type { Bot } from "../../bot.ts";
-import { BigString, WithReason } from "../../mod.ts";
-import { Emoji } from "../../transformers/emoji.ts";
-import { DiscordEmoji } from "../../types/discord.ts";
+import type { Bot } from '../../bot.js'
+import { BigString, WithReason } from '../../mod.js'
+import { Emoji } from '../../transformers/emoji.js'
+import { DiscordEmoji } from '../../types/discord.js'
 
 /**
  * Edits an emoji.
@@ -23,27 +23,27 @@ export async function editEmoji(
   bot: Bot,
   guildId: BigString,
   id: BigString,
-  options: ModifyGuildEmoji,
+  options: ModifyGuildEmoji
 ): Promise<Emoji> {
   const result = await bot.rest.runMethod<DiscordEmoji>(
     bot.rest,
-    "PATCH",
+    'PATCH',
     bot.constants.routes.GUILD_EMOJI(guildId, id),
     {
       name: options.name,
       // NEED TERNARY TO SUPPORT NULL AS VALID
-      roles: options.roles ? options.roles.map((role) => role.toString()) : options.roles,
-      reason: options.reason,
-    },
-  );
+      roles: (options.roles != null) ? options.roles.map((role) => role.toString()) : options.roles,
+      reason: options.reason
+    }
+  )
 
-  return bot.transformers.emoji(bot, result);
+  return bot.transformers.emoji(bot, result)
 }
 
 /** https://discord.com/developers/docs/resources/emoji#modify-guild-emoji */
 export interface ModifyGuildEmoji extends WithReason {
   /** Name of the emoji */
-  name?: string;
+  name?: string
   /** Roles allowed to use this emoji */
-  roles?: BigString[] | null;
+  roles?: BigString[] | null
 }

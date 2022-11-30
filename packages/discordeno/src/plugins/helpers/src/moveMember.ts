@@ -1,13 +1,13 @@
-import { BigString, Bot } from "../deps.ts";
+import { BigString, Bot } from '../deps.js'
 
 /**
  * Move a member from a voice channel to another.
  */
-export function moveMember(
+export async function moveMember(
   bot: Bot,
   guildId: BigString,
   memberId: BigString,
-  channelId: BigString,
+  channelId: BigString
 ) {
-  return bot.helpers.editMember(guildId, memberId, { channelId });
+  return await bot.helpers.editMember(guildId, memberId, { channelId })
 }

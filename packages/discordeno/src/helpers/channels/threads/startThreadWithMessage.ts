@@ -1,7 +1,7 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString, WithReason } from "../../../mod.ts";
-import { Channel } from "../../../transformers/channel.ts";
-import { DiscordChannel } from "../../../types/discord.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString, WithReason } from '../../../mod.js'
+import { Channel } from '../../../transformers/channel.js'
+import { DiscordChannel } from '../../../types/discord.js'
 
 /**
  * Creates a thread, using an existing message as its point of origin.
@@ -27,28 +27,28 @@ export async function startThreadWithMessage(
   bot: Bot,
   channelId: BigString,
   messageId: BigString,
-  options: StartThreadWithMessage,
+  options: StartThreadWithMessage
 ): Promise<Channel> {
   const result = await bot.rest.runMethod<DiscordChannel>(
     bot.rest,
-    "POST",
+    'POST',
     bot.constants.routes.THREAD_START_PUBLIC(channelId, messageId),
     {
       name: options.name,
       auto_archive_duration: options.autoArchiveDuration,
       rate_limit_per_user: options.rateLimitPerUser,
-      reason: options.reason,
-    },
-  );
+      reason: options.reason
+    }
+  )
 
-  return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(result.guild_id!) });
+  return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(result.guild_id!) })
 }
 
 export interface StartThreadWithMessage extends WithReason {
   /** 1-100 character thread name */
-  name: string;
+  name: string
   /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration: 60 | 1440 | 4320 | 10080;
+  autoArchiveDuration: 60 | 1440 | 4320 | 10080
   /** Amount of seconds a user has to wait before sending another message (0-21600) */
-  rateLimitPerUser?: number | null;
+  rateLimitPerUser?: number | null
 }

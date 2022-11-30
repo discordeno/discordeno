@@ -1,1 +1,1 @@
-export * from "./GUILD_EMOJIS_UPDATE.ts";
+export * from "./GUILD_EMOJIS_UPDATE.js";

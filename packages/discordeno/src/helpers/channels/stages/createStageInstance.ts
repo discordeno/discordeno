@@ -1,7 +1,7 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString, WithReason } from "../../../mod.ts";
-import { StageInstance } from "../../../transformers/stageInstance.ts";
-import { DiscordStageInstance } from "../../../types/discord.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString, WithReason } from '../../../mod.js'
+import { StageInstance } from '../../../transformers/stageInstance.js'
+import { DiscordStageInstance } from '../../../types/discord.js'
 
 /**
  * Creates a stage instance associated with a stage channel.
@@ -20,22 +20,22 @@ import { DiscordStageInstance } from "../../../types/discord.ts";
 export async function createStageInstance(bot: Bot, options: CreateStageInstance): Promise<StageInstance> {
   const result = await bot.rest.runMethod<DiscordStageInstance>(
     bot.rest,
-    "POST",
+    'POST',
     bot.constants.routes.STAGE_INSTANCES(),
     {
       channel_id: options.channelId.toString(),
       topic: options.topic,
       send_start_notification: options.sendStartNotification,
-      reason: options.reason,
-    },
-  );
+      reason: options.reason
+    }
+  )
 
-  return bot.transformers.stageInstance(bot, result);
+  return bot.transformers.stageInstance(bot, result)
 }
 
 export interface CreateStageInstance extends WithReason {
-  channelId: BigString;
-  topic: string;
+  channelId: BigString
+  topic: string
   /** Notify @everyone that the stage instance has started. Requires the MENTION_EVERYONE permission. */
-  sendStartNotification?: boolean;
+  sendStartNotification?: boolean
 }

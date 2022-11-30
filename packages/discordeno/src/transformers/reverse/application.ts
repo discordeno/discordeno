@@ -1,6 +1,6 @@
-import { Bot } from "../../bot.ts";
-import { DiscordApplication } from "../../types/discord.ts";
-import { Application } from "../application.ts";
+import { Bot } from '../../bot.js'
+import { DiscordApplication } from '../../types/discord.js'
+import { Application } from '../application.js'
 
 export function transformApplicationToDiscordApplication(bot: Bot, payload: Application): DiscordApplication {
   return {
@@ -19,8 +19,8 @@ export function transformApplicationToDiscordApplication(bot: Bot, payload: Appl
 
     id: bot.utils.bigintToSnowflake(payload.id),
     icon: payload.icon ? bot.utils.iconBigintToHash(payload.icon) : null,
-    owner: payload.owner ? bot.transformers.reverse.user(bot, payload.owner) : undefined,
-    team: payload.team ? bot.transformers.reverse.team(bot, payload.team) : null,
-    guild_id: payload.guildId ? bot.utils.bigintToSnowflake(payload.guildId) : undefined,
-  };
+    owner: (payload.owner != null) ? bot.transformers.reverse.user(bot, payload.owner) : undefined,
+    team: (payload.team != null) ? bot.transformers.reverse.team(bot, payload.team) : null,
+    guild_id: payload.guildId ? bot.utils.bigintToSnowflake(payload.guildId) : undefined
+  }
 }

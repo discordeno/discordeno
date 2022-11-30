@@ -1,6 +1,6 @@
-import type { Bot } from "../../../bot.ts";
-import { DiscordFollowedChannel } from "../../../types/discord.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { DiscordFollowedChannel } from '../../../types/discord.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Follows an announcement channel, allowing messages posted within it to be cross-posted into the target channel.
@@ -20,16 +20,16 @@ import { BigString } from "../../../types/shared.ts";
 export async function followAnnouncementChannel(
   bot: Bot,
   sourceChannelId: BigString,
-  targetChannelId: BigString,
+  targetChannelId: BigString
 ): Promise<bigint> {
   const result = await bot.rest.runMethod<DiscordFollowedChannel>(
     bot.rest,
-    "POST",
+    'POST',
     bot.constants.routes.CHANNEL_FOLLOW(sourceChannelId),
     {
-      webhook_channel_id: targetChannelId,
-    },
-  );
+      webhook_channel_id: targetChannelId
+    }
+  )
 
-  return bot.transformers.snowflake(result.webhook_id);
+  return bot.transformers.snowflake(result.webhook_id)
 }

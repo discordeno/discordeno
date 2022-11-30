@@ -1,5 +1,6 @@
-export * from "./createAutomodRule.ts";
-export * from "./deleteAutomodRule.ts";
-export * from "./editAutomodRule.ts";
-export * from "./getAutomodRule.ts";
-export * from "./getAutomodRules.ts";
+export * from './createAutomodRule.js'
+export * from './deleteAutomodRule.js'
+export * from './editAutomodRule.js'
+export * from './getAutomodRule.js'
+export * from './getAutomodRules.js'
+

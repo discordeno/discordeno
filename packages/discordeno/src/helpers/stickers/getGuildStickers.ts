@@ -1,6 +1,6 @@
-import { Bot } from "../../bot.ts";
-import { Collection, Sticker } from "../../mod.ts";
-import { DiscordSticker } from "../../types/discord.ts";
+import { Bot } from '../../bot.js'
+import { Collection, Sticker } from '../../mod.js'
+import { DiscordSticker } from '../../types/discord.js'
 
 /**
  * Returns an array of sticker objects for the given guild.
@@ -16,14 +16,14 @@ import { DiscordSticker } from "../../types/discord.ts";
 export async function getGuildStickers(bot: Bot, guildId: bigint): Promise<Collection<bigint, Sticker>> {
   const results = await bot.rest.runMethod<DiscordSticker[]>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_STICKERS(guildId),
-  );
+    'GET',
+    bot.constants.routes.GUILD_STICKERS(guildId)
+  )
 
   return new Collection(
     results.map((result) => {
-      const pack = bot.transformers.sticker(bot, result);
-      return [pack.id, pack];
-    }),
-  );
+      const pack = bot.transformers.sticker(bot, result)
+      return [pack.id, pack]
+    })
+  )
 }

@@ -1,18 +1,18 @@
-import { Bot } from "../../bot.ts";
-import { DiscordInteractionResponse, InteractionResponse } from "../../types/mod.ts";
+import { Bot } from '../../bot.js'
+import { DiscordInteractionResponse, InteractionResponse } from '../../types/mod.js'
 
 export function transformInteractionResponseToDiscordInteractionResponse(
   bot: Bot,
-  payload: InteractionResponse,
+  payload: InteractionResponse
 ): DiscordInteractionResponse {
   // If no mentions are provided, force disable mentions
-  if (payload.data && !payload.data?.allowedMentions) {
-    payload.data.allowedMentions = { parse: [] };
+  if ((payload.data != null) && ((payload.data?.allowedMentions) == null)) {
+    payload.data.allowedMentions = { parse: [] }
   }
 
   return {
     type: payload.type,
-    data: payload.data
+    data: (payload.data != null)
       ? {
         tts: payload.data.tts,
         title: payload.data.title,
@@ -24,8 +24,8 @@ export function transformInteractionResponseToDiscordInteractionResponse(
         custom_id: payload.data.customId,
         embeds: payload.data.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
         allowed_mentions: bot.transformers.reverse.allowedMentions(bot, payload.data.allowedMentions!),
-        components: payload.data.components?.map((component) => bot.transformers.reverse.component(bot, component)),
+        components: payload.data.components?.map((component) => bot.transformers.reverse.component(bot, component))
       }
-      : undefined,
-  };
+      : undefined
+  }
 }

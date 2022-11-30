@@ -1,6 +1,6 @@
-import { ApplicationCommandOption } from "../transformers/applicationCommandOption.ts";
-import { ApplicationCommandOptionChoice } from "../transformers/applicationCommandOptionChoice.ts";
-import { Embed } from "../transformers/embed.ts";
+import { ApplicationCommandOption } from "../transformers/applicationCommandOption.js";
+import { ApplicationCommandOptionChoice } from "../transformers/applicationCommandOptionChoice.js";
+import { Embed } from "../transformers/embed.js";
 import {
   AllowedMentionsTypes,
   ApplicationCommandTypes,
@@ -10,8 +10,8 @@ import {
   MessageComponentTypes,
   OverwriteTypes,
   PermissionStrings,
-  TextStyles,
-} from "./shared.ts";
+  TextStyles
+} from "./shared.js";
 
 export type MessageComponents = ActionRow[];
 
@@ -21,19 +21,19 @@ export interface ActionRow {
   type: MessageComponentTypes.ActionRow;
   /** The components in this row */
   components:
-    | [
-      | ButtonComponent
-      | InputTextComponent
-      | SelectMenuComponent
-      | SelectMenuChannelsComponent
-      | SelectMenuRolesComponent
-      | SelectMenuUsersComponent
-      | SelectMenuUsersAndRolesComponent,
-    ]
-    | [ButtonComponent, ButtonComponent]
-    | [ButtonComponent, ButtonComponent, ButtonComponent]
-    | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]
-    | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent];
+  | [
+    | ButtonComponent
+    | InputTextComponent
+    | SelectMenuComponent
+    | SelectMenuChannelsComponent
+    | SelectMenuRolesComponent
+    | SelectMenuUsersComponent
+    | SelectMenuUsersAndRolesComponent,
+  ]
+  | [ButtonComponent, ButtonComponent]
+  | [ButtonComponent, ButtonComponent, ButtonComponent]
+  | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]
+  | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent];
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#button-object-button-structure */

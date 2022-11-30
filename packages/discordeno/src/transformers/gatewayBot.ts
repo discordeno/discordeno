@@ -1,5 +1,5 @@
-import { DiscordGetGatewayBot } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
+import { DiscordGetGatewayBot } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
 
 export function transformGatewayBot(payload: DiscordGetGatewayBot) {
   const gatewayBot = {
@@ -9,11 +9,11 @@ export function transformGatewayBot(payload: DiscordGetGatewayBot) {
       total: payload.session_start_limit.total,
       remaining: payload.session_start_limit.remaining,
       resetAfter: payload.session_start_limit.reset_after,
-      maxConcurrency: payload.session_start_limit.max_concurrency,
-    },
-  };
+      maxConcurrency: payload.session_start_limit.max_concurrency
+    }
+  }
 
-  return gatewayBot as Optionalize<typeof gatewayBot>;
+  return gatewayBot as Optionalize<typeof gatewayBot>
 }
 
-export interface GetGatewayBot extends ReturnType<typeof transformGatewayBot> {}
+export interface GetGatewayBot extends ReturnType<typeof transformGatewayBot> { }

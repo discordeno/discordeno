@@ -1,6 +1,6 @@
-import { BigString, Bot } from "../deps.ts";
+import { BigString, Bot } from '../deps.js'
 
 /** Kicks a member from a voice channel */
-export function disconnectMember(bot: Bot, guildId: BigString, memberId: BigString) {
-  return bot.helpers.editMember(guildId, memberId, { channelId: null });
+export async function disconnectMember(bot: Bot, guildId: BigString, memberId: BigString) {
+  return await bot.helpers.editMember(guildId, memberId, { channelId: null })
 }

@@ -1,5 +1,5 @@
-import { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
+import { Bot } from '../../bot.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Builds a URL to an emoji in the Discord CDN.
@@ -9,5 +9,5 @@ import { BigString } from "../../types/shared.ts";
  * @returns The link to the resource.
  */
 export function getEmojiURL(_bot: Bot, emojiId: BigString, animated = false): string {
-  return `https://cdn.discordapp.com/emojis/${emojiId}.${animated ? "gif" : "png"}`;
+  return `https://cdn.discordapp.com/emojis/${emojiId}.${animated ? 'gif' : 'png'}`
 }

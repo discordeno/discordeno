@@ -1,6 +1,6 @@
-import type { Bot } from "../../../bot.ts";
-import { Message } from "../../../transformers/message.ts";
-import { DiscordMessage } from "../../../types/discord.ts";
+import type { Bot } from '../../../bot.js'
+import { Message } from '../../../transformers/message.js'
+import { DiscordMessage } from '../../../types/discord.js'
 
 /**
  * Gets the initial message response to an interaction.
@@ -21,9 +21,9 @@ import { DiscordMessage } from "../../../types/discord.ts";
 export async function getOriginalInteractionResponse(bot: Bot, token: string): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "GET",
-    bot.constants.routes.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token),
-  );
+    'GET',
+    bot.constants.routes.INTERACTION_ORIGINAL_ID_TOKEN(bot.applicationId, token)
+  )
 
-  return bot.transformers.message(bot, result);
+  return bot.transformers.message(bot, result)
 }

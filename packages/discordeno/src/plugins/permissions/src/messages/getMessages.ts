@@ -1,18 +1,18 @@
-import { BotWithCache } from "../../deps.ts";
-import { requireBotChannelPermissions } from "../permissions.ts";
+import { BotWithCache } from '../../deps.js'
+import { requireBotChannelPermissions } from '../permissions.js'
 
 export function getMessages(bot: BotWithCache) {
-  const getMessages = bot.helpers.getMessages;
+  const getMessages = bot.helpers.getMessages
 
   bot.helpers.getMessages = async function (channelId, options) {
-    const channel = bot.channels.get(bot.transformers.snowflake(channelId));
+    const channel = bot.channels.get(bot.transformers.snowflake(channelId))
     if (channel?.guildId) {
       requireBotChannelPermissions(bot, channel, [
-        "READ_MESSAGE_HISTORY",
-        "VIEW_CHANNEL",
-      ]);
+        'READ_MESSAGE_HISTORY',
+        'VIEW_CHANNEL'
+      ])
     }
 
-    return await getMessages(channelId, options);
-  };
+    return await getMessages(channelId, options)
+  }
 }

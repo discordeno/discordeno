@@ -1,5 +1,5 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Builds a URL to the guild widget image stored in the Discord CDN.
@@ -10,7 +10,7 @@ import { BigString } from "../../../types/shared.ts";
  * @returns The link to the resource.
  */
 export function getWidgetImageURL(bot: Bot, guildId: BigString, options?: GetGuildWidgetImageQuery): string {
-  return bot.constants.routes.GUILD_WIDGET_IMAGE(guildId, options?.style);
+  return bot.constants.routes.GUILD_WIDGET_IMAGE(guildId, options?.style)
 }
 
 /** https://discord.com/developers/docs/resources/guild#get-guild-widget-image-query-string-params */
@@ -25,9 +25,9 @@ export interface GetGuildWidgetImageQuery {
    * Banner4: Large Discord logo at the top of the widget. Guild icon, name and online count in the middle portion of the widget and a "JOIN MY SERVER" button at the bottom
    */
   style?:
-    | "shield"
-    | "banner1"
-    | "banner2"
-    | "banner3"
-    | "banner4";
+  | 'shield'
+  | 'banner1'
+  | 'banner2'
+  | 'banner3'
+  | 'banner4'
 }

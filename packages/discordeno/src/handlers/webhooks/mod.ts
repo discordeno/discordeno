@@ -1,1 +1,1 @@
-export * from "./WEBHOOKS_UPDATE.ts";
+export * from "./WEBHOOKS_UPDATE.js";

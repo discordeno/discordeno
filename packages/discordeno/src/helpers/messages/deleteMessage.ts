@@ -1,5 +1,5 @@
-import type { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { BigString } from '../../types/shared.js'
 
 // TODO: Remove `delayMilliseconds` parameter.
 
@@ -23,14 +23,14 @@ export async function deleteMessage(
   channelId: BigString,
   messageId: BigString,
   reason?: string,
-  delayMilliseconds = 0,
+  delayMilliseconds = 0
 ): Promise<void> {
-  if (delayMilliseconds) await bot.utils.delay(delayMilliseconds);
+  if (delayMilliseconds) await bot.utils.delay(delayMilliseconds)
 
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
+    'DELETE',
     bot.constants.routes.CHANNEL_MESSAGE(channelId, messageId),
-    { reason },
-  );
+    { reason }
+  )
 }

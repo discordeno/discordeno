@@ -1,5 +1,5 @@
-import type { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Deletes a channel from within a guild.
@@ -29,10 +29,10 @@ import { BigString } from "../../types/shared.ts";
 export async function deleteChannel(bot: Bot, channelId: BigString, reason?: string): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
+    'DELETE',
     bot.constants.routes.CHANNEL(channelId),
     {
-      reason,
-    },
-  );
+      reason
+    }
+  )
 }

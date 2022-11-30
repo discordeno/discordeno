@@ -1,5 +1,5 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString } from '../../../types/shared.js'
 
 // TODO: `guildId` and `commandId` should be swapped.
 
@@ -15,7 +15,7 @@ import { BigString } from "../../../types/shared.ts";
 export async function deleteGuildApplicationCommand(bot: Bot, commandId: BigString, guildId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
-    bot.constants.routes.COMMANDS_GUILD_ID(bot.applicationId, guildId, commandId),
-  );
+    'DELETE',
+    bot.constants.routes.COMMANDS_GUILD_ID(bot.applicationId, guildId, commandId)
+  )
 }

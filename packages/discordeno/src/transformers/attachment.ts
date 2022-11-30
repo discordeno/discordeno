@@ -1,6 +1,6 @@
-import { Bot } from "../bot.ts";
-import { DiscordAttachment } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
+import { Bot } from '../bot.js'
+import { DiscordAttachment } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
 
 export function transformAttachment(bot: Bot, payload: DiscordAttachment) {
   const attachment = {
@@ -13,10 +13,10 @@ export function transformAttachment(bot: Bot, payload: DiscordAttachment) {
     height: payload.height ?? undefined,
     width: payload.width ?? undefined,
     ephemeral: payload.ephemeral,
-    description: payload.description,
-  };
+    description: payload.description
+  }
 
-  return attachment as Optionalize<typeof attachment>;
+  return attachment as Optionalize<typeof attachment>
 }
 
-export interface Attachment extends ReturnType<typeof transformAttachment> {}
+export interface Attachment extends ReturnType<typeof transformAttachment> { }

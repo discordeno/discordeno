@@ -1,7 +1,7 @@
-import type { Bot } from "../../../bot.ts";
-import { StageInstance } from "../../../transformers/stageInstance.ts";
-import { DiscordStageInstance } from "../../../types/discord.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { StageInstance } from '../../../transformers/stageInstance.js'
+import { DiscordStageInstance } from '../../../types/discord.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Gets the stage instance associated with a stage channel, if one exists.
@@ -15,9 +15,9 @@ import { BigString } from "../../../types/shared.ts";
 export async function getStageInstance(bot: Bot, channelId: BigString): Promise<StageInstance> {
   const result = await bot.rest.runMethod<DiscordStageInstance>(
     bot.rest,
-    "GET",
-    bot.constants.routes.STAGE_INSTANCE(channelId),
-  );
+    'GET',
+    bot.constants.routes.STAGE_INSTANCE(channelId)
+  )
 
-  return bot.transformers.stageInstance(bot, result);
+  return bot.transformers.stageInstance(bot, result)
 }

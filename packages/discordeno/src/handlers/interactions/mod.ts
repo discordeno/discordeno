@@ -1,1 +1,1 @@
-export * from "./INTERACTION_CREATE.ts";
+export * from "./INTERACTION_CREATE.js";

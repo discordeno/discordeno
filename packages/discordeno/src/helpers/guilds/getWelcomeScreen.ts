@@ -1,7 +1,7 @@
-import type { Bot } from "../../bot.ts";
-import { WelcomeScreen } from "../../transformers/welcomeScreen.ts";
-import { DiscordWelcomeScreen } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { WelcomeScreen } from '../../transformers/welcomeScreen.js'
+import { DiscordWelcomeScreen } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Gets the welcome screen for a guild.
@@ -19,9 +19,9 @@ import { BigString } from "../../types/shared.ts";
 export async function getWelcomeScreen(bot: Bot, guildId: BigString): Promise<WelcomeScreen> {
   const result = await bot.rest.runMethod<DiscordWelcomeScreen>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_WELCOME_SCREEN(guildId),
-  );
+    'GET',
+    bot.constants.routes.GUILD_WELCOME_SCREEN(guildId)
+  )
 
-  return bot.transformers.welcomeScreen(bot, result);
+  return bot.transformers.welcomeScreen(bot, result)
 }

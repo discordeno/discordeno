@@ -1,4 +1,5 @@
-export * from "./createInvite.ts";
-export * from "./deleteInvite.ts";
-export * from "./getInvite.ts";
-export * from "./getInvites.ts";
+export * from './createInvite.js'
+export * from './deleteInvite.js'
+export * from './getInvite.js'
+export * from './getInvites.js'
+

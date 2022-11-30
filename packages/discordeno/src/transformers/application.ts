@@ -1,6 +1,6 @@
-import { Bot } from "../bot.ts";
-import { DiscordApplication } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
+import { Bot } from '../bot.js'
+import { DiscordApplication } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
 
 export function transformApplication(bot: Bot, payload: DiscordApplication) {
   const application = {
@@ -19,13 +19,13 @@ export function transformApplication(bot: Bot, payload: DiscordApplication) {
 
     id: bot.transformers.snowflake(payload.id),
     icon: payload.icon ? bot.utils.iconHashToBigInt(payload.icon) : undefined,
-    // @ts-ignore the partial here wont break anything
-    owner: payload.owner ? bot.transformers.user(bot, payload.owner) : undefined,
-    team: payload.team ? bot.transformers.team(bot, payload.team) : undefined,
-    guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
-  };
+    // @ts-expect-error the partial here wont break anything
+    owner: (payload.owner != null) ? bot.transformers.user(bot, payload.owner) : undefined,
+    team: (payload.team != null) ? bot.transformers.team(bot, payload.team) : undefined,
+    guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
+  }
 
-  return application as Optionalize<typeof application>;
+  return application as Optionalize<typeof application>
 }
 
-export interface Application extends ReturnType<typeof transformApplication> {}
+export interface Application extends ReturnType<typeof transformApplication> { }

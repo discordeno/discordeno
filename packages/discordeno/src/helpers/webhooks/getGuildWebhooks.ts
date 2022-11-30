@@ -1,8 +1,8 @@
-import type { Bot } from "../../bot.ts";
-import { Webhook } from "../../transformers/webhook.ts";
-import { DiscordWebhook } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
-import { Collection } from "../../util/collection.ts";
+import type { Bot } from '../../bot.js'
+import { Webhook } from '../../transformers/webhook.js'
+import { DiscordWebhook } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
+import { Collection } from '../../util/collection.js'
 
 /**
  * Gets the list of webhooks for a guild.
@@ -19,14 +19,14 @@ import { Collection } from "../../util/collection.ts";
 export async function getGuildWebhooks(bot: Bot, guildId: BigString): Promise<Collection<bigint, Webhook>> {
   const results = await bot.rest.runMethod<DiscordWebhook[]>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_WEBHOOKS(guildId),
-  );
+    'GET',
+    bot.constants.routes.GUILD_WEBHOOKS(guildId)
+  )
 
   return new Collection(
     results.map((result) => {
-      const webhook = bot.transformers.webhook(bot, result);
-      return [webhook.id, webhook];
-    }),
-  );
+      const webhook = bot.transformers.webhook(bot, result)
+      return [webhook.id, webhook]
+    })
+  )
 }

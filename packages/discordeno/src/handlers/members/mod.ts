@@ -1,4 +1,5 @@
-export * from "./GUILD_MEMBER_ADD.ts";
-export * from "./GUILD_MEMBER_REMOVE.ts";
-export * from "./GUILD_MEMBER_UPDATE.ts";
-export * from "./GUILD_MEMBERS_CHUNK.ts";
+export * from './GUILD_MEMBERS_CHUNK.js'
+export * from './GUILD_MEMBER_ADD.js'
+export * from './GUILD_MEMBER_REMOVE.js'
+export * from './GUILD_MEMBER_UPDATE.js'
+

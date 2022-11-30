@@ -13,8 +13,8 @@ plugin which will not work in a performance optimized fashion. This is designed 
 
 ```ts
 // MOVE TO DEPS.TS AND USE SPECIFIC VERSION
-import enableCachePlugin from "https://deno.land/x/discordeno_cache_plugin/mod.ts";
-import enablePermissionPlugin from "https://deno.land/x/discordeno_permission_plugin/mod.ts";
+import enableCachePlugin from "https://deno.land/x/discordeno_cache_plugin/mod.js";
+import enablePermissionPlugin from "https://deno.land/x/discordeno_permission_plugin/mod.js";
 
 // Create the bot object, THIS WILL NEED YOUR OPTIONS.
 const bot = createBot({});

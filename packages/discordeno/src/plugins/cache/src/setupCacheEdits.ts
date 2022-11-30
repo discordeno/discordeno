@@ -5,9 +5,9 @@ import type {
   DiscordMessageReactionAdd,
   DiscordMessageReactionRemove,
   DiscordMessageReactionRemoveAll,
-  DiscordVoiceState,
-} from "../deps.ts";
-import type { BotWithCache } from "./addCacheCollections.ts";
+  DiscordVoiceState
+} from '../deps.js'
+import type { BotWithCache } from './addCacheCollections.js'
 
 export function setupCacheEdits<B extends Bot>(bot: BotWithCache<B>) {
   const {
@@ -16,120 +16,120 @@ export function setupCacheEdits<B extends Bot>(bot: BotWithCache<B>) {
     MESSAGE_REACTION_ADD,
     MESSAGE_REACTION_REMOVE,
     MESSAGE_REACTION_REMOVE_ALL,
-    VOICE_STATE_UPDATE,
-  } = bot.handlers;
+    VOICE_STATE_UPDATE
+  } = bot.handlers
 
   bot.handlers.GUILD_MEMBER_ADD = function (_, data, shardId) {
-    const payload = data.d as DiscordGuildMemberAdd;
+    const payload = data.d as DiscordGuildMemberAdd
 
-    const guild = bot.guilds.get(bot.transformers.snowflake(payload.guild_id));
+    const guild = bot.guilds.get(bot.transformers.snowflake(payload.guild_id))
 
-    if (guild) guild.memberCount++;
+    if (guild != null) guild.memberCount++
 
-    GUILD_MEMBER_ADD(bot, data, shardId);
-  };
+    GUILD_MEMBER_ADD(bot, data, shardId)
+  }
 
   bot.handlers.GUILD_MEMBER_REMOVE = function (_, data, shardId) {
-    const payload = data.d as DiscordGuildMemberRemove;
+    const payload = data.d as DiscordGuildMemberRemove
 
-    const guild = bot.guilds.get(bot.transformers.snowflake(payload.guild_id));
+    const guild = bot.guilds.get(bot.transformers.snowflake(payload.guild_id))
 
-    if (guild) guild.memberCount--;
+    if (guild != null) guild.memberCount--
 
-    GUILD_MEMBER_REMOVE(bot, data, shardId);
-  };
+    GUILD_MEMBER_REMOVE(bot, data, shardId)
+  }
 
   bot.handlers.MESSAGE_REACTION_ADD = function (_, data, shardId) {
-    const payload = data.d as DiscordMessageReactionAdd;
+    const payload = data.d as DiscordMessageReactionAdd
 
-    const messageId = bot.transformers.snowflake(payload.message_id);
-    const message = bot.messages.get(messageId);
+    const messageId = bot.transformers.snowflake(payload.message_id)
+    const message = bot.messages.get(messageId)
 
-    const emoji = bot.transformers.emoji(bot, payload.emoji);
+    const emoji = bot.transformers.emoji(bot, payload.emoji)
 
     // if the message is cached
-    if (message) {
-      const reactions = message.reactions?.map((r) => r.emoji.name);
+    if (message != null) {
+      const reactions = message.reactions?.map((r) => r.emoji.name)
       const toSet = {
         count: 1,
         me: bot.transformers.snowflake(payload.user_id) === bot.id,
-        emoji: emoji,
-      };
+        emoji
+      }
 
       // if theres no reaction add it
-      if (!message.reactions || !reactions) {
-        message.reactions = [toSet];
+      if ((message.reactions == null) || (reactions == null)) {
+        message.reactions = [toSet]
       } else if (!reactions.includes(emoji.name)) {
-        message.reactions?.push(toSet);
+        message.reactions?.push(toSet)
       } else { // otherwise the reaction has already been added so +1 to the reaction count
-        const current = message.reactions?.[reactions.indexOf(emoji.name)];
+        const current = message.reactions?.[reactions.indexOf(emoji.name)]
 
         // rewrite
         if (current) {
-          current.count++;
+          current.count++
         }
       }
     }
 
-    MESSAGE_REACTION_ADD(bot, data, shardId);
-  };
+    MESSAGE_REACTION_ADD(bot, data, shardId)
+  }
 
   bot.handlers.MESSAGE_REACTION_REMOVE = function (_, data, shardId) {
-    const payload = data.d as DiscordMessageReactionRemove;
+    const payload = data.d as DiscordMessageReactionRemove
 
-    const messageId = bot.transformers.snowflake(payload.message_id);
-    const message = bot.messages.get(messageId);
+    const messageId = bot.transformers.snowflake(payload.message_id)
+    const message = bot.messages.get(messageId)
 
-    const emoji = bot.transformers.emoji(bot, payload.emoji);
+    const emoji = bot.transformers.emoji(bot, payload.emoji)
 
     // if the message is cached
-    if (message) {
-      const reactions = message.reactions?.map((r) => r.emoji.name);
+    if (message != null) {
+      const reactions = message.reactions?.map((r) => r.emoji.name)
 
       if (reactions?.indexOf(emoji.name) !== undefined) {
-        const current = message.reactions?.[reactions.indexOf(emoji.name)];
+        const current = message.reactions?.[reactions.indexOf(emoji.name)]
 
-        if (current) {
+        if (current != null) {
           if (current.count > 0) {
-            current.count--;
+            current.count--
           }
           // delete when count is 0
           if (current.count === 0) {
-            message.reactions?.splice(reactions?.indexOf(emoji.name), 1);
+            message.reactions?.splice(reactions?.indexOf(emoji.name), 1)
           }
           // when someone deleted a reaction that doesn't exist in the cache just pass
         }
       }
     }
 
-    MESSAGE_REACTION_REMOVE(bot, data, shardId);
-  };
+    MESSAGE_REACTION_REMOVE(bot, data, shardId)
+  }
 
   bot.handlers.MESSAGE_REACTION_REMOVE_ALL = function (_, data, shardId) {
-    const payload = data.d as DiscordMessageReactionRemoveAll;
+    const payload = data.d as DiscordMessageReactionRemoveAll
 
-    const messageId = bot.transformers.snowflake(payload.message_id);
-    const message = bot.messages.get(messageId);
+    const messageId = bot.transformers.snowflake(payload.message_id)
+    const message = bot.messages.get(messageId)
 
-    if (message) {
+    if (message != null) {
       // when an admin deleted all the reactions of a message
-      message.reactions = undefined;
+      message.reactions = undefined
     }
 
-    MESSAGE_REACTION_REMOVE_ALL(bot, data, shardId);
-  };
+    MESSAGE_REACTION_REMOVE_ALL(bot, data, shardId)
+  }
 
   bot.handlers.VOICE_STATE_UPDATE = (_, data, shardId) => {
-    const payload = data.d as DiscordVoiceState;
-    if (!payload.guild_id) return;
+    const payload = data.d as DiscordVoiceState
+    if (!payload.guild_id) return
 
     const vs = bot.transformers.voiceState(bot, {
       voiceState: payload,
-      guildId: bot.transformers.snowflake(payload.guild_id),
-    });
+      guildId: bot.transformers.snowflake(payload.guild_id)
+    })
 
-    bot.guilds.get(vs.guildId)?.voiceStates.set(vs.userId, vs);
+    bot.guilds.get(vs.guildId)?.voiceStates.set(vs.userId, vs)
 
-    VOICE_STATE_UPDATE(bot, data, shardId);
-  };
+    VOICE_STATE_UPDATE(bot, data, shardId)
+  }
 }

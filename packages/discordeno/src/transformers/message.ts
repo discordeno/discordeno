@@ -1,16 +1,16 @@
-import { Bot } from "../bot.ts";
-import { DiscordMessage } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
-import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
-import { MemberToggles } from "./toggles/member.ts";
+import { Bot } from '../bot.js'
+import { DiscordMessage } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
+import { CHANNEL_MENTION_REGEX } from '../util/constants.js'
+import { MemberToggles } from './toggles/member.js'
 
 export function transformMessage(bot: Bot, payload: DiscordMessage) {
-  const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
-  const userId = bot.transformers.snowflake(payload.author.id);
+  const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
+  const userId = bot.transformers.snowflake(payload.author.id)
 
   const message = {
     // UNTRANSFORMED STUFF HERE
-    content: payload.content || "",
+    content: payload.content || '',
     isFromBot: payload.author.bot || false,
     tag: `${payload.author.username}#${payload.author.discriminator}`,
     timestamp: Date.parse(payload.timestamp),
@@ -21,24 +21,24 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
     reactions: payload.reactions?.map((reaction) => ({
       me: reaction.me,
       count: reaction.count,
-      emoji: bot.transformers.emoji(bot, reaction.emoji),
+      emoji: bot.transformers.emoji(bot, reaction.emoji)
     })),
     type: payload.type,
-    activity: payload.activity
+    activity: (payload.activity != null)
       ? {
         type: payload.activity.type,
-        partyId: payload.activity.party_id,
+        partyId: payload.activity.party_id
       }
       : undefined,
     application: payload.application,
     flags: payload.flags,
-    interaction: payload.interaction
+    interaction: (payload.interaction != null)
       ? {
         id: bot.transformers.snowflake(payload.interaction.id),
         type: payload.interaction.type,
         name: payload.interaction.name,
         user: bot.transformers.user(bot, payload.interaction.user),
-        member: payload.interaction.member
+        member: (payload.interaction.member != null)
           ? {
             id: userId,
             guildId,
@@ -59,17 +59,17 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
               : undefined,
             communicationDisabledUntil: payload.interaction.member.communication_disabled_until
               ? Date.parse(payload.interaction.member.communication_disabled_until)
-              : undefined,
+              : undefined
           }
-          : undefined,
+          : undefined
       }
       : undefined,
-    thread: payload.thread ? bot.transformers.channel(bot, { channel: payload.thread, guildId }) : undefined,
+    thread: (payload.thread != null) ? bot.transformers.channel(bot, { channel: payload.thread, guildId }) : undefined,
     components: payload.components?.map((component) => bot.transformers.component(bot, component)),
     stickerItems: payload.sticker_items?.map((sticker) => ({
       id: bot.transformers.snowflake(sticker.id),
       name: sticker.name,
-      formatType: sticker.format_type,
+      formatType: sticker.format_type
     })),
 
     // TRANSFORMED STUFF BELOW
@@ -79,7 +79,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
     webhookId: payload.webhook_id ? bot.transformers.snowflake(payload.webhook_id) : undefined,
     authorId: userId,
     applicationId: payload.application_id ? bot.transformers.snowflake(payload.application_id) : undefined,
-    messageReference: payload.message_reference
+    messageReference: (payload.message_reference != null)
       ? {
         messageId: payload.message_reference.message_id
           ? bot.transformers.snowflake(payload.message_reference.message_id)
@@ -89,25 +89,25 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
           : undefined,
         guildId: payload.message_reference.guild_id
           ? bot.transformers.snowflake(payload.message_reference.guild_id)
-          : undefined,
+          : undefined
       }
       : undefined,
-    mentionedUserIds: payload.mentions ? payload.mentions.map((m) => bot.transformers.snowflake(m.id)) : [],
-    mentionedRoleIds: payload.mention_roles ? payload.mention_roles.map((id) => bot.transformers.snowflake(id)) : [],
+    mentionedUserIds: (payload.mentions != null) ? payload.mentions.map((m) => bot.transformers.snowflake(m.id)) : [],
+    mentionedRoleIds: (payload.mention_roles != null) ? payload.mention_roles.map((id) => bot.transformers.snowflake(id)) : [],
     mentionedChannelIds: [
       // Keep any ids tht discord sends
       ...(payload.mention_channels ?? []).map((m) => bot.transformers.snowflake(m.id)),
       // Add any other ids that can be validated in a channel mention format
-      ...(payload.content?.match(CHANNEL_MENTION_REGEX) || []).map((text) =>
+      ...(((payload.content?.match(CHANNEL_MENTION_REGEX)) != null) || []).map((text) =>
         // converts the <#123> into 123
         bot.transformers.snowflake(text.substring(2, text.length - 1))
-      ),
+      )
     ],
-    member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined,
-    nonce: payload.nonce,
-  };
+    member: (payload.member != null) && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined,
+    nonce: payload.nonce
+  }
 
-  return message as Optionalize<typeof message>;
+  return message as Optionalize<typeof message>
 }
 
-export interface Message extends ReturnType<typeof transformMessage> {}
+export interface Message extends ReturnType<typeof transformMessage> { }

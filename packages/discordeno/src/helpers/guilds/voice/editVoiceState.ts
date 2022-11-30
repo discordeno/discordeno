@@ -1,7 +1,7 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString } from '../../../types/shared.js'
 
-export const updateBotVoiceState = editOwnVoiceState;
+export const updateBotVoiceState = editOwnVoiceState
 
 /**
  * Edits the voice state of the bot user.
@@ -22,13 +22,13 @@ export const updateBotVoiceState = editOwnVoiceState;
  * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state}
  */
 export async function editOwnVoiceState(bot: Bot, guildId: BigString, options: EditOwnVoiceState): Promise<void> {
-  return await bot.rest.runMethod<void>(bot.rest, "PATCH", bot.constants.routes.UPDATE_VOICE_STATE(guildId), {
+  return await bot.rest.runMethod<void>(bot.rest, 'PATCH', bot.constants.routes.UPDATE_VOICE_STATE(guildId), {
     channel_id: options.channelId,
     suppress: options.suppress,
     request_to_speak_timestamp: options.requestToSpeakTimestamp
       ? new Date(options.requestToSpeakTimestamp).toISOString()
-      : options.requestToSpeakTimestamp,
-  });
+      : options.requestToSpeakTimestamp
+  })
 }
 
 // TODO: Make the `userId` property of `options` its own parameter.
@@ -50,32 +50,32 @@ export async function editOwnVoiceState(bot: Bot, guildId: BigString, options: E
 export async function editUserVoiceState(bot: Bot, guildId: BigString, options: EditUserVoiceState): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "PATCH",
+    'PATCH',
     bot.constants.routes.UPDATE_VOICE_STATE(guildId, options.userId),
     {
       channel_id: options.channelId,
       suppress: options.suppress,
-      user_id: options.userId,
-    },
-  );
+      user_id: options.userId
+    }
+  )
 }
 
 /** https://discord.com/developers/docs/resources/guild#update-current-user-voice-state */
 export interface EditOwnVoiceState {
   /** The id of the channel the user is currently in */
-  channelId: BigString;
+  channelId: BigString
   /** Toggles the user's suppress state */
-  suppress?: boolean;
+  suppress?: boolean
   /** Sets the user's request to speak */
-  requestToSpeakTimestamp?: number | null;
+  requestToSpeakTimestamp?: number | null
 }
 
 /** https://discord.com/developers/docs/resources/guild#update-user-voice-state */
 export interface EditUserVoiceState {
   /** The id of the channel the user is currently in */
-  channelId: BigString;
+  channelId: BigString
   /** Toggles the user's suppress state */
-  suppress?: boolean;
+  suppress?: boolean
   /** The user id to target */
-  userId: BigString;
+  userId: BigString
 }

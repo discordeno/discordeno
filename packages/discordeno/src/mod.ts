@@ -1,9 +1,10 @@
-export * from "./gateway/mod.ts";
-export * from "./handlers/mod.ts";
-export * from "./helpers/mod.ts";
-export * from "./rest/mod.ts";
-export * from "./transformers/mod.ts";
-export * from "./types/mod.ts";
-export * from "./util/mod.ts";
+export * from './bot.js'
+export * from './gateway/mod.js'
+export * from './handlers/mod.js'
+export * from './helpers/mod.js'
+export * from './rest/mod.js'
+export * from './transformers/mod.js'
+export * from './types/mod.js'
+export * from './util/mod.js'
 
-export * from "./bot.ts";
+

@@ -1,5 +1,5 @@
-import { createLeakyBucket } from "../../util/bucket.ts";
-import { GatewayManager } from "./gatewayManager.ts";
+import { createLeakyBucket } from '../../util/bucket.js'
+import { GatewayManager } from './gatewayManager.js'
 
 export function prepareBuckets(gateway: GatewayManager) {
   for (let i = 0; i < gateway.gatewayBot.sessionStartLimit.maxConcurrency; ++i) {
@@ -9,38 +9,37 @@ export function prepareBuckets(gateway: GatewayManager) {
         max: 1,
         refillAmount: 1,
         // special number which is proven to be working dont change
-        refillInterval: gateway.spawnShardDelay,
-      }),
-    });
+        refillInterval: gateway.spawnShardDelay
+      })
+    })
   }
 
   // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
   for (let shardId = gateway.firstShardId; shardId <= gateway.lastShardId; ++shardId) {
     if (shardId >= gateway.manager.totalShards) {
       throw new Error(
-        `Shard (id: ${shardId}) is bigger or equal to the used amount of used shards which is ${gateway.manager.totalShards}`,
-      );
+        `Shard (id: ${shardId}) is bigger or equal to the used amount of used shards which is ${gateway.manager.totalShards}`
+      )
     }
 
-    const bucketId = shardId % gateway.gatewayBot.sessionStartLimit.maxConcurrency;
-    const bucket = gateway.buckets.get(bucketId);
-    if (!bucket) {
+    const bucketId = shardId % gateway.gatewayBot.sessionStartLimit.maxConcurrency
+    const bucket = gateway.buckets.get(bucketId)
+    if (bucket == null) {
       throw new Error(
-        `Shard (id: ${shardId}) got assigned to an illegal bucket id: ${bucketId}, expected a bucket id between 0 and ${
-          gateway.gatewayBot.sessionStartLimit.maxConcurrency - 1
-        }`,
-      );
+        `Shard (id: ${shardId}) got assigned to an illegal bucket id: ${bucketId}, expected a bucket id between 0 and ${gateway.gatewayBot.sessionStartLimit.maxConcurrency - 1
+        }`
+      )
     }
 
     // FIND A QUEUE IN THIS BUCKET THAT HAS SPACE
     // const worker = bucket.workers.find((w) => w.queue.length < gateway.shardsPerWorker);
-    const workerId = gateway.calculateWorkerId(shardId);
-    const worker = bucket.workers.find((w) => w.id === workerId);
-    if (worker) {
+    const workerId = gateway.calculateWorkerId(shardId)
+    const worker = bucket.workers.find((w) => w.id === workerId)
+    if (worker != null) {
       // IF THE QUEUE HAS SPACE JUST ADD IT TO THIS QUEUE
-      worker.queue.push(shardId);
+      worker.queue.push(shardId)
     } else {
-      bucket.workers.push({ id: workerId, queue: [shardId] });
+      bucket.workers.push({ id: workerId, queue: [shardId] })
     }
   }
 }

@@ -1,8 +1,8 @@
-import type { Bot } from "../../../bot.ts";
-import { Integration } from "../../../transformers/integration.ts";
-import { DiscordIntegration } from "../../../types/discord.ts";
-import { BigString } from "../../../types/shared.ts";
-import { Collection } from "../../../util/collection.ts";
+import type { Bot } from '../../../bot.js'
+import { Integration } from '../../../transformers/integration.js'
+import { DiscordIntegration } from '../../../types/discord.js'
+import { BigString } from '../../../types/shared.js'
+import { Collection } from '../../../util/collection.js'
 
 /**
  * Gets the list of integrations attached to a guild.
@@ -19,9 +19,9 @@ import { Collection } from "../../../util/collection.ts";
 export async function getIntegrations(bot: Bot, guildId: BigString): Promise<Collection<bigint, Integration>> {
   const results = await bot.rest.runMethod<DiscordIntegration[]>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_INTEGRATIONS(guildId),
-  );
+    'GET',
+    bot.constants.routes.GUILD_INTEGRATIONS(guildId)
+  )
 
   return new Collection(
     results.map((result) => {
@@ -42,9 +42,9 @@ export async function getIntegrations(bot: Bot, guildId: BigString): Promise<Col
         subscriber_count: result.subscriber_count,
         revoked: result.revoked,
         application: result.application,
-        scopes: result.scopes,
-      });
-      return [integration.id, integration];
-    }),
-  );
+        scopes: result.scopes
+      })
+      return [integration.id, integration]
+    })
+  )
 }

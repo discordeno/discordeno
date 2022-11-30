@@ -1,6 +1,6 @@
-import { Bot } from "../../bot.ts";
-import { Sticker } from "../../transformers/sticker.ts";
-import { FileContent, WithReason } from "../../types/discordeno.ts";
+import { Bot } from '../../bot.js'
+import { Sticker } from '../../transformers/sticker.js'
+import { FileContent, WithReason } from '../../types/discordeno.js'
 
 /**
  * Create a new sticker for the guild.
@@ -20,25 +20,25 @@ import { FileContent, WithReason } from "../../types/discordeno.ts";
 export async function createGuildSticker(
   bot: Bot,
   guildId: bigint,
-  options: CreateGuildStickerOptions,
+  options: CreateGuildStickerOptions
 ): Promise<Sticker> {
-  const result = await bot.rest.runMethod(bot.rest, "POST", bot.constants.routes.GUILD_STICKERS(guildId), {
+  const result = await bot.rest.runMethod(bot.rest, 'POST', bot.constants.routes.GUILD_STICKERS(guildId), {
     name: options.name,
     description: options.description,
     tags: options.tags,
     file: options.file,
-    reason: options.reason,
-  });
-  return bot.transformers.sticker(bot, result);
+    reason: options.reason
+  })
+  return bot.transformers.sticker(bot, result)
 }
 
 export interface CreateGuildStickerOptions extends WithReason {
   /** Name of the sticker (2-30 characters) */
-  name: string;
+  name: string
   /** Description of the sticker (empty or 2-100 characters) */
-  description: string;
+  description: string
   /** Autocomplete/suggestion tags for the sticker (max 200 characters) */
-  tags: string;
+  tags: string
   /** The sticker file to upload, must be a PNG, APNG, or Lottie JSON file, max 500 KB */
-  file: FileContent;
+  file: FileContent
 }

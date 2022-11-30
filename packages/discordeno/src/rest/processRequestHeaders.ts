@@ -1,73 +1,73 @@
-import { RestManager } from "./restManager.ts";
+import { RestManager } from './restManager.js'
 
 /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
 export function processRequestHeaders(rest: RestManager, url: string, headers: Headers) {
-  let rateLimited = false;
+  let rateLimited = false
 
   // GET ALL NECESSARY HEADERS
-  const remaining = headers.get("x-ratelimit-remaining");
-  const retryAfter = headers.get("x-ratelimit-reset-after");
-  const reset = Date.now() + Number(retryAfter) * 1000;
-  const global = headers.get("x-ratelimit-global");
+  const remaining = headers.get('x-ratelimit-remaining')
+  const retryAfter = headers.get('x-ratelimit-reset-after')
+  const reset = Date.now() + Number(retryAfter) * 1000
+  const global = headers.get('x-ratelimit-global')
   // undefined override null needed for typings
-  const bucketId = headers.get("x-ratelimit-bucket") || undefined;
+  const bucketId = headers.get('x-ratelimit-bucket') || undefined
 
   rest.pathQueues.get(url)?.handleCompletedRequest({
     remaining: Number(remaining),
     interval: Number(retryAfter) * 1000,
-    max: Number(headers.get("x-ratelimit-limit")),
-  });
+    max: Number(headers.get('x-ratelimit-limit'))
+  })
 
   // IF THERE IS NO REMAINING RATE LIMIT, MARK IT AS RATE LIMITED
-  if (remaining === "0") {
-    rateLimited = true;
+  if (remaining === '0') {
+    rateLimited = true
 
     // SAVE THE URL AS LIMITED, IMPORTANT FOR NEW REQUESTS BY USER WITHOUT BUCKET
     rest.rateLimitedPaths.set(url, {
       url,
       resetTimestamp: reset,
-      bucketId,
-    });
+      bucketId
+    })
 
     // SAVE THE BUCKET AS LIMITED SINCE DIFFERENT URLS MAY SHARE A BUCKET
     if (bucketId) {
       rest.rateLimitedPaths.set(bucketId, {
         url,
         resetTimestamp: reset,
-        bucketId,
-      });
+        bucketId
+      })
     }
   }
 
   // IF THERE IS NO REMAINING GLOBAL LIMIT, MARK IT RATE LIMITED GLOBALLY
   if (global) {
-    const retryAfter = headers.get("retry-after");
-    const globalReset = Date.now() + Number(retryAfter) * 1000;
-    rest.debug(`[REST = Globally Rate Limited] URL: ${url} | Global Rest: ${globalReset}`);
-    rest.globallyRateLimited = true;
-    rateLimited = true;
+    const retryAfter = headers.get('retry-after')
+    const globalReset = Date.now() + Number(retryAfter) * 1000
+    rest.debug(`[REST = Globally Rate Limited] URL: ${url} | Global Rest: ${globalReset}`)
+    rest.globallyRateLimited = true
+    rateLimited = true
 
     setTimeout(() => {
-      rest.globallyRateLimited = false;
-    }, globalReset);
+      rest.globallyRateLimited = false
+    }, globalReset)
 
-    rest.rateLimitedPaths.set("global", {
-      url: "global",
+    rest.rateLimitedPaths.set('global', {
+      url: 'global',
       resetTimestamp: globalReset,
-      bucketId,
-    });
+      bucketId
+    })
 
     if (bucketId) {
       rest.rateLimitedPaths.set(bucketId, {
-        url: "global",
+        url: 'global',
         resetTimestamp: globalReset,
-        bucketId,
-      });
+        bucketId
+      })
     }
   }
 
   if (rateLimited && !rest.processingRateLimitedPaths) {
-    rest.processRateLimitedPaths(rest);
+    rest.processRateLimitedPaths(rest)
   }
-  return rateLimited ? bucketId : undefined;
+  return rateLimited ? bucketId : undefined
 }

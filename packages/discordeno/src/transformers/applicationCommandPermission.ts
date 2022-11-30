@@ -1,6 +1,6 @@
-import { Bot } from "../bot.ts";
-import { DiscordGuildApplicationCommandPermissions } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
+import { Bot } from '../bot.js'
+import { DiscordGuildApplicationCommandPermissions } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
 
 export function transformApplicationCommandPermission(bot: Bot, payload: DiscordGuildApplicationCommandPermissions) {
   const applicationCommandPermission = {
@@ -10,11 +10,11 @@ export function transformApplicationCommandPermission(bot: Bot, payload: Discord
     permissions: payload.permissions.map((perm) => ({
       id: bot.transformers.snowflake(perm.id),
       type: perm.type,
-      permission: perm.permission,
-    })),
-  };
+      permission: perm.permission
+    }))
+  }
 
-  return applicationCommandPermission as Optionalize<typeof applicationCommandPermission>;
+  return applicationCommandPermission as Optionalize<typeof applicationCommandPermission>
 }
 
-export interface ApplicationCommandPermission extends ReturnType<typeof transformApplicationCommandPermission> {}
+export interface ApplicationCommandPermission extends ReturnType<typeof transformApplicationCommandPermission> { }

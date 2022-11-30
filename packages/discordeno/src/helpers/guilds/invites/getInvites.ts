@@ -1,8 +1,8 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString, TargetTypes } from "../../../mod.ts";
-import { DiscordInviteMetadata } from "../../../types/discord.ts";
-import { Collection } from "../../../util/collection.ts";
-import { InviteMetadata } from "./getInvite.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString, TargetTypes } from '../../../mod.js'
+import { DiscordInviteMetadata } from '../../../types/discord.js'
+import { Collection } from '../../../util/collection.js'
+import { InviteMetadata } from './getInvite.js'
 
 /**
  * Gets the list of invites for a guild.
@@ -19,9 +19,9 @@ import { InviteMetadata } from "./getInvite.ts";
 export async function getInvites(bot: Bot, guildId: BigString): Promise<Collection<string, InviteMetadata>> {
   const results = await bot.rest.runMethod<DiscordInviteMetadata[]>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_INVITES(guildId),
-  );
+    'GET',
+    bot.constants.routes.GUILD_INVITES(guildId)
+  )
 
   return new Collection(
     results.map<[string, InviteMetadata]>((result) => {
@@ -48,9 +48,9 @@ export async function getInvites(bot: Bot, guildId: BigString): Promise<Collecti
         maxUses: result.max_uses,
         maxAge: result.max_age,
         temporary: result.temporary,
-        createdAt: Date.parse(result.created_at),
-      };
-      return [inviteMetadata.code, inviteMetadata];
-    }),
-  );
+        createdAt: Date.parse(result.created_at)
+      }
+      return [inviteMetadata.code, inviteMetadata]
+    })
+  )
 }

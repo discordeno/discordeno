@@ -1,10 +1,10 @@
-import type { Bot } from "../../bot.ts";
-import { Message } from "../../transformers/message.ts";
-import { DiscordMessage } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { Message } from '../../transformers/message.js'
+import { DiscordMessage } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
 
 export interface GetWebhookMessageOptions {
-  threadId: BigString;
+  threadId: BigString
 }
 
 /**
@@ -24,13 +24,13 @@ export async function getWebhookMessage(
   webhookId: BigString,
   token: string,
   messageId: BigString,
-  options?: GetWebhookMessageOptions,
+  options?: GetWebhookMessageOptions
 ): Promise<Message> {
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "GET",
-    bot.constants.routes.WEBHOOK_MESSAGE(webhookId, token, messageId, options),
-  );
+    'GET',
+    bot.constants.routes.WEBHOOK_MESSAGE(webhookId, token, messageId, options)
+  )
 
-  return bot.transformers.message(bot, result);
+  return bot.transformers.message(bot, result)
 }

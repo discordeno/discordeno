@@ -1,6 +1,6 @@
-import { Bot } from "../../deps.ts";
-import { createInvite } from "./createInvite.ts";
+import { Bot } from '../../deps.js'
+import { createInvite } from './createInvite.js'
 
 export function invites(bot: Bot) {
-  createInvite(bot);
+  createInvite(bot)
 }

@@ -1,5 +1,5 @@
-import type { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Unpins a pinned message in a channel.
@@ -21,12 +21,12 @@ export async function unpinMessage(
   bot: Bot,
   channelId: BigString,
   messageId: BigString,
-  reason?: string,
+  reason?: string
 ): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
+    'DELETE',
     bot.constants.routes.CHANNEL_PIN(channelId, messageId),
-    reason ? { reason } : undefined,
-  );
+    reason ? { reason } : undefined
+  )
 }

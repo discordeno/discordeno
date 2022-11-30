@@ -1,7 +1,8 @@
-export * from "./emoji.ts";
-export * from "./guild.ts";
-export * from "./member.ts";
-export * from "./role.ts";
-export * from "./ToggleBitfield.ts";
-export * from "./user.ts";
-export * from "./voice.ts";
+export * from './emoji.js'
+export * from './guild.js'
+export * from './member.js'
+export * from './role.js'
+export * from './ToggleBitfield.js'
+export * from './user.js'
+export * from './voice.js'
+

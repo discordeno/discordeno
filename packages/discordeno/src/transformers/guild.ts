@@ -1,12 +1,12 @@
-import type { Emoji } from "../transformers/emoji.ts";
-import { Bot } from "../bot.ts";
-import { Collection } from "../util/collection.ts";
-import { DiscordGuild } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
-import { GuildToggles } from "./toggles/guild.ts";
+import { Bot } from '../bot.js'
+import type { Emoji } from '../transformers/emoji.js'
+import { DiscordGuild } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
+import { Collection } from '../util/collection.js'
+import { GuildToggles } from './toggles/guild.js'
 
 export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) {
-  const guildId = bot.transformers.snowflake(payload.guild.id);
+  const guildId = bot.transformers.snowflake(payload.guild.id)
 
   const guild = {
     afkTimeout: payload.guild.afk_timeout,
@@ -33,20 +33,20 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
       /** The id of the associated Stage channel */
       channelId: bot.transformers.snowflake(si.channel_id),
       /** The topic of the Stage instance (1-120 characters) */
-      topic: si.topic,
+      topic: si.topic
     })),
     systemChannelFlags: payload.guild.system_channel_flags,
     vanityUrlCode: payload.guild.vanity_url_code,
     verificationLevel: payload.guild.verification_level,
-    welcomeScreen: payload.guild.welcome_screen
+    welcomeScreen: (payload.guild.welcome_screen != null)
       ? {
         description: payload.guild.welcome_screen.description ?? undefined,
         welcomeChannels: payload.guild.welcome_screen.welcome_channels.map((wc) => ({
           channelId: bot.transformers.snowflake(wc.channel_id),
           description: wc.description,
           emojiId: wc.emoji_id ? bot.transformers.snowflake(wc.emoji_id) : undefined,
-          emojiName: wc.emoji_name ?? undefined,
-        })),
+          emojiName: wc.emoji_name ?? undefined
+        }))
       }
       : undefined,
     discoverySplash: payload.guild.discovery_splash
@@ -61,32 +61,32 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
     splash: payload.guild.splash ? bot.utils.iconHashToBigInt(payload.guild.splash) : undefined,
     channels: new Collection(
       payload.guild.channels?.map((channel) => {
-        const result = bot.transformers.channel(bot, { channel, guildId });
-        return [result.id, result];
-      }),
+        const result = bot.transformers.channel(bot, { channel, guildId })
+        return [result.id, result]
+      })
     ),
     members: new Collection(
       payload.guild.members?.map((member) => {
-        const result = bot.transformers.member(bot, member, guildId, bot.transformers.snowflake(member.user!.id));
-        return [result.id, result];
-      }),
+        const result = bot.transformers.member(bot, member, guildId, bot.transformers.snowflake(member.user!.id))
+        return [result.id, result]
+      })
     ),
     roles: new Collection(
       payload.guild.roles?.map((role) => {
-        const result = bot.transformers.role(bot, { role, guildId });
-        return [result.id, result];
-      }),
+        const result = bot.transformers.role(bot, { role, guildId })
+        return [result.id, result]
+      })
     ),
     emojis: new Collection(
       (payload.guild.emojis || []).map((emoji) => {
-        const em: Emoji = bot.transformers.emoji(bot, emoji);
-        return [em.id!, em];
-      }),
+        const em: Emoji = bot.transformers.emoji(bot, emoji)
+        return [em.id!, em]
+      })
     ),
     voiceStates: new Collection(
-      (payload.guild.voice_states || [])
+      ((payload.guild.voice_states != null) || [])
         .map((vs) => bot.transformers.voiceState(bot, { voiceState: vs, guildId }))
-        .map((vs) => [vs.userId, vs]),
+        .map((vs) => [vs.userId, vs])
     ),
 
     id: guildId,
@@ -107,10 +107,10 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
     publicUpdatesChannelId: payload.guild.public_updates_channel_id
       ? bot.transformers.snowflake(payload.guild.public_updates_channel_id)
       : undefined,
-    premiumProgressBarEnabled: payload.guild.premium_progress_bar_enabled,
-  };
+    premiumProgressBarEnabled: payload.guild.premium_progress_bar_enabled
+  }
 
-  return guild as Optionalize<typeof guild>;
+  return guild as Optionalize<typeof guild>
 }
 
-export interface Guild extends ReturnType<typeof transformGuild> {}
+export interface Guild extends ReturnType<typeof transformGuild> { }

@@ -1,9 +1,9 @@
-import { Bot } from "../bot.ts";
-import { DiscordTeam } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
+import { Bot } from '../bot.js'
+import { DiscordTeam } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
 
 export function transformTeam(bot: Bot, payload: DiscordTeam) {
-  const id = bot.transformers.snowflake(payload.id);
+  const id = bot.transformers.snowflake(payload.id)
 
   const team = {
     name: payload.name,
@@ -15,11 +15,11 @@ export function transformTeam(bot: Bot, payload: DiscordTeam) {
       membershipState: member.membership_state,
       permissions: member.permissions,
       teamId: id,
-      user: bot.transformers.user(bot, member.user),
-    })),
-  };
+      user: bot.transformers.user(bot, member.user)
+    }))
+  }
 
-  return team as Optionalize<typeof team>;
+  return team as Optionalize<typeof team>
 }
 
-export interface Team extends ReturnType<typeof transformTeam> {}
+export interface Team extends ReturnType<typeof transformTeam> { }

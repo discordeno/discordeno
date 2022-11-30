@@ -1,6 +1,6 @@
-import { Bot } from "../../bot.ts";
-import { DiscordEmbed } from "../../types/discord.ts";
-import { Embed } from "../embed.ts";
+import { Bot } from '../../bot.js'
+import { DiscordEmbed } from '../../types/discord.js'
+import { Embed } from '../embed.js'
 
 export function transformEmbedToDiscordEmbed(bot: Bot, payload: Embed): DiscordEmbed {
   return {
@@ -10,46 +10,46 @@ export function transformEmbedToDiscordEmbed(bot: Bot, payload: Embed): DiscordE
     url: payload.url,
     timestamp: payload.timestamp ? new Date(payload.timestamp).toISOString() : undefined,
     color: payload.color,
-    footer: payload.footer
+    footer: (payload.footer != null)
       ? {
         text: payload.footer.text,
         icon_url: payload.footer.iconUrl,
-        proxy_icon_url: payload.footer.proxyIconUrl,
+        proxy_icon_url: payload.footer.proxyIconUrl
       }
       : undefined,
-    image: payload.image
+    image: (payload.image != null)
       ? {
         url: payload.image.url,
         proxy_url: payload.image.proxyUrl,
         height: payload.image.height,
-        width: payload.image.width,
+        width: payload.image.width
       }
       : undefined,
-    thumbnail: payload.thumbnail
+    thumbnail: (payload.thumbnail != null)
       ? {
         url: payload.thumbnail.url,
         proxy_url: payload.thumbnail.proxyUrl,
         height: payload.thumbnail.height,
-        width: payload.thumbnail.width,
+        width: payload.thumbnail.width
       }
       : undefined,
-    video: payload.video
+    video: (payload.video != null)
       ? {
         url: payload.video.url,
         proxy_url: payload.video.proxyUrl,
         height: payload.video.height,
-        width: payload.video.width,
+        width: payload.video.width
       }
       : undefined,
     provider: payload.provider,
-    author: payload.author
+    author: (payload.author != null)
       ? {
         name: payload.author.name,
         url: payload.author.url,
         icon_url: payload.author.iconUrl,
-        proxy_icon_url: payload.author.proxyIconUrl,
+        proxy_icon_url: payload.author.proxyIconUrl
       }
       : undefined,
-    fields: payload.fields,
-  };
+    fields: payload.fields
+  }
 }

@@ -1,7 +1,7 @@
-import { Bot } from "../../../bot.ts";
-import { ScheduledEvent } from "../../../transformers/scheduledEvent.ts";
-import { DiscordScheduledEvent } from "../../../types/discord.ts";
-import { BigString } from "../../../types/shared.ts";
+import { Bot } from '../../../bot.js'
+import { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
+import { DiscordScheduledEvent } from '../../../types/discord.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Gets a scheduled event by its ID.
@@ -18,13 +18,13 @@ export async function getScheduledEvent(
   bot: Bot,
   guildId: BigString,
   eventId: BigString,
-  options?: { withUserCount?: boolean },
+  options?: { withUserCount?: boolean }
 ): Promise<ScheduledEvent> {
   const result = await bot.rest.runMethod<DiscordScheduledEvent>(
     bot.rest,
-    "GET",
-    bot.constants.routes.GUILD_SCHEDULED_EVENT(guildId, eventId, options?.withUserCount),
-  );
+    'GET',
+    bot.constants.routes.GUILD_SCHEDULED_EVENT(guildId, eventId, options?.withUserCount)
+  )
 
-  return bot.transformers.scheduledEvent(bot, result);
+  return bot.transformers.scheduledEvent(bot, result)
 }

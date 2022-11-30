@@ -1,4 +1,4 @@
-import { BigString, Bot, Collection, DiscordMemberWithUser, ListGuildMembers, Member } from "../deps.ts";
+import { BigString, Bot, Collection, DiscordMemberWithUser, ListGuildMembers, Member } from '../deps.js'
 
 /**
  * Highly recommended to **NOT** use this function to get members instead use fetchMembers().
@@ -8,62 +8,61 @@ import { BigString, Bot, Collection, DiscordMemberWithUser, ListGuildMembers, Me
 export async function getMembersPaginated(
   bot: Bot,
   guildId: BigString,
-  options: ListGuildMembers,
+  options: ListGuildMembers
 ) {
-  const members = new Collection<bigint, Member>();
+  const members = new Collection<bigint, Member>()
 
-  let membersLeft = options?.limit ?? 1000;
-  let loops = 1;
+  let membersLeft = options?.limit ?? 1000
+  let loops = 1
   while (
     (options?.limit ?? 1000) > members.size &&
     membersLeft > 0
   ) {
-    bot.events.debug("Running while loop in getMembers function.");
+    bot.events.debug('Running while loop in getMembers function.')
 
     if (options?.limit && options.limit > 1000) {
       console.log(
-        `Paginating get members from REST. #${loops} / ${
-          Math.ceil(
-            (options?.limit ?? 1) / 1000,
-          )
-        }`,
-      );
+        `Paginating get members from REST. #${loops} / ${Math.ceil(
+          (options?.limit ?? 1) / 1000
+        )
+        }`
+      )
     }
 
     const result = await bot.rest.runMethod<DiscordMemberWithUser[]>(
       bot.rest,
-      "GET",
+      'GET',
       bot.constants.routes.GUILD_MEMBERS(guildId, {
         limit: membersLeft > 1000 ? 1000 : membersLeft,
-        after: options.after,
-      }),
-    );
+        after: options.after
+      })
+    )
 
     const discordenoMembers = result.map((member) =>
       bot.transformers.member(
         bot,
         member,
         bot.transformers.snowflake(guildId),
-        bot.transformers.snowflake(member.user.id),
+        bot.transformers.snowflake(member.user.id)
       )
-    );
+    )
 
-    if (!discordenoMembers.length) break;
+    if (discordenoMembers.length === 0) break
 
     discordenoMembers.forEach((member) => {
-      bot.events.debug(`Running forEach loop in get_members file.`);
-      members.set(member.id, member);
-    });
+      bot.events.debug('Running forEach loop in get_members file.')
+      members.set(member.id, member)
+    })
 
     options = {
       limit: options?.limit,
-      after: discordenoMembers[discordenoMembers.length - 1].id.toString(),
-    };
+      after: discordenoMembers[discordenoMembers.length - 1].id.toString()
+    }
 
-    membersLeft -= 1000;
+    membersLeft -= 1000
 
-    loops++;
+    loops++
   }
 
-  return members;
+  return members
 }

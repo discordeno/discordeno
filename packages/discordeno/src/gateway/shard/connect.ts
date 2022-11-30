@@ -1,4 +1,4 @@
-import { Shard, ShardState } from "./types.ts";
+import { Shard, ShardState } from "./types.js";
 
 export async function connect(shard: Shard): Promise<void> {
   // Only set the shard to `Connecting` state,

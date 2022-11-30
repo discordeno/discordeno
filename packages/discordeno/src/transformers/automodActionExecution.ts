@@ -1,6 +1,6 @@
-import { Bot } from "../bot.ts";
-import { DiscordAutoModerationActionExecution } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
+import { Bot } from '../bot.js'
+import { DiscordAutoModerationActionExecution } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
 
 export function transformAutoModerationActionExecution(bot: Bot, payload: DiscordAutoModerationActionExecution) {
   const rule = {
@@ -14,20 +14,20 @@ export function transformAutoModerationActionExecution(bot: Bot, payload: Discor
     alertSystemMessageId: payload.alert_system_message_id
       ? bot.transformers.snowflake(payload.alert_system_message_id)
       : undefined,
-    matchedKeyword: payload.matched_keyword ?? "",
-    matchedContent: payload.matched_content ?? "",
+    matchedKeyword: payload.matched_keyword ?? '',
+    matchedContent: payload.matched_content ?? '',
     action: {
       type: payload.action.type,
       metadata: {
         durationSeconds: payload.action.metadata.duration_seconds,
         channelId: payload.action.metadata.channel_id
           ? bot.transformers.snowflake(payload.action.metadata.channel_id)
-          : undefined,
-      },
-    },
-  };
+          : undefined
+      }
+    }
+  }
 
-  return rule as Optionalize<typeof rule>;
+  return rule as Optionalize<typeof rule>
 }
 
-export interface AutoModerationActionExecution extends ReturnType<typeof transformAutoModerationActionExecution> {}
+export interface AutoModerationActionExecution extends ReturnType<typeof transformAutoModerationActionExecution> { }

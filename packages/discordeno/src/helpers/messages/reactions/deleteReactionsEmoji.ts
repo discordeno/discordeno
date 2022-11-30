@@ -1,6 +1,6 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString } from "../../../types/shared.ts";
-import { processReactionString } from "./getReactions.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString } from '../../../types/shared.js'
+import { processReactionString } from './getReactions.js'
 
 /**
  * Deletes all reactions for an emoji from a message.
@@ -23,13 +23,13 @@ export async function deleteReactionsEmoji(
   bot: Bot,
   channelId: BigString,
   messageId: BigString,
-  reaction: string,
+  reaction: string
 ): Promise<void> {
-  reaction = processReactionString(reaction);
+  reaction = processReactionString(reaction)
 
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
-    bot.constants.routes.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction),
-  );
+    'DELETE',
+    bot.constants.routes.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction)
+  )
 }

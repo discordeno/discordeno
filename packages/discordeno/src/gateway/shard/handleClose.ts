@@ -1,17 +1,17 @@
-import { GatewayCloseEventCodes } from "../../types/shared.ts";
-import { Shard, ShardSocketCloseCodes, ShardState } from "./types.ts";
+import { GatewayCloseEventCodes } from '../../types/shared.js'
+import { Shard, ShardSocketCloseCodes, ShardState } from './types.js'
 
 export async function handleClose(shard: Shard, close: CloseEvent): Promise<void> {
   //   gateway.debug("GW CLOSED", { shardId, payload: event });
 
-  shard.stopHeartbeating();
+  shard.stopHeartbeating()
 
   switch (close.code) {
     case ShardSocketCloseCodes.TestingFinished: {
-      shard.state = ShardState.Offline;
-      shard.events.disconnected?.(shard);
+      shard.state = ShardState.Offline
+      shard.events.disconnected?.(shard)
 
-      return;
+      return
     }
     // On these codes a manual start will be done.
     case ShardSocketCloseCodes.Shutdown:
@@ -19,11 +19,11 @@ export async function handleClose(shard: Shard, close: CloseEvent): Promise<void
     case ShardSocketCloseCodes.Resharded:
     case ShardSocketCloseCodes.ResumeClosingOldConnection:
     case ShardSocketCloseCodes.ZombiedConnection: {
-      shard.state = ShardState.Disconnected;
-      shard.events.disconnected?.(shard);
+      shard.state = ShardState.Disconnected
+      shard.events.disconnected?.(shard)
 
       // gateway.debug("GW CLOSED_RECONNECT", { shardId, payload: event });
-      return;
+      return
     }
     // Gateway connection closes which require a new identify.
     case GatewayCloseEventCodes.UnknownOpcode:
@@ -31,10 +31,10 @@ export async function handleClose(shard: Shard, close: CloseEvent): Promise<void
     case GatewayCloseEventCodes.InvalidSeq:
     case GatewayCloseEventCodes.RateLimited:
     case GatewayCloseEventCodes.SessionTimedOut: {
-      shard.state = ShardState.Identifying;
-      shard.events.disconnected?.(shard);
+      shard.state = ShardState.Identifying
+      shard.events.disconnected?.(shard)
 
-      return await shard.identify();
+      return await shard.identify()
     }
     // When these codes are received something went really wrong.
     // On those we cannot start a reconnect attempt.
@@ -44,20 +44,20 @@ export async function handleClose(shard: Shard, close: CloseEvent): Promise<void
     case GatewayCloseEventCodes.InvalidApiVersion:
     case GatewayCloseEventCodes.InvalidIntents:
     case GatewayCloseEventCodes.DisallowedIntents: {
-      shard.state = ShardState.Offline;
-      shard.events.disconnected?.(shard);
+      shard.state = ShardState.Offline
+      shard.events.disconnected?.(shard)
 
-      throw new Error(close.reason || "Discord gave no reason! GG! You broke Discord!");
+      throw new Error(close.reason || 'Discord gave no reason! GG! You broke Discord!')
     }
     // Gateway connection closes on which a resume is allowed.
     case GatewayCloseEventCodes.UnknownError:
     case GatewayCloseEventCodes.DecodeError:
     case GatewayCloseEventCodes.AlreadyAuthenticated:
     default: {
-      shard.state = ShardState.Resuming;
-      shard.events.disconnected?.(shard);
+      shard.state = ShardState.Resuming
+      shard.events.disconnected?.(shard)
 
-      return await shard.resume();
+      return await shard.resume()
     }
   }
 }

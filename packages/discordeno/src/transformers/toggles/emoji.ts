@@ -1,5 +1,5 @@
-import { DiscordEmoji } from "../../types/discord.ts";
-import { ToggleBitfield } from "./ToggleBitfield.ts";
+import { DiscordEmoji } from '../../types/discord.js'
+import { ToggleBitfield } from './ToggleBitfield.js'
 
 export const EmojiToggle = {
   /** Whether this emoji must be wrapped in colons */
@@ -9,60 +9,60 @@ export const EmojiToggle = {
   /** Whether this emoji is animated */
   animated: 1 << 2,
   /** Whether this emoji can be used, may be false due to loss of Server Boosts */
-  available: 1 << 3,
-};
+  available: 1 << 3
+}
 
 export class EmojiToggles extends ToggleBitfield {
   constructor(roleOrTogglesInt: DiscordEmoji | number) {
-    super();
+    super()
 
-    if (typeof roleOrTogglesInt === "number") this.bitfield = roleOrTogglesInt;
+    if (typeof roleOrTogglesInt === 'number') this.bitfield = roleOrTogglesInt
     else {
-      const role = roleOrTogglesInt;
+      const role = roleOrTogglesInt
 
-      if (role.require_colons) this.add(EmojiToggle.requireColons);
-      if (role.managed) this.add(EmojiToggle.managed);
-      if (role.animated) this.add(EmojiToggle.animated);
-      if (role.available) this.add(EmojiToggle.available);
+      if (role.require_colons) this.add(EmojiToggle.requireColons)
+      if (role.managed) this.add(EmojiToggle.managed)
+      if (role.animated) this.add(EmojiToggle.animated)
+      if (role.available) this.add(EmojiToggle.available)
     }
   }
 
   /** Whether this emoji must be wrapped in colons */
   get requireColons() {
-    return this.has("requireColons");
+    return this.has('requireColons')
   }
 
   /** Whether this emoji is managed */
   get managed() {
-    return this.has("managed");
+    return this.has('managed')
   }
 
   /** Whether this emoji is animated */
   get animated() {
-    return this.has("animated");
+    return this.has('animated')
   }
 
   /** Whether this emoji can be used, may be false due to loss of Server Boosts */
   get available() {
-    return this.has("available");
+    return this.has('available')
   }
 
   /** Checks whether or not the permissions exist in this */
   has(permissions: EmojiToggleKeys | EmojiToggleKeys[]) {
-    if (!Array.isArray(permissions)) return super.contains(EmojiToggle[permissions]);
+    if (!Array.isArray(permissions)) return super.contains(EmojiToggle[permissions])
 
-    return super.contains(permissions.reduce((a, b) => (a |= EmojiToggle[b]), 0));
+    return super.contains(permissions.reduce((a, b) => (a |= EmojiToggle[b]), 0))
   }
 
   /** Lists all the toggles for the role and whether or not each is true or false. */
   list() {
-    const json: Record<string, boolean> = {};
+    const json: Record<string, boolean> = {}
     for (const [key, value] of Object.entries(EmojiToggle)) {
-      json[key] = super.contains(value);
+      json[key] = super.contains(value)
     }
 
-    return json as Record<EmojiToggleKeys, boolean>;
+    return json as Record<EmojiToggleKeys, boolean>
   }
 }
 
-export type EmojiToggleKeys = keyof typeof EmojiToggle;
+export type EmojiToggleKeys = keyof typeof EmojiToggle

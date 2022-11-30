@@ -1,6 +1,6 @@
-import { Bot } from "../bot.ts";
-import { DiscordWelcomeScreen } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
+import { Bot } from '../bot.js'
+import { DiscordWelcomeScreen } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
 
 export function transformWelcomeScreen(bot: Bot, payload: DiscordWelcomeScreen) {
   const welcomeScreen = {
@@ -9,11 +9,11 @@ export function transformWelcomeScreen(bot: Bot, payload: DiscordWelcomeScreen) 
       channelId: bot.transformers.snowflake(channel.channel_id),
       description: channel.description,
       emojiId: channel.emoji_id ? bot.transformers.snowflake(channel.emoji_id) : undefined,
-      emojiName: channel.emoji_name ?? undefined,
-    })),
-  };
+      emojiName: channel.emoji_name ?? undefined
+    }))
+  }
 
-  return welcomeScreen as Optionalize<typeof welcomeScreen>;
+  return welcomeScreen as Optionalize<typeof welcomeScreen>
 }
 
-export interface WelcomeScreen extends ReturnType<typeof transformWelcomeScreen> {}
+export interface WelcomeScreen extends ReturnType<typeof transformWelcomeScreen> { }

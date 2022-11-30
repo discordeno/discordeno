@@ -1,6 +1,6 @@
-import { Bot } from "../../../deps.ts";
-import { createScheduledEvent } from "./createScheduledEvent.ts";
+import { Bot } from '../../../deps.js'
+import { createScheduledEvent } from './createScheduledEvent.js'
 
 export function events(bot: Bot) {
-  createScheduledEvent(bot);
+  createScheduledEvent(bot)
 }

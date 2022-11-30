@@ -1,19 +1,19 @@
-import { BotWithCache, ChannelTypes } from "../../deps.ts";
-import { requireBotChannelPermissions } from "../permissions.ts";
+import { BotWithCache, ChannelTypes } from '../../deps.js'
+import { requireBotChannelPermissions } from '../permissions.js'
 
 export function getChannelWebhooks(bot: BotWithCache) {
-  const getChannelWebhooks = bot.helpers.getChannelWebhooks;
+  const getChannelWebhooks = bot.helpers.getChannelWebhooks
 
   bot.helpers.getChannelWebhooks = async function (channelId) {
-    const channel = bot.channels.get(bot.transformers.snowflake(channelId));
-    if (channel) {
-      const isWebhookParent = [ChannelTypes.GuildAnnouncement, ChannelTypes.GuildText].includes(channel.type);
+    const channel = bot.channels.get(bot.transformers.snowflake(channelId))
+    if (channel != null) {
+      const isWebhookParent = [ChannelTypes.GuildAnnouncement, ChannelTypes.GuildText].includes(channel.type)
       if (!isWebhookParent) {
-        throw new Error("Target channel must be a text channel or an announcement channel");
+        throw new Error('Target channel must be a text channel or an announcement channel')
       }
-      requireBotChannelPermissions(bot, bot.transformers.snowflake(channelId), ["VIEW_CHANNEL", "MANAGE_WEBHOOKS"]);
+      requireBotChannelPermissions(bot, bot.transformers.snowflake(channelId), ['VIEW_CHANNEL', 'MANAGE_WEBHOOKS'])
     }
 
-    return await getChannelWebhooks(channelId);
-  };
+    return await getChannelWebhooks(channelId)
+  }
 }

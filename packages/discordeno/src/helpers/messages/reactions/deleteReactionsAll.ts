@@ -1,5 +1,5 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Deletes all reactions for all emojis from a message.
@@ -20,7 +20,7 @@ import { BigString } from "../../../types/shared.ts";
 export async function deleteReactionsAll(bot: Bot, channelId: BigString, messageId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
-    bot.constants.routes.CHANNEL_MESSAGE_REACTIONS(channelId, messageId),
-  );
+    'DELETE',
+    bot.constants.routes.CHANNEL_MESSAGE_REACTIONS(channelId, messageId)
+  )
 }

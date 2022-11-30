@@ -1,6 +1,7 @@
-export * from "./createScheduledEvent.ts";
-export * from "./deleteScheduledEvent.ts";
-export * from "./editScheduledEvent.ts";
-export * from "./getScheduledEvent.ts";
-export * from "./getScheduledEvents.ts";
-export * from "./getScheduledEventUsers.ts";
+export * from './createScheduledEvent.js'
+export * from './deleteScheduledEvent.js'
+export * from './editScheduledEvent.js'
+export * from './getScheduledEvent.js'
+export * from './getScheduledEvents.js'
+export * from './getScheduledEventUsers.js'
+

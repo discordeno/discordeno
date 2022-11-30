@@ -1,14 +1,14 @@
-import type { Bot } from "../../bot.ts";
-import { Channel } from "../../transformers/channel.ts";
-import { Guild } from "../../transformers/guild.ts";
-import { Role } from "../../transformers/role.ts";
-import { DiscordGuild } from "../../types/discord.ts";
+import type { Bot } from '../../bot.js'
+import { Channel } from '../../transformers/channel.js'
+import { Guild } from '../../transformers/guild.js'
+import { Role } from '../../transformers/role.js'
+import { DiscordGuild } from '../../types/discord.js'
 import {
   DefaultMessageNotificationLevels,
   ExplicitContentFilterLevels,
   SystemChannelFlags,
-  VerificationLevels,
-} from "../../types/shared.ts";
+  VerificationLevels
+} from '../../types/shared.js'
 
 /**
  * Creates a guild.
@@ -25,7 +25,7 @@ import {
  * @see {@link https://discord.com/developers/docs/resources/guild#create-guild}
  */
 export async function createGuild(bot: Bot, options: CreateGuild): Promise<Guild> {
-  const result = await bot.rest.runMethod<DiscordGuild>(bot.rest, "POST", bot.constants.routes.GUILDS(), {
+  const result = await bot.rest.runMethod<DiscordGuild>(bot.rest, 'POST', bot.constants.routes.GUILDS(), {
     name: options.name,
     afk_channel_id: options.afkChannelId,
     afk_timeout: options.afkTimeout,
@@ -36,34 +36,34 @@ export async function createGuild(bot: Bot, options: CreateGuild): Promise<Guild
     roles: options.roles,
     system_channel_flags: options.systemChannelFlags,
     system_channel_id: options.systemChannelId,
-    verification_level: options.verificationLevel,
-  });
+    verification_level: options.verificationLevel
+  })
 
-  return bot.transformers.guild(bot, { guild: result, shardId: 0 });
+  return bot.transformers.guild(bot, { guild: result, shardId: 0 })
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild */
 export interface CreateGuild {
   /** Name of the guild (1-100 characters) */
-  name: string;
+  name: string
   /** Base64 128x128 image for the guild icon */
-  icon?: string;
+  icon?: string
   /** Verification level */
-  verificationLevel?: VerificationLevels;
+  verificationLevel?: VerificationLevels
   /** Default message notification level */
-  defaultMessageNotifications?: DefaultMessageNotificationLevels;
+  defaultMessageNotifications?: DefaultMessageNotificationLevels
   /** Explicit content filter level */
-  explicitContentFilter?: ExplicitContentFilterLevels;
+  explicitContentFilter?: ExplicitContentFilterLevels
   /** New guild roles (first role is the everyone role) */
-  roles?: Role[];
+  roles?: Role[]
   /** New guild's channels */
-  channels?: Partial<Channel>[];
+  channels?: Array<Partial<Channel>>
   /** Id for afk channel */
-  afkChannelId?: string;
+  afkChannelId?: string
   /** Afk timeout in seconds */
-  afkTimeout?: number;
+  afkTimeout?: number
   /** The id of the channel where guild notices such as welcome messages and boost events are posted */
-  systemChannelId?: string;
+  systemChannelId?: string
   /** System channel flags */
-  systemChannelFlags?: SystemChannelFlags;
+  systemChannelFlags?: SystemChannelFlags
 }

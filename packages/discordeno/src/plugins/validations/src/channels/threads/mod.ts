@@ -1,10 +1,10 @@
-import { Bot } from "../../../deps.ts";
-import { addThreadMember } from "./addThreadMember.ts";
-import { getThreadMembers } from "./getThreadMember.ts";
-import { removeThreadMember } from "./removeThreadMember.ts";
+import { Bot } from '../../../deps.js'
+import { addThreadMember } from './addThreadMember.js'
+import { getThreadMembers } from './getThreadMember.js'
+import { removeThreadMember } from './removeThreadMember.js'
 
 export function threads(bot: Bot) {
-  addThreadMember(bot);
-  getThreadMembers(bot);
-  removeThreadMember(bot);
+  addThreadMember(bot)
+  getThreadMembers(bot)
+  removeThreadMember(bot)
 }

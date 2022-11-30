@@ -1,7 +1,7 @@
-import type { Bot } from "../../../bot.ts";
-import { ApplicationCommand } from "../../../transformers/applicationCommand.ts";
-import { CreateApplicationCommand, DiscordApplicationCommand } from "../../../types/mod.ts";
-import { Collection } from "../../../util/collection.ts";
+import type { Bot } from '../../../bot.js'
+import { ApplicationCommand } from '../../../transformers/applicationCommand.js'
+import { CreateApplicationCommand, DiscordApplicationCommand } from '../../../types/mod.js'
+import { Collection } from '../../../util/collection.js'
 
 /**
  * Re-registers the list of global application commands, overwriting the previous commands completely.
@@ -19,19 +19,19 @@ import { Collection } from "../../../util/collection.ts";
  */
 export async function upsertGlobalApplicationCommands(
   bot: Bot,
-  commands: CreateApplicationCommand[],
+  commands: CreateApplicationCommand[]
 ): Promise<Collection<bigint, ApplicationCommand>> {
   const results = await bot.rest.runMethod<DiscordApplicationCommand[]>(
     bot.rest,
-    "PUT",
+    'PUT',
     bot.constants.routes.COMMANDS(bot.applicationId),
-    commands.map((command) => bot.transformers.reverse.createApplicationCommand(bot, command)),
-  );
+    commands.map((command) => bot.transformers.reverse.createApplicationCommand(bot, command))
+  )
 
   return new Collection(
     results.map((result) => {
-      const command = bot.transformers.applicationCommand(bot, result);
-      return [command.id, command];
-    }),
-  );
+      const command = bot.transformers.applicationCommand(bot, result)
+      return [command.id, command]
+    })
+  )
 }

@@ -1,5 +1,5 @@
-import { Bot } from "../../bot.ts";
-import { Sticker } from "../../transformers/sticker.ts";
+import { Bot } from '../../bot.js'
+import { Sticker } from '../../transformers/sticker.js'
 
 /**
  * Delete a new sticker for the guild.
@@ -19,8 +19,8 @@ import { Sticker } from "../../transformers/sticker.ts";
 export async function deleteGuildSticker(bot: Bot, guildId: bigint, stickerId: bigint, reason?: string): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
+    'DELETE',
     bot.constants.routes.GUILD_STICKER(guildId, stickerId),
-    reason ? { reason } : undefined,
-  );
+    reason ? { reason } : undefined
+  )
 }

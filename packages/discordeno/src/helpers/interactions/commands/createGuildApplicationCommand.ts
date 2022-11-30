@@ -1,5 +1,5 @@
-import { Bot } from "../../../bot.ts";
-import { ApplicationCommand, BigString, CreateApplicationCommand, DiscordApplicationCommand } from "../../../mod.ts";
+import { Bot } from '../../../bot.js'
+import { ApplicationCommand, BigString, CreateApplicationCommand, DiscordApplicationCommand } from '../../../mod.js'
 
 /**
  * Creates an application command only accessible in a specific guild.
@@ -18,14 +18,14 @@ import { ApplicationCommand, BigString, CreateApplicationCommand, DiscordApplica
 export async function createGuildApplicationCommand(
   bot: Bot,
   command: CreateApplicationCommand,
-  guildId: BigString,
+  guildId: BigString
 ): Promise<ApplicationCommand> {
   const result = await bot.rest.runMethod<DiscordApplicationCommand>(
     bot.rest,
-    "POST",
+    'POST',
     bot.constants.routes.COMMANDS_GUILD(bot.applicationId, guildId),
-    bot.transformers.reverse.createApplicationCommand(bot, command),
-  );
+    bot.transformers.reverse.createApplicationCommand(bot, command)
+  )
 
-  return bot.transformers.applicationCommand(bot, result);
+  return bot.transformers.applicationCommand(bot, result)
 }

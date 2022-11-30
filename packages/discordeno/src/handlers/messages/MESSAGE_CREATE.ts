@@ -1,8 +1,8 @@
-import { Bot } from "../../bot.ts";
-import { DiscordGatewayPayload, DiscordMessage } from "../../types/discord.ts";
+import { Bot } from '../../bot.js'
+import { DiscordGatewayPayload, DiscordMessage } from '../../types/discord.js'
 
 export async function handleMessageCreate(bot: Bot, data: DiscordGatewayPayload) {
-  const payload = data.d as DiscordMessage;
+  const payload = data.d as DiscordMessage
 
-  bot.events.messageCreate(bot, bot.transformers.message(bot, payload));
+  bot.events.messageCreate(bot, bot.transformers.message(bot, payload))
 }

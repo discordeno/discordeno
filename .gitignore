@@ -8,9 +8,9 @@ node_modules
 # testing
 coverage
 
-# next.js
-.next/
-out/
+# build
+dist
+out
 build
 
 # misc

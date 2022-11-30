@@ -1,6 +1,6 @@
-import type { Bot } from "../../bot.ts";
-import { User } from "../../transformers/member.ts";
-import { DiscordUser } from "../../types/discord.ts";
+import type { Bot } from '../../bot.js'
+import { User } from '../../transformers/member.js'
+import { DiscordUser } from '../../types/discord.js'
 
 /**
  * Modifies the bot's username or avatar.
@@ -8,14 +8,14 @@ import { DiscordUser } from "../../types/discord.ts";
  */
 export async function editBotProfile(
   bot: Bot,
-  options: { username?: string; botAvatarURL?: string | null },
+  options: { username?: string, botAvatarURL?: string | null }
 ): Promise<User> {
-  const avatar = options?.botAvatarURL ? await bot.utils.urlToBase64(options?.botAvatarURL) : options?.botAvatarURL;
+  const avatar = options?.botAvatarURL ? await bot.utils.urlToBase64(options?.botAvatarURL) : options?.botAvatarURL
 
-  const result = await bot.rest.runMethod<DiscordUser>(bot.rest, "PATCH", bot.constants.routes.USER_BOT(), {
+  const result = await bot.rest.runMethod<DiscordUser>(bot.rest, 'PATCH', bot.constants.routes.USER_BOT(), {
     username: options.username?.trim(),
-    avatar,
-  });
+    avatar
+  })
 
-  return bot.transformers.user(bot, result);
+  return bot.transformers.user(bot, result)
 }

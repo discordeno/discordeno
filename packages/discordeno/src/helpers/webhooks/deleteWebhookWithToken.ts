@@ -1,5 +1,5 @@
-import type { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Deletes a webhook message using the webhook token, thereby bypassing the need for authentication + permissions.
@@ -14,5 +14,5 @@ import { BigString } from "../../types/shared.ts";
  * @see {@link https://discord.com/developers/docs/resources/webhook#delete-webhook-with-token}
  */
 export async function deleteWebhookWithToken(bot: Bot, webhookId: BigString, token: string): Promise<void> {
-  return await bot.rest.runMethod<void>(bot.rest, "DELETE", bot.constants.routes.WEBHOOK(webhookId, token));
+  return await bot.rest.runMethod<void>(bot.rest, 'DELETE', bot.constants.routes.WEBHOOK(webhookId, token))
 }

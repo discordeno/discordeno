@@ -1,2 +1,3 @@
-export * from "./commands/mod.ts";
-export * from "./responses/mod.ts";
+export * from './commands/mod.js'
+export * from './responses/mod.js'
+

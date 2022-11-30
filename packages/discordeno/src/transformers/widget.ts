@@ -1,6 +1,6 @@
-import { Bot } from "../bot.ts";
-import { DiscordGuildWidget } from "../types/discord.ts";
-import { Optionalize } from "../types/shared.ts";
+import { Bot } from '../bot.js'
+import { DiscordGuildWidget } from '../types/discord.js'
+import { Optionalize } from '../types/shared.js'
 
 export function transformWidget(bot: Bot, payload: DiscordGuildWidget) {
   const widget = {
@@ -10,7 +10,7 @@ export function transformWidget(bot: Bot, payload: DiscordGuildWidget) {
     channels: payload.channels.map((channel) => ({
       id: bot.transformers.snowflake(channel.id),
       name: channel.name,
-      position: channel.position,
+      position: channel.position
     })),
     members: payload.members.map((member) => ({
       id: bot.transformers.snowflake(member.id),
@@ -18,12 +18,12 @@ export function transformWidget(bot: Bot, payload: DiscordGuildWidget) {
       discriminator: member.discriminator,
       avatar: member.avatar ? bot.utils.iconHashToBigInt(member.avatar) : undefined,
       status: member.status,
-      avatarUrl: member.avatar_url,
+      avatarUrl: member.avatar_url
     })),
-    presenceCount: payload.presence_count,
-  };
+    presenceCount: payload.presence_count
+  }
 
-  return widget as Optionalize<typeof widget>;
+  return widget as Optionalize<typeof widget>
 }
 
-export interface GuildWidget extends ReturnType<typeof transformWidget> {}
+export interface GuildWidget extends ReturnType<typeof transformWidget> { }

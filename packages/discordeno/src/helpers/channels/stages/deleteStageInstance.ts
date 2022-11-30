@@ -1,5 +1,5 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Deletes the stage instance associated with a stage channel, if one exists.
@@ -17,8 +17,8 @@ import { BigString } from "../../../types/shared.ts";
 export async function deleteStageInstance(bot: Bot, channelId: BigString, reason?: string): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
+    'DELETE',
     bot.constants.routes.STAGE_INSTANCE(channelId),
-    reason ? { reason } : undefined,
-  );
+    reason ? { reason } : undefined
+  )
 }

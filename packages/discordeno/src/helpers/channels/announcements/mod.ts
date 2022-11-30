@@ -1,1 +1,1 @@
-export * from "./followAnnouncementChannel.ts";
+export * from "./followAnnouncementChannel.js";

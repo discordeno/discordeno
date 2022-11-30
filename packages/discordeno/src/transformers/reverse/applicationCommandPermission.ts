@@ -1,10 +1,10 @@
-import { Bot } from "../../bot.ts";
-import { DiscordGuildApplicationCommandPermissions } from "../../types/discord.ts";
-import { ApplicationCommandPermission } from "../applicationCommandPermission.ts";
+import { Bot } from '../../bot.js'
+import { DiscordGuildApplicationCommandPermissions } from '../../types/discord.js'
+import { ApplicationCommandPermission } from '../applicationCommandPermission.js'
 
 export function transformApplicationCommandPermissionToDiscordApplicationCommandPermission(
   bot: Bot,
-  payload: ApplicationCommandPermission,
+  payload: ApplicationCommandPermission
 ): DiscordGuildApplicationCommandPermissions {
   return {
     id: bot.transformers.reverse.snowflake(payload.id),
@@ -13,7 +13,7 @@ export function transformApplicationCommandPermissionToDiscordApplicationCommand
     permissions: payload.permissions.map((perm) => ({
       id: bot.transformers.reverse.snowflake(perm.id),
       type: perm.type,
-      permission: perm.permission,
-    })),
-  };
+      permission: perm.permission
+    }))
+  }
 }

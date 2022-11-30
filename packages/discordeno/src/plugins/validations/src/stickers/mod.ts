@@ -1,8 +1,8 @@
-import { Bot } from "../../../../bot.ts";
-import { createGuildSticker } from "./createGuildSticker.ts";
-import { editGuildSticker } from "./editGuildSticker.ts";
+import { Bot } from '../../../../bot.js'
+import { createGuildSticker } from './createGuildSticker.js'
+import { editGuildSticker } from './editGuildSticker.js'
 
 export function stickers(bot: Bot) {
-  createGuildSticker(bot);
-  editGuildSticker(bot);
+  createGuildSticker(bot)
+  editGuildSticker(bot)
 }

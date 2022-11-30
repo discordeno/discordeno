@@ -1,7 +1,7 @@
-import type { Bot } from "../../../bot.ts";
-import { ThreadMember } from "../../../transformers/threadMember.ts";
-import { DiscordThreadMember } from "../../../types/discord.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { ThreadMember } from '../../../transformers/threadMember.js'
+import { DiscordThreadMember } from '../../../types/discord.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Gets a thread member by their user ID.
@@ -16,9 +16,9 @@ import { BigString } from "../../../types/shared.ts";
 export async function getThreadMember(bot: Bot, channelId: BigString, userId: BigString): Promise<ThreadMember> {
   const result = await bot.rest.runMethod<DiscordThreadMember>(
     bot.rest,
-    "GET",
-    bot.constants.routes.THREAD_USER(channelId, userId),
-  );
+    'GET',
+    bot.constants.routes.THREAD_USER(channelId, userId)
+  )
 
-  return bot.transformers.threadMember(bot, result);
+  return bot.transformers.threadMember(bot, result)
 }

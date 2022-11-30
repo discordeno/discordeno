@@ -1,6 +1,6 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString } from "../../../types/shared.ts";
-import { processReactionString } from "./getReactions.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString } from '../../../types/shared.js'
+import { processReactionString } from './getReactions.js'
 
 // TODO: Improve typing of the `reaction` parameter.
 
@@ -23,15 +23,15 @@ export async function deleteOwnReaction(
   bot: Bot,
   channelId: BigString,
   messageId: BigString,
-  reaction: string,
+  reaction: string
 ): Promise<void> {
-  reaction = processReactionString(reaction);
+  reaction = processReactionString(reaction)
 
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
-    bot.constants.routes.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction),
-  );
+    'DELETE',
+    bot.constants.routes.CHANNEL_MESSAGE_REACTION_ME(channelId, messageId, reaction)
+  )
 }
 
 /**
@@ -57,18 +57,18 @@ export async function deleteUserReaction(
   channelId: BigString,
   messageId: BigString,
   userId: BigString,
-  reaction: string,
+  reaction: string
 ): Promise<void> {
-  reaction = processReactionString(reaction);
+  reaction = processReactionString(reaction)
 
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
+    'DELETE',
     bot.constants.routes.CHANNEL_MESSAGE_REACTION_USER(
       channelId,
       messageId,
       reaction,
-      userId,
-    ),
-  );
+      userId
+    )
+  )
 }

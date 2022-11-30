@@ -1,5 +1,5 @@
-import type { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from "../../bot.js";
+import { BigString } from "../../types/shared.js";
 
 /**
  * Deletes a template from a guild.

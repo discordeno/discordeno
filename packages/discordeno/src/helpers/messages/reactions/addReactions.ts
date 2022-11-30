@@ -1,5 +1,5 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString } from '../../../types/shared.js'
 
 // TODO: Improve typing of the `reactions` parameter.
 
@@ -27,13 +27,13 @@ export async function addReactions(
   channelId: BigString,
   messageId: BigString,
   reactions: string[],
-  ordered = false,
+  ordered = false
 ): Promise<void> {
   if (!ordered) {
-    return void await Promise.all(reactions.map((reaction) => bot.helpers.addReaction(channelId, messageId, reaction)));
+    return void await Promise.all(reactions.map(async (reaction) => await bot.helpers.addReaction(channelId, messageId, reaction)))
   }
 
   for (const reaction of reactions) {
-    await bot.helpers.addReaction(channelId, messageId, reaction);
+    await bot.helpers.addReaction(channelId, messageId, reaction)
   }
 }

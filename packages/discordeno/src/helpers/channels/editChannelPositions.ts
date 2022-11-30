@@ -1,7 +1,7 @@
-import type { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { BigString } from '../../types/shared.js'
 
-export const swapChannels = editChannelPositions;
+export const swapChannels = editChannelPositions
 
 /**
  * Edits the positions of a set of channels in a guild.
@@ -20,33 +20,33 @@ export const swapChannels = editChannelPositions;
 export async function editChannelPositions(
   bot: Bot,
   guildId: BigString,
-  channelPositions: ModifyGuildChannelPositions[],
+  channelPositions: ModifyGuildChannelPositions[]
 ): Promise<void> {
-  if (!channelPositions.length) {
-    throw new Error("You must provide at least one channels to be moved.");
+  if (channelPositions.length === 0) {
+    throw new Error('You must provide at least one channels to be moved.')
   }
 
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "PATCH",
+    'PATCH',
     bot.constants.routes.GUILD_CHANNELS(guildId),
     channelPositions.map((channelPosition) => ({
       id: channelPosition.id,
       position: channelPosition.position,
       lock_positions: channelPosition.lockPositions,
-      parent_id: channelPosition.parentId,
-    })),
-  );
+      parent_id: channelPosition.parentId
+    }))
+  )
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions */
 export interface ModifyGuildChannelPositions {
   /** Channel id */
-  id: string;
+  id: string
   /** Sorting position of the channel */
-  position: number | null;
+  position: number | null
   /** Syncs the permission overwrites with the new parent, if moving to a new category */
-  lockPositions?: boolean | null;
+  lockPositions?: boolean | null
   /** The new parent ID for the channel that is moved */
-  parentId?: string | null;
+  parentId?: string | null
 }

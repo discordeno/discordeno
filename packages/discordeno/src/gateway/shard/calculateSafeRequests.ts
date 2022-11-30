@@ -1,4 +1,4 @@
-import { Shard } from "./types.ts";
+import { Shard } from "./types.js";
 
 export function calculateSafeRequests(shard: Shard) {
   // * 2 adds extra safety layer for discords OP 1 requests that we need to respond to

@@ -1,9 +1,8 @@
-import type { Bot } from "../../bot.ts";
-import type { Guild } from "../../transformers/guild.ts";
-import { DiscordGatewayPayload, DiscordGuild } from "../../types/discord.ts";
+import type { Bot } from '../../bot.js'
+import { DiscordGatewayPayload, DiscordGuild } from '../../types/discord.js'
 
 export function handleGuildUpdate(bot: Bot, data: DiscordGatewayPayload, shardId: number) {
-  const payload = data.d as DiscordGuild;
+  const payload = data.d as DiscordGuild
 
-  bot.events.guildUpdate(bot, bot.transformers.guild(bot, { guild: payload, shardId }) as Guild);
+  bot.events.guildUpdate(bot, bot.transformers.guild(bot, { guild: payload, shardId }))
 }

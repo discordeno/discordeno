@@ -1,11 +1,11 @@
-import type { Bot } from "../../bot.ts";
-import { Embed } from "../../transformers/embed.ts";
-import { Message } from "../../transformers/message.ts";
-import { DiscordMessage } from "../../types/discord.ts";
-import { AllowedMentions, FileContent, MessageComponents } from "../../types/discordeno.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { Embed } from '../../transformers/embed.js'
+import { Message } from '../../transformers/message.js'
+import { DiscordMessage } from '../../types/discord.js'
+import { AllowedMentions, FileContent, MessageComponents } from '../../types/discordeno.js'
+import { BigString } from '../../types/shared.js'
 
-export const sendWebhookMessage = executeWebhook;
+export const sendWebhookMessage = executeWebhook
 
 /**
  * Executes a webhook, causing a message to be posted in the channel configured for the webhook.
@@ -25,20 +25,20 @@ export async function executeWebhook(
   bot: Bot,
   webhookId: BigString,
   token: string,
-  options: ExecuteWebhook,
+  options: ExecuteWebhook
 ): Promise<Message | undefined> {
-  const allowedMentions = options.allowedMentions
+  const allowedMentions = (options.allowedMentions != null)
     ? {
       parse: options.allowedMentions.parse,
       replied_user: options.allowedMentions.repliedUser,
       users: options.allowedMentions.users?.map((id) => id.toString()),
-      roles: options.allowedMentions.roles?.map((id) => id.toString()),
+      roles: options.allowedMentions.roles?.map((id) => id.toString())
     }
-    : { parse: [] };
+    : { parse: [] }
 
   const result = await bot.rest.runMethod<DiscordMessage>(
     bot.rest,
-    "POST",
+    'POST',
     bot.constants.routes.WEBHOOK(webhookId, token, options),
     {
       wait: options.wait,
@@ -51,36 +51,36 @@ export async function executeWebhook(
       file: options.file,
       embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
       allowed_mentions: allowedMentions,
-      components: options.components?.map((component) => bot.transformers.reverse.component(bot, component)),
-    },
-  );
-  if (!options.wait) return;
+      components: options.components?.map((component) => bot.transformers.reverse.component(bot, component))
+    }
+  )
+  if (!options.wait) return
 
-  return bot.transformers.message(bot, result);
+  return bot.transformers.message(bot, result)
 }
 
 /** https://discord.com/developers/docs/resources/webhook#execute-webhook */
 export interface ExecuteWebhook {
   /** Waits for server confirmation of message send before response, and returns the created message body (defaults to `false`; when `false` a message that is not saved does not return an error) */
-  wait?: boolean;
+  wait?: boolean
   /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. */
-  threadId?: BigString;
+  threadId?: BigString
   /** Name of the thread to create (target channel has to be type of forum channel) */
-  threadName?: string;
+  threadName?: string
   /** The message contents (up to 2000 characters) */
-  content?: string;
+  content?: string
   /** Override the default username of the webhook */
-  username?: string;
+  username?: string
   /** Override the default avatar of the webhook */
-  avatarUrl?: string;
+  avatarUrl?: string
   /** True if this is a TTS message */
-  tts?: boolean;
+  tts?: boolean
   /** The contents of the file being sent */
-  file?: FileContent | FileContent[];
+  file?: FileContent | FileContent[]
   /** Embedded `rich` content */
-  embeds?: Embed[];
+  embeds?: Embed[]
   /** Allowed mentions for the message */
-  allowedMentions?: AllowedMentions;
+  allowedMentions?: AllowedMentions
   /** the components to include with the message */
-  components?: MessageComponents;
+  components?: MessageComponents
 }

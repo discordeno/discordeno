@@ -1,5 +1,5 @@
-import { Bot } from "../../../bot.ts";
-import { BigString } from "../../../types/shared.ts";
+import { Bot } from '../../../bot.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Deletes a scheduled event from a guild.
@@ -18,7 +18,7 @@ import { BigString } from "../../../types/shared.ts";
 export async function deleteScheduledEvent(bot: Bot, guildId: BigString, eventId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
-    bot.constants.routes.GUILD_SCHEDULED_EVENT(guildId, eventId),
-  );
+    'DELETE',
+    bot.constants.routes.GUILD_SCHEDULED_EVENT(guildId, eventId)
+  )
 }

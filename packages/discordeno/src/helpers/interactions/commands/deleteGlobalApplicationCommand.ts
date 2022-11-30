@@ -1,5 +1,5 @@
-import type { Bot } from "../../../bot.ts";
-import { BigString } from "../../../types/shared.ts";
+import type { Bot } from '../../../bot.js'
+import { BigString } from '../../../types/shared.js'
 
 /**
  * Deletes an application command registered globally.
@@ -12,7 +12,7 @@ import { BigString } from "../../../types/shared.ts";
 export async function deleteGlobalApplicationCommand(bot: Bot, commandId: BigString): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "DELETE",
-    bot.constants.routes.COMMANDS_ID(bot.applicationId, commandId),
-  );
+    'DELETE',
+    bot.constants.routes.COMMANDS_ID(bot.applicationId, commandId)
+  )
 }

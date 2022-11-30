@@ -1,7 +1,7 @@
-import type { Bot } from "../../bot.ts";
-import { WelcomeScreen } from "../../transformers/welcomeScreen.ts";
-import { DiscordWelcomeScreen } from "../../types/discord.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { WelcomeScreen } from '../../transformers/welcomeScreen.js'
+import { DiscordWelcomeScreen } from '../../types/discord.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Edits a guild's welcome screen.
@@ -21,11 +21,11 @@ import { BigString } from "../../types/shared.ts";
 export async function editWelcomeScreen(
   bot: Bot,
   guildId: BigString,
-  options: ModifyGuildWelcomeScreen,
+  options: ModifyGuildWelcomeScreen
 ): Promise<WelcomeScreen> {
   const result = await bot.rest.runMethod<DiscordWelcomeScreen>(
     bot.rest,
-    "PATCH",
+    'PATCH',
     bot.constants.routes.GUILD_WELCOME_SCREEN(guildId),
     {
       enabled: options.enabled,
@@ -33,32 +33,32 @@ export async function editWelcomeScreen(
         channel_id: welcomeScreen.channelId,
         description: welcomeScreen.description,
         emoji_id: welcomeScreen.emojiId,
-        emoji_name: welcomeScreen.emojiName,
+        emoji_name: welcomeScreen.emojiName
       })),
-      description: options.description,
-    },
-  );
+      description: options.description
+    }
+  )
 
-  return bot.transformers.welcomeScreen(bot, result);
+  return bot.transformers.welcomeScreen(bot, result)
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen */
 export interface ModifyGuildWelcomeScreen {
   /** Whether the welcome screen is enabled */
-  enabled?: boolean | null;
+  enabled?: boolean | null
   /** Channels linked in the welcome screen and their display options */
-  welcomeScreen?: WelcomeScreenChannel[] | null;
+  welcomeScreen?: WelcomeScreenChannel[] | null
   /** The server description to show in the welcome screen */
-  description?: string | null;
+  description?: string | null
 }
 
 export interface WelcomeScreenChannel {
   /** The channel's id */
-  channelId: BigString;
+  channelId: BigString
   /** The emoji id, if the emoji is custom */
-  emojiId?: BigString;
+  emojiId?: BigString
   /** The emoji name if custom, the unicode character if standard, or `null` if no emoji is set */
-  emojiName?: string;
+  emojiName?: string
   /** The description shown for the channel */
-  description: string;
+  description: string
 }

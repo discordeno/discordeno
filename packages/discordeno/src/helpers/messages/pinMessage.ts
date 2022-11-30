@@ -1,5 +1,5 @@
-import type { Bot } from "../../bot.ts";
-import { BigString } from "../../types/shared.ts";
+import type { Bot } from '../../bot.js'
+import { BigString } from '../../types/shared.js'
 
 /**
  * Pins a message in a channel.
@@ -22,8 +22,8 @@ import { BigString } from "../../types/shared.ts";
 export async function pinMessage(bot: Bot, channelId: BigString, messageId: BigString, reason?: string): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
-    "PUT",
+    'PUT',
     bot.constants.routes.CHANNEL_PIN(channelId, messageId),
-    reason ? { reason } : undefined,
-  );
+    reason ? { reason } : undefined
+  )
 }

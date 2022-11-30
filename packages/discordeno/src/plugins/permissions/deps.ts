@@ -1,2 +1,3 @@
-export * from "../../mod.ts";
-export type { BotWithCache } from "../cache/mod.ts";
+export * from '../../mod.js'
+export type { BotWithCache } from '../cache/mod.js'
+
