@@ -13,5 +13,8 @@
     "eslint-config-discordeno": "*",
     "tsconfig": "*",
     "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "@types/node": "^18.11.9"
   }
 }
