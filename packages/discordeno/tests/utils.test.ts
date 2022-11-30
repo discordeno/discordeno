@@ -1,15 +1,15 @@
-import { Collection, formatImageURL, hasProperty, iconBigintToHash, iconHashToBigInt, validateLength } from '../mod.ts'
-import { decode, encode } from '../util/base64.ts'
-import { bigintToSnowflake, snowflakeToBigint } from '../util/bigint.ts'
-import { removeTokenPrefix } from '../util/token.ts'
-import { assertEquals, assertExists, assertNotEquals } from './deps.ts'
-import { loadBot } from './mod.ts'
-import { delayUntil } from './utils.ts'
+import { Collection, formatImageURL, hasProperty, iconBigintToHash, iconHashToBigInt, validateLength } from '../mod.js'
+import { decode, encode } from '../util/base64.js'
+import { bigintToSnowflake, snowflakeToBigint } from '../util/bigint.js'
+import { removeTokenPrefix } from '../util/token.js'
+import { assertEquals, assertExists, assertNotEquals } from './deps.js'
+import { loadBot } from './mod.js'
+import { delayUntil } from './utils.js'
 
 Deno.test({
   name: '[token] Remove token prefix when Bot is prefixed.',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     assertEquals('discordeno is best lib', removeTokenPrefix('Bot discordeno is best lib'))
   }
 })
@@ -17,7 +17,7 @@ Deno.test({
 Deno.test({
   name: '[token] Remove token prefix when Bot is NOT prefixed.',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     assertEquals('discordeno is best lib', removeTokenPrefix('discordeno is best lib'))
   }
 })
@@ -25,7 +25,7 @@ Deno.test({
 Deno.test({
   name: '[bigint] - Transform a snowflake string to bigint',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     const text = '130136895395987456'
     const big = 130136895395987456n
     const result = snowflakeToBigint(text)
@@ -38,7 +38,7 @@ Deno.test({
 Deno.test({
   name: '[bigint] - Transform a bigint to a string',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     const text = '130136895395987456'
     const big = 130136895395987456n
     const result = bigintToSnowflake(big)
@@ -51,7 +51,7 @@ Deno.test({
 Deno.test({
   name: '[emoji] Create an emoji url',
   ignore: process.env.TEST_ENV === 'UNIT',
-  async fn (t) {
+  async fn(t) {
     const bot = loadBot()
     assertEquals(
       bot.helpers.getEmojiURL(785403373817823272n, false),
@@ -67,7 +67,7 @@ Deno.test({
 Deno.test({
   name: "[guild] format a guild's icon url",
   ignore: process.env.TEST_ENV === 'UNIT',
-  async fn (t) {
+  async fn(t) {
     const bot = loadBot()
     assertEquals(
       bot.helpers.getGuildIconURL(785384884197392384n, 3837424427068676005442449262648382018748n),
@@ -79,7 +79,7 @@ Deno.test({
 Deno.test({
   name: "[guild] format a guild's banner url",
   ignore: process.env.TEST_ENV === 'UNIT',
-  async fn (t) {
+  async fn(t) {
     const bot = loadBot()
 
     assertEquals(
@@ -94,7 +94,7 @@ Deno.test({
 Deno.test({
   name: "[guild] format a guild's splash url",
   ignore: process.env.TEST_ENV === 'UNIT',
-  async fn (t) {
+  async fn(t) {
     const bot = loadBot()
     assertEquals(
       bot.helpers.getGuildSplashURL(785384884197392384n, 3837424427068676005442449262648382018748n),
@@ -106,7 +106,7 @@ Deno.test({
 Deno.test({
   name: '[utils] format image url',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     assertEquals(formatImageURL('https://skillz.is.pro'), 'https://skillz.is.pro.jpg?size=128')
     assertEquals(formatImageURL('https://skillz.is.pro', 1024), 'https://skillz.is.pro.jpg?size=1024')
     assertEquals(formatImageURL('https://skillz.is.pro', 1024, 'gif'), 'https://skillz.is.pro.gif?size=1024')
@@ -122,7 +122,7 @@ const a_iconBigInt = 3503487521485885045056617826984736090062n
 Deno.test({
   name: '[utils] icon hash to bigint',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     assertEquals(iconHashToBigInt(iconHash), iconBigInt)
   }
 })
@@ -130,7 +130,7 @@ Deno.test({
 Deno.test({
   name: '[utils] icon bigint to hash',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     assertEquals(iconBigintToHash(iconBigInt), iconHash)
   }
 })
@@ -138,7 +138,7 @@ Deno.test({
 Deno.test({
   name: '[utils] icon hash to bigint a_ (animated)',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     assertEquals(iconHashToBigInt(a_iconHash), a_iconBigInt)
   }
 })
@@ -146,7 +146,7 @@ Deno.test({
 Deno.test({
   name: '[utils] icon bigint to hash a_ (animated)',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     assertEquals(iconBigintToHash(a_iconBigInt), a_iconHash)
   }
 })
@@ -154,7 +154,7 @@ Deno.test({
 Deno.test({
   name: '[utils] Validate length is too low',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     assertEquals(validateLength('test', { min: 5 }), false)
   }
 })
@@ -162,7 +162,7 @@ Deno.test({
 Deno.test({
   name: '[utils] Validate length is too high',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     assertEquals(validateLength('test', { max: 3 }), false)
   }
 })
@@ -170,7 +170,7 @@ Deno.test({
 Deno.test({
   name: '[utils] Validate length is NOT just right in between.',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     assertEquals(validateLength('test', { min: 5, max: 3 }), false)
   }
 })
@@ -178,7 +178,7 @@ Deno.test({
 Deno.test({
   name: '[utils] Validate length is NOT too low',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     assertEquals(validateLength('test', { min: 3 }), true)
   }
 })
@@ -186,7 +186,7 @@ Deno.test({
 Deno.test({
   name: '[utils] Validate length is NOT too high',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     assertEquals(validateLength('test', { max: 5 }), true)
   }
 })
@@ -194,7 +194,7 @@ Deno.test({
 Deno.test({
   name: '[utils] Validate length is just right in between.',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     assertEquals(validateLength('test', { min: 3, max: 6 }), true)
   }
 })
@@ -204,7 +204,7 @@ const obj = { prop: 'lts372005' }
 Deno.test({
   name: '[utils] hasProperty does HAVE property',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     assertEquals(hasProperty(obj, 'prop'), true)
   }
 })
@@ -212,7 +212,7 @@ Deno.test({
 Deno.test({
   name: '[utils] hasProperty does NOT HAVE property',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     assertEquals(hasProperty(obj, 'lts372005'), false)
   }
 })
@@ -220,7 +220,7 @@ Deno.test({
 Deno.test({
   name: '[member] format a members avatar url',
   ignore: process.env.TEST_ENV === 'UNIT',
-  async fn (t) {
+  async fn(t) {
     const bot = loadBot()
 
     assertEquals(
@@ -235,7 +235,7 @@ Deno.test({
 Deno.test({
   name: '[collection] Create a collection',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     const collection = new Collection()
 
     assertExists(collection)
@@ -243,7 +243,7 @@ Deno.test({
     await t.step({
       name: '[collection] collection values to array',
       ignore: process.env.TEST_ENV === 'INTEGRATION',
-      async fn (t) {
+      async fn(t) {
         const testCollection = new Collection([['best', 'tri'], ['proficient', 'yui']])
 
         assertEquals(testCollection.array(), ['tri', 'yui'])
@@ -253,7 +253,7 @@ Deno.test({
     await t.step({
       name: '[collection] get a random value',
       ignore: process.env.TEST_ENV === 'INTEGRATION',
-      async fn (t) {
+      async fn(t) {
         const testCollection = new Collection([['best', 'tri']])
 
         assertEquals(['best', 'tri'].includes(testCollection.random() ?? ''), true)
@@ -264,7 +264,7 @@ Deno.test({
     await t.step({
       name: '[collection] Set a value without maxSize',
       ignore: process.env.TEST_ENV === 'INTEGRATION',
-      async fn (t) {
+      async fn(t) {
         collection.set('best developer', 'triformine')
         assertEquals(collection.size, 1)
         assertEquals(collection.get('best developer'), 'triformine')
@@ -273,14 +273,14 @@ Deno.test({
 
         await t.step({
           name: '[collection] get the value of the first element',
-          async fn (t) {
+          async fn(t) {
             assertEquals(collection.first(), 'triformine')
           }
         })
 
         await t.step({
           name: '[collection] get the value of the last element',
-          async fn (t) {
+          async fn(t) {
             assertEquals(collection.last(), 'yes')
           }
         })
@@ -290,7 +290,7 @@ Deno.test({
     await t.step({
       name: '[collection] Create a collection with maxSize',
       ignore: process.env.TEST_ENV === 'INTEGRATION',
-      async fn (t) {
+      async fn(t) {
         const maxSize = 2
 
         const maxCollection = new Collection([], {
@@ -303,7 +303,7 @@ Deno.test({
 
         await t.step({
           name: '[collection] Test if maxSize works properly',
-          async fn (t) {
+          async fn(t) {
             maxCollection.set('foo', 'bar')
             maxCollection.set('me', 'you')
 
@@ -315,7 +315,7 @@ Deno.test({
 
             await t.step({
               name: '[collection] Test if forceSet ignore maxSize',
-              async fn (t) {
+              async fn(t) {
                 maxCollection.forceSet('this', 'not')
 
                 assertEquals(maxCollection.size, 3)
@@ -331,7 +331,7 @@ Deno.test({
     await t.step({
       name: '[collection] find by key or value',
       ignore: process.env.TEST_ENV === 'INTEGRATION',
-      async fn (t) {
+      async fn(t) {
         assertEquals(testCollection.find((v, k) => v === 2), 2)
         assertEquals(testCollection.find((v, k) => k === 'b'), 2)
       }
@@ -340,7 +340,7 @@ Deno.test({
     await t.step({
       name: '[collection] filter by key or value',
       ignore: process.env.TEST_ENV === 'INTEGRATION',
-      async fn (t) {
+      async fn(t) {
         assertEquals(testCollection.filter((v, k) => v === 3).size, 1)
         assertEquals(testCollection.filter((v, k) => k === 'd').size, 0)
       }
@@ -349,7 +349,7 @@ Deno.test({
     await t.step({
       name: '[collection] map',
       ignore: process.env.TEST_ENV === 'INTEGRATION',
-      async fn (t) {
+      async fn(t) {
         assertEquals(testCollection.map((k, v) => `${v}${k}`), ['a1', 'b2', 'c3'])
       }
     })
@@ -357,7 +357,7 @@ Deno.test({
     await t.step({
       name: '[collection] some',
       ignore: process.env.TEST_ENV === 'INTEGRATION',
-      async fn (t) {
+      async fn(t) {
         assertEquals(testCollection.some((v, _) => v === 1), true)
         assertEquals(testCollection.some((v, _) => v === 4), false)
       }
@@ -366,7 +366,7 @@ Deno.test({
     await t.step({
       name: '[collection] every',
       ignore: process.env.TEST_ENV === 'INTEGRATION',
-      async fn (t) {
+      async fn(t) {
         assertEquals(testCollection.every((v, _) => v !== 0), true)
         assertEquals(testCollection.every((v, _) => v === 1), false)
       }
@@ -375,7 +375,7 @@ Deno.test({
     await t.step({
       name: '[collection] reduce',
       ignore: process.env.TEST_ENV === 'INTEGRATION',
-      async fn (t) {
+      async fn(t) {
         assertEquals(testCollection.reduce((acc, val) => acc + val, 0), 6)
       }
     })
@@ -383,7 +383,7 @@ Deno.test({
     await t.step({
       name: '[collection] start sweeper',
       ignore: process.env.TEST_ENV === 'INTEGRATION',
-      async fn (t) {
+      async fn(t) {
         const sweeperCollection = new Collection([['a', 1], ['b', 2]], {
           sweeper: {
             filter: (v, _) => v === 1,
@@ -412,7 +412,7 @@ Deno.test({
 Deno.test({
   name: '[utils] encode some bytes to base64',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     assertEquals(encode(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])), 'AQIDBAUGBwgJCg==')
   }
 })
@@ -420,7 +420,7 @@ Deno.test({
 Deno.test({
   name: '[utils] decode some base64 to bytes',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     assertEquals(decode('AQIDBAUGBwgJCg=='), new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
   }
 })
@@ -428,7 +428,7 @@ Deno.test({
 Deno.test({
   name: '[utils] encode/decode base64 roundtrip should work',
   ignore: process.env.TEST_ENV === 'INTEGRATION',
-  async fn (t) {
+  async fn(t) {
     for (let i = 0; i < 10; i++) {
       const bytes = []
       for (let i = 0; i < 10000; i++) {

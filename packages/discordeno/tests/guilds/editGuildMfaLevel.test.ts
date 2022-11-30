@@ -1,11 +1,11 @@
-import { MfaLevels } from '../../mod.ts'
-import { assertEquals } from '../deps.ts'
-import { loadBot } from '../mod.ts'
+import { MfaLevels } from '../../mod.js'
+import { assertEquals } from '../deps.js'
+import { loadBot } from '../mod.js'
 
 Deno.test({
   name: '[guild] edit guild mfa level',
   ignore: process.env.TEST_ENV === 'UNIT',
-  async fn (t) {
+  async fn(t) {
     const bot = loadBot()
     const guild = await bot.helpers.createGuild({ name: 'test' })
     await bot.helpers.editGuildMfaLevel(guild.id, MfaLevels.Elevated, 'test')

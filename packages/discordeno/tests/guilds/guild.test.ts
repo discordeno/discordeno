@@ -1,11 +1,11 @@
-import { ChannelTypes } from '../../mod.ts'
-import { assertEquals, assertExists, assertNotEquals, assertRejects } from '../deps.ts'
-import { loadBot } from '../mod.ts'
+import { ChannelTypes } from '../../mod.js'
+import { assertEquals, assertExists, assertNotEquals, assertRejects } from '../deps.js'
+import { loadBot } from '../mod.js'
 
 Deno.test({
   name: '[guild] Create a guild',
   ignore: process.env.TEST_ENV === 'UNIT',
-  async fn (t) {
+  async fn(t) {
     const bot = loadBot()
 
     // Delete the oldest guild(most likely to have finished tests).
@@ -97,7 +97,7 @@ Deno.test({
       // Create an emoji
       await t.step({
         name: '[emoji] create an emoji',
-        async fn (t) {
+        async fn(t) {
           const bot = loadBot()
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: 'blamewolf',
@@ -115,7 +115,7 @@ Deno.test({
       // delete an emoji without a reason
       await t.step({
         name: '[emoji] delete an emoji without a reason',
-        async fn (t) {
+        async fn(t) {
           const bot = loadBot()
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: 'blamewolf',
@@ -135,7 +135,7 @@ Deno.test({
       // delete an emoji with a reason
       await t.step({
         name: '[emoji] delete an emoji with a reason',
-        async fn (t) {
+        async fn(t) {
           const bot = loadBot()
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: 'blamewolf',
@@ -155,7 +155,7 @@ Deno.test({
       // edit an emoji name
       await t.step({
         name: '[emoji] Edit an emoji name',
-        async fn (t) {
+        async fn(t) {
           const bot = loadBot()
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: 'blamewolf',
@@ -182,7 +182,7 @@ Deno.test({
       // edit an emoji roles
       await t.step({
         name: "[emoji] Edit an emoji's roles",
-        async fn (t) {
+        async fn(t) {
           const bot = loadBot()
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: 'blamewolf',
@@ -213,7 +213,7 @@ Deno.test({
       // get an emoji
       await t.step({
         name: '[emoji] get an emoji',
-        async fn (t) {
+        async fn(t) {
           const bot = loadBot()
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: 'blamewolf',
@@ -234,7 +234,7 @@ Deno.test({
 
       await t.step({
         name: '[emoji] get all guild emojis',
-        async fn (t) {
+        async fn(t) {
           const bot = loadBot()
           const emoji = await bot.helpers.createEmoji(guild.id, {
             name: 'blamewolf',

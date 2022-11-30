@@ -1,12 +1,12 @@
-import { ChannelTypes } from '../../mod.ts'
-import { assertExists, assertNotEquals } from '../deps.ts'
-import { loadBot } from '../mod.ts'
-import { CACHED_COMMUNITY_GUILD_ID } from '../utils.ts'
+import { ChannelTypes } from '../../mod.js'
+import { assertExists, assertNotEquals } from '../deps.js'
+import { loadBot } from '../mod.js'
+import { CACHED_COMMUNITY_GUILD_ID } from '../utils.js'
 
 Deno.test({
   name: '[stage] Create a stage instance',
   ignore: process.env.TEST_ENV === 'UNIT',
-  async fn (t) {
+  async fn(t) {
     const bot = loadBot()
     const stage = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, {
       name: 'createinstance',

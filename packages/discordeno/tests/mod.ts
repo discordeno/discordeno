@@ -1,9 +1,9 @@
-import { createBot, createRestManager } from '../mod.ts'
-import { dotenv } from './deps.ts'
+import { createBot, createRestManager } from '../mod.js'
+import { dotenv } from './deps.js'
 
 dotenv({ export: true, path: `${Deno.cwd()}/.env` })
 
-export function loadBot () {
+export function loadBot() {
   const token = process.env.DISCORD_TOKEN
   if (!token) throw new Error('Token was not provided.')
 

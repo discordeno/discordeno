@@ -1,6 +1,6 @@
-// import { memoryBenchmarks } from "../../benchmarks/index.ts";
-// import enableCachePlugin from "../../plugins/cache/mod.ts";
-// import { loadBot } from "../mod.ts";
+// import { memoryBenchmarks } from "../../benchmarks/index.js";
+// import enableCachePlugin from "../../plugins/cache/mod.js";
+// import { loadBot } from "../mod.js";
 
 // Deno.test({
 //   name: "[Memory] Benchmark memory tests",

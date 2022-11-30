@@ -1,12 +1,12 @@
-import { AutoModerationActionType, AutoModerationEventTypes, AutoModerationTriggerTypes } from '../../types/discord.ts'
-import { assertEquals, assertExists } from '../deps.ts'
-import { loadBot } from '../mod.ts'
-import { CACHED_COMMUNITY_GUILD_ID } from '../utils.ts'
+import { AutoModerationActionType, AutoModerationEventTypes, AutoModerationTriggerTypes } from '../../types/discord.js'
+import { assertEquals, assertExists } from '../deps.js'
+import { loadBot } from '../mod.js'
+import { CACHED_COMMUNITY_GUILD_ID } from '../utils.js'
 
 Deno.test({
   name: '[automod] Run automod tests',
   ignore: process.env.TEST_ENV === 'UNIT',
-  async fn (t) {
+  async fn(t) {
     const bot = loadBot()
 
     await t.step('[automod] Create a MessageSend rule for Keyword with BlockMessage action.', async () => {

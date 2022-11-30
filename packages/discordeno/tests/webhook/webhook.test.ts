@@ -1,11 +1,11 @@
-import { assertEquals, assertExists, assertNotEquals } from '../deps.ts'
-import { loadBot } from '../mod.ts'
-import { CACHED_COMMUNITY_GUILD_ID } from '../utils.ts'
+import { assertEquals, assertExists, assertNotEquals } from '../deps.js'
+import { loadBot } from '../mod.js'
+import { CACHED_COMMUNITY_GUILD_ID } from '../utils.js'
 
 Deno.test({
   name: '[webhooks] Webhook related tests',
   ignore: process.env.TEST_ENV === 'UNIT',
-  async fn (t) {
+  async fn(t) {
     const bot = loadBot()
 
     // Create a channel

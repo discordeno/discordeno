@@ -1,10 +1,10 @@
-import { assertExists } from '../../deps.ts'
-import { loadBot } from '../../mod.ts'
+import { assertExists } from '../../deps.js'
+import { loadBot } from '../../mod.js'
 
 Deno.test({
   name: '[member] get dm channel and send a message',
   ignore: process.env.TEST_ENV === 'UNIT',
-  async fn (t) {
+  async fn(t) {
     const bot = loadBot()
     // Itoh Alt ID
     const channel = await bot.helpers.getDmChannel(750661528360845322n)

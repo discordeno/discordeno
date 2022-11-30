@@ -1,6 +1,6 @@
 // START FILE FOR REST PROCESS
-import { BASE_URL, createRestManager } from '../mod.ts'
-import { dotenv } from './deps.ts'
+import { BASE_URL, createRestManager } from '../mod.js'
+import { dotenv } from './deps.js'
 
 dotenv({ export: true, path: `${Deno.cwd()}/.env` })
 
@@ -31,7 +31,7 @@ for await (const conn of server) {
   handleRequest(conn)
 }
 
-async function handleRequest (conn: Deno.Conn) {
+async function handleRequest(conn: Deno.Conn) {
   // This "upgrades" a network connection into an HTTP connection.
   const httpConn = Deno.serveHttp(conn)
   // Each request sent over the HTTP connection will be yielded as an async

@@ -1,11 +1,11 @@
-import { assertEquals } from '../deps.ts'
-import { loadBot } from '../mod.ts'
-import { CACHED_COMMUNITY_GUILD_ID } from '../utils.ts'
+import { assertEquals } from '../deps.js'
+import { loadBot } from '../mod.js'
+import { CACHED_COMMUNITY_GUILD_ID } from '../utils.js'
 
 Deno.test({
   name: '[stickers] Get guild stickers',
   ignore: process.env.TEST_ENV === 'UNIT',
-  async fn (t) {
+  async fn(t) {
     const bot = loadBot()
     const sticker1 = await bot.helpers.createGuildSticker(CACHED_COMMUNITY_GUILD_ID, {
       name: 'sticker 1',

@@ -1,12 +1,12 @@
-import { ChannelTypes, ScheduledEventEntityType, ScheduledEventPrivacyLevel } from '../../../mod.ts'
-import { assertEquals, assertExists, assertRejects } from '../../deps.ts'
-import { loadBot } from '../../mod.ts'
-import { CACHED_COMMUNITY_GUILD_ID } from '../../utils.ts'
+import { ChannelTypes, ScheduledEventEntityType, ScheduledEventPrivacyLevel } from '../../../mod.js'
+import { assertEquals, assertExists, assertRejects } from '../../deps.js'
+import { loadBot } from '../../mod.js'
+import { CACHED_COMMUNITY_GUILD_ID } from '../../utils.js'
 
 Deno.test({
   name: '[events] unit tests for events',
   ignore: process.env.TEST_ENV === 'UNIT',
-  async fn (t) {
+  async fn(t) {
     const bot = loadBot()
 
     // create a guild scheduled event with external entity with an end time
@@ -192,7 +192,7 @@ Deno.test({
     await t.step(
       {
         name: '[scheduled event] edit a scheduled event',
-        async fn (t) {
+        async fn(t) {
           const channel = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, {
             name: 'entity',
             type: ChannelTypes.GuildStageVoice

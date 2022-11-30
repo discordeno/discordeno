@@ -1,6 +1,6 @@
-import { assertEquals, assertExists, assertRejects } from '../../deps.ts'
-import { loadBot } from '../../mod.ts'
-import { CACHED_COMMUNITY_GUILD_ID } from '../../utils.ts'
+import { assertEquals, assertExists, assertRejects } from '../../deps.js'
+import { loadBot } from '../../mod.js'
+import { CACHED_COMMUNITY_GUILD_ID } from '../../utils.js'
 
 // THIS IS WOLF, IF ANYTHING BREAKS BLAME HIM!
 const wolfID = 270273690074087427n
@@ -13,20 +13,20 @@ const ltsID = 379643682984296448n
 Deno.test({
   name: '[member] ban member test group',
   ignore: process.env.TEST_ENV === 'UNIT',
-  async fn (t) {
+  async fn(t) {
     const bot = loadBot()
 
     // ban user from guild without reason
     await t.step({
       name: '[member] ban user from guild without reason',
       ignore: process.env.TEST_ENV === 'INTEGRATION',
-      async fn (t) {
+      async fn(t) {
         await bot.helpers.banMember(CACHED_COMMUNITY_GUILD_ID, wolfID)
 
         // get a single user's ban
         await t.step({
           name: "[member] get a single user's ban",
-          async fn (t) {
+          async fn(t) {
             assertExists(await bot.helpers.getBan(CACHED_COMMUNITY_GUILD_ID, wolfID))
           }
         })
@@ -37,7 +37,7 @@ Deno.test({
     await t.step({
       name: '[member] ban member from guild with a reason',
       ignore: process.env.TEST_ENV === 'INTEGRATION',
-      async fn (t) {
+      async fn(t) {
         await bot.helpers.banMember(CACHED_COMMUNITY_GUILD_ID, ianID, { reason: 'Blame Wolf' })
         assertExists(await bot.helpers.getBan(CACHED_COMMUNITY_GUILD_ID, ianID))
       }
@@ -53,7 +53,7 @@ Deno.test({
     await t.step({
       name: '[member] get bans on a server',
       ignore: process.env.TEST_ENV === 'INTEGRATION',
-      async fn (t) {
+      async fn(t) {
         const bans = await bot.helpers.getBans(CACHED_COMMUNITY_GUILD_ID)
         assertEquals(bans.size > 1, true)
       }
@@ -63,7 +63,7 @@ Deno.test({
     await t.step({
       name: '[member] fetch a single member by id',
       ignore: process.env.TEST_ENV === 'INTEGRATION',
-      async fn (t) {
+      async fn(t) {
         const member = await bot.helpers.getMember(CACHED_COMMUNITY_GUILD_ID, bot.id)
 
         assertExists(member?.id)
@@ -74,7 +74,7 @@ Deno.test({
     await t.step({
       name: '[member] unban member from guild',
       ignore: process.env.TEST_ENV === 'INTEGRATION',
-      async fn (t) {
+      async fn(t) {
         await Promise.all([
           bot.helpers.unbanMember(CACHED_COMMUNITY_GUILD_ID, wolfID),
           bot.helpers.unbanMember(CACHED_COMMUNITY_GUILD_ID, ianID)

@@ -1,10 +1,10 @@
-import { assertEquals, assertExists } from '../deps.ts'
-import { loadBot } from '../mod.ts'
+import { assertEquals, assertExists } from '../deps.js'
+import { loadBot } from '../mod.js'
 
 Deno.test({
   name: '[misc] Get gateway bot information',
   ignore: process.env.TEST_ENV === 'UNIT',
-  async fn (t) {
+  async fn(t) {
     const bot = loadBot()
     const data = await bot.helpers.getGatewayBot()
 
