@@ -14,7 +14,7 @@ export async function runProxyMethod<T = any> (
   bucketId?: string
 ): Promise<ProxyMethodResponse<T>> {
   rest.debug(
-    `[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${retryCount} | Bucket ID: ${bucketId} | Body: ${JSON.stringify(
+    `[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${retryCount} | Bucket ID: ${bucketId ?? 'N/A'} | Body: ${JSON.stringify(
       body
     )
     }`
@@ -29,6 +29,7 @@ export async function runProxyMethod<T = any> (
         method,
         reject: (data: RestRequestRejection) => {
           const { body: b, ...r } = data
+          // eslint-disable-next-line prefer-promise-reject-errors
           reject({ body: data.status !== 204 ? JSON.parse(b ?? '{}') : (undefined as unknown as T), ...r })
         },
         respond: (data: RestRequestResponse) => {

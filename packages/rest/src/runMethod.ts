@@ -16,7 +16,7 @@ export async function runMethod<T = any> (
 ): Promise<T> {
   rest.debug(
     `[REST - RequestCreate] Method: ${method} | URL: ${route} | Retry Count: ${options?.retryCount ?? 0
-    } | Bucket ID: ${options?.bucketId} | Body: ${JSON.stringify(
+    } | Bucket ID: ${options?.bucketId ?? 'N/A'} | Body: ${JSON.stringify(
       body
     )
     }`
@@ -55,9 +55,9 @@ export async function runMethod<T = any> (
     })
 
     if (!result.ok) {
-      const err = await result.json().catch(() => { })
+      const err: RestRequestRejection = await result.json().catch(() => { })
       // Legacy Handling to not break old code or when body is missing
-      if (!err?.body) throw new Error(`Error: ${err.message ?? result.statusText}`)
+      if (!err?.body) throw new Error(`Error: ${(err as unknown as Error).message ?? result.statusText}`)
       throw rest.convertRestError(errorStack, err)
     }
 

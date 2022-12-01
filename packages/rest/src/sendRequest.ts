@@ -132,14 +132,15 @@ export async function sendRequest<T> (rest: RestManager, options: RestSendReques
       return JSON.parse(json)
     }
   } catch (error) {
+    const stringifiedError = (error as Error).toString?.()
     // SOMETHING WENT WRONG, LOG AND RESPOND WITH ERROR
-    rest.debug(`[REST - fetchFailed] Payload: ${JSON.stringify(options)} | Error: ${error}`)
+    rest.debug(`[REST - fetchFailed] Payload: ${JSON.stringify(options)} | Error: ${stringifiedError}`)
     options.reject?.({
       ok: false,
       status: 599,
-      error: `Internal Proxy Error\n${error}`
+      error: `Internal Proxy Error\n${stringifiedError}`
     })
 
-    throw new Error(`Something went wrong in sendRequest\n${error}`)
+    throw new Error(`Something went wrong in sendRequest\n${stringifiedError}`)
   }
 }
