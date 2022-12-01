@@ -1,7 +1,7 @@
+import { addCacheCollections, BotWithCache } from './addCacheCollections.js'
 import { Bot, Collection, DiscordGuildEmojisUpdate } from './deps.js'
-import { addCacheCollections, BotWithCache } from './src/addCacheCollections.js'
-import { setupCacheEdits } from './src/setupCacheEdits.js'
-import { setupCacheRemovals } from './src/setupCacheRemovals.js'
+import { setupCacheEdits } from './setupCacheEdits.js'
+import { setupCacheRemovals } from './setupCacheRemovals.js'
 
 // PLUGINS MUST TAKE A BOT ARGUMENT WHICH WILL BE MODIFIED
 export function enableCachePlugin<B extends Bot = Bot> (rawBot: B): BotWithCache<B> {
@@ -147,8 +147,8 @@ export function enableCachePlugin<B extends Bot = Bot> (rawBot: B): BotWithCache
 }
 
 export default enableCachePlugin
-export * from './src/addCacheCollections.js'
-export * from './src/dispatchRequirements.js'
-export * from './src/setupCacheEdits.js'
-export * from './src/setupCacheRemovals.js'
-export * from './src/sweepers.js'
+export * from './addCacheCollections.js'
+export * from './dispatchRequirements.js'
+export * from './setupCacheEdits.js'
+export * from './setupCacheRemovals.js'
+export * from './sweepers.js'

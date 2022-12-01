@@ -1,0 +1,28 @@
+{
+  "name": "@discordeno/helpers-plugin",
+  "version": "18.0.0-alpha.1",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "swc src --out-dir dist",
+    "build-types": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
+    "release-build": "yarn build && yarn build-types",
+    "fmt": "prettier -w ./src",
+    "lint": "eslint \"src/**/*.ts*\"",
+    "test-types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.3.21",
+    "eslint": "^8.0.1",
+    "eslint-config-discordeno": "*",
+    "tsconfig": "*",
+    "@discordeno/types": "18.0.0-alpha.1",
+    "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "@types/node": "^18.11.9"
+  }
+}
