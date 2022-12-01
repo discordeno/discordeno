@@ -218,3 +218,14 @@ export interface OverwriteReadable {
   /** Permission bit set */
   deny?: PermissionStrings[]
 }
+
+export interface GetGatewayBot {
+  url: string
+  shards: number
+  sessionStartLimit: {
+    total: number
+    remaining: number
+    resetAfter: number
+    maxConcurrency: number
+  }
+}

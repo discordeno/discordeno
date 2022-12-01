@@ -1,7 +1,7 @@
-import { createLeakyBucket } from '../../util/bucket.js'
+import { createLeakyBucket } from '@discordeno/utils'
 import { GatewayManager } from './gatewayManager.js'
 
-export function prepareBuckets (gateway: GatewayManager) {
+export function prepareBuckets (gateway: GatewayManager): void {
   for (let i = 0; i < gateway.gatewayBot.sessionStartLimit.maxConcurrency; ++i) {
     gateway.buckets.set(i, {
       workers: [],

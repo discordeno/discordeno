@@ -1,7 +1,7 @@
-import { delay } from '../../util/utils.js'
+import { delay } from '@discordeno/utils'
 import { GatewayManager } from './gatewayManager.js'
 
-export async function stop (gateway: GatewayManager, code: number, reason: string) {
+export async function stop (gateway: GatewayManager, code: number, reason: string): Promise<void> {
   gateway.manager.shards.forEach((shard) => shard.close(code, reason))
 
   await delay(5000)

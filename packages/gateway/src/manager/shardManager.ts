@@ -1,6 +1,5 @@
-import { DiscordGatewayPayload } from '../../types/discord.js'
-import { PickPartial } from '../../types/shared.js'
-import { Collection } from '../../util/collection.js'
+import { DiscordGatewayPayload, PickPartial } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import { CreateShard, createShard } from '../shard/createShard.js'
 import { Shard, ShardGatewayConfig } from '../shard/types.js'
 
@@ -16,6 +15,7 @@ export type ShardManager = ReturnType<typeof createShardManager>
  * This does not manage a specific range of Shard but the provided Shards on create or when an identify is requested.
  * The aim of this is to provide an easy to use manager which can be used by workers or any other kind of separate process.
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function createShardManager (options: CreateShardManager) {
   return {
     // ----------
@@ -74,7 +74,7 @@ export function createShardManager (options: CreateShardManager) {
         this.shards.set(shardId, shard)
       }
 
-      return await shard.identify()
+      return shard.identify()
     },
 
     /** Kill a shard.
@@ -85,7 +85,7 @@ export function createShardManager (options: CreateShardManager) {
       if (shard == null) return
 
       this.shards.delete(shardId)
-      return await shard.shutdown()
+      return shard.shutdown()
     },
 
     /** This function communicates with the parent manager,

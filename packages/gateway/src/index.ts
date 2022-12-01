@@ -1,2 +1,2 @@
-export * from './manager/mod.js'
-export * from './shard/mod.js'
+export * from './manager/index.js'
+export * from './shard/index.js'

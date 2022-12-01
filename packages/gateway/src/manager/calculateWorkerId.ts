@@ -1,6 +1,6 @@
 import { GatewayManager } from './gatewayManager.js'
 
-export function calculateWorkerId (manager: GatewayManager, shardId: number) {
+export function calculateWorkerId (manager: GatewayManager, shardId: number): number {
   // Ignore decimal numbers.
   let workerId = Math.floor((shardId) / manager.shardsPerWorker)
   // If the workerId overflows the maximal allowed workers we by default just use to last worker.

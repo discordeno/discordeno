@@ -1,8 +1,5 @@
-import { GetGatewayBot } from '../../transformers/gatewayBot.js'
-import { DiscordGatewayPayload } from '../../types/discord.js'
-import { PickPartial } from '../../types/shared.js'
-import { LeakyBucket } from '../../util/bucket.js'
-import { Collection } from '../../util/collection.js'
+import { DiscordGatewayPayload, GetGatewayBot, PickPartial } from '@discordeno/types'
+import { Collection, LeakyBucket } from '@discordeno/utils'
 import { CreateShard } from '../shard/createShard.js'
 import { Shard, ShardGatewayConfig } from '../shard/types.js'
 import { calculateTotalShards } from './calculateTotalShards.js'
@@ -28,6 +25,7 @@ export type GatewayManager = ReturnType<typeof createGatewayManager>
  * provided, it will fallback to a default which should be suitable for most
  * bots.
  */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function createGatewayManager (
   options: PickPartial<CreateGatewayManager, 'handleDiscordPayload' | 'gatewayBot' | 'gatewayConfig'>
 ) {
@@ -74,6 +72,7 @@ export function createGatewayManager (
     /** This is where the Shards get stored.
      * This will not be used when having a custom workers solution.
      */
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     manager: {} as ShardManager,
     /** Delay in milliseconds to wait before spawning next shard.
      * OPTIMAL IS ABOVE 5100. YOU DON'T WANT TO HIT THE RATE LIMIT!!!
@@ -189,6 +188,7 @@ export function createGatewayManager (
 
     requestIdentify: async (shardId) => {
       // TODO: improve
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       await gatewayManager.buckets.get(shardId % gatewayManager.gatewayBot.sessionStartLimit.maxConcurrency)!.leak
         .acquire(1)
     }

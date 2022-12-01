@@ -1,14 +1,14 @@
-import { GetGatewayBot } from '../../transformers/gatewayBot.js'
-import { DiscordGatewayPayload, DiscordReady } from '../../types/discord.js'
-import { Collection } from '../../util/collection.js'
+import { DiscordGatewayPayload, DiscordReady, GetGatewayBot } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
+import { inflateSync } from 'node:zlib'
 import { createShard } from '../shard/createShard.js'
-import { decompressWith } from '../shard/deps.js'
 import { handleMessage } from '../shard/handleMessage.js'
 import { Shard, ShardSocketCloseCodes } from '../shard/types.js'
 import { GatewayManager } from './gatewayManager.js'
 
 export type Resharder = ReturnType<typeof activateResharder>
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function activateResharder (options: ActivateResharderOptions) {
   const resharder = {
     // ----------
@@ -19,13 +19,13 @@ export function activateResharder (options: ActivateResharderOptions) {
      *
      * @default 28800000 (8 hours)
      */
-    checkInterval: options.checkInterval || 28800000,
+    checkInterval: options.checkInterval ?? 28800000,
 
     /** Gateway manager which is currently processing all shards and events. */
     gateway: options.gatewayManager,
 
     /** Timeout of the reshard checker. */
-    intervalId: undefined as number | undefined,
+    intervalId: undefined as NodeJS.Timer | undefined,
 
     /** Percentage at which resharding should occur.
      * @default 80
@@ -112,28 +112,30 @@ export function activate (resharder: Resharder): void {
     throw new Error('[RESHARDER] Cannot activate the resharder more than one time.')
   }
 
-  resharder.intervalId = setInterval(async () => {
-    console.log('[Resharding] Checking if resharding is needed.')
+  resharder.intervalId = setInterval(() => {
+    void (async () => {
+      console.log('[Resharding] Checking if resharding is needed.')
 
-    const result = await resharder.getGatewayBot()
+      const result = await resharder.getGatewayBot()
 
-    // 2500 is the max amount of guilds a single shard can handle
-    // 1000 is the amount of guilds discord uses to determine how many shards to recommend.
-    // This algo helps check if your bot has grown enough to reshard.
-    const percentage = (2500 * result.shards) /
+      // 2500 is the max amount of guilds a single shard can handle
+      // 1000 is the amount of guilds discord uses to determine how many shards to recommend.
+      // This algo helps check if your bot has grown enough to reshard.
+      const percentage = (2500 * result.shards) /
       (resharder.gateway.manager.totalShards * 1000) * 100
-    // Less than necessary% being used so do nothing
-    if (percentage < resharder.percentage) return
+      // Less than necessary% being used so do nothing
+      if (percentage < resharder.percentage) return
 
-    // Don't have enough identify rate limits to reshard
-    if (result.sessionStartLimit.remaining < result.shards) return
+      // Don't have enough identify rate limits to reshard
+      if (result.sessionStartLimit.remaining < result.shards) return
 
-    // MULTI-SERVER BOTS OVERRIDE THIS IF YOU NEED TO RESHARD SERVER BY SERVER
-    return await resharder.reshard(result)
+      // MULTI-SERVER BOTS OVERRIDE THIS IF YOU NEED TO RESHARD SERVER BY SERVER
+      return await resharder.reshard(result)
+    })()
   }, resharder.checkInterval)
 }
 
-export async function reshard (resharder: Resharder, gatewayBot: GetGatewayBot) {
+export async function reshard (resharder: Resharder, gatewayBot: GetGatewayBot): Promise<void> {
   console.log('[Resharding] Starting the reshard process.')
 
   resharder.gateway.gatewayBot = gatewayBot
@@ -157,16 +159,16 @@ export async function reshard (resharder: Resharder, gatewayBot: GetGatewayBot) 
 }
 
 /** Handler that by default will save the new shard id for each guild this becomes ready in new gateway. This can be overridden to save the shard ids in a redis cache layer or whatever you prefer. These ids will be used later to update all guilds. */
-export async function markNewGuildShardId (guildIds: bigint[], shardId: number) {
+export async function markNewGuildShardId (guildIds: bigint[], shardId: number): Promise<void> {
   // PLACEHOLDER TO LET YOU MARK A GUILD ID AND SHARD ID FOR LATER USE ONCE RESHARDED
 }
 
 /** Handler that by default does not do anything since by default the library will not cache. */
-export async function reshardingEditGuildShardIds () {
+export async function reshardingEditGuildShardIds (): Promise<void> {
   // PLACEHOLDER TO LET YOU UPDATE CACHED GUILDS
 }
 
-export async function tellWorkerToPrepare (resharder: Resharder, shardId: number) {
+export async function tellWorkerToPrepare (resharder: Resharder, shardId: number): Promise<void> {
   // First create a shard without identifyin.
   const shard = createShard({
     ...resharder.gateway.manager.createShardOptions,
@@ -183,11 +185,8 @@ export async function tellWorkerToPrepare (resharder: Resharder, shardId: number
       // If message compression is enabled,
       // Discord might send zlib compressed payloads.
       if (shard.gatewayConfig.compress && message instanceof Blob) {
-        message = decompressWith(
-          new Uint8Array(await message.arrayBuffer()),
-          0,
-          (slice: Uint8Array) => new TextDecoder().decode(slice)
-        )
+        // @ts-expect-error
+        message = inflateSync(await message.arrayBuffer()).toString()
       }
 
       // Safeguard incase decompression failed to make a string.
@@ -207,10 +206,10 @@ export async function tellWorkerToPrepare (resharder: Resharder, shardId: number
   await shard.identify()
 
   // Tell the manager that this shard is online
-  resharder.shardIsPending(resharder, shard)
+  void resharder.shardIsPending(resharder, shard)
 }
 
-export async function shardIsPending (resharder: Resharder, shard: Shard) {
+export async function shardIsPending (resharder: Resharder, shard: Shard): Promise<void> {
   // Save this in pending at the moment, until all shards are online
   resharder.pendingShards.set(shard.id, shard)
 

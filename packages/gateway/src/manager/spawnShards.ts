@@ -1,7 +1,7 @@
 import { GatewayManager } from './gatewayManager.js'
 
 /** Begin spawning shards. */
-export function spawnShards (gateway: GatewayManager) {
+export function spawnShards (gateway: GatewayManager): void {
   // PREPARES ALL SHARDS IN SPECIFIC BUCKETS
   gateway.prepareBuckets()
 
