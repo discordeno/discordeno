@@ -1,6 +1,6 @@
 import { DiscordMessage, Optionalize } from '@discordeno/types'
+import { CHANNEL_MENTION_REGEX } from '@discordeno/utils'
 import { Bot } from '../bot.js'
-import { CHANNEL_MENTION_REGEX } from '../util/constants.js'
 import { MemberToggles } from './toggles/member.js'
 
 export function transformMessage (bot: Bot, payload: DiscordMessage) {

@@ -1,7 +1,6 @@
-import { DiscordThreadMember } from '@discordeno/types'
+import { BigString, DiscordThreadMember } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { ThreadMember } from '../../../transformers/threadMember.js'
-import { BigString } from '../../../types/shared.js'
 
 /**
  * Gets a thread member by their user ID.

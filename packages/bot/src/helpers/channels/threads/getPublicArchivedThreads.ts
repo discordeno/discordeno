@@ -1,7 +1,6 @@
-import { DiscordListArchivedThreads } from '@discordeno/types'
+import { BigString, DiscordListArchivedThreads } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import type { Bot } from '../../../bot.js'
-import { BigString } from '../../../types/shared.js'
-import { Collection } from '../../../util/collection.js'
 import { ActiveThreads } from './getActiveThreads.js'
 
 /**

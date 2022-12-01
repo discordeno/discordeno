@@ -1,7 +1,7 @@
+import { BigString, CreateApplicationCommand, DiscordApplicationCommand } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import type { Bot } from '../../../bot.js'
 import { ApplicationCommand } from '../../../transformers/applicationCommand.js'
-import { BigString, CreateApplicationCommand, DiscordApplicationCommand } from '../../../types/index.js'
-import { Collection } from '../../../util/collection.js'
 
 /**
  * Re-registers the list of application commands registered in a guild, overwriting the previous commands completely.

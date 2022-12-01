@@ -1,9 +1,11 @@
+import {
+  DiscordCreateApplicationCommand
+} from '@discordeno/types'
 import { Bot } from '../../bot.js'
 import {
   CreateApplicationCommand,
-  DiscordCreateApplicationCommand,
   isContextApplicationCommand
-} from '../../types/index.js'
+} from '../../types.js'
 
 export function transformCreateApplicationCommandToDiscordCreateApplicationCommand (
   bot: Bot,

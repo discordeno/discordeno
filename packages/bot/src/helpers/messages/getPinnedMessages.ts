@@ -1,7 +1,7 @@
 import { BigString, DiscordMessage } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import type { Bot } from '../../bot.js'
 import { Message } from '../../transformers/message.js'
-import { Collection } from '../../util/collection.js'
 
 /**
  * Gets the pinned messages for a channel.

@@ -1,7 +1,7 @@
 import { BigString, DiscordEmoji } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import type { Bot } from '../../bot.js'
 import { Emoji } from '../../transformers/emoji.js'
-import { Collection } from '../../util/collection.js'
 
 /**
  * Gets the list of emojis for a guild.

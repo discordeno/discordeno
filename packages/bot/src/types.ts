@@ -1,8 +1,7 @@
-import { AllowedMentions, FileContent, MessageComponents } from '@discordeno/types'
 import {
-  ApplicationCommandTypes, InteractionResponseTypes,
-  Localization, PermissionStrings
-} from '@discordeno/types/src/shared.js'
+  AllowedMentions, ApplicationCommandTypes, FileContent, InteractionResponseTypes,
+  Localization, MessageComponents, PermissionStrings
+} from '@discordeno/types'
 import { ApplicationCommandOption } from './transformers/applicationCommandOption.js'
 import { ApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js'
 import { Embed } from './transformers/embed.js'

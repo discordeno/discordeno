@@ -1,13 +1,11 @@
-import { DiscordScheduledEvent } from '@discordeno/types'
+import {
+  BigString, DiscordScheduledEvent, ScheduledEventEntityType,
+  ScheduledEventPrivacyLevel,
+  ScheduledEventStatus
+} from '@discordeno/types'
 import { Bot } from '../../../bot.js'
 import { WithReason } from '../../../index.js'
 import { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
-import {
-  BigString,
-  ScheduledEventEntityType,
-  ScheduledEventPrivacyLevel,
-  ScheduledEventStatus
-} from '../../../types/shared.js'
 
 /**
  * Edits a scheduled event.

@@ -1,7 +1,6 @@
-import { DiscordGuildWidget } from '@discordeno/types'
+import { BigString, DiscordGuildWidget } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { GuildWidget } from '../../../transformers/widget.js'
-import { BigString } from '../../../types/shared.js'
 
 /**
  * Gets the guild widget by guild ID.

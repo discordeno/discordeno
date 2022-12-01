@@ -1,6 +1,6 @@
 import { BigString, DiscordBan } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import type { Bot } from '../../bot.js'
-import { Collection } from '../../util/collection.js'
 import { Ban } from './getBan.js'
 
 /**

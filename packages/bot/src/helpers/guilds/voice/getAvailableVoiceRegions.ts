@@ -1,7 +1,7 @@
 import { DiscordVoiceRegion } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import type { Bot } from '../../../bot.js'
 import { VoiceRegions } from '../../../transformers/voiceRegion.js'
-import { Collection } from '../../../util/collection.js'
 
 /**
  * Gets the list of available voice regions.

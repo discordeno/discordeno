@@ -1,7 +1,6 @@
-import { DiscordScheduledEvent } from '@discordeno/types'
+import { BigString, DiscordScheduledEvent } from '@discordeno/types'
 import { Bot } from '../../../bot.js'
 import { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
-import { BigString } from '../../../types/shared.js'
 
 /**
  * Gets a scheduled event by its ID.

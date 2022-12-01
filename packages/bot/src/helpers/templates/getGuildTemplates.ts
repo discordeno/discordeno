@@ -2,7 +2,7 @@ import type { Bot } from '../../bot.js'
 import { Template } from '../../transformers/template.js'
 import { DiscordTemplate } from '@discordeno/types'
 import { BigString } from '@discordeno/types'
-import { Collection } from '../../util/collection.js'
+import { Collection } from '@discordeno/utils'
 
 /**
  * Gets the list of templates for a guild.

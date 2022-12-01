@@ -1,6 +1,7 @@
 import { DiscordSticker } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import { Bot } from '../../bot.js'
-import { Collection, Sticker } from '../../index.js'
+import { Sticker } from '../../index.js'
 
 /**
  * Returns an array of sticker objects for the given guild.

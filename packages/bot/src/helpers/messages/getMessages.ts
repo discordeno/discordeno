@@ -1,8 +1,8 @@
 import { BigString, DiscordMessage } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import type { Bot } from '../../bot.js'
 import { Message } from '../../transformers/message.js'
-import { Collection } from '../../util/collection.js'
-import { hasProperty } from '../../util/utils.js'
+import { hasProperty } from '../../utils/utils.js'
 
 /**
  * Gets multiple messages from a channel.

@@ -1,5 +1,6 @@
 import { ActivityTypes, DiscordGatewayPayload, PickPartial, PresenceStatus } from '@discordeno/types'
 import { API_VERSION, createLeakyBucket, LeakyBucket } from '@discordeno/utils'
+import { WebSocket } from 'ws'
 import { calculateSafeRequests } from './calculateSafeRequests.js'
 import { close } from './close.js'
 import { connect } from './connect.js'

@@ -3,8 +3,8 @@ import {
   DiscordInteractionDataOption,
   DiscordInteractionDataResolved, Optionalize
 } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import { Bot } from '../bot.js'
-import { Collection } from '../util/collection.js'
 import { Attachment } from './attachment.js'
 import { Member, User } from './member.js'
 import { Message } from './message.js'

@@ -1,8 +1,7 @@
-import { DiscordScheduledEvent } from '@discordeno/types'
+import { BigString, DiscordScheduledEvent, ScheduledEventEntityType, ScheduledEventPrivacyLevel } from '@discordeno/types'
 import { Bot } from '../../../bot.js'
 import { WithReason } from '../../../index.js'
 import { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
-import { BigString, ScheduledEventEntityType, ScheduledEventPrivacyLevel } from '../../../types/shared.js'
 
 /**
  * Creates a scheduled event in a guild.

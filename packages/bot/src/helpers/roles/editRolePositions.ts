@@ -1,7 +1,7 @@
 import { BigString, DiscordRole } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import { Bot } from '../../bot.js'
 import { Role } from '../../transformers/role.js'
-import { Collection } from '../../util/collection.js'
 
 /**
  * Edits the positions of a set of roles.

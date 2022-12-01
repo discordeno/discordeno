@@ -1,7 +1,6 @@
-import { DiscordGuildWidgetSettings } from '@discordeno/types'
+import { BigString, DiscordGuildWidgetSettings } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { GuildWidgetSettings } from '../../../transformers/widgetSettings.js'
-import { BigString } from '../../../types/shared.js'
 
 // TODO: Use `options` instead of `enabled` and `channelId`.
 

@@ -1,8 +1,7 @@
-import { DiscordThreadMember } from '@discordeno/types'
+import { BigString, DiscordThreadMember } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import type { Bot } from '../../../bot.js'
 import { ThreadMember } from '../../../transformers/threadMember.js'
-import { BigString } from '../../../types/shared.js'
-import { Collection } from '../../../util/collection.js'
 
 /**
  * Gets the list of thread members for a thread.

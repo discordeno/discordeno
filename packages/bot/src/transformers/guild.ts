@@ -1,7 +1,7 @@
 import { DiscordGuild, Optionalize } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import { Bot } from '../bot.js'
 import type { Emoji } from '../transformers/emoji.js'
-import { Collection } from '../util/collection.js'
 import { GuildToggles } from './toggles/guild.js'
 
 export function transformGuild (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) {

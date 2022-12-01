@@ -1,7 +1,6 @@
-import { DiscordAutoModerationRule } from '@discordeno/types'
+import { BigString, DiscordAutoModerationRule } from '@discordeno/types'
 import { Bot } from '../../../bot.js'
 import { AutoModerationRule } from '../../../transformers/automodRule.js'
-import { BigString } from '../../../types/shared.js'
 
 /**
  * Gets an automod rule by its ID.

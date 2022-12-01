@@ -1,7 +1,6 @@
-import { DiscordMessage } from '@discordeno/types'
+import { DiscordMessage, InteractionCallbackData, InteractionResponseTypes } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { Message } from '../../../transformers/message.js'
-import { InteractionCallbackData, InteractionResponseTypes } from '../../../types/index.js'
 
 /**
  * Edits the initial message response to an interaction.

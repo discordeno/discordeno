@@ -1,7 +1,7 @@
 // START FILE FOR REST PROCESS
-import { config as dotenv } from 'https://deno.land/x/dotenv@v3.2.0/mod.js'
+import { config as dotenv } from 'https://deno.land/x/dotenv@v3.2.0/index.js'
 
-import { BASE_URL, Collection, createRestManager } from './mod.js'
+import { BASE_URL, Collection, createRestManager } from './index.js'
 
 dotenv({ export: true, path: `${Deno.cwd()}/.env` })
 

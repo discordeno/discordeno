@@ -1,6 +1,5 @@
-import { DiscordFollowedChannel } from '@discordeno/types'
+import { BigString, DiscordFollowedChannel } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
-import { BigString } from '../../../types/shared.js'
 
 /**
  * Follows an announcement channel, allowing messages posted within it to be cross-posted into the target channel.

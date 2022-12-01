@@ -1,8 +1,7 @@
-import { DiscordMessage } from '@discordeno/types'
+import { BigString, DiscordMessage, InteractionResponseTypes } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { InteractionCallbackData } from '../../../index.js'
 import { Message } from '../../../transformers/message.js'
-import { BigString, InteractionResponseTypes } from '../../../types/shared.js'
 
 /**
  * Edits a follow-up message to an interaction.

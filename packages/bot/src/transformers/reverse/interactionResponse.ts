@@ -1,5 +1,5 @@
+import { DiscordInteractionResponse, InteractionResponse } from '@discordeno/types'
 import { Bot } from '../../bot.js'
-import { DiscordInteractionResponse, InteractionResponse } from '../../types/index.js'
 
 export function transformInteractionResponseToDiscordInteractionResponse (
   bot: Bot,

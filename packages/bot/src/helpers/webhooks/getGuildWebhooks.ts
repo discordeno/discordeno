@@ -1,7 +1,7 @@
 import { BigString, DiscordWebhook } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import type { Bot } from '../../bot.js'
 import { Webhook } from '../../transformers/webhook.js'
-import { Collection } from '../../util/collection.js'
 
 /**
  * Gets the list of webhooks for a guild.

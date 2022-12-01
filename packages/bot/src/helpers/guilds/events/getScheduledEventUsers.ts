@@ -1,8 +1,7 @@
-import { DiscordMember, DiscordUser } from '@discordeno/types'
+import { BigString, DiscordMember, DiscordUser } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import { Bot } from '../../../bot.js'
 import { Member, User } from '../../../transformers/member.js'
-import { BigString } from '../../../types/shared.js'
-import { Collection } from '../../../util/collection.js'
 
 // TODO: This endpoint discards certain data from the result.
 //  Create `ScheduledEventUser` type and parse the data to it.

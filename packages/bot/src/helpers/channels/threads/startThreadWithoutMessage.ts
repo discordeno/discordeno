@@ -1,8 +1,7 @@
-import { DiscordChannel } from '@discordeno/types'
+import { BigString, ChannelTypes, DiscordChannel } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { WithReason } from '../../../index.js'
 import { Channel } from '../../../transformers/channel.js'
-import { BigString, ChannelTypes } from '../../../types/shared.js'
 
 /**
  * Creates a thread without using a message as the thread's point of origin.

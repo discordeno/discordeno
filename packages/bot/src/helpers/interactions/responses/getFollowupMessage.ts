@@ -1,7 +1,6 @@
-import { DiscordMessage } from '@discordeno/types'
+import { BigString, DiscordMessage } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { Message } from '../../../transformers/message.js'
-import { BigString } from '../../../types/shared.js'
 
 /**
  * Gets a follow-up message to an interaction by the ID of the message.

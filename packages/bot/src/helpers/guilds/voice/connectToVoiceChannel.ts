@@ -1,5 +1,5 @@
+import { AtLeastOne, BigString, GatewayOpcodes } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
-import { AtLeastOne, BigString, GatewayOpcodes } from '../../../types/shared.js'
 
 /**
  * Connects the bot user to a voice or stage channel.

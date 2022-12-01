@@ -1,8 +1,7 @@
-import { DiscordGuildApplicationCommandPermissions } from '@discordeno/types'
+import { BigString, DiscordGuildApplicationCommandPermissions } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import type { Bot } from '../../../bot.js'
 import { ApplicationCommandPermission } from '../../../transformers/applicationCommandPermission.js'
-import { BigString } from '../../../types/shared.js'
-import { Collection } from '../../../util/collection.js'
 
 /**
  * Gets the permissions of all application commands registered in a guild by the ID of the guild.

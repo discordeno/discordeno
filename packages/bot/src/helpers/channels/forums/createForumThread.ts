@@ -1,8 +1,7 @@
-import { DiscordChannel } from '@discordeno/types'
+import { AllowedMentions, BigString, DiscordChannel, FileContent, MessageComponents, WithReason } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { Channel } from '../../../transformers/channel.js'
 import { Embed } from '../../../transformers/embed.js'
-import { AllowedMentions, BigString, FileContent, MessageComponents, WithReason } from '../../../types/index.js'
 
 /**
  * Creates a new thread in a forum channel, and sends a message within the created thread.

@@ -1,7 +1,6 @@
-import { DiscordStageInstance } from '@discordeno/types'
+import { BigString, DiscordStageInstance } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { StageInstance } from '../../../transformers/stageInstance.js'
-import { BigString } from '../../../types/shared.js'
 
 /**
  * Gets the stage instance associated with a stage channel, if one exists.

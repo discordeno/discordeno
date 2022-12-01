@@ -1,6 +1,6 @@
+import { calculateShardId } from '@discordeno/gateway'
 import { BigString, GatewayIntents, GatewayOpcodes } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
-import { calculateShardId } from '../../util/calculateShardId.js'
 
 /**
  * Fetches the list of members for a guild over the gateway.

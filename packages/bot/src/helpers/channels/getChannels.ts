@@ -1,7 +1,7 @@
 import { BigString, DiscordChannel } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import type { Bot } from '../../bot.js'
 import { Channel } from '../../transformers/channel.js'
-import { Collection } from '../../util/collection.js'
 
 /**
  * Gets the list of channels for a guild.

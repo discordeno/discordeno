@@ -1,7 +1,7 @@
 import { BigString, DiscordMemberWithUser } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import type { Bot } from '../../bot.js'
 import { Member } from '../../transformers/member.js'
-import { Collection } from '../../util/collection.js'
 
 // TODO: make options optional
 

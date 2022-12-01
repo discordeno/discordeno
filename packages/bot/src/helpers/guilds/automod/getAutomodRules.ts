@@ -1,8 +1,7 @@
-import { DiscordAutoModerationRule } from '@discordeno/types'
+import { BigString, DiscordAutoModerationRule } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import { Bot } from '../../../bot.js'
 import { AutoModerationRule } from '../../../transformers/automodRule.js'
-import { BigString } from '../../../types/shared.js'
-import { Collection } from '../../../util/collection.js'
 
 /**
  * Gets the list of automod rules for a guild.

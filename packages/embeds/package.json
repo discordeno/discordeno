@@ -1,5 +1,5 @@
 {
-  "name": "embeds",
+  "name": "@discordeno/embeds",
   "version": "18.0.0-alpha.1",
   "main": "./src/index.ts",
   "types": "./src/index.ts",

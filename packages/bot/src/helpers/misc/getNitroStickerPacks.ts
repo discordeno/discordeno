@@ -1,7 +1,7 @@
 import { DiscordStickerPack } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import { Bot } from '../../bot.js'
 import { StickerPack } from '../../transformers/sticker.js'
-import { Collection } from '../../util/collection.js'
 
 /**
  * Returns the list of sticker packs available to Nitro subscribers.

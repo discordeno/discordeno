@@ -1,5 +1,5 @@
-import type { Bot } from '../../../bot.js'
-import { BigString } from '../../../types/shared.js'
+import type { Bot } from '.@discordeno/types'
+import { BigString } from '@discordeno/types'
 
 /**
  * Deletes all reactions for all emojis from a message.

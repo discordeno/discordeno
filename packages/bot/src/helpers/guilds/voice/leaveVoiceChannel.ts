@@ -1,5 +1,5 @@
+import { BigString, GatewayOpcodes } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
-import { BigString, GatewayOpcodes } from '../../../types/shared.js'
 
 /**
  * Leaves the voice channel the bot user is currently in.

@@ -1,7 +1,7 @@
 import { DiscordListActiveThreads } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import type { Bot } from '../../../bot.js'
 import { BigString, Channel, ThreadMember } from '../../../index.js'
-import { Collection } from '../../../util/collection.js'
 
 /**
  * Gets the list of all active threads for a guild.
