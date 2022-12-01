@@ -1,4 +1,4 @@
-import { PickPartial } from '../types/shared.js'
+import { PickPartial } from '@discordeno/types'
 import { delay } from './utils.js'
 
 /** A Leaky Bucket.
@@ -165,7 +165,7 @@ async function acquire (bucket: LeakyBucket, amount: number, highPriority = fals
 
   // In order to not subtract too much from the tokens,
   // calculate what is actually needed to subtract.
-  const toSubtract = (amount % bucket.refillAmount) || amount
+  const toSubtract = amount % bucket.refillAmount ?? amount
   bucket.tokensState -= toSubtract
 
   // Allow the next acquire to happen.

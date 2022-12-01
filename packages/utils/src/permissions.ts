@@ -1,17 +1,17 @@
-import { BitwisePermissionFlags, PermissionStrings } from '../types/shared.js'
+import { BitwisePermissionFlags, PermissionStrings } from '@discordeno/types'
 
 /** This function converts a bitwise string to permission strings */
-export function calculatePermissions (permissionBits: bigint) {
+export function calculatePermissions (permissionBits: bigint): PermissionStrings[] {
   return Object.keys(BitwisePermissionFlags).filter((permission) => {
     // Since Object.keys() not only returns the permission names but also the bit values we need to return false if it is a Number
-    if (Number(permission)) return false
+    if (typeof permission === 'number') return false
     // Check if permissionBits has this permission
     return permissionBits & BigInt(BitwisePermissionFlags[permission as PermissionStrings])
   }) as PermissionStrings[]
 }
 
 /** This function converts an array of permissions into the bitwise string. */
-export function calculateBits (permissions: PermissionStrings[]) {
+export function calculateBits (permissions: PermissionStrings[]): string {
   return permissions
     .reduce((bits, perm) => {
       bits |= BigInt(BitwisePermissionFlags[perm])

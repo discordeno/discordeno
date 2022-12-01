@@ -7,6 +7,9 @@
   ],
   "scripts": {
     "build": "turbo run build",
+    "fmt": "turbo run fmt",
+    "build-types": "turbo run fmt",
+    "release-build": "turbo run release-build",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
