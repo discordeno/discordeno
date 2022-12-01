@@ -1,6 +1,5 @@
+import { DiscordThreadMember, DiscordThreadMemberGuildCreate, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordThreadMember, DiscordThreadMemberGuildCreate } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 
 export function transformThreadMember (bot: Bot, payload: DiscordThreadMember) {
   const threadMember = {

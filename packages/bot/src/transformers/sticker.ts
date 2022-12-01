@@ -1,6 +1,5 @@
+import { DiscordSticker, DiscordStickerPack, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordSticker, DiscordStickerPack } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 
 export function transformSticker (bot: Bot, payload: DiscordSticker) {
   const sticker = {

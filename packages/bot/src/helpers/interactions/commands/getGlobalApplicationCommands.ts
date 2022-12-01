@@ -1,6 +1,6 @@
+import { DiscordApplicationCommand } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { ApplicationCommand } from '../../../transformers/applicationCommand.js'
-import { DiscordApplicationCommand } from '../../../types/discord.js'
 import { Collection } from '../../../util/collection.js'
 
 // TODO: Implement `with_localizations` options field.

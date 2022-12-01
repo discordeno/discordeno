@@ -1,7 +1,6 @@
+import { BigString, DiscordRole } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { Role } from '../../transformers/role.js'
-import { DiscordRole } from '../../types/discord.js'
-import { BigString } from '../../types/shared.js'
 import { Collection } from '../../util/collection.js'
 
 /**

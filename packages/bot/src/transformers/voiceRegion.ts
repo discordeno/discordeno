@@ -1,6 +1,5 @@
+import { DiscordVoiceRegion, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordVoiceRegion } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 
 // TODO: Rename `VoiceRegions` to `VoiceRegion`.
 

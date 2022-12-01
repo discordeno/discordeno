@@ -1,4 +1,4 @@
-import { DiscordMember } from '../../types/discord.js'
+import { DiscordMember } from '@discordeno/types'
 import { ToggleBitfield } from './ToggleBitfield.js'
 
 export const MemberToggle = {

@@ -1,6 +1,6 @@
 import type { Bot } from '../../bot.js'
 import { Guild } from '../../transformers/guild.js'
-import { DiscordGuild } from '../../types/discord.js'
+import { DiscordGuild } from '@discordeno/types'
 
 /**
  * Creates a guild from a template.

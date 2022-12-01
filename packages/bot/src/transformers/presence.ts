@@ -1,6 +1,5 @@
+import { DiscordPresenceUpdate, Optionalize, PresenceStatus } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordPresenceUpdate } from '../types/discord.js'
-import { Optionalize, PresenceStatus } from '../types/shared.js'
 import { UserToggles } from './toggles/user.js'
 
 export function transformPresence (bot: Bot, payload: DiscordPresenceUpdate) {

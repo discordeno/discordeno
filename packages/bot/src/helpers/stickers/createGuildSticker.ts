@@ -1,6 +1,6 @@
+import { FileContent, WithReason } from '@discordeno/types'
 import { Bot } from '../../bot.js'
 import { Sticker } from '../../transformers/sticker.js'
-import { FileContent, WithReason } from '../../types/discordeno.js'
 
 /**
  * Create a new sticker for the guild.

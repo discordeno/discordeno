@@ -1,5 +1,5 @@
+import { DiscordGatewayPayload, DiscordGuildBanAddRemove } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
-import { DiscordGatewayPayload, DiscordGuildBanAddRemove } from '../../types/discord.js'
 
 export async function handleGuildBanRemove (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordGuildBanAddRemove

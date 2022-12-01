@@ -1,6 +1,5 @@
+import { DiscordIntegrationCreateUpdate, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordIntegrationCreateUpdate } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 
 export function transformIntegration (bot: Bot, payload: DiscordIntegrationCreateUpdate) {
   const integration = {

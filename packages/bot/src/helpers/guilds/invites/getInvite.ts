@@ -1,6 +1,6 @@
+import { DiscordInviteMetadata } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
-import { BigString, ScheduledEvent, TargetTypes, User } from '../../../mod.js'
-import { DiscordInviteMetadata } from '../../../types/discord.js'
+import { BigString, ScheduledEvent, TargetTypes, User } from '../../../index.js'
 
 export interface BaseInvite {
   code: string

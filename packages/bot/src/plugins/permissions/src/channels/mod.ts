@@ -5,11 +5,11 @@ import { deleteChannelPermissionOverride } from './deleteChannelPermissionOverri
 import { editChannel } from './editChannel.js'
 import { editChannelPermissionOverrides } from './editChannelPermissionOverrides.js'
 import { followAnnouncementChannel } from './followAnnouncementChannel.js'
-import { forums } from './forums/mod.js'
+import { forums } from './forums/index.js'
 import { getChannelWebhooks } from './getChannelWebhooks.js'
-import { stages } from './stages/mod.js'
+import { stages } from './stages/index.js'
 import { swapChannels } from './swapChannels.js'
-import { threads } from './threads/mod.js'
+import { threads } from './threads/index.js'
 
 export function channels (bot: BotWithCache) {
   forums(bot)

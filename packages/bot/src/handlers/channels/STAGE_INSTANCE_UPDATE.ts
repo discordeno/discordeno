@@ -1,5 +1,5 @@
+import { DiscordGatewayPayload, DiscordStageInstance } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
-import { DiscordGatewayPayload, DiscordStageInstance } from '../../types/discord.js'
 
 export function handleStageInstanceUpdate (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordStageInstance

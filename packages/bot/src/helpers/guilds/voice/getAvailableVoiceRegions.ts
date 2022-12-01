@@ -1,6 +1,6 @@
+import { DiscordVoiceRegion } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { VoiceRegions } from '../../../transformers/voiceRegion.js'
-import { DiscordVoiceRegion } from '../../../types/discord.js'
 import { Collection } from '../../../util/collection.js'
 
 /**

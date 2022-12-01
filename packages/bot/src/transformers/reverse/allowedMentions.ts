@@ -1,4 +1,4 @@
-import { AllowedMentions, Bot, DiscordAllowedMentions } from '../../mod.js'
+import { AllowedMentions, Bot, DiscordAllowedMentions } from '../../index.js'
 
 export function transformAllowedMentionsToDiscordAllowedMentions (
   bot: Bot,

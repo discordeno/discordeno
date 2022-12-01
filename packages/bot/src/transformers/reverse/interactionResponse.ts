@@ -1,5 +1,5 @@
 import { Bot } from '../../bot.js'
-import { DiscordInteractionResponse, InteractionResponse } from '../../types/mod.js'
+import { DiscordInteractionResponse, InteractionResponse } from '../../types/index.js'
 
 export function transformInteractionResponseToDiscordInteractionResponse (
   bot: Bot,

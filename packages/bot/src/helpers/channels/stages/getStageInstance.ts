@@ -1,6 +1,6 @@
+import { DiscordStageInstance } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { StageInstance } from '../../../transformers/stageInstance.js'
-import { DiscordStageInstance } from '../../../types/discord.js'
 import { BigString } from '../../../types/shared.js'
 
 /**

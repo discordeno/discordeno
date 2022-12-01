@@ -1,6 +1,6 @@
+import { DiscordApplicationCommand } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
-import { ApplicationCommand, CreateApplicationCommand } from '../../../mod.js'
-import { DiscordApplicationCommand } from '../../../types/discord.js'
+import { ApplicationCommand, CreateApplicationCommand } from '../../../index.js'
 
 /**
  * Creates an application command accessible globally; across different guilds and channels.

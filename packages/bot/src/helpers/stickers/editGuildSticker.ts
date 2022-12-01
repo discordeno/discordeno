@@ -1,7 +1,6 @@
+import { AtLeastOne, WithReason } from '@discordeno/types'
 import { Bot } from '../../bot.js'
 import { Sticker } from '../../transformers/sticker.js'
-import { WithReason } from '../../types/discordeno.js'
-import { AtLeastOne } from '../../types/shared.js'
 
 /**
  * Edit the given sticker.

@@ -1,5 +1,5 @@
+import { BigString, GatewayIntents, GatewayOpcodes } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
-import { BigString, GatewayIntents, GatewayOpcodes } from '../../types/shared.js'
 import { calculateShardId } from '../../util/calculateShardId.js'
 
 /**

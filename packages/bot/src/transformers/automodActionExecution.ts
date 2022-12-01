@@ -1,7 +1,7 @@
+import { DiscordAutoModerationActionExecution, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordAutoModerationActionExecution } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformAutoModerationActionExecution (bot: Bot, payload: DiscordAutoModerationActionExecution) {
   const rule = {
     content: payload.content,

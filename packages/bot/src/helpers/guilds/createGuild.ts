@@ -1,14 +1,12 @@
+import {
+  DefaultMessageNotificationLevels, DiscordGuild, ExplicitContentFilterLevels,
+  SystemChannelFlags,
+  VerificationLevels
+} from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { Channel } from '../../transformers/channel.js'
 import { Guild } from '../../transformers/guild.js'
 import { Role } from '../../transformers/role.js'
-import { DiscordGuild } from '../../types/discord.js'
-import {
-  DefaultMessageNotificationLevels,
-  ExplicitContentFilterLevels,
-  SystemChannelFlags,
-  VerificationLevels
-} from '../../types/shared.js'
 
 /**
  * Creates a guild.

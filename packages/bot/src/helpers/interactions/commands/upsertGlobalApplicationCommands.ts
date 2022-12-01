@@ -1,6 +1,6 @@
 import type { Bot } from '../../../bot.js'
 import { ApplicationCommand } from '../../../transformers/applicationCommand.js'
-import { CreateApplicationCommand, DiscordApplicationCommand } from '../../../types/mod.js'
+import { CreateApplicationCommand, DiscordApplicationCommand } from '../../../types/index.js'
 import { Collection } from '../../../util/collection.js'
 
 /**

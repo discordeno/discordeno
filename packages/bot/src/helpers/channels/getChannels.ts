@@ -1,7 +1,6 @@
+import { BigString, DiscordChannel } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { Channel } from '../../transformers/channel.js'
-import { DiscordChannel } from '../../types/discord.js'
-import { BigString } from '../../types/shared.js'
 import { Collection } from '../../util/collection.js'
 
 /**

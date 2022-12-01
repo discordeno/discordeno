@@ -1,6 +1,6 @@
 import type { Bot } from '../../../bot.js'
-import { InteractionResponse } from '../../../types/discordeno.js'
 import { BigString } from '../../../types/shared.js'
+import { InteractionResponse } from '../@discordeno/types'
 
 /**
  * Sends a response to an interaction.

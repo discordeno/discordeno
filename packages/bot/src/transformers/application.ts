@@ -1,7 +1,7 @@
+import { DiscordApplication, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordApplication } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformApplication (bot: Bot, payload: DiscordApplication) {
   const application = {
     name: payload.name,

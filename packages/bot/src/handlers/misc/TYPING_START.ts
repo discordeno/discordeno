@@ -1,5 +1,5 @@
+import { DiscordGatewayPayload, DiscordTypingStart } from '@discordeno/types'
 import { Bot } from '../../bot.js'
-import { DiscordGatewayPayload, DiscordTypingStart } from '../../types/discord.js'
 
 export function handleTypingStart (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordTypingStart

@@ -1,6 +1,5 @@
+import { DiscordTeam, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordTeam } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 
 export function transformTeam (bot: Bot, payload: DiscordTeam) {
   const id = bot.transformers.snowflake(payload.id)

@@ -1,7 +1,6 @@
+import { DiscordGuild, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
 import type { Emoji } from '../transformers/emoji.js'
-import { DiscordGuild } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 import { Collection } from '../util/collection.js'
 import { GuildToggles } from './toggles/guild.js'
 

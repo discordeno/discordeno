@@ -1,5 +1,5 @@
+import { DiscordGatewayPayload, DiscordMessageReactionRemoveEmoji } from '@discordeno/types'
 import { Bot } from '../../bot.js'
-import { DiscordGatewayPayload, DiscordMessageReactionRemoveEmoji } from '../../types/discord.js'
 
 export async function handleMessageReactionRemoveEmoji (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordMessageReactionRemoveEmoji

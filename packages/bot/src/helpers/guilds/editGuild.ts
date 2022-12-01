@@ -1,14 +1,12 @@
-import type { Bot } from '../../bot.js'
-import { Guild } from '../../transformers/guild.js'
-import { DiscordGuild } from '../../types/discord.js'
 import {
   BigString,
-  DefaultMessageNotificationLevels,
-  ExplicitContentFilterLevels,
+  DefaultMessageNotificationLevels, DiscordGuild, ExplicitContentFilterLevels,
   GuildFeatures,
   SystemChannelFlags,
   VerificationLevels
-} from '../../types/shared.js'
+} from '@discordeno/types'
+import type { Bot } from '../../bot.js'
+import { Guild } from '../../transformers/guild.js'
 
 // TODO: Put the `shardId` parameter before `options`.
 

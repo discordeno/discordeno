@@ -1,7 +1,13 @@
-import { createGatewayManager } from './gateway/manager/gatewayManager.js'
-import * as handlers from './handlers/mod.js'
-import * as helpers from './helpers/mod.js'
-import { createRestManager, CreateRestManagerOptions } from './rest/mod.js'
+import { calculateShardId, createGatewayManager, CreateShardManager, ShardSocketCloseCodes } from '@discordeno/gateway'
+import { createRestManager, CreateRestManagerOptions } from '@discordeno/rest'
+import {
+  AllowedMentions, BigString, DiscordActivity, DiscordAllowedMentions, DiscordApplication, DiscordApplicationCommand, DiscordApplicationCommandOption, DiscordApplicationCommandOptionChoice, DiscordAttachment, DiscordAuditLogEntry, DiscordAutoModerationActionExecution, DiscordAutoModerationRule, DiscordChannel, DiscordComponent, DiscordCreateApplicationCommand, DiscordEmbed, DiscordEmoji, DiscordGatewayPayload, DiscordGetGatewayBot, DiscordGuild, DiscordGuildApplicationCommandPermissions, DiscordGuildWidget, DiscordGuildWidgetSettings, DiscordIntegrationCreateUpdate, DiscordInteraction, DiscordInteractionDataOption, DiscordInteractionResponse, DiscordInviteCreate, DiscordMember, DiscordMessage, DiscordPresenceUpdate, DiscordReady, DiscordRole, DiscordScheduledEvent, DiscordStageInstance, DiscordSticker, DiscordStickerPack, DiscordTeam, DiscordTemplate, DiscordThreadMember, DiscordUser, DiscordVoiceRegion, DiscordVoiceState, DiscordWebhook, DiscordWelcomeScreen, Errors, GatewayDispatchEventNames, GatewayIntents, GetGatewayBot
+} from '@discordeno/types'
+import {
+  baseEndpoints, bigintToSnowflake, calculateBits, calculatePermissions, CHANNEL_MENTION_REGEX, Collection, CONTEXT_MENU_COMMANDS_NAME_REGEX, DISCORDENO_VERSION, DISCORD_SNOWFLAKE_REGEX, getBotIdFromToken, iconBigintToHash, iconHashToBigInt, removeTokenPrefix, SLASH_COMMANDS_NAME_REGEX, snowflakeToBigint, urlToBase64, USER_AGENT, validateLength
+} from '@discordeno/utils'
+import * as handlers from './handlers/index.js'
+import * as helpers from './helpers/index.js'
 import { Activity, transformActivity } from './transformers/activity.js'
 import { Application, transformApplication } from './transformers/application.js'
 import { ApplicationCommand, transformApplicationCommand } from './transformers/applicationCommand.js'
@@ -12,140 +18,19 @@ import { AuditLogEntry, transformAuditLogEntry } from './transformers/auditLogEn
 import { Component, transformComponent } from './transformers/component.js'
 import { Embed, transformEmbed } from './transformers/embed.js'
 import { Emoji, transformEmoji } from './transformers/emoji.js'
-import { GetGatewayBot, transformGatewayBot } from './transformers/gatewayBot.js'
-import { Integration, transformIntegration } from './transformers/integration.js'
+import { transformGatewayBot } from './transformers/gatewayBot.js'
 import {
-  Interaction,
-  InteractionDataOption,
-  transformInteraction,
-  transformInteractionDataOption
-} from './transformers/interaction.js'
-import { Invite, transformInvite } from './transformers/invite.js'
+  ApplicationCommandOptionChoice, AutoModerationActionExecution, AutoModerationRule, Channel, Guild, GuildWidget, GuildWidgetSettings, Integration, Interaction, InteractionDataOption, Invite, Member, Message, PresenceUpdate, Role, ScheduledEvent, StageInstance, Sticker, StickerPack, Team, Template, ThreadMember, transformActivityToDiscordActivity, transformAllowedMentionsToDiscordAllowedMentions, transformApplicationCommandOptionChoice, transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice, transformApplicationCommandOptionToDiscordApplicationCommandOption, transformApplicationCommandToDiscordApplicationCommand, transformApplicationToDiscordApplication, transformAttachmentToDiscordAttachment, transformAutoModerationActionExecution, transformAutoModerationRule, transformChannel, transformComponentToDiscordComponent, transformCreateApplicationCommandToDiscordCreateApplicationCommand, transformEmbedToDiscordEmbed, transformGuild, transformIntegration, transformInteraction, transformInteractionDataOption, transformInteractionResponseToDiscordInteractionResponse, transformInvite, transformMember, transformMemberToDiscordMember, transformMessage, transformPresence, transformRole, transformScheduledEvent, transformStageInstance, transformSticker, transformStickerPack, transformTeam, transformTeamToDiscordTeam, transformTemplate, transformThreadMember, transformUser, transformUserToDiscordUser, transformVoiceRegion, transformVoiceState, transformWebhook, transformWelcomeScreen, transformWidget, transformWidgetSettings, User, VoiceRegions, VoiceState, Webhook, WelcomeScreen
+} from './transformers/index.js'
 import {
-  Channel,
-  Guild,
-  Member,
-  Message,
-  Role,
-  ScheduledEvent,
-  Template,
-  transformApplicationCommandToDiscordApplicationCommand,
-  transformAttachmentToDiscordAttachment,
-  transformChannel,
-  transformGuild,
-  transformMember,
-  transformMessage,
-  transformRole,
-  transformTemplate,
-  transformUser,
-  transformVoiceState,
-  User,
-  VoiceState
-} from './transformers/mod.js'
-import { PresenceUpdate, transformPresence } from './transformers/presence.js'
-import { transformScheduledEvent } from './transformers/scheduledEvent.js'
-import { StageInstance, transformStageInstance } from './transformers/stageInstance.js'
-import { Sticker, StickerPack, transformSticker, transformStickerPack } from './transformers/sticker.js'
-import { transformTeam, Team } from './transformers/team.js'
-import { ThreadMember, transformThreadMember } from './transformers/threadMember.js'
-import { transformVoiceRegion, VoiceRegions } from './transformers/voiceRegion.js'
-import { transformWebhook, Webhook } from './transformers/webhook.js'
-import { transformWelcomeScreen, WelcomeScreen } from './transformers/welcomeScreen.js'
-import { transformWidget, GuildWidget } from './transformers/widget.js'
-import { transformWidgetSettings, GuildWidgetSettings } from './transformers/widgetSettings.js'
-import {
-  DiscordAllowedMentions,
-  DiscordApplicationCommandOptionChoice,
-  DiscordAutoModerationActionExecution,
-  DiscordAutoModerationRule,
-  DiscordCreateApplicationCommand,
-  DiscordEmoji,
-  DiscordGatewayPayload,
-  DiscordInteractionDataOption,
-  DiscordInteractionResponse,
-  DiscordReady,
-  DiscordStickerPack,
-  DiscordTemplate
-  ,
-  DiscordActivity,
-  DiscordApplication,
-  DiscordApplicationCommand,
-  DiscordApplicationCommandOption,
-  DiscordAttachment,
-  DiscordAuditLogEntry,
-  DiscordChannel,
-  DiscordComponent,
-  DiscordEmbed,
-  DiscordGetGatewayBot,
-  DiscordGuild,
-  DiscordGuildApplicationCommandPermissions,
-  DiscordGuildWidget,
-  DiscordGuildWidgetSettings,
-  DiscordIntegrationCreateUpdate,
-  DiscordInteraction,
-  DiscordInviteCreate,
-  DiscordMember,
-  DiscordMessage,
-  DiscordPresenceUpdate,
-  DiscordRole,
-  DiscordScheduledEvent,
-  DiscordStageInstance,
-  DiscordSticker,
-  DiscordTeam,
-  DiscordThreadMember,
-  DiscordUser,
-  DiscordVoiceRegion,
-  DiscordVoiceState,
-  DiscordWebhook,
-  DiscordWelcomeScreen
-} from './types/discord.js'
-import { BigString, Errors, GatewayDispatchEventNames, GatewayIntents } from './types/shared.js'
-import { bigintToSnowflake, snowflakeToBigint } from './util/bigint.js'
-import { calculateShardId } from './util/calculateShardId.js'
-import { Collection } from './util/collection.js'
-import {
-  baseEndpoints,
-  CHANNEL_MENTION_REGEX,
-  CONTEXT_MENU_COMMANDS_NAME_REGEX, DISCORDENO_VERSION, DISCORD_SNOWFLAKE_REGEX, SLASH_COMMANDS_NAME_REGEX,
-  USER_AGENT
-} from './util/constants.js'
-import { iconBigintToHash, iconHashToBigInt } from './util/hash.js'
-import { calculateBits, calculatePermissions } from './util/permissions.js'
-import { urlToBase64 } from './util/urlToBase64.js'
-import { delay, formatImageURL } from './util/utils.js'
-import { validateLength } from './util/validateLength.js'
-
-import { CreateShardManager } from './gateway/manager/shardManager.js'
-import {
-  AllowedMentions,
   CreateApplicationCommand,
-  InteractionResponse,
-  ShardSocketCloseCodes,
-  transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
-  transformApplicationCommandOptionToDiscordApplicationCommandOption
-} from './mod.js'
-import {
-  ApplicationCommandOptionChoice,
-  transformApplicationCommandOptionChoice
-} from './transformers/applicationCommandOptionChoice.js'
-import {
-  AutoModerationActionExecution,
-  transformAutoModerationActionExecution
-} from './transformers/automodActionExecution.js'
-import { AutoModerationRule, transformAutoModerationRule } from './transformers/automodRule.js'
-import { transformActivityToDiscordActivity } from './transformers/reverse/activity.js'
-import { transformAllowedMentionsToDiscordAllowedMentions } from './transformers/reverse/allowedMentions.js'
-import { transformApplicationToDiscordApplication } from './transformers/reverse/application.js'
-import { transformComponentToDiscordComponent } from './transformers/reverse/component.js'
-import { transformCreateApplicationCommandToDiscordCreateApplicationCommand } from './transformers/reverse/createApplicationCommand.js'
-import { transformEmbedToDiscordEmbed } from './transformers/reverse/embed.js'
-import { transformInteractionResponseToDiscordInteractionResponse } from './transformers/reverse/interactionResponse.js'
-import { transformMemberToDiscordMember, transformUserToDiscordUser } from './transformers/reverse/member.js'
-import { transformTeamToDiscordTeam } from './transformers/reverse/team.js'
-import { routes } from './util/routes.js'
-import { getBotIdFromToken, removeTokenPrefix } from './util/token.js'
+  InteractionResponse
+} from './types.js'
+import { routes } from './utils/routes.js'
+import { delay, formatImageURL } from './utils/utils.js'
 
 export function createBot (options: CreateBotOptions): Bot {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const bot = {
     id: options.botId ?? getBotIdFromToken(options.token),
     applicationId: options.applicationId || options.botId || getBotIdFromToken(options.token),
@@ -267,7 +152,7 @@ export function createEventHandlers (
   }
 }
 
-export async function startBot (bot: Bot) {
+export async function startBot (bot: Bot): Promise<void> {
   if (Object.keys(bot.botGatewayData ?? {}).length === 0) {
     bot.gateway.gatewayBot = await bot.helpers.getGatewayBot()
     bot.gateway.lastShardId = bot.gateway.gatewayBot.shards - 1
@@ -277,6 +162,7 @@ export async function startBot (bot: Bot) {
   bot.gateway.spawnShards()
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function createUtils (options: Partial<HelperUtils>) {
   return {
     snowflakeToBigint,
@@ -307,7 +193,7 @@ export interface HelperUtils {
   calculatePermissions: typeof calculatePermissions
 }
 
-export async function stopBot (bot: Bot) {
+export async function stopBot (bot: Bot): Promise<Bot> {
   await bot.gateway.stop(ShardSocketCloseCodes.Shutdown, 'User requested bot stop')
 
   return bot

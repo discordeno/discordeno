@@ -1,6 +1,6 @@
+import { DiscordIntegration } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { Integration } from '../../../transformers/integration.js'
-import { DiscordIntegration } from '../../../types/discord.js'
 import { BigString } from '../../../types/shared.js'
 import { Collection } from '../../../util/collection.js'
 

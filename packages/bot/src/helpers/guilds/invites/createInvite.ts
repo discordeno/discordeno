@@ -1,6 +1,6 @@
+import { DiscordInvite } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
-import { WithReason } from '../../../mod.js'
-import { DiscordInvite } from '../../../types/discord.js'
+import { WithReason } from '../../../index.js'
 import { BigString, TargetTypes } from '../../../types/shared.js'
 import { BaseInvite } from './getInvite.js'
 

@@ -1,6 +1,6 @@
+import { DiscordUser } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { User } from '../../transformers/member.js'
-import { DiscordUser } from '../../types/discord.js'
 
 /**
  * Modifies the bot's username or avatar.

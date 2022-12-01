@@ -1,6 +1,5 @@
+import { DiscordMessage, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordMessage } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 import { CHANNEL_MENTION_REGEX } from '../util/constants.js'
 import { MemberToggles } from './toggles/member.js'
 

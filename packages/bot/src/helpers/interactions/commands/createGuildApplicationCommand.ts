@@ -1,5 +1,5 @@
 import { Bot } from '../../../bot.js'
-import { ApplicationCommand, BigString, CreateApplicationCommand, DiscordApplicationCommand } from '../../../mod.js'
+import { ApplicationCommand, BigString, CreateApplicationCommand, DiscordApplicationCommand } from '../../../index.js'
 
 /**
  * Creates an application command only accessible in a specific guild.

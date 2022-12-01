@@ -1,6 +1,5 @@
+import { DiscordRole, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordRole } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 import { RoleToggles } from './toggles/role.js'
 
 export function transformRole (bot: Bot, payload: { role: DiscordRole } & { guildId: bigint }) {

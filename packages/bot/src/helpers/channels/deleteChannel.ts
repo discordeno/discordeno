@@ -1,5 +1,5 @@
+import { BigString } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
-import { BigString } from '../../types/shared.js'
 
 /**
  * Deletes a channel from within a guild.

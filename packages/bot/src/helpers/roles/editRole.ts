@@ -1,7 +1,6 @@
+import { BigString, DiscordRole, PermissionStrings } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { Role } from '../../transformers/role.js'
-import { DiscordRole } from '../../types/discord.js'
-import { BigString, PermissionStrings } from '../../types/shared.js'
 
 /**
  * Edits a role in a guild.

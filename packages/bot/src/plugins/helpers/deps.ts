@@ -1,1 +1,1 @@
-export * from '../../mod.js'
+export * from '../../index.js'

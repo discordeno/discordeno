@@ -1,7 +1,6 @@
-import { DiscordGetGatewayBot } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
+import { DiscordGetGatewayBot, GetGatewayBot, Optionalize } from '@discordeno/types'
 
-export function transformGatewayBot (payload: DiscordGetGatewayBot) {
+export function transformGatewayBot (payload: DiscordGetGatewayBot): GetGatewayBot {
   const gatewayBot = {
     url: payload.url,
     shards: payload.shards,
@@ -15,5 +14,3 @@ export function transformGatewayBot (payload: DiscordGetGatewayBot) {
 
   return gatewayBot as Optionalize<typeof gatewayBot>
 }
-
-export interface GetGatewayBot extends ReturnType<typeof transformGatewayBot> { }

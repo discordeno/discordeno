@@ -1,5 +1,5 @@
+import { DiscordListArchivedThreads } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
-import { DiscordListArchivedThreads } from '../../../types/discord.js'
 import { BigString } from '../../../types/shared.js'
 import { Collection } from '../../../util/collection.js'
 import { ArchivedThreads, ListArchivedThreads } from './getPublicArchivedThreads.js'

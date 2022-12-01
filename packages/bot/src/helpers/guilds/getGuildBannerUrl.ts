@@ -1,5 +1,5 @@
+import { BigString } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
-import { BigString } from '../../types/shared.js'
 import { ImageFormat, ImageSize } from '../members/getAvatarUrl.js'
 
 // TODO: Move `banner` from `options` into the parameters and rename to `imageHash`.

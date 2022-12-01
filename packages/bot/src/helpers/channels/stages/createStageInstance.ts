@@ -1,7 +1,7 @@
+import { DiscordStageInstance } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
-import { BigString, WithReason } from '../../../mod.js'
+import { BigString, WithReason } from '../../../index.js'
 import { StageInstance } from '../../../transformers/stageInstance.js'
-import { DiscordStageInstance } from '../../../types/discord.js'
 
 /**
  * Creates a stage instance associated with a stage channel.

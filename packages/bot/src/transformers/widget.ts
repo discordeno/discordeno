@@ -1,6 +1,5 @@
+import { DiscordGuildWidget, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordGuildWidget } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 
 export function transformWidget (bot: Bot, payload: DiscordGuildWidget) {
   const widget = {

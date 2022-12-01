@@ -1,5 +1,5 @@
 import type { Bot } from '../../bot.js'
-import { BigString } from '../../types/shared.js'
+import { BigString } from '@discordeno/types'
 
 /**
  * Deletes a template from a guild.

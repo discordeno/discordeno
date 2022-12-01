@@ -1,7 +1,7 @@
+import { DiscordMessage } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
-import { InteractionCallbackData } from '../../../mod.js'
+import { InteractionCallbackData } from '../../../index.js'
 import { Message } from '../../../transformers/message.js'
-import { DiscordMessage } from '../../../types/discord.js'
 import { BigString, InteractionResponseTypes } from '../../../types/shared.js'
 
 /**

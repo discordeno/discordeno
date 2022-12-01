@@ -1,6 +1,6 @@
+import { DiscordAutoModerationRule } from '@discordeno/types'
 import { Bot } from '../../../bot.js'
 import { AutoModerationRule } from '../../../transformers/automodRule.js'
-import { DiscordAutoModerationRule } from '../../../types/discord.js'
 import { BigString } from '../../../types/shared.js'
 import { Collection } from '../../../util/collection.js'
 

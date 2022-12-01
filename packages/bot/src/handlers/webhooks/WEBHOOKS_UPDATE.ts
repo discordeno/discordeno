@@ -1,5 +1,5 @@
+import { DiscordGatewayPayload, DiscordWebhookUpdate } from '@discordeno/types'
 import { Bot } from '../../bot.js'
-import { DiscordGatewayPayload, DiscordWebhookUpdate } from '../../types/discord.js'
 
 export function handleWebhooksUpdate (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordWebhookUpdate

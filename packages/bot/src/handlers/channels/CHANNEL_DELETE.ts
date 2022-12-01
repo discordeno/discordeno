@@ -1,5 +1,5 @@
+import { DiscordChannel, DiscordGatewayPayload } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
-import { DiscordChannel, DiscordGatewayPayload } from '../../types/discord.js'
 
 export async function handleChannelDelete (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordChannel

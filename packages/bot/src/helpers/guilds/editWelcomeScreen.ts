@@ -1,7 +1,6 @@
+import { BigString, DiscordWelcomeScreen } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { WelcomeScreen } from '../../transformers/welcomeScreen.js'
-import { DiscordWelcomeScreen } from '../../types/discord.js'
-import { BigString } from '../../types/shared.js'
 
 /**
  * Edits a guild's welcome screen.

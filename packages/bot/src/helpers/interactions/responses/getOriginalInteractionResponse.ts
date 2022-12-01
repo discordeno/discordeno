@@ -1,6 +1,6 @@
+import { DiscordMessage } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { Message } from '../../../transformers/message.js'
-import { DiscordMessage } from '../../../types/discord.js'
 
 /**
  * Gets the initial message response to an interaction.

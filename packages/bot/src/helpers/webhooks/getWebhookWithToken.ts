@@ -1,7 +1,6 @@
+import { BigString, DiscordWebhook } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { Webhook } from '../../transformers/webhook.js'
-import { DiscordWebhook } from '../../types/discord.js'
-import { BigString } from '../../types/shared.js'
 
 /**
  * Gets a webhook using the webhook token, thereby bypassing the need for authentication + permissions.

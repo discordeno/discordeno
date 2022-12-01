@@ -1,5 +1,5 @@
+import { DiscordAuditLogEntry } from '@discordeno/types'
 import { Bot } from '../../bot.js'
-import { DiscordAuditLogEntry } from '../../types/discord.js'
 import { AuditLogEntry } from '../auditLogEntry.js'
 
 export function transformAuditLogEntryToDiscordAuditLogEntry (bot: Bot, payload: AuditLogEntry): DiscordAuditLogEntry {

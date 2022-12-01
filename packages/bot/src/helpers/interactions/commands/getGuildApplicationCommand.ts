@@ -1,6 +1,6 @@
+import { DiscordApplicationCommand } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { ApplicationCommand } from '../../../transformers/applicationCommand.js'
-import { DiscordApplicationCommand } from '../../../types/discord.js'
 import { BigString } from '../../../types/shared.js'
 
 // TODO: Swap `commandId` and `guildId` parameters.

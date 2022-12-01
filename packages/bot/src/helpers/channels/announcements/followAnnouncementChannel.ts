@@ -1,5 +1,5 @@
+import { DiscordFollowedChannel } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
-import { DiscordFollowedChannel } from '../../../types/discord.js'
 import { BigString } from '../../../types/shared.js'
 
 /**

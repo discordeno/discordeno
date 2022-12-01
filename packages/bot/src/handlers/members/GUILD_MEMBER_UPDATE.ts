@@ -1,5 +1,5 @@
+import { DiscordGatewayPayload, DiscordGuildMemberUpdate } from '@discordeno/types'
 import { Bot } from '../../bot.js'
-import { DiscordGatewayPayload, DiscordGuildMemberUpdate } from '../../types/discord.js'
 
 export async function handleGuildMemberUpdate (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordGuildMemberUpdate

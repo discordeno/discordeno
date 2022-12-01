@@ -1,5 +1,5 @@
+import { DiscordTeam } from '@discordeno/types'
 import { Bot } from '../../bot.js'
-import { DiscordTeam } from '../../types/discord.js'
 import { Team } from '../team.js'
 
 export function transformTeamToDiscordTeam (bot: Bot, payload: Team): DiscordTeam {

@@ -1,6 +1,6 @@
+import { DiscordListActiveThreads } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
-import { BigString, Channel, ThreadMember } from '../../../mod.js'
-import { DiscordListActiveThreads } from '../../../types/discord.js'
+import { BigString, Channel, ThreadMember } from '../../../index.js'
 import { Collection } from '../../../util/collection.js'
 
 /**

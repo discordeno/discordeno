@@ -1,5 +1,5 @@
+import { DiscordGuildWidgetSettings } from '@discordeno/types'
 import { Bot } from '../../bot.js'
-import { DiscordGuildWidgetSettings } from '../../types/discord.js'
 import { GuildWidgetSettings } from '../widgetSettings.js'
 
 export function transformWidgetSettingsToDiscordWidgetSettings (

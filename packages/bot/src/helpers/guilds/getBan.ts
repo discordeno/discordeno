@@ -1,7 +1,6 @@
+import { BigString, DiscordBan } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { User } from '../../transformers/member.js'
-import { DiscordBan } from '../../types/discord.js'
-import { BigString } from '../../types/shared.js'
 
 export interface Ban {
   reason?: string

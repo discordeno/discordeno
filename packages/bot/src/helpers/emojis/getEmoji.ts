@@ -1,7 +1,6 @@
+import { BigString, DiscordEmoji } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { Emoji } from '../../transformers/emoji.js'
-import { DiscordEmoji } from '../../types/discord.js'
-import { BigString } from '../../types/shared.js'
 
 /**
  * Gets an emoji by its ID.

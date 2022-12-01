@@ -1,5 +1,5 @@
+import { DiscordGatewayPayload, DiscordMessageDelete } from '@discordeno/types'
 import { Bot } from '../../bot.js'
-import { DiscordGatewayPayload, DiscordMessageDelete } from '../../types/discord.js'
 
 export async function handleMessageDelete (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordMessageDelete

@@ -1,5 +1,5 @@
+import { DiscordGatewayPayload, DiscordGuild } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
-import { DiscordGatewayPayload, DiscordGuild } from '../../types/discord.js'
 
 export function handleGuildCreate (bot: Bot, data: DiscordGatewayPayload, shardId: number) {
   const payload = data.d as DiscordGuild

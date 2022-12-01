@@ -1,7 +1,6 @@
+import { BigString, DiscordGuild } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { Guild } from '../../transformers/guild.js'
-import { DiscordGuild } from '../../types/discord.js'
-import { BigString } from '../../types/shared.js'
 
 /**
  * Gets a guild by its ID.

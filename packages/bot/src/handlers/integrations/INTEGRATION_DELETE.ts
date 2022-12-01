@@ -1,5 +1,5 @@
+import { DiscordGatewayPayload, DiscordIntegrationDelete } from '@discordeno/types'
 import { Bot } from '../../bot.js'
-import { DiscordGatewayPayload, DiscordIntegrationDelete } from '../../types/discord.js'
 
 export function handleIntegrationDelete (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordIntegrationDelete

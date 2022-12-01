@@ -1,4 +1,4 @@
-import { DiscordGetGatewayBot } from '../../types/discord.js'
+import { DiscordGetGatewayBot } from '@discordeno/types'
 import { GetGatewayBot } from '../gatewayBot.js'
 
 export function transformGatewayBotToDiscordGatewayBot (payload: GetGatewayBot): DiscordGetGatewayBot {

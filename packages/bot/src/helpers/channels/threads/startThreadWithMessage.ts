@@ -1,7 +1,7 @@
+import { DiscordChannel } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
-import { BigString, WithReason } from '../../../mod.js'
+import { BigString, WithReason } from '../../../index.js'
 import { Channel } from '../../../transformers/channel.js'
-import { DiscordChannel } from '../../../types/discord.js'
 
 /**
  * Creates a thread, using an existing message as its point of origin.

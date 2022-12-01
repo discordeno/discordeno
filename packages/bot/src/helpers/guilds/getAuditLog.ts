@@ -1,3 +1,4 @@
+import { AuditLogEvents, BigString, DiscordAuditLog } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { ApplicationCommand } from '../../transformers/applicationCommand.js'
 import { AuditLogEntry } from '../../transformers/auditLogEntry.js'
@@ -7,8 +8,6 @@ import { Integration } from '../../transformers/integration.js'
 import { User } from '../../transformers/member.js'
 import { ScheduledEvent } from '../../transformers/scheduledEvent.js'
 import { Webhook } from '../../transformers/webhook.js'
-import { DiscordAuditLog } from '../../types/discord.js'
-import { AuditLogEvents, BigString } from '../../types/shared.js'
 
 export interface AuditLog {
   auditLogEntries: AuditLogEntry[]

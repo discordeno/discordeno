@@ -1,6 +1,6 @@
+import { DiscordGuildApplicationCommandPermissions } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { ApplicationCommandPermission } from '../../../transformers/applicationCommandPermission.js'
-import { DiscordGuildApplicationCommandPermissions } from '../../../types/discord.js'
 import { BigString } from '../../../types/shared.js'
 import { Collection } from '../../../util/collection.js'
 

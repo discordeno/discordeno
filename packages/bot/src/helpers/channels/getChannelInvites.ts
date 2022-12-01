@@ -1,8 +1,7 @@
+import { BigString, DiscordInviteMetadata, TargetTypes } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
-import { DiscordInviteMetadata } from '../../types/discord.js'
-import { BigString, TargetTypes } from '../../types/shared.js'
 import { Collection } from '../../util/collection.js'
-import { InviteMetadata } from '../guilds/invites/mod.js'
+import { InviteMetadata } from '../guilds/invites/index.js'
 
 /**
  * Gets the list of invites for a channel.

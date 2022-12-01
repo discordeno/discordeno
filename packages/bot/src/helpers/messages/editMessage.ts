@@ -1,10 +1,8 @@
+import { AllowedMentions, BigString, DiscordMessage, FileContent, MessageComponents } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { Attachment } from '../../transformers/attachment.js'
 import { Embed } from '../../transformers/embed.js'
 import { Message } from '../../transformers/message.js'
-import { DiscordMessage } from '../../types/discord.js'
-import { AllowedMentions, FileContent, MessageComponents } from '../../types/discordeno.js'
-import { BigString } from '../../types/shared.js'
 
 /**
  * Edits a message.

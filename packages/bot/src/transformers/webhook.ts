@@ -1,6 +1,5 @@
+import { DiscordWebhook, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordWebhook } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 
 export function transformWebhook (bot: Bot, payload: DiscordWebhook) {
   const webhook = {

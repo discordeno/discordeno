@@ -1,6 +1,5 @@
+import { DiscordEmbed, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordEmbed } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 
 export function transformEmbed (bot: Bot, payload: DiscordEmbed) {
   const embed = {

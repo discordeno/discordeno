@@ -1,5 +1,5 @@
+import { DiscordApplicationCommand } from '@discordeno/types'
 import { Bot } from '../../bot.js'
-import { DiscordApplicationCommand } from '../../types/discord.js'
 import { ApplicationCommand } from '../applicationCommand.js'
 
 export function transformApplicationCommandToDiscordApplicationCommand (

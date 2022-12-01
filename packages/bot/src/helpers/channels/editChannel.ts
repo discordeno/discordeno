@@ -1,9 +1,7 @@
+import { BigString, ChannelTypes, DiscordChannel, OverwriteReadable, SortOrderTypes, VideoQualityModes } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
-import { WithReason } from '../../mod.js'
+import { WithReason } from '../../index.js'
 import { Channel } from '../../transformers/channel.js'
-import { DiscordChannel } from '../../types/discord.js'
-import { OverwriteReadable } from '../../types/discordeno.js'
-import { BigString, ChannelTypes, SortOrderTypes, VideoQualityModes } from '../../types/shared.js'
 
 /**
  * Edits a channel's settings.

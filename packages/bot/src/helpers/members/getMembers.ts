@@ -1,7 +1,6 @@
+import { BigString, DiscordMemberWithUser } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { Member } from '../../transformers/member.js'
-import { DiscordMemberWithUser } from '../../types/discord.js'
-import { BigString } from '../../types/shared.js'
 import { Collection } from '../../util/collection.js'
 
 // TODO: make options optional

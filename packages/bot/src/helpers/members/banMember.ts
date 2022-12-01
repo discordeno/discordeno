@@ -1,5 +1,5 @@
 import type { Bot } from '../../bot.js'
-import { BigString, WithReason } from '../../mod.js'
+import { BigString, WithReason } from '../../index.js'
 
 /**
  * Bans a user from a guild.

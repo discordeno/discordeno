@@ -1,10 +1,9 @@
-import { Bot } from '../bot.js'
 import {
-  DiscordInteraction,
+  ChannelTypes, DiscordInteraction,
   DiscordInteractionDataOption,
-  DiscordInteractionDataResolved
-} from '../types/discord.js'
-import { ChannelTypes, Optionalize } from '../types/shared.js'
+  DiscordInteractionDataResolved, Optionalize
+} from '@discordeno/types'
+import { Bot } from '../bot.js'
 import { Collection } from '../util/collection.js'
 import { Attachment } from './attachment.js'
 import { Member, User } from './member.js'

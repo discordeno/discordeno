@@ -1,13 +1,13 @@
 import { BotWithCache } from './deps.js'
-import { channels } from './src/channels/mod.js'
-import { emojis } from './src/emojis/mod.js'
-import { guilds } from './src/guilds/mod.js'
-import { integrations } from './src/integrations/mod.js'
-import { members } from './src/members/mod.js'
-import { messages } from './src/messages/mod.js'
-import { roles } from './src/roles/mod.js'
-import { stickers } from './src/stickers/mod.js'
-import { webhooks } from './src/webhooks/mod.js'
+import { channels } from './src/channels/index.js'
+import { emojis } from './src/emojis/index.js'
+import { guilds } from './src/guilds/index.js'
+import { integrations } from './src/integrations/index.js'
+import { members } from './src/members/index.js'
+import { messages } from './src/messages/index.js'
+import { roles } from './src/roles/index.js'
+import { stickers } from './src/stickers/index.js'
+import { webhooks } from './src/webhooks/index.js'
 
 // PLUGINS MUST TAKE A BOT ARGUMENT WHICH WILL BE MODIFIED
 export function enablePermissionsPlugin<B extends BotWithCache = BotWithCache> (bot: B): B {

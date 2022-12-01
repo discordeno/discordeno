@@ -1,5 +1,5 @@
 import type { Bot } from '../../bot.js'
-import { BigString, DiscordMember, Member, WithReason } from '../../mod.js'
+import { BigString, DiscordMember, Member, WithReason } from '../../index.js'
 
 /**
  * Edits the nickname of the bot user.

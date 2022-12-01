@@ -1,6 +1,6 @@
+import { DiscordApplication } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { Application } from '../../transformers/application.js'
-import { DiscordApplication } from '../../types/discord.js'
 
 /** Get the applications info */
 export async function getApplicationInfo (bot: Bot): Promise<Application> {

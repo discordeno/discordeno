@@ -3,7 +3,7 @@ import {
   CreateApplicationCommand,
   DiscordCreateApplicationCommand,
   isContextApplicationCommand
-} from '../../types/mod.js'
+} from '../../types/index.js'
 
 export function transformCreateApplicationCommandToDiscordCreateApplicationCommand (
   bot: Bot,

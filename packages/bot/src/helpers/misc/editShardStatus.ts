@@ -1,6 +1,6 @@
+import { GatewayOpcodes, PresenceStatus } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { Activity } from '../../transformers/activity.js'
-import { GatewayOpcodes, PresenceStatus } from '../../types/shared.js'
 
 export async function editShardStatus (bot: Bot, shardId: number, data: StatusUpdate): Promise<void> {
   const shard = bot.gateway.manager.shards.get(shardId)
@@ -8,7 +8,7 @@ export async function editShardStatus (bot: Bot, shardId: number, data: StatusUp
     throw new Error(`Shard (id: ${shardId}) not found.`)
   }
 
-  return await shard.send({
+  return shard.send({
     op: GatewayOpcodes.PresenceUpdate,
     d: {
       since: null,
@@ -64,7 +64,7 @@ export async function editShardStatus (bot: Bot, shardId: number, data: StatusUp
   })
 }
 
-/** https://discord.com/developers/docs/topics/gateway#update-status */
+/** https://discord.com/developers/docs/topics/gateway-events#update-presence */
 export interface StatusUpdate {
   // /** Unix time (in milliseconds) of when the client went idle, or null if the client is not idle */
   // since: number | null;

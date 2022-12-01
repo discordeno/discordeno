@@ -1,6 +1,6 @@
+import { DiscordGuildWidgetSettings } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { GuildWidgetSettings } from '../../../transformers/widgetSettings.js'
-import { DiscordGuildWidgetSettings } from '../../../types/discord.js'
 import { BigString } from '../../../types/shared.js'
 
 /**

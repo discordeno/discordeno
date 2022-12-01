@@ -1,6 +1,6 @@
+import { DiscordMessage } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
-import { InteractionResponse, Message } from '../../../mod.js'
-import { DiscordMessage } from '../../../types/discord.js'
+import { InteractionResponse, Message } from '../../../index.js'
 
 /**
  * Sends a follow-up message to an interaction.

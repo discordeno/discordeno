@@ -1,6 +1,5 @@
+import { DiscordMember, DiscordUser, Optionalize } from '@discordeno/types'
 import type { Bot } from '../bot.js'
-import { DiscordMember, DiscordUser } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 import { MemberToggles } from './toggles/member.js'
 import { UserToggles } from './toggles/user.js'
 

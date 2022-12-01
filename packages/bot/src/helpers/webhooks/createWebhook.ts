@@ -1,7 +1,7 @@
+import { DiscordWebhook } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
-import { BigString, WithReason } from '../../mod.js'
+import { BigString, WithReason } from '../../index.js'
 import { Webhook } from '../../transformers/webhook.js'
-import { DiscordWebhook } from '../../types/discord.js'
 
 /**
  * Creates a webhook.

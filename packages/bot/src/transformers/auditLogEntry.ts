@@ -1,7 +1,7 @@
+import { DiscordAuditLogEntry, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordAuditLogEntry } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformAuditLogEntry (bot: Bot, payload: DiscordAuditLogEntry) {
   const auditLogEntry = {
     id: bot.transformers.snowflake(payload.id),

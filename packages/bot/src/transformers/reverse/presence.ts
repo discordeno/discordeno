@@ -1,6 +1,5 @@
+import { DiscordPresenceUpdate, PresenceStatus } from '@discordeno/types'
 import { Bot } from '../../bot.js'
-import { DiscordPresenceUpdate } from '../../types/discord.js'
-import { PresenceStatus } from '../../types/shared.js'
 import { PresenceUpdate } from '../presence.js'
 
 export const reverseStatusTypes = Object.freeze(

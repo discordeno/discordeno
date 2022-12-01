@@ -1,5 +1,5 @@
+import { DiscordApplication } from '@discordeno/types'
 import { Bot } from '../../bot.js'
-import { DiscordApplication } from '../../types/discord.js'
 import { Application } from '../application.js'
 
 export function transformApplicationToDiscordApplication (bot: Bot, payload: Application): DiscordApplication {

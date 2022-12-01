@@ -1,7 +1,7 @@
+import { DiscordAttachment, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordAttachment } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformAttachment (bot: Bot, payload: DiscordAttachment) {
   const attachment = {
     id: bot.transformers.snowflake(payload.id),

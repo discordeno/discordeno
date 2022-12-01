@@ -1,7 +1,7 @@
+import { DiscordEmoji } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
-import { BigString, WithReason } from '../../mod.js'
+import { BigString, WithReason } from '../../index.js'
 import { Emoji } from '../../transformers/emoji.js'
-import { DiscordEmoji } from '../../types/discord.js'
 
 /**
  * Edits an emoji.

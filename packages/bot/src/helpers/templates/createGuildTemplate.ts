@@ -1,7 +1,7 @@
 import type { Bot } from '../../bot.js'
 import { Template } from '../../transformers/template.js'
-import { DiscordTemplate } from '../../types/discord.js'
-import { BigString } from '../../types/shared.js'
+import { DiscordTemplate } from '@discordeno/types'
+import { BigString } from '@discordeno/types'
 
 /**
  * Creates a template from a guild.

@@ -1,6 +1,6 @@
+import { DiscordSticker } from '@discordeno/types'
 import { Bot } from '../../bot.js'
-import { Sticker } from '../../mod.js'
-import { DiscordSticker } from '../../types/discord.js'
+import { Sticker } from '../../index.js'
 
 /**
  * Returns a sticker object for the given sticker ID.

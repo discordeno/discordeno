@@ -1,5 +1,5 @@
+import { BigString } from '@discordeno/types'
 import { Bot } from '../../bot.js'
-import { BigString } from '../../types/shared.js'
 
 /**
  * Kicks a member from a guild.

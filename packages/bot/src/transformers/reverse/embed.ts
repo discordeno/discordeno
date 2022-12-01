@@ -1,5 +1,5 @@
+import { DiscordEmbed } from '@discordeno/types'
 import { Bot } from '../../bot.js'
-import { DiscordEmbed } from '../../types/discord.js'
 import { Embed } from '../embed.js'
 
 export function transformEmbedToDiscordEmbed (bot: Bot, payload: Embed): DiscordEmbed {

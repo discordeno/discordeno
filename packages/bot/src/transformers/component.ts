@@ -1,6 +1,6 @@
+import { DiscordComponent } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { ButtonStyles, MessageComponentTypes, SelectOption, TextStyles } from '../mod.js'
-import { DiscordComponent } from '../types/discord.js'
+import { ButtonStyles, MessageComponentTypes, SelectOption, TextStyles } from '../index.js'
 
 export function transformComponent (bot: Bot, payload: DiscordComponent): Component {
   return {

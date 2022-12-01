@@ -1,5 +1,5 @@
+import { BigString } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
-import { BigString } from '../../types/shared.js'
 
 /**
  * Builds a URL to a user's avatar stored in the Discord CDN.

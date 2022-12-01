@@ -1,6 +1,6 @@
+import { OverwriteReadable } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
-import { BigString, WithReason } from '../../mod.js'
-import { OverwriteReadable } from '../../types/discordeno.js'
+import { BigString, WithReason } from '../../index.js'
 
 /**
  * Edits the permission overrides for a user or role in a channel.

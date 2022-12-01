@@ -1,8 +1,7 @@
+import { BigString, DiscordGuildPreview, GuildFeatures } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { Emoji } from '../../transformers/emoji.js'
 import { Sticker } from '../../transformers/sticker.js'
-import { DiscordGuildPreview } from '../../types/discord.js'
-import { BigString, GuildFeatures } from '../../types/shared.js'
 
 export interface GuildPreview {
   id: BigString

@@ -1,6 +1,5 @@
+import { DiscordInviteCreate, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordInviteCreate } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 
 export function transformInvite (bot: Bot, invite: DiscordInviteCreate) {
   const transformedInvite = {

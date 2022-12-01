@@ -1,6 +1,5 @@
+import { DiscordEmoji, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordEmoji } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 import { EmojiToggles } from './toggles/emoji.js'
 
 export function transformEmoji (bot: Bot, payload: DiscordEmoji) {

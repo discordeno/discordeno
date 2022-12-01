@@ -1,4 +1,4 @@
-import { Bot, Sticker } from '../../mod.js'
+import { Bot, Sticker } from '../../index.js'
 
 /**
  * Returns a sticker object for the given guild and sticker IDs.

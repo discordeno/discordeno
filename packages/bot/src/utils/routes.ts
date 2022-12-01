@@ -1,3 +1,5 @@
+import { BigString } from '@discordeno/types'
+import { baseEndpoints } from '@discordeno/utils'
 import {
   GetBans,
   GetGuildAuditLog,
@@ -12,13 +14,11 @@ import {
   isGetMessagesLimit,
   ListArchivedThreads,
   ListGuildMembers
-} from '../helpers/mod.js'
-import { BigString } from '../types/shared.js'
-import { baseEndpoints } from './constants.js'
+} from '../helpers/index.js'
 
 export const routes = {
   GATEWAY_BOT: () => {
-    return `/gateway/bot`
+    return '/gateway/bot'
   },
 
   // Automod Endpoints

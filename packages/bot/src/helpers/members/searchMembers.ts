@@ -1,9 +1,8 @@
-import type { DiscordMemberWithUser } from '../../types/discord.js'
-import type { SearchMembers } from '../../types/discordeno.js'
+import type { DiscordMemberWithUser, SearchMembers } from '@discordeno/types'
 
+import { BigString } from '@discordeno/types'
 import { Bot } from '../../bot.js'
 import { Member } from '../../transformers/member.js'
-import { BigString } from '../../types/shared.js'
 import { Collection } from '../../util/collection.js'
 
 /**

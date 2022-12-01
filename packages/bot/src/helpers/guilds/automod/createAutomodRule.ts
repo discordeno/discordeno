@@ -1,13 +1,13 @@
-import { Bot } from '../../../bot.js'
-import { BigString, WithReason } from '../../../mod.js'
-import { AutoModerationRule } from '../../../transformers/automodRule.js'
 import {
   AutoModerationActionType,
   AutoModerationEventTypes,
   AutoModerationTriggerTypes,
   DiscordAutoModerationRule,
   DiscordAutoModerationRuleTriggerMetadataPresets
-} from '../../../types/discord.js'
+} from '@discordeno/types'
+import { Bot } from '../../../bot.js'
+import { BigString, WithReason } from '../../../index.js'
+import { AutoModerationRule } from '../../../transformers/automodRule.js'
 
 /**
  * Creates an automod rule in a guild.

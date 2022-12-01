@@ -1,7 +1,7 @@
+import { DiscordApplicationCommand, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordApplicationCommand } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformApplicationCommand (bot: Bot, payload: DiscordApplicationCommand) {
   const applicationCommand = {
     id: bot.transformers.snowflake(payload.id),

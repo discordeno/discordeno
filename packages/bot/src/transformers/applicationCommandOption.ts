@@ -1,6 +1,5 @@
+import { ApplicationCommandOptionTypes, ChannelTypes, DiscordApplicationCommandOption, Localization } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordApplicationCommandOption } from '../types/discord.js'
-import { ApplicationCommandOptionTypes, ChannelTypes, Localization } from '../types/shared.js'
 import { ApplicationCommandOptionChoice } from './applicationCommandOptionChoice.js'
 
 export function transformApplicationCommandOption (

@@ -1,6 +1,6 @@
 import type { Bot } from '../../../bot.js'
 import { ApplicationCommand } from '../../../transformers/applicationCommand.js'
-import { BigString, CreateApplicationCommand, DiscordApplicationCommand } from '../../../types/mod.js'
+import { BigString, CreateApplicationCommand, DiscordApplicationCommand } from '../../../types/index.js'
 
 // TODO: Swap `commandId` and `guildId` parameters.
 

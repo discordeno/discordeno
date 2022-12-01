@@ -1,9 +1,8 @@
+import { BigString, DiscordMessage, MessageComponentTypes } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { Embed } from '../../transformers/embed.js'
 import { Message } from '../../transformers/message.js'
-import { DiscordMessage } from '../../types/discord.js'
-import { AllowedMentions, FileContent, MessageComponents } from '../../types/mod.js'
-import { BigString, MessageComponentTypes } from '../../types/shared.js'
+import { AllowedMentions, FileContent, MessageComponents } from '../../types/index.js'
 
 /**
  * Sends a message to a channel.

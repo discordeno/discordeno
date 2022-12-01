@@ -1,6 +1,6 @@
+import { DiscordStickerPack } from '@discordeno/types'
 import { Bot } from '../../bot.js'
 import { StickerPack } from '../../transformers/sticker.js'
-import { DiscordStickerPack } from '../../types/discord.js'
 import { Collection } from '../../util/collection.js'
 
 /**

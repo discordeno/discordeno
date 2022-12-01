@@ -1,6 +1,5 @@
+import { DiscordVoiceState, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
-import { DiscordVoiceState } from '../types/discord.js'
-import { Optionalize } from '../types/shared.js'
 import { VoiceStateToggles } from './toggles/voice.js'
 
 export function transformVoiceState (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) {

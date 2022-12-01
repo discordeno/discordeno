@@ -1,5 +1,5 @@
+import { DiscordGatewayPayload, DiscordScheduledEventUserAdd } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
-import { DiscordGatewayPayload, DiscordScheduledEventUserAdd } from '../../../types/discord.js'
 
 export function handleGuildScheduledEventUserAdd (bot: Bot, data: DiscordGatewayPayload) {
   const payload = data.d as DiscordScheduledEventUserAdd

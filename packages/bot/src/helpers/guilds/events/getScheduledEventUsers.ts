@@ -1,6 +1,6 @@
+import { DiscordMember, DiscordUser } from '@discordeno/types'
 import { Bot } from '../../../bot.js'
 import { Member, User } from '../../../transformers/member.js'
-import { DiscordMember, DiscordUser } from '../../../types/discord.js'
 import { BigString } from '../../../types/shared.js'
 import { Collection } from '../../../util/collection.js'
 
@@ -74,7 +74,7 @@ export async function getScheduledEventUsers (
   return new Collection(
     results.map((result) => {
       const user = bot.transformers.user(bot, result.user)
-      const member = bot.transformers.member(bot, result.member!, id, user.id)
+      const member = bot.transformers.member(bot, result.member, id, user.id)
 
       return [user.id, { member, user }]
     })
