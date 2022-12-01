@@ -74,7 +74,7 @@ export function createShardManager (options: CreateShardManager) {
         this.shards.set(shardId, shard)
       }
 
-      return shard.identify()
+      return await shard.identify()
     },
 
     /** Kill a shard.
@@ -85,7 +85,7 @@ export function createShardManager (options: CreateShardManager) {
       if (shard == null) return
 
       this.shards.delete(shardId)
-      return shard.shutdown()
+      return await shard.shutdown()
     },
 
     /** This function communicates with the parent manager,

@@ -149,6 +149,8 @@ export async function reshard (resharder: Resharder, gatewayBot: GetGatewayBot):
   resharder.gateway.prepareBuckets()
 
   // SPREAD THIS OUT TO DIFFERENT WORKERS TO BEGIN STARTING UP
+  // Ignore eslint here because prefer concurrency of forEach instead of for of
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   resharder.gateway.buckets.forEach(async (bucket, bucketId) => {
     for (const worker of bucket.workers) {
       for (const shardId of worker.queue) {
