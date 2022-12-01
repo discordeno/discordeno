@@ -10,104 +10,69 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: denoland/setup-deno@main
+      - uses: actions/setup-node@v3
         with:
-          deno-version: v1.x
+          node-version: 18
+          cache: "yarn"
+      - run: yarn install --frozen-lockfile
       - name: Check Formatting
-        run: deno fmt --check
-
-  # change if any prod code changed, skip test without change
-  path-filter:
-    name: Check Path Changes
-    runs-on: ubuntu-latest
-    outputs:
-      code-change: ${{ steps.changes.outputs.code-change }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: |
-            code-change:
-            - ".github/workflows/test.yml"
-            - "gateway/**"
-            - "handlers/**"
-            - "helpers/**"
-            - "packages/**"
-            - "plugins/**"
-            - "rest/**"
-            - "template/**"
-            - "tests/**"
-            - "transformers/**"
-            - "types/**"
-            - "util/**"
-            - "bot.ts"
-            - "mod.ts"
-            - "dnt.ts"
+        run: yarn lint
 
   type-test:
     name: Type Test
     runs-on: ubuntu-latest
-    needs: path-filter
-    if: ${{ needs.path-filter.outputs.code-change == 'true' }}
     steps:
       - uses: actions/checkout@v3
-      - uses: denoland/setup-deno@main
+      - uses: actions/setup-node@v3
         with:
-          deno-version: v1.x
-      - name: Check dependencies
-        run: deno check mod.ts
-      - name: Check plugins
-        run: deno check plugins/mod.ts
-      - name: Check Templates
-        run: deno check template/beginner/mod.ts template/minimal/mod.ts
+          node-version: 18
+          cache: "yarn"
+      - run: yarn install --frozen-lockfile
+      - name: Check Formatting
+        run: yarn test-types
 
-  integration-test:
-    name: Integration Test
-    runs-on: ubuntu-latest
-    needs: path-filter
-    if: ${{ needs.path-filter.outputs.code-change == 'true' && github.ref == 'refs/heads/main' }}
-    concurrency: integration-test
-    steps:
-      - uses: actions/checkout@v3
-      - uses: denoland/setup-deno@main
-        with:
-          deno-version: v1.x
-      - name: Run integration
-        # if: ${{ github.actor == 'Skillz4Killz' || github.actor == 'itohatweb' }}
-        run: deno test --coverage=coverage -A tests/
-        env:
-          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
-          UNIT_TEST_GUILD_ID: ${{ secrets.UNIT_TEST_GUILD_ID }}
-          TEST_ENV: INTEGRATION
-          PROXY_REST_SECRET: ${{ secrets.PROXY_REST_SECRET }}
-          PROXY_REST_URL: ${{ secrets.PROXY_REST_URL }}
-      - name: Create coverage report
-        run: deno coverage --exclude=tests ./coverage --lcov > coverage.lcov
-      - name: Collect and upload the coverage report
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./coverage.lcov
-          flags: integration
+  #integration-test:
+  #  name: Integration Test
+  #  runs-on: ubuntu-latest
+  #  concurrency: integration-test
+  #  steps:
+  #    - uses: actions/checkout@v3
+  #    - uses: denoland/setup-deno@main
+  #      with:
+  #        deno-version: v1.x
+  #    - name: Run integration
+  #      # if: ${{ github.actor == 'Skillz4Killz' || github.actor == 'itohatweb' }}
+  #      run: deno test --coverage=coverage -A tests/
+  #      env:
+  #        DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+  #        UNIT_TEST_GUILD_ID: ${{ secrets.UNIT_TEST_GUILD_ID }}
+  #        TEST_ENV: INTEGRATION
+  #        PROXY_REST_SECRET: ${{ secrets.PROXY_REST_SECRET }}
+  #        PROXY_REST_URL: ${{ secrets.PROXY_REST_URL }}
+  #    - name: Create coverage report
+  #      run: deno coverage --exclude=tests ./coverage --lcov > coverage.lcov
+  #    - name: Collect and upload the coverage report
+  #      uses: codecov/codecov-action@v3
+  #      with:
+  #        file: ./coverage.lcov
+  #        flags: integration
 
-  unit-test:
-    name: Unit Test
-    runs-on: ubuntu-latest
-    needs: path-filter
-    if: ${{ needs.path-filter.outputs.code-change == 'true' }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: denoland/setup-deno@main
-        with:
-          deno-version: v1.x
-      - name: Run integration
-        run: deno test --coverage=coverage --parallel -A tests/
-        env:
-          TEST_ENV: UNIT
-      - name: Create coverage report
-        run: deno coverage --exclude=tests ./coverage --lcov > coverage.lcov
-      - name: Collect and upload the coverage report
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./coverage.lcov
-          flags: unit
+  #unit-test:
+  #  name: Unit Test
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - uses: actions/checkout@v3
+  #    - uses: denoland/setup-deno@main
+  #      with:
+  #        deno-version: v1.x
+  #    - name: Run integration
+  #      run: deno test --coverage=coverage --parallel -A tests/
+  #      env:
+  #        TEST_ENV: UNIT
+  #    - name: Create coverage report
+  #      run: deno coverage --exclude=tests ./coverage --lcov > coverage.lcov
+  #    - name: Collect and upload the coverage report
+  #      uses: codecov/codecov-action@v3
+  #      with:
+  #        file: ./coverage.lcov
+  #        flags: unit

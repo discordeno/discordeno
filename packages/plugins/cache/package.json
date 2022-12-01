@@ -14,13 +14,13 @@
     "test-types": "tsc --noEmit"
   },
   "devDependencies": {
+    "@discordeno/bot": "18.0.0-alpha.1",
+    "@discordeno/gateway": "18.0.0-alpha.1",
     "@swc/cli": "^0.1.57",
     "@swc/core": "^1.3.21",
     "eslint": "^8.0.1",
     "eslint-config-discordeno": "*",
     "tsconfig": "*",
-    "@discordeno/bot": "18.0.0-alpha.1",
-    "@discordeno/gateway": "18.0.0-alpha.1",
     "typescript": "^4.9.3"
   },
   "dependencies": {
