@@ -40,10 +40,10 @@ export const routes = {
     let url = `/channels/${channelId}/messages?`
 
     if (options) {
-      if (isGetMessagesAfter(options) && options.after) url += `after=${options.after}`
-      if (isGetMessagesBefore(options) && options.before) url += `&before=${options.before}`
-      if (isGetMessagesAround(options) && options.around) url += `&around=${options.around}`
-      if (isGetMessagesLimit(options) && options.limit) url += `&limit=${options.limit}`
+      if (isGetMessagesAfter(options) && options.after) { url += `after=${options.after}` }
+      if (isGetMessagesBefore(options) && options.before) { url += `&before=${options.before}` }
+      if (isGetMessagesAround(options) && options.around) { url += `&around=${options.around}` }
+      if (isGetMessagesLimit(options) && options.limit) { url += `&limit=${options.limit}` }
     }
 
     return url
@@ -63,17 +63,37 @@ export const routes = {
   CHANNEL_WEBHOOKS: (channelId: BigString) => {
     return `/channels/${channelId}/webhooks`
   },
-  CHANNEL_MESSAGE_REACTION_ME: (channelId: BigString, messageId: BigString, emoji: string) => {
-    return `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}/@me`
+  CHANNEL_MESSAGE_REACTION_ME: (
+    channelId: BigString,
+    messageId: BigString,
+    emoji: string
+  ) => {
+    return `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(
+      emoji
+    )}/@me`
   },
-  CHANNEL_MESSAGE_REACTION_USER: (channelId: BigString, messageId: BigString, emoji: string, userId: BigString) => {
-    return `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}/${userId}`
+  CHANNEL_MESSAGE_REACTION_USER: (
+    channelId: BigString,
+    messageId: BigString,
+    emoji: string,
+    userId: BigString
+  ) => {
+    return `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(
+      emoji
+    )}/${userId}`
   },
   CHANNEL_MESSAGE_REACTIONS: (channelId: BigString, messageId: BigString) => {
     return `/channels/${channelId}/messages/${messageId}/reactions`
   },
-  CHANNEL_MESSAGE_REACTION: (channelId: BigString, messageId: BigString, emoji: string, options?: GetReactions) => {
-    let url = `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}?`
+  CHANNEL_MESSAGE_REACTION: (
+    channelId: BigString,
+    messageId: BigString,
+    emoji: string,
+    options?: GetReactions
+  ) => {
+    let url = `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(
+      emoji
+    )}?`
 
     if (options) {
       if (options.after) url += `after=${options.after}`
@@ -118,31 +138,40 @@ export const routes = {
   THREAD_ARCHIVED: (channelId: BigString) => {
     return `/channels/${channelId}/threads/archived`
   },
-  THREAD_ARCHIVED_PUBLIC: (channelId: BigString, options?: ListArchivedThreads) => {
+  THREAD_ARCHIVED_PUBLIC: (
+    channelId: BigString,
+    options?: ListArchivedThreads
+  ) => {
     let url = `/channels/${channelId}/threads/archived/public?`
 
     if (options) {
-      if (options.before) url += `before=${new Date(options.before).toISOString()}`
+      if (options.before) { url += `before=${new Date(options.before).toISOString()}` }
       if (options.limit) url += `&limit=${options.limit}`
     }
 
     return url
   },
-  THREAD_ARCHIVED_PRIVATE: (channelId: BigString, options?: ListArchivedThreads) => {
+  THREAD_ARCHIVED_PRIVATE: (
+    channelId: BigString,
+    options?: ListArchivedThreads
+  ) => {
     let url = `/channels/${channelId}/threads/archived/private?`
 
     if (options) {
-      if (options.before) url += `before=${new Date(options.before).toISOString()}`
+      if (options.before) { url += `before=${new Date(options.before).toISOString()}` }
       if (options.limit) url += `&limit=${options.limit}`
     }
 
     return url
   },
-  THREAD_ARCHIVED_PRIVATE_JOINED: (channelId: BigString, options?: ListArchivedThreads) => {
+  THREAD_ARCHIVED_PRIVATE_JOINED: (
+    channelId: BigString,
+    options?: ListArchivedThreads
+  ) => {
     let url = `/channels/${channelId}/users/@me/threads/archived/private?`
 
     if (options) {
-      if (options.before) url += `before=${new Date(options.before).toISOString()}`
+      if (options.before) { url += `before=${new Date(options.before).toISOString()}` }
       if (options.limit) url += `&limit=${options.limit}`
     }
 
@@ -159,13 +188,13 @@ export const routes = {
     let url = `/guilds/${guildId}?`
 
     if (withCounts !== undefined) {
-      url += `with_counts=${withCounts}`
+      url += `with_counts=${withCounts.toString()}`
     }
 
     return url
   },
   GUILDS: () => {
-    return `/guilds`
+    return '/guilds'
   },
   GUILD_AUDIT_LOGS: (guildId: BigString, options?: GetGuildAuditLog) => {
     let url = `/guilds/${guildId}/audit-logs?`
@@ -208,12 +237,7 @@ export const routes = {
   },
   GUILD_WIDGET_IMAGE: (
     guildId: BigString,
-    style?:
-    | 'shield'
-    | 'banner1'
-    | 'banner2'
-    | 'banner3'
-    | 'banner4'
+    style?: 'shield' | 'banner1' | 'banner2' | 'banner3' | 'banner4'
   ) => {
     let url = `/guilds/${guildId}/widget.png?`
 
@@ -261,11 +285,21 @@ export const routes = {
 
     return url
   },
-  GUILD_MEMBER_ROLE: (guildId: BigString, memberId: BigString, roleId: BigString) => {
+  GUILD_MEMBER_ROLE: (
+    guildId: BigString,
+    memberId: BigString,
+    roleId: BigString
+  ) => {
     return `/guilds/${guildId}/members/${memberId}/roles/${roleId}`
   },
-  GUILD_MEMBERS_SEARCH: (guildId: BigString, query: string, options?: { limit?: number }) => {
-    let url = `/guilds/${guildId}/members/search?query=${encodeURIComponent(query)}`
+  GUILD_MEMBERS_SEARCH: (
+    guildId: BigString,
+    query: string,
+    options?: { limit?: number }
+  ) => {
+    let url = `/guilds/${guildId}/members/search?query=${encodeURIComponent(
+      query
+    )}`
 
     if (options) {
       if (options.limit !== undefined) url += `&limit=${options.limit}`
@@ -278,7 +312,11 @@ export const routes = {
 
     if (options) {
       if (options.days) url += `days=${options.days}`
-      if (options.includeRoles) url += `&include_roles=${options.includeRoles}`
+      if (Array.isArray(options.includeRoles)) {
+        url += `&include_roles=${options.includeRoles.join(',')}`
+      } else if (options.includeRoles) {
+        url += `&include_roles=${options.includeRoles}`
+      }
     }
 
     return url
@@ -324,27 +362,35 @@ export const routes = {
     let url = `/guilds/${guildId}/scheduled-events?`
 
     if (withUserCount !== undefined) {
-      url += `with_user_count=${withUserCount}`
+      url += `with_user_count=${withUserCount.toString()}`
     }
     return url
   },
-  GUILD_SCHEDULED_EVENT: (guildId: BigString, eventId: BigString, withUserCount?: boolean) => {
+  GUILD_SCHEDULED_EVENT: (
+    guildId: BigString,
+    eventId: BigString,
+    withUserCount?: boolean
+  ) => {
     let url = `/guilds/${guildId}/scheduled-events/${eventId}`
 
     if (withUserCount !== undefined) {
-      url += `with_user_count=${withUserCount}`
+      url += `with_user_count=${withUserCount.toString()}`
     }
 
     return url
   },
-  GUILD_SCHEDULED_EVENT_USERS: (guildId: BigString, eventId: BigString, options?: GetScheduledEventUsers) => {
+  GUILD_SCHEDULED_EVENT_USERS: (
+    guildId: BigString,
+    eventId: BigString,
+    options?: GetScheduledEventUsers
+  ) => {
     let url = `/guilds/${guildId}/scheduled-events/${eventId}/users?`
 
     if (options) {
-      if (options.limit) url += `limit=${options.limit}`
-      if (options.withMember) url += `&with_member=${options.withMember}`
-      if (options.after) url += `&after=${options.after}`
-      if (options.before) url += `&before=${options.before}`
+      if (options.limit !== undefined) url += `limit=${options.limit}`
+      if (options.withMember !== undefined) { url += `&with_member=${options.withMember.toString()}` }
+      if (options.after !== undefined) url += `&after=${options.after}`
+      if (options.before !== undefined) url += `&before=${options.before}`
     }
 
     return url
@@ -352,26 +398,30 @@ export const routes = {
   GUILD_MFA_LEVEL: (guildId: BigString) => `/guilds/${guildId}/mfa`,
   // Voice
   VOICE_REGIONS: () => {
-    return `/voice/regions`
+    return '/voice/regions'
   },
 
   INVITE: (inviteCode: string, options?: GetInvite) => {
     let url = `/invites/${inviteCode}?`
 
     if (options) {
-      if (options.withCounts) url += `with_counts=${options.withCounts}`
-      if (options.withExpiration) url += `&with_expiration=${options.withExpiration}`
-      if (options.scheduledEventId) url += `&guild_scheduled_event_id=${options.scheduledEventId}`
+      if (options.withCounts !== undefined) { url += `with_counts=${options.withCounts.toString()}` }
+      if (options.withExpiration !== undefined) { url += `&with_expiration=${options.withExpiration.toString()}` }
+      if (options.scheduledEventId) { url += `&guild_scheduled_event_id=${options.scheduledEventId}` }
     }
 
     return url
   },
 
-  WEBHOOK: (webhookId: BigString, token: string, options?: { wait?: boolean, threadId?: BigString }) => {
+  WEBHOOK: (
+    webhookId: BigString,
+    token: string,
+    options?: { wait?: boolean, threadId?: BigString }
+  ) => {
     let url = `/webhooks/${webhookId}/${token}?`
 
     if (options) {
-      if (options?.wait !== undefined) url += `wait=${options.wait}`
+      if (options?.wait !== undefined) url += `wait=${options.wait.toString()}`
       if (options.threadId) url += `thread_id=${options.threadId}`
     }
 
@@ -380,7 +430,12 @@ export const routes = {
   WEBHOOK_ID: (webhookId: BigString) => {
     return `/webhooks/${webhookId}`
   },
-  WEBHOOK_MESSAGE: (webhookId: BigString, token: string, messageId: BigString, options?: { threadId?: BigString }) => {
+  WEBHOOK_MESSAGE: (
+    webhookId: BigString,
+    token: string,
+    messageId: BigString,
+    options?: { threadId?: BigString }
+  ) => {
     let url = `/webhooks/${webhookId}/${token}/messages/${messageId}?`
 
     if (options) {
@@ -389,7 +444,11 @@ export const routes = {
 
     return url
   },
-  WEBHOOK_MESSAGE_ORIGINAL: (webhookId: BigString, token: string, options?: { threadId?: BigString }) => {
+  WEBHOOK_MESSAGE_ORIGINAL: (
+    webhookId: BigString,
+    token: string,
+    options?: { threadId?: BigString }
+  ) => {
     let url = `/webhooks/${webhookId}/${token}/messages/@original?`
 
     if (options) {
@@ -415,14 +474,22 @@ export const routes = {
   COMMANDS_PERMISSIONS: (applicationId: BigString, guildId: BigString) => {
     return `/applications/${applicationId}/guilds/${guildId}/commands/permissions`
   },
-  COMMANDS_PERMISSION: (applicationId: BigString, guildId: BigString, commandId: BigString) => {
+  COMMANDS_PERMISSION: (
+    applicationId: BigString,
+    guildId: BigString,
+    commandId: BigString
+  ) => {
     return `/applications/${applicationId}/guilds/${guildId}/commands/${commandId}/permissions`
   },
-  COMMANDS_ID: (applicationId: BigString, commandId: BigString, withLocalizations?: boolean) => {
+  COMMANDS_ID: (
+    applicationId: BigString,
+    commandId: BigString,
+    withLocalizations?: boolean
+  ) => {
     let url = `/applications/${applicationId}/commands/${commandId}?`
 
     if (withLocalizations !== undefined) {
-      url += `withLocalizations=${withLocalizations}`
+      url += `withLocalizations=${withLocalizations.toString()}`
     }
 
     return url
@@ -436,7 +503,7 @@ export const routes = {
     let url = `/applications/${applicationId}/guilds/${guildId}/commands/${commandId}?`
 
     if (withLocalizations !== undefined) {
-      url += `with_localizations=${withLocalizations}`
+      url += `with_localizations=${withLocalizations.toString()}`
     }
 
     return url
@@ -449,7 +516,11 @@ export const routes = {
   INTERACTION_ORIGINAL_ID_TOKEN: (interactionId: BigString, token: string) => {
     return `/webhooks/${interactionId}/${token}/messages/@original`
   },
-  INTERACTION_ID_TOKEN_MESSAGE_ID: (applicationId: BigString, token: string, messageId: BigString) => {
+  INTERACTION_ID_TOKEN_MESSAGE_ID: (
+    applicationId: BigString,
+    token: string,
+    messageId: BigString
+  ) => {
     return `/webhooks/${applicationId}/${token}/messages/${messageId}`
   },
 
@@ -458,10 +529,10 @@ export const routes = {
     return `/users/${userId}`
   },
   USER_BOT: () => {
-    return `/users/@me`
+    return '/users/@me'
   },
   USER_GUILDS: () => {
-    return `/users/@me/guilds`
+    return '/users/@me/guilds'
   },
   // TODO: move this away
   USER_AVATAR: (userId: BigString, icon: string) => {
@@ -472,10 +543,10 @@ export const routes = {
     return `${baseEndpoints.CDN_URL}/embed/avatars/${icon}.png`
   },
   USER_DM: () => {
-    return `/users/@me/channels`
+    return '/users/@me/channels'
   },
   USER_CONNECTIONS: () => {
-    return `/users/@me/connections`
+    return '/users/@me/connections'
   },
   USER_NICK: (guildId: BigString) => {
     return `/guilds/${guildId}/members/@me`
@@ -483,7 +554,7 @@ export const routes = {
 
   // Discovery Endpoints
   DISCOVERY_CATEGORIES: () => {
-    return `/discovery/categories`
+    return '/discovery/categories'
   },
   DISCOVERY_VALID_TERM: (term: string) => {
     return `/discovery/valid-term?term=${term}`
@@ -497,12 +568,12 @@ export const routes = {
 
   // OAuth2
   OAUTH2_APPLICATION: () => {
-    return `/oauth2/applications/@me`
+    return 'oauth2/applications/@me'
   },
 
   // Stage instances
   STAGE_INSTANCES: () => {
-    return `/stage-instances`
+    return '/stage-instances'
   },
   STAGE_INSTANCE: (channelId: BigString) => {
     return `/stage-instances/${channelId}`

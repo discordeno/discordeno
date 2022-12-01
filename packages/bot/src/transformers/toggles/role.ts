@@ -23,45 +23,47 @@ export class RoleToggles extends ToggleBitfield {
       if (role.hoist) this.add(RoleToggle.hoist)
       if (role.managed) this.add(RoleToggle.managed)
       if (role.mentionable) this.add(RoleToggle.mentionable)
-      if (role.tags?.premium_subscriber === null) this.add(RoleToggle.premiumSubscriber)
+      if (role.tags?.premium_subscriber === null) { this.add(RoleToggle.premiumSubscriber) }
     }
   }
 
   /** If this role is showed separately in the user listing */
-  get hoist () {
+  get hoist (): boolean {
     return this.has('hoist')
   }
 
   /** Whether this role is managed by an integration */
-  get managed () {
+  get managed (): boolean {
     return this.has('managed')
   }
 
   /** Whether this role is mentionable */
-  get mentionable () {
+  get mentionable (): boolean {
     return this.has('mentionable')
   }
 
   /** Whether this is the guilds premium subscriber role */
-  get premiumSubscriber () {
+  get premiumSubscriber (): boolean {
     return this.has('premiumSubscriber')
   }
 
   /** Checks whether or not the permissions exist in this */
-  has (permissions: RoleToggleKeys | RoleToggleKeys[]) {
-    if (!Array.isArray(permissions)) return super.contains(RoleToggle[permissions])
+  has (permissions: RoleToggleKeys | RoleToggleKeys[]): boolean {
+    if (!Array.isArray(permissions)) { return super.contains(RoleToggle[permissions]) }
 
-    return super.contains(permissions.reduce((a, b) => (a |= RoleToggle[b]), 0))
+    return super.contains(
+      permissions.reduce((a, b) => (a |= RoleToggle[b]), 0)
+    )
   }
 
   /** Lists all the toggles for the role and whether or not each is true or false. */
-  list () {
+  list (): Record<RoleToggleKeys, boolean> {
     const json: Record<string, boolean> = {}
     for (const [key, value] of Object.entries(RoleToggle)) {
       json[key] = super.contains(value)
     }
 
-    return json as Record<RoleToggleKeys, boolean>
+    return json
   }
 }
 

@@ -2,7 +2,11 @@ import { GatewayOpcodes, PresenceStatus } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { Activity } from '../../transformers/activity.js'
 
-export async function editShardStatus (bot: Bot, shardId: number, data: StatusUpdate): Promise<void> {
+export async function editShardStatus (
+  bot: Bot,
+  shardId: number,
+  data: StatusUpdate
+): Promise<void> {
   const shard = bot.gateway.manager.shards.get(shardId)
   if (shard == null) {
     throw new Error(`Shard (id: ${shardId}) not found.`)
@@ -18,16 +22,17 @@ export async function editShardStatus (bot: Bot, shardId: number, data: StatusUp
         type: activity.type,
         url: activity.url,
         created_at: activity.createdAt,
-        timestamps: activity.startedAt || activity.endedAt
-          ? {
-              start: activity.startedAt,
-              end: activity.endedAt
-            }
-          : undefined,
+        timestamps:
+          activity.startedAt ?? activity.endedAt
+            ? {
+                start: activity.startedAt,
+                end: activity.endedAt
+              }
+            : undefined,
         application_id: activity.applicationId?.toString(),
         details: activity.details,
         state: activity.state,
-        emoji: (activity.emoji)
+        emoji: activity.emoji
           ? {
               name: activity.emoji.name,
               id: activity.emoji.id?.toString(),
@@ -40,21 +45,26 @@ export async function editShardStatus (bot: Bot, shardId: number, data: StatusUp
               size: activity.partyMaxSize
             }
           : undefined,
-        assets: activity.largeImage || activity.largeText || activity.smallImage || activity.smallText
-          ? {
-              large_image: activity.largeImage,
-              large_text: activity.largeText,
-              small_image: activity.smallImage,
-              small_text: activity.smallText
-            }
-          : undefined,
-        secrets: activity.join || activity.spectate || activity.match
-          ? {
-              join: activity.join,
-              spectate: activity.spectate,
-              match: activity.match
-            }
-          : undefined,
+        assets:
+          activity.largeImage ??
+          activity.largeText ??
+          activity.smallImage ??
+          activity.smallText
+            ? {
+                large_image: activity.largeImage,
+                large_text: activity.largeText,
+                small_image: activity.smallImage,
+                small_text: activity.smallText
+              }
+            : undefined,
+        secrets:
+          activity.join ?? activity.spectate ?? activity.match
+            ? {
+                join: activity.join,
+                spectate: activity.spectate,
+                match: activity.match
+              }
+            : undefined,
         instance: activity.instance,
         flags: activity.flags,
         buttons: activity.buttons

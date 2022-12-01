@@ -1,6 +1,7 @@
 import { DiscordTemplate, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformTemplate (bot: Bot, payload: DiscordTemplate) {
   const template = {
     code: payload.code,
@@ -19,4 +20,4 @@ export function transformTemplate (bot: Bot, payload: DiscordTemplate) {
   return template as Optionalize<typeof template>
 }
 
-export interface Template extends ReturnType<typeof transformTemplate> { }
+export interface Template extends ReturnType<typeof transformTemplate> {}

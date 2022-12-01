@@ -1,7 +1,13 @@
 import { DiscordChannel, DiscordGatewayPayload } from '@discordeno/types'
 import { Bot } from '../../bot.js'
 
-export async function handleThreadDelete (bot: Bot, data: DiscordGatewayPayload) {
+export async function handleThreadDelete (
+  bot: Bot,
+  data: DiscordGatewayPayload
+): Promise<void> {
   const payload = data.d as DiscordChannel
-  bot.events.threadDelete(bot, bot.transformers.channel(bot, { channel: payload }))
+  bot.events.threadDelete(
+    bot,
+    bot.transformers.channel(bot, { channel: payload })
+  )
 }

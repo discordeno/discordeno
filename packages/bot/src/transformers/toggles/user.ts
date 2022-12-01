@@ -28,40 +28,42 @@ export class UserToggles extends ToggleBitfield {
   }
 
   /** Whether the user belongs to an OAuth2 application */
-  get bot () {
+  get bot (): boolean {
     return this.has('bot')
   }
 
   /** Whether the user is an Official Discord System user (part of the urgent message system) */
-  get system () {
+  get system (): boolean {
     return this.has('system')
   }
 
   /** Whether the user has two factor enabled on their account */
-  get mfaEnabled () {
+  get mfaEnabled (): boolean {
     return this.has('mfaEnabled')
   }
 
   /** Whether the email on this account has been verified */
-  get verified () {
+  get verified (): boolean {
     return this.has('verified')
   }
 
   /** Checks whether or not the permissions exist in this */
-  has (permissions: UserToggleKeys | UserToggleKeys[]) {
-    if (!Array.isArray(permissions)) return super.contains(UserToggle[permissions])
+  has (permissions: UserToggleKeys | UserToggleKeys[]): boolean {
+    if (!Array.isArray(permissions)) { return super.contains(UserToggle[permissions]) }
 
-    return super.contains(permissions.reduce((a, b) => (a |= UserToggle[b]), 0))
+    return super.contains(
+      permissions.reduce((a, b) => (a |= UserToggle[b]), 0)
+    )
   }
 
   /** Lists all the toggles for the role and whether or not each is true or false. */
-  list () {
+  list (): Record<UserToggleKeys, boolean> {
     const json: Record<string, boolean> = {}
     for (const [key, value] of Object.entries(UserToggle)) {
       json[key] = super.contains(value)
     }
 
-    return json as Record<UserToggleKeys, boolean>
+    return json
   }
 }
 

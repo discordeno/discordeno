@@ -1,7 +1,11 @@
 import { DiscordStageInstance, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
 
-export function transformStageInstance (bot: Bot, payload: DiscordStageInstance) {
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export function transformStageInstance (
+  bot: Bot,
+  payload: DiscordStageInstance
+) {
   const stageInstance = {
     id: bot.transformers.snowflake(payload.id),
     guildId: bot.transformers.snowflake(payload.guild_id),
@@ -15,4 +19,5 @@ export function transformStageInstance (bot: Bot, payload: DiscordStageInstance)
   return stageInstance as Optionalize<typeof stageInstance>
 }
 
-export interface StageInstance extends ReturnType<typeof transformStageInstance> { }
+export interface StageInstance
+  extends ReturnType<typeof transformStageInstance> {}

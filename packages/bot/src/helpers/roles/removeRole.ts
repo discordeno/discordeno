@@ -16,7 +16,13 @@ import type { Bot } from '../../bot.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#remove-guild-member-role}
  */
-export async function removeRole (bot: Bot, guildId: BigString, userId: BigString, roleId: BigString, reason?: string) {
+export async function removeRole (
+  bot: Bot,
+  guildId: BigString,
+  userId: BigString,
+  roleId: BigString,
+  reason?: string
+): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     'DELETE',

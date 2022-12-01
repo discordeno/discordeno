@@ -93,45 +93,46 @@ export class GuildToggles extends ToggleBitfieldBigint {
   constructor (guildOrTogglesBigint: DiscordGuild | bigint) {
     super()
 
-    if (typeof guildOrTogglesBigint === 'bigint') this.bitfield = guildOrTogglesBigint
-    else {
+    if (typeof guildOrTogglesBigint === 'bigint') { this.bitfield = guildOrTogglesBigint } else {
       const guild = guildOrTogglesBigint
 
       if (guild.owner) this.add(GuildToggle.owner)
       if (guild.widget_enabled) this.add(GuildToggle.widgetEnabled)
       if (guild.large) this.add(GuildToggle.large)
       if (guild.unavailable) this.add(GuildToggle.unavailable)
-      if (guild.premium_progress_bar_enabled) this.add(GuildToggle.premiumProgressBarEnabled)
+      if (guild.premium_progress_bar_enabled) { this.add(GuildToggle.premiumProgressBarEnabled) }
 
-      if (guild.features.includes(GuildFeatures.InviteSplash)) this.add(GuildToggle.inviteSplash)
-      if (guild.features.includes(GuildFeatures.VipRegions)) this.add(GuildToggle.vipRegions)
-      if (guild.features.includes(GuildFeatures.VanityUrl)) this.add(GuildToggle.vanityUrl)
-      if (guild.features.includes(GuildFeatures.Verified)) this.add(GuildToggle.verified)
-      if (guild.features.includes(GuildFeatures.Partnered)) this.add(GuildToggle.partnered)
-      if (guild.features.includes(GuildFeatures.Community)) this.add(GuildToggle.community)
-      if (guild.features.includes(GuildFeatures.DeveloperSupportServer)) this.add(GuildToggle.developerSupportServer)
-      if (guild.features.includes(GuildFeatures.AnimatedBanner)) this.add(GuildToggle.animatedBanner)
-      if (guild.features.includes(GuildFeatures.News)) this.add(GuildToggle.news)
-      if (guild.features.includes(GuildFeatures.Discoverable)) this.add(GuildToggle.discoverable)
-      if (guild.features.includes(GuildFeatures.Featurable)) this.add(GuildToggle.featurable)
-      if (guild.features.includes(GuildFeatures.AnimatedIcon)) this.add(GuildToggle.animatedIcon)
-      if (guild.features.includes(GuildFeatures.Banner)) this.add(GuildToggle.banner)
-      if (guild.features.includes(GuildFeatures.WelcomeScreenEnabled)) this.add(GuildToggle.welcomeScreenEnabled)
-      if (guild.features.includes(GuildFeatures.MemberVerificationGateEnabled)) {
+      if (guild.features.includes(GuildFeatures.InviteSplash)) { this.add(GuildToggle.inviteSplash) }
+      if (guild.features.includes(GuildFeatures.VipRegions)) { this.add(GuildToggle.vipRegions) }
+      if (guild.features.includes(GuildFeatures.VanityUrl)) { this.add(GuildToggle.vanityUrl) }
+      if (guild.features.includes(GuildFeatures.Verified)) { this.add(GuildToggle.verified) }
+      if (guild.features.includes(GuildFeatures.Partnered)) { this.add(GuildToggle.partnered) }
+      if (guild.features.includes(GuildFeatures.Community)) { this.add(GuildToggle.community) }
+      if (guild.features.includes(GuildFeatures.DeveloperSupportServer)) { this.add(GuildToggle.developerSupportServer) }
+      if (guild.features.includes(GuildFeatures.AnimatedBanner)) { this.add(GuildToggle.animatedBanner) }
+      if (guild.features.includes(GuildFeatures.News)) { this.add(GuildToggle.news) }
+      if (guild.features.includes(GuildFeatures.Discoverable)) { this.add(GuildToggle.discoverable) }
+      if (guild.features.includes(GuildFeatures.Featurable)) { this.add(GuildToggle.featurable) }
+      if (guild.features.includes(GuildFeatures.AnimatedIcon)) { this.add(GuildToggle.animatedIcon) }
+      if (guild.features.includes(GuildFeatures.Banner)) { this.add(GuildToggle.banner) }
+      if (guild.features.includes(GuildFeatures.WelcomeScreenEnabled)) { this.add(GuildToggle.welcomeScreenEnabled) }
+      if (
+        guild.features.includes(GuildFeatures.MemberVerificationGateEnabled)
+      ) {
         this.add(GuildToggle.memberVerificationGateEnabled)
       }
-      if (guild.features.includes(GuildFeatures.PreviewEnabled)) this.add(GuildToggle.previewEnabled)
-      if (guild.features.includes(GuildFeatures.TicketedEventsEnabled)) this.add(GuildToggle.ticketedEventsEnabled)
-      if (guild.features.includes(GuildFeatures.MonetizationEnabled)) this.add(GuildToggle.monetizationEnabled)
-      if (guild.features.includes(GuildFeatures.MoreStickers)) this.add(GuildToggle.moreStickers)
-      if (guild.features.includes(GuildFeatures.PrivateThreads)) this.add(GuildToggle.privateThreads)
-      if (guild.features.includes(GuildFeatures.RoleIcons)) this.add(GuildToggle.roleIcons)
-      if (guild.features.includes(GuildFeatures.AutoModeration)) this.add(GuildToggle.autoModeration)
-      if (guild.features.includes(GuildFeatures.InvitesDisabled)) this.add(GuildToggle.invitesDisabled)
+      if (guild.features.includes(GuildFeatures.PreviewEnabled)) { this.add(GuildToggle.previewEnabled) }
+      if (guild.features.includes(GuildFeatures.TicketedEventsEnabled)) { this.add(GuildToggle.ticketedEventsEnabled) }
+      if (guild.features.includes(GuildFeatures.MonetizationEnabled)) { this.add(GuildToggle.monetizationEnabled) }
+      if (guild.features.includes(GuildFeatures.MoreStickers)) { this.add(GuildToggle.moreStickers) }
+      if (guild.features.includes(GuildFeatures.PrivateThreads)) { this.add(GuildToggle.privateThreads) }
+      if (guild.features.includes(GuildFeatures.RoleIcons)) { this.add(GuildToggle.roleIcons) }
+      if (guild.features.includes(GuildFeatures.AutoModeration)) { this.add(GuildToggle.autoModeration) }
+      if (guild.features.includes(GuildFeatures.InvitesDisabled)) { this.add(GuildToggle.invitesDisabled) }
     }
   }
 
-  get features () {
+  get features (): GuildToggleKeys[] {
     const features: GuildToggleKeys[] = []
     for (const key of Object.keys(GuildToggle)) {
       if (!featureNames.includes(key)) continue
@@ -144,160 +145,162 @@ export class GuildToggles extends ToggleBitfieldBigint {
   }
 
   /** Whether the bot is the owner of the guild */
-  get owner () {
+  get owner (): boolean {
     return this.has('owner')
   }
 
   /** Whether the server widget is enabled */
-  get widgetEnabled () {
+  get widgetEnabled (): boolean {
     return this.has('widgetEnabled')
   }
 
   /** Whether this is considered a large guild */
-  get large () {
+  get large (): boolean {
     return this.has('large')
   }
 
   /** Whether this guild is unavailable due to an outage */
-  get unavailable () {
+  get unavailable (): boolean {
     return this.has('unavailable')
   }
 
   /** Whether the guild has the boost progress bar enabled */
-  get premiumProgressBarEnabled () {
+  get premiumProgressBarEnabled (): boolean {
     return this.has('premiumProgressBarEnabled')
   }
 
   /** Whether the guild has access to set an invite splash background */
-  get inviteSplash () {
+  get inviteSplash (): boolean {
     return this.has('inviteSplash')
   }
 
   /** Whether the guild has access to set 384 kbps bitrate in voice (previously VIP voice servers) */
-  get vipRegions () {
+  get vipRegions (): boolean {
     return this.has('vipRegions')
   }
 
   /** Whether the guild has access to set a vanity URL */
-  get vanityUrl () {
+  get vanityUrl (): boolean {
     return this.has('vanityUrl')
   }
 
   /** Whether the guild is verified */
-  get verified () {
+  get verified (): boolean {
     return this.has('verified')
   }
 
   /** Whether the guild is partnered */
-  get partnered () {
+  get partnered (): boolean {
     return this.has('partnered')
   }
 
   /** Whether the guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
-  get community () {
+  get community (): boolean {
     return this.has('community')
   }
 
   /** Whether the Guild has been set as a support server on the App Directory */
-  get developerSupportServer () {
+  get developerSupportServer (): boolean {
     return this.has('developerSupportServer')
   }
 
   /** Whether the guild has access to set an animated guild banner image */
-  get animatedBanner () {
+  get animatedBanner (): boolean {
     return this.has('animatedBanner')
   }
 
   /** Whether the guild has access to create news channels */
-  get news () {
+  get news (): boolean {
     return this.has('news')
   }
 
   /** Whether the guild is able to be discovered in the directory */
-  get discoverable () {
+  get discoverable (): boolean {
     return this.has('discoverable')
   }
 
   /** Whether the guild is able to be featured in the directory */
-  get featurable () {
+  get featurable (): boolean {
     return this.has('featurable')
   }
 
   /** Whether the guild has access to set an animated guild icon */
-  get animatedIcon () {
+  get animatedIcon (): boolean {
     return this.has('animatedIcon')
   }
 
   /** Whether the guild has access to set a guild banner image */
-  get banner () {
+  get banner (): boolean {
     return this.has('banner')
   }
 
   /** Whether the guild has enabled the welcome screen */
-  get welcomeScreenEnabled () {
+  get welcomeScreenEnabled (): boolean {
     return this.has('welcomeScreenEnabled')
   }
 
   /** Whether the guild has enabled [Membership Screening](https://discord.com/developers/docs/resources/guild#membership-screening-object) */
-  get memberVerificationGateEnabled () {
+  get memberVerificationGateEnabled (): boolean {
     return this.has('memberVerificationGateEnabled')
   }
 
   /** Whether the guild can be previewed before joining via Membership Screening or the directory */
-  get previewEnabled () {
+  get previewEnabled (): boolean {
     return this.has('previewEnabled')
   }
 
   /** Whether the guild has enabled ticketed events */
-  get ticketedEventsEnabled () {
+  get ticketedEventsEnabled (): boolean {
     return this.has('ticketedEventsEnabled')
   }
 
   /** Whether the guild has enabled monetization */
-  get monetizationEnabled () {
+  get monetizationEnabled (): boolean {
     return this.has('monetizationEnabled')
   }
 
   /** Whether the guild has increased custom sticker slots */
-  get moreStickers () {
+  get moreStickers (): boolean {
     return this.has('moreStickers')
   }
 
   /** Whether the guild has access to create private threads */
-  get privateThreads () {
+  get privateThreads (): boolean {
     return this.has('privateThreads')
   }
 
   /** Whether the guild is able to set role icons */
-  get roleIcons () {
+  get roleIcons (): boolean {
     return this.has('roleIcons')
   }
 
   /** Whether the guild has set up auto moderation rules */
-  get autoModeration () {
+  get autoModeration (): boolean {
     return this.has('autoModeration')
   }
 
   /** Whether the guild has paused invites, preventing new users from joining */
-  get invitesDisabled () {
+  get invitesDisabled (): boolean {
     return this.has('invitesDisabled')
   }
 
   /** Checks whether or not the permissions exist in this */
-  has (permissions: GuildToggleKeys | GuildToggleKeys[]) {
-    if (!Array.isArray(permissions)) return super.contains(GuildToggle[permissions])
+  has (permissions: GuildToggleKeys | GuildToggleKeys[]): boolean {
+    if (!Array.isArray(permissions)) { return super.contains(GuildToggle[permissions]) }
 
-    return super.contains(permissions.reduce((a, b) => (a |= GuildToggle[b]), 0n))
+    return super.contains(
+      permissions.reduce((a, b) => (a |= GuildToggle[b]), 0n)
+    )
   }
 
   /** Lists all the toggles for the role and whether or not each is true or false. */
-  list () {
+  list (): Record<GuildToggleKeys, boolean> {
     const json: Record<string, boolean> = {}
     for (const [key, value] of Object.entries(GuildToggle)) {
       json[key] = super.contains(value)
     }
 
-    return json as Record<GuildToggleKeys, boolean>
+    return json
   }
 }
 

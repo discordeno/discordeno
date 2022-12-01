@@ -24,9 +24,11 @@ export function getAvatarURL (
     ? bot.utils.formatImageURL(
       bot.constants.routes.USER_AVATAR(
         userId,
-        typeof options?.avatar === 'string' ? options.avatar : bot.utils.iconBigintToHash(options?.avatar)
+        typeof options?.avatar === 'string'
+          ? options.avatar
+          : bot.utils.iconBigintToHash(options?.avatar)
       ),
-      options?.size || 128,
+      options?.size ?? 128,
       options?.format
     )
     : bot.constants.routes.USER_DEFAULT_AVATAR(Number(discriminator) % 5)

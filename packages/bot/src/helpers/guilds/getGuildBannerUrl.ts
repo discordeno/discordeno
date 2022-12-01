@@ -25,9 +25,11 @@ export function getGuildBannerURL (
     ? bot.utils.formatImageURL(
       bot.constants.routes.GUILD_BANNER(
         guildId,
-        typeof options.banner === 'string' ? options.banner : bot.utils.iconBigintToHash(options.banner)
+        typeof options.banner === 'string'
+          ? options.banner
+          : bot.utils.iconBigintToHash(options.banner)
       ),
-      options.size || 128,
+      options.size ?? 128,
       options.format
     )
     : undefined

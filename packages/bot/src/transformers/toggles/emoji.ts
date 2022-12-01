@@ -28,40 +28,42 @@ export class EmojiToggles extends ToggleBitfield {
   }
 
   /** Whether this emoji must be wrapped in colons */
-  get requireColons () {
+  get requireColons (): boolean {
     return this.has('requireColons')
   }
 
   /** Whether this emoji is managed */
-  get managed () {
+  get managed (): boolean {
     return this.has('managed')
   }
 
   /** Whether this emoji is animated */
-  get animated () {
+  get animated (): boolean {
     return this.has('animated')
   }
 
   /** Whether this emoji can be used, may be false due to loss of Server Boosts */
-  get available () {
+  get available (): boolean {
     return this.has('available')
   }
 
   /** Checks whether or not the permissions exist in this */
-  has (permissions: EmojiToggleKeys | EmojiToggleKeys[]) {
-    if (!Array.isArray(permissions)) return super.contains(EmojiToggle[permissions])
+  has (permissions: EmojiToggleKeys | EmojiToggleKeys[]): boolean {
+    if (!Array.isArray(permissions)) { return super.contains(EmojiToggle[permissions]) }
 
-    return super.contains(permissions.reduce((a, b) => (a |= EmojiToggle[b]), 0))
+    return super.contains(
+      permissions.reduce((a, b) => (a |= EmojiToggle[b]), 0)
+    )
   }
 
   /** Lists all the toggles for the role and whether or not each is true or false. */
-  list () {
+  list (): Record<EmojiToggleKeys, boolean> {
     const json: Record<string, boolean> = {}
     for (const [key, value] of Object.entries(EmojiToggle)) {
       json[key] = super.contains(value)
     }
 
-    return json as Record<EmojiToggleKeys, boolean>
+    return json
   }
 }
 

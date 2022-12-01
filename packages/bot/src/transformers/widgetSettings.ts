@@ -1,7 +1,11 @@
 import { DiscordGuildWidgetSettings, Optionalize } from '@discordeno/types'
 import { Bot } from '../bot.js'
 
-export function transformWidgetSettings (bot: Bot, payload: DiscordGuildWidgetSettings) {
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export function transformWidgetSettings (
+  bot: Bot,
+  payload: DiscordGuildWidgetSettings
+) {
   const widget = {
     enabled: payload.enabled,
     channelId: payload.channel_id ?? undefined
@@ -10,4 +14,5 @@ export function transformWidgetSettings (bot: Bot, payload: DiscordGuildWidgetSe
   return widget as Optionalize<typeof widget>
 }
 
-export interface GuildWidgetSettings extends ReturnType<typeof transformWidgetSettings> { }
+export interface GuildWidgetSettings
+  extends ReturnType<typeof transformWidgetSettings> {}

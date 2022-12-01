@@ -1,17 +1,39 @@
-import { DiscordGatewayPayload, DiscordThreadListSync } from '@discordeno/types'
+import {
+  DiscordGatewayPayload,
+  DiscordThreadListSync
+} from '@discordeno/types'
 import { Bot } from '../../bot.js'
+import { Channel } from '../../transformers/index.js'
 
-export async function handleThreadListSync (bot: Bot, data: DiscordGatewayPayload) {
+export async function handleThreadListSync (
+  bot: Bot,
+  data: DiscordGatewayPayload
+): Promise<{
+    guildId: bigint
+    channelIds: bigint[] | undefined
+    threads: Channel[]
+    members: Array<{
+      id: bigint | undefined
+      userId: bigint | undefined
+      joinTimestamp: number
+    }>
+  }> {
   const payload = data.d as DiscordThreadListSync
 
   const guildId = bot.transformers.snowflake(payload.guild_id)
   return {
     guildId,
-    channelIds: payload.channel_ids?.map((id) => bot.transformers.snowflake(id)),
-    threads: payload.threads.map((thread) => bot.transformers.channel(bot, { channel: thread, guildId })),
+    channelIds: payload.channel_ids?.map((id) =>
+      bot.transformers.snowflake(id)
+    ),
+    threads: payload.threads.map((thread) =>
+      bot.transformers.channel(bot, { channel: thread, guildId })
+    ),
     members: payload.members.map((member) => ({
       id: member.id ? bot.transformers.snowflake(member.id) : undefined,
-      userId: member.user_id ? bot.transformers.snowflake(member.user_id) : undefined,
+      userId: member.user_id
+        ? bot.transformers.snowflake(member.user_id)
+        : undefined,
       joinTimestamp: Date.parse(member.join_timestamp)
     }))
   }
