@@ -1,4 +1,4 @@
-import { BASE_URL } from '../util/constants.js'
+import { BASE_URL } from '@discordeno/utils'
 import { createQueueBucket } from './createQueueBucket.js'
 import { RestPayload, RestRequest } from './rest.js'
 import { RestManager } from './restManager.js'

@@ -23,7 +23,6 @@ export async function runMethod<T = any> (
   )
 
   const errorStack = new Error('Location:')
-  // @ts-expect-error Breaks deno deploy. Luca said add ts-ignore until it's fixed
   Error.captureStackTrace(errorStack)
 
   // For proxies we don't need to do any of the legwork so we just forward the request
