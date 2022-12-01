@@ -30,8 +30,14 @@
   },
   "lint-staged": {
     "*": "prettier --ignore-unknown --write",
-    "*.ts": "eslint --fix",
-    "*.js": "eslint --fix"
+    "*.ts": [
+      "eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to .",
+      "git add"
+    ],
+    "*.js": [
+      "eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to .",
+      "git add"
+    ]
   },
   "packageManager": "yarn@3.3.0"
 }
