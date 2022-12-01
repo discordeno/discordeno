@@ -19,7 +19,7 @@
     "eslint": "^8.0.1",
     "eslint-config-discordeno": "*",
     "tsconfig": "*",
-    "typescript": "^4.5.2",
+    "typescript": "^4.9.3",
     "@discordeno/bot": "18.0.0-alpha.1",
     "@discordeno/rest": "18.0.0-alpha.1",
     "@discordeno/gateway": "18.0.0-alpha.1",

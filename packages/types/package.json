@@ -19,7 +19,7 @@
     "eslint": "^8.0.1",
     "eslint-config-discordeno": "*",
     "tsconfig": "*",
-    "typescript": "^4.5.2"
+    "typescript": "^4.9.3"
   },
   "dependencies": {
     "@types/node": "^18.11.9"

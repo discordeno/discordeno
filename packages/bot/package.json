@@ -22,7 +22,7 @@
     "@discordeno/gateway": "18.0.0-alpha.1",
     "@discordeno/rest": "18.0.0-alpha.1",
     "@discordeno/types": "18.0.0-alpha.1",
-    "typescript": "^4.5.2"
+    "typescript": "^4.9.3"
   },
   "dependencies": {
     "@types/node": "^18.11.9"
