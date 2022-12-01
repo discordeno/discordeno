@@ -2,29 +2,19 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "outputs": [
-        "dist/**/*.js"
-      ],
-      "inputs": [
-        "src/**/*.ts"
-      ]
+      "outputs": ["dist/**/*.js"],
+      "inputs": ["src/**/*.ts"]
     },
     "build-types": {
-      "dependsOn": [
-        "^build-types"
-      ],
-      "outputs": [
-        "dist/**/d.ts",
-        "dist/**/d.ts.map"
-      ]
+      "dependsOn": ["^build-types"],
+      "outputs": ["dist/**/d.ts", "dist/**/d.ts.map"]
     },
     "release-build": {
-      "dependsOn": [
-        "^build-types"
-      ],
-      "outputs": [
-        "dist/**"
-      ]
+      "dependsOn": ["^build-types"],
+      "outputs": ["dist/**"]
+    },
+    "test-types": {
+      "dependsOn": ["^build-types"]
     },
     "lint": {},
     "fmt": {},

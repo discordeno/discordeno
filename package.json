@@ -7,12 +7,13 @@
     "packages/plugins/cache"
   ],
   "scripts": {
-    "build": "turbo run build --parallel",
-    "fmt": "turbo run fmt --parallel",
+    "build": "turbo run build",
+    "fmt": "turbo run fmt",
     "build-types": "turbo run build-types",
     "release-build": "turbo run release-build",
     "dev": "turbo run dev --parallel",
-    "lint": "turbo run lint --parallel",
+    "lint": "turbo run lint",
+    "test-types": "turbo run test-types",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install"
   },
