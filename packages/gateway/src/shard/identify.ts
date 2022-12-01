@@ -1,11 +1,11 @@
-import { GatewayOpcodes } from '../../types/shared.js'
+import { GatewayOpcodes } from '@discordeno/types'
 import { Shard, ShardSocketCloseCodes, ShardState } from './types.js'
 
 export async function identify (shard: Shard): Promise<void> {
   // A new identify has been requested even though there is already a connection open.
   // Therefore we need to close the old connection and heartbeating before creating a new one.
   if (shard.isOpen()) {
-    console.log('CLOSING EXISTING SHARD: #' + shard.id)
+    console.log(`CLOSING EXISTING SHARD: #${shard.id}`)
     shard.close(ShardSocketCloseCodes.ReIdentifying, 'Re-identifying closure of old connection.')
   }
 
@@ -22,7 +22,7 @@ export async function identify (shard: Shard): Promise<void> {
   // Wait until an identify is free for this shard.
   await shard.requestIdentify()
 
-  shard.send({
+  void shard.send({
     op: GatewayOpcodes.Identify,
     d: {
       token: `Bot ${shard.gatewayConfig.token}`,

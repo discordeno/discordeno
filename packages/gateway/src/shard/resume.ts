@@ -1,4 +1,4 @@
-import { GatewayOpcodes } from '../../types/shared.js'
+import { GatewayOpcodes } from '@discordeno/types'
 import { Shard, ShardSocketCloseCodes, ShardState } from './types.js'
 
 export async function resume (shard: Shard): Promise<void> {
@@ -26,7 +26,7 @@ export async function resume (shard: Shard): Promise<void> {
   // Before we can resume, we need to create a new connection with Discord's gateway.
   await shard.connect()
 
-  shard.send({
+  void shard.send({
     op: GatewayOpcodes.Resume,
     d: {
       token: `Bot ${shard.gatewayConfig.token}`,

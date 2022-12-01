@@ -1,4 +1,4 @@
-import { GatewayCloseEventCodes } from '../../types/shared.js'
+import { GatewayCloseEventCodes } from '@discordeno/types'
 import { Shard, ShardSocketCloseCodes, ShardState } from './types.js'
 
 export async function handleClose (shard: Shard, close: CloseEvent): Promise<void> {

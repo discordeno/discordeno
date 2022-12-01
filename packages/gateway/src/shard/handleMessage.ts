@@ -1,11 +1,7 @@
-import { DiscordGatewayPayload, DiscordHello, DiscordReady } from '../../types/discord.js'
-import { GatewayOpcodes } from '../../types/shared.js'
-import { createLeakyBucket } from '../../util/bucket.js'
-import { delay } from '../../util/utils.js'
-import { decompressWith } from './deps.js'
+import { DiscordGatewayPayload, DiscordHello, DiscordReady, GatewayOpcodes } from '@discordeno/types'
+import { createLeakyBucket, delay } from '@discordeno/utils'
+import { inflateSync } from 'node:zlib'
 import { GATEWAY_RATE_LIMIT_RESET_INTERVAL, Shard, ShardState } from './types.js'
-
-const decoder = new TextDecoder()
 
 export async function handleMessage (shard: Shard, message: MessageEvent<any>): Promise<void> {
   message = message.data
@@ -13,11 +9,8 @@ export async function handleMessage (shard: Shard, message: MessageEvent<any>): 
   // If message compression is enabled,
   // Discord might send zlib compressed payloads.
   if (shard.gatewayConfig.compress && message instanceof Blob) {
-    message = decompressWith(
-      new Uint8Array(await message.arrayBuffer()),
-      0,
-      (slice: Uint8Array) => decoder.decode(slice)
-    )
+    // @ts-expect-error
+    message = inflateSync(await message.arrayBuffer()).toString()
   }
 
   // Safeguard incase decompression failed to make a string.
@@ -126,8 +119,9 @@ export async function handleMessage (shard: Shard, message: MessageEvent<any>): 
 
     shard.resolves.get('RESUMED')?.(messageData)
     shard.resolves.delete('RESUMED')
-  } // Important for future resumes.
-  else if (messageData.t === 'READY') {
+  } else if (messageData.t === 'READY') {
+    // Important for future resumes.
+
     const payload = messageData.d as DiscordReady
 
     shard.resumeGatewayUrl = payload.resume_gateway_url

@@ -1,8 +1,5 @@
-import { StatusUpdate } from '../../helpers/misc/editShardStatus.js'
-import { DiscordGatewayPayload } from '../../types/discord.js'
-import { PickPartial } from '../../types/shared.js'
-import { createLeakyBucket, LeakyBucket } from '../../util/bucket.js'
-import { API_VERSION } from '../../util/constants.js'
+import { ActivityTypes, DiscordGatewayPayload, PickPartial, PresenceStatus } from '@discordeno/types'
+import { API_VERSION, createLeakyBucket, LeakyBucket } from '@discordeno/utils'
 import { calculateSafeRequests } from './calculateSafeRequests.js'
 import { close } from './close.js'
 import { connect } from './connect.js'
@@ -32,6 +29,7 @@ import {
 // TODO: improve shard event resolving
 
 /** */
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function createShard (
   options: CreateShard
 ) {
@@ -55,11 +53,12 @@ export function createShard (
     // ----------
 
     /** The gateway configuration which is used to connect to Discord. */
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     gatewayConfig: {
       compress: options.gatewayConfig.compress ?? false,
       intents: options.gatewayConfig.intents ?? 0,
       properties: {
-        os: options.gatewayConfig?.properties?.os ?? Deno.build.os,
+        os: options.gatewayConfig?.properties?.os ?? process.platform,
         browser: options.gatewayConfig?.properties?.browser ?? 'Discordeno',
         device: options.gatewayConfig?.properties?.device ?? 'Discordeno'
       },
@@ -68,6 +67,7 @@ export function createShard (
       version: options.gatewayConfig.version ?? API_VERSION
     } as ShardGatewayConfig,
     /** This contains all the heartbeat information */
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     heart: {
       acknowledged: false,
       interval: DEFAULT_HEARTBEAT_INTERVAL
@@ -79,7 +79,7 @@ export function createShard (
      */
     maxRequestsPerRateLimitTick: MAX_GATEWAY_REQUESTS_PER_INTERVAL,
     /** The previous payload sequence number. */
-    previousSequenceNumber: options.previousSequenceNumber || null,
+    previousSequenceNumber: options.previousSequenceNumber ?? null,
     /** In which interval (in milliseconds) the gateway resets it's rate limit. */
     rateLimitResetInterval: GATEWAY_RATE_LIMIT_RESET_INTERVAL,
     /** Current session id of the shard if present. */
@@ -97,6 +97,7 @@ export function createShard (
     // ----------
 
     /** The shard related event handlers. */
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     events: options.events ?? {} as ShardEvents,
 
     /** Calculate the amount of requests which can safely be made per rate limit interval,
@@ -224,6 +225,25 @@ export function createShard (
   }
 }
 
+/** https://discord.com/developers/docs/topics/gateway-events#activity-object */
+export interface BotActivity {
+  name: string
+  type: ActivityTypes
+  url?: string
+}
+
+/** https://discord.com/developers/docs/topics/gateway-events#update-presence */
+export interface BotStatusUpdate {
+  // /** Unix time (in milliseconds) of when the client went idle, or null if the client is not idle */
+  since: number | null
+  /** The user's activities */
+  activities: BotActivity[]
+  /** The user's new status */
+  status: keyof typeof PresenceStatus
+  // /** Whether or not the client is afk */
+  // afk: boolean;
+}
+
 export interface CreateShard {
   /** Id of the shard which should be created. */
   id: number
@@ -275,7 +295,7 @@ export interface CreateShard {
   isOpen?: typeof isOpen
 
   /** Function which can be overwritten in order to get the shards presence. */
-  makePresence?: (shardId: number) => Promise<StatusUpdate> | StatusUpdate
+  makePresence?: (shardId: number) => Promise<BotStatusUpdate> | BotStatusUpdate
 
   /** The maximum of requests which can be send to discord per rate limit tick.
    * Typically this value should not be changed.

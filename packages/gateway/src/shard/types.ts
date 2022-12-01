@@ -1,5 +1,4 @@
-import { DiscordGatewayPayload } from '../../types/discord.js'
-import { GatewayOpcodes } from '../../types/shared.js'
+import { DiscordGatewayPayload, GatewayOpcodes } from '@discordeno/types'
 import { createShard } from './createShard.js'
 
 // TODO: think whether we also need an identifiedShard function
@@ -80,7 +79,7 @@ export interface ShardHeart {
   /** Interval between heartbeats requested by Discord. */
   interval: number
   /** Id of the interval, which is used for sending the heartbeats. */
-  intervalId?: number
+  intervalId?: NodeJS.Timer
   /** Unix (in milliseconds) timestamp when the last heartbeat ACK was received from Discord. */
   lastAck?: number
   /** Unix timestamp (in milliseconds) when the last heartbeat was sent. */
@@ -91,7 +90,7 @@ export interface ShardHeart {
    */
   rtt?: number
   /** Id of the timeout which is used for sending the first heartbeat to Discord since it's "special". */
-  timeoutId?: number
+  timeoutId?: NodeJS.Timeout
 }
 
 export interface ShardEvents {
