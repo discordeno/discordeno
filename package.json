@@ -3,7 +3,6 @@
   "version": "18.0.0-alpha.1",
   "private": true,
   "workspaces": [
-    "apps/*",
     "packages/*"
   ],
   "scripts": {
