@@ -1,5 +1,5 @@
 // The order of the import is important
-import { DiscordEmbed, Embed, formatImageURL, iconBigintToHash, ImageFormat, ImageSize, User } from './deps.ts'
+import { DiscordEmbed, Embed, formatImageURL, iconBigintToHash, ImageFormat, ImageSize, User } from './deps.js'
 
 import { routes } from '@discordeno/utils'
 
@@ -24,7 +24,7 @@ function avatarURL (
     size?: ImageSize
     format?: ImageFormat
   }
-) {
+): string {
   return options?.avatar
     ? formatImageURL(
       routes.USER_AVATAR(
@@ -53,7 +53,7 @@ export class Embeds extends Array<Embed> {
     return this
   }
 
-  fitData (data: string, max: number) {
+  fitData (data: string, max: number): string {
     // If the string is bigger then the allowed max shorten it.
     if (data.length > max) data = data.substring(0, max)
     // Check the amount of characters left for this embed
@@ -68,7 +68,7 @@ export class Embeds extends Array<Embed> {
     return data
   }
 
-  setAuthor (name: string, iconUrl?: string | User, url?: string) {
+  setAuthor (name: string, iconUrl?: string | User, url?: string): this {
     const embed = this.getLastEmbed()
     const finalName = this.enforceLimits ? this.fitData(name, embedLimits.authorName) : name
 
@@ -89,7 +89,7 @@ export class Embeds extends Array<Embed> {
     return this
   }
 
-  setColor (color: string) {
+  setColor (color: string): this {
     this.getLastEmbed().color = color.toLowerCase() === 'random'
       // Random color
       ? Math.floor(Math.random() * (0xffffff + 1))
@@ -99,14 +99,14 @@ export class Embeds extends Array<Embed> {
     return this
   }
 
-  setDescription (description: string | string[]) {
+  setDescription (description: string | string[]): this {
     if (Array.isArray(description)) description = description.join('\n')
     this.getLastEmbed().description = this.fitData(description, embedLimits.description)
 
     return this
   }
 
-  addField (name: string, value: string, inline = false) {
+  addField (name: string, value: string, inline = false): this {
     const embed = this.getLastEmbed()
 
     if (embed.fields!.length >= 25) return this
@@ -120,11 +120,11 @@ export class Embeds extends Array<Embed> {
     return this
   }
 
-  addBlankField (inline = false) {
+  addBlankField (inline = false): this {
     return this.addField('\u200B', '\u200B', inline)
   }
 
-  attachFile (file: unknown, name: string) {
+  attachFile (file: unknown, name: string): this {
     this.file = {
       blob: file,
       name
@@ -134,7 +134,7 @@ export class Embeds extends Array<Embed> {
     return this
   }
 
-  setFooter (text: string, icon?: string) {
+  setFooter (text: string, icon?: string): this {
     this.getLastEmbed().footer = {
       text: this.fitData(text, embedLimits.footerText),
       iconUrl: icon
@@ -143,7 +143,7 @@ export class Embeds extends Array<Embed> {
     return this
   }
 
-  setImage (url: string | User) {
+  setImage (url: string | User): this {
     if (typeof url === 'string') this.getLastEmbed().image = { url }
     else {
       this.getLastEmbed().image = {
@@ -157,32 +157,32 @@ export class Embeds extends Array<Embed> {
     return this
   }
 
-  setTimestamp (time = Date.now()) {
+  setTimestamp (time = Date.now()): this {
     this.getLastEmbed().timestamp = time
 
     return this
   }
 
-  setTitle (title: string, url?: string) {
+  setTitle (title: string, url?: string): this {
     this.getLastEmbed().title = this.fitData(title, embedLimits.title)
     if (url) this.getLastEmbed().url = url
 
     return this
   }
 
-  setURL (url: string) {
+  setURL (url: string): this {
     this.getLastEmbed().url = url
 
     return this
   }
 
-  setThumbnail (url: string) {
+  setThumbnail (url: string): this {
     this.getLastEmbed().thumbnail = { url }
 
     return this
   }
 
-  addEmbed (embed?: Embed) {
+  addEmbed (embed?: Embed): this {
     if (this.length === 10) return this
 
     this.push({ ...embed, fields: embed?.fields ?? [] })
@@ -191,7 +191,7 @@ export class Embeds extends Array<Embed> {
   }
 
   /** Get the last DiscordEmbed, if there is no it will create one */
-  getLastEmbed () {
+  getLastEmbed (): Embed {
     if (this.length) return this[this.length - 1]
 
     this.push({
@@ -201,7 +201,7 @@ export class Embeds extends Array<Embed> {
     return this[0]
   }
 
-  setFromJson (json: Record<string, any>) {
+  setFromJson (json: Record<string, any>): this {
     if (json.author?.name) this.setAuthor(json.author.name, json.author.icon_url, json.url)
     if (json.title) this.setTitle(json.title, json.url)
     if (json.description) this.setDescription(json.description)
@@ -221,7 +221,7 @@ export class Embeds extends Array<Embed> {
     return this
   }
 
-  setFromEmbed (embed: Embed) {
+  setFromEmbed (embed: Embed): this {
     if (embed.author?.name) this.setAuthor(embed.author.name, embed.author.iconUrl, embed.url)
     if (embed.title) this.setTitle(embed.title, embed.url)
     if (embed.description) this.setDescription(embed.description)
