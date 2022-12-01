@@ -94,7 +94,7 @@ function coerceToFileContent (value: unknown): value is FileContent {
 
   switch (typeof file.blob) {
     case 'string': {
-      const match = file.blob.match(/^data:(?<mimeType>[a-zA-Z0-9\/]*);base64,(?<content>.*)$/)
+      const match = file.blob.match(/^data:(?<mimeType>[a-zA-Z0-9/]*);base64,(?<content>.*)$/)
       if (match?.groups === undefined) {
         return false
       }
