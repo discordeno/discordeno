@@ -16,7 +16,9 @@
     "test-types": {
       "dependsOn": ["^build-types"]
     },
-    "lint": {},
+    "lint": {
+      "dependsOn": ["^build-types"]
+    },
     "fmt": {},
     "dev": {
       "cache": false
