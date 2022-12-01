@@ -11,7 +11,7 @@
     },
     "build-types": {
       "dependsOn": [
-        "^build"
+        "^build-types"
       ],
       "outputs": [
         "dist/**/d.ts",
