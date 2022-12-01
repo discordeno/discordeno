@@ -1,0 +1,14 @@
+{
+    "entryPointStrategy": "packages",
+    "entryPoints": [
+        "packages/bot",
+        "packages/discordeno",
+        "packages/gateway",
+        "packages/logger",
+        "packages/plugins",
+        "packages/rest",
+        "packages/tester",
+        "packages/types",
+        "packages/utils"
+    ]
+}

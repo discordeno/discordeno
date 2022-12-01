@@ -1,0 +1,32 @@
+[discordeno-monorepo](../README.md) / [Modules](../modules.md) / [@discordeno/bot](../modules/discordeno_bot.md) / OverwriteTypes
+
+# Enumeration: OverwriteTypes
+
+[@discordeno/bot](../modules/discordeno_bot.md).OverwriteTypes
+
+## Table of contents
+
+### Enumeration Members
+
+- [Member](discordeno_bot.OverwriteTypes.md#member)
+- [Role](discordeno_bot.OverwriteTypes.md#role)
+
+## Enumeration Members
+
+### Member
+
+• **Member** = `1`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:296
+
+---
+
+### Role
+
+• **Role** = `0`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:295

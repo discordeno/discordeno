@@ -1,0 +1,1886 @@
+[discordeno-monorepo](../README.md) / [Modules](../modules.md) / [@discordeno/rest](../modules/discordeno_rest.md) / JsonErrorCodes
+
+# Enumeration: JsonErrorCodes
+
+[@discordeno/rest](../modules/discordeno_rest.md).JsonErrorCodes
+
+https://discord.com/developers/docs/topics/opcodes-and-status-codes#json
+
+## Table of contents
+
+### Enumeration Members
+
+- [AMessageCanOnlyBePinnedInTheChannelItWasSentIn](discordeno_rest.JsonErrorCodes.md#amessagecanonlybepinnedinthechannelitwassentin)
+- [AMessageProvidedWasTooOldToBulkDelete](discordeno_rest.JsonErrorCodes.md#amessageprovidedwastoooldtobulkdelete)
+- [AThreadHasAlreadyBeenCreatedForThisMessage](discordeno_rest.JsonErrorCodes.md#athreadhasalreadybeencreatedforthismessage)
+- [AnApplicationCommandWithThatNameAlreadyExists](discordeno_rest.JsonErrorCodes.md#anapplicationcommandwiththatnamealreadyexists)
+- [AnInviteWasAcceptedToAGuildTheApplicationsBotIsNotIn](discordeno_rest.JsonErrorCodes.md#aninvitewasacceptedtoaguildtheapplicationsbotisnotin)
+- [ApiResourceIsCurrentlyOverloadedTryAgainALittleLater](discordeno_rest.JsonErrorCodes.md#apiresourceiscurrentlyoverloadedtryagainalittlelater)
+- [ApplicationInteractionFailedToSend](discordeno_rest.JsonErrorCodes.md#applicationinteractionfailedtosend)
+- [ApplicationNotYetAvailable](discordeno_rest.JsonErrorCodes.md#applicationnotyetavailable)
+- [BeforeValueIsEarlierThanTheThreadCreationDate](discordeno_rest.JsonErrorCodes.md#beforevalueisearlierthanthethreadcreationdate)
+- [BitrateIsTooHighForChannelOfThisType](discordeno_rest.JsonErrorCodes.md#bitrateistoohighforchannelofthistype)
+- [BotsCannotUseThisEndpoint](discordeno_rest.JsonErrorCodes.md#botscannotusethisendpoint)
+- [CannotDeleteAChannelRequiredForCommunityGuilds](discordeno_rest.JsonErrorCodes.md#cannotdeleteachannelrequiredforcommunityguilds)
+- [CannotEditMessageAuthoredByAnotherUser](discordeno_rest.JsonErrorCodes.md#cannoteditmessageauthoredbyanotheruser)
+- [CannotEditStickersWithinAMessage](discordeno_rest.JsonErrorCodes.md#cannoteditstickerswithinamessage)
+- [CannotExecuteActionOnADMChannel](discordeno_rest.JsonErrorCodes.md#cannotexecuteactiononadmchannel)
+- [CannotExecuteActionOnASystemMessage](discordeno_rest.JsonErrorCodes.md#cannotexecuteactiononasystemmessage)
+- [CannotExecuteActionOnThisChannelType](discordeno_rest.JsonErrorCodes.md#cannotexecuteactiononthischanneltype)
+- [CannotReplyWithoutPermissionToReadMessageHistory](discordeno_rest.JsonErrorCodes.md#cannotreplywithoutpermissiontoreadmessagehistory)
+- [CannotSelfRedeemThisGift](discordeno_rest.JsonErrorCodes.md#cannotselfredeemthisgift)
+- [CannotSendAnEmptyMessage](discordeno_rest.JsonErrorCodes.md#cannotsendanemptymessage)
+- [CannotSendMessagesInANonTextChannel](discordeno_rest.JsonErrorCodes.md#cannotsendmessagesinanontextchannel)
+- [CannotSendMessagesToThisUser](discordeno_rest.JsonErrorCodes.md#cannotsendmessagestothisuser)
+- [CannotUpdateAFinishedEvent](discordeno_rest.JsonErrorCodes.md#cannotupdateafinishedevent)
+- [ChannelVerificationLevelIsTooHighForYouToGainAccess](discordeno_rest.JsonErrorCodes.md#channelverificationlevelistoohighforyoutogainaccess)
+- [CommunityServerChannelsMustBeTextChannels](discordeno_rest.JsonErrorCodes.md#communityserverchannelsmustbetextchannels)
+- [ConnectionHasBeenRevoked](discordeno_rest.JsonErrorCodes.md#connectionhasbeenrevoked)
+- [ExplicitContentCannotBeSentToTheDesiredRecipient](discordeno_rest.JsonErrorCodes.md#explicitcontentcannotbesenttothedesiredrecipient)
+- [FailedToCreateStageNeededForStageEvent](discordeno_rest.JsonErrorCodes.md#failedtocreatestageneededforstageevent)
+- [FailedToResizeAssetBelowTheMaximumSize](discordeno_rest.JsonErrorCodes.md#failedtoresizeassetbelowthemaximumsize)
+- [FileUploadedExceedsTheMaximumSize](discordeno_rest.JsonErrorCodes.md#fileuploadedexceedsthemaximumsize)
+- [GeneralError](discordeno_rest.JsonErrorCodes.md#generalerror)
+- [GuildAlreadyHasTemplate](discordeno_rest.JsonErrorCodes.md#guildalreadyhastemplate)
+- [GuildPremiumSubscriptionLevelTooLow](discordeno_rest.JsonErrorCodes.md#guildpremiumsubscriptionleveltoolow)
+- [GuildWidgetDisabled](discordeno_rest.JsonErrorCodes.md#guildwidgetdisabled)
+- [InteractionHasAlreadyBeenAcknowledged](discordeno_rest.JsonErrorCodes.md#interactionhasalreadybeenacknowledged)
+- [InvalidAccountType](discordeno_rest.JsonErrorCodes.md#invalidaccounttype)
+- [InvalidActivityAction](discordeno_rest.JsonErrorCodes.md#invalidactivityaction)
+- [InvalidApiVersionProvided](discordeno_rest.JsonErrorCodes.md#invalidapiversionprovided)
+- [InvalidAuthenticationTokenProvided](discordeno_rest.JsonErrorCodes.md#invalidauthenticationtokenprovided)
+- [InvalidFileUploaded](discordeno_rest.JsonErrorCodes.md#invalidfileuploaded)
+- [InvalidFormBodyOrContentTypeProvided](discordeno_rest.JsonErrorCodes.md#invalidformbodyorcontenttypeprovided)
+- [InvalidGuild](discordeno_rest.JsonErrorCodes.md#invalidguild)
+- [InvalidJsonForUploadedLottieFile](discordeno_rest.JsonErrorCodes.md#invalidjsonforuploadedlottiefile)
+- [InvalidMFALevel](discordeno_rest.JsonErrorCodes.md#invalidmfalevel)
+- [InvalidMessageType](discordeno_rest.JsonErrorCodes.md#invalidmessagetype)
+- [InvalidOAuth2AccessTokenProvided](discordeno_rest.JsonErrorCodes.md#invalidoauth2accesstokenprovided)
+- [InvalidOAuth2State](discordeno_rest.JsonErrorCodes.md#invalidoauth2state)
+- [InvalidRecipients](discordeno_rest.JsonErrorCodes.md#invalidrecipients)
+- [InvalidRole](discordeno_rest.JsonErrorCodes.md#invalidrole)
+- [InvalidStickerSent](discordeno_rest.JsonErrorCodes.md#invalidstickersent)
+- [InvalidThreadNotificationSettings](discordeno_rest.JsonErrorCodes.md#invalidthreadnotificationsettings)
+- [InvalidWebhookTokenProvided](discordeno_rest.JsonErrorCodes.md#invalidwebhooktokenprovided)
+- [InviteCodeWasEitherInvalidOrTaken](discordeno_rest.JsonErrorCodes.md#invitecodewaseitherinvalidortaken)
+- [LottieAnimationMaximumDimensionsExceeded](discordeno_rest.JsonErrorCodes.md#lottieanimationmaximumdimensionsexceeded)
+- [MaxNumberOfDailyApplicationCommandCreatesHasBeenReached](discordeno_rest.JsonErrorCodes.md#maxnumberofdailyapplicationcommandcreateshasbeenreached)
+- [MaxNumberOfThreadParticipantsHasBeenReached](discordeno_rest.JsonErrorCodes.md#maxnumberofthreadparticipantshasbeenreached)
+- [MaximumNumberOfActiveAnnouncementThreadsReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofactiveannouncementthreadsreached)
+- [MaximumNumberOfActiveThreadsReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofactivethreadsreached)
+- [MaximumNumberOfAnimatedEmojisReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofanimatedemojisreached)
+- [MaximumNumberOfAttachmentsInAMessageReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofattachmentsinamessagereached)
+- [MaximumNumberOfBansFetchesHasBeenReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofbansfetcheshasbeenreached)
+- [MaximumNumberOfBansForNonGuildMembersHaveBeenExceeded](discordeno_rest.JsonErrorCodes.md#maximumnumberofbansfornonguildmembershavebeenexceeded)
+- [MaximumNumberOfEditsToMessagesOlderThan1HourReachedTryAgainLater](discordeno_rest.JsonErrorCodes.md#maximumnumberofeditstomessagesolderthan1hourreachedtryagainlater)
+- [MaximumNumberOfEmojisReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofemojisreached)
+- [MaximumNumberOfFriendsReached](discordeno_rest.JsonErrorCodes.md#maximumnumberoffriendsreached)
+- [MaximumNumberOfGuildChannelsReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofguildchannelsreached)
+- [MaximumNumberOfGuildRolesReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofguildrolesreached)
+- [MaximumNumberOfGuildWidgetSettingsUpdatesHasBeenReachedTryAgainLater](discordeno_rest.JsonErrorCodes.md#maximumnumberofguildwidgetsettingsupdateshasbeenreachedtryagainlater)
+- [MaximumNumberOfGuildsReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofguildsreached)
+- [MaximumNumberOfInvitesReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofinvitesreached)
+- [MaximumNumberOfPinnedThreadsInAForumChannelHasBeenReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofpinnedthreadsinaforumchannelhasbeenreached)
+- [MaximumNumberOfPinsReachedForTheChannel](discordeno_rest.JsonErrorCodes.md#maximumnumberofpinsreachedforthechannel)
+- [MaximumNumberOfPruneRequestsHasBeenReachedTryAgainLater](discordeno_rest.JsonErrorCodes.md#maximumnumberofprunerequestshasbeenreachedtryagainlater)
+- [MaximumNumberOfReactionsReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofreactionsreached)
+- [MaximumNumberOfRecipientsReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofrecipientsreached)
+- [MaximumNumberOfServerCategoriesHasBeenReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofservercategorieshasbeenreached)
+- [MaximumNumberOfServerMembersReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofservermembersreached)
+- [MaximumNumberOfStickersReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofstickersreached)
+- [MaximumNumberOfUncompletedGuildScheduledEventsReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofuncompletedguildscheduledeventsreached)
+- [MaximumNumberOfWebhooksReached](discordeno_rest.JsonErrorCodes.md#maximumnumberofwebhooksreached)
+- [MaximumNumbersOfApplicationCommandsReached](discordeno_rest.JsonErrorCodes.md#maximumnumbersofapplicationcommandsreached)
+- [MaxiumNumberOfTagsInAForumChannelHasBeenReached](discordeno_rest.JsonErrorCodes.md#maxiumnumberoftagsinaforumchannelhasbeenreached)
+- [MessageWasBlockedByAutomaticModeration](discordeno_rest.JsonErrorCodes.md#messagewasblockedbyautomaticmoderation)
+- [MissingAccess](discordeno_rest.JsonErrorCodes.md#missingaccess)
+- [MissingRequiredOAuth2Scope](discordeno_rest.JsonErrorCodes.md#missingrequiredoauth2scope)
+- [NoUsersWithDiscordTagExist](discordeno_rest.JsonErrorCodes.md#nouserswithdiscordtagexist)
+- [NoteWasTooLong](discordeno_rest.JsonErrorCodes.md#notewastoolong)
+- [OAuth2ApplicationDoesNotHaveABot](discordeno_rest.JsonErrorCodes.md#oauth2applicationdoesnothaveabot)
+- [OAuth2ApplicationLimitReached](discordeno_rest.JsonErrorCodes.md#oauth2applicationlimitreached)
+- [OnlyBotsCanUseThisEndpoint](discordeno_rest.JsonErrorCodes.md#onlybotscanusethisendpoint)
+- [OnlyTheOwnerOfThisAccountCanPerformThisAction](discordeno_rest.JsonErrorCodes.md#onlytheownerofthisaccountcanperformthisaction)
+- [OwnershipCannotBeTransferredToABotUser](discordeno_rest.JsonErrorCodes.md#ownershipcannotbetransferredtoabotuser)
+- [PaymentSourceRequiredToRedeemGift](discordeno_rest.JsonErrorCodes.md#paymentsourcerequiredtoredeemgift)
+- [ProvidedTooFewOrTooManyMessagesToDeleteMustProvideAtLeast2AndFewerThan100MessagesToDelete](discordeno_rest.JsonErrorCodes.md#providedtoofewortoomanymessagestodeletemustprovideatleast2andfewerthan100messagestodelete)
+- [ReactionWasBlocked](discordeno_rest.JsonErrorCodes.md#reactionwasblocked)
+- [RequestEntityTooLargeTrySendingSomethingSmallerInSize](discordeno_rest.JsonErrorCodes.md#requestentitytoolargetrysendingsomethingsmallerinsize)
+- [SendMessagesHasBeenTemporarilyDisabled](discordeno_rest.JsonErrorCodes.md#sendmessageshasbeentemporarilydisabled)
+- [StickerAnimationDurationExceedsMaximumOf5Seconds](discordeno_rest.JsonErrorCodes.md#stickeranimationdurationexceedsmaximumof5seconds)
+- [StickerFrameCountExceedsMaximumOf1000Frames](discordeno_rest.JsonErrorCodes.md#stickerframecountexceedsmaximumof1000frames)
+- [StickerFrameRateIsEitherTooSmallOrTooLarge](discordeno_rest.JsonErrorCodes.md#stickerframerateiseithertoosmallortoolarge)
+- [StickerMaximumFramerateExceeded](discordeno_rest.JsonErrorCodes.md#stickermaximumframerateexceeded)
+- [TargetUserIsNotConnectedToVoice](discordeno_rest.JsonErrorCodes.md#targetuserisnotconnectedtovoice)
+- [TheChannelYouAreWritingHasHitTheWriteRateLimit](discordeno_rest.JsonErrorCodes.md#thechannelyouarewritinghashitthewriteratelimit)
+- [TheRequestBodyContainsInvalidJSON](discordeno_rest.JsonErrorCodes.md#therequestbodycontainsinvalidjson)
+- [TheStageIsAlreadyOpen](discordeno_rest.JsonErrorCodes.md#thestageisalreadyopen)
+- [TheWriteActionYouArePerformingOnTheServerHasHitTheWriteRateLimit](discordeno_rest.JsonErrorCodes.md#thewriteactionyouareperformingontheserverhashitthewriteratelimit)
+- [ThisActionCannotBePerformedDueToSlowmodeRateLimit](discordeno_rest.JsonErrorCodes.md#thisactioncannotbeperformedduetoslowmoderatelimit)
+- [ThisFeatureHasBeenTemporarilyDisabledServerSide](discordeno_rest.JsonErrorCodes.md#thisfeaturehasbeentemporarilydisabledserverside)
+- [ThisMessageCannotBeEditedDueToAnnouncementRateLimits](discordeno_rest.JsonErrorCodes.md#thismessagecannotbeeditedduetoannouncementratelimits)
+- [ThisMessageHasAlreadyBeenCrossposted](discordeno_rest.JsonErrorCodes.md#thismessagehasalreadybeencrossposted)
+- [ThisServerIsNotAvailableInYourLocation](discordeno_rest.JsonErrorCodes.md#thisserverisnotavailableinyourlocation)
+- [ThisServerNeedsMonetizationEnabledInOrderToPerformThisAction](discordeno_rest.JsonErrorCodes.md#thisserverneedsmonetizationenabledinordertoperformthisaction)
+- [ThisServerNeedsMoreBoostsToPerformThisAction](discordeno_rest.JsonErrorCodes.md#thisserverneedsmorebooststoperformthisaction)
+- [ThisUserBannedFromThisGuild](discordeno_rest.JsonErrorCodes.md#thisuserbannedfromthisguild)
+- [ThreadIsLocked](discordeno_rest.JsonErrorCodes.md#threadislocked)
+- [TitleWasBlockedByAutomaticModeration](discordeno_rest.JsonErrorCodes.md#titlewasblockedbyautomaticmoderation)
+- [TriedToPerformAnOperationOnAnArchivedThreadSuchAsEditingAMessageOrAddingAUserToTheThread](discordeno_rest.JsonErrorCodes.md#triedtoperformanoperationonanarchivedthreadsuchaseditingamessageoraddingausertothethread)
+- [TwoFactorIsRequiredForThisOperation](discordeno_rest.JsonErrorCodes.md#twofactorisrequiredforthisoperation)
+- [UnauthorizedProvideAValidTokenAndTryAgain](discordeno_rest.JsonErrorCodes.md#unauthorizedprovideavalidtokenandtryagain)
+- [UnderMinimumAge](discordeno_rest.JsonErrorCodes.md#underminimumage)
+- [UnknownAccount](discordeno_rest.JsonErrorCodes.md#unknownaccount)
+- [UnknownApplication](discordeno_rest.JsonErrorCodes.md#unknownapplication)
+- [UnknownApplicationCommand](discordeno_rest.JsonErrorCodes.md#unknownapplicationcommand)
+- [UnknownApplicationCommandPermissions](discordeno_rest.JsonErrorCodes.md#unknownapplicationcommandpermissions)
+- [UnknownBan](discordeno_rest.JsonErrorCodes.md#unknownban)
+- [UnknownBranch](discordeno_rest.JsonErrorCodes.md#unknownbranch)
+- [UnknownBuild](discordeno_rest.JsonErrorCodes.md#unknownbuild)
+- [UnknownChannel](discordeno_rest.JsonErrorCodes.md#unknownchannel)
+- [UnknownDiscoveryCategory](discordeno_rest.JsonErrorCodes.md#unknowndiscoverycategory)
+- [UnknownEmoji](discordeno_rest.JsonErrorCodes.md#unknownemoji)
+- [UnknownEntitlement](discordeno_rest.JsonErrorCodes.md#unknownentitlement)
+- [UnknownGiftCode](discordeno_rest.JsonErrorCodes.md#unknowngiftcode)
+- [UnknownGuild](discordeno_rest.JsonErrorCodes.md#unknownguild)
+- [UnknownGuildMemberVerificationForm](discordeno_rest.JsonErrorCodes.md#unknownguildmemberverificationform)
+- [UnknownGuildScheduledEvent](discordeno_rest.JsonErrorCodes.md#unknownguildscheduledevent)
+- [UnknownGuildScheduledEventUser](discordeno_rest.JsonErrorCodes.md#unknownguildscheduledeventuser)
+- [UnknownGuildTemplate](discordeno_rest.JsonErrorCodes.md#unknownguildtemplate)
+- [UnknownGuildWelcomeScreen](discordeno_rest.JsonErrorCodes.md#unknownguildwelcomescreen)
+- [UnknownIntegration](discordeno_rest.JsonErrorCodes.md#unknownintegration)
+- [UnknownInteraction](discordeno_rest.JsonErrorCodes.md#unknowninteraction)
+- [UnknownInvite](discordeno_rest.JsonErrorCodes.md#unknowninvite)
+- [UnknownLobby](discordeno_rest.JsonErrorCodes.md#unknownlobby)
+- [UnknownMember](discordeno_rest.JsonErrorCodes.md#unknownmember)
+- [UnknownMessage](discordeno_rest.JsonErrorCodes.md#unknownmessage)
+- [UnknownPermissionOverwrite](discordeno_rest.JsonErrorCodes.md#unknownpermissionoverwrite)
+- [UnknownPremiumServerSubscribeCooldown](discordeno_rest.JsonErrorCodes.md#unknownpremiumserversubscribecooldown)
+- [UnknownProvider](discordeno_rest.JsonErrorCodes.md#unknownprovider)
+- [UnknownRedistributable](discordeno_rest.JsonErrorCodes.md#unknownredistributable)
+- [UnknownRole](discordeno_rest.JsonErrorCodes.md#unknownrole)
+- [UnknownSKU](discordeno_rest.JsonErrorCodes.md#unknownsku)
+- [UnknownSession](discordeno_rest.JsonErrorCodes.md#unknownsession)
+- [UnknownStageInstance](discordeno_rest.JsonErrorCodes.md#unknownstageinstance)
+- [UnknownSticker](discordeno_rest.JsonErrorCodes.md#unknownsticker)
+- [UnknownStoreDirectoryLayout](discordeno_rest.JsonErrorCodes.md#unknownstoredirectorylayout)
+- [UnknownStoreListing](discordeno_rest.JsonErrorCodes.md#unknownstorelisting)
+- [UnknownStream](discordeno_rest.JsonErrorCodes.md#unknownstream)
+- [UnknownTag](discordeno_rest.JsonErrorCodes.md#unknowntag)
+- [UnknownToken](discordeno_rest.JsonErrorCodes.md#unknowntoken)
+- [UnknownUser](discordeno_rest.JsonErrorCodes.md#unknownuser)
+- [UnknownVoiceState](discordeno_rest.JsonErrorCodes.md#unknownvoicestate)
+- [UnknownWebhook](discordeno_rest.JsonErrorCodes.md#unknownwebhook)
+- [UnknownWebhookService](discordeno_rest.JsonErrorCodes.md#unknownwebhookservice)
+- [UploadedFileNotFound](discordeno_rest.JsonErrorCodes.md#uploadedfilenotfound)
+- [UploadedLottiesCannotContainRasterizedImagesSuchAsPngOrJpeg](discordeno_rest.JsonErrorCodes.md#uploadedlottiescannotcontainrasterizedimagessuchaspngorjpeg)
+- [WebhooksCanOnlyCreateThreadsInForumChannels](discordeno_rest.JsonErrorCodes.md#webhookscanonlycreatethreadsinforumchannels)
+- [YouAreNotAuthorizedToPerformThisActionOnThisApplication](discordeno_rest.JsonErrorCodes.md#youarenotauthorizedtoperformthisactiononthisapplication)
+- [YouAreOpeningDirectMessagesTooFast](discordeno_rest.JsonErrorCodes.md#youareopeningdirectmessagestoofast)
+- [YouLackPermissionsToPerformThatAction](discordeno_rest.JsonErrorCodes.md#youlackpermissionstoperformthataction)
+- [YouNeedToVerifyYourAccountInOrderToPerformThisAction](discordeno_rest.JsonErrorCodes.md#youneedtoverifyyouraccountinordertoperformthisaction)
+- [YourStageTopicOrServerNameOrServerDescriptionOrChannelNamesContainsWordsThatAreNotAllowedForPublicStages](discordeno_rest.JsonErrorCodes.md#yourstagetopicorservernameorserverdescriptionorchannelnamescontainswordsthatarenotallowedforpublicstages)
+
+## Enumeration Members
+
+### AMessageCanOnlyBePinnedInTheChannelItWasSentIn
+
+• **AMessageCanOnlyBePinnedInTheChannelItWasSentIn** = `50019`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:839
+
+---
+
+### AMessageProvidedWasTooOldToBulkDelete
+
+• **AMessageProvidedWasTooOldToBulkDelete** = `50034`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:848
+
+---
+
+### AThreadHasAlreadyBeenCreatedForThisMessage
+
+• **AThreadHasAlreadyBeenCreatedForThisMessage** = `160004`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:881
+
+---
+
+### AnApplicationCommandWithThatNameAlreadyExists
+
+• **AnApplicationCommandWithThatNameAlreadyExists** = `40041`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:819
+
+---
+
+### AnInviteWasAcceptedToAGuildTheApplicationsBotIsNotIn
+
+• **AnInviteWasAcceptedToAGuildTheApplicationsBotIsNotIn** = `50036`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:851
+
+---
+
+### ApiResourceIsCurrentlyOverloadedTryAgainALittleLater
+
+• **ApiResourceIsCurrentlyOverloadedTryAgainALittleLater** = `130000`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:878
+
+---
+
+### ApplicationInteractionFailedToSend
+
+• **ApplicationInteractionFailedToSend** = `40043`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:820
+
+---
+
+### ApplicationNotYetAvailable
+
+• **ApplicationNotYetAvailable** = `110001`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:877
+
+---
+
+### BeforeValueIsEarlierThanTheThreadCreationDate
+
+• **BeforeValueIsEarlierThanTheThreadCreationDate** = `50085`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:865
+
+---
+
+### BitrateIsTooHighForChannelOfThisType
+
+• **BitrateIsTooHighForChannelOfThisType** = `30052`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:808
+
+---
+
+### BotsCannotUseThisEndpoint
+
+• **BotsCannotUseThisEndpoint** = `20001`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:769
+
+---
+
+### CannotDeleteAChannelRequiredForCommunityGuilds
+
+• **CannotDeleteAChannelRequiredForCommunityGuilds** = `50074`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:860
+
+---
+
+### CannotEditMessageAuthoredByAnotherUser
+
+• **CannotEditMessageAuthoredByAnotherUser** = `50005`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:826
+
+---
+
+### CannotEditStickersWithinAMessage
+
+• **CannotEditStickersWithinAMessage** = `50080`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:861
+
+---
+
+### CannotExecuteActionOnADMChannel
+
+• **CannotExecuteActionOnADMChannel** = `50003`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:824
+
+---
+
+### CannotExecuteActionOnASystemMessage
+
+• **CannotExecuteActionOnASystemMessage** = `50021`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:841
+
+---
+
+### CannotExecuteActionOnThisChannelType
+
+• **CannotExecuteActionOnThisChannelType** = `50024`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:842
+
+---
+
+### CannotReplyWithoutPermissionToReadMessageHistory
+
+• **CannotReplyWithoutPermissionToReadMessageHistory** = `160002`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:880
+
+---
+
+### CannotSelfRedeemThisGift
+
+• **CannotSelfRedeemThisGift** = `50054`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:856
+
+---
+
+### CannotSendAnEmptyMessage
+
+• **CannotSendAnEmptyMessage** = `50006`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:827
+
+---
+
+### CannotSendMessagesInANonTextChannel
+
+• **CannotSendMessagesInANonTextChannel** = `50008`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:829
+
+---
+
+### CannotSendMessagesToThisUser
+
+• **CannotSendMessagesToThisUser** = `50007`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:828
+
+---
+
+### CannotUpdateAFinishedEvent
+
+• **CannotUpdateAFinishedEvent** = `180000`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:892
+
+---
+
+### ChannelVerificationLevelIsTooHighForYouToGainAccess
+
+• **ChannelVerificationLevelIsTooHighForYouToGainAccess** = `50009`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:830
+
+---
+
+### CommunityServerChannelsMustBeTextChannels
+
+• **CommunityServerChannelsMustBeTextChannels** = `50086`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:866
+
+---
+
+### ConnectionHasBeenRevoked
+
+• **ConnectionHasBeenRevoked** = `40012`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:816
+
+---
+
+### ExplicitContentCannotBeSentToTheDesiredRecipient
+
+• **ExplicitContentCannotBeSentToTheDesiredRecipient** = `20009`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:771
+
+---
+
+### FailedToCreateStageNeededForStageEvent
+
+• **FailedToCreateStageNeededForStageEvent** = `180002`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:893
+
+---
+
+### FailedToResizeAssetBelowTheMaximumSize
+
+• **FailedToResizeAssetBelowTheMaximumSize** = `50138`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:872
+
+---
+
+### FileUploadedExceedsTheMaximumSize
+
+• **FileUploadedExceedsTheMaximumSize** = `50045`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:854
+
+---
+
+### GeneralError
+
+• **GeneralError** = `0`
+
+General error (such as a malformed request body, amongst other things)
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:726
+
+---
+
+### GuildAlreadyHasTemplate
+
+• **GuildAlreadyHasTemplate** = `30031`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:795
+
+---
+
+### GuildPremiumSubscriptionLevelTooLow
+
+• **GuildPremiumSubscriptionLevelTooLow** = `20035`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:780
+
+---
+
+### GuildWidgetDisabled
+
+• **GuildWidgetDisabled** = `50004`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:825
+
+---
+
+### InteractionHasAlreadyBeenAcknowledged
+
+• **InteractionHasAlreadyBeenAcknowledged** = `40060`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:821
+
+---
+
+### InvalidAccountType
+
+• **InvalidAccountType** = `50002`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:823
+
+---
+
+### InvalidActivityAction
+
+• **InvalidActivityAction** = `50039`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:852
+
+---
+
+### InvalidApiVersionProvided
+
+• **InvalidApiVersionProvided** = `50041`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:853
+
+---
+
+### InvalidAuthenticationTokenProvided
+
+• **InvalidAuthenticationTokenProvided** = `50014`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:835
+
+---
+
+### InvalidFileUploaded
+
+• **InvalidFileUploaded** = `50046`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:855
+
+---
+
+### InvalidFormBodyOrContentTypeProvided
+
+• **InvalidFormBodyOrContentTypeProvided** = `50035`
+
+Invalid form body (returned for both `application/json` and `multipart/form-data` bodies), or invalid `Content-Type` provided
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:850
+
+---
+
+### InvalidGuild
+
+• **InvalidGuild** = `50055`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:857
+
+---
+
+### InvalidJsonForUploadedLottieFile
+
+• **InvalidJsonForUploadedLottieFile** = `170001`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:885
+
+---
+
+### InvalidMFALevel
+
+• **InvalidMFALevel** = `50017`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:838
+
+---
+
+### InvalidMessageType
+
+• **InvalidMessageType** = `50068`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:858
+
+---
+
+### InvalidOAuth2AccessTokenProvided
+
+• **InvalidOAuth2AccessTokenProvided** = `50025`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:843
+
+---
+
+### InvalidOAuth2State
+
+• **InvalidOAuth2State** = `50012`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:833
+
+---
+
+### InvalidRecipients
+
+• **InvalidRecipients** = `50033`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:847
+
+---
+
+### InvalidRole
+
+• **InvalidRole** = `50028`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:846
+
+---
+
+### InvalidStickerSent
+
+• **InvalidStickerSent** = `50081`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:862
+
+---
+
+### InvalidThreadNotificationSettings
+
+• **InvalidThreadNotificationSettings** = `50084`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:864
+
+---
+
+### InvalidWebhookTokenProvided
+
+• **InvalidWebhookTokenProvided** = `50027`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:845
+
+---
+
+### InviteCodeWasEitherInvalidOrTaken
+
+• **InviteCodeWasEitherInvalidOrTaken** = `50020`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:840
+
+---
+
+### LottieAnimationMaximumDimensionsExceeded
+
+• **LottieAnimationMaximumDimensionsExceeded** = `170005`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:889
+
+---
+
+### MaxNumberOfDailyApplicationCommandCreatesHasBeenReached
+
+• **MaxNumberOfDailyApplicationCommandCreatesHasBeenReached** = `30034`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:798
+
+---
+
+### MaxNumberOfThreadParticipantsHasBeenReached
+
+• **MaxNumberOfThreadParticipantsHasBeenReached** = `30033`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:797
+
+---
+
+### MaximumNumberOfActiveAnnouncementThreadsReached
+
+• **MaximumNumberOfActiveAnnouncementThreadsReached** = `160007`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:884
+
+---
+
+### MaximumNumberOfActiveThreadsReached
+
+• **MaximumNumberOfActiveThreadsReached** = `160006`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:883
+
+---
+
+### MaximumNumberOfAnimatedEmojisReached
+
+• **MaximumNumberOfAnimatedEmojisReached** = `30018`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:792
+
+---
+
+### MaximumNumberOfAttachmentsInAMessageReached
+
+• **MaximumNumberOfAttachmentsInAMessageReached** = `30015`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:790
+
+---
+
+### MaximumNumberOfBansFetchesHasBeenReached
+
+• **MaximumNumberOfBansFetchesHasBeenReached** = `30037`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:800
+
+---
+
+### MaximumNumberOfBansForNonGuildMembersHaveBeenExceeded
+
+• **MaximumNumberOfBansForNonGuildMembersHaveBeenExceeded** = `30035`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:799
+
+---
+
+### MaximumNumberOfEditsToMessagesOlderThan1HourReachedTryAgainLater
+
+• **MaximumNumberOfEditsToMessagesOlderThan1HourReachedTryAgainLater** = `30046`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:805
+
+---
+
+### MaximumNumberOfEmojisReached
+
+• **MaximumNumberOfEmojisReached** = `30008`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:787
+
+---
+
+### MaximumNumberOfFriendsReached
+
+• **MaximumNumberOfFriendsReached** = `30002`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:782
+
+---
+
+### MaximumNumberOfGuildChannelsReached
+
+• **MaximumNumberOfGuildChannelsReached** = `30013`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:789
+
+---
+
+### MaximumNumberOfGuildRolesReached
+
+• **MaximumNumberOfGuildRolesReached** = `30005`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:785
+
+---
+
+### MaximumNumberOfGuildWidgetSettingsUpdatesHasBeenReachedTryAgainLater
+
+• **MaximumNumberOfGuildWidgetSettingsUpdatesHasBeenReachedTryAgainLater** = `30042`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:804
+
+---
+
+### MaximumNumberOfGuildsReached
+
+• **MaximumNumberOfGuildsReached** = `30001`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:781
+
+---
+
+### MaximumNumberOfInvitesReached
+
+• **MaximumNumberOfInvitesReached** = `30016`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:791
+
+---
+
+### MaximumNumberOfPinnedThreadsInAForumChannelHasBeenReached
+
+• **MaximumNumberOfPinnedThreadsInAForumChannelHasBeenReached** = `30047`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:806
+
+---
+
+### MaximumNumberOfPinsReachedForTheChannel
+
+• **MaximumNumberOfPinsReachedForTheChannel** = `30003`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:783
+
+---
+
+### MaximumNumberOfPruneRequestsHasBeenReachedTryAgainLater
+
+• **MaximumNumberOfPruneRequestsHasBeenReachedTryAgainLater** = `30040`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:803
+
+---
+
+### MaximumNumberOfReactionsReached
+
+• **MaximumNumberOfReactionsReached** = `30010`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:788
+
+---
+
+### MaximumNumberOfRecipientsReached
+
+• **MaximumNumberOfRecipientsReached** = `30004`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:784
+
+---
+
+### MaximumNumberOfServerCategoriesHasBeenReached
+
+• **MaximumNumberOfServerCategoriesHasBeenReached** = `30030`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:794
+
+---
+
+### MaximumNumberOfServerMembersReached
+
+• **MaximumNumberOfServerMembersReached** = `30019`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:793
+
+---
+
+### MaximumNumberOfStickersReached
+
+• **MaximumNumberOfStickersReached** = `30039`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:802
+
+---
+
+### MaximumNumberOfUncompletedGuildScheduledEventsReached
+
+• **MaximumNumberOfUncompletedGuildScheduledEventsReached** = `30038`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:801
+
+---
+
+### MaximumNumberOfWebhooksReached
+
+• **MaximumNumberOfWebhooksReached** = `30007`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:786
+
+---
+
+### MaximumNumbersOfApplicationCommandsReached
+
+• **MaximumNumbersOfApplicationCommandsReached** = `30032`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:796
+
+---
+
+### MaxiumNumberOfTagsInAForumChannelHasBeenReached
+
+• **MaxiumNumberOfTagsInAForumChannelHasBeenReached** = `30048`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:807
+
+---
+
+### MessageWasBlockedByAutomaticModeration
+
+• **MessageWasBlockedByAutomaticModeration** = `200000`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:894
+
+---
+
+### MissingAccess
+
+• **MissingAccess** = `50001`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:822
+
+---
+
+### MissingRequiredOAuth2Scope
+
+• **MissingRequiredOAuth2Scope** = `50026`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:844
+
+---
+
+### NoUsersWithDiscordTagExist
+
+• **NoUsersWithDiscordTagExist** = `80004`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:875
+
+---
+
+### NoteWasTooLong
+
+• **NoteWasTooLong** = `50015`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:836
+
+---
+
+### OAuth2ApplicationDoesNotHaveABot
+
+• **OAuth2ApplicationDoesNotHaveABot** = `50010`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:831
+
+---
+
+### OAuth2ApplicationLimitReached
+
+• **OAuth2ApplicationLimitReached** = `50011`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:832
+
+---
+
+### OnlyBotsCanUseThisEndpoint
+
+• **OnlyBotsCanUseThisEndpoint** = `20002`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:770
+
+---
+
+### OnlyTheOwnerOfThisAccountCanPerformThisAction
+
+• **OnlyTheOwnerOfThisAccountCanPerformThisAction** = `20018`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:774
+
+---
+
+### OwnershipCannotBeTransferredToABotUser
+
+• **OwnershipCannotBeTransferredToABotUser** = `50132`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:871
+
+---
+
+### PaymentSourceRequiredToRedeemGift
+
+• **PaymentSourceRequiredToRedeemGift** = `50070`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:859
+
+---
+
+### ProvidedTooFewOrTooManyMessagesToDeleteMustProvideAtLeast2AndFewerThan100MessagesToDelete
+
+• **ProvidedTooFewOrTooManyMessagesToDeleteMustProvideAtLeast2AndFewerThan100MessagesToDelete** = `50016`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:837
+
+---
+
+### ReactionWasBlocked
+
+• **ReactionWasBlocked** = `90001`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:876
+
+---
+
+### RequestEntityTooLargeTrySendingSomethingSmallerInSize
+
+• **RequestEntityTooLargeTrySendingSomethingSmallerInSize** = `40005`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:813
+
+---
+
+### SendMessagesHasBeenTemporarilyDisabled
+
+• **SendMessagesHasBeenTemporarilyDisabled** = `40004`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:812
+
+---
+
+### StickerAnimationDurationExceedsMaximumOf5Seconds
+
+• **StickerAnimationDurationExceedsMaximumOf5Seconds** = `170007`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:891
+
+---
+
+### StickerFrameCountExceedsMaximumOf1000Frames
+
+• **StickerFrameCountExceedsMaximumOf1000Frames** = `170004`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:888
+
+---
+
+### StickerFrameRateIsEitherTooSmallOrTooLarge
+
+• **StickerFrameRateIsEitherTooSmallOrTooLarge** = `170006`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:890
+
+---
+
+### StickerMaximumFramerateExceeded
+
+• **StickerMaximumFramerateExceeded** = `170003`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:887
+
+---
+
+### TargetUserIsNotConnectedToVoice
+
+• **TargetUserIsNotConnectedToVoice** = `40032`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:817
+
+---
+
+### TheChannelYouAreWritingHasHitTheWriteRateLimit
+
+• **TheChannelYouAreWritingHasHitTheWriteRateLimit** = `20028`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:777
+
+---
+
+### TheRequestBodyContainsInvalidJSON
+
+• **TheRequestBodyContainsInvalidJSON** = `50109`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:870
+
+---
+
+### TheStageIsAlreadyOpen
+
+• **TheStageIsAlreadyOpen** = `150006`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:879
+
+---
+
+### TheWriteActionYouArePerformingOnTheServerHasHitTheWriteRateLimit
+
+• **TheWriteActionYouArePerformingOnTheServerHasHitTheWriteRateLimit** = `20029`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:778
+
+---
+
+### ThisActionCannotBePerformedDueToSlowmodeRateLimit
+
+• **ThisActionCannotBePerformedDueToSlowmodeRateLimit** = `20016`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:773
+
+---
+
+### ThisFeatureHasBeenTemporarilyDisabledServerSide
+
+• **ThisFeatureHasBeenTemporarilyDisabledServerSide** = `40006`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:814
+
+---
+
+### ThisMessageCannotBeEditedDueToAnnouncementRateLimits
+
+• **ThisMessageCannotBeEditedDueToAnnouncementRateLimits** = `20022`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:775
+
+---
+
+### ThisMessageHasAlreadyBeenCrossposted
+
+• **ThisMessageHasAlreadyBeenCrossposted** = `40033`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:818
+
+---
+
+### ThisServerIsNotAvailableInYourLocation
+
+• **ThisServerIsNotAvailableInYourLocation** = `50095`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:867
+
+---
+
+### ThisServerNeedsMonetizationEnabledInOrderToPerformThisAction
+
+• **ThisServerNeedsMonetizationEnabledInOrderToPerformThisAction** = `50097`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:868
+
+---
+
+### ThisServerNeedsMoreBoostsToPerformThisAction
+
+• **ThisServerNeedsMoreBoostsToPerformThisAction** = `50101`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:869
+
+---
+
+### ThisUserBannedFromThisGuild
+
+• **ThisUserBannedFromThisGuild** = `40007`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:815
+
+---
+
+### ThreadIsLocked
+
+• **ThreadIsLocked** = `160005`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:882
+
+---
+
+### TitleWasBlockedByAutomaticModeration
+
+• **TitleWasBlockedByAutomaticModeration** = `200001`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:895
+
+---
+
+### TriedToPerformAnOperationOnAnArchivedThreadSuchAsEditingAMessageOrAddingAUserToTheThread
+
+• **TriedToPerformAnOperationOnAnArchivedThreadSuchAsEditingAMessageOrAddingAUserToTheThread** = `50083`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:863
+
+---
+
+### TwoFactorIsRequiredForThisOperation
+
+• **TwoFactorIsRequiredForThisOperation** = `60003`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:874
+
+---
+
+### UnauthorizedProvideAValidTokenAndTryAgain
+
+• **UnauthorizedProvideAValidTokenAndTryAgain** = `40001`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:809
+
+---
+
+### UnderMinimumAge
+
+• **UnderMinimumAge** = `20024`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:776
+
+---
+
+### UnknownAccount
+
+• **UnknownAccount** = `10001`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:727
+
+---
+
+### UnknownApplication
+
+• **UnknownApplication** = `10002`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:728
+
+---
+
+### UnknownApplicationCommand
+
+• **UnknownApplicationCommand** = `10063`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:760
+
+---
+
+### UnknownApplicationCommandPermissions
+
+• **UnknownApplicationCommandPermissions** = `10066`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:762
+
+---
+
+### UnknownBan
+
+• **UnknownBan** = `10026`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:744
+
+---
+
+### UnknownBranch
+
+• **UnknownBranch** = `10032`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:750
+
+---
+
+### UnknownBuild
+
+• **UnknownBuild** = `10030`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:748
+
+---
+
+### UnknownChannel
+
+• **UnknownChannel** = `10003`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:729
+
+---
+
+### UnknownDiscoveryCategory
+
+• **UnknownDiscoveryCategory** = `10059`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:757
+
+---
+
+### UnknownEmoji
+
+• **UnknownEmoji** = `10014`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:740
+
+---
+
+### UnknownEntitlement
+
+• **UnknownEntitlement** = `10029`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:747
+
+---
+
+### UnknownGiftCode
+
+• **UnknownGiftCode** = `10038`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:753
+
+---
+
+### UnknownGuild
+
+• **UnknownGuild** = `10004`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:730
+
+---
+
+### UnknownGuildMemberVerificationForm
+
+• **UnknownGuildMemberVerificationForm** = `10068`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:764
+
+---
+
+### UnknownGuildScheduledEvent
+
+• **UnknownGuildScheduledEvent** = `10070`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:766
+
+---
+
+### UnknownGuildScheduledEventUser
+
+• **UnknownGuildScheduledEventUser** = `10071`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:767
+
+---
+
+### UnknownGuildTemplate
+
+• **UnknownGuildTemplate** = `10057`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:756
+
+---
+
+### UnknownGuildWelcomeScreen
+
+• **UnknownGuildWelcomeScreen** = `10069`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:765
+
+---
+
+### UnknownIntegration
+
+• **UnknownIntegration** = `10005`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:731
+
+---
+
+### UnknownInteraction
+
+• **UnknownInteraction** = `10062`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:759
+
+---
+
+### UnknownInvite
+
+• **UnknownInvite** = `10006`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:732
+
+---
+
+### UnknownLobby
+
+• **UnknownLobby** = `10031`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:749
+
+---
+
+### UnknownMember
+
+• **UnknownMember** = `10007`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:733
+
+---
+
+### UnknownMessage
+
+• **UnknownMessage** = `10008`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:734
+
+---
+
+### UnknownPermissionOverwrite
+
+• **UnknownPermissionOverwrite** = `10009`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:735
+
+---
+
+### UnknownPremiumServerSubscribeCooldown
+
+• **UnknownPremiumServerSubscribeCooldown** = `10050`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:755
+
+---
+
+### UnknownProvider
+
+• **UnknownProvider** = `10010`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:736
+
+---
+
+### UnknownRedistributable
+
+• **UnknownRedistributable** = `10036`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:752
+
+---
+
+### UnknownRole
+
+• **UnknownRole** = `10011`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:737
+
+---
+
+### UnknownSKU
+
+• **UnknownSKU** = `10027`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:745
+
+---
+
+### UnknownSession
+
+• **UnknownSession** = `10020`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:743
+
+---
+
+### UnknownStageInstance
+
+• **UnknownStageInstance** = `10067`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:763
+
+---
+
+### UnknownSticker
+
+• **UnknownSticker** = `10060`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:758
+
+---
+
+### UnknownStoreDirectoryLayout
+
+• **UnknownStoreDirectoryLayout** = `10033`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:751
+
+---
+
+### UnknownStoreListing
+
+• **UnknownStoreListing** = `10028`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:746
+
+---
+
+### UnknownStream
+
+• **UnknownStream** = `10049`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:754
+
+---
+
+### UnknownTag
+
+• **UnknownTag** = `10087`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:768
+
+---
+
+### UnknownToken
+
+• **UnknownToken** = `10012`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:738
+
+---
+
+### UnknownUser
+
+• **UnknownUser** = `10013`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:739
+
+---
+
+### UnknownVoiceState
+
+• **UnknownVoiceState** = `10065`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:761
+
+---
+
+### UnknownWebhook
+
+• **UnknownWebhook** = `10015`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:741
+
+---
+
+### UnknownWebhookService
+
+• **UnknownWebhookService** = `10016`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:742
+
+---
+
+### UploadedFileNotFound
+
+• **UploadedFileNotFound** = `50146`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:873
+
+---
+
+### UploadedLottiesCannotContainRasterizedImagesSuchAsPngOrJpeg
+
+• **UploadedLottiesCannotContainRasterizedImagesSuchAsPngOrJpeg** = `170002`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:886
+
+---
+
+### WebhooksCanOnlyCreateThreadsInForumChannels
+
+• **WebhooksCanOnlyCreateThreadsInForumChannels** = `220003`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:896
+
+---
+
+### YouAreNotAuthorizedToPerformThisActionOnThisApplication
+
+• **YouAreNotAuthorizedToPerformThisActionOnThisApplication** = `20012`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:772
+
+---
+
+### YouAreOpeningDirectMessagesTooFast
+
+• **YouAreOpeningDirectMessagesTooFast** = `40003`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:811
+
+---
+
+### YouLackPermissionsToPerformThatAction
+
+• **YouLackPermissionsToPerformThatAction** = `50013`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:834
+
+---
+
+### YouNeedToVerifyYourAccountInOrderToPerformThisAction
+
+• **YouNeedToVerifyYourAccountInOrderToPerformThisAction** = `40002`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:810
+
+---
+
+### YourStageTopicOrServerNameOrServerDescriptionOrChannelNamesContainsWordsThatAreNotAllowedForPublicStages
+
+• **YourStageTopicOrServerNameOrServerDescriptionOrChannelNamesContainsWordsThatAreNotAllowedForPublicStages** = `20031`
+
+#### Defined in
+
+packages/types/dist/shared.d.ts:779

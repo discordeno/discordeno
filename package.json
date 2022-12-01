@@ -16,7 +16,7 @@
     "test-types": "turbo run test-types",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install",
-    "build:doc": "typedoc --plugin typedoc-plugin-markdown --out ./apps/site/docs/generated/index.md --entryPointStrategy expand packages/"
+    "build:doc": "typedoc --plugin typedoc-plugin-markdown --out ./apps/site/docs/generated/ "
   },
   "devDependencies": {
     "eslint": "^8.28.0",
