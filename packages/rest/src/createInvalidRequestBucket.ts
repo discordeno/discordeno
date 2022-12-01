@@ -1,4 +1,4 @@
-import { delay } from '../mod.js'
+import { delay } from '@discordeno/utils'
 
 /**
  * A invalid request bucket is used in a similar manner as a leaky bucket but a invalid request bucket can be refilled as needed.
@@ -12,7 +12,7 @@ export function createInvalidRequestBucket (options: InvalidRequestBucketOptions
     current: options.current ?? 0,
     max: options.max ?? 10000,
     interval: options.interval ?? 600000,
-    timeoutId: options.timeoutId ?? 0,
+    timeoutId: options.timeoutId,
     safety: options.safety ?? 1,
     frozenAt: options.frozenAt ?? 0,
     errorStatuses: options.errorStatuses ?? [401, 403, 429],
@@ -30,15 +30,17 @@ export function createInvalidRequestBucket (options: InvalidRequestBucketOptions
     },
 
     waitUntilRequestAvailable: async function () {
-      return await new Promise(async (resolve) => {
-        // If whatever amount of requests is left is more than the safety margin, allow the request
-        if (bucket.isRequestAllowed()) {
-          bucket.requested++
-          resolve()
-        } else {
-          bucket.waiting.push(resolve)
-          await bucket.processWaiting()
-        }
+      return await new Promise((resolve) => {
+        void (async () => {
+          // If whatever amount of requests is left is more than the safety margin, allow the request
+          if (bucket.isRequestAllowed()) {
+            bucket.requested++
+            resolve()
+          } else {
+            bucket.waiting.push(resolve)
+            await bucket.processWaiting()
+          }
+        })()
       })
     },
 
@@ -76,15 +78,15 @@ export function createInvalidRequestBucket (options: InvalidRequestBucketOptions
       // INVALID REQUEST WAS MADE
 
       // If it was not frozen before, mark it frozen
-      if (!bucket.frozenAt) bucket.frozenAt = Date.now()
+      if (bucket.frozenAt === 0) bucket.frozenAt = Date.now()
       // Mark a request has been invalid
       bucket.current++
       // If a timeout was not started, start a timeout to reset this bucket
-      if (!bucket.timeoutId) {
+      if (bucket.timeoutId !== undefined) {
         bucket.timeoutId = setTimeout(() => {
           bucket.frozenAt = 0
           bucket.current = 0
-          bucket.timeoutId = 0
+          bucket.timeoutId = undefined
         }, bucket.frozenAt + bucket.interval)
       }
     }
@@ -101,7 +103,7 @@ export interface InvalidRequestBucketOptions {
   /** The time that discord allows to make the max number of invalid requests. Defaults to 10 minutes */
   interval?: number
   /** timer to reset to 0 */
-  timeoutId?: number
+  timeoutId?: NodeJS.Timeout
   /** how safe to be from max. Defaults to 1 */
   safety?: number
   /** when first request in this period was made */
@@ -120,7 +122,7 @@ export interface InvalidRequestBucket {
   /** The time that discord allows to make the max number of invalid requests. Defaults to 10 minutes */
   interval: number
   /** timer to reset to 0 */
-  timeoutId: number
+  timeoutId: NodeJS.Timeout | undefined
   /** how safe to be from max. Defaults to 1 */
   safety: number
   /** when first request in this period was made */

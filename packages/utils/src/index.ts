@@ -1,3 +1,4 @@
+export * from './base64.js'
 export * from './bigint.js'
 export * from './bucket.js'
 export * from './constants.js'

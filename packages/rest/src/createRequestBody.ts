@@ -1,19 +1,22 @@
-import { FileContent } from '../types/discordeno.js'
-import { decode } from '../util/base64.js'
-import { USER_AGENT } from '../util/constants.js'
+import { FileContent } from '@discordeno/types'
+import { decode, USER_AGENT } from '@discordeno/utils'
 import { RequestMethod } from './rest.js'
 import { RestManager } from './restManager.js'
 
 /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
-export function createRequestBody (rest: RestManager, options: CreateRequestBodyOptions) {
+export function createRequestBody (rest: RestManager, options: CreateRequestBodyOptions): {
+  headers: Record<string, string>
+  body: string | FormData
+  method: RequestMethod
+} {
   const headers: Record<string, string> = {
     'user-agent': USER_AGENT
   }
 
-  if (!options.unauthorized) headers.authorization = `Bot ${rest.token}`
+  if (options.unauthorized === undefined) headers.authorization = `Bot ${rest.token}`
 
   // SOMETIMES SPECIAL HEADERS (E.G. CUSTOM AUTHORIZATION) NEED TO BE USED
-  if (options.headers != null) {
+  if (options.headers !== undefined) {
     for (const key in options.headers) {
       headers[key.toLowerCase()] = options.headers[key]
     }
@@ -25,19 +28,19 @@ export function createRequestBody (rest: RestManager, options: CreateRequestBody
   }
 
   // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
-  if (options.body?.reason) {
+  if (options.body?.reason !== undefined) {
     headers['X-Audit-Log-Reason'] = encodeURIComponent(options.body.reason as string)
     options.body.reason = undefined
   }
 
   // IF A FILE/ATTACHMENT IS PRESENT WE NEED SPECIAL HANDLING
-  if (options.body?.file) {
+  if (options.body?.file !== undefined) {
     const files = findFiles(options.body.file)
 
     const form = new FormData()
 
     // WHEN CREATING A STICKER, DISCORD WANTS FORM DATA ONLY
-    if (options.url?.endsWith('/stickers') && options.method === 'POST') {
+    if ((options.url ?? '').endsWith('/stickers') && options.method === 'POST') {
       form.append('file', files[0].blob, files[0].name)
       form.append('name', options.body.name as string)
       form.append('description', options.body.description as string)
@@ -51,7 +54,7 @@ export function createRequestBody (rest: RestManager, options: CreateRequestBody
     }
 
     options.body.file = form
-  } else if ((options.body != null) && !['GET', 'DELETE'].includes(options.method)) {
+  } else if (options.body !== undefined && !['GET', 'DELETE'].includes(options.method)) {
     headers['Content-Type'] = 'application/json'
   }
 
@@ -80,7 +83,7 @@ function findFiles (file: unknown): FileContent[] {
 }
 
 function coerceToFileContent (value: unknown): value is FileContent {
-  if (!value || typeof value !== 'object') {
+  if (!(value) || typeof value !== 'object') {
     return false
   }
 

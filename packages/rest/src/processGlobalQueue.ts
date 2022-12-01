@@ -6,7 +6,7 @@ export async function processGlobalQueue (rest: RestManager, request: {
   payload: RestPayload
   basicURL: string
   urlToUse: string
-}) {
+}): Promise<void> {
   // Check if this request is able to be made globally
   await rest.invalidBucket.waitUntilRequestAvailable()
 
@@ -20,7 +20,7 @@ export async function processGlobalQueue (rest: RestManager, request: {
     reject: request.request.reject,
     respond: request.request.respond,
     retryRequest: function () {
-      rest.processGlobalQueue(rest, request)
+      void rest.processGlobalQueue(rest, request)
     },
     retryCount: request.payload.retryCount ?? 0,
     payload: rest.createRequestBody(rest, {

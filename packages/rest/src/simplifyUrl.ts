@@ -4,9 +4,9 @@
  */
 
 /** Split a url to separate rate limit buckets based on major/minor parameters. */
-export function simplifyUrl (url: string, method: string) {
+export function simplifyUrl (url: string, method: string): string {
   let route = url
-    .replace(/\/([a-z-]+)\/(?:[0-9]{17,19})/g, function (match, p) {
+    .replace(/\/([a-z-]+)\/(?:[0-9]{17,19})/g, function (match, p: string) {
       return ['channels', 'guilds'].includes(p) ? match : `/${p}/skillzPrefersID`
     })
     .replace(/\/reactions\/[^/]+/g, '/reactions/skillzPrefersID')

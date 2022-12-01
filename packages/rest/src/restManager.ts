@@ -1,5 +1,4 @@
-import { API_VERSION, baseEndpoints } from '@discordeno/utils'
-import { removeTokenPrefix } from '../util/token.js'
+import { API_VERSION, baseEndpoints, removeTokenPrefix } from '@discordeno/utils'
 import { checkRateLimits } from './checkRateLimits.js'
 import { cleanupQueues } from './cleanupQueues.js'
 import { convertRestError } from './convertRestError.js'
@@ -20,7 +19,7 @@ import { simplifyUrl } from './simplifyUrl.js'
 export function createRestManager (options: CreateRestManagerOptions) {
   const version = options.version ?? API_VERSION
 
-  if (options.customUrl) {
+  if (options.customUrl !== undefined) {
     baseEndpoints.BASE_URL = `${options.customUrl}/v${version}`
   }
 
@@ -28,9 +27,9 @@ export function createRestManager (options: CreateRestManagerOptions) {
     invalidBucket: createInvalidRequestBucket({}),
     version,
     token: removeTokenPrefix(options.token),
-    maxRetryCount: options.maxRetryCount || 10,
-    secretKey: options.secretKey || 'discordeno_best_lib_ever',
-    customUrl: options.customUrl || '',
+    maxRetryCount: options.maxRetryCount ?? 10,
+    secretKey: options.secretKey ?? 'discordeno_best_lib_ever',
+    customUrl: options.customUrl ?? '',
     pathQueues: new Map<string, QueueBucket>(),
     processingQueue: false,
     processingRateLimitedPaths: false,
@@ -44,28 +43,28 @@ export function createRestManager (options: CreateRestManagerOptions) {
     globalQueueProcessing: false,
     rateLimitedPaths: new Map<string, RestRateLimitedPath>(),
 
-    debug: (options.debug != null) || function (_text: string) { },
-    checkRateLimits: (options.checkRateLimits != null) || checkRateLimits,
-    cleanupQueues: (options.cleanupQueues != null) || cleanupQueues,
-    processQueue: (options.processQueue != null) || processQueue,
-    processRateLimitedPaths: (options.processRateLimitedPaths != null) ||
+    debug: options.debug ?? function (_text: string) { },
+    checkRateLimits: options.checkRateLimits ?? checkRateLimits,
+    cleanupQueues: options.cleanupQueues ?? cleanupQueues,
+    processQueue: options.processQueue ?? processQueue,
+    processRateLimitedPaths: options.processRateLimitedPaths ??
       processRateLimitedPaths,
-    processRequestHeaders: (options.processRequestHeaders != null) ||
+    processRequestHeaders: options.processRequestHeaders ??
       processRequestHeaders,
-    processRequest: (options.processRequest != null) || processRequest,
-    createRequestBody: (options.createRequestBody != null) || createRequestBody,
-    runMethod: (options.runMethod != null) || runMethod,
-    simplifyUrl: (options.simplifyUrl != null) || simplifyUrl,
-    processGlobalQueue: (options.processGlobalQueue != null) || processGlobalQueue,
-    convertRestError: (options.convertRestError != null) || convertRestError,
-    sendRequest: (options.sendRequest != null) || sendRequest,
+    processRequest: options.processRequest ?? processRequest,
+    createRequestBody: options.createRequestBody ?? createRequestBody,
+    runMethod: options.runMethod ?? runMethod,
+    simplifyUrl: options.simplifyUrl ?? simplifyUrl,
+    processGlobalQueue: options.processGlobalQueue ?? processGlobalQueue,
+    convertRestError: options.convertRestError ?? convertRestError,
+    sendRequest: options.sendRequest ?? sendRequest,
 
-    fetching: (options.fetching != null) || function (opts: RestSendRequestOptions) {
+    fetching: options.fetching ?? function (opts: RestSendRequestOptions) {
       options.debug?.(
         `[REST - fetching] URL: ${opts.url} | ${JSON.stringify(opts)}`
       )
     },
-    fetched: (options.fetched != null) || function (
+    fetched: options.fetched ?? function (
       opts: RestSendRequestOptions,
       response: Response
     ) {

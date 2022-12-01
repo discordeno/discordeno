@@ -1,4 +1,4 @@
-import { delay } from '../util/utils.js'
+import { delay } from '@discordeno/utils'
 import { RestPayload, RestRequest } from './rest.js'
 import { RestManager } from './restManager.js'
 
@@ -13,7 +13,7 @@ export function createQueueBucket (rest: RestManager, options: QueueBucketOption
     remaining: options.remaining ?? 1,
     max: options.max ?? 1,
     interval: options.interval ?? 0,
-    timeoutId: options.timeoutId ?? 0,
+    timeoutId: options.timeoutId,
     processing: false,
     processingPending: false,
     firstRequest: true,
@@ -26,15 +26,17 @@ export function createQueueBucket (rest: RestManager, options: QueueBucketOption
     },
 
     waitUntilRequestAvailable: async function () {
-      return await new Promise(async (resolve) => {
-        // If whatever amount of requests is left is more than the safety margin, allow the request
-        if (bucket.isRequestAllowed()) {
-          // bucket.remaining++;
-          resolve()
-        } else {
-          bucket.waiting.push(resolve)
-          await bucket.processWaiting()
-        }
+      return await new Promise((resolve) => {
+        void (async () => {
+          // If whatever amount of requests is left is more than the safety margin, allow the request
+          if (bucket.isRequestAllowed()) {
+            // bucket.remaining++;
+            resolve()
+          } else {
+            bucket.waiting.push(resolve)
+            await bucket.processWaiting()
+          }
+        })()
       })
     },
 
@@ -71,26 +73,26 @@ export function createQueueBucket (rest: RestManager, options: QueueBucketOption
 
       while (bucket.pending.length > 0) {
         if (bucket.firstRequest || bucket.isRequestAllowed()) {
-          const [queuedRequest] = bucket.pending
-          if (queuedRequest) {
+          if (bucket.pending.length > 0) {
+            const queuedRequest = bucket.pending[0]
             const basicURL = rest.simplifyUrl(queuedRequest.request.url, queuedRequest.request.method)
 
             // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
             const urlResetIn = rest.checkRateLimits(rest, basicURL)
-            if (urlResetIn) {
+            if (urlResetIn !== false) {
               setTimeout(() => {
-                bucket.processPending()
+                void bucket.processPending()
               }, urlResetIn)
               break
             }
 
             // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
-            const bucketResetIn = queuedRequest.payload.bucketId
+            const bucketResetIn = queuedRequest.payload.bucketId !== undefined
               ? rest.checkRateLimits(rest, queuedRequest.payload.bucketId)
               : false
-            if (bucketResetIn) {
+            if (bucketResetIn !== false) {
               setTimeout(() => {
-                bucket.processPending()
+                void bucket.processPending()
               }, bucketResetIn)
               break
             }
@@ -98,16 +100,16 @@ export function createQueueBucket (rest: RestManager, options: QueueBucketOption
             bucket.firstRequest = false
             bucket.remaining--
 
-            if (!bucket.timeoutId && !bucket.remaining && bucket.interval) {
+            if (bucket.timeoutId === undefined && bucket.remaining === 0 && bucket.interval !== 0) {
               bucket.timeoutId = setTimeout(() => {
                 bucket.remaining = bucket.max
-                bucket.timeoutId = 0
+                bucket.timeoutId = undefined
               }, bucket.interval)
             }
 
             // Remove from queue, we are executing it.
             bucket.pending.shift()
-            rest.processGlobalQueue(rest, {
+            void rest.processGlobalQueue(rest, {
               ...queuedRequest,
               urlToUse: queuedRequest.request.url,
               basicURL
@@ -131,7 +133,7 @@ export function createQueueBucket (rest: RestManager, options: QueueBucketOption
       if (bucket.remaining <= 1) {
         bucket.timeoutId = setTimeout(() => {
           bucket.remaining = bucket.max
-          bucket.timeoutId = 0
+          bucket.timeoutId = undefined
         }, headers.interval)
       }
     },
@@ -139,7 +141,7 @@ export function createQueueBucket (rest: RestManager, options: QueueBucketOption
     makeRequest: async function (options: BucketRequest) {
       await bucket.waitUntilRequestAvailable()
       bucket.pending.push(options)
-      bucket.processPending()
+      void bucket.processPending()
     }
   }
 
@@ -154,7 +156,7 @@ export interface QueueBucketOptions {
   /** The time in milliseconds that discord allows to make the max number of invalid requests. Defaults to 0 */
   interval?: number
   /** timer to reset to 0 */
-  timeoutId?: number
+  timeoutId?: NodeJS.Timeout
 }
 
 export interface QueueBucket {
@@ -165,7 +167,7 @@ export interface QueueBucket {
   /** The time that discord allows to make the max number of requests. Defaults to 0 */
   interval: number
   /** timer to reset to 0 */
-  timeoutId: number
+  timeoutId: NodeJS.Timeout | undefined
   /** The requests that are currently pending. */
   waiting: Array<(value: void | PromiseLike<void>) => void>
   /** The requests that are currently pending. */

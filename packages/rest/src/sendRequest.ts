@@ -1,6 +1,5 @@
-import { delay } from '../mod.js'
-import { HTTPResponseCodes } from '../types/shared.js'
-import { BASE_URL } from '../util/constants.js'
+import { HTTPResponseCodes } from '@discordeno/types'
+import { BASE_URL, delay } from '@discordeno/utils'
 import { RequestMethod } from './rest.js'
 import { RestManager } from './restManager.js'
 
@@ -39,7 +38,7 @@ export async function sendRequest<T> (rest: RestManager, options: RestSendReques
       response.headers
     )
     // SET THE BUCKET Id IF IT WAS PRESENT
-    if (bucketIdFromHeaders) {
+    if (bucketIdFromHeaders !== undefined) {
       options.bucketId = bucketIdFromHeaders
     }
 
@@ -73,7 +72,9 @@ export async function sendRequest<T> (rest: RestManager, options: RestSendReques
       // If NOT rate limited remove from queue
       if (response.status !== 429) {
         rest.invalidBucket.handleCompletedRequest(response.status, false)
-        const body = response.type ? JSON.stringify(await response.json()) : undefined
+
+        // need revise, old code: const body = response.type ? JSON.stringify(await response.json()) : undefined
+        const body = JSON.stringify(await response.json())
         return options.reject?.({
           ok: false,
           status: response.status,
@@ -84,7 +85,7 @@ export async function sendRequest<T> (rest: RestManager, options: RestSendReques
         const json = await response.json()
 
         // TOO MANY ATTEMPTS, GET RID OF REQUEST FROM QUEUE.
-        if (options.retryCount && options.retryCount++ >= rest.maxRetryCount) {
+        if (options.retryCount !== undefined && options.retryCount++ >= rest.maxRetryCount) {
           rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(options)}`)
           // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
           options.reject?.({
@@ -95,8 +96,9 @@ export async function sendRequest<T> (rest: RestManager, options: RestSendReques
 
           // @ts-expect-error Code should never reach here
           return
-        } // RATE LIMITED, ADD BACK TO QUEUE
-        else {
+        } else {
+          // RATE LIMITED, ADD BACK TO QUEUE
+
           rest.invalidBucket.handleCompletedRequest(
             response.status,
             response.headers.get('X-RateLimit-Scope') === 'shared'

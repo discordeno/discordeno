@@ -1,6 +1,5 @@
-import { FileContent } from '../mod.js'
-import { encode } from '../util/base64.js'
-import { API_VERSION, baseEndpoints, BASE_URL } from '../util/constants.js'
+import { FileContent } from '@discordeno/types'
+import { API_VERSION, baseEndpoints, BASE_URL, encode } from '@discordeno/utils'
 import { RequestMethod, RestRequestRejection, RestRequestResponse } from './rest.js'
 import { RestManager } from './restManager.js'
 
@@ -47,7 +46,7 @@ export async function runMethod<T = any> (
     const headers: HeadersInit = {
       Authorization: rest.secretKey
     }
-    if (body) {
+    if (body !== undefined) {
       headers['Content-Type'] = 'application/json'
     }
     const result = await fetch(`${baseEndpoints.BASE_URL}${route}`, {

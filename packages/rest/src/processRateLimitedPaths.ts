@@ -1,7 +1,7 @@
 import { RestManager } from './restManager.js'
 
 /** This will create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */
-export function processRateLimitedPaths (rest: RestManager) {
+export function processRateLimitedPaths (rest: RestManager): void {
   const now = Date.now()
 
   for (const [key, value] of rest.rateLimitedPaths.entries()) {
@@ -16,7 +16,7 @@ export function processRateLimitedPaths (rest: RestManager) {
   }
 
   // ALL PATHS ARE CLEARED CAN CANCEL OUT!
-  if (!rest.rateLimitedPaths.size) {
+  if (rest.rateLimitedPaths.size === 0) {
     rest.processingRateLimitedPaths = false
   } else {
     rest.processingRateLimitedPaths = true

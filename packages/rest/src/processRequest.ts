@@ -19,7 +19,7 @@ export function processRequest (rest: RestManager, request: RestRequest, payload
   const url = rest.simplifyUrl(request.url, request.method)
 
   const queue = rest.pathQueues.get(url)
-  if (queue != null) {
+  if (queue !== undefined) {
     queue.makeRequest({ request, payload })
   } else {
     // CREATES A NEW QUEUE
