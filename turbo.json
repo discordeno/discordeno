@@ -2,11 +2,11 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
       "outputs": [
         "dist/**/*.js"
+      ],
+      "inputs": [
+        "src/**/*.ts"
       ]
     },
     "build-types": {
@@ -20,19 +20,14 @@
     },
     "release-build": {
       "dependsOn": [
-        "^build",
         "^build-types"
       ],
       "outputs": [
         "dist/**"
       ]
     },
-    "lint": {
-      "outputs": []
-    },
-    "fmt": {
-      "outputs": []
-    },
+    "lint": {},
+    "fmt": {},
     "dev": {
       "cache": false
     }
