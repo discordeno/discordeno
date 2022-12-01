@@ -37,7 +37,7 @@ export async function editAutomodRule (
     {
       name: options.name,
       event_type: options.eventType,
-      trigger_metadata: (options.triggerMetadata != null)
+      trigger_metadata: (options.triggerMetadata)
         ? {
             keyword_filter: options.triggerMetadata.keywordFilter,
             presets: options.triggerMetadata.presets,

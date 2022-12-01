@@ -10,9 +10,10 @@ import { Member, User } from './member.js'
 import { Message } from './message.js'
 import { Role } from './role.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformInteraction (bot: Bot, payload: DiscordInteraction) {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
-  const user = bot.transformers.user(bot, ((payload.member?.user) != null) || payload.user!)
+  const user = bot.transformers.user(bot, payload.member?.user ?? payload.user!)
 
   const interaction = {
     // UNTRANSFORMED STUFF HERE
@@ -28,11 +29,11 @@ export function transformInteraction (bot: Bot, payload: DiscordInteraction) {
     id: bot.transformers.snowflake(payload.id),
     applicationId: bot.transformers.snowflake(payload.application_id),
     appPermissions: payload.app_permissions ? bot.transformers.snowflake(payload.app_permissions) : undefined,
-    message: (payload.message != null) ? bot.transformers.message(bot, payload.message) : undefined,
+    message: payload.message ? bot.transformers.message(bot, payload.message) : undefined,
     channelId: payload.channel_id ? bot.transformers.snowflake(payload.channel_id) : undefined,
-    member: (payload.member != null) && guildId ? bot.transformers.member(bot, payload.member, guildId, user.id) : undefined,
+    member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, user.id) : undefined,
 
-    data: (payload.data != null)
+    data: payload.data
       ? {
           componentType: payload.data.component_type,
           customId: payload.data.custom_id,
@@ -40,7 +41,7 @@ export function transformInteraction (bot: Bot, payload: DiscordInteraction) {
           values: payload.data.values,
           id: payload.data.id ? bot.transformers.snowflake(payload.data.id) : undefined,
           name: payload.data.name,
-          resolved: (payload.data.resolved != null)
+          resolved: payload.data.resolved
             ? transformInteractionDataResolved(bot, payload.data.resolved, guildId)
             : undefined,
           options: payload.data.options?.map((opt) => bot.transformers.interactionDataOptions(bot, opt)),
@@ -50,9 +51,10 @@ export function transformInteraction (bot: Bot, payload: DiscordInteraction) {
       : undefined
   }
 
-  return interaction as Optionalize<typeof interaction>
+  return interaction
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformInteractionDataOption (bot: Bot, option: DiscordInteractionDataOption) {
   const opt = {
     name: option.name,
@@ -65,6 +67,7 @@ export function transformInteractionDataOption (bot: Bot, option: DiscordInterac
   return opt as Optionalize<typeof opt>
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformInteractionDataResolved (bot: Bot, resolved: DiscordInteractionDataResolved, guildId?: bigint) {
   const transformed: {
     messages?: Collection<bigint, Message>
@@ -75,7 +78,7 @@ export function transformInteractionDataResolved (bot: Bot, resolved: DiscordInt
     attachments?: Collection<bigint, Attachment>
   } = {}
 
-  if (resolved.messages != null) {
+  if (resolved.messages) {
     transformed.messages = new Collection(
       Object.entries(resolved.messages).map(([id, value]) => {
         const message: Message = bot.transformers.message(bot, value)
@@ -84,7 +87,7 @@ export function transformInteractionDataResolved (bot: Bot, resolved: DiscordInt
     )
   }
 
-  if (resolved.users != null) {
+  if (resolved.users) {
     transformed.users = new Collection(
       Object.entries(resolved.users).map(([id, value]) => {
         const user = bot.transformers.user(bot, value)
@@ -93,7 +96,7 @@ export function transformInteractionDataResolved (bot: Bot, resolved: DiscordInt
     )
   }
 
-  if (guildId && (resolved.members != null)) {
+  if (guildId && resolved.members) {
     transformed.members = new Collection(
       Object.entries(resolved.members).map(([id, value]) => {
         const member: Member = bot.transformers.member(bot, value, guildId, bot.transformers.snowflake(id))
@@ -102,7 +105,7 @@ export function transformInteractionDataResolved (bot: Bot, resolved: DiscordInt
     )
   }
 
-  if (guildId && (resolved.roles != null)) {
+  if (guildId && resolved.roles) {
     transformed.roles = new Collection(
       Object.entries(resolved.roles).map(([id, value]) => {
         const role = bot.transformers.role(bot, { role: value, guildId })
@@ -111,7 +114,7 @@ export function transformInteractionDataResolved (bot: Bot, resolved: DiscordInt
     )
   }
 
-  if (resolved.channels != null) {
+  if (resolved.channels) {
     transformed.channels = new Collection(
       Object.entries(resolved.channels).map(([key, value]) => {
         const id = bot.transformers.snowflake(key)
@@ -129,7 +132,7 @@ export function transformInteractionDataResolved (bot: Bot, resolved: DiscordInt
     )
   }
 
-  if (resolved.attachments != null) {
+  if (resolved.attachments) {
     transformed.attachments = new Collection(
       Object.entries(resolved.attachments).map(([key, value]) => {
         const id = bot.transformers.snowflake(key)
@@ -138,7 +141,7 @@ export function transformInteractionDataResolved (bot: Bot, resolved: DiscordInt
     )
   }
 
-  return transformed as Optionalize<typeof transformed>
+  return transformed
 }
 
 export interface Interaction extends ReturnType<typeof transformInteraction> { }

@@ -6,7 +6,7 @@ export function getChannelWebhooks (bot: BotWithCache) {
 
   bot.helpers.getChannelWebhooks = async function (channelId) {
     const channel = bot.channels.get(bot.transformers.snowflake(channelId))
-    if (channel != null) {
+    if (channel) {
       const isWebhookParent = [ChannelTypes.GuildAnnouncement, ChannelTypes.GuildText].includes(channel.type)
       if (!isWebhookParent) {
         throw new Error('Target channel must be a text channel or an announcement channel')

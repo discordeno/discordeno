@@ -1,7 +1,6 @@
 import type { Bot } from '../../bot.js'
 import { Template } from '../../transformers/template.js'
-import { DiscordTemplate } from '@discordeno/types'
-import { BigString } from '@discordeno/types'
+import { DiscordTemplate, BigString } from '@discordeno/types'
 
 /**
  * Synchronises a template with the current state of a guild.

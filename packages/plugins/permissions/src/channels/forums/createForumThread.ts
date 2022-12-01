@@ -7,7 +7,7 @@ export function createForumThread (bot: BotWithCache) {
   bot.helpers.createForumThread = async function (channelId, options) {
     const channel = bot.channels.get(bot.transformers.snowflake(channelId))
 
-    if ((channel != null) && channel.type !== ChannelTypes.GuildForum) {
+    if ((channel) && channel.type !== ChannelTypes.GuildForum) {
       throw new Error('Channel must be a forum channel')
     }
     requireBotChannelPermissions(bot, bot.transformers.snowflake(channelId), ['VIEW_CHANNEL', 'SEND_MESSAGES'])

@@ -9,7 +9,7 @@ export function editMember (bot: BotWithCache) {
 
     if (options.nick) requiredPerms.push('MANAGE_NICKNAMES')
 
-    if (options.roles != null) requiredPerms.push('MANAGE_ROLES')
+    if (options.roles) requiredPerms.push('MANAGE_ROLES')
 
     if (
       options.mute !== undefined || options.deaf !== undefined ||

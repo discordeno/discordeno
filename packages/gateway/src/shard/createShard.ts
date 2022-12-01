@@ -1,6 +1,6 @@
 import { ActivityTypes, DiscordGatewayPayload, PickPartial, PresenceStatus } from '@discordeno/types'
 import { API_VERSION, createLeakyBucket, LeakyBucket } from '@discordeno/utils'
-import { WebSocket } from 'ws'
+import { CloseEvent, MessageEvent, WebSocket } from 'ws'
 import { calculateSafeRequests } from './calculateSafeRequests.js'
 import { close } from './close.js'
 import { connect } from './connect.js'
@@ -182,7 +182,7 @@ export function createShard (
      *
      * Handle an incoming gateway message.
      */
-    handleMessage: async function (message: MessageEvent<any>) {
+    handleMessage: async function (message: MessageEvent) {
       return await handleMessageOverwritten(this, message)
     },
 

@@ -6,7 +6,7 @@ export function editMessage (bot: BotWithCache) {
 
   bot.helpers.editMessage = async function (channelId, messageId, content) {
     const message = bot.messages.get(messageId)
-    if (message != null) {
+    if (message) {
       if (message.authorId !== bot.id) {
         content = { flags: content.flags }
         requireBotChannelPermissions(bot, channelId, ['MANAGE_MESSAGES'])

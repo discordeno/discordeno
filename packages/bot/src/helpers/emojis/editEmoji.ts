@@ -32,7 +32,7 @@ export async function editEmoji (
     {
       name: options.name,
       // NEED TERNARY TO SUPPORT NULL AS VALID
-      roles: (options.roles != null) ? options.roles.map((role) => role.toString()) : options.roles,
+      roles: (options.roles) ? options.roles.map((role) => role.toString()) : options.roles,
       reason: options.reason
     }
   )

@@ -6,7 +6,7 @@ export function getPrivateJoinedArchivedThreads (bot: BotWithCache) {
   bot.helpers.getPrivateJoinedArchivedThreads = async function (channelId, options) {
     const channel = bot.channels.get(bot.transformers.snowflake(channelId))
 
-    if (channel != null) {
+    if (channel) {
       const isThreadParent = [ChannelTypes.GuildText, ChannelTypes.GuildAnnouncement, ChannelTypes.GuildForum]
         .includes(channel.type)
       if (!isThreadParent) {

@@ -11,9 +11,9 @@ export function removeRole (bot: BotWithCache) {
     reason
   ) {
     const guild = bot.guilds.get(bot.transformers.snowflake(guildId))
-    if (guild != null) {
+    if (guild) {
       const role = guild.roles.get(bot.transformers.snowflake(roleId))
-      if (role != null) {
+      if (role) {
         const botRole = highestRole(bot, guild, bot.id)
 
         if (!higherRolePosition(bot, guild, botRole.id, role.id)) {

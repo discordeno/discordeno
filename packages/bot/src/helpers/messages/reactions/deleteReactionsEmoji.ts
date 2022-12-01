@@ -1,5 +1,5 @@
-import type { Bot } from '.@discordeno/types'
 import { BigString } from '@discordeno/types'
+import type { Bot } from '../../../bot'
 import { processReactionString } from './getReactions.js'
 
 /**

@@ -7,7 +7,7 @@ export function createChannel (bot: BotWithCache) {
   bot.helpers.createChannel = async function (guildId, options) {
     const guild = bot.guilds.get(bot.transformers.snowflake(guildId))
 
-    if (guild != null) {
+    if (guild) {
       if (options?.rateLimitPerUser && !(options.rateLimitPerUser > 0 && options.rateLimitPerUser < 21600)) {
         throw new Error('Amount of seconds a user has to wait before sending another message must be between 0-21600')
       }
@@ -39,7 +39,7 @@ export function createChannel (bot: BotWithCache) {
 
       if (options?.parentId) {
         const category = bot.channels.get(bot.transformers.snowflake(options.parentId))
-        if ((category != null) && category.type !== ChannelTypes.GuildCategory) {
+        if ((category) && category.type !== ChannelTypes.GuildCategory) {
           throw new Error('The parent id must be for a category channel type.')
         }
       }

@@ -9,9 +9,9 @@ export function editWebhookMessage (bot: Bot) {
       throw Error('The content can not exceed 2000 characters.')
     }
 
-    if ((options.embeds != null) && options.embeds.length > 10) options.embeds.splice(10)
+    if ((options.embeds) && options.embeds.length > 10) options.embeds.splice(10)
 
-    if (options.allowedMentions != null) {
+    if (options.allowedMentions) {
       if (options.allowedMentions.users?.length) {
         if (options.allowedMentions.parse?.includes(AllowedMentionsTypes.UserMentions)) {
           options.allowedMentions.parse = options.allowedMentions.parse.filter((p) => p !== 'users')
@@ -33,7 +33,7 @@ export function editWebhookMessage (bot: Bot) {
       }
     }
 
-    if (options.components != null) validateComponents(bot, options.components)
+    if (options.components) validateComponents(bot, options.components)
 
     return await editWebhookMessage(webhookId, webhookToken, messageId, options)
   }

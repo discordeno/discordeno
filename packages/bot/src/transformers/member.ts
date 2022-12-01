@@ -24,7 +24,7 @@ export function transformMember (bot: Bot, payload: DiscordMember, guildId: bigi
   const member = {
     id: userId,
     guildId,
-    user: (payload.user != null) ? bot.transformers.user(bot, payload.user) : undefined,
+    user: (payload.user) ? bot.transformers.user(bot, payload.user) : undefined,
     nick: payload.nick ?? undefined,
     roles: payload.roles.map((id) => bot.transformers.snowflake(id)),
     joinedAt: Date.parse(payload.joined_at),

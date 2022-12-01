@@ -43,14 +43,14 @@ export async function createChannel (bot: Bot, guildId: BigString, options: Crea
           permission_overwrites: options?.permissionOverwrites?.map((overwrite) => ({
             id: overwrite.id.toString(),
             type: overwrite.type,
-            allow: (overwrite.allow != null) ? bot.utils.calculateBits(overwrite.allow) : null,
-            deny: (overwrite.deny != null) ? bot.utils.calculateBits(overwrite.deny) : null
+            allow: (overwrite.allow) ? bot.utils.calculateBits(overwrite.allow) : null,
+            deny: (overwrite.deny) ? bot.utils.calculateBits(overwrite.deny) : null
           })),
           type: options?.type || ChannelTypes.GuildText,
           default_sort_order: options.defaultSortOrder,
           reason: options.reason,
           default_auto_archive_duration: options?.defaultAutoArchiveDuration,
-          default_reaction_emoji: (options.defaultReactionEmoji != null)
+          default_reaction_emoji: (options.defaultReactionEmoji)
             ? {
                 emoji_id: options.defaultReactionEmoji.emojiId
                   ? bot.transformers.reverse.snowflake(options.defaultReactionEmoji.emojiId)
@@ -59,7 +59,7 @@ export async function createChannel (bot: Bot, guildId: BigString, options: Crea
               }
             : undefined,
 
-          available_tags: (options.availableTags != null)
+          available_tags: (options.availableTags)
             ? options.availableTags.map((availableTag) => ({
               id: bot.transformers.reverse.snowflake(availableTag.id),
               name: availableTag.name,

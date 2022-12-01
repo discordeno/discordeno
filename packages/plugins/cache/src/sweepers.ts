@@ -1,9 +1,9 @@
-import { Bot, Member } from '../deps.js'
+import { Bot, Member } from '@discordeno/bot'
 import { BotWithCache } from './addCacheCollections.js'
 import { dispatchRequirements } from './dispatchRequirements.js'
 
 /** Enables sweepers for your bot but will require, enabling cache first. */
-export function enableCacheSweepers<B extends Bot> (bot: BotWithCache<B>) {
+export function enableCacheSweepers<B extends Bot> (bot: BotWithCache<B>): void {
   bot.guilds.startSweeper({
     filter: function (guild, _, bot: BotWithCache<B>) {
       // Reset activity for next interval

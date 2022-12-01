@@ -1,5 +1,5 @@
+import { Bot, Collection, DiscordGuildEmojisUpdate } from '@discordeno/bot'
 import { addCacheCollections, BotWithCache } from './addCacheCollections.js'
-import { Bot, Collection, DiscordGuildEmojisUpdate } from './deps.js'
 import { setupCacheEdits } from './setupCacheEdits.js'
 import { setupCacheRemovals } from './setupCacheRemovals.js'
 
@@ -21,7 +21,7 @@ export function enableCachePlugin<B extends Bot = Bot> (rawBot: B): BotWithCache
     if (result) {
       bot.guilds.set(result.id, result)
 
-      const channels = (payload.guild.channels != null) || []
+      const channels = (payload.guild.channels) ?? []
 
       channels.forEach((channel) => {
         bot.transformers.channel(bot, { channel, guildId: result.id })
@@ -86,7 +86,7 @@ export function enableCachePlugin<B extends Bot = Bot> (rawBot: B): BotWithCache
       const user = bot.transformers.user(bot, payload.author)
       bot.users.set(user.id, user)
 
-      if (payload.guild_id && (payload.member != null)) {
+      if (payload.guild_id && (payload.member)) {
         const guildId = bot.transformers.snowflake(payload.guild_id)
         // CACHE THE MEMBER
         bot.members.set(
@@ -129,7 +129,7 @@ export function enableCachePlugin<B extends Bot = Bot> (rawBot: B): BotWithCache
     const payload = data.d as DiscordGuildEmojisUpdate
 
     const guild = bot.guilds.get(bot.transformers.snowflake(payload.guild_id))
-    if (guild != null) {
+    if (guild) {
       guild.emojis = new Collection(payload.emojis.map((e) => {
         const emoji = bot.transformers.emoji(bot, e)
         return [emoji.id!, emoji]

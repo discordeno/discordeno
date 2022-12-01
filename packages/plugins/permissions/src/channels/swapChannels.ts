@@ -7,7 +7,7 @@ export function swapChannels (bot: BotWithCache) {
   bot.helpers.swapChannels = async function (guildId, channelPositions) {
     for (const channelPosition of channelPositions) {
       const channel = bot.channels.get(BigInt(channelPosition.id))
-      if (channel != null) {
+      if (channel) {
         const perms: PermissionStrings[] = ['VIEW_CHANNEL', 'MANAGE_CHANNELS']
         const isVoice = [ChannelTypes.GuildVoice, ChannelTypes.GuildStageVoice].includes(channel.type)
         if (isVoice) perms.push('CONNECT')

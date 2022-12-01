@@ -1,22 +1,22 @@
 import { DiscordGatewayPayload, DiscordHello, DiscordReady, GatewayOpcodes } from '@discordeno/types'
 import { createLeakyBucket, delay } from '@discordeno/utils'
 import { inflateSync } from 'node:zlib'
+import { MessageEvent } from 'ws'
 import { GATEWAY_RATE_LIMIT_RESET_INTERVAL, Shard, ShardState } from './types.js'
 
-export async function handleMessage (shard: Shard, message: MessageEvent<any>): Promise<void> {
-  message = message.data
+export async function handleMessage (shard: Shard, message: MessageEvent): Promise<void> {
+  let preProcessMessage = message.data
 
   // If message compression is enabled,
   // Discord might send zlib compressed payloads.
-  if (shard.gatewayConfig.compress && message instanceof Blob) {
-    // @ts-expect-error
-    message = inflateSync(await message.arrayBuffer()).toString()
+  if (shard.gatewayConfig.compress && preProcessMessage instanceof Blob) {
+    preProcessMessage = inflateSync(await preProcessMessage.arrayBuffer()).toString()
   }
 
   // Safeguard incase decompression failed to make a string.
-  if (typeof message !== 'string') return
+  if (typeof preProcessMessage !== 'string') return
 
-  const messageData = JSON.parse(message) as DiscordGatewayPayload
+  const messageData = JSON.parse(preProcessMessage) as DiscordGatewayPayload
 
   // Edge case start: https://github.com/discordeno/discordeno/issues/2311
   shard.heart.lastAck = Date.now()

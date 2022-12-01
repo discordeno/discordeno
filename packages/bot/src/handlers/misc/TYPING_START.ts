@@ -12,6 +12,6 @@ export function handleTypingStart (bot: Bot, data: DiscordGatewayPayload) {
     channelId: bot.transformers.snowflake(payload.channel_id),
     userId,
     timestamp: payload.timestamp,
-    member: (payload.member != null) && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined
+    member: (payload.member) && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined
   })
 }

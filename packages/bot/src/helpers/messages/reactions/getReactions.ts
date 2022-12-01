@@ -1,6 +1,6 @@
-import type { Bot } from '.@discordeno/types'
 import { BigString, DiscordUser } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
+import type { Bot } from '../../../bot'
 import { User } from '../../../transformers/member.js'
 
 /** Get a list of users that reacted with this emoji. */

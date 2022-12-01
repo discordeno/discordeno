@@ -1,6 +1,7 @@
-import { BigString, CreateApplicationCommand, DiscordApplicationCommand } from '@discordeno/types'
+import { BigString, DiscordApplicationCommand } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 import { ApplicationCommand } from '../../../transformers/applicationCommand.js'
+import { CreateApplicationCommand } from '../../../types'
 
 /**
  * Edits a global application command.

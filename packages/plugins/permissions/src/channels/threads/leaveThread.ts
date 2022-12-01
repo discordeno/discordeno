@@ -7,7 +7,7 @@ export function leaveThread (bot: BotWithCache) {
   bot.helpers.leaveThread = async function (threadId) {
     const channel = bot.channels.get(bot.transformers.snowflake(threadId))
 
-    if (channel != null) {
+    if (channel) {
       const isThread = ![ChannelTypes.PublicThread, ChannelTypes.PrivateThread, ChannelTypes.AnnouncementThread]
         .includes(channel.type)
 

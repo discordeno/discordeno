@@ -13,7 +13,7 @@ export function transformIntegration (bot: Bot, payload: DiscordIntegrationCreat
     enableEmoticons: payload.enable_emoticons,
     expireBehavior: payload.expire_behavior,
     expireGracePeriod: payload.expire_grace_period,
-    user: (payload.user != null) ? bot.transformers.user(bot, payload.user) : undefined,
+    user: (payload.user) ? bot.transformers.user(bot, payload.user) : undefined,
     account: {
       id: bot.transformers.snowflake(payload.account.id),
       name: payload.account.name
@@ -21,13 +21,13 @@ export function transformIntegration (bot: Bot, payload: DiscordIntegrationCreat
     syncedAt: payload.synced_at ? Date.parse(payload.synced_at) : undefined,
     subscriberCount: payload.subscriber_count,
     revoked: payload.revoked,
-    application: (payload.application != null)
+    application: (payload.application)
       ? {
           id: bot.transformers.snowflake(payload.application.id),
           name: payload.application.name,
           icon: payload.application.icon ? bot.utils.iconHashToBigInt(payload.application.icon) : undefined,
           description: payload.application.description,
-          bot: (payload.application.bot != null) ? bot.transformers.user(bot, payload.application.bot) : undefined
+          bot: (payload.application.bot) ? bot.transformers.user(bot, payload.application.bot) : undefined
         }
       : undefined,
     scopes: payload.scopes

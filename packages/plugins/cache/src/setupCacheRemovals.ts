@@ -1,4 +1,4 @@
-import type { Emoji } from '../deps.js'
+import type { Emoji } from '@discordeno/bot'
 import {
   Bot,
   Collection,
@@ -11,10 +11,10 @@ import {
   DiscordMessageDeleteBulk,
   DiscordUnavailableGuild,
   DiscordVoiceState
-} from '../deps.js'
+} from '@discordeno/bot'
 import type { BotWithCache } from './addCacheCollections.js'
 
-export function setupCacheRemovals<B extends Bot> (bot: BotWithCache<B>) {
+export function setupCacheRemovals<B extends Bot> (bot: BotWithCache<B>): void {
   const {
     CHANNEL_DELETE,
     GUILD_BAN_ADD,
@@ -71,7 +71,7 @@ export function setupCacheRemovals<B extends Bot> (bot: BotWithCache<B>) {
     const payload = data.d as DiscordGuildEmojisUpdate
     const guild = bot.guilds.get(bot.transformers.snowflake(payload.guild_id))
 
-    if (guild != null) {
+    if (guild) {
       guild.emojis = new Collection(payload.emojis.map((e) => {
         const emoji: Emoji = bot.transformers.emoji(bot, e)
         return [emoji.id!, emoji]
@@ -106,7 +106,7 @@ export function setupCacheRemovals<B extends Bot> (bot: BotWithCache<B>) {
     )
     const id = bot.transformers.snowflake(payload.role_id)
 
-    if (guild != null) {
+    if (guild) {
       guild.roles.delete(id)
       bot.members.forEach((member) => {
         // SKIP MEMBERS IN OTHER GUILDS

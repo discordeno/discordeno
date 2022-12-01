@@ -28,7 +28,7 @@ export async function editRole (bot: Bot, guildId: BigString, roleId: BigString,
       color: options.color,
       hoist: options.hoist,
       mentionable: options.mentionable,
-      permissions: bot.utils.calculateBits(((options?.permissions) != null) || []),
+      permissions: bot.utils.calculateBits(options?.permissions ?? []),
       icon: options.icon,
       unicode_emoji: options.unicodeEmoji
     }

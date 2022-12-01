@@ -180,19 +180,18 @@ export async function tellWorkerToPrepare (resharder: Resharder, shardId: number
     },
     // Ignore events in this new shard for now
     handleMessage: async function (shard, message) {
-      message = message.data
+      let preProcessMessage = message.data
 
       // If message compression is enabled,
       // Discord might send zlib compressed payloads.
-      if (shard.gatewayConfig.compress && message instanceof Blob) {
-        // @ts-expect-error
-        message = inflateSync(await message.arrayBuffer()).toString()
+      if (shard.gatewayConfig.compress && preProcessMessage instanceof Blob) {
+        preProcessMessage = inflateSync(await preProcessMessage.arrayBuffer()).toString()
       }
 
       // Safeguard incase decompression failed to make a string.
-      if (typeof message !== 'string') return
+      if (typeof preProcessMessage !== 'string') return
 
-      const messageData = JSON.parse(message) as DiscordGatewayPayload
+      const messageData = JSON.parse(preProcessMessage) as DiscordGatewayPayload
 
       if (messageData.t === 'READY') {
         const payload = messageData.d as DiscordReady
@@ -229,8 +228,14 @@ export async function shardIsPending (resharder: Resharder, shard: Shard): Promi
       const oldHandler = shard.handleMessage
 
       shard.handleMessage = async function (message) {
-        // Member checks need to continue but others can stop
-        if (message.data.t !== 'GUILD_MEMBERS_CHUNK') return
+        let preProcessMessage = message.data
+        if (shard.gatewayConfig.compress && preProcessMessage instanceof Blob) {
+          preProcessMessage = inflateSync(await preProcessMessage.arrayBuffer()).toString()
+        }
+        if (typeof preProcessMessage !== 'string') return
+        const messageData = JSON.parse(preProcessMessage) as DiscordGatewayPayload
+        if (messageData.t !== 'GUILD_MEMBERS_CHUNK') return
+
         // Process only the chunking events
         oldHandler(message)
       }

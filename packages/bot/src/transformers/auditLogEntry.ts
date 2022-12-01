@@ -112,7 +112,7 @@ export function transformAuditLogEntry (bot: Bot, payload: DiscordAuditLogEntry)
     userId: payload.user_id ? bot.transformers.snowflake(payload.user_id) : undefined,
     targetId: payload.target_id ? bot.transformers.snowflake(payload.target_id) : undefined,
     actionType: payload.action_type,
-    options: (payload.options != null)
+    options: (payload.options)
       ? {
           deleteMemberDays: payload.options.delete_member_days ? Number(payload.options.delete_member_days) : 0,
           membersRemoved: payload.options.members_removed ? Number(payload.options.members_removed) : 0,

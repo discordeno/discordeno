@@ -40,7 +40,7 @@ export async function sendMessage (bot: Bot, channelId: BigString, options: Crea
       nonce: options.nonce,
       tts: options.tts,
       embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
-      allowed_mentions: (options.allowedMentions != null)
+      allowed_mentions: (options.allowedMentions)
         ? {
             parse: options.allowedMentions?.parse,
             roles: options.allowedMentions?.roles?.map((id) => id.toString()),
@@ -76,7 +76,7 @@ export async function sendMessage (bot: Bot, channelId: BigString, options: Crea
                 label: option.label,
                 value: option.value,
                 description: option.description,
-                emoji: (option.emoji != null)
+                emoji: (option.emoji)
                   ? {
                       id: option.emoji.id?.toString(),
                       name: option.emoji.name,
@@ -109,7 +109,7 @@ export async function sendMessage (bot: Bot, channelId: BigString, options: Crea
             custom_id: subComponent.customId,
             label: subComponent.label,
             style: subComponent.style,
-            emoji: 'emoji' in subComponent && (subComponent.emoji != null)
+            emoji: 'emoji' in subComponent && (subComponent.emoji)
               ? {
                   id: subComponent.emoji.id?.toString(),
                   name: subComponent.emoji.name,

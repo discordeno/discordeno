@@ -15,7 +15,7 @@ export function transformActivityToDiscordActivity (bot: Bot, payload: Activity)
     application_id: payload.applicationId ? bot.utils.bigintToSnowflake(payload.applicationId) : undefined,
     details: payload.details ?? undefined,
     state: payload.state ?? undefined,
-    emoji: (payload.emoji != null)
+    emoji: (payload.emoji)
       ? {
           name: payload.emoji.name,
           animated: payload.emoji.animated,

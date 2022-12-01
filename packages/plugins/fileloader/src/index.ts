@@ -1,4 +1,4 @@
-import { Bot } from './deps.js'
+import { Bot } from '@discordeno/bot'
 
 // iMpOrTaNt to make sure files can be reloaded properly!
 export let uniqueFilePathCounter = 0
@@ -7,7 +7,7 @@ export let paths: string[] = []
 /** Recursively generates an array of unique paths to import using `fileLoader()`
  * (**Is** windows compatible)
  */
-export async function importDirectory (path: string) {
+export async function importDirectory (path: string): Promise<void> {
   path = path.replaceAll('\\', '/')
   const files = Deno.readDirSync(Deno.realPathSync(path))
 

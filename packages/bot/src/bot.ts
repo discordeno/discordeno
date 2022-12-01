@@ -4,7 +4,7 @@ import {
   AllowedMentions, BigString, DiscordActivity, DiscordAllowedMentions, DiscordApplication, DiscordApplicationCommand, DiscordApplicationCommandOption, DiscordApplicationCommandOptionChoice, DiscordAttachment, DiscordAuditLogEntry, DiscordAutoModerationActionExecution, DiscordAutoModerationRule, DiscordChannel, DiscordComponent, DiscordCreateApplicationCommand, DiscordEmbed, DiscordEmoji, DiscordGatewayPayload, DiscordGetGatewayBot, DiscordGuild, DiscordGuildApplicationCommandPermissions, DiscordGuildWidget, DiscordGuildWidgetSettings, DiscordIntegrationCreateUpdate, DiscordInteraction, DiscordInteractionDataOption, DiscordInteractionResponse, DiscordInviteCreate, DiscordMember, DiscordMessage, DiscordPresenceUpdate, DiscordReady, DiscordRole, DiscordScheduledEvent, DiscordStageInstance, DiscordSticker, DiscordStickerPack, DiscordTeam, DiscordTemplate, DiscordThreadMember, DiscordUser, DiscordVoiceRegion, DiscordVoiceState, DiscordWebhook, DiscordWelcomeScreen, Errors, GatewayDispatchEventNames, GatewayIntents, GetGatewayBot
 } from '@discordeno/types'
 import {
-  baseEndpoints, bigintToSnowflake, calculateBits, calculatePermissions, CHANNEL_MENTION_REGEX, Collection, CONTEXT_MENU_COMMANDS_NAME_REGEX, DISCORDENO_VERSION, DISCORD_SNOWFLAKE_REGEX, getBotIdFromToken, iconBigintToHash, iconHashToBigInt, removeTokenPrefix, SLASH_COMMANDS_NAME_REGEX, snowflakeToBigint, urlToBase64, USER_AGENT, validateLength
+  baseEndpoints, bigintToSnowflake, calculateBits, calculatePermissions, CHANNEL_MENTION_REGEX, Collection, CONTEXT_MENU_COMMANDS_NAME_REGEX, delay, DISCORDENO_VERSION, DISCORD_SNOWFLAKE_REGEX, getBotIdFromToken, iconBigintToHash, iconHashToBigInt, removeTokenPrefix, SLASH_COMMANDS_NAME_REGEX, snowflakeToBigint, urlToBase64, USER_AGENT, validateLength
 } from '@discordeno/utils'
 import * as handlers from './handlers/index.js'
 import * as helpers from './helpers/index.js'
@@ -27,13 +27,13 @@ import {
   InteractionResponse
 } from './types.js'
 import { routes } from './utils/routes.js'
-import { delay, formatImageURL } from './utils/utils.js'
+import { formatImageURL } from './utils/utils.js'
 
 export function createBot (options: CreateBotOptions): Bot {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const bot = {
     id: options.botId ?? getBotIdFromToken(options.token),
-    applicationId: options.applicationId || options.botId || getBotIdFromToken(options.token),
+    applicationId: options.applicationId ?? options.botId ?? getBotIdFromToken(options.token),
     token: removeTokenPrefix(options.token),
     events: createEventHandlers(options.events ?? {}),
     intents: options.intents,
@@ -89,7 +89,7 @@ export function createBot (options: CreateBotOptions): Bot {
 export function createEventHandlers (
   events: Partial<EventHandlers>
 ): EventHandlers {
-  function ignore () { }
+  function ignore (): void { }
 
   return {
     debug: events.debug ?? ignore,
@@ -250,15 +250,15 @@ export function createHelpers (
   bot: Bot,
   customHelpers?: Partial<Helpers>
 ): FinalHelpers {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const converted = {} as FinalHelpers
   for (
     const [name, fun] of Object.entries({
-      ...createBaseHelpers((customHelpers != null) || {})
+      ...createBaseHelpers(customHelpers ?? {})
     })
   ) {
     // @ts-expect-error - TODO: make the types better
     converted[name as keyof FinalHelpers] = (
-      // @ts-expect-error - TODO: make the types better
       ...args: RemoveFirstFromTuple<Parameters<typeof fun>>
     ) =>
       // @ts-expect-error - TODO: make the types better
@@ -268,7 +268,7 @@ export function createHelpers (
   return converted
 }
 
-export function createBaseHelpers (options: Partial<Helpers>) {
+export function createBaseHelpers (options: Partial<Helpers>): DefaultHelpers & Partial<Helpers> {
   return {
     ...defaultHelpers,
     ...options
@@ -343,72 +343,73 @@ export interface Transformers {
   template: (bot: Bot, payload: DiscordTemplate) => Template
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function createTransformers (options: Partial<Transformers>) {
   return {
     reverse: {
-      allowedMentions: ((options.reverse?.allowedMentions) != null) || transformAllowedMentionsToDiscordAllowedMentions,
-      embed: ((options.reverse?.embed) != null) || transformEmbedToDiscordEmbed,
-      component: ((options.reverse?.component) != null) || transformComponentToDiscordComponent,
-      activity: ((options.reverse?.activity) != null) || transformActivityToDiscordActivity,
-      member: ((options.reverse?.member) != null) || transformMemberToDiscordMember,
-      user: ((options.reverse?.user) != null) || transformUserToDiscordUser,
-      team: ((options.reverse?.team) != null) || transformTeamToDiscordTeam,
-      application: ((options.reverse?.application) != null) || transformApplicationToDiscordApplication,
-      snowflake: ((options.reverse?.snowflake) != null) || bigintToSnowflake,
-      createApplicationCommand: ((options.reverse?.createApplicationCommand) != null) ||
+      allowedMentions: options.reverse?.allowedMentions ?? transformAllowedMentionsToDiscordAllowedMentions,
+      embed: options.reverse?.embed ?? transformEmbedToDiscordEmbed,
+      component: options.reverse?.component ?? transformComponentToDiscordComponent,
+      activity: options.reverse?.activity ?? transformActivityToDiscordActivity,
+      member: options.reverse?.member ?? transformMemberToDiscordMember,
+      user: options.reverse?.user ?? transformUserToDiscordUser,
+      team: options.reverse?.team ?? transformTeamToDiscordTeam,
+      application: options.reverse?.application ?? transformApplicationToDiscordApplication,
+      snowflake: options.reverse?.snowflake ?? bigintToSnowflake,
+      createApplicationCommand: options.reverse?.createApplicationCommand ??
         transformCreateApplicationCommandToDiscordCreateApplicationCommand,
-      applicationCommand: ((options.reverse?.applicationCommand) != null) ||
+      applicationCommand: options.reverse?.applicationCommand ??
         transformApplicationCommandToDiscordApplicationCommand,
-      applicationCommandOption: ((options.reverse?.applicationCommandOption) != null) ||
+      applicationCommandOption: options.reverse?.applicationCommandOption ??
         transformApplicationCommandOptionToDiscordApplicationCommandOption,
-      applicationCommandOptionChoice: ((options.reverse?.applicationCommandOptionChoice) != null) ||
+      applicationCommandOptionChoice: options.reverse?.applicationCommandOptionChoice ??
         transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
-      interactionResponse: ((options.reverse?.interactionResponse) != null) ||
+      interactionResponse: options.reverse?.interactionResponse ??
         transformInteractionResponseToDiscordInteractionResponse,
-      attachment: ((options.reverse?.attachment) != null) || transformAttachmentToDiscordAttachment
+      attachment: options.reverse?.attachment ?? transformAttachmentToDiscordAttachment
     },
-    automodRule: (options.automodRule != null) || transformAutoModerationRule,
-    automodActionExecution: (options.automodActionExecution != null) || transformAutoModerationActionExecution,
-    activity: (options.activity != null) || transformActivity,
-    application: (options.application != null) || transformApplication,
-    attachment: (options.attachment != null) || transformAttachment,
-    channel: (options.channel != null) || transformChannel,
-    component: (options.component != null) || transformComponent,
-    embed: (options.embed != null) || transformEmbed,
-    emoji: (options.emoji != null) || transformEmoji,
-    guild: (options.guild != null) || transformGuild,
-    integration: (options.integration != null) || transformIntegration,
-    interaction: (options.interaction != null) || transformInteraction,
-    interactionDataOptions: (options.interactionDataOptions != null) || transformInteractionDataOption,
-    invite: (options.invite != null) || transformInvite,
-    member: (options.member != null) || transformMember,
-    message: (options.message != null) || transformMessage,
-    presence: (options.presence != null) || transformPresence,
-    role: (options.role != null) || transformRole,
-    user: (options.user != null) || transformUser,
-    team: (options.team != null) || transformTeam,
-    voiceState: (options.voiceState != null) || transformVoiceState,
-    snowflake: (options.snowflake != null) || snowflakeToBigint,
-    webhook: (options.webhook != null) || transformWebhook,
-    auditLogEntry: (options.auditLogEntry != null) || transformAuditLogEntry,
-    applicationCommand: (options.applicationCommand != null) ||
+    automodRule: (options.automodRule) ?? transformAutoModerationRule,
+    automodActionExecution: (options.automodActionExecution) ?? transformAutoModerationActionExecution,
+    activity: (options.activity) ?? transformActivity,
+    application: (options.application) ?? transformApplication,
+    attachment: (options.attachment) ?? transformAttachment,
+    channel: (options.channel) ?? transformChannel,
+    component: (options.component) ?? transformComponent,
+    embed: (options.embed) ?? transformEmbed,
+    emoji: (options.emoji) ?? transformEmoji,
+    guild: (options.guild) ?? transformGuild,
+    integration: (options.integration) ?? transformIntegration,
+    interaction: (options.interaction) ?? transformInteraction,
+    interactionDataOptions: (options.interactionDataOptions) ?? transformInteractionDataOption,
+    invite: (options.invite) ?? transformInvite,
+    member: (options.member) ?? transformMember,
+    message: (options.message) ?? transformMessage,
+    presence: (options.presence) ?? transformPresence,
+    role: (options.role) ?? transformRole,
+    user: (options.user) ?? transformUser,
+    team: (options.team) ?? transformTeam,
+    voiceState: (options.voiceState) ?? transformVoiceState,
+    snowflake: (options.snowflake) ?? snowflakeToBigint,
+    webhook: (options.webhook) ?? transformWebhook,
+    auditLogEntry: (options.auditLogEntry) ?? transformAuditLogEntry,
+    applicationCommand: (options.applicationCommand) ??
       transformApplicationCommand,
-    applicationCommandOption: (options.applicationCommandOption != null) ||
+    applicationCommandOption: (options.applicationCommandOption) ??
       transformApplicationCommandOption,
-    applicationCommandPermission: (options.applicationCommandPermission != null) ||
+    applicationCommandPermission: (options.applicationCommandPermission) ??
       transformApplicationCommandPermission,
-    scheduledEvent: (options.scheduledEvent != null) || transformScheduledEvent,
-    threadMember: (options.threadMember != null) || transformThreadMember,
-    welcomeScreen: (options.welcomeScreen != null) || transformWelcomeScreen,
-    voiceRegion: (options.voiceRegion != null) || transformVoiceRegion,
-    widget: (options.widget != null) || transformWidget,
-    widgetSettings: (options.widgetSettings != null) || transformWidgetSettings,
-    stageInstance: (options.stageInstance != null) || transformStageInstance,
-    sticker: (options.sticker != null) || transformSticker,
-    stickerPack: (options.stickerPack != null) || transformStickerPack,
-    gatewayBot: (options.gatewayBot != null) || transformGatewayBot,
-    applicationCommandOptionChoice: (options.applicationCommandOptionChoice != null) || transformApplicationCommandOptionChoice,
-    template: (options.template != null) || transformTemplate
+    scheduledEvent: (options.scheduledEvent) ?? transformScheduledEvent,
+    threadMember: (options.threadMember) ?? transformThreadMember,
+    welcomeScreen: (options.welcomeScreen) ?? transformWelcomeScreen,
+    voiceRegion: (options.voiceRegion) ?? transformVoiceRegion,
+    widget: (options.widget) ?? transformWidget,
+    widgetSettings: (options.widgetSettings) ?? transformWidgetSettings,
+    stageInstance: (options.stageInstance) ?? transformStageInstance,
+    sticker: (options.sticker) ?? transformSticker,
+    stickerPack: (options.stickerPack) ?? transformStickerPack,
+    gatewayBot: (options.gatewayBot) ?? transformGatewayBot,
+    applicationCommandOptionChoice: (options.applicationCommandOptionChoice) ?? transformApplicationCommandOptionChoice,
+    template: (options.template) ?? transformTemplate
   }
 }
 
@@ -633,6 +634,7 @@ export interface EventHandlers {
   ) => unknown
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function createBotConstants () {
   return {
     DISCORDENO_VERSION,

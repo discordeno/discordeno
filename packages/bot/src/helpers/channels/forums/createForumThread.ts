@@ -38,7 +38,7 @@ export async function createForumThread (
 
       content: options.content,
       embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
-      allowed_mentions: (options.allowedMentions != null)
+      allowed_mentions: (options.allowedMentions)
         ? {
             parse: options.allowedMentions?.parse,
             roles: options.allowedMentions?.roles?.map((id) => id.toString()),

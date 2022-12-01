@@ -78,15 +78,15 @@ export async function editChannel (bot: Bot, channelId: BigString, options: Modi
       auto_archive_duration: options.autoArchiveDuration,
       locked: options.locked,
       invitable: options.invitable,
-      permission_overwrites: (options.permissionOverwrites != null)
+      permission_overwrites: (options.permissionOverwrites)
         ? options.permissionOverwrites?.map((overwrite) => ({
           id: overwrite.id.toString(),
           type: overwrite.type,
-          allow: (overwrite.allow != null) ? bot.utils.calculateBits(overwrite.allow) : null,
-          deny: (overwrite.deny != null) ? bot.utils.calculateBits(overwrite.deny) : null
+          allow: (overwrite.allow) ? bot.utils.calculateBits(overwrite.allow) : null,
+          deny: (overwrite.deny) ? bot.utils.calculateBits(overwrite.deny) : null
         }))
         : undefined,
-      available_tags: (options.availableTags != null)
+      available_tags: (options.availableTags)
         ? options.availableTags.map((availableTag) => ({
           id: availableTag.id,
           name: availableTag.name,
@@ -96,7 +96,7 @@ export async function editChannel (bot: Bot, channelId: BigString, options: Modi
         }))
         : undefined,
       applied_tags: options.appliedTags?.map((appliedTag) => appliedTag.toString()),
-      default_reaction_emoji: (options.defaultReactionEmoji != null)
+      default_reaction_emoji: (options.defaultReactionEmoji)
         ? {
             emoji_id: options.defaultReactionEmoji.emojiId,
             emoji_name: options.defaultReactionEmoji.emojiName

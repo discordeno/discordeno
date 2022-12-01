@@ -9,7 +9,7 @@ export function transformComponent (bot: Bot, payload: DiscordComponent): Compon
     disabled: payload.disabled,
     style: payload.style,
     label: payload.label,
-    emoji: (payload.emoji != null)
+    emoji: (payload.emoji)
       ? {
           id: payload.emoji.id ? bot.transformers.snowflake(payload.emoji.id) : undefined,
           name: payload.emoji.name,
@@ -21,7 +21,7 @@ export function transformComponent (bot: Bot, payload: DiscordComponent): Compon
       label: option.label,
       value: option.value,
       description: option.description,
-      emoji: (option.emoji != null)
+      emoji: (option.emoji)
         ? {
             id: option.emoji.id ? bot.transformers.snowflake(option.emoji.id) : undefined,
             name: option.emoji.name,

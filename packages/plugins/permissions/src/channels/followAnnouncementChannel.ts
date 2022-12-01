@@ -6,11 +6,11 @@ export function followAnnouncementChannel (bot: BotWithCache) {
 
   bot.helpers.followAnnouncementChannel = async function (sourceChannelId, targetChannelId) {
     const sourceChannel = bot.channels.get(bot.transformers.snowflake(sourceChannelId))
-    if ((sourceChannel != null) && sourceChannel.type !== ChannelTypes.GuildAnnouncement) {
+    if ((sourceChannel) && sourceChannel.type !== ChannelTypes.GuildAnnouncement) {
       throw new Error('Source channel must be an announcement channel')
     }
     const targetChannel = bot.channels.get(bot.transformers.snowflake(targetChannelId))
-    if (targetChannel != null) {
+    if (targetChannel) {
       const isWebhookParent = [ChannelTypes.GuildAnnouncement, ChannelTypes.GuildText].includes(targetChannel.type)
       if (!isWebhookParent) {
         throw new Error('Target channel must be a text channel or an announcement channel')

@@ -35,7 +35,7 @@ export function prepareBuckets (gateway: GatewayManager): void {
     // const worker = bucket.workers.find((w) => w.queue.length < gateway.shardsPerWorker);
     const workerId = gateway.calculateWorkerId(shardId)
     const worker = bucket.workers.find((w) => w.id === workerId)
-    if (worker != null) {
+    if (worker) {
       // IF THE QUEUE HAS SPACE JUST ADD IT TO THIS QUEUE
       worker.queue.push(shardId)
     } else {

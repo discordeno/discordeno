@@ -10,7 +10,7 @@ import {
   PresenceUpdate,
   User,
   Webhook
-} from '../deps.js'
+} from '@discordeno/bot'
 
 export type BotWithCache<B extends Bot = Bot> = Omit<B, 'helpers'> & CacheProps & {
   helpers: BotHelpersWithCache<B['helpers']>

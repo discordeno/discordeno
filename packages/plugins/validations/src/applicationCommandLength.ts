@@ -1,10 +1,10 @@
 import { ApplicationCommandOption, CreateSlashApplicationCommand } from '../deps.js'
 export function validateApplicationCommandLength (options: CreateSlashApplicationCommand) {
   let length = 0
-  if (options.nameLocalizations != null) {
+  if (options.nameLocalizations) {
     length += Math.max(options.name.length, ...Object.values(options.nameLocalizations).map((name) => name.length))
   } else length += options.name.length
-  if (options.descriptionLocalizations != null) {
+  if (options.descriptionLocalizations) {
     length += Math.max(
       options.description.length,
       ...Object.values(options.descriptionLocalizations).map((name) => name.length)
@@ -12,7 +12,7 @@ export function validateApplicationCommandLength (options: CreateSlashApplicatio
   } else {
     length += options.description.length
   }
-  if (options.options != null) length += validateApplicationCommandOptionLength(options.options)
+  if (options.options) length += validateApplicationCommandOptionLength(options.options)
 
   if (length > 4000) {
     throw new Error(
@@ -24,10 +24,10 @@ export function validateApplicationCommandLength (options: CreateSlashApplicatio
 function validateApplicationCommandOptionLength (options: ApplicationCommandOption[]) {
   let length = 0
   for (const option of options) {
-    if (option.nameLocalizations != null) {
+    if (option.nameLocalizations) {
       length += Math.max(option.name.length, ...Object.values(option.nameLocalizations).map((name) => name.length))
     } else length += option.name.length
-    if (option.descriptionLocalizations != null) {
+    if (option.descriptionLocalizations) {
       length += Math.max(
         option.description.length,
         ...Object.values(option.descriptionLocalizations).map((name) => name.length)
@@ -36,16 +36,16 @@ function validateApplicationCommandOptionLength (options: ApplicationCommandOpti
       length += option.description.length
     }
 
-    if (option.choices != null) {
+    if (option.choices) {
       for (const choice of option.choices) {
         length += choice.value.toString().length
-        if (choice.nameLocalizations != null) {
+        if (choice.nameLocalizations) {
           length += Math.max(option.name.length, ...Object.values(choice.nameLocalizations).map((name) => name.length))
         } else length += choice.name.length
       }
     }
 
-    if (option.options != null) length += validateApplicationCommandOptionLength(option.options)
+    if (option.options) length += validateApplicationCommandOptionLength(option.options)
   }
   return length
 }

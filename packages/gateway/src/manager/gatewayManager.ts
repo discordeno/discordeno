@@ -135,7 +135,7 @@ export function createGatewayManager (
     },
     // TODO: fix debug
     /** Handle the different logs. Used for debugging. */
-    debug: (options.debug != null) || function () { },
+    debug: (options.debug) || function () { },
 
     // /** The methods related to resharding. */
     // resharding: {

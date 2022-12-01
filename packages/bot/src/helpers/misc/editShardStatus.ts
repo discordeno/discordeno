@@ -8,7 +8,7 @@ export async function editShardStatus (bot: Bot, shardId: number, data: StatusUp
     throw new Error(`Shard (id: ${shardId}) not found.`)
   }
 
-  return shard.send({
+  return await shard.send({
     op: GatewayOpcodes.PresenceUpdate,
     d: {
       since: null,
@@ -27,7 +27,7 @@ export async function editShardStatus (bot: Bot, shardId: number, data: StatusUp
         application_id: activity.applicationId?.toString(),
         details: activity.details,
         state: activity.state,
-        emoji: (activity.emoji != null)
+        emoji: (activity.emoji)
           ? {
               name: activity.emoji.name,
               id: activity.emoji.id?.toString(),

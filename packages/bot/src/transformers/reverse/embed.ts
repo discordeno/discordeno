@@ -10,14 +10,14 @@ export function transformEmbedToDiscordEmbed (bot: Bot, payload: Embed): Discord
     url: payload.url,
     timestamp: payload.timestamp ? new Date(payload.timestamp).toISOString() : undefined,
     color: payload.color,
-    footer: (payload.footer != null)
+    footer: (payload.footer)
       ? {
           text: payload.footer.text,
           icon_url: payload.footer.iconUrl,
           proxy_icon_url: payload.footer.proxyIconUrl
         }
       : undefined,
-    image: (payload.image != null)
+    image: (payload.image)
       ? {
           url: payload.image.url,
           proxy_url: payload.image.proxyUrl,
@@ -25,7 +25,7 @@ export function transformEmbedToDiscordEmbed (bot: Bot, payload: Embed): Discord
           width: payload.image.width
         }
       : undefined,
-    thumbnail: (payload.thumbnail != null)
+    thumbnail: (payload.thumbnail)
       ? {
           url: payload.thumbnail.url,
           proxy_url: payload.thumbnail.proxyUrl,
@@ -33,7 +33,7 @@ export function transformEmbedToDiscordEmbed (bot: Bot, payload: Embed): Discord
           width: payload.thumbnail.width
         }
       : undefined,
-    video: (payload.video != null)
+    video: (payload.video)
       ? {
           url: payload.video.url,
           proxy_url: payload.video.proxyUrl,
@@ -42,7 +42,7 @@ export function transformEmbedToDiscordEmbed (bot: Bot, payload: Embed): Discord
         }
       : undefined,
     provider: payload.provider,
-    author: (payload.author != null)
+    author: (payload.author)
       ? {
           name: payload.author.name,
           url: payload.author.url,

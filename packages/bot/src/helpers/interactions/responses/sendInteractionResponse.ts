@@ -1,5 +1,6 @@
-import { BigString, InteractionResponse } from '@discordeno/types'
+import { BigString } from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
+import { InteractionResponse } from '../../../types'
 
 /**
  * Sends a response to an interaction.

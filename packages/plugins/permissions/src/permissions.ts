@@ -290,8 +290,8 @@ export function requireOverwritePermissions (
   let requiredPerms: Set<PermissionStrings> = new Set(['MANAGE_CHANNELS'])
 
   overwrites?.forEach((overwrite) => {
-    if (overwrite.allow != null) overwrite.allow.forEach(requiredPerms.add, requiredPerms)
-    if (overwrite.deny != null) overwrite.deny.forEach(requiredPerms.add, requiredPerms)
+    if (overwrite.allow) overwrite.allow.forEach(requiredPerms.add, requiredPerms)
+    if (overwrite.deny) overwrite.deny.forEach(requiredPerms.add, requiredPerms)
   })
 
   // MANAGE_ROLES permission can only be set by administrators

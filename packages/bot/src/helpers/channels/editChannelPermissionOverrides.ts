@@ -28,8 +28,8 @@ export async function editChannelPermissionOverrides (
     'PUT',
     bot.constants.routes.CHANNEL_OVERWRITE(channelId, options.id),
     {
-      allow: (options.allow != null) ? bot.utils.calculateBits(options.allow) : '0',
-      deny: (options.deny != null) ? bot.utils.calculateBits(options.deny) : '0',
+      allow: (options.allow) ? bot.utils.calculateBits(options.allow) : '0',
+      deny: (options.deny) ? bot.utils.calculateBits(options.deny) : '0',
       type: options.type,
       reason: options.reason
     }

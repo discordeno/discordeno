@@ -42,7 +42,7 @@ export function createGlobalApplicationCommand (bot: Bot) {
       }
 
       let length = 0
-      if (options.nameLocalizations != null) {
+      if (options.nameLocalizations) {
         length += Math.max(options.name.length, ...Object.values(options.nameLocalizations).map((name) => name.length))
       } else length += options.name.length
 

@@ -4,7 +4,7 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "packages/plugins/*"
+    "packages/plugins/cache"
   ],
   "scripts": {
     "build": "turbo run build --parallel",

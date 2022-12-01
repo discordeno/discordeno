@@ -35,7 +35,7 @@ export async function editMessage (
     {
       content: options.content,
       embeds: options.embeds?.map((embed) => bot.transformers.reverse.embed(bot, embed)),
-      allowed_mentions: (options.allowedMentions != null)
+      allowed_mentions: (options.allowedMentions)
         ? bot.transformers.reverse.allowedMentions(bot, options.allowedMentions)
         : undefined,
       attachments: options.attachments?.map((attachment) => bot.transformers.reverse.attachment(bot, attachment)),

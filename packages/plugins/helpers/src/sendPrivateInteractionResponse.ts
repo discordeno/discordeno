@@ -7,6 +7,6 @@ export async function sendPrivateInteractionResponse (
   token: string,
   options: InteractionResponse
 ) {
-  if ((options.data != null) && !options.data?.flags) options.data.flags = 64 // private: true
+  if ((options.data) && !options.data?.flags) options.data.flags = 64 // private: true
   return await bot.helpers.sendInteractionResponse(id, token, options)
 }

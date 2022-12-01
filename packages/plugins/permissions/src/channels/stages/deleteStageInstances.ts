@@ -6,7 +6,7 @@ export function deleteStageInstance (bot: BotWithCache) {
 
   bot.helpers.deleteStageInstance = async function (channelId) {
     const channel = bot.channels.get(bot.transformers.snowflake(channelId))
-    if ((channel != null) && channel.type !== ChannelTypes.GuildStageVoice) {
+    if ((channel) && channel.type !== ChannelTypes.GuildStageVoice) {
       throw new Error('Channel must be a stage voice channel')
     }
     requireBotChannelPermissions(bot, bot.transformers.snowflake(channelId), [

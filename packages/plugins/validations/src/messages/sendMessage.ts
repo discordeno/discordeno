@@ -12,7 +12,7 @@ export function sendMessage (bot: Bot) {
       throw new Error('The content should not exceed 2000 characters.')
     }
 
-    if (content.allowedMentions != null) {
+    if (content.allowedMentions) {
       if (content.allowedMentions.users?.length) {
         if (
           content.allowedMentions.parse?.includes(
@@ -52,7 +52,7 @@ export function sendMessage (bot: Bot) {
       }
     }
 
-    if (content.components != null) validateComponents(bot, content.components)
+    if (content.components) validateComponents(bot, content.components)
 
     if (
       !content.content?.length && !content.embeds?.length && !content.components?.length && (content.file == null) &&

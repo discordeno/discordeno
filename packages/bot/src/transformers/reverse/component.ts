@@ -10,7 +10,7 @@ export function transformComponentToDiscordComponent (bot: Bot, payload: Compone
     required: payload.required,
     style: payload.style,
     label: payload.label,
-    emoji: (payload.emoji != null)
+    emoji: (payload.emoji)
       ? {
           id: payload.emoji.id?.toString(),
           name: payload.emoji.name,
@@ -22,7 +22,7 @@ export function transformComponentToDiscordComponent (bot: Bot, payload: Compone
       label: option.label,
       value: option.value,
       description: option.description,
-      emoji: (option.emoji != null)
+      emoji: (option.emoji)
         ? {
             id: option.emoji.id?.toString(),
             name: option.emoji.name,

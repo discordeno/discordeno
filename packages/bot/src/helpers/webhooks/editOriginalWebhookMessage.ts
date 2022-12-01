@@ -1,6 +1,7 @@
-import { BigString, DiscordMessage, InteractionCallbackData, InteractionResponseTypes } from '@discordeno/types'
+import { BigString, DiscordMessage, InteractionResponseTypes } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { Message } from '../../transformers/message.js'
+import { InteractionCallbackData } from '../../types'
 
 /**
  * Edits the original webhook message.

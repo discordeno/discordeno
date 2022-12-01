@@ -6,7 +6,7 @@ export function editStageInstance (bot: BotWithCache) {
 
   bot.helpers.editStageInstance = async function (channelId, data) {
     const channel = bot.channels.get(bot.transformers.snowflake(channelId))
-    if ((channel != null) && channel.type !== ChannelTypes.GuildStageVoice) {
+    if ((channel) && channel.type !== ChannelTypes.GuildStageVoice) {
       throw new Error('Channel must be a stage voice channel')
     }
 

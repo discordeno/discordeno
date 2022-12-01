@@ -12,7 +12,7 @@ export function transformSticker (bot: Bot, payload: DiscordSticker) {
     formatType: payload.format_type,
     available: payload.available,
     guildId: payload.guild_id ? bot.utils.snowflakeToBigint(payload.guild_id) : undefined,
-    user: (payload.user != null) ? bot.transformers.user(bot, payload.user) : undefined,
+    user: (payload.user) ? bot.transformers.user(bot, payload.user) : undefined,
     sortValue: payload.sort_value
   }
 

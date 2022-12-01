@@ -41,18 +41,18 @@ export function editChannel (bot: BotWithCache) {
           perms.push('MANAGE_THREADS')
         }
 
-        if ((options.appliedTags != null) && options.appliedTags.length > 5) throw new Error('thread applied tags is limit to 5')
+        if ((options.appliedTags) && options.appliedTags.length > 5) throw new Error('thread applied tags is limit to 5')
       } else {
         perms.push('MANAGE_CHANNELS')
 
-        if (options.permissionOverwrites != null) perms.push('MANAGE_ROLES')
+        if (options.permissionOverwrites) perms.push('MANAGE_ROLES')
 
         if (options.type) {
           if ([ChannelTypes.GuildAnnouncement, ChannelTypes.GuildText].includes(options.type)) {
             throw new Error('Only news and text types can be modified.')
           }
 
-          if ((guild != null) && !guild.toggles.has('news')) {
+          if ((guild) && !guild.toggles.has('news')) {
             throw new Error('The NEWS feature is missing in this guild to be able to modify the channel type.')
           }
         }
@@ -67,12 +67,12 @@ export function editChannel (bot: BotWithCache) {
 
         if (options.parentId) {
           const category = bot.channels.get(bot.transformers.snowflake(options.parentId))
-          if ((category != null) && category.type !== ChannelTypes.GuildCategory) {
+          if ((category) && category.type !== ChannelTypes.GuildCategory) {
             throw new Error('The parent id must be for a category channel type.')
           }
         }
 
-        if ((options.availableTags != null) && options.availableTags.length > 20) {
+        if ((options.availableTags) && options.availableTags.length > 20) {
           throw new Error('channel available tags is limited to 20')
         }
       }

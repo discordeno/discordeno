@@ -45,7 +45,7 @@ export async function createAutomodRule (
       },
       actions: options.actions.map((action) => ({
         type: action.type,
-        metadata: (action.metadata != null)
+        metadata: (action.metadata)
           ? {
               channel_id: action.metadata.channelId?.toString(),
               duration_seconds: action.metadata.durationSeconds

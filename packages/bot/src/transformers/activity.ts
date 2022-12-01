@@ -13,7 +13,7 @@ export function transformActivity (bot: Bot, payload: DiscordActivity) {
     applicationId: payload.application_id ? bot.transformers.snowflake(payload.application_id) : undefined,
     details: payload.details ?? undefined,
     state: payload.state ?? undefined,
-    emoji: (payload.emoji != null)
+    emoji: (payload.emoji)
       ? {
           name: payload.emoji.name,
           animated: payload.emoji.animated,

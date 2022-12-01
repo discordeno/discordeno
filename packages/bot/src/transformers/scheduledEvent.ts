@@ -13,7 +13,7 @@ export function transformScheduledEvent (
     scheduledStartTime: Date.parse(payload.scheduled_start_time),
     scheduledEndTime: payload.scheduled_end_time ? Date.parse(payload.scheduled_end_time) : undefined,
     entityId: payload.entity_id ? bot.transformers.snowflake(payload.entity_id) : undefined,
-    creator: (payload.creator != null) ? bot.transformers.user(bot, payload.creator) : undefined,
+    creator: (payload.creator) ? bot.transformers.user(bot, payload.creator) : undefined,
 
     name: payload.name,
     description: payload.description,

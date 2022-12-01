@@ -35,7 +35,7 @@ export function transformChannel (bot: Bot, payload: { channel: DiscordChannel }
     videoQualityMode: payload.channel.video_quality_mode,
     guildId: payload.guildId || (payload.channel.guild_id ? bot.transformers.snowflake(payload.channel.guild_id) : 0n),
     lastPinTimestamp: payload.channel.last_pin_timestamp ? Date.parse(payload.channel.last_pin_timestamp) : undefined,
-    permissionOverwrites: (payload.channel.permission_overwrites != null)
+    permissionOverwrites: (payload.channel.permission_overwrites)
       ? payload.channel.permission_overwrites.map((o) => packOverwrites(o.allow || '0', o.deny || '0', o.id, o.type))
       : [],
 

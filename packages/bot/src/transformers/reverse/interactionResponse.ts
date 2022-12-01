@@ -1,18 +1,19 @@
-import { DiscordInteractionResponse, InteractionResponse } from '@discordeno/types'
+import { DiscordInteractionResponse } from '@discordeno/types'
 import { Bot } from '../../bot.js'
+import { InteractionResponse } from '../../types'
 
 export function transformInteractionResponseToDiscordInteractionResponse (
   bot: Bot,
   payload: InteractionResponse
 ): DiscordInteractionResponse {
   // If no mentions are provided, force disable mentions
-  if ((payload.data != null) && ((payload.data?.allowedMentions) == null)) {
+  if ((payload.data) && ((payload.data?.allowedMentions) == null)) {
     payload.data.allowedMentions = { parse: [] }
   }
 
   return {
     type: payload.type,
-    data: (payload.data != null)
+    data: (payload.data)
       ? {
           tts: payload.data.tts,
           title: payload.data.title,

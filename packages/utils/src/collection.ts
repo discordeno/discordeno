@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface Bot {
+export interface PlaceHolderBot {
 }
 
 export class Collection<K, V> extends Map<K, V> {
@@ -43,7 +43,7 @@ export class Collection<K, V> extends Map<K, V> {
     this.startSweeper({ filter: this.sweeper.filter, interval: newInterval })
   }
 
-  changeSweeperFilter (newFilter: (value: V, key: K, bot: Bot) => boolean): void {
+  changeSweeperFilter (newFilter: (value: V, key: K, bot: PlaceHolderBot) => boolean): void {
     if (this.sweeper == null) return
 
     this.startSweeper({ filter: newFilter, interval: this.sweeper.interval })
@@ -147,5 +147,5 @@ export interface CollectionSweeper<K, V> {
   /** The interval in which the sweeper should run */
   interval: number
   /** The bot object itself */
-  bot?: Bot
+  bot?: PlaceHolderBot
 }

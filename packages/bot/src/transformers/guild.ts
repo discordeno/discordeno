@@ -4,6 +4,7 @@ import { Bot } from '../bot.js'
 import type { Emoji } from '../transformers/emoji.js'
 import { GuildToggles } from './toggles/guild.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformGuild (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) {
   const guildId = bot.transformers.snowflake(payload.guild.id)
 
@@ -37,7 +38,7 @@ export function transformGuild (bot: Bot, payload: { guild: DiscordGuild } & { s
     systemChannelFlags: payload.guild.system_channel_flags,
     vanityUrlCode: payload.guild.vanity_url_code,
     verificationLevel: payload.guild.verification_level,
-    welcomeScreen: (payload.guild.welcome_screen != null)
+    welcomeScreen: (payload.guild.welcome_screen)
       ? {
           description: payload.guild.welcome_screen.description ?? undefined,
           welcomeChannels: payload.guild.welcome_screen.welcome_channels.map((wc) => ({
@@ -77,13 +78,13 @@ export function transformGuild (bot: Bot, payload: { guild: DiscordGuild } & { s
       })
     ),
     emojis: new Collection(
-      (payload.guild.emojis || []).map((emoji) => {
+      (payload.guild.emojis ?? []).map((emoji) => {
         const em: Emoji = bot.transformers.emoji(bot, emoji)
         return [em.id!, em]
       })
     ),
     voiceStates: new Collection(
-      ((payload.guild.voice_states != null) || [])
+      (payload.guild.voice_states ?? [])
         .map((vs) => bot.transformers.voiceState(bot, { voiceState: vs, guildId }))
         .map((vs) => [vs.userId, vs])
     ),

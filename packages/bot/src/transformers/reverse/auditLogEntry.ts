@@ -119,7 +119,7 @@ export function transformAuditLogEntryToDiscordAuditLogEntry (bot: Bot, payload:
     user_id: payload.userId ? bot.transformers.reverse.snowflake(payload.userId) : null,
     target_id: payload.targetId ? bot.transformers.reverse.snowflake(payload.targetId) : null,
     action_type: payload.actionType,
-    options: (payload.options != null)
+    options: (payload.options)
       ? {
         // respect transformer as reference than type
           delete_member_days: payload.options.deleteMemberDays === 0 ? payload.options.deleteMemberDays.toString() : '',

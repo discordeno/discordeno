@@ -1,7 +1,8 @@
-import { CreateApplicationCommand, DiscordApplicationCommand } from '@discordeno/types'
+import { DiscordApplicationCommand } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { Bot } from '../../../bot.js'
 import { ApplicationCommand } from '../../../transformers/applicationCommand.js'
+import { CreateApplicationCommand } from '../../../types'
 
 /**
  * Re-registers the list of global application commands, overwriting the previous commands completely.

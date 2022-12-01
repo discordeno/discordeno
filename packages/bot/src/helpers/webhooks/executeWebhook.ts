@@ -25,7 +25,7 @@ export async function executeWebhook (
   token: string,
   options: ExecuteWebhook
 ): Promise<Message | undefined> {
-  const allowedMentions = (options.allowedMentions != null)
+  const allowedMentions = (options.allowedMentions)
     ? {
         parse: options.allowedMentions.parse,
         replied_user: options.allowedMentions.repliedUser,

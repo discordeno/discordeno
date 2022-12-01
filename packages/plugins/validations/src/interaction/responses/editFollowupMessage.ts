@@ -6,9 +6,9 @@ export function editFollowupMessage (bot: Bot) {
   bot.helpers.editFollowupMessage = async function (token, messageId, options) {
     if (options.content && options.content.length > 2000) throw Error('MESSAGE_MAX_LENGTH')
 
-    if ((options.embeds != null) && options.embeds.length > 10) options.embeds.splice(10)
+    if ((options.embeds) && options.embeds.length > 10) options.embeds.splice(10)
 
-    if (options.allowedMentions != null) {
+    if (options.allowedMentions) {
       if (options.allowedMentions.users?.length) {
         if (options.allowedMentions.parse?.includes(AllowedMentionsTypes.UserMentions)) {
           options.allowedMentions.parse = options.allowedMentions.parse.filter((p) => p !== 'users')

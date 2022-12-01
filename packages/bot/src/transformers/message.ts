@@ -3,6 +3,7 @@ import { CHANNEL_MENTION_REGEX } from '@discordeno/utils'
 import { Bot } from '../bot.js'
 import { MemberToggles } from './toggles/member.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformMessage (bot: Bot, payload: DiscordMessage) {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
   const userId = bot.transformers.snowflake(payload.author.id)
@@ -23,7 +24,7 @@ export function transformMessage (bot: Bot, payload: DiscordMessage) {
       emoji: bot.transformers.emoji(bot, reaction.emoji)
     })),
     type: payload.type,
-    activity: (payload.activity != null)
+    activity: (payload.activity)
       ? {
           type: payload.activity.type,
           partyId: payload.activity.party_id
@@ -31,13 +32,13 @@ export function transformMessage (bot: Bot, payload: DiscordMessage) {
       : undefined,
     application: payload.application,
     flags: payload.flags,
-    interaction: (payload.interaction != null)
+    interaction: (payload.interaction)
       ? {
           id: bot.transformers.snowflake(payload.interaction.id),
           type: payload.interaction.type,
           name: payload.interaction.name,
           user: bot.transformers.user(bot, payload.interaction.user),
-          member: (payload.interaction.member != null)
+          member: (payload.interaction.member)
             ? {
                 id: userId,
                 guildId,
@@ -63,7 +64,7 @@ export function transformMessage (bot: Bot, payload: DiscordMessage) {
             : undefined
         }
       : undefined,
-    thread: (payload.thread != null) ? bot.transformers.channel(bot, { channel: payload.thread, guildId }) : undefined,
+    thread: (payload.thread) ? bot.transformers.channel(bot, { channel: payload.thread, guildId }) : undefined,
     components: payload.components?.map((component) => bot.transformers.component(bot, component)),
     stickerItems: payload.sticker_items?.map((sticker) => ({
       id: bot.transformers.snowflake(sticker.id),
@@ -78,7 +79,7 @@ export function transformMessage (bot: Bot, payload: DiscordMessage) {
     webhookId: payload.webhook_id ? bot.transformers.snowflake(payload.webhook_id) : undefined,
     authorId: userId,
     applicationId: payload.application_id ? bot.transformers.snowflake(payload.application_id) : undefined,
-    messageReference: (payload.message_reference != null)
+    messageReference: (payload.message_reference)
       ? {
           messageId: payload.message_reference.message_id
             ? bot.transformers.snowflake(payload.message_reference.message_id)
@@ -91,18 +92,18 @@ export function transformMessage (bot: Bot, payload: DiscordMessage) {
             : undefined
         }
       : undefined,
-    mentionedUserIds: (payload.mentions != null) ? payload.mentions.map((m) => bot.transformers.snowflake(m.id)) : [],
-    mentionedRoleIds: (payload.mention_roles != null) ? payload.mention_roles.map((id) => bot.transformers.snowflake(id)) : [],
+    mentionedUserIds: (payload.mentions) ? payload.mentions.map((m) => bot.transformers.snowflake(m.id)) : [],
+    mentionedRoleIds: (payload.mention_roles) ? payload.mention_roles.map((id) => bot.transformers.snowflake(id)) : [],
     mentionedChannelIds: [
       // Keep any ids tht discord sends
       ...(payload.mention_channels ?? []).map((m) => bot.transformers.snowflake(m.id)),
       // Add any other ids that can be validated in a channel mention format
-      ...(((payload.content?.match(CHANNEL_MENTION_REGEX)) != null) || []).map((text) =>
+      ...(payload.content?.match(CHANNEL_MENTION_REGEX) ?? []).map((text) =>
         // converts the <#123> into 123
         bot.transformers.snowflake(text.substring(2, text.length - 1))
       )
     ],
-    member: (payload.member != null) && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined,
+    member: (payload.member) && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined,
     nonce: payload.nonce
   }
 

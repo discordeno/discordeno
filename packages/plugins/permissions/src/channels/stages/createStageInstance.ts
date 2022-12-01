@@ -6,7 +6,7 @@ export function createStageInstance (bot: BotWithCache) {
 
   bot.helpers.createStageInstance = async function (options) {
     const channel = bot.channels.get(bot.transformers.snowflake(options.channelId))
-    if ((channel != null) && channel.type !== ChannelTypes.GuildStageVoice) {
+    if ((channel) && channel.type !== ChannelTypes.GuildStageVoice) {
       throw new Error('Channel must be a stage voice channel')
     }
 

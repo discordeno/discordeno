@@ -39,7 +39,7 @@ export const routes = {
   CHANNEL_MESSAGES: (channelId: BigString, options?: GetMessagesOptions) => {
     let url = `/channels/${channelId}/messages?`
 
-    if (options != null) {
+    if (options) {
       if (isGetMessagesAfter(options) && options.after) url += `after=${options.after}`
       if (isGetMessagesBefore(options) && options.before) url += `&before=${options.before}`
       if (isGetMessagesAround(options) && options.around) url += `&around=${options.around}`
@@ -75,7 +75,7 @@ export const routes = {
   CHANNEL_MESSAGE_REACTION: (channelId: BigString, messageId: BigString, emoji: string, options?: GetReactions) => {
     let url = `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}?`
 
-    if (options != null) {
+    if (options) {
       if (options.after) url += `after=${options.after}`
       if (options.limit) url += `&limit=${options.limit}`
     }
@@ -121,7 +121,7 @@ export const routes = {
   THREAD_ARCHIVED_PUBLIC: (channelId: BigString, options?: ListArchivedThreads) => {
     let url = `/channels/${channelId}/threads/archived/public?`
 
-    if (options != null) {
+    if (options) {
       if (options.before) url += `before=${new Date(options.before).toISOString()}`
       if (options.limit) url += `&limit=${options.limit}`
     }
@@ -131,7 +131,7 @@ export const routes = {
   THREAD_ARCHIVED_PRIVATE: (channelId: BigString, options?: ListArchivedThreads) => {
     let url = `/channels/${channelId}/threads/archived/private?`
 
-    if (options != null) {
+    if (options) {
       if (options.before) url += `before=${new Date(options.before).toISOString()}`
       if (options.limit) url += `&limit=${options.limit}`
     }
@@ -141,7 +141,7 @@ export const routes = {
   THREAD_ARCHIVED_PRIVATE_JOINED: (channelId: BigString, options?: ListArchivedThreads) => {
     let url = `/channels/${channelId}/users/@me/threads/archived/private?`
 
-    if (options != null) {
+    if (options) {
       if (options.before) url += `before=${new Date(options.before).toISOString()}`
       if (options.limit) url += `&limit=${options.limit}`
     }
@@ -170,7 +170,7 @@ export const routes = {
   GUILD_AUDIT_LOGS: (guildId: BigString, options?: GetGuildAuditLog) => {
     let url = `/guilds/${guildId}/audit-logs?`
 
-    if (options != null) {
+    if (options) {
       if (options.actionType) url += `action_type=${options.actionType}`
       if (options.before) url += `&before=${options.before}`
       if (options.limit) url += `&limit=${options.limit}`
@@ -185,7 +185,7 @@ export const routes = {
   GUILD_BANS: (guildId: BigString, options?: GetBans) => {
     let url = `/guilds/${guildId}/bans?`
 
-    if (options != null) {
+    if (options) {
       if (options.limit) url += `limit=${options.limit}`
       if (options.after) url += `&after=${options.after}`
       if (options.before) url += `&before=${options.before}`
@@ -267,7 +267,7 @@ export const routes = {
   GUILD_MEMBERS_SEARCH: (guildId: BigString, query: string, options?: { limit?: number }) => {
     let url = `/guilds/${guildId}/members/search?query=${encodeURIComponent(query)}`
 
-    if (options != null) {
+    if (options) {
       if (options.limit !== undefined) url += `&limit=${options.limit}`
     }
 
@@ -276,7 +276,7 @@ export const routes = {
   GUILD_PRUNE: (guildId: BigString, options?: GetGuildPruneCountQuery) => {
     let url = `/guilds/${guildId}/prune?`
 
-    if (options != null) {
+    if (options) {
       if (options.days) url += `days=${options.days}`
       if (options.includeRoles) url += `&include_roles=${options.includeRoles}`
     }
@@ -340,7 +340,7 @@ export const routes = {
   GUILD_SCHEDULED_EVENT_USERS: (guildId: BigString, eventId: BigString, options?: GetScheduledEventUsers) => {
     let url = `/guilds/${guildId}/scheduled-events/${eventId}/users?`
 
-    if (options != null) {
+    if (options) {
       if (options.limit) url += `limit=${options.limit}`
       if (options.withMember) url += `&with_member=${options.withMember}`
       if (options.after) url += `&after=${options.after}`
@@ -358,7 +358,7 @@ export const routes = {
   INVITE: (inviteCode: string, options?: GetInvite) => {
     let url = `/invites/${inviteCode}?`
 
-    if (options != null) {
+    if (options) {
       if (options.withCounts) url += `with_counts=${options.withCounts}`
       if (options.withExpiration) url += `&with_expiration=${options.withExpiration}`
       if (options.scheduledEventId) url += `&guild_scheduled_event_id=${options.scheduledEventId}`
@@ -370,7 +370,7 @@ export const routes = {
   WEBHOOK: (webhookId: BigString, token: string, options?: { wait?: boolean, threadId?: BigString }) => {
     let url = `/webhooks/${webhookId}/${token}?`
 
-    if (options != null) {
+    if (options) {
       if (options?.wait !== undefined) url += `wait=${options.wait}`
       if (options.threadId) url += `thread_id=${options.threadId}`
     }
@@ -383,7 +383,7 @@ export const routes = {
   WEBHOOK_MESSAGE: (webhookId: BigString, token: string, messageId: BigString, options?: { threadId?: BigString }) => {
     let url = `/webhooks/${webhookId}/${token}/messages/${messageId}?`
 
-    if (options != null) {
+    if (options) {
       if (options.threadId) url += `thread_id=${options.threadId}`
     }
 
@@ -392,7 +392,7 @@ export const routes = {
   WEBHOOK_MESSAGE_ORIGINAL: (webhookId: BigString, token: string, options?: { threadId?: BigString }) => {
     let url = `/webhooks/${webhookId}/${token}/messages/@original?`
 
-    if (options != null) {
+    if (options) {
       if (options.threadId) url += `thread_id=${options.threadId}`
     }
 

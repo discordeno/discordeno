@@ -6,10 +6,10 @@ import type {
   DiscordMessageReactionRemove,
   DiscordMessageReactionRemoveAll,
   DiscordVoiceState
-} from '../deps.js'
+} from '@discordeno/bot'
 import type { BotWithCache } from './addCacheCollections.js'
 
-export function setupCacheEdits<B extends Bot> (bot: BotWithCache<B>) {
+export function setupCacheEdits<B extends Bot> (bot: BotWithCache<B>): void {
   const {
     GUILD_MEMBER_ADD,
     GUILD_MEMBER_REMOVE,
@@ -24,7 +24,7 @@ export function setupCacheEdits<B extends Bot> (bot: BotWithCache<B>) {
 
     const guild = bot.guilds.get(bot.transformers.snowflake(payload.guild_id))
 
-    if (guild != null) guild.memberCount++
+    if (guild) guild.memberCount++
 
     GUILD_MEMBER_ADD(bot, data, shardId)
   }
@@ -34,7 +34,7 @@ export function setupCacheEdits<B extends Bot> (bot: BotWithCache<B>) {
 
     const guild = bot.guilds.get(bot.transformers.snowflake(payload.guild_id))
 
-    if (guild != null) guild.memberCount--
+    if (guild) guild.memberCount--
 
     GUILD_MEMBER_REMOVE(bot, data, shardId)
   }
@@ -48,7 +48,7 @@ export function setupCacheEdits<B extends Bot> (bot: BotWithCache<B>) {
     const emoji = bot.transformers.emoji(bot, payload.emoji)
 
     // if the message is cached
-    if (message != null) {
+    if (message) {
       const reactions = message.reactions?.map((r) => r.emoji.name)
       const toSet = {
         count: 1,
@@ -83,13 +83,13 @@ export function setupCacheEdits<B extends Bot> (bot: BotWithCache<B>) {
     const emoji = bot.transformers.emoji(bot, payload.emoji)
 
     // if the message is cached
-    if (message != null) {
+    if (message) {
       const reactions = message.reactions?.map((r) => r.emoji.name)
 
       if (reactions?.indexOf(emoji.name) !== undefined) {
         const current = message.reactions?.[reactions.indexOf(emoji.name)]
 
-        if (current != null) {
+        if (current) {
           if (current.count > 0) {
             current.count--
           }
@@ -111,7 +111,7 @@ export function setupCacheEdits<B extends Bot> (bot: BotWithCache<B>) {
     const messageId = bot.transformers.snowflake(payload.message_id)
     const message = bot.messages.get(messageId)
 
-    if (message != null) {
+    if (message) {
       // when an admin deleted all the reactions of a message
       message.reactions = undefined
     }

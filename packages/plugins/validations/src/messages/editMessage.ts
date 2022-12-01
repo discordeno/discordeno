@@ -4,7 +4,7 @@ export function editMessage (bot: Bot) {
   const editMessage = bot.helpers.editMessage
 
   bot.helpers.editMessage = async function (channelId, messageId, content) {
-    if (content.allowedMentions != null) {
+    if (content.allowedMentions) {
       if (content.allowedMentions.users?.length) {
         if (
           content.allowedMentions.parse?.includes(

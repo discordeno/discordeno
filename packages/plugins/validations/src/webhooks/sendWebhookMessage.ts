@@ -9,7 +9,7 @@ export function sendWebhookMessage (bot: Bot) {
       throw new Error('The content should not exceed 2000 characters.')
     }
 
-    if (options.allowedMentions != null) {
+    if (options.allowedMentions) {
       if (options.allowedMentions.users?.length) {
         if (options.allowedMentions.parse?.includes(AllowedMentionsTypes.UserMentions)) {
           options.allowedMentions.parse = options.allowedMentions.parse.filter((p) => p !== 'users')
@@ -31,7 +31,7 @@ export function sendWebhookMessage (bot: Bot) {
       }
     }
 
-    if (options.components != null) validateComponents(bot, options.components)
+    if (options.components) validateComponents(bot, options.components)
 
     if (!options.content && (options.file == null) && (options.embeds == null)) {
       throw new Error('You must provide a value for at least one of content, embeds, or file.')
