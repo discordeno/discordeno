@@ -1,9 +1,9 @@
-import { BigString } from '../mod.js'
+import { BigString } from '@discordeno/types'
 
-export function snowflakeToBigint (snowflake: BigString) {
+export function snowflakeToBigint (snowflake: BigString): bigint {
   return BigInt(snowflake) | 0n
 }
 
-export function bigintToSnowflake (snowflake: BigString) {
+export function bigintToSnowflake (snowflake: BigString): string {
   return snowflake === 0n ? '' : snowflake.toString()
 }

@@ -1229,7 +1229,6 @@ export enum GatewayIntents {
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
 export const Intents = GatewayIntents
-export type Intents = GatewayIntents
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype */
 export enum InteractionResponseTypes {

@@ -1,4 +1,4 @@
-import { API_VERSION, baseEndpoints } from '../util/constants.js'
+import { API_VERSION, baseEndpoints } from '@discordeno/utils'
 import { removeTokenPrefix } from '../util/token.js'
 import { checkRateLimits } from './checkRateLimits.js'
 import { cleanupQueues } from './cleanupQueues.js'
@@ -16,8 +16,9 @@ import { runMethod } from './runMethod.js'
 import { RestSendRequestOptions, sendRequest } from './sendRequest.js'
 import { simplifyUrl } from './simplifyUrl.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function createRestManager (options: CreateRestManagerOptions) {
-  const version = options.version || API_VERSION
+  const version = options.version ?? API_VERSION
 
   if (options.customUrl) {
     baseEndpoints.BASE_URL = `${options.customUrl}/v${version}`

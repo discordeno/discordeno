@@ -1,4 +1,4 @@
-export function iconHashToBigInt (hash: string) {
+export function iconHashToBigInt (hash: string): bigint {
   // The icon is animated so it needs special handling
   if (hash.startsWith('a_')) {
     // Change the `a_` to just be `a`
@@ -11,7 +11,7 @@ export function iconHashToBigInt (hash: string) {
   return BigInt(`0x${hash}`)
 }
 
-export function iconBigintToHash (icon: bigint) {
+export function iconBigintToHash (icon: bigint): string {
   // Convert the bigint back to a hash
   const hash = icon.toString(16)
   // Hashes starting with a are animated and with b are not so need to handle that

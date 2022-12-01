@@ -574,7 +574,7 @@ export interface DiscordGuild {
   max_video_channel_users?: number
   /** Approximate number of members in this guild, returned from the GET /guilds/<id> endpoint when with_counts is true */
   approximate_member_count?: number
-  /**	Approximate number of non-offline members in this guild, returned from the GET /guilds/<id> endpoint when with_counts is true */
+  /** Approximate number of non-offline members in this guild, returned from the GET /guilds/<id> endpoint when with_counts is true */
   approximate_presence_count?: number
   /** Guild NSFW level */
   nsfw_level: GuildNsfwLevel
@@ -2344,14 +2344,6 @@ export interface DiscordAddGuildDiscoverySubcategory {
   guild_id: string
   /** The Id of the subcategory added */
   category_id: number
-}
-
-/** https://discord.com/developers/docs/topics/gateway#guild-ban-add */
-export interface DiscordGuildBanAddRemove {
-  /** id of the guild */
-  guild_id: string
-  /** The banned user */
-  user: DiscordUser
 }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-member-update */
