@@ -30,7 +30,8 @@
   },
   "lint-staged": {
     "*": "prettier --ignore-unknown --write",
-    "*.ts": "eslint --fix"
+    "*.ts": "eslint --fix",
+    "*.js": "eslint --fix"
   },
   "packageManager": "yarn@3.3.0"
 }
