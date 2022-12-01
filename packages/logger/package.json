@@ -1,5 +1,5 @@
 {
-  "name": "logger",
+  "name": "@discordeno/logger",
   "version": "18.0.0-alpha.1",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
@@ -13,5 +13,8 @@
     "eslint-config-discordeno": "*",
     "tsconfig": "*",
     "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "chalk": "^5.1.2"
   }
 }
