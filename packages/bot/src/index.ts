@@ -1,3 +1,5 @@
+export * from '@discordeno/types'
+export * from '@discordeno/utils'
 export * from './bot.js'
 export * from './transformers/index.js'
 export * from './types.js'

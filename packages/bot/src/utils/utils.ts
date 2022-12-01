@@ -1,14 +1,5 @@
 import { ImageFormat, ImageSize } from '../helpers/members/getAvatarUrl.js'
 
-/** Pause the execution for a given amount of milliseconds. */
-export async function delay (ms: number): Promise<void> {
-  return await new Promise((res): number =>
-    setTimeout((): void => {
-      res()
-    }, ms)
-  )
-}
-
 /** Help format an image url. */
 export function formatImageURL (url: string, size: ImageSize = 128, format?: ImageFormat) {
   return `${url}.${format || (url.includes('/a_') ? 'gif' : 'jpg')}?size=${size}`
