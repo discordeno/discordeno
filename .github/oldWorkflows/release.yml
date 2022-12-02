@@ -26,8 +26,8 @@ jobs:
         run: git tag ${{ env.DISCORDENO_VERSION }} && git push --tags
       - uses: actions/setup-node@v2
         with:
-          node-version: '16.x'
-          registry-url: 'https://registry.npmjs.org'
+          node-version: "16.x"
+          registry-url: "https://registry.npmjs.org"
       - name: build npm
         run: deno run -A ./dnt.ts ${{ env.DISCORDENO_VERSION }}
       - name: npm publish
