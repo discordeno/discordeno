@@ -1,7 +1,51 @@
 flags:
-  unit:
+  bot:unit:
+    paths:
+      - packages/bot
     carryforward: false
-  integration:
-    carryforward: true
+  discordeno:unit:
+    paths:
+      - packages/discordeno
+    carryforward: false
+  embeds:unit:
+    paths:
+      - packages/embeds
+    carryforward: false
+  gatway:unit:
+    paths:
+      - packages/gatway
+    carryforward: false
+  logger:unit:
+    paths:
+      - packages/logger
+    carryforward: false
+  rest:unit:
+    paths:
+      - packages/rest
+    carryforward: false
+  utils:unit:
+    paths:
+      - packages/utils
+    carryforward: false
+  cache-plugin:unit:
+    paths:
+      - packages/plugins/utils
+    carryforward: false
+  fileloader-plugin:unit:
+    paths:
+      - packages/plugins/fileloader
+    carryforward: false
+  permissions-plugin:unit:
+    paths:
+      - packages/plugins/permissions
+    carryforward: false
+  utils-plugin:unit:
+    paths:
+      - packages/plugins/utils
+    carryforward: false
+  validations-plugin:unit:
+    paths:
+      - packages/plugins/validations
+    carryforward: false
 comment:
   show_carryforward_flags: true
