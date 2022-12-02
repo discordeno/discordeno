@@ -53,7 +53,9 @@ export async function createScheduledEvent (
         'A scheduled end time is required when making an External event.'
       )
     }
-    if (!options.location) { throw new Error('A location is required when making an External event.') }
+    if (!options.location) {
+      throw new Error('A location is required when making an External event.')
+    }
   }
   if (
     options.scheduledStartTime &&

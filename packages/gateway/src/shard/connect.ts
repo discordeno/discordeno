@@ -26,15 +26,21 @@ export async function connect (shard: Shard): Promise<void> {
   // TODO: proper event handling
   socket.onerror = (event) => console.log({ error: event })
 
-  socket.onclose = (event) => { void shard.handleClose(event) }
+  socket.onclose = (event) => {
+    void shard.handleClose(event)
+  }
 
-  socket.onmessage = (message) => { void shard.handleMessage(message) }
+  socket.onmessage = (message) => {
+    void shard.handleMessage(message)
+  }
 
   return await new Promise((resolve) => {
     socket.onopen = () => {
       // Only set the shard to `Unidentified` state,
       // if the connection request does not come from an identify or resume action.
-      if (![ShardState.Identifying, ShardState.Resuming].includes(shard.state)) {
+      if (
+        ![ShardState.Identifying, ShardState.Resuming].includes(shard.state)
+      ) {
         shard.state = ShardState.Unidentified
       }
       shard.events.connected?.(shard)

@@ -23,7 +23,9 @@ export class RoleToggles extends ToggleBitfield {
       if (role.hoist) this.add(RoleToggle.hoist)
       if (role.managed) this.add(RoleToggle.managed)
       if (role.mentionable) this.add(RoleToggle.mentionable)
-      if (role.tags?.premium_subscriber === null) { this.add(RoleToggle.premiumSubscriber) }
+      if (role.tags?.premium_subscriber === null) {
+        this.add(RoleToggle.premiumSubscriber)
+      }
     }
   }
 
@@ -49,7 +51,9 @@ export class RoleToggles extends ToggleBitfield {
 
   /** Checks whether or not the permissions exist in this */
   has (permissions: RoleToggleKeys | RoleToggleKeys[]): boolean {
-    if (!Array.isArray(permissions)) { return super.contains(RoleToggle[permissions]) }
+    if (!Array.isArray(permissions)) {
+      return super.contains(RoleToggle[permissions])
+    }
 
     return super.contains(
       permissions.reduce((a, b) => (a |= RoleToggle[b]), 0)

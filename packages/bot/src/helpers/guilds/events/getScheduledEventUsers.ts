@@ -52,7 +52,9 @@ export async function getScheduledEventUsers (
     url = '?'
 
     if (options.limit) url += `limit=${options.limit}`
-    if (options.withMember !== undefined) { url += `&with_member=${options.withMember.toString()}` }
+    if (options.withMember !== undefined) {
+      url += `&with_member=${options.withMember.toString()}`
+    }
     if (options.after) url += `&after=${options.after}`
     if (options.before) url += `&before=${options.before}`
   }

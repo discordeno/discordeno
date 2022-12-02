@@ -1,7 +1,11 @@
 import { RestManager } from './restManager.js'
 
 /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
-export function processRequestHeaders (rest: RestManager, url: string, headers: Headers): string | undefined {
+export function processRequestHeaders (
+  rest: RestManager,
+  url: string,
+  headers: Headers
+): string | undefined {
   let rateLimited = false
 
   // GET ALL NECESSARY HEADERS
@@ -43,7 +47,9 @@ export function processRequestHeaders (rest: RestManager, url: string, headers: 
   if (global) {
     const retryAfter = headers.get('retry-after')
     const globalReset = Date.now() + Number(retryAfter) * 1000
-    rest.debug(`[REST = Globally Rate Limited] URL: ${url} | Global Rest: ${globalReset}`)
+    rest.debug(
+      `[REST = Globally Rate Limited] URL: ${url} | Global Rest: ${globalReset}`
+    )
     rest.globallyRateLimited = true
     rateLimited = true
 

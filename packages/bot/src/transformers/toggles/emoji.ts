@@ -49,7 +49,9 @@ export class EmojiToggles extends ToggleBitfield {
 
   /** Checks whether or not the permissions exist in this */
   has (permissions: EmojiToggleKeys | EmojiToggleKeys[]): boolean {
-    if (!Array.isArray(permissions)) { return super.contains(EmojiToggle[permissions]) }
+    if (!Array.isArray(permissions)) {
+      return super.contains(EmojiToggle[permissions])
+    }
 
     return super.contains(
       permissions.reduce((a, b) => (a |= EmojiToggle[b]), 0)

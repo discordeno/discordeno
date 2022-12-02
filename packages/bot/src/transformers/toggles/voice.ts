@@ -22,7 +22,9 @@ export class VoiceStateToggles extends ToggleBitfield {
   constructor (voiceOrTogglesInt: DiscordVoiceState | number) {
     super()
 
-    if (typeof voiceOrTogglesInt === 'number') { this.bitfield = voiceOrTogglesInt } else {
+    if (typeof voiceOrTogglesInt === 'number') {
+      this.bitfield = voiceOrTogglesInt
+    } else {
       const voice = voiceOrTogglesInt
 
       if (voice.deaf) this.add(VoiceStateToggle.deaf)
@@ -72,7 +74,9 @@ export class VoiceStateToggles extends ToggleBitfield {
 
   /** Checks whether or not the permissions exist in this */
   has (permissions: VoiceStateToggleKeys | VoiceStateToggleKeys[]): boolean {
-    if (!Array.isArray(permissions)) { return super.contains(VoiceStateToggle[permissions]) }
+    if (!Array.isArray(permissions)) {
+      return super.contains(VoiceStateToggle[permissions])
+    }
 
     return super.contains(
       permissions.reduce((a, b) => (a |= VoiceStateToggle[b]), 0)

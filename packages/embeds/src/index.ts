@@ -1,5 +1,13 @@
 // The order of the import is important
-import { DiscordEmbed, Embed, formatImageURL, iconBigintToHash, ImageFormat, ImageSize, User } from './deps.js'
+import {
+  DiscordEmbed,
+  Embed,
+  formatImageURL,
+  iconBigintToHash,
+  ImageFormat,
+  ImageSize,
+  User
+} from './deps.js'
 
 import { routes } from '@discordeno/utils'
 
@@ -29,7 +37,9 @@ function avatarURL (
     ? formatImageURL(
       routes.USER_AVATAR(
         userId,
-        typeof options?.avatar === 'string' ? options.avatar : iconBigintToHash(options?.avatar)
+        typeof options?.avatar === 'string'
+          ? options.avatar
+          : iconBigintToHash(options?.avatar)
       ),
       options?.size || 128,
       options?.format
@@ -70,7 +80,9 @@ export class Embeds extends Array<Embed> {
 
   setAuthor (name: string, iconUrl?: string | User, url?: string): this {
     const embed = this.getLastEmbed()
-    const finalName = this.enforceLimits ? this.fitData(name, embedLimits.authorName) : name
+    const finalName = this.enforceLimits
+      ? this.fitData(name, embedLimits.authorName)
+      : name
 
     if (typeof iconUrl === 'string') {
       embed.author = { name: finalName, iconUrl, url }
@@ -90,18 +102,20 @@ export class Embeds extends Array<Embed> {
   }
 
   setColor (color: string): this {
-    this.getLastEmbed().color = color.toLowerCase() === 'random'
-      // Random color
-      ? Math.floor(Math.random() * (0xffffff + 1))
-      // Convert the hex to a acceptable color for discord
-      : parseInt(color.replace('#', ''), 16)
+    this.getLastEmbed().color =
+      color.toLowerCase() === 'random'
+        ? Math.floor(Math.random() * (0xffffff + 1)) // Random color
+        : parseInt(color.replace('#', ''), 16) // Convert the hex to a acceptable color for discord
 
     return this
   }
 
   setDescription (description: string | string[]): this {
     if (Array.isArray(description)) description = description.join('\n')
-    this.getLastEmbed().description = this.fitData(description, embedLimits.description)
+    this.getLastEmbed().description = this.fitData(
+      description,
+      embedLimits.description
+    )
 
     return this
   }
@@ -202,13 +216,13 @@ export class Embeds extends Array<Embed> {
   }
 
   setFromJson (json: Record<string, any>): this {
-    if (json.author?.name) this.setAuthor(json.author.name, json.author.icon_url, json.url)
+    if (json.author?.name) { this.setAuthor(json.author.name, json.author.icon_url, json.url) }
     if (json.title) this.setTitle(json.title, json.url)
     if (json.description) this.setDescription(json.description)
     if (json.color) this.setColor(json.color)
     if (json.timestamp) this.setTimestamp()
-    if (json.footer?.text) this.setFooter(json.footer.text, json.footer.icon_url)
-    if (json.thumbnail) this.setThumbnail(json.thumbnail?.url ?? json.thumbnail)
+    if (json.footer?.text) { this.setFooter(json.footer.text, json.footer.icon_url) }
+    if (json.thumbnail) { this.setThumbnail(json.thumbnail?.url ?? json.thumbnail) }
     if (json.image) this.setImage(json.image?.url ?? json.image)
     if (json.fields && Array.isArray(json.fields)) {
       for (const field of json.fields) {
@@ -222,12 +236,12 @@ export class Embeds extends Array<Embed> {
   }
 
   setFromEmbed (embed: Embed): this {
-    if (embed.author?.name) this.setAuthor(embed.author.name, embed.author.iconUrl, embed.url)
+    if (embed.author?.name) { this.setAuthor(embed.author.name, embed.author.iconUrl, embed.url) }
     if (embed.title) this.setTitle(embed.title, embed.url)
     if (embed.description) this.setDescription(embed.description)
     if (embed.color) this.getLastEmbed().color = embed.color
     if (embed.timestamp) this.setTimestamp(embed.timestamp)
-    if (embed.footer?.text) this.setFooter(embed.footer.text, embed.footer.iconUrl)
+    if (embed.footer?.text) { this.setFooter(embed.footer.text, embed.footer.iconUrl) }
     if (embed.thumbnail?.url) this.setThumbnail(embed.thumbnail?.url)
     if (embed.image?.url) this.setImage(embed.image?.url)
     if (embed.fields && Array.isArray(embed.fields)) {
@@ -244,7 +258,9 @@ export class Embeds extends Array<Embed> {
   showEmbedCode (): DiscordEmbed[] {
     return this.map((embed) => ({
       ...embed,
-      timestamp: embed.timestamp ? new Date(embed.timestamp).toISOString() : undefined,
+      timestamp: embed.timestamp
+        ? new Date(embed.timestamp).toISOString()
+        : undefined,
       author: embed.author
         ? {
             name: embed.author.name,

@@ -93,42 +93,90 @@ export class GuildToggles extends ToggleBitfieldBigint {
   constructor (guildOrTogglesBigint: DiscordGuild | bigint) {
     super()
 
-    if (typeof guildOrTogglesBigint === 'bigint') { this.bitfield = guildOrTogglesBigint } else {
+    if (typeof guildOrTogglesBigint === 'bigint') {
+      this.bitfield = guildOrTogglesBigint
+    } else {
       const guild = guildOrTogglesBigint
 
       if (guild.owner) this.add(GuildToggle.owner)
       if (guild.widget_enabled) this.add(GuildToggle.widgetEnabled)
       if (guild.large) this.add(GuildToggle.large)
       if (guild.unavailable) this.add(GuildToggle.unavailable)
-      if (guild.premium_progress_bar_enabled) { this.add(GuildToggle.premiumProgressBarEnabled) }
+      if (guild.premium_progress_bar_enabled) {
+        this.add(GuildToggle.premiumProgressBarEnabled)
+      }
 
-      if (guild.features.includes(GuildFeatures.InviteSplash)) { this.add(GuildToggle.inviteSplash) }
-      if (guild.features.includes(GuildFeatures.VipRegions)) { this.add(GuildToggle.vipRegions) }
-      if (guild.features.includes(GuildFeatures.VanityUrl)) { this.add(GuildToggle.vanityUrl) }
-      if (guild.features.includes(GuildFeatures.Verified)) { this.add(GuildToggle.verified) }
-      if (guild.features.includes(GuildFeatures.Partnered)) { this.add(GuildToggle.partnered) }
-      if (guild.features.includes(GuildFeatures.Community)) { this.add(GuildToggle.community) }
-      if (guild.features.includes(GuildFeatures.DeveloperSupportServer)) { this.add(GuildToggle.developerSupportServer) }
-      if (guild.features.includes(GuildFeatures.AnimatedBanner)) { this.add(GuildToggle.animatedBanner) }
-      if (guild.features.includes(GuildFeatures.News)) { this.add(GuildToggle.news) }
-      if (guild.features.includes(GuildFeatures.Discoverable)) { this.add(GuildToggle.discoverable) }
-      if (guild.features.includes(GuildFeatures.Featurable)) { this.add(GuildToggle.featurable) }
-      if (guild.features.includes(GuildFeatures.AnimatedIcon)) { this.add(GuildToggle.animatedIcon) }
-      if (guild.features.includes(GuildFeatures.Banner)) { this.add(GuildToggle.banner) }
-      if (guild.features.includes(GuildFeatures.WelcomeScreenEnabled)) { this.add(GuildToggle.welcomeScreenEnabled) }
+      if (guild.features.includes(GuildFeatures.InviteSplash)) {
+        this.add(GuildToggle.inviteSplash)
+      }
+      if (guild.features.includes(GuildFeatures.VipRegions)) {
+        this.add(GuildToggle.vipRegions)
+      }
+      if (guild.features.includes(GuildFeatures.VanityUrl)) {
+        this.add(GuildToggle.vanityUrl)
+      }
+      if (guild.features.includes(GuildFeatures.Verified)) {
+        this.add(GuildToggle.verified)
+      }
+      if (guild.features.includes(GuildFeatures.Partnered)) {
+        this.add(GuildToggle.partnered)
+      }
+      if (guild.features.includes(GuildFeatures.Community)) {
+        this.add(GuildToggle.community)
+      }
+      if (guild.features.includes(GuildFeatures.DeveloperSupportServer)) {
+        this.add(GuildToggle.developerSupportServer)
+      }
+      if (guild.features.includes(GuildFeatures.AnimatedBanner)) {
+        this.add(GuildToggle.animatedBanner)
+      }
+      if (guild.features.includes(GuildFeatures.News)) {
+        this.add(GuildToggle.news)
+      }
+      if (guild.features.includes(GuildFeatures.Discoverable)) {
+        this.add(GuildToggle.discoverable)
+      }
+      if (guild.features.includes(GuildFeatures.Featurable)) {
+        this.add(GuildToggle.featurable)
+      }
+      if (guild.features.includes(GuildFeatures.AnimatedIcon)) {
+        this.add(GuildToggle.animatedIcon)
+      }
+      if (guild.features.includes(GuildFeatures.Banner)) {
+        this.add(GuildToggle.banner)
+      }
+      if (guild.features.includes(GuildFeatures.WelcomeScreenEnabled)) {
+        this.add(GuildToggle.welcomeScreenEnabled)
+      }
       if (
         guild.features.includes(GuildFeatures.MemberVerificationGateEnabled)
       ) {
         this.add(GuildToggle.memberVerificationGateEnabled)
       }
-      if (guild.features.includes(GuildFeatures.PreviewEnabled)) { this.add(GuildToggle.previewEnabled) }
-      if (guild.features.includes(GuildFeatures.TicketedEventsEnabled)) { this.add(GuildToggle.ticketedEventsEnabled) }
-      if (guild.features.includes(GuildFeatures.MonetizationEnabled)) { this.add(GuildToggle.monetizationEnabled) }
-      if (guild.features.includes(GuildFeatures.MoreStickers)) { this.add(GuildToggle.moreStickers) }
-      if (guild.features.includes(GuildFeatures.PrivateThreads)) { this.add(GuildToggle.privateThreads) }
-      if (guild.features.includes(GuildFeatures.RoleIcons)) { this.add(GuildToggle.roleIcons) }
-      if (guild.features.includes(GuildFeatures.AutoModeration)) { this.add(GuildToggle.autoModeration) }
-      if (guild.features.includes(GuildFeatures.InvitesDisabled)) { this.add(GuildToggle.invitesDisabled) }
+      if (guild.features.includes(GuildFeatures.PreviewEnabled)) {
+        this.add(GuildToggle.previewEnabled)
+      }
+      if (guild.features.includes(GuildFeatures.TicketedEventsEnabled)) {
+        this.add(GuildToggle.ticketedEventsEnabled)
+      }
+      if (guild.features.includes(GuildFeatures.MonetizationEnabled)) {
+        this.add(GuildToggle.monetizationEnabled)
+      }
+      if (guild.features.includes(GuildFeatures.MoreStickers)) {
+        this.add(GuildToggle.moreStickers)
+      }
+      if (guild.features.includes(GuildFeatures.PrivateThreads)) {
+        this.add(GuildToggle.privateThreads)
+      }
+      if (guild.features.includes(GuildFeatures.RoleIcons)) {
+        this.add(GuildToggle.roleIcons)
+      }
+      if (guild.features.includes(GuildFeatures.AutoModeration)) {
+        this.add(GuildToggle.autoModeration)
+      }
+      if (guild.features.includes(GuildFeatures.InvitesDisabled)) {
+        this.add(GuildToggle.invitesDisabled)
+      }
     }
   }
 
@@ -286,7 +334,9 @@ export class GuildToggles extends ToggleBitfieldBigint {
 
   /** Checks whether or not the permissions exist in this */
   has (permissions: GuildToggleKeys | GuildToggleKeys[]): boolean {
-    if (!Array.isArray(permissions)) { return super.contains(GuildToggle[permissions]) }
+    if (!Array.isArray(permissions)) {
+      return super.contains(GuildToggle[permissions])
+    }
 
     return super.contains(
       permissions.reduce((a, b) => (a |= GuildToggle[b]), 0n)

@@ -49,7 +49,9 @@ export class UserToggles extends ToggleBitfield {
 
   /** Checks whether or not the permissions exist in this */
   has (permissions: UserToggleKeys | UserToggleKeys[]): boolean {
-    if (!Array.isArray(permissions)) { return super.contains(UserToggle[permissions]) }
+    if (!Array.isArray(permissions)) {
+      return super.contains(UserToggle[permissions])
+    }
 
     return super.contains(
       permissions.reduce((a, b) => (a |= UserToggle[b]), 0)

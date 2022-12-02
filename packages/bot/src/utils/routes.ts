@@ -40,10 +40,18 @@ export const routes = {
     let url = `/channels/${channelId}/messages?`
 
     if (options) {
-      if (isGetMessagesAfter(options) && options.after) { url += `after=${options.after}` }
-      if (isGetMessagesBefore(options) && options.before) { url += `&before=${options.before}` }
-      if (isGetMessagesAround(options) && options.around) { url += `&around=${options.around}` }
-      if (isGetMessagesLimit(options) && options.limit) { url += `&limit=${options.limit}` }
+      if (isGetMessagesAfter(options) && options.after) {
+        url += `after=${options.after}`
+      }
+      if (isGetMessagesBefore(options) && options.before) {
+        url += `&before=${options.before}`
+      }
+      if (isGetMessagesAround(options) && options.around) {
+        url += `&around=${options.around}`
+      }
+      if (isGetMessagesLimit(options) && options.limit) {
+        url += `&limit=${options.limit}`
+      }
     }
 
     return url
@@ -145,7 +153,9 @@ export const routes = {
     let url = `/channels/${channelId}/threads/archived/public?`
 
     if (options) {
-      if (options.before) { url += `before=${new Date(options.before).toISOString()}` }
+      if (options.before) {
+        url += `before=${new Date(options.before).toISOString()}`
+      }
       if (options.limit) url += `&limit=${options.limit}`
     }
 
@@ -158,7 +168,9 @@ export const routes = {
     let url = `/channels/${channelId}/threads/archived/private?`
 
     if (options) {
-      if (options.before) { url += `before=${new Date(options.before).toISOString()}` }
+      if (options.before) {
+        url += `before=${new Date(options.before).toISOString()}`
+      }
       if (options.limit) url += `&limit=${options.limit}`
     }
 
@@ -171,7 +183,9 @@ export const routes = {
     let url = `/channels/${channelId}/users/@me/threads/archived/private?`
 
     if (options) {
-      if (options.before) { url += `before=${new Date(options.before).toISOString()}` }
+      if (options.before) {
+        url += `before=${new Date(options.before).toISOString()}`
+      }
       if (options.limit) url += `&limit=${options.limit}`
     }
 
@@ -388,7 +402,9 @@ export const routes = {
 
     if (options) {
       if (options.limit !== undefined) url += `limit=${options.limit}`
-      if (options.withMember !== undefined) { url += `&with_member=${options.withMember.toString()}` }
+      if (options.withMember !== undefined) {
+        url += `&with_member=${options.withMember.toString()}`
+      }
       if (options.after !== undefined) url += `&after=${options.after}`
       if (options.before !== undefined) url += `&before=${options.before}`
     }
@@ -405,9 +421,15 @@ export const routes = {
     let url = `/invites/${inviteCode}?`
 
     if (options) {
-      if (options.withCounts !== undefined) { url += `with_counts=${options.withCounts.toString()}` }
-      if (options.withExpiration !== undefined) { url += `&with_expiration=${options.withExpiration.toString()}` }
-      if (options.scheduledEventId) { url += `&guild_scheduled_event_id=${options.scheduledEventId}` }
+      if (options.withCounts !== undefined) {
+        url += `with_counts=${options.withCounts.toString()}`
+      }
+      if (options.withExpiration !== undefined) {
+        url += `&with_expiration=${options.withExpiration.toString()}`
+      }
+      if (options.scheduledEventId) {
+        url += `&guild_scheduled_event_id=${options.scheduledEventId}`
+      }
     }
 
     return url

@@ -1,4 +1,8 @@
-import { DiscordGatewayPayload, DiscordReady, GetGatewayBot } from '@discordeno/types'
+import {
+  DiscordGatewayPayload,
+  DiscordReady,
+  GetGatewayBot
+} from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import { inflateSync } from 'node:zlib'
 import { createShard } from '../shard/createShard.js'
@@ -96,7 +100,7 @@ export interface ActivateResharderOptions {
     gatewayManager: GatewayManager,
     workerId: number,
     shardId: number,
-    bucketId: number,
+    bucketId: number
   ) => Promise<void>
 
   /** Tell the resharder and manager that the a shard is created and identified using new settings but is currently pending by ignoring incoming events. This can be used to track all shards are online which is when old shards are closed and these new shards replace the old ones. */
@@ -109,7 +113,9 @@ export interface ActivateResharderOptions {
 /** Handler that by default will check to see if resharding should occur. Can be overridden if you have multiple servers and you want to communicate through redis pubsub or whatever you prefer. */
 export function activate (resharder: Resharder): void {
   if (resharder.intervalId !== undefined) {
-    throw new Error('[RESHARDER] Cannot activate the resharder more than one time.')
+    throw new Error(
+      '[RESHARDER] Cannot activate the resharder more than one time.'
+    )
   }
 
   resharder.intervalId = setInterval(() => {
@@ -121,8 +127,10 @@ export function activate (resharder: Resharder): void {
       // 2500 is the max amount of guilds a single shard can handle
       // 1000 is the amount of guilds discord uses to determine how many shards to recommend.
       // This algo helps check if your bot has grown enough to reshard.
-      const percentage = (2500 * result.shards) /
-      (resharder.gateway.manager.totalShards * 1000) * 100
+      const percentage =
+        ((2500 * result.shards) /
+          (resharder.gateway.manager.totalShards * 1000)) *
+        100
       // Less than necessary% being used so do nothing
       if (percentage < resharder.percentage) return
 
@@ -135,7 +143,10 @@ export function activate (resharder: Resharder): void {
   }, resharder.checkInterval)
 }
 
-export async function reshard (resharder: Resharder, gatewayBot: GetGatewayBot): Promise<void> {
+export async function reshard (
+  resharder: Resharder,
+  gatewayBot: GetGatewayBot
+): Promise<void> {
   console.log('[Resharding] Starting the reshard process.')
 
   resharder.gateway.gatewayBot = gatewayBot
@@ -143,7 +154,8 @@ export async function reshard (resharder: Resharder, gatewayBot: GetGatewayBot):
   // If more than 100K servers, begin switching to 16x sharding
   if (resharder.useOptimalLargeBotSharding) {
     console.log('[Resharding] Using optimal large bot sharding solution.')
-    resharder.gateway.manager.totalShards = resharder.gateway.calculateTotalShards()
+    resharder.gateway.manager.totalShards =
+      resharder.gateway.calculateTotalShards()
   }
 
   resharder.gateway.prepareBuckets()
@@ -154,14 +166,22 @@ export async function reshard (resharder: Resharder, gatewayBot: GetGatewayBot):
   resharder.gateway.buckets.forEach(async (bucket, bucketId) => {
     for (const worker of bucket.workers) {
       for (const shardId of worker.queue) {
-        await resharder.tellWorkerToPrepare(resharder.gateway, worker.id, shardId, bucketId)
+        await resharder.tellWorkerToPrepare(
+          resharder.gateway,
+          worker.id,
+          shardId,
+          bucketId
+        )
       }
     }
   })
 }
 
 /** Handler that by default will save the new shard id for each guild this becomes ready in new gateway. This can be overridden to save the shard ids in a redis cache layer or whatever you prefer. These ids will be used later to update all guilds. */
-export async function markNewGuildShardId (guildIds: bigint[], shardId: number): Promise<void> {
+export async function markNewGuildShardId (
+  guildIds: bigint[],
+  shardId: number
+): Promise<void> {
   // PLACEHOLDER TO LET YOU MARK A GUILD ID AND SHARD ID FOR LATER USE ONCE RESHARDED
 }
 
@@ -170,7 +190,10 @@ export async function reshardingEditGuildShardIds (): Promise<void> {
   // PLACEHOLDER TO LET YOU UPDATE CACHED GUILDS
 }
 
-export async function tellWorkerToPrepare (resharder: Resharder, shardId: number): Promise<void> {
+export async function tellWorkerToPrepare (
+  resharder: Resharder,
+  shardId: number
+): Promise<void> {
   // First create a shard without identifyin.
   const shard = createShard({
     ...resharder.gateway.manager.createShardOptions,
@@ -187,18 +210,25 @@ export async function tellWorkerToPrepare (resharder: Resharder, shardId: number
       // If message compression is enabled,
       // Discord might send zlib compressed payloads.
       if (shard.gatewayConfig.compress && preProcessMessage instanceof Blob) {
-        preProcessMessage = inflateSync(await preProcessMessage.arrayBuffer()).toString()
+        preProcessMessage = inflateSync(
+          await preProcessMessage.arrayBuffer()
+        ).toString()
       }
 
       // Safeguard incase decompression failed to make a string.
       if (typeof preProcessMessage !== 'string') return
 
-      const messageData = JSON.parse(preProcessMessage) as DiscordGatewayPayload
+      const messageData = JSON.parse(
+        preProcessMessage
+      ) as DiscordGatewayPayload
 
       if (messageData.t === 'READY') {
         const payload = messageData.d as DiscordReady
         shard.resumeGatewayUrl = payload.resume_gateway_url
-        await resharder.markNewGuildShardId(payload.guilds.map((g) => g.id), shardId)
+        await resharder.markNewGuildShardId(
+          payload.guilds.map((g) => g.id),
+          shardId
+        )
       }
     }
   })
@@ -210,7 +240,10 @@ export async function tellWorkerToPrepare (resharder: Resharder, shardId: number
   void resharder.shardIsPending(resharder, shard)
 }
 
-export async function shardIsPending (resharder: Resharder, shard: Shard): Promise<void> {
+export async function shardIsPending (
+  resharder: Resharder,
+  shard: Shard
+): Promise<void> {
   // Save this in pending at the moment, until all shards are online
   resharder.pendingShards.set(shard.id, shard)
 
@@ -232,10 +265,14 @@ export async function shardIsPending (resharder: Resharder, shard: Shard): Promi
       shard.handleMessage = async function (message) {
         let preProcessMessage = message.data
         if (shard.gatewayConfig.compress && preProcessMessage instanceof Blob) {
-          preProcessMessage = inflateSync(await preProcessMessage.arrayBuffer()).toString()
+          preProcessMessage = inflateSync(
+            await preProcessMessage.arrayBuffer()
+          ).toString()
         }
         if (typeof preProcessMessage !== 'string') return
-        const messageData = JSON.parse(preProcessMessage) as DiscordGatewayPayload
+        const messageData = JSON.parse(
+          preProcessMessage
+        ) as DiscordGatewayPayload
         if (messageData.t !== 'GUILD_MEMBERS_CHUNK') return
 
         // Process only the chunking events

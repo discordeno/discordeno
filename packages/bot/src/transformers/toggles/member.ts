@@ -14,7 +14,9 @@ export class MemberToggles extends ToggleBitfield {
   constructor (memberOrTogglesInt: Partial<DiscordMember> | number) {
     super()
 
-    if (typeof memberOrTogglesInt === 'number') { this.bitfield = memberOrTogglesInt } else {
+    if (typeof memberOrTogglesInt === 'number') {
+      this.bitfield = memberOrTogglesInt
+    } else {
       const member = memberOrTogglesInt
 
       if (member.deaf) this.add(MemberToggle.deaf)
@@ -40,7 +42,9 @@ export class MemberToggles extends ToggleBitfield {
 
   /** Checks whether or not the permissions exist in this */
   has (permissions: MemberToggleKeys | MemberToggleKeys[]): boolean {
-    if (!Array.isArray(permissions)) { return super.contains(MemberToggle[permissions]) }
+    if (!Array.isArray(permissions)) {
+      return super.contains(MemberToggle[permissions])
+    }
 
     return super.contains(
       permissions.reduce((a, b) => (a |= MemberToggle[b]), 0)

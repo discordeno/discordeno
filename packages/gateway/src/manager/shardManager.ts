@@ -27,7 +27,8 @@ export function createShardManager (options: CreateShardManager) {
       ...options.createShardOptions,
       events: {
         ...options.createShardOptions?.events,
-        message: options.createShardOptions?.events?.message ?? options.handleMessage
+        message:
+          options.createShardOptions?.events?.message ?? options.handleMessage
       }
     },
     /** Gateway configuration which is used when creating a Shard. */
@@ -100,7 +101,10 @@ export interface CreateShardManager {
   // PROPERTIES
   // ----------
   /** Options which are used to create a new Shard. */
-  createShardOptions?: Omit<CreateShard, 'id' | 'totalShards' | 'requestIdentify' | 'gatewayConfig'>
+  createShardOptions?: Omit<
+  CreateShard,
+  'id' | 'totalShards' | 'requestIdentify' | 'gatewayConfig'
+  >
   /** Gateway configuration which is used when creating a Shard. */
   gatewayConfig: PickPartial<ShardGatewayConfig, 'token'>
   /** Ids of the Shards which should be managed. */

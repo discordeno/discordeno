@@ -1,4 +1,8 @@
-import { DiscordGatewayPayload, GetGatewayBot, PickPartial } from '@discordeno/types'
+import {
+  DiscordGatewayPayload,
+  GetGatewayBot,
+  PickPartial
+} from '@discordeno/types'
 import { Collection, LeakyBucket } from '@discordeno/utils'
 import { CreateShard } from '../shard/createShard.js'
 import { Shard, ShardGatewayConfig } from '../shard/types.js'
@@ -27,14 +31,20 @@ export type GatewayManager = ReturnType<typeof createGatewayManager>
  */
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function createGatewayManager (
-  options: PickPartial<CreateGatewayManager, 'handleDiscordPayload' | 'gatewayBot' | 'gatewayConfig'>
+  options: PickPartial<
+  CreateGatewayManager,
+  'handleDiscordPayload' | 'gatewayBot' | 'gatewayConfig'
+  >
 ) {
   const prepareBucketsOverwritten = options.prepareBuckets ?? prepareBuckets
   const spawnShardsOverwritten = options.spawnShards ?? spawnShards
   const stopOverwritten = options.stop ?? stop
-  const tellWorkerToIdentifyOverwritten = options.tellWorkerToIdentify ?? tellWorkerToIdentify
-  const calculateTotalShardsOverwritten = options.calculateTotalShards ?? calculateTotalShards
-  const calculateWorkerIdOverwritten = options.calculateWorkerId ?? calculateWorkerId
+  const tellWorkerToIdentifyOverwritten =
+    options.tellWorkerToIdentify ?? tellWorkerToIdentify
+  const calculateTotalShardsOverwritten =
+    options.calculateTotalShards ?? calculateTotalShards
+  const calculateWorkerIdOverwritten =
+    options.calculateWorkerId ?? calculateWorkerId
 
   const totalShards = options.totalShards ?? options.gatewayBot.shards ?? 1
 
@@ -130,12 +140,21 @@ export function createGatewayManager (
      * Instead you have to overwrite the `tellWorkerToIdentify` function to make that for you.
      * Look at the [BigBot template gateway solution](https://github.com/discordeno/discordeno/tree/main/template/bigbot/src/gateway) for reference.
      */
-    tellWorkerToIdentify: async function (workerId: number, shardId: number, bucketId: number) {
-      return await tellWorkerToIdentifyOverwritten(this, workerId, shardId, bucketId)
+    tellWorkerToIdentify: async function (
+      workerId: number,
+      shardId: number,
+      bucketId: number
+    ) {
+      return await tellWorkerToIdentifyOverwritten(
+        this,
+        workerId,
+        shardId,
+        bucketId
+      )
     },
     // TODO: fix debug
     /** Handle the different logs. Used for debugging. */
-    debug: (options.debug) ?? function () { },
+    debug: options.debug ?? function () {},
 
     // /** The methods related to resharding. */
     // resharding: {
@@ -189,8 +208,11 @@ export function createGatewayManager (
     requestIdentify: async (shardId) => {
       // TODO: improve
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      await gatewayManager.buckets.get(shardId % gatewayManager.gatewayBot.sessionStartLimit.maxConcurrency)!.leak
-        .acquire(1)
+      await gatewayManager.buckets
+        .get(
+          shardId % gatewayManager.gatewayBot.sessionStartLimit.maxConcurrency
+        )!
+        .leak.acquire(1)
     }
   })
 
@@ -227,7 +249,10 @@ export interface CreateGatewayManager {
   gatewayConfig: PickPartial<ShardGatewayConfig, 'token'>
 
   /** Options which are used to create a new shard. */
-  createShardOptions?: Omit<CreateShard, 'id' | 'totalShards' | 'requestIdentify' | 'gatewayConfig'>
+  createShardOptions?: Omit<
+  CreateShard,
+  'id' | 'totalShards' | 'requestIdentify' | 'gatewayConfig'
+  >
 
   /** Stored as bucketId: { workers: [workerId, [ShardIds]], createNextShard: boolean } */
   buckets: Collection<

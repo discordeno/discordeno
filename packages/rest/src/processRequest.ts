@@ -4,7 +4,11 @@ import { RestPayload, RestRequest } from './rest.js'
 import { RestManager } from './restManager.js'
 
 /** Processes a request and assigns it to a queue or creates a queue if none exists for it. */
-export function processRequest (rest: RestManager, request: RestRequest, payload: RestPayload): void {
+export function processRequest (
+  rest: RestManager,
+  request: RestRequest,
+  payload: RestPayload
+): void {
   const route = request.url.substring(request.url.indexOf('api/'))
   const parts = route.split('/')
   // REMOVE THE API

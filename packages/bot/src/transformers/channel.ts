@@ -16,7 +16,9 @@ function unpack64 (v: bigint, shift: number): bigint {
 }
 function pack64 (v: string | number, shift: number): bigint {
   const b = BigInt(v)
-  if (b < 0 || b > Mask) { throw new Error(`should have been a 64 bit unsigned integer: ${v}`) }
+  if (b < 0 || b > Mask) {
+    throw new Error(`should have been a 64 bit unsigned integer: ${v}`)
+  }
   return b << BigInt(shift * 64)
 }
 export function separateOverwrites (
