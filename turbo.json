@@ -16,6 +16,9 @@
     "test-types": {
       "dependsOn": ["^build-types"]
     },
+    "test:unit": {
+      "dependsOn": ["^build"]
+    },
     "lint": {
       "dependsOn": ["^build-types"]
     },

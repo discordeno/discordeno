@@ -15,6 +15,7 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "test-types": "turbo run test-types",
+    "test:unit": "turbo run test:unit",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install"
   },

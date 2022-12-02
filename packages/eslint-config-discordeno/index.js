@@ -4,7 +4,14 @@ module.exports = {
     node: true
   },
   extends: 'standard-with-typescript',
-  overrides: [],
+  overrides: [
+    {
+      files: ['*.spec.ts'],
+      rules: {
+        '@typescript-eslint/no-unused-expressions': 'off'
+      }
+    }
+  ],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
