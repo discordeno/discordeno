@@ -36,10 +36,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,md,html,css}": "prettier --ignore-unknown --write",
-    "*.ts": [
-      "eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to ."
-    ],
-    "*.js": [
+    "*.{js,ts,tsx}": [
       "eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to ."
     ]
   },
