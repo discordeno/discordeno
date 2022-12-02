@@ -10,11 +10,11 @@
   "scripts": {
     "build": "turbo run build",
     "fmt": "turbo run fmt",
-    "build-types": "turbo run build-types",
+    "build:type": "turbo run build:type",
     "release-build": "turbo run release-build",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
-    "test-types": "turbo run test-types",
+    "test:type": "turbo run build:type",
     "test:unit": "turbo run test:unit",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install"

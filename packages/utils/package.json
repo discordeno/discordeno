@@ -7,19 +7,13 @@
   "license": "Apache-2.0",
   "scripts": {
     "build": "swc src --out-dir dist",
-    "build-types": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
-    "release-build": "yarn build && yarn build-types",
+    "build:type": "tsc --skipDefaultLibCheck --declaration --emitDeclarationOnly --declarationDir dist",
+    "release-build": "yarn build && yarn build:type",
     "fmt": "prettier -w ./src",
     "lint": "eslint \"src/**/*.ts*\"",
-    "test:unit": "mocha --no-warnings 'tests/**/*.spec.ts'",
+    "test:unit": "c8 mocha --no-warnings 'tests/**/*.spec.ts'",
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/**/*.spec.ts'",
-    "test-types": "tsc --noEmit"
-  },
-  "dependencies": {
-    "chai": "^4.3.7",
-    "mocha": "^10.1.0",
-    "sinon": "^15.0.0",
-    "ts-node": "^10.9.1"
+    "test:type": "tsc --noEmit"
   },
   "devDependencies": {
     "@discordeno/types": "18.0.0-alpha.1",
@@ -29,8 +23,13 @@
     "@types/mocha": "^10",
     "@types/node": "^18.11.9",
     "@types/sinon": "^10.0.13",
+    "c8": "^7.12.0",
+    "chai": "^4.3.7",
     "eslint": "^8.0.1",
     "eslint-config-discordeno": "*",
+    "mocha": "^10.1.0",
+    "sinon": "^15.0.0",
+    "ts-node": "^10.9.1",
     "tsconfig": "*",
     "typescript": "^4.9.3"
   }
