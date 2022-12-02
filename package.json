@@ -4,7 +4,8 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "packages/plugins/cache"
+    "packages/plugins/cache",
+    "packages/plugins/utils"
   ],
   "scripts": {
     "build": "turbo run build",
@@ -31,12 +32,10 @@
   "lint-staged": {
     "*": "prettier --ignore-unknown --write",
     "*.ts": [
-      "eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to .",
-      "git add"
+      "eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to ."
     ],
     "*.js": [
-      "eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to .",
-      "git add"
+      "eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to ."
     ]
   },
   "packageManager": "yarn@3.3.0"

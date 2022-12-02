@@ -1,7 +1,16 @@
-import { Bot, Channel, CreateGuildChannel, separateOverwrites } from '../deps.js'
+import {
+  Bot,
+  Channel,
+  CreateGuildChannel,
+  separateOverwrites
+} from '@discordeno/bot'
 
 /** Create a copy of a channel */
-export async function cloneChannel (bot: Bot, channel: Channel, reason?: string) {
+export async function cloneChannel (
+  bot: Bot,
+  channel: Channel,
+  reason?: string
+): Promise<Channel> {
   if (!channel.guildId) {
     throw new Error('Cannot clone a channel outside a guild')
   }
@@ -15,7 +24,7 @@ export async function cloneChannel (bot: Bot, channel: Channel, reason?: string)
     parentId: channel.parentId,
     nsfw: channel.nsfw,
     name: channel.name!,
-    topic: channel.topic || undefined,
+    topic: channel.topic,
     permissionOverwrites: channel.permissionOverwrites.map((overwrite) => {
       const [type, id, allow, deny] = separateOverwrites(overwrite)
 
@@ -30,5 +39,5 @@ export async function cloneChannel (bot: Bot, channel: Channel, reason?: string)
   }
 
   // Create the channel (also handles permissions)
-  return await bot.helpers.createChannel(channel.guildId!, createChannelOptions)
+  return await bot.helpers.createChannel(channel.guildId, createChannelOptions)
 }
