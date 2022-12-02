@@ -1,7 +1,10 @@
 import { RestRequestRejection, RestRequestResponse } from './rest.js'
 import { RestManager } from './restManager.js'
 
-export type ProxyMethodResponse<T> = Omit<RestRequestResponse | RestRequestRejection, 'body'> & { body?: T }
+export type ProxyMethodResponse<T> = Omit<
+RestRequestResponse | RestRequestRejection,
+'body'
+> & { body?: T }
 
 // Left out proxy request, because it's not needed here
 // this file could also be moved to a plugin.
@@ -14,10 +17,9 @@ export async function runProxyMethod<T = any> (
   bucketId?: string
 ): Promise<ProxyMethodResponse<T>> {
   rest.debug(
-    `[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${retryCount} | Bucket ID: ${bucketId} | Body: ${JSON.stringify(
-      body
-    )
-    }`
+    `[REST - RequestCreate] Method: ${method} | URL: ${url} | Retry Count: ${retryCount} | Bucket ID: ${
+      bucketId ?? 'N/A'
+    } | Body: ${JSON.stringify(body)}`
   )
 
   // No proxy so we need to handle all rate limiting and such
@@ -29,11 +31,24 @@ export async function runProxyMethod<T = any> (
         method,
         reject: (data: RestRequestRejection) => {
           const { body: b, ...r } = data
-          reject({ body: data.status !== 204 ? JSON.parse(b ?? '{}') : (undefined as unknown as T), ...r })
+          // eslint-disable-next-line prefer-promise-reject-errors
+          reject({
+            body:
+              data.status !== 204
+                ? JSON.parse(b ?? '{}')
+                : (undefined as unknown as T),
+            ...r
+          })
         },
         respond: (data: RestRequestResponse) => {
           const { body: b, ...r } = data
-          resolve({ body: data.status !== 204 ? JSON.parse(b ?? '{}') : (undefined as unknown as T), ...r })
+          resolve({
+            body:
+              data.status !== 204
+                ? JSON.parse(b ?? '{}')
+                : (undefined as unknown as T),
+            ...r
+          })
         }
       },
       {

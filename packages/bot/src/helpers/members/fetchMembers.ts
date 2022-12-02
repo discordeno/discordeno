@@ -33,7 +33,11 @@ export async function fetchMembers (
 ): Promise<void> {
   // You can request 1 member without the intent
   // Check if intents is not 0 as proxy ws won't set intents in other instances
-  if (bot.intents && (!options?.limit || options.limit > 1) && !(bot.intents & GatewayIntents.GuildMembers)) {
+  if (
+    bot.intents &&
+    (!options?.limit || options.limit > 1) &&
+    !(bot.intents & GatewayIntents.GuildMembers)
+  ) {
     throw new Error(bot.constants.Errors.MISSING_INTENT_GUILD_MEMBERS)
   }
 
@@ -41,7 +45,10 @@ export async function fetchMembers (
     options.limit = options.userIds.length
   }
 
-  const shardId = calculateShardId(bot.gateway, bot.transformers.snowflake(guildId))
+  const shardId = calculateShardId(
+    bot.gateway,
+    bot.transformers.snowflake(guildId)
+  )
 
   return await new Promise((resolve) => {
     const nonce = `${guildId}-${Date.now()}`
@@ -57,9 +64,9 @@ export async function fetchMembers (
       d: {
         guild_id: guildId.toString(),
         // If a query is provided use it, OR if a limit is NOT provided use ""
-        query: options?.query || (options?.limit ? undefined : ''),
-        limit: options?.limit || 0,
-        presences: options?.presences || false,
+        query: options?.query ?? (options?.limit ? undefined : ''),
+        limit: options?.limit ?? 0,
+        presences: options?.presences ?? false,
         user_ids: options?.userIds?.map((id) => id.toString()),
         nonce
       }

@@ -1,4 +1,11 @@
-import { BigString, ChannelTypes, DiscordChannel, OverwriteReadable, SortOrderTypes, VideoQualityModes } from '@discordeno/types'
+import {
+  BigString,
+  ChannelTypes,
+  DiscordChannel,
+  OverwriteReadable,
+  SortOrderTypes,
+  VideoQualityModes
+} from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { WithReason } from '../../index.js'
 import { Channel } from '../../transformers/channel.js'
@@ -33,8 +40,12 @@ import { Channel } from '../../transformers/channel.js'
  * - Otherwise:
  *     - Fires a _Channel Update_ gateway event.
  */
-export async function editChannel (bot: Bot, channelId: BigString, options: ModifyChannel): Promise<Channel> {
-  if (options.name || options.topic) {
+export async function editChannel (
+  bot: Bot,
+  channelId: BigString,
+  options: ModifyChannel
+): Promise<Channel> {
+  if (options.name ?? options.topic) {
     const request = editChannelNameTopicQueue.get(channelId)
     if (request == null) {
       // If this hasn't been done before simply add 1 for it
@@ -71,22 +82,27 @@ export async function editChannel (bot: Bot, channelId: BigString, options: Modi
       user_limit: options.userLimit,
       rate_limit_per_user: options.rateLimitPerUser,
       position: options.position,
-      parent_id: options.parentId === null ? null : options.parentId?.toString(),
+      parent_id:
+        options.parentId === null ? null : options.parentId?.toString(),
       nsfw: options.nsfw,
       type: options.type,
       archived: options.archived,
       auto_archive_duration: options.autoArchiveDuration,
       locked: options.locked,
       invitable: options.invitable,
-      permission_overwrites: (options.permissionOverwrites)
+      permission_overwrites: options.permissionOverwrites
         ? options.permissionOverwrites?.map((overwrite) => ({
           id: overwrite.id.toString(),
           type: overwrite.type,
-          allow: (overwrite.allow) ? bot.utils.calculateBits(overwrite.allow) : null,
-          deny: (overwrite.deny) ? bot.utils.calculateBits(overwrite.deny) : null
+          allow: overwrite.allow
+            ? bot.utils.calculateBits(overwrite.allow)
+            : null,
+          deny: overwrite.deny
+            ? bot.utils.calculateBits(overwrite.deny)
+            : null
         }))
         : undefined,
-      available_tags: (options.availableTags)
+      available_tags: options.availableTags
         ? options.availableTags.map((availableTag) => ({
           id: availableTag.id,
           name: availableTag.name,
@@ -95,8 +111,10 @@ export async function editChannel (bot: Bot, channelId: BigString, options: Modi
           emoji_name: availableTag.emojiName
         }))
         : undefined,
-      applied_tags: options.appliedTags?.map((appliedTag) => appliedTag.toString()),
-      default_reaction_emoji: (options.defaultReactionEmoji)
+      applied_tags: options.appliedTags?.map((appliedTag) =>
+        appliedTag.toString()
+      ),
+      default_reaction_emoji: options.defaultReactionEmoji
         ? {
             emoji_id: options.defaultReactionEmoji.emojiId,
             emoji_name: options.defaultReactionEmoji.emojiName
@@ -107,7 +125,10 @@ export async function editChannel (bot: Bot, channelId: BigString, options: Modi
     }
   )
 
-  return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(result.guild_id!) })
+  return bot.transformers.channel(bot, {
+    channel: result,
+    guildId: bot.transformers.snowflake(result.guild_id!)
+  })
 }
 
 interface EditChannelRequest {
@@ -130,30 +151,33 @@ function processEditChannelQueue (bot: Bot): void {
   if (!editChannelProcessing) return
 
   const now = Date.now()
-  editChannelNameTopicQueue.forEach(async (request) => {
-    bot.events.debug('Running forEach loop in edit_channel file.')
-    if (now < request.timestamp) return
-    // 10 minutes have passed so we can reset this channel again
-    if (request.items.length === 0) {
-      return editChannelNameTopicQueue.delete(request.channelId)
-    }
-    request.amount = 0
-    // There are items to process for this request
-    const details = request.items.shift()
+  editChannelNameTopicQueue.forEach((request) => {
+    (async () => {
+      bot.events.debug('Running forEach loop in edit_channel file.')
+      if (now < request.timestamp) return
+      // 10 minutes have passed so we can reset this channel again
+      if (request.items.length === 0) {
+        editChannelNameTopicQueue.delete(request.channelId)
+        return
+      }
+      request.amount = 0
+      // There are items to process for this request
+      const details = request.items.shift()
 
-    if (details == null) return
+      if (details == null) return
 
-    await bot.helpers
-      .editChannel(details.channelId, details.options)
-      .then((result) => details.resolve(result))
-      .catch(details.reject)
-    const secondDetails = request.items.shift()
-    if (secondDetails == null) return
+      await bot.helpers
+        .editChannel(details.channelId, details.options)
+        .then((result) => details.resolve(result))
+        .catch(details.reject)
+      const secondDetails = request.items.shift()
+      if (secondDetails == null) return
 
-    await bot.helpers
-      .editChannel(secondDetails.channelId, secondDetails.options)
-      .then((result) => secondDetails.resolve(result))
-      .catch(secondDetails.reject)
+      await bot.helpers
+        .editChannel(secondDetails.channelId, secondDetails.options)
+        .then((result) => secondDetails.resolve(result))
+        .catch(secondDetails.reject)
+    })()
   })
 
   if (editChannelNameTopicQueue.size) {

@@ -1,7 +1,13 @@
-import { DiscordGatewayPayload, DiscordVoiceServerUpdate } from '@discordeno/types'
+import {
+  DiscordGatewayPayload,
+  DiscordVoiceServerUpdate
+} from '@discordeno/types'
 import { Bot } from '../../bot.js'
 
-export async function handleVoiceServerUpdate (bot: Bot, data: DiscordGatewayPayload) {
+export async function handleVoiceServerUpdate (
+  bot: Bot,
+  data: DiscordGatewayPayload
+): Promise<void> {
   const payload = data.d as DiscordVoiceServerUpdate
 
   bot.events.voiceServerUpdate(bot, {

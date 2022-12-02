@@ -1,4 +1,10 @@
-import { BigString, ChannelTypes, DiscordChannel, OverwriteReadable, SortOrderTypes } from '@discordeno/types'
+import {
+  BigString,
+  ChannelTypes,
+  DiscordChannel,
+  OverwriteReadable,
+  SortOrderTypes
+} from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 import { WithReason } from '../../index.js'
 import { Channel } from '../../transformers/channel.js'
@@ -22,7 +28,11 @@ import { Channel } from '../../transformers/channel.js'
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-channel}
  */
-export async function createChannel (bot: Bot, guildId: BigString, options: CreateGuildChannel): Promise<Channel> {
+export async function createChannel (
+  bot: Bot,
+  guildId: BigString,
+  options: CreateGuildChannel
+): Promise<Channel> {
   // BITRATE IS IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
   if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000
 
@@ -40,39 +50,52 @@ export async function createChannel (bot: Bot, guildId: BigString, options: Crea
           position: options.position,
           parent_id: options.parentId?.toString(),
           nsfw: options.nsfw,
-          permission_overwrites: options?.permissionOverwrites?.map((overwrite) => ({
-            id: overwrite.id.toString(),
-            type: overwrite.type,
-            allow: (overwrite.allow) ? bot.utils.calculateBits(overwrite.allow) : null,
-            deny: (overwrite.deny) ? bot.utils.calculateBits(overwrite.deny) : null
-          })),
-          type: options?.type || ChannelTypes.GuildText,
+          permission_overwrites: options?.permissionOverwrites?.map(
+            (overwrite) => ({
+              id: overwrite.id.toString(),
+              type: overwrite.type,
+              allow: overwrite.allow
+                ? bot.utils.calculateBits(overwrite.allow)
+                : null,
+              deny: overwrite.deny
+                ? bot.utils.calculateBits(overwrite.deny)
+                : null
+            })
+          ),
+          type: options?.type ?? ChannelTypes.GuildText,
           default_sort_order: options.defaultSortOrder,
           reason: options.reason,
           default_auto_archive_duration: options?.defaultAutoArchiveDuration,
-          default_reaction_emoji: (options.defaultReactionEmoji)
+          default_reaction_emoji: options.defaultReactionEmoji
             ? {
                 emoji_id: options.defaultReactionEmoji.emojiId
-                  ? bot.transformers.reverse.snowflake(options.defaultReactionEmoji.emojiId)
+                  ? bot.transformers.reverse.snowflake(
+                    options.defaultReactionEmoji.emojiId
+                  )
                   : options.defaultReactionEmoji.emojiId,
                 emoji_name: options.defaultReactionEmoji.emojiName
               }
             : undefined,
 
-          available_tags: (options.availableTags)
+          available_tags: options.availableTags
             ? options.availableTags.map((availableTag) => ({
               id: bot.transformers.reverse.snowflake(availableTag.id),
               name: availableTag.name,
               moderated: availableTag.moderated,
               emoji_name: availableTag.emojiName,
-              emoji_id: availableTag.emojiId ? bot.transformers.reverse.snowflake(availableTag.emojiId) : undefined
+              emoji_id: availableTag.emojiId
+                ? bot.transformers.reverse.snowflake(availableTag.emojiId)
+                : undefined
             }))
             : undefined
         }
       : {}
   )
 
-  return bot.transformers.channel(bot, { channel: result, guildId: bot.transformers.snowflake(guildId) })
+  return bot.transformers.channel(bot, {
+    channel: result,
+    guildId: bot.transformers.snowflake(guildId)
+  })
 }
 
 export interface CreateGuildChannel extends WithReason {

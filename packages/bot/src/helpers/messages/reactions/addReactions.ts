@@ -30,7 +30,13 @@ export async function addReactions (
   ordered = false
 ): Promise<void> {
   if (!ordered) {
-    return void await Promise.all(reactions.map(async (reaction) => await bot.helpers.addReaction(channelId, messageId, reaction)))
+    await Promise.all(
+      reactions.map(
+        async (reaction) =>
+          await bot.helpers.addReaction(channelId, messageId, reaction)
+      )
+    )
+    return
   }
 
   for (const reaction of reactions) {

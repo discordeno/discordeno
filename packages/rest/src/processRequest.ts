@@ -4,7 +4,11 @@ import { RestPayload, RestRequest } from './rest.js'
 import { RestManager } from './restManager.js'
 
 /** Processes a request and assigns it to a queue or creates a queue if none exists for it. */
-export function processRequest (rest: RestManager, request: RestRequest, payload: RestPayload) {
+export function processRequest (
+  rest: RestManager,
+  request: RestRequest,
+  payload: RestPayload
+): void {
   const route = request.url.substring(request.url.indexOf('api/'))
   const parts = route.split('/')
   // REMOVE THE API
@@ -20,12 +24,12 @@ export function processRequest (rest: RestManager, request: RestRequest, payload
 
   const queue = rest.pathQueues.get(url)
   if (queue !== undefined) {
-    queue.makeRequest({ request, payload })
+    void queue.makeRequest({ request, payload })
   } else {
     // CREATES A NEW QUEUE
     const bucketQueue = createQueueBucket(rest, {})
     // Add request to queue
-    bucketQueue.makeRequest({
+    void bucketQueue.makeRequest({
       request,
       payload
     })

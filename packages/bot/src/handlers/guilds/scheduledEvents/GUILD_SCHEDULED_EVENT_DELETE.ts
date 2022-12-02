@@ -1,7 +1,16 @@
-import { DiscordGatewayPayload, DiscordScheduledEvent } from '@discordeno/types'
+import {
+  DiscordGatewayPayload,
+  DiscordScheduledEvent
+} from '@discordeno/types'
 import type { Bot } from '../../../bot.js'
 
-export function handleGuildScheduledEventDelete (bot: Bot, data: DiscordGatewayPayload) {
+export function handleGuildScheduledEventDelete (
+  bot: Bot,
+  data: DiscordGatewayPayload
+): void {
   const payload = data.d as DiscordScheduledEvent
-  bot.events.scheduledEventDelete(bot, bot.transformers.scheduledEvent(bot, payload))
+  bot.events.scheduledEventDelete(
+    bot,
+    bot.transformers.scheduledEvent(bot, payload)
+  )
 }

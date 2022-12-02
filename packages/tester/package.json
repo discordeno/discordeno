@@ -7,11 +7,11 @@
   "license": "Apache-2.0",
   "scripts": {
     "build": "swc src --out-dir dist",
-    "build-types": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
-    "release-build": "yarn build && yarn build-types",
+    "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
+    "release-build": "yarn build && yarn build:type",
     "fmt": "prettier -w ./src",
     "lint": "eslint \"src/**/*.ts*\"",
-    "test-types": "tsc --noEmit",
+    "test:type": "tsc --noEmit",
     "dev": "yarn build && node dist/index.js"
   },
   "devDependencies": {

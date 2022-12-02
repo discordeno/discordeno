@@ -26,13 +26,13 @@ export async function getScheduledEventUsers (
   bot: Bot,
   guildId: BigString,
   eventId: BigString,
-  options?: GetScheduledEventUsers & { withMember?: false },
+  options?: GetScheduledEventUsers & { withMember?: false }
 ): Promise<Collection<bigint, User>>
 export async function getScheduledEventUsers (
   bot: Bot,
   guildId: BigString,
   eventId: BigString,
-  options?: GetScheduledEventUsers & { withMember: true },
+  options?: GetScheduledEventUsers & { withMember: true }
 ): Promise<Collection<bigint, { user: User, member: Member }>>
 export async function getScheduledEventUsers (
   bot: Bot,
@@ -42,22 +42,26 @@ export async function getScheduledEventUsers (
 ): Promise<
   Collection<bigint, User> | Collection<bigint, { user: User, member: Member }>
   > {
-  let url = bot.constants.routes.GUILD_SCHEDULED_EVENT_USERS(guildId, eventId, options)
+  let url = bot.constants.routes.GUILD_SCHEDULED_EVENT_USERS(
+    guildId,
+    eventId,
+    options
+  )
 
   if (options != null) {
     url = '?'
 
     if (options.limit) url += `limit=${options.limit}`
-    if (options.withMember) url += `&with_member=${options.withMember}`
+    if (options.withMember !== undefined) {
+      url += `&with_member=${options.withMember.toString()}`
+    }
     if (options.after) url += `&after=${options.after}`
     if (options.before) url += `&before=${options.before}`
   }
 
-  const results = await bot.rest.runMethod<Array<{ user: DiscordUser, member?: DiscordMember }>>(
-    bot.rest,
-    'GET',
-    url
-  )
+  const results = await bot.rest.runMethod<
+  Array<{ user: DiscordUser, member?: DiscordMember }>
+  >(bot.rest, 'GET', url)
 
   if (!options?.withMember) {
     return new Collection(

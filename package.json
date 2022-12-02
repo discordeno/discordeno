@@ -4,16 +4,18 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "packages/plugins/cache"
+    "packages/plugins/cache",
+    "packages/plugins/utils"
   ],
   "scripts": {
     "build": "turbo run build",
     "fmt": "turbo run fmt",
-    "build-types": "turbo run build-types",
+    "build:type": "turbo run build:type",
     "release-build": "turbo run release-build",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
-    "test-types": "turbo run test-types",
+    "test:type": "turbo run build:type",
+    "test:unit": "turbo run test:unit",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install",
     "build:doc": "typedoc --plugin typedoc-plugin-markdown --out ./apps/site/docs/generated/ "
@@ -34,7 +36,12 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,md,html,css}": "prettier --ignore-unknown --write",
-    "*.ts": "eslint --fix --ignore"
+    "*.ts": [
+      "eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to ."
+    ],
+    "*.js": [
+      "eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to ."
+    ]
   },
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "yarn@3.3.0"
 }

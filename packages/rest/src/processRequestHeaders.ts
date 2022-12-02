@@ -1,7 +1,11 @@
 import { RestManager } from './restManager.js'
 
 /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
-export function processRequestHeaders (rest: RestManager, url: string, headers: Headers) {
+export function processRequestHeaders (
+  rest: RestManager,
+  url: string,
+  headers: Headers
+): string | undefined {
   let rateLimited = false
 
   // GET ALL NECESSARY HEADERS
@@ -10,7 +14,7 @@ export function processRequestHeaders (rest: RestManager, url: string, headers: 
   const reset = Date.now() + Number(retryAfter) * 1000
   const global = headers.get('x-ratelimit-global')
   // undefined override null needed for typings
-  const bucketId = headers.get('x-ratelimit-bucket') || undefined
+  const bucketId = headers.get('x-ratelimit-bucket') ?? undefined
 
   rest.pathQueues.get(url)?.handleCompletedRequest({
     remaining: Number(remaining),
@@ -43,7 +47,9 @@ export function processRequestHeaders (rest: RestManager, url: string, headers: 
   if (global) {
     const retryAfter = headers.get('retry-after')
     const globalReset = Date.now() + Number(retryAfter) * 1000
-    rest.debug(`[REST = Globally Rate Limited] URL: ${url} | Global Rest: ${globalReset}`)
+    rest.debug(
+      `[REST = Globally Rate Limited] URL: ${url} | Global Rest: ${globalReset}`
+    )
     rest.globallyRateLimited = true
     rateLimited = true
 

@@ -24,9 +24,11 @@ export function getGuildSplashURL (
     ? bot.utils.formatImageURL(
       bot.constants.routes.GUILD_SPLASH(
         guildId,
-        typeof imageHash === 'string' ? imageHash : bot.utils.iconBigintToHash(imageHash)
+        typeof imageHash === 'string'
+          ? imageHash
+          : bot.utils.iconBigintToHash(imageHash)
       ),
-      options?.size || 128,
+      options?.size ?? 128,
       options?.format
     )
     : undefined

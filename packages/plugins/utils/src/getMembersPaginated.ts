@@ -1,4 +1,11 @@
-import { BigString, Bot, Collection, DiscordMemberWithUser, ListGuildMembers, Member } from '../deps.js'
+import {
+  BigString,
+  Bot,
+  Collection,
+  DiscordMemberWithUser,
+  ListGuildMembers,
+  Member
+} from '@discordeno/bot'
 
 /**
  * Highly recommended to **NOT** use this function to get members instead use fetchMembers().
@@ -9,23 +16,19 @@ export async function getMembersPaginated (
   bot: Bot,
   guildId: BigString,
   options: ListGuildMembers
-) {
+): Promise<any> {
   const members = new Collection<bigint, Member>()
 
   let membersLeft = options?.limit ?? 1000
   let loops = 1
-  while (
-    (options?.limit ?? 1000) > members.size &&
-    membersLeft > 0
-  ) {
+  while ((options?.limit ?? 1000) > members.size && membersLeft > 0) {
     bot.events.debug('Running while loop in getMembers function.')
 
     if (options?.limit && options.limit > 1000) {
       console.log(
         `Paginating get members from REST. #${loops} / ${Math.ceil(
           (options?.limit ?? 1) / 1000
-        )
-        }`
+        )}`
       )
     }
 

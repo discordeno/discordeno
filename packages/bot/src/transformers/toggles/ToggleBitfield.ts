@@ -6,18 +6,18 @@ export class ToggleBitfield {
   }
 
   /** Tests whether or not this bitfield has the permission requested. */
-  contains (bits: number) {
+  contains (bits: number): boolean {
     return Boolean(this.bitfield & bits)
   }
 
   /** Adds some bits to the bitfield. */
-  add (bits: number) {
+  add (bits: number): this {
     this.bitfield |= bits
     return this
   }
 
   /** Removes some bits from the bitfield. */
-  remove (bits: number) {
+  remove (bits: number): this {
     this.bitfield &= ~bits
     return this
   }
@@ -31,18 +31,18 @@ export class ToggleBitfieldBigint {
   }
 
   /** Tests whether or not this bitfield has the permission requested. */
-  contains (bits: bigint) {
+  contains (bits: bigint): boolean {
     return Boolean(this.bitfield & bits)
   }
 
   /** Adds some bits to the bitfield. */
-  add (bits: bigint) {
+  add (bits: bigint): this {
     this.bitfield |= bits
     return this
   }
 
   /** Removes some bits from the bitfield. */
-  remove (bits: bigint) {
+  remove (bits: bigint): this {
     this.bitfield &= ~bits
     return this
   }

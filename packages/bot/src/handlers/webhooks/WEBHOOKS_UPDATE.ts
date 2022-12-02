@@ -1,7 +1,10 @@
 import { DiscordGatewayPayload, DiscordWebhookUpdate } from '@discordeno/types'
 import { Bot } from '../../bot.js'
 
-export function handleWebhooksUpdate (bot: Bot, data: DiscordGatewayPayload) {
+export function handleWebhooksUpdate (
+  bot: Bot,
+  data: DiscordGatewayPayload
+): void {
   const payload = data.d as DiscordWebhookUpdate
   bot.events.webhooksUpdate(bot, {
     channelId: bot.transformers.snowflake(payload.channel_id),

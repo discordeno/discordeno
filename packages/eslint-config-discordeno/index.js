@@ -5,6 +5,12 @@ module.exports = {
   },
   extends: 'standard-with-typescript',
   overrides: [
+    {
+      files: ['*.spec.ts'],
+      rules: {
+        '@typescript-eslint/no-unused-expressions': 'off'
+      }
+    }
   ],
   parserOptions: {
     ecmaVersion: 'latest',
@@ -14,6 +20,8 @@ module.exports = {
   rules: {
     '@typescript-eslint/strict-boolean-expressions': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
-    '@typescript-eslint/consistent-type-assertions': 'off'
+    '@typescript-eslint/consistent-type-assertions': 'off',
+    '@typescript-eslint/no-floating-promises': 'off',
+    '@typescript-eslint/no-invalid-void-type': 'off'
   }
 }

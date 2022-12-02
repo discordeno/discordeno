@@ -16,12 +16,12 @@
     "noUnusedParameters": false,
     "preserveWatchOutput": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "incremental": true
   },
-  "exclude": [
-    "node_modules",
-    "dist",
-    "tests",
-    "test"
-  ]
+  "exclude": ["node_modules", "dist", "tests", "test"],
+  "ts-node": {
+    "swc": true,
+    "esm": true
+  }
 }

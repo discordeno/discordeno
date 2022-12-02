@@ -17,13 +17,18 @@ export interface RestSendRequestOptions {
   }
 }
 
-export async function sendRequest<T> (rest: RestManager, options: RestSendRequestOptions): Promise<T> {
+export async function sendRequest<T> (
+  rest: RestManager,
+  options: RestSendRequestOptions
+): Promise<T> {
   try {
     // CUSTOM HANDLER FOR USER TO LOG OR WHATEVER WHENEVER A FETCH IS MADE
     rest.fetching(options)
 
     const response = await fetch(
-      options.url.startsWith(BASE_URL) ? options.url : `${BASE_URL}/v${rest.version}/${options.url}`,
+      options.url.startsWith(BASE_URL)
+        ? options.url
+        : `${BASE_URL}/v${rest.version}/${options.url}`,
       {
         method: options.method,
         headers: options.payload?.headers,
@@ -44,28 +49,34 @@ export async function sendRequest<T> (rest: RestManager, options: RestSendReques
 
     if (response.status < 200 || response.status >= 400) {
       rest.debug(
-        `[REST - httpError] Payload: ${JSON.stringify(options)} | Response: ${JSON.stringify(response)}`
+        `[REST - httpError] Payload: ${JSON.stringify(
+          options
+        )} | Response: ${JSON.stringify(response)}`
       )
 
       let error = 'REQUEST_UNKNOWN_ERROR'
       switch (response.status) {
         case HTTPResponseCodes.BadRequest:
-          error = "The options was improperly formatted, or the server couldn't understand it."
+          error =
+            "The options was improperly formatted, or the server couldn't understand it."
           break
         case HTTPResponseCodes.Unauthorized:
           error = 'The Authorization header was missing or invalid.'
           break
         case HTTPResponseCodes.Forbidden:
-          error = 'The Authorization token you passed did not have permission to the resource.'
+          error =
+            'The Authorization token you passed did not have permission to the resource.'
           break
         case HTTPResponseCodes.NotFound:
           error = "The resource at the location specified doesn't exist."
           break
         case HTTPResponseCodes.MethodNotAllowed:
-          error = 'The HTTP method used is not valid for the location specified.'
+          error =
+            'The HTTP method used is not valid for the location specified.'
           break
         case HTTPResponseCodes.GatewayUnavailable:
-          error = 'There was not a gateway available to process your options. Wait a bit and retry.'
+          error =
+            'There was not a gateway available to process your options. Wait a bit and retry.'
           break
       }
 
@@ -85,13 +96,17 @@ export async function sendRequest<T> (rest: RestManager, options: RestSendReques
         const json = await response.json()
 
         // TOO MANY ATTEMPTS, GET RID OF REQUEST FROM QUEUE.
-        if (options.retryCount !== undefined && options.retryCount++ >= rest.maxRetryCount) {
+        if (
+          options.retryCount !== undefined &&
+          options.retryCount++ >= rest.maxRetryCount
+        ) {
           rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(options)}`)
           // REMOVE ITEM FROM QUEUE TO PREVENT RETRY
           options.reject?.({
             ok: false,
             status: response.status,
-            error: 'The options was rate limited and it maxed out the retries limit.'
+            error:
+              'The options was rate limited and it maxed out the retries limit.'
           })
 
           // @ts-expect-error Code should never reach here
@@ -111,7 +126,9 @@ export async function sendRequest<T> (rest: RestManager, options: RestSendReques
 
     // SOMETIMES DISCORD RETURNS AN EMPTY 204 RESPONSE THAT CAN'T BE MADE TO JSON
     if (response.status === 204) {
-      rest.debug(`[REST - FetchSuccess] URL: ${options.url} | ${JSON.stringify(options)}`)
+      rest.debug(
+        `[REST - FetchSuccess] URL: ${options.url} | ${JSON.stringify(options)}`
+      )
       options.respond?.({
         ok: true,
         status: 204
@@ -132,14 +149,19 @@ export async function sendRequest<T> (rest: RestManager, options: RestSendReques
       return JSON.parse(json)
     }
   } catch (error) {
+    const stringifiedError = (error as Error).toString?.()
     // SOMETHING WENT WRONG, LOG AND RESPOND WITH ERROR
-    rest.debug(`[REST - fetchFailed] Payload: ${JSON.stringify(options)} | Error: ${error}`)
+    rest.debug(
+      `[REST - fetchFailed] Payload: ${JSON.stringify(
+        options
+      )} | Error: ${stringifiedError}`
+    )
     options.reject?.({
       ok: false,
       status: 599,
-      error: `Internal Proxy Error\n${error}`
+      error: `Internal Proxy Error\n${stringifiedError}`
     })
 
-    throw new Error(`Something went wrong in sendRequest\n${error}`)
+    throw new Error(`Something went wrong in sendRequest\n${stringifiedError}`)
   }
 }

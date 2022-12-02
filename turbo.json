@@ -5,19 +5,24 @@
       "outputs": ["dist/**/*.js"],
       "inputs": ["src/**/*.ts"]
     },
-    "build-types": {
-      "dependsOn": ["^build-types"],
-      "outputs": ["dist/**/d.ts", "dist/**/d.ts.map"]
+    "build:type": {
+      "dependsOn": ["^build:type"],
+      "outputs": [
+        "dist/**/d.ts",
+        "dist/**/d.ts.map",
+        "dist/tsconfig.tsbuildinfo"
+      ]
     },
     "release-build": {
-      "dependsOn": ["^build-types"],
+      "dependsOn": ["^build:type"],
       "outputs": ["dist/**"]
     },
-    "test-types": {
-      "dependsOn": ["^build-types"]
+    "test:unit": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
     },
     "lint": {
-      "dependsOn": ["^build-types"]
+      "dependsOn": ["^build:type"]
     },
     "fmt": {},
     "dev": {

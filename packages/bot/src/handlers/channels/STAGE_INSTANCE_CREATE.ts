@@ -1,7 +1,10 @@
 import { DiscordGatewayPayload, DiscordStageInstance } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
 
-export function handleStageInstanceCreate (bot: Bot, data: DiscordGatewayPayload) {
+export function handleStageInstanceCreate (
+  bot: Bot,
+  data: DiscordGatewayPayload
+): void {
   const payload = data.d as DiscordStageInstance
 
   bot.events.stageInstanceCreate(bot, {

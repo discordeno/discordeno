@@ -1,4 +1,4 @@
-import type { BigString, Bot, InteractionResponse } from '../deps.js'
+import type { BigString, Bot, InteractionResponse } from '@discordeno/bot'
 
 /** sendInteractionResponse with ephemeral reply */
 export async function sendPrivateInteractionResponse (
@@ -6,7 +6,7 @@ export async function sendPrivateInteractionResponse (
   id: BigString,
   token: string,
   options: InteractionResponse
-) {
-  if ((options.data) && !options.data?.flags) options.data.flags = 64 // private: true
+): Promise<void> {
+  if (options.data && !options.data?.flags) options.data.flags = 64 // private: true
   return await bot.helpers.sendInteractionResponse(id, token, options)
 }

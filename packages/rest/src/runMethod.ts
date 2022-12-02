@@ -1,6 +1,15 @@
 import { FileContent } from '@discordeno/types'
-import { API_VERSION, baseEndpoints, BASE_URL, encode } from '@discordeno/utils'
-import { RequestMethod, RestRequestRejection, RestRequestResponse } from './rest.js'
+import {
+  API_VERSION,
+  baseEndpoints,
+  BASE_URL,
+  encode
+} from '@discordeno/utils'
+import {
+  RequestMethod,
+  RestRequestRejection,
+  RestRequestResponse
+} from './rest.js'
 import { RestManager } from './restManager.js'
 
 export async function runMethod<T = any> (
@@ -15,11 +24,11 @@ export async function runMethod<T = any> (
   }
 ): Promise<T> {
   rest.debug(
-    `[REST - RequestCreate] Method: ${method} | URL: ${route} | Retry Count: ${options?.retryCount ?? 0
-    } | Bucket ID: ${options?.bucketId} | Body: ${JSON.stringify(
+    `[REST - RequestCreate] Method: ${method} | URL: ${route} | Retry Count: ${
+      options?.retryCount ?? 0
+    } | Bucket ID: ${options?.bucketId ?? 'N/A'} | Body: ${JSON.stringify(
       body
-    )
-    }`
+    )}`
   )
 
   const errorStack = new Error('Location:')
@@ -35,7 +44,7 @@ export async function runMethod<T = any> (
       // convert blobs to string before sending to proxy
       body.file = await Promise.all(
         body.file.map(async (f: FileContent) => {
-          const url = encode(await (f.blob).arrayBuffer())
+          const url = encode(await f.blob.arrayBuffer())
 
           return { name: f.name, blob: `data:${f.blob.type};base64,${url}` }
         })
@@ -55,9 +64,13 @@ export async function runMethod<T = any> (
     })
 
     if (!result.ok) {
-      const err = await result.json().catch(() => { })
+      const err: RestRequestRejection = await result.json().catch(() => {})
       // Legacy Handling to not break old code or when body is missing
-      if (!err?.body) throw new Error(`Error: ${err.message ?? result.statusText}`)
+      if (!err?.body) {
+        throw new Error(
+          `Error: ${(err as unknown as Error).message ?? result.statusText}`
+        )
+      }
       throw rest.convertRestError(errorStack, err)
     }
 
@@ -72,14 +85,15 @@ export async function runMethod<T = any> (
         url: route[0] === '/' ? `${BASE_URL}/v${API_VERSION}${route}` : route,
         method,
         reject: (data: RestRequestRejection) => {
-          const restError = rest.convertRestError(
-            errorStack,
-            data
-          )
+          const restError = rest.convertRestError(errorStack, data)
           reject(restError)
         },
         respond: (data: RestRequestResponse) =>
-          resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : (undefined as unknown as T))
+          resolve(
+            data.status !== 204
+              ? JSON.parse(data.body ?? '{}')
+              : (undefined as unknown as T)
+          )
       },
       {
         bucketId: options?.bucketId,
