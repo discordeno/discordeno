@@ -9,7 +9,7 @@ const config = {
   title: "Discordeno",
   tagline: "Making Scalable Bots Easy!",
   url: "https://discordeno.mod.land",
-  baseUrl: "/",
+  baseUrl: "/discordeno/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.png",
