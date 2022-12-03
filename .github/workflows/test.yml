@@ -91,8 +91,8 @@ jobs:
             ${{ runner.os }}-turbo-test:unit-
       - name: Unit Test
         run: yarn test:unit --cache-dir=".turbo"
-      #- name: Collect and upload the coverage report
-      #  uses: codecov/codecov-action@v3
+      - name: Collect and upload the coverage report
+        uses: codecov/codecov-action@v3
 
   #integration-test:
   #  name: Integration Test
