@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1670083986743,
+  "lastUpdate": 1670084049372,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -2802,6 +2802,132 @@ window.BENCHMARK_DATA = {
             "value": 137.94,
             "unit": "MB",
             "range": "28.56 … 280.02"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "23035000+Skillz4Killz@users.noreply.github.com",
+            "name": "Skillz4Killz",
+            "username": "Skillz4Killz"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ef452b5d54f151cfbf7a4d913fd5bada1a8e0173",
+          "message": "Update docusaurus.config.js",
+          "timestamp": "2022-12-03T10:12:55-06:00",
+          "tree_id": "7ffd22d2e328392d4afeade63a7e174fc4b947ee",
+          "url": "https://github.com/discordeno/discordeno/commit/ef452b5d54f151cfbf7a4d913fd5bada1a8e0173"
+        },
+        "date": 1670084047479,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "[Transformer] Discord Guild to a Guild",
+            "value": 10977,
+            "unit": "ns/iter",
+            "range": "10258.38 … 7164290.8"
+          },
+          {
+            "name": "[Guild.toggles.features] Get the features of a guild",
+            "value": 2100,
+            "unit": "ns/iter",
+            "range": "2007.47 … 2136.4"
+          },
+          {
+            "name": "[Transformer] Discord User to a User",
+            "value": 221,
+            "unit": "ns/iter",
+            "range": "217.53 … 252.46"
+          },
+          {
+            "name": "[Transformer] User to a Discord User",
+            "value": 183,
+            "unit": "ns/iter",
+            "range": "178.44 … 262.26"
+          },
+          {
+            "name": "[Transformer] Discord Rules Channel to a Rules Channel",
+            "value": 601,
+            "unit": "ns/iter",
+            "range": "593.62 … 610.01"
+          },
+          {
+            "name": "[Transformer] Discord Announcement Channel to a Announcement Channel",
+            "value": 1670,
+            "unit": "ns/iter",
+            "range": "1653.88 … 1694.71"
+          },
+          {
+            "name": "[Transformer] Discord Moderator Channel to a Moderator Channel",
+            "value": 832,
+            "unit": "ns/iter",
+            "range": "820.97 … 842.13"
+          },
+          {
+            "name": "[Transformer] Discord Text Channel to a Text Channel",
+            "value": 804,
+            "unit": "ns/iter",
+            "range": "794.61 … 810.61"
+          },
+          {
+            "name": "[Transformer] Discord Stage Channel to a Stage Channel",
+            "value": 635,
+            "unit": "ns/iter",
+            "range": "626.04 … 645.89"
+          },
+          {
+            "name": "[Transformer] Discord Voice Channel to a Voice Channel",
+            "value": 650,
+            "unit": "ns/iter",
+            "range": "639.94 … 664.07"
+          },
+          {
+            "name": "[Transformer] Discord Member to a Member",
+            "value": 1334,
+            "unit": "ns/iter",
+            "range": "1311.27 … 1353.31"
+          },
+          {
+            "name": "[Transformer] Member to a Discord Member",
+            "value": 1497,
+            "unit": "ns/iter",
+            "range": "1478.99 … 1526.36"
+          },
+          {
+            "name": "[Transformer] Discord Role to a Role",
+            "value": 407,
+            "unit": "ns/iter",
+            "range": "402.82 … 423.19"
+          },
+          {
+            "name": "[Transformer] Discord Message to a Message",
+            "value": 1415,
+            "unit": "ns/iter",
+            "range": "1364.6 … 3333.51"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 143.99,
+            "unit": "MB",
+            "range": "38.82 … 280.4"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 265.19,
+            "unit": "MB",
+            "range": "260.61 … 271.04"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 142.39,
+            "unit": "MB",
+            "range": "36.16 … 279.76"
           }
         ]
       }
