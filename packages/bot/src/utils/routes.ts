@@ -1,6 +1,6 @@
 import { BigString } from '@discordeno/types'
 import { baseEndpoints } from '@discordeno/utils'
-import type {
+import {
   GetBans,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,

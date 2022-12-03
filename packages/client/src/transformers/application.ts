@@ -1,4 +1,8 @@
-import { DiscordApplication, Optionalize } from '@discordeno/types'
+import {
+  DiscordApplication,
+  DiscordUser,
+  Optionalize
+} from '@discordeno/types'
 import { Client } from '../client.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -26,9 +30,8 @@ export function transformApplication (
     icon: payload.icon
       ? client.utils.iconHashToBigInt(payload.icon)
       : undefined,
-    // @ts-expect-error the partial here wont break anything
     owner: payload.owner
-      ? client.transformers.user(client, payload.owner)
+      ? client.transformers.user(client, payload.owner as DiscordUser)
       : undefined,
     team: payload.team
       ? client.transformers.team(client, payload.team)
