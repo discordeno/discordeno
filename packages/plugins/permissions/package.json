@@ -11,7 +11,10 @@
     "release-build": "yarn build && yarn build:type",
     "fmt": "prettier -w ./src",
     "lint": "eslint \"src/**/*.ts*\"",
-    "test:type": "tsc --noEmit"
+    "test:unit": "c8 mocha --no-warnings 'tests/**/*.spec.ts'",
+    "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/**/*.spec.ts'",
+    "test:type": "tsc --noEmit",
+    "test:test-type": "tsc --project tsconfig.test.json"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.57",

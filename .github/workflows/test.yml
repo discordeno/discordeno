@@ -63,6 +63,35 @@ jobs:
       - name: Type Test
         run: yarn test:type --cache-dir=".turbo"
 
+  test-type-test:
+    name: Test Type Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - run: yarn install --immutable
+      - name: Turbo Cache
+        id: turbo-cache
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-test:test-type-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-test:test-type-
+      - name: Test Type Test
+        run: yarn test:test-type --cache-dir=".turbo"
+
   unit-test:
     name: Unit Test
     runs-on: ubuntu-latest

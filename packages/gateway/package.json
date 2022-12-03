@@ -12,21 +12,31 @@
     "release-build": "yarn build && yarn build:type",
     "fmt": "prettier -w ./src",
     "lint": "eslint \"src/**/*.ts*\"",
-    "test:type": "tsc --noEmit"
+    "test:unit": "c8 mocha --no-warnings 'tests/**/*.spec.ts'",
+    "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/**/*.spec.ts'",
+    "test:type": "tsc --noEmit",
+    "test:test-type": "tsc --project tsconfig.test.json"
   },
   "devDependencies": {
     "@discordeno/types": "18.0.0-alpha.1",
     "@discordeno/utils": "18.0.0-alpha.1",
     "@swc/cli": "^0.1.57",
     "@swc/core": "^1.3.21",
+    "@types/chai": "^4",
+    "@types/mocha": "^10",
+    "@types/node": "^18.11.9",
+    "@types/sinon": "^10.0.13",
     "@types/ws": "^8.5.3",
+    "c8": "^7.12.0",
+    "chai": "^4.3.7",
     "eslint": "^8.0.1",
     "eslint-config-discordeno": "*",
+    "mocha": "^10.1.0",
+    "sinon": "^15.0.0",
     "tsconfig": "*",
     "typescript": "^4.9.3"
   },
   "dependencies": {
-    "@types/node": "^18.11.9",
     "ws": "^8.11.0"
   }
 }

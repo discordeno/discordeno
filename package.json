@@ -16,6 +16,7 @@
     "lint": "turbo run lint",
     "test:type": "turbo run build:type",
     "test:unit": "turbo run test:unit",
+    "test:test-type": "turbo run test:test-type",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install",
     "build:doc": "typedoc --plugin typedoc-plugin-markdown --out ./apps/site/docs/generated/ "

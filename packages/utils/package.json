@@ -13,7 +13,8 @@
     "lint": "eslint \"src/**/*.ts*\"",
     "test:unit": "c8 mocha --no-warnings 'tests/**/*.spec.ts'",
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/**/*.spec.ts'",
-    "test:type": "tsc --noEmit"
+    "test:type": "tsc --noEmit",
+    "test:test-type": "tsc --project tsconfig.test.json"
   },
   "devDependencies": {
     "@discordeno/types": "18.0.0-alpha.1",
