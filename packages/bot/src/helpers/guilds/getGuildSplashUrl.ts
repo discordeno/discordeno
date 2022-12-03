@@ -1,6 +1,5 @@
-import { BigString } from '@discordeno/types'
+import { BigString, ImageFormat, ImageSize } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
-import { ImageFormat, ImageSize } from '../members/getAvatarUrl.js'
 
 /**
  * Builds the URL to a guild splash stored in the Discord CDN.

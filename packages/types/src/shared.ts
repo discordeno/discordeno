@@ -154,7 +154,13 @@ export enum WebhookTypes {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-types */
-export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link'
+export type EmbedTypes =
+  | 'rich'
+  | 'image'
+  | 'video'
+  | 'gifv'
+  | 'article'
+  | 'link'
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level */
 export enum DefaultMessageNotificationLevels {
@@ -1096,10 +1102,7 @@ export type GatewayDispatchEventNames =
   | 'THREAD_LIST_SYNC'
   | 'THREAD_MEMBERS_UPDATE'
 
-export type GatewayEventNames =
-  | GatewayDispatchEventNames
-  | 'READY'
-  | 'RESUMED'
+export type GatewayEventNames = GatewayDispatchEventNames | 'READY' | 'RESUMED'
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
 export enum GatewayIntents {
@@ -1211,18 +1214,18 @@ export enum GatewayIntents {
    * - GUILD_SCHEDULED_EVENT_USER_ADD this is experimental and unstable.
    * - GUILD_SCHEDULED_EVENT_USER_REMOVE this is experimental and unstable.
    */
-  GuildScheduledEvents = (1 << 16),
+  GuildScheduledEvents = 1 << 16,
 
   /**
    * - AUTO_MODERATION_RULE_CREATE
    * - AUTO_MODERATION_RULE_UPDATE
    * - AUTO_MODERATION_RULE_DELETE
    */
-  AutoModerationConfiguration = (1 << 20),
+  AutoModerationConfiguration = 1 << 20,
   /**
    * - AUTO_MODERATION_ACTION_EXECUTION
    */
-  AutoModerationExecution = (1 << 21),
+  AutoModerationExecution = 1 << 21,
 }
 
 // ALIASES JUST FOR BETTER UX IN THIS CASE
@@ -1255,6 +1258,15 @@ export enum SortOrderTypes {
   CreationDate,
 }
 
+/**
+ * https://discord.com/developers/docs/reference#image-formatting
+ * json is only for stickers
+ */
+export type ImageFormat = 'jpg' | 'jpeg' | 'png' | 'webp' | 'gif' | 'json'
+
+/** https://discord.com/developers/docs/reference#image-formatting */
+export type ImageSize = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096
+
 export enum Errors {
   // Bot Role errors
   BOTS_HIGHEST_ROLE_TOO_LOW = 'BOTS_HIGHEST_ROLE_TOO_LOW',
@@ -1283,8 +1295,7 @@ export enum Errors {
   NOT_A_THREAD_CHANNEL = 'NOT_A_THREAD_CHANNEL',
   MISSING_MANAGE_THREADS_AND_NOT_MEMBER = 'MISSING_MANAGE_THREADS_AND_NOT_MEMBER',
   CANNOT_GET_MEMBERS_OF_AN_UNJOINED_PRIVATE_THREAD = 'CANNOT_GET_MEMBERS_OF_AN_UNJOINED_PRIVATE_THREAD',
-  HAVE_TO_BE_THE_CREATOR_OF_THE_THREAD_OR_HAVE_MANAGE_THREADS_TO_REMOVE_MEMBERS =
-  'HAVE_TO_BE_THE_CREATOR_OF_THE_THREAD_OR_HAVE_MANAGE_THREADS_TO_REMOVE_MEMBERS',
+  HAVE_TO_BE_THE_CREATOR_OF_THE_THREAD_OR_HAVE_MANAGE_THREADS_TO_REMOVE_MEMBERS = 'HAVE_TO_BE_THE_CREATOR_OF_THE_THREAD_OR_HAVE_MANAGE_THREADS_TO_REMOVE_MEMBERS',
   // Message Get Errors
   INVALID_GET_MESSAGES_LIMIT = 'INVALID_GET_MESSAGES_LIMIT',
   // Message Delete Errors
@@ -1416,18 +1427,23 @@ export type Localization = Partial<Record<Locales, string>>
 
 // UTILS
 
-export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U]
+export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
+U[keyof U]
 
 export type MakeRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
 // THANK YOU YUI FOR SHARING THIS!
-export type CamelCase<S extends string> = S extends `${infer P1}_${infer P2}${infer P3}`
-  ? `${Lowercase<P1>}${Uppercase<P2>}${CamelCase<P3>}`
-  : Lowercase<S>
+export type CamelCase<S extends string> =
+  S extends `${infer P1}_${infer P2}${infer P3}`
+    ? `${Lowercase<P1>}${Uppercase<P2>}${CamelCase<P3>}`
+    : Lowercase<S>
 export type Camelize<T> = {
-  [K in keyof T as CamelCase<string & K>]: T[K] extends Array<infer U> ? U extends {} ? Array<Camelize<U>>
-    : T[K]
-    : T[K] extends {} ? Camelize<T[K]>
+  [K in keyof T as CamelCase<string & K>]: T[K] extends Array<infer U>
+    ? U extends {}
+      ? Array<Camelize<U>>
+      : T[K]
+    : T[K] extends {}
+      ? Camelize<T[K]>
       : never;
 }
 
@@ -1480,23 +1496,23 @@ T
 /**
  * object identity type
  */
-export type Id<T> = T extends infer U ? {
-  [K in keyof U]: U[K];
-}
+export type Id<T> = T extends infer U
+  ? {
+      [K in keyof U]: U[K];
+    }
   : never
 
 export type KeysWithUndefined<T> = {
-  [K in keyof T]-?: undefined extends T[K] ? K
-    : null extends T[K] ? K
-      : never;
+  [K in keyof T]-?: undefined extends T[K] ? K : null extends T[K] ? K : never;
 }[keyof T]
 
 type OptionalizeAux<T extends object> = Id<
-& {
+{
   [K in KeysWithUndefined<T>]?: Optionalize<T[K]>;
-}
-& {
-  [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends ObjectLiteral ? Optionalize<T[K]> : T[K];
+} & {
+  [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends ObjectLiteral
+    ? Optionalize<T[K]>
+    : T[K];
 }
 >
 
@@ -1505,16 +1521,19 @@ type OptionalizeAux<T extends object> = Id<
  * it is recursive
  */
 export type Optionalize<T> = T extends object
-  ? T extends unknown[] ? number extends T['length'] ? T[number] extends object ? Array<OptionalizeAux<T[number]>>
-    : T
-    : Partial<T>
+  ? T extends unknown[]
+    ? number extends T['length']
+      ? T[number] extends object
+        ? Array<OptionalizeAux<T[number]>>
+        : T
+      : Partial<T>
     : OptionalizeAux<T>
   : T
 
-export type PickPartial<T, K extends keyof T> =
-  & {
-    [P in keyof T]?: T[P] | undefined;
-  }
-  & { [P in K]: T[P] }
+export type PickPartial<T, K extends keyof T> = {
+  [P in keyof T]?: T[P] | undefined;
+} & { [P in K]: T[P] }
 
-export type OmitFirstFnArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...args: P) => R : never
+export type OmitFirstFnArg<F> = F extends (x: any, ...args: infer P) => infer R
+  ? (...args: P) => R
+  : never

@@ -1,6 +1,5 @@
-import { BigString } from '@discordeno/types'
+import { BigString, ImageFormat, ImageSize } from '@discordeno/types'
 import type { Bot } from '../../bot.js'
-import { ImageFormat, ImageSize } from '../members/getAvatarUrl.js'
 
 /**
  * Builds a URL to the guild icon stored in the Discord CDN.
