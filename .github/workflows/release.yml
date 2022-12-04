@@ -7,6 +7,35 @@ on:
       - node-migration
 
 jobs:
+   path-filter:
+    name: Check Path Changes
+    runs-on: ubuntu-latest
+    outputs:
+      bot: ${ steps.changes.outputs.bot }
+      gateway: ${ steps.changes.outputs.gateway }
+      rest: ${ steps.changes.outputs.rest }
+      types: ${ steps.changes.outputs.types }
+      utils: ${ steps.changes.outputs.utils }
+      global: ${ steps.changes.outputs.global }
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            bot: bot: ${ steps.changes.outputs.bot }
+            - "packages/bot/**"
+            gateway:
+            - "packages/gateway/**"
+            rest:
+            - "packages/rest/**"
+            types:
+            - "packages/types/**"
+            utils:
+            - "packages/utils/**"
+            global:
+            - ".github/workflows/release.yml"
+
   publish:
     runs-on: ubuntu-latest
     permissions:
@@ -15,6 +44,8 @@ jobs:
     strategy:
       matrix:
         package: ["bot", "gateway", "rest", "types", "utils"]
+    needs: path-filter
+    if: ${{ needs.path-filter.outputs[format('{0}',matrix.package] == 'true' || needs.path-filter.outputs.global }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
