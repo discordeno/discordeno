@@ -42,27 +42,34 @@ import {
   DiscordVoiceState,
   DiscordWebhook,
   DiscordWelcomeScreen,
+  Errors,
   GetGatewayBot
 } from '@discordeno/types'
 import {
   API_VERSION,
   baseEndpoints,
   bigintToSnowflake,
+  getBotIdFromToken,
   removeTokenPrefix,
   snowflakeToBigint
 } from '@discordeno/utils'
 import { checkRateLimits } from './checkRateLimits.js'
 import { cleanupQueues } from './cleanupQueues.js'
 import { convertRestError } from './convertRestError.js'
-import { createInvalidRequestBucket } from './createInvalidRequestBucket.js'
+import {
+  createInvalidRequestBucket,
+  InvalidRequestBucket
+} from './createInvalidRequestBucket.js'
 import { QueueBucket } from './createQueueBucket.js'
 import { createRequestBody } from './createRequestBody.js'
+import * as helpers from './helpers/index.js'
 import { processGlobalQueue } from './processGlobalQueue.js'
 import { processQueue } from './processQueue.js'
 import { processRateLimitedPaths } from './processRateLimitedPaths.js'
 import { processRequest } from './processRequest.js'
 import { processRequestHeaders } from './processRequestHeaders.js'
 import { RestPayload, RestRateLimitedPath, RestRequest } from './rest.js'
+import { routes } from './routes.js'
 import { runMethod } from './runMethod.js'
 import { RestSendRequestOptions, sendRequest } from './sendRequest.js'
 import { simplifyUrl } from './simplifyUrl.js'
@@ -160,7 +167,9 @@ import {
 import { CreateApplicationCommand, InteractionResponse } from './types.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function createRestManager (options: CreateRestManagerOptions) {
+export function createRestManager (
+  options: CreateRestManagerOptions
+): RestManager {
   const version = options.version ?? API_VERSION
 
   if (options.customUrl !== undefined) {
@@ -218,8 +227,20 @@ export function createRestManager (options: CreateRestManagerOptions) {
           } ${JSON.stringify(opts)}`
         )
       },
-    transformers: createTransformers(options.transformers ?? {})
-  }
+    transformers: createTransformers(options.transformers ?? {}),
+    constants: {
+      routes,
+      Errors
+    },
+    id: options.botId ?? getBotIdFromToken(options.token),
+    applicationId:
+      options.applicationId ??
+      options.botId ??
+      getBotIdFromToken(options.token),
+    helpers: {} as FinalHelpers
+  } as RestManager
+
+  rest.helpers = createHelpers(rest, options.helpers ?? {})
 
   return rest
 }
@@ -246,9 +267,54 @@ export interface CreateRestManagerOptions {
   fetching?: (options: RestSendRequestOptions) => void
   fetched?: (options: RestSendRequestOptions, response: Response) => void
   transformers?: Partial<ReturnType<typeof createTransformers>>
+  helpers?: Partial<Helpers>
+  applicationId?: bigint
+  botId?: bigint
 }
 
-export type RestManager = ReturnType<typeof createRestManager>
+export interface RestManager {
+  invalidBucket: InvalidRequestBucket
+  version: number
+  token: string
+  maxRetryCount: number
+  secretKey: string
+  customUrl: string
+  pathQueues: Map<string, QueueBucket>
+  processingQueue: boolean
+  processingRateLimitedPaths: boolean
+  globallyRateLimited: boolean
+  globalQueue: Array<{
+    request: RestRequest
+    payload: RestPayload
+    basicURL: string
+    urlToUse: string
+  }>
+  globalQueueProcessing: boolean
+  rateLimitedPaths: Map<string, RestRateLimitedPath>
+  debug: (text: string) => unknown
+  checkRateLimits: typeof checkRateLimits
+  cleanupQueues: typeof cleanupQueues
+  processQueue: typeof processQueue
+  processRateLimitedPaths: typeof processRateLimitedPaths
+  processRequestHeaders: typeof processRequestHeaders
+  processRequest: typeof processRequest
+  createRequestBody: typeof createRequestBody
+  runMethod: typeof runMethod
+  simplifyUrl: typeof simplifyUrl
+  processGlobalQueue: typeof processGlobalQueue
+  convertRestError: typeof convertRestError
+  sendRequest: typeof sendRequest
+  fetching: (options: RestSendRequestOptions) => void
+  fetched: (options: RestSendRequestOptions, response: Response) => void
+  transformers: Transformers
+  constants: {
+    routes: typeof routes
+    Errors: typeof Errors
+  }
+  id: bigint
+  applicationId: bigint
+  helpers: FinalHelpers
+}
 
 export interface Transformers {
   reverse: {
@@ -478,4 +544,49 @@ export function createTransformers (
       transformApplicationCommandOptionChoice,
     template: options.template ?? transformTemplate
   }
+}
+
+export const defaultHelpers = { ...helpers }
+export type DefaultHelpers = typeof defaultHelpers
+// deno-lint-ignore no-empty-interface
+export interface Helpers extends DefaultHelpers {} // Use interface for declaration merging
+
+export function createHelpers (
+  rest: RestManager,
+  customHelpers?: Partial<Helpers>
+): FinalHelpers {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  const converted = {} as FinalHelpers
+  for (const [name, fun] of Object.entries({
+    ...createBaseHelpers(customHelpers ?? {})
+  })) {
+    // @ts-expect-error - TODO: make the types better
+    converted[name as keyof FinalHelpers] = (
+      ...args: RemoveFirstFromTuple<Parameters<typeof fun>>
+    ) =>
+      // @ts-expect-error - TODO: make the types better
+      fun(rest, ...args)
+  }
+
+  return converted
+}
+
+export function createBaseHelpers (
+  options: Partial<Helpers>
+): DefaultHelpers & Partial<Helpers> {
+  return {
+    ...defaultHelpers,
+    ...options
+  }
+}
+
+export type RemoveFirstFromTuple<T extends any[]> = T['length'] extends 0
+  ? []
+  : ((...b: T) => void) extends (a: any, ...b: infer I) => void
+      ? I
+      : []
+export type FinalHelpers = {
+  [K in keyof Helpers]: (
+    ...args: RemoveFirstFromTuple<Parameters<Helpers[K]>>
+  ) => ReturnType<Helpers[K]>;
 }

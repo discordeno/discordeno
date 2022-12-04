@@ -1,0 +1,47 @@
+import { DiscordWebhook } from '@discordeno/types'
+import { BigString, WithReason } from '../../index.js'
+import type { RestManager } from '../../restManager.js'
+import { Webhook } from '../../transformers/webhook.js'
+
+/**
+ * Edits a webhook.
+ *
+ * @param bot - The bot instance to use to make the request.
+ * @param webhookId - The ID of the webhook to edit.
+ * @returns An instance of the edited {@link Webhook}.
+ *
+ * @remarks
+ * Requires the `MANAGE_WEBHOOKS` permission.
+ *
+ * Fires a _Webhooks Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook}
+ */
+export async function editWebhook (
+  rest: RestManager,
+  webhookId: BigString,
+  options: ModifyWebhook
+): Promise<Webhook> {
+  const result = await rest.runMethod<DiscordWebhook>(
+    rest,
+    'PATCH',
+    rest.constants.routes.WEBHOOK_ID(webhookId),
+    {
+      name: options.name,
+      avatar: options.avatar,
+      channel_id: options.channelId,
+      reason: options.reason
+    }
+  )
+
+  return rest.transformers.webhook(rest, result)
+}
+
+export interface ModifyWebhook extends WithReason {
+  /** The default name of the webhook */
+  name?: string
+  /** Image for the default webhook avatar */
+  avatar?: BigString | null
+  /** The new channel id this webhook should be moved to */
+  channelId?: BigString
+}

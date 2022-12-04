@@ -1,8 +1,7 @@
 import { BigString, DiscordMessage } from '@discordeno/types'
-import { Collection } from '@discordeno/utils'
+import { Collection, hasProperty } from '@discordeno/utils'
 import type { Bot } from '../../bot.js'
 import { Message } from '../../transformers/message.js'
-import { hasProperty } from '../../utils/utils.js'
 
 /**
  * Gets multiple messages from a channel.
@@ -67,20 +66,32 @@ export interface GetMessagesAfter extends GetMessagesLimit {
   after?: BigString
 }
 
-export type GetMessagesOptions = GetMessagesAfter | GetMessagesBefore | GetMessagesAround | GetMessagesLimit
+export type GetMessagesOptions =
+  | GetMessagesAfter
+  | GetMessagesBefore
+  | GetMessagesAround
+  | GetMessagesLimit
 
-export function isGetMessagesAfter (options: GetMessagesOptions): options is GetMessagesAfter {
+export function isGetMessagesAfter (
+  options: GetMessagesOptions
+): options is GetMessagesAfter {
   return hasProperty(options, 'after')
 }
 
-export function isGetMessagesBefore (options: GetMessagesOptions): options is GetMessagesBefore {
+export function isGetMessagesBefore (
+  options: GetMessagesOptions
+): options is GetMessagesBefore {
   return hasProperty(options, 'before')
 }
 
-export function isGetMessagesAround (options: GetMessagesOptions): options is GetMessagesAround {
+export function isGetMessagesAround (
+  options: GetMessagesOptions
+): options is GetMessagesAround {
   return hasProperty(options, 'around')
 }
 
-export function isGetMessagesLimit (options: GetMessagesOptions): options is GetMessagesLimit {
+export function isGetMessagesLimit (
+  options: GetMessagesOptions
+): options is GetMessagesLimit {
   return hasProperty(options, 'limit')
 }

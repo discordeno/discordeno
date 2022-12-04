@@ -1,5 +1,5 @@
 import { BigString } from '@discordeno/types'
-import type { Bot } from '../../../bot'
+import type { Bot } from '../../../bot.js'
 
 /**
  * Deletes all reactions for all emojis from a message.
@@ -17,7 +17,11 @@ import type { Bot } from '../../../bot'
  *
  * @see {@link https://discord.com/developers/docs/resources/channel#delete-all-reactions}
  */
-export async function deleteReactionsAll (bot: Bot, channelId: BigString, messageId: BigString): Promise<void> {
+export async function deleteReactionsAll (
+  bot: Bot,
+  channelId: BigString,
+  messageId: BigString
+): Promise<void> {
   return await bot.rest.runMethod<void>(
     bot.rest,
     'DELETE',

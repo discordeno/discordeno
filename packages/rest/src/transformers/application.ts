@@ -1,4 +1,8 @@
-import { DiscordApplication, Optionalize } from '@discordeno/types'
+import {
+  DiscordApplication,
+  DiscordUser,
+  Optionalize
+} from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { RestManager } from '../restManager.js'
 
@@ -25,9 +29,8 @@ export function transformApplication (
 
     id: rest.transformers.snowflake(payload.id),
     icon: payload.icon ? iconHashToBigInt(payload.icon) : undefined,
-    // @ts-expect-error the partial here wont break anything
     owner: payload.owner
-      ? rest.transformers.user(rest, payload.owner)
+      ? rest.transformers.user(rest, payload.owner as DiscordUser)
       : undefined,
     team: payload.team ? rest.transformers.team(rest, payload.team) : undefined,
     guildId: payload.guild_id

@@ -62,6 +62,7 @@ import {
   delay,
   DISCORDENO_VERSION,
   DISCORD_SNOWFLAKE_REGEX,
+  formatImageURL,
   getBotIdFromToken,
   iconBigintToHash,
   iconHashToBigInt,
@@ -170,7 +171,6 @@ import {
   WelcomeScreen
 } from './transformers/index.js'
 import { CreateApplicationCommand, InteractionResponse } from './types.js'
-import { formatImageURL } from './utils/utils.js'
 
 export function createClient (options: CreateClientOptions): Client {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions

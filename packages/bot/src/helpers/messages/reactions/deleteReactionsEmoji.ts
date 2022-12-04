@@ -1,5 +1,5 @@
 import { BigString } from '@discordeno/types'
-import type { Bot } from '../../../bot'
+import type { Bot } from '../../../bot.js'
 import { processReactionString } from './getReactions.js'
 
 /**
@@ -30,6 +30,10 @@ export async function deleteReactionsEmoji (
   return await bot.rest.runMethod<void>(
     bot.rest,
     'DELETE',
-    bot.constants.routes.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction)
+    bot.constants.routes.CHANNEL_MESSAGE_REACTION(
+      channelId,
+      messageId,
+      reaction
+    )
   )
 }

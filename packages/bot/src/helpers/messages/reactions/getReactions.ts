@@ -1,6 +1,6 @@
 import { BigString, DiscordUser } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
-import type { Bot } from '../../../bot'
+import type { Bot } from '../../../bot.js'
 import { User } from '../../../transformers/member.js'
 
 /** Get a list of users that reacted with this emoji. */
@@ -28,7 +28,12 @@ export async function getReactions (
   const results = await bot.rest.runMethod<DiscordUser[]>(
     bot.rest,
     'GET',
-    bot.constants.routes.CHANNEL_MESSAGE_REACTION(channelId, messageId, reaction, options)
+    bot.constants.routes.CHANNEL_MESSAGE_REACTION(
+      channelId,
+      messageId,
+      reaction,
+      options
+    )
   )
 
   return new Collection(

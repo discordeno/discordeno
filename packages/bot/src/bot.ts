@@ -1,39 +1,192 @@
-import { calculateShardId, createGatewayManager, CreateShardManager, ShardSocketCloseCodes } from '@discordeno/gateway'
+import {
+  calculateShardId,
+  createGatewayManager,
+  CreateShardManager,
+  ShardSocketCloseCodes
+} from '@discordeno/gateway'
 import { createRestManager, CreateRestManagerOptions } from '@discordeno/rest'
 import {
-  AllowedMentions, BigString, DiscordActivity, DiscordAllowedMentions, DiscordApplication, DiscordApplicationCommand, DiscordApplicationCommandOption, DiscordApplicationCommandOptionChoice, DiscordAttachment, DiscordAuditLogEntry, DiscordAutoModerationActionExecution, DiscordAutoModerationRule, DiscordChannel, DiscordComponent, DiscordCreateApplicationCommand, DiscordEmbed, DiscordEmoji, DiscordGatewayPayload, DiscordGetGatewayBot, DiscordGuild, DiscordGuildApplicationCommandPermissions, DiscordGuildWidget, DiscordGuildWidgetSettings, DiscordIntegrationCreateUpdate, DiscordInteraction, DiscordInteractionDataOption, DiscordInteractionResponse, DiscordInviteCreate, DiscordMember, DiscordMessage, DiscordPresenceUpdate, DiscordReady, DiscordRole, DiscordScheduledEvent, DiscordStageInstance, DiscordSticker, DiscordStickerPack, DiscordTeam, DiscordTemplate, DiscordThreadMember, DiscordUser, DiscordVoiceRegion, DiscordVoiceState, DiscordWebhook, DiscordWelcomeScreen, Errors, GatewayDispatchEventNames, GatewayIntents, GetGatewayBot
+  AllowedMentions,
+  BigString,
+  DiscordActivity,
+  DiscordAllowedMentions,
+  DiscordApplication,
+  DiscordApplicationCommand,
+  DiscordApplicationCommandOption,
+  DiscordApplicationCommandOptionChoice,
+  DiscordAttachment,
+  DiscordAuditLogEntry,
+  DiscordAutoModerationActionExecution,
+  DiscordAutoModerationRule,
+  DiscordChannel,
+  DiscordComponent,
+  DiscordCreateApplicationCommand,
+  DiscordEmbed,
+  DiscordEmoji,
+  DiscordGatewayPayload,
+  DiscordGetGatewayBot,
+  DiscordGuild,
+  DiscordGuildApplicationCommandPermissions,
+  DiscordGuildWidget,
+  DiscordGuildWidgetSettings,
+  DiscordIntegrationCreateUpdate,
+  DiscordInteraction,
+  DiscordInteractionDataOption,
+  DiscordInteractionResponse,
+  DiscordInviteCreate,
+  DiscordMember,
+  DiscordMessage,
+  DiscordPresenceUpdate,
+  DiscordReady,
+  DiscordRole,
+  DiscordScheduledEvent,
+  DiscordStageInstance,
+  DiscordSticker,
+  DiscordStickerPack,
+  DiscordTeam,
+  DiscordTemplate,
+  DiscordThreadMember,
+  DiscordUser,
+  DiscordVoiceRegion,
+  DiscordVoiceState,
+  DiscordWebhook,
+  DiscordWelcomeScreen,
+  Errors,
+  GatewayDispatchEventNames,
+  GatewayIntents,
+  GetGatewayBot
 } from '@discordeno/types'
 import {
-  baseEndpoints, bigintToSnowflake, calculateBits, calculatePermissions, CHANNEL_MENTION_REGEX, Collection, CONTEXT_MENU_COMMANDS_NAME_REGEX, delay, DISCORDENO_VERSION, DISCORD_SNOWFLAKE_REGEX, getBotIdFromToken, iconBigintToHash, iconHashToBigInt, removeTokenPrefix, SLASH_COMMANDS_NAME_REGEX, snowflakeToBigint, urlToBase64, USER_AGENT, validateLength
+  baseEndpoints,
+  bigintToSnowflake,
+  calculateBits,
+  calculatePermissions,
+  CHANNEL_MENTION_REGEX,
+  Collection,
+  CONTEXT_MENU_COMMANDS_NAME_REGEX,
+  delay,
+  DISCORDENO_VERSION,
+  DISCORD_SNOWFLAKE_REGEX,
+  formatImageURL,
+  getBotIdFromToken,
+  iconBigintToHash,
+  iconHashToBigInt,
+  removeTokenPrefix,
+  SLASH_COMMANDS_NAME_REGEX,
+  snowflakeToBigint,
+  urlToBase64,
+  USER_AGENT,
+  validateLength
 } from '@discordeno/utils'
 import * as handlers from './handlers/index.js'
 import * as helpers from './helpers/index.js'
 import { Activity, transformActivity } from './transformers/activity.js'
-import { Application, transformApplication } from './transformers/application.js'
-import { ApplicationCommand, transformApplicationCommand } from './transformers/applicationCommand.js'
-import { ApplicationCommandOption, transformApplicationCommandOption } from './transformers/applicationCommandOption.js'
-import { ApplicationCommandPermission, transformApplicationCommandPermission } from './transformers/applicationCommandPermission.js'
+import {
+  Application,
+  transformApplication
+} from './transformers/application.js'
+import {
+  ApplicationCommand,
+  transformApplicationCommand
+} from './transformers/applicationCommand.js'
+import {
+  ApplicationCommandOption,
+  transformApplicationCommandOption
+} from './transformers/applicationCommandOption.js'
+import {
+  ApplicationCommandPermission,
+  transformApplicationCommandPermission
+} from './transformers/applicationCommandPermission.js'
 import { Attachment, transformAttachment } from './transformers/attachment.js'
-import { AuditLogEntry, transformAuditLogEntry } from './transformers/auditLogEntry.js'
+import {
+  AuditLogEntry,
+  transformAuditLogEntry
+} from './transformers/auditLogEntry.js'
 import { Component, transformComponent } from './transformers/component.js'
 import { Embed, transformEmbed } from './transformers/embed.js'
 import { Emoji, transformEmoji } from './transformers/emoji.js'
 import { transformGatewayBot } from './transformers/gatewayBot.js'
 import {
-  ApplicationCommandOptionChoice, AutoModerationActionExecution, AutoModerationRule, Channel, Guild, GuildWidget, GuildWidgetSettings, Integration, Interaction, InteractionDataOption, Invite, Member, Message, PresenceUpdate, Role, ScheduledEvent, StageInstance, Sticker, StickerPack, Team, Template, ThreadMember, transformActivityToDiscordActivity, transformAllowedMentionsToDiscordAllowedMentions, transformApplicationCommandOptionChoice, transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice, transformApplicationCommandOptionToDiscordApplicationCommandOption, transformApplicationCommandToDiscordApplicationCommand, transformApplicationToDiscordApplication, transformAttachmentToDiscordAttachment, transformAutoModerationActionExecution, transformAutoModerationRule, transformChannel, transformComponentToDiscordComponent, transformCreateApplicationCommandToDiscordCreateApplicationCommand, transformEmbedToDiscordEmbed, transformGuild, transformIntegration, transformInteraction, transformInteractionDataOption, transformInteractionResponseToDiscordInteractionResponse, transformInvite, transformMember, transformMemberToDiscordMember, transformMessage, transformPresence, transformRole, transformScheduledEvent, transformStageInstance, transformSticker, transformStickerPack, transformTeam, transformTeamToDiscordTeam, transformTemplate, transformThreadMember, transformUser, transformUserToDiscordUser, transformVoiceRegion, transformVoiceState, transformWebhook, transformWelcomeScreen, transformWidget, transformWidgetSettings, User, VoiceRegions, VoiceState, Webhook, WelcomeScreen
+  ApplicationCommandOptionChoice,
+  AutoModerationActionExecution,
+  AutoModerationRule,
+  Channel,
+  Guild,
+  GuildWidget,
+  GuildWidgetSettings,
+  Integration,
+  Interaction,
+  InteractionDataOption,
+  Invite,
+  Member,
+  Message,
+  PresenceUpdate,
+  Role,
+  ScheduledEvent,
+  StageInstance,
+  Sticker,
+  StickerPack,
+  Team,
+  Template,
+  ThreadMember,
+  transformActivityToDiscordActivity,
+  transformAllowedMentionsToDiscordAllowedMentions,
+  transformApplicationCommandOptionChoice,
+  transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
+  transformApplicationCommandOptionToDiscordApplicationCommandOption,
+  transformApplicationCommandToDiscordApplicationCommand,
+  transformApplicationToDiscordApplication,
+  transformAttachmentToDiscordAttachment,
+  transformAutoModerationActionExecution,
+  transformAutoModerationRule,
+  transformChannel,
+  transformComponentToDiscordComponent,
+  transformCreateApplicationCommandToDiscordCreateApplicationCommand,
+  transformEmbedToDiscordEmbed,
+  transformGuild,
+  transformIntegration,
+  transformInteraction,
+  transformInteractionDataOption,
+  transformInteractionResponseToDiscordInteractionResponse,
+  transformInvite,
+  transformMember,
+  transformMemberToDiscordMember,
+  transformMessage,
+  transformPresence,
+  transformRole,
+  transformScheduledEvent,
+  transformStageInstance,
+  transformSticker,
+  transformStickerPack,
+  transformTeam,
+  transformTeamToDiscordTeam,
+  transformTemplate,
+  transformThreadMember,
+  transformUser,
+  transformUserToDiscordUser,
+  transformVoiceRegion,
+  transformVoiceState,
+  transformWebhook,
+  transformWelcomeScreen,
+  transformWidget,
+  transformWidgetSettings,
+  User,
+  VoiceRegions,
+  VoiceState,
+  Webhook,
+  WelcomeScreen
 } from './transformers/index.js'
-import {
-  CreateApplicationCommand,
-  InteractionResponse
-} from './types.js'
+import { CreateApplicationCommand, InteractionResponse } from './types.js'
 import { routes } from './utils/routes.js'
-import { formatImageURL } from './utils/utils.js'
 
 export function createBot (options: CreateBotOptions): Bot {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const bot = {
     id: options.botId ?? getBotIdFromToken(options.token),
-    applicationId: options.applicationId ?? options.botId ?? getBotIdFromToken(options.token),
+    applicationId:
+      options.applicationId ??
+      options.botId ??
+      getBotIdFromToken(options.token),
     token: removeTokenPrefix(options.token),
     events: createEventHandlers(options.events ?? {}),
     intents: options.intents,
@@ -58,7 +211,7 @@ export function createBot (options: CreateBotOptions): Bot {
 
   bot.helpers = createHelpers(bot, options.helpers ?? {})
   bot.gateway = createGatewayManager({
-    gatewayBot: bot.botGatewayData ?? {} as any,
+    gatewayBot: bot.botGatewayData ?? ({} as any),
     gatewayConfig: {
       token: options.token,
       intents: options.intents
@@ -66,7 +219,8 @@ export function createBot (options: CreateBotOptions): Bot {
 
     debug: bot.events.debug,
 
-    handleDiscordPayload: bot.handleDiscordPayload ??
+    handleDiscordPayload:
+      bot.handleDiscordPayload ??
       async function (shard, data: DiscordGatewayPayload) {
         // TRIGGER RAW EVENT
         bot.events.raw(bot, data, shard.id)
@@ -89,7 +243,7 @@ export function createBot (options: CreateBotOptions): Bot {
 export function createEventHandlers (
   events: Partial<EventHandlers>
 ): EventHandlers {
-  function ignore (): void { }
+  function ignore (): void {}
 
   return {
     debug: events.debug ?? ignore,
@@ -194,7 +348,10 @@ export interface HelperUtils {
 }
 
 export async function stopBot (bot: Bot): Promise<Bot> {
-  await bot.gateway.stop(ShardSocketCloseCodes.Shutdown, 'User requested bot stop')
+  await bot.gateway.stop(
+    ShardSocketCloseCodes.Shutdown,
+    'User requested bot stop'
+  )
 
   return bot
 }
@@ -214,7 +371,8 @@ export interface CreateBotOptions {
   helpers?: Partial<Helpers>
 }
 
-export type UnPromise<T extends Promise<unknown>> = T extends Promise<infer K> ? K
+export type UnPromise<T extends Promise<unknown>> = T extends Promise<infer K>
+  ? K
   : never
 
 export interface Bot {
@@ -244,7 +402,7 @@ export interface Bot {
 export const defaultHelpers = { ...helpers }
 export type DefaultHelpers = typeof defaultHelpers
 // deno-lint-ignore no-empty-interface
-export interface Helpers extends DefaultHelpers { } // Use interface for declaration merging
+export interface Helpers extends DefaultHelpers {} // Use interface for declaration merging
 
 export function createHelpers (
   bot: Bot,
@@ -252,11 +410,9 @@ export function createHelpers (
 ): FinalHelpers {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const converted = {} as FinalHelpers
-  for (
-    const [name, fun] of Object.entries({
-      ...createBaseHelpers(customHelpers ?? {})
-    })
-  ) {
+  for (const [name, fun] of Object.entries({
+    ...createBaseHelpers(customHelpers ?? {})
+  })) {
     // @ts-expect-error - TODO: make the types better
     converted[name as keyof FinalHelpers] = (
       ...args: RemoveFirstFromTuple<Parameters<typeof fun>>
@@ -268,7 +424,9 @@ export function createHelpers (
   return converted
 }
 
-export function createBaseHelpers (options: Partial<Helpers>): DefaultHelpers & Partial<Helpers> {
+export function createBaseHelpers (
+  options: Partial<Helpers>
+): DefaultHelpers & Partial<Helpers> {
   return {
     ...defaultHelpers,
     ...options
@@ -277,7 +435,10 @@ export function createBaseHelpers (options: Partial<Helpers>): DefaultHelpers & 
 
 export interface Transformers {
   reverse: {
-    allowedMentions: (bot: Bot, payload: AllowedMentions) => DiscordAllowedMentions
+    allowedMentions: (
+      bot: Bot,
+      payload: AllowedMentions
+    ) => DiscordAllowedMentions
     embed: (bot: Bot, payload: Embed) => DiscordEmbed
     component: (bot: Bot, payload: Component) => DiscordComponent
     activity: (bot: Bot, payload: Activity) => DiscordActivity
@@ -286,30 +447,71 @@ export interface Transformers {
     team: (bot: Bot, payload: Team) => DiscordTeam
     application: (bot: Bot, payload: Application) => DiscordApplication
     snowflake: (snowflake: BigString) => string
-    createApplicationCommand: (bot: Bot, payload: CreateApplicationCommand) => DiscordCreateApplicationCommand
-    applicationCommand: (bot: Bot, payload: ApplicationCommand) => DiscordApplicationCommand
-    applicationCommandOption: (bot: Bot, payload: ApplicationCommandOption) => DiscordApplicationCommandOption
+    createApplicationCommand: (
+      bot: Bot,
+      payload: CreateApplicationCommand
+    ) => DiscordCreateApplicationCommand
+    applicationCommand: (
+      bot: Bot,
+      payload: ApplicationCommand
+    ) => DiscordApplicationCommand
+    applicationCommandOption: (
+      bot: Bot,
+      payload: ApplicationCommandOption
+    ) => DiscordApplicationCommandOption
     applicationCommandOptionChoice: (
       bot: Bot,
-      payload: ApplicationCommandOptionChoice,
+      payload: ApplicationCommandOptionChoice
     ) => DiscordApplicationCommandOptionChoice
-    interactionResponse: (bot: Bot, payload: InteractionResponse) => DiscordInteractionResponse
+    interactionResponse: (
+      bot: Bot,
+      payload: InteractionResponse
+    ) => DiscordInteractionResponse
     attachment: (bot: Bot, payload: Attachment) => DiscordAttachment
   }
   snowflake: (snowflake: BigString) => bigint
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot
-  automodRule: (bot: Bot, payload: DiscordAutoModerationRule) => AutoModerationRule
-  automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution) => AutoModerationActionExecution
-  channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }) => Channel
-  guild: (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) => Guild
+  automodRule: (
+    bot: Bot,
+    payload: DiscordAutoModerationRule
+  ) => AutoModerationRule
+  automodActionExecution: (
+    bot: Bot,
+    payload: DiscordAutoModerationActionExecution
+  ) => AutoModerationActionExecution
+  channel: (
+    bot: Bot,
+    payload: { channel: DiscordChannel } & { guildId?: bigint }
+  ) => Channel
+  guild: (
+    bot: Bot,
+    payload: { guild: DiscordGuild } & { shardId: number }
+  ) => Guild
   user: (bot: Bot, payload: DiscordUser) => User
-  member: (bot: Bot, payload: DiscordMember, guildId: bigint, userId: bigint) => Member
+  member: (
+    bot: Bot,
+    payload: DiscordMember,
+    guildId: bigint,
+    userId: bigint
+  ) => Member
   message: (bot: Bot, payload: DiscordMessage) => Message
-  role: (bot: Bot, payload: { role: DiscordRole } & { guildId: bigint }) => Role
-  voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) => VoiceState
+  role: (
+    bot: Bot,
+    payload: { role: DiscordRole } & { guildId: bigint }
+  ) => Role
+  voiceState: (
+    bot: Bot,
+    payload: { voiceState: DiscordVoiceState } & { guildId: bigint }
+  ) => VoiceState
   interaction: (bot: Bot, payload: DiscordInteraction) => Interaction
-  interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption
-  integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration
+  interactionDataOptions: (
+    bot: Bot,
+    payload: DiscordInteractionDataOption
+  ) => InteractionDataOption
+  integration: (
+    bot: Bot,
+    payload: DiscordIntegrationCreateUpdate
+  ) => Integration
   invite: (bot: Bot, invite: DiscordInviteCreate) => Invite
   application: (bot: Bot, payload: DiscordApplication) => Application
   team: (bot: Bot, payload: DiscordTeam) => Team
@@ -321,24 +523,33 @@ export interface Transformers {
   component: (bot: Bot, payload: DiscordComponent) => Component
   webhook: (bot: Bot, payload: DiscordWebhook) => Webhook
   auditLogEntry: (bot: Bot, payload: DiscordAuditLogEntry) => AuditLogEntry
-  applicationCommand: (bot: Bot, payload: DiscordApplicationCommand) => ApplicationCommand
-  applicationCommandOption: (bot: Bot, payload: DiscordApplicationCommandOption) => ApplicationCommandOption
+  applicationCommand: (
+    bot: Bot,
+    payload: DiscordApplicationCommand
+  ) => ApplicationCommand
+  applicationCommandOption: (
+    bot: Bot,
+    payload: DiscordApplicationCommandOption
+  ) => ApplicationCommandOption
   applicationCommandPermission: (
     bot: Bot,
-    payload: DiscordGuildApplicationCommandPermissions,
+    payload: DiscordGuildApplicationCommandPermissions
   ) => ApplicationCommandPermission
   scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent) => ScheduledEvent
   threadMember: (bot: Bot, payload: DiscordThreadMember) => ThreadMember
   welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen) => WelcomeScreen
   voiceRegion: (bot: Bot, payload: DiscordVoiceRegion) => VoiceRegions
   widget: (bot: Bot, payload: DiscordGuildWidget) => GuildWidget
-  widgetSettings: (bot: Bot, payload: DiscordGuildWidgetSettings) => GuildWidgetSettings
+  widgetSettings: (
+    bot: Bot,
+    payload: DiscordGuildWidgetSettings
+  ) => GuildWidgetSettings
   stageInstance: (bot: Bot, payload: DiscordStageInstance) => StageInstance
   sticker: (bot: Bot, payload: DiscordSticker) => Sticker
   stickerPack: (bot: Bot, payload: DiscordStickerPack) => StickerPack
   applicationCommandOptionChoice: (
     bot: Bot,
-    payload: DiscordApplicationCommandOptionChoice,
+    payload: DiscordApplicationCommandOptionChoice
   ) => ApplicationCommandOptionChoice
   template: (bot: Bot, payload: DiscordTemplate) => Template
 }
@@ -347,69 +558,85 @@ export interface Transformers {
 export function createTransformers (options: Partial<Transformers>) {
   return {
     reverse: {
-      allowedMentions: options.reverse?.allowedMentions ?? transformAllowedMentionsToDiscordAllowedMentions,
+      allowedMentions:
+        options.reverse?.allowedMentions ??
+        transformAllowedMentionsToDiscordAllowedMentions,
       embed: options.reverse?.embed ?? transformEmbedToDiscordEmbed,
-      component: options.reverse?.component ?? transformComponentToDiscordComponent,
+      component:
+        options.reverse?.component ?? transformComponentToDiscordComponent,
       activity: options.reverse?.activity ?? transformActivityToDiscordActivity,
       member: options.reverse?.member ?? transformMemberToDiscordMember,
       user: options.reverse?.user ?? transformUserToDiscordUser,
       team: options.reverse?.team ?? transformTeamToDiscordTeam,
-      application: options.reverse?.application ?? transformApplicationToDiscordApplication,
+      application:
+        options.reverse?.application ??
+        transformApplicationToDiscordApplication,
       snowflake: options.reverse?.snowflake ?? bigintToSnowflake,
-      createApplicationCommand: options.reverse?.createApplicationCommand ??
+      createApplicationCommand:
+        options.reverse?.createApplicationCommand ??
         transformCreateApplicationCommandToDiscordCreateApplicationCommand,
-      applicationCommand: options.reverse?.applicationCommand ??
+      applicationCommand:
+        options.reverse?.applicationCommand ??
         transformApplicationCommandToDiscordApplicationCommand,
-      applicationCommandOption: options.reverse?.applicationCommandOption ??
+      applicationCommandOption:
+        options.reverse?.applicationCommandOption ??
         transformApplicationCommandOptionToDiscordApplicationCommandOption,
-      applicationCommandOptionChoice: options.reverse?.applicationCommandOptionChoice ??
+      applicationCommandOptionChoice:
+        options.reverse?.applicationCommandOptionChoice ??
         transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
-      interactionResponse: options.reverse?.interactionResponse ??
+      interactionResponse:
+        options.reverse?.interactionResponse ??
         transformInteractionResponseToDiscordInteractionResponse,
-      attachment: options.reverse?.attachment ?? transformAttachmentToDiscordAttachment
+      attachment:
+        options.reverse?.attachment ?? transformAttachmentToDiscordAttachment
     },
-    automodRule: (options.automodRule) ?? transformAutoModerationRule,
-    automodActionExecution: (options.automodActionExecution) ?? transformAutoModerationActionExecution,
-    activity: (options.activity) ?? transformActivity,
-    application: (options.application) ?? transformApplication,
-    attachment: (options.attachment) ?? transformAttachment,
-    channel: (options.channel) ?? transformChannel,
-    component: (options.component) ?? transformComponent,
-    embed: (options.embed) ?? transformEmbed,
-    emoji: (options.emoji) ?? transformEmoji,
-    guild: (options.guild) ?? transformGuild,
-    integration: (options.integration) ?? transformIntegration,
-    interaction: (options.interaction) ?? transformInteraction,
-    interactionDataOptions: (options.interactionDataOptions) ?? transformInteractionDataOption,
-    invite: (options.invite) ?? transformInvite,
-    member: (options.member) ?? transformMember,
-    message: (options.message) ?? transformMessage,
-    presence: (options.presence) ?? transformPresence,
-    role: (options.role) ?? transformRole,
-    user: (options.user) ?? transformUser,
-    team: (options.team) ?? transformTeam,
-    voiceState: (options.voiceState) ?? transformVoiceState,
-    snowflake: (options.snowflake) ?? snowflakeToBigint,
-    webhook: (options.webhook) ?? transformWebhook,
-    auditLogEntry: (options.auditLogEntry) ?? transformAuditLogEntry,
-    applicationCommand: (options.applicationCommand) ??
-      transformApplicationCommand,
-    applicationCommandOption: (options.applicationCommandOption) ??
-      transformApplicationCommandOption,
-    applicationCommandPermission: (options.applicationCommandPermission) ??
+    automodRule: options.automodRule ?? transformAutoModerationRule,
+    automodActionExecution:
+      options.automodActionExecution ?? transformAutoModerationActionExecution,
+    activity: options.activity ?? transformActivity,
+    application: options.application ?? transformApplication,
+    attachment: options.attachment ?? transformAttachment,
+    channel: options.channel ?? transformChannel,
+    component: options.component ?? transformComponent,
+    embed: options.embed ?? transformEmbed,
+    emoji: options.emoji ?? transformEmoji,
+    guild: options.guild ?? transformGuild,
+    integration: options.integration ?? transformIntegration,
+    interaction: options.interaction ?? transformInteraction,
+    interactionDataOptions:
+      options.interactionDataOptions ?? transformInteractionDataOption,
+    invite: options.invite ?? transformInvite,
+    member: options.member ?? transformMember,
+    message: options.message ?? transformMessage,
+    presence: options.presence ?? transformPresence,
+    role: options.role ?? transformRole,
+    user: options.user ?? transformUser,
+    team: options.team ?? transformTeam,
+    voiceState: options.voiceState ?? transformVoiceState,
+    snowflake: options.snowflake ?? snowflakeToBigint,
+    webhook: options.webhook ?? transformWebhook,
+    auditLogEntry: options.auditLogEntry ?? transformAuditLogEntry,
+    applicationCommand:
+      options.applicationCommand ?? transformApplicationCommand,
+    applicationCommandOption:
+      options.applicationCommandOption ?? transformApplicationCommandOption,
+    applicationCommandPermission:
+      options.applicationCommandPermission ??
       transformApplicationCommandPermission,
-    scheduledEvent: (options.scheduledEvent) ?? transformScheduledEvent,
-    threadMember: (options.threadMember) ?? transformThreadMember,
-    welcomeScreen: (options.welcomeScreen) ?? transformWelcomeScreen,
-    voiceRegion: (options.voiceRegion) ?? transformVoiceRegion,
-    widget: (options.widget) ?? transformWidget,
-    widgetSettings: (options.widgetSettings) ?? transformWidgetSettings,
-    stageInstance: (options.stageInstance) ?? transformStageInstance,
-    sticker: (options.sticker) ?? transformSticker,
-    stickerPack: (options.stickerPack) ?? transformStickerPack,
-    gatewayBot: (options.gatewayBot) ?? transformGatewayBot,
-    applicationCommandOptionChoice: (options.applicationCommandOptionChoice) ?? transformApplicationCommandOptionChoice,
-    template: (options.template) ?? transformTemplate
+    scheduledEvent: options.scheduledEvent ?? transformScheduledEvent,
+    threadMember: options.threadMember ?? transformThreadMember,
+    welcomeScreen: options.welcomeScreen ?? transformWelcomeScreen,
+    voiceRegion: options.voiceRegion ?? transformVoiceRegion,
+    widget: options.widget ?? transformWidget,
+    widgetSettings: options.widgetSettings ?? transformWidgetSettings,
+    stageInstance: options.stageInstance ?? transformStageInstance,
+    sticker: options.sticker ?? transformSticker,
+    stickerPack: options.stickerPack ?? transformStickerPack,
+    gatewayBot: options.gatewayBot ?? transformGatewayBot,
+    applicationCommandOptionChoice:
+      options.applicationCommandOptionChoice ??
+      transformApplicationCommandOptionChoice,
+    template: options.template ?? transformTemplate
   }
 }
 
@@ -418,15 +645,21 @@ export interface EventHandlers {
   automodRuleCreate: (bot: Bot, rule: AutoModerationRule) => unknown
   automodRuleUpdate: (bot: Bot, rule: AutoModerationRule) => unknown
   automodRuleDelete: (bot: Bot, rule: AutoModerationRule) => unknown
-  automodActionExecution: (bot: Bot, payload: AutoModerationActionExecution) => unknown
+  automodActionExecution: (
+    bot: Bot,
+    payload: AutoModerationActionExecution
+  ) => unknown
   threadCreate: (bot: Bot, thread: Channel) => unknown
   threadDelete: (bot: Bot, thread: Channel) => unknown
-  threadMemberUpdate: (bot: Bot, payload: {
-    id: bigint
-    guildId: bigint
-    joinedAt: number
-    flags: number
-  }) => unknown
+  threadMemberUpdate: (
+    bot: Bot,
+    payload: {
+      id: bigint
+      guildId: bigint
+      joinedAt: number
+      flags: number
+    }
+  ) => unknown
   threadMembersUpdate: (
     bot: Bot,
     payload: {
@@ -434,7 +667,7 @@ export interface EventHandlers {
       guildId: bigint
       addedMembers?: ThreadMember[]
       removedMemberIds?: bigint[]
-    },
+    }
   ) => unknown
   threadUpdate: (bot: Bot, thread: Channel) => unknown
   scheduledEventCreate: (bot: Bot, event: ScheduledEvent) => unknown
@@ -447,7 +680,7 @@ export interface EventHandlers {
       guildScheduledEventId: bigint
       guildId: bigint
       userId: bigint
-    },
+    }
   ) => unknown
   /** Sent when a user has unsubscribed to a guild scheduled event. EXPERIMENTAL! */
   scheduledEventUserRemove: (
@@ -456,7 +689,7 @@ export interface EventHandlers {
       guildScheduledEventId: bigint
       guildId: bigint
       userId: bigint
-    },
+    }
   ) => unknown
   ready: (
     bot: Bot,
@@ -469,13 +702,13 @@ export interface EventHandlers {
       shard?: number[]
       applicationId: bigint
     },
-    rawPayload: DiscordReady,
+    rawPayload: DiscordReady
   ) => unknown
   interactionCreate: (bot: Bot, interaction: Interaction) => unknown
   integrationCreate: (bot: Bot, integration: Integration) => unknown
   integrationDelete: (
     bot: Bot,
-    payload: { id: bigint, guildId: bigint, applicationId?: bigint },
+    payload: { id: bigint, guildId: bigint, applicationId?: bigint }
   ) => unknown
   integrationUpdate: (bot: Bot, payload: { guildId: bigint }) => unknown
   inviteCreate: (bot: Bot, invite: Invite) => unknown
@@ -485,31 +718,22 @@ export interface EventHandlers {
       channelId: bigint
       guildId?: bigint
       code: string
-    },
+    }
   ) => unknown
-  guildMemberAdd: (
-    bot: Bot,
-    member: Member,
-    user: User,
-  ) => unknown
+  guildMemberAdd: (bot: Bot, member: Member, user: User) => unknown
   guildMemberRemove: (bot: Bot, user: User, guildId: bigint) => unknown
-  guildMemberUpdate: (
-    bot: Bot,
-    member: Member,
-    user: User,
-  ) => unknown
+  guildMemberUpdate: (bot: Bot, member: Member, user: User) => unknown
   messageCreate: (bot: Bot, message: Message) => unknown
   messageDelete: (
     bot: Bot,
     payload: { id: bigint, channelId: bigint, guildId?: bigint },
-    message?: Message,
+    message?: Message
   ) => unknown
-  messageDeleteBulk: (bot: Bot, payload: { ids: bigint[], channelId: bigint, guildId?: bigint }) => unknown
-  messageUpdate: (
+  messageDeleteBulk: (
     bot: Bot,
-    message: Message,
-    oldMessage?: Message,
+    payload: { ids: bigint[], channelId: bigint, guildId?: bigint }
   ) => unknown
+  messageUpdate: (bot: Bot, message: Message, oldMessage?: Message) => unknown
   reactionAdd: (
     bot: Bot,
     payload: {
@@ -520,7 +744,7 @@ export interface EventHandlers {
       member?: Member
       user?: User
       emoji: Emoji
-    },
+    }
   ) => unknown
   reactionRemove: (
     bot: Bot,
@@ -530,7 +754,7 @@ export interface EventHandlers {
       messageId: bigint
       guildId?: bigint
       emoji: Emoji
-    },
+    }
   ) => unknown
   reactionRemoveEmoji: (
     bot: Bot,
@@ -539,7 +763,7 @@ export interface EventHandlers {
       messageId: bigint
       guildId?: bigint
       emoji: Emoji
-    },
+    }
   ) => unknown
   reactionRemoveAll: (
     bot: Bot,
@@ -547,31 +771,28 @@ export interface EventHandlers {
       channelId: bigint
       messageId: bigint
       guildId?: bigint
-    },
+    }
   ) => unknown
   presenceUpdate: (
     bot: Bot,
     presence: PresenceUpdate,
-    oldPresence?: PresenceUpdate,
+    oldPresence?: PresenceUpdate
   ) => unknown
   voiceServerUpdate: (
     bot: Bot,
-    payload: { token: string, endpoint?: string, guildId: bigint },
+    payload: { token: string, endpoint?: string, guildId: bigint }
   ) => unknown
-  voiceStateUpdate: (
-    bot: Bot,
-    voiceState: VoiceState,
-  ) => unknown
+  voiceStateUpdate: (bot: Bot, voiceState: VoiceState) => unknown
   channelCreate: (bot: Bot, channel: Channel) => unknown
   dispatchRequirements: (
     bot: Bot,
     data: DiscordGatewayPayload,
-    shardId: number,
+    shardId: number
   ) => unknown
   channelDelete: (bot: Bot, channel: Channel) => unknown
   channelPinsUpdate: (
     bot: Bot,
-    data: { guildId?: bigint, channelId: bigint, lastPinTimestamp?: number },
+    data: { guildId?: bigint, channelId: bigint, lastPinTimestamp?: number }
   ) => unknown
   channelUpdate: (bot: Bot, channel: Channel) => unknown
   stageInstanceCreate: (
@@ -581,7 +802,7 @@ export interface EventHandlers {
       guildId: bigint
       channelId: bigint
       topic: string
-    },
+    }
   ) => unknown
   stageInstanceDelete: (
     bot: Bot,
@@ -590,7 +811,7 @@ export interface EventHandlers {
       guildId: bigint
       channelId: bigint
       topic: string
-    },
+    }
   ) => unknown
   stageInstanceUpdate: (
     bot: Bot,
@@ -599,14 +820,14 @@ export interface EventHandlers {
       guildId: bigint
       channelId: bigint
       topic: string
-    },
+    }
   ) => unknown
   guildEmojisUpdate: (
     bot: Bot,
     payload: {
       guildId: bigint
       emojis: Collection<bigint, DiscordEmoji>
-    },
+    }
   ) => unknown
   guildBanAdd: (bot: Bot, user: User, guildId: bigint) => unknown
   guildBanRemove: (bot: Bot, user: User, guildId: bigint) => unknown
@@ -615,11 +836,14 @@ export interface EventHandlers {
   guildUpdate: (bot: Bot, guild: Guild) => unknown
   raw: (bot: Bot, data: DiscordGatewayPayload, shardId: number) => unknown
   roleCreate: (bot: Bot, role: Role) => unknown
-  roleDelete: (bot: Bot, payload: { guildId: bigint, roleId: bigint }) => unknown
+  roleDelete: (
+    bot: Bot,
+    payload: { guildId: bigint, roleId: bigint }
+  ) => unknown
   roleUpdate: (bot: Bot, role: Role) => unknown
   webhooksUpdate: (
     bot: Bot,
-    payload: { channelId: bigint, guildId: bigint },
+    payload: { channelId: bigint, guildId: bigint }
   ) => unknown
   botUpdate: (bot: Bot, user: User) => unknown
   typingStart: (
@@ -630,7 +854,7 @@ export interface EventHandlers {
       userId: bigint
       timestamp: number
       member: Member | undefined
-    },
+    }
   ) => unknown
 }
 
@@ -719,98 +943,109 @@ export function createBotGatewayHandlers (
     // channels
     CHANNEL_CREATE: options.CHANNEL_CREATE ?? handlers.handleChannelCreate,
     CHANNEL_DELETE: options.CHANNEL_DELETE ?? handlers.handleChannelDelete,
-    CHANNEL_PINS_UPDATE: options.CHANNEL_PINS_UPDATE ??
-      handlers.handleChannelPinsUpdate,
+    CHANNEL_PINS_UPDATE:
+      options.CHANNEL_PINS_UPDATE ?? handlers.handleChannelPinsUpdate,
     CHANNEL_UPDATE: options.CHANNEL_UPDATE ?? handlers.handleChannelUpdate,
     THREAD_CREATE: options.THREAD_CREATE ?? handlers.handleThreadCreate,
     THREAD_UPDATE: options.THREAD_UPDATE ?? handlers.handleThreadUpdate,
     THREAD_DELETE: options.THREAD_DELETE ?? handlers.handleThreadDelete,
     THREAD_LIST_SYNC: options.THREAD_LIST_SYNC ?? handlers.handleThreadListSync,
-    THREAD_MEMBERS_UPDATE: options.THREAD_MEMBERS_UPDATE ?? handlers.handleThreadMembersUpdate,
-    STAGE_INSTANCE_CREATE: options.STAGE_INSTANCE_CREATE ??
-      handlers.handleStageInstanceCreate,
-    STAGE_INSTANCE_UPDATE: options.STAGE_INSTANCE_UPDATE ??
-      handlers.handleStageInstanceUpdate,
-    STAGE_INSTANCE_DELETE: options.STAGE_INSTANCE_DELETE ??
-      handlers.handleStageInstanceDelete,
+    THREAD_MEMBERS_UPDATE:
+      options.THREAD_MEMBERS_UPDATE ?? handlers.handleThreadMembersUpdate,
+    STAGE_INSTANCE_CREATE:
+      options.STAGE_INSTANCE_CREATE ?? handlers.handleStageInstanceCreate,
+    STAGE_INSTANCE_UPDATE:
+      options.STAGE_INSTANCE_UPDATE ?? handlers.handleStageInstanceUpdate,
+    STAGE_INSTANCE_DELETE:
+      options.STAGE_INSTANCE_DELETE ?? handlers.handleStageInstanceDelete,
 
     // guilds
     GUILD_BAN_ADD: options.GUILD_BAN_ADD ?? handlers.handleGuildBanAdd,
     GUILD_BAN_REMOVE: options.GUILD_BAN_REMOVE ?? handlers.handleGuildBanRemove,
     GUILD_CREATE: options.GUILD_CREATE ?? handlers.handleGuildCreate,
     GUILD_DELETE: options.GUILD_DELETE ?? handlers.handleGuildDelete,
-    GUILD_EMOJIS_UPDATE: options.GUILD_EMOJIS_UPDATE ??
-      handlers.handleGuildEmojisUpdate,
-    GUILD_INTEGRATIONS_UPDATE: options.GUILD_INTEGRATIONS_UPDATE ??
+    GUILD_EMOJIS_UPDATE:
+      options.GUILD_EMOJIS_UPDATE ?? handlers.handleGuildEmojisUpdate,
+    GUILD_INTEGRATIONS_UPDATE:
+      options.GUILD_INTEGRATIONS_UPDATE ??
       handlers.handleGuildIntegrationsUpdate,
     GUILD_MEMBER_ADD: options.GUILD_MEMBER_ADD ?? handlers.handleGuildMemberAdd,
-    GUILD_MEMBER_REMOVE: options.GUILD_MEMBER_REMOVE ??
-      handlers.handleGuildMemberRemove,
-    GUILD_MEMBER_UPDATE: options.GUILD_MEMBER_UPDATE ??
-      handlers.handleGuildMemberUpdate,
-    GUILD_MEMBERS_CHUNK: options.GUILD_MEMBERS_CHUNK ??
-      handlers.handleGuildMembersChunk,
-    GUILD_ROLE_CREATE: options.GUILD_ROLE_CREATE ??
-      handlers.handleGuildRoleCreate,
-    GUILD_ROLE_DELETE: options.GUILD_ROLE_DELETE ??
-      handlers.handleGuildRoleDelete,
-    GUILD_ROLE_UPDATE: options.GUILD_ROLE_UPDATE ??
-      handlers.handleGuildRoleUpdate,
+    GUILD_MEMBER_REMOVE:
+      options.GUILD_MEMBER_REMOVE ?? handlers.handleGuildMemberRemove,
+    GUILD_MEMBER_UPDATE:
+      options.GUILD_MEMBER_UPDATE ?? handlers.handleGuildMemberUpdate,
+    GUILD_MEMBERS_CHUNK:
+      options.GUILD_MEMBERS_CHUNK ?? handlers.handleGuildMembersChunk,
+    GUILD_ROLE_CREATE:
+      options.GUILD_ROLE_CREATE ?? handlers.handleGuildRoleCreate,
+    GUILD_ROLE_DELETE:
+      options.GUILD_ROLE_DELETE ?? handlers.handleGuildRoleDelete,
+    GUILD_ROLE_UPDATE:
+      options.GUILD_ROLE_UPDATE ?? handlers.handleGuildRoleUpdate,
     GUILD_UPDATE: options.GUILD_UPDATE ?? handlers.handleGuildUpdate,
     // guild events
-    GUILD_SCHEDULED_EVENT_CREATE: options.GUILD_SCHEDULED_EVENT_CREATE ??
+    GUILD_SCHEDULED_EVENT_CREATE:
+      options.GUILD_SCHEDULED_EVENT_CREATE ??
       handlers.handleGuildScheduledEventCreate,
-    GUILD_SCHEDULED_EVENT_DELETE: options.GUILD_SCHEDULED_EVENT_DELETE ??
+    GUILD_SCHEDULED_EVENT_DELETE:
+      options.GUILD_SCHEDULED_EVENT_DELETE ??
       handlers.handleGuildScheduledEventDelete,
-    GUILD_SCHEDULED_EVENT_UPDATE: options.GUILD_SCHEDULED_EVENT_UPDATE ??
+    GUILD_SCHEDULED_EVENT_UPDATE:
+      options.GUILD_SCHEDULED_EVENT_UPDATE ??
       handlers.handleGuildScheduledEventUpdate,
-    GUILD_SCHEDULED_EVENT_USER_ADD: options.GUILD_SCHEDULED_EVENT_USER_ADD ??
+    GUILD_SCHEDULED_EVENT_USER_ADD:
+      options.GUILD_SCHEDULED_EVENT_USER_ADD ??
       handlers.handleGuildScheduledEventUserAdd,
-    GUILD_SCHEDULED_EVENT_USER_REMOVE: options.GUILD_SCHEDULED_EVENT_USER_REMOVE ??
+    GUILD_SCHEDULED_EVENT_USER_REMOVE:
+      options.GUILD_SCHEDULED_EVENT_USER_REMOVE ??
       handlers.handleGuildScheduledEventUserRemove,
     // interactions
-    INTERACTION_CREATE: options.INTERACTION_CREATE ??
-      handlers.handleInteractionCreate,
+    INTERACTION_CREATE:
+      options.INTERACTION_CREATE ?? handlers.handleInteractionCreate,
     // invites
     INVITE_CREATE: options.INVITE_CREATE ?? handlers.handleInviteCreate,
     INVITE_DELETE: options.INVITE_DELETE ?? handlers.handleInviteCreate,
     // messages
     MESSAGE_CREATE: options.MESSAGE_CREATE ?? handlers.handleMessageCreate,
-    MESSAGE_DELETE_BULK: options.MESSAGE_DELETE_BULK ??
-      handlers.handleMessageDeleteBulk,
+    MESSAGE_DELETE_BULK:
+      options.MESSAGE_DELETE_BULK ?? handlers.handleMessageDeleteBulk,
     MESSAGE_DELETE: options.MESSAGE_DELETE ?? handlers.handleMessageDelete,
-    MESSAGE_REACTION_ADD: options.MESSAGE_REACTION_ADD ??
-      handlers.handleMessageReactionAdd,
-    MESSAGE_REACTION_REMOVE_ALL: options.MESSAGE_REACTION_REMOVE_ALL ??
+    MESSAGE_REACTION_ADD:
+      options.MESSAGE_REACTION_ADD ?? handlers.handleMessageReactionAdd,
+    MESSAGE_REACTION_REMOVE_ALL:
+      options.MESSAGE_REACTION_REMOVE_ALL ??
       handlers.handleMessageReactionRemoveAll,
-    MESSAGE_REACTION_REMOVE_EMOJI: options.MESSAGE_REACTION_REMOVE_EMOJI ??
+    MESSAGE_REACTION_REMOVE_EMOJI:
+      options.MESSAGE_REACTION_REMOVE_EMOJI ??
       handlers.handleMessageReactionRemoveEmoji,
-    MESSAGE_REACTION_REMOVE: options.MESSAGE_REACTION_REMOVE ??
-      handlers.handleMessageReactionRemove,
+    MESSAGE_REACTION_REMOVE:
+      options.MESSAGE_REACTION_REMOVE ?? handlers.handleMessageReactionRemove,
     MESSAGE_UPDATE: options.MESSAGE_UPDATE ?? handlers.handleMessageUpdate,
     // presence
     PRESENCE_UPDATE: options.PRESENCE_UPDATE ?? handlers.handlePresenceUpdate,
     TYPING_START: options.TYPING_START ?? handlers.handleTypingStart,
     USER_UPDATE: options.USER_UPDATE ?? handlers.handleUserUpdate,
     // voice
-    VOICE_SERVER_UPDATE: options.VOICE_SERVER_UPDATE ??
-      handlers.handleVoiceServerUpdate,
-    VOICE_STATE_UPDATE: options.VOICE_STATE_UPDATE ??
-      handlers.handleVoiceStateUpdate,
+    VOICE_SERVER_UPDATE:
+      options.VOICE_SERVER_UPDATE ?? handlers.handleVoiceServerUpdate,
+    VOICE_STATE_UPDATE:
+      options.VOICE_STATE_UPDATE ?? handlers.handleVoiceStateUpdate,
     // webhooks
     WEBHOOKS_UPDATE: options.WEBHOOKS_UPDATE ?? handlers.handleWebhooksUpdate,
     // integrations
-    INTEGRATION_CREATE: options.INTEGRATION_CREATE ??
-      handlers.handleIntegrationCreate,
-    INTEGRATION_UPDATE: options.INTEGRATION_UPDATE ??
-      handlers.handleIntegrationUpdate,
-    INTEGRATION_DELETE: options.INTEGRATION_DELETE ??
-      handlers.handleIntegrationDelete
+    INTEGRATION_CREATE:
+      options.INTEGRATION_CREATE ?? handlers.handleIntegrationCreate,
+    INTEGRATION_UPDATE:
+      options.INTEGRATION_UPDATE ?? handlers.handleIntegrationUpdate,
+    INTEGRATION_DELETE:
+      options.INTEGRATION_DELETE ?? handlers.handleIntegrationDelete
   }
 }
 
-export type RemoveFirstFromTuple<T extends any[]> = T['length'] extends 0 ? []
-  : ((...b: T) => void) extends (a: any, ...b: infer I) => void ? I
+export type RemoveFirstFromTuple<T extends any[]> = T['length'] extends 0
+  ? []
+  : ((...b: T) => void) extends (a: any, ...b: infer I) => void
+      ? I
       : []
 export type FinalHelpers = {
   [K in keyof Helpers]: (

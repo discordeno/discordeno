@@ -1,6 +1,7 @@
 export * from './base64.js'
 export * from './bigint.js'
 export * from './bucket.js'
+export * from './calculateShardId.js'
 export * from './collection.js'
 export * from './constants.js'
 export * from './hash.js'
