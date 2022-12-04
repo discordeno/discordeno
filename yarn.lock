@@ -69,7 +69,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@discordeno/client@workspace:packages/client":
+"@discordeno/client@18.0.0-alpha.1, @discordeno/client@workspace:packages/client":
   version: 0.0.0-use.local
   resolution: "@discordeno/client@workspace:packages/client"
   dependencies:
@@ -1451,7 +1451,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "discordeno@workspace:packages/discordeno"
   dependencies:
-    "@discordeno/bot": 18.0.0-alpha.1
+    "@discordeno/client": 18.0.0-alpha.1
     "@discordeno/gateway": 18.0.0-alpha.1
     "@discordeno/rest": 18.0.0-alpha.1
     "@discordeno/types": 18.0.0-alpha.1
