@@ -7,7 +7,7 @@ on:
       - node-migration
 
 jobs:
-   path-filter:
+  path-filter:
     name: Check Path Changes
     runs-on: ubuntu-latest
     outputs:
