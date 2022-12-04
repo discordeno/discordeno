@@ -35,7 +35,7 @@ export function createGlobalApplicationCommand(bot: Bot) {
         options.options = validateApplicationCommandOptions(bot, options.options);
       }
 
-      validateApplicationCommandLength(bot, options);
+      validateApplicationCommandLength(options);
     } else {
       if (!CONTEXT_MENU_COMMANDS_NAME_REGEX.test(options.name)) {
         throw new Error("The name of the context menu did not match the required regex.");

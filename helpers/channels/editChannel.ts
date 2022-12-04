@@ -3,7 +3,7 @@ import { WithReason } from "../../mod.ts";
 import { Channel } from "../../transformers/channel.ts";
 import { DiscordChannel } from "../../types/discord.ts";
 import { OverwriteReadable } from "../../types/discordeno.ts";
-import { BigString, ChannelTypes, VideoQualityModes } from "../../types/shared.ts";
+import { BigString, ChannelTypes, SortOrderTypes, VideoQualityModes } from "../../types/shared.ts";
 
 /**
  * Edits a channel's settings.
@@ -97,12 +97,14 @@ export async function editChannel(bot: Bot, channelId: BigString, options: Modif
           emoji_name: availableTag.emojiName,
         }))
         : undefined,
+      applied_tags: options.appliedTags?.map((appliedTag) => appliedTag.toString()),
       default_reaction_emoji: options.defaultReactionEmoji
         ? {
           emoji_id: options.defaultReactionEmoji.emojiId,
           emoji_name: options.defaultReactionEmoji.emojiName,
         }
         : undefined,
+      default_sort_order: options.defaultSortOrder,
       reason: options.reason,
     },
   );
@@ -214,6 +216,8 @@ export interface ModifyChannel extends WithReason {
     /** The unicode character of the emoji */
     emojiName: string;
   }[];
+  /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel; limited to 5 */
+  appliedTags?: BigString[];
   /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */
   defaultReactionEmoji?: {
     /** The id of a guild's custom emoji */
@@ -223,4 +227,6 @@ export interface ModifyChannel extends WithReason {
   };
   /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
   defaultThreadRateLimitPerUser?: number;
+  /** the default sort order type used to order posts in forum channels */
+  defaultSortOrder?: SortOrderTypes | null;
 }

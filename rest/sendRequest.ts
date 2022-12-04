@@ -70,24 +70,9 @@ export async function sendRequest<T>(rest: RestManager, options: RestSendRequest
           break;
       }
 
-      if (
-        rest.invalidRequestErrorStatuses.includes(response.status) &&
-        !(response.status === 429 && response.headers.get("X-RateLimit-Scope"))
-      ) {
-        // INCREMENT CURRENT INVALID REQUESTS
-        ++rest.invalidRequests;
-
-        if (!rest.invalidRequestsTimeoutId) {
-          rest.invalidRequestsTimeoutId = setTimeout(() => {
-            rest.debug(`[REST - processGlobalQueue] Resetting invalid optionss counter in setTimeout.`);
-            rest.invalidRequests = 0;
-            rest.invalidRequestsTimeoutId = 0;
-          }, rest.invalidRequestsInterval);
-        }
-      }
-
       // If NOT rate limited remove from queue
       if (response.status !== 429) {
+        rest.invalidBucket.handleCompletedRequest(response.status, false);
         const body = response.type ? JSON.stringify(await response.json()) : undefined;
         return options.reject?.({
           ok: false,
@@ -96,6 +81,8 @@ export async function sendRequest<T>(rest: RestManager, options: RestSendRequest
           body,
         });
       } else {
+        const json = await response.json();
+
         // TOO MANY ATTEMPTS, GET RID OF REQUEST FROM QUEUE.
         if (options.retryCount && options.retryCount++ >= rest.maxRetryCount) {
           rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(options)}`);
@@ -110,7 +97,10 @@ export async function sendRequest<T>(rest: RestManager, options: RestSendRequest
           return;
         } // RATE LIMITED, ADD BACK TO QUEUE
         else {
-          const json = await response.json();
+          rest.invalidBucket.handleCompletedRequest(
+            response.status,
+            response.headers.get("X-RateLimit-Scope") === "shared",
+          );
           await delay(json.retry_after * 1000);
           return options.retryRequest?.();
         }

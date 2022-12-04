@@ -1,8 +1,11 @@
 // START FILE FOR REST PROCESS
-import { BASE_URL, createRestManager } from "../mod.ts";
-import { dotenv } from "./deps.ts";
+import { config as dotenv } from "https://deno.land/x/dotenv@v3.2.0/mod.ts";
+
+import { BASE_URL, Collection, createRestManager } from "./mod.ts";
 
 dotenv({ export: true, path: `${Deno.cwd()}/.env` });
+
+const col = new Collection<string, number>();
 
 const token = Deno.env.get("GAMER_TOKEN");
 if (!token) throw new Error("Token was not provided.");
@@ -16,12 +19,30 @@ const rest = createRestManager({
   token,
   secretKey: REST_AUTHORIZATION_KEY,
   customUrl: PROXY_REST_URL,
+  debug(text) {
+    if (text.startsWith("[REST - RequestCreate]")) {
+      const aaa = text.split(" ");
+      const method = aaa[4];
+      const url = aaa[7];
+
+      col.set(method + url, Date.now());
+
+      // console.log("[DEBUG]", method, url);
+    }
+
+    if (text.startsWith("[REST - processGlobalQueue] rate limited, running setTimeout.")) {
+      console.log("[POSSIBLE BUCKET ISSUE]");
+    }
+  },
+  fetching(options) {
+    // console.log("[FETCHING]", options.method, options.url, Date.now() - col.get(options.method + options.url)!);
+  },
 });
 
 // START LISTENING TO THE URL(localhost)
 const server = Deno.listen({ port: REST_PORT });
 console.log(
-  `Rest Proxy running. Access it at: ${PROXY_REST_URL}`,
+  `HTTP webserver running.  Access it at: ${PROXY_REST_URL}`,
 );
 
 // Connections to the server will be yielded up as an async iterable.
@@ -108,3 +129,10 @@ async function handleRequest(conn: Deno.Conn) {
 }
 
 type RequestMethod = "POST" | "PUT" | "DELETE" | "PATCH";
+
+// // @ts-ignore
+// rest.convertRestError = (errorStack, data) => {
+//   return data;
+// };
+
+// console.log(`Giveaway Boat REST Started At: ${new Date().toUTCString()}`);
