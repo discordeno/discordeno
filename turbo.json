@@ -45,7 +45,11 @@
         "^build:type"
       ]
     },
-    "fmt": {},
+    "fmt": {
+      "dependsOn": [
+        "^build:type"
+      ]
+    },
     "dev": {
       "cache": false
     }

@@ -13,7 +13,7 @@
     "build": "swc src --out-dir dist",
     "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
     "release-build": "yarn build && yarn build:type",
-    "fmt": "prettier -w ./src",
+    "fmt": "eslint --fix \"src/**/*.ts*\"",
     "lint": "eslint \"src/**/*.ts*\"",
     "test:unit": "c8 mocha --no-warnings 'tests/**/*.spec.ts'",
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/**/*.spec.ts'",
