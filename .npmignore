@@ -3,7 +3,8 @@
 
 # except package.json and build
 !package.json
-!dist
+!README.md
+!dist/*
 
 # but not tsc cache 
 dist/tsconfig.tsbuildinfo

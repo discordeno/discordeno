@@ -43,7 +43,7 @@ jobs:
       - name: build Package
         run: yarn release-build --cache-dir=".turbo"
       - name: Bump Package Version
-        run: node /scripts/bumpVersionByCommit.js ${{ matrix.package }}
+        run: node ./scripts/bumpVersionByCommit.js ${{ matrix.package }}
       - run: npm publish
         working-directory: packages/${{ matrix.package }}
         env:
