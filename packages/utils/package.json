@@ -1,6 +1,6 @@
 {
   "name": "@discordeno/utils",
-  "version": "18.0.0-next.a88e1e7",
+  "version": "18.0.0-alpha.1",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
