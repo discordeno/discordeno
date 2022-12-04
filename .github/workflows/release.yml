@@ -47,7 +47,7 @@ jobs:
         run: [false]
         exclude:
           - package: bot
-            with: ${{ needs.path-filter.outputs.bot || needs.path-filter.outputs.global }}
+            run: ${{ needs.path-filter.outputs.bot || needs.path-filter.outputs.global }}
           - package: gateway
             run: ${{ needs.path-filter.outputs.gateway || needs.path-filter.outputs.global }}
           - package: rest
