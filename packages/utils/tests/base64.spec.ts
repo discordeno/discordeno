@@ -26,3 +26,27 @@ describe('base64.ts', () => {
     })
   })
 })
+
+/** Old test */
+it('[utils] encode some bytes to base64', () => {
+  expect(
+    encode(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
+  ).to.be.deep.equal('AQIDBAUGBwgJCg==')
+})
+
+it('[utils] decode some base64 to bytes', () => {
+  expect(decode('AQIDBAUGBwgJCg==')).to.be.deep.equal(
+    new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+  )
+})
+
+it('[utils] encode/decode base64 roundtrip should work', () => {
+  for (let i = 0; i < 10; i++) {
+    const bytes = []
+    for (let i = 0; i < 10000; i++) {
+      bytes.push(Math.floor(Math.random() * 256))
+    }
+    const data = new Uint8Array(bytes)
+    expect(decode(encode(data))).to.be.deep.equal(data)
+  }
+})

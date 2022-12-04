@@ -5,13 +5,17 @@ import { CACHED_COMMUNITY_GUILD_ID } from '../utils.js'
 Deno.test({
   name: '[webhook] delete a webhook',
   ignore: process.env.TEST_ENV === 'UNIT',
-  async fn(t) {
+  async fn (t) {
     const bot = loadBot()
 
-    const channel = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, { name: 'deleteWebhook' })
+    const channel = await bot.helpers.createChannel(CACHED_COMMUNITY_GUILD_ID, {
+      name: 'deleteWebhook'
+    })
     assertExists(channel?.id)
 
-    const webhook = await bot.helpers.createWebhook(channel.id, { name: 'delete' })
+    const webhook = await bot.helpers.createWebhook(channel.id, {
+      name: 'delete'
+    })
     assertExists(webhook?.id)
 
     await bot.helpers.deleteWebhook(webhook.id)
