@@ -93,5 +93,5 @@ jobs:
         run: npm set //npm.pkg.github.com/:_authToken ${{ secrets.GITHUB_TOKEN }}
       - name: Npm registry authentication
         run: npm set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
-      - run: npm publish
+      - run: npm publish --access public
         working-directory: packages/${{ matrix.package }}
