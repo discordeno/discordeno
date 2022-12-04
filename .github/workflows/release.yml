@@ -9,9 +9,9 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    permissions: 
+    permissions:
       contents: read
-      packages: write 
+      packages: write
     strategy:
       matrix:
         package: ["bot", "gateway", "rest", "types", "utils"]
@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 18
           registry-url: "https://npm.pkg.github.com"
-           scope: '@discordeno'
+          scope: "@discordeno"
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
@@ -48,4 +48,3 @@ jobs:
         working-directory: packages/${{ matrix.package }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
