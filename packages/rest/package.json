@@ -1,10 +1,14 @@
 {
   "name": "@discordeno/rest",
-  "version": "18.0.0-alpha.1",
+  "version": "18.0.0-next.a88e1e7",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/discordeno/discordeno.git"
+  },
   "scripts": {
     "build": "swc src --out-dir dist",
     "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",

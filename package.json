@@ -2,6 +2,7 @@
   "name": "discordeno-monorepo",
   "version": "18.0.0-alpha.1",
   "private": true,
+  "type": "module",
   "workspaces": [
     "packages/*",
     "packages/plugins/cache",

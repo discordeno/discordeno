@@ -5,6 +5,10 @@
   "types": "./src/index.ts",
   "type": "module",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/discordeno/discordeno.git"
+  },
   "scripts": {
     "lint": "eslint \"**/*.ts*\""
   },
