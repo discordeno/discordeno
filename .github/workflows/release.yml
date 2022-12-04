@@ -47,15 +47,15 @@ jobs:
         run: [false]
         exclude:
           - package: bot
-            run: ${{ needs.path-filter.outputs.bot || needs.path-filter.outputs.global }}
+            run: ${{ needs.path-filter.outputs.bot == 'true' || needs.path-filter.outputs.global == 'true' }}
           - package: gateway
-            run: ${{ needs.path-filter.outputs.gateway || needs.path-filter.outputs.global }}
+            run: ${{ needs.path-filter.outputs.gateway == 'true' || needs.path-filter.outputs.global == 'true' }}
           - package: rest
-            run: ${{ needs.path-filter.outputs.rest || needs.path-filter.outputs.global }}
+            run: ${{ needs.path-filter.outputs.rest == 'true' || needs.path-filter.outputs.global == 'true' }}
           - package: types
-            run: ${{ needs.path-filter.outputs.types || needs.path-filter.outputs.global }}
+            run: ${{ needs.path-filter.outputs.types == 'true' || needs.path-filter.outputs.global == 'true' }}
           - package: utils
-            run: ${{ needs.path-filter.outputs.utils || needs.path-filter.outputs.global }}
+            run: ${{ needs.path-filter.outputs.utils == 'true' || needs.path-filter.outputs.global == 'true' }}
     needs: path-filter
     steps:
       - uses: actions/checkout@v3
@@ -66,7 +66,7 @@ jobs:
           scope: "@discordeno"
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
       - uses: actions/cache@v3
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
