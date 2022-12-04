@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "devbg": "npx prisma generate && tsc --watch",
-    "fmt": "prettier -w ./src",
+    "fmt": "eslint --fix \"src/**/*.ts*\"",
     "devg": "nodemon --ignore ./src/bot/**/* --ignore ./src/rest/**/* --ignore ./dist/**/* -e ts dist/gateway/index.js",
     "devr": "nodemon --ignore ./src/bot/**/* --ignore ./src/gateway/**/* --ignore ./dist/**/* -e ts dist/rest/index.js",
     "devb": "nodemon --ignore ./src/rest/**/* --ignore ./src/gateway/**/* --ignore ./dist/**/* -e ts dist/bot/index.js",
