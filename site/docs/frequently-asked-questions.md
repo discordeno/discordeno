@@ -6,31 +6,18 @@ sidebar_position: 5
 
 ## Does Discordeno Support TypeScript?
 
-Discordeno provides first class support for TypeScript! Since Deno provides support for TypeScript, that also comes into
-Discordeno. This means you don't need to compile TypeScript before you use it. However, this isn't really why Discordeno
-is the best library for TypeScript developers. When I developed this library, I was experimenting with a lot of
-different things and one of them was automated typings.
+TypeScript is supported to the highest standard by Discordeno. TypeScript is included in Discordeno since Deno supports it. This implies that before using TypeScript, you do not need to compile it. But this isn't the main reason Discordeno is the ideal library for TypeScript programmers. I was experimenting with a lot of various things when I created this library, and automatic typings was one of them.
 
-Whenever I used other libraries, I was always seeing typings being inaccurate or problematic. This is because in any
-Discord API library, the majority is not used by the library itself so TypeScript doesn't warn the library developers.
-This makes it extremely likely that those typings become inaccurate or out of date because of simple mistakes like
-forgetting to update typings. Sometimes libraries will add a property and forget to add that on their typings. This
-makes it usable for JavaScript developers but not for TypeScript devs. For TypeScript developers, typings are
-everything! Discordeno treats typings as part of it's code! A breaking change in typings is a breaking change for the
-library!
+When I utilised other libraries, I frequently observed incorrect or troublesome typings. This is so that TypeScript won't alert the library developers because most of the Discord API typings aren't utilised by the libraries themselves.
+
+It is quite unlikely that these typings would become wrong or outdated as a result of minor errors like forgetting to update typings because Discordeno utilises them as part of the rest process. Libraries occasionally add a property without also adding it to their typings. Because of this, TypeScript developers cannot use it, only JavaScript developers can. Typings are crucial for TypeScript developers. Typings are treated as a component of the code by Discordeno!  A breaking change in typings is a breaking change for the library!
 
 ## How Stable Is Discordeno?
 
-One of the biggest issues with almost every library (that I have used) is stability. None of the libraries gave much
-love and attention to TypeScript developers the way it deserves. Sometimes TypeScript projects would break because
-breaking changes to typings did not make a MAJOR bump so TypeScript bots in production would break. Sometimes I was
-personally maintaining the typings because no one else was for that lib. Some libs were pre 1.0 and didn't even have a
-stable branch/version where I would not have to worry about breaking changes.
+Stability is one of the main problems with practically every library (I have used). None of the libraries showed TypeScript developers the love and care that they deserve. Because breaking changes to typings occasionally occurred without producing a MAJOR bump, TypeScript projects would occasionally fail. As a result, production TypeScript bots would fail. At times, I was the only one keeping the typings up to date for that library. Some libraries that were older than 1.0 didn't even have a stable branch or version, so I didn't have to worry about them undergoing breaking changes.
 
-This is why I made it one of my foundational goals of this library to have the best stability for TypeScript developers.
-No matter how small, a breaking change is a breaking change when it affects the public API. I could care less if we end
-up at version 500. Being afraid to bump a MAJOR because it's a small change or a typing change is a terrible decision as
-a library maintainer and destroys the experience for end users.
+The finest stability for TypeScript developers is one of my basic goals for this library.
+No matter how little, a change that impacts the public API qualifies as a breaking change. I don't care whether we reach version 500. As a library maintainer, you should never be scared to bump a MAJOR because it just involves a tiny modification or a type change because doing so will ruin the end user's experience.
 
 ## Why Doesn't Discordeno Use Classes or EventEmitter?
 

@@ -12,7 +12,7 @@ import FlowChart from '@site/src/components/architecture/FlowChart'
   {() => <FlowChart />}
 </BrowserOnly>
 
-Discordeno have three main components/process, gateway, bot and rest. The Gateway process is responsible for handling and maintaining the websocket with discord, the websocket events from discord, such as connection, resuming, heartbeating and sending websocket message to discord. The Bot process is responsible for handling and converting all events from discord and trigger your code, like run function on message create. The Rest process is responsible for handling/fetching all http requests to discord, such as ratelimiting and proxying.
+Discordeno have three main components/process, gateway, bot and rest. Websocket events from Discord, such as connecting, restarting, heartbeating, and transmitting websocket messages to Discord, are handled and maintained by the Gateway process. All Discord events are handled and converted by the Bot process, which also activates your code, such as the execute function upon message creation. All http requests to Discord, including proxying and ratelimiting, are handled by the Rest process.
 
 ## Gateway Process
 import FlowChart2 from '@site/src/components/architecture/FlowChart2'
@@ -21,15 +21,15 @@ import FlowChart2 from '@site/src/components/architecture/FlowChart2'
   {() => <FlowChart2 />}
 </BrowserOnly>
 
-The Gateway process have two part the gateway manager and the gateway [shard](https://discord.com/developers/docs/topics/gateway#sharding), the gateway manager oversee the gateway shard.
+The Gateway process have two part the gateway manager and the gateway [shard](https://discord.com/developers/docs/topics/gateway#sharding), the gateway manager oversees the gateway shard.
 
 ### Gateway Manager
 
-The gateway manager spawn the right amount of shard acording to data from discord's [getGatewayBot](https://discord.com/developers/docs/topics/gateway#get-gateway-bot) endpoint, user can override the value of gatewayBot by directly passing the value. The manager control the order or sequence of shard identifying base on the session start limit listed in the getGatewayBot to prevent hitting the ratelimiting. By default the manager will check the getGatewayBot endpoint every 8 hours and reshard if the number of shard changed shard. Check [here](/tutorial/big-bot-guide/gateway#understanding-gateway-manager) for more information about the gateway manager.
+The gateway manager spawns the right amount of shard acording to data from discord's [getGatewayBot](https://discord.com/developers/docs/topics/gateway#get-gateway-bot) endpoint, user can override the value of gatewayBot by directly passing the value. The manager control the order or sequence of shard identifying base on the session start limit listed in the getGatewayBot to prevent hitting the ratelimiting. By default the manager will check the getGatewayBot endpoint every 8 hours and reshard if the number of shard changed shard. Check [here](/tutorial/big-bot-guide/gateway#understanding-gateway-manager) for more information about the gateway manager.
 
 ### Gateway Shard
 
-The gateway shard create a websocket connect to discord, and pass any event to the handleMessage function. The handleMessage function will check the event and intercept/process websocket related event like hello, resume, heartbeat, ready, only pass real event to the bot. You may customize the handleMessage to you own case, but it is not recommand unless you know what youd doing, as it is vital for the connection. After the function processed the event, the function will pass the event to the Bot proceess either directly (in same process), with rest api, with message queue, or with other method depend on the user customiztion.
+Any event is passed to the handleMessage method by the gateway shard, which also establishes a websocket connection to Discord. The handleMessage method will examine the event and only deliver genuine events to the bot by intercepting and processing websocket-related events like hello, resume, heartbeat, and ready. You can modify the handleMessage to suit your needs, but it is not advised unless you are certain of your actions because the connection depends on it. After the function has finished processing the event, it will either pass the event directly (in the same process), via the rest api, a message queue, or another mechanism depending on the user's customization.
 
 ## Bot Process
 import FlowChart3 from '@site/src/components/architecture/FlowChart3'
@@ -42,7 +42,7 @@ A simplified version of function used inside of the bot process, showing only th
 
 ### Bot
 
-The Bot process receive event from gateway and pass all the event to the handleDiscordPayload function. The handleDiscordPayload function will call raw event for all event, and route to three layer for process the event, the handler, transformers and event. The handler will transformer the data of event with transformers and call the event with the transformed data. The transformer will remove useless property, change the name, abstractify bitwise permission flags change transform the data to a javascript.   
+When an event arrives from the gateway, the bot process receives it and passes it all to the handleDiscordPayload method. The handleDiscordPayload method will invoke raw events for each event and route calls to handlers, transformers, and events at three different layers for processing. The handler will use transformers to alter the event's contents before calling the event. The data will be transformed into typescript after being stripped of pointless properties, given a new name, and having bitwise permission flags abstracted.
 
 ## Rest Process
 
