@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "docusaurus": "docusaurus",
-    "start": "docusaurus start",
+    "start": "docusaurus start --host 0.0.0.0",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@docusaurus/core": "2.2.0",
+    "@docusaurus/plugin-client-redirects": "^2.2.0",
     "@docusaurus/preset-classic": "2.2.0",
     "@easyops-cn/docusaurus-search-local": "^0.21.4",
     "@mdx-js/react": "^1.6.21",
@@ -25,7 +26,8 @@
     "prism-react-renderer": "^1.2.1",
     "react": "^17.0.1",
     "react-chartjs-2": "^4.3.1",
-    "react-dom": "^17.0.1"
+    "react-dom": "^17.0.1",
+    "reactflow": "^11.2.0"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "2.2.0",

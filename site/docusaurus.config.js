@@ -45,20 +45,16 @@ const config = {
         },
         items: [
           {
-            type: 'docSidebar',
-            sidebarId: 'docs',
+            type: "docSidebar",
+            sidebarId: "docs",
             position: "left",
             label: "Docs",
           },
           {
-            type: 'docSidebar',
-            sidebarId: 'tutorial',
+            type: "docSidebar",
+            sidebarId: "tutorial",
             position: "left",
             label: "Tutorial",
-          },
-          {
-            to: "/benchmark",
-            label: "Benchmark",
           },
           {
             href: "https://github.com/discordeno/discordeno",
@@ -85,8 +81,13 @@ const config = {
                 label: "FAQ",
                 to: "/docs/docs/frequently-asked-questions",
               },
+              {
+                label: "Benchmark",
+                to: "/docs/docs/benchmark",
+              },
             ],
-          }, {
+          },
+          {
             title: "Tutorial",
             items: [
               {
@@ -146,6 +147,36 @@ const config = {
         highlightSearchTermsOnTargetPage: true,
         searchResultLimits: 8,
         searchResultContextMaxLength: 50,
+      },
+    ],
+    [
+      "client-redirects",
+      /** @type {import('@docusaurus/plugin-client-redirects').Options} */
+      {
+        createRedirects(existingPath) {
+          if (
+            existingPath.includes("/docs/tutorial/big-bot-guide/") || existingPath.includes("/docs/tutorial/nodejs/") ||
+            existingPath.includes("/docs/tutorial/amethyst/")
+          ) {
+            return [
+              existingPath.replace("/docs/tutorial/", "/docs/"),
+            ];
+          }
+          if (
+            existingPath.includes("/docs/docs/frequently-asked-questions") ||
+            existingPath.includes("/docs/docs/getting-started") || existingPath.includes("/docs/docs/migrating")
+          ) {
+            return [
+              existingPath.replace("/docs/docs/", "/docs/general/"),
+            ];
+          }
+          if (existingPath.includes("/docs/docs/intro")) {
+            return [
+              existingPath.replace("/docs/docs/", "/docs/"),
+            ];
+          }
+          return undefined; // Return a falsy value: no redirect created
+        },
       },
     ],
   ],
