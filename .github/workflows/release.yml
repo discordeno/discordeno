@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - node-migration
+    path:
+      - packages/**
+      - .github/**
 
 jobs:
   path-filter:
@@ -22,6 +25,7 @@ jobs:
       - uses: dorny/paths-filter@v2
         id: changes
         with:
+          base: node-migration
           filters: |
             bot:
             - "packages/bot/**"
@@ -34,7 +38,7 @@ jobs:
             utils:
             - "packages/utils/**"
             global:
-            - ".github/workflows/release.yml"
+            - ".github/**"
 
   publish:
     runs-on: ubuntu-latest
@@ -44,18 +48,18 @@ jobs:
     strategy:
       matrix:
         package: ["bot", "gateway", "rest", "types", "utils"]
-        run: [false]
+        run: ["false"]
         exclude:
           - package: bot
-            run: ${{ needs.path-filter.outputs.bot == 'true' || needs.path-filter.outputs.global == 'true' }}
+            run: "${{ needs.path-filter.outputs.bot == 'true' || needs.path-filter.outputs.global == 'true' }}"
           - package: gateway
-            run: ${{ needs.path-filter.outputs.gateway == 'true' || needs.path-filter.outputs.global == 'true' }}
+            run: "${{ needs.path-filter.outputs.gateway == 'true' || needs.path-filter.outputs.global == 'true' }}"
           - package: rest
-            run: ${{ needs.path-filter.outputs.rest == 'true' || needs.path-filter.outputs.global == 'true' }}
+            run: "${{ needs.path-filter.outputs.rest == 'true' || needs.path-filter.outputs.global == 'true' }}"
           - package: types
-            run: ${{ needs.path-filter.outputs.types == 'true' || needs.path-filter.outputs.global == 'true' }}
+            run: "${{ needs.path-filter.outputs.types == 'true' || needs.path-filter.outputs.global == 'true' }}"
           - package: utils
-            run: ${{ needs.path-filter.outputs.utils == 'true' || needs.path-filter.outputs.global == 'true' }}
+            run: "${{ needs.path-filter.outputs.utils == 'true' || needs.path-filter.outputs.global == 'true' }}"
     needs: path-filter
     steps:
       - uses: actions/checkout@v3
