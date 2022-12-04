@@ -14,8 +14,8 @@
         "^build:type"
       ],
       "outputs": [
-        "dist/**/d.ts",
-        "dist/**/d.ts.map",
+        "dist/**/*.d.ts",
+        "dist/**/*.d.ts.map",
         "dist/tsconfig.tsbuildinfo"
       ]
     },
