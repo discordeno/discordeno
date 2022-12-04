@@ -7,8 +7,12 @@ on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: ["main"]
+    paths:
+      - "site/**"
   pull_request:
     branches: ["main"]
+    paths:
+      - "site/**"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -23,6 +27,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
+    name: Build Docusaurus
     runs-on: ubuntu-latest
     defaults:
       run:
