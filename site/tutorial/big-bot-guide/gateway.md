@@ -127,14 +127,14 @@ const gateway = createGatewayManager({
 });
 ```
 
-**Basic Keys**
+#### Basic Keys
 
 - `EVENT_HANDLER_SECRET_KEY` is from your configs that will be used to make sure requests sent to your event handler
   process are indeed from you.
 - `DISCORD_TOKEN` if you can't figure this out, this guide isn't for you. Please find another.
 - `INTENTS` pass in a number or a string of intents. Autocomplete/type-safety is provided for strings :)
 
-**Powerful Keys**
+#### Powerful Keys
 
 If your bot is going to be run on one process, you can re-use the data that discord gave you to connect.
 
