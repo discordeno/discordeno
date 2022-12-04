@@ -67,6 +67,7 @@ jobs:
         with:
           node-version: 18
           registry-url: "https://npm.pkg.github.com"
+          scope: "@discordeno"
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
@@ -89,9 +90,21 @@ jobs:
         run: yarn release-build --cache-dir=".turbo"
       - name: Bump Package Version
         run: node ./scripts/bumpVersionByCommit.js ${{ matrix.package }}
-      - name: Github package registry authentication
-        run: npm set //npm.pkg.github.com/:_authToken ${{ secrets.GITHUB_TOKEN }}
-      - name: Npm registry authentication
-        run: npm set //registry.npmjs.org/:_authToken ${{ secrets.NPM_TOKEN }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@discordeno"
       - run: npm publish --access public
         working-directory: packages/${{ matrix.package }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: "https://registry.npmjs.org"
+          scope: "@discordeno"
+      - run: npm publish --access public
+        working-directory: packages/${{ matrix.package }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
