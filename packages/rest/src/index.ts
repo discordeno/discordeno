@@ -1,5 +1,3 @@
-export * from '@discordeno/types'
-export * from '@discordeno/utils'
 export * from './checkRateLimits.js'
 export * from './cleanupQueues.js'
 export * from './convertRestError.js'

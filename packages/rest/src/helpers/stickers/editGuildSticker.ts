@@ -1,5 +1,5 @@
 import { AtLeastOne, WithReason } from '@discordeno/types'
-import { RestManager } from '../../restManager.js'
+import type { RestManager } from '../../restManager.js'
 import { Sticker } from '../../transformers/sticker.js'
 
 /**

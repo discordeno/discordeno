@@ -1,4 +1,4 @@
-import { BigString, DiscordMember, WithReason } from '../../index.js'
+import { BigString, DiscordMember, WithReason } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import { Member } from '../../transformers/member.js'
 

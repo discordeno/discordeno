@@ -22,10 +22,10 @@
     "test:test-type": "tsc --project tsconfig.test.json"
   },
   "dependencies": {
-    "@discordeno/bot": "18.0.0-alpha.1",
     "@discordeno/client": "18.0.0-alpha.1",
     "@discordeno/gateway": "18.0.0-alpha.1",
-    "@discordeno/rest": "18.0.0-alpha.1"
+    "@discordeno/rest": "18.0.0-alpha.1",
+    "@discordeno/utils": "18.0.0-alpha.1"
   },
   "devDependencies": {
     "@discordeno/types": "18.0.0-alpha.1",

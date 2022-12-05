@@ -1,5 +1,5 @@
 import { BigString, DiscordApplicationCommand } from '@discordeno/types'
-import { RestManager } from '../../../restManager.js'
+import type { RestManager } from '../../../restManager.js'
 import { ApplicationCommand } from '../../../transformers/applicationCommand.js'
 import { CreateApplicationCommand } from '../../../types.js'
 

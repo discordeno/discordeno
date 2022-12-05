@@ -1,6 +1,6 @@
 import { BigString, DiscordMember, DiscordUser } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
-import { RestManager } from '../../../restManager.js'
+import type { RestManager } from '../../../restManager.js'
 import { Member, User } from '../../../transformers/member.js'
 
 // TODO: This endpoint discards certain data from the result.

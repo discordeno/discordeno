@@ -1,8 +1,5 @@
-import {
-  AllowedMentions,
-  DiscordAllowedMentions,
-  RestManager
-} from '../../index.js'
+import { AllowedMentions, DiscordAllowedMentions } from '@discordeno/types'
+import type { RestManager } from '../../restManager'
 
 export function transformAllowedMentionsToDiscordAllowedMentions (
   rest: RestManager,

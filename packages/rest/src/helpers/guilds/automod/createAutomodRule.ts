@@ -2,12 +2,13 @@ import {
   AutoModerationActionType,
   AutoModerationEventTypes,
   AutoModerationTriggerTypes,
+  BigString,
   DiscordAutoModerationRule,
   DiscordAutoModerationRuleTriggerMetadataPresets,
-  DiscordCreateAutomoderationRule
+  DiscordCreateAutomoderationRule,
+  WithReason
 } from '@discordeno/types'
-import { BigString, WithReason } from '../../../index.js'
-import { RestManager } from '../../../restManager.js'
+import type { RestManager } from '../../../restManager.js'
 import { AutoModerationRule } from '../../../transformers/automodRule.js'
 
 /**

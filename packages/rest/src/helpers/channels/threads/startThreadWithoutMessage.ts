@@ -1,5 +1,9 @@
-import { BigString, ChannelTypes, DiscordChannel } from '@discordeno/types'
-import { WithReason } from '../../../index.js'
+import {
+  BigString,
+  ChannelTypes,
+  DiscordChannel,
+  WithReason
+} from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import { Channel } from '../../../transformers/channel.js'
 

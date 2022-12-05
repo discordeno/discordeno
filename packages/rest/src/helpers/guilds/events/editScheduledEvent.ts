@@ -3,11 +3,11 @@ import {
   DiscordScheduledEvent,
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
-  ScheduledEventStatus
+  ScheduledEventStatus,
+  WithReason
 } from '@discordeno/types'
 import { validateLength } from '@discordeno/utils'
-import { WithReason } from '../../../index.js'
-import { RestManager } from '../../../restManager.js'
+import type { RestManager } from '../../../restManager.js'
 import { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
 
 /**

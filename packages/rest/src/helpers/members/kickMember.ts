@@ -1,5 +1,5 @@
 import { BigString } from '@discordeno/types'
-import { RestManager } from '../../restManager.js'
+import type { RestManager } from '../../restManager.js'
 
 /**
  * Kicks a member from a guild.

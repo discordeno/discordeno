@@ -1,5 +1,4 @@
-import { DiscordWebhook } from '@discordeno/types'
-import { BigString, WithReason } from '../../index.js'
+import { BigString, DiscordWebhook, WithReason } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import { Webhook } from '../../transformers/webhook.js'
 

@@ -1,6 +1,6 @@
 import { DiscordStickerPack } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
-import { RestManager } from '../../restManager.js'
+import type { RestManager } from '../../restManager.js'
 import { StickerPack } from '../../transformers/sticker.js'
 
 /**

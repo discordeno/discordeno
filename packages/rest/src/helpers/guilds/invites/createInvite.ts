@@ -1,5 +1,9 @@
-import { BigString, DiscordInvite, TargetTypes } from '@discordeno/types'
-import { WithReason } from '../../../index.js'
+import {
+  BigString,
+  DiscordInvite,
+  TargetTypes,
+  WithReason
+} from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import { BaseInvite } from './getInvite.js'
 

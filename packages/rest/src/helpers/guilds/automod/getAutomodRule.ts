@@ -1,5 +1,5 @@
 import { BigString, DiscordAutoModerationRule } from '@discordeno/types'
-import { RestManager } from '../../../restManager.js'
+import type { RestManager } from '../../../restManager.js'
 import { AutoModerationRule } from '../../../transformers/automodRule.js'
 
 /**

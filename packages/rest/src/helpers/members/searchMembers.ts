@@ -2,7 +2,7 @@ import type { DiscordMemberWithUser, SearchMembers } from '@discordeno/types'
 
 import { BigString } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
-import { RestManager } from '../../restManager.js'
+import type { RestManager } from '../../restManager.js'
 import { Member } from '../../transformers/member.js'
 
 /**
@@ -23,7 +23,9 @@ export async function searchMembers (
   options?: Omit<SearchMembers, 'query'>
 ): Promise<Collection<bigint, Member>> {
   if (options?.limit) {
-    if (options.limit < 1) { throw new Error(rest.constants.Errors.MEMBER_SEARCH_LIMIT_TOO_LOW) }
+    if (options.limit < 1) {
+      throw new Error(rest.constants.Errors.MEMBER_SEARCH_LIMIT_TOO_LOW)
+    }
     if (options.limit > 1000) {
       throw new Error(rest.constants.Errors.MEMBER_SEARCH_LIMIT_TOO_HIGH)
     }

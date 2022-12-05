@@ -1,4 +1,4 @@
-import { RestManager } from '../../index.js'
+import type { RestManager } from '../../restManager.js'
 import { Sticker } from '../../transformers/sticker.js'
 
 /**

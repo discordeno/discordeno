@@ -3,10 +3,10 @@ import {
   ChannelTypes,
   DiscordChannel,
   OverwriteReadable,
-  SortOrderTypes
+  SortOrderTypes,
+  WithReason
 } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
-import { WithReason } from '../../index.js'
 import type { RestManager } from '../../restManager.js'
 import { Channel } from '../../transformers/channel.js'
 

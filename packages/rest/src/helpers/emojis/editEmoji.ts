@@ -1,5 +1,4 @@
-import { DiscordEmoji } from '@discordeno/types'
-import { BigString, WithReason } from '../../index.js'
+import { BigString, DiscordEmoji, WithReason } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import { Emoji } from '../../transformers/emoji.js'
 

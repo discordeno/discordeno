@@ -1,10 +1,10 @@
-import { DiscordComponent } from '@discordeno/types'
 import {
   ButtonStyles,
+  DiscordComponent,
   MessageComponentTypes,
   SelectOption,
   TextStyles
-} from '../index.js'
+} from '@discordeno/types'
 import type { RestManager } from '../restManager.js'
 
 export function transformComponent (

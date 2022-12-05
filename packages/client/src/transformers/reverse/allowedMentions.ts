@@ -1,8 +1,5 @@
-import {
-  AllowedMentions,
-  Client,
-  DiscordAllowedMentions
-} from '../../index.js'
+import { AllowedMentions, DiscordAllowedMentions } from '@discordeno/types'
+import { Client } from '../../client.js'
 
 export function transformAllowedMentionsToDiscordAllowedMentions (
   client: Client,

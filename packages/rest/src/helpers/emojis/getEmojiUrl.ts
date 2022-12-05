@@ -1,5 +1,5 @@
 import { BigString } from '@discordeno/types'
-import { RestManager } from '../../restManager.js'
+import type { RestManager } from '../../restManager.js'
 
 /**
  * Builds a URL to an emoji in the Discord CDN.

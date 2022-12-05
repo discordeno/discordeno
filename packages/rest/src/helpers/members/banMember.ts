@@ -1,4 +1,4 @@
-import { BigString, WithReason } from '../../index.js'
+import { BigString, WithReason } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
 /**

@@ -1,6 +1,6 @@
 import { BigString, DiscordScheduledEvent } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
-import { RestManager } from '../../../restManager.js'
+import type { RestManager } from '../../../restManager.js'
 import { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
 
 /**
