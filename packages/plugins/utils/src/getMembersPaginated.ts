@@ -1,11 +1,11 @@
-import {
+import type {
   BigString,
   Bot,
-  Collection,
   DiscordMemberWithUser,
   ListGuildMembers,
   Member
 } from '@discordeno/bot'
+import { Collection } from '@discordeno/bot'
 
 /**
  * Highly recommended to **NOT** use this function to get members instead use fetchMembers().

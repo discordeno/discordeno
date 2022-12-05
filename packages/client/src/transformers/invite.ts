@@ -1,5 +1,5 @@
-import { DiscordInviteCreate, Optionalize } from '@discordeno/types'
-import { Client } from '../client.js'
+import type { DiscordInviteCreate, Optionalize } from '@discordeno/types'
+import type { Client } from '../client.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformInvite (client: Client, invite: DiscordInviteCreate) {

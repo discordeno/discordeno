@@ -1,7 +1,8 @@
-import { DiscordGatewayPayload, PickPartial } from '@discordeno/types'
+import type { DiscordGatewayPayload, PickPartial } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
-import { CreateShard, createShard } from '../shard/createShard.js'
-import { Shard, ShardGatewayConfig } from '../shard/types.js'
+import type { CreateShard } from '../shard/createShard.js'
+import { createShard } from '../shard/createShard.js'
+import type { Shard, ShardGatewayConfig } from '../shard/types.js'
 
 // TODO: debug
 

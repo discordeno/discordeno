@@ -1,4 +1,4 @@
-import { BigString, ImageFormat, ImageSize } from '@discordeno/types'
+import type { BigString, ImageFormat, ImageSize } from '@discordeno/types'
 import { formatImageURL, iconBigintToHash } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
 

@@ -1,7 +1,7 @@
-import { BigString, DiscordApplicationCommand } from '@discordeno/types'
+import type { BigString, DiscordApplicationCommand } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
-import { ApplicationCommand } from '../../../transformers/applicationCommand.js'
+import type { ApplicationCommand } from '../../../transformers/applicationCommand.js'
 
 /**
  * Gets the list of application commands registered by your bot in a guild.

@@ -1,6 +1,6 @@
-import { AtLeastOne, WithReason } from '@discordeno/types'
+import type { AtLeastOne, WithReason } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { Sticker } from '../../transformers/sticker.js'
+import type { Sticker } from '../../transformers/sticker.js'
 
 /**
  * Edit the given sticker.

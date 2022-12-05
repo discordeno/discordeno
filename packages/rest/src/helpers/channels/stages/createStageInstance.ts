@@ -1,6 +1,10 @@
-import { BigString, DiscordStageInstance, WithReason } from '@discordeno/types'
+import type {
+  BigString,
+  DiscordStageInstance,
+  WithReason
+} from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { StageInstance } from '../../../transformers/stageInstance.js'
+import type { StageInstance } from '../../../transformers/stageInstance.js'
 
 /**
  * Creates a stage instance associated with a stage channel.

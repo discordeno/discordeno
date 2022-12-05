@@ -1,7 +1,7 @@
-import { BigString, DiscordVoiceRegion } from '@discordeno/types'
+import type { BigString, DiscordVoiceRegion } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
-import { VoiceRegions } from '../../../transformers/voiceRegion.js'
+import type { VoiceRegions } from '../../../transformers/voiceRegion.js'
 
 /**
  * Gets the list of voice regions for a guild.

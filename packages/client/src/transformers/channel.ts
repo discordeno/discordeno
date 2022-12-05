@@ -1,5 +1,5 @@
-import { DiscordChannel, Optionalize } from '@discordeno/types'
-import { Client } from '../client.js'
+import type { DiscordChannel, Optionalize } from '@discordeno/types'
+import type { Client } from '../client.js'
 
 const Mask = (1n << 64n) - 1n
 

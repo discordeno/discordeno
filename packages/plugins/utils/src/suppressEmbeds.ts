@@ -1,4 +1,4 @@
-import { BigString, Bot, DiscordMessage, Message } from '@discordeno/bot'
+import type { BigString, Bot, DiscordMessage, Message } from '@discordeno/bot'
 
 /** Suppress all the embeds in this message */
 export async function suppressEmbeds (

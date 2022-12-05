@@ -1,9 +1,5 @@
-import {
-  Bot,
-  Channel,
-  CreateGuildChannel,
-  separateOverwrites
-} from '@discordeno/bot'
+import type { Bot, Channel, CreateGuildChannel } from '@discordeno/bot'
+import { separateOverwrites } from '@discordeno/bot'
 
 /** Create a copy of a channel */
 export async function cloneChannel (

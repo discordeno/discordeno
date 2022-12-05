@@ -1,7 +1,7 @@
-import { BigString, DiscordRole } from '@discordeno/types'
+import type { BigString, DiscordRole } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { Role } from '../../transformers/role.js'
+import type { Role } from '../../transformers/role.js'
 
 /**
  * Gets the list of roles for a guild.

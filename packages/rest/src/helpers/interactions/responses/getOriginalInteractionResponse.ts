@@ -1,6 +1,6 @@
-import { DiscordMessage } from '@discordeno/types'
+import type { DiscordMessage } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { Message } from '../../../transformers/message.js'
+import type { Message } from '../../../transformers/message.js'
 
 /**
  * Gets the initial message response to an interaction.

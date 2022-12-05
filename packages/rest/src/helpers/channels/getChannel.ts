@@ -1,6 +1,6 @@
-import { BigString, DiscordChannel } from '@discordeno/types'
+import type { BigString, DiscordChannel } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { Channel } from '../../transformers/channel.js'
+import type { Channel } from '../../transformers/channel.js'
 
 /**
  * Gets a channel by its ID.

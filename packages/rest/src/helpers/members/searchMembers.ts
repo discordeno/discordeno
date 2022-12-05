@@ -1,9 +1,12 @@
-import type { DiscordMemberWithUser, SearchMembers } from '@discordeno/types'
+import type {
+  DiscordMemberWithUser,
+  SearchMembers,
+  BigString
+} from '@discordeno/types'
 
-import { BigString } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { Member } from '../../transformers/member.js'
+import type { Member } from '../../transformers/member.js'
 
 /**
  * Gets the list of members whose usernames or nicknames start with a provided string.

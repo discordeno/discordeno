@@ -1,6 +1,6 @@
-import { DiscordMessage, Optionalize } from '@discordeno/types'
+import type { DiscordMessage, Optionalize } from '@discordeno/types'
 import { CHANNEL_MENTION_REGEX } from '@discordeno/utils'
-import { Client } from '../client.js'
+import type { Client } from '../client.js'
 import { MemberToggles } from './toggles/member.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

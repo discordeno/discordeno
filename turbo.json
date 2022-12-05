@@ -21,7 +21,7 @@
     },
     "release-build": {
       "dependsOn": [
-        "^build:type"
+        "^release-build"
       ],
       "outputs": [
         "dist/**"

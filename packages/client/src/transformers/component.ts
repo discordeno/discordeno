@@ -1,11 +1,11 @@
-import {
+import type {
   ButtonStyles,
   DiscordComponent,
   MessageComponentTypes,
   SelectOption,
   TextStyles
 } from '@discordeno/types'
-import { Client } from '../client.js'
+import type { Client } from '../client.js'
 
 export function transformComponent (
   client: Client,

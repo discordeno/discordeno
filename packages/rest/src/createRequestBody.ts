@@ -1,7 +1,7 @@
-import { FileContent } from '@discordeno/types'
+import type { FileContent } from '@discordeno/types'
 import { decode, USER_AGENT } from '@discordeno/utils'
-import { RequestMethod } from './rest.js'
-import { RestManager } from './restManager.js'
+import type { RequestMethod } from './rest.js'
+import type { RestManager } from './restManager.js'
 
 /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
 export function createRequestBody (
@@ -16,7 +16,9 @@ export function createRequestBody (
     'user-agent': USER_AGENT
   }
 
-  if (options.unauthorized === undefined) { headers.authorization = `Bot ${rest.token}` }
+  if (options.unauthorized === undefined) {
+    headers.authorization = `Bot ${rest.token}`
+  }
 
   // SOMETIMES SPECIAL HEADERS (E.G. CUSTOM AUTHORIZATION) NEED TO BE USED
   if (options.headers !== undefined) {

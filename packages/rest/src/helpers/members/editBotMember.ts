@@ -1,6 +1,6 @@
-import { BigString, DiscordMember, WithReason } from '@discordeno/types'
+import type { BigString, DiscordMember, WithReason } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { Member } from '../../transformers/member.js'
+import type { Member } from '../../transformers/member.js'
 
 /**
  * Edits the nickname of the bot user.

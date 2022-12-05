@@ -1,9 +1,9 @@
 // @ts-nocheck
 
-import { DiscordGuild } from '@discordeno/types'
+import type { DiscordGuild } from '@discordeno/types'
 import { calculateShardId, urlToBase64 } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { Guild } from '../../transformers/guild.js'
+import type { Guild } from '../../transformers/guild.js'
 
 /**
  * Creates a guild from a template.

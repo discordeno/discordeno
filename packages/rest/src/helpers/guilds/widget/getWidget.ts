@@ -1,6 +1,6 @@
-import { BigString, DiscordGuildWidget } from '@discordeno/types'
+import type { BigString, DiscordGuildWidget } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { GuildWidget } from '../../../transformers/widget.js'
+import type { GuildWidget } from '../../../transformers/widget.js'
 
 /**
  * Gets the guild widget by guild ID.

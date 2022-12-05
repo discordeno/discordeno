@@ -1,4 +1,4 @@
-import {
+import type {
   DiscordGatewayPayload,
   DiscordGuildBanAddRemove
 } from '@discordeno/types'

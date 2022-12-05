@@ -1,6 +1,6 @@
-import { DiscordApplication } from '@discordeno/types'
+import type { DiscordApplication } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { Application } from '../../transformers/application.js'
+import type { Application } from '../../transformers/application.js'
 
 /** Get the applications info */
 export async function getApplicationInfo (

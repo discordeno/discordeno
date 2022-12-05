@@ -1,4 +1,4 @@
-import {
+import type {
   DiscordGatewayPayload,
   DiscordScheduledEvent
 } from '@discordeno/types'

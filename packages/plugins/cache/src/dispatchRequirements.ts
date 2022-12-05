@@ -1,6 +1,6 @@
 import type { Bot, DiscordGatewayPayload, Guild } from '@discordeno/bot'
 import type { Shard } from '@discordeno/gateway'
-import { BotWithCache } from './addCacheCollections.js'
+import type { BotWithCache } from './addCacheCollections.js'
 
 const processing = new Set<bigint>()
 
@@ -14,9 +14,7 @@ export async function dispatchRequirements<B extends Bot> (
 
   const id = bot.utils.snowflakeToBigint(
     (data.t && ['GUILD_UPDATE'].includes(data.t)
-      // deno-lint-ignore no-explicit-any
       ? (data.d as any)?.id
-      // deno-lint-ignore no-explicit-any
       : (data.d as any)?.guild_id) ?? ''
   )
 
@@ -30,7 +28,9 @@ export async function dispatchRequirements<B extends Bot> (
 
   if (processing.has(id)) {
     bot.events.debug(
-      `[DISPATCH] New Guild ID already being processed: ${id} in ${data.t as string} event`
+      `[DISPATCH] New Guild ID already being processed: ${id} in ${
+        data.t as string
+      } event`
     )
 
     let runs = 0
@@ -42,7 +42,9 @@ export async function dispatchRequirements<B extends Bot> (
     if (!processing.has(id)) return
 
     return bot.events.debug(
-      `[DISPATCH] Already processed guild was not successfully fetched:  ${id} in ${data.t as string} event`
+      `[DISPATCH] Already processed guild was not successfully fetched:  ${id} in ${
+        data.t as string
+      } event`
     )
   }
 

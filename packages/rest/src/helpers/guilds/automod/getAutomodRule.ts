@@ -1,6 +1,6 @@
-import { BigString, DiscordAutoModerationRule } from '@discordeno/types'
+import type { BigString, DiscordAutoModerationRule } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { AutoModerationRule } from '../../../transformers/automodRule.js'
+import type { AutoModerationRule } from '../../../transformers/automodRule.js'
 
 /**
  * Gets an automod rule by its ID.

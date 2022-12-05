@@ -1,4 +1,4 @@
-import {
+import type {
   DiscordApplication,
   DiscordUser,
   Optionalize

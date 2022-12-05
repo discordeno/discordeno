@@ -1,7 +1,7 @@
-import { BigString, DiscordBan } from '@discordeno/types'
+import type { BigString, DiscordBan } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { Ban } from './getBan.js'
+import type { Ban } from './getBan.js'
 
 /**
  * Gets the list of bans for a guild.

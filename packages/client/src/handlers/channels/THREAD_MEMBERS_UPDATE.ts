@@ -1,8 +1,8 @@
-import {
+import type {
   DiscordGatewayPayload,
   DiscordThreadMembersUpdate
 } from '@discordeno/types'
-import { Client } from '../../client.js'
+import type { Client } from '../../client.js'
 
 export async function handleThreadMembersUpdate (
   client: Client,

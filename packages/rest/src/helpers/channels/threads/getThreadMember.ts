@@ -1,6 +1,6 @@
-import { BigString, DiscordThreadMember } from '@discordeno/types'
+import type { BigString, DiscordThreadMember } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { ThreadMember } from '../../../transformers/threadMember.js'
+import type { ThreadMember } from '../../../transformers/threadMember.js'
 
 /**
  * Gets a thread member by their user ID.

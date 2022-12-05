@@ -1,4 +1,4 @@
-import {
+import type {
   DiscordGatewayPayload,
   DiscordGuildEmojisUpdate
 } from '@discordeno/types'

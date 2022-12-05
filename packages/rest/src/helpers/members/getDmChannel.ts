@@ -1,6 +1,6 @@
-import { BigString, DiscordChannel } from '@discordeno/types'
+import type { BigString, DiscordChannel } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { Channel } from '../../transformers/channel.js'
+import type { Channel } from '../../transformers/channel.js'
 
 /**
  * Gets or creates a DM channel with a user.
@@ -15,7 +15,9 @@ export async function getDmChannel (
   rest: RestManager,
   userId: BigString
 ): Promise<Channel> {
-  if (userId === rest.id) { throw new Error(rest.constants.Errors.YOU_CAN_NOT_DM_THE_BOT_ITSELF) }
+  if (userId === rest.id) {
+    throw new Error(rest.constants.Errors.YOU_CAN_NOT_DM_THE_BOT_ITSELF)
+  }
 
   const result = await rest.runMethod<DiscordChannel>(
     rest,

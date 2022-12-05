@@ -1,7 +1,7 @@
-import { BigString, DiscordUser } from '@discordeno/types'
+import type { BigString, DiscordUser } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
-import { User } from '../../../transformers/member.js'
+import type { User } from '../../../transformers/member.js'
 
 /** Get a list of users that reacted with this emoji. */
 /**

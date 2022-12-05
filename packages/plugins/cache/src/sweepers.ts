@@ -1,5 +1,5 @@
-import { Bot, Member } from '@discordeno/bot'
-import { BotWithCache } from './addCacheCollections.js'
+import type { Bot, Member } from '@discordeno/bot'
+import type { BotWithCache } from './addCacheCollections.js'
 import { dispatchRequirements } from './dispatchRequirements.js'
 
 /** Enables sweepers for your bot but will require, enabling cache first. */
@@ -19,11 +19,7 @@ export function enableCacheSweepers<B extends Bot> (bot: BotWithCache<B>): void 
     bot
   })
   bot.channels.startSweeper({
-    filter: function channelSweeper (
-      channel,
-      key,
-      bot: BotWithCache<B>
-    ) {
+    filter: function channelSweeper (channel, key, bot: BotWithCache<B>) {
       // If this is in a guild and the guild was dispatched, then we can dispatch the channel
       if (channel.guildId && bot.dispatchedGuildIds.has(channel.guildId)) {
         bot.dispatchedChannelIds.add(channel.id)
@@ -53,7 +49,10 @@ export function enableCacheSweepers<B extends Bot> (bot: BotWithCache<B>): void 
       if (member.id === bot.id) return false
 
       // Only sweep members who were not active the last 30 minutes
-      return Date.now() - (member as Member & { cachedAt: number }).cachedAt > 1800000
+      return (
+        Date.now() - (member as Member & { cachedAt: number }).cachedAt >
+        1800000
+      )
     },
     interval: 300000,
     bot
@@ -74,8 +73,12 @@ export function enableCacheSweepers<B extends Bot> (bot: BotWithCache<B>): void 
   bot.presences.startSweeper({ filter: () => true, interval: 300000, bot })
 
   // DISPATCH REQUIREMENTS
-  const handleDiscordPayloadOld = bot.gateway.manager.createShardOptions.events.message
-  bot.gateway.manager.createShardOptions.events.message = async function (shard, data) {
+  const handleDiscordPayloadOld =
+    bot.gateway.manager.createShardOptions.events.message
+  bot.gateway.manager.createShardOptions.events.message = async function (
+    shard,
+    data
+  ) {
     // RUN DISPATCH CHECK
     await dispatchRequirements(bot, data, shard)
     // RUN OLD HANDLER

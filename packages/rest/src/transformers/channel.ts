@@ -1,4 +1,4 @@
-import { DiscordChannel, Optionalize } from '@discordeno/types'
+import type { DiscordChannel, Optionalize } from '@discordeno/types'
 import type { RestManager } from '../restManager.js'
 
 const Mask = (1n << 64n) - 1n

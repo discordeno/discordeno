@@ -1,6 +1,6 @@
-import { BigString, DiscordMessage } from '@discordeno/types'
+import type { BigString, DiscordMessage } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { Message } from '../../transformers/message.js'
+import type { Message } from '../../transformers/message.js'
 
 export const publishMessage = crosspostMessage
 

@@ -1,6 +1,6 @@
-import { BigString } from '@discordeno/types'
+import type { BigString } from '@discordeno/types'
 import { baseEndpoints } from '@discordeno/utils'
-import {
+import type {
   GetBans,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
@@ -8,12 +8,14 @@ import {
   GetMessagesOptions,
   GetReactions,
   GetScheduledEventUsers,
+  ListArchivedThreads,
+  ListGuildMembers
+} from './helpers/index.js'
+import {
   isGetMessagesAfter,
   isGetMessagesAround,
   isGetMessagesBefore,
-  isGetMessagesLimit,
-  ListArchivedThreads,
-  ListGuildMembers
+  isGetMessagesLimit
 } from './helpers/index.js'
 
 export const routes = {

@@ -1,4 +1,4 @@
-import {
+import type {
   ChannelTypes,
   DiscordInteraction,
   DiscordInteractionDataOption,
@@ -7,10 +7,10 @@ import {
 } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../restManager.js'
-import { Attachment } from './attachment.js'
-import { Member, User } from './member.js'
-import { Message } from './message.js'
-import { Role } from './role.js'
+import type { Attachment } from './attachment.js'
+import type { Member, User } from './member.js'
+import type { Message } from './message.js'
+import type { Role } from './role.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformInteraction (

@@ -1,4 +1,4 @@
-import { DiscordEmoji, Optionalize } from '@discordeno/types'
+import type { DiscordEmoji, Optionalize } from '@discordeno/types'
 import type { RestManager } from '../restManager.js'
 import { EmojiToggles } from './toggles/emoji.js'
 

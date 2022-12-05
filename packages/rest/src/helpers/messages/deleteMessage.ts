@@ -1,4 +1,4 @@
-import { BigString } from '@discordeno/types'
+import type { BigString } from '@discordeno/types'
 import { delay } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
 

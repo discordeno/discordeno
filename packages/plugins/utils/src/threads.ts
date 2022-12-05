@@ -1,4 +1,4 @@
-import { BigString, Bot, Channel, DiscordChannel } from '@discordeno/bot'
+import type { BigString, Bot, Channel, DiscordChannel } from '@discordeno/bot'
 
 /** Sets a thread channel to be archived. */
 export async function archiveThread (

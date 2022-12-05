@@ -1,7 +1,7 @@
-import { BigString, DiscordChannel } from '@discordeno/types'
+import type { BigString, DiscordChannel } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { Channel } from '../../transformers/channel.js'
+import type { Channel } from '../../transformers/channel.js'
 
 /**
  * Gets the list of channels for a guild.

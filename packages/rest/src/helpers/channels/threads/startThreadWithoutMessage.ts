@@ -1,11 +1,11 @@
-import {
+import type {
   BigString,
   ChannelTypes,
   DiscordChannel,
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { Channel } from '../../../transformers/channel.js'
+import type { Channel } from '../../../transformers/channel.js'
 
 /**
  * Creates a thread without using a message as the thread's point of origin.

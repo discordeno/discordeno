@@ -1,14 +1,14 @@
-import {
+import type {
   BigString,
-  ChannelTypes,
   DiscordChannel,
   OverwriteReadable,
   SortOrderTypes,
   WithReason
 } from '@discordeno/types'
+import { ChannelTypes } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { Channel } from '../../transformers/channel.js'
+import type { Channel } from '../../transformers/channel.js'
 
 /**
  * Creates a channel within a guild.

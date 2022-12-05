@@ -1,4 +1,4 @@
-import {
+import type {
   DiscordGatewayPayload,
   DiscordUnavailableGuild
 } from '@discordeno/types'

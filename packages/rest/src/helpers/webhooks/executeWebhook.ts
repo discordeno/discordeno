@@ -1,4 +1,4 @@
-import {
+import type {
   AllowedMentions,
   BigString,
   DiscordMessage,
@@ -6,8 +6,8 @@ import {
   MessageComponents
 } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { Embed } from '../../transformers/embed.js'
-import { Message } from '../../transformers/message.js'
+import type { Embed } from '../../transformers/embed.js'
+import type { Message } from '../../transformers/message.js'
 
 export const sendWebhookMessage = executeWebhook
 

@@ -1,4 +1,4 @@
-import {
+import type {
   DiscordAutoModerationActionExecution,
   DiscordGatewayPayload
 } from '@discordeno/types'

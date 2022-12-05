@@ -1,63 +1,22 @@
-import { calculateShardId, CreateShardManager } from '@discordeno/gateway'
-import { CreateRestManagerOptions } from '@discordeno/rest'
-import {
-  AllowedMentions,
-  BigString,
-  DiscordActivity,
-  DiscordAllowedMentions,
-  DiscordApplication,
-  DiscordApplicationCommand,
-  DiscordApplicationCommandOption,
-  DiscordApplicationCommandOptionChoice,
-  DiscordAttachment,
-  DiscordAuditLogEntry,
-  DiscordAutoModerationActionExecution,
-  DiscordAutoModerationRule,
-  DiscordChannel,
-  DiscordComponent,
-  DiscordCreateApplicationCommand,
-  DiscordEmbed,
+import type { CreateShardManager, GatewayManager } from '@discordeno/gateway'
+import type { CreateRestManagerOptions } from '@discordeno/rest'
+import type {
   DiscordEmoji,
   DiscordGatewayPayload,
-  DiscordGetGatewayBot,
-  DiscordGuild,
-  DiscordGuildApplicationCommandPermissions,
-  DiscordGuildWidget,
-  DiscordGuildWidgetSettings,
-  DiscordIntegrationCreateUpdate,
-  DiscordInteraction,
-  DiscordInteractionDataOption,
-  DiscordInteractionResponse,
-  DiscordInviteCreate,
-  DiscordMember,
-  DiscordMessage,
-  DiscordPresenceUpdate,
   DiscordReady,
-  DiscordRole,
-  DiscordScheduledEvent,
-  DiscordStageInstance,
-  DiscordSticker,
-  DiscordStickerPack,
-  DiscordTeam,
-  DiscordTemplate,
-  DiscordThreadMember,
-  DiscordUser,
-  DiscordVoiceRegion,
-  DiscordVoiceState,
-  DiscordWebhook,
-  DiscordWelcomeScreen,
-  Errors,
   GatewayDispatchEventNames,
   GatewayIntents,
   GetGatewayBot
 } from '@discordeno/types'
+import { Errors } from '@discordeno/types'
+import type { Collection } from '@discordeno/utils'
 import {
   baseEndpoints,
   bigintToSnowflake,
   calculateBits,
   calculatePermissions,
+  calculateShardId,
   CHANNEL_MENTION_REGEX,
-  Collection,
   CONTEXT_MENU_COMMANDS_NAME_REGEX,
   delay,
   DISCORDENO_VERSION,
@@ -74,103 +33,26 @@ import {
   validateLength
 } from '@discordeno/utils'
 import * as handlers from './handlers/index.js'
-import { Activity, transformActivity } from './transformers/activity.js'
-import {
-  Application,
-  transformApplication
-} from './transformers/application.js'
-import {
-  ApplicationCommand,
-  transformApplicationCommand
-} from './transformers/applicationCommand.js'
-import {
-  ApplicationCommandOption,
-  transformApplicationCommandOption
-} from './transformers/applicationCommandOption.js'
-import {
-  ApplicationCommandPermission,
-  transformApplicationCommandPermission
-} from './transformers/applicationCommandPermission.js'
-import { Attachment, transformAttachment } from './transformers/attachment.js'
-import {
-  AuditLogEntry,
-  transformAuditLogEntry
-} from './transformers/auditLogEntry.js'
-import { Component, transformComponent } from './transformers/component.js'
-import { Embed, transformEmbed } from './transformers/embed.js'
-import { Emoji, transformEmoji } from './transformers/emoji.js'
-import { transformGatewayBot } from './transformers/gatewayBot.js'
-import {
-  ApplicationCommandOptionChoice,
+import type { Transformers } from './transformer.js'
+import { createTransformers } from './transformer.js'
+import type {
   AutoModerationActionExecution,
   AutoModerationRule,
   Channel,
+  Emoji,
   Guild,
-  GuildWidget,
-  GuildWidgetSettings,
   Integration,
   Interaction,
-  InteractionDataOption,
   Invite,
   Member,
   Message,
   PresenceUpdate,
   Role,
   ScheduledEvent,
-  StageInstance,
-  Sticker,
-  StickerPack,
-  Team,
-  Template,
   ThreadMember,
-  transformActivityToDiscordActivity,
-  transformAllowedMentionsToDiscordAllowedMentions,
-  transformApplicationCommandOptionChoice,
-  transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
-  transformApplicationCommandOptionToDiscordApplicationCommandOption,
-  transformApplicationCommandToDiscordApplicationCommand,
-  transformApplicationToDiscordApplication,
-  transformAttachmentToDiscordAttachment,
-  transformAutoModerationActionExecution,
-  transformAutoModerationRule,
-  transformChannel,
-  transformComponentToDiscordComponent,
-  transformCreateApplicationCommandToDiscordCreateApplicationCommand,
-  transformEmbedToDiscordEmbed,
-  transformGuild,
-  transformIntegration,
-  transformInteraction,
-  transformInteractionDataOption,
-  transformInteractionResponseToDiscordInteractionResponse,
-  transformInvite,
-  transformMember,
-  transformMemberToDiscordMember,
-  transformMessage,
-  transformPresence,
-  transformRole,
-  transformScheduledEvent,
-  transformStageInstance,
-  transformSticker,
-  transformStickerPack,
-  transformTeam,
-  transformTeamToDiscordTeam,
-  transformTemplate,
-  transformThreadMember,
-  transformUser,
-  transformUserToDiscordUser,
-  transformVoiceRegion,
-  transformVoiceState,
-  transformWebhook,
-  transformWelcomeScreen,
-  transformWidget,
-  transformWidgetSettings,
   User,
-  VoiceRegions,
-  VoiceState,
-  Webhook,
-  WelcomeScreen
+  VoiceState
 } from './transformers/index.js'
-import { CreateApplicationCommand, InteractionResponse } from './types.js'
 
 export function createClient (options: CreateClientOptions): Client {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
@@ -285,7 +167,8 @@ export function createUtils (options: Partial<HelperUtils>) {
   return {
     snowflakeToBigint,
     bigintToSnowflake,
-    calculateShardId,
+    calculateShardId: (gateway: GatewayManager, guildId: bigint) =>
+      calculateShardId(gateway.manager.totalShards, guildId),
     delay,
     iconHashToBigInt,
     iconBigintToHash,
@@ -300,7 +183,10 @@ export function createUtils (options: Partial<HelperUtils>) {
 export interface HelperUtils {
   snowflakeToBigint: typeof snowflakeToBigint
   bigintToSnowflake: typeof bigintToSnowflake
-  calculateShardId: typeof calculateShardId
+  calculateShardId: (
+    gateway: GatewayManager,
+    guildId: bigint
+  ) => ReturnType<typeof calculateShardId>
   delay: typeof delay
   iconHashToBigInt: typeof iconHashToBigInt
   iconBigintToHash: typeof iconBigintToHash
@@ -347,225 +233,6 @@ export interface Client {
   }
   enabledPlugins: Set<string>
   handleDiscordPayload?: CreateShardManager['handleMessage']
-}
-
-export interface Transformers {
-  reverse: {
-    allowedMentions: (
-      client: Client,
-      payload: AllowedMentions
-    ) => DiscordAllowedMentions
-    embed: (client: Client, payload: Embed) => DiscordEmbed
-    component: (client: Client, payload: Component) => DiscordComponent
-    activity: (client: Client, payload: Activity) => DiscordActivity
-    member: (client: Client, payload: Member) => DiscordMember
-    user: (client: Client, payload: User) => DiscordUser
-    team: (client: Client, payload: Team) => DiscordTeam
-    application: (client: Client, payload: Application) => DiscordApplication
-    snowflake: (snowflake: BigString) => string
-    createApplicationCommand: (
-      client: Client,
-      payload: CreateApplicationCommand
-    ) => DiscordCreateApplicationCommand
-    applicationCommand: (
-      client: Client,
-      payload: ApplicationCommand
-    ) => DiscordApplicationCommand
-    applicationCommandOption: (
-      client: Client,
-      payload: ApplicationCommandOption
-    ) => DiscordApplicationCommandOption
-    applicationCommandOptionChoice: (
-      client: Client,
-      payload: ApplicationCommandOptionChoice
-    ) => DiscordApplicationCommandOptionChoice
-    interactionResponse: (
-      client: Client,
-      payload: InteractionResponse
-    ) => DiscordInteractionResponse
-    attachment: (client: Client, payload: Attachment) => DiscordAttachment
-  }
-  snowflake: (snowflake: BigString) => bigint
-  gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot
-  automodRule: (
-    client: Client,
-    payload: DiscordAutoModerationRule
-  ) => AutoModerationRule
-  automodActionExecution: (
-    client: Client,
-    payload: DiscordAutoModerationActionExecution
-  ) => AutoModerationActionExecution
-  channel: (
-    client: Client,
-    payload: { channel: DiscordChannel } & { guildId?: bigint }
-  ) => Channel
-  guild: (
-    client: Client,
-    payload: { guild: DiscordGuild } & { shardId: number }
-  ) => Guild
-  user: (client: Client, payload: DiscordUser) => User
-  member: (
-    client: Client,
-    payload: DiscordMember,
-    guildId: bigint,
-    userId: bigint
-  ) => Member
-  message: (client: Client, payload: DiscordMessage) => Message
-  role: (
-    client: Client,
-    payload: { role: DiscordRole } & { guildId: bigint }
-  ) => Role
-  voiceState: (
-    client: Client,
-    payload: { voiceState: DiscordVoiceState } & { guildId: bigint }
-  ) => VoiceState
-  interaction: (client: Client, payload: DiscordInteraction) => Interaction
-  interactionDataOptions: (
-    client: Client,
-    payload: DiscordInteractionDataOption
-  ) => InteractionDataOption
-  integration: (
-    client: Client,
-    payload: DiscordIntegrationCreateUpdate
-  ) => Integration
-  invite: (client: Client, invite: DiscordInviteCreate) => Invite
-  application: (client: Client, payload: DiscordApplication) => Application
-  team: (client: Client, payload: DiscordTeam) => Team
-  emoji: (client: Client, payload: DiscordEmoji) => Emoji
-  activity: (client: Client, payload: DiscordActivity) => Activity
-  presence: (client: Client, payload: DiscordPresenceUpdate) => PresenceUpdate
-  attachment: (client: Client, payload: DiscordAttachment) => Attachment
-  embed: (client: Client, payload: DiscordEmbed) => Embed
-  component: (client: Client, payload: DiscordComponent) => Component
-  webhook: (client: Client, payload: DiscordWebhook) => Webhook
-  auditLogEntry: (
-    client: Client,
-    payload: DiscordAuditLogEntry
-  ) => AuditLogEntry
-  applicationCommand: (
-    client: Client,
-    payload: DiscordApplicationCommand
-  ) => ApplicationCommand
-  applicationCommandOption: (
-    client: Client,
-    payload: DiscordApplicationCommandOption
-  ) => ApplicationCommandOption
-  applicationCommandPermission: (
-    client: Client,
-    payload: DiscordGuildApplicationCommandPermissions
-  ) => ApplicationCommandPermission
-  scheduledEvent: (
-    client: Client,
-    payload: DiscordScheduledEvent
-  ) => ScheduledEvent
-  threadMember: (client: Client, payload: DiscordThreadMember) => ThreadMember
-  welcomeScreen: (
-    client: Client,
-    payload: DiscordWelcomeScreen
-  ) => WelcomeScreen
-  voiceRegion: (client: Client, payload: DiscordVoiceRegion) => VoiceRegions
-  widget: (client: Client, payload: DiscordGuildWidget) => GuildWidget
-  widgetSettings: (
-    client: Client,
-    payload: DiscordGuildWidgetSettings
-  ) => GuildWidgetSettings
-  stageInstance: (
-    client: Client,
-    payload: DiscordStageInstance
-  ) => StageInstance
-  sticker: (client: Client, payload: DiscordSticker) => Sticker
-  stickerPack: (client: Client, payload: DiscordStickerPack) => StickerPack
-  applicationCommandOptionChoice: (
-    client: Client,
-    payload: DiscordApplicationCommandOptionChoice
-  ) => ApplicationCommandOptionChoice
-  template: (client: Client, payload: DiscordTemplate) => Template
-}
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function createTransformers (options: Partial<Transformers>) {
-  return {
-    reverse: {
-      allowedMentions:
-        options.reverse?.allowedMentions ??
-        transformAllowedMentionsToDiscordAllowedMentions,
-      embed: options.reverse?.embed ?? transformEmbedToDiscordEmbed,
-      component:
-        options.reverse?.component ?? transformComponentToDiscordComponent,
-      activity: options.reverse?.activity ?? transformActivityToDiscordActivity,
-      member: options.reverse?.member ?? transformMemberToDiscordMember,
-      user: options.reverse?.user ?? transformUserToDiscordUser,
-      team: options.reverse?.team ?? transformTeamToDiscordTeam,
-      application:
-        options.reverse?.application ??
-        transformApplicationToDiscordApplication,
-      snowflake: options.reverse?.snowflake ?? bigintToSnowflake,
-      createApplicationCommand:
-        options.reverse?.createApplicationCommand ??
-        transformCreateApplicationCommandToDiscordCreateApplicationCommand,
-      applicationCommand:
-        options.reverse?.applicationCommand ??
-        transformApplicationCommandToDiscordApplicationCommand,
-      applicationCommandOption:
-        options.reverse?.applicationCommandOption ??
-        transformApplicationCommandOptionToDiscordApplicationCommandOption,
-      applicationCommandOptionChoice:
-        options.reverse?.applicationCommandOptionChoice ??
-        transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
-      interactionResponse:
-        options.reverse?.interactionResponse ??
-        transformInteractionResponseToDiscordInteractionResponse,
-      attachment:
-        options.reverse?.attachment ?? transformAttachmentToDiscordAttachment
-    },
-    automodRule: options.automodRule ?? transformAutoModerationRule,
-    automodActionExecution:
-      options.automodActionExecution ?? transformAutoModerationActionExecution,
-    activity: options.activity ?? transformActivity,
-    application: options.application ?? transformApplication,
-    attachment: options.attachment ?? transformAttachment,
-    channel: options.channel ?? transformChannel,
-    component: options.component ?? transformComponent,
-    embed: options.embed ?? transformEmbed,
-    emoji: options.emoji ?? transformEmoji,
-    guild: options.guild ?? transformGuild,
-    integration: options.integration ?? transformIntegration,
-    interaction: options.interaction ?? transformInteraction,
-    interactionDataOptions:
-      options.interactionDataOptions ?? transformInteractionDataOption,
-    invite: options.invite ?? transformInvite,
-    member: options.member ?? transformMember,
-    message: options.message ?? transformMessage,
-    presence: options.presence ?? transformPresence,
-    role: options.role ?? transformRole,
-    user: options.user ?? transformUser,
-    team: options.team ?? transformTeam,
-    voiceState: options.voiceState ?? transformVoiceState,
-    snowflake: options.snowflake ?? snowflakeToBigint,
-    webhook: options.webhook ?? transformWebhook,
-    auditLogEntry: options.auditLogEntry ?? transformAuditLogEntry,
-    applicationCommand:
-      options.applicationCommand ?? transformApplicationCommand,
-    applicationCommandOption:
-      options.applicationCommandOption ?? transformApplicationCommandOption,
-    applicationCommandPermission:
-      options.applicationCommandPermission ??
-      transformApplicationCommandPermission,
-    scheduledEvent: options.scheduledEvent ?? transformScheduledEvent,
-    threadMember: options.threadMember ?? transformThreadMember,
-    welcomeScreen: options.welcomeScreen ?? transformWelcomeScreen,
-    voiceRegion: options.voiceRegion ?? transformVoiceRegion,
-    widget: options.widget ?? transformWidget,
-    widgetSettings: options.widgetSettings ?? transformWidgetSettings,
-    stageInstance: options.stageInstance ?? transformStageInstance,
-    sticker: options.sticker ?? transformSticker,
-    stickerPack: options.stickerPack ?? transformStickerPack,
-    gatewayBot: options.gatewayBot ?? transformGatewayBot,
-    applicationCommandOptionChoice:
-      options.applicationCommandOptionChoice ??
-      transformApplicationCommandOptionChoice,
-    template: options.template ?? transformTemplate
-  }
 }
 
 export interface EventHandlers {
@@ -976,9 +643,3 @@ export function createClientGatewayHandlers (
       options.INTEGRATION_DELETE ?? handlers.handleIntegrationDelete
   }
 }
-
-export type RemoveFirstFromTuple<T extends any[]> = T['length'] extends 0
-  ? []
-  : ((...b: T) => void) extends (a: any, ...b: infer I) => void
-      ? I
-      : []

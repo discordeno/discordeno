@@ -1,11 +1,11 @@
-import {
+import type {
   BigString,
   DiscordInvite,
   TargetTypes,
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { BaseInvite } from './getInvite.js'
+import type { BaseInvite } from './getInvite.js'
 
 /**
  * Creates an invite to a channel in a guild.

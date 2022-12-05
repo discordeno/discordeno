@@ -1,7 +1,7 @@
-import { BigString, DiscordWebhook } from '@discordeno/types'
+import type { BigString, DiscordWebhook } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { Webhook } from '../../transformers/webhook.js'
-import { ModifyWebhook } from './editWebhook.js'
+import type { Webhook } from '../../transformers/webhook.js'
+import type { ModifyWebhook } from './editWebhook.js'
 
 /**
  * Edits a webhook using the webhook token, thereby bypassing the need for authentication + permissions.

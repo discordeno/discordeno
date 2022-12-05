@@ -1,16 +1,27 @@
-import { DiscordGatewayPayload, DiscordHello, DiscordReady, GatewayOpcodes } from '@discordeno/types'
+import type {
+  DiscordGatewayPayload,
+  DiscordHello,
+  DiscordReady
+} from '@discordeno/types'
+import { GatewayOpcodes } from '@discordeno/types'
 import { createLeakyBucket, delay } from '@discordeno/utils'
 import { inflateSync } from 'node:zlib'
-import { MessageEvent } from 'ws'
-import { GATEWAY_RATE_LIMIT_RESET_INTERVAL, Shard, ShardState } from './types.js'
+import type { MessageEvent } from 'ws'
+import type { Shard } from './types.js'
+import { GATEWAY_RATE_LIMIT_RESET_INTERVAL, ShardState } from './types.js'
 
-export async function handleMessage (shard: Shard, message: MessageEvent): Promise<void> {
+export async function handleMessage (
+  shard: Shard,
+  message: MessageEvent
+): Promise<void> {
   let preProcessMessage = message.data
 
   // If message compression is enabled,
   // Discord might send zlib compressed payloads.
   if (shard.gatewayConfig.compress && preProcessMessage instanceof Blob) {
-    preProcessMessage = inflateSync(await preProcessMessage.arrayBuffer()).toString()
+    preProcessMessage = inflateSync(
+      await preProcessMessage.arrayBuffer()
+    ).toString()
   }
 
   // Safeguard incase decompression failed to make a string.

@@ -1,5 +1,5 @@
 import type { RestManager } from '../../restManager.js'
-import { BigString } from '@discordeno/types'
+import type { BigString } from '@discordeno/types'
 
 /**
  * Deletes a template from a guild.

@@ -1,4 +1,4 @@
-import { DiscordScheduledEvent, Optionalize } from '@discordeno/types'
+import type { DiscordScheduledEvent, Optionalize } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { RestManager } from '../restManager.js'
 

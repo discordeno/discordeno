@@ -1,4 +1,4 @@
-import {
+import type {
   DiscordApplicationCommandOptionChoice,
   Optionalize
 } from '@discordeno/types'

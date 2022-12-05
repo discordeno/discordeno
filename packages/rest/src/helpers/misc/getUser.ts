@@ -1,6 +1,6 @@
-import { BigString, DiscordUser } from '@discordeno/types'
+import type { BigString, DiscordUser } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { User } from '../../transformers/member.js'
+import type { User } from '../../transformers/member.js'
 
 /** This function will return the raw user payload in the rare cases you need to fetch a user directly from the API. */
 export async function getUser (

@@ -1,7 +1,7 @@
-import { DiscordSticker } from '@discordeno/types'
+import type { DiscordSticker } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { Sticker } from '../../transformers/sticker.js'
+import type { Sticker } from '../../transformers/sticker.js'
 
 /**
  * Returns an array of sticker objects for the given guild.

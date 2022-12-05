@@ -1,7 +1,6 @@
-import type { Emoji } from '@discordeno/bot'
-import {
+import type {
+  Emoji,
   Bot,
-  Collection,
   DiscordChannel,
   DiscordGuildBanAddRemove,
   DiscordGuildEmojisUpdate,
@@ -12,6 +11,7 @@ import {
   DiscordUnavailableGuild,
   DiscordVoiceState
 } from '@discordeno/bot'
+import { Collection } from '@discordeno/bot'
 import type { BotWithCache } from './addCacheCollections.js'
 
 export function setupCacheRemovals<B extends Bot> (bot: BotWithCache<B>): void {
@@ -72,10 +72,12 @@ export function setupCacheRemovals<B extends Bot> (bot: BotWithCache<B>): void {
     const guild = bot.guilds.get(bot.transformers.snowflake(payload.guild_id))
 
     if (guild) {
-      guild.emojis = new Collection(payload.emojis.map((e) => {
-        const emoji: Emoji = bot.transformers.emoji(bot, e)
-        return [emoji.id!, emoji]
-      }))
+      guild.emojis = new Collection(
+        payload.emojis.map((e) => {
+          const emoji: Emoji = bot.transformers.emoji(bot, e)
+          return [emoji.id!, emoji]
+        })
+      )
     }
 
     GUILD_EMOJIS_UPDATE(bot, data, shardId)
@@ -85,25 +87,31 @@ export function setupCacheRemovals<B extends Bot> (bot: BotWithCache<B>): void {
     const payload = data.d as DiscordMessageDelete
     const id = bot.transformers.snowflake(payload.id)
     const message = bot.messages.get(id)
-    bot.events.messageDelete(bot, {
-      id,
-      channelId: bot.transformers.snowflake(payload.channel_id),
-      guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
-    }, message)
+    bot.events.messageDelete(
+      bot,
+      {
+        id,
+        channelId: bot.transformers.snowflake(payload.channel_id),
+        guildId: payload.guild_id
+          ? bot.transformers.snowflake(payload.guild_id)
+          : undefined
+      },
+      message
+    )
     bot.messages.delete(id)
   }
 
   bot.handlers.MESSAGE_DELETE_BULK = function (_, data, shardId) {
     const payload = data.d as DiscordMessageDeleteBulk
-    payload.ids.forEach((id) => bot.messages.delete(bot.transformers.snowflake(id)))
+    payload.ids.forEach((id) =>
+      bot.messages.delete(bot.transformers.snowflake(id))
+    )
     MESSAGE_DELETE_BULK(bot, data, shardId)
   }
 
   bot.handlers.GUILD_ROLE_DELETE = function (_, data, shardId) {
     const payload = data.d as DiscordGuildRoleDelete
-    const guild = bot.guilds.get(
-      bot.transformers.snowflake(payload.guild_id)
-    )
+    const guild = bot.guilds.get(bot.transformers.snowflake(payload.guild_id))
     const id = bot.transformers.snowflake(payload.role_id)
 
     if (guild) {
@@ -130,7 +138,7 @@ export function setupCacheRemovals<B extends Bot> (bot: BotWithCache<B>): void {
       guildId: bot.transformers.snowflake(payload.guild_id)
     })
 
-    if (!vs.channelId) bot.guilds.get(vs.guildId)?.voiceStates.delete(vs.userId)
+    if (!vs.channelId) { bot.guilds.get(vs.guildId)?.voiceStates.delete(vs.userId) }
 
     VOICE_STATE_UPDATE(bot, data, shardId)
   }

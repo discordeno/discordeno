@@ -1,4 +1,4 @@
-import { DiscordVoiceRegion, Optionalize } from '@discordeno/types'
+import type { DiscordVoiceRegion, Optionalize } from '@discordeno/types'
 import type { RestManager } from '../restManager.js'
 
 // TODO: Rename `VoiceRegions` to `VoiceRegion`.

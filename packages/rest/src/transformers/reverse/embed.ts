@@ -1,6 +1,6 @@
-import { DiscordEmbed } from '@discordeno/types'
+import type { DiscordEmbed } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { Embed } from '../embed.js'
+import type { Embed } from '../embed.js'
 
 export function transformEmbedToDiscordEmbed (
   rest: RestManager,

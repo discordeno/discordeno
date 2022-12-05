@@ -1,6 +1,7 @@
-import { DiscordPresenceUpdate, PresenceStatus } from '@discordeno/types'
+import type { DiscordPresenceUpdate } from '@discordeno/types'
+import { PresenceStatus } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { PresenceUpdate } from '../presence.js'
+import type { PresenceUpdate } from '../presence.js'
 
 export const reverseStatusTypes = Object.freeze({
   0: 'online',

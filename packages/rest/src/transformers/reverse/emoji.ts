@@ -1,6 +1,6 @@
-import { DiscordEmoji } from '@discordeno/types'
+import type { DiscordEmoji } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { Emoji } from '../emoji.js'
+import type { Emoji } from '../emoji.js'
 
 export function transformEmojiToDiscordEmoji (
   rest: RestManager,

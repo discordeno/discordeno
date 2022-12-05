@@ -1,7 +1,7 @@
-import { DiscordMessage } from '@discordeno/types'
+import type { DiscordMessage } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { Message } from '../../../transformers/message.js'
-import { InteractionResponse } from '../../../types.js'
+import type { Message } from '../../../transformers/message.js'
+import type { InteractionResponse } from '../../../types.js'
 
 /**
  * Sends a follow-up message to an interaction.

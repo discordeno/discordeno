@@ -1,4 +1,4 @@
-import {
+import type {
   AutoModerationActionType,
   AutoModerationEventTypes,
   AutoModerationTriggerTypes,
@@ -9,7 +9,7 @@ import {
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { AutoModerationRule } from '../../../transformers/automodRule.js'
+import type { AutoModerationRule } from '../../../transformers/automodRule.js'
 
 /**
  * Creates an automod rule in a guild.

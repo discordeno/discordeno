@@ -1,10 +1,10 @@
-import {
+import type {
   ApplicationCommandPermissionTypes,
   BigString,
   DiscordGuildApplicationCommandPermissions
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { ApplicationCommandPermission } from '../../../transformers/applicationCommandPermission.js'
+import type { ApplicationCommandPermission } from '../../../transformers/applicationCommandPermission.js'
 
 // TODO: Make `options` into an object with a `permissions` field.
 

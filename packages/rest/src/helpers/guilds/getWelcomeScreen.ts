@@ -1,6 +1,6 @@
-import { BigString, DiscordWelcomeScreen } from '@discordeno/types'
+import type { BigString, DiscordWelcomeScreen } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { WelcomeScreen } from '../../transformers/welcomeScreen.js'
+import type { WelcomeScreen } from '../../transformers/welcomeScreen.js'
 
 /**
  * Gets the welcome screen for a guild.

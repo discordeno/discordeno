@@ -1,5 +1,5 @@
 import type { RestManager } from '../../restManager.js'
-import { Sticker } from '../../transformers/sticker.js'
+import type { Sticker } from '../../transformers/sticker.js'
 
 /**
  * Returns a sticker object for the given guild and sticker IDs.

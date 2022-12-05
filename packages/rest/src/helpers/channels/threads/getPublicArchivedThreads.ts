@@ -1,7 +1,7 @@
-import { BigString, DiscordListArchivedThreads } from '@discordeno/types'
+import type { BigString, DiscordListArchivedThreads } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
-import { ActiveThreads } from './getActiveThreads.js'
+import type { ActiveThreads } from './getActiveThreads.js'
 
 /**
  * Gets the list of public archived threads for a channel.

@@ -1,4 +1,4 @@
-import {
+import type {
   BigString,
   DiscordScheduledEvent,
   ScheduledEventEntityType,
@@ -8,7 +8,7 @@ import {
 } from '@discordeno/types'
 import { validateLength } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
-import { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
+import type { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
 
 /**
  * Edits a scheduled event.

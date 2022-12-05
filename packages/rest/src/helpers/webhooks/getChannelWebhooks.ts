@@ -1,7 +1,7 @@
-import { BigString, DiscordWebhook } from '@discordeno/types'
+import type { BigString, DiscordWebhook } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { Webhook } from '../../transformers/webhook.js'
+import type { Webhook } from '../../transformers/webhook.js'
 
 /**
  * Gets a list of webhooks for a channel.

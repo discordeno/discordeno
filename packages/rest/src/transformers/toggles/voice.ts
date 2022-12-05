@@ -1,4 +1,4 @@
-import { DiscordVoiceState } from '@discordeno/types'
+import type { DiscordVoiceState } from '@discordeno/types'
 import { ToggleBitfield } from './ToggleBitfield.js'
 
 export const VoiceStateToggle = {

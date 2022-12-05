@@ -1,5 +1,8 @@
-import { DiscordGatewayPayload, DiscordMessageDelete } from '@discordeno/types'
-import { Client } from '../../client.js'
+import type {
+  DiscordGatewayPayload,
+  DiscordMessageDelete
+} from '@discordeno/types'
+import type { Client } from '../../client.js'
 
 export async function handleMessageDelete (
   client: Client,

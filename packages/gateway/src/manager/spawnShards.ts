@@ -1,4 +1,4 @@
-import { GatewayManager } from './gatewayManager.js'
+import type { GatewayManager } from './gatewayManager.js'
 
 /** Begin spawning shards. */
 export function spawnShards (gateway: GatewayManager): void {

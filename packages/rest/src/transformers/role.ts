@@ -1,4 +1,4 @@
-import { DiscordRole, Optionalize } from '@discordeno/types'
+import type { DiscordRole, Optionalize } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { RestManager } from '../restManager.js'
 import { RoleToggles } from './toggles/role.js'

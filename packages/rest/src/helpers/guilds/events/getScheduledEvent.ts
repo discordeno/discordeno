@@ -1,6 +1,6 @@
-import { BigString, DiscordScheduledEvent } from '@discordeno/types'
+import type { BigString, DiscordScheduledEvent } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
+import type { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
 
 /**
  * Gets a scheduled event by its ID.

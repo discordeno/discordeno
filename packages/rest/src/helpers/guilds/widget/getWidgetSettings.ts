@@ -1,6 +1,6 @@
-import { BigString, DiscordGuildWidgetSettings } from '@discordeno/types'
+import type { BigString, DiscordGuildWidgetSettings } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { GuildWidgetSettings } from '../../../transformers/widgetSettings.js'
+import type { GuildWidgetSettings } from '../../../transformers/widgetSettings.js'
 
 /**
  * Gets the settings of a guild's widget.

@@ -1,5 +1,5 @@
-import { DiscordEmoji, Optionalize } from '@discordeno/types'
-import { Client } from '../client.js'
+import type { DiscordEmoji, Optionalize } from '@discordeno/types'
+import type { Client } from '../client.js'
 import { EmojiToggles } from './toggles/emoji.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

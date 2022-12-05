@@ -1,8 +1,9 @@
 // @ts-nocheck
 
-import { GatewayOpcodes, PresenceStatus } from '@discordeno/types'
+import type { PresenceStatus } from '@discordeno/types'
+import { GatewayOpcodes } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { Activity } from '../../transformers/activity.js'
+import type { Activity } from '../../transformers/activity.js'
 export async function editShardStatus (
   rest: RestManager,
   shardId: number,

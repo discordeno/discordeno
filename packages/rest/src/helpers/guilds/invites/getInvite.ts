@@ -1,11 +1,8 @@
-import {
-  BigString,
-  DiscordInviteMetadata,
-  TargetTypes
-} from '@discordeno/types'
+import type { BigString, DiscordInviteMetadata } from '@discordeno/types'
+import { TargetTypes } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { User } from '../../../transformers/member.js'
-import { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
+import type { User } from '../../../transformers/member.js'
+import type { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
 
 export interface BaseInvite {
   code: string

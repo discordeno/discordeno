@@ -1,7 +1,7 @@
-import { BigString, DiscordListArchivedThreads } from '@discordeno/types'
+import type { BigString, DiscordListArchivedThreads } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
-import {
+import type {
   ArchivedThreads,
   ListArchivedThreads
 } from './getPublicArchivedThreads.js'

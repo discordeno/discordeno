@@ -1,8 +1,8 @@
-import {
+import type {
   DiscordGatewayPayload,
   DiscordGuildRoleCreate
 } from '@discordeno/types'
-import { Client } from '../../client.js'
+import type { Client } from '../../client.js'
 
 export async function handleGuildRoleCreate (
   client: Client,

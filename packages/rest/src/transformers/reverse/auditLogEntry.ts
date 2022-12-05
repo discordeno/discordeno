@@ -1,6 +1,6 @@
-import { DiscordAuditLogEntry } from '@discordeno/types'
+import type { DiscordAuditLogEntry } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { AuditLogEntry } from '../auditLogEntry.js'
+import type { AuditLogEntry } from '../auditLogEntry.js'
 
 export function transformAuditLogEntryToDiscordAuditLogEntry (
   rest: RestManager,

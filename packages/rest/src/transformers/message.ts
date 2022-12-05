@@ -1,4 +1,4 @@
-import { DiscordMessage, Optionalize } from '@discordeno/types'
+import type { DiscordMessage, Optionalize } from '@discordeno/types'
 import { CHANNEL_MENTION_REGEX, iconHashToBigInt } from '@discordeno/utils'
 import type { RestManager } from '../restManager.js'
 import { MemberToggles } from './toggles/member.js'

@@ -1,8 +1,12 @@
 import { createLeakyBucket } from '@discordeno/utils'
-import { GatewayManager } from './gatewayManager.js'
+import type { GatewayManager } from './gatewayManager.js'
 
 export function prepareBuckets (gateway: GatewayManager): void {
-  for (let i = 0; i < gateway.gatewayBot.sessionStartLimit.maxConcurrency; ++i) {
+  for (
+    let i = 0;
+    i < gateway.gatewayBot.sessionStartLimit.maxConcurrency;
+    ++i
+  ) {
     gateway.buckets.set(i, {
       workers: [],
       leak: createLeakyBucket({
@@ -15,18 +19,24 @@ export function prepareBuckets (gateway: GatewayManager): void {
   }
 
   // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
-  for (let shardId = gateway.firstShardId; shardId <= gateway.lastShardId; ++shardId) {
+  for (
+    let shardId = gateway.firstShardId;
+    shardId <= gateway.lastShardId;
+    ++shardId
+  ) {
     if (shardId >= gateway.manager.totalShards) {
       throw new Error(
         `Shard (id: ${shardId}) is bigger or equal to the used amount of used shards which is ${gateway.manager.totalShards}`
       )
     }
 
-    const bucketId = shardId % gateway.gatewayBot.sessionStartLimit.maxConcurrency
+    const bucketId =
+      shardId % gateway.gatewayBot.sessionStartLimit.maxConcurrency
     const bucket = gateway.buckets.get(bucketId)
     if (bucket == null) {
       throw new Error(
-        `Shard (id: ${shardId}) got assigned to an illegal bucket id: ${bucketId}, expected a bucket id between 0 and ${gateway.gatewayBot.sessionStartLimit.maxConcurrency - 1
+        `Shard (id: ${shardId}) got assigned to an illegal bucket id: ${bucketId}, expected a bucket id between 0 and ${
+          gateway.gatewayBot.sessionStartLimit.maxConcurrency - 1
         }`
       )
     }

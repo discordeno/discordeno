@@ -1,7 +1,7 @@
-import { DiscordMember, DiscordUser } from '@discordeno/types'
+import type { DiscordMember, DiscordUser } from '@discordeno/types'
 import { bigintToSnowflake, iconBigintToHash } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { Member, User } from '../member.js'
+import type { Member, User } from '../member.js'
 
 export function transformUserToDiscordUser (
   rest: RestManager,

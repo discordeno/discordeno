@@ -1,7 +1,7 @@
-import { DiscordTeam } from '@discordeno/types'
+import type { DiscordTeam } from '@discordeno/types'
 import { bigintToSnowflake, iconBigintToHash } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { Team } from '../team.js'
+import type { Team } from '../team.js'
 
 export function transformTeamToDiscordTeam (
   rest: RestManager,

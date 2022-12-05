@@ -17,9 +17,15 @@
     "preserveWatchOutput": true,
     "skipLibCheck": true,
     "strict": true,
-    "incremental": true
+    "incremental": true,
+    "importsNotUsedAsValues": "error"
   },
-  "exclude": ["node_modules", "dist", "tests", "test"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests",
+    "test"
+  ],
   "ts-node": {
     "swc": true,
     "esm": true

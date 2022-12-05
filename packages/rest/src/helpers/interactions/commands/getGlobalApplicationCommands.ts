@@ -1,7 +1,7 @@
-import { DiscordApplicationCommand } from '@discordeno/types'
+import type { DiscordApplicationCommand } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
-import { ApplicationCommand } from '../../../transformers/applicationCommand.js'
+import type { ApplicationCommand } from '../../../transformers/applicationCommand.js'
 
 // TODO: Implement `with_localizations` options field.
 

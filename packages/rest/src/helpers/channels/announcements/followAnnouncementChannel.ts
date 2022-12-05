@@ -1,4 +1,4 @@
-import { BigString, DiscordFollowedChannel } from '@discordeno/types'
+import type { BigString, DiscordFollowedChannel } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 
 /**

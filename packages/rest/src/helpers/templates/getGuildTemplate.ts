@@ -1,6 +1,6 @@
 import type { RestManager } from '../../restManager.js'
-import { Template } from '../../transformers/template.js'
-import { DiscordTemplate } from '@discordeno/types'
+import type { Template } from '../../transformers/template.js'
+import type { DiscordTemplate } from '@discordeno/types'
 
 /**
  * Gets a template by its code.

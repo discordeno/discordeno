@@ -1,4 +1,8 @@
-import { BigString, OverwriteReadable, WithReason } from '@discordeno/types'
+import type {
+  BigString,
+  OverwriteReadable,
+  WithReason
+} from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
 

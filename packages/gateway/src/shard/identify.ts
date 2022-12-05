@@ -1,12 +1,16 @@
 import { GatewayOpcodes } from '@discordeno/types'
-import { Shard, ShardSocketCloseCodes, ShardState } from './types.js'
+import type { Shard } from './types.js'
+import { ShardSocketCloseCodes, ShardState } from './types.js'
 
 export async function identify (shard: Shard): Promise<void> {
   // A new identify has been requested even though there is already a connection open.
   // Therefore we need to close the old connection and heartbeating before creating a new one.
   if (shard.isOpen()) {
     console.log(`CLOSING EXISTING SHARD: #${shard.id}`)
-    shard.close(ShardSocketCloseCodes.ReIdentifying, 'Re-identifying closure of old connection.')
+    shard.close(
+      ShardSocketCloseCodes.ReIdentifying,
+      'Re-identifying closure of old connection.'
+    )
   }
 
   shard.state = ShardState.Identifying
@@ -22,17 +26,20 @@ export async function identify (shard: Shard): Promise<void> {
   // Wait until an identify is free for this shard.
   await shard.requestIdentify()
 
-  void shard.send({
-    op: GatewayOpcodes.Identify,
-    d: {
-      token: `Bot ${shard.gatewayConfig.token}`,
-      compress: shard.gatewayConfig.compress,
-      properties: shard.gatewayConfig.properties,
-      intents: shard.gatewayConfig.intents,
-      shard: [shard.id, shard.totalShards],
-      presence: await shard.makePresence?.(shard.id)
-    }
-  }, true)
+  void shard.send(
+    {
+      op: GatewayOpcodes.Identify,
+      d: {
+        token: `Bot ${shard.gatewayConfig.token}`,
+        compress: shard.gatewayConfig.compress,
+        properties: shard.gatewayConfig.properties,
+        intents: shard.gatewayConfig.intents,
+        shard: [shard.id, shard.totalShards],
+        presence: await shard.makePresence?.(shard.id)
+      }
+    },
+    true
+  )
 
   return await new Promise((resolve) => {
     shard.resolves.set('READY', () => {

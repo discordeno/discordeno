@@ -1,8 +1,8 @@
-import { BigString, DiscordListActiveThreads } from '@discordeno/types'
+import type { BigString, DiscordListActiveThreads } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
-import { Channel } from '../../../transformers/channel.js'
-import { ThreadMember } from '../../../transformers/threadMember.js'
+import type { Channel } from '../../../transformers/channel.js'
+import type { ThreadMember } from '../../../transformers/threadMember.js'
 
 /**
  * Gets the list of all active threads for a guild.

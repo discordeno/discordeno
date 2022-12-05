@@ -1,15 +1,15 @@
-import {
+import type {
   AllowedMentions,
-  ApplicationCommandTypes,
   FileContent,
   InteractionResponseTypes,
   Localization,
   MessageComponents,
   PermissionStrings
 } from '@discordeno/types'
-import { ApplicationCommandOption } from './transformers/applicationCommandOption.js'
-import { ApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js'
-import { Embed } from './transformers/embed.js'
+import { ApplicationCommandTypes } from '@discordeno/types'
+import type { ApplicationCommandOption } from './transformers/applicationCommandOption.js'
+import type { ApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js'
+import type { Embed } from './transformers/embed.js'
 
 export type CreateApplicationCommand =
   | CreateSlashApplicationCommand

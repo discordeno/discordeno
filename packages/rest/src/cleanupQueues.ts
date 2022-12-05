@@ -1,5 +1,5 @@
-import { QueueBucket } from './createQueueBucket.js'
-import { RestManager } from './restManager.js'
+import type { QueueBucket } from './createQueueBucket.js'
+import type { RestManager } from './restManager.js'
 
 /** Cleans up the queues by checking if there is nothing left and removing it. */
 export function cleanupQueues (rest: RestManager): void {
@@ -17,7 +17,11 @@ export function cleanupQueues (rest: RestManager): void {
   if (rest.pathQueues.size === 0) rest.processingQueue = false
 }
 
-export function clearQueue (rest: RestManager, key: string, queue: QueueBucket): void {
+export function clearQueue (
+  rest: RestManager,
+  key: string,
+  queue: QueueBucket
+): void {
   if (!isQueueClearable(queue)) return
 
   rest.pathQueues.delete(key)

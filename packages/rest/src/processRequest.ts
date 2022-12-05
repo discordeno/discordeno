@@ -1,7 +1,7 @@
 import { BASE_URL } from '@discordeno/utils'
 import { createQueueBucket } from './createQueueBucket.js'
-import { RestPayload, RestRequest } from './rest.js'
-import { RestManager } from './restManager.js'
+import type { RestPayload, RestRequest } from './rest.js'
+import type { RestManager } from './restManager.js'
 
 /** Processes a request and assigns it to a queue or creates a queue if none exists for it. */
 export function processRequest (

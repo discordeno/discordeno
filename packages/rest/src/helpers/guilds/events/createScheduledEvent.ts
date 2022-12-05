@@ -1,13 +1,15 @@
-import {
+import type {
   BigString,
   DiscordScheduledEvent,
-  ScheduledEventEntityType,
-  ScheduledEventPrivacyLevel,
   WithReason
+} from '@discordeno/types'
+import {
+  ScheduledEventEntityType,
+  ScheduledEventPrivacyLevel
 } from '@discordeno/types'
 import { validateLength } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
-import { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
+import type { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
 
 /**
  * Creates a scheduled event in a guild.

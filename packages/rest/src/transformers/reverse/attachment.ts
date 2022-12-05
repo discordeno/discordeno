@@ -1,6 +1,6 @@
-import { DiscordAttachment } from '@discordeno/types'
+import type { DiscordAttachment } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { Attachment } from '../attachment.js'
+import type { Attachment } from '../attachment.js'
 
 export function transformAttachmentToDiscordAttachment (
   rest: RestManager,

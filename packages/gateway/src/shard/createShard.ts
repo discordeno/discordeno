@@ -1,6 +1,12 @@
-import { ActivityTypes, DiscordGatewayPayload, PickPartial, PresenceStatus } from '@discordeno/types'
-import { API_VERSION, createLeakyBucket, LeakyBucket } from '@discordeno/utils'
-import { CloseEvent, MessageEvent, WebSocket } from 'ws'
+import type {
+  ActivityTypes,
+  DiscordGatewayPayload,
+  PickPartial,
+  PresenceStatus
+} from '@discordeno/types'
+import type { LeakyBucket } from '@discordeno/utils'
+import { API_VERSION, createLeakyBucket } from '@discordeno/utils'
+import type { CloseEvent, MessageEvent, WebSocket } from 'ws'
 import { calculateSafeRequests } from './calculateSafeRequests.js'
 import { close } from './close.js'
 import { connect } from './connect.js'
@@ -13,15 +19,17 @@ import { send } from './send.js'
 import { shutdown } from './shutdown.js'
 import { startHeartbeating } from './startHeartbeating.js'
 import { stopHeartbeating } from './stopHeartbeating.js'
-import {
-  DEFAULT_HEARTBEAT_INTERVAL,
-  GATEWAY_RATE_LIMIT_RESET_INTERVAL,
-  MAX_GATEWAY_REQUESTS_PER_INTERVAL,
+import type {
   Shard,
   ShardEvents,
   ShardGatewayConfig,
   ShardHeart,
-  ShardSocketRequest,
+  ShardSocketRequest
+} from './types.js'
+import {
+  DEFAULT_HEARTBEAT_INTERVAL,
+  GATEWAY_RATE_LIMIT_RESET_INTERVAL,
+  MAX_GATEWAY_REQUESTS_PER_INTERVAL,
   ShardState
 } from './types.js'
 
@@ -31,11 +39,10 @@ import {
 
 /** */
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function createShard (
-  options: CreateShard
-) {
+export function createShard (options: CreateShard) {
   // This is done for performance reasons
-  const calculateSafeRequestsOverwritten = options.calculateSafeRequests ?? calculateSafeRequests
+  const calculateSafeRequestsOverwritten =
+    options.calculateSafeRequests ?? calculateSafeRequests
   const closeOverwritten = options.close ?? close
   const connectOverwritten = options.connect ?? connect
   const identifyOverwritten = options.identify ?? identify
@@ -45,8 +52,10 @@ export function createShard (
   const handleCloseOverwritten = options.handleClose ?? handleClose
   const handleMessageOverwritten = options.handleMessage ?? handleMessage
   const isOpenOverwritten = options.isOpen ?? isOpen
-  const startHeartbeatingOverwritten = options.startHeartbeating ?? startHeartbeating
-  const stopHeartbeatingOverwritten = options.stopHeartbeating ?? stopHeartbeating
+  const startHeartbeatingOverwritten =
+    options.startHeartbeating ?? startHeartbeating
+  const stopHeartbeatingOverwritten =
+    options.stopHeartbeating ?? stopHeartbeating
 
   return {
     // ----------
@@ -99,7 +108,7 @@ export function createShard (
 
     /** The shard related event handlers. */
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    events: options.events ?? {} as ShardEvents,
+    events: options.events ?? ({} as ShardEvents),
 
     /** Calculate the amount of requests which can safely be made per rate limit interval,
      * before the gateway gets disconnected due to an exceeded rate limit.
@@ -145,7 +154,10 @@ export function createShard (
     /** Send a message to Discord.
      * @param {boolean} [highPriority=false] - Whether this message should be send asap.
      */
-    send: async function (message: ShardSocketRequest, highPriority: boolean = false) {
+    send: async function (
+      message: ShardSocketRequest,
+      highPriority: boolean = false
+    ) {
       return await sendOverwritten(this, message, highPriority)
     },
 
@@ -204,7 +216,10 @@ export function createShard (
      * This is used to resolve internal waiting states.
      * Mapped by SelectedEvents => ResolveFunction
      */
-    resolves: new Map<'READY' | 'RESUMED' | 'INVALID_SESSION', (payload: DiscordGatewayPayload) => void>(),
+    resolves: new Map<
+    'READY' | 'RESUMED' | 'INVALID_SESSION',
+    (payload: DiscordGatewayPayload) => void
+    >(),
 
     /** @private Internal shard function.
      * Only use this function if you know what you are doing.
@@ -296,7 +311,9 @@ export interface CreateShard {
   isOpen?: typeof isOpen
 
   /** Function which can be overwritten in order to get the shards presence. */
-  makePresence?: (shardId: number) => Promise<BotStatusUpdate> | BotStatusUpdate
+  makePresence?: (
+    shardId: number
+  ) => Promise<BotStatusUpdate> | BotStatusUpdate
 
   /** The maximum of requests which can be send to discord per rate limit tick.
    * Typically this value should not be changed.

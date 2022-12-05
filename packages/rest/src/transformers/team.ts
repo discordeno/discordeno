@@ -1,4 +1,4 @@
-import { DiscordTeam, Optionalize } from '@discordeno/types'
+import type { DiscordTeam, Optionalize } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { RestManager } from '../restManager.js'
 

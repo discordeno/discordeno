@@ -1,4 +1,4 @@
-import {
+import type {
   AllowedMentions,
   BigString,
   DiscordChannel,
@@ -7,8 +7,8 @@ import {
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { Channel } from '../../../transformers/channel.js'
-import { Embed } from '../../../transformers/embed.js'
+import type { Channel } from '../../../transformers/channel.js'
+import type { Embed } from '../../../transformers/embed.js'
 
 /**
  * Creates a new thread in a forum channel, and sends a message within the created thread.

@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 // @ts-nocheck
 
-import { AtLeastOne, BigString, GatewayOpcodes } from '@discordeno/types'
+import type { AtLeastOne, BigString } from '@discordeno/types'
+import { GatewayOpcodes } from '@discordeno/types'
 import { calculateShardId } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
 

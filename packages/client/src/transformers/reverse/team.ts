@@ -1,6 +1,6 @@
-import { DiscordTeam } from '@discordeno/types'
-import { Client } from '../../client.js'
-import { Team } from '../team.js'
+import type { DiscordTeam } from '@discordeno/types'
+import type { Client } from '../../client.js'
+import type { Team } from '../team.js'
 
 export function transformTeamToDiscordTeam (
   client: Client,

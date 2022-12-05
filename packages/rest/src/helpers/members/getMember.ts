@@ -1,6 +1,6 @@
-import { BigString, DiscordMemberWithUser } from '@discordeno/types'
+import type { BigString, DiscordMemberWithUser } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { Member } from '../../transformers/member.js'
+import type { Member } from '../../transformers/member.js'
 
 /**
  * Gets the member object by user ID.

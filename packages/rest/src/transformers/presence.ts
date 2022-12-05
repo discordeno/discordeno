@@ -1,8 +1,5 @@
-import {
-  DiscordPresenceUpdate,
-  Optionalize,
-  PresenceStatus
-} from '@discordeno/types'
+import type { DiscordPresenceUpdate, Optionalize } from '@discordeno/types'
+import { PresenceStatus } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { RestManager } from '../restManager.js'
 import { UserToggles } from './toggles/user.js'

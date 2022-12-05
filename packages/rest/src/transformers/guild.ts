@@ -1,4 +1,4 @@
-import { DiscordGuild, Optionalize } from '@discordeno/types'
+import type { DiscordGuild, Optionalize } from '@discordeno/types'
 import { Collection, iconHashToBigInt } from '@discordeno/utils'
 import type { RestManager } from '../restManager.js'
 import type { Emoji } from '../transformers/emoji.js'

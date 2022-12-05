@@ -1,6 +1,6 @@
-import { DiscordAuditLogEntry } from '@discordeno/types'
-import { Client } from '../../client.js'
-import { AuditLogEntry } from '../auditLogEntry.js'
+import type { DiscordAuditLogEntry } from '@discordeno/types'
+import type { Client } from '../../client.js'
+import type { AuditLogEntry } from '../auditLogEntry.js'
 
 export function transformAuditLogEntryToDiscordAuditLogEntry (
   client: Client,

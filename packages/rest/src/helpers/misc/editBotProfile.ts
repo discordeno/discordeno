@@ -1,7 +1,7 @@
-import { DiscordUser } from '@discordeno/types'
+import type { DiscordUser } from '@discordeno/types'
 import { urlToBase64 } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { User } from '../../transformers/member.js'
+import type { User } from '../../transformers/member.js'
 
 /**
  * Modifies the bot's username or avatar.

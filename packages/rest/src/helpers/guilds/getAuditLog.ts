@@ -1,14 +1,18 @@
-import { AuditLogEvents, BigString, DiscordAuditLog } from '@discordeno/types'
+import type {
+  AuditLogEvents,
+  BigString,
+  DiscordAuditLog
+} from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { ApplicationCommand } from '../../transformers/applicationCommand.js'
-import { AuditLogEntry } from '../../transformers/auditLogEntry.js'
-import { AutoModerationRule } from '../../transformers/automodRule.js'
-import { Channel } from '../../transformers/channel.js'
-import { Integration } from '../../transformers/integration.js'
-import { User } from '../../transformers/member.js'
-import { ScheduledEvent } from '../../transformers/scheduledEvent.js'
-import { Webhook } from '../../transformers/webhook.js'
+import type { ApplicationCommand } from '../../transformers/applicationCommand.js'
+import type { AuditLogEntry } from '../../transformers/auditLogEntry.js'
+import type { AutoModerationRule } from '../../transformers/automodRule.js'
+import type { Channel } from '../../transformers/channel.js'
+import type { Integration } from '../../transformers/integration.js'
+import type { User } from '../../transformers/member.js'
+import type { ScheduledEvent } from '../../transformers/scheduledEvent.js'
+import type { Webhook } from '../../transformers/webhook.js'
 
 export interface AuditLog {
   auditLogEntries: AuditLogEntry[]

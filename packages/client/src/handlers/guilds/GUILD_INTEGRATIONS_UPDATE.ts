@@ -1,4 +1,4 @@
-import {
+import type {
   DiscordGatewayPayload,
   DiscordGuildIntegrationsUpdate
 } from '@discordeno/types'

@@ -141,13 +141,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@discordeno/logger@workspace:packages/logger":
+"@discordeno/logger@18.0.0-alpha.1, @discordeno/logger@workspace:packages/logger":
   version: 0.0.0-use.local
   resolution: "@discordeno/logger@workspace:packages/logger"
   dependencies:
+    "@swc/cli": ^0.1.57
+    "@swc/core": ^1.3.21
     "@types/chai": ^4
     "@types/mocha": ^10
+    "@types/node": ^18.11.9
     "@types/sinon": ^10.0.13
+    "@types/ws": ^8.5.3
     c8: ^7.12.0
     chai: ^4.3.7
     chalk: ^5.1.2
@@ -1456,7 +1460,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"discordeno@workspace:packages/discordeno":
+"discordeno@18.0.0-alpha.1, discordeno@workspace:packages/discordeno":
   version: 0.0.0-use.local
   resolution: "discordeno@workspace:packages/discordeno"
   dependencies:
@@ -4029,6 +4033,27 @@ __metadata:
   checksum: 3b34a3d77165a2cb82b34014b3aba93b1c4637a5011807557dc2f3da826c59975a5ccad765721c4648b39817e3472789f9b0fa98fc854c5c1c7a1e632aacdc28
   languageName: node
   linkType: hard
+
+"tester@workspace:packages/tester":
+  version: 0.0.0-use.local
+  resolution: "tester@workspace:packages/tester"
+  dependencies:
+    "@discordeno/logger": 18.0.0-alpha.1
+    "@swc/cli": ^0.1.57
+    "@swc/core": ^1.3.21
+    "@types/chai": ^4
+    "@types/mocha": ^10
+    "@types/node": ^18.11.9
+    "@types/sinon": ^10.0.13
+    chalk: ^5.1.2
+    discordeno: 18.0.0-alpha.1
+    eslint: ^8.0.1
+    eslint-config-discordeno: "*"
+    ts-node: ^10.9.1
+    tsconfig: "*"
+    typescript: ^4.9.3
+  languageName: unknown
+  linkType: soft
 
 "text-table@npm:^0.2.0":
   version: 0.2.0

@@ -1,4 +1,4 @@
-import {
+import type {
   AllowedMentions,
   BigString,
   DiscordMessage,
@@ -6,9 +6,9 @@ import {
   MessageComponents
 } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { Attachment } from '../../transformers/attachment.js'
-import { Embed } from '../../transformers/embed.js'
-import { Message } from '../../transformers/message.js'
+import type { Attachment } from '../../transformers/attachment.js'
+import type { Embed } from '../../transformers/embed.js'
+import type { Message } from '../../transformers/message.js'
 
 /**
  * Edits a message.

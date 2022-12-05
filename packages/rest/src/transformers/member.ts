@@ -1,4 +1,8 @@
-import { DiscordMember, DiscordUser, Optionalize } from '@discordeno/types'
+import type {
+  DiscordMember,
+  DiscordUser,
+  Optionalize
+} from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { RestManager } from '../restManager.js'
 import { MemberToggles } from './toggles/member.js'

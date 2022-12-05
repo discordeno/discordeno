@@ -1,9 +1,9 @@
-import {
+import type {
   ApplicationCommandOptionChoice,
   BigString,
-  Bot,
-  InteractionResponseTypes
+  Bot
 } from '@discordeno/bot'
+import { InteractionResponseTypes } from '@discordeno/bot'
 
 export async function sendAutocompleteChoices (
   bot: Bot,

@@ -1,9 +1,6 @@
-import {
-  DiscordPresenceUpdate,
-  Optionalize,
-  PresenceStatus
-} from '@discordeno/types'
-import { Client } from '../client.js'
+import type { DiscordPresenceUpdate, Optionalize } from '@discordeno/types'
+import { PresenceStatus } from '@discordeno/types'
+import type { Client } from '../client.js'
 import { UserToggles } from './toggles/user.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

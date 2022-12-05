@@ -1,6 +1,6 @@
-import { DiscordGuildWidgetSettings } from '@discordeno/types'
+import type { DiscordGuildWidgetSettings } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { GuildWidgetSettings } from '../widgetSettings.js'
+import type { GuildWidgetSettings } from '../widgetSettings.js'
 
 export function transformWidgetSettingsToDiscordWidgetSettings (
   bot: RestManager,

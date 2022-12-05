@@ -1,4 +1,4 @@
-import {
+import type {
   BigString,
   ChannelTypes,
   DiscordChannel,
@@ -9,7 +9,7 @@ import {
 } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { Channel } from '../../transformers/channel.js'
+import type { Channel } from '../../transformers/channel.js'
 
 /**
  * Edits a channel's settings.

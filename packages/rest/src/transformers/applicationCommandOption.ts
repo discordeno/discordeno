@@ -1,11 +1,11 @@
-import {
+import type {
   ApplicationCommandOptionTypes,
   ChannelTypes,
   DiscordApplicationCommandOption,
   Localization
 } from '@discordeno/types'
 import type { RestManager } from '../restManager.js'
-import { ApplicationCommandOptionChoice } from './applicationCommandOptionChoice.js'
+import type { ApplicationCommandOptionChoice } from './applicationCommandOptionChoice.js'
 
 export function transformApplicationCommandOption (
   rest: RestManager,

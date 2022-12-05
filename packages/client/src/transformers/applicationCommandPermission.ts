@@ -1,8 +1,8 @@
-import {
+import type {
   DiscordGuildApplicationCommandPermissions,
   Optionalize
 } from '@discordeno/types'
-import { Client } from '../client.js'
+import type { Client } from '../client.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformApplicationCommandPermission (

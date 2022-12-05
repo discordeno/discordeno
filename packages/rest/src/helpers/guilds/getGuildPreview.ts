@@ -1,11 +1,11 @@
-import {
+import type {
   BigString,
   DiscordGuildPreview,
   GuildFeatures
 } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { Emoji } from '../../transformers/emoji.js'
-import { Sticker } from '../../transformers/sticker.js'
+import type { Emoji } from '../../transformers/emoji.js'
+import type { Sticker } from '../../transformers/sticker.js'
 
 export interface GuildPreview {
   id: BigString

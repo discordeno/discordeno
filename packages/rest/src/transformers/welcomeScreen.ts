@@ -1,4 +1,4 @@
-import { DiscordWelcomeScreen, Optionalize } from '@discordeno/types'
+import type { DiscordWelcomeScreen, Optionalize } from '@discordeno/types'
 import type { RestManager } from '../restManager.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

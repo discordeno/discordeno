@@ -1,7 +1,7 @@
-import { BigString, DiscordScheduledEvent } from '@discordeno/types'
+import type { BigString, DiscordScheduledEvent } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
-import { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
+import type { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
 
 /**
  * Gets the list of scheduled events for a guild.

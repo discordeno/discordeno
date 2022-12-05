@@ -1,6 +1,6 @@
 import type { RestManager } from '../../restManager.js'
-import { Template } from '../../transformers/template.js'
-import { DiscordTemplate, BigString } from '@discordeno/types'
+import type { Template } from '../../transformers/template.js'
+import type { DiscordTemplate, BigString } from '@discordeno/types'
 
 /**
  * Edits a template's settings.

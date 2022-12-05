@@ -1,5 +1,5 @@
 /** Pause the execution for a given amount of milliseconds. */
-import { ImageFormat, ImageSize } from '@discordeno/types'
+import type { ImageFormat, ImageSize } from '@discordeno/types'
 
 export async function delay (ms: number): Promise<void> {
   return await new Promise(

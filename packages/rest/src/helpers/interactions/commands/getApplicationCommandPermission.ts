@@ -1,9 +1,9 @@
-import {
+import type {
   BigString,
   DiscordGuildApplicationCommandPermissions
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { ApplicationCommandPermission } from '../../../transformers/applicationCommandPermission.js'
+import type { ApplicationCommandPermission } from '../../../transformers/applicationCommandPermission.js'
 
 /**
  * Gets the permissions of a guild application command.

@@ -1,4 +1,4 @@
-import {
+import type {
   BigString,
   DefaultMessageNotificationLevels,
   DiscordGuild,
@@ -9,7 +9,7 @@ import {
 } from '@discordeno/types'
 import { urlToBase64 } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { Guild } from '../../transformers/guild.js'
+import type { Guild } from '../../transformers/guild.js'
 
 // TODO: Put the `shardId` parameter before `options`.
 

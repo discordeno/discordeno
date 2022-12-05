@@ -1,7 +1,11 @@
-import { BigString, DiscordRole, PermissionStrings } from '@discordeno/types'
+import type {
+  BigString,
+  DiscordRole,
+  PermissionStrings
+} from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { Role } from '../../transformers/role.js'
+import type { Role } from '../../transformers/role.js'
 
 /**
  * Edits a role in a guild.

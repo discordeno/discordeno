@@ -1,4 +1,4 @@
-import {
+import type {
   DiscordAutoModerationActionExecution,
   Optionalize
 } from '@discordeno/types'

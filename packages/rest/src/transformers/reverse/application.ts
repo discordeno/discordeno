@@ -1,7 +1,7 @@
-import { DiscordApplication } from '@discordeno/types'
+import type { DiscordApplication } from '@discordeno/types'
 import { bigintToSnowflake, iconBigintToHash } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { Application } from '../application.js'
+import type { Application } from '../application.js'
 
 export function transformApplicationToDiscordApplication (
   rest: RestManager,

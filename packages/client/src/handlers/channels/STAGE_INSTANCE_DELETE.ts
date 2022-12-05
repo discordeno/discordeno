@@ -1,4 +1,7 @@
-import { DiscordGatewayPayload, DiscordStageInstance } from '@discordeno/types'
+import type {
+  DiscordGatewayPayload,
+  DiscordStageInstance
+} from '@discordeno/types'
 import type { Client } from '../../client.js'
 
 export function handleStageInstanceDelete (

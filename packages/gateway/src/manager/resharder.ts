@@ -1,4 +1,4 @@
-import {
+import type {
   DiscordGatewayPayload,
   DiscordReady,
   GetGatewayBot
@@ -7,8 +7,9 @@ import { Collection } from '@discordeno/utils'
 import { inflateSync } from 'node:zlib'
 import { createShard } from '../shard/createShard.js'
 import { handleMessage } from '../shard/handleMessage.js'
-import { Shard, ShardSocketCloseCodes } from '../shard/types.js'
-import { GatewayManager } from './gatewayManager.js'
+import type { Shard } from '../shard/types.js'
+import { ShardSocketCloseCodes } from '../shard/types.js'
+import type { GatewayManager } from './gatewayManager.js'
 
 export type Resharder = ReturnType<typeof activateResharder>
 

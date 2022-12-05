@@ -1,9 +1,9 @@
 // @ts-nocheck
 
-import { BigString, DiscordGuild } from '@discordeno/types'
+import type { BigString, DiscordGuild } from '@discordeno/types'
 import { calculateShardId } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { Guild } from '../../transformers/guild.js'
+import type { Guild } from '../../transformers/guild.js'
 
 /**
  * Gets a guild by its ID.

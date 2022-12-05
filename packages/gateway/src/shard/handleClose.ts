@@ -1,8 +1,12 @@
 import { GatewayCloseEventCodes } from '@discordeno/types'
-import { CloseEvent } from 'ws'
-import { Shard, ShardSocketCloseCodes, ShardState } from './types.js'
+import type { CloseEvent } from 'ws'
+import type { Shard } from './types.js'
+import { ShardSocketCloseCodes, ShardState } from './types.js'
 
-export async function handleClose (shard: Shard, close: CloseEvent): Promise<void> {
+export async function handleClose (
+  shard: Shard,
+  close: CloseEvent
+): Promise<void> {
   //   gateway.debug("GW CLOSED", { shardId, payload: event });
 
   shard.stopHeartbeating()
@@ -48,7 +52,9 @@ export async function handleClose (shard: Shard, close: CloseEvent): Promise<voi
       shard.state = ShardState.Offline
       shard.events.disconnected?.(shard)
 
-      throw new Error(close.reason || 'Discord gave no reason! GG! You broke Discord!')
+      throw new Error(
+        close.reason || 'Discord gave no reason! GG! You broke Discord!'
+      )
     }
     // Gateway connection closes on which a resume is allowed.
     case GatewayCloseEventCodes.UnknownError:

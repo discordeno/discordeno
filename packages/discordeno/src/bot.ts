@@ -1,15 +1,17 @@
-import { Client, createClient, CreateClientOptions } from '@discordeno/client'
+import type { Client, CreateClientOptions } from '@discordeno/client'
+import { createClient } from '@discordeno/client'
 import {
   createGatewayManager,
   ShardSocketCloseCodes
 } from '@discordeno/gateway'
-import { createRestManager, CreateRestManagerOptions } from '@discordeno/rest'
-import {
+import type { CreateRestManagerOptions } from '@discordeno/rest'
+import { createRestManager } from '@discordeno/rest'
+import type {
   DiscordGatewayPayload,
-  Errors,
   GatewayDispatchEventNames,
   GetGatewayBot
 } from '@discordeno/types'
+import { Errors } from '@discordeno/types'
 
 import {
   baseEndpoints,
@@ -25,6 +27,7 @@ export function createBot (options: CreateBotOptions): Bot {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const bot = {
     ...createClient(options),
+    handleDiscordPayload: options.handleDiscordPayload,
     botGatewayData: options.botGatewayData,
     rest: createRestManager({
       token: options.token,

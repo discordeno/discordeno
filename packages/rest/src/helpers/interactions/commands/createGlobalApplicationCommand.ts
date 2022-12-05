@@ -1,7 +1,7 @@
-import { DiscordApplicationCommand } from '@discordeno/types'
+import type { DiscordApplicationCommand } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { ApplicationCommand } from '../../../transformers/applicationCommand.js'
-import { CreateApplicationCommand } from '../../../types.js'
+import type { ApplicationCommand } from '../../../transformers/applicationCommand.js'
+import type { CreateApplicationCommand } from '../../../types.js'
 
 /**
  * Creates an application command accessible globally; across different guilds and channels.

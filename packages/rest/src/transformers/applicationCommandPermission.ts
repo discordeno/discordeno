@@ -1,4 +1,4 @@
-import {
+import type {
   DiscordGuildApplicationCommandPermissions,
   Optionalize
 } from '@discordeno/types'

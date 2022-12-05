@@ -1,8 +1,8 @@
-import { BigString, DiscordApplicationCommand } from '@discordeno/types'
+import type { BigString, DiscordApplicationCommand } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
-import { ApplicationCommand } from '../../../transformers/applicationCommand.js'
-import { CreateApplicationCommand } from '../../../types'
+import type { ApplicationCommand } from '../../../transformers/applicationCommand.js'
+import type { CreateApplicationCommand } from '../../../types'
 
 /**
  * Re-registers the list of application commands registered in a guild, overwriting the previous commands completely.

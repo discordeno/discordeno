@@ -1,6 +1,6 @@
-import { BigString, DiscordApplicationCommand } from '@discordeno/types'
+import type { BigString, DiscordApplicationCommand } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { ApplicationCommand } from '../../../transformers/applicationCommand.js'
+import type { ApplicationCommand } from '../../../transformers/applicationCommand.js'
 
 /**
  * Gets a global application command by its ID.

@@ -1,4 +1,4 @@
-import { DiscordRole } from '@discordeno/types'
+import type { DiscordRole } from '@discordeno/types'
 import { ToggleBitfield } from './ToggleBitfield.js'
 
 export const RoleToggle = {

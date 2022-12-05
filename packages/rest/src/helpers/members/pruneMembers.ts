@@ -1,4 +1,4 @@
-import { BigString } from '@discordeno/types'
+import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
 /**
@@ -25,8 +25,12 @@ export async function pruneMembers (
   guildId: BigString,
   options: BeginGuildPrune
 ): Promise<number | undefined> {
-  if (options.days && options.days < 1) { throw new Error(rest.constants.Errors.PRUNE_MIN_DAYS) }
-  if (options.days && options.days > 30) { throw new Error(rest.constants.Errors.PRUNE_MAX_DAYS) }
+  if (options.days && options.days < 1) {
+    throw new Error(rest.constants.Errors.PRUNE_MIN_DAYS)
+  }
+  if (options.days && options.days > 30) {
+    throw new Error(rest.constants.Errors.PRUNE_MAX_DAYS)
+  }
 
   const result = await rest.runMethod<{ pruned: number | null }>(
     rest,

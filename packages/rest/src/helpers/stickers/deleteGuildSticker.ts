@@ -1,6 +1,6 @@
 import type { RestManager } from '../../restManager.js'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Sticker } from '../../transformers/sticker.js'
+import type { Sticker } from '../../transformers/sticker.js'
 
 /**
  * Delete a new sticker for the guild.

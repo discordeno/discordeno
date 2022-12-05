@@ -1,11 +1,8 @@
-import {
-  BigString,
-  DiscordInviteMetadata,
-  TargetTypes
-} from '@discordeno/types'
+import type { BigString, DiscordInviteMetadata } from '@discordeno/types'
+import { TargetTypes } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { InviteMetadata } from '../guilds/invites/index.js'
+import type { InviteMetadata } from '../guilds/invites/index.js'
 
 /**
  * Gets the list of invites for a channel.

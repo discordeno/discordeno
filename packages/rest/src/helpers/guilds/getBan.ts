@@ -1,6 +1,6 @@
-import { BigString, DiscordBan } from '@discordeno/types'
+import type { BigString, DiscordBan } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { User } from '../../transformers/member.js'
+import type { User } from '../../transformers/member.js'
 
 export interface Ban {
   reason?: string

@@ -10,16 +10,16 @@
     "url": "https://github.com/discordeno/discordeno.git"
   },
   "scripts": {
-    "build": "swc src --out-dir dist",
-    "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
-    "release-build": "yarn build && yarn build:type",
-    "release-build:clean": "shx rm -rf dist && yarn build && yarn build:type",
-    "fmt": "eslint --fix \"src/**/*.ts*\"",
-    "lint": "eslint \"src/**/*.ts*\"",
-    "test:unit": "c8 mocha --no-warnings 'tests/**/*.spec.ts'",
-    "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/**/*.spec.ts'",
-    "test:type": "tsc --noEmit",
-    "test:test-type": "tsc --project tsconfig.test.json"
+    " build": "swc src --out-dir dist",
+    " build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
+    " release-build": "yarn build && yarn build:type",
+    " release-build:clean": "shx rm -rf dist && yarn build && yarn build:type",
+    " fmt": "eslint --fix \"src/**/*.ts*\"",
+    " lint": "eslint \"src/**/*.ts*\"",
+    " test:unit": "c8 mocha --no-warnings 'tests/**/*.spec.ts'",
+    " test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/**/*.spec.ts'",
+    " test:type": "tsc --noEmit",
+    " test:test-type": "tsc --project tsconfig.test.json"
   },
   "dependencies": {
     "@discordeno/gateway": "18.0.0-alpha.1",

@@ -1,7 +1,7 @@
-import { BigString, DiscordIntegration } from '@discordeno/types'
+import type { BigString, DiscordIntegration } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
-import { Integration } from '../../../transformers/integration.js'
+import type { Integration } from '../../../transformers/integration.js'
 
 /**
  * Gets the list of integrations attached to a guild.

@@ -1,8 +1,7 @@
-import {
+import type {
   BigString,
   Bot,
   Channel,
-  Collection,
   Guild,
   Member,
   Message,
@@ -11,14 +10,20 @@ import {
   User,
   Webhook
 } from '@discordeno/bot'
+import { Collection } from '@discordeno/bot'
 
-export type BotWithCache<B extends Bot = Bot> = Omit<B, 'helpers'> & CacheProps & {
+export type BotWithCache<B extends Bot = Bot> = Omit<B, 'helpers'> &
+CacheProps & {
   helpers: BotHelpersWithCache<B['helpers']>
 }
 
 export type BotHelpersWithCache<T> = Omit<T, 'editWebhook'> & {
   /** The added channelId argument at the end is used to validate permission checks */
-  editWebhook: (webhookId: BigString, options: ModifyWebhook, fromChannelId?: bigint) => Promise<Webhook>
+  editWebhook: (
+    webhookId: BigString,
+    options: ModifyWebhook,
+    fromChannelId?: bigint
+  ) => Promise<Webhook>
 }
 
 export interface CacheProps {

@@ -1,4 +1,8 @@
-import { DiscordMember, DiscordUser, Optionalize } from '@discordeno/types'
+import type {
+  DiscordMember,
+  DiscordUser,
+  Optionalize
+} from '@discordeno/types'
 import type { Client } from '../client.js'
 import { MemberToggles } from './toggles/member.js'
 import { UserToggles } from './toggles/user.js'

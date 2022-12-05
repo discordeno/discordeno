@@ -1,4 +1,4 @@
-import { DiscordVoiceState, Optionalize } from '@discordeno/types'
+import type { DiscordVoiceState, Optionalize } from '@discordeno/types'
 import type { RestManager } from '../restManager.js'
 import { VoiceStateToggles } from './toggles/voice.js'
 

@@ -1,6 +1,6 @@
-import { DiscordGuildApplicationCommandPermissions } from '@discordeno/types'
-import { Client } from '../../client.js'
-import { ApplicationCommandPermission } from '../applicationCommandPermission.js'
+import type { DiscordGuildApplicationCommandPermissions } from '@discordeno/types'
+import type { Client } from '../../client.js'
+import type { ApplicationCommandPermission } from '../applicationCommandPermission.js'
 
 export function transformApplicationCommandPermissionToDiscordApplicationCommandPermission (
   client: Client,

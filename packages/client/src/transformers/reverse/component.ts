@@ -1,6 +1,6 @@
-import { DiscordComponent } from '@discordeno/types'
-import { Client } from '../../client.js'
-import { Component } from '../component.js'
+import type { DiscordComponent } from '@discordeno/types'
+import type { Client } from '../../client.js'
+import type { Component } from '../component.js'
 
 export function transformComponentToDiscordComponent (
   client: Client,

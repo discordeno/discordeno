@@ -1,6 +1,6 @@
-import { DiscordComponent } from '@discordeno/types'
+import type { DiscordComponent } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { Component } from '../component.js'
+import type { Component } from '../component.js'
 
 export function transformComponentToDiscordComponent (
   rest: RestManager,

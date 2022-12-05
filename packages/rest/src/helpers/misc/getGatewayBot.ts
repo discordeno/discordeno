@@ -1,4 +1,4 @@
-import { DiscordGetGatewayBot, GetGatewayBot } from '@discordeno/types'
+import type { DiscordGetGatewayBot, GetGatewayBot } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
 /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */

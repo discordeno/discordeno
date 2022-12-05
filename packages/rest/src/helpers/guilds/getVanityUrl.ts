@@ -1,4 +1,4 @@
-import { BigString } from '@discordeno/types'
+import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
 export interface VanityUrl {

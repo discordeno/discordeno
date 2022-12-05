@@ -1,7 +1,7 @@
-import { DiscordActivity } from '@discordeno/types'
+import type { DiscordActivity } from '@discordeno/types'
 import { bigintToSnowflake } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { Activity } from '../activity.js'
+import type { Activity } from '../activity.js'
 
 export function transformActivityToDiscordActivity (
   rest: RestManager,

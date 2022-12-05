@@ -1,10 +1,8 @@
-import { DiscordCreateApplicationCommand } from '@discordeno/types'
+import type { DiscordCreateApplicationCommand } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import {
-  CreateApplicationCommand,
-  isContextApplicationCommand
-} from '../../types.js'
+import type { CreateApplicationCommand } from '../../types.js'
+import { isContextApplicationCommand } from '../../types.js'
 
 export function transformCreateApplicationCommandToDiscordCreateApplicationCommand (
   rest: RestManager,

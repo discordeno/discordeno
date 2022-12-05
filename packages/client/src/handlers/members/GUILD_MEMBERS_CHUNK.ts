@@ -1,10 +1,10 @@
-import {
+import type {
   DiscordGatewayPayload,
-  DiscordGuildMembersChunk,
-  PresenceStatus
+  DiscordGuildMembersChunk
 } from '@discordeno/types'
-import { Client } from '../../client.js'
-import { Activity, Member, User } from '../../transformers/index.js'
+import { PresenceStatus } from '@discordeno/types'
+import type { Client } from '../../client.js'
+import type { Activity, Member, User } from '../../transformers/index.js'
 
 export async function handleGuildMembersChunk (
   client: Client,

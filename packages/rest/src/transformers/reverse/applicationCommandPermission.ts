@@ -1,6 +1,6 @@
-import { DiscordGuildApplicationCommandPermissions } from '@discordeno/types'
+import type { DiscordGuildApplicationCommandPermissions } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { ApplicationCommandPermission } from '../applicationCommandPermission.js'
+import type { ApplicationCommandPermission } from '../applicationCommandPermission.js'
 
 export function transformApplicationCommandPermissionToDiscordApplicationCommandPermission (
   rest: RestManager,

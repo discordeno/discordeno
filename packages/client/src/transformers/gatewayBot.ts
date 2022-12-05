@@ -1,4 +1,4 @@
-import {
+import type {
   DiscordGetGatewayBot,
   GetGatewayBot,
   Optionalize

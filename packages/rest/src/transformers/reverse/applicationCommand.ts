@@ -1,6 +1,6 @@
-import { DiscordApplicationCommand } from '@discordeno/types'
+import type { DiscordApplicationCommand } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import { ApplicationCommand } from '../applicationCommand.js'
+import type { ApplicationCommand } from '../applicationCommand.js'
 
 export function transformApplicationCommandToDiscordApplicationCommand (
   rest: RestManager,
