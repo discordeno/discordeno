@@ -1,12 +1,14 @@
 // The order of the import is important
-import {
+import type {
   DiscordEmbed,
   Embed,
-  formatImageURL,
-  iconBigintToHash,
   ImageFormat,
   ImageSize,
   User
+} from './deps.js'
+import {
+  formatImageURL,
+  iconBigintToHash
 } from './deps.js'
 
 import { routes } from '@discordeno/utils'

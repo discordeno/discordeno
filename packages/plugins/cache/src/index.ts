@@ -1,5 +1,5 @@
-import type { Bot, DiscordGuildEmojisUpdate } from '@discordeno/bot'
-import { Collection } from '@discordeno/bot'
+import type { Bot, DiscordGuildEmojisUpdate } from 'discordeno'
+import { Collection } from 'discordeno'
 import type { BotWithCache } from './addCacheCollections.js'
 import { addCacheCollections } from './addCacheCollections.js'
 import { setupCacheEdits } from './setupCacheEdits.js'

@@ -1,4 +1,4 @@
-import type { BigString, Collection, Member } from '@discordeno/bot'
+import type { BigString, Collection, Member } from 'discordeno'
 import type { BotWithCache } from '../../cache/src/addCacheCollections.js'
 
 /** Fetch members for an entire guild then return the entire guilds cached members. */

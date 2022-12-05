@@ -1,4 +1,4 @@
-import { Bot } from '@discordeno/bot'
+import type { Bot } from 'discordeno'
 
 // iMpOrTaNt to make sure files can be reloaded properly!
 export let uniqueFilePathCounter = 0

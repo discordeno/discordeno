@@ -1,4 +1,4 @@
-import type { BigString, Bot, Member } from '@discordeno/bot'
+import type { BigString, Bot, Member } from 'discordeno'
 
 /** Kicks a member from a voice channel */
 export async function disconnectMember (

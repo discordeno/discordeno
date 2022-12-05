@@ -1,4 +1,4 @@
-import type { Bot, Member } from '@discordeno/bot'
+import type { Bot, Member } from 'discordeno'
 import type { BotWithCache } from './addCacheCollections.js'
 import { dispatchRequirements } from './dispatchRequirements.js'
 

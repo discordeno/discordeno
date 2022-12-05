@@ -6,7 +6,7 @@ import type {
   DiscordMessageReactionRemove,
   DiscordMessageReactionRemoveAll,
   DiscordVoiceState
-} from '@discordeno/bot'
+} from 'discordeno'
 import type { BotWithCache } from './addCacheCollections.js'
 
 export function setupCacheEdits<B extends Bot> (bot: BotWithCache<B>): void {

@@ -1,5 +1,5 @@
-import type { Bot, DiscordGatewayPayload, Guild } from '@discordeno/bot'
 import type { Shard } from '@discordeno/gateway'
+import type { Bot, DiscordGatewayPayload, Guild } from 'discordeno'
 import type { BotWithCache } from './addCacheCollections.js'
 
 const processing = new Set<bigint>()

@@ -1,5 +1,4 @@
 import type {
-  Emoji,
   Bot,
   DiscordChannel,
   DiscordGuildBanAddRemove,
@@ -9,9 +8,9 @@ import type {
   DiscordMessageDelete,
   DiscordMessageDeleteBulk,
   DiscordUnavailableGuild,
-  DiscordVoiceState
-} from '@discordeno/bot'
-import { Collection } from '@discordeno/bot'
+  DiscordVoiceState, Emoji
+} from 'discordeno'
+import { Collection } from 'discordeno'
 import type { BotWithCache } from './addCacheCollections.js'
 
 export function setupCacheRemovals<B extends Bot> (bot: BotWithCache<B>): void {

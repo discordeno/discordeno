@@ -1,5 +1,5 @@
-import type { BigString, Bot, CreateMessage, Message } from '@discordeno/bot'
-import { Collection } from '@discordeno/bot'
+import type { BigString, Bot, CreateMessage, Message } from 'discordeno'
+import { Collection } from 'discordeno'
 
 /** Maps the <userId, channelId> for dm channels */
 export const dmChannelIds = new Collection<BigString, BigString>()

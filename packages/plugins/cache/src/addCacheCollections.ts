@@ -9,8 +9,8 @@ import type {
   PresenceUpdate,
   User,
   Webhook
-} from '@discordeno/bot'
-import { Collection } from '@discordeno/bot'
+} from 'discordeno'
+import { Collection } from 'discordeno'
 
 export type BotWithCache<B extends Bot = Bot> = Omit<B, 'helpers'> &
 CacheProps & {
