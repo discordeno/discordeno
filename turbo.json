@@ -27,6 +27,12 @@
         "dist/**"
       ]
     },
+    "release-build:clean": {
+      "dependsOn": [
+        "^release-build:clean"
+      ],
+      "cache": false
+    },
     "test:unit": {
       "dependsOn": [
         "^build"
