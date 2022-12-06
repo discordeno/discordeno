@@ -1,6 +1,11 @@
-import type { BigString, DiscordChannel, WithReason } from '@discordeno/types'
+import type {
+  BigString,
+  DiscordChannel,
+  SnakeToCamelCaseNested,
+  WithReason
+} from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import type { Channel } from '../../../transformers/channel.js'
+import { snakeToCamelCaseNested } from '../../../transformer.js'
 
 /**
  * Creates a thread, using an existing message as its point of origin.
@@ -27,7 +32,7 @@ export async function startThreadWithMessage (
   channelId: BigString,
   messageId: BigString,
   options: StartThreadWithMessage
-): Promise<Channel> {
+): Promise<SnakeToCamelCaseNested<DiscordChannel>> {
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'POST',
@@ -40,10 +45,7 @@ export async function startThreadWithMessage (
     }
   )
 
-  return rest.transformers.channel(rest, {
-    channel: result,
-    guildId: rest.transformers.snowflake(result.guild_id!)
-  })
+  return snakeToCamelCaseNested(result)
 }
 
 export interface StartThreadWithMessage extends WithReason {

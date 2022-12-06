@@ -1,14 +1,18 @@
-import type { BigString, DiscordChannel } from '@discordeno/types'
+import type {
+  BigString,
+  DiscordChannel,
+  SnakeToCamelCaseNested
+} from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import type { Channel } from '../../transformers/channel.js'
+import { snakeToCamelCaseNested } from '../../transformer.js'
 
 /**
  * Gets the list of channels for a guild.
  *
  * @param bot - The bot instance to use to make the request.
  * @param guildId - The ID of the guild to get the channels of.
- * @returns A collection of {@link Channel} objects assorted by channel ID.
+ * @returns A collection of {@link DiscordChannel} objects assorted by channel ID.
  *
  * @remarks
  * Excludes threads.
@@ -18,21 +22,16 @@ import type { Channel } from '../../transformers/channel.js'
 export async function getChannels (
   rest: RestManager,
   guildId: BigString
-): Promise<Collection<bigint, Channel>> {
+): Promise<Collection<string, SnakeToCamelCaseNested<DiscordChannel>>> {
   const results = await rest.runMethod<DiscordChannel[]>(
     rest,
     'GET',
     rest.constants.routes.GUILD_CHANNELS(guildId)
   )
 
-  const id = rest.transformers.snowflake(guildId)
-
   return new Collection(
     results.map((result) => {
-      const channel = rest.transformers.channel(rest, {
-        channel: result,
-        guildId: id
-      })
+      const channel = snakeToCamelCaseNested(result)
       return [channel.id, channel]
     })
   )

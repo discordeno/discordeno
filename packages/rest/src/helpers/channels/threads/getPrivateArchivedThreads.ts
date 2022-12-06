@@ -1,8 +1,9 @@
 import type { BigString, DiscordListArchivedThreads } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
+import { snakeToCamelCaseNested } from '../../../transformer.js'
 import type {
-  ArchivedThreads,
+  DiscordArchivedThreads,
   ListArchivedThreads
 } from './getPublicArchivedThreads.js'
 
@@ -12,7 +13,7 @@ import type {
  * @param bot - The bot instance to use to make the request.
  * @param channelId - The ID of the channel to get the archived threads for.
  * @param options - The parameters for the fetching of threads.
- * @returns An instance of {@link ArchivedThreads}.
+ * @returns An instance of {@link DiscordArchivedThreads}.
  *
  * @remarks
  * Requires the `READ_MESSAGE_HISTORY` permission.
@@ -28,7 +29,7 @@ export async function getPrivateArchivedThreads (
   rest: RestManager,
   channelId: BigString,
   options?: ListArchivedThreads
-): Promise<ArchivedThreads> {
+): Promise<DiscordArchivedThreads> {
   const results = await rest.runMethod<DiscordListArchivedThreads>(
     rest,
     'GET',
@@ -38,13 +39,13 @@ export async function getPrivateArchivedThreads (
   return {
     threads: new Collection(
       results.threads.map((result) => {
-        const thread = rest.transformers.channel(rest, { channel: result })
+        const thread = snakeToCamelCaseNested(result)
         return [thread.id, thread]
       })
     ),
     members: new Collection(
       results.members.map((result) => {
-        const member = rest.transformers.threadMember(rest, result)
+        const member = snakeToCamelCaseNested(result)
         return [member.id!, member]
       })
     ),

@@ -3,13 +3,14 @@ import type {
   ChannelTypes,
   DiscordChannel,
   OverwriteReadable,
+  SnakeToCamelCaseNested,
   SortOrderTypes,
   VideoQualityModes,
   WithReason
 } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import type { Channel } from '../../transformers/channel.js'
+import { snakeToCamelCaseNested } from '../../transformer.js'
 
 /**
  * Edits a channel's settings.
@@ -17,7 +18,7 @@ import type { Channel } from '../../transformers/channel.js'
  * @param bot - The bot instance to use to make the request.
  * @param channelId - The ID of the channel to edit.
  * @param options - The parameters for the edit of the channel.
- * @returns An instance of the edited {@link Channel}.
+ * @returns An instance of the edited {@link DiscordChannel}.
  *
  * @remarks
  * If editing a channel of type {@link ChannelTypes.GroupDm}:
@@ -45,7 +46,7 @@ export async function editChannel (
   rest: RestManager,
   channelId: BigString,
   options: ModifyChannel
-): Promise<Channel> {
+): Promise<SnakeToCamelCaseNested<DiscordChannel>> {
   if (options.name ?? options.topic) {
     const request = editChannelNameTopicQueue.get(channelId)
     if (request == null) {
@@ -62,13 +63,15 @@ export async function editChannel (
       request.amount = 2
       request.timestamp = Date.now() + 600000
     } else {
-      return await new Promise<Channel>((resolve, reject) => {
-        // 2 have already been used add to queue
-        request.items.push({ channelId, options, resolve, reject })
-        if (editChannelProcessing) return
-        editChannelProcessing = true
-        processEditChannelQueue(rest)
-      })
+      return await new Promise<SnakeToCamelCaseNested<DiscordChannel>>(
+        (resolve, reject) => {
+          // 2 have already been used add to queue
+          request.items.push({ channelId, options, resolve, reject })
+          if (editChannelProcessing) return
+          editChannelProcessing = true
+          processEditChannelQueue(rest)
+        }
+      )
     }
   }
 
@@ -122,10 +125,7 @@ export async function editChannel (
     }
   )
 
-  return rest.transformers.channel(rest, {
-    channel: result,
-    guildId: rest.transformers.snowflake(result.guild_id!)
-  })
+  return snakeToCamelCaseNested(result)
 }
 
 interface EditChannelRequest {
@@ -135,7 +135,7 @@ interface EditChannelRequest {
   items: Array<{
     channelId: BigString
     options: ModifyChannel
-    resolve: (channel: Channel) => void
+    resolve: (channel: SnakeToCamelCaseNested<DiscordChannel>) => void
     // deno-lint-ignore no-explicit-any
     reject: (error: any) => void
   }>

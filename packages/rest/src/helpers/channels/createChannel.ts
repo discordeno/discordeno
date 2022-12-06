@@ -2,13 +2,14 @@ import type {
   BigString,
   DiscordChannel,
   OverwriteReadable,
+  SnakeToCamelCaseNested,
   SortOrderTypes,
   WithReason
 } from '@discordeno/types'
 import { ChannelTypes } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import type { Channel } from '../../transformers/channel.js'
+import { snakeToCamelCaseNested } from '../../transformer.js'
 
 /**
  * Creates a channel within a guild.
@@ -16,7 +17,7 @@ import type { Channel } from '../../transformers/channel.js'
  * @param bot - The bot instance to use to make the request.
  * @param guildId - The ID of the guild to create the channel within.
  * @param options - The parameters for the creation of the channel.
- * @returns An instance of the created {@link Channel}.
+ * @returns An instance of the created {@link DiscordChannel}.
  *
  * @remarks
  * Requires the `MANAGE_CHANNELS` permission.
@@ -33,7 +34,7 @@ export async function createChannel (
   rest: RestManager,
   guildId: BigString,
   options: CreateGuildChannel
-): Promise<Channel> {
+): Promise<SnakeToCamelCaseNested<DiscordChannel>> {
   // BITRATE IS IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
   if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000
 
@@ -89,10 +90,7 @@ export async function createChannel (
       : {}
   )
 
-  return rest.transformers.channel(rest, {
-    channel: result,
-    guildId: rest.transformers.snowflake(guildId)
-  })
+  return snakeToCamelCaseNested(result)
 }
 
 export interface CreateGuildChannel extends WithReason {

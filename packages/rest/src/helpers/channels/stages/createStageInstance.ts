@@ -1,17 +1,18 @@
 import type {
   BigString,
   DiscordStageInstance,
+  SnakeToCamelCaseNested,
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import type { StageInstance } from '../../../transformers/stageInstance.js'
+import { snakeToCamelCaseNested } from '../../../transformer.js'
 
 /**
  * Creates a stage instance associated with a stage channel.
  *
  * @param bot - The bot instance to use to make the request.
  * @param options - The parameters for the creation of the stage instance.
- * @returns An instance of the created {@link StageInstance}.
+ * @returns An instance of the created {@link DiscordStageInstance}.
  *
  * @remarks
  * Requires the user to be a moderator of the stage channel.
@@ -23,7 +24,7 @@ import type { StageInstance } from '../../../transformers/stageInstance.js'
 export async function createStageInstance (
   rest: RestManager,
   options: CreateStageInstance
-): Promise<StageInstance> {
+): Promise<SnakeToCamelCaseNested<DiscordStageInstance>> {
   const result = await rest.runMethod<DiscordStageInstance>(
     rest,
     'POST',
@@ -36,7 +37,7 @@ export async function createStageInstance (
     }
   )
 
-  return rest.transformers.stageInstance(rest, result)
+  return snakeToCamelCaseNested(result)
 }
 
 export interface CreateStageInstance extends WithReason {

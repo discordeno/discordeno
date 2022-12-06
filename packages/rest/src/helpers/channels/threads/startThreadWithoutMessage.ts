@@ -2,10 +2,11 @@ import type {
   BigString,
   ChannelTypes,
   DiscordChannel,
+  SnakeToCamelCaseNested,
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import type { Channel } from '../../../transformers/channel.js'
+import { snakeToCamelCaseNested } from '../../../transformer.js'
 
 /**
  * Creates a thread without using a message as the thread's point of origin.
@@ -13,7 +14,7 @@ import type { Channel } from '../../../transformers/channel.js'
  * @param bot - The bot instance to use to make the request.
  * @param channelId - The ID of the channel in which to create the thread.
  * @param options - The parameters to use for the creation of the thread.
- * @returns An instance of the created {@link Channel | Thread}.
+ * @returns An instance of the created {@link DiscordChannel | Thread}.
  *
  * @remarks
  * Creating a private thread requires the server to be boosted.
@@ -26,7 +27,7 @@ export async function startThreadWithoutMessage (
   rest: RestManager,
   channelId: BigString,
   options: StartThreadWithoutMessage
-): Promise<Channel> {
+): Promise<SnakeToCamelCaseNested<DiscordChannel>> {
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'POST',
@@ -41,12 +42,7 @@ export async function startThreadWithoutMessage (
     }
   )
 
-  return rest.transformers.channel(rest, {
-    channel: result,
-    guildId: result.guild_id
-      ? rest.transformers.snowflake(result.guild_id)
-      : undefined
-  })
+  return snakeToCamelCaseNested(result)
 }
 
 export interface StartThreadWithoutMessage extends WithReason {

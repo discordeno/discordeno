@@ -1,17 +1,18 @@
 import type {
   BigString,
   DiscordStageInstance,
+  SnakeToCamelCaseNested,
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import type { StageInstance } from '../../../transformers/stageInstance.js'
+import { snakeToCamelCaseNested } from '../../../transformer.js'
 
 /**
  * Edits a stage instance.
  *
  * @param bot - The bot instance to use to make the request.
  * @param channelId - The ID of the stage channel the stage instance is associated with.
- * @returns An instance of the updated {@link StageInstance}.
+ * @returns An instance of the updated {@link DiscordStageInstance}.
  *
  * @remarks
  * Requires the user to be a moderator of the stage channel.
@@ -24,7 +25,7 @@ export async function editStageInstance (
   rest: RestManager,
   channelId: BigString,
   data: EditStageInstanceOptions
-): Promise<StageInstance> {
+): Promise<SnakeToCamelCaseNested<DiscordStageInstance>> {
   const result = await rest.runMethod<DiscordStageInstance>(
     rest,
     'PATCH',
@@ -34,7 +35,7 @@ export async function editStageInstance (
     }
   )
 
-  return rest.transformers.stageInstance(rest, result)
+  return snakeToCamelCaseNested(result)
 }
 
 export interface EditStageInstanceOptions extends WithReason {

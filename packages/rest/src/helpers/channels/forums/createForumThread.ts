@@ -4,10 +4,11 @@ import type {
   DiscordChannel,
   FileContent,
   MessageComponents,
+  SnakeToCamelCaseNested,
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import type { Channel } from '../../../transformers/channel.js'
+import { snakeToCamelCaseNested } from '../../../transformer.js'
 import type { Embed } from '../../../transformers/embed.js'
 
 /**
@@ -16,7 +17,7 @@ import type { Embed } from '../../../transformers/embed.js'
  * @param bot - The bot instance to use to make the request.
  * @param channelId - The ID of the forum channel to create the thread within.
  * @param options - The parameters for the creation of the thread.
- * @returns An instance of {@link Channel} with a nested {@link Message} object.
+ * @returns An instance of {@link DiscordChannel} with a nested {@link Message} object.
  *
  * @remarks
  * Requires the `CREATE_MESSAGES` permission.
@@ -32,7 +33,7 @@ export async function createForumThread (
   rest: RestManager,
   channelId: BigString,
   options: CreateForumPostWithMessage
-): Promise<Channel> {
+): Promise<SnakeToCamelCaseNested<DiscordChannel>> {
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'POST',
@@ -62,10 +63,7 @@ export async function createForumThread (
     }
   )
 
-  return rest.transformers.channel(rest, {
-    channel: result,
-    guildId: rest.transformers.snowflake(result.guild_id!)
-  })
+  return snakeToCamelCaseNested(result)
 }
 
 export interface CreateForumPostWithMessage extends WithReason {

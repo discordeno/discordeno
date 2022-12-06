@@ -1,7 +1,8 @@
 import type { BigString, DiscordListArchivedThreads } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
-import type { ActiveThreads } from './getActiveThreads.js'
+import { snakeToCamelCaseNested } from '../../../transformer.js'
+import type { DiscordActiveThreads } from './getActiveThreads.js'
 
 /**
  * Gets the list of public archived threads for a channel.
@@ -25,7 +26,7 @@ export async function getPublicArchivedThreads (
   rest: RestManager,
   channelId: BigString,
   options?: ListArchivedThreads
-): Promise<ArchivedThreads> {
+): Promise<DiscordArchivedThreads> {
   const results = await rest.runMethod<DiscordListArchivedThreads>(
     rest,
     'GET',
@@ -35,13 +36,13 @@ export async function getPublicArchivedThreads (
   return {
     threads: new Collection(
       results.threads.map((result) => {
-        const thread = rest.transformers.channel(rest, { channel: result })
+        const thread = snakeToCamelCaseNested(result)
         return [thread.id, thread]
       })
     ),
     members: new Collection(
       results.members.map((result) => {
-        const member = rest.transformers.threadMember(rest, result)
+        const member = snakeToCamelCaseNested(result)
         return [member.id!, member]
       })
     ),
@@ -57,6 +58,6 @@ export interface ListArchivedThreads {
   limit?: number
 }
 
-export type ArchivedThreads = ActiveThreads & {
+export type DiscordArchivedThreads = DiscordActiveThreads & {
   hasMore: boolean
 }

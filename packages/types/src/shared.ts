@@ -1537,3 +1537,18 @@ export type PickPartial<T, K extends keyof T> = {
 export type OmitFirstFnArg<F> = F extends (x: any, ...args: infer P) => infer R
   ? (...args: P) => R
   : never
+
+export type SnakeToCamelCase<S extends string> =
+  S extends `${infer T}_${infer U}`
+    ? `${T}${Capitalize<SnakeToCamelCase<U>>}`
+    : S
+
+export type SnakeToCamelCaseNested<T> = T extends any[]
+  ? Array<SnakeToCamelCaseNested<T[number]>>
+  : T extends object
+    ? {
+        [K in keyof T as SnakeToCamelCase<K & string>]: SnakeToCamelCaseNested<
+        T[K]
+        >;
+      }
+    : T

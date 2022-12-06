@@ -7,7 +7,7 @@ import type { RestManager } from '../../../restManager.js'
  * @param bot - The bot instance to use to make the request.
  * @param sourceChannelId - The ID of the announcement channel to follow.
  * @param targetChannelId - The ID of the target channel - the channel to cross-post to.
- * @returns An instance of {@link FollowedChannel}.
+ * @returns An instance of {@link DiscordFollowedChannel}.
  *
  * @remarks
  * Requires the `MANAGE_WEBHOOKS` permission in the __target channel__.
@@ -20,7 +20,7 @@ export async function followAnnouncementChannel (
   rest: RestManager,
   sourceChannelId: BigString,
   targetChannelId: BigString
-): Promise<bigint> {
+): Promise<DiscordFollowedChannel> {
   const result = await rest.runMethod<DiscordFollowedChannel>(
     rest,
     'POST',
@@ -30,5 +30,5 @@ export async function followAnnouncementChannel (
     }
   )
 
-  return rest.transformers.snowflake(result.webhook_id)
+  return result
 }

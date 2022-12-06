@@ -1,13 +1,17 @@
-import type { BigString, DiscordChannel } from '@discordeno/types'
+import type {
+  BigString,
+  DiscordChannel,
+  SnakeToCamelCaseNested
+} from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import type { Channel } from '../../transformers/channel.js'
+import { snakeToCamelCaseNested } from '../../transformer.js'
 
 /**
  * Gets a channel by its ID.
  *
  * @param bot - The bot instance to use to make the request.
  * @param channelId - The ID of the channel to get.
- * @returns An instance of {@link Channel}.
+ * @returns An instance of {@link DiscordChannel}.
  *
  * @remarks
  * If the channel is a thread, a {@link ThreadMember} object is included in the result.
@@ -17,7 +21,7 @@ import type { Channel } from '../../transformers/channel.js'
 export async function getChannel (
   rest: RestManager,
   channelId: BigString
-): Promise<Channel> {
+): Promise<SnakeToCamelCaseNested<DiscordChannel>> {
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'GET',
@@ -25,10 +29,5 @@ export async function getChannel (
   )
 
   // IF A CHANNEL DOESN'T EXIST, DISCORD RETURNS `{}`
-  return rest.transformers.channel(rest, {
-    channel: result,
-    guildId: result.guild_id
-      ? rest.transformers.snowflake(result.guild_id)
-      : undefined
-  })
+  return snakeToCamelCaseNested(result)
 }
