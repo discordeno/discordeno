@@ -4,6 +4,7 @@ import type {
   BigString,
   DiscordAutoModerationRule,
   DiscordAutoModerationRuleTriggerMetadataPresets,
+  DiscordModifyAutomoderationRule,
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
@@ -57,7 +58,7 @@ export async function editAutomodRule (
       exempt_roles: options.exemptRoles?.map((id) => id.toString()),
       exempt_channels: options.exemptChannels?.map((id) => id.toString()),
       reason: options.reason
-    }
+    } as DiscordModifyAutomoderationRule
   )
 
   return rest.transformers.automodRule(rest, result)

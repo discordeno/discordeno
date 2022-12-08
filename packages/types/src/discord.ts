@@ -2553,28 +2553,26 @@ export interface DiscordCreateAutomoderationRule {
   /** The type of trigger to use for the rule. */
   trigger_type: AutoModerationTriggerTypes
   /** The metadata to use for the trigger. */
-  trigger_metadata: {
-    /** The keywords needed to match. Only present when TriggerType.Keyword */
-    keyword_filter?: string[]
-    /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
-    presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
-    /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
-    allow_list?: string[]
-    /** Total number of mentions (role & user) allowed per message (Maximum of 50). Only present when TriggerType.MentionSpam */
-    mention_total_limit?: number
-  }
+  trigger_metadata: DiscordAutoModerationRuleTriggerMetadata
   /** The actions that will trigger for this rule */
-  actions: Array<{
-    /** The type of action to take when a rule is triggered */
-    type: AutoModerationActionType
-    /** additional metadata needed during execution for this specific action type */
-    metadata?: {
-      /** The id of channel to which user content should be logged. Only in SendAlertMessage */
-      channel_id?: string
-      /** Timeout duration in seconds. Max is 2419200(4 weeks). Only supported for TriggerType.Keyword */
-      duration_seconds?: number
-    }
-  }>
+  actions: DiscordAutoModerationAction[]
+  /** Whether the rule should be enabled, true by default. */
+  enabled?: boolean
+  /** The role ids that should not be effected by the rule */
+  exempt_roles?: string[]
+  /** The channel ids that should not be effected by the rule. */
+  exempt_channels?: string[]
+}
+
+export interface DiscordModifyAutomoderationRule {
+  /** The name of the rule. */
+  name: string
+  /** The type of event to trigger the rule on. */
+  event_type: AutoModerationEventTypes
+  /** The metadata to use for the trigger. */
+  trigger_metadata: DiscordAutoModerationRuleTriggerMetadata
+  /** The actions that will trigger for this rule */
+  actions: DiscordAutoModerationAction[]
   /** Whether the rule should be enabled, true by default. */
   enabled?: boolean
   /** The role ids that should not be effected by the rule */
