@@ -581,7 +581,6 @@ export interface DiscordGuild {
   nsfw_level: GuildNsfwLevel
   /** Whether the guild has the boost progress bar enabled */
   premium_progress_bar_enabled: boolean
-
   /** Guild id */
   id: string
   /** Icon hash */
@@ -634,6 +633,8 @@ export interface DiscordGuild {
   welcome_screen?: DiscordWelcomeScreen
   /** Stage instances in the guild */
   stage_instances?: DiscordStageInstance[]
+  /** custom guild stickers */
+  stickers?: DiscordSticker[]
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
