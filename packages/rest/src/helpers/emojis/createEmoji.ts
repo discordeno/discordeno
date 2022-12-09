@@ -1,7 +1,11 @@
-import type { BigString, DiscordEmoji, WithReason } from '@discordeno/types'
+import type {
+  BigString,
+  DiscordEmoji,
+  SnakeToCamelCaseNested,
+  WithReason
+} from '@discordeno/types'
 import { urlToBase64 } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import type { Emoji } from '../../transformers/emoji.js'
 
 /**
  * Creates an emoji in a guild.
@@ -9,7 +13,7 @@ import type { Emoji } from '../../transformers/emoji.js'
  * @param bot - The bot instance to use to make the request.
  * @param guildId - The ID of the guild in which to create the emoji.
  * @param options - The parameters for the creation of the emoji.
- * @returns An instance of the created {@link Emoji}.
+ * @returns An instance of the created {@link DiscordEmoji}.
  *
  * @remarks
  * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
@@ -24,7 +28,7 @@ export async function createEmoji (
   rest: RestManager,
   guildId: BigString,
   options: CreateGuildEmoji
-): Promise<Emoji> {
+): Promise<SnakeToCamelCaseNested<DiscordEmoji>> {
   if (options.image && !options.image.startsWith('data:image/')) {
     options.image = await urlToBase64(options.image)
   }
@@ -41,7 +45,32 @@ export async function createEmoji (
     }
   )
 
-  return rest.transformers.emoji(rest, result)
+  return {
+    id: result.id,
+    name: result.name,
+    roles: result.roles,
+    user: result.user && {
+      id: result.user.id,
+      username: result.user.username,
+      discriminator: result.user.discriminator,
+      avatar: result.user.avatar,
+      bot: result.user.bot,
+      system: result.user.system,
+      mfaEnabled: result.user.mfa_enabled,
+      banner: result.user.banner,
+      accentColor: result.user.accent_color,
+      locale: result.user.locale,
+      verified: result.user.verified,
+      email: result.user.email,
+      flags: result.user.flags,
+      premiumType: result.user.premium_type,
+      publicFlags: result.user.public_flags
+    },
+    requireColons: result.require_colons,
+    managed: result.managed,
+    animated: result.animated,
+    available: result.animated
+  }
 }
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
