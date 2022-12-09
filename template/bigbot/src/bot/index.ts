@@ -2,14 +2,13 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { DiscordGatewayPayload } from "discordeno";
-// ReferenceError: publishMessage is not defined
-// import Embeds from "discordeno/embeds";
 import amqplib from "amqplib";
 import express from "express";
 import { BOT_ID, EVENT_HANDLER_URL } from "../configs.js";
 import { bot } from "./bot.js";
 import { updateDevCommands } from "./utils/slash/updateCommands.js";
 import { webhookURLToIDAndToken } from "./utils/webhook.js";
+import Embeds from "discordeno/embeds";
 
 const BUGS_ERRORS_REPORT_WEBHOOK = process.env.BUGS_ERRORS_REPORT_WEBHOOK;
 const EVENT_HANDLER_AUTHORIZATION = process.env.EVENT_HANDLER_AUTHORIZATION as string;
@@ -31,8 +30,6 @@ process
 
     if (!error) return;
 
-    // ReferenceError: publishMessage is not defined
-    /*
     const embeds = new Embeds()
       .setDescription(["```js", error, "```"].join(`\n`))
       .setTimestamp()
@@ -40,7 +37,6 @@ process
 
     // SEND ERROR TO THE LOG CHANNEL ON THE DEV SERVER
     return bot.helpers.sendWebhookMessage(bot.transformers.snowflake(id), token, { embeds }).catch(console.error);
-    */
   })
   .on("uncaughtException", async (error) => {
     if (!BUGS_ERRORS_REPORT_WEBHOOK) return;
@@ -57,14 +53,12 @@ process
 
     if (!error) process.exit(1);
 
-    /*
     const embeds = new Embeds()
       .setDescription(["```js", error.stack, "```"].join(`\n`))
       .setTimestamp()
       .setFooter("Unhandled Exception Error Occurred");
       // SEND ERROR TO THE LOG CHANNEL ON THE DEV SERVER
       await bot.helpers.sendWebhookMessage(bot.transformers.snowflake(id), token, { embeds }).catch(console.error);
-      */
 
     process.exit(1);
   });
