@@ -2856,9 +2856,9 @@ export interface DiscordCreateGuild {
   /** Explicit content filter level */
   explicit_content_filter?: ExplicitContentFilterLevels
   /** New guild roles (first role is the everyone role) */
-  roles?: Role[]
+  roles?: DiscordRole[]
   /** New guild's channels */
-  channels?: Array<Partial<Channel>>
+  channels?: Array<Partial<DiscordChannel>>
   /** Id for afk channel */
   afk_channel_id?: string
   /** Afk timeout in seconds */
