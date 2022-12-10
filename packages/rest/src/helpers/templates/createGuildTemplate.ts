@@ -1,6 +1,6 @@
 import type { RestManager } from '../../restManager.js'
 import type { Template } from '../../transformers/template.js'
-import type { DiscordTemplate, BigString } from '@discordeno/types'
+import type { DiscordTemplate, BigString, DiscordCreateTemplate } from '@discordeno/types'
 
 /**
  * Creates a template from a guild.
@@ -34,7 +34,7 @@ export async function createGuildTemplate (
     rest,
     'POST',
     rest.constants.routes.GUILD_TEMPLATES(guildId),
-    options
+    options as DiscordCreateTemplate
   )
 
   return rest.transformers.template(rest, result)

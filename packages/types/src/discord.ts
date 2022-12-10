@@ -3032,3 +3032,109 @@ export interface DiscordBeginGuildPrune {
   /** Role(s) ro include, default: none */
   include_roles?: string[]
 }
+
+export interface DiscordCreateGuildRole {
+  /** Name of the role, max 100 characters, default: "new role" */
+  name?: string
+  /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
+  permissions?: string[]
+  /** RGB color value, default: 0 */
+  color?: number
+  /** Whether the role should be displayed separately in the sidebar, default: false */
+  hoist?: boolean
+  /** Whether the role should be mentionable, default: false */
+  mentionable?: boolean
+  /** The role's unicode emoji (if the guild has the `ROLE_ICONS` feature) */
+  unicode_emoji?: string
+  /** the role's icon image (if the guild has the `ROLE_ICONS` feature) */
+  icon?: string
+}
+
+export interface DiscordEditGuildRole {
+  /** Name of the role, max 100 characters, default: "new role" */
+  name?: string
+  /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
+  permissions?: string[]
+  /** RGB color value, default: 0 */
+  color?: number
+  /** Whether the role should be displayed separately in the sidebar, default: false */
+  hoist?: boolean
+  /** Whether the role should be mentionable, default: false */
+  mentionable?: boolean
+  /** The role's unicode emoji (if the guild has the `ROLE_ICONS` feature) */
+  unicode_emoji?: string
+  /** the role's icon image (if the guild has the `ROLE_ICONS` feature) */
+  icon?: string
+}
+
+export interface DiscordModifyRolePositions {
+  /** The role id */
+  id: string
+  /** The sorting position for the role. */
+  position?: number | null
+}
+
+export interface DiscordCreateGuildStickerOptions {
+  /** Name of the sticker (2-30 characters) */
+  name: string
+  /** Description of the sticker (empty or 2-100 characters) */
+  description: string
+  /** Autocomplete/suggestion tags for the sticker (max 200 characters) */
+  tags: string
+}
+
+export interface DiscordEditGuildStickerOptions {
+  /** Name of the sticker (2-30 characters) */
+  name?: string
+  /** Description of the sticker (empty or 2-100 characters) */
+  description?: string | null
+  /** Autocomplete/suggestion tags for the sticker (max 200 characters) */
+  tags?: string
+}
+
+export interface DiscordCreateTemplate {
+  /** Name which the template should have */
+  name: string
+  /** Description of the template */
+  description?: string
+}
+
+export interface DiscordCreateWebhook {
+  /** Name of the webhook (1-80 characters) */
+  name: string
+  /** Image url for the default webhook avatar */
+  avatar?: string | null
+}
+
+export interface DiscordModifyWebhook {
+  /** The default name of the webhook */
+  name?: string
+  /** Image for the default webhook avatar */
+  avatar?: string | null
+  /** The new channel id this webhook should be moved to */
+  channel_id?: string
+}
+
+/** https://discord.com/developers/docs/resources/webhook#execute-webhook */
+export interface DiscordExecuteWebhook {
+  /** Waits for server confirmation of message send before response, and returns the created message body (defaults to `false`; when `false` a message that is not saved does not return an error) */
+  wait?: boolean
+  /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. */
+  thread_id?: string
+  /** Name of the thread to create (target channel has to be type of forum channel) */
+  thread_name?: string
+  /** The message contents (up to 2000 characters) */
+  content?: string
+  /** Override the default username of the webhook */
+  username?: string
+  /** Override the default avatar of the webhook */
+  avatar_url?: string
+  /** True if this is a TTS message */
+  tts?: boolean
+  /** Embedded `rich` content */
+  embeds?: DiscordEmbed[]
+  /** Allowed mentions for the message */
+  allowed_mentions?: DiscordAllowedMentions
+  /** the components to include with the message */
+  components?: DiscordMessageComponents
+}

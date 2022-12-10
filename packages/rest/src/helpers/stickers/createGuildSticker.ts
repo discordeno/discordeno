@@ -1,4 +1,4 @@
-import type { FileContent, WithReason } from '@discordeno/types'
+import type { FileContent, WithReason, DiscordCreateGuildStickerOptions } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Sticker } from '../../transformers/sticker.js'
 
@@ -32,7 +32,7 @@ export async function createGuildSticker (
       tags: options.tags,
       file: options.file,
       reason: options.reason
-    }
+    } as DiscordCreateGuildStickerOptions
   )
   return rest.transformers.sticker(rest, result)
 }

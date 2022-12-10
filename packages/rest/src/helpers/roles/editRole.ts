@@ -1,6 +1,7 @@
 import type {
   BigString,
   DiscordRole,
+  DiscordEditGuildRole,
   PermissionStrings
 } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
@@ -41,7 +42,7 @@ export async function editRole (
       permissions: calculateBits(options?.permissions ?? []),
       icon: options.icon,
       unicode_emoji: options.unicodeEmoji
-    }
+    } as DiscordEditGuildRole
   )
 
   return rest.transformers.role(rest, {

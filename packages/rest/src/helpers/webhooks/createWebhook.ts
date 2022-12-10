@@ -1,4 +1,4 @@
-import type { BigString, DiscordWebhook, WithReason } from '@discordeno/types'
+import type { BigString, DiscordWebhook, WithReason, DiscordCreateWebhook } from '@discordeno/types'
 import { urlToBase64 } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
 import type { Webhook } from '../../transformers/webhook.js'
@@ -33,7 +33,7 @@ export async function createWebhook (
       name: options.name,
       avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
       reason: options.reason
-    }
+    } as DiscordCreateWebhook
   )
 
   return rest.transformers.webhook(rest, result)

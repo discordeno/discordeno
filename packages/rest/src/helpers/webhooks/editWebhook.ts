@@ -1,4 +1,4 @@
-import type { BigString, DiscordWebhook, WithReason } from '@discordeno/types'
+import type { BigString, DiscordModifyWebhook, DiscordWebhook, WithReason } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Webhook } from '../../transformers/webhook.js'
 
@@ -30,7 +30,7 @@ export async function editWebhook (
       avatar: options.avatar,
       channel_id: options.channelId,
       reason: options.reason
-    }
+    } as DiscordModifyWebhook
   )
 
   return rest.transformers.webhook(rest, result)

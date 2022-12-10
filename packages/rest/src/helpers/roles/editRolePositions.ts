@@ -1,4 +1,4 @@
-import type { BigString, DiscordRole } from '@discordeno/types'
+import type { BigString, DiscordRole, DiscordModifyRolePositions } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
 import type { Role } from '../../transformers/role.js'
@@ -27,7 +27,7 @@ export async function modifyRolePositions (
     rest,
     'PATCH',
     rest.constants.routes.GUILD_ROLES(guildId),
-    options
+    options as DiscordModifyRolePositions[]
   )
 
   const id = rest.transformers.snowflake(guildId)

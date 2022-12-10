@@ -1,6 +1,7 @@
 import type {
   BigString,
   DiscordRole,
+  DiscordCreateGuildRole,
   PermissionStrings
 } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
@@ -41,7 +42,7 @@ export async function createRole (
       icon: options.icon,
       unicode_emoji: options.unicodeEmoji,
       reason
-    }
+    } as DiscordCreateGuildRole
   )
 
   return rest.transformers.role(rest, {

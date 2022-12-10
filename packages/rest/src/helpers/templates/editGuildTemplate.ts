@@ -1,6 +1,6 @@
 import type { RestManager } from '../../restManager.js'
 import type { Template } from '../../transformers/template.js'
-import type { DiscordTemplate, BigString } from '@discordeno/types'
+import type { DiscordTemplate, BigString, DiscordModifyGuildTemplate } from '@discordeno/types'
 
 /**
  * Edits a template's settings.
@@ -42,7 +42,7 @@ export async function editGuildTemplate (
     {
       name: options.name,
       description: options.description
-    }
+    } as DiscordModifyGuildTemplate
   )
 
   return rest.transformers.template(rest, result)

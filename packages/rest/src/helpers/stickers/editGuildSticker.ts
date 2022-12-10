@@ -1,4 +1,4 @@
-import type { AtLeastOne, WithReason } from '@discordeno/types'
+import type { AtLeastOne, WithReason, DiscordEditGuildStickerOptions } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Sticker } from '../../transformers/sticker.js'
 
@@ -30,7 +30,7 @@ export async function editGuildSticker (
       description: options.description,
       tags: options.tags,
       reason: options.reason
-    }
+    } as DiscordEditGuildStickerOptions
   )
   return rest.transformers.sticker(rest, result)
 }

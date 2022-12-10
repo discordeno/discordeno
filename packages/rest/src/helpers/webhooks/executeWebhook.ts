@@ -2,6 +2,7 @@ import type {
   AllowedMentions,
   BigString,
   DiscordMessage,
+  DiscordExecuteWebhook,
   FileContent,
   MessageComponents
 } from '@discordeno/types'
@@ -60,7 +61,7 @@ export async function executeWebhook (
       components: options.components?.map((component) =>
         rest.transformers.reverse.component(rest, component)
       )
-    }
+    } as DiscordExecuteWebhook
   )
   if (!options.wait) return
 
