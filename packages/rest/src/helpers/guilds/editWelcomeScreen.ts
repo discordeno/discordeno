@@ -1,4 +1,4 @@
-import type { BigString, DiscordWelcomeScreen } from '@discordeno/types'
+import type { BigString, DiscordWelcomeScreen, DiscordModifyGuildWelcomeScreen } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { WelcomeScreen } from '../../transformers/welcomeScreen.js'
 
@@ -35,7 +35,7 @@ export async function editWelcomeScreen (
         emoji_name: welcomeScreen.emojiName
       })),
       description: options.description
-    }
+    } as DiscordModifyGuildWelcomeScreen
   )
 
   return rest.transformers.welcomeScreen(rest, result)

@@ -1,4 +1,4 @@
-import type { BigString, MfaLevels } from '@discordeno/types'
+import type { BigString, MfaLevels,DiscordEditGuildMFALevel } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
 /** Modify a guild's MFA level. Requires guild ownership. */
@@ -12,6 +12,6 @@ export async function editGuildMfaLevel (
     rest,
     'POST',
     rest.constants.routes.GUILD_MFA_LEVEL(guildId),
-    { level: mfaLevel, reason }
+    { level: mfaLevel, reason } as DiscordEditGuildMFALevel
   )
 }

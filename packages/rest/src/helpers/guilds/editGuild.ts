@@ -5,7 +5,8 @@ import type {
   ExplicitContentFilterLevels,
   GuildFeatures,
   SystemChannelFlags,
-  VerificationLevels
+  VerificationLevels,
+  DiscordModifyGuild
 } from '@discordeno/types'
 import { urlToBase64 } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -81,7 +82,7 @@ export async function editGuild (
       preferred_locale: options.preferredLocale,
       features: options.features,
       premium_progress_bar_enabled: options.premiumProgressBarEnabled
-    }
+    } as DiscordModifyGuild
   )
 
   return rest.transformers.guild(rest, { guild: result, shardId })

@@ -2815,3 +2815,111 @@ export interface DiscordCreateChannelInvite {
   /** The id of the embedded application to open for this invite, required if `target_type` is 2, the application must have the `EMBEDDED` flag */
   target_application_id?: string
 }
+
+/** https://discord.com/developers/docs/resources/guild#update-current-user-voice-state */
+export interface DiscordEditOwnVoiceState {
+  /** The id of the channel the user is currently in */
+  channel_id: string
+  /** Toggles the user's suppress state */
+  suppress?: boolean
+  /** Sets the user's request to speak */
+  request_to_speak_timestamp?: number | null
+}
+
+/** https://discord.com/developers/docs/resources/guild#update-user-voice-state */
+export interface DiscordEditUserVoiceState {
+  /** The id of the channel the user is currently in */
+  channel_id: string
+  /** Toggles the user's suppress state */
+  suppress?: boolean
+  /** The user id to target */
+  user_id: string
+}
+
+export interface DiscordEditGuildWidgetSettings {
+  /** Whether or not the widget is enabled. */
+  enabled: boolean
+  /** The channel id if any for this widget. */
+  channel_id?: string | null
+}
+
+/** https://discord.com/developers/docs/resources/guild#create-guild */
+export interface DiscordCreateGuild {
+  /** Name of the guild (1-100 characters) */
+  name: string
+  /** Base64 128x128 image for the guild icon */
+  icon?: string
+  /** Verification level */
+  verification_level?: VerificationLevels
+  /** Default message notification level */
+  default_message_notifications?: DefaultMessageNotificationLevels
+  /** Explicit content filter level */
+  explicit_content_filter?: ExplicitContentFilterLevels
+  /** New guild roles (first role is the everyone role) */
+  roles?: Role[]
+  /** New guild's channels */
+  channels?: Array<Partial<Channel>>
+  /** Id for afk channel */
+  afk_channel_id?: string
+  /** Afk timeout in seconds */
+  afk_timeout?: number
+  /** The id of the channel where guild notices such as welcome messages and boost events are posted */
+  system_channel_id?: string
+  /** System channel flags */
+  system_channel_flags?: SystemChannelFlags
+}
+
+/** https://discord.com/developers/docs/resources/guild#modify-guild */
+export interface DiscordModifyGuild {
+  /** Guild name */
+  name?: string
+  /** Verification level */
+  verification_level?: VerificationLevels | null
+  /** Default message notification filter level */
+  default_message_notifications?: DefaultMessageNotificationLevels | null
+  /** Explicit content filter level */
+  explicit_content_filter?: ExplicitContentFilterLevels | null
+  /** Id for afk channel */
+  afk_channel_id?: string | null
+  /** Afk timeout in seconds */
+  afk_timeout?: number
+  /** Base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has the `ANIMATED_ICON` feature) */
+  icon?: string | null
+  /** User id to transfer guild ownership to (must be owner) */
+  owner_id?: string
+  /** Base64 16:9 png/jpeg image for the guild splash (when the server has `INVITE_SPLASH` feature) */
+  splash?: string | null
+  /** Base64 16:9 png/jpeg image for the guild discovery spash (when the server has the `DISCOVERABLE` feature) */
+  discovery_splash?: string | null
+  /** Base64 16:9 png/jpeg image for the guild banner (when the server has BANNER feature) */
+  banner?: string | null
+  /** The id of the channel where guild notices such as welcome messages and boost events are posted */
+  system_channel_id?: string | null
+  /** System channel flags */
+  system_channel_flags?: SystemChannelFlags
+  /** The id of the channel where Community guilds display rules and/or guidelines */
+  rules_channel_id?: string | null
+  /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
+  public_updates_channel_id?: string | null
+  /** The preferred locale of a Community guild used in server discovery and notices from Discord; defaults to "en-US" */
+  preferred_locale?: string | null
+  /** Enabled guild features */
+  features?: GuildFeatures[]
+  /** Whether the guild's boost progress bar should be enabled */
+  premium_progress_bar_enabled?: boolean
+}
+
+export interface DiscordEditGuildMFALevel {
+  /** The level to set for the guilds mfa level. */
+  level: MfaLevels
+}
+
+/** https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen */
+export interface DiscordModifyGuildWelcomeScreen {
+  /** Whether the welcome screen is enabled */
+  enabled?: boolean | null
+  /** Channels linked in the welcome screen and their display options */
+  welcome_screen?: DiscordWelcomeScreenChannel[] | null
+  /** The server description to show in the welcome screen */
+  description?: string | null
+}

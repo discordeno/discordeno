@@ -1,4 +1,4 @@
-import type { BigString, DiscordGuildWidgetSettings } from '@discordeno/types'
+import type { BigString, DiscordGuildWidgetSettings, DiscordEditGuildWidgetSettings } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import type { GuildWidgetSettings } from '../../../transformers/widgetSettings.js'
 
@@ -31,7 +31,7 @@ export async function editWidgetSettings (
     {
       enabled,
       channel_id: channelId
-    }
+    } as DiscordEditGuildWidgetSettings
   )
 
   return rest.transformers.widgetSettings(rest, result)

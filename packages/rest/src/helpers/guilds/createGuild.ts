@@ -3,7 +3,8 @@ import type {
   DiscordGuild,
   ExplicitContentFilterLevels,
   SystemChannelFlags,
-  VerificationLevels
+  VerificationLevels,
+  DiscordCreateGuild
 } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Channel } from '../../transformers/channel.js'
@@ -44,7 +45,7 @@ export async function createGuild (
       system_channel_flags: options.systemChannelFlags,
       system_channel_id: options.systemChannelId,
       verification_level: options.verificationLevel
-    }
+    } as DiscordCreateGuild
   )
 
   return rest.transformers.guild(rest, { guild: result, shardId: 0 })

@@ -1,4 +1,4 @@
-import type { BigString } from '@discordeno/types'
+import type { BigString, DiscordEditOwnVoiceState, DiscordEditUserVoiceState } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 
 export const updateBotVoiceState = editOwnVoiceState
@@ -36,7 +36,7 @@ export async function editOwnVoiceState (
       request_to_speak_timestamp: options.requestToSpeakTimestamp
         ? new Date(options.requestToSpeakTimestamp).toISOString()
         : options.requestToSpeakTimestamp
-    }
+    } as DiscordEditOwnVoiceState
   )
 }
 
@@ -69,7 +69,7 @@ export async function editUserVoiceState (
       channel_id: options.channelId,
       suppress: options.suppress,
       user_id: options.userId
-    }
+    } as DiscordEditUserVoiceState
   )
 }
 
