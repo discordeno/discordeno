@@ -24,9 +24,6 @@ export async function connectToVoiceChannel(
 ): Promise<void> {
   const shardId = bot.utils.calculateShardId(bot.gateway, bot.transformers.snowflake(guildId));
   const shard = bot.gateway.manager.shards.get(shardId);
-  if (!shard) {
-    throw new Error(`Shard (id: ${shardId} not found`);
-  }
 
   return shard.send({
     op: GatewayOpcodes.VoiceStateUpdate,

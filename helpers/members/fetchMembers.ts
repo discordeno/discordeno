@@ -1,5 +1,5 @@
 import type { Bot } from "../../bot.ts";
-import { BigString, GatewayIntents, GatewayOpcodes } from "../../types/shared.ts";
+import { BigString, GatewayOpcodes } from "../../types/shared.ts";
 import { calculateShardId } from "../../util/calculateShardId.ts";
 
 /**
@@ -31,12 +31,6 @@ export function fetchMembers(
   guildId: BigString,
   options?: Omit<RequestGuildMembers, "guildId">,
 ): Promise<void> {
-  // You can request 1 member without the intent
-  // Check if intents is not 0 as proxy ws won't set intents in other instances
-  if (bot.intents && (!options?.limit || options.limit > 1) && !(bot.intents & GatewayIntents.GuildMembers)) {
-    throw new Error(bot.constants.Errors.MISSING_INTENT_GUILD_MEMBERS);
-  }
-
   if (options?.userIds?.length) {
     options.limit = options.userIds.length;
   }
@@ -48,9 +42,6 @@ export function fetchMembers(
     bot.cache.fetchAllMembersProcessingRequests.set(nonce, resolve);
 
     const shard = bot.gateway.manager.shards.get(shardId);
-    if (!shard) {
-      throw new Error(`Shard (id: ${shardId}) not found.`);
-    }
 
     shard.send({
       op: GatewayOpcodes.RequestGuildMembers,

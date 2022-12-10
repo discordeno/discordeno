@@ -4,9 +4,6 @@ import { GatewayOpcodes, PresenceStatus } from "../../types/shared.ts";
 
 export function editShardStatus(bot: Bot, shardId: number, data: StatusUpdate): Promise<void> {
   const shard = bot.gateway.manager.shards.get(shardId);
-  if (!shard) {
-    throw new Error(`Shard (id: ${shardId}) not found.`);
-  }
 
   return shard.send({
     op: GatewayOpcodes.PresenceUpdate,

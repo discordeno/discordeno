@@ -22,11 +22,7 @@ export async function editChannelPositions(
   guildId: BigString,
   channelPositions: ModifyGuildChannelPositions[],
 ): Promise<void> {
-  if (!channelPositions.length) {
-    throw new Error("You must provide at least one channels to be moved.");
-  }
-
-  return await bot.rest.runMethod<void>(
+  await bot.rest.runMethod<void>(
     bot.rest,
     "PATCH",
     bot.constants.routes.GUILD_CHANNELS(guildId),

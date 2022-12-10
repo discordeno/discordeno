@@ -3,8 +3,8 @@ import type { SearchMembers } from "../../types/discordeno.ts";
 
 import { Bot } from "../../bot.ts";
 import { Member } from "../../transformers/member.ts";
-import { Collection } from "../../util/collection.ts";
 import { BigString } from "../../types/shared.ts";
+import { Collection } from "../../util/collection.ts";
 
 /**
  * Gets the list of members whose usernames or nicknames start with a provided string.
@@ -23,13 +23,6 @@ export async function searchMembers(
   query: string,
   options?: Omit<SearchMembers, "query">,
 ): Promise<Collection<bigint, Member>> {
-  if (options?.limit) {
-    if (options.limit < 1) throw new Error(bot.constants.Errors.MEMBER_SEARCH_LIMIT_TOO_LOW);
-    if (options.limit > 1000) {
-      throw new Error(bot.constants.Errors.MEMBER_SEARCH_LIMIT_TOO_HIGH);
-    }
-  }
-
   const results = await bot.rest.runMethod<DiscordMemberWithUser[]>(
     bot.rest,
     "GET",

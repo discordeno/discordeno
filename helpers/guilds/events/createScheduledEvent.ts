@@ -26,28 +26,6 @@ export async function createScheduledEvent(
   guildId: BigString,
   options: CreateScheduledEvent,
 ): Promise<ScheduledEvent> {
-  if (!bot.utils.validateLength(options.name, { min: 1, max: 100 })) {
-    throw new Error("Name must be between 1-100 characters.");
-  }
-  if (options.description && !bot.utils.validateLength(options.description, { max: 1000 })) {
-    throw new Error("Description must be below 1000 characters.");
-  }
-  if (options.location) {
-    if (!bot.utils.validateLength(options.location, { max: 100 })) {
-      throw new Error("Location must be below 100 characters.");
-    }
-    if (options.entityType === ScheduledEventEntityType.Voice) {
-      throw new Error("Location can not be provided for a Voice event.");
-    }
-  }
-  if (options.entityType === ScheduledEventEntityType.External) {
-    if (!options.scheduledEndTime) throw new Error("A scheduled end time is required when making an External event.");
-    if (!options.location) throw new Error("A location is required when making an External event.");
-  }
-  if (options.scheduledStartTime && options.scheduledEndTime && options.scheduledStartTime > options.scheduledEndTime) {
-    throw new Error("Cannot schedule event to end before starting.");
-  }
-
   const result = await bot.rest.runMethod<DiscordScheduledEvent>(
     bot.rest,
     "POST",
