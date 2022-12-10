@@ -2542,3 +2542,7 @@ export interface DiscordCreateAutomoderationRule {
   /** The channel ids that should not be effected by the rule. */
   exempt_channels?: string[]
 }
+
+export interface DiscordEditAutomoderationRule extends Omit<DiscordCreateAutomoderationRule, 'trigger_type'> {
+
+}

@@ -2,7 +2,8 @@ import {
   AutoModerationActionType,
   AutoModerationEventTypes,
   DiscordAutoModerationRule,
-  DiscordAutoModerationRuleTriggerMetadataPresets
+  DiscordAutoModerationRuleTriggerMetadataPresets,
+  DiscordEditAutomoderationRule
 } from '@discordeno/types'
 import { Bot } from '../../../bot.js'
 import { BigString, WithReason } from '../../../index.js'
@@ -56,7 +57,7 @@ export async function editAutomodRule (
       exempt_roles: options.exemptRoles?.map((id) => id.toString()),
       exempt_channels: options.exemptChannels?.map((id) => id.toString()),
       reason: options.reason
-    }
+    } as DiscordEditAutomoderationRule
   )
 
   return bot.transformers.automodRule(bot, result)
