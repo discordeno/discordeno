@@ -1,5 +1,5 @@
-import { DiscordRole, Optionalize } from '@discordeno/types'
-import { Client } from '../client.js'
+import type { DiscordRole, Optionalize } from '@discordeno/types'
+import type { Client } from '../client.js'
 import { RoleToggles } from './toggles/role.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

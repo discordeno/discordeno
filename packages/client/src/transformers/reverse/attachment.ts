@@ -1,6 +1,6 @@
-import { DiscordAttachment } from '@discordeno/types'
-import { Client } from '../../client.js'
-import { Attachment } from '../attachment.js'
+import type { DiscordAttachment } from '@discordeno/types'
+import type { Client } from '../../client.js'
+import type { Attachment } from '../attachment.js'
 
 export function transformAttachmentToDiscordAttachment (
   client: Client,

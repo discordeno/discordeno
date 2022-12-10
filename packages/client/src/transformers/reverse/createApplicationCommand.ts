@@ -1,9 +1,7 @@
-import { DiscordCreateApplicationCommand } from '@discordeno/types'
-import { Client } from '../../client.js'
-import {
-  CreateApplicationCommand,
-  isContextApplicationCommand
-} from '../../types.js'
+import type { DiscordCreateApplicationCommand } from '@discordeno/types'
+import type { Client } from '../../client.js'
+import type { CreateApplicationCommand } from '../../types.js'
+import { isContextApplicationCommand } from '../../types.js'
 
 export function transformCreateApplicationCommandToDiscordCreateApplicationCommand (
   client: Client,

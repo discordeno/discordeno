@@ -1,5 +1,8 @@
-import { DiscordGatewayPayload, DiscordTypingStart } from '@discordeno/types'
-import { Client } from '../../client.js'
+import type {
+  DiscordGatewayPayload,
+  DiscordTypingStart
+} from '@discordeno/types'
+import type { Client } from '../../client.js'
 
 export function handleTypingStart (
   client: Client,

@@ -1,10 +1,14 @@
-import { Bot, Collection, DiscordGuildEmojisUpdate } from '@discordeno/bot'
-import { addCacheCollections, BotWithCache } from './addCacheCollections.js'
+import type { Bot, DiscordGuildEmojisUpdate } from 'discordeno'
+import { Collection } from 'discordeno'
+import type { BotWithCache } from './addCacheCollections.js'
+import { addCacheCollections } from './addCacheCollections.js'
 import { setupCacheEdits } from './setupCacheEdits.js'
 import { setupCacheRemovals } from './setupCacheRemovals.js'
 
 // PLUGINS MUST TAKE A BOT ARGUMENT WHICH WILL BE MODIFIED
-export function enableCachePlugin<B extends Bot = Bot> (rawBot: B): BotWithCache<B> {
+export function enableCachePlugin<B extends Bot = Bot> (
+  rawBot: B
+): BotWithCache<B> {
   // MARK THIS PLUGIN BEING USED
   rawBot.enabledPlugins.add('CACHE')
 
@@ -12,7 +16,8 @@ export function enableCachePlugin<B extends Bot = Bot> (rawBot: B): BotWithCache
   const bot = addCacheCollections(rawBot)
 
   // Get the unmodified transformer.
-  const { guild, user, member, channel, message, presence, role } = bot.transformers
+  const { guild, user, member, channel, message, presence, role } =
+    bot.transformers
   // Override the transformer
   bot.transformers.guild = function (_, payload) {
     // Run the unmodified transformer
@@ -21,14 +26,19 @@ export function enableCachePlugin<B extends Bot = Bot> (rawBot: B): BotWithCache
     if (result) {
       bot.guilds.set(result.id, result)
 
-      const channels = (payload.guild.channels) ?? []
+      const channels = payload.guild.channels ?? []
 
       channels.forEach((channel) => {
         bot.transformers.channel(bot, { channel, guildId: result.id })
       })
 
       payload.guild.members?.forEach((member) => {
-        bot.transformers.member(bot, member, result.id, bot.transformers.snowflake(member.user!.id))
+        bot.transformers.member(
+          bot,
+          member,
+          result.id,
+          bot.transformers.snowflake(member.user!.id)
+        )
       })
     }
 
@@ -86,7 +96,7 @@ export function enableCachePlugin<B extends Bot = Bot> (rawBot: B): BotWithCache
       const user = bot.transformers.user(bot, payload.author)
       bot.users.set(user.id, user)
 
-      if (payload.guild_id && (payload.member)) {
+      if (payload.guild_id && payload.member) {
         const guildId = bot.transformers.snowflake(payload.guild_id)
         // CACHE THE MEMBER
         bot.members.set(
@@ -130,10 +140,12 @@ export function enableCachePlugin<B extends Bot = Bot> (rawBot: B): BotWithCache
 
     const guild = bot.guilds.get(bot.transformers.snowflake(payload.guild_id))
     if (guild) {
-      guild.emojis = new Collection(payload.emojis.map((e) => {
-        const emoji = bot.transformers.emoji(bot, e)
-        return [emoji.id!, emoji]
-      }))
+      guild.emojis = new Collection(
+        payload.emojis.map((e) => {
+          const emoji = bot.transformers.emoji(bot, e)
+          return [emoji.id!, emoji]
+        })
+      )
     }
 
     GUILD_EMOJIS_UPDATE(bot, data, shardId)

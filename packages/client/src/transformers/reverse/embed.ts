@@ -1,6 +1,6 @@
-import { DiscordEmbed } from '@discordeno/types'
-import { Client } from '../../client.js'
-import { Embed } from '../embed.js'
+import type { DiscordEmbed } from '@discordeno/types'
+import type { Client } from '../../client.js'
+import type { Embed } from '../embed.js'
 
 export function transformEmbedToDiscordEmbed (
   client: Client,

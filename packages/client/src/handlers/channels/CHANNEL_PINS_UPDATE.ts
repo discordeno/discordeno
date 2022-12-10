@@ -1,4 +1,4 @@
-import {
+import type {
   DiscordChannelPinsUpdate,
   DiscordGatewayPayload
 } from '@discordeno/types'

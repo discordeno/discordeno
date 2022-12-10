@@ -1,6 +1,6 @@
-import { DiscordActivity } from '@discordeno/types'
-import { Client } from '../../client.js'
-import { Activity } from '../activity.js'
+import type { DiscordActivity } from '@discordeno/types'
+import type { Client } from '../../client.js'
+import type { Activity } from '../activity.js'
 
 export function transformActivityToDiscordActivity (
   client: Client,

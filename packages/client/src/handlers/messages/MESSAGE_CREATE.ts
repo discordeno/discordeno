@@ -1,5 +1,5 @@
-import { DiscordGatewayPayload, DiscordMessage } from '@discordeno/types'
-import { Client } from '../../client.js'
+import type { DiscordGatewayPayload, DiscordMessage } from '@discordeno/types'
+import type { Client } from '../../client.js'
 
 export async function handleMessageCreate (
   client: Client,

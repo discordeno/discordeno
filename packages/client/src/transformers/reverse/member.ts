@@ -1,6 +1,6 @@
-import { DiscordMember, DiscordUser } from '@discordeno/types'
+import type { DiscordMember, DiscordUser } from '@discordeno/types'
 import type { Client } from '../../client.js'
-import { Member, User } from '../member.js'
+import type { Member, User } from '../member.js'
 
 export function transformUserToDiscordUser (
   client: Client,

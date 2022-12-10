@@ -10,17 +10,21 @@
     "url": "https://github.com/discordeno/discordeno.git"
   },
   "scripts": {
-    "lint": "eslint \"**/*.ts*\""
+    "build": "swc src --out-dir dist",
+    "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
+    "release-build": "yarn build && yarn build:type",
+    "release-build:clean": "shx rm -rf dist && yarn build && yarn build:type",
+    "fmt": "eslint --fix \"src/**/*.ts*\"",
+    "lint": "eslint \"src/**/*.ts*\"",
+    "test:type": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/chai": "^4",
-    "@types/mocha": "^10",
-    "@types/sinon": "^10.0.13",
-    "c8": "^7.12.0",
-    "chai": "^4.3.7",
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.3.21",
+    "@types/node": "^18.11.9",
     "eslint": "^8.0.1",
     "eslint-config-discordeno": "*",
-    "mocha": "^10.1.0",
+    "shx": "^0.3.4",
     "sinon": "^15.0.0",
     "tsconfig": "*",
     "typescript": "^4.9.3"

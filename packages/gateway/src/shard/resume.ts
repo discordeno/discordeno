@@ -1,12 +1,16 @@
 import { GatewayOpcodes } from '@discordeno/types'
-import { Shard, ShardSocketCloseCodes, ShardState } from './types.js'
+import type { Shard } from './types.js'
+import { ShardSocketCloseCodes, ShardState } from './types.js'
 
 export async function resume (shard: Shard): Promise<void> {
   //   gateway.debug("GW RESUMING", { shardId });
   // It has been requested to resume the Shards session.
   // It's possible that the shard is still connected with Discord's gateway therefore we need to forcefully close it.
   if (shard.isOpen()) {
-    shard.close(ShardSocketCloseCodes.ResumeClosingOldConnection, 'Reconnecting the shard, closing old connection.')
+    shard.close(
+      ShardSocketCloseCodes.ResumeClosingOldConnection,
+      'Reconnecting the shard, closing old connection.'
+    )
   }
 
   // Shard has never identified, so we cannot resume.
@@ -26,14 +30,17 @@ export async function resume (shard: Shard): Promise<void> {
   // Before we can resume, we need to create a new connection with Discord's gateway.
   await shard.connect()
 
-  void shard.send({
-    op: GatewayOpcodes.Resume,
-    d: {
-      token: `Bot ${shard.gatewayConfig.token}`,
-      session_id: shard.sessionId,
-      seq: shard.previousSequenceNumber ?? 0
-    }
-  }, true)
+  void shard.send(
+    {
+      op: GatewayOpcodes.Resume,
+      d: {
+        token: `Bot ${shard.gatewayConfig.token}`,
+        session_id: shard.sessionId,
+        seq: shard.previousSequenceNumber ?? 0
+      }
+    },
+    true
+  )
 
   return await new Promise((resolve) => {
     shard.resolves.set('RESUMED', () => resolve())

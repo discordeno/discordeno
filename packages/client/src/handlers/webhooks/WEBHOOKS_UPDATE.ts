@@ -1,5 +1,8 @@
-import { DiscordGatewayPayload, DiscordWebhookUpdate } from '@discordeno/types'
-import { Client } from '../../client.js'
+import type {
+  DiscordGatewayPayload,
+  DiscordWebhookUpdate
+} from '@discordeno/types'
+import type { Client } from '../../client.js'
 
 export function handleWebhooksUpdate (
   client: Client,

@@ -1,5 +1,8 @@
-import { DiscordGatewayPayload, DiscordInviteCreate } from '@discordeno/types'
-import { Client } from '../../client.js'
+import type {
+  DiscordGatewayPayload,
+  DiscordInviteCreate
+} from '@discordeno/types'
+import type { Client } from '../../client.js'
 
 export function handleInviteCreate (
   client: Client,

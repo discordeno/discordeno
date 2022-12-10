@@ -1,4 +1,4 @@
-import { BigString } from '@discordeno/types'
+import type { BigString } from '@discordeno/types'
 
 export function snowflakeToBigint (snowflake: BigString): bigint {
   return BigInt(snowflake) | 0n

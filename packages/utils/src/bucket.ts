@@ -1,4 +1,4 @@
-import { PickPartial } from '@discordeno/types'
+import type { PickPartial } from '@discordeno/types'
 import { delay } from './utils.js'
 
 /** A Leaky Bucket.
@@ -62,22 +62,22 @@ export interface LeakyBucket {
   waiting: Array<(_?: unknown) => void>
 }
 
-export function createLeakyBucket (
-  { max, refillInterval, refillAmount, tokens, waiting, ...rest }:
-  & Omit<
-  PickPartial<
-  LeakyBucket,
-  'max' | 'refillInterval' | 'refillAmount'
-  >,
-  'tokens'
-  >
-  & {
-    /** Current tokens in the bucket.
-         * @default max
-         */
-    tokens?: number
-  }
-): LeakyBucket {
+export function createLeakyBucket ({
+  max,
+  refillInterval,
+  refillAmount,
+  tokens,
+  waiting,
+  ...rest
+}: Omit<
+PickPartial<LeakyBucket, 'max' | 'refillInterval' | 'refillAmount'>,
+'tokens'
+> & {
+  /** Current tokens in the bucket.
+   * @default max
+   */
+  tokens?: number
+}): LeakyBucket {
   return {
     max,
     refillInterval,
@@ -112,7 +112,10 @@ function updateTokens (bucket: LeakyBucket): number {
   const missedRefills = Math.floor(timePassed / bucket.refillInterval)
 
   // The refill shall not exceed the max amount of tokens.
-  bucket.tokensState = Math.min(bucket.tokensState + (bucket.refillAmount * missedRefills), bucket.max)
+  bucket.tokensState = Math.min(
+    bucket.tokensState + bucket.refillAmount * missedRefills,
+    bucket.max
+  )
   bucket.lastRefill += bucket.refillInterval * missedRefills
 
   return bucket.tokensState
@@ -122,10 +125,14 @@ function nextRefill (bucket: LeakyBucket): number {
   // Since this bucket is lazy update the tokens before calculating the next refill.
   updateTokens(bucket)
 
-  return (performance.now() - bucket.lastRefill) + bucket.refillInterval
+  return performance.now() - bucket.lastRefill + bucket.refillInterval
 }
 
-async function acquire (bucket: LeakyBucket, amount: number, highPriority = false): Promise<void> {
+async function acquire (
+  bucket: LeakyBucket,
+  amount: number,
+  highPriority = false
+): Promise<void> {
   // To prevent the race condition of 2 acquires happening at once,
   // check whether its currently allowed to acquire.
   if (!bucket.allowAcquire) {

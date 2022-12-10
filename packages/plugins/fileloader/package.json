@@ -13,6 +13,7 @@
     "build": "swc src --out-dir dist",
     "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
     "release-build": "yarn build && yarn build:type",
+    "release-build:clean": "shx rm -rf dist && yarn build && yarn build:type",
     "fmt": "eslint --fix \"src/**/*.ts*\"",
     "lint": "eslint \"src/**/*.ts*\"",
     "test:unit": "c8 mocha --no-warnings 'tests/**/*.spec.ts'",
@@ -26,7 +27,7 @@
     "eslint": "^8.0.1",
     "eslint-config-discordeno": "*",
     "tsconfig": "*",
-    "@discordeno/bot": "18.0.0-alpha.1",
+    "discordeno": "18.0.0-alpha.1",
     "typescript": "^4.9.3"
   },
   "dependencies": {

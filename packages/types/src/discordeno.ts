@@ -1,9 +1,11 @@
-import {
-  AllowedMentionsTypes, ButtonStyles, MessageComponentTypes,
+import type {
+  AllowedMentionsTypes,
+  ButtonStyles,
+  MessageComponentTypes,
   OverwriteTypes,
   PermissionStrings,
   TextStyles
-} from '@discordeno/types/src/shared.js'
+} from './shared.js'
 
 export type MessageComponents = ActionRow[]
 
@@ -20,12 +22,18 @@ export interface ActionRow {
     | SelectMenuChannelsComponent
     | SelectMenuRolesComponent
     | SelectMenuUsersComponent
-    | SelectMenuUsersAndRolesComponent,
+    | SelectMenuUsersAndRolesComponent
   ]
   | [ButtonComponent, ButtonComponent]
   | [ButtonComponent, ButtonComponent, ButtonComponent]
   | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]
-  | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]
+  | [
+    ButtonComponent,
+    ButtonComponent,
+    ButtonComponent,
+    ButtonComponent,
+    ButtonComponent
+  ]
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#button-object-button-structure */

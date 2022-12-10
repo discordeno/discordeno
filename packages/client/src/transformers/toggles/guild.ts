@@ -1,4 +1,5 @@
-import { DiscordGuild, GuildFeatures } from '@discordeno/types'
+import type { DiscordGuild } from '@discordeno/types'
+import { GuildFeatures } from '@discordeno/types'
 import { ToggleBitfieldBigint } from './ToggleBitfield.js'
 
 const featureNames = [

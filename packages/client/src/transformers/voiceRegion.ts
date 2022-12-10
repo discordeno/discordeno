@@ -1,5 +1,5 @@
-import { DiscordVoiceRegion, Optionalize } from '@discordeno/types'
-import { Client } from '../client.js'
+import type { DiscordVoiceRegion, Optionalize } from '@discordeno/types'
+import type { Client } from '../client.js'
 
 // TODO: Rename `VoiceRegions` to `VoiceRegion`.
 

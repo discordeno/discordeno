@@ -1,4 +1,4 @@
-import {
+import type {
   ApplicationCommandOptionChoice,
   BigString,
   Bot,
@@ -10,8 +10,8 @@ import {
   ListGuildMembers,
   Member,
   Message
-} from '@discordeno/bot'
-import { BotWithCache } from '../cache/src/addCacheCollections.js'
+} from 'discordeno'
+import type { BotWithCache } from '../cache/src/addCacheCollections.js'
 import { cloneChannel } from './src/channels.js'
 import { disconnectMember } from './src/disconnectMember.js'
 import { fetchAndRetrieveMembers } from './src/fetchAndRetrieveMembers.js'
@@ -22,11 +22,11 @@ import { sendDirectMessage } from './src/sendDirectMessage.js'
 import { sendPrivateInteractionResponse } from './src/sendPrivateInteractionResponse.js'
 import { sendTextMessage } from './src/sendTextMessage.js'
 import { suppressEmbeds } from './src/suppressEmbeds.js'
+import type { ModifyThread } from './src/threads.js'
 import {
   archiveThread,
   editThread,
   lockThread,
-  ModifyThread,
   unarchiveThread,
   unlockThread
 } from './src/threads.js'

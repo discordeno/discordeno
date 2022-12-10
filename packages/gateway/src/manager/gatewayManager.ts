@@ -1,11 +1,12 @@
-import {
+import type {
   DiscordGatewayPayload,
   GetGatewayBot,
   PickPartial
 } from '@discordeno/types'
-import { Collection, LeakyBucket } from '@discordeno/utils'
-import { CreateShard } from '../shard/createShard.js'
-import { Shard, ShardGatewayConfig } from '../shard/types.js'
+import type { LeakyBucket } from '@discordeno/utils'
+import { Collection } from '@discordeno/utils'
+import type { CreateShard } from '../shard/createShard.js'
+import type { Shard, ShardGatewayConfig } from '../shard/types.js'
 import { calculateTotalShards } from './calculateTotalShards.js'
 import { calculateWorkerId } from './calculateWorkerId.js'
 // import {
@@ -16,7 +17,8 @@ import { calculateWorkerId } from './calculateWorkerId.js'
 // reshardingEditGuildShardIds,
 // } from "./resharder.js";
 import { prepareBuckets } from './prepareBuckets.js'
-import { createShardManager, ShardManager } from './shardManager.js'
+import type { ShardManager } from './shardManager.js'
+import { createShardManager } from './shardManager.js'
 import { spawnShards } from './spawnShards.js'
 import { stop } from './stop.js'
 import { tellWorkerToIdentify } from './tellWorkerToIdentify.js'

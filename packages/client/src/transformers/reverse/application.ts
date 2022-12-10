@@ -1,6 +1,6 @@
-import { DiscordApplication } from '@discordeno/types'
-import { Client } from '../../client.js'
-import { Application } from '../application.js'
+import type { DiscordApplication } from '@discordeno/types'
+import type { Client } from '../../client.js'
+import type { Application } from '../application.js'
 
 export function transformApplicationToDiscordApplication (
   client: Client,

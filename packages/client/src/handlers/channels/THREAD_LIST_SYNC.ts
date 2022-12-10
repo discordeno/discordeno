@@ -1,9 +1,9 @@
-import {
+import type {
   DiscordGatewayPayload,
   DiscordThreadListSync
 } from '@discordeno/types'
-import { Client } from '../../client.js'
-import { Channel } from '../../transformers/index.js'
+import type { Client } from '../../client.js'
+import type { Channel } from '../../transformers/index.js'
 
 export async function handleThreadListSync (
   client: Client,

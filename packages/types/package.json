@@ -13,6 +13,7 @@
     "build": "swc src --out-dir dist",
     "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
     "release-build": "yarn build && yarn build:type",
+    "release-build:clean": "shx rm -rf dist && yarn build && yarn build:type",
     "fmt": "eslint --fix \"src/**/*.ts*\"",
     "lint": "eslint \"src/**/*.ts*\"",
     "test:type": "tsc --noEmit"
@@ -22,6 +23,7 @@
     "@swc/core": "^1.3.21",
     "eslint": "^8.0.1",
     "eslint-config-discordeno": "*",
+    "shx": "^0.3.4",
     "tsconfig": "*",
     "typescript": "^4.9.3"
   },

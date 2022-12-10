@@ -1,5 +1,5 @@
-import { RestRequestRejection, RestRequestResponse } from './rest.js'
-import { RestManager } from './restManager.js'
+import type { RestRequestRejection, RestRequestResponse } from './rest.js'
+import type { RestManager } from './restManager.js'
 
 export type ProxyMethodResponse<T> = Omit<
 RestRequestResponse | RestRequestRejection,

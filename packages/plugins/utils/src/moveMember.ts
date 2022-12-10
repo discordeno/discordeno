@@ -1,4 +1,4 @@
-import { BigString, Bot, Member } from '@discordeno/bot'
+import type { BigString, Bot, Member } from 'discordeno'
 
 /**
  * Move a member from a voice channel to another.

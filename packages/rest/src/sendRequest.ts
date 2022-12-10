@@ -1,7 +1,7 @@
 import { HTTPResponseCodes } from '@discordeno/types'
 import { BASE_URL, delay } from '@discordeno/utils'
-import { RequestMethod } from './rest.js'
-import { RestManager } from './restManager.js'
+import type { RequestMethod } from './rest.js'
+import type { RestManager } from './restManager.js'
 
 export interface RestSendRequestOptions {
   url: string

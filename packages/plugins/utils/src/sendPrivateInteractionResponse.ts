@@ -1,4 +1,4 @@
-import type { BigString, Bot, InteractionResponse } from '@discordeno/bot'
+import type { BigString, Bot, InteractionResponse } from 'discordeno'
 
 /** sendInteractionResponse with ephemeral reply */
 export async function sendPrivateInteractionResponse (

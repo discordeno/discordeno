@@ -1,5 +1,8 @@
-import { DiscordGatewayPayload, DiscordInteraction } from '@discordeno/types'
-import { Client } from '../../client.js'
+import type {
+  DiscordGatewayPayload,
+  DiscordInteraction
+} from '@discordeno/types'
+import type { Client } from '../../client.js'
 
 export async function handleInteractionCreate (
   client: Client,

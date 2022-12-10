@@ -1,4 +1,4 @@
-import {
+import type {
   ActivityTypes,
   AllowedMentionsTypes,
   ApplicationCommandOptionTypes,
@@ -316,7 +316,8 @@ export interface DiscordTeamMember {
   /** The id of the parent team of which they are a member */
   team_id: string
   /** The avatar, discriminator, id, and username of the user */
-  user: Partial<DiscordUser> & Pick<DiscordUser, 'avatar' | 'discriminator' | 'id' | 'username'>
+  user: Partial<DiscordUser> &
+  Pick<DiscordUser, 'avatar' | 'discriminator' | 'id' | 'username'>
 }
 
 /** https://discord.com/developers/docs/topics/gateway#webhooks-update-webhook-update-event-fields */
@@ -580,7 +581,6 @@ export interface DiscordGuild {
   nsfw_level: GuildNsfwLevel
   /** Whether the guild has the boost progress bar enabled */
   premium_progress_bar_enabled: boolean
-
   /** Guild id */
   id: string
   /** Icon hash */
@@ -633,6 +633,8 @@ export interface DiscordGuild {
   welcome_screen?: DiscordWelcomeScreen
   /** Stage instances in the guild */
   stage_instances?: DiscordStageInstance[]
+  /** custom guild stickers */
+  stickers?: DiscordSticker[]
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
@@ -1173,16 +1175,25 @@ export interface DiscordActionRow {
   type: 1
   /** The components in this row */
   components:
-  | [DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent]
+  | [
+    | DiscordSelectMenuComponent
+    | DiscordButtonComponent
+    | DiscordInputTextComponent
+  ]
   | [DiscordButtonComponent, DiscordButtonComponent]
   | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
-  | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
+  | [
+    DiscordButtonComponent,
+    DiscordButtonComponent,
+    DiscordButtonComponent,
+    DiscordButtonComponent
+  ]
   | [
     DiscordButtonComponent,
     DiscordButtonComponent,
     DiscordButtonComponent,
     DiscordButtonComponent,
-    DiscordButtonComponent,
+    DiscordButtonComponent
   ]
 }
 
@@ -1354,11 +1365,17 @@ export interface DiscordInteractionData {
     /** The Ids and User objects */
     users?: Record<string, DiscordUser>
     /** The Ids and partial Member objects */
-    members?: Record<string, Omit<DiscordInteractionMember, 'user' | 'deaf' | 'mute'>>
+    members?: Record<
+    string,
+    Omit<DiscordInteractionMember, 'user' | 'deaf' | 'mute'>
+    >
     /** The Ids and Role objects */
     roles?: Record<string, DiscordRole>
     /** The Ids and partial Channel objects */
-    channels?: Record<string, Pick<DiscordChannel, 'id' | 'name' | 'type' | 'permissions'>>
+    channels?: Record<
+    string,
+    Pick<DiscordChannel, 'id' | 'name' | 'type' | 'permissions'>
+    >
     /** The ids and attachment objects */
     attachments: Record<string, DiscordAttachment>
   }
@@ -1376,7 +1393,13 @@ export interface DiscordInteractionDataOption {
   /** Value of application command option type */
   type: ApplicationCommandOptionTypes
   /** Value of the option resulting from user input */
-  value?: string | boolean | number | DiscordMember | DiscordChannel | DiscordRole
+  value?:
+  | string
+  | boolean
+  | number
+  | DiscordMember
+  | DiscordChannel
+  | DiscordRole
   /** Present if this option is a group or subcommand */
   options?: DiscordInteractionDataOption[]
   /** `true` if this option is the currently focused option for autocomplete */
@@ -1389,11 +1412,17 @@ export interface DiscordInteractionDataResolved {
   /** The Ids and User objects */
   users?: Record<string, DiscordUser>
   /** The Ids and partial Member objects */
-  members?: Record<string, Omit<DiscordInteractionMember, 'user' | 'deaf' | 'mute'>>
+  members?: Record<
+  string,
+  Omit<DiscordInteractionMember, 'user' | 'deaf' | 'mute'>
+  >
   /** The Ids and Role objects */
   roles?: Record<string, DiscordRole>
   /** The Ids and partial Channel objects */
-  channels?: Record<string, Pick<DiscordChannel, 'id' | 'name' | 'type' | 'permissions'>>
+  channels?: Record<
+  string,
+  Pick<DiscordChannel, 'id' | 'name' | 'type' | 'permissions'>
+  >
   /** The Ids and attachments objects */
   attachments?: Record<string, DiscordAttachment>
 }
@@ -1838,7 +1867,8 @@ export interface DiscordInviteStageInstance {
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure */
-export interface DiscordApplicationCommand extends DiscordCreateApplicationCommand {
+export interface DiscordApplicationCommand
+  extends DiscordCreateApplicationCommand {
   /** Unique ID of command */
   id: string
   /** ID of the parent application */
@@ -2135,7 +2165,8 @@ export interface DiscordGuildBanAddRemove {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove */
-export interface DiscordMessageReactionRemove extends Omit<DiscordMessageReactionAdd, 'member'> { }
+export interface DiscordMessageReactionRemove
+  extends Omit<DiscordMessageReactionAdd, 'member'> {}
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-add */
 export interface DiscordMessageReactionAdd {
@@ -2212,11 +2243,13 @@ export interface DiscordReady {
   /** The shard information associated with this session, if sent when identifying */
   shard?: [number, number]
   /** Contains id and flags */
-  application: Partial<DiscordApplication> & Pick<DiscordApplication, 'id' | 'flags'>
+  application: Partial<DiscordApplication> &
+  Pick<DiscordApplication, 'id' | 'flags'>
 }
 
 /** https://discord.com/developers/docs/resources/guild#unavailable-guild-object */
-export interface DiscordUnavailableGuild extends Pick<DiscordGuild, 'id' | 'unavailable'> { }
+export interface DiscordUnavailableGuild
+  extends Pick<DiscordGuild, 'id' | 'unavailable'> {}
 
 /** https://discord.com/developers/docs/topics/gateway#message-delete-bulk */
 export interface DiscordMessageDeleteBulk {
@@ -2249,8 +2282,7 @@ export interface DiscordTemplate {
   /** The Id of the guild this template is based on */
   source_guild_id: string
   /** The guild snapshot this template contains */
-  serialized_source_guild:
-  & Omit<
+  serialized_source_guild: Omit<
   PickPartial<
   DiscordGuild,
   | 'name'
@@ -2266,16 +2298,22 @@ export interface DiscordTemplate {
   | 'system_channel_flags'
   >,
   'roles'
-  >
-  & {
-    roles: Array< & Omit<
+  > & {
+    roles: Array<
+    Omit<
     PickPartial<
     DiscordRole,
-    'name' | 'color' | 'hoist' | 'mentionable' | 'permissions' | 'icon' | 'unicode_emoji'
+    | 'name'
+    | 'color'
+    | 'hoist'
+    | 'mentionable'
+    | 'permissions'
+    | 'icon'
+    | 'unicode_emoji'
     >,
     'id'
+    > & { id: number }
     >
-    & { id: number }>
   }
   /** Whether the template has un-synced changes */
   is_dirty: boolean | null
@@ -2374,7 +2412,10 @@ export interface DiscordGuildMemberUpdate {
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-all */
 export interface DiscordMessageReactionRemoveAll
-  extends Pick<DiscordMessageReactionAdd, 'channel_id' | 'message_id' | 'guild_id'> { }
+  extends Pick<
+  DiscordMessageReactionAdd,
+  'channel_id' | 'message_id' | 'guild_id'
+  > {}
 
 // TODO: add docs link
 export interface DiscordValidateDiscoverySearchTerm {
@@ -2513,28 +2554,26 @@ export interface DiscordCreateAutomoderationRule {
   /** The type of trigger to use for the rule. */
   trigger_type: AutoModerationTriggerTypes
   /** The metadata to use for the trigger. */
-  trigger_metadata: {
-    /** The keywords needed to match. Only present when TriggerType.Keyword */
-    keyword_filter?: string[]
-    /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
-    presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
-    /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
-    allow_list?: string[]
-    /** Total number of mentions (role & user) allowed per message (Maximum of 50). Only present when TriggerType.MentionSpam */
-    mention_total_limit?: number
-  }
+  trigger_metadata: DiscordAutoModerationRuleTriggerMetadata
   /** The actions that will trigger for this rule */
-  actions: Array<{
-    /** The type of action to take when a rule is triggered */
-    type: AutoModerationActionType
-    /** additional metadata needed during execution for this specific action type */
-    metadata?: {
-      /** The id of channel to which user content should be logged. Only in SendAlertMessage */
-      channel_id?: string
-      /** Timeout duration in seconds. Max is 2419200(4 weeks). Only supported for TriggerType.Keyword */
-      duration_seconds?: number
-    }
-  }>
+  actions: DiscordAutoModerationAction[]
+  /** Whether the rule should be enabled, true by default. */
+  enabled?: boolean
+  /** The role ids that should not be effected by the rule */
+  exempt_roles?: string[]
+  /** The channel ids that should not be effected by the rule. */
+  exempt_channels?: string[]
+}
+
+export interface DiscordModifyAutomoderationRule {
+  /** The name of the rule. */
+  name: string
+  /** The type of event to trigger the rule on. */
+  event_type: AutoModerationEventTypes
+  /** The metadata to use for the trigger. */
+  trigger_metadata: DiscordAutoModerationRuleTriggerMetadata
+  /** The actions that will trigger for this rule */
+  actions: DiscordAutoModerationAction[]
   /** Whether the rule should be enabled, true by default. */
   enabled?: boolean
   /** The role ids that should not be effected by the rule */

@@ -1,5 +1,5 @@
-import { DiscordGatewayPayload, GatewayOpcodes } from '@discordeno/types'
-import { createShard } from './createShard.js'
+import type { DiscordGatewayPayload, GatewayOpcodes } from '@discordeno/types'
+import type { createShard } from './createShard.js'
 
 // TODO: think whether we also need an identifiedShard function
 

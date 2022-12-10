@@ -1,5 +1,6 @@
 import { WebSocket } from 'ws'
-import { Shard, ShardState } from './types.js'
+import type { Shard } from './types.js'
+import { ShardState } from './types.js'
 
 export async function connect (shard: Shard): Promise<void> {
   // Only set the shard to `Connecting` state,

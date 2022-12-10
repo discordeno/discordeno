@@ -1,16 +1,16 @@
-import { FileContent } from '@discordeno/types'
+import type { FileContent } from '@discordeno/types'
 import {
   API_VERSION,
   baseEndpoints,
   BASE_URL,
   encode
 } from '@discordeno/utils'
-import {
+import type {
   RequestMethod,
   RestRequestRejection,
   RestRequestResponse
 } from './rest.js'
-import { RestManager } from './restManager.js'
+import type { RestManager } from './restManager.js'
 
 export async function runMethod<T = any> (
   rest: RestManager,

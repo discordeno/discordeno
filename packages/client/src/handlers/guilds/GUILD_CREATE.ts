@@ -1,4 +1,4 @@
-import { DiscordGatewayPayload, DiscordGuild } from '@discordeno/types'
+import type { DiscordGatewayPayload, DiscordGuild } from '@discordeno/types'
 import type { Client } from '../../client.js'
 
 export function handleGuildCreate (

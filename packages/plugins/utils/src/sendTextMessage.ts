@@ -1,4 +1,4 @@
-import { BigString, Bot, CreateMessage, Message } from '@discordeno/bot'
+import type { BigString, Bot, CreateMessage, Message } from 'discordeno'
 
 /** Sends a text message. */
 export async function sendTextMessage (

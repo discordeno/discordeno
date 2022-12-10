@@ -1,5 +1,6 @@
 import { GatewayOpcodes } from '@discordeno/types'
-import { Shard, ShardSocketCloseCodes, ShardState } from './types.js'
+import type { Shard } from './types.js'
+import { ShardSocketCloseCodes, ShardState } from './types.js'
 
 export function startHeartbeating (shard: Shard, interval: number): void {
   //   gateway.debug("GW HEARTBEATING_STARTED", { shardId, interval });
@@ -19,10 +20,12 @@ export function startHeartbeating (shard: Shard, interval: number): void {
   const jitter = Math.ceil(shard.heart.interval * (Math.random() || 0.5))
   shard.heart.timeoutId = setTimeout(() => {
     // Using a direct socket.send call here because heartbeat requests are reserved by us.
-    shard.socket?.send(JSON.stringify({
-      op: GatewayOpcodes.Heartbeat,
-      d: shard.previousSequenceNumber
-    }))
+    shard.socket?.send(
+      JSON.stringify({
+        op: GatewayOpcodes.Heartbeat,
+        d: shard.previousSequenceNumber
+      })
+    )
 
     shard.heart.lastBeat = Date.now()
     shard.heart.acknowledged = false

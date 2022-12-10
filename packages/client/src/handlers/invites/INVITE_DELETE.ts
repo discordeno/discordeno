@@ -1,5 +1,8 @@
-import { DiscordGatewayPayload, DiscordInviteDelete } from '@discordeno/types'
-import { Client } from '../../client.js'
+import type {
+  DiscordGatewayPayload,
+  DiscordInviteDelete
+} from '@discordeno/types'
+import type { Client } from '../../client.js'
 
 export function handleInviteDelete (
   client: Client,

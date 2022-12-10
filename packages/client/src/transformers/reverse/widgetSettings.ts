@@ -1,6 +1,6 @@
-import { DiscordGuildWidgetSettings } from '@discordeno/types'
-import { Client } from '../../client.js'
-import { GuildWidgetSettings } from '../widgetSettings.js'
+import type { DiscordGuildWidgetSettings } from '@discordeno/types'
+import type { Client } from '../../client.js'
+import type { GuildWidgetSettings } from '../widgetSettings.js'
 
 export function transformWidgetSettingsToDiscordWidgetSettings (
   client: Client,

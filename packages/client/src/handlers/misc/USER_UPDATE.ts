@@ -1,5 +1,5 @@
-import { DiscordGatewayPayload, DiscordUser } from '@discordeno/types'
-import { Client } from '../../client.js'
+import type { DiscordGatewayPayload, DiscordUser } from '@discordeno/types'
+import type { Client } from '../../client.js'
 
 export async function handleUserUpdate (
   client: Client,

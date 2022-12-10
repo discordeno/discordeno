@@ -1,11 +1,11 @@
-import {
+import type {
   ApplicationCommandOptionTypes,
   ChannelTypes,
   DiscordApplicationCommandOption,
   Localization
 } from '@discordeno/types'
-import { Client } from '../client.js'
-import { ApplicationCommandOptionChoice } from './applicationCommandOptionChoice.js'
+import type { Client } from '../client.js'
+import type { ApplicationCommandOptionChoice } from './applicationCommandOptionChoice.js'
 
 export function transformApplicationCommandOption (
   client: Client,

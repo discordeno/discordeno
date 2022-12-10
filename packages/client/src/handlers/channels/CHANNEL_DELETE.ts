@@ -1,4 +1,4 @@
-import { DiscordChannel, DiscordGatewayPayload } from '@discordeno/types'
+import type { DiscordChannel, DiscordGatewayPayload } from '@discordeno/types'
 import type { Client } from '../../client.js'
 
 export async function handleChannelDelete (

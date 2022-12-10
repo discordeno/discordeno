@@ -21,11 +21,17 @@
     },
     "release-build": {
       "dependsOn": [
-        "^build:type"
+        "^release-build"
       ],
       "outputs": [
         "dist/**"
       ]
+    },
+    "release-build:clean": {
+      "dependsOn": [
+        "^release-build:clean"
+      ],
+      "cache": false
     },
     "test:unit": {
       "dependsOn": [

@@ -1,6 +1,9 @@
-import { Shard, ShardSocketRequest } from './types.js'
+import type { Shard, ShardSocketRequest } from './types.js'
 
-async function checkOffline (shard: Shard, highPriority: boolean): Promise<void> {
+async function checkOffline (
+  shard: Shard,
+  highPriority: boolean
+): Promise<void> {
   if (!shard.isOpen()) {
     await new Promise((resolve) => {
       if (highPriority) {
@@ -13,7 +16,11 @@ async function checkOffline (shard: Shard, highPriority: boolean): Promise<void>
   }
 }
 
-export async function send (shard: Shard, message: ShardSocketRequest, highPriority: boolean): Promise<void> {
+export async function send (
+  shard: Shard,
+  message: ShardSocketRequest,
+  highPriority: boolean
+): Promise<void> {
   // Before acquiring a token from the bucket, check whether the shard is currently offline or not.
   // Else bucket and token wait time just get wasted.
   await checkOffline(shard, highPriority)

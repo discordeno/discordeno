@@ -1,6 +1,6 @@
-import { DiscordApplicationCommandOptionChoice } from '@discordeno/types'
-import { Client } from '../../client.js'
-import { ApplicationCommandOptionChoice } from '../applicationCommandOptionChoice.js'
+import type { DiscordApplicationCommandOptionChoice } from '@discordeno/types'
+import type { Client } from '../../client.js'
+import type { ApplicationCommandOptionChoice } from '../applicationCommandOptionChoice.js'
 
 export function transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice (
   client: Client,
