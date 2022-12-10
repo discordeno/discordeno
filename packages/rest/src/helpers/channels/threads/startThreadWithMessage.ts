@@ -1,6 +1,7 @@
 import type {
   BigString,
   DiscordChannel,
+  DiscordStartThreadWithMessage,
   SnakeToCamelCaseNested,
   WithReason
 } from '@discordeno/types'
@@ -42,7 +43,7 @@ export async function startThreadWithMessage (
       auto_archive_duration: options.autoArchiveDuration,
       rate_limit_per_user: options.rateLimitPerUser,
       reason: options.reason
-    }
+    } as DiscordStartThreadWithMessage
   )
 
   return snakeToCamelCaseNested(result)

@@ -2,6 +2,7 @@ import type {
   BigString,
   ChannelTypes,
   DiscordChannel,
+  DiscordStartThreadWithoutMessage,
   SnakeToCamelCaseNested,
   WithReason
 } from '@discordeno/types'
@@ -39,7 +40,7 @@ export async function startThreadWithoutMessage (
       type: options.type,
       invitable: options.invitable,
       reason: options.reason
-    }
+    } as DiscordStartThreadWithoutMessage
   )
 
   return snakeToCamelCaseNested(result)
