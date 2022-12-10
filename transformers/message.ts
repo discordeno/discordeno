@@ -5,7 +5,9 @@ import { CHANNEL_MENTION_REGEX } from "../util/constants.ts";
 import { MemberToggles } from "./toggles/member.ts";
 
 export function transformMessage(bot: Bot, payload: DiscordMessage) {
-  const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined;
+  const guildId = payload.guild_id
+    ? bot.transformers.snowflake(payload.guild_id)
+    : undefined;
   const userId = bot.transformers.snowflake(payload.author.id);
 
   const message = {
@@ -34,11 +36,11 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
     flags: payload.flags,
     interaction: payload.interaction
       ? {
-        id: bot.transformers.snowflake(payload.interaction.id),
-        type: payload.interaction.type,
-        name: payload.interaction.name,
-        user: bot.transformers.user(bot, payload.interaction.user),
-        member: payload.interaction.member
+          id: bot.transformers.snowflake(payload.interaction.id),
+          type: payload.interaction.type,
+          name: payload.interaction.name,
+          user: bot.transformers.user(bot, payload.interaction.user),
+          member: payload.interaction.member
           ? {
             id: userId,
             guildId,
@@ -76,14 +78,18 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
     id: bot.transformers.snowflake(payload.id),
     guildId,
     channelId: bot.transformers.snowflake(payload.channel_id),
-    webhookId: payload.webhook_id ? bot.transformers.snowflake(payload.webhook_id) : undefined,
+    webhookId: payload.webhook_id
+      ? bot.transformers.snowflake(payload.webhook_id)
+      : undefined,
     authorId: userId,
-    applicationId: payload.application_id ? bot.transformers.snowflake(payload.application_id) : undefined,
+    applicationId: payload.application_id
+      ? bot.transformers.snowflake(payload.application_id)
+      : undefined,
     messageReference: payload.message_reference
       ? {
         messageId: payload.message_reference.message_id
-          ? bot.transformers.snowflake(payload.message_reference.message_id)
-          : undefined,
+        ? bot.transformers.snowflake(payload.message_reference.message_id)
+        : undefined,
         channelId: payload.message_reference.channel_id
           ? bot.transformers.snowflake(payload.message_reference.channel_id)
           : undefined,
@@ -103,7 +109,15 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
         bot.transformers.snowflake(text.substring(2, text.length - 1))
       ),
     ],
-    member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined,
+    member: payload.member && guildId
+        ? bot.transformers.member(
+            bot,
+            payload.member,
+            guildId,
+            userId,
+            payload.author
+          )
+        : undefined,
     nonce: payload.nonce,
   };
 

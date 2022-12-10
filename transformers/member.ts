@@ -21,11 +21,21 @@ export function transformUser(bot: Bot, payload: DiscordUser) {
   return user as Optionalize<typeof user>;
 }
 
-export function transformMember(bot: Bot, payload: DiscordMember, guildId: bigint, userId: bigint) {
+export function transformMember(
+  bot: Bot,
+  payload: DiscordMember,
+  guildId: bigint,
+  userId: bigint,
+  author?: DiscordUser
+) {
   const member = {
     id: userId,
     guildId,
-    user: payload.user ? bot.transformers.user(bot, payload.user) : undefined,
+    user: payload.user
+      ? bot.transformers.user(bot, payload.user)
+      : author
+      ? bot.transformers.user(bot, author)
+      : undefined,
     nick: payload.nick ?? undefined,
     roles: payload.roles.map((id) => bot.transformers.snowflake(id)),
     joinedAt: Date.parse(payload.joined_at),
