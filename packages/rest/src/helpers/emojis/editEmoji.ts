@@ -2,7 +2,8 @@ import type {
   BigString,
   DiscordEmoji,
   SnakeToCamelCaseNested,
-  WithReason
+  WithReason,
+  DiscordModifyGuildEmoji
 } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
@@ -39,7 +40,7 @@ export async function editEmoji (
         ? options.roles.map((role) => role.toString())
         : options.roles,
       reason: options.reason
-    }
+    } as DiscordModifyGuildEmoji
   )
 
   return {

@@ -2581,3 +2581,82 @@ export interface DiscordModifyAutomoderationRule {
   /** The channel ids that should not be effected by the rule. */
   exempt_channels?: string[]
 }
+
+export interface DiscordModifyChannel {
+  /** 1-100 character channel name */
+  name?: string
+  /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
+  type?: ChannelTypes
+  /** The position of the channel in the left-hand listing */
+  position?: number | null
+  /** 0-1024 character channel topic */
+  topic?: string | null
+  /** Whether the channel is nsfw */
+  nsfw?: boolean | null
+  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
+  rate_limit_per_user?: number | null
+  /** The bitrate (in bits) of the voice channel; 8000 to 96000 (128000 for VIP servers) */
+  bitrate?: number | null
+  /** The user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit */
+  user_limit?: number | null
+  /** Channel or category-specific permissions */
+  permission_overwrites?: DiscordOverwrite[] | null
+  /** Id of the new parent category for a channel */
+  parent_id?: string | null
+  /** Voice region id for the voice channel, automatic when set to null */
+  rtc_region?: string | null
+  /** The camera video quality mode of the voice channel */
+  video_quality_mode?: VideoQualityModes
+  /** Whether the thread is archived */
+  archived?: boolean
+  /** Duration in minutes to automatically archive the thread after recent activity */
+  auto_archive_duration?: 60 | 1440 | 4320 | 10080
+  /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
+  locked?: boolean
+  /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
+  invitable?: boolean
+  /** The set of tags that can be used in a GUILD_FORUM channel */
+  available_tags?: Array<{
+    /** The id of the tag */
+    id: string
+    /** The name of the tag (0-20 characters) */
+    name: string
+    /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
+    moderated: boolean
+    /** The id of a guild's custom emoji At most one of emoji_id and emoji_name may be set. */
+    emoji_id: string
+    /** The unicode character of the emoji */
+    emoji_name: string
+  }>
+  /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel; limited to 5 */
+  applied_tags?: string[]
+  /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */
+  default_reaction_emoji?: {
+    /** The id of a guild's custom emoji */
+    emoji_id: string
+    /** The unicode character of the emoji */
+    emoji_name: string | null
+  }
+  /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
+  default_thread_rate_limit_per_user?: number
+  /** the default sort order type used to order posts in forum channels */
+  default_sort_order?: SortOrderTypes | null
+}
+
+/** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
+export interface DiscordCreateGuildEmoji {
+  /** Name of the emoji */
+  name: string
+  /** The 128x128 emoji image. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. */
+  image: string
+  /** Roles allowed to use this emoji */
+  roles?: string[]
+}
+
+/** https://discord.com/developers/docs/resources/emoji#modify-guild-emoji */
+export interface DiscordModifyGuildEmoji {
+  /** Name of the emoji */
+  name?: string
+  /** Roles allowed to use this emoji */
+  roles?: string[] | null
+}

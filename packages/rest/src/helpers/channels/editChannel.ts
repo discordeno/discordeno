@@ -6,7 +6,8 @@ import type {
   SnakeToCamelCaseNested,
   SortOrderTypes,
   VideoQualityModes,
-  WithReason
+  WithReason,
+  DiscordModifyChannel
 } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -122,7 +123,7 @@ export async function editChannel (
         : undefined,
       default_sort_order: options.defaultSortOrder,
       reason: options.reason
-    }
+    } as DiscordModifyChannel
   )
 
   return snakeToCamelCaseNested(result)

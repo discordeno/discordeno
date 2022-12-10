@@ -2,7 +2,8 @@ import type {
   BigString,
   DiscordEmoji,
   SnakeToCamelCaseNested,
-  WithReason
+  WithReason,
+  DiscordCreateGuildEmoji
 } from '@discordeno/types'
 import { urlToBase64 } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -42,7 +43,7 @@ export async function createEmoji (
       image: options.image,
       roles: options.roles?.map((role) => role.toString()),
       reason: options.reason
-    }
+    } as DiscordCreateGuildEmoji
   )
 
   return {
