@@ -1,4 +1,4 @@
-import type { BigString } from '@discordeno/types'
+import type { BigString, DiscordBeginGuildPrune } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
 /**
@@ -40,7 +40,7 @@ export async function pruneMembers (
       days: options.days,
       compute_prune_count: options.computePruneCount,
       include_roles: options.includeRoles
-    }
+    } as DiscordBeginGuildPrune
   )
 
   return result.pruned ?? undefined

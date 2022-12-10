@@ -1,4 +1,4 @@
-import type { BigString, WithReason } from '@discordeno/types'
+import type { BigString, DiscordCreateGuildBan, WithReason } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
 /**
@@ -29,7 +29,7 @@ export async function banMember (
     {
       delete_message_seconds: options?.deleteMessageSeconds,
       reason: options?.reason
-    }
+    } as DiscordCreateGuildBan
   )
 }
 

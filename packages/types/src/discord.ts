@@ -2991,3 +2991,44 @@ export interface DiscordModifyGuildChannelPositions {
   /** The new parent ID for the channel that is moved */
   parent_id?: string | null
 }
+
+/** https://discord.com/developers/docs/resources/guild#create-guild-ban */
+export interface DiscordCreateGuildBan {
+  /** Number of seconds to delete messages for, between 0 and 604800 (7 days) */
+  delete_message_seconds?: number
+}
+
+export interface DiscordEditBotMemberOptions {
+  nick?: string | null
+}
+
+/** https://discord.com/developers/docs/resources/guild#modify-guild-member */
+export interface DiscordModifyGuildMember {
+  /** Value to set users nickname to. Requires the `MANAGE_NICKNAMES` permission */
+  nick?: string | null
+  /** Array of role ids the member is assigned. Requires the `MANAGE_ROLES` permission */
+  roles?: string[] | null
+  /** Whether the user is muted in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MUTE_MEMBERS` permission */
+  mute?: boolean | null
+  /** Whether the user is deafened in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MOVE_MEMBERS` permission */
+  deaf?: boolean | null
+  /** Id of channel to move user to (if they are connected to voice). Requires the `MOVE_MEMBERS` permission */
+  channel_id?: string | null
+  /** when the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission */
+  communication_disabled_until?: number | null
+}
+
+export interface DiscordGetDMChannel {
+  /** The user id */
+  recipient_id: string
+}
+
+/** https://discord.com/developers/docs/resources/guild#begin-guild-prune */
+export interface DiscordBeginGuildPrune {
+  /** Number of days to prune (1 or more), default: 7 */
+  days?: number
+  /** Whether 'pruned' is returned, discouraged for large guilds, default: true */
+  compute_prune_count?: boolean
+  /** Role(s) ro include, default: none */
+  include_roles?: string[]
+}

@@ -1,4 +1,4 @@
-import type { BigString, DiscordMemberWithUser } from '@discordeno/types'
+import type { BigString, DiscordMemberWithUser, DiscordModifyGuildMember } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Member } from '../../transformers/member.js'
 
@@ -37,7 +37,7 @@ export async function editMember (
       communication_disabled_until: options.communicationDisabledUntil
         ? new Date(options.communicationDisabledUntil).toISOString()
         : options.communicationDisabledUntil
-    }
+    } as DiscordModifyGuildMember
   )
 
   return rest.transformers.member(

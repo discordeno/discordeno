@@ -1,4 +1,4 @@
-import type { BigString, DiscordMember, WithReason } from '@discordeno/types'
+import type { BigString, DiscordMember, DiscordEditBotMemberOptions, WithReason } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Member } from '../../transformers/member.js'
 
@@ -27,7 +27,7 @@ export async function editBotMember (
     {
       nick: options.nick,
       reason: options.reason
-    }
+    } as DiscordEditBotMemberOptions
   )
 
   return rest.transformers.member(
