@@ -4,7 +4,8 @@ import type {
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
-  WithReason
+  WithReason,
+  DiscordEditScheduledEvent
 } from '@discordeno/types'
 import { validateLength } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
@@ -75,7 +76,7 @@ export async function editScheduledEvent (
       entity_type: options.entityType,
       status: options.status,
       reason: options.reason
-    }
+    } as DiscordEditScheduledEvent
   )
 
   return rest.transformers.scheduledEvent(rest, result)

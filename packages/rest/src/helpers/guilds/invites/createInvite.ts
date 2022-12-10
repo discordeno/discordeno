@@ -1,6 +1,7 @@
 import type {
   BigString,
   DiscordInvite,
+  DiscordCreateChannelInvite,
   TargetTypes,
   WithReason
 } from '@discordeno/types'
@@ -43,7 +44,7 @@ export async function createInvite (
       target_user_id: options.targetUserId?.toString(),
       target_application_id: options.targetApplicationId?.toString(),
       reason: options.reason
-    }
+    } as DiscordCreateChannelInvite
   )
 
   return {

@@ -2759,3 +2759,59 @@ export interface DiscordCreateMessage {
   stickerIds?: [string] | [string, string] | [string, string, string]
 }
 
+export interface DiscordCreateScheduledEvent {
+  /** the channel id of the scheduled event. */
+  channel_id?: string
+  /** location of the event. Required for events with `entityType: ScheduledEventEntityType.External` */
+  location?: string
+  /** the name of the scheduled event */
+  name: string
+  /** the description of the scheduled event */
+  description: string
+  /** the time the scheduled event will start */
+  scheduled_start_time: number
+  /** the time the scheduled event will end if it does end. Required for events with `entityType: ScheduledEventEntityType.External` */
+  scheduled_end_time?: number
+  /** the privacy level of the scheduled event */
+  privacy_level?: ScheduledEventPrivacyLevel
+  /** the type of hosting entity associated with a scheduled event */
+  entity_type: ScheduledEventEntityType
+}
+
+export interface DiscordEditScheduledEvent {
+  /** the channel id of the scheduled event. null if switching to external event. */
+  channel_id: string | null
+  /** location of the event */
+  location?: string
+  /** the name of the scheduled event */
+  name: string
+  /** the description of the scheduled event */
+  description?: string
+  /** the time the scheduled event will start */
+  scheduled_start_time: number
+  /** the time the scheduled event will end if it does end. */
+  scheduled_end_time?: number
+  /** the privacy level of the scheduled event */
+  privacy_level: ScheduledEventPrivacyLevel
+  /** the type of hosting entity associated with a scheduled event */
+  entity_type: ScheduledEventEntityType
+  /** the status of the scheduled event */
+  status: ScheduledEventStatus
+}
+
+export interface DiscordCreateChannelInvite {
+  /** Duration of invite in seconds before expiry, or 0 for never. Between 0 and 604800 (7 days). Default: 86400 (24 hours) */
+  max_age?: number
+  /** Max number of users or 0 for unlimited. Between 0 and 100. Default: 0 */
+  max_uses?: number
+  /** Whether this invite only grants temporary membership. Default: false */
+  temporary?: boolean
+  /** If true, don't try to reuse similar invite (useful for creating many unique one time use invites). Default: false */
+  unique?: boolean
+  /** The type of target for this voice channel invite */
+  target_type?: TargetTypes
+  /** The id of the user whose stream to display for this invite, required if `target_type` is 1, the user must be streaming in the channel */
+  target_user_id?: string
+  /** The id of the embedded application to open for this invite, required if `target_type` is 2, the application must have the `EMBEDDED` flag */
+  target_application_id?: string
+}

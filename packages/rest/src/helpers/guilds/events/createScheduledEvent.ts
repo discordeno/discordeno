@@ -1,7 +1,8 @@
 import type {
   BigString,
   DiscordScheduledEvent,
-  WithReason
+  WithReason,
+  DiscordCreateScheduledEvent
 } from '@discordeno/types'
 import {
   ScheduledEventEntityType,
@@ -87,7 +88,7 @@ export async function createScheduledEvent (
         options.privacyLevel ?? ScheduledEventPrivacyLevel.GuildOnly,
       entity_type: options.entityType,
       reason: options.reason
-    }
+    } as DiscordCreateScheduledEvent
   )
 
   return rest.transformers.scheduledEvent(rest, result)
