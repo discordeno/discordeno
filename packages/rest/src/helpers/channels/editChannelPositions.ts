@@ -1,4 +1,4 @@
-import type { BigString } from '@discordeno/types'
+import type { BigString, DiscordModifyGuildChannelPositions } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
 export const swapChannels = editChannelPositions
@@ -31,22 +31,22 @@ export async function editChannelPositions (
     'PATCH',
     rest.constants.routes.GUILD_CHANNELS(guildId),
     channelPositions.map((channelPosition) => ({
-      id: channelPosition.id,
+      id: channelPosition.id.toString(),
       position: channelPosition.position,
       lock_positions: channelPosition.lockPositions,
-      parent_id: channelPosition.parentId
-    }))
+      parent_id: channelPosition.parentId?.toString()
+    })) as DiscordModifyGuildChannelPositions[]
   )
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions */
 export interface ModifyGuildChannelPositions {
   /** Channel id */
-  id: string
+  id: BigString
   /** Sorting position of the channel */
   position: number | null
   /** Syncs the permission overwrites with the new parent, if moving to a new category */
   lockPositions?: boolean | null
   /** The new parent ID for the channel that is moved */
-  parentId?: string | null
+  parentId?: BigString | null
 }

@@ -1,5 +1,6 @@
 import type {
   BigString,
+  DiscordEditChannelPermissionOverridesOptions,
   OverwriteReadable,
   WithReason
 } from '@discordeno/types'
@@ -36,7 +37,7 @@ export async function editChannelPermissionOverrides (
       deny: options.deny ? calculateBits(options.deny) : '0',
       type: options.type,
       reason: options.reason
-    }
+    } as DiscordEditChannelPermissionOverridesOptions
   )
 }
 

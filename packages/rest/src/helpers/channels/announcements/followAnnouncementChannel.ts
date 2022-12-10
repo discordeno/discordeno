@@ -1,4 +1,4 @@
-import type { BigString, DiscordFollowedChannel } from '@discordeno/types'
+import type { BigString, DiscordFollowedChannel, DiscordFollowAnnouncementChannel } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 
 /**
@@ -27,7 +27,7 @@ export async function followAnnouncementChannel (
     rest.constants.routes.CHANNEL_FOLLOW(sourceChannelId),
     {
       webhook_channel_id: targetChannelId
-    }
+    } as DiscordFollowAnnouncementChannel
   )
 
   return result

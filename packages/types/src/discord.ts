@@ -2948,3 +2948,46 @@ export interface DiscordStartThreadWithoutMessage {
   /** whether non-moderators can add other non-moderators to a thread; only available when creating a private thread */
   invitable?: boolean
 }
+
+export interface CreateForumPostWithMessage {
+  /** 1-100 character thread name */
+  name: string
+  /** Duration in minutes to automatically archive the thread after recent activity */
+  auto_archive_duration: 60 | 1440 | 4320 | 10080
+  /** Amount of seconds a user has to wait before sending another message (0-21600) */
+  rate_limit_per_user?: number | null
+  /** The message contents (up to 2000 characters) */
+  content?: string
+  /** Embedded `rich` content (up to 6000 characters) */
+  embeds?: DiscordEmbed[]
+  /** Allowed mentions for the message */
+  allowed_mentions?: DiscordAllowedMentions
+  /** The components you would like to have sent in this message */
+  components?: DiscordMessageComponents
+}
+
+export interface DiscordFollowAnnouncementChannel {
+  /** The id of the channel to send announcements to. */
+  webhook_channel_id: string
+}
+
+export interface DiscordEditChannelPermissionOverridesOptions {
+  /** Permission bit set */
+  allow: string
+  /** Permission bit set */
+  deny: string
+  /** Either 0 (role) or 1 (member) */
+  type: OverwriteTypes
+}
+
+/** https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions */
+export interface DiscordModifyGuildChannelPositions {
+  /** Channel id */
+  id: string
+  /** Sorting position of the channel */
+  position: number | null
+  /** Syncs the permission overwrites with the new parent, if moving to a new category */
+  lock_positions?: boolean | null
+  /** The new parent ID for the channel that is moved */
+  parent_id?: string | null
+}

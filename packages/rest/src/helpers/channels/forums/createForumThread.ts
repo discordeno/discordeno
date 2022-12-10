@@ -2,6 +2,7 @@ import type {
   AllowedMentions,
   BigString,
   DiscordChannel,
+  DiscordCreateForumPostWithMessage,
   FileContent,
   MessageComponents,
   SnakeToCamelCaseNested,
@@ -60,7 +61,7 @@ export async function createForumThread (
       components: options.components?.map((component) =>
         rest.transformers.reverse.component(rest, component)
       )
-    }
+    } as DiscordCreateForumPostWithMessage
   )
 
   return snakeToCamelCaseNested(result)
