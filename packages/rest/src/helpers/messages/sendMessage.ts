@@ -3,7 +3,8 @@ import type {
   BigString,
   DiscordMessage,
   FileContent,
-  MessageComponents
+  MessageComponents,
+  DiscordCreateMessage
 } from '@discordeno/types'
 import { MessageComponentTypes } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
@@ -152,7 +153,7 @@ export async function sendMessage (
           }
         : {}),
       sticker_ids: options.stickerIds?.map((sticker) => sticker.toString())
-    }
+    } as DiscordCreateMessage
   )
 
   return rest.transformers.message(rest, result)
@@ -188,5 +189,5 @@ export interface CreateMessage {
   /** The components you would like to have sent in this message */
   components?: MessageComponents
   /** IDs of up to 3 stickers in the server to send in the message */
-  stickerIds?: [bigint] | [bigint, bigint] | [bigint, bigint, bigint]
+  stickerIds?: [BigString] | [BigString, BigString] | [BigString, BigString, BigString]
 }

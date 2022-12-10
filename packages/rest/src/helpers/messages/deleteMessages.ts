@@ -1,4 +1,4 @@
-import type { BigString } from '@discordeno/types'
+import type { BigString, DiscordBulkDeleteMessages } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
 /**
@@ -40,6 +40,6 @@ export async function deleteMessages (
     {
       messages: messageIds.slice(0, 100).map((id) => id.toString()),
       reason
-    }
+    } as DiscordBulkDeleteMessages
   )
 }

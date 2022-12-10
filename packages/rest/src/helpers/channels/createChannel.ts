@@ -4,7 +4,8 @@ import type {
   OverwriteReadable,
   SnakeToCamelCaseNested,
   SortOrderTypes,
-  WithReason
+  WithReason,
+  DiscordCreateGuildChannel
 } from '@discordeno/types'
 import { ChannelTypes } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
@@ -86,7 +87,7 @@ export async function createChannel (
                 : undefined
             }))
             : undefined
-        }
+        } as DiscordCreateGuildChannel
       : {}
   )
 

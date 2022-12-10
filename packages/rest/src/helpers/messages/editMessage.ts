@@ -3,7 +3,8 @@ import type {
   BigString,
   DiscordMessage,
   FileContent,
-  MessageComponents
+  MessageComponents,
+  DiscordEditMessage
 } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Attachment } from '../../transformers/attachment.js'
@@ -56,7 +57,7 @@ export async function editMessage (
       components: options.components?.map((component) =>
         rest.transformers.reverse.component(rest, component)
       )
-    }
+    } as DiscordEditMessage
   )
 
   return rest.transformers.message(rest, result)
