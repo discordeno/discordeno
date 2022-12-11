@@ -44,23 +44,24 @@ export async function createForumThread (
       auto_archive_duration: options.autoArchiveDuration,
       rate_limit_per_user: options.rateLimitPerUser,
       reason: options.reason,
-
-      content: options.content,
-      embeds: options.embeds?.map((embed) =>
-        rest.transformers.reverse.embed(rest, embed)
-      ),
-      allowed_mentions: options.allowedMentions
-        ? {
-            parse: options.allowedMentions?.parse,
-            roles: options.allowedMentions?.roles?.map((id) => id.toString()),
-            users: options.allowedMentions?.users?.map((id) => id.toString()),
-            replied_user: options.allowedMentions?.repliedUser
-          }
-        : undefined,
-      file: options.file,
-      components: options.components?.map((component) =>
-        rest.transformers.reverse.component(rest, component)
-      )
+      message: {
+        content: options.content,
+        embeds: options.embeds?.map((embed) =>
+          rest.transformers.reverse.embed(rest, embed)
+        ),
+        allowed_mentions: options.allowedMentions
+          ? {
+              parse: options.allowedMentions?.parse,
+              roles: options.allowedMentions?.roles?.map((id) => id.toString()),
+              users: options.allowedMentions?.users?.map((id) => id.toString()),
+              replied_user: options.allowedMentions?.repliedUser
+            }
+          : undefined,
+        components: options.components?.map((component) =>
+          rest.transformers.reverse.component(rest, component)
+        ),
+        file: options.file
+      }
     } as DiscordCreateForumPostWithMessage
   )
 

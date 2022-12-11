@@ -1,6 +1,10 @@
+import type {
+  BigString,
+  DiscordModifyGuildTemplate,
+  DiscordTemplate
+} from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Template } from '../../transformers/template.js'
-import type { DiscordTemplate, BigString, DiscordModifyGuildTemplate } from '@discordeno/types'
 
 /**
  * Edits a template's settings.

@@ -1,8 +1,8 @@
 import type {
   BigString,
+  DiscordCreateScheduledEvent,
   DiscordScheduledEvent,
-  WithReason,
-  DiscordCreateScheduledEvent
+  WithReason
 } from '@discordeno/types'
 import {
   ScheduledEventEntityType,
@@ -104,9 +104,9 @@ export interface CreateScheduledEvent extends WithReason {
   /** the description of the scheduled event */
   description: string
   /** the time the scheduled event will start */
-  scheduledStartTime: number
+  scheduledStartTime: string
   /** the time the scheduled event will end if it does end. Required for events with `entityType: ScheduledEventEntityType.External` */
-  scheduledEndTime?: number
+  scheduledEndTime?: string
   /** the privacy level of the scheduled event */
   privacyLevel?: ScheduledEventPrivacyLevel
   /** the type of hosting entity associated with a scheduled event */

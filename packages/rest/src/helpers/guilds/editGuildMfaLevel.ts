@@ -1,4 +1,8 @@
-import type { BigString, MfaLevels,DiscordEditGuildMFALevel } from '@discordeno/types'
+import type {
+  BigString,
+  DiscordEditGuildMFALevel,
+  MfaLevels
+} from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
 /** Modify a guild's MFA level. Requires guild ownership. */
