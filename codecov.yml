@@ -1,49 +1,49 @@
 flags:
-  bot:unit:
+  client-unit:
     paths:
-      - packages/bot
+      - packages/client
     carryforward: false
-  discordeno:unit:
+  discordeno-unit:
     paths:
       - packages/discordeno
     carryforward: false
-  embeds:unit:
+  embeds-unit:
     paths:
       - packages/embeds
     carryforward: false
-  gatway:unit:
+  gatway-unit:
     paths:
       - packages/gatway
     carryforward: false
-  logger:unit:
+  logger-unit:
     paths:
       - packages/logger
     carryforward: false
-  rest:unit:
+  rest-unit:
     paths:
       - packages/rest
     carryforward: false
-  utils:unit:
+  utils-unit:
     paths:
       - packages/utils
     carryforward: false
-  cache-plugin:unit:
+  cache_plugin-unit:
     paths:
       - packages/plugins/utils
     carryforward: false
-  fileloader-plugin:unit:
+  fileloader_plugin-unit:
     paths:
       - packages/plugins/fileloader
     carryforward: false
-  permissions-plugin:unit:
+  permissions_plugin-unit:
     paths:
       - packages/plugins/permissions
     carryforward: false
-  utils-plugin:unit:
+  utils_plugin-unit:
     paths:
       - packages/plugins/utils
     carryforward: false
-  validations-plugin:unit:
+  validations_plugin-unit:
     paths:
       - packages/plugins/validations
     carryforward: false
