@@ -5,7 +5,7 @@ import type { WelcomeScreen } from '../../transformers/welcomeScreen.js'
 /**
  * Gets the welcome screen for a guild.
  *
- * @param bot - The bot instance used to make the request
+ * @param rest - The rest manager used to make the request
  * @param guildId - The ID of the guild to get the welcome screen for.
  * @returns An instance of {@link WelcomeScreen}.
  *

@@ -6,7 +6,7 @@ import type { Role } from '../../transformers/role.js'
 /**
  * Gets the list of roles for a guild.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to get the list of roles for.
  * @returns A collection of {@link Role} objects assorted by role ID.
  *

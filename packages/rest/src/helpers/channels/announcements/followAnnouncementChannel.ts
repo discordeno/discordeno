@@ -4,7 +4,7 @@ import type { RestManager } from '../../../restManager.js'
 /**
  * Follows an announcement channel, allowing messages posted within it to be cross-posted into the target channel.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param sourceChannelId - The ID of the announcement channel to follow.
  * @param targetChannelId - The ID of the target channel - the channel to cross-post to.
  * @returns An instance of {@link DiscordFollowedChannel}.

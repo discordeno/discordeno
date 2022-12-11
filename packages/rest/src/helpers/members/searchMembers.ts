@@ -11,7 +11,7 @@ import type { Member } from '../../transformers/member.js'
 /**
  * Gets the list of members whose usernames or nicknames start with a provided string.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to search in.
  * @param query - The string to match usernames or nicknames against.
  * @param options - The parameters for searching through the members.

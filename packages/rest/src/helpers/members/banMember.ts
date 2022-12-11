@@ -4,7 +4,7 @@ import type { RestManager } from '../../restManager.js'
 /**
  * Bans a user from a guild.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to ban the user from.
  * @param userId - The ID of the user to ban from the guild.
  * @param options - The parameters for the creation of the ban.

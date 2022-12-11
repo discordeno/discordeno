@@ -5,7 +5,7 @@ import type { Member } from '../../transformers/member.js'
 /**
  * Edits a member's properties.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to edit the member of.
  * @param userId - The user ID of the member to edit.
  * @param options - The parameters for the edit of the user.

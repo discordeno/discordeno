@@ -8,7 +8,7 @@ import type { RestManager } from '../../../restManager.js'
  *
  * This function uses the `addReaction()` helper behind the scenes.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel the message to add reactions to is in.
  * @param messageId - The ID of the message to add the reactions to.
  * @param reactions - The reactions to add to the message.

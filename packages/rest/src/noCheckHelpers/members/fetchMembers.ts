@@ -9,7 +9,7 @@ import type { RestManager } from '../../restManager.js'
 /**
  * Fetches the list of members for a guild over the gateway.
  *
- * @param bot - The bot instance to use to make the requests.
+ * @param rest - The rest manager to use to make the requests.
  * @param guildId - The ID of the guild to get the list of members for.
  * @param options - The parameters for the fetching of the members.
  *

@@ -15,7 +15,7 @@ import type { Embed } from '../../../transformers/embed.js'
 /**
  * Creates a new thread in a forum channel, and sends a message within the created thread.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the forum channel to create the thread within.
  * @param options - The parameters for the creation of the thread.
  * @returns An instance of {@link DiscordChannel} with a nested {@link Message} object.

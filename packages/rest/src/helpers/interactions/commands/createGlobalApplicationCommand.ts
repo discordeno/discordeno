@@ -6,7 +6,7 @@ import type { CreateApplicationCommand } from '../../../types.js'
 /**
  * Creates an application command accessible globally; across different guilds and channels.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param command - The command to create.
  * @returns An instance of the created {@link ApplicationCommand}.
  *

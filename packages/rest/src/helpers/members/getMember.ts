@@ -5,7 +5,7 @@ import type { Member } from '../../transformers/member.js'
 /**
  * Gets the member object by user ID.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to get the member object for.
  * @param userId - The ID of the user to get the member object for.
  * @returns An instance of {@link Member}.

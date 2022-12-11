@@ -6,7 +6,7 @@ import type { VoiceRegions } from '../../../transformers/voiceRegion.js'
 /**
  * Gets the list of available voice regions.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @returns A collection of {@link VoiceRegions | VoiceRegion} objects assorted by voice region ID.
  */
 export async function getAvailableVoiceRegions (

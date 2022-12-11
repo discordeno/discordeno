@@ -8,7 +8,7 @@ interface DiscordPrunedCount {
 /**
  * Gets the number of members that would be kicked from a guild during pruning.
  *
- * @param bot - The bot instance used to make the request
+ * @param rest - The rest manager used to make the request
  * @param guildId - The ID of the guild to get the prune count of.
  * @param options - The parameters for the fetching of the prune count.
  * @returns A number indicating the number of members that would be kicked.

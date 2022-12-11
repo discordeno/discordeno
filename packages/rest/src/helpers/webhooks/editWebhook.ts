@@ -5,7 +5,7 @@ import type { Webhook } from '../../transformers/webhook.js'
 /**
  * Edits a webhook.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param webhookId - The ID of the webhook to edit.
  * @returns An instance of the edited {@link Webhook}.
  *

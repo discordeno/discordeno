@@ -7,7 +7,7 @@ import type { User } from '../../../transformers/member.js'
 /**
  * Gets the list of users that reacted with an emoji to a message.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel the message to get the users for is in.
  * @param messageId - The ID of the message to get the users for.
  * @param reaction - The reaction for which to get the users.

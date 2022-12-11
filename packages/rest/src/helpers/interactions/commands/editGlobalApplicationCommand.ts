@@ -6,7 +6,7 @@ import type { CreateApplicationCommand } from '../../../types'
 /**
  * Edits a global application command.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param commandId - The ID of the command to edit.
  * @param options - The parameters for the edit of the command.
  * @returns An instance of the edited {@link ApplicationCommand}.

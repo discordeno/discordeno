@@ -5,7 +5,7 @@ import type { Member } from '../../transformers/member.js'
 /**
  * Edits the nickname of the bot user.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to edit the nickname of the bot user in.
  * @param options - The parameters for the edit of the nickname.
  * @returns An instance of the edited {@link Member}

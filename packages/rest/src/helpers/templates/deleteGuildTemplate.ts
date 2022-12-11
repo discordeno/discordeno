@@ -4,7 +4,7 @@ import type { BigString } from '@discordeno/types'
 /**
  * Deletes a template from a guild.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to delete the template from.
  * @param templateCode - The code of the template to delete.
  *

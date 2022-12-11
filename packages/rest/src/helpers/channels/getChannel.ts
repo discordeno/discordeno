@@ -9,7 +9,7 @@ import { snakeToCamelCaseNested } from '../../transformer.js'
 /**
  * Gets a channel by its ID.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel to get.
  * @returns An instance of {@link DiscordChannel}.
  *

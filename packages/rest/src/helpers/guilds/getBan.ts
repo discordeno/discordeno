@@ -12,7 +12,7 @@ export interface Ban {
 /**
  * Gets a ban by user ID.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to get the ban from.
  * @param userId - The ID of the user to get the ban for.
  * @returns An instance of {@link Ban}.

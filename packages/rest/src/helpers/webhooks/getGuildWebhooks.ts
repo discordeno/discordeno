@@ -6,7 +6,7 @@ import type { Webhook } from '../../transformers/webhook.js'
 /**
  * Gets the list of webhooks for a guild.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to get the list of webhooks for.
  * @returns A collection of {@link Webhook} objects assorted by webhook ID.
  *

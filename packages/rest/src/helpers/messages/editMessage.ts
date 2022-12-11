@@ -14,7 +14,7 @@ import type { Message } from '../../transformers/message.js'
 /**
  * Edits a message.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel to edit the message in.
  * @param messageId - The IDs of the message to edit.
  * @param options - The parameters for the edit of the message.

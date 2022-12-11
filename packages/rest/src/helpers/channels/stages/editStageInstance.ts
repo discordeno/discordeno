@@ -10,7 +10,7 @@ import { snakeToCamelCaseNested } from '../../../transformer.js'
 /**
  * Edits a stage instance.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the stage channel the stage instance is associated with.
  * @returns An instance of the updated {@link DiscordStageInstance}.
  *

@@ -5,7 +5,7 @@ import type { Webhook } from '../../transformers/webhook.js'
 /**
  * Gets a webhook using the webhook token, thereby bypassing the need for authentication + permissions.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param webhookId - The ID of the webhook to get.
  * @param token - The webhook token, used to get the webhook.
  * @returns An instance of {@link Webhook}.

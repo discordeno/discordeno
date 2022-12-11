@@ -6,7 +6,7 @@ import type { Message } from '../../transformers/message.js'
 /**
  * Gets multiple messages from a channel.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel from which to get the messages.
  * @param options - The parameters for the fetching of the messages.
  * @returns A collection of {@link Message} objects assorted by message ID.

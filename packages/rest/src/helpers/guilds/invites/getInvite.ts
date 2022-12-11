@@ -29,7 +29,7 @@ export type InviteMetadata = BaseInvite & {
 /**
  * Gets an invite to a channel by its invite code.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param inviteCode - The invite code of the invite to get.
  * @param options - The parameters for the fetching of the invite.
  * @returns An instance of {@link BaseInvite | Invite}.

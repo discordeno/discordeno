@@ -7,7 +7,7 @@ import { processReactionString } from './getReactions.js'
 /**
  * Deletes a reaction added by the bot user from a message.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel the message to delete the reaction from is in.
  * @param messageId - The ID of the message to delete the reaction from.
  * @param reaction - The reaction to delete from the message.
@@ -41,7 +41,7 @@ export async function deleteOwnReaction (
 /**
  * Deletes a user's reaction from a message.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel the message to delete the reaction from is in.
  * @param messageId - The ID of the message to delete the reaction from.
  * @param userId - The ID of the user whose reaction to delete.

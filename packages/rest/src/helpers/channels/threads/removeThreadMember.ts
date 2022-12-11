@@ -4,7 +4,7 @@ import type { RestManager } from '../../../restManager.js'
 /**
  * Removes a member from a thread.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the thread to remove the thread member of.
  * @param userId - The user ID of the thread member to remove.
  *

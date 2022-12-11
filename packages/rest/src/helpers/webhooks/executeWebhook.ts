@@ -15,7 +15,7 @@ export const sendWebhookMessage = executeWebhook
 /**
  * Executes a webhook, causing a message to be posted in the channel configured for the webhook.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param webhookId - The ID of the webhook to execute.
  * @param token - The webhook token, used to execute the webhook.
  * @param options - The parameters for the execution of the webhook.

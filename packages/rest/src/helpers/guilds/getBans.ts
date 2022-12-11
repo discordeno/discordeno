@@ -6,7 +6,7 @@ import type { Ban } from './getBan.js'
 /**
  * Gets the list of bans for a guild.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to get the list of bans for.
  * @param options - The parameters for the fetching of the list of bans.
  * @returns A collection of {@link Ban} objects assorted by user ID.

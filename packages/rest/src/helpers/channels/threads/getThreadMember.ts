@@ -9,7 +9,7 @@ import { snakeToCamelCaseNested } from '../../../transformer.js'
 /**
  * Gets a thread member by their user ID.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the thread to get the thread member of.
  * @param userId - The user ID of the thread member to get.
  * @returns An instance of {@link DiscordThreadMember}.

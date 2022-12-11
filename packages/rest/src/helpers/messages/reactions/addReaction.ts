@@ -7,7 +7,7 @@ import { processReactionString } from './getReactions.js'
 /**
  * Adds a reaction to a message.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel the message to add a reaction to is in.
  * @param messageId - The ID of the message to add a reaction to.
  * @param reaction - The reaction to add to the message.

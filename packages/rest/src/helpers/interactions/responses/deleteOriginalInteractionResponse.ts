@@ -3,7 +3,7 @@ import type { RestManager } from '../../../restManager.js'
 /**
  * Deletes the initial message response to an interaction.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param token - The interaction token to use, provided in the original interaction.
  *
  * @remarks

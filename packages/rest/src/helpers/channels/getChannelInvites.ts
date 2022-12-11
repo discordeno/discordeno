@@ -10,7 +10,7 @@ import { snakeToCamelCaseNested } from '../../transformer.js'
 /**
  * Gets the list of invites for a channel.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel to get the invites of.
  * @returns A collection of {@link DiscordInviteMetadata} objects assorted by invite code.
  *

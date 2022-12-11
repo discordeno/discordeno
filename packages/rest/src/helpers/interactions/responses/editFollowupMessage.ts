@@ -7,7 +7,7 @@ import type { InteractionCallbackData } from '../../../types.js'
 /**
  * Edits a follow-up message to an interaction.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param token - The interaction token to use, provided in the original interaction.
  * @param messageId - The ID of the message to edit.
  * @param options - The parameters for the edit of the message.
