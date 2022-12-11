@@ -4,7 +4,7 @@ import type { RestManager } from '../../restManager.js'
 /**
  * Deletes an emoji from a guild.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild from which to delete the emoji.
  * @param id - The ID of the emoji to delete.
  *

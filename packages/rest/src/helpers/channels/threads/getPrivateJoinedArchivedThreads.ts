@@ -10,7 +10,7 @@ import type {
 /**
  * Gets the list of private archived threads the bot is a member of for a channel.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel to get the archived threads for.
  * @param options - The parameters for the fetching of threads.
  * @returns An instance of {@link DiscordArchivedThreads}.

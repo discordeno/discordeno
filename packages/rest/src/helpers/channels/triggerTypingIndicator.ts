@@ -6,7 +6,7 @@ export const startTyping = triggerTypingIndicator
 /**
  * Triggers a typing indicator for the bot user.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel in which to trigger the typing indicator.
  *
  * @remarks

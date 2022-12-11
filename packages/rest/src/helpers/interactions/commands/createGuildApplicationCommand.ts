@@ -6,7 +6,7 @@ import type { CreateApplicationCommand } from '../../../types.js'
 /**
  * Creates an application command only accessible in a specific guild.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param command - The command to create.
  * @param guildId - The ID of the guild to create the command for.
  * @returns An instance of the created {@link ApplicationCommand}.

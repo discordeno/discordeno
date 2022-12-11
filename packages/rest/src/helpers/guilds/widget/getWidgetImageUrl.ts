@@ -4,7 +4,7 @@ import type { RestManager } from '../../../restManager.js'
 /**
  * Builds a URL to the guild widget image stored in the Discord CDN.
  *
- * @param bot - The bot instance to use to build the URL.
+ * @param rest - The rest manager to use to build the URL.
  * @param guildId - The ID of the guild to get the link to the widget image for.
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource.

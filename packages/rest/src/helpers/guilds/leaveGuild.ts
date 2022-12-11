@@ -4,7 +4,7 @@ import type { RestManager } from '../../restManager.js'
 /**
  * Leaves a guild.
  *
- * @param bot - The bot instance used to make the request
+ * @param rest - The rest manager used to make the request
  * @param guildId - The ID of the guild to leave.
  *
  * @remarks

@@ -7,7 +7,7 @@ import type { ApplicationCommand } from '../../../transformers/applicationComman
 /**
  * Gets a guild application command by its ID.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild the command is registered in.
  * @param commandId - The ID of the command to get.
  * @returns An instance of {@link ApplicationCommand}.

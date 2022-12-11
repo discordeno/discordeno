@@ -6,7 +6,7 @@ import type { Role } from '../../transformers/role.js'
 /**
  * Edits the positions of a set of roles.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to edit the role positions in.
  * @param options - The parameters for the edit of the role positions.
  * @returns A collection of {@link Role} objects assorted by role ID.

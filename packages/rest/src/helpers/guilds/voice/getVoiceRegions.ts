@@ -6,7 +6,7 @@ import type { VoiceRegions } from '../../../transformers/voiceRegion.js'
 /**
  * Gets the list of voice regions for a guild.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to get the voice regions for.
  * @returns A collection of {@link VoiceRegions | VoiceRegion} objects assorted by voice region ID.
  *

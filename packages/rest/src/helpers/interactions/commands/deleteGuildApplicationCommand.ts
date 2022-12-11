@@ -6,7 +6,7 @@ import type { RestManager } from '../../../restManager.js'
 /**
  * Deletes an application command registered in a guild.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to delete the command from.
  * @param commandId - The ID of the command to delete from the guild.
  *

@@ -7,7 +7,7 @@ import type { InviteMetadata } from './getInvite.js'
 /**
  * Gets the list of invites for a guild.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to get the invites from.
  * @returns A collection of {@link InviteMetadata | Invite} objects assorted by invite code.
  *

@@ -9,7 +9,7 @@ import type { Member, User } from '../../../transformers/member.js'
 /**
  * Gets the list of subscribers to a scheduled event from a guild.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to get the subscribers to the scheduled event from.
  * @param eventId - The ID of the scheduled event to get the subscribers of.
  * @param options - The parameters for the fetching of the subscribers.

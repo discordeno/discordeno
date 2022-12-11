@@ -16,7 +16,7 @@ import { snakeToCamelCaseNested } from '../../transformer.js'
 /**
  * Edits a channel's settings.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel to edit.
  * @param options - The parameters for the edit of the channel.
  * @returns An instance of the edited {@link DiscordChannel}.

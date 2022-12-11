@@ -9,7 +9,7 @@ import type { Template } from '../../transformers/template.js'
 /**
  * Edits a template's settings.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to edit a template of.
  * @param templateCode - The code of the template to edit.
  * @param options - The parameters for the edit of the template.

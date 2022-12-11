@@ -5,7 +5,7 @@ import type { Message } from '../../../transformers/message.js'
 /**
  * Gets a follow-up message to an interaction by the ID of the message.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param token - The interaction token to use, provided in the original interaction.
  * @param messageId - The ID of the message to get.
  * @returns An instance of {@link Message}.

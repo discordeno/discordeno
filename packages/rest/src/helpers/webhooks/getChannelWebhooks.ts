@@ -6,7 +6,7 @@ import type { Webhook } from '../../transformers/webhook.js'
 /**
  * Gets a list of webhooks for a channel.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel which to get the webhooks of.
  * @returns A collection of {@link Webhook} objects assorted by webhook ID.
  *

@@ -15,7 +15,7 @@ import { snakeToCamelCaseNested } from '../../transformer.js'
 /**
  * Creates a channel within a guild.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to create the channel within.
  * @param options - The parameters for the creation of the channel.
  * @returns An instance of the created {@link DiscordChannel}.

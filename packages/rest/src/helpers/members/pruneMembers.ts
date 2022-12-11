@@ -4,7 +4,7 @@ import type { RestManager } from '../../restManager.js'
 /**
  * Initiates the process of pruning inactive members.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to prune the members of.
  * @param options - The parameters for the pruning of members.
  * @returns A number indicating how many members were pruned.

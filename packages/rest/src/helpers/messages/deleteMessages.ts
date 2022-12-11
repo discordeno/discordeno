@@ -4,7 +4,7 @@ import type { RestManager } from '../../restManager.js'
 /**
  * Deletes multiple messages from a channel.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel to delete the messages from.
  * @param messageIds - The IDs of the messages to delete from the channel.
  *

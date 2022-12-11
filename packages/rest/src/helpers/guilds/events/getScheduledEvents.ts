@@ -6,7 +6,7 @@ import type { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
 /**
  * Gets the list of scheduled events for a guild.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to get the scheduled events from.
  * @param options - The parameters for the fetching of the scheduled events.
  * @returns A collection of {@link ScheduledEvent} objects assorted by event ID.

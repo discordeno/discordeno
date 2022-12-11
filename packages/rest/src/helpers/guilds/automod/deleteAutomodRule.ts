@@ -4,7 +4,7 @@ import type { RestManager } from '../../../restManager.js'
 /**
  * Deletes an automod rule.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to delete the rule from.
  * @param ruleId - The ID of the automod rule to delete.
  *

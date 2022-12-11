@@ -9,7 +9,7 @@ import type { RestManager } from '../../restManager.js'
 /**
  * Gets the list of emojis for a guild.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild which to get the emojis of.
  * @returns A collection of {@link DiscordEmoji} objects assorted by emoji ID.
  *

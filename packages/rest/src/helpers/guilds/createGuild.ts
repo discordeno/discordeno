@@ -14,7 +14,7 @@ import type { Role } from '../../transformers/role.js'
 /**
  * Creates a guild.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param options - The parameters for the creation of the guild.
  * @returns An instance of the created {@link DiscordGuild}.
  *

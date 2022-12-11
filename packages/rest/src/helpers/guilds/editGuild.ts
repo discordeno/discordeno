@@ -17,7 +17,7 @@ import type { Guild } from '../../transformers/guild.js'
 /**
  * Edits a guild's settings.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to edit.
  * @param shardId - The ID of the shard the guild is in.
  * @param options - The parameters for the edit of the guild.

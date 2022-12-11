@@ -8,7 +8,7 @@ import type { ApplicationCommandPermission } from '../../../transformers/applica
 /**
  * Gets the permissions of a guild application command.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild the command is registered in.
  * @param commandId - The ID of the command to get the permissions of.
  * @returns An instance of {@link ApplicationCommandPermission}.

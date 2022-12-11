@@ -5,7 +5,7 @@ import type { Channel } from '../../transformers/channel.js'
 /**
  * Gets or creates a DM channel with a user.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param userId - The ID of the user to create the DM channel with.
  * @returns An instance of {@link Channel}.
  *

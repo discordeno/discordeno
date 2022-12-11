@@ -4,7 +4,7 @@ import type { RestManager } from '../../../restManager.js'
 /**
  * Deletes a scheduled event from a guild.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to delete the scheduled event from.
  * @param eventId - The ID of the scheduled event to delete.
  *

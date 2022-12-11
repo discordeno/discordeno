@@ -8,7 +8,7 @@ import type { ApplicationCommand } from '../../../transformers/applicationComman
 /**
  * Gets the list of your bot's global application commands.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @returns A collection of {@link ApplicationCommand} objects assorted by command ID.
  *
  * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands}

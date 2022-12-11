@@ -26,7 +26,7 @@ export interface GuildPreview {
 /**
  * Gets the preview of a guild by a guild's ID.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to get the preview of.
  * @returns An instance of {@link GuildPreview}.
  *

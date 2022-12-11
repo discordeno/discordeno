@@ -7,7 +7,7 @@ import type { CreateApplicationCommand } from '../../../types'
 /**
  * Re-registers the list of global application commands, overwriting the previous commands completely.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param commands - The list of commands to use to overwrite the previous list.
  * @returns A collection of {@link ApplicationCommand} objects assorted by command ID.
  *

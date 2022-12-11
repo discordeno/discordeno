@@ -9,7 +9,7 @@ export interface GetWebhookMessageOptions {
 /**
  * Gets a webhook message by its ID.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param webhookId - The ID of the webhook to get a message of.
  * @param token - The webhook token, used to get webhook messages.
  * @param messageId - the ID of the webhook message to get.

@@ -12,7 +12,7 @@ import { snakeToCamelCaseNested } from '../../../transformer.js'
 /**
  * Creates a thread without using a message as the thread's point of origin.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel in which to create the thread.
  * @param options - The parameters to use for the creation of the thread.
  * @returns An instance of the created {@link DiscordChannel | Thread}.

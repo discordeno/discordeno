@@ -14,7 +14,7 @@ import type { Message } from '../../transformers/message.js'
 /**
  * Sends a message to a channel.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel to send the message in.
  * @param options - The parameters for the creation of the message.
  * @returns An instance of the created {@link Message}.

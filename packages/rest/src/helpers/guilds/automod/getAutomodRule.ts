@@ -5,7 +5,7 @@ import type { AutoModerationRule } from '../../../transformers/automodRule.js'
 /**
  * Gets an automod rule by its ID.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to get the rule of.
  * @param ruleId - The ID of the rule to get.
  * @returns An instance of {@link AutoModerationRule}.

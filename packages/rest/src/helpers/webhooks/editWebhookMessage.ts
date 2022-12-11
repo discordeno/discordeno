@@ -7,7 +7,7 @@ import type { InteractionCallbackData } from '../../types'
 /**
  * Edits a webhook message.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param webhookId - The ID of the webhook to edit the message of.
  * @param token - The webhook token, used to edit the message.
  * @param messageId - The ID of the message to edit.

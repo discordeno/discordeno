@@ -6,7 +6,7 @@ export const swapChannels = editChannelPositions
 /**
  * Edits the positions of a set of channels in a guild.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild in which to edit the positions of the channels.
  * @param channelPositions - A set of objects defining the updated positions of the channels.
  *

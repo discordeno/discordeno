@@ -5,7 +5,7 @@ import type { DiscordTemplate } from '@discordeno/types'
 /**
  * Gets a template by its code.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param templateCode - The code of the template to get.
  * @returns An instance of {@link Template}.
  *

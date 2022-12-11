@@ -7,7 +7,7 @@ import type { GuildWidgetSettings } from '../../../transformers/widgetSettings.j
 /**
  * Edits the settings of a guild's widget.
  *
- * @param bot - The bot instance to use to make the request.
+ * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to edit the settings of the widget of.
  * @returns An instance of the edited {@link GuildWidgetSettings}.
  *
