@@ -41,6 +41,14 @@
         "coverage/**"
       ]
     },
+    "test:unit-noTextCoverage": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "coverage/**"
+      ]
+    },
     "test:test-type": {
       "dependsOn": [
         "^build:type"

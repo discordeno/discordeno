@@ -163,7 +163,7 @@ jobs:
           path: .turbo
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
       - name: Unit Test
-        run: yarn test:unit --cache-dir=".turbo"
+        run: yarn test:unit-noTextCoverage --cache-dir=".turbo"
       - name: Collect and upload the coverage report
         uses: codecov/codecov-action@v3
         with:
