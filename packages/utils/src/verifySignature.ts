@@ -1,19 +1,22 @@
-import { verify } from 'node:crypto'
+import nacl from 'tweetnacl'
 
-export function verifySignature ({ publicKey, signature, timestamp, body }: VerifySignatureOptions): {
-  isValid: boolean
-  body: string
-} {
-  const isValid = verify(
-    'ed25519',
+export function verifySignature ({
+  publicKey,
+  signature,
+  timestamp,
+  body
+}: VerifySignatureOptions): {
+    isValid: boolean
+    body: string
+  } {
+  const isValid = nacl.sign.detached.verify(
     Buffer.from(timestamp + body),
-    publicKey,
-    Buffer.from(signature)
+    Buffer.from(signature, 'hex'),
+    Buffer.from(publicKey, 'hex')
   )
 
   return { isValid, body }
 }
-
 export interface VerifySignatureOptions {
   publicKey: string
   signature: string

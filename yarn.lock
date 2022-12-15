@@ -156,7 +156,7 @@ __metadata:
     "@swc/core": ^1.3.21
     "@types/chai": ^4
     "@types/mocha": ^10
-    "@types/node": ^18.11.9
+    "@types/node": ^18.11.15
     "@types/sinon": ^10.0.13
     c8: ^7.12.0
     chai: ^4.3.7
@@ -167,6 +167,7 @@ __metadata:
     sinon: ^15.0.0
     ts-node: ^10.9.1
     tsconfig: "*"
+    tweetnacl: ^1.0.3
     typescript: ^4.9.3
   languageName: unknown
   linkType: soft
@@ -568,6 +569,13 @@ __metadata:
   version: 18.11.10
   resolution: "@types/node@npm:18.11.10"
   checksum: 0f60cb090b2ee91fcd3dc4311bc1ed7889b92f14644c0069f100776f86474c12eebbcc6c75bc0d7d96b975a103b4d5d6b3c22b4e88bea6e7f4e2b1bb0daf5ea8
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^18.11.15":
+  version: 18.11.15
+  resolution: "@types/node@npm:18.11.15"
+  checksum: cae8692a5cee0316f93ee0342237eb921f70c51afb37c661c711a925a4642654ae7e404c5a80899d481c0cfaff3a6891ef04bacd330a2e72734192bfc91dc2d8
   languageName: node
   linkType: hard
 
@@ -4126,6 +4134,13 @@ __metadata:
   bin:
     turbo: bin/turbo
   checksum: 35195f4b7623014c25ba152c11a8cb23e51cbd75dc9266d0656692665f85b28faf3496dea8cecacf52795a917410668124186ffbdcf276325ccc3e11df9e9623
+  languageName: node
+  linkType: hard
+
+"tweetnacl@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "tweetnacl@npm:1.0.3"
+  checksum: e4a57cac188f0c53f24c7a33279e223618a2bfb5fea426231991652a13247bea06b081fd745d71291fcae0f4428d29beba1b984b1f1ce6f66b06a6d1ab90645c
   languageName: node
   linkType: hard
 
