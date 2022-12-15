@@ -42,7 +42,7 @@ it('[utils] decode some base64 to bytes', () => {
 
 it('[utils] encode/decode base64 roundtrip should work', () => {
   for (let i = 0; i < 10; i++) {
-    const bytes = []
+    const bytes: number[] = []
     for (let i = 0; i < 10000; i++) {
       bytes.push(Math.floor(Math.random() * 256))
     }
