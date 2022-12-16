@@ -3,23 +3,6 @@
   "version": "18.0.0-alpha.1",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./transformer": {
-      "import": "./dist/transformer.js",
-      "types": "./dist/transformer.d.ts"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "transformer": [
-        "./dist/transformer.d.ts"
-      ]
-    }
-  },
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
@@ -40,6 +23,8 @@
     "test:test-type": "tsc --project tsconfig.test.json"
   },
   "dependencies": {
+    "@discordeno/constant": "18.0.0-alpha.1",
+    "@discordeno/transformer": "18.0.0-alpha.1",
     "@discordeno/utils": "18.0.0-alpha.1"
   },
   "devDependencies": {

@@ -46,6 +46,30 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@discordeno/constant@18.0.0-alpha.1, @discordeno/constant@workspace:packages/constant":
+  version: 0.0.0-use.local
+  resolution: "@discordeno/constant@workspace:packages/constant"
+  dependencies:
+    "@discordeno/types": 18.0.0-alpha.1
+    "@discordeno/utils": 18.0.0-alpha.1
+    "@swc/cli": ^0.1.57
+    "@swc/core": ^1.3.21
+    "@types/chai": ^4
+    "@types/mocha": ^10
+    "@types/node": ^18.11.9
+    "@types/sinon": ^10.0.13
+    c8: ^7.12.0
+    chai: ^4.3.7
+    eslint: ^8.0.1
+    eslint-config-discordeno: "*"
+    mocha: ^10.1.0
+    shx: ^0.3.4
+    sinon: ^15.0.0
+    tsconfig: "*"
+    typescript: ^4.9.3
+  languageName: unknown
+  linkType: soft
+
 "@discordeno/embeds@workspace:packages/embeds":
   version: 0.0.0-use.local
   resolution: "@discordeno/embeds@workspace:packages/embeds"
@@ -111,6 +135,32 @@ __metadata:
 "@discordeno/rest@18.0.0-alpha.1, @discordeno/rest@workspace:packages/rest":
   version: 0.0.0-use.local
   resolution: "@discordeno/rest@workspace:packages/rest"
+  dependencies:
+    "@discordeno/constant": 18.0.0-alpha.1
+    "@discordeno/transformer": 18.0.0-alpha.1
+    "@discordeno/types": 18.0.0-alpha.1
+    "@discordeno/utils": 18.0.0-alpha.1
+    "@swc/cli": ^0.1.57
+    "@swc/core": ^1.3.21
+    "@types/chai": ^4
+    "@types/mocha": ^10
+    "@types/node": ^18.11.9
+    "@types/sinon": ^10.0.13
+    c8: ^7.12.0
+    chai: ^4.3.7
+    eslint: ^8.0.1
+    eslint-config-discordeno: "*"
+    mocha: ^10.1.0
+    shx: ^0.3.4
+    sinon: ^15.0.0
+    tsconfig: "*"
+    typescript: ^4.9.3
+  languageName: unknown
+  linkType: soft
+
+"@discordeno/transformer@18.0.0-alpha.1, @discordeno/transformer@workspace:packages/transformer":
+  version: 0.0.0-use.local
+  resolution: "@discordeno/transformer@workspace:packages/transformer"
   dependencies:
     "@discordeno/types": 18.0.0-alpha.1
     "@discordeno/utils": 18.0.0-alpha.1

@@ -1,5 +1,5 @@
 {
-  "name": "discordeno",
+  "name": "@discordeno/transformer",
   "version": "18.0.0-alpha.1",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -23,9 +23,6 @@
     "test:test-type": "tsc --project tsconfig.test.json"
   },
   "dependencies": {
-    "@discordeno/client": "18.0.0-alpha.1",
-    "@discordeno/gateway": "18.0.0-alpha.1",
-    "@discordeno/rest": "18.0.0-alpha.1",
     "@discordeno/utils": "18.0.0-alpha.1"
   },
   "devDependencies": {

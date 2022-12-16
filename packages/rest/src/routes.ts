@@ -16,7 +16,7 @@ import {
   isGetMessagesAround,
   isGetMessagesBefore,
   isGetMessagesLimit
-} from './helpers/index.js'
+} from './helpers/messages/getMessages.js'
 
 export const routes = {
   GATEWAY_BOT: () => {
