@@ -96,11 +96,13 @@ import {
   transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
   transformApplicationCommandOptionToDiscordApplicationCommandOption,
   transformApplicationCommandPermission,
+  transformApplicationCommandPermissionToDiscordApplicationCommandPermission,
   transformApplicationCommandToDiscordApplicationCommand,
   transformApplicationToDiscordApplication,
   transformAttachment,
   transformAttachmentToDiscordAttachment,
   transformAuditLogEntry,
+  transformAuditLogEntryToDiscordAuditLogEntry,
   transformAutoModerationActionExecution,
   transformAutoModerationRule,
   transformChannel,
@@ -110,7 +112,9 @@ import {
   transformEmbed,
   transformEmbedToDiscordEmbed,
   transformEmoji,
+  transformEmojiToDiscordEmoji,
   transformGatewayBot,
+  transformGatewayBotToDiscordGatewayBot,
   transformGuild,
   transformIntegration,
   transformInteraction,
@@ -121,6 +125,7 @@ import {
   transformMemberToDiscordMember,
   transformMessage,
   transformPresence,
+  transformPresenceToDiscordPresence,
   transformRole,
   transformScheduledEvent,
   transformStageInstance,
@@ -137,7 +142,8 @@ import {
   transformWebhook,
   transformWelcomeScreen,
   transformWidget,
-  transformWidgetSettings
+  transformWidgetSettings,
+  transformWidgetSettingsToDiscordWidgetSettings
 } from './transformers/index.js'
 import type { CreateApplicationCommand, InteractionResponse } from './types.js'
 
@@ -176,6 +182,24 @@ export interface Transformers {
       payload: InteractionResponse
     ) => DiscordInteractionResponse
     attachment: (client: Client, payload: Attachment) => DiscordAttachment
+    applicationCommandPermission: (
+      client: Client,
+      payload: ApplicationCommandPermission
+    ) => DiscordGuildApplicationCommandPermissions
+    auditLogEntry: (
+      client: Client,
+      payload: AuditLogEntry
+    ) => DiscordAuditLogEntry
+    emoji: (client: Client, payload: Emoji) => DiscordEmoji
+    gatewayBot: (payload: GetGatewayBot) => DiscordGetGatewayBot
+    presence: (
+      client: Client,
+      payload: PresenceUpdate
+    ) => DiscordPresenceUpdate
+    widgetSettings: (
+      client: Client,
+      payload: GuildWidgetSettings
+    ) => DiscordGuildWidgetSettings
   }
   snowflake: (snowflake: BigString) => bigint
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot
@@ -309,7 +333,20 @@ export function createTransformers (
         options.reverse?.interactionResponse ??
         transformInteractionResponseToDiscordInteractionResponse,
       attachment:
-        options.reverse?.attachment ?? transformAttachmentToDiscordAttachment
+        options.reverse?.attachment ?? transformAttachmentToDiscordAttachment,
+      applicationCommandPermission:
+        options.reverse?.applicationCommandPermission ??
+        transformApplicationCommandPermissionToDiscordApplicationCommandPermission,
+      auditLogEntry:
+        options.reverse?.auditLogEntry ??
+        transformAuditLogEntryToDiscordAuditLogEntry,
+      emoji: options.reverse?.emoji ?? transformEmojiToDiscordEmoji,
+      gatewayBot:
+        options.reverse?.gatewayBot ?? transformGatewayBotToDiscordGatewayBot,
+      presence: options.reverse?.presence ?? transformPresenceToDiscordPresence,
+      widgetSettings:
+        options.reverse?.widgetSettings ??
+        transformWidgetSettingsToDiscordWidgetSettings
     },
     automodRule: options.automodRule ?? transformAutoModerationRule,
     automodActionExecution:
