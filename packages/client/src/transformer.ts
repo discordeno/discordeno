@@ -24,6 +24,7 @@ import type {
   DiscordIntegrationCreateUpdate,
   DiscordInteraction,
   DiscordInteractionDataOption,
+  DiscordInteractionDataResolved,
   DiscordInteractionResponse,
   DiscordInviteCreate,
   DiscordMember,
@@ -67,6 +68,7 @@ import type {
   Integration,
   Interaction,
   InteractionDataOption,
+  InteractionDataResolved,
   Invite,
   Member,
   Message,
@@ -119,6 +121,7 @@ import {
   transformIntegration,
   transformInteraction,
   transformInteractionDataOption,
+  transformInteractionDataResolved,
   transformInteractionResponseToDiscordInteractionResponse,
   transformInvite,
   transformMember,
@@ -236,10 +239,14 @@ export interface Transformers {
     payload: { voiceState: DiscordVoiceState } & { guildId: bigint }
   ) => VoiceState
   interaction: (client: Client, payload: DiscordInteraction) => Interaction
-  interactionDataOptions: (
+  interactionDataOption: (
     client: Client,
     payload: DiscordInteractionDataOption
   ) => InteractionDataOption
+  interactionDataResolved: (
+    client: Client,
+    payload: DiscordInteractionDataResolved
+  ) => InteractionDataResolved
   integration: (
     client: Client,
     payload: DiscordIntegrationCreateUpdate
@@ -361,8 +368,10 @@ export function createTransformers (
     guild: options.guild ?? transformGuild,
     integration: options.integration ?? transformIntegration,
     interaction: options.interaction ?? transformInteraction,
-    interactionDataOptions:
-      options.interactionDataOptions ?? transformInteractionDataOption,
+    interactionDataOption:
+      options.interactionDataOption ?? transformInteractionDataOption,
+    interactionDataResolved:
+      options.interactionDataResolved ?? transformInteractionDataResolved,
     invite: options.invite ?? transformInvite,
     member: options.member ?? transformMember,
     message: options.message ?? transformMessage,
