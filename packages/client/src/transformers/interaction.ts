@@ -72,7 +72,7 @@ export function transformInteraction (
             )
             : undefined,
           options: payload.data.options?.map((opt) =>
-            client.transformers.interactionDataOptions(client, opt)
+            client.transformers.interactionDataOption(client, opt)
           ),
           targetId: payload.data.target_id
             ? client.transformers.snowflake(payload.data.target_id)
