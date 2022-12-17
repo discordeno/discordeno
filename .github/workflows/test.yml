@@ -132,34 +132,34 @@ jobs:
         run: yarn test:test-type --cache-dir=".turbo"
 
   # Not using matrix because test later on cant needs a specific job
-  client-unit-test:
-    name: Client Unit Test
+  client-test:
+    name: Client
     needs: build-dist
-    uses: ./.github/workflows/unit-test.yml
+    uses: ./.github/workflows/package-test.yml
     with:
       package: client
-  discordeno-unit-test:
-    name: Discordeno Unit Test
+  discordeno-test:
+    name: Discordeno
     needs: build-dist
-    uses: ./.github/workflows/unit-test.yml
+    uses: ./.github/workflows/package-test.yml
     with:
       package: discordeno
-  gateway-unit-test:
-    name: Gateway Unit Test
+  gateway-test:
+    name: Gateway
     needs: build-dist
-    uses: ./.github/workflows/unit-test.yml
+    uses: ./.github/workflows/package-test.yml
     with:
       package: gateway
-  rest-unit-test:
-    name: Rest Unit Test
+  rest-test:
+    name: Rest
     needs: build-dist
-    uses: ./.github/workflows/unit-test.yml
+    uses: ./.github/workflows/package-test.yml
     with:
       package: rest
-  utils-unit-test:
-    name: Utils Unit Test
+  utils-test:
+    name: Utils
     needs: build-dist
-    uses: ./.github/workflows/unit-test.yml
+    uses: ./.github/workflows/package-test.yml
     with:
       package: utils
 
