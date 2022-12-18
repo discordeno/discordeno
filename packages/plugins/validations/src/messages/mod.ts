@@ -7,4 +7,9 @@ export function messages (bot: Bot) {
   deleteMessages(bot)
   editMessage(bot)
   sendMessage(bot)
+
+  // TODO: validations getMessages
+  // if (options?.limit && (options.limit < 0 || options.limit > 100)) {
+  //   throw new Error(rest.constants.Errors.INVALID_GET_MESSAGES_LIMIT)
+  // }
 }

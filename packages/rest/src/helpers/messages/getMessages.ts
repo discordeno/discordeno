@@ -24,10 +24,6 @@ export async function getMessages (
   channelId: BigString,
   options?: GetMessagesOptions
 ): Promise<Collection<bigint, Message>> {
-  if (options?.limit && (options.limit < 0 || options.limit > 100)) {
-    throw new Error(rest.constants.Errors.INVALID_GET_MESSAGES_LIMIT)
-  }
-
   const results = await rest.runMethod<DiscordMessage[]>(
     rest,
     'GET',

@@ -1,7 +1,5 @@
-// @ts-nocheck
-
 import type { DiscordGuild } from '@discordeno/types'
-import { calculateShardId, urlToBase64 } from '@discordeno/utils'
+import { calculateShardId } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
 import type { Guild } from '../../transformers/guild.js'
 
@@ -26,9 +24,10 @@ export async function createGuildFromTemplate (
   numberOfShard: number,
   options: CreateGuildFromTemplate
 ): Promise<Guild> {
-  if (options.icon) {
-    options.icon = await urlToBase64(options.icon)
-  }
+  // TODO: validations
+  // if (options.icon) {
+  //   options.icon = await urlToBase64(options.icon)
+  // }
 
   const createdGuild = await rest.runMethod<DiscordGuild>(
     rest,

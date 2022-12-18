@@ -42,22 +42,11 @@ export async function getScheduledEventUsers (
 ): Promise<
   Collection<bigint, User> | Collection<bigint, { user: User, member: Member }>
   > {
-  let url = rest.constants.routes.GUILD_SCHEDULED_EVENT_USERS(
+  const url = rest.constants.routes.GUILD_SCHEDULED_EVENT_USERS(
     guildId,
     eventId,
     options
   )
-
-  if (options != null) {
-    url = '?'
-
-    if (options.limit) url += `limit=${options.limit}`
-    if (options.withMember !== undefined) {
-      url += `&with_member=${options.withMember.toString()}`
-    }
-    if (options.after) url += `&after=${options.after}`
-    if (options.before) url += `&before=${options.before}`
-  }
 
   const results = await rest.runMethod<
   Array<{ user: DiscordUser, member?: DiscordMember }>

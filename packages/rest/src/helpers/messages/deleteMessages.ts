@@ -23,16 +23,6 @@ export async function deleteMessages (
   messageIds: BigString[],
   reason?: string
 ): Promise<void> {
-  if (messageIds.length < 2) {
-    throw new Error(rest.constants.Errors.DELETE_MESSAGES_MIN)
-  }
-
-  if (messageIds.length > 100) {
-    console.warn(
-      'This endpoint only accepts a maximum of 100 messages. Using the first 100 message ids provided.'
-    )
-  }
-
   return await rest.runMethod<void>(
     rest,
     'POST',

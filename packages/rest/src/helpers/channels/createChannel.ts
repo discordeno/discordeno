@@ -36,9 +36,6 @@ export async function createChannel (
   guildId: BigString,
   options: CreateGuildChannel
 ): Promise<SnakeToCamelCaseNested<DiscordChannel>> {
-  // BITRATE IS IN THOUSANDS SO IF USER PROVIDES 32 WE CONVERT TO 32000
-  if (options?.bitrate && options.bitrate < 1000) options.bitrate *= 1000
-
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'POST',

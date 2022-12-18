@@ -15,10 +15,6 @@ export async function getDmChannel (
   rest: RestManager,
   userId: BigString
 ): Promise<Channel> {
-  if (userId === rest.id) {
-    throw new Error(rest.constants.Errors.YOU_CAN_NOT_DM_THE_BOT_ITSELF)
-  }
-
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'POST',

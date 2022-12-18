@@ -1,14 +1,11 @@
 import type {
   BigString,
   DiscordCreateScheduledEvent,
-  DiscordScheduledEvent,
-  WithReason
+  DiscordScheduledEvent, ScheduledEventEntityType, WithReason
 } from '@discordeno/types'
 import {
-  ScheduledEventEntityType,
   ScheduledEventPrivacyLevel
 } from '@discordeno/types'
-import { validateLength } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
 import type { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
 
@@ -34,41 +31,6 @@ export async function createScheduledEvent (
   guildId: BigString,
   options: CreateScheduledEvent
 ): Promise<ScheduledEvent> {
-  if (!validateLength(options.name, { min: 1, max: 100 })) {
-    throw new Error('Name must be between 1-100 characters.')
-  }
-  if (
-    options.description &&
-    !validateLength(options.description, { max: 1000 })
-  ) {
-    throw new Error('Description must be below 1000 characters.')
-  }
-  if (options.location) {
-    if (!validateLength(options.location, { max: 100 })) {
-      throw new Error('Location must be below 100 characters.')
-    }
-    if (options.entityType === ScheduledEventEntityType.Voice) {
-      throw new Error('Location can not be provided for a Voice event.')
-    }
-  }
-  if (options.entityType === ScheduledEventEntityType.External) {
-    if (!options.scheduledEndTime) {
-      throw new Error(
-        'A scheduled end time is required when making an External event.'
-      )
-    }
-    if (!options.location) {
-      throw new Error('A location is required when making an External event.')
-    }
-  }
-  if (
-    options.scheduledStartTime &&
-    options.scheduledEndTime &&
-    options.scheduledStartTime > options.scheduledEndTime
-  ) {
-    throw new Error('Cannot schedule event to end before starting.')
-  }
-
   const result = await rest.runMethod<DiscordScheduledEvent>(
     rest,
     'POST',

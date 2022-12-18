@@ -5,7 +5,6 @@ import type {
   WithReason,
   DiscordCreateGuildEmoji
 } from '@discordeno/types'
-import { urlToBase64 } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
 
 /**
@@ -30,10 +29,6 @@ export async function createEmoji (
   guildId: BigString,
   options: CreateGuildEmoji
 ): Promise<SnakeToCamelCaseNested<DiscordEmoji>> {
-  if (options.image && !options.image.startsWith('data:image/')) {
-    options.image = await urlToBase64(options.image)
-  }
-
   const result = await rest.runMethod<DiscordEmoji>(
     rest,
     'POST',

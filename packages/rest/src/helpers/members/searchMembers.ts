@@ -1,7 +1,6 @@
 import type {
-  DiscordMemberWithUser,
-  SearchMembers,
-  BigString
+  BigString, DiscordMemberWithUser,
+  SearchMembers
 } from '@discordeno/types'
 
 import { Collection } from '@discordeno/utils'
@@ -25,15 +24,6 @@ export async function searchMembers (
   query: string,
   options?: Omit<SearchMembers, 'query'>
 ): Promise<Collection<bigint, Member>> {
-  if (options?.limit) {
-    if (options.limit < 1) {
-      throw new Error(rest.constants.Errors.MEMBER_SEARCH_LIMIT_TOO_LOW)
-    }
-    if (options.limit > 1000) {
-      throw new Error(rest.constants.Errors.MEMBER_SEARCH_LIMIT_TOO_HIGH)
-    }
-  }
-
   const results = await rest.runMethod<DiscordMemberWithUser[]>(
     rest,
     'GET',

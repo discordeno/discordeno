@@ -1,4 +1,4 @@
-import { Bot } from './deps.js'
+import type { Bot } from './deps.js'
 import { channels } from './src/channels/index.js'
 import { guilds } from './src/guilds/index.js'
 import { interactions } from './src/interaction/index.js'
@@ -24,6 +24,27 @@ export function enableValidationsPlugin<B extends Bot> (bot: B): B {
   misc(bot)
   stickers(bot)
   webhooks(bot)
+
+  // TODO: validations createGuildTemplate
+  // if (options.name.length < 1 || options.name.length > 100) {
+  //   throw new Error('The name can only be in between 1-100 characters.')
+  // }
+
+  // if (options.description?.length && options.description.length > 120) {
+  //   throw new Error('The description can only be in between 0-120 characters.')
+  // }
+
+  // TODO: validations editGuildTemplate
+  // if (
+  //   options.name?.length &&
+  //   (options.name.length < 1 || options.name.length > 100)
+  // ) {
+  //   throw new Error('The name can only be in between 1-100 characters.')
+  // }
+
+  // if (options.description?.length && options.description.length > 120) {
+  //   throw new Error('The description can only be in between 0-120 characters.')
+  // }
 
   // PLUGINS MUST RETURN THE BOT
   return bot

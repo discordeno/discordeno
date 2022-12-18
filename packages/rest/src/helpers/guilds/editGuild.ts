@@ -1,14 +1,11 @@
 import type {
   BigString,
   DefaultMessageNotificationLevels,
-  DiscordGuild,
-  ExplicitContentFilterLevels,
+  DiscordGuild, DiscordModifyGuild, ExplicitContentFilterLevels,
   GuildFeatures,
   SystemChannelFlags,
-  VerificationLevels,
-  DiscordModifyGuild
+  VerificationLevels
 } from '@discordeno/types'
-import { urlToBase64 } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
 import type { Guild } from '../../transformers/guild.js'
 
@@ -39,18 +36,6 @@ export async function editGuild (
   options: ModifyGuild,
   shardId: number
 ): Promise<Guild> {
-  if (options.icon && !options.icon.startsWith('data:image/')) {
-    options.icon = await urlToBase64(options.icon)
-  }
-
-  if (options.banner && !options.banner.startsWith('data:image/')) {
-    options.banner = await urlToBase64(options.banner)
-  }
-
-  if (options.splash && !options.splash.startsWith('data:image/')) {
-    options.splash = await urlToBase64(options.splash)
-  }
-
   const result = await rest.runMethod<DiscordGuild>(
     rest,
     'PATCH',

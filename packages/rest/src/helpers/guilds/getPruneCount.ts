@@ -23,13 +23,6 @@ export async function getPruneCount (
   guildId: BigString,
   options?: GetGuildPruneCountQuery
 ): Promise<number> {
-  if (options?.days && options.days < 1) {
-    throw new Error(rest.constants.Errors.PRUNE_MIN_DAYS)
-  }
-  if (options?.days && options.days > 30) {
-    throw new Error(rest.constants.Errors.PRUNE_MAX_DAYS)
-  }
-
   const result = await rest.runMethod<DiscordPrunedCount>(
     rest,
     'GET',

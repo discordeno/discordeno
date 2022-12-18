@@ -45,11 +45,6 @@ export async function getAuditLog (
   guildId: BigString,
   options?: GetGuildAuditLog
 ): Promise<AuditLog> {
-  if (options?.limit) {
-    options.limit =
-      options.limit >= 1 && options.limit <= 100 ? options.limit : 50
-  }
-
   const result = await rest.runMethod<DiscordAuditLog>(
     rest,
     'GET',

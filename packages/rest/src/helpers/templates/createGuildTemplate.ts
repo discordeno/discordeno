@@ -1,6 +1,6 @@
+import type { BigString, DiscordCreateTemplate, DiscordTemplate } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Template } from '../../transformers/template.js'
-import type { DiscordTemplate, BigString, DiscordCreateTemplate } from '@discordeno/types'
 
 /**
  * Creates a template from a guild.
@@ -22,14 +22,6 @@ export async function createGuildTemplate (
   guildId: BigString,
   options: CreateTemplate
 ): Promise<Template> {
-  if (options.name.length < 1 || options.name.length > 100) {
-    throw new Error('The name can only be in between 1-100 characters.')
-  }
-
-  if (options.description?.length && options.description.length > 120) {
-    throw new Error('The description can only be in between 0-120 characters.')
-  }
-
   const result = await rest.runMethod<DiscordTemplate>(
     rest,
     'POST',

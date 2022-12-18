@@ -2,7 +2,7 @@
 // @ts-nocheck
 
 import type { BigString } from '@discordeno/types'
-import { GatewayIntents, GatewayOpcodes } from '@discordeno/types'
+import { GatewayOpcodes } from '@discordeno/types'
 import { calculateShardId } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
 
@@ -37,17 +37,18 @@ export async function fetchMembers (
 ): Promise<void> {
   // You can request 1 member without the intent
   // Check if intents is not 0 as proxy ws won't set intents in other instances
-  if (
-    bot.intents &&
-    (!options?.limit || options.limit > 1) &&
-    !(bot.intents & GatewayIntents.GuildMembers)
-  ) {
-    throw new Error(rest.constants.Errors.MISSING_INTENT_GUILD_MEMBERS)
-  }
+  // TODO: validations
+  // if (
+  //   bot.intents &&
+  //   (!options?.limit || options.limit > 1) &&
+  //   !(bot.intents & GatewayIntents.GuildMembers)
+  // ) {
+  //   throw new Error(rest.constants.Errors.MISSING_INTENT_GUILD_MEMBERS)
+  // }
 
-  if (options?.userIds?.length) {
-    options.limit = options.userIds.length
-  }
+  // if (options?.userIds?.length) {
+  //   options.limit = options.userIds.length
+  // }
 
   const shardId = calculateShardId(
     bot.gateway,

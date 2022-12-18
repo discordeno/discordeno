@@ -28,17 +28,6 @@ export async function editGuildTemplate (
   templateCode: string,
   options: ModifyGuildTemplate
 ): Promise<Template> {
-  if (
-    options.name?.length &&
-    (options.name.length < 1 || options.name.length > 100)
-  ) {
-    throw new Error('The name can only be in between 1-100 characters.')
-  }
-
-  if (options.description?.length && options.description.length > 120) {
-    throw new Error('The description can only be in between 0-120 characters.')
-  }
-
   const result = await rest.runMethod<DiscordTemplate>(
     rest,
     'PATCH',
