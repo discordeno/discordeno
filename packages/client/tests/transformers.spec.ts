@@ -30,7 +30,6 @@ describe('Transformers', () => {
           })
       )
     }
-    expect(transformerNames).to.empty
     expect(
       missingExportTransformers,
       `\nThere is/are transformer(s) defined in src/transformers, but no export in src/transformers/index.js
@@ -73,7 +72,9 @@ ${
                 transformerNames.splice(index, 1)
                 return
               }
-              if (['transformThreadMemberGuildCreate'].includes(transformer)) { return }
+              if (['transformThreadMemberGuildCreate'].includes(transformer)) {
+                return
+              }
               missingExportTransformers.push(
                 `File: src/transformers/${file}\nFunction: ${transformer}`
               )
@@ -104,7 +105,6 @@ ${
             })
         })
     )
-
     expect(
       missingExportTransformers,
       `\nThere is/are transformer(s) defined in src/transformers, but not found in createTransformers() function at src/transformers.ts

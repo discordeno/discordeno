@@ -2378,6 +2378,14 @@ export interface DiscordGuildEmojisUpdate {
   emojis: DiscordEmoji[]
 }
 
+/** https://discord.com/developers/docs/topics/gateway-events#guild-stickers-update */
+export interface DiscordGuildStickersUpdate {
+  /** id of the guild */
+  guild_id: string
+  /** Array of sticker */
+  stickers: DiscordSticker[]
+}
+
 export interface DiscordAddGuildDiscoverySubcategory {
   /** The guild Id of the subcategory was added to */
   guild_id: string

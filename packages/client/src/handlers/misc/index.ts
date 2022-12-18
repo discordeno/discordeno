@@ -1,3 +1,4 @@
+export * from './APPLICATION_COMMAND_PERMISSIONS_UPDATE.js'
 export * from './PRESENCE_UPDATE.js'
 export * from './READY.js'
 export * from './TYPING_START.js'

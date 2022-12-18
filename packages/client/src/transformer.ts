@@ -24,6 +24,7 @@ import type {
   DiscordIntegrationCreateUpdate,
   DiscordInteraction,
   DiscordInteractionDataOption,
+  DiscordInteractionDataResolved,
   DiscordInteractionResponse,
   DiscordInviteCreate,
   DiscordMember,
@@ -67,6 +68,7 @@ import type {
   Integration,
   Interaction,
   InteractionDataOption,
+  InteractionDataResolved,
   Invite,
   Member,
   Message,
@@ -96,11 +98,13 @@ import {
   transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
   transformApplicationCommandOptionToDiscordApplicationCommandOption,
   transformApplicationCommandPermission,
+  transformApplicationCommandPermissionToDiscordApplicationCommandPermission,
   transformApplicationCommandToDiscordApplicationCommand,
   transformApplicationToDiscordApplication,
   transformAttachment,
   transformAttachmentToDiscordAttachment,
   transformAuditLogEntry,
+  transformAuditLogEntryToDiscordAuditLogEntry,
   transformAutoModerationActionExecution,
   transformAutoModerationRule,
   transformChannel,
@@ -110,17 +114,21 @@ import {
   transformEmbed,
   transformEmbedToDiscordEmbed,
   transformEmoji,
+  transformEmojiToDiscordEmoji,
   transformGatewayBot,
+  transformGatewayBotToDiscordGatewayBot,
   transformGuild,
   transformIntegration,
   transformInteraction,
   transformInteractionDataOption,
+  transformInteractionDataResolved,
   transformInteractionResponseToDiscordInteractionResponse,
   transformInvite,
   transformMember,
   transformMemberToDiscordMember,
   transformMessage,
   transformPresence,
+  transformPresenceToDiscordPresence,
   transformRole,
   transformScheduledEvent,
   transformStageInstance,
@@ -137,7 +145,8 @@ import {
   transformWebhook,
   transformWelcomeScreen,
   transformWidget,
-  transformWidgetSettings
+  transformWidgetSettings,
+  transformWidgetSettingsToDiscordWidgetSettings
 } from './transformers/index.js'
 import type { CreateApplicationCommand, InteractionResponse } from './types.js'
 
@@ -176,6 +185,24 @@ export interface Transformers {
       payload: InteractionResponse
     ) => DiscordInteractionResponse
     attachment: (client: Client, payload: Attachment) => DiscordAttachment
+    applicationCommandPermission: (
+      client: Client,
+      payload: ApplicationCommandPermission
+    ) => DiscordGuildApplicationCommandPermissions
+    auditLogEntry: (
+      client: Client,
+      payload: AuditLogEntry
+    ) => DiscordAuditLogEntry
+    emoji: (client: Client, payload: Emoji) => DiscordEmoji
+    gatewayBot: (payload: GetGatewayBot) => DiscordGetGatewayBot
+    presence: (
+      client: Client,
+      payload: PresenceUpdate
+    ) => DiscordPresenceUpdate
+    widgetSettings: (
+      client: Client,
+      payload: GuildWidgetSettings
+    ) => DiscordGuildWidgetSettings
   }
   snowflake: (snowflake: BigString) => bigint
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot
@@ -212,10 +239,14 @@ export interface Transformers {
     payload: { voiceState: DiscordVoiceState } & { guildId: bigint }
   ) => VoiceState
   interaction: (client: Client, payload: DiscordInteraction) => Interaction
-  interactionDataOptions: (
+  interactionDataOption: (
     client: Client,
     payload: DiscordInteractionDataOption
   ) => InteractionDataOption
+  interactionDataResolved: (
+    client: Client,
+    payload: DiscordInteractionDataResolved
+  ) => InteractionDataResolved
   integration: (
     client: Client,
     payload: DiscordIntegrationCreateUpdate
@@ -309,7 +340,20 @@ export function createTransformers (
         options.reverse?.interactionResponse ??
         transformInteractionResponseToDiscordInteractionResponse,
       attachment:
-        options.reverse?.attachment ?? transformAttachmentToDiscordAttachment
+        options.reverse?.attachment ?? transformAttachmentToDiscordAttachment,
+      applicationCommandPermission:
+        options.reverse?.applicationCommandPermission ??
+        transformApplicationCommandPermissionToDiscordApplicationCommandPermission,
+      auditLogEntry:
+        options.reverse?.auditLogEntry ??
+        transformAuditLogEntryToDiscordAuditLogEntry,
+      emoji: options.reverse?.emoji ?? transformEmojiToDiscordEmoji,
+      gatewayBot:
+        options.reverse?.gatewayBot ?? transformGatewayBotToDiscordGatewayBot,
+      presence: options.reverse?.presence ?? transformPresenceToDiscordPresence,
+      widgetSettings:
+        options.reverse?.widgetSettings ??
+        transformWidgetSettingsToDiscordWidgetSettings
     },
     automodRule: options.automodRule ?? transformAutoModerationRule,
     automodActionExecution:
@@ -324,8 +368,10 @@ export function createTransformers (
     guild: options.guild ?? transformGuild,
     integration: options.integration ?? transformIntegration,
     interaction: options.interaction ?? transformInteraction,
-    interactionDataOptions:
-      options.interactionDataOptions ?? transformInteractionDataOption,
+    interactionDataOption:
+      options.interactionDataOption ?? transformInteractionDataOption,
+    interactionDataResolved:
+      options.interactionDataResolved ?? transformInteractionDataResolved,
     invite: options.invite ?? transformInvite,
     member: options.member ?? transformMember,
     message: options.message ?? transformMessage,

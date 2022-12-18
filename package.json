@@ -16,6 +16,7 @@
     "lint": "turbo run lint",
     "test:type": "turbo run build:type",
     "test:unit": "turbo run test:unit",
+    "test:unit-noTextCoverage": "turbo run test:unit-noTextCoverage",
     "test:test-type": "turbo run test:test-type",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install",
@@ -27,7 +28,6 @@
     "husky": "^8.0.2",
     "lint-staged": "^13.0.4",
     "prettier": "^2.8.0",
-    "turbo": "^1.6.3",
     "typedoc": "^0.23.21",
     "typedoc-plugin-markdown": "^3.13.6",
     "typescript": "^4.9.3"
@@ -41,5 +41,8 @@
       "eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to ."
     ]
   },
-  "packageManager": "yarn@3.3.0"
+  "packageManager": "yarn@3.3.0",
+  "dependencies": {
+    "turbo": "^1.6.3"
+  }
 }
