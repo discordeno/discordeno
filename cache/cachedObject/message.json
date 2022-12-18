@@ -1,14 +1,14 @@
 {
-  "id": "6396545226288537667",
+  "id": "5488722590123639015",
   "type": 0,
-  "content": "hqvwxhk",
-  "channel_id": "1986431503468201363",
+  "content": "wvvjynx",
+  "channel_id": "8701154105353451955",
   "author": {
-    "id": "492673289297363787",
-    "username": "1197485736769990",
+    "id": "596947190908883953",
+    "username": "1151726302700290",
     "avatar": "eae5905ad2d18d7c8deca20478b088b5",
     "avatar_decoration": null,
-    "discriminator": "6703",
+    "discriminator": "6933",
     "public_flags": 4194560
   },
   "attachments": [],
@@ -18,7 +18,7 @@
   "pinned": false,
   "mention_everyone": false,
   "tts": false,
-  "timestamp": "2022-12-17T00:39:42.621Z",
+  "timestamp": "2022-12-18T00:40:38.535Z",
   "edited_timestamp": null,
   "flags": 0,
   "components": []
