@@ -33,6 +33,6 @@ export function s1nakelize1StickerPack (payload: Camelize<DiscordStickerPack>): 
     banner_asset_id: payload.bannerAssetId,
     cover_sticker_id: payload.coverStickerId,
 
-    stickers: payload.stickers.map((sticker) => s1nakelize1Sticker(sticker)),
+    stickers: payload.stickers.map((sticker) => s1nakelize1Sticker(sticker))
   }
 }
