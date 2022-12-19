@@ -95,6 +95,14 @@ ${
         return Object.keys(createClientGatewayHandlers({}))[index]
       })
       .filter((gatewayHandler) => gatewayHandler !== undefined)
+      .filter(
+        (gatewayHandler) =>
+          ![
+            'GUILD_MEMBERS_CHUNK',
+            'THREAD_LIST_SYNC',
+            'GUILD_INTEGRATIONS_UPDATE'
+          ].includes(gatewayHandler as string)
+      )
 
     const getErrorMessage = (): string => `
 The following event(s) in createEventHandlers() missing a matching gateway event in createClientGatewayHandlers():
@@ -113,6 +121,7 @@ ${
     ? missingClientEventEventHandlers.join('\n')
     : 'None'
 }
+
 `
 
     expect(missingClientEventEventHandlers, getErrorMessage()).to.be.empty
