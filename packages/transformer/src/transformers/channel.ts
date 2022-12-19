@@ -50,7 +50,7 @@ export function c1amelize1Channel (
       name: tag.name,
       moderated: tag.moderated,
       emojiId: tag.emoji_id,
-      emojiName: tag.name
+      emojiName: tag.emoji_name
     })),
     appliedTags: payload.applied_tags,
     defaultReactionEmoji: payload.default_reaction_emoji && {

@@ -10,6 +10,6 @@ export function c1amelize1Emoji (payload: DiscordEmoji): Camelize<DiscordEmoji> 
     requireColons: payload.require_colons,
     managed: payload.managed,
     animated: payload.animated,
-    available: payload.animated
+    available: payload.available
   }
 }
