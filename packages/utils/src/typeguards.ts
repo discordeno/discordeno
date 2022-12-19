@@ -1,5 +1,11 @@
-import type { GetMessagesAfter, GetMessagesAround, GetMessagesBefore, GetMessagesLimit, GetMessagesOptions } from '@discordeno/types'
-import { hasProperty } from './utils'
+import type {
+  GetMessagesAfter,
+  GetMessagesAround,
+  GetMessagesBefore,
+  GetMessagesLimit,
+  GetMessagesOptions
+} from '@discordeno/types'
+import { hasProperty } from './utils.js'
 
 export function isGetMessagesAfter (
   options: GetMessagesOptions
