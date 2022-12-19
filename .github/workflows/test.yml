@@ -29,8 +29,6 @@ jobs:
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-build:type-
       - name: Build Type and Test
         run: yarn build:type --cache-dir=".turbo"
 
@@ -58,8 +56,6 @@ jobs:
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-build-
       - name: Type Test
         run: yarn build --cache-dir=".turbo"
 

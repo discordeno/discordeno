@@ -33,7 +33,7 @@
       ],
       "cache": false
     },
-    "test:unit": {
+    "test:unit-coverage": {
       "dependsOn": [
         "^build"
       ],
@@ -41,7 +41,7 @@
         "coverage/**"
       ]
     },
-    "test:unit-noTextCoverage": {
+    "test:unit": {
       "dependsOn": [
         "^build"
       ],
