@@ -1,10 +1,10 @@
 import { routes } from '@discordeno/constant'
 import type {
   BigString,
+  Camelize,
   ChannelTypes,
   DiscordChannel,
   DiscordStartThreadWithoutMessage,
-  SnakeToCamelCaseNested,
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
@@ -29,7 +29,7 @@ export async function startThreadWithoutMessage (
   rest: RestManager,
   channelId: BigString,
   options: StartThreadWithoutMessage
-): Promise<SnakeToCamelCaseNested<DiscordChannel>> {
+): Promise<Camelize<DiscordChannel>> {
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'POST',

@@ -125,6 +125,9 @@ export function transformAuditLogEntry (
     actionType: payload.action_type,
     options: payload.options
       ? {
+          autoModerationRuleName: payload.options.auto_moderation_rule_name,
+          autoModerationRuleTriggerType:
+            payload.options.auto_moderation_rule_trigger_type,
           deleteMemberDays: payload.options.delete_member_days
             ? Number(payload.options.delete_member_days)
             : 0,

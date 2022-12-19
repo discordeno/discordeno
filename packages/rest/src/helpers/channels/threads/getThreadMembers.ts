@@ -1,8 +1,8 @@
 import { routes } from '@discordeno/constant'
 import type {
   BigString,
-  DiscordThreadMember,
-  SnakeToCamelCaseNested
+  Camelize,
+  DiscordThreadMember
 } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
@@ -23,7 +23,7 @@ import { snakeToCamelCaseNested } from '../../../transformer.js'
 export async function getThreadMembers (
   rest: RestManager,
   channelId: BigString
-): Promise<Collection<string, SnakeToCamelCaseNested<DiscordThreadMember>>> {
+): Promise<Collection<string, Camelize<DiscordThreadMember>>> {
   const results = await rest.runMethod<DiscordThreadMember[]>(
     rest,
     'GET',

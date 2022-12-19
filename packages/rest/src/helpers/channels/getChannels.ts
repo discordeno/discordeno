@@ -1,9 +1,5 @@
 import { routes } from '@discordeno/constant'
-import type {
-  BigString,
-  DiscordChannel,
-  SnakeToCamelCaseNested
-} from '@discordeno/types'
+import type { BigString, Camelize, DiscordChannel } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
 import { snakeToCamelCaseNested } from '../../transformer.js'
@@ -23,7 +19,7 @@ import { snakeToCamelCaseNested } from '../../transformer.js'
 export async function getChannels (
   rest: RestManager,
   guildId: BigString
-): Promise<Collection<string, SnakeToCamelCaseNested<DiscordChannel>>> {
+): Promise<Collection<string, Camelize<DiscordChannel>>> {
   const results = await rest.runMethod<DiscordChannel[]>(
     rest,
     'GET',

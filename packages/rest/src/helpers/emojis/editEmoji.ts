@@ -1,7 +1,9 @@
 import { routes } from '@discordeno/constant'
 import type {
   BigString,
-  DiscordEmoji, DiscordModifyGuildEmoji, SnakeToCamelCaseNested,
+  Camelize,
+  DiscordEmoji,
+  DiscordModifyGuildEmoji,
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
@@ -27,7 +29,7 @@ export async function editEmoji (
   guildId: BigString,
   id: BigString,
   options: ModifyGuildEmoji
-): Promise<SnakeToCamelCaseNested<DiscordEmoji>> {
+): Promise<Camelize<DiscordEmoji>> {
   const result = await rest.runMethod<DiscordEmoji>(
     rest,
     'PATCH',

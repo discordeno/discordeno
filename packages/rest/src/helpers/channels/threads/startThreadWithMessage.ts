@@ -1,9 +1,9 @@
 import { routes } from '@discordeno/constant'
 import type {
   BigString,
+  Camelize,
   DiscordChannel,
   DiscordStartThreadWithMessage,
-  SnakeToCamelCaseNested,
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
@@ -34,7 +34,7 @@ export async function startThreadWithMessage (
   channelId: BigString,
   messageId: BigString,
   options: StartThreadWithMessage
-): Promise<SnakeToCamelCaseNested<DiscordChannel>> {
+): Promise<Camelize<DiscordChannel>> {
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'POST',

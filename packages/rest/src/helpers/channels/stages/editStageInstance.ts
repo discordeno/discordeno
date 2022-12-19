@@ -1,8 +1,8 @@
 import { routes } from '@discordeno/constant'
 import type {
   BigString,
+  Camelize,
   DiscordStageInstance,
-  SnakeToCamelCaseNested,
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
@@ -26,7 +26,7 @@ export async function editStageInstance (
   rest: RestManager,
   channelId: BigString,
   data: EditStageInstanceOptions
-): Promise<SnakeToCamelCaseNested<DiscordStageInstance>> {
+): Promise<Camelize<DiscordStageInstance>> {
   const result = await rest.runMethod<DiscordStageInstance>(
     rest,
     'PATCH',

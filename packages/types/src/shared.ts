@@ -1439,20 +1439,17 @@ U[keyof U]
 
 export type MakeRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
-// THANK YOU YUI FOR SHARING THIS!
-export type CamelCase<S extends string> =
-  S extends `${infer P1}_${infer P2}${infer P3}`
-    ? `${Lowercase<P1>}${Uppercase<P2>}${CamelCase<P3>}`
-    : Lowercase<S>
-export type Camelize<T> = {
-  [K in keyof T as CamelCase<string & K>]: T[K] extends Array<infer U>
-    ? U extends {}
-      ? Array<Camelize<U>>
-      : T[K]
-    : T[K] extends {}
-      ? Camelize<T[K]>
-      : never;
-}
+export type CamelCase<S extends string> = S extends `${infer T}_${infer U}`
+  ? `${T}${Capitalize<CamelCase<U>>}`
+  : S
+
+export type Camelize<T> = T extends any[]
+  ? Array<Camelize<T[number]>>
+  : T extends object
+    ? {
+        [K in keyof T as CamelCase<K & string>]: Camelize<T[K]>;
+      }
+    : T
 
 /** Non object primitives */
 export type Primitive =
@@ -1544,18 +1541,3 @@ export type PickPartial<T, K extends keyof T> = {
 export type OmitFirstFnArg<F> = F extends (x: any, ...args: infer P) => infer R
   ? (...args: P) => R
   : never
-
-export type SnakeToCamelCase<S extends string> =
-  S extends `${infer T}_${infer U}`
-    ? `${T}${Capitalize<SnakeToCamelCase<U>>}`
-    : S
-
-export type SnakeToCamelCaseNested<T> = T extends any[]
-  ? Array<SnakeToCamelCaseNested<T[number]>>
-  : T extends object
-    ? {
-        [K in keyof T as SnakeToCamelCase<K & string>]: SnakeToCamelCaseNested<
-        T[K]
-        >;
-      }
-    : T

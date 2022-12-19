@@ -2,11 +2,11 @@ import { routes } from '@discordeno/constant'
 import type {
   AllowedMentions,
   BigString,
+  Camelize,
   DiscordChannel,
   DiscordCreateForumPostWithMessage,
   FileContent,
   MessageComponents,
-  SnakeToCamelCaseNested,
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
@@ -35,7 +35,7 @@ export async function createForumThread (
   rest: RestManager,
   channelId: BigString,
   options: CreateForumPostWithMessage
-): Promise<SnakeToCamelCaseNested<DiscordChannel>> {
+): Promise<Camelize<DiscordChannel>> {
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'POST',

@@ -1,9 +1,5 @@
 import { routes } from '@discordeno/constant'
-import type {
-  BigString,
-  DiscordChannel,
-  SnakeToCamelCaseNested
-} from '@discordeno/types'
+import type { BigString, Camelize, DiscordChannel } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import { snakeToCamelCaseNested } from '../../transformer.js'
 
@@ -22,7 +18,7 @@ import { snakeToCamelCaseNested } from '../../transformer.js'
 export async function getChannel (
   rest: RestManager,
   channelId: BigString
-): Promise<SnakeToCamelCaseNested<DiscordChannel>> {
+): Promise<Camelize<DiscordChannel>> {
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'GET',

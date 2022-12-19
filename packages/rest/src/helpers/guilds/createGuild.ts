@@ -1,10 +1,10 @@
 import { routes } from '@discordeno/constant'
 import type {
+  Camelize,
   DefaultMessageNotificationLevels,
   DiscordCreateGuild,
   DiscordGuild,
   ExplicitContentFilterLevels,
-  SnakeToCamelCaseNested,
   SystemChannelFlags,
   VerificationLevels
 } from '@discordeno/types'
@@ -29,7 +29,7 @@ import type { Role } from '../../transformers/role.js'
 export async function createGuild (
   rest: RestManager,
   options: CreateGuild
-): Promise<SnakeToCamelCaseNested<DiscordGuild>> {
+): Promise<Camelize<DiscordGuild>> {
   const result = await rest.runMethod<DiscordGuild>(
     rest,
     'POST',

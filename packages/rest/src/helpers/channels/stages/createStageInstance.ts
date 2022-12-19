@@ -1,8 +1,8 @@
 import { routes } from '@discordeno/constant'
 import type {
   BigString,
+  Camelize,
   DiscordStageInstance,
-  SnakeToCamelCaseNested,
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
@@ -25,7 +25,7 @@ import { snakeToCamelCaseNested } from '../../../transformer.js'
 export async function createStageInstance (
   rest: RestManager,
   options: CreateStageInstance
-): Promise<SnakeToCamelCaseNested<DiscordStageInstance>> {
+): Promise<Camelize<DiscordStageInstance>> {
   const result = await rest.runMethod<DiscordStageInstance>(
     rest,
     'POST',

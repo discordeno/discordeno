@@ -143,6 +143,9 @@ export function transformAuditLogEntryToDiscordAuditLogEntry (
     options: payload.options
       ? {
           // respect transformer as reference than type
+          auto_moderation_rule_name: payload.options.autoModerationRuleName,
+          auto_moderation_rule_trigger_type:
+            payload.options.autoModerationRuleTriggerType,
           delete_member_days:
             payload.options.deleteMemberDays === 0
               ? payload.options.deleteMemberDays.toString()

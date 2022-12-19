@@ -1,8 +1,8 @@
 import { routes } from '@discordeno/constant'
 import type {
   BigString,
-  DiscordInviteMetadata,
-  SnakeToCamelCaseNested
+  Camelize,
+  DiscordInviteMetadata
 } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -25,7 +25,7 @@ import { snakeToCamelCaseNested } from '../../transformer.js'
 export async function getChannelInvites (
   rest: RestManager,
   channelId: BigString
-): Promise<Collection<string, SnakeToCamelCaseNested<DiscordInviteMetadata>>> {
+): Promise<Collection<string, Camelize<DiscordInviteMetadata>>> {
   const results = await rest.runMethod<DiscordInviteMetadata[]>(
     rest,
     'GET',
@@ -33,10 +33,8 @@ export async function getChannelInvites (
   )
 
   return new Collection(
-    results.map<[string, SnakeToCamelCaseNested<DiscordInviteMetadata>]>(
-      (result) => {
-        return [result.code, snakeToCamelCaseNested(result)]
-      }
-    )
+    results.map<[string, Camelize<DiscordInviteMetadata>]>((result) => {
+      return [result.code, snakeToCamelCaseNested(result)]
+    })
   )
 }

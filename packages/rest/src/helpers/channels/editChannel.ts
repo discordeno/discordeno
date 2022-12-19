@@ -1,11 +1,11 @@
 import { routes } from '@discordeno/constant'
 import type {
   BigString,
+  Camelize,
   ChannelTypes,
   DiscordChannel,
   DiscordModifyChannel,
   OverwriteReadable,
-  SnakeToCamelCaseNested,
   SortOrderTypes,
   VideoQualityModes,
   WithReason
@@ -48,7 +48,7 @@ export async function editChannel (
   rest: RestManager,
   channelId: BigString,
   options: ModifyChannel
-): Promise<SnakeToCamelCaseNested<DiscordChannel>> {
+): Promise<Camelize<DiscordChannel>> {
   if (options.name ?? options.topic) {
     const request = editChannelNameTopicQueue.get(channelId)
     if (request == null) {
@@ -65,15 +65,13 @@ export async function editChannel (
       request.amount = 2
       request.timestamp = Date.now() + 600000
     } else {
-      return await new Promise<SnakeToCamelCaseNested<DiscordChannel>>(
-        (resolve, reject) => {
-          // 2 have already been used add to queue
-          request.items.push({ channelId, options, resolve, reject })
-          if (editChannelProcessing) return
-          editChannelProcessing = true
-          processEditChannelQueue(rest)
-        }
-      )
+      return await new Promise<Camelize<DiscordChannel>>((resolve, reject) => {
+        // 2 have already been used add to queue
+        request.items.push({ channelId, options, resolve, reject })
+        if (editChannelProcessing) return
+        editChannelProcessing = true
+        processEditChannelQueue(rest)
+      })
     }
   }
 
@@ -137,7 +135,7 @@ interface EditChannelRequest {
   items: Array<{
     channelId: BigString
     options: ModifyChannel
-    resolve: (channel: SnakeToCamelCaseNested<DiscordChannel>) => void
+    resolve: (channel: Camelize<DiscordChannel>) => void
     // deno-lint-ignore no-explicit-any
     reject: (error: any) => void
   }>

@@ -248,7 +248,7 @@ export interface DiscordMember {
   communication_disabled_until?: string | null
 }
 
-/** https://discord.com/developers/docs/topics/oauth2#application-object */
+/** https://discord.com/developers/docs/resources/application#application-object */
 export interface DiscordApplication {
   /** The name of the app */
   name: string
@@ -291,6 +291,8 @@ export interface DiscordApplication {
   install_params?: DiscordInstallParams
   /** the application's default custom authorization link, if enabled */
   custom_install_url?: string
+  /** the application's role connection verification entry point, which when configured will render the app as a verification method in the guild role verification configuration */
+  role_connections_verification_url?: string
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-object */
@@ -728,43 +730,34 @@ export interface DiscordVoiceState {
 
 /** https://discord.com/developers/docs/resources/channel#channel-object */
 export interface DiscordChannel {
+  /** The id of the channel */
+  id: string
   /** The type of channel */
   type: ChannelTypes
-  /** The flags of the channel */
-  flags?: ChannelFlags
+  /** The id of the guild */
+  guild_id?: string
   /** Sorting position of the channel */
   position?: number
+  /** Explicit permission overwrites for members and roles */
+  permission_overwrites?: DiscordOverwrite[]
   /** The name of the channel (1-100 characters) */
   name?: string
   /** The channel topic (0-4096 characters for GUILD_FORUM channels, 0-1024 characters for all others) */
   topic?: string | null
+  /** Whether the channel is nsfw */
+  nsfw?: boolean
+  /** The id of the last message sent in this channel (may not point to an existing or valid message) */
+  last_message_id?: string | null
   /** The bitrate (in bits) of the voice or stage channel */
   bitrate?: number
   /** The user limit of the voice or stage channel */
   user_limit?: number
   /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
   rate_limit_per_user?: number
-  /** Voice region id for the voice or stage channel, automatic when set to null */
-  rtc_region?: string | null
-  /** The camera video quality mode of the voice channel, 1 when not present */
-  video_quality_mode?: VideoQualityModes
-  /** An approximate count of messages in a thread, stops counting at 50 */
-  message_count?: number
-  /** An approximate count of users in a thread, stops counting at 50 */
-  member_count?: number
-  /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
-  default_auto_archive_duration?: number
-
-  /** The id of the channel */
-  id: string
-  /** The id of the guild */
-  guild_id?: string
-  /** Explicit permission overwrites for members and roles */
-  permission_overwrites?: DiscordOverwrite[]
-  /** Whether the channel is nsfw */
-  nsfw?: boolean
-  /** The id of the last message sent in this channel (may not point to an existing or valid message) */
-  last_message_id?: string | null
+  /** the recipients of the DM */
+  recipients?: DiscordUser[]
+  /** icon hash of the group DM */
+  icon?: string
   /** Id of the creator of the thread */
   owner_id?: string
   /** Application id of the group DM creator if it is bot-created */
@@ -773,14 +766,26 @@ export interface DiscordChannel {
   parent_id?: string | null
   /** When the last pinned message was pinned. This may be null in events such as GUILD_CREATE when a message is not pinned. */
   last_pin_timestamp?: string | null
+  /** Voice region id for the voice or stage channel, automatic when set to null */
+  rtc_region?: string | null
+  /** The camera video quality mode of the voice channel, 1 when not present */
+  video_quality_mode?: VideoQualityModes
+  /** An approximate count of messages in a thread, stops counting at 50 */
+  message_count?: number
+  /** An approximate count of users in a thread, stops counting at 50 */
+  member_count?: number
   /** Thread-specific fields not needed by other channels */
   thread_metadata?: DiscordThreadMetadata
   /** Thread member object for the current user, if they have joined the thread, only included on certain API endpoints */
   member?: DiscordThreadMember
+  /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
+  default_auto_archive_duration?: number
   /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a application command interaction */
   permissions?: string
-  /** When a thread is created this will be true on that channel payload for the thread. */
-  newly_created?: boolean
+  /** The flags of the channel */
+  flags?: ChannelFlags
+  /** number of messages ever sent in a thread, it's similar to `message_count` on message creation, but will not decrement the number when a message is deleted */
+  total_message_sent?: number
   /** The set of tags that can be used in a GUILD_FORUM channel */
   available_tags: DiscordForumTag[]
   /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
@@ -791,6 +796,10 @@ export interface DiscordChannel {
   default_thread_rate_limit_per_user: number
   /** the default sort order type used to order posts in GUILD_FORUM channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
   default_sort_order?: SortOrderTypes | null
+  /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
+  default_forum_layout?: number
+  /** When a thread is created this will be true on that channel payload for the thread. */
+  newly_created?: boolean
 }
 
 /** https://discord.com/developers/docs/topics/gateway#presence-update */
@@ -880,7 +889,7 @@ export interface DiscordThreadMemberGuildCreate {
   join_timestamp: string
 }
 
-/** https://discord.com/developers/docs/topics/gateway#activity-object */
+/** https://discord.com/developers/docs/topics/gateway-events#activity-object */
 export interface DiscordActivity {
   /** The activity's name */
   name: string
@@ -1474,6 +1483,7 @@ export interface DiscordAuditLog {
   application_commands: DiscordApplicationCommand[]
 }
 
+/** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object */
 export interface DiscordAutoModerationRule {
   /** The id of this rule */
   id: string
@@ -1556,6 +1566,7 @@ export interface DiscordAutoModerationActionMetadata {
   duration_seconds?: number
 }
 
+/** https://discord.com/developers/docs/topics/gateway-events#auto-moderation-action-execution-auto-moderation-action-execution-event-fields */
 export interface DiscordAutoModerationActionExecution {
   /** The id of the guild */
   guild_id: string
@@ -1697,17 +1708,23 @@ export type DiscordAuditLogChange =
 /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
 export interface DiscordOptionalAuditEntryInfo {
   /**
-   * Number of days after which inactive members were kicked.
+   * ID of the app whose permissions were targeted.
    *
-   * Event types: `MEMBER_PRUNE`
+   * Event types: `APPLICATION_COMMAND_PERMISSION_UPDATE`
    */
-  delete_member_days: string
+  application_id: string
   /**
-   * Number of members removed by the prune.
+   * Name of the Auto Moderation rule that was triggered.
    *
-   * Event types: `MEMBER_PRUNE`
+   * Event types: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`
    */
-  members_removed: string
+  auto_moderation_rule_name: string
+  /**
+   * Trigger type of the Auto Moderation rule that was triggered.
+   *
+   * Event types: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`
+   */
+  auto_moderation_rule_trigger_type: string
   /**
    * Channel in which the entities were targeted.
    *
@@ -1715,17 +1732,17 @@ export interface DiscordOptionalAuditEntryInfo {
    */
   channel_id: string
   /**
-   * ID of the message that was targeted.
-   *
-   * Event types: `MESSAGE_PIN`, `MESSAGE_UNPIN`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
-   */
-  message_id: string
-  /**
    * Number of entities that were targeted.
    *
    * Event types: `MESSAGE_DELETE`, `MESSAGE_BULK_DELETE`, `MEMBER_DISCONNECT`, `MEMBER_MOVE`
    */
   count: string
+  /**
+   * Number of days after which inactive members were kicked.
+   *
+   * Event types: `MEMBER_PRUNE`
+   */
+  delete_member_days: string
   /**
    * ID of the overwritten entity.
    *
@@ -1733,11 +1750,17 @@ export interface DiscordOptionalAuditEntryInfo {
    */
   id: string
   /**
-   * Type of overwritten entity - "0", for "role", or "1" for "member".
+   * Number of members removed by the prune.
    *
-   * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
+   * Event types: `MEMBER_PRUNE`
    */
-  type: string
+  members_removed: string
+  /**
+   * ID of the message that was targeted.
+   *
+   * Event types: `MESSAGE_PIN`, `MESSAGE_UNPIN`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
+   */
+  message_id: string
   /**
    * Name of the role if type is "0" (not present if type is "1").
    *
@@ -1745,11 +1768,11 @@ export interface DiscordOptionalAuditEntryInfo {
    */
   role_name: string
   /**
-   * ID of the app whose permissions were targeted.
+   * Type of overwritten entity - "0", for "role", or "1" for "member".
    *
-   * Event types: `APPLICATION_COMMAND_PERMISSION_UPDATE`
+   * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
    */
-  application_id: string
+  type: string
 }
 
 export interface DiscordScheduledEvent {
@@ -1901,6 +1924,8 @@ export interface DiscordCreateApplicationCommand {
   default_member_permissions?: string | null
   /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
   dm_permission?: boolean
+  /** Indicates whether the command is age-restricted, defaults to false */
+  nsfw?: boolean
   /** Auto incrementing version identifier updated during substantial record changes */
   version?: string
 }
@@ -1947,7 +1972,7 @@ export interface DiscordApplicationCommandOption {
   max_length?: number
 }
 
-/** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-choice-structure */
+/** https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object */
 export interface DiscordApplicationCommandOptionChoice {
   /** 1-100 character choice name */
   name: string

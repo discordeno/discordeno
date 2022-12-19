@@ -1,10 +1,10 @@
 import { routes } from '@discordeno/constant'
 import type {
   BigString,
+  Camelize,
   DiscordChannel,
   DiscordListActiveThreads,
-  DiscordThreadMember,
-  SnakeToCamelCaseNested
+  DiscordThreadMember
 } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
@@ -51,6 +51,6 @@ export async function getActiveThreads (
 }
 
 export interface DiscordActiveThreads {
-  threads: Collection<string, SnakeToCamelCaseNested<DiscordChannel>>
-  members: Collection<string, SnakeToCamelCaseNested<DiscordThreadMember>>
+  threads: Collection<string, Camelize<DiscordChannel>>
+  members: Collection<string, Camelize<DiscordThreadMember>>
 }

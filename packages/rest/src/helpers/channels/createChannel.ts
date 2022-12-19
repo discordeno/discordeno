@@ -1,15 +1,15 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
+  Camelize,
   DiscordChannel,
+  DiscordCreateGuildChannel,
   OverwriteReadable,
-  SnakeToCamelCaseNested,
   SortOrderTypes,
-  WithReason,
-  DiscordCreateGuildChannel
+  WithReason
 } from '@discordeno/types'
 import { ChannelTypes } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
-import { routes } from '@discordeno/constant'
 import type { RestManager } from '../../restManager.js'
 import { snakeToCamelCaseNested } from '../../transformer.js'
 
@@ -36,13 +36,13 @@ export async function createChannel (
   rest: RestManager,
   guildId: BigString,
   options: CreateGuildChannel
-): Promise<SnakeToCamelCaseNested<DiscordChannel>> {
+): Promise<Camelize<DiscordChannel>> {
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'POST',
     routes.GUILD_CHANNELS(guildId),
     options
-      ? {
+      ? ({
           name: options.name,
           topic: options.topic,
           bitrate: options.bitrate,
@@ -85,7 +85,7 @@ export async function createChannel (
                 : undefined
             }))
             : undefined
-        } as DiscordCreateGuildChannel
+        } as DiscordCreateGuildChannel)
       : {}
   )
 

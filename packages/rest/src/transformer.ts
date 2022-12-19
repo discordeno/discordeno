@@ -1,6 +1,7 @@
 import type {
   AllowedMentions,
   BigString,
+  Camelize,
   DiscordActivity,
   DiscordAllowedMentions,
   DiscordApplication,
@@ -42,8 +43,7 @@ import type {
   DiscordVoiceState,
   DiscordWebhook,
   DiscordWelcomeScreen,
-  GetGatewayBot,
-  SnakeToCamelCaseNested
+  GetGatewayBot
 } from '@discordeno/types'
 import { bigintToSnowflake, snowflakeToBigint } from '@discordeno/utils'
 import type { RestManager } from './restManager.js'
@@ -142,29 +142,28 @@ import {
 } from './transformers/index.js'
 import type { CreateApplicationCommand, InteractionResponse } from './types.js'
 
-export const snakeToCamelCaseNested = <T>(
-  object: T
-): SnakeToCamelCaseNested<T> => {
+export const snakeToCamelCaseNested = <T>(object: T): Camelize<T> => {
   if (Array.isArray(object)) {
     return object.map((element) =>
       snakeToCamelCaseNested(element)
-    ) as SnakeToCamelCaseNested<T>
+    ) as Camelize<T>
   }
   if (typeof object === 'object' && object !== null) {
-    const obj = {} as SnakeToCamelCaseNested<T>;
+    const obj = {} as Camelize<T>;
     (Object.keys(object) as Array<keyof T>).forEach((key) => {
       (obj[
         (typeof key === 'string'
           ? key.replace(/([-_][a-z])/gi, ($1) => {
             return $1.toUpperCase().replace('-', '').replace('_', '')
           })
-          : key) as keyof SnakeToCamelCaseNested<T>
-      ] as SnakeToCamelCaseNested<(T & object)[keyof T]>) =
-        snakeToCamelCaseNested(object[key])
+          : key) as keyof Camelize<T>
+      ] as Camelize<(T & object)[keyof T]>) = snakeToCamelCaseNested(
+        object[key]
+      )
     })
     return obj
   }
-  return object as SnakeToCamelCaseNested<T>
+  return object as Camelize<T>
 }
 
 export interface Transformers {
