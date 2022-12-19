@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { DiscordMessage } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import type { Message } from '../../../transformers/message.js'
@@ -30,7 +31,7 @@ export async function sendFollowupMessage (
   options: InteractionResponse
 ): Promise<Message> {
   const result = await rest.sendRequest<DiscordMessage>(rest, {
-    url: rest.constants.routes.WEBHOOK(rest.applicationId, token),
+    url: routes.WEBHOOK(rest.applicationId, token),
     method: 'POST',
     payload: rest.createRequestBody(rest, {
       method: 'POST',

@@ -1,7 +1,8 @@
+import { routes } from '@discordeno/constant'
 import type {
-  AuditLogEvents,
   BigString,
-  DiscordAuditLog
+  DiscordAuditLog,
+  GetGuildAuditLog
 } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -48,7 +49,7 @@ export async function getAuditLog (
   const result = await rest.runMethod<DiscordAuditLog>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_AUDIT_LOGS(guildId, options)
+    routes.GUILD_AUDIT_LOGS(guildId, options)
   )
 
   const id = rest.transformers.snowflake(guildId)
@@ -115,16 +116,4 @@ export async function getAuditLog (
       rest.transformers.applicationCommand(rest, applicationCommand)
     )
   }
-}
-
-/** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
-export interface GetGuildAuditLog {
-  /** Entries from a specific user ID */
-  userId?: BigString | string
-  /** Entries for a specific audit log event */
-  actionType?: AuditLogEvents
-  /** Entries that preceded a specific audit log entry ID */
-  before?: BigString | string
-  /** Maximum number of entries (between 1-100) to return, defaults to 50 */
-  limit?: number
 }

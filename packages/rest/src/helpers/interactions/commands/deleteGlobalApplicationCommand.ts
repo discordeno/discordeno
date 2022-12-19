@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 
@@ -16,6 +17,6 @@ export async function deleteGlobalApplicationCommand (
   return await rest.runMethod<void>(
     rest,
     'DELETE',
-    rest.constants.routes.COMMANDS_ID(rest.applicationId, commandId)
+    routes.COMMANDS_ID(rest.applicationId, commandId)
   )
 }

@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { DiscordUser } from '@discordeno/types'
 import { urlToBase64 } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -18,7 +19,7 @@ export async function editBotProfile (
   const result = await rest.runMethod<DiscordUser>(
     rest,
     'PATCH',
-    rest.constants.routes.USER_BOT(),
+    routes.USER_BOT(),
     {
       username: options.username?.trim(),
       avatar

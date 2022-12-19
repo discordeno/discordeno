@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordModifyGuildChannelPositions } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
@@ -25,7 +26,7 @@ export async function editChannelPositions (
   return await rest.runMethod<void>(
     rest,
     'PATCH',
-    rest.constants.routes.GUILD_CHANNELS(guildId),
+    routes.GUILD_CHANNELS(guildId),
     channelPositions.map((channelPosition) => ({
       id: channelPosition.id.toString(),
       position: channelPosition.position,

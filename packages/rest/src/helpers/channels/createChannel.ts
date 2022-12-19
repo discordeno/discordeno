@@ -9,6 +9,7 @@ import type {
 } from '@discordeno/types'
 import { ChannelTypes } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
+import { routes } from '@discordeno/constant'
 import type { RestManager } from '../../restManager.js'
 import { snakeToCamelCaseNested } from '../../transformer.js'
 
@@ -39,7 +40,7 @@ export async function createChannel (
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'POST',
-    rest.constants.routes.GUILD_CHANNELS(guildId),
+    routes.GUILD_CHANNELS(guildId),
     options
       ? {
           name: options.name,

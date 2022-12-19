@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString, DiscordMemberWithUser,
   SearchMembers
@@ -27,7 +28,7 @@ export async function searchMembers (
   const results = await rest.runMethod<DiscordMemberWithUser[]>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_MEMBERS_SEARCH(guildId, query, options)
+    routes.GUILD_MEMBERS_SEARCH(guildId, query, options)
   )
 
   const id = rest.transformers.snowflake(guildId)

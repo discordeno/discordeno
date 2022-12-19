@@ -1,4 +1,5 @@
-import type { BigString, DiscordGuildWidgetSettings, DiscordEditGuildWidgetSettings } from '@discordeno/types'
+import { routes } from '@discordeno/constant'
+import type { BigString, DiscordEditGuildWidgetSettings, DiscordGuildWidgetSettings } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import type { GuildWidgetSettings } from '../../../transformers/widgetSettings.js'
 
@@ -27,7 +28,7 @@ export async function editWidgetSettings (
   const result = await rest.runMethod<DiscordGuildWidgetSettings>(
     rest,
     'PATCH',
-    rest.constants.routes.GUILD_WIDGET(guildId),
+    routes.GUILD_WIDGET(guildId),
     {
       enabled,
       channel_id: channelId

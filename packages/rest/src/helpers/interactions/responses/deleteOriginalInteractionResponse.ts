@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { RestManager } from '../../../restManager.js'
 
 /**
@@ -20,7 +21,7 @@ export async function deleteOriginalInteractionResponse (
   return await rest.runMethod<void>(
     rest,
     'DELETE',
-    rest.constants.routes.INTERACTION_ORIGINAL_ID_TOKEN(
+    routes.INTERACTION_ORIGINAL_ID_TOKEN(
       rest.applicationId,
       token
     )

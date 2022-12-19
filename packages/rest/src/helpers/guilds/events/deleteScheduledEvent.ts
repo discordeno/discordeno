@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 
@@ -23,6 +24,6 @@ export async function deleteScheduledEvent (
   return await rest.runMethod<void>(
     rest,
     'DELETE',
-    rest.constants.routes.GUILD_SCHEDULED_EVENT(guildId, eventId)
+    routes.GUILD_SCHEDULED_EVENT(guildId, eventId)
   )
 }

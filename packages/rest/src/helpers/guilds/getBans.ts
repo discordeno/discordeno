@@ -1,4 +1,5 @@
-import type { BigString, DiscordBan } from '@discordeno/types'
+import { routes } from '@discordeno/constant'
+import type { BigString, DiscordBan, GetBans } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
 import type { Ban } from './getBan.js'
@@ -26,7 +27,7 @@ export async function getBans (
   const results = await rest.runMethod<DiscordBan[]>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_BANS(guildId, options)
+    routes.GUILD_BANS(guildId, options)
   )
 
   return new Collection(
@@ -41,13 +42,4 @@ export async function getBans (
       ]
     })
   )
-}
-
-export interface GetBans {
-  /** Number of users to return (up to maximum 1000). Default: 1000 */
-  limit?: number
-  /** Consider only users before given user id */
-  before?: BigString
-  /** Consider only users after given user id */
-  after?: BigString
 }

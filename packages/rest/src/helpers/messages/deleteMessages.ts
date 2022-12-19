@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordBulkDeleteMessages } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
@@ -26,7 +27,7 @@ export async function deleteMessages (
   return await rest.runMethod<void>(
     rest,
     'POST',
-    rest.constants.routes.CHANNEL_BULK_DELETE(channelId),
+    routes.CHANNEL_BULK_DELETE(channelId),
     {
       messages: messageIds.slice(0, 100).map((id) => id.toString()),
       reason

@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DefaultMessageNotificationLevels,
@@ -39,7 +40,7 @@ export async function editGuild (
   const result = await rest.runMethod<DiscordGuild>(
     rest,
     'PATCH',
-    rest.constants.routes.GUILD(guildId),
+    routes.GUILD(guildId),
     {
       name: options.name,
       verification_levels: options.verificationLevel,

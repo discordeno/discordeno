@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, ImageFormat, ImageSize } from '@discordeno/types'
 import { formatImageURL, iconBigintToHash } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -23,7 +24,7 @@ export function getGuildBannerURL (
 ): string | undefined {
   return options.banner
     ? formatImageURL(
-      rest.constants.routes.GUILD_BANNER(
+      routes.GUILD_BANNER(
         guildId,
         typeof options.banner === 'string'
           ? options.banner

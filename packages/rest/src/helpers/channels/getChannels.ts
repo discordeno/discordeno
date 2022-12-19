@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordChannel,
@@ -26,7 +27,7 @@ export async function getChannels (
   const results = await rest.runMethod<DiscordChannel[]>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_CHANNELS(guildId)
+    routes.GUILD_CHANNELS(guildId)
   )
 
   return new Collection(

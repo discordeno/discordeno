@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordEditScheduledEvent,
@@ -38,7 +39,7 @@ export async function editScheduledEvent (
   const result = await rest.runMethod<DiscordScheduledEvent>(
     rest,
     'PATCH',
-    rest.constants.routes.GUILD_SCHEDULED_EVENT(guildId, eventId),
+    routes.GUILD_SCHEDULED_EVENT(guildId, eventId),
     {
       channel_id:
         options.channelId === null ? null : options.channelId?.toString(),

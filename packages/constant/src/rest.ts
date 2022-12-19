@@ -1,22 +1,5 @@
-import type { BigString } from '@discordeno/types'
-import { baseEndpoints } from '@discordeno/utils'
-import type {
-  GetBans,
-  GetGuildAuditLog,
-  GetGuildPruneCountQuery,
-  GetInvite,
-  GetMessagesOptions,
-  GetReactions,
-  GetScheduledEventUsers,
-  ListArchivedThreads,
-  ListGuildMembers
-} from './helpers/index.js'
-import {
-  isGetMessagesAfter,
-  isGetMessagesAround,
-  isGetMessagesBefore,
-  isGetMessagesLimit
-} from './helpers/messages/getMessages.js'
+import type { BigString, GetBans, GetGuildAuditLog, GetGuildPruneCountQuery, GetInvite, GetMessagesOptions, GetReactions, GetScheduledEventUsers, ListArchivedThreads, ListGuildMembers } from '@discordeno/types'
+import { baseEndpoints, isGetMessagesAfter, isGetMessagesAround, isGetMessagesBefore, isGetMessagesLimit } from '@discordeno/utils'
 
 export const routes = {
   GATEWAY_BOT: () => {
@@ -43,15 +26,19 @@ export const routes = {
 
     if (options) {
       if (isGetMessagesAfter(options) && options.after) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         url += `after=${options.after}`
       }
       if (isGetMessagesBefore(options) && options.before) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         url += `&before=${options.before}`
       }
       if (isGetMessagesAround(options) && options.around) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         url += `&around=${options.around}`
       }
       if (isGetMessagesLimit(options) && options.limit) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         url += `&limit=${options.limit}`
       }
     }
@@ -106,7 +93,9 @@ export const routes = {
     )}?`
 
     if (options) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.after) url += `after=${options.after}`
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.limit) url += `&limit=${options.limit}`
     }
 
@@ -158,6 +147,7 @@ export const routes = {
       if (options.before) {
         url += `before=${new Date(options.before).toISOString()}`
       }
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.limit) url += `&limit=${options.limit}`
     }
 
@@ -173,6 +163,7 @@ export const routes = {
       if (options.before) {
         url += `before=${new Date(options.before).toISOString()}`
       }
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.limit) url += `&limit=${options.limit}`
     }
 
@@ -188,6 +179,7 @@ export const routes = {
       if (options.before) {
         url += `before=${new Date(options.before).toISOString()}`
       }
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.limit) url += `&limit=${options.limit}`
     }
 
@@ -216,9 +208,13 @@ export const routes = {
     let url = `/guilds/${guildId}/audit-logs?`
 
     if (options) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.actionType) url += `action_type=${options.actionType}`
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.before) url += `&before=${options.before}`
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.limit) url += `&limit=${options.limit}`
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.userId) url += `&user_id=${options.userId}`
     }
 
@@ -231,8 +227,11 @@ export const routes = {
     let url = `/guilds/${guildId}/bans?`
 
     if (options) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.limit) url += `limit=${options.limit}`
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.after) url += `&after=${options.after}`
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.before) url += `&before=${options.before}`
     }
 
@@ -295,7 +294,9 @@ export const routes = {
     let url = `/guilds/${guildId}/members?`
 
     if (options !== undefined) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.limit) url += `limit=${options.limit}`
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.after) url += `&after=${options.after}`
     }
 
@@ -327,10 +328,13 @@ export const routes = {
     let url = `/guilds/${guildId}/prune?`
 
     if (options) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.days) url += `days=${options.days}`
       if (Array.isArray(options.includeRoles)) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         url += `&include_roles=${options.includeRoles.join(',')}`
       } else if (options.includeRoles) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         url += `&include_roles=${options.includeRoles}`
       }
     }
@@ -403,11 +407,15 @@ export const routes = {
     let url = `/guilds/${guildId}/scheduled-events/${eventId}/users?`
 
     if (options) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.limit !== undefined) url += `limit=${options.limit}`
       if (options.withMember !== undefined) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         url += `&with_member=${options.withMember.toString()}`
       }
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.after !== undefined) url += `&after=${options.after}`
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       if (options.before !== undefined) url += `&before=${options.before}`
     }
 
@@ -424,12 +432,15 @@ export const routes = {
 
     if (options) {
       if (options.withCounts !== undefined) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         url += `with_counts=${options.withCounts.toString()}`
       }
       if (options.withExpiration !== undefined) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         url += `&with_expiration=${options.withExpiration.toString()}`
       }
       if (options.scheduledEventId) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         url += `&guild_scheduled_event_id=${options.scheduledEventId}`
       }
     }

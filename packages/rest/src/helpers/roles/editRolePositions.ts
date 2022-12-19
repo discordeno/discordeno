@@ -1,4 +1,5 @@
-import type { BigString, DiscordRole, DiscordModifyRolePositions } from '@discordeno/types'
+import { routes } from '@discordeno/constant'
+import type { BigString, DiscordModifyRolePositions, DiscordRole } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
 import type { Role } from '../../transformers/role.js'
@@ -26,7 +27,7 @@ export async function modifyRolePositions (
   const results = await rest.runMethod<DiscordRole[]>(
     rest,
     'PATCH',
-    rest.constants.routes.GUILD_ROLES(guildId),
+    routes.GUILD_ROLES(guildId),
     options as DiscordModifyRolePositions[]
   )
 

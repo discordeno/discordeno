@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordMessage } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import type { Message } from '../../../transformers/message.js'
@@ -27,7 +28,7 @@ export async function getFollowupMessage (
   const result = await rest.runMethod<DiscordMessage>(
     rest,
     'GET',
-    rest.constants.routes.INTERACTION_ID_TOKEN_MESSAGE_ID(
+    routes.INTERACTION_ID_TOKEN_MESSAGE_ID(
       rest.applicationId,
       token,
       messageId

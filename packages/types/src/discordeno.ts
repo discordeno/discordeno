@@ -1,5 +1,7 @@
 import type {
   AllowedMentionsTypes,
+  AuditLogEvents,
+  BigString,
   ButtonStyles,
   MessageComponentTypes,
   OverwriteTypes,
@@ -236,4 +238,108 @@ export interface GetGatewayBot {
     resetAfter: number
     maxConcurrency: number
   }
+}
+
+/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
+export interface GetMessagesLimit {
+  /** Max number of messages to return (1-100) default 50 */
+  limit?: number
+}
+
+/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
+export interface GetMessagesAround extends GetMessagesLimit {
+  /** Get messages around this message id */
+  around?: BigString
+}
+
+/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
+export interface GetMessagesBefore extends GetMessagesLimit {
+  /** Get messages before this message id */
+  before?: BigString
+}
+
+/** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
+export interface GetMessagesAfter extends GetMessagesLimit {
+  /** Get messages after this message id */
+  after?: BigString
+}
+
+export type GetMessagesOptions =
+  | GetMessagesAfter
+  | GetMessagesBefore
+  | GetMessagesAround
+  | GetMessagesLimit
+
+/** https://discord.com/developers/docs/resources/channel#get-reactions-query-string-params */
+export interface GetReactions {
+  /** Get users after this user Id */
+  after?: string
+  /** Max number of users to return (1-100) */
+  limit?: number
+}
+
+/** https://discord.com/developers/docs/resources/channel#list-public-archived-threads-query-string-params */
+export interface ListArchivedThreads {
+  /** Returns threads before this timestamp */
+  before?: number
+  /** Optional maximum number of threads to return */
+  limit?: number
+}
+
+/** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
+export interface GetGuildAuditLog {
+  /** Entries from a specific user ID */
+  userId?: BigString | string
+  /** Entries for a specific audit log event */
+  actionType?: AuditLogEvents
+  /** Entries that preceded a specific audit log entry ID */
+  before?: BigString | string
+  /** Maximum number of entries (between 1-100) to return, defaults to 50 */
+  limit?: number
+}
+
+export interface GetBans {
+  /** Number of users to return (up to maximum 1000). Default: 1000 */
+  limit?: number
+  /** Consider only users before given user id */
+  before?: BigString
+  /** Consider only users after given user id */
+  after?: BigString
+}
+
+/** https://discord.com/developers/docs/resources/guild#list-guild-members */
+export interface ListGuildMembers {
+  /** Max number of members to return (1-1000). Default: 1000 */
+  limit?: number
+  /** The highest user id in the previous page. Default: 0 */
+  after?: string
+}
+
+/** https://discord.com/developers/docs/resources/guild#get-guild-prune-count */
+export interface GetGuildPruneCountQuery {
+  /** Number of days to count prune for (1 or more), default: 7 */
+  days?: number
+  /** Role(s) to include, default: none */
+  includeRoles?: string | string[]
+}
+
+export interface GetScheduledEventUsers {
+  /** number of users to return (up to maximum 100), defaults to 100 */
+  limit?: number
+  /** whether to also have member objects provided, defaults to false */
+  withMember?: boolean
+  /** consider only users before given user id */
+  before?: BigString
+  /** consider only users after given user id. If both before and after are provided, only before is respected. Fetching users in-between before and after is not supported. */
+  after?: BigString
+}
+
+/** https://discord.com/developers/docs/resources/invite#get-invite */
+export interface GetInvite {
+  /** Whether the invite should contain approximate member counts */
+  withCounts?: boolean
+  /** Whether the invite should contain the expiration date */
+  withExpiration?: boolean
+  /** the guild scheduled event to include with the invite */
+  scheduledEventId?: BigString
 }

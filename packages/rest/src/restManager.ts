@@ -1,4 +1,3 @@
-import { Errors } from '@discordeno/types'
 import {
   API_VERSION,
   baseEndpoints,
@@ -19,7 +18,6 @@ import { processRateLimitedPaths } from './processRateLimitedPaths.js'
 import { processRequest } from './processRequest.js'
 import { processRequestHeaders } from './processRequestHeaders.js'
 import type { RestPayload, RestRateLimitedPath, RestRequest } from './rest.js'
-import { routes } from './routes.js'
 import { runMethod } from './runMethod.js'
 import type { RestSendRequestOptions } from './sendRequest.js'
 import { sendRequest } from './sendRequest.js'
@@ -89,10 +87,6 @@ export function createRestManager (
         )
       },
     transformers: createTransformers(options.transformers ?? {}),
-    constants: {
-      routes,
-      Errors
-    },
     id: options.botId ?? getBotIdFromToken(options.token),
     applicationId:
       options.applicationId ??
@@ -168,10 +162,6 @@ export interface RestManager {
   fetching: (options: RestSendRequestOptions) => void
   fetched: (options: RestSendRequestOptions, response: Response) => void
   transformers: Transformers
-  constants: {
-    routes: typeof routes
-    Errors: typeof Errors
-  }
   id: bigint
   applicationId: bigint
   helpers: FinalHelpers

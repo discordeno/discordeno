@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
@@ -21,6 +22,6 @@ export async function deleteWebhookWithToken (
   return await rest.runMethod<void>(
     rest,
     'DELETE',
-    rest.constants.routes.WEBHOOK(webhookId, token)
+    routes.WEBHOOK(webhookId, token)
   )
 }

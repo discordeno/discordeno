@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordStageInstance,
@@ -22,7 +23,7 @@ export async function getStageInstance (
   const result = await rest.runMethod<DiscordStageInstance>(
     rest,
     'GET',
-    rest.constants.routes.STAGE_INSTANCE(channelId)
+    routes.STAGE_INSTANCE(channelId)
   )
 
   return snakeToCamelCaseNested(result)

@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordGuildPreview,
@@ -42,7 +43,7 @@ export async function getGuildPreview (
   const result = await rest.runMethod<DiscordGuildPreview>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_PREVIEW(guildId)
+    routes.GUILD_PREVIEW(guildId)
   )
 
   return {

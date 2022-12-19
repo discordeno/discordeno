@@ -1,9 +1,10 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
+  DiscordCreateGuildEmoji,
   DiscordEmoji,
   SnakeToCamelCaseNested,
-  WithReason,
-  DiscordCreateGuildEmoji
+  WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
@@ -32,7 +33,7 @@ export async function createEmoji (
   const result = await rest.runMethod<DiscordEmoji>(
     rest,
     'POST',
-    rest.constants.routes.GUILD_EMOJIS(guildId),
+    routes.GUILD_EMOJIS(guildId),
     {
       name: options.name,
       image: options.image,

@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordThreadMember,
@@ -26,7 +27,7 @@ export async function getThreadMembers (
   const results = await rest.runMethod<DiscordThreadMember[]>(
     rest,
     'GET',
-    rest.constants.routes.THREAD_MEMBERS(channelId)
+    routes.THREAD_MEMBERS(channelId)
   )
 
   return new Collection(

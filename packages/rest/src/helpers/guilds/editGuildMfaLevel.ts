@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordEditGuildMFALevel,
@@ -15,7 +16,7 @@ export async function editGuildMfaLevel (
   return await rest.runMethod<void>(
     rest,
     'POST',
-    rest.constants.routes.GUILD_MFA_LEVEL(guildId),
+    routes.GUILD_MFA_LEVEL(guildId),
     { level: mfaLevel, reason } as DiscordEditGuildMFALevel
   )
 }

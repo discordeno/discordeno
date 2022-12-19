@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordEditChannelPermissionOverridesOptions,
@@ -31,7 +32,7 @@ export async function editChannelPermissionOverrides (
   return await rest.runMethod<void>(
     rest,
     'PUT',
-    rest.constants.routes.CHANNEL_OVERWRITE(channelId, options.id),
+    routes.CHANNEL_OVERWRITE(channelId, options.id),
     {
       allow: options.allow ? calculateBits(options.allow) : '0',
       deny: options.deny ? calculateBits(options.deny) : '0',

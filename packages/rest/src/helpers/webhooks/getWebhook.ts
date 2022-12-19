@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordWebhook } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Webhook } from '../../transformers/webhook.js'
@@ -21,7 +22,7 @@ export async function getWebhook (
   const result = await rest.runMethod<DiscordWebhook>(
     rest,
     'GET',
-    rest.constants.routes.WEBHOOK_ID(webhookId)
+    routes.WEBHOOK_ID(webhookId)
   )
 
   return rest.transformers.webhook(rest, result)

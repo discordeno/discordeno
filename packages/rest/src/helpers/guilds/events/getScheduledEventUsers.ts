@@ -1,4 +1,5 @@
-import type { BigString, DiscordMember, DiscordUser } from '@discordeno/types'
+import { routes } from '@discordeno/constant'
+import type { BigString, DiscordMember, DiscordUser, GetScheduledEventUsers } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
 import type { Member, User } from '../../../transformers/member.js'
@@ -42,7 +43,7 @@ export async function getScheduledEventUsers (
 ): Promise<
   Collection<bigint, User> | Collection<bigint, { user: User, member: Member }>
   > {
-  const url = rest.constants.routes.GUILD_SCHEDULED_EVENT_USERS(
+  const url = routes.GUILD_SCHEDULED_EVENT_USERS(
     guildId,
     eventId,
     options
@@ -76,15 +77,4 @@ export async function getScheduledEventUsers (
       return [user.id, { member, user }]
     })
   )
-}
-
-export interface GetScheduledEventUsers {
-  /** number of users to return (up to maximum 100), defaults to 100 */
-  limit?: number
-  /** whether to also have member objects provided, defaults to false */
-  withMember?: boolean
-  /** consider only users before given user id */
-  before?: BigString
-  /** consider only users after given user id. If both before and after are provided, only before is respected. Fetching users in-between before and after is not supported. */
-  after?: BigString
 }

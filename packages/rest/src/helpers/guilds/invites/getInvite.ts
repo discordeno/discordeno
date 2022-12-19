@@ -1,4 +1,5 @@
-import type { BigString, DiscordInviteMetadata } from '@discordeno/types'
+import { routes } from '@discordeno/constant'
+import type { BigString, DiscordInviteMetadata, GetInvite } from '@discordeno/types'
 import { TargetTypes } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import type { User } from '../../../transformers/member.js'
@@ -44,7 +45,7 @@ export async function getInvite (
   const result = await rest.runMethod<DiscordInviteMetadata>(
     rest,
     'GET',
-    rest.constants.routes.INVITE(inviteCode, options)
+    routes.INVITE(inviteCode, options)
   )
 
   return {
@@ -73,14 +74,4 @@ export async function getInvite (
     approximateMemberCount: result.approximate_member_count,
     expiresAt: result.expires_at ? Date.parse(result.expires_at) : undefined
   }
-}
-
-/** https://discord.com/developers/docs/resources/invite#get-invite */
-export interface GetInvite {
-  /** Whether the invite should contain approximate member counts */
-  withCounts?: boolean
-  /** Whether the invite should contain the expiration date */
-  withExpiration?: boolean
-  /** the guild scheduled event to include with the invite */
-  scheduledEventId?: BigString
 }

@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordChannel, DiscordGetDMChannel } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Channel } from '../../transformers/channel.js'
@@ -18,7 +19,7 @@ export async function getDmChannel (
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'POST',
-    rest.constants.routes.USER_DM(),
+    routes.USER_DM(),
     {
       recipient_id: userId.toString()
     } as DiscordGetDMChannel

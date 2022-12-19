@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordAutoModerationRule } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
@@ -22,7 +23,7 @@ export async function getAutomodRules (
   const results = await rest.runMethod<DiscordAutoModerationRule[]>(
     rest,
     'GET',
-    rest.constants.routes.AUTOMOD_RULES(guildId)
+    routes.AUTOMOD_RULES(guildId)
   )
 
   return new Collection(

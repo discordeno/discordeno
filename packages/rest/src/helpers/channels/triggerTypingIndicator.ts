@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
@@ -23,6 +24,6 @@ export async function triggerTypingIndicator (
   return await rest.runMethod<void>(
     rest,
     'POST',
-    rest.constants.routes.CHANNEL_TYPING(channelId)
+    routes.CHANNEL_TYPING(channelId)
   )
 }

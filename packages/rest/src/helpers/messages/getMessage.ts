@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordMessage } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Message } from '../../transformers/message.js'
@@ -26,7 +27,7 @@ export async function getMessage (
   const result = await rest.runMethod<DiscordMessage>(
     rest,
     'GET',
-    rest.constants.routes.CHANNEL_MESSAGE(channelId, messageId)
+    routes.CHANNEL_MESSAGE(channelId, messageId)
   )
 
   return rest.transformers.message(rest, result)

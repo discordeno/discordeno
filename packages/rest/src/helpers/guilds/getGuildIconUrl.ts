@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, ImageFormat, ImageSize } from '@discordeno/types'
 import { formatImageURL, iconBigintToHash } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -21,7 +22,7 @@ export function getGuildIconURL (
 ): string | undefined {
   return imageHash
     ? formatImageURL(
-      rest.constants.routes.GUILD_ICON(
+      routes.GUILD_ICON(
         guildId,
         typeof imageHash === 'string'
           ? imageHash

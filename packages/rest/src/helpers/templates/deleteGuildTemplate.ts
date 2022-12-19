@@ -1,5 +1,6 @@
-import type { RestManager } from '../../restManager.js'
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
+import type { RestManager } from '../../restManager.js'
 
 /**
  * Deletes a template from a guild.
@@ -23,6 +24,6 @@ export async function deleteGuildTemplate (
   return await rest.runMethod<void>(
     rest,
     'DELETE',
-    rest.constants.routes.GUILD_TEMPLATE(guildId, templateCode)
+    routes.GUILD_TEMPLATE(guildId, templateCode)
   )
 }

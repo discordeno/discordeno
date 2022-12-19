@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordModifyGuildTemplate,
@@ -31,7 +32,7 @@ export async function editGuildTemplate (
   const result = await rest.runMethod<DiscordTemplate>(
     rest,
     'PATCH',
-    rest.constants.routes.GUILD_TEMPLATE(guildId, templateCode),
+    routes.GUILD_TEMPLATE(guildId, templateCode),
     {
       name: options.name,
       description: options.description

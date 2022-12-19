@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordApplicationCommand } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import type { ApplicationCommand } from '../../../transformers/applicationCommand.js'
@@ -18,7 +19,7 @@ export async function getGlobalApplicationCommand (
   const result = await rest.runMethod<DiscordApplicationCommand>(
     rest,
     'GET',
-    rest.constants.routes.COMMANDS_ID(rest.applicationId, commandId)
+    routes.COMMANDS_ID(rest.applicationId, commandId)
   )
 
   return rest.transformers.applicationCommand(rest, result)

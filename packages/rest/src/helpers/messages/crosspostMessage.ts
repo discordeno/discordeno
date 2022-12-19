@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordMessage } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Message } from '../../transformers/message.js'
@@ -30,7 +31,7 @@ export async function crosspostMessage (
   const result = await rest.runMethod<DiscordMessage>(
     rest,
     'POST',
-    rest.constants.routes.CHANNEL_MESSAGE_CROSSPOST(channelId, messageId)
+    routes.CHANNEL_MESSAGE_CROSSPOST(channelId, messageId)
   )
 
   return rest.transformers.message(rest, result)

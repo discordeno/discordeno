@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   ChannelTypes,
@@ -32,7 +33,7 @@ export async function startThreadWithoutMessage (
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'POST',
-    rest.constants.routes.THREAD_START_PRIVATE(channelId),
+    routes.THREAD_START_PRIVATE(channelId),
     {
       name: options.name,
       auto_archive_duration: options.autoArchiveDuration,

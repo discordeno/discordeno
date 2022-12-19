@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordMemberWithUser, DiscordModifyGuildMember } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Member } from '../../transformers/member.js'
@@ -27,7 +28,7 @@ export async function editMember (
   const result = await rest.runMethod<DiscordMemberWithUser>(
     rest,
     'PATCH',
-    rest.constants.routes.GUILD_MEMBER(guildId, userId),
+    routes.GUILD_MEMBER(guildId, userId),
     {
       nick: options.nick,
       roles: options.roles?.map((id) => id.toString()),

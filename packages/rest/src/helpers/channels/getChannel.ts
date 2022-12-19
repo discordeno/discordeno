@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordChannel,
@@ -25,7 +26,7 @@ export async function getChannel (
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'GET',
-    rest.constants.routes.CHANNEL(channelId)
+    routes.CHANNEL(channelId)
   )
 
   // IF A CHANNEL DOESN'T EXIST, DISCORD RETURNS `{}`

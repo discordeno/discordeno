@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordMessage } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -25,7 +26,7 @@ export async function getPinnedMessages (
   const results = await rest.runMethod<DiscordMessage[]>(
     rest,
     'GET',
-    rest.constants.routes.CHANNEL_PINS(channelId)
+    routes.CHANNEL_PINS(channelId)
   )
 
   return new Collection(

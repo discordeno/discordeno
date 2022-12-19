@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { DiscordSticker } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -21,7 +22,7 @@ export async function getGuildStickers (
   const results = await rest.runMethod<DiscordSticker[]>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_STICKERS(guildId)
+    routes.GUILD_STICKERS(guildId)
   )
 
   return new Collection(

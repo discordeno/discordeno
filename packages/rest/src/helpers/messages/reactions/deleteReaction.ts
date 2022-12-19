@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import { processReactionString } from './getReactions.js'
@@ -30,7 +31,7 @@ export async function deleteOwnReaction (
   return await rest.runMethod<void>(
     rest,
     'DELETE',
-    rest.constants.routes.CHANNEL_MESSAGE_REACTION_ME(
+    routes.CHANNEL_MESSAGE_REACTION_ME(
       channelId,
       messageId,
       reaction
@@ -68,7 +69,7 @@ export async function deleteUserReaction (
   return await rest.runMethod<void>(
     rest,
     'DELETE',
-    rest.constants.routes.CHANNEL_MESSAGE_REACTION_USER(
+    routes.CHANNEL_MESSAGE_REACTION_USER(
       channelId,
       messageId,
       reaction,

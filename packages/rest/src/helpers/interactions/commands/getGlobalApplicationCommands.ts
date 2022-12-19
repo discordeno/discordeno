@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { DiscordApplicationCommand } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
@@ -19,7 +20,7 @@ export async function getGlobalApplicationCommands (
   const results = await rest.runMethod<DiscordApplicationCommand[]>(
     rest,
     'GET',
-    rest.constants.routes.COMMANDS(rest.applicationId)
+    routes.COMMANDS(rest.applicationId)
   )
 
   return new Collection(

@@ -1,4 +1,5 @@
-import type { BigString, DiscordMemberWithUser } from '@discordeno/types'
+import { routes } from '@discordeno/constant'
+import type { BigString, DiscordMemberWithUser, ListGuildMembers } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
 import type { Member } from '../../transformers/member.js'
@@ -32,7 +33,7 @@ export async function getMembers (
   const results = await rest.runMethod<DiscordMemberWithUser[]>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_MEMBERS(guildId, options)
+    routes.GUILD_MEMBERS(guildId, options)
   )
 
   const id = rest.transformers.snowflake(guildId)
@@ -48,12 +49,4 @@ export async function getMembers (
       return [member.id, member]
     })
   )
-}
-
-/** https://discord.com/developers/docs/resources/guild#list-guild-members */
-export interface ListGuildMembers {
-  /** Max number of members to return (1-1000). Default: 1000 */
-  limit?: number
-  /** The highest user id in the previous page. Default: 0 */
-  after?: string
 }

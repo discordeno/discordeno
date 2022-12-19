@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordAutoModerationRule } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import type { AutoModerationRule } from '../../../transformers/automodRule.js'
@@ -23,7 +24,7 @@ export async function getAutomodRule (
   const result = await rest.runMethod<DiscordAutoModerationRule>(
     rest,
     'GET',
-    rest.constants.routes.AUTOMOD_RULE(guildId, ruleId)
+    routes.AUTOMOD_RULE(guildId, ruleId)
   )
 
   return rest.transformers.automodRule(rest, result)

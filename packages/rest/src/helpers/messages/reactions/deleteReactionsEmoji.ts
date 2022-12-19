@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import { processReactionString } from './getReactions.js'
@@ -30,7 +31,7 @@ export async function deleteReactionsEmoji (
   return await rest.runMethod<void>(
     rest,
     'DELETE',
-    rest.constants.routes.CHANNEL_MESSAGE_REACTION(
+    routes.CHANNEL_MESSAGE_REACTION(
       channelId,
       messageId,
       reaction

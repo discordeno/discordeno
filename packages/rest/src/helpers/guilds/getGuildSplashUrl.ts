@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, ImageFormat, ImageSize } from '@discordeno/types'
 import { formatImageURL, iconBigintToHash } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -22,7 +23,7 @@ export function getGuildSplashURL (
 ): string | undefined {
   return imageHash
     ? formatImageURL(
-      rest.constants.routes.GUILD_SPLASH(
+      routes.GUILD_SPLASH(
         guildId,
         typeof imageHash === 'string'
           ? imageHash

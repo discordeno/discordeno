@@ -1,10 +1,10 @@
-import type { BigString, DiscordListArchivedThreads } from '@discordeno/types'
+import { routes } from '@discordeno/constant'
+import type { BigString, DiscordListArchivedThreads, ListArchivedThreads } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
 import { snakeToCamelCaseNested } from '../../../transformer.js'
 import type {
-  DiscordArchivedThreads,
-  ListArchivedThreads
+  DiscordArchivedThreads
 } from './getPublicArchivedThreads.js'
 
 /**
@@ -32,7 +32,7 @@ export async function getPrivateJoinedArchivedThreads (
   const results = await rest.runMethod<DiscordListArchivedThreads>(
     rest,
     'GET',
-    rest.constants.routes.THREAD_ARCHIVED_PRIVATE_JOINED(channelId, options)
+    routes.THREAD_ARCHIVED_PRIVATE_JOINED(channelId, options)
   )
 
   return {

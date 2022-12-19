@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import { processReactionString } from './getReactions.js'
@@ -34,7 +35,7 @@ export async function addReaction (
   return await rest.runMethod<void>(
     rest,
     'PUT',
-    rest.constants.routes.CHANNEL_MESSAGE_REACTION_ME(
+    routes.CHANNEL_MESSAGE_REACTION_ME(
       channelId,
       messageId,
       reaction

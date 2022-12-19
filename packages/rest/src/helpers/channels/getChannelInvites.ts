@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordInviteMetadata,
@@ -28,7 +29,7 @@ export async function getChannelInvites (
   const results = await rest.runMethod<DiscordInviteMetadata[]>(
     rest,
     'GET',
-    rest.constants.routes.CHANNEL_INVITES(channelId)
+    routes.CHANNEL_INVITES(channelId)
   )
 
   return new Collection(

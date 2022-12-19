@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { RestManager } from '../../restManager.js'
 import type { Sticker } from '../../transformers/sticker.js'
 
@@ -21,7 +22,7 @@ export async function getGuildSticker (
   const result = await rest.runMethod(
     rest,
     'GET',
-    rest.constants.routes.GUILD_STICKER(guildId, stickerId)
+    routes.GUILD_STICKER(guildId, stickerId)
   )
   return rest.transformers.sticker(rest, result)
 }

@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 
@@ -22,7 +23,7 @@ export async function deleteStageInstance (
   return await rest.runMethod<void>(
     rest,
     'DELETE',
-    rest.constants.routes.STAGE_INSTANCE(channelId),
+    routes.STAGE_INSTANCE(channelId),
     reason ? { reason } : undefined
   )
 }

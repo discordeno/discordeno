@@ -26,7 +26,7 @@ export async function getGuild (
   const result = await rest.runMethod<DiscordGuild>(
     rest,
     'GET',
-    rest.constants.routes.GUILD(guildId, options.counts)
+    routes.GUILD(guildId, options.counts)
   )
 
   return rest.transformers.guild(rest, {

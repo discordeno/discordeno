@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordScheduledEvent } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import type { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
@@ -22,7 +23,7 @@ export async function getScheduledEvent (
   const result = await rest.runMethod<DiscordScheduledEvent>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_SCHEDULED_EVENT(
+    routes.GUILD_SCHEDULED_EVENT(
       guildId,
       eventId,
       options?.withUserCount

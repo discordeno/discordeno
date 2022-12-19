@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import { delay } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -31,7 +32,7 @@ export async function deleteMessage (
   return await rest.runMethod<void>(
     rest,
     'DELETE',
-    rest.constants.routes.CHANNEL_MESSAGE(channelId, messageId),
+    routes.CHANNEL_MESSAGE(channelId, messageId),
     { reason }
   )
 }

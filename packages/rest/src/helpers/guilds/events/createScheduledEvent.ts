@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordCreateScheduledEvent,
@@ -34,7 +35,7 @@ export async function createScheduledEvent (
   const result = await rest.runMethod<DiscordScheduledEvent>(
     rest,
     'POST',
-    rest.constants.routes.GUILD_SCHEDULED_EVENTS(guildId),
+    routes.GUILD_SCHEDULED_EVENTS(guildId),
     {
       channel_id: options.channelId?.toString(),
       entity_metadata: options.location

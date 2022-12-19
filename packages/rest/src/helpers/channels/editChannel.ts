@@ -1,13 +1,14 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   ChannelTypes,
   DiscordChannel,
+  DiscordModifyChannel,
   OverwriteReadable,
   SnakeToCamelCaseNested,
   SortOrderTypes,
   VideoQualityModes,
-  WithReason,
-  DiscordModifyChannel
+  WithReason
 } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -79,7 +80,7 @@ export async function editChannel (
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'PATCH',
-    rest.constants.routes.CHANNEL(channelId),
+    routes.CHANNEL(channelId),
     {
       name: options.name,
       topic: options.topic,

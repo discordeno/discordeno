@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { DiscordMessage } from '@discordeno/types'
 import { InteractionResponseTypes } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
@@ -29,7 +30,7 @@ export async function editOriginalInteractionResponse (
   const result = await rest.runMethod<DiscordMessage>(
     rest,
     'PATCH',
-    rest.constants.routes.INTERACTION_ORIGINAL_ID_TOKEN(
+    routes.INTERACTION_ORIGINAL_ID_TOKEN(
       rest.applicationId,
       token
     ),

@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { RestManager } from '../../restManager.js'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { Sticker } from '../../transformers/sticker.js'
@@ -26,7 +27,7 @@ export async function deleteGuildSticker (
   return await rest.runMethod<void>(
     rest,
     'DELETE',
-    rest.constants.routes.GUILD_STICKER(guildId, stickerId),
+    routes.GUILD_STICKER(guildId, stickerId),
     reason ? { reason } : undefined
   )
 }

@@ -1,8 +1,6 @@
+import { routes } from '@discordeno/constant'
 import type {
-  BigString,
-  DiscordInvite,
-  DiscordCreateChannelInvite,
-  TargetTypes,
+  BigString, DiscordCreateChannelInvite, DiscordInvite, TargetTypes,
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
@@ -34,7 +32,7 @@ export async function createInvite (
   const result = await rest.runMethod<DiscordInvite>(
     rest,
     'POST',
-    rest.constants.routes.CHANNEL_INVITES(channelId),
+    routes.CHANNEL_INVITES(channelId),
     {
       max_age: options.maxAge,
       max_uses: options.maxUses,

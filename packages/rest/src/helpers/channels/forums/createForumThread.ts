@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   AllowedMentions,
   BigString,
@@ -38,7 +39,7 @@ export async function createForumThread (
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'POST',
-    rest.constants.routes.FORUM_START(channelId),
+    routes.FORUM_START(channelId),
     {
       name: options.name,
       auto_archive_duration: options.autoArchiveDuration,

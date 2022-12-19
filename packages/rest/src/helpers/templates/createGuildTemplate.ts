@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordCreateTemplate, DiscordTemplate } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Template } from '../../transformers/template.js'
@@ -25,7 +26,7 @@ export async function createGuildTemplate (
   const result = await rest.runMethod<DiscordTemplate>(
     rest,
     'POST',
-    rest.constants.routes.GUILD_TEMPLATES(guildId),
+    routes.GUILD_TEMPLATES(guildId),
     options as DiscordCreateTemplate
   )
 

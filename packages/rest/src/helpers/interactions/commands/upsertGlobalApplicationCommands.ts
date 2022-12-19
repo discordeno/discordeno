@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { DiscordApplicationCommand } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
@@ -25,7 +26,7 @@ export async function upsertGlobalApplicationCommands (
   const results = await rest.runMethod<DiscordApplicationCommand[]>(
     rest,
     'PUT',
-    rest.constants.routes.COMMANDS(rest.applicationId),
+    routes.COMMANDS(rest.applicationId),
     commands.map((command) =>
       rest.transformers.reverse.createApplicationCommand(rest, command)
     )

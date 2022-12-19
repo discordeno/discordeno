@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordChannel,
@@ -37,7 +38,7 @@ export async function startThreadWithMessage (
   const result = await rest.runMethod<DiscordChannel>(
     rest,
     'POST',
-    rest.constants.routes.THREAD_START_PUBLIC(channelId, messageId),
+    routes.THREAD_START_PUBLIC(channelId, messageId),
     {
       name: options.name,
       auto_archive_duration: options.autoArchiveDuration,

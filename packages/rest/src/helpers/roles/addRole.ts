@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
@@ -26,7 +27,7 @@ export async function addRole (
   return await rest.runMethod<void>(
     rest,
     'PUT',
-    rest.constants.routes.GUILD_MEMBER_ROLE(guildId, userId, roleId),
+    routes.GUILD_MEMBER_ROLE(guildId, userId, roleId),
     { reason }
   )
 }

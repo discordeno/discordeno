@@ -1,9 +1,8 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
-  DiscordEmoji,
-  SnakeToCamelCaseNested,
-  WithReason,
-  DiscordModifyGuildEmoji
+  DiscordEmoji, DiscordModifyGuildEmoji, SnakeToCamelCaseNested,
+  WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
@@ -32,7 +31,7 @@ export async function editEmoji (
   const result = await rest.runMethod<DiscordEmoji>(
     rest,
     'PATCH',
-    rest.constants.routes.GUILD_EMOJI(guildId, id),
+    routes.GUILD_EMOJI(guildId, id),
     {
       name: options.name,
       // NEED TERNARY TO SUPPORT NULL AS VALID

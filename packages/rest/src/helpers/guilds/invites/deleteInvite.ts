@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { RestManager } from '../../../restManager.js'
 
 /**
@@ -21,7 +22,7 @@ export async function deleteInvite (
   return await rest.runMethod<void>(
     rest,
     'DELETE',
-    rest.constants.routes.INVITE(inviteCode),
+    routes.INVITE(inviteCode),
     reason ? { reason } : undefined
   )
 }

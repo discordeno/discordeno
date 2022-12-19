@@ -1,6 +1,7 @@
+import { routes } from '@discordeno/constant'
+import type { BigString, DiscordTemplate } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Template } from '../../transformers/template.js'
-import type { DiscordTemplate, BigString } from '@discordeno/types'
 
 /**
  * Synchronises a template with the current state of a guild.
@@ -24,7 +25,7 @@ export async function syncGuildTemplate (
   const result = await rest.runMethod<DiscordTemplate>(
     rest,
     'PUT',
-    rest.constants.routes.GUILD_TEMPLATE(guildId, templateCode)
+    routes.GUILD_TEMPLATE(guildId, templateCode)
   )
 
   return rest.transformers.template(rest, result)

@@ -1,9 +1,7 @@
+import { routes } from '@discordeno/constant'
 import type {
   AllowedMentions,
-  BigString,
-  DiscordMessage,
-  DiscordExecuteWebhook,
-  FileContent,
+  BigString, DiscordExecuteWebhook, DiscordMessage, FileContent,
   MessageComponents
 } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
@@ -44,7 +42,7 @@ export async function executeWebhook (
   const result = await rest.runMethod<DiscordMessage>(
     rest,
     'POST',
-    rest.constants.routes.WEBHOOK(webhookId, token, options),
+    routes.WEBHOOK(webhookId, token, options),
     {
       wait: options.wait,
       thread_id: options.threadId,

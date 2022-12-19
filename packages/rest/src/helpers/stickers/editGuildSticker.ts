@@ -1,4 +1,5 @@
-import type { AtLeastOne, WithReason, DiscordEditGuildStickerOptions } from '@discordeno/types'
+import { routes } from '@discordeno/constant'
+import type { AtLeastOne, DiscordEditGuildStickerOptions, WithReason } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Sticker } from '../../transformers/sticker.js'
 
@@ -24,7 +25,7 @@ export async function editGuildSticker (
   const result = await rest.runMethod(
     rest,
     'PATCH',
-    rest.constants.routes.GUILD_STICKER(guildId, stickerId),
+    routes.GUILD_STICKER(guildId, stickerId),
     {
       name: options.name,
       description: options.description,

@@ -1,4 +1,5 @@
-import type { BigString, DiscordMember, DiscordEditBotMemberOptions, WithReason } from '@discordeno/types'
+import { routes } from '@discordeno/constant'
+import type { BigString, DiscordEditBotMemberOptions, DiscordMember, WithReason } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Member } from '../../transformers/member.js'
 
@@ -23,7 +24,7 @@ export async function editBotMember (
   const result = await rest.runMethod<DiscordMember>(
     rest,
     'PATCH',
-    rest.constants.routes.USER_NICK(guildId),
+    routes.USER_NICK(guildId),
     {
       nick: options.nick,
       reason: options.reason

@@ -1,8 +1,6 @@
+import { routes } from '@discordeno/constant'
 import type {
-  BigString,
-  DiscordRole,
-  DiscordEditGuildRole,
-  PermissionStrings
+  BigString, DiscordEditGuildRole, DiscordRole, PermissionStrings
 } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -33,7 +31,7 @@ export async function editRole (
   const result = await rest.runMethod<DiscordRole>(
     rest,
     'PATCH',
-    rest.constants.routes.GUILD_ROLE(guildId, roleId),
+    routes.GUILD_ROLE(guildId, roleId),
     {
       name: options.name,
       color: options.color,

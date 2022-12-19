@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordRole } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -22,7 +23,7 @@ export async function getRoles (
   const results = await rest.runMethod<DiscordRole[]>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_ROLES(guildId)
+    routes.GUILD_ROLES(guildId)
   )
   const id = rest.transformers.snowflake(guildId)
 

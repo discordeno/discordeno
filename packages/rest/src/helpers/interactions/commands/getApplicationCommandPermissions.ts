@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordGuildApplicationCommandPermissions
@@ -24,7 +25,7 @@ export async function getApplicationCommandPermissions (
   >(
     rest,
     'GET',
-    rest.constants.routes.COMMANDS_PERMISSIONS(rest.applicationId, guildId)
+    routes.COMMANDS_PERMISSIONS(rest.applicationId, guildId)
   )
 
   return new Collection(

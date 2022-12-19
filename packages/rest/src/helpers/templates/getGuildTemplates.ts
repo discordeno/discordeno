@@ -1,7 +1,8 @@
+import { routes } from '@discordeno/constant'
+import type { BigString, DiscordTemplate } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
 import type { Template } from '../../transformers/template.js'
-import type { DiscordTemplate, BigString } from '@discordeno/types'
-import { Collection } from '@discordeno/utils'
 
 /**
  * Gets the list of templates for a guild.
@@ -22,7 +23,7 @@ export async function getGuildTemplates (
   const results = await rest.runMethod<DiscordTemplate[]>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_TEMPLATES(guildId)
+    routes.GUILD_TEMPLATES(guildId)
   )
 
   return new Collection(

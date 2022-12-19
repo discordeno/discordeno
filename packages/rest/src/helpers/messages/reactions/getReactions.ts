@@ -1,4 +1,5 @@
-import type { BigString, DiscordUser } from '@discordeno/types'
+import { routes } from '@discordeno/constant'
+import type { BigString, DiscordUser, GetReactions } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
 import type { User } from '../../../transformers/member.js'
@@ -28,7 +29,7 @@ export async function getReactions (
   const results = await rest.runMethod<DiscordUser[]>(
     rest,
     'GET',
-    rest.constants.routes.CHANNEL_MESSAGE_REACTION(
+    routes.CHANNEL_MESSAGE_REACTION(
       channelId,
       messageId,
       reaction,
@@ -54,12 +55,4 @@ export function processReactionString (reaction: string): string {
   }
 
   return reaction
-}
-
-/** https://discord.com/developers/docs/resources/channel#get-reactions-query-string-params */
-export interface GetReactions {
-  /** Get users after this user Id */
-  after?: string
-  /** Max number of users to return (1-100) */
-  limit?: number
 }

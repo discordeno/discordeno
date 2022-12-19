@@ -1,4 +1,5 @@
-import type { BigString, DiscordWelcomeScreen, DiscordModifyGuildWelcomeScreen } from '@discordeno/types'
+import { routes } from '@discordeno/constant'
+import type { BigString, DiscordModifyGuildWelcomeScreen, DiscordWelcomeScreen } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { WelcomeScreen } from '../../transformers/welcomeScreen.js'
 
@@ -25,7 +26,7 @@ export async function editWelcomeScreen (
   const result = await rest.runMethod<DiscordWelcomeScreen>(
     rest,
     'PATCH',
-    rest.constants.routes.GUILD_WELCOME_SCREEN(guildId),
+    routes.GUILD_WELCOME_SCREEN(guildId),
     {
       enabled: options.enabled,
       welcome_screen: options.welcomeScreen?.map((welcomeScreen) => ({

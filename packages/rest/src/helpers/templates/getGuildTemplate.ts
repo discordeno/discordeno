@@ -1,6 +1,7 @@
+import { routes } from '@discordeno/constant'
+import type { DiscordTemplate } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Template } from '../../transformers/template.js'
-import type { DiscordTemplate } from '@discordeno/types'
 
 /**
  * Gets a template by its code.
@@ -21,7 +22,7 @@ export async function getGuildTemplate (
   const result = await rest.runMethod<DiscordTemplate>(
     rest,
     'GET',
-    rest.constants.routes.TEMPLATE(templateCode)
+    routes.TEMPLATE(templateCode)
   )
 
   return rest.transformers.template(rest, result)

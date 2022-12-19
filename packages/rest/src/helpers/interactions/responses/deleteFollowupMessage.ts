@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 
@@ -23,7 +24,7 @@ export async function deleteFollowupMessage (
   return await rest.runMethod<void>(
     rest,
     'DELETE',
-    rest.constants.routes.INTERACTION_ID_TOKEN_MESSAGE_ID(
+    routes.INTERACTION_ID_TOKEN_MESSAGE_ID(
       rest.applicationId,
       token,
       messageId

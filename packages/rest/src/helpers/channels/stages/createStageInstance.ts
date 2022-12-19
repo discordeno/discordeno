@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordStageInstance,
@@ -28,7 +29,7 @@ export async function createStageInstance (
   const result = await rest.runMethod<DiscordStageInstance>(
     rest,
     'POST',
-    rest.constants.routes.STAGE_INSTANCES(),
+    routes.STAGE_INSTANCES(),
     {
       channel_id: options.channelId.toString(),
       topic: options.topic,

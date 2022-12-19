@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
@@ -26,7 +27,7 @@ export async function unpinMessage (
   return await rest.runMethod<void>(
     rest,
     'DELETE',
-    rest.constants.routes.CHANNEL_PIN(channelId, messageId),
+    routes.CHANNEL_PIN(channelId, messageId),
     reason ? { reason } : undefined
   )
 }

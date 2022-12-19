@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { DiscordGuild } from '@discordeno/types'
 import { calculateShardId } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -32,7 +33,7 @@ export async function createGuildFromTemplate (
   const createdGuild = await rest.runMethod<DiscordGuild>(
     rest,
     'POST',
-    rest.constants.routes.TEMPLATE(templateCode),
+    routes.TEMPLATE(templateCode),
     options
   )
 

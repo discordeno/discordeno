@@ -1,8 +1,6 @@
+import { routes } from '@discordeno/constant'
 import type {
-  BigString,
-  DiscordRole,
-  DiscordCreateGuildRole,
-  PermissionStrings
+  BigString, DiscordCreateGuildRole, DiscordRole, PermissionStrings
 } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -32,7 +30,7 @@ export async function createRole (
   const result = await rest.runMethod<DiscordRole>(
     rest,
     'POST',
-    rest.constants.routes.GUILD_ROLES(guildId),
+    routes.GUILD_ROLES(guildId),
     {
       name: options.name,
       color: options.color,

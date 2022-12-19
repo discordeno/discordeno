@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordWebhook } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -22,7 +23,7 @@ export async function getGuildWebhooks (
   const results = await rest.runMethod<DiscordWebhook[]>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_WEBHOOKS(guildId)
+    routes.GUILD_WEBHOOKS(guildId)
   )
 
   return new Collection(

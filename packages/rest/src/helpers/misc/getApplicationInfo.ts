@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { DiscordApplication } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Application } from '../../transformers/application.js'
@@ -9,7 +10,7 @@ export async function getApplicationInfo (
   const result = await rest.runMethod<DiscordApplication>(
     rest,
     'GET',
-    rest.constants.routes.OAUTH2_APPLICATION()
+    routes.OAUTH2_APPLICATION()
   )
 
   return rest.transformers.application(rest, result)

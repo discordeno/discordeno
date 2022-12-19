@@ -1,4 +1,5 @@
-import type { BigString, DiscordListArchivedThreads } from '@discordeno/types'
+import { routes } from '@discordeno/constant'
+import type { BigString, DiscordListArchivedThreads, ListArchivedThreads } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
 import { snakeToCamelCaseNested } from '../../../transformer.js'
@@ -30,7 +31,7 @@ export async function getPublicArchivedThreads (
   const results = await rest.runMethod<DiscordListArchivedThreads>(
     rest,
     'GET',
-    rest.constants.routes.THREAD_ARCHIVED_PUBLIC(channelId, options)
+    routes.THREAD_ARCHIVED_PUBLIC(channelId, options)
   )
 
   return {
@@ -48,14 +49,6 @@ export async function getPublicArchivedThreads (
     ),
     hasMore: results.has_more
   }
-}
-
-/** https://discord.com/developers/docs/resources/channel#list-public-archived-threads-query-string-params */
-export interface ListArchivedThreads {
-  /** Returns threads before this timestamp */
-  before?: number
-  /** Optional maximum number of threads to return */
-  limit?: number
 }
 
 export type DiscordArchivedThreads = DiscordActiveThreads & {

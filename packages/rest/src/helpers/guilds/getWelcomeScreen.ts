@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordWelcomeScreen } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { WelcomeScreen } from '../../transformers/welcomeScreen.js'
@@ -22,7 +23,7 @@ export async function getWelcomeScreen (
   const result = await rest.runMethod<DiscordWelcomeScreen>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_WELCOME_SCREEN(guildId)
+    routes.GUILD_WELCOME_SCREEN(guildId)
   )
 
   return rest.transformers.welcomeScreen(rest, result)

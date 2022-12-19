@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordInviteMetadata } from '@discordeno/types'
 import { TargetTypes } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
@@ -23,7 +24,7 @@ export async function getInvites (
   const results = await rest.runMethod<DiscordInviteMetadata[]>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_INVITES(guildId)
+    routes.GUILD_INVITES(guildId)
   )
 
   return new Collection(

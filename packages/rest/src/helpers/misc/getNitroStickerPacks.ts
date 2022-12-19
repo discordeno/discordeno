@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { DiscordStickerPack } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -17,7 +18,7 @@ export async function getNitroStickerPacks (
   const results = await rest.runMethod<DiscordStickerPack[]>(
     rest,
     'GET',
-    rest.constants.routes.NITRO_STICKER_PACKS()
+    routes.NITRO_STICKER_PACKS()
   )
 
   return new Collection(

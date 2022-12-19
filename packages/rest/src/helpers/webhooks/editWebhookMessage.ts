@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordMessage } from '@discordeno/types'
 import { InteractionResponseTypes } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
@@ -29,7 +30,7 @@ export async function editWebhookMessage (
   const result = await rest.runMethod<DiscordMessage>(
     rest,
     'PATCH',
-    rest.constants.routes.WEBHOOK_MESSAGE(webhookId, token, messageId, options),
+    routes.WEBHOOK_MESSAGE(webhookId, token, messageId, options),
     {
       ...rest.transformers.reverse.interactionResponse(rest, {
         type: InteractionResponseTypes.UpdateMessage,

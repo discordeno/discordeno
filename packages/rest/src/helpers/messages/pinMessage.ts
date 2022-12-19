@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
@@ -28,7 +29,7 @@ export async function pinMessage (
   return await rest.runMethod<void>(
     rest,
     'PUT',
-    rest.constants.routes.CHANNEL_PIN(channelId, messageId),
+    routes.CHANNEL_PIN(channelId, messageId),
     reason ? { reason } : undefined
   )
 }

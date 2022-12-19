@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordWebhook } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Webhook } from '../../transformers/webhook.js'
@@ -27,7 +28,7 @@ export async function editWebhookWithToken (
   const result = await rest.runMethod<DiscordWebhook>(
     rest,
     'PATCH',
-    rest.constants.routes.WEBHOOK(webhookId, token),
+    routes.WEBHOOK(webhookId, token),
     {
       name: options.name,
       avatar: options.avatar

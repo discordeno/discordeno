@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordApplicationCommand } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import type { ApplicationCommand } from '../../../transformers/applicationCommand.js'
@@ -22,7 +23,7 @@ export async function getGuildApplicationCommand (
   const result = await rest.runMethod<DiscordApplicationCommand>(
     rest,
     'GET',
-    rest.constants.routes.COMMANDS_GUILD_ID(
+    routes.COMMANDS_GUILD_ID(
       rest.applicationId,
       guildId,
       commandId

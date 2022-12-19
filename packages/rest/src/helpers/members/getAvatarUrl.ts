@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, ImageFormat, ImageSize } from '@discordeno/types'
 import { formatImageURL, iconBigintToHash } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
@@ -23,7 +24,7 @@ export function getAvatarURL (
 ): string {
   return options?.avatar
     ? formatImageURL(
-      rest.constants.routes.USER_AVATAR(
+      routes.USER_AVATAR(
         userId,
         typeof options?.avatar === 'string'
           ? options.avatar
@@ -32,5 +33,5 @@ export function getAvatarURL (
       options?.size ?? 128,
       options?.format
     )
-    : rest.constants.routes.USER_DEFAULT_AVATAR(Number(discriminator) % 5)
+    : routes.USER_DEFAULT_AVATAR(Number(discriminator) % 5)
 }

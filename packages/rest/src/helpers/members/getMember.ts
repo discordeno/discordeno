@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordMemberWithUser } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Member } from '../../transformers/member.js'
@@ -20,7 +21,7 @@ export async function getMember (
   const result = await rest.runMethod<DiscordMemberWithUser>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_MEMBER(guildId, userId)
+    routes.GUILD_MEMBER(guildId, userId)
   )
 
   return rest.transformers.member(

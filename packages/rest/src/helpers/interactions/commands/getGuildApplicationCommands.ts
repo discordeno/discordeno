@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordApplicationCommand } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
@@ -19,7 +20,7 @@ export async function getGuildApplicationCommands (
   const results = await rest.runMethod<DiscordApplicationCommand[]>(
     rest,
     'GET',
-    rest.constants.routes.COMMANDS_GUILD(rest.applicationId, guildId)
+    routes.COMMANDS_GUILD(rest.applicationId, guildId)
   )
 
   return new Collection(

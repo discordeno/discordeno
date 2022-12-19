@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 
@@ -14,7 +15,7 @@ export function getWidgetImageURL (
   guildId: BigString,
   options?: GetGuildWidgetImageQuery
 ): string {
-  return rest.constants.routes.GUILD_WIDGET_IMAGE(guildId, options?.style)
+  return routes.GUILD_WIDGET_IMAGE(guildId, options?.style)
 }
 
 /** https://discord.com/developers/docs/resources/guild#get-guild-widget-image-query-string-params */

@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordBan } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { User } from '../../transformers/member.js'
@@ -30,7 +31,7 @@ export async function getBan (
   const result = await rest.runMethod<DiscordBan>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_BAN(guildId, userId)
+    routes.GUILD_BAN(guildId, userId)
   )
 
   return {

@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordChannel,
@@ -30,7 +31,7 @@ export async function getActiveThreads (
   const results = await rest.runMethod<DiscordListActiveThreads>(
     rest,
     'GET',
-    rest.constants.routes.THREAD_ACTIVE(guildId)
+    routes.THREAD_ACTIVE(guildId)
   )
 
   return {

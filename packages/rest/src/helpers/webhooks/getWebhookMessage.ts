@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordMessage } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Message } from '../../transformers/message.js'
@@ -28,7 +29,7 @@ export async function getWebhookMessage (
   const result = await rest.runMethod<DiscordMessage>(
     rest,
     'GET',
-    rest.constants.routes.WEBHOOK_MESSAGE(webhookId, token, messageId, options)
+    routes.WEBHOOK_MESSAGE(webhookId, token, messageId, options)
   )
 
   return rest.transformers.message(rest, result)

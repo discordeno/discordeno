@@ -1,4 +1,5 @@
-import type { BigString, DiscordWebhook, WithReason, DiscordCreateWebhook } from '@discordeno/types'
+import { routes } from '@discordeno/constant'
+import type { BigString, DiscordCreateWebhook, DiscordWebhook, WithReason } from '@discordeno/types'
 import { urlToBase64 } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
 import type { Webhook } from '../../transformers/webhook.js'
@@ -28,7 +29,7 @@ export async function createWebhook (
   const result = await rest.runMethod<DiscordWebhook>(
     rest,
     'POST',
-    rest.constants.routes.CHANNEL_WEBHOOKS(channelId),
+    routes.CHANNEL_WEBHOOKS(channelId),
     {
       name: options.name,
       avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,

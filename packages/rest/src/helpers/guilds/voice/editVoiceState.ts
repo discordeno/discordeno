@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordEditOwnVoiceState, DiscordEditUserVoiceState } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 
@@ -29,7 +30,7 @@ export async function editOwnVoiceState (
   return await rest.runMethod<void>(
     rest,
     'PATCH',
-    rest.constants.routes.UPDATE_VOICE_STATE(guildId),
+    routes.UPDATE_VOICE_STATE(guildId),
     {
       channel_id: options.channelId,
       suppress: options.suppress,
@@ -64,7 +65,7 @@ export async function editUserVoiceState (
   return await rest.runMethod<void>(
     rest,
     'PATCH',
-    rest.constants.routes.UPDATE_VOICE_STATE(guildId, options.userId),
+    routes.UPDATE_VOICE_STATE(guildId, options.userId),
     {
       channel_id: options.channelId,
       suppress: options.suppress,

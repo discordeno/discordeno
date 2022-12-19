@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 
@@ -24,6 +25,6 @@ export async function addThreadMember (
   return await rest.runMethod<void>(
     rest,
     'PUT',
-    rest.constants.routes.THREAD_USER(channelId, userId)
+    routes.THREAD_USER(channelId, userId)
   )
 }

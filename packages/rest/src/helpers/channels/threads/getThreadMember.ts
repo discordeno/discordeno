@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordThreadMember,
@@ -24,7 +25,7 @@ export async function getThreadMember (
   const result = await rest.runMethod<DiscordThreadMember>(
     rest,
     'GET',
-    rest.constants.routes.THREAD_USER(channelId, userId)
+    routes.THREAD_USER(channelId, userId)
   )
 
   return snakeToCamelCaseNested(result)

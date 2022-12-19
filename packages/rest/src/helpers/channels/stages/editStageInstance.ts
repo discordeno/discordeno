@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordStageInstance,
@@ -29,7 +30,7 @@ export async function editStageInstance (
   const result = await rest.runMethod<DiscordStageInstance>(
     rest,
     'PATCH',
-    rest.constants.routes.STAGE_INSTANCE(channelId),
+    routes.STAGE_INSTANCE(channelId),
     {
       topic: data.topic
     }

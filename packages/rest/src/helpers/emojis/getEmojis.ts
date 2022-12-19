@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   BigString,
   DiscordEmoji,
@@ -22,7 +23,7 @@ export async function getEmojis (
   const results = await rest.runMethod<DiscordEmoji[]>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_EMOJIS(guildId)
+    routes.GUILD_EMOJIS(guildId)
   )
 
   return new Collection(

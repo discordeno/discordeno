@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   AutoModerationActionType,
   AutoModerationEventTypes,
@@ -35,7 +36,7 @@ export async function editAutomodRule (
   const result = await rest.runMethod<DiscordAutoModerationRule>(
     rest,
     'PATCH',
-    rest.constants.routes.AUTOMOD_RULE(guildId, ruleId),
+    routes.AUTOMOD_RULE(guildId, ruleId),
     {
       name: options.name,
       event_type: options.eventType,

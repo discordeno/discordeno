@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { DiscordVoiceRegion } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
@@ -15,7 +16,7 @@ export async function getAvailableVoiceRegions (
   const results = await rest.runMethod<DiscordVoiceRegion[]>(
     rest,
     'GET',
-    rest.constants.routes.VOICE_REGIONS()
+    routes.VOICE_REGIONS()
   )
 
   return new Collection(

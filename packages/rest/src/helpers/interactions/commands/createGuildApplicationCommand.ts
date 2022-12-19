@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordApplicationCommand } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import type { ApplicationCommand } from '../../../transformers/applicationCommand.js'
@@ -25,7 +26,7 @@ export async function createGuildApplicationCommand (
   const result = await rest.runMethod<DiscordApplicationCommand>(
     rest,
     'POST',
-    rest.constants.routes.COMMANDS_GUILD(rest.applicationId, guildId),
+    routes.COMMANDS_GUILD(rest.applicationId, guildId),
     rest.transformers.reverse.createApplicationCommand(rest, command)
   )
 

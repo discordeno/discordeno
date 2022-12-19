@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordCreateGuildBan, WithReason } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
@@ -25,7 +26,7 @@ export async function banMember (
   return await rest.runMethod<void>(
     rest,
     'PUT',
-    rest.constants.routes.GUILD_BAN(guildId, userId),
+    routes.GUILD_BAN(guildId, userId),
     {
       delete_message_seconds: options?.deleteMessageSeconds,
       reason: options?.reason

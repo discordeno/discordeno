@@ -1,10 +1,9 @@
+import { routes } from '@discordeno/constant'
 import type {
   AllowedMentions,
-  BigString,
-  DiscordMessage,
+  BigString, DiscordEditMessage, DiscordMessage,
   FileContent,
-  MessageComponents,
-  DiscordEditMessage
+  MessageComponents
 } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Attachment } from '../../transformers/attachment.js'
@@ -38,7 +37,7 @@ export async function editMessage (
   const result = await rest.runMethod<DiscordMessage>(
     rest,
     'PATCH',
-    rest.constants.routes.CHANNEL_MESSAGE(channelId, messageId),
+    routes.CHANNEL_MESSAGE(channelId, messageId),
     {
       content: options.content,
       embeds: options.embeds?.map((embed) =>

@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { DiscordMessage } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import type { Message } from '../../../transformers/message.js'
@@ -25,7 +26,7 @@ export async function getOriginalInteractionResponse (
   const result = await rest.runMethod<DiscordMessage>(
     rest,
     'GET',
-    rest.constants.routes.INTERACTION_ORIGINAL_ID_TOKEN(
+    routes.INTERACTION_ORIGINAL_ID_TOKEN(
       rest.applicationId,
       token
     )

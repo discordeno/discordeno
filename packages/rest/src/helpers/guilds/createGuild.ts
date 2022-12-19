@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type {
   DefaultMessageNotificationLevels,
   DiscordCreateGuild,
@@ -32,7 +33,7 @@ export async function createGuild (
   const result = await rest.runMethod<DiscordGuild>(
     rest,
     'POST',
-    rest.constants.routes.GUILDS(),
+    routes.GUILDS(),
     {
       name: options.name,
       afk_channel_id: options.afkChannelId,

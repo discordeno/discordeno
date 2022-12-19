@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
@@ -29,6 +30,6 @@ export async function getVanityUrl (
   return await rest.runMethod<VanityUrl>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_VANITY_URL(guildId)
+    routes.GUILD_VANITY_URL(guildId)
   )
 }

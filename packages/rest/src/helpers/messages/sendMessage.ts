@@ -1,10 +1,9 @@
+import { routes } from '@discordeno/constant'
 import type {
   AllowedMentions,
-  BigString,
-  DiscordMessage,
+  BigString, DiscordCreateMessage, DiscordMessage,
   FileContent,
-  MessageComponents,
-  DiscordCreateMessage
+  MessageComponents
 } from '@discordeno/types'
 import { MessageComponentTypes } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
@@ -46,7 +45,7 @@ export async function sendMessage (
   const result = await rest.runMethod<DiscordMessage>(
     rest,
     'POST',
-    rest.constants.routes.CHANNEL_MESSAGES(channelId),
+    routes.CHANNEL_MESSAGES(channelId),
     {
       content: options.content,
       nonce: options.nonce,

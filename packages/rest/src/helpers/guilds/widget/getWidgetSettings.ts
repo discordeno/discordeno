@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordGuildWidgetSettings } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import type { GuildWidgetSettings } from '../../../transformers/widgetSettings.js'
@@ -21,7 +22,7 @@ export async function getWidgetSettings (
   const result = await rest.runMethod<DiscordGuildWidgetSettings>(
     rest,
     'GET',
-    rest.constants.routes.GUILD_WIDGET(guildId)
+    routes.GUILD_WIDGET(guildId)
   )
 
   return rest.transformers.widgetSettings(rest, result)

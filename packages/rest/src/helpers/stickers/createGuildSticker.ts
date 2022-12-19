@@ -1,4 +1,5 @@
-import type { FileContent, WithReason, DiscordCreateGuildStickerOptions } from '@discordeno/types'
+import { routes } from '@discordeno/constant'
+import type { DiscordCreateGuildStickerOptions, FileContent, WithReason } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Sticker } from '../../transformers/sticker.js'
 
@@ -25,7 +26,7 @@ export async function createGuildSticker (
   const result = await rest.runMethod(
     rest,
     'POST',
-    rest.constants.routes.GUILD_STICKERS(guildId),
+    routes.GUILD_STICKERS(guildId),
     {
       name: options.name,
       description: options.description,

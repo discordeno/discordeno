@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import type { InteractionResponse } from '../../../types'
@@ -31,7 +32,7 @@ export async function sendInteractionResponse (
   options: InteractionResponse
 ): Promise<void> {
   return await rest.sendRequest<void>(rest, {
-    url: rest.constants.routes.INTERACTION_ID_TOKEN(interactionId, token),
+    url: routes.INTERACTION_ID_TOKEN(interactionId, token),
     method: 'POST',
     payload: rest.createRequestBody(rest, {
       method: 'POST',

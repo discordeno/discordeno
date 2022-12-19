@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 
@@ -24,7 +25,7 @@ export async function deleteAutomodRule (
   return await rest.runMethod<void>(
     rest,
     'DELETE',
-    rest.constants.routes.AUTOMOD_RULE(guildId, ruleId),
+    routes.AUTOMOD_RULE(guildId, ruleId),
     { reason }
   )
 }

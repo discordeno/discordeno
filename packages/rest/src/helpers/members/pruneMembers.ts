@@ -1,3 +1,4 @@
+import { routes } from '@discordeno/constant'
 import type { BigString, DiscordBeginGuildPrune } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 
@@ -28,7 +29,7 @@ export async function pruneMembers (
   const result = await rest.runMethod<{ pruned: number | null }>(
     rest,
     'POST',
-    rest.constants.routes.GUILD_PRUNE(guildId),
+    routes.GUILD_PRUNE(guildId),
     {
       days: options.days,
       compute_prune_count: options.computePruneCount,
