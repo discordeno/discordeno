@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { simplifyUrl } from '../src/index.js'
+import { simplifyUrl } from '../../src/index.js'
 
 describe('[rest] simplifyUrl', () => {
   describe('id', () => {

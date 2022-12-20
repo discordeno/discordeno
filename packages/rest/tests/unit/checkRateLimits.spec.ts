@@ -1,8 +1,8 @@
 import { expect } from 'chai'
 import { afterEach, beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
-import type { RestManager } from '../src/index.js'
-import { checkRateLimits, createRestManager } from '../src/index.js'
+import type { RestManager } from '../../src/index.js'
+import { checkRateLimits, createRestManager } from '../../src/index.js'
 
 describe('[rest] checkRateLimits', () => {
   let rest: RestManager
