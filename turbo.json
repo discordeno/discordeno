@@ -50,6 +50,7 @@
     },
     "test:deno-unit": {
       "dependsOn": [
+        "build",
         "^build"
       ],
       "outputs": [
