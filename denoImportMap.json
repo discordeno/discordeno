@@ -6,6 +6,7 @@
     "mocha": "https://deno.land/std@0.168.0/testing/bdd.ts",
     "chai": "https://cdn.skypack.dev/chai@4.3.4?dts",
     "sinon": "https://cdn.skypack.dev/sinon@15.0.0?dts",
+    "benchmark": "npm:benchmark",
     "@discordeno/utils": "./packages/utils/dist/index.js",
     "@discordeno/constant": "./packages/constant/dist/index.js",
     "@discordeno/types": "./packages/types/dist/index.js"

@@ -68,7 +68,7 @@ export function createBot (options: CreateBotOptions): Bot {
 
 export async function startBot (bot: Bot): Promise<void> {
   if (Object.keys(bot.botGatewayData ?? {}).length === 0) {
-    bot.gateway.gatewayBot = await bot.rest.helpers.getGatewayBot()
+    bot.gateway.gatewayBot = await bot.rest.getGatewayBot()
     bot.gateway.lastShardId = bot.gateway.gatewayBot.shards - 1
     bot.gateway.manager.totalShards = bot.gateway.gatewayBot.shards
   }
