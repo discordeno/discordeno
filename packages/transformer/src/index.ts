@@ -11,7 +11,7 @@ import { c1amelize1Channel } from './camel/channel.js'
 import { c1amelize1Emoji } from './camel/emoji.js'
 import { c1amelize1GatewayBot } from './camel/gatewayBot.js'
 import { c1amelize1Guild } from './camel/guild.js'
-import { c1amelize1Member } from './camel/member.js'
+import { c1amelize1Member, c1amelize1User } from './camel/member.js'
 import { c1amelize1Role } from './camel/role.js'
 import { c1amelize1Sticker } from './camel/sticker.js'
 import { c1amelize1Team } from './camel/team.js'
@@ -31,7 +31,7 @@ import { s1nakelize1Channel } from './snake/channel.js'
 import { s1nakelize1Emoji } from './snake/emoji.js'
 import { s1nakelize1GatewayBot } from './snake/gatewayBot.js'
 import { s1nakelize1Guild } from './snake/guild.js'
-import { s1nakelize1Member } from './snake/member.js'
+import { s1nakelize1Member, s1nakelize1User } from './snake/member.js'
 import { s1nakelize1Role } from './snake/role.js'
 import { s1nakelize1Sticker } from './snake/sticker.js'
 import { s1nakelize1Team } from './snake/team.js'
@@ -56,6 +56,7 @@ export const TRANSFORMERS = {
   emoji: c1amelize1Emoji,
   gatewayBot: c1amelize1GatewayBot,
   guild: c1amelize1Guild,
+  user: c1amelize1User,
   member: c1amelize1Member,
   role: c1amelize1Role,
   sticker: c1amelize1Sticker,
@@ -78,6 +79,7 @@ export const TRANSFORMERS = {
     emoji: s1nakelize1Emoji,
     gatewayBot: s1nakelize1GatewayBot,
     guild: s1nakelize1Guild,
+    user: s1nakelize1User,
     member: s1nakelize1Member,
     role: s1nakelize1Role,
     sticker: s1nakelize1Sticker,
