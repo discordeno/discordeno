@@ -1,6 +1,5 @@
 {
   "imports": {
-    "node:crypto": "https://deno.land/std@0.167.0/node/crypto.ts",
     "node:buffer": "https://deno.land/std@0.168.0/node/buffer.ts",
     "node:fs": "https://deno.land/std@0.168.0/node/fs.ts",
     "tweetnacl": "npm:tweetnacl",
