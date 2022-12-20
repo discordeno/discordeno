@@ -22,6 +22,7 @@ coverage
 
 # build
 dist
+denoTestsDist
 out
 build
 .docusaurus

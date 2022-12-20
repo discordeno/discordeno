@@ -27,12 +27,6 @@
         "dist/**"
       ]
     },
-    "release-build:clean": {
-      "dependsOn": [
-        "^release-build:clean"
-      ],
-      "cache": false
-    },
     "test:unit-coverage": {
       "dependsOn": [
         "^build"
@@ -52,6 +46,15 @@
     "test:test-type": {
       "dependsOn": [
         "^build:type"
+      ]
+    },
+    "test:deno-unit": {
+      "dependsOn": [
+        "build",
+        "^build"
+      ],
+      "outputs": [
+        "denoTestsDist/**"
       ]
     },
     "lint": {

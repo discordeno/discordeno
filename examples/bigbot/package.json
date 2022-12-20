@@ -10,7 +10,7 @@
     "devr": "nodemon --ignore ./src/bot/**/* --ignore ./src/gateway/**/* --ignore ./dist/**/* -e ts dist/rest/index.js",
     "devb": "nodemon --ignore ./src/rest/**/* --ignore ./src/gateway/**/* --ignore ./dist/**/* -e ts dist/bot/index.js",
     "type": "tsc --noEmit",
-    "build": "swc src --out-dir dist",
+    "build": "swc --delete-dir-on-start src --out-dir dist",
     "startr": "node dist/rest/index.js",
     "startg": "node dist/gateway/index.js",
     "startb": "node dist/bot/index.js"

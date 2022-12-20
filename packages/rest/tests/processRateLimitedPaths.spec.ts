@@ -1,6 +1,8 @@
 import { expect } from 'chai'
+import { afterEach, beforeEach, describe, it } from 'mocha'
 import sinon, { spy } from 'sinon'
-import { createRestManager, RestManager } from '../src/index.js'
+import type { RestManager } from '../src/index.js'
+import { createRestManager } from '../src/index.js'
 
 describe('[rest] processRateLimitedPaths', () => {
   let rest: RestManager

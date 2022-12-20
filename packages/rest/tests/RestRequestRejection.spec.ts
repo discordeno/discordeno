@@ -1,4 +1,5 @@
 import { expect } from 'chai'
+import { describe, it } from 'mocha'
 import { convertRestError } from '../src/convertRestError.js'
 
 describe('[rest] convertRestError', () => {

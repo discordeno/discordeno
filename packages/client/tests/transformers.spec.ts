@@ -2,6 +2,7 @@ import { expect } from 'chai'
 import fs from 'node:fs'
 import { createTransformers } from '../src/transformer.js'
 // import { createTransformers } from '../src/transformer.js'
+import { describe, it } from 'mocha'
 import * as transformers from '../src/transformers/index.js'
 
 describe('Transformers', () => {
