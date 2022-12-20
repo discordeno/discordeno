@@ -1,3 +1,4 @@
+import { Buffer } from 'node:buffer'
 import nacl from 'tweetnacl'
 
 export function verifySignature ({

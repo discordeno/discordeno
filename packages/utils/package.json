@@ -10,14 +10,14 @@
     "url": "https://github.com/discordeno/discordeno.git"
   },
   "scripts": {
-    "build": "swc src --out-dir dist",
+    "build": "swc --delete-dir-on-start src --out-dir dist",
     "build:type": "tsc --skipDefaultLibCheck --declaration --emitDeclarationOnly --declarationDir dist",
     "release-build": "yarn build && yarn build:type",
-    "release-build:clean": "shx rm -rf dist && yarn build && yarn build:type",
     "fmt": "eslint --fix \"src/**/*.ts*\"",
     "lint": "eslint \"src/**/*.ts*\"",
     "test:unit-coverage": "c8 mocha --no-warnings 'tests/**/*.spec.ts'",
     "test:unit": "c8 --r lcov mocha --no-warnings 'tests/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js utils",
+    "test:deno-unit": "swc tests --delete-dir-on-start --out-dir denoTestsDist && node ../../scripts/fixDenoTestExtension.js && deno test -A --import-map ../../denoImportMap.json denoTestsDist",
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/**/*.spec.ts'",
     "test:type": "tsc --noEmit",
     "test:test-type": "tsc --project tsconfig.test.json"
@@ -35,7 +35,6 @@
     "eslint": "^8.0.1",
     "eslint-config-discordeno": "*",
     "mocha": "^10.1.0",
-    "shx": "^0.3.4",
     "sinon": "^15.0.0",
     "ts-node": "^10.9.1",
     "tsconfig": "*",

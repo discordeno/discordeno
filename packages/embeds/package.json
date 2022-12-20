@@ -21,7 +21,6 @@
     "eslint": "^8.0.1",
     "eslint-config-discordeno": "*",
     "mocha": "^10.1.0",
-    "shx": "^0.3.4",
     "sinon": "^15.0.0",
     "tsconfig": "*",
     "typescript": "^4.9.3"

@@ -1,4 +1,5 @@
 import { expect } from 'chai'
+import { it } from 'mocha'
 import { bigintToSnowflake, snowflakeToBigint } from '../src/bigint.js'
 
 it('[bigint] - Transform a snowflake string to bigint', () => {
