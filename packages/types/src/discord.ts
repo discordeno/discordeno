@@ -787,7 +787,7 @@ export interface DiscordChannel {
   /** number of messages ever sent in a thread, it's similar to `message_count` on message creation, but will not decrement the number when a message is deleted */
   total_message_sent?: number
   /** The set of tags that can be used in a GUILD_FORUM channel */
-  available_tags: DiscordForumTag[]
+  available_tags?: DiscordForumTag[]
   /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
   applied_tags: string[]
   /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */

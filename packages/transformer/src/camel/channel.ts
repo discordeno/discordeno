@@ -45,7 +45,7 @@ export function c1amelize1Channel (
     permissions: payload.permissions,
     flags: payload.flags,
     totalMessageSent: payload.total_message_sent,
-    availableTags: payload.available_tags.map((tag) => ({
+    availableTags: payload.available_tags?.map((tag) => ({
       id: tag.id,
       name: tag.name,
       moderated: tag.moderated,

@@ -1,7 +1,9 @@
 import type { Camelize, DiscordChannel } from '@discordeno/types'
 import { s1nakelize1User } from './member.js'
 
-export function s1nakelize1Channel (payload: Camelize<DiscordChannel>): DiscordChannel {
+export function s1nakelize1Channel (
+  payload: Camelize<DiscordChannel>
+): DiscordChannel {
   return {
     id: payload.id,
     type: payload.type,
@@ -51,7 +53,7 @@ export function s1nakelize1Channel (payload: Camelize<DiscordChannel>): DiscordC
       user_id: payload.member.userId,
       join_timestamp: payload.member.joinTimestamp
     },
-    available_tags: payload.availableTags.map((tag) => ({
+    available_tags: payload.availableTags?.map((tag) => ({
       id: tag.id,
       name: tag.name,
       moderated: tag.moderated,
