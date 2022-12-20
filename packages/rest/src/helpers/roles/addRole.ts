@@ -25,7 +25,7 @@ export async function addRole (
   reason?: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'PUT',
     routes.GUILD_MEMBER_ROLE(guildId, userId, roleId),
     { reason }

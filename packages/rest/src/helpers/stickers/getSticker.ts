@@ -17,7 +17,7 @@ export async function getSticker (
   stickerId: bigint
 ): Promise<Sticker> {
   const result = await rest.runMethod<DiscordSticker>(
-    rest,
+
     'GET',
     routes.STICKER(stickerId)
   )

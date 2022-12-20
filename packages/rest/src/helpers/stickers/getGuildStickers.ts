@@ -20,7 +20,7 @@ export async function getGuildStickers (
   guildId: bigint
 ): Promise<Collection<bigint, Sticker>> {
   const results = await rest.runMethod<DiscordSticker[]>(
-    rest,
+
     'GET',
     routes.GUILD_STICKERS(guildId)
   )

@@ -24,7 +24,7 @@ export async function deleteReactionsAll (
   messageId: BigString
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.CHANNEL_MESSAGE_REACTIONS(channelId, messageId)
   )

@@ -20,7 +20,7 @@ export async function getScheduledEvents (
   options?: GetScheduledEvents
 ): Promise<Collection<bigint, ScheduledEvent>> {
   const results = await rest.runMethod<DiscordScheduledEvent[]>(
-    rest,
+
     'GET',
     routes.GUILD_SCHEDULED_EVENTS(
       guildId,

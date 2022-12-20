@@ -31,7 +31,6 @@ export async function editEmoji (
   options: ModifyGuildEmoji
 ): Promise<Camelize<DiscordEmoji>> {
   const result = await rest.runMethod<DiscordEmoji>(
-    rest,
     'PATCH',
     routes.GUILD_EMOJI(guildId, id),
     {

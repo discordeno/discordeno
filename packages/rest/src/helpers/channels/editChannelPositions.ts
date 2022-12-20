@@ -24,7 +24,6 @@ export async function editChannelPositions (
   channelPositions: ModifyGuildChannelPositions[]
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
     'PATCH',
     routes.GUILD_CHANNELS(guildId),
     channelPositions.map((channelPosition) => ({

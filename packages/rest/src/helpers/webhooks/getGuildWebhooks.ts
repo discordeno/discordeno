@@ -21,7 +21,7 @@ export async function getGuildWebhooks (
   guildId: BigString
 ): Promise<Collection<bigint, Webhook>> {
   const results = await rest.runMethod<DiscordWebhook[]>(
-    rest,
+
     'GET',
     routes.GUILD_WEBHOOKS(guildId)
   )

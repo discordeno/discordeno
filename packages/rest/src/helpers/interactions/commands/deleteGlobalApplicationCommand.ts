@@ -15,7 +15,7 @@ export async function deleteGlobalApplicationCommand (
   commandId: BigString
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.COMMANDS_ID(rest.applicationId, commandId)
   )

@@ -33,7 +33,7 @@ export async function createAutomodRule (
   options: CreateAutoModerationRuleOptions
 ): Promise<AutoModerationRule> {
   const result = await rest.runMethod<DiscordAutoModerationRule>(
-    rest,
+
     'POST',
     routes.AUTOMOD_RULES(guildId),
     {

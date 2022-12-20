@@ -19,7 +19,7 @@ export async function deleteOriginalInteractionResponse (
   token: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.INTERACTION_ORIGINAL_ID_TOKEN(
       rest.applicationId,

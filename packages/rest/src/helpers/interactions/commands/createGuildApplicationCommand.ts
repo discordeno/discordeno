@@ -24,7 +24,7 @@ export async function createGuildApplicationCommand (
   guildId: BigString
 ): Promise<ApplicationCommand> {
   const result = await rest.runMethod<DiscordApplicationCommand>(
-    rest,
+
     'POST',
     routes.COMMANDS_GUILD(rest.applicationId, guildId),
     rest.transformers.reverse.createApplicationCommand(rest, command)

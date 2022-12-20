@@ -30,7 +30,6 @@ export async function editChannelPermissionOverrides (
   options: EditChannelPermissionOverridesOptions
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
     'PUT',
     routes.CHANNEL_OVERWRITE(channelId, options.id),
     {

@@ -16,7 +16,7 @@ export async function getNitroStickerPacks (
   rest: RestManager
 ): Promise<Collection<bigint, StickerPack>> {
   const results = await rest.runMethod<DiscordStickerPack[]>(
-    rest,
+
     'GET',
     routes.NITRO_STICKER_PACKS()
   )

@@ -21,7 +21,7 @@ export async function getScheduledEvent (
   options?: { withUserCount?: boolean }
 ): Promise<ScheduledEvent> {
   const result = await rest.runMethod<DiscordScheduledEvent>(
-    rest,
+
     'GET',
     routes.GUILD_SCHEDULED_EVENT(
       guildId,

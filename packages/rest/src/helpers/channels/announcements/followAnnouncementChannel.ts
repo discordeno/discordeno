@@ -23,7 +23,6 @@ export async function followAnnouncementChannel (
   targetChannelId: BigString
 ): Promise<DiscordFollowedChannel> {
   const result = await rest.runMethod<DiscordFollowedChannel>(
-    rest,
     'POST',
     routes.CHANNEL_FOLLOW(sourceChannelId),
     {

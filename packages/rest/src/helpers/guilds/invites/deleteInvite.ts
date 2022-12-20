@@ -20,7 +20,7 @@ export async function deleteInvite (
   reason?: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.INVITE(inviteCode),
     reason ? { reason } : undefined

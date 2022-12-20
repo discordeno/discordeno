@@ -22,7 +22,7 @@ export async function getAutomodRule (
   ruleId: BigString
 ): Promise<AutoModerationRule> {
   const result = await rest.runMethod<DiscordAutoModerationRule>(
-    rest,
+
     'GET',
     routes.AUTOMOD_RULE(guildId, ruleId)
   )

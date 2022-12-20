@@ -20,7 +20,6 @@ export async function leaveThread (
   channelId: BigString
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
     'DELETE',
     routes.THREAD_ME(channelId)
   )

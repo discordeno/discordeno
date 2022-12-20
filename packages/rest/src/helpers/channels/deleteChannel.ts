@@ -32,12 +32,5 @@ export async function deleteChannel (
   channelId: BigString,
   reason?: string
 ): Promise<void> {
-  return await rest.runMethod<void>(
-    rest,
-    'DELETE',
-    routes.CHANNEL(channelId),
-    {
-      reason
-    }
-  )
+  return await rest.runMethod<void>('DELETE', routes.CHANNEL(channelId), { reason })
 }

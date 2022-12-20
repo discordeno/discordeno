@@ -14,7 +14,7 @@ export async function getAvailableVoiceRegions (
   rest: RestManager
 ): Promise<Collection<string, VoiceRegions>> {
   const results = await rest.runMethod<DiscordVoiceRegion[]>(
-    rest,
+
     'GET',
     routes.VOICE_REGIONS()
   )

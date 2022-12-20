@@ -25,7 +25,6 @@ export async function removeThreadMember (
   userId: BigString
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
     'DELETE',
     routes.THREAD_USER(channelId, userId)
   )

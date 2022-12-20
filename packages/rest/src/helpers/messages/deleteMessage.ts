@@ -30,7 +30,7 @@ export async function deleteMessage (
   if (delayMilliseconds) await delay(delayMilliseconds)
 
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.CHANNEL_MESSAGE(channelId, messageId),
     { reason }

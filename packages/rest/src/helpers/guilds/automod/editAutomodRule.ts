@@ -34,7 +34,7 @@ export async function editAutomodRule (
   options: Partial<EditAutoModerationRuleOptions>
 ): Promise<AutoModerationRule> {
   const result = await rest.runMethod<DiscordAutoModerationRule>(
-    rest,
+
     'PATCH',
     routes.AUTOMOD_RULE(guildId, ruleId),
     {

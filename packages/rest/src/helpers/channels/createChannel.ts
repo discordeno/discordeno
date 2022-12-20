@@ -38,7 +38,6 @@ export async function createChannel (
   options: CreateGuildChannel
 ): Promise<Camelize<DiscordChannel>> {
   const result = await rest.runMethod<DiscordChannel>(
-    rest,
     'POST',
     routes.GUILD_CHANNELS(guildId),
     options

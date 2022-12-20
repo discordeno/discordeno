@@ -28,7 +28,7 @@ export async function editOwnVoiceState (
   options: EditOwnVoiceState
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'PATCH',
     routes.UPDATE_VOICE_STATE(guildId),
     {
@@ -63,7 +63,7 @@ export async function editUserVoiceState (
   options: EditUserVoiceState
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'PATCH',
     routes.UPDATE_VOICE_STATE(guildId, options.userId),
     {

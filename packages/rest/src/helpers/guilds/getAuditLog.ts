@@ -47,7 +47,7 @@ export async function getAuditLog (
   options?: GetGuildAuditLog
 ): Promise<AuditLog> {
   const result = await rest.runMethod<DiscordAuditLog>(
-    rest,
+
     'GET',
     routes.GUILD_AUDIT_LOGS(guildId, options)
   )

@@ -33,7 +33,7 @@ export async function createScheduledEvent (
   options: CreateScheduledEvent
 ): Promise<ScheduledEvent> {
   const result = await rest.runMethod<DiscordScheduledEvent>(
-    rest,
+
     'POST',
     routes.GUILD_SCHEDULED_EVENTS(guildId),
     {

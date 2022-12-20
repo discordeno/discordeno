@@ -23,7 +23,6 @@ export async function deleteChannelPermissionOverride (
   reason?: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
     'DELETE',
     routes.CHANNEL_OVERWRITE(channelId, overwriteId),
     reason ? { reason } : undefined

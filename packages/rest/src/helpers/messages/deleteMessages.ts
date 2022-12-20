@@ -25,7 +25,7 @@ export async function deleteMessages (
   reason?: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'POST',
     routes.CHANNEL_BULK_DELETE(channelId),
     {

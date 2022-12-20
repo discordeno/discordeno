@@ -24,7 +24,7 @@ export async function editGuildApplicationCommand (
   options: CreateApplicationCommand
 ): Promise<ApplicationCommand> {
   const result = await rest.runMethod<DiscordApplicationCommand>(
-    rest,
+
     'PATCH',
     routes.COMMANDS_GUILD_ID(
       rest.applicationId,

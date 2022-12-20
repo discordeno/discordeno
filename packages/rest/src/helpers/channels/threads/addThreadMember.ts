@@ -23,7 +23,6 @@ export async function addThreadMember (
   userId: BigString
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
     'PUT',
     routes.THREAD_USER(channelId, userId)
   )

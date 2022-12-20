@@ -37,7 +37,7 @@ export async function editScheduledEvent (
   options: Partial<EditScheduledEvent>
 ): Promise<ScheduledEvent> {
   const result = await rest.runMethod<DiscordScheduledEvent>(
-    rest,
+
     'PATCH',
     routes.GUILD_SCHEDULED_EVENT(guildId, eventId),
     {

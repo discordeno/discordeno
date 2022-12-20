@@ -17,7 +17,6 @@ export async function getEmojis (
   guildId: BigString
 ): Promise<Collection<string, Camelize<DiscordEmoji>>> {
   const results = await rest.runMethod<DiscordEmoji[]>(
-    rest,
     'GET',
     routes.GUILD_EMOJIS(guildId)
   )

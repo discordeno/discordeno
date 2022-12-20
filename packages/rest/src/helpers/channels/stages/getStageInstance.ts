@@ -21,7 +21,6 @@ export async function getStageInstance (
   channelId: BigString
 ): Promise<Camelize<DiscordStageInstance>> {
   const result = await rest.runMethod<DiscordStageInstance>(
-    rest,
     'GET',
     routes.STAGE_INSTANCE(channelId)
   )

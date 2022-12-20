@@ -35,7 +35,7 @@ export async function editMessage (
   options: EditMessage
 ): Promise<Message> {
   const result = await rest.runMethod<DiscordMessage>(
-    rest,
+
     'PATCH',
     routes.CHANNEL_MESSAGE(channelId, messageId),
     {

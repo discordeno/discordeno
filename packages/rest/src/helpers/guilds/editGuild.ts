@@ -38,7 +38,7 @@ export async function editGuild (
   shardId: number
 ): Promise<Guild> {
   const result = await rest.runMethod<DiscordGuild>(
-    rest,
+
     'PATCH',
     routes.GUILD(guildId),
     {

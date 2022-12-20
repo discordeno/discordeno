@@ -27,7 +27,7 @@ export async function getWebhookMessage (
   options?: GetWebhookMessageOptions
 ): Promise<Message> {
   const result = await rest.runMethod<DiscordMessage>(
-    rest,
+
     'GET',
     routes.WEBHOOK_MESSAGE(webhookId, token, messageId, options)
   )

@@ -29,7 +29,6 @@ export async function getActiveThreads (
   guildId: BigString
 ): Promise<DiscordActiveThreads> {
   const results = await rest.runMethod<DiscordListActiveThreads>(
-    rest,
     'GET',
     routes.THREAD_ACTIVE(guildId)
   )

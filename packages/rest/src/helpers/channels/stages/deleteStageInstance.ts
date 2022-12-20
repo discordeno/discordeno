@@ -21,7 +21,6 @@ export async function deleteStageInstance (
   reason?: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
     'DELETE',
     routes.STAGE_INSTANCE(channelId),
     reason ? { reason } : undefined

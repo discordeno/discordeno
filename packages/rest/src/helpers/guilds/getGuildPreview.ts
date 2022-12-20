@@ -41,7 +41,7 @@ export async function getGuildPreview (
   guildId: BigString
 ): Promise<GuildPreview> {
   const result = await rest.runMethod<DiscordGuildPreview>(
-    rest,
+
     'GET',
     routes.GUILD_PREVIEW(guildId)
   )

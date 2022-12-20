@@ -18,7 +18,7 @@ export async function getVoiceRegions (
   guildId: BigString
 ): Promise<Collection<string, VoiceRegions>> {
   const results = await rest.runMethod<DiscordVoiceRegion[]>(
-    rest,
+
     'GET',
     routes.GUILD_REGIONS(guildId)
   )

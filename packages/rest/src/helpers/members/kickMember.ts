@@ -23,7 +23,7 @@ export async function kickMember (
   reason?: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.GUILD_MEMBER(guildId, userId),
     {

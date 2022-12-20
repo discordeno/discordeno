@@ -22,7 +22,7 @@ export async function editBotMember (
   options: EditBotMemberOptions
 ): Promise<Member> {
   const result = await rest.runMethod<DiscordMember>(
-    rest,
+
     'PATCH',
     routes.USER_NICK(guildId),
     {

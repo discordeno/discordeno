@@ -36,7 +36,6 @@ export async function startThreadWithMessage (
   options: StartThreadWithMessage
 ): Promise<Camelize<DiscordChannel>> {
   const result = await rest.runMethod<DiscordChannel>(
-    rest,
     'POST',
     routes.THREAD_START_PUBLIC(channelId, messageId),
     {

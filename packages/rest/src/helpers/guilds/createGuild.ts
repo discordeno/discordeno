@@ -31,7 +31,6 @@ export async function createGuild (
   options: CreateGuild
 ): Promise<Camelize<DiscordGuild>> {
   const result = await rest.runMethod<DiscordGuild>(
-    rest,
     'POST',
     routes.GUILDS(),
     {

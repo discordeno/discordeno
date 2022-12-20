@@ -23,7 +23,7 @@ export async function createGlobalApplicationCommand (
   command: CreateApplicationCommand
 ): Promise<ApplicationCommand> {
   const result = await rest.runMethod<DiscordApplicationCommand>(
-    rest,
+
     'POST',
     routes.COMMANDS(rest.applicationId),
     rest.transformers.reverse.createApplicationCommand(rest, command)

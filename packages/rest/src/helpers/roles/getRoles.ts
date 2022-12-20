@@ -21,7 +21,7 @@ export async function getRoles (
   guildId: BigString
 ): Promise<Collection<bigint, Role>> {
   const results = await rest.runMethod<DiscordRole[]>(
-    rest,
+
     'GET',
     routes.GUILD_ROLES(guildId)
   )

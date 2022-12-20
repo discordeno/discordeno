@@ -23,7 +23,7 @@ export async function deleteAutomodRule (
   reason?: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.AUTOMOD_RULE(guildId, ruleId),
     { reason }

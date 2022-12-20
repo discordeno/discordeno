@@ -18,7 +18,7 @@ export async function getGuildApplicationCommands (
   guildId: BigString
 ): Promise<Collection<bigint, ApplicationCommand>> {
   const results = await rest.runMethod<DiscordApplicationCommand[]>(
-    rest,
+
     'GET',
     routes.COMMANDS_GUILD(rest.applicationId, guildId)
   )

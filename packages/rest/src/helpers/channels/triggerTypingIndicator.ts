@@ -22,7 +22,6 @@ export async function triggerTypingIndicator (
   channelId: BigString
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
     'POST',
     routes.CHANNEL_TYPING(channelId)
   )

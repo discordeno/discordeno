@@ -24,7 +24,7 @@ export async function createGuildTemplate (
   options: CreateTemplate
 ): Promise<Template> {
   const result = await rest.runMethod<DiscordTemplate>(
-    rest,
+
     'POST',
     routes.GUILD_TEMPLATES(guildId),
     options as DiscordCreateTemplate

@@ -76,7 +76,6 @@ export async function editChannel (
   }
 
   const result = await rest.runMethod<DiscordChannel>(
-    rest,
     'PATCH',
     routes.CHANNEL(channelId),
     {
@@ -163,14 +162,14 @@ function processEditChannelQueue (rest: RestManager): void {
 
       if (details == null) return
 
-      await rest.helpers
+      await rest
         .editChannel(details.channelId, details.options)
         .then((result) => details.resolve(result))
         .catch(details.reject)
       const secondDetails = request.items.shift()
       if (secondDetails == null) return
 
-      await rest.helpers
+      await rest
         .editChannel(secondDetails.channelId, secondDetails.options)
         .then((result) => secondDetails.resolve(result))
         .catch(secondDetails.reject)

@@ -28,7 +28,7 @@ export async function editWebhookMessage (
   options: InteractionCallbackData & { threadId?: BigString }
 ): Promise<Message> {
   const result = await rest.runMethod<DiscordMessage>(
-    rest,
+
     'PATCH',
     routes.WEBHOOK_MESSAGE(webhookId, token, messageId, options),
     {

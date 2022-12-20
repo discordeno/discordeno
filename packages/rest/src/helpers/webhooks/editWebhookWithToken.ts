@@ -26,7 +26,7 @@ export async function editWebhookWithToken (
   options: Omit<ModifyWebhook, 'channelId'>
 ): Promise<Webhook> {
   const result = await rest.runMethod<DiscordWebhook>(
-    rest,
+
     'PATCH',
     routes.WEBHOOK(webhookId, token),
     {

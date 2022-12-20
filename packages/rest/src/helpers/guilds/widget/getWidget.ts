@@ -17,7 +17,7 @@ export async function getWidget (
   guildId: BigString
 ): Promise<GuildWidget> {
   const result = await rest.runMethod<DiscordGuildWidget>(
-    rest,
+
     'GET',
     routes.GUILD_WIDGET_JSON(guildId)
   )

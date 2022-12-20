@@ -26,7 +26,7 @@ export async function upsertGuildApplicationCommands (
   commands: CreateApplicationCommand[]
 ): Promise<Collection<bigint, ApplicationCommand>> {
   const results = await rest.runMethod<DiscordApplicationCommand[]>(
-    rest,
+
     'PUT',
     routes.COMMANDS_GUILD(rest.applicationId, guildId),
     commands.map((command) =>

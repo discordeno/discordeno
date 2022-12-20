@@ -23,7 +23,7 @@ export async function syncGuildTemplate (
   templateCode: string
 ): Promise<Template> {
   const result = await rest.runMethod<DiscordTemplate>(
-    rest,
+
     'PUT',
     routes.GUILD_TEMPLATE(guildId, templateCode)
   )

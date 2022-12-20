@@ -24,7 +24,7 @@ export async function deleteWebhookMessage (
   options?: DeleteWebhookMessageOptions
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.WEBHOOK_MESSAGE(webhookId, token, messageId, options)
   )

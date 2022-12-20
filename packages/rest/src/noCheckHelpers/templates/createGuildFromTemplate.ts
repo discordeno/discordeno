@@ -31,7 +31,7 @@ export async function createGuildFromTemplate (
   // }
 
   const createdGuild = await rest.runMethod<DiscordGuild>(
-    rest,
+
     'POST',
     routes.TEMPLATE(templateCode),
     options

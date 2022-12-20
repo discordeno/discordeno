@@ -29,7 +29,7 @@ export async function deleteOwnReaction (
   reaction = processReactionString(reaction)
 
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.CHANNEL_MESSAGE_REACTION_ME(
       channelId,
@@ -67,7 +67,7 @@ export async function deleteUserReaction (
   reaction = processReactionString(reaction)
 
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.CHANNEL_MESSAGE_REACTION_USER(
       channelId,

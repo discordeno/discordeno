@@ -24,7 +24,7 @@ export async function editWelcomeScreen (
   options: ModifyGuildWelcomeScreen
 ): Promise<WelcomeScreen> {
   const result = await rest.runMethod<DiscordWelcomeScreen>(
-    rest,
+
     'PATCH',
     routes.GUILD_WELCOME_SCREEN(guildId),
     {

@@ -18,7 +18,7 @@ export async function getGlobalApplicationCommands (
   rest: RestManager
 ): Promise<Collection<bigint, ApplicationCommand>> {
   const results = await rest.runMethod<DiscordApplicationCommand[]>(
-    rest,
+
     'GET',
     routes.COMMANDS(rest.applicationId)
   )

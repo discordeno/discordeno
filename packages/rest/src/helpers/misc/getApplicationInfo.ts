@@ -8,7 +8,7 @@ export async function getApplicationInfo (
   rest: RestManager
 ): Promise<Application> {
   const result = await rest.runMethod<DiscordApplication>(
-    rest,
+
     'GET',
     routes.OAUTH2_APPLICATION()
   )

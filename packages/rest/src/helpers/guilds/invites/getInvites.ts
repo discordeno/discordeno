@@ -22,7 +22,7 @@ export async function getInvites (
   guildId: BigString
 ): Promise<Collection<string, InviteMetadata>> {
   const results = await rest.runMethod<DiscordInviteMetadata[]>(
-    rest,
+
     'GET',
     routes.GUILD_INVITES(guildId)
   )

@@ -19,7 +19,7 @@ export async function deleteGuildApplicationCommand (
   guildId: BigString
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.COMMANDS_GUILD_ID(
       rest.applicationId,

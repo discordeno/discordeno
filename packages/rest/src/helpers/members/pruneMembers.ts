@@ -27,7 +27,7 @@ export async function pruneMembers (
   options: BeginGuildPrune
 ): Promise<number | undefined> {
   const result = await rest.runMethod<{ pruned: number | null }>(
-    rest,
+
     'POST',
     routes.GUILD_PRUNE(guildId),
     {

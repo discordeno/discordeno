@@ -28,7 +28,7 @@ export async function getVanityUrl (
   guildId: BigString
 ): Promise<VanityUrl> {
   return await rest.runMethod<VanityUrl>(
-    rest,
+
     'GET',
     routes.GUILD_VANITY_URL(guildId)
   )

@@ -27,7 +27,6 @@ export async function createStageInstance (
   options: CreateStageInstance
 ): Promise<Camelize<DiscordStageInstance>> {
   const result = await rest.runMethod<DiscordStageInstance>(
-    rest,
     'POST',
     routes.STAGE_INSTANCES(),
     {

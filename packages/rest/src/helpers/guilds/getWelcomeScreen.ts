@@ -21,7 +21,7 @@ export async function getWelcomeScreen (
   guildId: BigString
 ): Promise<WelcomeScreen> {
   const result = await rest.runMethod<DiscordWelcomeScreen>(
-    rest,
+
     'GET',
     routes.GUILD_WELCOME_SCREEN(guildId)
   )

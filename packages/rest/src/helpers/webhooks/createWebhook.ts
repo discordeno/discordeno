@@ -27,7 +27,7 @@ export async function createWebhook (
   options: CreateWebhook
 ): Promise<Webhook> {
   const result = await rest.runMethod<DiscordWebhook>(
-    rest,
+
     'POST',
     routes.CHANNEL_WEBHOOKS(channelId),
     {

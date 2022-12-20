@@ -25,7 +25,7 @@ export async function getBans (
   options?: GetBans
 ): Promise<Collection<bigint, Ban>> {
   const results = await rest.runMethod<DiscordBan[]>(
-    rest,
+
     'GET',
     routes.GUILD_BANS(guildId, options)
   )

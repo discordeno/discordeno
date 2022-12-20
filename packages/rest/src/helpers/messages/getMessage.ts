@@ -25,7 +25,7 @@ export async function getMessage (
   messageId: BigString
 ): Promise<Message> {
   const result = await rest.runMethod<DiscordMessage>(
-    rest,
+
     'GET',
     routes.CHANNEL_MESSAGE(channelId, messageId)
   )

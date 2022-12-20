@@ -23,7 +23,7 @@ export async function editWebhook (
   options: ModifyWebhook
 ): Promise<Webhook> {
   const result = await rest.runMethod<DiscordWebhook>(
-    rest,
+
     'PATCH',
     routes.WEBHOOK_ID(webhookId),
     {

@@ -25,7 +25,7 @@ export async function unpinMessage (
   reason?: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.CHANNEL_PIN(channelId, messageId),
     reason ? { reason } : undefined

@@ -17,7 +17,7 @@ import { processQueue } from './processQueue.js'
 import { processRateLimitedPaths } from './processRateLimitedPaths.js'
 import { processRequest } from './processRequest.js'
 import { processRequestHeaders } from './processRequestHeaders.js'
-import type { RestPayload, RestRateLimitedPath, RestRequest } from './rest.js'
+import type { RequestMethod, RestPayload, RestRateLimitedPath, RestRequest } from './rest.js'
 import { runMethod } from './runMethod.js'
 import type { RestSendRequestOptions } from './sendRequest.js'
 import { sendRequest } from './sendRequest.js'
@@ -25,10 +25,7 @@ import { simplifyUrl } from './simplifyUrl.js'
 import type { Transformers } from './transformer.js'
 import { createTransformers } from './transformer.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function createRestManager (
-  options: CreateRestManagerOptions
-): RestManager {
+export function createRestManager (options: CreateRestManagerOptions): RestManager {
   const version = options.version ?? API_VERSION
 
   if (options.customUrl !== undefined) {
@@ -65,7 +62,17 @@ export function createRestManager (
       options.processRequestHeaders ?? processRequestHeaders,
     processRequest: options.processRequest ?? processRequest,
     createRequestBody: options.createRequestBody ?? createRequestBody,
-    runMethod: options.runMethod ?? runMethod,
+    // async runMethod (method: RequestMethod,
+    //   route: string,
+    //   body?: any,
+    //   opts?: {
+    //     retryCount?: number
+    //     bucketId?: string
+    //     headers?: Record<string, string>
+    //   }) {
+    //   if (options.runMethod) return await options.runMethod(rest, method, route, body, opts)
+    //   return await runMethod(rest, method, route, body, opts)
+    // },
     simplifyUrl: options.simplifyUrl ?? simplifyUrl,
     processGlobalQueue: options.processGlobalQueue ?? processGlobalQueue,
     convertRestError: options.convertRestError ?? convertRestError,
@@ -91,11 +98,17 @@ export function createRestManager (
     applicationId:
       options.applicationId ??
       options.botId ??
-      getBotIdFromToken(options.token),
-    helpers: {} as FinalHelpers
-  } as RestManager
+      getBotIdFromToken(options.token)
+  } as unknown as RestManager
 
-  rest.helpers = createHelpers(rest, options.helpers ?? {})
+  for (const [name, fun] of Object.entries({
+    ...helpers,
+    ...{ runMethod: options.runMethod ?? runMethod },
+    ...(options.helpers ?? {})
+  })) {
+    // @ts-expect-error dynamically add modified functions
+    rest[name] = (...args) => fun(rest, ...args)
+  }
 
   return rest
 }
@@ -127,7 +140,7 @@ export interface CreateRestManagerOptions {
   botId?: bigint
 }
 
-export interface RestManager {
+export interface RestManager extends FinalHelpers {
   invalidBucket: InvalidRequestBucket
   version: number
   token: string
@@ -154,7 +167,14 @@ export interface RestManager {
   processRequestHeaders: typeof processRequestHeaders
   processRequest: typeof processRequest
   createRequestBody: typeof createRequestBody
-  runMethod: typeof runMethod
+  runMethod: <T>(method: RequestMethod,
+    route: string,
+    body?: any,
+    options?: {
+      retryCount?: number
+      bucketId?: string
+      headers?: Record<string, string>
+    }) => Promise<T>
   simplifyUrl: typeof simplifyUrl
   processGlobalQueue: typeof processGlobalQueue
   convertRestError: typeof convertRestError
@@ -164,48 +184,18 @@ export interface RestManager {
   transformers: Transformers
   id: bigint
   applicationId: bigint
-  helpers: FinalHelpers
 }
 
 export const defaultHelpers = { ...helpers }
 export type DefaultHelpers = typeof defaultHelpers
-// deno-lint-ignore no-empty-interface
 export interface Helpers extends DefaultHelpers {} // Use interface for declaration merging
-
-export function createHelpers (
-  rest: RestManager,
-  customHelpers?: Partial<Helpers>
-): FinalHelpers {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  const converted = {} as FinalHelpers
-  for (const [name, fun] of Object.entries({
-    ...createBaseHelpers(customHelpers ?? {})
-  })) {
-    // @ts-expect-error - TODO: make the types better
-    converted[name as keyof FinalHelpers] = (
-      ...args: RemoveFirstFromTuple<Parameters<typeof fun>>
-    ) =>
-      // @ts-expect-error - TODO: make the types better
-      fun(rest, ...args)
-  }
-
-  return converted
-}
-
-export function createBaseHelpers (
-  options: Partial<Helpers>
-): DefaultHelpers & Partial<Helpers> {
-  return {
-    ...defaultHelpers,
-    ...options
-  }
-}
 
 export type RemoveFirstFromTuple<T extends any[]> = T['length'] extends 0
   ? []
   : ((...b: T) => void) extends (a: any, ...b: infer I) => void
       ? I
       : []
+
 export type FinalHelpers = {
   [K in keyof Helpers]: (
     ...args: RemoveFirstFromTuple<Parameters<Helpers[K]>>

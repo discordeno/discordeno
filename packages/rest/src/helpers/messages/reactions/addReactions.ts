@@ -33,13 +33,13 @@ export async function addReactions (
     await Promise.all(
       reactions.map(
         async (reaction) =>
-          await rest.helpers.addReaction(channelId, messageId, reaction)
+          await rest.addReaction(channelId, messageId, reaction)
       )
     )
     return
   }
 
   for (const reaction of reactions) {
-    await rest.helpers.addReaction(channelId, messageId, reaction)
+    await rest.addReaction(channelId, messageId, reaction)
   }
 }

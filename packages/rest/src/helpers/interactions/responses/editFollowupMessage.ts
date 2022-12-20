@@ -30,7 +30,7 @@ export async function editFollowupMessage (
   options: InteractionCallbackData
 ): Promise<Message> {
   const result = await rest.runMethod<DiscordMessage>(
-    rest,
+
     'PATCH',
     routes.WEBHOOK_MESSAGE(rest.applicationId, token, messageId),
     {

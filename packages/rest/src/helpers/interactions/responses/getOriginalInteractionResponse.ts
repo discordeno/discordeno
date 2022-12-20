@@ -24,7 +24,7 @@ export async function getOriginalInteractionResponse (
   token: string
 ): Promise<Message> {
   const result = await rest.runMethod<DiscordMessage>(
-    rest,
+
     'GET',
     routes.INTERACTION_ORIGINAL_ID_TOKEN(
       rest.applicationId,

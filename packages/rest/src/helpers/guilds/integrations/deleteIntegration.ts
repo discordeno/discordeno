@@ -25,7 +25,7 @@ export async function deleteIntegration (
   integrationId: BigString
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.GUILD_INTEGRATION(guildId, integrationId)
   )

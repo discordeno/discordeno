@@ -25,7 +25,7 @@ export async function modifyRolePositions (
   options: ModifyRolePositions[]
 ): Promise<Collection<bigint, Role>> {
   const results = await rest.runMethod<DiscordRole[]>(
-    rest,
+
     'PATCH',
     routes.GUILD_ROLES(guildId),
     options as DiscordModifyRolePositions[]

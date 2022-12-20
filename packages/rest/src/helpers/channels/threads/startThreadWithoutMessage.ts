@@ -31,7 +31,6 @@ export async function startThreadWithoutMessage (
   options: StartThreadWithoutMessage
 ): Promise<Camelize<DiscordChannel>> {
   const result = await rest.runMethod<DiscordChannel>(
-    rest,
     'POST',
     routes.THREAD_START_PRIVATE(channelId),
     {

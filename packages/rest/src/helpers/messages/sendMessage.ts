@@ -43,7 +43,7 @@ export async function sendMessage (
   options: CreateMessage
 ): Promise<Message> {
   const result = await rest.runMethod<DiscordMessage>(
-    rest,
+
     'POST',
     routes.CHANNEL_MESSAGES(channelId),
     {

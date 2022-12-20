@@ -20,7 +20,7 @@ export async function editGlobalApplicationCommand (
   options: CreateApplicationCommand
 ): Promise<ApplicationCommand> {
   const result = await rest.runMethod<DiscordApplicationCommand>(
-    rest,
+
     'PATCH',
     routes.COMMANDS_ID(rest.applicationId, commandId),
     rest.transformers.reverse.createApplicationCommand(rest, options)

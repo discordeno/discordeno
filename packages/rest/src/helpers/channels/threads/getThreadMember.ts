@@ -23,7 +23,6 @@ export async function getThreadMember (
   userId: BigString
 ): Promise<Camelize<DiscordThreadMember>> {
   const result = await rest.runMethod<DiscordThreadMember>(
-    rest,
     'GET',
     routes.THREAD_USER(channelId, userId)
   )

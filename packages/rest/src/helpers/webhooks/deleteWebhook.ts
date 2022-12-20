@@ -21,7 +21,7 @@ export async function deleteWebhook (
   reason?: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.WEBHOOK_ID(webhookId),
     { reason }

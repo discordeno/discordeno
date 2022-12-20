@@ -25,7 +25,7 @@ export async function deleteGuildSticker (
   reason?: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.GUILD_STICKER(guildId, stickerId),
     reason ? { reason } : undefined

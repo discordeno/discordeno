@@ -30,7 +30,7 @@ export async function editGuildTemplate (
   options: ModifyGuildTemplate
 ): Promise<Template> {
   const result = await rest.runMethod<DiscordTemplate>(
-    rest,
+
     'PATCH',
     routes.GUILD_TEMPLATE(guildId, templateCode),
     {

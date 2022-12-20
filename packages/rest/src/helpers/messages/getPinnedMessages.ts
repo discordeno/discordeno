@@ -24,7 +24,7 @@ export async function getPinnedMessages (
   channelId: BigString
 ): Promise<Collection<bigint, Message>> {
   const results = await rest.runMethod<DiscordMessage[]>(
-    rest,
+
     'GET',
     routes.CHANNEL_PINS(channelId)
   )

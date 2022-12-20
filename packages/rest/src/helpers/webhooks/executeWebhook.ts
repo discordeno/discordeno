@@ -40,7 +40,7 @@ export async function executeWebhook (
     : { parse: [] }
 
   const result = await rest.runMethod<DiscordMessage>(
-    rest,
+
     'POST',
     routes.WEBHOOK(webhookId, token, options),
     {

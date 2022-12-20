@@ -29,7 +29,7 @@ export async function getBan (
   userId: BigString
 ): Promise<Ban> {
   const result = await rest.runMethod<DiscordBan>(
-    rest,
+
     'GET',
     routes.GUILD_BAN(guildId, userId)
   )

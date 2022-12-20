@@ -31,7 +31,6 @@ export async function getPrivateArchivedThreads (
   options?: ListArchivedThreads
 ): Promise<DiscordArchivedThreads> {
   const results = await rest.runMethod<DiscordListArchivedThreads>(
-    rest,
     'GET',
     routes.THREAD_ARCHIVED_PRIVATE(channelId, options)
   )

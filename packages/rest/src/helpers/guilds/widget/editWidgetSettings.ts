@@ -26,7 +26,7 @@ export async function editWidgetSettings (
   channelId?: string | null
 ): Promise<GuildWidgetSettings> {
   const result = await rest.runMethod<DiscordGuildWidgetSettings>(
-    rest,
+
     'PATCH',
     routes.GUILD_WIDGET(guildId),
     {

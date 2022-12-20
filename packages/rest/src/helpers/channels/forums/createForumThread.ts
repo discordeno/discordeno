@@ -37,7 +37,6 @@ export async function createForumThread (
   options: CreateForumPostWithMessage
 ): Promise<Camelize<DiscordChannel>> {
   const result = await rest.runMethod<DiscordChannel>(
-    rest,
     'POST',
     routes.FORUM_START(channelId),
     {

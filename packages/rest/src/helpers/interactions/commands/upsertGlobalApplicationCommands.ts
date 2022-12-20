@@ -24,7 +24,7 @@ export async function upsertGlobalApplicationCommands (
   commands: CreateApplicationCommand[]
 ): Promise<Collection<bigint, ApplicationCommand>> {
   const results = await rest.runMethod<DiscordApplicationCommand[]>(
-    rest,
+
     'PUT',
     routes.COMMANDS(rest.applicationId),
     commands.map((command) =>

@@ -17,7 +17,7 @@ export async function editBotProfile (
     : options?.botAvatarURL
 
   const result = await rest.runMethod<DiscordUser>(
-    rest,
+
     'PATCH',
     routes.USER_BOT(),
     {

@@ -51,7 +51,7 @@ export async function getScheduledEventUsers (
 
   const results = await rest.runMethod<
   Array<{ user: DiscordUser, member?: DiscordMember }>
-  >(rest, 'GET', url)
+  >('GET', url)
 
   if (!options?.withMember) {
     return new Collection(

@@ -20,7 +20,7 @@ export async function getGuildTemplate (
   templateCode: string
 ): Promise<Template> {
   const result = await rest.runMethod<DiscordTemplate>(
-    rest,
+
     'GET',
     routes.TEMPLATE(templateCode)
   )

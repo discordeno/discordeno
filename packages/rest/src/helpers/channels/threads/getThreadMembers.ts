@@ -25,7 +25,6 @@ export async function getThreadMembers (
   channelId: BigString
 ): Promise<Collection<string, Camelize<DiscordThreadMember>>> {
   const results = await rest.runMethod<DiscordThreadMember[]>(
-    rest,
     'GET',
     routes.THREAD_MEMBERS(channelId)
   )

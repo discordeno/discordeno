@@ -28,7 +28,6 @@ export async function editStageInstance (
   data: EditStageInstanceOptions
 ): Promise<Camelize<DiscordStageInstance>> {
   const result = await rest.runMethod<DiscordStageInstance>(
-    rest,
     'PATCH',
     routes.STAGE_INSTANCE(channelId),
     {

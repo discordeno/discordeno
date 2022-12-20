@@ -26,7 +26,7 @@ export async function searchMembers (
   options?: Omit<SearchMembers, 'query'>
 ): Promise<Collection<bigint, Member>> {
   const results = await rest.runMethod<DiscordMemberWithUser[]>(
-    rest,
+
     'GET',
     routes.GUILD_MEMBERS_SEARCH(guildId, query, options)
   )

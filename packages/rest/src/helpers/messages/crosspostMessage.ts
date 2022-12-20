@@ -29,7 +29,7 @@ export async function crosspostMessage (
   messageId: BigString
 ): Promise<Message> {
   const result = await rest.runMethod<DiscordMessage>(
-    rest,
+
     'POST',
     routes.CHANNEL_MESSAGE_CROSSPOST(channelId, messageId)
   )

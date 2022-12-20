@@ -25,7 +25,7 @@ export async function getPruneCount (
   options?: GetGuildPruneCountQuery
 ): Promise<number> {
   const result = await rest.runMethod<DiscordPrunedCount>(
-    rest,
+
     'GET',
     routes.GUILD_PRUNE(guildId, options)
   )

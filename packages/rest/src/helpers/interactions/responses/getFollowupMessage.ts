@@ -26,7 +26,7 @@ export async function getFollowupMessage (
   messageId: BigString
 ): Promise<Message> {
   const result = await rest.runMethod<DiscordMessage>(
-    rest,
+
     'GET',
     routes.INTERACTION_ID_TOKEN_MESSAGE_ID(
       rest.applicationId,

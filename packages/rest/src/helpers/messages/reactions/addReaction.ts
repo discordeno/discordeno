@@ -33,7 +33,7 @@ export async function addReaction (
   reaction = processReactionString(reaction)
 
   return await rest.runMethod<void>(
-    rest,
+
     'PUT',
     routes.CHANNEL_MESSAGE_REACTION_ME(
       channelId,

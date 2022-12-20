@@ -22,7 +22,7 @@ export async function deleteFollowupMessage (
   messageId: BigString
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.INTERACTION_ID_TOKEN_MESSAGE_ID(
       rest.applicationId,

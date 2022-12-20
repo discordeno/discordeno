@@ -28,7 +28,7 @@ export async function editOriginalInteractionResponse (
   options: InteractionCallbackData
 ): Promise<Message | undefined> {
   const result = await rest.runMethod<DiscordMessage>(
-    rest,
+
     'PATCH',
     routes.INTERACTION_ORIGINAL_ID_TOKEN(
       rest.applicationId,

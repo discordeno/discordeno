@@ -20,7 +20,6 @@ export async function joinThread (
   channelId: BigString
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
     'PUT',
     routes.THREAD_ME(channelId)
   )

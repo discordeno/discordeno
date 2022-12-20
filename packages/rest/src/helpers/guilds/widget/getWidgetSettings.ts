@@ -20,7 +20,7 @@ export async function getWidgetSettings (
   guildId: BigString
 ): Promise<GuildWidgetSettings> {
   const result = await rest.runMethod<DiscordGuildWidgetSettings>(
-    rest,
+
     'GET',
     routes.GUILD_WIDGET(guildId)
   )

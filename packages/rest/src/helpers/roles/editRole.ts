@@ -29,7 +29,7 @@ export async function editRole (
   options: EditGuildRole
 ): Promise<Role> {
   const result = await rest.runMethod<DiscordRole>(
-    rest,
+
     'PATCH',
     routes.GUILD_ROLE(guildId, roleId),
     {

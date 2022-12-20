@@ -29,7 +29,7 @@ export async function deleteReactionsEmoji (
   reaction = processReactionString(reaction)
 
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.CHANNEL_MESSAGE_REACTION(
       channelId,

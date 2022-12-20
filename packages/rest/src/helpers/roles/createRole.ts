@@ -28,7 +28,7 @@ export async function createRole (
   reason?: string
 ): Promise<Role> {
   const result = await rest.runMethod<DiscordRole>(
-    rest,
+
     'POST',
     routes.GUILD_ROLES(guildId),
     {

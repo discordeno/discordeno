@@ -26,7 +26,7 @@ export async function getMessages (
   options?: GetMessagesOptions
 ): Promise<Collection<bigint, Message>> {
   const results = await rest.runMethod<DiscordMessage[]>(
-    rest,
+
     'GET',
     routes.CHANNEL_MESSAGES(channelId, options)
   )

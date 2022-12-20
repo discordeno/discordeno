@@ -22,7 +22,7 @@ export async function deleteScheduledEvent (
   eventId: BigString
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.GUILD_SCHEDULED_EVENT(guildId, eventId)
   )

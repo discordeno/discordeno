@@ -21,7 +21,6 @@ export async function getChannels (
   guildId: BigString
 ): Promise<Collection<string, Camelize<DiscordChannel>>> {
   const results = await rest.runMethod<DiscordChannel[]>(
-    rest,
     'GET',
     routes.GUILD_CHANNELS(guildId)
   )

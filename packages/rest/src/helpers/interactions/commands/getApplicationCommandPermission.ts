@@ -23,7 +23,7 @@ export async function getApplicationCommandPermission (
 ): Promise<ApplicationCommandPermission> {
   const result =
     await rest.runMethod<DiscordGuildApplicationCommandPermissions>(
-      rest,
+
       'GET',
       routes.COMMANDS_PERMISSION(
         rest.applicationId,

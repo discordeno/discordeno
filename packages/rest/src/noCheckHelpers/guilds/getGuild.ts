@@ -24,7 +24,7 @@ export async function getGuild (
   }
 ): Promise<Guild> {
   const result = await rest.runMethod<DiscordGuild>(
-    rest,
+
     'GET',
     routes.GUILD(guildId, options.counts)
   )

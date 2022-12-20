@@ -9,7 +9,7 @@ export async function getUser (
   userId: BigString
 ): Promise<User> {
   const result = await rest.runMethod<DiscordUser>(
-    rest,
+
     'GET',
     routes.USER(userId)
   )

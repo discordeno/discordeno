@@ -27,7 +27,7 @@ export async function getReactions (
   reaction = processReactionString(reaction)
 
   const results = await rest.runMethod<DiscordUser[]>(
-    rest,
+
     'GET',
     routes.CHANNEL_MESSAGE_REACTION(
       channelId,

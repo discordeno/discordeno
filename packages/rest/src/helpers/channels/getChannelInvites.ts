@@ -27,7 +27,6 @@ export async function getChannelInvites (
   channelId: BigString
 ): Promise<Collection<string, Camelize<DiscordInviteMetadata>>> {
   const results = await rest.runMethod<DiscordInviteMetadata[]>(
-    rest,
     'GET',
     routes.CHANNEL_INVITES(channelId)
   )

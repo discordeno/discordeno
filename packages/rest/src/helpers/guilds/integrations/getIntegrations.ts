@@ -21,7 +21,7 @@ export async function getIntegrations (
   guildId: BigString
 ): Promise<Collection<bigint, Integration>> {
   const results = await rest.runMethod<DiscordIntegration[]>(
-    rest,
+
     'GET',
     routes.GUILD_INTEGRATIONS(guildId)
   )

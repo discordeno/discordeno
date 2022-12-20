@@ -17,7 +17,7 @@ export async function getDmChannel (
   userId: BigString
 ): Promise<Channel> {
   const result = await rest.runMethod<DiscordChannel>(
-    rest,
+
     'POST',
     routes.USER_DM(),
     {

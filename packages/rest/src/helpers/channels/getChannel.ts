@@ -20,7 +20,6 @@ export async function getChannel (
   channelId: BigString
 ): Promise<Camelize<DiscordChannel>> {
   const result = await rest.runMethod<DiscordChannel>(
-    rest,
     'GET',
     routes.CHANNEL(channelId)
   )

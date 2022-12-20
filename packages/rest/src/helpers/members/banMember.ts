@@ -24,7 +24,7 @@ export async function banMember (
   options?: CreateGuildBan
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'PUT',
     routes.GUILD_BAN(guildId, userId),
     {

@@ -27,7 +27,7 @@ export async function pinMessage (
   reason?: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'PUT',
     routes.CHANNEL_PIN(channelId, messageId),
     reason ? { reason } : undefined

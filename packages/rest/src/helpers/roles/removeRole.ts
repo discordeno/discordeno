@@ -25,7 +25,7 @@ export async function removeRole (
   reason?: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.GUILD_MEMBER_ROLE(guildId, userId, roleId),
     { reason }

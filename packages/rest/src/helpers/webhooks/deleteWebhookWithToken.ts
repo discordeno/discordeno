@@ -20,7 +20,7 @@ export async function deleteWebhookWithToken (
   token: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.WEBHOOK(webhookId, token)
   )

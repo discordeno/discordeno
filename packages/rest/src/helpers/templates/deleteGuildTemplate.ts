@@ -22,7 +22,7 @@ export async function deleteGuildTemplate (
   templateCode: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.GUILD_TEMPLATE(guildId, templateCode)
   )

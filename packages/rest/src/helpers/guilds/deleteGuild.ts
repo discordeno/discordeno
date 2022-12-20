@@ -20,7 +20,7 @@ export async function deleteGuild (
   guildId: BigString
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.GUILD(guildId)
   )

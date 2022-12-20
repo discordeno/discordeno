@@ -26,7 +26,7 @@ export async function editMember (
   options: ModifyGuildMember
 ): Promise<Member> {
   const result = await rest.runMethod<DiscordMemberWithUser>(
-    rest,
+
     'PATCH',
     routes.GUILD_MEMBER(guildId, userId),
     {

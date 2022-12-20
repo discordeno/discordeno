@@ -21,7 +21,7 @@ export async function getGuildTemplates (
   guildId: BigString
 ): Promise<Collection<string, Template>> {
   const results = await rest.runMethod<DiscordTemplate[]>(
-    rest,
+
     'GET',
     routes.GUILD_TEMPLATES(guildId)
   )

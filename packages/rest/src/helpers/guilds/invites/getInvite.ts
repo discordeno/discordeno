@@ -43,7 +43,7 @@ export async function getInvite (
   options?: GetInvite
 ): Promise<BaseInvite> {
   const result = await rest.runMethod<DiscordInviteMetadata>(
-    rest,
+
     'GET',
     routes.INVITE(inviteCode, options)
   )

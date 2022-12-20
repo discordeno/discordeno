@@ -30,7 +30,7 @@ export async function createInvite (
   options: CreateChannelInvite = {}
 ): Promise<BaseInvite> {
   const result = await rest.runMethod<DiscordInvite>(
-    rest,
+
     'POST',
     routes.CHANNEL_INVITES(channelId),
     {

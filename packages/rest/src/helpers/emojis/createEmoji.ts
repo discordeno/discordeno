@@ -31,7 +31,6 @@ export async function createEmoji (
   options: CreateGuildEmoji
 ): Promise<Camelize<DiscordEmoji>> {
   const result = await rest.runMethod<DiscordEmoji>(
-    rest,
     'POST',
     routes.GUILD_EMOJIS(guildId),
     {

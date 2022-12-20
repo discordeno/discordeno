@@ -18,7 +18,6 @@ export async function getEmoji (
   emojiId: BigString
 ): Promise<Camelize<DiscordEmoji>> {
   const result = await rest.runMethod<DiscordEmoji>(
-    rest,
     'GET',
     routes.GUILD_EMOJI(guildId, emojiId)
   )

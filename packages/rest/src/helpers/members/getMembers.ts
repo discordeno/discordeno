@@ -31,7 +31,7 @@ export async function getMembers (
   options: ListGuildMembers
 ): Promise<Collection<bigint, Member>> {
   const results = await rest.runMethod<DiscordMemberWithUser[]>(
-    rest,
+
     'GET',
     routes.GUILD_MEMBERS(guildId, options)
   )

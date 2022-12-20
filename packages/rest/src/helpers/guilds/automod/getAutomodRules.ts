@@ -21,7 +21,7 @@ export async function getAutomodRules (
   guildId: BigString
 ): Promise<Collection<bigint, AutoModerationRule>> {
   const results = await rest.runMethod<DiscordAutoModerationRule[]>(
-    rest,
+
     'GET',
     routes.AUTOMOD_RULES(guildId)
   )

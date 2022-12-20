@@ -34,7 +34,7 @@ export async function editApplicationCommandPermissions (
 ): Promise<ApplicationCommandPermission> {
   const result =
     await rest.runMethod<DiscordGuildApplicationCommandPermissions>(
-      rest,
+
       'PUT',
       routes.COMMANDS_PERMISSION(
         rest.applicationId,

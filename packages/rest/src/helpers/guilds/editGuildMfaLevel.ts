@@ -14,7 +14,7 @@ export async function editGuildMfaLevel (
   reason?: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'POST',
     routes.GUILD_MFA_LEVEL(guildId),
     { level: mfaLevel, reason } as DiscordEditGuildMFALevel

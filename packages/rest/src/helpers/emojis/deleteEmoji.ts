@@ -23,7 +23,6 @@ export async function deleteEmoji (
   reason?: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
     'DELETE',
     routes.GUILD_EMOJI(guildId, id),
     {

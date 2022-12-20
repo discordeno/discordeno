@@ -19,7 +19,7 @@ export async function getMember (
   userId: BigString
 ): Promise<Member> {
   const result = await rest.runMethod<DiscordMemberWithUser>(
-    rest,
+
     'GET',
     routes.GUILD_MEMBER(guildId, userId)
   )

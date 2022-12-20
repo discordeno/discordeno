@@ -18,7 +18,7 @@ export async function leaveGuild (
   guildId: BigString
 ): Promise<void> {
   return await rest.runMethod<void>(
-    rest,
+
     'DELETE',
     routes.GUILD_LEAVE(guildId)
   )
