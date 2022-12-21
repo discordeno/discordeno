@@ -83,7 +83,7 @@ export function createInvalidRequestBucket (
       // Mark a request has been invalid
       bucket.current++
       // If a timeout was not started, start a timeout to reset this bucket
-      if (bucket.timeoutId !== undefined) {
+      if (bucket.timeoutId === undefined) {
         bucket.timeoutId = setTimeout(() => {
           bucket.frozenAt = 0
           bucket.current = 0
