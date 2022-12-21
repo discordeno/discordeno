@@ -1,3 +1,5 @@
+import log from 'why-is-node-running'
+
 import type {
   Camelize,
   DiscordChannel,
@@ -5,10 +7,19 @@ import type {
 } from '@discordeno/types'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
-import { afterEach, beforeEach, describe, it } from 'mocha'
+import { after, afterEach, beforeEach, describe, it } from 'mocha'
 import { createRestManager } from '../../src/restManager.js'
 import { CACHED_COMMUNITY_GUILD_ID, token } from './utils.js'
 chai.use(chaiAsPromised)
+
+after(async () => {
+  await new Promise<void>((resolve) =>
+    setTimeout(() => {
+      log()
+      resolve()
+    }, 4000)
+  )
+})
 
 // waiting for channel
 describe.skip('[webhooks] Webhook related tests', async () => {
