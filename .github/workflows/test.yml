@@ -5,7 +5,7 @@ on:
   push:
 
 jobs:
-  build-type-and-unit-and-integration-test:
+  build-type-and-test:
     name: Build Type and Test
     runs-on: ubuntu-latest
     steps:
@@ -174,7 +174,7 @@ jobs:
     name: Rest
     needs: rest-unit-and-integration-test
     if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/node-migration' }}
-    uses: ./.github/workflows/package-test.yml
+    uses: ./.github/workflows/e2e-test.yml
     with:
       package: rest
   rest-other-runtime-test:
