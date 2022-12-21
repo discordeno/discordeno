@@ -39,8 +39,13 @@ jobs:
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
-      - name: Unit Test
+      - name: E2E Test
         run: yarn test:e2e --cache-dir=".turbo" --filter=./packages/${{ inputs.package }}
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          E2E_TEST_GUILD_ID: ${{ secrets.UNIT_TEST_GUILD_ID }}
+          PROXY_REST_SECRET: ${{ secrets.PROXY_REST_SECRET }}
+          PROXY_REST_URL: ${{ secrets.PROXY_REST_URL }}
       - name: Collect and upload the coverage report
         uses: codecov/codecov-action@v3
         with:
