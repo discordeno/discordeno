@@ -1,4 +1,8 @@
-import type { Camelize, DiscordChannel } from '@discordeno/types'
+import type {
+  Camelize,
+  DiscordChannel,
+  DiscordWebhook
+} from '@discordeno/types'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { afterEach, beforeEach, describe, it } from 'mocha'
@@ -23,7 +27,7 @@ describe('[webhooks] Webhook related tests', async () => {
     await rest.deleteChannel(channel.id)
   })
 
-  it('[webhooks] Create a webhook', async () => {
+  it('Create a webhook', async () => {
     const webhook = await rest.createWebhook(channel.id, {
       name: 'idk'
     })
@@ -49,14 +53,14 @@ describe('[webhooks] Webhook related tests', async () => {
     expect(webhook?.id).to.exist
     expect(webhook.token).to.exist
 
-    await rest.deleteWebhookWithToken(webhook.id, webhook.token)
+    await rest.deleteWebhookWithToken(webhook.id, webhook.token!)
 
     // Fetch the webhook to validate it was deleted
     expect(rest.getWebhook(webhook.id)).to.eventually.rejected
   })
 
-  describe('[webhooks] Guild webhook', async () => {
-    let webhook: any
+  describe('Guild webhook', async () => {
+    let webhook: Camelize<DiscordWebhook>
 
     beforeEach(async () => {
       webhook = await rest.createWebhook(channel.id, {
@@ -68,7 +72,7 @@ describe('[webhooks] Webhook related tests', async () => {
       await rest.deleteWebhook(webhook.id)
     })
 
-    it('[webhooks] Edit a webhook', async (t) => {
+    it('Edit a webhook', async (t) => {
       const edited = await rest.editWebhook(webhook.id, {
         name: 'edited'
       })
@@ -76,7 +80,7 @@ describe('[webhooks] Webhook related tests', async () => {
       expect(webhook.name).to.not.equal(edited.name)
     })
 
-    it('[webhooks] Edit a webhook with token', async () => {
+    it('Edit a webhook with token', async () => {
       expect(webhook.token).to.exist
       const edited = await rest.editWebhookWithToken(
         webhook.id,
@@ -89,20 +93,20 @@ describe('[webhooks] Webhook related tests', async () => {
       expect(webhook.name).to.not.equal(edited.name)
     })
 
-    it('[webhooks] Get a webhook', async () => {
+    it('Get a webhook', async () => {
       const fetched = await rest.getWebhook(webhook.id)
       expect(fetched).to.exist
       expect(webhook.id).to.equal(fetched.id)
     })
 
-    it('[webhooks] Get a webhook with a token', async () => {
+    it('Get a webhook with a token', async () => {
       expect(webhook.token).to.exist
       const fetched = await rest.getWebhookWithToken(webhook.id, webhook.token)
       expect(webhook.id).to.equal(fetched.id)
     })
   })
 
-  describe('[webhooks] Get channel webhooks', async () => {
+  describe('Get channel webhooks', async () => {
     const second = await rest.createWebhook(channel.id, {
       name: 'what nonsense'
     })
@@ -111,7 +115,7 @@ describe('[webhooks] Webhook related tests', async () => {
     const fetched = await rest.getChannelWebhooks(channel.id)
     expect(fetched.size).to.greaterThan(1)
 
-    it('[webhooks] Get guild webhooks', async () => {
+    it('Get guild webhooks', async () => {
       const guildWebhooks = await rest.getGuildWebhooks(channel.guildId!)
       expect(guildWebhooks.size).to.greaterThan(1)
     })
