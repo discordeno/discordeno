@@ -32,4 +32,5 @@ jobs:
         with:
           auto_fix: true
           eslint: true
+          eslint_extensions: "js,ts"
           prettier: true
