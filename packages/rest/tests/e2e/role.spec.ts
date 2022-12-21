@@ -7,7 +7,9 @@ import { CACHED_COMMUNITY_GUILD_ID, token } from './utils.js'
 
 describe('[role] Role tests', async () => {
   const rest = createRestManager({
-    token
+    token,
+    fetching: console.log,
+    fetched: console.log
   })
 
   // Create a role with a reason
