@@ -1,19 +1,18 @@
 import type { Camelize, DiscordChannel } from '@discordeno/types'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
-import type { RestManager } from '../../src/restManager.js'
+import { afterEach, beforeEach, describe, it } from 'mocha'
 import { createRestManager } from '../../src/restManager.js'
 import { CACHED_COMMUNITY_GUILD_ID, token } from './utils.js'
 chai.use(chaiAsPromised)
 
 describe('[webhooks] Webhook related tests', async () => {
-  let rest: RestManager
+  const rest = createRestManager({
+    token
+  })
   let channel: Camelize<DiscordChannel>
 
   beforeEach(async () => {
-    rest = createRestManager({
-      token
-    })
     channel = await rest.createChannel(CACHED_COMMUNITY_GUILD_ID, {
       name: 'wbhook'
     })
