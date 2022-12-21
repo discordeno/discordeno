@@ -46,8 +46,8 @@ describe('[member] Member tests', async () => {
 
       // get a single user's ban
       it("get a single user's ban", async () => {
-        expect(rest.getBan(CACHED_COMMUNITY_GUILD_ID, wolfID)).to.eventually
-          .exist
+        await expect(rest.getBan(CACHED_COMMUNITY_GUILD_ID, wolfID)).to
+          .eventually.exist
       })
     })
 
@@ -56,7 +56,8 @@ describe('[member] Member tests', async () => {
       await rest.banMember(CACHED_COMMUNITY_GUILD_ID, ianID, {
         reason: 'Blame Wolf'
       })
-      expect(rest.getBan(CACHED_COMMUNITY_GUILD_ID, ianID)).to.eventually.exist
+      await expect(rest.getBan(CACHED_COMMUNITY_GUILD_ID, ianID)).to.eventually
+        .exist
     })
 
     // ban member from guild and delete messages
@@ -64,7 +65,8 @@ describe('[member] Member tests', async () => {
       await rest.banMember(CACHED_COMMUNITY_GUILD_ID, ltsID, {
         deleteMessageSeconds: 604800
       })
-      expect(rest.getBan(CACHED_COMMUNITY_GUILD_ID, ltsID)).to.eventually.exist
+      await expect(rest.getBan(CACHED_COMMUNITY_GUILD_ID, ltsID)).to.eventually
+        .exist
     })
 
     // get bans on a server
@@ -80,7 +82,7 @@ describe('[member] Member tests', async () => {
         rest.unbanMember(CACHED_COMMUNITY_GUILD_ID, ianID)
       ])
 
-      expect(rest.getBan(CACHED_COMMUNITY_GUILD_ID, wolfID)).to.eventually
+      await expect(rest.getBan(CACHED_COMMUNITY_GUILD_ID, wolfID)).to.eventually
         .rejected
     })
   })
