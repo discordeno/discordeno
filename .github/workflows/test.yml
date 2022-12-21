@@ -168,7 +168,6 @@ jobs:
     name: Rest
     needs: build-dist
     uses: ./.github/workflows/package-test.yml
-    secrets: inherit
     with:
       package: rest
   rest-e2e-test:
@@ -176,6 +175,7 @@ jobs:
     needs: rest-unit-and-integration-test
     if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/node-migration' }}
     uses: ./.github/workflows/e2e-test.yml
+    secrets: inherit
     with:
       package: rest
   rest-other-runtime-test:
