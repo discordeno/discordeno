@@ -30,7 +30,7 @@ export async function resume (shard: Shard): Promise<void> {
   // Before we can resume, we need to create a new connection with Discord's gateway.
   await shard.connect()
 
-  void shard.send(
+  shard.send(
     {
       op: GatewayOpcodes.Resume,
       d: {

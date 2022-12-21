@@ -7,7 +7,9 @@ import { delay } from '@discordeno/utils'
  * @param options The options used to configure this bucket.
  * @returns RefillingBucket
  */
-export function createInvalidRequestBucket (options: InvalidRequestBucketOptions): InvalidRequestBucket {
+export function createInvalidRequestBucket (
+  options: InvalidRequestBucketOptions
+): InvalidRequestBucket {
   const bucket: InvalidRequestBucket = {
     current: options.current ?? 0,
     max: options.max ?? 10000,
@@ -30,17 +32,16 @@ export function createInvalidRequestBucket (options: InvalidRequestBucketOptions
     },
 
     waitUntilRequestAvailable: async function () {
-      return await new Promise((resolve) => {
-        void (async () => {
-          // If whatever amount of requests is left is more than the safety margin, allow the request
-          if (bucket.isRequestAllowed()) {
-            bucket.requested++
-            resolve()
-          } else {
-            bucket.waiting.push(resolve)
-            await bucket.processWaiting()
-          }
-        })()
+      // eslint-disable-next-line no-async-promise-executor
+      return await new Promise(async (resolve) => {
+        // If whatever amount of requests is left is more than the safety margin, allow the request
+        if (bucket.isRequestAllowed()) {
+          bucket.requested++
+          resolve()
+        } else {
+          bucket.waiting.push(resolve)
+          await bucket.processWaiting()
+        }
       })
     },
 

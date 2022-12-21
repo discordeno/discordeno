@@ -27,13 +27,9 @@ export async function connect (shard: Shard): Promise<void> {
   // TODO: proper event handling
   socket.onerror = (event) => console.log({ error: event })
 
-  socket.onclose = (event) => {
-    void shard.handleClose(event)
-  }
+  socket.onclose = async (event) => await shard.handleClose(event)
 
-  socket.onmessage = (message) => {
-    void shard.handleMessage(message)
-  }
+  socket.onmessage = async (message) => await shard.handleMessage(message)
 
   return await new Promise((resolve) => {
     socket.onopen = () => {

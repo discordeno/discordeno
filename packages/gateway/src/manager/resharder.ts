@@ -119,28 +119,26 @@ export function activate (resharder: Resharder): void {
     )
   }
 
-  resharder.intervalId = setInterval(() => {
-    void (async () => {
-      console.log('[Resharding] Checking if resharding is needed.')
+  resharder.intervalId = setInterval(async () => {
+    console.log('[Resharding] Checking if resharding is needed.')
 
-      const result = await resharder.getGatewayBot()
+    const result = await resharder.getGatewayBot()
 
-      // 2500 is the max amount of guilds a single shard can handle
-      // 1000 is the amount of guilds discord uses to determine how many shards to recommend.
-      // This algo helps check if your bot has grown enough to reshard.
-      const percentage =
-        ((2500 * result.shards) /
-          (resharder.gateway.manager.totalShards * 1000)) *
-        100
-      // Less than necessary% being used so do nothing
-      if (percentage < resharder.percentage) return
+    // 2500 is the max amount of guilds a single shard can handle
+    // 1000 is the amount of guilds discord uses to determine how many shards to recommend.
+    // This algo helps check if your bot has grown enough to reshard.
+    const percentage =
+      ((2500 * result.shards) /
+        (resharder.gateway.manager.totalShards * 1000)) *
+      100
+    // Less than necessary% being used so do nothing
+    if (percentage < resharder.percentage) return
 
-      // Don't have enough identify rate limits to reshard
-      if (result.sessionStartLimit.remaining < result.shards) return
+    // Don't have enough identify rate limits to reshard
+    if (result.sessionStartLimit.remaining < result.shards) return
 
-      // MULTI-SERVER BOTS OVERRIDE THIS IF YOU NEED TO RESHARD SERVER BY SERVER
-      return await resharder.reshard(result)
-    })()
+    // MULTI-SERVER BOTS OVERRIDE THIS IF YOU NEED TO RESHARD SERVER BY SERVER
+    return await resharder.reshard(result)
   }, resharder.checkInterval)
 }
 
@@ -238,7 +236,7 @@ export async function tellWorkerToPrepare (
   await shard.identify()
 
   // Tell the manager that this shard is online
-  void resharder.shardIsPending(resharder, shard)
+  return await resharder.shardIsPending(resharder, shard)
 }
 
 export async function shardIsPending (

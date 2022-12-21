@@ -31,39 +31,37 @@ export function startHeartbeating (shard: Shard, interval: number): void {
     shard.heart.acknowledged = false
 
     // After the random heartbeat jitter we can start a normal interval.
-    shard.heart.intervalId = setInterval(() => {
-      void (async () => {
-        // gateway.debug("GW DEBUG", `Running setInterval in heartbeat file. Shard: ${shardId}`);
+    shard.heart.intervalId = setInterval(async () => {
+      // gateway.debug("GW DEBUG", `Running setInterval in heartbeat file. Shard: ${shardId}`);
 
-        // gateway.debug("GW HEARTBEATING", { shardId, shard: currentShard });
+      // gateway.debug("GW HEARTBEATING", { shardId, shard: currentShard });
 
-        // The Shard did not receive a heartbeat ACK from Discord in time,
-        // therefore we have to assume that the connection has failed or got "zombied".
-        // The Shard needs to start a re-identify action accordingly.
-        // Reference: https://discord.com/developers/docs/topics/gateway#heartbeating-example-gateway-heartbeat-ack
-        if (!shard.heart.acknowledged) {
-          shard.close(
-            ShardSocketCloseCodes.ZombiedConnection,
-            'Zombied connection, did not receive an heartbeat ACK in time.'
-          )
-
-          return await shard.identify()
-        }
-
-        shard.heart.acknowledged = false
-
-        // Using a direct socket.send call here because heartbeat requests are reserved by us.
-        shard.socket?.send(
-          JSON.stringify({
-            op: GatewayOpcodes.Heartbeat,
-            d: shard.previousSequenceNumber
-          })
+      // The Shard did not receive a heartbeat ACK from Discord in time,
+      // therefore we have to assume that the connection has failed or got "zombied".
+      // The Shard needs to start a re-identify action accordingly.
+      // Reference: https://discord.com/developers/docs/topics/gateway#heartbeating-example-gateway-heartbeat-ack
+      if (!shard.heart.acknowledged) {
+        shard.close(
+          ShardSocketCloseCodes.ZombiedConnection,
+          'Zombied connection, did not receive an heartbeat ACK in time.'
         )
 
-        shard.heart.lastBeat = Date.now()
+        return await shard.identify()
+      }
 
-        shard.events.heartbeat?.(shard)
-      })()
+      shard.heart.acknowledged = false
+
+      // Using a direct socket.send call here because heartbeat requests are reserved by us.
+      shard.socket?.send(
+        JSON.stringify({
+          op: GatewayOpcodes.Heartbeat,
+          d: shard.previousSequenceNumber
+        })
+      )
+
+      shard.heart.lastBeat = Date.now()
+
+      shard.events.heartbeat?.(shard)
     }, shard.heart.interval)
   }, jitter)
 }

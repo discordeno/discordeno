@@ -24,12 +24,12 @@ export function processRequest (
 
   const queue = rest.pathQueues.get(url)
   if (queue !== undefined) {
-    void queue.makeRequest({ request, payload })
+    queue.makeRequest({ request, payload })
   } else {
     // CREATES A NEW QUEUE
     const bucketQueue = createQueueBucket(rest, {})
     // Add request to queue
-    void bucketQueue.makeRequest({
+    bucketQueue.makeRequest({
       request,
       payload
     })
