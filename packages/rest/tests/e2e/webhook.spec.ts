@@ -24,7 +24,8 @@ after(async () => {
 // waiting for channel
 describe.skip('[webhooks] Webhook related tests', async () => {
   const rest = createRestManager({
-    token
+    token,
+    debug: console.log
   })
   let channel: Camelize<DiscordChannel>
 

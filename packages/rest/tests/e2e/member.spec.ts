@@ -14,7 +14,8 @@ const ltsID = 379643682984296448n
 
 describe('[member] Member tests', async () => {
   const rest = createRestManager({
-    token
+    token,
+    debug: console.log
   })
 
   describe('Get members', () => {
