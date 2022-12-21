@@ -1,10 +1,14 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type {
-  BigString, DiscordEditGuildRole, DiscordRole, PermissionStrings
+  BigString,
+  Camelize,
+  DiscordEditGuildRole,
+  DiscordRole,
+  PermissionStrings
 } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import type { Role } from '../../transformers/role.js'
 
 /**
  * Edits a role in a guild.
@@ -13,7 +17,7 @@ import type { Role } from '../../transformers/role.js'
  * @param guildId - The ID of the guild to edit the role in.
  * @param roleId - The ID of the role to edit.
  * @param options - The parameters for the edit of the role.
- * @returns An instance of the edited {@link Role}.
+ * @returns An instance of the edited {@link DiscordRole}.
  *
  * @remarks
  * Requires the `MANAGE_ROLES` permission.
@@ -27,9 +31,8 @@ export async function editRole (
   guildId: BigString,
   roleId: BigString,
   options: EditGuildRole
-): Promise<Role> {
+): Promise<Camelize<DiscordRole>> {
   const result = await rest.runMethod<DiscordRole>(
-
     'PATCH',
     routes.GUILD_ROLE(guildId, roleId),
     {
@@ -43,10 +46,7 @@ export async function editRole (
     } as DiscordEditGuildRole
   )
 
-  return rest.transformers.role(rest, {
-    role: result,
-    guildId: rest.transformers.snowflake(guildId)
-  })
+  return TRANSFORMERS.role(result)
 }
 
 export interface EditGuildRole {

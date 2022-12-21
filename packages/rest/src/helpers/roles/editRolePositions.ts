@@ -1,8 +1,13 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordModifyRolePositions, DiscordRole } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type {
+  BigString,
+  Camelize,
+  DiscordModifyRolePositions,
+  DiscordRole
+} from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import type { Role } from '../../transformers/role.js'
 
 /**
  * Edits the positions of a set of roles.
@@ -10,7 +15,7 @@ import type { Role } from '../../transformers/role.js'
  * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to edit the role positions in.
  * @param options - The parameters for the edit of the role positions.
- * @returns A collection of {@link Role} objects assorted by role ID.
+ * @returns A collection of {@link DiscordRole} objects assorted by role ID.
  *
  * @remarks
  * Requires the `MANAGE_ROLES` permission.
@@ -23,19 +28,16 @@ export async function modifyRolePositions (
   rest: RestManager,
   guildId: BigString,
   options: ModifyRolePositions[]
-): Promise<Collection<bigint, Role>> {
+): Promise<Collection<string, Camelize<DiscordRole>>> {
   const results = await rest.runMethod<DiscordRole[]>(
-
     'PATCH',
     routes.GUILD_ROLES(guildId),
     options as DiscordModifyRolePositions[]
   )
 
-  const id = rest.transformers.snowflake(guildId)
-
   return new Collection(
     results.map((result) => {
-      const role = rest.transformers.role(rest, { role: result, guildId: id })
+      const role = TRANSFORMERS.role(result)
       return [role.id, role]
     })
   )

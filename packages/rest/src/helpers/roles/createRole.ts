@@ -1,10 +1,14 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type {
-  BigString, DiscordCreateGuildRole, DiscordRole, PermissionStrings
+  BigString,
+  Camelize,
+  DiscordCreateGuildRole,
+  DiscordRole,
+  PermissionStrings
 } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import type { Role } from '../../transformers/role.js'
 
 /**
  * Creates a role in a guild.
@@ -12,7 +16,7 @@ import type { Role } from '../../transformers/role.js'
  * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to create the role in.
  * @param options - The parameters for the creation of the role.
- * @returns An instance of the created {@link Role}.
+ * @returns An instance of the created {@link DiscordRole}.
  *
  * @remarks
  * Requires the `MANAGE_ROLES` permission.
@@ -26,9 +30,8 @@ export async function createRole (
   guildId: BigString,
   options: CreateGuildRole,
   reason?: string
-): Promise<Role> {
+): Promise<Camelize<DiscordRole>> {
   const result = await rest.runMethod<DiscordRole>(
-
     'POST',
     routes.GUILD_ROLES(guildId),
     {
@@ -43,10 +46,7 @@ export async function createRole (
     } as DiscordCreateGuildRole
   )
 
-  return rest.transformers.role(rest, {
-    role: result,
-    guildId: rest.transformers.snowflake(guildId)
-  })
+  return TRANSFORMERS.role(result)
 }
 
 export interface CreateGuildRole {
