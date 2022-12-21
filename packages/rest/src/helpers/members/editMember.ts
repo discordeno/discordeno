@@ -1,7 +1,13 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordMemberWithUser, DiscordModifyGuildMember } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type {
+  BigString,
+  Camelize,
+  DiscordMember,
+  DiscordMemberWithUser,
+  DiscordModifyGuildMember
+} from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import type { Member } from '../../transformers/member.js'
 
 /**
  * Edits a member's properties.
@@ -24,9 +30,8 @@ export async function editMember (
   guildId: BigString,
   userId: BigString,
   options: ModifyGuildMember
-): Promise<Member> {
+): Promise<Camelize<DiscordMember>> {
   const result = await rest.runMethod<DiscordMemberWithUser>(
-
     'PATCH',
     routes.GUILD_MEMBER(guildId, userId),
     {
@@ -41,12 +46,7 @@ export async function editMember (
     } as DiscordModifyGuildMember
   )
 
-  return rest.transformers.member(
-    rest,
-    result,
-    rest.transformers.snowflake(guildId),
-    rest.transformers.snowflake(userId)
-  )
+  return TRANSFORMERS.member(result)
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-member */

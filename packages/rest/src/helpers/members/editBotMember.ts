@@ -1,7 +1,13 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordEditBotMemberOptions, DiscordMember, WithReason } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type {
+  BigString,
+  Camelize,
+  DiscordEditBotMemberOptions,
+  DiscordMember,
+  WithReason
+} from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import type { Member } from '../../transformers/member.js'
 
 /**
  * Edits the nickname of the bot user.
@@ -9,7 +15,7 @@ import type { Member } from '../../transformers/member.js'
  * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to edit the nickname of the bot user in.
  * @param options - The parameters for the edit of the nickname.
- * @returns An instance of the edited {@link Member}
+ * @returns An instance of the edited {@link DiscordMember}
  *
  * @remarks
  * Fires a _Guild Member Update_ gateway event.
@@ -20,9 +26,8 @@ export async function editBotMember (
   rest: RestManager,
   guildId: BigString,
   options: EditBotMemberOptions
-): Promise<Member> {
+): Promise<Camelize<DiscordMember>> {
   const result = await rest.runMethod<DiscordMember>(
-
     'PATCH',
     routes.USER_NICK(guildId),
     {
@@ -31,12 +36,7 @@ export async function editBotMember (
     } as DiscordEditBotMemberOptions
   )
 
-  return rest.transformers.member(
-    rest,
-    result,
-    rest.transformers.snowflake(guildId),
-    rest.id
-  )
+  return TRANSFORMERS.member(result)
 }
 
 export interface EditBotMemberOptions extends WithReason {

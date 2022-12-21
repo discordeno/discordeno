@@ -1,8 +1,13 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordMemberWithUser, ListGuildMembers } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type {
+  BigString,
+  Camelize,
+  DiscordMemberWithUser,
+  ListGuildMembers
+} from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import type { Member } from '../../transformers/member.js'
 
 // TODO: make options optional
 
@@ -12,7 +17,7 @@ import type { Member } from '../../transformers/member.js'
  * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to get the list of members for.
  * @param options - The parameters for the fetching of the members.
- * @returns A collection of {@link Member} objects assorted by user ID.
+ * @returns A collection of {@link DiscordMemberWithUser} objects assorted by user ID.
  *
  * @remarks
  * Requires the `GUILD_MEMBERS` intent.
@@ -29,24 +34,18 @@ export async function getMembers (
   rest: RestManager,
   guildId: BigString,
   options: ListGuildMembers
-): Promise<Collection<bigint, Member>> {
+): Promise<Collection<string, Camelize<DiscordMemberWithUser>>> {
   const results = await rest.runMethod<DiscordMemberWithUser[]>(
-
     'GET',
     routes.GUILD_MEMBERS(guildId, options)
   )
 
-  const id = rest.transformers.snowflake(guildId)
-
   return new Collection(
     results.map((result) => {
-      const member = rest.transformers.member(
-        rest,
-        result,
-        id,
-        rest.transformers.snowflake(result.user.id)
-      )
-      return [member.id, member]
+      const member = TRANSFORMERS.member(
+        result
+      ) as Camelize<DiscordMemberWithUser>
+      return [member.user.id, member]
     })
   )
 }
