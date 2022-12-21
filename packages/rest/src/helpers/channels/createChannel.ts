@@ -11,7 +11,6 @@ import type {
 import { ChannelTypes } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import { snakeToCamelCaseNested } from '../../transformer.js'
 
 /**
  * Creates a channel within a guild.
@@ -88,7 +87,7 @@ export async function createChannel (
       : {}
   )
 
-  return snakeToCamelCaseNested(result)
+  return result
 }
 
 export interface CreateGuildChannel extends WithReason {

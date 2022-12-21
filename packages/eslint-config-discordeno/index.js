@@ -23,6 +23,7 @@ module.exports = {
     '@typescript-eslint/consistent-type-assertions': 'off',
     '@typescript-eslint/no-floating-promises': 'off',
     '@typescript-eslint/no-invalid-void-type': 'off',
-    '@typescript-eslint/consistent-type-imports': 'error'
+    '@typescript-eslint/consistent-type-imports': 'error',
+    '@typescript-eslint/no-misused-promises': 'off'
   }
 }

@@ -17,15 +17,20 @@ import { processQueue } from './processQueue.js'
 import { processRateLimitedPaths } from './processRateLimitedPaths.js'
 import { processRequest } from './processRequest.js'
 import { processRequestHeaders } from './processRequestHeaders.js'
-import type { RequestMethod, RestPayload, RestRateLimitedPath, RestRequest } from './rest.js'
+import type {
+  RequestMethod,
+  RestPayload,
+  RestRateLimitedPath,
+  RestRequest
+} from './rest.js'
 import { runMethod } from './runMethod.js'
 import type { RestSendRequestOptions } from './sendRequest.js'
 import { sendRequest } from './sendRequest.js'
 import { simplifyUrl } from './simplifyUrl.js'
-import type { Transformers } from './transformer.js'
-import { createTransformers } from './transformer.js'
 
-export function createRestManager (options: CreateRestManagerOptions): RestManager {
+export function createRestManager (
+  options: CreateRestManagerOptions
+): RestManager {
   const version = options.version ?? API_VERSION
 
   if (options.customUrl !== undefined) {
@@ -93,7 +98,6 @@ export function createRestManager (options: CreateRestManagerOptions): RestManag
           } ${JSON.stringify(opts)}`
         )
       },
-    transformers: createTransformers(options.transformers ?? {}),
     id: options.botId ?? getBotIdFromToken(options.token),
     applicationId:
       options.applicationId ??
@@ -134,7 +138,6 @@ export interface CreateRestManagerOptions {
   sendRequest?: typeof sendRequest
   fetching?: (options: RestSendRequestOptions) => void
   fetched?: (options: RestSendRequestOptions, response: Response) => void
-  transformers?: Partial<ReturnType<typeof createTransformers>>
   helpers?: Partial<Helpers>
   applicationId?: bigint
   botId?: bigint
@@ -167,21 +170,22 @@ export interface RestManager extends FinalHelpers {
   processRequestHeaders: typeof processRequestHeaders
   processRequest: typeof processRequest
   createRequestBody: typeof createRequestBody
-  runMethod: <T>(method: RequestMethod,
+  runMethod: <T>(
+    method: RequestMethod,
     route: string,
     body?: any,
     options?: {
       retryCount?: number
       bucketId?: string
       headers?: Record<string, string>
-    }) => Promise<T>
+    }
+  ) => Promise<T>
   simplifyUrl: typeof simplifyUrl
   processGlobalQueue: typeof processGlobalQueue
   convertRestError: typeof convertRestError
   sendRequest: typeof sendRequest
   fetching: (options: RestSendRequestOptions) => void
   fetched: (options: RestSendRequestOptions, response: Response) => void
-  transformers: Transformers
   id: bigint
   applicationId: bigint
 }

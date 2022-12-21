@@ -11,6 +11,10 @@ flags:
     carryforward: false
   rest-unit:
     carryforward: false
+  rest-integration:
+    carryforward: false
+  rest-e2e:
+    carryforward: true
   utils-unit:
     carryforward: false
   cache_plugin-unit:
