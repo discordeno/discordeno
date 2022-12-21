@@ -9,6 +9,7 @@
     "benchmark": "npm:benchmark",
     "@discordeno/utils": "./packages/utils/dist/index.js",
     "@discordeno/constant": "./packages/constant/dist/index.js",
-    "@discordeno/types": "./packages/types/dist/index.js"
+    "@discordeno/types": "./packages/types/dist/index.js",
+    "@discordeno/transformer": "./packages/transformer/dist/index.js"
   }
 }
