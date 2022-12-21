@@ -2,8 +2,8 @@
 
 import type { PresenceStatus } from '@discordeno/types'
 import { GatewayOpcodes } from '@discordeno/types'
-import type { RestManager } from '../../restManager.js'
-import type { Activity } from '../../transformers/activity.js'
+import type { Activity } from '../../../../bot/transformers/activity.js'
+import type { RestManager } from '../../../../rest/src/restManager.js'
 export async function editShardStatus (
   rest: RestManager,
   shardId: number,

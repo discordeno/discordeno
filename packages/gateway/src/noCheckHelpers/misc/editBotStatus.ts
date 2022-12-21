@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import type { RestManager } from '../../restManager.js'
+import type { RestManager } from '../../../../rest/src/restManager.js'
 import type { StatusUpdate } from './editShardStatus.js'
 
 export async function editBotStatus (

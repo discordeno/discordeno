@@ -4,7 +4,7 @@
 import type { BigString } from '@discordeno/types'
 import { GatewayOpcodes } from '@discordeno/types'
 import { calculateShardId } from '@discordeno/utils'
-import type { RestManager } from '../../../restManager.js'
+import type { RestManager } from '../../../../../rest/src/restManager.js'
 /**
  * Leaves the voice channel the bot user is currently in.
  *

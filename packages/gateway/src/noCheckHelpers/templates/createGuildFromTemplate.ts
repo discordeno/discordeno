@@ -1,8 +1,8 @@
 import { routes } from '@discordeno/constant'
 import type { DiscordGuild } from '@discordeno/types'
 import { calculateShardId } from '@discordeno/utils'
-import type { RestManager } from '../../restManager.js'
-import type { Guild } from '../../transformers/guild.js'
+import type { Guild } from '../../../../bot/transformers/guild.js'
+import type { RestManager } from '../../../../rest/src/restManager.js'
 
 /**
  * Creates a guild from a template.

@@ -2,8 +2,8 @@
 
 import type { BigString, DiscordGuild } from '@discordeno/types'
 import { calculateShardId } from '@discordeno/utils'
-import type { RestManager } from '../../restManager.js'
-import type { Guild } from '../../transformers/guild.js'
+import type { Guild } from '../../../../bot/transformers/guild.js'
+import type { RestManager } from '../../../../rest/src/restManager.js'
 
 /**
  * Gets a guild by its ID.
