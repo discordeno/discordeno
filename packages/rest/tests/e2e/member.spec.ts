@@ -103,7 +103,8 @@ describe('[member] Member tests', async () => {
     })
   })
 
-  describe('DM', () => {
+  // waiting for channel
+  describe.skip('DM', () => {
     it('[member] get dm channel and send a message', async () => {
       // Itoh Alt ID
       const channel = await rest.getDmChannel(750661528360845322n)
