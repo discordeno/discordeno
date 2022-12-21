@@ -26,13 +26,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - run: yarn install --immutable
-      
       - name: Run linters
         uses: wearerequired/lint-action@v2
         with:
           auto_fix: true
           eslint: true
-          eslint_dir: "packages/"
           eslint_extensions: "js,ts"
           prettier: true
-          prettier_dir: "packages/"
