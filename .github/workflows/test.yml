@@ -168,6 +168,7 @@ jobs:
     name: Rest
     needs: build-dist
     uses: ./.github/workflows/package-test.yml
+    secrets: inherit
     with:
       package: rest
   rest-e2e-test:
