@@ -1,6 +1,6 @@
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
-import { describe } from 'mocha'
+import { describe, it } from 'mocha'
 import { createRestManager } from '../../src/restManager.js'
 import { CACHED_COMMUNITY_GUILD_ID, token } from './utils.js'
 chai.use(chaiAsPromised)
@@ -46,8 +46,7 @@ describe('[member] Member tests', async () => {
 
       // get a single user's ban
       it("get a single user's ban", async () => {
-        await expect(rest.getBan(CACHED_COMMUNITY_GUILD_ID, wolfID)).to
-          .eventually.exist
+        expect(await rest.getBan(CACHED_COMMUNITY_GUILD_ID, wolfID)).to.exist
       })
     })
 
@@ -56,8 +55,7 @@ describe('[member] Member tests', async () => {
       await rest.banMember(CACHED_COMMUNITY_GUILD_ID, ianID, {
         reason: 'Blame Wolf'
       })
-      await expect(rest.getBan(CACHED_COMMUNITY_GUILD_ID, ianID)).to.eventually
-        .exist
+      expect(await rest.getBan(CACHED_COMMUNITY_GUILD_ID, ianID)).to.exist
     })
 
     // ban member from guild and delete messages
@@ -65,8 +63,7 @@ describe('[member] Member tests', async () => {
       await rest.banMember(CACHED_COMMUNITY_GUILD_ID, ltsID, {
         deleteMessageSeconds: 604800
       })
-      await expect(rest.getBan(CACHED_COMMUNITY_GUILD_ID, ltsID)).to.eventually
-        .exist
+      expect(await rest.getBan(CACHED_COMMUNITY_GUILD_ID, ltsID)).to.exist
     })
 
     // get bans on a server
