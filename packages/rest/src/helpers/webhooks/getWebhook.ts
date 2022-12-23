@@ -20,10 +20,9 @@ export async function getWebhook (
   webhookId: BigString
 ): Promise<Webhook> {
   const result = await rest.runMethod<DiscordWebhook>(
-
     'GET',
     routes.WEBHOOK_ID(webhookId)
   )
 
-  return rest.transformers.webhook(rest, result)
+  return TRANSFORMERS.webhook(result)
 }

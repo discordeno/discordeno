@@ -1,8 +1,14 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordCreateWebhook, DiscordWebhook, WithReason } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type {
+  BigString,
+  Camelize,
+  DiscordCreateWebhook,
+  DiscordWebhook,
+  WithReason
+} from '@discordeno/types'
 import { urlToBase64 } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
-import type { Webhook } from '../../transformers/webhook.js'
 
 /**
  * Creates a webhook.
@@ -10,7 +16,7 @@ import type { Webhook } from '../../transformers/webhook.js'
  * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel to create the webhook in.
  * @param options - The parameters for the creation of the webhook.
- * @returns An instance of the created {@link Webhook}.
+ * @returns An instance of the created {@link DiscordWebhook}.
  *
  * @remarks
  * Requires the `MANAGE_WEBHOOKS` permission.
@@ -25,9 +31,8 @@ export async function createWebhook (
   rest: RestManager,
   channelId: BigString,
   options: CreateWebhook
-): Promise<Webhook> {
+): Promise<Camelize<DiscordWebhook>> {
   const result = await rest.runMethod<DiscordWebhook>(
-
     'POST',
     routes.CHANNEL_WEBHOOKS(channelId),
     {
@@ -37,7 +42,7 @@ export async function createWebhook (
     } as DiscordCreateWebhook
   )
 
-  return rest.transformers.webhook(rest, result)
+  return TRANSFORMERS.webhook(result)
 }
 
 export interface CreateWebhook extends WithReason {

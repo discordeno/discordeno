@@ -19,10 +19,9 @@ export async function getWebhookWithToken (
   token: string
 ): Promise<Webhook> {
   const result = await rest.runMethod<DiscordWebhook>(
-
     'GET',
     routes.WEBHOOK(webhookId, token)
   )
 
-  return rest.transformers.webhook(rest, result)
+  return TRANSFORMERS.webhook(result)
 }

@@ -1,4 +1,5 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type { BigString, DiscordMessage } from '@discordeno/types'
 import { InteractionResponseTypes } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
@@ -26,11 +27,10 @@ export async function editOriginalWebhookMessage (
   options: InteractionCallbackData & { threadId?: BigString }
 ): Promise<Message> {
   const result = await rest.runMethod<DiscordMessage>(
-
     'PATCH',
     routes.WEBHOOK_MESSAGE_ORIGINAL(webhookId, token, options),
     {
-      ...rest.transformers.reverse.interactionResponse(rest, {
+      ...TRANSFORMERS.reverse.interactionResponse(rest, {
         type: InteractionResponseTypes.UpdateMessage,
         data: options
       }).data,
@@ -38,5 +38,5 @@ export async function editOriginalWebhookMessage (
     }
   )
 
-  return rest.transformers.message(rest, result)
+  return TRANSFORMERS.message(rest, result)
 }

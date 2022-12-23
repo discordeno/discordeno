@@ -1,7 +1,10 @@
 import { routes } from '@discordeno/constant'
 import type {
   AllowedMentions,
-  BigString, DiscordExecuteWebhook, DiscordMessage, FileContent,
+  BigString,
+  DiscordExecuteWebhook,
+  DiscordMessage,
+  FileContent,
   MessageComponents
 } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
@@ -40,7 +43,6 @@ export async function executeWebhook (
     : { parse: [] }
 
   const result = await rest.runMethod<DiscordMessage>(
-
     'POST',
     routes.WEBHOOK(webhookId, token, options),
     {
@@ -53,17 +55,17 @@ export async function executeWebhook (
       tts: options.tts,
       file: options.file,
       embeds: options.embeds?.map((embed) =>
-        rest.transformers.reverse.embed(rest, embed)
+        TRANSFORMERS.reverse.embed(rest, embed)
       ),
       allowed_mentions: allowedMentions,
       components: options.components?.map((component) =>
-        rest.transformers.reverse.component(rest, component)
+        TRANSFORMERS.reverse.component(rest, component)
       )
     } as DiscordExecuteWebhook
   )
   if (!options.wait) return
 
-  return rest.transformers.message(rest, result)
+  return TRANSFORMERS.message(rest, result)
 }
 
 /** https://discord.com/developers/docs/resources/webhook#execute-webhook */

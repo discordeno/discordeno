@@ -28,11 +28,10 @@ export async function editWebhookMessage (
   options: InteractionCallbackData & { threadId?: BigString }
 ): Promise<Message> {
   const result = await rest.runMethod<DiscordMessage>(
-
     'PATCH',
     routes.WEBHOOK_MESSAGE(webhookId, token, messageId, options),
     {
-      ...rest.transformers.reverse.interactionResponse(rest, {
+      ...TRANSFORMERS.reverse.interactionResponse(rest, {
         type: InteractionResponseTypes.UpdateMessage,
         data: options
       }).data,
@@ -40,5 +39,5 @@ export async function editWebhookMessage (
     }
   )
 
-  return rest.transformers.message(rest, result)
+  return TRANSFORMERS.message(rest, result)
 }

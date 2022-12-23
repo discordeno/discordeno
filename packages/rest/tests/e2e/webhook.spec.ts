@@ -11,7 +11,7 @@ import { CACHED_COMMUNITY_GUILD_ID, token } from './utils.js'
 chai.use(chaiAsPromised)
 
 // waiting for channel
-describe.skip('[webhooks] Webhook related tests', async () => {
+describe('[webhooks] Webhook related tests', async () => {
   const rest = createRestManager({
     token
   })

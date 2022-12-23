@@ -1,43 +1,51 @@
-import { c1amelize1Activity } from './camel/activity.js'
-import { c1amelize1Application } from './camel/application.js'
-import { c1amelize1ApplicationCommand } from './camel/applicationCommand.js'
-import { c1amelize1ApplicationCommandOption } from './camel/applicationCommandOption.js'
-import { c1amelize1ApplicationCommandOptionChoice } from './camel/applicationCommandOptionChoice.js'
-import { c1amelize1ApplicationCommandPermission } from './camel/applicationCommandPermission.js'
-import { c1amelize1Attachment } from './camel/attachment.js'
-import { c1amelize1AutoModerationActionExecution } from './camel/automodActionExecution.js'
-import { c1amelize1AutoModerationRule } from './camel/automodRule.js'
-import { c1amelize1Channel } from './camel/channel.js'
-import { c1amelize1Emoji } from './camel/emoji.js'
-import { c1amelize1GatewayBot } from './camel/gatewayBot.js'
-import { c1amelize1Guild } from './camel/guild.js'
-import { c1amelize1Member, c1amelize1User } from './camel/member.js'
-import { c1amelize1Role } from './camel/role.js'
-import { c1amelize1Sticker } from './camel/sticker.js'
-import { c1amelize1Team } from './camel/team.js'
-import { c1amelize1WelcomeScreen } from './camel/welcomeScreen.js'
-import { c1amelize1Widget } from './camel/widget.js'
-import { c1amelize1WidgetSettings } from './camel/widgetSettings.js'
-import { s1nakelize1Activity } from './snake/activity.js'
-import { s1nakelize1Application } from './snake/application.js'
-import { s1nakelize1ApplicationCommand } from './snake/applicationCommand.js'
-import { s1nakelize1ApplicationCommandOption } from './snake/applicationCommandOption.js'
-import { s1nakelize1ApplicationCommandOptionChoice } from './snake/applicationCommandOptionChoice.js'
-import { s1nakelize1ApplicationCommandPermission } from './snake/applicationCommandPermission.js'
-import { s1nakelize1Attachment } from './snake/attachment.js'
-import { s1nakelize1AutoModerationActionExecution } from './snake/automodActionExecution.js'
-import { s1nakelize1AutoModerationRule } from './snake/automodRule.js'
-import { s1nakelize1Channel } from './snake/channel.js'
-import { s1nakelize1Emoji } from './snake/emoji.js'
-import { s1nakelize1GatewayBot } from './snake/gatewayBot.js'
-import { s1nakelize1Guild } from './snake/guild.js'
-import { s1nakelize1Member, s1nakelize1User } from './snake/member.js'
-import { s1nakelize1Role } from './snake/role.js'
-import { s1nakelize1Sticker } from './snake/sticker.js'
-import { s1nakelize1Team } from './snake/team.js'
-import { s1nakelize1WelcomeScreen } from './snake/welcomeScreen.js'
-import { s1nakelize1Widget } from './snake/widget.js'
-import { s1nakelize1WidgetSettings } from './snake/widgetSettings.js'
+import {
+  c1amelize1Activity,
+  c1amelize1Application,
+  c1amelize1ApplicationCommand,
+  c1amelize1ApplicationCommandOption,
+  c1amelize1ApplicationCommandOptionChoice,
+  c1amelize1ApplicationCommandPermission,
+  c1amelize1Attachment,
+  c1amelize1AutoModerationActionExecution,
+  c1amelize1AutoModerationRule,
+  c1amelize1Channel,
+  c1amelize1Emoji,
+  c1amelize1GatewayBot,
+  c1amelize1Guild,
+  c1amelize1Member,
+  c1amelize1Role,
+  c1amelize1Sticker,
+  c1amelize1Team,
+  c1amelize1User,
+  c1amelize1Webhook,
+  c1amelize1WelcomeScreen,
+  c1amelize1Widget,
+  c1amelize1WidgetSettings
+} from './camel/index.js'
+import {
+  s1nakelize1Activity,
+  s1nakelize1Application,
+  s1nakelize1ApplicationCommand,
+  s1nakelize1ApplicationCommandOption,
+  s1nakelize1ApplicationCommandOptionChoice,
+  s1nakelize1ApplicationCommandPermission,
+  s1nakelize1Attachment,
+  s1nakelize1AutoModerationActionExecution,
+  s1nakelize1AutoModerationRule,
+  s1nakelize1Channel,
+  s1nakelize1Emoji,
+  s1nakelize1GatewayBot,
+  s1nakelize1Guild,
+  s1nakelize1Member,
+  s1nakelize1Role,
+  s1nakelize1Sticker,
+  s1nakelize1Team,
+  s1nakelize1User,
+  s1nakelize1Webhook,
+  s1nakelize1WelcomeScreen,
+  s1nakelize1Widget,
+  s1nakelize1WidgetSettings
+} from './snake/index.js'
 
 export * from './camel/index.js'
 export * from './snake/index.js'
@@ -61,6 +69,7 @@ export const TRANSFORMERS = {
   role: c1amelize1Role,
   sticker: c1amelize1Sticker,
   team: c1amelize1Team,
+  webhook: c1amelize1Webhook,
   welcomeScreen: c1amelize1WelcomeScreen,
   widget: c1amelize1Widget,
   widgetSettings: c1amelize1WidgetSettings,
@@ -84,6 +93,7 @@ export const TRANSFORMERS = {
     role: s1nakelize1Role,
     sticker: s1nakelize1Sticker,
     team: s1nakelize1Team,
+    webhook: s1nakelize1Webhook,
     welcomeScreen: s1nakelize1WelcomeScreen,
     widget: s1nakelize1Widget,
     widgetSettings: s1nakelize1WidgetSettings

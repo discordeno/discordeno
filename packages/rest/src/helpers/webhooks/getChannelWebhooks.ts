@@ -21,14 +21,13 @@ export async function getChannelWebhooks (
   channelId: BigString
 ): Promise<Collection<bigint, Webhook>> {
   const results = await rest.runMethod<DiscordWebhook[]>(
-
     'GET',
     routes.CHANNEL_WEBHOOKS(channelId)
   )
 
   return new Collection(
     results.map((result) => {
-      const webhook = rest.transformers.webhook(rest, result)
+      const webhook = TRANSFORMERS.webhook(result)
       return [webhook.id, webhook]
     })
   )

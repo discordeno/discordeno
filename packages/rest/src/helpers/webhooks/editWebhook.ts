@@ -1,5 +1,10 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordModifyWebhook, DiscordWebhook, WithReason } from '@discordeno/types'
+import type {
+  BigString,
+  DiscordModifyWebhook,
+  DiscordWebhook,
+  WithReason
+} from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Webhook } from '../../transformers/webhook.js'
 
@@ -23,7 +28,6 @@ export async function editWebhook (
   options: ModifyWebhook
 ): Promise<Webhook> {
   const result = await rest.runMethod<DiscordWebhook>(
-
     'PATCH',
     routes.WEBHOOK_ID(webhookId),
     {
@@ -34,7 +38,7 @@ export async function editWebhook (
     } as DiscordModifyWebhook
   )
 
-  return rest.transformers.webhook(rest, result)
+  return TRANSFORMERS.webhook(result)
 }
 
 export interface ModifyWebhook extends WithReason {
