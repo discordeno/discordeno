@@ -13,7 +13,6 @@ import type { QueueBucket } from './createQueueBucket.js'
 import { createRequestBody } from './createRequestBody.js'
 import * as helpers from './helpers/index.js'
 import { processGlobalQueue } from './processGlobalQueue.js'
-import { processQueue } from './processQueue.js'
 import { processRateLimitedPaths } from './processRateLimitedPaths.js'
 import { processRequest } from './processRequest.js'
 import { processRequestHeaders } from './processRequestHeaders.js'
@@ -60,7 +59,6 @@ export function createRestManager (
     debug: options.debug ?? function (_text: string) {},
     checkRateLimits: options.checkRateLimits ?? checkRateLimits,
     cleanupQueues: options.cleanupQueues ?? cleanupQueues,
-    processQueue: options.processQueue ?? processQueue,
     processRateLimitedPaths:
       options.processRateLimitedPaths ?? processRateLimitedPaths,
     processRequestHeaders:
@@ -126,7 +124,6 @@ export interface CreateRestManagerOptions {
   debug?: (text: string) => unknown
   checkRateLimits?: typeof checkRateLimits
   cleanupQueues?: typeof cleanupQueues
-  processQueue?: typeof processQueue
   processRateLimitedPaths?: typeof processRateLimitedPaths
   processRequestHeaders?: typeof processRequestHeaders
   processRequest?: typeof processRequest
@@ -165,7 +162,6 @@ export interface RestManager extends FinalHelpers {
   debug: (text: string) => unknown
   checkRateLimits: typeof checkRateLimits
   cleanupQueues: typeof cleanupQueues
-  processQueue: typeof processQueue
   processRateLimitedPaths: typeof processRateLimitedPaths
   processRequestHeaders: typeof processRequestHeaders
   processRequest: typeof processRequest

@@ -16,12 +16,10 @@ export function createRequestBody (
     'user-agent': USER_AGENT
   }
 
-  if (options.unauthorized === undefined) {
-    headers.authorization = `Bot ${rest.token}`
-  }
+  if (!options.unauthorized) headers.authorization = `Bot ${rest.token}`
 
   // SOMETIMES SPECIAL HEADERS (E.G. CUSTOM AUTHORIZATION) NEED TO BE USED
-  if (options.headers !== undefined) {
+  if (options.headers) {
     for (const key in options.headers) {
       headers[key.toLowerCase()] = options.headers[key]
     }
@@ -33,7 +31,7 @@ export function createRequestBody (
   }
 
   // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
-  if (options.body?.reason !== undefined) {
+  if (options.body?.reason) {
     headers['X-Audit-Log-Reason'] = encodeURIComponent(
       options.body.reason as string
     )
@@ -41,16 +39,13 @@ export function createRequestBody (
   }
 
   // IF A FILE/ATTACHMENT IS PRESENT WE NEED SPECIAL HANDLING
-  if (options.body?.file !== undefined) {
+  if (options.body?.file) {
     const files = findFiles(options.body.file)
 
     const form = new FormData()
 
     // WHEN CREATING A STICKER, DISCORD WANTS FORM DATA ONLY
-    if (
-      (options.url ?? '').endsWith('/stickers') &&
-      options.method === 'POST'
-    ) {
+    if (options.url?.endsWith('/stickers') && options.method === 'POST') {
       form.append('file', files[0].blob, files[0].name)
       form.append('name', options.body.name as string)
       form.append('description', options.body.description as string)
@@ -67,10 +62,7 @@ export function createRequestBody (
     }
 
     options.body.file = form
-  } else if (
-    options.body !== undefined &&
-    !['GET', 'DELETE'].includes(options.method)
-  ) {
+  } else if (options.body && !['GET', 'DELETE'].includes(options.method)) {
     headers['Content-Type'] = 'application/json'
   }
 

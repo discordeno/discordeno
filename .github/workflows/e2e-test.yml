@@ -41,6 +41,7 @@ jobs:
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
       - name: E2E Test
         run: yarn test:e2e --cache-dir=".turbo" --filter=./packages/${{ inputs.package }}
+        timeout-minutes: 5
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           E2E_TEST_GUILD_ID: ${{ secrets.UNIT_TEST_GUILD_ID }}

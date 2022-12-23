@@ -29,17 +29,16 @@ export function createQueueBucket (
     },
 
     waitUntilRequestAvailable: async function () {
-      return await new Promise((resolve) => {
-        void (async () => {
-          // If whatever amount of requests is left is more than the safety margin, allow the request
-          if (bucket.isRequestAllowed()) {
-            // bucket.remaining++;
-            resolve()
-          } else {
-            bucket.waiting.push(resolve)
-            await bucket.processWaiting()
-          }
-        })()
+      // eslint-disable-next-line no-async-promise-executor
+      return await new Promise(async (resolve) => {
+        // If whatever amount of requests is left is more than the safety margin, allow the request
+        if (bucket.isRequestAllowed()) {
+          // bucket.remaining++;
+          resolve()
+        } else {
+          bucket.waiting.push(resolve)
+          await bucket.processWaiting()
+        }
       })
     },
 
@@ -76,8 +75,8 @@ export function createQueueBucket (
 
       while (bucket.pending.length > 0) {
         if (bucket.firstRequest || bucket.isRequestAllowed()) {
-          if (bucket.pending.length > 0) {
-            const queuedRequest = bucket.pending[0]
+          const queuedRequest = bucket.pending[0]
+          if (queuedRequest) {
             const basicURL = rest.simplifyUrl(
               queuedRequest.request.url,
               queuedRequest.request.method
@@ -87,7 +86,7 @@ export function createQueueBucket (
             const urlResetIn = rest.checkRateLimits(rest, basicURL)
             if (urlResetIn !== false) {
               setTimeout(() => {
-                void bucket.processPending()
+                bucket.processPending()
               }, urlResetIn)
               break
             }
@@ -99,7 +98,7 @@ export function createQueueBucket (
                 : false
             if (bucketResetIn !== false) {
               setTimeout(() => {
-                void bucket.processPending()
+                bucket.processPending()
               }, bucketResetIn)
               break
             }
@@ -120,7 +119,7 @@ export function createQueueBucket (
 
             // Remove from queue, we are executing it.
             bucket.pending.shift()
-            void rest.processGlobalQueue(rest, {
+            rest.processGlobalQueue(rest, {
               ...queuedRequest,
               urlToUse: queuedRequest.request.url,
               basicURL
@@ -152,7 +151,7 @@ export function createQueueBucket (
     makeRequest: async function (options: BucketRequest) {
       await bucket.waitUntilRequestAvailable()
       bucket.pending.push(options)
-      void bucket.processPending()
+      bucket.processPending()
     }
   }
 

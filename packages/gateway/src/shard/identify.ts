@@ -26,7 +26,7 @@ export async function identify (shard: Shard): Promise<void> {
   // Wait until an identify is free for this shard.
   await shard.requestIdentify()
 
-  void shard.send(
+  shard.send(
     {
       op: GatewayOpcodes.Identify,
       d: {

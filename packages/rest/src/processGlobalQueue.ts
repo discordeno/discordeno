@@ -24,7 +24,7 @@ export async function processGlobalQueue (
       reject: request.request.reject,
       respond: request.request.respond,
       retryRequest: function () {
-        void rest.processGlobalQueue(rest, request)
+        rest.processGlobalQueue(rest, request)
       },
       retryCount: request.payload.retryCount ?? 0,
       payload: rest.createRequestBody(rest, {
