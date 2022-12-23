@@ -25,7 +25,7 @@ export function c1amelize1Member (
 ): Camelize<DiscordMember> {
   return {
     user: payload.user && c1amelize1User(payload.user),
-    nick: payload.nick,
+    nick: payload.nick ?? undefined,
     avatar: payload.avatar,
     roles: payload.roles,
     joinedAt: payload.joined_at,
