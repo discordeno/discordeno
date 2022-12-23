@@ -136,6 +136,10 @@ export function createQueueBucket (
     },
 
     handleCompletedRequest: function (headers) {
+      if (headers.max === 0) {
+        bucket.remaining++
+        return
+      }
       bucket.max = headers.max
       bucket.interval = headers.interval
       bucket.remaining = headers.remaining

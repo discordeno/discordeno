@@ -13,17 +13,14 @@ export function processRequestHeaders (
   const retryAfter = headers.get('x-ratelimit-reset-after')
   const reset = Date.now() + Number(retryAfter) * 1000
   const global = headers.get('x-ratelimit-global')
-  const max = headers.get('x-ratelimit-limit')
   // undefined override null needed for typings
   const bucketId = headers.get('x-ratelimit-bucket') ?? undefined
 
-  if (max !== null) {
-    rest.pathQueues.get(url)?.handleCompletedRequest({
-      remaining: Number(remaining),
-      interval: Number(retryAfter) * 1000,
-      max: Number(max)
-    })
-  }
+  rest.pathQueues.get(url)?.handleCompletedRequest({
+    remaining: Number(remaining),
+    interval: Number(retryAfter) * 1000,
+    max: Number(headers.get('x-ratelimit-limit'))
+  })
 
   // IF THERE IS NO REMAINING RATE LIMIT, MARK IT AS RATE LIMITED
   if (remaining === '0') {
