@@ -83,14 +83,14 @@ export function createRestManager (
     fetching:
       options.fetching ??
       function (opts: RestSendRequestOptions) {
-        options.debug?.(
+        rest.debug?.(
           `[REST - fetching] URL: ${opts.url} | ${JSON.stringify(opts)}`
         )
       },
     fetched:
       options.fetched ??
       function (opts: RestSendRequestOptions, response: Response) {
-        options.debug?.(
+        rest.debug?.(
           `[REST - fetched] URL: ${opts.url} | Status: ${
             response.status
           } ${JSON.stringify(opts)}`
