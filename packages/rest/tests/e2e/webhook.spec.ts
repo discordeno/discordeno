@@ -43,7 +43,7 @@ describe('[webhooks] Webhook helpers', async () => {
       await rest.deleteWebhook(webhook.id)
 
       // Fetch the webhook to validate it was deleted
-      expect(rest.getWebhook(webhook.id)).to.eventually.rejected
+      await expect(rest.getWebhook(webhook.id)).to.eventually.rejected
     })
 
     it('Can delete a webhook with token', async () => {
@@ -53,7 +53,7 @@ describe('[webhooks] Webhook helpers', async () => {
       await rest.deleteWebhookWithToken(webhook.id, webhook.token!)
 
       // Fetch the webhook to validate it was deleted
-      expect(rest.getWebhook(webhook.id)).to.eventually.rejected
+      await expect(rest.getWebhook(webhook.id)).to.eventually.rejected
     })
   })
 
