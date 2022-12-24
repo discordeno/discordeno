@@ -7,15 +7,11 @@ import type {
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { afterEach, beforeEach, describe, it } from 'mocha'
-import { createRestManager } from '../../src/restManager.js'
-import { CACHED_COMMUNITY_GUILD_ID, token } from './utils.js'
+import { CACHED_COMMUNITY_GUILD_ID, rest } from './utils.js'
 chai.use(chaiAsPromised)
 
 // waiting for channel
 describe('[webhooks] Webhook helpers', async () => {
-  const rest = createRestManager({
-    token
-  })
   let channel: Camelize<DiscordChannel>
 
   beforeEach(async () => {

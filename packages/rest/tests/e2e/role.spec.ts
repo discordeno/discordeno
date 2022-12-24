@@ -2,14 +2,9 @@ import type { Camelize, DiscordRole } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
 import { expect } from 'chai'
 import { afterEach, beforeEach, describe, it } from 'mocha'
-import { createRestManager } from '../../src/restManager.js'
-import { CACHED_COMMUNITY_GUILD_ID, token } from './utils.js'
+import { CACHED_COMMUNITY_GUILD_ID, rest } from './utils.js'
 
 describe('[role] Role tests', async () => {
-  const rest = createRestManager({
-    token
-  })
-
   // Create a role with a reason
   it('Create a role with a reason', async () => {
     const role = await rest.createRole(
