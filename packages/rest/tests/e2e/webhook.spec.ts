@@ -70,7 +70,7 @@ describe('[webhooks] Webhook helpers', async () => {
       await rest.deleteWebhook(webhook.id)
     })
 
-    it('Can edit a guild webhook', async (t) => {
+    it('Can edit a guild webhook', async () => {
       const edited = await rest.editWebhook(webhook.id, {
         name: 'edited'
       })
