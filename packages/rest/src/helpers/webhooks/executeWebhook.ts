@@ -1,7 +1,9 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type {
   AllowedMentions,
   BigString,
+  Camelize,
   DiscordExecuteWebhook,
   DiscordMessage,
   FileContent,
@@ -9,7 +11,6 @@ import type {
 } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 import type { Embed } from '../../transformers/embed.js'
-import type { Message } from '../../transformers/message.js'
 
 export const sendWebhookMessage = executeWebhook
 
@@ -20,7 +21,7 @@ export const sendWebhookMessage = executeWebhook
  * @param webhookId - The ID of the webhook to execute.
  * @param token - The webhook token, used to execute the webhook.
  * @param options - The parameters for the execution of the webhook.
- * @returns An instance of the created {@link Message}, or `undefined` if the {@link ExecuteWebhook.wait | wait} property of the {@link options} object parameter is set to `false`.
+ * @returns An instance of the created {@link DiscordMessage}, or `undefined` if the {@link ExecuteWebhook.wait | wait} property of the {@link options} object parameter is set to `false`.
  *
  * @remarks
  * If the webhook channel is a forum channel, you must provide a value for either `threadId` or `threadName`.
@@ -32,7 +33,7 @@ export async function executeWebhook (
   webhookId: BigString,
   token: string,
   options: ExecuteWebhook
-): Promise<Message | undefined> {
+): Promise<Camelize<DiscordMessage | undefined>> {
   const allowedMentions = options.allowedMentions
     ? {
         parse: options.allowedMentions.parse,
@@ -54,18 +55,16 @@ export async function executeWebhook (
       avatar_url: options.avatarUrl,
       tts: options.tts,
       file: options.file,
-      embeds: options.embeds?.map((embed) =>
-        TRANSFORMERS.reverse.embed(rest, embed)
-      ),
+      embeds: options.embeds?.map((embed) => TRANSFORMERS.reverse.embed(embed)),
       allowed_mentions: allowedMentions,
       components: options.components?.map((component) =>
-        TRANSFORMERS.reverse.component(rest, component)
+        TRANSFORMERS.reverse.component(component)
       )
     } as DiscordExecuteWebhook
   )
   if (!options.wait) return
 
-  return TRANSFORMERS.message(rest, result)
+  return TRANSFORMERS.message(result)
 }
 
 /** https://discord.com/developers/docs/resources/webhook#execute-webhook */

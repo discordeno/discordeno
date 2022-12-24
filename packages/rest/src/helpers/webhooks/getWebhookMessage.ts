@@ -1,7 +1,7 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordMessage } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type { BigString, Camelize, DiscordMessage } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import type { Message } from '../../transformers/message.js'
 
 export interface GetWebhookMessageOptions {
   threadId: BigString
@@ -15,7 +15,7 @@ export interface GetWebhookMessageOptions {
  * @param token - The webhook token, used to get webhook messages.
  * @param messageId - the ID of the webhook message to get.
  * @param options - The parameters for the fetching of the message.
- * @returns An instance of {@link Message}.
+ * @returns An instance of {@link DiscordMessage}.
  *
  * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook-message}
  */
@@ -25,11 +25,11 @@ export async function getWebhookMessage (
   token: string,
   messageId: BigString,
   options?: GetWebhookMessageOptions
-): Promise<Message> {
+): Promise<Camelize<DiscordMessage>> {
   const result = await rest.runMethod<DiscordMessage>(
     'GET',
     routes.WEBHOOK_MESSAGE(webhookId, token, messageId, options)
   )
 
-  return TRANSFORMERS.message(rest, result)
+  return TRANSFORMERS.message(result)
 }

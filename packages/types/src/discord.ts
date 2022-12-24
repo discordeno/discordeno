@@ -1040,7 +1040,7 @@ export interface DiscordMessage {
    * Users specifically mentioned in the message
    * Note: The user objects in the mentions array will only have the partial member field present in `MESSAGE_CREATE` and `MESSAGE_UPDATE` events from text-based guild channels.
    */
-  mentions?: Array<DiscordUser & { member?: Partial<DiscordMember> }>
+  mentions: Array<DiscordUser & { member?: Partial<DiscordMember> }>
   /** Roles specifically mentioned in this message */
   mention_roles?: string[]
   /**
@@ -1090,6 +1090,8 @@ export interface DiscordMessage {
   components?: DiscordMessageComponents
   /** Sent if the message contains stickers */
   sticker_items?: DiscordStickerItem[]
+  /** A generally increasing integer (there may be gaps or duplicates) that represents the approximate position of the message in a thread, it can be used to estimate the relative position of the message in a thread in company with `total_message_sent` on parent thread */
+  position?: number
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-mention-object */

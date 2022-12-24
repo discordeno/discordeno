@@ -1,14 +1,14 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordWebhook } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type { BigString, Camelize, DiscordWebhook } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import type { Webhook } from '../../transformers/webhook.js'
 
 /**
  * Gets a webhook by its ID.
  *
  * @param rest - The rest manager to use to make the request.
  * @param webhookId - The ID of the webhook to get.
- * @returns An instance of {@link Webhook}.
+ * @returns An instance of {@link DiscordWebhook}.
  *
  * @remarks
  * Requires the `MANAGE_WEBHOOKS` permission.
@@ -18,7 +18,7 @@ import type { Webhook } from '../../transformers/webhook.js'
 export async function getWebhook (
   rest: RestManager,
   webhookId: BigString
-): Promise<Webhook> {
+): Promise<Camelize<DiscordWebhook>> {
   const result = await rest.runMethod<DiscordWebhook>(
     'GET',
     routes.WEBHOOK_ID(webhookId)

@@ -1,8 +1,8 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordMessage } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type { BigString, Camelize, DiscordMessage } from '@discordeno/types'
 import { InteractionResponseTypes } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import type { Message } from '../../transformers/message.js'
 import type { InteractionCallbackData } from '../../types'
 
 /**
@@ -13,7 +13,7 @@ import type { InteractionCallbackData } from '../../types'
  * @param token - The webhook token, used to edit the message.
  * @param messageId - The ID of the message to edit.
  * @param options - The parameters for the edit of the message.
- * @returns An instance of the edited {@link Message}.
+ * @returns An instance of the edited {@link DiscordMessage}.
  *
  * @remarks
  * Fires a _Message Update_ gateway event.
@@ -26,7 +26,7 @@ export async function editWebhookMessage (
   token: string,
   messageId: BigString,
   options: InteractionCallbackData & { threadId?: BigString }
-): Promise<Message> {
+): Promise<Camelize<DiscordMessage>> {
   const result = await rest.runMethod<DiscordMessage>(
     'PATCH',
     routes.WEBHOOK_MESSAGE(webhookId, token, messageId, options),
@@ -39,5 +39,5 @@ export async function editWebhookMessage (
     }
   )
 
-  return TRANSFORMERS.message(rest, result)
+  return TRANSFORMERS.message(result)
 }
