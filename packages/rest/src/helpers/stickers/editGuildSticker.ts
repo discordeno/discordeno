@@ -1,14 +1,21 @@
 import { routes } from '@discordeno/constant'
-import type { AtLeastOne, DiscordEditGuildStickerOptions, DiscordSticker, WithReason } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type {
+  AtLeastOne,
+  BigString,
+  Camelize,
+  DiscordEditGuildStickerOptions,
+  DiscordSticker,
+  WithReason
+} from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import type { Sticker } from '../../transformers/sticker.js'
 
 /**
  * Edit the given sticker.
  *
  * @param bot The bot instance to use to make the request.
  * @param guildId The ID of the guild to get
- * @return A {@link Sticker}
+ * @return A {@link DiscordSticker}
  *
  * @remarks
  * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
@@ -18,10 +25,10 @@ import type { Sticker } from '../../transformers/sticker.js'
  */
 export async function editGuildSticker (
   rest: RestManager,
-  guildId: bigint,
-  stickerId: bigint,
+  guildId: BigString,
+  stickerId: BigString,
   options: AtLeastOne<EditGuildStickerOptions>
-): Promise<Sticker> {
+): Promise<Camelize<DiscordSticker>> {
   const result = await rest.runMethod<DiscordSticker>(
     'PATCH',
     routes.GUILD_STICKER(guildId, stickerId),
@@ -32,7 +39,7 @@ export async function editGuildSticker (
       reason: options.reason
     } as DiscordEditGuildStickerOptions
   )
-  return rest.transformers.sticker(rest, result)
+  return TRANSFORMERS.sticker(result)
 }
 
 export interface EditGuildStickerOptions extends WithReason {

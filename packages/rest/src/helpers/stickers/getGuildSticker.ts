@@ -1,7 +1,7 @@
 import { routes } from '@discordeno/constant'
-import type { DiscordSticker } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type { BigString, Camelize, DiscordSticker } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import type { Sticker } from '../../transformers/sticker.js'
 
 /**
  * Returns a sticker object for the given guild and sticker IDs.
@@ -9,7 +9,7 @@ import type { Sticker } from '../../transformers/sticker.js'
  * @param bot The bot instance to use to make the request.
  * @param guildId The ID of the guild to get
  * @param stickerId The ID of the sticker to get
- * @return A {@link Sticker}
+ * @return A {@link DiscordSticker}
  *
  * @remarks Includes the user field if the bot has the `MANAGE_EMOJIS_AND_STICKERS` permission.
  *
@@ -17,13 +17,12 @@ import type { Sticker } from '../../transformers/sticker.js'
  */
 export async function getGuildSticker (
   rest: RestManager,
-  guildId: bigint,
-  stickerId: bigint
-): Promise<Sticker> {
+  guildId: BigString,
+  stickerId: BigString
+): Promise<Camelize<DiscordSticker>> {
   const result = await rest.runMethod<DiscordSticker>(
-
     'GET',
     routes.GUILD_STICKER(guildId, stickerId)
   )
-  return rest.transformers.sticker(rest, result)
+  return TRANSFORMERS.sticker(result)
 }
