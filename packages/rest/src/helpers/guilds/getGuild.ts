@@ -1,9 +1,7 @@
-// @ts-nocheck
-
-import type { BigString, DiscordGuild } from '@discordeno/types'
-import { calculateShardId } from '@discordeno/utils'
-import type { Guild } from '../../../../bot/transformers/guild.js'
-import type { RestManager } from '../../../../rest/src/restManager.js'
+import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
+import type { BigString, Camelize, DiscordGuild } from '@discordeno/types'
+import type { RestManager } from '../../restManager.js'
 
 /**
  * Gets a guild by its ID.
@@ -18,22 +16,14 @@ import type { RestManager } from '../../../../rest/src/restManager.js'
 export async function getGuild (
   rest: RestManager,
   guildId: BigString,
-  numberOfShard: number,
   options: { counts?: boolean } = {
     counts: true
   }
-): Promise<Guild> {
+): Promise<Camelize<DiscordGuild>> {
   const result = await rest.runMethod<DiscordGuild>(
-
     'GET',
     routes.GUILD(guildId, options.counts)
   )
 
-  return rest.transformers.guild(rest, {
-    guild: result,
-    shardId: calculateShardId(
-      numberOfShard,
-      rest.transformers.snowflake(guildId)
-    )
-  })
+  return TRANSFORMERS.guild(result)
 }

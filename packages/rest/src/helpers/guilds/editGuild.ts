@@ -1,14 +1,17 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type {
   BigString,
+  Camelize,
   DefaultMessageNotificationLevels,
-  DiscordGuild, DiscordModifyGuild, ExplicitContentFilterLevels,
+  DiscordGuild,
+  DiscordModifyGuild,
+  ExplicitContentFilterLevels,
   GuildFeatures,
   SystemChannelFlags,
   VerificationLevels
 } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import type { Guild } from '../../transformers/guild.js'
 
 // TODO: Put the `shardId` parameter before `options`.
 
@@ -34,11 +37,9 @@ import type { Guild } from '../../transformers/guild.js'
 export async function editGuild (
   rest: RestManager,
   guildId: BigString,
-  options: ModifyGuild,
-  shardId: number
-): Promise<Guild> {
+  options: ModifyGuild
+): Promise<Camelize<DiscordGuild>> {
   const result = await rest.runMethod<DiscordGuild>(
-
     'PATCH',
     routes.GUILD(guildId),
     {
@@ -71,7 +72,7 @@ export async function editGuild (
     } as DiscordModifyGuild
   )
 
-  return rest.transformers.guild(rest, { guild: result, shardId })
+  return TRANSFORMERS.guild(result)
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild */
