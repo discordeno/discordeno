@@ -148,11 +148,6 @@ describe('[automod] Run automod tests', async () => {
     })
 
     it('[automod] Create a MessageSend rule for Keyword with SendAlertMessage action.', async () => {
-      const channel = await rest.createChannel(guild.id, {
-        name: 'test'
-      })
-      expect(channel.id).to.be.exist
-
       const rule = await rest.createAutomodRule(guild.id, {
         name: 'test',
         eventType: AutoModerationEventTypes.MessageSend,
@@ -193,15 +188,9 @@ describe('[automod] Run automod tests', async () => {
       expect(fetchedRule.actions[0].metadata?.channelId).to.equal(channel.id)
 
       await rest.deleteAutomodRule(guild.id, rule.id)
-      await rest.deleteChannel(channel.id)
     })
 
     it('[automod] Create a MessageSend rule for Keyword with SendAlertMessage & Timeout action.', async () => {
-      const channel = await rest.createChannel(guild.id, {
-        name: 'test'
-      })
-      expect(channel.id).to.be.exist
-
       const rule = await rest.createAutomodRule(guild.id, {
         name: 'test',
         eventType: AutoModerationEventTypes.MessageSend,
@@ -228,7 +217,6 @@ describe('[automod] Run automod tests', async () => {
       expect(rule.id).to.be.exist
 
       await rest.deleteAutomodRule(guild.id, rule.id)
-      await rest.deleteChannel(channel.id)
     })
 
     it('[automod] Create a MessageSend rule for Keyword with BlockMessage & SendAlertMessage & Timeout action.', async () => {
@@ -290,7 +278,6 @@ describe('[automod] Run automod tests', async () => {
       )
 
       await rest.deleteAutomodRule(guild.id, rule.id)
-      await rest.deleteChannel(channel.id)
     })
   })
 })
