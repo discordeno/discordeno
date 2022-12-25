@@ -1,20 +1,20 @@
 import type { Camelize, DiscordEmoji, DiscordGuild } from '@discordeno/types'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
-import { afterEach, beforeEach, describe, it } from 'mocha'
+import { after, afterEach, before, beforeEach, describe, it } from 'mocha'
 import { rest } from './utils.js'
 chai.use(chaiAsPromised)
 
 describe('Emoji helpers', () => {
   let guild: Camelize<DiscordGuild>
 
-  beforeEach(async () => {
+  before(async () => {
     guild = await rest.createGuild({
       name: 'Discordeno-test'
     })
   })
 
-  afterEach(async () => {
+  after(async () => {
     await rest.deleteGuild(guild.id)
   })
 
@@ -76,8 +76,7 @@ describe('Emoji helpers', () => {
     })
 
     afterEach(async () => {
-      /** No extra delete emoji is needed because we delete the guild contain emoji after each test */
-      // await rest.deleteEmoji(guild.id, emoji.id)
+      await rest.deleteEmoji(guild.id, emoji.id)
     })
 
     // edit an emoji name

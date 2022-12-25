@@ -2,16 +2,14 @@ import type { Camelize, DiscordGuild } from '@discordeno/types'
 import { ChannelTypes } from '@discordeno/types'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
-import { describe } from 'mocha'
+import { after, before, describe, it } from 'mocha'
 import { rest } from './utils.js'
 chai.use(chaiAsPromised)
-
-// import { afterEach, beforeEach, describe, it } from 'mocha'
 
 describe('Guild helpers', async () => {
   // Delete the oldest guild(most likely to have finished tests).
 
-  describe('Create and delete', () => {
+  describe.only('Create and delete', () => {
     it('Create a guild', async () => {
       const guild = await rest.createGuild({
         name: 'Discordeno-test'
@@ -33,13 +31,13 @@ describe('Guild helpers', async () => {
   describe('Edit and get', () => {
     let guild: Camelize<DiscordGuild>
 
-    beforeEach(async () => {
+    before(async () => {
       guild = await rest.createGuild({
         name: 'Discordeno-test'
       })
     })
 
-    afterEach(async () => {
+    after(async () => {
       await rest.deleteGuild(guild.id)
     })
 
