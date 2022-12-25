@@ -7,6 +7,7 @@ import type {
   DiscordEmoji,
   WithReason
 } from '@discordeno/types'
+import { urlToBase64 } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
 
 /**
@@ -31,6 +32,10 @@ export async function createEmoji (
   guildId: BigString,
   options: CreateGuildEmoji
 ): Promise<Camelize<DiscordEmoji>> {
+  if (options.image && !options.image.startsWith('data:image/')) {
+    options.image = await urlToBase64(options.image)
+  }
+
   const result = await rest.runMethod<DiscordEmoji>(
     'POST',
     routes.GUILD_EMOJIS(guildId),
