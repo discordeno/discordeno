@@ -89,7 +89,7 @@ describe('Guild helpers', async () => {
 
       // Assertions
       expect(fetchedBan).to.be.exist
-      expect(fetchedBan.user.id).to.equal(379643682984296448n)
+      expect(fetchedBan.user.id).to.equal('379643682984296448')
 
       // Get multiple guild bans
       it('Get multiple guild bans', async () => {

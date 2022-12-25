@@ -1,21 +1,39 @@
 import type {
   Camelize,
   DiscordChannel,
+  DiscordGuild,
   DiscordMessage,
   DiscordWebhook
 } from '@discordeno/types'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { afterEach, beforeEach, describe, it } from 'mocha'
-import { CACHED_COMMUNITY_GUILD_ID, rest } from './utils.js'
+import { cached, rest } from './utils.js'
 chai.use(chaiAsPromised)
+
+let guild: Camelize<DiscordGuild>
+
+before(async () => {
+  if (!cached.guild) {
+    guild = cached.guild = await rest.createGuild({
+      name: 'Discordeno-test'
+    })
+  }
+})
+
+after(async () => {
+  if (cached.guild) {
+    await rest.deleteGuild(guild.id)
+    cached.guild = undefined
+  }
+})
 
 // waiting for channel
 describe('[webhooks] Webhook helpers', async () => {
   let channel: Camelize<DiscordChannel>
 
   beforeEach(async () => {
-    channel = await rest.createChannel(CACHED_COMMUNITY_GUILD_ID, {
+    channel = await rest.createChannel(guild.id, {
       name: 'wbhook'
     })
     expect(channel.id).to.exist
