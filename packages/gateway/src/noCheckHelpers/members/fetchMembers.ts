@@ -52,7 +52,7 @@ export async function fetchMembers (
 
   const shardId = calculateShardId(
     bot.gateway,
-    rest.transformers.snowflake(guildId)
+    guildId
   )
 
   return await new Promise((resolve) => {

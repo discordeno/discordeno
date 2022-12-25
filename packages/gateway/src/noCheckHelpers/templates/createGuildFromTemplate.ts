@@ -1,6 +1,6 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type { DiscordGuild } from '@discordeno/types'
-import { calculateShardId } from '@discordeno/utils'
 import type { Guild } from '../../../../bot/transformers/guild.js'
 import type { RestManager } from '../../../../rest/src/restManager.js'
 
@@ -37,13 +37,7 @@ export async function createGuildFromTemplate (
     options
   )
 
-  return rest.transformers.guild(rest, {
-    guild: createdGuild,
-    shardId: calculateShardId(
-      numberOfShard,
-      rest.transformers.snowflake(createdGuild.id)
-    )
-  })
+  return TRANSFORMERS.guild(createdGuild)
 }
 
 /** https://discord.com/developers/docs/resources/template#create-guild-from-template-json-params */

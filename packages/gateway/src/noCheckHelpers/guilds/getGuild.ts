@@ -4,6 +4,7 @@ import type { BigString, DiscordGuild } from '@discordeno/types'
 import { calculateShardId } from '@discordeno/utils'
 import type { Guild } from '../../../../bot/transformers/guild.js'
 import type { RestManager } from '../../../../rest/src/restManager.js'
+import TRANSFORMERS from '@discordeno/transformer'
 
 /**
  * Gets a guild by its ID.
@@ -24,16 +25,9 @@ export async function getGuild (
   }
 ): Promise<Guild> {
   const result = await rest.runMethod<DiscordGuild>(
-
     'GET',
     routes.GUILD(guildId, options.counts)
   )
 
-  return rest.transformers.guild(rest, {
-    guild: result,
-    shardId: calculateShardId(
-      numberOfShard,
-      rest.transformers.snowflake(guildId)
-    )
-  })
+  return TRANSFORMERS.guild(result)
 }

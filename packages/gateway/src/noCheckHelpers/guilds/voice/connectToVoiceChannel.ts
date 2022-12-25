@@ -29,7 +29,7 @@ export async function connectToVoiceChannel (
 ): Promise<void> {
   const shardId = calculateShardId(
     bot.gateway,
-    rest.transformers.snowflake(guildId)
+    guildId
   )
   const shard = bot.gateway.manager.shards.get(shardId)
   if (shard == null) {
