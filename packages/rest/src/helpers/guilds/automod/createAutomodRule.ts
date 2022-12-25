@@ -19,7 +19,7 @@ import type { RestManager } from '../../../restManager.js'
  * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to create the rule in.
  * @param options - The parameters for the creation of the rule.
- * @returns An instance of the created {@link AutoModerationRule}.
+ * @returns An instance of the created {@link DiscordAutoModerationRule}.
  *
  * @remarks
  * Requires the `MANAGE_GUILD` permission.
@@ -34,7 +34,6 @@ export async function createAutomodRule (
   options: CreateAutoModerationRuleOptions
 ): Promise<Camelize<DiscordAutoModerationRule>> {
   const result = await rest.runMethod<DiscordAutoModerationRule>(
-
     'POST',
     routes.AUTOMOD_RULES(guildId),
     {

@@ -1,4 +1,5 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type {
   BigString,
   Camelize,
@@ -6,6 +7,7 @@ import type {
   DiscordEmoji,
   WithReason
 } from '@discordeno/types'
+import { urlToBase64 } from '@discordeno/utils'
 import type { RestManager } from '../../restManager.js'
 
 /**
@@ -30,6 +32,10 @@ export async function createEmoji (
   guildId: BigString,
   options: CreateGuildEmoji
 ): Promise<Camelize<DiscordEmoji>> {
+  if (options.image && !options.image.startsWith('data:image/')) {
+    options.image = await urlToBase64(options.image)
+  }
+
   const result = await rest.runMethod<DiscordEmoji>(
     'POST',
     routes.GUILD_EMOJIS(guildId),
@@ -41,32 +47,7 @@ export async function createEmoji (
     } as DiscordCreateGuildEmoji
   )
 
-  return {
-    id: result.id,
-    name: result.name,
-    roles: result.roles,
-    user: result.user && {
-      id: result.user.id,
-      username: result.user.username,
-      discriminator: result.user.discriminator,
-      avatar: result.user.avatar,
-      bot: result.user.bot,
-      system: result.user.system,
-      mfaEnabled: result.user.mfa_enabled,
-      banner: result.user.banner,
-      accentColor: result.user.accent_color,
-      locale: result.user.locale,
-      verified: result.user.verified,
-      email: result.user.email,
-      flags: result.user.flags,
-      premiumType: result.user.premium_type,
-      publicFlags: result.user.public_flags
-    },
-    requireColons: result.require_colons,
-    managed: result.managed,
-    animated: result.animated,
-    available: result.animated
-  }
+  return TRANSFORMERS.emoji(result)
 }
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */

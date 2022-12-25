@@ -1,14 +1,14 @@
 import { routes } from '@discordeno/constant'
+import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { Sticker } from '../../transformers/sticker.js'
 
 /**
  * Delete a new sticker for the guild.
  *
  * @param bot The bot instance to use to make the request.
  * @param guildId The ID of the guild to get
- * @return A {@link Sticker}
+ * @return A {@link DiscordSticker}
  *
  * @remarks
  * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
@@ -20,12 +20,11 @@ import type { Sticker } from '../../transformers/sticker.js'
  */
 export async function deleteGuildSticker (
   rest: RestManager,
-  guildId: bigint,
-  stickerId: bigint,
+  guildId: BigString,
+  stickerId: BigString,
   reason?: string
 ): Promise<void> {
   return await rest.runMethod<void>(
-
     'DELETE',
     routes.GUILD_STICKER(guildId, stickerId),
     reason ? { reason } : undefined

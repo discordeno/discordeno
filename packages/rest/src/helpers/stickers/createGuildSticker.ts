@@ -1,14 +1,21 @@
 import { routes } from '@discordeno/constant'
-import type { DiscordCreateGuildStickerOptions, DiscordSticker, FileContent, WithReason } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type {
+  BigString,
+  Camelize,
+  DiscordCreateGuildStickerOptions,
+  DiscordSticker,
+  FileContent,
+  WithReason
+} from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import type { Sticker } from '../../transformers/sticker.js'
 
 /**
  * Create a new sticker for the guild.
  *
  * @param bot The bot instance to use to make the request.
  * @param guildId The ID of the guild to get
- * @return A {@link Sticker}
+ * @return A {@link DiscordSticker}
  *
  * @remarks
  * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
@@ -20,11 +27,10 @@ import type { Sticker } from '../../transformers/sticker.js'
  */
 export async function createGuildSticker (
   rest: RestManager,
-  guildId: bigint,
+  guildId: BigString,
   options: CreateGuildStickerOptions
-): Promise<Sticker> {
+): Promise<Camelize<DiscordSticker>> {
   const result = await rest.runMethod<DiscordSticker>(
-
     'POST',
     routes.GUILD_STICKERS(guildId),
     {
@@ -35,7 +41,7 @@ export async function createGuildSticker (
       reason: options.reason
     } as DiscordCreateGuildStickerOptions
   )
-  return rest.transformers.sticker(rest, result)
+  return TRANSFORMERS.sticker(result)
 }
 
 export interface CreateGuildStickerOptions extends WithReason {

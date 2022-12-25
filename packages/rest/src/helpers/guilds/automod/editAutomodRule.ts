@@ -19,7 +19,7 @@ import type { RestManager } from '../../../restManager.js'
  * @param guildId - The ID of the guild to edit the rule in.
  * @param ruleId - The ID of the rule to edit.
  * @param options - The parameters for the edit of the rule.
- * @returns An instance of the edited {@link AutoModerationRule}.
+ * @returns An instance of the edited {@link DiscordAutoModerationRule}.
  *
  * @remarks
  * Requires the `MANAGE_GUILD` permission.
@@ -35,7 +35,6 @@ export async function editAutomodRule (
   options: Partial<EditAutoModerationRuleOptions>
 ): Promise<Camelize<DiscordAutoModerationRule>> {
   const result = await rest.runMethod<DiscordAutoModerationRule>(
-
     'PATCH',
     routes.AUTOMOD_RULE(guildId, ruleId),
     {

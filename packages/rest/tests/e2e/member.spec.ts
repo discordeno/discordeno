@@ -1,8 +1,7 @@
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
-import { createRestManager } from '../../src/restManager.js'
-import { CACHED_COMMUNITY_GUILD_ID, token } from './utils.js'
+import { CACHED_COMMUNITY_GUILD_ID, rest } from './utils.js'
 chai.use(chaiAsPromised)
 
 // THIS IS WOLF, IF ANYTHING BREAKS BLAME HIM!
@@ -13,11 +12,6 @@ const ianID = 90339695967350784n
 const ltsID = 379643682984296448n
 
 describe('[member] Member tests', async () => {
-  const rest = createRestManager({
-    token,
-    debug: console.log
-  })
-
   describe('Get members', () => {
     it("Fetches the bot and compares the bot's id with the fetched member's id", async () => {
       const member = await rest.getMember(CACHED_COMMUNITY_GUILD_ID, rest.id)

@@ -15,6 +15,10 @@ import { c1amelize1ScheduledEvent } from './camel/event.js'
 import { c1amelize1FollowedChannel } from './camel/followedChannel.js'
 import { c1amelize1GatewayBot } from './camel/gatewayBot.js'
 import { c1amelize1Guild } from './camel/guild.js'
+import {
+  c1amelize1AllowedMentions, c1amelize1Component,
+  c1amelize1Embed, c1amelize1Message
+} from './camel/index.js'
 import { c1amelize1Integration } from './camel/integration.js'
 import { c1amelize1Invite, c1amelize1StageInvite, c1amelizeInviteMetadata } from './camel/invite.js'
 import { c1amelize1Member, c1amelize1User } from './camel/member.js'
@@ -41,6 +45,10 @@ import { s1nakelize1Channel } from './snake/channel.js'
 import { s1nakelize1Emoji } from './snake/emoji.js'
 import { s1nakelize1GatewayBot } from './snake/gatewayBot.js'
 import { s1nakelize1Guild } from './snake/guild.js'
+import {
+  s1nakelize1AllowedMentions, s1nakelize1Component,
+  s1nakelize1Embed, s1nakelize1InteractionResponse, s1nakelize1Message, s1nakelize1Webhook
+} from './snake/index.js'
 import { s1nakelize1Member, s1nakelize1User } from './snake/member.js'
 import { s1nakelize1Role } from './snake/role.js'
 import { s1nakelize1Sticker } from './snake/sticker.js'
@@ -55,6 +63,7 @@ export * from './snake/index.js'
 
 export const TRANSFORMERS = {
   activity: c1amelize1Activity,
+  allowedMentions: c1amelize1AllowedMentions,
   application: c1amelize1Application,
   auditlogs: {
     log: c1amelize1Auditlogs,
@@ -68,6 +77,8 @@ export const TRANSFORMERS = {
   automodActionExecution: c1amelize1AutoModerationActionExecution,
   automodRule: c1amelize1AutoModerationRule,
   channel: c1amelize1Channel,
+  component: c1amelize1Component,
+  embed: c1amelize1Embed,
   emoji: c1amelize1Emoji,
   event: c1amelize1ScheduledEvent,
   followedChannel: c1amelize1FollowedChannel,
@@ -82,17 +93,19 @@ export const TRANSFORMERS = {
   preview: c1amelize1GuildPreview,
   user: c1amelize1User,
   member: c1amelize1Member,
+  message: c1amelize1Message,
   role: c1amelize1Role,
   sticker: c1amelize1Sticker,
   team: c1amelize1Team,
   voice: c1amelize1VoiceRegion,
-  welcomeScreen: c1amelize1WelcomeScreen,
   webhook: c1amelize1Webhook,
+  welcomeScreen: c1amelize1WelcomeScreen,
   widget: c1amelize1Widget,
   widgetSettings: c1amelize1WidgetSettings,
 
   reverse: {
     activity: s1nakelize1Activity,
+    allowedMentions: s1nakelize1AllowedMentions,
     application: s1nakelize1Application,
     commands: {
       command: s1nakelize1ApplicationCommand,
@@ -104,14 +117,19 @@ export const TRANSFORMERS = {
     automodActionExecution: s1nakelize1AutoModerationActionExecution,
     automodRule: s1nakelize1AutoModerationRule,
     channel: s1nakelize1Channel,
+    component: s1nakelize1Component,
+    embed: s1nakelize1Embed,
     emoji: s1nakelize1Emoji,
     gatewayBot: s1nakelize1GatewayBot,
     guild: s1nakelize1Guild,
+    interactionResponse: s1nakelize1InteractionResponse,
     user: s1nakelize1User,
     member: s1nakelize1Member,
+    message: s1nakelize1Message,
     role: s1nakelize1Role,
     sticker: s1nakelize1Sticker,
     team: s1nakelize1Team,
+    webhook: s1nakelize1Webhook,
     welcomeScreen: s1nakelize1WelcomeScreen,
     widget: s1nakelize1Widget,
     widgetSettings: s1nakelize1WidgetSettings

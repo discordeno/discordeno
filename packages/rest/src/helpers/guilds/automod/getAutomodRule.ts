@@ -9,7 +9,7 @@ import type { RestManager } from '../../../restManager.js'
  * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to get the rule of.
  * @param ruleId - The ID of the rule to get.
- * @returns An instance of {@link AutoModerationRule}.
+ * @returns An instance of {@link DiscordAutoModerationRule}.
  *
  * @remarks
  * Requires the `MANAGE_GUILD` permission.
@@ -22,7 +22,6 @@ export async function getAutomodRule (
   ruleId: BigString
 ): Promise<Camelize<DiscordAutoModerationRule>> {
   const result = await rest.runMethod<DiscordAutoModerationRule>(
-
     'GET',
     routes.AUTOMOD_RULE(guildId, ruleId)
   )

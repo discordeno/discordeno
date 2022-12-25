@@ -1,14 +1,17 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type {
   AllowedMentions,
-  BigString, DiscordCreateMessage, DiscordMessage,
+  BigString,
+  Camelize,
+  DiscordCreateMessage,
+  DiscordEmbed,
+  DiscordMessage,
   FileContent,
   MessageComponents
 } from '@discordeno/types'
 import { MessageComponentTypes } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import type { Embed } from '../../transformers/embed.js'
-import type { Message } from '../../transformers/message.js'
 
 /**
  * Sends a message to a channel.
@@ -16,7 +19,7 @@ import type { Message } from '../../transformers/message.js'
  * @param rest - The rest manager to use to make the request.
  * @param channelId - The ID of the channel to send the message in.
  * @param options - The parameters for the creation of the message.
- * @returns An instance of the created {@link Message}.
+ * @returns An instance of the created {@link DiscordMessage}.
  *
  * @remarks
  * Requires that the bot user be able to see the contents of the channel the message is to be sent in.
@@ -41,18 +44,15 @@ export async function sendMessage (
   rest: RestManager,
   channelId: BigString,
   options: CreateMessage
-): Promise<Message> {
+): Promise<Camelize<DiscordMessage>> {
   const result = await rest.runMethod<DiscordMessage>(
-
     'POST',
     routes.CHANNEL_MESSAGES(channelId),
     {
       content: options.content,
       nonce: options.nonce,
       tts: options.tts,
-      embeds: options.embeds?.map((embed) =>
-        rest.transformers.reverse.embed(rest, embed)
-      ),
+      embeds: options.embeds?.map((embed) => TRANSFORMERS.reverse.embed(embed)),
       allowed_mentions: options.allowedMentions
         ? {
             parse: options.allowedMentions?.parse,
@@ -155,7 +155,7 @@ export async function sendMessage (
     } as DiscordCreateMessage
   )
 
-  return rest.transformers.message(rest, result)
+  return TRANSFORMERS.message(result)
 }
 
 export interface CreateMessage {
@@ -166,7 +166,7 @@ export interface CreateMessage {
   /** true if this is a TTS message */
   tts?: boolean
   /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: Embed[]
+  embeds?: DiscordEmbed[]
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
   /** Include to make your message a reply */
@@ -188,5 +188,8 @@ export interface CreateMessage {
   /** The components you would like to have sent in this message */
   components?: MessageComponents
   /** IDs of up to 3 stickers in the server to send in the message */
-  stickerIds?: [BigString] | [BigString, BigString] | [BigString, BigString, BigString]
+  stickerIds?:
+  | [BigString]
+  | [BigString, BigString]
+  | [BigString, BigString, BigString]
 }

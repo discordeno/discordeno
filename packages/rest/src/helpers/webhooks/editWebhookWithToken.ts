@@ -1,7 +1,7 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordWebhook } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type { BigString, Camelize, DiscordWebhook } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import type { Webhook } from '../../transformers/webhook.js'
 import type { ModifyWebhook } from './editWebhook.js'
 
 /**
@@ -10,7 +10,7 @@ import type { ModifyWebhook } from './editWebhook.js'
  * @param rest - The rest manager to use to make the request.
  * @param webhookId - The ID of the webhook to edit.
  * @param token - The webhook token, used to edit the webhook.
- * @returns An instance of the edited {@link Webhook}.
+ * @returns An instance of the edited {@link DiscordWebhook}.
  *
  * @remarks
  * Requires the `MANAGE_WEBHOOKS` permission.
@@ -24,9 +24,8 @@ export async function editWebhookWithToken (
   webhookId: BigString,
   token: string,
   options: Omit<ModifyWebhook, 'channelId'>
-): Promise<Webhook> {
+): Promise<Camelize<DiscordWebhook>> {
   const result = await rest.runMethod<DiscordWebhook>(
-
     'PATCH',
     routes.WEBHOOK(webhookId, token),
     {
@@ -35,5 +34,5 @@ export async function editWebhookWithToken (
     }
   )
 
-  return rest.transformers.webhook(rest, result)
+  return TRANSFORMERS.webhook(result)
 }

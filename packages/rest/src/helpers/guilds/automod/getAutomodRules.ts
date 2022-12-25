@@ -9,7 +9,7 @@ import type { RestManager } from '../../../restManager.js'
  *
  * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to get the rules from.
- * @returns A collection of {@link AutoModerationRule} objects assorted by rule ID.
+ * @returns A collection of {@link DiscordAutoModerationRule} objects assorted by rule ID.
  *
  * @remarks
  * Requires the `MANAGE_GUILD` permission.
