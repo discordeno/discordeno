@@ -1,5 +1,22 @@
-import type { BigString, GetBans, GetGuildAuditLog, GetGuildPruneCountQuery, GetInvite, GetMessagesOptions, GetReactions, GetScheduledEventUsers, ListArchivedThreads, ListGuildMembers } from '@discordeno/types'
-import { baseEndpoints, isGetMessagesAfter, isGetMessagesAround, isGetMessagesBefore, isGetMessagesLimit } from '@discordeno/utils'
+import type {
+  BigString,
+  GetBans,
+  GetGuildAuditLog,
+  GetGuildPruneCountQuery,
+  GetInvite,
+  GetMessagesOptions,
+  GetReactions,
+  GetScheduledEventUsers,
+  ListArchivedThreads,
+  ListGuildMembers
+} from '@discordeno/types'
+import {
+  baseEndpoints,
+  isGetMessagesAfter,
+  isGetMessagesAround,
+  isGetMessagesBefore,
+  isGetMessagesLimit
+} from '@discordeno/utils'
 
 export const routes = {
   GATEWAY_BOT: () => {
@@ -618,13 +635,13 @@ export const routes = {
   NITRO_STICKER_PACKS: () => {
     return '/sticker-packs'
   },
-  STICKER: (stickerId: bigint) => {
+  STICKER: (stickerId: BigString) => {
     return `/stickers/${stickerId}`
   },
-  GUILD_STICKERS: (guildId: bigint) => {
+  GUILD_STICKERS: (guildId: BigString) => {
     return `/guilds/${guildId}/stickers`
   },
-  GUILD_STICKER: (guildId: bigint, stickerId: bigint) => {
+  GUILD_STICKER: (guildId: BigString, stickerId: BigString) => {
     return `/guilds/${guildId}/stickers/${stickerId}`
   }
 }
