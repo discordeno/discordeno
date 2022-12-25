@@ -1,8 +1,8 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordScheduledEvent } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type { BigString, Camelize, DiscordScheduledEvent } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
-import type { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
 
 /**
  * Gets the list of scheduled events for a guild.
@@ -18,9 +18,8 @@ export async function getScheduledEvents (
   rest: RestManager,
   guildId: BigString,
   options?: GetScheduledEvents
-): Promise<Collection<bigint, ScheduledEvent>> {
+): Promise<Collection<string, Camelize<DiscordScheduledEvent>>> {
   const results = await rest.runMethod<DiscordScheduledEvent[]>(
-
     'GET',
     routes.GUILD_SCHEDULED_EVENTS(
       guildId,
@@ -30,7 +29,7 @@ export async function getScheduledEvents (
 
   return new Collection(
     results.map((result) => {
-      const event = rest.transformers.scheduledEvent(rest, result)
+      const event = TRANSFORMERS.event(result)
       return [event.id, event]
     })
   )

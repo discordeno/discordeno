@@ -1,7 +1,7 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordScheduledEvent } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type { BigString, Camelize, DiscordScheduledEvent } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import type { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
 
 /**
  * Gets a scheduled event by its ID.
@@ -19,9 +19,8 @@ export async function getScheduledEvent (
   guildId: BigString,
   eventId: BigString,
   options?: { withUserCount?: boolean }
-): Promise<ScheduledEvent> {
+): Promise<Camelize<DiscordScheduledEvent>> {
   const result = await rest.runMethod<DiscordScheduledEvent>(
-
     'GET',
     routes.GUILD_SCHEDULED_EVENT(
       guildId,
@@ -30,5 +29,5 @@ export async function getScheduledEvent (
     )
   )
 
-  return rest.transformers.scheduledEvent(rest, result)
+  return TRANSFORMERS.event(result)
 }

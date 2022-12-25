@@ -1,4 +1,5 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type {
   AllowedMentions,
   BigString,
@@ -10,7 +11,6 @@ import type {
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import { snakeToCamelCaseNested } from '../../../transformer.js'
 import type { Embed } from '../../../transformers/embed.js'
 
 /**
@@ -47,7 +47,7 @@ export async function createForumThread (
       message: {
         content: options.content,
         embeds: options.embeds?.map((embed) =>
-          rest.transformers.reverse.embed(rest, embed)
+          TRANSFORMERS.reverse.embed(rest, embed)
         ),
         allowed_mentions: options.allowedMentions
           ? {
@@ -58,14 +58,14 @@ export async function createForumThread (
             }
           : undefined,
         components: options.components?.map((component) =>
-          rest.transformers.reverse.component(rest, component)
+          TRANSFORMERS.reverse.component(rest, component)
         ),
         file: options.file
       }
     } as DiscordCreateForumPostWithMessage
   )
 
-  return snakeToCamelCaseNested(result)
+  return TRANSFORMERS.channel(result)
 }
 
 export interface CreateForumPostWithMessage extends WithReason {

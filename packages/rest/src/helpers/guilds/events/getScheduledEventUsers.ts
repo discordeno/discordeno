@@ -1,8 +1,8 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordMember, DiscordUser, GetScheduledEventUsers } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type { BigString, Camelize, DiscordMember, DiscordUser, GetScheduledEventUsers } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
-import type { Member, User } from '../../../transformers/member.js'
 
 // TODO: This endpoint discards certain data from the result.
 //  Create `ScheduledEventUser` type and parse the data to it.
@@ -28,20 +28,20 @@ export async function getScheduledEventUsers (
   guildId: BigString,
   eventId: BigString,
   options?: GetScheduledEventUsers & { withMember?: false }
-): Promise<Collection<bigint, User>>
+): Promise<Collection<string, Camelize<DiscordUser>>>
 export async function getScheduledEventUsers (
   rest: RestManager,
   guildId: BigString,
   eventId: BigString,
   options?: GetScheduledEventUsers & { withMember: true }
-): Promise<Collection<bigint, { user: User, member: Member }>>
+): Promise<Collection<string, { user: Camelize<DiscordUser>, member: Camelize<DiscordMember> }>>
 export async function getScheduledEventUsers (
   rest: RestManager,
   guildId: BigString,
   eventId: BigString,
   options?: GetScheduledEventUsers
 ): Promise<
-  Collection<bigint, User> | Collection<bigint, { user: User, member: Member }>
+  Collection<string, Camelize<DiscordUser>> | Collection<string, { user: Camelize<DiscordUser>, member: Camelize<DiscordMember> }>
   > {
   const url = routes.GUILD_SCHEDULED_EVENT_USERS(
     guildId,
@@ -56,23 +56,16 @@ export async function getScheduledEventUsers (
   if (!options?.withMember) {
     return new Collection(
       results.map((result) => {
-        const user = rest.transformers.user(rest, result.user)
+        const user = TRANSFORMERS.user(result.user)
         return [user.id, user]
       })
     )
   }
 
-  const id = rest.transformers.snowflake(guildId)
-
   return new Collection(
     results.map((result) => {
-      const user = rest.transformers.user(rest, result.user)
-      const member = rest.transformers.member(
-        rest,
-        result.member!,
-        id,
-        user.id
-      )
+      const user = TRANSFORMERS.user(result.user)
+      const member = TRANSFORMERS.member(result.member!)
 
       return [user.id, { member, user }]
     })

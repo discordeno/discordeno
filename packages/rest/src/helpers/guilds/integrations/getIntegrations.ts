@@ -1,4 +1,5 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type { BigString, DiscordIntegration } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
@@ -28,25 +29,7 @@ export async function getIntegrations (
 
   return new Collection(
     results.map((result) => {
-      const integration = rest.transformers.integration(rest, {
-        guild_id: guildId.toString(),
-        id: result.id,
-        name: result.name,
-        type: result.type,
-        enabled: result.enabled,
-        syncing: result.syncing,
-        role_id: result.role_id,
-        enable_emoticons: result.enable_emoticons,
-        expire_behavior: result.expire_behavior,
-        expire_grace_period: result.expire_grace_period,
-        user: result.user,
-        account: result.account,
-        synced_at: result.synced_at,
-        subscriber_count: result.subscriber_count,
-        revoked: result.revoked,
-        application: result.application,
-        scopes: result.scopes
-      })
+      const integration = TRANSFORMERS.integration(result)
       return [integration.id, integration]
     })
   )

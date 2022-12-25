@@ -1,4 +1,5 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type { DiscordVoiceRegion } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
@@ -21,7 +22,7 @@ export async function getAvailableVoiceRegions (
 
   return new Collection(
     results.map((result) => {
-      const region = rest.transformers.voiceRegion(rest, result)
+      const region = TRANSFORMERS.voiceRegion(result)
       return [region.id, region]
     })
   )

@@ -1,7 +1,7 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordModifyGuildWelcomeScreen, DiscordWelcomeScreen } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type { BigString, Camelize, DiscordModifyGuildWelcomeScreen, DiscordWelcomeScreen } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import type { WelcomeScreen } from '../../transformers/welcomeScreen.js'
 
 /**
  * Edits a guild's welcome screen.
@@ -22,7 +22,7 @@ export async function editWelcomeScreen (
   rest: RestManager,
   guildId: BigString,
   options: ModifyGuildWelcomeScreen
-): Promise<WelcomeScreen> {
+): Promise<Camelize<DiscordWelcomeScreen>> {
   const result = await rest.runMethod<DiscordWelcomeScreen>(
 
     'PATCH',
@@ -30,16 +30,16 @@ export async function editWelcomeScreen (
     {
       enabled: options.enabled,
       welcome_screen: options.welcomeScreen?.map((welcomeScreen) => ({
-        channel_id: welcomeScreen.channelId,
+        channel_id: welcomeScreen.channelId.toString(),
         description: welcomeScreen.description,
-        emoji_id: welcomeScreen.emojiId,
+        emoji_id: welcomeScreen.emojiId?.toString(),
         emoji_name: welcomeScreen.emojiName
       })),
       description: options.description
     } as DiscordModifyGuildWelcomeScreen
   )
 
-  return rest.transformers.welcomeScreen(rest, result)
+  return TRANSFORMERS.welcomeScreen(result)
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen */

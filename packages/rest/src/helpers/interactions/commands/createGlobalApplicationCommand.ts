@@ -1,5 +1,6 @@
 import { routes } from '@discordeno/constant'
-import type { DiscordApplicationCommand } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type { Camelize, DiscordApplicationCommand } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import type { ApplicationCommand } from '../../../transformers/applicationCommand.js'
 import type { CreateApplicationCommand } from '../../../types.js'
@@ -21,13 +22,12 @@ import type { CreateApplicationCommand } from '../../../types.js'
 export async function createGlobalApplicationCommand (
   rest: RestManager,
   command: CreateApplicationCommand
-): Promise<ApplicationCommand> {
+): Promise<Camelize<DiscordApplicationCommand>> {
   const result = await rest.runMethod<DiscordApplicationCommand>(
-
     'POST',
     routes.COMMANDS(rest.applicationId),
-    rest.transformers.reverse.createApplicationCommand(rest, command)
+    utils.makeCreateCommandBody(command)
   )
 
-  return rest.transformers.applicationCommand(rest, result)
+  return TRANSFORMERS.command(result)
 }

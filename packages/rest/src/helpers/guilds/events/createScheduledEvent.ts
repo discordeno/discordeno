@@ -1,6 +1,8 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type {
   BigString,
+  Camelize,
   DiscordCreateScheduledEvent,
   DiscordScheduledEvent, ScheduledEventEntityType, WithReason
 } from '@discordeno/types'
@@ -8,7 +10,6 @@ import {
   ScheduledEventPrivacyLevel
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import type { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
 
 /**
  * Creates a scheduled event in a guild.
@@ -31,9 +32,8 @@ export async function createScheduledEvent (
   rest: RestManager,
   guildId: BigString,
   options: CreateScheduledEvent
-): Promise<ScheduledEvent> {
+): Promise<Camelize<DiscordScheduledEvent>> {
   const result = await rest.runMethod<DiscordScheduledEvent>(
-
     'POST',
     routes.GUILD_SCHEDULED_EVENTS(guildId),
     {
@@ -54,7 +54,7 @@ export async function createScheduledEvent (
     } as DiscordCreateScheduledEvent
   )
 
-  return rest.transformers.scheduledEvent(rest, result)
+  return TRANSFORMERS.event(result)
 }
 
 export interface CreateScheduledEvent extends WithReason {

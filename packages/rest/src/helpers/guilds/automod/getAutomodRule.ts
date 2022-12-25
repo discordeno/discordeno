@@ -1,7 +1,7 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordAutoModerationRule } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type { BigString, Camelize, DiscordAutoModerationRule } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import type { AutoModerationRule } from '../../../transformers/automodRule.js'
 
 /**
  * Gets an automod rule by its ID.
@@ -20,12 +20,12 @@ export async function getAutomodRule (
   rest: RestManager,
   guildId: BigString,
   ruleId: BigString
-): Promise<AutoModerationRule> {
+): Promise<Camelize<DiscordAutoModerationRule>> {
   const result = await rest.runMethod<DiscordAutoModerationRule>(
 
     'GET',
     routes.AUTOMOD_RULE(guildId, ruleId)
   )
 
-  return rest.transformers.automodRule(rest, result)
+  return TRANSFORMERS.automodRule(result)
 }

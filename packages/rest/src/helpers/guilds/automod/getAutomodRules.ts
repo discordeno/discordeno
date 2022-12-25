@@ -1,8 +1,8 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordAutoModerationRule } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type { BigString, Camelize, DiscordAutoModerationRule } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { RestManager } from '../../../restManager.js'
-import type { AutoModerationRule } from '../../../transformers/automodRule.js'
 
 /**
  * Gets the list of automod rules for a guild.
@@ -19,16 +19,15 @@ import type { AutoModerationRule } from '../../../transformers/automodRule.js'
 export async function getAutomodRules (
   rest: RestManager,
   guildId: BigString
-): Promise<Collection<bigint, AutoModerationRule>> {
+): Promise<Collection<string, Camelize<DiscordAutoModerationRule>>> {
   const results = await rest.runMethod<DiscordAutoModerationRule[]>(
-
     'GET',
     routes.AUTOMOD_RULES(guildId)
   )
 
   return new Collection(
     results.map((result) => {
-      const rule = rest.transformers.automodRule(rest, result)
+      const rule = TRANSFORMERS.automodRule(result)
       return [rule.id, rule]
     })
   )

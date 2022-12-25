@@ -1,4 +1,5 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type {
   BigString,
   DiscordGuildPreview,
@@ -41,24 +42,9 @@ export async function getGuildPreview (
   guildId: BigString
 ): Promise<GuildPreview> {
   const result = await rest.runMethod<DiscordGuildPreview>(
-
     'GET',
     routes.GUILD_PREVIEW(guildId)
   )
 
-  return {
-    id: rest.transformers.snowflake(result.id),
-    name: result.name,
-    icon: result.icon ?? undefined,
-    splash: result.splash ?? undefined,
-    discoverySplash: result.discovery_splash ?? undefined,
-    emojis: result.emojis.map((emoji) => rest.transformers.emoji(rest, emoji)),
-    features: result.features,
-    approximateMemberCount: result.approximate_member_count,
-    approximatePresenceCount: result.approximate_presence_count,
-    description: result.description ?? undefined,
-    stickers: result.stickers.map((sticker) =>
-      rest.transformers.sticker(rest, sticker)
-    )
-  }
+  return TRANSFORMERS.preview(result)
 }

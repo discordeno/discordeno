@@ -1,4 +1,5 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type {
   BigString,
   Camelize,
@@ -64,9 +65,7 @@ export async function createChannel (
           default_reaction_emoji: options.defaultReactionEmoji
             ? {
                 emoji_id: options.defaultReactionEmoji.emojiId
-                  ? rest.transformers.reverse.snowflake(
-                    options.defaultReactionEmoji.emojiId
-                  )
+                  ? options.defaultReactionEmoji.emojiId.toString()
                   : options.defaultReactionEmoji.emojiId,
                 emoji_name: options.defaultReactionEmoji.emojiName
               }
@@ -74,12 +73,12 @@ export async function createChannel (
 
           available_tags: options.availableTags
             ? options.availableTags.map((availableTag) => ({
-              id: rest.transformers.reverse.snowflake(availableTag.id),
+              id: availableTag.id.toString(),
               name: availableTag.name,
               moderated: availableTag.moderated,
               emoji_name: availableTag.emojiName,
               emoji_id: availableTag.emojiId
-                ? rest.transformers.reverse.snowflake(availableTag.emojiId)
+                ? availableTag.emojiId.toString()
                 : undefined
             }))
             : undefined
@@ -87,7 +86,7 @@ export async function createChannel (
       : {}
   )
 
-  return result
+  return TRANSFORMERS.channel(result)
 }
 
 export interface CreateGuildChannel extends WithReason {

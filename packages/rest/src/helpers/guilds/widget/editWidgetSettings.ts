@@ -1,5 +1,6 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordEditGuildWidgetSettings, DiscordGuildWidgetSettings } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type { BigString, Camelize, DiscordEditGuildWidgetSettings, DiscordGuildWidgetSettings } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import type { GuildWidgetSettings } from '../../../transformers/widgetSettings.js'
 
@@ -24,7 +25,7 @@ export async function editWidgetSettings (
   guildId: BigString,
   enabled: boolean,
   channelId?: string | null
-): Promise<GuildWidgetSettings> {
+): Promise<Camelize<DiscordGuildWidgetSettings>> {
   const result = await rest.runMethod<DiscordGuildWidgetSettings>(
 
     'PATCH',
@@ -35,5 +36,5 @@ export async function editWidgetSettings (
     } as DiscordEditGuildWidgetSettings
   )
 
-  return rest.transformers.widgetSettings(rest, result)
+  return TRANSFORMERS.widgetSettings(result)
 }

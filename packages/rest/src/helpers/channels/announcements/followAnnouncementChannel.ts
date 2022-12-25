@@ -1,6 +1,7 @@
 import { routes } from '@discordeno/constant'
 import type { BigString, DiscordFollowAnnouncementChannel, DiscordFollowedChannel } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
+import { TRANSFORMERS } from '@discordeno/transformer'
 
 /**
  * Follows an announcement channel, allowing messages posted within it to be cross-posted into the target channel.
@@ -30,5 +31,5 @@ export async function followAnnouncementChannel (
     } as DiscordFollowAnnouncementChannel
   )
 
-  return result
+  return TRANSFORMERS.followedChannel(result)
 }

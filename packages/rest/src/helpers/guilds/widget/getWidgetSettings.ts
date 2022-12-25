@@ -1,7 +1,7 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordGuildWidgetSettings } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type { BigString, Camelize, DiscordGuildWidgetSettings } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import type { GuildWidgetSettings } from '../../../transformers/widgetSettings.js'
 
 /**
  * Gets the settings of a guild's widget.
@@ -18,12 +18,12 @@ import type { GuildWidgetSettings } from '../../../transformers/widgetSettings.j
 export async function getWidgetSettings (
   rest: RestManager,
   guildId: BigString
-): Promise<GuildWidgetSettings> {
+): Promise<Camelize<DiscordGuildWidgetSettings>> {
   const result = await rest.runMethod<DiscordGuildWidgetSettings>(
 
     'GET',
     routes.GUILD_WIDGET(guildId)
   )
 
-  return rest.transformers.widgetSettings(rest, result)
+  return TRANSFORMERS.widgetSettings(result)
 }

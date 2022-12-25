@@ -1,4 +1,5 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type {
   BigString, DiscordCreateChannelInvite, DiscordInvite, TargetTypes,
   WithReason
@@ -45,28 +46,7 @@ export async function createInvite (
     } as DiscordCreateChannelInvite
   )
 
-  return {
-    code: result.code,
-    guildId: result.guild?.id
-      ? rest.transformers.snowflake(result.guild.id)
-      : undefined,
-    channelId: result.channel?.id
-      ? rest.transformers.snowflake(result.channel.id)
-      : undefined,
-    inviter: result.inviter
-      ? rest.transformers.user(rest, result.inviter)
-      : undefined,
-    targetType: result.target_type,
-    targetUser: result.target_user
-      ? rest.transformers.user(rest, result.target_user)
-      : undefined,
-    targetApplicationId: result.target_application?.id
-      ? rest.transformers.snowflake(result.target_application.id)
-      : undefined,
-    approximatePresenceCount: result.approximate_presence_count,
-    approximateMemberCount: result.approximate_member_count,
-    expiresAt: result.expires_at ? Date.parse(result.expires_at) : undefined
-  }
+  return TRANSFORMERS.invites.invite(result)
 }
 
 export interface CreateChannelInvite extends WithReason {

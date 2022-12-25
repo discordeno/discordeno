@@ -1,4 +1,5 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type {
   BigString,
   DefaultMessageNotificationLevels,
@@ -71,7 +72,7 @@ export async function editGuild (
     } as DiscordModifyGuild
   )
 
-  return rest.transformers.guild(rest, { guild: result, shardId })
+  return TRANSFORMERS.guild(result)
 }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild */

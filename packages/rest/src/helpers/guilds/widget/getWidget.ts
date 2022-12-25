@@ -1,7 +1,7 @@
 import { routes } from '@discordeno/constant'
-import type { BigString, DiscordGuildWidget } from '@discordeno/types'
+import TRANSFORMERS from '@discordeno/transformer'
+import type { BigString, Camelize, DiscordGuildWidget } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import type { GuildWidget } from '../../../transformers/widget.js'
 
 /**
  * Gets the guild widget by guild ID.
@@ -15,12 +15,12 @@ import type { GuildWidget } from '../../../transformers/widget.js'
 export async function getWidget (
   rest: RestManager,
   guildId: BigString
-): Promise<GuildWidget> {
+): Promise<Camelize<DiscordGuildWidget>> {
   const result = await rest.runMethod<DiscordGuildWidget>(
 
     'GET',
     routes.GUILD_WIDGET_JSON(guildId)
   )
 
-  return rest.transformers.widget(rest, result)
+  return TRANSFORMERS.widget(result)
 }

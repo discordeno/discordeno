@@ -1,6 +1,8 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type {
   BigString,
+  Camelize,
   DiscordEditScheduledEvent,
   DiscordScheduledEvent,
   ScheduledEventEntityType,
@@ -9,7 +11,6 @@ import type {
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import type { ScheduledEvent } from '../../../transformers/scheduledEvent.js'
 
 /**
  * Edits a scheduled event.
@@ -35,9 +36,8 @@ export async function editScheduledEvent (
   guildId: BigString,
   eventId: BigString,
   options: Partial<EditScheduledEvent>
-): Promise<ScheduledEvent> {
+): Promise<Camelize<DiscordScheduledEvent>> {
   const result = await rest.runMethod<DiscordScheduledEvent>(
-
     'PATCH',
     routes.GUILD_SCHEDULED_EVENT(guildId, eventId),
     {
@@ -59,7 +59,7 @@ export async function editScheduledEvent (
     } as DiscordEditScheduledEvent
   )
 
-  return rest.transformers.scheduledEvent(rest, result)
+  return TRANSFORMERS.event(result)
 }
 
 export interface EditScheduledEvent extends WithReason {
