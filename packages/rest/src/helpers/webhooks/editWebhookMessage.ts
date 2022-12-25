@@ -31,7 +31,7 @@ export async function editWebhookMessage (
     'PATCH',
     routes.WEBHOOK_MESSAGE(webhookId, token, messageId, options),
     {
-      ...TRANSFORMERS.reverse.interactionResponse(rest, {
+      ...TRANSFORMERS.reverse.interactionResponse({
         type: InteractionResponseTypes.UpdateMessage,
         data: options
       }).data,

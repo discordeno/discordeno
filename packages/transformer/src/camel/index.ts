@@ -1,4 +1,5 @@
 export * from './activity.js'
+export * from './allowedMentions.js'
 export * from './application.js'
 export * from './applicationCommand.js'
 export * from './applicationCommandOption.js'

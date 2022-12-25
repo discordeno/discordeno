@@ -33,7 +33,7 @@ export async function executeWebhook (
   webhookId: BigString,
   token: string,
   options: ExecuteWebhook
-): Promise<Camelize<DiscordMessage | undefined>> {
+): Promise<Camelize<DiscordMessage> | undefined> {
   const allowedMentions = options.allowedMentions
     ? {
         parse: options.allowedMentions.parse,

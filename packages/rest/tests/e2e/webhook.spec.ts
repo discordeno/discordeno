@@ -131,10 +131,12 @@ describe('[webhooks] Webhook helpers', async () => {
       webhook = await rest.createWebhook(channel.id, {
         name: 'idk'
       })
-      message = await rest.sendWebhookMessage(webhook.id, webhook.token!, {
+      const msg = await rest.sendWebhookMessage(webhook.id, webhook.token!, {
         content: 'discordeno is best lib',
         wait: true
       })
+      if (!msg) throw new Error('message not send')
+      message = msg
     })
 
     it('Can send message with webhook', async () => {

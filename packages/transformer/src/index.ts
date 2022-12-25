@@ -1,5 +1,6 @@
 import {
   c1amelize1Activity,
+  c1amelize1AllowedMentions,
   c1amelize1Application,
   c1amelize1ApplicationCommand,
   c1amelize1ApplicationCommandOption,
@@ -27,6 +28,7 @@ import {
 } from './camel/index.js'
 import {
   s1nakelize1Activity,
+  s1nakelize1AllowedMentions,
   s1nakelize1Application,
   s1nakelize1ApplicationCommand,
   s1nakelize1ApplicationCommandOption,
@@ -41,6 +43,7 @@ import {
   s1nakelize1Emoji,
   s1nakelize1GatewayBot,
   s1nakelize1Guild,
+  s1nakelize1InteractionResponse,
   s1nakelize1Member,
   s1nakelize1Message,
   s1nakelize1Role,
@@ -58,6 +61,7 @@ export * from './snake/index.js'
 
 export const TRANSFORMERS = {
   activity: c1amelize1Activity,
+  allowedMentions: c1amelize1AllowedMentions,
   application: c1amelize1Application,
   command: c1amelize1ApplicationCommand,
   commandOption: c1amelize1ApplicationCommandOption,
@@ -85,6 +89,7 @@ export const TRANSFORMERS = {
 
   reverse: {
     activity: s1nakelize1Activity,
+    allowedMentions: s1nakelize1AllowedMentions,
     application: s1nakelize1Application,
     command: s1nakelize1ApplicationCommand,
     commandOption: s1nakelize1ApplicationCommandOption,
@@ -99,6 +104,7 @@ export const TRANSFORMERS = {
     emoji: s1nakelize1Emoji,
     gatewayBot: s1nakelize1GatewayBot,
     guild: s1nakelize1Guild,
+    interactionResponse: s1nakelize1InteractionResponse,
     user: s1nakelize1User,
     member: s1nakelize1Member,
     message: s1nakelize1Message,
