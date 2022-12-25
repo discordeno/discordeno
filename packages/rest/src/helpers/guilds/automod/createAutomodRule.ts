@@ -1,16 +1,17 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type {
   AutoModerationActionType,
   AutoModerationEventTypes,
   AutoModerationTriggerTypes,
   BigString,
+  Camelize,
   DiscordAutoModerationRule,
   DiscordAutoModerationRuleTriggerMetadataPresets,
   DiscordCreateAutomoderationRule,
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import type { AutoModerationRule } from '../../../transformers/automodRule.js'
 
 /**
  * Creates an automod rule in a guild.
@@ -18,7 +19,7 @@ import type { AutoModerationRule } from '../../../transformers/automodRule.js'
  * @param rest - The rest manager to use to make the request.
  * @param guildId - The ID of the guild to create the rule in.
  * @param options - The parameters for the creation of the rule.
- * @returns An instance of the created {@link AutoModerationRule}.
+ * @returns An instance of the created {@link DiscordAutoModerationRule}.
  *
  * @remarks
  * Requires the `MANAGE_GUILD` permission.
@@ -31,9 +32,8 @@ export async function createAutomodRule (
   rest: RestManager,
   guildId: BigString,
   options: CreateAutoModerationRuleOptions
-): Promise<AutoModerationRule> {
+): Promise<Camelize<DiscordAutoModerationRule>> {
   const result = await rest.runMethod<DiscordAutoModerationRule>(
-
     'POST',
     routes.AUTOMOD_RULES(guildId),
     {
@@ -62,7 +62,7 @@ export async function createAutomodRule (
     } as DiscordCreateAutomoderationRule
   )
 
-  return rest.transformers.automodRule(rest, result)
+  return TRANSFORMERS.automodRule(result)
 }
 
 export interface CreateAutoModerationRuleOptions extends WithReason {

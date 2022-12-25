@@ -1,15 +1,16 @@
 import { routes } from '@discordeno/constant'
+import TRANSFORMERS from '@discordeno/transformer'
 import type {
   AutoModerationActionType,
   AutoModerationEventTypes,
   BigString,
+  Camelize,
   DiscordAutoModerationRule,
   DiscordAutoModerationRuleTriggerMetadataPresets,
   DiscordModifyAutomoderationRule,
   WithReason
 } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import type { AutoModerationRule } from '../../../transformers/automodRule.js'
 
 /**
  * Edits an automod rule.
@@ -18,7 +19,7 @@ import type { AutoModerationRule } from '../../../transformers/automodRule.js'
  * @param guildId - The ID of the guild to edit the rule in.
  * @param ruleId - The ID of the rule to edit.
  * @param options - The parameters for the edit of the rule.
- * @returns An instance of the edited {@link AutoModerationRule}.
+ * @returns An instance of the edited {@link DiscordAutoModerationRule}.
  *
  * @remarks
  * Requires the `MANAGE_GUILD` permission.
@@ -32,9 +33,8 @@ export async function editAutomodRule (
   guildId: BigString,
   ruleId: BigString,
   options: Partial<EditAutoModerationRuleOptions>
-): Promise<AutoModerationRule> {
+): Promise<Camelize<DiscordAutoModerationRule>> {
   const result = await rest.runMethod<DiscordAutoModerationRule>(
-
     'PATCH',
     routes.AUTOMOD_RULE(guildId, ruleId),
     {
@@ -62,7 +62,7 @@ export async function editAutomodRule (
     } as DiscordModifyAutomoderationRule
   )
 
-  return rest.transformers.automodRule(rest, result)
+  return TRANSFORMERS.automodRule(result)
 }
 
 export interface EditAutoModerationRuleOptions extends WithReason {
