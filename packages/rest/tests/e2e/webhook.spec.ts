@@ -15,10 +15,11 @@ let guild: Camelize<DiscordGuild>
 
 before(async () => {
   if (!cached.guild) {
-    guild = cached.guild = await rest.createGuild({
+    cached.guild = await rest.createGuild({
       name: 'Discordeno-test'
     })
   }
+  guild = cached.guild
 })
 
 after(async () => {
