@@ -9,23 +9,14 @@ chai.use(chaiAsPromised)
 describe('Guild helpers', async () => {
   // Delete the oldest guild(most likely to have finished tests).
 
-  describe('Create and delete', () => {
-    it('Create a guild', async () => {
-      const guild = await rest.createGuild({
-        name: 'Discordeno-test'
-      })
-      expect(guild.id).to.be.exist
-      await rest.deleteGuild(guild.id)
+  it('Create and delete a guild', async () => {
+    const guild = await rest.createGuild({
+      name: 'Discordeno-test'
     })
-
-    it('Delete a guild', async () => {
-      const guild = await rest.createGuild({
-        name: 'Discordeno-test'
-      })
-      await rest.deleteGuild(guild.id)
-      // Make sure the guild was deleted
-      await expect(rest.getGuild(guild.id)).to.eventually.rejected
-    })
+    expect(guild.id).to.be.exist
+    await rest.deleteGuild(guild.id)
+    // Make sure the guild was deleted
+    await expect(rest.getGuild(guild.id)).to.eventually.rejected
   })
 
   describe('Edit and get', () => {

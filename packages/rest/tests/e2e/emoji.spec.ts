@@ -2,22 +2,27 @@ import type { Camelize, DiscordEmoji, DiscordGuild } from '@discordeno/types'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { after, afterEach, before, beforeEach, describe, it } from 'mocha'
-import { rest } from './utils.js'
+import { cached, rest } from './utils.js'
 chai.use(chaiAsPromised)
 
-describe('Emoji helpers', () => {
-  let guild: Camelize<DiscordGuild>
+let guild: Camelize<DiscordGuild>
 
-  before(async () => {
-    guild = await rest.createGuild({
+before(async () => {
+  if (!cached.guild) {
+    guild = cached.guild = await rest.createGuild({
       name: 'Discordeno-test'
     })
-  })
+  }
+})
 
-  after(async () => {
+after(async () => {
+  if (cached.guild) {
     await rest.deleteGuild(guild.id)
-  })
+    cached.guild = undefined
+  }
+})
 
+describe('Emoji helpers', () => {
   describe('Create and delete', () => {
     it('create an emoji', async () => {
       const emoji = await rest.createEmoji(guild.id, {
