@@ -9,7 +9,7 @@ chai.use(chaiAsPromised)
 describe('Guild helpers', async () => {
   // Delete the oldest guild(most likely to have finished tests).
 
-  describe.only('Create and delete', () => {
+  describe('Create and delete', () => {
     it('Create a guild', async () => {
       const guild = await rest.createGuild({
         name: 'Discordeno-test'
