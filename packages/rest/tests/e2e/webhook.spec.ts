@@ -67,7 +67,8 @@ describe('[webhooks] Webhook helpers', async () => {
     })
 
     afterEach(async () => {
-      await rest.deleteWebhook(webhook.id)
+      /** no need extra delete Webhook becuase we delete the channel contain the webhook */
+      // await rest.deleteWebhook(webhook.id)
     })
 
     it('Can edit a guild webhook', async () => {
