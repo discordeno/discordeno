@@ -1444,8 +1444,10 @@ export type CamelCase<S extends string> = S extends `${infer T}_${infer U}`
   : S
 
 export type Camelize<T> = T extends any[]
-  ? T extends Array<Record<any, any>> ? Array<Camelize<T[number]>> : T
-  : T extends object
+  ? T extends Array<Record<any, any>>
+    ? Array<Camelize<T[number]>>
+    : T
+  : T extends Record<any, any>
     ? {
         [K in keyof T as CamelCase<K & string>]: Camelize<T[K]>;
       }
