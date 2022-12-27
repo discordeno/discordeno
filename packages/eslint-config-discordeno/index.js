@@ -25,6 +25,5 @@ module.exports = {
     '@typescript-eslint/no-invalid-void-type': 'off',
     '@typescript-eslint/consistent-type-imports': 'error',
     '@typescript-eslint/no-misused-promises': 'off',
-    '@typescript-eslint/comma-dangle': 'on',
   }
 }

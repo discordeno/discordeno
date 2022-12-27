@@ -1439,19 +1439,19 @@ export enum UserFlags {
 
 // export type MakeRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
-// export type CamelCase<S extends string> = S extends `${infer T}_${infer U}`
-//   ? `${T}${Capitalize<CamelCase<U>>}`
-//   : S
+export type CamelCase<S extends string> = S extends `${infer T}_${infer U}`
+  ? `${T}${Capitalize<CamelCase<U>>}`
+  : S
 
-// export type Camelize<T> = T extends any[]
-//   ? T extends Array<Record<any, any>>
-//     ? Array<Camelize<T[number]>>
-//     : T
-//   : T extends Record<any, any>
-//     ? {
-//         [K in keyof T as CamelCase<K & string>]: Camelize<T[K]>;
-//       }
-//     : T
+export type Camelize<T> = T extends any[]
+  ? T extends Array<Record<any, any>>
+    ? Array<Camelize<T[number]>>
+    : T
+  : T extends Record<any, any>
+    ? {
+        [K in keyof T as CamelCase<K & string>]: Camelize<T[K]>;
+      }
+    : T
 
 // /** Non object primitives */
 // export type Primitive =
