@@ -35,11 +35,10 @@ describe('[rest] manager', () => {
       })
     })
 
-    // TODO fix this test, needs proper error handling in rest
-    // it('With an invalid user id', async () => {
-    //   const user = await rest.getUser('123')
-    //   console.log('user fail', user)
-    //   expect(await rest.getUser('123')).to.throw
-    // })
+    it('With an invalid user id', async () => {
+      expect(() => {
+        rest.getUser('123')
+      }).throws
+    })
   })
 })

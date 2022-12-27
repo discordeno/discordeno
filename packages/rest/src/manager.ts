@@ -54,8 +54,36 @@ export function createRestManager (options: CreateRestManagerOptions): RestManag
       }
     },
 
+    async sendRequest (options) {
+      const response = await fetch(`${rest.baseUrl}/v${rest.version}/${options.url}`, rest.createRequest({ method: options.method, url: options.url }))
+      if (response.status < 200 || response.status >= 400) {
+        // If NOT rate limited remove from queue
+        if (response.status === 429) {
+          // TODO: RATELIMITED HANDLING
+          return options.reject('RATELIMITED 429')
+        } else {
+          // INVALID REQUEST
+          const body = JSON.stringify(await response.json())
+          return options.reject({
+            ok: false,
+            status: response.status,
+            body
+          })
+        }
+      }
+
+      options.resolve(await response.json())
+    },
+
     async makeRequest (method, url) {
-      return await fetch(`${rest.baseUrl}/v${rest.version}/${url}`, rest.createRequest({ method, url })).then(async res => await res.json())
+      return await new Promise((resolve, reject) => {
+        rest.sendRequest({
+          url,
+          method,
+          resolve,
+          reject
+        })
+      })
     },
 
     async get (url) {
@@ -105,7 +133,9 @@ export interface RestManager {
   }
   /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
   createRequest: (options: CreateRequestBodyOptions) => RequestBody
-  /** Make a request to the api. */
+  /** Sends a request to the api. */
+  sendRequest: (options: SendRequestOptions) => Promise<void>
+  /** Make a request to be sent to the api. */
   makeRequest: <T = unknown>(method: RequestMethods, url: string) => Promise<T>
   /** Make a get request to the api */
   get: <T = unknown>(url: string) => Promise<T>
@@ -133,4 +163,15 @@ export interface RequestBody {
   headers: Record<string, string>
   body: string | FormData
   method: RequestMethods
+}
+
+export interface SendRequestOptions {
+  /** The url to send the request to. */
+  url: string
+  /** The method to use when sending the request. */
+  method: RequestMethods
+  /** Resolve handler when a request succeeds. */
+  resolve: (value: any | PromiseLike<any>) => void
+  /** Reject handler when a request fails. */
+  reject: (reason?: any) => void
 }
