@@ -1,14 +1,13 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { createRestManager } from '../../src/index.js'
+import { token } from '../constants.js'
 
 describe('[rest] manager', () => {
-  const FAKE_TOKEN = ''
-
   describe('create a rest manager with only a token', () => {
-    const rest = createRestManager({ token: FAKE_TOKEN })
+    const rest = createRestManager({ token })
     it('Token is set properly.', () => {
-      expect(rest.token).to.be.equal(FAKE_TOKEN)
+      expect(rest.token).to.be.equal(token)
     })
 
     it('Default values are set when none are provided.', () => {
@@ -19,7 +18,7 @@ describe('[rest] manager', () => {
 
   describe('create a manager with other options', () => {
     const options = {
-      token: FAKE_TOKEN,
+      token,
       version: 9,
       baseUrl: 'https://localhost:8000'
     } as const
