@@ -1,5 +1,5 @@
 import { Bot } from '../../deps.js'
-import { threads } from './threads/index.js'
+import { threads } from './threads/index.js.js'
 
 export function channels (bot: Bot) {
   threads(bot)

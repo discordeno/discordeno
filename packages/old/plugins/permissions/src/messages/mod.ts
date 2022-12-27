@@ -4,7 +4,7 @@ import { deleteMessages } from './deleteMessages.js'
 import { getMessage } from './getMessage.js'
 import { getMessages } from './getMessages.js'
 import { pinMessage } from './pinMessage.js'
-import { reactions } from './reactions/index.js'
+import { reactions } from './reactions/index.js.js'
 import { sendMessage } from './sendMessage.js'
 import { unpinMessage } from './unpinMessage.js'
 

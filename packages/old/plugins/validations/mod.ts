@@ -1,13 +1,13 @@
 import type { Bot } from './deps.js'
-import { channels } from './src/channels/index.js'
-import { guilds } from './src/guilds/index.js'
-import { interactions } from './src/interaction/index.js'
-import { invites } from './src/invites/index.js'
-import { members } from './src/members/index.js'
-import { messages } from './src/messages/index.js'
-import { misc } from './src/misc/index.js'
-import { stickers } from './src/stickers/index.js'
-import { webhooks } from './src/webhooks/index.js'
+import { channels } from './src/channels/index.js.js'
+import { guilds } from './src/guilds/index.js.js'
+import { interactions } from './src/interaction/index.js.js'
+import { invites } from './src/invites/index.js.js'
+import { members } from './src/members/index.js.js'
+import { messages } from './src/messages/index.js.js'
+import { misc } from './src/misc/index.js.js'
+import { stickers } from './src/stickers/index.js.js'
+import { webhooks } from './src/webhooks/index.js.js'
 
 // PLUGINS MUST TAKE A BOT ARGUMENT WHICH WILL BE MODIFIED
 export function enableValidationsPlugin<B extends Bot> (bot: B): B {
