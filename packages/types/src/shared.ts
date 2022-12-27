@@ -1,4 +1,4 @@
-// export type BigString = bigint | string
+export type BigString = bigint | string
 
 // export enum PresenceStatus {
 //   online,

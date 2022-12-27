@@ -45,7 +45,7 @@
 //   WebhookTypes
 // } from './shared.js'
 
-import type { UserFlags, PremiumTypes } from "./shared"
+import type { UserFlags, PremiumTypes } from './shared'
 
 /** https://discord.com/developers/docs/resources/user#user-object */
 export interface DiscordUser {
