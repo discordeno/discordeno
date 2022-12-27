@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
+import TRANSFORMERS from '@discordeno/transformer'
 import type { BigString, Camelize, DiscordUser } from '@discordeno/types'
+
+// TODO: make dynamic based on package.json file
+const version = '18.0.0-alpha.1'
 
 export function createRestManager (options: CreateRestManagerOptions): RestManager {
   const rest: RestManager = {
@@ -9,15 +13,49 @@ export function createRestManager (options: CreateRestManagerOptions): RestManag
 
     routes: {
       // User endpoints
-      user: (userId: BigString) => {
+      user (userId: BigString) {
         return `/users/${userId}`
       }
     },
 
+    createRequest (options) {
+      const headers: Record<string, string> = {
+        'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${version})`
+      }
+
+      if (!options.unauthorized) headers.authorization = `Bot ${rest.token}`
+
+      // SOMETIMES SPECIAL HEADERS (E.G. CUSTOM AUTHORIZATION) NEED TO BE USED
+      if (options.headers) {
+        for (const key in options.headers) {
+          headers[key.toLowerCase()] = options.headers[key]
+        }
+      }
+
+      // GET METHODS SHOULD NOT HAVE A BODY
+      if (options.method === 'GET') {
+        options.body = undefined
+      }
+
+      // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
+      if (options.body?.reason) {
+        headers['X-Audit-Log-Reason'] = encodeURIComponent(
+          options.body.reason as string
+        )
+        options.body.reason = undefined
+      }
+
+      return {
+        headers,
+        body: (options.body?.file ?? JSON.stringify(options.body)) as
+      | FormData
+      | string,
+        method: options.method
+      }
+    },
+
     async makeRequest (method, url) {
-      return await fetch(`${rest.baseUrl}/v${rest.version}/${url}`, {
-        method
-      }).then(async res => await res.json())
+      return await fetch(`${rest.baseUrl}/v${rest.version}/${url}`, rest.createRequest({ method, url })).then(async res => await res.json())
     },
 
     async get (url) {
@@ -25,8 +63,8 @@ export function createRestManager (options: CreateRestManagerOptions): RestManag
     },
 
     async getUser (id) {
-      // TODO: camelize
-      return await rest.get<DiscordUser>(rest.routes.user(id))
+      const result = await rest.get<DiscordUser>(rest.routes.user(id))
+      return TRANSFORMERS.user(result)
     }
   }
 
@@ -65,6 +103,8 @@ export interface RestManager {
     /** A specific user route. */
     user: (id: BigString) => string
   }
+  /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
+  createRequest: (options: CreateRequestBodyOptions) => RequestBody
   /** Make a request to the api. */
   makeRequest: <T = unknown>(method: RequestMethods, url: string) => Promise<T>
   /** Make a get request to the api */
@@ -80,3 +120,17 @@ export interface RestManager {
 
 export type RequestMethods = 'GET'
 export type ApiVersions = 9 | 10
+
+export interface CreateRequestBodyOptions {
+  headers?: Record<string, string>
+  method: RequestMethods
+  body?: Record<string, unknown>
+  unauthorized?: boolean
+  url?: string
+}
+
+export interface RequestBody {
+  headers: Record<string, string>
+  body: string | FormData
+  method: RequestMethods
+}
