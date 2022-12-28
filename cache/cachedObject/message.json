@@ -1,14 +1,14 @@
 {
-  "id": "5033959134957763774",
+  "id": "6881467690359591184",
   "type": 0,
-  "content": "skrneft",
-  "channel_id": "9060320275078870257",
+  "content": "galzums",
+  "channel_id": "8160228848671723628",
   "author": {
-    "id": "158975714262103501",
-    "username": "9875676830602673",
+    "id": "494106331057141269",
+    "username": "8855525498509741",
     "avatar": "eae5905ad2d18d7c8deca20478b088b5",
     "avatar_decoration": null,
-    "discriminator": "7804",
+    "discriminator": "1560",
     "public_flags": 4194560
   },
   "attachments": [],
@@ -18,7 +18,7 @@
   "pinned": false,
   "mention_everyone": false,
   "tts": false,
-  "timestamp": "2022-12-27T00:41:44.993Z",
+  "timestamp": "2022-12-28T00:41:23.400Z",
   "edited_timestamp": null,
   "flags": 0,
   "components": []
