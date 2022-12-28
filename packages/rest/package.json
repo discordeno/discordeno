@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@discordeno/transformer": "18.0.0-alpha.1",
+    "@discordeno/utils": "18.0.0-alpha.1",
     "dotenv": "^16.0.3"
   },
   "devDependencies": {

@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { rest } from '../utils.js'
 
-describe('[rest] manager', () => {
+describe('[rest] User related tests', () => {
   describe('Get a user from the api', () => {
     it('With a valid user id', async () => {
       const user = await rest.getUser('130136895395987456')
