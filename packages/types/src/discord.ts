@@ -675,6 +675,8 @@ export interface DiscordUser {
 //   integration_id?: string
 //   /** Whether this is the guild's premium subscriber role */
 //   premium_subscriber?: null
+//   /** Whether this is a guild's linked role */
+//   guild_connections?: null
 // }
 
 // /** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
