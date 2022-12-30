@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 import { it } from 'mocha'
 // import { validateLength } from '../src/validateLength.js'
+let validateLength
 
 describe.skip(' ', () => {
   it('[utils] Validate length is too low', () => {

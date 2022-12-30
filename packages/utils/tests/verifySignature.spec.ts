@@ -4,6 +4,7 @@ import { Buffer } from 'node:buffer'
 import Sinon from 'sinon'
 import nacl from 'tweetnacl'
 // import { verifySignature } from '../src/verifySignature.js'
+let verifySignature
 
 describe.skip('VerifySignature', () => {
   let publicKey: Uint8Array

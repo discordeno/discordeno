@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 import { it } from 'mocha'
 // import { bigintToSnowflake, snowflakeToBigint } from '../src/bigint.js'
+let bigintToSnowflake, snowflakeToBigint
 
 it.skip('[bigint] - Transform a snowflake string to bigint', () => {
   const text = '130136895395987456'

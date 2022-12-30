@@ -1,7 +1,8 @@
 import { expect } from 'chai'
 import { afterEach, beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
-import { delay, formatImageURL, hasProperty } from '../src/utils.js'
+import { delay } from '../src/utils.js'
+let formatImageURL, hasProperty
 
 describe('utils.ts', () => {
   let clock: sinon.SinonFakeTimers

@@ -2,6 +2,7 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
 // import { iconBigintToHash, iconHashToBigInt } from '../src/hash.js'
+let iconBigintToHash, iconHashToBigInt
 
 const iconHash = '4bbb271a13f7195031adcc06a2d867ce'
 const iconBigInt = 3843769888406823508519992434416504301518n

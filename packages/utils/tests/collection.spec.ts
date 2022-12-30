@@ -2,6 +2,7 @@ import { expect } from 'chai'
 import { beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
 // import { Collection } from '../src/collection.js'
+let Collection
 
 describe.skip('[collection]', () => {
   let collection: Collection<any, any>
