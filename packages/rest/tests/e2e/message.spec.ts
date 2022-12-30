@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { rest } from '../utils.js'
+import { rest } from './utils.js'
 
 describe('[rest] Message related tests', () => {
   describe('Send a message', () => {
