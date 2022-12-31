@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import TRANSFORMERS from '@discordeno/transformer'
 import type { BigString, Camelize, CreateMessageOptions, DiscordCreateMessage, DiscordMessage, DiscordUser, GetMessagesOptions } from '@discordeno/types'
-import { delay } from '@discordeno/utils'
+import { delay, camelize } from '@discordeno/utils'
 
 // TODO: make dynamic based on package.json file
 const version = '18.0.0-alpha.1'
@@ -162,16 +162,15 @@ export function createRestManager (options: CreateRestManagerOptions): RestManag
     },
 
     async get (url) {
-      return await rest.makeRequest('GET', url)
+      return camelize(await rest.makeRequest('GET', url))
     },
 
     async post (url, body) {
-      return await rest.makeRequest('POST', url, body)
+      return camelize(await rest.makeRequest('POST', url, body))
     },
 
     async getUser (id) {
-      const result = await rest.get<DiscordUser>(rest.routes.user(id))
-      return TRANSFORMERS.user(result)
+      return await rest.get<DiscordUser>(rest.routes.user(id))
     },
 
     /**
@@ -262,9 +261,9 @@ export interface RestManager {
   /** Make a request to be sent to the api. */
   makeRequest: <T = unknown>(method: RequestMethods, url: string, body?: Record<string, any>) => Promise<T>
   /** Make a get request to the api */
-  get: <T = unknown>(url: string) => Promise<T>
+  get: <T = unknown>(url: string) => Promise<Camelize<T>>
   /** Make a post request to the api. */
-  post: <T = unknown>(url: string, body?: Record<string, any>) => Promise<T>
+  post: <T = unknown>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
   /**
    * Get a user's data from the api
    *

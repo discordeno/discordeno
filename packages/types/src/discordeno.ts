@@ -1,4 +1,4 @@
-import type { BigString } from "./shared"
+import type { BigString } from './shared'
 
 export interface CreateMessageOptions {
   /** The message contents (up to 2000 characters) */
