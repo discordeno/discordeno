@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import TRANSFORMERS from '@discordeno/transformer'
 import type { BigString, Camelize, CreateMessageOptions, DiscordCreateMessage, DiscordMessage, DiscordUser, GetMessagesOptions } from '@discordeno/types'
-import { delay, camelize } from '@discordeno/utils'
+import { camelize, delay } from '@discordeno/utils'
 
 // TODO: make dynamic based on package.json file
 const version = '18.0.0-alpha.1'
@@ -161,44 +161,18 @@ export function createRestManager (options: CreateRestManagerOptions): RestManag
       })
     },
 
-    async get (url) {
-      return camelize(await rest.makeRequest('GET', url))
+    async get<T = Record<string, unknown>>(url: string) {
+      return camelize(await rest.makeRequest('GET', url)) as Camelize<T>
     },
 
-    async post (url, body) {
-      return camelize(await rest.makeRequest('POST', url, body))
+    async post<T = Record<string, unknown>> (url: string, body?: Record<string, any>) {
+      return camelize(await rest.makeRequest('POST', url, body)) as Camelize<T>
     },
 
     async getUser (id) {
       return await rest.get<DiscordUser>(rest.routes.user(id))
     },
 
-    /**
-     * Sends a message to a channel.
-     *
-     * @param channelId - The ID of the channel to send the message in.
-     * @param options - The parameters for the creation of the message.
-     * @returns An instance of the created {@link DiscordMessage}.
-     *
-     * @remarks
-     * Requires that the bot user be able to see the contents of the channel the message is to be sent in.
-     *
-     * If sending a message to a guild channel:
-     * - Requires the `SEND_MESSAGES` permission.
-     *
-     * If sending a TTS message:
-     * - Requires the `SEND_TTS_MESSAGES` permission.
-     *
-     * If sending a message as a reply to another message:
-     * - Requires the `READ_MESSAGE_HISTORY` permission.
-     * - The message being replied to cannot be a system message.
-     *
-     * ⚠️ The maximum size of a request (accounting for any attachments and message content) for bot users is _8 MiB_.
-     *
-     * Fires a _Message Create_ gateway event.
-     *
-     * @see {@link https://discord.com/developers/docs/resources/channel#create-message}
-     */
     async sendMessage (channelId: BigString, options: CreateMessageOptions) {
       const result = await rest.post<DiscordMessage>(
         rest.routes.channels.messages(channelId),
@@ -261,9 +235,9 @@ export interface RestManager {
   /** Make a request to be sent to the api. */
   makeRequest: <T = unknown>(method: RequestMethods, url: string, body?: Record<string, any>) => Promise<T>
   /** Make a get request to the api */
-  get: <T = unknown>(url: string) => Promise<Camelize<T>>
+  get: <T = Record<string, unknown>>(url: string) => Promise<Camelize<T>>
   /** Make a post request to the api. */
-  post: <T = unknown>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
+  post: <T = Record<string, unknown>>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
   /**
    * Get a user's data from the api
    *
@@ -272,10 +246,31 @@ export interface RestManager {
    */
   getUser: (id: BigString) => Promise<Camelize<DiscordUser>>
   /**
-   * Send a message to a channel.
-   *
-   * @returns {Message}
-   */
+     * Sends a message to a channel.
+     *
+     * @param channelId - The ID of the channel to send the message in.
+     * @param options - The parameters for the creation of the message.
+     * @returns An instance of the created {@link DiscordMessage}.
+     *
+     * @remarks
+     * Requires that the bot user be able to see the contents of the channel the message is to be sent in.
+     *
+     * If sending a message to a guild channel:
+     * - Requires the `SEND_MESSAGES` permission.
+     *
+     * If sending a TTS message:
+     * - Requires the `SEND_TTS_MESSAGES` permission.
+     *
+     * If sending a message as a reply to another message:
+     * - Requires the `READ_MESSAGE_HISTORY` permission.
+     * - The message being replied to cannot be a system message.
+     *
+     * ⚠️ The maximum size of a request (accounting for any attachments and message content) for bot users is _8 MiB_.
+     *
+     * Fires a _Message Create_ gateway event.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/channel#create-message}
+     */
   sendMessage: (channelId: BigString, options: CreateMessageOptions) => Promise<Camelize<DiscordMessage>>
 }
 
