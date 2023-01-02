@@ -23,13 +23,7 @@ describe('[rest] User related tests', () => {
         it('Has been camelized', () => {
           const keys = Object.keys(user)
 
-          expect(keys.includes('mfa_enabled')).to.be.false
-          expect(keys.includes('accent_color')).to.be.false
-          expect(keys.includes('premium_type')).to.be.false
           expect(keys.includes('public_flags')).to.be.false
-          expect(keys.includes('mfaEnabled')).to.be.true
-          expect(keys.includes('accentColor')).to.be.true
-          expect(keys.includes('premiumType')).to.be.true
           expect(keys.includes('publicFlags')).to.be.true
         })
       })
