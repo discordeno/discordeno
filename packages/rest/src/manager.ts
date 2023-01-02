@@ -1,4 +1,3 @@
-import TRANSFORMERS from '@discordeno/transformer'
 import type { BigString, Camelize, CreateMessageOptions, DiscordCreateMessage, DiscordMessage, DiscordUser, GetMessagesOptions } from '@discordeno/types'
 import { camelize, delay } from '@discordeno/utils'
 import type { InvalidRequestBucket } from './invalidBucket.js'
@@ -336,15 +335,13 @@ export function createRestManager (options: CreateRestManagerOptions): RestManag
     },
 
     async sendMessage (channelId: BigString, options: CreateMessageOptions) {
-      const result = await rest.post<DiscordMessage>(
+      return await rest.post<DiscordMessage>(
         rest.routes.channels.messages(channelId),
         {
           content: options.content
           // TODO: other options
         } as DiscordCreateMessage
       )
-
-      return TRANSFORMERS.message(result)
     }
   }
 
