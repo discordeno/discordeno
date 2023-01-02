@@ -153,11 +153,12 @@ export function createRestManager (options: CreateRestManagerOptions): RestManag
       const global = headers.get('x-ratelimit-global')
       // undefined override null needed for typings
       const bucketId = headers.get('x-ratelimit-bucket') ?? undefined
+      const limit = headers.get('x-ratelimit-limit')
 
       rest.queues.get(url)?.handleCompletedRequest({
-        remaining: Number(remaining),
-        interval: Number(retryAfter) * 1000,
-        max: Number(headers.get('x-ratelimit-limit'))
+        remaining: remaining ? Number(remaining) : undefined,
+        interval: retryAfter ? Number(retryAfter) * 1000 : undefined,
+        max: limit ? Number(limit) : undefined
       })
 
       // IF THERE IS NO REMAINING RATE LIMIT, MARK IT AS RATE LIMITED

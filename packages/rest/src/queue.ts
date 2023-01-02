@@ -134,13 +134,14 @@ export class Queue {
     this.cleanup()
   }
 
-  handleCompletedRequest (headers: { max: number, interval: number, remaining: number }): void {
+  handleCompletedRequest (headers: { max?: number, interval?: number, remaining?: number }): void {
     if (headers.max === 0) {
       this.remaining++
       return
     }
-    this.interval = headers.interval
-    this.remaining = headers.remaining
+
+    if (headers.interval !== undefined) this.interval = headers.interval
+    if (headers.remaining !== undefined) this.remaining = headers.remaining
 
     if (this.remaining <= 1) {
       this.timeoutId = setTimeout(() => {
