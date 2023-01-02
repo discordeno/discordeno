@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import TRANSFORMERS from '@discordeno/transformer'
 import type { BigString, Camelize, CreateMessageOptions, DiscordCreateMessage, DiscordMessage, DiscordUser, GetMessagesOptions } from '@discordeno/types'
 import { camelize, delay } from '@discordeno/utils'
