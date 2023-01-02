@@ -1249,7 +1249,7 @@ export interface DiscordMessage {
 //   /** All button components have type 2 */
 //   type: MessageComponentTypes.Button
 //   /** for what the button says (max 80 characters) */
-//   label: string
+//   label?: string
 //   /** a dev-defined unique string sent on click (max 100 characters). type 5 Link buttons can not have a custom_id */
 //   custom_id?: string
 //   /** For different styles/colors of the buttons */
