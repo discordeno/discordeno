@@ -45,7 +45,7 @@
 //   WebhookTypes
 // } from './shared.js'
 
-import type { ActivityTypes, ApplicationFlags, ChannelFlags, ChannelTypes, DefaultMessageNotificationLevels, ExplicitContentFilterLevels, GuildFeatures, GuildNsfwLevel, MfaLevels, OverwriteTypes, PremiumTiers, PremiumTypes, SortOrderTypes, StickerFormatTypes, StickerTypes, SystemChannelFlags, TeamMembershipStates, UserFlags, VerificationLevels, VideoQualityModes } from './shared'
+import type { ActivityTypes, ApplicationFlags, ChannelFlags, ChannelTypes, DefaultMessageNotificationLevels, ExplicitContentFilterLevels, GatewayEventNames, GuildFeatures, GuildNsfwLevel, MfaLevels, OverwriteTypes, PremiumTiers, PremiumTypes, SortOrderTypes, StickerFormatTypes, StickerTypes, SystemChannelFlags, TeamMembershipStates, UserFlags, VerificationLevels, VideoQualityModes } from './shared'
 
 /** https://discord.com/developers/docs/resources/user#user-object */
 export interface DiscordUser {
@@ -2089,17 +2089,17 @@ export interface DiscordSessionStartLimit {
 //   webhook_id: string
 // }
 
-// /** https://discord.com/developers/docs/topics/gateway#payloads-gateway-payload-structure */
-// export interface DiscordGatewayPayload {
-//   /** opcode for the payload */
-//   op: number
-//   /** Event data */
-//   d: unknown | null
-//   /** Sequence number, used for resuming sessions and heartbeats */
-//   s: number | null
-//   /** The event name for this payload */
-//   t: GatewayEventNames | null
-// }
+/** https://discord.com/developers/docs/topics/gateway#payloads-gateway-payload-structure */
+export interface DiscordGatewayPayload {
+  /** opcode for the payload */
+  op: number
+  /** Event data */
+  d: unknown | null
+  /** Sequence number, used for resuming sessions and heartbeats */
+  s: number | null
+  /** The event name for this payload */
+  t: GatewayEventNames | null
+}
 
 // /** https://discord.com/developers/docs/topics/gateway#guild-members-chunk */
 // export interface DiscordGuildMembersChunk {
@@ -2245,11 +2245,11 @@ export interface DiscordSessionStartLimit {
 //   uses: number
 // }
 
-// /** https://discord.com/developers/docs/topics/gateway#hello */
-// export interface DiscordHello {
-//   /** The interval (in milliseconds) the client should heartbeat with */
-//   heartbeat_interval: number
-// }
+/** https://discord.com/developers/docs/topics/gateway#hello */
+export interface DiscordHello {
+  /** The interval (in milliseconds) the client should heartbeat with */
+  heartbeat_interval: number
+}
 
 /** https://discord.com/developers/docs/topics/gateway#ready */
 export interface DiscordReady {
