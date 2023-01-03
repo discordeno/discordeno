@@ -1,11 +1,11 @@
 export type BigString = bigint | string
 
-// export enum PresenceStatus {
-//   online,
-//   dnd,
-//   idle,
-//   offline,
-// }
+export enum PresenceStatus {
+  online,
+  dnd,
+  idle,
+  offline,
+}
 
 // /* https://discord.com/developers/docs/resources/channel#message-object-message-flags */
 // export enum ApplicationCommandFlags {
