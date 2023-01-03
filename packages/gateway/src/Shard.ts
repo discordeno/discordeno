@@ -5,10 +5,6 @@ import { inflateSync } from 'zlib'
 import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest } from './types.js'
 import { ShardSocketCloseCodes, ShardState } from './types.js'
 
-export const MAX_GATEWAY_REQUESTS_PER_INTERVAL = 120
-export const GATEWAY_RATE_LIMIT_RESET_INTERVAL = 60_000 // 60 seconds
-export const DEFAULT_HEARTBEAT_INTERVAL = 45000
-
 export class Shard {
   /** The id of the shard */
   id: number
@@ -371,7 +367,7 @@ export class Shard {
           // therefore the rate limit interval has been reset too.
           this.bucket = createLeakyBucket({
             max: this.calculateSafeRequests(),
-            refillInterval: GATEWAY_RATE_LIMIT_RESET_INTERVAL,
+            refillInterval: 60000,
             refillAmount: this.calculateSafeRequests(),
             // Waiting acquires should not be lost on a re-identify.
             waiting: this.bucket.waiting
