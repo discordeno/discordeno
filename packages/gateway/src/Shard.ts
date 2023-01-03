@@ -2,7 +2,6 @@ import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discord
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
 import { createLeakyBucket, delay } from '@discordeno/utils'
 import { inflateSync } from 'zlib'
-import type { GatewayManager } from './manager.js'
 import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest } from './types.js'
 import { ShardSocketCloseCodes, ShardState } from './types.js'
 
@@ -13,8 +12,8 @@ export const DEFAULT_HEARTBEAT_INTERVAL = 45000
 export class Shard {
   /** The id of the shard */
   id: number
-  /** The gateway manager that is responsible for this this. */
-  manager: GatewayManager
+  /** The connection config details that this shard will used to connect to discord. */
+  connection: ShardGatewayConfig
   /** This contains all the heartbeat information */
   heart: ShardHeart
   /** The maximum of requests which can be send to discord per rate limit tick. Typically this value should not be changed. */
@@ -29,12 +28,14 @@ export class Shard {
   socket?: WebSocket
   /** Current internal state of the this. */
   state = ShardState.Offline
-  /** The total amount of shards which are used to communicate with Discord. */
-  // totalShards: number
   /** The url provided by discord to use when resuming a connection for this this. */
   resumeGatewayUrl: string = ''
   /** The shard related event handlers. */
   events: ShardEvents = {}
+  /** Cache for pending gateway requests which should have been send while the gateway went offline. */
+  offlineSendQueue: Array<(_?: unknown) => void> = []
+  /** Resolve internal waiting states. Mapped by SelectedEvents => ResolveFunction */
+  resolves = new Map<'READY' | 'RESUMED' | 'INVALID_SESSION', (payload: DiscordGatewayPayload) => void>()
   /** Shard bucket. Only access this if you know what you are doing. Bucket for handling shard request rate limits. */
   bucket = createLeakyBucket({
     max: 120,
@@ -42,16 +43,9 @@ export class Shard {
     refillAmount: 120
   })
 
-  /** Cache for pending gateway requests which should have been send while the gateway went offline. */
-  offlineSendQueue: Array<(_?: unknown) => void> = []
-
-  /** Resolve internal waiting states. Mapped by SelectedEvents => ResolveFunction */
-  resolves = new Map<'READY' | 'RESUMED' | 'INVALID_SESSION', (payload: DiscordGatewayPayload) => void>()
-
-  constructor (manager: GatewayManager, shardId: number) {
+  constructor (shardId: number, connection: ShardGatewayConfig) {
     this.id = shardId
-    // TODO: can this be done without a manager?
-    this.manager = manager
+    this.connection = connection
 
     this.heart = {
       acknowledged: false,
@@ -61,18 +55,7 @@ export class Shard {
 
   /** The gateway configuration which is used to connect to Discord. */
   get gatewayConfig (): ShardGatewayConfig {
-    return {
-      compress: this.manager.compress,
-      intents: this.manager.intents,
-      properties: {
-        os: this.manager.properties.os,
-        browser: this.manager.properties.browser,
-        device: this.manager.properties.device
-      },
-      token: this.manager.token,
-      url: this.manager.url,
-      version: this.manager.version
-    }
+    return this.connection
   }
 
   /** Calculate the amount of requests which can safely be made per rate limit interval, before the gateway gets disconnected due to an exceeded rate limit. */
@@ -174,7 +157,7 @@ export class Shard {
           compress: this.gatewayConfig.compress,
           properties: this.gatewayConfig.properties,
           intents: this.gatewayConfig.intents,
-          shard: [this.id, this.manager.totalShards],
+          shard: [this.id, this.gatewayConfig.totalShards],
           presence: await this.makePresence?.()
         }
       },

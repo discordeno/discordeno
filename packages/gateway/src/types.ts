@@ -4,15 +4,11 @@ import type Shard from './Shard.js'
 export enum ShardState {
   /** Shard is fully connected to the gateway and receiving events from Discord. */
   Connected = 0,
-  /** Shard started to connect to the gateway.
-     * This is only used if the shard is not currently trying to identify or resume.
-     */
+  /** Shard started to connect to the gateway. This is only used if the shard is not currently trying to identify or resume. */
   Connecting = 1,
   /** Shard got disconnected and reconnection actions have been started. */
   Disconnected = 2,
-  /** The shard is connected to the gateway but only heartbeating.
-     * At this state the shard has not been identified with discord.
-     */
+  /** The shard is connected to the gateway but only heartbeating. At this state the shard has not been identified with discord. */
   Unidentified = 3,
   /** Shard is trying to identify with the gateway to create a new session. */
   Identifying = 4,
@@ -24,45 +20,50 @@ export enum ShardState {
 
 export interface ShardGatewayConfig {
   /** Whether incoming payloads are compressed using zlib.
-     *
-     * @default false
-     */
+   *
+   * @default false
+   */
   compress: boolean
   /** The calculated intent value of the events which the shard should receive.
-     *
-     * @default 0
-     */
+   *
+   * @default 0
+   */
   intents: number
   /** Identify properties to use */
   properties: {
     /** Operating system the shard runs on.
-       *
-       * @default "darwin" | "linux" | "windows"
-       */
+     *
+     * @default "darwin" | "linux" | "windows"
+     */
     os: string
     /** The "browser" where this shard is running on.
-       *
-       * @default "Discordeno"
-       */
+     *
+     * @default "Discordeno"
+     */
     browser: string
     /** The device on which the shard is running.
-       *
-       * @default "Discordeno"
-       */
+     *
+     * @default "Discordeno"
+     */
     device: string
   }
   /** Bot token which is used to connect to Discord */
   token: string
   /** The URL of the gateway which should be connected to.
-     *
-     * @default "wss://gateway.discord.gg"
-     */
+   *
+   * @default "wss://gateway.discord.gg"
+   */
   url: string
   /** The gateway version which should be used.
-     *
-     * @default 10
-     */
+   *
+   * @default 10
+   */
   version: number
+  /**
+   * The total number of shards to connect to across the entire bot.
+   * @default 1
+   */
+  totalShards: number
 }
 
 export interface ShardHeart {
@@ -77,9 +78,9 @@ export interface ShardHeart {
   /** Unix timestamp (in milliseconds) when the last heartbeat was sent. */
   lastBeat?: number
   /** Round trip time (in milliseconds) from Shard to Discord and back.
-     * Calculated using the heartbeat system.
-     * Note: this value is undefined until the first heartbeat to Discord has happened.
-     */
+   * Calculated using the heartbeat system.
+   * Note: this value is undefined until the first heartbeat to Discord has happened.
+   */
   rtt?: number
   /** Id of the timeout which is used for sending the first heartbeat to Discord since it's "special". */
   timeoutId?: NodeJS.Timeout
@@ -120,8 +121,8 @@ export enum ShardSocketCloseCodes {
   /** A resume has been requested and therefore the old connection needs to be closed. */
   ResumeClosingOldConnection = 3024,
   /** Did not receive a heartbeat ACK in time.
-     * Closing the shard and creating a new session.
-     */
+   * Closing the shard and creating a new session.
+   */
   ZombiedConnection = 3010,
   /** Discordeno's gateway tests hae been finished, therefore the Shard can be turned off. */
   TestingFinished = 3064,
