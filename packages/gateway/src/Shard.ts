@@ -78,9 +78,7 @@ export class Shard {
   /** Calculate the amount of requests which can safely be made per rate limit interval, before the gateway gets disconnected due to an exceeded rate limit. */
   calculateSafeRequests (): number {
     // * 2 adds extra safety layer for discords OP 1 requests that we need to respond to
-    const safeRequests =
-  this.maxRequestsPerRateLimitTick -
-  Math.ceil(this.rateLimitResetInterval / this.heart.interval) * 2
+    const safeRequests = this.maxRequestsPerRateLimitTick - Math.ceil(this.rateLimitResetInterval / this.heart.interval) * 2
 
     return safeRequests < 0 ? 0 : safeRequests
   }
@@ -88,12 +86,9 @@ export class Shard {
   async checkOffline (highPriority: boolean): Promise<void> {
     if (!this.isOpen()) {
       await new Promise((resolve) => {
-        if (highPriority) {
-          // Higher priority requests get added at the beginning of the array.
-          this.offlineSendQueue.unshift(resolve)
-        } else {
-          this.offlineSendQueue.push(resolve)
-        }
+        // Higher priority requests get added at the beginning of the array.
+        if (highPriority) this.offlineSendQueue.unshift(resolve)
+        else this.offlineSendQueue.push(resolve)
       })
     }
   }
@@ -108,7 +103,7 @@ export class Shard {
   /** Connect the shard with the gateway and start heartbeating. This will not identify the shard to the gateway. */
   async connect (): Promise<Shard> {
     // Only set the shard to `Connecting` state,
-  // if the connection request does not come from an identify or resume action.
+    // if the connection request does not come from an identify or resume action.
     if (![ShardState.Identifying, ShardState.Resuming].includes(this.state)) {
       this.state = ShardState.Connecting
     }
@@ -137,11 +132,9 @@ export class Shard {
 
     return await new Promise((resolve) => {
       socket.onopen = () => {
-      // Only set the shard to `Unidentified` state,
-      // if the connection request does not come from an identify or resume action.
-        if (
-          ![ShardState.Identifying, ShardState.Resuming].includes(this.state)
-        ) {
+        // Only set the shard to `Unidentified` state,
+        // if the connection request does not come from an identify or resume action.
+        if (![ShardState.Identifying, ShardState.Resuming].includes(this.state)) {
           this.state = ShardState.Unidentified
         }
         this.events.connected?.(this)
@@ -154,13 +147,10 @@ export class Shard {
   /** Identify the shard to the gateway. If not connected, this will also connect the shard to the gateway. */
   async identify (): Promise<void> {
     // A new identify has been requested even though there is already a connection open.
-  // Therefore we need to close the old connection and heartbeating before creating a new one.
+    // Therefore we need to close the old connection and heartbeating before creating a new one.
     if (this.isOpen()) {
       console.log(`CLOSING EXISTING SHARD: #${this.id}`)
-      this.close(
-        ShardSocketCloseCodes.ReIdentifying,
-        'Re-identifying closure of old connection.'
-      )
+      this.close(ShardSocketCloseCodes.ReIdentifying, 'Re-identifying closure of old connection.')
     }
 
     this.state = ShardState.Identifying
@@ -214,25 +204,22 @@ export class Shard {
   /** Attempt to resume the previous shards session with the gateway. */
   async resume (): Promise<void> {
     //   gateway.debug("GW RESUMING", { shardId });
-  // It has been requested to resume the Shards session.
-  // It's possible that the shard is still connected with Discord's gateway therefore we need to forcefully close it.
+    // It has been requested to resume the Shards session.
+    // It's possible that the shard is still connected with Discord's gateway therefore we need to forcefully close it.
     if (this.isOpen()) {
-      this.close(
-        ShardSocketCloseCodes.ResumeClosingOldConnection,
-        'Reconnecting the shard, closing old connection.'
-      )
+      this.close(ShardSocketCloseCodes.ResumeClosingOldConnection, 'Reconnecting the shard, closing old connection.')
     }
 
     // Shard has never identified, so we cannot resume.
     if (!this.sessionId) {
-    // gateway.debug(
-    //   "GW DEBUG",
-    //   `[Error] Trying to resume a shard (id: ${shardId}) that was not first identified.`,
-    // );
+      // gateway.debug(
+      //   "GW DEBUG",
+      //   `[Error] Trying to resume a shard (id: ${shardId}) that was not first identified.`,
+      // );
 
       return await this.identify()
 
-    // throw new Error(`[SHARD] Trying to resume a shard (id: ${this.id}) which was never identified`);
+      // throw new Error(`[SHARD] Trying to resume a shard (id: ${this.id}) which was never identified`);
     }
 
     this.state = ShardState.Resuming
@@ -333,9 +320,7 @@ export class Shard {
         this.state = ShardState.Offline
         this.events.disconnected?.(this)
 
-        throw new Error(
-          close.reason || 'Discord gave no reason! GG! You broke Discord!'
-        )
+        throw new Error(close.reason || 'Discord gave no reason! GG! You broke Discord!')
       }
       // Gateway connection closes on which a resume is allowed.
       case GatewayCloseEventCodes.UnknownError:
@@ -357,9 +342,7 @@ export class Shard {
     // If message compression is enabled,
     // Discord might send zlib compressed payloads.
     if (this.gatewayConfig.compress && preProcessMessage instanceof Blob) {
-      preProcessMessage = inflateSync(
-        await preProcessMessage.arrayBuffer()
-      ).toString()
+      preProcessMessage = inflateSync(await preProcessMessage.arrayBuffer()).toString()
     }
 
     // Safeguard incase decompression failed to make a string.
@@ -378,7 +361,7 @@ export class Shard {
 
     switch (messageData.op) {
       case GatewayOpcodes.Heartbeat: {
-      // TODO: can this actually happen
+        // TODO: can this actually happen
         if (!this.isOpen()) return
 
         this.heart.lastBeat = Date.now()
@@ -400,9 +383,9 @@ export class Shard {
         this.startHeartbeating(interval)
 
         if (this.state !== ShardState.Resuming) {
-        // HELLO has been send on a non resume action.
-        // This means that the shard starts a new session,
-        // therefore the rate limit interval has been reset too.
+          // HELLO has been send on a non resume action.
+          // This means that the shard starts a new session,
+          // therefore the rate limit interval has been reset too.
           this.bucket = createLeakyBucket({
             max: this.calculateSafeRequests(),
             refillInterval: GATEWAY_RATE_LIMIT_RESET_INTERVAL,
@@ -422,7 +405,7 @@ export class Shard {
         break
       }
       case GatewayOpcodes.Reconnect: {
-      //   gateway.debug("GW RECONNECT", { shardId });
+        //   gateway.debug("GW RECONNECT", { shardId });
 
         this.events.requestedReconnect?.(this)
 
@@ -431,7 +414,7 @@ export class Shard {
         break
       }
       case GatewayOpcodes.InvalidSession: {
-      //   gateway.debug("GW INVALID_SESSION", { shardId, payload: messageData });
+        //   gateway.debug("GW INVALID_SESSION", { shardId, payload: messageData });
         const resumable = messageData.d as boolean
 
         this.events.invalidSession?.(this, resumable)
@@ -458,7 +441,7 @@ export class Shard {
     }
 
     if (messageData.t === 'RESUMED') {
-    // gateway.debug("GW RESUMED", { shardId });
+      // gateway.debug("GW RESUMED", { shardId });
 
       this.state = ShardState.Connected
       this.events.resumed?.(this)
@@ -469,7 +452,7 @@ export class Shard {
       this.resolves.get('RESUMED')?.(messageData)
       this.resolves.delete('RESUMED')
     } else if (messageData.t === 'READY') {
-    // Important for future resumes.
+      // Important for future resumes.
 
       const payload = messageData.d as DiscordReady
 
@@ -532,7 +515,7 @@ export class Shard {
     // Reference: https://discord.com/developers/docs/topics/gateway#heartbeating
     const jitter = Math.ceil(this.heart.interval * (Math.random() || 0.5))
     this.heart.timeoutId = setTimeout(() => {
-    // Using a direct socket.send call here because heartbeat requests are reserved by us.
+      // Using a direct socket.send call here because heartbeat requests are reserved by us.
       this.socket?.send(
         JSON.stringify({
           op: GatewayOpcodes.Heartbeat,
@@ -545,7 +528,7 @@ export class Shard {
 
       // After the random heartbeat jitter we can start a normal interval.
       this.heart.intervalId = setInterval(async () => {
-      // gateway.debug("GW DEBUG", `Running setInterval in heartbeat file. Shard: ${shardId}`);
+        // gateway.debug("GW DEBUG", `Running setInterval in heartbeat file. Shard: ${shardId}`);
 
         // gateway.debug("GW HEARTBEATING", { shardId, shard: currentShard });
 
@@ -554,10 +537,7 @@ export class Shard {
         // The Shard needs to start a re-identify action accordingly.
         // Reference: https://discord.com/developers/docs/topics/gateway#heartbeating-example-gateway-heartbeat-ack
         if (!this.heart.acknowledged) {
-          this.close(
-            ShardSocketCloseCodes.ZombiedConnection,
-            'Zombied connection, did not receive an heartbeat ACK in time.'
-          )
+          this.close(ShardSocketCloseCodes.ZombiedConnection, 'Zombied connection, did not receive an heartbeat ACK in time.')
 
           return await this.identify()
         }
