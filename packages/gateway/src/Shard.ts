@@ -510,7 +510,8 @@ export class Shard {
 
   /** This function communicates with the management process, in order to know whether its free to identify. When this function resolves, this means that the shard is allowed to send an identify payload to discord. */
   async requestIdentify (): Promise<void> {
-    return await options.requestIdentify(this.id)
+    // TODO: how to handle this
+    // return await options.requestIdentify(this.id)
   }
 
   /** Start sending heartbeat payloads to Discord in the provided interval. */
