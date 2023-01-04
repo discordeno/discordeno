@@ -173,7 +173,7 @@ jobs:
   rest-e2e-test:
     name: Rest
     needs: rest-unit-and-integration-test
-    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/node-migration' }}
+    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/node-migration' || github.ref == 'refs/heads/node-migration-clean' }}
     uses: ./.github/workflows/e2e-test.yml
     secrets: inherit
     with:
