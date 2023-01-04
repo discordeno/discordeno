@@ -1,4 +1,13 @@
-import type { BigString, Camelize, CreateMessageOptions, DiscordCreateMessage, DiscordMessage, DiscordUser, GetMessagesOptions } from '@discordeno/types'
+import type {
+  BigString,
+  Camelize,
+  CreateMessageOptions,
+  DiscordChannel,
+  DiscordCreateMessage,
+  DiscordMessage,
+  DiscordUser,
+  GetMessagesOptions
+} from '@discordeno/types'
 import { camelize, delay } from '@discordeno/utils'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 import { createInvalidRequestBucket } from './invalidBucket.js'
@@ -22,6 +31,10 @@ export function createRestManager (options: CreateRestManagerOptions): RestManag
     routes: {
       // Channel Endpoints
       channels: {
+        channel: (channelId) => {
+          return `/channels/${channelId}`
+        },
+
         message: (channelId, messageId) => {
           return `/channels/${channelId}/messages/${messageId}`
         },
@@ -52,7 +65,6 @@ export function createRestManager (options: CreateRestManagerOptions): RestManag
       user (userId: BigString) {
         return `/users/${userId}`
       }
-
     },
 
     checkRateLimits (url) {
@@ -92,9 +104,7 @@ export function createRestManager (options: CreateRestManagerOptions): RestManag
 
       // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
       if (options.body?.reason) {
-        headers['X-Audit-Log-Reason'] = encodeURIComponent(
-          options.body.reason as string
-        )
+        headers['X-Audit-Log-Reason'] = encodeURIComponent(options.body.reason as string)
         options.body.reason = undefined
       }
 
@@ -104,9 +114,7 @@ export function createRestManager (options: CreateRestManagerOptions): RestManag
 
       return {
         headers,
-        body: (options.body?.file ?? JSON.stringify(options.body)) as
-      | FormData
-      | string,
+        body: (options.body?.file ?? JSON.stringify(options.body)) as FormData | string,
         method: options.method
       }
     },
@@ -115,11 +123,11 @@ export function createRestManager (options: CreateRestManagerOptions): RestManag
       const now = Date.now()
 
       for (const [key, value] of rest.rateLimitedPaths.entries()) {
-      //   rest.debug(
-      // `[REST - processRateLimitedPaths] Running for of loop. ${
-      //   value.resetTimestamp - now
-      // }`
-      //   )
+        //   rest.debug(
+        // `[REST - processRateLimitedPaths] Running for of loop. ${
+        //   value.resetTimestamp - now
+        // }`
+        //   )
         // If the time has not reached cancel
         if (value.resetTimestamp > now) continue
 
@@ -219,10 +227,7 @@ export function createRestManager (options: CreateRestManagerOptions): RestManag
 
     async sendRequest (options) {
       // console.log('sending request', options.url, rest.createRequest({ method: options.method, url: options.url, body: options.body }))
-      const response = await fetch(
-        options.url,
-        rest.createRequest({ method: options.method, url: options.url, body: options.body })
-      )
+      const response = await fetch(options.url, rest.createRequest({ method: options.method, url: options.url, body: options.body }))
 
       // Set the bucket id if it was available on the headers
       const bucketId = rest.processHeaders(rest.simplifyUrl(options.url, options.method), response.headers)
@@ -238,16 +243,12 @@ export function createRestManager (options: CreateRestManagerOptions): RestManag
             return options.reject?.({
               ok: false,
               status: response.status,
-              error:
-              'The options was rate limited and it maxed out the retries limit.'
+              error: 'The options was rate limited and it maxed out the retries limit.'
             })
           }
 
           // Rate limited, add back to queue
-          rest.invalidBucket.handleCompletedRequest(
-            response.status,
-            response.headers.get('X-RateLimit-Scope') === 'shared'
-          )
+          rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get('X-RateLimit-Scope') === 'shared')
 
           const resetAfter = response.headers.get('x-ratelimit-reset-after')
           if (resetAfter) await delay(Number(resetAfter) * 1000)
@@ -327,8 +328,12 @@ export function createRestManager (options: CreateRestManagerOptions): RestManag
       return camelize(await rest.makeRequest('GET', url)) as Camelize<T>
     },
 
-    async post<T = Record<string, unknown>> (url: string, body?: Record<string, any>) {
+    async post<T = Record<string, unknown>>(url: string, body?: Record<string, any>) {
       return camelize(await rest.makeRequest('POST', url, body)) as Camelize<T>
+    },
+
+    async getChannel (channelId) {
+      return await rest.get(rest.routes.channels.channel(channelId))
     },
 
     async getUser (id) {
@@ -336,13 +341,10 @@ export function createRestManager (options: CreateRestManagerOptions): RestManag
     },
 
     async sendMessage (channelId: BigString, options: CreateMessageOptions) {
-      return await rest.post<DiscordMessage>(
-        rest.routes.channels.messages(channelId),
-        {
-          content: options.content
-          // TODO: other options
-        } as DiscordCreateMessage
-      )
+      return await rest.post<DiscordMessage>(rest.routes.channels.messages(channelId), {
+        content: options.content
+        // TODO: other options
+      } as DiscordCreateMessage)
     }
   }
 
@@ -394,6 +396,7 @@ export interface RestManager {
     user: (id: BigString) => string
     /** Routes for channel related endpoints. */
     channels: {
+      channel: (channelId: BigString) => string
       /** Route for a specific message */
       message: (channelId: BigString, id: BigString) => string
       /** Route for handling non-specific messages. */
@@ -421,6 +424,18 @@ export interface RestManager {
   /** Make a post request to the api. */
   post: <T = Record<string, unknown>>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
   /**
+   * Gets a channel by its ID.
+   *
+   * @param channelId - The ID of the channel to get.
+   * @returns An instance of {@link DiscordChannel}.
+   *
+   * @remarks
+   * If the channel is a thread, a {@link ThreadMember} object is included in the result.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#get-channel}
+   */
+  getChannel: (channelId: BigString) => Promise<Camelize<DiscordChannel>>
+  /**
    * Get a user's data from the api
    *
    * @param id The user's id
@@ -428,31 +443,31 @@ export interface RestManager {
    */
   getUser: (id: BigString) => Promise<Camelize<DiscordUser>>
   /**
-     * Sends a message to a channel.
-     *
-     * @param channelId - The ID of the channel to send the message in.
-     * @param options - The parameters for the creation of the message.
-     * @returns An instance of the created {@link DiscordMessage}.
-     *
-     * @remarks
-     * Requires that the bot user be able to see the contents of the channel the message is to be sent in.
-     *
-     * If sending a message to a guild channel:
-     * - Requires the `SEND_MESSAGES` permission.
-     *
-     * If sending a TTS message:
-     * - Requires the `SEND_TTS_MESSAGES` permission.
-     *
-     * If sending a message as a reply to another message:
-     * - Requires the `READ_MESSAGE_HISTORY` permission.
-     * - The message being replied to cannot be a system message.
-     *
-     * ⚠️ The maximum size of a request (accounting for any attachments and message content) for bot users is _8 MiB_.
-     *
-     * Fires a _Message Create_ gateway event.
-     *
-     * @see {@link https://discord.com/developers/docs/resources/channel#create-message}
-     */
+   * Sends a message to a channel.
+   *
+   * @param channelId - The ID of the channel to send the message in.
+   * @param options - The parameters for the creation of the message.
+   * @returns An instance of the created {@link DiscordMessage}.
+   *
+   * @remarks
+   * Requires that the bot user be able to see the contents of the channel the message is to be sent in.
+   *
+   * If sending a message to a guild channel:
+   * - Requires the `SEND_MESSAGES` permission.
+   *
+   * If sending a TTS message:
+   * - Requires the `SEND_TTS_MESSAGES` permission.
+   *
+   * If sending a message as a reply to another message:
+   * - Requires the `READ_MESSAGE_HISTORY` permission.
+   * - The message being replied to cannot be a system message.
+   *
+   * ⚠️ The maximum size of a request (accounting for any attachments and message content) for bot users is _8 MiB_.
+   *
+   * Fires a _Message Create_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#create-message}
+   */
   sendMessage: (channelId: BigString, options: CreateMessageOptions) => Promise<Camelize<DiscordMessage>>
 }
 
