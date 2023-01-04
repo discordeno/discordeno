@@ -15,7 +15,8 @@ export function c1amelize1Role (payload: DiscordRole): Camelize<DiscordRole> {
     tags: payload.tags && {
       botId: payload.tags.bot_id,
       integrationId: payload.tags.integration_id,
-      premiumSubscriber: payload.tags.premium_subscriber
+      premiumSubscriber: payload.tags.premium_subscriber,
+      guildConnections: payload.tags.guild_connections
     }
   }
 }

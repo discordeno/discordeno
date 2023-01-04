@@ -693,6 +693,8 @@ export interface DiscordRoleTags {
   integration_id?: string
   /** Whether this is the guild's premium subscriber role */
   premium_subscriber?: null
+  /** Whether this is a guild's linked role */
+  guild_connections?: null
 }
 
 /** https://discord.com/developers/docs/resources/emoji#emoji-object-emoji-structure */
@@ -1264,7 +1266,7 @@ export interface DiscordSticker {
 //   /** All button components have type 2 */
 //   type: MessageComponentTypes.Button
 //   /** for what the button says (max 80 characters) */
-//   label: string
+//   label?: string
 //   /** a dev-defined unique string sent on click (max 100 characters). type 5 Link buttons can not have a custom_id */
 //   custom_id?: string
 //   /** For different styles/colors of the buttons */

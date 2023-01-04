@@ -77,7 +77,8 @@ export async function createGuild (
       tags: role.tags && {
         botId: role.tags.bot_id,
         integrationId: role.tags.integration_id,
-        premiumSubscriber: role.tags.premium_subscriber
+        premiumSubscriber: role.tags.premium_subscriber,
+        guildConnections: role.tags.guild_connections
       }
     })),
     emojis: result.emojis,
