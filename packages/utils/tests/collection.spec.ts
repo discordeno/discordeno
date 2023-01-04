@@ -1,8 +1,13 @@
+/*
 import { expect } from 'chai'
 import { beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
 // import { Collection } from '../src/collection.js'
-let Collection
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class, @typescript-eslint/no-unused-vars
+class Collection<T, U> {
+  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
+  constructor(item?: any) {}
+}
 
 describe.skip('[collection]', () => {
   let collection: Collection<any, any>
@@ -14,7 +19,7 @@ describe.skip('[collection]', () => {
   it('[collection] collection values to array', () => {
     const testCollection = new Collection([
       ['best', 'tri'],
-      ['proficient', 'yui']
+      ['proficient', 'yui'],
     ])
     expect(testCollection.array()).to.be.deep.equal(['tri', 'yui'])
   })
@@ -52,7 +57,7 @@ describe.skip('[collection]', () => {
     const maxSize = 2
 
     const maxCollection = new Collection([], {
-      maxSize
+      maxSize,
     })
 
     expect(maxCollection).to.exist
@@ -80,7 +85,7 @@ describe.skip('[collection]', () => {
   const testCollection = new Collection([
     ['a', 1],
     ['b', 2],
-    ['c', 3]
+    ['c', 3],
   ])
 
   it('[collection] find by key or value', () => {
@@ -94,11 +99,7 @@ describe.skip('[collection]', () => {
   })
 
   it('[collection] map', () => {
-    expect(testCollection.map((k, v) => `${v}${k}`)).to.be.deep.equal([
-      'a1',
-      'b2',
-      'c3'
-    ])
+    expect(testCollection.map((k, v) => `${v}${k}`)).to.be.deep.equal(['a1', 'b2', 'c3'])
   })
 
   it('[collection] some', () => {
@@ -120,14 +121,14 @@ describe.skip('[collection]', () => {
     const sweeperCollection = new Collection(
       [
         ['a', 1],
-        ['b', 2]
+        ['b', 2],
       ],
       {
         sweeper: {
           filter: (v, _) => v === 1,
-          interval: 50
-        }
-      }
+          interval: 50,
+        },
+      },
     )
 
     try {
@@ -145,3 +146,4 @@ describe.skip('[collection]', () => {
     clock.restore()
   })
 })
+*/
