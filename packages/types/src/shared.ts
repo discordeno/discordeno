@@ -1,11 +1,11 @@
 export type BigString = bigint | string
 
-// export enum PresenceStatus {
-//   online,
-//   dnd,
-//   idle,
-//   offline,
-// }
+export enum PresenceStatus {
+  online,
+  dnd,
+  idle,
+  offline,
+}
 
 // /* https://discord.com/developers/docs/resources/channel#message-object-message-flags */
 // export enum ApplicationCommandFlags {
@@ -41,14 +41,14 @@ export enum UserFlags {
   BotHttpInteractions = 1 << 19,
 }
 
-// /** https://discord.com/developers/docs/resources/channel#channels-resource */
-// export enum ChannelFlags {
-//   None,
-//   /** this thread is pinned to the top of its parent `GUILD_FORUM` channel */
-//   Pinned = 1 << 1,
-//   /** Whether a tag is required to be specified when creating a thread in a `GUILD_FORUM` channel. Tags are specified in the `applied_tags` field. */
-//   RequireTag,
-// }
+/** https://discord.com/developers/docs/resources/channel#channels-resource */
+export enum ChannelFlags {
+  None,
+  /** this thread is pinned to the top of its parent `GUILD_FORUM` channel */
+  Pinned = 1 << 1,
+  /** Whether a tag is required to be specified when creating a thread in a `GUILD_FORUM` channel. Tags are specified in the `applied_tags` field. */
+  RequireTag,
+}
 
 // /** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
 // export enum IntegrationExpireBehaviors {
@@ -64,33 +64,33 @@ export enum UserFlags {
 //   Everyone,
 // }
 
-// /** https://discord.com/developers/docs/topics/teams#data-models-membership-state-enum */
-// export enum TeamMembershipStates {
-//   Invited = 1,
-//   Accepted,
-// }
+/** https://discord.com/developers/docs/topics/teams#data-models-membership-state-enum */
+export enum TeamMembershipStates {
+  Invited = 1,
+  Accepted,
+}
 
-// /** https://discord.com/developers/docs/topics/oauth2#application-application-flags */
-// export enum ApplicationFlags {
-//   /** Intent required for bots in **100 or more servers** to receive [`presence_update` events](#DOCS_TOPICS_GATEWAY/presence-update) */
-//   GatewayPresence = 1 << 12,
-//   /** Intent required for bots in under 100 servers to receive [`presence_update` events](#DOCS_TOPICS_GATEWAY/presence-update), found in Bot Settings */
-//   GatewayPresenceLimited = 1 << 13,
-//   /** Intent required for bots in **100 or more servers** to receive member-related events like `guild_member_add`. See list of member-related events [under `GUILD_MEMBERS`](#DOCS_TOPICS_GATEWAY/list-of-intents) */
-//   GatewayGuildMembers = 1 << 14,
-//   /** Intent required for bots in under 100 servers to receive member-related events like `guild_member_add`, found in Bot Settings. See list of member-related events [under `GUILD_MEMBERS`](#DOCS_TOPICS_GATEWAY/list-of-intents) */
-//   GatewayGuildMembersLimited = 1 << 15,
-//   /** Indicates unusual growth of an app that prevents verification */
-//   VerificationPendingGuildLimit = 1 << 16,
-//   /** Indicates if an app is embedded within the Discord client (currently unavailable publicly) */
-//   Embedded = 1 << 17,
-//   /** Intent required for bots in **100 or more servers** to receive [message content](https://support-dev.discord.com/hc/en-us/articles/4404772028055) */
-//   GatewayMessageContent = 1 << 18,
-//   /** Intent required for bots in under 100 servers to receive [message content](https://support-dev.discord.com/hc/en-us/articles/4404772028055), found in Bot Settings */
-//   GatewayMessageContentLimited = 1 << 19,
-//   /** Indicates if an app has registered global application commands */
-//   ApplicationCommandBadge = 1 << 23,
-// }
+/** https://discord.com/developers/docs/topics/oauth2#application-application-flags */
+export enum ApplicationFlags {
+  /** Intent required for bots in **100 or more servers** to receive [`presence_update` events](#DOCS_TOPICS_GATEWAY/presence-update) */
+  GatewayPresence = 1 << 12,
+  /** Intent required for bots in under 100 servers to receive [`presence_update` events](#DOCS_TOPICS_GATEWAY/presence-update), found in Bot Settings */
+  GatewayPresenceLimited = 1 << 13,
+  /** Intent required for bots in **100 or more servers** to receive member-related events like `guild_member_add`. See list of member-related events [under `GUILD_MEMBERS`](#DOCS_TOPICS_GATEWAY/list-of-intents) */
+  GatewayGuildMembers = 1 << 14,
+  /** Intent required for bots in under 100 servers to receive member-related events like `guild_member_add`, found in Bot Settings. See list of member-related events [under `GUILD_MEMBERS`](#DOCS_TOPICS_GATEWAY/list-of-intents) */
+  GatewayGuildMembersLimited = 1 << 15,
+  /** Indicates unusual growth of an app that prevents verification */
+  VerificationPendingGuildLimit = 1 << 16,
+  /** Indicates if an app is embedded within the Discord client (currently unavailable publicly) */
+  Embedded = 1 << 17,
+  /** Intent required for bots in **100 or more servers** to receive [message content](https://support-dev.discord.com/hc/en-us/articles/4404772028055) */
+  GatewayMessageContent = 1 << 18,
+  /** Intent required for bots in under 100 servers to receive [message content](https://support-dev.discord.com/hc/en-us/articles/4404772028055), found in Bot Settings */
+  GatewayMessageContentLimited = 1 << 19,
+  /** Indicates if an app has registered global application commands */
+  ApplicationCommandBadge = 1 << 23,
+}
 
 // /** https://discord.com/developers/docs/interactions/message-components#component-types */
 // export enum MessageComponentTypes {
@@ -162,37 +162,37 @@ export enum UserFlags {
 //   | 'article'
 //   | 'link'
 
-// /** https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level */
-// export enum DefaultMessageNotificationLevels {
-//   /** Members will receive notifications for all messages by default */
-//   AllMessages,
-//   /** Members will receive notifications only for messages that @mention them by default */
-//   OnlyMentions,
-// }
+/** https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level */
+export enum DefaultMessageNotificationLevels {
+  /** Members will receive notifications for all messages by default */
+  AllMessages,
+  /** Members will receive notifications only for messages that @mention them by default */
+  OnlyMentions,
+}
 
-// /** https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level */
-// export enum ExplicitContentFilterLevels {
-//   /** Media content will not be scanned */
-//   Disabled,
-//   /** Media content sent by members without roles will be scanned */
-//   MembersWithoutRoles,
-//   /** Media content sent by all members will be scanned */
-//   AllMembers,
-// }
+/** https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level */
+export enum ExplicitContentFilterLevels {
+  /** Media content will not be scanned */
+  Disabled,
+  /** Media content sent by members without roles will be scanned */
+  MembersWithoutRoles,
+  /** Media content sent by all members will be scanned */
+  AllMembers,
+}
 
-// /** https://discord.com/developers/docs/resources/guild#guild-object-verification-level */
-// export enum VerificationLevels {
-//   /** Unrestricted */
-//   None,
-//   /** Must have verified email on account */
-//   Low,
-//   /** Must be registered on Discord for longer than 5 minutes */
-//   Medium,
-//   /** Must be a member of the server for longer than 10 minutes */
-//   High,
-//   /** Must have a verified phone number */
-//   VeryHigh,
-// }
+/** https://discord.com/developers/docs/resources/guild#guild-object-verification-level */
+export enum VerificationLevels {
+  /** Unrestricted */
+  None,
+  /** Must have verified email on account */
+  Low,
+  /** Must be registered on Discord for longer than 5 minutes */
+  Medium,
+  /** Must be a member of the server for longer than 10 minutes */
+  High,
+  /** Must have a verified phone number */
+  VeryHigh,
+}
 
 // /** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
 // export interface BaseRole {
@@ -206,173 +206,173 @@ export enum UserFlags {
 //   unicodeEmoji?: string
 // }
 
-// /** https://discord.com/developers/docs/resources/guild#guild-object-guild-features */
-// export enum GuildFeatures {
-//   /** Guild has access to set an invite splash background */
-//   InviteSplash = 'INVITE_SPLASH',
-//   /** Guild has access to set 384 kbps bitrate in voice (previously VIP voice servers) */
-//   VipRegions = 'VIP_REGIONS',
-//   /** Guild has access to set a vanity URL */
-//   VanityUrl = 'VANITY_URL',
-//   /** Guild is verified */
-//   Verified = 'VERIFIED',
-//   /** Guild is partnered */
-//   Partnered = 'PARTNERED',
-//   /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
-//   Community = 'COMMUNITY',
-//   /** Guild has been set as a support server on the App Directory */
-//   DeveloperSupportServer = 'DEVELOPER_SUPPORT_SERVER',
-//   /** Guild has access to create news channels */
-//   News = 'NEWS',
-//   /** Guild is able to be discovered in the directory */
-//   Discoverable = 'DISCOVERABLE',
-//   /** Guild is able to be featured in the directory */
-//   Featurable = 'FEATURABLE',
-//   /** Guild has access to set an animated guild icon */
-//   AnimatedIcon = 'ANIMATED_ICON',
-//   /** Guild has access to set a guild banner image */
-//   Banner = 'BANNER',
-//   /** Guild has enabled the welcome screen */
-//   WelcomeScreenEnabled = 'WELCOME_SCREEN_ENABLED',
-//   /** Guild has enabled [Membership Screening](https://discord.com/developers/docs/resources/guild#membership-screening-object) */
-//   MemberVerificationGateEnabled = 'MEMBER_VERIFICATION_GATE_ENABLED',
-//   /** Guild can be previewed before joining via Membership Screening or the directory */
-//   PreviewEnabled = 'PREVIEW_ENABLED',
-//   /** Guild has enabled ticketed events */
-//   TicketedEventsEnabled = 'TICKETED_EVENTS_ENABLED',
-//   /** Guild has enabled monetization */
-//   MonetizationEnabled = 'MONETIZATION_ENABLED',
-//   /** Guild has increased custom sticker slots */
-//   MoreStickers = 'MORE_STICKERS',
-//   /** Guild has access to create private threads */
-//   PrivateThreads = 'PRIVATE_THREADS',
-//   /** Guild is able to set role icons */
-//   RoleIcons = 'ROLE_ICONS',
-//   /** Guild has set up auto moderation rules */
-//   AutoModeration = 'AUTO_MODERATION',
-//   /** Guild has paused invites, preventing new users from joining */
-//   InvitesDisabled = 'INVITES_DISABLED',
-//   /** Guild has access to set an animated guild banner image */
-//   AnimatedBanner = 'ANIMATED_BANNER',
-// }
+/** https://discord.com/developers/docs/resources/guild#guild-object-guild-features */
+export enum GuildFeatures {
+  /** Guild has access to set an invite splash background */
+  InviteSplash = 'INVITE_SPLASH',
+  /** Guild has access to set 384 kbps bitrate in voice (previously VIP voice servers) */
+  VipRegions = 'VIP_REGIONS',
+  /** Guild has access to set a vanity URL */
+  VanityUrl = 'VANITY_URL',
+  /** Guild is verified */
+  Verified = 'VERIFIED',
+  /** Guild is partnered */
+  Partnered = 'PARTNERED',
+  /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
+  Community = 'COMMUNITY',
+  /** Guild has been set as a support server on the App Directory */
+  DeveloperSupportServer = 'DEVELOPER_SUPPORT_SERVER',
+  /** Guild has access to create news channels */
+  News = 'NEWS',
+  /** Guild is able to be discovered in the directory */
+  Discoverable = 'DISCOVERABLE',
+  /** Guild is able to be featured in the directory */
+  Featurable = 'FEATURABLE',
+  /** Guild has access to set an animated guild icon */
+  AnimatedIcon = 'ANIMATED_ICON',
+  /** Guild has access to set a guild banner image */
+  Banner = 'BANNER',
+  /** Guild has enabled the welcome screen */
+  WelcomeScreenEnabled = 'WELCOME_SCREEN_ENABLED',
+  /** Guild has enabled [Membership Screening](https://discord.com/developers/docs/resources/guild#membership-screening-object) */
+  MemberVerificationGateEnabled = 'MEMBER_VERIFICATION_GATE_ENABLED',
+  /** Guild can be previewed before joining via Membership Screening or the directory */
+  PreviewEnabled = 'PREVIEW_ENABLED',
+  /** Guild has enabled ticketed events */
+  TicketedEventsEnabled = 'TICKETED_EVENTS_ENABLED',
+  /** Guild has enabled monetization */
+  MonetizationEnabled = 'MONETIZATION_ENABLED',
+  /** Guild has increased custom sticker slots */
+  MoreStickers = 'MORE_STICKERS',
+  /** Guild has access to create private threads */
+  PrivateThreads = 'PRIVATE_THREADS',
+  /** Guild is able to set role icons */
+  RoleIcons = 'ROLE_ICONS',
+  /** Guild has set up auto moderation rules */
+  AutoModeration = 'AUTO_MODERATION',
+  /** Guild has paused invites, preventing new users from joining */
+  InvitesDisabled = 'INVITES_DISABLED',
+  /** Guild has access to set an animated guild banner image */
+  AnimatedBanner = 'ANIMATED_BANNER',
+}
 
-// /** https://discord.com/developers/docs/resources/guild#guild-object-mfa-level */
-// export enum MfaLevels {
-//   /** Guild has no MFA/2FA requirement for moderation actions */
-//   None,
-//   /** Guild has a 2FA requirement for moderation actions */
-//   Elevated,
-// }
+/** https://discord.com/developers/docs/resources/guild#guild-object-mfa-level */
+export enum MfaLevels {
+  /** Guild has no MFA/2FA requirement for moderation actions */
+  None,
+  /** Guild has a 2FA requirement for moderation actions */
+  Elevated,
+}
 
-// /** https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags */
-// export enum SystemChannelFlags {
-//   /** Suppress member join notifications */
-//   SuppressJoinNotifications = 1 << 0,
-//   /** Suppress server boost notifications */
-//   SuppressPremiumSubscriptions = 1 << 1,
-//   /** Suppress server setup tips */
-//   SuppressGuildReminderNotifications = 1 << 2,
-//   /** Hide member join sticker reply buttons */
-//   SuppressJoinNotificationReplies = 1 << 3,
-// }
+/** https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags */
+export enum SystemChannelFlags {
+  /** Suppress member join notifications */
+  SuppressJoinNotifications = 1 << 0,
+  /** Suppress server boost notifications */
+  SuppressPremiumSubscriptions = 1 << 1,
+  /** Suppress server setup tips */
+  SuppressGuildReminderNotifications = 1 << 2,
+  /** Hide member join sticker reply buttons */
+  SuppressJoinNotificationReplies = 1 << 3,
+}
 
-// /** https://discord.com/developers/docs/resources/guild#guild-object-premium-tier */
-// export enum PremiumTiers {
-//   /** Guild has not unlocked any Server Boost perks */
-//   None,
-//   /** Guild has unlocked Server Boost level 1 perks */
-//   Tier1,
-//   /** Guild has unlocked Server Boost level 2 perks */
-//   Tier2,
-//   /** Guild has unlocked Server Boost level 3 perks */
-//   Tier3,
-// }
+/** https://discord.com/developers/docs/resources/guild#guild-object-premium-tier */
+export enum PremiumTiers {
+  /** Guild has not unlocked any Server Boost perks */
+  None,
+  /** Guild has unlocked Server Boost level 1 perks */
+  Tier1,
+  /** Guild has unlocked Server Boost level 2 perks */
+  Tier2,
+  /** Guild has unlocked Server Boost level 3 perks */
+  Tier3,
+}
 
-// /** https://discord.com/developers/docs/resources/guild#guild-object-guild-nsfw-level */
-// export enum GuildNsfwLevel {
-//   Default,
-//   Explicit,
-//   Safe,
-//   AgeRestricted,
-// }
+/** https://discord.com/developers/docs/resources/guild#guild-object-guild-nsfw-level */
+export enum GuildNsfwLevel {
+  Default,
+  Explicit,
+  Safe,
+  AgeRestricted,
+}
 
-// /** https://discord.com/developers/docs/resources/channel#channel-object-channel-types */
-// export enum ChannelTypes {
-//   /** A text channel within a server */
-//   GuildText,
-//   /** A direct message between users */
-//   DM,
-//   /** A voice channel within a server */
-//   GuildVoice,
-//   /** A direct message between multiple users */
-//   GroupDm,
-//   /** An organizational category that contains up to 50 channels */
-//   GuildCategory,
-//   /** A channel that users can follow and crosspost into their own server */
-//   GuildAnnouncement,
-//   /** A temporary sub-channel within a GUILD_ANNOUNCEMENT channel */
-//   AnnouncementThread = 10,
-//   /** A temporary sub-channel within a GUILD_TEXT or GUILD_FORUM channel */
-//   PublicThread,
-//   /** A temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission */
-//   PrivateThread,
-//   /** A voice channel for hosting events with an audience */
-//   GuildStageVoice,
-//   /** A channel in a hub containing the listed servers */
-//   GuildDirectory,
-//   /** A channel which can only contains threads */
-//   GuildForum,
-// }
+/** https://discord.com/developers/docs/resources/channel#channel-object-channel-types */
+export enum ChannelTypes {
+  /** A text channel within a server */
+  GuildText,
+  /** A direct message between users */
+  DM,
+  /** A voice channel within a server */
+  GuildVoice,
+  /** A direct message between multiple users */
+  GroupDm,
+  /** An organizational category that contains up to 50 channels */
+  GuildCategory,
+  /** A channel that users can follow and crosspost into their own server */
+  GuildAnnouncement,
+  /** A temporary sub-channel within a GUILD_ANNOUNCEMENT channel */
+  AnnouncementThread = 10,
+  /** A temporary sub-channel within a GUILD_TEXT or GUILD_FORUM channel */
+  PublicThread,
+  /** A temporary sub-channel within a GUILD_TEXT channel that is only viewable by those invited and those with the MANAGE_THREADS permission */
+  PrivateThread,
+  /** A voice channel for hosting events with an audience */
+  GuildStageVoice,
+  /** A channel in a hub containing the listed servers */
+  GuildDirectory,
+  /** A channel which can only contains threads */
+  GuildForum,
+}
 
-// export enum OverwriteTypes {
-//   Role,
-//   Member,
-// }
+export enum OverwriteTypes {
+  Role,
+  Member,
+}
 
-// export enum VideoQualityModes {
-//   /** Discord chooses the quality for optimal performance */
-//   Auto = 1,
-//   /** 720p */
-//   Full,
-// }
+export enum VideoQualityModes {
+  /** Discord chooses the quality for optimal performance */
+  Auto = 1,
+  /** 720p */
+  Full,
+}
 
-// /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-types */
-// export enum ActivityTypes {
-//   Game,
-//   Streaming,
-//   Listening,
-//   Watching,
-//   Custom = 4,
-//   Competing,
-// }
+/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-types */
+export enum ActivityTypes {
+  Game,
+  Streaming,
+  Listening,
+  Watching,
+  Custom = 4,
+  Competing,
+}
 
-// /** https://discord.com/developers/docs/resources/channel#message-object-message-types */
-// export enum MessageTypes {
-//   Default,
-//   RecipientAdd,
-//   RecipientRemove,
-//   Call,
-//   ChannelNameChange,
-//   ChannelIconChange,
-//   ChannelPinnedMessage,
-//   UserJoin,
-//   GuildBoost,
-//   GuildBoostTier1,
-//   GuildBoostTier2,
-//   GuildBoostTier3,
-//   ChannelFollowAdd,
-//   GuildDiscoveryDisqualified = 14,
-//   GuildDiscoveryRequalified,
-//   GuildDiscoveryGracePeriodInitialWarning,
-//   GuildDiscoveryGracePeriodFinalWarning,
-//   ThreadCreated,
-//   Reply,
-//   ChatInputCommand,
-//   ThreadStarterMessage,
-//   GuildInviteReminder,
-//   ContextMenuCommand,
-//   AutoModerationAction,
-// }
+/** https://discord.com/developers/docs/resources/channel#message-object-message-types */
+export enum MessageTypes {
+  Default,
+  RecipientAdd,
+  RecipientRemove,
+  Call,
+  ChannelNameChange,
+  ChannelIconChange,
+  ChannelPinnedMessage,
+  UserJoin,
+  GuildBoost,
+  GuildBoostTier1,
+  GuildBoostTier2,
+  GuildBoostTier3,
+  ChannelFollowAdd,
+  GuildDiscoveryDisqualified = 14,
+  GuildDiscoveryRequalified,
+  GuildDiscoveryGracePeriodInitialWarning,
+  GuildDiscoveryGracePeriodFinalWarning,
+  ThreadCreated,
+  Reply,
+  ChatInputCommand,
+  ThreadStarterMessage,
+  GuildInviteReminder,
+  ContextMenuCommand,
+  AutoModerationAction,
+}
 
 // /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
 // export enum MessageActivityTypes {
@@ -382,20 +382,20 @@ export enum UserFlags {
 //   JoinRequest,
 // }
 
-// /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types */
-// export enum StickerTypes {
-//   /** an official sticker in a pack, part of Nitro or in a removed purchasable pack */
-//   Standard = 1,
-//   /** a sticker uploaded to a Boosted guild for the guild's members */
-//   Guild,
-// }
+/** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types */
+export enum StickerTypes {
+  /** an official sticker in a pack, part of Nitro or in a removed purchasable pack */
+  Standard = 1,
+  /** a sticker uploaded to a Boosted guild for the guild's members */
+  Guild,
+}
 
-// /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types */
-// export enum StickerFormatTypes {
-//   Png = 1,
-//   APng,
-//   Lottie,
-// }
+/** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types */
+export enum StickerFormatTypes {
+  Png = 1,
+  APng,
+  Lottie,
+}
 
 // /** https://discord.com/developers/docs/interactions/slash-commands#interaction-interactiontype */
 // export enum InteractionTypes {
@@ -979,41 +979,39 @@ export enum UserFlags {
 //   GatewayUnavailable = 502,
 // }
 
-// /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#opcodes-and-status-codes */
-// export enum GatewayCloseEventCodes {
-//   /** A normal closure of the gateway.
-//    * You may attempt to reconnect.
-//    */
-//   NormalClosure = 1000,
-//   /** We're not sure what went wrong. Try reconnecting? */
-//   UnknownError = 4000,
-//   /** You sent an invalid [Gateway opcode](https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes) or an invalid payload for an opcode. Don't do that! */
-//   UnknownOpcode,
-//   /** You sent an invalid [payload](https://discord.com/developers/docs/topics/gateway#sending-payloads) to us. Don't do that! */
-//   DecodeError,
-//   /** You sent us a payload prior to [identifying](https://discord.com/developers/docs/topics/gateway#identify). */
-//   NotAuthenticated,
-//   /** The account token sent with your [identify payload](https://discord.com/developers/docs/topics/gateway#identify) is incorrect. */
-//   AuthenticationFailed,
-//   /** You sent more than one identify payload. Don't do that! */
-//   AlreadyAuthenticated,
-//   /** The sequence sent when [resuming](https://discord.com/developers/docs/topics/gateway#resume) the session was invalid. Reconnect and start a new session. */
-//   InvalidSeq = 4007,
-//   /** Woah nelly! You're sending payloads to us too quickly. Slow it down! You will be disconnected on receiving this. */
-//   RateLimited,
-//   /** Your session timed out. Reconnect and start a new one. */
-//   SessionTimedOut,
-//   /** You sent us an invalid [shard when identifying](https://discord.com/developers/docs/topics/gateway#sharding). */
-//   InvalidShard,
-//   /** The session would have handled too many guilds - you are required to [shard](https://discord.com/developers/docs/topics/gateway#sharding) your connection in order to connect. */
-//   ShardingRequired,
-//   /** You sent an invalid version for the gateway. */
-//   InvalidApiVersion,
-//   /** You sent an invalid intent for a [Gateway Intent](https://discord.com/developers/docs/topics/gateway#gateway-intents). You may have incorrectly calculated the bitwise value. */
-//   InvalidIntents,
-//   /** You sent a disallowed intent for a [Gateway Intent](https://discord.com/developers/docs/topics/gateway#gateway-intents). You may have tried to specify an intent that you [have not enabled or are not approved for](https://discord.com/developers/docs/topics/gateway#privileged-intents). */
-//   DisallowedIntents,
-// }
+/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#opcodes-and-status-codes */
+export enum GatewayCloseEventCodes {
+  /** A normal closure of the gateway. You may attempt to reconnect. */
+  NormalClosure = 1000,
+  /** We're not sure what went wrong. Try reconnecting? */
+  UnknownError = 4000,
+  /** You sent an invalid [Gateway opcode](https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes) or an invalid payload for an opcode. Don't do that! */
+  UnknownOpcode,
+  /** You sent an invalid [payload](https://discord.com/developers/docs/topics/gateway#sending-payloads) to us. Don't do that! */
+  DecodeError,
+  /** You sent us a payload prior to [identifying](https://discord.com/developers/docs/topics/gateway#identify). */
+  NotAuthenticated,
+  /** The account token sent with your [identify payload](https://discord.com/developers/docs/topics/gateway#identify) is incorrect. */
+  AuthenticationFailed,
+  /** You sent more than one identify payload. Don't do that! */
+  AlreadyAuthenticated,
+  /** The sequence sent when [resuming](https://discord.com/developers/docs/topics/gateway#resume) the session was invalid. Reconnect and start a new session. */
+  InvalidSeq = 4007,
+  /** Woah nelly! You're sending payloads to us too quickly. Slow it down! You will be disconnected on receiving this. */
+  RateLimited,
+  /** Your session timed out. Reconnect and start a new one. */
+  SessionTimedOut,
+  /** You sent us an invalid [shard when identifying](https://discord.com/developers/docs/topics/gateway#sharding). */
+  InvalidShard,
+  /** The session would have handled too many guilds - you are required to [shard](https://discord.com/developers/docs/topics/gateway#sharding) your connection in order to connect. */
+  ShardingRequired,
+  /** You sent an invalid version for the gateway. */
+  InvalidApiVersion,
+  /** You sent an invalid intent for a [Gateway Intent](https://discord.com/developers/docs/topics/gateway#gateway-intents). You may have incorrectly calculated the bitwise value. */
+  InvalidIntents,
+  /** You sent a disallowed intent for a [Gateway Intent](https://discord.com/developers/docs/topics/gateway#gateway-intents). You may have tried to specify an intent that you [have not enabled or are not approved for](https://discord.com/developers/docs/topics/gateway#privileged-intents). */
+  DisallowedIntents,
+}
 
 // /** https://discord.com/developers/docs/resources/invite#invite-object-invite-target-types */
 // export enum InviteTargetTypes {
@@ -1021,95 +1019,94 @@ export enum UserFlags {
 //   EmbeddedApplication,
 // }
 
-// /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes */
-// export enum GatewayOpcodes {
-//   /** An event was dispatched. */
-//   Dispatch,
-//   /** Fired periodically by the client to keep the connection alive. */
-//   Heartbeat,
-//   /** Starts a new session during the initial handshake. */
-//   Identify,
-//   /** Update the client's presence. */
-//   PresenceUpdate,
-//   /** Used to join/leave or move between voice channels. */
+/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes */
+export enum GatewayOpcodes {
+  /** An event was dispatched. */
+  Dispatch,
+  /** Fired periodically by the client to keep the connection alive. */
+  Heartbeat,
+  /** Starts a new session during the initial handshake. */
+  Identify,
+  /** Update the client's presence. */
+  PresenceUpdate,
+  /** Used to join/leave or move between voice channels. */
+  VoiceStateUpdate,
+  /** Resume a previous session that was disconnected. */
+  Resume = 6,
+  /** You should attempt to reconnect and resume immediately. */
+  Reconnect,
+  /** Request information about offline guild members in a large guild. */
+  RequestGuildMembers,
+  /** The session has been invalidated. You should reconnect and identify/resume accordingly. */
+  InvalidSession,
+  /** Sent immediately after connecting, contains the `heartbeat_interval` to use. */
+  Hello,
+  /** Sent in response to receiving a heartbeat to acknowledge that it has been received. */
+  HeartbeatACK,
+}
 
-//   VoiceStateUpdate,
-//   /** Resume a previous session that was disconnected. */
-//   Resume = 6,
-//   /** You should attempt to reconnect and resume immediately. */
-//   Reconnect,
-//   /** Request information about offline guild members in a large guild. */
-//   RequestGuildMembers,
-//   /** The session has been invalidated. You should reconnect and identify/resume accordingly. */
-//   InvalidSession,
-//   /** Sent immediately after connecting, contains the `heartbeat_interval` to use. */
-//   Hello,
-//   /** Sent in response to receiving a heartbeat to acknowledge that it has been received. */
-//   HeartbeatACK,
-// }
+export type GatewayDispatchEventNames =
+  | 'READY'
+  | 'APPLICATION_COMMAND_PERMISSIONS_UPDATE'
+  | 'AUTO_MODERATION_RULE_CREATE'
+  | 'AUTO_MODERATION_RULE_UPDATE'
+  | 'AUTO_MODERATION_RULE_DELETE'
+  | 'AUTO_MODERATION_ACTION_EXECUTION'
+  | 'CHANNEL_CREATE'
+  | 'CHANNEL_UPDATE'
+  | 'CHANNEL_DELETE'
+  | 'CHANNEL_PINS_UPDATE'
+  | 'THREAD_CREATE'
+  | 'THREAD_UPDATE'
+  | 'THREAD_DELETE'
+  | 'THREAD_LIST_SYNC'
+  | 'THREAD_MEMBER_UPDATE'
+  | 'THREAD_MEMBERS_UPDATE'
+  | 'GUILD_CREATE'
+  | 'GUILD_UPDATE'
+  | 'GUILD_DELETE'
+  | 'GUILD_BAN_ADD'
+  | 'GUILD_BAN_REMOVE'
+  | 'GUILD_EMOJIS_UPDATE'
+  | 'GUILD_STICKERS_UPDATE'
+  | 'GUILD_INTEGRATIONS_UPDATE'
+  | 'GUILD_MEMBER_ADD'
+  | 'GUILD_MEMBER_REMOVE'
+  | 'GUILD_MEMBER_UPDATE'
+  | 'GUILD_MEMBERS_CHUNK'
+  | 'GUILD_ROLE_CREATE'
+  | 'GUILD_ROLE_UPDATE'
+  | 'GUILD_ROLE_DELETE'
+  | 'GUILD_SCHEDULED_EVENT_CREATE'
+  | 'GUILD_SCHEDULED_EVENT_UPDATE'
+  | 'GUILD_SCHEDULED_EVENT_DELETE'
+  | 'GUILD_SCHEDULED_EVENT_USER_ADD'
+  | 'GUILD_SCHEDULED_EVENT_USER_REMOVE'
+  | 'INTEGRATION_CREATE'
+  | 'INTEGRATION_UPDATE'
+  | 'INTEGRATION_DELETE'
+  | 'INTERACTION_CREATE'
+  | 'INVITE_CREATE'
+  | 'INVITE_DELETE'
+  | 'MESSAGE_CREATE'
+  | 'MESSAGE_UPDATE'
+  | 'MESSAGE_DELETE'
+  | 'MESSAGE_DELETE_BULK'
+  | 'MESSAGE_REACTION_ADD'
+  | 'MESSAGE_REACTION_REMOVE'
+  | 'MESSAGE_REACTION_REMOVE_ALL'
+  | 'MESSAGE_REACTION_REMOVE_EMOJI'
+  | 'PRESENCE_UPDATE'
+  | 'STAGE_INSTANCE_CREATE'
+  | 'STAGE_INSTANCE_UPDATE'
+  | 'STAGE_INSTANCE_DELETE'
+  | 'TYPING_START'
+  | 'USER_UPDATE'
+  | 'VOICE_STATE_UPDATE'
+  | 'VOICE_SERVER_UPDATE'
+  | 'WEBHOOKS_UPDATE'
 
-// export type GatewayDispatchEventNames =
-//   | 'READY'
-//   | 'APPLICATION_COMMAND_PERMISSIONS_UPDATE'
-//   | 'AUTO_MODERATION_RULE_CREATE'
-//   | 'AUTO_MODERATION_RULE_UPDATE'
-//   | 'AUTO_MODERATION_RULE_DELETE'
-//   | 'AUTO_MODERATION_ACTION_EXECUTION'
-//   | 'CHANNEL_CREATE'
-//   | 'CHANNEL_UPDATE'
-//   | 'CHANNEL_DELETE'
-//   | 'CHANNEL_PINS_UPDATE'
-//   | 'THREAD_CREATE'
-//   | 'THREAD_UPDATE'
-//   | 'THREAD_DELETE'
-//   | 'THREAD_LIST_SYNC'
-//   | 'THREAD_MEMBER_UPDATE'
-//   | 'THREAD_MEMBERS_UPDATE'
-//   | 'GUILD_CREATE'
-//   | 'GUILD_UPDATE'
-//   | 'GUILD_DELETE'
-//   | 'GUILD_BAN_ADD'
-//   | 'GUILD_BAN_REMOVE'
-//   | 'GUILD_EMOJIS_UPDATE'
-//   | 'GUILD_STICKERS_UPDATE'
-//   | 'GUILD_INTEGRATIONS_UPDATE'
-//   | 'GUILD_MEMBER_ADD'
-//   | 'GUILD_MEMBER_REMOVE'
-//   | 'GUILD_MEMBER_UPDATE'
-//   | 'GUILD_MEMBERS_CHUNK'
-//   | 'GUILD_ROLE_CREATE'
-//   | 'GUILD_ROLE_UPDATE'
-//   | 'GUILD_ROLE_DELETE'
-//   | 'GUILD_SCHEDULED_EVENT_CREATE'
-//   | 'GUILD_SCHEDULED_EVENT_UPDATE'
-//   | 'GUILD_SCHEDULED_EVENT_DELETE'
-//   | 'GUILD_SCHEDULED_EVENT_USER_ADD'
-//   | 'GUILD_SCHEDULED_EVENT_USER_REMOVE'
-//   | 'INTEGRATION_CREATE'
-//   | 'INTEGRATION_UPDATE'
-//   | 'INTEGRATION_DELETE'
-//   | 'INTERACTION_CREATE'
-//   | 'INVITE_CREATE'
-//   | 'INVITE_DELETE'
-//   | 'MESSAGE_CREATE'
-//   | 'MESSAGE_UPDATE'
-//   | 'MESSAGE_DELETE'
-//   | 'MESSAGE_DELETE_BULK'
-//   | 'MESSAGE_REACTION_ADD'
-//   | 'MESSAGE_REACTION_REMOVE'
-//   | 'MESSAGE_REACTION_REMOVE_ALL'
-//   | 'MESSAGE_REACTION_REMOVE_EMOJI'
-//   | 'PRESENCE_UPDATE'
-//   | 'STAGE_INSTANCE_CREATE'
-//   | 'STAGE_INSTANCE_UPDATE'
-//   | 'STAGE_INSTANCE_DELETE'
-//   | 'TYPING_START'
-//   | 'USER_UPDATE'
-//   | 'VOICE_STATE_UPDATE'
-//   | 'VOICE_SERVER_UPDATE'
-//   | 'WEBHOOKS_UPDATE'
-
-// export type GatewayEventNames = GatewayDispatchEventNames | 'READY' | 'RESUMED'
+export type GatewayEventNames = GatewayDispatchEventNames | 'READY' | 'RESUMED'
 
 // /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
 // export enum GatewayIntents {
@@ -1258,12 +1255,12 @@ export enum UserFlags {
 //   Modal = 9,
 // }
 
-// export enum SortOrderTypes {
-//   /** Sort forum posts by activity */
-//   LatestActivity,
-//   /** Sort forum posts by creation time (from most recent to oldest) */
-//   CreationDate,
-// }
+export enum SortOrderTypes {
+  /** Sort forum posts by activity */
+  LatestActivity,
+  /** Sort forum posts by creation time (from most recent to oldest) */
+  CreationDate,
+}
 
 // /**
 //  * https://discord.com/developers/docs/reference#image-formatting
@@ -1439,18 +1436,14 @@ export enum UserFlags {
 
 // export type MakeRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
-export type CamelCase<S extends string> = S extends `${infer T}_${infer U}`
-  ? `${T}${Capitalize<CamelCase<U>>}`
-  : S
+export type CamelCase<S extends string> = S extends `${infer T}_${infer U}` ? `${T}${Capitalize<CamelCase<U>>}` : S
 
 export type Camelize<T> = T extends any[]
   ? T extends Array<Record<any, any>>
     ? Array<Camelize<T[number]>>
     : T
   : T extends Record<any, any>
-    ? {
-        [K in keyof T as CamelCase<K & string>]: Camelize<T[K]>;
-      }
+    ? { [K in keyof T as CamelCase<K & string>]: Camelize<T[K]> }
     : T
 
 // /** Non object primitives */
@@ -1536,9 +1529,7 @@ export type Camelize<T> = T extends any[]
 //     : OptionalizeAux<T>
 //   : T
 
-// export type PickPartial<T, K extends keyof T> = {
-//   [P in keyof T]?: T[P] | undefined;
-// } & { [P in K]: T[P] }
+export type PickPartial<T, K extends keyof T> = { [P in keyof T]?: T[P] | undefined } & { [P in K]: T[P] }
 
 // export type OmitFirstFnArg<F> = F extends (x: any, ...args: infer P) => infer R
 //   ? (...args: P) => R

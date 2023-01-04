@@ -1,5 +1,5 @@
 import type { Camelize, DiscordGuild } from '@discordeno/types'
-import { createRestManager } from '../src/manager.js'
+import { createRestManager } from '../../src/manager.js'
 import { token } from './constants.js'
 
 // eslint-disable-next-line prefer-const

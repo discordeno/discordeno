@@ -1,8 +1,3 @@
-import dotenv from 'dotenv'
+import { Buffer } from 'node:buffer'
 
-dotenv.config({ path: '../../.env' })
-
-if (!process.env.DISCORD_TOKEN) throw new Error('Token was not provided.')
-export const token = process.env.DISCORD_TOKEN
-
-export const E2E_TEST_GUILD_ID = process.env.E2E_TEST_GUILD_ID
+export const fakeToken = `${Buffer.from('1033452747380494366', 'base64').toString()}.zawsxedcrftvgybhu`
