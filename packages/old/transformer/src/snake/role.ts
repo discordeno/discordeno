@@ -16,7 +16,8 @@ export function s1nakelize1Role (payload: Camelize<DiscordRole>): DiscordRole {
     tags: payload.tags && {
       bot_id: payload.tags.botId,
       integration_id: payload.tags.integrationId,
-      premium_subscriber: payload.tags.premiumSubscriber
+      premium_subscriber: payload.tags.premiumSubscriber,
+      guild_connections: payload.tags.guildConnections
     }
   }
 }

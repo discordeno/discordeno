@@ -8,8 +8,10 @@ export const RoleToggle = {
   managed: 1 << 1,
   /** Whether this role is mentionable */
   mentionable: 1 << 2,
-  /** Whether this is the guilds premium subscriber role */
-  premiumSubscriber: 1 << 3
+  /** Whether this is the guild's premium subscriber role */
+  premiumSubscriber: 1 << 3,
+  /** Whether this role is a guild's linked role */
+  guildConnections: 1 << 4
 }
 
 export class RoleToggles extends ToggleBitfield {
@@ -25,6 +27,9 @@ export class RoleToggles extends ToggleBitfield {
       if (role.mentionable) this.add(RoleToggle.mentionable)
       if (role.tags?.premium_subscriber === null) {
         this.add(RoleToggle.premiumSubscriber)
+      }
+      if (role.tags?.guild_connections === null) {
+        this.add(RoleToggle.guildConnections)
       }
     }
   }
@@ -47,6 +52,11 @@ export class RoleToggles extends ToggleBitfield {
   /** Whether this is the guilds premium subscriber role */
   get premiumSubscriber (): boolean {
     return this.has('premiumSubscriber')
+  }
+
+  /** Whether this role is a guild's linked role */
+  get guildConnections (): boolean {
+    return this.has('guildConnections')
   }
 
   /** Checks whether or not the permissions exist in this */
