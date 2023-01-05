@@ -1,22 +1,26 @@
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface PlaceHolderBot {
-}
+export interface PlaceHolderBot {}
 
 export class Collection<K, V> extends Map<K, V> {
+  /**
+   * The maximum amount of items allowed in this collection. To disable cache, set it 0, set to undefined to make it infinite.
+   * @default undefined
+   */
   maxSize: number | undefined
-  sweeper: CollectionSweeper<K, V> & { intervalId?: NodeJS.Timer } | undefined
+  /** Handler to remove items from the collection every so often. */
+  sweeper: (CollectionSweeper<K, V> & { intervalId?: NodeJS.Timer }) | undefined
 
-  constructor (entries?: (ReadonlyArray<readonly [K, V]> | null) | Map<K, V>, options?: CollectionOptions<K, V>) {
+  constructor(entries?: (ReadonlyArray<readonly [K, V]> | null) | Map<K, V>, options?: CollectionOptions<K, V>) {
     super(entries ?? [])
 
     this.maxSize = options?.maxSize
 
-    if ((options?.sweeper) == null) return
+    if (!options?.sweeper) return
 
     this.startSweeper(options.sweeper)
   }
 
-  startSweeper (options: CollectionSweeper<K, V>): NodeJS.Timer {
+  startSweeper(options: CollectionSweeper<K, V>): NodeJS.Timer {
     if (this.sweeper?.intervalId) clearInterval(this.sweeper.intervalId)
 
     this.sweeper = options
@@ -32,23 +36,24 @@ export class Collection<K, V> extends Map<K, V> {
     return this.sweeper.intervalId
   }
 
-  stopSweeper (): void {
+  stopSweeper(): void {
     return clearInterval(this.sweeper?.intervalId)
   }
 
-  changeSweeperInterval (newInterval: number): void {
+  changeSweeperInterval(newInterval: number): void {
     if (this.sweeper == null) return
 
     this.startSweeper({ filter: this.sweeper.filter, interval: newInterval })
   }
 
-  changeSweeperFilter (newFilter: (value: V, key: K, bot: PlaceHolderBot) => boolean): void {
+  changeSweeperFilter(newFilter: (value: V, key: K, bot: PlaceHolderBot) => boolean): void {
     if (this.sweeper == null) return
 
     this.startSweeper({ filter: newFilter, interval: this.sweeper.interval })
   }
 
-  set (key: K, value: V): this {
+  /** Add an item to the collection. Makes sure not to go above the maxSize. */
+  set(key: K, value: V): this {
     // When this collection is maxSized make sure we can add first
     if ((this.maxSize !== undefined || this.maxSize === 0) && this.size >= this.maxSize) {
       return this
@@ -57,29 +62,34 @@ export class Collection<K, V> extends Map<K, V> {
     return super.set(key, value)
   }
 
-  forceSet (key: K, value: V): this {
+  /** Add an item to the collection, no matter what the maxSize is. */
+  forceSet(key: K, value: V): this {
     return super.set(key, value)
   }
 
-  array (): V[] {
+  /** Convert the collection to an array. */
+  array(): V[] {
     return [...this.values()]
   }
 
-  /** Retrieve the value of the first element in this collection */
-  first (): V | undefined {
+  /** Retrieve the value of the first element in this collection. */
+  first(): V | undefined {
     return this.values().next().value
   }
 
-  last (): V | undefined {
+  /** Retrieve the value of the last element in this collection. */
+  last(): V | undefined {
     return [...this.values()][this.size - 1]
   }
 
-  random (): V | undefined {
+  /** Retrieve the value of a random element in this collection. */
+  random(): V | undefined {
     const array = [...this.values()]
     return array[Math.floor(Math.random() * array.length)]
   }
 
-  find (callback: (value: V, key: K) => boolean): NonNullable<V> | undefined {
+  /** Find a specific element in this collection. */
+  find(callback: (value: V, key: K) => boolean): NonNullable<V> | undefined {
     for (const key of this.keys()) {
       const value = this.get(key)!
       if (callback(value, key)) return value
@@ -87,7 +97,8 @@ export class Collection<K, V> extends Map<K, V> {
     // If nothing matched
   }
 
-  filter (callback: (value: V, key: K) => boolean): Collection<K, V> {
+  /** Find all elements in this collection that match the given pattern. */
+  filter(callback: (value: V, key: K) => boolean): Collection<K, V> {
     const relevant = new Collection<K, V>()
     this.forEach((value, key) => {
       if (callback(value, key)) relevant.set(key, value)
@@ -96,6 +107,7 @@ export class Collection<K, V> extends Map<K, V> {
     return relevant
   }
 
+  /** Converts the collection into an array by running a callback on all items in the collection. */
   map<T>(callback: (value: V, key: K) => T): T[] {
     const results = []
     for (const key of this.keys()) {
@@ -105,7 +117,8 @@ export class Collection<K, V> extends Map<K, V> {
     return results
   }
 
-  some (callback: (value: V, key: K) => boolean): boolean {
+  /** Check if one of the items in the collection matches the pattern. */
+  some(callback: (value: V, key: K) => boolean): boolean {
     for (const key of this.keys()) {
       const value = this.get(key)!
       if (callback(value, key)) return true
@@ -114,7 +127,8 @@ export class Collection<K, V> extends Map<K, V> {
     return false
   }
 
-  every (callback: (value: V, key: K) => boolean): boolean {
+  /** Check if all of the items in the collection matches the pattern. */
+  every(callback: (value: V, key: K) => boolean): boolean {
     for (const key of this.keys()) {
       const value = this.get(key)!
       if (!callback(value, key)) return false
@@ -123,6 +137,7 @@ export class Collection<K, V> extends Map<K, V> {
     return true
   }
 
+  /** Runs a callback on all items in the collection, merging them into a single value. */
   reduce<T>(callback: (accumulator: T, value: V, key: K) => T, initialValue?: T): T {
     let accumulator: T = initialValue!
 
@@ -136,7 +151,9 @@ export class Collection<K, V> extends Map<K, V> {
 }
 
 export interface CollectionOptions<K, V> {
+  /** Handler to clean out the items in the collection every so often. */
   sweeper?: CollectionSweeper<K, V>
+  /** The maximum number of items allowed in the collection. */
   maxSize?: number
 }
 
