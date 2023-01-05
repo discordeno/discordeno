@@ -3,37 +3,37 @@ import type { BigString } from './shared'
 export interface CreateMessageOptions {
   /** The message contents (up to 2000 characters) */
   content?: string
-//   /** Can be used to verify a message was sent (up to 25 characters). Value will appear in the Message Create event. */
-//   nonce?: string | number
-//   /** true if this is a TTS message */
-//   tts?: boolean
+  //   /** Can be used to verify a message was sent (up to 25 characters). Value will appear in the Message Create event. */
+  //   nonce?: string | number
+  //   /** true if this is a TTS message */
+  //   tts?: boolean
   /** Embedded `rich` content (up to 6000 characters) */
-//   embeds?: Embed[]
+  //   embeds?: Embed[]
   /** Allowed mentions for the message */
-//   allowedMentions?: AllowedMentions
+  //   allowedMentions?: AllowedMentions
   /** Include to make your message a reply */
-//   messageReference?: {
-//     /** id of the originating message */
-//     messageId?: BigString
-//     /**
-//      * id of the originating message's channel
-//      * Note: `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model.
-//      */
-//     channelId?: BigString
-//     /** id of the originating message's guild */
-//     guildId?: BigString
-//     /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
-//     failIfNotExists: boolean
-//   }
+  //   messageReference?: {
+  //     /** id of the originating message */
+  //     messageId?: BigString
+  //     /**
+  //      * id of the originating message's channel
+  //      * Note: `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model.
+  //      */
+  //     channelId?: BigString
+  //     /** id of the originating message's guild */
+  //     guildId?: BigString
+  //     /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
+  //     failIfNotExists: boolean
+  //   }
   /** The contents of the file being sent */
-//   file?: FileContent | FileContent[]
-//   /** The components you would like to have sent in this message */
-//   components?: MessageComponents
-//   /** IDs of up to 3 stickers in the server to send in the message */
-//   stickerIds?:
-//   | [BigString]
-//   | [BigString, BigString]
-//   | [BigString, BigString, BigString]
+  //   file?: FileContent | FileContent[]
+  //   /** The components you would like to have sent in this message */
+  //   components?: MessageComponents
+  //   /** IDs of up to 3 stickers in the server to send in the message */
+  //   stickerIds?:
+  //   | [BigString]
+  //   | [BigString, BigString]
+  //   | [BigString, BigString, BigString]
 }
 // import type {
 //   AllowedMentionsTypes,
@@ -253,10 +253,10 @@ export interface CreateMessageOptions {
 //   limit?: number
 // }
 
-// export interface WithReason {
-//   /** The reason which should be added in the audit logs for doing this action. */
-//   reason?: string
-// }
+export interface WithReason {
+  /** The reason which should be added in the audit logs for doing this action. */
+  reason?: string
+}
 
 // export interface OverwriteReadable {
 //   /** Role or user id */
@@ -304,11 +304,7 @@ export interface GetMessagesAfter extends GetMessagesLimit {
   after?: BigString
 }
 
-export type GetMessagesOptions =
-  | GetMessagesAfter
-  | GetMessagesBefore
-  | GetMessagesAround
-  | GetMessagesLimit
+export type GetMessagesOptions = GetMessagesAfter | GetMessagesBefore | GetMessagesAround | GetMessagesLimit
 
 // /** https://discord.com/developers/docs/resources/channel#get-reactions-query-string-params */
 // export interface GetReactions {
@@ -486,3 +482,13 @@ export type GetMessagesOptions =
 //   /** if autocomplete interactions are enabled for this `String`, `Integer`, or `Number` type option */
 //   autocomplete?: boolean
 // }
+
+/** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
+export interface CreateGuildEmoji extends WithReason {
+  /** Name of the emoji */
+  name: string
+  /** The 128x128 emoji image. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. */
+  image: string
+  /** Roles allowed to use this emoji */
+  roles?: BigString[]
+}
