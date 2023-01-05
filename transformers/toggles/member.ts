@@ -24,7 +24,7 @@ export class MemberToggles extends ToggleBitfield {
     }
   }
 
-  /** Whether the user belongs to an OAuth2 application */
+  /** Whether the user is deafened in voice channels */
   get deaf() {
     return this.has("deaf");
   }
