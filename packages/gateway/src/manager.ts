@@ -1,7 +1,7 @@
-import type { Camelize, DiscordGetconnection } from '@discordeno/types'
+import type { Camelize, DiscordGetGatewayBot } from '@discordeno/types'
 import type { LeakyBucket } from '@discordeno/utils'
 import { createLeakyBucket, delay } from '@discordeno/utils'
-import Shard from './Shard'
+import Shard from './Shard.js'
 
 export function createGatewayManager (options: CreateGatewayManagerOptions): GatewayManager {
   const gateway: GatewayManager = {
@@ -13,10 +13,10 @@ export function createGatewayManager (options: CreateGatewayManagerOptions): Gat
       device: options.properties?.device ?? 'Discordeno'
     },
     token: options.token,
-    url: options.url ?? 'wss://gateway.discord.gg',
+    url: options.url ?? options.connection.url ?? 'wss://gateway.discord.gg',
     version: options.version ?? 10,
     connection: options.connection,
-    totalShards: options.totalShards ?? 1,
+    totalShards: options.totalShards ?? options.connection.shards ?? 1,
     lastShardId: options.lastShardId ?? 1,
     firstShardId: options.firstShardId ?? 0,
     totalWorkers: options.totalWorkers ?? 4,
@@ -108,13 +108,22 @@ export function createGatewayManager (options: CreateGatewayManagerOptions): Gat
       gateway.prepareBuckets()
 
       // Prefer concurrency of forEach instead of forof
-      gateway.buckets.forEach(async (bucket, bucketId) => {
-        for (const worker of bucket.workers) {
-          for (const shardId of worker.queue) {
-            await gateway.tellWorkerToIdentify(worker.id, shardId, bucketId)
+      await Promise.all(
+        [...gateway.buckets.entries()].map(async ([bucketId, bucket]) => {
+          for (const worker of bucket.workers) {
+            for (const shardId of worker.queue) {
+              await gateway.tellWorkerToIdentify(worker.id, shardId, bucketId)
+            }
           }
-        }
-      })
+        })
+      )
+      // gateway.buckets.forEach(async (bucket, bucketId) => {
+      //   for (const worker of bucket.workers) {
+      //     for (const shardId of worker.queue) {
+      //       await gateway.tellWorkerToIdentify(worker.id, shardId, bucketId)
+      //     }
+      //   }
+      // })
     },
     async shutdown (code, reason) {
       gateway.shards.forEach((shard) => shard.close(code, reason))
@@ -127,7 +136,15 @@ export function createGatewayManager (options: CreateGatewayManagerOptions): Gat
     async identify (shardId: number) {
       let shard = this.shards.get(shardId)
       if (!shard) {
-        shard = new Shard(shardId)
+        shard = new Shard(shardId, {
+          compress: this.compress,
+          intents: this.intents,
+          properties: this.properties,
+          token: this.token,
+          totalShards: this.totalShards,
+          url: this.url,
+          version: this.version
+        })
 
         this.shards.set(shardId, shard)
       }
@@ -180,7 +197,7 @@ export interface CreateGatewayManagerOptions {
    */
   totalWorkers?: number
   /** Important data which is used by the manager to connect shards to the gateway. */
-  connection: Camelize<DiscordGetconnection>
+  connection: Camelize<DiscordGetGatewayBot>
   /** Whether incoming payloads are compressed using zlib.
    *
    * @default false
