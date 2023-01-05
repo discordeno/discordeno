@@ -1,4 +1,5 @@
-import { AllowedMentionsTypes, Bot } from '../../../deps.js'
+import type { Bot } from '../../../deps.js';
+import { AllowedMentionsTypes } from '../../../deps.js'
 
 export function editOriginalInteractionResponse (bot: Bot) {
   const editOriginalInteractionResponse = bot.helpers.editOriginalInteractionResponse

@@ -1,4 +1,4 @@
-import { Bot } from '../../../deps.js'
+import type { Bot } from '../../../deps.js'
 
 export function removeThreadMember (bot: Bot) {
   const removeThreadMember = bot.helpers.removeThreadMember

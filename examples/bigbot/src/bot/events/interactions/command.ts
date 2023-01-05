@@ -1,22 +1,25 @@
 import { bgBlack, bgGreen, bgMagenta, bgYellow, black, green, red, white } from "colorette";
-import {
+import type {
   ApplicationCommandOption,
-  ApplicationCommandOptionTypes,
   Bot,
   Channel,
   ChannelTypes,
   Interaction,
   InteractionDataOption,
-  InteractionResponseTypes,
   Member,
   Role,
-  User,
+  User} from "discordeno";
+import {
+  ApplicationCommandOptionTypes,
+  InteractionResponseTypes
 } from "discordeno";
-import { bot, BotWithCustomProps } from "../../bot.js";
+import type { BotWithCustomProps } from "../../bot.js";
+import { bot } from "../../bot.js";
 import COMMANDS from "../../commands/mod.js";
-import { getLanguage, loadLanguage, serverLanguages, translate, translationKeys } from "../../languages/translate.js";
-import { InteractionWithCustomProps } from "../../typings/discordeno.js";
-import { Command, ConvertArgumentDefinitionsToArgs } from "../../utils/slash/createCommand.js";
+import type { translationKeys } from "../../languages/translate.js";
+import { getLanguage, loadLanguage, serverLanguages, translate } from "../../languages/translate.js";
+import type { InteractionWithCustomProps } from "../../typings/discordeno.js";
+import type { Command, ConvertArgumentDefinitionsToArgs } from "../../utils/slash/createCommand.js";
 
 function logCommand(
   info: Interaction,
@@ -179,7 +182,7 @@ function convertOptionValue(
     const channel = interaction.data?.resolved?.channels?.get(BigInt(option.value as string));
 
     // SAVE THE ARGUMENT WITH THE CORRECT NAME
-    return [translateOptions?.[option.name] ?? option.name, channel!];
+    return [translateOptions?.[option.name] ?? option.name, channel];
   }
 
   // THE OPTION IS A ROLE
@@ -187,7 +190,7 @@ function convertOptionValue(
     const role = interaction.data?.resolved?.roles?.get(BigInt(option.value as string));
 
     // SAVE THE ARGUMENT WITH THE CORRECT NAME
-    return [translateOptions?.[option.name] ?? option.name, role!];
+    return [translateOptions?.[option.name] ?? option.name, role];
   }
 
   // THE OPTION IS A USER
@@ -199,8 +202,8 @@ function convertOptionValue(
     return [
       translateOptions?.[option.name] ?? option.name,
       {
-        member: member!,
-        user: user!,
+        member,
+        user,
       },
     ];
   }
@@ -211,7 +214,7 @@ function convertOptionValue(
     const user = interaction.data?.resolved?.users?.get(BigInt(option.value as string));
     const member = interaction.data?.resolved?.members?.get(BigInt(option.value as string));
 
-    const final = user && member ? { user, member } : role!;
+    const final = user && member ? { user, member } : role;
 
     // SAVE THE ARGUMENT WITH THE CORRECT NAME
     return [translateOptions?.[option.name] ?? option.name, final];
@@ -219,7 +222,7 @@ function convertOptionValue(
 
   // THE REST OF OPTIONS DON'T NEED ANY CONVERTION
   // SAVE THE ARGUMENT WITH THE CORRECT NAME
-  // @ts-ignore
+  // @ts-expect-error
   return [translateOptions?.[option.name] ?? option.name, option.value];
 }
 
@@ -258,7 +261,7 @@ export function optionParser(
       convertedOptions[name] = value;
     }
 
-    // @ts-ignore
+    // @ts-expect-error
     return {
       [translateOptions?.[interaction.data.options[0].name] ?? interaction.data.options[0].name]: convertedOptions,
     };
@@ -270,11 +273,11 @@ export function optionParser(
     // CONVERT ALL THE OPTIONS
     for (const option of interaction.data.options[0]?.options![0]?.options ?? []) {
       const [name, value] = convertOptionValue(interaction, option, translateOptions);
-      // @ts-ignore
+      // @ts-expect-error
       convertedOptions[name] = value;
     }
 
-    // @ts-ignore
+    // @ts-expect-error
     return {
       [translateOptions?.[interaction.data.options[0].name] ?? interaction.data.options[0].name]: {
         [
@@ -292,7 +295,7 @@ export function optionParser(
   > = {};
   for (const option of interaction.data.options ?? []) {
     const [name, value] = convertOptionValue(interaction, option, translateOptions);
-    // @ts-ignore
+    // @ts-expect-error
     convertedOptions[name] = value;
   }
 

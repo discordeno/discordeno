@@ -50,7 +50,7 @@ export function enableCacheSweepers<B extends Bot> (bot: BotWithCache<B>): void 
 
       // Only sweep members who were not active the last 30 minutes
       return (
-        Date.now() - (member as Member & { cachedAt: number }).cachedAt >
+        Date.now() - (member ).cachedAt >
         1800000
       )
     },

@@ -1,4 +1,5 @@
-import { Bot, GatewayIntents } from '../../../deps.js'
+import type { Bot} from '../../../deps.js';
+import { GatewayIntents } from '../../../deps.js'
 
 export function getThreadMembers (bot: Bot) {
   const getThreadMembers = bot.helpers.getThreadMembers

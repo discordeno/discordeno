@@ -1,4 +1,4 @@
-import { Bot } from '../../../../bot.js'
+import type { Bot } from '../../../../bot.js'
 import { createGuildSticker } from './createGuildSticker.js'
 import { editGuildSticker } from './editGuildSticker.js'
 

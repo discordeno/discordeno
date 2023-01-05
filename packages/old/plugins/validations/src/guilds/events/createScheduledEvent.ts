@@ -1,4 +1,5 @@
-import { Bot, ScheduledEventEntityType } from '../../../deps.js'
+import type { Bot} from '../../../deps.js';
+import { ScheduledEventEntityType } from '../../../deps.js'
 
 export function createScheduledEvent (bot: Bot) {
   const createScheduledEvent = bot.helpers.createScheduledEvent

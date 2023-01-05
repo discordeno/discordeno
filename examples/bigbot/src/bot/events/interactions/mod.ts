@@ -1,6 +1,6 @@
 import { InteractionTypes, MessageComponentTypes } from "discordeno";
 import { bot } from "../../bot.js";
-import { InteractionWithCustomProps } from "../../typings/discordeno.js";
+import type { InteractionWithCustomProps } from "../../typings/discordeno.js";
 import { executeButtonClick } from "./button.js";
 import { executeSlashCommand } from "./command.js";
 import { executeModalSubmit } from "./modal.js";

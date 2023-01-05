@@ -1,4 +1,5 @@
-import { BotWithCache, ScheduledEventEntityType } from '../../../deps.js'
+import type { BotWithCache} from '../../../deps.js';
+import { ScheduledEventEntityType } from '../../../deps.js'
 import { requireBotChannelPermissions, requireBotGuildPermissions } from '../../permissions.js'
 
 export function editScheduledEvent (bot: BotWithCache) {

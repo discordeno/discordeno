@@ -1,4 +1,4 @@
-import { BotWithCache } from '../../../deps.js'
+import type { BotWithCache } from '../../../deps.js'
 import { addThreadMember } from './addThreadMember.js'
 import { getPrivateArchivedThreads } from './getPrivateArchivedThreads.js'
 import { getPrivateJoinedArchivedThreads } from './getPrivateJoinedArchivedThreads.js'

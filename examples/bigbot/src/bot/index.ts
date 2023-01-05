@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
-dotenv.config();
 
-import { DiscordGatewayPayload } from "discordeno";
+import type { DiscordGatewayPayload } from "discordeno";
 // ReferenceError: publishMessage is not defined
 // import Embeds from "discordeno/embeds";
 import amqplib from "amqplib";
@@ -10,6 +9,7 @@ import { BOT_ID, EVENT_HANDLER_URL } from "../configs.js";
 import { bot } from "./bot.js";
 import { updateDevCommands } from "./utils/slash/updateCommands.js";
 import { webhookURLToIDAndToken } from "./utils/webhook.js";
+dotenv.config();
 
 const BUGS_ERRORS_REPORT_WEBHOOK = process.env.BUGS_ERRORS_REPORT_WEBHOOK;
 const EVENT_HANDLER_AUTHORIZATION = process.env.EVENT_HANDLER_AUTHORIZATION as string;
@@ -124,7 +124,7 @@ app.listen(EVENT_HANDLER_PORT, () => {
 });
 
 const connectRabbitmq = async () => {
-  let connection: amqplib.Connection | undefined = undefined;
+  let connection: amqplib.Connection | undefined;
 
   try {
     connection = await amqplib.connect(

@@ -8,11 +8,11 @@ export async function validateSlashLimits() {
     headers: {
       "content-type": "application/json",
     },
-  }).then((res) => res.json()).catch(() => undefined);
+  }).then(async (res) => await res.json()).catch(() => undefined);
 
   if (!commands) return;
 
-  let invalidCommandNames: string[] = [];
+  const invalidCommandNames: string[] = [];
 
   if (commands[0]?.characters > MAX_ALLOWED_CHARACTERS) {
     for (const command of commands) {

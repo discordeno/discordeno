@@ -1,4 +1,5 @@
-import { BotWithCache, ChannelTypes } from '../../../deps.js'
+import type { BotWithCache} from '../../../deps.js';
+import { ChannelTypes } from '../../../deps.js'
 import { requireBotChannelPermissions } from '../../permissions.js'
 
 export function getPublicArchivedThreads (bot: BotWithCache) {

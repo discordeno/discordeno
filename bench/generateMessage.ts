@@ -15,7 +15,7 @@ interface BenchmarksData {
   };
   date: number;
   tool: string;
-  benches: { name: string; value: number; unit: string; range: string }[];
+  benches: Array<{ name: string; value: number; unit: string; range: string }>;
 }
 
 interface CompareTable {
@@ -38,7 +38,7 @@ interface CompareTable {
 const benchmarks = results.entries.Benchmark.slice(-2) as BenchmarksData[];
 const latestHeadBenchmarks = benchmarks.length === 2 ? benchmarks[1] : benchmarks[0];
 const lastHeadBenchmarks = benchmarks.length === 2 ? benchmarks[0] : undefined;
-//@ts-ignore
+// @ts-expect-error
 const latestBaseBenchmarks = JSON.parse(JSON.stringify(window.BENCHMARK_DATA.entries.Benchmark)).slice(
   -1,
 )[0] as BenchmarksData;
@@ -62,13 +62,13 @@ for (const benchmark of latestBaseBenchmarks.benches) {
 }
 for (const benchmark of latestHeadBenchmarks.benches) {
   compareWithBase[benchmark.name] = {
-    //@ts-ignore
+    // @ts-expect-error
     previous: {},
     ...compareWithBase[benchmark.name],
     current: benchmark,
   };
   compareWithHead[benchmark.name] = {
-    //@ts-ignore
+    // @ts-expect-error
     previous: {},
     ...compareWithHead[benchmark.name],
     current: benchmark,
@@ -103,7 +103,7 @@ for (const benchmarkType of ["Performance", "Memory"]) {
       } | ${
         compare[field].previous.value && compare[field].current.value
           ? `\`${
-            //@ts-ignore
+            // @ts-expect-error
             Math.round((parseFloat(compare[field].previous.value) / parseFloat(compare[field].current.value)) * 100) /
             100}\``
           : ""

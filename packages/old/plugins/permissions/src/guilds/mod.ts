@@ -1,4 +1,4 @@
-import { BotWithCache } from '../../deps.js'
+import type { BotWithCache } from '../../deps.js'
 import { automod } from './automod/index.js.js'
 import { createGuild } from './createGuild.js'
 import { deleteGuild } from './deleteGuild.js'

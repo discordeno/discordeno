@@ -1,4 +1,4 @@
-import { ApplicationCommandOption, CreateSlashApplicationCommand } from '../deps.js'
+import type { ApplicationCommandOption, CreateSlashApplicationCommand } from '../deps.js'
 export function validateApplicationCommandLength (options: CreateSlashApplicationCommand) {
   let length = 0
   if (options.nameLocalizations) {

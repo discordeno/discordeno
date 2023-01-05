@@ -1,4 +1,4 @@
-import { Bot } from '../../deps.js'
+import type { Bot } from '../../deps.js'
 import { editBotProfile } from './editBotProfile.js'
 
 export function misc (bot: Bot) {

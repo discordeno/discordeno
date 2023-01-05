@@ -66,7 +66,7 @@ import type {
   TeamMembershipStates,
   UserFlags,
   VerificationLevels,
-  VideoQualityModes
+  VideoQualityModes,
 } from './shared'
 
 /** https://discord.com/developers/docs/resources/user#user-object */
@@ -2705,13 +2705,13 @@ export interface DiscordCreateGuildEmoji {
   roles?: string[]
 }
 
-// /** https://discord.com/developers/docs/resources/emoji#modify-guild-emoji */
-// export interface DiscordModifyGuildEmoji {
-//   /** Name of the emoji */
-//   name?: string
-//   /** Roles allowed to use this emoji */
-//   roles?: string[] | null
-// }
+/** https://discord.com/developers/docs/resources/emoji#modify-guild-emoji */
+export interface DiscordModifyGuildEmoji {
+  /** Name of the emoji */
+  name?: string
+  /** Roles allowed to use this emoji */
+  roles?: string[] | null
+}
 
 // export interface DiscordCreateGuildChannel {
 //   /** Channel name (1-100 characters) */

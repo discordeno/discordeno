@@ -1,4 +1,5 @@
-import { BotWithCache, ChannelTypes, PermissionStrings } from '../../deps.js'
+import type { BotWithCache, PermissionStrings } from '../../deps.js';
+import { ChannelTypes } from '../../deps.js'
 import { requireBotChannelPermissions } from '../permissions.js'
 
 export function deleteChannelPermissionOverride (bot: BotWithCache) {

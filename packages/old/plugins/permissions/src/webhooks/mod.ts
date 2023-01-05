@@ -1,4 +1,4 @@
-import { BotWithCache } from '../../deps.js'
+import type { BotWithCache } from '../../deps.js'
 import { createWebhook } from './createWebhook.js'
 import { deleteWebhook } from './deleteWebhook.js'
 import { editWebhook } from './editWebhook.js'

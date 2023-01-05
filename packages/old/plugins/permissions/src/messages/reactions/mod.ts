@@ -1,4 +1,4 @@
-import { BotWithCache } from '../../../deps.js'
+import type { BotWithCache } from '../../../deps.js'
 import { addReaction } from './addReaction.js'
 import { addReactions } from './addReactions.js'
 import { deleteReactionsAll } from './deleteReactionsAll.js'

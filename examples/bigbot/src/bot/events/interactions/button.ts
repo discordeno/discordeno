@@ -1,5 +1,5 @@
-import { Interaction } from "discordeno";
-import { BotWithCustomProps } from "../../bot.js";
+import type { Interaction } from "discordeno";
+import type { BotWithCustomProps } from "../../bot.js";
 
 export async function executeButtonClick(bot: BotWithCustomProps, interaction: Interaction) {
   if (!interaction.data) return;

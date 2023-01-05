@@ -1,4 +1,4 @@
-import { Bot } from '../../deps.js'
+import type { Bot } from '../../deps.js'
 
 export function createInvite (bot: Bot) {
   const createInvite = bot.helpers.createInvite

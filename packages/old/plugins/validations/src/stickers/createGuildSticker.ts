@@ -1,4 +1,4 @@
-import { Bot } from '../../../../bot.js'
+import type { Bot } from '../../../../bot.js'
 
 export function createGuildSticker (bot: Bot) {
   const createGuildSticker = bot.helpers.createGuildSticker

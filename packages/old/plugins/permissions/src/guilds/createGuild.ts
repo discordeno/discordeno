@@ -1,4 +1,4 @@
-import { BotWithCache } from '../../deps.js'
+import type { BotWithCache } from '../../deps.js'
 
 export function createGuild (bot: BotWithCache) {
   const createGuild = bot.helpers.createGuild

@@ -1,7 +1,8 @@
 import { configs } from "./configs.ts";
-import {
+import type {
   BotWithCache,
-  BotWithHelpersPlugin,
+  BotWithHelpersPlugin} from "./deps.ts";
+import {
   Collection,
   createBot,
   enableCachePlugin,
@@ -10,7 +11,7 @@ import {
   enablePermissionsPlugin,
   GatewayIntents,
 } from "./deps.ts";
-import { Command } from "./src/types/commands.ts";
+import type { Command } from "./src/types/commands.ts";
 
 // MAKE THE BASIC BOT OBJECT
 const bot = createBot({

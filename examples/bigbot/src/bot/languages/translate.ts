@@ -1,7 +1,7 @@
 import Embeds from "discordeno/embeds";
 import { bot } from "../bot.js";
 import { webhookURLToIDAndToken } from "../utils/webhook.js";
-import english from "./english.js";
+import type english from "./english.js";
 import languages from "./languages.js";
 
 const MISSING_TRANSLATION_WEBHOOK = process.env.MISSING_TRANSLATION_WEBHOOK;
@@ -35,7 +35,7 @@ export function translate<K extends translationKeys>(
 
   if (typeof value === "function") return value(...(params || []));
 
-  return value as string;
+  return value ;
 }
 
 /** Get the language this guild has set, will always return "english" if it is not in cache */

@@ -1,4 +1,4 @@
-import { BotWithCache, PermissionStrings } from '../../deps.js'
+import type { BotWithCache, PermissionStrings } from '../../deps.js'
 import { requireBotChannelPermissions, requireBotGuildPermissions } from '../permissions.js'
 
 export function editMember (bot: BotWithCache) {

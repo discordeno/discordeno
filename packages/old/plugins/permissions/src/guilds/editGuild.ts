@@ -1,4 +1,5 @@
-import { BotWithCache, GuildFeatures } from '../../deps.js'
+import type { BotWithCache} from '../../deps.js';
+import { GuildFeatures } from '../../deps.js'
 import { requireBotGuildPermissions } from '../permissions.js'
 
 export function editGuild (bot: BotWithCache) {

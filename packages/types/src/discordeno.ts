@@ -492,3 +492,11 @@ export interface CreateGuildEmoji extends WithReason {
   /** Roles allowed to use this emoji */
   roles?: BigString[]
 }
+
+/** https://discord.com/developers/docs/resources/emoji#modify-guild-emoji */
+export interface ModifyGuildEmoji extends WithReason {
+  /** Name of the emoji */
+  name?: string
+  /** Roles allowed to use this emoji */
+  roles?: BigString[] | null
+}

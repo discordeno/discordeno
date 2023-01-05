@@ -37,7 +37,7 @@ enableCacheSweepers(bot);
 
 bot.gateway.manager.createShardOptions.makePresence = (shardId: number) => {
   return {
-    shardId: shardId,
+    shardId,
     status: "online",
     activities: [
       {
