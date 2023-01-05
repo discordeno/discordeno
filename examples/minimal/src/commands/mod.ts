@@ -1,10 +1,11 @@
-import { ApplicationCommandOption, ApplicationCommandTypes, Bot, Collection, Interaction } from "../../deps.ts";
+import type { ApplicationCommandOption, ApplicationCommandTypes, Bot, Interaction } from "../../deps.ts";
+import { Collection } from "../../deps.ts";
 
 export type subCommand = Omit<Command, "subcommands">;
-export type subCommandGroup = {
+export interface subCommandGroup {
   name: string;
   subCommands: subCommand[];
-};
+}
 export interface Command {
   name: string;
   description: string;

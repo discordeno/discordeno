@@ -1,4 +1,5 @@
-import { AutoModerationActionType, BotWithCache } from '../../../deps.js'
+import type { BotWithCache } from '../../../deps.js';
+import { AutoModerationActionType } from '../../../deps.js'
 import { requireBotGuildPermissions } from '../../permissions.js'
 
 export function createAutomodRule (bot: BotWithCache) {

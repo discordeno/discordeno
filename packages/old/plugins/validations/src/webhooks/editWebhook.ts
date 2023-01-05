@@ -1,4 +1,4 @@
-import { Bot } from '../../deps.js'
+import type { Bot } from '../../deps.js'
 
 export function editWebhook (bot: Bot) {
   const editWebhook = bot.helpers.editWebhook

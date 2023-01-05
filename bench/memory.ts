@@ -9,14 +9,14 @@ const results = await memoryBenchmarks(() =>
   }))
 );
 
-const output: {
+const output: Array<{
   name: string;
   value: number;
   range: string;
   unit: string;
-}[] = JSON.parse(await Deno.readTextFile("output.txt"));
+}> = JSON.parse(await Deno.readTextFile("output.txt"));
 
-for (const resultKey of Object.keys(results.Cached) as (keyof typeof results.Cached)[]) {
+for (const resultKey of Object.keys(results.Cached) as Array<keyof typeof results.Cached>) {
   output.push({
     name: `[Cache Plugin] ${resultKey.toString()}`,
     value: results.Cached[resultKey].value,

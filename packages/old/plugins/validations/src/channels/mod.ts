@@ -1,4 +1,4 @@
-import { Bot } from '../../deps.js'
+import type { Bot } from '../../deps.js'
 import { threads } from './threads/index.js.js'
 
 export function channels (bot: Bot) {

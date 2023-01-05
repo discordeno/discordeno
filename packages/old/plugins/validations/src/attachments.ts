@@ -1,4 +1,4 @@
-import { Attachment, Bot } from '../deps.js'
+import type { Attachment, Bot } from '../deps.js'
 
 export function validateAttachments (bot: Bot, attachments: Attachment[]) {
   attachments.forEach((attachment) => {

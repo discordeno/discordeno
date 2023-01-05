@@ -1,4 +1,4 @@
-import { BotWithCache } from './deps.js'
+import type { BotWithCache } from './deps.js'
 import { channels } from './src/channels/index.js.js'
 import { emojis } from './src/emojis/index.js.js'
 import { guilds } from './src/guilds/index.js.js'

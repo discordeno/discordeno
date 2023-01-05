@@ -65,7 +65,7 @@ export async function getScheduledEventUsers (
   return new Collection(
     results.map((result) => {
       const user = TRANSFORMERS.user(result.user)
-      const member = TRANSFORMERS.member(result.member!)
+      const member = TRANSFORMERS.member(result.member)
 
       return [user.id, { member, user }]
     })

@@ -1,4 +1,4 @@
-import { BotWithCache } from '../../deps.js'
+import type { BotWithCache } from '../../deps.js'
 import { createChannel } from './createChannel.js'
 import { deleteChannel } from './deleteChannel.js'
 import { deleteChannelPermissionOverride } from './deleteChannelPermissionOverride.js'

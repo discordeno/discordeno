@@ -1,4 +1,4 @@
-import { BotWithCache } from '../../deps.js'
+import type { BotWithCache } from '../../deps.js'
 
 export function deleteGuild (bot: BotWithCache) {
   const deleteGuild = bot.helpers.deleteGuild

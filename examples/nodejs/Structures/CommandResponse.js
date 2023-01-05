@@ -19,7 +19,7 @@ class Responses {
 
       const msg = await this.message.channel.send(content);
 
-      //Assign properties to the response
+      // Assign properties to the response
       const response = this.client.messages.forge(msg);
       this.replied = true;
       return response;

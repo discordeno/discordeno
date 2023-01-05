@@ -1,4 +1,5 @@
-import { Bot, ButtonStyles, Emoji, MessageComponents, MessageComponentTypes } from '../deps.js'
+import type { Bot, Emoji, MessageComponents} from '../deps.js';
+import { ButtonStyles, MessageComponentTypes } from '../deps.js'
 
 export function validateComponents (bot: Bot, components: MessageComponents) {
   if (!components?.length) return

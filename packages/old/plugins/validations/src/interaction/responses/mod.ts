@@ -1,4 +1,4 @@
-import { Bot } from '../../../deps.js'
+import type { Bot } from '../../../deps.js'
 import { editFollowupMessage } from './editFollowupMessage.js'
 import { editOriginalInteractionResponse } from './editOriginalInteractionResponse.js'
 import { sendInteractionResponse } from './sendInteractionResponse.js'

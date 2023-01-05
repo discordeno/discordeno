@@ -1,4 +1,4 @@
-import { BotWithCache } from '../../deps.js'
+import type { BotWithCache } from '../../deps.js'
 import { requireBotGuildPermissions } from '../permissions.js'
 
 export async function createGuildSticker (bot: BotWithCache) {

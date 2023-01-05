@@ -1,4 +1,4 @@
-import { BotWithCache } from '../../../deps.js'
+import type { BotWithCache } from '../../../deps.js'
 import { createStageInstance } from './createStageInstance.js'
 import { deleteStageInstance } from './deleteStageInstances.js'
 import { editStageInstance } from './editStageInstance.js'

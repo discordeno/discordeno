@@ -1,13 +1,14 @@
-import {
-  BitwisePermissionFlags,
+import type {
   BotWithCache,
   Channel,
-  Errors,
   Guild,
   Member,
   OverwriteReadable,
   PermissionStrings,
-  Role,
+  Role} from '../deps.js';
+import {
+  BitwisePermissionFlags,
+  Errors,
   separateOverwrites
 } from '../deps.js'
 

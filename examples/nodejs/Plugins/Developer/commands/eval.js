@@ -9,11 +9,12 @@ class evalcommand extends BaseCommand {
   constructor(data) {
     super(data);
   }
+
   async execute() {
     if (!this.client.config.owners.includes(String(this.user.id))) return;
     if (!(this.args.length > 0)) return this.reply({ content: "**You must provide something to eval!**" });
 
-    let inputOfEval = this.args.join(" ");
+    const inputOfEval = this.args.join(" ");
     let outputOfEval;
     let typeOfEval;
 
@@ -28,7 +29,7 @@ class evalcommand extends BaseCommand {
       typeOfEval = e.name;
     }
 
-    var seen = [];
+    const seen = [];
     outputOfEval = typeof outputOfEval === "object"
       ? JSON.stringify(outputOfEval, (_, value) => {
         if (value == `Bot ${this.client.config.token}`) return `BOT_TOKEN`;

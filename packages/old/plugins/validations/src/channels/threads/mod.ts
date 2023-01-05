@@ -1,4 +1,4 @@
-import { Bot } from '../../../deps.js'
+import type { Bot } from '../../../deps.js'
 import { addThreadMember } from './addThreadMember.js'
 import { getThreadMembers } from './getThreadMember.js'
 import { removeThreadMember } from './removeThreadMember.js'

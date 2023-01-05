@@ -377,7 +377,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editEmoji(guildId, id, options) {
-      return rest.patch<DiscordEmoji>(rest.routes.guilds.emoji(guildId, id), {
+      return await rest.patch<DiscordEmoji>(rest.routes.guilds.emoji(guildId, id), {
         name: options.name,
         // NEED TERNARY TO SUPPORT NULL AS VALID
 

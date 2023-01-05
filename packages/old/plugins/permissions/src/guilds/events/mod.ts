@@ -1,4 +1,4 @@
-import { BotWithCache } from '../../../deps.js'
+import type { BotWithCache } from '../../../deps.js'
 import { createScheduledEvent } from './createScheduledEvent.js'
 import { editScheduledEvent } from './editScheduledEvent.js'
 

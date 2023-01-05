@@ -1,4 +1,4 @@
-import { Bot } from '../../../deps.js'
+import type { Bot } from '../../../deps.js'
 import { createGlobalApplicationCommand } from './createGlobalApplicationCommand.js'
 import { createGuildApplicationCommand } from './createGuildApplicationCommand.js'
 

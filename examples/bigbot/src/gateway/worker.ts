@@ -1,22 +1,23 @@
 import dotenv from "dotenv";
-dotenv.config();
 
 import amqplib from "amqplib";
-import {
-  createShardManager,
+import type {
   DiscordGuild,
   DiscordReady,
   DiscordUnavailableGuild,
-  GatewayEventNames,
   Shard,
   ShardSocketRequest,
-  ShardState,
+  ShardState} from "discordeno";
+import {
+  createShardManager,
+  GatewayEventNames
 } from "discordeno";
 import { createLogger } from "discordeno/logger";
 import fetch from "node-fetch";
 import crypto from "node:crypto";
 import { parentPort, workerData } from "worker_threads";
-import { ManagerMessage } from "./index";
+import type { ManagerMessage } from "./index";
+dotenv.config();
 
 if (!parentPort) {
   throw new Error("Parent port is null");
@@ -28,7 +29,7 @@ const log = createLogger({ name: `[WORKER #${script.workerId}]` });
 
 const identifyPromises = new Map<number, () => void>();
 
-let channel: amqplib.Channel | undefined = undefined;
+let channel: amqplib.Channel | undefined;
 
 const useMessageQueue = process.env.MESSAGEQUEUE_ENABLE === "true";
 
@@ -61,7 +62,7 @@ const manager = createShardManager({
       if (existing) return;
 
       if (loadingGuildIds.has(id)) {
-        (message.t as GatewayEventNames | "GUILD_LOADED_DD") = "GUILD_LOADED_DD";
+        (message.t ) = "GUILD_LOADED_DD";
 
         loadingGuildIds.delete(id);
       }
@@ -153,28 +154,28 @@ parentPort.on("message", async (data: WorkerMessage) => {
 
 export type WorkerMessage = WorkerIdentifyShard | WorkerAllowIdentify | WorkerShardPayload | WorkerGetShardInfo;
 
-export type WorkerIdentifyShard = {
+export interface WorkerIdentifyShard {
   type: "IDENTIFY_SHARD";
   shardId: number;
-};
+}
 
-export type WorkerAllowIdentify = {
+export interface WorkerAllowIdentify {
   type: "ALLOW_IDENTIFY";
   shardId: number;
-};
+}
 
-export type WorkerShardPayload = {
+export interface WorkerShardPayload {
   type: "SHARD_PAYLOAD";
   shardId: number;
   data: ShardSocketRequest;
-};
+}
 
-export type WorkerGetShardInfo = {
+export interface WorkerGetShardInfo {
   type: "GET_SHARD_INFO";
   nonce: string;
-};
+}
 
-export type WorkerCreateData = {
+export interface WorkerCreateData {
   intents: number;
   token: string;
   handlerUrls: string[];
@@ -182,17 +183,17 @@ export type WorkerCreateData = {
   path: string;
   totalShards: number;
   workerId: number;
-};
+}
 
-export type WorkerShardInfo = {
+export interface WorkerShardInfo {
   workerId: number;
   shardId: number;
   rtt: number;
   state: ShardState;
-};
+}
 
 const connectRabbitmq = async () => {
-  let connection: amqplib.Connection | undefined = undefined;
+  let connection: amqplib.Connection | undefined;
 
   try {
     connection = await amqplib.connect(

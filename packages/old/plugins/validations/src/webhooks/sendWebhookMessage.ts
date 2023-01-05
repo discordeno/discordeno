@@ -1,4 +1,5 @@
-import { AllowedMentionsTypes, Bot } from '../../deps.js'
+import type { Bot } from '../../deps.js';
+import { AllowedMentionsTypes } from '../../deps.js'
 import { validateComponents } from '../components.js'
 
 export function sendWebhookMessage (bot: Bot) {

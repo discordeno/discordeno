@@ -1,4 +1,4 @@
-import { Interaction, Member, Message } from "discordeno";
+import type { Interaction, Member, Message } from "discordeno";
 import { bot } from "../bot.js";
 
 export async function needMessage(
@@ -25,8 +25,8 @@ export async function needMessage(memberId: bigint, channelId: bigint, options?:
   return (options?.amount || 1) > 1 ? messages : messages[0];
 }
 
-export function collectMessages(options: CollectMessagesOptions): Promise<Message[]> {
-  return new Promise((resolve, reject) => {
+export async function collectMessages(options: CollectMessagesOptions): Promise<Message[]> {
+  return await new Promise((resolve, reject) => {
     bot.collectors.messages.get(options.key)?.reject(
       "A new collector began before the user responded to the previous one.",
     );

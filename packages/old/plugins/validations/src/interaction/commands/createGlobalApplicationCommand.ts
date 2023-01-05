@@ -1,6 +1,7 @@
+import type {
+  Bot} from '../../../deps.js';
 import {
   ApplicationCommandTypes,
-  Bot,
   CONTEXT_MENU_COMMANDS_NAME_REGEX,
   SLASH_COMMANDS_NAME_REGEX
 } from '../../../deps.js'

@@ -8,12 +8,13 @@ class CommandManager {
     this.cache = new Map();
     this.aliases = new Map();
   }
+
   load(options = {}) {
     const commandFolderPath = options.path || "../Plugins";
     const commandFolder = resolveFolder(commandFolderPath);
     if (options.category === undefined) options.category = true;
     if (options.plugins === undefined) options.plugins = true;
-    //PluginMode will iterate through all SubFolders
+    // PluginMode will iterate through all SubFolders
     fs.readdirSync(commandFolder).map(async (dir) => {
       if (dir.endsWith(".txt")) return;
       if (!options.category && dir.endsWith(".js")) {
@@ -78,9 +79,9 @@ class CommandManager {
 
   async onMessage(message, guild, args) {
     const commandName = args.shift().toLowerCase();
-    const command = this.cache.get(commandName); //|| this.cache.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+    const command = this.cache.get(commandName); // || this.cache.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     if (!command && message.content.includes(this.client.id)) {
-      //Handle, when Command has not been found
+      // Handle, when Command has not been found
       const options = { content: "I did not found the Command!" };
       this.client.helpers.sendMessage(message.channelId, options);
     }
@@ -88,9 +89,9 @@ class CommandManager {
 
     const messagecommand = new command({
       manager: this,
-      message: message,
+      message,
       client: this.client,
-      args: args,
+      args,
       settings: {},
       commandName: command.name,
     });
@@ -106,7 +107,7 @@ class CommandManager {
     if (!command) return;
 
     const args = [];
-    //Map all Values and Args
+    // Map all Values and Args
     interaction.data.options?.map((o) => {
       if (o.name) args.push(o.name);
       if (o.options) {
@@ -120,9 +121,9 @@ class CommandManager {
 
     const messagecommand = new command({
       manager: this,
-      interaction: interaction,
+      interaction,
       client: this.client,
-      args: args,
+      args,
       settings: {},
       commandName: command.name,
     });

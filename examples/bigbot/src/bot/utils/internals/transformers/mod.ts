@@ -1,4 +1,4 @@
-import { BotWithCustomProps } from "../../../bot.js";
+import type { BotWithCustomProps } from "../../../bot.js";
 // SETUP-DD-TEMP: Enable this comment if you want to enable this customizer.
 // import { customizeGuildTransformer } from "./guild.js";
 import { customizeInteractionTransformer } from "./interaction.js";

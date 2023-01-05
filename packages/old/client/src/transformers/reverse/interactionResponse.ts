@@ -31,7 +31,7 @@ export function transformInteractionResponseToDiscordInteractionResponse (
           ),
           allowed_mentions: client.transformers.reverse.allowedMentions(
             client,
-            payload.data.allowedMentions!
+            payload.data.allowedMentions
           ),
           components: payload.data.components?.map((component) =>
             client.transformers.reverse.component(client, component)

@@ -1,4 +1,4 @@
-import { Bot } from '../../deps.js'
+import type { Bot } from '../../deps.js'
 import { createWebhook } from './createWebhook.js'
 import { editWebhook } from './editWebhook.js'
 import { editWebhookMessage } from './editWebhookMessage.js'

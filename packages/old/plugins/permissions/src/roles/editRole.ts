@@ -1,4 +1,4 @@
-import { BotWithCache } from '../../deps.js'
+import type { BotWithCache } from '../../deps.js'
 import { higherRolePosition, highestRole, requireBotGuildPermissions } from '../permissions.js'
 
 export function editRole (bot: BotWithCache) {
