@@ -1,17 +1,17 @@
 import type {
   BigString,
   Camelize,
-  CreateMessageOptions,
   CreateGuildEmoji,
+  CreateMessageOptions,
   DiscordChannel,
   DiscordCreateMessage,
-  DiscordCreateGuildEmoji,
   DiscordEmoji,
   DiscordMessage,
   DiscordUser,
   GetMessagesOptions,
+  ModifyGuildEmoji,
 } from '@discordeno/types'
-import { camelize, delay } from '@discordeno/utils'
+import { camelize, Collection, delay } from '@discordeno/utils'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -66,6 +66,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       // Guild Endpoints
       guilds: {
+        emoji: (guildId: BigString, emojiId: BigString) => {
+          return `/guilds/${guildId}/emojis/${emojiId}`
+        },
         emojis: (guildId: BigString) => {
           return `/guilds/${guildId}/emojis`
         },
@@ -342,21 +345,63 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return camelize(await rest.makeRequest('POST', url, body)) as Camelize<T>
     },
 
+    async delete(url: string, body?: Record<string, any>) {
+      return camelize(await rest.makeRequest('DELETE', url, body))
+    },
+
+    async patch<T = Record<string, unknown>>(url: string, body?: Record<string, any>) {
+      return camelize(await rest.makeRequest('PATCH', url, body)) as Camelize<T>
+    },
+
     async getChannel(channelId) {
-      return await rest.get(rest.routes.channels.channel(channelId))
+      return await rest.get<DiscordChannel>(rest.routes.channels.channel(channelId))
     },
 
     async getUser(id) {
       return await rest.get<DiscordUser>(rest.routes.user(id))
     },
 
-    async createEmoji(guildId: BigString, options: CreateGuildEmoji): Promise<Camelize<DiscordEmoji>> {
-      return await rest.post(rest.routes.guilds.emojis(guildId), {
+    async createEmoji(guildId, options) {
+      return await rest.post<DiscordEmoji>(rest.routes.guilds.emojis(guildId), {
         name: options.name,
         image: options.image,
         roles: options.roles?.map((role) => role.toString()),
         reason: options.reason,
-      } as DiscordCreateGuildEmoji)
+      })
+    },
+
+    async deleteEmoji(guildId, id, reason) {
+      return await rest.delete(rest.routes.guilds.emoji(guildId, id), {
+        reason,
+      })
+    },
+
+    async editEmoji(guildId, id, options) {
+      return rest.patch<DiscordEmoji>(rest.routes.guilds.emoji(guildId, id), {
+        name: options.name,
+        // NEED TERNARY TO SUPPORT NULL AS VALID
+
+        roles: options.roles?.map((role) => role.toString()),
+        reason: options.reason,
+      })
+    },
+
+    async getEmoji(guildId, emojiId) {
+      return await rest.get<DiscordEmoji>(rest.routes.guilds.emoji(guildId, emojiId))
+    },
+
+    async getEmojis(guildId) {
+      const emojis = await rest.get<DiscordEmoji[]>(rest.routes.guilds.emojis(guildId))
+
+      return new Collection(
+        emojis.map((emoji) => {
+          return [emoji.id!, emoji]
+        }),
+      )
+    },
+
+    getEmojiURL(emojiId, animated = false) {
+      return `https://cdn.discordapp.com/emojis/${emojiId}.${animated ? 'gif' : 'png'}`
     },
 
     async sendMessage(channelId: BigString, options: CreateMessageOptions) {
@@ -424,6 +469,8 @@ export interface RestManager {
     }
     /** Routes for guild related endpoints. */
     guilds: {
+      /** Route for handling a specific emoji. */
+      emoji: (guildId: BigString, id: BigString) => string
       /** Route for handling non-specific emojis. */
       emojis: (guildId: BigString) => string
     }
@@ -448,6 +495,10 @@ export interface RestManager {
   get: <T = Record<string, unknown>>(url: string) => Promise<Camelize<T>>
   /** Make a post request to the api. */
   post: <T = Record<string, unknown>>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
+  /** Make a delete request to the api. */
+  delete: (url: string, body?: Record<string, any>) => Promise<void>
+  /** Make a patch request to the api. */
+  patch: <T = Record<string, unknown>>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
   /**
    * Gets a channel by its ID.
    *
@@ -485,6 +536,67 @@ export interface RestManager {
    */
   createEmoji: (guildId: BigString, options: CreateGuildEmoji) => Promise<Camelize<DiscordEmoji>>
   /**
+   * Deletes an emoji from a guild.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param guildId - The ID of the guild from which to delete the emoji.
+   * @param id - The ID of the emoji to delete.
+   *
+   * @remarks
+   * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   *
+   * Fires a _Guild Emojis Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/emoji#delete-guild-emoji}
+   */
+  deleteEmoji: (guildId: BigString, id: BigString, reason?: string) => Promise<void>
+  /**
+   * Edits an emoji.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param guildId - The ID of the guild in which to edit the emoji.
+   * @param id - The ID of the emoji to edit.
+   * @param options - The parameters for the edit of the emoji.
+   * @returns An instance of the updated {@link DiscordEmoji}.
+   *
+   * @remarks
+   * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   *
+   * Fires a `Guild Emojis Update` gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/emoji#modify-guild-emoji}
+   */
+  editEmoji: (guildId: BigString, id: BigString, options: ModifyGuildEmoji) => Promise<Camelize<DiscordEmoji>>
+  /**
+   * Gets an emoji by its ID.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param guildId - The ID of the guild from which to get the emoji.
+   * @param emojiId - The ID of the emoji to get.
+   * @returns An instance of {@link DiscordEmoji}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/emoji#get-guild-emoji}
+   */
+  getEmoji: (guildId: BigString, emojiId: BigString) => Promise<Camelize<DiscordEmoji>>
+  /**
+   * Gets the list of emojis for a guild.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param guildId - The ID of the guild which to get the emojis of.
+   * @returns A collection of {@link DiscordEmoji} objects assorted by emoji ID.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/emoji#list-guild-emojis}
+   */
+  getEmojis: (guildId: BigString) => Promise<Collection<string, Camelize<DiscordEmoji>>>
+  /**
+   * Builds a URL to an emoji in the Discord CDN.
+   *
+   * @param emojiId - The ID of the emoji to access.
+   * @param animated - Whether the emoji is animated or static.
+   * @returns The link to the resource.
+   */
+  getEmojiURL: (emojiId: BigString, animated?: boolean) => string
+  /**
    * Sends a message to a channel.
    *
    * @param channelId - The ID of the channel to send the message in.
@@ -513,7 +625,7 @@ export interface RestManager {
   sendMessage: (channelId: BigString, options: CreateMessageOptions) => Promise<Camelize<DiscordMessage>>
 }
 
-export type RequestMethods = 'GET' | 'POST' | 'DELETE'
+export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH'
 export type ApiVersions = 9 | 10
 
 export interface CreateRequestBodyOptions {
