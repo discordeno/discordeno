@@ -8,7 +8,6 @@ import { createGatewayManager, ShardSocketCloseCodes } from '@discordeno/gateway
 import type { CreateRestManagerOptions, RestManager } from '@discordeno/rest'
 import { createRestManager } from '@discordeno/rest'
 import type {
-  CamelCase,
   Camelize,
   DiscordAutoModerationActionExecution,
   DiscordAutoModerationRule,
@@ -54,7 +53,6 @@ import type {
   DiscordVoiceServerUpdate,
   DiscordVoiceState,
   DiscordWebhookUpdate,
-  GatewayEventNames,
 } from '@discordeno/types'
 
 /**
@@ -77,11 +75,11 @@ export function createBot(options: CreateBotOptions): Bot {
 
           // RUN DISPATCH CHECK
           await bot.events.dispatchRequirements?.(data, shard)
-          // @ts-expect-error dynamic handling
           bot.events[
             data.t.toLowerCase().replace(/_([a-z])/g, function (g) {
               return g[1].toUpperCase()
-            }) as CamelCase<Lowercase<GatewayEventNames>>
+            }) as keyof EventHandlers
+            // @ts-expect-error as any gets removed by linter
           ]?.(data.d, shard)
         },
       },

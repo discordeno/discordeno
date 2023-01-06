@@ -1,6 +1,6 @@
 import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
-import { createLeakyBucket, delay } from '@discordeno/utils'
+import { camelize, createLeakyBucket, delay } from '@discordeno/utils'
 import { inflateSync } from 'zlib'
 import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest } from './types.js'
 import { ShardSocketCloseCodes, ShardState } from './types.js'
@@ -458,7 +458,7 @@ export class Shard {
 
     // The necessary handling required for the Shards connection has been finished.
     // Now the event can be safely forwarded.
-    this.events.message?.(this, messageData)
+    this.events.message?.(this, camelize(messageData))
   }
 
   /**
