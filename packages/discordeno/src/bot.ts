@@ -1,8 +1,3 @@
-// TODO: LIST
-/**
- * 1. Trigger Gateway handlers
- * 2. Trigger Event callback
- */
 import type { CreateGatewayManagerOptions, GatewayManager, Shard } from '@discordeno/gateway'
 import { createGatewayManager, ShardSocketCloseCodes } from '@discordeno/gateway'
 import type { CreateRestManagerOptions, RestManager } from '@discordeno/rest'
