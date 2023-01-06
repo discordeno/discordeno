@@ -64,9 +64,6 @@ import type {
  * @returns Bot
  */
 export function createBot(options: CreateBotOptions): Bot {
-  const foo: CamelCase<Lowercase<GatewayEventNames>> = 'ready'
-  console.log(foo)
-
   if (!options.rest) options.rest = { token: options.token }
   if (!options.gateway)
     options.gateway = {
