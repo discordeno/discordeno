@@ -50,11 +50,11 @@ export enum ChannelFlags {
   RequireTag,
 }
 
-// /** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
-// export enum IntegrationExpireBehaviors {
-//   RemoveRole,
-//   Kick,
-// }
+/** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
+export enum IntegrationExpireBehaviors {
+  RemoveRole,
+  Kick,
+}
 
 // /** https://discord.com/developers/docs/resources/user#connection-object-visibility-types */
 // export enum VisibilityTypes {
@@ -92,46 +92,46 @@ export enum ApplicationFlags {
   ApplicationCommandBadge = 1 << 23,
 }
 
-// /** https://discord.com/developers/docs/interactions/message-components#component-types */
-// export enum MessageComponentTypes {
-//   /** A container for other components */
-//   ActionRow = 1,
-//   /** A button object */
-//   Button,
-//   /** A select menu for picking from choices */
-//   SelectMenu,
-//   /** A text input object */
-//   InputText,
-//   /** Select menu for users */
-//   SelectMenuUsers,
-//   /** Select menu for roles */
-//   SelectMenuRoles,
-//   /** Select menu for users and roles */
-//   SelectMenuUsersAndRoles,
-//   /** Select menu for channels */
-//   SelectMenuChannels,
-// }
+/** https://discord.com/developers/docs/interactions/message-components#component-types */
+export enum MessageComponentTypes {
+  /** A container for other components */
+  ActionRow = 1,
+  /** A button object */
+  Button,
+  /** A select menu for picking from choices */
+  SelectMenu,
+  /** A text input object */
+  InputText,
+  /** Select menu for users */
+  SelectMenuUsers,
+  /** Select menu for roles */
+  SelectMenuRoles,
+  /** Select menu for users and roles */
+  SelectMenuUsersAndRoles,
+  /** Select menu for channels */
+  SelectMenuChannels,
+}
 
-// export enum TextStyles {
-//   /** Intended for short single-line text */
-//   Short = 1,
-//   /** Intended for much longer inputs */
-//   Paragraph = 2,
-// }
+export enum TextStyles {
+  /** Intended for short single-line text */
+  Short = 1,
+  /** Intended for much longer inputs */
+  Paragraph = 2,
+}
 
-// /** https://discord.com/developers/docs/interactions/message-components#buttons-button-styles */
-// export enum ButtonStyles {
-//   /** A blurple button */
-//   Primary = 1,
-//   /** A grey button */
-//   Secondary,
-//   /** A green button */
-//   Success,
-//   /** A red button */
-//   Danger,
-//   /** A button that navigates to a URL */
-//   Link,
-// }
+/** https://discord.com/developers/docs/interactions/message-components#buttons-button-styles */
+export enum ButtonStyles {
+  /** A blurple button */
+  Primary = 1,
+  /** A grey button */
+  Secondary,
+  /** A green button */
+  Success,
+  /** A red button */
+  Danger,
+  /** A button that navigates to a URL */
+  Link,
+}
 
 // /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types */
 // export enum AllowedMentionsTypes {
@@ -397,29 +397,29 @@ export enum StickerFormatTypes {
   Lottie,
 }
 
-// /** https://discord.com/developers/docs/interactions/slash-commands#interaction-interactiontype */
-// export enum InteractionTypes {
-//   Ping = 1,
-//   ApplicationCommand = 2,
-//   MessageComponent = 3,
-//   ApplicationCommandAutocomplete = 4,
-//   ModalSubmit = 5,
-// }
+/** https://discord.com/developers/docs/interactions/slash-commands#interaction-interactiontype */
+export enum InteractionTypes {
+  Ping = 1,
+  ApplicationCommand = 2,
+  MessageComponent = 3,
+  ApplicationCommandAutocomplete = 4,
+  ModalSubmit = 5,
+}
 
-// /** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptiontype */
-// export enum ApplicationCommandOptionTypes {
-//   SubCommand = 1,
-//   SubCommandGroup,
-//   String,
-//   Integer,
-//   Boolean,
-//   User,
-//   Channel,
-//   Role,
-//   Mentionable,
-//   Number,
-//   Attachment,
-// }
+/** https://discord.com/developers/docs/interactions/slash-commands#applicationcommandoptiontype */
+export enum ApplicationCommandOptionTypes {
+  SubCommand = 1,
+  SubCommandGroup,
+  String,
+  Integer,
+  Boolean,
+  User,
+  Channel,
+  Role,
+  Mentionable,
+  Number,
+  Attachment,
+}
 
 // /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events */
 // export enum AuditLogEvents {
@@ -529,46 +529,46 @@ export enum StickerFormatTypes {
 //   AutoModerationBlockMessage,
 // }
 
-// export enum ScheduledEventPrivacyLevel {
-//   /** the scheduled event is public and available in discovery. DISCORD DEVS DISABLED THIS! WILL ERROR IF USED! */
-//   // Public = 1,
-//   /** the scheduled event is only accessible to guild members */
-//   GuildOnly = 2,
-// }
+export enum ScheduledEventPrivacyLevel {
+  /** the scheduled event is public and available in discovery. DISCORD DEVS DISABLED THIS! WILL ERROR IF USED! */
+  // Public = 1,
+  /** the scheduled event is only accessible to guild members */
+  GuildOnly = 2,
+}
 
-// export enum ScheduledEventEntityType {
-//   StageInstance = 1,
-//   Voice,
-//   External,
-// }
+export enum ScheduledEventEntityType {
+  StageInstance = 1,
+  Voice,
+  External,
+}
 
-// export enum ScheduledEventStatus {
-//   Scheduled = 1,
-//   Active,
-//   Completed,
-//   Canceled,
-// }
+export enum ScheduledEventStatus {
+  Scheduled = 1,
+  Active,
+  Completed,
+  Canceled,
+}
 
-// /** https://discord.com/developers/docs/resources/invite#invite-object-target-user-types */
-// export enum TargetTypes {
-//   Stream = 1,
-//   EmbeddedApplication,
-// }
+/** https://discord.com/developers/docs/resources/invite#invite-object-target-user-types */
+export enum TargetTypes {
+  Stream = 1,
+  EmbeddedApplication,
+}
 
-// export enum ApplicationCommandTypes {
-//   /** A text-based command that shows up when a user types `/` */
-//   ChatInput = 1,
-//   /** A UI-based command that shows up when you right click or tap on a user */
-//   User,
-//   /** A UI-based command that shows up when you right click or tap on a message */
-//   Message,
-// }
+export enum ApplicationCommandTypes {
+  /** A text-based command that shows up when a user types `/` */
+  ChatInput = 1,
+  /** A UI-based command that shows up when you right click or tap on a user */
+  User,
+  /** A UI-based command that shows up when you right click or tap on a message */
+  Message,
+}
 
-// export enum ApplicationCommandPermissionTypes {
-//   Role = 1,
-//   User,
-//   Channel,
-// }
+export enum ApplicationCommandPermissionTypes {
+  Role = 1,
+  User,
+  Channel,
+}
 
 // /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags */
 // export enum ActivityFlags {
