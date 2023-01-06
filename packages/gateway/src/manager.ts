@@ -2,15 +2,30 @@ import type { Camelize, DiscordGetGatewayBot } from '@discordeno/types'
 import type { LeakyBucket } from '@discordeno/utils'
 import { createLeakyBucket, delay } from '@discordeno/utils'
 import Shard from './Shard.js'
+import type { ShardEvents } from './types.js'
 
-export function createGatewayManager (options: CreateGatewayManagerOptions): GatewayManager {
+export function createGatewayManager(options: CreateGatewayManagerOptions): GatewayManager {
+  if (!options.connection) {
+    options.connection = {
+      url: 'wss://gateway.discord.gg',
+      shards: 1,
+      sessionStartLimit: {
+        maxConcurrency: 1,
+        remaining: 1000,
+        total: 1000,
+        resetAfter: 1000 * 60 * 60 * 24,
+      },
+    }
+  }
+
   const gateway: GatewayManager = {
+    events: options.events,
     compress: options.compress ?? false,
     intents: options.intents ?? 0,
     properties: {
       os: options.properties?.os ?? process.platform,
       browser: options.properties?.browser ?? 'Discordeno',
-      device: options.properties?.device ?? 'Discordeno'
+      device: options.properties?.device ?? 'Discordeno',
     },
     token: options.token,
     url: options.url ?? options.connection.url ?? 'wss://gateway.discord.gg',
@@ -25,7 +40,7 @@ export function createGatewayManager (options: CreateGatewayManagerOptions): Gat
     shards: new Map(),
     buckets: new Map(),
 
-    calculateTotalShards () {
+    calculateTotalShards() {
       // Bots under 100k servers do not have access to total shards.
       if (gateway.totalShards < 100) return gateway.totalShards
 
@@ -33,14 +48,12 @@ export function createGatewayManager (options: CreateGatewayManagerOptions): Gat
       return (
         Math.ceil(
           gateway.totalShards /
-        // If `maxConcurrency` is 1 we can safely use 16.
-        (gateway.connection.sessionStartLimit.maxConcurrency === 1
-          ? 16
-          : gateway.connection.sessionStartLimit.maxConcurrency)
+            // If `maxConcurrency` is 1 we can safely use 16.
+            (gateway.connection.sessionStartLimit.maxConcurrency === 1 ? 16 : gateway.connection.sessionStartLimit.maxConcurrency),
         ) * gateway.connection.sessionStartLimit.maxConcurrency
       )
     },
-    calculateWorkerId (shardId) {
+    calculateWorkerId(shardId) {
       // Ignore decimal numbers.
       let workerId = Math.floor(shardId / gateway.shardsPerWorker)
       // If the workerId overflows the maximal allowed workers we by default just use to last worker.
@@ -51,43 +64,32 @@ export function createGatewayManager (options: CreateGatewayManagerOptions): Gat
 
       return workerId
     },
-    prepareBuckets () {
-      for (
-        let i = 0;
-        i < gateway.connection.sessionStartLimit.maxConcurrency;
-        ++i
-      ) {
+    prepareBuckets() {
+      for (let i = 0; i < gateway.connection.sessionStartLimit.maxConcurrency; ++i) {
         gateway.buckets.set(i, {
           workers: [],
           leak: createLeakyBucket({
             max: 1,
             refillAmount: 1,
             // special number which is proven to be working dont change
-            refillInterval: gateway.spawnShardDelay
-          })
+            refillInterval: gateway.spawnShardDelay,
+          }),
         })
       }
 
       // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
-      for (
-        let shardId = gateway.firstShardId;
-        shardId <= gateway.lastShardId;
-        ++shardId
-      ) {
+      for (let shardId = gateway.firstShardId; shardId <= gateway.lastShardId; ++shardId) {
         if (shardId >= gateway.totalShards) {
-          throw new Error(
-            `Shard (id: ${shardId}) is bigger or equal to the used amount of used shards which is ${gateway.totalShards}`
-          )
+          throw new Error(`Shard (id: ${shardId}) is bigger or equal to the used amount of used shards which is ${gateway.totalShards}`)
         }
 
-        const bucketId =
-          shardId % gateway.connection.sessionStartLimit.maxConcurrency
+        const bucketId = shardId % gateway.connection.sessionStartLimit.maxConcurrency
         const bucket = gateway.buckets.get(bucketId)
         if (bucket == null) {
           throw new Error(
             `Shard (id: ${shardId}) got assigned to an illegal bucket id: ${bucketId}, expected a bucket id between 0 and ${
               gateway.connection.sessionStartLimit.maxConcurrency - 1
-            }`
+            }`,
           )
         }
 
@@ -103,7 +105,7 @@ export function createGatewayManager (options: CreateGatewayManagerOptions): Gat
         }
       }
     },
-    async spawnShards () {
+    async spawnShards() {
       // PREPARES ALL SHARDS IN SPECIFIC BUCKETS
       gateway.prepareBuckets()
 
@@ -115,7 +117,7 @@ export function createGatewayManager (options: CreateGatewayManagerOptions): Gat
               await gateway.tellWorkerToIdentify(worker.id, shardId, bucketId)
             }
           }
-        })
+        }),
       )
       // gateway.buckets.forEach(async (bucket, bucketId) => {
       //   for (const worker of bucket.workers) {
@@ -125,25 +127,29 @@ export function createGatewayManager (options: CreateGatewayManagerOptions): Gat
       //   }
       // })
     },
-    async shutdown (code, reason) {
+    async shutdown(code, reason) {
       gateway.shards.forEach((shard) => shard.close(code, reason))
 
       await delay(5000)
     },
-    async tellWorkerToIdentify (workerId, shardId, bucketId) {
+    async tellWorkerToIdentify(workerId, shardId, bucketId) {
       return await gateway.identify(shardId)
     },
-    async identify (shardId: number) {
+    async identify(shardId: number) {
       let shard = this.shards.get(shardId)
       if (!shard) {
-        shard = new Shard(shardId, {
-          compress: this.compress,
-          intents: this.intents,
-          properties: this.properties,
-          token: this.token,
-          totalShards: this.totalShards,
-          url: this.url,
-          version: this.version
+        shard = new Shard({
+          id: shardId,
+          connection: {
+            compress: this.compress,
+            intents: this.intents,
+            properties: this.properties,
+            token: this.token,
+            totalShards: this.totalShards,
+            url: this.url,
+            version: this.version,
+          },
+          events: options.events,
         })
 
         this.shards.set(shardId, shard)
@@ -151,7 +157,7 @@ export function createGatewayManager (options: CreateGatewayManagerOptions): Gat
 
       return await shard.identify()
     },
-    async kill (shardId: number) {
+    async kill(shardId: number) {
       const shard = this.shards.get(shardId)
       if (!shard) return
 
@@ -159,7 +165,7 @@ export function createGatewayManager (options: CreateGatewayManagerOptions): Gat
       return await shard.shutdown()
     },
 
-    async requestIdentify () {}
+    async requestIdentify() {},
   }
 
   return gateway
@@ -197,7 +203,7 @@ export interface CreateGatewayManagerOptions {
    */
   totalWorkers?: number
   /** Important data which is used by the manager to connect shards to the gateway. */
-  connection: Camelize<DiscordGetGatewayBot>
+  connection?: Camelize<DiscordGetGatewayBot>
   /** Whether incoming payloads are compressed using zlib.
    *
    * @default false
@@ -238,14 +244,19 @@ export interface CreateGatewayManagerOptions {
    * @default 10
    */
   version?: number
+  /** The events handlers */
+  events: ShardEvents
 }
 
 export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
   /** The max concurrency buckets. Those will be created when the `spawnShards` (which calls `prepareBuckets` under the hood) function gets called. */
-  buckets: Map<number, {
-    workers: Array<{ id: number, queue: number[] }>
-    leak: LeakyBucket
-  }>
+  buckets: Map<
+    number,
+    {
+      workers: Array<{ id: number; queue: number[] }>
+      leak: LeakyBucket
+    }
+  >
   /** The shards that are created. */
   shards: Map<number, Shard>
   /** Determine max number of shards to use based upon the max concurrency. */

@@ -39,9 +39,10 @@ export class Shard {
     refillAmount: 120
   })
 
-  constructor (shardId: number, connection: ShardGatewayConfig) {
-    this.id = shardId
-    this.connection = connection
+  constructor (options: ShardCreateOptions) {
+    this.id = options.id
+    this.connection = options.connection
+    this.events = options.events
 
     this.heart = {
       acknowledged: false,
@@ -546,6 +547,15 @@ export class Shard {
     // To go safe we should clear the related timeout too.
     clearTimeout(this.heart.timeoutId)
   }
+}
+
+export interface ShardCreateOptions {
+  /** The shard id */
+  id: number
+  /** The connection details */
+  connection: ShardGatewayConfig
+  /** The event handlers for events on the shard. */
+  events: ShardEvents
 }
 
 export default Shard
