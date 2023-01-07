@@ -47,23 +47,29 @@
 
 import type {
   ActivityTypes,
+  AllowedMentionsTypes,
   ApplicationCommandOptionTypes,
   ApplicationCommandPermissionTypes,
   ApplicationCommandTypes,
   ApplicationFlags,
+  AuditLogEvents,
   ButtonStyles,
   ChannelFlags,
   ChannelTypes,
   DefaultMessageNotificationLevels,
+  EmbedTypes,
   ExplicitContentFilterLevels,
   GatewayEventNames,
   GuildFeatures,
   GuildNsfwLevel,
   IntegrationExpireBehaviors,
   InteractionTypes,
+  MessageActivityTypes,
   MessageComponentTypes,
+  MessageTypes,
   MfaLevels,
   OverwriteTypes,
+  PickPartial,
   PremiumTiers,
   PremiumTypes,
   ScheduledEventEntityType,
@@ -359,124 +365,122 @@ export interface DiscordWebhookUpdate {
   channel_id: string
 }
 
-// /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */
-// export interface DiscordAllowedMentions {
-//   /** An array of allowed mention types to parse from the content. */
-//   parse?: AllowedMentionsTypes[]
-//   /** For replies, whether to mention the author of the message being replied to (default false) */
-//   replied_user?: boolean
+/** https://discord.com/developers/docs/resources/channel#allowed-mentions-object */
+export interface DiscordAllowedMentions {
+  /** An array of allowed mention types to parse from the content. */
+  parse?: AllowedMentionsTypes[]
+  /** For replies, whether to mention the author of the message being replied to (default false) */
+  replied_user?: boolean
+  /** Array of role_ids to mention (Max size of 100) */
+  roles?: string[]
+  /** Array of user_ids to mention (Max size of 100) */
+  users?: string[]
+}
 
-//   /** Array of role_ids to mention (Max size of 100) */
-//   roles?: string[]
-//   /** Array of user_ids to mention (Max size of 100) */
-//   users?: string[]
-// }
+/** https://discord.com/developers/docs/resources/channel#embed-object */
+export interface DiscordEmbed {
+  /** Title of embed */
+  title?: string
+  /** Type of embed (always "rich" for webhook embeds) */
+  type?: EmbedTypes
+  /** Description of embed */
+  description?: string
+  /** Url of embed */
+  url?: string
+  /** Color code of the embed */
+  color?: number
+  /** Timestamp of embed content */
+  timestamp?: string
+  /** Footer information */
+  footer?: DiscordEmbedFooter
+  /** Image information */
+  image?: DiscordEmbedImage
+  /** Thumbnail information */
+  thumbnail?: DiscordEmbedThumbnail
+  /** Video information */
+  video?: DiscordEmbedVideo
+  /** Provider information */
+  provider?: DiscordEmbedProvider
+  /** Author information */
+  author?: DiscordEmbedAuthor
+  /** Fields information */
+  fields?: DiscordEmbedField[]
+}
 
-// /** https://discord.com/developers/docs/resources/channel#embed-object */
-// export interface DiscordEmbed {
-//   /** Title of embed */
-//   title?: string
-//   /** Type of embed (always "rich" for webhook embeds) */
-//   type?: EmbedTypes
-//   /** Description of embed */
-//   description?: string
-//   /** Url of embed */
-//   url?: string
-//   /** Color code of the embed */
-//   color?: number
+/** https://discord.com/developers/docs/resources/channel#embed-object-embed-author-structure */
+export interface DiscordEmbedAuthor {
+  /** Name of author */
+  name: string
+  /** Url of author */
+  url?: string
+  /** Url of author icon (only supports http(s) and attachments) */
+  icon_url?: string
+  /** A proxied url of author icon */
+  proxy_icon_url?: string
+}
 
-//   /** Timestamp of embed content */
-//   timestamp?: string
-//   /** Footer information */
-//   footer?: DiscordEmbedFooter
-//   /** Image information */
-//   image?: DiscordEmbedImage
-//   /** Thumbnail information */
-//   thumbnail?: DiscordEmbedThumbnail
-//   /** Video information */
-//   video?: DiscordEmbedVideo
-//   /** Provider information */
-//   provider?: DiscordEmbedProvider
-//   /** Author information */
-//   author?: DiscordEmbedAuthor
-//   /** Fields information */
-//   fields?: DiscordEmbedField[]
-// }
+/** https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure */
+export interface DiscordEmbedField {
+  /** Name of the field */
+  name: string
+  /** Value of the field */
+  value: string
+  /** Whether or not this field should display inline */
+  inline?: boolean
+}
 
-// /** https://discord.com/developers/docs/resources/channel#embed-object-embed-author-structure */
-// export interface DiscordEmbedAuthor {
-//   /** Name of author */
-//   name: string
-//   /** Url of author */
-//   url?: string
-//   /** Url of author icon (only supports http(s) and attachments) */
-//   icon_url?: string
-//   /** A proxied url of author icon */
-//   proxy_icon_url?: string
-// }
+/** https://discord.com/developers/docs/resources/channel#embed-object-embed-footer-structure */
+export interface DiscordEmbedFooter {
+  /** Footer text */
+  text: string
+  /** Url of footer icon (only supports http(s) and attachments) */
+  icon_url?: string
+  /** A proxied url of footer icon */
+  proxy_icon_url?: string
+}
 
-// /** https://discord.com/developers/docs/resources/channel#embed-object-embed-field-structure */
-// export interface DiscordEmbedField {
-//   /** Name of the field */
-//   name: string
-//   /** Value of the field */
-//   value: string
-//   /** Whether or not this field should display inline */
-//   inline?: boolean
-// }
+/** https://discord.com/developers/docs/resources/channel#embed-object-embed-image-structure */
+export interface DiscordEmbedImage {
+  /** Source url of image (only supports http(s) and attachments) */
+  url: string
+  /** A proxied url of the image */
+  proxy_url?: string
+  /** Height of image */
+  height?: number
+  /** Width of image */
+  width?: number
+}
 
-// /** https://discord.com/developers/docs/resources/channel#embed-object-embed-footer-structure */
-// export interface DiscordEmbedFooter {
-//   /** Footer text */
-//   text: string
-//   /** Url of footer icon (only supports http(s) and attachments) */
-//   icon_url?: string
-//   /** A proxied url of footer icon */
-//   proxy_icon_url?: string
-// }
+export interface DiscordEmbedProvider {
+  /** Name of provider */
+  name?: string
+  /** Url of provider */
+  url?: string
+}
 
-// /** https://discord.com/developers/docs/resources/channel#embed-object-embed-image-structure */
-// export interface DiscordEmbedImage {
-//   /** Source url of image (only supports http(s) and attachments) */
-//   url: string
-//   /** A proxied url of the image */
-//   proxy_url?: string
-//   /** Height of image */
-//   height?: number
-//   /** Width of image */
-//   width?: number
-// }
+/** https://discord.com/developers/docs/resources/channel#embed-object-embed-thumbnail-structure */
+export interface DiscordEmbedThumbnail {
+  /** Source url of thumbnail (only supports http(s) and attachments) */
+  url: string
+  /** A proxied url of the thumbnail */
+  proxy_url?: string
+  /** Height of thumbnail */
+  height?: number
+  /** Width of thumbnail */
+  width?: number
+}
 
-// export interface DiscordEmbedProvider {
-//   /** Name of provider */
-//   name?: string
-//   /** Url of provider */
-//   url?: string
-// }
-
-// /** https://discord.com/developers/docs/resources/channel#embed-object-embed-thumbnail-structure */
-// export interface DiscordEmbedThumbnail {
-//   /** Source url of thumbnail (only supports http(s) and attachments) */
-//   url: string
-//   /** A proxied url of the thumbnail */
-//   proxy_url?: string
-//   /** Height of thumbnail */
-//   height?: number
-//   /** Width of thumbnail */
-//   width?: number
-// }
-
-// /** https://discord.com/developers/docs/resources/channel#embed-object-embed-video-structure */
-// export interface DiscordEmbedVideo {
-//   /** Source url of video */
-//   url?: string
-//   /** A proxied url of the video */
-//   proxy_url?: string
-//   /** Height of video */
-//   height?: number
-//   /** Width of video */
-//   width?: number
-// }
+/** https://discord.com/developers/docs/resources/channel#embed-object-embed-video-structure */
+export interface DiscordEmbedVideo {
+  /** Source url of video */
+  url?: string
+  /** A proxied url of the video */
+  proxy_url?: string
+  /** Height of video */
+  height?: number
+  /** Width of video */
+  width?: number
+}
 
 /** https://discord.com/developers/docs/resources/channel#attachment-object */
 export interface DiscordAttachment {
@@ -1035,135 +1039,135 @@ export interface DiscordMemberWithUser extends DiscordMember {
 export interface DiscordMessage {
   /** id of the message */
   id: string
-  //   /** id of the channel the message was sent in */
-  //   channel_id: string
-  //   /**
-  //    * id of the guild the message was sent in
-  //    * Note: For MESSAGE_CREATE and MESSAGE_UPDATE events, the message object may not contain a guild_id or member field since the events are sent directly to the receiving user and the bot who sent the message, rather than being sent through the guild like non-ephemeral messages.
-  //    */
-  //   guild_id?: string
-  //   /**
-  //    * The author of this message (not guaranteed to be a valid user)
-  //    * Note: The author object follows the structure of the user object, but is only a valid user in the case where the message is generated by a user or bot user. If the message is generated by a webhook, the author object corresponds to the webhook's id, username, and avatar. You can tell if a message is generated by a webhook by checking for the webhook_id on the message object.
-  //    */
-  //   author: DiscordUser
-  //   /**
-  //    * Member properties for this message's author
-  //    * Note: The member object exists in `MESSAGE_CREATE` and `MESSAGE_UPDATE` events from text-based guild channels. This allows bots to obtain real-time member data without requiring bots to store member state in memory.
-  //    */
-  //   member?: DiscordMember
+  /** id of the channel the message was sent in */
+  channel_id: string
+  /**
+   * id of the guild the message was sent in
+   * Note: For MESSAGE_CREATE and MESSAGE_UPDATE events, the message object may not contain a guild_id or member field since the events are sent directly to the receiving user and the bot who sent the message, rather than being sent through the guild like non-ephemeral messages.
+   */
+  guild_id?: string
+  /**
+   * The author of this message (not guaranteed to be a valid user)
+   * Note: The author object follows the structure of the user object, but is only a valid user in the case where the message is generated by a user or bot user. If the message is generated by a webhook, the author object corresponds to the webhook's id, username, and avatar. You can tell if a message is generated by a webhook by checking for the webhook_id on the message object.
+   */
+  author: DiscordUser
+  /**
+   * Member properties for this message's author
+   * Note: The member object exists in `MESSAGE_CREATE` and `MESSAGE_UPDATE` events from text-based guild channels. This allows bots to obtain real-time member data without requiring bots to store member state in memory.
+   */
+  member?: DiscordMember
   /** Contents of the message */
   content?: string
-  //   /** When this message was sent */
-  //   timestamp: string
-  //   /** When this message was edited (or null if never) */
-  //   edited_timestamp: string | null
-  //   /** Whether this was a TTS message */
-  //   tts: boolean
-  //   /** Whether this message mentions everyone */
-  //   mention_everyone: boolean
-  //   /**
-  //    * Users specifically mentioned in the message
-  //    * Note: The user objects in the mentions array will only have the partial member field present in `MESSAGE_CREATE` and `MESSAGE_UPDATE` events from text-based guild channels.
-  //    */
-  //   mentions: Array<DiscordUser & { member?: Partial<DiscordMember> }>
-  //   /** Roles specifically mentioned in this message */
-  //   mention_roles?: string[]
-  //   /**
-  //    * Channels specifically mentioned in this message
-  //    * Note: Not all channel mentions in a message will appear in `mention_channels`. Only textual channels that are visible to everyone in a lurkable guild will ever be included. Only crossposted messages (via Channel Following) currently include `mention_channels` at all. If no mentions in the message meet these requirements, this field will not be sent.
-  //    */
-  //   mention_channels?: DiscordChannelMention[]
-  //   /** Any attached files */
-  //   attachments: DiscordAttachment[]
-  //   /** Any embedded content */
-  //   embeds: DiscordEmbed[]
-  //   /** Reactions to the message */
-  //   reactions?: DiscordReaction[]
-  //   /** Used for validating a message was sent */
-  //   nonce?: number | string
-  //   /** Whether this message is pinned */
-  //   pinned: boolean
-  //   /** If the message is generated by a webhook, this is the webhook's id */
-  //   webhook_id?: string
-  //   /** Type of message */
-  //   type: MessageTypes
-  //   /** Sent with Rich Presence-related chat embeds */
-  //   activity?: DiscordMessageActivity
-  //   /** Sent with Rich Presence-related chat embeds */
-  //   application?: Partial<DiscordApplication>
-  //   /** if the message is an Interaction or application-owned webhook, this is the id of the application */
-  //   application_id?: string
-  //   /** Data showing the source of a crossposted channel follow add, pin or reply message */
-  //   message_reference?: Omit<DiscordMessageReference, 'failIfNotExists'>
-  //   /** Message flags combined as a bitfield */
-  //   flags?: number
-  //   /**
-  //    * The stickers sent with the message (bots currently can only receive messages with stickers, not send)
-  //    * @deprecated
-  //    */
-  //   stickers?: DiscordSticker[]
-  //   /**
-  //    * The message associated with the `message_reference`
-  //    * Note: This field is only returned for messages with a `type` of `19` (REPLY). If the message is a reply but the `referenced_message` field is not present, the backend did not attempt to fetch the message that was being replied to, so its state is unknown. If the field exists but is null, the referenced message was deleted.
-  //    */
-  //   referenced_message?: DiscordMessage
-  //   /** Sent if the message is a response to an Interaction */
-  //   interaction?: DiscordMessageInteraction
-  //   /** The thread that was started from this message, includes thread member object */
-  //   thread?: Omit<DiscordChannel, 'member'> & { member: DiscordThreadMember }
-  //   /** The components related to this message */
-  //   components?: DiscordMessageComponents
-  //   /** Sent if the message contains stickers */
-  //   sticker_items?: DiscordStickerItem[]
-  //   /** A generally increasing integer (there may be gaps or duplicates) that represents the approximate position of the message in a thread, it can be used to estimate the relative position of the message in a thread in company with `total_message_sent` on parent thread */
-  //   position?: number
+  /** When this message was sent */
+  timestamp: string
+  /** When this message was edited (or null if never) */
+  edited_timestamp: string | null
+  /** Whether this was a TTS message */
+  tts: boolean
+  /** Whether this message mentions everyone */
+  mention_everyone: boolean
+  /**
+   * Users specifically mentioned in the message
+   * Note: The user objects in the mentions array will only have the partial member field present in `MESSAGE_CREATE` and `MESSAGE_UPDATE` events from text-based guild channels.
+   */
+  mentions: Array<DiscordUser & { member?: Partial<DiscordMember> }>
+  /** Roles specifically mentioned in this message */
+  mention_roles?: string[]
+  /**
+   * Channels specifically mentioned in this message
+   * Note: Not all channel mentions in a message will appear in `mention_channels`. Only textual channels that are visible to everyone in a lurkable guild will ever be included. Only crossposted messages (via Channel Following) currently include `mention_channels` at all. If no mentions in the message meet these requirements, this field will not be sent.
+   */
+  mention_channels?: DiscordChannelMention[]
+  /** Any attached files */
+  attachments: DiscordAttachment[]
+  /** Any embedded content */
+  embeds: DiscordEmbed[]
+  /** Reactions to the message */
+  reactions?: DiscordReaction[]
+  /** Used for validating a message was sent */
+  nonce?: number | string
+  /** Whether this message is pinned */
+  pinned: boolean
+  /** If the message is generated by a webhook, this is the webhook's id */
+  webhook_id?: string
+  /** Type of message */
+  type: MessageTypes
+  /** Sent with Rich Presence-related chat embeds */
+  activity?: DiscordMessageActivity
+  /** Sent with Rich Presence-related chat embeds */
+  application?: Partial<DiscordApplication>
+  /** if the message is an Interaction or application-owned webhook, this is the id of the application */
+  application_id?: string
+  /** Data showing the source of a crossposted channel follow add, pin or reply message */
+  message_reference?: Omit<DiscordMessageReference, 'failIfNotExists'>
+  /** Message flags combined as a bitfield */
+  flags?: number
+  /**
+   * The stickers sent with the message (bots currently can only receive messages with stickers, not send)
+   * @deprecated
+   */
+  stickers?: DiscordSticker[]
+  /**
+   * The message associated with the `message_reference`
+   * Note: This field is only returned for messages with a `type` of `19` (REPLY). If the message is a reply but the `referenced_message` field is not present, the backend did not attempt to fetch the message that was being replied to, so its state is unknown. If the field exists but is null, the referenced message was deleted.
+   */
+  referenced_message?: DiscordMessage
+  /** Sent if the message is a response to an Interaction */
+  interaction?: DiscordMessageInteraction
+  /** The thread that was started from this message, includes thread member object */
+  thread?: Omit<DiscordChannel, 'member'> & { member: DiscordThreadMember }
+  /** The components related to this message */
+  components?: DiscordMessageComponents
+  /** Sent if the message contains stickers */
+  sticker_items?: DiscordStickerItem[]
+  /** A generally increasing integer (there may be gaps or duplicates) that represents the approximate position of the message in a thread, it can be used to estimate the relative position of the message in a thread in company with `total_message_sent` on parent thread */
+  position?: number
 }
 
-// /** https://discord.com/developers/docs/resources/channel#channel-mention-object */
-// export interface DiscordChannelMention {
-//   /** id of the channel */
-//   id: string
-//   /** id of the guild containing the channel */
-//   guild_id: string
-//   /** The type of channel */
-//   type: number
-//   /** The name of the channel */
-//   name: string
-// }
+/** https://discord.com/developers/docs/resources/channel#channel-mention-object */
+export interface DiscordChannelMention {
+  /** id of the channel */
+  id: string
+  /** id of the guild containing the channel */
+  guild_id: string
+  /** The type of channel */
+  type: number
+  /** The name of the channel */
+  name: string
+}
 
-// /** https://discord.com/developers/docs/resources/channel#reaction-object */
-// export interface DiscordReaction {
-//   /** Times this emoji has been used to react */
-//   count: number
-//   /** Whether the current user reacted using this emoji */
-//   me: boolean
-//   /** Emoji information */
-//   emoji: Partial<DiscordEmoji>
-// }
+/** https://discord.com/developers/docs/resources/channel#reaction-object */
+export interface DiscordReaction {
+  /** Times this emoji has been used to react */
+  count: number
+  /** Whether the current user reacted using this emoji */
+  me: boolean
+  /** Emoji information */
+  emoji: Partial<DiscordEmoji>
+}
 
-// /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure */
-// export interface DiscordMessageActivity {
-//   /** Type of message activity */
-//   type: MessageActivityTypes
-//   /** `party_id` from a Rich Presence event */
-//   party_id?: string
-// }
+/** https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure */
+export interface DiscordMessageActivity {
+  /** Type of message activity */
+  type: MessageActivityTypes
+  /** `party_id` from a Rich Presence event */
+  party_id?: string
+}
 
-// /** https://discord.com/developers/docs/resources/channel#message-object-message-reference-structure */
-// export interface DiscordMessageReference {
-//   /** id of the originating message */
-//   message_id?: string
-//   /**
-//    * id of the originating message's channel
-//    * Note: `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model.
-//    */
-//   channel_id?: string
-//   /** id of the originating message's guild */
-//   guild_id?: string
-//   /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
-//   fail_if_not_exists: boolean
-// }
+/** https://discord.com/developers/docs/resources/channel#message-object-message-reference-structure */
+export interface DiscordMessageReference {
+  /** id of the originating message */
+  message_id?: string
+  /**
+   * id of the originating message's channel
+   * Note: `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model.
+   */
+  channel_id?: string
+  /** id of the originating message's guild */
+  guild_id?: string
+  /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
+  fail_if_not_exists: boolean
+}
 
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-structure */
 export interface DiscordSticker {
@@ -1191,19 +1195,19 @@ export interface DiscordSticker {
   sort_value?: number
 }
 
-// /** https://discord.com/developers/docs/interactions/receiving-and-responding#message-interaction-object-message-interaction-structure */
-// export interface DiscordMessageInteraction {
-//   /** Id of the interaction */
-//   id: string
-//   /** The type of interaction */
-//   type: InteractionTypes
-//   /** The name of the ApplicationCommand including the name of the subcommand/subcommand group */
-//   name: string
-//   /** The user who invoked the interaction */
-//   user: DiscordUser
-//   /** The member who invoked the interaction in the guild */
-//   member?: Partial<DiscordMember>
-// }
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#message-interaction-object-message-interaction-structure */
+export interface DiscordMessageInteraction {
+  /** Id of the interaction */
+  id: string
+  /** The type of interaction */
+  type: InteractionTypes
+  /** The name of the ApplicationCommand including the name of the subcommand/subcommand group */
+  name: string
+  /** The user who invoked the interaction */
+  user: DiscordUser
+  /** The member who invoked the interaction in the guild */
+  member?: Partial<DiscordMember>
+}
 
 export type DiscordMessageComponents = DiscordActionRow[]
 
@@ -1213,26 +1217,11 @@ export interface DiscordActionRow {
   type: 1
   /** The components in this row */
   components:
-  | [
-    | DiscordSelectMenuComponent
-    | DiscordButtonComponent
-    | DiscordInputTextComponent
-  ]
-  | [DiscordButtonComponent, DiscordButtonComponent]
-  | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
-  | [
-    DiscordButtonComponent,
-    DiscordButtonComponent,
-    DiscordButtonComponent,
-    DiscordButtonComponent
-  ]
-  | [
-    DiscordButtonComponent,
-    DiscordButtonComponent,
-    DiscordButtonComponent,
-    DiscordButtonComponent,
-    DiscordButtonComponent
-  ]
+    | [DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent]
+    | [DiscordButtonComponent, DiscordButtonComponent]
+    | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
+    | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
+    | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
 }
 
 export interface DiscordSelectMenuComponent {
@@ -1316,15 +1305,15 @@ export interface DiscordInputTextComponent {
   value?: string
 }
 
-// /** https://discord.com/developers/docs/resources/sticker#sticker-item-object-sticker-item-structure */
-// export interface DiscordStickerItem {
-//   /** Id of the sticker */
-//   id: string
-//   /** Name of the sticker */
-//   name: string
-//   /** [Type of sticker format](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types) */
-//   format_type: StickerFormatTypes
-// }
+/** https://discord.com/developers/docs/resources/sticker#sticker-item-object-sticker-item-structure */
+export interface DiscordStickerItem {
+  /** Id of the sticker */
+  id: string
+  /** Name of the sticker */
+  name: string
+  /** [Type of sticker format](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types) */
+  format_type: StickerFormatTypes
+}
 
 // /** https://discord.com/developers/docs/resources/sticker#sticker-pack-object-sticker-pack-structure */
 // export interface DiscordStickerPack {
@@ -1403,17 +1392,11 @@ export interface DiscordInteractionData {
     /** The Ids and User objects */
     users?: Record<string, DiscordUser>
     /** The Ids and partial Member objects */
-    members?: Record<
-    string,
-    Omit<DiscordInteractionMember, 'user' | 'deaf' | 'mute'>
-    >
+    members?: Record<string, Omit<DiscordInteractionMember, 'user' | 'deaf' | 'mute'>>
     /** The Ids and Role objects */
     roles?: Record<string, DiscordRole>
     /** The Ids and partial Channel objects */
-    channels?: Record<
-    string,
-    Pick<DiscordChannel, 'id' | 'name' | 'type' | 'permissions'>
-    >
+    channels?: Record<string, Pick<DiscordChannel, 'id' | 'name' | 'type' | 'permissions'>>
     /** The ids and attachment objects */
     attachments: Record<string, DiscordAttachment>
   }
@@ -1431,13 +1414,7 @@ export interface DiscordInteractionDataOption {
   /** Value of application command option type */
   type: ApplicationCommandOptionTypes
   /** Value of the option resulting from user input */
-  value?:
-  | string
-  | boolean
-  | number
-  | DiscordMember
-  | DiscordChannel
-  | DiscordRole
+  value?: string | boolean | number | DiscordMember | DiscordChannel | DiscordRole
   /** Present if this option is a group or subcommand */
   options?: DiscordInteractionDataOption[]
   /** `true` if this option is the currently focused option for autocomplete */
@@ -1620,188 +1597,188 @@ export interface DiscordAutoModerationActionExecution {
   matched_content: string | null
 }
 
-// /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-entry-structure */
-// export interface DiscordAuditLogEntry {
-//   /** ID of the affected entity (webhook, user, role, etc.) */
-//   target_id: string | null
-//   /** Changes made to the `target_id` */
-//   changes?: DiscordAuditLogChange[]
-//   /** User or app that made the changes */
-//   user_id: string | null
-//   /** ID of the entry */
-//   id: string
-//   /** Type of action that occurred */
-//   action_type: AuditLogEvents
-//   /** Additional info for certain event types */
-//   options?: DiscordOptionalAuditEntryInfo
-//   /** Reason for the change (1-512 characters) */
-//   reason?: string
-// }
+/** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-entry-structure */
+export interface DiscordAuditLogEntry {
+  /** ID of the affected entity (webhook, user, role, etc.) */
+  target_id: string | null
+  /** Changes made to the `target_id` */
+  changes?: DiscordAuditLogChange[]
+  /** User or app that made the changes */
+  user_id: string | null
+  /** ID of the entry */
+  id: string
+  /** Type of action that occurred */
+  action_type: AuditLogEvents
+  /** Additional info for certain event types */
+  options?: DiscordOptionalAuditEntryInfo
+  /** Reason for the change (1-512 characters) */
+  reason?: string
+}
 
-// /** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
-// export type DiscordAuditLogChange =
-//   | {
-//     new_value: string
-//     old_value: string
-//     key:
-//     | 'name'
-//     | 'description'
-//     | 'discovery_splash_hash'
-//     | 'banner_hash'
-//     | 'preferred_locale'
-//     | 'rules_channel_id'
-//     | 'public_updates_channel_id'
-//     | 'icon_hash'
-//     | 'image_hash'
-//     | 'splash_hash'
-//     | 'owner_id'
-//     | 'region'
-//     | 'afk_channel_id'
-//     | 'vanity_url_code'
-//     | 'widget_channel_id'
-//     | 'system_channel_id'
-//     | 'topic'
-//     | 'application_id'
-//     | 'permissions'
-//     | 'allow'
-//     | 'deny'
-//     | 'code'
-//     | 'channel_id'
-//     | 'inviter_id'
-//     | 'nick'
-//     | 'avatar_hash'
-//     | 'id'
-//     | 'location'
-//     | 'command_id'
-//   }
-//   | {
-//     new_value: number
-//     old_value: number
-//     key:
-//     | 'afk_timeout'
-//     | 'mfa_level'
-//     | 'verification_level'
-//     | 'explicit_content_filter'
-//     | 'default_message_notifications'
-//     | 'prune_delete_days'
-//     | 'position'
-//     | 'bitrate'
-//     | 'rate_limit_per_user'
-//     | 'color'
-//     | 'max_uses'
-//     | 'uses'
-//     | 'max_age'
-//     | 'expire_behavior'
-//     | 'expire_grace_period'
-//     | 'user_limit'
-//     | 'privacy_level'
-//     | 'auto_archive_duration'
-//     | 'default_auto_archive_duration'
-//     | 'entity_type'
-//     | 'status'
-//     | 'communication_disabled_until'
-//   }
-//   | {
-//     new_value: Array<Partial<DiscordRole>>
-//     old_value?: Array<Partial<DiscordRole>>
-//     key: '$add' | '$remove'
-//   }
-//   | {
-//     new_value: boolean
-//     old_value: boolean
-//     key:
-//     | 'widget_enabled'
-//     | 'nsfw'
-//     | 'hoist'
-//     | 'mentionable'
-//     | 'temporary'
-//     | 'deaf'
-//     | 'mute'
-//     | 'enable_emoticons'
-//     | 'archived'
-//     | 'locked'
-//     | 'invitable'
-//   }
-//   | {
-//     new_value: DiscordOverwrite[]
-//     old_value: DiscordOverwrite[]
-//     key: 'permission_overwrites'
-//   }
-//   | {
-//     new_value: string | number
-//     old_value: string | number
-//     key: 'type'
-//   }
+/** https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure */
+export type DiscordAuditLogChange =
+  | {
+      new_value: string
+      old_value: string
+      key:
+        | 'name'
+        | 'description'
+        | 'discovery_splash_hash'
+        | 'banner_hash'
+        | 'preferred_locale'
+        | 'rules_channel_id'
+        | 'public_updates_channel_id'
+        | 'icon_hash'
+        | 'image_hash'
+        | 'splash_hash'
+        | 'owner_id'
+        | 'region'
+        | 'afk_channel_id'
+        | 'vanity_url_code'
+        | 'widget_channel_id'
+        | 'system_channel_id'
+        | 'topic'
+        | 'application_id'
+        | 'permissions'
+        | 'allow'
+        | 'deny'
+        | 'code'
+        | 'channel_id'
+        | 'inviter_id'
+        | 'nick'
+        | 'avatar_hash'
+        | 'id'
+        | 'location'
+        | 'command_id'
+    }
+  | {
+      new_value: number
+      old_value: number
+      key:
+        | 'afk_timeout'
+        | 'mfa_level'
+        | 'verification_level'
+        | 'explicit_content_filter'
+        | 'default_message_notifications'
+        | 'prune_delete_days'
+        | 'position'
+        | 'bitrate'
+        | 'rate_limit_per_user'
+        | 'color'
+        | 'max_uses'
+        | 'uses'
+        | 'max_age'
+        | 'expire_behavior'
+        | 'expire_grace_period'
+        | 'user_limit'
+        | 'privacy_level'
+        | 'auto_archive_duration'
+        | 'default_auto_archive_duration'
+        | 'entity_type'
+        | 'status'
+        | 'communication_disabled_until'
+    }
+  | {
+      new_value: Array<Partial<DiscordRole>>
+      old_value?: Array<Partial<DiscordRole>>
+      key: '$add' | '$remove'
+    }
+  | {
+      new_value: boolean
+      old_value: boolean
+      key:
+        | 'widget_enabled'
+        | 'nsfw'
+        | 'hoist'
+        | 'mentionable'
+        | 'temporary'
+        | 'deaf'
+        | 'mute'
+        | 'enable_emoticons'
+        | 'archived'
+        | 'locked'
+        | 'invitable'
+    }
+  | {
+      new_value: DiscordOverwrite[]
+      old_value: DiscordOverwrite[]
+      key: 'permission_overwrites'
+    }
+  | {
+      new_value: string | number
+      old_value: string | number
+      key: 'type'
+    }
 
-// /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
-// export interface DiscordOptionalAuditEntryInfo {
-//   /**
-//    * ID of the app whose permissions were targeted.
-//    *
-//    * Event types: `APPLICATION_COMMAND_PERMISSION_UPDATE`
-//    */
-//   application_id: string
-//   /**
-//    * Name of the Auto Moderation rule that was triggered.
-//    *
-//    * Event types: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`
-//    */
-//   auto_moderation_rule_name: string
-//   /**
-//    * Trigger type of the Auto Moderation rule that was triggered.
-//    *
-//    * Event types: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`
-//    */
-//   auto_moderation_rule_trigger_type: string
-//   /**
-//    * Channel in which the entities were targeted.
-//    *
-//    * Event types: `MEMBER_MOVE`, `MESSAGE_PIN`, `MESSAGE_UNPIN`, `MESSAGE_DELETE`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
-//    */
-//   channel_id: string
-//   /**
-//    * Number of entities that were targeted.
-//    *
-//    * Event types: `MESSAGE_DELETE`, `MESSAGE_BULK_DELETE`, `MEMBER_DISCONNECT`, `MEMBER_MOVE`
-//    */
-//   count: string
-//   /**
-//    * Number of days after which inactive members were kicked.
-//    *
-//    * Event types: `MEMBER_PRUNE`
-//    */
-//   delete_member_days: string
-//   /**
-//    * ID of the overwritten entity.
-//    *
-//    * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
-//    */
-//   id: string
-//   /**
-//    * Number of members removed by the prune.
-//    *
-//    * Event types: `MEMBER_PRUNE`
-//    */
-//   members_removed: string
-//   /**
-//    * ID of the message that was targeted.
-//    *
-//    * Event types: `MESSAGE_PIN`, `MESSAGE_UNPIN`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
-//    */
-//   message_id: string
-//   /**
-//    * Name of the role if type is "0" (not present if type is "1").
-//    *
-//    * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
-//    */
-//   role_name: string
-//   /**
-//    * Type of overwritten entity - "0", for "role", or "1" for "member".
-//    *
-//    * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
-//    */
-//   type: string
-// }
+/** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-optional-audit-entry-info */
+export interface DiscordOptionalAuditEntryInfo {
+  /**
+   * ID of the app whose permissions were targeted.
+   *
+   * Event types: `APPLICATION_COMMAND_PERMISSION_UPDATE`
+   */
+  application_id: string
+  /**
+   * Name of the Auto Moderation rule that was triggered.
+   *
+   * Event types: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`
+   */
+  auto_moderation_rule_name: string
+  /**
+   * Trigger type of the Auto Moderation rule that was triggered.
+   *
+   * Event types: `AUTO_MODERATION_BLOCK_MESSAGE`, `AUTO_MODERATION_FLAG_TO_CHANNEL`, `AUTO_MODERATION_USER_COMMUNICATION_DISABLED`
+   */
+  auto_moderation_rule_trigger_type: string
+  /**
+   * Channel in which the entities were targeted.
+   *
+   * Event types: `MEMBER_MOVE`, `MESSAGE_PIN`, `MESSAGE_UNPIN`, `MESSAGE_DELETE`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
+   */
+  channel_id: string
+  /**
+   * Number of entities that were targeted.
+   *
+   * Event types: `MESSAGE_DELETE`, `MESSAGE_BULK_DELETE`, `MEMBER_DISCONNECT`, `MEMBER_MOVE`
+   */
+  count: string
+  /**
+   * Number of days after which inactive members were kicked.
+   *
+   * Event types: `MEMBER_PRUNE`
+   */
+  delete_member_days: string
+  /**
+   * ID of the overwritten entity.
+   *
+   * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
+   */
+  id: string
+  /**
+   * Number of members removed by the prune.
+   *
+   * Event types: `MEMBER_PRUNE`
+   */
+  members_removed: string
+  /**
+   * ID of the message that was targeted.
+   *
+   * Event types: `MESSAGE_PIN`, `MESSAGE_UNPIN`, `STAGE_INSTANCE_CREATE`, `STAGE_INSTANCE_UPDATE`, `STAGE_INSTANCE_DELETE`
+   */
+  message_id: string
+  /**
+   * Name of the role if type is "0" (not present if type is "1").
+   *
+   * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
+   */
+  role_name: string
+  /**
+   * Type of overwritten entity - "0", for "role", or "1" for "member".
+   *
+   * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
+   */
+  type: string
+}
 
 export interface DiscordScheduledEvent {
   /** the id of the scheduled event */
@@ -1879,44 +1856,44 @@ export interface DiscordSessionStartLimit {
 //   created_at: string
 // }
 
-// /** https://discord.com/developers/docs/resources/invite#invite-object */
-// export interface DiscordInvite {
-//   /** The invite code (unique Id) */
-//   code: string
-//   /** The guild this invite is for */
-//   guild?: Partial<DiscordGuild>
-//   /** The channel this invite is for */
-//   channel: Partial<DiscordChannel> | null
-//   /** The user who created the invite */
-//   inviter?: DiscordUser
-//   /** The type of target for this voice channel invite */
-//   target_type?: TargetTypes
-//   /** The target user for this invite */
-//   target_user?: DiscordUser
-//   /** The embedded application to open for this voice channel embedded application invite */
-//   target_application?: Partial<DiscordApplication>
-//   /** Approximate count of online members (only present when target_user is set) */
-//   approximate_presence_count?: number
-//   /** Approximate count of total members */
-//   approximate_member_count?: number
-//   /** The expiration date of this invite, returned from the `GET /invites/<code>` endpoint when `with_expiration` is `true` */
-//   expires_at?: string | null
-//   /** Stage instance data if there is a public Stage instance in the Stage channel this invite is for */
-//   stage_instance?: DiscordInviteStageInstance
-//   /** guild scheduled event data */
-//   guild_scheduled_event?: DiscordScheduledEvent
-// }
+/** https://discord.com/developers/docs/resources/invite#invite-object */
+export interface DiscordInvite {
+  /** The invite code (unique Id) */
+  code: string
+  /** The guild this invite is for */
+  guild?: Partial<DiscordGuild>
+  /** The channel this invite is for */
+  channel: Partial<DiscordChannel> | null
+  /** The user who created the invite */
+  inviter?: DiscordUser
+  /** The type of target for this voice channel invite */
+  target_type?: TargetTypes
+  /** The target user for this invite */
+  target_user?: DiscordUser
+  /** The embedded application to open for this voice channel embedded application invite */
+  target_application?: Partial<DiscordApplication>
+  /** Approximate count of online members (only present when target_user is set) */
+  approximate_presence_count?: number
+  /** Approximate count of total members */
+  approximate_member_count?: number
+  /** The expiration date of this invite, returned from the `GET /invites/<code>` endpoint when `with_expiration` is `true` */
+  expires_at?: string | null
+  /** Stage instance data if there is a public Stage instance in the Stage channel this invite is for */
+  stage_instance?: DiscordInviteStageInstance
+  /** guild scheduled event data */
+  guild_scheduled_event?: DiscordScheduledEvent
+}
 
-// export interface DiscordInviteStageInstance {
-//   /** The members speaking in the Stage */
-//   members: Array<Partial<DiscordMember>>
-//   /** The number of users in the Stage */
-//   participant_count: number
-//   /** The number of users speaking in the Stage */
-//   speaker_count: number
-//   /** The topic of the Stage instance (1-120 characters) */
-//   topic: string
-// }
+export interface DiscordInviteStageInstance {
+  /** The members speaking in the Stage */
+  members: Array<Partial<DiscordMember>>
+  /** The number of users in the Stage */
+  participant_count: number
+  /** The number of users speaking in the Stage */
+  speaker_count: number
+  /** The topic of the Stage instance (1-120 characters) */
+  topic: string
+}
 
 // /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure */
 // export interface DiscordApplicationCommand
@@ -2053,31 +2030,31 @@ export interface DiscordApplicationCommandPermissions {
 //   presence_count: number
 // }
 
-// /** https://discord.com/developers/docs/resources/guild#guild-preview-object */
-// export interface DiscordGuildPreview {
-//   /** Guild id */
-//   id: string
-//   /** Guild name (2-100 characters) */
-//   name: string
-//   /** Icon hash */
-//   icon: string | null
-//   /** Splash hash */
-//   splash: string | null
-//   /** Discovery splash hash */
-//   discovery_splash: string | null
-//   /** Custom guild emojis */
-//   emojis: DiscordEmoji[]
-//   /** Enabled guild features */
-//   features: GuildFeatures[]
-//   /** Approximate number of members in this guild */
-//   approximate_member_count: number
-//   /** Approximate number of online members in this guild */
-//   approximate_presence_count: number
-//   /** The description for the guild, if the guild is discoverable */
-//   description: string | null
-//   /** Custom guild stickers */
-//   stickers: DiscordSticker[]
-// }
+/** https://discord.com/developers/docs/resources/guild#guild-preview-object */
+export interface DiscordGuildPreview {
+  /** Guild id */
+  id: string
+  /** Guild name (2-100 characters) */
+  name: string
+  /** Icon hash */
+  icon: string | null
+  /** Splash hash */
+  splash: string | null
+  /** Discovery splash hash */
+  discovery_splash: string | null
+  /** Custom guild emojis */
+  emojis: DiscordEmoji[]
+  /** Enabled guild features */
+  features: GuildFeatures[]
+  /** Approximate number of members in this guild */
+  approximate_member_count: number
+  /** Approximate number of online members in this guild */
+  approximate_presence_count: number
+  /** The description for the guild, if the guild is discoverable */
+  description: string | null
+  /** Custom guild stickers */
+  stickers: DiscordSticker[]
+}
 
 // export interface DiscordDiscoveryCategory {
 //   /** Numeric id of the category */
@@ -2219,8 +2196,7 @@ export interface DiscordGuildBanAddRemove {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove */
-export interface DiscordMessageReactionRemove
-  extends Omit<DiscordMessageReactionAdd, 'member'> {}
+export interface DiscordMessageReactionRemove extends Omit<DiscordMessageReactionAdd, 'member'> {}
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-add */
 export interface DiscordMessageReactionAdd {
@@ -2313,63 +2289,51 @@ export interface DiscordMessageDeleteBulk {
   guild_id?: string
 }
 
-// /** https://discord.com/developers/docs/resources/template#template-object-template-structure */
-// export interface DiscordTemplate {
-//   /** The template code (unique Id) */
-//   code: string
-//   /** Template name */
-//   name: string
-//   /** The description for the template */
-//   description: string | null
-//   /** Number of times this template has been used */
-//   usage_count: number
-//   /** The Id of the user who created the template */
-//   creator_id: string
-//   /** The user who created the template */
-//   creator: DiscordUser
-//   /** When this template was created */
-//   created_at: string
-//   /** When this template was last synced to the source guild */
-//   updated_at: string
-//   /** The Id of the guild this template is based on */
-//   source_guild_id: string
-//   /** The guild snapshot this template contains */
-//   serialized_source_guild: Omit<
-//   PickPartial<
-//   DiscordGuild,
-//   | 'name'
-//   | 'description'
-//   | 'verification_level'
-//   | 'default_message_notifications'
-//   | 'explicit_content_filter'
-//   | 'preferred_locale'
-//   | 'afk_timeout'
-//   | 'channels'
-//   | 'afk_channel_id'
-//   | 'system_channel_id'
-//   | 'system_channel_flags'
-//   >,
-//   'roles'
-//   > & {
-//     roles: Array<
-//     Omit<
-//     PickPartial<
-//     DiscordRole,
-//     | 'name'
-//     | 'color'
-//     | 'hoist'
-//     | 'mentionable'
-//     | 'permissions'
-//     | 'icon'
-//     | 'unicode_emoji'
-//     >,
-//     'id'
-//     > & { id: number }
-//     >
-//   }
-//   /** Whether the template has un-synced changes */
-//   is_dirty: boolean | null
-// }
+/** https://discord.com/developers/docs/resources/template#template-object-template-structure */
+export interface DiscordTemplate {
+  /** The template code (unique Id) */
+  code: string
+  /** Template name */
+  name: string
+  /** The description for the template */
+  description: string | null
+  /** Number of times this template has been used */
+  usage_count: number
+  /** The Id of the user who created the template */
+  creator_id: string
+  /** The user who created the template */
+  creator: DiscordUser
+  /** When this template was created */
+  created_at: string
+  /** When this template was last synced to the source guild */
+  updated_at: string
+  /** The Id of the guild this template is based on */
+  source_guild_id: string
+  /** The guild snapshot this template contains */
+  serialized_source_guild: Omit<
+    PickPartial<
+      DiscordGuild,
+      | 'name'
+      | 'description'
+      | 'verification_level'
+      | 'default_message_notifications'
+      | 'explicit_content_filter'
+      | 'preferred_locale'
+      | 'afk_timeout'
+      | 'channels'
+      | 'afk_channel_id'
+      | 'system_channel_id'
+      | 'system_channel_flags'
+    >,
+    'roles'
+  > & {
+    roles: Array<
+      Omit<PickPartial<DiscordRole, 'name' | 'color' | 'hoist' | 'mentionable' | 'permissions' | 'icon' | 'unicode_emoji'>, 'id'> & { id: number }
+    >
+  }
+  /** Whether the template has un-synced changes */
+  is_dirty: boolean | null
+}
 
 /** https://discord.com/developers/docs/topics/gateway#guild-member-add */
 export interface DiscordGuildMemberAdd extends DiscordMemberWithUser {
@@ -2471,11 +2435,7 @@ export interface DiscordGuildMemberUpdate {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-all */
-export interface DiscordMessageReactionRemoveAll
-  extends Pick<
-  DiscordMessageReactionAdd,
-  'channel_id' | 'message_id' | 'guild_id'
-  > {}
+export interface DiscordMessageReactionRemoveAll extends Pick<DiscordMessageReactionAdd, 'channel_id' | 'message_id' | 'guild_id'> {}
 
 // // TODO: add docs link
 // export interface DiscordValidateDiscoverySearchTerm {
@@ -2501,10 +2461,7 @@ export interface DiscordScheduledEventUserAdd {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-emoji */
-export type DiscordMessageReactionRemoveEmoji = Pick<
-DiscordMessageReactionAdd,
-'channel_id' | 'guild_id' | 'message_id' | 'emoji'
->
+export type DiscordMessageReactionRemoveEmoji = Pick<DiscordMessageReactionAdd, 'channel_id' | 'guild_id' | 'message_id' | 'emoji'>
 
 /** https://discord.com/developers/docs/topics/gateway#guild-member-remove */
 export interface DiscordGuildMemberRemove {

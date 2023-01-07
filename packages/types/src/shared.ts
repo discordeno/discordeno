@@ -133,34 +133,28 @@ export enum ButtonStyles {
   Link,
 }
 
-// /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types */
-// export enum AllowedMentionsTypes {
-//   /** Controls role mentions */
-//   RoleMentions = 'roles',
-//   /** Controls user mentions */
-//   UserMentions = 'users',
-//   /** Controls @everyone and @here mentions */
-//   EveryoneMentions = 'everyone',
-// }
+/** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types */
+export enum AllowedMentionsTypes {
+  /** Controls role mentions */
+  RoleMentions = 'roles',
+  /** Controls user mentions */
+  UserMentions = 'users',
+  /** Controls @everyone and @here mentions */
+  EveryoneMentions = 'everyone',
+}
 
-// /** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-types */
-// export enum WebhookTypes {
-//   /** Incoming Webhooks can post messages to channels with a generated token */
-//   Incoming = 1,
-//   /** Channel Follower Webhooks are internal webhooks used with Channel Following to post new messages into channels */
-//   ChannelFollower,
-//   /** Application webhooks are webhooks used with Interactions */
-//   Application,
-// }
+/** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-types */
+export enum WebhookTypes {
+  /** Incoming Webhooks can post messages to channels with a generated token */
+  Incoming = 1,
+  /** Channel Follower Webhooks are internal webhooks used with Channel Following to post new messages into channels */
+  ChannelFollower,
+  /** Application webhooks are webhooks used with Interactions */
+  Application,
+}
 
-// /** https://discord.com/developers/docs/resources/channel#embed-object-embed-types */
-// export type EmbedTypes =
-//   | 'rich'
-//   | 'image'
-//   | 'video'
-//   | 'gifv'
-//   | 'article'
-//   | 'link'
+/** https://discord.com/developers/docs/resources/channel#embed-object-embed-types */
+export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link'
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level */
 export enum DefaultMessageNotificationLevels {
@@ -374,13 +368,13 @@ export enum MessageTypes {
   AutoModerationAction,
 }
 
-// /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
-// export enum MessageActivityTypes {
-//   Join = 1,
-//   Spectate,
-//   Listen,
-//   JoinRequest,
-// }
+/** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
+export enum MessageActivityTypes {
+  Join = 1,
+  Spectate,
+  Listen,
+  JoinRequest,
+}
 
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types */
 export enum StickerTypes {
@@ -421,113 +415,113 @@ export enum ApplicationCommandOptionTypes {
   Attachment,
 }
 
-// /** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events */
-// export enum AuditLogEvents {
-//   /** Server settings were updated */
-//   GuildUpdate = 1,
-//   /** Channel was created */
-//   ChannelCreate = 10,
-//   /** Channel settings were updated */
-//   ChannelUpdate,
-//   /** Channel was deleted */
-//   ChannelDelete,
-//   /** Permission overwrite was added to a channel */
-//   ChannelOverwriteCreate,
-//   /** Permission overwrite was updated for a channel */
-//   ChannelOverwriteUpdate,
-//   /** Permission overwrite was deleted from a channel */
-//   ChannelOverwriteDelete,
-//   /** Member was removed from server */
-//   MemberKick = 20,
-//   /** Members were pruned from server */
-//   MemberPrune,
-//   /** Member was banned from server */
-//   MemberBanAdd,
-//   /** Server ban was lifted for a member */
-//   MemberBanRemove,
-//   /** Member was updated in server */
-//   MemberUpdate,
-//   /** Member was added or removed from a role */
-//   MemberRoleUpdate,
-//   /** Member was moved to a different voice channel */
-//   MemberMove,
-//   /** Member was disconnected from a voice channel */
-//   MemberDisconnect,
-//   /** Bot user was added to server */
-//   BotAdd,
-//   /** Role was created */
-//   RoleCreate = 30,
-//   /** Role was edited */
-//   RoleUpdate,
-//   /** Role was deleted */
-//   RoleDelete,
-//   /** Server invite was created */
-//   InviteCreate = 40,
-//   /** Server invite was updated */
-//   InviteUpdate,
-//   /** Server invite was deleted */
-//   InviteDelete,
-//   /** Webhook was created */
-//   WebhookCreate = 50,
-//   /** Webhook properties or channel were updated */
-//   WebhookUpdate,
-//   /** Webhook was deleted */
-//   WebhookDelete,
-//   /** Emoji was created */
-//   EmojiCreate = 60,
-//   /** Emoji name was updated */
-//   EmojiUpdate,
-//   /** Emoji was deleted */
-//   EmojiDelete,
-//   /** Single message was deleted */
-//   MessageDelete = 72,
-//   /** Multiple messages were deleted */
-//   MessageBulkDelete,
-//   /** Messaged was pinned to a channel */
-//   MessagePin,
-//   /** Message was unpinned from a channel */
-//   MessageUnpin,
-//   /** App was added to server */
-//   IntegrationCreate = 80,
-//   /** App was updated (as an example, its scopes were updated) */
-//   IntegrationUpdate,
-//   /** App was removed from server */
-//   IntegrationDelete,
-//   /** Stage instance was created (stage channel becomes live) */
-//   StageInstanceCreate,
-//   /** Stage instace details were updated */
-//   StageInstanceUpdate,
-//   /** Stage instance was deleted (stage channel no longer live) */
-//   StageInstanceDelete,
-//   /** Sticker was created */
-//   StickerCreate = 90,
-//   /** Sticker details were updated */
-//   StickerUpdate,
-//   /** Sticker was deleted */
-//   StickerDelete,
-//   /** Event was created */
-//   GuildScheduledEventCreate = 100,
-//   /** Event was updated */
-//   GuildScheduledEventUpdate,
-//   /** Event was cancelled */
-//   GuildScheduledEventDelete,
-//   /** Thread was created in a channel */
-//   ThreadCreate = 110,
-//   /** Thread was updated */
-//   ThreadUpdate,
-//   /** Thread was deleted */
-//   ThreadDelete,
-//   /** Permissions were updated for a command */
-//   ApplicationCommandPermissionUpdate = 121,
-//   /** Auto moderation rule was created */
-//   AutoModerationRuleCreate = 140,
-//   /** Auto moderation rule was updated */
-//   AutoModerationRuleUpdate,
-//   /** Auto moderation rule was deleted */
-//   AutoModerationRuleDelete,
-//   /** Message was blocked by AutoMod according to a rule. */
-//   AutoModerationBlockMessage,
-// }
+/** https://discord.com/developers/docs/resources/audit-log#audit-log-entry-object-audit-log-events */
+export enum AuditLogEvents {
+  /** Server settings were updated */
+  GuildUpdate = 1,
+  /** Channel was created */
+  ChannelCreate = 10,
+  /** Channel settings were updated */
+  ChannelUpdate,
+  /** Channel was deleted */
+  ChannelDelete,
+  /** Permission overwrite was added to a channel */
+  ChannelOverwriteCreate,
+  /** Permission overwrite was updated for a channel */
+  ChannelOverwriteUpdate,
+  /** Permission overwrite was deleted from a channel */
+  ChannelOverwriteDelete,
+  /** Member was removed from server */
+  MemberKick = 20,
+  /** Members were pruned from server */
+  MemberPrune,
+  /** Member was banned from server */
+  MemberBanAdd,
+  /** Server ban was lifted for a member */
+  MemberBanRemove,
+  /** Member was updated in server */
+  MemberUpdate,
+  /** Member was added or removed from a role */
+  MemberRoleUpdate,
+  /** Member was moved to a different voice channel */
+  MemberMove,
+  /** Member was disconnected from a voice channel */
+  MemberDisconnect,
+  /** Bot user was added to server */
+  BotAdd,
+  /** Role was created */
+  RoleCreate = 30,
+  /** Role was edited */
+  RoleUpdate,
+  /** Role was deleted */
+  RoleDelete,
+  /** Server invite was created */
+  InviteCreate = 40,
+  /** Server invite was updated */
+  InviteUpdate,
+  /** Server invite was deleted */
+  InviteDelete,
+  /** Webhook was created */
+  WebhookCreate = 50,
+  /** Webhook properties or channel were updated */
+  WebhookUpdate,
+  /** Webhook was deleted */
+  WebhookDelete,
+  /** Emoji was created */
+  EmojiCreate = 60,
+  /** Emoji name was updated */
+  EmojiUpdate,
+  /** Emoji was deleted */
+  EmojiDelete,
+  /** Single message was deleted */
+  MessageDelete = 72,
+  /** Multiple messages were deleted */
+  MessageBulkDelete,
+  /** Messaged was pinned to a channel */
+  MessagePin,
+  /** Message was unpinned from a channel */
+  MessageUnpin,
+  /** App was added to server */
+  IntegrationCreate = 80,
+  /** App was updated (as an example, its scopes were updated) */
+  IntegrationUpdate,
+  /** App was removed from server */
+  IntegrationDelete,
+  /** Stage instance was created (stage channel becomes live) */
+  StageInstanceCreate,
+  /** Stage instace details were updated */
+  StageInstanceUpdate,
+  /** Stage instance was deleted (stage channel no longer live) */
+  StageInstanceDelete,
+  /** Sticker was created */
+  StickerCreate = 90,
+  /** Sticker details were updated */
+  StickerUpdate,
+  /** Sticker was deleted */
+  StickerDelete,
+  /** Event was created */
+  GuildScheduledEventCreate = 100,
+  /** Event was updated */
+  GuildScheduledEventUpdate,
+  /** Event was cancelled */
+  GuildScheduledEventDelete,
+  /** Thread was created in a channel */
+  ThreadCreate = 110,
+  /** Thread was updated */
+  ThreadUpdate,
+  /** Thread was deleted */
+  ThreadDelete,
+  /** Permissions were updated for a command */
+  ApplicationCommandPermissionUpdate = 121,
+  /** Auto moderation rule was created */
+  AutoModerationRuleCreate = 140,
+  /** Auto moderation rule was updated */
+  AutoModerationRuleUpdate,
+  /** Auto moderation rule was deleted */
+  AutoModerationRuleDelete,
+  /** Message was blocked by AutoMod according to a rule. */
+  AutoModerationBlockMessage,
+}
 
 export enum ScheduledEventPrivacyLevel {
   /** the scheduled event is public and available in discovery. DISCORD DEVS DISABLED THIS! WILL ERROR IF USED! */
@@ -583,91 +577,91 @@ export enum ApplicationCommandPermissionTypes {
 //   Embedded = 1 << 8,
 // }
 
-// /** https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags */
-// export enum BitwisePermissionFlags {
-//   /** Allows creation of instant invites */
-//   CREATE_INSTANT_INVITE = 0x0000000000000001,
-//   /** Allows kicking members */
-//   KICK_MEMBERS = 0x0000000000000002,
-//   /** Allows banning members */
-//   BAN_MEMBERS = 0x0000000000000004,
-//   /** Allows all permissions and bypasses channel permission overwrites */
-//   ADMINISTRATOR = 0x0000000000000008,
-//   /** Allows management and editing of channels */
-//   MANAGE_CHANNELS = 0x0000000000000010,
-//   /** Allows management and editing of the guild */
-//   MANAGE_GUILD = 0x0000000000000020,
-//   /** Allows for the addition of reactions to messages */
-//   ADD_REACTIONS = 0x0000000000000040,
-//   /** Allows for viewing of audit logs */
-//   VIEW_AUDIT_LOG = 0x0000000000000080,
-//   /** Allows for using priority speaker in a voice channel */
-//   PRIORITY_SPEAKER = 0x0000000000000100,
-//   /** Allows the user to go live */
-//   STREAM = 0x0000000000000200,
-//   /** Allows guild members to view a channel, which includes reading messages in text channels and joining voice channels */
-//   VIEW_CHANNEL = 0x0000000000000400,
-//   /** Allows for sending messages in a channel. (does not allow sending messages in threads) */
-//   SEND_MESSAGES = 0x0000000000000800,
-//   /** Allows for sending of /tts messages */
-//   SEND_TTS_MESSAGES = 0x0000000000001000,
-//   /** Allows for deletion of other users messages */
-//   MANAGE_MESSAGES = 0x0000000000002000,
-//   /** Links sent by users with this permission will be auto-embedded */
-//   EMBED_LINKS = 0x0000000000004000,
-//   /** Allows for uploading images and files */
-//   ATTACH_FILES = 0x0000000000008000,
-//   /** Allows for reading of message history */
-//   READ_MESSAGE_HISTORY = 0x0000000000010000,
-//   /** Allows for using the @everyone tag to notify all users in a channel, and the @here tag to notify all online users in a channel */
-//   MENTION_EVERYONE = 0x0000000000020000,
-//   /** Allows the usage of custom emojis from other servers */
-//   USE_EXTERNAL_EMOJIS = 0x0000000000040000,
-//   /** Allows for viewing guild insights */
-//   VIEW_GUILD_INSIGHTS = 0x0000000000080000,
-//   /** Allows for joining of a voice channel */
-//   CONNECT = 0x0000000000100000,
-//   /** Allows for speaking in a voice channel */
-//   SPEAK = 0x0000000000200000,
-//   /** Allows for muting members in a voice channel */
-//   MUTE_MEMBERS = 0x0000000000400000,
-//   /** Allows for deafening of members in a voice channel */
-//   DEAFEN_MEMBERS = 0x0000000000800000,
-//   /** Allows for moving of members between voice channels */
-//   MOVE_MEMBERS = 0x0000000001000000,
-//   /** Allows for using voice-activity-detection in a voice channel */
-//   USE_VAD = 0x0000000002000000,
-//   /** Allows for modification of own nickname */
-//   CHANGE_NICKNAME = 0x0000000004000000,
-//   /** Allows for modification of other users nicknames */
-//   MANAGE_NICKNAMES = 0x0000000008000000,
-//   /** Allows management and editing of roles */
-//   MANAGE_ROLES = 0x0000000010000000,
-//   /** Allows management and editing of webhooks */
-//   MANAGE_WEBHOOKS = 0x0000000020000000,
-//   /** Allows management and editing of emojis and stickers */
-//   MANAGE_EMOJIS_AND_STICKERS = 0x0000000040000000,
-//   /** Allows members to use application commands in text channels */
-//   USE_SLASH_COMMANDS = 0x0000000080000000,
-//   /** Allows for requesting to speak in stage channels. */
-//   REQUEST_TO_SPEAK = 0x0000000100000000,
-//   /** Allows for creating, editing, and deleting scheduled events */
-//   MANAGE_EVENTS = 0x0000000200000000,
-//   /** Allows for deleting and archiving threads, and viewing all private threads */
-//   MANAGE_THREADS = 0x0000000400000000,
-//   /** Allows for creating public and announcement threads */
-//   CREATE_PUBLIC_THREADS = 0x0000000800000000,
-//   /** Allows for creating private threads */
-//   CREATE_PRIVATE_THREADS = 0x0000001000000000,
-//   /** Allows the usage of custom stickers from other servers */
-//   USE_EXTERNAL_STICKERS = 0x0000002000000000,
-//   /** Allows for sending messages in threads */
-//   SEND_MESSAGES_IN_THREADS = 0x0000004000000000,
-//   /** Allows for launching activities (applications with the `EMBEDDED` flag) in a voice channel. */
-//   USE_EMBEDDED_ACTIVITIES = 0x0000008000000000,
-//   /** Allows for timing out users to prevent them from sending or reacting to messages in chat and threads, and from speaking in voice and stage channels */
-//   MODERATE_MEMBERS = 0x0000010000000000,
-// }
+/** https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags */
+export enum BitwisePermissionFlags {
+  /** Allows creation of instant invites */
+  CREATE_INSTANT_INVITE = 0x0000000000000001,
+  /** Allows kicking members */
+  KICK_MEMBERS = 0x0000000000000002,
+  /** Allows banning members */
+  BAN_MEMBERS = 0x0000000000000004,
+  /** Allows all permissions and bypasses channel permission overwrites */
+  ADMINISTRATOR = 0x0000000000000008,
+  /** Allows management and editing of channels */
+  MANAGE_CHANNELS = 0x0000000000000010,
+  /** Allows management and editing of the guild */
+  MANAGE_GUILD = 0x0000000000000020,
+  /** Allows for the addition of reactions to messages */
+  ADD_REACTIONS = 0x0000000000000040,
+  /** Allows for viewing of audit logs */
+  VIEW_AUDIT_LOG = 0x0000000000000080,
+  /** Allows for using priority speaker in a voice channel */
+  PRIORITY_SPEAKER = 0x0000000000000100,
+  /** Allows the user to go live */
+  STREAM = 0x0000000000000200,
+  /** Allows guild members to view a channel, which includes reading messages in text channels and joining voice channels */
+  VIEW_CHANNEL = 0x0000000000000400,
+  /** Allows for sending messages in a channel. (does not allow sending messages in threads) */
+  SEND_MESSAGES = 0x0000000000000800,
+  /** Allows for sending of /tts messages */
+  SEND_TTS_MESSAGES = 0x0000000000001000,
+  /** Allows for deletion of other users messages */
+  MANAGE_MESSAGES = 0x0000000000002000,
+  /** Links sent by users with this permission will be auto-embedded */
+  EMBED_LINKS = 0x0000000000004000,
+  /** Allows for uploading images and files */
+  ATTACH_FILES = 0x0000000000008000,
+  /** Allows for reading of message history */
+  READ_MESSAGE_HISTORY = 0x0000000000010000,
+  /** Allows for using the @everyone tag to notify all users in a channel, and the @here tag to notify all online users in a channel */
+  MENTION_EVERYONE = 0x0000000000020000,
+  /** Allows the usage of custom emojis from other servers */
+  USE_EXTERNAL_EMOJIS = 0x0000000000040000,
+  /** Allows for viewing guild insights */
+  VIEW_GUILD_INSIGHTS = 0x0000000000080000,
+  /** Allows for joining of a voice channel */
+  CONNECT = 0x0000000000100000,
+  /** Allows for speaking in a voice channel */
+  SPEAK = 0x0000000000200000,
+  /** Allows for muting members in a voice channel */
+  MUTE_MEMBERS = 0x0000000000400000,
+  /** Allows for deafening of members in a voice channel */
+  DEAFEN_MEMBERS = 0x0000000000800000,
+  /** Allows for moving of members between voice channels */
+  MOVE_MEMBERS = 0x0000000001000000,
+  /** Allows for using voice-activity-detection in a voice channel */
+  USE_VAD = 0x0000000002000000,
+  /** Allows for modification of own nickname */
+  CHANGE_NICKNAME = 0x0000000004000000,
+  /** Allows for modification of other users nicknames */
+  MANAGE_NICKNAMES = 0x0000000008000000,
+  /** Allows management and editing of roles */
+  MANAGE_ROLES = 0x0000000010000000,
+  /** Allows management and editing of webhooks */
+  MANAGE_WEBHOOKS = 0x0000000020000000,
+  /** Allows management and editing of emojis and stickers */
+  MANAGE_EMOJIS_AND_STICKERS = 0x0000000040000000,
+  /** Allows members to use application commands in text channels */
+  USE_SLASH_COMMANDS = 0x0000000080000000,
+  /** Allows for requesting to speak in stage channels. */
+  REQUEST_TO_SPEAK = 0x0000000100000000,
+  /** Allows for creating, editing, and deleting scheduled events */
+  MANAGE_EVENTS = 0x0000000200000000,
+  /** Allows for deleting and archiving threads, and viewing all private threads */
+  MANAGE_THREADS = 0x0000000400000000,
+  /** Allows for creating public and announcement threads */
+  CREATE_PUBLIC_THREADS = 0x0000000800000000,
+  /** Allows for creating private threads */
+  CREATE_PRIVATE_THREADS = 0x0000001000000000,
+  /** Allows the usage of custom stickers from other servers */
+  USE_EXTERNAL_STICKERS = 0x0000002000000000,
+  /** Allows for sending messages in threads */
+  SEND_MESSAGES_IN_THREADS = 0x0000004000000000,
+  /** Allows for launching activities (applications with the `EMBEDDED` flag) in a voice channel. */
+  USE_EMBEDDED_ACTIVITIES = 0x0000008000000000,
+  /** Allows for timing out users to prevent them from sending or reacting to messages in chat and threads, and from speaking in voice and stage channels */
+  MODERATE_MEMBERS = 0x0000010000000000,
+}
 
 // export type PermissionStrings = keyof typeof BitwisePermissionFlags
 
@@ -1108,152 +1102,152 @@ export type GatewayDispatchEventNames =
 
 export type GatewayEventNames = GatewayDispatchEventNames | 'READY' | 'RESUMED'
 
-// /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
-// export enum GatewayIntents {
-//   /**
-//    * - GUILD_CREATE
-//    * - GUILD_DELETE
-//    * - GUILD_ROLE_CREATE
-//    * - GUILD_ROLE_UPDATE
-//    * - GUILD_ROLE_DELETE
-//    * - CHANNEL_CREATE
-//    * - CHANNEL_UPDATE
-//    * - CHANNEL_DELETE
-//    * - CHANNEL_PINS_UPDATE
-//    * - THREAD_CREATE
-//    * - THREAD_UPDATE
-//    * - THREAD_DELETE
-//    * - THREAD_LIST_SYNC
-//    * - THREAD_MEMBER_UPDATE
-//    * - THREAD_MEMBERS_UPDATE
-//    * - STAGE_INSTANCE_CREATE
-//    * - STAGE_INSTANCE_UPDATE
-//    * - STAGE_INSTANCE_DELETE
-//    */
-//   Guilds = 1 << 0,
-//   /**
-//    * - GUILD_MEMBER_ADD
-//    * - GUILD_MEMBER_UPDATE
-//    * - GUILD_MEMBER_REMOVE
-//    */
-//   GuildMembers = 1 << 1,
-//   /**
-//    * - GUILD_BAN_ADD
-//    * - GUILD_BAN_REMOVE
-//    */
-//   GuildBans = 1 << 2,
-//   /**
-//    * - GUILD_EMOJIS_UPDATE
-//    */
-//   GuildEmojis = 1 << 3,
-//   /**
-//    * - GUILD_INTEGRATIONS_UPDATE
-//    * - INTEGRATION_CREATE
-//    * - INTEGRATION_UPDATE
-//    * - INTEGRATION_DELETE
-//    */
-//   GuildIntegrations = 1 << 4,
-//   /** Enables the following events:
-//    * - WEBHOOKS_UPDATE
-//    */
-//   GuildWebhooks = 1 << 5,
-//   /**
-//    * - INVITE_CREATE
-//    * - INVITE_DELETE
-//    */
-//   GuildInvites = 1 << 6,
-//   /**
-//    * - VOICE_STATE_UPDATE
-//    */
-//   GuildVoiceStates = 1 << 7,
-//   /**
-//    * - PRESENCE_UPDATE
-//    */
-//   GuildPresences = 1 << 8,
-//   /**
-//    * - MESSAGE_CREATE
-//    * - MESSAGE_UPDATE
-//    * - MESSAGE_DELETE
-//    */
-//   GuildMessages = 1 << 9,
-//   /**
-//    * - MESSAGE_REACTION_ADD
-//    * - MESSAGE_REACTION_REMOVE
-//    * - MESSAGE_REACTION_REMOVE_ALL
-//    * - MESSAGE_REACTION_REMOVE_EMOJI
-//    */
-//   GuildMessageReactions = 1 << 10,
-//   /**
-//    * - TYPING_START
-//    */
-//   GuildMessageTyping = 1 << 11,
-//   /**
-//    * - CHANNEL_CREATE
-//    * - MESSAGE_CREATE
-//    * - MESSAGE_UPDATE
-//    * - MESSAGE_DELETE
-//    * - CHANNEL_PINS_UPDATE
-//    */
-//   DirectMessages = 1 << 12,
-//   /**
-//    * - MESSAGE_REACTION_ADD
-//    * - MESSAGE_REACTION_REMOVE
-//    * - MESSAGE_REACTION_REMOVE_ALL
-//    * - MESSAGE_REACTION_REMOVE_EMOJI
-//    */
-//   DirectMessageReactions = 1 << 13,
-//   /**
-//    * - TYPING_START
-//    */
-//   DirectMessageTyping = 1 << 14,
+/** https://discord.com/developers/docs/topics/gateway#list-of-intents */
+export enum GatewayIntents {
+  /**
+   * - GUILD_CREATE
+   * - GUILD_DELETE
+   * - GUILD_ROLE_CREATE
+   * - GUILD_ROLE_UPDATE
+   * - GUILD_ROLE_DELETE
+   * - CHANNEL_CREATE
+   * - CHANNEL_UPDATE
+   * - CHANNEL_DELETE
+   * - CHANNEL_PINS_UPDATE
+   * - THREAD_CREATE
+   * - THREAD_UPDATE
+   * - THREAD_DELETE
+   * - THREAD_LIST_SYNC
+   * - THREAD_MEMBER_UPDATE
+   * - THREAD_MEMBERS_UPDATE
+   * - STAGE_INSTANCE_CREATE
+   * - STAGE_INSTANCE_UPDATE
+   * - STAGE_INSTANCE_DELETE
+   */
+  Guilds = 1 << 0,
+  /**
+   * - GUILD_MEMBER_ADD
+   * - GUILD_MEMBER_UPDATE
+   * - GUILD_MEMBER_REMOVE
+   */
+  GuildMembers = 1 << 1,
+  /**
+   * - GUILD_BAN_ADD
+   * - GUILD_BAN_REMOVE
+   */
+  GuildBans = 1 << 2,
+  /**
+   * - GUILD_EMOJIS_UPDATE
+   */
+  GuildEmojis = 1 << 3,
+  /**
+   * - GUILD_INTEGRATIONS_UPDATE
+   * - INTEGRATION_CREATE
+   * - INTEGRATION_UPDATE
+   * - INTEGRATION_DELETE
+   */
+  GuildIntegrations = 1 << 4,
+  /** Enables the following events:
+   * - WEBHOOKS_UPDATE
+   */
+  GuildWebhooks = 1 << 5,
+  /**
+   * - INVITE_CREATE
+   * - INVITE_DELETE
+   */
+  GuildInvites = 1 << 6,
+  /**
+   * - VOICE_STATE_UPDATE
+   */
+  GuildVoiceStates = 1 << 7,
+  /**
+   * - PRESENCE_UPDATE
+   */
+  GuildPresences = 1 << 8,
+  /**
+   * - MESSAGE_CREATE
+   * - MESSAGE_UPDATE
+   * - MESSAGE_DELETE
+   */
+  GuildMessages = 1 << 9,
+  /**
+   * - MESSAGE_REACTION_ADD
+   * - MESSAGE_REACTION_REMOVE
+   * - MESSAGE_REACTION_REMOVE_ALL
+   * - MESSAGE_REACTION_REMOVE_EMOJI
+   */
+  GuildMessageReactions = 1 << 10,
+  /**
+   * - TYPING_START
+   */
+  GuildMessageTyping = 1 << 11,
+  /**
+   * - CHANNEL_CREATE
+   * - MESSAGE_CREATE
+   * - MESSAGE_UPDATE
+   * - MESSAGE_DELETE
+   * - CHANNEL_PINS_UPDATE
+   */
+  DirectMessages = 1 << 12,
+  /**
+   * - MESSAGE_REACTION_ADD
+   * - MESSAGE_REACTION_REMOVE
+   * - MESSAGE_REACTION_REMOVE_ALL
+   * - MESSAGE_REACTION_REMOVE_EMOJI
+   */
+  DirectMessageReactions = 1 << 13,
+  /**
+   * - TYPING_START
+   */
+  DirectMessageTyping = 1 << 14,
 
-//   /**
-//    * This intent will add `content` values to all message objects.
-//    */
-//   MessageContent = 1 << 15,
-//   /**
-//    * - GUILD_SCHEDULED_EVENT_CREATE
-//    * - GUILD_SCHEDULED_EVENT_UPDATE
-//    * - GUILD_SCHEDULED_EVENT_DELETE
-//    * - GUILD_SCHEDULED_EVENT_USER_ADD this is experimental and unstable.
-//    * - GUILD_SCHEDULED_EVENT_USER_REMOVE this is experimental and unstable.
-//    */
-//   GuildScheduledEvents = 1 << 16,
+  /**
+   * This intent will add `content` values to all message objects.
+   */
+  MessageContent = 1 << 15,
+  /**
+   * - GUILD_SCHEDULED_EVENT_CREATE
+   * - GUILD_SCHEDULED_EVENT_UPDATE
+   * - GUILD_SCHEDULED_EVENT_DELETE
+   * - GUILD_SCHEDULED_EVENT_USER_ADD this is experimental and unstable.
+   * - GUILD_SCHEDULED_EVENT_USER_REMOVE this is experimental and unstable.
+   */
+  GuildScheduledEvents = 1 << 16,
 
-//   /**
-//    * - AUTO_MODERATION_RULE_CREATE
-//    * - AUTO_MODERATION_RULE_UPDATE
-//    * - AUTO_MODERATION_RULE_DELETE
-//    */
-//   AutoModerationConfiguration = 1 << 20,
-//   /**
-//    * - AUTO_MODERATION_ACTION_EXECUTION
-//    */
-//   AutoModerationExecution = 1 << 21,
-// }
+  /**
+   * - AUTO_MODERATION_RULE_CREATE
+   * - AUTO_MODERATION_RULE_UPDATE
+   * - AUTO_MODERATION_RULE_DELETE
+   */
+  AutoModerationConfiguration = 1 << 20,
+  /**
+   * - AUTO_MODERATION_ACTION_EXECUTION
+   */
+  AutoModerationExecution = 1 << 21,
+}
 
-// // ALIASES JUST FOR BETTER UX IN THIS CASE
+// ALIASES JUST FOR BETTER UX IN THIS CASE
 
-// /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
-// export const Intents = GatewayIntents
+/** https://discord.com/developers/docs/topics/gateway#list-of-intents */
+export const Intents = GatewayIntents
 
-// /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype */
-// export enum InteractionResponseTypes {
-//   /** ACK a `Ping` */
-//   Pong = 1,
-//   /** Respond to an interaction with a message */
-//   ChannelMessageWithSource = 4,
-//   /** ACK an interaction and edit a response later, the user sees a loading state */
-//   DeferredChannelMessageWithSource = 5,
-//   /** For components, ACK an interaction and edit the original message later; the user does not see a loading state */
-//   DeferredUpdateMessage = 6,
-//   /** For components, edit the message the component was attached to */
-//   UpdateMessage = 7,
-//   /** For Application Command Options, send an autocomplete result */
-//   ApplicationCommandAutocompleteResult = 8,
-//   /** For Command or Component interactions, send a Modal response */
-//   Modal = 9,
-// }
+/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionresponsetype */
+export enum InteractionResponseTypes {
+  /** ACK a `Ping` */
+  Pong = 1,
+  /** Respond to an interaction with a message */
+  ChannelMessageWithSource = 4,
+  /** ACK an interaction and edit a response later, the user sees a loading state */
+  DeferredChannelMessageWithSource = 5,
+  /** For components, ACK an interaction and edit the original message later; the user does not see a loading state */
+  DeferredUpdateMessage = 6,
+  /** For components, edit the message the component was attached to */
+  UpdateMessage = 7,
+  /** For Application Command Options, send an autocomplete result */
+  ApplicationCommandAutocompleteResult = 8,
+  /** For Command or Component interactions, send a Modal response */
+  Modal = 9,
+}
 
 export enum SortOrderTypes {
   /** Sort forum posts by activity */
@@ -1443,8 +1437,8 @@ export type Camelize<T> = T extends any[]
     ? Array<Camelize<T[number]>>
     : T
   : T extends Record<any, any>
-    ? { [K in keyof T as CamelCase<K & string>]: Camelize<T[K]> }
-    : T
+  ? { [K in keyof T as CamelCase<K & string>]: Camelize<T[K]> }
+  : T
 
 // /** Non object primitives */
 // export type Primitive =

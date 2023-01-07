@@ -58,7 +58,7 @@ import type {
  */
 export function createBot(options: CreateBotOptions): Bot {
   if (!options.rest) options.rest = { token: options.token }
-  if (!options.gateway)
+  if (!options.gateway) {
     options.gateway = {
       token: options.token,
       events: {
@@ -79,6 +79,7 @@ export function createBot(options: CreateBotOptions): Bot {
         },
       },
     }
+  }
 
   options.rest.token = options.token
   options.gateway.token = options.token
