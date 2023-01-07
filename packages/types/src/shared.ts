@@ -144,14 +144,14 @@ export enum ApplicationFlags {
 // }
 
 // /** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-types */
-// export enum WebhookTypes {
-//   /** Incoming Webhooks can post messages to channels with a generated token */
-//   Incoming = 1,
-//   /** Channel Follower Webhooks are internal webhooks used with Channel Following to post new messages into channels */
-//   ChannelFollower,
-//   /** Application webhooks are webhooks used with Interactions */
-//   Application,
-// }
+export enum WebhookTypes {
+  /** Incoming Webhooks can post messages to channels with a generated token */
+  Incoming = 1,
+  /** Channel Follower Webhooks are internal webhooks used with Channel Following to post new messages into channels */
+  ChannelFollower,
+  /** Application webhooks are webhooks used with Interactions */
+  Application,
+}
 
 // /** https://discord.com/developers/docs/resources/channel#embed-object-embed-types */
 // export type EmbedTypes =
@@ -1443,8 +1443,8 @@ export type Camelize<T> = T extends any[]
     ? Array<Camelize<T[number]>>
     : T
   : T extends Record<any, any>
-    ? { [K in keyof T as CamelCase<K & string>]: Camelize<T[K]> }
-    : T
+  ? { [K in keyof T as CamelCase<K & string>]: Camelize<T[K]> }
+  : T
 
 // /** Non object primitives */
 // export type Primitive =
