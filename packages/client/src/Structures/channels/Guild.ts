@@ -6,10 +6,10 @@ import { Collection } from '@discordeno/utils'
 import type Client from '../../Client.js'
 import type { EditChannelOptions, EditChannelPositionOptions } from '../../typings.js'
 import type Guild from '../guilds/Guild.js'
+import type Member from '../guilds/Member.js'
 import Permission from '../Permission.js'
 import PermissionOverwrite from '../PermissionOverwrite.js'
 import Channel from './Channel.js'
-import type Member from './threads/Member.js'
 import ThreadChannel from './threads/Thread.js'
 
 export class GuildChannel extends Channel {
@@ -84,7 +84,7 @@ export class GuildChannel extends Channel {
     if (permission & BigInt(BitwisePermissionFlags.ADMINISTRATOR)) {
       return new Permission(BitwisePermissionFlags.ADMINISTRATOR)
     }
-    const channel = this instanceof ThreadChannel ? this.guild.channels.get(this.parentID) : this
+    const channel = this instanceof ThreadChannel ? this.guild.channels.get(this.parentID!) : this
     let overwrite = channel?.permissionOverwrites.get(this.guild.id)
     if (overwrite) {
       permission = (permission & ~overwrite.deny) | overwrite.allow

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import type { DiscordVoiceState } from "@discordeno/types"
-import Base from "../../Base.js"
-
+import type { DiscordVoiceState } from '@discordeno/types'
+import Base from '../../Base.js'
+import { VoiceStateToggle, VoiceStateToggles } from '../toggles/Voice.js'
 
 export class VoiceState extends Base {
   channelID: string | null = null

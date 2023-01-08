@@ -142,7 +142,7 @@ export class Shard extends EventEmitter {
 
   /** Tells the shard to connect */
   connect() {
-    if (this.ws && this.ws.readyState != WebSocket.CLOSED) {
+    if (this.ws && this.ws.readyState !== WebSocket.CLOSED) {
       this.emit('error', new Error('Existing connection detected'), this.id)
       return
     }
@@ -1756,7 +1756,7 @@ export class Shard extends EventEmitter {
         }
         const deletedThreads = (packet.d.channel_ids ?? guild.threads.map((c) => c.id)) // REVIEW Is this a good name?
           .filter((c) => !packet.d.threads.some((t) => t.id === c))
-          .map((id) => guild.threads.remove({ id }) || { id })
+          .map((id) => guild.threads.remove({ id }) ?? { id })
         const activeThreads = packet.d.threads.map((t) => guild.threads.update(t, this.client))
         const joinedThreadsMember = packet.d.members.map((m) => guild.threads.get(m.id)?.members.update(m, this.client))
 
@@ -1869,7 +1869,7 @@ export class Shard extends EventEmitter {
           break
         }
 
-        this.emit('stageInstanceDelete', guild.stageInstances.remove(packet.d) || new StageInstance(packet.d, this.client))
+        this.emit('stageInstanceDelete', guild.stageInstances.remove(packet.d) ?? new StageInstance(packet.d, this.client))
         break
       }
       case 'GUILD_INTEGRATIONS_UPDATE': {

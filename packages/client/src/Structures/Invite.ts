@@ -48,6 +48,7 @@ export class Invite {
     // super();
     this.client = client
     this.code = data.code
+    // @ts-expect-error js hacks
     this.channel = data.channel
 
     if (data.inviter) {
@@ -70,6 +71,7 @@ export class Invite {
             client.guilds.get(data.guild.id!)?.channels.set(channel.id, channel)
           }
         } else {
+          // @ts-expect-error js hacks
           this.guild = new Guild(data.guild, client)
         }
       }
@@ -79,8 +81,9 @@ export class Invite {
       if (data.stage_instance !== undefined) {
         this.stageInstance = {
           members: data.stage_instance.members.map((m) => {
+            // @ts-expect-error js hacks
             const member = new Member(m as DiscordMemberWithUser, this.guild, client)
-            this.guild.members.set(member.id, member)
+            this.guild?.members.set(member.id, member)
             return member
           }),
           participantCount: data.stage_instance.participant_count,

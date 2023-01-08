@@ -19,7 +19,7 @@ import {
   type GetMessagesOptions,
   type OverwriteTypes,
 } from '@discordeno/types'
-import { delay } from '@discordeno/utils'
+import { delay, getBotIdFromToken, iconBigintToHash, iconHashToBigInt } from '@discordeno/utils'
 import EventEmitter from 'events'
 import Base from './Base.js'
 import Collection from './Collection.js'
@@ -121,6 +121,7 @@ import ThreadMember from './Structures/channels/threads/Member.js'
 import type NewsThreadChannel from './Structures/channels/threads/NewsThread.js'
 import type PrivateThreadChannel from './Structures/channels/threads/PrivateThread.js'
 import type PublicThreadChannel from './Structures/channels/threads/PublicThread.js'
+import type ThreadChannel from './Structures/channels/threads/Thread.js'
 import GuildAuditLogEntry from './Structures/guilds/AuditLogEntry.js'
 import Guild from './Structures/guilds/Guild.js'
 import GuildIntegration from './Structures/guilds/Integration.js'
@@ -199,6 +200,9 @@ import type {
   WidgetData,
 } from './typings.js'
 
+// TODO: api version
+const API_VERSION = 10
+
 export class Client extends EventEmitter {
   /** The cleaned up version of the provided configurations for the client. */
   options: ParsedClientOptions
@@ -229,6 +233,11 @@ export class Client extends EventEmitter {
   /** Whether or not the client is fully ready. */
   ready = false
 
+  /** The reconnection delay from the last time it tried. */
+  lastReconnectDelay: number = 0
+  /** The amount of times it has already tried to reconnect. */
+  reconnectAttempts: number = 0
+
   constructor(token: string, options: ClientOptions) {
     super()
 
@@ -246,9 +255,12 @@ export class Client extends EventEmitter {
       maxShards: options.maxShards ?? 'auto',
       compress: false,
       // compress: options.compress ?? false,
+      firstShardID: options.firstShardID ?? 0,
       lastShardID: options.lastShardID,
       maxResumeAttempts: options.maxResumeAttempts ?? Infinity,
       intents: options.intents ?? 0,
+      autoreconnect: options.autoreconnect ?? true,
+      reconnectDelay: options.reconnectDelay ?? ((lastDelay, attempts) => Math.pow(attempts + 1, 0.7) * 20000),
     }
 
     this.token = token
@@ -266,6 +278,9 @@ export class Client extends EventEmitter {
     this.shards = new ShardManager(this, {
       concurrency: typeof this.options.shardConcurrency === 'number' ? this.options.shardConcurrency : undefined,
     })
+
+    // Class related annoyance bug hack
+    this.connect = this.connect.bind(this)
   }
 
   /** The amount of time in milliseconds that this client has been online for. */
@@ -346,9 +361,10 @@ export class Client extends EventEmitter {
 
       if (this.options.maxShards === 'auto') {
         this.options.maxShards = data.shards
-        if (this.options.lastShardID === undefined) {
-          this.options.lastShardID = data.shards - 1
-        }
+      }
+
+      if (this.options.lastShardID === undefined) {
+        this.options.lastShardID = data.shards - 1
       }
 
       if (this.options.shardConcurrency === 'auto' && data.session_start_limit && typeof data.session_start_limit.max_concurrency === 'number') {
@@ -363,7 +379,7 @@ export class Client extends EventEmitter {
         throw err
       }
 
-      const reconnectDelay = this.options.reconnectDelay(this.lastReconnectDelay, this.reconnectAttempts)
+      const reconnectDelay = await this.options.reconnectDelay(this.lastReconnectDelay, this.reconnectAttempts)
 
       await delay(reconnectDelay)
       this.lastReconnectDelay = reconnectDelay
@@ -796,7 +812,7 @@ export class Client extends EventEmitter {
         name: options.name,
         auto_archive_duration: options.autoArchiveDuration,
       },
-    }).then((channel) => Channel.from(channel, this))
+    }).then((channel) => Channel.from(channel, this) as unknown as NewsThreadChannel | PublicThreadChannel)
   }
 
   /** Create a thread without an existing message */
@@ -962,7 +978,7 @@ export class Client extends EventEmitter {
         video_quality_mode: options.videoQualityMode,
         permission_overwrites: options.permissionOverwrites,
       },
-    }).then((channel) => Channel.from(channel, this))
+    }).then((channel) => Channel.from(channel, this) as unknown as AnyGuildChannel)
   }
 
   /** Create a channel permission overwrite */
@@ -1458,7 +1474,7 @@ export class Client extends EventEmitter {
 
     if (guildID) {
       const guild = this.guilds.get(guildID)
-      if (guild) return guild.channels.get(channelID)
+      if (guild) return guild.channels.get(channelID) as unknown as AnyChannel
     }
 
     return this.privateChannels.get(id)!
@@ -1542,14 +1558,14 @@ export class Client extends EventEmitter {
       })
 
       const threads = data.threads.map((thread: DiscordChannel) => {
-        const channel = Channel.from(thread, this)
+        const channel = Channel.from(thread, this) as unknown as ThreadChannel
         guild?.threads.set(channel.id, channel)
         return channel
       })
 
       return {
-        entries: data.audit_log_entries.map((entry: DiscordAuditLogEntry) => new GuildAuditLogEntry(entry, guild)),
-        integrations: data.integrations.map((integration: DiscordIntegration) => new GuildIntegration(integration, guild)),
+        entries: guild ? data.audit_log_entries.map((entry: DiscordAuditLogEntry) => new GuildAuditLogEntry(entry, guild)) : [],
+        integrations: guild ? data.integrations.map((integration: DiscordIntegration) => new GuildIntegration(integration, guild)) : [],
         threads,
         users,
         webhooks: data.webhooks,
@@ -1626,9 +1642,9 @@ export class Client extends EventEmitter {
   /** Get a list of integrations for a guild */
   async getGuildIntegrations(guildID: BigString): Promise<GuildIntegration[]> {
     const guild = this.guilds.get(guildID)
-    return await this.get(GUILD_INTEGRATIONS(guildID)).then((integrations) =>
-      integrations.map((integration: DiscordIntegration) => new GuildIntegration(integration, guild)),
-    )
+    return await this.get(GUILD_INTEGRATIONS(guildID)).then((integrations) => {
+      return guild ? integrations.map((integration: DiscordIntegration) => new GuildIntegration(integration, guild)) : []
+    })
   }
 
   /** Get all invites in a guild */
@@ -1781,6 +1797,7 @@ export class Client extends EventEmitter {
 
         return await get((_before ?? !_after) && messages[messages.length - 1].id, _after && messages[0].id)
       }
+      // @ts-expect-error js hacks
       return await get(options.before, options.after)
     }
 
@@ -2096,7 +2113,8 @@ export class Client extends EventEmitter {
 
     return await this.get(GUILD_MEMBERS_SEARCH(guildID) + qs).then((members) => {
       const guild = this.guilds.get(guildID)
-      return members.map((member: DiscordMemberWithUser) => new Member(member, guild, this))
+
+      return guild ? members.map((member: DiscordMemberWithUser) => new Member(member, guild, this)) : []
     })
   }
 
@@ -2179,6 +2197,11 @@ export class Client extends EventEmitter {
   /** Converts a snowflake(discord id) into a timestamp. */
   snowflakeToTimestamp(snowflake: BigString): number {
     return Number(BigInt(snowflake) / 4194304n + 1420070400000n)
+  }
+
+  /** Get the bot id from the bot token. WARNING: Discord staff has mentioned this may not be stable forever. Use at your own risk. However, note for over 5 years this has never broken. */
+  getBotIdFromToken(token: string): string {
+    return getBotIdFromToken(token).toString()
   }
 
   /** Convert a icon hash into a bigint. */
@@ -2276,12 +2299,18 @@ export interface ClientOptions {
   maxShards?: 'auto' | number
   /** Whether or not to enable websocket compression. NOT REcOMMENDED. */
   compress?: boolean
+  /** The first shard id to use. */
+  firstShardID?: number
   /** The last shard id to use. */
   lastShardID?: number
   /** How many times to attempt resuming. */
   maxResumeAttempts?: number
   /** The intents to use when connection to gateway. */
   intents?: GatewayIntents
+  /** Whether or not to automatically reconnect to gateway. */
+  autoreconnect?: boolean
+  /** Handler to determine how many milliseconds to wait before reconnecting. */
+  reconnectDelay?: (lastDelay: number, attempts: number) => Promise<number> | number
 }
 
 export interface ParsedClientOptions {
@@ -2309,12 +2338,18 @@ export interface ParsedClientOptions {
   maxShards: 'auto' | number
   /** Whether or not to enable websocket compression. NOT REcOMMENDED. */
   compress: boolean
+  /** The first shard id to use. */
+  firstShardID: number
   /** The last shard id to use. */
   lastShardID?: number
   /** How many times to attempt resuming. */
   maxResumeAttempts: number
   /** The intents to use when connection to gateway. */
   intents: GatewayIntents
+  /** Whether or not to automatically reconnect to gateway. */
+  autoreconnect: boolean
+  /** Handler to determine how many milliseconds to wait before reconnecting. */
+  reconnectDelay: (lastDelay: number, attempts: number) => Promise<number> | number
 }
 
 // TODO: Switch bigstring to dd version in next dd release.

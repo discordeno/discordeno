@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-useless-call */
+import type { RequestGuildMembers } from '@discordeno/types'
 import {
   BitwisePermissionFlags,
   ChannelTypes,
@@ -226,7 +227,7 @@ export class Guild extends Base {
     if (data.threads) {
       for (const threadData of data.threads) {
         threadData.guild_id = this.id.toString()
-        const thread = Channel.from(threadData, client) as ThreadChannel
+        const thread = Channel.from(threadData, client) as unknown as ThreadChannel
         this.threads.set(thread.id, thread)
         client._threadGuildMap.set(thread.id, this.id)
       }

@@ -3,6 +3,7 @@ import Base from '../../Base.js'
 import type Client from '../../Client.js'
 import type { ImageFormat, ImageSize } from '../../Client.js'
 import { GUILD_DISCOVERY_SPLASH, GUILD_ICON, GUILD_SPLASH } from '../../Endpoints.js'
+import { GuildToggles } from '../toggles/Guild.js'
 
 export class GuildPreview extends Base {
   /** The client object */

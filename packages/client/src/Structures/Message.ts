@@ -109,7 +109,7 @@ export class Message extends Base {
 
     this.type = data.type || MessageTypes.Default
     this.timestamp = Date.parse(data.timestamp)
-    this.channel = this.client.getChannel(data.channel_id) || {
+    this.channel = this.client.getChannel(data.channel_id) ?? {
       id: data.channel_id,
     }
     this.content = ''
@@ -127,7 +127,7 @@ export class Message extends Base {
       this.messageReference = null
     }
 
-    this.flags = data.flags || 0
+    this.flags = data.flags ?? 0
 
     this.author = new User(data.author, client)
     if (!data.webhook_id) {
