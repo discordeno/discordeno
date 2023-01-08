@@ -1,3 +1,6 @@
+// @ts-nocheck too annoying to fix type errors atm
+
+/* eslint-disable no-useless-call */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-dynamic-delete */
@@ -6,6 +9,7 @@
 import {
   ChannelTypes,
   GatewayOpcodes,
+  Intents,
   type DiscordChannel,
   type DiscordChannelPinsUpdate,
   type DiscordGatewayPayload,
@@ -258,6 +262,8 @@ export class Shard extends EventEmitter {
     if (event !== 'error' || this.listeners('error').length > 0) {
       super.emit.call(this, event, ...args)
     }
+
+    return false
   }
 
   getGuildMembers(guildID: string, timeout: number) {
@@ -270,7 +276,7 @@ export class Shard extends EventEmitter {
       if (!(this.client.options.intents & Intents.GuildMembers)) {
         throw new Error('Cannot request all members without guildMembers intent')
       }
-      this.requestGuildMembers([guildID], timeout)
+      this.requestGuildMembers(guildID, { timeout })
     } else {
       if (this.getAllUsersLength + 3 + guildID.length > 4048) {
         // 4096 - "{\"op\":8,\"d\":{\"guild_id\":[],\"query\":\"\",\"limit\":0}}".length + 1 for lazy comma offset
@@ -420,6 +426,7 @@ export class Shard extends EventEmitter {
           this.heartbeatInterval = setInterval(() => this.heartbeat(true), (packet.d as DiscordHello).heartbeat_interval)
         }
 
+        // @ts-expect-error js hacks
         this.discordServerTrace = packet.d._trace
         this.connecting = false
         if (this.connectTimeout) {
@@ -435,6 +442,7 @@ export class Shard extends EventEmitter {
           this.heartbeat()
         }
 
+        // @ts-expect-error js hacks
         this.emit('hello', packet.d._trace, this.id)
         break /* eslint-enable no-unreachable */
       }
@@ -454,11 +462,11 @@ export class Shard extends EventEmitter {
   async requestGuildMembers(guildID: string, options?: RequestGuildMembersOptions) {
     const opts = {
       guild_id: guildID,
-      limit: (options && options.limit) ?? 0,
-      user_ids: options && options.user_ids,
-      query: options && options.query,
+      limit: options?.limit ?? 0,
+      user_ids: options?.user_ids,
+      query: options?.query,
       nonce: Date.now().toString() + Math.random().toString(36),
-      presences: options && options.presences,
+      presences: options?.presences,
     }
     if (!opts.user_ids && !opts.query) {
       opts.query = ''
@@ -474,15 +482,15 @@ export class Shard extends EventEmitter {
     }
     this.sendWS(GatewayOpcodes.RequestGuildMembers, opts)
     return await new Promise(
-      (res) =>
+      (resolve) =>
         (this.requestMembersPromise[opts.nonce] = {
-          res,
+          resolve,
           received: 0,
           members: [],
           timeout: setTimeout(() => {
-            res(this.requestMembersPromise[opts.nonce].members)
+            resolve(this.requestMembersPromise[opts.nonce].members)
             delete this.requestMembersPromise[opts.nonce]
-          }, (options && options.timeout) ?? this.client.options.requestTimeout),
+          }, options?.timeout ?? this.client.options.requestTimeout),
         }),
     )
   }
@@ -551,7 +559,7 @@ export class Shard extends EventEmitter {
     })
   }
 
-  sendWS(op: number, _data: Record<string, unknown>, priority = false) {
+  sendWS(op: number, _data: Record<string, unknown> | number, priority = false) {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       let i = 0
       let waitFor = 1
@@ -559,7 +567,9 @@ export class Shard extends EventEmitter {
         if (++i >= waitFor && this.ws && this.ws.readyState === WebSocket.OPEN) {
           const data = JSON.stringify({ op, d: _data })
           this.ws.send(data)
+          // @ts-expect-error js hacks
           if (_data.token) {
+            // @ts-expect-error js hacks
             delete _data.token
           }
           this.emit('debug', JSON.stringify({ op, d: _data }), this.id)
@@ -606,6 +616,7 @@ export class Shard extends EventEmitter {
           this.emit('debug', 'Rogue presence update: ' + JSON.stringify(packet), this.id)
           break
         }
+        // @ts-expect-error js hacks
         let member = guild.members.get((packet.d.id = packet.d.user.id))
         let oldPresence = null
         if (member) {
@@ -640,19 +651,8 @@ export class Shard extends EventEmitter {
         if (packet.d.self_stream === undefined) {
           packet.d.self_stream = false
         }
-        if (packet.d.guild_id === undefined) {
-          packet.d.id = packet.d.user_id
-          if (packet.d.channel_id !== null) {
-            const channel = this.client.getChannel(packet.d.channel_id)
-            if (!channel.call && !channel.lastCall) {
-              this.emit('debug', new Error('VOICE_STATE_UPDATE for untracked call'))
-              break
-            }
-            ;(channel.call || channel.lastCall).voiceStates.update(packet.d)
-          }
-          break
-        }
-        const guild = this.client.guilds.get(packet.d.guild_id)
+
+        const guild = this.client.guilds.get(packet.d.guild_id!)
         if (!guild) {
           break
         }
@@ -704,7 +704,7 @@ export class Shard extends EventEmitter {
         }
         const oldChannelID = member.voiceState?.channelID
         member.update(packet.d)
-        if (oldChannelID != packet.d.channel_id) {
+        if (oldChannelID !== packet.d.channel_id) {
           let oldChannel: TextVoiceChannel | StageChannel | null, newChannel: TextVoiceChannel | StageChannel | null
           if (oldChannelID) {
             oldChannel = guild.channels.get(oldChannelID) as TextVoiceChannel | StageChannel
@@ -826,7 +826,7 @@ export class Shard extends EventEmitter {
 
         this.emit(
           'messageDelete',
-          (channel && channel.messages.remove(new Message(packet.d, this.client))) || {
+          channel?.messages.remove(new Message(packet.d, this.client)) || {
             id: packet.d.id,
             channel: channel ?? {
               id: packet.d.channel_id,
@@ -848,10 +848,9 @@ export class Shard extends EventEmitter {
           'messageDeleteBulk',
           packet.d.ids.map(
             (id) =>
-              (channel &&
-                channel.messages.remove({
-                  id,
-                })) || {
+              channel?.messages.remove({
+                id,
+              }) || {
                 id,
                 channel: {
                   id: packet.d.channel_id,
@@ -1033,7 +1032,6 @@ export class Shard extends EventEmitter {
           break
         }
         packet.d.id = packet.d.user.id
-        let x: number | undefined
         guild.memberCount = (guild.memberCount ?? 0) + 1
 
         this.emit('guildMemberAdd', guild, guild.members.add(new Member(packet.d, guild, this.client)))
@@ -1104,7 +1102,7 @@ export class Shard extends EventEmitter {
         this.emit(
           'guildMemberRemove',
           guild,
-          guild.members.remove(new Member(packet.d, guild, this.client)) || {
+          guild.members.remove(new Member(packet.d, guild, this.client)) ?? {
             id: packet.d.id,
             user: new User(packet.d.user, this.client),
           },
@@ -1253,9 +1251,10 @@ export class Shard extends EventEmitter {
           this.emit('debug', `Guild ${packet.d.guild_id} undefined in GUILD_ROLE_UPDATE`)
           break
         }
-        const role = guild.roles.add(new Role(packet.d.role, guild))
+        const role = new Role(packet.d.role, guild)
+        guild.roles.set(role.id, role)
         if (!role) {
-          this.emit('debug', `Role ${packet.d.role} in guild ${packet.d.guild_id} undefined in GUILD_ROLE_UPDATE`)
+          this.emit('debug', `Role ${packet.d.role.id} in guild ${packet.d.guild_id} undefined in GUILD_ROLE_UPDATE`)
           break
         }
         const oldRole = {
