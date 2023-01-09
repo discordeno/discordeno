@@ -1,6 +1,6 @@
 import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
-import { createLeakyBucket, delay } from '@discordeno/utils'
+import { camelize, createLeakyBucket, delay } from '@discordeno/utils'
 import { inflateSync } from 'zlib'
 import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest } from './types.js'
 import { ShardSocketCloseCodes, ShardState } from './types.js'
@@ -39,9 +39,10 @@ export class Shard {
     refillAmount: 120
   })
 
-  constructor (shardId: number, connection: ShardGatewayConfig) {
-    this.id = shardId
-    this.connection = connection
+  constructor (options: ShardCreateOptions) {
+    this.id = options.id
+    this.connection = options.connection
+    this.events = options.events
 
     this.heart = {
       acknowledged: false,
@@ -457,7 +458,7 @@ export class Shard {
 
     // The necessary handling required for the Shards connection has been finished.
     // Now the event can be safely forwarded.
-    this.events.message?.(this, messageData)
+    this.events.message?.(this, camelize(messageData))
   }
 
   /**
@@ -546,6 +547,15 @@ export class Shard {
     // To go safe we should clear the related timeout too.
     clearTimeout(this.heart.timeoutId)
   }
+}
+
+export interface ShardCreateOptions {
+  /** The shard id */
+  id: number
+  /** The connection details */
+  connection: ShardGatewayConfig
+  /** The event handlers for events on the shard. */
+  events: ShardEvents
 }
 
 export default Shard

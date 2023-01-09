@@ -7,6 +7,7 @@ import type {
   DiscordChannel,
   DiscordCreateMessage,
   DiscordEmoji,
+  DiscordGetGatewayBot,
   DiscordMessage,
   DiscordUser,
   GetMessagesOptions,
@@ -56,6 +57,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         return url
       },
+
+      // Miscellaneous Endpoints
+      sessionInfo: () => '/gateway/bot',
+
       // Channel Endpoints
       channels: {
         webhooks: (channelId) => {
@@ -405,6 +410,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordChannel>(rest.routes.channels.channel(channelId))
     },
 
+    async getSessionInfo() {
+      return await rest.get<DiscordGetGatewayBot>(rest.routes.sessionInfo())
+    },
+
     async getUser(id) {
       return await rest.get<DiscordUser>(rest.routes.user(id))
     },
@@ -448,6 +457,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       )
     },
 
+    // TODO: make this a util, it does not fetch anything from the api
     getEmojiURL(emojiId, animated = false) {
       return `https://cdn.discordapp.com/emojis/${emojiId}.${animated ? 'gif' : 'png'}`
     },
@@ -557,6 +567,8 @@ export interface RestManager {
   invalidBucket: InvalidRequestBucket
   /** The routes that are available for this manager. */
   routes: {
+    /** Route to get a bots session info. */
+    sessionInfo: () => string
     /** A specific user route. */
     user: (id: BigString) => string
     /** Current bot user route. */
@@ -627,6 +639,8 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#get-channel}
    */
   getChannel: (channelId: BigString) => Promise<Camelize<DiscordChannel>>
+  /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */
+  getSessionInfo: () => Promise<Camelize<DiscordGetGatewayBot>>
   /**
    * Get a user's data from the api
    *

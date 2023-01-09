@@ -1,4 +1,4 @@
-import type { ActivityTypes, DiscordGatewayPayload, GatewayOpcodes, PresenceStatus } from '@discordeno/types'
+import type { ActivityTypes, Camelize, DiscordGatewayPayload, GatewayOpcodes, PresenceStatus } from '@discordeno/types'
 import type Shard from './Shard.js'
 
 export enum ShardState {
@@ -112,7 +112,7 @@ export interface ShardEvents {
   /** The shard has successfully been identified itself with Discord. */
   identified?: (shard: Shard) => unknown
   /** The shard has received a message from Discord. */
-  message?: (shard: Shard, payload: DiscordGatewayPayload) => unknown
+  message?: (shard: Shard, payload: Camelize<DiscordGatewayPayload>) => unknown
 }
 
 export enum ShardSocketCloseCodes {
