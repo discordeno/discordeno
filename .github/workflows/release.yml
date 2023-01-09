@@ -84,11 +84,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .turbo
-          key: ${{ runner.os }}-turbo-release-build-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-release-build-
+          key: ${{ runner.os }}-turbo-release-build-${{ matrix.package }}-${{ github.sha }}
       - name: build Package
-        run: yarn release-build --cache-dir=".turbo"
+        run: yarn release-build --cache-dir=".turbo" --filter=./packages/${{ matrix.package }}
       - name: Bump Package Version
         run: node ./scripts/bumpVersionByCommit.js ${{ matrix.package }}
       - uses: actions/setup-node@v3
