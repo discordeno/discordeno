@@ -4,31 +4,31 @@ import type {
   CreateGuildChannel,
   CreateGuildEmoji,
   CreateMessageOptions,
+  DeleteWebhookMessageOptions,
   DiscordApplication,
   DiscordChannel,
-  DiscordCreateGuildChannel,
   DiscordCreateMessage,
   DiscordCreateWebhook,
-  DiscordEditChannelPermissionOverridesOptions,
   DiscordEmoji,
   DiscordGetGatewayBot,
   DiscordInviteMetadata,
   DiscordMessage,
-  DiscordModifyChannel,
-  DiscordModifyGuildChannelPositions,
   DiscordStickerPack,
   DiscordUser,
   DiscordWebhook,
   EditChannelPermissionOverridesOptions,
+  ExecuteWebhook,
   GetMessagesOptions,
+  GetWebhookMessageOptions,
   InteractionCallbackData,
   ModifyChannel,
   ModifyGuildChannelPositions,
   ModifyGuildEmoji,
+  ModifyWebhook,
   WithReason,
 } from '@discordeno/types'
-import { ChannelTypes, InteractionResponseTypes } from '@discordeno/types'
-import { calculateBits, camelize, Collection, delay, urlToBase64 } from '@discordeno/utils'
+import { InteractionResponseTypes } from '@discordeno/types'
+import { camelize, delay, urlToBase64 } from '@discordeno/utils'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -133,14 +133,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       // Guild Endpoints
       guilds: {
+        channels: (guildId) => {
+          return `/guilds/${guildId}/channels`
+        },
         emoji: (guildId, emojiId) => {
           return `/guilds/${guildId}/emojis/${emojiId}`
         },
         emojis: (guildId) => {
           return `/guilds/${guildId}/emojis`
         },
-        channels: (guildId) => {
-          return `/guilds/${guildId}/channels`
+        webhooks: (guildId) => {
+          return `/guilds/${guildId}/webhooks`
         },
       },
 
@@ -487,9 +490,105 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       },
     },
 
+    emojis: {
+      async create(guildId, options) {
+        return await rest.createEmoji(guildId, options)
+      },
+
+      async delete(guildId, id, reason) {
+        return await rest.deleteEmoji(guildId, id, reason)
+      },
+
+      async edit(guildId, id, options) {
+        return await rest.editEmoji(guildId, id, options)
+      },
+
+      async get(guildId, emojiId) {
+        return await rest.getEmoji(guildId, emojiId)
+      },
+    },
+
     guilds: {
       async channels(id) {
         return await rest.getChannels(id)
+      },
+
+      async emojis(id) {
+        return await rest.getEmojis(id)
+      },
+    },
+
+    webhooks: {
+      async create(channelId, options) {
+        return await rest.createWebhook(channelId, options)
+      },
+
+      delete: {
+        with: {
+          async id(id, reason) {
+            return await rest.deleteWebhook(id, reason)
+          },
+
+          async token(id, token) {
+            return await rest.deleteWebhookWithToken(id, token)
+          },
+        },
+      },
+
+      edit: {
+        with: {
+          async id(webhookId, options) {
+            return await rest.editWebhook(webhookId, options)
+          },
+
+          async token(id, token, options) {
+            return await rest.editWebhookWithToken(id, token, options)
+          },
+        },
+      },
+
+      async execute(webhookId, token, options) {
+        return await rest.executeWebhook(webhookId, token, options)
+      },
+
+      get: {
+        async channel(channelId) {
+          return await rest.getChannelWebhooks(channelId)
+        },
+
+        async guild(guildId) {
+          return await rest.getGuildWebhooks(guildId)
+        },
+
+        async message(webhookId, token, messageId, options) {
+          return await rest.getWebhookMessage(webhookId, token, messageId, options)
+        },
+
+        with: {
+          async id(webhookId) {
+            return await rest.getWebhook(webhookId)
+          },
+
+          async token(webhookId, token) {
+            return await rest.getWebhookWithToken(webhookId, token)
+          },
+        },
+      },
+
+      messages: {
+        async delete(webhookId, token, messageId, options) {
+          return await rest.deleteWebhookMessage(webhookId, token, messageId, options)
+        },
+
+        edit: {
+          async normal(webhookId, token, messageId, options) {
+            return await rest.editWebhookMessage(webhookId, token, messageId, options)
+          },
+
+          async original(webhookId, token, options) {
+            return await rest.editOriginalWebhookMessage(webhookId, token, options)
+          },
+        },
       },
     },
 
@@ -498,49 +597,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async createChannel(guildId, options) {
-      return await rest.post<DiscordChannel>(
-        rest.routes.guilds.channels(guildId),
-        options
-          ? ({
-              name: options.name,
-              topic: options.topic,
-              bitrate: options.bitrate,
-              user_limit: options.userLimit,
-              rate_limit_per_user: options.rateLimitPerUser,
-              position: options.position,
-              parent_id: options.parentId?.toString(),
-              nsfw: options.nsfw,
-              permission_overwrites: options?.permissionOverwrites?.map((overwrite) => ({
-                id: overwrite.id.toString(),
-                type: overwrite.type,
-                allow: overwrite.allow ? calculateBits(overwrite.allow) : null,
-                deny: overwrite.deny ? calculateBits(overwrite.deny) : null,
-              })),
-              type: options?.type ?? ChannelTypes.GuildText,
-              default_sort_order: options.defaultSortOrder,
-              reason: options.reason,
-              default_auto_archive_duration: options?.defaultAutoArchiveDuration,
-              default_reaction_emoji: options.defaultReactionEmoji
-                ? {
-                    emoji_id: options.defaultReactionEmoji.emojiId
-                      ? options.defaultReactionEmoji.emojiId.toString()
-                      : options.defaultReactionEmoji.emojiId,
-                    emoji_name: options.defaultReactionEmoji.emojiName,
-                  }
-                : undefined,
-
-              available_tags: options.availableTags
-                ? options.availableTags.map((availableTag) => ({
-                    id: availableTag.id.toString(),
-                    name: availableTag.name,
-                    moderated: availableTag.moderated,
-                    emoji_name: availableTag.emojiName,
-                    emoji_id: availableTag.emojiId ? availableTag.emojiId.toString() : undefined,
-                  }))
-                : undefined,
-            } as DiscordCreateGuildChannel)
-          : {},
-      )
+      return await rest.post<DiscordChannel>(rest.routes.guilds.channels(guildId), options)
     },
 
     async deleteChannel(channelId, reason) {
@@ -552,68 +609,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editChannel(channelId, options) {
-      return await rest.patch<DiscordChannel>(rest.routes.channels.channel(channelId), {
-        name: options.name,
-        topic: options.topic,
-        bitrate: options.bitrate,
-        user_limit: options.userLimit,
-        rate_limit_per_user: options.rateLimitPerUser,
-        position: options.position,
-        parent_id: options.parentId === null ? null : options.parentId?.toString(),
-        nsfw: options.nsfw,
-        type: options.type,
-        archived: options.archived,
-        auto_archive_duration: options.autoArchiveDuration,
-        locked: options.locked,
-        invitable: options.invitable,
-        permission_overwrites: options.permissionOverwrites
-          ? options.permissionOverwrites?.map((overwrite) => ({
-              id: overwrite.id.toString(),
-              type: overwrite.type,
-              allow: overwrite.allow ? calculateBits(overwrite.allow) : null,
-              deny: overwrite.deny ? calculateBits(overwrite.deny) : null,
-            }))
-          : undefined,
-        available_tags: options.availableTags
-          ? options.availableTags.map((availableTag) => ({
-              id: availableTag.id,
-              name: availableTag.name,
-              moderated: availableTag.moderated,
-              emoji_id: availableTag.emojiId,
-              emoji_name: availableTag.emojiName,
-            }))
-          : undefined,
-        applied_tags: options.appliedTags?.map((appliedTag) => appliedTag.toString()),
-        default_reaction_emoji: options.defaultReactionEmoji
-          ? {
-              emoji_id: options.defaultReactionEmoji.emojiId,
-              emoji_name: options.defaultReactionEmoji.emojiName,
-            }
-          : undefined,
-        default_sort_order: options.defaultSortOrder,
-        reason: options.reason,
-      } as DiscordModifyChannel)
+      return await rest.patch<DiscordChannel>(rest.routes.channels.channel(channelId), options)
     },
 
     async editChannelPermissionOverrides(channelId, options) {
-      return await rest.put(rest.routes.channels.overwrite(channelId, options.id), {
-        allow: options.allow ? calculateBits(options.allow) : '0',
-        deny: options.deny ? calculateBits(options.deny) : '0',
-        type: options.type,
-        reason: options.reason,
-      } as DiscordEditChannelPermissionOverridesOptions)
+      return await rest.put(rest.routes.channels.overwrite(channelId, options.id), options)
     },
 
     async editChannelPositions(guildId, channelPositions) {
-      return await rest.patch(
-        rest.routes.guilds.channels(guildId),
-        channelPositions.map((channelPosition) => ({
-          id: channelPosition.id.toString(),
-          position: channelPosition.position,
-          lock_positions: channelPosition.lockPositions,
-          parent_id: channelPosition.parentId?.toString(),
-        })) as DiscordModifyGuildChannelPositions[],
-      )
+      return await rest.patch(rest.routes.guilds.channels(guildId), channelPositions)
     },
 
     async getChannelInvites(channelId) {
@@ -637,28 +641,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async createEmoji(guildId, options) {
-      return await rest.post<DiscordEmoji>(rest.routes.guilds.emojis(guildId), {
-        name: options.name,
-        image: options.image,
-        roles: options.roles?.map((role) => role.toString()),
-        reason: options.reason,
-      })
+      return await rest.post<DiscordEmoji>(rest.routes.guilds.emojis(guildId), options)
     },
 
     async deleteEmoji(guildId, id, reason) {
-      return await rest.delete(rest.routes.guilds.emoji(guildId, id), {
-        reason,
-      })
+      return await rest.delete(rest.routes.guilds.emoji(guildId, id), { reason })
     },
 
     async editEmoji(guildId, id, options) {
-      return await rest.patch<DiscordEmoji>(rest.routes.guilds.emoji(guildId, id), {
-        name: options.name,
-        // NEED TERNARY TO SUPPORT NULL AS VALID
-
-        roles: options.roles?.map((role) => role.toString()),
-        reason: options.reason,
-      })
+      return await rest.patch<DiscordEmoji>(rest.routes.guilds.emoji(guildId, id), options)
     },
 
     async getEmoji(guildId, emojiId) {
@@ -666,13 +657,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getEmojis(guildId) {
-      const emojis = await rest.get<DiscordEmoji[]>(rest.routes.guilds.emojis(guildId))
-
-      return new Collection(
-        emojis.map((emoji) => {
-          return [emoji.id!, emoji]
-        }),
-      )
+      return await rest.get<DiscordEmoji[]>(rest.routes.guilds.emojis(guildId))
     },
 
     // TODO: make this a util, it does not fetch anything from the api
@@ -705,13 +690,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getNitroStickerPacks() {
-      const stickerPacks = await rest.get<DiscordStickerPack[]>(rest.routes.nitroStickerPacks())
-
-      return new Collection(
-        stickerPacks.map((stickerPack) => {
-          return [BigInt(stickerPack.id), stickerPack]
-        }),
-      )
+      return await rest.get<DiscordStickerPack[]>(rest.routes.nitroStickerPacks())
     },
 
     async createWebhook(channelId, options) {
@@ -736,18 +715,52 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async editOriginalWebhookMessage(webhookId, token, options) {
       return await rest.patch<DiscordMessage>(rest.routes.webhooks.original(webhookId, token, options), {
-          type: InteractionResponseTypes.UpdateMessage,
-          data: options
+        type: InteractionResponseTypes.UpdateMessage,
+        data: options,
       })
+    },
+
+    async editWebhook(webhookId, options) {
+      return await rest.patch<DiscordWebhook>(rest.routes.webhookId(webhookId), options)
+    },
+
+    async editWebhookMessage(webhookId, token, messageId, options) {
+      return await rest.patch<DiscordMessage>(rest.routes.webhookMessage(webhookId, token, messageId, options), {
+        type: InteractionResponseTypes.UpdateMessage,
+        data: options,
+      })
+    },
+
+    async editWebhookWithToken(webhookId, token, options) {
+      return await rest.patch<DiscordWebhook>(rest.routes.webhook(webhookId, token), options)
+    },
+
+    async executeWebhook(webhookId, token, options) {
+      return await rest.post<DiscordMessage>(rest.routes.webhook(webhookId, token, options), options)
+    },
+
+    async getChannelWebhooks(channelId) {
+      return await rest.get<DiscordWebhook[]>(rest.routes.channels.webhooks(channelId))
+    },
+
+    async getGuildWebhooks(guildId) {
+      return await rest.get<DiscordWebhook[]>(rest.routes.guilds.webhooks(guildId))
+    },
+
+    async getWebhook(webhookId) {
+      return await rest.get<DiscordWebhook>(rest.routes.webhookId(webhookId))
+    },
+
+    async getWebhookMessage(webhookId, token, messageId, options) {
+      return await rest.get<DiscordMessage>(rest.routes.webhookMessage(webhookId, token, messageId, options))
+    },
+
+    async getWebhookWithToken(webhookId, token) {
+      return await rest.get<DiscordWebhook>(rest.routes.webhook(webhookId, token))
     },
   }
 
   return rest
-}
-
-export interface DeleteWebhookMessageOptions {
-  /** id of the thread the message is in */
-  threadId: BigString
 }
 
 export interface CreateRestManagerOptions {
@@ -832,12 +845,14 @@ export interface RestManager {
     }
     /** Routes for guild related endpoints. */
     guilds: {
+      /** Route for handling non-specific channels in a guild */
+      channels: (guildId: BigString) => string
       /** Route for handling a specific emoji. */
       emoji: (guildId: BigString, id: BigString) => string
       /** Route for handling non-specific emojis. */
       emojis: (guildId: BigString) => string
-      /** Route for handling non-specific channels in a guild */
-      channels: (guildId: BigString) => string
+      /** Route for handling non-specific webhooks in a guild */
+      webhooks: (guildId: BigString) => string
     }
   }
   /** Check the rate limits for a url or a bucket. */
@@ -1029,6 +1044,66 @@ export interface RestManager {
      */
     typing: (channelId: BigString) => Promise<void>
   }
+  /** Emoji related helper methods. */
+  emojis: {
+    /**
+     * Creates an emoji in a guild.
+     *
+     * @param guildId - The ID of the guild in which to create the emoji.
+     * @param options - The parameters for the creation of the emoji.
+     * @returns An instance of the created {@link DiscordEmoji}.
+     *
+     * @remarks
+     * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+     *
+     * Emojis have a maximum file size of 256 kilobits. Attempting to upload a larger emoji will cause the route to return 400 Bad Request.
+     *
+     * Fires a _Guild Emojis Update_ gateway event.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/emoji#create-guild-emoji}
+     */
+    create: (guildId: BigString, options: CreateGuildEmoji) => Promise<Camelize<DiscordEmoji>>
+    /**
+     * Deletes an emoji from a guild.
+     *
+     * @param guildId - The ID of the guild from which to delete the emoji.
+     * @param id - The ID of the emoji to delete.
+     *
+     * @remarks
+     * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+     *
+     * Fires a _Guild Emojis Update_ gateway event.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/emoji#delete-guild-emoji}
+     */
+    delete: (guildId: BigString, id: BigString, reason?: string) => Promise<void>
+    /**
+     * Edits an emoji.
+     *
+     * @param guildId - The ID of the guild in which to edit the emoji.
+     * @param id - The ID of the emoji to edit.
+     * @param options - The parameters for the edit of the emoji.
+     * @returns An instance of the updated {@link DiscordEmoji}.
+     *
+     * @remarks
+     * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+     *
+     * Fires a `Guild Emojis Update` gateway event.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/emoji#modify-guild-emoji}
+     */
+    edit: (guildId: BigString, id: BigString, options: ModifyGuildEmoji) => Promise<Camelize<DiscordEmoji>>
+    /**
+     * Gets an emoji by its ID.
+     *
+     * @param guildId - The ID of the guild from which to get the emoji.
+     * @param emojiId - The ID of the emoji to get.
+     * @returns An instance of {@link DiscordEmoji}.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/emoji#get-guild-emoji}
+     */
+    get: (guildId: BigString, emojiId: BigString) => Promise<Camelize<DiscordEmoji>>
+  }
   /** Guild related helper methods */
   guilds: {
     /**
@@ -1043,6 +1118,235 @@ export interface RestManager {
      * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-channels}
      */
     channels: (guildId: BigString) => Promise<Array<Camelize<DiscordChannel>>>
+    /**
+     * Gets the list of emojis for a guild.
+     *
+     * @param guildId - The ID of the guild which to get the emojis of.
+     * @returns A collection of {@link DiscordEmoji} objects assorted by emoji ID.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/emoji#list-guild-emojis}
+     */
+    emojis: (guildId: BigString) => Promise<Array<Camelize<DiscordEmoji>>>
+  }
+  /** Webhook related helper methods. */
+  webhooks: {
+    /**
+     * Creates a webhook.
+     *
+     * @param channelId - The ID of the channel to create the webhook in.
+     * @param options - The parameters for the creation of the webhook.
+     * @returns An instance of the created {@link DiscordWebhook}.
+     *
+     * @remarks
+     * Requires the `MANAGE_WEBHOOKS` permission.
+     *
+     * ⚠️ The webhook name must not contain the string 'clyde' (case-insensitive).
+     *
+     * Fires a _Webhooks Update_ gateway event.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/webhook#create-webhook}
+     */
+    create: (channelId: BigString, options: CreateWebhook) => Promise<Camelize<DiscordWebhook>>
+    /** Methods to delete a webhook. */
+    delete: {
+      with: {
+        /**
+         * Deletes a webhook.
+         *
+         * @param id - The ID of the webhook to delete.
+         *
+         * @remarks
+         * Requires the `MANAGE_WEBHOOKS` permission.
+         *
+         * Fires a _Webhooks Update_ gateway event.
+         *
+         * @see {@link https://discord.com/developers/docs/resources/webhook#delete-webhook}
+         */
+        id: (id: BigString, reason?: string) => Promise<void>
+        /**
+         * Deletes a webhook message using the webhook token, thereby bypassing the need for authentication + permissions.
+         *
+         * @param id - The ID of the webhook to delete the message belonging to.
+         * @param token - The webhook token, used to delete the webhook.
+         *
+         * @remarks
+         * Fires a _Message Delete_ gateway event.
+         *
+         * @see {@link https://discord.com/developers/docs/resources/webhook#delete-webhook-with-token}
+         */
+        token: (id: BigString, token: string) => Promise<void>
+      }
+    }
+    /** Methods related to editing a webhook. */
+    edit: {
+      with: {
+        /**
+         * Edits a webhook.
+         *
+         * @param webhookId - The ID of the webhook to edit.
+         * @returns An instance of the edited {@link DiscordWebhook}.
+         *
+         * @remarks
+         * Requires the `MANAGE_WEBHOOKS` permission.
+         *
+         * Fires a _Webhooks Update_ gateway event.
+         *
+         * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook}
+         */
+        id: (webhookId: BigString, options: ModifyWebhook) => Promise<Camelize<DiscordWebhook>>
+        /**
+         * Edits a webhook using the webhook token, thereby bypassing the need for authentication + permissions.
+         *
+         * @param webhookId - The ID of the webhook to edit.
+         * @param token - The webhook token, used to edit the webhook.
+         * @returns An instance of the edited {@link DiscordWebhook}.
+         *
+         * @remarks
+         * Requires the `MANAGE_WEBHOOKS` permission.
+         *
+         * Fires a _Webhooks Update_ gateway event.
+         *
+         * @see {@link https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token}
+         */
+        token: (webhookId: BigString, token: string, options: Omit<ModifyWebhook, 'channelId'>) => Promise<Camelize<DiscordWebhook>>
+      }
+    }
+
+    /**
+     * Executes a webhook, causing a message to be posted in the channel configured for the webhook.
+     *
+     * @param webhookId - The ID of the webhook to execute.
+     * @param token - The webhook token, used to execute the webhook.
+     * @param options - The parameters for the execution of the webhook.
+     * @returns An instance of the created {@link DiscordMessage}, or `undefined` if the {@link ExecuteWebhook.wait | wait} property of the {@link options} object parameter is set to `false`.
+     *
+     * @remarks
+     * If the webhook channel is a forum channel, you must provide a value for either `threadId` or `threadName`.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/webhook#execute-webhook}
+     */
+    execute: (webhookId: BigString, token: string, options: ExecuteWebhook) => Promise<Camelize<DiscordMessage> | undefined>
+    /** Methods related to getting webhooks. */
+    get: {
+      /**
+       * Gets a list of webhooks for a channel.
+       *
+       * @param channelId - The ID of the channel which to get the webhooks of.
+       * @returns A collection of {@link DiscordWebhook} objects assorted by webhook ID.
+       *
+       * @remarks
+       * Requires the `MANAGE_WEBHOOKS` permission.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/webhook#get-channel-webhooks}
+       */
+      channel: (channelId: BigString) => Promise<Array<Camelize<DiscordWebhook>>>
+      /**
+       * Gets the list of webhooks for a guild.
+       *
+       * @param guildId - The ID of the guild to get the list of webhooks for.
+       * @returns A collection of {@link DiscordWebhook} objects assorted by webhook ID.
+       *
+       * @remarks
+       * Requires the `MANAGE_WEBHOOKS` permission.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/webhook#get-guild-webhooks}
+       */
+      guild: (guildId: BigString) => Promise<Array<Camelize<DiscordWebhook>>>
+      /**
+       * Gets a webhook message by its ID.
+       *
+       * @param webhookId - The ID of the webhook to get a message of.
+       * @param token - The webhook token, used to get webhook messages.
+       * @param messageId - the ID of the webhook message to get.
+       * @param options - The parameters for the fetching of the message.
+       * @returns An instance of {@link DiscordMessage}.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook-message}
+       */
+      message: (webhookId: BigString, token: string, messageId: BigString, options?: GetWebhookMessageOptions) => Promise<Camelize<DiscordMessage>>
+      with: {
+        /**
+         * Gets a webhook by its ID.
+         *
+         * @param webhookId - The ID of the webhook to get.
+         * @returns An instance of {@link DiscordWebhook}.
+         *
+         * @remarks
+         * Requires the `MANAGE_WEBHOOKS` permission.
+         *
+         * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook}
+         */
+        id: (webhookId: BigString) => Promise<Camelize<DiscordWebhook>>
+        /**
+         * Gets a webhook using the webhook token, thereby bypassing the need for authentication + permissions.
+         *
+         * @param webhookId - The ID of the webhook to get.
+         * @param token - The webhook token, used to get the webhook.
+         * @returns An instance of {@link DiscordWebhook}.
+         *
+         * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook-with-token}
+         */
+        token: (webhookId: BigString, token: string) => Promise<Camelize<DiscordWebhook>>
+      }
+    }
+    /** Methods related to message sent by a webhook. */
+    messages: {
+      /**
+       * Deletes a webhook message.
+       *
+       * @param webhookId - The ID of the webhook to delete the message belonging to.
+       * @param token - The webhook token, used to manage the webhook.
+       * @param messageId - The ID of the message to delete.
+       * @param options - The parameters for the deletion of the message.
+       *
+       * @remarks
+       * Fires a _Message Delete_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/webhook#delete-webhook}
+       */
+      delete: (webhookId: BigString, token: string, messageId: BigString, options?: DeleteWebhookMessageOptions) => Promise<void>
+      /** Methods related to editing messages sent by a webhook. */
+      edit: {
+        /**
+         * Edits a webhook message.
+         *
+         * @param webhookId - The ID of the webhook to edit the message of.
+         * @param token - The webhook token, used to edit the message.
+         * @param messageId - The ID of the message to edit.
+         * @param options - The parameters for the edit of the message.
+         * @returns An instance of the edited {@link DiscordMessage}.
+         *
+         * @remarks
+         * Fires a _Message Update_ gateway event.
+         *
+         * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
+         */
+        normal: (
+          webhookId: BigString,
+          token: string,
+          messageId: BigString,
+          options: InteractionCallbackData & { threadId?: BigString },
+        ) => Promise<Camelize<DiscordMessage>>
+        /**
+         * Edits the original webhook message.
+         *
+         * @param webhookId - The ID of the webhook to edit the original message of.
+         * @param token - The webhook token, used to edit the message.
+         * @param options - The parameters for the edit of the message.
+         * @returns An instance of the edited {@link DiscordMessage}.
+         *
+         * @remarks
+         * Fires a _Message Update_ gateway event.
+         *
+         * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
+         */
+        original: (
+          webhookId: BigString,
+          token: string,
+          options: InteractionCallbackData & { threadId?: BigString },
+        ) => Promise<Camelize<DiscordMessage>>
+      }
+    }
   }
   /**
    * Gets a channel by its ID.
@@ -1287,7 +1591,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/emoji#list-guild-emojis}
    */
-  getEmojis: (guildId: BigString) => Promise<Collection<string, Camelize<DiscordEmoji>>>
+  getEmojis: (guildId: BigString) => Promise<Array<Camelize<DiscordEmoji>>>
   /**
    * Builds a URL to an emoji in the Discord CDN.
    *
@@ -1340,7 +1644,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#list-nitro-sticker-packs}
    */
-  getNitroStickerPacks: () => Promise<Collection<bigint, Camelize<DiscordStickerPack>>>
+  getNitroStickerPacks: () => Promise<Array<Camelize<DiscordStickerPack>>>
   /**
    * Creates a webhook.
    *
@@ -1415,6 +1719,132 @@ export interface RestManager {
     token: string,
     options: InteractionCallbackData & { threadId?: BigString },
   ) => Promise<Camelize<DiscordMessage>>
+  /**
+   * Edits a webhook.
+   *
+   * @param webhookId - The ID of the webhook to edit.
+   * @returns An instance of the edited {@link DiscordWebhook}.
+   *
+   * @remarks
+   * Requires the `MANAGE_WEBHOOKS` permission.
+   *
+   * Fires a _Webhooks Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook}
+   */
+  editWebhook: (webhookId: BigString, options: ModifyWebhook) => Promise<Camelize<DiscordWebhook>>
+  /**
+   * Edits a webhook message.
+   *
+   * @param webhookId - The ID of the webhook to edit the message of.
+   * @param token - The webhook token, used to edit the message.
+   * @param messageId - The ID of the message to edit.
+   * @param options - The parameters for the edit of the message.
+   * @returns An instance of the edited {@link DiscordMessage}.
+   *
+   * @remarks
+   * Fires a _Message Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
+   */
+  editWebhookMessage: (
+    webhookId: BigString,
+    token: string,
+    messageId: BigString,
+    options: InteractionCallbackData & { threadId?: BigString },
+  ) => Promise<Camelize<DiscordMessage>>
+  /**
+   * Edits a webhook using the webhook token, thereby bypassing the need for authentication + permissions.
+   *
+   * @param webhookId - The ID of the webhook to edit.
+   * @param token - The webhook token, used to edit the webhook.
+   * @returns An instance of the edited {@link DiscordWebhook}.
+   *
+   * @remarks
+   * Requires the `MANAGE_WEBHOOKS` permission.
+   *
+   * Fires a _Webhooks Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token}
+   */
+  editWebhookWithToken: (webhookId: BigString, token: string, options: Omit<ModifyWebhook, 'channelId'>) => Promise<Camelize<DiscordWebhook>>
+  /**
+   * Executes a webhook, causing a message to be posted in the channel configured for the webhook.
+   *
+   * @param webhookId - The ID of the webhook to execute.
+   * @param token - The webhook token, used to execute the webhook.
+   * @param options - The parameters for the execution of the webhook.
+   * @returns An instance of the created {@link DiscordMessage}, or `undefined` if the {@link ExecuteWebhook.wait | wait} property of the {@link options} object parameter is set to `false`.
+   *
+   * @remarks
+   * If the webhook channel is a forum channel, you must provide a value for either `threadId` or `threadName`.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/webhook#execute-webhook}
+   */
+  executeWebhook: (webhookId: BigString, token: string, options: ExecuteWebhook) => Promise<Camelize<DiscordMessage> | undefined>
+  /**
+   * Gets a list of webhooks for a channel.
+   *
+   * @param channelId - The ID of the channel which to get the webhooks of.
+   * @returns A collection of {@link DiscordWebhook} objects assorted by webhook ID.
+   *
+   * @remarks
+   * Requires the `MANAGE_WEBHOOKS` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/webhook#get-channel-webhooks}
+   */
+  getChannelWebhooks: (channelId: BigString) => Promise<Array<Camelize<DiscordWebhook>>>
+  /**
+   * Gets the list of webhooks for a guild.
+   *
+   * @param guildId - The ID of the guild to get the list of webhooks for.
+   * @returns A collection of {@link DiscordWebhook} objects assorted by webhook ID.
+   *
+   * @remarks
+   * Requires the `MANAGE_WEBHOOKS` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/webhook#get-guild-webhooks}
+   */
+  getGuildWebhooks: (guildId: BigString) => Promise<Array<Camelize<DiscordWebhook>>>
+  /**
+   * Gets a webhook by its ID.
+   *
+   * @param webhookId - The ID of the webhook to get.
+   * @returns An instance of {@link DiscordWebhook}.
+   *
+   * @remarks
+   * Requires the `MANAGE_WEBHOOKS` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook}
+   */
+  getWebhook: (webhookId: BigString) => Promise<Camelize<DiscordWebhook>>
+  /**
+   * Gets a webhook message by its ID.
+   *
+   * @param webhookId - The ID of the webhook to get a message of.
+   * @param token - The webhook token, used to get webhook messages.
+   * @param messageId - the ID of the webhook message to get.
+   * @param options - The parameters for the fetching of the message.
+   * @returns An instance of {@link DiscordMessage}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook-message}
+   */
+  getWebhookMessage: (
+    webhookId: BigString,
+    token: string,
+    messageId: BigString,
+    options?: GetWebhookMessageOptions,
+  ) => Promise<Camelize<DiscordMessage>>
+  /**
+   * Gets a webhook using the webhook token, thereby bypassing the need for authentication + permissions.
+   *
+   * @param webhookId - The ID of the webhook to get.
+   * @param token - The webhook token, used to get the webhook.
+   * @returns An instance of {@link DiscordWebhook}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook-with-token}
+   */
+  getWebhookWithToken: (webhookId: BigString, token: string) => Promise<Camelize<DiscordWebhook>>
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'
@@ -1464,4 +1894,41 @@ export interface RestRateLimitedPath {
   url: string
   resetTimestamp: number
   bucketId?: string
+}
+
+export interface WebhookMessageEditor {
+  /**
+   * Edits a webhook message.
+   *
+   * @param webhookId - The ID of the webhook to edit the message of.
+   * @param token - The webhook token, used to edit the message.
+   * @param messageId - The ID of the message to edit.
+   * @param options - The parameters for the edit of the message.
+   * @returns An instance of the edited {@link DiscordMessage}.
+   *
+   * @remarks
+   * Fires a _Message Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
+   */
+  call: (
+    webhookId: BigString,
+    token: string,
+    messageId: BigString,
+    options: InteractionCallbackData & { threadId?: BigString },
+  ) => Promise<Camelize<DiscordMessage>>
+  /**
+   * Edits the original webhook message.
+   *
+   * @param webhookId - The ID of the webhook to edit the original message of.
+   * @param token - The webhook token, used to edit the message.
+   * @param options - The parameters for the edit of the message.
+   * @returns An instance of the edited {@link DiscordMessage}.
+   *
+   * @remarks
+   * Fires a _Message Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
+   */
+  original: (webhookId: BigString, token: string, options: InteractionCallbackData & { threadId?: BigString }) => Promise<Camelize<DiscordMessage>>
 }

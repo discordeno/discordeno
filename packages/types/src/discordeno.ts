@@ -1,5 +1,17 @@
 import type { DiscordEmbed } from './discord'
-import type { AllowedMentionsTypes, BigString, ButtonStyles, Camelize, ChannelTypes, MessageComponentTypes, OverwriteTypes, PermissionStrings, SortOrderTypes, TextStyles, VideoQualityModes } from './shared'
+import type {
+  AllowedMentionsTypes,
+  BigString,
+  ButtonStyles,
+  Camelize,
+  ChannelTypes,
+  MessageComponentTypes,
+  OverwriteTypes,
+  PermissionStrings,
+  SortOrderTypes,
+  TextStyles,
+  VideoQualityModes,
+} from './shared'
 
 export interface CreateMessageOptions {
   /** The message contents (up to 2000 characters) */
@@ -58,25 +70,19 @@ export interface ActionRow {
   type: MessageComponentTypes.ActionRow
   /** The components in this row */
   components:
-  | [
-    | ButtonComponent
-    | InputTextComponent
-    | SelectMenuComponent
-    | SelectMenuChannelsComponent
-    | SelectMenuRolesComponent
-    | SelectMenuUsersComponent
-    | SelectMenuUsersAndRolesComponent
-  ]
-  | [ButtonComponent, ButtonComponent]
-  | [ButtonComponent, ButtonComponent, ButtonComponent]
-  | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]
-  | [
-    ButtonComponent,
-    ButtonComponent,
-    ButtonComponent,
-    ButtonComponent,
-    ButtonComponent
-  ]
+    | [
+        | ButtonComponent
+        | InputTextComponent
+        | SelectMenuComponent
+        | SelectMenuChannelsComponent
+        | SelectMenuRolesComponent
+        | SelectMenuUsersComponent
+        | SelectMenuUsersAndRolesComponent,
+      ]
+    | [ButtonComponent, ButtonComponent]
+    | [ButtonComponent, ButtonComponent, ButtonComponent]
+    | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]
+    | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#button-object-button-structure */
@@ -645,4 +651,49 @@ export interface ModifyGuildChannelPositions {
   lockPositions?: boolean | null
   /** The new parent ID for the channel that is moved */
   parentId?: BigString | null
+}
+
+export interface ModifyWebhook extends WithReason {
+  /** The default name of the webhook */
+  name?: string
+  /** Image for the default webhook avatar */
+  avatar?: BigString | null
+  /** The new channel id this webhook should be moved to */
+  channelId?: BigString
+}
+
+/** https://discord.com/developers/docs/resources/webhook#execute-webhook */
+export interface ExecuteWebhook {
+  /** Waits for server confirmation of message send before response, and returns the created message body (defaults to `false`; when `false` a message that is not saved does not return an error) */
+  wait?: boolean
+  /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. */
+  threadId?: BigString
+  /** Name of the thread to create (target channel has to be type of forum channel) */
+  threadName?: string
+  /** The message contents (up to 2000 characters) */
+  content?: string
+  /** Override the default username of the webhook */
+  username?: string
+  /** Override the default avatar of the webhook */
+  avatarUrl?: string
+  /** True if this is a TTS message */
+  tts?: boolean
+  /** The contents of the file being sent */
+  file?: FileContent | FileContent[]
+  /** Embedded `rich` content */
+  embeds?: Array<Camelize<DiscordEmbed>>
+  /** Allowed mentions for the message */
+  allowedMentions?: AllowedMentions
+  /** the components to include with the message */
+  components?: MessageComponents
+}
+
+export interface GetWebhookMessageOptions {
+  /** id of the thread the message is in */
+  threadId: BigString
+}
+
+export interface DeleteWebhookMessageOptions {
+  /** id of the thread the message is in */
+  threadId: BigString
 }
