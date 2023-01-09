@@ -663,7 +663,7 @@ export enum BitwisePermissionFlags {
   MODERATE_MEMBERS = 0x0000010000000000,
 }
 
-// export type PermissionStrings = keyof typeof BitwisePermissionFlags
+export type PermissionStrings = keyof typeof BitwisePermissionFlags
 
 // /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#voice */
 // export enum VoiceOpcodes {

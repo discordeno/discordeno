@@ -1,4 +1,4 @@
-import type { BigString } from './shared'
+import type { BigString, ChannelTypes, OverwriteTypes, PermissionStrings, SortOrderTypes, VideoQualityModes } from './shared'
 
 export interface CreateMessageOptions {
   /** The message contents (up to 2000 characters) */
@@ -258,16 +258,16 @@ export interface WithReason {
   reason?: string
 }
 
-// export interface OverwriteReadable {
-//   /** Role or user id */
-//   id: bigint
-//   /** Either 0 (role) or 1 (member) */
-//   type: OverwriteTypes
-//   /** Permission bit set */
-//   allow?: PermissionStrings[]
-//   /** Permission bit set */
-//   deny?: PermissionStrings[]
-// }
+export interface OverwriteReadable {
+  /** Role or user id */
+  id: bigint
+  /** Either 0 (role) or 1 (member) */
+  type: OverwriteTypes
+  /** Permission bit set */
+  allow?: PermissionStrings[]
+  /** Permission bit set */
+  deny?: PermissionStrings[]
+}
 
 // export interface GetGatewayBot {
 //   url: string
@@ -515,4 +515,127 @@ export interface RequestGuildMembers {
   userIds?: BigString[]
   /** Nonce to identify the Guild Members Chunk response */
   nonce?: string
+}
+
+export interface CreateGuildChannel extends WithReason {
+  /** Channel name (1-100 characters) */
+  name: string
+  /** The type of channel */
+  type?: ChannelTypes
+  /** Channel topic (0-1024 characters) */
+  topic?: string
+  /** The bitrate (in bits) of the voice channel (voice only) */
+  bitrate?: number
+  /** The user limit of the voice channel (voice only) */
+  userLimit?: number
+  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
+  rateLimitPerUser?: number
+  /** Sorting position of the channel */
+  position?: number
+  /** The channel's permission overwrites */
+  permissionOverwrites?: OverwriteReadable[]
+  /** Id of the parent category for a channel */
+  parentId?: BigString
+  /** Whether the channel is nsfw */
+  nsfw?: boolean
+  /** Default duration (in minutes) that clients (not the API) use for newly created threads in this channel, to determine when to automatically archive the thread after the last activity */
+  defaultAutoArchiveDuration?: number
+  /** Emoji to show in the add reaction button on a thread in a forum channel */
+  defaultReactionEmoji?: {
+    /** The id of a guild's custom emoji. Exactly one of `emojiId` and `emojiName` must be set. */
+    emojiId?: BigString | null
+    /** The unicode character of the emoji. Exactly one of `emojiId` and `emojiName` must be set. */
+    emojiName?: string | null
+  }
+  /** Set of tags that can be used in a forum channel */
+  availableTags?: Array<{
+    /** The id of the tag */
+    id: BigString
+    /** The name of the tag (0-20 characters) */
+    name: string
+    /** whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
+    moderated: boolean
+    /** The id of a guild's custom emoji */
+    emojiId: BigString
+    /** The unicode character of the emoji */
+    emojiName?: string
+  }>
+  /** the default sort order type used to order posts in forum channels */
+  defaultSortOrder?: SortOrderTypes | null
+}
+
+export interface ModifyChannel extends WithReason {
+  /** 1-100 character channel name */
+  name?: string
+  /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
+  type?: ChannelTypes
+  /** The position of the channel in the left-hand listing */
+  position?: number | null
+  /** 0-1024 character channel topic */
+  topic?: string | null
+  /** Whether the channel is nsfw */
+  nsfw?: boolean | null
+  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
+  rateLimitPerUser?: number | null
+  /** The bitrate (in bits) of the voice channel; 8000 to 96000 (128000 for VIP servers) */
+  bitrate?: number | null
+  /** The user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit */
+  userLimit?: number | null
+  /** Channel or category-specific permissions */
+  permissionOverwrites?: OverwriteReadable[] | null
+  /** Id of the new parent category for a channel */
+  parentId?: BigString | null
+  /** Voice region id for the voice channel, automatic when set to null */
+  rtcRegion?: string | null
+  /** The camera video quality mode of the voice channel */
+  videoQualityMode?: VideoQualityModes
+  /** Whether the thread is archived */
+  archived?: boolean
+  /** Duration in minutes to automatically archive the thread after recent activity */
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
+  /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
+  locked?: boolean
+  /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
+  invitable?: boolean
+
+  /** The set of tags that can be used in a GUILD_FORUM channel */
+  availableTags?: Array<{
+    /** The id of the tag */
+    id: string
+    /** The name of the tag (0-20 characters) */
+    name: string
+    /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
+    moderated: boolean
+    /** The id of a guild's custom emoji At most one of emoji_id and emoji_name may be set. */
+    emojiId: string
+    /** The unicode character of the emoji */
+    emojiName: string
+  }>
+  /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel; limited to 5 */
+  appliedTags?: BigString[]
+  /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */
+  defaultReactionEmoji?: {
+    /** The id of a guild's custom emoji */
+    emojiId: string
+    /** The unicode character of the emoji */
+    emojiName: string | null
+  }
+  /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
+  defaultThreadRateLimitPerUser?: number
+  /** the default sort order type used to order posts in forum channels */
+  defaultSortOrder?: SortOrderTypes | null
+}
+
+export interface EditChannelPermissionOverridesOptions extends OverwriteReadable, WithReason {}
+
+/** https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions */
+export interface ModifyGuildChannelPositions {
+  /** Channel id */
+  id: BigString
+  /** Sorting position of the channel */
+  position: number | null
+  /** Syncs the permission overwrites with the new parent, if moving to a new category */
+  lockPositions?: boolean | null
+  /** The new parent ID for the channel that is moved */
+  parentId?: BigString | null
 }

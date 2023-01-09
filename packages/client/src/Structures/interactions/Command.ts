@@ -59,7 +59,7 @@ export class CommandInteraction extends Interaction {
   constructor(info: DiscordInteraction, client: Client) {
     super(info, client)
 
-    this.channel = this.client.getChannel(info.channel_id!) || {
+    this.channel = this.client.getChannel(info.channel_id!) ?? {
       id: info.channel_id,
     }
 

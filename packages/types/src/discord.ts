@@ -1842,19 +1842,19 @@ export interface DiscordSessionStartLimit {
   max_concurrency: number
 }
 
-// /** https://discord.com/developers/docs/resources/invite#invite-metadata-object */
-// export interface DiscordInviteMetadata extends DiscordInvite {
-//   /** Number of times this invite has been used */
-//   uses: number
-//   /** Max number of times this invite can be used */
-//   max_uses: number
-//   /** Duration (in seconds) after which the invite expires */
-//   max_age: number
-//   /** Whether this invite only grants temporary membership */
-//   temporary: boolean
-//   /** When this invite was created */
-//   created_at: string
-// }
+/** https://discord.com/developers/docs/resources/invite#invite-metadata-object */
+export interface DiscordInviteMetadata extends DiscordInvite {
+  /** Number of times this invite has been used */
+  uses: number
+  /** Max number of times this invite can be used */
+  max_uses: number
+  /** Duration (in seconds) after which the invite expires */
+  max_age: number
+  /** Whether this invite only grants temporary membership */
+  temporary: boolean
+  /** When this invite was created */
+  created_at: string
+}
 
 /** https://discord.com/developers/docs/resources/invite#invite-object */
 export interface DiscordInvite {
@@ -2599,66 +2599,66 @@ export interface DiscordDefaultReactionEmoji {
 //   exempt_channels?: string[]
 // }
 
-// export interface DiscordModifyChannel {
-//   /** 1-100 character channel name */
-//   name?: string
-//   /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
-//   type?: ChannelTypes
-//   /** The position of the channel in the left-hand listing */
-//   position?: number | null
-//   /** 0-1024 character channel topic */
-//   topic?: string | null
-//   /** Whether the channel is nsfw */
-//   nsfw?: boolean | null
-//   /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
-//   rate_limit_per_user?: number | null
-//   /** The bitrate (in bits) of the voice channel; 8000 to 96000 (128000 for VIP servers) */
-//   bitrate?: number | null
-//   /** The user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit */
-//   user_limit?: number | null
-//   /** Channel or category-specific permissions */
-//   permission_overwrites?: DiscordOverwrite[] | null
-//   /** Id of the new parent category for a channel */
-//   parent_id?: string | null
-//   /** Voice region id for the voice channel, automatic when set to null */
-//   rtc_region?: string | null
-//   /** The camera video quality mode of the voice channel */
-//   video_quality_mode?: VideoQualityModes
-//   /** Whether the thread is archived */
-//   archived?: boolean
-//   /** Duration in minutes to automatically archive the thread after recent activity */
-//   auto_archive_duration?: 60 | 1440 | 4320 | 10080
-//   /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
-//   locked?: boolean
-//   /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
-//   invitable?: boolean
-//   /** The set of tags that can be used in a GUILD_FORUM channel */
-//   available_tags?: Array<{
-//     /** The id of the tag */
-//     id: string
-//     /** The name of the tag (0-20 characters) */
-//     name: string
-//     /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
-//     moderated: boolean
-//     /** The id of a guild's custom emoji At most one of emoji_id and emoji_name may be set. */
-//     emoji_id: string
-//     /** The unicode character of the emoji */
-//     emoji_name: string
-//   }>
-//   /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel; limited to 5 */
-//   applied_tags?: string[]
-//   /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */
-//   default_reaction_emoji?: {
-//     /** The id of a guild's custom emoji */
-//     emoji_id: string
-//     /** The unicode character of the emoji */
-//     emoji_name: string | null
-//   }
-//   /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
-//   default_thread_rate_limit_per_user?: number
-//   /** the default sort order type used to order posts in forum channels */
-//   default_sort_order?: SortOrderTypes | null
-// }
+export interface DiscordModifyChannel {
+  /** 1-100 character channel name */
+  name?: string
+  /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
+  type?: ChannelTypes
+  /** The position of the channel in the left-hand listing */
+  position?: number | null
+  /** 0-1024 character channel topic */
+  topic?: string | null
+  /** Whether the channel is nsfw */
+  nsfw?: boolean | null
+  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
+  rate_limit_per_user?: number | null
+  /** The bitrate (in bits) of the voice channel; 8000 to 96000 (128000 for VIP servers) */
+  bitrate?: number | null
+  /** The user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit */
+  user_limit?: number | null
+  /** Channel or category-specific permissions */
+  permission_overwrites?: DiscordOverwrite[] | null
+  /** Id of the new parent category for a channel */
+  parent_id?: string | null
+  /** Voice region id for the voice channel, automatic when set to null */
+  rtc_region?: string | null
+  /** The camera video quality mode of the voice channel */
+  video_quality_mode?: VideoQualityModes
+  /** Whether the thread is archived */
+  archived?: boolean
+  /** Duration in minutes to automatically archive the thread after recent activity */
+  auto_archive_duration?: 60 | 1440 | 4320 | 10080
+  /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
+  locked?: boolean
+  /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
+  invitable?: boolean
+  /** The set of tags that can be used in a GUILD_FORUM channel */
+  available_tags?: Array<{
+    /** The id of the tag */
+    id: string
+    /** The name of the tag (0-20 characters) */
+    name: string
+    /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
+    moderated: boolean
+    /** The id of a guild's custom emoji At most one of emoji_id and emoji_name may be set. */
+    emoji_id: string
+    /** The unicode character of the emoji */
+    emoji_name: string
+  }>
+  /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel; limited to 5 */
+  applied_tags?: string[]
+  /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */
+  default_reaction_emoji?: {
+    /** The id of a guild's custom emoji */
+    emoji_id: string
+    /** The unicode character of the emoji */
+    emoji_name: string | null
+  }
+  /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
+  default_thread_rate_limit_per_user?: number
+  /** the default sort order type used to order posts in forum channels */
+  default_sort_order?: SortOrderTypes | null
+}
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
 export interface DiscordCreateGuildEmoji {
@@ -2678,52 +2678,52 @@ export interface DiscordModifyGuildEmoji {
   roles?: string[] | null
 }
 
-// export interface DiscordCreateGuildChannel {
-//   /** Channel name (1-100 characters) */
-//   name: string
-//   /** The type of channel */
-//   type?: ChannelTypes
-//   /** Channel topic (0-1024 characters) */
-//   topic?: string
-//   /** The bitrate (in bits) of the voice channel (voice only) */
-//   bitrate?: number
-//   /** The user limit of the voice channel (voice only) */
-//   user_limit?: number
-//   /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
-//   rate_limit_per_user?: number
-//   /** Sorting position of the channel */
-//   position?: number
-//   /** The channel's permission overwrites */
-//   permission_overwrites?: DiscordOverwrite[]
-//   /** Id of the parent category for a channel */
-//   parent_id?: string
-//   /** Whether the channel is nsfw */
-//   nsfw?: boolean
-//   /** Default duration (in minutes) that clients (not the API) use for newly created threads in this channel, to determine when to automatically archive the thread after the last activity */
-//   default_auto_archive_duration?: number
-//   /** Emoji to show in the add reaction button on a thread in a forum channel */
-//   default_reaction_emoji?: {
-//     /** The id of a guild's custom emoji. Exactly one of `emojiId` and `emojiName` must be set. */
-//     emoji_id?: string | null
-//     /** The unicode character of the emoji. Exactly one of `emojiId` and `emojiName` must be set. */
-//     emoji_name?: string | null
-//   }
-//   /** Set of tags that can be used in a forum channel */
-//   available_tags?: Array<{
-//     /** The id of the tag */
-//     id: string
-//     /** The name of the tag (0-20 characters) */
-//     name: string
-//     /** whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
-//     moderated: boolean
-//     /** The id of a guild's custom emoji */
-//     emoji_id: string
-//     /** The unicode character of the emoji */
-//     emoji_name?: string
-//   }>
-//   /** the default sort order type used to order posts in forum channels */
-//   default_sort_order?: SortOrderTypes | null
-// }
+export interface DiscordCreateGuildChannel {
+  /** Channel name (1-100 characters) */
+  name: string
+  /** The type of channel */
+  type?: ChannelTypes
+  /** Channel topic (0-1024 characters) */
+  topic?: string
+  /** The bitrate (in bits) of the voice channel (voice only) */
+  bitrate?: number
+  /** The user limit of the voice channel (voice only) */
+  user_limit?: number
+  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
+  rate_limit_per_user?: number
+  /** Sorting position of the channel */
+  position?: number
+  /** The channel's permission overwrites */
+  permission_overwrites?: DiscordOverwrite[]
+  /** Id of the parent category for a channel */
+  parent_id?: string
+  /** Whether the channel is nsfw */
+  nsfw?: boolean
+  /** Default duration (in minutes) that clients (not the API) use for newly created threads in this channel, to determine when to automatically archive the thread after the last activity */
+  default_auto_archive_duration?: number
+  /** Emoji to show in the add reaction button on a thread in a forum channel */
+  default_reaction_emoji?: {
+    /** The id of a guild's custom emoji. Exactly one of `emojiId` and `emojiName` must be set. */
+    emoji_id?: string | null
+    /** The unicode character of the emoji. Exactly one of `emojiId` and `emojiName` must be set. */
+    emoji_name?: string | null
+  }
+  /** Set of tags that can be used in a forum channel */
+  available_tags?: Array<{
+    /** The id of the tag */
+    id: string
+    /** The name of the tag (0-20 characters) */
+    name: string
+    /** whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
+    moderated: boolean
+    /** The id of a guild's custom emoji */
+    emoji_id: string
+    /** The unicode character of the emoji */
+    emoji_name?: string
+  }>
+  /** the default sort order type used to order posts in forum channels */
+  default_sort_order?: SortOrderTypes | null
+}
 
 // export interface DiscordBulkDeleteMessages {
 //   messages: string[]
@@ -2971,26 +2971,26 @@ export interface DiscordCreateMessage {
 //   webhook_channel_id: string
 // }
 
-// export interface DiscordEditChannelPermissionOverridesOptions {
-//   /** Permission bit set */
-//   allow: string
-//   /** Permission bit set */
-//   deny: string
-//   /** Either 0 (role) or 1 (member) */
-//   type: OverwriteTypes
-// }
+export interface DiscordEditChannelPermissionOverridesOptions {
+  /** Permission bit set */
+  allow: string
+  /** Permission bit set */
+  deny: string
+  /** Either 0 (role) or 1 (member) */
+  type: OverwriteTypes
+}
 
-// /** https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions */
-// export interface DiscordModifyGuildChannelPositions {
-//   /** Channel id */
-//   id: string
-//   /** Sorting position of the channel */
-//   position: number | null
-//   /** Syncs the permission overwrites with the new parent, if moving to a new category */
-//   lock_positions?: boolean | null
-//   /** The new parent ID for the channel that is moved */
-//   parent_id?: string | null
-// }
+/** https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions */
+export interface DiscordModifyGuildChannelPositions {
+  /** Channel id */
+  id: string
+  /** Sorting position of the channel */
+  position: number | null
+  /** Syncs the permission overwrites with the new parent, if moving to a new category */
+  lock_positions?: boolean | null
+  /** The new parent ID for the channel that is moved */
+  parent_id?: string | null
+}
 
 // /** https://discord.com/developers/docs/resources/guild#create-guild-ban */
 // export interface DiscordCreateGuildBan {

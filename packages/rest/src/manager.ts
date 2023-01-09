@@ -1,18 +1,28 @@
 import type {
   BigString,
   Camelize,
+  CreateGuildChannel,
   CreateGuildEmoji,
   CreateMessageOptions,
   DiscordChannel,
+  DiscordCreateGuildChannel,
   DiscordCreateMessage,
+  DiscordEditChannelPermissionOverridesOptions,
   DiscordEmoji,
   DiscordGetGatewayBot,
+  DiscordInviteMetadata,
   DiscordMessage,
+  DiscordModifyChannel,
+  DiscordModifyGuildChannelPositions,
   DiscordUser,
+  EditChannelPermissionOverridesOptions,
   GetMessagesOptions,
-  ModifyGuildEmoji,
+  ModifyChannel,
+  ModifyGuildChannelPositions,
+  ModifyGuildEmoji
 } from '@discordeno/types'
-import { camelize, Collection, delay } from '@discordeno/utils'
+import { ChannelTypes } from '@discordeno/types'
+import { calculateBits, camelize, Collection, delay } from '@discordeno/utils'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -42,6 +52,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           return `/channels/${channelId}`
         },
 
+        invites: (channelId) => {
+          return `/channels/${channelId}/invites`
+        },
+
         message: (channelId, messageId) => {
           return `/channels/${channelId}/messages/${messageId}`
         },
@@ -66,15 +80,26 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
           return url
         },
+
+        overwrite: (channelId, overwriteId) => {
+          return `/channels/${channelId}/permissions/${overwriteId}`
+        },
+
+        typing: (channelId) => {
+          return `/channels/${channelId}/typing`
+        },
       },
 
       // Guild Endpoints
       guilds: {
-        emoji: (guildId: BigString, emojiId: BigString) => {
+        emoji: (guildId, emojiId) => {
           return `/guilds/${guildId}/emojis/${emojiId}`
         },
-        emojis: (guildId: BigString) => {
+        emojis: (guildId) => {
           return `/guilds/${guildId}/emojis`
+        },
+        channels: (guildId) => {
+          return `/guilds/${guildId}/channels`
         },
       },
 
@@ -357,8 +382,189 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return camelize(await rest.makeRequest('PATCH', url, body)) as Camelize<T>
     },
 
-    async getChannel(channelId) {
-      return await rest.get<DiscordChannel>(rest.routes.channels.channel(channelId))
+    async put<T = void>(url: string, body?: Record<string, any>) {
+      return camelize(await rest.makeRequest('PUT', url, body)) as Camelize<T>
+    },
+
+    channels: {
+      async get(id) {
+        return await rest.getChannel(id)
+      },
+
+      async create(guildId, options) {
+        return await rest.createChannel(guildId, options)
+      },
+
+      async delete(id, reason) {
+        return await rest.deleteChannel(id, reason)
+      },
+
+      async edit(id, options) {
+        return await rest.editChannel(id, options)
+      },
+
+      permissions: {
+        async edit(channelId, options) {
+          return await rest.editChannelPermissionOverrides(channelId, options)
+        },
+
+        async delete(channelId, id) {
+          return await rest.deleteChannelPermissionOverride(channelId, id)
+        },
+      },
+
+      async positions(guildId, channelPositions) {
+        return await rest.editChannelPositions(guildId, channelPositions)
+      },
+
+      async invites(id) {
+        return await rest.getChannelInvites(id)
+      },
+
+      async typing(id) {
+        return await rest.triggerTypingIndicator(id)
+      },
+    },
+
+    guilds: {
+      async channels(id) {
+        return await rest.getChannels(id)
+      },
+    },
+
+    async getChannel(id) {
+      return await rest.get<DiscordChannel>(rest.routes.channels.channel(id))
+    },
+
+    async createChannel(guildId, options) {
+      return await rest.post<DiscordChannel>(
+        rest.routes.guilds.channels(guildId),
+        options
+          ? ({
+              name: options.name,
+              topic: options.topic,
+              bitrate: options.bitrate,
+              user_limit: options.userLimit,
+              rate_limit_per_user: options.rateLimitPerUser,
+              position: options.position,
+              parent_id: options.parentId?.toString(),
+              nsfw: options.nsfw,
+              permission_overwrites: options?.permissionOverwrites?.map((overwrite) => ({
+                id: overwrite.id.toString(),
+                type: overwrite.type,
+                allow: overwrite.allow ? calculateBits(overwrite.allow) : null,
+                deny: overwrite.deny ? calculateBits(overwrite.deny) : null,
+              })),
+              type: options?.type ?? ChannelTypes.GuildText,
+              default_sort_order: options.defaultSortOrder,
+              reason: options.reason,
+              default_auto_archive_duration: options?.defaultAutoArchiveDuration,
+              default_reaction_emoji: options.defaultReactionEmoji
+                ? {
+                    emoji_id: options.defaultReactionEmoji.emojiId
+                      ? options.defaultReactionEmoji.emojiId.toString()
+                      : options.defaultReactionEmoji.emojiId,
+                    emoji_name: options.defaultReactionEmoji.emojiName,
+                  }
+                : undefined,
+
+              available_tags: options.availableTags
+                ? options.availableTags.map((availableTag) => ({
+                    id: availableTag.id.toString(),
+                    name: availableTag.name,
+                    moderated: availableTag.moderated,
+                    emoji_name: availableTag.emojiName,
+                    emoji_id: availableTag.emojiId ? availableTag.emojiId.toString() : undefined,
+                  }))
+                : undefined,
+            } as DiscordCreateGuildChannel)
+          : {},
+      )
+    },
+
+    async deleteChannel(channelId, reason) {
+      return await rest.delete(rest.routes.channels.channel(channelId), { reason })
+    },
+
+    async deleteChannelPermissionOverride(channelId, overwriteId, reason) {
+      return await rest.delete(rest.routes.channels.overwrite(channelId, overwriteId), reason ? { reason } : undefined)
+    },
+
+    async editChannel(channelId, options) {
+      return await rest.patch<DiscordChannel>(rest.routes.channels.channel(channelId), {
+        name: options.name,
+        topic: options.topic,
+        bitrate: options.bitrate,
+        user_limit: options.userLimit,
+        rate_limit_per_user: options.rateLimitPerUser,
+        position: options.position,
+        parent_id: options.parentId === null ? null : options.parentId?.toString(),
+        nsfw: options.nsfw,
+        type: options.type,
+        archived: options.archived,
+        auto_archive_duration: options.autoArchiveDuration,
+        locked: options.locked,
+        invitable: options.invitable,
+        permission_overwrites: options.permissionOverwrites
+          ? options.permissionOverwrites?.map((overwrite) => ({
+              id: overwrite.id.toString(),
+              type: overwrite.type,
+              allow: overwrite.allow ? calculateBits(overwrite.allow) : null,
+              deny: overwrite.deny ? calculateBits(overwrite.deny) : null,
+            }))
+          : undefined,
+        available_tags: options.availableTags
+          ? options.availableTags.map((availableTag) => ({
+              id: availableTag.id,
+              name: availableTag.name,
+              moderated: availableTag.moderated,
+              emoji_id: availableTag.emojiId,
+              emoji_name: availableTag.emojiName,
+            }))
+          : undefined,
+        applied_tags: options.appliedTags?.map((appliedTag) => appliedTag.toString()),
+        default_reaction_emoji: options.defaultReactionEmoji
+          ? {
+              emoji_id: options.defaultReactionEmoji.emojiId,
+              emoji_name: options.defaultReactionEmoji.emojiName,
+            }
+          : undefined,
+        default_sort_order: options.defaultSortOrder,
+        reason: options.reason,
+      } as DiscordModifyChannel)
+    },
+
+    async editChannelPermissionOverrides(channelId, options) {
+      return await rest.put(rest.routes.channels.overwrite(channelId, options.id), {
+        allow: options.allow ? calculateBits(options.allow) : '0',
+        deny: options.deny ? calculateBits(options.deny) : '0',
+        type: options.type,
+        reason: options.reason,
+      } as DiscordEditChannelPermissionOverridesOptions)
+    },
+
+    async editChannelPositions(guildId, channelPositions) {
+      return await rest.patch(
+        rest.routes.guilds.channels(guildId),
+        channelPositions.map((channelPosition) => ({
+          id: channelPosition.id.toString(),
+          position: channelPosition.position,
+          lock_positions: channelPosition.lockPositions,
+          parent_id: channelPosition.parentId?.toString(),
+        })) as DiscordModifyGuildChannelPositions[],
+      )
+    },
+
+    async getChannelInvites(channelId) {
+      return await rest.get<DiscordInviteMetadata[]>(rest.routes.channels.invites(channelId))
+    },
+
+    async getChannels(guildId) {
+      return await rest.get<DiscordChannel[]>(rest.routes.guilds.channels(guildId))
+    },
+
+    async triggerTypingIndicator(channelId) {
+      return await rest.post(rest.routes.channels.typing(channelId))
     },
 
     async getSessionInfo() {
@@ -473,10 +679,16 @@ export interface RestManager {
     channels: {
       /** Route for a specific channel. */
       channel: (channelId: BigString) => string
+      /** Route for a specific channel's invites. */
+      invites: (channelId: BigString) => string
       /** Route for a specific message */
       message: (channelId: BigString, id: BigString) => string
       /** Route for handling non-specific messages. */
       messages: (channelId: BigString, options?: GetMessagesOptions) => string
+      /** Route for handling a specific overwrite. */
+      overwrite: (channelId: BigString, overwriteId: BigString) => string
+      /** Route for handling typing indicators in a channel. */
+      typing: (channelId: BigString) => string
     }
     /** Routes for guild related endpoints. */
     guilds: {
@@ -484,6 +696,8 @@ export interface RestManager {
       emoji: (guildId: BigString, id: BigString) => string
       /** Route for handling non-specific emojis. */
       emojis: (guildId: BigString) => string
+      /** Route for handling non-specific channels in a guild */
+      channels: (guildId: BigString) => string
     }
   }
   /** Check the rate limits for a url or a bucket. */
@@ -503,13 +717,194 @@ export interface RestManager {
   /** Takes a request and processes it into a queue. */
   processRequest: (request: SendRequestOptions) => void
   /** Make a get request to the api */
-  get: <T = Record<string, unknown>>(url: string) => Promise<Camelize<T>>
+  get: <T = void>(url: string) => Promise<Camelize<T>>
   /** Make a post request to the api. */
-  post: <T = Record<string, unknown>>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
+  post: <T = void>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
+  /** Make a put request to the api. */
+  put: <T = void>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
   /** Make a delete request to the api. */
   delete: (url: string, body?: Record<string, any>) => Promise<void>
   /** Make a patch request to the api. */
-  patch: <T = Record<string, unknown>>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
+  patch: <T = void>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
+  /** Helper methods related to channels */
+  channels: {
+    /**
+     * Gets a channel by its ID.
+     *
+     * @param id - The ID of the channel to get.
+     * @returns An instance of {@link DiscordChannel}.
+     *
+     * @remarks
+     * If the channel is a thread, a {@link ThreadMember} object is included in the result.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/channel#get-channel}
+     */
+    get: (id: BigString) => Promise<Camelize<DiscordChannel>>
+    /**
+     * Creates a channel within a guild.
+     *
+     * @param guildId - The ID of the guild to create the channel within.
+     * @param options - The parameters for the creation of the channel.
+     * @returns An instance of the created {@link DiscordChannel}.
+     *
+     * @remarks
+     * Requires the `MANAGE_CHANNELS` permission.
+     *
+     * If setting permission overwrites, only the permissions the bot user has in the guild can be allowed or denied.
+     *
+     * Setting the `MANAGE_ROLES` permission is only possible for guild administrators.
+     *
+     * Fires a _Channel Create_ gateway event.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-channel}
+     */
+    create: (guildId: BigString, options: CreateGuildChannel) => Promise<Camelize<DiscordChannel>>
+    /**
+     * Deletes a channel from within a guild.
+     *
+     * @param channelId - The ID of the channel to delete.
+     * @returns An instance of the deleted {@link Channel}.
+     *
+     * @remarks
+     * For community guilds, the _Rules_, _Guidelines_ and _Community Update_ channels cannot be deleted.
+     *
+     * If the channel is a thread:
+     * - Requires the `MANAGE_THREADS` permission.
+     *
+     * - Fires a _Thread Delete_ gateway event.
+     *
+     * Otherwise:
+     * - Requires the `MANAGE_CHANNELS` permission.
+     *
+     * - ⚠️ Deleting a category channel does not delete its child channels.
+     *   Instead, they will have their `parent_id` property removed, and a `Channel Update` gateway event will fire for each of them.
+     *
+     * - Fires a _Channel Delete_ gateway event.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/channel#deleteclose-channel}
+     */
+    delete: (channelId: BigString, reason?: string) => Promise<void>
+    /**
+     * Edits a channel's settings.
+     *
+     * @param channelId - The ID of the channel to edit.
+     * @param options - The parameters for the edit of the channel.
+     * @returns An instance of the edited {@link DiscordChannel}.
+     *
+     * @remarks
+     * If editing a channel of type {@link ChannelTypes.GroupDm}:
+     * - Fires a _Channel Update_ gateway event.
+     *
+     * If editing a thread channel:
+     * - Requires the `MANAGE_THREADS` permission __unless__ if setting the `archived` property to `false` when the `locked` property is also `false`, in which case only the `SEND_MESSAGES` permission is required.
+     *
+     * - Fires a _Thread Update_ gateway event.
+     *
+     * If editing a guild channel:
+     * - Requires the `MANAGE_CHANNELS` permission.
+     *
+     * - If modifying permission overrides:
+     *   - Requires the `MANAGE_ROLES` permission.
+     *
+     *   - Only permissions the bot user has in the guild or parent channel can be allowed/denied __unless__ the bot user has a `MANAGE_ROLES` permission override in the channel.
+     *
+     * - If modifying a channel of type {@link ChannelTypes.GuildCategory}:
+     *     - Fires a _Channel Update_ gateway event for each child channel impacted in this change.
+     * - Otherwise:
+     *     - Fires a _Channel Update_ gateway event.
+     */
+    edit: (channelId: BigString, options: ModifyChannel) => Promise<Camelize<DiscordChannel>>
+    /** Permission related helpers in a channel */
+    permissions: {
+      /**
+       * Edits the permission overrides for a user or role in a channel.
+       *
+       * @param channelId - The ID of the channel to edit the permission overrides of.
+       * @param options - The permission override.
+       *
+       * @remarks
+       * Requires the `MANAGE_ROLES` permission.
+       *
+       * Only permissions the bot user has in the guild or parent channel can be allowed/denied __unless__ the bot user has a `MANAGE_ROLES` permission override in the channel.
+       *
+       * Fires a _Channel Update_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/channel#edit-channel-permissions}
+       */
+      edit: (channelId: BigString, options: EditChannelPermissionOverridesOptions) => Promise<void>
+      /**
+       * Deletes a permission override for a user or role in a channel.
+       *
+       * @param channelId - The ID of the channel to delete the permission override of.
+       * @param overwriteId - The ID of the permission override to delete.
+       *
+       * @remarks
+       * Requires the `MANAGE_ROLES` permission.
+       *
+       * Fires a _Channel Update_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/channel#delete-channel-permission}
+       */
+      delete: (channelId: BigString, overwriteId: BigString, reason?: string) => Promise<void>
+    }
+    /**
+     * Edits the positions of a set of channels in a guild.
+     *
+     * @param guildId - The ID of the guild in which to edit the positions of the channels.
+     * @param channelPositions - A set of objects defining the updated positions of the channels.
+     *
+     * @remarks
+     * Requires the `MANAGE_CHANNELS` permission.
+     *
+     * Fires a _Channel Update_ gateway event for every channel impacted in this change.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions}
+     */
+    positions: (guildId: BigString, channelPositions: ModifyGuildChannelPositions[]) => Promise<void>
+    /**
+     * Gets the list of invites for a channel.
+     *
+     * @param rest - The rest manager to use to make the request.
+     * @param channelId - The ID of the channel to get the invites of.
+     * @returns A collection of {@link DiscordInviteMetadata} objects assorted by invite code.
+     *
+     * @remarks
+     * Requires the `MANAGE_CHANNELS` permission.
+     *
+     * Only usable for guild channels.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/channel#get-channel-invites}
+     */
+    invites: (channelId: BigString) => Promise<Array<Camelize<DiscordInviteMetadata>>>
+    /**
+     * Triggers a typing indicator for the bot user.
+     *
+     * @param channelId - The ID of the channel in which to trigger the typing indicator.
+     *
+     * @remarks
+     * Generally, bots should _not_ use this route.
+     *
+     * Fires a _Typing Start_ gateway event.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/channel#trigger-typing-indicator}
+     */
+    typing: (channelId: BigString) => Promise<void>
+  }
+  /** Guild related helper methods */
+  guilds: {
+    /**
+     * Gets the list of channels for a guild.
+     *
+     * @param guildId - The ID of the guild to get the channels of.
+     * @returns A collection of {@link DiscordChannel} objects assorted by channel ID.
+     *
+     * @remarks
+     * Excludes threads.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-channels}
+     */
+    channels: (guildId: BigString) => Promise<Array<Camelize<DiscordChannel>>>
+  }
   /**
    * Gets a channel by its ID.
    *
@@ -522,6 +917,164 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#get-channel}
    */
   getChannel: (channelId: BigString) => Promise<Camelize<DiscordChannel>>
+  /**
+   * Creates a channel within a guild.
+   *
+   * @param guildId - The ID of the guild to create the channel within.
+   * @param options - The parameters for the creation of the channel.
+   * @returns An instance of the created {@link DiscordChannel}.
+   *
+   * @remarks
+   * Requires the `MANAGE_CHANNELS` permission.
+   *
+   * If setting permission overwrites, only the permissions the bot user has in the guild can be allowed or denied.
+   *
+   * Setting the `MANAGE_ROLES` permission is only possible for guild administrators.
+   *
+   * Fires a _Channel Create_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-channel}
+   */
+  createChannel: (guildId: BigString, options: CreateGuildChannel) => Promise<Camelize<DiscordChannel>>
+  /**
+   * Deletes a channel from within a guild.
+   *
+   * @param channelId - The ID of the channel to delete.
+   * @returns An instance of the deleted {@link Channel}.
+   *
+   * @remarks
+   * For community guilds, the _Rules_, _Guidelines_ and _Community Update_ channels cannot be deleted.
+   *
+   * If the channel is a thread:
+   * - Requires the `MANAGE_THREADS` permission.
+   *
+   * - Fires a _Thread Delete_ gateway event.
+   *
+   * Otherwise:
+   * - Requires the `MANAGE_CHANNELS` permission.
+   *
+   * - ⚠️ Deleting a category channel does not delete its child channels.
+   *   Instead, they will have their `parent_id` property removed, and a `Channel Update` gateway event will fire for each of them.
+   *
+   * - Fires a _Channel Delete_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#deleteclose-channel}
+   */
+  deleteChannel: (channelId: BigString, reason?: string) => Promise<void>
+  /**
+   * Deletes a permission override for a user or role in a channel.
+   *
+   * @param channelId - The ID of the channel to delete the permission override of.
+   * @param overwriteId - The ID of the permission override to delete.
+   *
+   * @remarks
+   * Requires the `MANAGE_ROLES` permission.
+   *
+   * Fires a _Channel Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#delete-channel-permission}
+   */
+  deleteChannelPermissionOverride: (channelId: BigString, overwriteId: BigString, reason?: string) => Promise<void>
+  /**
+   * Edits a channel's settings.
+   *
+   * @param channelId - The ID of the channel to edit.
+   * @param options - The parameters for the edit of the channel.
+   * @returns An instance of the edited {@link DiscordChannel}.
+   *
+   * @remarks
+   * If editing a channel of type {@link ChannelTypes.GroupDm}:
+   * - Fires a _Channel Update_ gateway event.
+   *
+   * If editing a thread channel:
+   * - Requires the `MANAGE_THREADS` permission __unless__ if setting the `archived` property to `false` when the `locked` property is also `false`, in which case only the `SEND_MESSAGES` permission is required.
+   *
+   * - Fires a _Thread Update_ gateway event.
+   *
+   * If editing a guild channel:
+   * - Requires the `MANAGE_CHANNELS` permission.
+   *
+   * - If modifying permission overrides:
+   *   - Requires the `MANAGE_ROLES` permission.
+   *
+   *   - Only permissions the bot user has in the guild or parent channel can be allowed/denied __unless__ the bot user has a `MANAGE_ROLES` permission override in the channel.
+   *
+   * - If modifying a channel of type {@link ChannelTypes.GuildCategory}:
+   *     - Fires a _Channel Update_ gateway event for each child channel impacted in this change.
+   * - Otherwise:
+   *     - Fires a _Channel Update_ gateway event.
+   */
+  editChannel: (channelId: BigString, options: ModifyChannel) => Promise<Camelize<DiscordChannel>>
+  /**
+   * Edits the permission overrides for a user or role in a channel.
+   *
+   * @param channelId - The ID of the channel to edit the permission overrides of.
+   * @param options - The permission override.
+   *
+   * @remarks
+   * Requires the `MANAGE_ROLES` permission.
+   *
+   * Only permissions the bot user has in the guild or parent channel can be allowed/denied __unless__ the bot user has a `MANAGE_ROLES` permission override in the channel.
+   *
+   * Fires a _Channel Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#edit-channel-permissions}
+   */
+  editChannelPermissionOverrides: (channelId: BigString, options: EditChannelPermissionOverridesOptions) => Promise<void>
+  /**
+   * Edits the positions of a set of channels in a guild.
+   *
+   * @param guildId - The ID of the guild in which to edit the positions of the channels.
+   * @param channelPositions - A set of objects defining the updated positions of the channels.
+   *
+   * @remarks
+   * Requires the `MANAGE_CHANNELS` permission.
+   *
+   * Fires a _Channel Update_ gateway event for every channel impacted in this change.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions}
+   */
+  editChannelPositions: (guildId: BigString, channelPositions: ModifyGuildChannelPositions[]) => Promise<void>
+  /**
+   * Gets the list of invites for a channel.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param channelId - The ID of the channel to get the invites of.
+   * @returns A collection of {@link DiscordInviteMetadata} objects assorted by invite code.
+   *
+   * @remarks
+   * Requires the `MANAGE_CHANNELS` permission.
+   *
+   * Only usable for guild channels.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#get-channel-invites}
+   */
+  getChannelInvites: (channelId: BigString) => Promise<Array<Camelize<DiscordInviteMetadata>>>
+  /**
+   * Gets the list of channels for a guild.
+   *
+   * @param guildId - The ID of the guild to get the channels of.
+   * @returns A collection of {@link DiscordChannel} objects assorted by channel ID.
+   *
+   * @remarks
+   * Excludes threads.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-channels}
+   */
+  getChannels: (guildId: BigString) => Promise<Array<Camelize<DiscordChannel>>>
+  /**
+   * Triggers a typing indicator for the bot user.
+   *
+   * @param channelId - The ID of the channel in which to trigger the typing indicator.
+   *
+   * @remarks
+   * Generally, bots should _not_ use this route.
+   *
+   * Fires a _Typing Start_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#trigger-typing-indicator}
+   */
+  triggerTypingIndicator: (channelId: BigString) => Promise<void>
   /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */
   getSessionInfo: () => Promise<Camelize<DiscordGetGatewayBot>>
   /**
@@ -638,7 +1191,7 @@ export interface RestManager {
   sendMessage: (channelId: BigString, options: CreateMessageOptions) => Promise<Camelize<DiscordMessage>>
 }
 
-export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH'
+export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'
 export type ApiVersions = 9 | 10
 
 export interface CreateRequestBodyOptions {
