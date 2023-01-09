@@ -5,7 +5,8 @@ on:
     branches:
       - main
       - node-migration
-    path:
+      - node-migration-clean
+    paths:
       - packages/**
       - .github/**
 
