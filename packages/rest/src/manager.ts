@@ -3,6 +3,7 @@ import type {
   Camelize,
   CreateGuildEmoji,
   CreateMessageOptions,
+  DiscordApplication,
   DiscordChannel,
   DiscordCreateMessage,
   DiscordEmoji,
@@ -11,8 +12,12 @@ import type {
   DiscordUser,
   GetMessagesOptions,
   ModifyGuildEmoji,
+  WithReason,
+  InteractionCallbackData
 } from '@discordeno/types'
-import { camelize, Collection, delay } from '@discordeno/utils'
+import { camelize, Collection, delay, urlToBase64 } from '@discordeno/utils'
+import type { DiscordCreateWebhook, DiscordStickerPack, DiscordWebhook } from '../../types/src/discord.js'
+import type { DiscordGetGatewayBot } from './../../types/dist/discord.d'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -33,11 +38,35 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     invalidBucket: createInvalidRequestBucket({}),
 
     routes: {
+      webhook: (webhookId, token, options) => {
+        let url = `/webhooks/${webhookId}/${token}?`
+
+        if (options) {
+          if (options?.wait !== undefined) url += `wait=${options.wait.toString()}`
+          if (options.threadId) url += `thread_id=${options.threadId}`
+        }
+
+        return url
+      },
+      webhookMessage: (webhookId, token, messageId, options) => {
+        let url = `/webhooks/${webhookId}/${token}/messages/${messageId}?`
+
+        if (options) {
+          if (options.threadId) url += `thread_id=${options.threadId}`
+        }
+
+        return url
+      },
+
       // Miscellaneous Endpoints
       sessionInfo: () => '/gateway/bot',
 
       // Channel Endpoints
       channels: {
+        webhooks: (channelId) => {
+          return `/channels/${channelId}/webhooks`
+        },
+
         channel: (channelId) => {
           return `/channels/${channelId}`
         },
@@ -81,6 +110,26 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       // User endpoints
       user(userId: BigString) {
         return `/users/${userId}`
+      },
+
+      userBot() {
+        return '/users/@me'
+      },
+
+      oauth2Application() {
+        return 'oauth2/applications/@me'
+      },
+
+      gatewayBot() {
+        return '/gateway/bot'
+      },
+
+      nitroStickerPacks() {
+        return '/sticker-packs'
+      },
+
+      webhookId: (webhookId: BigString) => {
+        return `/webhooks/${webhookId}`
       },
     },
 
@@ -419,9 +468,62 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         // TODO: other options
       } as DiscordCreateMessage)
     },
+
+    async editBotProfile(options) {
+      const avatar = options?.botAvatarURL ? await urlToBase64(options?.botAvatarURL) : options?.botAvatarURL
+
+      return await rest.patch<DiscordUser>(rest.routes.userBot(), {
+        username: options.username?.trim(),
+        avatar,
+      })
+    },
+
+    async getApplicationInfo() {
+      return await rest.get<DiscordApplication>(rest.routes.oauth2Application())
+    },
+
+    async getGatewayBot() {
+      return await rest.get<DiscordGetGatewayBot>(rest.routes.gatewayBot())
+    },
+
+    async getNitroStickerPacks() {
+      const stickerPacks = await rest.get<DiscordStickerPack[]>(rest.routes.nitroStickerPacks())
+
+      return new Collection(
+        stickerPacks.map((stickerPack) => {
+          return [BigInt(stickerPack.id), stickerPack]
+        }),
+      )
+    },
+
+    async createWebhook(channelId, options) {
+      return await rest.post<DiscordWebhook>(rest.routes.channels.webhooks(channelId), {
+        name: options.name,
+        avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
+        reason: options.reason,
+      } as DiscordCreateWebhook)
+    },
+
+    async deleteWebhook(webhookId, reason) {
+      return await rest.delete(rest.routes.webhookId(webhookId), { reason })
+    },
+
+    async deleteWebhookMessage(webhookId, token, messageId, options) {
+      return await rest.delete(rest.routes.webhookMessage(webhookId, token, messageId, options))
+    },
+
+    async deleteWebhookWithToken(webhookId, token) {
+      return await rest.delete(rest.routes.webhook(webhookId, token))
+    },
+    
   }
 
   return rest
+}
+
+export interface DeleteWebhookMessageOptions {
+  /** id of the thread the message is in */
+  threadId: BigString
 }
 
 export interface CreateRestManagerOptions {
@@ -469,8 +571,23 @@ export interface RestManager {
     sessionInfo: () => string
     /** A specific user route. */
     user: (id: BigString) => string
+    /** Current bot user route. */
+    userBot: () => string
+    // OAuth2
+    oauth2Application: () => string
+    // Gateway Bot
+    gatewayBot: () => string
+    // Nitro Sticker Packs
+    nitroStickerPacks: () => string
+    // Get a Webhook
+    webhookId: (webhookId: BigString) => string
+    // Send a Message through a Webhook
+    webhookMessage: (webhookId: BigString, token: string, messageId: BigString, options?: { threadId?: BigString }) => string
+    webhook: (webhookId: BigString, token: string, options?: { wait?: boolean; threadId?: BigString }) => string
     /** Routes for channel related endpoints. */
     channels: {
+      // Get a Channels Webhooks
+      webhooks: (channelId: BigString) => string
       /** Route for a specific channel. */
       channel: (channelId: BigString) => string
       /** Route for a specific message */
@@ -636,10 +753,123 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#create-message}
    */
   sendMessage: (channelId: BigString, options: CreateMessageOptions) => Promise<Camelize<DiscordMessage>>
+  /**
+   * Modifies the bot's username or avatar.
+   * NOTE: username: if changed may cause the bot's discriminator to be randomized.
+   */
+  editBotProfile: (options: { username?: string; botAvatarURL?: string | null }) => Promise<Camelize<DiscordUser>>
+
+  /** Get the applications info */
+  getApplicationInfo: () => Promise<Camelize<DiscordApplication>>
+
+  /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */
+  getGatewayBot: () => Promise<Camelize<DiscordGetGatewayBot>>
+
+  /**
+   * Returns the list of sticker packs available to Nitro subscribers.
+   *
+   * @param bot The bot instance to use to make the request.
+   * @returns A collection of {@link StickerPack} objects assorted by sticker ID.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/sticker#list-nitro-sticker-packs}
+   */
+  getNitroStickerPacks: () => Promise<Collection<bigint, Camelize<DiscordStickerPack>>>
+
+  /**
+   * Creates a webhook.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param channelId - The ID of the channel to create the webhook in.
+   * @param options - The parameters for the creation of the webhook.
+   * @returns An instance of the created {@link DiscordWebhook}.
+   *
+   * @remarks
+   * Requires the `MANAGE_WEBHOOKS` permission.
+   *
+   * ⚠️ The webhook name must not contain the string 'clyde' (case-insensitive).
+   *
+   * Fires a _Webhooks Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/webhook#create-webhook}
+   */
+  createWebhook: (channelId: BigString, options: CreateWebhook) => Promise<Camelize<DiscordWebhook>>
+
+  /**
+   * Deletes a webhook.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param webhookId - The ID of the webhook to delete.
+   *
+   * @remarks
+   * Requires the `MANAGE_WEBHOOKS` permission.
+   *
+   * Fires a _Webhooks Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/webhook#delete-webhook}
+   */
+  deleteWebhook: (webhookId: BigString, reason?: string) => Promise<void>
+
+  /**
+   * Deletes a webhook message.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param webhookId - The ID of the webhook to delete the message belonging to.
+   * @param token - The webhook token, used to manage the webhook.
+   * @param messageId - The ID of the message to delete.
+   * @param options - The parameters for the deletion of the message.
+   *
+   * @remarks
+   * Fires a _Message Delete_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/webhook#delete-webhook}
+   */
+  deleteWebhookMessage: (webhookId: BigString, token: string, messageId: BigString, options?: DeleteWebhookMessageOptions) => Promise<void>
+
+  /**
+   * Deletes a webhook message using the webhook token, thereby bypassing the need for authentication + permissions.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param webhookId - The ID of the webhook to delete the message belonging to.
+   * @param token - The webhook token, used to delete the webhook.
+   *
+   * @remarks
+   * Fires a _Message Delete_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/webhook#delete-webhook-with-token}
+   */
+  deleteWebhookWithToken: (webhookId: BigString, token: string) => Promise<void>
+
+  /**
+ * Edits the original webhook message.
+ *
+ * @param rest - The rest manager to use to make the request.
+ * @param webhookId - The ID of the webhook to edit the original message of.
+ * @param token - The webhook token, used to edit the message.
+ * @param options - The parameters for the edit of the message.
+ * @returns An instance of the edited {@link DiscordMessage}.
+ *
+ * @remarks
+ * Fires a _Message Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
+ */
+ editOriginalWebhookMessage: (
+  webhookId: BigString,
+  token: string,
+  options: InteractionCallbackData & { threadId?: BigString }
+) => Promise<Camelize<DiscordMessage>> 
+
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH'
 export type ApiVersions = 9 | 10
+
+export interface CreateWebhook extends WithReason {
+  /** Name of the webhook (1-80 characters) */
+  name: string
+  /** Image url for the default webhook avatar */
+  avatar?: string | null
+}
 
 export interface CreateRequestBodyOptions {
   headers?: Record<string, string>

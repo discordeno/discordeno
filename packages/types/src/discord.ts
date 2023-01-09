@@ -1,5 +1,6 @@
 // import type { FileContent } from './discordeno.js'
-// import type {
+import type { WebhookTypes } from './shared.js'
+
 //   ActivityTypes,
 //   AllowedMentionsTypes,
 //   ApplicationCommandOptionTypes,
@@ -42,8 +43,6 @@
 //   VerificationLevels,
 //   VideoQualityModes,
 //   VisibilityTypes,
-//   WebhookTypes
-// } from './shared.js'
 
 import type {
   ActivityTypes,
@@ -506,64 +505,64 @@ export interface DiscordAttachment {
   ephemeral?: boolean
 }
 
-// /** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure */
-// export type DiscordWebhook = DiscordIncomingWebhook | DiscordApplicationWebhook
+/** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure */
+export type DiscordWebhook = DiscordIncomingWebhook | DiscordApplicationWebhook
 
-// export interface DiscordIncomingWebhook {
-//   /** The type of the webhook */
-//   type: WebhookTypes
-//   /** The secure token of the webhook (returned for Incoming Webhooks) */
-//   token?: string
-//   /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
-//   url?: string
+export interface DiscordIncomingWebhook {
+  /** The type of the webhook */
+  type: WebhookTypes
+  /** The secure token of the webhook (returned for Incoming Webhooks) */
+  token?: string
+  /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
+  url?: string
 
-//   /** The id of the webhook */
-//   id: string
-//   /** The guild id this webhook is for */
-//   guild_id?: string
-//   /** The channel id this webhook is for */
-//   channel_id: string
-//   /** The user this webhook was created by (not returned when getting a webhook with its token) */
-//   user?: DiscordUser
-//   /** The default name of the webhook */
-//   name: string | null
-//   /** The default user avatar hash of the webhook */
-//   avatar: string | null
-//   /** The bot/OAuth2 application that created this webhook */
-//   application_id: string | null
-//   /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks) */
-//   source_guild?: Partial<DiscordGuild>
-//   /** The channel that this webhook is following (returned for Channel Follower Webhooks) */
-//   source_channel?: Partial<DiscordChannel>
-// }
+  /** The id of the webhook */
+  id: string
+  /** The guild id this webhook is for */
+  guild_id?: string
+  /** The channel id this webhook is for */
+  channel_id: string
+  /** The user this webhook was created by (not returned when getting a webhook with its token) */
+  user?: DiscordUser
+  /** The default name of the webhook */
+  name: string | null
+  /** The default user avatar hash of the webhook */
+  avatar: string | null
+  /** The bot/OAuth2 application that created this webhook */
+  application_id: string | null
+  /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks) */
+  source_guild?: Partial<DiscordGuild>
+  /** The channel that this webhook is following (returned for Channel Follower Webhooks) */
+  source_channel?: Partial<DiscordChannel>
+}
 
-// export interface DiscordApplicationWebhook {
-//   /** The type of the webhook */
-//   type: WebhookTypes.Application
-//   /** The secure token of the webhook (returned for Incoming Webhooks) */
-//   token?: string
-//   /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
-//   url?: string
+export interface DiscordApplicationWebhook {
+  /** The type of the webhook */
+  type: WebhookTypes.Application
+  /** The secure token of the webhook (returned for Incoming Webhooks) */
+  token?: string
+  /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
+  url?: string
 
-//   /** The id of the webhook */
-//   id: string
-//   /** The guild id this webhook is for */
-//   guild_id?: string | null
-//   /** The channel id this webhook is for */
-//   channel_id?: string | null
-//   /** The user this webhook was created by (not returned when getting a webhook with its token) */
-//   user?: DiscordUser
-//   /** The default name of the webhook */
-//   name: string | null
-//   /** The default user avatar hash of the webhook */
-//   avatar: string | null
-//   /** The bot/OAuth2 application that created this webhook */
-//   application_id: string | null
-//   /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks), field will be absent if the webhook creator has since lost access to the guild where the followed channel resides */
-//   source_guild?: Partial<DiscordGuild>
-//   /** The channel that this webhook is following (returned for Channel Follower Webhooks), field will be absent if the webhook creator has since lost access to the guild where the followed channel resides */
-//   source_channel?: Partial<DiscordChannel>
-// }
+  /** The id of the webhook */
+  id: string
+  /** The guild id this webhook is for */
+  guild_id?: string | null
+  /** The channel id this webhook is for */
+  channel_id?: string | null
+  /** The user this webhook was created by (not returned when getting a webhook with its token) */
+  user?: DiscordUser
+  /** The default name of the webhook */
+  name: string | null
+  /** The default user avatar hash of the webhook */
+  avatar: string | null
+  /** The bot/OAuth2 application that created this webhook */
+  application_id: string | null
+  /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks), field will be absent if the webhook creator has since lost access to the guild where the followed channel resides */
+  source_guild?: Partial<DiscordGuild>
+  /** The channel that this webhook is following (returned for Channel Follower Webhooks), field will be absent if the webhook creator has since lost access to the guild where the followed channel resides */
+  source_channel?: Partial<DiscordChannel>
+}
 
 /** https://discord.com/developers/docs/resources/guild#guild-object */
 export interface DiscordGuild {
@@ -1315,23 +1314,23 @@ export interface DiscordStickerItem {
   format_type: StickerFormatTypes
 }
 
-// /** https://discord.com/developers/docs/resources/sticker#sticker-pack-object-sticker-pack-structure */
-// export interface DiscordStickerPack {
-//   /** id of the sticker pack */
-//   id: string
-//   /** the stickers in the pack */
-//   stickers: DiscordSticker[]
-//   /** name of the sticker pack */
-//   name: string
-//   /** id of the pack's SKU */
-//   sku_id: string
-//   /** id of a sticker in the pack which is shown as the pack's icon */
-//   cover_sticker_id?: string
-//   /** description of the sticker pack */
-//   description: string
-//   /** id of the sticker pack's [banner image](https://discord.com/developers/docs/reference#image-formatting) */
-//   banner_asset_id?: string
-// }
+/** https://discord.com/developers/docs/resources/sticker#sticker-pack-object-sticker-pack-structure */
+export interface DiscordStickerPack {
+  /** id of the sticker pack */
+  id: string
+  /** the stickers in the pack */
+  stickers: DiscordSticker[]
+  /** name of the sticker pack */
+  name: string
+  /** id of the pack's SKU */
+  sku_id: string
+  /** id of a sticker in the pack which is shown as the pack's icon */
+  cover_sticker_id?: string
+  /** description of the sticker pack */
+  description: string
+  /** id of the sticker pack's [banner image](https://discord.com/developers/docs/reference#image-formatting) */
+  banner_asset_id?: string
+}
 
 export interface DiscordInteraction {
   /** Id of the interaction */
@@ -3099,12 +3098,12 @@ export interface DiscordCreateMessage {
 //   description?: string
 // }
 
-// export interface DiscordCreateWebhook {
-//   /** Name of the webhook (1-80 characters) */
-//   name: string
-//   /** Image url for the default webhook avatar */
-//   avatar?: string | null
-// }
+export interface DiscordCreateWebhook {
+  /** Name of the webhook (1-80 characters) */
+  name: string
+  /** Image url for the default webhook avatar */
+  avatar?: string | null
+}
 
 // export interface DiscordModifyWebhook {
 //   /** The default name of the webhook */
