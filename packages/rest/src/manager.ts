@@ -1,6 +1,5 @@
 /**
  * TODO: missing helpers
- * createForumThread
  * createStageInstance
  * deleteStageInstance
  * editStageInstance
@@ -25,6 +24,7 @@ import type {
   CreateGuildChannel,
   CreateGuildEmoji,
   CreateMessageOptions,
+  CreateStageInstance,
   DeleteWebhookMessageOptions,
   DiscordApplication,
   DiscordChannel,
@@ -36,10 +36,12 @@ import type {
   DiscordGetGatewayBot,
   DiscordInviteMetadata,
   DiscordMessage,
+  DiscordStageInstance,
   DiscordStickerPack,
   DiscordUser,
   DiscordWebhook,
   EditChannelPermissionOverridesOptions,
+  EditStageInstanceOptions,
   ExecuteWebhook,
   GetMessagesOptions,
   GetWebhookMessageOptions,
@@ -155,6 +157,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         overwrite: (channelId, overwriteId) => {
           return `/channels/${channelId}/permissions/${overwriteId}`
+        },
+
+        stages: () => {
+          return '/stage-instances'
+        },
+
+        stage: (channelId) => {
+          return `/stage-instances/${channelId}`
         },
 
         typing: (channelId) => {
@@ -526,6 +536,24 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return await rest.getChannelInvites(id)
       },
 
+      stages: {
+        async create(options) {
+          return await rest.createStageInstance(options)
+        },
+
+        async delete(channelId, reason) {
+          return await rest.deleteStageInstance(channelId, reason)
+        },
+
+        async edit(channelId, data) {
+          return await rest.editStageInstance(channelId, data)
+        },
+
+        async get(channelId) {
+          return await rest.getStageInstance(channelId)
+        },
+      },
+
       async typing(id) {
         return await rest.triggerTypingIndicator(id)
       },
@@ -645,25 +673,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordChannel>(rest.routes.guilds.channels(guildId), options)
     },
 
-    /**
-     * Creates a new thread in a forum channel, and sends a message within the created thread.
-     *
-     * @param channelId - The ID of the forum channel to create the thread within.
-     * @param options - The parameters for the creation of the thread.
-     * @returns An instance of {@link DiscordChannel} with a nested {@link Message} object.
-     *
-     * @remarks
-     * Requires the `CREATE_MESSAGES` permission.
-     *
-     * Fires a _Thread Create_ gateway event.
-     * Fires a _Message Create_ gateway event.
-     *
-     * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel}
-     *
-     * @experimental
-     */
     async createForumThread(channelId, options) {
       return await rest.post<DiscordChannel>(rest.routes.channels.forum(channelId), options)
+    },
+
+    async createStageInstance(options) {
+      return await rest.post<DiscordStageInstance>(rest.routes.channels.stages(), options)
     },
 
     async deleteChannel(channelId, reason) {
@@ -672,6 +687,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async deleteChannelPermissionOverride(channelId, overwriteId, reason) {
       return await rest.delete(rest.routes.channels.overwrite(channelId, overwriteId), reason ? { reason } : undefined)
+    },
+
+    async deleteStageInstance(channelId, reason) {
+      return await rest.delete(rest.routes.channels.stage(channelId), reason ? { reason } : undefined)
     },
 
     async editChannel(channelId, options) {
@@ -684,6 +703,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async editChannelPositions(guildId, channelPositions) {
       return await rest.patch(rest.routes.guilds.channels(guildId), channelPositions)
+    },
+
+    async editStageInstance(channelId, data) {
+      return await rest.patch<DiscordStageInstance>(rest.routes.channels.stage(channelId), { topic: data.topic })
     },
 
     async followAnnouncement(sourceChannelId, targetChannelId) {
@@ -706,6 +729,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getSessionInfo() {
       return await rest.get<DiscordGetGatewayBot>(rest.routes.sessionInfo())
+    },
+
+    async getStageInstance(channelId) {
+      return await rest.get<DiscordStageInstance>(rest.routes.channels.stage(channelId))
     },
 
     async getUser(id) {
@@ -832,9 +859,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
   }
 
-  rest.webhooks.messages.edit('', '', '', {})
-  rest.webhooks.messages.edit.original('', '', {})
-
   return rest
 }
 
@@ -919,6 +943,10 @@ export interface RestManager {
       messages: (channelId: BigString, options?: GetMessagesOptions) => string
       /** Route for handling a specific overwrite. */
       overwrite: (channelId: BigString, overwriteId: BigString) => string
+      /** Route for handling non-specific stages */
+      stages: () => string
+      /** Route for handling a specific stage */
+      stage: (channelId: BigString) => string
       /** Route for handling typing indicators in a channel. */
       typing: (channelId: BigString) => string
     }
@@ -1145,6 +1173,61 @@ export interface RestManager {
      * @see {@link https://discord.com/developers/docs/resources/channel#get-channel-invites}
      */
     invites: (channelId: BigString) => Promise<Array<Camelize<DiscordInviteMetadata>>>
+    /** Stage related helpers for a channel. */
+    stages: {
+      /**
+       * Creates a stage instance associated with a stage channel.
+       *
+       * @param options - The parameters for the creation of the stage instance.
+       * @returns An instance of the created {@link DiscordStageInstance}.
+       *
+       * @remarks
+       * Requires the user to be a moderator of the stage channel.
+       *
+       * Fires a _Stage Instance Create_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/stage-instance#create-stage-instance}
+       */
+      create: (options: CreateStageInstance) => Promise<Camelize<DiscordStageInstance>>
+      /**
+       * Deletes the stage instance associated with a stage channel, if one exists.
+       *
+       * @param channelId - The ID of the stage channel the stage instance is associated with.
+       *
+       * @remarks
+       * Requires the user to be a moderator of the stage channel.
+       *
+       * Fires a _Stage Instance Delete_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance}
+       */
+      delete: (channelId: BigString, reason?: string) => Promise<void>
+      /**
+       * Edits a stage instance.
+       *
+       * @param rest - The rest manager to use to make the request.
+       * @param channelId - The ID of the stage channel the stage instance is associated with.
+       * @returns An instance of the updated {@link DiscordStageInstance}.
+       *
+       * @remarks
+       * Requires the user to be a moderator of the stage channel.
+       *
+       * Fires a _Stage Instance Update_ event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance}
+       */
+      edit: (channelId: BigString, data: EditStageInstanceOptions) => Promise<Camelize<DiscordStageInstance>>
+      /**
+       * Gets the stage instance associated with a stage channel, if one exists.
+       *
+       * @param rest - The rest manager to use to make the request.
+       * @param channelId - The ID of the stage channel the stage instance is associated with.
+       * @returns An instance of {@link DiscordStageInstance}.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/stage-instance#get-stage-instance}
+       */
+      get: (channelId: BigString) => Promise<Camelize<DiscordStageInstance>>
+    }
     /**
      * Triggers a typing indicator for the bot user.
      *
@@ -1474,6 +1557,20 @@ export interface RestManager {
    */
   createForumThread: (channelId: BigString, options: CreateForumPostWithMessage) => Promise<Camelize<DiscordChannel>>
   /**
+   * Creates a stage instance associated with a stage channel.
+   *
+   * @param options - The parameters for the creation of the stage instance.
+   * @returns An instance of the created {@link DiscordStageInstance}.
+   *
+   * @remarks
+   * Requires the user to be a moderator of the stage channel.
+   *
+   * Fires a _Stage Instance Create_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/stage-instance#create-stage-instance}
+   */
+  createStageInstance: (options: CreateStageInstance) => Promise<Camelize<DiscordStageInstance>>
+  /**
    * Deletes a channel from within a guild.
    *
    * @param channelId - The ID of the channel to delete.
@@ -1512,6 +1609,20 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#delete-channel-permission}
    */
   deleteChannelPermissionOverride: (channelId: BigString, overwriteId: BigString, reason?: string) => Promise<void>
+  /**
+   * Deletes the stage instance associated with a stage channel, if one exists.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param channelId - The ID of the stage channel the stage instance is associated with.
+   *
+   * @remarks
+   * Requires the user to be a moderator of the stage channel.
+   *
+   * Fires a _Stage Instance Delete_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance}
+   */
+  deleteStageInstance: (channelId: BigString, reason?: string) => Promise<void>
   /**
    * Edits a channel's settings.
    *
@@ -1572,6 +1683,21 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions}
    */
   editChannelPositions: (guildId: BigString, channelPositions: ModifyGuildChannelPositions[]) => Promise<void>
+  /**
+   * Edits a stage instance.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param channelId - The ID of the stage channel the stage instance is associated with.
+   * @returns An instance of the updated {@link DiscordStageInstance}.
+   *
+   * @remarks
+   * Requires the user to be a moderator of the stage channel.
+   *
+   * Fires a _Stage Instance Update_ event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance}
+   */
+  editStageInstance: (channelId: BigString, data: EditStageInstanceOptions) => Promise<Camelize<DiscordStageInstance>>
   /**
    * Follows an announcement channel, allowing messages posted within it to be cross-posted into the target channel.
    *
@@ -1634,6 +1760,16 @@ export interface RestManager {
    * @param id The user's id
    * @returns {Camelize<DiscordUser>}
    */
+  /**
+   * Gets the stage instance associated with a stage channel, if one exists.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param channelId - The ID of the stage channel the stage instance is associated with.
+   * @returns An instance of {@link DiscordStageInstance}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/stage-instance#get-stage-instance}
+   */
+  getStageInstance: (channelId: BigString) => Promise<Camelize<DiscordStageInstance>>
   getUser: (id: BigString) => Promise<Camelize<DiscordUser>>
   /**
    * Creates an emoji in a guild.

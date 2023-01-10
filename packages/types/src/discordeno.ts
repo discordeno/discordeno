@@ -716,3 +716,15 @@ export interface CreateForumPostWithMessage extends WithReason {
   /** The components you would like to have sent in this message */
   components?: MessageComponents
 }
+
+export interface CreateStageInstance extends WithReason {
+  channelId: BigString
+  topic: string
+  /** Notify @everyone that the stage instance has started. Requires the MENTION_EVERYONE permission. */
+  sendStartNotification?: boolean
+}
+
+export interface EditStageInstanceOptions extends WithReason {
+  /** The topic of the Stage instance (1-120 characters) */
+  topic: string
+}
