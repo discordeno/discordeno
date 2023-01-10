@@ -6,6 +6,7 @@ import type {
   CreateGuildChannel,
   CreateGuildEmoji,
   CreateMessageOptions,
+  CreateScheduledEvent,
   CreateStageInstance,
   DeleteWebhookMessageOptions,
   DiscordActiveThreads,
@@ -22,7 +23,9 @@ import type {
   DiscordInviteMetadata,
   DiscordListActiveThreads,
   DiscordListArchivedThreads,
+  DiscordMember,
   DiscordMessage,
+  DiscordScheduledEvent,
   DiscordStageInstance,
   DiscordStickerPack,
   DiscordThreadMember,
@@ -30,9 +33,12 @@ import type {
   DiscordWebhook,
   EditAutoModerationRuleOptions,
   EditChannelPermissionOverridesOptions,
+  EditScheduledEvent,
   EditStageInstanceOptions,
   ExecuteWebhook,
   GetMessagesOptions,
+  GetScheduledEvents,
+  GetScheduledEventUsers,
   GetWebhookMessageOptions,
   InteractionCallbackData,
   ListArchivedThreads,
@@ -249,6 +255,43 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
         emojis: (guildId) => {
           return `/guilds/${guildId}/emojis`
+        },
+        events: {
+          events: (guildId: BigString, withUserCount?: boolean) => {
+            let url = `/guilds/${guildId}/scheduled-events?`
+
+            if (withUserCount !== undefined) {
+              url += `with_user_count=${withUserCount.toString()}`
+            }
+            return url
+          },
+          event: (guildId: BigString, eventId: BigString, withUserCount?: boolean) => {
+            let url = `/guilds/${guildId}/scheduled-events/${eventId}`
+
+            if (withUserCount !== undefined) {
+              url += `with_user_count=${withUserCount.toString()}`
+            }
+
+            return url
+          },
+          users: (guildId: BigString, eventId: BigString, options?: GetScheduledEventUsers) => {
+            let url = `/guilds/${guildId}/scheduled-events/${eventId}/users?`
+
+            if (options) {
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              if (options.limit !== undefined) url += `limit=${options.limit}`
+              if (options.withMember !== undefined) {
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                url += `&with_member=${options.withMember.toString()}`
+              }
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              if (options.after !== undefined) url += `&after=${options.after}`
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              if (options.before !== undefined) url += `&before=${options.before}`
+            }
+
+            return url
+          },
         },
         webhooks: (guildId) => {
           return `/guilds/${guildId}/webhooks`
@@ -700,6 +743,24 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         async create(guildId, options) {
           return await rest.createAutomodRule(guildId, options)
         },
+
+        async delete(guildId, eventId) {
+          return await rest.deleteAutomodRule(guildId, eventId)
+        },
+
+        async edit(guildId, ruleId, options) {
+          return await rest.editAutomodRule(guildId, ruleId, options)
+        },
+
+        get: {
+          async rule(guildId, ruleId) {
+            return await rest.getAutomodRule(guildId, ruleId)
+          },
+
+          async rules(guildId) {
+            return await rest.getAutomodRules(guildId)
+          },
+        },
       },
 
       async channels(id) {
@@ -708,6 +769,34 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       async emojis(id) {
         return await rest.getEmojis(id)
+      },
+
+      events: {
+        async create(guildId, options) {
+          return await rest.createScheduledEvent(guildId, options)
+        },
+
+        async delete(guildId, eventId) {
+          return await rest.deleteScheduledEvent(guildId, eventId)
+        },
+
+        async edit(guildId, eventId, options) {
+          return await rest.editScheduledEvent(guildId, eventId, options)
+        },
+
+        get: {
+          async event(guildId, eventId, options) {
+            return await rest.getScheduledEvent(guildId, eventId, options)
+          },
+
+          async events(guildId, options) {
+            return await rest.getScheduledEvents(guildId, options)
+          },
+
+          async users(guildId, eventId, options) {
+            return await rest.getScheduledEventUsers(guildId, eventId, options)
+          },
+        },
       },
     },
 
@@ -793,7 +882,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.put(rest.routes.channels.threads.user(channelId, userId))
     },
 
-    async createAutomodRule(guildId: BigString, options: CreateAutoModerationRuleOptions): Promise<Camelize<DiscordAutoModerationRule>> {
+    async createAutomodRule(guildId, options) {
       return await rest.post<DiscordAutoModerationRule>(rest.routes.guilds.automod.rules(guildId), options)
     },
 
@@ -809,6 +898,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordChannel>(rest.routes.channels.forum(channelId), options)
     },
 
+    async createScheduledEvent(guildId, options) {
+      return await rest.post<DiscordScheduledEvent>(rest.routes.guilds.events.events(guildId), options)
+    },
+
     async createStageInstance(options) {
       return await rest.post<DiscordStageInstance>(rest.routes.channels.stages(), options)
     },
@@ -821,7 +914,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       } as DiscordCreateWebhook)
     },
 
-    async deleteAutomodRule(guildId: BigString, ruleId: BigString, reason?: string): Promise<void> {
+    async deleteAutomodRule(guildId, ruleId, reason) {
       return await rest.delete(rest.routes.guilds.automod.rule(guildId, ruleId), { reason })
     },
 
@@ -835,6 +928,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async deleteEmoji(guildId, id, reason) {
       return await rest.delete(rest.routes.guilds.emoji(guildId, id), { reason })
+    },
+
+    async deleteScheduledEvent(guildId, eventId) {
+      return await rest.delete(rest.routes.guilds.events.event(guildId, eventId))
     },
 
     async deleteStageInstance(channelId, reason) {
@@ -853,11 +950,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.delete(rest.routes.webhooks.webhook(webhookId, token))
     },
 
-    async editAutomodRule(
-      guildId: BigString,
-      ruleId: BigString,
-      options: Partial<EditAutoModerationRuleOptions>,
-    ): Promise<Camelize<DiscordAutoModerationRule>> {
+    async editAutomodRule(guildId, ruleId, options) {
       return await rest.patch<DiscordAutoModerationRule>(rest.routes.guilds.automod.rule(guildId, ruleId), options)
     },
 
@@ -891,6 +984,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         type: InteractionResponseTypes.UpdateMessage,
         data: options,
       })
+    },
+
+    async editScheduledEvent(guildId, eventId, options) {
+      return await rest.patch<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId), options)
     },
 
     async editStageInstance(channelId, data) {
@@ -930,11 +1027,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordApplication>(rest.routes.oauth2Application())
     },
 
-    async getAutomodRule(guildId: BigString, ruleId: BigString): Promise<Camelize<DiscordAutoModerationRule>> {
+    async getAutomodRule(guildId, ruleId) {
       return await rest.get<DiscordAutoModerationRule>(rest.routes.guilds.automod.rule(guildId, ruleId))
     },
 
-    async getAutomodRules(guildId: BigString): Promise<Array<Camelize<DiscordAutoModerationRule>>> {
+    async getAutomodRules(guildId) {
       return await rest.get<DiscordAutoModerationRule[]>(rest.routes.guilds.automod.rules(guildId))
     },
 
@@ -986,6 +1083,18 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.public(channelId, options))
     },
 
+    async getScheduledEvent(guildId, eventId, options) {
+      return await rest.get<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId, options?.withUserCount))
+    },
+
+    async getScheduledEvents(guildId, options) {
+      return await rest.get<DiscordScheduledEvent[]>(rest.routes.guilds.events.events(guildId, options?.withUserCount))
+    },
+
+    async getScheduledEventUsers(guildId, eventId, options) {
+      return await rest.get<Array<{ user: DiscordUser; member?: DiscordMember }>>(rest.routes.guilds.events.users(guildId, eventId, options))
+    },
+
     async getSessionInfo() {
       return await rest.get<DiscordGetGatewayBot>(rest.routes.sessionInfo())
     },
@@ -1030,7 +1139,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.delete(rest.routes.channels.threads.user(channelId, userId))
     },
 
-    async sendMessage(channelId: BigString, options: CreateMessageOptions) {
+    async sendMessage(channelId, options) {
       return await rest.post<DiscordMessage>(rest.routes.channels.messages(channelId), {
         content: options.content,
         // TODO: other options
@@ -1167,11 +1276,21 @@ export interface RestManager {
     }
     /** Routes for guild related endpoints. */
     guilds: {
+      /** Routes for a guilds automoderation. */
       automod: {
         /** Route for handling a guild's automoderation. */
         rules: (guildId: BigString) => string
         /** Route for handling a specific automoderation rule guild's */
         rule: (guildId: BigString, ruleId: BigString) => string
+      }
+      /** Routes for handling a guild's scheduled events. */
+      events: {
+        /** Route for handling non-specific scheduled event. */
+        events: (guildId: BigString, withUserCount?: boolean) => string
+        /** Route for handling a specific scheduled event. */
+        event: (guildId: BigString, eventId: BigString, withUserCount?: boolean) => string
+        /** Route for handling a scheduled event users. */
+        users: (guildId: BigString, eventId: BigString, options?: GetScheduledEventUsers) => string
       }
       /** Route for handling non-specific channels in a guild */
       channels: (guildId: BigString) => string
@@ -1720,6 +1839,64 @@ export interface RestManager {
        * @see {@link https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule}
        */
       create: (guildId: BigString, options: CreateAutoModerationRuleOptions) => Promise<Camelize<DiscordAutoModerationRule>>
+      /**
+       * Deletes a scheduled event from a guild.
+       *
+       * @param guildId - The ID of the guild to delete the scheduled event from.
+       * @param eventId - The ID of the scheduled event to delete.
+       *
+       * @remarks
+       * Requires the `MANAGE_EVENTS` permission.
+       *
+       * Fires a _Guild Scheduled Event Delete_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#delete-guild-scheduled-event}
+       */
+      delete: (guildId: BigString, eventId: BigString) => Promise<void>
+      /**
+       * Edits an automod rule.
+       *
+       * @param guildId - The ID of the guild to edit the rule in.
+       * @param ruleId - The ID of the rule to edit.
+       * @param options - The parameters for the edit of the rule.
+       * @returns An instance of the edited {@link DiscordAutoModerationRule}.
+       *
+       * @remarks
+       * Requires the `MANAGE_GUILD` permission.
+       *
+       * Fires an _Auto Moderation Rule Update_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule}
+       */
+      edit: (guildId: BigString, ruleId: BigString, options: Partial<EditAutoModerationRuleOptions>) => Promise<Camelize<DiscordAutoModerationRule>>
+      /** Methods related to getting automoderation data in a guild. */
+      get: {
+        /**
+         * Gets an automod rule by its ID.
+         *
+         * @param guildId - The ID of the guild to get the rule of.
+         * @param ruleId - The ID of the rule to get.
+         * @returns An instance of {@link DiscordAutoModerationRule}.
+         *
+         * @remarks
+         * Requires the `MANAGE_GUILD` permission.
+         *
+         * @see {@link https://discord.com/developers/docs/resources/auto-moderation#get-auto-moderation-rule}
+         */
+        rule: (guildId: BigString, ruleId: BigString) => Promise<Camelize<DiscordAutoModerationRule>>
+        /**
+         * Gets the list of automod rules for a guild.
+         *
+         * @param guildId - The ID of the guild to get the rules from.
+         * @returns A collection of {@link DiscordAutoModerationRule} objects assorted by rule ID.
+         *
+         * @remarks
+         * Requires the `MANAGE_GUILD` permission.
+         *
+         * @see {@link https://discord.com/developers/docs/resources/auto-moderation#list-auto-moderation-rules-for-guild}
+         */
+        rules: (guildId: BigString) => Promise<Array<Camelize<DiscordAutoModerationRule>>>
+      }
     }
     /**
      * Gets the list of channels for a guild.
@@ -1742,6 +1919,103 @@ export interface RestManager {
      * @see {@link https://discord.com/developers/docs/resources/emoji#list-guild-emojis}
      */
     emojis: (guildId: BigString) => Promise<Array<Camelize<DiscordEmoji>>>
+    /** Methods related to a guild's scheduled events. */
+    events: {
+      /**
+       * Creates a scheduled event in a guild.
+       *
+       * @param guildId - The ID of the guild to create the scheduled event in.
+       * @param options - The parameters for the creation of the scheduled event.
+       * @returns An instance of the created {@link ScheduledEvent}.
+       *
+       * @remarks
+       * Requires the `MANAGE_EVENTS` permission.
+       *
+       * A guild can only have a maximum of 100 events with a status of {@link ScheduledEventStatus.Active} or {@link ScheduledEventStatus.Scheduled} (inclusive).
+       *
+       * Fires a _Guild Scheduled Event Create_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event}
+       */
+      create: (guildId: BigString, options: CreateScheduledEvent) => Promise<Camelize<DiscordScheduledEvent>>
+      /**
+       * Deletes a scheduled event from a guild.
+       *
+       * @param guildId - The ID of the guild to delete the scheduled event from.
+       * @param eventId - The ID of the scheduled event to delete.
+       *
+       * @remarks
+       * Requires the `MANAGE_EVENTS` permission.
+       *
+       * Fires a _Guild Scheduled Event Delete_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#delete-guild-scheduled-event}
+       */
+      delete: (guildId: BigString, eventId: BigString) => Promise<void>
+      /**
+       * Edits a scheduled event.
+       *
+       * @param guildId - The ID of the guild to edit the scheduled event in.
+       * @param eventId - The ID of the scheduled event to edit.
+       * @returns An instance of the edited {@link ScheduledEvent}.
+       *
+       * @remarks
+       * Requires the `MANAGE_EVENTS` permission.
+       *
+       * To start or end an event, modify the event's `status` property.
+       *
+       * The `entity_metadata` property is discarded for events whose `entity_type` is not {@link ScheduledEventEntityType.External}.
+       *
+       * Fires a _Guild Scheduled Event Update_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event}
+       */
+      edit: (guildId: BigString, eventId: BigString, options: Partial<EditScheduledEvent>) => Promise<Camelize<DiscordScheduledEvent>>
+
+      get: {
+        /**
+         * Gets a scheduled event by its ID.
+         *
+         * @param guildId - The ID of the guild to get the scheduled event from.
+         * @param eventId - The ID of the scheduled event to get.
+         * @param options - The parameters for the fetching of the scheduled event.
+         * @returns An instance of {@link ScheduledEvent}.
+         *
+         * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event}
+         */
+        event: (guildId: BigString, eventId: BigString, options?: { withUserCount?: boolean }) => Promise<Camelize<DiscordScheduledEvent>>
+        /**
+         * Gets the list of scheduled events for a guild.
+         *
+         * @param guildId - The ID of the guild to get the scheduled events from.
+         * @param options - The parameters for the fetching of the scheduled events.
+         * @returns A collection of {@link ScheduledEvent} objects assorted by event ID.
+         *
+         * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#list-scheduled-events-for-guild}
+         */
+        events: (guildId: BigString, options?: GetScheduledEvents) => Promise<Array<Camelize<DiscordScheduledEvent>>>
+        /**
+         * Gets the list of subscribers to a scheduled event from a guild.
+         *
+         * @param guildId - The ID of the guild to get the subscribers to the scheduled event from.
+         * @param eventId - The ID of the scheduled event to get the subscribers of.
+         * @param options - The parameters for the fetching of the subscribers.
+         * @returns A collection of {@link User} objects assorted by user ID.
+         *
+         * @remarks
+         * Requires the `MANAGE_EVENTS` permission.
+         *
+         * Users are ordered by their IDs in _ascending_ order.
+         *
+         * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event-users}
+         */
+        users: (
+          guildId: BigString,
+          eventId: BigString,
+          options?: GetScheduledEventUsers,
+        ) => Promise<Array<{ user: Camelize<DiscordUser>; member?: Camelize<DiscordMember> }>>
+      }
+    }
   }
   /** Webhook related helper methods. */
   webhooks: {
@@ -2009,6 +2283,23 @@ export interface RestManager {
    */
   createForumThread: (channelId: BigString, options: CreateForumPostWithMessage) => Promise<Camelize<DiscordChannel>>
   /**
+   * Creates a scheduled event in a guild.
+   *
+   * @param guildId - The ID of the guild to create the scheduled event in.
+   * @param options - The parameters for the creation of the scheduled event.
+   * @returns An instance of the created {@link ScheduledEvent}.
+   *
+   * @remarks
+   * Requires the `MANAGE_EVENTS` permission.
+   *
+   * A guild can only have a maximum of 100 events with a status of {@link ScheduledEventStatus.Active} or {@link ScheduledEventStatus.Scheduled} (inclusive).
+   *
+   * Fires a _Guild Scheduled Event Create_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event}
+   */
+  createScheduledEvent: (guildId: BigString, options: CreateScheduledEvent) => Promise<Camelize<DiscordScheduledEvent>>
+  /**
    * Creates a stage instance associated with a stage channel.
    *
    * @param options - The parameters for the creation of the stage instance.
@@ -2042,7 +2333,6 @@ export interface RestManager {
   /**
    * Deletes an automod rule.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param guildId - The ID of the guild to delete the rule from.
    * @param ruleId - The ID of the automod rule to delete.
    *
@@ -2108,6 +2398,20 @@ export interface RestManager {
    */
   deleteEmoji: (guildId: BigString, id: BigString, reason?: string) => Promise<void>
   /**
+   * Deletes a scheduled event from a guild.
+   *
+   * @param guildId - The ID of the guild to delete the scheduled event from.
+   * @param eventId - The ID of the scheduled event to delete.
+   *
+   * @remarks
+   * Requires the `MANAGE_EVENTS` permission.
+   *
+   * Fires a _Guild Scheduled Event Delete_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#delete-guild-scheduled-event}
+   */
+  deleteScheduledEvent: (guildId: BigString, eventId: BigString) => Promise<void>
+  /**
    * Deletes the stage instance associated with a stage channel, if one exists.
    *
    * @param channelId - The ID of the stage channel the stage instance is associated with.
@@ -2162,7 +2466,6 @@ export interface RestManager {
   /**
    * Edits an automod rule.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param guildId - The ID of the guild to edit the rule in.
    * @param ruleId - The ID of the rule to edit.
    * @param options - The parameters for the edit of the rule.
@@ -2280,6 +2583,25 @@ export interface RestManager {
     options: InteractionCallbackData & { threadId?: BigString },
   ) => Promise<Camelize<DiscordMessage>>
   /**
+   * Edits a scheduled event.
+   *
+   * @param guildId - The ID of the guild to edit the scheduled event in.
+   * @param eventId - The ID of the scheduled event to edit.
+   * @returns An instance of the edited {@link ScheduledEvent}.
+   *
+   * @remarks
+   * Requires the `MANAGE_EVENTS` permission.
+   *
+   * To start or end an event, modify the event's `status` property.
+   *
+   * The `entity_metadata` property is discarded for events whose `entity_type` is not {@link ScheduledEventEntityType.External}.
+   *
+   * Fires a _Guild Scheduled Event Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event}
+   */
+  editScheduledEvent: (guildId: BigString, eventId: BigString, options: Partial<EditScheduledEvent>) => Promise<Camelize<DiscordScheduledEvent>>
+  /**
    * Edits a stage instance.
    *
    * @param channelId - The ID of the stage channel the stage instance is associated with.
@@ -2390,7 +2712,6 @@ export interface RestManager {
   /**
    * Gets an automod rule by its ID.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param guildId - The ID of the guild to get the rule of.
    * @param ruleId - The ID of the rule to get.
    * @returns An instance of {@link DiscordAutoModerationRule}.
@@ -2404,7 +2725,6 @@ export interface RestManager {
   /**
    * Gets the list of automod rules for a guild.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param guildId - The ID of the guild to get the rules from.
    * @returns A collection of {@link DiscordAutoModerationRule} objects assorted by rule ID.
    *
@@ -2559,6 +2879,47 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#list-public-archived-threads}
    */
   getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  /**
+   * Gets a scheduled event by its ID.
+   *
+   * @param guildId - The ID of the guild to get the scheduled event from.
+   * @param eventId - The ID of the scheduled event to get.
+   * @param options - The parameters for the fetching of the scheduled event.
+   * @returns An instance of {@link ScheduledEvent}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event}
+   */
+  getScheduledEvent: (guildId: BigString, eventId: BigString, options?: { withUserCount?: boolean }) => Promise<Camelize<DiscordScheduledEvent>>
+  /**
+   * Gets the list of scheduled events for a guild.
+   *
+   * @param guildId - The ID of the guild to get the scheduled events from.
+   * @param options - The parameters for the fetching of the scheduled events.
+   * @returns A collection of {@link ScheduledEvent} objects assorted by event ID.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#list-scheduled-events-for-guild}
+   */
+  getScheduledEvents: (guildId: BigString, options?: GetScheduledEvents) => Promise<Array<Camelize<DiscordScheduledEvent>>>
+  /**
+   * Gets the list of subscribers to a scheduled event from a guild.
+   *
+   * @param guildId - The ID of the guild to get the subscribers to the scheduled event from.
+   * @param eventId - The ID of the scheduled event to get the subscribers of.
+   * @param options - The parameters for the fetching of the subscribers.
+   * @returns A collection of {@link User} objects assorted by user ID.
+   *
+   * @remarks
+   * Requires the `MANAGE_EVENTS` permission.
+   *
+   * Users are ordered by their IDs in _ascending_ order.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event-users}
+   */
+  getScheduledEventUsers: (
+    guildId: BigString,
+    eventId: BigString,
+    options?: GetScheduledEventUsers,
+  ) => Promise<Array<{ user: Camelize<DiscordUser>; member?: Camelize<DiscordMember> }>>
   /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */
   getSessionInfo: () => Promise<Camelize<DiscordGetGatewayBot>>
   /**

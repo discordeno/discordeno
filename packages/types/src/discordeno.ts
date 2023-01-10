@@ -8,6 +8,9 @@ import type {
   MessageComponentTypes,
   OverwriteTypes,
   PermissionStrings,
+  ScheduledEventEntityType,
+  ScheduledEventPrivacyLevel,
+  ScheduledEventStatus,
   SortOrderTypes,
   TextStyles,
   VideoQualityModes,
@@ -365,16 +368,16 @@ export interface ListArchivedThreads {
 //   includeRoles?: string | string[]
 // }
 
-// export interface GetScheduledEventUsers {
-//   /** number of users to return (up to maximum 100), defaults to 100 */
-//   limit?: number
-//   /** whether to also have member objects provided, defaults to false */
-//   withMember?: boolean
-//   /** consider only users before given user id */
-//   before?: BigString
-//   /** consider only users after given user id. If both before and after are provided, only before is respected. Fetching users in-between before and after is not supported. */
-//   after?: BigString
-// }
+export interface GetScheduledEventUsers {
+  /** number of users to return (up to maximum 100), defaults to 100 */
+  limit?: number
+  /** whether to also have member objects provided, defaults to false */
+  withMember?: boolean
+  /** consider only users before given user id */
+  before?: BigString
+  /** consider only users after given user id. If both before and after are provided, only before is respected. Fetching users in-between before and after is not supported. */
+  after?: BigString
+}
 
 // /** https://discord.com/developers/docs/resources/invite#get-invite */
 // export interface GetInvite {
@@ -824,4 +827,49 @@ export interface EditAutoModerationRuleOptions extends WithReason {
   exemptRoles?: BigString[]
   /** The channel ids that should not be effected by the rule. */
   exemptChannels?: BigString[]
+}
+
+export interface CreateScheduledEvent extends WithReason {
+  /** the channel id of the scheduled event. */
+  channelId?: BigString
+  /** location of the event. Required for events with `entityType: ScheduledEventEntityType.External` */
+  location?: string
+  /** the name of the scheduled event */
+  name: string
+  /** the description of the scheduled event */
+  description: string
+  /** the time the scheduled event will start */
+  scheduledStartTime: string
+  /** the time the scheduled event will end if it does end. Required for events with `entityType: ScheduledEventEntityType.External` */
+  scheduledEndTime?: string
+  /** the privacy level of the scheduled event */
+  privacyLevel?: ScheduledEventPrivacyLevel
+  /** the type of hosting entity associated with a scheduled event */
+  entityType: ScheduledEventEntityType
+}
+
+export interface EditScheduledEvent extends WithReason {
+  /** the channel id of the scheduled event. null if switching to external event. */
+  channelId: BigString | null
+  /** location of the event */
+  location?: string
+  /** the name of the scheduled event */
+  name: string
+  /** the description of the scheduled event */
+  description?: string
+  /** the time the scheduled event will start */
+  scheduledStartTime: string
+  /** the time the scheduled event will end if it does end. */
+  scheduledEndTime?: string
+  /** the privacy level of the scheduled event */
+  privacyLevel: ScheduledEventPrivacyLevel
+  /** the type of hosting entity associated with a scheduled event */
+  entityType: ScheduledEventEntityType
+  /** the status of the scheduled event */
+  status: ScheduledEventStatus
+}
+
+export interface GetScheduledEvents {
+  /** include number of users subscribed to each event */
+  withUserCount?: boolean
 }
