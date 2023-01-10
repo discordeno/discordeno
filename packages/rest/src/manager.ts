@@ -64,6 +64,18 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     routes: {
       webhooks: {
+        id: (webhookId: BigString) => {
+          return `/webhooks/${webhookId}`
+        },
+        message: (webhookId, token, messageId, options) => {
+          let url = `/webhooks/${webhookId}/${token}/messages/${messageId}?`
+
+          if (options) {
+            if (options.threadId) url += `thread_id=${options.threadId}`
+          }
+
+          return url
+        },
         original: (webhookId, token, options) => {
           let url = `/webhooks/${webhookId}/${token}/messages/@original?`
 
@@ -73,25 +85,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
           return url
         },
-      },
-      webhook: (webhookId, token, options) => {
-        let url = `/webhooks/${webhookId}/${token}?`
+        webhook: (webhookId, token, options) => {
+          let url = `/webhooks/${webhookId}/${token}?`
 
-        if (options) {
-          if (options?.wait !== undefined) url += `wait=${options.wait.toString()}`
-          if (options.threadId) url += `thread_id=${options.threadId}`
-        }
+          if (options) {
+            if (options?.wait !== undefined) url += `wait=${options.wait.toString()}`
+            if (options.threadId) url += `thread_id=${options.threadId}`
+          }
 
-        return url
-      },
-      webhookMessage: (webhookId, token, messageId, options) => {
-        let url = `/webhooks/${webhookId}/${token}/messages/${messageId}?`
-
-        if (options) {
-          if (options.threadId) url += `thread_id=${options.threadId}`
-        }
-
-        return url
+          return url
+        },
       },
 
       // Miscellaneous Endpoints
@@ -260,10 +263,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       nitroStickerPacks() {
         return '/sticker-packs'
-      },
-
-      webhookId: (webhookId: BigString) => {
-        return `/webhooks/${webhookId}`
       },
     },
 
@@ -818,15 +817,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteWebhook(webhookId, reason) {
-      return await rest.delete(rest.routes.webhookId(webhookId), { reason })
+      return await rest.delete(rest.routes.webhooks.id(webhookId), { reason })
     },
 
     async deleteWebhookMessage(webhookId, token, messageId, options) {
-      return await rest.delete(rest.routes.webhookMessage(webhookId, token, messageId, options))
+      return await rest.delete(rest.routes.webhooks.message(webhookId, token, messageId, options))
     },
 
     async deleteWebhookWithToken(webhookId, token) {
-      return await rest.delete(rest.routes.webhook(webhookId, token))
+      return await rest.delete(rest.routes.webhooks.webhook(webhookId, token))
     },
 
     async editBotProfile(options) {
@@ -866,22 +865,22 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editWebhook(webhookId, options) {
-      return await rest.patch<DiscordWebhook>(rest.routes.webhookId(webhookId), options)
+      return await rest.patch<DiscordWebhook>(rest.routes.webhooks.id(webhookId), options)
     },
 
     async editWebhookMessage(webhookId, token, messageId, options) {
-      return await rest.patch<DiscordMessage>(rest.routes.webhookMessage(webhookId, token, messageId, options), {
+      return await rest.patch<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), {
         type: InteractionResponseTypes.UpdateMessage,
         data: options,
       })
     },
 
     async editWebhookWithToken(webhookId, token, options) {
-      return await rest.patch<DiscordWebhook>(rest.routes.webhook(webhookId, token), options)
+      return await rest.patch<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token), options)
     },
 
     async executeWebhook(webhookId, token, options) {
-      return await rest.post<DiscordMessage>(rest.routes.webhook(webhookId, token, options), options)
+      return await rest.post<DiscordMessage>(rest.routes.webhooks.webhook(webhookId, token, options), options)
     },
 
     async followAnnouncement(sourceChannelId, targetChannelId) {
@@ -967,15 +966,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getWebhook(webhookId) {
-      return await rest.get<DiscordWebhook>(rest.routes.webhookId(webhookId))
+      return await rest.get<DiscordWebhook>(rest.routes.webhooks.id(webhookId))
     },
 
     async getWebhookMessage(webhookId, token, messageId, options) {
-      return await rest.get<DiscordMessage>(rest.routes.webhookMessage(webhookId, token, messageId, options))
+      return await rest.get<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options))
     },
 
     async getWebhookWithToken(webhookId, token) {
-      return await rest.get<DiscordWebhook>(rest.routes.webhook(webhookId, token))
+      return await rest.get<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token))
     },
 
     async joinThread(channelId) {
@@ -1066,16 +1065,17 @@ export interface RestManager {
     gatewayBot: () => string
     // Nitro Sticker Packs
     nitroStickerPacks: () => string
-    // Get a Webhook
-    webhookId: (webhookId: BigString) => string
     /** Routes for webhook related routes. */
     webhooks: {
       /** Route for managing the original message sent by a webhook. */
       original: (webhookId: BigString, token: string, options?: { threadId?: BigString }) => string
+      /** Route for webhook with a id. */
+      id: (webhookId: BigString) => string
+      /** Route for handling a webhook with a token. */
+      webhook: (webhookId: BigString, token: string, options?: { wait?: boolean; threadId?: BigString }) => string
+      /** Route for handling a message that was sent through a webhook. */
+      message: (webhookId: BigString, token: string, messageId: BigString, options?: { threadId?: BigString }) => string
     }
-    // Send a Message through a Webhook
-    webhookMessage: (webhookId: BigString, token: string, messageId: BigString, options?: { threadId?: BigString }) => string
-    webhook: (webhookId: BigString, token: string, options?: { wait?: boolean; threadId?: BigString }) => string
     /** Routes for channel related endpoints. */
     channels: {
       // Get a Channels Webhooks
