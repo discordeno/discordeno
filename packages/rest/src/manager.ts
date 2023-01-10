@@ -1,6 +1,7 @@
 import type {
   BigString,
   Camelize,
+  CreateAutoModerationRuleOptions,
   CreateForumPostWithMessage,
   CreateGuildChannel,
   CreateGuildEmoji,
@@ -10,6 +11,7 @@ import type {
   DiscordActiveThreads,
   DiscordApplication,
   DiscordArchivedThreads,
+  DiscordAutoModerationRule,
   DiscordChannel,
   DiscordCreateMessage,
   DiscordCreateWebhook,
@@ -26,6 +28,7 @@ import type {
   DiscordThreadMember,
   DiscordUser,
   DiscordWebhook,
+  EditAutoModerationRuleOptions,
   EditChannelPermissionOverridesOptions,
   EditStageInstanceOptions,
   ExecuteWebhook,
@@ -230,6 +233,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       // Guild Endpoints
       guilds: {
+        automod: {
+          rule: (guildId, ruleId) => {
+            return `/guilds/${guildId}/auto-moderation/rules/${ruleId}`
+          },
+          rules: (guildId) => {
+            return `/guilds/${guildId}/auto-moderation/rules`
+          },
+        },
         channels: (guildId) => {
           return `/guilds/${guildId}/channels`
         },
@@ -685,6 +696,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     guilds: {
+      automod: {
+        async create(guildId, options) {
+          return await rest.createAutomodRule(guildId, options)
+        },
+      },
+
       async channels(id) {
         return await rest.getChannels(id)
       },
@@ -776,6 +793,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.put(rest.routes.channels.threads.user(channelId, userId))
     },
 
+    async createAutomodRule(guildId: BigString, options: CreateAutoModerationRuleOptions): Promise<Camelize<DiscordAutoModerationRule>> {
+      return await rest.post<DiscordAutoModerationRule>(rest.routes.guilds.automod.rules(guildId), options)
+    },
+
     async createChannel(guildId, options) {
       return await rest.post<DiscordChannel>(rest.routes.guilds.channels(guildId), options)
     },
@@ -798,6 +819,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
         reason: options.reason,
       } as DiscordCreateWebhook)
+    },
+
+    async deleteAutomodRule(guildId: BigString, ruleId: BigString, reason?: string): Promise<void> {
+      return await rest.delete(rest.routes.guilds.automod.rule(guildId, ruleId), { reason })
     },
 
     async deleteChannel(channelId, reason) {
@@ -826,6 +851,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async deleteWebhookWithToken(webhookId, token) {
       return await rest.delete(rest.routes.webhooks.webhook(webhookId, token))
+    },
+
+    async editAutomodRule(
+      guildId: BigString,
+      ruleId: BigString,
+      options: Partial<EditAutoModerationRuleOptions>,
+    ): Promise<Camelize<DiscordAutoModerationRule>> {
+      return await rest.patch<DiscordAutoModerationRule>(rest.routes.guilds.automod.rule(guildId, ruleId), options)
     },
 
     async editBotProfile(options) {
@@ -895,6 +928,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getApplicationInfo() {
       return await rest.get<DiscordApplication>(rest.routes.oauth2Application())
+    },
+
+    async getAutomodRule(guildId: BigString, ruleId: BigString): Promise<Camelize<DiscordAutoModerationRule>> {
+      return await rest.get<DiscordAutoModerationRule>(rest.routes.guilds.automod.rule(guildId, ruleId))
+    },
+
+    async getAutomodRules(guildId: BigString): Promise<Array<Camelize<DiscordAutoModerationRule>>> {
+      return await rest.get<DiscordAutoModerationRule[]>(rest.routes.guilds.automod.rules(guildId))
     },
 
     async getChannel(id) {
@@ -1126,6 +1167,12 @@ export interface RestManager {
     }
     /** Routes for guild related endpoints. */
     guilds: {
+      automod: {
+        /** Route for handling a guild's automoderation. */
+        rules: (guildId: BigString) => string
+        /** Route for handling a specific automoderation rule guild's */
+        rule: (guildId: BigString, ruleId: BigString) => string
+      }
       /** Route for handling non-specific channels in a guild */
       channels: (guildId: BigString) => string
       /** Route for handling a specific emoji. */
@@ -1324,7 +1371,6 @@ export interface RestManager {
         /**
          * Gets the list of all active threads for a guild.
          *
-         * @param rest - The rest manager to use to make the request.
          * @param guildId - The ID of the guild to get the threads of.
          * @returns An instance of {@link DiscordActiveThreads}.
          *
@@ -1341,7 +1387,6 @@ export interface RestManager {
           /**
            * Gets the list of private archived threads for a channel.
            *
-           * @param rest - The rest manager to use to make the request.
            * @param channelId - The ID of the channel to get the archived threads for.
            * @param options - The parameters for the fetching of threads.
            * @returns An instance of {@link DiscordArchivedThreads}.
@@ -1360,7 +1405,6 @@ export interface RestManager {
           /**
            * Gets the list of private archived threads the bot is a member of for a channel.
            *
-           * @param rest - The rest manager to use to make the request.
            * @param channelId - The ID of the channel to get the archived threads for.
            * @param options - The parameters for the fetching of threads.
            * @returns An instance of {@link DiscordArchivedThreads}.
@@ -1378,7 +1422,6 @@ export interface RestManager {
           /**
            * Gets the list of public archived threads for a channel.
            *
-           * @param rest - The rest manager to use to make the request.
            * @param channelId - The ID of the channel to get the archived threads for.
            * @param options - The parameters for the fetching of threads.
            * @returns An instance of {@link ArchivedThreads}.
@@ -1398,7 +1441,6 @@ export interface RestManager {
         /**
          * Gets a thread member by their user ID.
          *
-         * @param rest - The rest manager to use to make the request.
          * @param channelId - The ID of the thread to get the thread member of.
          * @param userId - The user ID of the thread member to get.
          * @returns An instance of {@link DiscordThreadMember}.
@@ -1409,7 +1451,6 @@ export interface RestManager {
         /**
          * Gets the list of thread members for a thread.
          *
-         * @param rest - The rest manager to use to make the request.
          * @param channelId - The ID of the thread to get the thread members of.
          * @returns A collection of {@link DiscordThreadMember} assorted by user ID.
          *
@@ -1423,7 +1464,6 @@ export interface RestManager {
       /**
        * Adds the bot user to a thread.
        *
-       * @param rest - The rest manager to use to make the request.
        * @param channelId - The ID of the thread to add the bot user to.
        *
        * @remarks
@@ -1437,7 +1477,6 @@ export interface RestManager {
       /**
        * Removes the bot user from a thread.
        *
-       * @param rest - The rest manager to use to make the request.
        * @param channelId - The ID of the thread to remove the bot user from.
        *
        * @remarks
@@ -1451,7 +1490,6 @@ export interface RestManager {
       /**
        * Removes a member from a thread.
        *
-       * @param rest - The rest manager to use to make the request.
        * @param channelId - The ID of the thread to remove the thread member of.
        * @param userId - The user ID of the thread member to remove.
        *
@@ -1472,7 +1510,6 @@ export interface RestManager {
           /**
            * Creates a thread, using an existing message as its point of origin.
            *
-           * @param rest - The rest manager to use to make the request.
            * @param channelId - The ID of the channel in which to create the thread.
            * @param messageId - The ID of the message to use as the thread's point of origin.
            * @param options - The parameters to use for the creation of the thread.
@@ -1495,7 +1532,6 @@ export interface RestManager {
           /**
            * Creates a thread without using a message as the thread's point of origin.
            *
-           * @param rest - The rest manager to use to make the request.
            * @param channelId - The ID of the channel in which to create the thread.
            * @param options - The parameters to use for the creation of the thread.
            * @returns An instance of the created {@link DiscordChannel | Thread}.
@@ -1571,7 +1607,6 @@ export interface RestManager {
       /**
        * Edits a stage instance.
        *
-       * @param rest - The rest manager to use to make the request.
        * @param channelId - The ID of the stage channel the stage instance is associated with.
        * @returns An instance of the updated {@link DiscordStageInstance}.
        *
@@ -1586,7 +1621,6 @@ export interface RestManager {
       /**
        * Gets the stage instance associated with a stage channel, if one exists.
        *
-       * @param rest - The rest manager to use to make the request.
        * @param channelId - The ID of the stage channel the stage instance is associated with.
        * @returns An instance of {@link DiscordStageInstance}.
        *
@@ -1670,6 +1704,23 @@ export interface RestManager {
   }
   /** Guild related helper methods */
   guilds: {
+    automod: {
+      /**
+       * Creates an automod rule in a guild.
+       *
+       * @param guildId - The ID of the guild to create the rule in.
+       * @param options - The parameters for the creation of the rule.
+       * @returns An instance of the created {@link DiscordAutoModerationRule}.
+       *
+       * @remarks
+       * Requires the `MANAGE_GUILD` permission.
+       *
+       * Fires an _Auto Moderation Rule Create_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule}
+       */
+      create: (guildId: BigString, options: CreateAutoModerationRuleOptions) => Promise<Camelize<DiscordAutoModerationRule>>
+    }
     /**
      * Gets the list of channels for a guild.
      *
@@ -1876,7 +1927,6 @@ export interface RestManager {
   /**
    * Adds a member to a thread.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param channelId - The ID of the thread to add the member to.
    * @param userId - The user ID of the member to add to the thread.
    *
@@ -1889,6 +1939,21 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#add-thread-member}
    */
   addThreadMember: (channelId: BigString, userId: BigString) => Promise<void>
+  /**
+   * Creates an automod rule in a guild.
+   *
+   * @param guildId - The ID of the guild to create the rule in.
+   * @param options - The parameters for the creation of the rule.
+   * @returns An instance of the created {@link DiscordAutoModerationRule}.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * Fires an _Auto Moderation Rule Create_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule}
+   */
+  createAutomodRule: (guildId: BigString, options: CreateAutoModerationRuleOptions) => Promise<Camelize<DiscordAutoModerationRule>>
   /**
    * Creates a channel within a guild.
    *
@@ -1975,6 +2040,21 @@ export interface RestManager {
    */
   createWebhook: (channelId: BigString, options: CreateWebhook) => Promise<Camelize<DiscordWebhook>>
   /**
+   * Deletes an automod rule.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param guildId - The ID of the guild to delete the rule from.
+   * @param ruleId - The ID of the automod rule to delete.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * Fires an _Auto Moderation Rule Delete_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/auto-moderation#delete-auto-moderation-rule}
+   */
+  deleteAutomodRule: (guildId: BigString, ruleId: BigString, reason?: string) => Promise<void>
+  /**
    * Deletes a channel from within a guild.
    *
    * @param channelId - The ID of the channel to delete.
@@ -2030,7 +2110,6 @@ export interface RestManager {
   /**
    * Deletes the stage instance associated with a stage channel, if one exists.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param channelId - The ID of the stage channel the stage instance is associated with.
    *
    * @remarks
@@ -2080,6 +2159,27 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/webhook#delete-webhook-with-token}
    */
   deleteWebhookWithToken: (webhookId: BigString, token: string) => Promise<void>
+  /**
+   * Edits an automod rule.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param guildId - The ID of the guild to edit the rule in.
+   * @param ruleId - The ID of the rule to edit.
+   * @param options - The parameters for the edit of the rule.
+   * @returns An instance of the edited {@link DiscordAutoModerationRule}.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * Fires an _Auto Moderation Rule Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule}
+   */
+  editAutomodRule: (
+    guildId: BigString,
+    ruleId: BigString,
+    options: Partial<EditAutoModerationRuleOptions>,
+  ) => Promise<Camelize<DiscordAutoModerationRule>>
   /**
    * Modifies the bot's username or avatar.
    * NOTE: username: if changed may cause the bot's discriminator to be randomized.
@@ -2182,7 +2282,6 @@ export interface RestManager {
   /**
    * Edits a stage instance.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param channelId - The ID of the stage channel the stage instance is associated with.
    * @returns An instance of the updated {@link DiscordStageInstance}.
    *
@@ -2275,7 +2374,6 @@ export interface RestManager {
   /**
    * Gets the list of all active threads for a guild.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param guildId - The ID of the guild to get the threads of.
    * @returns An instance of {@link DiscordActiveThreads}.
    *
@@ -2289,6 +2387,33 @@ export interface RestManager {
   getActiveThreads: (guildId: BigString) => Promise<Camelize<DiscordActiveThreads>>
   /** Get the applications info */
   getApplicationInfo: () => Promise<Camelize<DiscordApplication>>
+  /**
+   * Gets an automod rule by its ID.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param guildId - The ID of the guild to get the rule of.
+   * @param ruleId - The ID of the rule to get.
+   * @returns An instance of {@link DiscordAutoModerationRule}.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/auto-moderation#get-auto-moderation-rule}
+   */
+  getAutomodRule: (guildId: BigString, ruleId: BigString) => Promise<Camelize<DiscordAutoModerationRule>>
+  /**
+   * Gets the list of automod rules for a guild.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param guildId - The ID of the guild to get the rules from.
+   * @returns A collection of {@link DiscordAutoModerationRule} objects assorted by rule ID.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/auto-moderation#list-auto-moderation-rules-for-guild}
+   */
+  getAutomodRules: (guildId: BigString) => Promise<Array<Camelize<DiscordAutoModerationRule>>>
   /**
    * Gets a channel by its ID.
    *
@@ -2384,7 +2509,6 @@ export interface RestManager {
   /**
    * Gets the list of private archived threads for a channel.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param channelId - The ID of the channel to get the archived threads for.
    * @param options - The parameters for the fetching of threads.
    * @returns An instance of {@link DiscordArchivedThreads}.
@@ -2403,7 +2527,6 @@ export interface RestManager {
   /**
    * Gets the list of private archived threads the bot is a member of for a channel.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param channelId - The ID of the channel to get the archived threads for.
    * @param options - The parameters for the fetching of threads.
    * @returns An instance of {@link DiscordArchivedThreads}.
@@ -2421,7 +2544,6 @@ export interface RestManager {
   /**
    * Gets the list of public archived threads for a channel.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param channelId - The ID of the channel to get the archived threads for.
    * @param options - The parameters for the fetching of threads.
    * @returns An instance of {@link ArchivedThreads}.
@@ -2442,7 +2564,6 @@ export interface RestManager {
   /**
    * Gets the stage instance associated with a stage channel, if one exists.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param channelId - The ID of the stage channel the stage instance is associated with.
    * @returns An instance of {@link DiscordStageInstance}.
    *
@@ -2452,7 +2573,6 @@ export interface RestManager {
   /**
    * Gets a thread member by their user ID.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param channelId - The ID of the thread to get the thread member of.
    * @param userId - The user ID of the thread member to get.
    * @returns An instance of {@link DiscordThreadMember}.
@@ -2463,7 +2583,6 @@ export interface RestManager {
   /**
    * Gets the list of thread members for a thread.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param channelId - The ID of the thread to get the thread members of.
    * @returns A collection of {@link DiscordThreadMember} assorted by user ID.
    *
@@ -2522,7 +2641,6 @@ export interface RestManager {
   /**
    * Adds the bot user to a thread.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param channelId - The ID of the thread to add the bot user to.
    *
    * @remarks
@@ -2536,7 +2654,6 @@ export interface RestManager {
   /**
    * Removes the bot user from a thread.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param channelId - The ID of the thread to remove the bot user from.
    *
    * @remarks
@@ -2550,7 +2667,6 @@ export interface RestManager {
   /**
    * Removes a member from a thread.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param channelId - The ID of the thread to remove the thread member of.
    * @param userId - The user ID of the thread member to remove.
    *
@@ -2595,7 +2711,6 @@ export interface RestManager {
   /**
    * Creates a thread, using an existing message as its point of origin.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param channelId - The ID of the channel in which to create the thread.
    * @param messageId - The ID of the message to use as the thread's point of origin.
    * @param options - The parameters to use for the creation of the thread.
@@ -2616,7 +2731,6 @@ export interface RestManager {
   /**
    * Creates a thread without using a message as the thread's point of origin.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param channelId - The ID of the channel in which to create the thread.
    * @param options - The parameters to use for the creation of the thread.
    * @returns An instance of the created {@link DiscordChannel | Thread}.
