@@ -697,3 +697,22 @@ export interface DeleteWebhookMessageOptions {
   /** id of the thread the message is in */
   threadId: BigString
 }
+
+export interface CreateForumPostWithMessage extends WithReason {
+  /** 1-100 character thread name */
+  name: string
+  /** Duration in minutes to automatically archive the thread after recent activity */
+  autoArchiveDuration: 60 | 1440 | 4320 | 10080
+  /** Amount of seconds a user has to wait before sending another message (0-21600) */
+  rateLimitPerUser?: number | null
+  /** The message contents (up to 2000 characters) */
+  content?: string
+  /** Embedded `rich` content (up to 6000 characters) */
+  embeds?: Array<Camelize<DiscordEmbed>>
+  /** Allowed mentions for the message */
+  allowedMentions?: AllowedMentions
+  /** The contents of the file being sent */
+  file?: FileContent | FileContent[]
+  /** The components you would like to have sent in this message */
+  components?: MessageComponents
+}

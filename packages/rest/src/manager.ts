@@ -1,6 +1,5 @@
 /**
  * TODO: missing helpers
- * followAnnouncements
  * createForumThread
  * createStageInstance
  * deleteStageInstance
@@ -22,6 +21,7 @@
 import type {
   BigString,
   Camelize,
+  CreateForumPostWithMessage,
   CreateGuildChannel,
   CreateGuildEmoji,
   CreateMessageOptions,
@@ -118,6 +118,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         follow: (channelId) => {
           return `/channels/${channelId}/followers`
+        },
+
+        forum: (channelId) => {
+          return `/channels/${channelId}/threads?has_message=true`
         },
 
         invites: (channelId) => {
@@ -498,6 +502,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return await rest.followAnnouncement(sourceChannelId, targetChannelId)
       },
 
+      forums: {
+        async post(channelId, options) {
+          return await rest.createForumThread(channelId, options)
+        },
+      },
+
       permissions: {
         async edit(channelId, options) {
           return await rest.editChannelPermissionOverrides(channelId, options)
@@ -611,15 +621,19 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           return await rest.deleteWebhookMessage(webhookId, token, messageId, options)
         },
 
-        edit: {
-          async normal(webhookId, token, messageId, options) {
+        // js hack making it possible to do webhooks.messages.edit() as well as webhooks.messages.edit.original()
+        edit: Object.assign(
+          // The base function for webhooks.messages.edit()
+          (async (webhookId, token, messageId, options) => {
             return await rest.editWebhookMessage(webhookId, token, messageId, options)
-          },
-
-          async original(webhookId, token, options) {
-            return await rest.editOriginalWebhookMessage(webhookId, token, options)
-          },
-        },
+          }) as WebhookMessageEditor,
+          // The properties that webhooks.messages.edit.xxx will have are listed in this object
+          {
+            original: async (webhookId, token, options) => {
+              return await rest.editOriginalWebhookMessage(webhookId, token, options)
+            },
+          } as WebhookMessageEditor,
+        ),
       },
     },
 
@@ -629,6 +643,27 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async createChannel(guildId, options) {
       return await rest.post<DiscordChannel>(rest.routes.guilds.channels(guildId), options)
+    },
+
+    /**
+     * Creates a new thread in a forum channel, and sends a message within the created thread.
+     *
+     * @param channelId - The ID of the forum channel to create the thread within.
+     * @param options - The parameters for the creation of the thread.
+     * @returns An instance of {@link DiscordChannel} with a nested {@link Message} object.
+     *
+     * @remarks
+     * Requires the `CREATE_MESSAGES` permission.
+     *
+     * Fires a _Thread Create_ gateway event.
+     * Fires a _Message Create_ gateway event.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel}
+     *
+     * @experimental
+     */
+    async createForumThread(channelId, options) {
+      return await rest.post<DiscordChannel>(rest.routes.channels.forum(channelId), options)
     },
 
     async deleteChannel(channelId, reason) {
@@ -797,6 +832,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
   }
 
+  rest.webhooks.messages.edit('', '', '', {})
+  rest.webhooks.messages.edit.original('', '', {})
+
   return rest
 }
 
@@ -871,6 +909,8 @@ export interface RestManager {
       channel: (channelId: BigString) => string
       /** Route for following a specific channel. */
       follow: (channelId: BigString) => string
+      /** Route for managing a forum with a message. */
+      forum: (channelId: BigString) => string
       /** Route for a specific channel's invites. */
       invites: (channelId: BigString) => string
       /** Route for a specific message */
@@ -1023,6 +1063,27 @@ export interface RestManager {
      * @see {@link https://discord.com/developers/docs/resources/channel#follow-announcement-channel}
      */
     follow: (sourceChannelId: BigString, targetChannelId: BigString) => Promise<Camelize<DiscordFollowedChannel>>
+    /** Forum related helpers in a channel */
+    forums: {
+      /**
+       * Creates a new thread in a forum channel, and sends a message within the created thread.
+       *
+       * @param channelId - The ID of the forum channel to create the thread within.
+       * @param options - The parameters for the creation of the thread.
+       * @returns An instance of {@link DiscordChannel} with a nested {@link Message} object.
+       *
+       * @remarks
+       * Requires the `CREATE_MESSAGES` permission.
+       *
+       * Fires a _Thread Create_ gateway event.
+       * Fires a _Message Create_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel}
+       *
+       * @experimental
+       */
+      post: (channelId: BigString, options: CreateForumPostWithMessage) => Promise<Camelize<DiscordChannel>>
+    }
     /** Permission related helpers in a channel */
     permissions: {
       /**
@@ -1360,46 +1421,7 @@ export interface RestManager {
        */
       delete: (webhookId: BigString, token: string, messageId: BigString, options?: DeleteWebhookMessageOptions) => Promise<void>
       /** Methods related to editing messages sent by a webhook. */
-      edit: {
-        /**
-         * Edits a webhook message.
-         *
-         * @param webhookId - The ID of the webhook to edit the message of.
-         * @param token - The webhook token, used to edit the message.
-         * @param messageId - The ID of the message to edit.
-         * @param options - The parameters for the edit of the message.
-         * @returns An instance of the edited {@link DiscordMessage}.
-         *
-         * @remarks
-         * Fires a _Message Update_ gateway event.
-         *
-         * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
-         */
-        normal: (
-          webhookId: BigString,
-          token: string,
-          messageId: BigString,
-          options: InteractionCallbackData & { threadId?: BigString },
-        ) => Promise<Camelize<DiscordMessage>>
-        /**
-         * Edits the original webhook message.
-         *
-         * @param webhookId - The ID of the webhook to edit the original message of.
-         * @param token - The webhook token, used to edit the message.
-         * @param options - The parameters for the edit of the message.
-         * @returns An instance of the edited {@link DiscordMessage}.
-         *
-         * @remarks
-         * Fires a _Message Update_ gateway event.
-         *
-         * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
-         */
-        original: (
-          webhookId: BigString,
-          token: string,
-          options: InteractionCallbackData & { threadId?: BigString },
-        ) => Promise<Camelize<DiscordMessage>>
-      }
+      edit: WebhookMessageEditor
     }
   }
   /**
@@ -1433,6 +1455,24 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-channel}
    */
   createChannel: (guildId: BigString, options: CreateGuildChannel) => Promise<Camelize<DiscordChannel>>
+  /**
+   * Creates a new thread in a forum channel, and sends a message within the created thread.
+   *
+   * @param channelId - The ID of the forum channel to create the thread within.
+   * @param options - The parameters for the creation of the thread.
+   * @returns An instance of {@link DiscordChannel} with a nested {@link Message} object.
+   *
+   * @remarks
+   * Requires the `CREATE_MESSAGES` permission.
+   *
+   * Fires a _Thread Create_ gateway event.
+   * Fires a _Message Create_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel}
+   *
+   * @experimental
+   */
+  createForumThread: (channelId: BigString, options: CreateForumPostWithMessage) => Promise<Camelize<DiscordChannel>>
   /**
    * Deletes a channel from within a guild.
    *
@@ -1980,12 +2020,9 @@ export interface WebhookMessageEditor {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
    */
-  call: (
-    webhookId: BigString,
-    token: string,
-    messageId: BigString,
-    options: InteractionCallbackData & { threadId?: BigString },
-  ) => Promise<Camelize<DiscordMessage>>
+  (webhookId: BigString, token: string, messageId: BigString, options: InteractionCallbackData & { threadId?: BigString }): Promise<
+    Camelize<DiscordMessage>
+  >
   /**
    * Edits the original webhook message.
    *

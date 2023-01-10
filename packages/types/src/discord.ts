@@ -85,6 +85,7 @@ import type {
   VerificationLevels,
   VideoQualityModes,
 } from './shared'
+import type { FileContent } from './discordeno.js'
 
 /** https://discord.com/developers/docs/resources/user#user-object */
 export interface DiscordUser {
@@ -3138,38 +3139,38 @@ export interface DiscordCreateWebhook {
 //   components?: DiscordMessageComponents
 // }
 
-// /** https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel */
-// export interface DiscordCreateForumPostWithMessage {
-//   /** 1-100 character channel name */
-//   name: string
-//   /** duration in minutes to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
-//   auto_archive_duration?: 60 | 1440 | 4320 | 10080
-//   /** amount of seconds a user has to wait before sending another message (0-21600) */
-//   rate_limit_per_user?: number
-//   /** contents of the first message in the forum thread */
-//   message: {
-//     /** Message contents (up to 2000 characters) */
-//     content?: string
-//     /** Embedded rich content (up to 6000 characters) */
-//     embeds?: DiscordEmbed[]
-//     /** Allowed mentions for the message */
-//     allowed_mentions?: DiscordAllowedMentions[]
-//     /** Components to include with the message */
-//     components?: DiscordMessageComponents[]
-//     /** IDs of up to 3 stickers in the server to send in the message */
-//     sticker_ids?: string[]
-//     /** Contents of the file being sent. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
-//     file: FileContent | FileContent[] | undefined
-//     /** JSON-encoded body of non-file params, only for multipart/form-data requests. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
-//     payload_json?: string
-//     /** Attachment objects with filename and description. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
-//     attachments?: DiscordAttachment[]
-//     /** Message flags combined as a bitfield (only SUPPRESS_EMBEDS can be set) */
-//     flags?: number
-//   }
-//   /** the IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
-//   applied_tags?: string[]
-// }
+/** https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel */
+export interface DiscordCreateForumPostWithMessage {
+  /** 1-100 character channel name */
+  name: string
+  /** duration in minutes to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
+  auto_archive_duration?: 60 | 1440 | 4320 | 10080
+  /** amount of seconds a user has to wait before sending another message (0-21600) */
+  rate_limit_per_user?: number
+  /** contents of the first message in the forum thread */
+  message: {
+    /** Message contents (up to 2000 characters) */
+    content?: string
+    /** Embedded rich content (up to 6000 characters) */
+    embeds?: DiscordEmbed[]
+    /** Allowed mentions for the message */
+    allowed_mentions?: DiscordAllowedMentions[]
+    /** Components to include with the message */
+    components?: DiscordMessageComponents[]
+    /** IDs of up to 3 stickers in the server to send in the message */
+    sticker_ids?: string[]
+    /** Contents of the file being sent. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
+    file: FileContent | FileContent[] | undefined
+    /** JSON-encoded body of non-file params, only for multipart/form-data requests. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
+    payload_json?: string
+    /** Attachment objects with filename and description. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
+    attachments?: DiscordAttachment[]
+    /** Message flags combined as a bitfield (only SUPPRESS_EMBEDS can be set) */
+    flags?: number
+  }
+  /** the IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
+  applied_tags?: string[]
+}
 
 // /** https://discord.com/developers/docs/resources/guild-template#modify-guild-template */
 // export interface DiscordModifyGuildTemplate {
