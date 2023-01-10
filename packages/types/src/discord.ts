@@ -1442,17 +1442,17 @@ export interface DiscordInteractionDataOption {
 //   attachments?: Record<string, DiscordAttachment>
 // }
 
-// export interface DiscordListActiveThreads {
-//   /** The active threads */
-//   threads: DiscordChannel[]
-//   /** A thread member object for each returned thread the current user has joined */
-//   members: DiscordThreadMember[]
-// }
+export interface DiscordListActiveThreads {
+  /** The active threads */
+  threads: DiscordChannel[]
+  /** A thread member object for each returned thread the current user has joined */
+  members: DiscordThreadMember[]
+}
 
-// export interface DiscordListArchivedThreads extends DiscordListActiveThreads {
-//   /** Whether there are potentially additional threads that could be returned on a subsequent call */
-//   has_more: boolean
-// }
+export interface DiscordListArchivedThreads extends DiscordListActiveThreads {
+  /** Whether there are potentially additional threads that could be returned on a subsequent call */
+  has_more: boolean
+}
 
 export interface DiscordThreadListSync {
   /** The id of the guild */
@@ -3179,3 +3179,12 @@ export interface DiscordCreateForumPostWithMessage {
 //   /** description for the template (0-120 characters) */
 //   description?: string
 // }
+
+export type DiscordArchivedThreads = DiscordActiveThreads & {
+  hasMore: boolean
+}
+
+export interface DiscordActiveThreads {
+  threads: DiscordChannel[]
+  members: DiscordThreadMember[]
+}

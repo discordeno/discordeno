@@ -320,13 +320,13 @@ export type GetMessagesOptions = GetMessagesAfter | GetMessagesBefore | GetMessa
 //   limit?: number
 // }
 
-// /** https://discord.com/developers/docs/resources/channel#list-public-archived-threads-query-string-params */
-// export interface ListArchivedThreads {
-//   /** Returns threads before this timestamp */
-//   before?: number
-//   /** Optional maximum number of threads to return */
-//   limit?: number
-// }
+/** https://discord.com/developers/docs/resources/channel#list-public-archived-threads-query-string-params */
+export interface ListArchivedThreads {
+  /** Returns threads before this timestamp */
+  before?: number
+  /** Optional maximum number of threads to return */
+  limit?: number
+}
 
 // /** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
 // export interface GetGuildAuditLog {
@@ -727,4 +727,26 @@ export interface CreateStageInstance extends WithReason {
 export interface EditStageInstanceOptions extends WithReason {
   /** The topic of the Stage instance (1-120 characters) */
   topic: string
+}
+
+export interface StartThreadWithMessage extends WithReason {
+  /** 1-100 character thread name */
+  name: string
+  /** Duration in minutes to automatically archive the thread after recent activity */
+  autoArchiveDuration: 60 | 1440 | 4320 | 10080
+  /** Amount of seconds a user has to wait before sending another message (0-21600) */
+  rateLimitPerUser?: number | null
+}
+
+export interface StartThreadWithoutMessage extends WithReason {
+  /** 1-100 character thread name */
+  name: string
+  /** Duration in minutes to automatically archive the thread after recent activity */
+  autoArchiveDuration: 60 | 1440 | 4320 | 10080
+  /** Amount of seconds a user has to wait before sending another message (0-21600) */
+  rateLimitPerUser?: number | null
+  /** the type of thread to create */
+  type: ChannelTypes.AnnouncementThread | ChannelTypes.PublicThread | ChannelTypes.PrivateThread
+  /** whether non-moderators can add other non-moderators to a thread; only available when creating a private thread */
+  invitable?: boolean
 }

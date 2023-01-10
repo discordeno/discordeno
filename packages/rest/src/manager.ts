@@ -1,22 +1,3 @@
-/**
- * TODO: missing helpers
- * createStageInstance
- * deleteStageInstance
- * editStageInstance
- * getStageInstance
- * addThreadMember
- * getActiveThreads
- * getPrivateArchivedThreads
- * getPrivateJoinedArchivedThreads
- * getPublicArchivedThreads
- * getThreadMember
- * getThreadMembers
- * joinThread
- * leaveThread
- * removeThreadMember
- * startThreadWithMessage
- * startThreadWithoutMessage
- */
 import type {
   BigString,
   Camelize,
@@ -26,7 +7,9 @@ import type {
   CreateMessageOptions,
   CreateStageInstance,
   DeleteWebhookMessageOptions,
+  DiscordActiveThreads,
   DiscordApplication,
+  DiscordArchivedThreads,
   DiscordChannel,
   DiscordCreateMessage,
   DiscordCreateWebhook,
@@ -35,9 +18,12 @@ import type {
   DiscordFollowedChannel,
   DiscordGetGatewayBot,
   DiscordInviteMetadata,
+  DiscordListActiveThreads,
+  DiscordListArchivedThreads,
   DiscordMessage,
   DiscordStageInstance,
   DiscordStickerPack,
+  DiscordThreadMember,
   DiscordUser,
   DiscordWebhook,
   EditChannelPermissionOverridesOptions,
@@ -46,10 +32,13 @@ import type {
   GetMessagesOptions,
   GetWebhookMessageOptions,
   InteractionCallbackData,
+  ListArchivedThreads,
   ModifyChannel,
   ModifyGuildChannelPositions,
   ModifyGuildEmoji,
   ModifyWebhook,
+  StartThreadWithMessage,
+  StartThreadWithoutMessage,
   WithReason,
 } from '@discordeno/types'
 import { InteractionResponseTypes } from '@discordeno/types'
@@ -165,6 +154,70 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         stage: (channelId) => {
           return `/stage-instances/${channelId}`
+        },
+
+        // Thread Endpoints
+        threads: {
+          message: (channelId, messageId) => {
+            return `/channels/${channelId}/messages/${messageId}/threads`
+          },
+          all: (channelId) => {
+            return `/channels/${channelId}/threads`
+          },
+          active: (guildId) => {
+            return `/guilds/${guildId}/threads/active`
+          },
+          members: (channelId) => {
+            return `/channels/${channelId}/thread-members`
+          },
+          me: (channelId) => {
+            return `/channels/${channelId}/thread-members/@me`
+          },
+          user: (channelId, userId) => {
+            return `/channels/${channelId}/thread-members/${userId}`
+          },
+          archived: (channelId) => {
+            return `/channels/${channelId}/threads/archived`
+          },
+          public: (channelId, options) => {
+            let url = `/channels/${channelId}/threads/archived/public?`
+
+            if (options) {
+              if (options.before) {
+                url += `before=${new Date(options.before).toISOString()}`
+              }
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              if (options.limit) url += `&limit=${options.limit}`
+            }
+
+            return url
+          },
+          private: (channelId, options) => {
+            let url = `/channels/${channelId}/threads/archived/private?`
+
+            if (options) {
+              if (options.before) {
+                url += `before=${new Date(options.before).toISOString()}`
+              }
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              if (options.limit) url += `&limit=${options.limit}`
+            }
+
+            return url
+          },
+          joined: (channelId, options) => {
+            let url = `/channels/${channelId}/users/@me/threads/archived/private?`
+
+            if (options) {
+              if (options.before) {
+                url += `before=${new Date(options.before).toISOString()}`
+              }
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              if (options.limit) url += `&limit=${options.limit}`
+            }
+
+            return url
+          },
         },
 
         typing: (channelId) => {
@@ -554,6 +607,61 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
       },
 
+      threads: {
+        create: {
+          with: {
+            async message(channelId, messageId, options) {
+              return await rest.startThreadWithMessage(channelId, messageId, options)
+            },
+          },
+          without: {
+            async message(channelId, options) {
+              return await rest.startThreadWithoutMessage(channelId, options)
+            },
+          },
+        },
+
+        get: {
+          async active(guildId) {
+            return await rest.getActiveThreads(guildId)
+          },
+
+          archived: {
+            async private(channelId, options) {
+              return await rest.getPrivateArchivedThreads(channelId, options)
+            },
+
+            async joined(channelId, options) {
+              return await rest.getPrivateJoinedArchivedThreads(channelId, options)
+            },
+
+            async public(channelId, options) {
+              return await rest.getPublicArchivedThreads(channelId, options)
+            },
+          },
+
+          async member(channelId, userId) {
+            return await rest.getThreadMember(channelId, userId)
+          },
+
+          async members(channelId) {
+            return await rest.getThreadMembers(channelId)
+          },
+        },
+
+        async join(channelId) {
+          return await rest.joinThread(channelId)
+        },
+
+        async leave(channelId) {
+          return await rest.leaveThread(channelId)
+        },
+
+        async kick(channelId, userId) {
+          return await rest.removeThreadMember(channelId, userId)
+        },
+      },
+
       async typing(id) {
         return await rest.triggerTypingIndicator(id)
       },
@@ -665,8 +773,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       },
     },
 
-    async getChannel(id) {
-      return await rest.get<DiscordChannel>(rest.routes.channels.channel(id))
+    async addThreadMember(channelId, userId) {
+      return await rest.put(rest.routes.channels.threads.user(channelId, userId))
     },
 
     async createChannel(guildId, options) {
@@ -715,6 +823,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       } as DiscordFollowAnnouncementChannel)
     },
 
+    async getActiveThreads(guildId) {
+      return await rest.get<DiscordListActiveThreads>(rest.routes.channels.threads.active(guildId))
+    },
+
+    async getChannel(id) {
+      return await rest.get<DiscordChannel>(rest.routes.channels.channel(id))
+    },
+
     async getChannelInvites(channelId) {
       return await rest.get<DiscordInviteMetadata[]>(rest.routes.channels.invites(channelId))
     },
@@ -723,8 +839,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordChannel[]>(rest.routes.guilds.channels(guildId))
     },
 
-    async triggerTypingIndicator(channelId) {
-      return await rest.post(rest.routes.channels.typing(channelId))
+    async getPrivateArchivedThreads(channelId, options) {
+      return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.private(channelId, options))
+    },
+
+    async getPrivateJoinedArchivedThreads(channelId, options) {
+      return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.joined(channelId, options))
+    },
+
+    async getPublicArchivedThreads(channelId, options) {
+      return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.public(channelId, options))
     },
 
     async getSessionInfo() {
@@ -733,6 +857,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getStageInstance(channelId) {
       return await rest.get<DiscordStageInstance>(rest.routes.channels.stage(channelId))
+    },
+
+    async getThreadMember(channelId, userId) {
+      return await rest.get<DiscordThreadMember>(rest.routes.channels.threads.user(channelId, userId))
+    },
+
+    async getThreadMembers(channelId) {
+      return await rest.get<DiscordThreadMember[]>(rest.routes.channels.threads.members(channelId))
     },
 
     async getUser(id) {
@@ -857,6 +989,30 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async getWebhookWithToken(webhookId, token) {
       return await rest.get<DiscordWebhook>(rest.routes.webhook(webhookId, token))
     },
+
+    async joinThread(channelId) {
+      return await rest.put(rest.routes.channels.threads.me(channelId))
+    },
+
+    async leaveThread(channelId) {
+      return await rest.delete(rest.routes.channels.threads.me(channelId))
+    },
+
+    async removeThreadMember(channelId, userId) {
+      return await rest.delete(rest.routes.channels.threads.user(channelId, userId))
+    },
+
+    async startThreadWithMessage(channelId, messageId, options) {
+      return await rest.post<DiscordChannel>(rest.routes.channels.threads.message(channelId, messageId), options)
+    },
+
+    async startThreadWithoutMessage(channelId, options) {
+      return await rest.post<DiscordChannel>(rest.routes.channels.threads.all(channelId), options)
+    },
+
+    async triggerTypingIndicator(channelId) {
+      return await rest.post(rest.routes.channels.typing(channelId))
+    },
   }
 
   return rest
@@ -947,7 +1103,30 @@ export interface RestManager {
       stages: () => string
       /** Route for handling a specific stage */
       stage: (channelId: BigString) => string
-      /** Route for handling typing indicators in a channel. */
+      /** Routes for handling thread related to a channel. */
+      threads: {
+        /** Route for thread a specific message. */
+        message: (channelId: BigString, messageId: BigString) => string
+        /** Route for thread without a message. */
+        all: (channelId: BigString) => string
+        /** Route for active threads. */
+        active: (guildId: BigString) => string
+        /** Route for members in a thread. */
+        members: (channelId: BigString) => string
+        /** Route for the bot member in a thread. */
+        me: (channelId: BigString) => string
+        /** Route for a specific member in a thread. */
+        user: (channelId: BigString, userId: BigString) => string
+        /** Route for handling archived threads. */
+        archived: (channelId: BigString) => string
+        /** Route for handling publically archived threads. */
+        public: (channelId: BigString, options?: ListArchivedThreads) => string
+        /** Route for handling private archived threads. */
+        private: (channelId: BigString, options?: ListArchivedThreads) => string
+        /** Route for handling private archived threads that the bot has joined. */
+        joined: (channelId: BigString, options?: ListArchivedThreads) => string
+      }
+      /** Route for handling typing indicators in a c«hannel. */
       typing: (channelId: BigString) => string
     }
     /** Routes for guild related endpoints. */
@@ -1144,6 +1323,198 @@ export interface RestManager {
        * @see {@link https://discord.com/developers/docs/resources/channel#delete-channel-permission}
        */
       delete: (channelId: BigString, overwriteId: BigString, reason?: string) => Promise<void>
+    }
+    threads: {
+      get: {
+        /**
+         * Gets the list of all active threads for a guild.
+         *
+         * @param rest - The rest manager to use to make the request.
+         * @param guildId - The ID of the guild to get the threads of.
+         * @returns An instance of {@link DiscordActiveThreads}.
+         *
+         * @remarks
+         * Returns both public and private threads.
+         *
+         * Threads are ordered by the `id` property in descending order.
+         *
+         * @see {@link https://discord.com/developers/docs/resources/guild#list-active-guild-threads}
+         */
+        active: (guildId: BigString) => Promise<Camelize<DiscordActiveThreads>>
+        /** Methods related to getting archived threads. */
+        archived: {
+          /**
+           * Gets the list of private archived threads for a channel.
+           *
+           * @param rest - The rest manager to use to make the request.
+           * @param channelId - The ID of the channel to get the archived threads for.
+           * @param options - The parameters for the fetching of threads.
+           * @returns An instance of {@link DiscordArchivedThreads}.
+           *
+           * @remarks
+           * Requires the `READ_MESSAGE_HISTORY` permission.
+           * Requires the `MANAGE_THREADS` permission.
+           *
+           * Returns threads of type {@link ChannelTypes.GuildPrivateThread}.
+           *
+           * Threads are ordered by the `archive_timestamp` property included in the metadata of the object in descending order.
+           *
+           * @see {@link https://discord.com/developers/docs/resources/channel#list-private-archived-threads}
+           */
+          private: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+          /**
+           * Gets the list of private archived threads the bot is a member of for a channel.
+           *
+           * @param rest - The rest manager to use to make the request.
+           * @param channelId - The ID of the channel to get the archived threads for.
+           * @param options - The parameters for the fetching of threads.
+           * @returns An instance of {@link DiscordArchivedThreads}.
+           *
+           * @remarks
+           * Requires the `READ_MESSAGE_HISTORY` permission.
+           *
+           * Returns threads of type {@link ChannelTypes.GuildPrivateThread}.
+           *
+           * Threads are ordered by the `id` property in descending order.
+           *
+           * @see {@link https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads}
+           */
+          joined: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+          /**
+           * Gets the list of public archived threads for a channel.
+           *
+           * @param rest - The rest manager to use to make the request.
+           * @param channelId - The ID of the channel to get the archived threads for.
+           * @param options - The parameters for the fetching of threads.
+           * @returns An instance of {@link ArchivedThreads}.
+           *
+           * @remarks
+           * Requires the `READ_MESSAGE_HISTORY` permission.
+           *
+           * If called on a channel of type {@link ChannelTypes.GuildText}, returns threads of type {@link ChannelTypes.GuildPublicThread}.
+           * If called on a channel of type {@link ChannelTypes.GuildNews}, returns threads of type {@link ChannelTypes.GuildNewsThread}.
+           *
+           * Threads are ordered by the `archive_timestamp` property included in the metadata of the object in descending order.
+           *
+           * @see {@link https://discord.com/developers/docs/resources/channel#list-public-archived-threads}
+           */
+          public: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+        }
+        /**
+         * Gets a thread member by their user ID.
+         *
+         * @param rest - The rest manager to use to make the request.
+         * @param channelId - The ID of the thread to get the thread member of.
+         * @param userId - The user ID of the thread member to get.
+         * @returns An instance of {@link DiscordThreadMember}.
+         *
+         * @see {@link https://discord.com/developers/docs/resources/channel#get-thread-member}
+         */
+        member: (channelId: BigString, userId: BigString) => Promise<Camelize<DiscordThreadMember>>
+        /**
+         * Gets the list of thread members for a thread.
+         *
+         * @param rest - The rest manager to use to make the request.
+         * @param channelId - The ID of the thread to get the thread members of.
+         * @returns A collection of {@link DiscordThreadMember} assorted by user ID.
+         *
+         * @remarks
+         * Requires the application to have the `GUILD_MEMBERS` privileged intent enabled.
+         *
+         * @see {@link https://discord.com/developers/docs/resources/channel#list-thread-members}
+         */
+        members: (channelId: BigString) => Promise<Array<Camelize<DiscordThreadMember>>>
+      }
+      /**
+       * Adds the bot user to a thread.
+       *
+       * @param rest - The rest manager to use to make the request.
+       * @param channelId - The ID of the thread to add the bot user to.
+       *
+       * @remarks
+       * Requires the thread not be archived.
+       *
+       * Fires a _Thread Members Update_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/channel#join-thread}
+       */
+      join: (channelId: BigString) => Promise<void>
+      /**
+       * Removes the bot user from a thread.
+       *
+       * @param rest - The rest manager to use to make the request.
+       * @param channelId - The ID of the thread to remove the bot user from.
+       *
+       * @remarks
+       * Requires the thread not be archived.
+       *
+       * Fires a _Thread Members Update_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/channel#leave-thread}
+       */
+      leave: (channelId: BigString) => Promise<void>
+      /**
+       * Removes a member from a thread.
+       *
+       * @param rest - The rest manager to use to make the request.
+       * @param channelId - The ID of the thread to remove the thread member of.
+       * @param userId - The user ID of the thread member to remove.
+       *
+       * @remarks
+       * If the thread is of type {@link ChannelTypes.GuildPrivateThread}, requires to be the creator of the thread.
+       * Otherwise, requires the `MANAGE_THREADS` permission.
+       *
+       * Requires the thread not be archived.
+       *
+       * Fires a _Thread Members Update_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/channel#remove-thread-member}
+       */
+      kick: (channelId: BigString, userId: BigString) => Promise<void>
+      /** Methods related to creating a thread. */
+      create: {
+        with: {
+          /**
+           * Creates a thread, using an existing message as its point of origin.
+           *
+           * @param rest - The rest manager to use to make the request.
+           * @param channelId - The ID of the channel in which to create the thread.
+           * @param messageId - The ID of the message to use as the thread's point of origin.
+           * @param options - The parameters to use for the creation of the thread.
+           * @returns An instance of the created {@link Channel | Thread}.
+           *
+           * @remarks
+           * If called on a channel of type {@link ChannelTypes.GuildText}, creates a {@link ChannelTypes.GuildPublicThread}.
+           * If called on a channel of type {@link ChannelTypes.GuildNews}, creates a {@link ChannelTypes.GuildNewsThread}.
+           * Does not work on channels of type {@link ChannelTypes.GuildForum}.
+           *
+           * The ID of the created thread will be the same as the ID of the source message.
+           *
+           * Fires a _Thread Create_ gateway event.
+           *
+           * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-from-message}
+           */
+          message: (channelId: BigString, messageId: BigString, options: StartThreadWithMessage) => Promise<Camelize<DiscordChannel>>
+        }
+        without: {
+          /**
+           * Creates a thread without using a message as the thread's point of origin.
+           *
+           * @param rest - The rest manager to use to make the request.
+           * @param channelId - The ID of the channel in which to create the thread.
+           * @param options - The parameters to use for the creation of the thread.
+           * @returns An instance of the created {@link DiscordChannel | Thread}.
+           *
+           * @remarks
+           * Creating a private thread requires the server to be boosted.
+           *
+           * Fires a _Thread Create_ gateway event.
+           *
+           * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-without-message}
+           */
+          message: (channelId: BigString, options: StartThreadWithoutMessage) => Promise<Camelize<DiscordChannel>>
+        }
+      }
     }
     /**
      * Edits the positions of a set of channels in a guild.
@@ -1755,12 +2126,6 @@ export interface RestManager {
   /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */
   getSessionInfo: () => Promise<Camelize<DiscordGetGatewayBot>>
   /**
-   * Get a user's data from the api
-   *
-   * @param id The user's id
-   * @returns {Camelize<DiscordUser>}
-   */
-  /**
    * Gets the stage instance associated with a stage channel, if one exists.
    *
    * @param rest - The rest manager to use to make the request.
@@ -1770,6 +2135,12 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/stage-instance#get-stage-instance}
    */
   getStageInstance: (channelId: BigString) => Promise<Camelize<DiscordStageInstance>>
+  /**
+   * Get a user's data from the api
+   *
+   * @param id The user's id
+   * @returns {Camelize<DiscordUser>}
+   */
   getUser: (id: BigString) => Promise<Camelize<DiscordUser>>
   /**
    * Creates an emoji in a guild.
@@ -2090,6 +2461,200 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook-with-token}
    */
   getWebhookWithToken: (webhookId: BigString, token: string) => Promise<Camelize<DiscordWebhook>>
+  /**
+   * Adds a member to a thread.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param channelId - The ID of the thread to add the member to.
+   * @param userId - The user ID of the member to add to the thread.
+   *
+   * @remarks
+   * Requires the ability to send messages in the thread.
+   * Requires the thread not be archived.
+   *
+   * Fires a _Thread Members Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#add-thread-member}
+   */
+  addThreadMember: (channelId: BigString, userId: BigString) => Promise<void>
+  /**
+   * Gets the list of all active threads for a guild.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param guildId - The ID of the guild to get the threads of.
+   * @returns An instance of {@link DiscordActiveThreads}.
+   *
+   * @remarks
+   * Returns both public and private threads.
+   *
+   * Threads are ordered by the `id` property in descending order.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#list-active-guild-threads}
+   */
+  getActiveThreads: (guildId: BigString) => Promise<Camelize<DiscordActiveThreads>>
+  /**
+   * Gets the list of private archived threads for a channel.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param channelId - The ID of the channel to get the archived threads for.
+   * @param options - The parameters for the fetching of threads.
+   * @returns An instance of {@link DiscordArchivedThreads}.
+   *
+   * @remarks
+   * Requires the `READ_MESSAGE_HISTORY` permission.
+   * Requires the `MANAGE_THREADS` permission.
+   *
+   * Returns threads of type {@link ChannelTypes.GuildPrivateThread}.
+   *
+   * Threads are ordered by the `archive_timestamp` property included in the metadata of the object in descending order.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#list-private-archived-threads}
+   */
+  getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  /**
+   * Gets the list of private archived threads the bot is a member of for a channel.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param channelId - The ID of the channel to get the archived threads for.
+   * @param options - The parameters for the fetching of threads.
+   * @returns An instance of {@link DiscordArchivedThreads}.
+   *
+   * @remarks
+   * Requires the `READ_MESSAGE_HISTORY` permission.
+   *
+   * Returns threads of type {@link ChannelTypes.GuildPrivateThread}.
+   *
+   * Threads are ordered by the `id` property in descending order.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads}
+   */
+  getPrivateJoinedArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  /**
+   * Gets the list of public archived threads for a channel.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param channelId - The ID of the channel to get the archived threads for.
+   * @param options - The parameters for the fetching of threads.
+   * @returns An instance of {@link ArchivedThreads}.
+   *
+   * @remarks
+   * Requires the `READ_MESSAGE_HISTORY` permission.
+   *
+   * If called on a channel of type {@link ChannelTypes.GuildText}, returns threads of type {@link ChannelTypes.GuildPublicThread}.
+   * If called on a channel of type {@link ChannelTypes.GuildNews}, returns threads of type {@link ChannelTypes.GuildNewsThread}.
+   *
+   * Threads are ordered by the `archive_timestamp` property included in the metadata of the object in descending order.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#list-public-archived-threads}
+   */
+  getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  /**
+   * Gets a thread member by their user ID.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param channelId - The ID of the thread to get the thread member of.
+   * @param userId - The user ID of the thread member to get.
+   * @returns An instance of {@link DiscordThreadMember}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#get-thread-member}
+   */
+  getThreadMember: (channelId: BigString, userId: BigString) => Promise<Camelize<DiscordThreadMember>>
+  /**
+   * Gets the list of thread members for a thread.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param channelId - The ID of the thread to get the thread members of.
+   * @returns A collection of {@link DiscordThreadMember} assorted by user ID.
+   *
+   * @remarks
+   * Requires the application to have the `GUILD_MEMBERS` privileged intent enabled.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#list-thread-members}
+   */
+  getThreadMembers: (channelId: BigString) => Promise<Array<Camelize<DiscordThreadMember>>>
+  /**
+   * Adds the bot user to a thread.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param channelId - The ID of the thread to add the bot user to.
+   *
+   * @remarks
+   * Requires the thread not be archived.
+   *
+   * Fires a _Thread Members Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#join-thread}
+   */
+  joinThread: (channelId: BigString) => Promise<void>
+  /**
+   * Removes the bot user from a thread.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param channelId - The ID of the thread to remove the bot user from.
+   *
+   * @remarks
+   * Requires the thread not be archived.
+   *
+   * Fires a _Thread Members Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#leave-thread}
+   */
+  leaveThread: (channelId: BigString) => Promise<void>
+  /**
+   * Removes a member from a thread.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param channelId - The ID of the thread to remove the thread member of.
+   * @param userId - The user ID of the thread member to remove.
+   *
+   * @remarks
+   * If the thread is of type {@link ChannelTypes.GuildPrivateThread}, requires to be the creator of the thread.
+   * Otherwise, requires the `MANAGE_THREADS` permission.
+   *
+   * Requires the thread not be archived.
+   *
+   * Fires a _Thread Members Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#remove-thread-member}
+   */
+  removeThreadMember: (channelId: BigString, userId: BigString) => Promise<void>
+  /**
+   * Creates a thread, using an existing message as its point of origin.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param channelId - The ID of the channel in which to create the thread.
+   * @param messageId - The ID of the message to use as the thread's point of origin.
+   * @param options - The parameters to use for the creation of the thread.
+   * @returns An instance of the created {@link Channel | Thread}.
+   *
+   * @remarks
+   * If called on a channel of type {@link ChannelTypes.GuildText}, creates a {@link ChannelTypes.GuildPublicThread}.
+   * If called on a channel of type {@link ChannelTypes.GuildNews}, creates a {@link ChannelTypes.GuildNewsThread}.
+   * Does not work on channels of type {@link ChannelTypes.GuildForum}.
+   *
+   * The ID of the created thread will be the same as the ID of the source message.
+   *
+   * Fires a _Thread Create_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-from-message}
+   */
+  startThreadWithMessage: (channelId: BigString, messageId: BigString, options: StartThreadWithMessage) => Promise<Camelize<DiscordChannel>>
+  /**
+   * Creates a thread without using a message as the thread's point of origin.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param channelId - The ID of the channel in which to create the thread.
+   * @param options - The parameters to use for the creation of the thread.
+   * @returns An instance of the created {@link DiscordChannel | Thread}.
+   *
+   * @remarks
+   * Creating a private thread requires the server to be boosted.
+   *
+   * Fires a _Thread Create_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-without-message}
+   */
+  startThreadWithoutMessage: (channelId: BigString, options: StartThreadWithoutMessage) => Promise<Camelize<DiscordChannel>>
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'
