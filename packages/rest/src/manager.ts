@@ -1,3 +1,24 @@
+/**
+ * TODO: missing helpers
+ * followAnnouncements
+ * createForumThread
+ * createStageInstance
+ * deleteStageInstance
+ * editStageInstance
+ * getStageInstance
+ * addThreadMember
+ * getActiveThreads
+ * getPrivateArchivedThreads
+ * getPrivateJoinedArchivedThreads
+ * getPublicArchivedThreads
+ * getThreadMember
+ * getThreadMembers
+ * joinThread
+ * leaveThread
+ * removeThreadMember
+ * startThreadWithMessage
+ * startThreadWithoutMessage
+ */
 import type {
   BigString,
   Camelize,
@@ -10,6 +31,8 @@ import type {
   DiscordCreateMessage,
   DiscordCreateWebhook,
   DiscordEmoji,
+  DiscordFollowAnnouncementChannel,
+  DiscordFollowedChannel,
   DiscordGetGatewayBot,
   DiscordInviteMetadata,
   DiscordMessage,
@@ -91,6 +114,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         channel: (channelId) => {
           return `/channels/${channelId}`
+        },
+
+        follow: (channelId) => {
+          return `/channels/${channelId}/followers`
         },
 
         invites: (channelId) => {
@@ -467,6 +494,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return await rest.editChannel(id, options)
       },
 
+      async follow(sourceChannelId, targetChannelId) {
+        return await rest.followAnnouncement(sourceChannelId, targetChannelId)
+      },
+
       permissions: {
         async edit(channelId, options) {
           return await rest.editChannelPermissionOverrides(channelId, options)
@@ -618,6 +649,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async editChannelPositions(guildId, channelPositions) {
       return await rest.patch(rest.routes.guilds.channels(guildId), channelPositions)
+    },
+
+    async followAnnouncement(sourceChannelId, targetChannelId) {
+      return await rest.post<DiscordFollowedChannel>(rest.routes.channels.follow(sourceChannelId), {
+        webhook_channel_id: targetChannelId,
+      } as DiscordFollowAnnouncementChannel)
     },
 
     async getChannelInvites(channelId) {
@@ -832,6 +869,8 @@ export interface RestManager {
       webhooks: (channelId: BigString) => string
       /** Route for a specific channel. */
       channel: (channelId: BigString) => string
+      /** Route for following a specific channel. */
+      follow: (channelId: BigString) => string
       /** Route for a specific channel's invites. */
       invites: (channelId: BigString) => string
       /** Route for a specific message */
@@ -969,6 +1008,21 @@ export interface RestManager {
      *     - Fires a _Channel Update_ gateway event.
      */
     edit: (channelId: BigString, options: ModifyChannel) => Promise<Camelize<DiscordChannel>>
+    /**
+     * Follows an announcement channel, allowing messages posted within it to be cross-posted into the target channel.
+     *
+     * @param sourceChannelId - The ID of the announcement channel to follow.
+     * @param targetChannelId - The ID of the target channel - the channel to cross-post to.
+     * @returns An instance of {@link DiscordFollowedChannel}.
+     *
+     * @remarks
+     * Requires the `MANAGE_WEBHOOKS` permission in the __target channel__.
+     *
+     * Fires a _Webhooks Update_ gateway event.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/channel#follow-announcement-channel}
+     */
+    follow: (sourceChannelId: BigString, targetChannelId: BigString) => Promise<Camelize<DiscordFollowedChannel>>
     /** Permission related helpers in a channel */
     permissions: {
       /**
@@ -1478,6 +1532,21 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions}
    */
   editChannelPositions: (guildId: BigString, channelPositions: ModifyGuildChannelPositions[]) => Promise<void>
+  /**
+   * Follows an announcement channel, allowing messages posted within it to be cross-posted into the target channel.
+   *
+   * @param sourceChannelId - The ID of the announcement channel to follow.
+   * @param targetChannelId - The ID of the target channel - the channel to cross-post to.
+   * @returns An instance of {@link DiscordFollowedChannel}.
+   *
+   * @remarks
+   * Requires the `MANAGE_WEBHOOKS` permission in the __target channel__.
+   *
+   * Fires a _Webhooks Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#follow-announcement-channel}
+   */
+  followAnnouncement: (sourceChannelId: BigString, targetChannelId: BigString) => Promise<Camelize<DiscordFollowedChannel>>
   /**
    * Gets the list of invites for a channel.
    *

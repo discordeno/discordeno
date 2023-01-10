@@ -2088,13 +2088,13 @@ export interface DiscordGuildPreview {
 //   category_ids: number[]
 // }
 
-// /** https://discord.com/developers/docs/resources/channel#followed-channel-object */
-// export interface DiscordFollowedChannel {
-//   /** Source message id */
-//   channel_id: string
-//   /** Created target webhook id */
-//   webhook_id: string
-// }
+/** https://discord.com/developers/docs/resources/channel#followed-channel-object */
+export interface DiscordFollowedChannel {
+  /** Source message id */
+  channel_id: string
+  /** Created target webhook id */
+  webhook_id: string
+}
 
 /** https://discord.com/developers/docs/topics/gateway#payloads-gateway-payload-structure */
 export interface DiscordGatewayPayload {
@@ -2965,10 +2965,10 @@ export interface DiscordCreateMessage {
 //   invitable?: boolean
 // }
 
-// export interface DiscordFollowAnnouncementChannel {
-//   /** The id of the channel to send announcements to. */
-//   webhook_channel_id: string
-// }
+export interface DiscordFollowAnnouncementChannel {
+  /** The id of the channel to send announcements to. */
+  webhook_channel_id: string
+}
 
 export interface DiscordEditChannelPermissionOverridesOptions {
   /** Permission bit set */
