@@ -23,7 +23,10 @@ export const camelize = <T>(object: T): Camelize<T> => {
   return object as Camelize<T>
 }
 
+const regex = /(_[a-z])/;
 function snakeToCamelCase(str: string) {
+  if (!regex.test(str)) return str
+
   let result = ''
   for (let i = 0, len = str.length; i < len; ++i) {
     if (str[i] === '_') {
