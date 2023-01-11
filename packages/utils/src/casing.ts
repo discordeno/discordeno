@@ -31,7 +31,7 @@ function snakeToCamelCase(str: string) {
     if (str[i] === '_') {
       result += str[i++].toUpperCase()
 
-      continue;
+      continue
     }
 
     result += str[i]
