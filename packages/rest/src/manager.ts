@@ -20,6 +20,7 @@ import type {
   DiscordFollowAnnouncementChannel,
   DiscordFollowedChannel,
   DiscordGetGatewayBot,
+  DiscordIntegration,
   DiscordInviteMetadata,
   DiscordListActiveThreads,
   DiscordListArchivedThreads,
@@ -292,6 +293,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
             return url
           },
+        },
+        integration(guildId, integrationId) {
+          return `/guilds/${guildId}/integrations/${integrationId}`
+        },
+        integrations: (guildId) => {
+          return `/guilds/${guildId}/integrations?include_applications=true`
         },
         webhooks: (guildId) => {
           return `/guilds/${guildId}/webhooks`
@@ -798,6 +805,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           },
         },
       },
+
+      integrations: {
+        async get(guildId) {
+          return await rest.getIntegrations(guildId)
+        },
+
+        async delete(guildId, integrationId) {
+          return await rest.deleteIntegration(guildId, integrationId)
+        },
+      },
     },
 
     webhooks: {
@@ -928,6 +945,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async deleteEmoji(guildId, id, reason) {
       return await rest.delete(rest.routes.guilds.emoji(guildId, id), { reason })
+    },
+
+    async deleteIntegration(guildId, integrationId) {
+      return await rest.delete(rest.routes.guilds.integration(guildId, integrationId))
     },
 
     async deleteScheduledEvent(guildId, eventId) {
@@ -1065,6 +1086,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getGuildWebhooks(guildId) {
       return await rest.get<DiscordWebhook[]>(rest.routes.guilds.webhooks(guildId))
+    },
+
+    async getIntegrations(guildId) {
+      return await rest.get<DiscordIntegration[]>(rest.routes.guilds.integrations(guildId))
     },
 
     async getNitroStickerPacks() {
@@ -1298,6 +1323,10 @@ export interface RestManager {
       emoji: (guildId: BigString, id: BigString) => string
       /** Route for handling non-specific emojis. */
       emojis: (guildId: BigString) => string
+      /** Route for handling a specific integration. */
+      integration: (guildId: BigString, integrationId: BigString) => string
+      /** Route for handling non-specific integrations. */
+      integrations: (guildId: BigString) => string
       /** Route for handling non-specific webhooks in a guild */
       webhooks: (guildId: BigString) => string
     }
@@ -1578,7 +1607,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/resources/channel#list-thread-members}
          */
-        members: (channelId: BigString) => Promise<Array<Camelize<DiscordThreadMember>>>
+        members: (channelId: BigString) => Promise<Camelize<DiscordThreadMember[]>>
       }
       /**
        * Adds the bot user to a thread.
@@ -1693,7 +1722,7 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/channel#get-channel-invites}
      */
-    invites: (channelId: BigString) => Promise<Array<Camelize<DiscordInviteMetadata>>>
+    invites: (channelId: BigString) => Promise<Camelize<DiscordInviteMetadata[]>>
     /** Stage related helpers for a channel. */
     stages: {
       /**
@@ -1895,7 +1924,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/resources/auto-moderation#list-auto-moderation-rules-for-guild}
          */
-        rules: (guildId: BigString) => Promise<Array<Camelize<DiscordAutoModerationRule>>>
+        rules: (guildId: BigString) => Promise<Camelize<DiscordAutoModerationRule[]>>
       }
     }
     /**
@@ -1909,7 +1938,7 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-channels}
      */
-    channels: (guildId: BigString) => Promise<Array<Camelize<DiscordChannel>>>
+    channels: (guildId: BigString) => Promise<Camelize<DiscordChannel[]>>
     /**
      * Gets the list of emojis for a guild.
      *
@@ -1918,7 +1947,7 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/emoji#list-guild-emojis}
      */
-    emojis: (guildId: BigString) => Promise<Array<Camelize<DiscordEmoji>>>
+    emojis: (guildId: BigString) => Promise<Camelize<DiscordEmoji[]>>
     /** Methods related to a guild's scheduled events. */
     events: {
       /**
@@ -1993,7 +2022,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#list-scheduled-events-for-guild}
          */
-        events: (guildId: BigString, options?: GetScheduledEvents) => Promise<Array<Camelize<DiscordScheduledEvent>>>
+        events: (guildId: BigString, options?: GetScheduledEvents) => Promise<Camelize<DiscordScheduledEvent[]>>
         /**
          * Gets the list of subscribers to a scheduled event from a guild.
          *
@@ -2015,6 +2044,38 @@ export interface RestManager {
           options?: GetScheduledEventUsers,
         ) => Promise<Array<{ user: Camelize<DiscordUser>; member?: Camelize<DiscordMember> }>>
       }
+    }
+    /** Methods related to a guild's integrations. */
+    integrations: {
+      /**
+       * Gets the list of integrations attached to a guild.
+       *
+       * @param guildId - The ID of the guild to get the list of integrations from.
+       * @returns A collection of {@link Integration} objects assorted by integration ID.
+       *
+       * @remarks
+       * Requires the `MANAGE_GUILD` permission.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-integrations}
+       */
+      get: (guildId: BigString) => Promise<Camelize<DiscordIntegration[]>>
+      /**
+       * Deletes an integration attached to a guild.
+       *
+       * @param guildId - The ID of the guild from which to delete the integration.
+       * @param integrationId - The ID of the integration to delete from the guild.
+       *
+       * @remarks
+       * Requires the `MANAGE_GUILD` permission.
+       *
+       * Deletes all webhooks associated with the integration, and kicks the associated bot if there is one.
+       *
+       * Fires a _Guild Integrations Update_ gateway event.
+       * Fires a _Integration Delete_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild-integration}
+       */
+      delete: (guildId: BigString, integrationId: BigString) => Promise<void>
     }
   }
   /** Webhook related helper methods. */
@@ -2128,7 +2189,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/webhook#get-channel-webhooks}
        */
-      channel: (channelId: BigString) => Promise<Array<Camelize<DiscordWebhook>>>
+      channel: (channelId: BigString) => Promise<Camelize<DiscordWebhook[]>>
       /**
        * Gets the list of webhooks for a guild.
        *
@@ -2140,7 +2201,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/webhook#get-guild-webhooks}
        */
-      guild: (guildId: BigString) => Promise<Array<Camelize<DiscordWebhook>>>
+      guild: (guildId: BigString) => Promise<Camelize<DiscordWebhook[]>>
       /**
        * Gets a webhook message by its ID.
        *
@@ -2397,6 +2458,23 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/emoji#delete-guild-emoji}
    */
   deleteEmoji: (guildId: BigString, id: BigString, reason?: string) => Promise<void>
+  /**
+   * Deletes an integration attached to a guild.
+   *
+   * @param guildId - The ID of the guild from which to delete the integration.
+   * @param integrationId - The ID of the integration to delete from the guild.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * Deletes all webhooks associated with the integration, and kicks the associated bot if there is one.
+   *
+   * Fires a _Guild Integrations Update_ gateway event.
+   * Fires a _Integration Delete_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild-integration}
+   */
+  deleteIntegration: (guildId: BigString, integrationId: BigString) => Promise<void>
   /**
    * Deletes a scheduled event from a guild.
    *
@@ -2733,7 +2811,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/auto-moderation#list-auto-moderation-rules-for-guild}
    */
-  getAutomodRules: (guildId: BigString) => Promise<Array<Camelize<DiscordAutoModerationRule>>>
+  getAutomodRules: (guildId: BigString) => Promise<Camelize<DiscordAutoModerationRule[]>>
   /**
    * Gets a channel by its ID.
    *
@@ -2759,7 +2837,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#get-channel-invites}
    */
-  getChannelInvites: (channelId: BigString) => Promise<Array<Camelize<DiscordInviteMetadata>>>
+  getChannelInvites: (channelId: BigString) => Promise<Camelize<DiscordInviteMetadata[]>>
   /**
    * Gets the list of channels for a guild.
    *
@@ -2771,7 +2849,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-channels}
    */
-  getChannels: (guildId: BigString) => Promise<Array<Camelize<DiscordChannel>>>
+  getChannels: (guildId: BigString) => Promise<Camelize<DiscordChannel[]>>
   /**
    * Gets a list of webhooks for a channel.
    *
@@ -2783,7 +2861,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#get-channel-webhooks}
    */
-  getChannelWebhooks: (channelId: BigString) => Promise<Array<Camelize<DiscordWebhook>>>
+  getChannelWebhooks: (channelId: BigString) => Promise<Camelize<DiscordWebhook[]>>
   /**
    * Gets an emoji by its ID.
    *
@@ -2802,7 +2880,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/emoji#list-guild-emojis}
    */
-  getEmojis: (guildId: BigString) => Promise<Array<Camelize<DiscordEmoji>>>
+  getEmojis: (guildId: BigString) => Promise<Camelize<DiscordEmoji[]>>
   /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */
   getGatewayBot: () => Promise<Camelize<DiscordGetGatewayBot>>
   /**
@@ -2816,7 +2894,19 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#get-guild-webhooks}
    */
-  getGuildWebhooks: (guildId: BigString) => Promise<Array<Camelize<DiscordWebhook>>>
+  getGuildWebhooks: (guildId: BigString) => Promise<Camelize<DiscordWebhook[]>>
+  /**
+   * Gets the list of integrations attached to a guild.
+   *
+   * @param guildId - The ID of the guild to get the list of integrations from.
+   * @returns A collection of {@link Integration} objects assorted by integration ID.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-integrations}
+   */
+  getIntegrations: (guildId: BigString) => Promise<Camelize<DiscordIntegration[]>>
   /**
    * Returns the list of sticker packs available to Nitro subscribers.
    *
@@ -2825,7 +2915,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#list-nitro-sticker-packs}
    */
-  getNitroStickerPacks: () => Promise<Array<Camelize<DiscordStickerPack>>>
+  getNitroStickerPacks: () => Promise<Camelize<DiscordStickerPack[]>>
   /**
    * Gets the list of private archived threads for a channel.
    *
@@ -2899,7 +2989,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#list-scheduled-events-for-guild}
    */
-  getScheduledEvents: (guildId: BigString, options?: GetScheduledEvents) => Promise<Array<Camelize<DiscordScheduledEvent>>>
+  getScheduledEvents: (guildId: BigString, options?: GetScheduledEvents) => Promise<Camelize<DiscordScheduledEvent[]>>
   /**
    * Gets the list of subscribers to a scheduled event from a guild.
    *
@@ -2952,7 +3042,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-thread-members}
    */
-  getThreadMembers: (channelId: BigString) => Promise<Array<Camelize<DiscordThreadMember>>>
+  getThreadMembers: (channelId: BigString) => Promise<Camelize<DiscordThreadMember[]>>
   /**
    * Get a user's data from the api
    *
