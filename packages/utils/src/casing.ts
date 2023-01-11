@@ -1,4 +1,4 @@
-import type { Camelize } from '@discordeno/types';
+import type { Camelize } from '@discordeno/types'
 
 export const camelize = <T>(object: T): Camelize<T> => {
   if (Array.isArray(object)) {
@@ -24,16 +24,16 @@ export const camelize = <T>(object: T): Camelize<T> => {
 }
 
 function snakeToCamelCase(str: string) {
-  let result = "";
+  let result = ''
   for (let i = 0, len = str.length; i < len; ++i) {
-    if (str[i] === "_") {
-      result += str[i++].toUpperCase();
+    if (str[i] === '_') {
+      result += str[i++].toUpperCase()
 
       continue;
     }
 
-    result += str[i];
+    result += str[i]
   }
 
-  return result;
+  return result
 }
