@@ -230,6 +230,7 @@ export function createEventHandlers(
 
   return {
     debug: events.debug ?? ignore,
+    auditLogEntryCreate: events.auditLogEntryCreate ?? ignore,
     automodRuleCreate: events.automodRuleCreate ?? ignore,
     automodRuleUpdate: events.automodRuleUpdate ?? ignore,
     automodRuleDelete: events.automodRuleDelete ?? ignore,
@@ -550,6 +551,7 @@ export function createTransformers(options: Partial<Transformers>) {
 
 export interface EventHandlers {
   debug: (text: string, ...args: any[]) => unknown;
+  auditLogEntryCreate: (bot: Bot, log: AuditLogEntry, guildId: bigint) => unknown;
   automodRuleCreate: (bot: Bot, rule: AutoModerationRule) => unknown;
   automodRuleUpdate: (bot: Bot, rule: AutoModerationRule) => unknown;
   automodRuleDelete: (bot: Bot, rule: AutoModerationRule) => unknown;
@@ -800,6 +802,7 @@ export interface BotGatewayHandlerOptions {
   STAGE_INSTANCE_CREATE: typeof handlers.handleStageInstanceCreate;
   STAGE_INSTANCE_UPDATE: typeof handlers.handleStageInstanceUpdate;
   STAGE_INSTANCE_DELETE: typeof handlers.handleStageInstanceDelete;
+  GUILD_AUDIT_LOG_ENTRY_CREATE: typeof handlers.handleGuildAuditLogEntryCreate;
   GUILD_BAN_ADD: typeof handlers.handleGuildBanAdd;
   GUILD_BAN_REMOVE: typeof handlers.handleGuildBanRemove;
   GUILD_CREATE: typeof handlers.handleGuildCreate;
@@ -869,6 +872,7 @@ export function createBotGatewayHandlers(
       handlers.handleStageInstanceDelete,
 
     // guilds
+    GUILD_AUDIT_LOG_ENTRY_CREATE: options.GUILD_AUDIT_LOG_ENTRY_CREATE ?? handlers.handleGuildAuditLogEntryCreate,
     GUILD_BAN_ADD: options.GUILD_BAN_ADD ?? handlers.handleGuildBanAdd,
     GUILD_BAN_REMOVE: options.GUILD_BAN_REMOVE ?? handlers.handleGuildBanRemove,
     GUILD_CREATE: options.GUILD_CREATE ?? handlers.handleGuildCreate,
