@@ -1132,6 +1132,7 @@ export enum GatewayIntents {
    */
   GuildMembers = 1 << 1,
   /**
+   * - GUILD_AUDIT_LOG_ENTRY_CREATE
    * - GUILD_BAN_ADD
    * - GUILD_BAN_REMOVE
    */
