@@ -1048,6 +1048,7 @@ export type GatewayDispatchEventNames =
   | "CHANNEL_DELETE"
   | "CHANNEL_PINS_UPDATE"
   | "CHANNEL_UPDATE"
+  | "GUILD_AUDIT_LOG_ENTRY_CREATE"
   | "GUILD_BAN_ADD"
   | "GUILD_BAN_REMOVE"
   | "GUILD_CREATE"
