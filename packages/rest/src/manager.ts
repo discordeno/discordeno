@@ -1,3 +1,17 @@
+/**
+ * sendInteractionResponse
+ * editOriginalInteractionResponse
+ * sendMessage
+ * editMessage
+ * publishMessage
+ * sendFollowupMessage
+ * deleteMessage
+ * editWebhookMessage
+ * editGlobalApplicationCommand
+ * editGuildApplicationCommand
+ * getDmChannel
+ * getOriginalInteractionResponse
+ */
 import type {
   BigString,
   Camelize,
@@ -52,7 +66,7 @@ import type {
   ModifyWebhook,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
-  WithReason,
+  WithReason
 } from '@discordeno/types'
 import { InteractionResponseTypes } from '@discordeno/types'
 import { camelize, delay, urlToBase64 } from '@discordeno/utils'
@@ -111,10 +125,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       },
 
       // Miscellaneous Endpoints
-      sessionInfo: () => '/gateway/bot',
+      sessionInfo: () => rest.routes.gatewayBot(),
 
       // Channel Endpoints
       channels: {
+        dm: () => {
+          return '/users/@me/channels'
+        },
         webhooks: (channelId) => {
           return `/channels/${channelId}/webhooks`
         },
@@ -861,6 +878,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       },
     },
 
+    users: {
+      async channel(userId) {
+        return await rest.getDmChannel(userId)
+      },
+    },
+
     webhooks: {
       async create(channelId, options) {
         return await rest.createWebhook(channelId, options)
@@ -1124,6 +1147,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordWebhook[]>(rest.routes.channels.webhooks(channelId))
     },
 
+async getDmChannel (userId) {
+  return await rest.post<DiscordChannel>(
+    rest.routes.channels.dm(),
+    {
+      recipient_id: userId.toString()
+    }
+  )
+},
+
     async getEmoji(guildId, emojiId) {
       return await rest.get<DiscordEmoji>(rest.routes.guilds.emoji(guildId, emojiId))
     },
@@ -1181,7 +1213,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getSessionInfo() {
-      return await rest.get<DiscordGetGatewayBot>(rest.routes.sessionInfo())
+      return await rest.getGatewayBot()
     },
 
     async getStageInstance(channelId) {
@@ -1313,7 +1345,9 @@ export interface RestManager {
     }
     /** Routes for channel related endpoints. */
     channels: {
-      // Get a Channels Webhooks
+      /** Route for non-specific dm channel. */
+      dm: () => string
+      /** Route for non-specific webhook in a channel. */
       webhooks: (channelId: BigString) => string
       /** Route for a specific channel. */
       channel: (channelId: BigString) => string
@@ -2148,7 +2182,7 @@ export interface RestManager {
        *
        * @param channelId - The ID of the channel to create the invite to.
        * @param options - The parameters for the creation of the invite.
-       * @returns An instance of the created {@link BaseInvite | Invite}.
+       * @returns An instance of the created {@link DiscordInvite}.
        *
        * @remarks
        * Requires the `CREATE_INSTANT_INVITE` permission.
@@ -2160,7 +2194,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/channel#create-channel-invite}
        */
-      create: (channelId: BigString, options?: CreateChannelInvite) => Promise<BaseInvite>
+      create: (channelId: BigString, options?: CreateChannelInvite) => Promise<Camelize<DiscordInvite>>
       /**
        * Deletes an invite to a channel.
        *
@@ -2179,7 +2213,7 @@ export interface RestManager {
        *
        * @param inviteCode - The invite code of the invite to get.
        * @param options - The parameters for the fetching of the invite.
-       * @returns An instance of {@link BaseInvite | Invite}.
+       * @returns An instance of {@link DiscordInviteMetadata}.
        *
        * @see {@link https://discord.com/developers/docs/resources/invite#get-invite}
        */
@@ -2188,7 +2222,7 @@ export interface RestManager {
        * Gets the list of invites for a guild.
        *
        * @param guildId - The ID of the guild to get the invites from.
-       * @returns A collection of {@link InviteMetadata | Invite} objects assorted by invite code.
+       * @returns A collection of {@link DiscordInviteMetadata} objects assorted by invite code.
        *
        * @remarks
        * Requires the `MANAGE_GUILD` permission.
@@ -2379,6 +2413,19 @@ export interface RestManager {
       edit: WebhookMessageEditor
     }
   }
+  /** User related helper methods. */
+  users: {
+    /**
+    * Gets or creates a DM channel with a user.
+    *
+    * @param userId - The ID of the user to create the DM channel with.
+    * @returns An instance of {@link DiscordChannel}.
+    *
+    * @see {@link https://discord.com/developers/docs/resources/user#create-dm}
+    */
+   channel: (userId: BigString) => Promise<Camelize<DiscordChannel>>
+    
+  }
   /**
    * Adds a member to a thread.
    *
@@ -2468,7 +2515,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel to create the invite to.
    * @param options - The parameters for the creation of the invite.
-   * @returns An instance of the created {@link BaseInvite | Invite}.
+   * @returns An instance of the created {@link DiscordInvite}.
    *
    * @remarks
    * Requires the `CREATE_INSTANT_INVITE` permission.
@@ -2480,7 +2527,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#create-channel-invite}
    */
-  createInvite: (channelId: BigString, options: CreateChannelInvite = {}) => Promise<BaseInvite>
+  createInvite: (channelId: BigString, options?: CreateChannelInvite) => Promise<Camelize<DiscordInvite>>
   /**
    * Creates a scheduled event in a guild.
    *
@@ -3014,6 +3061,15 @@ export interface RestManager {
    */
   getChannelWebhooks: (channelId: BigString) => Promise<Camelize<DiscordWebhook[]>>
   /**
+   * Gets or creates a DM channel with a user.
+   *
+   * @param userId - The ID of the user to create the DM channel with.
+   * @returns An instance of {@link DiscordChannel}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/user#create-dm}
+   */
+  getDmChannel: (userId: BigString) => Promise<Camelize<DiscordChannel>>
+  /**
    * Gets an emoji by its ID.
    *
    * @param guildId - The ID of the guild from which to get the emoji.
@@ -3063,7 +3119,7 @@ export interface RestManager {
    *
    * @param inviteCode - The invite code of the invite to get.
    * @param options - The parameters for the fetching of the invite.
-   * @returns An instance of {@link BaseInvite | Invite}.
+   * @returns An instance of {@link DiscordInviteMetadata}.
    *
    * @see {@link https://discord.com/developers/docs/resources/invite#get-invite}
    */
