@@ -1,0 +1,7 @@
+import type { Bot } from "../../bot.ts";
+import { DiscordGatewayPayload, DiscordAuditLogEntry } from "../../types/discord.ts";
+
+export async function handleGuildAuditLogEntryCreate(bot: Bot, data: DiscordGatewayPayload) {
+  const payload = data.d as DiscordAuditLogEntry;
+  bot.events.auditLogEntryCreate(bot, bot.transformers.auditLogEntry(bot, payload), bot.transformers.snowflake(payload.guild_id));
+}
