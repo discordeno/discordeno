@@ -12,6 +12,7 @@ import type {
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
   SortOrderTypes,
+  TargetTypes,
   TextStyles,
   VideoQualityModes,
 } from './shared'
@@ -379,15 +380,15 @@ export interface GetScheduledEventUsers {
   after?: BigString
 }
 
-// /** https://discord.com/developers/docs/resources/invite#get-invite */
-// export interface GetInvite {
-//   /** Whether the invite should contain approximate member counts */
-//   withCounts?: boolean
-//   /** Whether the invite should contain the expiration date */
-//   withExpiration?: boolean
-//   /** the guild scheduled event to include with the invite */
-//   scheduledEventId?: BigString
-// }
+/** https://discord.com/developers/docs/resources/invite#get-invite */
+export interface GetInvite {
+  /** Whether the invite should contain approximate member counts */
+  withCounts?: boolean
+  /** Whether the invite should contain the expiration date */
+  withExpiration?: boolean
+  /** the guild scheduled event to include with the invite */
+  scheduledEventId?: BigString
+}
 
 // export type CreateApplicationCommand =
 //   | CreateSlashApplicationCommand
@@ -873,3 +874,21 @@ export interface GetScheduledEvents {
   /** include number of users subscribed to each event */
   withUserCount?: boolean
 }
+
+export interface CreateChannelInvite extends WithReason {
+  /** Duration of invite in seconds before expiry, or 0 for never. Between 0 and 604800 (7 days). Default: 86400 (24 hours) */
+  maxAge?: number
+  /** Max number of users or 0 for unlimited. Between 0 and 100. Default: 0 */
+  maxUses?: number
+  /** Whether this invite only grants temporary membership. Default: false */
+  temporary?: boolean
+  /** If true, don't try to reuse similar invite (useful for creating many unique one time use invites). Default: false */
+  unique?: boolean
+  /** The type of target for this voice channel invite */
+  targetType?: TargetTypes
+  /** The id of the user whose stream to display for this invite, required if `target_type` is 1, the user must be streaming in the channel */
+  targetUserId?: BigString
+  /** The id of the embedded application to open for this invite, required if `target_type` is 2, the application must have the `EMBEDDED` flag */
+  targetApplicationId?: BigString
+}
+

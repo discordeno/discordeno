@@ -2,6 +2,7 @@ import type {
   BigString,
   Camelize,
   CreateAutoModerationRuleOptions,
+  CreateChannelInvite,
   CreateForumPostWithMessage,
   CreateGuildChannel,
   CreateGuildEmoji,
@@ -21,6 +22,7 @@ import type {
   DiscordFollowedChannel,
   DiscordGetGatewayBot,
   DiscordIntegration,
+  DiscordInvite,
   DiscordInviteMetadata,
   DiscordListActiveThreads,
   DiscordListArchivedThreads,
@@ -37,6 +39,7 @@ import type {
   EditScheduledEvent,
   EditStageInstanceOptions,
   ExecuteWebhook,
+  GetInvite,
   GetMessagesOptions,
   GetScheduledEvents,
   GetScheduledEventUsers,
@@ -299,6 +302,29 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
         integrations: (guildId) => {
           return `/guilds/${guildId}/integrations?include_applications=true`
+        },
+        invite(inviteCode, options) {
+          let url = `/invites/${inviteCode}?`
+
+          if (options) {
+            if (options.withCounts !== undefined) {
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              url += `with_counts=${options.withCounts.toString()}`
+            }
+            if (options.withExpiration !== undefined) {
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              url += `&with_expiration=${options.withExpiration.toString()}`
+            }
+            if (options.scheduledEventId) {
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              url += `&guild_scheduled_event_id=${options.scheduledEventId}`
+            }
+          }
+
+          return url
+        },
+        invites: (guildId) => {
+          return `/guilds/${guildId}/invites`
         },
         webhooks: (guildId) => {
           return `/guilds/${guildId}/webhooks`
@@ -815,6 +841,24 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           return await rest.deleteIntegration(guildId, integrationId)
         },
       },
+
+      invites: {
+        async create(channelId, options) {
+          return await rest.createInvite(channelId, options)
+        },
+
+        async delete(inviteCode, reason) {
+          return await rest.deleteInvite(inviteCode, reason)
+        },
+
+        async get(inviteCode, options) {
+          return await rest.getInvite(inviteCode, options)
+        },
+
+        async list(guildId) {
+          return await rest.getInvites(guildId)
+        },
+      },
     },
 
     webhooks: {
@@ -915,6 +959,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordChannel>(rest.routes.channels.forum(channelId), options)
     },
 
+    async createInvite(channelId, options = {}) {
+      return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), options)
+    },
+
     async createScheduledEvent(guildId, options) {
       return await rest.post<DiscordScheduledEvent>(rest.routes.guilds.events.events(guildId), options)
     },
@@ -949,6 +997,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async deleteIntegration(guildId, integrationId) {
       return await rest.delete(rest.routes.guilds.integration(guildId, integrationId))
+    },
+
+    async deleteInvite(inviteCode: string, reason?: string) {
+      return await rest.delete(rest.routes.guilds.invite(inviteCode), reason ? { reason } : undefined)
     },
 
     async deleteScheduledEvent(guildId, eventId) {
@@ -1090,6 +1142,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getIntegrations(guildId) {
       return await rest.get<DiscordIntegration[]>(rest.routes.guilds.integrations(guildId))
+    },
+
+    async getInvite(inviteCode, options) {
+      return await rest.get<DiscordInviteMetadata>(rest.routes.guilds.invite(inviteCode, options))
+    },
+
+    async getInvites(guildId) {
+      return await rest.get<DiscordInviteMetadata[]>(rest.routes.guilds.invites(guildId))
     },
 
     async getNitroStickerPacks() {
@@ -1327,6 +1387,10 @@ export interface RestManager {
       integration: (guildId: BigString, integrationId: BigString) => string
       /** Route for handling non-specific integrations. */
       integrations: (guildId: BigString) => string
+      /** Route for handling a specific guild invite. */
+      invite: (inviteCode: string, options?: GetInvite) => string
+      /** Route for handling non-specific invites in a guild. */
+      invites: (guildId: BigString) => string
       /** Route for handling non-specific webhooks in a guild */
       webhooks: (guildId: BigString) => string
     }
@@ -2077,6 +2141,62 @@ export interface RestManager {
        */
       delete: (guildId: BigString, integrationId: BigString) => Promise<void>
     }
+    /** Methods related to a guild's invites. */
+    invites: {
+      /**
+       * Creates an invite to a channel in a guild.
+       *
+       * @param channelId - The ID of the channel to create the invite to.
+       * @param options - The parameters for the creation of the invite.
+       * @returns An instance of the created {@link BaseInvite | Invite}.
+       *
+       * @remarks
+       * Requires the `CREATE_INSTANT_INVITE` permission.
+       *
+       * Fires an _Invite Create_ gateway event.
+       *
+       * @privateRemarks
+       * The request body is not optional, and an empty JSON object must be sent regardless of whether any fields are being transmitted.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/channel#create-channel-invite}
+       */
+      create: (channelId: BigString, options?: CreateChannelInvite) => Promise<BaseInvite>
+      /**
+       * Deletes an invite to a channel.
+       *
+       * @param inviteCode - The invite code of the invite to delete.
+       *
+       * @remarks
+       * Requires the `MANAGE_CHANNELS` permission.
+       *
+       * Fires an _Invite Delete_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/channel#delete-channel-invite}
+       */
+      delete: (inviteCode: string, reason?: string) => Promise<void>
+      /**
+       * Gets an invite to a channel by its invite code.
+       *
+       * @param inviteCode - The invite code of the invite to get.
+       * @param options - The parameters for the fetching of the invite.
+       * @returns An instance of {@link BaseInvite | Invite}.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/invite#get-invite}
+       */
+      get: (inviteCode: string, options?: GetInvite) => Promise<Camelize<DiscordInviteMetadata>>
+      /**
+       * Gets the list of invites for a guild.
+       *
+       * @param guildId - The ID of the guild to get the invites from.
+       * @returns A collection of {@link InviteMetadata | Invite} objects assorted by invite code.
+       *
+       * @remarks
+       * Requires the `MANAGE_GUILD` permission.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/invite#get-invites}
+       */
+      list: (guildId: BigString) => Promise<Camelize<DiscordInviteMetadata[]>>
+    }
   }
   /** Webhook related helper methods. */
   webhooks: {
@@ -2344,6 +2464,24 @@ export interface RestManager {
    */
   createForumThread: (channelId: BigString, options: CreateForumPostWithMessage) => Promise<Camelize<DiscordChannel>>
   /**
+   * Creates an invite to a channel in a guild.
+   *
+   * @param channelId - The ID of the channel to create the invite to.
+   * @param options - The parameters for the creation of the invite.
+   * @returns An instance of the created {@link BaseInvite | Invite}.
+   *
+   * @remarks
+   * Requires the `CREATE_INSTANT_INVITE` permission.
+   *
+   * Fires an _Invite Create_ gateway event.
+   *
+   * @privateRemarks
+   * The request body is not optional, and an empty JSON object must be sent regardless of whether any fields are being transmitted.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#create-channel-invite}
+   */
+  createInvite: (channelId: BigString, options: CreateChannelInvite = {}) => Promise<BaseInvite>
+  /**
    * Creates a scheduled event in a guild.
    *
    * @param guildId - The ID of the guild to create the scheduled event in.
@@ -2475,6 +2613,19 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild-integration}
    */
   deleteIntegration: (guildId: BigString, integrationId: BigString) => Promise<void>
+  /**
+   * Deletes an invite to a channel.
+   *
+   * @param inviteCode - The invite code of the invite to delete.
+   *
+   * @remarks
+   * Requires the `MANAGE_CHANNELS` permission.
+   *
+   * Fires an _Invite Delete_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#delete-channel-invite}
+   */
+  deleteInvite: (inviteCode: string, reason?: string) => Promise<void>
   /**
    * Deletes a scheduled event from a guild.
    *
@@ -2907,6 +3058,28 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-integrations}
    */
   getIntegrations: (guildId: BigString) => Promise<Camelize<DiscordIntegration[]>>
+  /**
+   * Gets an invite to a channel by its invite code.
+   *
+   * @param inviteCode - The invite code of the invite to get.
+   * @param options - The parameters for the fetching of the invite.
+   * @returns An instance of {@link BaseInvite | Invite}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/invite#get-invite}
+   */
+  getInvite: (inviteCode: string, options?: GetInvite) => Promise<Camelize<DiscordInviteMetadata>>
+  /**
+   * Gets the list of invites for a guild.
+   *
+   * @param guildId - The ID of the guild to get the invites from.
+   * @returns A collection of {@link InviteMetadata | Invite} objects assorted by invite code.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/invite#get-invites}
+   */
+  getInvites: (guildId: BigString) => Promise<Camelize<DiscordInviteMetadata[]>>
   /**
    * Returns the list of sticker packs available to Nitro subscribers.
    *
