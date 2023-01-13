@@ -24,6 +24,7 @@
     "eslint": "^8.0.1",
     "eslint-config-discordeno": "*",
     "sinon": "^15.0.0",
+    "ts-node": "^10.9.1",
     "tsconfig": "*",
     "typescript": "^4.9.3"
   },
