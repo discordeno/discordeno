@@ -1,15 +1,10 @@
 /**
  * sendInteractionResponse
  * editOriginalInteractionResponse
- * sendMessage
- * editMessage
- * publishMessage
  * sendFollowupMessage
- * deleteMessage
  * editWebhookMessage
  * editGlobalApplicationCommand
  * editGuildApplicationCommand
- * getDmChannel
  * getOriginalInteractionResponse
  */
 import type {
@@ -28,9 +23,7 @@ import type {
   DiscordApplication,
   DiscordArchivedThreads,
   DiscordAutoModerationRule,
-  DiscordChannel,
-  DiscordCreateMessage,
-  DiscordCreateWebhook,
+  DiscordChannel, DiscordCreateWebhook,
   DiscordEmoji,
   DiscordFollowAnnouncementChannel,
   DiscordFollowedChannel,
@@ -50,6 +43,7 @@ import type {
   DiscordWebhook,
   EditAutoModerationRuleOptions,
   EditChannelPermissionOverridesOptions,
+  EditMessage,
   EditScheduledEvent,
   EditStageInstanceOptions,
   ExecuteWebhook,
@@ -179,6 +173,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         overwrite: (channelId, overwriteId) => {
           return `/channels/${channelId}/permissions/${overwriteId}`
+        },
+
+        crosspost: (channelId, messageId) => {
+          return `/channels/${channelId}/messages/${messageId}/crosspost`
         },
 
         stages: () => {
@@ -648,6 +646,23 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     channels: {
+      messages: {
+        async delete(channelId, messageId, reason?) {
+          return await rest.deleteMessage(channelId, messageId, reason)
+        },
+        async edit(channelId, messageId, options) {
+          return await rest.editMessage(channelId, messageId, options)  
+        },
+
+        async send(channelId, options) {
+          return await rest.sendMessage(channelId, options)
+        },
+
+        async publish(channelId, messageId) {
+          return await rest.publishMessage(channelId, messageId)
+        },
+      },
+
       async get(id) {
         return await rest.getChannel(id)
       },
@@ -1026,6 +1041,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.delete(rest.routes.guilds.invite(inviteCode), reason ? { reason } : undefined)
     },
 
+async deleteMessage (channelId,messageId,reason) {
+  return await rest.delete(
+    rest.routes.channels.message(channelId, messageId),
+    { reason }
+  )
+},
+
     async deleteScheduledEvent(guildId, eventId) {
       return await rest.delete(rest.routes.guilds.events.event(guildId, eventId))
     },
@@ -1073,6 +1095,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async editEmoji(guildId, id, options) {
       return await rest.patch<DiscordEmoji>(rest.routes.guilds.emoji(guildId, id), options)
+    },
+
+    async editMessage (channelId,messageId,options) {
+      return await rest.patch<DiscordMessage>(
+        rest.routes.channels.message(channelId, messageId),
+        options
+      )
     },
 
     async editOriginalWebhookMessage(webhookId, token, options) {
@@ -1252,15 +1281,18 @@ async getDmChannel (userId) {
       return await rest.delete(rest.routes.channels.threads.me(channelId))
     },
 
+async publishMessage (channelId,messageId) {
+  return await rest.post<DiscordMessage>(
+    rest.routes.channels.crosspost(channelId, messageId)
+  )
+},
+
     async removeThreadMember(channelId, userId) {
       return await rest.delete(rest.routes.channels.threads.user(channelId, userId))
     },
 
     async sendMessage(channelId, options) {
-      return await rest.post<DiscordMessage>(rest.routes.channels.messages(channelId), {
-        content: options.content,
-        // TODO: other options
-      } as DiscordCreateMessage)
+      return await rest.post<DiscordMessage>(rest.routes.channels.messages(channelId), options)
     },
 
     async startThreadWithMessage(channelId, messageId, options) {
@@ -1363,6 +1395,8 @@ export interface RestManager {
       messages: (channelId: BigString, options?: GetMessagesOptions) => string
       /** Route for handling a specific overwrite. */
       overwrite: (channelId: BigString, overwriteId: BigString) => string
+      /** Route for handling crossposting a specific message. */
+      crosspost: (channelId: BigString, messageId: BigString) => string
       /** Route for handling non-specific stages */
       stages: () => string
       /** Route for handling a specific stage */
@@ -1457,6 +1491,87 @@ export interface RestManager {
   patch: <T = void>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
   /** Helper methods related to channels */
   channels: {
+    /** Methods related to messages in a channel */
+    messages: {
+      /**
+       * Sends a message to a channel.
+       *
+       * @param channelId - The ID of the channel to send the message in.
+       * @param options - The parameters for the creation of the message.
+       * @returns An instance of the created {@link DiscordMessage}.
+       *
+       * @remarks
+       * Requires that the bot user be able to see the contents of the channel the message is to be sent in.
+       *
+       * If sending a message to a guild channel:
+       * - Requires the `SEND_MESSAGES` permission.
+       *
+       * If sending a TTS message:
+       * - Requires the `SEND_TTS_MESSAGES` permission.
+       *
+       * If sending a message as a reply to another message:
+       * - Requires the `READ_MESSAGE_HISTORY` permission.
+       * - The message being replied to cannot be a system message.
+       *
+       * ⚠️ The maximum size of a request (accounting for any attachments and message content) for bot users is _8 MiB_.
+       *
+       * Fires a _Message Create_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/channel#create-message}
+       */
+      send: (channelId: BigString, options: CreateMessageOptions) => Promise<Camelize<DiscordMessage>>
+      /**
+ * Edits a message.
+ *
+ * @param channelId - The ID of the channel to edit the message in.
+ * @param messageId - The IDs of the message to edit.
+ * @param options - The parameters for the edit of the message.
+ * @returns An instance of the edited {@link Message}.
+ *
+ * @remarks
+ * If editing another user's message:
+ * - Requires the `MANAGE_MESSAGES` permission.
+ * - Only the {@link EditMessage.flags | flags} property of the {@link options} object parameter can be edited.
+ *
+ * Fires a _Message Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/channel#edit-message}
+ */
+edit: (channelId: BigString,messageId: BigString,options: EditMessage) => Promise<Camelize<DiscordMessage>>
+/**
+ * Cross-posts a message posted in an announcement channel to subscribed channels.
+ *
+ * @param channelId - The ID of the announcement channel.
+ * @param messageId - The ID of the message to cross-post.
+ * @returns An instance of the cross-posted {@link Message}.
+ *
+ * @remarks
+ * Requires the `SEND_MESSAGES` permission.
+ *
+ * If not cross-posting own message:
+ * - Requires the `MANAGE_MESSAGES` permission.
+ *
+ * Fires a _Message Create_ event in the guilds the subscribed channels are in.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/channel#crosspost-message}
+ */
+ publish: (channelId: BigString,messageId: BigString) => Promise<Camelize<DiscordMessage>>
+/**
+ * Deletes a message from a channel.
+ *
+ * @param channelId - The ID of the channel to delete the message from.
+ * @param messageId - The ID of the message to delete from the channel.
+ *
+ * @remarks
+ * If not deleting own message:
+ * - Requires the `MANAGE_MESSAGES` permission.
+ *
+ * Fires a _Message Delete_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/channel#delete-message}
+ */
+ delete: (channelId: BigString,messageId: BigString,reason?: string) => Promise<void>   
+}
     /**
      * Gets a channel by its ID.
      *
@@ -2674,6 +2789,21 @@ export interface RestManager {
    */
   deleteInvite: (inviteCode: string, reason?: string) => Promise<void>
   /**
+ * Deletes a message from a channel.
+ *
+ * @param channelId - The ID of the channel to delete the message from.
+ * @param messageId - The ID of the message to delete from the channel.
+ *
+ * @remarks
+ * If not deleting own message:
+ * - Requires the `MANAGE_MESSAGES` permission.
+ *
+ * Fires a _Message Delete_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/channel#delete-message}
+ */
+ deleteMessage: (channelId: BigString,messageId: BigString,reason?: string) => Promise<void>
+  /**
    * Deletes a scheduled event from a guild.
    *
    * @param guildId - The ID of the guild to delete the scheduled event from.
@@ -2840,6 +2970,24 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/emoji#modify-guild-emoji}
    */
   editEmoji: (guildId: BigString, id: BigString, options: ModifyGuildEmoji) => Promise<Camelize<DiscordEmoji>>
+  /**
+ * Edits a message.
+ *
+ * @param channelId - The ID of the channel to edit the message in.
+ * @param messageId - The IDs of the message to edit.
+ * @param options - The parameters for the edit of the message.
+ * @returns An instance of the edited {@link Message}.
+ *
+ * @remarks
+ * If editing another user's message:
+ * - Requires the `MANAGE_MESSAGES` permission.
+ * - Only the {@link EditMessage.flags | flags} property of the {@link options} object parameter can be edited.
+ *
+ * Fires a _Message Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/channel#edit-message}
+ */
+editMessage: (channelId: BigString,messageId: BigString,options: EditMessage) => Promise<Camelize<DiscordMessage>>
   /**
    * Edits the original webhook message.
    *
@@ -3344,6 +3492,24 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#leave-thread}
    */
   leaveThread: (channelId: BigString) => Promise<void>
+  /**
+ * Cross-posts a message posted in an announcement channel to subscribed channels.
+ *
+ * @param channelId - The ID of the announcement channel.
+ * @param messageId - The ID of the message to cross-post.
+ * @returns An instance of the cross-posted {@link Message}.
+ *
+ * @remarks
+ * Requires the `SEND_MESSAGES` permission.
+ *
+ * If not cross-posting own message:
+ * - Requires the `MANAGE_MESSAGES` permission.
+ *
+ * Fires a _Message Create_ event in the guilds the subscribed channels are in.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/channel#crosspost-message}
+ */
+publishMessage: (channelId: BigString,messageId: BigString) => Promise<Camelize<DiscordMessage>>
   /**
    * Removes a member from a thread.
    *

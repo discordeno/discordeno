@@ -1,4 +1,11 @@
-import type { AutoModerationActionType, AutoModerationEventTypes, AutoModerationTriggerTypes, DiscordAutoModerationRuleTriggerMetadataPresets, DiscordEmbed } from './discord'
+import type {
+  AutoModerationActionType,
+  AutoModerationEventTypes,
+  AutoModerationTriggerTypes,
+  DiscordAttachment,
+  DiscordAutoModerationRuleTriggerMetadataPresets,
+  DiscordEmbed,
+} from './discord'
 import type {
   AllowedMentionsTypes,
   BigString,
@@ -20,37 +27,34 @@ import type {
 export interface CreateMessageOptions {
   /** The message contents (up to 2000 characters) */
   content?: string
-  //   /** Can be used to verify a message was sent (up to 25 characters). Value will appear in the Message Create event. */
-  //   nonce?: string | number
-  //   /** true if this is a TTS message */
-  //   tts?: boolean
+  /** Can be used to verify a message was sent (up to 25 characters). Value will appear in the Message Create event. */
+  nonce?: string | number
+  /** true if this is a TTS message */
+  tts?: boolean
   /** Embedded `rich` content (up to 6000 characters) */
-  //   embeds?: Embed[]
+  embeds?: Array<Camelize<DiscordEmbed>>
   /** Allowed mentions for the message */
-  //   allowedMentions?: AllowedMentions
+  allowedMentions?: AllowedMentions
   /** Include to make your message a reply */
-  //   messageReference?: {
-  //     /** id of the originating message */
-  //     messageId?: BigString
-  //     /**
-  //      * id of the originating message's channel
-  //      * Note: `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model.
-  //      */
-  //     channelId?: BigString
-  //     /** id of the originating message's guild */
-  //     guildId?: BigString
-  //     /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
-  //     failIfNotExists: boolean
-  //   }
+  messageReference?: {
+    /** id of the originating message */
+    messageId?: BigString
+    /**
+     * id of the originating message's channel
+     * Note: `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model.
+     */
+    channelId?: BigString
+    /** id of the originating message's guild */
+    guildId?: BigString
+    /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
+    failIfNotExists: boolean
+  }
   /** The contents of the file being sent */
-  //   file?: FileContent | FileContent[]
-  //   /** The components you would like to have sent in this message */
-  //   components?: MessageComponents
-  //   /** IDs of up to 3 stickers in the server to send in the message */
-  //   stickerIds?:
-  //   | [BigString]
-  //   | [BigString, BigString]
-  //   | [BigString, BigString, BigString]
+  file?: FileContent | FileContent[]
+  /** The components you would like to have sent in this message */
+  components?: MessageComponents
+  /** IDs of up to 3 stickers in the server to send in the message */
+  stickerIds?: [BigString] | [BigString, BigString] | [BigString, BigString, BigString]
 }
 // import type {
 //   AllowedMentionsTypes,
@@ -892,3 +896,20 @@ export interface CreateChannelInvite extends WithReason {
   targetApplicationId?: BigString
 }
 
+/** https://discord.com/developers/docs/resources/channel#edit-message-json-params */
+export interface EditMessage {
+  /** The new message contents (up to 2000 characters) */
+  content?: string | null
+  /** Embedded `rich` content (up to 6000 characters) */
+  embeds?: Array<Camelize<DiscordEmbed>> | null
+  /** Edit the flags of the message (only `SUPPRESS_EMBEDS` can currently be set/unset) */
+  flags?: 4 | null
+  /** The contents of the file being sent/edited */
+  file?: FileContent | FileContent[] | null
+  /** Allowed mentions for the message */
+  allowedMentions?: AllowedMentions
+  /** When specified (adding new attachments), attachments which are not provided in this list will be removed. */
+  attachments?: Array<Camelize<DiscordAttachment>>
+  /** The components you would like to have sent in this message */
+  components?: MessageComponents
+}
