@@ -155,4 +155,54 @@ describe('[rest] manager', () => {
       })
     })
   })
+
+  describe('rest.processRateLimitedPaths', () => {
+    let rest: RestManager
+    let time: sinon.SinonFakeTimers
+
+    beforeEach(() => {
+      rest = createRestManager({ token: ' ' })
+      time = sinon.useFakeTimers()
+    })
+
+    afterEach(() => {
+      time.restore()
+    })
+
+    describe('rateLimitedPaths', () => {
+      it('Will not delete path from rateLimitedPaths before resetTimestamp', () => {
+        rest.rateLimitedPaths.set('', {
+          resetTimestamp: Date.now() + 1,
+          url: '',
+        })
+        rest.processRateLimitedPaths()
+        expect(rest.rateLimitedPaths.size).to.be.equal(1)
+      })
+
+      it('Will delete path from rateLimitedPaths after resetTimestamp', () => {
+        rest.rateLimitedPaths.set('', { resetTimestamp: Date.now(), url: '' })
+        rest.processRateLimitedPaths()
+        expect(rest.rateLimitedPaths.size).to.be.equal(0)
+      })
+
+      it('Will mark globallyRateLimited false if key is global', () => {
+        rest.rateLimitedPaths.set('global', {
+          resetTimestamp: Date.now(),
+          url: '',
+        })
+        rest.globallyRateLimited = true
+        rest.processRateLimitedPaths()
+        expect(rest.rateLimitedPaths.size).to.be.equal(0)
+        expect(rest.globallyRateLimited).to.be.equal(false)
+      })
+
+      it('Will not mark globallyRateLimited false if key is not global', () => {
+        rest.rateLimitedPaths.set('', { resetTimestamp: Date.now(), url: '' })
+        rest.globallyRateLimited = true
+        rest.processRateLimitedPaths()
+        expect(rest.rateLimitedPaths.size).to.be.equal(0)
+        expect(rest.globallyRateLimited).to.be.equal(true)
+      })
+    })
+  })
 })
