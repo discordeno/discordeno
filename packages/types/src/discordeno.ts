@@ -8,10 +8,15 @@ import type {
 } from './discord'
 import type {
   AllowedMentionsTypes,
+  ApplicationCommandOptionTypes,
+  ApplicationCommandPermissionTypes,
+  ApplicationCommandTypes,
   BigString,
   ButtonStyles,
   Camelize,
   ChannelTypes,
+  InteractionResponseTypes,
+  Localization,
   MessageComponentTypes,
   OverwriteTypes,
   PermissionStrings,
@@ -394,45 +399,45 @@ export interface GetInvite {
   scheduledEventId?: BigString
 }
 
-// export type CreateApplicationCommand =
-//   | CreateSlashApplicationCommand
-//   | CreateContextApplicationCommand
+export type CreateApplicationCommand =
+  | CreateSlashApplicationCommand
+  | CreateContextApplicationCommand
 
-// /** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
-// export interface CreateSlashApplicationCommand {
-//   /**
-//    * Name of command, 1-32 characters.
-//    * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
-//    * If there is a lowercase variant of any letters used, you must use those.
-//    * Characters with no lowercase variants and/or uncased letters are still allowed.
-//    * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
-//    */
-//   name: string
-//   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-//   nameLocalizations?: Localization
-//   /** 1-100 character description */
-//   description: string
-//   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-//   descriptionLocalizations?: Localization
-//   /** Type of command, defaults `ApplicationCommandTypes.ChatInput` if not set  */
-//   type?: ApplicationCommandTypes
-//   /** Parameters for the command */
-//   options?: ApplicationCommandOption[]
-//   /** Set of permissions represented as a bit set */
-//   defaultMemberPermissions?: PermissionStrings[]
-//   /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
-//   dmPermission?: boolean
-// }
+/** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
+export interface CreateSlashApplicationCommand {
+  /**
+   * Name of command, 1-32 characters.
+   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   * If there is a lowercase variant of any letters used, you must use those.
+   * Characters with no lowercase variants and/or uncased letters are still allowed.
+   * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
+   */
+  name: string
+  /** Localization object for the `name` field. Values follow the same restrictions as `name` */
+  nameLocalizations?: Localization
+  /** 1-100 character description */
+  description: string
+  /** Localization object for the `description` field. Values follow the same restrictions as `description` */
+  descriptionLocalizations?: Localization
+  /** Type of command, defaults `ApplicationCommandTypes.ChatInput` if not set  */
+  type?: ApplicationCommandTypes
+  /** Parameters for the command */
+  options?: ApplicationCommandOption[]
+  /** Set of permissions represented as a bit set */
+  defaultMemberPermissions?: PermissionStrings[]
+  /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
+  dmPermission?: boolean
+}
 
-// /** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
-// export interface CreateContextApplicationCommand
-//   extends Omit<
-//   CreateSlashApplicationCommand,
-//   'options' | 'description' | 'descriptionLocalizations'
-//   > {
-//   /** The type of the command */
-//   type: ApplicationCommandTypes.Message | ApplicationCommandTypes.User
-// }
+/** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
+export interface CreateContextApplicationCommand
+  extends Omit<
+  CreateSlashApplicationCommand,
+  'options' | 'description' | 'descriptionLocalizations'
+  > {
+  /** The type of the command */
+  type: ApplicationCommandTypes.Message | ApplicationCommandTypes.User
+}
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionapplicationcommandcallbackdata */
 export interface InteractionCallbackData {
@@ -465,44 +470,44 @@ export interface ApplicationCommandOptionChoice {
   value: string | number
 }
 
-// /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
-// export interface InteractionResponse {
-//   /** The type of response */
-//   type: InteractionResponseTypes
-//   /** An optional response message */
-//   data?: InteractionCallbackData
-// }
+/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
+export interface InteractionResponse {
+  /** The type of response */
+  type: InteractionResponseTypes
+  /** An optional response message */
+  data?: InteractionCallbackData
+}
 
-// export interface ApplicationCommandOption {
-//   /** Value of Application Command Option Type */
-//   type: ApplicationCommandOptionTypes
-//   /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
-//   name: string
-//   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-//   nameLocalizations?: Localization
-//   /** 1-100 character description */
-//   description: string
-//   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-//   descriptionLocalizations?: Localization
-//   /** If the parameter is required or optional--default `false` */
-//   required?: boolean
-//   /** Choices for `string` and `int` types for the user to pick from */
-//   choices?: ApplicationCommandOptionChoice[]
-//   /** If the option is a subcommand or subcommand group type, this nested options will be the parameters */
-//   options?: ApplicationCommandOption[]
-//   /** If the option is a channel type, the channels shown will be restricted to these types */
-//   channelTypes?: ChannelTypes[]
-//   /** Minimum number desired. */
-//   minValue?: number
-//   /** Maximum number desired. */
-//   maxValue?: number
-//   /** Minimum length desired. */
-//   minLength?: number
-//   /** Maximum length desired. */
-//   maxLength?: number
-//   /** if autocomplete interactions are enabled for this `String`, `Integer`, or `Number` type option */
-//   autocomplete?: boolean
-// }
+export interface ApplicationCommandOption {
+  /** Value of Application Command Option Type */
+  type: ApplicationCommandOptionTypes
+  /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
+  name: string
+  /** Localization object for the `name` field. Values follow the same restrictions as `name` */
+  nameLocalizations?: Localization
+  /** 1-100 character description */
+  description: string
+  /** Localization object for the `description` field. Values follow the same restrictions as `description` */
+  descriptionLocalizations?: Localization
+  /** If the parameter is required or optional--default `false` */
+  required?: boolean
+  /** Choices for `string` and `int` types for the user to pick from */
+  choices?: ApplicationCommandOptionChoice[]
+  /** If the option is a subcommand or subcommand group type, this nested options will be the parameters */
+  options?: ApplicationCommandOption[]
+  /** If the option is a channel type, the channels shown will be restricted to these types */
+  channelTypes?: ChannelTypes[]
+  /** Minimum number desired. */
+  minValue?: number
+  /** Maximum number desired. */
+  maxValue?: number
+  /** Minimum length desired. */
+  minLength?: number
+  /** Maximum length desired. */
+  maxLength?: number
+  /** if autocomplete interactions are enabled for this `String`, `Integer`, or `Number` type option */
+  autocomplete?: boolean
+}
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
 export interface CreateGuildEmoji extends WithReason {
@@ -912,4 +917,14 @@ export interface EditMessage {
   attachments?: Array<Camelize<DiscordAttachment>>
   /** The components you would like to have sent in this message */
   components?: MessageComponents
+}
+
+/** https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions */
+export interface ApplicationCommandPermissions {
+  /** The id of the role or user */
+  id: string
+  /** Role or User */
+  type: ApplicationCommandPermissionTypes
+  /** `true` to allow, `false`, to disallow */
+  permission: boolean
 }

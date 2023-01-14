@@ -22,7 +22,7 @@ export class StageInstance extends Base {
     super(data.id);
 
     this.client = client;
-    this.channel = client.getChannel(data.channel_id) || {
+    this.channel = client.getChannel(data.channel_id) ?? {
       id: data.channel_id,
     };
     this.guild = client.guilds.get(data.guild_id) ?? { id: data.guild_id };

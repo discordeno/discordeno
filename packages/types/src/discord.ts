@@ -1,5 +1,5 @@
 // import type { FileContent } from './discordeno.js'
-import type { WebhookTypes } from './shared.js'
+import type { Localization, WebhookTypes } from './shared.js'
 
 //   ActivityTypes,
 //   AllowedMentionsTypes,
@@ -1895,97 +1895,97 @@ export interface DiscordInviteStageInstance {
   topic: string
 }
 
-// /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure */
-// export interface DiscordApplicationCommand
-//   extends DiscordCreateApplicationCommand {
-//   /** Unique ID of command */
-//   id: string
-//   /** ID of the parent application */
-//   application_id: string
-//   /** Guild id of the command, if not global */
-//   guild_id?: string
-// }
+/** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure */
+export interface DiscordApplicationCommand
+  extends DiscordCreateApplicationCommand {
+  /** Unique ID of command */
+  id: string
+  /** ID of the parent application */
+  application_id: string
+  /** Guild id of the command, if not global */
+  guild_id?: string
+}
 
-// export interface DiscordCreateApplicationCommand {
-//   /** Type of command, defaults to `ApplicationCommandTypes.ChatInput` */
-//   type?: ApplicationCommandTypes
-//   /**
-//    * Name of command, 1-32 characters.
-//    * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
-//    * If there is a lowercase variant of any letters used, you must use those.
-//    * Characters with no lowercase variants and/or uncased letters are still allowed.
-//    * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
-//    */
-//   name: string
-//   /** Localization object for `name` field. Values follow the same restrictions as `name` */
-//   name_localizations?: Localization | null
-//   /** Description for `ApplicationCommandTypes.ChatInput` commands, 1-100 characters. Empty string for `ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands */
-//   description: string
-//   /** Localization object for `description` field. Values follow the same restrictions as `description` */
-//   description_localizations?: Localization | null
-//   /** Parameters for the command, max of 25 */
-//   options?: DiscordApplicationCommandOption[]
-//   /** Set of permissions represented as a bit set */
-//   default_member_permissions?: string | null
-//   /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
-//   dm_permission?: boolean
-//   /** Indicates whether the command is age-restricted, defaults to false */
-//   nsfw?: boolean
-//   /** Auto incrementing version identifier updated during substantial record changes */
-//   version?: string
-// }
+export interface DiscordCreateApplicationCommand {
+  /** Type of command, defaults to `ApplicationCommandTypes.ChatInput` */
+  type?: ApplicationCommandTypes
+  /**
+   * Name of command, 1-32 characters.
+   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   * If there is a lowercase variant of any letters used, you must use those.
+   * Characters with no lowercase variants and/or uncased letters are still allowed.
+   * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
+   */
+  name: string
+  /** Localization object for `name` field. Values follow the same restrictions as `name` */
+  name_localizations?: Localization | null
+  /** Description for `ApplicationCommandTypes.ChatInput` commands, 1-100 characters. Empty string for `ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands */
+  description: string
+  /** Localization object for `description` field. Values follow the same restrictions as `description` */
+  description_localizations?: Localization | null
+  /** Parameters for the command, max of 25 */
+  options?: DiscordApplicationCommandOption[]
+  /** Set of permissions represented as a bit set */
+  default_member_permissions?: string | null
+  /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
+  dm_permission?: boolean
+  /** Indicates whether the command is age-restricted, defaults to false */
+  nsfw?: boolean
+  /** Auto incrementing version identifier updated during substantial record changes */
+  version?: string
+}
 
-// /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure */
-// export interface DiscordApplicationCommandOption {
-//   /** Type of option */
-//   type: ApplicationCommandOptionTypes
-//   /**
-//    * Name of command, 1-32 characters.
-//    * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
-//    * If there is a lowercase variant of any letters used, you must use those.
-//    * Characters with no lowercase variants and/or uncased letters are still allowed.
-//    * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
-//    */
-//   name: string
-//   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-//   name_localizations?: Localization | null
-//   /** 1-100 character description */
-//   description: string
-//   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-//   description_localizations?: Localization | null
-//   /** If the parameter is required or optional--default `false` */
-//   required?: boolean
-//   /** Choices for the option types `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer`, and `ApplicationCommandOptionTypes.Number`, from which the user can choose, max 25 */
-//   choices?: DiscordApplicationCommandOptionChoice[]
-//   /** If the option is a subcommand or subcommand group type, these nested options will be the parameters */
-//   options?: DiscordApplicationCommandOption[]
-//   /**
-//    * If autocomplete interactions are enabled for this option.
-//    *
-//    * Only available for `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer` and `ApplicationCommandOptionTypes.Number` option types
-//    */
-//   autocomplete?: boolean
-//   /** If the option is a channel type, the channels shown will be restricted to these types */
-//   channel_types?: ChannelTypes[]
-//   /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the minimum permitted value */
-//   min_value?: number
-//   /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the maximum permitted value */
-//   max_value?: number
-//   /** If the option type is `ApplicationCommandOptionTypes.String`, the minimum permitted length */
-//   min_length?: number
-//   /** If the option type is `ApplicationCommandOptionTypes.String`, the maximum permitted length  */
-//   max_length?: number
-// }
+/** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure */
+export interface DiscordApplicationCommandOption {
+  /** Type of option */
+  type: ApplicationCommandOptionTypes
+  /**
+   * Name of command, 1-32 characters.
+   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   * If there is a lowercase variant of any letters used, you must use those.
+   * Characters with no lowercase variants and/or uncased letters are still allowed.
+   * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
+   */
+  name: string
+  /** Localization object for the `name` field. Values follow the same restrictions as `name` */
+  name_localizations?: Localization | null
+  /** 1-100 character description */
+  description: string
+  /** Localization object for the `description` field. Values follow the same restrictions as `description` */
+  description_localizations?: Localization | null
+  /** If the parameter is required or optional--default `false` */
+  required?: boolean
+  /** Choices for the option types `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer`, and `ApplicationCommandOptionTypes.Number`, from which the user can choose, max 25 */
+  choices?: DiscordApplicationCommandOptionChoice[]
+  /** If the option is a subcommand or subcommand group type, these nested options will be the parameters */
+  options?: DiscordApplicationCommandOption[]
+  /**
+   * If autocomplete interactions are enabled for this option.
+   *
+   * Only available for `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer` and `ApplicationCommandOptionTypes.Number` option types
+   */
+  autocomplete?: boolean
+  /** If the option is a channel type, the channels shown will be restricted to these types */
+  channel_types?: ChannelTypes[]
+  /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the minimum permitted value */
+  min_value?: number
+  /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the maximum permitted value */
+  max_value?: number
+  /** If the option type is `ApplicationCommandOptionTypes.String`, the minimum permitted length */
+  min_length?: number
+  /** If the option type is `ApplicationCommandOptionTypes.String`, the maximum permitted length  */
+  max_length?: number
+}
 
-// /** https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object */
-// export interface DiscordApplicationCommandOptionChoice {
-//   /** 1-100 character choice name */
-//   name: string
-//   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-//   name_localizations?: Localization | null
-//   /** Value for the choice, up to 100 characters if string */
-//   value: string | number
-// }
+/** https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object */
+export interface DiscordApplicationCommandOptionChoice {
+  /** 1-100 character choice name */
+  name: string
+  /** Localization object for the `name` field. Values follow the same restrictions as `name` */
+  name_localizations?: Localization | null
+  /** Value for the choice, up to 100 characters if string */
+  value: string | number
+}
 
 /** https://discord.com/developers/docs/interactions/slash-commands#guildapplicationcommandpermissions */
 export interface DiscordGuildApplicationCommandPermissions {
