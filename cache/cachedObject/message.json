@@ -1,14 +1,14 @@
 {
-  "id": "7796460796293943592",
+  "id": "5803337485112485020",
   "type": 0,
-  "content": "kkxdzia",
-  "channel_id": "5472310997700842329",
+  "content": "rfjjwzx",
+  "channel_id": "6456552481464560220",
   "author": {
-    "id": "105714501418197848",
-    "username": "5094068437763474",
+    "id": "719564318172587284",
+    "username": "1177958586625897",
     "avatar": "eae5905ad2d18d7c8deca20478b088b5",
     "avatar_decoration": null,
-    "discriminator": "3414",
+    "discriminator": "1597",
     "public_flags": 4194560
   },
   "attachments": [],
@@ -18,7 +18,7 @@
   "pinned": false,
   "mention_everyone": false,
   "tts": false,
-  "timestamp": "2023-01-13T00:44:08.181Z",
+  "timestamp": "2023-01-14T00:41:15.537Z",
   "edited_timestamp": null,
   "flags": 0,
   "components": []
