@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { describe, it } from 'mocha'
+import { afterEach, beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
 import type { RestManager } from '../../src/index.js'
 import { createRestManager } from '../../src/index.js'
