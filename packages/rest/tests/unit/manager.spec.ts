@@ -1,5 +1,7 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
+import sinon from 'sinon'
+import type { RestManager } from '../../src/index.js'
 import { createRestManager } from '../../src/index.js'
 import { fakeToken as token } from '../constants.js'
 
@@ -35,9 +37,9 @@ describe('[rest] manager', () => {
   })
 
   describe('rest.simplifyUrl', () => {
-    const rest = createRestManager({ token })
     describe('the ending id', () => {
       it('Will change to x for channel, guild, message, messages', () => {
+        const rest = createRestManager({ token })
         expect(rest.simplifyUrl('/messages/555555555555555555', 'PUT')).to.be.equal('/messages/x')
         expect(rest.simplifyUrl('/users/555555555555555555', 'PUT')).to.be.equal('/users/x')
         expect(rest.simplifyUrl('/webhooks/555555555555555555', 'PUT')).to.be.equal('/webhooks/x')
@@ -46,6 +48,7 @@ describe('[rest] manager', () => {
       })
 
       it('Will not change to x for channels, guilds', () => {
+        const rest = createRestManager({ token })
         expect(rest.simplifyUrl('/channels/555555555555555555', 'PUT')).to.be.equal('/channels/555555555555555555')
         expect(rest.simplifyUrl('/guilds/555555555555555555', 'PUT')).to.be.equal('/guilds/555555555555555555')
       })
@@ -54,6 +57,7 @@ describe('[rest] manager', () => {
     describe('with route', () => {
       describe('/reactions', () => {
         it('Will remove path after reactions', () => {
+          const rest = createRestManager({ token })
           expect(rest.simplifyUrl('/channels/555555555555555555/reactions/555555555555555555/wdiubaibfwuabfobaowbfoibnion', 'PUT')).to.be.equal(
             '/channels/555555555555555555/reactions',
           )
@@ -62,12 +66,14 @@ describe('[rest] manager', () => {
 
       describe('/messages', () => {
         it('Will add method in front route if method is DELETE', () => {
+          const rest = createRestManager({ token })
           expect(rest.simplifyUrl('/channels/555555555555555555/messages/555555555555555555', 'DELETE')).to.be.equal(
             'DELETE/channels/555555555555555555/messages/x',
           )
         })
 
         it('Will not add method in front route', () => {
+          const rest = createRestManager({ token })
           expect(rest.simplifyUrl('/channels/555555555555555555/messages/555555555555555555', 'POST')).to.be.equal(
             '/channels/555555555555555555/messages/x',
           )
@@ -78,6 +84,74 @@ describe('[rest] manager', () => {
             '/channels/555555555555555555/messages/x',
           )
         })
+      })
+    })
+  })
+
+  describe('rest.checkRateLimits', () => {
+    let rest: RestManager
+    let clock: sinon.SinonFakeTimers
+
+    beforeEach(() => {
+      rest = createRestManager({ token })
+      clock = sinon.useFakeTimers()
+    })
+
+    afterEach(() => {
+      clock.restore()
+    })
+
+    it('will return false for path without rate limited', () => {
+      expect(rest.checkRateLimits('/channel/555555555555555555')).to.be.equal(false)
+    })
+
+    describe('With per URL rateLimitedPath', () => {
+      it('Will return time until reset if before resetTimestamp', () => {
+        rest.rateLimitedPaths.set('/channel/555555555555555555', {
+          url: '/channel/555555555555555555',
+          resetTimestamp: Date.now() + 6541,
+        })
+        expect(rest.checkRateLimits('/channel/555555555555555555')).to.be.equal(6541)
+      })
+
+      it('Will return false if before resetTimestamp', () => {
+        rest.rateLimitedPaths.set('/channel/555555555555555555', {
+          url: '/channel/555555555555555555',
+          resetTimestamp: Date.now(),
+        })
+        expect(rest.checkRateLimits('/channel/555555555555555555')).to.be.equal(false)
+      })
+    })
+
+    describe('With global rateLimitedPath', () => {
+      it('Will return time until reset if before resetTimestamp', () => {
+        rest.rateLimitedPaths.set('global', {
+          url: '/channel/555555555555555555',
+          resetTimestamp: Date.now() + 9849,
+        })
+        expect(rest.checkRateLimits('/channel/555555555555555555')).to.be.equal(9849)
+      })
+
+      it('Will return false if before resetTimestamp', () => {
+        rest.rateLimitedPaths.set('global', {
+          url: '/channel/555555555555555555',
+          resetTimestamp: Date.now(),
+        })
+        expect(rest.checkRateLimits('/channel/555555555555555555')).to.be.equal(false)
+      })
+    })
+
+    describe('With both URL and Global rateLimitedPath', () => {
+      it('Will return URL time first if before resetTimestamp', () => {
+        rest.rateLimitedPaths.set('/channel/555555555555555555', {
+          url: '/channel/555555555555555555',
+          resetTimestamp: Date.now() + 6541,
+        })
+        rest.rateLimitedPaths.set('global', {
+          url: '/channel/555555555555555555',
+          resetTimestamp: Date.now() + 9849,
+        })
+        expect(rest.checkRateLimits('/channel/555555555555555555')).to.be.equal(6541)
       })
     })
   })
