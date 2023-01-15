@@ -2,26 +2,26 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-useless-call */
 /* eslint-disable @typescript-eslint/return-await */
-import {
-  ApplicationCommandTypes,
-  InteractionResponseTypes,
-  type BigString,
-  type DiscordAttachment,
-  type DiscordInteraction,
-  type DiscordInteractionDataOption,
-  type DiscordMessageComponents,
-  type MessageComponentTypes,
+import { ApplicationCommandTypes, InteractionResponseTypes } from '@discordeno/types';
+
+import Collection from '../../Collection.js';
+import Channel from '../channels/Channel.js';
+import Member from '../guilds/Member.js';
+import Role from '../guilds/Role.js';
+import Message from '../Message.js';
+import User from '../users/User.js';
+import Interaction from './Interaction.js';
+
+import type {
+  BigString,
+  DiscordAttachment,
+  DiscordInteraction,
+  DiscordInteractionDataOption,
+  DiscordMessageComponents,
+  MessageComponentTypes,
 } from '@discordeno/types'
 import type Client from '../../Client.js'
-import Collection from '../../Collection.js'
 import type { AnyChannel, FileContent, InteractionContent, InteractionContentEdit } from '../../typings.js'
-import Channel from '../channels/Channel.js'
-import Member from '../guilds/Member.js'
-import Role from '../guilds/Role.js'
-import Message from '../Message.js'
-import User from '../users/User.js'
-import Interaction from './Interaction.js'
-
 export class CommandInteraction extends Interaction {
   channel: AnyChannel
   /** The type of component */
@@ -60,7 +60,7 @@ export class CommandInteraction extends Interaction {
     super(info, client)
 
     this.channel = this.client.getChannel(info.channel_id!) ?? {
-      id: info.channel_id,
+      id: info.channel_id!,
     }
 
     // this.data = info.data!;

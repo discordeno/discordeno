@@ -22,6 +22,8 @@ import type {
   WebhookTypes,
 } from '@discordeno/types'
 import type Collection from './Collection.js'
+import type Message from './Structures/Message.js'
+import type Permission from './Structures/Permission.js'
 import type CategoryChannel from './Structures/channels/Category.js'
 import type NewsChannel from './Structures/channels/News.js'
 import type PrivateChannel from './Structures/channels/Private.js'
@@ -36,8 +38,6 @@ import type ThreadChannel from './Structures/channels/threads/Thread.js'
 import type GuildAuditLogEntry from './Structures/guilds/AuditLogEntry.js'
 import type GuildIntegration from './Structures/guilds/Integration.js'
 import type Member from './Structures/guilds/Member.js'
-import type Message from './Structures/Message.js'
-import type Permission from './Structures/Permission.js'
 import type User from './Structures/users/User.js'
 
 // // Application Commands
@@ -126,8 +126,8 @@ export interface Uncached {
 }
 
 // // Channel
-export type AnyChannel = AnyGuildChannel | PrivateChannel
-export type AnyGuildChannel = GuildTextableChannel | AnyVoiceChannel | CategoryChannel
+export type AnyChannel = AnyGuildChannel | PrivateChannel | PossiblyUncachedTextable
+export type AnyGuildChannel = GuildTextableChannel | AnyVoiceChannel | CategoryChannel | AnyThreadChannel
 // TODO: Add THREADCHANNEL export type AnyThreadChannel = NewsThreadChannel | PrivateThreadChannel | PublicThreadChannel | ThreadChannel;
 export type AnyThreadChannel = NewsThreadChannel | PrivateThreadChannel | PublicThreadChannel
 export type AnyVoiceChannel = TextVoiceChannel | StageChannel
@@ -483,6 +483,7 @@ export interface PurgeChannelOptions {
   reason?: string
 }
 export interface Textable {
+  id: string
   lastMessageID: string
   messages: Collection<string, Message>
   addMessageReaction: (messageID: string, reaction: string) => Promise<void>
