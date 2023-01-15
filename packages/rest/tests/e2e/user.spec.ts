@@ -30,9 +30,9 @@ describe('[rest] User related tests', () => {
     })
 
     it('With an invalid user id', async () => {
-      expect(() => {
+      await expect(() => {
         rest.getUser('123')
-      }).throws
+      }).eventually.throws
     })
   })
 })
