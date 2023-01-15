@@ -12,9 +12,7 @@ export const camelize = <T>(object: T): Camelize<T> => {
       // @ts-expect-error
       (obj[
         typeof key === 'string'
-          ? key.replace(/([-_][a-z])/gi, ($1) => {
-            return $1.toUpperCase().replace('-', '').replace('_', '')
-          })
+          ? snakeToCamelCase(key)
           : key
       ] as Camelize<(T & object)[keyof T]>) = camelize(
         object[key]
@@ -23,4 +21,21 @@ export const camelize = <T>(object: T): Camelize<T> => {
     return obj
   }
   return object as Camelize<T>
+}
+
+function snakeToCamelCase(str: string) {
+  if (!str.includes('_')) return str
+
+  let result = ''
+  for (let i = 0, len = str.length; i < len; ++i) {
+    if (str[i] === '_') {
+      result += str[i++].toUpperCase()
+
+      continue
+    }
+
+    result += str[i]
+  }
+
+  return result
 }
