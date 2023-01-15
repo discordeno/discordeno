@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { it } from 'mocha'
+import { describe, it } from 'mocha'
 // import { validateLength } from '../src/validateLength.js'
 let validateLength
 

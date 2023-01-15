@@ -8,7 +8,7 @@ const iconBigInt = 3843769888406823508519992434416504301518n
 const a_iconHash = 'a_4bbb271a13f7195031adcc06a2d867ce'
 const a_iconBigInt = 3503487521485885045056617826984736090062n
 
-describe('', () => {
+describe('hash.ts', () => {
   it('[utils] icon hash to bigint', () => {
     expect(iconHashToBigInt(iconHash)).to.be.equal(iconBigInt)
   })

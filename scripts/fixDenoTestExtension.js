@@ -8,15 +8,16 @@ for await (const dir of dirs) {
         dirs.push(`${dir}/${file}`)
         return
       }
-      const content = await fs.promises.readFile(
-        `denoTestsDist${dir}/${file}`,
-        'utf-8'
-      )
+      const content = await fs.promises.readFile(`denoTestsDist${dir}/${file}`, 'utf-8')
       await fs.promises.rm(`denoTestsDist${dir}/${file}`)
       fs.promises.writeFile(
         `denoTestsDist${dir}/${file.slice(-8) === '.spec.js' ? `${file.slice(0, -7)}test.js` : file}`,
-        content.replace(/src\//g, 'dist/').replace(/\.ts/g, '.js')
+        content
+          .replace(/src\//g, 'dist/')
+          .replace(/\.ts/g, '.js')
+          .replace(/describe\.skip/g, 'describe.ignore')
+          .replace(/it\.skip/g, 'it.ignore'),
       )
-    })
+    }),
   )
 }
