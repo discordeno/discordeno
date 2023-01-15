@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673629323963,
+  "lastUpdate": 1673746960317,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -3726,6 +3726,132 @@ window.BENCHMARK_DATA = {
             "value": 279.34,
             "unit": "MB",
             "range": "278.32 … 280.42"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "35f98ccd5842830b3740d4f77d0290211c438f12",
+          "message": "chore(deps): bump json5 from 2.2.1 to 2.2.3 in /site (#2715)\n\nBumps [json5](https://github.com/json5/json5) from 2.2.1 to 2.2.3.\r\n- [Release notes](https://github.com/json5/json5/releases)\r\n- [Changelog](https://github.com/json5/json5/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/json5/json5/compare/v2.2.1...v2.2.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: json5\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-01-14T19:41:01-06:00",
+          "tree_id": "72086c68e27a9928d5da7c0783f08a01d962f86b",
+          "url": "https://github.com/discordeno/discordeno/commit/35f98ccd5842830b3740d4f77d0290211c438f12"
+        },
+        "date": 1673746957616,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "[Transformer] Discord Guild to a Guild",
+            "value": 16400,
+            "unit": "ns/iter",
+            "range": "11700 … 12360000"
+          },
+          {
+            "name": "[Guild.toggles.features] Get the features of a guild",
+            "value": 1530,
+            "unit": "ns/iter",
+            "range": "1440 … 2400"
+          },
+          {
+            "name": "[Transformer] Discord User to a User",
+            "value": 231,
+            "unit": "ns/iter",
+            "range": "210.16 … 277.39"
+          },
+          {
+            "name": "[Transformer] User to a Discord User",
+            "value": 195,
+            "unit": "ns/iter",
+            "range": "151.12 … 1390"
+          },
+          {
+            "name": "[Transformer] Discord Rules Channel to a Rules Channel",
+            "value": 603,
+            "unit": "ns/iter",
+            "range": "546.09 … 937.54"
+          },
+          {
+            "name": "[Transformer] Discord Announcement Channel to a Announcement Channel",
+            "value": 1700,
+            "unit": "ns/iter",
+            "range": "1550 … 2060"
+          },
+          {
+            "name": "[Transformer] Discord Moderator Channel to a Moderator Channel",
+            "value": 840,
+            "unit": "ns/iter",
+            "range": "750.28 … 1080"
+          },
+          {
+            "name": "[Transformer] Discord Text Channel to a Text Channel",
+            "value": 797,
+            "unit": "ns/iter",
+            "range": "697.48 … 974.53"
+          },
+          {
+            "name": "[Transformer] Discord Stage Channel to a Stage Channel",
+            "value": 631,
+            "unit": "ns/iter",
+            "range": "563.41 … 871.42"
+          },
+          {
+            "name": "[Transformer] Discord Voice Channel to a Voice Channel",
+            "value": 645,
+            "unit": "ns/iter",
+            "range": "579.74 … 841.51"
+          },
+          {
+            "name": "[Transformer] Discord Member to a Member",
+            "value": 1150,
+            "unit": "ns/iter",
+            "range": "937.34 … 1930"
+          },
+          {
+            "name": "[Transformer] Member to a Discord Member",
+            "value": 1560,
+            "unit": "ns/iter",
+            "range": "1430 … 2090"
+          },
+          {
+            "name": "[Transformer] Discord Role to a Role",
+            "value": 414,
+            "unit": "ns/iter",
+            "range": "372.47 … 593.34"
+          },
+          {
+            "name": "[Transformer] Discord Message to a Message",
+            "value": 1690,
+            "unit": "ns/iter",
+            "range": "1550 … 3190"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 284.32,
+            "unit": "MB",
+            "range": "283.49 … 285.42"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 264.68,
+            "unit": "MB",
+            "range": "257.38 … 269.85"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 277.27,
+            "unit": "MB",
+            "range": "272.5 … 281.37"
           }
         ]
       }
