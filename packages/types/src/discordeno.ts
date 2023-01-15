@@ -1,14 +1,30 @@
-import type { DiscordEmbed } from './discord'
+import type {
+  AutoModerationActionType,
+  AutoModerationEventTypes,
+  AutoModerationTriggerTypes,
+  DiscordAttachment,
+  DiscordAutoModerationRuleTriggerMetadataPresets,
+  DiscordEmbed,
+} from './discord'
 import type {
   AllowedMentionsTypes,
+  ApplicationCommandOptionTypes,
+  ApplicationCommandPermissionTypes,
+  ApplicationCommandTypes,
   BigString,
   ButtonStyles,
   Camelize,
   ChannelTypes,
+  InteractionResponseTypes,
+  Localization,
   MessageComponentTypes,
   OverwriteTypes,
   PermissionStrings,
+  ScheduledEventEntityType,
+  ScheduledEventPrivacyLevel,
+  ScheduledEventStatus,
   SortOrderTypes,
+  TargetTypes,
   TextStyles,
   VideoQualityModes,
 } from './shared'
@@ -16,37 +32,34 @@ import type {
 export interface CreateMessageOptions {
   /** The message contents (up to 2000 characters) */
   content?: string
-  //   /** Can be used to verify a message was sent (up to 25 characters). Value will appear in the Message Create event. */
-  //   nonce?: string | number
-  //   /** true if this is a TTS message */
-  //   tts?: boolean
+  /** Can be used to verify a message was sent (up to 25 characters). Value will appear in the Message Create event. */
+  nonce?: string | number
+  /** true if this is a TTS message */
+  tts?: boolean
   /** Embedded `rich` content (up to 6000 characters) */
-  //   embeds?: Embed[]
+  embeds?: Array<Camelize<DiscordEmbed>>
   /** Allowed mentions for the message */
-  //   allowedMentions?: AllowedMentions
+  allowedMentions?: AllowedMentions
   /** Include to make your message a reply */
-  //   messageReference?: {
-  //     /** id of the originating message */
-  //     messageId?: BigString
-  //     /**
-  //      * id of the originating message's channel
-  //      * Note: `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model.
-  //      */
-  //     channelId?: BigString
-  //     /** id of the originating message's guild */
-  //     guildId?: BigString
-  //     /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
-  //     failIfNotExists: boolean
-  //   }
+  messageReference?: {
+    /** id of the originating message */
+    messageId?: BigString
+    /**
+     * id of the originating message's channel
+     * Note: `channel_id` is optional when creating a reply, but will always be present when receiving an event/response that includes this data model.
+     */
+    channelId?: BigString
+    /** id of the originating message's guild */
+    guildId?: BigString
+    /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
+    failIfNotExists: boolean
+  }
   /** The contents of the file being sent */
-  //   file?: FileContent | FileContent[]
-  //   /** The components you would like to have sent in this message */
-  //   components?: MessageComponents
-  //   /** IDs of up to 3 stickers in the server to send in the message */
-  //   stickerIds?:
-  //   | [BigString]
-  //   | [BigString, BigString]
-  //   | [BigString, BigString, BigString]
+  file?: FileContent | FileContent[]
+  /** The components you would like to have sent in this message */
+  components?: MessageComponents
+  /** IDs of up to 3 stickers in the server to send in the message */
+  stickerIds?: [BigString] | [BigString, BigString] | [BigString, BigString, BigString]
 }
 // import type {
 //   AllowedMentionsTypes,
@@ -320,13 +333,13 @@ export type GetMessagesOptions = GetMessagesAfter | GetMessagesBefore | GetMessa
 //   limit?: number
 // }
 
-// /** https://discord.com/developers/docs/resources/channel#list-public-archived-threads-query-string-params */
-// export interface ListArchivedThreads {
-//   /** Returns threads before this timestamp */
-//   before?: number
-//   /** Optional maximum number of threads to return */
-//   limit?: number
-// }
+/** https://discord.com/developers/docs/resources/channel#list-public-archived-threads-query-string-params */
+export interface ListArchivedThreads {
+  /** Returns threads before this timestamp */
+  before?: number
+  /** Optional maximum number of threads to return */
+  limit?: number
+}
 
 // /** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
 // export interface GetGuildAuditLog {
@@ -365,66 +378,66 @@ export type GetMessagesOptions = GetMessagesAfter | GetMessagesBefore | GetMessa
 //   includeRoles?: string | string[]
 // }
 
-// export interface GetScheduledEventUsers {
-//   /** number of users to return (up to maximum 100), defaults to 100 */
-//   limit?: number
-//   /** whether to also have member objects provided, defaults to false */
-//   withMember?: boolean
-//   /** consider only users before given user id */
-//   before?: BigString
-//   /** consider only users after given user id. If both before and after are provided, only before is respected. Fetching users in-between before and after is not supported. */
-//   after?: BigString
-// }
+export interface GetScheduledEventUsers {
+  /** number of users to return (up to maximum 100), defaults to 100 */
+  limit?: number
+  /** whether to also have member objects provided, defaults to false */
+  withMember?: boolean
+  /** consider only users before given user id */
+  before?: BigString
+  /** consider only users after given user id. If both before and after are provided, only before is respected. Fetching users in-between before and after is not supported. */
+  after?: BigString
+}
 
-// /** https://discord.com/developers/docs/resources/invite#get-invite */
-// export interface GetInvite {
-//   /** Whether the invite should contain approximate member counts */
-//   withCounts?: boolean
-//   /** Whether the invite should contain the expiration date */
-//   withExpiration?: boolean
-//   /** the guild scheduled event to include with the invite */
-//   scheduledEventId?: BigString
-// }
+/** https://discord.com/developers/docs/resources/invite#get-invite */
+export interface GetInvite {
+  /** Whether the invite should contain approximate member counts */
+  withCounts?: boolean
+  /** Whether the invite should contain the expiration date */
+  withExpiration?: boolean
+  /** the guild scheduled event to include with the invite */
+  scheduledEventId?: BigString
+}
 
-// export type CreateApplicationCommand =
-//   | CreateSlashApplicationCommand
-//   | CreateContextApplicationCommand
+export type CreateApplicationCommand =
+  | CreateSlashApplicationCommand
+  | CreateContextApplicationCommand
 
-// /** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
-// export interface CreateSlashApplicationCommand {
-//   /**
-//    * Name of command, 1-32 characters.
-//    * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
-//    * If there is a lowercase variant of any letters used, you must use those.
-//    * Characters with no lowercase variants and/or uncased letters are still allowed.
-//    * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
-//    */
-//   name: string
-//   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-//   nameLocalizations?: Localization
-//   /** 1-100 character description */
-//   description: string
-//   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-//   descriptionLocalizations?: Localization
-//   /** Type of command, defaults `ApplicationCommandTypes.ChatInput` if not set  */
-//   type?: ApplicationCommandTypes
-//   /** Parameters for the command */
-//   options?: ApplicationCommandOption[]
-//   /** Set of permissions represented as a bit set */
-//   defaultMemberPermissions?: PermissionStrings[]
-//   /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
-//   dmPermission?: boolean
-// }
+/** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
+export interface CreateSlashApplicationCommand {
+  /**
+   * Name of command, 1-32 characters.
+   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   * If there is a lowercase variant of any letters used, you must use those.
+   * Characters with no lowercase variants and/or uncased letters are still allowed.
+   * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
+   */
+  name: string
+  /** Localization object for the `name` field. Values follow the same restrictions as `name` */
+  nameLocalizations?: Localization
+  /** 1-100 character description */
+  description: string
+  /** Localization object for the `description` field. Values follow the same restrictions as `description` */
+  descriptionLocalizations?: Localization
+  /** Type of command, defaults `ApplicationCommandTypes.ChatInput` if not set  */
+  type?: ApplicationCommandTypes
+  /** Parameters for the command */
+  options?: ApplicationCommandOption[]
+  /** Set of permissions represented as a bit set */
+  defaultMemberPermissions?: PermissionStrings[]
+  /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
+  dmPermission?: boolean
+}
 
-// /** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
-// export interface CreateContextApplicationCommand
-//   extends Omit<
-//   CreateSlashApplicationCommand,
-//   'options' | 'description' | 'descriptionLocalizations'
-//   > {
-//   /** The type of the command */
-//   type: ApplicationCommandTypes.Message | ApplicationCommandTypes.User
-// }
+/** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
+export interface CreateContextApplicationCommand
+  extends Omit<
+  CreateSlashApplicationCommand,
+  'options' | 'description' | 'descriptionLocalizations'
+  > {
+  /** The type of the command */
+  type: ApplicationCommandTypes.Message | ApplicationCommandTypes.User
+}
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response-interactionapplicationcommandcallbackdata */
 export interface InteractionCallbackData {
@@ -457,44 +470,44 @@ export interface ApplicationCommandOptionChoice {
   value: string | number
 }
 
-// /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
-// export interface InteractionResponse {
-//   /** The type of response */
-//   type: InteractionResponseTypes
-//   /** An optional response message */
-//   data?: InteractionCallbackData
-// }
+/** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
+export interface InteractionResponse {
+  /** The type of response */
+  type: InteractionResponseTypes
+  /** An optional response message */
+  data?: InteractionCallbackData
+}
 
-// export interface ApplicationCommandOption {
-//   /** Value of Application Command Option Type */
-//   type: ApplicationCommandOptionTypes
-//   /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
-//   name: string
-//   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-//   nameLocalizations?: Localization
-//   /** 1-100 character description */
-//   description: string
-//   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-//   descriptionLocalizations?: Localization
-//   /** If the parameter is required or optional--default `false` */
-//   required?: boolean
-//   /** Choices for `string` and `int` types for the user to pick from */
-//   choices?: ApplicationCommandOptionChoice[]
-//   /** If the option is a subcommand or subcommand group type, this nested options will be the parameters */
-//   options?: ApplicationCommandOption[]
-//   /** If the option is a channel type, the channels shown will be restricted to these types */
-//   channelTypes?: ChannelTypes[]
-//   /** Minimum number desired. */
-//   minValue?: number
-//   /** Maximum number desired. */
-//   maxValue?: number
-//   /** Minimum length desired. */
-//   minLength?: number
-//   /** Maximum length desired. */
-//   maxLength?: number
-//   /** if autocomplete interactions are enabled for this `String`, `Integer`, or `Number` type option */
-//   autocomplete?: boolean
-// }
+export interface ApplicationCommandOption {
+  /** Value of Application Command Option Type */
+  type: ApplicationCommandOptionTypes
+  /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
+  name: string
+  /** Localization object for the `name` field. Values follow the same restrictions as `name` */
+  nameLocalizations?: Localization
+  /** 1-100 character description */
+  description: string
+  /** Localization object for the `description` field. Values follow the same restrictions as `description` */
+  descriptionLocalizations?: Localization
+  /** If the parameter is required or optional--default `false` */
+  required?: boolean
+  /** Choices for `string` and `int` types for the user to pick from */
+  choices?: ApplicationCommandOptionChoice[]
+  /** If the option is a subcommand or subcommand group type, this nested options will be the parameters */
+  options?: ApplicationCommandOption[]
+  /** If the option is a channel type, the channels shown will be restricted to these types */
+  channelTypes?: ChannelTypes[]
+  /** Minimum number desired. */
+  minValue?: number
+  /** Maximum number desired. */
+  maxValue?: number
+  /** Minimum length desired. */
+  minLength?: number
+  /** Maximum length desired. */
+  maxLength?: number
+  /** if autocomplete interactions are enabled for this `String`, `Integer`, or `Number` type option */
+  autocomplete?: boolean
+}
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
 export interface CreateGuildEmoji extends WithReason {
@@ -696,4 +709,222 @@ export interface GetWebhookMessageOptions {
 export interface DeleteWebhookMessageOptions {
   /** id of the thread the message is in */
   threadId: BigString
+}
+
+export interface CreateForumPostWithMessage extends WithReason {
+  /** 1-100 character thread name */
+  name: string
+  /** Duration in minutes to automatically archive the thread after recent activity */
+  autoArchiveDuration: 60 | 1440 | 4320 | 10080
+  /** Amount of seconds a user has to wait before sending another message (0-21600) */
+  rateLimitPerUser?: number | null
+  /** The message contents (up to 2000 characters) */
+  content?: string
+  /** Embedded `rich` content (up to 6000 characters) */
+  embeds?: Array<Camelize<DiscordEmbed>>
+  /** Allowed mentions for the message */
+  allowedMentions?: AllowedMentions
+  /** The contents of the file being sent */
+  file?: FileContent | FileContent[]
+  /** The components you would like to have sent in this message */
+  components?: MessageComponents
+}
+
+export interface CreateStageInstance extends WithReason {
+  channelId: BigString
+  topic: string
+  /** Notify @everyone that the stage instance has started. Requires the MENTION_EVERYONE permission. */
+  sendStartNotification?: boolean
+}
+
+export interface EditStageInstanceOptions extends WithReason {
+  /** The topic of the Stage instance (1-120 characters) */
+  topic: string
+}
+
+export interface StartThreadWithMessage extends WithReason {
+  /** 1-100 character thread name */
+  name: string
+  /** Duration in minutes to automatically archive the thread after recent activity */
+  autoArchiveDuration: 60 | 1440 | 4320 | 10080
+  /** Amount of seconds a user has to wait before sending another message (0-21600) */
+  rateLimitPerUser?: number | null
+}
+
+export interface StartThreadWithoutMessage extends WithReason {
+  /** 1-100 character thread name */
+  name: string
+  /** Duration in minutes to automatically archive the thread after recent activity */
+  autoArchiveDuration: 60 | 1440 | 4320 | 10080
+  /** Amount of seconds a user has to wait before sending another message (0-21600) */
+  rateLimitPerUser?: number | null
+  /** the type of thread to create */
+  type: ChannelTypes.AnnouncementThread | ChannelTypes.PublicThread | ChannelTypes.PrivateThread
+  /** whether non-moderators can add other non-moderators to a thread; only available when creating a private thread */
+  invitable?: boolean
+}
+
+export interface CreateAutoModerationRuleOptions extends WithReason {
+  /** The name of the rule. */
+  name: string
+  /** The type of event to trigger the rule on. */
+  eventType: AutoModerationEventTypes
+  /** The type of trigger to use for the rule. */
+  triggerType: AutoModerationTriggerTypes
+  /** The metadata to use for the trigger. */
+  triggerMetadata: {
+    /** The keywords needed to match. Only present when TriggerType.Keyword */
+    keywordFilter?: string[]
+    /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
+    presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
+    /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
+    allowList?: string[]
+    /** Total number of mentions (role & user) allowed per message (Maximum of 50). Only present when TriggerType.MentionSpam */
+    mentionTotalLimit?: number
+  }
+  /** The actions that will trigger for this rule */
+  actions: Array<{
+    /** The type of action to take when a rule is triggered */
+    type: AutoModerationActionType
+    /** additional metadata needed during execution for this specific action type */
+    metadata?: {
+      /** The id of channel to which user content should be logged. Only in SendAlertMessage */
+      channelId?: BigString
+      /** Timeout duration in seconds. Max is 2419200(4 weeks). Only supported for TriggerType.Keyword */
+      durationSeconds?: number
+    }
+  }>
+  /** Whether the rule should be enabled, true by default. */
+  enabled?: boolean
+  /** The role ids that should not be effected by the rule */
+  exemptRoles?: BigString[]
+  /** The channel ids that should not be effected by the rule. */
+  exemptChannels?: BigString[]
+}
+
+export interface EditAutoModerationRuleOptions extends WithReason {
+  /** The name of the rule. */
+  name: string
+  /** The type of event to trigger the rule on. */
+  eventType: AutoModerationEventTypes
+  /** The metadata to use for the trigger. */
+  triggerMetadata: {
+    /** The keywords needed to match. Only present when TriggerType.Keyword */
+    keywordFilter?: string[]
+    // TODO: This may need a special type or enum
+    /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
+    presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
+    /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
+    allowList?: string[]
+    /** Total number of mentions (role & user) allowed per message (Maximum of 50) */
+    mentionTotalLimit: number
+  }
+  /** The actions that will trigger for this rule */
+  actions: Array<{
+    /** The type of action to take when a rule is triggered */
+    type: AutoModerationActionType
+    /** additional metadata needed during execution for this specific action type */
+    metadata: {
+      /** The id of channel to which user content should be logged. Only in SendAlertMessage */
+      channelId?: BigString
+      /** Timeout duration in seconds. Only supported for TriggerType.Keyword */
+      durationSeconds?: number
+    }
+  }>
+  /** Whether the rule should be enabled. */
+  enabled?: boolean
+  /** The role ids that should not be effected by the rule */
+  exemptRoles?: BigString[]
+  /** The channel ids that should not be effected by the rule. */
+  exemptChannels?: BigString[]
+}
+
+export interface CreateScheduledEvent extends WithReason {
+  /** the channel id of the scheduled event. */
+  channelId?: BigString
+  /** location of the event. Required for events with `entityType: ScheduledEventEntityType.External` */
+  location?: string
+  /** the name of the scheduled event */
+  name: string
+  /** the description of the scheduled event */
+  description: string
+  /** the time the scheduled event will start */
+  scheduledStartTime: string
+  /** the time the scheduled event will end if it does end. Required for events with `entityType: ScheduledEventEntityType.External` */
+  scheduledEndTime?: string
+  /** the privacy level of the scheduled event */
+  privacyLevel?: ScheduledEventPrivacyLevel
+  /** the type of hosting entity associated with a scheduled event */
+  entityType: ScheduledEventEntityType
+}
+
+export interface EditScheduledEvent extends WithReason {
+  /** the channel id of the scheduled event. null if switching to external event. */
+  channelId: BigString | null
+  /** location of the event */
+  location?: string
+  /** the name of the scheduled event */
+  name: string
+  /** the description of the scheduled event */
+  description?: string
+  /** the time the scheduled event will start */
+  scheduledStartTime: string
+  /** the time the scheduled event will end if it does end. */
+  scheduledEndTime?: string
+  /** the privacy level of the scheduled event */
+  privacyLevel: ScheduledEventPrivacyLevel
+  /** the type of hosting entity associated with a scheduled event */
+  entityType: ScheduledEventEntityType
+  /** the status of the scheduled event */
+  status: ScheduledEventStatus
+}
+
+export interface GetScheduledEvents {
+  /** include number of users subscribed to each event */
+  withUserCount?: boolean
+}
+
+export interface CreateChannelInvite extends WithReason {
+  /** Duration of invite in seconds before expiry, or 0 for never. Between 0 and 604800 (7 days). Default: 86400 (24 hours) */
+  maxAge?: number
+  /** Max number of users or 0 for unlimited. Between 0 and 100. Default: 0 */
+  maxUses?: number
+  /** Whether this invite only grants temporary membership. Default: false */
+  temporary?: boolean
+  /** If true, don't try to reuse similar invite (useful for creating many unique one time use invites). Default: false */
+  unique?: boolean
+  /** The type of target for this voice channel invite */
+  targetType?: TargetTypes
+  /** The id of the user whose stream to display for this invite, required if `target_type` is 1, the user must be streaming in the channel */
+  targetUserId?: BigString
+  /** The id of the embedded application to open for this invite, required if `target_type` is 2, the application must have the `EMBEDDED` flag */
+  targetApplicationId?: BigString
+}
+
+/** https://discord.com/developers/docs/resources/channel#edit-message-json-params */
+export interface EditMessage {
+  /** The new message contents (up to 2000 characters) */
+  content?: string | null
+  /** Embedded `rich` content (up to 6000 characters) */
+  embeds?: Array<Camelize<DiscordEmbed>> | null
+  /** Edit the flags of the message (only `SUPPRESS_EMBEDS` can currently be set/unset) */
+  flags?: 4 | null
+  /** The contents of the file being sent/edited */
+  file?: FileContent | FileContent[] | null
+  /** Allowed mentions for the message */
+  allowedMentions?: AllowedMentions
+  /** When specified (adding new attachments), attachments which are not provided in this list will be removed. */
+  attachments?: Array<Camelize<DiscordAttachment>>
+  /** The components you would like to have sent in this message */
+  components?: MessageComponents
+}
+
+/** https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions */
+export interface ApplicationCommandPermissions {
+  /** The id of the role or user */
+  id: string
+  /** Role or User */
+  type: ApplicationCommandPermissionTypes
+  /** `true` to allow, `false`, to disallow */
+  permission: boolean
 }

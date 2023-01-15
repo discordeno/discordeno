@@ -1,5 +1,5 @@
 // import type { FileContent } from './discordeno.js'
-import type { WebhookTypes } from './shared.js'
+import type { Localization, WebhookTypes } from './shared.js'
 
 //   ActivityTypes,
 //   AllowedMentionsTypes,
@@ -85,6 +85,7 @@ import type {
   VerificationLevels,
   VideoQualityModes,
 } from './shared'
+import type { FileContent } from './discordeno.js'
 
 /** https://discord.com/developers/docs/resources/user#user-object */
 export interface DiscordUser {
@@ -1441,17 +1442,17 @@ export interface DiscordInteractionDataOption {
 //   attachments?: Record<string, DiscordAttachment>
 // }
 
-// export interface DiscordListActiveThreads {
-//   /** The active threads */
-//   threads: DiscordChannel[]
-//   /** A thread member object for each returned thread the current user has joined */
-//   members: DiscordThreadMember[]
-// }
+export interface DiscordListActiveThreads {
+  /** The active threads */
+  threads: DiscordChannel[]
+  /** A thread member object for each returned thread the current user has joined */
+  members: DiscordThreadMember[]
+}
 
-// export interface DiscordListArchivedThreads extends DiscordListActiveThreads {
-//   /** Whether there are potentially additional threads that could be returned on a subsequent call */
-//   has_more: boolean
-// }
+export interface DiscordListArchivedThreads extends DiscordListActiveThreads {
+  /** Whether there are potentially additional threads that could be returned on a subsequent call */
+  has_more: boolean
+}
 
 export interface DiscordThreadListSync {
   /** The id of the guild */
@@ -1894,97 +1895,97 @@ export interface DiscordInviteStageInstance {
   topic: string
 }
 
-// /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure */
-// export interface DiscordApplicationCommand
-//   extends DiscordCreateApplicationCommand {
-//   /** Unique ID of command */
-//   id: string
-//   /** ID of the parent application */
-//   application_id: string
-//   /** Guild id of the command, if not global */
-//   guild_id?: string
-// }
+/** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure */
+export interface DiscordApplicationCommand
+  extends DiscordCreateApplicationCommand {
+  /** Unique ID of command */
+  id: string
+  /** ID of the parent application */
+  application_id: string
+  /** Guild id of the command, if not global */
+  guild_id?: string
+}
 
-// export interface DiscordCreateApplicationCommand {
-//   /** Type of command, defaults to `ApplicationCommandTypes.ChatInput` */
-//   type?: ApplicationCommandTypes
-//   /**
-//    * Name of command, 1-32 characters.
-//    * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
-//    * If there is a lowercase variant of any letters used, you must use those.
-//    * Characters with no lowercase variants and/or uncased letters are still allowed.
-//    * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
-//    */
-//   name: string
-//   /** Localization object for `name` field. Values follow the same restrictions as `name` */
-//   name_localizations?: Localization | null
-//   /** Description for `ApplicationCommandTypes.ChatInput` commands, 1-100 characters. Empty string for `ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands */
-//   description: string
-//   /** Localization object for `description` field. Values follow the same restrictions as `description` */
-//   description_localizations?: Localization | null
-//   /** Parameters for the command, max of 25 */
-//   options?: DiscordApplicationCommandOption[]
-//   /** Set of permissions represented as a bit set */
-//   default_member_permissions?: string | null
-//   /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
-//   dm_permission?: boolean
-//   /** Indicates whether the command is age-restricted, defaults to false */
-//   nsfw?: boolean
-//   /** Auto incrementing version identifier updated during substantial record changes */
-//   version?: string
-// }
+export interface DiscordCreateApplicationCommand {
+  /** Type of command, defaults to `ApplicationCommandTypes.ChatInput` */
+  type?: ApplicationCommandTypes
+  /**
+   * Name of command, 1-32 characters.
+   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   * If there is a lowercase variant of any letters used, you must use those.
+   * Characters with no lowercase variants and/or uncased letters are still allowed.
+   * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
+   */
+  name: string
+  /** Localization object for `name` field. Values follow the same restrictions as `name` */
+  name_localizations?: Localization | null
+  /** Description for `ApplicationCommandTypes.ChatInput` commands, 1-100 characters. Empty string for `ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands */
+  description: string
+  /** Localization object for `description` field. Values follow the same restrictions as `description` */
+  description_localizations?: Localization | null
+  /** Parameters for the command, max of 25 */
+  options?: DiscordApplicationCommandOption[]
+  /** Set of permissions represented as a bit set */
+  default_member_permissions?: string | null
+  /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
+  dm_permission?: boolean
+  /** Indicates whether the command is age-restricted, defaults to false */
+  nsfw?: boolean
+  /** Auto incrementing version identifier updated during substantial record changes */
+  version?: string
+}
 
-// /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure */
-// export interface DiscordApplicationCommandOption {
-//   /** Type of option */
-//   type: ApplicationCommandOptionTypes
-//   /**
-//    * Name of command, 1-32 characters.
-//    * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
-//    * If there is a lowercase variant of any letters used, you must use those.
-//    * Characters with no lowercase variants and/or uncased letters are still allowed.
-//    * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
-//    */
-//   name: string
-//   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-//   name_localizations?: Localization | null
-//   /** 1-100 character description */
-//   description: string
-//   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-//   description_localizations?: Localization | null
-//   /** If the parameter is required or optional--default `false` */
-//   required?: boolean
-//   /** Choices for the option types `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer`, and `ApplicationCommandOptionTypes.Number`, from which the user can choose, max 25 */
-//   choices?: DiscordApplicationCommandOptionChoice[]
-//   /** If the option is a subcommand or subcommand group type, these nested options will be the parameters */
-//   options?: DiscordApplicationCommandOption[]
-//   /**
-//    * If autocomplete interactions are enabled for this option.
-//    *
-//    * Only available for `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer` and `ApplicationCommandOptionTypes.Number` option types
-//    */
-//   autocomplete?: boolean
-//   /** If the option is a channel type, the channels shown will be restricted to these types */
-//   channel_types?: ChannelTypes[]
-//   /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the minimum permitted value */
-//   min_value?: number
-//   /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the maximum permitted value */
-//   max_value?: number
-//   /** If the option type is `ApplicationCommandOptionTypes.String`, the minimum permitted length */
-//   min_length?: number
-//   /** If the option type is `ApplicationCommandOptionTypes.String`, the maximum permitted length  */
-//   max_length?: number
-// }
+/** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure */
+export interface DiscordApplicationCommandOption {
+  /** Type of option */
+  type: ApplicationCommandOptionTypes
+  /**
+   * Name of command, 1-32 characters.
+   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   * If there is a lowercase variant of any letters used, you must use those.
+   * Characters with no lowercase variants and/or uncased letters are still allowed.
+   * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
+   */
+  name: string
+  /** Localization object for the `name` field. Values follow the same restrictions as `name` */
+  name_localizations?: Localization | null
+  /** 1-100 character description */
+  description: string
+  /** Localization object for the `description` field. Values follow the same restrictions as `description` */
+  description_localizations?: Localization | null
+  /** If the parameter is required or optional--default `false` */
+  required?: boolean
+  /** Choices for the option types `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer`, and `ApplicationCommandOptionTypes.Number`, from which the user can choose, max 25 */
+  choices?: DiscordApplicationCommandOptionChoice[]
+  /** If the option is a subcommand or subcommand group type, these nested options will be the parameters */
+  options?: DiscordApplicationCommandOption[]
+  /**
+   * If autocomplete interactions are enabled for this option.
+   *
+   * Only available for `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer` and `ApplicationCommandOptionTypes.Number` option types
+   */
+  autocomplete?: boolean
+  /** If the option is a channel type, the channels shown will be restricted to these types */
+  channel_types?: ChannelTypes[]
+  /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the minimum permitted value */
+  min_value?: number
+  /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the maximum permitted value */
+  max_value?: number
+  /** If the option type is `ApplicationCommandOptionTypes.String`, the minimum permitted length */
+  min_length?: number
+  /** If the option type is `ApplicationCommandOptionTypes.String`, the maximum permitted length  */
+  max_length?: number
+}
 
-// /** https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object */
-// export interface DiscordApplicationCommandOptionChoice {
-//   /** 1-100 character choice name */
-//   name: string
-//   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-//   name_localizations?: Localization | null
-//   /** Value for the choice, up to 100 characters if string */
-//   value: string | number
-// }
+/** https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object */
+export interface DiscordApplicationCommandOptionChoice {
+  /** 1-100 character choice name */
+  name: string
+  /** Localization object for the `name` field. Values follow the same restrictions as `name` */
+  name_localizations?: Localization | null
+  /** Value for the choice, up to 100 characters if string */
+  value: string | number
+}
 
 /** https://discord.com/developers/docs/interactions/slash-commands#guildapplicationcommandpermissions */
 export interface DiscordGuildApplicationCommandPermissions {
@@ -2088,13 +2089,13 @@ export interface DiscordGuildPreview {
 //   category_ids: number[]
 // }
 
-// /** https://discord.com/developers/docs/resources/channel#followed-channel-object */
-// export interface DiscordFollowedChannel {
-//   /** Source message id */
-//   channel_id: string
-//   /** Created target webhook id */
-//   webhook_id: string
-// }
+/** https://discord.com/developers/docs/resources/channel#followed-channel-object */
+export interface DiscordFollowedChannel {
+  /** Source message id */
+  channel_id: string
+  /** Created target webhook id */
+  webhook_id: string
+}
 
 /** https://discord.com/developers/docs/topics/gateway#payloads-gateway-payload-structure */
 export interface DiscordGatewayPayload {
@@ -2965,10 +2966,10 @@ export interface DiscordCreateMessage {
 //   invitable?: boolean
 // }
 
-// export interface DiscordFollowAnnouncementChannel {
-//   /** The id of the channel to send announcements to. */
-//   webhook_channel_id: string
-// }
+export interface DiscordFollowAnnouncementChannel {
+  /** The id of the channel to send announcements to. */
+  webhook_channel_id: string
+}
 
 export interface DiscordEditChannelPermissionOverridesOptions {
   /** Permission bit set */
@@ -3138,38 +3139,38 @@ export interface DiscordCreateWebhook {
 //   components?: DiscordMessageComponents
 // }
 
-// /** https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel */
-// export interface DiscordCreateForumPostWithMessage {
-//   /** 1-100 character channel name */
-//   name: string
-//   /** duration in minutes to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
-//   auto_archive_duration?: 60 | 1440 | 4320 | 10080
-//   /** amount of seconds a user has to wait before sending another message (0-21600) */
-//   rate_limit_per_user?: number
-//   /** contents of the first message in the forum thread */
-//   message: {
-//     /** Message contents (up to 2000 characters) */
-//     content?: string
-//     /** Embedded rich content (up to 6000 characters) */
-//     embeds?: DiscordEmbed[]
-//     /** Allowed mentions for the message */
-//     allowed_mentions?: DiscordAllowedMentions[]
-//     /** Components to include with the message */
-//     components?: DiscordMessageComponents[]
-//     /** IDs of up to 3 stickers in the server to send in the message */
-//     sticker_ids?: string[]
-//     /** Contents of the file being sent. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
-//     file: FileContent | FileContent[] | undefined
-//     /** JSON-encoded body of non-file params, only for multipart/form-data requests. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
-//     payload_json?: string
-//     /** Attachment objects with filename and description. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
-//     attachments?: DiscordAttachment[]
-//     /** Message flags combined as a bitfield (only SUPPRESS_EMBEDS can be set) */
-//     flags?: number
-//   }
-//   /** the IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
-//   applied_tags?: string[]
-// }
+/** https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel */
+export interface DiscordCreateForumPostWithMessage {
+  /** 1-100 character channel name */
+  name: string
+  /** duration in minutes to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
+  auto_archive_duration?: 60 | 1440 | 4320 | 10080
+  /** amount of seconds a user has to wait before sending another message (0-21600) */
+  rate_limit_per_user?: number
+  /** contents of the first message in the forum thread */
+  message: {
+    /** Message contents (up to 2000 characters) */
+    content?: string
+    /** Embedded rich content (up to 6000 characters) */
+    embeds?: DiscordEmbed[]
+    /** Allowed mentions for the message */
+    allowed_mentions?: DiscordAllowedMentions[]
+    /** Components to include with the message */
+    components?: DiscordMessageComponents[]
+    /** IDs of up to 3 stickers in the server to send in the message */
+    sticker_ids?: string[]
+    /** Contents of the file being sent. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
+    file: FileContent | FileContent[] | undefined
+    /** JSON-encoded body of non-file params, only for multipart/form-data requests. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
+    payload_json?: string
+    /** Attachment objects with filename and description. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
+    attachments?: DiscordAttachment[]
+    /** Message flags combined as a bitfield (only SUPPRESS_EMBEDS can be set) */
+    flags?: number
+  }
+  /** the IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
+  applied_tags?: string[]
+}
 
 // /** https://discord.com/developers/docs/resources/guild-template#modify-guild-template */
 // export interface DiscordModifyGuildTemplate {
@@ -3178,3 +3179,12 @@ export interface DiscordCreateWebhook {
 //   /** description for the template (0-120 characters) */
 //   description?: string
 // }
+
+export type DiscordArchivedThreads = DiscordActiveThreads & {
+  hasMore: boolean
+}
+
+export interface DiscordActiveThreads {
+  threads: DiscordChannel[]
+  members: DiscordThreadMember[]
+}

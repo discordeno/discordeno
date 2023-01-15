@@ -6,15 +6,14 @@ import nacl from 'tweetnacl'
 // import { verifySignature } from '../src/verifySignature.js'
 let verifySignature
 
-describe.skip('VerifySignature', () => {
+describe.skip('verifySignature.ts', () => {
   let publicKey: Uint8Array
   let secretKey: Uint8Array
   let clock: Sinon.SinonFakeTimers
 
   beforeEach(() => {
-    clock = Sinon.useFakeTimers();
-
-    ({ publicKey, secretKey } = nacl.sign.keyPair())
+    clock = Sinon.useFakeTimers()
+    ;({ publicKey, secretKey } = nacl.sign.keyPair())
   })
 
   afterEach(() => {
@@ -25,16 +24,13 @@ describe.skip('VerifySignature', () => {
   it('reutrn true if signature is verified', () => {
     const timestamp = Date.now().toString()
     const body = 'test body'
-    const signature = nacl.sign.detached(
-      Buffer.from(timestamp + body),
-      secretKey
-    )
+    const signature = nacl.sign.detached(Buffer.from(timestamp + body), secretKey)
 
     const verifiedSignature = verifySignature({
       publicKey: Buffer.from(publicKey).toString('hex'),
       signature: Buffer.from(signature).toString('hex'),
       timestamp,
-      body
+      body,
     })
 
     expect(verifiedSignature.body).equal(body)

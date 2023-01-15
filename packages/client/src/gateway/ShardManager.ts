@@ -21,13 +21,7 @@ export class ShardManager extends Collection<number, Shard> {
     super()
     this.client = client
 
-    this.options = Object.assign(
-      {
-        concurrency: 1,
-      },
-      options,
-    )
-
+    this.options = Object.assign({ concurrency: 1 }, options)
     this.buckets = new Map()
     this.connectQueue = []
     this.connectTimeout = null

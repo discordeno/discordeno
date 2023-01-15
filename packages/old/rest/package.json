@@ -45,6 +45,7 @@
     "eslint-config-discordeno": "*",
     "mocha": "^10.1.0",
     "sinon": "^15.0.0",
+    "ts-node": "^10.9.1",
     "tsconfig": "*",
     "typescript": "^4.9.3",
     "why-is-node-running": "^2.2.2"

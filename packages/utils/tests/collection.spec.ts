@@ -1,15 +1,9 @@
-/*
 import { expect } from 'chai'
 import { beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
-// import { Collection } from '../src/collection.js'
-// eslint-disable-next-line @typescript-eslint/no-extraneous-class, @typescript-eslint/no-unused-vars
-class Collection<T, U> {
-  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
-  constructor(item?: any) {}
-}
+import { Collection } from '../src/collection.js'
 
-describe.skip('[collection]', () => {
+describe('collection.ts', () => {
   let collection: Collection<any, any>
 
   beforeEach(() => {
@@ -146,4 +140,3 @@ describe.skip('[collection]', () => {
     clock.restore()
   })
 })
-*/
