@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { it } from 'mocha'
+import { describe, it } from 'mocha'
 import { removeTokenPrefix } from '../src/token.js'
 
 describe('token.ts', () => {
