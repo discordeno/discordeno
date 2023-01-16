@@ -1,14 +1,14 @@
 {
-  "id": "1774903814594685223",
+  "id": "4893120188067780233",
   "type": 0,
-  "content": "kutclyr",
-  "channel_id": "1784332725412002039",
+  "content": "czyhmyr",
+  "channel_id": "8434009197433732943",
   "author": {
-    "id": "339232896137540513",
-    "username": "8289660497947435",
+    "id": "525817764592348117",
+    "username": "1673568160549879",
     "avatar": "eae5905ad2d18d7c8deca20478b088b5",
     "avatar_decoration": null,
-    "discriminator": "3661",
+    "discriminator": "5471",
     "public_flags": 4194560
   },
   "attachments": [],
@@ -18,7 +18,7 @@
   "pinned": false,
   "mention_everyone": false,
   "tts": false,
-  "timestamp": "2023-01-15T00:46:39.898Z",
+  "timestamp": "2023-01-16T00:42:44.313Z",
   "edited_timestamp": null,
   "flags": 0,
   "components": []
