@@ -43,8 +43,8 @@ export function createRequestBody(rest: RestManager, options: CreateRequestBodyO
       form.append(`description`, options.body.description as string);
       form.append(`tags`, options.body.tags as string);
     } else {
-      for (let i = 0; i < files.length; i++) {
-        form.append(`file${i}`, files[i].blob, files[i].name);
+      for (let i = 0; i < file.length; i++) {
+        form.append(`file${i}`, file[i].blob, file[i].name);
       }
 
       form.append("payload_json", JSON.stringify({ ...options.body, file: undefined }));
