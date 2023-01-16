@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - node-migration
       - node-migration-clean
     paths:
       - packages/**
@@ -26,7 +25,7 @@ jobs:
       - uses: dorny/paths-filter@v2
         id: changes
         with:
-          base: node-migration
+          base: node-migration-clean
           filters: |
             bot:
             - "packages/bot/**"
