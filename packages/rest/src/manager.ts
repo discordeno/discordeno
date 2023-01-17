@@ -1,3 +1,9 @@
+import { InteractionResponseTypes } from '@discordeno/types';
+import { camelize, delay, getBotIdFromToken, urlToBase64 } from '@discordeno/utils';
+
+import { createInvalidRequestBucket } from './invalidBucket.js';
+import { Queue } from './queue.js';
+
 import type {
   ApplicationCommandPermissions,
   BigString,
@@ -45,8 +51,8 @@ import type {
   ExecuteWebhook,
   GetInvite,
   GetMessagesOptions,
-  GetScheduledEvents,
   GetScheduledEventUsers,
+  GetScheduledEvents,
   GetWebhookMessageOptions,
   InteractionCallbackData,
   InteractionResponse,
@@ -58,31 +64,17 @@ import type {
   StartThreadWithMessage,
   StartThreadWithoutMessage,
   WithReason,
-} from "@discordeno/types";
-import { InteractionResponseTypes } from "@discordeno/types";
-import {
-  camelize,
-  delay,
-  getBotIdFromToken,
-  urlToBase64,
-} from "@discordeno/utils";
-import type { InvalidRequestBucket } from "./invalidBucket.js";
-import { createInvalidRequestBucket } from "./invalidBucket.js";
-import { Queue } from "./queue.js";
-
+} from '@discordeno/types'
+import type { InvalidRequestBucket } from './invalidBucket.js'
 // TODO: make dynamic based on package.json file
-const version = "18.0.0-alpha.1";
+const version = '18.0.0-alpha.1'
 
-export function createRestManager(
-  options: CreateRestManagerOptions
-): RestManager {
+export function createRestManager(options: CreateRestManagerOptions): RestManager {
   const rest: RestManager = {
     token: options.token,
-    applicationId: options.applicationId
-      ? BigInt(options.applicationId)
-      : getBotIdFromToken(options.token),
+    applicationId: options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token),
     version: options.version ?? 10,
-    baseUrl: options.baseUrl ?? "https://discord.com/api",
+    baseUrl: options.baseUrl ?? 'https://discord.com/api',
     maxRetryCount: Infinity,
     globallyRateLimited: false,
     processingRateLimitedPaths: false,
@@ -93,36 +85,35 @@ export function createRestManager(
     routes: {
       webhooks: {
         id: (webhookId) => {
-          return `/webhooks/${webhookId}`;
+          return `/webhooks/${webhookId}`
         },
         message: (webhookId, token, messageId, options) => {
-          let url = `/webhooks/${webhookId}/${token}/messages/${messageId}?`;
+          let url = `/webhooks/${webhookId}/${token}/messages/${messageId}?`
 
           if (options) {
-            if (options.threadId) url += `thread_id=${options.threadId}`;
+            if (options.threadId) url += `thread_id=${options.threadId}`
           }
 
-          return url;
+          return url
         },
         original: (webhookId, token, options) => {
-          let url = `/webhooks/${webhookId}/${token}/messages/@original?`;
+          let url = `/webhooks/${webhookId}/${token}/messages/@original?`
 
           if (options) {
-            if (options.threadId) url += `thread_id=${options.threadId}`;
+            if (options.threadId) url += `thread_id=${options.threadId}`
           }
 
-          return url;
+          return url
         },
         webhook: (webhookId, token, options) => {
-          let url = `/webhooks/${webhookId}/${token}?`;
+          let url = `/webhooks/${webhookId}/${token}?`
 
           if (options) {
-            if (options?.wait !== undefined)
-              url += `wait=${options.wait.toString()}`;
-            if (options.threadId) url += `thread_id=${options.threadId}`;
+            if (options?.wait !== undefined) url += `wait=${options.wait.toString()}`
+            if (options.threadId) url += `thread_id=${options.threadId}`
           }
 
-          return url;
+          return url
         },
       },
 
@@ -132,34 +123,34 @@ export function createRestManager(
       // Channel Endpoints
       channels: {
         dm: () => {
-          return "/users/@me/channels";
+          return '/users/@me/channels'
         },
         webhooks: (channelId) => {
-          return `/channels/${channelId}/webhooks`;
+          return `/channels/${channelId}/webhooks`
         },
 
         channel: (channelId) => {
-          return `/channels/${channelId}`;
+          return `/channels/${channelId}`
         },
 
         follow: (channelId) => {
-          return `/channels/${channelId}/followers`;
+          return `/channels/${channelId}/followers`
         },
 
         forum: (channelId) => {
-          return `/channels/${channelId}/threads?has_message=true`;
+          return `/channels/${channelId}/threads?has_message=true`
         },
 
         invites: (channelId) => {
-          return `/channels/${channelId}/invites`;
+          return `/channels/${channelId}/invites`
         },
 
         message: (channelId, messageId) => {
-          return `/channels/${channelId}/messages/${messageId}`;
+          return `/channels/${channelId}/messages/${messageId}`
         },
 
         messages: (channelId, options?: GetMessagesOptions) => {
-          const url = `/channels/${channelId}/messages?`;
+          const url = `/channels/${channelId}/messages?`
 
           if (options) {
             // if (isGetMessagesAfter(options) && options.after) {
@@ -176,91 +167,91 @@ export function createRestManager(
             // }
           }
 
-          return url;
+          return url
         },
 
         overwrite: (channelId, overwriteId) => {
-          return `/channels/${channelId}/permissions/${overwriteId}`;
+          return `/channels/${channelId}/permissions/${overwriteId}`
         },
 
         crosspost: (channelId, messageId) => {
-          return `/channels/${channelId}/messages/${messageId}/crosspost`;
+          return `/channels/${channelId}/messages/${messageId}/crosspost`
         },
 
         stages: () => {
-          return "/stage-instances";
+          return '/stage-instances'
         },
 
         stage: (channelId) => {
-          return `/stage-instances/${channelId}`;
+          return `/stage-instances/${channelId}`
         },
 
         // Thread Endpoints
         threads: {
           message: (channelId, messageId) => {
-            return `/channels/${channelId}/messages/${messageId}/threads`;
+            return `/channels/${channelId}/messages/${messageId}/threads`
           },
           all: (channelId) => {
-            return `/channels/${channelId}/threads`;
+            return `/channels/${channelId}/threads`
           },
           active: (guildId) => {
-            return `/guilds/${guildId}/threads/active`;
+            return `/guilds/${guildId}/threads/active`
           },
           members: (channelId) => {
-            return `/channels/${channelId}/thread-members`;
+            return `/channels/${channelId}/thread-members`
           },
           me: (channelId) => {
-            return `/channels/${channelId}/thread-members/@me`;
+            return `/channels/${channelId}/thread-members/@me`
           },
           user: (channelId, userId) => {
-            return `/channels/${channelId}/thread-members/${userId}`;
+            return `/channels/${channelId}/thread-members/${userId}`
           },
           archived: (channelId) => {
-            return `/channels/${channelId}/threads/archived`;
+            return `/channels/${channelId}/threads/archived`
           },
           public: (channelId, options) => {
-            let url = `/channels/${channelId}/threads/archived/public?`;
+            let url = `/channels/${channelId}/threads/archived/public?`
 
             if (options) {
               if (options.before) {
-                url += `before=${new Date(options.before).toISOString()}`;
+                url += `before=${new Date(options.before).toISOString()}`
               }
               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-              if (options.limit) url += `&limit=${options.limit}`;
+              if (options.limit) url += `&limit=${options.limit}`
             }
 
-            return url;
+            return url
           },
           private: (channelId, options) => {
-            let url = `/channels/${channelId}/threads/archived/private?`;
+            let url = `/channels/${channelId}/threads/archived/private?`
 
             if (options) {
               if (options.before) {
-                url += `before=${new Date(options.before).toISOString()}`;
+                url += `before=${new Date(options.before).toISOString()}`
               }
               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-              if (options.limit) url += `&limit=${options.limit}`;
+              if (options.limit) url += `&limit=${options.limit}`
             }
 
-            return url;
+            return url
           },
           joined: (channelId, options) => {
-            let url = `/channels/${channelId}/users/@me/threads/archived/private?`;
+            let url = `/channels/${channelId}/users/@me/threads/archived/private?`
 
             if (options) {
               if (options.before) {
-                url += `before=${new Date(options.before).toISOString()}`;
+                url += `before=${new Date(options.before).toISOString()}`
               }
               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-              if (options.limit) url += `&limit=${options.limit}`;
+              if (options.limit) url += `&limit=${options.limit}`
             }
 
-            return url;
+            return url
           },
         },
 
         typing: (channelId) => {
-          return `/channels/${channelId}/typing`;
+          return `/channels/${channelId}/typing`
         },
       },
 
@@ -268,90 +259,89 @@ export function createRestManager(
       guilds: {
         automod: {
           rule: (guildId, ruleId) => {
-            return `/guilds/${guildId}/auto-moderation/rules/${ruleId}`;
+            return `/guilds/${guildId}/auto-moderation/rules/${ruleId}`
           },
           rules: (guildId) => {
-            return `/guilds/${guildId}/auto-moderation/rules`;
+            return `/guilds/${guildId}/auto-moderation/rules`
           },
         },
         channels: (guildId) => {
-          return `/guilds/${guildId}/channels`;
+          return `/guilds/${guildId}/channels`
         },
         emoji: (guildId, emojiId) => {
-          return `/guilds/${guildId}/emojis/${emojiId}`;
+          return `/guilds/${guildId}/emojis/${emojiId}`
         },
         emojis: (guildId) => {
-          return `/guilds/${guildId}/emojis`;
+          return `/guilds/${guildId}/emojis`
         },
         events: {
           events: (guildId, withUserCount?: boolean) => {
-            let url = `/guilds/${guildId}/scheduled-events?`;
+            let url = `/guilds/${guildId}/scheduled-events?`
 
             if (withUserCount !== undefined) {
-              url += `with_user_count=${withUserCount.toString()}`;
+              url += `with_user_count=${withUserCount.toString()}`
             }
-            return url;
+            return url
           },
           event: (guildId, eventId, withUserCount?: boolean) => {
-            let url = `/guilds/${guildId}/scheduled-events/${eventId}`;
+            let url = `/guilds/${guildId}/scheduled-events/${eventId}`
 
             if (withUserCount !== undefined) {
-              url += `with_user_count=${withUserCount.toString()}`;
+              url += `with_user_count=${withUserCount.toString()}`
             }
 
-            return url;
+            return url
           },
           users: (guildId, eventId, options?: GetScheduledEventUsers) => {
-            let url = `/guilds/${guildId}/scheduled-events/${eventId}/users?`;
+            let url = `/guilds/${guildId}/scheduled-events/${eventId}/users?`
 
             if (options) {
               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-              if (options.limit !== undefined) url += `limit=${options.limit}`;
+              if (options.limit !== undefined) url += `limit=${options.limit}`
               if (options.withMember !== undefined) {
                 // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                url += `&with_member=${options.withMember.toString()}`;
+                url += `&with_member=${options.withMember.toString()}`
               }
               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-              if (options.after !== undefined) url += `&after=${options.after}`;
+              if (options.after !== undefined) url += `&after=${options.after}`
               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-              if (options.before !== undefined)
-                url += `&before=${options.before}`;
+              if (options.before !== undefined) url += `&before=${options.before}`
             }
 
-            return url;
+            return url
           },
         },
         integration(guildId, integrationId) {
-          return `/guilds/${guildId}/integrations/${integrationId}`;
+          return `/guilds/${guildId}/integrations/${integrationId}`
         },
         integrations: (guildId) => {
-          return `/guilds/${guildId}/integrations?include_applications=true`;
+          return `/guilds/${guildId}/integrations?include_applications=true`
         },
         invite(inviteCode, options) {
-          let url = `/invites/${inviteCode}?`;
+          let url = `/invites/${inviteCode}?`
 
           if (options) {
             if (options.withCounts !== undefined) {
               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-              url += `with_counts=${options.withCounts.toString()}`;
+              url += `with_counts=${options.withCounts.toString()}`
             }
             if (options.withExpiration !== undefined) {
               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-              url += `&with_expiration=${options.withExpiration.toString()}`;
+              url += `&with_expiration=${options.withExpiration.toString()}`
             }
             if (options.scheduledEventId) {
               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-              url += `&guild_scheduled_event_id=${options.scheduledEventId}`;
+              url += `&guild_scheduled_event_id=${options.scheduledEventId}`
             }
           }
 
-          return url;
+          return url
         },
         invites: (guildId) => {
-          return `/guilds/${guildId}/invites`;
+          return `/guilds/${guildId}/invites`
         },
         webhooks: (guildId) => {
-          return `/guilds/${guildId}/webhooks`;
+          return `/guilds/${guildId}/webhooks`
         },
       },
 
@@ -360,135 +350,131 @@ export function createRestManager(
         commands: {
           // Application Endpoints
           commands: (applicationId) => {
-            return `/applications/${applicationId}/commands`;
+            return `/applications/${applicationId}/commands`
           },
 
           guilds: {
             all(applicationId, guildId) {
-              return `/applications/${applicationId}/guilds/${guildId}/commands`;
+              return `/applications/${applicationId}/guilds/${guildId}/commands`
             },
 
             one(applicationId, guildId, commandId, withLocalizations) {
-              let url = `/applications/${applicationId}/guilds/${guildId}/commands/${commandId}?`;
+              let url = `/applications/${applicationId}/guilds/${guildId}/commands/${commandId}?`
 
               if (withLocalizations !== undefined) {
-                url += `with_localizations=${withLocalizations.toString()}`;
+                url += `with_localizations=${withLocalizations.toString()}`
               }
 
-              return url;
+              return url
             },
           },
           permissions: (applicationId, guildId) => {
-            return `/applications/${applicationId}/guilds/${guildId}/commands/permissions`;
+            return `/applications/${applicationId}/guilds/${guildId}/commands/permissions`
           },
           permission: (applicationId, guildId, commandId) => {
-            return `/applications/${applicationId}/guilds/${guildId}/commands/${commandId}/permissions`;
+            return `/applications/${applicationId}/guilds/${guildId}/commands/${commandId}/permissions`
           },
           command: (applicationId, commandId, withLocalizations) => {
-            let url = `/applications/${applicationId}/commands/${commandId}?`;
+            let url = `/applications/${applicationId}/commands/${commandId}?`
 
             if (withLocalizations !== undefined) {
-              url += `withLocalizations=${withLocalizations.toString()}`;
+              url += `withLocalizations=${withLocalizations.toString()}`
             }
 
-            return url;
+            return url
           },
         },
 
         responses: {
           // Interaction Endpoints
           callback: (interactionId, token) => {
-            return `/interactions/${interactionId}/${token}/callback`;
+            return `/interactions/${interactionId}/${token}/callback`
           },
           original: (interactionId, token) => {
-            return `/webhooks/${interactionId}/${token}/messages/@original`;
+            return `/webhooks/${interactionId}/${token}/messages/@original`
           },
           message: (applicationId, token, messageId) => {
-            return `/webhooks/${applicationId}/${token}/messages/${messageId}`;
+            return `/webhooks/${applicationId}/${token}/messages/${messageId}`
           },
         },
       },
 
       // User endpoints
       user(userId) {
-        return `/users/${userId}`;
+        return `/users/${userId}`
       },
 
       userBot() {
-        return "/users/@me";
+        return '/users/@me'
       },
 
       oauth2Application() {
-        return "oauth2/applications/@me";
+        return 'oauth2/applications/@me'
       },
 
       gatewayBot() {
-        return "/gateway/bot";
+        return '/gateway/bot'
       },
 
       nitroStickerPacks() {
-        return "/sticker-packs";
+        return '/sticker-packs'
       },
     },
 
     checkRateLimits(url) {
-      const ratelimited = rest.rateLimitedPaths.get(url);
-      const global = rest.rateLimitedPaths.get("global");
-      const now = Date.now();
+      const ratelimited = rest.rateLimitedPaths.get(url)
+      const global = rest.rateLimitedPaths.get('global')
+      const now = Date.now()
 
       if (ratelimited && now < ratelimited.resetTimestamp) {
-        return ratelimited.resetTimestamp - now;
+        return ratelimited.resetTimestamp - now
       }
 
       if (global && now < global.resetTimestamp) {
-        return global.resetTimestamp - now;
+        return global.resetTimestamp - now
       }
 
-      return false;
+      return false
     },
 
     createRequest(options) {
       const headers: Record<string, string> = {
-        "user-agent": `DiscordBot (https://github.com/discordeno/discordeno, v${version})`,
-      };
+        'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${version})`,
+      }
 
-      if (!options.unauthorized) headers.authorization = `Bot ${rest.token}`;
+      if (!options.unauthorized) headers.authorization = `Bot ${rest.token}`
 
       // SOMETIMES SPECIAL HEADERS (E.G. CUSTOM AUTHORIZATION) NEED TO BE USED
       if (options.headers) {
         for (const key in options.headers) {
-          headers[key.toLowerCase()] = options.headers[key];
+          headers[key.toLowerCase()] = options.headers[key]
         }
       }
 
       // GET METHODS SHOULD NOT HAVE A BODY
-      if (options.method === "GET") {
-        options.body = undefined;
+      if (options.method === 'GET') {
+        options.body = undefined
       }
 
       // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
       if (options.body?.reason) {
-        headers["X-Audit-Log-Reason"] = encodeURIComponent(
-          options.body.reason as string
-        );
-        options.body.reason = undefined;
+        headers['X-Audit-Log-Reason'] = encodeURIComponent(options.body.reason as string)
+        options.body.reason = undefined
       }
 
-      if (options.body && !["GET", "DELETE"].includes(options.method)) {
-        headers["Content-Type"] = "application/json";
+      if (options.body && !['GET', 'DELETE'].includes(options.method)) {
+        headers['Content-Type'] = 'application/json'
       }
 
       return {
         headers,
-        body: (options.body?.file ?? JSON.stringify(options.body)) as
-          | FormData
-          | string,
+        body: (options.body?.file ?? JSON.stringify(options.body)) as FormData | string,
         method: options.method,
-      };
+      }
     },
 
     processRateLimitedPaths() {
-      const now = Date.now();
+      const now = Date.now()
 
       for (const [key, value] of rest.rateLimitedPaths.entries()) {
         //   rest.debug(
@@ -497,56 +483,56 @@ export function createRestManager(
         // }`
         //   )
         // If the time has not reached cancel
-        if (value.resetTimestamp > now) continue;
+        if (value.resetTimestamp > now) continue
 
         // Rate limit is over, delete the rate limiter
-        rest.rateLimitedPaths.delete(key);
+        rest.rateLimitedPaths.delete(key)
         // If it was global, also mark the global value as false
-        if (key === "global") rest.globallyRateLimited = false;
+        if (key === 'global') rest.globallyRateLimited = false
       }
 
       // ALL PATHS ARE CLEARED CAN CANCEL OUT!
       if (rest.rateLimitedPaths.size === 0) {
-        rest.processingRateLimitedPaths = false;
+        rest.processingRateLimitedPaths = false
       } else {
-        rest.processingRateLimitedPaths = true;
+        rest.processingRateLimitedPaths = true
         // RECHECK IN 1 SECOND
         setTimeout(() => {
           // rest.debug('[REST - processRateLimitedPaths] Running setTimeout.')
-          rest.processRateLimitedPaths();
-        }, 1000);
+          rest.processRateLimitedPaths()
+        }, 1000)
       }
     },
 
     /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
     processHeaders(url, headers) {
-      let rateLimited = false;
+      let rateLimited = false
 
       // GET ALL NECESSARY HEADERS
-      const remaining = headers.get("x-ratelimit-remaining");
-      const retryAfter = headers.get("x-ratelimit-reset-after");
-      const reset = Date.now() + Number(retryAfter) * 1000;
-      const global = headers.get("x-ratelimit-global");
+      const remaining = headers.get('x-ratelimit-remaining')
+      const retryAfter = headers.get('x-ratelimit-reset-after')
+      const reset = Date.now() + Number(retryAfter) * 1000
+      const global = headers.get('x-ratelimit-global')
       // undefined override null needed for typings
-      const bucketId = headers.get("x-ratelimit-bucket") ?? undefined;
-      const limit = headers.get("x-ratelimit-limit");
+      const bucketId = headers.get('x-ratelimit-bucket') ?? undefined
+      const limit = headers.get('x-ratelimit-limit')
 
       rest.queues.get(url)?.handleCompletedRequest({
         remaining: remaining ? Number(remaining) : undefined,
         interval: retryAfter ? Number(retryAfter) * 1000 : undefined,
         max: limit ? Number(limit) : undefined,
-      });
+      })
 
       // IF THERE IS NO REMAINING RATE LIMIT, MARK IT AS RATE LIMITED
-      if (remaining === "0") {
-        rateLimited = true;
+      if (remaining === '0') {
+        rateLimited = true
 
         // SAVE THE URL AS LIMITED, IMPORTANT FOR NEW REQUESTS BY USER WITHOUT BUCKET
         rest.rateLimitedPaths.set(url, {
           url,
           resetTimestamp: reset,
           bucketId,
-        });
+        })
 
         // SAVE THE BUCKET AS LIMITED SINCE DIFFERENT URLS MAY SHARE A BUCKET
         if (bucketId) {
@@ -554,43 +540,43 @@ export function createRestManager(
             url,
             resetTimestamp: reset,
             bucketId,
-          });
+          })
         }
       }
 
       // IF THERE IS NO REMAINING GLOBAL LIMIT, MARK IT RATE LIMITED GLOBALLY
       if (global) {
-        const retryAfter = headers.get("retry-after");
-        const globalReset = Date.now() + Number(retryAfter) * 1000;
+        const retryAfter = headers.get('retry-after')
+        const globalReset = Date.now() + Number(retryAfter) * 1000
         //   rest.debug(
         // `[REST = Globally Rate Limited] URL: ${url} | Global Rest: ${globalReset}`
         //   )
-        rest.globallyRateLimited = true;
-        rateLimited = true;
+        rest.globallyRateLimited = true
+        rateLimited = true
 
         setTimeout(() => {
-          rest.globallyRateLimited = false;
-        }, globalReset);
+          rest.globallyRateLimited = false
+        }, globalReset)
 
-        rest.rateLimitedPaths.set("global", {
-          url: "global",
+        rest.rateLimitedPaths.set('global', {
+          url: 'global',
           resetTimestamp: globalReset,
           bucketId,
-        });
+        })
 
         if (bucketId) {
           rest.rateLimitedPaths.set(bucketId, {
-            url: "global",
+            url: 'global',
             resetTimestamp: globalReset,
             bucketId,
-          });
+          })
         }
       }
 
       if (rateLimited && !rest.processingRateLimitedPaths) {
-        rest.processRateLimitedPaths();
+        rest.processRateLimitedPaths()
       }
-      return rateLimited ? bucketId : undefined;
+      return rateLimited ? bucketId : undefined
     },
 
     async sendRequest(options) {
@@ -602,15 +588,12 @@ export function createRestManager(
           url: options.url,
           body: options.body,
           ...options.options,
-        })
-      );
+        }),
+      )
 
       // Set the bucket id if it was available on the headers
-      const bucketId = rest.processHeaders(
-        rest.simplifyUrl(options.url, options.method),
-        response.headers
-      );
-      if (bucketId) options.bucketId = bucketId;
+      const bucketId = rest.processHeaders(rest.simplifyUrl(options.url, options.method), response.headers)
+      if (bucketId) options.bucketId = bucketId
 
       if (response.status < 200 || response.status >= 400) {
         // If NOT rate limited remove from queue
@@ -622,25 +605,21 @@ export function createRestManager(
             return options.reject?.({
               ok: false,
               status: response.status,
-              error:
-                "The options was rate limited and it maxed out the retries limit.",
-            });
+              error: 'The options was rate limited and it maxed out the retries limit.',
+            })
           }
 
           // Rate limited, add back to queue
-          rest.invalidBucket.handleCompletedRequest(
-            response.status,
-            response.headers.get("X-RateLimit-Scope") === "shared"
-          );
+          rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get('X-RateLimit-Scope') === 'shared')
 
-          const resetAfter = response.headers.get("x-ratelimit-reset-after");
-          if (resetAfter) await delay(Number(resetAfter) * 1000);
+          const resetAfter = response.headers.get('x-ratelimit-reset-after')
+          if (resetAfter) await delay(Number(resetAfter) * 1000)
 
-          return await options.retryRequest?.(options);
+          return await options.retryRequest?.(options)
         }
       }
 
-      options.resolve(await response.json());
+      options.resolve(await response.json())
     },
 
     // Credits: github.com/abalabahaha/eris lib/rest/RequestHandler.js#L397
@@ -648,48 +627,45 @@ export function createRestManager(
     simplifyUrl(url, method) {
       let route = url
         .replace(/\/([a-z-]+)\/(?:[0-9]{17,19})/g, function (match, p: string) {
-          return ["channels", "guilds"].includes(p) ? match : `/${p}/x`;
+          return ['channels', 'guilds'].includes(p) ? match : `/${p}/x`
         })
-        .replace(/\/reactions\/[^/]+/g, "/reactions/x");
+        .replace(/\/reactions\/[^/]+/g, '/reactions/x')
 
       // GENERAL /reactions and /reactions/emoji/@me share the buckets
-      if (route.includes("/reactions")) {
-        route = route.substring(
-          0,
-          route.indexOf("/reactions") + "/reactions".length
-        );
+      if (route.includes('/reactions')) {
+        route = route.substring(0, route.indexOf('/reactions') + '/reactions'.length)
       }
 
       // Delete Message endpoint has its own rate limit
-      if (method === "DELETE" && route.endsWith("/messages/x")) {
-        route = method + route;
+      if (method === 'DELETE' && route.endsWith('/messages/x')) {
+        route = method + route
       }
 
-      return route;
+      return route
     },
 
     processRequest(request: SendRequestOptions) {
-      const route = request.url.substring(request.url.indexOf("api/"));
-      const parts = route.split("/");
+      const route = request.url.substring(request.url.indexOf('api/'))
+      const parts = route.split('/')
       // Remove the api/
-      parts.shift();
+      parts.shift()
       // Removes the /v#/
-      if (parts[0]?.startsWith("v")) parts.shift();
+      if (parts[0]?.startsWith('v')) parts.shift()
       // Set the full url to discord api in case it was recieved in a proxy rest
-      request.url = `${rest.baseUrl}/v${rest.version}/${parts.join("/")}`;
+      request.url = `${rest.baseUrl}/v${rest.version}/${parts.join('/')}`
 
-      const url = rest.simplifyUrl(request.url, request.method);
-      const queue = rest.queues.get(url);
+      const url = rest.simplifyUrl(request.url, request.method)
+      const queue = rest.queues.get(url)
 
       if (queue !== undefined) {
-        queue.makeRequest(request);
+        queue.makeRequest(request)
       } else {
         // CREATES A NEW QUEUE
-        const bucketQueue = new Queue(rest, { url });
+        const bucketQueue = new Queue(rest, { url })
         // Add request to queue
-        bucketQueue.makeRequest(request);
+        bucketQueue.makeRequest(request)
         // Save queue
-        rest.queues.set(url, bucketQueue);
+        rest.queues.set(url, bucketQueue)
       }
     },
 
@@ -702,126 +678,112 @@ export function createRestManager(
           retryCount: 0,
           retryRequest: async function (options: SendRequestOptions) {
             // TODO: should change to reprocess queue item
-            await rest.sendRequest(options);
+            await rest.sendRequest(options)
           },
           resolve,
           reject,
           options,
-        });
-      });
+        })
+      })
     },
 
     async get<T = Record<string, unknown>>(url: string) {
-      return camelize(await rest.makeRequest("GET", url)) as Camelize<T>;
+      return camelize(await rest.makeRequest('GET', url)) as Camelize<T>
     },
 
-    async post<T = Record<string, unknown>>(
-      url: string,
-      body?: Record<string, any>
-    ) {
-      return camelize(await rest.makeRequest("POST", url, body)) as Camelize<T>;
+    async post<T = Record<string, unknown>>(url: string, body?: Record<string, any>) {
+      return camelize(await rest.makeRequest('POST', url, body)) as Camelize<T>
     },
 
     async delete(url: string, body?: Record<string, any>) {
-      return camelize(await rest.makeRequest("DELETE", url, body));
+      return camelize(await rest.makeRequest('DELETE', url, body))
     },
 
-    async patch<T = Record<string, unknown>>(
-      url: string,
-      body?: Record<string, any>
-    ) {
-      return camelize(
-        await rest.makeRequest("PATCH", url, body)
-      ) as Camelize<T>;
+    async patch<T = Record<string, unknown>>(url: string, body?: Record<string, any>) {
+      return camelize(await rest.makeRequest('PATCH', url, body)) as Camelize<T>
     },
 
-    async put<T = void>(
-      url: string,
-      body?: Record<string, any>,
-      options?: Record<string, any>
-    ) {
-      return camelize(
-        await rest.makeRequest("PUT", url, body, options)
-      ) as Camelize<T>;
+    async put<T = void>(url: string, body?: Record<string, any>, options?: Record<string, any>) {
+      return camelize(await rest.makeRequest('PUT', url, body, options)) as Camelize<T>
     },
 
     channels: {
       messages: {
         async delete(channelId, messageId, reason?) {
-          return await rest.deleteMessage(channelId, messageId, reason);
+          return await rest.deleteMessage(channelId, messageId, reason)
         },
         async edit(channelId, messageId, options) {
-          return await rest.editMessage(channelId, messageId, options);
+          return await rest.editMessage(channelId, messageId, options)
         },
 
         async send(channelId, options) {
-          return await rest.sendMessage(channelId, options);
+          return await rest.sendMessage(channelId, options)
         },
 
         async publish(channelId, messageId) {
-          return await rest.publishMessage(channelId, messageId);
+          return await rest.publishMessage(channelId, messageId)
         },
       },
 
       async get(id) {
-        return await rest.getChannel(id);
+        return await rest.getChannel(id)
       },
 
       async create(guildId, options) {
-        return await rest.createChannel(guildId, options);
+        return await rest.createChannel(guildId, options)
       },
 
       async delete(id, reason) {
-        return await rest.deleteChannel(id, reason);
+        return await rest.deleteChannel(id, reason)
       },
 
       async edit(id, options) {
-        return await rest.editChannel(id, options);
+        return await rest.editChannel(id, options)
       },
 
       async follow(sourceChannelId, targetChannelId) {
-        return await rest.followAnnouncement(sourceChannelId, targetChannelId);
+        return await rest.followAnnouncement(sourceChannelId, targetChannelId)
       },
 
       forums: {
         async post(channelId, options) {
-          return await rest.createForumThread(channelId, options);
+          return await rest.createForumThread(channelId, options)
         },
       },
 
       permissions: {
         async edit(channelId, options) {
-          return await rest.editChannelPermissionOverrides(channelId, options);
+          return await rest.editChannelPermissionOverrides(channelId, options)
         },
 
         async delete(channelId, id) {
-          return await rest.deleteChannelPermissionOverride(channelId, id);
+          return await rest.deleteChannelPermissionOverride(channelId, id)
         },
       },
 
       async positions(guildId, channelPositions) {
-        return await rest.editChannelPositions(guildId, channelPositions);
+        return await rest.editChannelPositions(guildId, channelPositions)
       },
 
       async invites(id) {
-        return await rest.getChannelInvites(id);
+        return await rest.getChannelInvites(id)
       },
 
       stages: {
         async create(options) {
-          return await rest.createStageInstance(options);
+          return await rest.createStageInstance(options)
         },
 
         async delete(channelId, reason) {
-          return await rest.deleteStageInstance(channelId, reason);
+          return await rest.deleteStageInstance(channelId, reason)
         },
 
         async edit(channelId, data) {
-          return await rest.editStageInstance(channelId, data);
+          return await rest.editStageInstance(channelId, data)
         },
 
         async get(channelId) {
-          return await rest.getStageInstance(channelId);
+          return await rest.getStageInstance(channelId)
         },
       },
 
@@ -829,239 +791,232 @@ export function createRestManager(
         create: {
           with: {
             async message(channelId, messageId, options) {
-              return await rest.startThreadWithMessage(
-                channelId,
-                messageId,
-                options
-              );
+              return await rest.startThreadWithMessage(channelId, messageId, options)
             },
           },
           without: {
             async message(channelId, options) {
-              return await rest.startThreadWithoutMessage(channelId, options);
+              return await rest.startThreadWithoutMessage(channelId, options)
             },
           },
         },
 
         get: {
           async active(guildId) {
-            return await rest.getActiveThreads(guildId);
+            return await rest.getActiveThreads(guildId)
           },
 
           archived: {
             async private(channelId, options) {
-              return await rest.getPrivateArchivedThreads(channelId, options);
+              return await rest.getPrivateArchivedThreads(channelId, options)
             },
 
             async joined(channelId, options) {
-              return await rest.getPrivateJoinedArchivedThreads(
-                channelId,
-                options
-              );
+              return await rest.getPrivateJoinedArchivedThreads(channelId, options)
             },
 
             async public(channelId, options) {
-              return await rest.getPublicArchivedThreads(channelId, options);
+              return await rest.getPublicArchivedThreads(channelId, options)
             },
           },
 
           async member(channelId, userId) {
-            return await rest.getThreadMember(channelId, userId);
+            return await rest.getThreadMember(channelId, userId)
           },
 
           async members(channelId) {
-            return await rest.getThreadMembers(channelId);
+            return await rest.getThreadMembers(channelId)
           },
         },
 
         async join(channelId) {
-          return await rest.joinThread(channelId);
+          return await rest.joinThread(channelId)
         },
 
         async leave(channelId) {
-          return await rest.leaveThread(channelId);
+          return await rest.leaveThread(channelId)
         },
 
         async kick(channelId, userId) {
-          return await rest.removeThreadMember(channelId, userId);
+          return await rest.removeThreadMember(channelId, userId)
         },
       },
 
       async typing(id) {
-        return await rest.triggerTypingIndicator(id);
+        return await rest.triggerTypingIndicator(id)
       },
     },
 
     emojis: {
       async create(guildId, options) {
-        return await rest.createEmoji(guildId, options);
+        return await rest.createEmoji(guildId, options)
       },
 
       async delete(guildId, id, reason) {
-        return await rest.deleteEmoji(guildId, id, reason);
+        return await rest.deleteEmoji(guildId, id, reason)
       },
 
       async edit(guildId, id, options) {
-        return await rest.editEmoji(guildId, id, options);
+        return await rest.editEmoji(guildId, id, options)
       },
 
       async get(guildId, emojiId) {
-        return await rest.getEmoji(guildId, emojiId);
+        return await rest.getEmoji(guildId, emojiId)
       },
     },
 
     guilds: {
       automod: {
         async create(guildId, options) {
-          return await rest.createAutomodRule(guildId, options);
+          return await rest.createAutomodRule(guildId, options)
         },
 
         async delete(guildId, eventId) {
-          return await rest.deleteAutomodRule(guildId, eventId);
+          return await rest.deleteAutomodRule(guildId, eventId)
         },
 
         async edit(guildId, ruleId, options) {
-          return await rest.editAutomodRule(guildId, ruleId, options);
+          return await rest.editAutomodRule(guildId, ruleId, options)
         },
 
         get: {
           async rule(guildId, ruleId) {
-            return await rest.getAutomodRule(guildId, ruleId);
+            return await rest.getAutomodRule(guildId, ruleId)
           },
 
           async rules(guildId) {
-            return await rest.getAutomodRules(guildId);
+            return await rest.getAutomodRules(guildId)
           },
         },
       },
 
       async channels(id) {
-        return await rest.getChannels(id);
+        return await rest.getChannels(id)
       },
 
       async emojis(id) {
-        return await rest.getEmojis(id);
+        return await rest.getEmojis(id)
       },
 
       events: {
         async create(guildId, options) {
-          return await rest.createScheduledEvent(guildId, options);
+          return await rest.createScheduledEvent(guildId, options)
         },
 
         async delete(guildId, eventId) {
-          return await rest.deleteScheduledEvent(guildId, eventId);
+          return await rest.deleteScheduledEvent(guildId, eventId)
         },
 
         async edit(guildId, eventId, options) {
-          return await rest.editScheduledEvent(guildId, eventId, options);
+          return await rest.editScheduledEvent(guildId, eventId, options)
         },
 
         get: {
           async event(guildId, eventId, options) {
-            return await rest.getScheduledEvent(guildId, eventId, options);
+            return await rest.getScheduledEvent(guildId, eventId, options)
           },
 
           async events(guildId, options) {
-            return await rest.getScheduledEvents(guildId, options);
+            return await rest.getScheduledEvents(guildId, options)
           },
 
           async users(guildId, eventId, options) {
-            return await rest.getScheduledEventUsers(guildId, eventId, options);
+            return await rest.getScheduledEventUsers(guildId, eventId, options)
           },
         },
       },
 
       integrations: {
         async get(guildId) {
-          return await rest.getIntegrations(guildId);
+          return await rest.getIntegrations(guildId)
         },
 
         async delete(guildId, integrationId) {
-          return await rest.deleteIntegration(guildId, integrationId);
+          return await rest.deleteIntegration(guildId, integrationId)
         },
       },
 
       invites: {
         async create(channelId, options) {
-          return await rest.createInvite(channelId, options);
+          return await rest.createInvite(channelId, options)
         },
 
         async delete(inviteCode, reason) {
-          return await rest.deleteInvite(inviteCode, reason);
+          return await rest.deleteInvite(inviteCode, reason)
         },
 
         async get(inviteCode, options) {
-          return await rest.getInvite(inviteCode, options);
+          return await rest.getInvite(inviteCode, options)
         },
 
         async list(guildId) {
-          return await rest.getInvites(guildId);
+          return await rest.getInvites(guildId)
         },
       },
 
       template: {
         async create(guildId, options) {
-          return await rest.createGuildTemplate(guildId, options);
+          return await rest.createGuildTemplate(guildId, options)
         },
         async delete(guildId, templateCode) {
-          return await rest.deleteGuildTemplate(guildId, templateCode);
+          return await rest.deleteGuildTemplate(guildId, templateCode)
         },
         async edit(guildId, templateCode, options) {
-          return await rest.editGuildTemplate(guildId, templateCode, options);
+          return await rest.editGuildTemplate(guildId, templateCode, options)
         },
         async get(templateCode) {
-          return await rest.getGuildTemplate(templateCode);
+          return await rest.getGuildTemplate(templateCode)
         },
         async list(guildId) {
-          return await rest.getGuildTemplates(guildId);
+          return await rest.getGuildTemplates(guildId)
         },
         async sync(guildId) {
-          return await rest.syncGuildTemplate(guildId);
+          return await rest.syncGuildTemplate(guildId)
         },
       },
 
       members: {
         async ban(guildId, userId, options) {
-          return await rest.banMember(guildId, userId, options);
+          return await rest.banMember(guildId, userId, options)
         },
         async edit(guildId, userId, options) {
-          return await rest.editMember(guildId, userId, options);
+          return await rest.editMember(guildId, userId, options)
         },
 
         async editSelf(guildId, options) {
-          return await rest.editBotMember(guildId, options);
+          return await rest.editBotMember(guildId, options)
         },
 
         async get(guildId, userId) {
-          return await rest.getMember(guildId, userId);
+          return await rest.getMember(guildId, userId)
         },
 
         getAvatarUrl(userId, discriminator, options) {
-          return rest.getAvatarURL(userId, discriminator, options);
+          return rest.getAvatarURL(userId, discriminator, options)
         },
 
         async getDm(userId) {
-          return await rest.getDmChannel(userId);
+          return await rest.getDmChannel(userId)
         },
 
         async kick(guildId, userId, reason) {
-          return await rest.kickMember(guildId, userId, reason);
+          return await rest.kickMember(guildId, userId, reason)
         },
 
         async list(guildId, options) {
-          return await rest.getMembers(guildId, options);
+          return await rest.getMembers(guildId, options)
         },
 
         async prune(guildId, options) {
-          return await rest.pruneMembers(guildId, options);
+          return await rest.pruneMembers(guildId, options)
         },
 
         async search(guildId, query, options) {
-          return await rest.searchMembers(guildId, query, options);
+          return await rest.searchMembers(guildId, query, options)
         },
 
         async unban(guildId, userId) {
-          return await rest.unbanMember(guildId, userId);
+          return await rest.unbanMember(guildId, userId)
         },
       },
     },
@@ -1070,87 +1025,75 @@ export function createRestManager(
       commands: {
         create: {
           async global(command) {
-            return await rest.createGlobalApplicationCommand(command);
+            return await rest.createGlobalApplicationCommand(command)
           },
 
           async guild(command, guildId) {
-            return await rest.createGuildApplicationCommand(command, guildId);
+            return await rest.createGuildApplicationCommand(command, guildId)
           },
         },
 
         delete: {
           async global(commandId) {
-            return await rest.deleteGlobalApplicationCommand(commandId);
+            return await rest.deleteGlobalApplicationCommand(commandId)
           },
 
           async guild(commandId, guildId) {
-            return await rest.deleteGuildApplicationCommand(commandId, guildId);
+            return await rest.deleteGuildApplicationCommand(commandId, guildId)
           },
         },
 
         edit: {
           async global(commandId, options) {
-            return await rest.editGlobalApplicationCommand(commandId, options);
+            return await rest.editGlobalApplicationCommand(commandId, options)
           },
 
           async guild(commandId, guildId, options) {
-            return await rest.editGuildApplicationCommand(
-              commandId,
-              guildId,
-              options
-            );
+            return await rest.editGuildApplicationCommand(commandId, guildId, options)
           },
 
           async permissions(guildId, commandId, bearerToken, options) {
-            return await rest.editApplicationCommandPermissions(
-              guildId,
-              commandId,
-              bearerToken,
-              options
-            );
+            return await rest.editApplicationCommandPermissions(guildId, commandId, bearerToken, options)
           },
         },
 
         get: {
           global: {
             async all() {
-              return await rest.getGlobalApplicationCommands();
+              return await rest.getGlobalApplicationCommands()
             },
 
             async one(commandId) {
-              return await rest.getGlobalApplicationCommand(commandId);
+              return await rest.getGlobalApplicationCommand(commandId)
             },
           },
 
           guilds: {
             async all(guildId) {
-              return await rest.getGuildApplicationCommands(guildId);
+              return await rest.getGuildApplicationCommands(guildId)
             },
 
             async one(commandId, guildId) {
-              return await rest.getGuildApplicationCommand(commandId, guildId);
+              return await rest.getGuildApplicationCommand(commandId, guildId)
             },
           },
 
           async permission(guildId, commandId) {
-            return await rest.getApplicationCommandPermission(
-              guildId,
-              commandId
-            );
+            return await rest.getApplicationCommandPermission(guildId, commandId)
           },
 
           async permissions(guildId) {
-            return await rest.getApplicationCommandPermissions(guildId);
+            return await rest.getApplicationCommandPermissions(guildId)
           },
         },
 
         replace: {
           async global(commands) {
-            return await rest.upsertGlobalApplicationCommands(commands);
+            return await rest.upsertGlobalApplicationCommands(commands)
           },
 
           async guild(guildId, commands) {
-            return await rest.upsertGuildApplicationCommands(guildId, commands);
+            return await rest.upsertGuildApplicationCommands(guildId, commands)
           },
         },
       },
@@ -1158,45 +1101,41 @@ export function createRestManager(
       responses: {
         create: {
           async followup(token, options) {
-            return await rest.sendFollowupMessage(token, options);
+            return await rest.sendFollowupMessage(token, options)
           },
 
           async original(interactionId, token, options) {
-            return await rest.sendInteractionResponse(
-              interactionId,
-              token,
-              options
-            );
+            return await rest.sendInteractionResponse(interactionId, token, options)
           },
         },
 
         delete: {
           async followup(token, messageId) {
-            return await rest.deleteFollowupMessage(token, messageId);
+            return await rest.deleteFollowupMessage(token, messageId)
           },
 
           async original(token) {
-            return await rest.deleteOriginalInteractionResponse(token);
+            return await rest.deleteOriginalInteractionResponse(token)
           },
         },
 
         edit: {
           async followup(token, messageId, options) {
-            return await rest.editFollowupMessage(token, messageId, options);
+            return await rest.editFollowupMessage(token, messageId, options)
           },
 
           async original(token, options) {
-            return await rest.editOriginalInteractionResponse(token, options);
+            return await rest.editOriginalInteractionResponse(token, options)
           },
         },
 
         get: {
           async followup(token, messageId) {
-            return await rest.getFollowupMessage(token, messageId);
+            return await rest.getFollowupMessage(token, messageId)
           },
 
           async original(token) {
-            return await rest.getOriginalInteractionResponse(token);
+            return await rest.getOriginalInteractionResponse(token)
           },
         },
       },
@@ -1204,23 +1143,23 @@ export function createRestManager(
 
     users: {
       async channel(userId) {
-        return await rest.getDmChannel(userId);
+        return await rest.getDmChannel(userId)
       },
     },
 
     webhooks: {
       async create(channelId, options) {
-        return await rest.createWebhook(channelId, options);
+        return await rest.createWebhook(channelId, options)
       },
 
       delete: {
         with: {
           async id(id, reason) {
-            return await rest.deleteWebhook(id, reason);
+            return await rest.deleteWebhook(id, reason)
           },
 
           async token(id, token) {
-            return await rest.deleteWebhookWithToken(id, token);
+            return await rest.deleteWebhookWithToken(id, token)
           },
         },
       },
@@ -1228,338 +1167,219 @@ export function createRestManager(
       edit: {
         with: {
           async id(webhookId, options) {
-            return await rest.editWebhook(webhookId, options);
+            return await rest.editWebhook(webhookId, options)
           },
 
           async token(id, token, options) {
-            return await rest.editWebhookWithToken(id, token, options);
+            return await rest.editWebhookWithToken(id, token, options)
           },
         },
       },
 
       async execute(webhookId, token, options) {
-        return await rest.executeWebhook(webhookId, token, options);
+        return await rest.executeWebhook(webhookId, token, options)
       },
 
       get: {
         async channel(channelId) {
-          return await rest.getChannelWebhooks(channelId);
+          return await rest.getChannelWebhooks(channelId)
         },
 
         async guild(guildId) {
-          return await rest.getGuildWebhooks(guildId);
+          return await rest.getGuildWebhooks(guildId)
         },
 
         async message(webhookId, token, messageId, options) {
-          return await rest.getWebhookMessage(
-            webhookId,
-            token,
-            messageId,
-            options
-          );
+          return await rest.getWebhookMessage(webhookId, token, messageId, options)
         },
 
         with: {
           async id(webhookId) {
-            return await rest.getWebhook(webhookId);
+            return await rest.getWebhook(webhookId)
           },
 
           async token(webhookId, token) {
-            return await rest.getWebhookWithToken(webhookId, token);
+            return await rest.getWebhookWithToken(webhookId, token)
           },
         },
       },
 
       messages: {
         async delete(webhookId, token, messageId, options) {
-          return await rest.deleteWebhookMessage(
-            webhookId,
-            token,
-            messageId,
-            options
-          );
+          return await rest.deleteWebhookMessage(webhookId, token, messageId, options)
         },
 
         // js hack making it possible to do webhooks.messages.edit() as well as webhooks.messages.edit.original()
         edit: Object.assign(
           // The base function for webhooks.messages.edit()
           (async (webhookId, token, messageId, options) => {
-            return await rest.editWebhookMessage(
-              webhookId,
-              token,
-              messageId,
-              options
-            );
+            return await rest.editWebhookMessage(webhookId, token, messageId, options)
           }) as WebhookMessageEditor,
           // The properties that webhooks.messages.edit.xxx will have are listed in this object
           {
             original: async (webhookId, token, options) => {
-              return await rest.editOriginalWebhookMessage(
-                webhookId,
-                token,
-                options
-              );
+              return await rest.editOriginalWebhookMessage(webhookId, token, options)
             },
-          } as WebhookMessageEditor
+          } as WebhookMessageEditor,
         ),
       },
     },
 
     async addThreadMember(channelId, userId) {
-      return await rest.put(
-        rest.routes.channels.threads.user(channelId, userId)
-      );
+      return await rest.put(rest.routes.channels.threads.user(channelId, userId))
     },
 
     async createAutomodRule(guildId, options) {
-      return await rest.post<DiscordAutoModerationRule>(
-        rest.routes.guilds.automod.rules(guildId),
-        options
-      );
+      return await rest.post<DiscordAutoModerationRule>(rest.routes.guilds.automod.rules(guildId), options)
     },
 
     async createChannel(guildId, options) {
-      return await rest.post<DiscordChannel>(
-        rest.routes.guilds.channels(guildId),
-        options
-      );
+      return await rest.post<DiscordChannel>(rest.routes.guilds.channels(guildId), options)
     },
 
     async createEmoji(guildId, options) {
-      return await rest.post<DiscordEmoji>(
-        rest.routes.guilds.emojis(guildId),
-        options
-      );
+      return await rest.post<DiscordEmoji>(rest.routes.guilds.emojis(guildId), options)
     },
 
     async createGlobalApplicationCommand(command) {
-      return await rest.post<DiscordApplicationCommand>(
-        rest.routes.interactions.commands.commands(rest.applicationId),
-        command
-      );
+      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.commands(rest.applicationId), command)
     },
 
     async createGuildApplicationCommand(command, guildId) {
-      return await rest.post<DiscordApplicationCommand>(
-        rest.routes.interactions.commands.guilds.all(
-          rest.applicationId,
-          guildId
-        ),
-        command
-      );
+      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), command)
     },
 
     async createForumThread(channelId, options) {
-      return await rest.post<DiscordChannel>(
-        rest.routes.channels.forum(channelId),
-        options
-      );
+      return await rest.post<DiscordChannel>(rest.routes.channels.forum(channelId), options)
     },
 
     async createInvite(channelId, options = {}) {
-      return await rest.post<DiscordInvite>(
-        rest.routes.channels.invites(channelId),
-        options
-      );
+      return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), options)
     },
 
     async createScheduledEvent(guildId, options) {
-      return await rest.post<DiscordScheduledEvent>(
-        rest.routes.guilds.events.events(guildId),
-        options
-      );
+      return await rest.post<DiscordScheduledEvent>(rest.routes.guilds.events.events(guildId), options)
     },
 
     async createStageInstance(options) {
-      return await rest.post<DiscordStageInstance>(
-        rest.routes.channels.stages(),
-        options
-      );
+      return await rest.post<DiscordStageInstance>(rest.routes.channels.stages(), options)
     },
 
     async createWebhook(channelId, options) {
-      return await rest.post<DiscordWebhook>(
-        rest.routes.channels.webhooks(channelId),
-        {
-          name: options.name,
-          avatar: options.avatar
-            ? await urlToBase64(options.avatar)
-            : undefined,
-          reason: options.reason,
-        } as DiscordCreateWebhook
-      );
+      return await rest.post<DiscordWebhook>(rest.routes.channels.webhooks(channelId), {
+        name: options.name,
+        avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
+        reason: options.reason,
+      } as DiscordCreateWebhook)
     },
 
     async deleteAutomodRule(guildId, ruleId, reason) {
-      return await rest.delete(
-        rest.routes.guilds.automod.rule(guildId, ruleId),
-        { reason }
-      );
+      return await rest.delete(rest.routes.guilds.automod.rule(guildId, ruleId), { reason })
     },
 
     async deleteChannel(channelId, reason) {
       return await rest.delete(rest.routes.channels.channel(channelId), {
         reason,
-      });
+      })
     },
 
     async deleteChannelPermissionOverride(channelId, overwriteId, reason) {
-      return await rest.delete(
-        rest.routes.channels.overwrite(channelId, overwriteId),
-        reason ? { reason } : undefined
-      );
+      return await rest.delete(rest.routes.channels.overwrite(channelId, overwriteId), reason ? { reason } : undefined)
     },
 
     async deleteEmoji(guildId, id, reason) {
       return await rest.delete(rest.routes.guilds.emoji(guildId, id), {
         reason,
-      });
+      })
     },
 
     async deleteFollowupMessage(token, messageId) {
-      return await rest.delete(
-        rest.routes.interactions.responses.message(
-          rest.applicationId,
-          token,
-          messageId
-        )
-      );
+      return await rest.delete(rest.routes.interactions.responses.message(rest.applicationId, token, messageId))
     },
 
     async deleteGlobalApplicationCommand(commandId) {
-      return await rest.delete(
-        rest.routes.interactions.commands.command(rest.applicationId, commandId)
-      );
+      return await rest.delete(rest.routes.interactions.commands.command(rest.applicationId, commandId))
     },
 
     async deleteGuildApplicationCommand(commandId, guildId) {
-      return await rest.delete(
-        rest.routes.interactions.commands.guilds.one(
-          rest.applicationId,
-          guildId,
-          commandId
-        )
-      );
+      return await rest.delete(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId))
     },
 
     async deleteIntegration(guildId, integrationId) {
-      return await rest.delete(
-        rest.routes.guilds.integration(guildId, integrationId)
-      );
+      return await rest.delete(rest.routes.guilds.integration(guildId, integrationId))
     },
 
     async deleteInvite(inviteCode, reason) {
-      return await rest.delete(
-        rest.routes.guilds.invite(inviteCode),
-        reason ? { reason } : undefined
-      );
+      return await rest.delete(rest.routes.guilds.invite(inviteCode), reason ? { reason } : undefined)
     },
 
     async deleteMessage(channelId, messageId, reason) {
-      return await rest.delete(
-        rest.routes.channels.message(channelId, messageId),
-        { reason }
-      );
+      return await rest.delete(rest.routes.channels.message(channelId, messageId), { reason })
     },
 
     async deleteOriginalInteractionResponse(token) {
-      return await rest.delete(
-        rest.routes.interactions.responses.original(rest.applicationId, token)
-      );
+      return await rest.delete(rest.routes.interactions.responses.original(rest.applicationId, token))
     },
 
     async deleteScheduledEvent(guildId, eventId) {
-      return await rest.delete(
-        rest.routes.guilds.events.event(guildId, eventId)
-      );
+      return await rest.delete(rest.routes.guilds.events.event(guildId, eventId))
     },
 
     async deleteStageInstance(channelId, reason) {
-      return await rest.delete(
-        rest.routes.channels.stage(channelId),
-        reason ? { reason } : undefined
-      );
+      return await rest.delete(rest.routes.channels.stage(channelId), reason ? { reason } : undefined)
     },
 
     async deleteWebhook(webhookId, reason) {
-      return await rest.delete(rest.routes.webhooks.id(webhookId), { reason });
+      return await rest.delete(rest.routes.webhooks.id(webhookId), { reason })
     },
 
     async deleteWebhookMessage(webhookId, token, messageId, options) {
-      return await rest.delete(
-        rest.routes.webhooks.message(webhookId, token, messageId, options)
-      );
+      return await rest.delete(rest.routes.webhooks.message(webhookId, token, messageId, options))
     },
 
     async deleteWebhookWithToken(webhookId, token) {
-      return await rest.delete(rest.routes.webhooks.webhook(webhookId, token));
+      return await rest.delete(rest.routes.webhooks.webhook(webhookId, token))
     },
 
-    async editApplicationCommandPermissions(
-      guildId,
-      commandId,
-      bearerToken,
-      options
-    ) {
+    async editApplicationCommandPermissions(guildId, commandId, bearerToken, options) {
       return await rest.put<DiscordApplicationCommandPermissions>(
-        rest.routes.interactions.commands.permission(
-          rest.applicationId,
-          guildId,
-          commandId
-        ),
+        rest.routes.interactions.commands.permission(rest.applicationId, guildId, commandId),
         {
           permissions: options,
         },
         {
           headers: { authorization: `Bearer ${bearerToken}` },
-        }
-      );
+        },
+      )
     },
 
     async editAutomodRule(guildId, ruleId, options) {
-      return await rest.patch<DiscordAutoModerationRule>(
-        rest.routes.guilds.automod.rule(guildId, ruleId),
-        options
-      );
+      return await rest.patch<DiscordAutoModerationRule>(rest.routes.guilds.automod.rule(guildId, ruleId), options)
     },
 
     async editBotProfile(options) {
-      const avatar = options?.botAvatarURL
-        ? await urlToBase64(options?.botAvatarURL)
-        : options?.botAvatarURL;
+      const avatar = options?.botAvatarURL ? await urlToBase64(options?.botAvatarURL) : options?.botAvatarURL
 
       return await rest.patch<DiscordUser>(rest.routes.userBot(), {
         username: options.username?.trim(),
         avatar,
-      });
+      })
     },
 
     async editChannel(channelId, options) {
-      return await rest.patch<DiscordChannel>(
-        rest.routes.channels.channel(channelId),
-        options
-      );
+      return await rest.patch<DiscordChannel>(rest.routes.channels.channel(channelId), options)
     },
 
     async editChannelPermissionOverrides(channelId, options) {
-      return await rest.put(
-        rest.routes.channels.overwrite(channelId, options.id),
-        options
-      );
+      return await rest.put(rest.routes.channels.overwrite(channelId, options.id), options)
     },
 
     async editChannelPositions(guildId, channelPositions) {
-      return await rest.patch(
-        rest.routes.guilds.channels(guildId),
-        channelPositions
-      );
+      return await rest.patch(rest.routes.guilds.channels(guildId), channelPositions)
     },
 
     async editEmoji(guildId, id, options) {
-      return await rest.patch<DiscordEmoji>(
-        rest.routes.guilds.emoji(guildId, id),
-        options
-      );
+      return await rest.patch<DiscordEmoji>(rest.routes.guilds.emoji(guildId, id), options)
     },
 
     /**
@@ -1580,998 +1400,682 @@ export function createRestManager(
      * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message}
      */
     async editFollowupMessage(token, messageId, options) {
-      return await rest.patch<DiscordMessage>(
-        rest.routes.interactions.responses.message(
-          rest.applicationId,
-          token,
-          messageId
-        ),
-        options
-      );
+      return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), options)
     },
 
     async editGlobalApplicationCommand(commandId, options) {
-      return await rest.patch<DiscordApplicationCommand>(
-        rest.routes.interactions.commands.command(
-          rest.applicationId,
-          commandId
-        ),
-        options
-      );
+      return await rest.patch<DiscordApplicationCommand>(rest.routes.interactions.commands.command(rest.applicationId, commandId), options)
     },
 
     async editGuildApplicationCommand(commandId, guildId, options) {
       return await rest.patch<DiscordApplicationCommand>(
-        rest.routes.interactions.commands.guilds.one(
-          rest.applicationId,
-          guildId,
-          commandId
-        ),
-        options
-      );
+        rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId),
+        options,
+      )
     },
 
     async editMessage(channelId, messageId, options) {
-      return await rest.patch<DiscordMessage>(
-        rest.routes.channels.message(channelId, messageId),
-        options
-      );
+      return await rest.patch<DiscordMessage>(rest.routes.channels.message(channelId, messageId), options)
     },
 
     async editOriginalInteractionResponse(token, options) {
-      return await rest.patch<DiscordMessage>(
-        rest.routes.interactions.responses.original(rest.applicationId, token),
-        options
-      );
+      return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), options)
     },
 
     async editOriginalWebhookMessage(webhookId, token, options) {
-      return await rest.patch<DiscordMessage>(
-        rest.routes.webhooks.original(webhookId, token, options),
-        {
-          type: InteractionResponseTypes.UpdateMessage,
-          data: options,
-        }
-      );
+      return await rest.patch<DiscordMessage>(rest.routes.webhooks.original(webhookId, token, options), {
+        type: InteractionResponseTypes.UpdateMessage,
+        data: options,
+      })
     },
 
     async editScheduledEvent(guildId, eventId, options) {
-      return await rest.patch<DiscordScheduledEvent>(
-        rest.routes.guilds.events.event(guildId, eventId),
-        options
-      );
+      return await rest.patch<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId), options)
     },
 
     async editStageInstance(channelId, data) {
-      return await rest.patch<DiscordStageInstance>(
-        rest.routes.channels.stage(channelId),
-        { topic: data.topic }
-      );
+      return await rest.patch<DiscordStageInstance>(rest.routes.channels.stage(channelId), { topic: data.topic })
     },
 
     async editWebhook(webhookId, options) {
-      return await rest.patch<DiscordWebhook>(
-        rest.routes.webhooks.id(webhookId),
-        options
-      );
+      return await rest.patch<DiscordWebhook>(rest.routes.webhooks.id(webhookId), options)
     },
 
     async editWebhookMessage(webhookId, token, messageId, options) {
-      return await rest.patch<DiscordMessage>(
-        rest.routes.webhooks.message(webhookId, token, messageId, options),
-        {
-          type: InteractionResponseTypes.UpdateMessage,
-          data: options,
-        }
-      );
+      return await rest.patch<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), {
+        type: InteractionResponseTypes.UpdateMessage,
+        data: options,
+      })
     },
 
     async editWebhookWithToken(webhookId, token, options) {
-      return await rest.patch<DiscordWebhook>(
-        rest.routes.webhooks.webhook(webhookId, token),
-        options
-      );
+      return await rest.patch<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token), options)
     },
 
     async executeWebhook(webhookId, token, options) {
-      return await rest.post<DiscordMessage>(
-        rest.routes.webhooks.webhook(webhookId, token, options),
-        options
-      );
+      return await rest.post<DiscordMessage>(rest.routes.webhooks.webhook(webhookId, token, options), options)
     },
 
     async followAnnouncement(sourceChannelId, targetChannelId) {
-      return await rest.post<DiscordFollowedChannel>(
-        rest.routes.channels.follow(sourceChannelId),
-        {
-          webhook_channel_id: targetChannelId,
-        } as DiscordFollowAnnouncementChannel
-      );
+      return await rest.post<DiscordFollowedChannel>(rest.routes.channels.follow(sourceChannelId), {
+        webhook_channel_id: targetChannelId,
+      } as DiscordFollowAnnouncementChannel)
     },
 
     async getActiveThreads(guildId) {
-      return await rest.get<DiscordListActiveThreads>(
-        rest.routes.channels.threads.active(guildId)
-      );
+      return await rest.get<DiscordListActiveThreads>(rest.routes.channels.threads.active(guildId))
     },
 
     async getApplicationCommandPermission(guildId, commandId) {
       return await rest.get<DiscordApplicationCommandPermissions>(
-        rest.routes.interactions.commands.permission(
-          rest.applicationId,
-          guildId,
-          commandId
-        )
-      );
+        rest.routes.interactions.commands.permission(rest.applicationId, guildId, commandId),
+      )
     },
 
     async getApplicationCommandPermissions(guildId) {
-      return await rest.get<DiscordApplicationCommandPermissions[]>(
-        rest.routes.interactions.commands.permissions(
-          rest.applicationId,
-          guildId
-        )
-      );
+      return await rest.get<DiscordApplicationCommandPermissions[]>(rest.routes.interactions.commands.permissions(rest.applicationId, guildId))
     },
 
     async getApplicationInfo() {
-      return await rest.get<DiscordApplication>(
-        rest.routes.oauth2Application()
-      );
+      return await rest.get<DiscordApplication>(rest.routes.oauth2Application())
     },
 
     async getAutomodRule(guildId, ruleId) {
-      return await rest.get<DiscordAutoModerationRule>(
-        rest.routes.guilds.automod.rule(guildId, ruleId)
-      );
+      return await rest.get<DiscordAutoModerationRule>(rest.routes.guilds.automod.rule(guildId, ruleId))
     },
 
     async getAutomodRules(guildId) {
-      return await rest.get<DiscordAutoModerationRule[]>(
-        rest.routes.guilds.automod.rules(guildId)
-      );
+      return await rest.get<DiscordAutoModerationRule[]>(rest.routes.guilds.automod.rules(guildId))
     },
 
     async getChannel(id) {
-      return await rest.get<DiscordChannel>(rest.routes.channels.channel(id));
+      return await rest.get<DiscordChannel>(rest.routes.channels.channel(id))
     },
 
     async getChannelInvites(channelId) {
-      return await rest.get<DiscordInviteMetadata[]>(
-        rest.routes.channels.invites(channelId)
-      );
+      return await rest.get<DiscordInviteMetadata[]>(rest.routes.channels.invites(channelId))
     },
 
     async getChannels(guildId) {
-      return await rest.get<DiscordChannel[]>(
-        rest.routes.guilds.channels(guildId)
-      );
+      return await rest.get<DiscordChannel[]>(rest.routes.guilds.channels(guildId))
     },
 
     async getChannelWebhooks(channelId) {
-      return await rest.get<DiscordWebhook[]>(
-        rest.routes.channels.webhooks(channelId)
-      );
+      return await rest.get<DiscordWebhook[]>(rest.routes.channels.webhooks(channelId))
     },
 
     async getDmChannel(userId) {
       return await rest.post<DiscordChannel>(rest.routes.channels.dm(), {
         recipient_id: userId.toString(),
-      });
+      })
     },
 
     async getEmoji(guildId, emojiId) {
-      return await rest.get<DiscordEmoji>(
-        rest.routes.guilds.emoji(guildId, emojiId)
-      );
+      return await rest.get<DiscordEmoji>(rest.routes.guilds.emoji(guildId, emojiId))
     },
 
     async getEmojis(guildId) {
-      return await rest.get<DiscordEmoji[]>(rest.routes.guilds.emojis(guildId));
+      return await rest.get<DiscordEmoji[]>(rest.routes.guilds.emojis(guildId))
     },
 
     async getFollowupMessage(token, messageId) {
-      return await rest.get<DiscordMessage>(
-        rest.routes.interactions.responses.message(
-          rest.applicationId,
-          token,
-          messageId
-        )
-      );
+      return await rest.get<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId))
     },
 
     async getGatewayBot() {
-      return await rest.get<DiscordGetGatewayBot>(rest.routes.gatewayBot());
+      return await rest.get<DiscordGetGatewayBot>(rest.routes.gatewayBot())
     },
 
     async getGlobalApplicationCommand(commandId) {
-      return await rest.get<DiscordApplicationCommand>(
-        rest.routes.interactions.commands.command(rest.applicationId, commandId)
-      );
+      return await rest.get<DiscordApplicationCommand>(rest.routes.interactions.commands.command(rest.applicationId, commandId))
     },
 
     async getGlobalApplicationCommands() {
-      return await rest.get<DiscordApplicationCommand[]>(
-        rest.routes.interactions.commands.commands(rest.applicationId)
-      );
+      return await rest.get<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId))
     },
 
     async getGuildApplicationCommand(commandId, guildId) {
-      return await rest.get<DiscordApplicationCommand>(
-        rest.routes.interactions.commands.guilds.one(
-          rest.applicationId,
-          guildId,
-          commandId
-        )
-      );
+      return await rest.get<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId))
     },
 
     async getGuildApplicationCommands(guildId) {
-      return await rest.get<DiscordApplicationCommand[]>(
-        rest.routes.interactions.commands.guilds.all(
-          rest.applicationId,
-          guildId
-        )
-      );
+      return await rest.get<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId))
     },
 
     async getGuildWebhooks(guildId) {
-      return await rest.get<DiscordWebhook[]>(
-        rest.routes.guilds.webhooks(guildId)
-      );
+      return await rest.get<DiscordWebhook[]>(rest.routes.guilds.webhooks(guildId))
     },
 
     async getIntegrations(guildId) {
-      return await rest.get<DiscordIntegration[]>(
-        rest.routes.guilds.integrations(guildId)
-      );
+      return await rest.get<DiscordIntegration[]>(rest.routes.guilds.integrations(guildId))
     },
 
     async getInvite(inviteCode, options) {
-      return await rest.get<DiscordInviteMetadata>(
-        rest.routes.guilds.invite(inviteCode, options)
-      );
+      return await rest.get<DiscordInviteMetadata>(rest.routes.guilds.invite(inviteCode, options))
     },
 
     async getInvites(guildId) {
-      return await rest.get<DiscordInviteMetadata[]>(
-        rest.routes.guilds.invites(guildId)
-      );
+      return await rest.get<DiscordInviteMetadata[]>(rest.routes.guilds.invites(guildId))
     },
 
     async getNitroStickerPacks() {
-      return await rest.get<DiscordStickerPack[]>(
-        rest.routes.nitroStickerPacks()
-      );
+      return await rest.get<DiscordStickerPack[]>(rest.routes.nitroStickerPacks())
     },
 
     async getOriginalInteractionResponse(token) {
-      return await rest.get<DiscordMessage>(
-        rest.routes.interactions.responses.original(rest.applicationId, token)
-      );
+      return await rest.get<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token))
     },
 
     async getPrivateArchivedThreads(channelId, options) {
-      return await rest.get<DiscordListArchivedThreads>(
-        rest.routes.channels.threads.private(channelId, options)
-      );
+      return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.private(channelId, options))
     },
 
     async getPrivateJoinedArchivedThreads(channelId, options) {
-      return await rest.get<DiscordListArchivedThreads>(
-        rest.routes.channels.threads.joined(channelId, options)
-      );
+      return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.joined(channelId, options))
     },
 
     async getPublicArchivedThreads(channelId, options) {
-      return await rest.get<DiscordListArchivedThreads>(
-        rest.routes.channels.threads.public(channelId, options)
-      );
+      return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.public(channelId, options))
     },
 
     async getScheduledEvent(guildId, eventId, options) {
-      return await rest.get<DiscordScheduledEvent>(
-        rest.routes.guilds.events.event(
-          guildId,
-          eventId,
-          options?.withUserCount
-        )
-      );
+      return await rest.get<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId, options?.withUserCount))
     },
 
     async getScheduledEvents(guildId, options) {
-      return await rest.get<DiscordScheduledEvent[]>(
-        rest.routes.guilds.events.events(guildId, options?.withUserCount)
-      );
+      return await rest.get<DiscordScheduledEvent[]>(rest.routes.guilds.events.events(guildId, options?.withUserCount))
     },
 
     async getScheduledEventUsers(guildId, eventId, options) {
-      return await rest.get<
-        Array<{ user: DiscordUser; member?: DiscordMember }>
-      >(rest.routes.guilds.events.users(guildId, eventId, options));
+      return await rest.get<Array<{ user: DiscordUser; member?: DiscordMember }>>(rest.routes.guilds.events.users(guildId, eventId, options))
     },
 
     async getSessionInfo() {
-      return await rest.getGatewayBot();
+      return await rest.getGatewayBot()
     },
 
     async getStageInstance(channelId) {
-      return await rest.get<DiscordStageInstance>(
-        rest.routes.channels.stage(channelId)
-      );
+      return await rest.get<DiscordStageInstance>(rest.routes.channels.stage(channelId))
     },
 
     async getThreadMember(channelId, userId) {
-      return await rest.get<DiscordThreadMember>(
-        rest.routes.channels.threads.user(channelId, userId)
-      );
+      return await rest.get<DiscordThreadMember>(rest.routes.channels.threads.user(channelId, userId))
     },
 
     async getThreadMembers(channelId) {
-      return await rest.get<DiscordThreadMember[]>(
-        rest.routes.channels.threads.members(channelId)
-      );
+      return await rest.get<DiscordThreadMember[]>(rest.routes.channels.threads.members(channelId))
     },
 
     async getUser(id) {
-      return await rest.get<DiscordUser>(rest.routes.user(id));
+      return await rest.get<DiscordUser>(rest.routes.user(id))
     },
 
     async getWebhook(webhookId) {
-      return await rest.get<DiscordWebhook>(rest.routes.webhooks.id(webhookId));
+      return await rest.get<DiscordWebhook>(rest.routes.webhooks.id(webhookId))
     },
 
     async getWebhookMessage(webhookId, token, messageId, options) {
-      return await rest.get<DiscordMessage>(
-        rest.routes.webhooks.message(webhookId, token, messageId, options)
-      );
+      return await rest.get<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options))
     },
 
     async getWebhookWithToken(webhookId, token) {
-      return await rest.get<DiscordWebhook>(
-        rest.routes.webhooks.webhook(webhookId, token)
-      );
+      return await rest.get<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token))
     },
 
     async joinThread(channelId) {
-      return await rest.put(rest.routes.channels.threads.me(channelId));
+      return await rest.put(rest.routes.channels.threads.me(channelId))
     },
 
     async leaveThread(channelId) {
-      return await rest.delete(rest.routes.channels.threads.me(channelId));
+      return await rest.delete(rest.routes.channels.threads.me(channelId))
     },
 
     async publishMessage(channelId, messageId) {
-      return await rest.post<DiscordMessage>(
-        rest.routes.channels.crosspost(channelId, messageId)
-      );
+      return await rest.post<DiscordMessage>(rest.routes.channels.crosspost(channelId, messageId))
     },
 
     async removeThreadMember(channelId, userId) {
-      return await rest.delete(
-        rest.routes.channels.threads.user(channelId, userId)
-      );
+      return await rest.delete(rest.routes.channels.threads.user(channelId, userId))
     },
 
     async sendFollowupMessage(token, options) {
       return await new Promise((resolve, reject) => {
         rest.sendRequest({
           url: rest.routes.webhooks.webhook(rest.applicationId, token),
-          method: "POST",
+          method: 'POST',
           body: rest.createRequest({
-            method: "POST",
+            method: 'POST',
             body: { ...options },
             // remove authorization header
-            headers: { Authorization: "" },
+            headers: { Authorization: '' },
           }),
           retryCount: 0,
           retryRequest: async function (options: SendRequestOptions) {
             // TODO: should change to reprocess queue item
-            await rest.sendRequest(options);
+            await rest.sendRequest(options)
           },
           resolve,
           reject,
-        });
-      });
+        })
+      })
     },
 
     async sendInteractionResponse(interactionId, token, options) {
       return await new Promise((resolve, reject) => {
         rest.sendRequest({
-          url: rest.routes.interactions.responses.callback(
-            interactionId,
-            token
-          ),
-          method: "POST",
+          url: rest.routes.interactions.responses.callback(interactionId, token),
+          method: 'POST',
           body: rest.createRequest({
-            method: "POST",
+            method: 'POST',
             body: { ...options },
             // remove authorization header
-            headers: { Authorization: "" },
+            headers: { Authorization: '' },
           }),
           retryCount: 0,
           retryRequest: async function (options: SendRequestOptions) {
             // TODO: should change to reprocess queue item
-            await rest.sendRequest(options);
+            await rest.sendRequest(options)
           },
           resolve,
           reject,
-        });
-      });
+        })
+      })
     },
 
     async sendMessage(channelId, options) {
-      return await rest.post<DiscordMessage>(
-        rest.routes.channels.messages(channelId),
-        options
-      );
+      return await rest.post<DiscordMessage>(rest.routes.channels.messages(channelId), options)
     },
 
     async startThreadWithMessage(channelId, messageId, options) {
-      return await rest.post<DiscordChannel>(
-        rest.routes.channels.threads.message(channelId, messageId),
-        options
-      );
+      return await rest.post<DiscordChannel>(rest.routes.channels.threads.message(channelId, messageId), options)
     },
 
     async startThreadWithoutMessage(channelId, options) {
-      return await rest.post<DiscordChannel>(
-        rest.routes.channels.threads.all(channelId),
-        options
-      );
+      return await rest.post<DiscordChannel>(rest.routes.channels.threads.all(channelId), options)
     },
 
     async triggerTypingIndicator(channelId) {
-      return await rest.post(rest.routes.channels.typing(channelId));
+      return await rest.post(rest.routes.channels.typing(channelId))
     },
 
     async upsertGlobalApplicationCommands(commands) {
-      return await rest.put<DiscordApplicationCommand[]>(
-        rest.routes.interactions.commands.commands(rest.applicationId),
-        commands
-      );
+      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId), commands)
     },
 
     async upsertGuildApplicationCommands(guildId, commands) {
-      return await rest.put<DiscordApplicationCommand[]>(
-        rest.routes.interactions.commands.guilds.all(
-          rest.applicationId,
-          guildId
-        ),
-        commands
-      );
+      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), commands)
     },
 
-    async createGuildTemplate(
-      guildId: BigString,
-      options: CreateTemplate
-    ): Promise<Template> {
-      const result = await rest.runMethod<DiscordTemplate>(
-        "POST",
-        routes.GUILD_TEMPLATES(guildId),
-        options as DiscordCreateTemplate
-      );
+    async createGuildTemplate(guildId: BigString, options: CreateTemplate): Promise<Template> {
+      const result = await rest.runMethod<DiscordTemplate>('POST', routes.GUILD_TEMPLATES(guildId), options as DiscordCreateTemplate)
 
-      return rest.transformers.template(rest, result);
+      return rest.transformers.template(rest, result)
     },
 
-    async deleteGuildTemplate(
-      guildId: BigString,
-      templateCode: string
-    ): Promise<void> {
-      return await rest.runMethod<void>(
-        "DELETE",
-        routes.GUILD_TEMPLATE(guildId, templateCode)
-      );
+    async deleteGuildTemplate(guildId: BigString, templateCode: string): Promise<void> {
+      return await rest.runMethod<void>('DELETE', routes.GUILD_TEMPLATE(guildId, templateCode))
     },
 
-    async editGuildTemplate(
-      guildId: BigString,
-      templateCode: string,
-      options: ModifyGuildTemplate
-    ): Promise<Template> {
-      const result = await rest.runMethod<DiscordTemplate>(
-        "PATCH",
-        routes.GUILD_TEMPLATE(guildId, templateCode),
-        {
-          name: options.name,
-          description: options.description,
-        } as DiscordModifyGuildTemplate
-      );
+    async editGuildTemplate(guildId: BigString, templateCode: string, options: ModifyGuildTemplate): Promise<Template> {
+      const result = await rest.runMethod<DiscordTemplate>('PATCH', routes.GUILD_TEMPLATE(guildId, templateCode), {
+        name: options.name,
+        description: options.description,
+      } as DiscordModifyGuildTemplate)
 
-      return rest.transformers.template(rest, result);
+      return rest.transformers.template(rest, result)
     },
 
     async getGuildTemplate(templateCode: string): Promise<Template> {
-      const result = await rest.runMethod<DiscordTemplate>(
-        "GET",
-        routes.TEMPLATE(templateCode)
-      );
+      const result = await rest.runMethod<DiscordTemplate>('GET', routes.TEMPLATE(templateCode))
 
-      return rest.transformers.template(rest, result);
+      return rest.transformers.template(rest, result)
     },
 
-    async getGuildTemplates(
-      guildId: BigString
-    ): Promise<Collection<string, Template>> {
-      const results = await rest.runMethod<DiscordTemplate[]>(
-        "GET",
-        routes.GUILD_TEMPLATES(guildId)
-      );
+    async getGuildTemplates(guildId: BigString): Promise<Collection<string, Template>> {
+      const results = await rest.runMethod<DiscordTemplate[]>('GET', routes.GUILD_TEMPLATES(guildId))
 
       return new Collection(
         results.map((result) => {
-          const template = rest.transformers.template(rest, result);
-          return [template.code, template];
-        })
-      );
+          const template = rest.transformers.template(rest, result)
+          return [template.code, template]
+        }),
+      )
     },
 
-    async syncGuildTemplate(
-      guildId: BigString,
-      templateCode: string
-    ): Promise<Template> {
-      const result = await rest.runMethod<DiscordTemplate>(
-        "PUT",
-        routes.GUILD_TEMPLATE(guildId, templateCode)
-      );
+    async syncGuildTemplate(guildId: BigString, templateCode: string): Promise<Template> {
+      const result = await rest.runMethod<DiscordTemplate>('PUT', routes.GUILD_TEMPLATE(guildId, templateCode))
 
-      return rest.transformers.template(rest, result);
+      return rest.transformers.template(rest, result)
     },
 
-    async banMember(
-      guildId: BigString,
-      userId: BigString,
-      options?: CreateGuildBan
-    ): Promise<void> {
-      return await rest.runMethod<void>(
-        "PUT",
-        routes.GUILD_BAN(guildId, userId),
-        {
-          delete_message_seconds: options?.deleteMessageSeconds,
-          reason: options?.reason,
-        } as DiscordCreateGuildBan
-      );
+    async banMember(guildId: BigString, userId: BigString, options?: CreateGuildBan): Promise<void> {
+      return await rest.runMethod<void>('PUT', routes.GUILD_BAN(guildId, userId), {
+        delete_message_seconds: options?.deleteMessageSeconds,
+        reason: options?.reason,
+      } as DiscordCreateGuildBan)
     },
 
-    async editBotMember(
-      guildId: BigString,
-      options: EditBotMemberOptions
-    ): Promise<Camelize<DiscordMember>> {
-      const result = await rest.runMethod<DiscordMember>(
-        "PATCH",
-        routes.USER_NICK(guildId),
-        {
-          nick: options.nick,
-          reason: options.reason,
-        } as DiscordEditBotMemberOptions
-      );
+    async editBotMember(guildId: BigString, options: EditBotMemberOptions): Promise<Camelize<DiscordMember>> {
+      const result = await rest.runMethod<DiscordMember>('PATCH', routes.USER_NICK(guildId), {
+        nick: options.nick,
+        reason: options.reason,
+      } as DiscordEditBotMemberOptions)
 
-      return TRANSFORMERS.member(result);
+      return TRANSFORMERS.member(result)
     },
 
-    async editMember(
-      guildId: BigString,
-      userId: BigString,
-      options: ModifyGuildMember
-    ): Promise<Camelize<DiscordMember>> {
-      const result = await rest.runMethod<DiscordMemberWithUser>(
-        "PATCH",
-        routes.GUILD_MEMBER(guildId, userId),
-        {
-          nick: options.nick,
-          roles: options.roles?.map((id) => id.toString()),
-          mute: options.mute,
-          deaf: options.deaf,
-          channel_id: options.channelId?.toString(),
-          communication_disabled_until: options.communicationDisabledUntil
-            ? new Date(options.communicationDisabledUntil).toISOString()
-            : options.communicationDisabledUntil,
-        } as DiscordModifyGuildMember
-      );
+    async editMember(guildId: BigString, userId: BigString, options: ModifyGuildMember): Promise<Camelize<DiscordMember>> {
+      const result = await rest.runMethod<DiscordMemberWithUser>('PATCH', routes.GUILD_MEMBER(guildId, userId), {
+        nick: options.nick,
+        roles: options.roles?.map((id) => id.toString()),
+        mute: options.mute,
+        deaf: options.deaf,
+        channel_id: options.channelId?.toString(),
+        communication_disabled_until: options.communicationDisabledUntil
+          ? new Date(options.communicationDisabledUntil).toISOString()
+          : options.communicationDisabledUntil,
+      } as DiscordModifyGuildMember)
 
-      return TRANSFORMERS.member(result);
+      return TRANSFORMERS.member(result)
     },
 
     async getAvatarURL(
       userId: BigString,
       discriminator: string,
       options?: {
-        avatar: BigString | undefined;
-        size?: ImageSize;
-        format?: ImageFormat;
-      }
+        avatar: BigString | undefined
+        size?: ImageSize
+        format?: ImageFormat
+      },
     ): string {
       return options?.avatar
         ? formatImageURL(
-            routes.USER_AVATAR(
-              userId,
-              typeof options?.avatar === "string"
-                ? options.avatar
-                : iconBigintToHash(options?.avatar)
-            ),
+            routes.USER_AVATAR(userId, typeof options?.avatar === 'string' ? options.avatar : iconBigintToHash(options?.avatar)),
             options?.size ?? 128,
-            options?.format
+            options?.format,
           )
-        : routes.USER_DEFAULT_AVATAR(Number(discriminator) % 5);
+        : routes.USER_DEFAULT_AVATAR(Number(discriminator) % 5)
     },
 
     async getDmChannel(userId: BigString): Promise<Channel> {
-      const result = await rest.runMethod<DiscordChannel>(
-        "POST",
-        routes.USER_DM(),
-        {
-          recipient_id: userId.toString(),
-        } as DiscordGetDMChannel
-      );
+      const result = await rest.runMethod<DiscordChannel>('POST', routes.USER_DM(), {
+        recipient_id: userId.toString(),
+      } as DiscordGetDMChannel)
 
-      return rest.transformers.channel(rest, { channel: result });
+      return rest.transformers.channel(rest, { channel: result })
     },
 
-    async getMember(
-      guildId: BigString,
-      userId: BigString
-    ): Promise<Camelize<DiscordMemberWithUser>> {
-      const result = await rest.runMethod<DiscordMemberWithUser>(
-        "GET",
-        routes.GUILD_MEMBER(guildId, userId)
-      );
+    async getMember(guildId: BigString, userId: BigString): Promise<Camelize<DiscordMemberWithUser>> {
+      const result = await rest.runMethod<DiscordMemberWithUser>('GET', routes.GUILD_MEMBER(guildId, userId))
 
-      return TRANSFORMERS.member(result) as Camelize<DiscordMemberWithUser>;
+      return TRANSFORMERS.member(result) as Camelize<DiscordMemberWithUser>
     },
 
-    async getMembers(
-      guildId: BigString,
-      options: ListGuildMembers
-    ): Promise<Collection<string, Camelize<DiscordMemberWithUser>>> {
-      const results = await rest.runMethod<DiscordMemberWithUser[]>(
-        "GET",
-        routes.GUILD_MEMBERS(guildId, options)
-      );
+    async getMembers(guildId: BigString, options: ListGuildMembers): Promise<Collection<string, Camelize<DiscordMemberWithUser>>> {
+      const results = await rest.runMethod<DiscordMemberWithUser[]>('GET', routes.GUILD_MEMBERS(guildId, options))
 
       return new Collection(
         results.map((result) => {
-          const member = TRANSFORMERS.member(
-            result
-          ) as Camelize<DiscordMemberWithUser>;
-          return [member.user.id, member];
-        })
-      );
+          const member = TRANSFORMERS.member(result) as Camelize<DiscordMemberWithUser>
+          return [member.user.id, member]
+        }),
+      )
     },
 
-    async kickMember(
-      guildId: BigString,
-      userId: BigString,
-      reason?: string
-    ): Promise<void> {
-      return await rest.runMethod<void>(
-        "DELETE",
-        routes.GUILD_MEMBER(guildId, userId),
-        {
-          reason,
-        }
-      );
+    async kickMember(guildId: BigString, userId: BigString, reason?: string): Promise<void> {
+      return await rest.runMethod<void>('DELETE', routes.GUILD_MEMBER(guildId, userId), {
+        reason,
+      })
     },
 
-    async pruneMembers(
-      guildId: BigString,
-      options: BeginGuildPrune
-    ): Promise<number | undefined> {
-      const result = await rest.runMethod<{ pruned: number | null }>(
-        "POST",
-        routes.GUILD_PRUNE(guildId),
-        {
-          days: options.days,
-          compute_prune_count: options.computePruneCount,
-          include_roles: options.includeRoles,
-        } as DiscordBeginGuildPrune
-      );
+    async pruneMembers(guildId: BigString, options: BeginGuildPrune): Promise<number | undefined> {
+      const result = await rest.runMethod<{ pruned: number | null }>('POST', routes.GUILD_PRUNE(guildId), {
+        days: options.days,
+        compute_prune_count: options.computePruneCount,
+        include_roles: options.includeRoles,
+      } as DiscordBeginGuildPrune)
 
-      return result.pruned ?? undefined;
+      return result.pruned ?? undefined
     },
 
     async searchMembers(
       guildId: BigString,
       query: string,
-      options?: Omit<SearchMembers, "query">
+      options?: Omit<SearchMembers, 'query'>,
     ): Promise<Collection<string, Camelize<DiscordMemberWithUser>>> {
-      const results = await rest.runMethod<DiscordMemberWithUser[]>(
-        "GET",
-        routes.GUILD_MEMBERS_SEARCH(guildId, query, options)
-      );
+      const results = await rest.runMethod<DiscordMemberWithUser[]>('GET', routes.GUILD_MEMBERS_SEARCH(guildId, query, options))
 
       return new Collection(
         results.map((result) => {
-          const member = TRANSFORMERS.member(
-            result
-          ) as Camelize<DiscordMemberWithUser>;
-          return [member.user.id, member];
-        })
-      );
+          const member = TRANSFORMERS.member(result) as Camelize<DiscordMemberWithUser>
+          return [member.user.id, member]
+        }),
+      )
     },
 
     async unbanMember(guildId: BigString, userId: BigString): Promise<void> {
-      return await rest.runMethod<void>(
-        "DELETE",
-        routes.GUILD_BAN(guildId, userId)
-      );
+      return await rest.runMethod<void>('DELETE', routes.GUILD_BAN(guildId, userId))
     },
-  };
+  }
 
-  return rest;
+  return rest
 }
 
 export interface CreateRestManagerOptions {
   /** The bot token which will be used to make requests. */
-  token: string;
+  token: string
   /**
    * For old bots that have a different bot id and application id.
    * @default bot id from token
    */
-  applicationId?: BigString;
+  applicationId?: BigString
   /**
    * The base url to connect to. If you create a proxy rest, that url would go here.
    * IT SHOULD NOT END WITH A /
    * @default https://discord.com/api
    */
-  baseUrl?: string;
+  baseUrl?: string
   /**
    * The api versions which can be used to make requests.
    * @default 10
    */
-  version?: ApiVersions;
+  version?: ApiVersions
 }
 
 export interface RestManager {
   /** The bot token which will be used to make requests. */
-  token: string;
+  token: string
   /** The application id. Normally this is not required for recent bots but old bot's application id is sometimes different from the bot id so it is required for those bots. */
-  applicationId: bigint;
+  applicationId: bigint
   /** The api version to use when making requests. Only the latest supported version will be tested. */
-  version: ApiVersions;
+  version: ApiVersions
   /**
    * The base url to connect to. If you create a proxy rest, that url would go here.
    * IT SHOULD NOT END WITH A /
    * @default https://discord.com/api
    */
-  baseUrl: string;
+  baseUrl: string
   /** The maximum amount of times a request should be retried. Defaults to Infinity */
-  maxRetryCount: number;
+  maxRetryCount: number
   /** Whether or not the manager is rate limited globally across all requests. Defaults to false. */
-  globallyRateLimited: boolean;
+  globallyRateLimited: boolean
   /** Whether or not the rate limited paths are being processed to allow requests to be made once time is up. Defaults to false. */
-  processingRateLimitedPaths: boolean;
+  processingRateLimitedPaths: boolean
   /** The queues that hold all the requests to be processed. */
-  queues: Map<string, Queue>;
+  queues: Map<string, Queue>
   /** The paths that are currently rate limited. */
-  rateLimitedPaths: Map<string, RestRateLimitedPath>;
+  rateLimitedPaths: Map<string, RestRateLimitedPath>
   /** The bucket for handling any invalid requests.  */
-  invalidBucket: InvalidRequestBucket;
+  invalidBucket: InvalidRequestBucket
   /** The routes that are available for this manager. */
   routes: {
     /** Route to get a bots session info. */
-    sessionInfo: () => string;
+    sessionInfo: () => string
     /** A specific user route. */
-    user: (id: BigString) => string;
+    user: (id: BigString) => string
     /** Current bot user route. */
-    userBot: () => string;
+    userBot: () => string
     // OAuth2
-    oauth2Application: () => string;
+    oauth2Application: () => string
     // Gateway Bot
-    gatewayBot: () => string;
+    gatewayBot: () => string
     // Nitro Sticker Packs
-    nitroStickerPacks: () => string;
+    nitroStickerPacks: () => string
     /** Routes for webhook related routes. */
     webhooks: {
       /** Route for managing the original message sent by a webhook. */
-      original: (
-        webhookId: BigString,
-        token: string,
-        options?: { threadId?: BigString }
-      ) => string;
+      original: (webhookId: BigString, token: string, options?: { threadId?: BigString }) => string
       /** Route for webhook with a id. */
-      id: (webhookId: BigString) => string;
+      id: (webhookId: BigString) => string
       /** Route for handling a webhook with a token. */
-      webhook: (
-        webhookId: BigString,
-        token: string,
-        options?: { wait?: boolean; threadId?: BigString }
-      ) => string;
+      webhook: (webhookId: BigString, token: string, options?: { wait?: boolean; threadId?: BigString }) => string
       /** Route for handling a message that was sent through a webhook. */
-      message: (
-        webhookId: BigString,
-        token: string,
-        messageId: BigString,
-        options?: { threadId?: BigString }
-      ) => string;
-    };
+      message: (webhookId: BigString, token: string, messageId: BigString, options?: { threadId?: BigString }) => string
+    }
     /** Routes for channel related endpoints. */
     channels: {
       /** Route for non-specific dm channel. */
-      dm: () => string;
+      dm: () => string
       /** Route for non-specific webhook in a channel. */
-      webhooks: (channelId: BigString) => string;
+      webhooks: (channelId: BigString) => string
       /** Route for a specific channel. */
-      channel: (channelId: BigString) => string;
+      channel: (channelId: BigString) => string
       /** Route for following a specific channel. */
-      follow: (channelId: BigString) => string;
+      follow: (channelId: BigString) => string
       /** Route for managing a forum with a message. */
-      forum: (channelId: BigString) => string;
+      forum: (channelId: BigString) => string
       /** Route for a specific channel's invites. */
-      invites: (channelId: BigString) => string;
+      invites: (channelId: BigString) => string
       /** Route for a specific message */
-      message: (channelId: BigString, id: BigString) => string;
+      message: (channelId: BigString, id: BigString) => string
       /** Route for handling non-specific messages. */
-      messages: (channelId: BigString, options?: GetMessagesOptions) => string;
+      messages: (channelId: BigString, options?: GetMessagesOptions) => string
       /** Route for handling a specific overwrite. */
-      overwrite: (channelId: BigString, overwriteId: BigString) => string;
+      overwrite: (channelId: BigString, overwriteId: BigString) => string
       /** Route for handling crossposting a specific message. */
-      crosspost: (channelId: BigString, messageId: BigString) => string;
+      crosspost: (channelId: BigString, messageId: BigString) => string
       /** Route for handling non-specific stages */
-      stages: () => string;
+      stages: () => string
       /** Route for handling a specific stage */
-      stage: (channelId: BigString) => string;
+      stage: (channelId: BigString) => string
       /** Routes for handling thread related to a channel. */
       threads: {
         /** Route for thread a specific message. */
-        message: (channelId: BigString, messageId: BigString) => string;
+        message: (channelId: BigString, messageId: BigString) => string
         /** Route for thread without a message. */
-        all: (channelId: BigString) => string;
+        all: (channelId: BigString) => string
         /** Route for active threads. */
-        active: (guildId: BigString) => string;
+        active: (guildId: BigString) => string
         /** Route for members in a thread. */
-        members: (channelId: BigString) => string;
+        members: (channelId: BigString) => string
         /** Route for the bot member in a thread. */
-        me: (channelId: BigString) => string;
+        me: (channelId: BigString) => string
         /** Route for a specific member in a thread. */
-        user: (channelId: BigString, userId: BigString) => string;
+        user: (channelId: BigString, userId: BigString) => string
         /** Route for handling archived threads. */
-        archived: (channelId: BigString) => string;
+        archived: (channelId: BigString) => string
         /** Route for handling publically archived threads. */
-        public: (channelId: BigString, options?: ListArchivedThreads) => string;
+        public: (channelId: BigString, options?: ListArchivedThreads) => string
         /** Route for handling private archived threads. */
-        private: (
-          channelId: BigString,
-          options?: ListArchivedThreads
-        ) => string;
+        private: (channelId: BigString, options?: ListArchivedThreads) => string
         /** Route for handling private archived threads that the bot has joined. */
-        joined: (channelId: BigString, options?: ListArchivedThreads) => string;
-      };
+        joined: (channelId: BigString, options?: ListArchivedThreads) => string
+      }
       /** Route for handling typing indicators in a c«hannel. */
-      typing: (channelId: BigString) => string;
-    };
+      typing: (channelId: BigString) => string
+    }
     /** Routes for guild related endpoints. */
     guilds: {
       /** Routes for a guilds automoderation. */
       automod: {
         /** Route for handling a guild's automoderation. */
-        rules: (guildId: BigString) => string;
+        rules: (guildId: BigString) => string
         /** Route for handling a specific automoderation rule guild's */
-        rule: (guildId: BigString, ruleId: BigString) => string;
-      };
+        rule: (guildId: BigString, ruleId: BigString) => string
+      }
       /** Routes for handling a guild's scheduled events. */
       events: {
         /** Route for handling non-specific scheduled event. */
-        events: (guildId: BigString, withUserCount?: boolean) => string;
+        events: (guildId: BigString, withUserCount?: boolean) => string
         /** Route for handling a specific scheduled event. */
-        event: (
-          guildId: BigString,
-          eventId: BigString,
-          withUserCount?: boolean
-        ) => string;
+        event: (guildId: BigString, eventId: BigString, withUserCount?: boolean) => string
         /** Route for handling a scheduled event users. */
-        users: (
-          guildId: BigString,
-          eventId: BigString,
-          options?: GetScheduledEventUsers
-        ) => string;
-      };
+        users: (guildId: BigString, eventId: BigString, options?: GetScheduledEventUsers) => string
+      }
       /** Route for handling non-specific channels in a guild */
-      channels: (guildId: BigString) => string;
+      channels: (guildId: BigString) => string
       /** Route for handling a specific emoji. */
-      emoji: (guildId: BigString, id: BigString) => string;
+      emoji: (guildId: BigString, id: BigString) => string
       /** Route for handling non-specific emojis. */
-      emojis: (guildId: BigString) => string;
+      emojis: (guildId: BigString) => string
       /** Route for handling a specific integration. */
-      integration: (guildId: BigString, integrationId: BigString) => string;
+      integration: (guildId: BigString, integrationId: BigString) => string
       /** Route for handling non-specific integrations. */
-      integrations: (guildId: BigString) => string;
+      integrations: (guildId: BigString) => string
       /** Route for handling a specific guild invite. */
-      invite: (inviteCode: string, options?: GetInvite) => string;
+      invite: (inviteCode: string, options?: GetInvite) => string
       /** Route for handling non-specific invites in a guild. */
-      invites: (guildId: BigString) => string;
+      invites: (guildId: BigString) => string
       /** Route for handling non-specific webhooks in a guild */
-      webhooks: (guildId: BigString) => string;
-    };
+      webhooks: (guildId: BigString) => string
+    }
     /** Routes for interaction related endpoints. */
     interactions: {
       /** Routes for interaction command related endpoints. */
       commands: {
         /** Route for non-specific commands. */
-        commands: (applicationId: BigString) => string;
+        commands: (applicationId: BigString) => string
         /** Route for guild related commands. */
         guilds: {
           /** Route for non-specific guild commands. */
-          all: (applicationId: BigString, guildId: BigString) => string;
+          all: (applicationId: BigString, guildId: BigString) => string
           /** Route for a specific guild command. */
-          one: (
-            applicationId: BigString,
-            guildId: BigString,
-            commandId: BigString,
-            withLocalizations?: boolean
-          ) => string;
-        };
+          one: (applicationId: BigString, guildId: BigString, commandId: BigString, withLocalizations?: boolean) => string
+        }
         /** Route for non-specific command permissions. */
-        permissions: (applicationId: BigString, guildId: BigString) => string;
+        permissions: (applicationId: BigString, guildId: BigString) => string
         /** Route for a specific command's permission. */
-        permission: (
-          applicationId: BigString,
-          guildId: BigString,
-          commandId: BigString
-        ) => string;
+        permission: (applicationId: BigString, guildId: BigString, commandId: BigString) => string
         /** Route for a specific command. */
-        command: (
-          applicationId: BigString,
-          commandId: BigString,
-          withLocalizations?: boolean
-        ) => string;
-      };
+        command: (applicationId: BigString, commandId: BigString, withLocalizations?: boolean) => string
+      }
       /** Routes for interaction response related endpoints. */
       responses: {
         /** Route for handling a callback response with id and token. */
-        callback: (interactionId: BigString, token: string) => string;
+        callback: (interactionId: BigString, token: string) => string
         /** Route for handling the original response using id and token. */
-        original: (interactionId: BigString, token: string) => string;
+        original: (interactionId: BigString, token: string) => string
         /** Route for handling a followup message from a interaction response. */
-        message: (
-          applicationId: BigString,
-          token: string,
-          messageId: BigString
-        ) => string;
-      };
-    };
-  };
+        message: (applicationId: BigString, token: string, messageId: BigString) => string
+      }
+    }
+  }
   /** Check the rate limits for a url or a bucket. */
-  checkRateLimits: (url: string) => number | false;
+  checkRateLimits: (url: string) => number | false
   /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
-  createRequest: (options: CreateRequestBodyOptions) => RequestBody;
+  createRequest: (options: CreateRequestBodyOptions) => RequestBody
   /** This will create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */
-  processRateLimitedPaths: () => void;
+  processRateLimitedPaths: () => void
   /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
-  processHeaders: (url: string, headers: Headers) => string | undefined;
+  processHeaders: (url: string, headers: Headers) => string | undefined
   /** Sends a request to the api. */
-  sendRequest: (options: SendRequestOptions) => Promise<void>;
+  sendRequest: (options: SendRequestOptions) => Promise<void>
   /** Split a url to separate rate limit buckets based on major/minor parameters. */
-  simplifyUrl: (url: string, method: RequestMethods) => string;
+  simplifyUrl: (url: string, method: RequestMethods) => string
   /** Make a request to be sent to the api. */
-  makeRequest: <T = unknown>(
-    method: RequestMethods,
-    url: string,
-    body?: Record<string, any>,
-    options?: Record<string, any>
-  ) => Promise<T>;
+  makeRequest: <T = unknown>(method: RequestMethods, url: string, body?: Record<string, any>, options?: Record<string, any>) => Promise<T>
   /** Takes a request and processes it into a queue. */
-  processRequest: (request: SendRequestOptions) => void;
+  processRequest: (request: SendRequestOptions) => void
   /** Make a get request to the api */
-  get: <T = void>(url: string) => Promise<Camelize<T>>;
+  get: <T = void>(url: string) => Promise<Camelize<T>>
   /** Make a post request to the api. */
-  post: <T = void>(
-    url: string,
-    body?: Record<string, any>
-  ) => Promise<Camelize<T>>;
+  post: <T = void>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
   /** Make a put request to the api. */
-  put: <T = void>(
-    url: string,
-    body?: Record<string, any>,
-    options?: Record<string, any>
-  ) => Promise<Camelize<T>>;
+  put: <T = void>(url: string, body?: Record<string, any>, options?: Record<string, any>) => Promise<Camelize<T>>
   /** Make a delete request to the api. */
-  delete: (url: string, body?: Record<string, any>) => Promise<void>;
+  delete: (url: string, body?: Record<string, any>) => Promise<void>
   /** Make a patch request to the api. */
-  patch: <T = void>(
-    url: string,
-    body?: Record<string, any>
-  ) => Promise<Camelize<T>>;
+  patch: <T = void>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
   /** Helper methods related to channels */
   channels: {
     /** Methods related to messages in a channel */
@@ -2602,10 +2106,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/channel#create-message}
        */
-      send: (
-        channelId: BigString,
-        options: CreateMessageOptions
-      ) => Promise<Camelize<DiscordMessage>>;
+      send: (channelId: BigString, options: CreateMessageOptions) => Promise<Camelize<DiscordMessage>>
       /**
        * Edits a message.
        *
@@ -2623,11 +2124,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/channel#edit-message}
        */
-      edit: (
-        channelId: BigString,
-        messageId: BigString,
-        options: EditMessage
-      ) => Promise<Camelize<DiscordMessage>>;
+      edit: (channelId: BigString, messageId: BigString, options: EditMessage) => Promise<Camelize<DiscordMessage>>
       /**
        * Cross-posts a message posted in an announcement channel to subscribed channels.
        *
@@ -2645,10 +2142,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/channel#crosspost-message}
        */
-      publish: (
-        channelId: BigString,
-        messageId: BigString
-      ) => Promise<Camelize<DiscordMessage>>;
+      publish: (channelId: BigString, messageId: BigString) => Promise<Camelize<DiscordMessage>>
       /**
        * Deletes a message from a channel.
        *
@@ -2663,12 +2157,8 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/channel#delete-message}
        */
-      delete: (
-        channelId: BigString,
-        messageId: BigString,
-        reason?: string
-      ) => Promise<void>;
-    };
+      delete: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
+    }
     /**
      * Gets a channel by its ID.
      *
@@ -2680,7 +2170,7 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/channel#get-channel}
      */
-    get: (id: BigString) => Promise<Camelize<DiscordChannel>>;
+    get: (id: BigString) => Promise<Camelize<DiscordChannel>>
     /**
      * Creates a channel within a guild.
      *
@@ -2699,10 +2189,7 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-channel}
      */
-    create: (
-      guildId: BigString,
-      options: CreateGuildChannel
-    ) => Promise<Camelize<DiscordChannel>>;
+    create: (guildId: BigString, options: CreateGuildChannel) => Promise<Camelize<DiscordChannel>>
     /**
      * Deletes a channel from within a guild.
      *
@@ -2727,7 +2214,7 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/channel#deleteclose-channel}
      */
-    delete: (channelId: BigString, reason?: string) => Promise<void>;
+    delete: (channelId: BigString, reason?: string) => Promise<void>
     /**
      * Edits a channel's settings.
      *
@@ -2757,10 +2244,7 @@ export interface RestManager {
      * - Otherwise:
      *     - Fires a _Channel Update_ gateway event.
      */
-    edit: (
-      channelId: BigString,
-      options: ModifyChannel
-    ) => Promise<Camelize<DiscordChannel>>;
+    edit: (channelId: BigString, options: ModifyChannel) => Promise<Camelize<DiscordChannel>>
     /**
      * Follows an announcement channel, allowing messages posted within it to be cross-posted into the target channel.
      *
@@ -2775,10 +2259,7 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/channel#follow-announcement-channel}
      */
-    follow: (
-      sourceChannelId: BigString,
-      targetChannelId: BigString
-    ) => Promise<Camelize<DiscordFollowedChannel>>;
+    follow: (sourceChannelId: BigString, targetChannelId: BigString) => Promise<Camelize<DiscordFollowedChannel>>
     /** Forum related helpers in a channel */
     forums: {
       /**
@@ -2798,11 +2279,8 @@ export interface RestManager {
        *
        * @experimental
        */
-      post: (
-        channelId: BigString,
-        options: CreateForumPostWithMessage
-      ) => Promise<Camelize<DiscordChannel>>;
-    };
+      post: (channelId: BigString, options: CreateForumPostWithMessage) => Promise<Camelize<DiscordChannel>>
+    }
     /** Permission related helpers in a channel */
     permissions: {
       /**
@@ -2820,10 +2298,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/channel#edit-channel-permissions}
        */
-      edit: (
-        channelId: BigString,
-        options: EditChannelPermissionOverridesOptions
-      ) => Promise<void>;
+      edit: (channelId: BigString, options: EditChannelPermissionOverridesOptions) => Promise<void>
       /**
        * Deletes a permission override for a user or role in a channel.
        *
@@ -2837,12 +2312,8 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/channel#delete-channel-permission}
        */
-      delete: (
-        channelId: BigString,
-        overwriteId: BigString,
-        reason?: string
-      ) => Promise<void>;
-    };
+      delete: (channelId: BigString, overwriteId: BigString, reason?: string) => Promise<void>
+    }
     threads: {
       get: {
         /**
@@ -2858,7 +2329,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/resources/guild#list-active-guild-threads}
          */
-        active: (guildId: BigString) => Promise<Camelize<DiscordActiveThreads>>;
+        active: (guildId: BigString) => Promise<Camelize<DiscordActiveThreads>>
         /** Methods related to getting archived threads. */
         archived: {
           /**
@@ -2878,10 +2349,7 @@ export interface RestManager {
            *
            * @see {@link https://discord.com/developers/docs/resources/channel#list-private-archived-threads}
            */
-          private: (
-            channelId: BigString,
-            options?: ListArchivedThreads
-          ) => Promise<Camelize<DiscordArchivedThreads>>;
+          private: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
           /**
            * Gets the list of private archived threads the bot is a member of for a channel.
            *
@@ -2898,10 +2366,7 @@ export interface RestManager {
            *
            * @see {@link https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads}
            */
-          joined: (
-            channelId: BigString,
-            options?: ListArchivedThreads
-          ) => Promise<Camelize<DiscordArchivedThreads>>;
+          joined: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
           /**
            * Gets the list of public archived threads for a channel.
            *
@@ -2919,11 +2384,8 @@ export interface RestManager {
            *
            * @see {@link https://discord.com/developers/docs/resources/channel#list-public-archived-threads}
            */
-          public: (
-            channelId: BigString,
-            options?: ListArchivedThreads
-          ) => Promise<Camelize<DiscordArchivedThreads>>;
-        };
+          public: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+        }
         /**
          * Gets a thread member by their user ID.
          *
@@ -2933,10 +2395,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/resources/channel#get-thread-member}
          */
-        member: (
-          channelId: BigString,
-          userId: BigString
-        ) => Promise<Camelize<DiscordThreadMember>>;
+        member: (channelId: BigString, userId: BigString) => Promise<Camelize<DiscordThreadMember>>
         /**
          * Gets the list of thread members for a thread.
          *
@@ -2948,10 +2407,8 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/resources/channel#list-thread-members}
          */
-        members: (
-          channelId: BigString
-        ) => Promise<Camelize<DiscordThreadMember[]>>;
-      };
+        members: (channelId: BigString) => Promise<Camelize<DiscordThreadMember[]>>
+      }
       /**
        * Adds the bot user to a thread.
        *
@@ -2964,7 +2421,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/channel#join-thread}
        */
-      join: (channelId: BigString) => Promise<void>;
+      join: (channelId: BigString) => Promise<void>
       /**
        * Removes the bot user from a thread.
        *
@@ -2977,7 +2434,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/channel#leave-thread}
        */
-      leave: (channelId: BigString) => Promise<void>;
+      leave: (channelId: BigString) => Promise<void>
       /**
        * Removes a member from a thread.
        *
@@ -2994,7 +2451,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/channel#remove-thread-member}
        */
-      kick: (channelId: BigString, userId: BigString) => Promise<void>;
+      kick: (channelId: BigString, userId: BigString) => Promise<void>
       /** Methods related to creating a thread. */
       create: {
         with: {
@@ -3017,12 +2474,8 @@ export interface RestManager {
            *
            * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-from-message}
            */
-          message: (
-            channelId: BigString,
-            messageId: BigString,
-            options: StartThreadWithMessage
-          ) => Promise<Camelize<DiscordChannel>>;
-        };
+          message: (channelId: BigString, messageId: BigString, options: StartThreadWithMessage) => Promise<Camelize<DiscordChannel>>
+        }
         without: {
           /**
            * Creates a thread without using a message as the thread's point of origin.
@@ -3038,13 +2491,10 @@ export interface RestManager {
            *
            * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-without-message}
            */
-          message: (
-            channelId: BigString,
-            options: StartThreadWithoutMessage
-          ) => Promise<Camelize<DiscordChannel>>;
-        };
-      };
-    };
+          message: (channelId: BigString, options: StartThreadWithoutMessage) => Promise<Camelize<DiscordChannel>>
+        }
+      }
+    }
     /**
      * Edits the positions of a set of channels in a guild.
      *
@@ -3058,10 +2508,7 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions}
      */
-    positions: (
-      guildId: BigString,
-      channelPositions: ModifyGuildChannelPositions[]
-    ) => Promise<void>;
+    positions: (guildId: BigString, channelPositions: ModifyGuildChannelPositions[]) => Promise<void>
     /**
      * Gets the list of invites for a channel.
      *
@@ -3075,9 +2522,7 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/channel#get-channel-invites}
      */
-    invites: (
-      channelId: BigString
-    ) => Promise<Camelize<DiscordInviteMetadata[]>>;
+    invites: (channelId: BigString) => Promise<Camelize<DiscordInviteMetadata[]>>
     /** Stage related helpers for a channel. */
     stages: {
       /**
@@ -3093,9 +2538,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/stage-instance#create-stage-instance}
        */
-      create: (
-        options: CreateStageInstance
-      ) => Promise<Camelize<DiscordStageInstance>>;
+      create: (options: CreateStageInstance) => Promise<Camelize<DiscordStageInstance>>
       /**
        * Deletes the stage instance associated with a stage channel, if one exists.
        *
@@ -3108,7 +2551,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance}
        */
-      delete: (channelId: BigString, reason?: string) => Promise<void>;
+      delete: (channelId: BigString, reason?: string) => Promise<void>
       /**
        * Edits a stage instance.
        *
@@ -3122,10 +2565,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance}
        */
-      edit: (
-        channelId: BigString,
-        data: EditStageInstanceOptions
-      ) => Promise<Camelize<DiscordStageInstance>>;
+      edit: (channelId: BigString, data: EditStageInstanceOptions) => Promise<Camelize<DiscordStageInstance>>
       /**
        * Gets the stage instance associated with a stage channel, if one exists.
        *
@@ -3134,8 +2574,8 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/stage-instance#get-stage-instance}
        */
-      get: (channelId: BigString) => Promise<Camelize<DiscordStageInstance>>;
-    };
+      get: (channelId: BigString) => Promise<Camelize<DiscordStageInstance>>
+    }
     /**
      * Triggers a typing indicator for the bot user.
      *
@@ -3148,8 +2588,8 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/channel#trigger-typing-indicator}
      */
-    typing: (channelId: BigString) => Promise<void>;
-  };
+    typing: (channelId: BigString) => Promise<void>
+  }
   /** Emoji related helper methods. */
   emojis: {
     /**
@@ -3168,10 +2608,7 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/emoji#create-guild-emoji}
      */
-    create: (
-      guildId: BigString,
-      options: CreateGuildEmoji
-    ) => Promise<Camelize<DiscordEmoji>>;
+    create: (guildId: BigString, options: CreateGuildEmoji) => Promise<Camelize<DiscordEmoji>>
     /**
      * Deletes an emoji from a guild.
      *
@@ -3185,11 +2622,7 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/emoji#delete-guild-emoji}
      */
-    delete: (
-      guildId: BigString,
-      id: BigString,
-      reason?: string
-    ) => Promise<void>;
+    delete: (guildId: BigString, id: BigString, reason?: string) => Promise<void>
     /**
      * Edits an emoji.
      *
@@ -3205,11 +2638,7 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/emoji#modify-guild-emoji}
      */
-    edit: (
-      guildId: BigString,
-      id: BigString,
-      options: ModifyGuildEmoji
-    ) => Promise<Camelize<DiscordEmoji>>;
+    edit: (guildId: BigString, id: BigString, options: ModifyGuildEmoji) => Promise<Camelize<DiscordEmoji>>
     /**
      * Gets an emoji by its ID.
      *
@@ -3219,11 +2648,8 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/emoji#get-guild-emoji}
      */
-    get: (
-      guildId: BigString,
-      emojiId: BigString
-    ) => Promise<Camelize<DiscordEmoji>>;
-  };
+    get: (guildId: BigString, emojiId: BigString) => Promise<Camelize<DiscordEmoji>>
+  }
   /** Guild related helper methods */
   guilds: {
     automod: {
@@ -3241,10 +2667,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule}
        */
-      create: (
-        guildId: BigString,
-        options: CreateAutoModerationRuleOptions
-      ) => Promise<Camelize<DiscordAutoModerationRule>>;
+      create: (guildId: BigString, options: CreateAutoModerationRuleOptions) => Promise<Camelize<DiscordAutoModerationRule>>
       /**
        * Deletes a scheduled event from a guild.
        *
@@ -3258,7 +2681,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#delete-guild-scheduled-event}
        */
-      delete: (guildId: BigString, eventId: BigString) => Promise<void>;
+      delete: (guildId: BigString, eventId: BigString) => Promise<void>
       /**
        * Edits an automod rule.
        *
@@ -3274,11 +2697,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule}
        */
-      edit: (
-        guildId: BigString,
-        ruleId: BigString,
-        options: Partial<EditAutoModerationRuleOptions>
-      ) => Promise<Camelize<DiscordAutoModerationRule>>;
+      edit: (guildId: BigString, ruleId: BigString, options: Partial<EditAutoModerationRuleOptions>) => Promise<Camelize<DiscordAutoModerationRule>>
       /** Methods related to getting automoderation data in a guild. */
       get: {
         /**
@@ -3293,10 +2712,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/resources/auto-moderation#get-auto-moderation-rule}
          */
-        rule: (
-          guildId: BigString,
-          ruleId: BigString
-        ) => Promise<Camelize<DiscordAutoModerationRule>>;
+        rule: (guildId: BigString, ruleId: BigString) => Promise<Camelize<DiscordAutoModerationRule>>
         /**
          * Gets the list of automod rules for a guild.
          *
@@ -3308,11 +2724,9 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/resources/auto-moderation#list-auto-moderation-rules-for-guild}
          */
-        rules: (
-          guildId: BigString
-        ) => Promise<Camelize<DiscordAutoModerationRule[]>>;
-      };
-    };
+        rules: (guildId: BigString) => Promise<Camelize<DiscordAutoModerationRule[]>>
+      }
+    }
     /**
      * Gets the list of channels for a guild.
      *
@@ -3324,7 +2738,7 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-channels}
      */
-    channels: (guildId: BigString) => Promise<Camelize<DiscordChannel[]>>;
+    channels: (guildId: BigString) => Promise<Camelize<DiscordChannel[]>>
     /**
      * Gets the list of emojis for a guild.
      *
@@ -3333,7 +2747,7 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/emoji#list-guild-emojis}
      */
-    emojis: (guildId: BigString) => Promise<Camelize<DiscordEmoji[]>>;
+    emojis: (guildId: BigString) => Promise<Camelize<DiscordEmoji[]>>
     /** Methods related to a guild's scheduled events. */
     events: {
       /**
@@ -3352,10 +2766,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event}
        */
-      create: (
-        guildId: BigString,
-        options: CreateScheduledEvent
-      ) => Promise<Camelize<DiscordScheduledEvent>>;
+      create: (guildId: BigString, options: CreateScheduledEvent) => Promise<Camelize<DiscordScheduledEvent>>
       /**
        * Deletes a scheduled event from a guild.
        *
@@ -3369,7 +2780,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#delete-guild-scheduled-event}
        */
-      delete: (guildId: BigString, eventId: BigString) => Promise<void>;
+      delete: (guildId: BigString, eventId: BigString) => Promise<void>
       /**
        * Edits a scheduled event.
        *
@@ -3388,11 +2799,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event}
        */
-      edit: (
-        guildId: BigString,
-        eventId: BigString,
-        options: Partial<EditScheduledEvent>
-      ) => Promise<Camelize<DiscordScheduledEvent>>;
+      edit: (guildId: BigString, eventId: BigString, options: Partial<EditScheduledEvent>) => Promise<Camelize<DiscordScheduledEvent>>
 
       get: {
         /**
@@ -3405,11 +2812,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event}
          */
-        event: (
-          guildId: BigString,
-          eventId: BigString,
-          options?: { withUserCount?: boolean }
-        ) => Promise<Camelize<DiscordScheduledEvent>>;
+        event: (guildId: BigString, eventId: BigString, options?: { withUserCount?: boolean }) => Promise<Camelize<DiscordScheduledEvent>>
         /**
          * Gets the list of scheduled events for a guild.
          *
@@ -3419,10 +2822,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#list-scheduled-events-for-guild}
          */
-        events: (
-          guildId: BigString,
-          options?: GetScheduledEvents
-        ) => Promise<Camelize<DiscordScheduledEvent[]>>;
+        events: (guildId: BigString, options?: GetScheduledEvents) => Promise<Camelize<DiscordScheduledEvent[]>>
         /**
          * Gets the list of subscribers to a scheduled event from a guild.
          *
@@ -3441,15 +2841,15 @@ export interface RestManager {
         users: (
           guildId: BigString,
           eventId: BigString,
-          options?: GetScheduledEventUsers
+          options?: GetScheduledEventUsers,
         ) => Promise<
           Array<{
-            user: Camelize<DiscordUser>;
-            member?: Camelize<DiscordMember>;
+            user: Camelize<DiscordUser>
+            member?: Camelize<DiscordMember>
           }>
-        >;
-      };
-    };
+        >
+      }
+    }
     /** Methods related to a guild's integrations. */
     integrations: {
       /**
@@ -3463,7 +2863,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-integrations}
        */
-      get: (guildId: BigString) => Promise<Camelize<DiscordIntegration[]>>;
+      get: (guildId: BigString) => Promise<Camelize<DiscordIntegration[]>>
       /**
        * Deletes an integration attached to a guild.
        *
@@ -3480,8 +2880,8 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild-integration}
        */
-      delete: (guildId: BigString, integrationId: BigString) => Promise<void>;
-    };
+      delete: (guildId: BigString, integrationId: BigString) => Promise<void>
+    }
     /** Methods related to a guild's invites. */
     invites: {
       /**
@@ -3501,10 +2901,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/channel#create-channel-invite}
        */
-      create: (
-        channelId: BigString,
-        options?: CreateChannelInvite
-      ) => Promise<Camelize<DiscordInvite>>;
+      create: (channelId: BigString, options?: CreateChannelInvite) => Promise<Camelize<DiscordInvite>>
       /**
        * Deletes an invite to a channel.
        *
@@ -3517,7 +2914,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/channel#delete-channel-invite}
        */
-      delete: (inviteCode: string, reason?: string) => Promise<void>;
+      delete: (inviteCode: string, reason?: string) => Promise<void>
       /**
        * Gets an invite to a channel by its invite code.
        *
@@ -3527,10 +2924,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/invite#get-invite}
        */
-      get: (
-        inviteCode: string,
-        options?: GetInvite
-      ) => Promise<Camelize<DiscordInviteMetadata>>;
+      get: (inviteCode: string, options?: GetInvite) => Promise<Camelize<DiscordInviteMetadata>>
       /**
        * Gets the list of invites for a guild.
        *
@@ -3542,8 +2936,8 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/invite#get-invites}
        */
-      list: (guildId: BigString) => Promise<Camelize<DiscordInviteMetadata[]>>;
-    };
+      list: (guildId: BigString) => Promise<Camelize<DiscordInviteMetadata[]>>
+    }
 
     /* Methods related to guild templates */
 
@@ -3563,10 +2957,7 @@ export interface RestManager {
        * @see {@link https://discord.com/developers/docs/resources/guild-template#create-guild-template}
        */
 
-      create: (
-        guildId: BigString,
-        options: CreateTemplate
-      ) => Promise<Template>;
+      create: (guildId: BigString, options: CreateTemplate) => Promise<Template>
       /**
        * Deletes a template from a guild.
        *
@@ -3580,7 +2971,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild-template#delete-guild-template}
        */
-      delete: (guildId: BigString, templateCode: string) => Promise<void>;
+      delete: (guildId: BigString, templateCode: string) => Promise<void>
       /**
        * Edits a template's settings.
        *
@@ -3596,11 +2987,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild-template#modify-guild-template}
        */
-      edit: (
-        guildId: BigString,
-        templateCode: string,
-        options: ModifyGuildTemplate
-      ) => Promise<Template>;
+      edit: (guildId: BigString, templateCode: string, options: ModifyGuildTemplate) => Promise<Template>
       /**
        * Gets a template by its code.
        *
@@ -3612,7 +2999,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-template}
        */
-      get: (templateCode: string) => Promise<Template>;
+      get: (templateCode: string) => Promise<Template>
       /**
        * Gets the list of templates for a guild.
        *
@@ -3624,7 +3011,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
        */
-      list: (guildId: BigString) => Promise<Collection<string, Template>>;
+      list: (guildId: BigString) => Promise<Collection<string, Template>>
       /**
        * Synchronises a template with the current state of a guild.
        *
@@ -3638,8 +3025,8 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
        */
-      sync: (guildId: BigString) => Promise<Template>;
-    };
+      sync: (guildId: BigString) => Promise<Template>
+    }
 
     /* Guild Members related helper methods. */
     members: {
@@ -3657,11 +3044,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-ban}
        */
-      ban: (
-        guildId: BigString,
-        userId: BigString,
-        options?: CreateGuildBan
-      ) => Promise<void>;
+      ban: (guildId: BigString, userId: BigString, options?: CreateGuildBan) => Promise<void>
       /**
        * Edits the nickname of the bot user.
        *
@@ -3674,10 +3057,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-member}
        */
-      editSelf: (
-        guildId: BigString,
-        options: EditBotMemberOptions
-      ) => Promise<Camelize<DiscordMember>>;
+      editSelf: (guildId: BigString, options: EditBotMemberOptions) => Promise<Camelize<DiscordMember>>
       /**
        * Edits a member's properties.
        *
@@ -3693,11 +3073,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-member}
        */
-      edit: (
-        guildId: BigString,
-        userId: BigString,
-        options: ModifyGuildMember
-      ) => Promise<Camelize<DiscordMember>>;
+      edit: (guildId: BigString, userId: BigString, options: ModifyGuildMember) => Promise<Camelize<DiscordMember>>
       /**
        * Builds a URL to a user's avatar stored in the Discord CDN.
        *
@@ -3710,11 +3086,11 @@ export interface RestManager {
         userId: BigString,
         discriminator: string,
         options?: {
-          avatar: BigString | undefined;
-          size?: ImageSize;
-          format?: ImageFormat;
-        }
-      ) => string;
+          avatar: BigString | undefined
+          size?: ImageSize
+          format?: ImageFormat
+        },
+      ) => string
       /**
        * Gets or creates a DM channel with a user.
        *
@@ -3723,7 +3099,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/user#create-dm}
        */
-      getDm: (userId: BigString) => Promise<Channel>;
+      getDm: (userId: BigString) => Promise<Channel>
       /**
        * Gets the member object by user ID.
        *
@@ -3733,10 +3109,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-member}
        */
-      get: (
-        guildId: BigString,
-        userId: BigString
-      ) => Promise<Camelize<DiscordMemberWithUser>>;
+      get: (guildId: BigString, userId: BigString) => Promise<Camelize<DiscordMemberWithUser>>
       /**
        * Gets the list of members for a guild.
        *
@@ -3755,10 +3128,7 @@ export interface RestManager {
        * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
        * @see {@link https://discord.com/developers/docs/topics/rate-limits#rate-limits}
        */
-      list: (
-        guildId: BigString,
-        options: ListGuildMembers
-      ) => Promise<Collection<string, Camelize<DiscordMemberWithUser>>>;
+      list: (guildId: BigString, options: ListGuildMembers) => Promise<Collection<string, Camelize<DiscordMemberWithUser>>>
       /**
        * Kicks a member from a guild.
        *
@@ -3772,11 +3142,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild#remove-guild-member}
        */
-      kick: (
-        guildId: BigString,
-        userId: BigString,
-        reason?: string
-      ) => Promise<void>;
+      kick: (guildId: BigString, userId: BigString, reason?: string) => Promise<void>
       /**
        * Initiates the process of pruning inactive members.
        *
@@ -3795,10 +3161,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild#begin-guild-prune}
        */
-      prune: (
-        guildId: BigString,
-        options: BeginGuildPrune
-      ) => Promise<number | undefined>;
+      prune: (guildId: BigString, options: BeginGuildPrune) => Promise<number | undefined>
       /**
        * Gets the list of members whose usernames or nicknames start with a provided string.
        *
@@ -3812,8 +3175,8 @@ export interface RestManager {
       search: (
         guildId: BigString,
         query: string,
-        options?: Omit<SearchMembers, "query">
-      ) => Promise<Collection<string, Camelize<DiscordMemberWithUser>>>;
+        options?: Omit<SearchMembers, 'query'>,
+      ) => Promise<Collection<string, Camelize<DiscordMemberWithUser>>>
       /**
        * Unbans a user from a guild.
        *
@@ -3827,9 +3190,9 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild#remove-guild-ban}
        */
-      unban: (guildId: BigString, userId: BigString) => Promise<void>;
-    };
-  };
+      unban: (guildId: BigString, userId: BigString) => Promise<void>
+    }
+  }
   /** Interaction related helper methods. */
   interactions: {
     /** Command related helper methods. */
@@ -3849,9 +3212,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-global-application-command}
          */
-        global: (
-          command: CreateApplicationCommand
-        ) => Promise<Camelize<DiscordApplicationCommand>>;
+        global: (command: CreateApplicationCommand) => Promise<Camelize<DiscordApplicationCommand>>
         /**
          * Creates an application command only accessible in a specific guild.
          *
@@ -3865,11 +3226,8 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command}
          */
-        guild: (
-          command: CreateApplicationCommand,
-          guildId: BigString
-        ) => Promise<Camelize<DiscordApplicationCommand>>;
-      };
+        guild: (command: CreateApplicationCommand, guildId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
+      }
       /** Methods for deleting a command. */
       delete: {
         /**
@@ -3879,7 +3237,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/application-commands#delete-global-application-command}
          */
-        global: (commandId: BigString) => Promise<void>;
+        global: (commandId: BigString) => Promise<void>
         /**
          * Deletes an application command registered in a guild.
          *
@@ -3888,8 +3246,8 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/application-commands#delete-guild-application-command}
          */
-        guild: (commandId: BigString, guildId: BigString) => Promise<void>;
-      };
+        guild: (commandId: BigString, guildId: BigString) => Promise<void>
+      }
       /** Methods for editing a command. */
       edit: {
         /**
@@ -3901,10 +3259,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command}
          */
-        global: (
-          commandId: BigString,
-          options: CreateApplicationCommand
-        ) => Promise<Camelize<DiscordApplicationCommand>>;
+        global: (commandId: BigString, options: CreateApplicationCommand) => Promise<Camelize<DiscordApplicationCommand>>
         /**
          * Edits an application command registered in a guild.
          *
@@ -3915,11 +3270,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-guild-application-command}
          */
-        guild: (
-          commandId: BigString,
-          guildId: BigString,
-          options: CreateApplicationCommand
-        ) => Promise<Camelize<DiscordApplicationCommand>>;
+        guild: (commandId: BigString, guildId: BigString, options: CreateApplicationCommand) => Promise<Camelize<DiscordApplicationCommand>>
         /**
          * Edits the permissions for a guild application command.
          *
@@ -3938,9 +3289,9 @@ export interface RestManager {
           guildId: BigString,
           commandId: BigString,
           bearerToken: string,
-          options: ApplicationCommandPermissions[]
-        ) => Promise<Camelize<DiscordApplicationCommandPermissions>>;
-      };
+          options: ApplicationCommandPermissions[],
+        ) => Promise<Camelize<DiscordApplicationCommandPermissions>>
+      }
       /** Methods for getting a command. */
       get: {
         global: {
@@ -3952,9 +3303,7 @@ export interface RestManager {
            *
            * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-command}
            */
-          one: (
-            commandId: BigString
-          ) => Promise<Camelize<DiscordApplicationCommand>>;
+          one: (commandId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
           /**
            * Gets the list of your bot's global application commands.
            *
@@ -3962,8 +3311,8 @@ export interface RestManager {
            *
            * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands}
            */
-          all: () => Promise<Camelize<DiscordApplicationCommand[]>>;
-        };
+          all: () => Promise<Camelize<DiscordApplicationCommand[]>>
+        }
         guilds: {
           /**
            * Gets a guild application command by its ID.
@@ -3974,10 +3323,7 @@ export interface RestManager {
            *
            * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command}
            */
-          one: (
-            commandId: BigString,
-            guildId: BigString
-          ) => Promise<Camelize<DiscordApplicationCommand>>;
+          one: (commandId: BigString, guildId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
           /**
            * Gets the list of application commands registered by your bot in a guild.
            *
@@ -3986,10 +3332,8 @@ export interface RestManager {
            *
            * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commandss}
            */
-          all: (
-            guildId: BigString
-          ) => Promise<Camelize<DiscordApplicationCommand[]>>;
-        };
+          all: (guildId: BigString) => Promise<Camelize<DiscordApplicationCommand[]>>
+        }
         /**
          * Gets the permissions of a guild application command.
          *
@@ -3999,10 +3343,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions}
          */
-        permission: (
-          guildId: BigString,
-          commandId: BigString
-        ) => Promise<Camelize<DiscordApplicationCommandPermissions>>;
+        permission: (guildId: BigString, commandId: BigString) => Promise<Camelize<DiscordApplicationCommandPermissions>>
         /**
          * Gets the permissions of all application commands registered in a guild by the ID of the guild.
          *
@@ -4011,10 +3352,8 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions}
          */
-        permissions: (
-          guildId: BigString
-        ) => Promise<Camelize<DiscordApplicationCommandPermissions[]>>;
-      };
+        permissions: (guildId: BigString) => Promise<Camelize<DiscordApplicationCommandPermissions[]>>
+      }
       /** Methods for replacing existing commands in bulk. */
       replace: {
         /**
@@ -4030,9 +3369,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands}
          */
-        global: (
-          commands: CreateApplicationCommand[]
-        ) => Promise<Camelize<DiscordApplicationCommand[]>>;
+        global: (commands: CreateApplicationCommand[]) => Promise<Camelize<DiscordApplicationCommand[]>>
         /**
          * Re-registers the list of application commands registered in a guild, overwriting the previous commands completely.
          *
@@ -4047,12 +3384,9 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands}
          */
-        guild: (
-          guildId: BigString,
-          commands: CreateApplicationCommand[]
-        ) => Promise<Camelize<DiscordApplicationCommand[]>>;
-      };
-    };
+        guild: (guildId: BigString, commands: CreateApplicationCommand[]) => Promise<Camelize<DiscordApplicationCommand[]>>
+      }
+    }
     /** Response related helper methods. */
     responses: {
       /** Helper methods related to creating a response. */
@@ -4077,10 +3411,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message}
          */
-        followup: (
-          token: string,
-          options: InteractionResponse
-        ) => Promise<Camelize<DiscordMessage>>;
+        followup: (token: string, options: InteractionResponse) => Promise<Camelize<DiscordMessage>>
         /**
          * Sends a response to an interaction.
          *
@@ -4102,12 +3433,8 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response}
          */
-        original: (
-          interactionId: BigString,
-          token: string,
-          options: InteractionResponse
-        ) => Promise<void>;
-      };
+        original: (interactionId: BigString, token: string, options: InteractionResponse) => Promise<void>
+      }
       /** Helper methods related to deleting a response. */
       delete: {
         /**
@@ -4123,7 +3450,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message}
          */
-        followup: (token: string, messageId: BigString) => Promise<void>;
+        followup: (token: string, messageId: BigString) => Promise<void>
         /**
          * Deletes the initial message response to an interaction.
          *
@@ -4136,8 +3463,8 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response}
          */
-        original: (token: string) => Promise<void>;
-      };
+        original: (token: string) => Promise<void>
+      }
       /** Helper methods related to editing a response. */
       edit: {
         /**
@@ -4157,11 +3484,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message}
          */
-        followup: (
-          token: string,
-          messageId: BigString,
-          options: InteractionCallbackData
-        ) => Promise<Camelize<DiscordMessage>>;
+        followup: (token: string, messageId: BigString, options: InteractionCallbackData) => Promise<Camelize<DiscordMessage>>
         /**
          * Edits the initial message response to an interaction.
          *
@@ -4178,11 +3501,8 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response}
          */
-        original: (
-          token: string,
-          options: InteractionCallbackData
-        ) => Promise<Camelize<DiscordMessage> | undefined>;
-      };
+        original: (token: string, options: InteractionCallbackData) => Promise<Camelize<DiscordMessage> | undefined>
+      }
       /** Helper methods related to getting a response. */
       get: {
         /**
@@ -4201,10 +3521,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message}
          */
-        followup: (
-          token: string,
-          messageId: BigString
-        ) => Promise<Camelize<DiscordMessage>>;
+        followup: (token: string, messageId: BigString) => Promise<Camelize<DiscordMessage>>
         /**
          * Gets the initial message response to an interaction.
          *
@@ -4220,10 +3537,10 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response}
          */
-        original: (token: string) => Promise<Camelize<DiscordMessage>>;
-      };
-    };
-  };
+        original: (token: string) => Promise<Camelize<DiscordMessage>>
+      }
+    }
+  }
   /** Webhook related helper methods. */
   webhooks: {
     /**
@@ -4242,10 +3559,7 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/webhook#create-webhook}
      */
-    create: (
-      channelId: BigString,
-      options: CreateWebhook
-    ) => Promise<Camelize<DiscordWebhook>>;
+    create: (channelId: BigString, options: CreateWebhook) => Promise<Camelize<DiscordWebhook>>
     /** Methods to delete a webhook. */
     delete: {
       with: {
@@ -4261,7 +3575,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/resources/webhook#delete-webhook}
          */
-        id: (id: BigString, reason?: string) => Promise<void>;
+        id: (id: BigString, reason?: string) => Promise<void>
         /**
          * Deletes a webhook message using the webhook token, thereby bypassing the need for authentication + permissions.
          *
@@ -4273,9 +3587,9 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/resources/webhook#delete-webhook-with-token}
          */
-        token: (id: BigString, token: string) => Promise<void>;
-      };
-    };
+        token: (id: BigString, token: string) => Promise<void>
+      }
+    }
     /** Methods related to editing a webhook. */
     edit: {
       with: {
@@ -4292,10 +3606,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook}
          */
-        id: (
-          webhookId: BigString,
-          options: ModifyWebhook
-        ) => Promise<Camelize<DiscordWebhook>>;
+        id: (webhookId: BigString, options: ModifyWebhook) => Promise<Camelize<DiscordWebhook>>
         /**
          * Edits a webhook using the webhook token, thereby bypassing the need for authentication + permissions.
          *
@@ -4310,13 +3621,9 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token}
          */
-        token: (
-          webhookId: BigString,
-          token: string,
-          options: Omit<ModifyWebhook, "channelId">
-        ) => Promise<Camelize<DiscordWebhook>>;
-      };
-    };
+        token: (webhookId: BigString, token: string, options: Omit<ModifyWebhook, 'channelId'>) => Promise<Camelize<DiscordWebhook>>
+      }
+    }
 
     /**
      * Executes a webhook, causing a message to be posted in the channel configured for the webhook.
@@ -4331,11 +3638,7 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/webhook#execute-webhook}
      */
-    execute: (
-      webhookId: BigString,
-      token: string,
-      options: ExecuteWebhook
-    ) => Promise<Camelize<DiscordMessage> | undefined>;
+    execute: (webhookId: BigString, token: string, options: ExecuteWebhook) => Promise<Camelize<DiscordMessage> | undefined>
     /** Methods related to getting webhooks. */
     get: {
       /**
@@ -4349,7 +3652,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/webhook#get-channel-webhooks}
        */
-      channel: (channelId: BigString) => Promise<Camelize<DiscordWebhook[]>>;
+      channel: (channelId: BigString) => Promise<Camelize<DiscordWebhook[]>>
       /**
        * Gets the list of webhooks for a guild.
        *
@@ -4361,7 +3664,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/webhook#get-guild-webhooks}
        */
-      guild: (guildId: BigString) => Promise<Camelize<DiscordWebhook[]>>;
+      guild: (guildId: BigString) => Promise<Camelize<DiscordWebhook[]>>
       /**
        * Gets a webhook message by its ID.
        *
@@ -4373,12 +3676,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook-message}
        */
-      message: (
-        webhookId: BigString,
-        token: string,
-        messageId: BigString,
-        options?: GetWebhookMessageOptions
-      ) => Promise<Camelize<DiscordMessage>>;
+      message: (webhookId: BigString, token: string, messageId: BigString, options?: GetWebhookMessageOptions) => Promise<Camelize<DiscordMessage>>
       with: {
         /**
          * Gets a webhook by its ID.
@@ -4391,7 +3689,7 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook}
          */
-        id: (webhookId: BigString) => Promise<Camelize<DiscordWebhook>>;
+        id: (webhookId: BigString) => Promise<Camelize<DiscordWebhook>>
         /**
          * Gets a webhook using the webhook token, thereby bypassing the need for authentication + permissions.
          *
@@ -4401,12 +3699,9 @@ export interface RestManager {
          *
          * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook-with-token}
          */
-        token: (
-          webhookId: BigString,
-          token: string
-        ) => Promise<Camelize<DiscordWebhook>>;
-      };
-    };
+        token: (webhookId: BigString, token: string) => Promise<Camelize<DiscordWebhook>>
+      }
+    }
     /** Methods related to message sent by a webhook. */
     messages: {
       /**
@@ -4422,16 +3717,11 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/webhook#delete-webhook}
        */
-      delete: (
-        webhookId: BigString,
-        token: string,
-        messageId: BigString,
-        options?: DeleteWebhookMessageOptions
-      ) => Promise<void>;
+      delete: (webhookId: BigString, token: string, messageId: BigString, options?: DeleteWebhookMessageOptions) => Promise<void>
       /** Methods related to editing messages sent by a webhook. */
-      edit: WebhookMessageEditor;
-    };
-  };
+      edit: WebhookMessageEditor
+    }
+  }
   /** User related helper methods. */
   users: {
     /**
@@ -4442,8 +3732,8 @@ export interface RestManager {
      *
      * @see {@link https://discord.com/developers/docs/resources/user#create-dm}
      */
-    channel: (userId: BigString) => Promise<Camelize<DiscordChannel>>;
-  };
+    channel: (userId: BigString) => Promise<Camelize<DiscordChannel>>
+  }
   /**
    * Adds a member to a thread.
    *
@@ -4458,7 +3748,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#add-thread-member}
    */
-  addThreadMember: (channelId: BigString, userId: BigString) => Promise<void>;
+  addThreadMember: (channelId: BigString, userId: BigString) => Promise<void>
   /**
    * Creates an automod rule in a guild.
    *
@@ -4473,10 +3763,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule}
    */
-  createAutomodRule: (
-    guildId: BigString,
-    options: CreateAutoModerationRuleOptions
-  ) => Promise<Camelize<DiscordAutoModerationRule>>;
+  createAutomodRule: (guildId: BigString, options: CreateAutoModerationRuleOptions) => Promise<Camelize<DiscordAutoModerationRule>>
   /**
    * Creates a channel within a guild.
    *
@@ -4495,10 +3782,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-channel}
    */
-  createChannel: (
-    guildId: BigString,
-    options: CreateGuildChannel
-  ) => Promise<Camelize<DiscordChannel>>;
+  createChannel: (guildId: BigString, options: CreateGuildChannel) => Promise<Camelize<DiscordChannel>>
   /**
    * Creates an emoji in a guild.
    *
@@ -4515,10 +3799,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/emoji#create-guild-emoji}
    */
-  createEmoji: (
-    guildId: BigString,
-    options: CreateGuildEmoji
-  ) => Promise<Camelize<DiscordEmoji>>;
+  createEmoji: (guildId: BigString, options: CreateGuildEmoji) => Promise<Camelize<DiscordEmoji>>
   /**
    * Creates a new thread in a forum channel, and sends a message within the created thread.
    *
@@ -4536,10 +3817,7 @@ export interface RestManager {
    *
    * @experimental
    */
-  createForumThread: (
-    channelId: BigString,
-    options: CreateForumPostWithMessage
-  ) => Promise<Camelize<DiscordChannel>>;
+  createForumThread: (channelId: BigString, options: CreateForumPostWithMessage) => Promise<Camelize<DiscordChannel>>
   /**
    * Creates an application command accessible globally; across different guilds and channels.
    *
@@ -4553,9 +3831,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-global-application-command}
    */
-  createGlobalApplicationCommand: (
-    command: CreateApplicationCommand
-  ) => Promise<Camelize<DiscordApplicationCommand>>;
+  createGlobalApplicationCommand: (command: CreateApplicationCommand) => Promise<Camelize<DiscordApplicationCommand>>
   /**
    * Creates an application command only accessible in a specific guild.
    *
@@ -4569,10 +3845,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command}
    */
-  createGuildApplicationCommand: (
-    command: CreateApplicationCommand,
-    guildId: BigString
-  ) => Promise<Camelize<DiscordApplicationCommand>>;
+  createGuildApplicationCommand: (command: CreateApplicationCommand, guildId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
   /**
    * Creates an invite to a channel in a guild.
    *
@@ -4590,10 +3863,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#create-channel-invite}
    */
-  createInvite: (
-    channelId: BigString,
-    options?: CreateChannelInvite
-  ) => Promise<Camelize<DiscordInvite>>;
+  createInvite: (channelId: BigString, options?: CreateChannelInvite) => Promise<Camelize<DiscordInvite>>
   /**
    * Creates a scheduled event in a guild.
    *
@@ -4610,10 +3880,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event}
    */
-  createScheduledEvent: (
-    guildId: BigString,
-    options: CreateScheduledEvent
-  ) => Promise<Camelize<DiscordScheduledEvent>>;
+  createScheduledEvent: (guildId: BigString, options: CreateScheduledEvent) => Promise<Camelize<DiscordScheduledEvent>>
   /**
    * Creates a stage instance associated with a stage channel.
    *
@@ -4627,9 +3894,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/stage-instance#create-stage-instance}
    */
-  createStageInstance: (
-    options: CreateStageInstance
-  ) => Promise<Camelize<DiscordStageInstance>>;
+  createStageInstance: (options: CreateStageInstance) => Promise<Camelize<DiscordStageInstance>>
   /**
    * Creates a webhook.
    *
@@ -4646,10 +3911,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#create-webhook}
    */
-  createWebhook: (
-    channelId: BigString,
-    options: CreateWebhook
-  ) => Promise<Camelize<DiscordWebhook>>;
+  createWebhook: (channelId: BigString, options: CreateWebhook) => Promise<Camelize<DiscordWebhook>>
   /**
    * Deletes an automod rule.
    *
@@ -4663,11 +3925,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/auto-moderation#delete-auto-moderation-rule}
    */
-  deleteAutomodRule: (
-    guildId: BigString,
-    ruleId: BigString,
-    reason?: string
-  ) => Promise<void>;
+  deleteAutomodRule: (guildId: BigString, ruleId: BigString, reason?: string) => Promise<void>
   /**
    * Deletes a channel from within a guild.
    *
@@ -4692,7 +3950,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#deleteclose-channel}
    */
-  deleteChannel: (channelId: BigString, reason?: string) => Promise<void>;
+  deleteChannel: (channelId: BigString, reason?: string) => Promise<void>
   /**
    * Deletes a permission override for a user or role in a channel.
    *
@@ -4706,11 +3964,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#delete-channel-permission}
    */
-  deleteChannelPermissionOverride: (
-    channelId: BigString,
-    overwriteId: BigString,
-    reason?: string
-  ) => Promise<void>;
+  deleteChannelPermissionOverride: (channelId: BigString, overwriteId: BigString, reason?: string) => Promise<void>
   /**
    * Deletes an emoji from a guild.
    *
@@ -4724,11 +3978,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/emoji#delete-guild-emoji}
    */
-  deleteEmoji: (
-    guildId: BigString,
-    id: BigString,
-    reason?: string
-  ) => Promise<void>;
+  deleteEmoji: (guildId: BigString, id: BigString, reason?: string) => Promise<void>
   /**
    * Deletes a follow-up message to an interaction.
    *
@@ -4742,7 +3992,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message}
    */
-  deleteFollowupMessage: (token: string, messageId: BigString) => Promise<void>;
+  deleteFollowupMessage: (token: string, messageId: BigString) => Promise<void>
   /**
    * Deletes an application command registered globally.
    *
@@ -4750,7 +4000,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#delete-global-application-command}
    */
-  deleteGlobalApplicationCommand: (commandId: BigString) => Promise<void>;
+  deleteGlobalApplicationCommand: (commandId: BigString) => Promise<void>
   /**
    * Deletes an application command registered in a guild.
    *
@@ -4759,10 +4009,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#delete-guild-application-command}
    */
-  deleteGuildApplicationCommand: (
-    commandId: BigString,
-    guildId: BigString
-  ) => Promise<void>;
+  deleteGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<void>
   /**
    * Deletes an integration attached to a guild.
    *
@@ -4779,10 +4026,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild-integration}
    */
-  deleteIntegration: (
-    guildId: BigString,
-    integrationId: BigString
-  ) => Promise<void>;
+  deleteIntegration: (guildId: BigString, integrationId: BigString) => Promise<void>
   /**
    * Deletes an invite to a channel.
    *
@@ -4795,7 +4039,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#delete-channel-invite}
    */
-  deleteInvite: (inviteCode: string, reason?: string) => Promise<void>;
+  deleteInvite: (inviteCode: string, reason?: string) => Promise<void>
   /**
    * Deletes a message from a channel.
    *
@@ -4810,11 +4054,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#delete-message}
    */
-  deleteMessage: (
-    channelId: BigString,
-    messageId: BigString,
-    reason?: string
-  ) => Promise<void>;
+  deleteMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
   /**
    * Deletes the initial message response to an interaction.
    *
@@ -4827,7 +4067,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response}
    */
-  deleteOriginalInteractionResponse: (token: string) => Promise<void>;
+  deleteOriginalInteractionResponse: (token: string) => Promise<void>
   /**
    * Deletes a scheduled event from a guild.
    *
@@ -4841,10 +4081,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#delete-guild-scheduled-event}
    */
-  deleteScheduledEvent: (
-    guildId: BigString,
-    eventId: BigString
-  ) => Promise<void>;
+  deleteScheduledEvent: (guildId: BigString, eventId: BigString) => Promise<void>
   /**
    * Deletes the stage instance associated with a stage channel, if one exists.
    *
@@ -4857,7 +4094,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance}
    */
-  deleteStageInstance: (channelId: BigString, reason?: string) => Promise<void>;
+  deleteStageInstance: (channelId: BigString, reason?: string) => Promise<void>
   /**
    * Deletes a webhook.
    *
@@ -4870,7 +4107,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#delete-webhook}
    */
-  deleteWebhook: (webhookId: BigString, reason?: string) => Promise<void>;
+  deleteWebhook: (webhookId: BigString, reason?: string) => Promise<void>
   /**
    * Deletes a webhook message.
    *
@@ -4884,12 +4121,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#delete-webhook}
    */
-  deleteWebhookMessage: (
-    webhookId: BigString,
-    token: string,
-    messageId: BigString,
-    options?: DeleteWebhookMessageOptions
-  ) => Promise<void>;
+  deleteWebhookMessage: (webhookId: BigString, token: string, messageId: BigString, options?: DeleteWebhookMessageOptions) => Promise<void>
   /**
    * Deletes a webhook message using the webhook token, thereby bypassing the need for authentication + permissions.
    *
@@ -4901,10 +4133,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#delete-webhook-with-token}
    */
-  deleteWebhookWithToken: (
-    webhookId: BigString,
-    token: string
-  ) => Promise<void>;
+  deleteWebhookWithToken: (webhookId: BigString, token: string) => Promise<void>
   /**
    * Edits the permissions for a guild application command.
    *
@@ -4923,8 +4152,8 @@ export interface RestManager {
     guildId: BigString,
     commandId: BigString,
     bearerToken: string,
-    options: ApplicationCommandPermissions[]
-  ) => Promise<Camelize<DiscordApplicationCommandPermissions>>;
+    options: ApplicationCommandPermissions[],
+  ) => Promise<Camelize<DiscordApplicationCommandPermissions>>
   /**
    * Edits an automod rule.
    *
@@ -4943,16 +4172,13 @@ export interface RestManager {
   editAutomodRule: (
     guildId: BigString,
     ruleId: BigString,
-    options: Partial<EditAutoModerationRuleOptions>
-  ) => Promise<Camelize<DiscordAutoModerationRule>>;
+    options: Partial<EditAutoModerationRuleOptions>,
+  ) => Promise<Camelize<DiscordAutoModerationRule>>
   /**
    * Modifies the bot's username or avatar.
    * NOTE: username: if changed may cause the bot's discriminator to be randomized.
    */
-  editBotProfile: (options: {
-    username?: string;
-    botAvatarURL?: string | null;
-  }) => Promise<Camelize<DiscordUser>>;
+  editBotProfile: (options: { username?: string; botAvatarURL?: string | null }) => Promise<Camelize<DiscordUser>>
   /**
    * Edits a channel's settings.
    *
@@ -4982,10 +4208,7 @@ export interface RestManager {
    * - Otherwise:
    *     - Fires a _Channel Update_ gateway event.
    */
-  editChannel: (
-    channelId: BigString,
-    options: ModifyChannel
-  ) => Promise<Camelize<DiscordChannel>>;
+  editChannel: (channelId: BigString, options: ModifyChannel) => Promise<Camelize<DiscordChannel>>
   /**
    * Edits the permission overrides for a user or role in a channel.
    *
@@ -5001,10 +4224,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#edit-channel-permissions}
    */
-  editChannelPermissionOverrides: (
-    channelId: BigString,
-    options: EditChannelPermissionOverridesOptions
-  ) => Promise<void>;
+  editChannelPermissionOverrides: (channelId: BigString, options: EditChannelPermissionOverridesOptions) => Promise<void>
   /**
    * Edits the positions of a set of channels in a guild.
    *
@@ -5018,10 +4238,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions}
    */
-  editChannelPositions: (
-    guildId: BigString,
-    channelPositions: ModifyGuildChannelPositions[]
-  ) => Promise<void>;
+  editChannelPositions: (guildId: BigString, channelPositions: ModifyGuildChannelPositions[]) => Promise<void>
   /**
    * Edits an emoji.
    *
@@ -5037,11 +4254,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/emoji#modify-guild-emoji}
    */
-  editEmoji: (
-    guildId: BigString,
-    id: BigString,
-    options: ModifyGuildEmoji
-  ) => Promise<Camelize<DiscordEmoji>>;
+  editEmoji: (guildId: BigString, id: BigString, options: ModifyGuildEmoji) => Promise<Camelize<DiscordEmoji>>
   /**
    * Edits a follow-up message to an interaction.
    *
@@ -5059,11 +4272,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message}
    */
-  editFollowupMessage: (
-    token: string,
-    messageId: BigString,
-    options: InteractionCallbackData
-  ) => Promise<Camelize<DiscordMessage>>;
+  editFollowupMessage: (token: string, messageId: BigString, options: InteractionCallbackData) => Promise<Camelize<DiscordMessage>>
   /**
    * Edits a global application command.
    *
@@ -5073,10 +4282,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command}
    */
-  editGlobalApplicationCommand: (
-    commandId: BigString,
-    options: CreateApplicationCommand
-  ) => Promise<Camelize<DiscordApplicationCommand>>;
+  editGlobalApplicationCommand: (commandId: BigString, options: CreateApplicationCommand) => Promise<Camelize<DiscordApplicationCommand>>
   /**
    * Edits an application command registered in a guild.
    *
@@ -5090,8 +4296,8 @@ export interface RestManager {
   editGuildApplicationCommand: (
     commandId: BigString,
     guildId: BigString,
-    options: CreateApplicationCommand
-  ) => Promise<Camelize<DiscordApplicationCommand>>;
+    options: CreateApplicationCommand,
+  ) => Promise<Camelize<DiscordApplicationCommand>>
   /**
    * Edits a message.
    *
@@ -5109,11 +4315,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#edit-message}
    */
-  editMessage: (
-    channelId: BigString,
-    messageId: BigString,
-    options: EditMessage
-  ) => Promise<Camelize<DiscordMessage>>;
+  editMessage: (channelId: BigString, messageId: BigString, options: EditMessage) => Promise<Camelize<DiscordMessage>>
   /**
    * Edits the initial message response to an interaction.
    *
@@ -5131,10 +4333,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response}
    */
-  editOriginalInteractionResponse: (
-    token: string,
-    options: InteractionCallbackData
-  ) => Promise<Camelize<DiscordMessage> | undefined>;
+  editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<Camelize<DiscordMessage> | undefined>
   /**
    * Edits the original webhook message.
    *
@@ -5151,8 +4350,8 @@ export interface RestManager {
   editOriginalWebhookMessage: (
     webhookId: BigString,
     token: string,
-    options: InteractionCallbackData & { threadId?: BigString }
-  ) => Promise<Camelize<DiscordMessage>>;
+    options: InteractionCallbackData & { threadId?: BigString },
+  ) => Promise<Camelize<DiscordMessage>>
   /**
    * Edits a scheduled event.
    *
@@ -5171,11 +4370,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event}
    */
-  editScheduledEvent: (
-    guildId: BigString,
-    eventId: BigString,
-    options: Partial<EditScheduledEvent>
-  ) => Promise<Camelize<DiscordScheduledEvent>>;
+  editScheduledEvent: (guildId: BigString, eventId: BigString, options: Partial<EditScheduledEvent>) => Promise<Camelize<DiscordScheduledEvent>>
   /**
    * Edits a stage instance.
    *
@@ -5189,10 +4384,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance}
    */
-  editStageInstance: (
-    channelId: BigString,
-    data: EditStageInstanceOptions
-  ) => Promise<Camelize<DiscordStageInstance>>;
+  editStageInstance: (channelId: BigString, data: EditStageInstanceOptions) => Promise<Camelize<DiscordStageInstance>>
   /**
    * Edits a webhook.
    *
@@ -5206,10 +4398,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook}
    */
-  editWebhook: (
-    webhookId: BigString,
-    options: ModifyWebhook
-  ) => Promise<Camelize<DiscordWebhook>>;
+  editWebhook: (webhookId: BigString, options: ModifyWebhook) => Promise<Camelize<DiscordWebhook>>
   /**
    * Edits a webhook message.
    *
@@ -5228,8 +4417,8 @@ export interface RestManager {
     webhookId: BigString,
     token: string,
     messageId: BigString,
-    options: InteractionCallbackData & { threadId?: BigString }
-  ) => Promise<Camelize<DiscordMessage>>;
+    options: InteractionCallbackData & { threadId?: BigString },
+  ) => Promise<Camelize<DiscordMessage>>
   /**
    * Edits a webhook using the webhook token, thereby bypassing the need for authentication + permissions.
    *
@@ -5244,11 +4433,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token}
    */
-  editWebhookWithToken: (
-    webhookId: BigString,
-    token: string,
-    options: Omit<ModifyWebhook, "channelId">
-  ) => Promise<Camelize<DiscordWebhook>>;
+  editWebhookWithToken: (webhookId: BigString, token: string, options: Omit<ModifyWebhook, 'channelId'>) => Promise<Camelize<DiscordWebhook>>
   /**
    * Executes a webhook, causing a message to be posted in the channel configured for the webhook.
    *
@@ -5262,11 +4447,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#execute-webhook}
    */
-  executeWebhook: (
-    webhookId: BigString,
-    token: string,
-    options: ExecuteWebhook
-  ) => Promise<Camelize<DiscordMessage> | undefined>;
+  executeWebhook: (webhookId: BigString, token: string, options: ExecuteWebhook) => Promise<Camelize<DiscordMessage> | undefined>
   /**
    * Follows an announcement channel, allowing messages posted within it to be cross-posted into the target channel.
    *
@@ -5281,10 +4462,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#follow-announcement-channel}
    */
-  followAnnouncement: (
-    sourceChannelId: BigString,
-    targetChannelId: BigString
-  ) => Promise<Camelize<DiscordFollowedChannel>>;
+  followAnnouncement: (sourceChannelId: BigString, targetChannelId: BigString) => Promise<Camelize<DiscordFollowedChannel>>
   /**
    * Gets the list of all active threads for a guild.
    *
@@ -5298,11 +4476,9 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#list-active-guild-threads}
    */
-  getActiveThreads: (
-    guildId: BigString
-  ) => Promise<Camelize<DiscordActiveThreads>>;
+  getActiveThreads: (guildId: BigString) => Promise<Camelize<DiscordActiveThreads>>
   /** Get the applications info */
-  getApplicationInfo: () => Promise<Camelize<DiscordApplication>>;
+  getApplicationInfo: () => Promise<Camelize<DiscordApplication>>
   /**
    * Gets the permissions of a guild application command.
    *
@@ -5312,10 +4488,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions}
    */
-  getApplicationCommandPermission: (
-    guildId: BigString,
-    commandId: BigString
-  ) => Promise<Camelize<DiscordApplicationCommandPermissions>>;
+  getApplicationCommandPermission: (guildId: BigString, commandId: BigString) => Promise<Camelize<DiscordApplicationCommandPermissions>>
   /**
    * Gets the permissions of all application commands registered in a guild by the ID of the guild.
    *
@@ -5324,9 +4497,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions}
    */
-  getApplicationCommandPermissions: (
-    guildId: BigString
-  ) => Promise<Camelize<DiscordApplicationCommandPermissions[]>>;
+  getApplicationCommandPermissions: (guildId: BigString) => Promise<Camelize<DiscordApplicationCommandPermissions[]>>
   /**
    * Gets an automod rule by its ID.
    *
@@ -5339,10 +4510,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/auto-moderation#get-auto-moderation-rule}
    */
-  getAutomodRule: (
-    guildId: BigString,
-    ruleId: BigString
-  ) => Promise<Camelize<DiscordAutoModerationRule>>;
+  getAutomodRule: (guildId: BigString, ruleId: BigString) => Promise<Camelize<DiscordAutoModerationRule>>
   /**
    * Gets the list of automod rules for a guild.
    *
@@ -5354,9 +4522,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/auto-moderation#list-auto-moderation-rules-for-guild}
    */
-  getAutomodRules: (
-    guildId: BigString
-  ) => Promise<Camelize<DiscordAutoModerationRule[]>>;
+  getAutomodRules: (guildId: BigString) => Promise<Camelize<DiscordAutoModerationRule[]>>
   /**
    * Gets a channel by its ID.
    *
@@ -5368,7 +4534,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#get-channel}
    */
-  getChannel: (channelId: BigString) => Promise<Camelize<DiscordChannel>>;
+  getChannel: (channelId: BigString) => Promise<Camelize<DiscordChannel>>
   /**
    * Gets the list of invites for a channel.
    *
@@ -5382,9 +4548,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#get-channel-invites}
    */
-  getChannelInvites: (
-    channelId: BigString
-  ) => Promise<Camelize<DiscordInviteMetadata[]>>;
+  getChannelInvites: (channelId: BigString) => Promise<Camelize<DiscordInviteMetadata[]>>
   /**
    * Gets the list of channels for a guild.
    *
@@ -5396,7 +4560,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-channels}
    */
-  getChannels: (guildId: BigString) => Promise<Camelize<DiscordChannel[]>>;
+  getChannels: (guildId: BigString) => Promise<Camelize<DiscordChannel[]>>
   /**
    * Gets a list of webhooks for a channel.
    *
@@ -5408,9 +4572,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#get-channel-webhooks}
    */
-  getChannelWebhooks: (
-    channelId: BigString
-  ) => Promise<Camelize<DiscordWebhook[]>>;
+  getChannelWebhooks: (channelId: BigString) => Promise<Camelize<DiscordWebhook[]>>
   /**
    * Gets or creates a DM channel with a user.
    *
@@ -5419,7 +4581,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/user#create-dm}
    */
-  getDmChannel: (userId: BigString) => Promise<Camelize<DiscordChannel>>;
+  getDmChannel: (userId: BigString) => Promise<Camelize<DiscordChannel>>
   /**
    * Gets an emoji by its ID.
    *
@@ -5429,10 +4591,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/emoji#get-guild-emoji}
    */
-  getEmoji: (
-    guildId: BigString,
-    emojiId: BigString
-  ) => Promise<Camelize<DiscordEmoji>>;
+  getEmoji: (guildId: BigString, emojiId: BigString) => Promise<Camelize<DiscordEmoji>>
   /**
    * Gets the list of emojis for a guild.
    *
@@ -5441,7 +4600,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/emoji#list-guild-emojis}
    */
-  getEmojis: (guildId: BigString) => Promise<Camelize<DiscordEmoji[]>>;
+  getEmojis: (guildId: BigString) => Promise<Camelize<DiscordEmoji[]>>
   /**
    * Gets a follow-up message to an interaction by the ID of the message.
    *
@@ -5458,12 +4617,9 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message}
    */
-  getFollowupMessage: (
-    token: string,
-    messageId: BigString
-  ) => Promise<Camelize<DiscordMessage>>;
+  getFollowupMessage: (token: string, messageId: BigString) => Promise<Camelize<DiscordMessage>>
   /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */
-  getGatewayBot: () => Promise<Camelize<DiscordGetGatewayBot>>;
+  getGatewayBot: () => Promise<Camelize<DiscordGetGatewayBot>>
   /**
    * Gets a global application command by its ID.
    *
@@ -5472,9 +4628,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-command}
    */
-  getGlobalApplicationCommand: (
-    commandId: BigString
-  ) => Promise<Camelize<DiscordApplicationCommand>>;
+  getGlobalApplicationCommand: (commandId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
   /**
    * Gets the list of your bot's global application commands.
    *
@@ -5482,9 +4636,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands}
    */
-  getGlobalApplicationCommands: () => Promise<
-    Camelize<DiscordApplicationCommand[]>
-  >;
+  getGlobalApplicationCommands: () => Promise<Camelize<DiscordApplicationCommand[]>>
   /**
    * Gets a guild application command by its ID.
    *
@@ -5494,10 +4646,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command}
    */
-  getGuildApplicationCommand: (
-    commandId: BigString,
-    guildId: BigString
-  ) => Promise<Camelize<DiscordApplicationCommand>>;
+  getGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
   /**
    * Gets the list of application commands registered by your bot in a guild.
    *
@@ -5506,9 +4655,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commandss}
    */
-  getGuildApplicationCommands: (
-    guildId: BigString
-  ) => Promise<Camelize<DiscordApplicationCommand[]>>;
+  getGuildApplicationCommands: (guildId: BigString) => Promise<Camelize<DiscordApplicationCommand[]>>
   /**
    * Gets the list of webhooks for a guild.
    *
@@ -5520,7 +4667,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#get-guild-webhooks}
    */
-  getGuildWebhooks: (guildId: BigString) => Promise<Camelize<DiscordWebhook[]>>;
+  getGuildWebhooks: (guildId: BigString) => Promise<Camelize<DiscordWebhook[]>>
   /**
    * Gets the list of integrations attached to a guild.
    *
@@ -5532,9 +4679,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-integrations}
    */
-  getIntegrations: (
-    guildId: BigString
-  ) => Promise<Camelize<DiscordIntegration[]>>;
+  getIntegrations: (guildId: BigString) => Promise<Camelize<DiscordIntegration[]>>
   /**
    * Gets an invite to a channel by its invite code.
    *
@@ -5544,10 +4689,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/invite#get-invite}
    */
-  getInvite: (
-    inviteCode: string,
-    options?: GetInvite
-  ) => Promise<Camelize<DiscordInviteMetadata>>;
+  getInvite: (inviteCode: string, options?: GetInvite) => Promise<Camelize<DiscordInviteMetadata>>
   /**
    * Gets the list of invites for a guild.
    *
@@ -5559,9 +4701,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/invite#get-invites}
    */
-  getInvites: (
-    guildId: BigString
-  ) => Promise<Camelize<DiscordInviteMetadata[]>>;
+  getInvites: (guildId: BigString) => Promise<Camelize<DiscordInviteMetadata[]>>
   /**
    * Returns the list of sticker packs available to Nitro subscribers.
    *
@@ -5570,7 +4710,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#list-nitro-sticker-packs}
    */
-  getNitroStickerPacks: () => Promise<Camelize<DiscordStickerPack[]>>;
+  getNitroStickerPacks: () => Promise<Camelize<DiscordStickerPack[]>>
   /**
    * Gets the initial message response to an interaction.
    *
@@ -5586,9 +4726,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response}
    */
-  getOriginalInteractionResponse: (
-    token: string
-  ) => Promise<Camelize<DiscordMessage>>;
+  getOriginalInteractionResponse: (token: string) => Promise<Camelize<DiscordMessage>>
   /**
    * Gets the list of private archived threads for a channel.
    *
@@ -5606,10 +4744,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-private-archived-threads}
    */
-  getPrivateArchivedThreads: (
-    channelId: BigString,
-    options?: ListArchivedThreads
-  ) => Promise<Camelize<DiscordArchivedThreads>>;
+  getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
   /**
    * Gets the list of private archived threads the bot is a member of for a channel.
    *
@@ -5626,10 +4761,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads}
    */
-  getPrivateJoinedArchivedThreads: (
-    channelId: BigString,
-    options?: ListArchivedThreads
-  ) => Promise<Camelize<DiscordArchivedThreads>>;
+  getPrivateJoinedArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
   /**
    * Gets the list of public archived threads for a channel.
    *
@@ -5647,10 +4779,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-public-archived-threads}
    */
-  getPublicArchivedThreads: (
-    channelId: BigString,
-    options?: ListArchivedThreads
-  ) => Promise<Camelize<DiscordArchivedThreads>>;
+  getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
   /**
    * Gets a scheduled event by its ID.
    *
@@ -5661,11 +4790,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event}
    */
-  getScheduledEvent: (
-    guildId: BigString,
-    eventId: BigString,
-    options?: { withUserCount?: boolean }
-  ) => Promise<Camelize<DiscordScheduledEvent>>;
+  getScheduledEvent: (guildId: BigString, eventId: BigString, options?: { withUserCount?: boolean }) => Promise<Camelize<DiscordScheduledEvent>>
   /**
    * Gets the list of scheduled events for a guild.
    *
@@ -5675,10 +4800,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#list-scheduled-events-for-guild}
    */
-  getScheduledEvents: (
-    guildId: BigString,
-    options?: GetScheduledEvents
-  ) => Promise<Camelize<DiscordScheduledEvent[]>>;
+  getScheduledEvents: (guildId: BigString, options?: GetScheduledEvents) => Promise<Camelize<DiscordScheduledEvent[]>>
   /**
    * Gets the list of subscribers to a scheduled event from a guild.
    *
@@ -5697,12 +4819,10 @@ export interface RestManager {
   getScheduledEventUsers: (
     guildId: BigString,
     eventId: BigString,
-    options?: GetScheduledEventUsers
-  ) => Promise<
-    Array<{ user: Camelize<DiscordUser>; member?: Camelize<DiscordMember> }>
-  >;
+    options?: GetScheduledEventUsers,
+  ) => Promise<Array<{ user: Camelize<DiscordUser>; member?: Camelize<DiscordMember> }>>
   /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */
-  getSessionInfo: () => Promise<Camelize<DiscordGetGatewayBot>>;
+  getSessionInfo: () => Promise<Camelize<DiscordGetGatewayBot>>
   /**
    * Gets the stage instance associated with a stage channel, if one exists.
    *
@@ -5711,9 +4831,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/stage-instance#get-stage-instance}
    */
-  getStageInstance: (
-    channelId: BigString
-  ) => Promise<Camelize<DiscordStageInstance>>;
+  getStageInstance: (channelId: BigString) => Promise<Camelize<DiscordStageInstance>>
   /**
    * Gets a thread member by their user ID.
    *
@@ -5723,10 +4841,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#get-thread-member}
    */
-  getThreadMember: (
-    channelId: BigString,
-    userId: BigString
-  ) => Promise<Camelize<DiscordThreadMember>>;
+  getThreadMember: (channelId: BigString, userId: BigString) => Promise<Camelize<DiscordThreadMember>>
   /**
    * Gets the list of thread members for a thread.
    *
@@ -5738,16 +4853,14 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-thread-members}
    */
-  getThreadMembers: (
-    channelId: BigString
-  ) => Promise<Camelize<DiscordThreadMember[]>>;
+  getThreadMembers: (channelId: BigString) => Promise<Camelize<DiscordThreadMember[]>>
   /**
    * Get a user's data from the api
    *
    * @param id The user's id
    * @returns {Camelize<DiscordUser>}
    */
-  getUser: (id: BigString) => Promise<Camelize<DiscordUser>>;
+  getUser: (id: BigString) => Promise<Camelize<DiscordUser>>
   /**
    * Gets a webhook by its ID.
    *
@@ -5759,7 +4872,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook}
    */
-  getWebhook: (webhookId: BigString) => Promise<Camelize<DiscordWebhook>>;
+  getWebhook: (webhookId: BigString) => Promise<Camelize<DiscordWebhook>>
   /**
    * Gets a webhook message by its ID.
    *
@@ -5775,8 +4888,8 @@ export interface RestManager {
     webhookId: BigString,
     token: string,
     messageId: BigString,
-    options?: GetWebhookMessageOptions
-  ) => Promise<Camelize<DiscordMessage>>;
+    options?: GetWebhookMessageOptions,
+  ) => Promise<Camelize<DiscordMessage>>
   /**
    * Gets a webhook using the webhook token, thereby bypassing the need for authentication + permissions.
    *
@@ -5786,10 +4899,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook-with-token}
    */
-  getWebhookWithToken: (
-    webhookId: BigString,
-    token: string
-  ) => Promise<Camelize<DiscordWebhook>>;
+  getWebhookWithToken: (webhookId: BigString, token: string) => Promise<Camelize<DiscordWebhook>>
   /**
    * Adds the bot user to a thread.
    *
@@ -5802,7 +4912,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#join-thread}
    */
-  joinThread: (channelId: BigString) => Promise<void>;
+  joinThread: (channelId: BigString) => Promise<void>
   /**
    * Removes the bot user from a thread.
    *
@@ -5815,7 +4925,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#leave-thread}
    */
-  leaveThread: (channelId: BigString) => Promise<void>;
+  leaveThread: (channelId: BigString) => Promise<void>
   /**
    * Cross-posts a message posted in an announcement channel to subscribed channels.
    *
@@ -5833,10 +4943,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#crosspost-message}
    */
-  publishMessage: (
-    channelId: BigString,
-    messageId: BigString
-  ) => Promise<Camelize<DiscordMessage>>;
+  publishMessage: (channelId: BigString, messageId: BigString) => Promise<Camelize<DiscordMessage>>
   /**
    * Removes a member from a thread.
    *
@@ -5853,10 +4960,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#remove-thread-member}
    */
-  removeThreadMember: (
-    channelId: BigString,
-    userId: BigString
-  ) => Promise<void>;
+  removeThreadMember: (channelId: BigString, userId: BigString) => Promise<void>
   /**
    * Sends a message to a channel.
    *
@@ -5883,10 +4987,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#create-message}
    */
-  sendMessage: (
-    channelId: BigString,
-    options: CreateMessageOptions
-  ) => Promise<Camelize<DiscordMessage>>;
+  sendMessage: (channelId: BigString, options: CreateMessageOptions) => Promise<Camelize<DiscordMessage>>
   /**
    * Sends a follow-up message to an interaction.
    *
@@ -5907,10 +5008,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message}
    */
-  sendFollowupMessage: (
-    token: string,
-    options: InteractionResponse
-  ) => Promise<Camelize<DiscordMessage>>;
+  sendFollowupMessage: (token: string, options: InteractionResponse) => Promise<Camelize<DiscordMessage>>
   /**
    * Sends a response to an interaction.
    *
@@ -5932,11 +5030,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response}
    */
-  sendInteractionResponse: (
-    interactionId: BigString,
-    token: string,
-    options: InteractionResponse
-  ) => Promise<void>;
+  sendInteractionResponse: (interactionId: BigString, token: string, options: InteractionResponse) => Promise<void>
   /**
    * Creates a thread, using an existing message as its point of origin.
    *
@@ -5956,11 +5050,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-from-message}
    */
-  startThreadWithMessage: (
-    channelId: BigString,
-    messageId: BigString,
-    options: StartThreadWithMessage
-  ) => Promise<Camelize<DiscordChannel>>;
+  startThreadWithMessage: (channelId: BigString, messageId: BigString, options: StartThreadWithMessage) => Promise<Camelize<DiscordChannel>>
   /**
    * Creates a thread without using a message as the thread's point of origin.
    *
@@ -5975,10 +5065,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-without-message}
    */
-  startThreadWithoutMessage: (
-    channelId: BigString,
-    options: StartThreadWithoutMessage
-  ) => Promise<Camelize<DiscordChannel>>;
+  startThreadWithoutMessage: (channelId: BigString, options: StartThreadWithoutMessage) => Promise<Camelize<DiscordChannel>>
   /**
    * Triggers a typing indicator for the bot user.
    *
@@ -5991,7 +5078,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#trigger-typing-indicator}
    */
-  triggerTypingIndicator: (channelId: BigString) => Promise<void>;
+  triggerTypingIndicator: (channelId: BigString) => Promise<void>
   /**
    * Re-registers the list of global application commands, overwriting the previous commands completely.
    *
@@ -6005,9 +5092,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands}
    */
-  upsertGlobalApplicationCommands: (
-    commands: CreateApplicationCommand[]
-  ) => Promise<Camelize<DiscordApplicationCommand[]>>;
+  upsertGlobalApplicationCommands: (commands: CreateApplicationCommand[]) => Promise<Camelize<DiscordApplicationCommand[]>>
   /**
    * Re-registers the list of application commands registered in a guild, overwriting the previous commands completely.
    *
@@ -6022,10 +5107,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands}
    */
-  upsertGuildApplicationCommands: (
-    guildId: BigString,
-    commands: CreateApplicationCommand[]
-  ) => Promise<Camelize<DiscordApplicationCommand[]>>;
+  upsertGuildApplicationCommands: (guildId: BigString, commands: CreateApplicationCommand[]) => Promise<Camelize<DiscordApplicationCommand[]>>
   /**
  * Creates a template from a guild.
  *
@@ -6041,10 +5123,7 @@ export interface RestManager {
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-template#create-guild-template}
  */
-  createGuildTemplate: (
-    guildId: BigString,
-    options: CreateTemplate
-  ) => Promise<Template>;
+  createGuildTemplate: (guildId: BigString, options: CreateTemplate) => Promise<Template>
   /**
    * Deletes a template from a guild.
    *
@@ -6058,10 +5137,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-template#delete-guild-template}
    */
-  deleteGuildTemplate: (
-    guildId: BigString,
-    templateCode: string
-  ) => Promise<void>;
+  deleteGuildTemplate: (guildId: BigString, templateCode: string) => Promise<void>
   /**
    * Edits a template's settings.
    *
@@ -6077,11 +5153,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-template#modify-guild-template}
    */
-  editGuildTemplate: (
-    guildId: BigString,
-    templateCode: string,
-    options: ModifyGuildTemplate
-  ) => Promise<Template>;
+  editGuildTemplate: (guildId: BigString, templateCode: string, options: ModifyGuildTemplate) => Promise<Template>
   /**
    * Gets a template by its code.
    *
@@ -6093,7 +5165,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-template}
    */
-  getGuildTemplate: (templateCode: string) => Promise<Template>;
+  getGuildTemplate: (templateCode: string) => Promise<Template>
   /**
    * Gets the list of templates for a guild.
    *
@@ -6105,9 +5177,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
    */
-  getGuildTemplates: (
-    guildId: BigString
-  ) => Promise<Collection<string, Template>>;
+  getGuildTemplates: (guildId: BigString) => Promise<Collection<string, Template>>
   /**
  * Synchronises a template with the current state of a guild.
  *
@@ -6122,10 +5192,7 @@ export interface RestManager {
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
  */
-  syncGuildTemplate: (
-    guildId: BigString,
-    templateCode: string
-  ) => Promise<Template>;
+  syncGuildTemplate: (guildId: BigString, templateCode: string) => Promise<Template>
 
   /**
  * Bans a user from a guild.
@@ -6142,11 +5209,7 @@ export interface RestManager {
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-ban}
  */
-  banMember: (
-    guildId: BigString,
-    userId: BigString,
-    options?: CreateGuildBan
-  ) => Promise<void>;
+  banMember: (guildId: BigString, userId: BigString, options?: CreateGuildBan) => Promise<void>
   /**
    * Edits the nickname of the bot user.
    *
@@ -6159,10 +5222,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-member}
    */
-  editBotMember: (
-    guildId: BigString,
-    options: EditBotMemberOptions
-  ) => Promise<Camelize<DiscordMember>>;
+  editBotMember: (guildId: BigString, options: EditBotMemberOptions) => Promise<Camelize<DiscordMember>>
   /**
    * Edits a member's properties.
    *
@@ -6178,11 +5238,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-member}
    */
-  editMember: (
-    guildId: BigString,
-    userId: BigString,
-    options: ModifyGuildMember
-  ) => Promise<Camelize<DiscordMember>>;
+  editMember: (guildId: BigString, userId: BigString, options: ModifyGuildMember) => Promise<Camelize<DiscordMember>>
   /**
    * Builds a URL to a user's avatar stored in the Discord CDN.
    *
@@ -6195,11 +5251,11 @@ export interface RestManager {
     userId: BigString,
     discriminator: string,
     options?: {
-      avatar: BigString | undefined;
-      size?: ImageSize;
-      format?: ImageFormat;
-    }
-  ) => string;
+      avatar: BigString | undefined
+      size?: ImageSize
+      format?: ImageFormat
+    },
+  ) => string
 
   /**
  * Gets or creates a DM channel with a user.
@@ -6210,7 +5266,7 @@ export interface RestManager {
  *
  * @see {@link https://discord.com/developers/docs/resources/user#create-dm}
  */
-  getDmChannel: (userId: BigString) => Promise<Channel>;
+  getDmChannel: (userId: BigString) => Promise<Channel>
   /**
  * Gets the member object by user ID.
  *
@@ -6221,10 +5277,7 @@ export interface RestManager {
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-member}
  */
-  getMember: (
-    guildId: BigString,
-    userId: BigString
-  ) => Promise<Camelize<DiscordMemberWithUser>>;
+  getMember: (guildId: BigString, userId: BigString) => Promise<Camelize<DiscordMemberWithUser>>
   /**
    * Gets the list of members for a guild.
    *
@@ -6243,10 +5296,7 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
    * @see {@link https://discord.com/developers/docs/topics/rate-limits#rate-limits}
    */
-  getMembers: (
-    guildId: BigString,
-    options: ListGuildMembers
-  ) => Promise<Collection<string, Camelize<DiscordMemberWithUser>>>;
+  getMembers: (guildId: BigString, options: ListGuildMembers) => Promise<Collection<string, Camelize<DiscordMemberWithUser>>>
 
   /**
  * Kicks a member from a guild.
@@ -6262,11 +5312,7 @@ export interface RestManager {
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#remove-guild-member}
  */
-  kickMember: (
-    guildId: BigString,
-    userId: BigString,
-    reason?: string
-  ) => Promise<void>;
+  kickMember: (guildId: BigString, userId: BigString, reason?: string) => Promise<void>
   /**
  * Initiates the process of pruning inactive members.
  *
@@ -6286,10 +5332,7 @@ export interface RestManager {
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#begin-guild-prune}
  */
-  pruneMembers: (
-    guildId: BigString,
-    options: BeginGuildPrune
-  ) => Promise<number | undefined>;
+  pruneMembers: (guildId: BigString, options: BeginGuildPrune) => Promise<number | undefined>
   /**
  * Gets the list of members whose usernames or nicknames start with a provided string.
  *
@@ -6304,8 +5347,8 @@ export interface RestManager {
   searchMembers: (
     guildId: BigString,
     query: string,
-    options?: Omit<SearchMembers, "query">
-  ) => Promise<Collection<string, Camelize<DiscordMemberWithUser>>>;
+    options?: Omit<SearchMembers, 'query'>,
+  ) => Promise<Collection<string, Camelize<DiscordMemberWithUser>>>
   /**
  * Unbans a user from a guild.
  *
@@ -6320,58 +5363,58 @@ export interface RestManager {
  *
  * @see {@link https://discord.com/developers/docs/resources/guild#remove-guild-ban}
  */
-  unbanMember: (guildId: BigString, userId: BigString) => Promise<void>;
+  unbanMember: (guildId: BigString, userId: BigString) => Promise<void>
 }
 
-export type RequestMethods = "GET" | "POST" | "DELETE" | "PATCH" | "PUT";
-export type ApiVersions = 9 | 10;
+export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'
+export type ApiVersions = 9 | 10
 
 export interface CreateWebhook extends WithReason {
   /** Name of the webhook (1-80 characters) */
-  name: string;
+  name: string
   /** Image url for the default webhook avatar */
-  avatar?: string | null;
+  avatar?: string | null
 }
 
 export interface CreateRequestBodyOptions {
-  headers?: Record<string, string>;
-  method: RequestMethods;
-  body?: Record<string, unknown>;
-  unauthorized?: boolean;
-  url?: string;
+  headers?: Record<string, string>
+  method: RequestMethods
+  body?: Record<string, unknown>
+  unauthorized?: boolean
+  url?: string
 }
 
 export interface RequestBody {
-  headers: Record<string, string>;
-  body: string | FormData;
-  method: RequestMethods;
+  headers: Record<string, string>
+  body: string | FormData
+  method: RequestMethods
 }
 
 export interface SendRequestOptions {
   /** The url to send the request to. */
-  url: string;
+  url: string
   /** The method to use when sending the request. */
-  method: RequestMethods;
+  method: RequestMethods
   /** The body to be sent in the request. */
-  body?: Record<string, any>;
+  body?: Record<string, any>
   /** The amount of times this request has been retried. */
-  retryCount: number;
+  retryCount: number
   /** Handler to retry a request should it be rate limited. */
-  retryRequest?: (options: SendRequestOptions) => Promise<void>;
+  retryRequest?: (options: SendRequestOptions) => Promise<void>
   /** Resolve handler when a request succeeds. */
-  resolve: (value: any | PromiseLike<any>) => void;
+  resolve: (value: any | PromiseLike<any>) => void
   /** Reject handler when a request fails. */
-  reject: (reason?: any) => void;
+  reject: (reason?: any) => void
   /** If this request has a bucket id which it falls under for rate limit */
-  bucketId?: string;
+  bucketId?: string
   /** Additional request options, used for things like overriding authorization header. */
-  options?: Record<string, any>;
+  options?: Record<string, any>
 }
 
 export interface RestRateLimitedPath {
-  url: string;
-  resetTimestamp: number;
-  bucketId?: string;
+  url: string
+  resetTimestamp: number
+  bucketId?: string
 }
 
 export interface WebhookMessageEditor {
@@ -6389,12 +5432,9 @@ export interface WebhookMessageEditor {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
    */
-  (
-    webhookId: BigString,
-    token: string,
-    messageId: BigString,
-    options: InteractionCallbackData & { threadId?: BigString }
-  ): Promise<Camelize<DiscordMessage>>;
+  (webhookId: BigString, token: string, messageId: BigString, options: InteractionCallbackData & { threadId?: BigString }): Promise<
+    Camelize<DiscordMessage>
+  >
   /**
    * Edits the original webhook message.
    *
@@ -6408,54 +5448,50 @@ export interface WebhookMessageEditor {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
    */
-  original: (
-    webhookId: BigString,
-    token: string,
-    options: InteractionCallbackData & { threadId?: BigString }
-  ) => Promise<Camelize<DiscordMessage>>;
+  original: (webhookId: BigString, token: string, options: InteractionCallbackData & { threadId?: BigString }) => Promise<Camelize<DiscordMessage>>
 }
 export interface CreateTemplate {
   /** Name which the template should have */
-  name: string;
+  name: string
   /** Description of the template */
-  description?: string;
+  description?: string
 }
 /** https://discord.com/developers/docs/resources/template#modify-guild-template */
 export interface ModifyGuildTemplate {
   /** Name of the template (1-100 characters) */
-  name?: string;
+  name?: string
   /** Description of the template (0-120 characters) */
-  description?: string | null;
+  description?: string | null
 }
 /** https://discord.com/developers/docs/resources/guild#create-guild-ban */
 export interface CreateGuildBan extends WithReason {
   /** Number of seconds to delete messages for, between 0 and 604800 (7 days) */
-  deleteMessageSeconds?: number;
+  deleteMessageSeconds?: number
 }
 export interface EditBotMemberOptions extends WithReason {
-  nick?: string | null;
+  nick?: string | null
 }
 /** https://discord.com/developers/docs/resources/guild#modify-guild-member */
 export interface ModifyGuildMember {
   /** Value to set users nickname to. Requires the `MANAGE_NICKNAMES` permission */
-  nick?: string | null;
+  nick?: string | null
   /** Array of role ids the member is assigned. Requires the `MANAGE_ROLES` permission */
-  roles?: BigString[] | null;
+  roles?: BigString[] | null
   /** Whether the user is muted in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MUTE_MEMBERS` permission */
-  mute?: boolean | null;
+  mute?: boolean | null
   /** Whether the user is deafened in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MOVE_MEMBERS` permission */
-  deaf?: boolean | null;
+  deaf?: boolean | null
   /** Id of channel to move user to (if they are connected to voice). Requires the `MOVE_MEMBERS` permission */
-  channelId?: BigString | null;
+  channelId?: BigString | null
   /** when the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission */
-  communicationDisabledUntil?: number | null;
+  communicationDisabledUntil?: number | null
 }
 /** https://discord.com/developers/docs/resources/guild#begin-guild-prune */
 export interface BeginGuildPrune {
   /** Number of days to prune (1 or more), default: 7 */
-  days?: number;
+  days?: number
   /** Whether 'pruned' is returned, discouraged for large guilds, default: true */
-  computePruneCount?: boolean;
+  computePruneCount?: boolean
   /** Role(s) ro include, default: none */
-  includeRoles?: string[];
+  includeRoles?: string[]
 }
