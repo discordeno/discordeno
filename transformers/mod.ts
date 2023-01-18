@@ -7,6 +7,7 @@ export * from "./applicationCommand.ts";
 export * from "./applicationCommandOption.ts";
 export * from "./applicationCommandOptionChoice.ts";
 export * from "./applicationCommandPermission.ts";
+export * from "./automodActionExecution.ts";
 export * from "./attachment.ts";
 export * from "./auditLogEntry.ts";
 export * from "./automodRule.ts";
