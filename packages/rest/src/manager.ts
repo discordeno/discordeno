@@ -1,3 +1,9 @@
+import { InteractionResponseTypes } from '@discordeno/types'
+import { camelize, Collection, delay, formatImageURL, getBotIdFromToken, iconBigintToHash, urlToBase64 } from '@discordeno/utils'
+
+import { createInvalidRequestBucket } from './invalidBucket.js'
+import { Queue } from './queue.js'
+
 import type {
   ApplicationCommandPermissions,
   BigString,
@@ -30,6 +36,7 @@ import type {
   DiscordListActiveThreads,
   DiscordListArchivedThreads,
   DiscordMember,
+  DiscordMemberWithUser,
   DiscordMessage,
   DiscordScheduledEvent,
   DiscordStageInstance,
@@ -49,6 +56,8 @@ import type {
   GetScheduledEvents,
   GetScheduledEventUsers,
   GetWebhookMessageOptions,
+  ImageFormat,
+  ImageSize,
   InteractionCallbackData,
   InteractionResponse,
   ListArchivedThreads,
@@ -60,12 +69,8 @@ import type {
   StartThreadWithoutMessage,
   WithReason,
 } from '@discordeno/types'
-import { InteractionResponseTypes } from '@discordeno/types'
-import { camelize, delay, getBotIdFromToken, urlToBase64 } from '@discordeno/utils'
+import type { Channel } from 'diagnostics_channel'
 import type { InvalidRequestBucket } from './invalidBucket.js'
-import { createInvalidRequestBucket } from './invalidBucket.js'
-import { Queue } from './queue.js'
-
 // TODO: make dynamic based on package.json file
 const version = '18.0.0-alpha.1'
 
@@ -429,6 +434,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       nitroStickerPacks() {
         return '/sticker-packs'
+      },
+
+      template(code) {
+        return `/guilds/templates/${code}`
       },
     },
 
@@ -960,30 +969,69 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
       },
 
-      templates: {
+      template: {
         async create(guildId, options) {
           return await rest.createGuildTemplate(guildId, options)
         },
-
         async delete(guildId, templateCode) {
           return await rest.deleteGuildTemplate(guildId, templateCode)
         },
-
         async edit(guildId, templateCode, options) {
           return await rest.editGuildTemplate(guildId, templateCode, options)
         },
-
         async get(templateCode) {
           return await rest.getGuildTemplate(templateCode)
         },
-
         async list(guildId) {
           return await rest.getGuildTemplates(guildId)
         },
-
-        async sync(guildId, templateCode) {
-          return await rest.syncGuildTemplate(guildId, templateCode)
+        async sync(guildId) {
+          return await rest.syncGuildTemplate(guildId)
         },
+      },
+
+      members: {
+        async ban(guildId, userId, options) {
+          return await rest.banMember(guildId, userId, options)
+        },
+        async edit(guildId, userId, options) {
+          return await rest.editMember(guildId, userId, options)
+        },
+
+        async editSelf(guildId, options) {
+          return await rest.editBotMember(guildId, options)
+        },
+
+        async get(guildId, userId) {
+          return await rest.getMember(guildId, userId)
+        },
+
+        getAvatarUrl(userId, discriminator, options) {
+          return rest.getAvatarURL(userId, discriminator, options)
+        },
+
+        async getDm(userId) {
+          return await rest.getDmChannel(userId)
+        },
+
+        async kick(guildId, userId, reason) {
+          return await rest.kickMember(guildId, userId, reason)
+        },
+
+        async list(guildId, options) {
+          return await rest.getMembers(guildId, options)
+        },
+
+        async prune(guildId, options) {
+          return await rest.pruneMembers(guildId, options)
+        },
+
+        async search(guildId, query, options) {
+          return await rest.searchMembers(guildId, query, options)
+        },
+
+        async unban(guildId, userId) {
+          return await rest.unbanMember(guildId, userId)
       },
     },
 
@@ -1248,7 +1296,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteChannel(channelId, reason) {
-      return await rest.delete(rest.routes.channels.channel(channelId), { reason })
+      return await rest.delete(rest.routes.channels.channel(channelId), {
+        reason,
+      })
     },
 
     async deleteChannelPermissionOverride(channelId, overwriteId, reason) {
@@ -1680,6 +1730,97 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.put<DiscordTemplate>(rest.routes.guilds.templates.guild(guildId, templateCode))
     },
 
+    async banMember(guildId: BigString, userId: BigString, options?: CreateGuildBan): Promise<void> {
+      return await rest.put<void>(rest.routes.GUILD_BAN(guildId, userId), {
+        delete_message_seconds: options?.deleteMessageSeconds,
+        reason: options?.reason,
+      } as DiscordCreateGuildBan)
+    },
+
+    async editBotMember(guildId: BigString, options: EditBotMemberOptions): Promise<Camelize<DiscordMember>> {
+      return await rest.patch<DiscordMember>(rest.routes.USER_NICK(guildId), {
+        nick: options.nick,
+        reason: options.reason,
+      } as DiscordEditBotMemberOptions)
+    },
+
+    async editMember(guildId: BigString, userId: BigString, options: ModifyGuildMember): Promise<Camelize<DiscordMember>> {
+      return await rest.patch<DiscordMemberWithUser>(rest.routes.GUILD_MEMBER(guildId, userId), {
+        nick: options.nick,
+        roles: options.roles?.map((id) => id.toString()),
+        mute: options.mute,
+        deaf: options.deaf,
+        channel_id: options.channelId?.toString(),
+        communication_disabled_until: options.communicationDisabledUntil
+          ? new Date(options.communicationDisabledUntil).toISOString()
+          : options.communicationDisabledUntil,
+      } as DiscordModifyGuildMember)
+    },
+
+    async getAvatarURL(
+      userId: BigString,
+      discriminator: string,
+      options?: {
+        avatar: BigString | undefined
+        size?: ImageSize
+        format?: ImageFormat
+      },
+    ): string {
+      return options?.avatar
+        ? formatImageURL(
+            rest.routes.USER_AVATAR(userId, typeof options?.avatar === 'string' ? options.avatar : iconBigintToHash(options?.avatar)),
+            options?.size ?? 128,
+            options?.format,
+          )
+        : rest.routes.USER_DEFAULT_AVATAR(Number(discriminator) % 5)
+    },
+
+    async getMember(guildId: BigString, userId: BigString): Promise<Camelize<DiscordMemberWithUser>> {
+      return await rest.get<DiscordMemberWithUser>(rest.routes.GUILD_MEMBER(guildId, userId))
+    },
+
+    async getMembers(guildId: BigString, options: ListGuildMembers): Promise<Collection<string, Camelize<DiscordMemberWithUser>>> {
+      const results = await rest.get<DiscordMemberWithUser[]>(rest.routes.GUILD_MEMBERS(guildId, options))
+
+      return new Collection(
+        results.map((result) => {
+          return [result.user.id, result]
+        }),
+      )
+    },
+
+    async kickMember(guildId: BigString, userId: BigString, reason?: string): Promise<void> {
+      return await rest.delete(rest.routes.GUILD_MEMBER(guildId, userId), {
+        reason,
+      })
+    },
+
+    async pruneMembers(guildId: BigString, options: BeginGuildPrune): Promise<number | undefined> {
+      return await rest.post<{ pruned: number | null }>(rest.routes.GUILD_PRUNE(guildId), {
+        days: options.days,
+        compute_prune_count: options.computePruneCount,
+        include_roles: options.includeRoles,
+      } as DiscordBeginGuildPrune)
+    },
+
+    async searchMembers(
+      guildId: BigString,
+      query: string,
+      options?: Omit<SearchMembers, 'query'>,
+    ): Promise<Collection<string, Camelize<DiscordMemberWithUser>>> {
+      const results = await rest.get<DiscordMemberWithUser[]>(rest.routes.GUILD_MEMBERS_SEARCH(guildId, query, options))
+
+      return new Collection(
+        results.map((result) => {
+          return [result.user.id, result]
+        }),
+      )
+    },
+
+    async unbanMember(guildId: BigString, userId: BigString): Promise<void> {
+      return await rest.delete(rest.routes.GUILD_BAN(guildId, userId))
+    },
+
     async triggerTypingIndicator(channelId) {
       return await rest.post(rest.routes.channels.typing(channelId))
     },
@@ -1756,6 +1897,8 @@ export interface RestManager {
     gatewayBot: () => string
     // Nitro Sticker Packs
     nitroStickerPacks: () => string
+    // Guild Template
+    template: (code: string) => string
     /** Routes for webhook related routes. */
     webhooks: {
       /** Route for managing the original message sent by a webhook. */
@@ -1851,6 +1994,10 @@ export interface RestManager {
       invite: (inviteCode: string, options?: GetInvite) => string
       /** Route for handling non-specific invites in a guild. */
       invites: (guildId: BigString) => string
+      /** Route for handling specific guild template. */
+      template: (guildId: BigString, code: string) => string
+      /** Route for handling non-specific guild templates. */
+      templates: (guildId: BigString) => string
       /** Route for handling non-specific webhooks in a guild */
       webhooks: (guildId: BigString) => string
       /** Routes for handling a guild's templates. */
@@ -2686,7 +2833,12 @@ export interface RestManager {
           guildId: BigString,
           eventId: BigString,
           options?: GetScheduledEventUsers,
-        ) => Promise<Array<{ user: Camelize<DiscordUser>; member?: Camelize<DiscordMember> }>>
+        ) => Promise<
+          Array<{
+            user: Camelize<DiscordUser>
+            member?: Camelize<DiscordMember>
+          }>
+        >
       }
     }
     /** Methods related to a guild's integrations. */
@@ -2861,7 +3013,172 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
        */
-      sync: (guildId: BigString, templateCode: string) => Promise<Camelize<DiscordTemplate>>
+      sync: (guildId: BigString) => Promise<Camelize<DiscordTemplate>>
+    }
+
+    /* Guild Members related helper methods. */
+    members: {
+      /**
+       * Bans a user from a guild.
+       *
+       * @param guildId - The ID of the guild to ban the user from.
+       * @param userId - The ID of the user to ban from the guild.
+       * @param options - The parameters for the creation of the ban.
+       *
+       * @remarks
+       * Requires the `BAN_MEMBERS` permission.
+       *
+       * Fires a _Guild Ban Add_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-ban}
+       */
+      ban: (guildId: BigString, userId: BigString, options?: CreateGuildBan) => Promise<void>
+      /**
+       * Edits the nickname of the bot user.
+       *
+       * @param guildId - The ID of the guild to edit the nickname of the bot user in.
+       * @param options - The parameters for the edit of the nickname.
+       * @returns An instance of the edited {@link DiscordMember}
+       *
+       * @remarks
+       * Fires a _Guild Member Update_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-member}
+       */
+      editSelf: (guildId: BigString, options: EditBotMemberOptions) => Promise<Camelize<DiscordMember>>
+      /**
+       * Edits a member's properties.
+       *
+       * @param guildId - The ID of the guild to edit the member of.
+       * @param userId - The user ID of the member to edit.
+       * @param options - The parameters for the edit of the user.
+       *
+       * @remarks
+       * This endpoint requires various permissions depending on what is edited about the member.
+       * To find out the required permission to enact a change, read the documentation of this endpoint's {@link ModifyGuildMember | parameters}.
+       *
+       * Fires a _Guild Member Update_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-member}
+       */
+      edit: (guildId: BigString, userId: BigString, options: ModifyGuildMember) => Promise<Camelize<DiscordMember>>
+      /**
+       * Builds a URL to a user's avatar stored in the Discord CDN.
+       *
+       * @param userId - The ID of the user to get the avatar of.
+       * @param discriminator - The user's discriminator. (4-digit tag after the hashtag.)
+       * @param options - The parameters for the building of the URL.
+       * @returns The link to the resource.
+       */
+      getAvatarUrl: (
+        userId: BigString,
+        discriminator: string,
+        options?: {
+          avatar: BigString | undefined
+          size?: ImageSize
+          format?: ImageFormat
+        },
+      ) => string
+      /**
+       * Gets or creates a DM channel with a user.
+       *
+       * @param userId - The ID of the user to create the DM channel with.
+       * @returns An instance of {@link Channel}.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/user#create-dm}
+       */
+      getDm: (userId: BigString) => Promise<Channel>
+      /**
+       * Gets the member object by user ID.
+       *
+       * @param guildId - The ID of the guild to get the member object for.
+       * @param userId - The ID of the user to get the member object for.
+       * @returns An instance of {@link DiscordMemberWithUser}.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-member}
+       */
+      get: (guildId: BigString, userId: BigString) => Promise<Camelize<DiscordMemberWithUser>>
+      /**
+       * Gets the list of members for a guild.
+       *
+       * @param guildId - The ID of the guild to get the list of members for.
+       * @param options - The parameters for the fetching of the members.
+       * @returns A collection of {@link DiscordMemberWithUser} objects assorted by user ID.
+       *
+       * @remarks
+       * Requires the `GUILD_MEMBERS` intent.
+       *
+       * ⚠️ It is not recommended to use this endpoint with very large bots. Instead, opt to use `fetchMembers()`:
+       * REST communication only permits 50 requests to be made per second, while gateways allow for up to 120 requests
+       * per minute per shard. For more information, read {@link https://discord.com/developers/docs/topics/rate-limits#rate-limits}.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#list-guild-members}
+       * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
+       * @see {@link https://discord.com/developers/docs/topics/rate-limits#rate-limits}
+       */
+      list: (guildId: BigString, options: ListGuildMembers) => Promise<Collection<string, Camelize<DiscordMemberWithUser>>>
+      /**
+       * Kicks a member from a guild.
+       *
+       * @param guildId - The ID of the guild to kick the member from.
+       * @param userId - The user ID of the member to kick from the guild.
+       *
+       * @remarks
+       * Requires the `KICK_MEMBERS` permission.
+       *
+       * Fires a _Guild Member Remove_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#remove-guild-member}
+       */
+      kick: (guildId: BigString, userId: BigString, reason?: string) => Promise<void>
+      /**
+       * Initiates the process of pruning inactive members.
+       *
+       * @param guildId - The ID of the guild to prune the members of.
+       * @param options - The parameters for the pruning of members.
+       * @returns A number indicating how many members were pruned.
+       *
+       * @remarks
+       * Requires the `KICK_MEMBERS` permission.
+       *
+       * ❗ Requests to this endpoint will time out for large guilds. To prevent this from happening, set the {@link BeginGuildPrune.computePruneCount} property of the {@link options} object parameter to `false`. This will begin the process of pruning, and immediately return `undefined`, rather than wait for the process to complete before returning the actual count of members that have been kicked.
+       *
+       * ⚠️ By default, this process will not remove members with a role. To include the members who have a _particular subset of roles_, specify the role(s) in the {@link BeginGuildPrune.includeRoles | includeRoles} property of the {@link options} object parameter.
+       *
+       * Fires a _Guild Member Remove_ gateway event for every member kicked.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#begin-guild-prune}
+       */
+      prune: (guildId: BigString, options: BeginGuildPrune) => Promise<number | undefined>
+      /**
+       * Gets the list of members whose usernames or nicknames start with a provided string.
+       *
+       * @param guildId - The ID of the guild to search in.
+       * @param query - The string to match usernames or nicknames against.
+       * @param options - The parameters for searching through the members.
+       * @returns A collection of {@link DiscordMember} objects assorted by user ID.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#search-guild-members}
+       */
+      search: (
+        guildId: BigString,
+        query: string,
+        options?: Omit<SearchMembers, 'query'>,
+      ) => Promise<Collection<string, Camelize<DiscordMemberWithUser>>>
+      /**
+       * Unbans a user from a guild.
+       *
+       * @param guildId - The ID of the guild to unban the user in.
+       * @param userId - The ID of the user to unban.
+       *
+       * @remarks
+       * Requires the `BAN_MEMBERS` permission.
+       *
+       * Fires a _Guild Ban Remove_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#remove-guild-ban}
+       */
+      unban: (guildId: BigString, userId: BigString) => Promise<void>
     }
   }
   /** Interaction related helper methods. */
@@ -4861,6 +5178,251 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands}
    */
   upsertGuildApplicationCommands: (guildId: BigString, commands: CreateApplicationCommand[]) => Promise<Camelize<DiscordApplicationCommand[]>>
+  /**
+ * Creates a template from a guild.
+ *
+
+ * @param guildId - The ID of the guild to create the template from.
+ * @param options - The parameters for the creation of the template.
+ * @returns An instance of the created {@link Template}.
+ *
+ * @remarks
+ * Requires the `MANAGE_GUILD` permission.
+ *
+ * Fires a _Guild Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild-template#create-guild-template}
+ */
+  createGuildTemplate: (guildId: BigString, options: CreateTemplate) => Promise<Camelize<DiscordTemplate>>
+  /**
+   * Deletes a template from a guild.
+   *
+   * @param guildId - The ID of the guild to delete the template from.
+   * @param templateCode - The code of the template to delete.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * Fires a _Guild Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild-template#delete-guild-template}
+   */
+  deleteGuildTemplate: (guildId: BigString, templateCode: string) => Promise<void>
+  /**
+   * Edits a template's settings.
+   *
+   * @param guildId - The ID of the guild to edit a template of.
+   * @param templateCode - The code of the template to edit.
+   * @param options - The parameters for the edit of the template.
+   * @returns An instance of the edited {@link Template}.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * Fires a _Guild Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild-template#modify-guild-template}
+   */
+  editGuildTemplate: (guildId: BigString, templateCode: string, options: ModifyGuildTemplate) => Promise<Camelize<DiscordTemplate>>
+  /**
+   * Gets a template by its code.
+   *
+   * @param templateCode - The code of the template to get.
+   * @returns An instance of {@link Template}.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-template}
+   */
+  getGuildTemplate: (templateCode: string) => Promise<Camelize<DiscordTemplate>>
+  /**
+   * Gets the list of templates for a guild.
+   *
+   * @param guildId - The ID of the guild to get the list of templates for.
+   * @returns A collection of {@link Template} objects assorted by template code.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
+   */
+  getGuildTemplates: (guildId: BigString) => Promise<Collection<string, Camelize<DiscordTemplate>>>
+  /**
+ * Synchronises a template with the current state of a guild.
+ *
+
+ * @param guildId - The ID of the guild to synchronise a template of.
+ * @returns An instance of the edited {@link Template}.
+ *
+ * @remarks
+ * Requires the `MANAGE_GUILD` permission.
+ *
+ * Fires a _Guild Update_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
+ */
+  syncGuildTemplate: (guildId: BigString, templateCode: string) => Promise<Camelize<DiscordTemplate>>
+
+  /**
+ * Bans a user from a guild.
+ *
+
+ * @param guildId - The ID of the guild to ban the user from.
+ * @param userId - The ID of the user to ban from the guild.
+ * @param options - The parameters for the creation of the ban.
+ *
+ * @remarks
+ * Requires the `BAN_MEMBERS` permission.
+ *
+ * Fires a _Guild Ban Add_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-ban}
+ */
+  banMember: (guildId: BigString, userId: BigString, options?: CreateGuildBan) => Promise<void>
+  /**
+   * Edits the nickname of the bot user.
+   *
+   * @param guildId - The ID of the guild to edit the nickname of the bot user in.
+   * @param options - The parameters for the edit of the nickname.
+   * @returns An instance of the edited {@link DiscordMember}
+   *
+   * @remarks
+   * Fires a _Guild Member Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-member}
+   */
+  editBotMember: (guildId: BigString, options: EditBotMemberOptions) => Promise<Camelize<DiscordMember>>
+  /**
+   * Edits a member's properties.
+   *
+   * @param guildId - The ID of the guild to edit the member of.
+   * @param userId - The user ID of the member to edit.
+   * @param options - The parameters for the edit of the user.
+   *
+   * @remarks
+   * This endpoint requires various permissions depending on what is edited about the member.
+   * To find out the required permission to enact a change, read the documentation of this endpoint's {@link ModifyGuildMember | parameters}.
+   *
+   * Fires a _Guild Member Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-member}
+   */
+  editMember: (guildId: BigString, userId: BigString, options: ModifyGuildMember) => Promise<Camelize<DiscordMember>>
+  /**
+   * Builds a URL to a user's avatar stored in the Discord CDN.
+   *
+   * @param userId - The ID of the user to get the avatar of.
+   * @param discriminator - The user's discriminator. (4-digit tag after the hashtag.)
+   * @param options - The parameters for the building of the URL.
+   * @returns The link to the resource.
+   */
+  getAvatarURL: (
+    userId: BigString,
+    discriminator: string,
+    options?: {
+      avatar: BigString | undefined
+      size?: ImageSize
+      format?: ImageFormat
+    },
+  ) => string
+  /**
+ * Gets the member object by user ID.
+ *
+
+ * @param guildId - The ID of the guild to get the member object for.
+ * @param userId - The ID of the user to get the member object for.
+ * @returns An instance of {@link DiscordMemberWithUser}.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-member}
+ */
+  getMember: (guildId: BigString, userId: BigString) => Promise<Camelize<DiscordMemberWithUser>>
+  /**
+   * Gets the list of members for a guild.
+   *
+   * @param guildId - The ID of the guild to get the list of members for.
+   * @param options - The parameters for the fetching of the members.
+   * @returns A collection of {@link DiscordMemberWithUser} objects assorted by user ID.
+   *
+   * @remarks
+   * Requires the `GUILD_MEMBERS` intent.
+   *
+   * ⚠️ It is not recommended to use this endpoint with very large bots. Instead, opt to use `fetchMembers()`:
+   * REST communication only permits 50 requests to be made per second, while gateways allow for up to 120 requests
+   * per minute per shard. For more information, read {@link https://discord.com/developers/docs/topics/rate-limits#rate-limits}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#list-guild-members}
+   * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
+   * @see {@link https://discord.com/developers/docs/topics/rate-limits#rate-limits}
+   */
+  getMembers: (guildId: BigString, options: ListGuildMembers) => Promise<Collection<string, Camelize<DiscordMemberWithUser>>>
+
+  /**
+ * Kicks a member from a guild.
+ *
+
+ * @param guildId - The ID of the guild to kick the member from.
+ * @param userId - The user ID of the member to kick from the guild.
+ *
+ * @remarks
+ * Requires the `KICK_MEMBERS` permission.
+ *
+ * Fires a _Guild Member Remove_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#remove-guild-member}
+ */
+  kickMember: (guildId: BigString, userId: BigString, reason?: string) => Promise<void>
+  /**
+ * Initiates the process of pruning inactive members.
+ *
+
+ * @param guildId - The ID of the guild to prune the members of.
+ * @param options - The parameters for the pruning of members.
+ * @returns A number indicating how many members were pruned.
+ *
+ * @remarks
+ * Requires the `KICK_MEMBERS` permission.
+ *
+ * ❗ Requests to this endpoint will time out for large guilds. To prevent this from happening, set the {@link BeginGuildPrune.computePruneCount} property of the {@link options} object parameter to `false`. This will begin the process of pruning, and immediately return `undefined`, rather than wait for the process to complete before returning the actual count of members that have been kicked.
+ *
+ * ⚠️ By default, this process will not remove members with a role. To include the members who have a _particular subset of roles_, specify the role(s) in the {@link BeginGuildPrune.includeRoles | includeRoles} property of the {@link options} object parameter.
+ *
+ * Fires a _Guild Member Remove_ gateway event for every member kicked.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#begin-guild-prune}
+ */
+  pruneMembers: (guildId: BigString, options: BeginGuildPrune) => Promise<number | undefined>
+  /**
+ * Gets the list of members whose usernames or nicknames start with a provided string.
+ *
+
+ * @param guildId - The ID of the guild to search in.
+ * @param query - The string to match usernames or nicknames against.
+ * @param options - The parameters for searching through the members.
+ * @returns A collection of {@link DiscordMember} objects assorted by user ID.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#search-guild-members}
+ */
+  searchMembers: (
+    guildId: BigString,
+    query: string,
+    options?: Omit<SearchMembers, 'query'>,
+  ) => Promise<Collection<string, Camelize<DiscordMemberWithUser>>>
+  /**
+ * Unbans a user from a guild.
+ *
+
+ * @param guildId - The ID of the guild to unban the user in.
+ * @param userId - The ID of the user to unban.
+ *
+ * @remarks
+ * Requires the `BAN_MEMBERS` permission.
+ *
+ * Fires a _Guild Ban Remove_ gateway event.
+ *
+ * @see {@link https://discord.com/developers/docs/resources/guild#remove-guild-ban}
+ */
+  unbanMember: (guildId: BigString, userId: BigString) => Promise<void>
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'
@@ -4959,4 +5521,36 @@ export interface ModifyGuildTemplate {
   name?: string
   /** Description of the template (0-120 characters) */
   description?: string | null
+}
+/** https://discord.com/developers/docs/resources/guild#create-guild-ban */
+export interface CreateGuildBan extends WithReason {
+  /** Number of seconds to delete messages for, between 0 and 604800 (7 days) */
+  deleteMessageSeconds?: number
+}
+export interface EditBotMemberOptions extends WithReason {
+  nick?: string | null
+}
+/** https://discord.com/developers/docs/resources/guild#modify-guild-member */
+export interface ModifyGuildMember {
+  /** Value to set users nickname to. Requires the `MANAGE_NICKNAMES` permission */
+  nick?: string | null
+  /** Array of role ids the member is assigned. Requires the `MANAGE_ROLES` permission */
+  roles?: BigString[] | null
+  /** Whether the user is muted in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MUTE_MEMBERS` permission */
+  mute?: boolean | null
+  /** Whether the user is deafened in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MOVE_MEMBERS` permission */
+  deaf?: boolean | null
+  /** Id of channel to move user to (if they are connected to voice). Requires the `MOVE_MEMBERS` permission */
+  channelId?: BigString | null
+  /** when the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission */
+  communicationDisabledUntil?: number | null
+}
+/** https://discord.com/developers/docs/resources/guild#begin-guild-prune */
+export interface BeginGuildPrune {
+  /** Number of days to prune (1 or more), default: 7 */
+  days?: number
+  /** Whether 'pruned' is returned, discouraged for large guilds, default: true */
+  computePruneCount?: boolean
+  /** Role(s) ro include, default: none */
+  includeRoles?: string[]
 }
