@@ -1,5 +1,5 @@
 import { InteractionResponseTypes } from '@discordeno/types'
-import { camelize, delay, getBotIdFromToken, urlToBase64 } from '@discordeno/utils'
+import { camelize, Collection, delay, formatImageURL, getBotIdFromToken, iconBigintToHash, urlToBase64 } from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -36,10 +36,12 @@ import type {
   DiscordListActiveThreads,
   DiscordListArchivedThreads,
   DiscordMember,
+  DiscordMemberWithUser,
   DiscordMessage,
   DiscordScheduledEvent,
   DiscordStageInstance,
   DiscordStickerPack,
+  DiscordTemplate,
   DiscordThreadMember,
   DiscordUser,
   DiscordWebhook,
@@ -54,6 +56,8 @@ import type {
   GetScheduledEvents,
   GetScheduledEventUsers,
   GetWebhookMessageOptions,
+  ImageFormat,
+  ImageSize,
   InteractionCallbackData,
   InteractionResponse,
   ListArchivedThreads,
@@ -65,6 +69,7 @@ import type {
   StartThreadWithoutMessage,
   WithReason,
 } from '@discordeno/types'
+import type { Channel } from 'diagnostics_channel'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 // TODO: make dynamic based on package.json file
 const version = '18.0.0-alpha.1'
@@ -1716,37 +1721,36 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), commands)
     },
 
-    async createGuildTemplate(guildId: BigString, options: CreateTemplate): Promise<Template> {
+    async createGuildTemplate(guildId: BigString, options: CreateTemplate): Promise<Camelize<DiscordTemplate>> {
       return await rest.post<DiscordTemplate>(rest.routes.guilds.templates(guildId), options as DiscordCreateTemplate)
     },
 
     async deleteGuildTemplate(guildId: BigString, templateCode: string): Promise<void> {
-      return await rest.delete<void>(rest.routes.guilds.template(guildId, templateCode))
+      return await rest.delete(rest.routes.guilds.template(guildId, templateCode))
     },
 
-    async editGuildTemplate(guildId: BigString, templateCode: string, options: ModifyGuildTemplate): Promise<Template> {
+    async editGuildTemplate(guildId: BigString, templateCode: string, options: ModifyGuildTemplate): Promise<Camelize<DiscordTemplate>> {
       return await rest.patch<DiscordTemplate>(rest.routes.guilds.template(guildId, templateCode), {
         name: options.name,
         description: options.description,
       } as DiscordModifyGuildTemplate)
     },
 
-    async getGuildTemplate(templateCode: string): Promise<Template> {
+    async getGuildTemplate(templateCode: string): Promise<Camelize<DiscordTemplate>> {
       return await rest.get<DiscordTemplate>(rest.routes.template(templateCode))
     },
 
-    async getGuildTemplates(guildId: BigString): Promise<Collection<string, Template>> {
+    async getGuildTemplates(guildId: BigString): Promise<Collection<string, Camelize<DiscordTemplate>>> {
       const results = await rest.get<DiscordTemplate[]>(rest.routes.guilds.templates(guildId))
 
       return new Collection(
         results.map((result) => {
-          const template = rest.transformers.template(rest, result)
-          return [template.code, template]
+          return [result.code, result]
         }),
       )
     },
 
-    async syncGuildTemplate(guildId: BigString, templateCode: string): Promise<Template> {
+    async syncGuildTemplate(guildId: BigString, templateCode: string): Promise<Camelize<DiscordTemplate>> {
       return await rest.put<DiscordTemplate>(rest.routes.guilds.template(guildId, templateCode))
     },
 
@@ -1795,12 +1799,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         : rest.routes.USER_DEFAULT_AVATAR(Number(discriminator) % 5)
     },
 
-    async getDmChannel(userId: BigString): Promise<Channel> {
-      return await rest.post<DiscordChannel>(rest.routes.USER_DM(), {
-        recipient_id: userId.toString(),
-      } as DiscordGetDMChannel)
-    },
-
     async getMember(guildId: BigString, userId: BigString): Promise<Camelize<DiscordMemberWithUser>> {
       return await rest.get<DiscordMemberWithUser>(rest.routes.GUILD_MEMBER(guildId, userId))
     },
@@ -1810,14 +1808,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       return new Collection(
         results.map((result) => {
-          const member = TRANSFORMERS.member(result) as Camelize<DiscordMemberWithUser>
-          return [member.user.id, member]
+          return [result.user.id, result]
         }),
       )
     },
 
     async kickMember(guildId: BigString, userId: BigString, reason?: string): Promise<void> {
-      return await rest.delete<void>(rest.routes.GUILD_MEMBER(guildId, userId), {
+      return await rest.delete(rest.routes.GUILD_MEMBER(guildId, userId), {
         reason,
       })
     },
@@ -1839,14 +1836,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       return new Collection(
         results.map((result) => {
-          const member = TRANSFORMERS.member(result) as Camelize<DiscordMemberWithUser>
-          return [member.user.id, member]
+          return [result.user.id, result]
         }),
       )
     },
 
     async unbanMember(guildId: BigString, userId: BigString): Promise<void> {
-      return await rest.delete<void>(rest.routes.GUILD_BAN(guildId, userId))
+      return await rest.delete(rest.routes.GUILD_BAN(guildId, userId))
     },
   }
 
@@ -2955,7 +2951,7 @@ export interface RestManager {
        * @see {@link https://discord.com/developers/docs/resources/guild-template#create-guild-template}
        */
 
-      create: (guildId: BigString, options: CreateTemplate) => Promise<Template>
+      create: (guildId: BigString, options: CreateTemplate) => Promise<Camelize<DiscordTemplate>>
       /**
        * Deletes a template from a guild.
        *
@@ -2985,7 +2981,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild-template#modify-guild-template}
        */
-      edit: (guildId: BigString, templateCode: string, options: ModifyGuildTemplate) => Promise<Template>
+      edit: (guildId: BigString, templateCode: string, options: ModifyGuildTemplate) => Promise<Camelize<DiscordTemplate>>
       /**
        * Gets a template by its code.
        *
@@ -2997,7 +2993,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-template}
        */
-      get: (templateCode: string) => Promise<Template>
+      get: (templateCode: string) => Promise<Camelize<DiscordTemplate>>
       /**
        * Gets the list of templates for a guild.
        *
@@ -3009,7 +3005,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
        */
-      list: (guildId: BigString) => Promise<Collection<string, Template>>
+      list: (guildId: BigString) => Promise<Collection<string, Camelize<DiscordTemplate>>>
       /**
        * Synchronises a template with the current state of a guild.
        *
@@ -3023,7 +3019,7 @@ export interface RestManager {
        *
        * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
        */
-      sync: (guildId: BigString) => Promise<Template>
+      sync: (guildId: BigString) => Promise<Camelize<DiscordTemplate>>
     }
 
     /* Guild Members related helper methods. */
@@ -5121,7 +5117,7 @@ export interface RestManager {
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-template#create-guild-template}
  */
-  createGuildTemplate: (guildId: BigString, options: CreateTemplate) => Promise<Template>
+  createGuildTemplate: (guildId: BigString, options: CreateTemplate) => Promise<Camelize<DiscordTemplate>>
   /**
    * Deletes a template from a guild.
    *
@@ -5151,7 +5147,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-template#modify-guild-template}
    */
-  editGuildTemplate: (guildId: BigString, templateCode: string, options: ModifyGuildTemplate) => Promise<Template>
+  editGuildTemplate: (guildId: BigString, templateCode: string, options: ModifyGuildTemplate) => Promise<Camelize<DiscordTemplate>>
   /**
    * Gets a template by its code.
    *
@@ -5163,7 +5159,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-template}
    */
-  getGuildTemplate: (templateCode: string) => Promise<Template>
+  getGuildTemplate: (templateCode: string) => Promise<Camelize<DiscordTemplate>>
   /**
    * Gets the list of templates for a guild.
    *
@@ -5175,7 +5171,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
    */
-  getGuildTemplates: (guildId: BigString) => Promise<Collection<string, Template>>
+  getGuildTemplates: (guildId: BigString) => Promise<Collection<string, Camelize<DiscordTemplate>>>
   /**
  * Synchronises a template with the current state of a guild.
  *
@@ -5190,7 +5186,7 @@ export interface RestManager {
  *
  * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
  */
-  syncGuildTemplate: (guildId: BigString, templateCode: string) => Promise<Template>
+  syncGuildTemplate: (guildId: BigString, templateCode: string) => Promise<Camelize<DiscordTemplate>>
 
   /**
  * Bans a user from a guild.
@@ -5254,17 +5250,6 @@ export interface RestManager {
       format?: ImageFormat
     },
   ) => string
-
-  /**
- * Gets or creates a DM channel with a user.
- *
-
- * @param userId - The ID of the user to create the DM channel with.
- * @returns An instance of {@link Channel}.
- *
- * @see {@link https://discord.com/developers/docs/resources/user#create-dm}
- */
-  getDmChannel: (userId: BigString) => Promise<Channel>
   /**
  * Gets the member object by user ID.
  *
