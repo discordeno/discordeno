@@ -1,8 +1,8 @@
-import { InteractionResponseTypes } from '@discordeno/types';
-import { camelize, delay, getBotIdFromToken, urlToBase64 } from '@discordeno/utils';
+import { InteractionResponseTypes } from '@discordeno/types'
+import { camelize, delay, getBotIdFromToken, urlToBase64 } from '@discordeno/utils'
 
-import { createInvalidRequestBucket } from './invalidBucket.js';
-import { Queue } from './queue.js';
+import { createInvalidRequestBucket } from './invalidBucket.js'
+import { Queue } from './queue.js'
 
 import type {
   ApplicationCommandPermissions,
@@ -51,8 +51,8 @@ import type {
   ExecuteWebhook,
   GetInvite,
   GetMessagesOptions,
-  GetScheduledEventUsers,
   GetScheduledEvents,
+  GetScheduledEventUsers,
   GetWebhookMessageOptions,
   InteractionCallbackData,
   InteractionResponse,
@@ -340,6 +340,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         invites: (guildId) => {
           return `/guilds/${guildId}/invites`
         },
+        template: (guildId, code) => {
+          return `/guilds/${guildId}/templates/${code}`
+        },
+        templates: (guildId) => {
+          return `/guilds/${guildId}/templates`
+        },
         webhooks: (guildId) => {
           return `/guilds/${guildId}/webhooks`
         },
@@ -418,6 +424,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       nitroStickerPacks() {
         return '/sticker-packs'
+      },
+
+      template(code) {
+        return `/guilds/templates/${code}`
       },
     },
 
@@ -1921,6 +1931,8 @@ export interface RestManager {
     gatewayBot: () => string
     // Nitro Sticker Packs
     nitroStickerPacks: () => string
+    // Guild Template
+    template: (code: string) => string
     /** Routes for webhook related routes. */
     webhooks: {
       /** Route for managing the original message sent by a webhook. */
@@ -2016,6 +2028,10 @@ export interface RestManager {
       invite: (inviteCode: string, options?: GetInvite) => string
       /** Route for handling non-specific invites in a guild. */
       invites: (guildId: BigString) => string
+      /** Route for handling specific guild template. */
+      template: (guildId: BigString, code: string) => string
+      /** Route for handling non-specific guild templates. */
+      templates: (guildId: BigString) => string
       /** Route for handling non-specific webhooks in a guild */
       webhooks: (guildId: BigString) => string
     }
