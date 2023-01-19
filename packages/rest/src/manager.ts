@@ -34,6 +34,7 @@ import type {
   DiscordScheduledEvent,
   DiscordStageInstance,
   DiscordStickerPack,
+  DiscordTemplate,
   DiscordThreadMember,
   DiscordUser,
   DiscordWebhook,
@@ -57,7 +58,7 @@ import type {
   ModifyWebhook,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
-  WithReason
+  WithReason,
 } from '@discordeno/types'
 import { InteractionResponseTypes } from '@discordeno/types'
 import { camelize, delay, getBotIdFromToken, urlToBase64 } from '@discordeno/utils'
@@ -339,6 +340,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         invites: (guildId) => {
           return `/guilds/${guildId}/invites`
         },
+        templates: {
+          code: (code) => {
+            return `/guilds/templates/${code}`
+          },
+          guild: (guildId, code) => {
+            return `/guilds/${guildId}/templates/${code}`
+          },
+          all: (guildId) => {
+            return `/guilds/${guildId}/templates`
+          },
+        },
         webhooks: (guildId) => {
           return `/guilds/${guildId}/webhooks`
         },
@@ -370,18 +382,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           permissions: (applicationId, guildId) => {
             return `/applications/${applicationId}/guilds/${guildId}/commands/permissions`
           },
-          permission: (
-            applicationId,
-            guildId,
-            commandId
-          ) => {
+          permission: (applicationId, guildId, commandId) => {
             return `/applications/${applicationId}/guilds/${guildId}/commands/${commandId}/permissions`
           },
-          command: (
-            applicationId,
-            commandId,
-            withLocalizations
-          ) => {
+          command: (applicationId, commandId, withLocalizations) => {
             let url = `/applications/${applicationId}/commands/${commandId}?`
 
             if (withLocalizations !== undefined) {
@@ -390,8 +394,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
             return url
           },
-
-
         },
 
         responses: {
@@ -402,11 +404,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           original: (interactionId, token) => {
             return `/webhooks/${interactionId}/${token}/messages/@original`
           },
-          message: (
-            applicationId,
-            token,
-            messageId
-          ) => {
+          message: (applicationId, token, messageId) => {
             return `/webhooks/${applicationId}/${token}/messages/${messageId}`
           },
         },
@@ -594,7 +592,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async sendRequest(options) {
       // console.log('sending request', options.url, rest.createRequest({ method: options.method, url: options.url, body: options.body }))
-      const response = await fetch(options.url, rest.createRequest({ method: options.method, url: options.url, body: options.body, ...options.options }))
+      const response = await fetch(
+        options.url,
+        rest.createRequest({ method: options.method, url: options.url, body: options.body, ...options.options }),
+      )
 
       // Set the bucket id if it was available on the headers
       const bucketId = rest.processHeaders(rest.simplifyUrl(options.url, options.method), response.headers)
@@ -958,6 +959,32 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           return await rest.getInvites(guildId)
         },
       },
+
+      templates: {
+        async create(guildId, options) {
+          return await rest.createGuildTemplate(guildId, options)
+        },
+
+        async delete(guildId, templateCode) {
+          return await rest.deleteGuildTemplate(guildId, templateCode)
+        },
+
+        async edit(guildId, templateCode, options) {
+          return await rest.editGuildTemplate(guildId, templateCode, options)
+        },
+
+        async get(templateCode) {
+          return await rest.getGuildTemplate(templateCode)
+        },
+
+        async list(guildId) {
+          return await rest.getGuildTemplates(guildId)
+        },
+
+        async sync(guildId, templateCode) {
+          return await rest.syncGuildTemplate(guildId, templateCode)
+        },
+      },
     },
 
     interactions: {
@@ -1034,8 +1061,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           async guild(guildId, commands) {
             return await rest.upsertGuildApplicationCommands(guildId, commands)
           },
-        }
-
+        },
       },
 
       responses: {
@@ -1077,8 +1103,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           async original(token) {
             return await rest.getOriginalInteractionResponse(token)
           },
-        }
-      }
+        },
+      },
     },
 
     users: {
@@ -1182,17 +1208,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async createGlobalApplicationCommand(command) {
-      return await rest.post<DiscordApplicationCommand>(
-        rest.routes.interactions.commands.commands(rest.applicationId),
-        command
-      )
+      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.commands(rest.applicationId), command)
     },
 
     async createGuildApplicationCommand(command, guildId) {
-      return await rest.post<DiscordApplicationCommand>(
-        rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId),
-        command
-      )
+      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), command)
+    },
+
+    async createGuildTemplate(guildId, options) {
+      return await rest.post<DiscordTemplate>(rest.routes.guilds.templates.all(guildId), options)
     },
 
     async createForumThread(channelId, options) {
@@ -1235,38 +1259,20 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.delete(rest.routes.guilds.emoji(guildId, id), { reason })
     },
 
-    async deleteFollowupMessage(
-      token,
-      messageId
-    ) {
-      return await rest.delete(
-        rest.routes.interactions.responses.message(
-          rest.applicationId,
-          token,
-          messageId
-        )
-      )
+    async deleteFollowupMessage(token, messageId) {
+      return await rest.delete(rest.routes.interactions.responses.message(rest.applicationId, token, messageId))
     },
 
-    async deleteGlobalApplicationCommand(
-      commandId
-    ) {
-      return await rest.delete(
-        rest.routes.interactions.commands.command(rest.applicationId, commandId)
-      )
+    async deleteGlobalApplicationCommand(commandId) {
+      return await rest.delete(rest.routes.interactions.commands.command(rest.applicationId, commandId))
     },
 
-    async deleteGuildApplicationCommand(
-      commandId,
-      guildId
-    ) {
-      return await rest.delete(
-        rest.routes.interactions.commands.guilds.one(
-          rest.applicationId,
-          guildId,
-          commandId
-        )
-      )
+    async deleteGuildApplicationCommand(commandId, guildId) {
+      return await rest.delete(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId))
+    },
+
+    async deleteGuildTemplate(guildId, templateCode) {
+      return await rest.delete(rest.routes.guilds.templates.guild(guildId, templateCode))
     },
 
     async deleteIntegration(guildId, integrationId) {
@@ -1278,22 +1284,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteMessage(channelId, messageId, reason) {
-      return await rest.delete(
-        rest.routes.channels.message(channelId, messageId),
-        { reason }
-      )
+      return await rest.delete(rest.routes.channels.message(channelId, messageId), { reason })
     },
 
-
-    async deleteOriginalInteractionResponse(
-      token
-    ) {
-      return await rest.delete(
-        rest.routes.interactions.responses.original(
-          rest.applicationId,
-          token
-        )
-      )
+    async deleteOriginalInteractionResponse(token) {
+      return await rest.delete(rest.routes.interactions.responses.original(rest.applicationId, token))
     },
 
     async deleteScheduledEvent(guildId, eventId) {
@@ -1316,25 +1311,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.delete(rest.routes.webhooks.webhook(webhookId, token))
     },
 
-
-    async editApplicationCommandPermissions(
-      guildId,
-      commandId,
-      bearerToken,
-      options
-    ) {
+    async editApplicationCommandPermissions(guildId, commandId, bearerToken, options) {
       return await rest.put<DiscordApplicationCommandPermissions>(
-        rest.routes.interactions.commands.permission(
-          rest.applicationId,
-          guildId,
-          commandId
-        ),
+        rest.routes.interactions.commands.permission(rest.applicationId, guildId, commandId),
         {
-          permissions: options
+          permissions: options,
         },
         {
-          headers: { authorization: `Bearer ${bearerToken}` }
-        }
+          headers: { authorization: `Bearer ${bearerToken}` },
+        },
       )
     },
 
@@ -1368,78 +1353,47 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     /**
- * Edits a follow-up message to an interaction.
- *
- * @param token - The interaction token to use, provided in the original interaction.
- * @param messageId - The ID of the message to edit.
- * @param options - The parameters for the edit of the message.
- * @returns An instance of the edited {@link Message}.
- *
- * @remarks
- * Unlike `editMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
- *
- * Does not support ephemeral follow-up messages due to these being stateless.
- *
- * Fires a _Message Update_ event.
- *
- * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message}
- */
-    async editFollowupMessage(
-      token,
-      messageId,
-      options
-    ) {
-      return await rest.patch<DiscordMessage>(
-        rest.routes.interactions.responses.message(rest.applicationId, token, messageId),
-        options
+     * Edits a follow-up message to an interaction.
+     *
+     * @param token - The interaction token to use, provided in the original interaction.
+     * @param messageId - The ID of the message to edit.
+     * @param options - The parameters for the edit of the message.
+     * @returns An instance of the edited {@link Message}.
+     *
+     * @remarks
+     * Unlike `editMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
+     *
+     * Does not support ephemeral follow-up messages due to these being stateless.
+     *
+     * Fires a _Message Update_ event.
+     *
+     * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message}
+     */
+    async editFollowupMessage(token, messageId, options) {
+      return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), options)
+    },
+
+    async editGlobalApplicationCommand(commandId, options) {
+      return await rest.patch<DiscordApplicationCommand>(rest.routes.interactions.commands.command(rest.applicationId, commandId), options)
+    },
+
+    async editGuildApplicationCommand(commandId, guildId, options) {
+      return await rest.patch<DiscordApplicationCommand>(
+        rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId),
+        options,
       )
     },
 
-
-    async editGlobalApplicationCommand(
-      commandId,
-      options
-    ) {
-      return await rest.patch<DiscordApplicationCommand>(
-        rest.routes.interactions.commands.command(rest.applicationId, commandId),
-        options
-      )
-    },
-
-
-    async editGuildApplicationCommand(
-      commandId,
-      guildId,
-      options
-    ) {
-      return await rest.patch<DiscordApplicationCommand>(
-        rest.routes.interactions.commands.guilds.one(
-          rest.applicationId,
-          guildId,
-          commandId
-        ),
-        options
-      )
+    async editGuildTemplate(guildId: BigString, templateCode: string, options: ModifyGuildTemplate): Promise<Camelize<DiscordTemplate>> {
+      return await rest.patch<DiscordTemplate>(rest.routes.guilds.templates.guild(guildId, templateCode), options)
     },
 
     async editMessage(channelId, messageId, options) {
-      return await rest.patch<DiscordMessage>(
-        rest.routes.channels.message(channelId, messageId),
-        options
-      )
+      return await rest.patch<DiscordMessage>(rest.routes.channels.message(channelId, messageId), options)
     },
 
-    async editOriginalInteractionResponse(
-      token,
-      options
-    ) {
-      return await rest.patch<DiscordMessage>(
-        rest.routes.interactions.responses.original(
-          rest.applicationId,
-          token
-        ),
-        options
-      )
+    async editOriginalInteractionResponse(token, options) {
+      return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), options)
     },
 
     async editOriginalWebhookMessage(webhookId, token, options) {
@@ -1486,28 +1440,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordListActiveThreads>(rest.routes.channels.threads.active(guildId))
     },
 
-
-    async getApplicationCommandPermission(
-      guildId,
-      commandId
-    ) {
+    async getApplicationCommandPermission(guildId, commandId) {
       return await rest.get<DiscordApplicationCommandPermissions>(
-        rest.routes.interactions.commands.permission(
-          rest.applicationId,
-          guildId,
-          commandId
-        )
+        rest.routes.interactions.commands.permission(rest.applicationId, guildId, commandId),
       )
     },
 
-    async getApplicationCommandPermissions(
-      guildId
-    ) {
-      return await rest.get<
-        DiscordApplicationCommandPermissions[]
-      >(
-        rest.routes.interactions.commands.permissions(rest.applicationId, guildId)
-      )
+    async getApplicationCommandPermissions(guildId) {
+      return await rest.get<DiscordApplicationCommandPermissions[]>(rest.routes.interactions.commands.permissions(rest.applicationId, guildId))
     },
 
     async getApplicationInfo() {
@@ -1539,12 +1479,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getDmChannel(userId) {
-      return await rest.post<DiscordChannel>(
-        rest.routes.channels.dm(),
-        {
-          recipient_id: userId.toString()
-        }
-      )
+      return await rest.post<DiscordChannel>(rest.routes.channels.dm(), {
+        recipient_id: userId.toString(),
+      })
     },
 
     async getEmoji(guildId, emojiId) {
@@ -1555,56 +1492,36 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordEmoji[]>(rest.routes.guilds.emojis(guildId))
     },
 
-    async getFollowupMessage(
-      token,
-      messageId
-    ) {
-      return await rest.get<DiscordMessage>(
-        rest.routes.interactions.responses.message(
-          rest.applicationId,
-          token,
-          messageId
-        )
-      )
+    async getFollowupMessage(token, messageId) {
+      return await rest.get<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId))
     },
 
     async getGatewayBot() {
       return await rest.get<DiscordGetGatewayBot>(rest.routes.gatewayBot())
     },
 
-    async getGlobalApplicationCommand(
-      commandId
-    ) {
-      return await rest.get<DiscordApplicationCommand>(
-        rest.routes.interactions.commands.command(rest.applicationId, commandId)
-      )
+    async getGlobalApplicationCommand(commandId) {
+      return await rest.get<DiscordApplicationCommand>(rest.routes.interactions.commands.command(rest.applicationId, commandId))
     },
 
     async getGlobalApplicationCommands() {
-      return await rest.get<DiscordApplicationCommand[]>(
-        rest.routes.interactions.commands.commands(rest.applicationId)
-      )
+      return await rest.get<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId))
     },
 
-    async getGuildApplicationCommand(
-      commandId,
-      guildId
-    ) {
-      return await rest.get<DiscordApplicationCommand>(
-        rest.routes.interactions.commands.guilds.one(
-          rest.applicationId,
-          guildId,
-          commandId
-        )
-      )
+    async getGuildApplicationCommand(commandId, guildId) {
+      return await rest.get<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId))
     },
 
-    async getGuildApplicationCommands(
-      guildId
-    ) {
-      return await rest.get<DiscordApplicationCommand[]>(
-        rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId)
-      )
+    async getGuildApplicationCommands(guildId) {
+      return await rest.get<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId))
+    },
+
+    async getGuildTemplate(templateCode) {
+      return await rest.get<DiscordTemplate>(rest.routes.guilds.templates.code(templateCode))
+    },
+
+    async getGuildTemplates(guildId) {
+      return await rest.get<DiscordTemplate[]>(rest.routes.guilds.templates.all(guildId))
     },
 
     async getGuildWebhooks(guildId) {
@@ -1627,15 +1544,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordStickerPack[]>(rest.routes.nitroStickerPacks())
     },
 
-    async getOriginalInteractionResponse(
-      token
-    ) {
-      return await rest.get<DiscordMessage>(
-        rest.routes.interactions.responses.original(
-          rest.applicationId,
-          token
-        )
-      )
+    async getOriginalInteractionResponse(token) {
+      return await rest.get<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token))
     },
 
     async getPrivateArchivedThreads(channelId, options) {
@@ -1703,19 +1613,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async publishMessage(channelId, messageId) {
-      return await rest.post<DiscordMessage>(
-        rest.routes.channels.crosspost(channelId, messageId)
-      )
+      return await rest.post<DiscordMessage>(rest.routes.channels.crosspost(channelId, messageId))
     },
 
     async removeThreadMember(channelId, userId) {
       return await rest.delete(rest.routes.channels.threads.user(channelId, userId))
     },
 
-    async sendFollowupMessage(
-      token,
-      options
-    ) {
+    async sendFollowupMessage(token, options) {
       return await new Promise((resolve, reject) => {
         rest.sendRequest({
           url: rest.routes.webhooks.webhook(rest.applicationId, token),
@@ -1724,7 +1629,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             method: 'POST',
             body: { ...options },
             // remove authorization header
-            headers: { Authorization: '' }
+            headers: { Authorization: '' },
           }),
           retryCount: 0,
           retryRequest: async function (options: SendRequestOptions) {
@@ -1737,11 +1642,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
     },
 
-    async sendInteractionResponse(
-      interactionId,
-      token,
-      options
-    ) {
+    async sendInteractionResponse(interactionId, token, options) {
       return await new Promise((resolve, reject) => {
         rest.sendRequest({
           url: rest.routes.interactions.responses.callback(interactionId, token),
@@ -1750,7 +1651,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             method: 'POST',
             body: { ...options },
             // remove authorization header
-            headers: { Authorization: '' }
+            headers: { Authorization: '' },
           }),
           retryCount: 0,
           retryRequest: async function (options: SendRequestOptions) {
@@ -1775,204 +1676,22 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordChannel>(rest.routes.channels.threads.all(channelId), options)
     },
 
+    async syncGuildTemplate(guildId, templateCode) {
+      return await rest.put<DiscordTemplate>(rest.routes.guilds.templates.guild(guildId, templateCode))
+    },
+
     async triggerTypingIndicator(channelId) {
       return await rest.post(rest.routes.channels.typing(channelId))
     },
 
-
-    async upsertGlobalApplicationCommands(
-      commands
-    ) {
-      return await rest.put<DiscordApplicationCommand[]>(
-        rest.routes.interactions.commands.commands(rest.applicationId),
-        commands
-      )
+    async upsertGlobalApplicationCommands(commands) {
+      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId), commands)
     },
 
-    async upsertGuildApplicationCommands(
-      guildId,
-      commands
-    ) {
-      return await rest.put<DiscordApplicationCommand[]>(
-        rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId),
-        commands
-      )
+    async upsertGuildApplicationCommands(guildId, commands) {
+      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), commands)
     },
-
-    /**
-     * Creates a template from a guild.
-     *
-     * @param rest - The rest manager to use to make the request.
-     * @param guildId - The ID of the guild to create the template from.
-     * @param options - The parameters for the creation of the template.
-     * @returns An instance of the created {@link Template}.
-     *
-     * @remarks
-     * Requires the `MANAGE_GUILD` permission.
-     *
-     * Fires a _Guild Update_ gateway event.
-     *
-     * @see {@link https://discord.com/developers/docs/resources/guild-template#create-guild-template}
-     */
-    async createGuildTemplate(
-      rest: RestManager,
-      guildId: BigString,
-      options: CreateTemplate
-    ): Promise<Template> {
-      const result = await rest.runMethod<DiscordTemplate>(
-
-        'POST',
-        routes.GUILD_TEMPLATES(guildId),
-        options as DiscordCreateTemplate
-      )
-
-      return rest.transformers.template(rest, result)
-    },
-    /**
-     * Deletes a template from a guild.
-     *
-     * @param rest - The rest manager to use to make the request.
-     * @param guildId - The ID of the guild to delete the template from.
-     * @param templateCode - The code of the template to delete.
-     *
-     * @remarks
-     * Requires the `MANAGE_GUILD` permission.
-     *
-     * Fires a _Guild Update_ gateway event.
-     *
-     * @see {@link https://discord.com/developers/docs/resources/guild-template#delete-guild-template}
-     */
-    async deleteGuildTemplate(
-      rest: RestManager,
-      guildId: BigString,
-      templateCode: string
-    ): Promise<void> {
-      return await rest.runMethod<void>(
-
-        'DELETE',
-        routes.GUILD_TEMPLATE(guildId, templateCode)
-      )
-    },
-
-
-    /**
-     * Edits a template's settings.
-     *
-     * @param rest - The rest manager to use to make the request.
-     * @param guildId - The ID of the guild to edit a template of.
-     * @param templateCode - The code of the template to edit.
-     * @param options - The parameters for the edit of the template.
-     * @returns An instance of the edited {@link Template}.
-     *
-     * @remarks
-     * Requires the `MANAGE_GUILD` permission.
-     *
-     * Fires a _Guild Update_ gateway event.
-     *
-     * @see {@link https://discord.com/developers/docs/resources/guild-template#modify-guild-template}
-     */
-    async editGuildTemplate(
-      rest: RestManager,
-      guildId: BigString,
-      templateCode: string,
-      options: ModifyGuildTemplate
-    ): Promise<Template> {
-      const result = await rest.runMethod<DiscordTemplate>(
-
-        'PATCH',
-        routes.GUILD_TEMPLATE(guildId, templateCode),
-        {
-          name: options.name,
-          description: options.description
-        } as DiscordModifyGuildTemplate
-      )
-
-      return rest.transformers.template(rest, result)
-    },
-
-    /**
-     * Gets a template by its code.
-     *
-     * @param rest - The rest manager to use to make the request.
-     * @param templateCode - The code of the template to get.
-     * @returns An instance of {@link Template}.
-     *
-     * @remarks
-     * Requires the `MANAGE_GUILD` permission.
-     *
-     * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-template}
-     */
-    async getGuildTemplate(
-      rest: RestManager,
-      templateCode: string
-    ): Promise<Template> {
-      const result = await rest.runMethod<DiscordTemplate>(
-
-        'GET',
-        routes.TEMPLATE(templateCode)
-      )
-
-      return rest.transformers.template(rest, result)
-    },
-    /**
- * Gets the list of templates for a guild.
- *
- * @param rest - The rest manager to use to make the request.
- * @param guildId - The ID of the guild to get the list of templates for.
- * @returns A collection of {@link Template} objects assorted by template code.
- *
- * @remarks
- * Requires the `MANAGE_GUILD` permission.
- *
- * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
- */
-    async getGuildTemplates(
-      rest: RestManager,
-      guildId: BigString
-    ): Promise<Collection<string, Template>> {
-      const results = await rest.runMethod<DiscordTemplate[]>(
-
-        'GET',
-        routes.GUILD_TEMPLATES(guildId)
-      )
-
-      return new Collection(
-        results.map((result) => {
-          const template = rest.transformers.template(rest, result)
-          return [template.code, template]
-        })
-      )
-    },
-
-    /**
-     * Synchronises a template with the current state of a guild.
-     *
-     * @param rest - The rest manager to use to make the request.
-     * @param guildId - The ID of the guild to synchronise a template of.
-     * @returns An instance of the edited {@link Template}.
-     *
-     * @remarks
-     * Requires the `MANAGE_GUILD` permission.
-     *
-     * Fires a _Guild Update_ gateway event.
-     *
-     * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
-     */
-    async syncGuildTemplate(
-      rest: RestManager,
-      guildId: BigString,
-      templateCode: string
-    ): Promise<Template> {
-      const result = await rest.runMethod<DiscordTemplate>(
-
-        'PUT',
-        routes.GUILD_TEMPLATE(guildId, templateCode)
-      )
-
-      return rest.transformers.template(rest, result)
-    }
-
-  },
+  }
 
   return rest
 }
@@ -2134,6 +1853,15 @@ export interface RestManager {
       invites: (guildId: BigString) => string
       /** Route for handling non-specific webhooks in a guild */
       webhooks: (guildId: BigString) => string
+      /** Routes for handling a guild's templates. */
+      templates: {
+        /** Route for handling a specifc guild's templates with a code only. */
+        code: (code: string) => string
+        /** Route for handling a specific guild's template with a guild id and code. */
+        guild: (guildId: BigString, code: string) => string
+        /** Route for handling non-specific guild's templates. */
+        all: (guildId: BigString) => string
+      }
     }
     /** Routes for interaction related endpoints. */
     interactions: {
@@ -2224,22 +1952,22 @@ export interface RestManager {
        */
       send: (channelId: BigString, options: CreateMessageOptions) => Promise<Camelize<DiscordMessage>>
       /**
- * Edits a message.
- *
- * @param channelId - The ID of the channel to edit the message in.
- * @param messageId - The IDs of the message to edit.
- * @param options - The parameters for the edit of the message.
- * @returns An instance of the edited {@link Message}.
- *
- * @remarks
- * If editing another user's message:
- * - Requires the `MANAGE_MESSAGES` permission.
- * - Only the {@link EditMessage.flags | flags} property of the {@link options} object parameter can be edited.
- *
- * Fires a _Message Update_ gateway event.
- *
- * @see {@link https://discord.com/developers/docs/resources/channel#edit-message}
- */
+       * Edits a message.
+       *
+       * @param channelId - The ID of the channel to edit the message in.
+       * @param messageId - The IDs of the message to edit.
+       * @param options - The parameters for the edit of the message.
+       * @returns An instance of the edited {@link Message}.
+       *
+       * @remarks
+       * If editing another user's message:
+       * - Requires the `MANAGE_MESSAGES` permission.
+       * - Only the {@link EditMessage.flags | flags} property of the {@link options} object parameter can be edited.
+       *
+       * Fires a _Message Update_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/channel#edit-message}
+       */
       edit: (channelId: BigString, messageId: BigString, options: EditMessage) => Promise<Camelize<DiscordMessage>>
       /**
        * Cross-posts a message posted in an announcement channel to subscribed channels.
@@ -3049,6 +2777,92 @@ export interface RestManager {
        */
       list: (guildId: BigString) => Promise<Camelize<DiscordInviteMetadata[]>>
     }
+    /** Methods related to a guild's templates. */
+    templates: {
+      /**
+       * Creates a template from a guild.
+       *
+       * @param guildId - The ID of the guild to create the template from.
+       * @param options - The parameters for the creation of the template.
+       * @returns An instance of the created {@link Template}.
+       *
+       * @remarks
+       * Requires the `MANAGE_GUILD` permission.
+       *
+       * Fires a _Guild Update_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild-template#create-guild-template}
+       */
+      create: (guildId: BigString, options: CreateTemplate) => Promise<Camelize<DiscordTemplate>>
+      /**
+       * Deletes a template from a guild.
+       *
+       * @param guildId - The ID of the guild to delete the template from.
+       * @param templateCode - The code of the template to delete.
+       *
+       * @remarks
+       * Requires the `MANAGE_GUILD` permission.
+       *
+       * Fires a _Guild Update_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild-template#delete-guild-template}
+       */
+      delete: (guildId: BigString, templateCode: string) => Promise<void>
+      /**
+       * Edits a template's settings.
+       *
+       * @param guildId - The ID of the guild to edit a template of.
+       * @param templateCode - The code of the template to edit.
+       * @param options - The parameters for the edit of the template.
+       * @returns An instance of the edited {@link Template}.
+       *
+       * @remarks
+       * Requires the `MANAGE_GUILD` permission.
+       *
+       * Fires a _Guild Update_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild-template#modify-guild-template}
+       */
+      edit: (guildId: BigString, templateCode: string, options: ModifyGuildTemplate) => Promise<Camelize<DiscordTemplate>>
+      /**
+       * Gets a template by its code.
+       *
+       * @param templateCode - The code of the template to get.
+       * @returns An instance of {@link Template}.
+       *
+       * @remarks
+       * Requires the `MANAGE_GUILD` permission.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-template}
+       */
+      get: (templateCode: string) => Promise<Camelize<DiscordTemplate>>
+      /**
+       * Gets the list of templates for a guild.
+       *
+       * @param guildId - The ID of the guild to get the list of templates for.
+       * @returns A collection of {@link Template} objects assorted by template code.
+       *
+       * @remarks
+       * Requires the `MANAGE_GUILD` permission.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
+       */
+      list: (guildId: BigString) => Promise<Camelize<DiscordTemplate[]>>
+      /**
+       * Synchronises a template with the current state of a guild.
+       *
+       * @param guildId - The ID of the guild to synchronise a template of.
+       * @returns An instance of the edited {@link Template}.
+       *
+       * @remarks
+       * Requires the `MANAGE_GUILD` permission.
+       *
+       * Fires a _Guild Update_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
+       */
+      sync: (guildId: BigString, templateCode: string) => Promise<Camelize<DiscordTemplate>>
+    }
   }
   /** Interaction related helper methods. */
   interactions: {
@@ -3057,92 +2871,97 @@ export interface RestManager {
       /** Methods for creating a command. */
       create: {
         /**
- * Creates an application command accessible globally; across different guilds and channels.
- *
- * @param command - The command to create.
- * @returns An instance of the created {@link ApplicationCommand}.
- *
- * @remarks
- * ⚠️ Creating a command with the same name as an existing command for your application will overwrite the old command.
- * ⚠️ Global commands once created are cached for periods of __an hour__, so changes made to existing commands will take an hour to surface.
- * ⚠️ You can only create up to 200 _new_ commands daily.
- *
- * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-global-application-command}
- */
+         * Creates an application command accessible globally; across different guilds and channels.
+         *
+         * @param command - The command to create.
+         * @returns An instance of the created {@link ApplicationCommand}.
+         *
+         * @remarks
+         * ⚠️ Creating a command with the same name as an existing command for your application will overwrite the old command.
+         * ⚠️ Global commands once created are cached for periods of __an hour__, so changes made to existing commands will take an hour to surface.
+         * ⚠️ You can only create up to 200 _new_ commands daily.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-global-application-command}
+         */
         global: (command: CreateApplicationCommand) => Promise<Camelize<DiscordApplicationCommand>>
         /**
- * Creates an application command only accessible in a specific guild.
- *
- * @param command - The command to create.
- * @param guildId - The ID of the guild to create the command for.
- * @returns An instance of the created {@link ApplicationCommand}.
- *
- * @remarks
- * ⚠️ Creating a command with the same name as an existing command for your application will overwrite the old command.
- * ⚠️ You can only create up to 200 _new_ commands daily.
- *
- * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command}
- */
+         * Creates an application command only accessible in a specific guild.
+         *
+         * @param command - The command to create.
+         * @param guildId - The ID of the guild to create the command for.
+         * @returns An instance of the created {@link ApplicationCommand}.
+         *
+         * @remarks
+         * ⚠️ Creating a command with the same name as an existing command for your application will overwrite the old command.
+         * ⚠️ You can only create up to 200 _new_ commands daily.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command}
+         */
         guild: (command: CreateApplicationCommand, guildId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
       }
       /** Methods for deleting a command. */
       delete: {
         /**
- * Deletes an application command registered globally.
- *
- * @param commandId - The ID of the command to delete.
- *
- * @see {@link https://discord.com/developers/docs/interactions/application-commands#delete-global-application-command}
- */
+         * Deletes an application command registered globally.
+         *
+         * @param commandId - The ID of the command to delete.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/application-commands#delete-global-application-command}
+         */
         global: (commandId: BigString) => Promise<void>
         /**
- * Deletes an application command registered in a guild.
- *
- * @param guildId - The ID of the guild to delete the command from.
- * @param commandId - The ID of the command to delete from the guild.
- *
- * @see {@link https://discord.com/developers/docs/interactions/application-commands#delete-guild-application-command}
- */
+         * Deletes an application command registered in a guild.
+         *
+         * @param guildId - The ID of the guild to delete the command from.
+         * @param commandId - The ID of the command to delete from the guild.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/application-commands#delete-guild-application-command}
+         */
         guild: (commandId: BigString, guildId: BigString) => Promise<void>
       }
       /** Methods for editing a command. */
       edit: {
         /**
- * Edits a global application command.
- *
- * @param commandId - The ID of the command to edit.
- * @param options - The parameters for the edit of the command.
- * @returns An instance of the edited {@link ApplicationCommand}.
- *
- * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command}
- */
+         * Edits a global application command.
+         *
+         * @param commandId - The ID of the command to edit.
+         * @param options - The parameters for the edit of the command.
+         * @returns An instance of the edited {@link ApplicationCommand}.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command}
+         */
         global: (commandId: BigString, options: CreateApplicationCommand) => Promise<Camelize<DiscordApplicationCommand>>
         /**
- * Edits an application command registered in a guild.
- *
- * @param guildId - The ID of the guild the command is registered in.
- * @param commandId - The ID of the command to edit.
- * @param options - The parameters for the edit of the command.
- * @returns An instance of the edited {@link ApplicationCommand}.
- *
- * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-guild-application-command}
- */
+         * Edits an application command registered in a guild.
+         *
+         * @param guildId - The ID of the guild the command is registered in.
+         * @param commandId - The ID of the command to edit.
+         * @param options - The parameters for the edit of the command.
+         * @returns An instance of the edited {@link ApplicationCommand}.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-guild-application-command}
+         */
         guild: (commandId: BigString, guildId: BigString, options: CreateApplicationCommand) => Promise<Camelize<DiscordApplicationCommand>>
         /**
- * Edits the permissions for a guild application command.
- *
- * @param guildId - The ID of the guild the command is registered in.
- * @param commandId - The ID of the command to edit the permissions of.
- * @param bearerToken - The bearer token to use to make the request.
- * @param options - The parameters for the edit of the command permissions.
- * @returns An instance of the edited {@link ApplicationCommandPermission}.
- *
- * @remarks
- * The bearer token requires the `applications.commands.permissions.update` scope to be enabled, and to have access to the guild whose ID has been provided in the parameters.
- *
- * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions}
- */
-        permissions: (guildId: BigString, commandId: BigString, bearerToken: string, options: ApplicationCommandPermissions[]) => Promise<Camelize<DiscordApplicationCommandPermissions>>
+         * Edits the permissions for a guild application command.
+         *
+         * @param guildId - The ID of the guild the command is registered in.
+         * @param commandId - The ID of the command to edit the permissions of.
+         * @param bearerToken - The bearer token to use to make the request.
+         * @param options - The parameters for the edit of the command permissions.
+         * @returns An instance of the edited {@link ApplicationCommandPermission}.
+         *
+         * @remarks
+         * The bearer token requires the `applications.commands.permissions.update` scope to be enabled, and to have access to the guild whose ID has been provided in the parameters.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions}
+         */
+        permissions: (
+          guildId: BigString,
+          commandId: BigString,
+          bearerToken: string,
+          options: ApplicationCommandPermissions[],
+        ) => Promise<Camelize<DiscordApplicationCommandPermissions>>
       }
       /** Methods for getting a command. */
       get: {
@@ -3167,14 +2986,14 @@ export interface RestManager {
         }
         guilds: {
           /**
-         * Gets a guild application command by its ID.
-         *
-         * @param guildId - The ID of the guild the command is registered in.
-         * @param commandId - The ID of the command to get.
-         * @returns An instance of {@link ApplicationCommand}.
-         *
-         * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command}
-         */
+           * Gets a guild application command by its ID.
+           *
+           * @param guildId - The ID of the guild the command is registered in.
+           * @param commandId - The ID of the command to get.
+           * @returns An instance of {@link ApplicationCommand}.
+           *
+           * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command}
+           */
           one: (commandId: BigString, guildId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
           /**
            * Gets the list of application commands registered by your bot in a guild.
@@ -3187,40 +3006,40 @@ export interface RestManager {
           all: (guildId: BigString) => Promise<Camelize<DiscordApplicationCommand[]>>
         }
         /**
- * Gets the permissions of a guild application command.
- *
- * @param guildId - The ID of the guild the command is registered in.
- * @param commandId - The ID of the command to get the permissions of.
- * @returns An instance of {@link ApplicationCommandPermission}.
- *
- * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions}
- */
+         * Gets the permissions of a guild application command.
+         *
+         * @param guildId - The ID of the guild the command is registered in.
+         * @param commandId - The ID of the command to get the permissions of.
+         * @returns An instance of {@link ApplicationCommandPermission}.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions}
+         */
         permission: (guildId: BigString, commandId: BigString) => Promise<Camelize<DiscordApplicationCommandPermissions>>
         /**
- * Gets the permissions of all application commands registered in a guild by the ID of the guild.
- *
- * @param guildId - The ID of the guild to get the permissions objects of.
- * @returns A collection of {@link ApplicationCommandPermission} objects assorted by command ID.
- *
- * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions}
- */
+         * Gets the permissions of all application commands registered in a guild by the ID of the guild.
+         *
+         * @param guildId - The ID of the guild to get the permissions objects of.
+         * @returns A collection of {@link ApplicationCommandPermission} objects assorted by command ID.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions}
+         */
         permissions: (guildId: BigString) => Promise<Camelize<DiscordApplicationCommandPermissions[]>>
       }
       /** Methods for replacing existing commands in bulk. */
       replace: {
         /**
- * Re-registers the list of global application commands, overwriting the previous commands completely.
- *
- * @param commands - The list of commands to use to overwrite the previous list.
- * @returns A collection of {@link ApplicationCommand} objects assorted by command ID.
- *
- * @remarks
- * ❗ Commands that are not present in the `commands` array will be __deleted__.
- *
- * ⚠️ Commands that do not already exist will count towards the daily limit of _200_ new commands.
- *
- * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands}
- */
+         * Re-registers the list of global application commands, overwriting the previous commands completely.
+         *
+         * @param commands - The list of commands to use to overwrite the previous list.
+         * @returns A collection of {@link ApplicationCommand} objects assorted by command ID.
+         *
+         * @remarks
+         * ❗ Commands that are not present in the `commands` array will be __deleted__.
+         *
+         * ⚠️ Commands that do not already exist will count towards the daily limit of _200_ new commands.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands}
+         */
         global: (commands: CreateApplicationCommand[]) => Promise<Camelize<DiscordApplicationCommand[]>>
         /**
          * Re-registers the list of application commands registered in a guild, overwriting the previous commands completely.
@@ -3244,151 +3063,151 @@ export interface RestManager {
       /** Helper methods related to creating a response. */
       create: {
         /**
- * Sends a follow-up message to an interaction.
- *
- * @param token - The interaction token to use, provided in the original interaction.
- * @param options - The parameters for the creation of the message.
- * @returns An instance of the created {@link Message}.
- *
- * @remarks
- * ⚠️ Interaction tokens are only valid for _15 minutes_.
- *
- * By default, mentions are suppressed. To enable mentions, pass a mention object with the callback data.
- *
- * Unlike `sendMessage()`, this endpoint allows the bot user to act without:
- * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
- * - Requiring the `MESSAGE_CONTENT` intent.
- *
- * Fires a _Message Create_ event.
- *
- * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message}
- */
+         * Sends a follow-up message to an interaction.
+         *
+         * @param token - The interaction token to use, provided in the original interaction.
+         * @param options - The parameters for the creation of the message.
+         * @returns An instance of the created {@link Message}.
+         *
+         * @remarks
+         * ⚠️ Interaction tokens are only valid for _15 minutes_.
+         *
+         * By default, mentions are suppressed. To enable mentions, pass a mention object with the callback data.
+         *
+         * Unlike `sendMessage()`, this endpoint allows the bot user to act without:
+         * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
+         * - Requiring the `MESSAGE_CONTENT` intent.
+         *
+         * Fires a _Message Create_ event.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message}
+         */
         followup: (token: string, options: InteractionResponse) => Promise<Camelize<DiscordMessage>>
         /**
- * Sends a response to an interaction.
- *
- * @param interactionId - The ID of the interaction to respond to.
- * @param token - The interaction token to use, provided in the original interaction.
- * @param options - The parameters for the creation of the message.
- * @returns An instance of the created {@link Message}.
- *
- * @remarks
- * ⚠️ Interaction tokens are only valid for _15 minutes_.
- *
- * By default, mentions are suppressed. To enable mentions, pass a mention object with the callback data.
- *
- * Unlike `sendMessage()`, this endpoint allows the bot user to act without:
- * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
- * - Requiring the `MESSAGE_CONTENT` intent.
- *
- * Fires a _Message Create_ event.
- *
- * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response}
- */
+         * Sends a response to an interaction.
+         *
+         * @param interactionId - The ID of the interaction to respond to.
+         * @param token - The interaction token to use, provided in the original interaction.
+         * @param options - The parameters for the creation of the message.
+         * @returns An instance of the created {@link Message}.
+         *
+         * @remarks
+         * ⚠️ Interaction tokens are only valid for _15 minutes_.
+         *
+         * By default, mentions are suppressed. To enable mentions, pass a mention object with the callback data.
+         *
+         * Unlike `sendMessage()`, this endpoint allows the bot user to act without:
+         * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
+         * - Requiring the `MESSAGE_CONTENT` intent.
+         *
+         * Fires a _Message Create_ event.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response}
+         */
         original: (interactionId: BigString, token: string, options: InteractionResponse) => Promise<void>
       }
       /** Helper methods related to deleting a response. */
       delete: {
         /**
- * Deletes a follow-up message to an interaction.
- *
- * @param token - The interaction token to use, provided in the original interaction.
- * @param messageId - The ID of the message to delete.
- *
- * @remarks
- * Unlike `deleteMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
- *
- * Fires a _Message Delete_ event.
- *
- * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message}
- */
+         * Deletes a follow-up message to an interaction.
+         *
+         * @param token - The interaction token to use, provided in the original interaction.
+         * @param messageId - The ID of the message to delete.
+         *
+         * @remarks
+         * Unlike `deleteMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
+         *
+         * Fires a _Message Delete_ event.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message}
+         */
         followup: (token: string, messageId: BigString) => Promise<void>
         /**
- * Deletes the initial message response to an interaction.
- *
- * @param token - The interaction token to use, provided in the original interaction.
- *
- * @remarks
- * Unlike `deleteMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
- *
- * Fires a _Message Delete_ event.
- *
- * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response}
- */
+         * Deletes the initial message response to an interaction.
+         *
+         * @param token - The interaction token to use, provided in the original interaction.
+         *
+         * @remarks
+         * Unlike `deleteMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
+         *
+         * Fires a _Message Delete_ event.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response}
+         */
         original: (token: string) => Promise<void>
       }
       /** Helper methods related to editing a response. */
       edit: {
         /**
- * Edits a follow-up message to an interaction.
- *
- * @param token - The interaction token to use, provided in the original interaction.
- * @param messageId - The ID of the message to edit.
- * @param options - The parameters for the edit of the message.
- * @returns An instance of the edited {@link Message}.
- *
- * @remarks
- * Unlike `editMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
- *
- * Does not support ephemeral follow-up messages due to these being stateless.
- *
- * Fires a _Message Update_ event.
- *
- * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message}
- */
+         * Edits a follow-up message to an interaction.
+         *
+         * @param token - The interaction token to use, provided in the original interaction.
+         * @param messageId - The ID of the message to edit.
+         * @param options - The parameters for the edit of the message.
+         * @returns An instance of the edited {@link Message}.
+         *
+         * @remarks
+         * Unlike `editMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
+         *
+         * Does not support ephemeral follow-up messages due to these being stateless.
+         *
+         * Fires a _Message Update_ event.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message}
+         */
         followup: (token: string, messageId: BigString, options: InteractionCallbackData) => Promise<Camelize<DiscordMessage>>
         /**
- * Edits the initial message response to an interaction.
- *
- * @param token - The interaction token to use, provided in the original interaction.
- * @param options - The parameters for the edit of the response.
- * @returns An instance of the edited {@link Message}.
- *
- * @remarks
- * Unlike `editMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
- *
- * Does not support ephemeral follow-up messages due to these being stateless.
- *
- * Fires a _Message Update_ event.
- *
- * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response}
- */
+         * Edits the initial message response to an interaction.
+         *
+         * @param token - The interaction token to use, provided in the original interaction.
+         * @param options - The parameters for the edit of the response.
+         * @returns An instance of the edited {@link Message}.
+         *
+         * @remarks
+         * Unlike `editMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
+         *
+         * Does not support ephemeral follow-up messages due to these being stateless.
+         *
+         * Fires a _Message Update_ event.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response}
+         */
         original: (token: string, options: InteractionCallbackData) => Promise<Camelize<DiscordMessage> | undefined>
       }
       /** Helper methods related to getting a response. */
       get: {
         /**
- * Gets a follow-up message to an interaction by the ID of the message.
- *
- * @param token - The interaction token to use, provided in the original interaction.
- * @param messageId - The ID of the message to get.
- * @returns An instance of {@link Message}.
- *
- * @remarks
- * Unlike `getMessage()`, this endpoint allows the bot user to act without:
- * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
- * - Requiring the `MESSAGE_CONTENT` intent.
- *
- * Does not support ephemeral follow-up messages due to these being stateless.
- *
- * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message}
- */
+         * Gets a follow-up message to an interaction by the ID of the message.
+         *
+         * @param token - The interaction token to use, provided in the original interaction.
+         * @param messageId - The ID of the message to get.
+         * @returns An instance of {@link Message}.
+         *
+         * @remarks
+         * Unlike `getMessage()`, this endpoint allows the bot user to act without:
+         * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
+         * - Requiring the `MESSAGE_CONTENT` intent.
+         *
+         * Does not support ephemeral follow-up messages due to these being stateless.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message}
+         */
         followup: (token: string, messageId: BigString) => Promise<Camelize<DiscordMessage>>
         /**
- * Gets the initial message response to an interaction.
- *
- * @param token - The interaction token to use, provided in the original interaction.
- * @returns An instance of {@link Message}.
- *
- * @remarks
- * Unlike `getMessage()`, this endpoint allows the bot user to act without:
- * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
- * - Requiring the `MESSAGE_CONTENT` intent.
- *
- * Does not support ephemeral follow-up messages due to these being stateless.
- *
- * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response}
- */
+         * Gets the initial message response to an interaction.
+         *
+         * @param token - The interaction token to use, provided in the original interaction.
+         * @returns An instance of {@link Message}.
+         *
+         * @remarks
+         * Unlike `getMessage()`, this endpoint allows the bot user to act without:
+         * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
+         * - Requiring the `MESSAGE_CONTENT` intent.
+         *
+         * Does not support ephemeral follow-up messages due to these being stateless.
+         *
+         * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response}
+         */
         original: (token: string) => Promise<Camelize<DiscordMessage>>
       }
     }
@@ -3577,13 +3396,13 @@ export interface RestManager {
   /** User related helper methods. */
   users: {
     /**
-    * Gets or creates a DM channel with a user.
-    *
-    * @param userId - The ID of the user to create the DM channel with.
-    * @returns An instance of {@link DiscordChannel}.
-    *
-    * @see {@link https://discord.com/developers/docs/resources/user#create-dm}
-    */
+     * Gets or creates a DM channel with a user.
+     *
+     * @param userId - The ID of the user to create the DM channel with.
+     * @returns An instance of {@link DiscordChannel}.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/user#create-dm}
+     */
     channel: (userId: BigString) => Promise<Camelize<DiscordChannel>>
   }
   /**
@@ -3671,18 +3490,18 @@ export interface RestManager {
    */
   createForumThread: (channelId: BigString, options: CreateForumPostWithMessage) => Promise<Camelize<DiscordChannel>>
   /**
- * Creates an application command accessible globally; across different guilds and channels.
- *
- * @param command - The command to create.
- * @returns An instance of the created {@link ApplicationCommand}.
- *
- * @remarks
- * ⚠️ Creating a command with the same name as an existing command for your application will overwrite the old command.
- * ⚠️ Global commands once created are cached for periods of __an hour__, so changes made to existing commands will take an hour to surface.
- * ⚠️ You can only create up to 200 _new_ commands daily.
- *
- * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-global-application-command}
- */
+   * Creates an application command accessible globally; across different guilds and channels.
+   *
+   * @param command - The command to create.
+   * @returns An instance of the created {@link ApplicationCommand}.
+   *
+   * @remarks
+   * ⚠️ Creating a command with the same name as an existing command for your application will overwrite the old command.
+   * ⚠️ Global commands once created are cached for periods of __an hour__, so changes made to existing commands will take an hour to surface.
+   * ⚠️ You can only create up to 200 _new_ commands daily.
+   *
+   * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-global-application-command}
+   */
   createGlobalApplicationCommand: (command: CreateApplicationCommand) => Promise<Camelize<DiscordApplicationCommand>>
   /**
    * Creates an application command only accessible in a specific guild.
@@ -3698,6 +3517,21 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command}
    */
   createGuildApplicationCommand: (command: CreateApplicationCommand, guildId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
+  /**
+   * Creates a template from a guild.
+   *
+   * @param guildId - The ID of the guild to create the template from.
+   * @param options - The parameters for the creation of the template.
+   * @returns An instance of the created {@link Template}.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * Fires a _Guild Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild-template#create-guild-template}
+   */
+  createGuildTemplate: (guildId: BigString, options: CreateTemplate) => Promise<Camelize<DiscordTemplate>>
   /**
    * Creates an invite to a channel in a guild.
    *
@@ -3832,18 +3666,18 @@ export interface RestManager {
    */
   deleteEmoji: (guildId: BigString, id: BigString, reason?: string) => Promise<void>
   /**
- * Deletes a follow-up message to an interaction.
- *
- * @param token - The interaction token to use, provided in the original interaction.
- * @param messageId - The ID of the message to delete.
- *
- * @remarks
- * Unlike `deleteMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
- *
- * Fires a _Message Delete_ event.
- *
- * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message}
- */
+   * Deletes a follow-up message to an interaction.
+   *
+   * @param token - The interaction token to use, provided in the original interaction.
+   * @param messageId - The ID of the message to delete.
+   *
+   * @remarks
+   * Unlike `deleteMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
+   *
+   * Fires a _Message Delete_ event.
+   *
+   * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message}
+   */
   deleteFollowupMessage: (token: string, messageId: BigString) => Promise<void>
   /**
    * Deletes an application command registered globally.
@@ -3862,6 +3696,20 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#delete-guild-application-command}
    */
   deleteGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<void>
+  /**
+   * Deletes a template from a guild.
+   *
+   * @param guildId - The ID of the guild to delete the template from.
+   * @param templateCode - The code of the template to delete.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * Fires a _Guild Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild-template#delete-guild-template}
+   */
+  deleteGuildTemplate: (guildId: BigString, templateCode: string) => Promise<void>
   /**
    * Deletes an integration attached to a guild.
    *
@@ -3893,46 +3741,46 @@ export interface RestManager {
    */
   deleteInvite: (inviteCode: string, reason?: string) => Promise<void>
   /**
- * Deletes a message from a channel.
- *
- * @param channelId - The ID of the channel to delete the message from.
- * @param messageId - The ID of the message to delete from the channel.
- *
- * @remarks
- * If not deleting own message:
- * - Requires the `MANAGE_MESSAGES` permission.
- *
- * Fires a _Message Delete_ gateway event.
- *
- * @see {@link https://discord.com/developers/docs/resources/channel#delete-message}
- */
+   * Deletes a message from a channel.
+   *
+   * @param channelId - The ID of the channel to delete the message from.
+   * @param messageId - The ID of the message to delete from the channel.
+   *
+   * @remarks
+   * If not deleting own message:
+   * - Requires the `MANAGE_MESSAGES` permission.
+   *
+   * Fires a _Message Delete_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#delete-message}
+   */
   deleteMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
   /**
-  * Deletes the initial message response to an interaction.
-  *
-  * @param token - The interaction token to use, provided in the original interaction.
-  *
-  * @remarks
-  * Unlike `deleteMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
-  *
-  * Fires a _Message Delete_ event.
-  *
-  * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response}
-  */
+   * Deletes the initial message response to an interaction.
+   *
+   * @param token - The interaction token to use, provided in the original interaction.
+   *
+   * @remarks
+   * Unlike `deleteMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
+   *
+   * Fires a _Message Delete_ event.
+   *
+   * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response}
+   */
   deleteOriginalInteractionResponse: (token: string) => Promise<void>
   /**
-    * Deletes a scheduled event from a guild.
-    *
-    * @param guildId - The ID of the guild to delete the scheduled event from.
-    * @param eventId - The ID of the scheduled event to delete.
-    *
-    * @remarks
-    * Requires the `MANAGE_EVENTS` permission.
-    *
-    * Fires a _Guild Scheduled Event Delete_ gateway event.
-    *
-    * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#delete-guild-scheduled-event}
-    */
+   * Deletes a scheduled event from a guild.
+   *
+   * @param guildId - The ID of the guild to delete the scheduled event from.
+   * @param eventId - The ID of the scheduled event to delete.
+   *
+   * @remarks
+   * Requires the `MANAGE_EVENTS` permission.
+   *
+   * Fires a _Guild Scheduled Event Delete_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#delete-guild-scheduled-event}
+   */
   deleteScheduledEvent: (guildId: BigString, eventId: BigString) => Promise<void>
   /**
    * Deletes the stage instance associated with a stage channel, if one exists.
@@ -3987,20 +3835,25 @@ export interface RestManager {
    */
   deleteWebhookWithToken: (webhookId: BigString, token: string) => Promise<void>
   /**
- * Edits the permissions for a guild application command.
- *
- * @param guildId - The ID of the guild the command is registered in.
- * @param commandId - The ID of the command to edit the permissions of.
- * @param bearerToken - The bearer token to use to make the request.
- * @param options - The parameters for the edit of the command permissions.
- * @returns An instance of the edited {@link ApplicationCommandPermission}.
- *
- * @remarks
- * The bearer token requires the `applications.commands.permissions.update` scope to be enabled, and to have access to the guild whose ID has been provided in the parameters.
- *
- * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions}
- */
-  editApplicationCommandPermissions: (guildId: BigString, commandId: BigString, bearerToken: string, options: ApplicationCommandPermissions[]) => Promise<Camelize<DiscordApplicationCommandPermissions>>
+   * Edits the permissions for a guild application command.
+   *
+   * @param guildId - The ID of the guild the command is registered in.
+   * @param commandId - The ID of the command to edit the permissions of.
+   * @param bearerToken - The bearer token to use to make the request.
+   * @param options - The parameters for the edit of the command permissions.
+   * @returns An instance of the edited {@link ApplicationCommandPermission}.
+   *
+   * @remarks
+   * The bearer token requires the `applications.commands.permissions.update` scope to be enabled, and to have access to the guild whose ID has been provided in the parameters.
+   *
+   * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions}
+   */
+  editApplicationCommandPermissions: (
+    guildId: BigString,
+    commandId: BigString,
+    bearerToken: string,
+    options: ApplicationCommandPermissions[],
+  ) => Promise<Camelize<DiscordApplicationCommandPermissions>>
   /**
    * Edits an automod rule.
    *
@@ -4103,22 +3956,22 @@ export interface RestManager {
    */
   editEmoji: (guildId: BigString, id: BigString, options: ModifyGuildEmoji) => Promise<Camelize<DiscordEmoji>>
   /**
- * Edits a follow-up message to an interaction.
- *
- * @param token - The interaction token to use, provided in the original interaction.
- * @param messageId - The ID of the message to edit.
- * @param options - The parameters for the edit of the message.
- * @returns An instance of the edited {@link Message}.
- *
- * @remarks
- * Unlike `editMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
- *
- * Does not support ephemeral follow-up messages due to these being stateless.
- *
- * Fires a _Message Update_ event.
- *
- * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message}
- */
+   * Edits a follow-up message to an interaction.
+   *
+   * @param token - The interaction token to use, provided in the original interaction.
+   * @param messageId - The ID of the message to edit.
+   * @param options - The parameters for the edit of the message.
+   * @returns An instance of the edited {@link Message}.
+   *
+   * @remarks
+   * Unlike `editMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
+   *
+   * Does not support ephemeral follow-up messages due to these being stateless.
+   *
+   * Fires a _Message Update_ event.
+   *
+   * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message}
+   */
   editFollowupMessage: (token: string, messageId: BigString, options: InteractionCallbackData) => Promise<Camelize<DiscordMessage>>
   /**
    * Edits a global application command.
@@ -4140,29 +3993,48 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-guild-application-command}
    */
-  editGuildApplicationCommand: (commandId: BigString, guildId: BigString, options: CreateApplicationCommand) => Promise<Camelize<DiscordApplicationCommand>>
+  editGuildApplicationCommand: (
+    commandId: BigString,
+    guildId: BigString,
+    options: CreateApplicationCommand,
+  ) => Promise<Camelize<DiscordApplicationCommand>>
   /**
- * Edits a message.
- *
- * @param channelId - The ID of the channel to edit the message in.
- * @param messageId - The IDs of the message to edit.
- * @param options - The parameters for the edit of the message.
- * @returns An instance of the edited {@link Message}.
- *
- * @remarks
- * If editing another user's message:
- * - Requires the `MANAGE_MESSAGES` permission.
- * - Only the {@link EditMessage.flags | flags} property of the {@link options} object parameter can be edited.
- *
- * Fires a _Message Update_ gateway event.
- *
- * @see {@link https://discord.com/developers/docs/resources/channel#edit-message}
- */
+   * Edits a template's settings.
+   *
+   * @param guildId - The ID of the guild to edit a template of.
+   * @param templateCode - The code of the template to edit.
+   * @param options - The parameters for the edit of the template.
+   * @returns An instance of the edited {@link Template}.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * Fires a _Guild Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild-template#modify-guild-template}
+   */
+  editGuildTemplate: (guildId: BigString, templateCode: string, options: ModifyGuildTemplate) => Promise<Camelize<DiscordTemplate>>
+  /**
+   * Edits a message.
+   *
+   * @param channelId - The ID of the channel to edit the message in.
+   * @param messageId - The IDs of the message to edit.
+   * @param options - The parameters for the edit of the message.
+   * @returns An instance of the edited {@link Message}.
+   *
+   * @remarks
+   * If editing another user's message:
+   * - Requires the `MANAGE_MESSAGES` permission.
+   * - Only the {@link EditMessage.flags | flags} property of the {@link options} object parameter can be edited.
+   *
+   * Fires a _Message Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#edit-message}
+   */
   editMessage: (channelId: BigString, messageId: BigString, options: EditMessage) => Promise<Camelize<DiscordMessage>>
   /**
    * Edits the initial message response to an interaction.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param token - The interaction token to use, provided in the original interaction.
    * @param options - The parameters for the edit of the response.
    * @returns An instance of the edited {@link Message}.
@@ -4178,18 +4050,18 @@ export interface RestManager {
    */
   editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<Camelize<DiscordMessage> | undefined>
   /**
-     * Edits the original webhook message.
-     *
-     * @param webhookId - The ID of the webhook to edit the original message of.
-     * @param token - The webhook token, used to edit the message.
-     * @param options - The parameters for the edit of the message.
-     * @returns An instance of the edited {@link DiscordMessage}.
-     *
-     * @remarks
-     * Fires a _Message Update_ gateway event.
-     *
-     * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
-     */
+   * Edits the original webhook message.
+   *
+   * @param webhookId - The ID of the webhook to edit the original message of.
+   * @param token - The webhook token, used to edit the message.
+   * @param options - The parameters for the edit of the message.
+   * @returns An instance of the edited {@link DiscordMessage}.
+   *
+   * @remarks
+   * Fires a _Message Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
+   */
   editOriginalWebhookMessage: (
     webhookId: BigString,
     token: string,
@@ -4323,14 +4195,14 @@ export interface RestManager {
   /** Get the applications info */
   getApplicationInfo: () => Promise<Camelize<DiscordApplication>>
   /**
- * Gets the permissions of a guild application command.
- *
- * @param guildId - The ID of the guild the command is registered in.
- * @param commandId - The ID of the command to get the permissions of.
- * @returns An instance of {@link ApplicationCommandPermission}.
- *
- * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions}
- */
+   * Gets the permissions of a guild application command.
+   *
+   * @param guildId - The ID of the guild the command is registered in.
+   * @param commandId - The ID of the command to get the permissions of.
+   * @returns An instance of {@link ApplicationCommandPermission}.
+   *
+   * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions}
+   */
   getApplicationCommandPermission: (guildId: BigString, commandId: BigString) => Promise<Camelize<DiscordApplicationCommandPermissions>>
   /**
    * Gets the permissions of all application commands registered in a guild by the ID of the guild.
@@ -4445,32 +4317,32 @@ export interface RestManager {
    */
   getEmojis: (guildId: BigString) => Promise<Camelize<DiscordEmoji[]>>
   /**
- * Gets a follow-up message to an interaction by the ID of the message.
- *
- * @param token - The interaction token to use, provided in the original interaction.
- * @param messageId - The ID of the message to get.
- * @returns An instance of {@link Message}.
- *
- * @remarks
- * Unlike `getMessage()`, this endpoint allows the bot user to act without:
- * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
- * - Requiring the `MESSAGE_CONTENT` intent.
- *
- * Does not support ephemeral follow-up messages due to these being stateless.
- *
- * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message}
- */
+   * Gets a follow-up message to an interaction by the ID of the message.
+   *
+   * @param token - The interaction token to use, provided in the original interaction.
+   * @param messageId - The ID of the message to get.
+   * @returns An instance of {@link Message}.
+   *
+   * @remarks
+   * Unlike `getMessage()`, this endpoint allows the bot user to act without:
+   * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
+   * - Requiring the `MESSAGE_CONTENT` intent.
+   *
+   * Does not support ephemeral follow-up messages due to these being stateless.
+   *
+   * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message}
+   */
   getFollowupMessage: (token: string, messageId: BigString) => Promise<Camelize<DiscordMessage>>
   /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */
   getGatewayBot: () => Promise<Camelize<DiscordGetGatewayBot>>
   /**
- * Gets a global application command by its ID.
- *
- * @param commandId - The ID of the command to get.
- * @returns An instance of {@link ApplicationCommand}.
- *
- * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-command}
- */
+   * Gets a global application command by its ID.
+   *
+   * @param commandId - The ID of the command to get.
+   * @returns An instance of {@link ApplicationCommand}.
+   *
+   * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-command}
+   */
   getGlobalApplicationCommand: (commandId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
   /**
    * Gets the list of your bot's global application commands.
@@ -4499,6 +4371,30 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commandss}
    */
   getGuildApplicationCommands: (guildId: BigString) => Promise<Camelize<DiscordApplicationCommand[]>>
+  /**
+   * Gets a template by its code.
+   *
+   * @param templateCode - The code of the template to get.
+   * @returns An instance of {@link Template}.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-template}
+   */
+  getGuildTemplate: (templateCode: string) => Promise<Camelize<DiscordTemplate>>
+  /**
+   * Gets the list of templates for a guild.
+   *
+   * @param guildId - The ID of the guild to get the list of templates for.
+   * @returns A collection of {@link Template} objects assorted by template code.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
+   */
+  getGuildTemplates: (guildId: BigString) => Promise<Camelize<DiscordTemplate[]>>
   /**
    * Gets the list of webhooks for a guild.
    *
@@ -4555,20 +4451,20 @@ export interface RestManager {
    */
   getNitroStickerPacks: () => Promise<Camelize<DiscordStickerPack[]>>
   /**
- * Gets the initial message response to an interaction.
- *
- * @param token - The interaction token to use, provided in the original interaction.
- * @returns An instance of {@link Message}.
- *
- * @remarks
- * Unlike `getMessage()`, this endpoint allows the bot user to act without:
- * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
- * - Requiring the `MESSAGE_CONTENT` intent.
- *
- * Does not support ephemeral follow-up messages due to these being stateless.
- *
- * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response}
- */
+   * Gets the initial message response to an interaction.
+   *
+   * @param token - The interaction token to use, provided in the original interaction.
+   * @returns An instance of {@link Message}.
+   *
+   * @remarks
+   * Unlike `getMessage()`, this endpoint allows the bot user to act without:
+   * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
+   * - Requiring the `MESSAGE_CONTENT` intent.
+   *
+   * Does not support ephemeral follow-up messages due to these being stateless.
+   *
+   * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response}
+   */
   getOriginalInteractionResponse: (token: string) => Promise<Camelize<DiscordMessage>>
   /**
    * Gets the list of private archived threads for a channel.
@@ -4770,22 +4666,22 @@ export interface RestManager {
    */
   leaveThread: (channelId: BigString) => Promise<void>
   /**
- * Cross-posts a message posted in an announcement channel to subscribed channels.
- *
- * @param channelId - The ID of the announcement channel.
- * @param messageId - The ID of the message to cross-post.
- * @returns An instance of the cross-posted {@link Message}.
- *
- * @remarks
- * Requires the `SEND_MESSAGES` permission.
- *
- * If not cross-posting own message:
- * - Requires the `MANAGE_MESSAGES` permission.
- *
- * Fires a _Message Create_ event in the guilds the subscribed channels are in.
- *
- * @see {@link https://discord.com/developers/docs/resources/channel#crosspost-message}
- */
+   * Cross-posts a message posted in an announcement channel to subscribed channels.
+   *
+   * @param channelId - The ID of the announcement channel.
+   * @param messageId - The ID of the message to cross-post.
+   * @returns An instance of the cross-posted {@link Message}.
+   *
+   * @remarks
+   * Requires the `SEND_MESSAGES` permission.
+   *
+   * If not cross-posting own message:
+   * - Requires the `MANAGE_MESSAGES` permission.
+   *
+   * Fires a _Message Create_ event in the guilds the subscribed channels are in.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#crosspost-message}
+   */
   publishMessage: (channelId: BigString, messageId: BigString) => Promise<Camelize<DiscordMessage>>
   /**
    * Removes a member from a thread.
@@ -4832,25 +4728,25 @@ export interface RestManager {
    */
   sendMessage: (channelId: BigString, options: CreateMessageOptions) => Promise<Camelize<DiscordMessage>>
   /**
- * Sends a follow-up message to an interaction.
- *
- * @param token - The interaction token to use, provided in the original interaction.
- * @param options - The parameters for the creation of the message.
- * @returns An instance of the created {@link Message}.
- *
- * @remarks
- * ⚠️ Interaction tokens are only valid for _15 minutes_.
- *
- * By default, mentions are suppressed. To enable mentions, pass a mention object with the callback data.
- *
- * Unlike `sendMessage()`, this endpoint allows the bot user to act without:
- * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
- * - Requiring the `MESSAGE_CONTENT` intent.
- *
- * Fires a _Message Create_ event.
- *
- * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message}
- */
+   * Sends a follow-up message to an interaction.
+   *
+   * @param token - The interaction token to use, provided in the original interaction.
+   * @param options - The parameters for the creation of the message.
+   * @returns An instance of the created {@link Message}.
+   *
+   * @remarks
+   * ⚠️ Interaction tokens are only valid for _15 minutes_.
+   *
+   * By default, mentions are suppressed. To enable mentions, pass a mention object with the callback data.
+   *
+   * Unlike `sendMessage()`, this endpoint allows the bot user to act without:
+   * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
+   * - Requiring the `MESSAGE_CONTENT` intent.
+   *
+   * Fires a _Message Create_ event.
+   *
+   * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message}
+   */
   sendFollowupMessage: (token: string, options: InteractionResponse) => Promise<Camelize<DiscordMessage>>
   /**
    * Sends a response to an interaction.
@@ -4909,6 +4805,20 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-without-message}
    */
   startThreadWithoutMessage: (channelId: BigString, options: StartThreadWithoutMessage) => Promise<Camelize<DiscordChannel>>
+  /**
+   * Synchronises a template with the current state of a guild.
+   *
+   * @param guildId - The ID of the guild to synchronise a template of.
+   * @returns An instance of the edited {@link Template}.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * Fires a _Guild Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
+   */
+  syncGuildTemplate: (guildId: BigString, templateCode: string) => Promise<Camelize<DiscordTemplate>>
   /**
    * Triggers a typing indicator for the bot user.
    *
@@ -5019,7 +4929,9 @@ export interface WebhookMessageEditor {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
    */
-  (webhookId: BigString, token: string, messageId: BigString, options: InteractionCallbackData & { threadId?: BigString }): Promise<Camelize<DiscordMessage>>
+  (webhookId: BigString, token: string, messageId: BigString, options: InteractionCallbackData & { threadId?: BigString }): Promise<
+    Camelize<DiscordMessage>
+  >
   /**
    * Edits the original webhook message.
    *
