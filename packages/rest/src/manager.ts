@@ -1717,32 +1717,26 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async createGuildTemplate(guildId: BigString, options: CreateTemplate): Promise<Template> {
-      const result = await rest.runMethod<DiscordTemplate>('POST', routes.GUILD_TEMPLATES(guildId), options as DiscordCreateTemplate)
-
-      return rest.transformers.template(rest, result)
+      return await rest.post<DiscordTemplate>(rest.routes.guilds.templates(guildId), options as DiscordCreateTemplate)
     },
 
     async deleteGuildTemplate(guildId: BigString, templateCode: string): Promise<void> {
-      return await rest.runMethod<void>('DELETE', routes.GUILD_TEMPLATE(guildId, templateCode))
+      return await rest.delete<void>(rest.routes.guilds.template(guildId, templateCode))
     },
 
     async editGuildTemplate(guildId: BigString, templateCode: string, options: ModifyGuildTemplate): Promise<Template> {
-      const result = await rest.runMethod<DiscordTemplate>('PATCH', routes.GUILD_TEMPLATE(guildId, templateCode), {
+      return await rest.patch<DiscordTemplate>(rest.routes.guilds.template(guildId, templateCode), {
         name: options.name,
         description: options.description,
       } as DiscordModifyGuildTemplate)
-
-      return rest.transformers.template(rest, result)
     },
 
     async getGuildTemplate(templateCode: string): Promise<Template> {
-      const result = await rest.runMethod<DiscordTemplate>('GET', routes.TEMPLATE(templateCode))
-
-      return rest.transformers.template(rest, result)
+      return await rest.get<DiscordTemplate>(rest.routes.template(templateCode))
     },
 
     async getGuildTemplates(guildId: BigString): Promise<Collection<string, Template>> {
-      const results = await rest.runMethod<DiscordTemplate[]>('GET', routes.GUILD_TEMPLATES(guildId))
+      const results = await rest.get<DiscordTemplate[]>(rest.routes.guilds.templates(guildId))
 
       return new Collection(
         results.map((result) => {
@@ -1753,29 +1747,25 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async syncGuildTemplate(guildId: BigString, templateCode: string): Promise<Template> {
-      const result = await rest.runMethod<DiscordTemplate>('PUT', routes.GUILD_TEMPLATE(guildId, templateCode))
-
-      return rest.transformers.template(rest, result)
+      return await rest.put<DiscordTemplate>(rest.routes.guilds.template(guildId, templateCode))
     },
 
     async banMember(guildId: BigString, userId: BigString, options?: CreateGuildBan): Promise<void> {
-      return await rest.runMethod<void>('PUT', routes.GUILD_BAN(guildId, userId), {
+      return await rest.put<void>(rest.routes.GUILD_BAN(guildId, userId), {
         delete_message_seconds: options?.deleteMessageSeconds,
         reason: options?.reason,
       } as DiscordCreateGuildBan)
     },
 
     async editBotMember(guildId: BigString, options: EditBotMemberOptions): Promise<Camelize<DiscordMember>> {
-      const result = await rest.runMethod<DiscordMember>('PATCH', routes.USER_NICK(guildId), {
+      return await rest.patch<DiscordMember>(rest.routes.USER_NICK(guildId), {
         nick: options.nick,
         reason: options.reason,
       } as DiscordEditBotMemberOptions)
-
-      return TRANSFORMERS.member(result)
     },
 
     async editMember(guildId: BigString, userId: BigString, options: ModifyGuildMember): Promise<Camelize<DiscordMember>> {
-      const result = await rest.runMethod<DiscordMemberWithUser>('PATCH', routes.GUILD_MEMBER(guildId, userId), {
+      return await rest.patch<DiscordMemberWithUser>(rest.routes.GUILD_MEMBER(guildId, userId), {
         nick: options.nick,
         roles: options.roles?.map((id) => id.toString()),
         mute: options.mute,
@@ -1785,8 +1775,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           ? new Date(options.communicationDisabledUntil).toISOString()
           : options.communicationDisabledUntil,
       } as DiscordModifyGuildMember)
-
-      return TRANSFORMERS.member(result)
     },
 
     async getAvatarURL(
@@ -1800,29 +1788,25 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     ): string {
       return options?.avatar
         ? formatImageURL(
-            routes.USER_AVATAR(userId, typeof options?.avatar === 'string' ? options.avatar : iconBigintToHash(options?.avatar)),
+            rest.routes.USER_AVATAR(userId, typeof options?.avatar === 'string' ? options.avatar : iconBigintToHash(options?.avatar)),
             options?.size ?? 128,
             options?.format,
           )
-        : routes.USER_DEFAULT_AVATAR(Number(discriminator) % 5)
+        : rest.routes.USER_DEFAULT_AVATAR(Number(discriminator) % 5)
     },
 
     async getDmChannel(userId: BigString): Promise<Channel> {
-      const result = await rest.runMethod<DiscordChannel>('POST', routes.USER_DM(), {
+      return await rest.post<DiscordChannel>(rest.routes.USER_DM(), {
         recipient_id: userId.toString(),
       } as DiscordGetDMChannel)
-
-      return rest.transformers.channel(rest, { channel: result })
     },
 
     async getMember(guildId: BigString, userId: BigString): Promise<Camelize<DiscordMemberWithUser>> {
-      const result = await rest.runMethod<DiscordMemberWithUser>('GET', routes.GUILD_MEMBER(guildId, userId))
-
-      return TRANSFORMERS.member(result) as Camelize<DiscordMemberWithUser>
+      return await rest.get<DiscordMemberWithUser>(rest.routes.GUILD_MEMBER(guildId, userId))
     },
 
     async getMembers(guildId: BigString, options: ListGuildMembers): Promise<Collection<string, Camelize<DiscordMemberWithUser>>> {
-      const results = await rest.runMethod<DiscordMemberWithUser[]>('GET', routes.GUILD_MEMBERS(guildId, options))
+      const results = await rest.get<DiscordMemberWithUser[]>(rest.routes.GUILD_MEMBERS(guildId, options))
 
       return new Collection(
         results.map((result) => {
@@ -1833,19 +1817,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async kickMember(guildId: BigString, userId: BigString, reason?: string): Promise<void> {
-      return await rest.runMethod<void>('DELETE', routes.GUILD_MEMBER(guildId, userId), {
+      return await rest.delete<void>(rest.routes.GUILD_MEMBER(guildId, userId), {
         reason,
       })
     },
 
     async pruneMembers(guildId: BigString, options: BeginGuildPrune): Promise<number | undefined> {
-      const result = await rest.runMethod<{ pruned: number | null }>('POST', routes.GUILD_PRUNE(guildId), {
+      return await rest.post<{ pruned: number | null }>(rest.routes.GUILD_PRUNE(guildId), {
         days: options.days,
         compute_prune_count: options.computePruneCount,
         include_roles: options.includeRoles,
       } as DiscordBeginGuildPrune)
-
-      return result.pruned ?? undefined
     },
 
     async searchMembers(
@@ -1853,7 +1835,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       query: string,
       options?: Omit<SearchMembers, 'query'>,
     ): Promise<Collection<string, Camelize<DiscordMemberWithUser>>> {
-      const results = await rest.runMethod<DiscordMemberWithUser[]>('GET', routes.GUILD_MEMBERS_SEARCH(guildId, query, options))
+      const results = await rest.get<DiscordMemberWithUser[]>(rest.routes.GUILD_MEMBERS_SEARCH(guildId, query, options))
 
       return new Collection(
         results.map((result) => {
@@ -1864,7 +1846,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async unbanMember(guildId: BigString, userId: BigString): Promise<void> {
-      return await rest.runMethod<void>('DELETE', routes.GUILD_BAN(guildId, userId))
+      return await rest.delete<void>(rest.routes.GUILD_BAN(guildId, userId))
     },
   }
 
