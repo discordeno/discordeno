@@ -7,16 +7,13 @@ import { delay } from '@discordeno/utils'
  * @param options The options used to configure this bucket.
  * @returns RefillingBucket
  */
-export function createInvalidRequestBucket (
-  options: InvalidRequestBucketOptions
-): InvalidRequestBucket {
+export function createInvalidRequestBucket(options: InvalidRequestBucketOptions): InvalidRequestBucket {
   const bucket: InvalidRequestBucket = {
     current: options.current ?? 0,
     max: options.max ?? 10000,
     interval: options.interval ?? 600000,
     timeoutId: options.timeoutId,
     safety: options.safety ?? 1,
-    frozenAt: options.frozenAt ?? 0,
     errorStatuses: options.errorStatuses ?? [401, 403, 429],
     requested: options.requested ?? 0,
     processing: false,
@@ -78,19 +75,16 @@ export function createInvalidRequestBucket (
 
       // INVALID REQUEST WAS MADE
 
-      // If it was not frozen before, mark it frozen
-      if (bucket.frozenAt === 0) bucket.frozenAt = Date.now()
       // Mark a request has been invalid
       bucket.current++
       // If a timeout was not started, start a timeout to reset this bucket
       if (bucket.timeoutId === undefined) {
         bucket.timeoutId = setTimeout(() => {
-          bucket.frozenAt = 0
           bucket.current = 0
           bucket.timeoutId = undefined
-        }, bucket.frozenAt + bucket.interval)
+        }, bucket.interval)
       }
-    }
+    },
   }
 
   return bucket
@@ -107,8 +101,6 @@ export interface InvalidRequestBucketOptions {
   timeoutId?: NodeJS.Timeout
   /** how safe to be from max. Defaults to 1 */
   safety?: number
-  /** when first request in this period was made */
-  frozenAt?: number
   /** The request statuses that count as an invalid request. */
   errorStatuses?: number[]
   /** The amount of requests that were requested from this bucket. */
@@ -126,8 +118,6 @@ export interface InvalidRequestBucket {
   timeoutId: NodeJS.Timeout | undefined
   /** how safe to be from max. Defaults to 1 */
   safety: number
-  /** when first request in this period was made */
-  frozenAt: number
   /** The request statuses that count as an invalid request. */
   errorStatuses: number[]
   /** The amount of requests that were requested from this bucket. */

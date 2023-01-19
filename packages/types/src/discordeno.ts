@@ -4,7 +4,7 @@ import type {
   AutoModerationTriggerTypes,
   DiscordAttachment,
   DiscordAutoModerationRuleTriggerMetadataPresets,
-  DiscordEmbed,
+  DiscordEmbed
 } from './discord'
 import type {
   AllowedMentionsTypes,
@@ -26,7 +26,7 @@ import type {
   SortOrderTypes,
   TargetTypes,
   TextStyles,
-  VideoQualityModes,
+  VideoQualityModes
 } from './shared'
 
 export interface CreateMessageOptions {
@@ -427,6 +427,8 @@ export interface CreateSlashApplicationCommand {
   defaultMemberPermissions?: PermissionStrings[]
   /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
   dmPermission?: boolean
+  /** Indicates whether the command is age-restricted, defaults to `false` */
+  nsfw?: boolean;
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
