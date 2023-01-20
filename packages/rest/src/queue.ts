@@ -24,6 +24,8 @@ export class Queue {
   firstRequest: boolean = false
   /** The url that all the requests in this queue are sent to. */
   url: string
+  /** When requests started being made to determine when the interval will reset it. */
+  frozenAt: number = 0
 
   constructor (rest: RestManager, options: QueueOptions) {
     this.rest = rest
@@ -85,7 +87,9 @@ export class Queue {
 
     while (this.pending.length > 0) {
       if (!this.firstRequest && !this.isRequestAllowed()) {
-        await delay(1000)
+        const now = Date.now()
+        const future = this.frozenAt + this.interval
+        await delay(future > now ? future - now : 1000)
         continue
       }
 
@@ -140,6 +144,7 @@ export class Queue {
       return
     }
 
+    if (!this.frozenAt) this.frozenAt = Date.now()
     if (headers.interval !== undefined) this.interval = headers.interval
     if (headers.remaining !== undefined) this.remaining = headers.remaining
 
