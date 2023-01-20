@@ -1,45 +1,45 @@
 {
-  "id": "974737373420934355",
-  "name": "omtu esmjamjg",
+  "id": "958945437974936122",
+  "name": "bkyl xygqruii",
   "icon": "eae5905ad2d18d7c8deca20478b088b5",
   "description": null,
   "home_header": null,
   "splash": null,
   "discovery_splash": null,
   "features": [
-    "BFTXDOWLS",
-    "IQFFbNKgBJKQJyXAQWJBQ",
-    "MCNrUOJEKRXEOxOEXIHlYUHEQM",
-    "DQQIIAVLXVPyOPMELLFuZSDQNUSIMSHaM7",
-    "BGMM",
-    "COTUxIBNHOIQDGX",
-    "OUEJPVHfOAJXIAdUZSCPMB"
+    "GBUNrQDdABSILuSRMFOLV",
+    "LVWDHFMgGUDDGPpQOECHSX",
+    "JMPlDBQVGHMRLfBKJLWnPWDWXU",
+    "KGXZEQUZBWHmDQYJXRTxDSNZLVCMCYLeK7",
+    "KGJQ",
+    "WZZXcDEFODTFGJA",
+    "TLEHESAKG"
   ],
   "approximate_member_count": 9,
-  "approximate_presence_count": 2,
+  "approximate_presence_count": 3,
   "emojis": [
     {
-      "name": "cyukxqlon",
+      "name": "hvaoxltky",
       "roles": [],
-      "id": "208327581547222539",
+      "id": "241660086284073492",
       "require_colons": true,
       "managed": false,
       "animated": false,
       "available": true
     },
     {
-      "name": "twdvlleut",
+      "name": "udrryvogq",
       "roles": [],
-      "id": "374951272359191425",
+      "id": "376174759937103577",
       "require_colons": true,
       "managed": false,
       "animated": false,
       "available": true
     },
     {
-      "name": "iyintlaii",
+      "name": "eieytybqh",
       "roles": [],
-      "id": "630427788485493170",
+      "id": "364042747032047797",
       "require_colons": true,
       "managed": false,
       "animated": false,
@@ -48,55 +48,55 @@
   ],
   "stickers": [
     {
-      "id": "5821279059630528381",
-      "name": "ffgfkkl uiif",
-      "tags": "lsggabp hbhq",
+      "id": "3996698228771607444",
+      "name": "jplufyf mcfv",
+      "tags": "opvohsj fkrn",
       "type": 2,
       "format_type": 1,
-      "description": "uoiwlsk idlpmkabohd",
+      "description": "wpxhjog fzghmnusqde",
       "asset": "",
       "available": true,
-      "guild_id": "298631566465831922"
+      "guild_id": "688598357675406621"
     },
     {
-      "id": "7807286252103586659",
-      "name": "dgswkkf zkxb",
-      "tags": "daqtraj eian",
+      "id": "5569407879038558369",
+      "name": "fdjmvai ixcd",
+      "tags": "zaxuhzp xkof",
       "type": 2,
       "format_type": 1,
-      "description": "ynvuuue qqafoutxndp",
+      "description": "twavbqa wqkzfojrikr",
       "asset": "",
       "available": true,
-      "guild_id": "435054441405947355"
+      "guild_id": "675738496488078580"
     },
     {
-      "id": "7369588766983875641",
-      "name": "bibthek udac",
-      "tags": "gyjukgi lwmt",
+      "id": "4117942082011828823",
+      "name": "fxmsbip uvai",
+      "tags": "icjzvql dkem",
       "type": 2,
       "format_type": 1,
-      "description": "bpdired lxuxeorjaxr",
+      "description": "wtnkmdj vswckqpjjqq",
       "asset": "",
       "available": true,
-      "guild_id": "209348769861379582"
+      "guild_id": "648443752219837881"
     }
   ],
   "banner": null,
-  "owner_id": "970678611755870130",
+  "owner_id": "727503810509961098",
   "application_id": null,
-  "region": "uszlhflsi",
+  "region": "anmxlmbki",
   "afk_channel_id": null,
   "afk_timeout": 300,
-  "system_channel_id": "282110920147661577",
+  "system_channel_id": "721118874068600692",
   "widget_enabled": false,
   "widget_channel_id": null,
   "verification_level": 1,
   "roles": [
     {
-      "id": "316447527390764793",
-      "name": "elpgejiqn",
+      "id": "287266765786113676",
+      "name": "xwsfnrygd",
       "description": null,
-      "permissions": "5035552731772",
+      "permissions": "8517463140662",
       "position": 0,
       "color": 0,
       "hoist": false,
@@ -107,10 +107,10 @@
       "flags": 0
     },
     {
-      "id": "981760006530763658",
-      "name": "Epc Dscetk",
+      "id": "546646625976320952",
+      "name": "Xah Tdgvls",
       "description": null,
-      "permissions": "1808244966454",
+      "permissions": "6655094539079",
       "position": 8,
       "color": 3066993,
       "hoist": false,
@@ -121,10 +121,10 @@
       "flags": 0
     },
     {
-      "id": "997281381823299979",
-      "name": "fap utaw",
+      "id": "569173003420530661",
+      "name": "wga gajm",
       "description": null,
-      "permissions": "8053438815955",
+      "permissions": "2694164184508",
       "position": 7,
       "color": 0,
       "hoist": false,
@@ -135,10 +135,10 @@
       "flags": 0
     },
     {
-      "id": "316983964111539965",
-      "name": "Ghwkg",
+      "id": "694606881448364567",
+      "name": "Zozey",
       "description": null,
-      "permissions": "5459497914934",
+      "permissions": "3230932936147",
       "position": 6,
       "color": 0,
       "hoist": false,
@@ -149,10 +149,10 @@
       "flags": 0
     },
     {
-      "id": "296934729137905222",
-      "name": "Fzcvzeooq Tvmhek",
+      "id": "339483770254023504",
+      "name": "Eyxfblura Nsptli",
       "description": null,
-      "permissions": "811912514",
+      "permissions": "862375608",
       "position": 5,
       "color": 0,
       "hoist": false,
@@ -162,14 +162,14 @@
       "unicode_emoji": null,
       "flags": 0,
       "tags": {
-        "bot_id": "330821150988756605"
+        "bot_id": "122289673508842132"
       }
     },
     {
-      "id": "557587674768481365",
-      "name": "Azrcx",
+      "id": "428155485339472405",
+      "name": "Bjtss",
       "description": null,
-      "permissions": "3944077044547",
+      "permissions": "7101103514137",
       "position": 4,
       "color": 15277667,
       "hoist": false,
@@ -180,10 +180,10 @@
       "flags": 0
     },
     {
-      "id": "472359103866187449",
-      "name": "mtfz Mqixr",
+      "id": "228360238733177477",
+      "name": "xjwe Luwbm",
       "description": null,
-      "permissions": "2860258362782",
+      "permissions": "2892037290340",
       "position": 3,
       "color": 0,
       "hoist": false,
@@ -194,10 +194,10 @@
       "flags": 0
     },
     {
-      "id": "398408371838690741",
-      "name": "Ecoyp",
+      "id": "384859935636924395",
+      "name": "Tfcec",
       "description": null,
-      "permissions": "3764620976",
+      "permissions": "9847701473",
       "position": 2,
       "color": 0,
       "hoist": false,
@@ -207,14 +207,14 @@
       "unicode_emoji": null,
       "flags": 0,
       "tags": {
-        "bot_id": "718521175615717862"
+        "bot_id": "357955928273759848"
       }
     },
     {
-      "id": "7393455640050321736",
-      "name": "q ltbi",
+      "id": "2110879382952508380",
+      "name": "w beyd",
       "description": null,
-      "permissions": "5654368173181",
+      "permissions": "3752614585440",
       "position": 1,
       "color": 0,
       "hoist": false,
@@ -225,10 +225,10 @@
       "flags": 0
     },
     {
-      "id": "8670468111901347478",
-      "name": "ovby aptv 1311392141282",
+      "id": "2838627281837498730",
+      "name": "ovbp xxsr 5555431484842",
       "description": null,
-      "permissions": "2",
+      "permissions": "5",
       "position": 1,
       "color": 0,
       "hoist": false,
@@ -239,10 +239,10 @@
       "flags": 0
     },
     {
-      "id": "3670947397935406903",
-      "name": "rbat zciy 3693114114112",
+      "id": "4629967958790775307",
+      "name": "sria dfoa 7363493737639",
       "description": null,
-      "permissions": "2",
+      "permissions": "9",
       "position": 1,
       "color": 0,
       "hoist": false,
@@ -253,8 +253,22 @@
       "flags": 0
     },
     {
-      "id": "2005873445095706699",
-      "name": "madb joux 2314959222729",
+      "id": "6627006948921926498",
+      "name": "lbih gzii 1381398424499",
+      "description": null,
+      "permissions": "6",
+      "position": 1,
+      "color": 0,
+      "hoist": false,
+      "managed": false,
+      "mentionable": false,
+      "icon": null,
+      "unicode_emoji": null,
+      "flags": 0
+    },
+    {
+      "id": "2504636227493875038",
+      "name": "kbli kkiw 7878578791686",
       "description": null,
       "permissions": "3",
       "position": 1,
@@ -267,10 +281,10 @@
       "flags": 0
     },
     {
-      "id": "1409475866293974522",
-      "name": "sfcb avpo 7739872741265",
+      "id": "6028462017696670848",
+      "name": "hmum eqon 1939122514467",
       "description": null,
-      "permissions": "7",
+      "permissions": "8",
       "position": 1,
       "color": 0,
       "hoist": false,
@@ -281,24 +295,10 @@
       "flags": 0
     },
     {
-      "id": "1347551088686465513",
-      "name": "abys eirn 9465443539338",
+      "id": "8292455017885794535",
+      "name": "hnie wsug 9836315854615",
       "description": null,
-      "permissions": "7",
-      "position": 1,
-      "color": 0,
-      "hoist": false,
-      "managed": false,
-      "mentionable": false,
-      "icon": null,
-      "unicode_emoji": null,
-      "flags": 0
-    },
-    {
-      "id": "3981339699625891805",
-      "name": "szvu lebg 6186786128422",
-      "description": null,
-      "permissions": "4",
+      "permissions": "1",
       "position": 1,
       "color": 0,
       "hoist": false,
@@ -320,10 +320,10 @@
   "premium_tier": 0,
   "premium_subscription_count": 0,
   "system_channel_flags": 0,
-  "preferred_locale": "efyBB",
-  "rules_channel_id": "248843228285218493",
+  "preferred_locale": "kcsAJ",
+  "rules_channel_id": "943016164662319516",
   "safety_alerts_channel_id": null,
-  "public_updates_channel_id": "803900980061700701",
+  "public_updates_channel_id": "272149051448810412",
   "hub_type": null,
   "premium_progress_bar_enabled": false,
   "nsfw": false,
