@@ -1,6 +1,6 @@
 {
   "name": "@discordeno/rest",
-  "version": "18.0.0-alpha.1",
+  "version": "19.0.0-alpha.1",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
@@ -24,11 +24,11 @@
     "test:test-type": "tsc --project tsconfig.test.json"
   },
   "dependencies": {
-    "@discordeno/utils": "18.0.0-alpha.1",
+    "@discordeno/utils": "19.0.0-alpha.1",
     "dotenv": "^16.0.3"
   },
   "devDependencies": {
-    "@discordeno/types": "18.0.0-alpha.1",
+    "@discordeno/types": "19.0.0-alpha.1",
     "@swc/cli": "^0.1.57",
     "@swc/core": "^1.3.21",
     "@types/chai": "^4",

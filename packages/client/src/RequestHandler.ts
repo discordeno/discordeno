@@ -5,7 +5,7 @@ import type Client from './Client.js'
 import type { FileContent, RequestHandlerOptions } from './typings.js'
 
 // TODO: make dynamic based on package.json file
-const version = '18.0.0-alpha.1'
+const version = '19.0.0-alpha.1'
 
 export class RequestHandler {
   /** The client manager. */

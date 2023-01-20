@@ -68,12 +68,12 @@ import type {
   SearchMembers,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
-  WithReason
+  WithReason,
 } from '@discordeno/types'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 
 // TODO: make dynamic based on package.json file
-const version = '18.0.0-alpha.1'
+const version = '19.0.0-alpha.1'
 
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
   const rest: RestManager = {
