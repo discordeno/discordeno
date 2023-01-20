@@ -264,13 +264,13 @@ export interface FileContent {
   name: string
 }
 
-// /** https://discord.com/developers/docs/resources/guild#search-guild-members-query-string-params */
-// export interface SearchMembers {
-//   /** Query string to match username(s) and nickname(s) against */
-//   query: string
-//   /** Max number of members to return (1-1000). Default: 1 */
-//   limit?: number
-// }
+/** https://discord.com/developers/docs/resources/guild#search-guild-members-query-string-params */
+export interface SearchMembers {
+  /** Query string to match username(s) and nickname(s) against */
+  query: string
+  /** Max number of members to return (1-1000). Default: 1 */
+  limit?: number
+}
 
 export interface WithReason {
   /** The reason which should be added in the audit logs for doing this action. */
@@ -362,21 +362,21 @@ export interface ListArchivedThreads {
 //   after?: BigString
 // }
 
-// /** https://discord.com/developers/docs/resources/guild#list-guild-members */
-// export interface ListGuildMembers {
-//   /** Max number of members to return (1-1000). Default: 1000 */
-//   limit?: number
-//   /** The highest user id in the previous page. Default: 0 */
-//   after?: string
-// }
+/** https://discord.com/developers/docs/resources/guild#list-guild-members */
+export interface ListGuildMembers {
+  /** Max number of members to return (1-1000). Default: 1000 */
+  limit?: number
+  /** The highest user id in the previous page. Default: 0 */
+  after?: string
+}
 
-// /** https://discord.com/developers/docs/resources/guild#get-guild-prune-count */
-// export interface GetGuildPruneCountQuery {
-//   /** Number of days to count prune for (1 or more), default: 7 */
-//   days?: number
-//   /** Role(s) to include, default: none */
-//   includeRoles?: string | string[]
-// }
+/** https://discord.com/developers/docs/resources/guild#get-guild-prune-count */
+export interface GetGuildPruneCountQuery {
+  /** Number of days to count prune for (1 or more), default: 7 */
+  days?: number
+  /** Role(s) to include, default: none */
+  includeRoles?: string | string[]
+}
 
 export interface GetScheduledEventUsers {
   /** number of users to return (up to maximum 100), defaults to 100 */
