@@ -4,6 +4,7 @@ export const camelize = <T>(object: T): Camelize<T> => {
   if (Array.isArray(object)) {
     return object.map((element) => camelize(element)) as Camelize<T>
   }
+  
   if (typeof object === 'object' && object !== null) {
     const obj = {} as Camelize<T>
     ;(Object.keys(object) as Array<keyof T>).forEach((key) => {
@@ -21,7 +22,7 @@ function snakeToCamelCase(str: string): string {
   let result = ''
   for (let i = 0, len = str.length; i < len; ++i) {
     if (str[i] === '_') {
-      result += str[i++].toUpperCase()
+      result += str[++i].toUpperCase()
 
       continue
     }
