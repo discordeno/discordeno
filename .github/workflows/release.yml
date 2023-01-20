@@ -27,8 +27,6 @@ jobs:
         with:
           base: node-migration-clean
           filters: |
-            bot:
-            - "packages/bot/**"
             gateway:
             - "packages/gateway/**"
             rest:
@@ -46,12 +44,11 @@ jobs:
       contents: read
       packages: write
     strategy:
+      fail-fast: false
       matrix:
-        package: ["bot", "gateway", "rest", "types", "utils"]
+        package: ["gateway", "rest", "types", "utils"]
         run: ["false"]
         exclude:
-          - package: bot
-            run: "${{ needs.path-filter.outputs.bot == 'true' || needs.path-filter.outputs.global == 'true' }}"
           - package: gateway
             run: "${{ needs.path-filter.outputs.gateway == 'true' || needs.path-filter.outputs.global == 'true' }}"
           - package: rest
