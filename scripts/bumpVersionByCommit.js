@@ -8,21 +8,14 @@ if (!packageName) {
   throw new Error('No package name specified')
 }
 
-const commitHash = childProcess
-  .execSync('git rev-parse HEAD')
-  .toString()
-  .trim()
-  .slice(0, 7)
+const commitHash = childProcess.execSync('git rev-parse HEAD').toString().trim().slice(0, 7)
 
-const file = JSON.parse(
-  await fs.readFile(`packages/${packageName}/package.json`, 'utf-8')
-)
-file.version = `${file.version.split('-')[0]}-next.${commitHash}`
-await fs.writeFile(
-  `packages/${packageName}/package.json`,
-  JSON.stringify(file, null, 2)
-)
+const file = JSON.parse(await fs.readFile(`packages/${packageName}/package.json`, 'utf-8'))
+const oldVersion = file.version
+file.version = `${oldVersion.split('-')[0]}-next.${commitHash}`
+Object.keys(file.dependencies).forEach((dependency) => {
+  if (file.dependencies[dependency] === oldVersion) file.dependencies[dependency] = file.version
+})
+await fs.writeFile(`packages/${packageName}/package.json`, JSON.stringify(file, null, 2))
 
-console.log(
-  `Bumped ${packageName} to ${file.version.split('-')[0]}-next.${commitHash}`
-)
+console.log(`Bumped ${packageName} to ${file.version.split('-')[0]}-next.${commitHash}`)
