@@ -76,6 +76,9 @@ import type { InvalidRequestBucket } from './invalidBucket.js'
 const version = '19.0.0-alpha.1'
 
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
+  // Falsy token string check
+  if (!options.token) throw new Error('You must provide a valid token.')
+
   const rest: RestManager = {
     token: options.token,
     applicationId: options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token),
