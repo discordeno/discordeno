@@ -4,8 +4,8 @@ import type {
   AutoModerationTriggerTypes,
   DiscordAttachment,
   DiscordAutoModerationRuleTriggerMetadataPresets,
-  DiscordEmbed
-} from './discord'
+  DiscordEmbed,
+} from './discord.js'
 import type {
   AllowedMentionsTypes,
   ApplicationCommandOptionTypes,
@@ -26,8 +26,8 @@ import type {
   SortOrderTypes,
   TargetTypes,
   TextStyles,
-  VideoQualityModes
-} from './shared'
+  VideoQualityModes,
+} from './shared.js'
 
 export interface CreateMessageOptions {
   /** The message contents (up to 2000 characters) */
@@ -399,9 +399,7 @@ export interface GetInvite {
   scheduledEventId?: BigString
 }
 
-export type CreateApplicationCommand =
-  | CreateSlashApplicationCommand
-  | CreateContextApplicationCommand
+export type CreateApplicationCommand = CreateSlashApplicationCommand | CreateContextApplicationCommand
 
 /** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
 export interface CreateSlashApplicationCommand {
@@ -428,15 +426,11 @@ export interface CreateSlashApplicationCommand {
   /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
   dmPermission?: boolean
   /** Indicates whether the command is age-restricted, defaults to `false` */
-  nsfw?: boolean;
+  nsfw?: boolean
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#endpoints-json-params */
-export interface CreateContextApplicationCommand
-  extends Omit<
-  CreateSlashApplicationCommand,
-  'options' | 'description' | 'descriptionLocalizations'
-  > {
+export interface CreateContextApplicationCommand extends Omit<CreateSlashApplicationCommand, 'options' | 'description' | 'descriptionLocalizations'> {
   /** The type of the command */
   type: ApplicationCommandTypes.Message | ApplicationCommandTypes.User
 }

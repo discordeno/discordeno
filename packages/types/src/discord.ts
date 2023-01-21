@@ -1,49 +1,4 @@
-// import type { FileContent } from './discordeno.js'
-import type { Localization, WebhookTypes } from './shared.js'
-
-//   ActivityTypes,
-//   AllowedMentionsTypes,
-//   ApplicationCommandOptionTypes,
-//   ApplicationCommandPermissionTypes,
-//   ApplicationCommandTypes,
-//   ApplicationFlags,
-//   AuditLogEvents,
-//   ButtonStyles,
-//   ChannelFlags,
-//   ChannelTypes,
-//   DefaultMessageNotificationLevels,
-//   EmbedTypes,
-//   ExplicitContentFilterLevels,
-//   GatewayEventNames,
-//   GuildFeatures,
-//   GuildNsfwLevel,
-//   IntegrationExpireBehaviors,
-//   InteractionResponseTypes,
-//   InteractionTypes,
-//   Localization,
-//   MessageActivityTypes,
-//   MessageComponentTypes,
-//   MessageTypes,
-//   MfaLevels,
-//   OverwriteTypes,
-//   PickPartial,
-//   PremiumTiers,
-//   PremiumTypes,
-//   ScheduledEventEntityType,
-//   ScheduledEventPrivacyLevel,
-//   ScheduledEventStatus,
-//   SortOrderTypes,
-//   StickerFormatTypes,
-//   StickerTypes,
-//   SystemChannelFlags,
-//   TargetTypes,
-//   TeamMembershipStates,
-//   TextStyles,
-//   UserFlags,
-//   VerificationLevels,
-//   VideoQualityModes,
-//   VisibilityTypes,
-
+import type { FileContent } from './discordeno.js'
 import type {
   ActivityTypes,
   AllowedMentionsTypes,
@@ -63,6 +18,7 @@ import type {
   GuildNsfwLevel,
   IntegrationExpireBehaviors,
   InteractionTypes,
+  Localization,
   MessageActivityTypes,
   MessageComponentTypes,
   MessageTypes,
@@ -84,8 +40,8 @@ import type {
   UserFlags,
   VerificationLevels,
   VideoQualityModes,
-} from './shared'
-import type { FileContent } from './discordeno.js'
+  WebhookTypes,
+} from './shared.js'
 
 /** https://discord.com/developers/docs/resources/user#user-object */
 export interface DiscordUser {
@@ -1896,8 +1852,7 @@ export interface DiscordInviteStageInstance {
 }
 
 /** https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-structure */
-export interface DiscordApplicationCommand
-  extends DiscordCreateApplicationCommand {
+export interface DiscordApplicationCommand extends DiscordCreateApplicationCommand {
   /** Unique ID of command */
   id: string
   /** ID of the parent application */
