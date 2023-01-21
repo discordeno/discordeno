@@ -1,6 +1,8 @@
-import { expect } from 'chai'
+import chai, { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { rest } from './utils.js'
+import chaiAsPromised from 'chai-as-promised'
+chai.use(chaiAsPromised)
 
 describe('[rest] User related tests', () => {
   describe('Get a user from the api', () => {
