@@ -32,7 +32,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     version: options.version ?? 10,
     connection: options.connection,
     totalShards: options.totalShards ?? options.connection.shards ?? 1,
-    lastShardId: options.lastShardId ?? 1,
+    lastShardId: options.lastShardId ?? 0,
     firstShardId: options.firstShardId ?? 0,
     totalWorkers: options.totalWorkers ?? 4,
     shardsPerWorker: options.shardsPerWorker ?? 25,
@@ -179,7 +179,7 @@ export interface CreateGatewayManagerOptions {
   firstShardId?: number
   /**
    * Id of the last Shard which should get controlled by this manager.
-   * @default 1
+   * @default 0
    */
   lastShardId?: number
   /**
