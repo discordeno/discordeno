@@ -3,19 +3,19 @@
   "communication_disabled_until": null,
   "flags": 0,
   "is_pending": false,
-  "joined_at": "2023-01-20T00:44:10.377Z",
+  "joined_at": "2023-01-21T00:43:38.187Z",
   "nick": null,
   "pending": false,
   "premium_since": null,
   "roles": [
-    "617304310838609631"
+    "735084822136247938"
   ],
   "user": {
-    "id": "940048796237184526",
-    "username": "Wzyowlevyqwkds",
+    "id": "199945321894127702",
+    "username": "Ipeszjdhezphop",
     "avatar": "eae5905ad2d18d7c8deca20478b088b5",
     "avatar_decoration": null,
-    "discriminator": "8736",
+    "discriminator": "4567",
     "public_flags": 4325376
   },
   "mute": false,
