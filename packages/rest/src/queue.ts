@@ -80,7 +80,7 @@ export class Queue {
   /** Process the queue of all requests pending to be sent. */
   async processPending (): Promise<void> {
     // If already processing, that loop will handle all pending requests.
-    if (this.processingPending) return
+    if (this.processingPending || !this.pending.length) return
 
     // Mark as processing so other loops don't start
     this.processingPending = true
