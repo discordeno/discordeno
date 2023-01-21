@@ -25,7 +25,8 @@
   "dependencies": {
     "@discordeno/types": "19.0.0-alpha.1",
     "@discordeno/utils": "19.0.0-alpha.1",
-    "ws": "^8.11.0"
+    "isomorphic-ws": "^5.0.0",
+    "ws": "^8.12.0"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.57",
