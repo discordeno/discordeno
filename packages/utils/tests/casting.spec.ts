@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { camelize } from '../src/casing.js'
+import { camelize, snakeToCamelCase } from '../src/casing.js'
 
 describe('casting.ts', () => {
   describe('camelize function', () => {
@@ -40,7 +40,7 @@ describe('casting.ts', () => {
 
     describe('snakeToCamelCase function', () => {
       it('will convert string snake case to camel case', () => {
-        expect(camelize('sd_sd')).to.equal('sdSd')
+        expect(snakeToCamelCase('sd_sd')).to.equal('sdSd')
       })
     })
   })
