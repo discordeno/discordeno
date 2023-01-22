@@ -38,8 +38,10 @@ describe('casting.ts', () => {
       ])
     })
 
-    it.skip('will convert string snake case to camel case', () => {
-      expect(camelize('sd_sd')).to.equal('sdSd')
+    describe('snakeToCamelCase function', () => {
+      it('will convert string snake case to camel case', () => {
+        expect(camelize('sd_sd')).to.equal('sdSd')
+      })
     })
   })
 })
