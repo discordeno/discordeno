@@ -1,5 +1,5 @@
 import { delay } from '@discordeno/utils'
-import type { RestManager, SendRequestOptions } from './manager'
+import type { RestManager, SendRequestOptions } from './manager.js'
 
 export class Queue {
   /** The rest manager */
@@ -27,7 +27,7 @@ export class Queue {
   /** When requests started being made to determine when the interval will reset it. */
   frozenAt: number = 0
 
-  constructor (rest: RestManager, options: QueueOptions) {
+  constructor(rest: RestManager, options: QueueOptions) {
     this.rest = rest
     this.url = options.url
 
@@ -38,12 +38,12 @@ export class Queue {
   }
 
   /** Check if there is any remaining requests that are allowed. */
-  isRequestAllowed (): boolean {
+  isRequestAllowed(): boolean {
     return this.remaining > 0
   }
 
   /** Pauses the execution until a request is allowed to be made. */
-  async waitUntilRequestAvailable (): Promise<void> {
+  async waitUntilRequestAvailable(): Promise<void> {
     // eslint-disable-next-line no-async-promise-executor
     return await new Promise(async (resolve) => {
       // If whatever amount of requests is left is more than the safety margin, allow the request
@@ -58,7 +58,7 @@ export class Queue {
   }
 
   /** Process the queue of requests waiting to be handled. */
-  async processWaiting (): Promise<void> {
+  async processWaiting(): Promise<void> {
     // If already processing, that loop will handle all waiting requests.
     if (this.processing) return
     // Mark as processing so other loops don't start
@@ -78,7 +78,7 @@ export class Queue {
   }
 
   /** Process the queue of all requests pending to be sent. */
-  async processPending (): Promise<void> {
+  async processPending(): Promise<void> {
     // If already processing, that loop will handle all pending requests.
     if (this.processingPending || !this.pending.length) return
 
@@ -95,10 +95,7 @@ export class Queue {
 
       const request = this.pending[0]
       if (request) {
-        const basicURL = this.rest.simplifyUrl(
-          request.url,
-          request.method
-        )
+        const basicURL = this.rest.simplifyUrl(request.url, request.method)
 
         // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
         // If this url is still rate limited, try again
@@ -106,10 +103,7 @@ export class Queue {
         if (urlResetIn) await delay(urlResetIn)
 
         // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
-        const bucketResetIn =
-            request.bucketId
-              ? this.rest.checkRateLimits(request.bucketId)
-              : false
+        const bucketResetIn = request.bucketId ? this.rest.checkRateLimits(request.bucketId) : false
         if (bucketResetIn) await delay(bucketResetIn)
 
         this.firstRequest = false
@@ -127,7 +121,8 @@ export class Queue {
         // Check if this request is able to be made globally
         await this.rest.invalidBucket.waitUntilRequestAvailable()
 
-        await this.rest.sendRequest(request)
+        await this.rest
+          .sendRequest(request)
           // Should be handled in sendRequest, this catch just prevents bots from dying
           .catch(() => null)
       }
@@ -138,7 +133,7 @@ export class Queue {
     this.cleanup()
   }
 
-  handleCompletedRequest (headers: { max?: number, interval?: number, remaining?: number }): void {
+  handleCompletedRequest(headers: { max?: number; interval?: number; remaining?: number }): void {
     if (headers.max === 0) {
       this.remaining++
       return
@@ -156,14 +151,14 @@ export class Queue {
     }
   }
 
-  async makeRequest (options: SendRequestOptions): Promise<void> {
+  async makeRequest(options: SendRequestOptions): Promise<void> {
     await this.waitUntilRequestAvailable()
     this.pending.push(options)
     this.processPending()
   }
 
   /** Cleans up the queue by checking if there is nothing left and removing it. */
-  cleanup (): void {
+  cleanup(): void {
     if (!this.isQueueClearable()) {
       this.processPending()
       return
@@ -180,7 +175,7 @@ export class Queue {
     }, 60000)
   }
 
-  isQueueClearable (): boolean {
+  isQueueClearable(): boolean {
     if (this.firstRequest) return false
     if (this.waiting.length > 0) return false
     if (this.pending.length > 0) return false
