@@ -1,21 +1,22 @@
 module.exports = {
   env: {
     es2021: true,
-    node: true
+    node: true,
   },
-  extends: ['standard-with-typescript','prettier'],
+  extends: ['standard-with-typescript', 'prettier', 'plugin:require-extensions/recommended'],
   overrides: [
     {
       files: ['*.spec.ts'],
       rules: {
-        '@typescript-eslint/no-unused-expressions': 'off'
-      }
-    }
+        '@typescript-eslint/no-unused-expressions': 'off',
+      },
+    },
   ],
+  plugins: ['require-extensions'],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
-    project: ['./tsconfig.json']
+    project: ['./tsconfig.json'],
   },
   rules: {
     '@typescript-eslint/strict-boolean-expressions': 'off',
@@ -25,5 +26,5 @@ module.exports = {
     '@typescript-eslint/no-invalid-void-type': 'off',
     '@typescript-eslint/consistent-type-imports': 'error',
     '@typescript-eslint/no-misused-promises': 'off',
-  }
+  },
 }
