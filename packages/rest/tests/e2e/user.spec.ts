@@ -1,7 +1,7 @@
 import chai, { expect } from 'chai'
+import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
 import { rest } from './utils.js'
-import chaiAsPromised from 'chai-as-promised'
 chai.use(chaiAsPromised)
 
 describe('[rest] User related tests', () => {
@@ -32,9 +32,7 @@ describe('[rest] User related tests', () => {
     })
 
     it('With an invalid user id', async () => {
-      await expect(() => {
-        rest.getUser('123')
-      }).eventually.throws
+      await expect(rest.getUser('123')).eventually.throws
     })
   })
 })
