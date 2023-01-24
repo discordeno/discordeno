@@ -4,7 +4,7 @@ export const camelize = <T>(object: T): Camelize<T> => {
   if (Array.isArray(object)) {
     return object.map((element) => camelize(element)) as Camelize<T>
   }
-  
+
   if (typeof object === 'object' && object !== null) {
     const obj = {} as Camelize<T>
     ;(Object.keys(object) as Array<keyof T>).forEach((key) => {
@@ -16,7 +16,7 @@ export const camelize = <T>(object: T): Camelize<T> => {
   return object as Camelize<T>
 }
 
-function snakeToCamelCase(str: string): string {
+export function snakeToCamelCase(str: string): string {
   if (!str.includes('_')) return str
 
   let result = ''
