@@ -1,5 +1,5 @@
 import type { Camelize, DiscordAuditLog } from '@discordeno/types'
-import TRANSFORMERS from '..'
+import TRANSFORMERS from '...js'
 
 export function c1amelize1Auditlogs (payload: DiscordAuditLog): Camelize<DiscordAuditLog> {
   return {

@@ -1,6 +1,6 @@
 import type {
   BotWithCache,
-  Guild} from "../../deps.ts";
+  Guild} from '../../deps.ts.js';
 import {
   ApplicationCommandOptionTypes,
   bgBlack,
@@ -10,12 +10,12 @@ import {
   red,
   white,
   yellow,
-} from "../../deps.ts";
-import { events } from "./mod.ts";
-import { logger } from "../utils/logger.ts";
-import { getGuildFromId, isSubCommand, isSubCommandGroup } from "../utils/helpers.ts";
-import type { Command} from "../commands/mod.ts";
-import { commands } from "../commands/mod.ts";
+} from '../../deps.ts.js';
+import { events } from './mod.ts.js';
+import { logger } from '../utils/logger.ts.js';
+import { getGuildFromId, isSubCommand, isSubCommandGroup } from '../utils/helpers.ts.js';
+import type { Command} from '../commands/mod.ts.js';
+import { commands } from '../commands/mod.ts.js';
 
 const log = logger({ name: "Event: InteractionCreate" });
 

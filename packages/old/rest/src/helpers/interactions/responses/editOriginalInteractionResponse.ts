@@ -3,7 +3,7 @@ import type { DiscordMessage } from '@discordeno/types'
 import { InteractionResponseTypes } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import type { Message } from '../../../transformers/message.js'
-import type { InteractionCallbackData } from '../../../types'
+import type { InteractionCallbackData } from '../../../types.js'
 
 /**
  * Edits the initial message response to an interaction.

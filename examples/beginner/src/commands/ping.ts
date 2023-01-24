@@ -1,6 +1,6 @@
-import { ApplicationCommandTypes, InteractionResponseTypes } from "../../deps.ts";
-import { snowflakeToTimestamp } from "../utils/helpers.ts";
-import { createCommand } from "./mod.ts";
+import { ApplicationCommandTypes, InteractionResponseTypes } from '../../deps.ts.js';
+import { snowflakeToTimestamp } from '../utils/helpers.ts.js';
+import { createCommand } from './mod.ts.js';
 
 createCommand({
   name: "ping",

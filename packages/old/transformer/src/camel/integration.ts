@@ -1,5 +1,5 @@
 import type { Camelize, DiscordIntegration } from '@discordeno/types'
-import TRANSFORMERS from '..'
+import TRANSFORMERS from '...js'
 
 export function c1amelize1Integration (payload: DiscordIntegration): Camelize<DiscordIntegration> {
   return {

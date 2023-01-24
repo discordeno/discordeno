@@ -1,6 +1,6 @@
 import { memoryBenchmarks } from "https://raw.githubusercontent.com/discordeno/benchmarks/main/index.ts";
-import { createBot } from "../mod.ts";
-import { enableCachePlugin } from "../plugins/mod.ts";
+import { createBot } from '../mod.ts.js';
+import { enableCachePlugin } from '../plugins/mod.ts.js';
 
 const results = await memoryBenchmarks(() =>
   enableCachePlugin(createBot({

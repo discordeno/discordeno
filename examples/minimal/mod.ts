@@ -6,11 +6,11 @@ import {
   fastFileLoader,
   GatewayIntents,
   startBot,
-} from "./deps.ts";
-import { BOT_ID, BOT_TOKEN } from "./configs.ts";
-import { logger } from "./src/utils/logger.ts";
-import { events } from "./src/events/mod.ts";
-import { updateCommands } from "./src/utils/helpers.ts";
+} from './deps.ts.js';
+import { BOT_ID, BOT_TOKEN } from './configs.ts.js';
+import { logger } from './src/utils/logger.ts.js';
+import { events } from './src/events/mod.ts.js';
+import { updateCommands } from './src/utils/helpers.ts.js';
 
 const log = logger({ name: "Main" });
 

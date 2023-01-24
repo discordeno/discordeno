@@ -16,7 +16,7 @@ import { createLogger } from "discordeno/logger";
 import fetch from "node-fetch";
 import crypto from "node:crypto";
 import { parentPort, workerData } from "worker_threads";
-import type { ManagerMessage } from "./index";
+import type { ManagerMessage } from './index.js';
 dotenv.config();
 
 if (!parentPort) {

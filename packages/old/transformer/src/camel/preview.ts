@@ -1,5 +1,5 @@
 import type { Camelize, DiscordGuildPreview } from '@discordeno/types'
-import TRANSFORMERS from '..'
+import TRANSFORMERS from '...js'
 
 export function c1amelize1GuildPreview (payload: DiscordGuildPreview): Camelize<DiscordGuildPreview> {
   return {
