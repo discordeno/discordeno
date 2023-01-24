@@ -2,7 +2,7 @@
 
 <img align="right" src="https://raw.githubusercontent.com/discordeno/discordeno/main/site/static/img/logo.png" height="150px">
 
-Discord API library for [Deno](https://deno.land)
+Discord API library for Node.JS, [Deno](https://deno.land) & Bun 
 
 Discordeno follows [semantic versioning](https://semver.org/)
 
