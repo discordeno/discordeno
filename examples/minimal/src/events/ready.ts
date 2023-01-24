@@ -1,5 +1,5 @@
-import { events } from "./mod.ts";
-import { logger } from "../utils/logger.ts";
+import { events } from './mod.ts.js';
+import { logger } from '../utils/logger.ts.js';
 
 const log = logger({ name: "Event: Ready" });
 

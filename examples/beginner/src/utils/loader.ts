@@ -1,4 +1,4 @@
-import log from "./logger.ts";
+import log from './logger.ts.js';
 
 // Very important to make sure files are reloaded properly
 let uniqueFilePathCounter = 0;

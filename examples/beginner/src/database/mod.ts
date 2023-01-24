@@ -1,5 +1,5 @@
-import { Kwik, KwikDecode, KwikEncode } from "../../deps.ts";
-import { logger } from "../utils/logger.ts";
+import { Kwik, KwikDecode, KwikEncode } from '../../deps.ts.js';
+import { logger } from '../utils/logger.ts.js';
 
 const log = logger({ name: "DB Manager" });
 
