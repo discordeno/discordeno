@@ -3,19 +3,20 @@
   "communication_disabled_until": null,
   "flags": 0,
   "is_pending": false,
-  "joined_at": "2023-01-24T00:45:41.870Z",
+  "joined_at": "2023-01-25T00:42:13.085Z",
   "nick": null,
   "pending": false,
   "premium_since": null,
   "roles": [
-    "314803605810924447"
+    "358429362942224931"
   ],
   "user": {
-    "id": "769965746784195715",
-    "username": "Jskihktoulmnaj",
+    "id": "131037091812764175",
+    "username": "Wseqvw",
+    "display_name": null,
     "avatar": "eae5905ad2d18d7c8deca20478b088b5",
     "avatar_decoration": null,
-    "discriminator": "1697",
+    "discriminator": "7003",
     "public_flags": 4325376
   },
   "mute": false,

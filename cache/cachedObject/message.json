@@ -1,14 +1,15 @@
 {
-  "id": "1073332449602493541",
+  "id": "4413219618568610744",
   "type": 0,
-  "content": "tljecic",
-  "channel_id": "1651591124568058422",
+  "content": "thacuxn",
+  "channel_id": "9741135003853837726",
   "author": {
-    "id": "478787027692378253",
-    "username": "9709701016646694",
+    "id": "729162241774724245",
+    "username": "1256325628354189",
+    "display_name": null,
     "avatar": "eae5905ad2d18d7c8deca20478b088b5",
     "avatar_decoration": null,
-    "discriminator": "8035",
+    "discriminator": "4347",
     "public_flags": 4194560
   },
   "attachments": [],
@@ -18,7 +19,7 @@
   "pinned": false,
   "mention_everyone": false,
   "tts": false,
-  "timestamp": "2023-01-24T00:45:42.066Z",
+  "timestamp": "2023-01-25T00:42:13.293Z",
   "edited_timestamp": null,
   "flags": 0,
   "components": []
