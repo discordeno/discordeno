@@ -1,5 +1,5 @@
-import { Bot } from "../../bot.ts";
-import { configs } from "../../configs.ts";
+import { Bot } from '../../bot.ts.js';
+import { configs } from '../../configs.ts.js';
 
 export async function updateApplicationCommands() {
   await Bot.helpers.upsertGlobalApplicationCommands(

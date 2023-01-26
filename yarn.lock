@@ -21,6 +21,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@discordeno/bot@19.0.0-alpha.1, @discordeno/bot@workspace:packages/bot":
+  version: 0.0.0-use.local
+  resolution: "@discordeno/bot@workspace:packages/bot"
+  dependencies:
+    "@discordeno/gateway": 19.0.0-alpha.1
+    "@discordeno/rest": 19.0.0-alpha.1
+    "@discordeno/types": 19.0.0-alpha.1
+    "@discordeno/utils": 19.0.0-alpha.1
+    "@swc/cli": ^0.1.57
+    "@swc/core": ^1.3.21
+    "@types/chai": ^4
+    "@types/mocha": ^10
+    "@types/node": ^18.11.9
+    "@types/sinon": ^10.0.13
+    c8: ^7.12.0
+    chai: ^4.3.7
+    eslint: ^8.0.1
+    eslint-config-discordeno: "*"
+    mocha: ^10.1.0
+    sinon: ^15.0.0
+    ts-node: ^10.9.1
+    tsconfig: "*"
+    typescript: ^4.9.3
+  languageName: unknown
+  linkType: soft
+
 "@discordeno/client@workspace:packages/client":
   version: 0.0.0-use.local
   resolution: "@discordeno/client@workspace:packages/client"
@@ -1667,6 +1693,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "discordeno@workspace:packages/discordeno"
   dependencies:
+    "@discordeno/bot": 19.0.0-alpha.1
     "@discordeno/gateway": 19.0.0-alpha.1
     "@discordeno/rest": 19.0.0-alpha.1
     "@discordeno/types": 19.0.0-alpha.1

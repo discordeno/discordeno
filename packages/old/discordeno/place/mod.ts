@@ -1,4 +1,4 @@
-export * from './@discordeno/types'
+export * from './@discordeno/types.js'
 export * from './bot.js'
 export * from './gateway/index.js'
 export * from './handlers/index.js'

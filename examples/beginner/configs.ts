@@ -1,4 +1,4 @@
-import { dotEnvConfig } from "./deps.ts";
+import { dotEnvConfig } from './deps.ts.js';
 
 // Get the .env file that the user should have created, and get the token
 const env = dotEnvConfig({ export: true, path: "./.env" });

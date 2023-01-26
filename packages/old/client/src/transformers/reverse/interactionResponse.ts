@@ -1,6 +1,6 @@
 import type { DiscordInteractionResponse } from '@discordeno/types'
 import type { Client } from '../../client.js'
-import type { InteractionResponse } from '../../types'
+import type { InteractionResponse } from '../../types.js'
 
 export function transformInteractionResponseToDiscordInteractionResponse (
   client: Client,

@@ -1,7 +1,7 @@
 import { routes } from '@discordeno/constant'
 import type { BigString } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
-import type { InteractionResponse } from '../../../types'
+import type { InteractionResponse } from '../../../types.js'
 
 /**
  * Sends a response to an interaction.

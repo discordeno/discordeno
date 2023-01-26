@@ -1,5 +1,5 @@
-import type { BotClient } from "../../bot.ts";
-import type { ApplicationCommandOption, ApplicationCommandTypes, Interaction } from "../../deps.ts";
+import type { BotClient } from '../../bot.ts.js';
+import type { ApplicationCommandOption, ApplicationCommandTypes, Interaction } from '../../deps.ts.js';
 
 export interface Command {
   /** The name of this command. */

@@ -3,15 +3,15 @@ import type {
   BotWithCache,
   CreateApplicationCommand,
   Guild,
-  MakeRequired} from "../../deps.ts";
+  MakeRequired} from '../../deps.ts.js';
 import {
   getGuild,
   hasProperty,
   upsertGuildApplicationCommands,
-} from "../../deps.ts";
-import { logger } from "./logger.ts";
-import type { subCommand, subCommandGroup } from "../commands/mod.ts";
-import { commands  } from "../commands/mod.ts";
+} from '../../deps.ts.js';
+import { logger } from './logger.ts.js';
+import type { subCommand, subCommandGroup } from '../commands/mod.ts.js';
+import { commands  } from '../commands/mod.ts.js';
 
 const log = logger({ name: "Helpers" });
 

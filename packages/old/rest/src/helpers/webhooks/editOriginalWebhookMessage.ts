@@ -3,7 +3,7 @@ import TRANSFORMERS from '@discordeno/transformer'
 import type { BigString, Camelize, DiscordMessage } from '@discordeno/types'
 import { InteractionResponseTypes } from '@discordeno/types'
 import type { RestManager } from '../../restManager.js'
-import type { InteractionCallbackData } from '../../types'
+import type { InteractionCallbackData } from '../../types.js'
 
 /**
  * Edits the original webhook message.

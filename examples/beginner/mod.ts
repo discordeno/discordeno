@@ -1,10 +1,10 @@
-import { startBot } from "./deps.ts";
-import log from "./src/utils/logger.ts";
-import { fileLoader, importDirectory } from "./src/utils/loader.ts";
-import { updateApplicationCommands } from "./src/utils/updateCommands.ts";
+import { startBot } from './deps.ts.js';
+import log from './src/utils/logger.ts.js';
+import { fileLoader, importDirectory } from './src/utils/loader.ts.js';
+import { updateApplicationCommands } from './src/utils/updateCommands.ts.js';
 // setup db
-import "./src/database/mod.ts";
-import { Bot } from "./bot.ts";
+import './src/database/mod.ts.js';
+import { Bot } from './bot.ts.js';
 
 log.info("Starting bot...");
 

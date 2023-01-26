@@ -2,7 +2,7 @@ import { routes } from '@discordeno/constant'
 import type { BigString, DiscordApplicationCommand } from '@discordeno/types'
 import type { RestManager } from '../../../restManager.js'
 import type { ApplicationCommand } from '../../../transformers/applicationCommand.js'
-import type { CreateApplicationCommand } from '../../../types'
+import type { CreateApplicationCommand } from '../../../types.js'
 
 // TODO: Swap `commandId` and `guildId` parameters.
 
