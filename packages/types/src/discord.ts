@@ -1370,7 +1370,7 @@ export interface DiscordInteractionDataOption {
   /** Value of application command option type */
   type: ApplicationCommandOptionTypes
   /** Value of the option resulting from user input */
-  value?: string | boolean | number | DiscordMember | DiscordChannel | DiscordRole
+  value?: string | boolean | number
   /** Present if this option is a group or subcommand */
   options?: DiscordInteractionDataOption[]
   /** `true` if this option is the currently focused option for autocomplete */
