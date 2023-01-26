@@ -90,13 +90,12 @@ __metadata:
     chai: ^4.3.7
     eslint: ^8.0.1
     eslint-config-discordeno: "*"
-    isomorphic-ws: ^5.0.0
     mocha: ^10.1.0
     sinon: ^15.0.0
     ts-node: ^10.9.1
     tsconfig: "*"
     typescript: ^4.9.3
-    ws: ^8.12.0
+    ws: ^8.11.0
   languageName: unknown
   linkType: soft
 
@@ -3280,15 +3279,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"isomorphic-ws@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "isomorphic-ws@npm:5.0.0"
-  peerDependencies:
-    ws: "*"
-  checksum: e20eb2aee09ba96247465fda40c6d22c1153394c0144fa34fe6609f341af4c8c564f60ea3ba762335a7a9c306809349f9b863c8beedf2beea09b299834ad5398
-  languageName: node
-  linkType: hard
-
 "istanbul-lib-coverage@npm:^3.0.0, istanbul-lib-coverage@npm:^3.2.0":
   version: 3.2.0
   resolution: "istanbul-lib-coverage@npm:3.2.0"
@@ -5580,18 +5570,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.12.0":
-  version: 8.12.0
-  resolution: "ws@npm:8.12.0"
+"ws@npm:^8.11.0":
+  version: 8.11.0
+  resolution: "ws@npm:8.11.0"
   peerDependencies:
     bufferutil: ^4.0.1
-    utf-8-validate: ">=5.0.2"
+    utf-8-validate: ^5.0.2
   peerDependenciesMeta:
     bufferutil:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 818ff3f8749c172a95a114cceb8b89cedd27e43a82d65c7ad0f7882b1e96a2ee6709e3746a903c3fa88beec0c8bae9a9fcd75f20858b32a166dfb7519316a5d7
+  checksum: 316b33aba32f317cd217df66dbfc5b281a2f09ff36815de222bc859e3424d83766d9eb2bd4d667de658b6ab7be151f258318fb1da812416b30be13103e5b5c67
   languageName: node
   linkType: hard
 
