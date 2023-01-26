@@ -10,6 +10,7 @@ export * from "./applicationCommandPermission.ts";
 export * from "./attachment.ts";
 export * from "./auditLogEntry.ts";
 export * from "./automodRule.ts";
+export * from "./automodActionExecution.ts";
 export * from "./channel.ts";
 export * from "./component.ts";
 export * from "./embed.ts";

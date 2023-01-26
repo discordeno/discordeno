@@ -39,6 +39,7 @@ export enum UserFlags {
   EarlyVerifiedBotDeveloper = 1 << 17,
   DiscordCertifiedModerator = 1 << 18,
   BotHttpInteractions = 1 << 19,
+  ActiveDeveloper = 1 << 22,
 }
 
 /** https://discord.com/developers/docs/resources/channel#channels-resource */
@@ -1287,7 +1288,7 @@ export enum Errors {
   MISSING_MANAGE_THREADS_AND_NOT_MEMBER = "MISSING_MANAGE_THREADS_AND_NOT_MEMBER",
   CANNOT_GET_MEMBERS_OF_AN_UNJOINED_PRIVATE_THREAD = "CANNOT_GET_MEMBERS_OF_AN_UNJOINED_PRIVATE_THREAD",
   HAVE_TO_BE_THE_CREATOR_OF_THE_THREAD_OR_HAVE_MANAGE_THREADS_TO_REMOVE_MEMBERS =
-    "HAVE_TO_BE_THE_CREATOR_OF_THE_THREAD_OR_HAVE_MANAGE_THREADS_TO_REMOVE_MEMBERS",
+  "HAVE_TO_BE_THE_CREATOR_OF_THE_THREAD_OR_HAVE_MANAGE_THREADS_TO_REMOVE_MEMBERS",
   // Message Get Errors
   INVALID_GET_MESSAGES_LIMIT = "INVALID_GET_MESSAGES_LIMIT",
   // Message Delete Errors
@@ -1429,9 +1430,9 @@ export type CamelCase<S extends string> = S extends `${infer P1}_${infer P2}${in
   : Lowercase<S>;
 export type Camelize<T> = {
   [K in keyof T as CamelCase<string & K>]: T[K] extends Array<infer U> ? U extends {} ? Array<Camelize<U>>
-    : T[K]
-    : T[K] extends {} ? Camelize<T[K]>
-    : never;
+  : T[K]
+  : T[K] extends {} ? Camelize<T[K]>
+  : never;
 };
 
 /** Non object primitives */
@@ -1484,14 +1485,14 @@ export type AnythingBut<T> = Exclude<
  * object identity type
  */
 export type Id<T> = T extends infer U ? {
-    [K in keyof U]: U[K];
-  }
+  [K in keyof U]: U[K];
+}
   : never;
 
 export type KeysWithUndefined<T> = {
   [K in keyof T]-?: undefined extends T[K] ? K
-    : null extends T[K] ? K
-    : never;
+  : null extends T[K] ? K
+  : never;
 }[keyof T];
 
 type OptionalizeAux<T extends object> = Id<
@@ -1509,8 +1510,8 @@ type OptionalizeAux<T extends object> = Id<
  */
 export type Optionalize<T> = T extends object
   ? T extends Array<unknown> ? number extends T["length"] ? T[number] extends object ? Array<OptionalizeAux<T[number]>>
-      : T
-    : Partial<T>
+  : T
+  : Partial<T>
   : OptionalizeAux<T>
   : T;
 
