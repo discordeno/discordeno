@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-useless-call */
-import type { RequestGuildMembers } from '@discordeno/types'
 import {
   BitwisePermissionFlags,
   ChannelTypes,
@@ -16,6 +15,7 @@ import {
   type GuildNsfwLevel,
   type MfaLevels,
   type PremiumTiers,
+  type RequestGuildMembers,
   type SystemChannelFlags,
   type VerificationLevels,
 } from '@discordeno/types'

@@ -1,5 +1,5 @@
 {
-  "name": "@discordeno/gateway",
+  "name": "@discordeno/bot",
   "version": "19.0.0-alpha.1",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -16,16 +16,17 @@
     "fmt": "eslint --fix \"src/**/*.ts*\"",
     "lint": "eslint \"src/**/*.ts*\"",
     "test:unit-coverage": "c8 mocha --no-warnings 'tests/**/*.spec.ts'",
-    "test:unit": "c8 --r lcov mocha --no-warnings 'tests/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js gateway",
+    "test:unit": "c8 --r lcov mocha --no-warnings 'tests/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js discordeno",
     "test:deno-unit": "swc tests --delete-dir-on-start --out-dir denoTestsDist && node ../../scripts/fixDenoTestExtension.js && deno test -A --import-map ../../denoImportMap.json denoTestsDist",
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/**/*.spec.ts'",
     "test:type": "tsc --noEmit",
     "test:test-type": "tsc --project tsconfig.test.json"
   },
   "dependencies": {
+    "@discordeno/gateway": "19.0.0-alpha.1",
+    "@discordeno/rest": "19.0.0-alpha.1",
     "@discordeno/types": "19.0.0-alpha.1",
-    "@discordeno/utils": "19.0.0-alpha.1",
-    "ws": "^8.11.0"
+    "@discordeno/utils": "19.0.0-alpha.1"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.57",
@@ -34,7 +35,6 @@
     "@types/mocha": "^10",
     "@types/node": "^18.11.9",
     "@types/sinon": "^10.0.13",
-    "@types/ws": "^8.5.3",
     "c8": "^7.12.0",
     "chai": "^4.3.7",
     "eslint": "^8.0.1",

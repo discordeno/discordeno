@@ -649,9 +649,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async sendRequest(options) {
-      // console.log('sending request', options.url, rest.createRequest({ method: options.method, url: options.url, body: options.body }))
       const response = await fetch(
-        options.url,
+        options.url.startsWith('https://') ? options.url : `${rest.baseUrl}/v${rest.version}${options.url}`,
         rest.createRequest({ method: options.method, url: options.url, body: options.body, ...options.options }),
       )
 

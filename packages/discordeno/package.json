@@ -23,6 +23,7 @@
     "test:test-type": "tsc --project tsconfig.test.json"
   },
   "dependencies": {
+    "@discordeno/bot": "19.0.0-alpha.1",
     "@discordeno/gateway": "19.0.0-alpha.1",
     "@discordeno/rest": "19.0.0-alpha.1",
     "@discordeno/types": "19.0.0-alpha.1",

@@ -2,9 +2,11 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-useless-call */
 
-import type { DiscordEmbed, DiscordMessageActivity, DiscordStickerItem } from '@discordeno/types'
 import {
   MessageTypes,
+  type DiscordEmbed,
+  type DiscordMessageActivity,
+  type DiscordStickerItem,
   type DiscordApplication,
   type DiscordAttachment,
   type DiscordMemberWithUser,
