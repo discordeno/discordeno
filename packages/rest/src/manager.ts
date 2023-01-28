@@ -682,6 +682,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         }
       }
 
+      // Discord sometimes sends no response
+      if (response.status === 204) return options.resolve(undefined);
+
       options.resolve(await response.json())
     },
 
@@ -1720,12 +1723,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rest.sendRequest({
           url: rest.routes.webhooks.webhook(rest.applicationId, token),
           method: 'POST',
-          body: rest.createRequest({
-            method: 'POST',
-            body: { ...options },
-            // remove authorization header
-            headers: { Authorization: '' },
-          }),
+          body: options,
           retryCount: 0,
           retryRequest: async function (options: SendRequestOptions) {
             // TODO: should change to reprocess queue item
@@ -1742,12 +1740,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rest.sendRequest({
           url: rest.routes.interactions.responses.callback(interactionId, token),
           method: 'POST',
-          body: rest.createRequest({
-            method: 'POST',
-            body: { ...options },
-            // remove authorization header
-            headers: { Authorization: '' },
-          }),
+          body: options,
           retryCount: 0,
           retryRequest: async function (options: SendRequestOptions) {
             // TODO: should change to reprocess queue item
