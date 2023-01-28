@@ -4,6 +4,7 @@ import { camelize, createLeakyBucket, delay } from '@discordeno/utils'
 import { inflateSync } from 'zlib'
 import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest } from './types.js'
 import { ShardSocketCloseCodes, ShardState } from './types.js'
+import WebSocket from 'ws'
 
 export class Shard {
   /** The id of the shard */
@@ -254,7 +255,7 @@ export class Shard {
   }
 
   /** Handle a gateway connection close. */
-  async handleClose (close: CloseEvent): Promise<void> {
+  async handleClose (close: WebSocket.CloseEvent): Promise<void> {
     //   gateway.debug("GW CLOSED", { shardId, payload: event });
 
     this.stopHeartbeating()
@@ -316,7 +317,7 @@ export class Shard {
   }
 
   /** Handle an incoming gateway message. */
-  async handleMessage (message: MessageEvent): Promise<void> {
+  async handleMessage (message: WebSocket.MessageEvent): Promise<void> {
     let preProcessMessage = message.data
 
     // If message compression is enabled,
