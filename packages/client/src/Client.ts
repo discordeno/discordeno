@@ -2,22 +2,19 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import type { DiscordAllowedMentions, DiscordAuditLogEntry, DiscordInvite, DiscordTemplate, GatewayIntents } from '@discordeno/types'
 import {
   AllowedMentionsTypes,
   ChannelTypes,
-  type DiscordChannel,
+  type DiscordAllowedMentions,
+  type DiscordAuditLogEntry, type DiscordChannel,
   type DiscordGetGatewayBot,
   type DiscordGuild,
-  type DiscordIntegration,
-  type DiscordMember,
+  type DiscordIntegration, type DiscordInvite, type DiscordMember,
   type DiscordMemberWithUser,
   type DiscordMessage,
-  type DiscordRole,
-  type DiscordThreadMember,
-  type DiscordUser,
-  type GetMessagesOptions,
-  type OverwriteTypes,
+  type DiscordRole, type DiscordTemplate, type DiscordThreadMember,
+  type DiscordUser, type GatewayIntents, type GetMessagesOptions,
+  type OverwriteTypes
 } from '@discordeno/types'
 import { delay, getBotIdFromToken, iconBigintToHash, iconHashToBigInt } from '@discordeno/utils'
 import EventEmitter from 'events'
@@ -106,7 +103,7 @@ import {
   WEBHOOK,
   WEBHOOK_MESSAGE,
   WEBHOOK_TOKEN,
-  WEBHOOK_TOKEN_SLACK,
+  WEBHOOK_TOKEN_SLACK
 } from './Endpoints.js'
 import ShardManager from './gateway/ShardManager.js'
 import RequestHandler from './RequestHandler.js'
@@ -197,7 +194,7 @@ import type {
   WelcomeScreen,
   WelcomeScreenOptions,
   Widget,
-  WidgetData,
+  WidgetData
 } from './typings.js'
 
 // TODO: api version
