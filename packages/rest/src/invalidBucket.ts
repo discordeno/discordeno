@@ -1,4 +1,4 @@
-import { delay } from '@discordeno/utils'
+import { delay, logger } from '@discordeno/utils'
 
 /**
  * A invalid request bucket is used in a similar manner as a leaky bucket but a invalid request bucket can be refilled as needed.
@@ -54,6 +54,7 @@ export function createInvalidRequestBucket (
       bucket.processing = true
 
       while (bucket.waiting.length > 0) {
+        logger.info(`[InvalidBucket] processing waiting queue while loop ran with ${bucket.waiting.length} remaining.`)
         if (bucket.isRequestAllowed()) {
           bucket.requested++
           // Resolve the next item in the queue

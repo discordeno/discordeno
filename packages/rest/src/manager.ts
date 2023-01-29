@@ -1,5 +1,5 @@
 import { InteractionResponseTypes } from '@discordeno/types'
-import { camelize, delay, getBotIdFromToken, urlToBase64 } from '@discordeno/utils'
+import { camelize, delay, getBotIdFromToken, logger, urlToBase64 } from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -87,6 +87,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     maxRetryCount: Infinity,
     globallyRateLimited: false,
     processingRateLimitedPaths: false,
+    deleteQueueDelay: 60000,
     queues: new Map(),
     rateLimitedPaths: new Map(),
     invalidBucket: createInvalidRequestBucket({}),
@@ -649,20 +650,25 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async sendRequest(options) {
-      const response = await fetch(
-        options.url.startsWith('https://') ? options.url : `${rest.baseUrl}/v${rest.version}${options.url}`,
-        rest.createRequest({ method: options.method, url: options.url, body: options.body, ...options.options }),
-      )
+      const url = options.url.startsWith('https://') ? options.url : `${rest.baseUrl}/v${rest.version}${options.url}`
+      const payload = rest.createRequest({ method: options.method, url: options.url, body: options.body, ...options.options })
+      
+      logger.debug(`sending request to ${url}`, "with payload:", {...payload, headers: { ...payload.headers, authorization: "Bot tokenhere"}})
+      const response = await fetch(url, payload)
+      logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
 
       // Set the bucket id if it was available on the headers
       const bucketId = rest.processHeaders(rest.simplifyUrl(options.url, options.method), response.headers)
       if (bucketId) options.bucketId = bucketId
 
       if (response.status < 200 || response.status >= 400) {
-        // If NOT rate limited remove from queue
+        logger.debug(`Request to ${url} failed.`)
+
         if (response.status === 429) {
+          logger.debug(`Request to ${url} was ratelimited.`)
           // Too many attempts, get rid of request from queue.
           if (options.retryCount++ >= rest.maxRetryCount) {
+            logger.debug(`Request to ${url} exceeded the maximum allowed retries.`, "with payload:", payload)
             // rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(options)}`)
             // Remove item from queue to prevent retry
             return options.reject?.({
@@ -683,7 +689,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
 
       // Discord sometimes sends no response
-      if (response.status === 204) return options.resolve(undefined);
+      if (response.status === 204) return options.resolve(undefined)
 
       options.resolve(await response.json())
     },
@@ -727,7 +733,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         queue.makeRequest(request)
       } else {
         // CREATES A NEW QUEUE
-        const bucketQueue = new Queue(rest, { url })
+        const bucketQueue = new Queue(rest, { url, deleteQueueDelay: rest.deleteQueueDelay })
+
         // Add request to queue
         bucketQueue.makeRequest(request)
         // Save queue
@@ -1862,6 +1869,8 @@ export interface RestManager {
   globallyRateLimited: boolean
   /** Whether or not the rate limited paths are being processed to allow requests to be made once time is up. Defaults to false. */
   processingRateLimitedPaths: boolean
+  /** The time in milliseconds to wait before deleting this queue if it is empty. Defaults to 60000(one minute). */
+  deleteQueueDelay: number;
   /** The queues that hold all the requests to be processed. */
   queues: Map<string, Queue>
   /** The paths that are currently rate limited. */

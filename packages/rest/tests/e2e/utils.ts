@@ -1,4 +1,5 @@
 import type { Camelize, DiscordGuild } from '@discordeno/types'
+import { logger, LogLevels } from "@discordeno/utils"
 import { createRestManager } from '../../src/manager.js'
 import { token } from './constants.js'
 
@@ -10,3 +11,7 @@ export let cached = {
 export const rest = createRestManager({
   token
 })
+rest.deleteQueueDelay = 10000;
+
+// For debugging purposes
+// logger.setLevel(LogLevels.Debug)
