@@ -1,5 +1,5 @@
 import { InteractionResponseTypes } from '@discordeno/types'
-import { camelize, delay, getBotIdFromToken, logger, urlToBase64 } from '@discordeno/utils'
+import { camelize, delay, findFiles, getBotIdFromToken, logger, urlToBase64 } from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -532,7 +532,29 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         options.body.reason = undefined
       }
 
-      if (options.body && !['GET', 'DELETE'].includes(options.method)) {
+      if (options.body?.file) {
+        const files = findFiles(options.body.file)
+        const form = new FormData()
+
+        // WHEN CREATING A STICKER, DISCORD WANTS FORM DATA ONLY
+        if (options.url?.endsWith('/stickers') && options.method === 'POST') {
+          form.append('file', files[0].blob, files[0].name)
+          form.append('name', options.body.name as string)
+          form.append('description', options.body.description as string)
+          form.append('tags', options.body.tags as string)
+        } else {
+          for (let i = 0; i < files.length; i++) {
+            form.append(`file${i}`, files[i].blob, files[i].name)
+          }
+
+          form.append(
+            'payload_json',
+            JSON.stringify({ ...options.body, file: undefined })
+          )
+        }
+
+        options.body.file = form
+      } else if (options.body && !['GET', 'DELETE'].includes(options.method)) {
         headers['Content-Type'] = 'application/json'
       }
 
