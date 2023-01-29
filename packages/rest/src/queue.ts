@@ -1,4 +1,4 @@
-import { delay } from '@discordeno/utils'
+import { delay, logger } from '@discordeno/utils'
 import type { RestManager, SendRequestOptions } from './manager.js'
 
 export class Queue {
@@ -26,15 +26,18 @@ export class Queue {
   url: string
   /** When requests started being made to determine when the interval will reset it. */
   frozenAt: number = 0
+  /** The time in milliseconds to wait before deleting this queue if it is empty. Defaults to 60000(one minute). */
+  deleteQueueDelay: number = 60000
 
   constructor(rest: RestManager, options: QueueOptions) {
     this.rest = rest
     this.url = options.url
 
-    if (options?.interval) this.interval = options.interval
-    if (options?.max) this.max = options.max
-    if (options?.remaining) this.remaining = options.remaining
-    if (options?.timeoutId) this.timeoutId = options.timeoutId
+    if (options.interval) this.interval = options.interval
+    if (options.max) this.max = options.max
+    if (options.remaining) this.remaining = options.remaining
+    if (options.timeoutId) this.timeoutId = options.timeoutId
+    if (options.deleteQueueDelay) this.deleteQueueDelay = options.deleteQueueDelay
   }
 
   /** Check if there is any remaining requests that are allowed. */
@@ -65,6 +68,7 @@ export class Queue {
     this.processing = true
 
     while (this.waiting.length > 0) {
+      logger.debug(`Queue ${this.url} process waiting while loop ran.`)
       if (this.isRequestAllowed()) {
         // Resolve the next item in the queue
         this.waiting.shift()?.()
@@ -86,6 +90,7 @@ export class Queue {
     this.processingPending = true
 
     while (this.pending.length > 0) {
+      logger.debug(`Queue ${this.url} process pending while loop ran with ${this.pending.length}.`)
       if (!this.firstRequest && !this.isRequestAllowed()) {
         const now = Date.now()
         const future = this.frozenAt + this.interval
@@ -128,6 +133,8 @@ export class Queue {
       }
     }
 
+    logger.debug(`Queue ${this.url} process pending while loop exited with ${this.pending.length}.`)
+
     // Mark as false so next pending request can be triggered by new loop.
     this.processingPending = false
     this.cleanup()
@@ -164,15 +171,20 @@ export class Queue {
       return
     }
 
+    logger.debug(`[Queue] ${this.url}. Delaying delete for ${this.deleteQueueDelay}ms`)
     // Delete in a minute giving a bit of time to allow new requests that may reuse this queue
-    setTimeout(() => {
+    setTimeout(async () => {
       if (!this.isQueueClearable()) {
+        logger.debug(`[Queue] ${this.url}. is not clearable. Restarting processing of queue.`)
         this.processPending()
         return
       }
+
+      logger.debug(`[Queue] ${this.url}. Deleting`)
       // No requests have been requested for this queue so we nuke this queue
       this.rest.queues.delete(this.url)
-    }, 60000)
+      logger.debug(`[Queue] ${this.url}. Deleted! Remaining: (${this.rest.queues.size})`, [...this.rest.queues.keys()])
+    }, this.deleteQueueDelay)
   }
 
   isQueueClearable(): boolean {
@@ -198,4 +210,6 @@ export interface QueueOptions {
   timeoutId?: NodeJS.Timeout
   /** The url this queue will be handling. */
   url: string
+  /** The time in milliseconds to wait before deleting this queue if it is empty. Defaults to 60000(one minute). */
+  deleteQueueDelay?: number
 }
