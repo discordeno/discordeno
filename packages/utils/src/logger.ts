@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { bgBlue, bold, cyan, gray, italic, red, yellow } from "./colors.js";
+import { bgBrightMagenta, black, bold, cyan, gray, italic, red, yellow } from './colors.js'
 
 export enum LogLevels {
   Debug,
@@ -48,7 +48,7 @@ export function createLogger({
 
     const date = new Date()
     const log = [
-      red(`[${date.toLocaleDateString()} ${date.toLocaleTimeString()}]`),
+      bgBrightMagenta(black(`[${date.toLocaleDateString()} ${date.toLocaleTimeString()}]`)),
       color(prefixes.get(level) ?? 'DEBUG'),
       name ? `${name} >` : '>',
       ...args,

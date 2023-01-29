@@ -5,7 +5,7 @@
 // on npm.
 // https://deno.land/std@0.153.0/fmt/colors.ts?source
 
-const noColor = true;
+const noColor = false;
 
 interface Code {
   open: string;
