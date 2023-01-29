@@ -84,7 +84,7 @@ export class GuildChannel extends Channel {
     if (permission & BigInt(BitwisePermissionFlags.ADMINISTRATOR)) {
       return new Permission(BitwisePermissionFlags.ADMINISTRATOR)
     }
-    const channel = this instanceof ThreadChannel ? this.guild.channels.get(this.parentID) : this
+    const channel = this instanceof ThreadChannel && this.parentID ? this.guild.channels.get(this.parentID) : this
     let overwrite = channel?.permissionOverwrites.get(this.guild.id)
     if (overwrite) {
       permission = (permission & ~overwrite.deny) | overwrite.allow

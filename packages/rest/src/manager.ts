@@ -3371,7 +3371,7 @@ export interface RestManager {
            *
            * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message}
            */
-          followup: (token: string, options: InteractionResponse) => Promise<Camelize<DiscordMessage>>
+          followup: (token: string, options: InteractionCallbackData) => Promise<Camelize<DiscordMessage>>
           /**
            * Sends a response to an interaction.
            *
@@ -5036,7 +5036,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message}
    */
-  sendFollowupMessage: (token: string, options: InteractionResponse) => Promise<Camelize<DiscordMessage>>
+  sendFollowupMessage: (token: string, options: InteractionCallbackData) => Promise<Camelize<DiscordMessage>>
   /**
    * Sends a response to an interaction.
    *
