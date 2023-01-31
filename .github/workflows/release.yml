@@ -35,6 +35,8 @@ jobs:
             - "packages/types/**"
             utils:
             - "packages/utils/**"
+            bot:
+            - "packages/bot/**"
             global:
             - ".github/**"
 
@@ -46,7 +48,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: ["gateway", "rest", "types", "utils"]
+        package: ["gateway", "rest", "types", "utils", "bot"]
         run: ["false"]
         exclude:
           - package: gateway
@@ -57,6 +59,8 @@ jobs:
             run: "${{ needs.path-filter.outputs.types == 'true' || needs.path-filter.outputs.global == 'true' }}"
           - package: utils
             run: "${{ needs.path-filter.outputs.utils == 'true' || needs.path-filter.outputs.global == 'true' }}"
+          - package: bot
+            run: "${{ needs.path-filter.outputs.bot == 'true' || needs.path-filter.outputs.global == 'true' }}"
     needs: path-filter
     steps:
       - uses: actions/checkout@v3
@@ -86,7 +90,7 @@ jobs:
       - name: Bump Package Version
         run: node ./scripts/bumpVersionByCommit.js ${{ matrix.package }}
 
-      - run: npm publish --access public
+      - run: npm publish --access public --tag next
         working-directory: packages/${{ matrix.package }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
