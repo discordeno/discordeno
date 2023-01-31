@@ -204,7 +204,7 @@ jobs:
       package: bot
   bot-other-runtime-test:
     name: Bot
-    needs: utils-unit-and-integration-test
+    needs: bot-unit-and-integration-test
     uses: ./.github/workflows/other-runtime-package-test.yml
     with:
       package: bot
