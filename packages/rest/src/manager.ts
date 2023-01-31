@@ -698,11 +698,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async sendRequest(options) {
-      console.log('in send request')
       const url = options.url.startsWith('https://') ? options.url : `${rest.baseUrl}/v${rest.version}${options.url}`
       const payload = rest.createRequest({ method: options.method, url: options.url, body: options.body, ...options.options })
 
-      console.log(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
       logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
       const response = await fetch(url, payload)
       logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
@@ -1407,7 +1405,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async createGuild(options) {
-      console.log('in create guild')
       return await rest.post<DiscordGuild>(rest.routes.guilds.all(), options)
     },
 
