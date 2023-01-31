@@ -1,9 +1,9 @@
 import { logger, LogLevels } from '@discordeno/utils'
-// For debugging purposes
-logger.setLevel(LogLevels.Debug)
 
 import { createRestManager } from '../../src/manager.js'
 import { token } from './constants.js'
+// For debugging purposes
+logger.setLevel(LogLevels.Debug)
 
 export const rest = createRestManager({
   token,
