@@ -123,6 +123,7 @@ describe('[role] Role tests', async () => {
       const edited = await rest.editRole(e2ecache.guild.id, role.id, {
         permissions: ['SEND_MESSAGES', 'VIEW_CHANNEL']
       })
+      console.log('edited', edited);
       expect(edited.permissions.toString()).to.equal(
         calculateBits(['SEND_MESSAGES', 'VIEW_CHANNEL'])
       )
@@ -138,7 +139,7 @@ describe('[role] Role tests', async () => {
       })
       await rest.addRole(
         e2ecache.guild.id,
-        130136895395987456n,
+        rest.applicationId,
         role.id
       )
     })
@@ -150,26 +151,27 @@ describe('[role] Role tests', async () => {
     it('without a reason', async () => {
       await rest.removeRole(
         e2ecache.guild.id,
-        130136895395987456n,
+        rest.applicationId,
         role.id
       )
       const member = await rest.getMember(
         e2ecache.guild.id,
-        130136895395987456n
+        rest.applicationId,
       )
+      // console.log('member', member.errors.userId.Errors)
       expect(member?.roles.includes(role.id)).to.equal(false)
     })
 
     it('with a reason', async () => {
       await rest.removeRole(
         e2ecache.guild.id,
-        130136895395987456n,
+        rest.applicationId,
         role.id,
         'test reason'
       )
       const member = await rest.getMember(
         e2ecache.guild.id,
-        130136895395987456n
+        rest.applicationId,
       )
       expect(member?.roles.includes(role.id)).to.equal(false)
     })
@@ -187,7 +189,7 @@ describe('[role] Role tests', async () => {
     afterEach(async () => {
       await rest.removeRole(
         e2ecache.guild.id,
-        130136895395987456n,
+        rest.applicationId,
         role.id
       )
       await rest.deleteRole(e2ecache.guild.id, role.id)
@@ -197,12 +199,12 @@ describe('[role] Role tests', async () => {
       // Assign the role to the user
       await rest.addRole(
         e2ecache.guild.id,
-        130136895395987456n,
+        rest.applicationId,
         role.id
       )
       const member = await rest.getMember(
         e2ecache.guild.id,
-        130136895395987456n
+        rest.applicationId,
       )
       expect(member?.roles.includes(role.id)).to.equal(true)
     })
@@ -211,13 +213,13 @@ describe('[role] Role tests', async () => {
     it('With a reason', async () => {
       await rest.addRole(
         e2ecache.guild.id,
-        130136895395987456n,
+        rest.applicationId,
         role.id,
         'test reason'
       )
       const member = await rest.getMember(
         e2ecache.guild.id,
-        130136895395987456n
+        rest.applicationId,
       )
       expect(member?.roles.includes(role.id)).to.equal(true)
     })
