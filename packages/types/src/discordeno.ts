@@ -4,7 +4,9 @@ import type {
   AutoModerationTriggerTypes,
   DiscordAttachment,
   DiscordAutoModerationRuleTriggerMetadataPresets,
+  DiscordChannel,
   DiscordEmbed,
+  DiscordRole,
 } from './discord.js'
 import type {
   AllowedMentionsTypes,
@@ -15,6 +17,8 @@ import type {
   ButtonStyles,
   Camelize,
   ChannelTypes,
+  DefaultMessageNotificationLevels,
+  ExplicitContentFilterLevels,
   InteractionResponseTypes,
   Localization,
   MessageComponentTypes,
@@ -24,8 +28,10 @@ import type {
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
   SortOrderTypes,
+  SystemChannelFlags,
   TargetTypes,
   TextStyles,
+  VerificationLevels,
   VideoQualityModes,
 } from './shared.js'
 
@@ -923,4 +929,71 @@ export interface ApplicationCommandPermissions {
   type: ApplicationCommandPermissionTypes
   /** `true` to allow, `false`, to disallow */
   permission: boolean
+}
+
+/** https://discord.com/developers/docs/resources/guild#create-guild */
+export interface CreateGuild {
+  /** Name of the guild (1-100 characters) */
+  name: string
+  /** Base64 128x128 image for the guild icon */
+  icon?: string
+  /** Verification level */
+  verificationLevel?: VerificationLevels
+  /** Default message notification level */
+  defaultMessageNotifications?: DefaultMessageNotificationLevels
+  /** Explicit content filter level */
+  explicitContentFilter?: ExplicitContentFilterLevels
+  /** New guild roles (first role is the everyone role) */
+  roles?: Camelize<DiscordRole[]>
+  /** New guild's channels */
+  channels?: Array<Partial<Camelize<DiscordChannel>>>
+  /** Id for afk channel */
+  afkChannelId?: string
+  /** Afk timeout in seconds */
+  afkTimeout?: number
+  /** The id of the channel where guild notices such as welcome messages and boost events are posted */
+  systemChannelId?: string
+  /** System channel flags */
+  systemChannelFlags?: SystemChannelFlags
+}
+
+export interface CreateGuildRole {
+  /** Name of the role, max 100 characters, default: "new role" */
+  name?: string
+  /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
+  permissions?: PermissionStrings[]
+  /** RGB color value, default: 0 */
+  color?: number
+  /** Whether the role should be displayed separately in the sidebar, default: false */
+  hoist?: boolean
+  /** Whether the role should be mentionable, default: false */
+  mentionable?: boolean
+  /** The role's unicode emoji (if the guild has the `ROLE_ICONS` feature) */
+  unicodeEmoji?: string
+  /** the role's icon image (if the guild has the `ROLE_ICONS` feature) */
+  icon?: string
+}
+
+export interface EditGuildRole {
+  /** Name of the role, max 100 characters, default: "new role" */
+  name?: string
+  /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
+  permissions?: PermissionStrings[]
+  /** RGB color value, default: 0 */
+  color?: number
+  /** Whether the role should be displayed separately in the sidebar, default: false */
+  hoist?: boolean
+  /** Whether the role should be mentionable, default: false */
+  mentionable?: boolean
+  /** The role's unicode emoji (if the guild has the `ROLE_ICONS` feature) */
+  unicodeEmoji?: string
+  /** the role's icon image (if the guild has the `ROLE_ICONS` feature) */
+  icon?: string
+}
+
+export interface ModifyRolePositions {
+  /** The role id */
+  id: BigString
+  /** The sorting position for the role. */
+  position?: number | null
 }

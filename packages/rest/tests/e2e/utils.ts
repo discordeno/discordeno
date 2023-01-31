@@ -1,17 +1,18 @@
-import type { Camelize, DiscordGuild } from '@discordeno/types'
-import { logger, LogLevels } from "@discordeno/utils"
+import { logger, LogLevels } from '@discordeno/utils'
+
 import { createRestManager } from '../../src/manager.js'
 import { token } from './constants.js'
-
-// eslint-disable-next-line prefer-const
-export let cached = {
-  guild: undefined as Camelize<DiscordGuild> | undefined
-}
+// For debugging purposes
+logger.setLevel(LogLevels.Debug)
 
 export const rest = createRestManager({
-  token
+  token,
 })
-rest.deleteQueueDelay = 10000;
+rest.deleteQueueDelay = 10000
 
-// For debugging purposes
-// logger.setLevel(LogLevels.Debug)
+console.log('CREATING GUILD')
+export const e2ecache = {
+  guild: await rest.createGuild({ name: 'ddenotester' }),
+}
+
+console.log('CACHED check', e2ecache.guild)
