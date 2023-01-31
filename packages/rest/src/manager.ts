@@ -1,4 +1,6 @@
-import { InteractionResponseTypes } from '@discordeno/types'
+import {
+  InteractionResponseTypes
+} from '@discordeno/types'
 import { camelize, delay, findFiles, getBotIdFromToken, logger, urlToBase64 } from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
@@ -69,7 +71,13 @@ import type {
   StartThreadWithMessage,
   StartThreadWithoutMessage,
   WithReason,
-} from '@discordeno/types'
+
+  CreateGuild,
+  CreateGuildRole,
+  DiscordGuild,
+  DiscordRole,
+  EditGuildRole,
+  ModifyRolePositions} from '@discordeno/types'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 
 // TODO: make dynamic based on package.json file
@@ -267,6 +275,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       // Guild Endpoints
       guilds: {
+        all: () => {
+          return '/guilds'
+        },
         automod: {
           rule: (guildId, ruleId) => {
             return `/guilds/${guildId}/auto-moderation/rules/${ruleId}`
@@ -320,6 +331,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
             return url
           },
+        },
+        guild(guildId, withCounts) {
+          let url = `/guilds/${guildId}?`
+
+          if (withCounts !== undefined) {
+            url += `with_counts=${withCounts.toString()}`
+          }
+
+          return url
         },
         integration(guildId, integrationId) {
           return `/guilds/${guildId}/integrations/${integrationId}`
@@ -397,6 +417,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             }
 
             return url
+          },
+        },
+        roles: {
+          one: (guildId: BigString, roleId: BigString) => {
+            return `/guilds/${guildId}/roles/${roleId}`
+          },
+          all: (guildId: BigString) => {
+            return `/guilds/${guildId}/roles`
+          },
+          member: (guildId, memberId, roleId) => {
+            return `/guilds/${guildId}/members/${memberId}/roles/${roleId}`
           },
         },
         templates: {
@@ -547,10 +578,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             form.append(`file${i}`, files[i].blob, files[i].name)
           }
 
-          form.append(
-            'payload_json',
-            JSON.stringify({ ...options.body, file: undefined })
-          )
+          form.append('payload_json', JSON.stringify({ ...options.body, file: undefined }))
         }
 
         options.body.file = form
@@ -672,10 +700,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async sendRequest(options) {
+      console.log('in send request')
       const url = options.url.startsWith('https://') ? options.url : `${rest.baseUrl}/v${rest.version}${options.url}`
       const payload = rest.createRequest({ method: options.method, url: options.url, body: options.body, ...options.options })
-      
-      logger.debug(`sending request to ${url}`, "with payload:", {...payload, headers: { ...payload.headers, authorization: "Bot tokenhere"}})
+
+      console.log(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
+      logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
       const response = await fetch(url, payload)
       logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
 
@@ -690,7 +720,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           logger.debug(`Request to ${url} was ratelimited.`)
           // Too many attempts, get rid of request from queue.
           if (options.retryCount++ >= rest.maxRetryCount) {
-            logger.debug(`Request to ${url} exceeded the maximum allowed retries.`, "with payload:", payload)
+            logger.debug(`Request to ${url} exceeded the maximum allowed retries.`, 'with payload:', payload)
             // rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(options)}`)
             // Remove item from queue to prevent retry
             return options.reject?.({
@@ -985,8 +1015,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
       },
 
+      async create(options) {
+        return await rest.createGuild(options)
+      },
+
       async channels(id) {
         return await rest.getChannels(id)
+      },
+
+      async delete(id) {
+        return await rest.deleteGuild(id)
       },
 
       async emojis(id) {
@@ -1230,6 +1268,36 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           },
         },
       },
+
+      roles: {
+        async add(guildId, userId, roleId, reason) {
+          return await rest.addRole(guildId, userId, roleId, reason)
+        },
+
+        async create(guildId, options, reason) {
+          return await rest.createRole(guildId, options, reason)
+        },
+
+        async delete(guildId, roleId) {
+          return await rest.deleteRole(guildId, roleId)
+        },
+
+        async edit(guildId, roleId, options) {
+          return await rest.editRole(guildId, roleId, options)
+        },
+
+        async list(guildId) {
+          return await rest.getRoles(guildId)
+        },
+
+        async positions(guildId, options) {
+          return await rest.editRolePositions(guildId, options)
+        },
+
+        async remove(guildId, userId, roleId, reason) {
+          return await rest.removeRole(guildId, userId, roleId, reason)
+        },
+      },
     },
 
     users: {
@@ -1316,6 +1384,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       },
     },
 
+    async addRole(guildId, userId, roleId, reason) {
+      return await rest.put(rest.routes.guilds.roles.member(guildId, userId, roleId), { reason })
+    },
+
     async addThreadMember(channelId, userId) {
       return await rest.put(rest.routes.channels.threads.user(channelId, userId))
     },
@@ -1336,6 +1408,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.commands(rest.applicationId), command)
     },
 
+    async createGuild(options) {
+      console.log('in create guild')
+      return await rest.post<DiscordGuild>(rest.routes.guilds.all(), options)
+    },
+
     async createGuildApplicationCommand(command, guildId) {
       return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), command)
     },
@@ -1350,6 +1427,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async createInvite(channelId, options = {}) {
       return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), options)
+    },
+
+    async createRole(guildId, options, reason) {
+      return await rest.post<DiscordRole>(rest.routes.guilds.roles.all(guildId), {
+        ...options,
+        reason,
+      })
     },
 
     async createScheduledEvent(guildId, options) {
@@ -1394,6 +1478,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.delete(rest.routes.interactions.commands.command(rest.applicationId, commandId))
     },
 
+    async deleteGuild(guildId) {
+      return await rest.delete(rest.routes.guilds.guild(guildId))
+    },
+
     async deleteGuildApplicationCommand(commandId, guildId) {
       return await rest.delete(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId))
     },
@@ -1416,6 +1504,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async deleteOriginalInteractionResponse(token) {
       return await rest.delete(rest.routes.interactions.responses.original(rest.applicationId, token))
+    },
+
+    async deleteRole(guildId, roleId) {
+      return await rest.delete(rest.routes.guilds.roles.one(guildId, roleId))
     },
 
     async deleteScheduledEvent(guildId, eventId) {
@@ -1479,23 +1571,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.patch<DiscordEmoji>(rest.routes.guilds.emoji(guildId, id), options)
     },
 
-    /**
-     * Edits a follow-up message to an interaction.
-     *
-     * @param token - The interaction token to use, provided in the original interaction.
-     * @param messageId - The ID of the message to edit.
-     * @param options - The parameters for the edit of the message.
-     * @returns An instance of the edited {@link Message}.
-     *
-     * @remarks
-     * Unlike `editMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
-     *
-     * Does not support ephemeral follow-up messages due to these being stateless.
-     *
-     * Fires a _Message Update_ event.
-     *
-     * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message}
-     */
     async editFollowupMessage(token, messageId, options) {
       return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), options)
     },
@@ -1532,6 +1607,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async editScheduledEvent(guildId, eventId, options) {
       return await rest.patch<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId), options)
+    },
+
+    async editRole(guildId, roleId, options) {
+      return await rest.patch<DiscordRole>(rest.routes.guilds.roles.one(guildId, roleId), options)
+    },
+
+    async editRolePositions(guildId, options) {
+      return await rest.patch<DiscordRole[]>(rest.routes.guilds.roles.all(guildId), options)
     },
 
     async editStageInstance(channelId, data) {
@@ -1687,6 +1770,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.public(channelId, options))
     },
 
+    async getRoles(guildId) {
+      return await rest.get<DiscordRole[]>(rest.routes.guilds.roles.all(guildId))
+    },
+
     async getScheduledEvent(guildId, eventId, options) {
       return await rest.get<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId, options?.withUserCount))
     },
@@ -1741,6 +1828,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async publishMessage(channelId, messageId) {
       return await rest.post<DiscordMessage>(rest.routes.channels.crosspost(channelId, messageId))
+    },
+
+    async removeRole(guildId, userId, roleId, reason) {
+      return await rest.delete(rest.routes.guilds.roles.member(guildId, userId, roleId), { reason })
     },
 
     async removeThreadMember(channelId, userId) {
@@ -1892,7 +1983,7 @@ export interface RestManager {
   /** Whether or not the rate limited paths are being processed to allow requests to be made once time is up. Defaults to false. */
   processingRateLimitedPaths: boolean
   /** The time in milliseconds to wait before deleting this queue if it is empty. Defaults to 60000(one minute). */
-  deleteQueueDelay: number;
+  deleteQueueDelay: number
   /** The queues that hold all the requests to be processed. */
   queues: Map<string, Queue>
   /** The paths that are currently rate limited. */
@@ -1978,6 +2069,8 @@ export interface RestManager {
     }
     /** Routes for guild related endpoints. */
     guilds: {
+      /** Routes for handling a non-specific guild. */
+      all: () => string
       /** Routes for a guilds automoderation. */
       automod: {
         /** Route for handling a guild's automoderation. */
@@ -2000,6 +2093,8 @@ export interface RestManager {
       emoji: (guildId: BigString, id: BigString) => string
       /** Route for handling non-specific emojis. */
       emojis: (guildId: BigString) => string
+      /** Route for handling a specific guild. */
+      guild: (guildId: BigString, withCounts?: boolean) => string
       /** Route for handling a specific integration. */
       integration: (guildId: BigString, integrationId: BigString) => string
       /** Route for handling non-specific integrations. */
@@ -2033,6 +2128,15 @@ export interface RestManager {
         guild: (guildId: BigString, code: string) => string
         /** Route for handling non-specific guild's templates. */
         all: (guildId: BigString) => string
+      }
+      /** Routes for handling a guild's roles. */
+      roles: {
+        /** Route for handling a specific guild role. */
+        one: (guildId: BigString, roleId: BigString) => string
+        /** Route for handling a guild's roles. */
+        all: (guildId: BigString) => string
+        /** Route for handling a members roles in a guild. */
+        member: (guildId: BigString, memberId: BigString, roleId: BigString) => string
       }
     }
     /** Routes for interaction related endpoints. */
@@ -2744,6 +2848,20 @@ export interface RestManager {
       }
     }
     /**
+     * Creates a guild.
+     *
+     * @param options - The parameters for the creation of the guild.
+     * @returns An instance of the created {@link DiscordGuild}.
+     *
+     * @remarks
+     * ⚠️ This route can only be used by bots in __fewer than 10 guilds__.
+     *
+     * Fires a _Guild Create_ gateway event.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/guild#create-guild}
+     */
+    create: (options: CreateGuild) => Promise<Camelize<DiscordGuild>>
+    /**
      * Gets the list of channels for a guild.
      *
      * @param guildId - The ID of the guild to get the channels of.
@@ -2755,6 +2873,19 @@ export interface RestManager {
      * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-channels}
      */
     channels: (guildId: BigString) => Promise<Camelize<DiscordChannel[]>>
+    /**
+     * Deletes a guild.
+     *
+     * @param guildId - The ID of the guild to delete.
+     *
+     * @remarks
+     * The bot user must be the owner of the guild.
+     *
+     * Fires a _Guild Delete_ gateway event.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild}
+     */
+    delete: (guildId: BigString) => Promise<void>
     /**
      * Gets the list of emojis for a guild.
      *
@@ -3040,7 +3171,6 @@ export interface RestManager {
        */
       sync: (guildId: BigString) => Promise<Camelize<DiscordTemplate>>
     }
-
     /* Guild Members related helper methods. */
     members: {
       /**
@@ -3532,6 +3662,111 @@ export interface RestManager {
         }
       }
     }
+    /** Role related helpers methods. */
+    roles: {
+      /**
+       * Adds a role to a member.
+       *
+       * @param guildId - The ID of the guild the member to add the role to is in.
+       * @param userId - The user ID of the member to add the role to.
+       * @param roleId - The ID of the role to add to the member.
+       *
+       * @remarks
+       * Requires the `MANAGE_ROLES` permission.
+       *
+       * Fires a _Guild Member Update_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#add-guild-member-role}
+       */
+      add: (guildId: BigString, userId: BigString, roleId: BigString, reason?: string) => Promise<void>
+      /**
+       * Creates a role in a guild.
+       *
+       * @param guildId - The ID of the guild to create the role in.
+       * @param options - The parameters for the creation of the role.
+       * @returns An instance of the created {@link DiscordRole}.
+       *
+       * @remarks
+       * Requires the `MANAGE_ROLES` permission.
+       *
+       * Fires a _Guild Role Create_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-role}
+       */
+      create: (guildId: BigString, options: CreateGuildRole, reason?: string) => Promise<Camelize<DiscordRole>>
+      /**
+       * Deletes a role from a guild.
+       *
+       * @param guildId - The ID of the guild to delete the role from.
+       * @param roleId - The ID of the role to delete.
+       *
+       * @remarks
+       * Requires the `MANAGE_ROLES` permission.
+       *
+       * Fires a _Guild Role Delete_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild-role}
+       */
+      delete: (guildId: BigString, roleId: BigString) => Promise<void>
+      /**
+       * Edits a role in a guild.
+       *
+       * @param guildId - The ID of the guild to edit the role in.
+       * @param roleId - The ID of the role to edit.
+       * @param options - The parameters for the edit of the role.
+       * @returns An instance of the edited {@link DiscordRole}.
+       *
+       * @remarks
+       * Requires the `MANAGE_ROLES` permission.
+       *
+       * Fires a _Guild Role Update_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-role}
+       */
+      edit: (guildId: BigString, roleId: BigString, options: EditGuildRole) => Promise<Camelize<DiscordRole>>
+      /**
+       * Edits the positions of a set of roles.
+       *
+       * @param guildId - The ID of the guild to edit the role positions in.
+       * @param options - The parameters for the edit of the role positions.
+       * @returns A collection of {@link DiscordRole} objects assorted by role ID.
+       *
+       * @remarks
+       * Requires the `MANAGE_ROLES` permission.
+       *
+       * Fires a _Guild Role Update_ gateway event for every role impacted in this change.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-role-positions}
+       */
+      positions: (guildId: BigString, options: ModifyRolePositions[]) => Promise<Camelize<DiscordRole[]>>
+      /**
+       * Gets the list of roles for a guild.
+       *
+       * @param guildId - The ID of the guild to get the list of roles for.
+       * @returns A collection of {@link DisorcRole} objects assorted by role ID.
+       *
+       * @remarks
+       * ⚠️ This endpoint should be used sparingly due to {@link User} objects already being included in guild payloads.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-roles}
+       */
+      list: (guildId: BigString) => Promise<Camelize<DiscordRole[]>>
+      /**
+       * Removes a role from a member.
+       *
+       * @param guildId - The ID of the guild the member to remove the role from is in.
+       * @param userId - The user ID of the member to remove the role from.
+       * @param roleId - The ID of the role to remove from the member.
+       *
+       * @remarks
+       * Requires the `MANAGE_ROLES` permission.
+       *
+       * Fires a _Guild Member Update_ gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/guild#remove-guild-member-role}
+       */
+      remove: (guildId: BigString, userId: BigString, roleId: BigString, reason?: string) => Promise<void>
+    }
   }
   /** Webhook related helper methods. */
   webhooks: {
@@ -3726,6 +3961,21 @@ export interface RestManager {
     channel: (userId: BigString) => Promise<Camelize<DiscordChannel>>
   }
   /**
+   * Adds a role to a member.
+   *
+   * @param guildId - The ID of the guild the member to add the role to is in.
+   * @param userId - The user ID of the member to add the role to.
+   * @param roleId - The ID of the role to add to the member.
+   *
+   * @remarks
+   * Requires the `MANAGE_ROLES` permission.
+   *
+   * Fires a _Guild Member Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#add-guild-member-role}
+   */
+  addRole: (guildId: BigString, userId: BigString, roleId: BigString, reason?: string) => Promise<void>
+  /**
    * Adds a member to a thread.
    *
    * @param channelId - The ID of the thread to add the member to.
@@ -3824,6 +4074,20 @@ export interface RestManager {
    */
   createGlobalApplicationCommand: (command: CreateApplicationCommand) => Promise<Camelize<DiscordApplicationCommand>>
   /**
+   * Creates a guild.
+   *
+   * @param options - The parameters for the creation of the guild.
+   * @returns An instance of the created {@link DiscordGuild}.
+   *
+   * @remarks
+   * ⚠️ This route can only be used by bots in __fewer than 10 guilds__.
+   *
+   * Fires a _Guild Create_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#create-guild}
+   */
+  createGuild: (options: CreateGuild) => Promise<Camelize<DiscordGuild>>
+  /**
    * Creates an application command only accessible in a specific guild.
    *
    * @param command - The command to create.
@@ -3870,6 +4134,21 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#create-channel-invite}
    */
   createInvite: (channelId: BigString, options?: CreateChannelInvite) => Promise<Camelize<DiscordInvite>>
+  /**
+   * Creates a role in a guild.
+   *
+   * @param guildId - The ID of the guild to create the role in.
+   * @param options - The parameters for the creation of the role.
+   * @returns An instance of the created {@link DiscordRole}.
+   *
+   * @remarks
+   * Requires the `MANAGE_ROLES` permission.
+   *
+   * Fires a _Guild Role Create_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-role}
+   */
+  createRole: (guildId: BigString, options: CreateGuildRole, reason?: string) => Promise<Camelize<DiscordRole>>
   /**
    * Creates a scheduled event in a guild.
    *
@@ -4008,6 +4287,19 @@ export interface RestManager {
    */
   deleteGlobalApplicationCommand: (commandId: BigString) => Promise<void>
   /**
+   * Deletes a guild.
+   *
+   * @param guildId - The ID of the guild to delete.
+   *
+   * @remarks
+   * The bot user must be the owner of the guild.
+   *
+   * Fires a _Guild Delete_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild}
+   */
+  deleteGuild: (guildId: BigString) => Promise<void>
+  /**
    * Deletes an application command registered in a guild.
    *
    * @param guildId - The ID of the guild to delete the command from.
@@ -4088,6 +4380,20 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response}
    */
   deleteOriginalInteractionResponse: (token: string) => Promise<void>
+  /**
+   * Deletes a role from a guild.
+   *
+   * @param guildId - The ID of the guild to delete the role from.
+   * @param roleId - The ID of the role to delete.
+   *
+   * @remarks
+   * Requires the `MANAGE_ROLES` permission.
+   *
+   * Fires a _Guild Role Delete_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild-role}
+   */
+  deleteRole: (guildId: BigString, roleId: BigString) => Promise<void>
   /**
    * Deletes a scheduled event from a guild.
    *
@@ -4387,6 +4693,37 @@ export interface RestManager {
     token: string,
     options: InteractionCallbackData & { threadId?: BigString },
   ) => Promise<Camelize<DiscordMessage>>
+  /**
+   * Edits a role in a guild.
+   *
+   * @param guildId - The ID of the guild to edit the role in.
+   * @param roleId - The ID of the role to edit.
+   * @param options - The parameters for the edit of the role.
+   * @returns An instance of the edited {@link DiscordRole}.
+   *
+   * @remarks
+   * Requires the `MANAGE_ROLES` permission.
+   *
+   * Fires a _Guild Role Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-role}
+   */
+  editRole: (guildId: BigString, roleId: BigString, options: EditGuildRole) => Promise<Camelize<DiscordRole>>
+  /**
+   * Edits the positions of a set of roles.
+   *
+   * @param guildId - The ID of the guild to edit the role positions in.
+   * @param options - The parameters for the edit of the role positions.
+   * @returns A collection of {@link DiscordRole} objects assorted by role ID.
+   *
+   * @remarks
+   * Requires the `MANAGE_ROLES` permission.
+   *
+   * Fires a _Guild Role Update_ gateway event for every role impacted in this change.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-role-positions}
+   */
+  editRolePositions: (guildId: BigString, options: ModifyRolePositions[]) => Promise<Camelize<DiscordRole[]>>
   /**
    * Edits a scheduled event.
    *
@@ -4840,6 +5177,18 @@ export interface RestManager {
    */
   getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
   /**
+   * Gets the list of roles for a guild.
+   *
+   * @param guildId - The ID of the guild to get the list of roles for.
+   * @returns A collection of {@link DisorcRole} objects assorted by role ID.
+   *
+   * @remarks
+   * ⚠️ This endpoint should be used sparingly due to {@link User} objects already being included in guild payloads.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-roles}
+   */
+  getRoles: (guildId: BigString) => Promise<Camelize<DiscordRole[]>>
+  /**
    * Gets a scheduled event by its ID.
    *
    * @param guildId - The ID of the guild to get the scheduled event from.
@@ -5003,6 +5352,21 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#crosspost-message}
    */
   publishMessage: (channelId: BigString, messageId: BigString) => Promise<Camelize<DiscordMessage>>
+  /**
+   * Removes a role from a member.
+   *
+   * @param guildId - The ID of the guild the member to remove the role from is in.
+   * @param userId - The user ID of the member to remove the role from.
+   * @param roleId - The ID of the role to remove from the member.
+   *
+   * @remarks
+   * Requires the `MANAGE_ROLES` permission.
+   *
+   * Fires a _Guild Member Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#remove-guild-member-role}
+   */
+  removeRole: (guildId: BigString, userId: BigString, roleId: BigString, reason?: string) => Promise<void>
   /**
    * Removes a member from a thread.
    *
