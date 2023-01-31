@@ -10,7 +10,7 @@ describe('[rest] Message related tests', () => {
     })
 
     it('With an image', async () => {
-      const image = await fetch("https://cdn.discordapp.com/avatars/270010330782892032/d031ea881688526d1ae235fd2843e53c.jpg?size=2048").then(res => res.blob()).catch(()=> undefined)
+      const image = await fetch("https://cdn.discordapp.com/avatars/270010330782892032/d031ea881688526d1ae235fd2843e53c.jpg?size=2048").then(async res => await res.blob()).catch(()=> undefined)
       expect(image).to.not.be.undefined
       if (!image) throw new Error("Was not able to fetch the image.")
 
