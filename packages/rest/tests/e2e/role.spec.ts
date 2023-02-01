@@ -4,13 +4,18 @@ import { expect } from 'chai'
 import { afterEach, before, beforeEach, describe, it } from 'mocha'
 import { e2ecache, rest } from './utils.js'
 
-// before(async () => {
-//   if (!e2ecache.guild) {
-//     e2ecache.guild = await rest.createGuild({
-//       name: 'Discordeno-test'
-//     })
-//   }
-// })
+before(async () => {
+  if (!e2ecache.guild) {
+    e2ecache.guild = await rest.createGuild({
+      name: 'Discordeno-test',
+    })
+  }
+})
+
+after(async () => {
+  if (rest.invalidBucket.timeoutId) clearTimeout(rest.invalidBucket.timeoutId)
+  if (e2ecache.guild.id) await rest.deleteGuild(e2ecache.guild.id)
+})
 
 describe('[role] Role tests', async () => {
   // Create a role with a reason
@@ -18,9 +23,9 @@ describe('[role] Role tests', async () => {
     const role = await rest.createRole(
       e2ecache.guild?.id,
       {
-        name: `test role ${Date.now()}`
+        name: `test role ${Date.now()}`,
       },
-      'test reason'
+      'test reason',
     )
 
     expect(role.id).to.exist
@@ -31,7 +36,7 @@ describe('[role] Role tests', async () => {
   // Create a role without a reason
   it('Create a role without a reason', async () => {
     const role = await rest.createRole(e2ecache.guild.id, {
-      name: `test role ${Date.now()}`
+      name: `test role ${Date.now()}`,
     })
 
     expect(role.id).to.exist
@@ -42,11 +47,11 @@ describe('[role] Role tests', async () => {
   // Delete a role
   it('Delete a role', async () => {
     const role = await rest.createRole(e2ecache.guild.id, {
-      name: `test role ${Date.now()}`
+      name: `test role ${Date.now()}`,
     })
     await rest.deleteRole(e2ecache.guild.id, role.id)
     const deletedRoles = await rest.getRoles(e2ecache.guild.id)
-    expect(deletedRoles.some(r => r.id === role.id)).to.equal(false)
+    expect(deletedRoles.some((r) => r.id === role.id)).to.equal(false)
   })
 
   // Edit a role
@@ -55,7 +60,7 @@ describe('[role] Role tests', async () => {
 
     beforeEach(async () => {
       role = await rest.createRole(e2ecache.guild.id, {
-        name: `test role ${Date.now()}`
+        name: `test role ${Date.now()}`,
       })
     })
 
@@ -66,7 +71,7 @@ describe('[role] Role tests', async () => {
     // Edit the roles name
     it('Edit the roles name', async () => {
       const edited = await rest.editRole(e2ecache.guild.id, role.id, {
-        name: 'test role 4'
+        name: 'test role 4',
       })
       expect(edited.name).to.equal('test role 4')
     })
@@ -74,7 +79,7 @@ describe('[role] Role tests', async () => {
     // Edit the roles color
     it('Edit the roles color', async () => {
       const edited = await rest.editRole(e2ecache.guild.id, role.id, {
-        color: 0x0000ff
+        color: 0x0000ff,
       })
       expect(edited.color).to.equal(0x0000ff)
     })
@@ -121,12 +126,9 @@ describe('[role] Role tests', async () => {
     // Edit the roles permissions
     it('Edit the roles permissions', async () => {
       const edited = await rest.editRole(e2ecache.guild.id, role.id, {
-        permissions: ['SEND_MESSAGES', 'VIEW_CHANNEL']
+        permissions: ['SEND_MESSAGES', 'VIEW_CHANNEL'],
       })
-      console.log('edited', edited);
-      expect(edited.permissions.toString()).to.equal(
-        calculateBits(['SEND_MESSAGES', 'VIEW_CHANNEL'])
-      )
+      expect(edited.permissions.toString()).to.equal(calculateBits(['SEND_MESSAGES', 'VIEW_CHANNEL']))
     })
   })
 
@@ -135,13 +137,9 @@ describe('[role] Role tests', async () => {
 
     beforeEach(async () => {
       role = await rest.createRole(e2ecache.guild.id, {
-        name: `test role ${Date.now()}`
+        name: `test role ${Date.now()}`,
       })
-      await rest.addRole(
-        e2ecache.guild.id,
-        rest.applicationId,
-        role.id
-      )
+      await rest.addRole(e2ecache.guild.id, rest.applicationId, role.id)
     })
 
     afterEach(async () => {
@@ -149,30 +147,15 @@ describe('[role] Role tests', async () => {
     })
 
     it('without a reason', async () => {
-      await rest.removeRole(
-        e2ecache.guild.id,
-        rest.applicationId,
-        role.id
-      )
-      const member = await rest.getMember(
-        e2ecache.guild.id,
-        rest.applicationId,
-      )
+      await rest.removeRole(e2ecache.guild.id, rest.applicationId, role.id)
+      const member = await rest.getMember(e2ecache.guild.id, rest.applicationId)
       // console.log('member', member.errors.userId.Errors)
       expect(member?.roles.includes(role.id)).to.equal(false)
     })
 
     it('with a reason', async () => {
-      await rest.removeRole(
-        e2ecache.guild.id,
-        rest.applicationId,
-        role.id,
-        'test reason'
-      )
-      const member = await rest.getMember(
-        e2ecache.guild.id,
-        rest.applicationId,
-      )
+      await rest.removeRole(e2ecache.guild.id, rest.applicationId, role.id, 'test reason')
+      const member = await rest.getMember(e2ecache.guild.id, rest.applicationId)
       expect(member?.roles.includes(role.id)).to.equal(false)
     })
   })
@@ -182,45 +165,26 @@ describe('[role] Role tests', async () => {
 
     beforeEach(async () => {
       role = await rest.createRole(e2ecache.guild.id, {
-        name: `test role ${Date.now()}`
+        name: `test role ${Date.now()}`,
       })
     })
 
     afterEach(async () => {
-      await rest.removeRole(
-        e2ecache.guild.id,
-        rest.applicationId,
-        role.id
-      )
+      await rest.removeRole(e2ecache.guild.id, rest.applicationId, role.id)
       await rest.deleteRole(e2ecache.guild.id, role.id)
     })
 
     it('Without a reason.', async () => {
       // Assign the role to the user
-      await rest.addRole(
-        e2ecache.guild.id,
-        rest.applicationId,
-        role.id
-      )
-      const member = await rest.getMember(
-        e2ecache.guild.id,
-        rest.applicationId,
-      )
+      await rest.addRole(e2ecache.guild.id, rest.applicationId, role.id)
+      const member = await rest.getMember(e2ecache.guild.id, rest.applicationId)
       expect(member?.roles.includes(role.id)).to.equal(true)
     })
 
     // Add the role to the user with a reason
     it('With a reason', async () => {
-      await rest.addRole(
-        e2ecache.guild.id,
-        rest.applicationId,
-        role.id,
-        'test reason'
-      )
-      const member = await rest.getMember(
-        e2ecache.guild.id,
-        rest.applicationId,
-      )
+      await rest.addRole(e2ecache.guild.id, rest.applicationId, role.id, 'test reason')
+      const member = await rest.getMember(e2ecache.guild.id, rest.applicationId)
       expect(member?.roles.includes(role.id)).to.equal(true)
     })
   })
