@@ -496,6 +496,8 @@ export class Shard {
     // Reference: https://discord.com/developers/docs/topics/gateway#heartbeating
     const jitter = Math.ceil(this.heart.interval * (Math.random() || 0.5))
     this.heart.timeoutId = setTimeout(() => {
+      if (!this.isOpen()) return;
+
       // Using a direct socket.send call here because heartbeat requests are reserved by us.
       this.socket?.send(
         JSON.stringify({
@@ -509,6 +511,7 @@ export class Shard {
 
       // After the random heartbeat jitter we can start a normal interval.
       this.heart.intervalId = setInterval(async () => {
+        if (!this.isOpen()) return;
         // gateway.debug("GW DEBUG", `Running setInterval in heartbeat file. Shard: ${shardId}`);
 
         // gateway.debug("GW HEARTBEATING", { shardId, shard: currentShard });

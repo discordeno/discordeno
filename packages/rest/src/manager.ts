@@ -1,5 +1,5 @@
 import { InteractionResponseTypes } from '@discordeno/types'
-import { camelize, delay, findFiles, getBotIdFromToken, logger, urlToBase64 } from '@discordeno/utils'
+import { camelize, camelToSnakeCase, delay, findFiles, getBotIdFromToken, logger, urlToBase64 } from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -12,8 +12,10 @@ import type {
   CreateAutoModerationRuleOptions,
   CreateChannelInvite,
   CreateForumPostWithMessage,
+  CreateGuild,
   CreateGuildChannel,
   CreateGuildEmoji,
+  CreateGuildRole,
   CreateMessageOptions,
   CreateScheduledEvent,
   CreateStageInstance,
@@ -30,6 +32,7 @@ import type {
   DiscordFollowAnnouncementChannel,
   DiscordFollowedChannel,
   DiscordGetGatewayBot,
+  DiscordGuild,
   DiscordIntegration,
   DiscordInvite,
   DiscordInviteMetadata,
@@ -38,6 +41,7 @@ import type {
   DiscordMember,
   DiscordMemberWithUser,
   DiscordMessage,
+  DiscordRole,
   DiscordScheduledEvent,
   DiscordStageInstance,
   DiscordStickerPack,
@@ -47,6 +51,7 @@ import type {
   DiscordWebhook,
   EditAutoModerationRuleOptions,
   EditChannelPermissionOverridesOptions,
+  EditGuildRole,
   EditMessage,
   EditScheduledEvent,
   EditStageInstanceOptions,
@@ -64,18 +69,13 @@ import type {
   ModifyChannel,
   ModifyGuildChannelPositions,
   ModifyGuildEmoji,
+  ModifyRolePositions,
   ModifyWebhook,
   SearchMembers,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
   WithReason,
-
-  CreateGuild,
-  CreateGuildRole,
-  DiscordGuild,
-  DiscordRole,
-  EditGuildRole,
-  ModifyRolePositions} from '@discordeno/types'
+} from '@discordeno/types'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 
 // TODO: make dynamic based on package.json file
@@ -536,6 +536,33 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return false
     },
 
+    changeToDiscordFormat(obj: any): any {
+      if (obj === null) return null
+
+      if (typeof obj === 'object') {
+        if (Array.isArray(obj)) {
+          return obj.map((item) => rest.changeToDiscordFormat(item))
+        }
+
+        const newObj: any = {}
+
+        for (const key of Object.keys(obj)) {
+          if (key === 'permissions') {
+            newObj.permissions = '1234567890'
+            continue
+          }
+
+          newObj[camelToSnakeCase(key)] = rest.changeToDiscordFormat(obj[key])
+        }
+
+        return newObj
+      }
+
+      if (typeof obj === 'bigint') return obj.toString()
+
+      return obj
+    },
+
     createRequest(options) {
       const headers: Record<string, string> = {
         'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${version})`,
@@ -561,32 +588,36 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         options.body.reason = undefined
       }
 
-      if (options.body?.file) {
-        const files = findFiles(options.body.file)
-        const form = new FormData()
+      if (options.body) {
+        const { file } = options.body
+        if (file) {
+          const files = findFiles(file)
+          const form = new FormData()
 
-        // WHEN CREATING A STICKER, DISCORD WANTS FORM DATA ONLY
-        if (options.url?.endsWith('/stickers') && options.method === 'POST') {
-          form.append('file', files[0].blob, files[0].name)
-          form.append('name', options.body.name as string)
-          form.append('description', options.body.description as string)
-          form.append('tags', options.body.tags as string)
-        } else {
-          for (let i = 0; i < files.length; i++) {
-            form.append(`file${i}`, files[i].blob, files[i].name)
+          // WHEN CREATING A STICKER, DISCORD WANTS FORM DATA ONLY
+          if (options.url?.endsWith('/stickers') && options.method === 'POST') {
+            form.append('file', files[0].blob, files[0].name)
+            form.append('name', options.body.name as string)
+            form.append('description', options.body.description as string)
+            form.append('tags', options.body.tags as string)
+          } else {
+            for (let i = 0; i < files.length; i++) {
+              form.append(`file${i}`, files[i].blob, files[i].name)
+            }
+
+            if (file) options.body.file = undefined
+            form.append('payload_json', JSON.stringify(rest.changeToDiscordFormat(options.body)))
           }
 
-          form.append('payload_json', JSON.stringify({ ...options.body, file: undefined }))
+          options.body.file = form
+        } else if (options.body && !['GET', 'DELETE'].includes(options.method)) {
+          headers['Content-Type'] = 'application/json'
         }
-
-        options.body.file = form
-      } else if (options.body && !['GET', 'DELETE'].includes(options.method)) {
-        headers['Content-Type'] = 'application/json'
       }
 
       return {
         headers,
-        body: (options.body?.file ?? JSON.stringify(options.body)) as FormData | string,
+        body: (options.body?.file ?? JSON.stringify(rest.changeToDiscordFormat(options.body))) as FormData | string,
         method: options.method,
       }
     },
@@ -698,11 +729,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async sendRequest(options) {
-      console.log('in send request')
       const url = options.url.startsWith('https://') ? options.url : `${rest.baseUrl}/v${rest.version}${options.url}`
       const payload = rest.createRequest({ method: options.method, url: options.url, body: options.body, ...options.options })
 
-      console.log(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
       logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
       const response = await fetch(url, payload)
       logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
@@ -736,6 +765,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
           return await options.retryRequest?.(options)
         }
+
+        return options.reject(await response.json())
       }
 
       // Discord sometimes sends no response
@@ -1407,7 +1438,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async createGuild(options) {
-      console.log('in create guild')
       return await rest.post<DiscordGuild>(rest.routes.guilds.all(), options)
     },
 
@@ -2170,6 +2200,8 @@ export interface RestManager {
   }
   /** Check the rate limits for a url or a bucket. */
   checkRateLimits: (url: string) => number | false
+  /** Reshapes and modifies the obj as needed to make it ready for discords api. */
+  changeToDiscordFormat: (obj: any) => any
   /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
   createRequest: (options: CreateRequestBodyOptions) => RequestBody
   /** This will create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */

@@ -1,6 +1,19 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { rest } from './utils.js'
+import { e2ecache, rest } from './utils.js'
+
+before(async () => {
+  if (!e2ecache.guild) {
+    e2ecache.guild = await rest.createGuild({
+      name: 'Discordeno-test',
+    })
+  }
+})
+
+after(async () => {
+  if (rest.invalidBucket.timeoutId) clearTimeout(rest.invalidBucket.timeoutId)
+  if (e2ecache.guild.id) await rest.deleteGuild(e2ecache.guild.id)
+})
 
 describe('[rest] Message related tests', () => {
   describe('Send a message', () => {

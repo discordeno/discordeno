@@ -32,3 +32,18 @@ export function snakeToCamelCase(str: string): string {
 
   return result
 }
+
+export function camelToSnakeCase(str: string): string {
+  let result = "";
+  for (let i = 0, len = str.length; i < len; ++i) {
+      if (str[i] >= "A" && str[i] <= "Z") {
+          result += `_${str[i].toLowerCase()}`;
+
+          continue;
+      }
+
+      result += str[i];
+  }
+
+  return result;
+}
