@@ -75,7 +75,13 @@ import type {
   StartThreadWithMessage,
   StartThreadWithoutMessage,
   WithReason,
-} from '@discordeno/types'
+
+  CreateGuild,
+  CreateGuildRole,
+  DiscordGuild,
+  DiscordRole,
+  EditGuildRole,
+  ModifyRolePositions} from '@discordeno/types'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 
 // TODO: make dynamic based on package.json file
@@ -724,6 +730,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async sendRequest(options) {
+      console.log('in send request')
       const url = options.url.startsWith('https://') ? options.url : `${rest.baseUrl}/v${rest.version}${options.url}`
       const payload = rest.createRequest({ method: options.method, url: options.url, body: options.body, ...options.options })
 

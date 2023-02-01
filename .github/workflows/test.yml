@@ -196,3 +196,15 @@ jobs:
     uses: ./.github/workflows/other-runtime-package-test.yml
     with:
       package: utils
+  bot-unit-and-integration-test:
+    name: Bot
+    needs: build-dist
+    uses: ./.github/workflows/package-test.yml
+    with:
+      package: bot
+  bot-other-runtime-test:
+    name: Bot
+    needs: bot-unit-and-integration-test
+    uses: ./.github/workflows/other-runtime-package-test.yml
+    with:
+      package: bot
