@@ -75,13 +75,7 @@ import type {
   StartThreadWithMessage,
   StartThreadWithoutMessage,
   WithReason,
-
-  CreateGuild,
-  CreateGuildRole,
-  DiscordGuild,
-  DiscordRole,
-  EditGuildRole,
-  ModifyRolePositions} from '@discordeno/types'
+} from '@discordeno/types'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 
 // TODO: make dynamic based on package.json file
