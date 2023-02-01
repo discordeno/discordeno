@@ -584,7 +584,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
 
       if (options.body) {
-        let { file } = options.body
+        const { file } = options.body
         if (file) {
           const files = findFiles(file)
           const form = new FormData()
@@ -592,15 +592,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           // WHEN CREATING A STICKER, DISCORD WANTS FORM DATA ONLY
           if (options.url?.endsWith('/stickers') && options.method === 'POST') {
             form.append('file', files[0].blob, files[0].name)
-            form.append('name', options.body!.name as string)
-            form.append('description', options.body!.description as string)
-            form.append('tags', options.body!.tags as string)
+            form.append('name', options.body.name as string)
+            form.append('description', options.body.description as string)
+            form.append('tags', options.body.tags as string)
           } else {
             for (let i = 0; i < files.length; i++) {
               form.append(`file${i}`, files[i].blob, files[i].name)
             }
 
-            if (file) options.body!.file = undefined
+            if (file) options.body.file = undefined
             form.append('payload_json', JSON.stringify(rest.changeToDiscordFormat(options.body)))
           }
 
