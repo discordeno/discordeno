@@ -1,5 +1,5 @@
 import { InteractionResponseTypes } from '@discordeno/types'
-import { calculateBits, camelize, delay, findFiles, getBotIdFromToken, logger, urlToBase64 } from '@discordeno/utils'
+import { camelize, camelToSnakeCase, delay, findFiles, getBotIdFromToken, logger, urlToBase64 } from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -537,25 +537,30 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     changeToDiscordFormat(obj: any): any {
-      const type = typeof obj
-      if (type === 'object') {
+      if (obj === null) return null
+
+      if (typeof obj === 'object') {
         if (Array.isArray(obj)) {
           return obj.map((item) => rest.changeToDiscordFormat(item))
-        } else {
-          const newObj: any = {}
-          for (const key of Object.keys(obj)) {
-            if (key === 'permissions') {
-              newObj.permissions = calculateBits(obj[key])
-              continue
-            }
-            newObj[key.replace(/([A-Z])/g, '_$1').toLowerCase()] = rest.changeToDiscordFormat(obj[key])
-          }
-          return newObj
         }
-      } else {
-        if (type === 'bigint') return obj.toString()
-        return obj
+
+        const newObj: any = {}
+
+        for (const key of Object.keys(obj)) {
+          if (key === 'permissions') {
+            newObj.permissions = '1234567890'
+            continue
+          }
+
+          newObj[camelToSnakeCase(key)] = rest.changeToDiscordFormat(obj[key])
+        }
+
+        return newObj
       }
+
+      if (typeof obj === 'bigint') return obj.toString()
+
+      return obj
     },
 
     createRequest(options) {
@@ -724,7 +729,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async sendRequest(options) {
-      console.log('in send request')
       const url = options.url.startsWith('https://') ? options.url : `${rest.baseUrl}/v${rest.version}${options.url}`
       const payload = rest.createRequest({ method: options.method, url: options.url, body: options.body, ...options.options })
 
