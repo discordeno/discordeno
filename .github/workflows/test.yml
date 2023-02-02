@@ -202,6 +202,14 @@ jobs:
     uses: ./.github/workflows/package-test.yml
     with:
       package: bot
+  bot-e2e-test:
+    name: Bot
+    needs: bot-unit-and-integration-test
+    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/node-migration' || github.ref == 'refs/heads/node-migration-clean' }}
+    uses: ./.github/workflows/e2e-test.yml
+    secrets: inherit
+    with:
+      package: bot
   bot-other-runtime-test:
     name: Bot
     needs: bot-unit-and-integration-test
