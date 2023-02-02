@@ -8,8 +8,10 @@
     "sinon": "https://cdn.skypack.dev/sinon@15.0.0?dts",
     "benchmark": "npm:benchmark",
     "@discordeno/utils": "./packages/utils/dist/index.js",
-    "@discordeno/constant": "./packages/constant/dist/index.js",
     "@discordeno/types": "./packages/types/dist/index.js",
-    "@discordeno/transformer": "./packages/transformer/dist/index.js"
+    "@discordeno/rest": "./packages/rest/dist/index.js",
+    "@discordeno/gateway": "./packages/gateway/dist/index.js",
+    "@discordeno/bot": "./packages/bot/dist/index.js",
+    "@discordeno/client": "./packages/client/dist/index.js"
   }
 }
