@@ -1,10 +1,10 @@
 import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
 import { camelize, createLeakyBucket, delay } from '@discordeno/utils'
-import { inflateSync } from 'zlib'
+import { inflateSync } from 'node:zlib'
+import WebSocket from 'ws'
 import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest } from './types.js'
 import { ShardSocketCloseCodes, ShardState } from './types.js'
-import WebSocket from 'ws'
 
 export class Shard {
   /** The id of the shard */
@@ -37,34 +37,34 @@ export class Shard {
   bucket = createLeakyBucket({
     max: 120,
     refillInterval: 60000,
-    refillAmount: 120
+    refillAmount: 120,
   })
 
-  constructor (options: ShardCreateOptions) {
+  constructor(options: ShardCreateOptions) {
     this.id = options.id
     this.connection = options.connection
     this.events = options.events
 
     this.heart = {
       acknowledged: false,
-      interval: 45000
+      interval: 45000,
     }
   }
 
   /** The gateway configuration which is used to connect to Discord. */
-  get gatewayConfig (): ShardGatewayConfig {
+  get gatewayConfig(): ShardGatewayConfig {
     return this.connection
   }
 
   /** Calculate the amount of requests which can safely be made per rate limit interval, before the gateway gets disconnected due to an exceeded rate limit. */
-  calculateSafeRequests (): number {
+  calculateSafeRequests(): number {
     // * 2 adds extra safety layer for discords OP 1 requests that we need to respond to
     const safeRequests = this.maxRequestsPerRateLimitTick - Math.ceil(this.rateLimitResetInterval / this.heart.interval) * 2
 
     return safeRequests < 0 ? 0 : safeRequests
   }
 
-  async checkOffline (highPriority: boolean): Promise<void> {
+  async checkOffline(highPriority: boolean): Promise<void> {
     if (!this.isOpen()) {
       await new Promise((resolve) => {
         // Higher priority requests get added at the beginning of the array.
@@ -75,14 +75,14 @@ export class Shard {
   }
 
   /** Close the socket connection to discord if present. */
-  close (code: number, reason: string): void {
+  close(code: number, reason: string): void {
     if (this.socket?.readyState !== WebSocket.OPEN) return
 
     return this.socket?.close(code, reason)
   }
 
   /** Connect the shard with the gateway and start heartbeating. This will not identify the shard to the gateway. */
-  async connect (): Promise<Shard> {
+  async connect(): Promise<Shard> {
     // Only set the shard to `Connecting` state,
     // if the connection request does not come from an identify or resume action.
     if (![ShardState.Identifying, ShardState.Resuming].includes(this.state)) {
@@ -126,7 +126,7 @@ export class Shard {
   }
 
   /** Identify the shard to the gateway. If not connected, this will also connect the shard to the gateway. */
-  async identify (): Promise<void> {
+  async identify(): Promise<void> {
     // A new identify has been requested even though there is already a connection open.
     // Therefore we need to close the old connection and heartbeating before creating a new one.
     if (this.isOpen()) {
@@ -156,10 +156,10 @@ export class Shard {
           properties: this.gatewayConfig.properties,
           intents: this.gatewayConfig.intents,
           shard: [this.id, this.gatewayConfig.totalShards],
-          presence: await this.makePresence?.()
-        }
+          presence: await this.makePresence?.(),
+        },
       },
-      true
+      true,
     )
 
     return await new Promise((resolve) => {
@@ -178,12 +178,12 @@ export class Shard {
   }
 
   /** Check whether the connection to Discord is currently open. */
-  isOpen (): boolean {
+  isOpen(): boolean {
     return this.socket?.readyState === WebSocket.OPEN
   }
 
   /** Attempt to resume the previous shards session with the gateway. */
-  async resume (): Promise<void> {
+  async resume(): Promise<void> {
     //   gateway.debug("GW RESUMING", { shardId });
     // It has been requested to resume the Shards session.
     // It's possible that the shard is still connected with Discord's gateway therefore we need to forcefully close it.
@@ -214,10 +214,10 @@ export class Shard {
         d: {
           token: `Bot ${this.gatewayConfig.token}`,
           session_id: this.sessionId,
-          seq: this.previousSequenceNumber ?? 0
-        }
+          seq: this.previousSequenceNumber ?? 0,
+        },
       },
-      true
+      true,
     )
 
     return await new Promise((resolve) => {
@@ -235,7 +235,7 @@ export class Shard {
   /** Send a message to Discord.
    * @param {boolean} [highPriority=false] - Whether this message should be send asap.
    */
-  async send (message: ShardSocketRequest, highPriority = false): Promise<void> {
+  async send(message: ShardSocketRequest, highPriority = false): Promise<void> {
     // Before acquiring a token from the bucket, check whether the shard is currently offline or not.
     // Else bucket and token wait time just get wasted.
     await this.checkOffline(highPriority)
@@ -249,13 +249,13 @@ export class Shard {
   }
 
   /** Shutdown the this. Forcefully disconnect the shard from Discord. The shard may not attempt to reconnect with Discord. */
-  async shutdown (): Promise<void> {
+  async shutdown(): Promise<void> {
     this.close(ShardSocketCloseCodes.Shutdown, 'Shard shutting down.')
     this.state = ShardState.Offline
   }
 
   /** Handle a gateway connection close. */
-  async handleClose (close: WebSocket.CloseEvent): Promise<void> {
+  async handleClose(close: WebSocket.CloseEvent): Promise<void> {
     //   gateway.debug("GW CLOSED", { shardId, payload: event });
 
     this.stopHeartbeating()
@@ -317,7 +317,7 @@ export class Shard {
   }
 
   /** Handle an incoming gateway message. */
-  async handleMessage (message: WebSocket.MessageEvent): Promise<void> {
+  async handleMessage(message: WebSocket.MessageEvent): Promise<void> {
     let preProcessMessage = message.data
 
     // If message compression is enabled,
@@ -351,8 +351,8 @@ export class Shard {
         this.socket?.send(
           JSON.stringify({
             op: GatewayOpcodes.Heartbeat,
-            d: this.previousSequenceNumber
-          })
+            d: this.previousSequenceNumber,
+          }),
         )
         this.events.heartbeat?.(this)
 
@@ -372,7 +372,7 @@ export class Shard {
             refillInterval: 60000,
             refillAmount: this.calculateSafeRequests(),
             // Waiting acquires should not be lost on a re-identify.
-            waiting: this.bucket.waiting
+            waiting: this.bucket.waiting,
           })
         }
 
@@ -467,19 +467,19 @@ export class Shard {
    * async in case devs create the presence based on eg. database values.
    * Passing the shard's id there to make it easier for the dev to use this function.
    */
-  async makePresence (): Promise<BotStatusUpdate | undefined> {
+  async makePresence(): Promise<BotStatusUpdate | undefined> {
     // eslint-disable-next-line no-useless-return
     return
   }
 
   /** This function communicates with the management process, in order to know whether its free to identify. When this function resolves, this means that the shard is allowed to send an identify payload to discord. */
-  async requestIdentify (): Promise<void> {
+  async requestIdentify(): Promise<void> {
     // TODO: how to handle this
     // return await options.requestIdentify(this.id)
   }
 
   /** Start sending heartbeat payloads to Discord in the provided interval. */
-  startHeartbeating (interval: number): void {
+  startHeartbeating(interval: number): void {
     //   gateway.debug("GW HEARTBEATING_STARTED", { shardId, interval });
 
     this.heart.interval = interval
@@ -496,14 +496,14 @@ export class Shard {
     // Reference: https://discord.com/developers/docs/topics/gateway#heartbeating
     const jitter = Math.ceil(this.heart.interval * (Math.random() || 0.5))
     this.heart.timeoutId = setTimeout(() => {
-      if (!this.isOpen()) return;
+      if (!this.isOpen()) return
 
       // Using a direct socket.send call here because heartbeat requests are reserved by us.
       this.socket?.send(
         JSON.stringify({
           op: GatewayOpcodes.Heartbeat,
-          d: this.previousSequenceNumber
-        })
+          d: this.previousSequenceNumber,
+        }),
       )
 
       this.heart.lastBeat = Date.now()
@@ -511,7 +511,7 @@ export class Shard {
 
       // After the random heartbeat jitter we can start a normal interval.
       this.heart.intervalId = setInterval(async () => {
-        if (!this.isOpen()) return;
+        if (!this.isOpen()) return
         // gateway.debug("GW DEBUG", `Running setInterval in heartbeat file. Shard: ${shardId}`);
 
         // gateway.debug("GW HEARTBEATING", { shardId, shard: currentShard });
@@ -532,8 +532,8 @@ export class Shard {
         this.socket?.send(
           JSON.stringify({
             op: GatewayOpcodes.Heartbeat,
-            d: this.previousSequenceNumber
-          })
+            d: this.previousSequenceNumber,
+          }),
         )
 
         this.heart.lastBeat = Date.now()
@@ -544,7 +544,7 @@ export class Shard {
   }
 
   /** Stop the heartbeating process with discord. */
-  stopHeartbeating (): void {
+  stopHeartbeating(): void {
     // Clear the regular heartbeat interval.
     clearInterval(this.heart.intervalId)
     // It's possible that the Shard got closed before the first jittered heartbeat.
