@@ -14,7 +14,9 @@ before(async () => {
 
 after(async () => {
   if (rest.invalidBucket.timeoutId) clearTimeout(rest.invalidBucket.timeoutId)
-  if (e2ecache.guild.id) await rest.deleteGuild(e2ecache.guild.id)
+  if (e2ecache.guild.id) {
+    await rest.deleteGuild(e2ecache.guild.id)
+  }
 })
 
 describe('[role] Role tests', async () => {
@@ -84,13 +86,13 @@ describe('[role] Role tests', async () => {
       expect(edited.color).to.equal(0x0000ff)
     })
 
-    /*
     // Edit the roles hoist
     it('Edit the roles hoist', async () => {
+      expect(role.hoist).to.equal(false)
       const edited = await rest.editRole(e2ecache.guild.id, role.id, {
         hoist: true
       })
-      expect(edited.toggles.hoist).to.equal(true)
+      expect(edited.hoist).to.equal(true)
     })
 
     // Make hoist false
@@ -100,7 +102,7 @@ describe('[role] Role tests', async () => {
       const edited = await rest.editRole(e2ecache.guild.id, role.id, {
         hoist: false
       })
-      expect(edited.toggles.hoist).to.equal(false)
+      expect(edited.hoist).to.equal(false)
     })
 
     // Edit the roles mentionable
@@ -108,7 +110,7 @@ describe('[role] Role tests', async () => {
       const edited = await rest.editRole(e2ecache.guild.id, role.id, {
         mentionable: true
       })
-      expect(edited.toggles.mentionable).to.equal(true)
+      expect(edited.mentionable).to.equal(true)
     })
 
     // Make mentionable false
@@ -119,9 +121,8 @@ describe('[role] Role tests', async () => {
       const edited = await rest.editRole(e2ecache.guild.id, role.id, {
         mentionable: false
       })
-      expect(edited.toggles.mentionable).to.equal(false)
+      expect(edited.mentionable).to.equal(false)
     })
-    */
 
     // Edit the roles permissions
     it('Edit the roles permissions', async () => {
@@ -142,9 +143,9 @@ describe('[role] Role tests', async () => {
       await rest.addRole(e2ecache.guild.id, rest.applicationId, role.id)
     })
 
-    afterEach(async () => {
-      await rest.deleteRole(e2ecache.guild.id, role.id)
-    })
+    // afterEach(async () => {
+    //   await rest.deleteRole(e2ecache.guild.id, role.id)
+    // })
 
     it('without a reason', async () => {
       await rest.removeRole(e2ecache.guild.id, rest.applicationId, role.id)

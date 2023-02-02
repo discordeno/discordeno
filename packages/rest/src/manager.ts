@@ -1,5 +1,5 @@
 import { InteractionResponseTypes } from '@discordeno/types'
-import { camelize, camelToSnakeCase, delay, findFiles, getBotIdFromToken, logger, urlToBase64 } from '@discordeno/utils'
+import { calculateBits, camelize, camelToSnakeCase, delay, findFiles, getBotIdFromToken, logger, urlToBase64 } from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -548,7 +548,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         for (const key of Object.keys(obj)) {
           if (key === 'permissions') {
-            newObj.permissions = '1234567890'
+            newObj.permissions = calculateBits(obj[key])
             continue
           }
 
