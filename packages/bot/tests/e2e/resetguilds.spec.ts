@@ -3,7 +3,8 @@ import { delay, logger } from '@discordeno/utils'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
-import { createBot, EventHandlers } from '../../src/bot.js'
+import type { EventHandlers } from '../../src/bot.js';
+import { createBot } from '../../src/bot.js'
 import { token } from './constants.js'
 chai.use(chaiAsPromised)
 
@@ -12,7 +13,7 @@ describe('[Bot] Delete any guild owned guilds', () => {
     const bot = createBot({
       token,
       gateway: {
-        token: token,
+        token,
         events: {
           message: async (shard, data) => {
             // TRIGGER RAW EVENT
