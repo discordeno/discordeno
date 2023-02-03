@@ -1,6 +1,4 @@
-import {
-  InteractionResponseTypes
-} from '@discordeno/types'
+import { InteractionResponseTypes } from '@discordeno/types'
 import { calculateBits, camelize, camelToSnakeCase, delay, findFiles, getBotIdFromToken, logger, urlToBase64 } from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
