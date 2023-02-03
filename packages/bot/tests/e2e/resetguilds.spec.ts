@@ -49,5 +49,7 @@ describe('[Bot] Delete any guild owned guilds', () => {
     await bot.start()
 
     await delay(5000)
+
+    await bot.shutdown()
   })
 })
