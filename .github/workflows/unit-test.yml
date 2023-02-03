@@ -40,6 +40,7 @@ jobs:
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
       - name: Unit Test
         run: yarn test:unit --cache-dir=".turbo" --filter=./packages/${{ inputs.package }}
+        timeout-minutes: 1
       - name: Collect and upload the coverage report
         uses: codecov/codecov-action@v3
         with:
