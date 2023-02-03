@@ -43,6 +43,14 @@
         "coverage/**"
       ]
     },
+    "test:integration": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "coverage/**"
+      ]
+    },
     "test:test-type": {
       "dependsOn": [
         "^build:type"

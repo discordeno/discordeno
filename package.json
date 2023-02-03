@@ -16,6 +16,7 @@
     "test:type": "turbo run build:type",
     "test:unit-coverage": "turbo run test:unit-coverage",
     "test:unit": "turbo run test:unit",
+    "test:integration": "turbo run test:integration",
     "test:deno-unit": "turbo run test:deno-unit",
     "test:e2e": "turbo run test:e2e",
     "test:test-type": "turbo run test:test-type",

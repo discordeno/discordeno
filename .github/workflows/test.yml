@@ -128,51 +128,57 @@ jobs:
         run: yarn test:test-type --cache-dir=".turbo"
 
   # Not using matrix because test later on cant needs a specific job
-  client-unit-and-integration-test:
+  client-unit-test:
     name: Client
     needs: build-dist
-    uses: ./.github/workflows/package-test.yml
+    uses: ./.github/workflows/unit-test.yml
     with:
       package: client
   client-other-runtime-test:
     name: Client
-    needs: client-unit-and-integration-test
-    uses: ./.github/workflows/other-runtime-package-test.yml
+    needs: client-unit-test
+    uses: ./.github/workflows/other-runtime-unit-test.yml
     with:
       package: client
-  discordeno-unit-and-integration-test:
+  discordeno-unit-test:
     name: Discordeno
     needs: build-dist
-    uses: ./.github/workflows/package-test.yml
+    uses: ./.github/workflows/unit-test.yml
     with:
       package: discordeno
   discordeno-other-runtime-test:
     name: Discordeno
-    needs: discordeno-unit-and-integration-test
-    uses: ./.github/workflows/other-runtime-package-test.yml
+    needs: discordeno-unit-test
+    uses: ./.github/workflows/other-runtime-unit-test.yml
     with:
       package: discordeno
-  gateway-unit-and-integration-test:
+  gateway-unit-test:
     name: Gateway
     needs: build-dist
-    uses: ./.github/workflows/package-test.yml
+    uses: ./.github/workflows/unit-test.yml
+    with:
+      package: gateway
+  gateway-integration-test:
+    name: Gateway
+    needs: build-dist
+    uses: ./.github/workflows/integration-test.yml
     with:
       package: gateway
   gateway-other-runtime-test:
     name: Gateway
-    needs: gateway-unit-and-integration-test
-    uses: ./.github/workflows/other-runtime-package-test.yml
+    needs: [gateway-unit-test, gateway-integration-test]
+    uses: ./.github/workflows/other-runtime-unit-test.yml
     with:
       package: gateway
-  rest-unit-and-integration-test:
+  rest-unit-test:
     name: Rest
     needs: build-dist
-    uses: ./.github/workflows/package-test.yml
+    uses: ./.github/workflows/unit-test.yml
     with:
       package: rest
   rest-e2e-test:
     name: Rest
-    needs: rest-unit-and-integration-test
+    needs: rest-unit-test
     if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/node-migration' || github.ref == 'refs/heads/node-migration-clean' }}
     uses: ./.github/workflows/e2e-test.yml
     secrets: inherit
@@ -180,31 +186,31 @@ jobs:
       package: rest
   rest-other-runtime-test:
     name: Rest
-    needs: rest-unit-and-integration-test
-    uses: ./.github/workflows/other-runtime-package-test.yml
+    needs: rest-unit-test
+    uses: ./.github/workflows/other-runtime-unit-test.yml
     with:
       package: rest
-  utils-unit-and-integration-test:
+  utils-unit-test:
     name: Utils
     needs: build-dist
-    uses: ./.github/workflows/package-test.yml
+    uses: ./.github/workflows/unit-test.yml
     with:
       package: utils
   utils-other-runtime-test:
     name: Utils
-    needs: utils-unit-and-integration-test
-    uses: ./.github/workflows/other-runtime-package-test.yml
+    needs: utils-unit-test
+    uses: ./.github/workflows/other-runtime-unit-test.yml
     with:
       package: utils
-  bot-unit-and-integration-test:
+  bot-unit-test:
     name: Bot
     needs: build-dist
-    uses: ./.github/workflows/package-test.yml
+    uses: ./.github/workflows/unit-test.yml
     with:
       package: bot
   bot-e2e-test:
     name: Bot
-    needs: bot-unit-and-integration-test
+    needs: bot-unit-test
     if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/node-migration' || github.ref == 'refs/heads/node-migration-clean' }}
     uses: ./.github/workflows/e2e-test.yml
     secrets: inherit
@@ -212,7 +218,7 @@ jobs:
       package: bot
   bot-other-runtime-test:
     name: Bot
-    needs: bot-unit-and-integration-test
-    uses: ./.github/workflows/other-runtime-package-test.yml
+    needs: bot-unit-test
+    uses: ./.github/workflows/other-runtime-unit-test.yml
     with:
       package: bot
