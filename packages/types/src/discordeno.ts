@@ -13,12 +13,14 @@ import type {
   ApplicationCommandOptionTypes,
   ApplicationCommandPermissionTypes,
   ApplicationCommandTypes,
+  AuditLogEvents,
   BigString,
   ButtonStyles,
   Camelize,
   ChannelTypes,
   DefaultMessageNotificationLevels,
   ExplicitContentFilterLevels,
+  GuildFeatures,
   InteractionResponseTypes,
   Localization,
   MessageComponentTypes,
@@ -347,26 +349,26 @@ export interface ListArchivedThreads {
   limit?: number
 }
 
-// /** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
-// export interface GetGuildAuditLog {
-//   /** Entries from a specific user ID */
-//   userId?: BigString | string
-//   /** Entries for a specific audit log event */
-//   actionType?: AuditLogEvents
-//   /** Entries that preceded a specific audit log entry ID */
-//   before?: BigString | string
-//   /** Maximum number of entries (between 1-100) to return, defaults to 50 */
-//   limit?: number
-// }
+/** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
+export interface GetGuildAuditLog {
+  /** Entries from a specific user ID */
+  userId?: BigString | string
+  /** Entries for a specific audit log event */
+  actionType?: AuditLogEvents
+  /** Entries that preceded a specific audit log entry ID */
+  before?: BigString | string
+  /** Maximum number of entries (between 1-100) to return, defaults to 50 */
+  limit?: number
+}
 
-// export interface GetBans {
-//   /** Number of users to return (up to maximum 1000). Default: 1000 */
-//   limit?: number
-//   /** Consider only users before given user id */
-//   before?: BigString
-//   /** Consider only users after given user id */
-//   after?: BigString
-// }
+export interface GetBans {
+  /** Number of users to return (up to maximum 1000). Default: 1000 */
+  limit?: number
+  /** Consider only users before given user id */
+  before?: BigString
+  /** Consider only users after given user id */
+  after?: BigString
+}
 
 /** https://discord.com/developers/docs/resources/guild#list-guild-members */
 export interface ListGuildMembers {
@@ -996,4 +998,64 @@ export interface ModifyRolePositions {
   id: BigString
   /** The sorting position for the role. */
   position?: number | null
+}
+
+/** https://discord.com/developers/docs/resources/guild#modify-guild */
+export interface ModifyGuild {
+  /** Guild name */
+  name?: string
+  /** Verification level */
+  verificationLevel?: VerificationLevels | null
+  /** Default message notification filter level */
+  defaultMessageNotifications?: DefaultMessageNotificationLevels | null
+  /** Explicit content filter level */
+  explicitContentFilter?: ExplicitContentFilterLevels | null
+  /** Id for afk channel */
+  afkChannelId?: BigString | null
+  /** Afk timeout in seconds */
+  afkTimeout?: number
+  /** Base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has the `ANIMATED_ICON` feature) */
+  icon?: string | null
+  /** User id to transfer guild ownership to (must be owner) */
+  ownerId?: BigString
+  /** Base64 16:9 png/jpeg image for the guild splash (when the server has `INVITE_SPLASH` feature) */
+  splash?: string | null
+  /** Base64 16:9 png/jpeg image for the guild discovery spash (when the server has the `DISCOVERABLE` feature) */
+  discoverySplash?: string | null
+  /** Base64 16:9 png/jpeg image for the guild banner (when the server has BANNER feature) */
+  banner?: string | null
+  /** The id of the channel where guild notices such as welcome messages and boost events are posted */
+  systemChannelId?: BigString | null
+  /** System channel flags */
+  systemChannelFlags?: SystemChannelFlags
+  /** The id of the channel where Community guilds display rules and/or guidelines */
+  rulesChannelId?: BigString | null
+  /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
+  publicUpdatesChannelId?: BigString | null
+  /** The preferred locale of a Community guild used in server discovery and notices from Discord; defaults to "en-US" */
+  preferredLocale?: string | null
+  /** Enabled guild features */
+  features?: GuildFeatures[]
+  /** Whether the guild's boost progress bar should be enabled */
+  premiumProgressBarEnabled?: boolean
+}
+
+export interface CreateGuildStickerOptions extends WithReason {
+  /** Name of the sticker (2-30 characters) */
+  name: string
+  /** Description of the sticker (empty or 2-100 characters) */
+  description: string
+  /** Autocomplete/suggestion tags for the sticker (max 200 characters) */
+  tags: string
+  /** The sticker file to upload, must be a PNG, APNG, or Lottie JSON file, max 500 KB */
+  file: FileContent
+}
+
+export interface EditGuildStickerOptions extends WithReason {
+  /** Name of the sticker (2-30 characters) */
+  name?: string
+  /** Description of the sticker (empty or 2-100 characters) */
+  description?: string | null
+  /** Autocomplete/suggestion tags for the sticker (max 200 characters) */
+  tags?: string
 }
