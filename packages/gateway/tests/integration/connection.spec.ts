@@ -124,4 +124,29 @@ describe('gateway', () => {
     await gateway.shutdown(ShardSocketCloseCodes.Shutdown, 'User requested bot stop')
     uWS.us_listen_socket_close(uwsToken)
   })
+
+  it('will heartbeat', async function () {
+    this.timeout(6000)
+    let resolveHeartbeat
+    let resolveConnected
+    const connected = new Promise((resolve) => (resolveConnected = resolve))
+    const Heartbeated = new Promise((resolve) => (resolveHeartbeat = resolve))
+    const { port, uwsToken } = await createUWS({
+      onOpen: resolveConnected,
+      onMessage: (message) => {
+        if (message.op !== 1) return
+        resolveHeartbeat()
+      },
+    })
+    const gateway = createGatewayManagerWithPort(port)
+    await gateway.spawnShards()
+    await connected
+    const timeout = setTimeout(() => {
+      throw new Error('Not heartbeat in time')
+    }, 100)
+    await Heartbeated
+    clearTimeout(timeout)
+    await gateway.shutdown(ShardSocketCloseCodes.Shutdown, 'User requested bot stop')
+    uWS.us_listen_socket_close(uwsToken)
+  })
 })
