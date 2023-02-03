@@ -75,7 +75,18 @@ import type {
   StartThreadWithMessage,
   StartThreadWithoutMessage,
   WithReason,
-} from '@discordeno/types'
+
+  AtLeastOne,
+  CreateGuildStickerOptions,
+  DiscordAuditLog,
+  DiscordBan,
+  DiscordSticker,
+  DiscordVanityUrl,
+  DiscordVoiceRegion,
+  EditGuildStickerOptions,
+  GetBans,
+  GetGuildAuditLog,
+  ModifyGuild} from '@discordeno/types'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 
 // TODO: make dynamic based on package.json file
@@ -276,6 +287,22 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         all: () => {
           return '/guilds'
         },
+        auditlogs: (guildId, options) => {
+          let url = `/guilds/${guildId}/audit-logs?`
+
+          if (options) {
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            if (options.actionType) url += `action_type=${options.actionType}`
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            if (options.before) url += `&before=${options.before}`
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            if (options.limit) url += `&limit=${options.limit}`
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            if (options.userId) url += `&user_id=${options.userId}`
+          }
+
+          return url
+        },
         automod: {
           rule: (guildId, ruleId) => {
             return `/guilds/${guildId}/auto-moderation/rules/${ruleId}`
@@ -372,6 +399,20 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           ban: (guildId, userId) => {
             return `/guilds/${guildId}/bans/${userId}`
           },
+          bans: (guildId, options) => {
+            let url = `/guilds/${guildId}/bans?`
+
+            if (options) {
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              if (options.limit) url += `limit=${options.limit}`
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              if (options.after) url += `&after=${options.after}`
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              if (options.before) url += `&before=${options.before}`
+            }
+
+            return url
+          },
           bot: (guildId) => {
             return `/guilds/${guildId}/members/@me`
           },
@@ -428,6 +469,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             return `/guilds/${guildId}/members/${memberId}/roles/${roleId}`
           },
         },
+        stickers: (guildId) => {
+          return `/guilds/${guildId}/stickers`
+        },
+        sticker: (guildId, stickerId) => {
+          return `/guilds/${guildId}/stickers/${stickerId}`
+        },
         templates: {
           code: (code) => {
             return `/guilds/templates/${code}`
@@ -439,9 +486,19 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             return `/guilds/${guildId}/templates`
           },
         },
+        vanity: (guildId) => {
+          return `/guilds/${guildId}/vanity-url`
+        },
+        regions: (guildId) => {
+          return `/guilds/${guildId}/regions`
+        },
         webhooks: (guildId) => {
           return `/guilds/${guildId}/webhooks`
         },
+      },
+
+      sticker: (stickerId: BigString) => {
+        return `/stickers/${stickerId}`
       },
 
       // Interaction Endpoints
@@ -1020,6 +1077,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     guilds: {
+      async auditlogs(guildId, options) {
+        return await rest.getAuditLog(guildId, options)
+      },
+
       automod: {
         async create(guildId, options) {
           return await rest.createAutomodRule(guildId, options)
@@ -1044,6 +1105,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
       },
 
+      async ban(guildId, userId) {
+        return await rest.getBan(guildId, userId)
+      },
+
+      async bans(guildId, options) {
+        return await rest.getBans(guildId, options)
+      },
+
       async create(options) {
         return await rest.createGuild(options)
       },
@@ -1054,6 +1123,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       async delete(id) {
         return await rest.deleteGuild(id)
+      },
+
+      async edit(guildId, options) {
+        return await rest.editGuild(guildId, options)
       },
 
       async emojis(id) {
@@ -1088,6 +1161,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
       },
 
+      async get(guildId, options = { counts: true }) {
+        return await rest.get<DiscordGuild>(rest.routes.guilds.guild(guildId, options.counts))
+      },
+
       integrations: {
         async get(guildId) {
           return await rest.getIntegrations(guildId)
@@ -1113,6 +1190,28 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         async list(guildId) {
           return await rest.getInvites(guildId)
+        },
+      },
+
+      stickers: {
+        async create(guildId, options) {
+          return await rest.createGuildSticker(guildId, options)
+        },
+
+        async delete(guildId, stickerId, reason) {
+          return await rest.deleteGuildSticker(guildId, stickerId, reason)
+        },
+
+        async edit(guildId, stickerId, options) {
+          return await rest.editGuildSticker(guildId, stickerId, options)
+        },
+
+        async sticker(guildId, stickerId) {
+          return await rest.getGuildSticker(guildId, stickerId)
+        },
+
+        async stickers(guildId) {
+          return await rest.getGuildStickers(guildId)
         },
       },
 
@@ -1327,6 +1426,18 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           return await rest.removeRole(guildId, userId, roleId, reason)
         },
       },
+
+      async vanity(guildId) {
+        return await rest.getVanityUrl(guildId)
+      },
+
+      async regions(guildId) {
+        return await rest.getVoiceRegions(guildId)
+      },
+    },
+
+    async sticker(stickerId) {
+      return await rest.getSticker(stickerId)
     },
 
     users: {
@@ -1445,6 +1556,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), command)
     },
 
+    async createGuildSticker(guildId, options) {
+      return await rest.post<DiscordSticker>(rest.routes.guilds.stickers(guildId), options)
+    },
+
     async createGuildTemplate(guildId, options) {
       return await rest.post<DiscordTemplate>(rest.routes.guilds.templates.all(guildId), options)
     },
@@ -1512,6 +1627,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async deleteGuildApplicationCommand(commandId, guildId) {
       return await rest.delete(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId))
+    },
+
+    async deleteGuildSticker(guildId, stickerId, reason) {
+      return await rest.delete(rest.routes.guilds.sticker(guildId, stickerId), reason ? { reason } : undefined)
     },
 
     async deleteGuildTemplate(guildId, templateCode) {
@@ -1607,6 +1726,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.patch<DiscordApplicationCommand>(rest.routes.interactions.commands.command(rest.applicationId, commandId), options)
     },
 
+    async editGuild(guildId, options) {
+      return await rest.patch<DiscordGuild>(rest.routes.guilds.guild(guildId), options)
+    },
+
     async editGuildApplicationCommand(commandId, guildId, options) {
       return await rest.patch<DiscordApplicationCommand>(
         rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId),
@@ -1614,7 +1737,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       )
     },
 
-    async editGuildTemplate(guildId: BigString, templateCode: string, options: ModifyGuildTemplate): Promise<Camelize<DiscordTemplate>> {
+    async editGuildSticker(guildId, stickerId, options) {
+      return await rest.patch<DiscordSticker>(rest.routes.guilds.sticker(guildId, stickerId), options)
+    },
+
+    async editGuildTemplate(guildId, templateCode: string, options: ModifyGuildTemplate): Promise<Camelize<DiscordTemplate>> {
       return await rest.patch<DiscordTemplate>(rest.routes.guilds.templates.guild(guildId, templateCode), options)
     },
 
@@ -1654,10 +1781,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editWebhookMessage(webhookId, token, messageId, options) {
-      return await rest.patch<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), {
-        type: InteractionResponseTypes.UpdateMessage,
-        data: options,
-      })
+      return await rest.patch<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), options)
     },
 
     async editWebhookWithToken(webhookId, token, options) {
@@ -1692,12 +1816,24 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordApplication>(rest.routes.oauth2Application())
     },
 
+    async getAuditLog(guildId, options) {
+      return await rest.get<DiscordAuditLog>(rest.routes.guilds.auditlogs(guildId, options))
+    },
+
     async getAutomodRule(guildId, ruleId) {
       return await rest.get<DiscordAutoModerationRule>(rest.routes.guilds.automod.rule(guildId, ruleId))
     },
 
     async getAutomodRules(guildId) {
       return await rest.get<DiscordAutoModerationRule[]>(rest.routes.guilds.automod.rules(guildId))
+    },
+
+    async getBan(guildId, userId) {
+      return await rest.get<DiscordBan>(rest.routes.guilds.members.ban(guildId, userId))
+    },
+
+    async getBans(guildId, options) {
+      return await rest.get<DiscordBan[]>(rest.routes.guilds.members.bans(guildId, options))
     },
 
     async getChannel(id) {
@@ -1744,6 +1880,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getGlobalApplicationCommands() {
       return await rest.get<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId))
+    },
+
+    async getGuild(guildId, options = { counts: true }) {
+      return await rest.get<DiscordGuild>(rest.routes.guilds.guild(guildId, options.counts))
     },
 
     async getGuildApplicationCommand(commandId, guildId) {
@@ -1822,6 +1962,18 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordStageInstance>(rest.routes.channels.stage(channelId))
     },
 
+    async getSticker(stickerId: BigString) {
+      return await rest.get<DiscordSticker>(rest.routes.sticker(stickerId))
+    },
+
+    async getGuildSticker(guildId, stickerId) {
+      return await rest.get<DiscordSticker>(rest.routes.guilds.sticker(guildId, stickerId))
+    },
+
+    async getGuildStickers(guildId) {
+      return await rest.get<DiscordSticker[]>(rest.routes.guilds.stickers(guildId))
+    },
+
     async getThreadMember(channelId, userId) {
       return await rest.get<DiscordThreadMember>(rest.routes.channels.threads.user(channelId, userId))
     },
@@ -1832,6 +1984,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getUser(id) {
       return await rest.get<DiscordUser>(rest.routes.user(id))
+    },
+
+    async getVanityUrl(guildId) {
+      return await rest.get<DiscordVanityUrl>(rest.routes.guilds.vanity(guildId))
+    },
+
+    async getVoiceRegions(guildId) {
+      return await rest.get<DiscordVoiceRegion[]>(rest.routes.guilds.regions(guildId))
     },
 
     async getWebhook(webhookId) {
@@ -2099,6 +2259,8 @@ export interface RestManager {
     guilds: {
       /** Routes for handling a non-specific guild. */
       all: () => string
+      /** Route for handling audit logs in a guild. */
+      auditlogs: (guildId: BigString, options?: GetGuildAuditLog) => string
       /** Routes for a guilds automoderation. */
       automod: {
         /** Route for handling a guild's automoderation. */
@@ -2137,6 +2299,8 @@ export interface RestManager {
       members: {
         /** Route for handling a specific guild member's ban. */
         ban: (guildId: BigString, userId: BigString) => string
+        /** Route for handling non-specific bans in a guild. */
+        bans: (guildId: BigString, options?: GetBans) => string
         /** Route for handling a the bot guild member. */
         bot: (guildId: BigString) => string
         /** Route for handling a specific guild member. */
@@ -2157,6 +2321,10 @@ export interface RestManager {
         /** Route for handling non-specific guild's templates. */
         all: (guildId: BigString) => string
       }
+      /** Route for handling a guild's vanity url. */
+      vanity: (guildId: BigString) => string
+      /** Route for handling a guild's regions. */
+      regions: (guildId: BigString) => string
       /** Routes for handling a guild's roles. */
       roles: {
         /** Route for handling a specific guild role. */
@@ -2166,6 +2334,10 @@ export interface RestManager {
         /** Route for handling a members roles in a guild. */
         member: (guildId: BigString, memberId: BigString, roleId: BigString) => string
       }
+      /** Route for handling a specific guild sticker. */
+      stickers: (guildId: BigString) => string
+      /** Route for handling non-specific guild stickers. */
+      sticker: (guildId: BigString, stickerId: BigString) => string
     }
     /** Routes for interaction related endpoints. */
     interactions: {
@@ -2197,6 +2369,8 @@ export interface RestManager {
         message: (applicationId: BigString, token: string, messageId: BigString) => string
       }
     }
+    /** Route for handling a sticker. */
+    sticker: (stickerId: BigString) => string
   }
   /** Check the rate limits for a url or a bucket. */
   checkRateLimits: (url: string) => number | false
@@ -2802,6 +2976,19 @@ export interface RestManager {
   }
   /** Guild related helper methods */
   guilds: {
+    /**
+     * Gets a guild's audit log.
+     *
+     * @param guildId - The ID of the guild to get the audit log of.
+     * @param options - The parameters for the fetching of the audit log.
+     * @returns An instance of {@link AuditLog}.
+     *
+     * @remarks
+     * Requires the `VIEW_AUDIT_LOG` permission.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log}
+     */
+    auditlogs: (guildId: BigString, options?: GetGuildAuditLog) => Promise<Camelize<DiscordAuditLog>>
     automod: {
       /**
        * Creates an automod rule in a guild.
@@ -2878,6 +3065,34 @@ export interface RestManager {
       }
     }
     /**
+     * Gets a ban by user ID.
+     *
+     * @param guildId - The ID of the guild to get the ban from.
+     * @param userId - The ID of the user to get the ban for.
+     * @returns An instance of {@link DiscordBan}.
+     *
+     * @remarks
+     * Requires the `BAN_MEMBERS` permission.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-ban}
+     */
+    ban: (guildId: BigString, userId: BigString) => Promise<Camelize<DiscordBan>>
+    /**
+     * Gets the list of bans for a guild.
+     *
+     * @param guildId - The ID of the guild to get the list of bans for.
+     * @param options - The parameters for the fetching of the list of bans.
+     * @returns A collection of {@link DiscordBan} objects assorted by user ID.
+     *
+     * @remarks
+     * Requires the `BAN_MEMBERS` permission.
+     *
+     * Users are ordered by their IDs in _ascending_ order.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-bans}
+     */
+    bans: (guildId: BigString, options?: GetBans) => Promise<Camelize<DiscordBan[]>>
+    /**
      * Creates a guild.
      *
      * @param options - The parameters for the creation of the guild.
@@ -2916,6 +3131,25 @@ export interface RestManager {
      * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild}
      */
     delete: (guildId: BigString) => Promise<void>
+    /**
+     * Edits a guild's settings.
+     *
+     * @param guildId - The ID of the guild to edit.
+     * @param shardId - The ID of the shard the guild is in.
+     * @param options - The parameters for the edit of the guild.
+     * @returns An instance of the edited {@link Guild}.
+     *
+     * @remarks
+     * Requires the `MANAGE_GUILD` permission.
+     *
+     * If attempting to add or remove the {@link GuildFeatures.Community} feature:
+     * - Requires the `ADMINISTRATOR` permission.
+     *
+     * Fires a _Guild Update_ gateway event.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild}
+     */
+    edit: (guildId: BigString, options: ModifyGuild) => Promise<Camelize<DiscordGuild>>
     /**
      * Gets the list of emojis for a guild.
      *
@@ -3027,6 +3261,16 @@ export interface RestManager {
         >
       }
     }
+    /**
+     * Gets a guild by its ID.
+     *
+     * @param guildId - The ID of the guild to get.
+     * @param options - The parameters for the fetching of the guild.
+     * @returns An instance of {@link Guild}.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/guild#get-guild}
+     */
+    get: (guildId: BigString, options?: { counts?: boolean }) => Promise<Camelize<DiscordGuild>>
     /** Methods related to a guild's integrations. */
     integrations: {
       /**
@@ -3114,6 +3358,75 @@ export interface RestManager {
        * @see {@link https://discord.com/developers/docs/resources/invite#get-invites}
        */
       list: (guildId: BigString) => Promise<Camelize<DiscordInviteMetadata[]>>
+    }
+    /** Methods related to stickers in a guild. */
+    stickers: {
+      /**
+       * Create a new sticker for the guild.
+       *
+       * @param guildId The ID of the guild to get
+       * @return A {@link DiscordSticker}
+       *
+       * @remarks
+       * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+       * Fires a Guild Stickers Update Gateway event.
+       * Every guilds has five free sticker slots by default, and each Boost level will grant access to more slots.
+       * Lottie stickers can only be uploaded on guilds that have either the `VERIFIED` and/or the `PARTNERED` guild feature.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/sticker#create-guild-sticker}
+       */
+      create: (guildId: BigString, options: CreateGuildStickerOptions) => Promise<Camelize<DiscordSticker>>
+      /**
+       * Delete a new sticker for the guild.
+       *
+       * @param guildId The ID of the guild to get
+       * @return A {@link DiscordSticker}
+       *
+       * @remarks
+       * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+       * Fires a Guild Stickers Update Gateway event.
+       * Every guilds has five free sticker slots by default, and each Boost level will grant access to more slots.
+       * Lottie stickers can only be uploaded on guilds that have either the `VERIFIED` and/or the `PARTNERED` guild feature.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/sticker#delete-guild-sticker}
+       */
+      delete: (guildId: BigString, stickerId: BigString, reason?: string) => Promise<void>
+      /**
+       * Edit the given sticker.
+       *
+       * @param guildId The ID of the guild to get
+       * @return A {@link DiscordSticker}
+       *
+       * @remarks
+       * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+       * Fires a Guild Stickers Update Gateway event.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/sticker#modify-guild-sticker}
+       */
+      edit: (guildId: BigString, stickerId: BigString, options: AtLeastOne<EditGuildStickerOptions>) => Promise<Camelize<DiscordSticker>>
+      /**
+       * Returns a sticker object for the given guild and sticker IDs.
+       *
+       * @param guildId The ID of the guild to get
+       * @param stickerId The ID of the sticker to get
+       * @return A {@link DiscordSticker}
+       *
+       * @remarks Includes the user field if the bot has the `MANAGE_EMOJIS_AND_STICKERS` permission.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/sticker#get-guild-sticker}
+       */
+      sticker: (guildId: BigString, stickerId: BigString) => Promise<Camelize<DiscordSticker>>
+      /**
+       * Returns an array of sticker objects for the given guild.
+       *
+       * @param guildId The ID of the guild to get
+       * @returns A collection of {@link DiscordSticker} objects assorted by sticker ID.
+       *
+       * @remarks Includes user fields if the bot has the `MANAGE_EMOJIS_AND_STICKERS` permission.
+       *
+       * @see {@link https://discord.com/developers/docs/resources/sticker#list-guild-stickers}
+       */
+      stickers: (guildId: BigString) => Promise<Camelize<DiscordSticker[]>>
     }
     /** Methods related to a guild's templates. */
     templates: {
@@ -3797,7 +4110,39 @@ export interface RestManager {
        */
       remove: (guildId: BigString, userId: BigString, roleId: BigString, reason?: string) => Promise<void>
     }
+    /**
+     * Gets information about the vanity url of a guild.
+     *
+     * @param guildId - The ID of the guild to get the vanity url information for.
+     * @returns An instance of {@link VanityUrl}.
+     *
+     * @remarks
+     * Requires the `MANAGE_GUILD` permission.
+     *
+     * The `code` property will be `null` if the guild does not have a set vanity url.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-vanity-url}
+     */
+    vanity: (guildId: BigString) => Promise<Camelize<DiscordVanityUrl>>
+    /**
+     * Gets the list of voice regions for a guild.
+     *
+     * @param guildId - The ID of the guild to get the voice regions for.
+     * @returns A collection of {@link VoiceRegions | VoiceRegion} objects assorted by voice region ID.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-voice-regions}
+     */
+    regions: (guildId: BigString) => Promise<Camelize<DiscordVoiceRegion[]>>
   }
+  /**
+   * Returns a sticker object for the given sticker ID.
+   *
+   * @param stickerId The ID of the sticker to get
+   * @returns A {@link DiscordSticker}
+   *
+   * @see {@link https://discord.com/developers/docs/resources/sticker#get-sticker}
+   */
+  sticker: (stickerId: BigString) => Promise<Camelize<DiscordSticker>>
   /** Webhook related helper methods. */
   webhooks: {
     /**
@@ -4132,6 +4477,21 @@ export interface RestManager {
    */
   createGuildApplicationCommand: (command: CreateApplicationCommand, guildId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
   /**
+   * Create a new sticker for the guild.
+   *
+   * @param guildId The ID of the guild to get
+   * @return A {@link DiscordSticker}
+   *
+   * @remarks
+   * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * Fires a Guild Stickers Update Gateway event.
+   * Every guilds has five free sticker slots by default, and each Boost level will grant access to more slots.
+   * Lottie stickers can only be uploaded on guilds that have either the `VERIFIED` and/or the `PARTNERED` guild feature.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/sticker#create-guild-sticker}
+   */
+  createGuildSticker: (guildId: BigString, options: CreateGuildStickerOptions) => Promise<Camelize<DiscordSticker>>
+  /**
    * Creates a template from a guild.
    *
    * @param guildId - The ID of the guild to create the template from.
@@ -4338,6 +4698,21 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#delete-guild-application-command}
    */
   deleteGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<void>
+  /**
+   * Delete a new sticker for the guild.
+   *
+   * @param guildId The ID of the guild to get
+   * @return A {@link DiscordSticker}
+   *
+   * @remarks
+   * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * Fires a Guild Stickers Update Gateway event.
+   * Every guilds has five free sticker slots by default, and each Boost level will grant access to more slots.
+   * Lottie stickers can only be uploaded on guilds that have either the `VERIFIED` and/or the `PARTNERED` guild feature.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/sticker#delete-guild-sticker}
+   */
+  deleteGuildSticker: (guildId: BigString, stickerId: BigString, reason?: string) => Promise<void>
   /**
    * Deletes a template from a guild.
    *
@@ -4640,6 +5015,25 @@ export interface RestManager {
    */
   editGlobalApplicationCommand: (commandId: BigString, options: CreateApplicationCommand) => Promise<Camelize<DiscordApplicationCommand>>
   /**
+   * Edits a guild's settings.
+   *
+   * @param guildId - The ID of the guild to edit.
+   * @param shardId - The ID of the shard the guild is in.
+   * @param options - The parameters for the edit of the guild.
+   * @returns An instance of the edited {@link Guild}.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * If attempting to add or remove the {@link GuildFeatures.Community} feature:
+   * - Requires the `ADMINISTRATOR` permission.
+   *
+   * Fires a _Guild Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild}
+   */
+  editGuild: (guildId: BigString, options: ModifyGuild) => Promise<Camelize<DiscordGuild>>
+  /**
    * Edits an application command registered in a guild.
    *
    * @param guildId - The ID of the guild the command is registered in.
@@ -4654,6 +5048,19 @@ export interface RestManager {
     guildId: BigString,
     options: CreateApplicationCommand,
   ) => Promise<Camelize<DiscordApplicationCommand>>
+  /**
+   * Edit the given sticker.
+   *
+   * @param guildId The ID of the guild to get
+   * @return A {@link DiscordSticker}
+   *
+   * @remarks
+   * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * Fires a Guild Stickers Update Gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/sticker#modify-guild-sticker}
+   */
+  editGuildSticker: (guildId: BigString, stickerId: BigString, options: AtLeastOne<EditGuildStickerOptions>) => Promise<Camelize<DiscordSticker>>
   /**
    * Edits a template's settings.
    *
@@ -4901,6 +5308,19 @@ export interface RestManager {
    */
   getApplicationCommandPermissions: (guildId: BigString) => Promise<Camelize<DiscordApplicationCommandPermissions[]>>
   /**
+   * Gets a guild's audit log.
+   *
+   * @param guildId - The ID of the guild to get the audit log of.
+   * @param options - The parameters for the fetching of the audit log.
+   * @returns An instance of {@link AuditLog}.
+   *
+   * @remarks
+   * Requires the `VIEW_AUDIT_LOG` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log}
+   */
+  getAuditLog: (guildId: BigString, options?: GetGuildAuditLog) => Promise<Camelize<DiscordAuditLog>>
+  /**
    * Gets an automod rule by its ID.
    *
    * @param guildId - The ID of the guild to get the rule of.
@@ -4925,6 +5345,34 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/auto-moderation#list-auto-moderation-rules-for-guild}
    */
   getAutomodRules: (guildId: BigString) => Promise<Camelize<DiscordAutoModerationRule[]>>
+  /**
+   * Gets a ban by user ID.
+   *
+   * @param guildId - The ID of the guild to get the ban from.
+   * @param userId - The ID of the user to get the ban for.
+   * @returns An instance of {@link DiscordBan}.
+   *
+   * @remarks
+   * Requires the `BAN_MEMBERS` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-ban}
+   */
+  getBan: (guildId: BigString, userId: BigString) => Promise<Camelize<DiscordBan>>
+  /**
+   * Gets the list of bans for a guild.
+   *
+   * @param guildId - The ID of the guild to get the list of bans for.
+   * @param options - The parameters for the fetching of the list of bans.
+   * @returns A collection of {@link DiscordBan} objects assorted by user ID.
+   *
+   * @remarks
+   * Requires the `BAN_MEMBERS` permission.
+   *
+   * Users are ordered by their IDs in _ascending_ order.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-bans}
+   */
+  getBans: (guildId: BigString, options?: GetBans) => Promise<Camelize<DiscordBan[]>>
   /**
    * Gets a channel by its ID.
    *
@@ -5040,6 +5488,16 @@ export interface RestManager {
    */
   getGlobalApplicationCommands: () => Promise<Camelize<DiscordApplicationCommand[]>>
   /**
+   * Gets a guild by its ID.
+   *
+   * @param guildId - The ID of the guild to get.
+   * @param options - The parameters for the fetching of the guild.
+   * @returns An instance of {@link Guild}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild}
+   */
+  getGuild: (guildId: BigString, options?: { counts?: boolean }) => Promise<Camelize<DiscordGuild>>
+  /**
    * Gets a guild application command by its ID.
    *
    * @param guildId - The ID of the guild the command is registered in.
@@ -5058,6 +5516,29 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commandss}
    */
   getGuildApplicationCommands: (guildId: BigString) => Promise<Camelize<DiscordApplicationCommand[]>>
+  /**
+   * Returns a sticker object for the given guild and sticker IDs.
+   *
+   * @param guildId The ID of the guild to get
+   * @param stickerId The ID of the sticker to get
+   * @return A {@link DiscordSticker}
+   *
+   * @remarks Includes the user field if the bot has the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/sticker#get-guild-sticker}
+   */
+  getGuildSticker: (guildId: BigString, stickerId: BigString) => Promise<Camelize<DiscordSticker>>
+  /**
+   * Returns an array of sticker objects for the given guild.
+   *
+   * @param guildId The ID of the guild to get
+   * @returns A collection of {@link DiscordSticker} objects assorted by sticker ID.
+   *
+   * @remarks Includes user fields if the bot has the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/sticker#list-guild-stickers}
+   */
+  getGuildStickers: (guildId: BigString) => Promise<Camelize<DiscordSticker[]>>
   /**
    * Gets a template by its code.
    *
@@ -5271,6 +5752,15 @@ export interface RestManager {
    */
   getStageInstance: (channelId: BigString) => Promise<Camelize<DiscordStageInstance>>
   /**
+   * Returns a sticker object for the given sticker ID.
+   *
+   * @param stickerId The ID of the sticker to get
+   * @returns A {@link DiscordSticker}
+   *
+   * @see {@link https://discord.com/developers/docs/resources/sticker#get-sticker}
+   */
+  getSticker: (stickerId: BigString) => Promise<Camelize<DiscordSticker>>
+  /**
    * Gets a thread member by their user ID.
    *
    * @param channelId - The ID of the thread to get the thread member of.
@@ -5299,6 +5789,29 @@ export interface RestManager {
    * @returns {Camelize<DiscordUser>}
    */
   getUser: (id: BigString) => Promise<Camelize<DiscordUser>>
+  /**
+   * Gets information about the vanity url of a guild.
+   *
+   * @param guildId - The ID of the guild to get the vanity url information for.
+   * @returns An instance of {@link VanityUrl}.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * The `code` property will be `null` if the guild does not have a set vanity url.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-vanity-url}
+   */
+  getVanityUrl: (guildId: BigString) => Promise<Camelize<DiscordVanityUrl>>
+  /**
+   * Gets the list of voice regions for a guild.
+   *
+   * @param guildId - The ID of the guild to get the voice regions for.
+   * @returns A collection of {@link VoiceRegions | VoiceRegion} objects assorted by voice region ID.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-voice-regions}
+   */
+  getVoiceRegions: (guildId: BigString) => Promise<Camelize<DiscordVoiceRegion[]>>
   /**
    * Gets a webhook by its ID.
    *
