@@ -1421,28 +1421,28 @@ export interface DiscordThreadListSync {
   members: DiscordThreadMember[]
 }
 
-// /** https://discord.com/developers/docs/resources/audit-log#audit-log-object */
-// export interface DiscordAuditLog {
-//   /** List of webhooks found in the audit log */
-//   webhooks: DiscordWebhook[]
-//   /** List of users found in the audit log */
-//   users: DiscordUser[]
-//   /** List of audit log entries, sorted from most to least recent */
-//   audit_log_entries: DiscordAuditLogEntry[]
-//   /** List of partial integration objects */
-//   integrations: Array<Partial<DiscordIntegration>>
-//   /**
-//    * List of threads found in the audit log.
-//    * Threads referenced in `THREAD_CREATE` and `THREAD_UPDATE` events are included in the threads map since archived threads might not be kept in memory by clients.
-//    */
-//   threads: DiscordChannel[]
-//   /** List of guild scheduled events found in the audit log */
-//   guild_scheduled_events?: DiscordScheduledEvent[]
-//   /** List of auto moderation rules referenced in the audit log */
-//   auto_moderation_rules?: DiscordAutoModerationRule[]
-//   /** List of application commands referenced in the audit log */
-//   application_commands: DiscordApplicationCommand[]
-// }
+/** https://discord.com/developers/docs/resources/audit-log#audit-log-object */
+export interface DiscordAuditLog {
+  /** List of webhooks found in the audit log */
+  webhooks: DiscordWebhook[]
+  /** List of users found in the audit log */
+  users: DiscordUser[]
+  /** List of audit log entries, sorted from most to least recent */
+  audit_log_entries: DiscordAuditLogEntry[]
+  /** List of partial integration objects */
+  integrations: Array<Partial<DiscordIntegration>>
+  /**
+   * List of threads found in the audit log.
+   * Threads referenced in `THREAD_CREATE` and `THREAD_UPDATE` events are included in the threads map since archived threads might not be kept in memory by clients.
+   */
+  threads: DiscordChannel[]
+  /** List of guild scheduled events found in the audit log */
+  guild_scheduled_events?: DiscordScheduledEvent[]
+  /** List of auto moderation rules referenced in the audit log */
+  auto_moderation_rules?: DiscordAutoModerationRule[]
+  /** List of application commands referenced in the audit log */
+  application_commands: DiscordApplicationCommand[]
+}
 
 /** https://discord.com/developers/docs/resources/auto-moderation#auto-moderation-rule-object */
 export interface DiscordAutoModerationRule {
@@ -2426,13 +2426,13 @@ export interface DiscordGuildMemberRemove {
   user: DiscordUser
 }
 
-// /** https://discord.com/developers/docs/resources/guild#ban-object */
-// export interface DiscordBan {
-//   /** The reason for the ban */
-//   reason: string | null
-//   /** The banned user */
-//   user: DiscordUser
-// }
+/** https://discord.com/developers/docs/resources/guild#ban-object */
+export interface DiscordBan {
+  /** The reason for the ban */
+  reason: string | null
+  /** The banned user */
+  user: DiscordUser
+}
 
 export interface DiscordScheduledEventUserRemove {
   /** id of the guild scheduled event */
@@ -2453,19 +2453,19 @@ export interface DiscordInviteDelete {
   code: string
 }
 
-// /** https://discord.com/developers/docs/resources/voice#voice-region-object-voice-region-structure */
-// export interface DiscordVoiceRegion {
-//   /** Unique Id for the region */
-//   id: string
-//   /** Name of the region */
-//   name: string
-//   /** true for a single server that is closest to the current user's client */
-//   optimal: boolean
-//   /** Whether this is a deprecated voice region (avoid switching to these) */
-//   deprecated: boolean
-//   /** Whether this is a custom voice region (used for events/etc) */
-//   custom: boolean
-// }
+/** https://discord.com/developers/docs/resources/voice#voice-region-object-voice-region-structure */
+export interface DiscordVoiceRegion {
+  /** Unique Id for the region */
+  id: string
+  /** Name of the region */
+  name: string
+  /** true for a single server that is closest to the current user's client */
+  optimal: boolean
+  /** Whether this is a deprecated voice region (avoid switching to these) */
+  deprecated: boolean
+  /** Whether this is a custom voice region (used for events/etc) */
+  custom: boolean
+}
 
 // export interface DiscordGuildWidgetSettings {
 //   /** whether the widget is enabled */
@@ -3142,4 +3142,9 @@ export type DiscordArchivedThreads = DiscordActiveThreads & {
 export interface DiscordActiveThreads {
   threads: DiscordChannel[]
   members: DiscordThreadMember[]
+}
+
+export interface DiscordVanityUrl {
+  code: string | null
+  uses: number
 }

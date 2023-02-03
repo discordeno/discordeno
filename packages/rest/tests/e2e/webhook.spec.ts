@@ -1,33 +1,28 @@
-import log from 'why-is-node-running'
 
 import type {
   Camelize,
-  DiscordChannel,
-  DiscordGuild,
-  DiscordMessage,
+  DiscordChannel, DiscordMessage,
   DiscordWebhook
 } from '@discordeno/types'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { afterEach, beforeEach, describe, it } from 'mocha'
-import { cached, rest } from './utils.js'
+import { e2ecache, rest } from './utils.js'
 chai.use(chaiAsPromised)
 
-let guild: Camelize<DiscordGuild>
-
 before(async () => {
-  if (!cached.guild) {
-    cached.guild = await rest.createGuild({
-      name: 'Discordeno-test'
+  if (!e2ecache.guild) {
+    e2ecache.guild = await rest.createGuild({
+      name: 'Discordeno-test',
     })
   }
-  guild = cached.guild
 })
 
 after(async () => {
-  if (cached.guild) {
-    await rest.deleteGuild(guild.id)
-    cached.guild = undefined
+  if (rest.invalidBucket.timeoutId) clearTimeout(rest.invalidBucket.timeoutId)
+  if (e2ecache.guild.id && !e2ecache.deletedGuild) {
+    e2ecache.deletedGuild = true;
+    await rest.deleteGuild(e2ecache.guild.id)
   }
 })
 
@@ -36,7 +31,7 @@ describe('[webhooks] Webhook helpers', async () => {
   let channel: Camelize<DiscordChannel>
 
   beforeEach(async () => {
-    channel = await rest.createChannel(guild.id, {
+    channel = await rest.createChannel(e2ecache.guild.id, {
       name: 'wbhook'
     })
     expect(channel.id).to.exist
@@ -136,12 +131,12 @@ describe('[webhooks] Webhook helpers', async () => {
     it('Can create guild channel webhooks', async () => {
       expect(second).to.exist
       const fetched = await rest.getChannelWebhooks(channel.id)
-      expect(fetched.size).to.greaterThan(1)
+      expect(fetched.length).to.greaterThan(1)
     })
 
     it('Can get a guild channel webhooks', async () => {
       const guildWebhooks = await rest.getGuildWebhooks(channel.guildId!)
-      expect(guildWebhooks.size).to.greaterThan(1)
+      expect(guildWebhooks.length).to.greaterThan(1)
     })
   })
 
@@ -153,7 +148,7 @@ describe('[webhooks] Webhook helpers', async () => {
       webhook = await rest.createWebhook(channel.id, {
         name: 'idk'
       })
-      const msg = await rest.sendWebhookMessage(webhook.id, webhook.token!, {
+      const msg = await rest.executeWebhook(webhook.id, webhook.token!, {
         content: 'discordeno is best lib',
         wait: true
       })

@@ -78,7 +78,7 @@ describe('Guild helpers', async () => {
     // Get available voice regions
     it('Get available voice regions', async () => {
       const regions = await rest.getVoiceRegions(guild.id)
-      expect(regions.size).to.be.exist
+      expect(regions.length).to.be.exist
     })
 
     // Get a guild ban
