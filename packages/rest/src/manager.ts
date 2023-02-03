@@ -1088,6 +1088,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
       },
 
+      async get(guildId, options = { counts: true }) {
+        return await rest.get<DiscordGuild>(rest.routes.guilds.guild(guildId, options.counts))
+      },
+
       integrations: {
         async get(guildId) {
           return await rest.getIntegrations(guildId)
@@ -1744,6 +1748,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getGlobalApplicationCommands() {
       return await rest.get<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId))
+    },
+
+    async getGuild(guildId, options = { counts: true }) {
+      return await rest.get<DiscordGuild>(rest.routes.guilds.guild(guildId, options.counts))
     },
 
     async getGuildApplicationCommand(commandId, guildId) {
@@ -3027,6 +3035,16 @@ export interface RestManager {
         >
       }
     }
+    /**
+     * Gets a guild by its ID.
+     *
+     * @param guildId - The ID of the guild to get.
+     * @param options - The parameters for the fetching of the guild.
+     * @returns An instance of {@link Guild}.
+     *
+     * @see {@link https://discord.com/developers/docs/resources/guild#get-guild}
+     */
+    get: (guildId: BigString, options: { counts?: boolean }) => Promise<Camelize<DiscordGuild>>
     /** Methods related to a guild's integrations. */
     integrations: {
       /**
@@ -5039,6 +5057,16 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands}
    */
   getGlobalApplicationCommands: () => Promise<Camelize<DiscordApplicationCommand[]>>
+  /**
+   * Gets a guild by its ID.
+   *
+   * @param guildId - The ID of the guild to get.
+   * @param options - The parameters for the fetching of the guild.
+   * @returns An instance of {@link Guild}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild}
+   */
+  getGuild: (guildId: BigString, options: { counts?: boolean }) => Promise<Camelize<DiscordGuild>>
   /**
    * Gets a guild application command by its ID.
    *
