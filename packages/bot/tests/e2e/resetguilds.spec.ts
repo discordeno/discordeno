@@ -1,15 +1,18 @@
 import { Intents } from '@discordeno/types'
-import { delay, logger } from '@discordeno/utils'
+import { logger } from '@discordeno/utils'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
-import type { EventHandlers } from '../../src/bot.js';
+import type { EventHandlers } from '../../src/bot.js'
 import { createBot } from '../../src/bot.js'
 import { token } from './constants.js'
 chai.use(chaiAsPromised)
 
 describe('[Bot] Delete any guild owned guilds', () => {
-  it('Start the bot', async () => {
+  it('Start the bot', async function () {
+    this.timeout(10000)
+    let guilds: string[] = []
+
     const bot = createBot({
       token,
       gateway: {
@@ -35,20 +38,24 @@ describe('[Bot] Delete any guild owned guilds', () => {
       },
       events: {
         async guildCreate(payload, shard) {
-          if (payload.joinedAt && (Date.now() - Date.parse(payload.joinedAt)) < 360000) {
-            return;
+          guilds.splice(guilds.indexOf(payload.id), 1)
+          if (payload.joinedAt && Date.now() - Date.parse(payload.joinedAt) < 360000) {
+            if (guilds.length === 0) await bot.shutdown()
+            return
           }
 
           if (bot.rest.applicationId.toString() === payload.ownerId) {
-            logger.debug(`Deleting one of the bot created guilds.`, payload.id);
+            logger.debug(`Deleting one of the bot created guilds.`, payload.id)
             await bot.rest.deleteGuild(payload.id)
           }
+          if (guilds.length === 0) await bot.shutdown()
+        },
+        ready(payload, shard) {
+          guilds = payload.guilds.map((guild) => guild.id)
         },
       },
     })
 
     await bot.start()
-
-    await delay(5000)
   })
 })
