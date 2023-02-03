@@ -14,7 +14,9 @@ before(async () => {
 
 after(async () => {
   if (rest.invalidBucket.timeoutId) clearTimeout(rest.invalidBucket.timeoutId)
-  if (e2ecache.guild.id) await rest.deleteGuild(e2ecache.guild.id)
+  if (e2ecache.guild.id && !e2ecache.deletedGuild) {
+    await rest.deleteGuild(e2ecache.guild.id)
+  }
 })
 
 describe('[rest] User related tests', () => {

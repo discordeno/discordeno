@@ -13,4 +13,5 @@ rest.deleteQueueDelay = 10000
 
 export const e2ecache = {
   guild: await rest.createGuild({ name: 'ddenotester' }),
+  deletedGuild: false,
 }
