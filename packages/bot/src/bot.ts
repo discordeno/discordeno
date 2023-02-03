@@ -48,6 +48,7 @@ import type {
   DiscordVoiceServerUpdate,
   DiscordVoiceState,
   DiscordWebhookUpdate,
+  GatewayIntents,
 } from '@discordeno/types'
 
 /**
@@ -83,6 +84,7 @@ export function createBot(options: CreateBotOptions): Bot {
 
   options.rest.token = options.token
   options.gateway.token = options.token
+  options.gateway.intents = options.intents
 
   const bot: Bot = {
     rest: createRestManager(options.rest),
@@ -107,6 +109,8 @@ export function createBot(options: CreateBotOptions): Bot {
 export interface CreateBotOptions {
   /** The bot's token. */
   token: string
+  /** The bot's intents that will be used to make a connection with discords gateway. */
+  intents?: GatewayIntents
   /** Any options you wish to provide to the rest manager. */
   rest?: CreateRestManagerOptions
   /** Any options you wish to provide to the gateway manager. */
