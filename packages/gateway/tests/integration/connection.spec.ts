@@ -22,7 +22,7 @@ const createGatewayManagerWithPort = (port: number) =>
   })
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const createUWS = async ({ onOpen = () => {}, onMessage = () => {}, onClose = () => {} }) => {
+const createUWS = async ({ onOpen = () => {}, onMessage = (message: any) => {}, onClose = (code: number, message: string) => {} }) => {
   return await new Promise<{ port: number; uwsToken: any }>((resolve, reject) => {
     let port = 0
     let uwsToken = 0
@@ -37,15 +37,15 @@ const createUWS = async ({ onOpen = () => {}, onMessage = () => {}, onClose = ()
             JSON.stringify({
               op: 10,
               d: {
-                heartbeat_interval: 2000,
+                heartbeat_interval: 100,
               },
             }),
           )
-          onOpen(ws)
+          onOpen()
         },
         message: async (ws, message, isBinary) => {
           const msg = JSON.parse(Buffer.from(message).toString())
-          onMessage(ws, msg)
+          onMessage(msg)
           if (msg.op === 1) {
             ws.send(
               JSON.stringify({
@@ -92,19 +92,12 @@ const createUWS = async ({ onOpen = () => {}, onMessage = () => {}, onClose = ()
             return
           }
           if (msg.op === 6) {
-            ws.send(
-              JSON.stringify({
-                op: 7,
-                d: null,
-              }),
-            )
-            return
+            // resume
           }
-          console.log(msg)
         },
         close: (ws, code, message) => {
-          console.log(code, 'server')
-          onClose(ws, code, message)
+          const msg = Buffer.from(message).toString()
+          onClose(code, msg)
         },
       })
       .listen(0, async (token) => {
@@ -119,12 +112,11 @@ const createUWS = async ({ onOpen = () => {}, onMessage = () => {}, onClose = ()
   })
 }
 
-describe('discord gateway connect', () => {
-  it('can connect to web socket server', async () => {
+describe('gateway', () => {
+  it('can connect to server', async function () {
+    this.timeout(6000)
     let resolveConnected
-    const connected = new Promise((resolve, reject) => {
-      resolveConnected = resolve
-    })
+    const connected = new Promise((resolve) => (resolveConnected = resolve))
     const { port, uwsToken } = await createUWS({ onOpen: resolveConnected })
     const gateway = createGatewayManagerWithPort(port)
     await gateway.spawnShards()
