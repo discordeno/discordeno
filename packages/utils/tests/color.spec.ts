@@ -1,4 +1,5 @@
 import { expect } from 'chai'
+import { describe, it } from 'mocha'
 import * as colors from '../src/colors.js'
 
 const arrayOfColors = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white']
