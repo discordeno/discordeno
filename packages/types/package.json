@@ -20,11 +20,10 @@
   "devDependencies": {
     "@swc/cli": "^0.1.57",
     "@swc/core": "^1.3.21",
+    "@types/node": "^18.11.9",
     "eslint": "^8.0.1",
     "eslint-config-discordeno": "*",
     "tsconfig": "*",
-    "@types/node": "^18.11.9",
     "typescript": "^4.9.3"
-  },
-  "dependencies": {}
+  }
 }
