@@ -43,7 +43,6 @@ const createUws = async (options: {
         maxPayloadLength: 16 * 1024 * 1024,
         idleTimeout: 10,
         open: async (ws) => {
-          console.log('open', options.closing)
           if (options.closing) {
             ws.end(3000)
             return
