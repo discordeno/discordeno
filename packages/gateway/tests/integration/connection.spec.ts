@@ -130,9 +130,9 @@ const createUws = async (options: {
 describe('gateway', () => {
   it('can connect to server', async function () {
     this.timeout(6000)
-    let resolveConnected
-    const connected = new Promise((resolve) => (resolveConnected = resolve))
-    const uwsOptions = { onOpen: resolveConnected, closing: false }
+    let resolveConnected: () => void
+    const connected = new Promise<void>((resolve) => (resolveConnected = resolve))
+    const uwsOptions = { onOpen: resolveConnected!, closing: false }
     const { port, uwsToken } = await createUws(uwsOptions)
     const gateway = createGatewayManagerWithPort(port)
     await gateway.spawnShards()
@@ -144,13 +144,13 @@ describe('gateway', () => {
 
   it('will heartbeat', async function () {
     this.timeout(6000)
-    let resolveHeartbeat
-    let resolveConnected
-    const connected = new Promise((resolve) => (resolveConnected = resolve))
-    const Heartbeated = new Promise((resolve) => (resolveHeartbeat = resolve))
+    let resolveHeartbeat: () => void
+    let resolveConnected: () => void
+    const connected = new Promise<void>((resolve) => (resolveConnected = resolve))
+    const Heartbeated = new Promise<void>((resolve) => (resolveHeartbeat = resolve))
     const uwsOptions = {
-      onOpen: resolveConnected,
-      onMessage: (message) => {
+      onOpen: resolveConnected!,
+      onMessage: (message: any) => {
         if (message.op !== 1) return
         resolveHeartbeat()
       },
