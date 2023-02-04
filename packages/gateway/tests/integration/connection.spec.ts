@@ -22,7 +22,17 @@ const createGatewayManagerWithPort = (port: number) =>
   })
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const createUWS = async ({ onOpen = () => {}, onMessage = (message: any) => {}, onClose = (code: number, message: string) => {} }) => {
+const createUws = async (options: {
+  onOpen?: () => any
+  onMessage?: (message: any) => any
+  onClose?: (code: number, message: string) => any
+  closing?: boolean
+}) => {
+  options.onOpen ??= () => {}
+  options.onMessage ??= (message: any) => {}
+  options.onClose ??= (code: number, message: string) => {}
+  options.closing ??= false
+
   return await new Promise<{ port: number; uwsToken: any }>((resolve, reject) => {
     let port = 0
     let uwsToken = 0
@@ -33,6 +43,11 @@ const createUWS = async ({ onOpen = () => {}, onMessage = (message: any) => {}, 
         maxPayloadLength: 16 * 1024 * 1024,
         idleTimeout: 10,
         open: async (ws) => {
+          console.log('open', options.closing)
+          if (options.closing) {
+            ws.end(3000)
+            return
+          }
           ws.send(
             JSON.stringify({
               op: 10,
@@ -41,11 +56,11 @@ const createUWS = async ({ onOpen = () => {}, onMessage = (message: any) => {}, 
               },
             }),
           )
-          onOpen()
+          options.onOpen!()
         },
         message: async (ws, message, isBinary) => {
           const msg = JSON.parse(Buffer.from(message).toString())
-          onMessage(msg)
+          options.onMessage!(msg)
           if (msg.op === 1) {
             ws.send(
               JSON.stringify({
@@ -97,7 +112,7 @@ const createUWS = async ({ onOpen = () => {}, onMessage = (message: any) => {}, 
         },
         close: (ws, code, message) => {
           const msg = Buffer.from(message).toString()
-          onClose(code, msg)
+          options.onClose!(code, msg)
         },
       })
       .listen(0, async (token) => {
@@ -117,10 +132,12 @@ describe('gateway', () => {
     this.timeout(6000)
     let resolveConnected
     const connected = new Promise((resolve) => (resolveConnected = resolve))
-    const { port, uwsToken } = await createUWS({ onOpen: resolveConnected })
+    const uwsOptions = { onOpen: resolveConnected, closing: false }
+    const { port, uwsToken } = await createUws(uwsOptions)
     const gateway = createGatewayManagerWithPort(port)
     await gateway.spawnShards()
     await connected
+    uwsOptions.closing = true
     await gateway.shutdown(ShardSocketCloseCodes.Shutdown, 'User requested bot stop')
     uWS.us_listen_socket_close(uwsToken)
   })
@@ -131,13 +148,15 @@ describe('gateway', () => {
     let resolveConnected
     const connected = new Promise((resolve) => (resolveConnected = resolve))
     const Heartbeated = new Promise((resolve) => (resolveHeartbeat = resolve))
-    const { port, uwsToken } = await createUWS({
+    const uwsOptions = {
       onOpen: resolveConnected,
       onMessage: (message) => {
         if (message.op !== 1) return
         resolveHeartbeat()
       },
-    })
+      closing: false,
+    }
+    const { port, uwsToken } = await createUws(uwsOptions)
     const gateway = createGatewayManagerWithPort(port)
     await gateway.spawnShards()
     await connected
@@ -146,6 +165,7 @@ describe('gateway', () => {
     }, 100)
     await Heartbeated
     clearTimeout(timeout)
+    uwsOptions.closing = true
     await gateway.shutdown(ShardSocketCloseCodes.Shutdown, 'User requested bot stop')
     uWS.us_listen_socket_close(uwsToken)
   })
