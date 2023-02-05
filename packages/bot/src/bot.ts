@@ -91,7 +91,7 @@ export function createBot(options: CreateBotOptions): Bot {
     rest: createRestManager(options.rest),
     gateway: createGatewayManager(options.gateway),
     events: options.events ?? {},
-    logger: createLogger({ name: 'Bot' }),
+    logger: createLogger({ name: 'BOT' }),
 
     async start() {
       if (!options.gateway?.connection) {
