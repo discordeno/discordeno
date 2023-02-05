@@ -5,7 +5,13 @@ flags:
     carryforward: false
   embeds-unit:
     carryforward: false
+  bot-unit:
+    carryforward: false
+  bot-e2e:
+    carryforward: true
   gatway-unit:
+    carryforward: false
+  gatway-integration:
     carryforward: false
   logger-unit:
     carryforward: false

@@ -90,7 +90,7 @@ jobs:
       - name: Bump Package Version
         run: node ./scripts/bumpVersionByCommit.js ${{ matrix.package }}
 
-      - run: npm publish --access public --tag next
+      - run: npm publish --access public
         working-directory: packages/${{ matrix.package }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
