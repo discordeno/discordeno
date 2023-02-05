@@ -50,6 +50,7 @@ import type {
   DiscordWebhookUpdate,
   GatewayIntents,
 } from '@discordeno/types'
+import { createLogger, logger } from '@discordeno/utils'
 
 /**
  * Create a bot object that will maintain the rest and gateway connection.
@@ -90,6 +91,7 @@ export function createBot(options: CreateBotOptions): Bot {
     rest: createRestManager(options.rest),
     gateway: createGatewayManager(options.gateway),
     events: options.events ?? {},
+    logger: createLogger({ name: 'Bot' }),
 
     async start() {
       if (!options.gateway?.connection) {
@@ -126,6 +128,8 @@ export interface Bot {
   gateway: GatewayManager
   /** The event handlers. */
   events: Partial<EventHandlers>
+  /** A logger utility to make it easy to log nice and useful things in the bot code. */
+  logger: ReturnType<typeof createLogger>
   /** Start the bot connection to the gateway. */
   start: () => Promise<void>
   /** Shuts down all the bot connections to the gateway. */
@@ -138,7 +142,6 @@ export interface EventHandlers {
   raw: (payload: Camelize<DiscordGatewayPayload>, shard: Shard) => unknown
 
   // Gateway events below this
-  ready: (payload: Camelize<DiscordReady>, shard: Shard) => unknown
   applicationCommandPermissionsUpdate: (payload: Camelize<DiscordGuildApplicationCommandPermissions>, shard: Shard) => unknown
   autoModerationRuleCreate: (payload: Camelize<DiscordAutoModerationRule>, shard: Shard) => unknown
   autoModerationRuleUpdate: (payload: Camelize<DiscordAutoModerationRule>, shard: Shard) => unknown
@@ -189,6 +192,7 @@ export interface EventHandlers {
   messageReactionRemoveAll: (payload: Camelize<DiscordMessageReactionRemoveAll>, shard: Shard) => unknown
   messageReactionRemoveEmoji: (payload: Camelize<DiscordMessageReactionRemoveEmoji>, shard: Shard) => unknown
   presenceUpdate: (payload: Camelize<DiscordPresenceUpdate>, shard: Shard) => unknown
+  ready: (payload: Camelize<DiscordReady>, shard: Shard) => unknown
   stageInstanceCreate: (payload: Camelize<DiscordStageInstance>, shard: Shard) => unknown
   stageInstanceUpdate: (payload: Camelize<DiscordStageInstance>, shard: Shard) => unknown
   stageInstanceDelete: (payload: Camelize<DiscordStageInstance>, shard: Shard) => unknown
