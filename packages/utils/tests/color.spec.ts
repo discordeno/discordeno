@@ -33,7 +33,6 @@ describe('color.ts', () => {
     .forEach((color, index) => {
       describe(`${color} function`, () => {
         it('will return colored word', () => {
-          console.dir((colors[color as keyof typeof colors] as typeof colors.bgBlack)('testWord'))
           expect((colors[color as keyof typeof colors] as typeof colors.bgBlack)('testWord')).to.equal(`\x1B[${40 + index}mtestWord\x1B[49m`)
         })
       })
@@ -44,7 +43,6 @@ describe('color.ts', () => {
     .forEach((color, index) => {
       describe(`${color} function`, () => {
         it('will return colored word', () => {
-          console.dir((colors[color as keyof typeof colors] as typeof colors.bgBrightBlack)('testWord'))
           expect((colors[color as keyof typeof colors] as typeof colors.bgBlack)('testWord')).to.equal(`\x1B[${100 + index}mtestWord\x1B[49m`)
         })
       })
