@@ -1,9 +1,9 @@
 import type { DiscordEmoji, DiscordGuildPreview } from '@discordeno/types'
-import Base from '../../Base.js'
-import type Client from '../../Client.js'
-import type { ImageFormat, ImageSize } from '../../Client.js'
-import { GUILD_DISCOVERY_SPLASH, GUILD_ICON, GUILD_SPLASH } from '../../Endpoints.js'
-import { GuildToggles } from '../toggles/Guild.js'
+import Base from '../../Base'
+import type Client from '../../Client'
+import type { ImageFormat, ImageSize } from '../../Client'
+import { GUILD_DISCOVERY_SPLASH, GUILD_ICON, GUILD_SPLASH } from '../../Endpoints'
+import { GuildToggles } from '../toggles/Guild'
 
 export class GuildPreview extends Base {
   /** The client object */

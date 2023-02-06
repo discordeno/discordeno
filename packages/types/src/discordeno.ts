@@ -7,7 +7,7 @@ import type {
   DiscordChannel,
   DiscordEmbed,
   DiscordRole,
-} from './discord.js'
+} from './discord'
 import type {
   AllowedMentionsTypes,
   ApplicationCommandOptionTypes,
@@ -35,7 +35,7 @@ import type {
   TextStyles,
   VerificationLevels,
   VideoQualityModes,
-} from './shared.js'
+} from './shared'
 
 export interface CreateMessageOptions {
   /** The message contents (up to 2000 characters) */
@@ -81,7 +81,7 @@ export interface CreateMessageOptions {
 //   OverwriteTypes,
 //   PermissionStrings,
 //   TextStyles
-// } from './shared.js'
+// } from './shared'
 
 export type MessageComponents = ActionRow[]
 

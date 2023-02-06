@@ -2,8 +2,8 @@
 /* eslint-disable no-useless-call */
 /* eslint-disable @typescript-eslint/return-await */
 import type { BigString, DiscordChannel, GetMessagesOptions } from '@discordeno/types'
-import type Client from '../../Client.js'
-import Collection from '../../Collection.js'
+import type Client from '../../Client'
+import Collection from '../../Collection'
 import type {
   CreateChannelInviteOptions,
   CreateThreadOptions,
@@ -14,12 +14,12 @@ import type {
   ListedChannelThreads,
   MessageContent,
   PurgeChannelOptions,
-} from '../../typings.js'
-import type Invite from '../Invite.js'
-import type Message from '../Message.js'
-import GuildChannel from './Guild.js'
-import type PrivateThreadChannel from './threads/PrivateThread.js'
-import type PublicThreadChannel from './threads/PublicThread.js'
+} from '../../typings'
+import type Invite from '../Invite'
+import type Message from '../Message'
+import GuildChannel from './Guild'
+import type PrivateThreadChannel from './threads/PrivateThread'
+import type PublicThreadChannel from './threads/PublicThread'
 
 export class TextChannel extends GuildChannel {
   /** Collection of Messages in this channel */

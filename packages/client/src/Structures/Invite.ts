@@ -1,12 +1,12 @@
 /* eslint-disable no-useless-call */
 
 import type { DiscordInvite, DiscordInviteCreate, DiscordMemberWithUser, TargetTypes } from '@discordeno/types'
-import Base from '../Base.js'
-import type Client from '../Client.js'
-import type Channel from './channels/Channel.js'
-import Guild from './guilds/Guild.js'
-import Member from './guilds/Member.js'
-import User from './users/User.js'
+import Base from '../Base'
+import type Client from '../Client'
+import type Channel from './channels/Channel'
+import Guild from './guilds/Guild'
+import Member from './guilds/Member'
+import User from './users/User'
 
 export class Invite {
   /** The client object. */

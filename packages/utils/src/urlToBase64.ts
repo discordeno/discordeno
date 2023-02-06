@@ -1,4 +1,4 @@
-import { encode } from './base64.js'
+import { encode } from './base64'
 
 /** Converts a url to base 64. Useful for example, uploading/creating server emojis. */
 export async function urlToBase64(url: string): Promise<string> {

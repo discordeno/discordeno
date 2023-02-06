@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-// import { bigintToSnowflake, snowflakeToBigint } from '../src/bigint.js'
+// import { bigintToSnowflake, snowflakeToBigint } from '../src/bigint'
 let bigintToSnowflake: any, snowflakeToBigint: any
 
 describe.skip('bigint.ts', () => {

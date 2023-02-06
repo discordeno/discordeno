@@ -1,5 +1,5 @@
 import type { ActivityTypes, Camelize, DiscordGatewayPayload, GatewayOpcodes, PresenceStatus } from '@discordeno/types'
-import type Shard from './Shard.js'
+import type Shard from './Shard'
 
 export enum ShardState {
   /** Shard is fully connected to the gateway and receiving events from Discord. */

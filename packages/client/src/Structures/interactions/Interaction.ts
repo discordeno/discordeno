@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { InteractionTypes, type BigString, type DiscordInteraction } from '@discordeno/types'
-import Base from '../../Base.js'
-import type Client from '../../Client.js'
-import AutocompleteInteraction from './Autocomplete.js'
-import CommandInteraction from './Command.js'
-import ComponentInteraction from './Component.js'
-import PingInteraction from './Ping.js'
-import UnknownInteraction from './Unknown.js'
+import Base from '../../Base'
+import type Client from '../../Client'
+import AutocompleteInteraction from './Autocomplete'
+import CommandInteraction from './Command'
+import ComponentInteraction from './Component'
+import PingInteraction from './Ping'
+import UnknownInteraction from './Unknown'
 
 export class Interaction extends Base {
   client: Client

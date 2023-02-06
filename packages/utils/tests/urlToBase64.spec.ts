@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { urlToBase64 } from '../src/urlToBase64.js'
+import { urlToBase64 } from '../src/urlToBase64'
 
 describe('urlToBase64.ts', () => {
   describe('urlToBase64 function', () => {

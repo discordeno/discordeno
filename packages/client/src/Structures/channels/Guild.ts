@@ -3,14 +3,14 @@
 import type { BigString, DiscordChannel, OverwriteTypes } from '@discordeno/types'
 import { BitwisePermissionFlags } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
-import type Client from '../../Client.js'
-import type { EditChannelOptions, EditChannelPositionOptions } from '../../typings.js'
-import type Guild from '../guilds/Guild.js'
-import type Member from '../guilds/Member.js'
-import Permission from '../Permission.js'
-import PermissionOverwrite from '../PermissionOverwrite.js'
-import Channel from './Channel.js'
-import ThreadChannel from './threads/Thread.js'
+import type Client from '../../Client'
+import type { EditChannelOptions, EditChannelPositionOptions } from '../../typings'
+import type Guild from '../guilds/Guild'
+import type Member from '../guilds/Member'
+import Permission from '../Permission'
+import PermissionOverwrite from '../PermissionOverwrite'
+import Channel from './Channel'
+import ThreadChannel from './threads/Thread'
 
 export class GuildChannel extends Channel {
   position: number

@@ -3,7 +3,7 @@
   "display": "Default",
   "compilerOptions": {
     "target": "es2022",
-    "module": "es2022",
+    "module": "CommonJS",
     "composite": false,
     "declaration": true,
     "declarationMap": true,
@@ -28,7 +28,6 @@
     "test"
   ],
   "ts-node": {
-    "swc": true,
-    "esm": true
+    "swc": true
   }
 }

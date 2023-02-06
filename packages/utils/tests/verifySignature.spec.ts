@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, it } from 'mocha'
 import { Buffer } from 'node:buffer'
 import Sinon from 'sinon'
 import nacl from 'tweetnacl'
-// import { verifySignature } from '../src/verifySignature.js'
+// import { verifySignature } from '../src/verifySignature'
 let verifySignature: any
 
 describe.skip('verifySignature.ts', () => {

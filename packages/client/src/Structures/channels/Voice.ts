@@ -1,11 +1,11 @@
 /* eslint-disable no-useless-call */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import type { DiscordChannel } from '@discordeno/types'
-import type Client from '../../Client.js'
-import Collection from '../../Collection.js'
-import type { CreateInviteOptions, TextVoiceChannelTypes, VideoQualityMode } from '../../typings.js'
-import type Member from '../guilds/Member.js'
-import GuildChannel from './Guild.js'
+import type Client from '../../Client'
+import Collection from '../../Collection'
+import type { CreateInviteOptions, TextVoiceChannelTypes, VideoQualityMode } from '../../typings'
+import type Member from '../guilds/Member'
+import GuildChannel from './Guild'
 
 export class VoiceChannel extends GuildChannel {
   bitrate: number = 0

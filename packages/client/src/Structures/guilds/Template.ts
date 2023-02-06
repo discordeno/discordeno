@@ -1,10 +1,10 @@
 /* eslint-disable no-useless-call */
 import type { DiscordTemplate } from '@discordeno/types'
-import Base from '../../Base.js'
-import type Client from '../../Client.js'
-import type { GuildTemplateOptions } from '../../typings.js'
-import User from '../users/User.js'
-import Guild from './Guild.js'
+import Base from '../../Base'
+import type Client from '../../Client'
+import type { GuildTemplateOptions } from '../../typings'
+import User from '../users/User'
+import Guild from './Guild'
 
 export class GuildTemplate {
   /** The client class itself. */

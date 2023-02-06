@@ -1,3 +1,3 @@
-export * from './invalidBucket.js'
-export * from './manager.js'
-export * from './queue.js'
+export * from './invalidBucket'
+export * from './manager'
+export * from './queue'

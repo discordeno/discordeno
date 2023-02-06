@@ -1,3 +1,3 @@
-export * from './discord.js'
-export * from './discordeno.js'
-export * from './shared.js'
+export * from './discord'
+export * from './discordeno'
+export * from './shared'

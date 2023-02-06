@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import type { DiscordAuditLogChange, DiscordAuditLogEntry } from '@discordeno/types'
 import { AuditLogEvents } from '@discordeno/types'
-import Base from '../../Base.js'
-import type GuildChannel from '../channels/Guild.js'
-import type TextChannel from '../channels/Text.js'
-import Invite from '../Invite.js'
-import type Message from '../Message.js'
-import type User from '../users/User.js'
-import type Guild from './Guild.js'
-import type Member from './Member.js'
-import type Role from './Role.js'
+import Base from '../../Base'
+import type GuildChannel from '../channels/Guild'
+import type TextChannel from '../channels/Text'
+import Invite from '../Invite'
+import type Message from '../Message'
+import type User from '../users/User'
+import type Guild from './Guild'
+import type Member from './Member'
+import type Role from './Role'
 
 export class GuildAuditLogEntry extends Base {
   /** The guild to which this entry belongs. */

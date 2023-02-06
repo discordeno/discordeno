@@ -3,7 +3,7 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: ['standard-with-typescript', 'prettier', 'plugin:require-extensions/recommended'],
+  extends: ['standard-with-typescript', 'prettier'],
   overrides: [
     {
       files: ['*.spec.ts'],
@@ -12,7 +12,6 @@ module.exports = {
       },
     },
   ],
-  plugins: ['require-extensions'],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',

@@ -19,11 +19,11 @@ import {
   type SystemChannelFlags,
   type VerificationLevels,
 } from '@discordeno/types'
-import Base from '../../Base.js'
-import type Client from '../../Client.js'
-import type { ImageFormat, ImageSize } from '../../Client.js'
-import Collection from '../../Collection.js'
-import { BANNER, GUILD_DISCOVERY_SPLASH, GUILD_ICON, GUILD_SPLASH } from '../../Endpoints.js'
+import Base from '../../Base'
+import type Client from '../../Client'
+import type { ImageFormat, ImageSize } from '../../Client'
+import Collection from '../../Collection'
+import { BANNER, GUILD_DISCOVERY_SPLASH, GUILD_ICON, GUILD_SPLASH } from '../../Endpoints'
 import type {
   AnyGuildChannel,
   AnyThreadChannel,
@@ -62,24 +62,24 @@ import type {
   WelcomeScreenOptions,
   Widget,
   WidgetData,
-} from '../../typings.js'
-import type CategoryChannel from '../channels/Category.js'
-import Channel from '../channels/Channel.js'
-import type GuildChannel from '../channels/Guild.js'
-import type StageChannel from '../channels/Stage.js'
-import type TextChannel from '../channels/Text.js'
-import type TextVoiceChannel from '../channels/TextVoice.js'
-import type ThreadChannel from '../channels/threads/Thread.js'
-import type VoiceChannel from '../channels/Voice.js'
-import type Invite from '../Invite.js'
-import Permission from '../Permission.js'
-import User from '../users/User.js'
-import type GuildIntegration from './Integration.js'
-import Member from './Member.js'
-import Role from './Role.js'
-import StageInstance from './StageInstance.js'
-import type GuildTemplate from './Template.js'
-import type { VoiceState } from './VoiceState.js'
+} from '../../typings'
+import type CategoryChannel from '../channels/Category'
+import Channel from '../channels/Channel'
+import type GuildChannel from '../channels/Guild'
+import type StageChannel from '../channels/Stage'
+import type TextChannel from '../channels/Text'
+import type TextVoiceChannel from '../channels/TextVoice'
+import type ThreadChannel from '../channels/threads/Thread'
+import type VoiceChannel from '../channels/Voice'
+import type Invite from '../Invite'
+import Permission from '../Permission'
+import User from '../users/User'
+import type GuildIntegration from './Integration'
+import Member from './Member'
+import Role from './Role'
+import StageInstance from './StageInstance'
+import type GuildTemplate from './Template'
+import type { VoiceState } from './VoiceState'
 
 export class Guild extends Base {
   /** The client object */

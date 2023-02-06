@@ -2,7 +2,7 @@ import type { Camelize, DiscordRole } from '@discordeno/types'
 import { calculateBits } from '@discordeno/utils'
 import { expect } from 'chai'
 import { afterEach, before, beforeEach, describe, it } from 'mocha'
-import { e2ecache, rest } from './utils.js'
+import { e2ecache, rest } from './utils'
 
 before(async () => {
   if (!e2ecache.guild) {
@@ -90,7 +90,7 @@ describe('[role] Role tests', async () => {
     it('Edit the roles hoist', async () => {
       expect(role.hoist).to.equal(false)
       const edited = await rest.editRole(e2ecache.guild.id, role.id, {
-        hoist: true
+        hoist: true,
       })
       expect(edited.hoist).to.equal(true)
     })
@@ -100,7 +100,7 @@ describe('[role] Role tests', async () => {
       await rest.editRole(e2ecache.guild.id, role.id, { hoist: true })
 
       const edited = await rest.editRole(e2ecache.guild.id, role.id, {
-        hoist: false
+        hoist: false,
       })
       expect(edited.hoist).to.equal(false)
     })
@@ -108,7 +108,7 @@ describe('[role] Role tests', async () => {
     // Edit the roles mentionable
     it('Edit the roles mentionable', async () => {
       const edited = await rest.editRole(e2ecache.guild.id, role.id, {
-        mentionable: true
+        mentionable: true,
       })
       expect(edited.mentionable).to.equal(true)
     })
@@ -116,10 +116,10 @@ describe('[role] Role tests', async () => {
     // Make mentionable false
     it('Make mentionable false', async () => {
       await rest.editRole(e2ecache.guild.id, role.id, {
-        mentionable: true
+        mentionable: true,
       })
       const edited = await rest.editRole(e2ecache.guild.id, role.id, {
-        mentionable: false
+        mentionable: false,
       })
       expect(edited.mentionable).to.equal(false)
     })

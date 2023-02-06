@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import Base from '../Base.js'
-import type Client from '../Client.js'
-import Collection from '../Collection.js'
-import type { ShardManagerOptions } from '../typings.js'
-import Shard from './Shard.js'
+import Base from '../Base'
+import type Client from '../Client'
+import Collection from '../Collection'
+import type { ShardManagerOptions } from '../typings'
+import Shard from './Shard'
 
 export class ShardManager extends Collection<number, Shard> {
   /** The client manager */

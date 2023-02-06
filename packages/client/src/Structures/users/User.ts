@@ -1,10 +1,10 @@
 /* eslint-disable no-useless-call */
 import type { BigString, DiscordUser, UserFlags } from '@discordeno/types'
-import Base from '../../Base.js'
-import type Client from '../../Client.js'
-import type { ImageFormat, ImageSize } from '../../Client.js'
-import { BANNER, DEFAULT_USER_AVATAR, USER_AVATAR } from '../../Endpoints.js'
-import type PrivateChannel from '../channels/Private.js'
+import Base from '../../Base'
+import type Client from '../../Client'
+import type { ImageFormat, ImageSize } from '../../Client'
+import { BANNER, DEFAULT_USER_AVATAR, USER_AVATAR } from '../../Endpoints'
+import type PrivateChannel from '../channels/Private'
 
 export class User extends Base {
   client: Client

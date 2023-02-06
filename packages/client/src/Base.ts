@@ -1,4 +1,4 @@
-import type { BigString } from './Client.js'
+import type { BigString } from './Client'
 
 export class Base {
   /** Internal storage of the id done in bigint to preserve memory */

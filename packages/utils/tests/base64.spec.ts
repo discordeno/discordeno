@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { Buffer } from 'node:buffer'
-import { decode, encode } from '../src/base64.js'
+import { decode, encode } from '../src/base64'
 
 describe('base64.ts', () => {
   describe('encode', () => {

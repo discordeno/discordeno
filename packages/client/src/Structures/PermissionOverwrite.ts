@@ -1,7 +1,7 @@
 import type { DiscordOverwrite, OverwriteTypes } from '@discordeno/types'
-import { Base } from '../Base.js'
-import type { BigString } from '../Client.js'
-import Permission from './Permission.js'
+import { Base } from '../Base'
+import type { BigString } from '../Client'
+import Permission from './Permission'
 
 export class PermissionOverwrite extends Permission {
   id: BigString

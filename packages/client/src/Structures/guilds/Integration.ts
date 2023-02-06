@@ -1,9 +1,9 @@
 /* eslint-disable no-useless-call */
 import type { DiscordIntegration, DiscordIntegrationApplication } from '@discordeno/types'
-import Base from '../../Base.js'
-import type { IntegrationOptions } from '../../typings.js'
-import User from '../users/User.js'
-import type Guild from './Guild.js'
+import Base from '../../Base'
+import type { IntegrationOptions } from '../../typings'
+import User from '../users/User'
+import type Guild from './Guild'
 
 export class GuildIntegration extends Base {
   /** The guild where this integration exists. */

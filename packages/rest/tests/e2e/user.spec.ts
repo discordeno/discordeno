@@ -1,7 +1,7 @@
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
-import { e2ecache, rest } from './utils.js'
+import { e2ecache, rest } from './utils'
 chai.use(chaiAsPromised)
 
 before(async () => {

@@ -4,13 +4,13 @@
 /* eslint-disable @typescript-eslint/return-await */
 
 import type { BigString, DiscordMember, DiscordMemberWithUser } from '@discordeno/types'
-import Base from '../../Base.js'
-import type Client from '../../Client.js'
-import type { ImageFormat, ImageSize } from '../../Client.js'
-import { GUILD_AVATAR } from '../../Endpoints.js'
-import type { MemberOptions } from '../../typings.js'
-import User from '../users/User.js'
-import type Guild from './Guild.js'
+import Base from '../../Base'
+import type Client from '../../Client'
+import type { ImageFormat, ImageSize } from '../../Client'
+import { GUILD_AVATAR } from '../../Endpoints'
+import type { MemberOptions } from '../../typings'
+import User from '../users/User'
+import type Guild from './Guild'
 
 export class Member extends Base {
   /** The client manager */

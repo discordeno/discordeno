@@ -1907,7 +1907,6 @@ __metadata:
     eslint-plugin-import: ^2.25.2
     eslint-plugin-n: ^15.0.0
     eslint-plugin-promise: ^6.0.0
-    eslint-plugin-require-extensions: ^0.1.1
     typescript: ^4.9.3
   languageName: unknown
   linkType: soft
@@ -2033,15 +2032,6 @@ __metadata:
   peerDependencies:
     eslint: ^7.0.0 || ^8.0.0
   checksum: 46b9a4f79dae5539987922afc27cc17cbccdecf4f0ba19c0ccbf911b0e31853e9f39d9959eefb9637461b52772afa1a482f1f87ff16c1ba38bdb6fcf21897e9a
-  languageName: node
-  linkType: hard
-
-"eslint-plugin-require-extensions@npm:^0.1.1":
-  version: 0.1.1
-  resolution: "eslint-plugin-require-extensions@npm:0.1.1"
-  peerDependencies:
-    eslint: "*"
-  checksum: 1207d33b0c8c86384737acfdb4675db77a9d5579334b19ce9f404c5913e249c6bebc015fa77942c942b18d40bb7e34baaeaafb62f2c8f80cd2c0044a40e0e546
   languageName: node
   linkType: hard
 

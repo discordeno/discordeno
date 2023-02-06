@@ -1,8 +1,8 @@
 import type { Camelize, DiscordGetGatewayBot } from '@discordeno/types'
 import type { LeakyBucket } from '@discordeno/utils'
 import { createLeakyBucket, delay } from '@discordeno/utils'
-import Shard from './Shard.js'
-import type { ShardEvents } from './types.js'
+import Shard from './Shard'
+import type { ShardEvents } from './types'
 
 export function createGatewayManager(options: CreateGatewayManagerOptions): GatewayManager {
   if (!options.connection) {

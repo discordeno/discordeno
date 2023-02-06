@@ -4,7 +4,7 @@
 
 import type { DiscordInteraction } from '@discordeno/types'
 import { InteractionResponseTypes } from '@discordeno/types'
-import type Client from '../../Client.js'
+import type Client from '../../Client'
 import type {
   ApplicationCommandOptionChoice,
   FileContent,
@@ -13,12 +13,12 @@ import type {
   InteractionResponse,
   PossiblyUncachedTextable,
   TextableChannel,
-} from '../../typings.js'
-import Member from '../guilds/Member.js'
-import Message from '../Message.js'
-import Permission from '../Permission.js'
-import User from '../users/User.js'
-import Interaction from './Interaction.js'
+} from '../../typings'
+import Member from '../guilds/Member'
+import Message from '../Message'
+import Permission from '../Permission'
+import User from '../users/User'
+import Interaction from './Interaction'
 
 export class UnknownInteraction<T extends PossiblyUncachedTextable = TextableChannel> extends Interaction {
   channel?: T

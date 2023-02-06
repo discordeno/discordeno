@@ -1,13 +1,8 @@
-
-import type {
-  Camelize,
-  DiscordChannel, DiscordMessage,
-  DiscordWebhook
-} from '@discordeno/types'
+import type { Camelize, DiscordChannel, DiscordMessage, DiscordWebhook } from '@discordeno/types'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { afterEach, beforeEach, describe, it } from 'mocha'
-import { e2ecache, rest } from './utils.js'
+import { e2ecache, rest } from './utils'
 chai.use(chaiAsPromised)
 
 before(async () => {
@@ -21,7 +16,7 @@ before(async () => {
 after(async () => {
   if (rest.invalidBucket.timeoutId) clearTimeout(rest.invalidBucket.timeoutId)
   if (e2ecache.guild.id && !e2ecache.deletedGuild) {
-    e2ecache.deletedGuild = true;
+    e2ecache.deletedGuild = true
     await rest.deleteGuild(e2ecache.guild.id)
   }
 })
@@ -32,7 +27,7 @@ describe('[webhooks] Webhook helpers', async () => {
 
   beforeEach(async () => {
     channel = await rest.createChannel(e2ecache.guild.id, {
-      name: 'wbhook'
+      name: 'wbhook',
     })
     expect(channel.id).to.exist
   })
@@ -46,7 +41,7 @@ describe('[webhooks] Webhook helpers', async () => {
 
     beforeEach(async () => {
       webhook = await rest.createWebhook(channel.id, {
-        name: 'idk'
+        name: 'idk',
       })
     })
 
@@ -78,7 +73,7 @@ describe('[webhooks] Webhook helpers', async () => {
 
     beforeEach(async () => {
       webhook = await rest.createWebhook(channel.id, {
-        name: 'idk'
+        name: 'idk',
       })
     })
 
@@ -89,20 +84,16 @@ describe('[webhooks] Webhook helpers', async () => {
 
     it('Can edit a guild webhook', async () => {
       const edited = await rest.editWebhook(webhook.id, {
-        name: 'edited'
+        name: 'edited',
       })
 
       expect(webhook.name).to.not.equal(edited.name)
     })
 
     it('Can edit a guild webhook with token', async () => {
-      const edited = await rest.editWebhookWithToken(
-        webhook.id,
-        webhook.token!,
-        {
-          name: 'editedtoken'
-        }
-      )
+      const edited = await rest.editWebhookWithToken(webhook.id, webhook.token!, {
+        name: 'editedtoken',
+      })
 
       expect(webhook.name).to.not.equal(edited.name)
     })
@@ -115,17 +106,14 @@ describe('[webhooks] Webhook helpers', async () => {
 
     it('Can get a guild webhook with a token', async () => {
       expect(webhook.token).to.exist
-      const fetched = await rest.getWebhookWithToken(
-        webhook.id,
-        webhook.token!
-      )
+      const fetched = await rest.getWebhookWithToken(webhook.id, webhook.token!)
       expect(webhook.id).to.equal(fetched.id)
     })
   })
 
   describe('Guild channel webhook helpers', async () => {
     const second = await rest.createWebhook(channel.id, {
-      name: 'what nonsense'
+      name: 'what nonsense',
     })
 
     it('Can create guild channel webhooks', async () => {
@@ -146,11 +134,11 @@ describe('[webhooks] Webhook helpers', async () => {
 
     beforeEach(async () => {
       webhook = await rest.createWebhook(channel.id, {
-        name: 'idk'
+        name: 'idk',
       })
       const msg = await rest.executeWebhook(webhook.id, webhook.token!, {
         content: 'discordeno is best lib',
-        wait: true
+        wait: true,
       })
       if (!msg) throw new Error('message not send')
       message = msg
@@ -162,31 +150,20 @@ describe('[webhooks] Webhook helpers', async () => {
 
     it('Can delete a message with webhook', async () => {
       await rest.deleteWebhookMessage(webhook.id, webhook.token!, message.id)
-      await expect(
-        rest.getWebhookMessage(webhook.id, webhook.token!, message.id)
-      ).to.eventually.rejected
+      await expect(rest.getWebhookMessage(webhook.id, webhook.token!, message.id)).to.eventually.rejected
     })
 
     it('Can get a message with webhook', async () => {
-      const fetched = await rest.getWebhookMessage(
-        webhook.id,
-        webhook.token!,
-        message.id
-      )
+      const fetched = await rest.getWebhookMessage(webhook.id, webhook.token!, message.id)
 
       expect(fetched).to.exist
       expect(fetched.content).to.equal(message.content)
     })
 
     it('Can edit a message with webhook', async () => {
-      const edited = await rest.editWebhookMessage(
-        webhook.id,
-        webhook.token!,
-        message.id,
-        {
-          content: 'different'
-        }
-      )
+      const edited = await rest.editWebhookMessage(webhook.id, webhook.token!, message.id, {
+        content: 'different',
+      })
 
       expect(edited).to.exist
       expect(edited.content).to.not.equal(message.content)

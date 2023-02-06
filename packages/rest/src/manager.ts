@@ -1,11 +1,12 @@
 import { InteractionResponseTypes } from '@discordeno/types'
 import { calculateBits, camelize, camelToSnakeCase, delay, findFiles, getBotIdFromToken, logger, urlToBase64 } from '@discordeno/utils'
 
-import { createInvalidRequestBucket } from './invalidBucket.js'
-import { Queue } from './queue.js'
+import { createInvalidRequestBucket } from './invalidBucket'
+import { Queue } from './queue'
 
 import type {
   ApplicationCommandPermissions,
+  AtLeastOne,
   BigString,
   Camelize,
   CreateApplicationCommand,
@@ -16,6 +17,7 @@ import type {
   CreateGuildChannel,
   CreateGuildEmoji,
   CreateGuildRole,
+  CreateGuildStickerOptions,
   CreateMessageOptions,
   CreateScheduledEvent,
   CreateStageInstance,
@@ -25,7 +27,9 @@ import type {
   DiscordApplicationCommand,
   DiscordApplicationCommandPermissions,
   DiscordArchivedThreads,
+  DiscordAuditLog,
   DiscordAutoModerationRule,
+  DiscordBan,
   DiscordChannel,
   DiscordCreateWebhook,
   DiscordEmoji,
@@ -44,18 +48,24 @@ import type {
   DiscordRole,
   DiscordScheduledEvent,
   DiscordStageInstance,
+  DiscordSticker,
   DiscordStickerPack,
   DiscordTemplate,
   DiscordThreadMember,
   DiscordUser,
+  DiscordVanityUrl,
+  DiscordVoiceRegion,
   DiscordWebhook,
   EditAutoModerationRuleOptions,
   EditChannelPermissionOverridesOptions,
   EditGuildRole,
+  EditGuildStickerOptions,
   EditMessage,
   EditScheduledEvent,
   EditStageInstanceOptions,
   ExecuteWebhook,
+  GetBans,
+  GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetInvite,
   GetMessagesOptions,
@@ -67,6 +77,7 @@ import type {
   ListArchivedThreads,
   ListGuildMembers,
   ModifyChannel,
+  ModifyGuild,
   ModifyGuildChannelPositions,
   ModifyGuildEmoji,
   ModifyRolePositions,
@@ -75,19 +86,8 @@ import type {
   StartThreadWithMessage,
   StartThreadWithoutMessage,
   WithReason,
-
-  AtLeastOne,
-  CreateGuildStickerOptions,
-  DiscordAuditLog,
-  DiscordBan,
-  DiscordSticker,
-  DiscordVanityUrl,
-  DiscordVoiceRegion,
-  EditGuildStickerOptions,
-  GetBans,
-  GetGuildAuditLog,
-  ModifyGuild} from '@discordeno/types'
-import type { InvalidRequestBucket } from './invalidBucket.js'
+} from '@discordeno/types'
+import type { InvalidRequestBucket } from './invalidBucket'
 
 // TODO: make dynamic based on package.json file
 const version = '19.0.0-alpha.1'

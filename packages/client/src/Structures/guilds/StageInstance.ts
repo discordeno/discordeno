@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-useless-call */
-import Base from '../../Base.js';
+import Base from '../../Base'
 
 import type { DiscordStageInstance } from '@discordeno/types'
-import type Client from '../../Client.js'
-import type { StageInstanceOptions } from '../../typings.js'
-import type StageChannel from '../channels/Stage.js'
-import type Guild from './Guild.js'
+import type Client from '../../Client'
+import type { StageInstanceOptions } from '../../typings'
+import type StageChannel from '../channels/Stage'
+import type Guild from './Guild'
 
 export class StageInstance extends Base {
   /** The client manager. */

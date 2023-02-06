@@ -3,7 +3,7 @@ import { StickerFormatTypes } from '@discordeno/types'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { afterEach, beforeEach, describe, it } from 'mocha'
-import { e2ecache, rest } from './utils.js'
+import { e2ecache, rest } from './utils'
 chai.use(chaiAsPromised)
 
 before(async () => {

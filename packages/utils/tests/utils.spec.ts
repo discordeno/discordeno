@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { afterEach, beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
-import { delay, formatImageURL } from '../src/utils.js'
+import { delay, formatImageURL } from '../src/utils'
 let hasProperty: any
 
 describe('utils.ts', () => {

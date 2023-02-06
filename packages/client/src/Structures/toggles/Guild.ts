@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { GuildFeatures, type DiscordGuild } from '@discordeno/types'
-import { ToggleBitfieldBigint } from './Toggle.js'
+import { ToggleBitfieldBigint } from './Toggle'
 
 const featureNames = [
   'inviteSplash',

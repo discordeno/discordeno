@@ -3,7 +3,7 @@ import { urlToBase64 } from '@discordeno/utils'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { after, afterEach, before, beforeEach, describe, it } from 'mocha'
-import { e2ecache, rest } from './utils.js'
+import { e2ecache, rest } from './utils'
 
 chai.use(chaiAsPromised)
 

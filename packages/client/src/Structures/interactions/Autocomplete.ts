@@ -3,16 +3,16 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import type { BigString, DiscordInteraction, DiscordInteractionData } from '@discordeno/types'
 import { InteractionResponseTypes } from '@discordeno/types'
-import type Client from '../../Client.js'
-import type { ApplicationCommandOptionChoice } from '../../typings.js'
-import type NewsChannel from '../channels/News.js'
-import type PrivateChannel from '../channels/Private.js'
-import type TextChannel from '../channels/Text.js'
-import type Guild from '../guilds/Guild.js'
-import Member from '../guilds/Member.js'
-import Permission from '../Permission.js'
-import User from '../users/User.js'
-import Interaction from './Interaction.js'
+import type Client from '../../Client'
+import type { ApplicationCommandOptionChoice } from '../../typings'
+import type NewsChannel from '../channels/News'
+import type PrivateChannel from '../channels/Private'
+import type TextChannel from '../channels/Text'
+import type Guild from '../guilds/Guild'
+import Member from '../guilds/Member'
+import Permission from '../Permission'
+import User from '../users/User'
+import Interaction from './Interaction'
 
 export class AutocompleteInteraction extends Interaction {
   /** The guild id if this interaction occurred in a guild. */

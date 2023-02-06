@@ -1,5 +1,5 @@
 import { delay, logger } from '@discordeno/utils'
-import type { RestManager, SendRequestOptions } from './manager.js'
+import type { RestManager, SendRequestOptions } from './manager'
 
 export class Queue {
   /** The rest manager */

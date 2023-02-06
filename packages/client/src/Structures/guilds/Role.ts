@@ -3,11 +3,11 @@
 /* eslint-disable @typescript-eslint/return-await */
 
 import type { DiscordRole, DiscordRoleTags } from '@discordeno/types'
-import Base from '../../Base.js'
-import { ROLE_ICON } from '../../Endpoints.js'
-import type { RoleOptions } from '../../typings.js'
-import Permission from '../Permission.js'
-import type Guild from './Guild.js'
+import Base from '../../Base'
+import { ROLE_ICON } from '../../Endpoints'
+import type { RoleOptions } from '../../typings'
+import Permission from '../Permission'
+import type Guild from './Guild'
 
 export class Role extends Base {
   permissions: Permission

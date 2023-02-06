@@ -1,7 +1,5 @@
-import { LogDepth, logger, LogLevels } from '@discordeno/utils'
-
-import { createRestManager } from '../../src/manager.js'
-import { E2E_TEST_GUILD_ID, token } from './constants.js'
+import { createRestManager } from '../../src/manager'
+import { E2E_TEST_GUILD_ID, token } from './constants'
 // For debugging purposes
 // logger.setLevel(LogLevels.Debug)
 // logger.setDepth(LogDepth.Full)
@@ -14,5 +12,5 @@ rest.deleteQueueDelay = 10000
 export const e2ecache = {
   guild: await rest.createGuild({ name: 'ddenotester' }),
   deletedGuild: false,
-  communityGuildId: E2E_TEST_GUILD_ID
+  communityGuildId: E2E_TEST_GUILD_ID,
 }

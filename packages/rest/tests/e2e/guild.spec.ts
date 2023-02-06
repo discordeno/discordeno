@@ -3,7 +3,7 @@ import { ChannelTypes } from '@discordeno/types'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { after, before, describe, it } from 'mocha'
-import { rest } from './utils.js'
+import { rest } from './utils'
 chai.use(chaiAsPromised)
 
 describe('Guild helpers', async () => {
@@ -11,7 +11,7 @@ describe('Guild helpers', async () => {
 
   it('Create and delete a guild', async () => {
     const guild = await rest.createGuild({
-      name: 'Discordeno-test'
+      name: 'Discordeno-test',
     })
     expect(guild.id).to.be.exist
     await rest.deleteGuild(guild.id)
@@ -24,7 +24,7 @@ describe('Guild helpers', async () => {
 
     before(async () => {
       guild = await rest.createGuild({
-        name: 'Discordeno-test'
+        name: 'Discordeno-test',
       })
     })
 
@@ -42,13 +42,13 @@ describe('Guild helpers', async () => {
     it('Edit a guild', async () => {
       const voiceChannel = await rest.createChannel(guild.id, {
         name: 'edit-guild-test',
-        type: ChannelTypes.GuildVoice
+        type: ChannelTypes.GuildVoice,
       })
       expect(voiceChannel.id).to.be.exist
 
       const edited = await rest.editGuild(guild.id, {
         name: 'Discordeno-test-edited',
-        afkChannelId: voiceChannel.id
+        afkChannelId: voiceChannel.id,
         // afkTimeout: 5,
       })
       expect(edited.name).to.equal('Discordeno-test-edited')

@@ -4,28 +4,28 @@
 
 import {
   MessageTypes,
-  type DiscordEmbed,
-  type DiscordMessageActivity,
-  type DiscordStickerItem,
   type DiscordApplication,
   type DiscordAttachment,
+  type DiscordEmbed,
   type DiscordMemberWithUser,
   type DiscordMessage,
+  type DiscordMessageActivity,
   type DiscordMessageComponents,
+  type DiscordStickerItem,
   type InteractionTypes,
 } from '@discordeno/types'
-import Base from '../Base.js'
-import type Client from '../Client.js'
-import { MESSAGE_LINK } from '../Endpoints.js'
-import { MessageFlags, type GetMessageReactionOptions, type MessageContentEdit, type MessageWebhookContent } from '../typings.js'
-import type NewsChannel from './channels/News.js'
-import type PrivateChannel from './channels/Private.js'
-import type TextChannel from './channels/Text.js'
-import type NewsThreadChannel from './channels/threads/NewsThread.js'
-import type PublicThreadChannel from './channels/threads/PublicThread.js'
-import type Guild from './guilds/Guild.js'
-import Member from './guilds/Member.js'
-import User from './users/User.js'
+import Base from '../Base'
+import type Client from '../Client'
+import { MESSAGE_LINK } from '../Endpoints'
+import { MessageFlags, type GetMessageReactionOptions, type MessageContentEdit, type MessageWebhookContent } from '../typings'
+import type NewsChannel from './channels/News'
+import type PrivateChannel from './channels/Private'
+import type TextChannel from './channels/Text'
+import type NewsThreadChannel from './channels/threads/NewsThread'
+import type PublicThreadChannel from './channels/threads/PublicThread'
+import type Guild from './guilds/Guild'
+import Member from './guilds/Member'
+import User from './users/User'
 
 export class Message extends Base {
   /** The client manager. */

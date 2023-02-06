@@ -1,8 +1,8 @@
 /* eslint-disable no-useless-call */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import type { DiscordChannel, GetMessagesOptions } from '@discordeno/types'
-import type Client from '../../Client.js'
-import Collection from '../../Collection.js'
+import type Client from '../../Client'
+import Collection from '../../Collection'
 import type {
   CreateInviteOptions,
   FileContent,
@@ -10,9 +10,9 @@ import type {
   MessageContent,
   MessageContentEdit,
   PurgeChannelOptions,
-} from '../../typings.js'
-import type Message from '../Message.js'
-import VoiceChannel from './Voice.js'
+} from '../../typings'
+import type Message from '../Message'
+import VoiceChannel from './Voice'
 
 /**
  * Represents a Text-in-Voice channel. See VoiceChannel for more properties and methods.

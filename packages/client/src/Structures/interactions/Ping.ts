@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/return-await */
 
 import { InteractionResponseTypes } from '@discordeno/types'
-import Interaction from './Interaction.js'
+import Interaction from './Interaction'
 
 export class PingInteraction extends Interaction {
   /**

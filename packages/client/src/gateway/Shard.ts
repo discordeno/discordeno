@@ -47,26 +47,26 @@ import {
   type DiscordWebhookUpdate,
 } from '@discordeno/types'
 import EventEmitter from 'events'
-import Base from '../Base.js'
-import type Client from '../Client.js'
-import Channel from '../Structures/channels/Channel.js'
-import GuildChannel from '../Structures/channels/Guild.js'
-import PrivateChannel from '../Structures/channels/Private.js'
-import type StageChannel from '../Structures/channels/Stage.js'
-import type TextChannel from '../Structures/channels/Text.js'
-import type TextVoiceChannel from '../Structures/channels/TextVoice.js'
-import ThreadChannel from '../Structures/channels/threads/Thread.js'
-import type VoiceChannel from '../Structures/channels/Voice.js'
-import Guild from '../Structures/guilds/Guild.js'
-import Member from '../Structures/guilds/Member.js'
-import Role from '../Structures/guilds/Role.js'
-import StageInstance from '../Structures/guilds/StageInstance.js'
-import UnavailableGuild from '../Structures/guilds/Unavailable.js'
-import Interaction from '../Structures/interactions/Interaction.js'
-import Invite from '../Structures/Invite.js'
-import Message from '../Structures/Message.js'
-import ExtendedUser from '../Structures/users/Extended.js'
-import User from '../Structures/users/User.js'
+import Base from '../Base'
+import type Client from '../Client'
+import Channel from '../Structures/channels/Channel'
+import GuildChannel from '../Structures/channels/Guild'
+import PrivateChannel from '../Structures/channels/Private'
+import type StageChannel from '../Structures/channels/Stage'
+import type TextChannel from '../Structures/channels/Text'
+import type TextVoiceChannel from '../Structures/channels/TextVoice'
+import ThreadChannel from '../Structures/channels/threads/Thread'
+import type VoiceChannel from '../Structures/channels/Voice'
+import Guild from '../Structures/guilds/Guild'
+import Member from '../Structures/guilds/Member'
+import Role from '../Structures/guilds/Role'
+import StageInstance from '../Structures/guilds/StageInstance'
+import UnavailableGuild from '../Structures/guilds/Unavailable'
+import Interaction from '../Structures/interactions/Interaction'
+import Invite from '../Structures/Invite'
+import Message from '../Structures/Message'
+import ExtendedUser from '../Structures/users/Extended'
+import User from '../Structures/users/User'
 import type {
   ActivityPartial,
   BotActivityType,
@@ -75,9 +75,9 @@ import type {
   RequestMembersPromise,
   SelfStatus,
   TextableChannel,
-} from '../typings.js'
-import type BrowserWebSocket from '../utils/BrowserWebSocket.js'
-import Bucket from '../utils/Bucket.js'
+} from '../typings'
+import type BrowserWebSocket from '../utils/BrowserWebSocket'
+import Bucket from '../utils/Bucket'
 
 export class Shard extends EventEmitter {
   client: Client

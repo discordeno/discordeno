@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { Buffer } from 'node:buffer'
-import { getBotIdFromToken, removeTokenPrefix } from '../src/token.js'
+import { getBotIdFromToken, removeTokenPrefix } from '../src/token'
 
 describe('token.ts', () => {
   describe('token function', () => {

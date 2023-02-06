@@ -6,20 +6,27 @@ import {
   AllowedMentionsTypes,
   ChannelTypes,
   type DiscordAllowedMentions,
-  type DiscordAuditLogEntry, type DiscordChannel,
+  type DiscordAuditLogEntry,
+  type DiscordChannel,
   type DiscordGetGatewayBot,
   type DiscordGuild,
-  type DiscordIntegration, type DiscordInvite, type DiscordMember,
+  type DiscordIntegration,
+  type DiscordInvite,
+  type DiscordMember,
   type DiscordMemberWithUser,
   type DiscordMessage,
-  type DiscordRole, type DiscordTemplate, type DiscordThreadMember,
-  type DiscordUser, type GatewayIntents, type GetMessagesOptions,
-  type OverwriteTypes
+  type DiscordRole,
+  type DiscordTemplate,
+  type DiscordThreadMember,
+  type DiscordUser,
+  type GatewayIntents,
+  type GetMessagesOptions,
+  type OverwriteTypes,
 } from '@discordeno/types'
 import { delay, getBotIdFromToken, iconBigintToHash, iconHashToBigInt } from '@discordeno/utils'
 import EventEmitter from 'events'
-import Base from './Base.js'
-import Collection from './Collection.js'
+import Base from './Base'
+import Collection from './Collection'
 import {
   CHANNEL,
   CHANNEL_BULK_DELETE,
@@ -103,36 +110,36 @@ import {
   WEBHOOK,
   WEBHOOK_MESSAGE,
   WEBHOOK_TOKEN,
-  WEBHOOK_TOKEN_SLACK
-} from './Endpoints.js'
-import ShardManager from './gateway/ShardManager.js'
-import RequestHandler from './RequestHandler.js'
-import type CategoryChannel from './Structures/channels/Category.js'
-import Channel from './Structures/channels/Channel.js'
-import type NewsChannel from './Structures/channels/News.js'
-import PrivateChannel from './Structures/channels/Private.js'
-import type StageChannel from './Structures/channels/Stage.js'
-import type TextChannel from './Structures/channels/Text.js'
-import type TextVoiceChannel from './Structures/channels/TextVoice.js'
-import ThreadMember from './Structures/channels/threads/Member.js'
-import type NewsThreadChannel from './Structures/channels/threads/NewsThread.js'
-import type PrivateThreadChannel from './Structures/channels/threads/PrivateThread.js'
-import type PublicThreadChannel from './Structures/channels/threads/PublicThread.js'
-import type ThreadChannel from './Structures/channels/threads/Thread.js'
-import GuildAuditLogEntry from './Structures/guilds/AuditLogEntry.js'
-import Guild from './Structures/guilds/Guild.js'
-import GuildIntegration from './Structures/guilds/Integration.js'
-import Member from './Structures/guilds/Member.js'
-import GuildPreview from './Structures/guilds/Preview.js'
-import Role from './Structures/guilds/Role.js'
-import StageInstance from './Structures/guilds/StageInstance.js'
-import GuildTemplate from './Structures/guilds/Template.js'
-import type UnavailableGuild from './Structures/guilds/Unavailable.js'
-import Invite from './Structures/Invite.js'
-import Message from './Structures/Message.js'
-import Permission from './Structures/Permission.js'
-import ExtendedUser from './Structures/users/Extended.js'
-import User from './Structures/users/User.js'
+  WEBHOOK_TOKEN_SLACK,
+} from './Endpoints'
+import ShardManager from './gateway/ShardManager'
+import RequestHandler from './RequestHandler'
+import type CategoryChannel from './Structures/channels/Category'
+import Channel from './Structures/channels/Channel'
+import type NewsChannel from './Structures/channels/News'
+import PrivateChannel from './Structures/channels/Private'
+import type StageChannel from './Structures/channels/Stage'
+import type TextChannel from './Structures/channels/Text'
+import type TextVoiceChannel from './Structures/channels/TextVoice'
+import ThreadMember from './Structures/channels/threads/Member'
+import type NewsThreadChannel from './Structures/channels/threads/NewsThread'
+import type PrivateThreadChannel from './Structures/channels/threads/PrivateThread'
+import type PublicThreadChannel from './Structures/channels/threads/PublicThread'
+import type ThreadChannel from './Structures/channels/threads/Thread'
+import GuildAuditLogEntry from './Structures/guilds/AuditLogEntry'
+import Guild from './Structures/guilds/Guild'
+import GuildIntegration from './Structures/guilds/Integration'
+import Member from './Structures/guilds/Member'
+import GuildPreview from './Structures/guilds/Preview'
+import Role from './Structures/guilds/Role'
+import StageInstance from './Structures/guilds/StageInstance'
+import GuildTemplate from './Structures/guilds/Template'
+import type UnavailableGuild from './Structures/guilds/Unavailable'
+import Invite from './Structures/Invite'
+import Message from './Structures/Message'
+import Permission from './Structures/Permission'
+import ExtendedUser from './Structures/users/Extended'
+import User from './Structures/users/User'
 import type {
   AllowedMentions,
   AnyChannel,
@@ -194,8 +201,8 @@ import type {
   WelcomeScreen,
   WelcomeScreenOptions,
   Widget,
-  WidgetData
-} from './typings.js'
+  WidgetData,
+} from './typings'
 
 // TODO: api version
 const API_VERSION = 10

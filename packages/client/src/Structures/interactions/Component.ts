@@ -4,14 +4,14 @@
 
 import type { BigString, DiscordInteraction, MessageComponentTypes } from '@discordeno/types'
 import { InteractionResponseTypes } from '@discordeno/types'
-import type Client from '../../Client.js'
-import type { AnyChannel, FileContent, InteractionApplicationCommandCallbackData, MessageWebhookContent, WebhookPayload } from '../../typings.js'
-import type Guild from '../guilds/Guild.js'
-import Member from '../guilds/Member.js'
-import Message from '../Message.js'
-import Permission from '../Permission.js'
-import User from '../users/User.js'
-import Interaction from './Interaction.js'
+import type Client from '../../Client'
+import type { AnyChannel, FileContent, InteractionApplicationCommandCallbackData, MessageWebhookContent, WebhookPayload } from '../../typings'
+import type Guild from '../guilds/Guild'
+import Member from '../guilds/Member'
+import Message from '../Message'
+import Permission from '../Permission'
+import User from '../users/User'
+import Interaction from './Interaction'
 
 export class ComponentInteraction extends Interaction {
   /** The channel id where this interaction occurred in. */

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { bgBrightMagenta, black, bold, cyan, gray, italic, red, yellow } from './colors.js'
+import { bgBrightMagenta, black, bold, cyan, gray, italic, red, yellow } from './colors'
 
 export enum LogLevels {
   Debug,

@@ -1,10 +1,10 @@
 /* eslint-disable no-useless-call */
 /* eslint-disable @typescript-eslint/return-await */
 import type { BigString, DiscordChannel } from '@discordeno/types'
-import type Client from '../../Client.js'
-import type { ChannelFollow } from '../../typings.js'
-import type Message from '../Message.js'
-import TextChannel from './Text.js'
+import type Client from '../../Client'
+import type { ChannelFollow } from '../../typings'
+import type Message from '../Message'
+import TextChannel from './Text'
 
 export class NewsChannel extends TextChannel {
   constructor(data: DiscordChannel, client: Client, messageLimit?: number) {

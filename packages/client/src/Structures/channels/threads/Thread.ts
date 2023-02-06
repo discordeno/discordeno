@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-useless-call */
 import type { BigString, DiscordChannel, GetMessagesOptions } from '@discordeno/types'
-import type Client from '../../../Client.js'
-import Collection from '../../../Collection.js'
-import type { FileContent, GetMessageReactionOptions, MessageContent, MessageContentEdit, PurgeChannelOptions } from '../../../typings.js'
-import type Message from '../../Message.js'
-import type User from '../../users/User.js'
-import GuildChannel from '../Guild.js'
-import ThreadMember from './Member.js'
+import type Client from '../../../Client'
+import Collection from '../../../Collection'
+import type { FileContent, GetMessageReactionOptions, MessageContent, MessageContentEdit, PurgeChannelOptions } from '../../../typings'
+import type Message from '../../Message'
+import type User from '../../users/User'
+import GuildChannel from '../Guild'
+import ThreadMember from './Member'
 
 export class ThreadChannel extends GuildChannel {
   /** The cached messages that were sent in this channel. */

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import type { BigString, ImageFormat, ImageSize } from '@discordeno/types'
-import { iconBigintToHash } from './hash.js'
-import { formatImageURL } from './utils.js'
+import { iconBigintToHash } from './hash'
+import { formatImageURL } from './utils'
 
 /**
  * Get the url for an emoji.

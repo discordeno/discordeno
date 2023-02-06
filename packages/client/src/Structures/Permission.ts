@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { BitwisePermissionFlags } from '@discordeno/types'
-import { Base } from '../Base.js'
-import type { BigString } from '../Client.js'
+import { Base } from '../Base'
+import type { BigString } from '../Client'
 
 export class Permission {
   allow: bigint

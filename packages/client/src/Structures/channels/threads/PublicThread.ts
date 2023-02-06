@@ -1,4 +1,4 @@
-import ThreadChannel from './Thread.js'
+import ThreadChannel from './Thread'
 
 export class PublicThreadChannel extends ThreadChannel {}
 

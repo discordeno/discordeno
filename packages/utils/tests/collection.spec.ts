@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
-import { Collection } from '../src/Collection.js'
+import { Collection } from '../src/Collection'
 
 describe('collection.ts', () => {
   let collection: Collection<any, any>

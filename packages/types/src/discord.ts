@@ -1,4 +1,4 @@
-import type { FileContent } from './discordeno.js'
+import type { FileContent } from './discordeno'
 import type {
   ActivityTypes,
   AllowedMentionsTypes,
@@ -41,7 +41,7 @@ import type {
   VerificationLevels,
   VideoQualityModes,
   WebhookTypes,
-} from './shared.js'
+} from './shared'
 
 /** https://discord.com/developers/docs/resources/user#user-object */
 export interface DiscordUser {

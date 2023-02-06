@@ -2,15 +2,15 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-useless-call */
 /* eslint-disable @typescript-eslint/return-await */
-import { ApplicationCommandTypes, InteractionResponseTypes } from '@discordeno/types';
+import { ApplicationCommandTypes, InteractionResponseTypes } from '@discordeno/types'
 
-import Collection from '../../Collection.js';
-import Channel from '../channels/Channel.js';
-import Member from '../guilds/Member.js';
-import Role from '../guilds/Role.js';
-import Message from '../Message.js';
-import User from '../users/User.js';
-import Interaction from './Interaction.js';
+import Collection from '../../Collection'
+import Channel from '../channels/Channel'
+import Member from '../guilds/Member'
+import Role from '../guilds/Role'
+import Message from '../Message'
+import User from '../users/User'
+import Interaction from './Interaction'
 
 import type {
   BigString,
@@ -20,8 +20,8 @@ import type {
   DiscordMessageComponents,
   MessageComponentTypes,
 } from '@discordeno/types'
-import type Client from '../../Client.js'
-import type { AnyChannel, FileContent, InteractionContent, InteractionContentEdit } from '../../typings.js'
+import type Client from '../../Client'
+import type { AnyChannel, FileContent, InteractionContent, InteractionContentEdit } from '../../typings'
 export class CommandInteraction extends Interaction {
   channel: AnyChannel
   /** The type of component */

@@ -1,11 +1,11 @@
 /* eslint-disable no-useless-call */
 import { ChannelTypes, type BigString, type DiscordChannel, type GetMessagesOptions } from '@discordeno/types'
-import type Client from '../../Client.js'
-import Collection from '../../Collection.js'
-import type { FileContent, GetMessageReactionOptions, MessageContent, MessageContentEdit } from '../../typings.js'
-import type Message from '../Message.js'
-import User from '../users/User.js'
-import Channel from './Channel.js'
+import type Client from '../../Client'
+import Collection from '../../Collection'
+import type { FileContent, GetMessageReactionOptions, MessageContent, MessageContentEdit } from '../../typings'
+import type Message from '../Message'
+import User from '../users/User'
+import Channel from './Channel'
 
 export class PrivateChannel extends Channel {
   /** The ID of the last message in this channel */

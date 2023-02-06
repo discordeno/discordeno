@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import type { BigString } from './Client.js'
+import type { BigString } from './Client'
 
 export const ORIGINAL_INTERACTION_RESPONSE = (appID: BigString, interactToken: string) => `/webhooks/${appID}/${interactToken}`
 export const COMMAND = (applicationID: BigString, commandID: BigString) => `/applications/${applicationID}/commands/${commandID}`
