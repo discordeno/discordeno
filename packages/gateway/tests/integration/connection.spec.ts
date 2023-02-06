@@ -1,5 +1,5 @@
 import { Intents } from '@discordeno/types'
-import uWS from 'uWebSockets'
+import uWS from 'uWebSockets.js'
 import { createGatewayManager, ShardSocketCloseCodes } from '../../src/index'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
