@@ -55,12 +55,11 @@ export async function fastFileLoader(
   before?: (uniqueFilePathCounter: number, paths: string[]) => void,
 ) {
   await Promise.all(
-    [...paths].map((path) => {
+    [...paths].map(async (path) => {
       if (between) between(path, uniqueFilePathCounter, paths);
-      importDirectory(path);
+      await importDirectory(path);
     }),
   );
-
   if (before) before(uniqueFilePathCounter, paths);
 
   await fileLoader();
