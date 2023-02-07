@@ -45,4 +45,4 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           files: ./packages/${{ inputs.package }}/coverage/lcov.info
-          flags: ${{ inputs.package }}-unit
+          flags: ${{ inputs.package }}-unit,${{ inputs.package }}

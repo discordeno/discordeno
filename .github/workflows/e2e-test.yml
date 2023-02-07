@@ -51,4 +51,4 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           files: ./packages/${{ inputs.package }}/coverage/lcov.info
-          flags: ${{ inputs.package }}-e2e
+          flags: ${{ inputs.package }}-e2e,${{ inputs.package }}
