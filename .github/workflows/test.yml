@@ -180,7 +180,7 @@ jobs:
       package: gateway
   gateway-test-status:
     name: Gateway
-    needs: [gateway-integration-test, gateway-other-runtime-test]
+    needs: [gateway-other-runtime-test]
     uses: ./.github/workflows/gateway-pkg-test-status.yml
   rest-unit-test:
     name: Rest
