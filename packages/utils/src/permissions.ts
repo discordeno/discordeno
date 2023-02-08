@@ -3,7 +3,7 @@ import { BitwisePermissionFlags } from '@discordeno/types'
 
 /** This function converts a bitwise string to permission strings */
 export function calculatePermissions(permissionBits: bigint): PermissionStrings[] {
-  return Object.keys(BitwisePermissionFlags).filter((permission) => {
+  return Object.values(BitwisePermissionFlags).filter((permission) => {
     // Since Object.keys() not only returns the permission names but also the bit values we need to return false if it is a Number
     if (typeof permission === 'number') return false
     // Check if permissionBits has this permission
