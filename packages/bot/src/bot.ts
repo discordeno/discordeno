@@ -50,7 +50,7 @@ import type {
   DiscordWebhookUpdate,
   GatewayIntents,
 } from '@discordeno/types'
-import { createLogger, logger } from '@discordeno/utils'
+import { createLogger } from '@discordeno/utils'
 
 /**
  * Create a bot object that will maintain the rest and gateway connection.

@@ -140,6 +140,10 @@ jobs:
     uses: ./.github/workflows/other-runtime-unit-test.yml
     with:
       package: client
+  client-test-status:
+    name: Client
+    needs: [client-other-runtime-test]
+    uses: ./.github/workflows/client-pkg-test-status.yml
   discordeno-unit-test:
     name: Discordeno
     needs: build-dist
@@ -152,6 +156,10 @@ jobs:
     uses: ./.github/workflows/other-runtime-unit-test.yml
     with:
       package: discordeno
+  discordeno-test-status:
+    name: Discordeno
+    needs: [discordeno-other-runtime-test]
+    uses: ./.github/workflows/discordeno-pkg-test-status.yml
   gateway-unit-test:
     name: Gateway
     needs: build-dist
@@ -170,6 +178,10 @@ jobs:
     uses: ./.github/workflows/other-runtime-unit-test.yml
     with:
       package: gateway
+  gateway-test-status:
+    name: Gateway
+    needs: [gateway-other-runtime-test]
+    uses: ./.github/workflows/gateway-pkg-test-status.yml
   rest-unit-test:
     name: Rest
     needs: build-dist
@@ -190,6 +202,10 @@ jobs:
     uses: ./.github/workflows/other-runtime-unit-test.yml
     with:
       package: rest
+  rest-test-status:
+    name: Rest
+    needs: [rest-e2e-test, rest-other-runtime-test]
+    uses: ./.github/workflows/rest-pkg-test-status.yml
   utils-unit-test:
     name: Utils
     needs: build-dist
@@ -202,6 +218,10 @@ jobs:
     uses: ./.github/workflows/other-runtime-unit-test.yml
     with:
       package: utils
+  utils-test-status:
+    name: Utils
+    needs: [utils-other-runtime-test]
+    uses: ./.github/workflows/utils-pkg-test-status.yml
   bot-unit-test:
     name: Bot
     needs: build-dist
@@ -222,3 +242,7 @@ jobs:
     uses: ./.github/workflows/other-runtime-unit-test.yml
     with:
       package: bot
+  bot-test-status:
+    name: Bot
+    needs: [bot-e2e-test, bot-other-runtime-test]
+    uses: ./.github/workflows/bot-pkg-test-status.yml
