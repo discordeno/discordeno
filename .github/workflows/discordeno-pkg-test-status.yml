@@ -1,0 +1,11 @@
+name: Discordeno Pkg Test Status
+
+on:
+  workflow_call:
+
+jobs:
+  discordeno-pkg-test-status:
+    name: Discordeno Pkg Test Status
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
