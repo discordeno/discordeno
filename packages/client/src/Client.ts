@@ -6,18 +6,25 @@ import {
   AllowedMentionsTypes,
   ChannelTypes,
   type DiscordAllowedMentions,
-  type DiscordAuditLogEntry, type DiscordChannel,
+  type DiscordAuditLogEntry,
+  type DiscordChannel,
   type DiscordGetGatewayBot,
   type DiscordGuild,
-  type DiscordIntegration, type DiscordInvite, type DiscordMember,
+  type DiscordIntegration,
+  type DiscordInvite,
+  type DiscordMember,
   type DiscordMemberWithUser,
   type DiscordMessage,
-  type DiscordRole, type DiscordTemplate, type DiscordThreadMember,
-  type DiscordUser, type GatewayIntents, type GetMessagesOptions,
-  type OverwriteTypes
+  type DiscordRole,
+  type DiscordTemplate,
+  type DiscordThreadMember,
+  type DiscordUser,
+  type GatewayIntents,
+  type GetMessagesOptions,
+  type OverwriteTypes,
 } from '@discordeno/types'
 import { delay, getBotIdFromToken, iconBigintToHash, iconHashToBigInt } from '@discordeno/utils'
-import EventEmitter from 'events'
+import EventEmitter from 'node:events'
 import Base from './Base.js'
 import Collection from './Collection.js'
 import {
@@ -103,7 +110,7 @@ import {
   WEBHOOK,
   WEBHOOK_MESSAGE,
   WEBHOOK_TOKEN,
-  WEBHOOK_TOKEN_SLACK
+  WEBHOOK_TOKEN_SLACK,
 } from './Endpoints.js'
 import ShardManager from './gateway/ShardManager.js'
 import RequestHandler from './RequestHandler.js'
@@ -194,7 +201,7 @@ import type {
   WelcomeScreen,
   WelcomeScreenOptions,
   Widget,
-  WidgetData
+  WidgetData,
 } from './typings.js'
 
 // TODO: api version
