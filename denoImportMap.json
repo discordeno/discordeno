@@ -2,6 +2,7 @@
   "imports": {
     "node:buffer": "https://deno.land/std@0.176.0/node/buffer.ts",
     "node:fs": "https://deno.land/std@0.176.0/node/fs.ts",
+    "node:events": "https://deno.land/std@0.176.0/node/events.ts",
     "tweetnacl": "npm:tweetnacl",
     "ws": "npm:ws",
     "mocha": "https://deno.land/std@0.168.0/testing/bdd.ts",
