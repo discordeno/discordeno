@@ -1,8 +1,8 @@
 import { expect } from 'chai'
 import { afterEach, beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
-import type { RestManager } from '../../src/index.js'
-import { createRestManager } from '../../src/index.js'
+import type { RestManager } from '../../src/manager.js'
+import { createRestManager } from '../../src/manager.js'
 import { fakeToken as token } from '../constants.js'
 
 describe('[rest] manager', () => {
