@@ -46,7 +46,7 @@ import {
   type DiscordVoiceState,
   type DiscordWebhookUpdate,
 } from '@discordeno/types'
-import EventEmitter from 'events'
+import EventEmitter from 'node:events'
 import Base from '../Base.js'
 import type Client from '../Client.js'
 import Channel from '../Structures/channels/Channel.js'
