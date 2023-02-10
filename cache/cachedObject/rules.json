@@ -1,13 +1,13 @@
 {
-  "id": "703924704374746781",
+  "id": "825287332144606570",
   "last_message_id": null,
   "type": 0,
-  "name": "bqiat",
+  "name": "qdata",
   "position": 24,
   "flags": 0,
-  "parent_id": "254110557010055388",
+  "parent_id": "338029082507090687",
   "topic": null,
-  "guild_id": "469660625487256375",
+  "guild_id": "465383122980742140",
   "permission_overwrites": [],
   "rate_limit_per_user": 0,
   "nsfw": false

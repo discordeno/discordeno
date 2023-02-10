@@ -1,15 +1,15 @@
 {
-  "id": "7702437926674288128",
+  "id": "2114417676452300696",
   "type": 0,
-  "content": "jgsafay",
-  "channel_id": "2316082539337657761",
+  "content": "dbkmbuc",
+  "channel_id": "7829472459983646521",
   "author": {
-    "id": "235624375613230062",
-    "username": "3242320191396027",
+    "id": "975708358605326164",
+    "username": "2305688013181221",
     "display_name": null,
     "avatar": "eae5905ad2d18d7c8deca20478b088b5",
     "avatar_decoration": null,
-    "discriminator": "8432",
+    "discriminator": "3856",
     "public_flags": 4194560
   },
   "attachments": [],
@@ -19,7 +19,7 @@
   "pinned": false,
   "mention_everyone": false,
   "tts": false,
-  "timestamp": "2023-02-09T00:43:32.698Z",
+  "timestamp": "2023-02-10T00:47:09.944Z",
   "edited_timestamp": null,
   "flags": 0,
   "components": []
