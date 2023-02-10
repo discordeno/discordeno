@@ -50,7 +50,7 @@ export interface LeakyBucket {
   waiting: Array<(_?: unknown) => void>
 }
 
-export function createLeakyBucket ({
+export function createLeakyBucket({
   max,
   refillInterval,
   refillAmount,
@@ -85,14 +85,14 @@ export function createLeakyBucket ({
     tokensState: tokens ?? max,
     waiting: waiting ?? [],
 
-    ...rest
+    ...rest,
   }
 }
 
 /** Update the tokens of that bucket.
  * @returns {number} The amount of current available tokens.
  */
-function updateTokens (bucket: LeakyBucket): number {
+export function updateTokens(bucket: LeakyBucket): number {
   const timePassed = performance.now() - bucket.lastRefill
   const missedRefills = Math.floor(timePassed / bucket.refillInterval)
 
@@ -103,14 +103,14 @@ function updateTokens (bucket: LeakyBucket): number {
   return bucket.tokensState
 }
 
-function nextRefill (bucket: LeakyBucket): number {
+export function nextRefill(bucket: LeakyBucket): number {
   // Since this bucket is lazy update the tokens before calculating the next refill.
   updateTokens(bucket)
 
   return performance.now() - bucket.lastRefill + bucket.refillInterval
 }
 
-async function acquire (bucket: LeakyBucket, amount: number, highPriority = false): Promise<void> {
+export async function acquire(bucket: LeakyBucket, amount: number, highPriority = false): Promise<void> {
   // To prevent the race condition of 2 acquires happening at once,
   // check whether its currently allowed to acquire.
   if (!bucket.allowAcquire) {
