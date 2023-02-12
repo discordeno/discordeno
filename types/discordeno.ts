@@ -5,6 +5,7 @@ import {
   AllowedMentionsTypes,
   ApplicationCommandTypes,
   ButtonStyles,
+  ChannelTypes,
   InteractionResponseTypes,
   Localization,
   MessageComponentTypes,
@@ -69,7 +70,7 @@ export interface SelectMenuComponent {
   customId: string;
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string;
-  /** The minimum number of items that must be selected. Default 1. Between 1-25. */
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
   minValues?: number;
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   maxValues?: number;
@@ -86,7 +87,7 @@ export interface SelectMenuUsersComponent {
   customId: string;
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string;
-  /** The minimum number of items that must be selected. Default 1. Between 1-25. */
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
   minValues?: number;
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   maxValues?: number;
@@ -101,7 +102,7 @@ export interface SelectMenuRolesComponent {
   customId: string;
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string;
-  /** The minimum number of items that must be selected. Default 1. Between 1-25. */
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
   minValues?: number;
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   maxValues?: number;
@@ -116,12 +117,10 @@ export interface SelectMenuUsersAndRolesComponent {
   customId: string;
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string;
-  /** The minimum number of items that must be selected. Default 1. Between 1-25. */
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
   minValues?: number;
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   maxValues?: number;
-  /** The choices! Maximum of 25 items. */
-  options: SelectOption[];
   /** Whether or not this select is disabled */
   disabled?: boolean;
 }
@@ -131,9 +130,11 @@ export interface SelectMenuChannelsComponent {
   type: MessageComponentTypes.SelectMenuChannels;
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string;
+  /** List of channel types to include in the channel select component */
+  channelTypes?: ChannelTypes[];
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string;
-  /** The minimum number of items that must be selected. Default 1. Between 1-25. */
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
   minValues?: number;
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   maxValues?: number;

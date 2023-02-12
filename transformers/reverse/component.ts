@@ -31,6 +31,7 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
         : undefined,
       default: option.default,
     })),
+    channel_types: payload.channelTypes,
     placeholder: payload.placeholder,
     min_values: payload.minValues,
     max_values: payload.maxValues,

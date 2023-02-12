@@ -1,5 +1,5 @@
 import { Bot } from "../bot.ts";
-import { ButtonStyles, MessageComponentTypes, SelectOption, TextStyles } from "../mod.ts";
+import { ButtonStyles, MessageComponentTypes, SelectOption, TextStyles, ChannelTypes } from "../mod.ts";
 import { DiscordComponent } from "../types/discord.ts";
 
 export function transformComponent(bot: Bot, payload: DiscordComponent): Component {
@@ -30,6 +30,7 @@ export function transformComponent(bot: Bot, payload: DiscordComponent): Compone
         : undefined,
       default: option.default,
     })),
+    channelTypes: payload.channel_types,
     placeholder: payload.placeholder,
     minValues: payload.min_values,
     maxValues: payload.max_values,
@@ -70,9 +71,11 @@ export interface Component {
   url?: string;
   /** The choices! Maximum of 25 items. */
   options?: SelectOption[];
+  /** List of channel types to include in the channel select component */
+  channelTypes?: ChannelTypes[];
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string;
-  /** The minimum number of items that must be selected. Default 1. Between 1-25. */
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
   minValues?: number;
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   maxValues?: number;

@@ -1173,7 +1173,15 @@ export interface DiscordActionRow {
   type: 1;
   /** The components in this row */
   components:
-    | [DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent]
+    | [
+      | DiscordButtonComponent
+      | DiscordInputTextComponent
+      | DiscordSelectMenuComponent
+      | DiscordSelectMenuChannelsComponent
+      | DiscordSelectMenuUsersComponent
+      | DiscordSelectMenuRolesComponent
+      | DiscordSelectMenuUsersAndRolesComponent
+    ]
     | [DiscordButtonComponent, DiscordButtonComponent]
     | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
     | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
@@ -1190,14 +1198,74 @@ export interface DiscordSelectMenuComponent {
   type: MessageComponentTypes.SelectMenu;
   /** A custom identifier for this component. Maximum 100 characters. */
   custom_id: string;
+  /** The choices! Maximum of 25 items. */
+  options: DiscordSelectOption[];
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string;
-  /** The minimum number of items that must be selected. Default 1. Between 1-25. */
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
   min_values?: number;
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   max_values?: number;
-  /** The choices! Maximum of 25 items. */
-  options: DiscordSelectOption[];
+  /** Whether select menu is disabled (defaults to false) */
+  disabled?: boolean;
+}
+
+export interface DiscordSelectMenuUsersComponent {
+  type: MessageComponentTypes.SelectMenuUsers;
+  /** A custom identifier for this component. Maximum 100 characters. */
+  custom_id: string;
+  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  placeholder?: string;
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  min_values?: number;
+  /** The maximum number of items that can be selected. Default 1. Between 1-25. */
+  max_values?: number;
+  /** Whether select menu is disabled (defaults to false) */
+  disabled?: boolean;
+}
+
+export interface DiscordSelectMenuRolesComponent {
+  type: MessageComponentTypes.SelectMenuRoles;
+  /** A custom identifier for this component. Maximum 100 characters. */
+  custom_id: string;
+  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  placeholder?: string;
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  min_values?: number;
+  /** The maximum number of items that can be selected. Default 1. Between 1-25. */
+  max_values?: number;
+  /** Whether select menu is disabled (defaults to false) */
+  disabled?: boolean;
+}
+
+export interface DiscordSelectMenuUsersAndRolesComponent {
+  type: MessageComponentTypes.SelectMenuUsersAndRoles;
+  /** A custom identifier for this component. Maximum 100 characters. */
+  custom_id: string;
+  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  placeholder?: string;
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  min_values?: number;
+  /** The maximum number of items that can be selected. Default 1. Between 1-25. */
+  max_values?: number;
+  /** Whether select menu is disabled (defaults to false) */
+  disabled?: boolean;
+}
+
+export interface DiscordSelectMenuChannelsComponent {
+  type: MessageComponentTypes.SelectMenuChannels;
+  /** A custom identifier for this component. Maximum 100 characters. */
+  custom_id: string;
+  /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
+  placeholder?: string;
+  /** List of channel types to include in the channel select component */
+  channel_types?: ChannelTypes[];
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
+  min_values?: number;
+  /** The maximum number of items that can be selected. Default 1. Between 1-25. */
+  max_values?: number;
+  /** Whether select menu is disabled (defaults to false) */
+  disabled?: boolean;
 }
 
 export interface DiscordSelectOption {
@@ -2092,9 +2160,11 @@ export interface DiscordComponent {
   url?: string;
   /** The choices! Maximum of 25 items. */
   options?: DiscordSelectOption[];
+  /** List of channel types to include in the channel select component */
+  channel_types?: ChannelTypes[];
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string;
-  /** The minimum number of items that must be selected. Default 1. Between 1-25. */
+  /** The minimum number of items that must be selected. Default 1. Between 0-25. */
   min_values?: number;
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   max_values?: number;
