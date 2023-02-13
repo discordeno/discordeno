@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable no-const-assign */
 import { InteractionResponseTypes } from '@discordeno/types'
 import {
   calculateBits,
@@ -6,6 +8,10 @@ import {
   delay,
   findFiles,
   getBotIdFromToken,
+  isGetMessagesAfter,
+  isGetMessagesAround,
+  isGetMessagesBefore,
+  isGetMessagesLimit,
   logger,
   processReactionString,
   urlToBase64,
@@ -217,21 +223,21 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
 
         messages: (channelId, options?: GetMessagesOptions) => {
-          const url = `/channels/${channelId}/messages?`
+          let url = `/channels/${channelId}/messages?`
 
           if (options) {
-            // if (isGetMessagesAfter(options) && options.after) {
-            //   url += `after=${options.after}`
-            // }
-            // if (isGetMessagesBefore(options) && options.before) {
-            //   url += `&before=${options.before}`
-            // }
-            // if (isGetMessagesAround(options) && options.around) {
-            //   url += `&around=${options.around}`
-            // }
-            // if (isGetMessagesLimit(options) && options.limit) {
-            //   url += `&limit=${options.limit}`
-            // }
+            if (isGetMessagesAfter(options) && options.after) {
+              url += `after=${options.after}`
+            }
+            if (isGetMessagesBefore(options) && options.before) {
+              url += `&before=${options.before}`
+            }
+            if (isGetMessagesAround(options) && options.around) {
+              url += `&around=${options.around}`
+            }
+            if (isGetMessagesLimit(options) && options.limit) {
+              url += `&limit=${options.limit}`
+            }
           }
 
           return url
