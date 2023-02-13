@@ -1,4 +1,5 @@
-import { AtLeastOne, BigString, Camelize, DiscordGetGatewayBot, GatewayOpcodes } from '@discordeno/types'
+import type { AtLeastOne, BigString, Camelize, DiscordGetGatewayBot } from '@discordeno/types'
+import { GatewayOpcodes } from '@discordeno/types'
 import type { LeakyBucket } from '@discordeno/utils'
 import { createLeakyBucket, delay } from '@discordeno/utils'
 import Shard from './Shard.js'
@@ -169,9 +170,9 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
     // Helpers methods below this
 
-    calculateShardId (guildId, totalShards) {
+    calculateShardId(guildId, totalShards) {
       // If none is provided, use the total shards number from gateway object.
-      if (!totalShards) totalShards = gateway.totalShards;
+      if (!totalShards) totalShards = gateway.totalShards
       // If it is only 1 shard, it will always be shard id 0
       if (totalShards === 1) return 0
 

@@ -31,7 +31,6 @@ import type {
   DiscordAutoModerationRule,
   DiscordBan,
   DiscordChannel,
-  DiscordCreateWebhook,
   DiscordEmoji,
   DiscordFollowAnnouncementChannel,
   DiscordFollowedChannel,
@@ -1630,7 +1629,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         name: options.name,
         avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
         reason: options.reason,
-      } as DiscordCreateWebhook)
+      })
     },
 
     async deleteAutomodRule(guildId, ruleId, reason) {
