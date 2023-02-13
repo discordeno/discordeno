@@ -1,8 +1,8 @@
-import type { Camelize, DiscordGetGatewayBot } from '@discordeno/types'
+import { AtLeastOne, BigString, Camelize, DiscordGetGatewayBot, GatewayOpcodes } from '@discordeno/types'
 import type { LeakyBucket } from '@discordeno/utils'
 import { createLeakyBucket, delay } from '@discordeno/utils'
 import Shard from './Shard.js'
-import type { ShardEvents } from './types.js'
+import type { ShardEvents, UpdateVoiceState } from './types.js'
 
 export function createGatewayManager(options: CreateGatewayManagerOptions): GatewayManager {
   if (!options.connection) {
@@ -166,6 +166,35 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     },
 
     async requestIdentify() {},
+
+    // Helpers methods below this
+
+    calculateShardId (guildId, totalShards) {
+      // If none is provided, use the total shards number from gateway object.
+      if (!totalShards) totalShards = gateway.totalShards;
+      // If it is only 1 shard, it will always be shard id 0
+      if (totalShards === 1) return 0
+
+      return Number((BigInt(guildId) >> 22n) % BigInt(totalShards))
+    },
+
+    async connectToVoiceChannel(guildId, channelId, options) {
+      const shardId = gateway.calculateShardId(guildId)
+      const shard = gateway.shards.get(shardId)
+      if (!shard) {
+        throw new Error(`Shard (id: ${shardId} not found`)
+      }
+
+      return await shard.send({
+        op: GatewayOpcodes.VoiceStateUpdate,
+        d: {
+          guild_id: guildId.toString(),
+          channel_id: channelId.toString(),
+          self_mute: Boolean(options?.selfMute),
+          self_deaf: options?.selfDeaf ?? true,
+        },
+      })
+    },
   }
 
   return gateway
@@ -277,4 +306,26 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
   kill: (shardId: number) => Promise<void>
   /** This function communicates with the parent manager, in order to know whether this manager is allowed to identify a new shard. */
   requestIdentify: () => Promise<void>
+  /** Calculates the number of shards based on the guild id and total shards. */
+  calculateShardId: (guildId: BigString, totalShards?: number) => number
+  /**
+   * Connects the bot user to a voice or stage channel.
+   *
+   * This function sends the _Update Voice State_ gateway command over the gateway behind the scenes.
+   *
+   * @param guildId - The ID of the guild the voice channel to leave is in.
+   * @param channelId - The ID of the channel you want to join.
+   *
+   * @remarks
+   * Requires the `CONNECT` permission.
+   *
+   * Fires a _Voice State Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/topics/gateway#update-voice-state}
+   */
+  connectToVoiceChannel: (
+    guildId: BigString,
+    channelId: BigString,
+    options?: AtLeastOne<Omit<UpdateVoiceState, 'guildId' | 'channelId'>>,
+  ) => Promise<void>
 }
