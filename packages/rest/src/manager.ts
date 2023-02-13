@@ -6,6 +6,7 @@ import { Queue } from './queue.js'
 
 import type {
   ApplicationCommandPermissions,
+  AtLeastOne,
   BigString,
   Camelize,
   CreateApplicationCommand,
@@ -16,6 +17,7 @@ import type {
   CreateGuildChannel,
   CreateGuildEmoji,
   CreateGuildRole,
+  CreateGuildStickerOptions,
   CreateMessageOptions,
   CreateScheduledEvent,
   CreateStageInstance,
@@ -25,7 +27,9 @@ import type {
   DiscordApplicationCommand,
   DiscordApplicationCommandPermissions,
   DiscordArchivedThreads,
+  DiscordAuditLog,
   DiscordAutoModerationRule,
+  DiscordBan,
   DiscordChannel,
   DiscordCreateWebhook,
   DiscordEmoji,
@@ -44,18 +48,24 @@ import type {
   DiscordRole,
   DiscordScheduledEvent,
   DiscordStageInstance,
+  DiscordSticker,
   DiscordStickerPack,
   DiscordTemplate,
   DiscordThreadMember,
   DiscordUser,
+  DiscordVanityUrl,
+  DiscordVoiceRegion,
   DiscordWebhook,
   EditAutoModerationRuleOptions,
   EditChannelPermissionOverridesOptions,
   EditGuildRole,
+  EditGuildStickerOptions,
   EditMessage,
   EditScheduledEvent,
   EditStageInstanceOptions,
   ExecuteWebhook,
+  GetBans,
+  GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetInvite,
   GetMessagesOptions,
@@ -67,6 +77,7 @@ import type {
   ListArchivedThreads,
   ListGuildMembers,
   ModifyChannel,
+  ModifyGuild,
   ModifyGuildChannelPositions,
   ModifyGuildEmoji,
   ModifyRolePositions,
@@ -75,18 +86,7 @@ import type {
   StartThreadWithMessage,
   StartThreadWithoutMessage,
   WithReason,
-
-  AtLeastOne,
-  CreateGuildStickerOptions,
-  DiscordAuditLog,
-  DiscordBan,
-  DiscordSticker,
-  DiscordVanityUrl,
-  DiscordVoiceRegion,
-  EditGuildStickerOptions,
-  GetBans,
-  GetGuildAuditLog,
-  ModifyGuild} from '@discordeno/types'
+} from '@discordeno/types'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 
 // TODO: make dynamic based on package.json file
@@ -151,6 +151,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       channels: {
         dm: () => {
           return '/users/@me/channels'
+        },
+        reactions: {
+          bot: (channelId, messageId, emoji) => {
+            return `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}/@me`
+          },
         },
         webhooks: (channelId) => {
           return `/channels/${channelId}/webhooks`
@@ -934,6 +939,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         async publish(channelId, messageId) {
           return await rest.publishMessage(channelId, messageId)
         },
+
+        reactions: {
+          async add(channelId, messageId, reaction) {
+            return await rest.addReaction(channelId, messageId, reaction)
+          },
+
+          async bulk(channelId, messageId, reactions, ordered) {
+            return await rest.addReactions(channelId, messageId, reactions, ordered)
+          },
+        },
       },
 
       async get(id) {
@@ -1522,6 +1537,29 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           } as WebhookMessageEditor,
         ),
       },
+    },
+
+    async addReaction(channelId, messageId, reaction) {
+      if (reaction.startsWith('<:')) {
+        reaction = reaction.substring(2, reaction.length - 1)
+      }
+
+      if (reaction.startsWith('<a:')) {
+        reaction = reaction.substring(3, reaction.length - 1)
+      }
+
+      return await rest.put(rest.routes.channels.reactions.bot(channelId, messageId, reaction))
+    },
+
+    async addReactions(channelId, messageId, reactions, ordered = false) {
+      if (!ordered) {
+        await Promise.all(reactions.map(async (reaction) => await rest.addReaction(channelId, messageId, reaction)))
+        return
+      }
+
+      for (const reaction of reactions) {
+        await rest.addReaction(channelId, messageId, reaction)
+      }
     },
 
     async addRole(guildId, userId, roleId, reason) {
@@ -2254,6 +2292,11 @@ export interface RestManager {
       }
       /** Route for handling typing indicators in a c«hannel. */
       typing: (channelId: BigString) => string
+      /** Routes for handling reactions on a message. */
+      reactions: {
+        /** Route for handling a bots reaction. */
+        bot: (channelId: BigString, messageId: BigString, emoji: string) => string
+      }
     }
     /** Routes for guild related endpoints. */
     guilds: {
@@ -2482,6 +2525,47 @@ export interface RestManager {
        * @see {@link https://discord.com/developers/docs/resources/channel#delete-message}
        */
       delete: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
+      /** Handlers related to reactions on a message. */
+      reactions: {
+        /**
+         * Adds a reaction to a message.
+         *
+         * @param channelId - The ID of the channel the message to add a reaction to is in.
+         * @param messageId - The ID of the message to add a reaction to.
+         * @param reaction - The reaction to add to the message.
+         * @returns
+         *
+         * @remarks
+         * Requires the `READ_MESSAGE_HISTORY` permission.
+         *
+         * If nobody else has reacted to the message:
+         * - Requires the `ADD_REACTIONS` permission.
+         *
+         * Fires a _Message Reaction Add_ gateway event.
+         *
+         * @see {@link https://discord.com/developers/docs/resources/channel#create-reaction}
+         */
+        add: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>
+        /**
+         * Adds multiple a reaction to a message.
+         *
+         * This function uses the `addReaction()` helper behind the scenes.
+         *
+         * @param channelId - The ID of the channel the message to add reactions to is in.
+         * @param messageId - The ID of the message to add the reactions to.
+         * @param reactions - The reactions to add to the message.
+         * @param ordered - Whether the reactions must be added in order or not.
+         *
+         * @remarks
+         * Requires the `READ_MESSAGE_HISTORY` permission.
+         *
+         * If nobody else has reacted to the message:
+         * - Requires the `ADD_REACTIONS` permission.
+         *
+         * Fires a _Message Reaction Add_ gateway event for every reaction added.
+         */
+        bulk: (channelId: BigString, messageId: BigString, reactions: string[], ordered?: boolean) => Promise<void>
+      }
     }
     /**
      * Gets a channel by its ID.
@@ -4335,6 +4419,44 @@ export interface RestManager {
      */
     channel: (userId: BigString) => Promise<Camelize<DiscordChannel>>
   }
+  /**
+   * Adds a reaction to a message.
+   *
+   * @param channelId - The ID of the channel the message to add a reaction to is in.
+   * @param messageId - The ID of the message to add a reaction to.
+   * @param reaction - The reaction to add to the message.
+   * @returns
+   *
+   * @remarks
+   * Requires the `READ_MESSAGE_HISTORY` permission.
+   *
+   * If nobody else has reacted to the message:
+   * - Requires the `ADD_REACTIONS` permission.
+   *
+   * Fires a _Message Reaction Add_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#create-reaction}
+   */
+  addReaction: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>
+  /**
+   * Adds multiple a reaction to a message.
+   *
+   * This function uses the `addReaction()` helper behind the scenes.
+   *
+   * @param channelId - The ID of the channel the message to add reactions to is in.
+   * @param messageId - The ID of the message to add the reactions to.
+   * @param reactions - The reactions to add to the message.
+   * @param ordered - Whether the reactions must be added in order or not.
+   *
+   * @remarks
+   * Requires the `READ_MESSAGE_HISTORY` permission.
+   *
+   * If nobody else has reacted to the message:
+   * - Requires the `ADD_REACTIONS` permission.
+   *
+   * Fires a _Message Reaction Add_ gateway event for every reaction added.
+   */
+  addReactions: (channelId: BigString, messageId: BigString, reactions: string[], ordered?: boolean) => Promise<void>
   /**
    * Adds a role to a member.
    *
