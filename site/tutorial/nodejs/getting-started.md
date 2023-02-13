@@ -4,14 +4,11 @@ sidebar_position: 1
 
 # Getting Started
 
-If you are reading this, you probably want to create a Discord bot with Discordeno or migrate from popular libraries
-like Discord.js.
+If you are reading this, you probably want to create a Discord bot with Discordeno or migrate from popular libraries like Discord.js.
 
-If this is going to be your first time making a bot, you should use Deno instead of Node.js. Although in some cases Deno
-might not be suitable for you, because of missing packages or a code base which too large to migrate to a slightly
-different language.
+If this is going to be your first time making a bot, you should use Deno instead of Node.js. Although in some cases, Deno might not be suitable for you because of missing packages or a code base that is too large to migrate to a slightly different language.
 
-This guide will help you making your first Discord Bot using Node.js or even migrating your Bot from a other Library.
+This guide will help you make your first Discord bot using Node.js or even migrate your bot from another library.
 
 Moreover this guide will utilize two different options. One option to use the Discordeno package without any frameworks
 and one, which uses the wrapper called `Discordeno.js`, which aims to achieve a djs-like interface.
