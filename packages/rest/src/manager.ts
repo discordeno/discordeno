@@ -8,7 +8,7 @@ import {
   getBotIdFromToken,
   logger,
   processReactionString,
-  urlToBase64
+  urlToBase64,
 } from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
@@ -87,6 +87,7 @@ import type {
   InteractionResponse,
   ListArchivedThreads,
   ListGuildMembers,
+  MfaLevels,
   ModifyChannel,
   ModifyGuild,
   ModifyGuildChannelPositions,
@@ -96,7 +97,7 @@ import type {
   SearchMembers,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
-  WithReason
+  WithReason,
 } from '@discordeno/types'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 
@@ -495,11 +496,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             return url
           },
         },
+        mfa: (guildId) => `/guilds/${guildId}/mfa`,
         roles: {
-          one: (guildId: BigString, roleId: BigString) => {
+          one: (guildId, roleId) => {
             return `/guilds/${guildId}/roles/${roleId}`
           },
-          all: (guildId: BigString) => {
+          all: (guildId) => {
             return `/guilds/${guildId}/roles`
           },
           member: (guildId, memberId, roleId) => {
@@ -1222,6 +1224,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       )
     },
 
+    /** Modify a guild's MFA level. Requires guild ownership. */
+    async editGuildMfaLevel(guildId: BigString, mfaLevel: MfaLevels, reason?: string): Promise<void> {
+      return await rest.post(rest.routes.guilds.mfa(guildId), { level: mfaLevel, reason })
+    },
+
     async editGuildSticker(guildId, stickerId, options) {
       return await rest.patch<DiscordSticker>(rest.routes.guilds.sticker(guildId, stickerId), options)
     },
@@ -1793,6 +1800,8 @@ export interface RestManager {
       invites: (guildId: BigString) => string
       /** Route for handling non-specific webhooks in a guild */
       webhooks: (guildId: BigString) => string
+      /** Route for handling a guilds mfa level. */
+      mfa: (guildId: BigString) => string
       /** Routes for handling a guild's members. */
       members: {
         /** Route for handling a specific guild member's ban. */
@@ -2746,6 +2755,8 @@ export interface RestManager {
     guildId: BigString,
     options: CreateApplicationCommand,
   ) => Promise<Camelize<DiscordApplicationCommand>>
+  /** Modify a guild's MFA level. Requires guild ownership. */
+  editGuildMfaLevel: (guildId: BigString, mfaLevel: MfaLevels, reason?: string) => Promise<void>
   /**
    * Edit the given sticker.
    *
