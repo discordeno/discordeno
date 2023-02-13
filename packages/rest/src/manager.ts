@@ -71,8 +71,10 @@ import type {
   EditGuildRole,
   EditGuildStickerOptions,
   EditMessage,
+  EditOwnVoiceState,
   EditScheduledEvent,
   EditStageInstanceOptions,
+  EditUserVoiceState,
   ExecuteWebhook,
   GetBans,
   GetGuildAuditLog,
@@ -513,6 +515,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
         sticker: (guildId, stickerId) => {
           return `/guilds/${guildId}/stickers/${stickerId}`
+        },
+        voice: (guildId, userId) => {
+          return `/guilds/${guildId}/voice-states/${userId ?? '@me'}`
         },
         templates: {
           code: (code) => {
@@ -1252,6 +1257,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
     },
 
+    async editOwnVoiceState(guildId, options) {
+      return await rest.patch(rest.routes.guilds.voice(guildId), {
+        channel_id: options.channelId,
+        suppress: options.suppress,
+        request_to_speak_timestamp: options.requestToSpeakTimestamp
+          ? new Date(options.requestToSpeakTimestamp).toISOString()
+          : options.requestToSpeakTimestamp,
+      })
+    },
+
     async editScheduledEvent(guildId, eventId, options) {
       return await rest.patch<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId), options)
     },
@@ -1266,6 +1281,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async editStageInstance(channelId, data) {
       return await rest.patch<DiscordStageInstance>(rest.routes.channels.stage(channelId), { topic: data.topic })
+    },
+
+    async editUserVoiceState(guildId, options) {
+      return await rest.patch(rest.routes.guilds.voice(guildId, options.userId), {
+        channel_id: options.channelId,
+        suppress: options.suppress,
+        user_id: options.userId,
+      })
     },
 
     async editWebhook(webhookId, options) {
@@ -1845,6 +1868,8 @@ export interface RestManager {
       stickers: (guildId: BigString) => string
       /** Route for handling non-specific guild stickers. */
       sticker: (guildId: BigString, stickerId: BigString) => string
+      /** Route for handling a voice state. */
+      voice: (guildId: BigString, userId?: BigString) => string
     }
     /** Routes for interaction related endpoints. */
     interactions: {
@@ -2840,6 +2865,25 @@ export interface RestManager {
     options: InteractionCallbackData & { threadId?: BigString },
   ) => Promise<Camelize<DiscordMessage>>
   /**
+   * Edits the voice state of the bot user.
+   *
+   * @param rest - The rest manager to use to make the request.
+   * @param guildId - The ID of the guild in which to edit the voice state of the bot user.
+   * @param options - The parameters for the edit of the voice state.
+   *
+   * @remarks
+   * The {@link EditOwnVoiceState.channelId | channelId} property of the {@link options} object parameter must point to a stage channel, and the bot user must already have joined it.
+   *
+   * If attempting to unmute oneself:
+   * - Requires the `MUTE_MEMBERS` permission.
+   *
+   * If attempting to request to speak:
+   * - Requires the `REQUEST_TO_SPEAK` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state}
+   */
+  editOwnVoiceState: (guildId: BigString, options: EditOwnVoiceState) => Promise<void>
+  /**
    * Edits a role in a guild.
    *
    * @param guildId - The ID of the guild to edit the role in.
@@ -2903,6 +2947,20 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance}
    */
   editStageInstance: (channelId: BigString, data: EditStageInstanceOptions) => Promise<Camelize<DiscordStageInstance>>
+  /**
+   * Edits the voice state of another user.
+   *
+   * @param guildId - The ID of the guild in which to edit the voice state of the bot user.
+   * @param options - The parameters for the edit of the voice state.
+   *
+   * @remarks
+   * The {@link EditOwnVoiceState.channelId | channelId} property of the {@link options} object parameter must point to a stage channel, and the user must already have joined it.
+   *
+   * Requires the `MUTE_MEMBERS` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state}
+   */
+  editUserVoiceState: (guildId: BigString, options: EditUserVoiceState) => Promise<void>
   /**
    * Edits a webhook.
    *
