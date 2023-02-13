@@ -1,15 +1,15 @@
 {
-  "id": "3531539486161216440",
+  "id": "9832063096320012371",
   "type": 0,
-  "content": "kkxnrky",
-  "channel_id": "6285333493495351012",
+  "content": "carciwc",
+  "channel_id": "3959875891007395110",
   "author": {
-    "id": "214034351922073448",
-    "username": "2597238777255955",
+    "id": "347353202227798996",
+    "username": "5208228147932515",
     "display_name": null,
     "avatar": "eae5905ad2d18d7c8deca20478b088b5",
     "avatar_decoration": null,
-    "discriminator": "1922",
+    "discriminator": "5877",
     "public_flags": 4194560
   },
   "attachments": [],
@@ -19,7 +19,7 @@
   "pinned": false,
   "mention_everyone": false,
   "tts": false,
-  "timestamp": "2023-02-12T00:48:25.591Z",
+  "timestamp": "2023-02-13T00:46:51.960Z",
   "edited_timestamp": null,
   "flags": 0,
   "components": []
