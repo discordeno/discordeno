@@ -75,7 +75,7 @@ export function guildBannerUrl(
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined` if no banner has been set.
  */
-export function getGuildIconURL (
+export function guildIconUrl(
   guildId: BigString,
   imageHash: BigString | undefined,
   options?: {
@@ -102,7 +102,7 @@ export function getGuildIconURL (
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined` if the guild does not have a splash image set.
  */
-export function getGuildSplashURL (
+export function guildSplashUrl(
   guildId: BigString,
   imageHash: BigString | undefined,
   options?: {
