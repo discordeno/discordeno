@@ -149,6 +149,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       // Channel Endpoints
       channels: {
+        bulk: (channelId) => {
+          return `/channels/${channelId}/messages/bulk-delete`
+        },
         dm: () => {
           return '/users/@me/channels'
         },
@@ -1079,6 +1082,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.delete(rest.routes.channels.message(channelId, messageId), { reason })
     },
 
+    async deleteMessages(channelId, messageIds, reason) {
+      return await rest.post(rest.routes.channels.bulk(channelId), {
+        messages: messageIds.slice(0, 100).map((id) => id.toString()),
+        reason,
+      })
+    },
+
     async deleteOriginalInteractionResponse(token) {
       return await rest.delete(rest.routes.interactions.responses.original(rest.applicationId, token))
     },
@@ -1635,6 +1645,8 @@ export interface RestManager {
     }
     /** Routes for channel related endpoints. */
     channels: {
+      /** Route for handling bulk messages in a channel. */
+      bulk: (channelId: BigString) => string
       /** Route for non-specific dm channel. */
       dm: () => string
       /** Route for non-specific webhook in a channel. */
@@ -2325,6 +2337,22 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#delete-message}
    */
   deleteMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
+  /**
+   * Deletes multiple messages from a channel.
+   *
+   * @param channelId - The ID of the channel to delete the messages from.
+   * @param messageIds - The IDs of the messages to delete from the channel.
+   *
+   * @remarks
+   * Requires the `MANAGE_MESSAGES` permission.
+   *
+   * ⚠️ Messages older than 2 weeks old cannot be deleted.
+   *
+   * Fires a _Message Delete Bulk_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#bulk-delete-messages}
+   */
+  deleteMessages: (channelId: BigString, messageIds: BigString[], reason?: string) => Promise<void>
   /**
    * Deletes the initial message response to an interaction.
    *
