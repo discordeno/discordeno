@@ -1,5 +1,15 @@
 import { InteractionResponseTypes } from '@discordeno/types'
-import { calculateBits, camelize, camelToSnakeCase, delay, findFiles, getBotIdFromToken, logger, urlToBase64 } from '@discordeno/utils'
+import {
+  calculateBits,
+  camelize,
+  camelToSnakeCase,
+  delay,
+  findFiles,
+  getBotIdFromToken,
+  logger,
+  processReactionString,
+  urlToBase64
+} from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -69,6 +79,7 @@ import type {
   GetGuildPruneCountQuery,
   GetInvite,
   GetMessagesOptions,
+  GetReactions,
   GetScheduledEvents,
   GetScheduledEventUsers,
   GetWebhookMessageOptions,
@@ -85,7 +96,7 @@ import type {
   SearchMembers,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
-  WithReason,
+  WithReason
 } from '@discordeno/types'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 
@@ -158,6 +169,24 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         reactions: {
           bot: (channelId, messageId, emoji) => {
             return `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}/@me`
+          },
+          user: (channelId, messageId, emoji, userId) => {
+            return `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}/${userId}`
+          },
+          all: (channelId, messageId) => {
+            return `/channels/${channelId}/messages/${messageId}/reactions`
+          },
+          emoji: (channelId, messageId, emoji, options) => {
+            let url = `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}?`
+
+            if (options) {
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              if (options.after) url += `after=${options.after}`
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              if (options.limit) url += `&limit=${options.limit}`
+            }
+
+            return url
           },
         },
         webhooks: (channelId) => {
@@ -927,13 +956,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async addReaction(channelId, messageId, reaction) {
-      if (reaction.startsWith('<:')) {
-        reaction = reaction.substring(2, reaction.length - 1)
-      }
-
-      if (reaction.startsWith('<a:')) {
-        reaction = reaction.substring(3, reaction.length - 1)
-      }
+      reaction = processReactionString(reaction)
 
       return await rest.put(rest.routes.channels.reactions.bot(channelId, messageId, reaction))
     },
@@ -1093,6 +1116,22 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.delete(rest.routes.interactions.responses.original(rest.applicationId, token))
     },
 
+    async deleteOwnReaction(channelId, messageId, reaction) {
+      reaction = processReactionString(reaction)
+
+      return await rest.delete(rest.routes.channels.reactions.bot(channelId, messageId, reaction))
+    },
+
+    async deleteReactionsAll(channelId, messageId) {
+      return await rest.delete(rest.routes.channels.reactions.all(channelId, messageId))
+    },
+
+    async deleteReactionsEmoji(channelId, messageId, reaction) {
+      reaction = processReactionString(reaction)
+
+      return await rest.delete(rest.routes.channels.reactions.emoji(channelId, messageId, reaction))
+    },
+
     async deleteRole(guildId, roleId) {
       return await rest.delete(rest.routes.guilds.roles.one(guildId, roleId))
     },
@@ -1103,6 +1142,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async deleteStageInstance(channelId, reason) {
       return await rest.delete(rest.routes.channels.stage(channelId), reason ? { reason } : undefined)
+    },
+
+    async deleteUserReaction(channelId, messageId, userId, reaction) {
+      reaction = processReactionString(reaction)
+
+      return await rest.delete(rest.routes.channels.reactions.user(channelId, messageId, reaction, userId))
     },
 
     async deleteWebhook(webhookId, reason) {
@@ -1700,6 +1745,12 @@ export interface RestManager {
       reactions: {
         /** Route for handling a bots reaction. */
         bot: (channelId: BigString, messageId: BigString, emoji: string) => string
+        /** Route for handling a user's reactions. */
+        user: (channelId: BigString, messageId: BigString, emoji: string, userId: BigString) => string
+        /** Route for handling all the reactions on a message. */
+        all: (channelId: BigString, messageId: BigString) => string
+        /** Route for handling all reactions for a single emoji on a message. */
+        emoji: (channelId: BigString, messageId: BigString, emoji: string, options?: GetReactions) => string
       }
     }
     /** Routes for guild related endpoints. */
@@ -2367,6 +2418,54 @@ export interface RestManager {
    */
   deleteOriginalInteractionResponse: (token: string) => Promise<void>
   /**
+   * Deletes a reaction added by the bot user from a message.
+   *
+   * @param channelId - The ID of the channel the message to delete the reaction from is in.
+   * @param messageId - The ID of the message to delete the reaction from.
+   * @param reaction - The reaction to delete from the message.
+   *
+   * @remarks
+   * Requires the `READ_MESSAGE_HISTORY` permission.
+   *
+   * Fires a _Message Reaction Remove_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#delete-own-reaction}
+   */
+  deleteOwnReaction: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>
+  /**
+   * Deletes all reactions for all emojis from a message.
+   *
+   * @param channelId - The ID of the channel the message to delete the reactions from is in.
+   * @param messageId - The ID of the message to delete the reactions from.
+   *
+   * @remarks
+   * Requires the `READ_MESSAGE_HISTORY` permission.
+   *
+   * Requires the `MANAGE_MESSAGES` permission.
+   *
+   * Fires a _Message Reaction Remove All_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#delete-all-reactions}
+   */
+  deleteReactionsAll: (channelId: BigString, messageId: BigString) => Promise<void>
+  /**
+   * Deletes all reactions for an emoji from a message.
+   *
+   * @param channelId - The ID of the channel the message to delete the reactions from is in.
+   * @param messageId - The ID of the message to delete the reactions from.
+   * @param reaction - The reaction to remove from the message.
+   *
+   * @remarks
+   * Requires the `READ_MESSAGE_HISTORY` permission.
+   *
+   * Requires the `MANAGE_MESSAGES` permission.
+   *
+   * Fires a _Message Reaction Remove Emoji_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#delete-all-reactions-for-emoji}
+   */
+  deleteReactionsEmoji: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>
+  /**
    * Deletes a role from a guild.
    *
    * @param guildId - The ID of the guild to delete the role from.
@@ -2407,6 +2506,24 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance}
    */
   deleteStageInstance: (channelId: BigString, reason?: string) => Promise<void>
+  /**
+   * Deletes a user's reaction from a message.
+   *
+   * @param channelId - The ID of the channel the message to delete the reaction from is in.
+   * @param messageId - The ID of the message to delete the reaction from.
+   * @param userId - The ID of the user whose reaction to delete.
+   * @param reaction - The reaction to delete from the message.
+   *
+   * @remarks
+   * Requires the `READ_MESSAGE_HISTORY` permission.
+   *
+   * Requires the `MANAGE_MESSAGES` permission.
+   *
+   * Fires a _Message Reaction Remove_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#delete-user-reaction}
+   */
+  deleteUserReaction: (channelId: BigString, messageId: BigString, userId: BigString, reaction: string) => Promise<void>
   /**
    * Deletes a webhook.
    *
