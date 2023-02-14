@@ -1964,26 +1964,26 @@ export interface DiscordApplicationCommandPermissions {
   permission: boolean
 }
 
-// /** https://discord.com/developers/docs/resources/guild#get-guild-widget-example-get-guild-widget */
-// export interface DiscordGuildWidget {
-//   id: string
-//   name: string
-//   instant_invite: string
-//   channels: Array<{
-//     id: string
-//     name: string
-//     position: number
-//   }>
-//   members: Array<{
-//     id: string
-//     username: string
-//     discriminator: string
-//     avatar?: string | null
-//     status: string
-//     avatar_url: string
-//   }>
-//   presence_count: number
-// }
+/** https://discord.com/developers/docs/resources/guild#get-guild-widget-example-get-guild-widget */
+export interface DiscordGuildWidget {
+  id: string
+  name: string
+  instant_invite: string
+  channels: Array<{
+    id: string
+    name: string
+    position: number
+  }>
+  members: Array<{
+    id: string
+    username: string
+    discriminator: string
+    avatar?: string | null
+    status: string
+    avatar_url: string
+  }>
+  presence_count: number
+}
 
 /** https://discord.com/developers/docs/resources/guild#guild-preview-object */
 export interface DiscordGuildPreview {
@@ -2467,12 +2467,12 @@ export interface DiscordVoiceRegion {
   custom: boolean
 }
 
-// export interface DiscordGuildWidgetSettings {
-//   /** whether the widget is enabled */
-//   enabled: boolean
-//   /** the widget channel id */
-//   channel_id: string | null
-// }
+export interface DiscordGuildWidgetSettings {
+  /** whether the widget is enabled */
+  enabled: boolean
+  /** the widget channel id */
+  channel_id: string | null
+}
 
 export interface DiscordInstallParams {
   /** the scopes to add the application to the server with */
@@ -2886,15 +2886,15 @@ export interface DiscordCreateMessage {
 //   level: MfaLevels
 // }
 
-// /** https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen */
-// export interface DiscordModifyGuildWelcomeScreen {
-//   /** Whether the welcome screen is enabled */
-//   enabled?: boolean | null
-//   /** Channels linked in the welcome screen and their display options */
-//   welcome_screen?: DiscordWelcomeScreenChannel[] | null
-//   /** The server description to show in the welcome screen */
-//   description?: string | null
-// }
+/** https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen */
+export interface DiscordModifyGuildWelcomeScreen {
+  /** Whether the welcome screen is enabled */
+  enabled?: boolean | null
+  /** Channels linked in the welcome screen and their display options */
+  welcome_screen?: DiscordWelcomeScreenChannel[] | null
+  /** The server description to show in the welcome screen */
+  description?: string | null
+}
 
 // export interface DiscordStartThreadWithMessage {
 //   /** 1-100 character thread name */
@@ -3147,4 +3147,8 @@ export interface DiscordActiveThreads {
 export interface DiscordVanityUrl {
   code: string | null
   uses: number
+}
+
+export interface DiscordPrunedCount {
+  pruned: number
 }

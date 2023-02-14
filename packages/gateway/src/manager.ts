@@ -1,9 +1,9 @@
-import type { AtLeastOne, BigString, Camelize, DiscordGetGatewayBot } from '@discordeno/types'
-import { GatewayOpcodes } from '@discordeno/types'
+import type { AtLeastOne, BigString, Camelize, DiscordGetGatewayBot, DiscordMember, RequestGuildMembers } from '@discordeno/types'
+import { GatewayIntents, GatewayOpcodes } from '@discordeno/types'
 import type { LeakyBucket } from '@discordeno/utils'
-import { createLeakyBucket, delay } from '@discordeno/utils'
+import { Collection, createLeakyBucket, delay } from '@discordeno/utils'
 import Shard from './Shard.js'
-import type { ShardEvents, UpdateVoiceState } from './types.js'
+import type { ShardEvents, StatusUpdate, UpdateVoiceState } from './types.js'
 
 export function createGatewayManager(options: CreateGatewayManagerOptions): GatewayManager {
   if (!options.connection) {
@@ -40,6 +40,12 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     spawnShardDelay: options.spawnShardDelay ?? 5300,
     shards: new Map(),
     buckets: new Map(),
+    cache: {
+      requestMembers: {
+        enabled: options.cache?.requestMembers?.enabled ?? false,
+        pending: new Collection(),
+      }
+    },
 
     calculateTotalShards() {
       // Bots under 100k servers do not have access to total shards.
@@ -196,6 +202,85 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         },
       })
     },
+
+    async editBotStatus(data) {
+      await Promise.all(
+        [...gateway.shards.values()].map(async (shard) => {
+          gateway.editShardStatus(shard.id, data)
+        }),
+      )
+    },
+
+    async editShardStatus(shardId, data) {
+      const shard = gateway.shards.get(shardId)
+      if (!shard) {
+        throw new Error(`Shard (id: ${shardId}) not found.`)
+      }
+
+      return await shard.send({
+        op: GatewayOpcodes.PresenceUpdate,
+        d: {
+          since: null,
+          afk: false,
+          activities: data.activities,
+          status: data.status,
+        },
+      })
+    },
+
+    async requestMembers(guildId, options) {
+      // You can request 1 member without the intent
+      // Check if intents is not 0 as proxy ws won't set intents in other instances
+      if (gateway.intents && (!options?.limit || options.limit > 1) && !(gateway.intents & GatewayIntents.GuildMembers)) {
+        throw new Error('MISSING_INTENT_GUILD_MEMBERS')
+      }
+
+      if (options?.userIds?.length) {
+        options.limit = options.userIds.length
+      }
+
+      const shardId = gateway.calculateShardId(guildId)
+      const shard = gateway.shards.get(shardId)
+      if (!shard) {
+        throw new Error(`Shard (id: ${shardId}) not found.`)
+      }
+
+      const nonce = `${guildId}-${Date.now()}`
+
+      // Gateway does not require caching these requests so directly send and return
+      if (!gateway.cache.requestMembers?.enabled) {
+        await shard.send({
+          op: GatewayOpcodes.RequestGuildMembers,
+          d: {
+            guild_id: guildId.toString(),
+            // If a query is provided use it, OR if a limit is NOT provided use ""
+            query: options?.query ?? (options?.limit ? undefined : ''),
+            limit: options?.limit ?? 0,
+            presences: options?.presences ?? false,
+            user_ids: options?.userIds?.map((id) => id.toString()),
+            nonce,
+          },
+        })
+        return [];
+      }
+
+      return await new Promise((resolve) => {
+        gateway.cache.requestMembers?.pending.set(nonce, { nonce, resolve, members: [] })
+
+        shard.send({
+          op: GatewayOpcodes.RequestGuildMembers,
+          d: {
+            guild_id: guildId.toString(),
+            // If a query is provided use it, OR if a limit is NOT provided use ""
+            query: options?.query ?? (options?.limit ? undefined : ''),
+            limit: options?.limit ?? 0,
+            presences: options?.presences ?? false,
+            user_ids: options?.userIds?.map((id) => id.toString()),
+            nonce,
+          },
+        })
+      })
+    },
   }
 
   return gateway
@@ -276,6 +361,18 @@ export interface CreateGatewayManagerOptions {
   version?: number
   /** The events handlers */
   events: ShardEvents
+  /** This managers cache related settings. */
+  cache?: {
+    requestMembers?: {
+      /**
+       * Whether or not request member requests should be cached.
+       * @default false
+       */
+      enabled?: boolean
+      /** The pending requests. */
+      pending: Collection<string, RequestMemberRequest>
+    }
+  }
 }
 
 export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
@@ -329,4 +426,52 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
     channelId: BigString,
     options?: AtLeastOne<Omit<UpdateVoiceState, 'guildId' | 'channelId'>>,
   ) => Promise<void>
+  /**
+   * Edits the bot status in all shards that this gateway manages.
+   *
+   * @param data The status data to set the bots status to.
+   * @returns Promise<void>
+   */
+  editBotStatus: (data: StatusUpdate) => Promise<void>
+  /**
+   * Edits the bot's status on one shard.
+   *
+   * @param shardId The shard id to edit the status for.
+   * @param data The status data to set the bots status to.
+   * @returns Promise<void>
+   */
+  editShardStatus: (shardId: number, data: StatusUpdate) => Promise<void>
+  /**
+   * Fetches the list of members for a guild over the gateway.
+   *
+   * @param guildId - The ID of the guild to get the list of members for.
+   * @param options - The parameters for the fetching of the members.
+   *
+   * @remarks
+   * If requesting the entire member list:
+   * - Requires the `GUILD_MEMBERS` intent.
+   *
+   * If requesting presences ({@link RequestGuildMembers.presences | presences} set to `true`):
+   * - Requires the `GUILD_PRESENCES` intent.
+   *
+   * If requesting a prefix ({@link RequestGuildMembers.query | query} non-`undefined`):
+   * - Returns a maximum of 100 members.
+   *
+   * If requesting a users by ID ({@link RequestGuildMembers.userIds | userIds} non-`undefined`):
+   * - Returns a maximum of 100 members.
+   *
+   * Fires a _Guild Members Chunk_ gateway event for every 1000 members fetched.
+   *
+   * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
+   */
+  requestMembers: (guildId: BigString, options?: Omit<RequestGuildMembers, 'guildId'>) => Promise<Camelize<DiscordMember[]>>
+}
+
+export interface RequestMemberRequest {
+  /** The unique nonce for this request. */
+  nonce: string
+  /** The resolver handler to run when all members arrive. */
+  resolve: (value: Camelize<DiscordMember[]> | PromiseLike<Camelize<DiscordMember[]>>) => void
+  /** The members that have already arrived for this request. */
+  members: Camelize<DiscordMember[]>
 }

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-const-assign */
-import { InteractionResponseTypes } from '@discordeno/types'
+import { DiscordGuildWidget, InteractionResponseTypes } from '@discordeno/types'
 import {
   calculateBits,
   camelize,
@@ -53,6 +53,8 @@ import type {
   DiscordFollowedChannel,
   DiscordGetGatewayBot,
   DiscordGuild,
+  DiscordGuildPreview,
+  DiscordGuildWidgetSettings,
   DiscordIntegration,
   DiscordInvite,
   DiscordInviteMetadata,
@@ -61,6 +63,8 @@ import type {
   DiscordMember,
   DiscordMemberWithUser,
   DiscordMessage,
+  DiscordModifyGuildWelcomeScreen,
+  DiscordPrunedCount,
   DiscordRole,
   DiscordScheduledEvent,
   DiscordStageInstance,
@@ -72,6 +76,7 @@ import type {
   DiscordVanityUrl,
   DiscordVoiceRegion,
   DiscordWebhook,
+  DiscordWelcomeScreen,
   EditAutoModerationRuleOptions,
   EditChannelPermissionOverridesOptions,
   EditGuildRole,
@@ -175,6 +180,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         dm: () => {
           return '/users/@me/channels'
         },
+        pins: (channelId) => {
+          return `/channels/${channelId}/pins`
+        },
         reactions: {
           bot: (channelId, messageId, emoji) => {
             return `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}/@me`
@@ -186,6 +194,18 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             return `/channels/${channelId}/messages/${messageId}/reactions`
           },
           emoji: (channelId, messageId, emoji, options) => {
+            let url = `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}?`
+
+            if (options) {
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              if (options.after) url += `after=${options.after}`
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              if (options.limit) url += `&limit=${options.limit}`
+            }
+
+            return url
+          },
+          message: (channelId, messageId, emoji, options) => {
             let url = `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}?`
 
             if (options) {
@@ -505,6 +525,26 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           },
         },
         mfa: (guildId) => `/guilds/${guildId}/mfa`,
+        preview: (guildId) => {
+          return `/guilds/${guildId}/preview`
+        },
+        prune: (guildId, options) => {
+          let url = `/guilds/${guildId}/prune?`
+
+          if (options) {
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            if (options.days) url += `days=${options.days}`
+            if (Array.isArray(options.includeRoles)) {
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              url += `&include_roles=${options.includeRoles.join(',')}`
+            } else if (options.includeRoles) {
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+              url += `&include_roles=${options.includeRoles}`
+            }
+          }
+
+          return url
+        },
         roles: {
           one: (guildId, roleId) => {
             return `/guilds/${guildId}/roles/${roleId}`
@@ -545,10 +585,23 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         webhooks: (guildId) => {
           return `/guilds/${guildId}/webhooks`
         },
+        welcome: (guildId) => {
+          return `/guilds/${guildId}/welcome-screen`
+        },
+        widget: (guildId) => {
+          return `/guilds/${guildId}/widget`
+        },
+        widgetJson: (guildId) => {
+          return `/guilds/${guildId}/widget.json`
+        },
       },
 
       sticker: (stickerId: BigString) => {
         return `/stickers/${stickerId}`
+      },
+
+      regions: () => {
+        return '/voice/regions'
       },
 
       // Interaction Endpoints
@@ -1235,7 +1288,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       )
     },
 
-    /** Modify a guild's MFA level. Requires guild ownership. */
     async editGuildMfaLevel(guildId: BigString, mfaLevel: MfaLevels, reason?: string): Promise<void> {
       return await rest.post(rest.routes.guilds.mfa(guildId), { level: mfaLevel, reason })
     },
@@ -1309,6 +1361,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.patch<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token), options)
     },
 
+    async editWelcomeScreen(guildId, options) {
+      return await rest.patch<DiscordWelcomeScreen>(rest.routes.guilds.welcome(guildId), options)
+    },
+
+    async editWidgetSettings(guildId, options) {
+      return await rest.patch<DiscordGuildWidgetSettings>(rest.routes.guilds.widget(guildId), options)
+    },
+
     async executeWebhook(webhookId, token, options) {
       return await rest.post<DiscordMessage>(rest.routes.webhooks.webhook(webhookId, token, options), options)
     },
@@ -1347,6 +1407,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getAutomodRules(guildId) {
       return await rest.get<DiscordAutoModerationRule[]>(rest.routes.guilds.automod.rules(guildId))
+    },
+
+    async getAvailableVoiceRegions() {
+      return await rest.get<DiscordVoiceRegion[]>(rest.routes.regions())
     },
 
     async getBan(guildId, userId) {
@@ -1415,6 +1479,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId))
     },
 
+    async getGuildPreview(guildId) {
+      return await rest.get<DiscordGuildPreview>(rest.routes.guilds.preview(guildId))
+    },
+
     async getGuildTemplate(templateCode) {
       return await rest.get<DiscordTemplate>(rest.routes.guilds.templates.code(templateCode))
     },
@@ -1439,6 +1507,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordInviteMetadata[]>(rest.routes.guilds.invites(guildId))
     },
 
+    async getMessage(channelId, messageId) {
+      return await rest.get<DiscordMessage>(rest.routes.channels.message(channelId, messageId))
+    },
+
+    async getMessages(channelId, options) {
+      return await rest.get<DiscordMessage[]>(rest.routes.channels.messages(channelId, options))
+    },
+
     async getNitroStickerPacks() {
       return await rest.get<DiscordStickerPack[]>(rest.routes.nitroStickerPacks())
     },
@@ -1447,12 +1523,20 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token))
     },
 
+    async getPinnedMessages(channelId) {
+      return await rest.get<DiscordMessage[]>(rest.routes.channels.pins(channelId))
+    },
+
     async getPrivateArchivedThreads(channelId, options) {
       return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.private(channelId, options))
     },
 
     async getPrivateJoinedArchivedThreads(channelId, options) {
       return await rest.get<DiscordListArchivedThreads>(rest.routes.channels.threads.joined(channelId, options))
+    },
+
+    async getPruneCount(guildId, options) {
+      return await rest.get<DiscordPrunedCount>(rest.routes.guilds.prune(guildId, options))
     },
 
     async getPublicArchivedThreads(channelId, options) {
@@ -1503,6 +1587,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordThreadMember[]>(rest.routes.channels.threads.members(channelId))
     },
 
+    async getReactions(channelId, messageId, reaction, options) {
+      return await rest.get<DiscordUser[]>(rest.routes.channels.reactions.message(channelId, messageId, reaction, options))
+    },
+
     async getUser(id) {
       return await rest.get<DiscordUser>(rest.routes.user(id))
     },
@@ -1525,6 +1613,18 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getWebhookWithToken(webhookId, token) {
       return await rest.get<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token))
+    },
+
+    async getWelcomeScreen(guildId) {
+      return await rest.get<DiscordWelcomeScreen>(rest.routes.guilds.welcome(guildId))
+    },
+
+    async getWidget(guildId) {
+      return await rest.get<DiscordGuildWidget>(rest.routes.guilds.widgetJson(guildId))
+    },
+
+    async getWidgetSettings(guildId) {
+      return await rest.get<DiscordGuildWidgetSettings>(rest.routes.guilds.widget(guildId))
     },
 
     async joinThread(channelId) {
@@ -1730,6 +1830,8 @@ export interface RestManager {
       bulk: (channelId: BigString) => string
       /** Route for non-specific dm channel. */
       dm: () => string
+      /** Route for handling a channels pins. */
+      pins: (channelId: BigString) => string
       /** Route for non-specific webhook in a channel. */
       webhooks: (channelId: BigString) => string
       /** Route for a specific channel. */
@@ -1787,6 +1889,8 @@ export interface RestManager {
         all: (channelId: BigString, messageId: BigString) => string
         /** Route for handling all reactions for a single emoji on a message. */
         emoji: (channelId: BigString, messageId: BigString, emoji: string, options?: GetReactions) => string
+        /** Route for handling a specific reaction on a message. */
+        message: (channelId: BigString, messageId: BigString, emoji: string, options?: GetReactions) => string
       }
     }
     /** Routes for guild related endpoints. */
@@ -1827,8 +1931,18 @@ export interface RestManager {
       invite: (inviteCode: string, options?: GetInvite) => string
       /** Route for handling non-specific invites in a guild. */
       invites: (guildId: BigString) => string
+      /** Route for handling a guild's preview. */
+      preview: (guildId: BigString) => string
+      /** Route for handling pruning of a guild. */
+      prune: (guildId: BigString, options?: GetGuildPruneCountQuery) => string
       /** Route for handling non-specific webhooks in a guild */
       webhooks: (guildId: BigString) => string
+      /** Route for handling a guild's welcome screen. */
+      welcome: (guildId: BigString) => string
+      /** Route for handling a guild's widget. */
+      widget: (guildId: BigString) => string
+      /** Route for handling a guild's widget in the form of json. */
+      widgetJson: (guildId: BigString) => string
       /** Route for handling a guilds mfa level. */
       mfa: (guildId: BigString) => string
       /** Routes for handling a guild's members. */
@@ -1909,6 +2023,8 @@ export interface RestManager {
     }
     /** Route for handling a sticker. */
     sticker: (stickerId: BigString) => string
+    /** Route for handling all voice regions. */
+    regions: () => string
   }
   /** Check the rate limits for a url or a bucket. */
   checkRateLimits: (url: string) => number | false
@@ -2873,7 +2989,6 @@ export interface RestManager {
   /**
    * Edits the voice state of the bot user.
    *
-   * @param rest - The rest manager to use to make the request.
    * @param guildId - The ID of the guild in which to edit the voice state of the bot user.
    * @param options - The parameters for the edit of the voice state.
    *
@@ -3017,6 +3132,35 @@ export interface RestManager {
    */
   editWebhookWithToken: (webhookId: BigString, token: string, options: Omit<ModifyWebhook, 'channelId'>) => Promise<Camelize<DiscordWebhook>>
   /**
+   * Edits a guild's welcome screen.
+   *
+   * @param guildId - The ID of the guild to edit the welcome screen of.
+   * @param options - The parameters for the edit of the welcome screen.
+   * @returns An instance of the edited {@link WelcomeScreen}.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * Fires a _Guild Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen}
+   */
+  editWelcomeScreen: (guildId: BigString, options: Camelize<DiscordModifyGuildWelcomeScreen>) => Promise<Camelize<DiscordWelcomeScreen>>
+  /**
+   * Edits the settings of a guild's widget.
+   *
+   * @param guildId - The ID of the guild to edit the settings of the widget of.
+   * @returns An instance of the edited {@link GuildWidgetSettings}.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * Fires a _Guild Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-widget}
+   */
+  editWidgetSettings: (guildId: BigString, options: Camelize<DiscordGuildWidgetSettings>) => Promise<Camelize<DiscordGuildWidgetSettings>>
+  /**
    * Executes a webhook, causing a message to be posted in the channel configured for the webhook.
    *
    * @param webhookId - The ID of the webhook to execute.
@@ -3118,6 +3262,12 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/auto-moderation#list-auto-moderation-rules-for-guild}
    */
   getAutomodRules: (guildId: BigString) => Promise<Camelize<DiscordAutoModerationRule[]>>
+  /**
+   * Gets the list of available voice regions.
+   *
+   * @returns A collection of {@link VoiceRegions | VoiceRegion} objects assorted by voice region ID.
+   */
+  getAvailableVoiceRegions: () => Promise<Camelize<DiscordVoiceRegion[]>>
   /**
    * Gets a ban by user ID.
    *
@@ -3290,6 +3440,18 @@ export interface RestManager {
    */
   getGuildApplicationCommands: (guildId: BigString) => Promise<Camelize<DiscordApplicationCommand[]>>
   /**
+   * Gets the preview of a guild by a guild's ID.
+   *
+   * @param guildId - The ID of the guild to get the preview of.
+   * @returns An instance of {@link GuildPreview}.
+   *
+   * @remarks
+   * If the bot user is not in the guild, the guild must be lurkable.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-preview}
+   */
+  getGuildPreview: (guildId: BigString) => Promise<Camelize<DiscordGuildPreview>>
+  /**
    * Returns a sticker object for the given guild and sticker IDs.
    *
    * @param guildId The ID of the guild to get
@@ -3383,6 +3545,38 @@ export interface RestManager {
    */
   getInvites: (guildId: BigString) => Promise<Camelize<DiscordInviteMetadata[]>>
   /**
+   * Gets a message from a channel by the ID of the message.
+   *
+   * @param channelId - The ID of the channel from which to get the message.
+   * @param messageId - The ID of the message to get.
+   * @returns An instance of {@link Message}.
+   *
+   * @remarks
+   * Requires that the bot user be able to see the contents of the channel in which the message was posted.
+   *
+   * If getting a message from a guild channel:
+   * - Requires the `READ_MESSAGE_HISTORY` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#get-channel-message}
+   */
+  getMessage: (channelId: BigString, messageId: BigString) => Promise<Camelize<DiscordMessage>>
+  /**
+   * Gets multiple messages from a channel.
+   *
+   * @param channelId - The ID of the channel from which to get the messages.
+   * @param options - The parameters for the fetching of the messages.
+   * @returns A collection of {@link Message} objects assorted by message ID.
+   *
+   * @remarks
+   * Requires that the bot user be able to see the contents of the channel in which the messages were posted.
+   *
+   * If getting a messages from a guild channel:
+   * - Requires the `READ_MESSAGE_HISTORY` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#get-channel-messages}
+   */
+  getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<Camelize<DiscordMessage[]>>
+  /**
    * Returns the list of sticker packs available to Nitro subscribers.
    *
    * @param bot The bot instance to use to make the request.
@@ -3407,6 +3601,21 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response}
    */
   getOriginalInteractionResponse: (token: string) => Promise<Camelize<DiscordMessage>>
+  /**
+   * Gets the pinned messages for a channel.
+   *
+   * @param channelId - The ID of the channel to get the pinned messages for.
+   * @returns A collection of {@link Message} objects assorted by message ID.
+   *
+   * @remarks
+   * Requires that the bot user be able to see the contents of the channel in which the messages were posted.
+   *
+   * If getting a message from a guild channel:
+   * - Requires the `READ_MESSAGE_HISTORY` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#get-pinned-messages}
+   */
+  getPinnedMessages: (channelId: BigString) => Promise<Camelize<DiscordMessage[]>>
   /**
    * Gets the list of private archived threads for a channel.
    *
@@ -3442,6 +3651,19 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads}
    */
   getPrivateJoinedArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  /**
+   * Gets the number of members that would be kicked from a guild during pruning.
+   *
+   * @param guildId - The ID of the guild to get the prune count of.
+   * @param options - The parameters for the fetching of the prune count.
+   * @returns A number indicating the number of members that would be kicked.
+   *
+   * @remarks
+   * Requires the `KICK_MEMBERS` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-prune-count}
+   */
+  getPruneCount: (guildId: BigString, options?: GetGuildPruneCountQuery) => Promise<Camelize<DiscordPrunedCount>>
   /**
    * Gets the list of public archived threads for a channel.
    *
@@ -3556,6 +3778,18 @@ export interface RestManager {
    */
   getThreadMembers: (channelId: BigString) => Promise<Camelize<DiscordThreadMember[]>>
   /**
+   * Gets the list of users that reacted with an emoji to a message.
+   *
+   * @param channelId - The ID of the channel the message to get the users for is in.
+   * @param messageId - The ID of the message to get the users for.
+   * @param reaction - The reaction for which to get the users.
+   * @param options - The parameters for the fetching of the users.
+   * @returns A collection of {@link User} objects assorted by user ID.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#get-reactions}
+   */
+  getReactions: (channelId: BigString, messageId: BigString, reaction: string, options?: GetReactions) => Promise<Camelize<DiscordUser[]>>
+  /**
    * Get a user's data from the api
    *
    * @param id The user's id
@@ -3624,6 +3858,40 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook-with-token}
    */
   getWebhookWithToken: (webhookId: BigString, token: string) => Promise<Camelize<DiscordWebhook>>
+  /**
+   * Gets the welcome screen for a guild.
+   *
+   * @param guildId - The ID of the guild to get the welcome screen for.
+   * @returns An instance of {@link WelcomeScreen}.
+   *
+   * @remarks
+   * If the welcome screen is not enabled:
+   * - Requires the `MANAGE_GUILD` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-welcome-screen}
+   */
+  getWelcomeScreen: (guildId: BigString) => Promise<Camelize<DiscordWelcomeScreen>>
+  /**
+   * Gets the guild widget by guild ID.
+   *
+   * @param guildId - The ID of the guild to get the widget of.
+   * @returns An instance of {@link GuildWidget}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-widget}
+   */
+  getWidget: (guildId: BigString) => Promise<Camelize<DiscordGuildWidget>>
+  /**
+   * Gets the settings of a guild's widget.
+   *
+   * @param guildId - The ID of the guild to get the widget of.
+   * @returns An instance of {@link GuildWidgetSettings}.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` permission.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-widget-settings}
+   */
+  getWidgetSettings: (guildId: BigString) => Promise<Camelize<DiscordGuildWidgetSettings>>
   /**
    * Adds the bot user to a thread.
    *

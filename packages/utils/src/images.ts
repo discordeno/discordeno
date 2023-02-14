@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import type { BigString, ImageFormat, ImageSize } from '@discordeno/types'
+import type { BigString, GetGuildWidgetImageQuery, ImageFormat, ImageSize } from '@discordeno/types'
 import { iconBigintToHash } from './hash.js'
 
 /** Help format an image url. */
@@ -119,4 +119,24 @@ export function guildSplashUrl(
       options?.format
     )
     : undefined
+}
+
+/**
+ * Builds a URL to the guild widget image stored in the Discord CDN.
+ *
+ * @param guildId - The ID of the guild to get the link to the widget image for.
+ * @param options - The parameters for the building of the URL.
+ * @returns The link to the resource.
+ */
+export function getWidgetImageUrl (
+  guildId: BigString,
+  options?: GetGuildWidgetImageQuery
+): string {
+  let url = `https://cdn.discordapp.com/guilds/${guildId}/widget.png`
+
+  if (options?.style) {
+    url += `?style=${options.style}`
+  }
+
+  return url
 }

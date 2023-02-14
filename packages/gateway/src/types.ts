@@ -1,4 +1,4 @@
-import type { ActivityTypes, Camelize, DiscordGatewayPayload, GatewayOpcodes, PresenceStatus } from '@discordeno/types'
+import type { ActivityTypes, Camelize, DiscordActivity, DiscordGatewayPayload, GatewayOpcodes, PresenceStatus } from '@discordeno/types'
 import type Shard from './Shard.js'
 
 export enum ShardState {
@@ -166,4 +166,16 @@ export interface UpdateVoiceState {
   selfMute: boolean
   /** Is the client deafened */
   selfDeaf: boolean
+}
+
+/** https://discord.com/developers/docs/topics/gateway-events#update-presence */
+export interface StatusUpdate {
+  // /** Unix time (in milliseconds) of when the client went idle, or null if the client is not idle */
+  // since: number | null;
+  /** The user's activities */
+  activities: Camelize<DiscordActivity[]>
+  /** The user's new status */
+  status: keyof typeof PresenceStatus
+  // /** Whether or not the client is afk */
+  // afk: boolean;
 }
