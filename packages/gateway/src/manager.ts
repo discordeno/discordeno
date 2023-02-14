@@ -44,7 +44,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       requestMembers: {
         enabled: options.cache?.requestMembers?.enabled ?? false,
         pending: new Collection(),
-      }
+      },
     },
 
     calculateTotalShards() {
@@ -261,7 +261,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             nonce,
           },
         })
-        return [];
+        return []
       }
 
       return await new Promise((resolve) => {
@@ -279,6 +279,24 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             nonce,
           },
         })
+      })
+    },
+
+    async leaveVoiceChannel(guildId) {
+      const shardId = gateway.calculateShardId(guildId)
+      const shard = gateway.shards.get(shardId)
+      if (!shard) {
+        throw new Error(`Shard (id: ${shardId} not found`)
+      }
+
+      return shard.send({
+        op: GatewayOpcodes.VoiceStateUpdate,
+        d: {
+          guild_id: guildId.toString(),
+          channel_id: null,
+          self_mute: false,
+          self_deaf: false,
+        },
       })
     },
   }
@@ -465,6 +483,19 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
    */
   requestMembers: (guildId: BigString, options?: Omit<RequestGuildMembers, 'guildId'>) => Promise<Camelize<DiscordMember[]>>
+  /**
+   * Leaves the voice channel the bot user is currently in.
+   *
+   * This function sends the _Update Voice State_ gateway command over the gateway behind the scenes.
+   *
+   * @param guildId - The ID of the guild the voice channel to leave is in.
+   *
+   * @remarks
+   * Fires a _Voice State Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/topics/gateway#update-voice-state}
+   */
+  leaveVoiceChannel: (guildId: BigString) => Promise<void>
 }
 
 export interface RequestMemberRequest {

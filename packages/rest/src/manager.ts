@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-const-assign */
-import { DiscordGuildWidget, InteractionResponseTypes } from '@discordeno/types'
+import { InteractionResponseTypes } from '@discordeno/types'
 import {
   calculateBits,
   camelize,
@@ -54,6 +54,7 @@ import type {
   DiscordGetGatewayBot,
   DiscordGuild,
   DiscordGuildPreview,
+  DiscordGuildWidget,
   DiscordGuildWidgetSettings,
   DiscordIntegration,
   DiscordInvite,
@@ -179,6 +180,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
         dm: () => {
           return '/users/@me/channels'
+        },
+        pin: (channelId, messageId) => {
+          return `/channels/${channelId}/pins/${messageId}`
         },
         pins: (channelId) => {
           return `/channels/${channelId}/pins`
@@ -460,6 +464,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         },
         invites: (guildId) => {
           return `/guilds/${guildId}/invites`
+        },
+        leave: (guildId) => {
+          return `/users/@me/guilds/${guildId}`
         },
         members: {
           ban: (guildId, userId) => {
@@ -1631,6 +1638,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.put(rest.routes.channels.threads.me(channelId))
     },
 
+    async leaveGuild(guildId) {
+      return await rest.delete(rest.routes.guilds.leave(guildId))
+    },
+
     async leaveThread(channelId) {
       return await rest.delete(rest.routes.channels.threads.me(channelId))
     },
@@ -1723,6 +1734,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
     },
 
+    async pinMessage(channelId, messageId, reason) {
+      return await rest.put(rest.routes.channels.pin(channelId, messageId), reason ? { reason } : undefined)
+    },
+
     async pruneMembers(guildId, options) {
       return await rest.post<{ pruned: number | null }>(rest.routes.guilds.members.prune(guildId), options)
     },
@@ -1733,6 +1748,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async unbanMember(guildId, userId) {
       return await rest.delete(rest.routes.guilds.members.ban(guildId, userId))
+    },
+
+    async unpinMessage(channelId, messageId, reason) {
+      return await rest.delete(rest.routes.channels.pin(channelId, messageId), reason ? { reason } : undefined)
     },
 
     async triggerTypingIndicator(channelId) {
@@ -1830,6 +1849,8 @@ export interface RestManager {
       bulk: (channelId: BigString) => string
       /** Route for non-specific dm channel. */
       dm: () => string
+      /** Route for handling a specific pin. */
+      pin: (channelId: BigString, messageId: BigString) => string
       /** Route for handling a channels pins. */
       pins: (channelId: BigString) => string
       /** Route for non-specific webhook in a channel. */
@@ -1931,6 +1952,8 @@ export interface RestManager {
       invite: (inviteCode: string, options?: GetInvite) => string
       /** Route for handling non-specific invites in a guild. */
       invites: (guildId: BigString) => string
+      /** Route for handling a bot leaving a guild. */
+      leave: (guildId: BigString) => string
       /** Route for handling a guild's preview. */
       preview: (guildId: BigString) => string
       /** Route for handling pruning of a guild. */
@@ -3906,6 +3929,17 @@ export interface RestManager {
    */
   joinThread: (channelId: BigString) => Promise<void>
   /**
+   * Leaves a guild.
+   *
+   * @param guildId - The ID of the guild to leave.
+   *
+   * @remarks
+   * Fires a _Guild Delete_ event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/user#leave-guild}
+   */
+  leaveGuild: (guildId: BigString) => Promise<void>
+  /**
    * Removes the bot user from a thread.
    *
    * @param channelId - The ID of the thread to remove the bot user from.
@@ -4221,6 +4255,24 @@ export interface RestManager {
  */
   kickMember: (guildId: BigString, userId: BigString, reason?: string) => Promise<void>
   /**
+   * Pins a message in a channel.
+   *
+   * @param channelId - The ID of the channel where the message is to be pinned.
+   * @param messageId - The ID of the message to pin.
+   *
+   * @remarks
+   * Requires that the bot user be able to see the contents of the channel in which the messages were posted.
+   *
+   * Requires the `MANAGE_MESSAGES` permission.
+   *
+   * ⚠️ There can only be at max 50 messages pinned in a channel.
+   *
+   * Fires a _Channel Pins Update_ event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#pin-message}
+   */
+  pinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
+  /**
  * Initiates the process of pruning inactive members.
  *
 
@@ -4267,6 +4319,22 @@ export interface RestManager {
  * @see {@link https://discord.com/developers/docs/resources/guild#remove-guild-ban}
  */
   unbanMember: (guildId: BigString, userId: BigString) => Promise<void>
+  /**
+   * Unpins a pinned message in a channel.
+   *
+   * @param channelId - The ID of the channel where the message is pinned.
+   * @param messageId - The ID of the message to unpin.
+   *
+   * @remarks
+   * Requires that the bot user be able to see the contents of the channel in which the messages were posted.
+   *
+   * Requires the `MANAGE_MESSAGES` permission.
+   *
+   * Fires a _Channel Pins Update_ event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#unpin-message}
+   */
+  unpinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'
