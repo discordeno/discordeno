@@ -21,17 +21,15 @@ No matter how little, a change that impacts the public API qualifies as a breaki
 
 ## Why Doesn't Discordeno Use Classes or EventEmitter?
 
-This is a design decision for the lib itself. You can still use class if you want on your bot. In fact, I hope someone
+This is a design decision for the library itself. You can still use class on your bot if you want. In fact, I hope someone
 makes a framework/templates for this lib one day using classes so that devs have a choice on which style they prefer.
-Without trying to write an entire thesis statement on the reasons why I avoided Classes in this lib, I will just link to
-the best resources I believe help explain it.
+Without trying to write an entire thesis statement on the reasons why I avoided Classes in this library, I will just link to
+the best resources that I believe help explain it.
 
 - [Really good article](https://dannyfritz.wordpress.com/2014/10/11/class-free-object-oriented-programming/)
 - [Lecture by one of the developers who makes JavaScript](https://www.youtube.com/watch?v=PSGEjv3Tqo0)
 
-In regards to EventEmitter, I believe a functional event API was a much better choice. EventEmitter at it's core is
-simply just functions that run when a certain event is emitted. In Discordeno, that function is executed instead of
-emitting some event to trigger that function.
+In regards to EventEmitter, I believe a functional event API was a much better choice. EventEmitter at its core, is simply a set of functions that run when a certain event is emitted. In Discordeno, that function is executed instead of emitting some event to trigger it.
 
 ```typescript
 // EventEmitter Example
@@ -47,7 +45,7 @@ issues I had. It prevents anyone from having this as a potential issue. Another 
 update the code in those functions without having to deal with headaches left and right of removing and adding
 listeners. You don't need to worry about binding or not binding events. They are just pure functions
 
-In Discordeno, this is extremely simple, you just simply give it the new event handlers. For example:
+In Discordeno, this is extremely simple; you just simply give it the new event handlers. For example:
 
 ```typescript
 bot.events.guildCreate = newGuildCreateEventHandler;
