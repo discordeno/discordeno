@@ -1,9 +1,9 @@
-import type { AtLeastOne, BigString, Camelize, DiscordGetGatewayBot, DiscordMember, RequestGuildMembers } from '@discordeno/types'
-import { GatewayIntents, GatewayOpcodes } from '@discordeno/types'
-import type { LeakyBucket } from '@discordeno/utils'
-import { Collection, createLeakyBucket, delay } from '@discordeno/utils'
-import Shard from './Shard.js'
-import type { ShardEvents, StatusUpdate, UpdateVoiceState } from './types.js'
+import type { AtLeastOne, BigString, Camelize, DiscordGetGatewayBot, DiscordMember, RequestGuildMembers } from '@discordeno/types';
+import { GatewayIntents, GatewayOpcodes } from '@discordeno/types';
+import type { LeakyBucket } from '@discordeno/utils';
+import { Collection, createLeakyBucket, delay, logger } from '@discordeno/utils';
+import Shard from './Shard.js';
+import type { ShardEvents, StatusUpdate, UpdateVoiceState } from './types.js';
 
 export function createGatewayManager(options: CreateGatewayManagerOptions): GatewayManager {
   if (!options.connection) {
@@ -49,8 +49,12 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
     calculateTotalShards() {
       // Bots under 100k servers do not have access to total shards.
-      if (gateway.totalShards < 100) return gateway.totalShards
+      if (gateway.totalShards < 100) {
+        logger.debug(`[Gateway] Calculating total shards: ${gateway.totalShards}`);
+        return gateway.totalShards
+      }
 
+      logger.debug(`[Gateway] Calculating total shards`, gateway.totalShards, gateway.connection.sessionStartLimit.maxConcurrency);
       // Calculate a multiple of `maxConcurrency` which can be used to connect to the gateway.
       return (
         Math.ceil(
@@ -69,10 +73,13 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         workerId = gateway.totalWorkers - 1
       }
 
+      logger.debug(`[Gateway] Calculating workerId: Shard: ${shardId} -> Worker: ${workerId} -> Per Worker: ${gateway.shardsPerWorker} -> Total: ${gateway.totalWorkers}`);
+
       return workerId
     },
     prepareBuckets() {
       for (let i = 0; i < gateway.connection.sessionStartLimit.maxConcurrency; ++i) {
+        logger.debug(`[Gateway] Preparing buckets for concurrency: ${i}`);
         gateway.buckets.set(i, {
           workers: [],
           leak: createLeakyBucket({
@@ -86,13 +93,14 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
       // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
       for (let shardId = gateway.firstShardId; shardId <= gateway.lastShardId; ++shardId) {
+        logger.debug(`[Gateway] Preparing buckets for shard: ${shardId}`);
         if (shardId >= gateway.totalShards) {
           throw new Error(`Shard (id: ${shardId}) is bigger or equal to the used amount of used shards which is ${gateway.totalShards}`)
         }
 
         const bucketId = shardId % gateway.connection.sessionStartLimit.maxConcurrency
         const bucket = gateway.buckets.get(bucketId)
-        if (bucket == null) {
+        if (!bucket) {
           throw new Error(
             `Shard (id: ${shardId}) got assigned to an illegal bucket id: ${bucketId}, expected a bucket id between 0 and ${
               gateway.connection.sessionStartLimit.maxConcurrency - 1
@@ -126,13 +134,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           }
         }),
       )
-      // gateway.buckets.forEach(async (bucket, bucketId) => {
-      //   for (const worker of bucket.workers) {
-      //     for (const shardId of worker.queue) {
-      //       await gateway.tellWorkerToIdentify(worker.id, shardId, bucketId)
-      //     }
-      //   }
-      // })
     },
     async shutdown(code, reason) {
       gateway.shards.forEach((shard) => shard.close(code, reason))
@@ -140,10 +141,13 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       await delay(5000)
     },
     async tellWorkerToIdentify(workerId, shardId, bucketId) {
+      logger.debug(`[Gateway] tell worker to identify (${workerId}, ${shardId}, ${bucketId})`)
       return await gateway.identify(shardId)
     },
     async identify(shardId: number) {
       let shard = this.shards.get(shardId)
+      logger.debug(`[Gateway] identifying ${shard ? 'existing' : 'new'} shard (${shardId})`)
+
       if (!shard) {
         shard = new Shard({
           id: shardId,
@@ -166,13 +170,18 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     },
     async kill(shardId: number) {
       const shard = this.shards.get(shardId)
-      if (!shard) return
+      if (!shard) {
+        return logger.debug(`[Gateway] kill shard but not found (${shardId})`)
+      }
 
+      logger.debug(`[Gateway] kill shard (${shardId})`)
       this.shards.delete(shardId)
       return await shard.shutdown()
     },
 
-    async requestIdentify() {},
+    async requestIdentify() {
+      logger.debug(`[Gateway] requesting identify`)
+    },
 
     // Helpers methods below this
 
@@ -180,8 +189,12 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       // If none is provided, use the total shards number from gateway object.
       if (!totalShards) totalShards = gateway.totalShards
       // If it is only 1 shard, it will always be shard id 0
-      if (totalShards === 1) return 0
+      if (totalShards === 1) {
+        logger.debug(`[Gateway] calculateShardId (1 shard)`);
+        return 0
+      }
 
+      logger.debug(`[Gateway] calculateShardId (guildId: ${guildId}, totalShards: ${totalShards})`);
       return Number((BigInt(guildId) >> 22n) % BigInt(totalShards))
     },
 
@@ -192,6 +205,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         throw new Error(`Shard (id: ${shardId} not found`)
       }
 
+      logger.debug(`[Gateway] connectToVoiceChannel guildId: ${guildId} channelId: ${channelId}`)
       return await shard.send({
         op: GatewayOpcodes.VoiceStateUpdate,
         d: {
@@ -204,6 +218,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     },
 
     async editBotStatus(data) {
+      logger.debug(`[Gateway] editBotStatus data: ${JSON.stringify(data)}`)
       await Promise.all(
         [...gateway.shards.values()].map(async (shard) => {
           gateway.editShardStatus(shard.id, data)
@@ -217,6 +232,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         throw new Error(`Shard (id: ${shardId}) not found.`)
       }
 
+      logger.debug(`[Gateway] editShardStatus shardId: ${shardId} -> data: ${JSON.stringify(data)}`)
       return await shard.send({
         op: GatewayOpcodes.PresenceUpdate,
         d: {
@@ -236,6 +252,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       }
 
       if (options?.userIds?.length) {
+        logger.debug(`[Gateway] requestMembers guildId: ${guildId} -> setting user limit based on userIds length: ${options.userIds.length}`)
         options.limit = options.userIds.length
       }
 
@@ -249,6 +266,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
       // Gateway does not require caching these requests so directly send and return
       if (!gateway.cache.requestMembers?.enabled) {
+        logger.debug(`[Gateway] requestMembers guildId: ${guildId} -> skipping cache -> options ${JSON.stringify(options)}`)
         await shard.send({
           op: GatewayOpcodes.RequestGuildMembers,
           d: {
@@ -267,6 +285,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       return await new Promise((resolve) => {
         gateway.cache.requestMembers?.pending.set(nonce, { nonce, resolve, members: [] })
 
+        logger.debug(`[Gateway] requestMembers guildId: ${guildId} -> requesting members -> data: ${JSON.stringify(options)}`)
         shard.send({
           op: GatewayOpcodes.RequestGuildMembers,
           d: {
@@ -289,7 +308,8 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         throw new Error(`Shard (id: ${shardId} not found`)
       }
 
-      return shard.send({
+      logger.debug(`[Gateway] leaveVoiceChannel guildId: ${guildId}`)
+      return await shard.send({
         op: GatewayOpcodes.VoiceStateUpdate,
         d: {
           guild_id: guildId.toString(),
