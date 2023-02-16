@@ -917,7 +917,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             logger.debug(`Request to ${url} exceeded the maximum allowed retries.`, 'with payload:', payload)
             // rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(options)}`)
             // Remove item from queue to prevent retry
-            return options.reject?.({
+            return options.reject({
               ok: false,
               status: response.status,
               error: 'The options was rate limited and it maxed out the retries limit.',
@@ -933,13 +933,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           return await options.retryRequest?.(options)
         }
 
-        return options.reject(await response.json())
+        return options.reject({ ok: false, status: response.status, body: JSON.stringify(await response.json()) })
       }
 
-      // Discord sometimes sends no response
-      if (response.status === 204) return options.resolve(undefined)
-
-      options.resolve(await response.json())
+      const is204 = response.status === 204
+      const json = is204 ? undefined : await response.json()
+      // Discord sometimes sends no response with 204 code
+      return options.resolve({ ok: true, status: response.status, body: JSON.stringify(json) })
     },
 
     // Credits: github.com/abalabahaha/eris lib/rest/RequestHandler.js#L397
@@ -1001,7 +1001,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             // TODO: should change to reprocess queue item
             await rest.sendRequest(options)
           },
-          resolve,
+          resolve: (data) => resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined),
           reject,
           options,
         })
@@ -1669,7 +1669,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             // TODO: should change to reprocess queue item
             await rest.sendRequest(options)
           },
-          resolve,
+          resolve: (data) => resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined),
           reject,
         })
       })
@@ -1686,7 +1686,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             // TODO: should change to reprocess queue item
             await rest.sendRequest(options)
           },
-          resolve,
+          resolve: (data) => resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined),
           reject,
         })
       })
@@ -4373,7 +4373,7 @@ export interface SendRequestOptions {
   /** Handler to retry a request should it be rate limited. */
   retryRequest?: (options: SendRequestOptions) => Promise<void>
   /** Resolve handler when a request succeeds. */
-  resolve: (value: any | PromiseLike<any>) => void
+  resolve: (value: RestRequestResponse) => void
   /** Reject handler when a request fails. */
   reject: (reason?: any) => void
   /** If this request has a bucket id which it falls under for rate limit */
@@ -4465,4 +4465,10 @@ export interface BeginGuildPrune {
   computePruneCount?: boolean
   /** Role(s) ro include, default: none */
   includeRoles?: string[]
+}
+
+export interface RestRequestResponse {
+  ok: boolean
+  status: number
+  body?: string
 }
