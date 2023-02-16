@@ -1,11 +1,11 @@
-// @ts-nocheck too annoying to fix type errors atm
-
 /* eslint-disable no-useless-call */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-dynamic-delete */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { Shard as DiscordenoShard } from '@discordeno/gateway'
+import type { Camelize, DiscordMember } from '@discordeno/types'
 import {
   ChannelTypes,
   GatewayOpcodes,
@@ -23,7 +23,6 @@ import {
   type DiscordGuildRoleCreate,
   type DiscordGuildRoleDelete,
   type DiscordGuildRoleUpdate,
-  type DiscordHello,
   type DiscordInteraction,
   type DiscordInviteCreate,
   type DiscordInviteDelete,
@@ -77,7 +76,7 @@ import type {
   TextableChannel,
 } from '../typings.js'
 import type BrowserWebSocket from '../utils/BrowserWebSocket.js'
-import Bucket from '../utils/Bucket.js'
+import type Bucket from '../utils/Bucket.js'
 
 export class Shard extends EventEmitter {
   client: Client
@@ -89,7 +88,7 @@ export class Shard extends EventEmitter {
   getAllUsersLength: number = 0
   getAllUsersQueue: unknown[] = []
   globalBucket!: Bucket
-  guildCreateTimeout: number | null = null
+  guildCreateTimeout: NodeJS.Timeout | null = null
   guildSyncQueue: string[] = []
   guildSyncQueueLength: number = 0
   heartbeatInterval: number | null = null
@@ -111,6 +110,8 @@ export class Shard extends EventEmitter {
   unsyncedGuilds: number = 0
   ws: WebSocket | BrowserWebSocket | null = null
 
+  discordeno: DiscordenoShard
+
   constructor(id: number, client: Client) {
     super()
 
@@ -122,6 +123,25 @@ export class Shard extends EventEmitter {
     this._onWSMessage = this._onWSMessage.bind(this)
     this._onWSError = this._onWSError.bind(this)
     this._onWSClose = this._onWSClose.bind(this)
+
+    this.discordeno = new DiscordenoShard({
+      id: this.id,
+      // TODO: shard events
+      events: {},
+      connection: {
+        compress: this.client.options.compress,
+        intents: this.client.options.intents,
+        properties: {
+          os: process.platform,
+          browser: 'Discordeno',
+          device: 'Discordeno',
+        },
+        token: this.client.token,
+        totalShards: this.client.options.maxShards as number,
+        url: this.client.gatewayURL,
+        version: this.client.apiVersion,
+      },
+    })
 
     this.hardReset()
   }
@@ -145,14 +165,8 @@ export class Shard extends EventEmitter {
   }
 
   /** Tells the shard to connect */
-  connect() {
-    if (this.ws && this.ws.readyState !== WebSocket.CLOSED) {
-      this.emit('error', new Error('Existing connection detected'), this.id)
-      return
-    }
-    ++this.connectAttempts
-    this.connecting = true
-    return this.initializeWS()
+  async connect() {
+    return await this.discordeno.connect()
   }
 
   createGuild(guild: Guild) {
@@ -163,98 +177,24 @@ export class Shard extends EventEmitter {
   }
 
   /** Disconnects the shard */
-  disconnect(options: { reconnect?: boolean | 'auto' } = {}, error?: Error) {
-    if (!this.ws) {
-      return
-    }
-
-    if (this.heartbeatInterval) {
-      clearInterval(this.heartbeatInterval)
-      this.heartbeatInterval = null
-    }
-
-    if (this.ws.readyState !== WebSocket.CLOSED) {
-      this.ws.removeEventListener('message', this._onWSMessage)
-      this.ws.removeEventListener('close', this._onWSClose)
-      try {
-        if (options.reconnect && this.sessionID) {
-          if (this.ws.readyState === WebSocket.OPEN) {
-            this.ws.close(4901, 'Eris: reconnect')
-          } else {
-            this.emit('debug', `Terminating websocket (state: ${this.ws.readyState})`, this.id)
-            this.ws.close(1000, `Terminating websocket (state: ${this.ws.readyState})`)
-          }
-        } else {
-          this.ws.close(1000, 'Eris: normal')
-        }
-      } catch (err) {
-        this.emit('error', err, this.id)
-      }
-    }
-    this.ws = null
-    this.reset()
-
-    if (error) {
-      this.emit('error', error, this.id)
-    }
-
-    super.emit('disconnect', error)
-
-    if (this.sessionID && this.connectAttempts >= this.client.options.maxResumeAttempts) {
-      this.emit('debug', `Automatically invalidating session due to excessive resume attempts | Attempt ${this.connectAttempts}`, this.id)
-      this.sessionID = null
-    }
-
-    if (options.reconnect === 'auto' && this.client.options.autoreconnect) {
-      if (this.sessionID) {
-        this.emit('debug', `Immediately reconnecting for potential resume | Attempt ${this.connectAttempts}`, this.id)
-        this.client.shards.connect(this)
-      } else {
-        this.emit('debug', `Queueing reconnect in ${this.reconnectInterval}ms | Attempt ${this.connectAttempts}`, this.id)
-        setTimeout(() => {
-          this.client.shards.connect(this)
-        }, this.reconnectInterval)
-        this.reconnectInterval = Math.min(Math.round(this.reconnectInterval * (Math.random() * 2 + 1)), 30000)
-      }
-    } else if (!options.reconnect) {
-      this.hardReset()
-    }
+  async disconnect(options: { reconnect?: boolean | 'auto' } = {}, error?: Error) {
+    return await this.discordeno.shutdown()
   }
 
   /**
    * Update the bot's AFK status.
+   * @deprecated self bot functionality
    */
-  editAFK(afk: boolean) {
-    this.presence.afk = !!afk
-
-    this.sendStatusUpdate()
-  }
+  editAFK(_afk: boolean) {}
 
   /**
    * Updates the bot's status on all guilds the shard is in
    */
-  editStatus(status: SelfStatus, activities?: Array<ActivityPartial<BotActivityType>> | ActivityPartial<BotActivityType>) {
-    if (activities === undefined && typeof status === 'object') {
-      activities = status
-      // @ts-expect-error
-      status = undefined
-    }
-    if (status) {
-      this.presence.status = status
-    }
-    if (activities === null) {
-      activities = []
-    } else if (activities && !Array.isArray(activities)) {
-      activities = [activities]
-    }
-    if (activities !== undefined) {
-      if (activities.length > 0 && !activities[0].hasOwnProperty('type')) {
-        activities[0].type = activities[0].url ? 1 : 0
-      }
-      this.presence.activities = activities
-    }
+  async editStatus(status: SelfStatus, activities?: Array<ActivityPartial<BotActivityType>> | ActivityPartial<BotActivityType>) {
+    // Selfbots
+    if (status === "invisible") return;
 
-    this.sendStatusUpdate()
+    return await this.discordeno.editShardStatus({ status, activities })
   }
 
   emit(event: string, ...args: any[]) {
@@ -266,265 +206,63 @@ export class Shard extends EventEmitter {
     return false
   }
 
-  getGuildMembers(guildID: string, timeout: number) {
-    if (this.getAllUsersCount.hasOwnProperty(guildID)) {
-      throw new Error('Cannot request all members while an existing request is processing')
-    }
-    this.getAllUsersCount[guildID] = true
-    // Using intents, request one guild at a time
-    if (this.client.options.intents) {
-      if (!(this.client.options.intents & Intents.GuildMembers)) {
-        throw new Error('Cannot request all members without guildMembers intent')
-      }
-      this.requestGuildMembers(guildID, { timeout })
-    } else {
-      if (this.getAllUsersLength + 3 + guildID.length > 4048) {
-        // 4096 - "{\"op\":8,\"d\":{\"guild_id\":[],\"query\":\"\",\"limit\":0}}".length + 1 for lazy comma offset
-        this.requestGuildMembers(this.getAllUsersQueue)
-        this.getAllUsersQueue = [guildID]
-        this.getAllUsersLength = 1 + guildID.length + 3
-      } else {
-        this.getAllUsersQueue.push(guildID)
-        this.getAllUsersLength += guildID.length + 3
-      }
-    }
+  async getGuildMembers(guildID: string, timeout: number): Promise<Camelize<DiscordMember[]>> {
+    return await this.discordeno.requestMembers(guildID)
   }
 
+  /**
+   * @deprecated this is not really necessary for dd gateway functionality
+   */
   hardReset() {
-    this.reset()
-    this.seq = 0
-    this.sessionID = null
-    this.reconnectInterval = 1000
-    this.connectAttempts = 0
-    this.ws = null
-    this.heartbeatInterval = null
-    this.guildCreateTimeout = null
-    this.globalBucket = new Bucket(120, 60000, { reservedTokens: 5 })
-    this.presenceUpdateBucket = new Bucket(5, 20000)
-    this.presence = JSON.parse(JSON.stringify(this.client.presence))
+    // this.reset()
+    // this.seq = 0
+    // this.sessionID = null
+    // this.reconnectInterval = 1000
+    // this.connectAttempts = 0
+    // this.ws = null
+    // this.heartbeatInterval = null
+    // this.guildCreateTimeout = null
+    // this.globalBucket = new Bucket(120, 60000, { reservedTokens: 5 })
+    // this.presenceUpdateBucket = new Bucket(5, 20000)
+    // this.presence = JSON.parse(JSON.stringify(this.client.presence))
   }
 
-  heartbeat(normal?: boolean) {
-    // Can only heartbeat after identify/resume succeeds, session will be killed otherwise, discord/discord-api-docs#1619
-    if (this.status === 'resuming' || this.status === 'identifying') {
-      return
-    }
-    if (normal) {
-      if (!this.lastHeartbeatAck) {
-        this.emit(
-          'debug',
-          'Heartbeat timeout; ' +
-            JSON.stringify({
-              lastReceived: this.lastHeartbeatReceived,
-              lastSent: this.lastHeartbeatSent,
-              interval: this.heartbeatInterval,
-              status: this.status,
-              timestamp: Date.now(),
-            }),
-        )
-        return this.disconnect(
-          {
-            reconnect: 'auto',
-          },
-          new Error("Server didn't acknowledge previous heartbeat, possible lost connection"),
-        )
-      }
-      this.lastHeartbeatAck = false
-    }
-    this.lastHeartbeatSent = Date.now()
-    this.sendWS(GatewayOpcodes.Heartbeat, this.seq, true)
+  heartbeat(_normal?: boolean) {
+    if (!this.discordeno.isOpen()) return
+
+    this.discordeno.heart.lastBeat = Date.now()
+    // Discord randomly sends this requiring an immediate heartbeat back.
+    // Using a direct socket.send call here because heartbeat requests are reserved by us.
+    this.discordeno.socket?.send(
+      JSON.stringify({
+        op: GatewayOpcodes.Heartbeat,
+        d: this.discordeno.previousSequenceNumber,
+      }),
+    )
+    this.discordeno.events.heartbeat?.(this.discordeno)
   }
 
-  identify() {
-    this.status = 'identifying'
-    const identify = {
-      token: this.client.token,
-      v: API_VERSION,
-      compress: !!this.client.options.compress,
-      large_threshold: this.client.options.largeThreshold,
-      intents: this.client.options.intents,
-      properties: {
-        os: process.platform,
-        browser: 'Eris',
-        device: 'Eris',
-      },
-      shard: this.client.options.maxShards > 1 ? [this.id, this.client.options.maxShards] : undefined,
-      presence: this.presence.status ? this.presence : undefined,
-    }
-    this.sendWS(GatewayOpcodes.Identify, identify)
+  async identify() {
+    return await this.discordeno.identify()
   }
 
-  initializeWS() {
-    if (!this.token) {
-      return this.disconnect(null, new Error('Token not specified'))
-    }
+  /**
+   * @deprecated done in connect()
+   */
+  initializeWS() {}
 
-    this.status = 'connecting'
-    if (this.client.options.compress) {
-      this.emit('debug', 'Initializing zlib-sync-based compression')
-    }
-    this.ws = new WebSocket(this.client.gatewayURL, this.client.options.ws)
-    this.ws.addEventListener('open', this._onWSOpen)
-    this.ws.addEventListener('message', this._onWSMessage)
-    this.ws.addEventListener('error', this._onWSError)
-    this.ws.addEventListener('close', this._onWSClose)
-
-    this.connectTimeout = setTimeout(() => {
-      if (this.connecting) {
-        this.disconnect(
-          {
-            reconnect: 'auto',
-          },
-          new Error('Connection timeout'),
-        )
-      }
-    }, this.client.options.connectionTimeout)
-  }
-
-  onPacket(packet: DiscordGatewayPayload) {
-    if (this.listeners('rawWS').length > 0 || this.client.listeners('rawWS').length) {
-      this.emit('rawWS', packet, this.id)
-    }
-
-    if (packet.s) {
-      if (packet.s > this.seq + 1 && this.ws && this.status !== 'resuming') {
-        this.emit('warn', `Non-consecutive sequence (${this.seq} -> ${packet.s})`, this.id)
-      }
-      this.seq = packet.s
-    }
-
-    switch (packet.op) {
-      case GatewayOpcodes.Dispatch: {
-        if (!this.client.options.disableEvents[packet.t]) {
-          this.wsEvent(packet)
-        }
-        break
-      }
-      case GatewayOpcodes.Heartbeat: {
-        this.heartbeat()
-        break
-      }
-      case GatewayOpcodes.InvalidSession: {
-        this.seq = 0
-        this.sessionID = null
-        this.emit('warn', 'Invalid session, reidentifying!', this.id)
-        this.identify()
-        break
-      }
-      case GatewayOpcodes.Reconnect: {
-        this.emit('debug', 'Reconnecting due to server request', this.id)
-        this.disconnect({
-          reconnect: 'auto',
-        })
-        break
-      }
-      case GatewayOpcodes.Hello: {
-        if ((packet.d as DiscordHello).heartbeat_interval > 0) {
-          if (this.heartbeatInterval) {
-            clearInterval(this.heartbeatInterval)
-          }
-          this.heartbeatInterval = setInterval(() => this.heartbeat(true), (packet.d as DiscordHello).heartbeat_interval)
-        }
-
-        // @ts-expect-error js hacks
-        this.discordServerTrace = packet.d._trace
-        this.connecting = false
-        if (this.connectTimeout) {
-          clearTimeout(this.connectTimeout)
-        }
-        this.connectTimeout = null
-
-        if (this.sessionID) {
-          this.resume()
-        } else {
-          this.identify()
-          // Cannot heartbeat when resuming, discord/discord-api-docs#1619
-          this.heartbeat()
-        }
-
-        // @ts-expect-error js hacks
-        this.emit('hello', packet.d._trace, this.id)
-        break /* eslint-enable no-unreachable */
-      }
-      case GatewayOpcodes.HeartbeatACK: {
-        this.lastHeartbeatAck = true
-        this.lastHeartbeatReceived = Date.now()
-        this.latency = this.lastHeartbeatReceived - (this.lastHeartbeatSent ?? 0)
-        break
-      }
-      default: {
-        this.emit('unknown', packet, this.id)
-        break
-      }
-    }
+  async onPacket(packet: DiscordGatewayPayload) {
+    return await this.discordeno.handleDiscordPacket(packet)
   }
 
   async requestGuildMembers(guildID: string, options?: RequestGuildMembersOptions) {
-    const opts = {
-      guild_id: guildID,
-      limit: options?.limit ?? 0,
-      user_ids: options?.user_ids,
-      query: options?.query,
-      nonce: Date.now().toString() + Math.random().toString(36),
-      presences: options?.presences,
-    }
-    if (!opts.user_ids && !opts.query) {
-      opts.query = ''
-    }
-    if (!opts.query && !opts.user_ids && this.client.options.intents && !(this.client.options.intents & Intents.GuildMembers)) {
-      throw new Error('Cannot request all members without guildMembers intent')
-    }
-    if (opts.presences && this.client.options.intents && !(this.client.options.intents & Intents.GuildPresences)) {
-      throw new Error('Cannot request members presences without guildPresences intent')
-    }
-    if (opts.user_ids && opts.user_ids.length > 100) {
-      throw new Error('Cannot request more than 100 users by their ID')
-    }
-    this.sendWS(GatewayOpcodes.RequestGuildMembers, opts)
-    return await new Promise(
-      (resolve) =>
-        (this.requestMembersPromise[opts.nonce] = {
-          resolve,
-          received: 0,
-          members: [],
-          timeout: setTimeout(() => {
-            resolve(this.requestMembersPromise[opts.nonce].members)
-            delete this.requestMembersPromise[opts.nonce]
-          }, options?.timeout ?? this.client.options.requestTimeout),
-        }),
-    )
+    return await this.discordeno.requestMembers(guildID, options ?? {})
   }
 
-  reset() {
-    this.connecting = false
-    this.ready = false
-    this.preReady = false
-    if (this.requestMembersPromise !== undefined) {
-      for (const guildID in this.requestMembersPromise) {
-        if (!this.requestMembersPromise.hasOwnProperty(guildID)) {
-          continue
-        }
-        clearTimeout(this.requestMembersPromise[guildID].timeout)
-        this.requestMembersPromise[guildID].res(this.requestMembersPromise[guildID].received)
-      }
-    }
-    this.requestMembersPromise = {}
-    this.getAllUsersCount = {}
-    this.getAllUsersQueue = []
-    this.getAllUsersLength = 1
-    this.guildSyncQueue = []
-    this.guildSyncQueueLength = 1
-    this.unsyncedGuilds = 0
-    this.latency = Infinity
-    this.lastHeartbeatAck = true
-    this.lastHeartbeatReceived = null
-    this.lastHeartbeatSent = null
-    this.status = 'disconnected'
-    if (this.connectTimeout) {
-      clearTimeout(this.connectTimeout)
-    }
-    this.connectTimeout = null
-  }
+  /**
+   * @deprecated Not necessarily used in dd style
+   */
+  reset() {}
 
   restartGuildCreateTimeout() {
     if (this.guildCreateTimeout) {

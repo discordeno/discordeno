@@ -1,9 +1,19 @@
-import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discordeno/types'
-import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
-import { camelize, createLeakyBucket, delay } from '@discordeno/utils'
+import type {
+  AtLeastOne,
+  BigString,
+  Camelize,
+  DiscordGatewayPayload,
+  DiscordHello,
+  DiscordMember,
+  DiscordReady,
+  RequestGuildMembers,
+} from '@discordeno/types'
+import { GatewayCloseEventCodes, GatewayIntents, GatewayOpcodes } from '@discordeno/types'
+import { camelize, Collection, createLeakyBucket, delay, logger } from '@discordeno/utils'
 import { inflateSync } from 'node:zlib'
 import WebSocket from 'ws'
-import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest } from './types.js'
+import type { RequestMemberRequest } from './manager.js'
+import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest, StatusUpdate, UpdateVoiceState } from './types.js'
 import { ShardSocketCloseCodes, ShardState } from './types.js'
 
 export class Shard {
@@ -39,6 +49,19 @@ export class Shard {
     refillInterval: 60000,
     refillAmount: 120,
   })
+
+  /** This managers cache related settings. */
+  cache = {
+    requestMembers: {
+      /**
+       * Whether or not request member requests should be cached.
+       * @default false
+       */
+      enabled: false,
+      /** The pending requests. */
+      pending: new Collection<string, RequestMemberRequest>(),
+    },
+  }
 
   constructor(options: ShardCreateOptions) {
     this.id = options.id
@@ -316,21 +339,8 @@ export class Shard {
     }
   }
 
-  /** Handle an incoming gateway message. */
-  async handleMessage(message: WebSocket.MessageEvent): Promise<void> {
-    let preProcessMessage = message.data
-
-    // If message compression is enabled,
-    // Discord might send zlib compressed payloads.
-    if (this.gatewayConfig.compress && preProcessMessage instanceof Blob) {
-      preProcessMessage = inflateSync(await preProcessMessage.arrayBuffer()).toString()
-    }
-
-    // Safeguard incase decompression failed to make a string.
-    if (typeof preProcessMessage !== 'string') return
-
-    const messageData = JSON.parse(preProcessMessage) as DiscordGatewayPayload
-
+  /** Handles a incoming gateway packet. */
+  async handleDiscordPacket(packet: DiscordGatewayPayload): Promise<void> {
     // Edge case start: https://github.com/discordeno/discordeno/issues/2311
     this.heart.lastAck = Date.now()
     // Manually calculating the round trip time for users who need it.
@@ -340,7 +350,7 @@ export class Shard {
     this.heart.acknowledged = true
     // Edge case end!
 
-    switch (messageData.op) {
+    switch (packet.op) {
       case GatewayOpcodes.Heartbeat: {
         // TODO: can this actually happen
         if (!this.isOpen()) return
@@ -359,7 +369,7 @@ export class Shard {
         break
       }
       case GatewayOpcodes.Hello: {
-        const interval = (messageData.d as DiscordHello).heartbeat_interval
+        const interval = (packet.d as DiscordHello).heartbeat_interval
 
         this.startHeartbeating(interval)
 
@@ -395,8 +405,8 @@ export class Shard {
         break
       }
       case GatewayOpcodes.InvalidSession: {
-        //   gateway.debug("GW INVALID_SESSION", { shardId, payload: messageData });
-        const resumable = messageData.d as boolean
+        //   gateway.debug("GW INVALID_SESSION", { shardId, payload: packet });
+        const resumable = packet.d as boolean
 
         this.events.invalidSession?.(this, resumable)
 
@@ -404,7 +414,7 @@ export class Shard {
         // Reference: https://discord.com/developers/docs/topics/gateway#resuming
         await delay(Math.floor((Math.random() * 4 + 1) * 1000))
 
-        this.resolves.get('INVALID_SESSION')?.(messageData)
+        this.resolves.get('INVALID_SESSION')?.(packet)
         this.resolves.delete('INVALID_SESSION')
 
         // When resumable is false we need to re-identify
@@ -421,7 +431,7 @@ export class Shard {
       }
     }
 
-    if (messageData.t === 'RESUMED') {
+    if (packet.t === 'RESUMED') {
       // gateway.debug("GW RESUMED", { shardId });
 
       this.state = ShardState.Connected
@@ -430,12 +440,12 @@ export class Shard {
       // Continue the requests which have been queued since the shard went offline.
       this.offlineSendQueue.map((resolve) => resolve())
 
-      this.resolves.get('RESUMED')?.(messageData)
+      this.resolves.get('RESUMED')?.(packet)
       this.resolves.delete('RESUMED')
-    } else if (messageData.t === 'READY') {
+    } else if (packet.t === 'READY') {
       // Important for future resumes.
 
-      const payload = messageData.d as DiscordReady
+      const payload = packet.d as DiscordReady
 
       this.resumeGatewayUrl = payload.resume_gateway_url
 
@@ -446,20 +456,36 @@ export class Shard {
       // Important when this is a re-identify
       this.offlineSendQueue.map((resolve) => resolve())
 
-      this.resolves.get('READY')?.(messageData)
+      this.resolves.get('READY')?.(packet)
       this.resolves.delete('READY')
     }
 
     // Update the sequence number if it is present
     // `s` can be either `null` or a `number`.
     // In order to prevent update misses when `s` is `0` we check against null.
-    if (messageData.s !== null) {
-      this.previousSequenceNumber = messageData.s
+    if (packet.s !== null) {
+      this.previousSequenceNumber = packet.s
     }
 
     // The necessary handling required for the Shards connection has been finished.
     // Now the event can be safely forwarded.
-    this.events.message?.(this, camelize(messageData))
+    this.events.message?.(this, camelize(packet))
+  }
+
+  /** Handle an incoming gateway message. */
+  async handleMessage(message: WebSocket.MessageEvent): Promise<void> {
+    let preProcessMessage = message.data
+
+    // If message compression is enabled,
+    // Discord might send zlib compressed payloads.
+    if (this.gatewayConfig.compress && preProcessMessage instanceof Blob) {
+      preProcessMessage = inflateSync(await preProcessMessage.arrayBuffer()).toString()
+    }
+
+    // Safeguard incase decompression failed to make a string.
+    if (typeof preProcessMessage !== 'string') return
+
+    return await this.handleDiscordPacket(JSON.parse(preProcessMessage) as DiscordGatewayPayload)
   }
 
   /**
@@ -550,6 +576,168 @@ export class Shard {
     // It's possible that the Shard got closed before the first jittered heartbeat.
     // To go safe we should clear the related timeout too.
     clearTimeout(this.heart.timeoutId)
+  }
+
+  /**
+   * Connects the bot user to a voice or stage channel.
+   *
+   * This function sends the _Update Voice State_ gateway command over the gateway behind the scenes.
+   *
+   * @param guildId - The ID of the guild the voice channel to leave is in.
+   * @param channelId - The ID of the channel you want to join.
+   *
+   * @remarks
+   * Requires the `CONNECT` permission.
+   *
+   * Fires a _Voice State Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/topics/gateway#update-voice-state}
+   */
+  async joinVoiceChannel(
+    guildId: BigString,
+    channelId: BigString,
+    options?: AtLeastOne<Omit<UpdateVoiceState, 'guildId' | 'channelId'>>,
+  ): Promise<void> {
+    logger.debug(`[Shard] joinVoiceChannel guildId: ${guildId} channelId: ${channelId}`)
+    return await this.send({
+      op: GatewayOpcodes.VoiceStateUpdate,
+      d: {
+        guild_id: guildId.toString(),
+        channel_id: channelId.toString(),
+        self_mute: Boolean(options?.selfMute),
+        self_deaf: options?.selfDeaf ?? true,
+      },
+    })
+  }
+
+  /**
+   * Edits the bot status in all shards that this gateway manages.
+   *
+   * @param data The status data to set the bots status to.
+   * @returns Promise<void>
+   */
+  async editBotStatus(data: StatusUpdate): Promise<void> {
+    logger.debug(`[Shard] editBotStatus data: ${JSON.stringify(data)}`)
+    return await this.editShardStatus(data)
+  }
+
+  /**
+   * Edits the bot's status on one shard.
+   *
+   * @param shardId The shard id to edit the status for.
+   * @param data The status data to set the bots status to.
+   * @returns Promise<void>
+   */
+  async editShardStatus(data: StatusUpdate): Promise<void> {
+    logger.debug(`[Shard] editShardStatus shardId: ${this.id} -> data: ${JSON.stringify(data)}`)
+    return await this.send({
+      op: GatewayOpcodes.PresenceUpdate,
+      d: {
+        since: null,
+        afk: false,
+        activities: data.activities,
+        status: data.status,
+      },
+    })
+  }
+
+  /**
+   * Fetches the list of members for a guild over the gateway.
+   *
+   * @param guildId - The ID of the guild to get the list of members for.
+   * @param options - The parameters for the fetching of the members.
+   *
+   * @remarks
+   * If requesting the entire member list:
+   * - Requires the `GUILD_MEMBERS` intent.
+   *
+   * If requesting presences ({@link RequestGuildMembers.presences | presences} set to `true`):
+   * - Requires the `GUILD_PRESENCES` intent.
+   *
+   * If requesting a prefix ({@link RequestGuildMembers.query | query} non-`undefined`):
+   * - Returns a maximum of 100 members.
+   *
+   * If requesting a users by ID ({@link RequestGuildMembers.userIds | userIds} non-`undefined`):
+   * - Returns a maximum of 100 members.
+   *
+   * Fires a _Guild Members Chunk_ gateway event for every 1000 members fetched.
+   *
+   * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
+   */
+  async requestMembers(guildId: BigString, options?: Omit<RequestGuildMembers, 'guildId'>): Promise<Camelize<DiscordMember[]>> {
+    // You can request 1 member without the intent
+    // Check if intents is not 0 as proxy ws won't set intents in other instances
+    if (this.connection.intents && (!options?.limit || options.limit > 1) && !(this.connection.intents & GatewayIntents.GuildMembers)) {
+      throw new Error('MISSING_INTENT_GUILD_MEMBERS')
+    }
+
+    if (options?.userIds?.length) {
+      logger.debug(`[Shard] requestMembers guildId: ${guildId} -> setting user limit based on userIds length: ${options.userIds.length}`)
+      options.limit = options.userIds.length
+    }
+
+    const nonce = `${guildId}-${Date.now()}`
+
+    // Gateway does not require caching these requests so directly send and return
+    if (!this.cache.requestMembers?.enabled) {
+      logger.debug(`[Shard] requestMembers guildId: ${guildId} -> skipping cache -> options ${JSON.stringify(options)}`)
+      await this.send({
+        op: GatewayOpcodes.RequestGuildMembers,
+        d: {
+          guild_id: guildId.toString(),
+          // If a query is provided use it, OR if a limit is NOT provided use ""
+          query: options?.query ?? (options?.limit ? undefined : ''),
+          limit: options?.limit ?? 0,
+          presences: options?.presences ?? false,
+          user_ids: options?.userIds?.map((id) => id.toString()),
+          nonce,
+        },
+      })
+      return []
+    }
+
+    return await new Promise((resolve) => {
+      this.cache.requestMembers?.pending.set(nonce, { nonce, resolve, members: [] })
+
+      logger.debug(`[Shard] requestMembers guildId: ${guildId} -> requesting members -> data: ${JSON.stringify(options)}`)
+      this.send({
+        op: GatewayOpcodes.RequestGuildMembers,
+        d: {
+          guild_id: guildId.toString(),
+          // If a query is provided use it, OR if a limit is NOT provided use ""
+          query: options?.query ?? (options?.limit ? undefined : ''),
+          limit: options?.limit ?? 0,
+          presences: options?.presences ?? false,
+          user_ids: options?.userIds?.map((id) => id.toString()),
+          nonce,
+        },
+      })
+    })
+  }
+
+  /**
+   * Leaves the voice channel the bot user is currently in.
+   *
+   * This function sends the _Update Voice State_ gateway command over the gateway behind the scenes.
+   *
+   * @param guildId - The ID of the guild the voice channel to leave is in.
+   *
+   * @remarks
+   * Fires a _Voice State Update_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/topics/gateway#update-voice-state}
+   */
+  async leaveVoiceChannel(guildId: BigString): Promise<void> {
+    logger.debug(`[Shard] leaveVoiceChannel guildId: ${guildId} Shard ${this.id}`)
+    return await this.send({
+      op: GatewayOpcodes.VoiceStateUpdate,
+      d: {
+        guild_id: guildId.toString(),
+        channel_id: null,
+        self_mute: false,
+        self_deaf: false,
+      },
+    })
   }
 }
 
