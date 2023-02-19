@@ -1,7 +1,8 @@
 import { expect } from 'chai'
 import { afterEach, beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
-import { delay, formatImageURL } from '../src/utils.js'
+import { delay } from '../src/utils.js'
+import { formatImageUrl } from '../src/images.js'
 
 describe('utils.ts', () => {
   let clock: sinon.SinonFakeTimers
@@ -29,8 +30,8 @@ describe('utils.ts', () => {
 })
 
 it('[utils] format image url', () => {
-  expect(formatImageURL('https://skillz.is.pro')).to.be.equal('https://skillz.is.pro.jpg?size=128')
-  expect(formatImageURL('https://skillz.is.pro', 1024)).to.be.equal('https://skillz.is.pro.jpg?size=1024')
-  expect(formatImageURL('https://skillz.is.pro', 1024, 'gif')).to.be.equal('https://skillz.is.pro.gif?size=1024')
-  expect(formatImageURL('https://skillz.is.pro', undefined, 'gif')).to.be.equal('https://skillz.is.pro.gif?size=128')
+  expect(formatImageUrl('https://skillz.is.pro')).to.be.equal('https://skillz.is.pro.jpg?size=128')
+  expect(formatImageUrl('https://skillz.is.pro', 1024)).to.be.equal('https://skillz.is.pro.jpg?size=1024')
+  expect(formatImageUrl('https://skillz.is.pro', 1024, 'gif')).to.be.equal('https://skillz.is.pro.gif?size=1024')
+  expect(formatImageUrl('https://skillz.is.pro', undefined, 'gif')).to.be.equal('https://skillz.is.pro.gif?size=128')
 })
