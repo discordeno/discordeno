@@ -80,7 +80,7 @@ import type {
   TextableChannel,
 } from '../typings.js'
 import type Bucket from '../utils/Bucket.js'
-import { generateChannelFrom } from '../utils/generate.js'
+import { generateChannelFrom, generateInteractionFrom } from '../utils/generate.js'
 
 export class Shard extends EventEmitter {
   client: Client
@@ -1615,7 +1615,7 @@ export class Shard extends EventEmitter {
       case 'INTERACTION_CREATE': {
         const packet = pkt.d as DiscordInteraction
 
-        this.emit('interactionCreate', Interaction.from(packet, this.client))
+        this.emit('interactionCreate', generateInteractionFrom(packet, this.client))
         break
       }
       default: {
