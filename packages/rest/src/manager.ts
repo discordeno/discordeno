@@ -4375,7 +4375,7 @@ export interface SendRequestOptions {
   /** Resolve handler when a request succeeds. */
   resolve: (value: RestRequestResponse) => void
   /** Reject handler when a request fails. */
-  reject: (reason?: any) => void
+  reject: (value: RestRequestRejection) => void
   /** If this request has a bucket id which it falls under for rate limit */
   bucketId?: string
   /** Additional request options, used for things like overriding authorization header. */
@@ -4471,4 +4471,11 @@ export interface RestRequestResponse {
   ok: boolean
   status: number
   body?: string
+}
+
+export interface RestRequestRejection {
+  ok: boolean, 
+  status: number
+  body?: string
+  error?: string
 }
