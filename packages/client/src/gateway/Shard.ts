@@ -5,11 +5,13 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Shard as DiscordenoShard } from '@discordeno/gateway'
-import type { Camelize, DiscordMember } from '@discordeno/types'
+import type { DiscordGuildStickersUpdate, DiscordThreadMemberUpdate } from '@discordeno/types'
 import {
+  ActivityTypes,
   ChannelTypes,
   GatewayOpcodes,
   Intents,
+  type Camelize,
   type DiscordChannel,
   type DiscordChannelPinsUpdate,
   type DiscordGatewayPayload,
@@ -26,6 +28,7 @@ import {
   type DiscordInteraction,
   type DiscordInviteCreate,
   type DiscordInviteDelete,
+  type DiscordMember,
   type DiscordMessage,
   type DiscordMessageDelete,
   type DiscordMessageDeleteBulk,
@@ -41,7 +44,6 @@ import {
   type DiscordTypingStart,
   type DiscordUnavailableGuild,
   type DiscordUser,
-  type DiscordVoiceServerUpdate,
   type DiscordVoiceState,
   type DiscordWebhookUpdate,
 } from '@discordeno/types'
@@ -54,6 +56,7 @@ import PrivateChannel from '../Structures/channels/Private.js'
 import type StageChannel from '../Structures/channels/Stage.js'
 import type TextChannel from '../Structures/channels/Text.js'
 import type TextVoiceChannel from '../Structures/channels/TextVoice.js'
+import ThreadMember from '../Structures/channels/threads/Member.js'
 import ThreadChannel from '../Structures/channels/threads/Thread.js'
 import type VoiceChannel from '../Structures/channels/Voice.js'
 import Guild from '../Structures/guilds/Guild.js'
@@ -190,11 +193,12 @@ export class Shard extends EventEmitter {
   /**
    * Updates the bot's status on all guilds the shard is in
    */
-  async editStatus(status: SelfStatus, activities?: Array<ActivityPartial<BotActivityType>> | ActivityPartial<BotActivityType>) {
+  async editStatus(status: SelfStatus, activities: Array<ActivityPartial<BotActivityType>> | ActivityPartial<BotActivityType> = []) {
     // Selfbots
-    if (status === "invisible") return;
+    if (status === 'invisible') return
+    if (!Array.isArray(activities)) activities = [activities]
 
-    return await this.discordeno.editShardStatus({ status, activities })
+    return await this.discordeno.editShardStatus({ status, activities: activities.map((a) => ({ ...a, type: a.type ?? ActivityTypes.Listening })) })
   }
 
   emit(event: string, ...args: any[]) {
@@ -206,7 +210,7 @@ export class Shard extends EventEmitter {
     return false
   }
 
-  async getGuildMembers(guildID: string, timeout: number): Promise<Camelize<DiscordMember[]>> {
+  async getGuildMembers(guildID: string, timeout?: number): Promise<Camelize<DiscordMember[]>> {
     return await this.discordeno.requestMembers(guildID)
   }
 
@@ -256,7 +260,13 @@ export class Shard extends EventEmitter {
   }
 
   async requestGuildMembers(guildID: string, options?: RequestGuildMembersOptions) {
-    return await this.discordeno.requestMembers(guildID, options ?? {})
+    return await this.discordeno.requestMembers(guildID, {
+      limit: 0,
+      userIds: options?.user_ids,
+      nonce: options?.nonce,
+      query: options?.query,
+      presences: options?.presences,
+    })
   }
 
   /**
@@ -280,45 +290,21 @@ export class Shard extends EventEmitter {
   }
 
   resume() {
-    this.status = 'resuming'
-    this.sendWS(GatewayOpcodes.Resume, {
-      token: this.client.token,
-      session_id: this.sessionID,
-      seq: this.seq,
-    })
+    this.discordeno.resume()
   }
 
   sendStatusUpdate() {
-    this.sendWS(GatewayOpcodes.PresenceUpdate, {
-      activities: this.presence.activities,
-      afk: false,
-      since: this.presence.status === 'idle' ? Date.now() : 0,
+    if (this.presence.status === 'invisible') this.presence.status = 'online'
+
+    this.discordeno.editBotStatus({
       status: this.presence.status,
+      // @ts-expect-error eris weird types issues
+      activities: this.presence.activities ?? [],
     })
   }
 
   sendWS(op: number, _data: Record<string, unknown> | number, priority = false) {
-    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-      let i = 0
-      let waitFor = 1
-      const func = () => {
-        if (++i >= waitFor && this.ws && this.ws.readyState === WebSocket.OPEN) {
-          const data = JSON.stringify({ op, d: _data })
-          this.ws.send(data)
-          // @ts-expect-error js hacks
-          if (_data.token) {
-            // @ts-expect-error js hacks
-            delete _data.token
-          }
-          this.emit('debug', JSON.stringify({ op, d: _data }), this.id)
-        }
-      }
-      if (op === GatewayOpcodes.PresenceUpdate) {
-        ++waitFor
-        this.presenceUpdateBucket.queue(func, priority)
-      }
-      this.globalBucket.queue(func, priority)
-    }
+    this.discordeno.send({ op, d: _data }, priority)
   }
 
   wsEvent(pkt: Required<DiscordGatewayPayload>) {
@@ -326,16 +312,14 @@ export class Shard extends EventEmitter {
       pkt.t /* eslint-disable no-redeclare */ // (╯°□°）╯︵ ┻━┻
     ) {
       case 'PRESENCE_UPDATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordPresenceUpdate
-        }
+        const packet = pkt.d as DiscordPresenceUpdate
 
-        if (packet.d.user.username !== undefined) {
-          let user = this.client.users.get(packet.d.user.id)
+        if (packet.user.username !== undefined) {
+          let user = this.client.users.get(packet.user.id)
           let oldUser = null
           if (
             user &&
-            (user.username !== packet.d.user.username || user.discriminator !== packet.d.user.discriminator || user.avatar !== packet.d.user.avatar)
+            (user.username !== packet.user.username || user.discriminator !== packet.user.discriminator || user.avatar !== packet.user.avatar)
           ) {
             oldUser = {
               username: user.username,
@@ -344,74 +328,53 @@ export class Shard extends EventEmitter {
             }
           }
           if (!user || oldUser) {
-            user = this.client.users.update(new User(packet.d.user, this.client), this.client)
+            user = this.client.users.update(new User(packet.user, this.client), this.client)
             this.emit('userUpdate', user, oldUser)
           }
-        }
-
-        const guild = this.client.guilds.get(packet.d.guild_id)
-        if (!guild) {
-          this.emit('debug', 'Rogue presence update: ' + JSON.stringify(packet), this.id)
-          break
-        }
-        // @ts-expect-error js hacks
-        let member = guild.members.get((packet.d.id = packet.d.user.id))
-        let oldPresence = null
-        if (member) {
-          oldPresence = {
-            activities: member.activities,
-            clientStatus: member.clientStatus,
-            status: member.status,
-          }
-        }
-        if ((!member && packet.d.user.username) || oldPresence) {
-          member = guild.members.update(packet.d, guild)
-          this.emit('presenceUpdate', member, oldPresence)
         }
         break
       }
       case 'VOICE_STATE_UPDATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordVoiceState
+        const packet = pkt.d as DiscordVoiceState
+
+        // TODO: voice - support voice connections
+        // if (packet.guild_id && packet.user_id === this.client.id) {
+        //   const voiceConnection = this.client.voiceConnections.get(packet.guild_id)
+        //   if (voiceConnection) {
+        //     if (packet.channel_id === null) {
+        //       this.client.voiceConnections.leave(packet.guild_id)
+        //     } else if (voiceConnection.channelID !== packet.channel_id) {
+        //       voiceConnection.switchChannel(packet.channel_id, true)
+        //     }
+        //   }
+        // }
+        if (packet.self_stream === undefined) {
+          packet.self_stream = false
         }
 
-        // (╯°□°）╯︵ ┻━┻
-        if (packet.d.guild_id && packet.d.user_id === this.client.id) {
-          const voiceConnection = this.client.voiceConnections.get(packet.d.guild_id)
-          if (voiceConnection) {
-            if (packet.d.channel_id === null) {
-              this.client.voiceConnections.leave(packet.d.guild_id)
-            } else if (voiceConnection.channelID !== packet.d.channel_id) {
-              voiceConnection.switchChannel(packet.d.channel_id, true)
-            }
-          }
-        }
-        if (packet.d.self_stream === undefined) {
-          packet.d.self_stream = false
-        }
-
-        const guild = this.client.guilds.get(packet.d.guild_id!)
+        const guild = this.client.guilds.get(packet.guild_id!)
         if (!guild) {
           break
         }
-        if (guild.pendingVoiceStates) {
-          guild.pendingVoiceStates.push(packet.d)
-          break
-        }
-        let member = guild.members.get((packet.d.id = packet.d.user_id))
+        // TODO: voice - support voice connections
+        // if (guild.pendingVoiceStates) {
+        //   guild.pendingVoiceStates.push(packet)
+        //   break
+        // }
+        let member = guild.members.get(packet.user_id)
         if (!member) {
-          if (!packet.d.member) {
+          if (!packet.member) {
             this.emit(
               'voiceStateUpdate',
               {
-                id: packet.d.user_id,
+                id: packet.user_id,
                 voiceState: {
-                  deaf: packet.d.deaf,
-                  mute: packet.d.mute,
-                  selfDeaf: packet.d.self_deaf,
-                  selfMute: packet.d.self_mute,
-                  selfStream: packet.d.self_stream,
-                  selfVideo: packet.d.self_video,
+                  deaf: packet.deaf,
+                  mute: packet.mute,
+                  selfDeaf: packet.self_deaf,
+                  selfMute: packet.self_mute,
+                  selfStream: packet.self_stream,
+                  selfVideo: packet.self_video,
                 },
               },
               null,
@@ -419,18 +382,18 @@ export class Shard extends EventEmitter {
             break
           }
           // Updates the member cache with this member for future events.
-          packet.d.member.id = packet.d.user_id
-          member = new Member(packet.d.member, guild, this.client)
-          guild.members.set(packet.d.user_id, member)
+          member = new Member(packet.member, guild, this.client)
+          guild.members.set(packet.user_id, member)
 
-          const channel = guild.channels.find(
-            (channel) =>
-              (channel.type === ChannelTypes.GuildVoice || channel.type === ChannelTypes.GuildStageVoice) && channel.voiceMembers.get(packet.d.id),
-          )
-          if (channel) {
-            channel.voiceMembers.remove(packet.d)
-            this.emit('debug', 'VOICE_STATE_UPDATE member null but in channel: ' + packet.d.id, this.id)
-          }
+          // TODO: voice - support voice connections
+          // const channel = guild.channels.find(
+          //   (channel) =>
+          //     (channel.type === ChannelTypes.GuildVoice || channel.type === ChannelTypes.GuildStageVoice) && channel.voiceMembers.get(packet.user_id),
+          // )
+          // if (channel) {
+          //   channel.voiceMembers.remove(packet)
+          //   this.emit('debug', 'VOICE_STATE_UPDATE member null but in channel: ' + packet.user_id, this.id)
+          // }
         }
         const oldState = {
           deaf: member.voiceState?.deaf,
@@ -441,8 +404,8 @@ export class Shard extends EventEmitter {
           selfVideo: member.voiceState?.selfVideo,
         }
         const oldChannelID = member.voiceState?.channelID
-        member.update(packet.d)
-        if (oldChannelID !== packet.d.channel_id) {
+        if (packet.member) member.update(packet.member)
+        if (oldChannelID !== packet.channel_id) {
           let oldChannel: TextVoiceChannel | StageChannel | null, newChannel: TextVoiceChannel | StageChannel | null
           if (oldChannelID) {
             oldChannel = guild.channels.get(oldChannelID) as TextVoiceChannel | StageChannel
@@ -452,8 +415,8 @@ export class Shard extends EventEmitter {
             }
           }
           if (
-            packet.d.channel_id &&
-            (newChannel = guild.channels.get(packet.d.channel_id) as TextVoiceChannel | StageChannel) &&
+            packet.channel_id &&
+            (newChannel = guild.channels.get(packet.channel_id) as TextVoiceChannel | StageChannel) &&
             (newChannel.type === ChannelTypes.GuildVoice || newChannel.type === ChannelTypes.GuildStageVoice)
           ) {
             // Welcome to Discord, where one can "join" text channels
@@ -481,57 +444,52 @@ export class Shard extends EventEmitter {
         break
       }
       case 'TYPING_START': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordTypingStart
-        }
+        const packet = pkt.d as DiscordTypingStart
 
         let member = null
-        const guild = this.client.guilds.get(packet.d.guild_id ?? '')
+        const guild = this.client.guilds.get(packet.guild_id ?? '')
         if (guild) {
-          member = guild.members.update(new Member({ ...packet.d.member!, id: packet.d.user_id }, guild, this.client))
+          member = guild.members.update(new Member({ ...packet.member!, id: packet.user_id }, guild, this.client))
         }
         if (this.client.listeners('typingStart').length > 0) {
           this.emit(
             'typingStart',
-            this.client.getChannel(packet.d.channel_id) ?? {
-              id: packet.d.channel_id,
+            this.client.getChannel(packet.channel_id) ?? {
+              id: packet.channel_id,
             },
-            this.client.users.get(packet.d.user_id) ?? { id: packet.d.user_id },
+            this.client.users.get(packet.user_id) ?? { id: packet.user_id },
             member,
           )
         }
         break
       }
       case 'MESSAGE_CREATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordMessage
-        }
+        const packet = pkt.d as DiscordMessage
 
-        const channel = this.client.getChannel(packet.d.channel_id)
+        const channel = this.client.getChannel(packet.channel_id) as TextChannel
         if (channel) {
           // MESSAGE_CREATE just when deleting o.o
-          channel.lastMessageID = packet.d.id
+          channel.lastMessageID = packet.id
 
-          this.emit('messageCreate', channel.messages.add(new Message(packet.d, this.client)))
+          this.emit('messageCreate', channel.messages.add(new Message(packet, this.client)))
         } else {
-          this.emit('messageCreate', new Message(packet.d, this.client))
+          this.emit('messageCreate', new Message(packet, this.client))
         }
         break
       }
       case 'MESSAGE_UPDATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordMessage
-        }
+        const packet = pkt.d as DiscordMessage
 
-        const channel = this.client.getChannel(packet.d.channel_id)
+        const channel = this.client.getChannel(packet.channel_id) as TextChannel
         if (!channel) {
-          packet.d.channel = {
-            id: packet.d.channel_id,
+          // @ts-expect-error eris hack
+          packet.channel = {
+            id: packet.channel_id,
           }
-          this.emit('messageUpdate', packet.d, null)
+          this.emit('messageUpdate', packet, null)
           break
         }
-        const message = channel.messages.get(packet.d.id)
+        const message = channel.messages.get(packet.id)
         let oldMessage = null
         if (message) {
           oldMessage = {
@@ -541,71 +499,68 @@ export class Shard extends EventEmitter {
             editedTimestamp: message.editedTimestamp,
             embeds: message.embeds,
             flags: message.flags,
-            mentionedBy: message.mentionedBy,
+            // mentionedBy: message.mentionedBy,
             mentions: message.mentions,
             pinned: message.pinned,
             roleMentions: message.roleMentions,
             tts: message.tts,
           }
-        } else if (!packet.d.timestamp) {
-          packet.d.channel = channel
-          this.emit('messageUpdate', packet.d, null)
+        } else if (!packet.timestamp) {
+          // @ts-expect-error eris hack
+          packet.channel = channel
+          this.emit('messageUpdate', packet, null)
           break
         }
-        this.emit('messageUpdate', channel.messages.update(new Message(packet.d, this.client)), oldMessage)
+        this.emit('messageUpdate', channel.messages.update(new Message(packet, this.client)), oldMessage)
         break
       }
       case 'MESSAGE_DELETE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordMessageDelete
-        }
+        const packet = pkt.d as DiscordMessageDelete
 
-        const channel = this.client.getChannel(packet.d.channel_id)
+        const channel = this.client.getChannel(packet.channel_id) as TextChannel
+        const oldMessage = channel?.messages.get(packet.id)
 
         this.emit(
           'messageDelete',
-          channel?.messages.remove(new Message(packet.d, this.client)) || {
-            id: packet.d.id,
+          oldMessage ?? {
+            id: packet.id,
             channel: channel ?? {
-              id: packet.d.channel_id,
-              guild: packet.d.guild_id ? { id: packet.d.guild_id } : undefined,
+              id: packet.channel_id,
+              guild: packet.guild_id ? { id: packet.guild_id } : undefined,
             },
-            guildID: packet.d.guild_id,
+            guildID: packet.guild_id,
           },
         )
         break
       }
       case 'MESSAGE_DELETE_BULK': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordMessageDeleteBulk
-        }
+        const packet = pkt.d as DiscordMessageDeleteBulk
 
-        const channel = this.client.getChannel(packet.d.channel_id)
+        const channel = this.client.getChannel(packet.channel_id) as TextChannel
 
         this.emit(
           'messageDeleteBulk',
-          packet.d.ids.map(
-            (id) =>
-              channel?.messages.remove({
-                id,
-              }) || {
+          packet.ids.map((id) => {
+            const oldMessage = channel?.messages.get(id)
+
+            return (
+              oldMessage ?? {
                 id,
                 channel: {
-                  id: packet.d.channel_id,
-                  guild: packet.d.guild_id ? { id: packet.d.guild_id } : undefined,
+                  id: packet.channel_id,
+                  guild: packet.guild_id ? { id: packet.guild_id } : undefined,
                 },
-                guildID: packet.d.guild_id,
-              },
-          ),
+                guildID: packet.guild_id,
+              }
+            )
+          }),
         )
         break
       }
       case 'MESSAGE_REACTION_ADD': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordMessageReactionAdd
-        }
+        const packet = pkt.d as DiscordMessageReactionAdd
 
-        const channel = this.client.getChannel(packet.d.channel_id)
+        const channel = this.client.getChannel(packet.channel_id) as TextChannel
         let message:
           | Message
           | {
@@ -616,50 +571,49 @@ export class Shard extends EventEmitter {
           | undefined
         let member
         if (channel) {
-          message = channel.messages.get(packet.d.message_id)
+          message = channel.messages.get(packet.message_id)
           if (channel.guild) {
-            if (packet.d.member) {
-              // Updates the member cache with this member for future events.
-              packet.d.member.id = packet.d.user_id
-              member = channel.guild.members.update(packet.d.member, channel.guild)
+            if (packet.member) {
+              const member = new Member(packet.member, channel.guild, this.client)
+              channel.guild.members.set(member.user.id, member)
             }
           }
         }
         if (message instanceof Message) {
-          const reaction = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name!
+          const reaction = packet.emoji.id ? `${packet.emoji.name}:${packet.emoji.id}` : packet.emoji.name!
           if (message.reactions[reaction]) {
             ++message.reactions[reaction].count
-            if (packet.d.user_id === this.client.id) {
+            if (packet.user_id === this.client.id) {
               message.reactions[reaction].me = true
             }
           } else {
             message.reactions[reaction] = {
               count: 1,
-              me: packet.d.user_id === this.client.id,
+              me: packet.user_id === this.client.id,
             }
           }
         } else {
           message = {
-            id: packet.d.message_id,
-            channel: channel ?? { id: packet.d.channel_id },
+            id: packet.message_id,
+            channel: channel ?? { id: packet.channel_id },
           }
 
-          if (packet.d.guild_id) {
-            message.guildID = packet.d.guild_id
+          if (packet.guild_id) {
+            message.guildID = packet.guild_id
+            // @ts-expect-error eris hacks
             if (!message.channel.guild) {
-              message.channel.guild = { id: packet.d.guild_id }
+              // @ts-expect-error eris hacks
+              message.channel.guild = { id: packet.guild_id }
             }
           }
         }
-        this.emit('messageReactionAdd', message, packet.d.emoji, member || { id: packet.d.user_id })
+        this.emit('messageReactionAdd', message, packet.emoji, member ?? { id: packet.user_id })
         break
       }
       case 'MESSAGE_REACTION_REMOVE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordMessageReactionRemove
-        }
+        const packet = pkt.d as DiscordMessageReactionRemove
 
-        const channel = this.client.getChannel(packet.d.channel_id)
+        const channel = this.client.getChannel(packet.channel_id) as TextChannel
         let message:
           | Message
           | {
@@ -669,58 +623,60 @@ export class Shard extends EventEmitter {
             }
           | undefined
         if (channel) {
-          message = channel.messages.get(packet.d.message_id)
+          message = channel.messages.get(packet.message_id)
         }
         if (message instanceof Message) {
-          const reaction = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name!
+          const reaction = packet.emoji.id ? `${packet.emoji.name}:${packet.emoji.id}` : packet.emoji.name!
           const reactionObj = message.reactions[reaction]
           if (reactionObj) {
             --reactionObj.count
             if (reactionObj.count === 0) {
               delete message.reactions[reaction]
-            } else if (packet.d.user_id === this.client.id) {
+            } else if (packet.user_id === this.client.id) {
               reactionObj.me = false
             }
           }
         } else {
           message = {
-            id: packet.d.message_id,
-            channel: channel ?? { id: packet.d.channel_id },
+            id: packet.message_id,
+            channel: channel ?? { id: packet.channel_id },
           }
 
-          if (packet.d.guild_id) {
-            message.guildID = packet.d.guild_id
+          if (packet.guild_id) {
+            message.guildID = packet.guild_id
+            // @ts-expect-error eris hacks
             if (!message.channel.guild) {
-              message.channel.guild = { id: packet.d.guild_id }
+              // @ts-expect-error eris hacks
+              message.channel.guild = { id: packet.guild_id }
             }
           }
         }
 
-        this.emit('messageReactionRemove', message, packet.d.emoji, packet.d.user_id)
+        this.emit('messageReactionRemove', message, packet.emoji, packet.user_id)
         break
       }
       case 'MESSAGE_REACTION_REMOVE_ALL': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordMessageReactionRemoveAll
-        }
+        const packet = pkt.d as DiscordMessageReactionRemoveAll
 
-        const channel = this.client.getChannel(packet.d.channel_id)
+        const channel = this.client.getChannel(packet.channel_id) as TextChannel
         let message
         if (channel) {
-          message = channel.messages.get(packet.d.message_id)
+          message = channel.messages.get(packet.message_id)
           if (message) {
             message.reactions = {}
           }
         }
         if (!message) {
           message = {
-            id: packet.d.message_id,
-            channel: channel ?? { id: packet.d.channel_id },
+            id: packet.message_id,
+            channel: channel ?? { id: packet.channel_id },
           }
-          if (packet.d.guild_id) {
-            message.guildID = packet.d.guild_id
+          if (packet.guild_id) {
+            // @ts-expect-error eris hacks
+            message.guildID = packet.guild_id
             if (!message.channel.guild) {
-              message.channel.guild = { id: packet.d.guild_id }
+              // @ts-expect-error eris hacks
+              message.channel.guild = { id: packet.guild_id }
             }
           }
         }
@@ -729,64 +685,61 @@ export class Shard extends EventEmitter {
         break
       }
       case 'MESSAGE_REACTION_REMOVE_EMOJI': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordMessageReactionRemoveEmoji
-        }
+        const packet = pkt.d as DiscordMessageReactionRemoveEmoji
 
-        const channel = this.client.getChannel(packet.d.channel_id)
+        const channel = this.client.getChannel(packet.channel_id) as TextChannel
         let message
         if (channel) {
-          message = channel.messages.get(packet.d.message_id)
+          message = channel.messages.get(packet.message_id)
           if (message) {
-            const reaction = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name!
+            const reaction = packet.emoji.id ? `${packet.emoji.name}:${packet.emoji.id}` : packet.emoji.name!
             delete message.reactions[reaction]
           }
         }
         if (!message) {
           message = {
-            id: packet.d.message_id,
-            channel: channel ?? { id: packet.d.channel_id },
+            id: packet.message_id,
+            channel: channel ?? { id: packet.channel_id },
           }
-          if (packet.d.guild_id) {
-            message.guildID = packet.d.guild_id
+          if (packet.guild_id) {
+            // @ts-expect-error eris hacks
+            message.guildID = packet.guild_id
             if (!message.channel.guild) {
-              message.channel.guild = { id: packet.d.guild_id }
+              // @ts-expect-error eris hacks
+              message.channel.guild = { id: packet.guild_id }
             }
           }
         }
 
-        this.emit('messageReactionRemoveEmoji', message, packet.d.emoji)
+        this.emit('messageReactionRemoveEmoji', message, packet.emoji)
         break
       }
       case 'GUILD_MEMBER_ADD': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordGuildMemberAdd
-        }
+        const packet = pkt.d as DiscordGuildMemberAdd
 
-        const guild = this.client.guilds.get(packet.d.guild_id)
+        const guild = this.client.guilds.get(packet.guild_id)
         if (!guild) {
           // Eventual Consistency™ (╯°□°）╯︵ ┻━┻
-          this.emit('debug', `Missing guild ${packet.d.guild_id} in GUILD_MEMBER_ADD`)
+          this.emit('debug', `Missing guild ${packet.guild_id} in GUILD_MEMBER_ADD`)
           break
         }
-        packet.d.id = packet.d.user.id
         guild.memberCount = (guild.memberCount ?? 0) + 1
 
-        this.emit('guildMemberAdd', guild, guild.members.add(new Member(packet.d, guild, this.client)))
+        const member = new Member(packet, guild, this.client)
+        guild.members.set(member.id, member)
+        this.emit('guildMemberAdd', guild, member)
         break
       }
       case 'GUILD_MEMBER_UPDATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordGuildMemberUpdate
-        }
+        const packet = pkt.d as DiscordGuildMemberUpdate
 
         // Check for member update if GuildPresences intent isn't set, to prevent emitting twice
-        if (!(this.client.options.intents & Intents.GuildPresences) && packet.d.user.username !== undefined) {
-          let user = this.client.users.get(packet.d.user.id)
+        if (!(this.client.options.intents & Intents.GuildPresences) && packet.user.username !== undefined) {
+          let user = this.client.users.get(packet.user.id)
           let oldUser = null
           if (
             user &&
-            (user.username !== packet.d.user.username || user.discriminator !== packet.d.user.discriminator || user.avatar !== packet.d.user.avatar)
+            (user.username !== packet.user.username || user.discriminator !== packet.user.discriminator || user.avatar !== packet.user.avatar)
           ) {
             oldUser = {
               username: user.username,
@@ -795,16 +748,16 @@ export class Shard extends EventEmitter {
             }
           }
           if (!user || oldUser) {
-            user = this.client.users.update(new User(packet.d.user, this.client))
+            user = this.client.users.update(new User(packet.user, this.client))
             this.emit('userUpdate', user, oldUser)
           }
         }
-        const guild = this.client.guilds.get(packet.d.guild_id)
+        const guild = this.client.guilds.get(packet.guild_id)
         if (!guild) {
-          this.emit('debug', `Missing guild ${packet.d.guild_id} in GUILD_MEMBER_UPDATE`)
+          this.emit('debug', `Missing guild ${packet.guild_id} in GUILD_MEMBER_UPDATE`)
           break
         }
-        let member = guild.members.get((packet.d.id = packet.d.user.id))
+        let member = guild.members.get(packet.user.id)
         let oldMember = null
         if (member) {
           oldMember = {
@@ -816,69 +769,62 @@ export class Shard extends EventEmitter {
             pending: member.pending,
           }
         }
-        member = guild.members.update(new Member(packet.d, guild, this.client))
+        member = guild.members.update(new Member(packet, guild, this.client))
 
         this.emit('guildMemberUpdate', guild, member, oldMember)
         break
       }
       case 'GUILD_MEMBER_REMOVE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordGuildMemberRemove
-        }
+        const packet = pkt.d as DiscordGuildMemberRemove
 
-        if (packet.d.user.id === this.client.id) {
+        if (packet.user.id === this.client.id) {
           // The bot is probably leaving
           break
         }
-        const guild = this.client.guilds.get(packet.d.guild_id)
+        const guild = this.client.guilds.get(packet.guild_id)
         if (!guild) {
           break
         }
         guild.memberCount = (guild.memberCount ?? 0) - 1
-        packet.d.id = packet.d.user.id
 
         this.emit(
           'guildMemberRemove',
           guild,
-          guild.members.remove(new Member(packet.d, guild, this.client)) ?? {
-            id: packet.d.id,
-            user: new User(packet.d.user, this.client),
+          guild.members.get(packet.user.id) ?? {
+            id: packet.user.id,
+            user: new User(packet.user, this.client),
           },
         )
         break
       }
       case 'GUILD_CREATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordGuild
-        }
+        const packet = pkt.d as DiscordGuild
 
-        if (!packet.d.unavailable) {
-          const guild = this.createGuild(new Guild(packet.d, this.client))
+        if (!packet.unavailable) {
+          const guild = this.createGuild(new Guild(packet, this.client))
           if (this.ready) {
-            if (this.client.unavailableGuilds.remove(new Guild(packet.d, this.client))) {
+            if (this.client.unavailableGuilds.remove(new Guild(packet, this.client))) {
               this.emit('guildAvailable', guild)
             } else {
               this.emit('guildCreate', guild)
             }
           } else {
-            this.client.unavailableGuilds.remove(new Guild(packet.d, this.client))
+            this.client.unavailableGuilds.remove(new Guild(packet, this.client))
             this.restartGuildCreateTimeout()
           }
         } else {
-          this.client.guilds.remove(new Guild(packet.d, this.client))
+          this.client.guilds.remove(new Guild(packet, this.client))
 
-          this.emit('unavailableGuildCreate', this.client.unavailableGuilds.add(new UnavailableGuild(packet.d, this.client)))
+          this.emit('unavailableGuildCreate', this.client.unavailableGuilds.add(new UnavailableGuild(packet, this.client)))
         }
         break
       }
       case 'GUILD_UPDATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordGuild
-        }
+        const packet = pkt.d as DiscordGuild
 
-        const guild = this.client.guilds.get(packet.d.id)
+        const guild = this.client.guilds.get(packet.id)
         if (!guild) {
-          this.emit('debug', `Guild ${packet.d.id} undefined in GUILD_UPDATE`)
+          this.emit('debug', `Guild ${packet.id} undefined in GUILD_UPDATE`)
           break
         }
         const oldGuild = {
@@ -913,86 +859,77 @@ export class Shard extends EventEmitter {
           verificationLevel: guild.verificationLevel,
         }
 
-        this.emit('guildUpdate', this.client.guilds.update(new Guild(packet.d, this.client)), oldGuild)
+        this.emit('guildUpdate', this.client.guilds.update(new Guild(packet, this.client)), oldGuild)
         break
       }
       case 'GUILD_DELETE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordUnavailableGuild
-        }
+        const packet = pkt.d as DiscordUnavailableGuild
 
-        const voiceConnection = this.client.voiceConnections.get(packet.d.id)
-        if (voiceConnection) {
-          if (voiceConnection.channelID) {
-            this.client.leaveVoiceChannel(voiceConnection.channelID)
-          } else {
-            this.client.voiceConnections.leave(packet.d.id)
-          }
-        }
+        // TODO: voice - support voice stuff
+        // const voiceConnection = this.client.voiceConnections.get(packet.id)
+        // if (voiceConnection) {
+        //   if (voiceConnection.channelID) {
+        //     this.client.leaveVoiceChannel(voiceConnection.channelID)
+        //   } else {
+        //     this.client.voiceConnections.leave(packet.id)
+        //   }
+        // }
 
-        delete this.client.guildShardMap[packet.d.id]
-        const guild = this.client.guilds.remove(packet.d)
+        delete this.client.guildShardMap[packet.id]
+        const guild = this.client.guilds.remove(packet)
         if (guild) {
           // Discord sends GUILD_DELETE for guilds that were previously unavailable in READY
           guild.channels.forEach((channel) => {
             delete this.client.channelGuildMap[channel.id]
           })
         }
-        if (packet.d.unavailable) {
-          this.emit('guildUnavailable', this.client.unavailableGuilds.add(new UnavailableGuild(packet.d, this.client)))
+        if (packet.unavailable) {
+          this.emit('guildUnavailable', this.client.unavailableGuilds.add(new UnavailableGuild(packet, this.client)))
         } else {
           this.emit(
             'guildDelete',
             guild ?? {
-              id: packet.d.id,
+              id: packet.id,
             },
           )
         }
         break
       }
       case 'GUILD_BAN_ADD': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordGuildBanAddRemove
-        }
+        const packet = pkt.d as DiscordGuildBanAddRemove
 
-        this.emit('guildBanAdd', this.client.guilds.get(packet.d.guild_id), this.client.users.update(new User(packet.d.user, this.client)))
+        this.emit('guildBanAdd', this.client.guilds.get(packet.guild_id), this.client.users.update(new User(packet.user, this.client)))
         break
       }
       case 'GUILD_BAN_REMOVE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordGuildBanAddRemove
-        }
+        const packet = pkt.d as DiscordGuildBanAddRemove
 
-        this.emit('guildBanRemove', this.client.guilds.get(packet.d.guild_id), this.client.users.update(new User(packet.d.user, this.client)))
+        this.emit('guildBanRemove', this.client.guilds.get(packet.guild_id), this.client.users.update(new User(packet.user, this.client)))
         break
       }
       case 'GUILD_ROLE_CREATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordGuildRoleCreate
-        }
+        const packet = pkt.d as DiscordGuildRoleCreate
 
-        const guild = this.client.guilds.get(packet.d.guild_id)
+        const guild = this.client.guilds.get(packet.guild_id)
         if (!guild) {
-          this.emit('debug', `Missing guild ${packet.d.guild_id} in GUILD_ROLE_CREATE`)
+          this.emit('debug', `Missing guild ${packet.guild_id} in GUILD_ROLE_CREATE`)
           break
         }
-        this.emit('guildRoleCreate', guild, guild.roles.add(new Role(packet.d.role, guild)))
+        this.emit('guildRoleCreate', guild, guild.roles.add(new Role(packet.role, guild)))
         break
       }
       case 'GUILD_ROLE_UPDATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordGuildRoleUpdate
-        }
+        const packet = pkt.d as DiscordGuildRoleUpdate
 
-        const guild = this.client.guilds.get(packet.d.guild_id)
+        const guild = this.client.guilds.get(packet.guild_id)
         if (!guild) {
-          this.emit('debug', `Guild ${packet.d.guild_id} undefined in GUILD_ROLE_UPDATE`)
+          this.emit('debug', `Guild ${packet.guild_id} undefined in GUILD_ROLE_UPDATE`)
           break
         }
-        const role = new Role(packet.d.role, guild)
+        const role = new Role(packet.role, guild)
         guild.roles.set(role.id, role)
         if (!role) {
-          this.emit('debug', `Role ${packet.d.role.id} in guild ${packet.d.guild_id} undefined in GUILD_ROLE_UPDATE`)
+          this.emit('debug', `Role ${packet.role.id} in guild ${packet.guild_id} undefined in GUILD_ROLE_UPDATE`)
           break
         }
         const oldRole = {
@@ -1008,39 +945,35 @@ export class Shard extends EventEmitter {
           unicodeEmoji: role.unicodeEmoji,
         }
 
-        this.emit('guildRoleUpdate', guild, guild.roles.update(new Role(packet.d.role, guild)), oldRole)
+        this.emit('guildRoleUpdate', guild, guild.roles.update(new Role(packet.role, guild)), oldRole)
         break
       }
       case 'GUILD_ROLE_DELETE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordGuildRoleDelete
-        }
+        const packet = pkt.d as DiscordGuildRoleDelete
 
-        const guild = this.client.guilds.get(packet.d.guild_id)
+        const guild = this.client.guilds.get(packet.guild_id)
         if (!guild) {
-          this.emit('debug', `Missing guild ${packet.d.guild_id} in GUILD_ROLE_DELETE`)
+          this.emit('debug', `Missing guild ${packet.guild_id} in GUILD_ROLE_DELETE`)
           break
         }
-        if (!guild.roles.has(packet.d.role_id)) {
-          this.emit('debug', `Missing role ${packet.d.role_id} in GUILD_ROLE_DELETE`)
+        if (!guild.roles.has(packet.role_id)) {
+          this.emit('debug', `Missing role ${packet.role_id} in GUILD_ROLE_DELETE`)
           break
         }
-        this.emit('guildRoleDelete', guild, guild.roles.remove({ id: packet.d.role_id }))
+        this.emit('guildRoleDelete', guild, guild.roles.remove({ id: packet.role_id }))
         break
       }
       case 'INVITE_CREATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordInviteCreate
-        }
+        const packet = pkt.d as DiscordInviteCreate
 
-        const guild = this.client.guilds.get(packet.d.guild_id ?? '')
+        const guild = this.client.guilds.get(packet.guild_id ?? '')
         if (!guild) {
-          this.emit('debug', `Missing guild ${packet.d.guild_id} in INVITE_CREATE`)
+          this.emit('debug', `Missing guild ${packet.guild_id} in INVITE_CREATE`)
           break
         }
-        const channel = this.client.getChannel(packet.d.channel_id)
+        const channel = this.client.getChannel(packet.channel_id) as GuildChannel
         if (!channel) {
-          this.emit('debug', `Missing channel ${packet.d.channel_id} in INVITE_CREATE`)
+          this.emit('debug', `Missing channel ${packet.channel_id} in INVITE_CREATE`)
           break
         }
 
@@ -1049,8 +982,8 @@ export class Shard extends EventEmitter {
           guild,
           new Invite(
             {
-              ...packet.d,
-              guild,
+              ...packet,
+              guild: guild.toJSON(),
               channel,
             },
             this.client,
@@ -1059,18 +992,16 @@ export class Shard extends EventEmitter {
         break
       }
       case 'INVITE_DELETE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordInviteDelete
-        }
+        const packet = pkt.d as DiscordInviteDelete
 
-        const guild = this.client.guilds.get(packet.d.guild_id ?? '')
+        const guild = this.client.guilds.get(packet.guild_id ?? '')
         if (!guild) {
-          this.emit('debug', `Missing guild ${packet.d.guild_id} in INVITE_DELETE`)
+          this.emit('debug', `Missing guild ${packet.guild_id} in INVITE_DELETE`)
           break
         }
-        const channel = this.client.getChannel(packet.d.channel_id)
+        const channel = this.client.getChannel(packet.channel_id) as GuildChannel
         if (!channel) {
-          this.emit('debug', `Missing channel ${packet.d.channel_id} in INVITE_DELETE`)
+          this.emit('debug', `Missing channel ${packet.channel_id} in INVITE_DELETE`)
           break
         }
 
@@ -1079,8 +1010,8 @@ export class Shard extends EventEmitter {
           guild,
           new Invite(
             {
-              ...packet.d,
-              guild,
+              ...packet,
+              guild: guild.toJSON(),
               channel,
             },
             this.client,
@@ -1089,21 +1020,21 @@ export class Shard extends EventEmitter {
         break
       }
       case 'CHANNEL_CREATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordChannel
-        }
+        const packet = pkt.d as DiscordChannel
 
-        const channel = Channel.from(packet.d, this.client)
-        if (packet.d.guild_id) {
-          if (!channel.guild) {
-            channel.guild = this.client.guilds.get(packet.d.guild_id)
-            if (!channel.guild) {
-              this.emit('debug', `Received CHANNEL_CREATE for channel in missing guild ${packet.d.guild_id}`)
+        const channel = Channel.from(packet, this.client)
+        if (packet.guild_id) {
+          const guildChannel = channel as GuildChannel
+          if (!guildChannel.guild) {
+            guildChannel.guild = this.client.guilds.get(packet.guild_id)!
+            if (!guildChannel.guild) {
+              this.emit('debug', `Received CHANNEL_CREATE for channel in missing guild ${packet.guild_id}`)
               break
             }
           }
-          channel.guild.channels.add(channel, this.client)
-          this.client.channelGuildMap[packet.d.id] = packet.d.guild_id
+
+          guildChannel.guild.channels.set(guildChannel.id, guildChannel)
+          this.client.channelGuildMap[packet.id] = packet.guild_id
 
           this.emit('channelCreate', channel)
         } else {
@@ -1113,11 +1044,9 @@ export class Shard extends EventEmitter {
         break
       }
       case 'CHANNEL_UPDATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordChannel
-        }
+        const packet = pkt.d as DiscordChannel
 
-        let channel = this.client.getChannel(packet.d.id) as GuildChannel
+        let channel = this.client.getChannel(packet.id) as GuildChannel
         if (!channel) {
           break
         }
@@ -1140,17 +1069,17 @@ export class Shard extends EventEmitter {
             videoQualityMode: (channel as VoiceChannel).videoQualityMode,
           }
         } else {
-          this.emit('warn', `Unexpected CHANNEL_UPDATE for channel ${packet.d.id} with type ${oldType}`)
+          this.emit('warn', `Unexpected CHANNEL_UPDATE for channel ${packet.id} with type ${oldType}`)
         }
-        if (oldType === packet.d.type) {
-          channel.update(packet.d)
+        if (oldType === packet.type) {
+          channel.update(packet)
         } else {
-          this.emit('debug', `Channel ${packet.d.id} changed from type ${oldType} to ${packet.d.type}`)
-          const newChannel = Channel.from(packet.d, this.client) as GuildChannel
-          if (packet.d.guild_id) {
-            const guild = this.client.guilds.get(packet.d.guild_id)
+          this.emit('debug', `Channel ${packet.id} changed from type ${oldType} to ${packet.type}`)
+          const newChannel = Channel.from(packet, this.client) as GuildChannel
+          if (packet.guild_id) {
+            const guild = this.client.guilds.get(packet.guild_id)
             if (!guild) {
-              this.emit('debug', `Received CHANNEL_UPDATE for channel in missing guild ${packet.d.guild_id}`)
+              this.emit('debug', `Received CHANNEL_UPDATE for channel in missing guild ${packet.guild_id}`)
               break
             }
             guild.channels.remove(channel)
@@ -1169,33 +1098,32 @@ export class Shard extends EventEmitter {
         break
       }
       case 'CHANNEL_DELETE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordChannel
-        }
+        const packet = pkt.d as DiscordChannel
 
-        if (packet.d.type === ChannelTypes.DM || packet.d.type === undefined) {
+        if (packet.type === ChannelTypes.DM || packet.type === undefined) {
           if (this.id === 0) {
-            const channel = this.client.privateChannels.remove(new PrivateChannel(packet.d, this.client))
+            const channel = this.client.privateChannels.remove(new PrivateChannel(packet, this.client))
             if (channel) {
               delete this.client.privateChannelMap[channel.recipient?.id ?? '']
 
               this.emit('channelDelete', channel)
             }
           }
-        } else if (packet.d.guild_id) {
-          delete this.client.channelGuildMap[packet.d.id]
-          const guild = this.client.guilds.get(packet.d.guild_id)
+        } else if (packet.guild_id) {
+          delete this.client.channelGuildMap[packet.id]
+          const guild = this.client.guilds.get(packet.guild_id)
           if (!guild) {
-            this.emit('debug', `Missing guild ${packet.d.guild_id} in CHANNEL_DELETE`)
+            this.emit('debug', `Missing guild ${packet.guild_id} in CHANNEL_DELETE`)
             break
           }
-          const channel = guild.channels.remove(new GuildChannel(packet.d, this.client))
+          const channel = guild.channels.remove(new GuildChannel(packet, this.client))
           if (!channel) {
             break
           }
           if (channel.type === ChannelTypes.GuildVoice || channel.type === ChannelTypes.GuildStageVoice) {
-            channel.voiceMembers.forEach((member) => {
-              channel.voiceMembers.remove(member)
+            const voiceChannel = channel as VoiceChannel | StageChannel
+            voiceChannel.voiceMembers.forEach((member) => {
+              voiceChannel.voiceMembers.remove(member)
               this.emit('voiceChannelLeave', member, channel)
             })
           }
@@ -1206,44 +1134,43 @@ export class Shard extends EventEmitter {
         break
       }
       case 'GUILD_MEMBERS_CHUNK': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordGuildMembersChunk
-        }
+        const packet = pkt.d as DiscordGuildMembersChunk
 
-        const guild = this.client.guilds.get(packet.d.guild_id)
+        const guild = this.client.guilds.get(packet.guild_id)
         if (!guild) {
           this.emit(
             'debug',
-            `Received GUILD_MEMBERS_CHUNK, but guild ${packet.d.guild_id} is ` +
-              (this.client.unavailableGuilds.has(packet.d.guild_id) ? 'unavailable' : 'missing'),
+            `Received GUILD_MEMBERS_CHUNK, but guild ${packet.guild_id} is ` +
+              (this.client.unavailableGuilds.has(packet.guild_id) ? 'unavailable' : 'missing'),
             this.id,
           )
           break
         }
 
-        const members = packet.d.members.map((member) => {
-          member.id = member.user.id
-          return guild.members.add(new Member(member, guild, this.client))
+        const members = packet.members.map((member) => {
+          const memb = new Member(member, guild, this.client)
+          guild.members.set(memb.id, memb)
+          return memb
         })
 
-        if (packet.d.presences) {
-          packet.d.presences.forEach((presence) => {
+        if (packet.presences) {
+          packet.presences.forEach((presence) => {
             const member = guild.members.get(presence.user.id)
             if (member) {
-              member.update(presence)
+              // member.update(presence)
             }
           })
         }
 
-        if (this.requestMembersPromise.hasOwnProperty(packet.d.nonce ?? '')) {
-          this.requestMembersPromise[packet.d.nonce ?? ''].members.push(...members)
+        if (this.requestMembersPromise.hasOwnProperty(packet.nonce ?? '')) {
+          this.requestMembersPromise[packet.nonce ?? ''].members.push(...members)
         }
 
-        if (packet.d.chunk_index >= packet.d.chunk_count - 1) {
-          if (this.requestMembersPromise.hasOwnProperty(packet.d.nonce ?? '')) {
-            clearTimeout(this.requestMembersPromise[packet.d.nonce ?? ''].timeout)
-            this.requestMembersPromise[packet.d.nonce ?? ''].res(this.requestMembersPromise[packet.d.nonce ?? ''].members)
-            delete this.requestMembersPromise[packet.d.nonce ?? '']
+        if (packet.chunk_index >= packet.chunk_count - 1) {
+          if (this.requestMembersPromise.hasOwnProperty(packet.nonce ?? '')) {
+            clearTimeout(this.requestMembersPromise[packet.nonce ?? ''].timeout)
+            this.requestMembersPromise[packet.nonce ?? ''].res(this.requestMembersPromise[packet.nonce ?? ''].members)
+            delete this.requestMembersPromise[packet.nonce ?? '']
           }
           if (this.getAllUsersCount.hasOwnProperty(guild.id)) {
             delete this.getAllUsersCount[guild.id]
@@ -1259,9 +1186,7 @@ export class Shard extends EventEmitter {
       }
       case 'RESUMED':
       case 'READY': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordReady
-        }
+        const packet = pkt.d as DiscordReady
 
         this.connectAttempts = 0
         this.reconnectInterval = 1000
@@ -1275,7 +1200,7 @@ export class Shard extends EventEmitter {
         this.presence.status = 'online'
         this.client.shards._readyPacketCB(this.id)
 
-        if (packet.t === 'RESUMED') {
+        if (pkt.t === 'RESUMED') {
           // Can only heartbeat after resume succeeds, discord/discord-api-docs#1619
           this.heartbeat()
 
@@ -1290,34 +1215,36 @@ export class Shard extends EventEmitter {
           break
         }
 
-        this.client.user = this.client.users.update(new ExtendedUser(packet.d.user, this.client), this.client)
+        this.client.user = new ExtendedUser(packet.user, this.client)
+        this.client.users.set(this.client.user.id, this.client.user)
 
         if (!this.client.token.startsWith('Bot ')) {
           this.client.token = 'Bot ' + this.client.token
         }
 
-        if (packet.d._trace) {
-          this.discordServerTrace = packet.d._trace
-        }
+        // if (packet._trace) {
+        //   this.discordServerTrace = packet._trace
+        // }
 
-        this.sessionID = packet.d.session_id
+        this.sessionID = packet.session_id
 
-        packet.d.guilds.forEach((guild) => {
+        packet.guilds.forEach((guild) => {
           if (guild.unavailable) {
             this.client.guilds.delete(guild.id)
             this.client.unavailableGuilds.set(guild.id, new UnavailableGuild(guild, this.client))
           } else {
-            this.client.unavailableGuilds.remove(this.createGuild(guild))
+            this.client.guildShardMap[guild.id] = this.id
+            this.client.unavailableGuilds.delete(guild.id)
           }
         })
 
-        this.client.application = packet.d.application
+        this.client.options.applicationId = packet.application.id
 
         this.preReady = true
 
         this.emit('shardPreReady', this.id)
 
-        if (this.client.unavailableGuilds.size > 0 && packet.d.guilds.length > 0) {
+        if (this.client.unavailableGuilds.size > 0 && packet.guilds.length > 0) {
           this.restartGuildCreateTimeout()
         } else {
           this.checkReady()
@@ -1326,24 +1253,20 @@ export class Shard extends EventEmitter {
         break
       }
       case 'VOICE_SERVER_UPDATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordVoiceServerUpdate
-        }
+        // const packet = pkt.d as DiscordVoiceServerUpdate
+        // TODO: voice - support voice stuff
+        // packet.session_id = this.sessionID
+        // packet.user_id = this.client.id
+        // packet.shard = this
 
-        packet.d.session_id = this.sessionID
-        packet.d.user_id = this.client.id
-        packet.d.shard = this
-
-        this.client.voiceConnections.voiceServerUpdate(packet.d)
+        // this.client.voiceConnections.voiceServerUpdate(packet)
 
         break
       }
       case 'USER_UPDATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordUser
-        }
+        const packet = pkt.d as DiscordUser
 
-        let user = this.client.users.get(packet.d.id)
+        let user = this.client.users.get(packet.id)
         let oldUser = null
         if (user) {
           oldUser = {
@@ -1352,103 +1275,90 @@ export class Shard extends EventEmitter {
             avatar: user.avatar,
           }
         }
-        user = this.client.users.update(new User(packet.d, this.client))
+        user = this.client.users.update(new User(packet, this.client))
         this.emit('userUpdate', user, oldUser)
         break
       }
       case 'GUILD_EMOJIS_UPDATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordGuildEmojisUpdate
-        }
+        const packet = pkt.d as DiscordGuildEmojisUpdate
 
-        const guild = this.client.guilds.get(packet.d.guild_id)
+        const guild = this.client.guilds.get(packet.guild_id)
         let oldEmojis = null
-        let emojis = packet.d.emojis
+        const emojis = packet.emojis
         if (guild) {
           oldEmojis = guild.emojis
-          guild.update(packet.d)
-          emojis = guild.emojis
+          guild.emojis = emojis
         }
 
-        this.emit('guildEmojisUpdate', guild ?? { id: packet.d.guild_id }, emojis, oldEmojis)
+        this.emit('guildEmojisUpdate', guild ?? { id: packet.guild_id }, emojis, oldEmojis)
         break
       }
-      // TODO: Add this when dd has the support for this event
-      // case 'GUILD_STICKERS_UPDATE': {
-      // const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & { d: {} };
+      case 'GUILD_STICKERS_UPDATE': {
+        const packet = pkt.d as DiscordGuildStickersUpdate
 
-      // const guild = this.client.guilds.get(packet.d.guild_id);
-      // let oldStickers = null;
-      // let stickers = packet.d.stickers;
-      // if (guild) {
-      // oldStickers = guild.stickers;
-      // guild.update(packet.d);
-      // stickers = guild.stickers;
-      // }
-      // this.emit('guildStickersUpdate', guild || { id: packet.d.guild_id }, stickers, oldStickers);
-      // break;
-      // }
+        const guild = this.client.guilds.get(packet.guild_id)
+        let oldStickers = null
+        const stickers = packet.stickers
+        if (guild) {
+          oldStickers = guild.stickers
+          guild.stickers = stickers
+        }
+        this.emit('guildStickersUpdate', guild ?? { id: packet.guild_id }, stickers, oldStickers)
+        break
+      }
 
       case 'CHANNEL_PINS_UPDATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordChannelPinsUpdate
-        }
+        const packet = pkt.d as DiscordChannelPinsUpdate
 
-        const channel = this.client.getChannel(packet.d.channel_id)
+        const channel = this.client.getChannel(packet.channel_id) as TextChannel
         if (!channel) {
-          this.emit('debug', `CHANNEL_PINS_UPDATE target channel ${packet.d.channel_id} not found`)
+          this.emit('debug', `CHANNEL_PINS_UPDATE target channel ${packet.channel_id} not found`)
           break
         }
         const oldTimestamp = channel.lastPinTimestamp
-        channel.lastPinTimestamp = Date.parse(packet.d.last_pin_timestamp ?? '')
+        channel.lastPinTimestamp = Date.parse(packet.last_pin_timestamp ?? '')
 
         this.emit('channelPinUpdate', channel, channel.lastPinTimestamp, oldTimestamp)
         break
       }
       case 'WEBHOOKS_UPDATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordWebhookUpdate
-        }
+        const packet = pkt.d as DiscordWebhookUpdate
 
         this.emit('webhooksUpdate', {
-          channelID: packet.d.channel_id,
-          guildID: packet.d.guild_id,
+          channelID: packet.channel_id,
+          guildID: packet.guild_id,
         })
         break
       }
       case 'THREAD_CREATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordChannel
-        }
+        const packet = pkt.d as DiscordChannel
 
-        const channel = Channel.from(packet.d, this.client) as ThreadChannel
+        const channel = Channel.from(packet, this.client) as ThreadChannel
         if (!channel.guild) {
-          channel.guild = this.client.guilds.get(packet.d.guild_id ?? '')!
+          channel.guild = this.client.guilds.get(packet.guild_id ?? '')!
           if (!channel.guild) {
-            this.emit('debug', `Received THREAD_CREATE for channel in missing guild ${packet.d.guild_id}`)
+            this.emit('debug', `Received THREAD_CREATE for channel in missing guild ${packet.guild_id}`)
             break
           }
         }
         channel.guild.threads.add(channel, this.client)
-        this.client.threadGuildMap[packet.d.id] = packet.d.guild_id ?? ''
+        this.client.threadGuildMap[packet.id] = packet.guild_id ?? ''
 
         this.emit('threadCreate', channel)
         break
       }
       case 'THREAD_UPDATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordChannel
-        }
+        const packet = pkt.d as DiscordChannel
 
-        const channel = this.client.getChannel(packet.d.id)
+        const channel = this.client.getChannel(packet.id)
         if (!channel) {
-          const thread = Channel.from(packet.d, this.client) as ThreadChannel
-          this.emit('threadUpdate', this.client.guilds.get(packet.d.guild_id ?? '')?.threads.add(thread, this.client), null)
-          this.client.threadGuildMap[packet.d.id] = packet.d.guild_id ?? ''
+          const thread = Channel.from(packet, this.client) as ThreadChannel
+          this.emit('threadUpdate', this.client.guilds.get(packet.guild_id ?? '')?.threads.add(thread, this.client), null)
+          this.client.threadGuildMap[packet.id] = packet.guild_id ?? ''
           break
         }
         if (!(channel instanceof ThreadChannel)) {
-          this.emit('warn', `Unexpected THREAD_UPDATE for channel ${packet.d.id} with type ${channel.type}`)
+          // this.emit('warn', `Unexpected THREAD_UPDATE for channel ${packet.id} with type ${channel.type}`)
           break
         }
         const oldChannel = {
@@ -1456,24 +1366,22 @@ export class Shard extends EventEmitter {
           rateLimitPerUser: channel.rateLimitPerUser,
           threadMetadata: channel.threadMetadata,
         }
-        channel.update(packet.d)
+        channel.update(packet)
 
         this.emit('threadUpdate', channel, oldChannel)
         break
       }
       case 'THREAD_DELETE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: Pick<DiscordChannel, 'id' | 'guild_id' | 'parent_id' | 'type'>
-        }
+        const packet = pkt.d as Pick<DiscordChannel, 'id' | 'guild_id' | 'parent_id' | 'type'>
 
-        delete this.client.threadGuildMap[packet.d.id]
-        const guild = this.client.guilds.get(packet.d.guild_id ?? '')
+        delete this.client.threadGuildMap[packet.id]
+        const guild = this.client.guilds.get(packet.guild_id ?? '')
         if (!guild) {
-          this.emit('debug', `Missing guild ${packet.d.guild_id} in THREAD_DELETE`)
+          this.emit('debug', `Missing guild ${packet.guild_id} in THREAD_DELETE`)
           break
         }
-        const channel = guild.threads.get(packet.d.id)
-        guild.threads.delete(packet.d.id)
+        const channel = guild.threads.get(packet.id)
+        guild.threads.delete(packet.id)
         if (!channel) {
           break
         }
@@ -1482,109 +1390,108 @@ export class Shard extends EventEmitter {
         break
       }
       case 'THREAD_LIST_SYNC': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordThreadListSync
-        }
+        const packet = pkt.d as DiscordThreadListSync
 
-        const guild = this.client.guilds.get(packet.d.guild_id)
+        const guild = this.client.guilds.get(packet.guild_id)
         if (!guild) {
-          this.emit('debug', `Missing guild ${packet.d.guild_id} in THREAD_LIST_SYNC`)
+          this.emit('debug', `Missing guild ${packet.guild_id} in THREAD_LIST_SYNC`)
           break
         }
-        const deletedThreads = (packet.d.channel_ids ?? guild.threads.map((c) => c.id)) // REVIEW Is this a good name?
-          .filter((c) => !packet.d.threads.some((t) => t.id === c))
+        const deletedThreads = (packet.channel_ids ?? guild.threads.map((c) => c.id)) // REVIEW Is this a good name?
+          .filter((c) => !packet.threads.some((t) => t.id === c))
           .map((id) => guild.threads.remove({ id }) ?? { id })
-        const activeThreads = packet.d.threads.map((t) => guild.threads.update(t, this.client))
-        const joinedThreadsMember = packet.d.members.map((m) => guild.threads.get(m.id)?.members.update(m, this.client))
+        const activeThreads = packet.threads.map((t) => {
+          const thread = Channel.from(t, this.client) as ThreadChannel
+          guild.threads.set(thread.id, thread)
+          return thread
+        })
+        // @ts-expect-error js hack
+        const joinedThreadsMember = packet.members.map((m) => guild.threads.get(m.id)?.members.update(m, this.client))
 
         this.emit('threadListSync', guild, deletedThreads, activeThreads, joinedThreadsMember)
         break
       }
       // TODO: Add this when dd has the support for this event
-      // case 'THREAD_MEMBER_UPDATE': {
-      //     const channel = this.client.getChannel(packet.d.id);
-      //     if (!channel) {
-      //         this.emit('debug', `Missing channel ${packet.d.id} in THREAD_MEMBER_UPDATE`);
-      //         break;
-      //     }
-      //     let oldMember = null;
-      //     // Thanks Discord
-      //     packet.d.thread_id = packet.d.id;
-      //     let member = channel.members.get((packet.d.id = packet.d.user_id));
-      //     if (member) {
-      //         oldMember = {
-      //             flags: member.flags,
-      //         };
-      //     }
-      //     member = channel.members.update(packet.d, this.client);
-      //     this.emit('threadMemberUpdate', channel, member, oldMember);
-      //     break;
-      // }
-      case 'THREAD_MEMBERS_UPDATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordThreadMembersUpdate
-        }
-
-        const channel = this.client.getChannel(packet.d.id) as unknown as ThreadChannel
+      case 'THREAD_MEMBER_UPDATE': {
+        const packet = pkt.d as DiscordThreadMemberUpdate
+        const channel = this.client.getChannel(packet.id) as ThreadChannel
         if (!channel) {
-          this.emit('debug', `Missing channel ${packet.d.id} in THREAD_MEMBERS_UPDATE`)
+          this.emit('debug', `Missing channel ${packet.id} in THREAD_MEMBER_UPDATE`)
           break
         }
-        channel.update(packet.d)
+        let oldMember = null
+        // Thanks Discord
+        let member = channel.members.get(this.client.id)
+        if (member) {
+          oldMember = {
+            flags: member.flags,
+          }
+        }
+        member = new ThreadMember({...packet, user_id: this.client.id.toString(), join_timestamp: new Date().toISOString()  }, this.client)
+        this.emit('threadMemberUpdate', channel, member, oldMember)
+        break
+      }
+      case 'THREAD_MEMBERS_UPDATE': {
+        const packet = pkt.d as DiscordThreadMembersUpdate
+
+        const channel = this.client.getChannel(packet.id) as ThreadChannel
+        if (!channel) {
+          this.emit('debug', `Missing channel ${packet.id} in THREAD_MEMBERS_UPDATE`)
+          break
+        }
+        channel.memberCount = packet.member_count
         let addedMembers
         let removedMembers
-        if (packet.d.added_members) {
-          addedMembers = packet.d.added_members.map((m) => {
-            if (m.presence) {
-              m.presence.id = m.presence.user.id
-              this.client.users.update(m.presence.user, this.client)
-            }
+        if (packet.added_members) {
+          addedMembers = packet.added_members.map((m) => {
+            // if (m.presence) {
+            //   m.presence.id = m.presence.user.id
+            //   this.client.users.update(m.presence.user, this.client)
+            // }
 
-            m.thread_id = m.id
-            m.id = m.user_id
-            m.member.id = m.member.user.id
-            const guild = this.client.guilds.get(packet.d.guild_id)
-            if (guild) {
-              if (m.presence) {
-                guild.members.update(m.presence, guild)
-              }
-              guild.members.update(m.member, guild)
-            }
-            return channel.members.update(m, this.client)
+            // m.thread_id = m.id
+            // m.id = m.user_id
+            // m.member.id = m.member.user.id
+            // const guild = this.client.guilds.get(packet.guild_id)
+            // if (guild) {
+            //   if (m.presence) {
+            //     guild.members.update(m.presence, guild)
+            //   }
+            //   guild.members.update(m.member, guild)
+            // }
+            const member = new ThreadMember(m, this.client);
+            channel.members.set(member.id, member)
+            return member
           })
         }
-        if (packet.d.removed_member_ids) {
-          removedMembers = packet.d.removed_member_ids.map((id) => channel.members.remove({ id }) ?? { id })
+        if (packet.removed_member_ids) {
+          removedMembers = packet.removed_member_ids.map((id) => channel.members.remove({ id }) ?? { id })
         }
 
         this.emit('threadMembersUpdate', channel, addedMembers ?? [], removedMembers ?? [])
         break
       }
       case 'STAGE_INSTANCE_CREATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordStageInstance
-        }
+        const packet = pkt.d as DiscordStageInstance
 
-        const guild = this.client.guilds.get(packet.d.guild_id)
+        const guild = this.client.guilds.get(packet.guild_id)
         if (!guild) {
-          this.emit('debug', `Missing guild ${packet.d.guild_id} in STAGE_INSTANCE_CREATE`)
+          this.emit('debug', `Missing guild ${packet.guild_id} in STAGE_INSTANCE_CREATE`)
           break
         }
 
-        this.emit('stageInstanceCreate', guild.stageInstances.add(new StageInstance(packet.d, this.client)))
+        this.emit('stageInstanceCreate', guild.stageInstances.add(new StageInstance(packet, this.client)))
         break
       }
       case 'STAGE_INSTANCE_UPDATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordStageInstance
-        }
+        const packet = pkt.d as DiscordStageInstance
 
-        const guild = this.client.guilds.get(packet.d.guild_id)
+        const guild = this.client.guilds.get(packet.guild_id)
         if (!guild) {
-          this.emit('stageInstanceUpdate', packet.d, null)
+          this.emit('stageInstanceUpdate', packet, null)
           break
         }
-        const stageInstance = guild.stageInstances.get(packet.d.id)
+        const stageInstance = guild.stageInstances.get(packet.id)
         let oldStageInstance = null
         if (stageInstance) {
           oldStageInstance = {
@@ -1592,21 +1499,19 @@ export class Shard extends EventEmitter {
           }
         }
 
-        this.emit('stageInstanceUpdate', guild.stageInstances.update(new StageInstance(packet.d, this.client)), oldStageInstance)
+        this.emit('stageInstanceUpdate', guild.stageInstances.update(new StageInstance(packet, this.client)), oldStageInstance)
         break
       }
       case 'STAGE_INSTANCE_DELETE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordStageInstance
-        }
+        const packet = pkt.d as DiscordStageInstance
 
-        const guild = this.client.guilds.get(packet.d.guild_id)
+        const guild = this.client.guilds.get(packet.guild_id)
         if (!guild) {
-          this.emit('stageInstanceDelete', new StageInstance(packet.d, this.client))
+          this.emit('stageInstanceDelete', new StageInstance(packet, this.client))
           break
         }
 
-        this.emit('stageInstanceDelete', guild.stageInstances.remove(packet.d) ?? new StageInstance(packet.d, this.client))
+        this.emit('stageInstanceDelete', guild.stageInstances.remove(packet) ?? new StageInstance(packet, this.client))
         break
       }
       case 'GUILD_INTEGRATIONS_UPDATE': {
@@ -1614,11 +1519,9 @@ export class Shard extends EventEmitter {
         break
       }
       case 'INTERACTION_CREATE': {
-        const packet = pkt as Omit<DiscordGatewayPayload, 'd'> & {
-          d: DiscordInteraction
-        }
+        const packet = pkt.d as DiscordInteraction
 
-        this.emit('interactionCreate', Interaction.from(packet.d, this.client))
+        this.emit('interactionCreate', Interaction.from(packet, this.client))
         break
       }
       default: {
@@ -1629,109 +1532,20 @@ export class Shard extends EventEmitter {
   }
 
   _onWSClose(event: { code: number; reason: string }) {
-    let { code, reason } = event
-
-    reason = reason.toString()
-    this.emit(
-      'debug',
-      'WS disconnected: ' +
-        JSON.stringify({
-          code,
-          reason,
-          status: this.status,
-        }),
-    )
-    let err: (Error & { code?: number }) | null = !code || code === 1000 ? null : new Error(code + ': ' + reason)
-    let reconnect: 'auto' | boolean = 'auto'
-    if (code) {
-      this.emit('debug', `${code === 1000 ? 'Clean' : 'Unclean'} WS close: ${code}: ${reason}`, this.id)
-      if (code === 4001) {
-        err = new Error('Gateway received invalid OP code')
-      } else if (code === 4002) {
-        err = new Error('Gateway received invalid message')
-      } else if (code === 4003) {
-        err = new Error('Not authenticated')
-        this.sessionID = null
-      } else if (code === 4004) {
-        err = new Error('Authentication failed')
-        this.sessionID = null
-        reconnect = false
-        this.emit('error', new Error(`Invalid token: ${this.token}`))
-      } else if (code === 4005) {
-        err = new Error('Already authenticated')
-      } else if (code === 4006 || code === 4009) {
-        err = new Error('Invalid session')
-        this.sessionID = null
-      } else if (code === 4007) {
-        err = new Error('Invalid sequence number: ' + this.seq)
-        this.seq = 0
-      } else if (code === 4008) {
-        err = new Error('Gateway connection was ratelimited')
-      } else if (code === 4010) {
-        err = new Error('Invalid shard key')
-        this.sessionID = null
-        reconnect = false
-      } else if (code === 4011) {
-        err = new Error('Shard has too many guilds (>2500)')
-        this.sessionID = null
-        reconnect = false
-      } else if (code === 4013) {
-        err = new Error('Invalid intents specified')
-        this.sessionID = null
-        reconnect = false
-      } else if (code === 4014) {
-        err = new Error('Disallowed intents specified')
-        this.sessionID = null
-        reconnect = false
-      } else if (code === 1006) {
-        err = new Error('Connection reset by peer')
-      } else if (code !== 1000 && reason) {
-        err = new Error(code + ': ' + reason)
-      }
-      if (err) {
-        err.code = code
-      }
-    } else {
-      this.emit('debug', 'WS close: unknown code: ' + reason, this.id)
-    }
-    this.disconnect(
-      {
-        reconnect,
-      },
-      err ?? undefined,
-    )
+    // dd handles this internally
   }
 
-  _onWSError(err: Error) {
-    this.emit('error', err, this.id)
+  _onWSError(_err: Error) {
+    // dd handls this internally
   }
 
-  _onWSMessage(data) {
-    try {
-      if (data instanceof ArrayBuffer) {
-        if (this.client.options.compress) {
-          data = Buffer.from(data)
-        }
-      } else if (Array.isArray(data)) {
-        // Fragmented messages
-        data = Buffer.concat(data) // Copyfull concat is slow, but no alternative
-      }
-      if (this.client.options.compress) {
-        if (data.length >= 4 && data.readUInt32BE(data.length - 4) === 0xffff) {
-          return this.onPacket(JSON.parse(data.toString()))
-        }
-      } else {
-        return this.onPacket(JSON.parse(data.toString()))
-      }
-    } catch (err) {
-      this.emit('error', err, this.id)
-    }
+  _onWSMessage(data: any) {
+    this.discordeno.handleMessage(data)
   }
 
   _onWSOpen() {
-    this.status = 'handshaking'
+    // Handled by dd internally
     this.emit('connect', this.id)
-    this.lastHeartbeatAck = true
   }
 
   toString() {

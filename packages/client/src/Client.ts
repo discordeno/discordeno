@@ -241,6 +241,8 @@ export class Client extends EventEmitter {
   lastReconnectDelay: number = 0
   /** The amount of times it has already tried to reconnect. */
   reconnectAttempts: number = 0
+  /** The client user */
+  user?: ExtendedUser
 
   constructor(token: string, options: ClientOptions) {
     super()
@@ -264,6 +266,7 @@ export class Client extends EventEmitter {
       maxResumeAttempts: options.maxResumeAttempts ?? Infinity,
       intents: options.intents ?? 0,
       autoreconnect: options.autoreconnect ?? true,
+      guildCreateTimeout: options.guildCreateTimeout ?? 2000,
       reconnectDelay: options.reconnectDelay ?? ((lastDelay, attempts) => Math.pow(attempts + 1, 0.7) * 20000),
     }
 
@@ -2313,6 +2316,11 @@ export interface ClientOptions {
   intents?: GatewayIntents
   /** Whether or not to automatically reconnect to gateway. */
   autoreconnect?: boolean
+   /** 
+    * How long in milliseconds to wait for a GUILD_CREATE before "ready" is fired. Increase this value if you notice missing guilds
+    * @default 2000
+    */
+   guildCreateTimeout?: number
   /** Handler to determine how many milliseconds to wait before reconnecting. */
   reconnectDelay?: (lastDelay: number, attempts: number) => Promise<number> | number
 }
@@ -2352,6 +2360,8 @@ export interface ParsedClientOptions {
   intents: GatewayIntents
   /** Whether or not to automatically reconnect to gateway. */
   autoreconnect: boolean
+  /** How long in milliseconds to wait for a GUILD_CREATE before "ready" is fired. Increase this value if you notice missing guilds */
+  guildCreateTimeout: number
   /** Handler to determine how many milliseconds to wait before reconnecting. */
   reconnectDelay: (lastDelay: number, attempts: number) => Promise<number> | number
 }

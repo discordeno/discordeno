@@ -977,7 +977,7 @@ export interface PartialEmoji {
 //   url: string;
 // }
 export interface RequestMembersPromise {
-  members: Member
+  members: Member[]
   received: number
   res: (value: Member[]) => void
   timeout: number
