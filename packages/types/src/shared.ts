@@ -1432,6 +1432,7 @@ U[keyof U]
 // export type MakeRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
 export type CamelCase<S extends string> = S extends `${infer T}_${infer U}` ? `${T}${Capitalize<CamelCase<U>>}` : S
+export type SnakeCase<S extends string> = S extends `${infer T}${infer U}` ? `${T extends Capitalize<T> ? "_" : ""}${Lowercase<T>}${SnakeCase<U>}` : S
 
 export type Camelize<T> = T extends any[]
   ? T extends Array<Record<any, any>>
@@ -1439,6 +1440,14 @@ export type Camelize<T> = T extends any[]
     : T
   : T extends Record<any, any>
   ? { [K in keyof T as CamelCase<K & string>]: Camelize<T[K]> }
+  : T
+
+  export type Snakelize<T> = T extends any[]
+  ? T extends Array<Record<any, any>>
+    ? Array<Snakelize<T[number]>>
+    : T
+  : T extends Record<any, any>
+  ? { [K in keyof T as SnakeCase<K & string>]: Snakelize<T[K]> }
   : T
 
 // /** Non object primitives */

@@ -47,6 +47,7 @@ import {
   type DiscordVoiceState,
   type DiscordWebhookUpdate,
 } from '@discordeno/types'
+import { snakelize } from '@discordeno/utils'
 import EventEmitter from 'node:events'
 import Base from '../Base.js'
 import type Client from '../Client.js'
@@ -130,7 +131,11 @@ export class Shard extends EventEmitter {
     this.discordeno = new DiscordenoShard({
       id: this.id,
       // TODO: shard events
-      events: {},
+      events: {
+        message: (_, payload) => {
+          this.wsEvent(snakelize(payload));
+        }
+      },
       connection: {
         compress: this.client.options.compress,
         intents: this.client.options.intents,
