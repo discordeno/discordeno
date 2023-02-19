@@ -63,8 +63,8 @@ import type {
   Widget,
   WidgetData,
 } from '../../typings.js'
+import { generateChannelFrom } from '../../utils/generate.js'
 import type CategoryChannel from '../channels/Category.js'
-import Channel from '../channels/Channel.js'
 import type GuildChannel from '../channels/Guild.js'
 import type StageChannel from '../channels/Stage.js'
 import type TextChannel from '../channels/Text.js'
@@ -218,7 +218,7 @@ export class Guild extends Base {
     if (data.channels) {
       for (const channelData of data.channels) {
         channelData.guild_id = this.id.toString()
-        const channel = Channel.from(channelData, client) as GuildChannel
+        const channel = generateChannelFrom(channelData, client) as GuildChannel
         this.channels.set(channel.id, channel)
         client._channelGuildMap.set(channel.id, this.id)
       }
@@ -227,7 +227,7 @@ export class Guild extends Base {
     if (data.threads) {
       for (const threadData of data.threads) {
         threadData.guild_id = this.id.toString()
-        const thread = Channel.from(threadData, client) as unknown as ThreadChannel
+        const thread = generateChannelFrom(threadData, client) as unknown as ThreadChannel
         this.threads.set(thread.id, thread)
         client._threadGuildMap.set(thread.id, this.id)
       }

@@ -1,12 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { InteractionTypes, type BigString, type DiscordInteraction } from '@discordeno/types'
+import type { DiscordInteraction, InteractionTypes } from '@discordeno/types'
 import Base from '../../Base.js'
 import type Client from '../../Client.js'
-import AutocompleteInteraction from './Autocomplete.js'
-import CommandInteraction from './Command.js'
-import ComponentInteraction from './Component.js'
-import PingInteraction from './Ping.js'
-import UnknownInteraction from './Unknown.js'
+import type { BigString } from '../../Client.js'
 
 export class Interaction extends Base {
   client: Client
@@ -38,24 +34,13 @@ export class Interaction extends Base {
     this.acknowledged = true
   }
 
+  /**
+   * @deprecated Use generateInteractionFrom(data, client) instead.
+   */
   static from(data: DiscordInteraction, client: Client) {
-    switch (data.type) {
-      case InteractionTypes.Ping: {
-        return new PingInteraction(data, client)
-      }
-      case InteractionTypes.ApplicationCommand: {
-        return new CommandInteraction(data, client)
-      }
-      case InteractionTypes.MessageComponent: {
-        return new ComponentInteraction(data, client)
-      }
-      case InteractionTypes.ApplicationCommandAutocomplete: {
-        return new AutocompleteInteraction(data, client)
-      }
-    }
-
-    client.emit('warn', new Error(`Unknown interaction type: ${data.type}\n${JSON.stringify(data)}`))
-    return new UnknownInteraction(data, client)
+    // Remove js hack of circular deps
+    console.error('Usage of Interaction.from() is deprecated. Use generateInteractionFrom(data, client) instead.')
+    client.emit('warn', new Error(`Usage of Interaction.from() is deprecated. Use generateInteractionFrom(data, client) instead.`))
   }
 }
 

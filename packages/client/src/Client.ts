@@ -115,7 +115,6 @@ import {
 import ShardManager from './gateway/ShardManager.js'
 import RequestHandler from './RequestHandler.js'
 import type CategoryChannel from './Structures/channels/Category.js'
-import Channel from './Structures/channels/Channel.js'
 import type NewsChannel from './Structures/channels/News.js'
 import PrivateChannel from './Structures/channels/Private.js'
 import type StageChannel from './Structures/channels/Stage.js'
@@ -203,6 +202,7 @@ import type {
   Widget,
   WidgetData,
 } from './typings.js'
+import { generateChannelFrom } from './utils/generate.js'
 
 // TODO: api version
 const API_VERSION = 10
@@ -581,7 +581,7 @@ export class Client extends EventEmitter {
         topic: options?.topic,
         user_limit: options?.userLimit,
       },
-    }).then((channel) => Channel.from(channel, this))
+    }).then((channel) => generateChannelFrom(channel, this))
   }
 
   /** Create an invite for a channel */
@@ -819,7 +819,7 @@ export class Client extends EventEmitter {
         name: options.name,
         auto_archive_duration: options.autoArchiveDuration,
       },
-    }).then((channel) => Channel.from(channel, this) as unknown as NewsThreadChannel | PublicThreadChannel)
+    }).then((channel) => generateChannelFrom(channel, this) as unknown as NewsThreadChannel | PublicThreadChannel)
   }
 
   /** Create a thread without an existing message */
@@ -831,7 +831,7 @@ export class Client extends EventEmitter {
         name: options.name,
         type: options.type,
       },
-    }).then((channel) => Channel.from(channel, this))) as PrivateThreadChannel
+    }).then((channel) => generateChannelFrom(channel, this))) as PrivateThreadChannel
   }
 
   /** Crosspost (publish) a message to subscribed channels */
@@ -985,7 +985,7 @@ export class Client extends EventEmitter {
         video_quality_mode: options.videoQualityMode,
         permission_overwrites: options.permissionOverwrites,
       },
-    }).then((channel) => Channel.from(channel, this) as unknown as AnyGuildChannel)
+    }).then((channel) => generateChannelFrom(channel, this) as unknown as AnyGuildChannel)
   }
 
   /** Create a channel permission overwrite */
@@ -1434,7 +1434,7 @@ export class Client extends EventEmitter {
     return await this.get(THREADS_GUILD_ACTIVE(guildID)).then((response) => {
       return {
         members: response.members.map((member: DiscordThreadMember) => new ThreadMember(member, this)),
-        threads: response.threads.map((thread: DiscordChannel) => Channel.from(thread, this)),
+        threads: response.threads.map((thread: DiscordChannel) => generateChannelFrom(thread, this)),
       }
     })
   }
@@ -1463,7 +1463,7 @@ export class Client extends EventEmitter {
       return {
         hasMore: response.has_more,
         members: response.members.map((member: DiscordThreadMember) => new ThreadMember(member, this)),
-        threads: response.threads.map((thread: DiscordChannel) => Channel.from(thread, this)),
+        threads: response.threads.map((thread: DiscordChannel) => generateChannelFrom(thread, this)),
       }
     })
   }
@@ -1565,7 +1565,7 @@ export class Client extends EventEmitter {
       })
 
       const threads = data.threads.map((thread: DiscordChannel) => {
-        const channel = Channel.from(thread, this) as unknown as ThreadChannel
+        const channel = generateChannelFrom(thread, this) as unknown as ThreadChannel
         guild?.threads.set(channel.id, channel)
         return channel
       })
@@ -1727,7 +1727,7 @@ export class Client extends EventEmitter {
       return {
         hasMore: response.has_more,
         members: response.members.map((member: DiscordThreadMember) => new ThreadMember(member, this)),
-        threads: response.threads.map((thread: DiscordChannel) => Channel.from(thread, this)),
+        threads: response.threads.map((thread: DiscordChannel) => generateChannelFrom(thread, this)),
       }
     })
   }
@@ -1850,7 +1850,7 @@ export class Client extends EventEmitter {
 
   /** Get a channel's data via the REST API. */
   async getRESTChannel(channelID: BigString): Promise<AnyChannel> {
-    return await this.get(CHANNEL(channelID)).then((channel: DiscordChannel) => Channel.from(channel, this))
+    return await this.get(CHANNEL(channelID)).then((channel: DiscordChannel) => generateChannelFrom(channel, this))
   }
 
   /** Get a guild's data via the REST API. */
@@ -1865,7 +1865,7 @@ export class Client extends EventEmitter {
 
   /** Get a guild's channels via the REST API. */
   async getRESTGuildChannels(guildID: BigString): Promise<AnyGuildChannel[]> {
-    return await this.get(GUILD_CHANNELS(guildID)).then((channels) => channels.map((channel: DiscordChannel) => Channel.from(channel, this)))
+    return await this.get(GUILD_CHANNELS(guildID)).then((channels) => channels.map((channel: DiscordChannel) => generateChannelFrom(channel, this)))
   }
 
   /** Get a guild emoji via the REST API. */
@@ -2316,11 +2316,11 @@ export interface ClientOptions {
   intents?: GatewayIntents
   /** Whether or not to automatically reconnect to gateway. */
   autoreconnect?: boolean
-   /** 
-    * How long in milliseconds to wait for a GUILD_CREATE before "ready" is fired. Increase this value if you notice missing guilds
-    * @default 2000
-    */
-   guildCreateTimeout?: number
+  /**
+   * How long in milliseconds to wait for a GUILD_CREATE before "ready" is fired. Increase this value if you notice missing guilds
+   * @default 2000
+   */
+  guildCreateTimeout?: number
   /** Handler to determine how many milliseconds to wait before reconnecting. */
   reconnectDelay?: (lastDelay: number, attempts: number) => Promise<number> | number
 }

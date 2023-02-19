@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-dynamic-delete */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Shard as DiscordenoShard } from '@discordeno/gateway'
+import { Shard as DiscordenoShard, ShardState } from '@discordeno/gateway'
 import type { DiscordGuildStickersUpdate, DiscordThreadMemberUpdate } from '@discordeno/types'
 import {
   ActivityTypes,
@@ -49,9 +49,9 @@ import {
 } from '@discordeno/types'
 import { snakelize } from '@discordeno/utils'
 import EventEmitter from 'node:events'
+import type WebSocket from 'ws'
 import Base from '../Base.js'
 import type Client from '../Client.js'
-import Channel from '../Structures/channels/Channel.js'
 import GuildChannel from '../Structures/channels/Guild.js'
 import PrivateChannel from '../Structures/channels/Private.js'
 import type StageChannel from '../Structures/channels/Stage.js'
@@ -79,15 +79,13 @@ import type {
   SelfStatus,
   TextableChannel,
 } from '../typings.js'
-import type BrowserWebSocket from '../utils/BrowserWebSocket.js'
 import type Bucket from '../utils/Bucket.js'
+import { generateChannelFrom } from '../utils/generate.js'
 
 export class Shard extends EventEmitter {
   client: Client
   connectAttempts: number = 0
-  connecting = false
   connectTimeout: number | null = null
-  discordServerTrace?: string[]
   getAllUsersCount: { [guildID: string]: boolean } = {}
   getAllUsersLength: number = 0
   getAllUsersQueue: unknown[] = []
@@ -95,11 +93,7 @@ export class Shard extends EventEmitter {
   guildCreateTimeout: NodeJS.Timeout | null = null
   guildSyncQueue: string[] = []
   guildSyncQueueLength: number = 0
-  heartbeatInterval: number | null = null
   id: number
-  lastHeartbeatAck = false
-  lastHeartbeatReceived: number | null = null
-  lastHeartbeatSent: number | null = null
   latency: number = 0
   preReady = false
   presence!: ClientPresence
@@ -107,12 +101,8 @@ export class Shard extends EventEmitter {
   ready = false
   reconnectInterval: number = 0
   requestMembersPromise: { [s: string]: RequestMembersPromise } = {}
-  seq: number = 0
-  sessionID: string | null = null
-  status: 'connecting' | 'disconnected' | 'handshaking' | 'identifying' | 'ready' | 'resuming' = 'disconnected'
-
   unsyncedGuilds: number = 0
-  ws: WebSocket | BrowserWebSocket | null = null
+  // ws: WebSocket | BrowserWebSocket | null = null
 
   discordeno: DiscordenoShard
 
@@ -133,8 +123,8 @@ export class Shard extends EventEmitter {
       // TODO: shard events
       events: {
         message: (_, payload) => {
-          this.wsEvent(snakelize(payload));
-        }
+          this.wsEvent(snakelize(payload))
+        },
       },
       connection: {
         compress: this.client.options.compress,
@@ -163,6 +153,109 @@ export class Shard extends EventEmitter {
 
   get token(): string {
     return this.client.token
+  }
+
+  get connecting(): boolean {
+    return this.discordeno.state === ShardState.Connecting
+  }
+
+  set connecting(connecting: boolean) {
+    this.discordeno.state = ShardState.Connecting
+  }
+
+  get heartbeatInterval(): number {
+    return this.discordeno.heart.interval
+  }
+
+  set heartbeatInterval(interval: number) {
+    this.discordeno.heart.interval = interval
+  }
+
+  get lastHeartbeatAck(): boolean {
+    return this.discordeno.heart.acknowledged
+  }
+
+  set lastHeartbeatAck(acknowledged: boolean) {
+    this.discordeno.heart.acknowledged = acknowledged
+  }
+
+  get lastHeartbeatReceived(): number | undefined {
+    return this.discordeno.heart.lastAck
+  }
+
+  set lastHeartbeatReceived(lastAck: number | undefined) {
+    this.discordeno.heart.lastAck = lastAck
+  }
+
+  get lastHeartbeatSent(): number | undefined {
+    return this.discordeno.heart.lastBeat
+  }
+
+  set lastHeartbeatSent(lastSent: number | undefined) {
+    this.discordeno.heart.lastBeat = lastSent
+  }
+
+  get sessionID(): string | undefined | null {
+    return this.discordeno.sessionId
+  }
+
+  set sessionID(id: string | undefined | null) {
+    this.discordeno.sessionId = id ?? undefined
+  }
+
+  get seq(): number {
+    return this.discordeno.previousSequenceNumber ?? 0
+  }
+
+  set seq(sequence: number) {
+    this.discordeno.previousSequenceNumber = sequence
+  }
+
+  get status() {
+    switch (this.discordeno.state) {
+      case ShardState.Disconnected:
+        return 'disconnected'
+      case ShardState.Connecting:
+        return 'connecting'
+      case ShardState.Resuming:
+        return 'resuming'
+      case ShardState.Identifying:
+        return 'identifying'
+      default:
+        return 'disconnected'
+    }
+  }
+
+  set status(state: 'connecting' | 'disconnected' | 'handshaking' | 'identifying' | 'ready' | 'resuming' | 'disconnected') {
+    switch (state) {
+      case 'connecting':
+        this.discordeno.state = ShardState.Connecting
+        break
+      case 'disconnected':
+        this.discordeno.state = ShardState.Disconnected
+        break
+      case 'identifying':
+        this.discordeno.state = ShardState.Identifying
+        break
+      case 'resuming':
+        this.discordeno.state = ShardState.Resuming
+        break
+      case 'handshaking':
+      case 'ready':
+        this.discordeno.state = ShardState.Connected
+        break
+      default:
+        this.discordeno.state = ShardState.Disconnected
+        break
+    }
+  }
+
+  get ws(): WebSocket | undefined {
+    return this.discordeno.socket
+  }
+
+  set ws(socket: WebSocket | undefined) {
+    this.discordeno.socket = socket
   }
 
   checkReady() {
@@ -1027,7 +1120,7 @@ export class Shard extends EventEmitter {
       case 'CHANNEL_CREATE': {
         const packet = pkt.d as DiscordChannel
 
-        const channel = Channel.from(packet, this.client)
+        const channel = generateChannelFrom(packet, this.client)
         if (packet.guild_id) {
           const guildChannel = channel as GuildChannel
           if (!guildChannel.guild) {
@@ -1080,7 +1173,7 @@ export class Shard extends EventEmitter {
           channel.update(packet)
         } else {
           this.emit('debug', `Channel ${packet.id} changed from type ${oldType} to ${packet.type}`)
-          const newChannel = Channel.from(packet, this.client) as GuildChannel
+          const newChannel = generateChannelFrom(packet, this.client) as GuildChannel
           if (packet.guild_id) {
             const guild = this.client.guilds.get(packet.guild_id)
             if (!guild) {
@@ -1227,10 +1320,6 @@ export class Shard extends EventEmitter {
           this.client.token = 'Bot ' + this.client.token
         }
 
-        // if (packet._trace) {
-        //   this.discordServerTrace = packet._trace
-        // }
-
         this.sessionID = packet.session_id
 
         packet.guilds.forEach((guild) => {
@@ -1338,7 +1427,7 @@ export class Shard extends EventEmitter {
       case 'THREAD_CREATE': {
         const packet = pkt.d as DiscordChannel
 
-        const channel = Channel.from(packet, this.client) as ThreadChannel
+        const channel = generateChannelFrom(packet, this.client) as ThreadChannel
         if (!channel.guild) {
           channel.guild = this.client.guilds.get(packet.guild_id ?? '')!
           if (!channel.guild) {
@@ -1357,7 +1446,7 @@ export class Shard extends EventEmitter {
 
         const channel = this.client.getChannel(packet.id)
         if (!channel) {
-          const thread = Channel.from(packet, this.client) as ThreadChannel
+          const thread = generateChannelFrom(packet, this.client) as ThreadChannel
           this.emit('threadUpdate', this.client.guilds.get(packet.guild_id ?? '')?.threads.add(thread, this.client), null)
           this.client.threadGuildMap[packet.id] = packet.guild_id ?? ''
           break
@@ -1406,7 +1495,7 @@ export class Shard extends EventEmitter {
           .filter((c) => !packet.threads.some((t) => t.id === c))
           .map((id) => guild.threads.remove({ id }) ?? { id })
         const activeThreads = packet.threads.map((t) => {
-          const thread = Channel.from(t, this.client) as ThreadChannel
+          const thread = generateChannelFrom(t, this.client) as ThreadChannel
           guild.threads.set(thread.id, thread)
           return thread
         })
@@ -1432,7 +1521,7 @@ export class Shard extends EventEmitter {
             flags: member.flags,
           }
         }
-        member = new ThreadMember({...packet, user_id: this.client.id.toString(), join_timestamp: new Date().toISOString()  }, this.client)
+        member = new ThreadMember({ ...packet, user_id: this.client.id.toString(), join_timestamp: new Date().toISOString() }, this.client)
         this.emit('threadMemberUpdate', channel, member, oldMember)
         break
       }
@@ -1464,7 +1553,7 @@ export class Shard extends EventEmitter {
             //   }
             //   guild.members.update(m.member, guild)
             // }
-            const member = new ThreadMember(m, this.client);
+            const member = new ThreadMember(m, this.client)
             channel.members.set(member.id, member)
             return member
           })
@@ -1561,7 +1650,6 @@ export class Shard extends EventEmitter {
     return Base.prototype.toJSON.call(this, [
       'connecting',
       'ready',
-      'discordServerTrace',
       'status',
       'lastHeartbeatReceived',
       'lastHeartbeatSent',
