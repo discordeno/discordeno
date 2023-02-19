@@ -1,14 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-var-requires */
-let EventEmitter
-try {
-  EventEmitter = require('eventemitter3')
-} catch (err) {
-  EventEmitter = require('events').EventEmitter
-}
+import { EventEmitter } from "events"
 
 class BrowserWebSocketError extends Error {
-  static CONNECTING: 0
+  static CONNECTING: 0 = 0
   static OPEN: 1
   static CLOSING: 2
   static CLOSED: 3
@@ -49,6 +44,38 @@ class BrowserWebSocket extends EventEmitter {
     return this._ws.readyState
   }
 
+  static get CONNECTING() {
+    return 0
+  }
+
+  static set CONNECTING(state: number) {
+    BrowserWebSocket.CONNECTING = state;
+  }
+
+  static get OPEN() {
+    return 1
+  }
+
+  static set OPEN(state: number) {
+    BrowserWebSocket.OPEN = state;
+  }
+
+  static get CLOSING() {
+    return 2
+  }
+
+  static set CLOSING(state: number) {
+    BrowserWebSocket.CLOSING = state;
+  }
+
+  static get CLOSED() {
+    return 3
+  }
+
+  static set CLOSED(state: number) {
+    BrowserWebSocket.CLOSED = state;
+  }
+
   close(code?: number, reason?: string) {
     return this._ws.close(code, reason)
   }
@@ -73,10 +100,5 @@ class BrowserWebSocket extends EventEmitter {
     }
   }
 }
-
-BrowserWebSocket.CONNECTING = 0
-BrowserWebSocket.OPEN = 1
-BrowserWebSocket.CLOSING = 2
-BrowserWebSocket.CLOSED = 3
 
 export default BrowserWebSocket
