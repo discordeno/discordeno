@@ -5,109 +5,244 @@ on:
   push:
 
 jobs:
-  format-test:
+  build-type-and-test:
+    name: Build Type and Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - run: yarn install --immutable
+      - name: Turbo Cache
+        id: turbo-cache
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
+      - name: Build Type and Test
+        run: yarn build:type --cache-dir=".turbo"
+
+  build-dist:
+    name: Build Dist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - run: yarn install --immutable
+      - name: Turbo Cache
+        id: turbo-cache
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-build-${{ github.sha }}
+      - name: Type Test
+        run: yarn build --cache-dir=".turbo"
+
+  format-unit-and-integration-test:
     name: Format Test
     runs-on: ubuntu-latest
+    needs: build-type-and-test
     steps:
       - uses: actions/checkout@v3
-      - uses: denoland/setup-deno@main
+      - uses: actions/setup-node@v3
         with:
-          deno-version: v1.x
+          node-version: 18
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - run: yarn install --immutable
+      - name: Turbo Cache
+        id: turbo-cache
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-lint-${{ github.sha }}
+      - name: Build type cache
+        if: steps.turbo-cache.outputs.cache-hit != 'true'
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
       - name: Check Formatting
-        run: deno fmt --check
+        run: yarn lint --cache-dir=".turbo"
 
-  # change if any prod code changed, skip test without change
-  path-filter:
-    name: Check Path Changes
+  test-type-unit-and-integration-test:
+    name: Test Type Test
     runs-on: ubuntu-latest
-    outputs:
-      code-change: ${{ steps.changes.outputs.code-change }}
+    needs: build-type-and-test
     steps:
       - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: changes
+      - uses: actions/setup-node@v3
         with:
-          filters: |
-            code-change:
-            - ".github/workflows/test.yml"
-            - "gateway/**"
-            - "handlers/**"
-            - "helpers/**"
-            - "packages/**"
-            - "plugins/**"
-            - "rest/**"
-            - "template/**"
-            - "tests/**"
-            - "transformers/**"
-            - "types/**"
-            - "util/**"
-            - "bot.ts"
-            - "mod.ts"
-            - "dnt.ts"
+          node-version: 18
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - run: yarn install --immutable
+      - name: Turbo Cache
+        id: turbo-cache
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-unit-and-integration-test:test-type-${{ github.sha }}
+      - name: Build type cache
+        if: steps.turbo-cache.outputs.cache-hit != 'true'
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
+      - name: Test Type Test
+        run: yarn test:test-type --cache-dir=".turbo"
 
-  type-test:
-    name: Type Test
-    runs-on: ubuntu-latest
-    needs: path-filter
-    if: ${{ needs.path-filter.outputs.code-change == 'true' }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: denoland/setup-deno@main
-        with:
-          deno-version: v1.x
-      - name: Check dependencies
-        run: deno check mod.ts
-      - name: Check plugins
-        run: deno check plugins/mod.ts
-      - name: Check Templates
-        run: deno check template/beginner/mod.ts template/minimal/mod.ts
-
-  integration-test:
-    name: Integration Test
-    runs-on: ubuntu-latest
-    needs: path-filter
-    if: ${{ needs.path-filter.outputs.code-change == 'true' && github.ref == 'refs/heads/main' }}
-    concurrency: integration-test
-    steps:
-      - uses: actions/checkout@v3
-      - uses: denoland/setup-deno@main
-        with:
-          deno-version: v1.x
-      - name: Run integration
-        # if: ${{ github.actor == 'Skillz4Killz' || github.actor == 'itohatweb' }}
-        run: deno test --coverage=coverage -A tests/
-        env:
-          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
-          UNIT_TEST_GUILD_ID: ${{ secrets.UNIT_TEST_GUILD_ID }}
-          TEST_ENV: INTEGRATION
-          PROXY_REST_SECRET: ${{ secrets.PROXY_REST_SECRET }}
-          PROXY_REST_URL: ${{ secrets.PROXY_REST_URL }}
-      - name: Create coverage report
-        run: deno coverage --exclude=tests ./coverage --lcov > coverage.lcov
-      - name: Collect and upload the coverage report
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./coverage.lcov
-          flags: integration
-
-  unit-test:
-    name: Unit Test
-    runs-on: ubuntu-latest
-    needs: path-filter
-    if: ${{ needs.path-filter.outputs.code-change == 'true' }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: denoland/setup-deno@main
-        with:
-          deno-version: v1.x
-      - name: Run integration
-        run: deno test --coverage=coverage --parallel -A tests/
-        env:
-          TEST_ENV: UNIT
-      - name: Create coverage report
-        run: deno coverage --exclude=tests ./coverage --lcov > coverage.lcov
-      - name: Collect and upload the coverage report
-        uses: codecov/codecov-action@v3
-        with:
-          file: ./coverage.lcov
-          flags: unit
+  # Not using matrix because test later on cant needs a specific job
+  client-unit-test:
+    name: Client
+    needs: build-dist
+    uses: ./.github/workflows/unit-test.yml
+    with:
+      package: client
+  client-other-runtime-test:
+    name: Client
+    needs: client-unit-test
+    uses: ./.github/workflows/other-runtime-unit-test.yml
+    with:
+      package: client
+  client-test-status:
+    name: Client
+    needs: [client-other-runtime-test]
+    uses: ./.github/workflows/client-pkg-test-status.yml
+  discordeno-unit-test:
+    name: Discordeno
+    needs: build-dist
+    uses: ./.github/workflows/unit-test.yml
+    with:
+      package: discordeno
+  discordeno-other-runtime-test:
+    name: Discordeno
+    needs: discordeno-unit-test
+    uses: ./.github/workflows/other-runtime-unit-test.yml
+    with:
+      package: discordeno
+  discordeno-test-status:
+    name: Discordeno
+    needs: [discordeno-other-runtime-test]
+    uses: ./.github/workflows/discordeno-pkg-test-status.yml
+  gateway-unit-test:
+    name: Gateway
+    needs: build-dist
+    uses: ./.github/workflows/unit-test.yml
+    with:
+      package: gateway
+  gateway-integration-test:
+    name: Gateway
+    needs: build-dist
+    uses: ./.github/workflows/integration-test.yml
+    with:
+      package: gateway
+  gateway-other-runtime-test:
+    name: Gateway
+    needs: [gateway-unit-test, gateway-integration-test]
+    uses: ./.github/workflows/other-runtime-unit-test.yml
+    with:
+      package: gateway
+  gateway-test-status:
+    name: Gateway
+    needs: [gateway-other-runtime-test]
+    uses: ./.github/workflows/gateway-pkg-test-status.yml
+  rest-unit-test:
+    name: Rest
+    needs: build-dist
+    uses: ./.github/workflows/unit-test.yml
+    with:
+      package: rest
+  rest-e2e-test:
+    name: Rest
+    needs: rest-unit-test
+    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/node-migration' || github.ref == 'refs/heads/node-migration-clean' }}
+    uses: ./.github/workflows/e2e-test.yml
+    secrets: inherit
+    with:
+      package: rest
+  rest-other-runtime-test:
+    name: Rest
+    needs: rest-unit-test
+    uses: ./.github/workflows/other-runtime-unit-test.yml
+    with:
+      package: rest
+  rest-test-status:
+    name: Rest
+    needs: [rest-e2e-test, rest-other-runtime-test]
+    uses: ./.github/workflows/rest-pkg-test-status.yml
+  utils-unit-test:
+    name: Utils
+    needs: build-dist
+    uses: ./.github/workflows/unit-test.yml
+    with:
+      package: utils
+  utils-other-runtime-test:
+    name: Utils
+    needs: utils-unit-test
+    uses: ./.github/workflows/other-runtime-unit-test.yml
+    with:
+      package: utils
+  utils-test-status:
+    name: Utils
+    needs: [utils-other-runtime-test]
+    uses: ./.github/workflows/utils-pkg-test-status.yml
+  bot-unit-test:
+    name: Bot
+    needs: build-dist
+    uses: ./.github/workflows/unit-test.yml
+    with:
+      package: bot
+  bot-e2e-test:
+    name: Bot
+    needs: bot-unit-test
+    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/node-migration' || github.ref == 'refs/heads/node-migration-clean' }}
+    uses: ./.github/workflows/e2e-test.yml
+    secrets: inherit
+    with:
+      package: bot
+  bot-other-runtime-test:
+    name: Bot
+    needs: bot-unit-test
+    uses: ./.github/workflows/other-runtime-unit-test.yml
+    with:
+      package: bot
+  bot-test-status:
+    name: Bot
+    needs: [bot-e2e-test, bot-other-runtime-test]
+    uses: ./.github/workflows/bot-pkg-test-status.yml

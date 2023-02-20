@@ -4,35 +4,97 @@ on:
   push:
     branches:
       - main
+<<<<<<< HEAD
+      - node-migration-clean
+    paths:
+      - packages/**
+      - .github/**
+=======
   workflow_dispatch:
+>>>>>>> 1a717ddc7d97e31d3775747df9df153729d2925d
 
 jobs:
+  path-filter:
+    name: Check Path Changes
+    runs-on: ubuntu-latest
+    outputs:
+      bot: ${ steps.changes.outputs.bot }
+      gateway: ${ steps.changes.outputs.gateway }
+      rest: ${ steps.changes.outputs.rest }
+      types: ${ steps.changes.outputs.types }
+      utils: ${ steps.changes.outputs.utils }
+      global: ${ steps.changes.outputs.global }
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          base: node-migration-clean
+          filters: |
+            gateway:
+            - "packages/gateway/**"
+            rest:
+            - "packages/rest/**"
+            types:
+            - "packages/types/**"
+            utils:
+            - "packages/utils/**"
+            bot:
+            - "packages/bot/**"
+            global:
+            - ".github/**"
+
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     strategy:
+      fail-fast: false
       matrix:
-        deno: ["v1.x"]
+        package: ["gateway", "rest", "types", "utils", "bot"]
+        run: ["false"]
+        exclude:
+          - package: gateway
+            run: "${{ needs.path-filter.outputs.gateway == 'true' || needs.path-filter.outputs.global == 'true' }}"
+          - package: rest
+            run: "${{ needs.path-filter.outputs.rest == 'true' || needs.path-filter.outputs.global == 'true' }}"
+          - package: types
+            run: "${{ needs.path-filter.outputs.types == 'true' || needs.path-filter.outputs.global == 'true' }}"
+          - package: utils
+            run: "${{ needs.path-filter.outputs.utils == 'true' || needs.path-filter.outputs.global == 'true' }}"
+          - package: bot
+            run: "${{ needs.path-filter.outputs.bot == 'true' || needs.path-filter.outputs.global == 'true' }}"
+    needs: path-filter
     steps:
-      - uses: actions/checkout@v2
-      - uses: denoland/setup-deno@main
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          deno-version: ${{ matrix.deno }}
-      - name: Get last tag version
-        run: |
-          echo "DISCORDENO_VERSION_OLD=$(wget -O- -q https://deno.land/x/discordeno/util/constants.ts | grep 'export const DISCORDENO_VERSION' | awk -F'= ' '{print $2}' | tr -d '"|;')" >> $GITHUB_ENV
-      - name: Get new tag version
-        run: echo "DISCORDENO_VERSION=$(cat util/constants.ts | grep 'export const DISCORDENO_VERSION' | awk -F'= ' '{print $2}' | tr -d '"|;')" >> $GITHUB_ENV
-      - name: Create tag
-        if: ${{ env.DISCORDENO_VERSION != env.DISCORDENO_VERSION_OLD }}
-        run: git tag ${{ env.DISCORDENO_VERSION }} && git push --tags
-      - uses: actions/setup-node@v2
+          node-version: 18
+          registry-url: "https://registry.npmjs.org"
+          scope: "@discordeno"
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
         with:
-          node-version: '16.x'
-          registry-url: 'https://registry.npmjs.org'
-      - name: build npm
-        run: deno run -A ./dnt.ts ${{ env.DISCORDENO_VERSION }}
-      - name: npm publish
-        if: ${{ env.DISCORDENO_VERSION != env.DISCORDENO_VERSION_OLD }}
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - run: yarn install --immutable
+      - name: Turbo Cache
+        id: turbo-cache
+        uses: actions/cache@v3
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-release-build-${{ matrix.package }}-${{ github.sha }}
+      - name: build Package
+        run: yarn release-build --cache-dir=".turbo" --filter=./packages/${{ matrix.package }}
+      - name: Bump Package Version
+        run: node ./scripts/bumpVersionByCommit.js ${{ matrix.package }}
+
+      - run: npm publish --access public
+        working-directory: packages/${{ matrix.package }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: cd npm && npm publish
