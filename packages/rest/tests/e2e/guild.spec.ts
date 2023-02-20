@@ -1,8 +1,8 @@
-import type { Camelize, DiscordGuild } from '@discordeno/types'
 import { ChannelTypes } from '@discordeno/types'
+import { logger } from '@discordeno/utils'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
-import { after, before, describe, it } from 'mocha'
+import { after, describe, it } from 'mocha'
 import { rest } from './utils.js'
 chai.use(chaiAsPromised)
 
@@ -10,22 +10,23 @@ describe('Guild helpers', async () => {
   // Delete the oldest guild(most likely to have finished tests).
 
   it('Create and delete a guild', async () => {
+    logger.info('Create and delete a guild')
     const guild = await rest.createGuild({
-      name: 'Discordeno-test'
+      name: 'Discordeno-test',
     })
+    logger.info('Guild created', guild.id)
     expect(guild.id).to.be.exist
+    logger.info('Guild exists', guild.id)
     await rest.deleteGuild(guild.id)
+    logger.info('Guild deleted', guild.id)
     // Make sure the guild was deleted
     await expect(rest.getGuild(guild.id)).to.eventually.rejected
+    logger.info('Guild deleted confirmed', guild.id)
   })
 
-  describe('Edit and get', () => {
-    let guild: Camelize<DiscordGuild>
-
-    before(async () => {
-      guild = await rest.createGuild({
-        name: 'Discordeno-test'
-      })
+  describe('Edit and get', async () => {
+    const guild = await rest.createGuild({
+      name: 'Discordeno-test',
     })
 
     after(async () => {
@@ -42,13 +43,13 @@ describe('Guild helpers', async () => {
     it('Edit a guild', async () => {
       const voiceChannel = await rest.createChannel(guild.id, {
         name: 'edit-guild-test',
-        type: ChannelTypes.GuildVoice
+        type: ChannelTypes.GuildVoice,
       })
       expect(voiceChannel.id).to.be.exist
 
       const edited = await rest.editGuild(guild.id, {
         name: 'Discordeno-test-edited',
-        afkChannelId: voiceChannel.id
+        afkChannelId: voiceChannel.id,
         // afkTimeout: 5,
       })
       expect(edited.name).to.equal('Discordeno-test-edited')

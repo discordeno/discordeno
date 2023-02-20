@@ -928,7 +928,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get('X-RateLimit-Scope') === 'shared')
 
           const resetAfter = response.headers.get('x-ratelimit-reset-after')
+          logger.warn(`Request to ${url} was rate limited. Reset after ${resetAfter} seconds.`,);
           if (resetAfter) await delay(Number(resetAfter) * 1000)
+          // process the response to prevent mem leak
+          await response.json()
 
           return await options.retryRequest?.(options)
         }
@@ -992,19 +995,20 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async makeRequest(method, url, body, options) {
       return await new Promise((resolve, reject) => {
-        rest.processRequest({
+        const payload: SendRequestOptions = {
           url,
           method,
           body,
           retryCount: 0,
           retryRequest: async function (options: SendRequestOptions) {
-            // TODO: should change to reprocess queue item
-            await rest.sendRequest(options)
+            rest.processRequest(payload)
           },
           resolve: (data) => resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined),
           reject,
           options,
-        })
+        }
+
+        rest.processRequest(payload)
       })
     },
 

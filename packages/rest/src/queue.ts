@@ -68,7 +68,7 @@ export class Queue {
     this.processing = true
 
     while (this.waiting.length > 0) {
-      logger.debug(`Queue ${this.url} process waiting while loop ran.`)
+      logger.debug(`[Queue] ${this.url} process waiting while loop ran.`)
       if (this.isRequestAllowed()) {
         // Resolve the next item in the queue
         this.waiting.shift()?.()
@@ -181,9 +181,11 @@ export class Queue {
       }
 
       logger.debug(`[Queue] ${this.url}. Deleting`)
+      if (this.timeoutId) clearTimeout(this.timeoutId)
       // No requests have been requested for this queue so we nuke this queue
       this.rest.queues.delete(this.url)
       logger.debug(`[Queue] ${this.url}. Deleted! Remaining: (${this.rest.queues.size})`, [...this.rest.queues.keys()])
+      if (this.rest.queues.size) this.processPending()
     }, this.deleteQueueDelay)
   }
 
