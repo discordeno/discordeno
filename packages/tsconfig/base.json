@@ -18,7 +18,8 @@
     "skipLibCheck": true,
     "strict": true,
     "incremental": true,
-    "importsNotUsedAsValues": "error"
+    "importsNotUsedAsValues": "error",
+    "resolveJsonModule": true
   },
   "exclude": [
     "node_modules",

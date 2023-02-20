@@ -5,29 +5,27 @@ import {
   AutoModerationTriggerTypes
 } from '@discordeno/types'
 import { expect } from 'chai'
-import { cached, rest } from './utils.js'
-
-let guild: Camelize<DiscordGuild>
+import { e2ecache, rest } from './utils.js'
 
 before(async () => {
-  if (!cached.guild) {
-    cached.guild = await rest.createGuild({
-      name: 'Discordeno-test'
+  if (!e2ecache.guild) {
+    e2ecache.guild = await rest.createGuild({
+      name: 'Discordeno-test',
     })
   }
-  guild = cached.guild
 })
 
 after(async () => {
-  if (cached.guild) {
-    await rest.deleteGuild(guild.id)
-    cached.guild = undefined
+  if (rest.invalidBucket.timeoutId) clearTimeout(rest.invalidBucket.timeoutId)
+  if (e2ecache.guild.id && !e2ecache.deletedGuild) {
+    e2ecache.deletedGuild = true;
+    await rest.deleteGuild(e2ecache.guild.id)
   }
 })
 
 describe('[automod] Run automod tests', async () => {
   it('[automod] Create a MessageSend rule for Keyword with BlockMessage action.', async () => {
-    const rule = await rest.createAutomodRule(guild.id, {
+    const rule = await rest.createAutomodRule(e2ecache.guild.id, {
       name: 'test',
       eventType: AutoModerationEventTypes.MessageSend,
       triggerType: AutoModerationTriggerTypes.Keyword,
@@ -43,7 +41,7 @@ describe('[automod] Run automod tests', async () => {
 
     expect(rule.id).to.be.exist
 
-    const fetchedRule = await rest.getAutomodRule(guild.id, rule.id)
+    const fetchedRule = await rest.getAutomodRule(e2ecache.guild.id, rule.id)
 
     expect(fetchedRule.id).to.be.exist
     expect(fetchedRule.name).to.equal(rule.name)
@@ -62,11 +60,11 @@ describe('[automod] Run automod tests', async () => {
       AutoModerationActionType.BlockMessage
     )
 
-    await rest.deleteAutomodRule(guild.id, rule.id)
+    await rest.deleteAutomodRule(e2ecache.guild.id, rule.id)
   })
 
   it('[automod] Create a MessageSend rule for Keyword with Timeout action.', async () => {
-    const rule = await rest.createAutomodRule(guild.id, {
+    const rule = await rest.createAutomodRule(e2ecache.guild.id, {
       name: 'test',
       eventType: AutoModerationEventTypes.MessageSend,
       triggerType: AutoModerationTriggerTypes.Keyword,
@@ -85,7 +83,7 @@ describe('[automod] Run automod tests', async () => {
 
     expect(rule.id).to.be.exist
 
-    const fetchedRule = await rest.getAutomodRule(guild.id, rule.id)
+    const fetchedRule = await rest.getAutomodRule(e2ecache.guild.id, rule.id)
 
     expect(fetchedRule.id).to.be.exist
     expect(fetchedRule.name).to.equal(rule.name)
@@ -105,11 +103,11 @@ describe('[automod] Run automod tests', async () => {
     )
     expect(fetchedRule.actions[0].metadata?.durationSeconds).to.equal(10)
 
-    await rest.deleteAutomodRule(guild.id, rule.id)
+    await rest.deleteAutomodRule(e2ecache.guild.id, rule.id)
   })
 
   it('[automod] Create a MessageSend rule for Keyword with BlockMessage & Timeout action.', async () => {
-    const rule = await rest.createAutomodRule(guild.id, {
+    const rule = await rest.createAutomodRule(e2ecache.guild.id, {
       name: 'test',
       eventType: AutoModerationEventTypes.MessageSend,
       triggerType: AutoModerationTriggerTypes.Keyword,
@@ -131,14 +129,14 @@ describe('[automod] Run automod tests', async () => {
 
     expect(rule.id).to.be.exist
 
-    await rest.deleteAutomodRule(guild.id, rule.id)
+    await rest.deleteAutomodRule(e2ecache.guild.id, rule.id)
   })
 
   describe('with a channel', () => {
     let channel: Camelize<DiscordChannel>
 
     beforeEach(async () => {
-      channel = await rest.createChannel(guild.id, {
+      channel = await rest.createChannel(e2ecache.guild.id, {
         name: 'test'
       })
     })
@@ -148,7 +146,7 @@ describe('[automod] Run automod tests', async () => {
     })
 
     it('[automod] Create a MessageSend rule for Keyword with SendAlertMessage action.', async () => {
-      const rule = await rest.createAutomodRule(guild.id, {
+      const rule = await rest.createAutomodRule(e2ecache.guild.id, {
         name: 'test',
         eventType: AutoModerationEventTypes.MessageSend,
         triggerType: AutoModerationTriggerTypes.Keyword,
@@ -167,7 +165,7 @@ describe('[automod] Run automod tests', async () => {
 
       expect(rule.id).to.be.exist
 
-      const fetchedRule = await rest.getAutomodRule(guild.id, rule.id)
+      const fetchedRule = await rest.getAutomodRule(e2ecache.guild.id, rule.id)
 
       expect(fetchedRule.id).to.be.exist
       expect(fetchedRule.name).to.equal(rule.name)
@@ -187,11 +185,11 @@ describe('[automod] Run automod tests', async () => {
       )
       expect(fetchedRule.actions[0].metadata?.channelId).to.equal(channel.id)
 
-      await rest.deleteAutomodRule(guild.id, rule.id)
+      await rest.deleteAutomodRule(e2ecache.guild.id, rule.id)
     })
 
     it('[automod] Create a MessageSend rule for Keyword with SendAlertMessage & Timeout action.', async () => {
-      const rule = await rest.createAutomodRule(guild.id, {
+      const rule = await rest.createAutomodRule(e2ecache.guild.id, {
         name: 'test',
         eventType: AutoModerationEventTypes.MessageSend,
         triggerType: AutoModerationTriggerTypes.Keyword,
@@ -216,11 +214,11 @@ describe('[automod] Run automod tests', async () => {
 
       expect(rule.id).to.be.exist
 
-      await rest.deleteAutomodRule(guild.id, rule.id)
+      await rest.deleteAutomodRule(e2ecache.guild.id, rule.id)
     })
 
     it('[automod] Create a MessageSend rule for Keyword with BlockMessage & SendAlertMessage & Timeout action.', async () => {
-      const rule = await rest.createAutomodRule(guild.id, {
+      const rule = await rest.createAutomodRule(e2ecache.guild.id, {
         name: 'test',
         eventType: AutoModerationEventTypes.MessageSend,
         triggerType: AutoModerationTriggerTypes.Keyword,
@@ -249,7 +247,7 @@ describe('[automod] Run automod tests', async () => {
       expect(rule.id).to.be.exist
 
       // Get the rule again to make sure it was created correctly
-      const fetchedRule = await rest.getAutomodRule(guild.id, rule.id)
+      const fetchedRule = await rest.getAutomodRule(e2ecache.guild.id, rule.id)
       expect(fetchedRule.id).to.be.exist
       expect(fetchedRule.name).to.equal(rule.name)
       expect(fetchedRule.eventType).to.equal(
@@ -277,7 +275,7 @@ describe('[automod] Run automod tests', async () => {
         AutoModerationActionType.Timeout
       )
 
-      await rest.deleteAutomodRule(guild.id, rule.id)
+      await rest.deleteAutomodRule(e2ecache.guild.id, rule.id)
     })
   })
 })

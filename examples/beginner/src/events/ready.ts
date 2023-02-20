@@ -1,5 +1,5 @@
-import { Bot } from "../../bot.ts";
-import log from "../utils/logger.ts";
+import { Bot } from '../../bot.ts.js';
+import log from '../utils/logger.ts.js';
 
 Bot.events.ready = (_, payload) => {
   log.info(`[READY] Shard ID ${payload.shardId} of ${Bot.gateway.lastShardId + 1} shards is ready!`);

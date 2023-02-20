@@ -1,2 +1,3 @@
-export * from './manager/index.js'
-export * from './shard/index.js'
+export * from './manager.js'
+export * from './Shard.js'
+export * from './types.js'

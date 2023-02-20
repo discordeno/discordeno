@@ -1,6 +1,1 @@
-export * from '@discordeno/client'
-export * from '@discordeno/gateway'
-export * from '@discordeno/rest'
-export * from '@discordeno/types'
-export * from '@discordeno/utils'
-export * from './bot.js'
+export * from '@discordeno/bot'

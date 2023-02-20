@@ -1,9 +1,9 @@
 import { expect } from 'chai'
 import { beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
-import { Collection } from '../src/collection.js'
+import { Collection } from '../src/Collection.js'
 
-describe('[collection]', () => {
+describe('collection.ts', () => {
   let collection: Collection<any, any>
 
   beforeEach(() => {
@@ -13,7 +13,7 @@ describe('[collection]', () => {
   it('[collection] collection values to array', () => {
     const testCollection = new Collection([
       ['best', 'tri'],
-      ['proficient', 'yui']
+      ['proficient', 'yui'],
     ])
     expect(testCollection.array()).to.be.deep.equal(['tri', 'yui'])
   })
@@ -51,7 +51,7 @@ describe('[collection]', () => {
     const maxSize = 2
 
     const maxCollection = new Collection([], {
-      maxSize
+      maxSize,
     })
 
     expect(maxCollection).to.exist
@@ -79,7 +79,7 @@ describe('[collection]', () => {
   const testCollection = new Collection([
     ['a', 1],
     ['b', 2],
-    ['c', 3]
+    ['c', 3],
   ])
 
   it('[collection] find by key or value', () => {
@@ -93,11 +93,7 @@ describe('[collection]', () => {
   })
 
   it('[collection] map', () => {
-    expect(testCollection.map((k, v) => `${v}${k}`)).to.be.deep.equal([
-      'a1',
-      'b2',
-      'c3'
-    ])
+    expect(testCollection.map((k, v) => `${v}${k}`)).to.be.deep.equal(['a1', 'b2', 'c3'])
   })
 
   it('[collection] some', () => {
@@ -119,14 +115,14 @@ describe('[collection]', () => {
     const sweeperCollection = new Collection(
       [
         ['a', 1],
-        ['b', 2]
+        ['b', 2],
       ],
       {
         sweeper: {
           filter: (v, _) => v === 1,
-          interval: 50
-        }
-      }
+          interval: 50,
+        },
+      },
     )
 
     try {

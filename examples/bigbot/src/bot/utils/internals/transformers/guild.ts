@@ -2,8 +2,9 @@
 // Only keep the properties your bot uses. If your bot does not use emojis in cache, you can save all that memory.
 // This file is currently disabled, but you can enable it should you choose when you go the customizer file.
 // Feel free to delete this comment or file as you wish.
-import { Collection, Guild } from "discordeno";
-import { BotWithCustomProps } from "../../../bot.js";
+import type { Guild } from "discordeno";
+import { Collection } from "discordeno";
+import type { BotWithCustomProps } from "../../../bot.js";
 
 export function customizeGuildTransformer(bot: BotWithCustomProps) {
   bot.transformers.guild = function (bot, payload) {

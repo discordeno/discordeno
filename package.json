@@ -1,6 +1,6 @@
 {
   "name": "discordeno-monorepo",
-  "version": "18.0.0-alpha.1",
+  "version": "19.0.0-alpha.1",
   "private": true,
   "type": "module",
   "workspaces": [
@@ -16,6 +16,7 @@
     "test:type": "turbo run build:type",
     "test:unit-coverage": "turbo run test:unit-coverage",
     "test:unit": "turbo run test:unit",
+    "test:integration": "turbo run test:integration",
     "test:deno-unit": "turbo run test:deno-unit",
     "test:e2e": "turbo run test:e2e",
     "test:test-type": "turbo run test:test-type",
@@ -29,6 +30,7 @@
     "husky": "^8.0.2",
     "lint-staged": "^13.0.4",
     "prettier": "^2.8.0",
+    "turbo": "^1.6.3",
     "typedoc": "^0.23.21",
     "typedoc-plugin-markdown": "^3.13.6",
     "typescript": "^4.9.3"
@@ -42,8 +44,5 @@
       "eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to ."
     ]
   },
-  "packageManager": "yarn@3.3.0",
-  "dependencies": {
-    "turbo": "^1.6.3"
-  }
+  "packageManager": "yarn@3.3.0"
 }

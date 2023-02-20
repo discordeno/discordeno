@@ -1,4 +1,4 @@
-import { dotEnvConfig } from "./deps.ts";
+import { dotEnvConfig } from './deps.ts.js';
 
 dotEnvConfig({ export: true });
 export const BOT_TOKEN = process.env.BOT_TOKEN || "";

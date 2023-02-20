@@ -10,8 +10,9 @@ class bancommand extends BaseCommand {
   constructor(data) {
     super(data);
   }
+
   async execute() {
-    //Show Case Modal
+    // Show Case Modal
 
     // Because no permission system has not been added
     if (!this.client.config.owners.includes(String(this.user.id))) return;

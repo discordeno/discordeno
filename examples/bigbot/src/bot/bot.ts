@@ -1,10 +1,11 @@
-import { Bot, Collection, createBot, createRestManager } from "discordeno";
+import type { Bot} from "discordeno";
+import { Collection, createBot, createRestManager } from "discordeno";
 import enableHelpersPlugin from "discordeno/helpers-plugin";
 import { createLogger } from "discordeno/logger";
 import { setupAnalyticsHooks } from "../analytics.js";
 import { INTENTS, REST_URL } from "../configs.js";
 import { setupEventHandlers } from "./events/mod.js";
-import { MessageCollector } from "./utils/collectors.js";
+import type { MessageCollector } from "./utils/collectors.js";
 import { customizeInternals } from "./utils/internals/mod.js";
 
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string;

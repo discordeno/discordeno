@@ -9,15 +9,16 @@ class pingcommand extends BaseCommand {
   constructor(data) {
     super(data);
   }
+
   async execute() {
     const msg = await this.channel.send({ content: `Pinging...` });
-    //Assign properties to the response
+    // Assign properties to the response
     const ping = msg.timestamp - (this.message ? this.message.timestamp : this.interaction.timestamp);
 
     const embed = new Discord.Embed()
       .setTitle(`The Bots ping is ${ping} ms`)
       .toJSON();
-    //Edit Message with the Embed
+    // Edit Message with the Embed
     return this.reply({ embeds: [embed] });
   }
 }

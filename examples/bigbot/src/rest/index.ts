@@ -1,10 +1,10 @@
 import dotenv from "dotenv";
-dotenv.config();
 
 import { BASE_URL, createRestManager } from "discordeno";
 import express from "express";
 import { setupAnalyticsHooks } from "../analytics.js";
 import { REST_URL } from "../configs.js";
+dotenv.config();
 
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN as string;
 const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION as string;
@@ -20,7 +20,7 @@ const rest = createRestManager({
 // Add send fetching analytics hook to rest
 setupAnalyticsHooks(rest);
 
-//@ts-ignore
+// @ts-expect-error
 rest.convertRestError = (errorStack, data) => {
   if (!data) return { message: errorStack.message };
   return { ...data, message: errorStack.message };
@@ -42,7 +42,7 @@ app.all("/*", async (req, res) => {
   }
 
   try {
-    const result = await rest.runMethod(rest, req.method as any, `${BASE_URL}${req.url}`, req.body);
+    const result = await rest.runMethod(rest, req.method , `${BASE_URL}${req.url}`, req.body);
 
     if (result) {
       res.status(200).json(result);

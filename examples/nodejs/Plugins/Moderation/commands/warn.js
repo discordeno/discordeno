@@ -11,8 +11,9 @@ class warncommand extends BaseCommand {
   constructor(data) {
     super(data);
   }
+
   async execute() {
-    //Show Case Modal
+    // Show Case Modal
     if (!this.interaction) return this.reply("You currently can just use this command as slash command.");
 
     if (!this.interaction.member.permissions.has("KICK_MEMBERS")) {

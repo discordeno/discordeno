@@ -1,22 +1,18 @@
-import type { Camelize, DiscordGuild } from '@discordeno/types'
-import dotenv from 'dotenv'
-import { createRestManager } from '../../src/restManager.js'
+import { LogDepth, logger, LogLevels } from '@discordeno/utils'
 
-dotenv.config()
-
-if (!process.env.DISCORD_TOKEN) throw new Error('Token was not provided.')
-export const token = process.env.DISCORD_TOKEN
-
-const E2E_TEST_GUILD_ID = process.env.E2E_TEST_GUILD_ID
-export const CACHED_COMMUNITY_GUILD_ID = E2E_TEST_GUILD_ID
-  ? BigInt(E2E_TEST_GUILD_ID)
-  : 907350958810480671n
-
-// eslint-disable-next-line prefer-const
-export let cached = {
-  guild: undefined as Camelize<DiscordGuild> | undefined
-}
+import { createRestManager } from '../../src/manager.js'
+import { E2E_TEST_GUILD_ID, token } from './constants.js'
+// For debugging purposes
+// logger.setLevel(LogLevels.Debug)
+// logger.setDepth(LogDepth.Full)
 
 export const rest = createRestManager({
-  token
+  token,
 })
+rest.deleteQueueDelay = 10000
+
+export const e2ecache = {
+  guild: await rest.createGuild({ name: 'ddenotester' }),
+  deletedGuild: false,
+  communityGuildId: E2E_TEST_GUILD_ID
+}

@@ -1,0 +1,11 @@
+name: Utils Pkg Test Status
+
+on:
+  workflow_call:
+
+jobs:
+  utils-pkg-test-status:
+    name: Utils Pkg Test Status
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3

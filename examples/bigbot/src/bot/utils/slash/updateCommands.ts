@@ -1,9 +1,10 @@
-import { ApplicationCommandOption, ApplicationCommandTypes, Bot } from "discordeno";
+import type { ApplicationCommandOption, Bot } from "discordeno";
+import { ApplicationCommandTypes } from "discordeno";
 import { prisma } from "../../../prisma.js";
 import { bot } from "../../bot.js";
 import COMMANDS from "../../commands/mod.js";
 import { serverLanguages, translate } from "../../languages/translate.js";
-import { ArgumentDefinition } from "./createCommand.js";
+import type { ArgumentDefinition } from "./createCommand.js";
 
 const DEV_SERVER_ID = process.env.DEV_SERVER_ID as string;
 
@@ -30,7 +31,7 @@ export async function updateDevCommands(bot: Bot) {
 
       return {
         name: (translatedName || name).toLowerCase(),
-        description: translatedDescription || command!.description,
+        description: translatedDescription || command.description,
         options: command.options
           ? createOptions(bot.transformers.snowflake(DEV_SERVER_ID), command.options, command.name)
           : undefined,
@@ -124,7 +125,7 @@ function createOptions(
     const optionDescription = translate(guildId, option.description);
 
     // TODO: remove this ts ignore
-    // @ts-ignore
+    // @ts-expect-error
     const choices = option.choices?.map((choice) => ({
       ...choice,
       name: translate(guildId, choice.name),
@@ -135,9 +136,9 @@ function createOptions(
       name: optionName.toLowerCase(),
       description: optionDescription || "No description available.",
       choices,
-      // @ts-ignore fix this
+      // @ts-expect-error fix this
       options: option.options
-        // @ts-ignore fix this
+        // @ts-expect-error fix this
         ? createOptions(bot, guildId, option.options)
         : undefined,
     } as ApplicationCommandOption);

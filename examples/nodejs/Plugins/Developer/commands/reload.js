@@ -7,6 +7,7 @@ class reloadcommand extends BaseCommand {
   constructor(data) {
     super(data);
   }
+
   async execute() {
     if (!this.client.config.owners.includes(String(this.user.id))) return;
     if (!this.args[0]) return this.reply({ content: "**You must provide a command to reload!**" });

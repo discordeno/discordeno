@@ -1,4 +1,4 @@
-import {
+import type {
   ApplicationCommandOptionTypes,
   ApplicationCommandTypes,
   Bot,
@@ -9,10 +9,10 @@ import {
   Role,
   User,
 } from "discordeno";
-import english from "../../languages/english.js";
-import { translationKeys } from "../../languages/translate.js";
-import { InteractionWithCustomProps } from "../../typings/discordeno.js";
-import { PermissionLevelHandlers } from "./permLevels.js";
+import type english from "../../languages/english.js";
+import type { translationKeys } from "../../languages/translate.js";
+import type { InteractionWithCustomProps } from "../../typings/discordeno.js";
+import type { PermissionLevelHandlers } from "./permLevels.js";
 
 export function createCommand<T extends readonly ArgumentDefinition[]>(command: Command<T>) {
   return command;
@@ -24,9 +24,9 @@ type Identity<T> = { [P in keyof T]: T[P] };
 
 // TODO: make required by default true
 // Define each of the types here
-type BaseDefinition = {
+interface BaseDefinition {
   description: translationKeys;
-};
+}
 
 // Subcommand
 type SubcommandArgumentDefinition<N extends translationKeys = translationKeys> = BaseDefinition & {
@@ -47,13 +47,13 @@ type SubcommandGroupArgumentDefinition<N extends translationKeys = translationKe
 type StringArgumentDefinition<N extends translationKeys = translationKeys> = BaseDefinition & {
   name: N;
   type: ApplicationCommandOptionTypes.String;
-  choices?: readonly { name: string; value: string }[];
+  choices?: ReadonlyArray<{ name: string; value: string }>;
   required?: true;
 };
 type StringOptionalArgumentDefinition<N extends translationKeys = translationKeys> = BaseDefinition & {
   name: N;
   type: ApplicationCommandOptionTypes.String;
-  choices?: readonly { name: string; value: string }[];
+  choices?: ReadonlyArray<{ name: string; value: string }>;
   required?: false;
 };
 
@@ -61,13 +61,13 @@ type StringOptionalArgumentDefinition<N extends translationKeys = translationKey
 type IntegerArgumentDefinition<N extends translationKeys = translationKeys> = BaseDefinition & {
   name: N;
   type: ApplicationCommandOptionTypes.Integer;
-  choices?: readonly { name: string; value: number }[];
+  choices?: ReadonlyArray<{ name: string; value: number }>;
   required: true;
 };
 type IntegerOptionalArgumentDefinition<N extends translationKeys = translationKeys> = BaseDefinition & {
   name: N;
   type: ApplicationCommandOptionTypes.Integer;
-  choices?: readonly { name: string; value: number }[];
+  choices?: ReadonlyArray<{ name: string; value: number }>;
   required?: false;
 };
 
@@ -158,25 +158,25 @@ export type ConvertArgumentDefinitionsToArgs<T extends readonly ArgumentDefiniti
     {
       [P in keyof T]: T[P] extends StringOptionalArgumentDefinition<infer N> // STRING
         ? {
-          // @ts-ignore TODO: fix this some day
-          [_ in getName<N>]?: T[P]["choices"] extends readonly { name: string; value: string }[] // @ts-ignore
+          // @ts-expect-error TODO: fix this some day
+          [_ in getName<N>]?: T[P]["choices"] extends ReadonlyArray<{ name: string; value: string }> // @ts-expect-error
             ? T[P]["choices"][number]["value"]
             : string;
         }
         : T[P] extends StringArgumentDefinition<infer N> ? {
-            // @ts-ignore TODO: fix this some day
-            [_ in getName<N>]: T[P]["choices"] extends readonly { name: string; value: string }[] // @ts-ignore
+            // @ts-expect-error TODO: fix this some day
+            [_ in getName<N>]: T[P]["choices"] extends ReadonlyArray<{ name: string; value: string }> // @ts-expect-error
               ? T[P]["choices"][number]["value"]
               : string;
           }
         // INTEGER
         : T[P] extends IntegerOptionalArgumentDefinition<infer N> ? {
-            [_ in getName<N>]?: T[P]["choices"] extends readonly { name: string; value: number }[] // @ts-ignore
+            [_ in getName<N>]?: T[P]["choices"] extends ReadonlyArray<{ name: string; value: number }> // @ts-expect-error
               ? T[P]["choices"][number]["value"]
               : number;
           }
         : T[P] extends IntegerArgumentDefinition<infer N> ? {
-            [_ in getName<N>]: T[P]["choices"] extends readonly { name: string; value: number }[] // @ts-ignore
+            [_ in getName<N>]: T[P]["choices"] extends ReadonlyArray<{ name: string; value: number }> // @ts-expect-error
               ? T[P]["choices"][number]["value"]
               : number;
           }
@@ -221,7 +221,7 @@ export type ConvertArgumentDefinitionsToArgs<T extends readonly ArgumentDefiniti
           }
         // SUBCOMMAND
         : T[P] extends SubcommandArgumentDefinition<infer N> ? {
-            [_ in getName<N>]?: T[P]["options"] extends readonly ArgumentDefinition[] // @ts-ignore somehow this check does not work
+            [_ in getName<N>]?: T[P]["options"] extends readonly ArgumentDefinition[] // @ts-expect-error somehow this check does not work
               ? ConvertArgumentDefinitionsToArgs<T[P]["options"]>
               : {};
           }
@@ -239,7 +239,7 @@ export interface Command<T extends readonly ArgumentDefinition[]> {
   name: translationKeys;
   /** The type of command. */
   type?: ApplicationCommandTypes;
-  /** The description of the command*/
+  /** The description of the command */
   description: translationKeys;
   // TODO: consider type being a string like "number" | "user" for better ux
   /** The options for the command, used for both slash and message commands. */
@@ -273,7 +273,7 @@ export interface Command<T extends readonly ArgumentDefinition[]> {
   acknowledge?: boolean;
 
   permissionLevels?:
-    | (keyof typeof PermissionLevelHandlers)[]
+    | Array<keyof typeof PermissionLevelHandlers>
     | ((data: Interaction, command: Command<T>) => boolean | Promise<boolean>);
   botServerPermissions?: PermissionStrings[];
   botChannelPermissions?: PermissionStrings[];

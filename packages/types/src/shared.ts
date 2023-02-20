@@ -7,13 +7,13 @@ export enum PresenceStatus {
   offline,
 }
 
-/* https://discord.com/developers/docs/resources/channel#message-object-message-flags */
-export enum ApplicationCommandFlags {
-  /** Do not include any embeds when serialising this message */
-  SuppressEmbeds = 1 << 2,
-  /** Only visible to the user who invoked the interaction */
-  Ephemeral = 1 << 6,
-}
+// /* https://discord.com/developers/docs/resources/channel#message-object-message-flags */
+// export enum ApplicationCommandFlags {
+//   /** Do not include any embeds when serialising this message */
+//   SuppressEmbeds = 1 << 2,
+//   /** Only visible to the user who invoked the interaction */
+//   Ephemeral = 1 << 6,
+// }
 
 /** https://discord.com/developers/docs/resources/user#user-object-premium-types */
 export enum PremiumTypes {
@@ -39,6 +39,7 @@ export enum UserFlags {
   EarlyVerifiedBotDeveloper = 1 << 17,
   DiscordCertifiedModerator = 1 << 18,
   BotHttpInteractions = 1 << 19,
+  ActiveDeveloper = 1 << 22,
 }
 
 /** https://discord.com/developers/docs/resources/channel#channels-resource */
@@ -56,13 +57,13 @@ export enum IntegrationExpireBehaviors {
   Kick,
 }
 
-/** https://discord.com/developers/docs/resources/user#connection-object-visibility-types */
-export enum VisibilityTypes {
-  /** Invisible to everyone except the user themselves */
-  None,
-  /** Visible to everyone */
-  Everyone,
-}
+// /** https://discord.com/developers/docs/resources/user#connection-object-visibility-types */
+// export enum VisibilityTypes {
+//   /** Invisible to everyone except the user themselves */
+//   None,
+//   /** Visible to everyone */
+//   Everyone,
+// }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-membership-state-enum */
 export enum TeamMembershipStates {
@@ -154,13 +155,7 @@ export enum WebhookTypes {
 }
 
 /** https://discord.com/developers/docs/resources/channel#embed-object-embed-types */
-export type EmbedTypes =
-  | 'rich'
-  | 'image'
-  | 'video'
-  | 'gifv'
-  | 'article'
-  | 'link'
+export type EmbedTypes = 'rich' | 'image' | 'video' | 'gifv' | 'article' | 'link'
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level */
 export enum DefaultMessageNotificationLevels {
@@ -194,17 +189,17 @@ export enum VerificationLevels {
   VeryHigh,
 }
 
-/** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
-export interface BaseRole {
-  /** Role name */
-  name: string
-  /** Integer representation of hexadecimal color code */
-  color: number
-  /** Position of this role */
-  position: number
-  /** role unicode emoji */
-  unicodeEmoji?: string
-}
+// /** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
+// export interface BaseRole {
+//   /** Role name */
+//   name: string
+//   /** Integer representation of hexadecimal color code */
+//   color: number
+//   /** Position of this role */
+//   position: number
+//   /** role unicode emoji */
+//   unicodeEmoji?: string
+// }
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-guild-features */
 export enum GuildFeatures {
@@ -570,18 +565,18 @@ export enum ApplicationCommandPermissionTypes {
   Channel,
 }
 
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags */
-export enum ActivityFlags {
-  Instance = 1 << 0,
-  Join = 1 << 1,
-  Spectate = 1 << 2,
-  JoinRequest = 1 << 3,
-  Sync = 1 << 4,
-  Play = 1 << 5,
-  PartyPrivacyFriends = 1 << 6,
-  PartyPrivacyVoiceChannel = 1 << 7,
-  Embedded = 1 << 8,
-}
+// /** https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags */
+// export enum ActivityFlags {
+//   Instance = 1 << 0,
+//   Join = 1 << 1,
+//   Spectate = 1 << 2,
+//   JoinRequest = 1 << 3,
+//   Sync = 1 << 4,
+//   Play = 1 << 5,
+//   PartyPrivacyFriends = 1 << 6,
+//   PartyPrivacyVoiceChannel = 1 << 7,
+//   Embedded = 1 << 8,
+// }
 
 /** https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags */
 export enum BitwisePermissionFlags {
@@ -671,319 +666,317 @@ export enum BitwisePermissionFlags {
 
 export type PermissionStrings = keyof typeof BitwisePermissionFlags
 
-/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#voice */
-export enum VoiceOpcodes {
-  /** Begin a voice websocket connection. */
-  Identify,
-  /** Select the voice protocol. */
-  SelectProtocol,
-  /** Complete the websocket handshake. */
-  Ready,
-  /** Keep the websocket connection alive. */
-  Heartbeat,
-  /** Describe the session. */
-  SessionDescription,
-  /** Indicate which users are speaking. */
-  Speaking,
-  /** Sent to acknowledge a received client heartbeat. */
-  HeartbeatACK,
-  /** Resume a connection. */
-  Resume,
-  /** Time to wait between sending heartbeats in milliseconds. */
-  Hello,
-  /** Acknowledge a successful session resume. */
-  Resumed,
-  /** A client has disconnected from the voice channel */
-  ClientDisconnect = 13,
-}
+// /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#voice */
+// export enum VoiceOpcodes {
+//   /** Begin a voice websocket connection. */
+//   Identify,
+//   /** Select the voice protocol. */
+//   SelectProtocol,
+//   /** Complete the websocket handshake. */
+//   Ready,
+//   /** Keep the websocket connection alive. */
+//   Heartbeat,
+//   /** Describe the session. */
+//   SessionDescription,
+//   /** Indicate which users are speaking. */
+//   Speaking,
+//   /** Sent to acknowledge a received client heartbeat. */
+//   HeartbeatACK,
+//   /** Resume a connection. */
+//   Resume,
+//   /** Time to wait between sending heartbeats in milliseconds. */
+//   Hello,
+//   /** Acknowledge a successful session resume. */
+//   Resumed,
+//   /** A client has disconnected from the voice channel */
+//   ClientDisconnect = 13,
+// }
 
-/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#voice */
-export enum VoiceCloseEventCodes {
-  /** You sent an invalid [opcode](https://discord.com/developers/docs/topics/opcodes-and-status-codes#voice-voice-opcodes). */
-  UnknownOpcode = 4001,
-  /** You sent a invalid payload in your [identifying](https://discord.com/developers/docs/topics/gateway#identify) to the Gateway. */
-  FailedToDecodePayload,
-  /** You sent a payload before [identifying](https://discord.com/developers/docs/topics/gateway#identify) with the Gateway. */
-  NotAuthenticated,
-  /** The token you sent in your [identify](https://discord.com/developers/docs/topics/gateway#identify) payload is incorrect. */
-  AuthenticationFailed,
-  /** You sent more than one [identify](https://discord.com/developers/docs/topics/gateway#identify) payload. Stahp. */
-  AlreadyAuthenticated,
-  /** Your session is no longer valid. */
-  SessionNoLongerValid,
-  /** Your session has timed out. */
-  SessionTimedOut = 4009,
-  /** We can't find the server you're trying to connect to. */
-  ServerNotFound = 4011,
-  /** We didn't recognize the [protocol](https://discord.com/developers/docs/topics/voice-connections#establishing-a-voice-udp-connection-example-select-protocol-payload) you sent. */
-  UnknownProtocol,
-  /** Channel was deleted, you were kicked, voice server changed, or the main gateway session was dropped. Should not reconnect. */
-  Disconnect = 4014,
-  /** The server crashed. Our bad! Try [resuming](https://discord.com/developers/docs/topics/voice-connections#resuming-voice-connection). */
-  VoiceServerCrashed,
-  /** We didn't recognize your [encryption](https://discord.com/developers/docs/topics/voice-connections#encrypting-and-sending-voice). */
-  UnknownEncryptionMode,
-}
+// /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#voice */
+// export enum VoiceCloseEventCodes {
+//   /** You sent an invalid [opcode](https://discord.com/developers/docs/topics/opcodes-and-status-codes#voice-voice-opcodes). */
+//   UnknownOpcode = 4001,
+//   /** You sent a invalid payload in your [identifying](https://discord.com/developers/docs/topics/gateway#identify) to the Gateway. */
+//   FailedToDecodePayload,
+//   /** You sent a payload before [identifying](https://discord.com/developers/docs/topics/gateway#identify) with the Gateway. */
+//   NotAuthenticated,
+//   /** The token you sent in your [identify](https://discord.com/developers/docs/topics/gateway#identify) payload is incorrect. */
+//   AuthenticationFailed,
+//   /** You sent more than one [identify](https://discord.com/developers/docs/topics/gateway#identify) payload. Stahp. */
+//   AlreadyAuthenticated,
+//   /** Your session is no longer valid. */
+//   SessionNoLongerValid,
+//   /** Your session has timed out. */
+//   SessionTimedOut = 4009,
+//   /** We can't find the server you're trying to connect to. */
+//   ServerNotFound = 4011,
+//   /** We didn't recognize the [protocol](https://discord.com/developers/docs/topics/voice-connections#establishing-a-voice-udp-connection-example-select-protocol-payload) you sent. */
+//   UnknownProtocol,
+//   /** Channel was deleted, you were kicked, voice server changed, or the main gateway session was dropped. Should not reconnect. */
+//   Disconnect = 4014,
+//   /** The server crashed. Our bad! Try [resuming](https://discord.com/developers/docs/topics/voice-connections#resuming-voice-connection). */
+//   VoiceServerCrashed,
+//   /** We didn't recognize your [encryption](https://discord.com/developers/docs/topics/voice-connections#encrypting-and-sending-voice). */
+//   UnknownEncryptionMode,
+// }
 
-/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#rpc */
-export enum RpcErrorCodes {
-  /** An unknown error occurred. */
-  UnknownError = 1000,
-  /** You sent an invalid payload. */
-  InvalidPayload = 4000,
-  /** Invalid command name specified. */
-  InvalidCommand = 4002,
-  /** Invalid guild ID specified. */
-  InvalidGuild,
-  /** Invalid event name specified. */
-  InvalidEvent,
-  /** Invalid channel ID specified. */
-  InvalidChannel,
-  /** You lack permissions to access the given resource. */
-  InvalidPermissions,
-  /** An invalid OAuth2 application ID was used to authorize or authenticate with. */
-  InvalidClientId,
-  /** An invalid OAuth2 application origin was used to authorize or authenticate with. */
-  InvalidOrigin,
-  /** An invalid OAuth2 token was used to authorize or authenticate with. */
-  InvalidToken,
-  /** The specified user ID was invalid. */
-  InvalidUser,
-  /** A standard OAuth2 error occurred; check the data object for the OAuth2 error details. */
-  OAuth2Error = 5000,
-  /** An asynchronous `SELECT_TEXT_CHANNEL`/`SELECT_VOICE_CHANNEL` command timed out. */
-  SelectChannelTimedOut,
-  /** An asynchronous `GET_GUILD` command timed out. */
-  GetGuildTimedOut,
-  /** You tried to join a user to a voice channel but the user was already in one. */
-  SelectVoiceForceRequired,
-  /** You tried to capture more than one shortcut key at once. */
-  CaptureShortcutAlreadyListening,
-}
+// /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#rpc */
+// export enum RpcErrorCodes {
+//   /** An unknown error occurred. */
+//   UnknownError = 1000,
+//   /** You sent an invalid payload. */
+//   InvalidPayload = 4000,
+//   /** Invalid command name specified. */
+//   InvalidCommand = 4002,
+//   /** Invalid guild ID specified. */
+//   InvalidGuild,
+//   /** Invalid event name specified. */
+//   InvalidEvent,
+//   /** Invalid channel ID specified. */
+//   InvalidChannel,
+//   /** You lack permissions to access the given resource. */
+//   InvalidPermissions,
+//   /** An invalid OAuth2 application ID was used to authorize or authenticate with. */
+//   InvalidClientId,
+//   /** An invalid OAuth2 application origin was used to authorize or authenticate with. */
+//   InvalidOrigin,
+//   /** An invalid OAuth2 token was used to authorize or authenticate with. */
+//   InvalidToken,
+//   /** The specified user ID was invalid. */
+//   InvalidUser,
+//   /** A standard OAuth2 error occurred; check the data object for the OAuth2 error details. */
+//   OAuth2Error = 5000,
+//   /** An asynchronous `SELECT_TEXT_CHANNEL`/`SELECT_VOICE_CHANNEL` command timed out. */
+//   SelectChannelTimedOut,
+//   /** An asynchronous `GET_GUILD` command timed out. */
+//   GetGuildTimedOut,
+//   /** You tried to join a user to a voice channel but the user was already in one. */
+//   SelectVoiceForceRequired,
+//   /** You tried to capture more than one shortcut key at once. */
+//   CaptureShortcutAlreadyListening,
+// }
 
-/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#rpc */
-export enum RpcCloseEventCodes {
-  /** You connected to the RPC server with an invalid client ID. */
-  InvalidClientId = 4000,
-  /** You connected to the RPC server with an invalid origin. */
-  InvalidOrigin,
-  /** You are being rate limited. */
-  RateLimited,
-  /** The OAuth2 token associated with a connection was revoked, get a new one! */
-  TokenRevoked,
-  /** The RPC Server version specified in the connection string was not valid. */
-  InvalidVersion,
-  /** The encoding specified in the connection string was not valid. */
-  InvalidEncoding,
-}
+// /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#rpc */
+// export enum RpcCloseEventCodes {
+//   /** You connected to the RPC server with an invalid client ID. */
+//   InvalidClientId = 4000,
+//   /** You connected to the RPC server with an invalid origin. */
+//   InvalidOrigin,
+//   /** You are being rate limited. */
+//   RateLimited,
+//   /** The OAuth2 token associated with a connection was revoked, get a new one! */
+//   TokenRevoked,
+//   /** The RPC Server version specified in the connection string was not valid. */
+//   InvalidVersion,
+//   /** The encoding specified in the connection string was not valid. */
+//   InvalidEncoding,
+// }
 
-/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#json */
-export enum JsonErrorCodes {
-  /** General error (such as a malformed request body, amongst other things) */
-  GeneralError,
-  UnknownAccount = 10001,
-  UnknownApplication,
-  UnknownChannel,
-  UnknownGuild,
-  UnknownIntegration,
-  UnknownInvite,
-  UnknownMember,
-  UnknownMessage,
-  UnknownPermissionOverwrite,
-  UnknownProvider,
-  UnknownRole,
-  UnknownToken,
-  UnknownUser,
-  UnknownEmoji,
-  UnknownWebhook,
-  UnknownWebhookService,
-  UnknownSession = 10020,
-  UnknownBan = 10026,
-  UnknownSKU,
-  UnknownStoreListing,
-  UnknownEntitlement,
-  UnknownBuild,
-  UnknownLobby,
-  UnknownBranch,
-  UnknownStoreDirectoryLayout,
-  UnknownRedistributable = 10036,
-  UnknownGiftCode = 10038,
-  UnknownStream = 10049,
-  UnknownPremiumServerSubscribeCooldown,
-  UnknownGuildTemplate = 10057,
-  UnknownDiscoveryCategory = 10059,
-  UnknownSticker,
-  UnknownInteraction = 10062,
-  UnknownApplicationCommand = 10063,
-  UnknownVoiceState = 10065,
-  UnknownApplicationCommandPermissions,
-  UnknownStageInstance,
-  UnknownGuildMemberVerificationForm,
-  UnknownGuildWelcomeScreen,
-  UnknownGuildScheduledEvent,
-  UnknownGuildScheduledEventUser,
-  UnknownTag = 10087,
-  BotsCannotUseThisEndpoint = 20001,
-  OnlyBotsCanUseThisEndpoint,
-  ExplicitContentCannotBeSentToTheDesiredRecipient = 20009,
-  YouAreNotAuthorizedToPerformThisActionOnThisApplication = 20012,
-  ThisActionCannotBePerformedDueToSlowmodeRateLimit = 20016,
-  OnlyTheOwnerOfThisAccountCanPerformThisAction = 20018,
-  ThisMessageCannotBeEditedDueToAnnouncementRateLimits = 20022,
-  UnderMinimumAge = 20024,
-  TheChannelYouAreWritingHasHitTheWriteRateLimit = 20028,
-  TheWriteActionYouArePerformingOnTheServerHasHitTheWriteRateLimit,
-  YourStageTopicOrServerNameOrServerDescriptionOrChannelNamesContainsWordsThatAreNotAllowedForPublicStages = 20031,
-  GuildPremiumSubscriptionLevelTooLow = 20035,
-  MaximumNumberOfGuildsReached = 30001,
-  MaximumNumberOfFriendsReached,
-  MaximumNumberOfPinsReachedForTheChannel,
-  MaximumNumberOfRecipientsReached,
-  MaximumNumberOfGuildRolesReached,
-  MaximumNumberOfWebhooksReached = 30007,
-  MaximumNumberOfEmojisReached,
-  MaximumNumberOfReactionsReached = 30010,
-  MaximumNumberOfGuildChannelsReached = 30013,
-  MaximumNumberOfAttachmentsInAMessageReached = 30015,
-  MaximumNumberOfInvitesReached,
-  MaximumNumberOfAnimatedEmojisReached = 30018,
-  MaximumNumberOfServerMembersReached,
-  MaximumNumberOfServerCategoriesHasBeenReached = 30030,
-  GuildAlreadyHasTemplate,
-  MaximumNumbersOfApplicationCommandsReached,
-  MaxNumberOfThreadParticipantsHasBeenReached,
-  MaxNumberOfDailyApplicationCommandCreatesHasBeenReached,
-  MaximumNumberOfBansForNonGuildMembersHaveBeenExceeded,
-  MaximumNumberOfBansFetchesHasBeenReached = 30037,
-  MaximumNumberOfUncompletedGuildScheduledEventsReached = 30038,
-  MaximumNumberOfStickersReached = 30039,
-  MaximumNumberOfPruneRequestsHasBeenReachedTryAgainLater,
-  MaximumNumberOfGuildWidgetSettingsUpdatesHasBeenReachedTryAgainLater = 30042,
-  MaximumNumberOfEditsToMessagesOlderThan1HourReachedTryAgainLater = 30046,
-  MaximumNumberOfPinnedThreadsInAForumChannelHasBeenReached,
-  MaxiumNumberOfTagsInAForumChannelHasBeenReached,
-  BitrateIsTooHighForChannelOfThisType = 30052,
-  UnauthorizedProvideAValidTokenAndTryAgain = 40001,
-  YouNeedToVerifyYourAccountInOrderToPerformThisAction,
-  YouAreOpeningDirectMessagesTooFast,
-  SendMessagesHasBeenTemporarilyDisabled,
-  RequestEntityTooLargeTrySendingSomethingSmallerInSize,
-  ThisFeatureHasBeenTemporarilyDisabledServerSide,
-  ThisUserBannedFromThisGuild,
-  ConnectionHasBeenRevoked = 40012,
-  TargetUserIsNotConnectedToVoice = 40032,
-  ThisMessageHasAlreadyBeenCrossposted,
-  AnApplicationCommandWithThatNameAlreadyExists = 40041,
-  ApplicationInteractionFailedToSend = 40043,
-  InteractionHasAlreadyBeenAcknowledged = 40060,
-  MissingAccess = 50001,
-  InvalidAccountType,
-  CannotExecuteActionOnADMChannel,
-  GuildWidgetDisabled,
-  CannotEditMessageAuthoredByAnotherUser,
-  CannotSendAnEmptyMessage,
-  CannotSendMessagesToThisUser,
-  CannotSendMessagesInANonTextChannel,
-  ChannelVerificationLevelIsTooHighForYouToGainAccess,
-  OAuth2ApplicationDoesNotHaveABot,
-  OAuth2ApplicationLimitReached,
-  InvalidOAuth2State,
-  YouLackPermissionsToPerformThatAction,
-  InvalidAuthenticationTokenProvided,
-  NoteWasTooLong,
-  ProvidedTooFewOrTooManyMessagesToDeleteMustProvideAtLeast2AndFewerThan100MessagesToDelete,
-  InvalidMFALevel,
-  AMessageCanOnlyBePinnedInTheChannelItWasSentIn = 50019,
-  InviteCodeWasEitherInvalidOrTaken,
-  CannotExecuteActionOnASystemMessage,
-  CannotExecuteActionOnThisChannelType = 50024,
-  InvalidOAuth2AccessTokenProvided,
-  MissingRequiredOAuth2Scope,
-  InvalidWebhookTokenProvided,
-  InvalidRole,
-  InvalidRecipients = 50033,
-  AMessageProvidedWasTooOldToBulkDelete,
-  /** Invalid form body (returned for both `application/json` and `multipart/form-data` bodies), or invalid `Content-Type` provided */
-  InvalidFormBodyOrContentTypeProvided,
-  AnInviteWasAcceptedToAGuildTheApplicationsBotIsNotIn,
-  InvalidActivityAction = 50039,
-  InvalidApiVersionProvided = 50041,
-  FileUploadedExceedsTheMaximumSize = 50045,
-  InvalidFileUploaded,
-  CannotSelfRedeemThisGift = 50054,
-  InvalidGuild,
-  InvalidMessageType = 50068,
-  PaymentSourceRequiredToRedeemGift = 50070,
-  CannotDeleteAChannelRequiredForCommunityGuilds = 50074,
-  CannotEditStickersWithinAMessage = 50080,
-  InvalidStickerSent,
-  TriedToPerformAnOperationOnAnArchivedThreadSuchAsEditingAMessageOrAddingAUserToTheThread = 50083,
-  InvalidThreadNotificationSettings,
-  BeforeValueIsEarlierThanTheThreadCreationDate,
-  CommunityServerChannelsMustBeTextChannels,
-  ThisServerIsNotAvailableInYourLocation = 50095,
-  ThisServerNeedsMonetizationEnabledInOrderToPerformThisAction = 50097,
-  ThisServerNeedsMoreBoostsToPerformThisAction = 50101,
-  TheRequestBodyContainsInvalidJSON = 50109,
-  OwnershipCannotBeTransferredToABotUser = 50132,
-  FailedToResizeAssetBelowTheMaximumSize = 50138,
-  UploadedFileNotFound = 50146,
-  TwoFactorIsRequiredForThisOperation = 60003,
-  NoUsersWithDiscordTagExist = 80004,
-  ReactionWasBlocked = 90001,
-  ApplicationNotYetAvailable = 110001,
-  ApiResourceIsCurrentlyOverloadedTryAgainALittleLater = 130000,
-  TheStageIsAlreadyOpen = 150006,
-  CannotReplyWithoutPermissionToReadMessageHistory = 160002,
-  AThreadHasAlreadyBeenCreatedForThisMessage = 160004,
-  ThreadIsLocked = 160005,
-  MaximumNumberOfActiveThreadsReached = 160006,
-  MaximumNumberOfActiveAnnouncementThreadsReached = 160007,
-  InvalidJsonForUploadedLottieFile = 170001,
-  UploadedLottiesCannotContainRasterizedImagesSuchAsPngOrJpeg,
-  StickerMaximumFramerateExceeded,
-  StickerFrameCountExceedsMaximumOf1000Frames,
-  LottieAnimationMaximumDimensionsExceeded,
-  StickerFrameRateIsEitherTooSmallOrTooLarge,
-  StickerAnimationDurationExceedsMaximumOf5Seconds,
-  CannotUpdateAFinishedEvent = 180000,
-  FailedToCreateStageNeededForStageEvent = 180002,
-  MessageWasBlockedByAutomaticModeration = 200000,
-  TitleWasBlockedByAutomaticModeration,
-  WebhooksCanOnlyCreateThreadsInForumChannels = 220003,
-}
+// /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#json */
+// export enum JsonErrorCodes {
+//   /** General error (such as a malformed request body, amongst other things) */
+//   GeneralError,
+//   UnknownAccount = 10001,
+//   UnknownApplication,
+//   UnknownChannel,
+//   UnknownGuild,
+//   UnknownIntegration,
+//   UnknownInvite,
+//   UnknownMember,
+//   UnknownMessage,
+//   UnknownPermissionOverwrite,
+//   UnknownProvider,
+//   UnknownRole,
+//   UnknownToken,
+//   UnknownUser,
+//   UnknownEmoji,
+//   UnknownWebhook,
+//   UnknownWebhookService,
+//   UnknownSession = 10020,
+//   UnknownBan = 10026,
+//   UnknownSKU,
+//   UnknownStoreListing,
+//   UnknownEntitlement,
+//   UnknownBuild,
+//   UnknownLobby,
+//   UnknownBranch,
+//   UnknownStoreDirectoryLayout,
+//   UnknownRedistributable = 10036,
+//   UnknownGiftCode = 10038,
+//   UnknownStream = 10049,
+//   UnknownPremiumServerSubscribeCooldown,
+//   UnknownGuildTemplate = 10057,
+//   UnknownDiscoveryCategory = 10059,
+//   UnknownSticker,
+//   UnknownInteraction = 10062,
+//   UnknownApplicationCommand = 10063,
+//   UnknownVoiceState = 10065,
+//   UnknownApplicationCommandPermissions,
+//   UnknownStageInstance,
+//   UnknownGuildMemberVerificationForm,
+//   UnknownGuildWelcomeScreen,
+//   UnknownGuildScheduledEvent,
+//   UnknownGuildScheduledEventUser,
+//   UnknownTag = 10087,
+//   BotsCannotUseThisEndpoint = 20001,
+//   OnlyBotsCanUseThisEndpoint,
+//   ExplicitContentCannotBeSentToTheDesiredRecipient = 20009,
+//   YouAreNotAuthorizedToPerformThisActionOnThisApplication = 20012,
+//   ThisActionCannotBePerformedDueToSlowmodeRateLimit = 20016,
+//   OnlyTheOwnerOfThisAccountCanPerformThisAction = 20018,
+//   ThisMessageCannotBeEditedDueToAnnouncementRateLimits = 20022,
+//   UnderMinimumAge = 20024,
+//   TheChannelYouAreWritingHasHitTheWriteRateLimit = 20028,
+//   TheWriteActionYouArePerformingOnTheServerHasHitTheWriteRateLimit,
+//   YourStageTopicOrServerNameOrServerDescriptionOrChannelNamesContainsWordsThatAreNotAllowedForPublicStages = 20031,
+//   GuildPremiumSubscriptionLevelTooLow = 20035,
+//   MaximumNumberOfGuildsReached = 30001,
+//   MaximumNumberOfFriendsReached,
+//   MaximumNumberOfPinsReachedForTheChannel,
+//   MaximumNumberOfRecipientsReached,
+//   MaximumNumberOfGuildRolesReached,
+//   MaximumNumberOfWebhooksReached = 30007,
+//   MaximumNumberOfEmojisReached,
+//   MaximumNumberOfReactionsReached = 30010,
+//   MaximumNumberOfGuildChannelsReached = 30013,
+//   MaximumNumberOfAttachmentsInAMessageReached = 30015,
+//   MaximumNumberOfInvitesReached,
+//   MaximumNumberOfAnimatedEmojisReached = 30018,
+//   MaximumNumberOfServerMembersReached,
+//   MaximumNumberOfServerCategoriesHasBeenReached = 30030,
+//   GuildAlreadyHasTemplate,
+//   MaximumNumbersOfApplicationCommandsReached,
+//   MaxNumberOfThreadParticipantsHasBeenReached,
+//   MaxNumberOfDailyApplicationCommandCreatesHasBeenReached,
+//   MaximumNumberOfBansForNonGuildMembersHaveBeenExceeded,
+//   MaximumNumberOfBansFetchesHasBeenReached = 30037,
+//   MaximumNumberOfUncompletedGuildScheduledEventsReached = 30038,
+//   MaximumNumberOfStickersReached = 30039,
+//   MaximumNumberOfPruneRequestsHasBeenReachedTryAgainLater,
+//   MaximumNumberOfGuildWidgetSettingsUpdatesHasBeenReachedTryAgainLater = 30042,
+//   MaximumNumberOfEditsToMessagesOlderThan1HourReachedTryAgainLater = 30046,
+//   MaximumNumberOfPinnedThreadsInAForumChannelHasBeenReached,
+//   MaxiumNumberOfTagsInAForumChannelHasBeenReached,
+//   BitrateIsTooHighForChannelOfThisType = 30052,
+//   UnauthorizedProvideAValidTokenAndTryAgain = 40001,
+//   YouNeedToVerifyYourAccountInOrderToPerformThisAction,
+//   YouAreOpeningDirectMessagesTooFast,
+//   SendMessagesHasBeenTemporarilyDisabled,
+//   RequestEntityTooLargeTrySendingSomethingSmallerInSize,
+//   ThisFeatureHasBeenTemporarilyDisabledServerSide,
+//   ThisUserBannedFromThisGuild,
+//   ConnectionHasBeenRevoked = 40012,
+//   TargetUserIsNotConnectedToVoice = 40032,
+//   ThisMessageHasAlreadyBeenCrossposted,
+//   AnApplicationCommandWithThatNameAlreadyExists = 40041,
+//   ApplicationInteractionFailedToSend = 40043,
+//   InteractionHasAlreadyBeenAcknowledged = 40060,
+//   MissingAccess = 50001,
+//   InvalidAccountType,
+//   CannotExecuteActionOnADMChannel,
+//   GuildWidgetDisabled,
+//   CannotEditMessageAuthoredByAnotherUser,
+//   CannotSendAnEmptyMessage,
+//   CannotSendMessagesToThisUser,
+//   CannotSendMessagesInANonTextChannel,
+//   ChannelVerificationLevelIsTooHighForYouToGainAccess,
+//   OAuth2ApplicationDoesNotHaveABot,
+//   OAuth2ApplicationLimitReached,
+//   InvalidOAuth2State,
+//   YouLackPermissionsToPerformThatAction,
+//   InvalidAuthenticationTokenProvided,
+//   NoteWasTooLong,
+//   ProvidedTooFewOrTooManyMessagesToDeleteMustProvideAtLeast2AndFewerThan100MessagesToDelete,
+//   InvalidMFALevel,
+//   AMessageCanOnlyBePinnedInTheChannelItWasSentIn = 50019,
+//   InviteCodeWasEitherInvalidOrTaken,
+//   CannotExecuteActionOnASystemMessage,
+//   CannotExecuteActionOnThisChannelType = 50024,
+//   InvalidOAuth2AccessTokenProvided,
+//   MissingRequiredOAuth2Scope,
+//   InvalidWebhookTokenProvided,
+//   InvalidRole,
+//   InvalidRecipients = 50033,
+//   AMessageProvidedWasTooOldToBulkDelete,
+//   /** Invalid form body (returned for both `application/json` and `multipart/form-data` bodies), or invalid `Content-Type` provided */
+//   InvalidFormBodyOrContentTypeProvided,
+//   AnInviteWasAcceptedToAGuildTheApplicationsBotIsNotIn,
+//   InvalidActivityAction = 50039,
+//   InvalidApiVersionProvided = 50041,
+//   FileUploadedExceedsTheMaximumSize = 50045,
+//   InvalidFileUploaded,
+//   CannotSelfRedeemThisGift = 50054,
+//   InvalidGuild,
+//   InvalidMessageType = 50068,
+//   PaymentSourceRequiredToRedeemGift = 50070,
+//   CannotDeleteAChannelRequiredForCommunityGuilds = 50074,
+//   CannotEditStickersWithinAMessage = 50080,
+//   InvalidStickerSent,
+//   TriedToPerformAnOperationOnAnArchivedThreadSuchAsEditingAMessageOrAddingAUserToTheThread = 50083,
+//   InvalidThreadNotificationSettings,
+//   BeforeValueIsEarlierThanTheThreadCreationDate,
+//   CommunityServerChannelsMustBeTextChannels,
+//   ThisServerIsNotAvailableInYourLocation = 50095,
+//   ThisServerNeedsMonetizationEnabledInOrderToPerformThisAction = 50097,
+//   ThisServerNeedsMoreBoostsToPerformThisAction = 50101,
+//   TheRequestBodyContainsInvalidJSON = 50109,
+//   OwnershipCannotBeTransferredToABotUser = 50132,
+//   FailedToResizeAssetBelowTheMaximumSize = 50138,
+//   UploadedFileNotFound = 50146,
+//   TwoFactorIsRequiredForThisOperation = 60003,
+//   NoUsersWithDiscordTagExist = 80004,
+//   ReactionWasBlocked = 90001,
+//   ApplicationNotYetAvailable = 110001,
+//   ApiResourceIsCurrentlyOverloadedTryAgainALittleLater = 130000,
+//   TheStageIsAlreadyOpen = 150006,
+//   CannotReplyWithoutPermissionToReadMessageHistory = 160002,
+//   AThreadHasAlreadyBeenCreatedForThisMessage = 160004,
+//   ThreadIsLocked = 160005,
+//   MaximumNumberOfActiveThreadsReached = 160006,
+//   MaximumNumberOfActiveAnnouncementThreadsReached = 160007,
+//   InvalidJsonForUploadedLottieFile = 170001,
+//   UploadedLottiesCannotContainRasterizedImagesSuchAsPngOrJpeg,
+//   StickerMaximumFramerateExceeded,
+//   StickerFrameCountExceedsMaximumOf1000Frames,
+//   LottieAnimationMaximumDimensionsExceeded,
+//   StickerFrameRateIsEitherTooSmallOrTooLarge,
+//   StickerAnimationDurationExceedsMaximumOf5Seconds,
+//   CannotUpdateAFinishedEvent = 180000,
+//   FailedToCreateStageNeededForStageEvent = 180002,
+//   MessageWasBlockedByAutomaticModeration = 200000,
+//   TitleWasBlockedByAutomaticModeration,
+//   WebhooksCanOnlyCreateThreadsInForumChannels = 220003,
+// }
 
-/** https://discord.com/developers/docs/topics/opcodes-and-status-codes#http */
-export enum HTTPResponseCodes {
-  /** The request completed successfully. */
-  Ok = 200,
-  /** The entity was created successfully. */
-  Created,
-  /** The request completed successfully but returned no content. */
-  NoContent = 204,
-  /** The entity was not modified (no action was taken). */
-  NotModified = 304,
-  /** The request was improperly formatted, or the server couldn't understand it. */
-  BadRequest = 400,
-  /** The `Authorization` header was missing or invalid. */
-  Unauthorized,
-  /** The `Authorization` token you passed did not have permission to the resource. */
-  Forbidden = 403,
-  /** The resource at the location specified doesn't exist. */
-  NotFound,
-  /** The HTTP method used is not valid for the location specified. */
-  MethodNotAllowed,
-  /** You are being rate limited, see [Rate Limits](https://discord.com/developers/docs/topics/rate-limits). */
-  TooManyRequests = 429,
-  /** There was not a gateway available to process your request. Wait a bit and retry. */
-  GatewayUnavailable = 502,
-}
+// /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#http */
+// export enum HTTPResponseCodes {
+//   /** The request completed successfully. */
+//   Ok = 200,
+//   /** The entity was created successfully. */
+//   Created,
+//   /** The request completed successfully but returned no content. */
+//   NoContent = 204,
+//   /** The entity was not modified (no action was taken). */
+//   NotModified = 304,
+//   /** The request was improperly formatted, or the server couldn't understand it. */
+//   BadRequest = 400,
+//   /** The `Authorization` header was missing or invalid. */
+//   Unauthorized,
+//   /** The `Authorization` token you passed did not have permission to the resource. */
+//   Forbidden = 403,
+//   /** The resource at the location specified doesn't exist. */
+//   NotFound,
+//   /** The HTTP method used is not valid for the location specified. */
+//   MethodNotAllowed,
+//   /** You are being rate limited, see [Rate Limits](https://discord.com/developers/docs/topics/rate-limits). */
+//   TooManyRequests = 429,
+//   /** There was not a gateway available to process your request. Wait a bit and retry. */
+//   GatewayUnavailable = 502,
+// }
 
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#opcodes-and-status-codes */
 export enum GatewayCloseEventCodes {
-  /** A normal closure of the gateway.
-   * You may attempt to reconnect.
-   */
+  /** A normal closure of the gateway. You may attempt to reconnect. */
   NormalClosure = 1000,
   /** We're not sure what went wrong. Try reconnecting? */
   UnknownError = 4000,
@@ -1015,11 +1008,11 @@ export enum GatewayCloseEventCodes {
   DisallowedIntents,
 }
 
-/** https://discord.com/developers/docs/resources/invite#invite-object-invite-target-types */
-export enum InviteTargetTypes {
-  Stream = 1,
-  EmbeddedApplication,
-}
+// /** https://discord.com/developers/docs/resources/invite#invite-object-invite-target-types */
+// export enum InviteTargetTypes {
+//   Stream = 1,
+//   EmbeddedApplication,
+// }
 
 /** https://discord.com/developers/docs/topics/opcodes-and-status-codes#gateway-gateway-opcodes */
 export enum GatewayOpcodes {
@@ -1032,7 +1025,6 @@ export enum GatewayOpcodes {
   /** Update the client's presence. */
   PresenceUpdate,
   /** Used to join/leave or move between voice channels. */
-
   VoiceStateUpdate,
   /** Resume a previous session that was disconnected. */
   Resume = 6,
@@ -1274,128 +1266,128 @@ export type ImageFormat = 'jpg' | 'jpeg' | 'png' | 'webp' | 'gif' | 'json'
 /** https://discord.com/developers/docs/reference#image-formatting */
 export type ImageSize = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096
 
-export enum Errors {
-  // Bot Role errors
-  BOTS_HIGHEST_ROLE_TOO_LOW = 'BOTS_HIGHEST_ROLE_TOO_LOW',
-  // Channel Errors
-  CHANNEL_NOT_FOUND = 'CHANNEL_NOT_FOUND',
-  CHANNEL_NOT_IN_GUILD = 'CHANNEL_NOT_IN_GUILD',
-  CHANNEL_NOT_TEXT_BASED = 'CHANNEL_NOT_TEXT_BASED',
-  CHANNEL_NOT_STAGE_VOICE = 'CHANNEL_NOT_STAGE_VOICE',
-  MESSAGE_MAX_LENGTH = 'MESSAGE_MAX_LENGTH',
-  RULES_CHANNEL_CANNOT_BE_DELETED = 'RULES_CHANNEL_CANNOT_BE_DELETED',
-  UPDATES_CHANNEL_CANNOT_BE_DELETED = 'UPDATES_CHANNEL_CANNOT_BE_DELETED',
-  INVALID_TOPIC_LENGTH = 'INVALID_TOPIC_LENGTH',
-  // Guild Errors
-  GUILD_NOT_DISCOVERABLE = 'GUILD_NOT_DISCOVERABLE',
-  GUILD_WIDGET_NOT_ENABLED = 'GUILD_WIDGET_NOT_ENABLED',
-  GUILD_NOT_FOUND = 'GUILD_NOT_FOUND',
-  MEMBER_NOT_FOUND = 'MEMBER_NOT_FOUND',
-  MEMBER_NOT_IN_VOICE_CHANNEL = 'MEMBER_NOT_IN_VOICE_CHANNEL',
-  MEMBER_SEARCH_LIMIT_TOO_HIGH = 'MEMBER_SEARCH_LIMIT_TOO_HIGH',
-  MEMBER_SEARCH_LIMIT_TOO_LOW = 'MEMBER_SEARCH_LIMIT_TOO_LOW',
-  PRUNE_MAX_DAYS = 'PRUNE_MAX_DAYS',
-  ROLE_NOT_FOUND = 'ROLE_NOT_FOUND',
-  // Thread errors
-  INVALID_THREAD_PARENT_CHANNEL_TYPE = 'INVALID_THREAD_PARENT_CHANNEL_TYPE',
-  GUILD_NEWS_CHANNEL_ONLY_SUPPORT_PUBLIC_THREADS = 'GUILD_NEWS_CHANNEL_ONLY_SUPPORT_PUBLIC_THREADS',
-  NOT_A_THREAD_CHANNEL = 'NOT_A_THREAD_CHANNEL',
-  MISSING_MANAGE_THREADS_AND_NOT_MEMBER = 'MISSING_MANAGE_THREADS_AND_NOT_MEMBER',
-  CANNOT_GET_MEMBERS_OF_AN_UNJOINED_PRIVATE_THREAD = 'CANNOT_GET_MEMBERS_OF_AN_UNJOINED_PRIVATE_THREAD',
-  HAVE_TO_BE_THE_CREATOR_OF_THE_THREAD_OR_HAVE_MANAGE_THREADS_TO_REMOVE_MEMBERS = 'HAVE_TO_BE_THE_CREATOR_OF_THE_THREAD_OR_HAVE_MANAGE_THREADS_TO_REMOVE_MEMBERS',
-  // Message Get Errors
-  INVALID_GET_MESSAGES_LIMIT = 'INVALID_GET_MESSAGES_LIMIT',
-  // Message Delete Errors
-  DELETE_MESSAGES_MIN = 'DELETE_MESSAGES_MIN',
-  PRUNE_MIN_DAYS = 'PRUNE_MIN_DAYS',
-  // Interaction Errors
-  INVALID_SLASH_DESCRIPTION = 'INVALID_SLASH_DESCRIPTION',
-  INVALID_SLASH_NAME = 'INVALID_SLASH_NAME',
-  INVALID_SLASH_OPTIONS = 'INVALID_SLASH_OPTIONS',
-  INVALID_SLASH_OPTIONS_CHOICES = 'INVALID_SLASH_OPTIONS_CHOICES',
-  TOO_MANY_SLASH_OPTIONS = 'TOO_MANY_SLASH_OPTIONS',
-  INVALID_SLASH_OPTION_CHOICE_NAME = 'INVALID_SLASH_OPTION_CHOICE_NAME',
-  INVALID_SLASH_OPTIONS_CHOICE_VALUE_TYPE = 'INVALID_SLASH_OPTIONS_CHOICE_VALUE_TYPE',
-  TOO_MANY_SLASH_OPTION_CHOICES = 'TOO_MANY_SLASH_OPTION_CHOICES',
-  ONLY_STRING_OR_INTEGER_OPTIONS_CAN_HAVE_CHOICES = 'ONLY_STRING_OR_INTEGER_OPTIONS_CAN_HAVE_CHOICES',
-  INVALID_SLASH_OPTION_NAME = 'INVALID_SLASH_OPTION_NAME',
-  INVALID_SLASH_OPTION_DESCRIPTION = 'INVALID_SLASH_OPTION_DESCRIPTION',
-  INVALID_CONTEXT_MENU_COMMAND_NAME = 'INVALID_CONTEXT_MENU_COMMAND_NAME',
-  INVALID_CONTEXT_MENU_COMMAND_DESCRIPTION = 'INVALID_CONTEXT_MENU_COMMAND_DESCRIPTION',
-  // Webhook Errors
-  INVALID_WEBHOOK_NAME = 'INVALID_WEBHOOK_NAME',
-  INVALID_WEBHOOK_OPTIONS = 'INVALID_WEBHOOK_OPTIONS',
-  // Permission Errors
-  MISSING_ADD_REACTIONS = 'MISSING_ADD_REACTIONS',
-  MISSING_ADMINISTRATOR = 'MISSING_ADMINISTRATOR',
-  MISSING_ATTACH_FILES = 'MISSING_ATTACH_FILES',
-  MISSING_BAN_MEMBERS = 'MISSING_BAN_MEMBERS',
-  MISSING_CHANGE_NICKNAME = 'MISSING_CHANGE_NICKNAME',
-  MISSING_CONNECT = 'MISSING_CONNECT',
-  MISSING_CREATE_INSTANT_INVITE = 'MISSING_CREATE_INSTANT_INVITE',
-  MISSING_DEAFEN_MEMBERS = 'MISSING_DEAFEN_MEMBERS',
-  MISSING_EMBED_LINKS = 'MISSING_EMBED_LINKS',
-  MISSING_INTENT_GUILD_MEMBERS = 'MISSING_INTENT_GUILD_MEMBERS',
-  MISSING_KICK_MEMBERS = 'MISSING_KICK_MEMBERS',
-  MISSING_MANAGE_CHANNELS = 'MISSING_MANAGE_CHANNELS',
-  MISSING_MANAGE_EMOJIS = 'MISSING_MANAGE_EMOJIS',
-  MISSING_MANAGE_GUILD = 'MISSING_MANAGE_GUILD',
-  MISSING_MANAGE_MESSAGES = 'MISSING_MANAGE_MESSAGES',
-  MISSING_MANAGE_NICKNAMES = 'MISSING_MANAGE_NICKNAMES',
-  MISSING_MANAGE_ROLES = 'MISSING_MANAGE_ROLES',
-  MISSING_MANAGE_WEBHOOKS = 'MISSING_MANAGE_WEBHOOKS',
-  MISSING_MENTION_EVERYONE = 'MISSING_MENTION_EVERYONE',
-  MISSING_MOVE_MEMBERS = 'MISSING_MOVE_MEMBERS',
-  MISSING_MUTE_MEMBERS = 'MISSING_MUTE_MEMBERS',
-  MISSING_PRIORITY_SPEAKER = 'MISSING_PRIORITY_SPEAKER',
-  MISSING_READ_MESSAGE_HISTORY = 'MISSING_READ_MESSAGE_HISTORY',
-  MISSING_SEND_MESSAGES = 'MISSING_SEND_MESSAGES',
-  MISSING_SEND_TTS_MESSAGES = 'MISSING_SEND_TTS_MESSAGES',
-  MISSING_SPEAK = 'MISSING_SPEAK',
-  MISSING_STREAM = 'MISSING_STREAM',
-  MISSING_USE_VAD = 'MISSING_USE_VAD',
-  MISSING_USE_EXTERNAL_EMOJIS = 'MISSING_USE_EXTERNAL_EMOJIS',
-  MISSING_VIEW_AUDIT_LOG = 'MISSING_VIEW_AUDIT_LOG',
-  MISSING_VIEW_CHANNEL = 'MISSING_VIEW_CHANNEL',
-  MISSING_VIEW_GUILD_INSIGHTS = 'MISSING_VIEW_GUILD_INSIGHTS',
-  // User Errors
-  NICKNAMES_MAX_LENGTH = 'NICKNAMES_MAX_LENGTH',
-  USERNAME_INVALID_CHARACTER = 'USERNAME_INVALID_CHARACTER',
-  USERNAME_INVALID_USERNAME = 'USERNAME_INVALID_USERNAME',
-  USERNAME_MAX_LENGTH = 'USERNAME_MAX_LENGTH',
-  USERNAME_MIN_LENGTH = 'USERNAME_MIN_LENGTH',
-  NONCE_TOO_LONG = 'NONCE_TOO_LONG',
-  INVITE_MAX_AGE_INVALID = 'INVITE_MAX_AGE_INVALID',
-  INVITE_MAX_USES_INVALID = 'INVITE_MAX_USES_INVALID',
-  // API Errors
-  RATE_LIMIT_RETRY_MAXED = 'RATE_LIMIT_RETRY_MAXED',
-  REQUEST_CLIENT_ERROR = 'REQUEST_CLIENT_ERROR',
-  REQUEST_SERVER_ERROR = 'REQUEST_SERVER_ERROR',
-  REQUEST_UNKNOWN_ERROR = 'REQUEST_UNKNOWN_ERROR',
-  // Component Errors
-  TOO_MANY_COMPONENTS = 'TOO_MANY_COMPONENTS',
-  TOO_MANY_ACTION_ROWS = 'TOO_MANY_ACTION_ROWS',
-  LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID = 'LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID',
-  COMPONENT_LABEL_TOO_BIG = 'COMPONENT_LABEL_TOO_BIG',
-  COMPONENT_CUSTOM_ID_TOO_BIG = 'COMPONENT_CUSTOM_ID_TOO_BIG',
-  BUTTON_REQUIRES_CUSTOM_ID = 'BUTTON_REQUIRES_CUSTOM_ID',
-  COMPONENT_SELECT_MUST_BE_ALONE = 'COMPONENT_SELECT_MUST_BE_ALONE',
-  COMPONENT_PLACEHOLDER_TOO_BIG = 'COMPONENT_PLACEHOLDER_TOO_BIG',
-  COMPONENT_SELECT_MIN_VALUE_TOO_LOW = 'COMPONENT_SELECT_MIN_VALUE_TOO_LOW',
-  COMPONENT_SELECT_MIN_VALUE_TOO_MANY = 'COMPONENT_SELECT_MIN_VALUE_TOO_MANY',
-  COMPONENT_SELECT_MAX_VALUE_TOO_LOW = 'COMPONENT_SELECT_MAX_VALUE_TOO_LOW',
-  COMPONENT_SELECT_MAX_VALUE_TOO_MANY = 'COMPONENT_SELECT_MAX_VALUE_TOO_MANY',
-  COMPONENT_SELECT_OPTIONS_TOO_LOW = 'COMPONENT_SELECT_OPTIONS_TOO_LOW',
-  COMPONENT_SELECT_OPTIONS_TOO_MANY = 'COMPONENT_SELECT_OPTIONS_TOO_MANY',
-  SELECT_OPTION_LABEL_TOO_BIG = 'SELECT_OPTION_LABEL_TOO_BIG',
-  SELECT_OPTION_VALUE_TOO_BIG = 'SELECT_OPTION_VALUE_TOO_BIG',
-  SELECT_OPTION_TOO_MANY_DEFAULTS = 'SELECT_OPTION_TOO_MANY_DEFAULTS',
-  COMPONENT_SELECT_MIN_HIGHER_THAN_MAX = 'COMPONENT_SELECT_MIN_HIGHER_THAN_MAX',
-  CANNOT_ADD_USER_TO_ARCHIVED_THREADS = 'CANNOT_ADD_USER_TO_ARCHIVED_THREADS',
-  CANNOT_LEAVE_ARCHIVED_THREAD = 'CANNOT_LEAVE_ARCHIVED_THREAD',
-  CANNOT_REMOVE_FROM_ARCHIVED_THREAD = 'CANNOT_REMOVE_FROM_ARCHIVED_THREAD',
-  YOU_CAN_NOT_DM_THE_BOT_ITSELF = 'YOU_CAN_NOT_DM_THE_BOT_ITSELF',
-}
+// export enum Errors {
+//   // Bot Role errors
+//   BOTS_HIGHEST_ROLE_TOO_LOW = 'BOTS_HIGHEST_ROLE_TOO_LOW',
+//   // Channel Errors
+//   CHANNEL_NOT_FOUND = 'CHANNEL_NOT_FOUND',
+//   CHANNEL_NOT_IN_GUILD = 'CHANNEL_NOT_IN_GUILD',
+//   CHANNEL_NOT_TEXT_BASED = 'CHANNEL_NOT_TEXT_BASED',
+//   CHANNEL_NOT_STAGE_VOICE = 'CHANNEL_NOT_STAGE_VOICE',
+//   MESSAGE_MAX_LENGTH = 'MESSAGE_MAX_LENGTH',
+//   RULES_CHANNEL_CANNOT_BE_DELETED = 'RULES_CHANNEL_CANNOT_BE_DELETED',
+//   UPDATES_CHANNEL_CANNOT_BE_DELETED = 'UPDATES_CHANNEL_CANNOT_BE_DELETED',
+//   INVALID_TOPIC_LENGTH = 'INVALID_TOPIC_LENGTH',
+//   // Guild Errors
+//   GUILD_NOT_DISCOVERABLE = 'GUILD_NOT_DISCOVERABLE',
+//   GUILD_WIDGET_NOT_ENABLED = 'GUILD_WIDGET_NOT_ENABLED',
+//   GUILD_NOT_FOUND = 'GUILD_NOT_FOUND',
+//   MEMBER_NOT_FOUND = 'MEMBER_NOT_FOUND',
+//   MEMBER_NOT_IN_VOICE_CHANNEL = 'MEMBER_NOT_IN_VOICE_CHANNEL',
+//   MEMBER_SEARCH_LIMIT_TOO_HIGH = 'MEMBER_SEARCH_LIMIT_TOO_HIGH',
+//   MEMBER_SEARCH_LIMIT_TOO_LOW = 'MEMBER_SEARCH_LIMIT_TOO_LOW',
+//   PRUNE_MAX_DAYS = 'PRUNE_MAX_DAYS',
+//   ROLE_NOT_FOUND = 'ROLE_NOT_FOUND',
+//   // Thread errors
+//   INVALID_THREAD_PARENT_CHANNEL_TYPE = 'INVALID_THREAD_PARENT_CHANNEL_TYPE',
+//   GUILD_NEWS_CHANNEL_ONLY_SUPPORT_PUBLIC_THREADS = 'GUILD_NEWS_CHANNEL_ONLY_SUPPORT_PUBLIC_THREADS',
+//   NOT_A_THREAD_CHANNEL = 'NOT_A_THREAD_CHANNEL',
+//   MISSING_MANAGE_THREADS_AND_NOT_MEMBER = 'MISSING_MANAGE_THREADS_AND_NOT_MEMBER',
+//   CANNOT_GET_MEMBERS_OF_AN_UNJOINED_PRIVATE_THREAD = 'CANNOT_GET_MEMBERS_OF_AN_UNJOINED_PRIVATE_THREAD',
+//   HAVE_TO_BE_THE_CREATOR_OF_THE_THREAD_OR_HAVE_MANAGE_THREADS_TO_REMOVE_MEMBERS = 'HAVE_TO_BE_THE_CREATOR_OF_THE_THREAD_OR_HAVE_MANAGE_THREADS_TO_REMOVE_MEMBERS',
+//   // Message Get Errors
+//   INVALID_GET_MESSAGES_LIMIT = 'INVALID_GET_MESSAGES_LIMIT',
+//   // Message Delete Errors
+//   DELETE_MESSAGES_MIN = 'DELETE_MESSAGES_MIN',
+//   PRUNE_MIN_DAYS = 'PRUNE_MIN_DAYS',
+//   // Interaction Errors
+//   INVALID_SLASH_DESCRIPTION = 'INVALID_SLASH_DESCRIPTION',
+//   INVALID_SLASH_NAME = 'INVALID_SLASH_NAME',
+//   INVALID_SLASH_OPTIONS = 'INVALID_SLASH_OPTIONS',
+//   INVALID_SLASH_OPTIONS_CHOICES = 'INVALID_SLASH_OPTIONS_CHOICES',
+//   TOO_MANY_SLASH_OPTIONS = 'TOO_MANY_SLASH_OPTIONS',
+//   INVALID_SLASH_OPTION_CHOICE_NAME = 'INVALID_SLASH_OPTION_CHOICE_NAME',
+//   INVALID_SLASH_OPTIONS_CHOICE_VALUE_TYPE = 'INVALID_SLASH_OPTIONS_CHOICE_VALUE_TYPE',
+//   TOO_MANY_SLASH_OPTION_CHOICES = 'TOO_MANY_SLASH_OPTION_CHOICES',
+//   ONLY_STRING_OR_INTEGER_OPTIONS_CAN_HAVE_CHOICES = 'ONLY_STRING_OR_INTEGER_OPTIONS_CAN_HAVE_CHOICES',
+//   INVALID_SLASH_OPTION_NAME = 'INVALID_SLASH_OPTION_NAME',
+//   INVALID_SLASH_OPTION_DESCRIPTION = 'INVALID_SLASH_OPTION_DESCRIPTION',
+//   INVALID_CONTEXT_MENU_COMMAND_NAME = 'INVALID_CONTEXT_MENU_COMMAND_NAME',
+//   INVALID_CONTEXT_MENU_COMMAND_DESCRIPTION = 'INVALID_CONTEXT_MENU_COMMAND_DESCRIPTION',
+//   // Webhook Errors
+//   INVALID_WEBHOOK_NAME = 'INVALID_WEBHOOK_NAME',
+//   INVALID_WEBHOOK_OPTIONS = 'INVALID_WEBHOOK_OPTIONS',
+//   // Permission Errors
+//   MISSING_ADD_REACTIONS = 'MISSING_ADD_REACTIONS',
+//   MISSING_ADMINISTRATOR = 'MISSING_ADMINISTRATOR',
+//   MISSING_ATTACH_FILES = 'MISSING_ATTACH_FILES',
+//   MISSING_BAN_MEMBERS = 'MISSING_BAN_MEMBERS',
+//   MISSING_CHANGE_NICKNAME = 'MISSING_CHANGE_NICKNAME',
+//   MISSING_CONNECT = 'MISSING_CONNECT',
+//   MISSING_CREATE_INSTANT_INVITE = 'MISSING_CREATE_INSTANT_INVITE',
+//   MISSING_DEAFEN_MEMBERS = 'MISSING_DEAFEN_MEMBERS',
+//   MISSING_EMBED_LINKS = 'MISSING_EMBED_LINKS',
+//   MISSING_INTENT_GUILD_MEMBERS = 'MISSING_INTENT_GUILD_MEMBERS',
+//   MISSING_KICK_MEMBERS = 'MISSING_KICK_MEMBERS',
+//   MISSING_MANAGE_CHANNELS = 'MISSING_MANAGE_CHANNELS',
+//   MISSING_MANAGE_EMOJIS = 'MISSING_MANAGE_EMOJIS',
+//   MISSING_MANAGE_GUILD = 'MISSING_MANAGE_GUILD',
+//   MISSING_MANAGE_MESSAGES = 'MISSING_MANAGE_MESSAGES',
+//   MISSING_MANAGE_NICKNAMES = 'MISSING_MANAGE_NICKNAMES',
+//   MISSING_MANAGE_ROLES = 'MISSING_MANAGE_ROLES',
+//   MISSING_MANAGE_WEBHOOKS = 'MISSING_MANAGE_WEBHOOKS',
+//   MISSING_MENTION_EVERYONE = 'MISSING_MENTION_EVERYONE',
+//   MISSING_MOVE_MEMBERS = 'MISSING_MOVE_MEMBERS',
+//   MISSING_MUTE_MEMBERS = 'MISSING_MUTE_MEMBERS',
+//   MISSING_PRIORITY_SPEAKER = 'MISSING_PRIORITY_SPEAKER',
+//   MISSING_READ_MESSAGE_HISTORY = 'MISSING_READ_MESSAGE_HISTORY',
+//   MISSING_SEND_MESSAGES = 'MISSING_SEND_MESSAGES',
+//   MISSING_SEND_TTS_MESSAGES = 'MISSING_SEND_TTS_MESSAGES',
+//   MISSING_SPEAK = 'MISSING_SPEAK',
+//   MISSING_STREAM = 'MISSING_STREAM',
+//   MISSING_USE_VAD = 'MISSING_USE_VAD',
+//   MISSING_USE_EXTERNAL_EMOJIS = 'MISSING_USE_EXTERNAL_EMOJIS',
+//   MISSING_VIEW_AUDIT_LOG = 'MISSING_VIEW_AUDIT_LOG',
+//   MISSING_VIEW_CHANNEL = 'MISSING_VIEW_CHANNEL',
+//   MISSING_VIEW_GUILD_INSIGHTS = 'MISSING_VIEW_GUILD_INSIGHTS',
+//   // User Errors
+//   NICKNAMES_MAX_LENGTH = 'NICKNAMES_MAX_LENGTH',
+//   USERNAME_INVALID_CHARACTER = 'USERNAME_INVALID_CHARACTER',
+//   USERNAME_INVALID_USERNAME = 'USERNAME_INVALID_USERNAME',
+//   USERNAME_MAX_LENGTH = 'USERNAME_MAX_LENGTH',
+//   USERNAME_MIN_LENGTH = 'USERNAME_MIN_LENGTH',
+//   NONCE_TOO_LONG = 'NONCE_TOO_LONG',
+//   INVITE_MAX_AGE_INVALID = 'INVITE_MAX_AGE_INVALID',
+//   INVITE_MAX_USES_INVALID = 'INVITE_MAX_USES_INVALID',
+//   // API Errors
+//   RATE_LIMIT_RETRY_MAXED = 'RATE_LIMIT_RETRY_MAXED',
+//   REQUEST_CLIENT_ERROR = 'REQUEST_CLIENT_ERROR',
+//   REQUEST_SERVER_ERROR = 'REQUEST_SERVER_ERROR',
+//   REQUEST_UNKNOWN_ERROR = 'REQUEST_UNKNOWN_ERROR',
+//   // Component Errors
+//   TOO_MANY_COMPONENTS = 'TOO_MANY_COMPONENTS',
+//   TOO_MANY_ACTION_ROWS = 'TOO_MANY_ACTION_ROWS',
+//   LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID = 'LINK_BUTTON_CANNOT_HAVE_CUSTOM_ID',
+//   COMPONENT_LABEL_TOO_BIG = 'COMPONENT_LABEL_TOO_BIG',
+//   COMPONENT_CUSTOM_ID_TOO_BIG = 'COMPONENT_CUSTOM_ID_TOO_BIG',
+//   BUTTON_REQUIRES_CUSTOM_ID = 'BUTTON_REQUIRES_CUSTOM_ID',
+//   COMPONENT_SELECT_MUST_BE_ALONE = 'COMPONENT_SELECT_MUST_BE_ALONE',
+//   COMPONENT_PLACEHOLDER_TOO_BIG = 'COMPONENT_PLACEHOLDER_TOO_BIG',
+//   COMPONENT_SELECT_MIN_VALUE_TOO_LOW = 'COMPONENT_SELECT_MIN_VALUE_TOO_LOW',
+//   COMPONENT_SELECT_MIN_VALUE_TOO_MANY = 'COMPONENT_SELECT_MIN_VALUE_TOO_MANY',
+//   COMPONENT_SELECT_MAX_VALUE_TOO_LOW = 'COMPONENT_SELECT_MAX_VALUE_TOO_LOW',
+//   COMPONENT_SELECT_MAX_VALUE_TOO_MANY = 'COMPONENT_SELECT_MAX_VALUE_TOO_MANY',
+//   COMPONENT_SELECT_OPTIONS_TOO_LOW = 'COMPONENT_SELECT_OPTIONS_TOO_LOW',
+//   COMPONENT_SELECT_OPTIONS_TOO_MANY = 'COMPONENT_SELECT_OPTIONS_TOO_MANY',
+//   SELECT_OPTION_LABEL_TOO_BIG = 'SELECT_OPTION_LABEL_TOO_BIG',
+//   SELECT_OPTION_VALUE_TOO_BIG = 'SELECT_OPTION_VALUE_TOO_BIG',
+//   SELECT_OPTION_TOO_MANY_DEFAULTS = 'SELECT_OPTION_TOO_MANY_DEFAULTS',
+//   COMPONENT_SELECT_MIN_HIGHER_THAN_MAX = 'COMPONENT_SELECT_MIN_HIGHER_THAN_MAX',
+//   CANNOT_ADD_USER_TO_ARCHIVED_THREADS = 'CANNOT_ADD_USER_TO_ARCHIVED_THREADS',
+//   CANNOT_LEAVE_ARCHIVED_THREAD = 'CANNOT_LEAVE_ARCHIVED_THREAD',
+//   CANNOT_REMOVE_FROM_ARCHIVED_THREAD = 'CANNOT_REMOVE_FROM_ARCHIVED_THREAD',
+//   YOU_CAN_NOT_DM_THE_BOT_ITSELF = 'YOU_CAN_NOT_DM_THE_BOT_ITSELF',
+// }
 
 export enum Locales {
   Danish = 'da',
@@ -1437,109 +1429,112 @@ export type Localization = Partial<Record<Locales, string>>
 export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
 U[keyof U]
 
-export type MakeRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
+// export type MakeRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
-export type CamelCase<S extends string> = S extends `${infer T}_${infer U}`
-  ? `${T}${Capitalize<CamelCase<U>>}`
-  : S
+export type CamelCase<S extends string> = S extends `${infer T}_${infer U}` ? `${T}${Capitalize<CamelCase<U>>}` : S
+export type SnakeCase<S extends string> = S extends `${infer T}${infer U}` ? `${T extends Capitalize<T> ? "_" : ""}${Lowercase<T>}${SnakeCase<U>}` : S
 
 export type Camelize<T> = T extends any[]
   ? T extends Array<Record<any, any>>
     ? Array<Camelize<T[number]>>
     : T
   : T extends Record<any, any>
-    ? {
-        [K in keyof T as CamelCase<K & string>]: Camelize<T[K]>;
-      }
-    : T
-
-/** Non object primitives */
-export type Primitive =
-  | string
-  | number
-  | symbol
-  | bigint
-  | boolean
-  | undefined
-  | null
-//  | object <- don't make object a primitive
-
-/**
- * alternative to 'object' or '{}'
- * @example:
- * export const o: ObjectLiteral = [] as object; // error
- * export const o: object = []; // no error
- */
-export type ObjectLiteral<T = unknown> = {
-  [K in PropertyKey]: T;
-}
-
-/** Array with no utilty methods, aka Object.create(null) */
-export interface ArrayWithNoPrototype<T> {
-  [index: number]: T | ArrayWithNoPrototype<T>
-}
-
-/**
- * Allows any type but T
- * it is recursive
- * @example
- * export type RequestData = Record<string, AnythingBut<bigint>>;
- */
-export type AnythingBut<T> = Exclude<
-| Primitive
-| {
-  [K in PropertyKey]: AnythingBut<T>;
-}
-| ArrayWithNoPrototype<
-| Primitive
-| {
-  [K in PropertyKey]: AnythingBut<T>;
-}
->,
-T
->
-
-/**
- * object identity type
- */
-export type Id<T> = T extends infer U
-  ? {
-      [K in keyof U]: U[K];
-    }
-  : never
-
-export type KeysWithUndefined<T> = {
-  [K in keyof T]-?: undefined extends T[K] ? K : null extends T[K] ? K : never;
-}[keyof T]
-
-type OptionalizeAux<T extends object> = Id<
-{
-  [K in KeysWithUndefined<T>]?: Optionalize<T[K]>;
-} & {
-  [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends ObjectLiteral
-    ? Optionalize<T[K]>
-    : T[K];
-}
->
-
-/**
- * Makes all of properties in T optional when they're null | undefined
- * it is recursive
- */
-export type Optionalize<T> = T extends object
-  ? T extends unknown[]
-    ? number extends T['length']
-      ? T[number] extends object
-        ? Array<OptionalizeAux<T[number]>>
-        : T
-      : Partial<T>
-    : OptionalizeAux<T>
+  ? { [K in keyof T as CamelCase<K & string>]: Camelize<T[K]> }
   : T
 
-export type PickPartial<T, K extends keyof T> = {
-  [P in keyof T]?: T[P] | undefined;
-} & { [P in K]: T[P] }
+  export type Snakelize<T> = T extends any[]
+  ? T extends Array<Record<any, any>>
+    ? Array<Snakelize<T[number]>>
+    : T
+  : T extends Record<any, any>
+  ? { [K in keyof T as SnakeCase<K & string>]: Snakelize<T[K]> }
+  : T
 
-export type OmitFirstFnArg<F> = F extends (x: any, ...args: infer P) => infer R
-  ? (...args: P) => R
-  : never
+// /** Non object primitives */
+// export type Primitive =
+//   | string
+//   | number
+//   | symbol
+//   | bigint
+//   | boolean
+//   | undefined
+//   | null
+// //  | object <- don't make object a primitive
+
+// /**
+//  * alternative to 'object' or '{}'
+//  * @example:
+//  * export const o: ObjectLiteral = [] as object; // error
+//  * export const o: object = []; // no error
+//  */
+// export type ObjectLiteral<T = unknown> = {
+//   [K in PropertyKey]: T;
+// }
+
+// /** Array with no utilty methods, aka Object.create(null) */
+// export interface ArrayWithNoPrototype<T> {
+//   [index: number]: T | ArrayWithNoPrototype<T>
+// }
+
+// /**
+//  * Allows any type but T
+//  * it is recursive
+//  * @example
+//  * export type RequestData = Record<string, AnythingBut<bigint>>;
+//  */
+// export type AnythingBut<T> = Exclude<
+// | Primitive
+// | {
+//   [K in PropertyKey]: AnythingBut<T>;
+// }
+// | ArrayWithNoPrototype<
+// | Primitive
+// | {
+//   [K in PropertyKey]: AnythingBut<T>;
+// }
+// >,
+// T
+// >
+
+// /**
+//  * object identity type
+//  */
+// export type Id<T> = T extends infer U
+//   ? {
+//       [K in keyof U]: U[K];
+//     }
+//   : never
+
+// export type KeysWithUndefined<T> = {
+//   [K in keyof T]-?: undefined extends T[K] ? K : null extends T[K] ? K : never;
+// }[keyof T]
+
+// type OptionalizeAux<T extends object> = Id<
+// {
+//   [K in KeysWithUndefined<T>]?: Optionalize<T[K]>;
+// } & {
+//   [K in Exclude<keyof T, KeysWithUndefined<T>>]: T[K] extends ObjectLiteral
+//     ? Optionalize<T[K]>
+//     : T[K];
+// }
+// >
+
+// /**
+//  * Makes all of properties in T optional when they're null | undefined
+//  * it is recursive
+//  */
+// export type Optionalize<T> = T extends object
+//   ? T extends unknown[]
+//     ? number extends T['length']
+//       ? T[number] extends object
+//         ? Array<OptionalizeAux<T[number]>>
+//         : T
+//       : Partial<T>
+//     : OptionalizeAux<T>
+//   : T
+
+export type PickPartial<T, K extends keyof T> = { [P in keyof T]?: T[P] | undefined } & { [P in K]: T[P] }
+
+// export type OmitFirstFnArg<F> = F extends (x: any, ...args: infer P) => infer R
+//   ? (...args: P) => R
+//   : never

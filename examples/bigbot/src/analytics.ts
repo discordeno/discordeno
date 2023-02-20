@@ -1,5 +1,5 @@
 import { InfluxDB, Point } from "@influxdata/influxdb-client";
-import { RestManager } from "discordeno/rest";
+import type { RestManager } from "discordeno/rest";
 
 const INFLUX_ORG = process.env.INFLUX_ORG as string;
 const INFLUX_BUCKET = process.env.INFLUX_BUCKET as string;
