@@ -7,7 +7,6 @@ Discord API library for [Node.JS](https://nodejs.org), [Deno](https://deno.land)
 [![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
 ![Test](https://github.com/discordeno/discordeno/workflows/Test/badge.svg)
 
-
 ## Tips
 
 - If you are already convinced about using Discordeno, go to [Getting Started](https://discordeno.mod.land)
@@ -15,14 +14,14 @@ Discord API library for [Node.JS](https://nodejs.org), [Deno](https://deno.land)
 
 ## Packages
 
-| Package                                                                  | npm                                                               | Tests                                                                                                                                             | Coverage                                                                                                                                                                            |
-| ------------------------------------------------------------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [discordeno](https://www.npmjs.com/package/discordeno)                   | ![npm (scoped)](https://img.shields.io/npm/v/discordeno)          | ![action status](https://github.com/discordeno/discordeno/actions/workflows/discordeno-pkg-test-status.yml/badge.svg?event=push) | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=discordeno)](https://codecov.io/gh/discordeno/discordeno) |
-| [@discordeno/types](https://www.npmjs.com/package/@discordeno/types)     | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/types)   | ![action status](https://github.com/discordeno/discordeno/actions/workflows/types-pkg-test-status.yml/badge.svg?branch=node-migration&event=push)      | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=types)](https://codecov.io/gh/discordeno/discordeno)      |
-| [@discordeno/utils](https://www.npmjs.com/package/@discordeno/utils)     | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/utils)   | ![action status](https://github.com/discordeno/discordeno/actions/workflows/utils-pkg-test-status.yml/badge.svg?branch=node-migration&event=push)      | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=utils)](https://codecov.io/gh/discordeno/discordeno)      |
-| [@discordeno/rest](https://www.npmjs.com/package/@discordeno/rest)       | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/rest)    | ![action status](https://github.com/discordeno/discordeno/actions/workflows/rest-pkg-test-status.yml/badge.svg?branch=node-migration&event=push)       | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=rest)](https://codecov.io/gh/discordeno/discordeno)       |
-| [@discordeno/gateway](https://www.npmjs.com/package/@discordeno/gateway) | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/gateway) | ![action status](https://github.com/discordeno/discordeno/actions/workflows/gateway-pkg-test-status.yml/badge.svg?branch=node-migration&event=push)    | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=gateway)](https://codecov.io/gh/discordeno/discordeno)    |
-| [@discordeno/bot](https://www.npmjs.com/package/@discordeno/bot)         | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/bot)     | ![action status](https://github.com/discordeno/discordeno/actions/workflows/bot-pkg-test-status.yml/badge.svg?branch=node-migration&event=push)        | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=bot)](https://codecov.io/gh/discordeno/discordeno)        |
+| Package                                                                  | npm                                                               | Tests                                                                                                                                    | Coverage                                                                                                                                                            |
+| ------------------------------------------------------------------------ | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [discordeno](https://www.npmjs.com/package/discordeno)                   | ![npm (scoped)](https://img.shields.io/npm/v/discordeno)          | ![action status](https://github.com/discordeno/discordeno/actions/workflows/discordeno-test.yml/badge.svg?event=push)                    | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=discordeno)](https://codecov.io/gh/discordeno/discordeno) |
+| [@discordeno/types](https://www.npmjs.com/package/@discordeno/types)     | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/types)   | ![action status](https://github.com/discordeno/discordeno/actions/workflows/types-test.yml/badge.svg?branch=node-migration&event=push)   | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=types)](https://codecov.io/gh/discordeno/discordeno)      |
+| [@discordeno/utils](https://www.npmjs.com/package/@discordeno/utils)     | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/utils)   | ![action status](https://github.com/discordeno/discordeno/actions/workflows/utils-test.yml/badge.svg?branch=node-migration&event=push)   | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=utils)](https://codecov.io/gh/discordeno/discordeno)      |
+| [@discordeno/rest](https://www.npmjs.com/package/@discordeno/rest)       | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/rest)    | ![action status](https://github.com/discordeno/discordeno/actions/workflows/rest-test.yml/badge.svg?branch=node-migration&event=push)    | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=rest)](https://codecov.io/gh/discordeno/discordeno)       |
+| [@discordeno/gateway](https://www.npmjs.com/package/@discordeno/gateway) | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/gateway) | ![action status](https://github.com/discordeno/discordeno/actions/workflows/gateway-test.yml/badge.svg?branch=node-migration&event=push) | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=gateway)](https://codecov.io/gh/discordeno/discordeno)    |
+| [@discordeno/bot](https://www.npmjs.com/package/@discordeno/bot)         | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/bot)     | ![action status](https://github.com/discordeno/discordeno/actions/workflows/bot-test.yml/badge.svg?branch=node-migration&event=push)     | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=bot)](https://codecov.io/gh/discordeno/discordeno)        |
 
 ## Features
 
@@ -73,14 +72,14 @@ Discordeno is actively maintained to guarantee **excellent performance, latest f
       - Identify limits have room to allow re-sharding. (Also customizable)
     - Manual: You can also trigger this manually should you choose.
       - When discord releases a new API version, updates your gateways to new version with no downtime.
-- **Horizontal Scaling:** 
+- **Horizontal Scaling:**
   - When your bot grows a lot, you have
     two options: you can either keep investing money to upgrade your server or you may expand horizontally by purchasing
     several more affordable servers. The proxy enables WS handling on multiple servers.
 - **No Loss Restarts:**
   - Without the proxy mechanism, you would typically lose a lot of events while restarting. Users could issue
     instructions or send messages that are not automoderated. As your bot grows, this amount grows sharply.
-    Users who don't receive the automatic roles or any other activities your bot should do. 
+    Users who don't receive the automatic roles or any other activities your bot should do.
   - While your bot is unavailable, events can be added to a queue, and once the bot is back online, the queue will start processing all of the events.
 - **Flexibility:**
   - You have complete control over everything inside the gateway thanks to the controller aspect. Need to customize, the way the manager talks to the workers? Simply, plug in and override the method.

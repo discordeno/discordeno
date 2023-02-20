@@ -1,4 +1,4 @@
-name: Test
+name: Bot Test
 
 on:
   pull_request:
@@ -30,7 +30,7 @@ jobs:
           path: .turbo
           key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
       - name: Build Type and Test
-        run: yarn build:type --cache-dir=".turbo"
+        run: yarn build:type --cache-dir=".turbo" --filter=./packages/bot
 
   build-dist:
     name: Build Dist
@@ -57,7 +57,7 @@ jobs:
           path: .turbo
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
       - name: Type Test
-        run: yarn build --cache-dir=".turbo"
+        run: yarn build --cache-dir=".turbo" --filter=./packages/bot
 
   format-unit-and-integration-test:
     name: Format Test
@@ -91,7 +91,7 @@ jobs:
           path: .turbo
           key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
       - name: Check Formatting
-        run: yarn lint --cache-dir=".turbo"
+        run: yarn lint --cache-dir=".turbo" --filter=./packages/bot
 
   test-type-unit-and-integration-test:
     name: Test Type Test
@@ -125,124 +125,23 @@ jobs:
           path: .turbo
           key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
       - name: Test Type Test
-        run: yarn test:test-type --cache-dir=".turbo"
+        run: yarn test:test-type --cache-dir=".turbo" --filter=./packages/bot
 
   # Not using matrix because test later on cant needs a specific job
-  client-unit-test:
-    name: Client
-    needs: build-dist
-    uses: ./.github/workflows/unit-test.yml
-    with:
-      package: client
-  client-other-runtime-test:
-    name: Client
-    needs: client-unit-test
-    uses: ./.github/workflows/other-runtime-unit-test.yml
-    with:
-      package: client
-  client-test-status:
-    name: Client
-    needs: [client-other-runtime-test]
-    uses: ./.github/workflows/client-pkg-test-status.yml
-  discordeno-unit-test:
-    name: Discordeno
-    needs: build-dist
-    uses: ./.github/workflows/unit-test.yml
-    with:
-      package: discordeno
-  discordeno-other-runtime-test:
-    name: Discordeno
-    needs: discordeno-unit-test
-    uses: ./.github/workflows/other-runtime-unit-test.yml
-    with:
-      package: discordeno
-  discordeno-test-status:
-    name: Discordeno
-    needs: [discordeno-other-runtime-test]
-    uses: ./.github/workflows/discordeno-pkg-test-status.yml
-  gateway-unit-test:
-    name: Gateway
-    needs: build-dist
-    uses: ./.github/workflows/unit-test.yml
-    with:
-      package: gateway
-  gateway-integration-test:
-    name: Gateway
-    needs: build-dist
-    uses: ./.github/workflows/integration-test.yml
-    with:
-      package: gateway
-  gateway-other-runtime-test:
-    name: Gateway
-    needs: [gateway-unit-test, gateway-integration-test]
-    uses: ./.github/workflows/other-runtime-unit-test.yml
-    with:
-      package: gateway
-  gateway-test-status:
-    name: Gateway
-    needs: [gateway-other-runtime-test]
-    uses: ./.github/workflows/gateway-pkg-test-status.yml
-  rest-unit-test:
-    name: Rest
-    needs: build-dist
-    uses: ./.github/workflows/unit-test.yml
-    with:
-      package: rest
-  rest-e2e-test:
-    name: Rest
-    needs: rest-unit-test
-    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/node-migration' || github.ref == 'refs/heads/node-migration-clean' }}
-    uses: ./.github/workflows/e2e-test.yml
-    secrets: inherit
-    with:
-      package: rest
-  rest-other-runtime-test:
-    name: Rest
-    needs: rest-unit-test
-    uses: ./.github/workflows/other-runtime-unit-test.yml
-    with:
-      package: rest
-  rest-test-status:
-    name: Rest
-    needs: [rest-e2e-test, rest-other-runtime-test]
-    uses: ./.github/workflows/rest-pkg-test-status.yml
-  utils-unit-test:
-    name: Utils
-    needs: build-dist
-    uses: ./.github/workflows/unit-test.yml
-    with:
-      package: utils
-  utils-other-runtime-test:
-    name: Utils
-    needs: utils-unit-test
-    uses: ./.github/workflows/other-runtime-unit-test.yml
-    with:
-      package: utils
-  utils-test-status:
-    name: Utils
-    needs: [utils-other-runtime-test]
-    uses: ./.github/workflows/utils-pkg-test-status.yml
   bot-unit-test:
-    name: Bot
     needs: build-dist
     uses: ./.github/workflows/unit-test.yml
     with:
       package: bot
   bot-e2e-test:
-    name: Bot
     needs: bot-unit-test
-    if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/node-migration' || github.ref == 'refs/heads/node-migration-clean' }}
+    if: ${{ github.ref == 'refs/heads/main' }}
     uses: ./.github/workflows/e2e-test.yml
     secrets: inherit
     with:
       package: bot
   bot-other-runtime-test:
-    name: Bot
     needs: bot-unit-test
     uses: ./.github/workflows/other-runtime-unit-test.yml
     with:
       package: bot
-  bot-test-status:
-    name: Bot
-    needs: [bot-e2e-test, bot-other-runtime-test]
-    uses: ./.github/workflows/bot-pkg-test-status.yml

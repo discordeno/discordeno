@@ -39,10 +39,19 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-site-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-site-
       - name: Build website
         run: |
-          npm ci
-          npm run build
+          yarn
+          yarn build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
