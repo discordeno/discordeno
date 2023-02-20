@@ -32,6 +32,11 @@ flags:
   rest-e2e:
     carryforward: true
 
+  types:
+    carryforward: false
+  types-unit:
+    carryforward: false
+
   utils:
     carryforward: false
   utils-unit:
