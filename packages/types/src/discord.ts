@@ -607,7 +607,6 @@ export interface DiscordGuild {
   members?: DiscordMember[]
   /** Channels in the guild */
   channels?: DiscordChannel[]
-  // TODO: check if need to omit
   /** All active threads in the guild that the current user has permission to view */
   threads?: DiscordChannel[]
   /** Presences of the members in the guild, will only include non-offline members if the size is greater than large threshold */
