@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { EventEmitter } from "events"
+import { EventEmitter } from "node:events"
 
 class BrowserWebSocketError extends Error {
   static CONNECTING: 0 = 0
