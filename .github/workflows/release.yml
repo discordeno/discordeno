@@ -4,10 +4,14 @@ on:
   push:
     branches:
       - main
+<<<<<<< HEAD
       - node-migration-clean
     paths:
       - packages/**
       - .github/**
+=======
+  workflow_dispatch:
+>>>>>>> 1a717ddc7d97e31d3775747df9df153729d2925d
 
 jobs:
   path-filter:

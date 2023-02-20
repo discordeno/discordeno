@@ -9,7 +9,7 @@ const config = {
   title: "Discordeno",
   tagline: "Making Scalable Bots Easy!",
   url: "https://discordeno.mod.land",
-  baseUrl: "/",
+  baseUrl: "/discordeno/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.png",
@@ -23,14 +23,7 @@ const config = {
       "classic",
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
-        docs: {
-          sidebarPath: require.resolve("./sidebars.js"),
-          editUrl: "https://github.com/discordeno/discordeno/tree/main/site/",
-        },
-        blog: {
-          showReadingTime: true,
-          editUrl: "https://github.com/discordeno/discordeno/tree/main/site/",
-        },
+        docs: false,
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
         },
@@ -49,12 +42,19 @@ const config = {
         },
         items: [
           {
-            type: "doc",
-            docId: "intro",
+            type: "docSidebar",
+            sidebarId: "docs",
             position: "left",
             label: "Docs",
+            docsPluginId: "docs",
           },
-          { to: "/blog", label: "Blog", position: "left" },
+          {
+            type: "docSidebar",
+            sidebarId: "tutorial",
+            position: "left",
+            label: "Tutorial",
+            docsPluginId: "tutorial",
+          },
           {
             href: "https://github.com/discordeno/discordeno",
             label: "GitHub",
@@ -69,8 +69,37 @@ const config = {
             title: "Docs",
             items: [
               {
-                label: "Docs",
+                label: "Introduction",
                 to: "/docs/intro",
+              },
+              {
+                label: "Getting Started",
+                to: "/docs/getting-started",
+              },
+              {
+                label: "FAQ",
+                to: "/docs/frequently-asked-questions",
+              },
+              {
+                label: "Benchmark",
+                to: "/docs/benchmark",
+              },
+            ],
+          },
+          {
+            title: "Tutorial",
+            items: [
+              {
+                label: "Big Bot",
+                to: "/tutorial/big-bot-guide/step-by-step",
+              },
+              {
+                label: "Node.js",
+                to: "/tutorial/nodejs/getting-started",
+              },
+              {
+                label: "Amethyst",
+                to: "/tutorial/amethyst/intro",
               },
             ],
           },
@@ -87,10 +116,6 @@ const config = {
             title: "More",
             items: [
               {
-                label: "Blog",
-                to: "/blog",
-              },
-              {
                 label: "GitHub",
                 href: "https://github.com/discordeno/discordeno",
               },
@@ -106,23 +131,67 @@ const config = {
     }),
 
   plugins: [
-    // ... Your other plugins.
+    [
+      "@docusaurus/plugin-content-docs",
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      {
+        id: "docs",
+        path: "docs",
+        routeBasePath: "docs",
+        sidebarPath: require.resolve("./docsSidebars.js"),
+        editUrl: "https://github.com/discordeno/discordeno/tree/main/site/",
+      },
+    ],
+    [
+      "@docusaurus/plugin-content-docs",
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      {
+        id: "tutorial",
+        path: "tutorial",
+        routeBasePath: "tutorial",
+        sidebarPath: require.resolve("./tutorialSidebars.js"),
+        editUrl: "https://github.com/discordeno/discordeno/tree/main/site/",
+      },
+    ],
     [
       require.resolve("@easyops-cn/docusaurus-search-local"),
       {
         indexDocs: true,
-        indexBlog: true,
         indexPages: true,
-        docsRouteBasePath: ["/docs"],
-        blogRouteBasePath: ["/blog"],
+        docsRouteBasePath: ["/docs", "/tutorial"],
         language: ["en"],
         hashed: true,
-        docsDir: ["docs"],
-        blogDir: ["blog"],
+        docsDir: ["docs", "tutorial"],
+        blogDir: [],
         removeDefaultStopWordFilter: true,
         highlightSearchTermsOnTargetPage: true,
         searchResultLimits: 8,
         searchResultContextMaxLength: 50,
+      },
+    ],
+    [
+      "client-redirects",
+      /** @type {import('@docusaurus/plugin-client-redirects').Options} */
+      {
+        createRedirects(existingPath) {
+          if (
+            existingPath.includes("/tutorial/big-bot-guide/") || existingPath.includes("/tutorial/nodejs/") ||
+            existingPath.includes("/tutorial/amethyst/")
+          ) {
+            return [
+              existingPath.replace("/tutorial/", "/docs/"),
+            ];
+          }
+          if (
+            existingPath.includes("/docs/docs/frequently-asked-questions") ||
+            existingPath.includes("/docs/docs/getting-started") || existingPath.includes("/docs/docs/migrating")
+          ) {
+            return [
+              existingPath.replace("/docs/", "/docs/general/"),
+            ];
+          }
+          return undefined; // Return a falsy value: no redirect created
+        },
       },
     ],
   ],
