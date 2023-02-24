@@ -4,6 +4,7 @@ import type { CreateRestManagerOptions, RestManager } from '@discordeno/rest'
 import { createRestManager } from '@discordeno/rest'
 import type {
   Camelize,
+  DiscordAuditLogEntry,
   DiscordAutoModerationActionExecution,
   DiscordAutoModerationRule,
   DiscordChannel,
@@ -60,31 +61,26 @@ import { createLogger } from '@discordeno/utils'
  */
 export function createBot(options: CreateBotOptions): Bot {
   if (!options.rest) options.rest = { token: options.token }
-  if (!options.gateway) {
-    options.gateway = {
-      token: options.token,
-      events: {
-        message: async (shard, data) => {
-          // TRIGGER RAW EVENT
-          bot.events.raw?.(data, shard)
+  if (!options.gateway) options.gateway = { token: options.token, events: {} };
+  if (!options.gateway.events.message) {
+    options.gateway.events.message = async (shard, data) => {
+       // TRIGGER RAW EVENT
+       bot.events.raw?.(data, shard)
 
-          if (!data.t) return
+       if (!data.t) return
 
-          // RUN DISPATCH CHECK
-          await bot.events.dispatchRequirements?.(data, shard)
-          bot.events[
-            data.t.toLowerCase().replace(/_([a-z])/g, function (g) {
-              return g[1].toUpperCase()
-            }) as keyof EventHandlers
-            // @ts-expect-error as any gets removed by linter
-          ]?.(data.d, shard)
-        },
-      },
+       // RUN DISPATCH CHECK
+       await bot.events.dispatchRequirements?.(data, shard)
+       bot.events[
+         data.t.toLowerCase().replace(/_([a-z])/g, function (g) {
+           return g[1].toUpperCase()
+         }) as keyof EventHandlers
+         // @ts-expect-error as any gets removed by linter
+       ]?.(data.d, shard)
     }
   }
 
   options.rest.token = options.token
-  options.gateway.token = options.token
   options.gateway.intents = options.intents
 
   const bot: Bot = {
@@ -143,6 +139,7 @@ export interface EventHandlers {
 
   // Gateway events below this
   applicationCommandPermissionsUpdate: (payload: Camelize<DiscordGuildApplicationCommandPermissions>, shard: Shard) => unknown
+  auditLogEntryCreate: (payload: Camelize<DiscordAuditLogEntry>, shard: Shard) => unknown
   autoModerationRuleCreate: (payload: Camelize<DiscordAutoModerationRule>, shard: Shard) => unknown
   autoModerationRuleUpdate: (payload: Camelize<DiscordAutoModerationRule>, shard: Shard) => unknown
   autoModerationRuleDelete: (payload: Camelize<DiscordAutoModerationRule>, shard: Shard) => unknown
