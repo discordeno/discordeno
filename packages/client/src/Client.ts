@@ -123,13 +123,9 @@ import type StageChannel from './Structures/channels/Stage.js'
 import type TextChannel from './Structures/channels/Text.js'
 import type TextVoiceChannel from './Structures/channels/TextVoice.js'
 import ThreadMember from './Structures/channels/threads/Member.js'
-import type NewsThread from './Structures/channels/threads/NewsThread.js'
 import type NewsThreadChannel from './Structures/channels/threads/NewsThread.js'
-import type PrivateThread from './Structures/channels/threads/PrivateThread.js'
 import type PrivateThreadChannel from './Structures/channels/threads/PrivateThread.js'
-import type PublicThread from './Structures/channels/threads/PublicThread.js'
 import type PublicThreadChannel from './Structures/channels/threads/PublicThread.js'
-import type Thread from './Structures/channels/threads/Thread.js'
 import type ThreadChannel from './Structures/channels/threads/Thread.js'
 import type VoiceChannel from './Structures/channels/Voice.js'
 import GuildAuditLogEntry from './Structures/guilds/AuditLogEntry.js'
@@ -2295,7 +2291,45 @@ export class Client extends EventEmitter {
   }
 
   /** Removes properties from a Structure you don't want. For example, if your bot does not need Channel.topic you can remove it. */
-  removeProperties<T extends typeof Member | typeof NewsThread | typeof PrivateThread | typeof PublicThread | typeof Thread | typeof CategoryChannel | typeof Channel | typeof GuildChannel | typeof NewsChannel | typeof PrivateChannel | typeof StageChannel | typeof TextChannel | typeof TextVoiceChannel | typeof VoiceChannel | typeof GuildAuditLogEntry | typeof Guild | typeof GuildIntegration | typeof Member | typeof GuildPreview | typeof Role | typeof StageInstance | typeof GuildTemplate | typeof UnavailableGuild | typeof VoiceState | typeof  AutocompleteInteraction | typeof CommandInteraction | typeof ComponentInteraction | typeof Interaction | typeof PingInteraction | typeof UnknownInteraction | typeof ExtendedUser | typeof User | typeof Invite | typeof Message | typeof Permission | typeof PermissionOverwrite>(obj: T, props: string[]): this {
+  removeProperties<
+    T extends
+      | typeof Member
+      | typeof NewsThreadChannel
+      | typeof PrivateThreadChannel
+      | typeof PublicThreadChannel
+      | typeof ThreadChannel
+      | typeof CategoryChannel
+      | typeof Channel
+      | typeof GuildChannel
+      | typeof NewsChannel
+      | typeof PrivateChannel
+      | typeof StageChannel
+      | typeof TextChannel
+      | typeof TextVoiceChannel
+      | typeof VoiceChannel
+      | typeof GuildAuditLogEntry
+      | typeof Guild
+      | typeof GuildIntegration
+      | typeof Member
+      | typeof GuildPreview
+      | typeof Role
+      | typeof StageInstance
+      | typeof GuildTemplate
+      | typeof UnavailableGuild
+      | typeof VoiceState
+      | typeof AutocompleteInteraction
+      | typeof CommandInteraction
+      | typeof ComponentInteraction
+      | typeof Interaction
+      | typeof PingInteraction
+      | typeof UnknownInteraction
+      | typeof ExtendedUser
+      | typeof User
+      | typeof Invite
+      | typeof Message
+      | typeof Permission
+      | typeof PermissionOverwrite,
+  >(obj: T, props: string[]): this {
     for (const prop of props) {
       Object.defineProperty(obj.prototype, prop, {
         // In case the user tries to use this property after having removed it.
@@ -2303,11 +2337,11 @@ export class Client extends EventEmitter {
           throw new Error(`${obj.constructor.name}.${prop} was removed with Client.removeProperties().`)
         },
         // {} makes noop so it will NOT set any values even internally
-        set() {} 
-      });
+        set() {},
+      })
     }
 
-    return this;
+    return this
   }
 }
 
