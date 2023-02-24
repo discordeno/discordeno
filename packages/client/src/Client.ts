@@ -115,16 +115,23 @@ import {
 import ShardManager from './gateway/ShardManager.js'
 import RequestHandler from './RequestHandler.js'
 import type CategoryChannel from './Structures/channels/Category.js'
+import type Channel from './Structures/channels/Channel.js'
+import type GuildChannel from './Structures/channels/Guild.js'
 import type NewsChannel from './Structures/channels/News.js'
 import PrivateChannel from './Structures/channels/Private.js'
 import type StageChannel from './Structures/channels/Stage.js'
 import type TextChannel from './Structures/channels/Text.js'
 import type TextVoiceChannel from './Structures/channels/TextVoice.js'
 import ThreadMember from './Structures/channels/threads/Member.js'
+import type NewsThread from './Structures/channels/threads/NewsThread.js'
 import type NewsThreadChannel from './Structures/channels/threads/NewsThread.js'
+import type PrivateThread from './Structures/channels/threads/PrivateThread.js'
 import type PrivateThreadChannel from './Structures/channels/threads/PrivateThread.js'
+import type PublicThread from './Structures/channels/threads/PublicThread.js'
 import type PublicThreadChannel from './Structures/channels/threads/PublicThread.js'
+import type Thread from './Structures/channels/threads/Thread.js'
 import type ThreadChannel from './Structures/channels/threads/Thread.js'
+import type VoiceChannel from './Structures/channels/Voice.js'
 import GuildAuditLogEntry from './Structures/guilds/AuditLogEntry.js'
 import Guild from './Structures/guilds/Guild.js'
 import GuildIntegration from './Structures/guilds/Integration.js'
@@ -134,9 +141,17 @@ import Role from './Structures/guilds/Role.js'
 import StageInstance from './Structures/guilds/StageInstance.js'
 import GuildTemplate from './Structures/guilds/Template.js'
 import type UnavailableGuild from './Structures/guilds/Unavailable.js'
+import type { VoiceState } from './Structures/guilds/VoiceState.js'
+import type AutocompleteInteraction from './Structures/interactions/Autocomplete.js'
+import type CommandInteraction from './Structures/interactions/Command.js'
+import type ComponentInteraction from './Structures/interactions/Component.js'
+import type Interaction from './Structures/interactions/Interaction.js'
+import type PingInteraction from './Structures/interactions/Ping.js'
+import type UnknownInteraction from './Structures/interactions/Unknown.js'
 import Invite from './Structures/Invite.js'
 import Message from './Structures/Message.js'
 import Permission from './Structures/Permission.js'
+import type PermissionOverwrite from './Structures/PermissionOverwrite.js'
 import ExtendedUser from './Structures/users/Extended.js'
 import User from './Structures/users/User.js'
 import type {
@@ -2274,8 +2289,25 @@ export class Client extends EventEmitter {
     return obj.hasOwnProperty(prop)
   }
 
+  /** A typeguard that tells whether a member has the user property or not. */
   isDiscordMemberWithUser(member: DiscordMember | DiscordMemberWithUser): member is DiscordMemberWithUser {
     return this.hasProperty(member, 'user')
+  }
+
+  /** Removes properties from a Structure you don't want. For example, if your bot does not need Channel.topic you can remove it. */
+  removeProperties<T extends typeof Member | typeof NewsThread | typeof PrivateThread | typeof PublicThread | typeof Thread | typeof CategoryChannel | typeof Channel | typeof GuildChannel | typeof NewsChannel | typeof PrivateChannel | typeof StageChannel | typeof TextChannel | typeof TextVoiceChannel | typeof VoiceChannel | typeof GuildAuditLogEntry | typeof Guild | typeof GuildIntegration | typeof Member | typeof GuildPreview | typeof Role | typeof StageInstance | typeof GuildTemplate | typeof UnavailableGuild | typeof VoiceState | typeof  AutocompleteInteraction | typeof CommandInteraction | typeof ComponentInteraction | typeof Interaction | typeof PingInteraction | typeof UnknownInteraction | typeof ExtendedUser | typeof User | typeof Invite | typeof Message | typeof Permission | typeof PermissionOverwrite>(obj: T, props: string[]): this {
+    for (const prop of props) {
+      Object.defineProperty(obj.prototype, prop, {
+        // In case the user tries to use this property after having removed it.
+        get() {
+          throw new Error(`${obj.constructor.name}.${prop} was removed with Client.removeProperties().`)
+        },
+        // {} makes noop so it will NOT set any values even internally
+        set() {} 
+      });
+    }
+
+    return this;
   }
 }
 
