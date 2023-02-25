@@ -3,7 +3,7 @@ import { delay, logger } from '@discordeno/utils'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
-import type { EventHandlers } from '../../src/bot.js';
+import type { EventHandlers } from '../../src/bot.js'
 import { createBot } from '../../src/bot.js'
 import { token } from './constants.js'
 chai.use(chaiAsPromised)
@@ -35,12 +35,12 @@ describe('[Bot] Delete any guild owned guilds', () => {
       },
       events: {
         async guildCreate(payload, shard) {
-          if (payload.joinedAt && (Date.now() - Date.parse(payload.joinedAt)) < 360000) {
-            return;
+          if (payload.joinedAt && Date.now() - Date.parse(payload.joinedAt) < 360000) {
+            return
           }
 
           if (bot.rest.applicationId.toString() === payload.ownerId) {
-            logger.debug(`Deleting one of the bot created guilds.`, payload.id);
+            logger.debug(`Deleting one of the bot created guilds.`, payload.id)
             await bot.rest.deleteGuild(payload.id)
           }
         },

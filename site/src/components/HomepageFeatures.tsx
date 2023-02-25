@@ -1,18 +1,18 @@
-import useBaseUrl from "@docusaurus/useBaseUrl";
-import React from "react";
-import clsx from "clsx";
-import styles from "./HomepageFeatures.module.css";
+import useBaseUrl from '@docusaurus/useBaseUrl'
+import React from 'react'
+import clsx from 'clsx'
+import styles from './HomepageFeatures.module.css'
 
 type FeatureItem = {
-  title: string;
-  image: string;
-  description: JSX.Element;
-};
+  title: string
+  image: string
+  description: JSX.Element
+}
 
 const FeatureList: FeatureItem[] = [
   {
-    title: "REST does not rest!",
-    image: "/img/undraw_docusaurus_mountain.svg",
+    title: 'REST does not rest!',
+    image: '/img/undraw_docusaurus_mountain.svg',
     description: (
       <>
         <ul>
@@ -27,14 +27,14 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: "Zero Downtime Updates",
-    image: "/img/undraw_docusaurus_tree.svg",
+    title: 'Zero Downtime Updates',
+    image: '/img/undraw_docusaurus_tree.svg',
     description: (
       <>
         <ul>
           <li>Instant bot restarts/updates.</li>
           <li>
-            Automated sharding &{" "}
+            Automated sharding &{' '}
             <strong>
               <i>re</i>
             </strong>
@@ -49,8 +49,8 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: "No More Forks!",
-    image: "/img/undraw_docusaurus_react.svg",
+    title: 'No More Forks!',
+    image: '/img/undraw_docusaurus_react.svg',
     description: (
       <>
         <ul>
@@ -64,11 +64,11 @@ const FeatureList: FeatureItem[] = [
       </>
     ),
   },
-];
+]
 
 function Feature({ title, image, description }: FeatureItem) {
   return (
-    <div className={clsx("col col--4")}>
+    <div className={clsx('col col--4')}>
       <div className="text--center">
         <img className={styles.featureSvg} alt={title} src={useBaseUrl(image)} />
       </div>
@@ -77,7 +77,7 @@ function Feature({ title, image, description }: FeatureItem) {
         <p>{description}</p>
       </div>
     </div>
-  );
+  )
 }
 
 export default function HomepageFeatures(): JSX.Element {
@@ -85,9 +85,11 @@ export default function HomepageFeatures(): JSX.Element {
     <section className={styles.features}>
       <div className="container">
         <div className="row">
-          {FeatureList.map((props, idx) => <Feature key={idx} {...props} />)}
+          {FeatureList.map((props, idx) => (
+            <Feature key={idx} {...props} />
+          ))}
         </div>
       </div>
     </section>
-  );
+  )
 }

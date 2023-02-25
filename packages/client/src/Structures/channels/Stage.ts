@@ -1,10 +1,9 @@
 /* eslint-disable no-useless-call */
 /* eslint-disable @typescript-eslint/return-await */
-import type { DiscordChannel } from "@discordeno/types"
-import type { StageInstanceOptions } from "../../typings.js"
-import type StageInstance from "../guilds/StageInstance.js"
-import VoiceChannel from "./Voice.js"
-
+import type { DiscordChannel } from '@discordeno/types'
+import type { StageInstanceOptions } from '../../typings.js'
+import type StageInstance from '../guilds/StageInstance.js'
+import VoiceChannel from './Voice.js'
 
 export class StageChannel extends VoiceChannel {
   /** The topic of the channel */

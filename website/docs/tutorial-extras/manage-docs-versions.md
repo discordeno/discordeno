@@ -40,7 +40,7 @@ module.exports = {
       ],
     },
   },
-};
+}
 ```
 
 The docs version dropdown appears in your navbar:

@@ -15,33 +15,25 @@ async function* walk(dir) {
 }
 
 for await (let filepath of walk(typedocOutPath)) {
+  if (filepath.endsWith('.json')) continue
+  // if (filepath.includes('/generated/classes')) console.log('file in classes', filepath)
+  // if (filepath.includes('/generated/modules')) console.log('file in modules', filepath)
   let file = fs.readFileSync(filepath, 'utf-8')
-
-  // Removes the old file in case it had ugly name, will be recreated below
-  fs.rmSync(filepath);
 
   if (filepath.endsWith('generated/README.md')) {
     file = [
-      "discordeno-monorepo / [Modules](modules.md)",
-      "",
-      "# Discordeno",
-      "",
-      "Thank you for using Discordeno. These docs are generated automatically. If you see any issues please contact us on [Discord](https://discord.gg/ddeno)"
-    ].join('\n');
-    filepath = filepath.replace("README", "Docs")
+      'discordeno-monorepo / [Modules](modules.md)',
+      '',
+      '# Discordeno',
+      '',
+      'Thank you for using Discordeno. These docs are generated automatically. If you see any issues please contact us on [Discord](https://discord.gg/ddeno)',
+    ].join('\n')
+    // console.log('renaming readme', filepath)
+    // filepath = filepath.replace("README", "Docs")
   }
-  // These files should be simply deleted.
-  const filesToDelete = [
-    // "README", 
-    // "modules"
-  ];
-  let deleted = false;
 
-  for (const filename of filesToDelete) {
-    if (filepath.endsWith(`generated/${filename}.md`)) deleted = true;
-  }
-  // Skip the rest if this file should be deleted
-  if (deleted) continue;
+  // Removes the old file in case it had ugly name, will be recreated below
+  fs.rmSync(filepath)
 
   // add all the words we need to replace here for invalid jsx errors
   const words = ['internal']
@@ -50,14 +42,35 @@ for await (let filepath of walk(typedocOutPath)) {
   }
 
   // Converts ugly names to clean names for example discordeno_types.ActionRow becomes ActionRow
-  const cleanForms = [{ ugly: 'discordeno_types.' }, { ugly: "discordeno_utils."}]
+  const cleanForms = [
+    { ugly: 'discordeno_bot.' },
+    { ugly: 'discordeno_client.' },
+    { ugly: 'discordeno_gateway.' },
+    { ugly: 'discordeno_rest.' },
+    { ugly: 'discordeno_types.' },
+    { ugly: 'discordeno_utils.' },
+  ]
 
   for (const form of cleanForms) {
-      // Clean the file of the ugly forms
-      file = file.replace(new RegExp(form.ugly, 'gi'), form.clean || '')
-      const lastIndex = filepath.lastIndexOf("/")
-      // Clean the file name of the ugly forms
-      filepath = filepath.replace(new RegExp(form.ugly, 'gi'), form.clean || '')
+    // Clean the file of the ugly forms
+    file = file.replace(new RegExp(form.ugly, 'gi'), form.clean || '')
+    const lastIndex = filepath.lastIndexOf('/')
+    // Clean the file name of the ugly forms
+    if (!filepath.endsWith(`${form.ugly}md`)) filepath = filepath.replace(new RegExp(form.ugly, 'gi'), form.clean || '')
+  }
+
+  file = file.replace(/Promise<([^>]+)>/gi, 'Promise{$1}')
+
+  if (file.includes('Promise<')) console.log('Removing Promise< failed')
+
+  if (filepath.endsWith('/md')) {
+    filepath = filepath.replace('/md', '/README.md')
+  }
+
+  // if (filepath.includes('/generated/classes')) console.log('file in classes 2', filepath)
+  if (filepath.includes('/generated/modules/discordeno_')) {
+    const mod = filepath.substring(filepath.lastIndexOf('_') + 1)
+    filepath = filepath.substring(0, filepath.lastIndexOf('/')) + `/${mod[0].toUpperCase()}${mod.substring(1)}`
   }
 
   fs.writeFileSync(filepath, file, function (err, result) {

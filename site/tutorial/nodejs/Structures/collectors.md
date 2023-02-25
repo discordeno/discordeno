@@ -22,27 +22,27 @@ We have a pre-made class for collectors which you can find
 [here](https://github.com/meister03/discordeno.js/blob/master/Util/Collectors.js).
 
 ```js
-const Discord = require("discordeno.js");
-const filter = (m) => m.data?.customId === "warn_modal" && m.user.id === interaction.user.id;
-const listener = client.eventListener; // When the eventListener property is named different
-const collector = new Discord.Collector("interactionCreate", {
+const Discord = require('discordeno.js')
+const filter = (m) => m.data?.customId === 'warn_modal' && m.user.id === interaction.user.id
+const listener = client.eventListener // When the eventListener property is named different
+const collector = new Discord.Collector('interactionCreate', {
   client: client,
   timeout: 60000,
   filter,
   max: 20,
   listener,
-});
-collector.on("collect", (m) => {
-  const interaction = client.interactions.forge(m);
+})
+collector.on('collect', (m) => {
+  const interaction = client.interactions.forge(m)
   // Stop Collector
   // collector.stop();
-});
+})
 
 // Fires on a timeout, when the collector has reached the max amount of interactions or when it has been closed
-collector.on("end", (collected) => {
+collector.on('end', (collected) => {
   // Map of Collected Interactions
-  console.log(collected);
-});
+  console.log(collected)
+})
 ```
 
 As you can see, this opens up many possibilities. You can listen to any event and get the interaction you need.

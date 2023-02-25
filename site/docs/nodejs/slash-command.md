@@ -18,14 +18,14 @@ commands show up directly.
 For this reason, we will now show how to create guild commands, in order to test them immediately.
 
 ```js
-const guildId = BigInt("YOUR_GUILD_ID");
+const guildId = BigInt('YOUR_GUILD_ID')
 const command = {
-  name: "ping",
-  description: "Retrieves the Bot latency",
+  name: 'ping',
+  description: 'Retrieves the Bot latency',
   options: [],
-};
+}
 
-client.helpers.createApplicationCommand(command, guildId);
+client.helpers.createApplicationCommand(command, guildId)
 ```
 
 This is just very simple example, you can also add sub commands, select options and much more.
@@ -36,28 +36,28 @@ Discord sends a WebSocket Event when a user runs a slash command. You can listen
 `interactionCreate` function in the client.
 
 ```js
-const Discord = require("discordeno");
-const config = require("./config.json");
+const Discord = require('discordeno')
+const config = require('./config.json')
 
 const client = Discord.createBot({
   events: {
     ready(client, payload) {
-      console.log(`Successfully connected Shard ${payload.shardId} to the gateway`);
+      console.log(`Successfully connected Shard ${payload.shardId} to the gateway`)
     },
     async interactionCreate(client, interaction) {
-      if (interaction.data?.name === "ping") {
+      if (interaction.data?.name === 'ping') {
         return await client.helpers.sendInteractionResponse(interaction.id, interaction.token, {
           type: Discord.InteractionResponseTypes.ChannelMessageWithSource,
-          data: { content: "🏓 Pong!" },
-        });
+          data: { content: '🏓 Pong!' },
+        })
       }
     },
   },
   intents: Discord.Intents.Guilds | Discord.Intents.GuildMessages,
   token: config.token,
-});
+})
 
-Discord.startBot(client);
+Discord.startBot(client)
 ```
 
 The handling may see complicated in the beginning, but as mentioned before, we will introduce structures to make it

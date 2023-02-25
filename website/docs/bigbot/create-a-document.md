@@ -53,5 +53,5 @@ module.exports = {
       items: ['tutorial-basics/create-a-document'],
     },
   ],
-};
+}
 ```

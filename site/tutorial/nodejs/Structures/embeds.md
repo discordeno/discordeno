@@ -32,7 +32,7 @@ Now we have created a class which we can use to create embeds. But we can't just
 So we need an additional method which will convert the data from the class to the correct format.
 
 ```js
-class Embed(){  
+class Embed(){
     constructor() {}
 
     setTitle(title) {
@@ -50,10 +50,10 @@ class Embed(){
 Wow, now you can create a embed and send it to Discord.
 
 ```js
-const Channel = require("./structures/Channel"); // Path to structure
+const Channel = require('./structures/Channel') // Path to structure
 
-const channel = new Channel(client, data);
-await channel.send({ embeds: [embed] });
+const channel = new Channel(client, data)
+await channel.send({ embeds: [embed] })
 ```
 
 You probably want more methods which you can use to create embeds.
@@ -62,36 +62,36 @@ You probably want more methods which you can use to create embeds.
 ### Using the Embed Structure:
 
 ```js
-const Discord = require("discordeno.js");
+const Discord = require('discordeno.js')
 
-const channel = client.channels.forge(channelData);
+const channel = client.channels.forge(channelData)
 const showCaseEmbed = new Discord.Embed()
-  .setColor(0x00AE86)
-  .setTitle("A Random Title")
-  .setURL("https://github.com/discordeno")
+  .setColor(0x00ae86)
+  .setTitle('A Random Title')
+  .setURL('https://github.com/discordeno')
   .setAuthor({
-    name: "Author name",
-    iconUrl: "https://raw.githubusercontent.com/discordeno/discordeno/main/site/static/img/logo.png",
-    url: "https://github.com/discordeno",
+    name: 'Author name',
+    iconUrl: 'https://raw.githubusercontent.com/discordeno/discordeno/main/site/static/img/logo.png',
+    url: 'https://github.com/discordeno',
   })
-  .setDescription("A Random Description")
-  .setThumbnail("https://raw.githubusercontent.com/discordeno/discordeno/main/site/static/img/logo.png")
+  .setDescription('A Random Description')
+  .setThumbnail('https://raw.githubusercontent.com/discordeno/discordeno/main/site/static/img/logo.png')
   .addFields(
-    { name: "Field 1 Name", value: "Normal Field Value" },
-    { name: "\u200B", value: "\u200B" },
-    { name: "Field 2 Name", value: "Inline Field Value", inline: true },
-    { name: "Field 3 Name", value: "Inline Field Value", inline: true },
+    { name: 'Field 1 Name', value: 'Normal Field Value' },
+    { name: '\u200B', value: '\u200B' },
+    { name: 'Field 2 Name', value: 'Inline Field Value', inline: true },
+    { name: 'Field 3 Name', value: 'Inline Field Value', inline: true },
   )
-  .addField({ name: "Field 4", value: "Field Value" })
-  .setImage("https://raw.githubusercontent.com/discordeno/discordeno/main/site/static/img/logo.png")
+  .addField({ name: 'Field 4', value: 'Field Value' })
+  .setImage('https://raw.githubusercontent.com/discordeno/discordeno/main/site/static/img/logo.png')
   .setTimestamp()
   .setFooter({
-    text: "A Footer Text",
-    iconUrl: "https://raw.githubusercontent.com/discordeno/discordeno/main/site/static/img/logo.png",
+    text: 'A Footer Text',
+    iconUrl: 'https://raw.githubusercontent.com/discordeno/discordeno/main/site/static/img/logo.png',
   })
-  .toJSON();
+  .toJSON()
 
-await channel.send({ embeds: [showCaseEmbed] });
+await channel.send({ embeds: [showCaseEmbed] })
 ```
 
 ### Embed Limits:

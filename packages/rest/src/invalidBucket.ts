@@ -7,9 +7,7 @@ import { delay, logger } from '@discordeno/utils'
  * @param options The options used to configure this bucket.
  * @returns RefillingBucket
  */
-export function createInvalidRequestBucket (
-  options: InvalidRequestBucketOptions
-): InvalidRequestBucket {
+export function createInvalidRequestBucket(options: InvalidRequestBucketOptions): InvalidRequestBucket {
   const bucket: InvalidRequestBucket = {
     current: options.current ?? 0,
     max: options.max ?? 10000,
@@ -87,7 +85,7 @@ export function createInvalidRequestBucket (
           bucket.timeoutId = undefined
         }, bucket.interval)
       }
-    }
+    },
   }
 
   return bucket

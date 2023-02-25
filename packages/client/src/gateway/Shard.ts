@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-dynamic-delete */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Shard as DiscordenoShard, ShardState } from '@discordeno/gateway'
+import { DiscordenoShard, ShardState } from '@discordeno/gateway'
 import type { DiscordGuildStickersUpdate, DiscordThreadMemberUpdate } from '@discordeno/types'
 import {
   ActivityTypes,

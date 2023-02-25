@@ -1,5 +1,5 @@
-import type { FileContent } from "@discordeno/types"
-import { decode } from "./base64.js"
+import type { FileContent } from '@discordeno/types'
+import { decode } from './base64.js'
 
 export function findFiles(file: unknown): FileContent[] {
   if (!file) {

@@ -23,20 +23,20 @@ Create a file named `config.json` in your project folder and insert the followin
 Open the `index.js` file which you have created earlier and then insert the following content:
 
 ```js
-const Discord = require("discordeno");
-const config = require("./config.json");
+const Discord = require('discordeno')
+const config = require('./config.json')
 
 const client = Discord.createBot({
   events: {
     ready(client, payload) {
-      console.log(`Successfully connected Shard ${payload.shardId} to the gateway`);
+      console.log(`Successfully connected Shard ${payload.shardId} to the gateway`)
     },
   },
-  intents: ["Guilds", "GuildMessages"],
+  intents: ['Guilds', 'GuildMessages'],
   token: config.token,
-});
+})
 
-Discord.startBot(client);
+Discord.startBot(client)
 ```
 
 Now you can start your bot by running the following command in your terminal:

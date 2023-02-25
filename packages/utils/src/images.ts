@@ -81,16 +81,14 @@ export function guildIconUrl(
   options?: {
     size?: ImageSize
     format?: ImageFormat
-  }
+  },
 ): string | undefined {
   return imageHash
     ? formatImageUrl(
-      `https://cdn.discordapp.com/icons/${guildId}/${typeof imageHash === 'string'
-      ? imageHash
-      : iconBigintToHash(imageHash)}`,
-      options?.size ?? 128,
-      options?.format
-    )
+        `https://cdn.discordapp.com/icons/${guildId}/${typeof imageHash === 'string' ? imageHash : iconBigintToHash(imageHash)}`,
+        options?.size ?? 128,
+        options?.format,
+      )
     : undefined
 }
 
@@ -108,16 +106,14 @@ export function guildSplashUrl(
   options?: {
     size?: ImageSize
     format?: ImageFormat
-  }
+  },
 ): string | undefined {
   return imageHash
     ? formatImageUrl(
-      `https://cdn.discordapp.com/splashes/${guildId}/${typeof imageHash === 'string'
-      ? imageHash
-      : iconBigintToHash(imageHash)}`,
-      options?.size ?? 128,
-      options?.format
-    )
+        `https://cdn.discordapp.com/splashes/${guildId}/${typeof imageHash === 'string' ? imageHash : iconBigintToHash(imageHash)}`,
+        options?.size ?? 128,
+        options?.format,
+      )
     : undefined
 }
 
@@ -128,10 +124,7 @@ export function guildSplashUrl(
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource.
  */
-export function getWidgetImageUrl (
-  guildId: BigString,
-  options?: GetGuildWidgetImageQuery
-): string {
+export function getWidgetImageUrl(guildId: BigString, options?: GetGuildWidgetImageQuery): string {
   let url = `https://cdn.discordapp.com/guilds/${guildId}/widget.png`
 
   if (options?.style) {

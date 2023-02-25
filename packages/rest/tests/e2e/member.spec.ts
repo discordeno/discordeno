@@ -22,7 +22,7 @@ before(async () => {
 after(async () => {
   if (rest.invalidBucket.timeoutId) clearTimeout(rest.invalidBucket.timeoutId)
   if (e2ecache.guild.id && !e2ecache.deletedGuild) {
-    e2ecache.deletedGuild = true;
+    e2ecache.deletedGuild = true
     await rest.deleteGuild(e2ecache.guild.id)
   }
 })
@@ -37,9 +37,9 @@ describe('[member] Member tests', async () => {
 
     it('Gets a member list and checks if the bot is in the member list', async () => {
       const members = await rest.getMembers(e2ecache.communityGuildId, {
-        limit: 10
+        limit: 10,
       })
-      expect(members.some(m => m.user.id === rest.applicationId.toString())).to.equal(true)
+      expect(members.some((m) => m.user.id === rest.applicationId.toString())).to.equal(true)
     })
 
     // fetch a single member by id
@@ -64,7 +64,7 @@ describe('[member] Member tests', async () => {
     // ban member from guild with a reason
     it('ban member from guild with a reason', async () => {
       await rest.banMember(e2ecache.communityGuildId, ianID, {
-        reason: 'Blame Wolf'
+        reason: 'Blame Wolf',
       })
       expect(await rest.getBan(e2ecache.communityGuildId, ianID)).to.exist
     })
@@ -72,7 +72,7 @@ describe('[member] Member tests', async () => {
     // ban member from guild and delete messages
     it('ban member from guild and delete messages', async () => {
       await rest.banMember(e2ecache.communityGuildId, ltsID, {
-        deleteMessageSeconds: 604800
+        deleteMessageSeconds: 604800,
       })
       expect(await rest.getBan(e2ecache.communityGuildId, ltsID)).to.exist
     })
@@ -85,13 +85,9 @@ describe('[member] Member tests', async () => {
 
     // unban member from guild
     it('unban member from guild', async () => {
-      await Promise.all([
-        rest.unbanMember(e2ecache.communityGuildId, wolfID),
-        rest.unbanMember(e2ecache.communityGuildId, ianID)
-      ])
+      await Promise.all([rest.unbanMember(e2ecache.communityGuildId, wolfID), rest.unbanMember(e2ecache.communityGuildId, ianID)])
 
-      await expect(rest.getBan(e2ecache.communityGuildId, wolfID)).to.eventually
-        .rejected
+      await expect(rest.getBan(e2ecache.communityGuildId, wolfID)).to.eventually.rejected
     })
   })
 
@@ -99,13 +95,13 @@ describe('[member] Member tests', async () => {
     it("Edit a bot's nickname", async () => {
       const nick = 'lts20050703'
       const member = await rest.editBotMember(e2ecache.communityGuildId, {
-        nick
+        nick,
       })
       expect(member.nick).to.equal(nick)
 
       // Change nickname back
       const member2 = await rest.editBotMember(e2ecache.communityGuildId, {
-        nick: null
+        nick: null,
       })
       expect(member2.nick).to.null
     })
@@ -119,7 +115,7 @@ describe('[member] Member tests', async () => {
       expect(channel?.id).to.exist
 
       const message = await rest.sendMessage(channel.id, {
-        content: 'https://i.imgur.com/doG55NR.png'
+        content: 'https://i.imgur.com/doG55NR.png',
       })
       expect(message?.content).to.exist
     })
