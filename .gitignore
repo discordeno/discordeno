@@ -17,6 +17,11 @@ site/docs/generated/classes
 site/docs/generated/enums
 site/docs/generated/interfaces
 site/docs/generated/modules
+website/docs/generated/classes
+website/docs/generated/enums
+website/docs/generated/interfaces
+website/docs/generated/modules
+website/.yarn/
 # testing
 coverage
 
