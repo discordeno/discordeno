@@ -1,12 +1,12 @@
 {
     "entryPointStrategy": "packages",
     "entryPoints": [
-        "packages/bot",
-        "packages/client",
-        "packages/discordeno",
-        "packages/gateway",
-        "packages/rest",
         "packages/types",
         "packages/utils"
-    ]
+    ],
+    "logger": "console",
+    "skipErrorChecking": true,
+    "cleanOutputDir": true,
+    "excludeNotDocumented": true,
+    "out": "./website/docs/generated/"
 }

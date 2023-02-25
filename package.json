@@ -22,7 +22,7 @@
     "test:test-type": "turbo run test:test-type",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install",
-    "build:doc": "typedoc --plugin typedoc-plugin-markdown --out ./website/docs/generated/ "
+    "build:doc": "typedoc --out ./website/docs/generated/ && node scripts/stripInternalInTypedocs.js"
   },
   "devDependencies": {
     "eslint": "^8.28.0",
@@ -44,5 +44,8 @@
       "eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to ."
     ]
   },
-  "packageManager": "yarn@3.3.0"
+  "packageManager": "yarn@3.3.0",
+  "dependencies": {
+    "typedoc-plugin-missing-exports": "^1.0.0"
+  }
 }
