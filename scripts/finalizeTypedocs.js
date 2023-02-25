@@ -17,6 +17,32 @@ async function* walk(dir) {
 for await (let filepath of walk(typedocOutPath)) {
   let file = fs.readFileSync(filepath, 'utf-8')
 
+  // Removes the old file in case it had ugly name, will be recreated below
+  fs.rmSync(filepath);
+
+  if (filepath.endsWith('generated/README.md')) {
+    file = [
+      "discordeno-monorepo / [Modules](modules.md)",
+      "",
+      "# Discordeno",
+      "",
+      "Thank you for using Discordeno. These docs are generated automatically. If you see any issues please contact us on [Discord](https://discord.gg/ddeno)"
+    ].join('\n');
+    filepath = filepath.replace("README", "Docs")
+  }
+  // These files should be simply deleted.
+  const filesToDelete = [
+    // "README", 
+    // "modules"
+  ];
+  let deleted = false;
+
+  for (const filename of filesToDelete) {
+    if (filepath.endsWith(`generated/${filename}.md`)) deleted = true;
+  }
+  // Skip the rest if this file should be deleted
+  if (deleted) continue;
+
   // add all the words we need to replace here for invalid jsx errors
   const words = ['internal']
   for (const word of words) {
