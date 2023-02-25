@@ -18,9 +18,9 @@ site/docs/generated/enums
 site/docs/generated/interfaces
 site/docs/generated/modules
 website/docs/generated/classes
-website/docs/generated/enums
-website/docs/generated/interfaces
-website/docs/generated/modules
+website/docs/generated/enums/*.md
+website/docs/generated/interfaces/*.md
+website/docs/generated/modules/*.md
 website/.yarn/
 # testing
 coverage

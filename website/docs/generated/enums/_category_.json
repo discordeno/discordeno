@@ -1,0 +1,9 @@
+{
+    "label": "Enums",
+    "position": 1,
+    "link": {
+      "type": "generated-index",
+      "description": "All the enums available for use from the @discordeno/types package."
+    }
+  }
+  
