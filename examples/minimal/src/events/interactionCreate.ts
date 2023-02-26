@@ -1,135 +1,111 @@
-import type {
-  BotWithCache,
-  Guild} from '../../deps.ts.js';
-import {
-  ApplicationCommandOptionTypes,
-  bgBlack,
-  bgYellow,
-  black,
-  green,
-  red,
-  white,
-  yellow,
-} from '../../deps.ts.js';
-import { events } from './mod.ts.js';
-import { logger } from '../utils/logger.ts.js';
-import { getGuildFromId, isSubCommand, isSubCommandGroup } from '../utils/helpers.ts.js';
-import type { Command} from '../commands/mod.ts.js';
-import { commands } from '../commands/mod.ts.js';
+import type { BotWithCache, Guild } from '../../deps.ts.js'
+import { ApplicationCommandOptionTypes, bgBlack, bgYellow, black, green, red, white, yellow } from '../../deps.ts.js'
+import { events } from './mod.ts.js'
+import { logger } from '../utils/logger.ts.js'
+import { getGuildFromId, isSubCommand, isSubCommandGroup } from '../utils/helpers.ts.js'
+import type { Command } from '../commands/mod.ts.js'
+import { commands } from '../commands/mod.ts.js'
 
-const log = logger({ name: "Event: InteractionCreate" });
+const log = logger({ name: 'Event: InteractionCreate' })
 
 events.interactionCreate = async (rawBot, interaction) => {
-  const bot = rawBot as BotWithCache;
+  const bot = rawBot as BotWithCache
 
   if (interaction.data && interaction.id) {
-    let guildName = "Direct Message";
-    let guild = {} as Guild;
+    let guildName = 'Direct Message'
+    let guild = {} as Guild
 
     // Set guild, if there was an error getting the guild, then just say it was a DM. (What else are we going to do?)
     if (interaction.guildId) {
-      const guildOrVoid = await getGuildFromId(bot, interaction.guildId).catch(
-        (err) => {
-          log.error(err);
-        },
-      );
+      const guildOrVoid = await getGuildFromId(bot, interaction.guildId).catch((err) => {
+        log.error(err)
+      })
       if (guildOrVoid) {
-        guild = guildOrVoid;
-        guildName = guild.name;
+        guild = guildOrVoid
+        guildName = guild.name
       }
     }
 
     log.info(
-      `[Command: ${bgYellow(black(String(interaction.data.name)))} - ${
-        bgBlack(white(`Trigger`))
-      }] by ${interaction.user.username}#${interaction.user.discriminator} in ${guildName}${
-        guildName !== "Direct Message" ? ` (${guild.id})` : ``
-      }`,
-    );
+      `[Command: ${bgYellow(black(String(interaction.data.name)))} - ${bgBlack(white(`Trigger`))}] by ${interaction.user.username}#${
+        interaction.user.discriminator
+      } in ${guildName}${guildName !== 'Direct Message' ? ` (${guild.id})` : ``}`,
+    )
 
-    let command: undefined | Command = interaction.data.name ? commands.get(interaction.data.name) : undefined;
-    let commandName = command?.name;
+    let command: undefined | Command = interaction.data.name ? commands.get(interaction.data.name) : undefined
+    let commandName = command?.name
 
     if (command !== undefined) {
       if (interaction.data.name) {
         if (interaction.data.options?.[0]) {
-          const optionType = interaction.data.options[0].type;
+          const optionType = interaction.data.options[0].type
 
           if (optionType === ApplicationCommandOptionTypes.SubCommandGroup) {
             // Check if command has subcommand and handle types
-            if (!command.subcommands) return;
+            if (!command.subcommands) return
 
             // Try to find the subcommand group
-            const subCommandGroup = command.subcommands?.find(
-              (command) => command.name == interaction.data?.options?.[0].name,
-            );
-            if (!subCommandGroup) return;
+            const subCommandGroup = command.subcommands?.find((command) => command.name == interaction.data?.options?.[0].name)
+            if (!subCommandGroup) return
 
-            if (isSubCommand(subCommandGroup)) return;
+            if (isSubCommand(subCommandGroup)) return
 
             // Get name of the command which we are looking for
-            const targetCmdName = interaction.data.options?.[0].options?.[0].name ||
-              interaction.data.options?.[0].options?.[0].name;
-            if (!targetCmdName) return;
+            const targetCmdName = interaction.data.options?.[0].options?.[0].name || interaction.data.options?.[0].options?.[0].name
+            if (!targetCmdName) return
 
             // Try to find the command
-            command = subCommandGroup.subCommands.find((c) => c.name === targetCmdName);
+            command = subCommandGroup.subCommands.find((c) => c.name === targetCmdName)
 
-            commandName += ` ${subCommandGroup.name} ${command?.name}`;
+            commandName += ` ${subCommandGroup.name} ${command?.name}`
 
             // Normal
           }
 
           if (optionType === ApplicationCommandOptionTypes.SubCommandGroup) {
             // Check if command has subcommand and handle types
-            if (!command?.subcommands) return;
+            if (!command?.subcommands) return
 
             // Try to find the command
-            const found = command.subcommands.find((command) => command.name == interaction.data?.options?.[0].name);
-            if (!found) return;
+            const found = command.subcommands.find((command) => command.name == interaction.data?.options?.[0].name)
+            if (!found) return
 
-            if (isSubCommandGroup(found)) return;
+            if (isSubCommandGroup(found)) return
 
-            command = found;
-            commandName += ` ${command?.name}`;
+            command = found
+            commandName += ` ${command?.name}`
           }
         }
 
         try {
           if (command) {
-            command.execute(rawBot, interaction);
+            command.execute(rawBot, interaction)
             log.info(
-              `[Command: ${bgYellow(black(String(interaction.data.name)))} - ${
-                bgBlack(green(`Success`))
-              }] by ${interaction.user.username}#${interaction.user.discriminator} in ${guildName}${
-                guildName !== "Direct Message" ? ` (${guild.id})` : ``
-              }`,
-            );
+              `[Command: ${bgYellow(black(String(interaction.data.name)))} - ${bgBlack(green(`Success`))}] by ${interaction.user.username}#${
+                interaction.user.discriminator
+              } in ${guildName}${guildName !== 'Direct Message' ? ` (${guild.id})` : ``}`,
+            )
           } else {
-            throw "";
+            throw ''
           }
         } catch (err) {
           log.error(
-            `[Command: ${bgYellow(black(String(interaction.data.name)))} - ${
-              bgBlack(red(`Error`))
-            }] by ${interaction.user.username}#${interaction.user.discriminator} in ${guildName}${
-              guildName !== "Direct Message" ? ` (${guild.id})` : ``
-            }`,
-          );
-          err.length ? log.error(err) : undefined;
+            `[Command: ${bgYellow(black(String(interaction.data.name)))} - ${bgBlack(red(`Error`))}] by ${interaction.user.username}#${
+              interaction.user.discriminator
+            } in ${guildName}${guildName !== 'Direct Message' ? ` (${guild.id})` : ``}`,
+          )
+          err.length ? log.error(err) : undefined
         }
       } else {
         log.warn(
-          `[Command: ${bgYellow(black(String(interaction.data.name)))} - ${
-            bgBlack(yellow(`Not Found`))
-          }] by ${interaction.user.username}#${interaction.user.discriminator} in ${guildName}${
-            guildName !== "Direct Message" ? ` (${guild.id})` : ``
-          }`,
-        );
+          `[Command: ${bgYellow(black(String(interaction.data.name)))} - ${bgBlack(yellow(`Not Found`))}] by ${interaction.user.username}#${
+            interaction.user.discriminator
+          } in ${guildName}${guildName !== 'Direct Message' ? ` (${guild.id})` : ``}`,
+        )
       }
     }
   }
-};
+}
 
 /*
     // Handle subcommands

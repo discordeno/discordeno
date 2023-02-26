@@ -7,28 +7,28 @@ sidebar_position: 2
 In order to process certain events, you must provide the Discordeno client with functions for these events.
 
 ```js
-const Discord = require("discordeno");
-const config = require("./config.json");
+const Discord = require('discordeno')
+const config = require('./config.json')
 
 const client = Discord.createBot({
   events: {
     ready(client, payload) {
-      console.log(`Successfully connected Shard ${payload.shardId} to the gateway`);
+      console.log(`Successfully connected Shard ${payload.shardId} to the gateway`)
     },
 
     async messageCreate(client, message) {
-      if (message.content === "!ping") {
-        await client.helpers.sendMessage(message.channelId, { content: "pong" });
+      if (message.content === '!ping') {
+        await client.helpers.sendMessage(message.channelId, { content: 'pong' })
       }
 
-      console.log(`Received message: ${message.content || message.embeds}`);
+      console.log(`Received message: ${message.content || message.embeds}`)
     },
   },
-  intents: ["Guilds", "GuildMessages"],
+  intents: ['Guilds', 'GuildMessages'],
   token: config.token,
-});
+})
 
-Discord.startBot(client);
+Discord.startBot(client)
 ```
 
 As you listen to more and more events, the functions code grows along with them, so you can quickly lose track.
@@ -52,42 +52,42 @@ Ready Event:
 module.exports = (client, payload) => {
   if (payload.shardId + 1 === client.gateway.maxShards) {
     // All Shards are ready
-    console.log(`Successfully connected to the gateway as ${payload.user.username}#${payload.user.discriminator}`);
+    console.log(`Successfully connected to the gateway as ${payload.user.username}#${payload.user.discriminator}`)
   }
-};
+}
 ```
 
 ## Load your Events
 
 ```js
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs')
+const path = require('path')
 
-const resolveFolder = (folderName) => path.resolve(__dirname, ".", folderName);
+const resolveFolder = (folderName) => path.resolve(__dirname, '.', folderName)
 
 class EventManager {
   constructor(client) {
-    this.cache = new Map();
-    this._events = {};
+    this.cache = new Map()
+    this._events = {}
   }
 
   load(options = {}) {
-    const eventsFolder = resolveFolder("../events");
+    const eventsFolder = resolveFolder('../events')
     fs.readdirSync(eventsFolder).map(async (file) => {
-      if (!file.endsWith(".js")) return;
+      if (!file.endsWith('.js')) return
 
-      const fileName = path.join(eventsFolder, file);
-      const event = require(fileName);
-      const eventName = file.split(".")[0];
+      const fileName = path.join(eventsFolder, file)
+      const event = require(fileName)
+      const eventName = file.split('.')[0]
 
-      this._events[`${eventName}`] = event;
-    });
+      this._events[`${eventName}`] = event
+    })
 
-    return this._events;
+    return this._events
   }
 }
 
-module.exports = EventManager;
+module.exports = EventManager
 ```
 
 The code above, which can also be found in the
@@ -98,19 +98,19 @@ In order to let the client know which events should be processed, you need to pa
 `createBot<options>.events` object.
 
 ```js
-const Discord = require("discordeno");
-const config = require("./config.json");
+const Discord = require('discordeno')
+const config = require('./config.json')
 
-const EventManager = require("./Managers/EventManager.js");
-const events = new EventManager({});
+const EventManager = require('./Managers/EventManager.js')
+const events = new EventManager({})
 
 const client = Discord.createBot({
   events: events.load({}),
-  intents: ["Guilds", "GuildMessages"],
+  intents: ['Guilds', 'GuildMessages'],
   token: config.token,
-});
+})
 
-Discord.startBot(client);
+Discord.startBot(client)
 ```
 
 Moreover, you can customize the `EventManager` and add more functionality to it and make it exactly fit your needs or

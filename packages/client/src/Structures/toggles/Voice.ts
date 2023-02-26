@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import type { DiscordVoiceState } from "@discordeno/types"
-import { ToggleBitfield } from "./Toggle.js"
-
+import type { DiscordVoiceState } from '@discordeno/types'
+import { ToggleBitfield } from './Toggle.js'
 
 export const VoiceStateToggle = {
   /** Whether this user is deafened by the server */

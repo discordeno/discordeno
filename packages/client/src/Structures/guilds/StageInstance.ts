@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-useless-call */
-import Base from '../../Base.js';
+import Base from '../../Base.js'
 
 import type { DiscordStageInstance } from '@discordeno/types'
 import type Client from '../../Client.js'

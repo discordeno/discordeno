@@ -1,7 +1,6 @@
-import type { DiscordUnavailableGuild } from "@discordeno/types"
-import Base from "../../Base.js"
-import type Client from "../../Client.js"
-
+import type { DiscordUnavailableGuild } from '@discordeno/types'
+import Base from '../../Base.js'
+import type Client from '../../Client.js'
 
 export class UnavailableGuild extends Base {
   /** Whether or not the guild is unavailable. */

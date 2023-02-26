@@ -80,15 +80,15 @@ Now we will initiate our cache service. This may be different for you based on y
 using PGSQL for our cache layer, we will now instantiate it.
 
 ```ts
-import { postgres } from "../../../deps.ts";
+import { postgres } from '../../../deps.ts'
 
 // YOU CUSTOM PGSQL INFO GOES HERE
-const DATABASE_USERNAME = "";
-const DATABASE_PASSWORD = "";
-const DATABASE_NAME = "";
-const DATABASE_HOST = "";
-const DATABASE_PORT = 8956;
-const DATABASE_MAX = 20;
+const DATABASE_USERNAME = ''
+const DATABASE_PASSWORD = ''
+const DATABASE_NAME = ''
+const DATABASE_HOST = ''
+const DATABASE_PORT = 8956
+const DATABASE_MAX = 20
 
 export const psql = postgres({
   username: DATABASE_USERNAME,
@@ -103,14 +103,14 @@ export const psql = postgres({
   types: {
     bigint: postgres.BigInt,
   },
-});
+})
 ```
 
 To use the PGSQL driver we are using in this guide you can insert this into your `deps.ts`.
 
 ```ts
 // @deno-types="https://denopkg.com/porsager/postgres@e2a8595d7aa8c3c838b83b9bca7b890c1707ad2c/types/index.d.ts"
-export { default as postgres } from "https://denopkg.com/porsager/postgres@e2a8595d7aa8c3c838b83b9bca7b890c1707ad2c/deno/lib/index.js";
+export { default as postgres } from 'https://denopkg.com/porsager/postgres@e2a8595d7aa8c3c838b83b9bca7b890c1707ad2c/deno/lib/index.js'
 ```
 
 > Note: Remember you can use any driver you like. For deno users we prefer to use this library for PGSQL because it is

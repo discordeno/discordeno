@@ -61,14 +61,14 @@ Before, we dive into how, here is a quick summary of why you will want a standal
 Create a file under some path like `src/gateway/mod.ts`.
 
 ```ts
-import { DISCORD_TOKEN, REST_AUTHORIZATION, REST_PORT } from "../../configs.ts";
-import { BASE_URL, createRestManager } from "../../deps.ts";
+import { DISCORD_TOKEN, REST_AUTHORIZATION, REST_PORT } from '../../configs.ts'
+import { BASE_URL, createRestManager } from '../../deps.ts'
 
 const rest = createRestManager({
   token: DISCORD_TOKEN,
   secretKey: REST_AUTHORIZATION,
   customUrl: `http://localhost:${REST_PORT}`,
-});
+})
 ```
 
 Throw another rest manager here which will be responsible for calling the main REST process we created in Step 1. This
@@ -84,16 +84,16 @@ Now we need to use this rest manager to call the api to get information about ho
 your bot.
 
 ```ts
-import { routes } from "../../deps.ts";
+import { routes } from '../../deps.ts'
 
 const rest = createRestManager({
   token: DISCORD_TOKEN,
   secretKey: REST_AUTHORIZATION,
   customUrl: `http://localhost:${REST_PORT}`,
-});
+})
 
 // CALL THE REST PROCESS TO GET GATEWAY DATA
-const gatewayBot = await rest.runMethod(rest, "GET", routes.GATEWAY_BOT()).then((res) => ({
+const gatewayBot = await rest.runMethod(rest, 'GET', routes.GATEWAY_BOT()).then((res) => ({
   url: res.url,
   shards: res.shards,
   sessionStartLimit: {
@@ -102,7 +102,7 @@ const gatewayBot = await rest.runMethod(rest, "GET", routes.GATEWAY_BOT()).then(
     resetAfter: res.session_start_limit.reset_after,
     maxConcurrency: res.session_start_limit.max_concurrency,
   },
-}));
+}))
 ```
 
 With this info, we can now create our gateway manager.
@@ -110,7 +110,7 @@ With this info, we can now create our gateway manager.
 ### Understanding Gateway Manager
 
 ```ts
-import { INTENTS, SHARDS_PER_WORKER, TOTAL_WORKERS } from "../../configs.ts";
+import { INTENTS, SHARDS_PER_WORKER, TOTAL_WORKERS } from '../../configs.ts'
 
 const gateway = createGatewayManager({
   gatewayBot,
@@ -124,7 +124,7 @@ const gateway = createGatewayManager({
   // debug: console.log,
   // THIS WILL BE USED LATER IN WORKER SO LEAVE IT HERE
   handleDiscordPayload: () => {},
-});
+})
 ```
 
 #### Basic Keys
@@ -171,7 +171,7 @@ change the logic in any method it is as simple as:
 // TYPINGS WILL BE AUTOMATICALLY PROVIDED
 gateway.heartbeat = function (gateway, shardId, interval) {
   // YOUR CUSTOM HANDLING CODE HERE
-};
+}
 ```
 
 ## Workers
@@ -188,20 +188,20 @@ to create workers and send message:
 
 ```ts
 gateway.tellWorkerToIdentify = async (_gateway, workerId, shardId, _bucketId) => {
-  let worker = workers.get(workerId);
+  let worker = workers.get(workerId)
   if (!worker) {
-    worker = createWorker(workerId);
-    workers.set(workerId, worker);
+    worker = createWorker(workerId)
+    workers.set(workerId, worker)
   }
 
   // TYPE TYPE WorkerMessage IS FROM WORKER FILE, DISCUSSED IN DETAIL BELOW
   const identify: WorkerMessage = {
-    type: "IDENTIFY_SHARD",
+    type: 'IDENTIFY_SHARD',
     shardId,
-  };
+  }
 
-  worker.postMessage(identify);
-};
+  worker.postMessage(identify)
+}
 ```
 
 You can choose to replace the handler with any desired functionality you like. For example, should should you want to
@@ -212,13 +212,13 @@ Now that we've setup our initial gateway manager and added `tellWorkerToIdentify
 of the work: creating workers, spawning shards etc.
 
 ```ts
-import { EVENT_HANDLER_SECRET_KEY, EVENT_HANDLER_URL } from "../../configs.ts";
-import { Worker } from "worker_threads";
-import { WorkerCreateData, WorkerGetShardInfo, WorkerMessage, WorkerShardInfo, WorkerShardPayload } from "./worker.js";
+import { EVENT_HANDLER_SECRET_KEY, EVENT_HANDLER_URL } from '../../configs.ts'
+import { Worker } from 'worker_threads'
+import { WorkerCreateData, WorkerGetShardInfo, WorkerMessage, WorkerShardInfo, WorkerShardPayload } from './worker.js'
 
 // A COLLECTION OF WORKERS
-const workers = new Collection<number, Worker>();
-const nonces = new Collection<string, (data: any) => void>();
+const workers = new Collection<number, Worker>()
+const nonces = new Collection<string, (data: any) => void>()
 
 function createWorker(workerId: number) {
   const workerData: WorkerCreateData = {
@@ -227,51 +227,51 @@ function createWorker(workerId: number) {
     // TODO: PUT THIS SEPARATELY. CAN USE MULTIPLE URLS IF YOU HAVE MULTIPLE BOT PROCESSES HANDLING DIFFERENT SHARDS' EVENTS
     handlerUrls: [EVENT_HANDLER_URL],
     handlerAuthorization: EVENT_HANDLER_SECRET_KEY,
-    path: "./worker.ts",
+    path: './worker.ts',
     totalShards: gateway.manager.totalShards,
     workerId,
-  };
+  }
 
-  const worker = new Worker("./worker.js", {
+  const worker = new Worker('./worker.js', {
     workerData,
-  });
+  })
 
-  worker.on("message", async (data: ManagerMessage) => {
+  worker.on('message', async (data: ManagerMessage) => {
     switch (data.type) {
-      case "REQUEST_IDENTIFY": {
-        await gateway.manager.requestIdentify(data.shardId);
+      case 'REQUEST_IDENTIFY': {
+        await gateway.manager.requestIdentify(data.shardId)
 
         const allowIdentify: WorkerMessage = {
-          type: "ALLOW_IDENTIFY",
+          type: 'ALLOW_IDENTIFY',
           shardId: data.shardId,
-        };
+        }
 
-        worker.postMessage(allowIdentify);
+        worker.postMessage(allowIdentify)
 
-        break;
+        break
       }
-      case "NONCE_REPLY": {
-        nonces.get(data.nonce)?.(data.data);
+      case 'NONCE_REPLY': {
+        nonces.get(data.nonce)?.(data.data)
       }
     }
-  });
+  })
 
-  return worker;
+  return worker
 }
 
 // TYPES WE USE
-export type ManagerMessage = ManagerRequestIdentify | ManagerNonceReply<WorkerShardInfo[]>;
+export type ManagerMessage = ManagerRequestIdentify | ManagerNonceReply<WorkerShardInfo[]>
 
 export type ManagerRequestIdentify = {
-  type: "REQUEST_IDENTIFY";
-  shardId: number;
-};
+  type: 'REQUEST_IDENTIFY'
+  shardId: number
+}
 
 export type ManagerNonceReply<T> = {
-  type: "NONCE_REPLY";
-  nonce: string;
-  data: T;
-};
+  type: 'NONCE_REPLY'
+  nonce: string
+  data: T
+}
 ```
 
 ## Spawning Shards
@@ -279,7 +279,7 @@ export type ManagerNonceReply<T> = {
 Once you are ready and the gateway has been created as you desired, we can begin spawning the shards.
 
 ```ts
-gateway.spawnShards(gateway);
+gateway.spawnShards(gateway)
 ```
 
 This code now handles creating gateway manager, creating workers, spawning shards and sending the info to each workers.
@@ -297,25 +297,25 @@ import {
   REST_PORT,
   SHARDS_PER_WORKER,
   TOTAL_WORKERS,
-} from "../../configs.ts";
-import { BASE_URL, createRestManager, routes } from "../../deps.ts";
-import { Worker } from "worker_threads";
-import { WorkerCreateData, WorkerGetShardInfo, WorkerMessage, WorkerShardInfo, WorkerShardPayload } from "./worker.ts";
+} from '../../configs.ts'
+import { BASE_URL, createRestManager, routes } from '../../deps.ts'
+import { Worker } from 'worker_threads'
+import { WorkerCreateData, WorkerGetShardInfo, WorkerMessage, WorkerShardInfo, WorkerShardPayload } from './worker.ts'
 
 const rest = createRestManager({
   token: DISCORD_TOKEN,
   secretKey: REST_AUTHORIZATION,
   customUrl: `http://localhost:${REST_PORT}`,
-});
+})
 
 const rest = createRestManager({
   token: DISCORD_TOKEN,
   secretKey: REST_AUTHORIZATION,
   customUrl: `http://localhost:${REST_PORT}`,
-});
+})
 
 // CALL THE REST PROCESS TO GET GATEWAY DATA
-const gatewayBot = await rest.runMethod(rest, "GET", routes.GATEWAY_BOT()).then((res) => ({
+const gatewayBot = await rest.runMethod(rest, 'GET', routes.GATEWAY_BOT()).then((res) => ({
   url: res.url,
   shards: res.shards,
   sessionStartLimit: {
@@ -324,7 +324,7 @@ const gatewayBot = await rest.runMethod(rest, "GET", routes.GATEWAY_BOT()).then(
     resetAfter: res.session_start_limit.reset_after,
     maxConcurrency: res.session_start_limit.max_concurrency,
   },
-}));
+}))
 
 const gateway = createGatewayManager({
   gatewayBot,
@@ -338,25 +338,25 @@ const gateway = createGatewayManager({
   // debug: console.log,
   handleDiscordPayload: () => {},
   tellWorkerToIdentify: async (_gateway, workerId, shardId, _bucketId) => {
-    let worker = workers.get(workerId);
+    let worker = workers.get(workerId)
     if (!worker) {
-      worker = createWorker(workerId);
-      workers.set(workerId, worker);
+      worker = createWorker(workerId)
+      workers.set(workerId, worker)
     }
 
     // TYPE TYPE WorkerMessage IS FROM WORKER FILE, DISCUSSED IN DETAIL BELOW
     const identify: WorkerMessage = {
-      type: "IDENTIFY_SHARD",
+      type: 'IDENTIFY_SHARD',
       shardId,
-    };
+    }
 
-    worker.postMessage(identify);
+    worker.postMessage(identify)
   },
-});
+})
 
 // A COLLECTION OF WORKERS
-const workers = new Collection<number, Worker>();
-const nonces = new Collection<string, (data: any) => void>();
+const workers = new Collection<number, Worker>()
+const nonces = new Collection<string, (data: any) => void>()
 
 function createWorker(workerId: number) {
   const workerData: WorkerCreateData = {
@@ -364,54 +364,54 @@ function createWorker(workerId: number) {
     token: DISCORD_TOKEN,
     handlerUrls: [EVENT_HANDLER_URL],
     handlerAuthorization: EVENT_HANDLER_SECRET_KEY,
-    path: "./worker.ts",
+    path: './worker.ts',
     totalShards: gateway.manager.totalShards,
     workerId,
-  };
+  }
 
-  const worker = new Worker("./worker.ts", {
+  const worker = new Worker('./worker.ts', {
     workerData,
-  });
+  })
 
-  worker.on("message", async (data: ManagerMessage) => {
+  worker.on('message', async (data: ManagerMessage) => {
     switch (data.type) {
-      case "REQUEST_IDENTIFY": {
-        await gateway.manager.requestIdentify(data.shardId);
+      case 'REQUEST_IDENTIFY': {
+        await gateway.manager.requestIdentify(data.shardId)
 
         const allowIdentify: WorkerMessage = {
-          type: "ALLOW_IDENTIFY",
+          type: 'ALLOW_IDENTIFY',
           shardId: data.shardId,
-        };
+        }
 
-        worker.postMessage(allowIdentify);
+        worker.postMessage(allowIdentify)
 
-        break;
+        break
       }
-      case "NONCE_REPLY": {
-        nonces.get(data.nonce)?.(data.data);
+      case 'NONCE_REPLY': {
+        nonces.get(data.nonce)?.(data.data)
       }
     }
-  });
+  })
 
-  return worker;
+  return worker
 }
 
 // TYPES WE USE
-export type ManagerMessage = ManagerRequestIdentify | ManagerNonceReply<WorkerShardInfo[]>;
+export type ManagerMessage = ManagerRequestIdentify | ManagerNonceReply<WorkerShardInfo[]>
 
 export type ManagerRequestIdentify = {
-  type: "REQUEST_IDENTIFY";
-  shardId: number;
-};
+  type: 'REQUEST_IDENTIFY'
+  shardId: number
+}
 
 export type ManagerNonceReply<T> = {
-  type: "NONCE_REPLY";
-  nonce: string;
-  data: T;
-};
+  type: 'NONCE_REPLY'
+  nonce: string
+  data: T
+}
 
 // SPAWN SHARDS INTO WORKERS
-gateway.spawnShards();
+gateway.spawnShards()
 ```
 
 ## Worker File
@@ -424,17 +424,17 @@ Create a file in a path like `src/gateway/worker.ts`.
 Now we'll have to create a Shard Manager, this is what will handle identifying, receiving events.
 
 ```ts
-import { createShardManager } from "discordeno";
-import { parentPort, workerData } from "worker_threads";
+import { createShardManager } from 'discordeno'
+import { parentPort, workerData } from 'worker_threads'
 
 if (!parentPort) {
-  throw new Error("Parent port is null");
+  throw new Error('Parent port is null')
 }
 
 // THE DATA WE GET FROM GATEWAY FILE
-const script: WorkerCreateData = workerData;
+const script: WorkerCreateData = workerData
 
-const identifyPromises = new Map<number, () => void>();
+const identifyPromises = new Map<number, () => void>()
 
 const manager = createShardManager({
   gatewayConfig: {
@@ -446,7 +446,7 @@ const manager = createShardManager({
   // WE WILL COVER THESE TWO FUNCTIONS IN LATER PART OF THE GUIDE, FOR NOW, LEAVE IT THIS WAY
   handleMessage: () => {},
   requestIdentify: async () => {},
-});
+})
 ```
 
 The above code only creates a shard manager, we now have 3 more things to do:
@@ -461,7 +461,7 @@ In order for the shards to receive events and send to bot process, we need to re
 first, we can do this by using `message` event in `parentPort` like shown below:
 
 ```ts
-import { Shard } from "discordeno";
+import { Shard } from 'discordeno'
 
 function buildShardInfo(shard: Shard): WorkerShardInfo {
   return {
@@ -469,84 +469,84 @@ function buildShardInfo(shard: Shard): WorkerShardInfo {
     shardId: shard.id,
     rtt: shard.heart.rtt || -1,
     state: shard.state,
-  };
+  }
 }
 
-parentPort.on("message", async (data: WorkerMessage) => {
+parentPort.on('message', async (data: WorkerMessage) => {
   switch (data.type) {
     // Gateway sends IDENTIFY_SHARD in gateway.tellWorkerToIdentify
-    case "IDENTIFY_SHARD": {
-      await manager.identify(data.shardId);
+    case 'IDENTIFY_SHARD': {
+      await manager.identify(data.shardId)
 
-      break;
+      break
     }
     // Gateway sends ALLOW_IDENTIFY when worker requests to identify
-    case "ALLOW_IDENTIFY": {
-      identifyPromises.get(data.shardId)?.();
-      identifyPromises.delete(data.shardId);
+    case 'ALLOW_IDENTIFY': {
+      identifyPromises.get(data.shardId)?.()
+      identifyPromises.delete(data.shardId)
 
-      break;
+      break
     }
     // Gateway sends SHARD_PAYLOAD for every events it receives from Discord
-    case "SHARD_PAYLOAD": {
-      manager.shards.get(data.shardId)?.send(data.data);
+    case 'SHARD_PAYLOAD': {
+      manager.shards.get(data.shardId)?.send(data.data)
 
-      break;
+      break
     }
     // Send shard info if gateway sends GET_SHARD_INFO
-    case "GET_SHARD_INFO": {
-      const infos = manager.shards.map(buildShardInfo);
+    case 'GET_SHARD_INFO': {
+      const infos = manager.shards.map(buildShardInfo)
 
-      parentPort?.postMessage({ type: "NONCE_REPLY", nonce: data.nonce, data: infos });
+      parentPort?.postMessage({ type: 'NONCE_REPLY', nonce: data.nonce, data: infos })
     }
   }
-});
+})
 ```
 
 Now TypeScript will error because of missing types, add these to your code:
 
 ```ts
-import { ShardSocketRequest, ShardState } from "discordeno";
+import { ShardSocketRequest, ShardState } from 'discordeno'
 
-export type WorkerMessage = WorkerIdentifyShard | WorkerAllowIdentify | WorkerShardPayload | WorkerGetShardInfo;
+export type WorkerMessage = WorkerIdentifyShard | WorkerAllowIdentify | WorkerShardPayload | WorkerGetShardInfo
 
 export type WorkerIdentifyShard = {
-  type: "IDENTIFY_SHARD";
-  shardId: number;
-};
+  type: 'IDENTIFY_SHARD'
+  shardId: number
+}
 
 export type WorkerAllowIdentify = {
-  type: "ALLOW_IDENTIFY";
-  shardId: number;
-};
+  type: 'ALLOW_IDENTIFY'
+  shardId: number
+}
 
 export type WorkerShardPayload = {
-  type: "SHARD_PAYLOAD";
-  shardId: number;
-  data: ShardSocketRequest;
-};
+  type: 'SHARD_PAYLOAD'
+  shardId: number
+  data: ShardSocketRequest
+}
 
 export type WorkerGetShardInfo = {
-  type: "GET_SHARD_INFO";
-  nonce: string;
-};
+  type: 'GET_SHARD_INFO'
+  nonce: string
+}
 
 export type WorkerCreateData = {
-  intents: number;
-  token: string;
-  handlerUrls: string[];
-  handlerAuthorization: string;
-  path: string;
-  totalShards: number;
-  workerId: number;
-};
+  intents: number
+  token: string
+  handlerUrls: string[]
+  handlerAuthorization: string
+  path: string
+  totalShards: number
+  workerId: number
+}
 
 export type WorkerShardInfo = {
-  workerId: number;
-  shardId: number;
-  rtt: number;
-  state: ShardState;
-};
+  workerId: number
+  shardId: number
+  rtt: number
+  state: ShardState
+}
 ```
 
 ## Handling Discord Payloads
@@ -558,15 +558,15 @@ with anything you like.
 
 ```ts
 manager.createShardOptions.handleMessage = async (shard, message) => {
-  const url = script.handlerUrls[shard.id % script.handlerUrls.length];
-  if (!url) return console.error("ERROR: NO URL FOUND TO SEND MESSAGE");
+  const url = script.handlerUrls[shard.id % script.handlerUrls.length]
+  if (!url) return console.error('ERROR: NO URL FOUND TO SEND MESSAGE')
 
   await fetch(url, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify({ message, shardId: shard.id }),
-    headers: { "Content-Type": "application/json", Authorization: script.handlerAuthorization },
-  }).catch((error) => console.error(error));
-};
+    headers: { 'Content-Type': 'application/json', Authorization: script.handlerAuthorization },
+  }).catch((error) => console.error(error))
+}
 ```
 
 You can change this function to use a WS or any form of communication you prefer to use to send this to your event
@@ -597,21 +597,21 @@ Now TypeScript will probably throw some errors at your face, so let's fix those 
 hold the queue of events for our gateway.
 
 ```ts
-import { DiscordGatewayPayload } from "discordeno";
+import { DiscordGatewayPayload } from 'discordeno'
 
 const queue: GatewayQueue = {
   processing: false,
   events: [],
-};
+}
 
 export interface QueuedEvent {
-  message: DiscordGatewayPayload;
-  shardId: number;
+  message: DiscordGatewayPayload
+  shardId: number
 }
 
 export interface GatewayQueue {
-  processing: boolean;
-  events: QueuedEvent[];
+  processing: boolean
+  events: QueuedEvent[]
 }
 
 async function handleQueue() {
@@ -644,38 +644,33 @@ automatically respond to the ones that can not be deferred. For the interactions
 defer them and add this event to the queue.
 
 ```ts
-import { DiscordInteraction, InteractionResponseTypes, InteractionTypes, routes } from "discordeno";
-import { BOT_SERVER_INVITE_CODE } from "../../configs.ts";
+import { DiscordInteraction, InteractionResponseTypes, InteractionTypes, routes } from 'discordeno'
+import { BOT_SERVER_INVITE_CODE } from '../../configs.ts'
 
 async function handleInteractionQueueing(message: DiscordGatewayPayload, shardId: number) {
-  if (message.t !== "INTERACTION_CREATE") return;
+  if (message.t !== 'INTERACTION_CREATE') return
 
-  const interaction = message.d as DiscordInteraction;
+  const interaction = message.d as DiscordInteraction
   // IF THIS INTERACTION IS NOT DEFERABLE
   if ([InteractionTypes.ModalSubmit, InteractionTypes.ApplicationCommandAutocomplete].includes(interaction.type)) {
-    return await rest.runMethod(
-      rest,
-      "POST",
-      routes.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token),
-      {
-        type: InteractionResponseTypes.ChannelMessageWithSource,
-        data: {
-          content:
-            `The bot is having a temporary issue, please try again or contact us at https://discord.gg/${BOT_SERVER_INVITE_CODE}`,
-        },
+    return await rest.runMethod(rest, 'POST', routes.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token), {
+      type: InteractionResponseTypes.ChannelMessageWithSource,
+      data: {
+        content: `The bot is having a temporary issue, please try again or contact us at https://discord.gg/${BOT_SERVER_INVITE_CODE}`,
       },
-    );
+    })
   }
 
-  await rest.runMethod(rest, "POST", endpoints.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token), {
+  await rest.runMethod(rest, 'POST', endpoints.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token), {
     // MESSAGE COMPONENTS NEED SPECIAL DEFER
-    type: InteractionTypes.MessageComponent === interaction.type
-      ? InteractionResponseTypes.DeferredUpdateMessage
-      : InteractionResponseTypes.DeferredChannelMessageWithSource,
-  });
+    type:
+      InteractionTypes.MessageComponent === interaction.type
+        ? InteractionResponseTypes.DeferredUpdateMessage
+        : InteractionResponseTypes.DeferredChannelMessageWithSource,
+  })
 
   // ADD EVENT TO QUEUE
-  queue.events.push({ shardId, message });
+  queue.events.push({ shardId, message })
 }
 ```
 
@@ -687,7 +682,7 @@ const rest = createRestManager({
   token: DISCORD_TOKEN,
   secretKey: REST_AUTHORIZATION,
   customUrl: REST_URL,
-});
+})
 ```
 
 So now there is only one thing left the `handleQueue` function. First we get the first item from the queue using
@@ -698,34 +693,34 @@ again to run the next item in the queue.
 
 ```ts
 async function handleQueue() {
-  const event = queue.events.shift();
+  const event = queue.events.shift()
   // QUEUE IS EMPTY
   if (!event) {
-    console.log("GATEWAY QUEUE ENDING");
-    queue.processing = false;
-    return;
+    console.log('GATEWAY QUEUE ENDING')
+    queue.processing = false
+    return
   }
 
   await fetch(EVENT_HANDLER_URL, {
     headers: {
       Authorization: EVENT_HANDLER_SECRET_KEY,
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify({
       shardId: event.shardId,
       message: event.message,
     }),
   })
     .then((res) => {
-      res.text();
-      handleQueue();
+      res.text()
+      handleQueue()
     })
     .catch(() => {
       // EVENT HANDLER STILL NOT ACCEPTING REQUEST. SO ADD BACK TO QUEUE
-      queue.events.unshift(event);
-      setTimeout(handleQueue, 1000);
-    });
+      queue.events.unshift(event)
+      setTimeout(handleQueue, 1000)
+    })
 }
 ```
 
@@ -735,20 +730,20 @@ We need to request identify in order to trigger initial handshake with the gatew
 to do this.
 
 ```ts
-import { ManagerMessage } from "./mod.ts";
+import { ManagerMessage } from './mod.ts'
 
 manager.requestIdentify = async function (shardId: number): Promise<void> {
   return await new Promise((resolve) => {
-    identifyPromises.set(shardId, resolve);
+    identifyPromises.set(shardId, resolve)
 
     const identifyRequest: ManagerMessage = {
-      type: "REQUEST_IDENTIFY",
+      type: 'REQUEST_IDENTIFY',
       shardId,
-    };
+    }
 
-    parentPort?.postMessage(identifyRequest);
-  });
-};
+    parentPort?.postMessage(identifyRequest)
+  })
+}
 ```
 
 That's all, you've now setup your gateway and worker. Here's the full code of `src/gateway/worker.ts`:
@@ -765,32 +760,25 @@ import {
   Shard,
   ShardSocketRequest,
   ShardState,
-} from "discordeno";
-import { parentPort, workerData } from "worker_threads";
-import { ManagerMessage } from "./mod";
-import {
-  BOT_SERVER_INVITE_CODE,
-  DISCORD_TOKEN,
-  EVENT_HANDLER_SECRET_KEY,
-  EVENT_HANDLER_URL,
-  REST_AUTHORIZATION,
-  REST_URL,
-} from "../../configs.ts";
+} from 'discordeno'
+import { parentPort, workerData } from 'worker_threads'
+import { ManagerMessage } from './mod'
+import { BOT_SERVER_INVITE_CODE, DISCORD_TOKEN, EVENT_HANDLER_SECRET_KEY, EVENT_HANDLER_URL, REST_AUTHORIZATION, REST_URL } from '../../configs.ts'
 
 if (!parentPort) {
-  throw new Error("Parent port is null");
+  throw new Error('Parent port is null')
 }
 
 // THE DATA WE GET FROM GATEWAY FILE
-const script: WorkerCreateData = workerData;
+const script: WorkerCreateData = workerData
 
-const identifyPromises = new Map<number, () => void>();
+const identifyPromises = new Map<number, () => void>()
 
 const rest = createRestManager({
   token: DISCORD_TOKEN,
   secretKey: REST_AUTHORIZATION,
   customUrl: REST_URL,
-});
+})
 
 const manager = createShardManager({
   gatewayConfig: {
@@ -800,34 +788,34 @@ const manager = createShardManager({
   shardIds: [],
   totalShards: script.totalShards,
   handleMessage: async (shard, message) => {
-    const url = script.handlerUrls[shard.id % script.handlerUrls.length];
-    if (!url) return console.error("ERROR: NO URL FOUND TO SEND MESSAGE");
+    const url = script.handlerUrls[shard.id % script.handlerUrls.length]
+    if (!url) return console.error('ERROR: NO URL FOUND TO SEND MESSAGE')
 
     await fetch(url, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify({ message, shardId: shard.id }),
-      headers: { "Content-Type": "application/json", Authorization: script.handlerAuthorization },
+      headers: { 'Content-Type': 'application/json', Authorization: script.handlerAuthorization },
     }).catch(() => {
       // IF FAILED TRY TO QUEUE MAYBE LISTENER IS DOWN
-      if (message.t === "INTERACTION_CREATE") handleInteractionQueueing(message, shard.id);
-      else queue.events.push({ shardId: shard.id, message });
+      if (message.t === 'INTERACTION_CREATE') handleInteractionQueueing(message, shard.id)
+      else queue.events.push({ shardId: shard.id, message })
 
-      setTimeout(handleQueue, 1000);
-    });
+      setTimeout(handleQueue, 1000)
+    })
   },
   requestIdentify: async function (shardId: number): Promise<void> {
     return await new Promise((resolve) => {
-      identifyPromises.set(shardId, resolve);
+      identifyPromises.set(shardId, resolve)
 
       const identifyRequest: ManagerMessage = {
-        type: "REQUEST_IDENTIFY",
+        type: 'REQUEST_IDENTIFY',
         shardId,
-      };
+      }
 
-      parentPort?.postMessage(identifyRequest);
-    });
+      parentPort?.postMessage(identifyRequest)
+    })
   },
-});
+})
 
 function buildShardInfo(shard: Shard): WorkerShardInfo {
   return {
@@ -835,149 +823,149 @@ function buildShardInfo(shard: Shard): WorkerShardInfo {
     shardId: shard.id,
     rtt: shard.heart.rtt || -1,
     state: shard.state,
-  };
+  }
 }
 
-parentPort.on("message", async (data: WorkerMessage) => {
+parentPort.on('message', async (data: WorkerMessage) => {
   switch (data.type) {
     // Gateway sends IDENTIFY_SHARD in gateway.tellWorkerToIdentify
-    case "IDENTIFY_SHARD": {
-      await manager.identify(data.shardId);
+    case 'IDENTIFY_SHARD': {
+      await manager.identify(data.shardId)
 
-      break;
+      break
     }
     // Gateway sends ALLOW_IDENTIFY when worker requests to identify
-    case "ALLOW_IDENTIFY": {
-      identifyPromises.get(data.shardId)?.();
-      identifyPromises.delete(data.shardId);
+    case 'ALLOW_IDENTIFY': {
+      identifyPromises.get(data.shardId)?.()
+      identifyPromises.delete(data.shardId)
 
-      break;
+      break
     }
     // Gateway sends SHARD_PAYLOAD for every events it receives from Discord
-    case "SHARD_PAYLOAD": {
-      manager.shards.get(data.shardId)?.send(data.data);
+    case 'SHARD_PAYLOAD': {
+      manager.shards.get(data.shardId)?.send(data.data)
 
-      break;
+      break
     }
     // Send shard info if gateway sends GET_SHARD_INFO
-    case "GET_SHARD_INFO": {
-      const infos = manager.shards.map(buildShardInfo);
+    case 'GET_SHARD_INFO': {
+      const infos = manager.shards.map(buildShardInfo)
 
-      parentPort?.postMessage({ type: "NONCE_REPLY", nonce: data.nonce, data: infos });
+      parentPort?.postMessage({ type: 'NONCE_REPLY', nonce: data.nonce, data: infos })
     }
   }
-});
+})
 
 const queue: GatewayQueue = {
   processing: false,
   events: [],
-};
+}
 
 async function handleQueue() {
-  const event = queue.events.shift();
+  const event = queue.events.shift()
   // QUEUE IS EMPTY
   if (!event) {
-    console.log("GATEWAY QUEUE ENDING");
-    queue.processing = false;
-    return;
+    console.log('GATEWAY QUEUE ENDING')
+    queue.processing = false
+    return
   }
 
   await fetch(EVENT_HANDLER_URL, {
     headers: {
       Authorization: EVENT_HANDLER_SECRET_KEY,
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify({
       shardId: event.shardId,
       message: event.message,
     }),
   })
     .then((res) => {
-      res.text();
-      handleQueue();
+      res.text()
+      handleQueue()
     })
     .catch(() => {
       // EVENT HANDLER STILL NOT ACCEPTING REQUEST. SO ADD BACK TO QUEUE
-      queue.events.unshift(event);
-      setTimeout(handleQueue, 1000);
-    });
+      queue.events.unshift(event)
+      setTimeout(handleQueue, 1000)
+    })
 }
 
 async function handleInteractionQueueing(message: DiscordGatewayPayload, shardId: number) {
-  if (message.t !== "INTERACTION_CREATE") return;
+  if (message.t !== 'INTERACTION_CREATE') return
 
-  const interaction = message.d as DiscordInteraction;
+  const interaction = message.d as DiscordInteraction
   // IF THIS INTERACTION IS NOT DEFERABLE
   if ([InteractionTypes.ModalSubmit, InteractionTypes.ApplicationCommandAutocomplete].includes(interaction.type)) {
-    return await rest.runMethod(rest, "POST", routes.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token), {
+    return await rest.runMethod(rest, 'POST', routes.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token), {
       type: InteractionResponseTypes.ChannelMessageWithSource,
       data: {
-        content:
-          `The bot is having a temporary issue, please try again or contact us at https://discord.gg/${BOT_SERVER_INVITE_CODE}`,
+        content: `The bot is having a temporary issue, please try again or contact us at https://discord.gg/${BOT_SERVER_INVITE_CODE}`,
       },
-    });
+    })
   }
 
-  await rest.runMethod(rest, "POST", routes.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token), {
+  await rest.runMethod(rest, 'POST', routes.INTERACTION_ID_TOKEN(BigInt(interaction.id), interaction.token), {
     // MESSAGE COMPONENTS NEED SPECIAL DEFER
-    type: InteractionTypes.MessageComponent === interaction.type
-      ? InteractionResponseTypes.DeferredUpdateMessage
-      : InteractionResponseTypes.DeferredChannelMessageWithSource,
-  });
+    type:
+      InteractionTypes.MessageComponent === interaction.type
+        ? InteractionResponseTypes.DeferredUpdateMessage
+        : InteractionResponseTypes.DeferredChannelMessageWithSource,
+  })
 
   // ADD EVENT TO QUEUE
-  queue.events.push({ shardId, message });
+  queue.events.push({ shardId, message })
 }
 
-export type WorkerMessage = WorkerIdentifyShard | WorkerAllowIdentify | WorkerShardPayload | WorkerGetShardInfo;
+export type WorkerMessage = WorkerIdentifyShard | WorkerAllowIdentify | WorkerShardPayload | WorkerGetShardInfo
 
 export type WorkerIdentifyShard = {
-  type: "IDENTIFY_SHARD";
-  shardId: number;
-};
+  type: 'IDENTIFY_SHARD'
+  shardId: number
+}
 
 export type WorkerAllowIdentify = {
-  type: "ALLOW_IDENTIFY";
-  shardId: number;
-};
+  type: 'ALLOW_IDENTIFY'
+  shardId: number
+}
 
 export type WorkerShardPayload = {
-  type: "SHARD_PAYLOAD";
-  shardId: number;
-  data: ShardSocketRequest;
-};
+  type: 'SHARD_PAYLOAD'
+  shardId: number
+  data: ShardSocketRequest
+}
 
 export type WorkerGetShardInfo = {
-  type: "GET_SHARD_INFO";
-  nonce: string;
-};
+  type: 'GET_SHARD_INFO'
+  nonce: string
+}
 
 export type WorkerCreateData = {
-  intents: number;
-  token: string;
-  handlerUrls: string[];
-  handlerAuthorization: string;
-  path: string;
-  totalShards: number;
-  workerId: number;
-};
+  intents: number
+  token: string
+  handlerUrls: string[]
+  handlerAuthorization: string
+  path: string
+  totalShards: number
+  workerId: number
+}
 
 export type WorkerShardInfo = {
-  workerId: number;
-  shardId: number;
-  rtt: number;
-  state: ShardState;
-};
+  workerId: number
+  shardId: number
+  rtt: number
+  state: ShardState
+}
 
 export interface QueuedEvent {
-  message: DiscordGatewayPayload;
-  shardId: number;
+  message: DiscordGatewayPayload
+  shardId: number
 }
 
 export interface GatewayQueue {
-  processing: boolean;
-  events: QueuedEvent[];
+  processing: boolean
+  events: QueuedEvent[]
 }
 ```
 

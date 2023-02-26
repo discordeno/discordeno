@@ -24,9 +24,9 @@ reloaded instantly.
 Create a file path like `src/bot/mod.ts`.
 
 ```ts
-import { DISCORD_TOKEN } from "../../configs.ts";
-import { Collection, createBot, Intents } from "../../deps.ts";
-import { psql } from "./cache/mod.ts";
+import { DISCORD_TOKEN } from '../../configs.ts'
+import { Collection, createBot, Intents } from '../../deps.ts'
+import { psql } from './cache/mod.ts'
 
 export const bot = createBot({
   token: DISCORD_TOKEN,
@@ -34,10 +34,10 @@ export const bot = createBot({
   intents: Intents.Guilds | Intents.GuildMessages,
   events: {
     messageCreate: function (bot, message) {
-      console.log("message arrived");
+      console.log('message arrived')
     },
   },
-});
+})
 ```
 
 Alright that was a lot of code. Now let's break it down little by little.
@@ -69,56 +69,36 @@ Here we'll have some basic functions to make use of the cache we created in step
 const cache = {
   /** Get a single item from the table */
   async get(key) {
-    return await psql`SELECT * FROM ${
-      psql(
-        tables[table],
-      )
-    } WHERE "id" = ${psql.types.bigint(key)}`;
+    return await psql`SELECT * FROM ${psql(tables[table])} WHERE "id" = ${psql.types.bigint(key)}`
   },
   /** Completely empty this table. */
   async clear() {
-    await psql`TRUNCATE TABLE ${psql(tables[table])}`;
+    await psql`TRUNCATE TABLE ${psql(tables[table])}`
   },
   /** Delete the data related to this key from table. */
   async delete(key) {
-    await psql`DELETE FROM ${
-      psql(
-        tables[table],
-      )
-    } WHERE "id" = ${psql.types.bigint(key)}`;
-    return true;
+    await psql`DELETE FROM ${psql(tables[table])} WHERE "id" = ${psql.types.bigint(key)}`
+    return true
   },
   /** Check if there is data assigned to this key. */
   async has(key) {
-    return Boolean(
-      await psql`SELECT 1 FROM ${
-        psql(
-          tables[table],
-        )
-      } WHERE "id" = ${psql.types.bigint(key)}`,
-    );
+    return Boolean(await psql`SELECT 1 FROM ${psql(tables[table])} WHERE "id" = ${psql.types.bigint(key)}`)
   },
   /** Check how many items are stored in this table. */
   async size() {
-    return (await psql`SELECT COUNT("id") FROM ${psql(tables[table])}`)
-      .count;
+    return (await psql`SELECT COUNT("id") FROM ${psql(tables[table])}`).count
   },
   /** Store new data to this table. */
   async set(key, data) {
-    await psql`INSERT INTO ${psql(tables[table])} ${
-      psql(
-        data,
-        ...Object.keys(data),
-      )
-    }`;
-    return true;
+    await psql`INSERT INTO ${psql(tables[table])} ${psql(data, ...Object.keys(data))}`
+    return true
   },
   // THESE TWO ARE USELESS FOR CUSTOM CACHE BUT NEED TO SHUT UP TS ERRORS
   async forEach(callback) {},
   async filter(callback) {
-    return new Collection();
+    return new Collection()
   },
-};
+}
 ```
 
 You can insert any code you desire for your cache system here. Since we were using PGSQL, we used sql queries to make
@@ -146,47 +126,44 @@ below simply to keep code cleaner and simpler, in expectation that it will grow 
 as you wish.
 
 ```ts
-import { Bot } from "../../../deps.ts";
-import { customizeBotTransformers } from "./transformers/mod.ts";
+import { Bot } from '../../../deps.ts'
+import { customizeBotTransformers } from './transformers/mod.ts'
 
 export function customizeBotInternals(bot: Bot) {
-  bot = customizeBotTransformers(bot);
+  bot = customizeBotTransformers(bot)
   // ADD AS MANY MORE CUSTOMIZATIONS HERE AS YOU LIKE TO HANDLERS, HELPERS, UTILS ETC...
-  return bot;
+  return bot
 }
 ```
 
 We also need to add another file now at `src/bot/internals/transformers/mod.ts`
 
 ```ts
-import { Bot } from "../../../../deps.ts";
-import { customizeUserTransformer } from "./user.ts";
+import { Bot } from '../../../../deps.ts'
+import { customizeUserTransformer } from './user.ts'
 
 export function customizeBotTransformers(bot: Bot) {
-  bot = customizeUserTransformer(bot);
+  bot = customizeUserTransformer(bot)
   // ADD ANY MORE CUSTOM TRANSFORMERS HERE
-  return bot;
+  return bot
 }
 ```
 
 One more file at `src/bot/internals/transformers/user.ts`
 
 ```ts
-import { Bot, DiscordenoUser, transformUser } from "../../../../deps.ts";
+import { Bot, DiscordenoUser, transformUser } from '../../../../deps.ts'
 
 export function customizeUserTransformer(bot: Bot) {
   bot.transformers.user = function (bot, payload) {
     // REMOVE USELESS PROPS OUR BOT DOESNT USE
-    const { system, locale, verified, email, flags, mfaEnabled, premiumType, publicFlags, ...user } = transformUser(
-      bot,
-      payload,
-    );
+    const { system, locale, verified, email, flags, mfaEnabled, premiumType, publicFlags, ...user } = transformUser(bot, payload)
 
     // RETURN ONLY USEFUL PROPS WE NEED TO USE AND CACHE IF NECESSARY
-    return user as DiscordenoUser;
-  };
+    return user as DiscordenoUser
+  }
 
-  return bot;
+  return bot
 }
 ```
 
@@ -210,51 +187,51 @@ Create a file in a path like `src/bot/gatewayEventsListener.ts`
 Now we should create a http listener, check for authorization in headers, run `bot.events.raw` and `bot.handlers[event]`
 
 ```ts
-import { DiscordGatewayPayload } from "discordeno";
-import { EVENT_HANDLER_PORT, REST_AUTHORIZATION } from "../../configs.ts";
+import { DiscordGatewayPayload } from 'discordeno'
+import { EVENT_HANDLER_PORT, REST_AUTHORIZATION } from '../../configs.ts'
 
-const server = Deno.listen({ port: EVENT_HANDLER_PORT });
+const server = Deno.listen({ port: EVENT_HANDLER_PORT })
 
 // Connections to the server will be yielded up as an async iterable.
 for await (const conn of server) {
   // In order to not be blocking, we need to handle each connection individually
   // in its own async function.
-  handleRequest(conn);
+  handleRequest(conn)
 }
 
 async function handleRequest(conn: Deno.Conn) {
   // This "upgrades" a network connection into an HTTP connection.
-  const httpConn = Deno.serveHttp(conn);
+  const httpConn = Deno.serveHttp(conn)
   // Each request sent over the HTTP connection will be yielded as an async
   // iterator from the HTTP connection.
   for await (const requestEvent of httpConn) {
-    if (!REST_AUTHORIZATION || REST_AUTHORIZATION !== requestEvent.request.headers.get("AUTHORIZATION")) {
+    if (!REST_AUTHORIZATION || REST_AUTHORIZATION !== requestEvent.request.headers.get('AUTHORIZATION')) {
       return requestEvent.respondWith(
-        new Response(JSON.stringify({ error: "Invalid authorization key." }), {
+        new Response(JSON.stringify({ error: 'Invalid authorization key.' }), {
           status: 401,
         }),
-      );
+      )
     }
 
     const json = (await requestEvent.request.json()) as {
-      message: DiscordGatewayPayload;
-      shardId: number;
-    };
+      message: DiscordGatewayPayload
+      shardId: number
+    }
 
     // Run raw event.
-    bot.events.raw(bot, json.message, json.shardId);
+    bot.events.raw(bot, json.message, json.shardId)
 
-    if (json.message.t && json.message.t !== "RESUMED") {
+    if (json.message.t && json.message.t !== 'RESUMED') {
       // When a guild or something isn't in cache this will fetch it before doing anything else.
-      if (!["READY", "GUILD_LOADED_DD"].includes(json.message.t)) {
-        await bot.events.dispatchRequirements(bot, json.message, json.shardId);
+      if (!['READY', 'GUILD_LOADED_DD'].includes(json.message.t)) {
+        await bot.events.dispatchRequirements(bot, json.message, json.shardId)
       }
 
       // Run event function provided in bot.events
-      bot.handlers[json.message.t]?.(bot, json.message, json.shardId);
+      bot.handlers[json.message.t]?.(bot, json.message, json.shardId)
     }
 
-    new Response(undefined, { status: 200 });
+    new Response(undefined, { status: 200 })
   }
 }
 ```

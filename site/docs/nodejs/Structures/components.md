@@ -82,20 +82,20 @@ component you want to use.
 ```js
 class ActionRow {
   constructor(options = {}) {
-    this.type = 1;
+    this.type = 1
   }
 
   setComponents(...components) {
-    this.components = components;
-    return this;
+    this.components = components
+    return this
   }
 }
 ```
 
 ```js
-const button = new Button();
-const button2 = new Button();
-const actionRow = new ActionRow().setComponents(button, button2);
+const button = new Button()
+const button2 = new Button()
+const actionRow = new ActionRow().setComponents(button, button2)
 ```
 
 This code will obviously not work because it's a missing a lot required of data. The other reason is that we can't send
@@ -107,34 +107,21 @@ We have a pre-made class for components which you can find
 ### Button
 
 ```js
-const Discord = require("discordeno.js");
-const message = client.messages.forge(rawMessage);
+const Discord = require('discordeno.js')
+const message = client.messages.forge(rawMessage)
 
-const button = new Discord.Component()
-  .setType("BUTTON")
-  .setStyle("LINK")
-  .setLabel("Click me!")
-  .setUrl("https://google.com")
-  .toJSON();
+const button = new Discord.Component().setType('BUTTON').setStyle('LINK').setLabel('Click me!').setUrl('https://google.com').toJSON()
 
 // Button with raw types
-const button2 = new Discord.Component()
-  .setType(2)
-  .setStyle(4)
-  .setLabel("DO NOT CLICK")
-  .setCustomId("12345")
-  .toJSON();
+const button2 = new Discord.Component().setType(2).setStyle(4).setLabel('DO NOT CLICK').setCustomId('12345').toJSON()
 
-const actionRow = new Discord.Component()
-  .setType("ACTION_ROW")
-  .setComponents(button, button2)
-  .toJSON();
+const actionRow = new Discord.Component().setType('ACTION_ROW').setComponents(button, button2).toJSON()
 
 // Message to send
-const messageOptions = { content: "hello", components: [actionRow] };
+const messageOptions = { content: 'hello', components: [actionRow] }
 
 // await client.helpers.sendMessage(channelId, messageOptions); // Do it the raw way
-message.channel.send(messageOptions); // Do it with the structure
+message.channel.send(messageOptions) // Do it with the structure
 ```
 
 As you can see, for simplicity you can use strings instead of numbers (types), which are hard to remember.
@@ -142,79 +129,76 @@ As you can see, for simplicity you can use strings instead of numbers (types), w
 ### Select Menu
 
 ```js
-const Discord = require("discordeno.js");
-const message = client.messages.forge(rawMessage);
+const Discord = require('discordeno.js')
+const message = client.messages.forge(rawMessage)
 
 const selectMenu = new Discord.Component()
-  .setType("SELECT_MENU")
-  .setCustomId("12345")
+  .setType('SELECT_MENU')
+  .setCustomId('12345')
   .setOptions([
     {
-      label: "Option 1",
-      value: "1",
+      label: 'Option 1',
+      value: '1',
       description: `This is option 1`,
     },
     {
-      label: "Option 2",
-      value: "2",
+      label: 'Option 2',
+      value: '2',
       description: `This is option 2`,
     },
     {
-      label: "Default Option",
-      value: "3",
+      label: 'Default Option',
+      value: '3',
       description: `Default option...`,
       default: true,
     },
   ])
-  .setPlaceholder("Select an option")
-  .toJSON();
+  .setPlaceholder('Select an option')
+  .toJSON()
 
-const actionRow = new Discord.Component()
-  .setType("ACTION_ROW")
-  .setComponents(selectMenu)
-  .toJSON();
+const actionRow = new Discord.Component().setType('ACTION_ROW').setComponents(selectMenu).toJSON()
 
-const messageOptions = { content: "hello", components: [actionRow] };
+const messageOptions = { content: 'hello', components: [actionRow] }
 
 // await client.helpers.sendMessage(channelId, messageOptions); // Do it the raw way
-message.channel.send(messageOptions); // Do it with the structure
+message.channel.send(messageOptions) // Do it with the structure
 ```
 
 ### Text Input
 
 ```js
-const Discord = require("discordeno.js");
-const interaction = client.messages.forge(rawInteraction);
+const Discord = require('discordeno.js')
+const interaction = client.messages.forge(rawInteraction)
 
 const textInput = new Component()
-  .setType("TEXT_INPUT")
-  .setStyle("SHORT")
-  .setCustomId("t1")
-  .setLabel("User ID")
-  .setPlaceholder("User ID")
+  .setType('TEXT_INPUT')
+  .setStyle('SHORT')
+  .setCustomId('t1')
+  .setLabel('User ID')
+  .setPlaceholder('User ID')
   .setRequired(true)
   .setMaxLength(20)
   .setMinLength(1)
-  .toJSON();
+  .toJSON()
 
 const textInput2 = new Component()
-  .setType("TEXT_INPUT")
-  .setStyle("PARAGRAPH")
-  .setCustomId("t2")
-  .setLabel("Reason")
-  .setPlaceholder("Reason for Ban")
+  .setType('TEXT_INPUT')
+  .setStyle('PARAGRAPH')
+  .setCustomId('t2')
+  .setLabel('Reason')
+  .setPlaceholder('Reason for Ban')
   .setRequired(false)
   .setMaxLength(300)
-  .toJSON();
+  .toJSON()
 
-const actionRow = new Component().setType("ACTION_ROW").setComponents(textInput).toJSON();
-const actionRow2 = new Component().setType("ACTION_ROW").setComponents(textInput2).toJSON();
+const actionRow = new Component().setType('ACTION_ROW').setComponents(textInput).toJSON()
+const actionRow2 = new Component().setType('ACTION_ROW').setComponents(textInput2).toJSON()
 
 interaction.popupModal({
-  customId: "ban_modal",
-  title: "Ban User",
+  customId: 'ban_modal',
+  title: 'Ban User',
   components: [actionRow, actionRow2],
-});
+})
 ```
 
 ### Receive Interactions

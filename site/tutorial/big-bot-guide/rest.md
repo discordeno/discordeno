@@ -43,14 +43,14 @@ Before going further, you should have already made the following pieces:
 Now let's open up that rest file and start coding.
 
 ```ts
-import { DISCORD_TOKEN, REST_AUTHORIZATION, REST_PORT } from "../../configs.ts";
-import { BASE_URL, createRestManager } from "../../deps.ts";
+import { DISCORD_TOKEN, REST_AUTHORIZATION, REST_PORT } from '../../configs.ts'
+import { BASE_URL, createRestManager } from '../../deps.ts'
 
 const rest = createRestManager({
   token: DISCORD_TOKEN,
   secretKey: REST_AUTHORIZATION,
   customUrl: `http://localhost:${REST_PORT}`,
-});
+})
 ```
 
 - `createRestManager` is imported from your deps file which should have exported everything from discordeno.
@@ -70,36 +70,31 @@ guides on this out there. I will only cover the rough functionality.
 
 ```ts
 // START LISTENING TO THE URL(localhost)
-const server = Deno.listen({ port: REST_PORT });
-console.info(
-  `HTTP webserver running.  Access it at:  http://localhost:${REST_PORT}/`,
-);
+const server = Deno.listen({ port: REST_PORT })
+console.info(`HTTP webserver running.  Access it at:  http://localhost:${REST_PORT}/`)
 
 // Connections to the server will be yielded up as an async iterable.
 for await (const conn of server) {
   // In order to not be blocking, we need to handle each connection individually
   // in its own async function.
-  handleRequest(conn);
+  handleRequest(conn)
 }
 
 async function handleRequest(conn: Deno.Conn) {
   // This "upgrades" a network connection into an HTTP connection.
-  const httpConn = Deno.serveHttp(conn);
+  const httpConn = Deno.serveHttp(conn)
   // Each request sent over the HTTP connection will be yielded as an async
   // iterator from the HTTP connection.
   for await (const requestEvent of httpConn) {
-    if (
-      !REST_AUTHORIZATION ||
-      REST_AUTHORIZATION !== requestEvent.request.headers.get("AUTHORIZATION")
-    ) {
+    if (!REST_AUTHORIZATION || REST_AUTHORIZATION !== requestEvent.request.headers.get('AUTHORIZATION')) {
       return requestEvent.respondWith(
-        new Response(JSON.stringify({ error: "Invalid authorization key." }), {
+        new Response(JSON.stringify({ error: 'Invalid authorization key.' }), {
           status: 401,
         }),
-      );
+      )
     }
 
-    const json = (await requestEvent.request.json()) as any;
+    const json = (await requestEvent.request.json()) as any
 
     // IMPLEMENT ANY ERROR HANDLING HERE IF YOU WOULD LIKE BY WRAPPING THIS IN A CATCH
 
@@ -109,13 +104,9 @@ async function handleRequest(conn: Deno.Conn) {
       // USE THE SAME METHOD THAT CAME IN. IF DELETE CAME IN WE SEND DELETE OUT
       requestEvent.request.method as any,
       // OVERWRITE THE CUSTOM URL WITH DISCORDS BASE URL
-      `${BASE_URL}/v${rest.version}${
-        requestEvent.request.url.substring(
-          rest.customUrl.length,
-        )
-      }`,
+      `${BASE_URL}/v${rest.version}${requestEvent.request.url.substring(rest.customUrl.length)}`,
       json,
-    );
+    )
 
     // RETURN DISCORDS RESPONSE BACK TO THE PROCESS MAKING THE REQUEST
     if (result) {
@@ -123,13 +114,13 @@ async function handleRequest(conn: Deno.Conn) {
         new Response(JSON.stringify(result), {
           status: 200,
         }),
-      );
+      )
     } else {
       requestEvent.respondWith(
         new Response(undefined, {
           status: 204,
         }),
-      );
+      )
     }
   }
 }

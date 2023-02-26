@@ -10,7 +10,7 @@ TypeScript is supported to the highest standard by Discordeno. TypeScript is inc
 
 When I utilised other libraries, I frequently observed incorrect or troublesome typings. This is so that TypeScript won't alert the library developers because most of the Discord API typings aren't utilised by the libraries themselves.
 
-It is quite unlikely that these typings would become wrong or outdated as a result of minor errors like forgetting to update typings because Discordeno utilises them as part of the rest process. Libraries occasionally add a property without also adding it to their typings. Because of this, TypeScript developers cannot use it, only JavaScript developers can. Typings are crucial for TypeScript developers. Typings are treated as a component of the code by Discordeno!  A breaking change in typings is a breaking change for the library!
+It is quite unlikely that these typings would become wrong or outdated as a result of minor errors like forgetting to update typings because Discordeno utilises them as part of the rest process. Libraries occasionally add a property without also adding it to their typings. Because of this, TypeScript developers cannot use it, only JavaScript developers can. Typings are crucial for TypeScript developers. Typings are treated as a component of the code by Discordeno! A breaking change in typings is a breaking change for the library!
 
 ## How Stable Is Discordeno?
 
@@ -33,9 +33,9 @@ In regards to EventEmitter, I believe a functional event API was a much better c
 
 ```typescript
 // EventEmitter Example
-EventEmitter.emit("guildCreate", guild);
+EventEmitter.emit('guildCreate', guild)
 // Discordeno Example
-bot.events.guildCreate?.(bot, guild);
+bot.events.guildCreate?.(bot, guild)
 ```
 
 There isn't really any difference especially for users when they use it. One bad thing about EventEmitter is that if
@@ -48,7 +48,7 @@ listeners. You don't need to worry about binding or not binding events. They are
 In Discordeno, this is extremely simple; you just simply give it the new event handlers. For example:
 
 ```typescript
-bot.events.guildCreate = newGuildCreateEventHandler;
+bot.events.guildCreate = newGuildCreateEventHandler
 ```
 
 ## Why Do You Have A Class for Collection If Classes Are Bad?
@@ -84,7 +84,7 @@ have even seen some bots have hundreds of thousands of Missing Permission or Mis
 don't handle it. IMO, this is a crucial part of any good library as much as it is to handle rate limiting.
 
 ```typescript
-import { Bot, Errors, Message } from "https://deno.land/x/discordeno@16.0.0/mod.ts";
+import { Bot, Errors, Message } from 'https://deno.land/x/discordeno@16.0.0/mod.ts'
 
 export function handleCommandError(bot: Bot, message: Message, type: Errors) {
   switch (type) {
@@ -92,10 +92,10 @@ export function handleCommandError(bot: Bot, message: Message, type: Errors) {
       return bot.helpers.sendMessage(message.channelId, {
         content:
           "The bot does not have the necessary permission to manage/edit other user's nicknames. Grant the **MANAGE_NICKNAME** permission to the bot and try again.",
-      });
+      })
     case Errors.MISSING_MANAGE_ROLES:
       // Note: i18n is not part of the library. This is just an example of how you could use i18n for custom error responses.
-      return bot.helpers.sendMessage(message.channelId, { content: i18n.translate(type) });
+      return bot.helpers.sendMessage(message.channelId, { content: i18n.translate(type) })
   }
 }
 ```

@@ -1,7 +1,6 @@
-import type { PremiumTypes, DiscordUser } from "@discordeno/types"
-import type Client from "../../Client.js"
-import User from "./User.js"
-
+import type { PremiumTypes, DiscordUser } from '@discordeno/types'
+import type Client from '../../Client.js'
+import User from './User.js'
 
 export class ExtendedUser extends User {
   email?: string | null

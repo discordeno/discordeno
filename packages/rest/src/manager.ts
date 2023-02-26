@@ -14,7 +14,7 @@ import {
   isGetMessagesLimit,
   logger,
   processReactionString,
-  urlToBase64
+  urlToBase64,
 } from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
@@ -22,9 +22,11 @@ import { Queue } from './queue.js'
 
 import type {
   BigString,
-  Camelize, DiscordApplication,
+  Camelize,
+  DiscordApplication,
   DiscordApplicationCommand,
-  DiscordApplicationCommandPermissions, DiscordAuditLog,
+  DiscordApplicationCommandPermissions,
+  DiscordAuditLog,
   DiscordAutoModerationRule,
   DiscordBan,
   DiscordChannel,
@@ -43,7 +45,8 @@ import type {
   DiscordListArchivedThreads,
   DiscordMember,
   DiscordMemberWithUser,
-  DiscordMessage, DiscordPrunedCount,
+  DiscordMessage,
+  DiscordPrunedCount,
   DiscordRole,
   DiscordScheduledEvent,
   DiscordStageInstance,
@@ -55,8 +58,11 @@ import type {
   DiscordVanityUrl,
   DiscordVoiceRegion,
   DiscordWebhook,
-  DiscordWelcomeScreen, GetMessagesOptions, GetScheduledEventUsers, MfaLevels,
-  ModifyGuildTemplate
+  DiscordWelcomeScreen,
+  GetMessagesOptions,
+  GetScheduledEventUsers,
+  MfaLevels,
+  ModifyGuildTemplate,
 } from '@discordeno/types'
 import type { CreateRestManagerOptions, RestManager, SendRequestOptions } from './types.js'
 
@@ -873,7 +879,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get('X-RateLimit-Scope') === 'shared')
 
           const resetAfter = response.headers.get('x-ratelimit-reset-after')
-          logger.warn(`Request to ${url} was rate limited. Reset after ${resetAfter} seconds.`,);
+          logger.warn(`Request to ${url} was rate limited. Reset after ${resetAfter} seconds.`)
           if (resetAfter) await delay(Number(resetAfter) * 1000)
           // process the response to prevent mem leak
           await response.json()

@@ -87,9 +87,9 @@ Example:
 
 ```js
 class Command {
-  static name = "ping";
-  static aliases = ["pong"];
-  static botPermission = ["SEND_EMBED_LINKS"];
+  static name = 'ping'
+  static aliases = ['pong']
+  static botPermission = ['SEND_EMBED_LINKS']
 
   run(message, args) {
     // do something
@@ -106,17 +106,17 @@ by each command. Extending the class makes this extra step obsolete.
 ```js
 class BaseCommand {
   constructor(client) {
-    this.client = client;
-    this.basePermission = ["SEND_EMBED_LINKS"];
+    this.client = client
+    this.basePermission = ['SEND_EMBED_LINKS']
   }
 }
 
 class Command extends BaseCommand {
-  static name = "ping";
-  static aliases = ["pong"];
+  static name = 'ping'
+  static aliases = ['pong']
 
   constructor(data) {
-    super(data);
+    super(data)
   }
 
   run(message, args) {

@@ -1,9 +1,8 @@
 {
-    "label": "Interfaces",
-    "position": 2,
-    "link": {
-      "type": "generated-index",
-      "description": "All the interfaces available for use from the @discordeno/types package."
-    }
+  "label": "Interfaces",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "Automatically generated documentation for interfaces"
   }
-  
+}

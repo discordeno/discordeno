@@ -1,4 +1,4 @@
-import type { CreateGatewayManagerOptions, GatewayManager, Shard } from '@discordeno/gateway'
+import type { CreateGatewayManagerOptions, GatewayManager, DiscordenoShard } from '@discordeno/gateway'
 import { createGatewayManager, ShardSocketCloseCodes } from '@discordeno/gateway'
 import type { CreateRestManagerOptions, RestManager } from '@discordeno/rest'
 import { createRestManager } from '@discordeno/rest'
@@ -61,22 +61,22 @@ import { createLogger } from '@discordeno/utils'
  */
 export function createBot(options: CreateBotOptions): Bot {
   if (!options.rest) options.rest = { token: options.token }
-  if (!options.gateway) options.gateway = { token: options.token, events: {} };
+  if (!options.gateway) options.gateway = { token: options.token, events: {} }
   if (!options.gateway.events.message) {
     options.gateway.events.message = async (shard, data) => {
-       // TRIGGER RAW EVENT
-       bot.events.raw?.(data, shard)
+      // TRIGGER RAW EVENT
+      bot.events.raw?.(data, shard)
 
-       if (!data.t) return
+      if (!data.t) return
 
-       // RUN DISPATCH CHECK
-       await bot.events.dispatchRequirements?.(data, shard)
-       bot.events[
-         data.t.toLowerCase().replace(/_([a-z])/g, function (g) {
-           return g[1].toUpperCase()
-         }) as keyof EventHandlers
-         // @ts-expect-error as any gets removed by linter
-       ]?.(data.d, shard)
+      // RUN DISPATCH CHECK
+      await bot.events.dispatchRequirements?.(data, shard)
+      bot.events[
+        data.t.toLowerCase().replace(/_([a-z])/g, function (g) {
+          return g[1].toUpperCase()
+        }) as keyof EventHandlers
+        // @ts-expect-error as any gets removed by linter
+      ]?.(data.d, shard)
     }
   }
 
@@ -134,68 +134,68 @@ export interface Bot {
 
 export interface EventHandlers {
   // Custom events here
-  dispatchRequirements: (payload: Camelize<DiscordGatewayPayload>, shard: Shard) => unknown
-  raw: (payload: Camelize<DiscordGatewayPayload>, shard: Shard) => unknown
+  dispatchRequirements: (payload: Camelize<DiscordGatewayPayload>, shard: DiscordenoShard) => unknown
+  raw: (payload: Camelize<DiscordGatewayPayload>, shard: DiscordenoShard) => unknown
 
   // Gateway events below this
-  applicationCommandPermissionsUpdate: (payload: Camelize<DiscordGuildApplicationCommandPermissions>, shard: Shard) => unknown
-  auditLogEntryCreate: (payload: Camelize<DiscordAuditLogEntry>, shard: Shard) => unknown
-  autoModerationRuleCreate: (payload: Camelize<DiscordAutoModerationRule>, shard: Shard) => unknown
-  autoModerationRuleUpdate: (payload: Camelize<DiscordAutoModerationRule>, shard: Shard) => unknown
-  autoModerationRuleDelete: (payload: Camelize<DiscordAutoModerationRule>, shard: Shard) => unknown
-  autoModerationActionExecution: (payload: Camelize<DiscordAutoModerationActionExecution>, shard: Shard) => unknown
-  channelCreate: (payload: Camelize<DiscordChannel>, shard: Shard) => unknown
-  channelUpdate: (payload: Camelize<DiscordChannel>, shard: Shard) => unknown
-  channelDelete: (payload: Camelize<DiscordChannel>, shard: Shard) => unknown
-  channelPinsUpdate: (payload: Camelize<DiscordChannelPinsUpdate>, shard: Shard) => unknown
-  threadCreate: (payload: Camelize<DiscordChannel>, shard: Shard) => unknown
-  threadUpdate: (payload: Camelize<DiscordChannel>, shard: Shard) => unknown
-  threadDelete: (payload: Camelize<DiscordChannel>, shard: Shard) => unknown
-  threadListSync: (payload: Camelize<DiscordThreadListSync>, shard: Shard) => unknown
-  threadMemberUpdate: (payload: Camelize<DiscordThreadMemberUpdate>, shard: Shard) => unknown
-  threadMembersUpdate: (payload: Camelize<DiscordThreadMembersUpdate>, shard: Shard) => unknown
-  guildCreate: (payload: Camelize<DiscordGuild>, shard: Shard) => unknown
-  guildUpdate: (payload: Camelize<DiscordGuild>, shard: Shard) => unknown
-  guildDelete: (payload: Camelize<DiscordUnavailableGuild>, shard: Shard) => unknown
-  guildBanAdd: (payload: Camelize<DiscordGuildBanAddRemove>, shard: Shard) => unknown
-  guildBanRemove: (payload: Camelize<DiscordGuildBanAddRemove>, shard: Shard) => unknown
-  guildEmojisUpdate: (payload: Camelize<DiscordGuildEmojisUpdate>, shard: Shard) => unknown
-  guildStickersUpdate: (payload: Camelize<DiscordGuildStickersUpdate>, shard: Shard) => unknown
-  guildIntegrationsUpdate: (payload: Camelize<DiscordIntegrationCreateUpdate>, shard: Shard) => unknown
-  guildMemberAdd: (payload: Camelize<DiscordGuildMemberAdd>, shard: Shard) => unknown
-  guildMemberRemove: (payload: Camelize<DiscordGuildMemberRemove>, shard: Shard) => unknown
-  guildMemberUpdate: (payload: Camelize<DiscordGuildMemberUpdate>, shard: Shard) => unknown
-  guildMembersChunk: (payload: Camelize<DiscordGuildMembersChunk>, shard: Shard) => unknown
-  guildRoleCreate: (payload: Camelize<DiscordGuildRoleCreate>, shard: Shard) => unknown
-  guildRoleUpdate: (payload: Camelize<DiscordGuildRoleUpdate>, shard: Shard) => unknown
-  guildRoleDelete: (payload: Camelize<DiscordGuildRoleDelete>, shard: Shard) => unknown
-  guildScheduledEventCreate: (payload: Camelize<DiscordScheduledEvent>, shard: Shard) => unknown
-  guildScheduledEventUpdate: (payload: Camelize<DiscordScheduledEvent>, shard: Shard) => unknown
-  guildScheduledEventDelete: (payload: Camelize<DiscordScheduledEvent>, shard: Shard) => unknown
-  guildScheduledEventUserAdd: (payload: Camelize<DiscordScheduledEventUserAdd>, shard: Shard) => unknown
-  guildScheduledEventUserRemove: (payload: Camelize<DiscordScheduledEventUserRemove>, shard: Shard) => unknown
-  integrationCreate: (payload: Camelize<DiscordIntegrationCreateUpdate>, shard: Shard) => unknown
-  integrationUpdate: (payload: Camelize<DiscordIntegrationCreateUpdate>, shard: Shard) => unknown
-  integrationDelete: (payload: Camelize<DiscordIntegrationDelete>, shard: Shard) => unknown
-  interactionCreate: (payload: Camelize<DiscordInteraction>, shard: Shard) => unknown
-  inviteCreate: (payload: Camelize<DiscordInviteCreate>, shard: Shard) => unknown
-  inviteDelete: (payload: Camelize<DiscordInviteDelete>, shard: Shard) => unknown
-  messageCreate: (payload: Camelize<DiscordMessage>, shard: Shard) => unknown
-  messageUpdate: (payload: Camelize<DiscordMessage>, shard: Shard) => unknown
-  messageDelete: (payload: Camelize<DiscordMessageDelete>, shard: Shard) => unknown
-  messageDeleteBulk: (payload: Camelize<DiscordMessageDeleteBulk>, shard: Shard) => unknown
-  messageReactionAdd: (payload: Camelize<DiscordMessageReactionAdd>, shard: Shard) => unknown
-  messageReactionRemove: (payload: Camelize<DiscordMessageReactionRemove>, shard: Shard) => unknown
-  messageReactionRemoveAll: (payload: Camelize<DiscordMessageReactionRemoveAll>, shard: Shard) => unknown
-  messageReactionRemoveEmoji: (payload: Camelize<DiscordMessageReactionRemoveEmoji>, shard: Shard) => unknown
-  presenceUpdate: (payload: Camelize<DiscordPresenceUpdate>, shard: Shard) => unknown
-  ready: (payload: Camelize<DiscordReady>, shard: Shard) => unknown
-  stageInstanceCreate: (payload: Camelize<DiscordStageInstance>, shard: Shard) => unknown
-  stageInstanceUpdate: (payload: Camelize<DiscordStageInstance>, shard: Shard) => unknown
-  stageInstanceDelete: (payload: Camelize<DiscordStageInstance>, shard: Shard) => unknown
-  typingStart: (payload: Camelize<DiscordTypingStart>, shard: Shard) => unknown
-  userUpdate: (payload: Camelize<DiscordUser>, shard: Shard) => unknown
-  voiceStateUpdate: (payload: Camelize<DiscordVoiceState>, shard: Shard) => unknown
-  voiceServerUpdate: (payload: Camelize<DiscordVoiceServerUpdate>, shard: Shard) => unknown
-  webhooksUpdate: (payload: Camelize<DiscordWebhookUpdate>, shard: Shard) => unknown
+  applicationCommandPermissionsUpdate: (payload: Camelize<DiscordGuildApplicationCommandPermissions>, shard: DiscordenoShard) => unknown
+  auditLogEntryCreate: (payload: Camelize<DiscordAuditLogEntry>, shard: DiscordenoShard) => unknown
+  autoModerationRuleCreate: (payload: Camelize<DiscordAutoModerationRule>, shard: DiscordenoShard) => unknown
+  autoModerationRuleUpdate: (payload: Camelize<DiscordAutoModerationRule>, shard: DiscordenoShard) => unknown
+  autoModerationRuleDelete: (payload: Camelize<DiscordAutoModerationRule>, shard: DiscordenoShard) => unknown
+  autoModerationActionExecution: (payload: Camelize<DiscordAutoModerationActionExecution>, shard: DiscordenoShard) => unknown
+  channelCreate: (payload: Camelize<DiscordChannel>, shard: DiscordenoShard) => unknown
+  channelUpdate: (payload: Camelize<DiscordChannel>, shard: DiscordenoShard) => unknown
+  channelDelete: (payload: Camelize<DiscordChannel>, shard: DiscordenoShard) => unknown
+  channelPinsUpdate: (payload: Camelize<DiscordChannelPinsUpdate>, shard: DiscordenoShard) => unknown
+  threadCreate: (payload: Camelize<DiscordChannel>, shard: DiscordenoShard) => unknown
+  threadUpdate: (payload: Camelize<DiscordChannel>, shard: DiscordenoShard) => unknown
+  threadDelete: (payload: Camelize<DiscordChannel>, shard: DiscordenoShard) => unknown
+  threadListSync: (payload: Camelize<DiscordThreadListSync>, shard: DiscordenoShard) => unknown
+  threadMemberUpdate: (payload: Camelize<DiscordThreadMemberUpdate>, shard: DiscordenoShard) => unknown
+  threadMembersUpdate: (payload: Camelize<DiscordThreadMembersUpdate>, shard: DiscordenoShard) => unknown
+  guildCreate: (payload: Camelize<DiscordGuild>, shard: DiscordenoShard) => unknown
+  guildUpdate: (payload: Camelize<DiscordGuild>, shard: DiscordenoShard) => unknown
+  guildDelete: (payload: Camelize<DiscordUnavailableGuild>, shard: DiscordenoShard) => unknown
+  guildBanAdd: (payload: Camelize<DiscordGuildBanAddRemove>, shard: DiscordenoShard) => unknown
+  guildBanRemove: (payload: Camelize<DiscordGuildBanAddRemove>, shard: DiscordenoShard) => unknown
+  guildEmojisUpdate: (payload: Camelize<DiscordGuildEmojisUpdate>, shard: DiscordenoShard) => unknown
+  guildStickersUpdate: (payload: Camelize<DiscordGuildStickersUpdate>, shard: DiscordenoShard) => unknown
+  guildIntegrationsUpdate: (payload: Camelize<DiscordIntegrationCreateUpdate>, shard: DiscordenoShard) => unknown
+  guildMemberAdd: (payload: Camelize<DiscordGuildMemberAdd>, shard: DiscordenoShard) => unknown
+  guildMemberRemove: (payload: Camelize<DiscordGuildMemberRemove>, shard: DiscordenoShard) => unknown
+  guildMemberUpdate: (payload: Camelize<DiscordGuildMemberUpdate>, shard: DiscordenoShard) => unknown
+  guildMembersChunk: (payload: Camelize<DiscordGuildMembersChunk>, shard: DiscordenoShard) => unknown
+  guildRoleCreate: (payload: Camelize<DiscordGuildRoleCreate>, shard: DiscordenoShard) => unknown
+  guildRoleUpdate: (payload: Camelize<DiscordGuildRoleUpdate>, shard: DiscordenoShard) => unknown
+  guildRoleDelete: (payload: Camelize<DiscordGuildRoleDelete>, shard: DiscordenoShard) => unknown
+  guildScheduledEventCreate: (payload: Camelize<DiscordScheduledEvent>, shard: DiscordenoShard) => unknown
+  guildScheduledEventUpdate: (payload: Camelize<DiscordScheduledEvent>, shard: DiscordenoShard) => unknown
+  guildScheduledEventDelete: (payload: Camelize<DiscordScheduledEvent>, shard: DiscordenoShard) => unknown
+  guildScheduledEventUserAdd: (payload: Camelize<DiscordScheduledEventUserAdd>, shard: DiscordenoShard) => unknown
+  guildScheduledEventUserRemove: (payload: Camelize<DiscordScheduledEventUserRemove>, shard: DiscordenoShard) => unknown
+  integrationCreate: (payload: Camelize<DiscordIntegrationCreateUpdate>, shard: DiscordenoShard) => unknown
+  integrationUpdate: (payload: Camelize<DiscordIntegrationCreateUpdate>, shard: DiscordenoShard) => unknown
+  integrationDelete: (payload: Camelize<DiscordIntegrationDelete>, shard: DiscordenoShard) => unknown
+  interactionCreate: (payload: Camelize<DiscordInteraction>, shard: DiscordenoShard) => unknown
+  inviteCreate: (payload: Camelize<DiscordInviteCreate>, shard: DiscordenoShard) => unknown
+  inviteDelete: (payload: Camelize<DiscordInviteDelete>, shard: DiscordenoShard) => unknown
+  messageCreate: (payload: Camelize<DiscordMessage>, shard: DiscordenoShard) => unknown
+  messageUpdate: (payload: Camelize<DiscordMessage>, shard: DiscordenoShard) => unknown
+  messageDelete: (payload: Camelize<DiscordMessageDelete>, shard: DiscordenoShard) => unknown
+  messageDeleteBulk: (payload: Camelize<DiscordMessageDeleteBulk>, shard: DiscordenoShard) => unknown
+  messageReactionAdd: (payload: Camelize<DiscordMessageReactionAdd>, shard: DiscordenoShard) => unknown
+  messageReactionRemove: (payload: Camelize<DiscordMessageReactionRemove>, shard: DiscordenoShard) => unknown
+  messageReactionRemoveAll: (payload: Camelize<DiscordMessageReactionRemoveAll>, shard: DiscordenoShard) => unknown
+  messageReactionRemoveEmoji: (payload: Camelize<DiscordMessageReactionRemoveEmoji>, shard: DiscordenoShard) => unknown
+  presenceUpdate: (payload: Camelize<DiscordPresenceUpdate>, shard: DiscordenoShard) => unknown
+  ready: (payload: Camelize<DiscordReady>, shard: DiscordenoShard) => unknown
+  stageInstanceCreate: (payload: Camelize<DiscordStageInstance>, shard: DiscordenoShard) => unknown
+  stageInstanceUpdate: (payload: Camelize<DiscordStageInstance>, shard: DiscordenoShard) => unknown
+  stageInstanceDelete: (payload: Camelize<DiscordStageInstance>, shard: DiscordenoShard) => unknown
+  typingStart: (payload: Camelize<DiscordTypingStart>, shard: DiscordenoShard) => unknown
+  userUpdate: (payload: Camelize<DiscordUser>, shard: DiscordenoShard) => unknown
+  voiceStateUpdate: (payload: Camelize<DiscordVoiceState>, shard: DiscordenoShard) => unknown
+  voiceServerUpdate: (payload: Camelize<DiscordVoiceServerUpdate>, shard: DiscordenoShard) => unknown
+  webhooksUpdate: (payload: Camelize<DiscordWebhookUpdate>, shard: DiscordenoShard) => unknown
 }
