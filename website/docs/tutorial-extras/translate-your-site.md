@@ -16,7 +16,7 @@ module.exports = {
     defaultLocale: 'en',
     locales: ['en', 'fr'],
   },
-};
+}
 ```
 
 ## Translate a doc
@@ -66,7 +66,7 @@ module.exports = {
       ],
     },
   },
-};
+}
 ```
 
 The locale dropdown now appears in your navbar:

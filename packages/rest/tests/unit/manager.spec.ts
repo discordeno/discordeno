@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { afterEach, beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
-import type { RestManager } from '../../src/manager.js'
+import type { RestManager } from '../../src/types.js'
 import { createRestManager } from '../../src/manager.js'
 import { fakeToken as token } from '../constants.js'
 

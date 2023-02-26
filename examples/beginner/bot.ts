@@ -1,7 +1,5 @@
-import { configs } from './configs.ts.js';
-import type {
-  BotWithCache,
-  BotWithHelpersPlugin} from './deps.ts.js';
+import { configs } from './configs.ts.js'
+import type { BotWithCache, BotWithHelpersPlugin } from './deps.ts.js'
 import {
   Collection,
   createBot,
@@ -10,8 +8,8 @@ import {
   enableHelpersPlugin,
   enablePermissionsPlugin,
   GatewayIntents,
-} from './deps.ts.js';
-import type { Command } from './src/types/commands.ts.js';
+} from './deps.ts.js'
+import type { Command } from './src/types/commands.ts.js'
 
 // MAKE THE BASIC BOT OBJECT
 const bot = createBot({
@@ -19,19 +17,19 @@ const bot = createBot({
   botId: configs.botId,
   intents: GatewayIntents.Guilds,
   events: {},
-});
+})
 
 // ENABLE ALL THE PLUGINS THAT WILL HELP MAKE IT EASIER TO CODE YOUR BOT
-enableHelpersPlugin(bot);
-enableCachePlugin(bot);
-enableCacheSweepers(bot as BotWithCache);
-enablePermissionsPlugin(bot as BotWithCache);
+enableHelpersPlugin(bot)
+enableCachePlugin(bot)
+enableCacheSweepers(bot as BotWithCache)
+enablePermissionsPlugin(bot as BotWithCache)
 
 export interface BotClient extends BotWithCache<BotWithHelpersPlugin> {
-  commands: Collection<string, Command>;
+  commands: Collection<string, Command>
 }
 
 // THIS IS THE BOT YOU WANT TO USE EVERYWHERE IN YOUR CODE! IT HAS EVERYTHING BUILT INTO IT!
-export const Bot = bot as BotClient;
+export const Bot = bot as BotClient
 // PREPARE COMMANDS HOLDER
-Bot.commands = new Collection();
+Bot.commands = new Collection()

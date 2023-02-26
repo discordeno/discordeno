@@ -69,19 +69,6 @@ export interface CreateMessageOptions {
   /** IDs of up to 3 stickers in the server to send in the message */
   stickerIds?: [BigString] | [BigString, BigString] | [BigString, BigString, BigString]
 }
-// import type {
-//   AllowedMentionsTypes,
-//   ApplicationCommandTypes,
-//   AuditLogEvents,
-//   BigString,
-//   ButtonStyles,
-//   InteractionResponseTypes,
-//   Localization,
-//   MessageComponentTypes,
-//   OverwriteTypes,
-//   PermissionStrings,
-//   TextStyles
-// } from './shared.js'
 
 export type MessageComponents = ActionRow[]
 
@@ -295,17 +282,6 @@ export interface OverwriteReadable {
   /** Permission bit set */
   deny?: PermissionStrings[]
 }
-
-// export interface GetGatewayBot {
-//   url: string
-//   shards: number
-//   sessionStartLimit: {
-//     total: number
-//     remaining: number
-//     resetAfter: number
-//     maxConcurrency: number
-//   }
-// }
 
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
 export interface GetMessagesLimit {
@@ -815,7 +791,6 @@ export interface EditAutoModerationRuleOptions extends WithReason {
   triggerMetadata: {
     /** The keywords needed to match. Only present when TriggerType.Keyword */
     keywordFilter?: string[]
-    // TODO: This may need a special type or enum
     /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
     presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
     /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */

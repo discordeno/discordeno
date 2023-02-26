@@ -16,7 +16,7 @@ import type { RequestMemberRequest } from './manager.js'
 import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest, StatusUpdate, UpdateVoiceState } from './types.js'
 import { ShardSocketCloseCodes, ShardState } from './types.js'
 
-export class Shard {
+export class DiscordenoShard {
   /** The id of the shard */
   id: number
   /** The connection config details that this shard will used to connect to discord. */
@@ -105,7 +105,7 @@ export class Shard {
   }
 
   /** Connect the shard with the gateway and start heartbeating. This will not identify the shard to the gateway. */
-  async connect(): Promise<Shard> {
+  async connect(): Promise<DiscordenoShard> {
     // Only set the shard to `Connecting` state,
     // if the connection request does not come from an identify or resume action.
     if (![ShardState.Identifying, ShardState.Resuming].includes(this.state)) {
@@ -750,4 +750,4 @@ export interface ShardCreateOptions {
   events: ShardEvents
 }
 
-export default Shard
+export default DiscordenoShard

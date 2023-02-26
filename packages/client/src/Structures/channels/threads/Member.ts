@@ -1,9 +1,8 @@
 /* eslint-disable no-useless-call */
-import type { BigString, DiscordThreadMember } from "@discordeno/types"
-import Base from "../../../Base.js"
-import type Client from "../../../Client.js"
-import type Member from "../../guilds/Member.js"
-
+import type { BigString, DiscordThreadMember } from '@discordeno/types'
+import Base from '../../../Base.js'
+import type Client from '../../../Client.js'
+import type Member from '../../guilds/Member.js'
 
 export class ThreadMember extends Base {
   client: Client

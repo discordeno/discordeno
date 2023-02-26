@@ -17,54 +17,47 @@ npm i @thereallonewolf/amethystframework
 - **Step 4**: Add following code in index.ts file, replacing TOKEN with your bot token.
 
 ```ts
-import { createBot, GatewayIntents, startBot } from "discordeno";
-import { enableCachePlugin, enableCacheSweepers } from "discordeno/cache-plugin";
-import {
-  AmethystBot,
-  Category,
-  Command,
-  Context,
-  enableAmethystPlugin,
-  Event,
-} from "@thereallonewolf/amethystframework";
+import { createBot, GatewayIntents, startBot } from 'discordeno'
+import { enableCachePlugin, enableCacheSweepers } from 'discordeno/cache-plugin'
+import { AmethystBot, Category, Command, Context, enableAmethystPlugin, Event } from '@thereallonewolf/amethystframework'
 
 let baseClient = createBot({
-  token: "TOKEN",
+  token: 'TOKEN',
   intents: GatewayIntents.Guilds | GatewayIntents.GuildMessages | GatewayIntents.MessageContent,
-});
+})
 
 //@ts-ignore
 let client = enableAmethystPlugin(enableCachePlugin(baseClient), {
   botMentionAsPrefix: true,
-  prefix: "!", //Can be a function or a string.
+  prefix: '!', //Can be a function or a string.
   ignoreBots: false,
-});
-enableCacheSweepers(client);
+})
+enableCacheSweepers(client)
 
-startBot(client);
+startBot(client)
 
 @Category({
-  name: "general",
-  description: "My general commands",
+  name: 'general',
+  description: 'My general commands',
   uniqueCommands: true,
-  default: "", //As all the commands are unique so no need to set the default command.
+  default: '', //As all the commands are unique so no need to set the default command.
 })
 export class General {
   @Command({
-    name: "ping",
-    description: "Pong!",
-    commandType: ["application", "message"],
-    category: "general",
+    name: 'ping',
+    description: 'Pong!',
+    commandType: ['application', 'message'],
+    category: 'general',
     args: [],
   })
   async ping(bot: AmethystBot, ctx: Context) {
-    ctx.reply({ content: "Pong!" });
+    ctx.reply({ content: 'Pong!' })
   }
 
-  @Event("ready")
+  @Event('ready')
   async ready() {
-    console.log("I am ready!");
-    client.amethystUtils.updateSlashCommands();
+    console.log('I am ready!')
+    client.amethystUtils.updateSlashCommands()
   }
 }
 ```

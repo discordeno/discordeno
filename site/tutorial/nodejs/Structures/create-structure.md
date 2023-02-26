@@ -11,14 +11,14 @@ Imagine you have a channel object to which you want to send a message.
 ```js
 const data = {
   id: 806947972004839444n,
-  name: "spam-and-bots",
-};
+  name: 'spam-and-bots',
+}
 ```
 
 The recommended way would be:
 
 ```js
-await client.helpers.sendMessage(data.id, { content: "hello" });
+await client.helpers.sendMessage(data.id, { content: 'hello' })
 ```
 
 However, you probably want to use something shorter, such as the following:
@@ -26,13 +26,13 @@ However, you probably want to use something shorter, such as the following:
 ```js
 class Channel {
   constructor(client, data) {
-    this.client = client;
-    this.id = data.id;
-    this.name = data.name;
+    this.client = client
+    this.id = data.id
+    this.name = data.name
   }
 
   async send(options) {
-    return await this.client.helpers.sendMessage(this.id, options);
+    return await this.client.helpers.sendMessage(this.id, options)
   }
 }
 ```
@@ -40,8 +40,8 @@ class Channel {
 Now you can use the `.send()` method on the channel object without using such a long code:
 
 ```js
-const channel = new Channel(client, data);
-await channel.send({ content: "hello" });
+const channel = new Channel(client, data)
+await channel.send({ content: 'hello' })
 ```
 
 Moreover, you can modify the `.send()` method to better suit your use case e.g not send the message if the channel is
@@ -74,22 +74,22 @@ construct the client for following the Guide
 **Using the Structures:**
 
 ```js
-const Discord = require("discordeno.js");
-const client = new Discord.Client(clientOptions, cacheOptions); //See the Readme above
-Discord.startBot(client);
-const guild = client.guilds.forge(guildData);
-const channel = guild.channels.forge(channelData);
-const role = guild.roles.forge(roleData);
-const member = guild.members.forge(memberData);
-const user = guild.users.forge(userData);
-const message = guild.messages.forge(messageData);
-const interaction = guild.interactions.forge(interactionData);
-const emoji = guild.emojis.forge(emojiData);
+const Discord = require('discordeno.js')
+const client = new Discord.Client(clientOptions, cacheOptions) //See the Readme above
+Discord.startBot(client)
+const guild = client.guilds.forge(guildData)
+const channel = guild.channels.forge(channelData)
+const role = guild.roles.forge(roleData)
+const member = guild.members.forge(memberData)
+const user = guild.users.forge(userData)
+const message = guild.messages.forge(messageData)
+const interaction = guild.interactions.forge(interactionData)
+const emoji = guild.emojis.forge(emojiData)
 
-const webhook = new Discord.Webhook(client, webhookData);
-const embed = new Discord.Embed(embedData); // embedData is optional
-const component = new Discord.Component(componentData); // componentData is optional
-const collection = new Discord.Collection();
+const webhook = new Discord.Webhook(client, webhookData)
+const embed = new Discord.Embed(embedData) // embedData is optional
+const component = new Discord.Component(componentData) // componentData is optional
+const collection = new Discord.Collection()
 ```
 
 Some popular methods have been added to the structures so that you can use them without having to come up with your own.

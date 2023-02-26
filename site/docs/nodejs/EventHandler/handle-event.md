@@ -24,14 +24,14 @@ Sometimes it's important to listen to events, in order to get informed of change
 This file should be called `messageCreate.js`.
 
 ```js
-const Message = require("./structures/Message");
+const Message = require('./structures/Message')
 
 module.exports = async (client, payload) => {
-  const message = client.messages.forge(payload);
+  const message = client.messages.forge(payload)
 
-  if (message.author.bot) return;
-  if (message.content === "!ping") return await message.reply("pong");
-};
+  if (message.author.bot) return
+  if (message.content === '!ping') return await message.reply('pong')
+}
 ```
 
 ### Interaction Event
@@ -39,13 +39,13 @@ module.exports = async (client, payload) => {
 This file should be called `interactionCreate.js`.
 
 ```js
-const Interaction = require("./structures/Interaction");
+const Interaction = require('./structures/Interaction')
 
 module.exports = async (client, payload) => {
-  const interaction = client.interactions.forge(payload);
+  const interaction = client.interactions.forge(payload)
 
-  if (interaction.data.name === "ping") return await interaction.reply({ content: "pong" });
-};
+  if (interaction.data.name === 'ping') return await interaction.reply({ content: 'pong' })
+}
 ```
 
 ### Ready Event
@@ -62,14 +62,14 @@ a `shard` becomes ready.
 In order to fire the "real event" a small code snippet has to be added to the `ready` Event.
 
 ```js
-const User = require("../Structures/User");
+const User = require('../Structures/User')
 
 module.exports = async (client, payload) => {
-  client.user = client.users.forge(payload.user);
+  client.user = client.users.forge(payload.user)
 
   if (payload.shardId + 1 === client.gateway.maxShards) {
     // All Shards are ready
-    console.log(`Successfully connected to the gateway as ${client.user.tag}`);
+    console.log(`Successfully connected to the gateway as ${client.user.tag}`)
   }
-};
+}
 ```

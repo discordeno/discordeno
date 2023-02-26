@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { EventEmitter } from "node:events"
+import { EventEmitter } from 'node:events'
 
 class BrowserWebSocketError extends Error {
   static CONNECTING: 0 = 0
@@ -49,7 +49,7 @@ class BrowserWebSocket extends EventEmitter {
   }
 
   static set CONNECTING(state: number) {
-    BrowserWebSocket.CONNECTING = state;
+    BrowserWebSocket.CONNECTING = state
   }
 
   static get OPEN() {
@@ -57,7 +57,7 @@ class BrowserWebSocket extends EventEmitter {
   }
 
   static set OPEN(state: number) {
-    BrowserWebSocket.OPEN = state;
+    BrowserWebSocket.OPEN = state
   }
 
   static get CLOSING() {
@@ -65,7 +65,7 @@ class BrowserWebSocket extends EventEmitter {
   }
 
   static set CLOSING(state: number) {
-    BrowserWebSocket.CLOSING = state;
+    BrowserWebSocket.CLOSING = state
   }
 
   static get CLOSED() {
@@ -73,7 +73,7 @@ class BrowserWebSocket extends EventEmitter {
   }
 
   static set CLOSED(state: number) {
-    BrowserWebSocket.CLOSED = state;
+    BrowserWebSocket.CLOSED = state
   }
 
   close(code?: number, reason?: string) {

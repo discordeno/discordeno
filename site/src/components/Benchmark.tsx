@@ -1,49 +1,42 @@
-import {
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  LineController,
-  LineElement,
-  PointElement,
-  Title,
-  Tooltip,
-} from "chart.js";
-import React, { useEffect, useState } from "react";
-import { Chart } from "react-chartjs-2";
-ChartJS.register(CategoryScale, LineController, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+import { CategoryScale, Chart as ChartJS, Legend, LinearScale, LineController, LineElement, PointElement, Title, Tooltip } from 'chart.js'
+import React, { useEffect, useState } from 'react'
+import { Chart } from 'react-chartjs-2'
+ChartJS.register(CategoryScale, LineController, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
-const BenchmarkResultChart = ({ name, dataset }: {
-  name: string;
+const BenchmarkResultChart = ({
+  name,
+  dataset,
+}: {
+  name: string
   dataset: {
     bench: {
-      name: string;
-      range: string | number;
-      unit: string;
-      value: string | number;
-      extra: string | number | undefined;
-    };
+      name: string
+      range: string | number
+      unit: string
+      value: string | number
+      extra: string | number | undefined
+    }
     commit: {
       author: {
-        email: string;
-        name: string;
-        username: string;
-      };
+        email: string
+        name: string
+        username: string
+      }
       committer: {
-        email: string;
-        name: string;
-        username: string;
-      };
-      distinct: true;
-      id: string;
-      message: string;
-      timestamp: string;
-      tree_id: string;
-      url: string;
-    };
-    date: number;
-    tool: string;
-  }[];
+        email: string
+        name: string
+        username: string
+      }
+      distinct: true
+      id: string
+      message: string
+      timestamp: string
+      tree_id: string
+      url: string
+    }
+    date: number
+    tool: string
+  }[]
 }) => {
   const data = {
     labels: dataset.map((d) => d.commit.id.slice(0, 7)),
@@ -51,11 +44,11 @@ const BenchmarkResultChart = ({ name, dataset }: {
       {
         label: name,
         data: dataset.map((d) => d.bench.value),
-        borderColor: "#ff3838",
-        backgroundColor: "#ff383860", // Add alpha for #rrggbbaa
+        borderColor: '#ff3838',
+        backgroundColor: '#ff383860', // Add alpha for #rrggbbaa
       },
     ],
-  };
+  }
 
   return (
     <Chart
@@ -67,13 +60,13 @@ const BenchmarkResultChart = ({ name, dataset }: {
           x: {
             title: {
               display: true,
-              text: "commit",
+              text: 'commit',
             },
           },
           y: {
             title: {
               display: true,
-              text: dataset.length > 0 ? dataset[0].bench.unit : "",
+              text: dataset.length > 0 ? dataset[0].bench.unit : '',
             },
             beginAtZero: true,
           },
@@ -82,92 +75,81 @@ const BenchmarkResultChart = ({ name, dataset }: {
           tooltip: {
             callbacks: {
               afterTitle: (items) => {
-                const index = items[0].dataIndex;
-                const data = dataset[index];
-                return "\n" + data.commit.message + "\n\n" + data.commit.timestamp + " committed by @" +
-                  data.commit.author.username + "\n";
+                const index = items[0].dataIndex
+                const data = dataset[index]
+                return '\n' + data.commit.message + '\n\n' + data.commit.timestamp + ' committed by @' + data.commit.author.username + '\n'
               },
               label: (item) => {
-                let label = item.formattedValue;
-                const { range, unit } = dataset[item.datasetIndex].bench;
-                label += " " + unit;
+                let label = item.formattedValue
+                const { range, unit } = dataset[item.datasetIndex].bench
+                label += ' ' + unit
                 if (range) {
-                  label += " (" + range + ")";
+                  label += ' (' + range + ')'
                 }
-                return label;
+                return label
               },
               afterLabel: (item) => {
-                const { extra } = dataset[item.datasetIndex].bench;
-                return extra ? "\n" + extra : "";
+                const { extra } = dataset[item.datasetIndex].bench
+                return extra ? '\n' + extra : ''
               },
             },
           },
         },
         onClick: (_mouseEvent, activeElems) => {
           if (activeElems.length === 0) {
-            return;
+            return
           }
           // XXX: Undocumented. How can we know the index?
-          const index = activeElems[0].index;
-          const url = dataset[index].commit.url;
-          window.open(url, "_blank");
+          const index = activeElems[0].index
+          const url = dataset[index].commit.url
+          window.open(url, '_blank')
         },
       }}
     />
-  );
-};
+  )
+}
 
 export default function BenchmarkResultCharts(): JSX.Element {
-  const [data, setData] = useState<{ entries: { Benchmark: [] } }>();
+  const [data, setData] = useState<{ entries: { Benchmark: [] } }>()
 
   useEffect(() => {
     if (!data) {
-      (async () => {
+      ;(async () => {
         setData(
           JSON.parse(
-            (await (await fetch(
-              "https://raw.githubusercontent.com/discordeno/discordeno/benchies/benchmarksResult/data.js",
-            )).text()).slice(24),
+            (await (await fetch('https://raw.githubusercontent.com/discordeno/discordeno/benchies/benchmarksResult/data.js')).text()).slice(24),
           ),
-        );
-      })();
+        )
+      })()
     }
-  }, []);
+  }, [])
 
   function collectBenchesPerTestCase(entries) {
-    const dataMap = new Map();
+    const dataMap = new Map()
     for (const entry of entries) {
-      const { commit, date, tool, benches } = entry;
+      const { commit, date, tool, benches } = entry
       for (const bench of benches) {
-        const result = { commit, date, tool, bench };
-        const arr = dataMap.get(bench.name);
+        const result = { commit, date, tool, bench }
+        const arr = dataMap.get(bench.name)
         if (arr === undefined) {
-          dataMap.set(bench.name, [result]);
+          dataMap.set(bench.name, [result])
         } else {
-          arr.push(result);
+          arr.push(result)
         }
       }
     }
-    return dataMap;
+    return dataMap
   }
 
   return (
-    <div style={{ minHeight: "100vh" }}>
-      {data
-        ? Array.from(
-          collectBenchesPerTestCase(data.entries.Benchmark),
-          ([key, value]) => ({ benchName: key, benches: value }),
-        ).map((
-          bench,
-          index,
-        ) => (
-          <BenchmarkResultChart
-            key={index}
-            name={bench.benchName}
-            dataset={bench.benches}
-          />
+    <div style={{ minHeight: '100vh' }}>
+      {data ? (
+        Array.from(collectBenchesPerTestCase(data.entries.Benchmark), ([key, value]) => ({ benchName: key, benches: value })).map((bench, index) => (
+          <BenchmarkResultChart key={index} name={bench.benchName} dataset={bench.benches} />
         ))
-        : <></>}
+      ) : (
+        <></>
+      )}
     </div>
-  );
+  )
 }

@@ -44,118 +44,104 @@ Current Discord.JS Code:
 
 ```js
 /* Keeping this to shoutout/credit the original author <3
-* @author: nukestye
-*/
+ * @author: nukestye
+ */
 
-const config = require("./config.json");
-const fs = require("fs");
-const log = console.log;
+const config = require('./config.json')
+const fs = require('fs')
+const log = console.log
 
 // Setting up the way to get commands
-const { CommandoClient } = require("discord.js-commando");
-const path = require("path");
+const { CommandoClient } = require('discord.js-commando')
+const path = require('path')
 
 // reading events
-fs.readdir("./src/events/", (err, files) => {
-  if (err) return console.error(err);
+fs.readdir('./src/events/', (err, files) => {
+  if (err) return console.error(err)
   files.forEach((file) => {
-    const eventFunction = require(`./src/events/${file}`);
-    if (eventFunction.disabled) return;
-    const event = eventFunction.event || file.split(".")[0];
-    const emitter =
-      (typeof eventFunction.emitter === "string" ? client[eventFunction.emitter] : eventFunction.emitter) || client;
-    const { once } = eventFunction;
+    const eventFunction = require(`./src/events/${file}`)
+    if (eventFunction.disabled) return
+    const event = eventFunction.event || file.split('.')[0]
+    const emitter = (typeof eventFunction.emitter === 'string' ? client[eventFunction.emitter] : eventFunction.emitter) || client
+    const { once } = eventFunction
     try {
-      emitter[
-        once ? "once" : "on"
-      ](event, (...args) => eventFunction.run(...args));
+      emitter[once ? 'once' : 'on'](event, (...args) => eventFunction.run(...args))
     } catch (error) {
-      console.error(error.stack);
+      console.error(error.stack)
     }
-  });
-});
+  })
+})
 
-const client = global.client = new CommandoClient({
+const client = (global.client = new CommandoClient({
   commandPrefix: `${config.prefix}`,
   owner: `${config.owner}`,
   invite: `${config.discord}`,
   unknownCommandResponse: false,
-});
+}))
 
 // Registing the commands
 client.registry
   .registerDefaultTypes()
   // The different fields for cmds
   .registerGroups([
-    ["mod", "Moderation Commands"],
-    ["public", "Public Commands"],
+    ['mod', 'Moderation Commands'],
+    ['public', 'Public Commands'],
   ])
   .registerDefaultGroups()
   // Basic cmds can be disabled like {"cmd: false"}
   .registerDefaultCommands()
   // commands in "/src/commands" will be counted
-  .registerCommandsIn(path.join(__dirname, "/src/commands"));
+  .registerCommandsIn(path.join(__dirname, '/src/commands'))
 
 // list of activities that the bot goes through
-const activityArray = [`${config.prefix}help | `];
+const activityArray = [`${config.prefix}help | `]
 // Bot lanuch code
-client.once("ready", () => {
-  log(`Logged in as ${client.user.tag} in ${client.guilds.size} guild(s)!`);
+client.once('ready', () => {
+  log(`Logged in as ${client.user.tag} in ${client.guilds.size} guild(s)!`)
   setInterval(() => {
-    const index = Math.floor(Math.random() * (activityArray.length)); // generates a random number between 1 and the length of the activities array list
-    client.user.setActivity(
-      activityArray[index],
-      {
-        type: "PLAYING",
-      },
-    ); // sets bot"s activities to one of the phrases in the arraylist.
-  }, 5000); // updates every 10000ms = 10s
-});
+    const index = Math.floor(Math.random() * activityArray.length) // generates a random number between 1 and the length of the activities array list
+    client.user.setActivity(activityArray[index], {
+      type: 'PLAYING',
+    }) // sets bot"s activities to one of the phrases in the arraylist.
+  }, 5000) // updates every 10000ms = 10s
+})
 // If an error print it out
-client.on("error", console.error);
+client.on('error', console.error)
 
 // Login in using the token in config
-client.login(config.env.TOKEN);
+client.login(config.env.TOKEN)
 ```
 
 Discordeno Version:
 
 ```ts
-import { botCache, Intents } from "./deps.ts";
-import { configs } from "./configs.ts";
-import { importDirectory } from "./src/utils/helpers.ts";
-import { loadLanguages } from "./src/utils/i18next.ts";
+import { botCache, Intents } from './deps.ts'
+import { configs } from './configs.ts'
+import { importDirectory } from './src/utils/helpers.ts'
+import { loadLanguages } from './src/utils/i18next.ts'
 
-console.info(
-  "Beginning Bot Startup Process. This can take a little bit depending on your system. Loading now...",
-);
+console.info('Beginning Bot Startup Process. This can take a little bit depending on your system. Loading now...')
 
 // Always require these files be processed before anything else
-await Promise.all([
-  "./src/customizations/structures",
-].map(
-  (path) => importDirectory(Deno.realPathSync(path)),
-));
+await Promise.all(['./src/customizations/structures'].map((path) => importDirectory(Deno.realPathSync(path))))
 
 // Forces deno to read all the files which will fill the commands/inhibitors cache etc.
 await Promise.all(
   [
-    "./src/commands",
-    "./src/inhibitors",
-    "./src/events",
-    "./src/arguments",
-    "./src/monitors",
-    "./src/tasks",
-    "./src/permissionLevels",
-    "./src/events",
-  ].map(
-    (path) => importDirectory(Deno.realPathSync(path)),
-  ),
-);
+    './src/commands',
+    './src/inhibitors',
+    './src/events',
+    './src/arguments',
+    './src/monitors',
+    './src/tasks',
+    './src/permissionLevels',
+    './src/events',
+  ].map((path) => importDirectory(Deno.realPathSync(path))),
+)
 
 // Loads languages
-await loadLanguages();
-await import("./src/database/database.ts");
+await loadLanguages()
+await import('./src/database/database.ts')
 
 startBot({
   token: configs.token,
@@ -164,7 +150,7 @@ startBot({
   intents: Intents.Guilds | Intents.GuildMessages,
   // These are all your event handler functions. Imported from the events folder
   events: botCache.events,
-});
+})
 ```
 
 Something we haven't converted yet from the `main.js` files is the event listeners. To do that, we will open up the
@@ -174,40 +160,34 @@ there is already a `ready.ts` file. We can just use that.
 In our `ready.ts` file we can add the `ready` event listener.
 
 ```ts
-import { ActivityTypes, botCache, cache, chooseRandom, editBotStatus, StatusTypes } from "../../deps.ts";
-import { registerTasks } from "./../utils/taskHelper.ts";
+import { ActivityTypes, botCache, cache, chooseRandom, editBotStatus, StatusTypes } from '../../deps.ts'
+import { registerTasks } from './../utils/taskHelper.ts'
 
 botCache.events.ready = function () {
-  editBotStatus(
-    StatusTypes.DoNotDisturb,
-    "Discordeno Best Lib",
-    ActivityTypes.Game,
-  );
+  editBotStatus(StatusTypes.DoNotDisturb, 'Discordeno Best Lib', ActivityTypes.Game)
 
-  console.log(`Loaded ${botCache.arguments.size} Argument(s)`);
-  console.log(`Loaded ${botCache.commands.size} Command(s)`);
-  console.log(`Loaded ${Object.keys(botCache.events).length} Event(s)`);
-  console.log(`Loaded ${botCache.inhibitors.size} Inhibitor(s)`);
-  console.log(`Loaded ${botCache.monitors.size} Monitor(s)`);
-  console.log(`Loaded ${botCache.tasks.size} Task(s)`);
+  console.log(`Loaded ${botCache.arguments.size} Argument(s)`)
+  console.log(`Loaded ${botCache.commands.size} Command(s)`)
+  console.log(`Loaded ${Object.keys(botCache.events).length} Event(s)`)
+  console.log(`Loaded ${botCache.inhibitors.size} Inhibitor(s)`)
+  console.log(`Loaded ${botCache.monitors.size} Monitor(s)`)
+  console.log(`Loaded ${botCache.tasks.size} Task(s)`)
 
-  registerTasks();
+  registerTasks()
 
-  console.log(
-    `[READY] Bot is online and ready in ${cache.guilds.size} guild(s)!`,
-  );
+  console.log(`[READY] Bot is online and ready in ${cache.guilds.size} guild(s)!`)
 
   // list of activities that the bot goes through
-  const activityArray = [`${configs.prefix}help | `];
+  const activityArray = [`${configs.prefix}help | `]
   setInterval(() => {
-    const randomActivity = activityArray[Math.floor(Math.random() * activityArray.length)];
+    const randomActivity = activityArray[Math.floor(Math.random() * activityArray.length)]
 
     editBotStatus(botCache, {
       activities: [{ name: randomActivity, type: ActivityTypes.Game, createdAt: Date.now() }],
-      status: "online",
-    });
-  }, 5000);
-};
+      status: 'online',
+    })
+  }, 5000)
+}
 ```
 
 To understand this code, we are setting a function to be run when the bot is `ready`. Then the bot will edit the bot's
@@ -228,86 +208,85 @@ This is the code from the bot:
 
 ```ts
 // Getting the 'Command' features from Commando
-const { Command } = require("discord.js-commando");
+const { Command } = require('discord.js-commando')
 
 // Code for the command
 module.exports = class addRoleCommand extends Command {
   constructor(client) {
     super(client, {
       // name of the command, must be in lowercase
-      name: "addrole",
+      name: 'addrole',
       // other ways to call the command, must be in lowercase
-      aliases: ["role"],
+      aliases: ['role'],
       // command group its part of
-      group: "mod",
+      group: 'mod',
       // name within the command group, must be in lowercase
-      memberName: "addrole",
+      memberName: 'addrole',
       // Is the description used for 'help' command
-      description: "Adds mentioned role to mentioned user.",
+      description: 'Adds mentioned role to mentioned user.',
       // Prevents it from being used in dms
       guildOnly: true,
       // Permissions, list found here > `discord.js.org/#/docs/main/11.5.1/class/Permissions?scrollTo=s-FLAGS`
-      clientPermissions: ["ADMINISTRATOR", "MANAGE_ROLES"],
-      userPermissions: ["MANAGE_ROLES"],
+      clientPermissions: ['ADMINISTRATOR', 'MANAGE_ROLES'],
+      userPermissions: ['MANAGE_ROLES'],
       // Prevents anyone other than owner to use the command
       ownerOnly: false,
-    });
+    })
   }
 
   // Run code goes here
   run(message) {
-    const user = message.mentions.members.first();
-    const roleToAdd = message.mentions.roles.first();
+    const user = message.mentions.members.first()
+    const roleToAdd = message.mentions.roles.first()
 
     // checking to see if the user has the role or not
-    if (!(user.roles.find((r) => r.name === roleToAdd.name))) {
-      user.addRole(roleToAdd);
-      message.channel.send(`${user} has been given the role: ${roleToAdd.name}`)
-        .then((msg) => {
-          msg.delete(5000);
-        });
+    if (!user.roles.find((r) => r.name === roleToAdd.name)) {
+      user.addRole(roleToAdd)
+      message.channel.send(`${user} has been given the role: ${roleToAdd.name}`).then((msg) => {
+        msg.delete(5000)
+      })
     } else {
-      message.channel.send(`${user} already has the role: ${roleToAdd.name}`);
+      message.channel.send(`${user} already has the role: ${roleToAdd.name}`)
     }
 
     // console.error(user, roleToAdd, message.member.roles.find(r => r.name === roleToAdd));
   }
-};
+}
 ```
 
 This is how to do it with Discordeno:
 
 ```ts
-import { createCommand } from "./../../utils/helpers.ts";
+import { createCommand } from './../../utils/helpers.ts'
 
 createCommand({
-  name: "role",
+  name: 'role',
   // Oher ways to call the command
-  aliases: ["addrole"],
+  aliases: ['addrole'],
   // Is the description used for 'help' command
-  description: "Adds mentioned role to mentioned user.",
+  description: 'Adds mentioned role to mentioned user.',
   // Prevents it from being used in dms
   guildOnly: true,
-  botServerPermissions: ["ADMINISTRATOR", "MANAGE_ROLES"],
-  userServerPermissions: ["MANAGE_ROLES"],
+  botServerPermissions: ['ADMINISTRATOR', 'MANAGE_ROLES'],
+  userServerPermissions: ['MANAGE_ROLES'],
   arguments: [
-    { name: "member", type: "member" },
-    { name: "role", type: "role" },
+    { name: 'member', type: 'member' },
+    { name: 'role', type: 'role' },
   ],
   execute: (bot, message, args) => {
     // checking to see if the user has the role or not
     if (!args.member.roles.includes(args.role.id)) {
-      bot.helpers.addRole(message.guildId, args.member.id, args.role.id);
+      bot.helpers.addRole(message.guildId, args.member.id, args.role.id)
       bot.helpers.sendMessage(message.channelId, {
         content: `${args.member.mention} has been given the role: ${args.role.name}`,
-      });
+      })
     } else {
       bot.helpers.sendMessage(message.channelId, {
         content: `${args.member.mention} already has the role: ${args.role.name}`,
-      });
+      })
     }
   },
-});
+})
 ```
 
 Awesome, that is a full command converted from Discord.JS to Discordeno. See how easy it is! Let's convert one more
@@ -317,25 +296,25 @@ Discord.JS Kick Command Version
 
 ```js
 // Getting the 'Command' features from Commando
-const { Command } = require("discord.js-commando");
-const { RichEmbed } = require("discord.js");
-const chalk = require("chalk");
-const log = console.log;
+const { Command } = require('discord.js-commando')
+const { RichEmbed } = require('discord.js')
+const chalk = require('chalk')
+const log = console.log
 
 // Code for the command
 module.exports = class kickCommand extends Command {
   constructor(client) {
     super(client, {
       // name of the command, must be in lowercase
-      name: "kick",
+      name: 'kick',
       // other ways to call the command, must be in lowercase
-      aliases: ["boot", "tempban"],
+      aliases: ['boot', 'tempban'],
       // command group its part of
-      group: "mod",
+      group: 'mod',
       // name within the command group, must be in lowercase
-      memberName: "kick",
+      memberName: 'kick',
       // Is the description used for 'help' command
-      description: "Kick command.",
+      description: 'Kick command.',
       // adds cooldowns to the command
       throttling: {
         // usages in certain time x
@@ -346,57 +325,52 @@ module.exports = class kickCommand extends Command {
       // Prevents it from being used in dms
       guildOnly: true,
       // Permissions, list found here > `discord.js.org/#/docs/main/11.5.1/class/Permissions?scrollTo=s-FLAGS`
-      clientPermissions: ["ADMINISTRATOR"],
-      userPermissions: ["KICK_MEMBERS"],
+      clientPermissions: ['ADMINISTRATOR'],
+      userPermissions: ['KICK_MEMBERS'],
       // Prevents anyone other than owner to use the command
       ownerOnly: false,
-    });
+    })
   }
 
   // Run code goes here
   run(message) {
-    const messageArry = message.content.split(" ");
-    const args = messageArry.slice(1);
+    const messageArry = message.content.split(' ')
+    const args = messageArry.slice(1)
 
-    const kUser = message.guild.member(
-      message.mentions.users.first() || message.guild.get(args[0]),
-    );
-    if (!kUser) return message.channel.send("User cannot be found!");
-    const kreason = args.join(" ").slice(22);
+    const kUser = message.guild.member(message.mentions.users.first() || message.guild.get(args[0]))
+    if (!kUser) return message.channel.send('User cannot be found!')
+    const kreason = args.join(' ').slice(22)
 
     // setting up the embed for report/log
-    const kickEmbed = new RichEmbed()
-      .setDescription(`Report: ${kUser} Kick`)
-      .addField("Reason >", `${kreason}`)
-      .addField("Time", message.createdAt);
+    const kickEmbed = new RichEmbed().setDescription(`Report: ${kUser} Kick`).addField('Reason >', `${kreason}`).addField('Time', message.createdAt)
 
-    const reportchannel = message.guild.channels.find("name", "report");
+    const reportchannel = message.guild.channels.find('name', 'report')
     if (!reportchannel) {
-      return message.channel.send("*`Report channel cannot be found!`*");
+      return message.channel.send('*`Report channel cannot be found!`*')
     }
 
     // Delete the message command
     // eslint-disable-next-line camelcase
-    message.delete().catch((O_o) => {});
+    message.delete().catch((O_o) => {})
     // Kick the user with reason
-    message.guild.member(kUser).kick(kreason);
+    message.guild.member(kUser).kick(kreason)
     // sends the kick report into log/report
-    reportchannel.send(kickEmbed);
+    reportchannel.send(kickEmbed)
     // Logs the kick into the terminal
-    log(chalk.red("KICK", chalk.underline.bgBlue(kUser) + "!"));
+    log(chalk.red('KICK', chalk.underline.bgBlue(kUser) + '!'))
   }
-};
+}
 ```
 
 Discordeno Version
 
 ```ts
-import { createCommand } from "./../../utils/helpers.ts";
+import { createCommand } from './../../utils/helpers.ts'
 
 createCommand({
   name: `kick`,
-  aliases: ["boot", "tempban"],
-  description: "Kick command.",
+  aliases: ['boot', 'tempban'],
+  description: 'Kick command.',
   // adds cooldowns to the command
   cooldown: {
     // usages in certain duration of seconds below
@@ -406,23 +380,23 @@ createCommand({
   },
   // Prevents it from being used in dms
   guildOnly: true,
-  botServerPermissions: ["ADMINISTRATOR"],
-  userServerPermissions: ["KICK_MEMBERS"],
+  botServerPermissions: ['ADMINISTRATOR'],
+  userServerPermissions: ['KICK_MEMBERS'],
   arguments: [
     {
-      name: "member",
-      type: "member",
+      name: 'member',
+      type: 'member',
       missing: function (message) {
-        message.reply(`User cannot be found.`);
+        message.reply(`User cannot be found.`)
       },
       // By default this is true but for the purpose of the guide so you can see this exists.
       required: true,
     },
     {
-      name: "reason",
+      name: 'reason',
       // The leftover string provided by the user that was not used by previous args.
-      type: "...string",
-      defaultValue: "No reason provided.",
+      type: '...string',
+      defaultValue: 'No reason provided.',
       // It is silly to lowercase this but for the purpose of the guide you can see that this is also available to you.
       lowercase: true,
     },
@@ -431,26 +405,26 @@ createCommand({
     // setting up the embed for report/log
     const embed = new Embed()
       .setDescription(`Report: ${args.member.mention} Kick`)
-      .addField("Reason >", args.reason)
-      .addField("Time", message.timestamp.toString());
+      .addField('Reason >', args.reason)
+      .addField('Time', message.timestamp.toString())
 
-    const reportchannel = message.guild?.channels.find((channel) => channel.name === "report");
+    const reportchannel = message.guild?.channels.find((channel) => channel.name === 'report')
     if (!reportchannel) {
-      return bot.helpers.sendMessage(message.channelId, { content: "*`Report channel cannot be found!`*" });
+      return bot.helpers.sendMessage(message.channelId, { content: '*`Report channel cannot be found!`*' })
     }
 
     // Delete the message command
-    bot.helpers.deleteMessage(message.channelId, { content: "Remove kick command trigger." });
+    bot.helpers.deleteMessage(message.channelId, { content: 'Remove kick command trigger.' })
     // Kick the user with reason
-    bot.helpers.kickMember(message.guildId, args.member.id, args.reason);
+    bot.helpers.kickMember(message.guildId, args.member.id, args.reason)
     // sends the kick report into log/report
-    bot.helpers.sendMessage(message.channelId, { embeds: [embed] });
+    bot.helpers.sendMessage(message.channelId, { embeds: [embed] })
   },
-});
+})
 
 interface KickArgs {
-  member: Member;
-  reason: string;
+  member: Member
+  reason: string
 }
 ```
 

@@ -9,7 +9,7 @@ As previously mentioned, Discordeno was built with as few classes as possible, t
 For example, you cannot execute functions on objects.
 
 ```diff
-- message.channel.send({content: "hello"}) 
+- message.channel.send({content: "hello"})
 + client.helpers.sendMessage(message.channel.id, {content: "hello"})
 ```
 
