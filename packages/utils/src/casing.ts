@@ -24,7 +24,6 @@ export const snakelize = <T>(object: T): Snakelize<T> => {
   if (typeof object === 'object' && object !== null) {
     const obj = {} as Snakelize<T>
     ;(Object.keys(object) as Array<keyof T>).forEach((key) => {
-      console.log(Object.keys(object))
       // @ts-expect-error js hack
       ;(obj[camelToSnakeCase(key)] as Snakelize<(T & object)[keyof T]>) = snakelize(object[key])
     })
