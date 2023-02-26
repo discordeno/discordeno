@@ -28,6 +28,7 @@ coverage
 # build
 dist
 denoTestsDist
+bunTestsDist
 benchDist
 out
 build
