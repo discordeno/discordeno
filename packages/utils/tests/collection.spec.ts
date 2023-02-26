@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { beforeEach, describe, it } from 'mocha'
+import { afterEach, beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
 import { Collection } from '../src/Collection.js'
 
