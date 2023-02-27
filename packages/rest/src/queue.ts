@@ -158,6 +158,7 @@ export class Queue {
     }
   }
 
+  /** Checks if a request is available and adds it to the queue. Also triggers queue processing if not already processing. */
   async makeRequest(options: SendRequestOptions): Promise<void> {
     await this.waitUntilRequestAvailable()
     this.pending.push(options)

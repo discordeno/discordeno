@@ -879,7 +879,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get('X-RateLimit-Scope') === 'shared')
 
           const resetAfter = response.headers.get('x-ratelimit-reset-after')
-          logger.warn(`Request to ${url} was rate limited. Reset after ${resetAfter} seconds.`)
           if (resetAfter) await delay(Number(resetAfter) * 1000)
           // process the response to prevent mem leak
           await response.json()

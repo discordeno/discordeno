@@ -10,18 +10,13 @@ describe('Guild helpers', async () => {
   // Delete the oldest guild(most likely to have finished tests).
 
   it('Create and delete a guild', async () => {
-    logger.info('Create and delete a guild')
     const guild = await rest.createGuild({
       name: 'Discordeno-test',
     })
-    logger.info('Guild created', guild.id)
     expect(guild.id).to.be.exist
-    logger.info('Guild exists', guild.id)
     await rest.deleteGuild(guild.id)
-    logger.info('Guild deleted', guild.id)
     // Make sure the guild was deleted
     await expect(rest.getGuild(guild.id)).to.eventually.rejected
-    logger.info('Guild deleted confirmed', guild.id)
   })
 
   describe('Edit and get', async () => {

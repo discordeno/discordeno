@@ -16,8 +16,6 @@ async function* walk(dir) {
 
 for await (let filepath of walk(typedocOutPath)) {
   if (filepath.endsWith('.json')) continue
-  // if (filepath.includes('/generated/classes')) console.log('file in classes', filepath)
-  // if (filepath.includes('/generated/modules')) console.log('file in modules', filepath)
   let file = fs.readFileSync(filepath, 'utf-8')
 
   if (filepath.endsWith('generated/README.md')) {
@@ -28,8 +26,6 @@ for await (let filepath of walk(typedocOutPath)) {
       '',
       'Thank you for using Discordeno. These docs are generated automatically. If you see any issues please contact us on [Discord](https://discord.gg/ddeno)',
     ].join('\n')
-    // console.log('renaming readme', filepath)
-    // filepath = filepath.replace("README", "Docs")
   }
 
   // Removes the old file in case it had ugly name, will be recreated below
