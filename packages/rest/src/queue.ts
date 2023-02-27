@@ -189,6 +189,7 @@ export class Queue {
     }, this.deleteQueueDelay)
   }
 
+  /** Simply checks if the queue is able to be cleared or it has requests pending. */
   isQueueClearable(): boolean {
     if (this.firstRequest) return false
     if (this.waiting.length > 0) return false
