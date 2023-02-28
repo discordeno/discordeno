@@ -436,11 +436,8 @@ export class Client extends EventEmitter {
   }
 
   /** Make a GET request to the discord api. */
-  async get(url: string) {
-    return await this.makeRequest({
-      method: 'GET',
-      url,
-    })
+  async get(url: string): Promise<any> {
+    return await this.requestHandler.discordeno.get(url)
   }
 
   /** Make a POST request to the discord api. */
@@ -451,14 +448,8 @@ export class Client extends EventEmitter {
       reason?: string
       file?: FileContent | FileContent[]
     },
-  ) {
-    return await this.makeRequest({
-      method: 'POST',
-      url,
-      body: payload?.body,
-      reason: payload?.reason,
-      file: payload?.file,
-    })
+  ): Promise<any> {
+    return await this.requestHandler.discordeno.post(url, payload)
   }
 
   /** Make a PATCH request to the discord api. */
@@ -469,14 +460,8 @@ export class Client extends EventEmitter {
       reason?: string
       file?: FileContent | FileContent[]
     },
-  ) {
-    return await this.makeRequest({
-      method: 'PATCH',
-      url,
-      body: payload?.body,
-      reason: payload?.reason,
-      file: payload?.file,
-    })
+  ): Promise<any> {
+    return await this.requestHandler.discordeno.patch(url, payload)
   }
 
   /** Make a PUT request to the discord api. */
@@ -486,22 +471,13 @@ export class Client extends EventEmitter {
       body?: Record<string, string | number> | any[]
       reason?: string
     },
-  ) {
-    return await this.makeRequest({
-      method: 'PUT',
-      url,
-      body: payload?.body,
-      reason: payload?.reason,
-    })
+  ): Promise<any> {
+    return await this.requestHandler.discordeno.put(url, payload)
   }
 
   /** Make a DELETE request to the discord api. */
   async delete(url: string, payload?: { reason?: string }) {
-    return await this.makeRequest({
-      method: 'DELETE',
-      url,
-      reason: payload?.reason,
-    })
+    return await this.requestHandler.discordeno.delete(url, payload)
   }
 
   /** Add a guild discovery subcategory */
@@ -1825,7 +1801,7 @@ export class Client extends EventEmitter {
 
         return await get((_before ?? !_after) && messages[messages.length - 1].id, _after && messages[0].id)
       }
-      // @ts-expect-error js hacks
+
       return await get(options.before, options.after)
     }
 
