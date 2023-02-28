@@ -17,7 +17,7 @@ site/docs/generated/classes
 site/docs/generated/enums
 site/docs/generated/interfaces
 site/docs/generated/modules
-website/docs/generated/classes
+website/docs/generated/classes/*.md
 website/docs/generated/enums/*.md
 website/docs/generated/interfaces/*.md
 website/docs/generated/modules/*.md
