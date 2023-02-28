@@ -58,22 +58,25 @@ export class DiscordRESTError extends Error {
 
   flattenErrors(errors: HTTPResponse, keyPrefix?: string): string[] {
     let messages: string[] = []
-    for (const fieldName in errors) {
-      if (!errors.hasOwnProperty(fieldName) || fieldName === 'message' || fieldName === 'code') {
+    for (const fieldName of Object.keys(errors)) {
+      if (fieldName === 'message' || fieldName === 'code') {
         continue
       }
+      
+      const prefix = `${keyPrefix ?? ""}${fieldName}`;
+
       // @ts-expect-error js hack from eris
       if (errors[fieldName]._errors) {
         // @ts-expect-error js hack from eris
-        messages = messages.concat(errors[fieldName]._errors.map((obj: any) => `${keyPrefix + fieldName}: ${obj.message}`))
+        messages = messages.concat(errors[fieldName]._errors.map((obj: any) => `${prefix}: ${obj.message as string}`))
         // @ts-expect-error js hack from eris
       } else if (Array.isArray(errors[fieldName])) {
         // @ts-expect-error js hack from eris
-        messages = messages.concat(errors[fieldName].map((str: string) => `${keyPrefix + fieldName}: ${str}`))
+        messages = messages.concat(errors[fieldName].map((str: string) => `${prefix}: ${str}`))
         // @ts-expect-error js hack from eris
       } else if (typeof errors[fieldName] === 'object') {
         // @ts-expect-error js hack from eris
-        messages = messages.concat(this.flattenErrors(errors[fieldName], keyPrefix + fieldName + '.'))
+        messages = messages.concat(this.flattenErrors(errors[fieldName], `${prefix}.`))
       }
     }
     return messages
