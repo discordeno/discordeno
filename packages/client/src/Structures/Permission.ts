@@ -2,7 +2,8 @@
 import { BitwisePermissionFlags } from '@discordeno/types'
 import { Base } from '../Base.js'
 import type { BigString } from '../Client.js'
-import { PermissionClientStrings, Permissions } from '../Constants.js'
+import type { PermissionClientStrings } from '../Constants.js'
+import { Permissions } from '../Constants.js'
 
 export class Permission {
   allow: bigint

@@ -37,7 +37,7 @@ export class RequestHandler {
       {
         // agent: client.options.agent || null,
         agent: null,
-        baseURL: client.BASE_URL,
+        baseURL: "https://discord.com/api",
         decodeReasons: true,
         disableLatencyCompensation: false,
         domain: 'discord.com',

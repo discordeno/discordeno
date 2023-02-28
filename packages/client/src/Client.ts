@@ -267,7 +267,8 @@ export class Client extends EventEmitter {
 
     this.options = {
       apiVersion: options.apiVersion ?? 10,
-      allowedMentions: this._formatAllowedMentions(options.allowedMentions),
+      // This is set below,
+      allowedMentions: {},
       defaultImageFormat: options.defaultImageFormat ?? 'png',
       defaultImageSize: options.defaultImageSize ?? 128,
       proxyURL: options.proxyURL,
@@ -287,6 +288,8 @@ export class Client extends EventEmitter {
       guildCreateTimeout: options.guildCreateTimeout ?? 2000,
       reconnectDelay: options.reconnectDelay ?? ((lastDelay, attempts) => Math.pow(attempts + 1, 0.7) * 20000),
     }
+
+    this.options.allowedMentions = this._formatAllowedMentions(options.allowedMentions)
 
 
     this.guildShardMap = {}
@@ -411,31 +414,6 @@ export class Client extends EventEmitter {
 
       return await this.connect()
     }
-  }
-
-  /** Make a request to the discord api. */
-  async makeRequest(data: RequestData) {
-    return await fetch(`${this.proxyURL}/${this.BASE_URL}/${data.url}`, {
-      method: data.method,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: this.proxyRestAuthorization,
-        'X-Audit-Log-Reason': data.reason ?? '',
-        ...(data.headers ?? {}),
-      },
-      body: data.body
-        ? JSON.stringify(data.body, (str) => {
-            if (str.endsWith('ID')) str = str.substring(0, str.length - 2) + 'Id'
-
-            return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`)
-          })
-        : undefined,
-    })
-      .then(async (res) => await res.json())
-      .catch((error) => {
-        console.log(error)
-        return null
-      })
   }
 
   /** Make a GET request to the discord api. */
@@ -1805,7 +1783,8 @@ export class Client extends EventEmitter {
         return await get((_before ?? !_after) && messages[messages.length - 1].id, _after && messages[0].id)
       }
 
-      return await get(options.before, options.after)
+      // @ts-expect-error todo use typeguards here
+      return await get(options.before, options.after);
     }
 
     const messages = await this.get(CHANNEL_MESSAGES(channelID))
