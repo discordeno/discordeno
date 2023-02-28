@@ -109,7 +109,7 @@ export class TextChannel extends GuildChannel {
    * @arg {String} file.name What to name the file
    * @returns {Promise<Message>}
    */
-  async createMessage(content: MessageContent, file: FileContent | FileContent[]) {
+  async createMessage(content: MessageContent, file?: FileContent | FileContent[]) {
     return this.client.createMessage.call(this.client, this.id, content, file)
   }
 

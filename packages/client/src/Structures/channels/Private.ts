@@ -36,7 +36,7 @@ export class PrivateChannel extends Channel {
   }
 
   /** Create a message in a text channel */
-  async createMessage(content: MessageContent, file: FileContent | FileContent[]): Promise<Message> {
+  async createMessage(content: MessageContent, file?: FileContent | FileContent[]): Promise<Message> {
     return await this.client.createMessage.call(this.client, this.id, content, file)
   }
 

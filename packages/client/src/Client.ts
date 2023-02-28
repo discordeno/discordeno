@@ -27,7 +27,8 @@ import { delay, getBotIdFromToken, iconBigintToHash, iconHashToBigInt } from '@d
 import EventEmitter from 'node:events'
 import Base from './Base.js'
 import Collection from './Collection.js'
-import { Intents, IntentStrings } from './Constants.js'
+import type { IntentStrings } from './Constants.js';
+import { Intents } from './Constants.js'
 import {
   CHANNEL,
   CHANNEL_BULK_DELETE,
@@ -2381,7 +2382,7 @@ export interface ClientOptions {
   /** How many times to attempt resuming. */
   maxResumeAttempts?: number
   /** The intents to use when connection to gateway. */
-  intents?: GatewayIntents | number | (IntentStrings | number)[]
+  intents?: GatewayIntents | number | Array<IntentStrings | number>
   /** Whether or not to automatically reconnect to gateway. */
   autoreconnect?: boolean
   /**

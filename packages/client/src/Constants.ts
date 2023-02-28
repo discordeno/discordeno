@@ -558,3 +558,4 @@ export const WebhookTypes = {
 };
 
 export type IntentStrings = keyof typeof Intents;
+export type PermissionClientStrings = keyof typeof Permissions;
