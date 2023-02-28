@@ -65,6 +65,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-site-
       - run: yarn install --immutable
+        working-directory: ./website
       - name: Build website
         run: yarn build
         working-directory: ./website
