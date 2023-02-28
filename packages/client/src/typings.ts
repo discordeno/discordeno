@@ -948,8 +948,8 @@ export interface EventListeners {
   stageInstanceUpdate: [stageInstance: StageInstance, oldStageInstance: any | null];
   threadCreate: [channel: AnyThreadChannel];
   threadDelete: [channel: AnyThreadChannel];
-  threadListSync: [guild: Guild, deletedThreads: (AnyThreadChannel | Uncached)[], activeThreads: AnyThreadChannel[], joinedThreadsMember: ThreadMember[]];
-  threadMembersUpdate: [channel: AnyThreadChannel, addedMembers: ThreadMember[], removedMembers: (ThreadMember | Uncached)[]];
+  threadListSync: [guild: Guild, deletedThreads: Array<AnyThreadChannel | Uncached>, activeThreads: AnyThreadChannel[], joinedThreadsMember: ThreadMember[]];
+  threadMembersUpdate: [channel: AnyThreadChannel, addedMembers: ThreadMember[], removedMembers: Array<ThreadMember | Uncached>];
   threadMemberUpdate: [channel: AnyThreadChannel, member: ThreadMember, oldMember: any];
   threadUpdate: [channel: AnyThreadChannel, oldChannel: any | null];
   typingStart: [channel: GuildTextableChannel | Uncached, user: User | Uncached, member: Member]
