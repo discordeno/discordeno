@@ -34,7 +34,7 @@ Currently, Discordeno v19 is in development. This is why you can not install it 
 
 We are going to use [NayuBot](https://github.com/AwesomeStickz/Nayu-Bot) which is a small bot written in TypeScript with Eris and is open source as the example we are going to migrate to Discordeno.
 
-At this moment in time, the tsc terminal(from now one we are going to refer to this as TypeScript), is telling us we have 13 errors. This is because although we removed eris, we need to fix any imports it may have. So let's run a search in VSC to find any `from 'eris';` and `from "eris"`. We need to replace these with `from '@discordeno/client'` and `from "@discordeno/client"`.
+At this moment in time, the tsc terminal(from now on we are going to refer to this as TypeScript), is telling us we have 13 errors. This is because when we removed eris, we also need to fix any imports it may have. So let's run a search in VSC to find any `from 'eris';` and `from "eris"`. We need to replace these with `from '@discordeno/client'` and `from "@discordeno/client"`.
 
 Tada! Time to run!
 
