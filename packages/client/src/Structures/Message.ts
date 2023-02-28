@@ -21,7 +21,9 @@ import { MessageFlags, type GetMessageReactionOptions, type MessageContentEdit, 
 import type NewsChannel from './channels/News.js'
 import type PrivateChannel from './channels/Private.js'
 import type TextChannel from './channels/Text.js'
+import type TextVoiceChannel from './channels/TextVoice.js'
 import type NewsThreadChannel from './channels/threads/NewsThread.js'
+import type PrivateThreadChannel from './channels/threads/PrivateThread.js'
 import type PublicThreadChannel from './channels/threads/PublicThread.js'
 import type Guild from './guilds/Guild.js'
 import Member from './guilds/Member.js'
@@ -35,7 +37,7 @@ export class Message extends Base {
   /** The type of the message */
   type: MessageTypes
   /** The channel the message is in. Can be partial with only the id if the channel is not cached. */
-  channel: PrivateChannel | TextChannel | NewsChannel | { id: string }
+  channel: PrivateChannel | TextChannel | NewsChannel | NewsThreadChannel | PublicThreadChannel | PrivateThreadChannel | TextVoiceChannel
   /** The message content. */
   content: string
   /** An object containing the reactions on the message. Each key is a reaction emoji and each value is an object with properties `me` (Boolean) and `count` (Number) for that specific reaction emoji. */
@@ -111,6 +113,7 @@ export class Message extends Base {
 
     this.type = data.type || MessageTypes.Default
     this.timestamp = Date.parse(data.timestamp)
+    // @ts-expect-error eris js hack
     this.channel = this.client.getChannel(data.channel_id) ?? {
       id: data.channel_id,
     }
