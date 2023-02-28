@@ -27,7 +27,7 @@ import { delay, getBotIdFromToken, iconBigintToHash, iconHashToBigInt } from '@d
 import EventEmitter from 'node:events'
 import Base from './Base.js'
 import Collection from './Collection.js'
-import type { IntentStrings } from './Constants.js';
+import type { IntentStrings } from './Constants.js'
 import { Intents } from './Constants.js'
 import {
   CHANNEL,
@@ -283,14 +283,31 @@ export class Client extends EventEmitter {
       firstShardID: options.firstShardID ?? 0,
       lastShardID: options.lastShardID,
       maxResumeAttempts: options.maxResumeAttempts ?? Infinity,
-      intents: typeof options.intents === "number" ? options.intents : Array.isArray(options.intents) ? options.intents.reduce<GatewayIntents>((bits, intent) => (typeof intent === "number" ? intent | bits : Intents[intent]), 0) : 0,
+      // Set up below
+      intents: 0,
       autoreconnect: options.autoreconnect ?? true,
       guildCreateTimeout: options.guildCreateTimeout ?? 2000,
       reconnectDelay: options.reconnectDelay ?? ((lastDelay, attempts) => Math.pow(attempts + 1, 0.7) * 20000),
     }
 
-    this.options.allowedMentions = this._formatAllowedMentions(options.allowedMentions)
+    if (options.intents !== undefined) {
+      // Resolve intents option to the proper integer
+      if (Array.isArray(options.intents)) {
+        let bitmask = 0
+        for (const intent of options.intents) {
+          if (typeof intent === 'number') {
+            bitmask |= intent
+          } else if (Intents[intent]) {
+            bitmask |= Intents[intent]
+          } else {
+            this.emit('warn', `Unknown intent: ${intent}`)
+          }
+        }
+        this.options.intents = bitmask
+      }
+    }
 
+    this.options.allowedMentions = this._formatAllowedMentions(options.allowedMentions)
 
     this.guildShardMap = {}
     this.requestHandler = new RequestHandler(this, {})
@@ -1784,7 +1801,7 @@ export class Client extends EventEmitter {
       }
 
       // @ts-expect-error todo use typeguards here
-      return await get(options.before, options.after);
+      return await get(options.before, options.after)
     }
 
     const messages = await this.get(CHANNEL_MESSAGES(channelID))
