@@ -36,5 +36,5 @@ We are going to use [NayuBot](https://github.com/AwesomeStickz/Nayu-Bot) which i
 
 At this moment in time, the tsc terminal(from now one we are going to refer to this as TypeScript), is telling us we have 13 errors. This is because although we removed eris, we need to fix any imports it may have. So let's run a search in VSC to find any `from 'eris';` and `from "eris"`. We need to replace these with `from '@discordeno/client'` and `from "@discordeno/client"`.
 
-We now have 20 errors in TypeScript. Some of these errors are not Discordeno/Eris related. However, some of them are. Let's discuss them below.
+Tada! Time to run!
 
