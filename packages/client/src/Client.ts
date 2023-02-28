@@ -258,7 +258,7 @@ export class Client extends EventEmitter {
   /** The amount of times it has already tried to reconnect. */
   reconnectAttempts: number = 0
   /** The client user */
-  user?: ExtendedUser
+  user!: ExtendedUser
 
   constructor(token: string, options: ClientOptions) {
     super()

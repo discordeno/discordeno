@@ -95,7 +95,7 @@ export class Shard extends EventEmitter {
   id: number
   latency: number = 0
   preReady = false
-  presence!: ClientPresence
+  presence: ClientPresence = { activities: [], afk: false, status: 'online', since: 0 }
   presenceUpdateBucket!: Bucket
   ready = false
   reconnectInterval: number = 0
