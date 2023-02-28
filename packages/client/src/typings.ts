@@ -46,6 +46,7 @@ import type CommandInteraction from './Structures/interactions/Command.js'
 import type ComponentInteraction from './Structures/interactions/Component.js'
 import type PingInteraction from './Structures/interactions/Ping.js'
 import type UnknownInteraction from './Structures/interactions/Unknown.js'
+import type { IncomingHttpHeaders } from 'node:http'
 
 export type ApplicationCommandStructure = ChatInputApplicationCommandStructure | MessageApplicationCommandStructure | UserApplicationCommandStructure
 export type ChatInputApplicationCommand = ApplicationCommand<ApplicationCommandTypes.ChatInput>
@@ -968,4 +969,11 @@ export interface ClientEvents extends EventListeners {
   shardDisconnect: [err: Error | undefined, id: number];
   shardReady: [id: number];
   shardResume: [id: number];
+}
+
+export interface HTTPResponse {
+  code: number;
+  message: string;
+  errors?: HTTPResponse
+  headers: IncomingHttpHeaders
 }
