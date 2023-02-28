@@ -24,6 +24,7 @@ import type Client from '../../Client.js'
 import type { ImageFormat, ImageSize } from '../../Client.js'
 import Collection from '../../Collection.js'
 import { BANNER, GUILD_DISCOVERY_SPLASH, GUILD_ICON, GUILD_SPLASH } from '../../Endpoints.js'
+import type Shard from '../../gateway/Shard.js'
 import type {
   AnyGuildChannel,
   AnyThreadChannel,
@@ -185,10 +186,14 @@ export class Guild extends Base {
   voiceStates = new Collection<BigString, VoiceState>()
   /** The cached stage instances in this guild. */
   stageInstances = new Collection<BigString, StageInstance>()
+  /** The shard that manages this guild. */
+  shard: Shard;
 
   constructor(data: DiscordGuild, client: Client) {
     super(data.id)
     this.client = client
+    this.shard = client.shards.get(client.guildShardMap[this.id] || (Base.getDiscordEpoch(data.id) % (client.options.maxShards as number)) || 0)!;
+
     this.ownerID = data.owner_id
 
     this.unavailable = !!data.unavailable
