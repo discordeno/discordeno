@@ -27,6 +27,7 @@ import { delay, getBotIdFromToken, iconBigintToHash, iconHashToBigInt } from '@d
 import EventEmitter from 'node:events'
 import Base from './Base.js'
 import Collection from './Collection.js'
+import { Intents, IntentStrings } from './Constants.js'
 import {
   CHANNEL,
   CHANNEL_BULK_DELETE,
@@ -258,6 +259,8 @@ export class Client extends EventEmitter {
   constructor(token: string, options: ClientOptions) {
     super()
 
+    this.token = token
+
     this.options = {
       apiVersion: options.apiVersion ?? 10,
       allowedMentions: this._formatAllowedMentions(options.allowedMentions),
@@ -265,7 +268,7 @@ export class Client extends EventEmitter {
       defaultImageSize: options.defaultImageSize ?? 128,
       proxyURL: options.proxyURL,
       proxyRestAuthorization: options.proxyRestAuthorization,
-      applicationId: options.applicationId,
+      applicationId: options.applicationId ?? this.id,
       messageLimit: options.messageLimit,
       seedVoiceConnections: options.seedVoiceConnections ?? true,
       shardConcurrency: options.shardConcurrency ?? 'auto',
@@ -275,13 +278,12 @@ export class Client extends EventEmitter {
       firstShardID: options.firstShardID ?? 0,
       lastShardID: options.lastShardID,
       maxResumeAttempts: options.maxResumeAttempts ?? Infinity,
-      intents: options.intents ?? 0,
+      intents: typeof options.intents === "number" ? options.intents : Array.isArray(options.intents) ? options.intents.reduce<GatewayIntents>((bits, intent) => (typeof intent === "number" ? intent | bits : Intents[intent]), 0) : 0,
       autoreconnect: options.autoreconnect ?? true,
       guildCreateTimeout: options.guildCreateTimeout ?? 2000,
       reconnectDelay: options.reconnectDelay ?? ((lastDelay, attempts) => Math.pow(attempts + 1, 0.7) * 20000),
     }
 
-    this.token = token
 
     this.guildShardMap = {}
     this.requestHandler = new RequestHandler(this, {})
@@ -2357,15 +2359,15 @@ export interface ClientOptions {
   /** The message limit you would like to set. */
   messageLimit?: number
   /** The api version you would like to use. */
-  apiVersion: ApiVersions
+  apiVersion?: ApiVersions
   /** The url to the REST proxy to send requests to. This url should nly include the initial domain:port portion until api/v.... */
-  proxyURL: string
+  proxyURL?: string
   /** The password/authorization to confirm that these request made to your rest proxy are indeed from you and not a hacker. */
-  proxyRestAuthorization: string
+  proxyRestAuthorization?: string
   /** The application id(NOT the bot id). The bot id and application id are the same for newer bots but older bots have different ids. */
-  applicationId: BigString
+  applicationId?: BigString
   /** Whether or not to seed voice connections. */
-  seedVoiceConnections: boolean
+  seedVoiceConnections?: boolean
   /** The concurrency to use when starting the bot. */
   shardConcurrency?: 'auto' | number
   /** How many shards to use max. */
@@ -2379,7 +2381,7 @@ export interface ClientOptions {
   /** How many times to attempt resuming. */
   maxResumeAttempts?: number
   /** The intents to use when connection to gateway. */
-  intents?: GatewayIntents
+  intents?: GatewayIntents | number | (IntentStrings | number)[]
   /** Whether or not to automatically reconnect to gateway. */
   autoreconnect?: boolean
   /**

@@ -139,7 +139,7 @@ export class Guild extends Base {
   /** When this guild was joined at. */
   joinedAt: number
   /** The amount of members in the guild. */
-  memberCount?: number
+  memberCount: number
   /** The approximate member count in the guild. */
   approximateMemberCount?: number
   /** The approximate presence count in the guild. */
@@ -193,7 +193,7 @@ export class Guild extends Base {
 
     this.unavailable = !!data.unavailable
     this.joinedAt = Date.parse(data.joined_at!)
-    this.memberCount = data.member_count
+    this.memberCount = data.member_count ?? 0
     this.applicationID = data.application_id
     this.widgetEnabled = !!data.widget_enabled
 

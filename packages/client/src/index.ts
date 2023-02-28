@@ -4,6 +4,7 @@ export default Client
 export * from './Base.js'
 export * from './Client.js'
 export * from './Collection.js'
+export * from './Constants.js'
 export * from './Endpoints.js'
 export * from './gateway/Shard.js'
 export * from './gateway/ShardManager.js'
