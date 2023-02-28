@@ -151,12 +151,14 @@ import type PermissionOverwrite from './Structures/PermissionOverwrite.js'
 import ExtendedUser from './Structures/users/Extended.js'
 import User from './Structures/users/User.js'
 import type {
+  ActivityPartial,
   AllowedMentions,
   AnyChannel,
   AnyGuildChannel,
   ApplicationCommand,
   ApplicationCommandPermissions,
   ApplicationCommandStructure,
+  BotActivityType,
   ChannelFollow,
   ChannelPosition,
   CreateChannelInviteOptions,
@@ -200,6 +202,7 @@ import type {
   PruneMemberOptions,
   PurgeChannelOptions,
   RoleOptions,
+  SelfStatus,
   StageInstanceOptions,
   Sticker,
   StickerPack,
@@ -1338,6 +1341,13 @@ export class Client extends EventEmitter {
     return await this.patch(STAGE_INSTANCE(channelID), {
       body: { ...options },
     }).then((instance) => new StageInstance(instance, this))
+  }
+
+  /**
+   * Updates the bot's status on all guilds the shard is in
+   */
+  async editStatus(status: SelfStatus, activities: Array<ActivityPartial<BotActivityType>> | ActivityPartial<BotActivityType> = []) {
+    return await Promise.all(this.shards.map(async (shard) => await shard.editStatus(status, activities)))
   }
 
   /** Edit a webhook */
