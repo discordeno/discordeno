@@ -36,5 +36,15 @@ We are going to use [NayuBot](https://github.com/AwesomeStickz/Nayu-Bot) which i
 
 At this moment in time, the tsc terminal(from now on we are going to refer to this as TypeScript), is telling us we have 13 errors. This is because when we removed eris, we also need to fix any imports it may have. So let's run a search in VSC to find any `from 'eris';` and `from "eris"`. We need to replace these with `from '@discordeno/client'` and `from "@discordeno/client"`.
 
-Tada! Time to run!
+## Intents
+
+Eris was still using an older version of the api. This meant, that intents like MessageContent was not yet supported. When switching to Discordeno, we use the latest API version possible to provide the best experience possible. This requires that if your bot needs the `MessageContent` intent, that it provide it in the intents.
+
+```ts
+// If you provide intents like this, make sure to update the number with MessageContent intent.
+intents: 4086,
+// If you provide intents like this, make sure to update the number with MessageContent as below
+intents: ["guilds", "guildMessages", Intents.MessageContent],
+```
+
 

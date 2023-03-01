@@ -23,7 +23,7 @@ import {
   type GetMessagesOptions,
   type OverwriteTypes,
 } from '@discordeno/types'
-import { delay, getBotIdFromToken, iconBigintToHash, iconHashToBigInt } from '@discordeno/utils'
+import { delay, getBotIdFromToken, iconBigintToHash, iconHashToBigInt, snakelize } from '@discordeno/utils'
 import EventEmitter from 'node:events'
 import Base from './Base.js'
 import Collection from './Collection.js'
@@ -163,6 +163,7 @@ import type {
   BotActivityType,
   ChannelFollow,
   ChannelPosition,
+  ClientEvents,
   CreateChannelInviteOptions,
   CreateChannelOptions,
   CreateGuildOptions,
@@ -383,6 +384,11 @@ export class Client extends EventEmitter {
     return this._privateChannelMap.toRecord()
   }
 
+  on<K extends keyof ClientEvents>(event: K, listener: (...args: ClientEvents[K]) => void): this
+  on(event: string, listener: (...args: any[]) => void): this {
+    return super.on(event, listener)
+  }
+
   /** Tells all shards to connect. This will call `getBotGateway()`, which is ratelimited. */
   async connect(): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -435,7 +441,7 @@ export class Client extends EventEmitter {
 
   /** Make a GET request to the discord api. */
   async get(url: string): Promise<any> {
-    return await this.requestHandler.discordeno.get(url)
+    return snakelize(await this.requestHandler.discordeno.get(url))
   }
 
   /** Make a POST request to the discord api. */
@@ -447,7 +453,13 @@ export class Client extends EventEmitter {
       file?: FileContent | FileContent[]
     },
   ): Promise<any> {
-    return await this.requestHandler.discordeno.post(url, payload)
+    return snakelize(
+      await this.requestHandler.discordeno.post(url, {
+        reason: payload?.reason,
+        file: payload?.file,
+        ...payload?.body,
+      }),
+    )
   }
 
   /** Make a PATCH request to the discord api. */
@@ -459,7 +471,19 @@ export class Client extends EventEmitter {
       file?: FileContent | FileContent[]
     },
   ): Promise<any> {
-    return await this.requestHandler.discordeno.patch(url, payload)
+    return snakelize(
+      await this.requestHandler.discordeno.patch(
+        url,
+        payload?.file ?? payload?.reason
+          ? {
+              reason: payload.reason,
+              file: payload.file,
+              // @ts-expect-error js hacks plz stop
+              ...payload.body,
+            }
+          : payload?.body,
+      ),
+    )
   }
 
   /** Make a PUT request to the discord api. */
@@ -470,7 +494,17 @@ export class Client extends EventEmitter {
       reason?: string
     },
   ): Promise<any> {
-    return await this.requestHandler.discordeno.put(url, payload)
+    return snakelize(
+      await this.requestHandler.discordeno.put(
+        url,
+        Array.isArray(payload?.body)
+          ? payload!.body
+          : {
+              reason: payload?.reason,
+              ...payload?.body,
+            },
+      ),
+    )
   }
 
   /** Make a DELETE request to the discord api. */
