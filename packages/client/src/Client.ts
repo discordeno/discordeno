@@ -235,13 +235,13 @@ export class Client extends EventEmitter {
   CDN_URL = 'https://cdn.discordapp.com'
   CLIENT_URL = 'https://discord.com'
 
-  guilds = new Collection<string, Guild>()
-  unavailableGuilds = new Collection<string, UnavailableGuild>()
-  users = new Collection<string, User>()
-  _channelGuildMap = new Collection<bigint, bigint>()
-  _threadGuildMap = new Collection<bigint, bigint>()
-  _privateChannelMap = new Collection<bigint, bigint>()
-  privateChannels = new Collection<string, PrivateChannel>()
+  guilds = new Collection<BigString, Guild>()
+  unavailableGuilds = new Collection<BigString, UnavailableGuild>()
+  users = new Collection<BigString, User>()
+  _channelGuildMap = new Collection<BigString, BigString>()
+  _threadGuildMap = new Collection<BigString, BigString>()
+  _privateChannelMap = new Collection<BigString, BigString>()
+  privateChannels = new Collection<BigString, PrivateChannel>()
 
   guildShardMap: Record<string, number>
 
