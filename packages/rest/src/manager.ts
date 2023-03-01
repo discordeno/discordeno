@@ -665,9 +665,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const newObj: any = {}
 
         for (const key of Object.keys(obj)) {
-          if (key === 'permissions') {
-            newObj.permissions = calculateBits(obj[key])
+          // Keys that dont require snake casing
+          if (['permissions', 'allow', 'deny'].includes(key)) {
+            newObj[key] = calculateBits(obj[key])
             continue
+          }
+
+          if (key === 'defaultMemberPermissions') {
+            newObj.default_member_permissions = calculateBits(obj[key]);
+            continue;
           }
 
           newObj[camelToSnakeCase(key)] = rest.changeToDiscordFormat(obj[key])
