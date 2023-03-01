@@ -4,7 +4,7 @@ const dirs = ['']
 for await (const dir of dirs) {
   await Promise.all(
     fs.readdirSync(`denoTestsDist${dir}`).map(async (file) => {
-      if (!file.endsWith('.js')) {
+      if (!file.endsWith('.js') && !file.endsWith('.map') && !file.endsWith('.ts')) {
         dirs.push(`${dir}/${file}`)
         return
       }
