@@ -24,6 +24,7 @@ import type Client from '../../Client.js'
 import type { ImageFormat, ImageSize } from '../../Client.js'
 import Collection from '../../Collection.js'
 import { BANNER, GUILD_DISCOVERY_SPLASH, GUILD_ICON, GUILD_SPLASH } from '../../Endpoints.js'
+import type Shard from '../../gateway/Shard.js'
 import type {
   AnyGuildChannel,
   AnyThreadChannel,
@@ -139,7 +140,7 @@ export class Guild extends Base {
   /** When this guild was joined at. */
   joinedAt: number
   /** The amount of members in the guild. */
-  memberCount?: number
+  memberCount: number
   /** The approximate member count in the guild. */
   approximateMemberCount?: number
   /** The approximate presence count in the guild. */
@@ -185,15 +186,19 @@ export class Guild extends Base {
   voiceStates = new Collection<BigString, VoiceState>()
   /** The cached stage instances in this guild. */
   stageInstances = new Collection<BigString, StageInstance>()
+  /** The shard that manages this guild. */
+  shard: Shard;
 
   constructor(data: DiscordGuild, client: Client) {
     super(data.id)
     this.client = client
+    this.shard = client.shards.get(client.guildShardMap[this.id] || (Base.getDiscordEpoch(data.id) % (client.options.maxShards as number)) || 0)!;
+
     this.ownerID = data.owner_id
 
     this.unavailable = !!data.unavailable
     this.joinedAt = Date.parse(data.joined_at!)
-    this.memberCount = data.member_count
+    this.memberCount = data.member_count ?? 0
     this.applicationID = data.application_id
     this.widgetEnabled = !!data.widget_enabled
 

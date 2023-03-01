@@ -16,8 +16,6 @@ async function* walk(dir) {
 
 for await (let filepath of walk(typedocOutPath)) {
   if (filepath.endsWith('.json')) continue
-  // if (filepath.includes('/generated/classes')) console.log('file in classes', filepath)
-  // if (filepath.includes('/generated/modules')) console.log('file in modules', filepath)
   let file = fs.readFileSync(filepath, 'utf-8')
 
   if (filepath.endsWith('generated/README.md')) {
@@ -28,8 +26,6 @@ for await (let filepath of walk(typedocOutPath)) {
       '',
       'Thank you for using Discordeno. These docs are generated automatically. If you see any issues please contact us on [Discord](https://discord.gg/ddeno)',
     ].join('\n')
-    // console.log('renaming readme', filepath)
-    // filepath = filepath.replace("README", "Docs")
   }
 
   // Removes the old file in case it had ugly name, will be recreated below
@@ -43,6 +39,12 @@ for await (let filepath of walk(typedocOutPath)) {
 
   // Converts ugly names to clean names for example discordeno_types.ActionRow becomes ActionRow
   const cleanForms = [
+    { ugly: 'discordeno_bot.md', clean: 'Bot.md'},
+    { ugly: 'discordeno_client.md', clean: 'Client.md'},
+    { ugly: 'discordeno_gateway.md', clean: 'Gateway.md'},
+    { ugly: 'discordeno_rest.md', clean: 'Rest.md'},
+    { ugly: 'discordeno_types.md', clean: 'Types.md'},
+    { ugly: 'discordeno_utils.md', clean: 'Utils.md'},
     { ugly: 'discordeno_bot.' },
     { ugly: 'discordeno_client.' },
     { ugly: 'discordeno_gateway.' },

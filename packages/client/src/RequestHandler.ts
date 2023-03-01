@@ -37,7 +37,7 @@ export class RequestHandler {
       {
         // agent: client.options.agent || null,
         agent: null,
-        baseURL: client.BASE_URL,
+        baseURL: 'https://discord.com/api',
         decodeReasons: true,
         disableLatencyCompensation: false,
         domain: 'discord.com',
@@ -82,14 +82,7 @@ export class RequestHandler {
    */
   globalUnblock(): void {}
 
-  warnUser(): void {
-    // LOG IT ENOUGH TIMES TO MAKE USER SEE IT CLEARLY
-    for (let i = 0; i < 10; i++) {
-      console.warn(
-        '[WARNING] Using internal RestManager since no proxy rest manager was provided. THIS IS NOT RECOMMENDED. Please use a proxy rest manager. If you need help setting it up, join discord.gg/ddeno',
-      )
-    }
-  }
+  warnUser(): void {}
 
   /**
    * Make an API request

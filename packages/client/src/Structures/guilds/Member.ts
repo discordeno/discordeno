@@ -87,7 +87,7 @@ export class Member extends Base {
     if (data.nick !== undefined) this.nick = data.nick
     if (data.roles !== undefined) this.roles = data.roles
     if (data.pending !== undefined) this.pending = data.pending
-    if (data.avatar !== undefined) this._avatar = this.client.iconHashToBigInt(data.avatar)
+    if (data.avatar !== undefined) this._avatar = data.avatar ? this.client.iconHashToBigInt(data.avatar) : undefined
 
     if (data.communication_disabled_until !== undefined) {
       if (data.communication_disabled_until !== null) {

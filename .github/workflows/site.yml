@@ -8,11 +8,13 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "site/**"
+      - "website/**"
+      - ".github/workflows/site.yml"
   pull_request:
     branches: ["main"]
     paths:
-      - "site/**"
+      - "website/**"
+      - ".github/workflows/site.yml"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -29,9 +31,6 @@ jobs:
     # The type of runner that the job will run on
     name: Build Docusaurus
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./site
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -39,23 +38,42 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+      - name: Get yarn cache directory path (root)
+        id: yarn-cache-dir-path-root
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path-root.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: yarn install (root)
+        run: yarn install --immutable
+      - name: Build all pkg
+        run: yarn release-build
+      - name: Build docs
+        run: yarn build:doc
+
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+        working-directory: ./website
       - uses: actions/cache@v3
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-site-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-site-
+      - run: yarn install --immutable
+        working-directory: ./website
       - name: Build website
-        run: |
-          yarn
-          yarn build
+        run: yarn build
+        working-directory: ./website
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: ./site/build
+          path: ./website/build
+
   deploy:
     environment:
       name: github-pages

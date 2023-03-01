@@ -115,7 +115,7 @@ export class ShardManager extends Collection<number, Shard> {
       }
 
       // connect the shard
-      shard.connect()
+      shard.identify()
       this.buckets.set(rateLimitKey, Date.now())
 
       // remove the shard from the queue

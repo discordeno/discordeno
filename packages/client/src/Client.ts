@@ -23,10 +23,12 @@ import {
   type GetMessagesOptions,
   type OverwriteTypes,
 } from '@discordeno/types'
-import { delay, getBotIdFromToken, iconBigintToHash, iconHashToBigInt } from '@discordeno/utils'
+import { delay, getBotIdFromToken, iconBigintToHash, iconHashToBigInt, snakelize } from '@discordeno/utils'
 import EventEmitter from 'node:events'
 import Base from './Base.js'
 import Collection from './Collection.js'
+import type { IntentStrings } from './Constants.js'
+import { Intents } from './Constants.js'
 import {
   CHANNEL,
   CHANNEL_BULK_DELETE,
@@ -151,14 +153,17 @@ import type PermissionOverwrite from './Structures/PermissionOverwrite.js'
 import ExtendedUser from './Structures/users/Extended.js'
 import User from './Structures/users/User.js'
 import type {
+  ActivityPartial,
   AllowedMentions,
   AnyChannel,
   AnyGuildChannel,
   ApplicationCommand,
   ApplicationCommandPermissions,
   ApplicationCommandStructure,
+  BotActivityType,
   ChannelFollow,
   ChannelPosition,
+  ClientEvents,
   CreateChannelInviteOptions,
   CreateChannelOptions,
   CreateGuildOptions,
@@ -200,6 +205,7 @@ import type {
   PruneMemberOptions,
   PurgeChannelOptions,
   RoleOptions,
+  SelfStatus,
   StageInstanceOptions,
   Sticker,
   StickerPack,
@@ -253,19 +259,22 @@ export class Client extends EventEmitter {
   /** The amount of times it has already tried to reconnect. */
   reconnectAttempts: number = 0
   /** The client user */
-  user?: ExtendedUser
+  user!: ExtendedUser
 
   constructor(token: string, options: ClientOptions) {
     super()
 
+    this.token = token
+
     this.options = {
       apiVersion: options.apiVersion ?? 10,
-      allowedMentions: this._formatAllowedMentions(options.allowedMentions),
+      // This is set below,
+      allowedMentions: {},
       defaultImageFormat: options.defaultImageFormat ?? 'png',
       defaultImageSize: options.defaultImageSize ?? 128,
       proxyURL: options.proxyURL,
       proxyRestAuthorization: options.proxyRestAuthorization,
-      applicationId: options.applicationId,
+      applicationId: options.applicationId ?? this.id,
       messageLimit: options.messageLimit,
       seedVoiceConnections: options.seedVoiceConnections ?? true,
       shardConcurrency: options.shardConcurrency ?? 'auto',
@@ -275,13 +284,31 @@ export class Client extends EventEmitter {
       firstShardID: options.firstShardID ?? 0,
       lastShardID: options.lastShardID,
       maxResumeAttempts: options.maxResumeAttempts ?? Infinity,
-      intents: options.intents ?? 0,
+      // Set up below
+      intents: 0,
       autoreconnect: options.autoreconnect ?? true,
       guildCreateTimeout: options.guildCreateTimeout ?? 2000,
       reconnectDelay: options.reconnectDelay ?? ((lastDelay, attempts) => Math.pow(attempts + 1, 0.7) * 20000),
     }
 
-    this.token = token
+    if (options.intents !== undefined) {
+      // Resolve intents option to the proper integer
+      if (Array.isArray(options.intents)) {
+        let bitmask = 0
+        for (const intent of options.intents) {
+          if (typeof intent === 'number') {
+            bitmask |= intent
+          } else if (Intents[intent]) {
+            bitmask |= Intents[intent]
+          } else {
+            this.emit('warn', `Unknown intent: ${intent}`)
+          }
+        }
+        this.options.intents = bitmask
+      }
+    }
+
+    this.options.allowedMentions = this._formatAllowedMentions(options.allowedMentions)
 
     this.guildShardMap = {}
     this.requestHandler = new RequestHandler(this, {})
@@ -357,6 +384,11 @@ export class Client extends EventEmitter {
     return this._privateChannelMap.toRecord()
   }
 
+  on<K extends keyof ClientEvents>(event: K, listener: (...args: ClientEvents[K]) => void): this
+  on(event: string, listener: (...args: any[]) => void): this {
+    return super.on(event, listener)
+  }
+
   /** Tells all shards to connect. This will call `getBotGateway()`, which is ratelimited. */
   async connect(): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -407,37 +439,9 @@ export class Client extends EventEmitter {
     }
   }
 
-  /** Make a request to the discord api. */
-  async makeRequest(data: RequestData) {
-    return await fetch(`${this.proxyURL}/${this.BASE_URL}/${data.url}`, {
-      method: data.method,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: this.proxyRestAuthorization,
-        'X-Audit-Log-Reason': data.reason ?? '',
-        ...(data.headers ?? {}),
-      },
-      body: data.body
-        ? JSON.stringify(data.body, (str) => {
-            if (str.endsWith('ID')) str = str.substring(0, str.length - 2) + 'Id'
-
-            return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`)
-          })
-        : undefined,
-    })
-      .then(async (res) => await res.json())
-      .catch((error) => {
-        console.log(error)
-        return null
-      })
-  }
-
   /** Make a GET request to the discord api. */
-  async get(url: string) {
-    return await this.makeRequest({
-      method: 'GET',
-      url,
-    })
+  async get(url: string): Promise<any> {
+    return snakelize(await this.requestHandler.discordeno.get(url))
   }
 
   /** Make a POST request to the discord api. */
@@ -448,14 +452,14 @@ export class Client extends EventEmitter {
       reason?: string
       file?: FileContent | FileContent[]
     },
-  ) {
-    return await this.makeRequest({
-      method: 'POST',
-      url,
-      body: payload?.body,
-      reason: payload?.reason,
-      file: payload?.file,
-    })
+  ): Promise<any> {
+    return snakelize(
+      await this.requestHandler.discordeno.post(url, {
+        reason: payload?.reason,
+        file: payload?.file,
+        ...payload?.body,
+      }),
+    )
   }
 
   /** Make a PATCH request to the discord api. */
@@ -466,14 +470,20 @@ export class Client extends EventEmitter {
       reason?: string
       file?: FileContent | FileContent[]
     },
-  ) {
-    return await this.makeRequest({
-      method: 'PATCH',
-      url,
-      body: payload?.body,
-      reason: payload?.reason,
-      file: payload?.file,
-    })
+  ): Promise<any> {
+    return snakelize(
+      await this.requestHandler.discordeno.patch(
+        url,
+        payload?.file ?? payload?.reason
+          ? {
+              reason: payload.reason,
+              file: payload.file,
+              // @ts-expect-error js hacks plz stop
+              ...payload.body,
+            }
+          : payload?.body,
+      ),
+    )
   }
 
   /** Make a PUT request to the discord api. */
@@ -483,22 +493,23 @@ export class Client extends EventEmitter {
       body?: Record<string, string | number> | any[]
       reason?: string
     },
-  ) {
-    return await this.makeRequest({
-      method: 'PUT',
-      url,
-      body: payload?.body,
-      reason: payload?.reason,
-    })
+  ): Promise<any> {
+    return snakelize(
+      await this.requestHandler.discordeno.put(
+        url,
+        Array.isArray(payload?.body)
+          ? payload!.body
+          : {
+              reason: payload?.reason,
+              ...payload?.body,
+            },
+      ),
+    )
   }
 
   /** Make a DELETE request to the discord api. */
   async delete(url: string, payload?: { reason?: string }) {
-    return await this.makeRequest({
-      method: 'DELETE',
-      url,
-      reason: payload?.reason,
-    })
+    return await this.requestHandler.discordeno.delete(url, payload)
   }
 
   /** Add a guild discovery subcategory */
@@ -1340,6 +1351,13 @@ export class Client extends EventEmitter {
     }).then((instance) => new StageInstance(instance, this))
   }
 
+  /**
+   * Updates the bot's status on all guilds the shard is in
+   */
+  async editStatus(status: SelfStatus, activities: Array<ActivityPartial<BotActivityType>> | ActivityPartial<BotActivityType> = []) {
+    return await Promise.all(this.shards.map(async (shard) => await shard.editStatus(status, activities)))
+  }
+
   /** Edit a webhook */
   async editWebhook(webhookID: BigString, options: WebhookOptions, token: string, reason?: string) {
     return await this.patch(token ? WEBHOOK_TOKEN(webhookID, token) : WEBHOOK(webhookID), {
@@ -1815,7 +1833,8 @@ export class Client extends EventEmitter {
 
         return await get((_before ?? !_after) && messages[messages.length - 1].id, _after && messages[0].id)
       }
-      // @ts-expect-error js hacks
+
+      // @ts-expect-error todo use typeguards here
       return await get(options.before, options.after)
     }
 
@@ -2357,15 +2376,15 @@ export interface ClientOptions {
   /** The message limit you would like to set. */
   messageLimit?: number
   /** The api version you would like to use. */
-  apiVersion: ApiVersions
+  apiVersion?: ApiVersions
   /** The url to the REST proxy to send requests to. This url should nly include the initial domain:port portion until api/v.... */
-  proxyURL: string
+  proxyURL?: string
   /** The password/authorization to confirm that these request made to your rest proxy are indeed from you and not a hacker. */
-  proxyRestAuthorization: string
+  proxyRestAuthorization?: string
   /** The application id(NOT the bot id). The bot id and application id are the same for newer bots but older bots have different ids. */
-  applicationId: BigString
+  applicationId?: BigString
   /** Whether or not to seed voice connections. */
-  seedVoiceConnections: boolean
+  seedVoiceConnections?: boolean
   /** The concurrency to use when starting the bot. */
   shardConcurrency?: 'auto' | number
   /** How many shards to use max. */
@@ -2379,7 +2398,7 @@ export interface ClientOptions {
   /** How many times to attempt resuming. */
   maxResumeAttempts?: number
   /** The intents to use when connection to gateway. */
-  intents?: GatewayIntents
+  intents?: GatewayIntents | number | Array<IntentStrings | number>
   /** Whether or not to automatically reconnect to gateway. */
   autoreconnect?: boolean
   /**

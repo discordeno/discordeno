@@ -1,5 +1,4 @@
 {
-    "minify": true,
     "jsc": {
         "parser": {
             "syntax": "typescript",
@@ -12,13 +11,7 @@
         },
         "target": "es2022",
         "keepClassNames": true,
-        "loose": true,
-        "minify": {
-            "compress": {
-                "unused": true
-            },
-            "mangle": true
-        }
+        "loose": true
     },
     "module": {
         "type": "es6",
@@ -27,5 +20,5 @@
         "lazy": false,
         "noInterop": false
     },
-    "sourceMaps": "inline"
+    "sourceMaps": true
 }

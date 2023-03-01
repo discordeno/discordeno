@@ -37,6 +37,16 @@ import type GuildAuditLogEntry from './Structures/guilds/AuditLogEntry.js'
 import type GuildIntegration from './Structures/guilds/Integration.js'
 import type Member from './Structures/guilds/Member.js'
 import type User from './Structures/users/User.js'
+import type { Guild, Invite } from './index.js'
+import type Role from './Structures/guilds/Role.js'
+import type StageInstance from './Structures/guilds/StageInstance.js'
+import type UnavailableGuild from './Structures/guilds/Unavailable.js'
+import type AutocompleteInteraction from './Structures/interactions/Autocomplete.js'
+import type CommandInteraction from './Structures/interactions/Command.js'
+import type ComponentInteraction from './Structures/interactions/Component.js'
+import type PingInteraction from './Structures/interactions/Ping.js'
+import type UnknownInteraction from './Structures/interactions/Unknown.js'
+import type { IncomingHttpHeaders } from 'node:http'
 
 export type ApplicationCommandStructure = ChatInputApplicationCommandStructure | MessageApplicationCommandStructure | UserApplicationCommandStructure
 export type ChatInputApplicationCommand = ApplicationCommand<ApplicationCommandTypes.ChatInput>
@@ -884,4 +894,86 @@ export const MessageFlags = {
   HAS_THREAD: 32,
   EPHEMERAL: 64,
   LOADING: 128,
+}
+
+export interface EventListeners {
+  channelCreate: [channel: AnyGuildChannel];
+  channelDelete: [channel: AnyChannel];
+  channelPinUpdate: [channel: TextableChannel, timestamp: number, oldTimestamp: number];
+  channelUpdate: [channel: AnyGuildChannel, oldChannel: any];
+  connect: [id: number];
+  debug: [message: string, id?: number];
+  disconnect: [];
+  error: [err: Error, id?: number];
+  guildAvailable: [guild: Guild];
+  guildBanAdd: [guild: Guild, user: User];
+  guildBanRemove: [guild: Guild, user: User];
+  guildCreate: [guild: Guild];
+  guildDelete: [guild: any];
+  guildEmojisUpdate: [guild: any, emojis: Emoji[], oldEmojis: Emoji[] | null];
+  guildMemberAdd: [guild: Guild, member: Member];
+  guildMemberChunk: [guild: Guild, member: Member[]];
+  guildMemberRemove: [guild: Guild, member: Member | any];
+  guildMemberUpdate: [guild: Guild, member: Member, oldMember: any | null];
+  guildRoleCreate: [guild: Guild, role: Role];
+  guildRoleDelete: [guild: Guild, role: Role];
+  guildRoleUpdate: [guild: Guild, role: Role, oldRole: any];
+  guildScheduledEventCreate: [event: any];
+  guildScheduledEventDelete: [event: any];
+  guildScheduledEventUpdate: [event: any, oldEvent: any | null];
+  guildScheduledEventUserAdd: [event: any, user: User | Uncached];
+  guildScheduledEventUserRemove: [event: any, user: User | Uncached];
+  guildStickersUpdate: [guild: any, stickers: Sticker[], oldStickers: Sticker[] | null];
+  guildUnavailable: [guild: UnavailableGuild];
+  guildUpdate: [guild: Guild, oldGuild: any];
+  hello: [trace: string[], id: number];
+  interactionCreate: [interaction: PingInteraction | CommandInteraction | ComponentInteraction | AutocompleteInteraction | UnknownInteraction];
+  inviteCreate: [guild: Guild, invite: Invite];
+  inviteDelete: [guild: Guild, invite: Invite];
+  messageCreate: [message: Message];
+  messageDelete: [message: any];
+  messageDeleteBulk: [messages: any[]];
+  messageReactionAdd: [message: any, emoji: PartialEmoji, reactor: Member | Uncached];
+  messageReactionRemove: [message: any, emoji: PartialEmoji, userID: string];
+  messageReactionRemoveAll: [message: any];
+  messageReactionRemoveEmoji: [message: any, emoji: PartialEmoji];
+  messageUpdate: [message: Message, oldMessage: any | null];
+  presenceUpdate: [other: Member, oldPresence: any | null];
+  rawREST: [request: any];
+  rawWS: [packet: any, id: number];
+  ready: [];
+  shardPreReady: [id: number];
+  stageInstanceCreate: [stageInstance: StageInstance];
+  stageInstanceDelete: [stageInstance: StageInstance];
+  stageInstanceUpdate: [stageInstance: StageInstance, oldStageInstance: any | null];
+  threadCreate: [channel: AnyThreadChannel];
+  threadDelete: [channel: AnyThreadChannel];
+  threadListSync: [guild: Guild, deletedThreads: Array<AnyThreadChannel | Uncached>, activeThreads: AnyThreadChannel[], joinedThreadsMember: ThreadMember[]];
+  threadMembersUpdate: [channel: AnyThreadChannel, addedMembers: ThreadMember[], removedMembers: Array<ThreadMember | Uncached>];
+  threadMemberUpdate: [channel: AnyThreadChannel, member: ThreadMember, oldMember: any];
+  threadUpdate: [channel: AnyThreadChannel, oldChannel: any | null];
+  typingStart: [channel: GuildTextableChannel | Uncached, user: User | Uncached, member: Member]
+  | [channel: PrivateChannel | Uncached, user: User | Uncached, member: null];
+  unavailableGuildCreate: [guild: UnavailableGuild];
+  unknown: [packet: any, id?: number];
+  userUpdate: [user: User, oldUser: PartialUser | null];
+  voiceChannelJoin: [member: Member, channel: AnyVoiceChannel];
+  voiceChannelLeave: [member: Member, channel: AnyVoiceChannel];
+  voiceChannelSwitch: [member: Member, newChannel: AnyVoiceChannel, oldChannel: AnyVoiceChannel];
+  voiceStateUpdate: [member: Member, oldState: any];
+  warn: [message: string, id?: number];
+  webhooksUpdate: [data: any];
+}
+
+export interface ClientEvents extends EventListeners {
+  shardDisconnect: [err: Error | undefined, id: number];
+  shardReady: [id: number];
+  shardResume: [id: number];
+}
+
+export interface HTTPResponse {
+  code: number;
+  message: string;
+  errors?: HTTPResponse
+  headers: IncomingHttpHeaders
 }
