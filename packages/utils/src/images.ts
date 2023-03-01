@@ -37,7 +37,7 @@ export function avatarUrl(
 ): string {
   return options?.avatar
     ? formatImageUrl(
-        `https://cdn.discordapp.com/avatars/${userId}/${typeof options?.avatar === 'string' ? options.avatar : iconBigintToHash(options?.avatar)}`,
+        `https://cdn.discordapp.com/avatars/${userId}/${typeof options.avatar === 'string' ? options.avatar : iconBigintToHash(options.avatar)}`,
         options?.size ?? 128,
         options?.format,
       )
