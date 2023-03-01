@@ -125,7 +125,7 @@ export function guildSplashUrl(
  * @returns The link to the resource.
  */
 export function getWidgetImageUrl(guildId: BigString, options?: GetGuildWidgetImageQuery): string {
-  let url = `https://cdn.discordapp.com/guilds/${guildId}/widget.png`
+  let url = `https://discordapp.com/api/guilds/${guildId}/widget.png`
 
   if (options?.style) {
     url += `?style=${options.style}`
