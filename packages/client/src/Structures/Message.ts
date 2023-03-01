@@ -374,12 +374,12 @@ export class Message extends Base {
   }
 
   /** Remove a reaction from a message */
-  async removeReaction(reaction: string): Promise<void> {
+  async removeReaction(reaction: string, userID?: string): Promise<void> {
     if (this.flags & MessageFlags.EPHEMERAL) {
       throw new Error('Ephemeral messages cannot have reactions')
     }
 
-    return await this.client.removeMessageReaction.call(this.client, this.channel.id, this.id, reaction)
+    return await this.client.removeMessageReaction.call(this.client, this.channel.id, this.id, reaction, userID)
   }
 
   /** Remove all reactions from a message for a single emoji */
