@@ -4,20 +4,21 @@
 
 import {
   MessageTypes,
-  type DiscordEmbed,
-  type DiscordMessageActivity,
-  type DiscordStickerItem,
   type DiscordApplication,
   type DiscordAttachment,
+  type DiscordEmbed,
   type DiscordMemberWithUser,
   type DiscordMessage,
+  type DiscordMessageActivity,
   type DiscordMessageComponents,
+  type DiscordStickerItem,
   type InteractionTypes,
 } from '@discordeno/types'
 import Base from '../Base.js'
 import type Client from '../Client.js'
+import { MessageFlags } from '../Constants.js'
 import { MESSAGE_LINK } from '../Endpoints.js'
-import { MessageFlags, type GetMessageReactionOptions, type MessageContentEdit, type MessageWebhookContent } from '../typings.js'
+import type { GetMessageReactionOptions, MessageContentEdit, MessageWebhookContent } from '../typings.js'
 import type NewsChannel from './channels/News.js'
 import type PrivateChannel from './channels/Private.js'
 import type TextChannel from './channels/Text.js'
