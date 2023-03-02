@@ -9,12 +9,12 @@
       "legacyDecorator": true,
       "decoratorMetadata": true
     },
-    "target": "ESNext",
+    "target": "es2022",
     "keepClassNames": true,
     "loose": true
   },
   "module": {
-    "type": "es6",
+    "type": "nodenext",
     "strict": false,
     "strictMode": true,
     "lazy": false,

@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Default",
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "es2022",
     "module": "ESNext",
     "composite": false,
     "declaration": true,
@@ -21,12 +21,7 @@
     "importsNotUsedAsValues": "error",
     "resolveJsonModule": true
   },
-  "exclude": [
-    "node_modules",
-    "dist",
-    "tests",
-    "test"
-  ],
+  "exclude": ["node_modules", "dist", "tests", "test"],
   "ts-node": {
     "swc": true,
     "esm": true

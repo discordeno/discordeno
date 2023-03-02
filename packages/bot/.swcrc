@@ -1,24 +1,24 @@
 {
-    "jsc": {
-        "parser": {
-            "syntax": "typescript",
-            "decorators": true,
-            "dynamicImport": true
-        },
-        "transform": {
-            "legacyDecorator": true,
-            "decoratorMetadata": true
-        },
-        "target": "ESNext",
-        "keepClassNames": true,
-        "loose": true
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "decorators": true,
+      "dynamicImport": true
     },
-    "module": {
-        "type": "es6",
-        "strict": false,
-        "strictMode": true,
-        "lazy": false,
-        "noInterop": false
+    "transform": {
+      "legacyDecorator": true,
+      "decoratorMetadata": true
     },
-    "sourceMaps": true
+    "target": "es2022",
+    "keepClassNames": true,
+    "loose": true
+  },
+  "module": {
+    "type": "nodenext",
+    "strict": false,
+    "strictMode": true,
+    "lazy": false,
+    "noInterop": false
+  },
+  "sourceMaps": true
 }
