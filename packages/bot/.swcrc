@@ -9,7 +9,7 @@
             "legacyDecorator": true,
             "decoratorMetadata": true
         },
-        "target": "es2022",
+        "target": "ESNext",
         "keepClassNames": true,
         "loose": true
     },
