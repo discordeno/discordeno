@@ -40,8 +40,8 @@ import { ExtendedUser } from './Structures/users/Extended.js'
 import User from './Structures/users/User.js'
 import Bucket from './utils/Bucket.js'
 import DiscordRESTError from './utils/DiscordRESTError.js'
-// eslint-disable-next-line require-extensions/require-extensions
-import { version as VERSION } from '../package.json'
+// TODO: MAKE THIS DYNAMIC FROM PACKAGE.JSON
+export const VERSION = "19.0.0";
 
 export function DiscordenoClient(token: string, options: ClientOptions): Client {
   return new Client(token, options)
