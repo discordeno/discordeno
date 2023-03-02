@@ -2,11 +2,10 @@
 import type { DiscordInteraction, InteractionTypes } from '@discordeno/types'
 import Base from '../../Base.js'
 import type Client from '../../Client.js'
-import type { BigString } from '../../Client.js'
 
 export class Interaction extends Base {
   client: Client
-  applicationID: BigString
+  applicationID: string
   token: string
   type: InteractionTypes
   version: 1

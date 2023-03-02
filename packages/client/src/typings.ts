@@ -3,7 +3,6 @@ import type {
   ApplicationCommandOptionTypes,
   ApplicationCommandPermissionTypes,
   ApplicationCommandTypes,
-  BigString,
   ButtonStyles,
   ChannelTypes,
   DefaultMessageNotificationLevels,
@@ -200,7 +199,7 @@ export interface ApplicationCommandOption<
   type: T
 }
 export interface ApplicationCommandPermissions {
-  id: BigString
+  id: string
   permission: boolean
   type: ApplicationCommandPermissionTypes
 }
@@ -976,4 +975,34 @@ export interface HTTPResponse {
   message: string;
   errors?: HTTPResponse
   headers: IncomingHttpHeaders
+}
+
+export type AnyInteraction = PingInteraction | CommandInteraction | ComponentInteraction | AutocompleteInteraction;
+export type InteractionDataOptions = InteractionDataOptionsSubCommand | InteractionDataOptionsSubCommandGroup | InteractionDataOptionsWithValue;
+export type InteractionDataOptionsBoolean = InteractionDataOptionWithValue<ApplicationCommandOptionTypes.Boolean, boolean>;
+export type InteractionDataOptionsChannel = InteractionDataOptionWithValue<ApplicationCommandOptionTypes.Channel, string>;
+export type InteractionDataOptionsInteger = InteractionDataOptionWithValue<ApplicationCommandOptionTypes.Integer, number>;
+export type InteractionDataOptionsMentionable = InteractionDataOptionWithValue<ApplicationCommandOptionTypes.Mentionable, string>;
+export type InteractionDataOptionsNumber = InteractionDataOptionWithValue<ApplicationCommandOptionTypes.Number, number>;
+export type InteractionDataOptionsRole = InteractionDataOptionWithValue<ApplicationCommandOptionTypes.Role, string>;
+export type InteractionDataOptionsString = InteractionDataOptionWithValue<ApplicationCommandOptionTypes.String, string>;
+export type InteractionDataOptionsUser = InteractionDataOptionWithValue<ApplicationCommandOptionTypes.User, string>;
+export type InteractionDataOptionsWithValue = InteractionDataOptionsString | InteractionDataOptionsInteger | InteractionDataOptionsBoolean | InteractionDataOptionsUser | InteractionDataOptionsChannel | InteractionDataOptionsRole | InteractionDataOptionsMentionable | InteractionDataOptionsNumber;
+
+export interface InteractionDataOptionWithValue<T extends ApplicationCommandOptionTypes, V = unknown> {
+  focused?: boolean;
+  name: string;
+  type: T;
+  value: V;
+}
+
+export interface InteractionDataOptionsSubCommand {
+  name: string;
+  options?: InteractionDataOptions[];
+  type: ApplicationCommandOptionTypes.SubCommand;
+}
+export interface InteractionDataOptionsSubCommandGroup {
+  name: string;
+  options: InteractionDataOptions[];
+  type: ApplicationCommandOptionTypes.SubCommandGroup;
 }

@@ -1,5 +1,5 @@
-export const GATEWAY_VERSION = 9;
-export const REST_VERSION = 9;
+export const GATEWAY_VERSION = 10;
+export const REST_VERSION = 10;
 
 export const ActivityTypes = {
     GAME:      0,
@@ -106,19 +106,19 @@ export const ButtonStyles = {
     LINK:      5
 };
 
-export const ChannelTypes = {
-    GUILD_TEXT:           0,
-    DM:                   1,
-    GUILD_VOICE:          2,
-    GROUP_DM:             3,
-    GUILD_CATEGORY:       4,
-    GUILD_NEWS:           5,
-    GUILD_STORE:          6,
+export enum ChannelTypes {
+    GUILD_TEXT =           0,
+    DM =                   1,
+    GUILD_VOICE =          2,
+    GROUP_DM =             3,
+    GUILD_CATEGORY =       4,
+    GUILD_NEWS =           5,
+    GUILD_STORE =          6,
 
-    GUILD_NEWS_THREAD:    10,
-    GUILD_PUBLIC_THREAD:  11,
-    GUILD_PRIVATE_THREAD: 12,
-    GUILD_STAGE_VOICE:    13, GUILD_STAGE: 13 // [DEPRECATED]
+    GUILD_NEWS_THREAD =    10,
+    GUILD_PUBLIC_THREAD =  11,
+    GUILD_PRIVATE_THREAD = 12,
+    GUILD_STAGE_VOICE =    13, GUILD_STAGE = 13 // [DEPRECATED]
 };
 
 export const ComponentTypes = {

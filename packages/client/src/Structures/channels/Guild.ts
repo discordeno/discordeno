@@ -14,7 +14,7 @@ import Channel from './Channel.js'
 export class GuildChannel extends Channel {
   position: number
   name: string
-  parentID?: BigString | null
+  parentID?: string | null
   guild: Guild
   nsfw: boolean
   permissionOverwrites = new Collection<BigString, PermissionOverwrite>()

@@ -27,7 +27,7 @@ export class TextChannel extends GuildChannel {
   /** The ratelimit of the channel, in seconds. 0 means no ratelimit is enabled */
   rateLimitPerUser: number | null
   /** The ID of the last message in this channel */
-  lastMessageID?: string | null
+  lastMessageID = ""
   /** The timestamp of the last pinned message */
   lastPinTimestamp?: number | null
   /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
@@ -44,7 +44,7 @@ export class TextChannel extends GuildChannel {
 
     this.rateLimitPerUser = data.rate_limit_per_user == null ? null : data.rate_limit_per_user
 
-    this.lastMessageID = data.last_message_id ?? null
+    this.lastMessageID = data.last_message_id ?? ""
     this.lastPinTimestamp = data.last_pin_timestamp ? Date.parse(data.last_pin_timestamp) : null
 
     this.update(data)

@@ -86,19 +86,19 @@ export class Guild extends Base {
   /** The client object */
   client: Client
   /** The id of the guild owner. */
-  ownerID: BigString
+  ownerID: string
   /** The id of the application. */
-  applicationID?: BigString | null
+  applicationID?: string | null
   /** The id of the widget channel. */
-  widgetChannelID?: BigString | null
+  widgetChannelID?: string | null
   /** The afk channel id if one is set. */
-  afkChannelID?: BigString | null
+  afkChannelID?: string | null
   /** The system channel id if one is set. */
-  systemChannelID?: BigString | null
+  systemChannelID?: string | null
   /** The public updates channel id if one is set. */
-  publicUpdatesChannelID?: BigString | null
+  publicUpdatesChannelID?: string | null
   /** The rules channel id if one is set. */
-  rulesChannelID?: BigString | null
+  rulesChannelID?: string | null
   /** The name of the guild. */
   name?: string
   /** The description of the guild. */
@@ -700,7 +700,7 @@ export class Guild extends Base {
   }
 
   /** Get the ban list of the guild */
-  async getBans(options: GetGuildBansOptions): Promise<GuildBan[]> {
+  async getBans(options?: GetGuildBansOptions): Promise<GuildBan[]> {
     return await this.client.getGuildBans.call(this.client, this.id, options)
   }
 
