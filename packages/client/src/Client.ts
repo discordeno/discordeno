@@ -2367,6 +2367,11 @@ export class Client extends EventEmitter {
 export default Client
 
 export interface ClientOptions {
+  /**
+   * @deprecated this property does absolutely nothing. Please delete from ur code. Thanks.
+   * Keeping this only to preserve 1:1 api with eris.
+   */
+  restMode?: boolean;
   /** The default allowed mentions you would like to use. */
   allowedMentions?: AllowedMentions
   /** The default image format you would like to use. */

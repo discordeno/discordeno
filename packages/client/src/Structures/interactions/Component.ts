@@ -15,9 +15,9 @@ import Interaction from './Interaction.js'
 
 export class ComponentInteraction extends Interaction {
   /** The channel id where this interaction occurred in. */
-  channelID: BigString
+  channelID: string
   /** The guild id where this interaction occurred in. */
-  guildID?: BigString
+  guildID?: string
   /** The member object if this interaction occurred in a guild. */
   member?: Member
   /** The user object for the user that created this interaction. */
