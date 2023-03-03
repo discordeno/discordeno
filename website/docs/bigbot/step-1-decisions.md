@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+sidebar_label: Step 1 - Decisions
 ---
 
 # Decisions To Make Before Continuing
