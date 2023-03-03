@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/return-await */
 /* eslint-disable no-useless-call */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import type { BigString, DiscordInteraction, DiscordInteractionData } from '@discordeno/types'
+import type { DiscordInteraction, DiscordInteractionData } from '@discordeno/types'
 import { InteractionResponseTypes } from '@discordeno/types'
 import type Client from '../../Client.js'
 import type { ApplicationCommandOptionChoice } from '../../typings.js'
@@ -16,11 +16,11 @@ import Interaction from './Interaction.js'
 
 export class AutocompleteInteraction extends Interaction {
   /** The guild id if this interaction occurred in a guild. */
-  guildID?: BigString
+  guildID?: string
   /** The permissions the app or bot has within the channel, the interaction was sent from. */
   appPermissions?: Permission
   /** The channel id where this interaction was created in. */
-  channelID: BigString
+  channelID: string
   /** The user who triggered the interaction. */
   user: User
   /** The data attached to this interaction. */

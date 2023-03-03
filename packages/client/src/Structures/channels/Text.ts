@@ -13,6 +13,7 @@ import type {
   GetMessageReactionOptions,
   ListedChannelThreads,
   MessageContent,
+  MessageContentEdit,
   PurgeChannelOptions,
 } from '../../typings.js'
 import type Invite from '../Invite.js'
@@ -27,7 +28,7 @@ export class TextChannel extends GuildChannel {
   /** The ratelimit of the channel, in seconds. 0 means no ratelimit is enabled */
   rateLimitPerUser: number | null
   /** The ID of the last message in this channel */
-  lastMessageID?: string | null
+  lastMessageID = ""
   /** The timestamp of the last pinned message */
   lastPinTimestamp?: number | null
   /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
@@ -44,7 +45,7 @@ export class TextChannel extends GuildChannel {
 
     this.rateLimitPerUser = data.rate_limit_per_user == null ? null : data.rate_limit_per_user
 
-    this.lastMessageID = data.last_message_id ?? null
+    this.lastMessageID = data.last_message_id ?? ""
     this.lastPinTimestamp = data.last_pin_timestamp ? Date.parse(data.last_pin_timestamp) : null
 
     this.update(data)
@@ -204,7 +205,7 @@ export class TextChannel extends GuildChannel {
    * @arg {Number} [content.flags] A number representing the flags to apply to the message. See [the official Discord API documentation entry](https://discord.com/developers/docs/resources/channel#message-object-message-flags) for flags reference
    * @returns {Promise<Message>}
    */
-  async editMessage(messageID: string, content: string) {
+  async editMessage(messageID: string, content: MessageContentEdit) {
     return this.client.editMessage.call(this.client, this.id, messageID, content)
   }
 

@@ -608,7 +608,12 @@ export class Shard extends EventEmitter {
           this.emit('messageUpdate', packet, null)
           break
         }
-        this.emit('messageUpdate', channel.messages.update(new Message(packet, this.client)), oldMessage)
+
+        const msg = message ?? new Message(packet, this.client)
+        if (message) message.update(packet)
+        else channel.messages.set(msg.id, msg)
+
+        this.emit('messageUpdate', msg, oldMessage)
         break
       }
       case 'MESSAGE_DELETE': {

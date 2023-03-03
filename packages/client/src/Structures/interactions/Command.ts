@@ -23,6 +23,7 @@ import type {
 import type Client from '../../Client.js'
 import type { AnyChannel, FileContent, InteractionContent, InteractionContentEdit } from '../../typings.js'
 export class CommandInteraction extends Interaction {
+  name: string = "";
   channel: AnyChannel
   /** The type of component */
   componentType?: MessageComponentTypes
@@ -131,6 +132,7 @@ export class CommandInteraction extends Interaction {
     this.client.users.set(this.user.id, this.user)
 
     if (info.data) {
+      this.name = info.data.name;
       this.componentType = info.data.component_type
       this.customId = info.data.custom_id
       this.components = info.data.components
@@ -143,6 +145,7 @@ export class CommandInteraction extends Interaction {
 
   get data() {
     return {
+      name: this.name,
       component_type: this.componentType,
       custom_id: this.customId,
       components: this.components,
