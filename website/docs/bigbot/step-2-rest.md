@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+sidebar_label: Step 2 - REST
 ---
 
 # Proxy REST
@@ -43,7 +44,7 @@ dotenv.config()
 
 import { REST } from './rest.ts'
 
-const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION as string
+const AUTHORIZATION = process.env.AUTHORIZATION as string
 
 const app = express()
 
@@ -56,7 +57,7 @@ app.use(
 app.use(express.json())
 
 app.all('/*', async (req, res) => {
-  if (!REST_AUTHORIZATION || REST_AUTHORIZATION !== req.headers.authorization) {
+  if (!AUTHORIZATION || AUTHORIZATION !== req.headers.authorization) {
     return res.status(401).json({ error: 'Invalid authorization key.' })
   }
 
