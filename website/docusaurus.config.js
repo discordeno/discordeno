@@ -11,7 +11,7 @@ const config = {
   favicon: 'img/favicon.png',
 
   // Set the production url of your site here
-  url: 'https://discordeno.mod.land',
+  url: 'https://discordeno.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/discordeno/',
@@ -132,24 +132,24 @@ const config = {
       },
     }),
 
-    plugins: [
-      [
-        require.resolve("@easyops-cn/docusaurus-search-local"),
-        {
-          indexDocs: true,
-          indexPages: true,
-          docsRouteBasePath: ["/docs", "/tutorial"],
-          language: ["en"],
-          hashed: true,
-          docsDir: ["docs", "tutorial"],
-          blogDir: [],
-          removeDefaultStopWordFilter: true,
-          highlightSearchTermsOnTargetPage: true,
-          searchResultLimits: 8,
-          searchResultContextMaxLength: 50,
-        },
-      ],
-    ]
+  plugins: [
+    [
+      require.resolve('@easyops-cn/docusaurus-search-local'),
+      {
+        indexDocs: true,
+        indexPages: true,
+        docsRouteBasePath: ['/docs', '/tutorial'],
+        language: ['en'],
+        hashed: true,
+        docsDir: ['docs', 'tutorial'],
+        blogDir: [],
+        removeDefaultStopWordFilter: true,
+        highlightSearchTermsOnTargetPage: true,
+        searchResultLimits: 8,
+        searchResultContextMaxLength: 50,
+      },
+    ],
+  ],
 }
 
 module.exports = config

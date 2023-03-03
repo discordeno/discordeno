@@ -5,6 +5,6 @@
 This repo is meant as a template which you can use to create a Discord bot very easily using the
 [Discordeno library](https://github.com/discordeno/discordeno).
 
-[Website/Guide](https://discordeno.mod.land/)
+[Website/Guide](https://discordeno.github.io/discordeno//)
 
 [Discord Server](https://discord.com/invite/5vBgXk3UcZ)
