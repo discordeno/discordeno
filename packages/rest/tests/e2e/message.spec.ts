@@ -40,6 +40,36 @@ describe('[rest] Message related tests', () => {
     })
   })
 
+  describe('Managing reactions', async () => {
+    it('Should add a unicode reaction', async () => {
+      const message = await rest.sendMessage('1041029705790402611', { content: 'testing rate limit manager' })
+
+      await rest.addReaction(message.channelId, message.id, '📙')
+      const reacted = await rest.getMessage(message.channelId, message.id)
+      expect(reacted.reactions?.length).to.be.greaterThanOrEqual(1)
+
+      it('Should delete a unicode reaction', async () => {
+        await rest.deleteOwnReaction(message.channelId, message.id, '📙')
+        const reacted = await rest.getMessage(message.channelId, message.id)
+        expect(reacted.reactions?.length).to.be.equal(0)
+      })
+    })
+
+    // it('Should add a custom reaction', async () => {
+    //   const message = await rest.sendMessage('1041029705790402611', { content: 'testing rate limit manager' })
+
+    //   await rest.addReaction(message.channelId, message.id, '<:discordeno:785403373817823272>')
+    //   const reacted = await rest.getMessage(message.channelId, message.id)
+    //   expect(reacted.reactions?.length).to.be.greaterThanOrEqual(1)
+
+    //   it('Should delete a custom reaction', async () => {
+    //     await rest.deleteOwnReaction(message.channelId, message.id, '<:discordeno:785403373817823272>')
+    //     const reacted = await rest.getMessage(message.channelId, message.id)
+    //     expect(reacted.reactions?.length).to.be.equal(0)
+    //   })
+    // })
+  })
+
   describe('Rate limit manager testing', () => {
     it('Send 10 messages to 1 channel', async () => {
       await Promise.all(
