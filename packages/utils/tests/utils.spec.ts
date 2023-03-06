@@ -1,8 +1,7 @@
 import { expect } from 'chai'
 import { afterEach, beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
-import { delay } from '../src/utils.js'
-import { formatImageUrl } from '../src/images.js'
+import { delay, hasProperty } from '../src/utils.js'
 
 describe('utils.ts', () => {
   let clock: sinon.SinonFakeTimers
@@ -16,22 +15,29 @@ describe('utils.ts', () => {
     clock.restore()
   })
 
-  it('will', async () => {
-    let delayEnded = false
-    delay(31).then(() => {
-      delayEnded = true
+  describe('delay function', () => {
+    it('will delay/sleep for given time', async () => {
+      let delayEnded = false
+      delay(31).then(() => {
+        delayEnded = true
+      })
+      expect(delayEnded).to.be.false
+      await clock.tickAsync(30)
+      expect(delayEnded).to.be.false
+      await clock.tickAsync(31)
+      expect(delayEnded).to.be.true
     })
-    expect(delayEnded).to.be.false
-    await clock.tickAsync(30)
-    expect(delayEnded).to.be.false
-    await clock.tickAsync(31)
-    expect(delayEnded).to.be.true
   })
-})
 
-it('[utils] format image url', () => {
-  expect(formatImageUrl('https://skillz.is.pro')).to.be.equal('https://skillz.is.pro.jpg?size=128')
-  expect(formatImageUrl('https://skillz.is.pro', 1024)).to.be.equal('https://skillz.is.pro.jpg?size=1024')
-  expect(formatImageUrl('https://skillz.is.pro', 1024, 'gif')).to.be.equal('https://skillz.is.pro.gif?size=1024')
-  expect(formatImageUrl('https://skillz.is.pro', undefined, 'gif')).to.be.equal('https://skillz.is.pro.gif?size=128')
+  describe('hasProperty funciton', async () => {
+    const obj = { prop: 'lts372005' }
+
+    it('will return true if it does have property', () => {
+      expect(hasProperty(obj, 'prop')).equal(true)
+    })
+
+    it('will return false if it does not have property', () => {
+      expect(hasProperty(obj, 'lts372005')).equal(false)
+    })
+  })
 })

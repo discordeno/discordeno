@@ -107,7 +107,7 @@ export function nextRefill(bucket: LeakyBucket): number {
   // Since this bucket is lazy update the tokens before calculating the next refill.
   updateTokens(bucket)
 
-  return performance.now() - bucket.lastRefill + bucket.refillInterval
+  return bucket.refillInterval - performance.now() + bucket.lastRefill
 }
 
 export async function acquire(bucket: LeakyBucket, amount: number, highPriority = false): Promise<void> {
