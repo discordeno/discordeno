@@ -9,4 +9,5 @@ jobs:
     name: Benchmark
     runs-on: ubuntu-latest
     steps:
-      - run: lscpu | sed -nr '/Model name/ s/.*:\s*(.*) @ .*/\1/p'
+      - uses: actions/checkout@v3
+      - run: ./scripts/checkCpuModel.sh
