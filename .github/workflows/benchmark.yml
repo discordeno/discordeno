@@ -1,0 +1,12 @@
+name: Benchmark
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  benchmark:
+    name: Benchmark
+    runs-on: ubuntu-latest
+    steps:
+      - run: lscpu | sed -nr '/Model name/ s/.*:\s*(.*) @ .*/\1/p'
