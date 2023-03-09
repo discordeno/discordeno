@@ -5,7 +5,7 @@ sidebar_label: Step 3 - Gateway
 
 # Standalone Gateway
 
-Sweet, it is time to start our gateway code. By now, you should have already built your rest process, as we will need it shortly.
+Sweet, it is time to start our gateway code. By now, you should have already built your rest process, as we will need it shortly. The gateway portion is the hardest and most complex part of making a bot. This is where most of your time will be spent to optimize your setup.
 
 ## Understanding The Concepts
 
@@ -116,11 +116,13 @@ Now, let's go ahead and set up the server where we will receive this and start a
 Just like before, we are going to make another http listener to listen for incoming events and delegate them outwords. Make a file called `services/gateway/sharding/index.ts`
 
 ```ts
-import { DiscordenoShard } from '@discordeno/gateway'
-import events from './events.js'
-import dotenv from 'dotenv'
-import express from 'express'
-dotenv.config()
+import { DiscordenoShard } from '@discordeno/gateway';
+import { logger } from '@discordeno/utils';
+import { Intents } from '@discordeno/types';
+import events from './events.js';
+import dotenv from 'dotenv';
+import express from 'express';
+dotenv.config();
 
 const AUTHORIZATION = process.env.AUTHORIZATION as string
 const SHARDS = new Collection<number, DiscordenoShard>()
@@ -144,23 +146,21 @@ app.all('/*', async (req, res) => {
     // Identify A Shard
     switch (req.body.type) {
       case 'IDENTIFY_SHARD': {
-        logger.info(`[Shard] identifying ${SHARDS.has(req.body.shardId) ? 'existing' : 'new'} shard (${shardId})`)
-        const shard =
-          SHARDS.get(req.body.shardId) ??
-          new DiscordenoShard({
-            id: shardId,
-            connection: {
-              compress: this.compress,
-              intents: this.intents,
-              properties: this.properties,
-              token: this.token,
-              totalShards: this.totalShards,
-              url: this.url,
-              version: this.version,
-            },
-            // TODO: Enable this in the next portion of the guide.
-            // events,
-          })
+        logger.info(`[Shard] identifying ${SHARDS.has(req.body.shardId) ? 'existing' : 'new'} shard (${shardId})`);
+        const shard = SHARDS.get(req.body.shardId) ?? new DiscordenoShard({
+          id: shardId,
+          connection: {
+            compress: req.body.compress,
+            intents: req.body.intents,
+            properties: req.body.properties,
+            token: req.body.token,
+            totalShards: req.body.totalShards,
+            url: req.body.url,
+            version: req.body.version,
+          },
+          // TODO: Enable this in the next portion of the guide.
+          // events,
+        });
 
         SHARDS.set(shard.id, shard)
         await shard.identify()
