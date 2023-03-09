@@ -3,6 +3,8 @@ name: Discordeno Test
 on:
   pull_request:
   push:
+    branches:
+      - "main"
 
 jobs:
   build-type-and-test:
