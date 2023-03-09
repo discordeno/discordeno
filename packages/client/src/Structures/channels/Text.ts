@@ -13,6 +13,7 @@ import type {
   GetMessageReactionOptions,
   ListedChannelThreads,
   MessageContent,
+  MessageContentEdit,
   PurgeChannelOptions,
 } from '../../typings.js'
 import type Invite from '../Invite.js'
@@ -204,7 +205,7 @@ export class TextChannel extends GuildChannel {
    * @arg {Number} [content.flags] A number representing the flags to apply to the message. See [the official Discord API documentation entry](https://discord.com/developers/docs/resources/channel#message-object-message-flags) for flags reference
    * @returns {Promise<Message>}
    */
-  async editMessage(messageID: string, content: string) {
+  async editMessage(messageID: string, content: MessageContentEdit) {
     return this.client.editMessage.call(this.client, this.id, messageID, content)
   }
 

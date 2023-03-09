@@ -187,4 +187,3 @@ app.listen(process.env.SHARD_SERVER_PORT, () => {
 This gives us a http listener, that processes incoming requests and verifies that these requests are authorized. Any authorized request then gets put in a switch case which will handle the request as needed. In this case, we were building support for, **identifying** our shards.
 
 In the code above, we left a *// TODO:*. This was to keep the code above minimal not to cause confusion for understanding it. Now let's start, making shard event handlers so we can forward the events discord sends to our event listener process(bot). Start by making a file like `
-

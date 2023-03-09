@@ -18,6 +18,8 @@ export class GuildChannel extends Channel {
   guild: Guild
   nsfw: boolean
   permissionOverwrites = new Collection<BigString, PermissionOverwrite>()
+  /** The RTC region ID of the channel (automatic if `null`) (guild voice channels only) */
+  rtcRegion: string | null = null
 
   constructor(data: DiscordChannel, client: Client) {
     super(data, client)

@@ -3,7 +3,7 @@
   "display": "Default",
   "compilerOptions": {
     "target": "es2022",
-    "module": "ESNext",
+    "module": "es2022",
     "composite": false,
     "declaration": true,
     "declarationMap": true,
