@@ -16,4 +16,27 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      - run: node ./scripts/checkCpuModel.js
+      - name: Check cpu model
+        run: node ./scripts/checkCpuModel.js
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - run: yarn install --immutable
+      - name: Build
+        run: yarn build
+
+        #
+      - name: Download db from benchmark repo
+        run: wget https://github.com/discordeno/benchmarks/raw/main/db.tar.gz
+      - name: Decompress db
+        run: tar -xzvf db.tar.gz
+
+      - name: Benchmark
+        run: node ./packages/benchmark/dist/index.js

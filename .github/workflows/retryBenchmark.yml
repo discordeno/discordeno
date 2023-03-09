@@ -1,4 +1,4 @@
-name: Benchmark
+name: Benchmark with retry
 
 on:
   pull_request:
@@ -6,65 +6,29 @@ on:
 
 jobs:
   benchmark-try-1:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - run: node ./scripts/checkCpuModel.js
+    uses: ./.github/workflows/benchmark.yml
 
   benchmark-try-2:
     needs: benchmark-try-1
     if: ${{ always() && needs.benchmark-try-1.result == 'failure' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - run: node ./scripts/checkCpuModel.js
+    uses: ./.github/workflows/benchmark.yml
 
   benchmark-try-3:
     needs: benchmark-try-2
     if: ${{ always() && needs.benchmark-try-2.result == 'failure' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - run: node ./scripts/checkCpuModel.js
+    uses: ./.github/workflows/benchmark.yml
 
   benchmark-try-4:
     needs: benchmark-try-3
     if: ${{ always() && needs.benchmark-try-3.result == 'failure' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - run: node ./scripts/checkCpuModel.js
+    uses: ./.github/workflows/benchmark.yml
 
   benchmark-try-5:
     needs: benchmark-try-4
     if: ${{ always() && needs.benchmark-try-4.result == 'failure' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - run: node ./scripts/checkCpuModel.js
+    uses: ./.github/workflows/benchmark.yml
 
   benchmark-try-6:
     needs: benchmark-try-5
     if: ${{ always() && needs.benchmark-try-5.result == 'failure' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - run: node ./scripts/checkCpuModel.js
+    uses: ./.github/workflows/benchmark.yml
