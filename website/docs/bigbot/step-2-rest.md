@@ -194,3 +194,15 @@ catch (error: any) {
 Now you will be able to take this data and implement it into Grafana. In a future time, if possible, we will add more detailed guide on how to setup grafana. But for now, you can follow this guide:
 
 [Grafana + Influx](https://grafana.com/docs/grafana/latest/getting-started/get-started-grafana-influxdb/)
+
+### Multiple Custom Bot Proxy Rest
+
+For bot's that allow servers to buy custom bot's, you can create a separate manager for each bot's token/authorization. As a request comes in, either get a cached rest manager or create one if none exists in cache. You can add them to a Collection where the authorization or token is provided in the request, you can dynamically create rest managers for each bot token. This way each bot can handle their own requests in their own queues.
+
+:::caution
+Having multiple bot's sending requests from one source will impact your global rate limit due to the global ip rate limit.
+:::
+
+### Evals
+
+One of the last things we should do, is make it possible to run commands on this process. To do this, we simply create a small bot on this process with an eval command that listens for our messages only on our developer server. This way we can dynamically update any properties we may need to. For example, if discord updates the API version, we can easily switch the api version with a simple command.
