@@ -5,7 +5,7 @@ sidebar_label: Step 3 - Gateway
 
 # Standalone Gateway
 
-Sweet, it is time to start our gateway code. By now, you should have already built your rest process, as we will need it shortly.
+Sweet, it is time to start our gateway code. By now, you should have already built your rest process, as we will need it shortly. The gateway portion is the hardest and most complex part of making a bot. This is where most of your time will be spent to optimize your setup.
 
 ## Understanding The Concepts
 
@@ -116,6 +116,8 @@ Just like before, we are going to make another http listener to listen for incom
 
 ```ts
 import { DiscordenoShard } from '@discordeno/gateway';
+import { logger } from '@discordeno/utils';
+import { Intents } from '@discordeno/types';
 import events from './events.js';
 import dotenv from 'dotenv';
 import express from 'express';
@@ -147,8 +149,8 @@ app.all('/*', async (req, res) => {
         const shard = SHARDS.get(req.body.shardId) ?? new DiscordenoShard({
           id: shardId,
           connection: {
-            compress: this.compress,
-            intents: this.intents,
+            compress: false,
+            intents: Intents.Guilds | Intents.GuildMessages,
             properties: this.properties,
             token: this.token,
             totalShards: this.totalShards,
@@ -181,3 +183,7 @@ app.listen(process.env.SHARD_SERVER_PORT, () => {
   console.log(`Listening at ${process.env.SERVER_URL}`)
 })
 ```
+
+This gives us a http listener, that processes incoming requests and verifies that these requests are authorized. Any authorized request then gets put in a switch case which will handle the request as needed. In this case, we were building support for, **identifying** our shards.
+
+In the code above, we left a *// TODO:*. This was to keep the code above minimal not to cause confusion for understanding it. Now let's start, making shard event handlers so we can forward the events discord sends to our event listener process(bot). Start by making a file like `
