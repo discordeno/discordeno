@@ -16,7 +16,7 @@ jobs:
 
   benchmark-try-2:
     needs: benchmark-try-1
-    if: ${{ always() && needs.benchmark-try-1.result == 'failure') }}
+    if: ${{ always() && needs.benchmark-try-1.result == 'failure' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -27,7 +27,7 @@ jobs:
 
   benchmark-try-3:
     needs: benchmark-try-2
-    if: ${{ always() && needs.benchmark-try-2.result == 'failure') }}
+    if: ${{ always() && needs.benchmark-try-2.result == 'failure' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -37,8 +37,8 @@ jobs:
       - run: node ./scripts/checkCpuModel.js
 
   benchmark-try-4:
-    needs: benchmark-try-1
-    if: ${{ always() && needs.benchmark-try-3.result == 'failure') }}
+    needs: benchmark-try-3
+    if: ${{ always() && needs.benchmark-try-3.result == 'failure' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -48,8 +48,8 @@ jobs:
       - run: node ./scripts/checkCpuModel.js
 
   benchmark-try-5:
-    needs: benchmark-try-1
-    if: ${{ always() && needs.benchmark-try-4.result == 'failure') }}
+    needs: benchmark-try-4
+    if: ${{ always() && needs.benchmark-try-4.result == 'failure' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -59,8 +59,8 @@ jobs:
       - run: node ./scripts/checkCpuModel.js
 
   benchmark-try-6:
-    needs: benchmark-try-1
-    if: ${{ always() && needs.benchmark-try-5.result == 'failure') }}
+    needs: benchmark-try-5
+    if: ${{ always() && needs.benchmark-try-5.result == 'failure' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
