@@ -2,10 +2,6 @@ name: Benchmark
 
 on:
   workflow_call:
-    inputs:
-      package:
-        required: true
-        type: string
 
 jobs:
   benchmark:
