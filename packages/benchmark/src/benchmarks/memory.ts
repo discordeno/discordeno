@@ -51,6 +51,7 @@ async function memoryBenchmarks(
     results.loaded = process.memoryUsage()
 
     events.forEach((event) => {
+      if (!event.payload.t) return
       bot.events[
         event.payload.t.toLowerCase().replace(/_([a-z])/g, function (g) {
           return g[1].toUpperCase()
