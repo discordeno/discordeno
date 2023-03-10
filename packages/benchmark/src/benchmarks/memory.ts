@@ -51,7 +51,11 @@ async function memoryBenchmarks(
     results.loaded = process.memoryUsage()
 
     events.forEach((event) => {
-      bot.handlers[event.payload.t]?.(bot, event.payload, event.shardId)
+      bot.events[
+        event.t.toLowerCase().replace(/_([a-z])/g, function (g) {
+          return g[1].toUpperCase()
+        })
+      ]?.(event.d, {})
     })
 
     if (options.log) {
