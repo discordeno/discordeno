@@ -52,10 +52,10 @@ async function memoryBenchmarks(
 
     events.forEach((event) => {
       bot.events[
-        event.t.toLowerCase().replace(/_([a-z])/g, function (g) {
+        event.payload.t.toLowerCase().replace(/_([a-z])/g, function (g) {
           return g[1].toUpperCase()
         })
-      ]?.(event.d, {})
+      ]?.(event.payload.d, {})
     })
 
     if (options.log) {
