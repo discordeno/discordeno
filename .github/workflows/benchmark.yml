@@ -22,30 +22,30 @@ jobs:
         run: node ./scripts/checkCpuModel.js
 
       - name: Get yarn cache directory path
-        if: ${{ steps.cpuCheck.outputs.match == "true" }}
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
       - uses: actions/cache@v3
-        if: ${{ steps.cpuCheck.outputs.match == "true" }}
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
       - run: yarn install --immutable
-        if: ${{ steps.cpuCheck.outputs.match == "true" }}
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
       - name: Build
-        if: ${{ steps.cpuCheck.outputs.match == "true" }}
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         run: yarn build
 
         #
       - name: Download db from benchmark repo
-        if: ${{ steps.cpuCheck.outputs.match == "true" }}
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         run: wget https://github.com/discordeno/benchmarks/raw/main/db.tar.gz
       - name: Decompress db
-        if: ${{ steps.cpuCheck.outputs.match == "true" }}
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         run: tar -xzvf db.tar.gz
 
       - name: Benchmark
-        if: ${{ steps.cpuCheck.outputs.match == "true" }}
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         run: node ./packages/benchmark/dist/index.js
