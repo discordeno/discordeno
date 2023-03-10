@@ -48,4 +48,4 @@ jobs:
 
       - name: Benchmark
         if: ${{ steps.cpuCheck.outputs.match == 'true' }}
-        run: node ./packages/benchmark/dist/index.js
+        run: node --expose-gc ./packages/benchmark/dist/index.js
