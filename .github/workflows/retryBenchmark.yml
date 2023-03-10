@@ -10,25 +10,25 @@ jobs:
 
   benchmark-try-2:
     needs: benchmark-try-1
-    if: ${{ always() && needs.benchmark-try-1.result == 'failure' }}
+    if: ${{ needs.benchmark-try-1.outputs.cpuMatch == 'false' }}
     uses: ./.github/workflows/benchmark.yml
 
   benchmark-try-3:
     needs: benchmark-try-2
-    if: ${{ always() && needs.benchmark-try-2.result == 'failure' }}
+    if: ${{ needs.benchmark-try-2.outputs.cpuMatch == 'false' }}
     uses: ./.github/workflows/benchmark.yml
 
   benchmark-try-4:
     needs: benchmark-try-3
-    if: ${{ always() && needs.benchmark-try-3.result == 'failure' }}
+    if: ${{ needs.benchmark-try-3.outputs.cpuMatch == 'false' }}
     uses: ./.github/workflows/benchmark.yml
 
   benchmark-try-5:
     needs: benchmark-try-4
-    if: ${{ always() && needs.benchmark-try-4.result == 'failure' }}
+    if: ${{ needs.benchmark-try-4.outputs.cpuMatch == 'false' }}
     uses: ./.github/workflows/benchmark.yml
 
   benchmark-try-6:
     needs: benchmark-try-5
-    if: ${{ always() && needs.benchmark-try-5.result == 'failure' }}
+    if: ${{ needs.benchmark-try-5.outputs.cpuMatch == 'false' }}
     uses: ./.github/workflows/benchmark.yml

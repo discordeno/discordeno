@@ -6,4 +6,4 @@ const targetCpu = await fetch('https://raw.githubusercontent.com/discordeno/disc
   .then((text) => text.slice(0, -1))
 console.dir(`host cpu: ${hostCpu} target cpu: ${targetCpu}`)
 
-if (hostCpu !== targetCpu) process.exit(1)
+process.env.match = hostCpu === targetCpu

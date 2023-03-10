@@ -7,6 +7,8 @@ const camelizedEvents: any[] = []
 
 const files = await fs.readdir('db/events')
 
+console.log('Start reading events')
+console.time('read db')
 await Promise.all(
   files.map(async (file) => {
     const eventsInFile = Object.values(await fs.readFile(`db/events/${file}`, 'utf8').then((text) => JSON.parse(text)))
@@ -16,6 +18,7 @@ await Promise.all(
     })
   }),
 )
+console.timeEnd('read db')
 
 events.forEach((event) => {
   camelizedEvents.push(camelize(event))
