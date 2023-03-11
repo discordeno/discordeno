@@ -8,7 +8,7 @@ async function memoryBenchmarks(
   options: { times: number; log: boolean; table: boolean } = {
     times: 3,
     log: false,
-    table: true,
+    table: false,
   },
 ) {
   let gcEnable = false
@@ -212,7 +212,7 @@ for (const resultKey of Object.keys(results.Cached) as Array<keyof typeof result
   console.log(
     `[Cache Plugin] ${resultKey.toString()} x ${results.Cached[resultKey].value} MB ±${
       (Math.max(Math.round((results.Cached[resultKey].min / results.Cached[resultKey].value) * 100) / 100),
-      Math.round((results.Cached[resultKey].max / results.Cached[resultKey].value) * 100) / 100)
+      Math.round((results.Cached[resultKey].max / results.Cached[resultKey].value) * 100) / 100) || 0
     }% (3 runs sampled)`,
   )
 }
