@@ -172,9 +172,6 @@ export class DiscordenoShard {
       await this.connect()
     }
 
-    // Wait until an identify is free for this this.
-    await this.requestIdentify()
-
     this.send(
       {
         op: GatewayOpcodes.Identify,
@@ -426,7 +423,7 @@ export class DiscordenoShard {
 
         // When resumable is false we need to re-identify
         if (!resumable) {
-          await this.identify()
+          await this.requestIdentify()
 
           break
         }

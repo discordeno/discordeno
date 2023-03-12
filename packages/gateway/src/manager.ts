@@ -164,8 +164,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           },
           events: options.events,
           requestIdentify: async () => {
-            // TODO: remove this entire concept, its much easier to do in reality.
-            // await gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.leak.acquire(shardId)
+            return await gateway.identify(shardId);
           },
           shardIsReady: async () => {
             logger.debug(`[Shard] Shard #${shardId} is ready`)
