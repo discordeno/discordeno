@@ -9,7 +9,7 @@ export class LeakyBucket implements LeakyBucketOptions {
   /** The amount of requests that have been used up already. */
   used: number = 0
   /** The queue of requests to acquire an available request. Mapped by <shardId, resolve()> */
-  queue: Map<number, (value: void | PromiseLike<void>) => void> = new Map()
+  queue: Array<{ shardId: number; resolve: (value: void | PromiseLike<void>) => void }> = []
   /** Whether or not the queue is already processing. */
   processing: boolean = false
   /** The timeout id for the timer to reduce the used amount by the refill amount.  */
@@ -42,7 +42,7 @@ export class LeakyBucket implements LeakyBucketOptions {
       if (this.remaining) {
         logger.debug(`[LeakyBucket] Processing queue. Remaining: ${this.remaining} Length: ${this.queue.length}`)
         // Resolves the promise allowing the paused execution of this request to resolve and continue.
-        this.queue.shift()?.()
+        this.queue.shift()?.resolve()
         // A request can be made
         this.used++
 
@@ -74,16 +74,16 @@ export class LeakyBucket implements LeakyBucketOptions {
     }
 
     // Loop has ended mark false so it can restart later when needed
-    this.processing = false;
+    this.processing = false
   }
 
   /** Pauses the execution until the request is available to be made. */
-  async acquire(highPriority?: boolean): Promise<void> {
+  async acquire(shardId: number, highPriority?: boolean): Promise<void> {
     return await new Promise((resolve) => {
       // High priority requests get added to the start of the queue
-      if (highPriority) this.queue.unshift(resolve)
+      if (highPriority) this.queue.unshift({ shardId, resolve })
       // All other requests get pushed to the end.
-      else this.queue.push(resolve)
+      else this.queue.push({ shardId, resolve })
 
       // Each request should trigger the queue to be processesd.
       void this.processQueue()

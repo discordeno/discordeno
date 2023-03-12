@@ -1,5 +1,5 @@
 import type { AtLeastOne, BigString, Camelize, DiscordGetGatewayBot, DiscordMember, RequestGuildMembers } from '@discordeno/types'
-import { Collection, delay, LeakyBucket, logger } from '@discordeno/utils'
+import { Collection, delay, logger } from '@discordeno/utils'
 import Shard from './Shard.js'
 import type { ShardEvents, StatusUpdate, UpdateVoiceState } from './types.js'
 
@@ -82,9 +82,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         logger.debug(`[Gateway] Preparing buckets for concurrency: ${i}`)
         gateway.buckets.set(i, {
           workers: [],
-          leak: new LeakyBucket({
-            refillInterval: gateway.spawnShardDelay,
-          }),
+          identifyRequests: [],
         })
       }
 
@@ -159,17 +157,30 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           },
           events: options.events,
           requestIdentify: async () => {
-            await gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.leak.acquire()
+            // TODO: remove this entire concept, its much easier to do in reality.
+            // await gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.leak.acquire(shardId)
+          },
+          shardIsReady: async () => {
+            logger.debug(`[Shard] Shard #${shardId} is ready`)
+            await delay(gateway.spawnShardDelay)
+            logger.debug(`[Shard] Resolving shard identify request`)
+            gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.identifyRequests.shift()?.()
           },
         })
 
         this.shards.set(shardId, shard)
       }
 
-      logger.debug(`[Gateway] requesting to identify shard #(${shardId}) from bucket.`)
-      await gateway.requestIdentify(shard.id)
-      logger.debug(`[Gateway] Identify request successful for shard #(${shardId}).`)
-      return await shard.identify()
+      const bucket = gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)
+      if (!bucket) return
+
+      return await new Promise((resolve) => {
+        // Mark that we are making an identify request so another is not made.
+        bucket.identifyRequests.push(resolve)
+        logger.debug(`[Gateway] identifying shard #(${shardId}).`)
+        // This will trigger identify and when READY is received it will resolve the above request.
+        shard?.identify()
+      })
     },
     async kill(shardId: number) {
       const shard = this.shards.get(shardId)
@@ -184,7 +195,12 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
     async requestIdentify(shardId: number) {
       logger.debug(`[Gateway] requesting identify`)
-      await gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.leak.acquire()
+      const bucket = gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)
+      if (!bucket) return
+
+      return await new Promise((resolve) => {
+        bucket.identifyRequests.push(resolve)
+      })
     },
 
     // Helpers methods below this
@@ -353,7 +369,8 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
     number,
     {
       workers: Array<{ id: number; queue: number[] }>
-      leak: LeakyBucket
+      /** Requests to identify shards are made based on whether it is available to be made. */
+      identifyRequests: Array<(value: void | PromiseLike<void>) => void>
     }
   >
   /** The shards that are created. */
@@ -374,7 +391,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
   identify: (shardId: number) => Promise<void>
   /** Kill a shard. Close a shards connection to Discord's gateway (if any) and remove it from the manager. */
   kill: (shardId: number) => Promise<void>
-  /** This function communicates with the parent manager, in order to know whether this manager is allowed to identify a new shard. */
+  /** This function makes sure that the bucket is allowed to make the next identify request. */
   requestIdentify: (shardId: number) => Promise<void>
   /** Calculates the number of shards based on the guild id and total shards. */
   calculateShardId: (guildId: BigString, totalShards?: number) => number

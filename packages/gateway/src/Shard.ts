@@ -6,10 +6,10 @@ import type {
   DiscordHello,
   DiscordMember,
   DiscordReady,
-  RequestGuildMembers
+  RequestGuildMembers,
 } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayIntents, GatewayOpcodes } from '@discordeno/types'
-import { camelize, Collection, delay, LeakyBucket, logger } from '@discordeno/utils'
+import { Collection, LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
 import { inflateSync } from 'node:zlib'
 import WebSocket from 'ws'
 import type { RequestMemberRequest } from './manager.js'
@@ -70,6 +70,7 @@ export class DiscordenoShard {
     }
 
     if (options.requestIdentify) this.requestIdentify = options.requestIdentify
+    if (options.shardIsReady) this.shardIsReady = options.shardIsReady
 
     this.bucket = new LeakyBucket({
       max: this.calculateSafeRequests(),
@@ -192,6 +193,8 @@ export class DiscordenoShard {
     return await new Promise((resolve) => {
       this.resolves.set('READY', () => {
         this.events.identified?.(this)
+        // Tells the manager that this shard is ready
+        this.shardIsReady();
         resolve()
       })
       // When identifying too fast,
@@ -267,7 +270,7 @@ export class DiscordenoShard {
     // Else bucket and token wait time just get wasted.
     await this.checkOffline(highPriority)
 
-    await this.bucket.acquire(highPriority)
+    await this.bucket.acquire(this.id, highPriority)
 
     // It's possible, that the shard went offline after a token has been acquired from the bucket.
     await this.checkOffline(highPriority)
@@ -378,7 +381,7 @@ export class DiscordenoShard {
         this.startHeartbeating(interval)
 
         if (this.state !== ShardState.Resuming) {
-          const currentQueue = [...this.bucket.queue];
+          const currentQueue = [...this.bucket.queue]
           // HELLO has been send on a non resume action.
           // This means that the shard starts a new session,
           // therefore the rate limit interval has been reset too.
@@ -389,7 +392,7 @@ export class DiscordenoShard {
           })
 
           // Queue should not be lost on a re-identify.
-          this.bucket.queue.unshift(...currentQueue);
+          this.bucket.queue.unshift(...currentQueue)
         }
 
         this.events.hello?.(this)
@@ -506,6 +509,9 @@ export class DiscordenoShard {
 
   /** This function communicates with the management process, in order to know whether its free to identify. When this function resolves, this means that the shard is allowed to send an identify payload to discord. */
   async requestIdentify(): Promise<void> {}
+
+  /** This function communicates with the management process, in order to tell it can identify the next shard. */
+  async shardIsReady(): Promise<void> {}
 
   /** Start sending heartbeat payloads to Discord in the provided interval. */
   startHeartbeating(interval: number): void {
@@ -753,6 +759,8 @@ export interface ShardCreateOptions {
   events: ShardEvents
   /** The handler to request a space to make an identify request. */
   requestIdentify?: () => Promise<void>
+  /** The handler to alert the gateway manager that this shard has received a READY event. */
+  shardIsReady?: () => Promise<void>
 }
 
 export default DiscordenoShard
