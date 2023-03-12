@@ -1,6 +1,5 @@
 import type { AtLeastOne, BigString, Camelize, DiscordGetGatewayBot, DiscordMember, RequestGuildMembers } from '@discordeno/types'
-import type { LeakyBucket } from '@discordeno/utils'
-import { Collection, createLeakyBucket, delay, logger } from '@discordeno/utils'
+import { Collection, delay, LeakyBucket, logger } from '@discordeno/utils'
 import Shard from './Shard.js'
 import type { ShardEvents, StatusUpdate, UpdateVoiceState } from './types.js'
 
@@ -83,10 +82,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         logger.debug(`[Gateway] Preparing buckets for concurrency: ${i}`)
         gateway.buckets.set(i, {
           workers: [],
-          leak: createLeakyBucket({
-            max: 1,
-            refillAmount: 1,
-            // special number which is proven to be working dont change
+          leak: new LeakyBucket({
             refillInterval: gateway.spawnShardDelay,
           }),
         })
@@ -163,7 +159,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           },
           events: options.events,
           requestIdentify: async () => {
-            await gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.leak.acquire(1)
+            await gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.leak.acquire()
           },
         })
 
@@ -188,7 +184,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
     async requestIdentify(shardId: number) {
       logger.debug(`[Gateway] requesting identify`)
-      await gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.leak.acquire(1)
+      await gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.leak.acquire()
     },
 
     // Helpers methods below this

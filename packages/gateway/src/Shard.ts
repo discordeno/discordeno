@@ -6,10 +6,10 @@ import type {
   DiscordHello,
   DiscordMember,
   DiscordReady,
-  RequestGuildMembers,
+  RequestGuildMembers
 } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayIntents, GatewayOpcodes } from '@discordeno/types'
-import { camelize, Collection, createLeakyBucket, delay, logger } from '@discordeno/utils'
+import { camelize, Collection, delay, LeakyBucket, logger } from '@discordeno/utils'
 import { inflateSync } from 'node:zlib'
 import WebSocket from 'ws'
 import type { RequestMemberRequest } from './manager.js'
@@ -44,11 +44,7 @@ export class DiscordenoShard {
   /** Resolve internal waiting states. Mapped by SelectedEvents => ResolveFunction */
   resolves = new Map<'READY' | 'RESUMED' | 'INVALID_SESSION', (payload: DiscordGatewayPayload) => void>()
   /** Shard bucket. Only access this if you know what you are doing. Bucket for handling shard request rate limits. */
-  bucket = createLeakyBucket({
-    max: 120,
-    refillInterval: 60000,
-    refillAmount: 120,
-  })
+  bucket: LeakyBucket
 
   /** This managers cache related settings. */
   cache = {
@@ -74,6 +70,12 @@ export class DiscordenoShard {
     }
 
     if (options.requestIdentify) this.requestIdentify = options.requestIdentify
+
+    this.bucket = new LeakyBucket({
+      max: this.calculateSafeRequests(),
+      refillAmount: this.calculateSafeRequests(),
+      refillInterval: 60000,
+    })
   }
 
   /** The gateway configuration which is used to connect to Discord. */
@@ -265,7 +267,7 @@ export class DiscordenoShard {
     // Else bucket and token wait time just get wasted.
     await this.checkOffline(highPriority)
 
-    await this.bucket.acquire(1, highPriority)
+    await this.bucket.acquire(highPriority)
 
     // It's possible, that the shard went offline after a token has been acquired from the bucket.
     await this.checkOffline(highPriority)
@@ -376,16 +378,18 @@ export class DiscordenoShard {
         this.startHeartbeating(interval)
 
         if (this.state !== ShardState.Resuming) {
+          const currentQueue = [...this.bucket.queue];
           // HELLO has been send on a non resume action.
           // This means that the shard starts a new session,
           // therefore the rate limit interval has been reset too.
-          this.bucket = createLeakyBucket({
+          this.bucket = new LeakyBucket({
             max: this.calculateSafeRequests(),
             refillInterval: 60000,
             refillAmount: this.calculateSafeRequests(),
-            // Waiting acquires should not be lost on a re-identify.
-            waiting: this.bucket.waiting,
           })
+
+          // Queue should not be lost on a re-identify.
+          this.bucket.queue.unshift(...currentQueue);
         }
 
         this.events.hello?.(this)
