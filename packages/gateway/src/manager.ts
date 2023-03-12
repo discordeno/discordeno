@@ -162,11 +162,17 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             version: this.version,
           },
           events: options.events,
+          requestIdentify: async () => {
+            await gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.leak.acquire(1)
+          },
         })
 
         this.shards.set(shardId, shard)
       }
 
+      logger.debug(`[Gateway] requesting to identify shard #(${shardId}) from bucket.`)
+      await gateway.requestIdentify(shard.id)
+      logger.debug(`[Gateway] Identify request successful for shard #(${shardId}).`)
       return await shard.identify()
     },
     async kill(shardId: number) {
@@ -180,8 +186,9 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       return await shard.shutdown()
     },
 
-    async requestIdentify() {
+    async requestIdentify(shardId: number) {
       logger.debug(`[Gateway] requesting identify`)
+      await gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.leak.acquire(1)
     },
 
     // Helpers methods below this
@@ -372,7 +379,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
   /** Kill a shard. Close a shards connection to Discord's gateway (if any) and remove it from the manager. */
   kill: (shardId: number) => Promise<void>
   /** This function communicates with the parent manager, in order to know whether this manager is allowed to identify a new shard. */
-  requestIdentify: () => Promise<void>
+  requestIdentify: (shardId: number) => Promise<void>
   /** Calculates the number of shards based on the guild id and total shards. */
   calculateShardId: (guildId: BigString, totalShards?: number) => number
   /**

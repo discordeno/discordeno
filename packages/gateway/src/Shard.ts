@@ -72,6 +72,8 @@ export class DiscordenoShard {
       acknowledged: false,
       interval: 45000,
     }
+
+    if (options.requestIdentify) this.requestIdentify = options.requestIdentify
   }
 
   /** The gateway configuration which is used to connect to Discord. */
@@ -153,7 +155,7 @@ export class DiscordenoShard {
     // A new identify has been requested even though there is already a connection open.
     // Therefore we need to close the old connection and heartbeating before creating a new one.
     if (this.isOpen()) {
-      console.log(`CLOSING EXISTING SHARD: #${this.id}`)
+      logger.debug(`CLOSING EXISTING SHARD: #${this.id}`)
       this.close(ShardSocketCloseCodes.ReIdentifying, 'Re-identifying closure of old connection.')
     }
 
@@ -499,10 +501,7 @@ export class DiscordenoShard {
   }
 
   /** This function communicates with the management process, in order to know whether its free to identify. When this function resolves, this means that the shard is allowed to send an identify payload to discord. */
-  async requestIdentify(): Promise<void> {
-    // TODO: how to handle this
-    // return await options.requestIdentify(this.id)
-  }
+  async requestIdentify(): Promise<void> {}
 
   /** Start sending heartbeat payloads to Discord in the provided interval. */
   startHeartbeating(interval: number): void {
@@ -748,6 +747,8 @@ export interface ShardCreateOptions {
   connection: ShardGatewayConfig
   /** The event handlers for events on the shard. */
   events: ShardEvents
+  /** The handler to request a space to make an identify request. */
+  requestIdentify?: () => Promise<void>
 }
 
 export default DiscordenoShard
