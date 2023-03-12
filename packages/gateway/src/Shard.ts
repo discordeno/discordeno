@@ -194,7 +194,7 @@ export class DiscordenoShard {
       this.resolves.set('READY', () => {
         this.events.identified?.(this)
         // Tells the manager that this shard is ready
-        this.shardIsReady();
+        this.shardIsReady()
         resolve()
       })
       // When identifying too fast,
@@ -223,10 +223,7 @@ export class DiscordenoShard {
 
     // Shard has never identified, so we cannot resume.
     if (!this.sessionId) {
-      // gateway.debug(
-      //   "GW DEBUG",
-      //   `[Error] Trying to resume a shard (id: ${shardId}) that was not first identified.`,
-      // );
+      logger.debug(`[Shard] Trying to resume a shard #${this.id} that was NOT first identified. (No session id found)`)
 
       return await this.identify()
 
@@ -270,7 +267,7 @@ export class DiscordenoShard {
     // Else bucket and token wait time just get wasted.
     await this.checkOffline(highPriority)
 
-    await this.bucket.acquire(this.id, highPriority)
+    await this.bucket.acquire(highPriority)
 
     // It's possible, that the shard went offline after a token has been acquired from the bucket.
     await this.checkOffline(highPriority)
@@ -315,6 +312,7 @@ export class DiscordenoShard {
       case GatewayCloseEventCodes.InvalidSeq:
       case GatewayCloseEventCodes.RateLimited:
       case GatewayCloseEventCodes.SessionTimedOut: {
+        logger.debug(`[Shard] Gateway connection closing requiring re-identify. Code: ${close.code}`)
         this.state = ShardState.Identifying
         this.events.disconnected?.(this)
 
@@ -414,8 +412,8 @@ export class DiscordenoShard {
         break
       }
       case GatewayOpcodes.InvalidSession: {
-        //   gateway.debug("GW INVALID_SESSION", { shardId, payload: packet });
         const resumable = packet.d as boolean
+        logger.debug(`[Shard] Received Invalid Session for Shard #${this.id} with resumeable as ${resumable.toString()}`)
 
         this.events.invalidSession?.(this, resumable)
 
@@ -556,6 +554,7 @@ export class DiscordenoShard {
         // The Shard needs to start a re-identify action accordingly.
         // Reference: https://discord.com/developers/docs/topics/gateway#heartbeating-example-gateway-heartbeat-ack
         if (!this.heart.acknowledged) {
+          logger.debug(`[Shard] Heartbeat not acknowledged for shard #${this.id}.`)
           this.close(ShardSocketCloseCodes.ZombiedConnection, 'Zombied connection, did not receive an heartbeat ACK in time.')
 
           return await this.identify()

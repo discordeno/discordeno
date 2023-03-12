@@ -114,6 +114,13 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           bucket.workers.push({ id: workerId, queue: [shardId] })
         }
       }
+
+      for (const bucket of gateway.buckets.values()) {
+        for (const worker of bucket.workers.values()) {
+          // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
+          worker.queue = worker.queue.sort((a, b) => a - b)
+        }
+      }
     },
     async spawnShards() {
       // PREPARES ALL SHARDS IN SPECIFIC BUCKETS
@@ -195,12 +202,12 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
     async requestIdentify(shardId: number) {
       logger.debug(`[Gateway] requesting identify`)
-      const bucket = gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)
-      if (!bucket) return
+      // const bucket = gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)
+      // if (!bucket) return
 
-      return await new Promise((resolve) => {
-        bucket.identifyRequests.push(resolve)
-      })
+      // return await new Promise((resolve) => {
+      //   bucket.identifyRequests.push(resolve)
+      // })
     },
 
     // Helpers methods below this
