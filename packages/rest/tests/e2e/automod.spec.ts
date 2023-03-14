@@ -1,4 +1,4 @@
-import type { Camelize, DiscordChannel, DiscordGuild } from '@discordeno/types'
+import type { Camelize, DiscordChannel } from '@discordeno/types'
 import { AutoModerationActionType, AutoModerationEventTypes, AutoModerationTriggerTypes } from '@discordeno/types'
 import { expect } from 'chai'
 import { e2ecache, rest } from './utils.js'

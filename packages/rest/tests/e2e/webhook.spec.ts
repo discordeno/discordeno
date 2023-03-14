@@ -96,7 +96,7 @@ describe('Webhook helpers', async () => {
     expect(message2).to.exist
     expect(message2.content).to.equal(message?.content)
 
-    const edited3 = await rest.editWebhookMessage(webhook.id, webhook.token!, message.id, {
+    const edited3 = await rest.editWebhookMessage(webhook.id, webhook.token!, message!.id, {
       content: 'different',
     })
 

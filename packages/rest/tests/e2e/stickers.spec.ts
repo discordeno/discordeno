@@ -70,7 +70,7 @@ describe('Sticker tests', async () => {
     expect(editSticker.description).to.equal('sticker description')
     expect(editSticker.tags).to.equal('sticker tags')
 
-    const sticker2 = await rest.createGuildSticker(e2ecache.guild.id, {
+    await rest.createGuildSticker(e2ecache.guild.id, {
       name: 'sticker 2',
       description: 'sticker 2',
       tags: 'sticker tags 2',
