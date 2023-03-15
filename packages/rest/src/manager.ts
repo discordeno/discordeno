@@ -16,6 +16,7 @@ import {
   processReactionString,
   urlToBase64,
 } from '@discordeno/utils'
+import fetch from 'node-fetch'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -672,8 +673,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           }
 
           if (key === 'defaultMemberPermissions') {
-            newObj.default_member_permissions = calculateBits(obj[key]);
-            continue;
+            newObj.default_member_permissions = calculateBits(obj[key])
+            continue
           }
 
           newObj[camelToSnakeCase(key)] = rest.changeToDiscordFormat(obj[key])
