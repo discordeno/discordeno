@@ -10,6 +10,7 @@ import type {
 } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayIntents, GatewayOpcodes } from '@discordeno/types'
 import { Collection, LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
+import { clearInterval } from 'node:timers'
 import { inflateSync } from 'node:zlib'
 import WebSocket from 'ws'
 import type { RequestMemberRequest } from './manager.js'
@@ -505,7 +506,9 @@ export class DiscordenoShard {
 
   /** Start sending heartbeat payloads to Discord in the provided interval. */
   startHeartbeating(interval: number): void {
-    //   gateway.debug("GW HEARTBEATING_STARTED", { shardId, interval });
+    // If old heartbeast exist like after resume, clear the old ones.
+    if (this.heart.intervalId) clearInterval(this.heart.intervalId)
+    if (this.heart.timeoutId) clearTimeout(this.heart.timeoutId)
 
     this.heart.interval = interval
 
