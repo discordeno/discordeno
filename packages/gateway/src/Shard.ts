@@ -84,6 +84,12 @@ export class DiscordenoShard {
     return this.connection
   }
 
+  /** The url to connect to. Intially this is the discord gateway url, and then is switched to resume gateway url once a READY is received. */
+  get connectionUrl(): string {
+    // Use || and not ?? here. ?? will cause a bug.
+    return this.resumeGatewayUrl || this.gatewayConfig.url
+  }
+
   /** Calculate the amount of requests which can safely be made per rate limit interval, before the gateway gets disconnected due to an exceeded rate limit. */
   calculateSafeRequests(): number {
     // * 2 adds extra safety layer for discords OP 1 requests that we need to respond to
@@ -118,25 +124,16 @@ export class DiscordenoShard {
     }
     this.events.connecting?.(this)
 
-    let url = new URL(this.gatewayConfig.url)
-    // If not connecting to a proxy but directly to discord need to handle resuming
-    if (url.origin === 'wss://gateway.discord.gg') {
-      if (this.state === ShardState.Resuming) {
-        url = new URL(this.resumeGatewayUrl)
-      }
-      url.searchParams.set('v', this.gatewayConfig.version.toString())
-      url.searchParams.set('encoding', 'json')
-    }
+    const url = new URL(this.connectionUrl)
+    url.searchParams.set('v', this.gatewayConfig.version.toString())
+    url.searchParams.set('encoding', 'json')
 
     const socket = new WebSocket(url.toString())
-
     this.socket = socket
 
     // TODO: proper event handling
-    socket.onerror = (event) => console.log({ error: event })
-
+    socket.onerror = (event) => console.log({ error: event, shardId: this.id })
     socket.onclose = async (event) => await this.handleClose(event)
-
     socket.onmessage = async (message) => await this.handleMessage(message)
 
     return await new Promise((resolve) => {
@@ -211,7 +208,7 @@ export class DiscordenoShard {
 
   /** Attempt to resume the previous shards session with the gateway. */
   async resume(): Promise<void> {
-    //   gateway.debug("GW RESUMING", { shardId });
+    logger.debug(`[Gateway] Resuming Shard #${this.id}`)
     // It has been requested to resume the Shards session.
     // It's possible that the shard is still connected with Discord's gateway therefore we need to forcefully close it.
     if (this.isOpen()) {
@@ -223,8 +220,6 @@ export class DiscordenoShard {
       logger.debug(`[Shard] Trying to resume a shard #${this.id} that was NOT first identified. (No session id found)`)
 
       return await this.identify()
-
-      // throw new Error(`[SHARD] Trying to resume a shard (id: ${this.id}) which was never identified`);
     }
 
     this.state = ShardState.Resuming
