@@ -33,7 +33,7 @@ __metadata:
     "@swc/core": ^1.3.40
     "@types/chai": ^4.3.4
     "@types/mocha": ^10.0.1
-    "@types/node": ^18.11.9
+    "@types/node": ^18.15.3
     "@types/sinon": ^10.0.13
     c8: ^7.12.0
     chai: ^4.3.7
@@ -59,7 +59,7 @@ __metadata:
     "@swc/core": ^1.3.40
     "@types/chai": ^4.3.4
     "@types/mocha": ^10.0.1
-    "@types/node": ^18.11.9
+    "@types/node": ^18.15.3
     "@types/sinon": ^10.0.13
     c8: ^7.12.0
     chai: ^4.3.7
@@ -83,7 +83,7 @@ __metadata:
     "@swc/core": ^1.3.40
     "@types/chai": ^4.3.4
     "@types/mocha": ^10.0.1
-    "@types/node": ^18.11.9
+    "@types/node": ^18.15.3
     "@types/sinon": ^10.0.13
     "@types/ws": ^8.5.3
     c8: ^7.12.0
@@ -111,7 +111,7 @@ __metadata:
     "@types/chai": ^4.3.4
     "@types/chai-as-promised": ^7.1.5
     "@types/mocha": ^10.0.1
-    "@types/node": ^18.11.9
+    "@types/node": ^18.15.3
     "@types/sinon": ^10.0.13
     c8: ^7.12.0
     chai: ^4.3.7
@@ -137,7 +137,7 @@ __metadata:
     "@swc/core": ^1.3.40
     "@types/chai": ^4.3.4
     "@types/mocha": ^10.0.1
-    "@types/node": ^18.11.15
+    "@types/node": ^18.15.3
     "@types/sinon": ^10.0.13
     c8: ^7.12.0
     chai: ^4.3.7
@@ -159,7 +159,7 @@ __metadata:
     "@swc/core": ^1.3.40
     "@types/chai": ^4.3.4
     "@types/mocha": ^10.0.1
-    "@types/node": ^18.11.15
+    "@types/node": ^18.15.3
     "@types/sinon": ^10.0.13
     c8: ^7.12.0
     chai: ^4.3.7
@@ -627,10 +627,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^18.11.15, @types/node@npm:^18.11.9":
+"@types/node@npm:*":
   version: 18.11.18
   resolution: "@types/node@npm:18.11.18"
   checksum: 03f17f9480f8d775c8a72da5ea7e9383db5f6d85aa5fefde90dd953a1449bd5e4ffde376f139da4f3744b4c83942166d2a7603969a6f8ea826edfb16e6e3b49d
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^18.15.3":
+  version: 18.15.3
+  resolution: "@types/node@npm:18.15.3"
+  checksum: 31b1d92475a82c30de29aa6c0771b18a276552d191283b4423ba2d61b3f01159bf0d02576c0b7cc834b043997893800db6bb47f246083ed85aa45e79c80875d7
   languageName: node
   linkType: hard
 
@@ -1582,7 +1589,7 @@ __metadata:
     "@swc/core": ^1.3.40
     "@types/chai": ^4.3.4
     "@types/mocha": ^10.0.1
-    "@types/node": ^18.11.9
+    "@types/node": ^18.15.3
     "@types/sinon": ^10.0.13
     c8: ^7.12.0
     chai: ^4.3.7
