@@ -1,4 +1,4 @@
-import type { Camelize, DiscordChannel, DiscordGuild } from '@discordeno/types'
+import type { Camelize, DiscordChannel } from '@discordeno/types'
 import { AutoModerationActionType, AutoModerationEventTypes, AutoModerationTriggerTypes } from '@discordeno/types'
 import { expect } from 'chai'
 import { e2ecache, rest } from './utils.js'
@@ -19,8 +19,8 @@ after(async () => {
   }
 })
 
-describe('[automod] Run automod tests', async () => {
-  it('[automod] Create a MessageSend rule for Keyword with BlockMessage action.', async () => {
+describe('Run automod tests', async () => {
+  it('Create a MessageSend rule for Keyword with BlockMessage action.', async () => {
     const rule = await rest.createAutomodRule(e2ecache.guild.id, {
       name: 'test',
       eventType: AutoModerationEventTypes.MessageSend,
@@ -51,7 +51,7 @@ describe('[automod] Run automod tests', async () => {
     await rest.deleteAutomodRule(e2ecache.guild.id, rule.id)
   })
 
-  it('[automod] Create a MessageSend rule for Keyword with Timeout action.', async () => {
+  it('Create a MessageSend rule for Keyword with Timeout action.', async () => {
     const rule = await rest.createAutomodRule(e2ecache.guild.id, {
       name: 'test',
       eventType: AutoModerationEventTypes.MessageSend,
@@ -86,7 +86,7 @@ describe('[automod] Run automod tests', async () => {
     await rest.deleteAutomodRule(e2ecache.guild.id, rule.id)
   })
 
-  it('[automod] Create a MessageSend rule for Keyword with BlockMessage & Timeout action.', async () => {
+  it('Create a MessageSend rule for Keyword with BlockMessage & Timeout action.', async () => {
     const rule = await rest.createAutomodRule(e2ecache.guild.id, {
       name: 'test',
       eventType: AutoModerationEventTypes.MessageSend,
@@ -125,7 +125,7 @@ describe('[automod] Run automod tests', async () => {
       await rest.deleteChannel(channel.id)
     })
 
-    it('[automod] Create a MessageSend rule for Keyword with SendAlertMessage action.', async () => {
+    it('Create a MessageSend rule for Keyword with SendAlertMessage action.', async () => {
       const rule = await rest.createAutomodRule(e2ecache.guild.id, {
         name: 'test',
         eventType: AutoModerationEventTypes.MessageSend,
@@ -160,7 +160,7 @@ describe('[automod] Run automod tests', async () => {
       await rest.deleteAutomodRule(e2ecache.guild.id, rule.id)
     })
 
-    it('[automod] Create a MessageSend rule for Keyword with SendAlertMessage & Timeout action.', async () => {
+    it('Create a MessageSend rule for Keyword with SendAlertMessage & Timeout action.', async () => {
       const rule = await rest.createAutomodRule(e2ecache.guild.id, {
         name: 'test',
         eventType: AutoModerationEventTypes.MessageSend,
@@ -189,7 +189,7 @@ describe('[automod] Run automod tests', async () => {
       await rest.deleteAutomodRule(e2ecache.guild.id, rule.id)
     })
 
-    it('[automod] Create a MessageSend rule for Keyword with BlockMessage & SendAlertMessage & Timeout action.', async () => {
+    it('Create a MessageSend rule for Keyword with BlockMessage & SendAlertMessage & Timeout action.', async () => {
       const rule = await rest.createAutomodRule(e2ecache.guild.id, {
         name: 'test',
         eventType: AutoModerationEventTypes.MessageSend,
