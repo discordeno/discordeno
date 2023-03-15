@@ -9,8 +9,7 @@ import type {
   RequestGuildMembers,
 } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayIntents, GatewayOpcodes } from '@discordeno/types'
-import { Collection, LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
-import { clearInterval } from 'node:timers'
+import { camelize, Collection, delay, LeakyBucket, logger } from '@discordeno/utils'
 import { inflateSync } from 'node:zlib'
 import WebSocket from 'ws'
 import type { RequestMemberRequest } from './manager.js'
