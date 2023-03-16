@@ -64,18 +64,10 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       )
     },
     calculateWorkerId(shardId) {
-      // Ignore decimal numbers.
-      let workerId = Math.floor(shardId / gateway.shardsPerWorker)
-      // If the workerId overflows the maximal allowed workers we by default just use to last worker.
-      if (workerId >= gateway.totalWorkers) {
-        // The Id of the last available worker is total -1
-        workerId = gateway.totalWorkers - 1
-      }
-
+      const workerId = shardId % gateway.shardsPerWorker
       logger.debug(
         `[Gateway] Calculating workerId: Shard: ${shardId} -> Worker: ${workerId} -> Per Worker: ${gateway.shardsPerWorker} -> Total: ${gateway.totalWorkers}`,
       )
-
       return workerId
     },
     prepareBuckets() {
@@ -165,7 +157,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           },
           events: options.events,
           requestIdentify: async () => {
-            await gateway.identify(shardId);
+            await gateway.identify(shardId)
           },
           shardIsReady: async () => {
             logger.debug(`[Shard] Shard #${shardId} is ready`)
