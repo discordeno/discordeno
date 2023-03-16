@@ -33,7 +33,7 @@ If you haven't already, install the @discordeno/rest package. Need help? Check t
 
 This code we have created will maintain a manager that will handle all the outgoing requests to discord. What we need to do now, is create a listener that will handle all the incoming requests from all of our services and forward them to this manager.
 
-## Creating A HTTP Listener 
+## Creating A HTTP Listener
 
 Now you can make another file like `services/rest/index.ts`. Then paste the code below:
 
@@ -167,7 +167,7 @@ Influx?.writePoint(
     .tag('bucket', options.bucketId ?? 'NA')
     .intField('status', response.status)
     .tag('statusText', response.statusText),
-);
+)
 ```
 
 Finally, we should now move to the `catch` portion in this file, to add analytics for whenever a request fails.
@@ -203,6 +203,91 @@ For bot's that allow servers to buy custom bot's, you can create a separate mana
 Having multiple bot's sending requests from one source will impact your global rate limit due to the global ip rate limit.
 :::
 
+```ts
+const MANAGERS = new Collection<string, RestManager>();
+```
+
+Create this MANAGERS collection at the near the top of the file. Then we can begin implementing this in our request handler.  We are going to be changing this line:
+
+```ts
+try {
+  const result = await REST.makeRequest(req.method, `${REST.baseUrl}${req.url}`, req.body)
+```
+
+It will become something like the following:
+
+```ts
+try {
+  let manager = MANAGERS.get(req.headers.token);
+  if (!manager) {
+    // A request came in with a token that has no manager in cache
+    manager = createRestManager({ token: req.headers.token })
+    MANAGERS.set(req.headers.token, manager);
+  }
+
+  const result = await manager.makeRequest(req.method, `${manager.baseUrl}${req.url}`, req.body)
+```
+
+
 ### Evals
 
 One of the last things we should do, is make it possible to run commands on this process. To do this, we simply create a small bot on this process with an eval command that listens for our messages only on our developer server. This way we can dynamically update any properties we may need to. For example, if discord updates the API version, we can easily switch the api version with a simple command.
+
+Let's make a small bot on this process. Make a file called `services/rest/bot.ts`. Then paste the code below.
+
+````ts
+import { Client } from '@discordeno/client'
+import { logger } from '@discordeno/utils'
+import * as util from 'util'
+
+const inspectOptions = {
+  depth: 1
+}
+
+const client = new Client(process.env.TOKEN, {
+  // client options here
+})
+
+client.on('messageCreate', (message) => {
+  // If the message is from a bot simply ignore
+  if (message.author.bot) return
+  // If the message is not from bot owner simply ignore
+  if (message.author.id !== 'YOUR_ID_HERE') return
+  // If the content of the message is not
+  if (!message.content.startsWith(`${process.env.PREFIX}eval`)) return
+
+  const args = message.conten.split(' ')
+  // remove the .eval part
+  args.shift()
+
+  const cleanArgs = args.join(' ').replace(/^\s+/, '').replace(/\s*$/, '')
+
+  // Eval the things and send the results
+  let result
+  try {
+    result = eval(cleanArgs)
+  } catch (e) {
+    result = e
+  }
+
+  const response = ['```ts']
+  const regex = new RegExp(Gamer.token, 'gi')
+
+  if (result && typeof result.then === 'function') {
+    // We returned a promise?
+    let value
+    try {
+      value = await result
+    } catch (err) {
+      value = err
+    }
+    response.push(util.inspect(value, inspectOptions).replace(regex, 'YOU WISH!').substring(0, 1985))
+  } else {
+    response.push(String(util.inspect(result)).replace(regex, 'YOU WISH!').substring(0, 1985))
+  }
+
+  response.push('```')
+
+  await message.channel.createMessage(response.join('\n'))
+})
+````
