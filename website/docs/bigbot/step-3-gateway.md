@@ -22,7 +22,7 @@ Let's say the bot process needs to execute some code on some shard such as fetch
 
 ## Creating The Manager
 
-## Preparing Connecting To REST
+## Connecting To REST
 
 Before we begin making a gateway manager, we need to first prepare a connection to our REST manager. Go ahead and make a file called `services/gateway/rest/index.ts`.
 
@@ -32,8 +32,10 @@ import { createRestManager } from '@discordeno/rest'
 export const REST = createRestManager({
   // YOUR BOT TOKEN HERE
   token: process.env.TOKEN,
-  baseUrl: process.env.REST_URL,
-  authorization: process.env.AUTHORIZATION,
+  proxy: {
+    baseUrl: process.env.REST_URL,
+    authorization: process.env.AUTHORIZATION,
+  }
 })
 ```
 
@@ -53,7 +55,7 @@ export const GATEWAY = createGatewayManager({
   intents: Intents.Guilds | Intents.GuildMessages,
   shardsPerWorker: 500,
   totalWorkers: 10,
-  connection = await REST.getSessionInfo(),
+  connection: await REST.getSessionInfo(),
 })
 
 // More code to be added here but first you need to understand this part.
@@ -81,7 +83,7 @@ export const GATEWAY = createGatewayManager({
   intents: Intents.Guilds | Intents.GuildMessages,
   shardsPerWorker: 500,
   totalWorkers: 10,
-  connection = await REST.getSessionInfo(),
+  connection: await REST.getSessionInfo(),
 })
 
 GATEWAY.tellWorkerToIdentify = async function (workerId, shardId, bucketId) {

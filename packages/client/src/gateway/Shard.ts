@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-indexed-object-style */
 /* eslint-disable no-useless-call */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
@@ -5,7 +6,6 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { DiscordenoShard, ShardState } from '@discordeno/gateway'
-import type { DiscordGuildStickersUpdate, DiscordThreadMemberUpdate } from '@discordeno/types'
 import {
   ActivityTypes,
   ChannelTypes,
@@ -25,6 +25,7 @@ import {
   type DiscordGuildRoleCreate,
   type DiscordGuildRoleDelete,
   type DiscordGuildRoleUpdate,
+  type DiscordGuildStickersUpdate,
   type DiscordInteraction,
   type DiscordInviteCreate,
   type DiscordInviteDelete,
@@ -41,6 +42,7 @@ import {
   type DiscordStageInstance,
   type DiscordThreadListSync,
   type DiscordThreadMembersUpdate,
+  type DiscordThreadMemberUpdate,
   type DiscordTypingStart,
   type DiscordUnavailableGuild,
   type DiscordUser,

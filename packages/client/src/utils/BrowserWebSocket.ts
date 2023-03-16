@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/class-literal-property-style */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { EventEmitter } from 'node:events'

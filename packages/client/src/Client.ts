@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
@@ -2300,6 +2301,7 @@ export class Client extends EventEmitter {
   // Typescript is not so good as we developers so we need this little utility function to help it out
   // Taken from https://fettblog.eu/typescript-hasownproperty/
   /** TS save way to check if a property exists in an object */
+  // eslint-disable-next-line @typescript-eslint/ban-types
   hasProperty<T extends {}, Y extends PropertyKey = string, Z = unknown>(obj: T, prop: Y): obj is T & Record<Y, Z> {
     return obj.hasOwnProperty(prop)
   }

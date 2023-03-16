@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import type {
   AtLeastOne,
   BigString,
@@ -112,7 +113,7 @@ export class DiscordenoShard {
   close(code: number, reason: string): void {
     if (this.socket?.readyState !== WebSocket.OPEN) return
 
-    return this.socket?.close(code, reason)
+    this.socket?.close(code, reason)
   }
 
   /** Connect the shard with the gateway and start heartbeating. This will not identify the shard to the gateway. */
@@ -601,7 +602,7 @@ export class DiscordenoShard {
     options?: AtLeastOne<Omit<UpdateVoiceState, 'guildId' | 'channelId'>>,
   ): Promise<void> {
     logger.debug(`[Shard] joinVoiceChannel guildId: ${guildId} channelId: ${channelId}`)
-    return await this.send({
+    await this.send({
       op: GatewayOpcodes.VoiceStateUpdate,
       d: {
         guild_id: guildId.toString(),
@@ -620,7 +621,7 @@ export class DiscordenoShard {
    */
   async editBotStatus(data: StatusUpdate): Promise<void> {
     logger.debug(`[Shard] editBotStatus data: ${JSON.stringify(data)}`)
-    return await this.editShardStatus(data)
+    await this.editShardStatus(data)
   }
 
   /**
@@ -632,7 +633,7 @@ export class DiscordenoShard {
    */
   async editShardStatus(data: StatusUpdate): Promise<void> {
     logger.debug(`[Shard] editShardStatus shardId: ${this.id} -> data: ${JSON.stringify(data)}`)
-    return await this.send({
+    await this.send({
       op: GatewayOpcodes.PresenceUpdate,
       d: {
         since: null,
@@ -731,7 +732,7 @@ export class DiscordenoShard {
    */
   async leaveVoiceChannel(guildId: BigString): Promise<void> {
     logger.debug(`[Shard] leaveVoiceChannel guildId: ${guildId} Shard ${this.id}`)
-    return await this.send({
+    await this.send({
       op: GatewayOpcodes.VoiceStateUpdate,
       d: {
         guild_id: guildId.toString(),
