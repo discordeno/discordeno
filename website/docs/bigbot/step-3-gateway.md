@@ -73,6 +73,54 @@ The `totalWorkers` property represents the number of **servers** we have availab
 You can adjust the amount of **shardsPerWorker** and **totalWorkers** to fit your specific needs.
 :::
 
+### Setting Up Bot To Gateway Communication
+
+Let's make a file called `services/gateway/index.ts` and paste the following code:
+
+```ts
+import { logger } from '@discordeno/utils';
+import dotenv from 'dotenv';
+import express from 'express';
+dotenv.config();
+
+const AUTHORIZATION = process.env.AUTHORIZATION as string
+
+const app = express()
+
+app.use(
+  express.urlencoded({
+    extended: true,
+  }),
+)
+
+app.use(express.json())
+
+app.all('/*', async (req, res) => {
+  if (!AUTHORIZATION || AUTHORIZATION !== req.headers.authorization) {
+    return res.status(401).json({ error: 'Invalid authorization key.' })
+  }
+
+  try {
+    // Identify A Shard
+    switch (req.body.type) {
+      case 'REQUEST_MEMBERS': {
+        return await GATEWAY.requestMembers(req.body.guildId, req.body.options);
+      }
+      default:
+        logger.error(`[Shard] Unknown request received. ${JSON.stringify(req.body)}`)
+        return res.status(404).json({ message: 'Unknown request received.', status: 404 })
+    }
+  } catch (error: any) {
+    console.log(error)
+    res.status(500).json(error)
+  }
+})
+
+app.listen(process.env.GATEWAY_MANAGER_PORT, () => {
+  console.log(`Listening at ${process.env.GATEWAY_MANAGER_URL}`)
+})
+```
+
 ### Setting Up Gateway To Shard Communication
 
 Continuing from the code above, now we can start telling our gateway how to communicate to our shards. We do this bit by bit.
@@ -138,6 +186,13 @@ app.use(
 )
 
 app.use(express.json())
+
+function getUrlFromShardId(totalShards: number, shardId: number) {
+ const urls = process.env.EVENT_HANDLER_URLS?.split(',') ?? [];
+ const index = totalShards % shardId;
+
+ return urls[index] ?? urls[0];
+}
 
 app.all('/*', async (req, res) => {
   if (!AUTHORIZATION || AUTHORIZATION !== req.headers.authorization) {
@@ -208,7 +263,7 @@ const shard =
     // This is the part we are adding
     events: {
       async message(shrd, payload) {
-        await fetch(process.env.EVENT_LISTENER_URL, {
+        await fetch(getUrlFromShardId(req.body.totalShards, shrd.id), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', authorization: AUTHORIZATION },
           body: JSON.stringify({ payload, shardId }),
