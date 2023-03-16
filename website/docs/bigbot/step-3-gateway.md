@@ -313,6 +313,8 @@ events: {
 
 We should take the time here to implement a small queue where we can store events in the off chance that our event listener was not able to receive the event. For example, if you are restarting the bot process for a split second, you might lose some events. To avoid this issue, we should build an event queue which will make sure we don't lose them.
 
+RabbitMQ setup guide here.
+
 ### Resharding
 
 Now let's enable resharding on our bot so we don't need to deal with it. Remember, Discord stops allowing your bot to be added to new servers when you max out your existing max shards. Consider a bot started with 150 shards operating on 150,000 servers. Your shards support a maximum of 150 \* 2500 = 375,000 servers. Your bot will be unable to join new servers once it reaches this point until it re-shards. Discordeno proxy provides 2 types of re-sharding. Automated and manual. You can also have both.
@@ -325,6 +327,10 @@ Now let's enable resharding on our bot so we don't need to deal with it. Remembe
 - Manual: You can also trigger this manually should you choose.
   - When discord releases a new API version, updates your gateways to new version with no downtime.
 
+
+
 ### Evals
 
 One of the last things we should do, is make it possible to run commands on this process. To do this, we simply create a small bot on this process with an eval command that listens for our messages only on our developer server. This way we can dynamically update any properties we may need to. For example, if discord updates the API version, we can easily switch the api version with a simple command.
+
+Please review the Evals section in Step 2 - REST portion of this guide to see how we made an eval in that process. The entire setup would be repeated here for the bot portion as well. That way you can dynamically change anything in your gateway.

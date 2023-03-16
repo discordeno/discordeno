@@ -106,12 +106,17 @@ export interface CreateRestManagerOptions {
    * @default bot id from token
    */
   applicationId?: BigString
-  /**
-   * The base url to connect to. If you create a proxy rest, that url would go here.
-   * IT SHOULD NOT END WITH A /
-   * @default https://discord.com/api
-   */
-  baseUrl?: string
+  /** Configuration when using a proxy. */
+  proxy?: {
+    /**
+     * The base url to connect to. If you create a proxy rest, that url would go here.
+     * IT SHOULD NOT END WITH A /
+     * @default https://discord.com/api
+     */
+    baseUrl: string
+    /** The authorization header to attach when sending requests to the proxy. */
+    authorization: string
+  }
   /**
    * The api versions which can be used to make requests.
    * @default 10
@@ -132,6 +137,8 @@ export interface RestManager {
    * @default https://discord.com/api
    */
   baseUrl: string
+  /** The authorization header to attach when sending requests to the proxy. */
+  authorization?: string
   /** The maximum amount of times a request should be retried. Defaults to Infinity */
   maxRetryCount: number
   /** Whether or not the manager is rate limited globally across all requests. Defaults to false. */
