@@ -148,9 +148,9 @@ app.all('/*', async (req, res) => {
     // Identify A Shard
     switch (req.body.type) {
       case 'IDENTIFY_SHARD': {
-        logger.info(`[Shard] identifying ${SHARDS.has(req.body.shardId) ? 'existing' : 'new'} shard (${shardId})`);
+        logger.info(`[Shard] identifying ${SHARDS.has(req.body.shardId) ? 'existing' : 'new'} shard (${req.body.shardId})`);
         const shard = SHARDS.get(req.body.shardId) ?? new DiscordenoShard({
-          id: shardId,
+          id: req.body.shardId,
           connection: {
             compress: req.body.compress,
             intents: req.body.intents,
