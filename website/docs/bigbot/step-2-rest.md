@@ -235,7 +235,7 @@ One of the last things we should do, is make it possible to run commands on this
 
 Let's make a small bot on this process. Make a file called `services/rest/bot.ts`. Then paste the code below.
 
-````ts
+```ts
 import { Client } from '@discordeno/client'
 import { logger } from '@discordeno/utils'
 import * as util from 'util'
@@ -290,4 +290,6 @@ client.on('messageCreate', (message) => {
 
   await message.channel.createMessage(response.join('\n'))
 })
-````
+```
+
+Now that you have an eval command available on ur `REST` service, whenever you need to modify something quickly you can easily do so from ur developer server where this bot is. For example, should you want to switch to a newer api version, it is as simple as `.eval REST.version = xxx` where xxx is the new API version.
