@@ -22,7 +22,10 @@ describe('[rest] manager', () => {
     const options = {
       token,
       version: 9,
-      baseUrl: 'https://localhost:8000',
+      proxy: {
+        baseUrl: 'https://localhost:8000',
+        authorization: token
+      }
     } as const
 
     const rest = createRestManager(options)
@@ -32,7 +35,7 @@ describe('[rest] manager', () => {
     })
 
     it('With a base url', () => {
-      expect(rest.baseUrl).to.be.equal(options.baseUrl)
+      expect(rest.baseUrl).to.be.equal(options.proxy.baseUrl)
     })
 
     it('With a falsy token', () => {
