@@ -52,9 +52,10 @@ export class LeakyBucket implements LeakyBucketOptions {
           this.timeoutId = setTimeout(() => {
             logger.debug(`[LeakyBucket] Timeout for leaky bucket requests executed. Refilling bucket.`)
             // Lower the used amount by the refill amount
-            this.used -= this.refillAmount
+            this.used = this.refillAmount > this.used ? 0 : this.used - this.refillAmount
             // Reset the refillsAt timestamp since it just got refilled
             this.refillsAt = undefined
+            this.timeoutId = undefined
           }, this.refillInterval)
           // Set the time for when this refill will occur.
           this.refillsAt = Date.now() + this.refillInterval
