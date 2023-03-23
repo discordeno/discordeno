@@ -18,6 +18,7 @@
     "test:unit": "turbo run test:unit",
     "test:integration": "turbo run test:integration",
     "test:deno-unit": "turbo run test:deno-unit",
+    "test:bun-unit": "turbo run test:bun-unit",
     "test:e2e": "turbo run test:e2e",
     "test:test-type": "turbo run test:test-type",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
