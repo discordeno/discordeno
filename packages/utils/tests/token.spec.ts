@@ -14,7 +14,7 @@ describe('token.ts', () => {
     })
 
     it('Will throw when token is undefined.', () => {
-      expect(() => removeTokenPrefix(undefined)).to.throw
+      expect(() => removeTokenPrefix(undefined)).to.throw()
     })
   })
 

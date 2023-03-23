@@ -2,6 +2,8 @@
 import { BitwisePermissionFlags } from '@discordeno/types'
 import { Base } from '../Base.js'
 import type { BigString } from '../Client.js'
+import type { PermissionClientStrings } from '../Constants.js'
+import { Permissions } from '../Constants.js'
 
 export class Permission {
   allow: bigint
@@ -36,13 +38,13 @@ export class Permission {
   }
 
   /** Check if this permission allows a specific permission */
-  has(permission: bigint | keyof typeof BitwisePermissionFlags): boolean {
+  has(permission: bigint | PermissionClientStrings): boolean {
     if (this.isAdmin) return true
 
     if (typeof permission === 'bigint') {
       return (this.allow & permission) === permission
     }
-    return !!(this.allow & BigInt(BitwisePermissionFlags[permission]))
+    return !!(this.allow & Permissions[permission])
   }
 
   toString() {

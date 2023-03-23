@@ -14,10 +14,12 @@ import Channel from './Channel.js'
 export class GuildChannel extends Channel {
   position: number
   name: string
-  parentID?: BigString | null
+  parentID?: string | null
   guild: Guild
   nsfw: boolean
   permissionOverwrites = new Collection<BigString, PermissionOverwrite>()
+  /** The RTC region ID of the channel (automatic if `null`) (guild voice channels only) */
+  rtcRegion: string | null = null
 
   constructor(data: DiscordChannel, client: Client) {
     super(data, client)

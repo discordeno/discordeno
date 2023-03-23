@@ -15,9 +15,9 @@ export class ThreadChannel extends GuildChannel {
   /** The cached thread members that are in this channel. */
   members: Collection<BigString, ThreadMember>
   /** The id of the last message in this channel. */
-  lastMessageID: BigString | null
+  lastMessageID: string
   /** The id of the user who created this thread. */
-  ownerID: BigString
+  ownerID: string
   /** The approximate amount of members that have joined this thread. */
   memberCount?: number
   /** The approximate amount of messages in this channel. */
@@ -48,7 +48,7 @@ export class ThreadChannel extends GuildChannel {
     this.messages = new Collection()
 
     this.messages.limit = messageLimit ?? client.options.messageLimit
-    this.lastMessageID = data.last_message_id ?? null
+    this.lastMessageID = data.last_message_id ?? ""
     this.ownerID = data.owner_id!
 
     this.update(data)

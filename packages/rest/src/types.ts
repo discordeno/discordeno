@@ -20,42 +20,42 @@ import type {
   CreateStageInstance,
   CreateTemplate,
   DeleteWebhookMessageOptions,
-  DiscordActiveThreads,
-  DiscordApplication,
-  DiscordApplicationCommand,
-  DiscordApplicationCommandPermissions,
-  DiscordArchivedThreads,
-  DiscordAuditLog,
-  DiscordAutoModerationRule,
-  DiscordBan,
-  DiscordChannel,
-  DiscordEmoji,
-  DiscordFollowedChannel,
-  DiscordGetGatewayBot,
-  DiscordGuild,
-  DiscordGuildPreview,
-  DiscordGuildWidget,
-  DiscordGuildWidgetSettings,
-  DiscordIntegration,
-  DiscordInvite,
-  DiscordInviteMetadata,
-  DiscordMember,
-  DiscordMemberWithUser,
-  DiscordMessage,
-  DiscordModifyGuildWelcomeScreen,
-  DiscordPrunedCount,
-  DiscordRole,
-  DiscordScheduledEvent,
-  DiscordStageInstance,
-  DiscordSticker,
-  DiscordStickerPack,
-  DiscordTemplate,
-  DiscordThreadMember,
-  DiscordUser,
-  DiscordVanityUrl,
-  DiscordVoiceRegion,
-  DiscordWebhook,
-  DiscordWelcomeScreen,
+  CamelizedDiscordActiveThreads,
+  CamelizedDiscordApplication,
+  CamelizedDiscordApplicationCommand,
+  CamelizedDiscordApplicationCommandPermissions,
+  CamelizedDiscordArchivedThreads,
+  CamelizedDiscordAuditLog,
+  CamelizedDiscordAutoModerationRule,
+  CamelizedDiscordBan,
+  CamelizedDiscordChannel,
+  CamelizedDiscordEmoji,
+  CamelizedDiscordFollowedChannel,
+  CamelizedDiscordGetGatewayBot,
+  CamelizedDiscordGuild,
+  CamelizedDiscordGuildPreview,
+  CamelizedDiscordGuildWidget,
+  CamelizedDiscordGuildWidgetSettings,
+  CamelizedDiscordIntegration,
+  CamelizedDiscordInvite,
+  CamelizedDiscordInviteMetadata,
+  CamelizedDiscordMember,
+  CamelizedDiscordMemberWithUser,
+  CamelizedDiscordMessage,
+  CamelizedDiscordModifyGuildWelcomeScreen,
+  CamelizedDiscordPrunedCount,
+  CamelizedDiscordRole,
+  CamelizedDiscordScheduledEvent,
+  CamelizedDiscordStageInstance,
+  CamelizedDiscordSticker,
+  CamelizedDiscordStickerPack,
+  CamelizedDiscordTemplate,
+  CamelizedDiscordThreadMember,
+  CamelizedDiscordUser,
+  CamelizedDiscordVanityUrl,
+  CamelizedDiscordVoiceRegion,
+  CamelizedDiscordWebhook,
+  CamelizedDiscordWelcomeScreen,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
   EditChannelPermissionOverridesOptions,
@@ -106,12 +106,17 @@ export interface CreateRestManagerOptions {
    * @default bot id from token
    */
   applicationId?: BigString
-  /**
-   * The base url to connect to. If you create a proxy rest, that url would go here.
-   * IT SHOULD NOT END WITH A /
-   * @default https://discord.com/api
-   */
-  baseUrl?: string
+  /** Configuration when using a proxy. */
+  proxy?: {
+    /**
+     * The base url to connect to. If you create a proxy rest, that url would go here.
+     * IT SHOULD NOT END WITH A /
+     * @default https://discord.com/api
+     */
+    baseUrl: string
+    /** The authorization header to attach when sending requests to the proxy. */
+    authorization: string
+  }
   /**
    * The api versions which can be used to make requests.
    * @default 10
@@ -132,6 +137,8 @@ export interface RestManager {
    * @default https://discord.com/api
    */
   baseUrl: string
+  /** The authorization header to attach when sending requests to the proxy. */
+  authorization?: string
   /** The maximum amount of times a request should be retried. Defaults to Infinity */
   maxRetryCount: number
   /** Whether or not the manager is rate limited globally across all requests. Defaults to false. */
@@ -249,7 +256,7 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild to create the rule in.
    * @param options - The parameters for the creation of the rule.
-   * @returns An instance of the created {@link DiscordAutoModerationRule}.
+   * @returns An instance of the created {@link CamelizedDiscordAutoModerationRule}.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
@@ -258,13 +265,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule}
    */
-  createAutomodRule: (guildId: BigString, options: CreateAutoModerationRuleOptions) => Promise<Camelize<DiscordAutoModerationRule>>
+  createAutomodRule: (guildId: BigString, options: CreateAutoModerationRuleOptions) => Promise<CamelizedDiscordAutoModerationRule>
   /**
    * Creates a channel within a guild.
    *
    * @param guildId - The ID of the guild to create the channel within.
    * @param options - The parameters for the creation of the channel.
-   * @returns An instance of the created {@link DiscordChannel}.
+   * @returns An instance of the created {@link CamelizedDiscordChannel}.
    *
    * @remarks
    * Requires the `MANAGE_CHANNELS` permission.
@@ -277,13 +284,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-channel}
    */
-  createChannel: (guildId: BigString, options: CreateGuildChannel) => Promise<Camelize<DiscordChannel>>
+  createChannel: (guildId: BigString, options: CreateGuildChannel) => Promise<CamelizedDiscordChannel>
   /**
    * Creates an emoji in a guild.
    *
    * @param guildId - The ID of the guild in which to create the emoji.
    * @param options - The parameters for the creation of the emoji.
-   * @returns An instance of the created {@link DiscordEmoji}.
+   * @returns An instance of the created {@link CamelizedDiscordEmoji}.
    *
    * @remarks
    * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
@@ -294,13 +301,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/emoji#create-guild-emoji}
    */
-  createEmoji: (guildId: BigString, options: CreateGuildEmoji) => Promise<Camelize<DiscordEmoji>>
+  createEmoji: (guildId: BigString, options: CreateGuildEmoji) => Promise<CamelizedDiscordEmoji>
   /**
    * Creates a new thread in a forum channel, and sends a message within the created thread.
    *
    * @param channelId - The ID of the forum channel to create the thread within.
    * @param options - The parameters for the creation of the thread.
-   * @returns An instance of {@link DiscordChannel} with a nested {@link Message} object.
+   * @returns An instance of {@link CamelizedDiscordChannel} with a nested {@link Message} object.
    *
    * @remarks
    * Requires the `CREATE_MESSAGES` permission.
@@ -312,7 +319,7 @@ export interface RestManager {
    *
    * @experimental
    */
-  createForumThread: (channelId: BigString, options: CreateForumPostWithMessage) => Promise<Camelize<DiscordChannel>>
+  createForumThread: (channelId: BigString, options: CreateForumPostWithMessage) => Promise<CamelizedDiscordChannel>
   /**
    * Creates an application command accessible globally; across different guilds and channels.
    *
@@ -326,12 +333,12 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-global-application-command}
    */
-  createGlobalApplicationCommand: (command: CreateApplicationCommand) => Promise<Camelize<DiscordApplicationCommand>>
+  createGlobalApplicationCommand: (command: CreateApplicationCommand) => Promise<CamelizedDiscordApplicationCommand>
   /**
    * Creates a guild.
    *
    * @param options - The parameters for the creation of the guild.
-   * @returns An instance of the created {@link DiscordGuild}.
+   * @returns An instance of the created {@link CamelizedDiscordGuild}.
    *
    * @remarks
    * ⚠️ This route can only be used by bots in __fewer than 10 guilds__.
@@ -340,7 +347,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#create-guild}
    */
-  createGuild: (options: CreateGuild) => Promise<Camelize<DiscordGuild>>
+  createGuild: (options: CreateGuild) => Promise<CamelizedDiscordGuild>
   /**
    * Creates an application command only accessible in a specific guild.
    *
@@ -354,7 +361,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command}
    */
-  createGuildApplicationCommand: (command: CreateApplicationCommand, guildId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
+  createGuildApplicationCommand: (command: CreateApplicationCommand, guildId: BigString) => Promise<CamelizedDiscordApplicationCommand>
   /**
    * Creates a guild from a template.
    *
@@ -369,12 +376,12 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-template#create-guild-from-guild-template}
    */
-  createGuildFromTemplate: (templateCode: string, options: CreateGuildFromTemplate) => Promise<Camelize<DiscordGuild>>
+  createGuildFromTemplate: (templateCode: string, options: CreateGuildFromTemplate) => Promise<CamelizedDiscordGuild>
   /**
    * Create a new sticker for the guild.
    *
    * @param guildId The ID of the guild to get
-   * @return A {@link DiscordSticker}
+   * @return A {@link CamelizedDiscordSticker}
    *
    * @remarks
    * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
@@ -384,7 +391,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#create-guild-sticker}
    */
-  createGuildSticker: (guildId: BigString, options: CreateGuildStickerOptions) => Promise<Camelize<DiscordSticker>>
+  createGuildSticker: (guildId: BigString, options: CreateGuildStickerOptions) => Promise<CamelizedDiscordSticker>
   /**
    * Creates a template from a guild.
    *
@@ -399,13 +406,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-template#create-guild-template}
    */
-  createGuildTemplate: (guildId: BigString, options: CreateTemplate) => Promise<Camelize<DiscordTemplate>>
+  createGuildTemplate: (guildId: BigString, options: CreateTemplate) => Promise<CamelizedDiscordTemplate>
   /**
    * Creates an invite to a channel in a guild.
    *
    * @param channelId - The ID of the channel to create the invite to.
    * @param options - The parameters for the creation of the invite.
-   * @returns An instance of the created {@link DiscordInvite}.
+   * @returns An instance of the created {@link CamelizedDiscordInvite}.
    *
    * @remarks
    * Requires the `CREATE_INSTANT_INVITE` permission.
@@ -417,13 +424,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#create-channel-invite}
    */
-  createInvite: (channelId: BigString, options?: CreateChannelInvite) => Promise<Camelize<DiscordInvite>>
+  createInvite: (channelId: BigString, options?: CreateChannelInvite) => Promise<CamelizedDiscordInvite>
   /**
    * Creates a role in a guild.
    *
    * @param guildId - The ID of the guild to create the role in.
    * @param options - The parameters for the creation of the role.
-   * @returns An instance of the created {@link DiscordRole}.
+   * @returns An instance of the created {@link CamelizedDiscordRole}.
    *
    * @remarks
    * Requires the `MANAGE_ROLES` permission.
@@ -432,7 +439,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-role}
    */
-  createRole: (guildId: BigString, options: CreateGuildRole, reason?: string) => Promise<Camelize<DiscordRole>>
+  createRole: (guildId: BigString, options: CreateGuildRole, reason?: string) => Promise<CamelizedDiscordRole>
   /**
    * Creates a scheduled event in a guild.
    *
@@ -449,12 +456,12 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event}
    */
-  createScheduledEvent: (guildId: BigString, options: CreateScheduledEvent) => Promise<Camelize<DiscordScheduledEvent>>
+  createScheduledEvent: (guildId: BigString, options: CreateScheduledEvent) => Promise<CamelizedDiscordScheduledEvent>
   /**
    * Creates a stage instance associated with a stage channel.
    *
    * @param options - The parameters for the creation of the stage instance.
-   * @returns An instance of the created {@link DiscordStageInstance}.
+   * @returns An instance of the created {@link CamelizedDiscordStageInstance}.
    *
    * @remarks
    * Requires the user to be a moderator of the stage channel.
@@ -463,13 +470,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/stage-instance#create-stage-instance}
    */
-  createStageInstance: (options: CreateStageInstance) => Promise<Camelize<DiscordStageInstance>>
+  createStageInstance: (options: CreateStageInstance) => Promise<CamelizedDiscordStageInstance>
   /**
    * Creates a webhook.
    *
    * @param channelId - The ID of the channel to create the webhook in.
    * @param options - The parameters for the creation of the webhook.
-   * @returns An instance of the created {@link DiscordWebhook}.
+   * @returns An instance of the created {@link CamelizedDiscordWebhook}.
    *
    * @remarks
    * Requires the `MANAGE_WEBHOOKS` permission.
@@ -480,7 +487,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#create-webhook}
    */
-  createWebhook: (channelId: BigString, options: CreateWebhook) => Promise<Camelize<DiscordWebhook>>
+  createWebhook: (channelId: BigString, options: CreateWebhook) => Promise<CamelizedDiscordWebhook>
   /**
    * Deletes an automod rule.
    *
@@ -596,7 +603,7 @@ export interface RestManager {
    * Delete a new sticker for the guild.
    *
    * @param guildId The ID of the guild to get
-   * @return A {@link DiscordSticker}
+   * @return A {@link CamelizedDiscordSticker}
    *
    * @remarks
    * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
@@ -860,14 +867,14 @@ export interface RestManager {
     commandId: BigString,
     bearerToken: string,
     options: ApplicationCommandPermissions[],
-  ) => Promise<Camelize<DiscordApplicationCommandPermissions>>
+  ) => Promise<CamelizedDiscordApplicationCommandPermissions>
   /**
    * Edits an automod rule.
    *
    * @param guildId - The ID of the guild to edit the rule in.
    * @param ruleId - The ID of the rule to edit.
    * @param options - The parameters for the edit of the rule.
-   * @returns An instance of the edited {@link DiscordAutoModerationRule}.
+   * @returns An instance of the edited {@link CamelizedDiscordAutoModerationRule}.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
@@ -880,18 +887,18 @@ export interface RestManager {
     guildId: BigString,
     ruleId: BigString,
     options: Partial<EditAutoModerationRuleOptions>,
-  ) => Promise<Camelize<DiscordAutoModerationRule>>
+  ) => Promise<CamelizedDiscordAutoModerationRule>
   /**
    * Modifies the bot's username or avatar.
    * NOTE: username: if changed may cause the bot's discriminator to be randomized.
    */
-  editBotProfile: (options: { username?: string; botAvatarURL?: string | null }) => Promise<Camelize<DiscordUser>>
+  editBotProfile: (options: { username?: string; botAvatarURL?: string | null }) => Promise<CamelizedDiscordUser>
   /**
    * Edits a channel's settings.
    *
    * @param channelId - The ID of the channel to edit.
    * @param options - The parameters for the edit of the channel.
-   * @returns An instance of the edited {@link DiscordChannel}.
+   * @returns An instance of the edited {@link CamelizedDiscordChannel}.
    *
    * @remarks
    * If editing a channel of type {@link ChannelTypes.GroupDm}:
@@ -915,7 +922,7 @@ export interface RestManager {
    * - Otherwise:
    *     - Fires a _Channel Update_ gateway event.
    */
-  editChannel: (channelId: BigString, options: ModifyChannel) => Promise<Camelize<DiscordChannel>>
+  editChannel: (channelId: BigString, options: ModifyChannel) => Promise<CamelizedDiscordChannel>
   /**
    * Edits the permission overrides for a user or role in a channel.
    *
@@ -952,7 +959,7 @@ export interface RestManager {
    * @param guildId - The ID of the guild in which to edit the emoji.
    * @param id - The ID of the emoji to edit.
    * @param options - The parameters for the edit of the emoji.
-   * @returns An instance of the updated {@link DiscordEmoji}.
+   * @returns An instance of the updated {@link CamelizedDiscordEmoji}.
    *
    * @remarks
    * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
@@ -961,7 +968,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/emoji#modify-guild-emoji}
    */
-  editEmoji: (guildId: BigString, id: BigString, options: ModifyGuildEmoji) => Promise<Camelize<DiscordEmoji>>
+  editEmoji: (guildId: BigString, id: BigString, options: ModifyGuildEmoji) => Promise<CamelizedDiscordEmoji>
   /**
    * Edits a follow-up message to an interaction.
    *
@@ -979,7 +986,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message}
    */
-  editFollowupMessage: (token: string, messageId: BigString, options: InteractionCallbackData) => Promise<Camelize<DiscordMessage>>
+  editFollowupMessage: (token: string, messageId: BigString, options: InteractionCallbackData) => Promise<CamelizedDiscordMessage>
   /**
    * Edits a global application command.
    *
@@ -989,7 +996,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command}
    */
-  editGlobalApplicationCommand: (commandId: BigString, options: CreateApplicationCommand) => Promise<Camelize<DiscordApplicationCommand>>
+  editGlobalApplicationCommand: (commandId: BigString, options: CreateApplicationCommand) => Promise<CamelizedDiscordApplicationCommand>
   /**
    * Edits a guild's settings.
    *
@@ -1008,7 +1015,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild}
    */
-  editGuild: (guildId: BigString, options: ModifyGuild) => Promise<Camelize<DiscordGuild>>
+  editGuild: (guildId: BigString, options: ModifyGuild) => Promise<CamelizedDiscordGuild>
   /**
    * Edits an application command registered in a guild.
    *
@@ -1023,14 +1030,14 @@ export interface RestManager {
     commandId: BigString,
     guildId: BigString,
     options: CreateApplicationCommand,
-  ) => Promise<Camelize<DiscordApplicationCommand>>
+  ) => Promise<CamelizedDiscordApplicationCommand>
   /** Modify a guild's MFA level. Requires guild ownership. */
   editGuildMfaLevel: (guildId: BigString, mfaLevel: MfaLevels, reason?: string) => Promise<void>
   /**
    * Edit the given sticker.
    *
    * @param guildId The ID of the guild to get
-   * @return A {@link DiscordSticker}
+   * @return A {@link CamelizedDiscordSticker}
    *
    * @remarks
    * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
@@ -1038,7 +1045,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#modify-guild-sticker}
    */
-  editGuildSticker: (guildId: BigString, stickerId: BigString, options: AtLeastOne<EditGuildStickerOptions>) => Promise<Camelize<DiscordSticker>>
+  editGuildSticker: (guildId: BigString, stickerId: BigString, options: AtLeastOne<EditGuildStickerOptions>) => Promise<CamelizedDiscordSticker>
   /**
    * Edits a template's settings.
    *
@@ -1054,7 +1061,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-template#modify-guild-template}
    */
-  editGuildTemplate: (guildId: BigString, templateCode: string, options: ModifyGuildTemplate) => Promise<Camelize<DiscordTemplate>>
+  editGuildTemplate: (guildId: BigString, templateCode: string, options: ModifyGuildTemplate) => Promise<CamelizedDiscordTemplate>
   /**
    * Edits a message.
    *
@@ -1072,7 +1079,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#edit-message}
    */
-  editMessage: (channelId: BigString, messageId: BigString, options: EditMessage) => Promise<Camelize<DiscordMessage>>
+  editMessage: (channelId: BigString, messageId: BigString, options: EditMessage) => Promise<CamelizedDiscordMessage>
   /**
    * Edits the initial message response to an interaction.
    *
@@ -1089,14 +1096,14 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response}
    */
-  editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<Camelize<DiscordMessage> | undefined>
+  editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<CamelizedDiscordMessage | undefined>
   /**
    * Edits the original webhook message.
    *
    * @param webhookId - The ID of the webhook to edit the original message of.
    * @param token - The webhook token, used to edit the message.
    * @param options - The parameters for the edit of the message.
-   * @returns An instance of the edited {@link DiscordMessage}.
+   * @returns An instance of the edited {@link CamelizedDiscordMessage}.
    *
    * @remarks
    * Fires a _Message Update_ gateway event.
@@ -1107,7 +1114,7 @@ export interface RestManager {
     webhookId: BigString,
     token: string,
     options: InteractionCallbackData & { threadId?: BigString },
-  ) => Promise<Camelize<DiscordMessage>>
+  ) => Promise<CamelizedDiscordMessage>
   /**
    * Edits the voice state of the bot user.
    *
@@ -1132,7 +1139,7 @@ export interface RestManager {
    * @param guildId - The ID of the guild to edit the role in.
    * @param roleId - The ID of the role to edit.
    * @param options - The parameters for the edit of the role.
-   * @returns An instance of the edited {@link DiscordRole}.
+   * @returns An instance of the edited {@link CamelizedDiscordRole}.
    *
    * @remarks
    * Requires the `MANAGE_ROLES` permission.
@@ -1141,13 +1148,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-role}
    */
-  editRole: (guildId: BigString, roleId: BigString, options: EditGuildRole) => Promise<Camelize<DiscordRole>>
+  editRole: (guildId: BigString, roleId: BigString, options: EditGuildRole) => Promise<CamelizedDiscordRole>
   /**
    * Edits the positions of a set of roles.
    *
    * @param guildId - The ID of the guild to edit the role positions in.
    * @param options - The parameters for the edit of the role positions.
-   * @returns A collection of {@link DiscordRole} objects assorted by role ID.
+   * @returns A collection of {@link CamelizedDiscordRole} objects assorted by role ID.
    *
    * @remarks
    * Requires the `MANAGE_ROLES` permission.
@@ -1156,7 +1163,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-role-positions}
    */
-  editRolePositions: (guildId: BigString, options: ModifyRolePositions[]) => Promise<Camelize<DiscordRole[]>>
+  editRolePositions: (guildId: BigString, options: ModifyRolePositions[]) => Promise<CamelizedDiscordRole[]>
   /**
    * Edits a scheduled event.
    *
@@ -1175,12 +1182,12 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event}
    */
-  editScheduledEvent: (guildId: BigString, eventId: BigString, options: Partial<EditScheduledEvent>) => Promise<Camelize<DiscordScheduledEvent>>
+  editScheduledEvent: (guildId: BigString, eventId: BigString, options: Partial<EditScheduledEvent>) => Promise<CamelizedDiscordScheduledEvent>
   /**
    * Edits a stage instance.
    *
    * @param channelId - The ID of the stage channel the stage instance is associated with.
-   * @returns An instance of the updated {@link DiscordStageInstance}.
+   * @returns An instance of the updated {@link CamelizedDiscordStageInstance}.
    *
    * @remarks
    * Requires the user to be a moderator of the stage channel.
@@ -1189,7 +1196,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance}
    */
-  editStageInstance: (channelId: BigString, data: EditStageInstanceOptions) => Promise<Camelize<DiscordStageInstance>>
+  editStageInstance: (channelId: BigString, data: EditStageInstanceOptions) => Promise<CamelizedDiscordStageInstance>
   /**
    * Edits the voice state of another user.
    *
@@ -1208,7 +1215,7 @@ export interface RestManager {
    * Edits a webhook.
    *
    * @param webhookId - The ID of the webhook to edit.
-   * @returns An instance of the edited {@link DiscordWebhook}.
+   * @returns An instance of the edited {@link CamelizedDiscordWebhook}.
    *
    * @remarks
    * Requires the `MANAGE_WEBHOOKS` permission.
@@ -1217,7 +1224,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook}
    */
-  editWebhook: (webhookId: BigString, options: ModifyWebhook) => Promise<Camelize<DiscordWebhook>>
+  editWebhook: (webhookId: BigString, options: ModifyWebhook) => Promise<CamelizedDiscordWebhook>
   /**
    * Edits a webhook message.
    *
@@ -1225,7 +1232,7 @@ export interface RestManager {
    * @param token - The webhook token, used to edit the message.
    * @param messageId - The ID of the message to edit.
    * @param options - The parameters for the edit of the message.
-   * @returns An instance of the edited {@link DiscordMessage}.
+   * @returns An instance of the edited {@link CamelizedDiscordMessage}.
    *
    * @remarks
    * Fires a _Message Update_ gateway event.
@@ -1237,13 +1244,13 @@ export interface RestManager {
     token: string,
     messageId: BigString,
     options: InteractionCallbackData & { threadId?: BigString },
-  ) => Promise<Camelize<DiscordMessage>>
+  ) => Promise<CamelizedDiscordMessage>
   /**
    * Edits a webhook using the webhook token, thereby bypassing the need for authentication + permissions.
    *
    * @param webhookId - The ID of the webhook to edit.
    * @param token - The webhook token, used to edit the webhook.
-   * @returns An instance of the edited {@link DiscordWebhook}.
+   * @returns An instance of the edited {@link CamelizedDiscordWebhook}.
    *
    * @remarks
    * Requires the `MANAGE_WEBHOOKS` permission.
@@ -1252,7 +1259,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token}
    */
-  editWebhookWithToken: (webhookId: BigString, token: string, options: Omit<ModifyWebhook, 'channelId'>) => Promise<Camelize<DiscordWebhook>>
+  editWebhookWithToken: (webhookId: BigString, token: string, options: Omit<ModifyWebhook, 'channelId'>) => Promise<CamelizedDiscordWebhook>
   /**
    * Edits a guild's welcome screen.
    *
@@ -1267,7 +1274,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen}
    */
-  editWelcomeScreen: (guildId: BigString, options: Camelize<DiscordModifyGuildWelcomeScreen>) => Promise<Camelize<DiscordWelcomeScreen>>
+  editWelcomeScreen: (guildId: BigString, options: CamelizedDiscordModifyGuildWelcomeScreen) => Promise<CamelizedDiscordWelcomeScreen>
   /**
    * Edits the settings of a guild's widget.
    *
@@ -1281,27 +1288,27 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-widget}
    */
-  editWidgetSettings: (guildId: BigString, options: Camelize<DiscordGuildWidgetSettings>) => Promise<Camelize<DiscordGuildWidgetSettings>>
+  editWidgetSettings: (guildId: BigString, options: CamelizedDiscordGuildWidgetSettings) => Promise<CamelizedDiscordGuildWidgetSettings>
   /**
    * Executes a webhook, causing a message to be posted in the channel configured for the webhook.
    *
    * @param webhookId - The ID of the webhook to execute.
    * @param token - The webhook token, used to execute the webhook.
    * @param options - The parameters for the execution of the webhook.
-   * @returns An instance of the created {@link DiscordMessage}, or `undefined` if the {@link ExecuteWebhook.wait | wait} property of the {@link options} object parameter is set to `false`.
+   * @returns An instance of the created {@link CamelizedDiscordMessage}, or `undefined` if the {@link ExecuteWebhook.wait | wait} property of the {@link options} object parameter is set to `false`.
    *
    * @remarks
    * If the webhook channel is a forum channel, you must provide a value for either `threadId` or `threadName`.
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#execute-webhook}
    */
-  executeWebhook: (webhookId: BigString, token: string, options: ExecuteWebhook) => Promise<Camelize<DiscordMessage> | undefined>
+  executeWebhook: (webhookId: BigString, token: string, options: ExecuteWebhook) => Promise<CamelizedDiscordMessage | undefined>
   /**
    * Follows an announcement channel, allowing messages posted within it to be cross-posted into the target channel.
    *
    * @param sourceChannelId - The ID of the announcement channel to follow.
    * @param targetChannelId - The ID of the target channel - the channel to cross-post to.
-   * @returns An instance of {@link DiscordFollowedChannel}.
+   * @returns An instance of {@link CamelizedDiscordFollowedChannel}.
    *
    * @remarks
    * Requires the `MANAGE_WEBHOOKS` permission in the __target channel__.
@@ -1310,12 +1317,12 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#follow-announcement-channel}
    */
-  followAnnouncement: (sourceChannelId: BigString, targetChannelId: BigString) => Promise<Camelize<DiscordFollowedChannel>>
+  followAnnouncement: (sourceChannelId: BigString, targetChannelId: BigString) => Promise<CamelizedDiscordFollowedChannel>
   /**
    * Gets the list of all active threads for a guild.
    *
    * @param guildId - The ID of the guild to get the threads of.
-   * @returns An instance of {@link DiscordActiveThreads}.
+   * @returns An instance of {@link CamelizedDiscordActiveThreads}.
    *
    * @remarks
    * Returns both public and private threads.
@@ -1324,9 +1331,9 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#list-active-guild-threads}
    */
-  getActiveThreads: (guildId: BigString) => Promise<Camelize<DiscordActiveThreads>>
+  getActiveThreads: (guildId: BigString) => Promise<CamelizedDiscordActiveThreads>
   /** Get the applications info */
-  getApplicationInfo: () => Promise<Camelize<DiscordApplication>>
+  getApplicationInfo: () => Promise<CamelizedDiscordApplication>
   /**
    * Gets the permissions of a guild application command.
    *
@@ -1336,7 +1343,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions}
    */
-  getApplicationCommandPermission: (guildId: BigString, commandId: BigString) => Promise<Camelize<DiscordApplicationCommandPermissions>>
+  getApplicationCommandPermission: (guildId: BigString, commandId: BigString) => Promise<CamelizedDiscordApplicationCommandPermissions>
   /**
    * Gets the permissions of all application commands registered in a guild by the ID of the guild.
    *
@@ -1345,7 +1352,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions}
    */
-  getApplicationCommandPermissions: (guildId: BigString) => Promise<Camelize<DiscordApplicationCommandPermissions[]>>
+  getApplicationCommandPermissions: (guildId: BigString) => Promise<CamelizedDiscordApplicationCommandPermissions[]>
   /**
    * Gets a guild's audit log.
    *
@@ -1358,57 +1365,57 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log}
    */
-  getAuditLog: (guildId: BigString, options?: GetGuildAuditLog) => Promise<Camelize<DiscordAuditLog>>
+  getAuditLog: (guildId: BigString, options?: GetGuildAuditLog) => Promise<CamelizedDiscordAuditLog>
   /**
    * Gets an automod rule by its ID.
    *
    * @param guildId - The ID of the guild to get the rule of.
    * @param ruleId - The ID of the rule to get.
-   * @returns An instance of {@link DiscordAutoModerationRule}.
+   * @returns An instance of {@link CamelizedDiscordAutoModerationRule}.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
    *
    * @see {@link https://discord.com/developers/docs/resources/auto-moderation#get-auto-moderation-rule}
    */
-  getAutomodRule: (guildId: BigString, ruleId: BigString) => Promise<Camelize<DiscordAutoModerationRule>>
+  getAutomodRule: (guildId: BigString, ruleId: BigString) => Promise<CamelizedDiscordAutoModerationRule>
   /**
    * Gets the list of automod rules for a guild.
    *
    * @param guildId - The ID of the guild to get the rules from.
-   * @returns A collection of {@link DiscordAutoModerationRule} objects assorted by rule ID.
+   * @returns A collection of {@link CamelizedDiscordAutoModerationRule} objects assorted by rule ID.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
    *
    * @see {@link https://discord.com/developers/docs/resources/auto-moderation#list-auto-moderation-rules-for-guild}
    */
-  getAutomodRules: (guildId: BigString) => Promise<Camelize<DiscordAutoModerationRule[]>>
+  getAutomodRules: (guildId: BigString) => Promise<CamelizedDiscordAutoModerationRule[]>
   /**
    * Gets the list of available voice regions.
    *
    * @returns A collection of {@link VoiceRegions | VoiceRegion} objects assorted by voice region ID.
    */
-  getAvailableVoiceRegions: () => Promise<Camelize<DiscordVoiceRegion[]>>
+  getAvailableVoiceRegions: () => Promise<CamelizedDiscordVoiceRegion[]>
   /**
    * Gets a ban by user ID.
    *
    * @param guildId - The ID of the guild to get the ban from.
    * @param userId - The ID of the user to get the ban for.
-   * @returns An instance of {@link DiscordBan}.
+   * @returns An instance of {@link CamelizedDiscordBan}.
    *
    * @remarks
    * Requires the `BAN_MEMBERS` permission.
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-ban}
    */
-  getBan: (guildId: BigString, userId: BigString) => Promise<Camelize<DiscordBan>>
+  getBan: (guildId: BigString, userId: BigString) => Promise<CamelizedDiscordBan>
   /**
    * Gets the list of bans for a guild.
    *
    * @param guildId - The ID of the guild to get the list of bans for.
    * @param options - The parameters for the fetching of the list of bans.
-   * @returns A collection of {@link DiscordBan} objects assorted by user ID.
+   * @returns A collection of {@link CamelizedDiscordBan} objects assorted by user ID.
    *
    * @remarks
    * Requires the `BAN_MEMBERS` permission.
@@ -1417,24 +1424,24 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-bans}
    */
-  getBans: (guildId: BigString, options?: GetBans) => Promise<Camelize<DiscordBan[]>>
+  getBans: (guildId: BigString, options?: GetBans) => Promise<CamelizedDiscordBan[]>
   /**
    * Gets a channel by its ID.
    *
    * @param channelId - The ID of the channel to get.
-   * @returns An instance of {@link DiscordChannel}.
+   * @returns An instance of {@link CamelizedDiscordChannel}.
    *
    * @remarks
    * If the channel is a thread, a {@link ThreadMember} object is included in the result.
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#get-channel}
    */
-  getChannel: (channelId: BigString) => Promise<Camelize<DiscordChannel>>
+  getChannel: (channelId: BigString) => Promise<CamelizedDiscordChannel>
   /**
    * Gets the list of invites for a channel.
    *
    * @param channelId - The ID of the channel to get the invites of.
-   * @returns A collection of {@link DiscordInviteMetadata} objects assorted by invite code.
+   * @returns A collection of {@link CamelizedDiscordInviteMetadata} objects assorted by invite code.
    *
    * @remarks
    * Requires the `MANAGE_CHANNELS` permission.
@@ -1443,59 +1450,59 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#get-channel-invites}
    */
-  getChannelInvites: (channelId: BigString) => Promise<Camelize<DiscordInviteMetadata[]>>
+  getChannelInvites: (channelId: BigString) => Promise<CamelizedDiscordInviteMetadata[]>
   /**
    * Gets the list of channels for a guild.
    *
    * @param guildId - The ID of the guild to get the channels of.
-   * @returns A collection of {@link DiscordChannel} objects assorted by channel ID.
+   * @returns A collection of {@link CamelizedDiscordChannel} objects assorted by channel ID.
    *
    * @remarks
    * Excludes threads.
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-channels}
    */
-  getChannels: (guildId: BigString) => Promise<Camelize<DiscordChannel[]>>
+  getChannels: (guildId: BigString) => Promise<CamelizedDiscordChannel[]>
   /**
    * Gets a list of webhooks for a channel.
    *
    * @param channelId - The ID of the channel which to get the webhooks of.
-   * @returns A collection of {@link DiscordWebhook} objects assorted by webhook ID.
+   * @returns A collection of {@link CamelizedDiscordWebhook} objects assorted by webhook ID.
    *
    * @remarks
    * Requires the `MANAGE_WEBHOOKS` permission.
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#get-channel-webhooks}
    */
-  getChannelWebhooks: (channelId: BigString) => Promise<Camelize<DiscordWebhook[]>>
+  getChannelWebhooks: (channelId: BigString) => Promise<CamelizedDiscordWebhook[]>
   /**
    * Gets or creates a DM channel with a user.
    *
    * @param userId - The ID of the user to create the DM channel with.
-   * @returns An instance of {@link DiscordChannel}.
+   * @returns An instance of {@link CamelizedDiscordChannel}.
    *
    * @see {@link https://discord.com/developers/docs/resources/user#create-dm}
    */
-  getDmChannel: (userId: BigString) => Promise<Camelize<DiscordChannel>>
+  getDmChannel: (userId: BigString) => Promise<CamelizedDiscordChannel>
   /**
    * Gets an emoji by its ID.
    *
    * @param guildId - The ID of the guild from which to get the emoji.
    * @param emojiId - The ID of the emoji to get.
-   * @returns An instance of {@link DiscordEmoji}.
+   * @returns An instance of {@link CamelizedDiscordEmoji}.
    *
    * @see {@link https://discord.com/developers/docs/resources/emoji#get-guild-emoji}
    */
-  getEmoji: (guildId: BigString, emojiId: BigString) => Promise<Camelize<DiscordEmoji>>
+  getEmoji: (guildId: BigString, emojiId: BigString) => Promise<CamelizedDiscordEmoji>
   /**
    * Gets the list of emojis for a guild.
    *
    * @param guildId - The ID of the guild which to get the emojis of.
-   * @returns A collection of {@link DiscordEmoji} objects assorted by emoji ID.
+   * @returns A collection of {@link CamelizedDiscordEmoji} objects assorted by emoji ID.
    *
    * @see {@link https://discord.com/developers/docs/resources/emoji#list-guild-emojis}
    */
-  getEmojis: (guildId: BigString) => Promise<Camelize<DiscordEmoji[]>>
+  getEmojis: (guildId: BigString) => Promise<CamelizedDiscordEmoji[]>
   /**
    * Gets a follow-up message to an interaction by the ID of the message.
    *
@@ -1512,9 +1519,9 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message}
    */
-  getFollowupMessage: (token: string, messageId: BigString) => Promise<Camelize<DiscordMessage>>
+  getFollowupMessage: (token: string, messageId: BigString) => Promise<CamelizedDiscordMessage>
   /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */
-  getGatewayBot: () => Promise<Camelize<DiscordGetGatewayBot>>
+  getGatewayBot: () => Promise<CamelizedDiscordGetGatewayBot>
   /**
    * Gets a global application command by its ID.
    *
@@ -1523,7 +1530,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-command}
    */
-  getGlobalApplicationCommand: (commandId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
+  getGlobalApplicationCommand: (commandId: BigString) => Promise<CamelizedDiscordApplicationCommand>
   /**
    * Gets the list of your bot's global application commands.
    *
@@ -1531,7 +1538,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands}
    */
-  getGlobalApplicationCommands: () => Promise<Camelize<DiscordApplicationCommand[]>>
+  getGlobalApplicationCommands: () => Promise<CamelizedDiscordApplicationCommand[]>
   /**
    * Gets a guild by its ID.
    *
@@ -1541,7 +1548,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild}
    */
-  getGuild: (guildId: BigString, options?: { counts?: boolean }) => Promise<Camelize<DiscordGuild>>
+  getGuild: (guildId: BigString, options?: { counts?: boolean }) => Promise<CamelizedDiscordGuild>
   /**
    * Gets a guild application command by its ID.
    *
@@ -1551,7 +1558,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command}
    */
-  getGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<Camelize<DiscordApplicationCommand>>
+  getGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<CamelizedDiscordApplicationCommand>
   /**
    * Gets the list of application commands registered by your bot in a guild.
    *
@@ -1560,7 +1567,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commandss}
    */
-  getGuildApplicationCommands: (guildId: BigString) => Promise<Camelize<DiscordApplicationCommand[]>>
+  getGuildApplicationCommands: (guildId: BigString) => Promise<CamelizedDiscordApplicationCommand[]>
   /**
    * Gets the preview of a guild by a guild's ID.
    *
@@ -1572,30 +1579,30 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-preview}
    */
-  getGuildPreview: (guildId: BigString) => Promise<Camelize<DiscordGuildPreview>>
+  getGuildPreview: (guildId: BigString) => Promise<CamelizedDiscordGuildPreview>
   /**
    * Returns a sticker object for the given guild and sticker IDs.
    *
    * @param guildId The ID of the guild to get
    * @param stickerId The ID of the sticker to get
-   * @return A {@link DiscordSticker}
+   * @return A {@link CamelizedDiscordSticker}
    *
    * @remarks Includes the user field if the bot has the `MANAGE_EMOJIS_AND_STICKERS` permission.
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#get-guild-sticker}
    */
-  getGuildSticker: (guildId: BigString, stickerId: BigString) => Promise<Camelize<DiscordSticker>>
+  getGuildSticker: (guildId: BigString, stickerId: BigString) => Promise<CamelizedDiscordSticker>
   /**
    * Returns an array of sticker objects for the given guild.
    *
    * @param guildId The ID of the guild to get
-   * @returns A collection of {@link DiscordSticker} objects assorted by sticker ID.
+   * @returns A collection of {@link CamelizedDiscordSticker} objects assorted by sticker ID.
    *
    * @remarks Includes user fields if the bot has the `MANAGE_EMOJIS_AND_STICKERS` permission.
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#list-guild-stickers}
    */
-  getGuildStickers: (guildId: BigString) => Promise<Camelize<DiscordSticker[]>>
+  getGuildStickers: (guildId: BigString) => Promise<CamelizedDiscordSticker[]>
   /**
    * Gets a template by its code.
    *
@@ -1607,7 +1614,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-template}
    */
-  getGuildTemplate: (templateCode: string) => Promise<Camelize<DiscordTemplate>>
+  getGuildTemplate: (templateCode: string) => Promise<CamelizedDiscordTemplate>
   /**
    * Gets the list of templates for a guild.
    *
@@ -1619,19 +1626,19 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
    */
-  getGuildTemplates: (guildId: BigString) => Promise<Camelize<DiscordTemplate[]>>
+  getGuildTemplates: (guildId: BigString) => Promise<CamelizedDiscordTemplate[]>
   /**
    * Gets the list of webhooks for a guild.
    *
    * @param guildId - The ID of the guild to get the list of webhooks for.
-   * @returns A collection of {@link DiscordWebhook} objects assorted by webhook ID.
+   * @returns A collection of {@link CamelizedDiscordWebhook} objects assorted by webhook ID.
    *
    * @remarks
    * Requires the `MANAGE_WEBHOOKS` permission.
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#get-guild-webhooks}
    */
-  getGuildWebhooks: (guildId: BigString) => Promise<Camelize<DiscordWebhook[]>>
+  getGuildWebhooks: (guildId: BigString) => Promise<CamelizedDiscordWebhook[]>
   /**
    * Gets the list of integrations attached to a guild.
    *
@@ -1643,17 +1650,17 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-integrations}
    */
-  getIntegrations: (guildId: BigString) => Promise<Camelize<DiscordIntegration[]>>
+  getIntegrations: (guildId: BigString) => Promise<CamelizedDiscordIntegration[]>
   /**
    * Gets an invite to a channel by its invite code.
    *
    * @param inviteCode - The invite code of the invite to get.
    * @param options - The parameters for the fetching of the invite.
-   * @returns An instance of {@link DiscordInviteMetadata}.
+   * @returns An instance of {@link CamelizedDiscordInviteMetadata}.
    *
    * @see {@link https://discord.com/developers/docs/resources/invite#get-invite}
    */
-  getInvite: (inviteCode: string, options?: GetInvite) => Promise<Camelize<DiscordInviteMetadata>>
+  getInvite: (inviteCode: string, options?: GetInvite) => Promise<CamelizedDiscordInviteMetadata>
   /**
    * Gets the list of invites for a guild.
    *
@@ -1665,7 +1672,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/invite#get-invites}
    */
-  getInvites: (guildId: BigString) => Promise<Camelize<DiscordInviteMetadata[]>>
+  getInvites: (guildId: BigString) => Promise<CamelizedDiscordInviteMetadata[]>
   /**
    * Gets a message from a channel by the ID of the message.
    *
@@ -1681,7 +1688,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#get-channel-message}
    */
-  getMessage: (channelId: BigString, messageId: BigString) => Promise<Camelize<DiscordMessage>>
+  getMessage: (channelId: BigString, messageId: BigString) => Promise<CamelizedDiscordMessage>
   /**
    * Gets multiple messages from a channel.
    *
@@ -1697,7 +1704,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#get-channel-messages}
    */
-  getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<Camelize<DiscordMessage[]>>
+  getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<CamelizedDiscordMessage[]>
   /**
    * Returns the list of sticker packs available to Nitro subscribers.
    *
@@ -1705,7 +1712,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#list-nitro-sticker-packs}
    */
-  getNitroStickerPacks: () => Promise<Camelize<DiscordStickerPack[]>>
+  getNitroStickerPacks: () => Promise<CamelizedDiscordStickerPack[]>
   /**
    * Gets the initial message response to an interaction.
    *
@@ -1721,7 +1728,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response}
    */
-  getOriginalInteractionResponse: (token: string) => Promise<Camelize<DiscordMessage>>
+  getOriginalInteractionResponse: (token: string) => Promise<CamelizedDiscordMessage>
   /**
    * Gets the pinned messages for a channel.
    *
@@ -1736,13 +1743,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#get-pinned-messages}
    */
-  getPinnedMessages: (channelId: BigString) => Promise<Camelize<DiscordMessage[]>>
+  getPinnedMessages: (channelId: BigString) => Promise<CamelizedDiscordMessage[]>
   /**
    * Gets the list of private archived threads for a channel.
    *
    * @param channelId - The ID of the channel to get the archived threads for.
    * @param options - The parameters for the fetching of threads.
-   * @returns An instance of {@link DiscordArchivedThreads}.
+   * @returns An instance of {@link CamelizedDiscordArchivedThreads}.
    *
    * @remarks
    * Requires the `READ_MESSAGE_HISTORY` permission.
@@ -1754,13 +1761,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-private-archived-threads}
    */
-  getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<CamelizedDiscordArchivedThreads>
   /**
    * Gets the list of private archived threads the bot is a member of for a channel.
    *
    * @param channelId - The ID of the channel to get the archived threads for.
    * @param options - The parameters for the fetching of threads.
-   * @returns An instance of {@link DiscordArchivedThreads}.
+   * @returns An instance of {@link CamelizedDiscordArchivedThreads}.
    *
    * @remarks
    * Requires the `READ_MESSAGE_HISTORY` permission.
@@ -1771,7 +1778,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-joined-private-archived-threads}
    */
-  getPrivateJoinedArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  getPrivateJoinedArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<CamelizedDiscordArchivedThreads>
   /**
    * Gets the number of members that would be kicked from a guild during pruning.
    *
@@ -1784,7 +1791,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-prune-count}
    */
-  getPruneCount: (guildId: BigString, options?: GetGuildPruneCountQuery) => Promise<Camelize<DiscordPrunedCount>>
+  getPruneCount: (guildId: BigString, options?: GetGuildPruneCountQuery) => Promise<CamelizedDiscordPrunedCount>
   /**
    * Gets the list of public archived threads for a channel.
    *
@@ -1802,7 +1809,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-public-archived-threads}
    */
-  getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<Camelize<DiscordArchivedThreads>>
+  getPublicArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<CamelizedDiscordArchivedThreads>
   /**
    * Gets the list of roles for a guild.
    *
@@ -1814,7 +1821,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-roles}
    */
-  getRoles: (guildId: BigString) => Promise<Camelize<DiscordRole[]>>
+  getRoles: (guildId: BigString) => Promise<CamelizedDiscordRole[]>
   /**
    * Gets a scheduled event by its ID.
    *
@@ -1825,7 +1832,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event}
    */
-  getScheduledEvent: (guildId: BigString, eventId: BigString, options?: { withUserCount?: boolean }) => Promise<Camelize<DiscordScheduledEvent>>
+  getScheduledEvent: (guildId: BigString, eventId: BigString, options?: { withUserCount?: boolean }) => Promise<CamelizedDiscordScheduledEvent>
   /**
    * Gets the list of scheduled events for a guild.
    *
@@ -1835,7 +1842,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#list-scheduled-events-for-guild}
    */
-  getScheduledEvents: (guildId: BigString, options?: GetScheduledEvents) => Promise<Camelize<DiscordScheduledEvent[]>>
+  getScheduledEvents: (guildId: BigString, options?: GetScheduledEvents) => Promise<CamelizedDiscordScheduledEvent[]>
   /**
    * Gets the list of subscribers to a scheduled event from a guild.
    *
@@ -1855,49 +1862,49 @@ export interface RestManager {
     guildId: BigString,
     eventId: BigString,
     options?: GetScheduledEventUsers,
-  ) => Promise<Array<{ user: Camelize<DiscordUser>; member?: Camelize<DiscordMember> }>>
+  ) => Promise<Array<{ user: CamelizedDiscordUser; member?: CamelizedDiscordMember }>>
   /** Get the bots Gateway metadata that can help during the operation of large or sharded bots. */
-  getSessionInfo: () => Promise<Camelize<DiscordGetGatewayBot>>
+  getSessionInfo: () => Promise<CamelizedDiscordGetGatewayBot>
   /**
    * Gets the stage instance associated with a stage channel, if one exists.
    *
    * @param channelId - The ID of the stage channel the stage instance is associated with.
-   * @returns An instance of {@link DiscordStageInstance}.
+   * @returns An instance of {@link CamelizedDiscordStageInstance}.
    *
    * @see {@link https://discord.com/developers/docs/resources/stage-instance#get-stage-instance}
    */
-  getStageInstance: (channelId: BigString) => Promise<Camelize<DiscordStageInstance>>
+  getStageInstance: (channelId: BigString) => Promise<CamelizedDiscordStageInstance>
   /**
    * Returns a sticker object for the given sticker ID.
    *
    * @param stickerId The ID of the sticker to get
-   * @returns A {@link DiscordSticker}
+   * @returns A {@link CamelizedDiscordSticker}
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#get-sticker}
    */
-  getSticker: (stickerId: BigString) => Promise<Camelize<DiscordSticker>>
+  getSticker: (stickerId: BigString) => Promise<CamelizedDiscordSticker>
   /**
    * Gets a thread member by their user ID.
    *
    * @param channelId - The ID of the thread to get the thread member of.
    * @param userId - The user ID of the thread member to get.
-   * @returns An instance of {@link DiscordThreadMember}.
+   * @returns An instance of {@link CamelizedDiscordThreadMember}.
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#get-thread-member}
    */
-  getThreadMember: (channelId: BigString, userId: BigString) => Promise<Camelize<DiscordThreadMember>>
+  getThreadMember: (channelId: BigString, userId: BigString) => Promise<CamelizedDiscordThreadMember>
   /**
    * Gets the list of thread members for a thread.
    *
    * @param channelId - The ID of the thread to get the thread members of.
-   * @returns A collection of {@link DiscordThreadMember} assorted by user ID.
+   * @returns A collection of {@link CamelizedDiscordThreadMember} assorted by user ID.
    *
    * @remarks
    * Requires the application to have the `GUILD_MEMBERS` privileged intent enabled.
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#list-thread-members}
    */
-  getThreadMembers: (channelId: BigString) => Promise<Camelize<DiscordThreadMember[]>>
+  getThreadMembers: (channelId: BigString) => Promise<CamelizedDiscordThreadMember[]>
   /**
    * Gets the list of users that reacted with an emoji to a message.
    *
@@ -1909,14 +1916,14 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#get-reactions}
    */
-  getReactions: (channelId: BigString, messageId: BigString, reaction: string, options?: GetReactions) => Promise<Camelize<DiscordUser[]>>
+  getReactions: (channelId: BigString, messageId: BigString, reaction: string, options?: GetReactions) => Promise<CamelizedDiscordUser[]>
   /**
    * Get a user's data from the api
    *
    * @param id The user's id
-   * @returns {Camelize<DiscordUser>}
+   * @returns {CamelizedDiscordUser}
    */
-  getUser: (id: BigString) => Promise<Camelize<DiscordUser>>
+  getUser: (id: BigString) => Promise<CamelizedDiscordUser>
   /**
    * Gets information about the vanity url of a guild.
    *
@@ -1930,7 +1937,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-vanity-url}
    */
-  getVanityUrl: (guildId: BigString) => Promise<Camelize<DiscordVanityUrl>>
+  getVanityUrl: (guildId: BigString) => Promise<CamelizedDiscordVanityUrl>
   /**
    * Gets the list of voice regions for a guild.
    *
@@ -1939,19 +1946,19 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-voice-regions}
    */
-  getVoiceRegions: (guildId: BigString) => Promise<Camelize<DiscordVoiceRegion[]>>
+  getVoiceRegions: (guildId: BigString) => Promise<CamelizedDiscordVoiceRegion[]>
   /**
    * Gets a webhook by its ID.
    *
    * @param webhookId - The ID of the webhook to get.
-   * @returns An instance of {@link DiscordWebhook}.
+   * @returns An instance of {@link CamelizedDiscordWebhook}.
    *
    * @remarks
    * Requires the `MANAGE_WEBHOOKS` permission.
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook}
    */
-  getWebhook: (webhookId: BigString) => Promise<Camelize<DiscordWebhook>>
+  getWebhook: (webhookId: BigString) => Promise<CamelizedDiscordWebhook>
   /**
    * Gets a webhook message by its ID.
    *
@@ -1959,7 +1966,7 @@ export interface RestManager {
    * @param token - The webhook token, used to get webhook messages.
    * @param messageId - the ID of the webhook message to get.
    * @param options - The parameters for the fetching of the message.
-   * @returns An instance of {@link DiscordMessage}.
+   * @returns An instance of {@link CamelizedDiscordMessage}.
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook-message}
    */
@@ -1968,17 +1975,17 @@ export interface RestManager {
     token: string,
     messageId: BigString,
     options?: GetWebhookMessageOptions,
-  ) => Promise<Camelize<DiscordMessage>>
+  ) => Promise<CamelizedDiscordMessage>
   /**
    * Gets a webhook using the webhook token, thereby bypassing the need for authentication + permissions.
    *
    * @param webhookId - The ID of the webhook to get.
    * @param token - The webhook token, used to get the webhook.
-   * @returns An instance of {@link DiscordWebhook}.
+   * @returns An instance of {@link CamelizedDiscordWebhook}.
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#get-webhook-with-token}
    */
-  getWebhookWithToken: (webhookId: BigString, token: string) => Promise<Camelize<DiscordWebhook>>
+  getWebhookWithToken: (webhookId: BigString, token: string) => Promise<CamelizedDiscordWebhook>
   /**
    * Gets the welcome screen for a guild.
    *
@@ -1991,7 +1998,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-welcome-screen}
    */
-  getWelcomeScreen: (guildId: BigString) => Promise<Camelize<DiscordWelcomeScreen>>
+  getWelcomeScreen: (guildId: BigString) => Promise<CamelizedDiscordWelcomeScreen>
   /**
    * Gets the guild widget by guild ID.
    *
@@ -2000,7 +2007,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-widget}
    */
-  getWidget: (guildId: BigString) => Promise<Camelize<DiscordGuildWidget>>
+  getWidget: (guildId: BigString) => Promise<CamelizedDiscordGuildWidget>
   /**
    * Gets the settings of a guild's widget.
    *
@@ -2012,7 +2019,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-widget-settings}
    */
-  getWidgetSettings: (guildId: BigString) => Promise<Camelize<DiscordGuildWidgetSettings>>
+  getWidgetSettings: (guildId: BigString) => Promise<CamelizedDiscordGuildWidgetSettings>
   /**
    * Adds the bot user to a thread.
    *
@@ -2067,7 +2074,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#crosspost-message}
    */
-  publishMessage: (channelId: BigString, messageId: BigString) => Promise<Camelize<DiscordMessage>>
+  publishMessage: (channelId: BigString, messageId: BigString) => Promise<CamelizedDiscordMessage>
   /**
    * Removes a role from a member.
    *
@@ -2105,7 +2112,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel to send the message in.
    * @param options - The parameters for the creation of the message.
-   * @returns An instance of the created {@link DiscordMessage}.
+   * @returns An instance of the created {@link CamelizedDiscordMessage}.
    *
    * @remarks
    * Requires that the bot user be able to see the contents of the channel the message is to be sent in.
@@ -2126,7 +2133,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#create-message}
    */
-  sendMessage: (channelId: BigString, options: CreateMessageOptions) => Promise<Camelize<DiscordMessage>>
+  sendMessage: (channelId: BigString, options: CreateMessageOptions) => Promise<CamelizedDiscordMessage>
   /**
    * Sends a follow-up message to an interaction.
    *
@@ -2147,7 +2154,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message}
    */
-  sendFollowupMessage: (token: string, options: InteractionCallbackData) => Promise<Camelize<DiscordMessage>>
+  sendFollowupMessage: (token: string, options: InteractionCallbackData) => Promise<CamelizedDiscordMessage>
   /**
    * Sends a response to an interaction.
    *
@@ -2189,13 +2196,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-from-message}
    */
-  startThreadWithMessage: (channelId: BigString, messageId: BigString, options: StartThreadWithMessage) => Promise<Camelize<DiscordChannel>>
+  startThreadWithMessage: (channelId: BigString, messageId: BigString, options: StartThreadWithMessage) => Promise<CamelizedDiscordChannel>
   /**
    * Creates a thread without using a message as the thread's point of origin.
    *
    * @param channelId - The ID of the channel in which to create the thread.
    * @param options - The parameters to use for the creation of the thread.
-   * @returns An instance of the created {@link DiscordChannel | Thread}.
+   * @returns An instance of the created {@link CamelizedDiscordChannel | Thread}.
    *
    * @remarks
    * Creating a private thread requires the server to be boosted.
@@ -2204,7 +2211,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-without-message}
    */
-  startThreadWithoutMessage: (channelId: BigString, options: StartThreadWithoutMessage) => Promise<Camelize<DiscordChannel>>
+  startThreadWithoutMessage: (channelId: BigString, options: StartThreadWithoutMessage) => Promise<CamelizedDiscordChannel>
   /**
    * Synchronises a template with the current state of a guild.
    *
@@ -2218,7 +2225,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-template#get-guild-templates}
    */
-  syncGuildTemplate: (guildId: BigString) => Promise<Camelize<DiscordTemplate>>
+  syncGuildTemplate: (guildId: BigString) => Promise<CamelizedDiscordTemplate>
   /**
    * Triggers a typing indicator for the bot user.
    *
@@ -2245,7 +2252,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands}
    */
-  upsertGlobalApplicationCommands: (commands: CreateApplicationCommand[]) => Promise<Camelize<DiscordApplicationCommand[]>>
+  upsertGlobalApplicationCommands: (commands: CreateApplicationCommand[]) => Promise<CamelizedDiscordApplicationCommand[]>
   /**
    * Re-registers the list of application commands registered in a guild, overwriting the previous commands completely.
    *
@@ -2260,7 +2267,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands}
    */
-  upsertGuildApplicationCommands: (guildId: BigString, commands: CreateApplicationCommand[]) => Promise<Camelize<DiscordApplicationCommand[]>>
+  upsertGuildApplicationCommands: (guildId: BigString, commands: CreateApplicationCommand[]) => Promise<CamelizedDiscordApplicationCommand[]>
   /**
    * Bans a user from a guild.
    *
@@ -2282,14 +2289,14 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild to edit the nickname of the bot user in.
    * @param options - The parameters for the edit of the nickname.
-   * @returns An instance of the edited {@link DiscordMember}
+   * @returns An instance of the edited {@link CamelizedDiscordMember}
    *
    * @remarks
    * Fires a _Guild Member Update_ gateway event.
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-member}
    */
-  editBotMember: (guildId: BigString, options: EditBotMemberOptions) => Promise<Camelize<DiscordMember>>
+  editBotMember: (guildId: BigString, options: EditBotMemberOptions) => Promise<CamelizedDiscordMember>
   /**
    * Edits a member's properties.
    *
@@ -2305,24 +2312,24 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-member}
    */
-  editMember: (guildId: BigString, userId: BigString, options: ModifyGuildMember) => Promise<Camelize<DiscordMember>>
+  editMember: (guildId: BigString, userId: BigString, options: ModifyGuildMember) => Promise<CamelizedDiscordMember>
   /**
    * Gets the member object by user ID.
    *
   
    * @param guildId - The ID of the guild to get the member object for.
    * @param userId - The ID of the user to get the member object for.
-   * @returns An instance of {@link DiscordMemberWithUser}.
+   * @returns An instance of {@link CamelizedDiscordMemberWithUser}.
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-member}
    */
-  getMember: (guildId: BigString, userId: BigString) => Promise<Camelize<DiscordMemberWithUser>>
+  getMember: (guildId: BigString, userId: BigString) => Promise<CamelizedDiscordMemberWithUser>
   /**
    * Gets the list of members for a guild.
    *
    * @param guildId - The ID of the guild to get the list of members for.
    * @param options - The parameters for the fetching of the members.
-   * @returns A collection of {@link DiscordMemberWithUser} objects assorted by user ID.
+   * @returns A collection of {@link CamelizedDiscordMemberWithUser} objects assorted by user ID.
    *
    * @remarks
    * Requires the `GUILD_MEMBERS` intent.
@@ -2335,7 +2342,7 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
    * @see {@link https://discord.com/developers/docs/topics/rate-limits#rate-limits}
    */
-  getMembers: (guildId: BigString, options: ListGuildMembers) => Promise<Camelize<DiscordMemberWithUser[]>>
+  getMembers: (guildId: BigString, options: ListGuildMembers) => Promise<CamelizedDiscordMemberWithUser[]>
 
   /**
    * Kicks a member from a guild.
@@ -2397,11 +2404,11 @@ export interface RestManager {
    * @param guildId - The ID of the guild to search in.
    * @param query - The string to match usernames or nicknames against.
    * @param options - The parameters for searching through the members.
-   * @returns A collection of {@link DiscordMember} objects assorted by user ID.
+   * @returns A collection of {@link CamelizedDiscordMember} objects assorted by user ID.
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#search-guild-members}
    */
-  searchMembers: (guildId: BigString, query: string, options?: Omit<SearchMembers, 'query'>) => Promise<Camelize<DiscordMemberWithUser[]>>
+  searchMembers: (guildId: BigString, query: string, options?: Omit<SearchMembers, 'query'>) => Promise<CamelizedDiscordMemberWithUser[]>
   /**
    * Unbans a user from a guild.
    *
@@ -2494,7 +2501,7 @@ export interface WebhookMessageEditor {
    * @param token - The webhook token, used to edit the message.
    * @param messageId - The ID of the message to edit.
    * @param options - The parameters for the edit of the message.
-   * @returns An instance of the edited {@link DiscordMessage}.
+   * @returns An instance of the edited {@link CamelizedDiscordMessage}.
    *
    * @remarks
    * Fires a _Message Update_ gateway event.
@@ -2502,7 +2509,7 @@ export interface WebhookMessageEditor {
    * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
    */
   (webhookId: BigString, token: string, messageId: BigString, options: InteractionCallbackData & { threadId?: BigString }): Promise<
-    Camelize<DiscordMessage>
+    CamelizedDiscordMessage
   >
   /**
    * Edits the original webhook message.
@@ -2510,14 +2517,14 @@ export interface WebhookMessageEditor {
    * @param webhookId - The ID of the webhook to edit the original message of.
    * @param token - The webhook token, used to edit the message.
    * @param options - The parameters for the edit of the message.
-   * @returns An instance of the edited {@link DiscordMessage}.
+   * @returns An instance of the edited {@link CamelizedDiscordMessage}.
    *
    * @remarks
    * Fires a _Message Update_ gateway event.
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
    */
-  original: (webhookId: BigString, token: string, options: InteractionCallbackData & { threadId?: BigString }) => Promise<Camelize<DiscordMessage>>
+  original: (webhookId: BigString, token: string, options: InteractionCallbackData & { threadId?: BigString }) => Promise<CamelizedDiscordMessage>
 }
 
 export interface RestRequestResponse {

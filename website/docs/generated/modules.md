@@ -6,9 +6,9 @@
 
 ### Modules
 
-- [@discordeno/bot](modules/discordeno_bot.md)
-- [@discordeno/client](modules/discordeno_client.md)
-- [@discordeno/gateway](modules/discordeno_gateway.md)
-- [@discordeno/rest](modules/discordeno_rest.md)
-- [@discordeno/types](modules/discordeno_types.md)
-- [@discordeno/utils](modules/discordeno_utils.md)
+- [@discordeno/bot](modules/Bot.md)
+- [@discordeno/client](modules/Client.md)
+- [@discordeno/gateway](modules/Gateway.md)
+- [@discordeno/rest](modules/Rest.md)
+- [@discordeno/types](modules/Types.md)
+- [@discordeno/utils](modules/Utils.md)

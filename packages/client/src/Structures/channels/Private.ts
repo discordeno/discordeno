@@ -9,7 +9,7 @@ import Channel from './Channel.js'
 
 export class PrivateChannel extends Channel {
   /** The ID of the last message in this channel */
-  lastMessageID?: string | null
+  lastMessageID = ""
   // TODO: THIS A THING IN DMS????
   /** The rate limit per user. */
   rateLimitPerUser?: number
@@ -21,7 +21,7 @@ export class PrivateChannel extends Channel {
   constructor(data: DiscordChannel, client: Client) {
     super(data, client)
 
-    this.lastMessageID = data.last_message_id
+    this.lastMessageID = data.last_message_id ?? ""
     this.rateLimitPerUser = data.rate_limit_per_user
     if (this.type === ChannelTypes.DM || this.type === undefined) {
       if (data.recipients?.[0]) this.recipient = new User(data.recipients[0], client)
@@ -36,7 +36,7 @@ export class PrivateChannel extends Channel {
   }
 
   /** Create a message in a text channel */
-  async createMessage(content: MessageContent, file: FileContent | FileContent[]): Promise<Message> {
+  async createMessage(content: MessageContent, file?: FileContent | FileContent[]): Promise<Message> {
     return await this.client.createMessage.call(this.client, this.id, content, file)
   }
 

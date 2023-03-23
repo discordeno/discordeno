@@ -1,8 +1,8 @@
 import { expect } from 'chai'
 import { afterEach, beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
-import type { RestManager } from '../../src/types.js'
 import { createRestManager } from '../../src/manager.js'
+import type { RestManager } from '../../src/types.js'
 import { fakeToken as token } from '../constants.js'
 
 describe('[rest] manager', () => {
@@ -22,7 +22,10 @@ describe('[rest] manager', () => {
     const options = {
       token,
       version: 9,
-      baseUrl: 'https://localhost:8000',
+      proxy: {
+        baseUrl: 'https://localhost:8000',
+        authorization: token
+      }
     } as const
 
     const rest = createRestManager(options)
@@ -32,7 +35,16 @@ describe('[rest] manager', () => {
     })
 
     it('With a base url', () => {
-      expect(rest.baseUrl).to.be.equal(options.baseUrl)
+      expect(rest.baseUrl).to.be.equal(options.proxy.baseUrl)
+    })
+
+    it('With a falsy token', () => {
+      expect(() => createRestManager({ token: '' })).throws()
+    })
+
+    it('With an application id', () => {
+      const subrest = createRestManager({ ...options, applicationId: '130136895395987456' })
+      expect(subrest.applicationId).to.be.equal(130136895395987456n)
     })
   })
 

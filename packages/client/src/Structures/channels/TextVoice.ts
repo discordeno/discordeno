@@ -22,7 +22,7 @@ import VoiceChannel from './Voice.js'
  * @prop {Number} rateLimitPerUser The ratelimit of the channel, in seconds. 0 means no ratelimit is enabled
  */
 export class TextVoiceChannel extends VoiceChannel {
-  lastMessageID: string | null
+  lastMessageID = ""
   messages: Collection<string, Message>
   rateLimitPerUser: number | null
 
@@ -33,7 +33,7 @@ export class TextVoiceChannel extends VoiceChannel {
     if (messageLimit == null) this.messages.limit = client.options.messageLimit
     else this.messages.limit = messageLimit
 
-    this.lastMessageID = data.last_message_id ?? null
+    this.lastMessageID = data.last_message_id ?? ""
     this.rateLimitPerUser = data.rate_limit_per_user == null ? null : data.rate_limit_per_user
   }
 

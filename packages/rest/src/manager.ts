@@ -6,6 +6,7 @@ import {
   camelize,
   camelToSnakeCase,
   delay,
+  encode,
   findFiles,
   getBotIdFromToken,
   isGetMessagesAfter,
@@ -16,6 +17,7 @@ import {
   processReactionString,
   urlToBase64,
 } from '@discordeno/utils'
+import fetch from 'node-fetch'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -59,6 +61,7 @@ import type {
   DiscordVoiceRegion,
   DiscordWebhook,
   DiscordWelcomeScreen,
+  FileContent,
   GetMessagesOptions,
   GetScheduledEventUsers,
   MfaLevels,
@@ -77,7 +80,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     token: options.token,
     applicationId: options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token),
     version: options.version ?? 10,
-    baseUrl: options.baseUrl ?? 'https://discord.com/api',
+    baseUrl: options.proxy?.baseUrl ?? 'https://discord.com/api',
     maxRetryCount: Infinity,
     globallyRateLimited: false,
     processingRateLimitedPaths: false,
@@ -85,6 +88,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     queues: new Map(),
     rateLimitedPaths: new Map(),
     invalidBucket: createInvalidRequestBucket({}),
+    authorization: options.proxy?.authorization,
 
     routes: {
       webhooks: {
@@ -665,8 +669,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const newObj: any = {}
 
         for (const key of Object.keys(obj)) {
-          if (key === 'permissions') {
-            newObj.permissions = calculateBits(obj[key])
+          // Keys that dont require snake casing
+          if (['permissions', 'allow', 'deny'].includes(key)) {
+            newObj[key] = calculateBits(obj[key])
+            continue
+          }
+
+          if (key === 'defaultMemberPermissions') {
+            newObj.default_member_permissions = calculateBits(obj[key])
             continue
           }
 
@@ -868,18 +878,18 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             logger.debug(`Request to ${url} exceeded the maximum allowed retries.`, 'with payload:', payload)
             // rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(options)}`)
             // Remove item from queue to prevent retry
-            return options.reject({
+            options.reject({
               ok: false,
               status: response.status,
               error: 'The options was rate limited and it maxed out the retries limit.',
             })
+            return
           }
 
           // Rate limited, add back to queue
           rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get('X-RateLimit-Scope') === 'shared')
 
           const resetAfter = response.headers.get('x-ratelimit-reset-after')
-          logger.warn(`Request to ${url} was rate limited. Reset after ${resetAfter} seconds.`)
           if (resetAfter) await delay(Number(resetAfter) * 1000)
           // process the response to prevent mem leak
           await response.json()
@@ -887,13 +897,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           return await options.retryRequest?.(options)
         }
 
-        return options.reject({ ok: false, status: response.status, body: JSON.stringify(await response.json()) })
+        options.reject({ ok: false, status: response.status, body: JSON.stringify(await response.json()) })
+        return
       }
 
       const is204 = response.status === 204
       const json = is204 ? undefined : await response.json()
       // Discord sometimes sends no response with 204 code
-      return options.resolve({ ok: true, status: response.status, body: JSON.stringify(json) })
+      options.resolve({ ok: true, status: response.status, body: JSON.stringify(json) })
     },
 
     // Credits: github.com/abalabahaha/eris lib/rest/RequestHandler.js#L397
@@ -945,6 +956,44 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async makeRequest(method, url, body, options) {
+      if (!rest.baseUrl.startsWith('https://discord.com') && url[0] === '/') {
+        // Special handling for sending blobs across http to proxy
+        if (body?.file) {
+          if (!Array.isArray(body.file)) {
+            body.file = [body.file]
+          }
+          // convert blobs to string before sending to proxy
+          body.file = await Promise.all(
+            body.file.map(async (f: FileContent) => {
+              const url = encode(await f.blob.arrayBuffer())
+
+              return { name: f.name, blob: `data:${f.blob.type};base64,${url}` }
+            }),
+          )
+        }
+
+        const headers: HeadersInit = {
+          Authorization: rest.authorization ?? "",
+        }
+        if (body) {
+          headers['Content-Type'] = 'application/json'
+        }
+        const result = await fetch(`${rest.baseUrl}${url}`, {
+          body: body ? JSON.stringify(body) : undefined,
+          headers,
+          method,
+        })
+
+        if (!result.ok) {
+          const err = await result.json().catch(() => {}) as Record<string, any>;
+          // Legacy Handling to not break old code or when body is missing
+          if (!err?.body) throw new Error(`Error: ${err.message ?? result.statusText}`)
+          throw new Error(JSON.stringify(err));
+        }
+
+        return result.status !== 204 ? await result.json() as any : undefined
+      }
+
       return await new Promise((resolve, reject) => {
         const payload: SendRequestOptions = {
           url,
@@ -954,7 +1003,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           retryRequest: async function (options: SendRequestOptions) {
             rest.processRequest(payload)
           },
-          resolve: (data) => resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined),
+          resolve: (data) => {
+            resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined)
+          },
           reject,
           options,
         }
@@ -972,7 +1023,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async delete(url: string, body?: Record<string, any>) {
-      return camelize(await rest.makeRequest('DELETE', url, body))
+      camelize(await rest.makeRequest('DELETE', url, body))
     },
 
     async patch<T = Record<string, unknown>>(url: string, body?: Record<string, any>) {
@@ -986,12 +1037,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async addReaction(channelId, messageId, reaction) {
       reaction = processReactionString(reaction)
 
-      return await rest.put(rest.routes.channels.reactions.bot(channelId, messageId, reaction))
+      await rest.put(rest.routes.channels.reactions.bot(channelId, messageId, reaction))
     },
 
     async addReactions(channelId, messageId, reactions, ordered = false) {
       if (!ordered) {
-        await Promise.all(reactions.map(async (reaction) => await rest.addReaction(channelId, messageId, reaction)))
+        await Promise.all(
+          reactions.map(async (reaction) => {
+            await rest.addReaction(channelId, messageId, reaction)
+          }),
+        )
         return
       }
 
@@ -1001,11 +1056,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async addRole(guildId, userId, roleId, reason) {
-      return await rest.put(rest.routes.guilds.roles.member(guildId, userId, roleId), { reason })
+      await rest.put(rest.routes.guilds.roles.member(guildId, userId, roleId), { reason })
     },
 
     async addThreadMember(channelId, userId) {
-      return await rest.put(rest.routes.channels.threads.user(channelId, userId))
+      await rest.put(rest.routes.channels.threads.user(channelId, userId))
     },
 
     async createAutomodRule(guildId, options) {
@@ -1080,114 +1135,114 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteAutomodRule(guildId, ruleId, reason) {
-      return await rest.delete(rest.routes.guilds.automod.rule(guildId, ruleId), { reason })
+      await rest.delete(rest.routes.guilds.automod.rule(guildId, ruleId), { reason })
     },
 
     async deleteChannel(channelId, reason) {
-      return await rest.delete(rest.routes.channels.channel(channelId), {
+      await rest.delete(rest.routes.channels.channel(channelId), {
         reason,
       })
     },
 
     async deleteChannelPermissionOverride(channelId, overwriteId, reason) {
-      return await rest.delete(rest.routes.channels.overwrite(channelId, overwriteId), reason ? { reason } : undefined)
+      await rest.delete(rest.routes.channels.overwrite(channelId, overwriteId), reason ? { reason } : undefined)
     },
 
     async deleteEmoji(guildId, id, reason) {
-      return await rest.delete(rest.routes.guilds.emoji(guildId, id), { reason })
+      await rest.delete(rest.routes.guilds.emoji(guildId, id), { reason })
     },
 
     async deleteFollowupMessage(token, messageId) {
-      return await rest.delete(rest.routes.interactions.responses.message(rest.applicationId, token, messageId))
+      await rest.delete(rest.routes.interactions.responses.message(rest.applicationId, token, messageId))
     },
 
     async deleteGlobalApplicationCommand(commandId) {
-      return await rest.delete(rest.routes.interactions.commands.command(rest.applicationId, commandId))
+      await rest.delete(rest.routes.interactions.commands.command(rest.applicationId, commandId))
     },
 
     async deleteGuild(guildId) {
-      return await rest.delete(rest.routes.guilds.guild(guildId))
+      await rest.delete(rest.routes.guilds.guild(guildId))
     },
 
     async deleteGuildApplicationCommand(commandId, guildId) {
-      return await rest.delete(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId))
+      await rest.delete(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId))
     },
 
     async deleteGuildSticker(guildId, stickerId, reason) {
-      return await rest.delete(rest.routes.guilds.sticker(guildId, stickerId), reason ? { reason } : undefined)
+      await rest.delete(rest.routes.guilds.sticker(guildId, stickerId), reason ? { reason } : undefined)
     },
 
     async deleteGuildTemplate(guildId, templateCode) {
-      return await rest.delete(rest.routes.guilds.templates.guild(guildId, templateCode))
+      await rest.delete(rest.routes.guilds.templates.guild(guildId, templateCode))
     },
 
     async deleteIntegration(guildId, integrationId) {
-      return await rest.delete(rest.routes.guilds.integration(guildId, integrationId))
+      await rest.delete(rest.routes.guilds.integration(guildId, integrationId))
     },
 
     async deleteInvite(inviteCode, reason) {
-      return await rest.delete(rest.routes.guilds.invite(inviteCode), reason ? { reason } : undefined)
+      await rest.delete(rest.routes.guilds.invite(inviteCode), reason ? { reason } : undefined)
     },
 
     async deleteMessage(channelId, messageId, reason) {
-      return await rest.delete(rest.routes.channels.message(channelId, messageId), { reason })
+      await rest.delete(rest.routes.channels.message(channelId, messageId), { reason })
     },
 
     async deleteMessages(channelId, messageIds, reason) {
-      return await rest.post(rest.routes.channels.bulk(channelId), {
+      await rest.post(rest.routes.channels.bulk(channelId), {
         messages: messageIds.slice(0, 100).map((id) => id.toString()),
         reason,
       })
     },
 
     async deleteOriginalInteractionResponse(token) {
-      return await rest.delete(rest.routes.interactions.responses.original(rest.applicationId, token))
+      await rest.delete(rest.routes.interactions.responses.original(rest.applicationId, token))
     },
 
     async deleteOwnReaction(channelId, messageId, reaction) {
       reaction = processReactionString(reaction)
 
-      return await rest.delete(rest.routes.channels.reactions.bot(channelId, messageId, reaction))
+      await rest.delete(rest.routes.channels.reactions.bot(channelId, messageId, reaction))
     },
 
     async deleteReactionsAll(channelId, messageId) {
-      return await rest.delete(rest.routes.channels.reactions.all(channelId, messageId))
+      await rest.delete(rest.routes.channels.reactions.all(channelId, messageId))
     },
 
     async deleteReactionsEmoji(channelId, messageId, reaction) {
       reaction = processReactionString(reaction)
 
-      return await rest.delete(rest.routes.channels.reactions.emoji(channelId, messageId, reaction))
+      await rest.delete(rest.routes.channels.reactions.emoji(channelId, messageId, reaction))
     },
 
     async deleteRole(guildId, roleId) {
-      return await rest.delete(rest.routes.guilds.roles.one(guildId, roleId))
+      await rest.delete(rest.routes.guilds.roles.one(guildId, roleId))
     },
 
     async deleteScheduledEvent(guildId, eventId) {
-      return await rest.delete(rest.routes.guilds.events.event(guildId, eventId))
+      await rest.delete(rest.routes.guilds.events.event(guildId, eventId))
     },
 
     async deleteStageInstance(channelId, reason) {
-      return await rest.delete(rest.routes.channels.stage(channelId), reason ? { reason } : undefined)
+      await rest.delete(rest.routes.channels.stage(channelId), reason ? { reason } : undefined)
     },
 
     async deleteUserReaction(channelId, messageId, userId, reaction) {
       reaction = processReactionString(reaction)
 
-      return await rest.delete(rest.routes.channels.reactions.user(channelId, messageId, reaction, userId))
+      await rest.delete(rest.routes.channels.reactions.user(channelId, messageId, reaction, userId))
     },
 
     async deleteWebhook(webhookId, reason) {
-      return await rest.delete(rest.routes.webhooks.id(webhookId), { reason })
+      await rest.delete(rest.routes.webhooks.id(webhookId), { reason })
     },
 
     async deleteWebhookMessage(webhookId, token, messageId, options) {
-      return await rest.delete(rest.routes.webhooks.message(webhookId, token, messageId, options))
+      await rest.delete(rest.routes.webhooks.message(webhookId, token, messageId, options))
     },
 
     async deleteWebhookWithToken(webhookId, token) {
-      return await rest.delete(rest.routes.webhooks.webhook(webhookId, token))
+      await rest.delete(rest.routes.webhooks.webhook(webhookId, token))
     },
 
     async editApplicationCommandPermissions(guildId, commandId, bearerToken, options) {
@@ -1220,11 +1275,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editChannelPermissionOverrides(channelId, options) {
-      return await rest.put(rest.routes.channels.overwrite(channelId, options.id), options)
+      await rest.put(rest.routes.channels.overwrite(channelId, options.id), options)
     },
 
     async editChannelPositions(guildId, channelPositions) {
-      return await rest.patch(rest.routes.guilds.channels(guildId), channelPositions)
+      await rest.patch(rest.routes.guilds.channels(guildId), channelPositions)
     },
 
     async editEmoji(guildId, id, options) {
@@ -1251,7 +1306,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editGuildMfaLevel(guildId: BigString, mfaLevel: MfaLevels, reason?: string): Promise<void> {
-      return await rest.post(rest.routes.guilds.mfa(guildId), { level: mfaLevel, reason })
+      await rest.post(rest.routes.guilds.mfa(guildId), { level: mfaLevel, reason })
     },
 
     async editGuildSticker(guildId, stickerId, options) {
@@ -1278,7 +1333,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editOwnVoiceState(guildId, options) {
-      return await rest.patch(rest.routes.guilds.voice(guildId), {
+      await rest.patch(rest.routes.guilds.voice(guildId), {
         channel_id: options.channelId,
         suppress: options.suppress,
         request_to_speak_timestamp: options.requestToSpeakTimestamp
@@ -1304,7 +1359,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editUserVoiceState(guildId, options) {
-      return await rest.patch(rest.routes.guilds.voice(guildId, options.userId), {
+      await rest.patch(rest.routes.guilds.voice(guildId, options.userId), {
         channel_id: options.channelId,
         suppress: options.suppress,
         user_id: options.userId,
@@ -1590,15 +1645,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async joinThread(channelId) {
-      return await rest.put(rest.routes.channels.threads.me(channelId))
+      await rest.put(rest.routes.channels.threads.me(channelId))
     },
 
     async leaveGuild(guildId) {
-      return await rest.delete(rest.routes.guilds.leave(guildId))
+      await rest.delete(rest.routes.guilds.leave(guildId))
     },
 
     async leaveThread(channelId) {
-      return await rest.delete(rest.routes.channels.threads.me(channelId))
+      await rest.delete(rest.routes.channels.threads.me(channelId))
     },
 
     async publishMessage(channelId, messageId) {
@@ -1606,11 +1661,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async removeRole(guildId, userId, roleId, reason) {
-      return await rest.delete(rest.routes.guilds.roles.member(guildId, userId, roleId), { reason })
+      await rest.delete(rest.routes.guilds.roles.member(guildId, userId, roleId), { reason })
     },
 
     async removeThreadMember(channelId, userId) {
-      return await rest.delete(rest.routes.channels.threads.user(channelId, userId))
+      await rest.delete(rest.routes.channels.threads.user(channelId, userId))
     },
 
     async sendFollowupMessage(token, options) {
@@ -1624,14 +1679,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             // TODO: should change to reprocess queue item
             await rest.sendRequest(options)
           },
-          resolve: (data) => resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined),
+          resolve: (data) => {
+            resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined)
+          },
           reject,
         })
       })
     },
 
     async sendInteractionResponse(interactionId, token, options) {
-      return await new Promise((resolve, reject) => {
+      await new Promise((resolve, reject) => {
         rest.sendRequest({
           url: rest.routes.interactions.responses.callback(interactionId, token),
           method: 'POST',
@@ -1641,7 +1698,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             // TODO: should change to reprocess queue item
             await rest.sendRequest(options)
           },
-          resolve: (data) => resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined),
+          resolve: (data) => {
+            resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined)
+          },
           reject,
         })
       })
@@ -1664,7 +1723,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async banMember(guildId, userId, options) {
-      return await rest.put<void>(rest.routes.guilds.members.ban(guildId, userId), options)
+      await rest.put<void>(rest.routes.guilds.members.ban(guildId, userId), options)
     },
 
     async editBotMember(guildId, options) {
@@ -1684,13 +1743,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async kickMember(guildId, userId, reason) {
-      return await rest.delete(rest.routes.guilds.members.member(guildId, userId), {
+      await rest.delete(rest.routes.guilds.members.member(guildId, userId), {
         reason,
       })
     },
 
     async pinMessage(channelId, messageId, reason) {
-      return await rest.put(rest.routes.channels.pin(channelId, messageId), reason ? { reason } : undefined)
+      await rest.put(rest.routes.channels.pin(channelId, messageId), reason ? { reason } : undefined)
     },
 
     async pruneMembers(guildId, options) {
@@ -1702,15 +1761,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async unbanMember(guildId, userId) {
-      return await rest.delete(rest.routes.guilds.members.ban(guildId, userId))
+      await rest.delete(rest.routes.guilds.members.ban(guildId, userId))
     },
 
     async unpinMessage(channelId, messageId, reason) {
-      return await rest.delete(rest.routes.channels.pin(channelId, messageId), reason ? { reason } : undefined)
+      await rest.delete(rest.routes.channels.pin(channelId, messageId), reason ? { reason } : undefined)
     },
 
     async triggerTypingIndicator(channelId) {
-      return await rest.post(rest.routes.channels.typing(channelId))
+      await rest.post(rest.routes.channels.typing(channelId))
     },
 
     async upsertGlobalApplicationCommands(commands) {

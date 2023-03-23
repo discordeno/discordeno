@@ -8,7 +8,7 @@ import Base from '../../Base.js'
 import type Client from '../../Client.js'
 import type { ImageFormat, ImageSize } from '../../Client.js'
 import { GUILD_AVATAR } from '../../Endpoints.js'
-import type { MemberOptions } from '../../typings.js'
+import type { MemberOptions, Status } from '../../typings.js'
 import User from '../users/User.js'
 import type Guild from './Guild.js'
 
@@ -16,7 +16,7 @@ export class Member extends Base {
   /** The client manager */
   client: Client
   /** An array of role IDs this member is a part of */
-  roles: BigString[]
+  roles: string[]
   /** The guild the member is in */
   guild: Guild
   /** The user object of the member */
@@ -31,6 +31,8 @@ export class Member extends Base {
   pending?: boolean
   /** Timestamp of timeout expiry. If `null`, the member is not timed out */
   communicationDisabledUntil?: number | null
+  /** The members current status */
+  status?: Status;
 
   /** The compressed form of the members avatar. */
   _avatar?: bigint
@@ -87,7 +89,7 @@ export class Member extends Base {
     if (data.nick !== undefined) this.nick = data.nick
     if (data.roles !== undefined) this.roles = data.roles
     if (data.pending !== undefined) this.pending = data.pending
-    if (data.avatar !== undefined) this._avatar = this.client.iconHashToBigInt(data.avatar)
+    if (data.avatar !== undefined) this._avatar = data.avatar ? this.client.iconHashToBigInt(data.avatar) : undefined
 
     if (data.communication_disabled_until !== undefined) {
       if (data.communication_disabled_until !== null) {

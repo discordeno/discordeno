@@ -158,6 +158,7 @@ export class Queue {
     }
   }
 
+  /** Checks if a request is available and adds it to the queue. Also triggers queue processing if not already processing. */
   async makeRequest(options: SendRequestOptions): Promise<void> {
     await this.waitUntilRequestAvailable()
     this.pending.push(options)
@@ -189,6 +190,7 @@ export class Queue {
     }, this.deleteQueueDelay)
   }
 
+  /** Simply checks if the queue is able to be cleared or it has requests pending. */
   isQueueClearable(): boolean {
     if (this.firstRequest) return false
     if (this.waiting.length > 0) return false

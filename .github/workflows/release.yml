@@ -7,38 +7,9 @@ on:
     paths:
       - packages/**
       - .github/**
+  workflow_dispatch:
 
 jobs:
-  path-filter:
-    name: Check Path Changes
-    runs-on: ubuntu-latest
-    outputs:
-      bot: ${ steps.changes.outputs.bot }
-      gateway: ${ steps.changes.outputs.gateway }
-      rest: ${ steps.changes.outputs.rest }
-      types: ${ steps.changes.outputs.types }
-      utils: ${ steps.changes.outputs.utils }
-      global: ${ steps.changes.outputs.global }
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          base: node-migration-clean
-          filters: |
-            gateway:
-            - "packages/gateway/**"
-            rest:
-            - "packages/rest/**"
-            types:
-            - "packages/types/**"
-            utils:
-            - "packages/utils/**"
-            bot:
-            - "packages/bot/**"
-            global:
-            - ".github/**"
-
   publish:
     runs-on: ubuntu-latest
     permissions:
@@ -47,20 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: ["gateway", "rest", "types", "utils", "bot"]
-        run: ["false"]
-        exclude:
-          - package: gateway
-            run: "${{ needs.path-filter.outputs.gateway == 'true' || needs.path-filter.outputs.global == 'true' }}"
-          - package: rest
-            run: "${{ needs.path-filter.outputs.rest == 'true' || needs.path-filter.outputs.global == 'true' }}"
-          - package: types
-            run: "${{ needs.path-filter.outputs.types == 'true' || needs.path-filter.outputs.global == 'true' }}"
-          - package: utils
-            run: "${{ needs.path-filter.outputs.utils == 'true' || needs.path-filter.outputs.global == 'true' }}"
-          - package: bot
-            run: "${{ needs.path-filter.outputs.bot == 'true' || needs.path-filter.outputs.global == 'true' }}"
-    needs: path-filter
+        package: ["gateway", "rest", "types", "utils", "bot", "client"]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3

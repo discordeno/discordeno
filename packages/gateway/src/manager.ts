@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import type { AtLeastOne, BigString, Camelize, DiscordGetGatewayBot, DiscordMember, RequestGuildMembers } from '@discordeno/types'
-import type { LeakyBucket } from '@discordeno/utils'
-import { Collection, createLeakyBucket, delay, logger } from '@discordeno/utils'
+import { Collection, delay, logger } from '@discordeno/utils'
 import Shard from './Shard.js'
 import type { ShardEvents, StatusUpdate, UpdateVoiceState } from './types.js'
 
@@ -64,18 +64,10 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       )
     },
     calculateWorkerId(shardId) {
-      // Ignore decimal numbers.
-      let workerId = Math.floor(shardId / gateway.shardsPerWorker)
-      // If the workerId overflows the maximal allowed workers we by default just use to last worker.
-      if (workerId >= gateway.totalWorkers) {
-        // The Id of the last available worker is total -1
-        workerId = gateway.totalWorkers - 1
-      }
-
+      const workerId = shardId % gateway.shardsPerWorker
       logger.debug(
         `[Gateway] Calculating workerId: Shard: ${shardId} -> Worker: ${workerId} -> Per Worker: ${gateway.shardsPerWorker} -> Total: ${gateway.totalWorkers}`,
       )
-
       return workerId
     },
     prepareBuckets() {
@@ -83,12 +75,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         logger.debug(`[Gateway] Preparing buckets for concurrency: ${i}`)
         gateway.buckets.set(i, {
           workers: [],
-          leak: createLeakyBucket({
-            max: 1,
-            refillAmount: 1,
-            // special number which is proven to be working dont change
-            refillInterval: gateway.spawnShardDelay,
-          }),
+          identifyRequests: [],
         })
       }
 
@@ -120,6 +107,13 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           bucket.workers.push({ id: workerId, queue: [shardId] })
         }
       }
+
+      for (const bucket of gateway.buckets.values()) {
+        for (const worker of bucket.workers.values()) {
+          // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
+          worker.queue = worker.queue.sort((a, b) => a - b)
+        }
+      }
     },
     async spawnShards() {
       // PREPARES ALL SHARDS IN SPECIFIC BUCKETS
@@ -143,7 +137,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     },
     async tellWorkerToIdentify(workerId, shardId, bucketId) {
       logger.debug(`[Gateway] tell worker to identify (${workerId}, ${shardId}, ${bucketId})`)
-      return await gateway.identify(shardId)
+      await gateway.identify(shardId)
     },
     async identify(shardId: number) {
       let shard = this.shards.get(shardId)
@@ -162,12 +156,30 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             version: this.version,
           },
           events: options.events,
+          requestIdentify: async () => {
+            await gateway.identify(shardId)
+          },
+          shardIsReady: async () => {
+            logger.debug(`[Shard] Shard #${shardId} is ready`)
+            await delay(gateway.spawnShardDelay)
+            logger.debug(`[Shard] Resolving shard identify request`)
+            gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.identifyRequests.shift()?.()
+          },
         })
 
         this.shards.set(shardId, shard)
       }
 
-      return await shard.identify()
+      const bucket = gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)
+      if (!bucket) return
+
+      return await new Promise((resolve) => {
+        // Mark that we are making an identify request so another is not made.
+        bucket.identifyRequests.push(resolve)
+        logger.debug(`[Gateway] identifying shard #(${shardId}).`)
+        // This will trigger identify and when READY is received it will resolve the above request.
+        shard?.identify()
+      })
     },
     async kill(shardId: number) {
       const shard = this.shards.get(shardId)
@@ -177,11 +189,17 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
       logger.debug(`[Gateway] kill shard (${shardId})`)
       this.shards.delete(shardId)
-      return await shard.shutdown()
+      await shard.shutdown()
     },
 
-    async requestIdentify() {
+    async requestIdentify(shardId: number) {
       logger.debug(`[Gateway] requesting identify`)
+      // const bucket = gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)
+      // if (!bucket) return
+
+      // return await new Promise((resolve) => {
+      //   bucket.identifyRequests.push(resolve)
+      // })
     },
 
     // Helpers methods below this
@@ -226,7 +244,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       }
 
       logger.debug(`[Gateway] editShardStatus shardId: ${shardId} -> data: ${JSON.stringify(data)}`)
-      return await shard.editShardStatus(data)
+      await shard.editShardStatus(data)
     },
 
     async requestMembers(guildId, options) {
@@ -248,7 +266,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       }
 
       logger.debug(`[Gateway] leaveVoiceChannel guildId: ${guildId} Shard ${shardId}`)
-      return await shard.leaveVoiceChannel(guildId)
+      await shard.leaveVoiceChannel(guildId)
     },
   }
 
@@ -350,7 +368,8 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
     number,
     {
       workers: Array<{ id: number; queue: number[] }>
-      leak: LeakyBucket
+      /** Requests to identify shards are made based on whether it is available to be made. */
+      identifyRequests: Array<(value: void | PromiseLike<void>) => void>
     }
   >
   /** The shards that are created. */
@@ -371,8 +390,8 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
   identify: (shardId: number) => Promise<void>
   /** Kill a shard. Close a shards connection to Discord's gateway (if any) and remove it from the manager. */
   kill: (shardId: number) => Promise<void>
-  /** This function communicates with the parent manager, in order to know whether this manager is allowed to identify a new shard. */
-  requestIdentify: () => Promise<void>
+  /** This function makes sure that the bucket is allowed to make the next identify request. */
+  requestIdentify: (shardId: number) => Promise<void>
   /** Calculates the number of shards based on the guild id and total shards. */
   calculateShardId: (guildId: BigString, totalShards?: number) => number
   /**

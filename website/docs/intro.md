@@ -76,7 +76,7 @@ Have your cache setup in any way you like. Redis, PGSQL or any cache layer you w
 
 ## Getting Started
 
-Interested? [Check the website](https://discordeno.mod.land) for more details on getting started.
+Interested? [Check the website](https://discordeno.github.io/discordeno/) for more details on getting started.
 
 ### Tools
 
@@ -85,7 +85,7 @@ and unofficial templates:
 
 ## Links
 
-- [Website](https://discordeno.mod.land)
+- [Website](https://discordeno.github.io/discordeno/)
 - [Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
 - [Discord](https://discord.com/invite/5vBgXk3UcZ)
 

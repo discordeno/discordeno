@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-indexed-object-style */
 /* eslint-disable no-useless-call */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
@@ -5,7 +6,6 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { DiscordenoShard, ShardState } from '@discordeno/gateway'
-import type { DiscordGuildStickersUpdate, DiscordThreadMemberUpdate } from '@discordeno/types'
 import {
   ActivityTypes,
   ChannelTypes,
@@ -25,6 +25,7 @@ import {
   type DiscordGuildRoleCreate,
   type DiscordGuildRoleDelete,
   type DiscordGuildRoleUpdate,
+  type DiscordGuildStickersUpdate,
   type DiscordInteraction,
   type DiscordInviteCreate,
   type DiscordInviteDelete,
@@ -41,6 +42,7 @@ import {
   type DiscordStageInstance,
   type DiscordThreadListSync,
   type DiscordThreadMembersUpdate,
+  type DiscordThreadMemberUpdate,
   type DiscordTypingStart,
   type DiscordUnavailableGuild,
   type DiscordUser,
@@ -95,7 +97,7 @@ export class Shard extends EventEmitter {
   id: number
   latency: number = 0
   preReady = false
-  presence!: ClientPresence
+  presence: ClientPresence = { activities: [], afk: false, status: 'online', since: 0 }
   presenceUpdateBucket!: Bucket
   ready = false
   reconnectInterval: number = 0
@@ -608,7 +610,12 @@ export class Shard extends EventEmitter {
           this.emit('messageUpdate', packet, null)
           break
         }
-        this.emit('messageUpdate', channel.messages.update(new Message(packet, this.client)), oldMessage)
+
+        const msg = message ?? new Message(packet, this.client)
+        if (message) message.update(packet)
+        else channel.messages.set(msg.id, msg)
+
+        this.emit('messageUpdate', msg, oldMessage)
         break
       }
       case 'MESSAGE_DELETE': {

@@ -1,142 +1,220 @@
 import { expect } from 'chai'
-import { beforeEach, describe, it } from 'mocha'
+import { afterEach, beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
 import { Collection } from '../src/Collection.js'
 
 describe('collection.ts', () => {
-  let collection: Collection<any, any>
-
-  beforeEach(() => {
-    collection = new Collection()
+  afterEach(() => {
+    sinon.restore()
   })
 
-  it('[collection] collection values to array', () => {
-    const testCollection = new Collection([
-      ['best', 'tri'],
-      ['proficient', 'yui'],
-    ])
-    expect(testCollection.array()).to.be.deep.equal(['tri', 'yui'])
-  })
+  describe('Collection class', () => {
+    let collection: Collection<any, any>
 
-  it('[collection] get a random value', () => {
-    const testCollection = new Collection([['best', 'tri']])
-
-    expect(testCollection.random() ?? '').to.be.oneOf(['best', 'tri'])
-    expect(collection.random()).to.be.undefined
-  })
-
-  describe('', () => {
     beforeEach(() => {
-      collection.set('best developer', 'triformine')
+      collection = new Collection([
+        ['best', 'tri'],
+        ['proficient', 'yui'],
+      ])
     })
-    it('[collection] Set a value without maxSize', () => {
-      expect(collection.size).to.be.equal(1)
-      expect(collection.get('best developer')).to.be.equal('triformine')
+
+    describe('.array() method', () => {
+      it('will return values as array', () => {
+        expect(collection.array()).to.be.deep.equal(['tri', 'yui'])
+      })
     })
-    describe('', () => {
+
+    describe('.random() method', () => {
+      it('will get a random value', () => {
+        expect(collection.random() ?? '').to.be.oneOf(['tri', 'yui'])
+        expect(new Collection().random()).to.be.undefined
+      })
+    })
+
+    describe('.set() method', () => {
+      describe('without maxSize', () => {
+        it('will set a value', () => {
+          collection.set('best developer', 'triformine')
+
+          expect(collection.size).to.be.equal(3)
+          expect(collection.get('best developer')).to.be.equal('triformine')
+        })
+      })
+
+      describe('with maxSize', () => {
+        const maxSize = 2
+
+        beforeEach(() => {
+          collection = new Collection([], {
+            maxSize,
+          })
+        })
+
+        it('will set a value when not over max size', () => {
+          collection.set('foo', 'bar')
+          collection.set('me', 'you')
+
+          expect(collection.size).to.be.equal(2)
+        })
+
+        it('will not set a value when over max size', () => {
+          collection.set('foo', 'bar')
+          collection.set('me', 'you')
+          expect(collection.size).to.be.equal(2)
+
+          collection.set('this', 'not')
+          expect(collection.size).to.be.equal(2)
+        })
+      })
+    })
+
+    describe('.forceSet() method', () => {
+      const maxSize = 2
+
       beforeEach(() => {
-        collection.set('deno', 'yes')
+        collection = new Collection(
+          [
+            ['foo', 'bar'],
+            ['me', 'you'],
+          ],
+          { maxSize },
+        )
       })
-      it('[collection] get the value of the first element', () => {
-        expect(collection.first()).to.be.equal('triformine')
-      })
 
-      it('[collection] get the value of the last element', () => {
-        expect(collection.last()).to.be.equal('yes')
-      })
-    })
-  })
+      it('will ignore maxSize and set a value ', () => {
+        collection.forceSet('this', 'not')
 
-  describe('[collection] Create a collection with maxSize', () => {
-    const maxSize = 2
-
-    const maxCollection = new Collection([], {
-      maxSize,
-    })
-
-    expect(maxCollection).to.exist
-    expect(maxCollection.maxSize).to.exist
-    expect(maxCollection.maxSize).to.be.equal(maxSize)
-
-    describe('[collection] Test if maxSize works properly', () => {
-      maxCollection.set('foo', 'bar')
-      maxCollection.set('me', 'you')
-
-      expect(maxCollection.size).to.be.equal(2)
-
-      maxCollection.set('this', 'not')
-
-      expect(maxCollection.size).to.be.equal(2)
-
-      it('[collection] Test if forceSet ignore maxSize', () => {
-        maxCollection.forceSet('this', 'not')
-
-        expect(maxCollection.size).to.be.equal(3)
+        expect(collection.size).to.be.equal(3)
       })
     })
-  })
 
-  const testCollection = new Collection([
-    ['a', 1],
-    ['b', 2],
-    ['c', 3],
-  ])
+    describe('.first() method', () => {
+      it('will get the value of the first element', () => {
+        expect(collection.first()).to.be.equal('tri')
+      })
+    })
 
-  it('[collection] find by key or value', () => {
-    expect(testCollection.find((v, k) => v === 2)).to.be.equal(2)
-    expect(testCollection.find((v, k) => k === 'b')).to.be.equal(2)
-  })
+    describe('.last() method', () => {
+      it('get the value of the last element', () => {
+        expect(collection.last()).to.be.equal('yui')
+      })
+    })
 
-  it('[collection] filter by key or value', () => {
-    expect(testCollection.filter((v, k) => v === 3).size).to.be.equal(1)
-    expect(testCollection.filter((v, k) => k === 'd').size).to.be.equal(0)
-  })
+    const testCollection = new Collection([
+      ['a', 1],
+      ['b', 2],
+      ['c', 3],
+    ])
 
-  it('[collection] map', () => {
-    expect(testCollection.map((k, v) => `${v}${k}`)).to.be.deep.equal(['a1', 'b2', 'c3'])
-  })
+    describe('.find() method', () => {
+      it('will find value by value', () => {
+        expect(collection.find((v, k) => v === 'tri')).to.be.equal('tri')
+        expect(collection.find((v, k) => v === 'skillz')).to.be.undefined
+      })
 
-  it('[collection] some', () => {
-    expect(testCollection.some((v, _) => v === 1)).to.be.equal(true)
-    expect(testCollection.some((v, _) => v === 4)).to.be.equal(false)
-  })
+      it('will find value by key', () => {
+        expect(collection.find((v, k) => k === 'proficient')).to.be.equal('yui')
+        expect(collection.find((v, k) => k === 'skillz')).to.be.undefined
+      })
+    })
 
-  it('[collection] every', () => {
-    expect(testCollection.every((v, _) => v !== 0)).to.be.equal(true)
-    expect(testCollection.every((v, _) => v === 1)).to.be.equal(false)
-  })
+    describe('.filter() method', () => {
+      it('will filter by key', () => {
+        expect(collection.filter((v, k) => v === 'yui').array()).to.deep.equal(['yui'])
+        expect(collection.filter((v, k) => v === 'skillz').array()).to.deep.equal([])
+      })
+      it('will filter by key', () => {
+        expect(collection.filter((v, k) => k === 'best').array()).to.deep.equal(['tri'])
+        expect(collection.filter((v, k) => k === 'skillz').array()).to.deep.equal([])
+      })
+    })
 
-  it('[collection] reduce', () => {
-    expect(testCollection.reduce((acc, val) => acc + val, 0)).to.be.equal(6)
-  })
+    it('map', () => {
+      expect(testCollection.map((k, v) => `${v}${k}`)).to.be.deep.equal(['a1', 'b2', 'c3'])
+    })
 
-  it('[collection] start sweeper', async () => {
-    const clock = sinon.useFakeTimers()
-    const sweeperCollection = new Collection(
-      [
-        ['a', 1],
-        ['b', 2],
-      ],
-      {
-        sweeper: {
-          filter: (v, _) => v === 1,
-          interval: 50,
-        },
-      },
-    )
+    it('some', () => {
+      expect(testCollection.some((v, _) => v === 1)).to.be.equal(true)
+      expect(testCollection.some((v, _) => v === 4)).to.be.equal(false)
+    })
 
-    try {
-      await clock.tickAsync(49)
-      expect(sweeperCollection.size).to.be.equal(2)
-      await clock.tickAsync(1)
-      expect(sweeperCollection.size).to.be.equal(1)
-    } catch (err) {
-      sweeperCollection.stopSweeper()
+    it('every', () => {
+      expect(testCollection.every((v, _) => v !== 0)).to.be.equal(true)
+      expect(testCollection.every((v, _) => v === 1)).to.be.equal(false)
+    })
 
-      throw err
-    }
+    it('reduce', () => {
+      expect(testCollection.reduce((acc, val) => acc + val, 0)).to.be.equal(6)
+    })
 
-    sweeperCollection.stopSweeper()
-    clock.restore()
+    describe('sweeper', () => {
+      let clock: sinon.SinonFakeTimers
+
+      beforeEach(() => {
+        clock = sinon.useFakeTimers()
+      })
+
+      afterEach(() => {
+        clock.restore()
+      })
+
+      it('start sweeper', async () => {
+        const sweeperCollection = new Collection(
+          [
+            ['a', 1],
+            ['b', 2],
+          ],
+          {
+            sweeper: {
+              filter: (v, _) => v === 1,
+              interval: 50,
+            },
+          },
+        )
+
+        try {
+          await clock.tickAsync(49)
+          expect(sweeperCollection.size).to.be.equal(2)
+          await clock.tickAsync(1)
+          expect(sweeperCollection.size).to.be.equal(1)
+        } catch (err) {
+          sweeperCollection.stopSweeper()
+
+          throw err
+        }
+
+        sweeperCollection.stopSweeper()
+      })
+
+      describe('.changeSweeperInterval() method', () => {
+        it('will call startSweeper with new interval', () => {
+          collection.startSweeper({ filter: () => false, interval: 1000 })
+          collection.changeSweeperInterval(20000)
+          expect(collection.sweeper?.interval).to.equal(20000)
+        })
+
+        it('will not startsweeper if not started', () => {
+          collection.changeSweeperInterval(20000)
+          expect(collection.sweeper).to.undefined
+        })
+      })
+
+      describe('.changeSweeperFilter() method', () => {
+        it('will call startSweeper with new interval', () => {
+          // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+          const newFilter = () => true
+          collection.startSweeper({ filter: () => false, interval: 1000 })
+          collection.changeSweeperFilter(newFilter)
+          expect(collection.sweeper?.filter).to.equal(newFilter)
+        })
+
+        it('will not startsweeper if not started', () => {
+          // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+          const newFilter = () => true
+          collection.changeSweeperFilter(newFilter)
+          expect(collection.sweeper).to.undefined
+        })
+      })
+    })
   })
 })
