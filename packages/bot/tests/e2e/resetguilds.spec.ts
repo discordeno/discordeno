@@ -17,12 +17,12 @@ describe('[Bot] Delete any guild owned guilds', () => {
         events: {
           message: async (shard, data) => {
             // TRIGGER RAW EVENT
-            bot.events.raw?.(data, shard)
+            bot.events.raw?.(data, shard.id)
 
             if (!data.t) return
 
             // RUN DISPATCH CHECK
-            await bot.events.dispatchRequirements?.(data, shard)
+            await bot.events.dispatchRequirements?.(data, shard.id)
             bot.events[
               data.t.toLowerCase().replace(/_([a-z])/g, function (g) {
                 return g[1].toUpperCase()
