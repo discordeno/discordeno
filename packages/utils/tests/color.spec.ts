@@ -47,4 +47,18 @@ describe('color.ts', () => {
         })
       })
     })
+
+  describe('get and set color enabled', () => {
+    it('by default color should be on', () => {
+      expect(colors.getColorEnabled()).to.equal(true)
+    })
+
+    it('Set it off and on', () => {
+      expect(colors.getColorEnabled()).to.equal(true)
+      colors.setColorEnabled(false)
+      expect(colors.getColorEnabled()).to.equal(false)
+      colors.setColorEnabled(true)
+      expect(colors.getColorEnabled()).to.equal(true)
+    })
+  })
 })

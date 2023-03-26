@@ -62,5 +62,41 @@ describe('bucket.ts', () => {
       })
       expect(bucket.queue).to.deep.equal([])
     })
+
+    it('will acquire a request', async () => {
+      const bucket = new LeakyBucket({
+        max: 120,
+        refillInterval: 60000,
+        refillAmount: 120,
+      })
+
+      await bucket.acquire()
+      expect(bucket.remaining).to.be.equal(119)
+      expect(bucket.used).to.be.equal(1)
+    })
+
+    it('will handle multiple requests at once', async () => {
+      const bucket = new LeakyBucket({
+        max: 120,
+        refillInterval: 60000,
+        refillAmount: 120,
+      })
+
+      for (let i = 0; i < 10; i++) {
+        bucket.acquire()
+      }
+    })
+
+    it('will handle too many requests', async () => {
+      const bucket = new LeakyBucket({
+        max: 5,
+        refillInterval: 10000,
+        refillAmount: 5,
+      })
+
+      for (let i = 0; i < 10; i++) {
+        bucket.acquire()
+      }
+    })
   })
 })

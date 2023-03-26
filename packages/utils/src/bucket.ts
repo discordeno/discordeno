@@ -32,10 +32,7 @@ export class LeakyBucket implements LeakyBucketOptions {
   async processQueue(): Promise<void> {
     logger.debug('[Gateway] Processing queue')
     // There is already a queue that is processing
-    if (this.processing) {
-      logger.debug('[Gateway] Queue is already processing.')
-      return
-    }
+    if (this.processing) return logger.debug('[Gateway] Queue is already processing.')
 
     // Begin going through the queue.
     while (this.queue.length) {
