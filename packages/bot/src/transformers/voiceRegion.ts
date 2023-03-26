@@ -4,6 +4,7 @@ import type { Optionalize } from '../optionalize.js'
 
 // TODO: Rename `VoiceRegions` to `VoiceRegion`.
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformVoiceRegion(bot: Bot, payload: DiscordVoiceRegion) {
   const voiceRegion = {
     id: payload.id,

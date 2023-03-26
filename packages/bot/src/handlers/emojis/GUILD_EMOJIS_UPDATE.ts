@@ -1,8 +1,8 @@
 import type { DiscordGatewayPayload, DiscordGuildEmojisUpdate } from '@discordeno/types'
+import { Collection } from '@discordeno/utils'
 import type { Bot } from '../../bot.js'
-import type { Collection } from '../../util/collection.js'
 
-export async function handleGuildEmojisUpdate(bot: Bot, data: DiscordGatewayPayload) {
+export async function handleGuildEmojisUpdate(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
   const payload = data.d as DiscordGuildEmojisUpdate
 
   bot.events.guildEmojisUpdate?.({

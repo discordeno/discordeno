@@ -2,6 +2,7 @@ import type { DiscordAutoModerationRule } from '@discordeno/types'
 import type { Bot } from '../index.js'
 import type { Optionalize } from '../optionalize.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModerationRule) {
   const rule = {
     name: payload.name,

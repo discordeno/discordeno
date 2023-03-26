@@ -1,7 +1,7 @@
 import type { DiscordGatewayPayload, DiscordGuildMemberUpdate } from '@discordeno/types'
 import type { Bot } from '../../index.js'
 
-export async function handleGuildMemberUpdate(bot: Bot, data: DiscordGatewayPayload) {
+export async function handleGuildMemberUpdate(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
   const payload = data.d as DiscordGuildMemberUpdate
 
   const user = bot.transformers.user(bot, payload.user)

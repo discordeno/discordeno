@@ -1,16 +1,16 @@
 import type { DiscordTeam } from '@discordeno/types'
-import { Bot, iconBigintToHash } from '../../index.js'
+import { iconBigintToHash, type Bot } from '../../index.js'
 import type { Team } from '../team.js'
 
 export function transformTeamToDiscordTeam(bot: Bot, payload: Team): DiscordTeam {
-  const id = bot.utils.bigintToSnowflake(payload.id)
+  const id = payload.id.toString()
 
   return {
     name: payload.name,
 
     id,
     icon: payload.icon ? iconBigintToHash(payload.icon) : null,
-    owner_user_id: bot.utils.bigintToSnowflake(payload.ownerUserId),
+    owner_user_id: payload.ownerUserId.toString(),
     members: payload.members.map((member) => ({
       membership_state: member.membershipState,
       permissions: member.permissions,

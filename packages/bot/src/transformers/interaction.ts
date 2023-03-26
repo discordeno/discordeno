@@ -1,16 +1,17 @@
-import type { ChannelTypes, DiscordAttachment, DiscordInteraction, DiscordInteractionDataOption } from '@discordeno/types'
+import type { ChannelTypes, DiscordInteraction, DiscordInteractionDataOption } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { Bot } from '../index.js'
 import type { Optionalize } from '../optionalize.js'
-import type { DiscordInteractionDataResolved } from '../types.js'
+import type { DiscordInteractionDataResolved } from '../typings.js'
 import type { Attachment } from './attachment.js'
 import type { Member, User } from './member.js'
 import type { Message } from './message.js'
 import type { Role } from './role.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformInteraction(bot: Bot, payload: DiscordInteraction) {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
-  const user = bot.transformers.user(bot, payload.member?.user || payload.user!)
+  const user = bot.transformers.user(bot, payload.member?.user ?? payload.user!)
 
   const interaction = {
     // UNTRANSFORMED STUFF HERE
@@ -49,6 +50,7 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction) {
   return interaction as Optionalize<typeof interaction>
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformInteractionDataOption(bot: Bot, option: DiscordInteractionDataOption) {
   const opt = {
     name: option.name,
@@ -61,6 +63,7 @@ export function transformInteractionDataOption(bot: Bot, option: DiscordInteract
   return opt as Optionalize<typeof opt>
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInteractionDataResolved, guildId?: bigint) {
   const transformed: {
     messages?: Collection<bigint, Message>
@@ -134,7 +137,7 @@ export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInte
     transformed.attachments = new Collection(
       Object.entries(resolved.attachments).map(([key, value]) => {
         const id = bot.transformers.snowflake(key)
-        return [id, bot.transformers.attachment(bot, value as DiscordAttachment)]
+        return [id, bot.transformers.attachment(bot, value)]
       }),
     )
   }

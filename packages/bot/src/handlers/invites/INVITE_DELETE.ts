@@ -1,7 +1,7 @@
 import type { DiscordGatewayPayload, DiscordInviteDelete } from '@discordeno/types'
 import type { Bot } from '../../index.js'
 
-export function handleInviteDelete(bot: Bot, data: DiscordGatewayPayload) {
+export async function handleInviteDelete(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
   const payload = data.d as DiscordInviteDelete
 
   bot.events.inviteDelete?.({

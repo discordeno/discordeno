@@ -3,6 +3,7 @@ import type { Bot } from '../index.js'
 import type { Optionalize } from '../optionalize.js'
 import { VoiceStateToggles } from './toggles/voice.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformVoiceState(bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) {
   const voiceState = {
     toggles: new VoiceStateToggles(payload.voiceState),

@@ -1,7 +1,7 @@
 import type { DiscordGatewayPayload, DiscordThreadListSync } from '@discordeno/types'
 import type { Bot } from '../../index.js'
 
-export async function handleThreadListSync(bot: Bot, data: DiscordGatewayPayload) {
+export async function handleThreadListSync(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
   const payload = data.d as DiscordThreadListSync
 
   const guildId = bot.transformers.snowflake(payload.guild_id)

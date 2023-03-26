@@ -62,5 +62,26 @@ describe('bucket.ts', () => {
       })
       expect(bucket.queue).to.deep.equal([])
     })
+
+    it('idk', async () => {
+      const bucket = new LeakyBucket({
+        max: 2,
+        refillInterval: 500,
+        refillAmount: 2,
+      })
+
+      const now = Date.now()
+      await bucket.acquire()
+
+      console.log((Date.now() - now), bucket.used, bucket.remaining)
+      await clock.tickAsync(1000)
+      console.log((Date.now() - now), bucket.used, bucket.remaining)
+
+      await bucket.acquire()
+
+      console.log((Date.now() - now), bucket.used, bucket.remaining)
+      await clock.tickAsync(1000)
+      console.log((Date.now() - now), bucket.used, bucket.remaining)
+    })
   })
 })

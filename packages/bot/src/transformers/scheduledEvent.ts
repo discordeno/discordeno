@@ -1,7 +1,8 @@
 import type { DiscordScheduledEvent } from '@discordeno/types'
-import { Bot, iconHashToBigInt } from '../index.js'
+import { iconHashToBigInt, type Bot } from '../index.js'
 import type { Optionalize } from '../optionalize.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformScheduledEvent(bot: Bot, payload: DiscordScheduledEvent) {
   const scheduledEvent = {
     id: bot.transformers.snowflake(payload.id),
@@ -18,7 +19,7 @@ export function transformScheduledEvent(bot: Bot, payload: DiscordScheduledEvent
     privacyLevel: payload.privacy_level,
     status: payload.status,
     entityType: payload.entity_type,
-    userCount: payload.user_count || 0,
+    userCount: payload.user_count ?? 0,
     location: payload.entity_metadata?.location,
     image: payload.image ? iconHashToBigInt(payload.image) : undefined,
   }

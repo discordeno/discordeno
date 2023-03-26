@@ -2,6 +2,7 @@ import type { DiscordGuildApplicationCommandPermissions } from '@discordeno/type
 import type { Bot } from '../index.js'
 import type { Optionalize } from '../optionalize.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformApplicationCommandPermission(bot: Bot, payload: DiscordGuildApplicationCommandPermissions) {
   const applicationCommandPermission = {
     id: bot.transformers.snowflake(payload.id),

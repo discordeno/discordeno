@@ -37,49 +37,49 @@ export class VoiceStateToggles extends ToggleBitfield {
   }
 
   /** Whether this user is deafened by the server */
-  get deaf() {
+  get deaf(): boolean {
     return this.has('deaf')
   }
 
   /** Whether this user is muted by the server */
-  get mute() {
+  get mute(): boolean {
     return this.has('mute')
   }
 
   /** Whether this user is locally deafened */
-  get selfDeaf() {
+  get selfDeaf(): boolean {
     return this.has('selfDeaf')
   }
 
   /** Whether this user is locally muted */
-  get selfMute() {
+  get selfMute(): boolean {
     return this.has('selfMute')
   }
 
   /** Whether this user is streaming using "Go Live" */
-  get selfStream() {
+  get selfStream(): boolean {
     return this.has('selfStream')
   }
 
   /** Whether this user's camera is enabled */
-  get selfVideo() {
+  get selfVideo(): boolean {
     return this.has('selfVideo')
   }
 
   /** Whether this user is muted by the current user */
-  get suppress() {
+  get suppress(): boolean {
     return this.has('suppress')
   }
 
   /** Checks whether or not the permissions exist in this */
-  has(permissions: VoiceStateToggleKeys | VoiceStateToggleKeys[]) {
+  has(permissions: VoiceStateToggleKeys | VoiceStateToggleKeys[]): boolean {
     if (!Array.isArray(permissions)) return super.contains(VoiceStateToggle[permissions])
 
     return super.contains(permissions.reduce((a, b) => (a |= VoiceStateToggle[b]), 0))
   }
 
   /** Lists all the toggles for the role and whether or not each is true or false. */
-  list() {
+  list(): Record<VoiceStateToggleKeys, boolean> {
     const json: Record<string, boolean> = {}
     for (const [key, value] of Object.entries(VoiceStateToggle)) {
       json[key] = super.contains(value)

@@ -1,7 +1,8 @@
 import type { DiscordIntegrationCreateUpdate } from '@discordeno/types'
-import { Bot, iconHashToBigInt } from '../index.js'
+import { iconHashToBigInt, type Bot } from '../index.js'
 import type { Optionalize } from '../optionalize.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreateUpdate) {
   const integration = {
     guildId: bot.transformers.snowflake(payload.guild_id),

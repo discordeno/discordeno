@@ -1,7 +1,8 @@
 import type { DiscordTeam } from '@discordeno/types'
-import { Bot, iconHashToBigInt } from '../index.js'
+import { iconHashToBigInt, type Bot } from '../index.js'
 import type { Optionalize } from '../optionalize.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformTeam(bot: Bot, payload: DiscordTeam) {
   const id = bot.transformers.snowflake(payload.id)
 

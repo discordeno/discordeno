@@ -28,6 +28,22 @@ export class LeakyBucket implements LeakyBucketOptions {
     return this.max < this.used ? 0 : this.max - this.used
   }
 
+  /** Refills the bucket as needed. */
+  refillBucket(): void {
+    console.log('refilling bucket');
+    logger.info(`[LeakyBucket] Timeout for leaky bucket requests executed. Refilling bucket.`)
+    // Lower the used amount by the refill amount
+    this.used = this.refillAmount > this.used ? 0 : this.used - this.refillAmount
+    // Reset the refillsAt timestamp since it just got refilled
+    this.refillsAt = undefined
+
+    if (this.used > 0) {
+      if (this.timeoutId) clearTimeout(this.timeoutId)
+      this.timeoutId = setTimeout(() => this.refillBucket, this.refillInterval)
+      this.refillsAt = Date.now() + this.refillInterval
+    }
+  }
+
   /** Begin processing the queue. */
   async processQueue(): Promise<void> {
     logger.debug('[Gateway] Processing queue')
@@ -49,13 +65,8 @@ export class LeakyBucket implements LeakyBucketOptions {
         // Create a new timeout for this request if none exists.
         if (!this.timeoutId) {
           logger.debug(`[LeakyBucket] Creating new timeout for leaky bucket requests.`)
-          this.timeoutId = setTimeout(() => {
-            logger.debug(`[LeakyBucket] Timeout for leaky bucket requests executed. Refilling bucket.`)
-            // Lower the used amount by the refill amount
-            this.used -= this.refillAmount
-            // Reset the refillsAt timestamp since it just got refilled
-            this.refillsAt = undefined
-          }, this.refillInterval)
+
+          this.timeoutId = setTimeout(() => this.refillBucket, this.refillInterval)
           // Set the time for when this refill will occur.
           this.refillsAt = Date.now() + this.refillInterval
         }

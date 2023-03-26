@@ -1,7 +1,8 @@
-import { DiscordApplication, iconHashToBigInt } from '@discordeno/bot'
+import { iconHashToBigInt, type DiscordApplication } from '@discordeno/bot'
 import type { Bot } from '../index.js'
 import type { Optionalize } from '../optionalize.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformApplication(bot: Bot, payload: DiscordApplication) {
   const application = {
     name: payload.name,
@@ -20,7 +21,7 @@ export function transformApplication(bot: Bot, payload: DiscordApplication) {
     id: bot.transformers.snowflake(payload.id),
     icon: payload.icon ? iconHashToBigInt(payload.icon) : undefined,
     owner: payload.owner
-      ? // @ts-ignore the partial here wont break anything
+      ? // @ts-expect-error the partial here wont break anything
         bot.transformers.user(bot, payload.owner)
       : undefined,
     team: payload.team ? bot.transformers.team(bot, payload.team) : undefined,

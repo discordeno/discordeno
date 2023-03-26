@@ -1,4 +1,4 @@
-import { DiscordApplication, iconBigintToHash } from '@discordeno/bot'
+import { iconBigintToHash, type DiscordApplication } from '@discordeno/bot'
 import type { Bot } from '../../index.js'
 import type { Application } from '../application.js'
 

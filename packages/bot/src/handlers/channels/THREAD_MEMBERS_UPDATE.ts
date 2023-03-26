@@ -1,7 +1,7 @@
 import type { DiscordGatewayPayload, DiscordThreadMembersUpdate } from '@discordeno/types'
 import type { Bot } from '../../index.js'
 
-export async function handleThreadMembersUpdate(bot: Bot, data: DiscordGatewayPayload) {
+export async function handleThreadMembersUpdate(bot: Bot, data: DiscordGatewayPayload, shardId: number): Promise<void> {
   const payload = data.d as DiscordThreadMembersUpdate
 
   bot.events.threadMembersUpdate?.({

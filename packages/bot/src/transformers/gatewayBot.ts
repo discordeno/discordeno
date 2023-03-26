@@ -1,6 +1,7 @@
 import type { DiscordGetGatewayBot } from '@discordeno/types'
 import type { Optionalize } from '../optionalize.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformGatewayBot(payload: DiscordGetGatewayBot) {
   const gatewayBot = {
     url: payload.url,

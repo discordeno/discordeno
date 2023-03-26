@@ -2,7 +2,7 @@ import type { DiscordAutoModerationActionExecution, DiscordGatewayPayload } from
 import type { Bot } from '../../../bot.js'
 
 /** Requires the MANAGE_GUILD permission. */
-export function handleAutoModerationActionExecution(bot: Bot, data: DiscordGatewayPayload, shardId: number) {
+export async function handleAutoModerationActionExecution(bot: Bot, data: DiscordGatewayPayload, shardId: number): Promise<void> {
   const payload = data.d as DiscordAutoModerationActionExecution
-  bot.events.automodActionExecution?.(bot.events.automodActionExecution(payload))
+  bot.events.automodActionExecution?.(bot.transformers.automodActionExecution(bot, payload))
 }

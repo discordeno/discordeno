@@ -128,27 +128,26 @@ describe('Manage reactions', async () => {
   })
 })
 
-describe("Manage pins", () => {
-it('Pin, get, and unpin messages', async () => {
-  const channel = await rest.createChannel(e2ecache.guild.id, { name: 'pinning' })
-  const message = await rest.sendMessage(channel.id, { content: 'pin me' })
-  const message2 = await rest.sendMessage(channel.id, { content: 'pin me 2' })
+describe('Manage pins', () => {
+  it('Pin, get, and unpin messages', async () => {
+    const channel = await rest.createChannel(e2ecache.guild.id, { name: 'pinning' })
+    const message = await rest.sendMessage(channel.id, { content: 'pin me' })
+    const message2 = await rest.sendMessage(channel.id, { content: 'pin me 2' })
 
-  await rest.pinMessage(channel.id, message.id)
-  await rest.pinMessage(channel.id, message2.id, 'with a reason')
+    await rest.pinMessage(channel.id, message.id)
+    await rest.pinMessage(channel.id, message2.id, 'with a reason')
 
-  const pins = await rest.getPinnedMessages(channel.id)
-  expect(pins.length).to.equal(2)
-  expect(pins.some(p => p.id === message.id)).to.equal(true)
+    const pins = await rest.getPinnedMessages(channel.id)
+    expect(pins.length).to.equal(2)
+    expect(pins.some((p) => p.id === message.id)).to.equal(true)
 
-  await rest.unpinMessage(channel.id, message.id)
-  await rest.unpinMessage(channel.id, message2.id, 'with a reason')
+    await rest.unpinMessage(channel.id, message.id)
+    await rest.unpinMessage(channel.id, message2.id, 'with a reason')
 
-  const unpinned = await rest.getPinnedMessages(channel.id)
-  expect(unpinned.length).to.equal(0) 
+    const unpinned = await rest.getPinnedMessages(channel.id)
+    expect(unpinned.length).to.equal(0)
+  })
 })
-})
-
 
 describe('Rate limit manager testing', () => {
   it('Send 10 messages to 1 channel', async () => {

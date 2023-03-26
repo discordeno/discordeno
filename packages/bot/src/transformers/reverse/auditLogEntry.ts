@@ -13,20 +13,20 @@ export function transformAuditLogEntryToDiscordAuditLogEntry(bot: Bot, payload: 
           return {
             key: change.key,
             new_value: (
-              change.new as {
+              change.new as Array<{
                 id: bigint | undefined
                 name: string | undefined
-              }[]
+              }>
             )?.map((val) => ({
               id: val.id ? bot.transformers.reverse.snowflake(val.id) : undefined,
               name: val.name,
             })),
             old_value: (
               change.old as
-                | {
+                | Array<{
                     id: bigint | undefined
                     name: string | undefined
-                  }[]
+                  }>
                 | undefined
             )?.map((val) => ({
               id: val?.id ? bot.transformers.reverse.snowflake(val.id) : undefined,
@@ -139,10 +139,7 @@ export function transformAuditLogEntryToDiscordAuditLogEntry(bot: Bot, payload: 
           role_name: payload.options.roleName,
           // make up value to make ts shut up, the orginal value do not persevere in transformer
           application_id: '',
-          // TODO: Fix
-          // @ts-expect-error
           auto_moderation_rule_name: payload.options.autoModerationRuleName,
-          // @ts-expect-error
           auto_moderation_rule_trigger_type: payload.options.autoModerationRuleTriggerType,
         }
       : undefined,

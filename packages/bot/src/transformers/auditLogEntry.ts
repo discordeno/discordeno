@@ -2,6 +2,7 @@ import type { DiscordAuditLogEntry } from '@discordeno/types'
 import type { Bot } from '../index.js'
 import type { Optionalize } from '../optionalize.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry) {
   const auditLogEntry = {
     id: bot.transformers.snowflake(payload.id),
@@ -122,6 +123,8 @@ export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry) 
           id: payload.options.id ? bot.transformers.snowflake(payload.options.id) : undefined,
           type: Number(payload.options.type),
           roleName: payload.options.role_name,
+          autoModerationRuleName: payload.options.auto_moderation_rule_name,
+          autoModerationRuleTriggerType: payload.options.auto_moderation_rule_trigger_type,
         }
       : undefined,
     reason: payload.reason,

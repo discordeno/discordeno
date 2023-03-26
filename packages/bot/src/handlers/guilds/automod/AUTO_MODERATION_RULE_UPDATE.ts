@@ -2,7 +2,7 @@ import type { DiscordAutoModerationRule, DiscordGatewayPayload } from '@discorde
 import type { Bot } from '../../../bot.js'
 
 /** Requires the MANAGE_GUILD permission. */
-export function handleAutoModerationRuleUpdate(bot: Bot, data: DiscordGatewayPayload, shardId: number) {
+export async function handleAutoModerationRuleUpdate(bot: Bot, data: DiscordGatewayPayload, shardId: number): Promise<void> {
   const payload = data.d as DiscordAutoModerationRule
   bot.events.automodRuleUpdate?.(bot.transformers.automodRule(bot, payload))
 }

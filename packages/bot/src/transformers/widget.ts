@@ -3,6 +3,7 @@ import type { DiscordGuildWidget } from '@discordeno/types'
 import type { Bot } from '../index.js'
 import type { Optionalize } from '../optionalize.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformWidget(bot: Bot, payload: DiscordGuildWidget) {
   const widget = {
     id: bot.transformers.snowflake(payload.id),

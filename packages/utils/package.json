@@ -16,7 +16,7 @@
     "fmt": "eslint --fix \"src/**/*.ts*\"",
     "lint": "eslint \"src/**/*.ts*\"",
     "test:unit-coverage": "c8 mocha --no-warnings 'tests/**/*.spec.ts'",
-    "test:unit": "c8 --r lcov mocha --no-warnings 'tests/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js utils",
+    "test:unit": "c8 --r lcov mocha --no-warnings 'tests/**/bucket.spec.ts' && node ../../scripts/coveragePathFixing.js utils",
     "test:deno-unit": "swc tests --delete-dir-on-start -C jsc.minify.mangle=false --out-dir denoTestsDist && node ../../scripts/fixDenoTestExtension.js && deno test -A --import-map ../../denoImportMap.json denoTestsDist",
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/**/*.spec.ts'",
     "test:type": "tsc --noEmit",

@@ -1,5 +1,5 @@
 import type { Bot } from '../../index.js'
-import type { BotInteractionResponse, DiscordInteractionResponse } from '../../types.js'
+import type { BotInteractionResponse, DiscordInteractionResponse } from '../../typings.js'
 
 export function transformInteractionResponseToDiscordInteractionResponse(bot: Bot, payload: BotInteractionResponse): DiscordInteractionResponse {
   // If no mentions are provided, force disable mentions

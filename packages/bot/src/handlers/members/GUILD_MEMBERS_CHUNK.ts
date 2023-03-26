@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordGuildMembersChunk } from '@discorden
 import { PresenceStatus } from '@discordeno/types'
 import type { Bot } from '../../index.js'
 
-export async function handleGuildMembersChunk(bot: Bot, data: DiscordGatewayPayload) {
+export async function handleGuildMembersChunk(bot: Bot, data: DiscordGatewayPayload): Promise<any> {
   const payload = data.d as DiscordGuildMembersChunk
 
   const guildId = bot.transformers.snowflake(payload.guild_id)

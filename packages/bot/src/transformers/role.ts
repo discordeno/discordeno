@@ -1,8 +1,9 @@
 import type { DiscordRole } from '@discordeno/types'
-import { Bot, iconHashToBigInt } from '../index.js'
+import { iconHashToBigInt, type Bot } from '../index.js'
 import type { Optionalize } from '../optionalize.js'
 import { RoleToggles } from './toggles/role.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guildId: bigint }) {
   const role = {
     name: payload.role.name,

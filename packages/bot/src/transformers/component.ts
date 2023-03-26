@@ -1,8 +1,8 @@
-// import type { DiscordComponent } from '@discordeno/types'
 import type { ButtonStyles, MessageComponentTypes, SelectOption, TextStyles } from '@discordeno/types'
 import type { Bot } from '../index.js'
+import type { DiscordComponent } from '../typings.js'
 
-export function transformComponent(bot: Bot, payload: any /* TODO: Fix, needs DiscordComponent type */): Component {
+export function transformComponent(bot: Bot, payload: DiscordComponent): Component {
   return {
     type: payload.type,
     customId: payload.custom_id,
@@ -17,7 +17,6 @@ export function transformComponent(bot: Bot, payload: any /* TODO: Fix, needs Di
         }
       : undefined,
     url: payload.url,
-    // @ts-expect-error TODO: Fix
     options: payload.options?.map((option) => ({
       label: option.label,
       value: option.value,
@@ -37,7 +36,6 @@ export function transformComponent(bot: Bot, payload: any /* TODO: Fix, needs Di
     minLength: payload.min_length,
     maxLength: payload.max_length,
     value: payload.value,
-    // @ts-expect-error TODO: Fix
     components: payload.components?.map((component) => bot.transformers.component(bot, component)),
   }
 }
@@ -80,7 +78,7 @@ export interface Component {
   maxValues?: number
   /** The minimum input length for a text input. Between 0-4000. */
   minLength?: number
-  /**The maximum input length for a text input. Between 1-4000. */
+  /** The maximum input length for a text input. Between 1-4000. */
   maxLength?: number
   /** a list of child components */
   components?: Component[]

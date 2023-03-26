@@ -2,6 +2,7 @@ import type { DiscordInviteCreate } from '@discordeno/types'
 import type { Bot } from '../index.js'
 import type { Optionalize } from '../optionalize.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformInvite(bot: Bot, invite: DiscordInviteCreate) {
   const transformedInvite = {
     /** The channel the invite is for */
@@ -24,7 +25,7 @@ export function transformInvite(bot: Bot, invite: DiscordInviteCreate) {
     targetUser: invite.target_user ? bot.transformers.user(bot, invite.target_user) : undefined,
     /** The embedded application to open for this voice channel embedded application invite */
     targetApplication: invite.target_application
-      ? // @ts-ignore should not break anything even though its partial. if it does blame wolf :)
+      ? // @ts-expect-error should not break anything even though its partial. if it does blame wolf :)
         bot.transformers.application(bot, invite.target_application)
       : undefined,
     /** Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */

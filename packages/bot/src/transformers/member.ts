@@ -5,6 +5,7 @@ import type { Optionalize } from '../optionalize.js'
 import { MemberToggles } from './toggles/member.js'
 import { UserToggles } from './toggles/user.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformUser(bot: Bot, payload: DiscordUser) {
   const user = {
     id: bot.transformers.snowflake(payload.id || ''),
@@ -22,6 +23,7 @@ export function transformUser(bot: Bot, payload: DiscordUser) {
   return user as Optionalize<typeof user>
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformMember(bot: Bot, payload: DiscordMember, guildId: bigint, userId: bigint) {
   const member = {
     id: userId,

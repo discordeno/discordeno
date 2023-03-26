@@ -4,21 +4,22 @@ import type { Optionalize } from '../optionalize.js'
 
 const Mask = (1n << 64n) - 1n
 
-export function packOverwrites(allow: string, deny: string, id: string, type: number) {
+export function packOverwrites(allow: string, deny: string, id: string, type: number): bigint {
   return pack64(allow, 0) | pack64(deny, 1) | pack64(id, 2) | pack64(type, 3)
 }
-function unpack64(v: bigint, shift: number) {
+function unpack64(v: bigint, shift: number): bigint {
   return (v >> BigInt(shift * 64)) & Mask
 }
-function pack64(v: string | number, shift: number) {
+function pack64(v: string | number, shift: number): bigint {
   const b = BigInt(v)
-  if (b < 0 || b > Mask) throw new Error('should have been a 64 bit unsigned integer: ' + v)
+  if (b < 0 || b > Mask) throw new Error('should have been a 64 bit unsigned integer: ' + v.toString())
   return b << BigInt(shift * 64)
 }
-export function separateOverwrites(v: bigint) {
+export function separateOverwrites(v: bigint): [number, bigint, bigint, bigint] {
   return [Number(unpack64(v, 3)), unpack64(v, 2), unpack64(v, 0), unpack64(v, 1)] as [number, bigint, bigint, bigint]
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }) {
   const channel = {
     // UNTRANSFORMED STUFF HERE
@@ -33,10 +34,10 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } 
     // recipients: payload.channel.recipients?.map((r) => bot.transformers.user(bot, r)),
     rtcRegion: payload.channel.rtc_region ?? undefined,
     videoQualityMode: payload.channel.video_quality_mode,
-    guildId: payload.guildId || (payload.channel.guild_id ? bot.transformers.snowflake(payload.channel.guild_id) : 0n),
+    guildId: payload.guildId ?? (payload.channel.guild_id ? bot.transformers.snowflake(payload.channel.guild_id) : 0n),
     lastPinTimestamp: payload.channel.last_pin_timestamp ? Date.parse(payload.channel.last_pin_timestamp) : undefined,
     permissionOverwrites: payload.channel.permission_overwrites
-      ? payload.channel.permission_overwrites.map((o) => packOverwrites(o.allow || '0', o.deny || '0', o.id, o.type))
+      ? payload.channel.permission_overwrites.map((o) => packOverwrites(o.allow ?? '0', o.deny ?? '0', o.id, o.type))
       : [],
 
     id: bot.transformers.snowflake(payload.channel.id),

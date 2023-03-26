@@ -1,7 +1,7 @@
 import type { DiscordGatewayPayload, DiscordMessageReactionRemoveAll } from '@discordeno/types'
 import type { Bot } from '../../index.js'
 
-export async function handleMessageReactionRemoveAll(bot: Bot, data: DiscordGatewayPayload) {
+export async function handleMessageReactionRemoveAll(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
   const payload = data.d as DiscordMessageReactionRemoveAll
 
   bot.events.reactionRemoveAll?.({

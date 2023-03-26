@@ -3,25 +3,27 @@ import { createGatewayManager, ShardSocketCloseCodes } from '@discordeno/gateway
 import type { CreateRestManagerOptions, RestManager } from '@discordeno/rest'
 import { createRestManager } from '@discordeno/rest'
 import type { DiscordEmoji, DiscordGatewayPayload, DiscordReady, GatewayIntents } from '@discordeno/types'
-import { Collection, createLogger } from '@discordeno/utils'
-import type { Transformers } from './transformer'
-import type { AuditLogEntry } from './transformers/auditLogEntry'
-import type { AutoModerationActionExecution } from './transformers/automodActionExecution'
-import type { AutoModerationRule } from './transformers/automodRule'
-import type { Channel } from './transformers/channel'
-import type { Emoji } from './transformers/emoji'
-import type { Guild } from './transformers/guild'
-import type { Integration } from './transformers/integration'
-import type { Interaction } from './transformers/interaction'
-import type { Invite } from './transformers/invite'
-import type { Member, User } from './transformers/member'
-import type { Message } from './transformers/message'
-import type { PresenceUpdate } from './transformers/presence'
-import type { Role } from './transformers/role'
-import type { ScheduledEvent } from './transformers/scheduledEvent'
-import type { ThreadMember } from './transformers/threadMember'
-import type { VoiceState } from './transformers/voiceState'
-import type { bigintToSnowflake, snowflakeToBigint } from './utils.js'
+import { createLogger, getBotIdFromToken, type Collection } from '@discordeno/utils'
+import { createBotGatewayHandlers } from './handlers.js'
+import { createTransformers, type Transformers } from './transformers.js'
+import type { ApplicationCommandPermission } from './transformers/applicationCommandPermission.js'
+import type { AuditLogEntry } from './transformers/auditLogEntry.js'
+import type { AutoModerationActionExecution } from './transformers/automodActionExecution.js'
+import type { AutoModerationRule } from './transformers/automodRule.js'
+import type { Channel } from './transformers/channel.js'
+import type { Emoji } from './transformers/emoji.js'
+import type { Guild } from './transformers/guild.js'
+import type { Integration } from './transformers/integration.js'
+import type { Interaction } from './transformers/interaction.js'
+import type { Invite } from './transformers/invite.js'
+import type { Member, User } from './transformers/member.js'
+import type { Message } from './transformers/message.js'
+import type { PresenceUpdate } from './transformers/presence.js'
+import type { Role } from './transformers/role.js'
+import type { ScheduledEvent } from './transformers/scheduledEvent.js'
+import type { Sticker } from './transformers/sticker.js'
+import type { ThreadMember } from './transformers/threadMember.js'
+import type { VoiceState } from './transformers/voiceState.js'
 
 /**
  * Create a bot object that will maintain the rest and gateway connection.
@@ -53,7 +55,13 @@ export function createBot(options: CreateBotOptions): Bot {
   options.rest.token = options.token
   options.gateway.intents = options.intents
 
+  const id = getBotIdFromToken(options.token)
+
   const bot: Bot = {
+    id,
+    applicationId: id,
+    transformers: createTransformers({}),
+    handlers: createBotGatewayHandlers({}),
     rest: createRestManager(options.rest),
     gateway: createGatewayManager(options.gateway),
     events: options.events ?? {},
@@ -88,7 +96,9 @@ export interface CreateBotOptions {
 }
 
 export interface Bot {
+  /** The id of the bot. */
   id: bigint
+  /** The application id of the bot. This is usually the same as id but in the case of old bots can be different. */
   applicationId: bigint
   /** The rest manager. */
   rest: RestManager
@@ -98,11 +108,10 @@ export interface Bot {
   events: Partial<EventHandlers>
   /** A logger utility to make it easy to log nice and useful things in the bot code. */
   logger: ReturnType<typeof createLogger>
+  /** The functions that should transform discord objects to discordeno shaped objects. */
   transformers: Transformers
-  utils: {
-    snowflakeToBigint: typeof snowflakeToBigint
-    bigintToSnowflake: typeof bigintToSnowflake
-  }
+  /** The handler functions that should handle incoming discord payloads from gateway and call an event. */
+  handlers: ReturnType<typeof createBotGatewayHandlers>
   /** Start the bot connection to the gateway. */
   start: () => Promise<void>
   /** Shuts down all the bot connections to the gateway. */
@@ -111,6 +120,7 @@ export interface Bot {
 
 export interface EventHandlers {
   debug: (text: string, ...args: any[]) => unknown
+  applicationCommandPermissionsUpdate: (command: ApplicationCommandPermission) => unknown
   auditLogEntryCreate: (log: AuditLogEntry, guildId: bigint) => unknown
   automodRuleCreate: (rule: AutoModerationRule) => unknown
   automodRuleUpdate: (rule: AutoModerationRule) => unknown
@@ -149,6 +159,7 @@ export interface EventHandlers {
   guildMemberAdd: (member: Member, user: User) => unknown
   guildMemberRemove: (user: User, guildId: bigint) => unknown
   guildMemberUpdate: (member: Member, user: User) => unknown
+  guildStickersUpdate: (stickers: Sticker[]) => unknown
   messageCreate: (message: Message) => unknown
   messageDelete: (payload: { id: bigint; channelId: bigint; guildId?: bigint }, message?: Message) => unknown
   messageDeleteBulk: (payload: { ids: bigint[]; channelId: bigint; guildId?: bigint }) => unknown

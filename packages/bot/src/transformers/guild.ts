@@ -5,6 +5,7 @@ import type { Optionalize } from '../optionalize.js'
 import type { Emoji } from '../transformers/emoji.js'
 import { GuildToggles } from './toggles/guild.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) {
   const guildId = bot.transformers.snowflake(payload.guild.id)
 
@@ -82,7 +83,7 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
       }),
     ),
     voiceStates: new Collection(
-      (payload.guild.voice_states || []).map((vs) => bot.transformers.voiceState(bot, { voiceState: vs, guildId })).map((vs) => [vs.userId, vs]),
+      (payload.guild.voice_states ?? []).map((vs) => bot.transformers.voiceState(bot, { voiceState: vs, guildId })).map((vs) => [vs.userId, vs]),
     ),
 
     id: guildId,

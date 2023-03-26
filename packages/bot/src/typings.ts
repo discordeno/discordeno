@@ -1,28 +1,28 @@
 import {
-  AllowedMentions,
-  ApplicationCommandOptionChoice,
   ApplicationCommandTypes,
-  ButtonStyles,
-  CreateApplicationCommand,
-  CreateContextApplicationCommand,
-  DiscordAllowedMentions,
-  DiscordApplicationCommandOptionChoice,
-  DiscordAttachment,
-  DiscordChannel,
-  DiscordEmbed,
-  DiscordInteractionMember,
-  DiscordMessage,
-  DiscordRole,
-  DiscordSelectOption,
-  DiscordUser,
-  FileContent,
-  InteractionResponseTypes,
-  MessageComponents,
-  MessageComponentTypes,
-  TextStyles,
+  type AllowedMentions,
+  type ApplicationCommandOptionChoice,
+  type ButtonStyles,
+  type CreateApplicationCommand,
+  type CreateContextApplicationCommand,
+  type DiscordAllowedMentions,
+  type DiscordApplicationCommandOptionChoice,
+  type DiscordAttachment,
+  type DiscordChannel,
+  type DiscordEmbed,
+  type DiscordInteractionMember,
+  type DiscordMessage,
+  type DiscordRole,
+  type DiscordSelectOption,
+  type DiscordUser,
+  type FileContent,
+  type InteractionResponseTypes,
+  type MessageComponents,
+  type MessageComponentTypes,
+  type TextStyles,
 } from '@discordeno/types'
-import type * as handlers from './handlers/mod.js'
-import type { Embed } from './transformers/embed'
+import type * as handlers from './handlers/index.js'
+import type { Embed } from './transformers/embed.js'
 
 export function isContextApplicationCommand(command: CreateApplicationCommand): command is CreateContextApplicationCommand {
   return command.type === ApplicationCommandTypes.Message || command.type === ApplicationCommandTypes.User
@@ -79,7 +79,7 @@ export interface DiscordComponent {
   max_values?: number
   /** The minimum input length for a text input. Between 0-4000. */
   min_length?: number
-  /**The maximum input length for a text input. Between 1-4000. */
+  /** The maximum input length for a text input. Between 1-4000. */
   max_length?: number
   /** a list of child components */
   components?: DiscordComponent[]
@@ -101,7 +101,7 @@ export interface BotInteractionCallbackData {
   /** True if this is a TTS message */
   tts?: boolean
   /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: Array<Embed>
+  embeds?: Embed[]
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
   /** The contents of the file being sent */
@@ -116,11 +116,6 @@ export interface BotInteractionCallbackData {
   flags?: number
   /** Autocomplete choices (max of 25 choices) */
   choices?: ApplicationCommandOptionChoice[]
-}
-
-export interface DiscordInteractionResponse {
-  type: InteractionResponseTypes
-  data?: DiscordInteractionCallbackData
 }
 
 export interface DiscordInteractionDataResolved {
@@ -147,6 +142,12 @@ export interface DiscordThreadMemberGuildCreate {
 
 export interface BotGatewayHandlerOptions {
   READY: typeof handlers.handleReady
+  APPLICATION_COMMAND_PERMISSIONS_UPDATE: typeof handlers.handleApplicationCommandPermissionsUpdate
+  AUTO_MODERATION_ACTION_EXECUTION: typeof handlers.handleAutoModerationActionExecution
+  AUTO_MODERATION_RULE_CREATE: typeof handlers.handleAutoModerationRuleCreate
+  AUTO_MODERATION_RULE_DELETE: typeof handlers.handleAutoModerationRuleDelete
+  AUTO_MODERATION_RULE_UPDATE: typeof handlers.handleAutoModerationRuleUpdate
+
   CHANNEL_CREATE: typeof handlers.handleChannelCreate
   CHANNEL_DELETE: typeof handlers.handleChannelDelete
   CHANNEL_PINS_UPDATE: typeof handlers.handleChannelPinsUpdate
@@ -178,6 +179,7 @@ export interface BotGatewayHandlerOptions {
   GUILD_SCHEDULED_EVENT_UPDATE: typeof handlers.handleGuildScheduledEventUpdate
   GUILD_SCHEDULED_EVENT_USER_ADD: typeof handlers.handleGuildScheduledEventUserAdd
   GUILD_SCHEDULED_EVENT_USER_REMOVE: typeof handlers.handleGuildScheduledEventUserRemove
+  GUILD_STICKERS_UPDATE: typeof handlers.handleGuildStickersUpdate
   GUILD_UPDATE: typeof handlers.handleGuildUpdate
   INTERACTION_CREATE: typeof handlers.handleInteractionCreate
   INVITE_CREATE: typeof handlers.handleInviteCreate

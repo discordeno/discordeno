@@ -1,5 +1,5 @@
 import type { Bot } from '../../index.js'
-import type { DiscordComponent } from '../../types.js'
+import type { DiscordComponent } from '../../typings.js'
 import type { Component } from '../component.js'
 
 export function transformComponentToDiscordComponent(bot: Bot, payload: Component): DiscordComponent {

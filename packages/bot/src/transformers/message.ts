@@ -1,17 +1,18 @@
 import type { DiscordMessage } from '@discordeno/types'
 import { CHANNEL_MENTION_REGEX } from '../constants.js'
-import { Bot, iconHashToBigInt } from '../index.js'
+import { iconHashToBigInt, type Bot } from '../index.js'
 import type { Optionalize } from '../optionalize.js'
 import { MemberToggles } from './toggles/member.js'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformMessage(bot: Bot, payload: DiscordMessage) {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
   const userId = bot.transformers.snowflake(payload.author.id)
 
   const message = {
     // UNTRANSFORMED STUFF HERE
-    content: payload.content || '',
-    isFromBot: payload.author.bot || false,
+    content: payload.content ?? '',
+    isFromBot: payload.author.bot ?? false,
     tag: `${payload.author.username}#${payload.author.discriminator}`,
     timestamp: Date.parse(payload.timestamp),
     editedTimestamp: payload.edited_timestamp ? Date.parse(payload.edited_timestamp) : undefined,
@@ -84,7 +85,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
       // Keep any ids tht discord sends
       ...(payload.mention_channels ?? []).map((m) => bot.transformers.snowflake(m.id)),
       // Add any other ids that can be validated in a channel mention format
-      ...(payload.content?.match(CHANNEL_MENTION_REGEX) || []).map((text) =>
+      ...(payload.content?.match(CHANNEL_MENTION_REGEX) ?? []).map((text) =>
         // converts the <#123> into 123
         bot.transformers.snowflake(text.substring(2, text.length - 1)),
       ),
