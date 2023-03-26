@@ -12,7 +12,7 @@ type OptionalizeAux<T extends object> = Id<
  * it is recursive
  */
 export type Optionalize<T> = T extends object
-  ? T extends Array<unknown> ? number extends T["length"] ? T[number] extends object ? Array<OptionalizeAux<T[number]>>
+  ? T extends unknown[] ? number extends T["length"] ? T[number] extends object ? Array<OptionalizeAux<T[number]>>
       : T
     : Partial<T>
   : OptionalizeAux<T>
@@ -43,9 +43,9 @@ export type Id<T> = T extends infer U ? {
 : never;
 
 /** Array with no utilty methods, aka Object.create(null) */
-export type ArrayWithNoPrototype<T> = {
+export interface ArrayWithNoPrototype<T> {
   [index: number]: T | ArrayWithNoPrototype<T>;
-};
+}
 
 /**
  * Allows any type but T
