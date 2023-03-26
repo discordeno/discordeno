@@ -34,12 +34,12 @@ describe('[Bot] Delete any guild owned guilds', () => {
         intents: Intents.Guilds,
       },
       events: {
-        async guildCreate(payload, shard) {
-          if (payload.joinedAt && Date.now() - Date.parse(payload.joinedAt) < 360000) {
+        async guildCreate(payload) {
+          if (payload.joinedAt && Date.now() - payload.joinedAt < 360000) {
             return
           }
 
-          if (bot.rest.applicationId.toString() === payload.ownerId) {
+          if (bot.rest.applicationId === payload.ownerId) {
             logger.debug(`Deleting one of the bot created guilds.`, payload.id)
             await bot.rest.deleteGuild(payload.id)
           }
