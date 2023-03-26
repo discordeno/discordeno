@@ -1,5 +1,4 @@
-import { iconBigintToHash, type DiscordApplication } from '@discordeno/bot'
-import type { Bot } from '../../index.js'
+import { iconBigintToHash, type Bot, type DiscordApplication } from '../../index.js'
 import type { Application } from '../application.js'
 
 export function transformApplicationToDiscordApplication(bot: Bot, payload: Application): DiscordApplication {

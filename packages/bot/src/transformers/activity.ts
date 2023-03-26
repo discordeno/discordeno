@@ -1,5 +1,4 @@
-import type { DiscordActivity } from '@discordeno/bot'
-import type { Bot } from '../index.js'
+import type { Bot, DiscordActivity } from '../index.js'
 import type { Optionalize } from '../optionalize.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

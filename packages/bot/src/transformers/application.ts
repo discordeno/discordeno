@@ -1,5 +1,4 @@
-import { iconHashToBigInt, type DiscordApplication } from '@discordeno/bot'
-import type { Bot } from '../index.js'
+import { iconHashToBigInt, type Bot, type DiscordApplication } from '../index.js'
 import type { Optionalize } from '../optionalize.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

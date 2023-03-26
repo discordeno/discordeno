@@ -1,4 +1,4 @@
-import type { DiscordEmoji } from '@discordeno/bot'
+import type { DiscordEmoji } from '@discordeno/types'
 import { ToggleBitfield } from './ToggleBitfield.js'
 
 export const EmojiToggle = {

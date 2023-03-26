@@ -1,5 +1,4 @@
-import type { DiscordActivity } from '@discordeno/bot'
-import type { Bot } from '../../index.js'
+import type { Bot, DiscordActivity } from '../../index.js'
 import type { Activity } from '../activity.js'
 
 export function transformActivityToDiscordActivity(bot: Bot, payload: Activity): DiscordActivity {

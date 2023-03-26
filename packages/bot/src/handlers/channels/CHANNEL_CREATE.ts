@@ -1,5 +1,4 @@
-import type { DiscordChannel, DiscordGatewayPayload } from '@discordeno/bot'
-import type { Bot } from '../../index.js'
+import type { Bot, DiscordChannel, DiscordGatewayPayload } from '../../index.js'
 
 export async function handleChannelCreate(bot: Bot, payload: DiscordGatewayPayload, shardId: number): Promise<void> {
   const channel = bot.transformers.channel(bot, {
