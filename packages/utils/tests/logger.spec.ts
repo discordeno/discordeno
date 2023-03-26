@@ -22,7 +22,7 @@ describe('Logger', () => {
 
   it('Handle fake level', () => {
     const loggy = createLogger({ name: 'fake level' })
-    // @ts-expect-error intentionally high value for level to bypass ts check and run the `default` handler
-    loggy.log(123, 'idk')
+    const level = 123 as LogLevels
+    loggy.log(level, 'idk')
   })
 })
