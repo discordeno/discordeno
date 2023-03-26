@@ -110,4 +110,15 @@ describe('Manage Guilds', async () => {
   it('Get vanity URL', async () => {
     await expect(rest.getVanityUrl(e2ecache.guild.id)).to.eventually.rejected
   })
+
+  // Get a welcome screen
+  // it('Get welcome screen', async () => {
+  //   const screen = await rest.getWelcomeScreen(e2ecache.guild.id)
+  //   await rest.editWelcomeScreen(e2ecache.guild.id, {
+  //     enabled: true,
+  //     description: 'some description',
+  //   })
+
+
+  // })
 })
