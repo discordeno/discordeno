@@ -6,6 +6,12 @@ describe('Logger', () => {
   it('create logger with default options', () => {
     const loggy = createLogger()
     loggy.setLevel(LogLevels.Debug)
+    loggy.debug('debugging')
+    loggy.error('error')
+    loggy.fatal('fatal')
+    loggy.info('info')
+    loggy.warn('warn')
+    
     loggy.setDepth(LogDepth.Full)
 
     loggy.debug('debugging')

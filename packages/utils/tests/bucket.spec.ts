@@ -55,11 +55,10 @@ describe('bucket.ts', () => {
     })
 
     it('will return bucket with default property', () => {
-      const bucket = new LeakyBucket({
-        max: 111,
-        refillInterval: 2002,
-        refillAmount: 3003,
-      })
+      const bucket = new LeakyBucket()
+      expect(bucket.max).equals(1)
+      expect(bucket.refillInterval).equals(5000)
+      expect(bucket.refillAmount).equals(1)
       expect(bucket.queue).to.deep.equal([])
     })
 
@@ -99,25 +98,58 @@ describe('bucket.ts', () => {
       }
     })
 
-    it('idk', async () => {
+    it('bucket refills are done properly', async () => {
       const bucket = new LeakyBucket({
         max: 2,
         refillInterval: 500,
         refillAmount: 2,
       })
 
-      const now = Date.now()
       await bucket.acquire()
-
-      console.log(Date.now() - now, bucket.used, bucket.remaining)
+      expect(bucket.remaining).equals(1)
+      expect(bucket.used).equals(1)
       await clock.tickAsync(1000)
-      console.log(Date.now() - now, bucket.used, bucket.remaining)
+      expect(bucket.remaining).equals(2)
+      expect(bucket.used).equals(0)
 
       await bucket.acquire()
-
-      console.log(Date.now() - now, bucket.used, bucket.remaining)
       await clock.tickAsync(1000)
-      console.log(Date.now() - now, bucket.used, bucket.remaining)
+    })
+
+    it('bucket refills when refill amount is < max', async () => {
+      const bucket = new LeakyBucket({
+        max: 3,
+        refillInterval: 800,
+        refillAmount: 1,
+      })
+
+      await bucket.acquire()
+      await bucket.acquire()
+      expect(bucket.remaining).equals(1)
+      expect(bucket.used).equals(2)
+      await clock.tickAsync(1000)
+      expect(bucket.remaining).equals(2)
+      expect(bucket.used).equals(1)
+
+      await clock.tickAsync(2000)
+      expect(bucket.remaining).equals(3)
+      expect(bucket.used).equals(0)
+    })
+
+    it('bucket refills when refill interval is slow', async () => {
+      const bucket = new LeakyBucket({
+        max: 1,
+        refillInterval: 500,
+        refillAmount: 1,
+      })
+
+      await bucket.acquire()
+      await bucket.acquire()
+      expect(bucket.remaining).equals(0)
+      expect(bucket.used).equals(1)
+      // await clock.tickAsync(600)
+      // expect(bucket.remaining).equals(1)
+      // expect(bucket.used).equals(0)
     })
   })
 })
