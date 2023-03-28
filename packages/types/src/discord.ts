@@ -1443,7 +1443,7 @@ export enum AutoModerationActionType {
 export interface DiscordAutoModerationActionMetadata {
   /** The id of channel to which user content should be logged. Only in ActionType.SendAlertMessage */
   channel_id?: string
-  /** Additional explanation that will be shown to members whenever their message is blocked. Maximum of 150 characters. */
+  /** Additional explanation that will be shown to members whenever their message is blocked. Maximum of 150 characters. Only supported for AutoModerationActionType.BlockMessage */
   custom_message?: string
   /** Timeout duration in seconds maximum of 2419200 seconds (4 weeks). Only supported for TriggerType.Keyword && Only in ActionType.Timeout */
   duration_seconds?: number
