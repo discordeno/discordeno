@@ -144,10 +144,10 @@ describe('bucket.ts', () => {
       })
 
       await bucket.acquire()
+      await clock.tickAsync(500)
       await bucket.acquire()
       expect(bucket.remaining).equals(0)
       expect(bucket.used).equals(1)
-      // await clock.tickAsync(600)
       // expect(bucket.remaining).equals(1)
       // expect(bucket.used).equals(0)
     })
