@@ -66,7 +66,7 @@ import type {
   MfaLevels,
   ModifyGuildTemplate,
 } from '@discordeno/types'
-import type { CreateRestManagerOptions, RestManager, SendRequestOptions } from './types.js'
+import type { CreateRequestBodyOptions, CreateRestManagerOptions, RestManager, SendRequestOptions } from './types.js'
 
 // TODO: make dynamic based on package.json file
 const version = '19.0.0-alpha.1'
@@ -702,7 +702,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
       if (options.reason !== undefined) {
-        headers['X-Audit-Log-Reason'] = encodeURIComponent(options.reason)
+        headers['x-audit-log-reason'] = encodeURIComponent(options.reason)
       }
 
       let body: string | FormData | undefined
@@ -960,6 +960,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async makeRequest(method, url, body, options) {
       if (!rest.baseUrl.startsWith('https://discord.com') && url[0] === '/') {
         // Special handling for sending blobs across http to proxy
+        // TODO: fix this hacky handling
         if (body?.file) {
           if (!Array.isArray(body.file)) {
             body.file = [body.file]
@@ -980,6 +981,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         if (body) {
           headers['Content-Type'] = 'application/json'
         }
+
         const result = await fetch(`${rest.baseUrl}${url}`, {
           body: body ? JSON.stringify(body) : undefined,
           headers,
@@ -1016,23 +1018,23 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
     },
 
-    async get<T = Record<string, unknown>>(url: string) {
-      return camelize(await rest.makeRequest('GET', url)) as Camelize<T>
+    async get<T = Record<string, unknown>>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return camelize(await rest.makeRequest('GET', url, undefined, options)) as Camelize<T>
     },
 
-    async post<T = Record<string, unknown>>(url: string, body?: Record<string, any>) {
-      return camelize(await rest.makeRequest('POST', url, body)) as Camelize<T>
+    async post<T = Record<string, unknown>>(url: string, body?: Record<string, any>, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return camelize(await rest.makeRequest('POST', url, body, options)) as Camelize<T>
     },
 
-    async delete(url: string, body?: Record<string, any>) {
+    async delete(url: string, body?: Record<string, any>, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
       camelize(await rest.makeRequest('DELETE', url, body))
     },
 
-    async patch<T = Record<string, unknown>>(url: string, body?: Record<string, any>) {
+    async patch<T = Record<string, unknown>>(url: string, body?: Record<string, any>, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
       return camelize(await rest.makeRequest('PATCH', url, body)) as Camelize<T>
     },
 
-    async put<T = void>(url: string, body?: Record<string, any>, options?: Record<string, any>) {
+    async put<T = void>(url: string, body?: Record<string, any>, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
       return camelize(await rest.makeRequest('PUT', url, body, options)) as Camelize<T>
     },
 

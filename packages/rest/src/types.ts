@@ -170,7 +170,12 @@ export interface RestManager {
   /** Split a url to separate rate limit buckets based on major/minor parameters. */
   simplifyUrl: (url: string, method: RequestMethods) => string
   /** Make a request to be sent to the api. */
-  makeRequest: <T = unknown>(method: RequestMethods, url: string, body?: Record<string, any>, options?: Record<string, any>) => Promise<T>
+  makeRequest: <T = unknown>(
+    method: RequestMethods,
+    url: string,
+    body?: Record<string, any>,
+    options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>,
+  ) => Promise<T>
   /** Takes a request and processes it into a queue. */
   processRequest: (request: SendRequestOptions) => void
   /** Make a get request to the api */
