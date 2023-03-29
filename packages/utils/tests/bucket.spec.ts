@@ -151,10 +151,6 @@ describe('bucket.ts', () => {
         refillAmount: 1,
       })
 
-      // await bucket.acquire()
-      // await bucket.acquire()
-      // expect(bucket.remaining).equals(1)
-      // expect(bucket.used).equals(0)
       {
         const acquired = bucket.acquire()
         expect(await promiseState(acquired)).to.equal('pending')
