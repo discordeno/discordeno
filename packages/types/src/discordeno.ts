@@ -1022,7 +1022,7 @@ export interface CreateGuildStickerOptions extends WithReason {
   description: string
   /** Autocomplete/suggestion tags for the sticker (max 200 characters) */
   tags: string
-  /** The sticker file to upload, must be a PNG, APNG, or Lottie JSON file, max 500 KB */
+  /** The sticker file to upload, must be a PNG, APNG, or Lottie JSON file, max 512 KB */
   file: FileContent
 }
 
