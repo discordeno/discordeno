@@ -20,7 +20,11 @@ export class Role extends Base {
   unicodeEmoji?: string
   position: number
   guild: Guild
-  tags?: Omit<DiscordRoleTags, 'premium_subscriber'> & { premium_subscriber?: boolean }
+  tags?: Omit<DiscordRoleTags, 'premium_subscriber' | 'available_for_purchase' | 'guild_connections'> & {
+    premium_subscriber?: boolean
+    available_for_purchase?: boolean
+    guild_connections?: boolean
+  }
 
   constructor(data: DiscordRole, guild: Guild) {
     super(data.id)
@@ -40,6 +44,9 @@ export class Role extends Base {
           bot_id: data.tags.bot_id,
           integration_id: data.tags.integration_id,
           premium_subscriber: data.tags.premium_subscriber === null,
+          subscription_listing_id: data.tags.subscription_listing_id,
+          available_for_purchase: data.tags.available_for_purchase === null,
+          guild_connections: data.tags.guild_connections === null,
         }
       : undefined
   }
@@ -70,6 +77,8 @@ export class Role extends Base {
       this.tags = {
         bot_id: data.tags.bot_id,
         integration_id: data.tags.integration_id,
+        subscription_listing_id: data.tags.subscription_listing_id,
+        available_for_purchase: data.tags.available_for_purchase === null,
         premium_subscriber: data.tags.premium_subscriber === null,
       }
     }

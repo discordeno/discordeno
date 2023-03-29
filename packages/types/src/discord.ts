@@ -83,7 +83,7 @@ export interface DiscordIntegration {
   id: string
   /** Integration name */
   name: string
-  /** Integration type (twitch, youtube or discord) */
+  /** Integration type (twitch, youtube, discord, or guild_subscription). */
   type: 'twitch' | 'youtube' | 'discord'
   /** Is this integration enabled */
   enabled?: boolean
@@ -615,6 +615,10 @@ export interface DiscordRoleTags {
   integration_id?: string
   /** Whether this is the guild's premium subscriber role */
   premium_subscriber?: null
+  /** Id of this role's subscription sku and listing. */
+  subscription_listing_id?: string
+  /** Whether this role is available for purchase. */
+  available_for_purchase?: null
   /** Whether this is a guild's linked role */
   guild_connections?: null
 }

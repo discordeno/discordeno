@@ -10,6 +10,10 @@ export const RoleToggle = {
   mentionable: 1 << 2,
   /** Whether this is the guilds premium subscriber role */
   premiumSubscriber: 1 << 3,
+  /** Whether this role is available for purchase. */
+  availableForPurchase: 1 << 4,
+  /** Whether this role is available for guild connections. */
+  guildConnections: 1 << 5,
 }
 
 export class RoleToggles extends ToggleBitfield {
@@ -24,6 +28,8 @@ export class RoleToggles extends ToggleBitfield {
       if (role.managed) this.add(RoleToggle.managed)
       if (role.mentionable) this.add(RoleToggle.mentionable)
       if (role.tags?.premium_subscriber === null) this.add(RoleToggle.premiumSubscriber)
+      if (role.tags?.available_for_purchase === null) this.add(RoleToggle.availableForPurchase)
+      if (role.tags?.guild_connections === null) this.add(RoleToggle.guildConnections)
     }
   }
 
