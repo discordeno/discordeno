@@ -27,6 +27,7 @@ export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModera
       metadata: action.metadata
         ? {
             channelId: action.metadata.channel_id ? bot.transformers.snowflake(action.metadata.channel_id) : undefined,
+            customMessage: action.metadata.custom_message,
             durationSeconds: action.metadata.duration_seconds,
           }
         : undefined,
