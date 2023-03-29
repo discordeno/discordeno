@@ -8,14 +8,10 @@ events.forEach((event) => {
   camelizedEvents.push(camelize(event))
 })
 
-suite.add(`Camelize ${events.length} events`, () => {
-  events.forEach((event) => {
-    camelize(event)
-  })
+suite.add(`Camelize 1 event`, () => {
+  snakelize(events[1])
 })
 
-suite.add(`Snakelize ${events.length} events`, () => {
-  camelizedEvents.forEach((event) => {
-    snakelize(event)
-  })
+suite.add(`Snakelize 1 event`, () => {
+  snakelize(camelizedEvents[1])
 })
