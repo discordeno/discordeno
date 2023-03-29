@@ -920,7 +920,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
 
       if (route.includes('/reactions')) {
-        route = route.substring(0, route.indexOf('/emoji/@me'))
+        // 10 is the length of `/reactions`
+        route = route.substring(0, route.indexOf('/reactions') + 10)
       }
 
       // Delete Message endpoint has its own rate limit
