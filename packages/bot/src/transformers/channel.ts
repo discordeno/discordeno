@@ -45,6 +45,7 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } 
     lastMessageId: payload.channel.last_message_id ? bot.transformers.snowflake(payload.channel.last_message_id) : undefined,
     ownerId: payload.channel.owner_id ? bot.transformers.snowflake(payload.channel.owner_id) : undefined,
     applicationId: payload.channel.application_id ? bot.transformers.snowflake(payload.channel.application_id) : undefined,
+    managed: payload.managed,
     parentId: payload.channel.parent_id ? bot.transformers.snowflake(payload.channel.parent_id) : undefined,
     memberCount: payload.channel.member_count,
     messageCount: payload.channel.message_count,
