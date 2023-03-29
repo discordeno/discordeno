@@ -18,7 +18,7 @@ import type {
   StickerTypes,
   VerificationLevels,
   VideoQualityModes,
-  WebhookTypes,
+  WebhookTypes
 } from '@discordeno/types'
 import type { IncomingHttpHeaders } from 'node:http'
 import type Collection from './Collection.js'
@@ -438,6 +438,7 @@ export interface DiscoverySubcategoryResponse {
 export interface GetGuildAuditLogOptions {
   actionType?: number
   before?: string
+  after?: string
   limit?: number
   userID?: string
 }

@@ -321,6 +321,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             if (options.before) url += `&before=${options.before}`
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            if (options.after) url += `&after=${options.after}`
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             if (options.limit) url += `&limit=${options.limit}`
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             if (options.userId) url += `&user_id=${options.userId}`
@@ -973,7 +975,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         }
 
         const headers: HeadersInit = {
-          Authorization: rest.authorization ?? "",
+          Authorization: rest.authorization ?? '',
         }
         if (body) {
           headers['Content-Type'] = 'application/json'
@@ -985,13 +987,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         })
 
         if (!result.ok) {
-          const err = await result.json().catch(() => {}) as Record<string, any>;
+          const err = (await result.json().catch(() => {})) as Record<string, any>
           // Legacy Handling to not break old code or when body is missing
           if (!err?.body) throw new Error(`Error: ${err.message ?? result.statusText}`)
-          throw new Error(JSON.stringify(err));
+          throw new Error(JSON.stringify(err))
         }
 
-        return result.status !== 204 ? await result.json() as any : undefined
+        return result.status !== 204 ? ((await result.json()) as any) : undefined
       }
 
       return await new Promise((resolve, reject) => {
