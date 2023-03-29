@@ -13,6 +13,7 @@ import type {
   DefaultMessageNotificationLevels,
   EmbedTypes,
   ExplicitContentFilterLevels,
+  FormLayout,
   GatewayEventNames,
   GuildFeatures,
   GuildNsfwLevel,
@@ -83,7 +84,7 @@ export interface DiscordIntegration {
   id: string
   /** Integration name */
   name: string
-  /** Integration type (twitch, youtube or discord) */
+  /** Integration type (twitch, youtube, discord, or guild_subscription). */
   type: 'twitch' | 'youtube' | 'discord'
   /** Is this integration enabled */
   enabled?: boolean
@@ -615,6 +616,10 @@ export interface DiscordRoleTags {
   integration_id?: string
   /** Whether this is the guild's premium subscriber role */
   premium_subscriber?: null
+  /** Id of this role's subscription sku and listing. */
+  subscription_listing_id?: string
+  /** Whether this role is available for purchase. */
+  available_for_purchase?: null
   /** Whether this is a guild's linked role */
   guild_connections?: null
 }
@@ -703,6 +708,8 @@ export interface DiscordChannel {
   owner_id?: string
   /** Application id of the group DM creator if it is bot-created */
   application_id?: string
+  /** For group DM channels: whether the channel is managed by an application via the `gdm.join` OAuth2 scope. */
+  managed?: boolean
   /** For guild channels: Id of the parent category for a channel (each parent category can contain up to 50 channels), for threads: id of the text channel this thread was created */
   parent_id?: string | null
   /** When the last pinned message was pinned. This may be null in events such as GUILD_CREATE when a message is not pinned. */
@@ -738,7 +745,7 @@ export interface DiscordChannel {
   /** the default sort order type used to order posts in GUILD_FORUM channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
   default_sort_order?: SortOrderTypes | null
   /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
-  default_forum_layout?: number
+  default_forum_layout?: FormLayout
   /** When a thread is created this will be true on that channel payload for the thread. */
   newly_created?: boolean
 }
@@ -2394,6 +2401,8 @@ export interface DiscordModifyChannel {
   default_thread_rate_limit_per_user?: number
   /** the default sort order type used to order posts in forum channels */
   default_sort_order?: SortOrderTypes | null
+  /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
+  default_forum_layout?: FormLayout
 }
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */

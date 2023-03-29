@@ -94,15 +94,9 @@ Have your cache setup in any way you like. Redis, PGSQL or any cache layer you w
 
 Interested? [Check the website](https://discordeno.github.io/discordeno/) for more details on getting started.
 
-### Tools
-
-This library is not intended for beginners, however if you still want to utilise it, check out these excellent official
-and unofficial templates:
-
 ## Links
 
 - [Website](https://discordeno.github.io/discordeno/)
-- [Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
 - [Discord](https://discord.com/invite/5vBgXk3UcZ)
 
 Discordeno follows [semantic versioning](https://semver.org/)

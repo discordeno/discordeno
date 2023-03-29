@@ -328,11 +328,13 @@ export interface ListArchivedThreads {
 /** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
 export interface GetGuildAuditLog {
   /** Entries from a specific user ID */
-  userId?: BigString | string
+  userId?: BigString
   /** Entries for a specific audit log event */
   actionType?: AuditLogEvents
-  /** Entries that preceded a specific audit log entry ID */
-  before?: BigString | string
+  /** Entries with ID less than a specific audit log entry ID. */
+  before?: BigString
+  /** Entries with ID greater than a specific audit log entry ID. */
+  after?: BigString
   /** Maximum number of entries (between 1-100) to return, defaults to 50 */
   limit?: number
 }
@@ -1022,7 +1024,7 @@ export interface CreateGuildStickerOptions extends WithReason {
   description: string
   /** Autocomplete/suggestion tags for the sticker (max 200 characters) */
   tags: string
-  /** The sticker file to upload, must be a PNG, APNG, or Lottie JSON file, max 500 KB */
+  /** The sticker file to upload, must be a PNG, APNG, or Lottie JSON file, max 512 KB */
   file: FileContent
 }
 
