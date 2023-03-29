@@ -54,7 +54,13 @@ export class RequestHandler {
     this.client = client
     this.discordeno = createRestManager({
       token: this.client.token,
-      baseUrl: options.baseURL ?? this.client.options.proxyURL,
+      proxy:
+        options.baseURL ?? this.client.options.proxyURL
+          ? {
+              baseUrl: options.baseURL ?? this.client.options.proxyURL!,
+              authorization: this.client.token,
+            }
+          : undefined,
     })
 
     this.userAgent = `DiscordBot (https://github.com/discordeno/discordeno, ${version})`

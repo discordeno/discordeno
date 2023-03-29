@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-indexed-object-style */
 import type {
   ActivityTypes,
   ApplicationCommandOptionTypes,
@@ -7,6 +8,7 @@ import type {
   ChannelTypes,
   DefaultMessageNotificationLevels,
   ExplicitContentFilterLevels,
+  FormLayout,
   GuildFeatures,
   InteractionResponseTypes,
   MessageComponentTypes,
@@ -16,7 +18,7 @@ import type {
   StickerTypes,
   VerificationLevels,
   VideoQualityModes,
-  WebhookTypes,
+  WebhookTypes
 } from '@discordeno/types'
 import type { IncomingHttpHeaders } from 'node:http'
 import type Collection from './Collection.js'
@@ -255,6 +257,7 @@ export interface EditChannelOptions extends Omit<CreateChannelOptions, 'reason'>
   ownerID?: string
   rtcRegion?: string | null
   videoQualityMode?: VideoQualityModes
+  defaultForumLayout: FormLayout
 }
 export interface EditChannelPositionOptions {
   lockPermissions?: string
@@ -435,6 +438,7 @@ export interface DiscoverySubcategoryResponse {
 export interface GetGuildAuditLogOptions {
   actionType?: number
   before?: string
+  after?: string
   limit?: number
   userID?: string
 }

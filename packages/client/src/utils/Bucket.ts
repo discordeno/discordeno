@@ -20,6 +20,7 @@ class Bucket {
   tokenLimit: number
   tokens: number
   reservedTokens: number
+  // eslint-disable-next-line @typescript-eslint/ban-types
   _queue: Array<{ func: Function; priority: boolean }>
   timeout: NodeJS.Timeout | null = null
 

@@ -23,109 +23,107 @@ after(async () => {
   }
 })
 
-describe('Emoji helpers', () => {
-  describe('Create and delete', () => {
-    it('create an emoji', async () => {
-      const emoji = await rest.createEmoji(e2ecache.guild.id, {
-        name: 'blamewolf',
-        image: await urlToBase64('https://cdn.discordapp.com/emojis/814955268123000832.png'),
-        roles: [],
-      })
-
-      // Assertions
-      expect(emoji.id).to.be.exist
-      await rest.deleteEmoji(e2ecache.guild.id, emoji.id!)
+describe('Create and delete emojis', () => {
+  it('create an emoji', async () => {
+    const emoji = await rest.createEmoji(e2ecache.guild.id, {
+      name: 'blamewolf',
+      image: await urlToBase64('https://cdn.discordapp.com/emojis/814955268123000832.png'),
+      roles: [],
     })
 
-    // delete an emoji without a reason
-    it('delete an emoji without a reason', async () => {
-      const emoji = await rest.createEmoji(e2ecache.guild.id, {
-        name: 'blamewolf',
-        image: await urlToBase64('https://cdn.discordapp.com/emojis/814955268123000832.png'),
-        roles: [],
-      })
-
-      // Assertions
-      expect(emoji.id).to.be.exist
-
-      await rest.deleteEmoji(e2ecache.guild.id, emoji.id!)
-
-      await expect(rest.getEmoji(e2ecache.guild.id, emoji.id!)).to.eventually.rejected
-    })
-
-    // delete an emoji with a reason
-    it('delete an emoji with a reason', async () => {
-      const emoji = await rest.createEmoji(e2ecache.guild.id, {
-        name: 'blamewolf',
-        image: await urlToBase64('https://cdn.discordapp.com/emojis/814955268123000832.png'),
-        roles: [],
-      })
-
-      // Assertions
-      expect(emoji.id).to.be.exist
-
-      await rest.deleteEmoji(e2ecache.guild.id, emoji.id!, 'with a reason')
-
-      await expect(rest.getEmoji(e2ecache.guild.id, emoji.id!)).to.eventually.rejected
-    })
+    // Assertions
+    expect(emoji.id).to.be.exist
+    await rest.deleteEmoji(e2ecache.guild.id, emoji.id!)
   })
 
-  describe('edit and get', () => {
-    let emoji: Camelize<DiscordEmoji> & { id: string }
-
-    beforeEach(async () => {
-      emoji = (await rest.createEmoji(e2ecache.guild.id, {
-        name: 'blamewolf',
-        image: await urlToBase64('https://cdn.discordapp.com/emojis/814955268123000832.png'),
-        roles: [],
-      })) as Camelize<DiscordEmoji> & { id: string }
+  // delete an emoji without a reason
+  it('delete an emoji without a reason', async () => {
+    const emoji = await rest.createEmoji(e2ecache.guild.id, {
+      name: 'blamewolf',
+      image: await urlToBase64('https://cdn.discordapp.com/emojis/814955268123000832.png'),
+      roles: [],
     })
 
-    afterEach(async () => {
-      await rest.deleteEmoji(e2ecache.guild.id, emoji.id)
+    // Assertions
+    expect(emoji.id).to.be.exist
+
+    await rest.deleteEmoji(e2ecache.guild.id, emoji.id!)
+
+    await expect(rest.getEmoji(e2ecache.guild.id, emoji.id!)).to.eventually.rejected
+  })
+
+  // delete an emoji with a reason
+  it('delete an emoji with a reason', async () => {
+    const emoji = await rest.createEmoji(e2ecache.guild.id, {
+      name: 'blamewolf',
+      image: await urlToBase64('https://cdn.discordapp.com/emojis/814955268123000832.png'),
+      roles: [],
     })
 
-    // edit an emoji name
-    it('Edit an emoji name', async () => {
-      await rest.editEmoji(e2ecache.guild.id, emoji.id, {
-        name: 'edited',
-      })
+    // Assertions
+    expect(emoji.id).to.be.exist
 
-      const edited = await rest.getEmoji(e2ecache.guild.id, emoji.id)
+    await rest.deleteEmoji(e2ecache.guild.id, emoji.id!, 'with a reason')
 
-      expect(edited.name).to.equal('edited')
+    await expect(rest.getEmoji(e2ecache.guild.id, emoji.id!)).to.eventually.rejected
+  })
+})
+
+describe('Edit and get emojis', () => {
+  let emoji: Camelize<DiscordEmoji> & { id: string }
+
+  beforeEach(async () => {
+    emoji = (await rest.createEmoji(e2ecache.guild.id, {
+      name: 'blamewolf',
+      image: await urlToBase64('https://cdn.discordapp.com/emojis/814955268123000832.png'),
+      roles: [],
+    })) as Camelize<DiscordEmoji> & { id: string }
+  })
+
+  afterEach(async () => {
+    await rest.deleteEmoji(e2ecache.guild.id, emoji.id)
+  })
+
+  // edit an emoji name
+  it('Edit an emoji name', async () => {
+    await rest.editEmoji(e2ecache.guild.id, emoji.id, {
+      name: 'edited',
     })
 
-    // edit an emoji roles
-    it("Edit an emoji's roles", async () => {
-      const role = await rest.createRole(e2ecache.guild.id, {
-        name: 'dd-test-emoji',
-      })
-      await rest.editEmoji(e2ecache.guild.id, emoji.id, {
-        roles: [role.id],
-      })
+    const edited = await rest.getEmoji(e2ecache.guild.id, emoji.id)
 
-      const edited = await rest.getEmoji(e2ecache.guild.id, emoji.id)
+    expect(edited.name).to.equal('edited')
+  })
 
-      expect(edited.roles?.length).to.equal(1)
+  // edit an emoji roles
+  it("Edit an emoji's roles", async () => {
+    const role = await rest.createRole(e2ecache.guild.id, {
+      name: 'dd-test-emoji',
+    })
+    await rest.editEmoji(e2ecache.guild.id, emoji.id, {
+      roles: [role.id],
     })
 
-    // get an emoji
-    it('get an emoji', async () => {
-      const exists = await rest.getEmoji(e2ecache.guild.id, emoji.id)
-      expect(exists.id).to.be.exist
-      expect(emoji.id).to.equal(exists.id)
+    const edited = await rest.getEmoji(e2ecache.guild.id, emoji.id)
+
+    expect(edited.roles?.length).to.equal(1)
+  })
+
+  // get an emoji
+  it('get an emoji', async () => {
+    const exists = await rest.getEmoji(e2ecache.guild.id, emoji.id)
+    expect(exists.id).to.be.exist
+    expect(emoji.id).to.equal(exists.id)
+  })
+
+  it('get all guild emojis', async () => {
+    await rest.createEmoji(e2ecache.guild.id, {
+      name: 'blamewolf2',
+      image: await urlToBase64('https://cdn.discordapp.com/emojis/814955268123000832.png'),
+      roles: [],
     })
 
-    it('get all guild emojis', async () => {
-      await rest.createEmoji(e2ecache.guild.id, {
-        name: 'blamewolf2',
-        image: await urlToBase64('https://cdn.discordapp.com/emojis/814955268123000832.png'),
-        roles: [],
-      })
-
-      const exists = await rest.getEmojis(e2ecache.guild.id)
-      expect(exists.length).to.greaterThan(1)
-    })
+    const exists = await rest.getEmojis(e2ecache.guild.id)
+    expect(exists.length).to.greaterThan(1)
   })
 })

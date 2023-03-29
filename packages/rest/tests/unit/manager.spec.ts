@@ -22,7 +22,10 @@ describe('[rest] manager', () => {
     const options = {
       token,
       version: 9,
-      baseUrl: 'https://localhost:8000',
+      proxy: {
+        baseUrl: 'https://localhost:8000',
+        authorization: token,
+      },
     } as const
 
     const rest = createRestManager(options)
@@ -32,7 +35,7 @@ describe('[rest] manager', () => {
     })
 
     it('With a base url', () => {
-      expect(rest.baseUrl).to.be.equal(options.baseUrl)
+      expect(rest.baseUrl).to.be.equal(options.proxy.baseUrl)
     })
 
     it('With a falsy token', () => {
@@ -77,7 +80,7 @@ describe('[rest] manager', () => {
         it('Will add method in front route if method is DELETE', () => {
           const rest = createRestManager({ token })
           expect(rest.simplifyUrl('/channels/555555555555555555/messages/555555555555555555', 'DELETE')).to.be.equal(
-            'DELETE/channels/555555555555555555/messages/x',
+            'D/channels/555555555555555555/messages/x',
           )
         })
 

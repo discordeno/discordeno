@@ -51,7 +51,7 @@ const createUws = async (options: {
             JSON.stringify({
               op: 10,
               d: {
-                heartbeat_interval: 100,
+                heartbeat_interval: 1017,
               },
             }),
           )
@@ -128,7 +128,7 @@ const createUws = async (options: {
 
 describe('gateway', () => {
   it('can connect to server', async function () {
-    this.timeout(6000)
+    this.timeout(15000)
     let resolveConnected: () => void
     const connected = new Promise<void>((resolve) => (resolveConnected = resolve))
     const uwsOptions = { onOpen: resolveConnected!, closing: false }
@@ -142,7 +142,7 @@ describe('gateway', () => {
   })
 
   it('will heartbeat', async function () {
-    this.timeout(6000)
+    this.timeout(15000)
     let resolveHeartbeat: () => void
     let resolveConnected: () => void
     const connected = new Promise<void>((resolve) => (resolveConnected = resolve))
@@ -161,7 +161,7 @@ describe('gateway', () => {
     await connected
     const timeout = setTimeout(() => {
       throw new Error('Not heartbeat in time')
-    }, 100)
+    }, 1017)
     await Heartbeated
     clearTimeout(timeout)
     uwsOptions.closing = true

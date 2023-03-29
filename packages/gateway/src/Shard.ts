@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import type {
   AtLeastOne,
   BigString,
@@ -9,7 +10,7 @@ import type {
   RequestGuildMembers,
 } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayIntents, GatewayOpcodes } from '@discordeno/types'
-import { camelize, Collection, createLeakyBucket, delay, logger } from '@discordeno/utils'
+import { Collection, LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
 import { inflateSync } from 'node:zlib'
 import WebSocket from 'ws'
 import type { RequestMemberRequest } from './manager.js'
@@ -44,11 +45,7 @@ export class DiscordenoShard {
   /** Resolve internal waiting states. Mapped by SelectedEvents => ResolveFunction */
   resolves = new Map<'READY' | 'RESUMED' | 'INVALID_SESSION', (payload: DiscordGatewayPayload) => void>()
   /** Shard bucket. Only access this if you know what you are doing. Bucket for handling shard request rate limits. */
-  bucket = createLeakyBucket({
-    max: 120,
-    refillInterval: 60000,
-    refillAmount: 120,
-  })
+  bucket: LeakyBucket
 
   /** This managers cache related settings. */
   cache = {
@@ -72,11 +69,26 @@ export class DiscordenoShard {
       acknowledged: false,
       interval: 45000,
     }
+
+    if (options.requestIdentify) this.requestIdentify = options.requestIdentify
+    if (options.shardIsReady) this.shardIsReady = options.shardIsReady
+
+    this.bucket = new LeakyBucket({
+      max: this.calculateSafeRequests(),
+      refillAmount: this.calculateSafeRequests(),
+      refillInterval: 60000,
+    })
   }
 
   /** The gateway configuration which is used to connect to Discord. */
   get gatewayConfig(): ShardGatewayConfig {
     return this.connection
+  }
+
+  /** The url to connect to. Intially this is the discord gateway url, and then is switched to resume gateway url once a READY is received. */
+  get connectionUrl(): string {
+    // Use || and not ?? here. ?? will cause a bug.
+    return this.resumeGatewayUrl || this.gatewayConfig.url
   }
 
   /** Calculate the amount of requests which can safely be made per rate limit interval, before the gateway gets disconnected due to an exceeded rate limit. */
@@ -101,7 +113,7 @@ export class DiscordenoShard {
   close(code: number, reason: string): void {
     if (this.socket?.readyState !== WebSocket.OPEN) return
 
-    return this.socket?.close(code, reason)
+    this.socket?.close(code, reason)
   }
 
   /** Connect the shard with the gateway and start heartbeating. This will not identify the shard to the gateway. */
@@ -113,25 +125,16 @@ export class DiscordenoShard {
     }
     this.events.connecting?.(this)
 
-    let url = new URL(this.gatewayConfig.url)
-    // If not connecting to a proxy but directly to discord need to handle resuming
-    if (url.origin === 'wss://gateway.discord.gg') {
-      if (this.state === ShardState.Resuming) {
-        url = new URL(this.resumeGatewayUrl)
-      }
-      url.searchParams.set('v', this.gatewayConfig.version.toString())
-      url.searchParams.set('encoding', 'json')
-    }
+    const url = new URL(this.connectionUrl)
+    url.searchParams.set('v', this.gatewayConfig.version.toString())
+    url.searchParams.set('encoding', 'json')
 
     const socket = new WebSocket(url.toString())
-
     this.socket = socket
 
     // TODO: proper event handling
-    socket.onerror = (event) => console.log({ error: event })
-
+    socket.onerror = (event) => console.log({ error: event, shardId: this.id })
     socket.onclose = async (event) => await this.handleClose(event)
-
     socket.onmessage = async (message) => await this.handleMessage(message)
 
     return await new Promise((resolve) => {
@@ -153,7 +156,7 @@ export class DiscordenoShard {
     // A new identify has been requested even though there is already a connection open.
     // Therefore we need to close the old connection and heartbeating before creating a new one.
     if (this.isOpen()) {
-      console.log(`CLOSING EXISTING SHARD: #${this.id}`)
+      logger.debug(`CLOSING EXISTING SHARD: #${this.id}`)
       this.close(ShardSocketCloseCodes.ReIdentifying, 'Re-identifying closure of old connection.')
     }
 
@@ -166,9 +169,6 @@ export class DiscordenoShard {
     if (!this.isOpen()) {
       await this.connect()
     }
-
-    // Wait until an identify is free for this this.
-    await this.requestIdentify()
 
     this.send(
       {
@@ -188,6 +188,8 @@ export class DiscordenoShard {
     return await new Promise((resolve) => {
       this.resolves.set('READY', () => {
         this.events.identified?.(this)
+        // Tells the manager that this shard is ready
+        this.shardIsReady()
         resolve()
       })
       // When identifying too fast,
@@ -207,7 +209,7 @@ export class DiscordenoShard {
 
   /** Attempt to resume the previous shards session with the gateway. */
   async resume(): Promise<void> {
-    //   gateway.debug("GW RESUMING", { shardId });
+    logger.debug(`[Gateway] Resuming Shard #${this.id}`)
     // It has been requested to resume the Shards session.
     // It's possible that the shard is still connected with Discord's gateway therefore we need to forcefully close it.
     if (this.isOpen()) {
@@ -216,14 +218,9 @@ export class DiscordenoShard {
 
     // Shard has never identified, so we cannot resume.
     if (!this.sessionId) {
-      // gateway.debug(
-      //   "GW DEBUG",
-      //   `[Error] Trying to resume a shard (id: ${shardId}) that was not first identified.`,
-      // );
+      logger.debug(`[Shard] Trying to resume a shard #${this.id} that was NOT first identified. (No session id found)`)
 
       return await this.identify()
-
-      // throw new Error(`[SHARD] Trying to resume a shard (id: ${this.id}) which was never identified`);
     }
 
     this.state = ShardState.Resuming
@@ -263,7 +260,7 @@ export class DiscordenoShard {
     // Else bucket and token wait time just get wasted.
     await this.checkOffline(highPriority)
 
-    await this.bucket.acquire(1, highPriority)
+    await this.bucket.acquire(highPriority)
 
     // It's possible, that the shard went offline after a token has been acquired from the bucket.
     await this.checkOffline(highPriority)
@@ -308,6 +305,7 @@ export class DiscordenoShard {
       case GatewayCloseEventCodes.InvalidSeq:
       case GatewayCloseEventCodes.RateLimited:
       case GatewayCloseEventCodes.SessionTimedOut: {
+        logger.debug(`[Shard] Gateway connection closing requiring re-identify. Code: ${close.code}`)
         this.state = ShardState.Identifying
         this.events.disconnected?.(this)
 
@@ -374,16 +372,18 @@ export class DiscordenoShard {
         this.startHeartbeating(interval)
 
         if (this.state !== ShardState.Resuming) {
+          const currentQueue = [...this.bucket.queue]
           // HELLO has been send on a non resume action.
           // This means that the shard starts a new session,
           // therefore the rate limit interval has been reset too.
-          this.bucket = createLeakyBucket({
+          this.bucket = new LeakyBucket({
             max: this.calculateSafeRequests(),
             refillInterval: 60000,
             refillAmount: this.calculateSafeRequests(),
-            // Waiting acquires should not be lost on a re-identify.
-            waiting: this.bucket.waiting,
           })
+
+          // Queue should not be lost on a re-identify.
+          this.bucket.queue.unshift(...currentQueue)
         }
 
         this.events.hello?.(this)
@@ -405,8 +405,8 @@ export class DiscordenoShard {
         break
       }
       case GatewayOpcodes.InvalidSession: {
-        //   gateway.debug("GW INVALID_SESSION", { shardId, payload: packet });
         const resumable = packet.d as boolean
+        logger.debug(`[Shard] Received Invalid Session for Shard #${this.id} with resumeable as ${resumable.toString()}`)
 
         this.events.invalidSession?.(this, resumable)
 
@@ -419,7 +419,7 @@ export class DiscordenoShard {
 
         // When resumable is false we need to re-identify
         if (!resumable) {
-          await this.identify()
+          await this.requestIdentify()
 
           break
         }
@@ -467,6 +467,10 @@ export class DiscordenoShard {
       this.previousSequenceNumber = packet.s
     }
 
+    this.forwardToBot(packet);
+  }
+
+  forwardToBot(packet: DiscordGatewayPayload): void {
     // The necessary handling required for the Shards connection has been finished.
     // Now the event can be safely forwarded.
     this.events.message?.(this, camelize(packet))
@@ -499,14 +503,16 @@ export class DiscordenoShard {
   }
 
   /** This function communicates with the management process, in order to know whether its free to identify. When this function resolves, this means that the shard is allowed to send an identify payload to discord. */
-  async requestIdentify(): Promise<void> {
-    // TODO: how to handle this
-    // return await options.requestIdentify(this.id)
-  }
+  async requestIdentify(): Promise<void> {}
+
+  /** This function communicates with the management process, in order to tell it can identify the next shard. */
+  async shardIsReady(): Promise<void> {}
 
   /** Start sending heartbeat payloads to Discord in the provided interval. */
   startHeartbeating(interval: number): void {
-    //   gateway.debug("GW HEARTBEATING_STARTED", { shardId, interval });
+    // If old heartbeast exist like after resume, clear the old ones.
+    if (this.heart.intervalId) clearInterval(this.heart.intervalId)
+    if (this.heart.timeoutId) clearTimeout(this.heart.timeoutId)
 
     this.heart.interval = interval
 
@@ -547,6 +553,7 @@ export class DiscordenoShard {
         // The Shard needs to start a re-identify action accordingly.
         // Reference: https://discord.com/developers/docs/topics/gateway#heartbeating-example-gateway-heartbeat-ack
         if (!this.heart.acknowledged) {
+          logger.debug(`[Shard] Heartbeat not acknowledged for shard #${this.id}.`)
           this.close(ShardSocketCloseCodes.ZombiedConnection, 'Zombied connection, did not receive an heartbeat ACK in time.')
 
           return await this.identify()
@@ -599,7 +606,7 @@ export class DiscordenoShard {
     options?: AtLeastOne<Omit<UpdateVoiceState, 'guildId' | 'channelId'>>,
   ): Promise<void> {
     logger.debug(`[Shard] joinVoiceChannel guildId: ${guildId} channelId: ${channelId}`)
-    return await this.send({
+    await this.send({
       op: GatewayOpcodes.VoiceStateUpdate,
       d: {
         guild_id: guildId.toString(),
@@ -618,7 +625,7 @@ export class DiscordenoShard {
    */
   async editBotStatus(data: StatusUpdate): Promise<void> {
     logger.debug(`[Shard] editBotStatus data: ${JSON.stringify(data)}`)
-    return await this.editShardStatus(data)
+    await this.editShardStatus(data)
   }
 
   /**
@@ -630,7 +637,7 @@ export class DiscordenoShard {
    */
   async editShardStatus(data: StatusUpdate): Promise<void> {
     logger.debug(`[Shard] editShardStatus shardId: ${this.id} -> data: ${JSON.stringify(data)}`)
-    return await this.send({
+    await this.send({
       op: GatewayOpcodes.PresenceUpdate,
       d: {
         since: null,
@@ -729,7 +736,7 @@ export class DiscordenoShard {
    */
   async leaveVoiceChannel(guildId: BigString): Promise<void> {
     logger.debug(`[Shard] leaveVoiceChannel guildId: ${guildId} Shard ${this.id}`)
-    return await this.send({
+    await this.send({
       op: GatewayOpcodes.VoiceStateUpdate,
       d: {
         guild_id: guildId.toString(),
@@ -748,6 +755,10 @@ export interface ShardCreateOptions {
   connection: ShardGatewayConfig
   /** The event handlers for events on the shard. */
   events: ShardEvents
+  /** The handler to request a space to make an identify request. */
+  requestIdentify?: () => Promise<void>
+  /** The handler to alert the gateway manager that this shard has received a READY event. */
+  shardIsReady?: () => Promise<void>
 }
 
 export default DiscordenoShard

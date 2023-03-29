@@ -180,17 +180,19 @@ export const GuildFeatures = [
   'BANNER',
   'COMMERCE',
   'COMMUNITY',
+  'CREATOR_MONETIZABLE_PROVISIONAL',
+  'CREATOR_STORE_PAGE',
   'DISCOVERABLE',
   'FEATURABLE',
   'INVITE_SPLASH',
   'MEMBER_VERIFICATION_GATE_ENABLED',
-  'MONETIZATION_ENABLED',
   'MORE_STICKERS',
   'NEWS',
   'PARTNERED',
   'PREVIEW_ENABLED',
   'PRIVATE_THREADS',
   'ROLE_ICONS',
+  'ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE',
   'ROLE_SUBSCRIPTIONS_ENABLED',
   'SEVEN_DAY_THREAD_ARCHIVE',
   'THREE_DAY_THREAD_ARCHIVE',
@@ -329,6 +331,15 @@ export const MessageTypes = {
   THREAD_STARTER_MESSAGE: 21,
   GUILD_INVITE_REMINDER: 22,
   CONTEXT_MENU_COMMAND: 23,
+  AUTO_MODERATION_ACTION: 24,
+  ROLE_SUBSCRIPTION_PURCHASE: 25,
+  INTERACTION_PREMIUM_UPSELL: 26,
+  STAGE_START: 27,
+  STAGE_END: 28,
+  STAGE_SPEAKER: 29,
+
+  STAGE_TOPIC: 31,
+  GUILD_APPLICATION_PREMIUM_SUBSCRIPTION: 32,
 }
 
 export const PermissionOverwriteTypes = {
@@ -636,4 +647,4 @@ export const Constants = {
   WebhookTypes,
 }
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export type Constants = typeof Constants;
+export type Constants = typeof Constants
