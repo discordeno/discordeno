@@ -123,7 +123,6 @@ export class GuildToggles extends ToggleBitfieldBigint {
       }
       if (guild.features.includes(GuildFeatures.PreviewEnabled)) this.add(GuildToggle.previewEnabled)
       if (guild.features.includes(GuildFeatures.TicketedEventsEnabled)) this.add(GuildToggle.ticketedEventsEnabled)
-      if (guild.features.includes(GuildFeatures.MonetizationEnabled)) this.add(GuildToggle.monetizationEnabled)
       if (guild.features.includes(GuildFeatures.MoreStickers)) this.add(GuildToggle.moreStickers)
       if (guild.features.includes(GuildFeatures.PrivateThreads)) this.add(GuildToggle.privateThreads)
       if (guild.features.includes(GuildFeatures.RoleIcons)) this.add(GuildToggle.roleIcons)
