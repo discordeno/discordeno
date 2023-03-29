@@ -187,6 +187,10 @@ export enum GuildFeatures {
   Partnered = 'PARTNERED',
   /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
   Community = 'COMMUNITY',
+  /** Guild has enabled monetization. */
+  CreatorMonetizableProvisional = 'CREATOR_MONETIZABLE_PROVISIONAL',
+  /** Guild has enabled the role subscription promo page. */
+  CreatorStorePage = 'CREATOR_STORE_PAGE',
   /** Guild has been set as a support server on the App Directory */
   DeveloperSupportServer = 'DEVELOPER_SUPPORT_SERVER',
   /** Guild has access to create news channels */
@@ -207,14 +211,16 @@ export enum GuildFeatures {
   PreviewEnabled = 'PREVIEW_ENABLED',
   /** Guild has enabled ticketed events */
   TicketedEventsEnabled = 'TICKETED_EVENTS_ENABLED',
-  /** Guild has enabled monetization */
-  MonetizationEnabled = 'MONETIZATION_ENABLED',
   /** Guild has increased custom sticker slots */
   MoreStickers = 'MORE_STICKERS',
   /** Guild has access to create private threads */
   PrivateThreads = 'PRIVATE_THREADS',
   /** Guild is able to set role icons */
   RoleIcons = 'ROLE_ICONS',
+  /** Guild has role subscriptions that can be purchased. */
+  RoleSubscriptionsAvailableForPurchase = 'ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE',
+  /** Guild has enabled role subscriptions. */
+  RoleSubscriptionsEnabled = 'ROLE_SUBSCRIPTIONS_ENABLED',
   /** Guild has set up auto moderation rules */
   AutoModeration = 'AUTO_MODERATION',
   /** Guild has paused invites, preventing new users from joining */

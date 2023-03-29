@@ -53,6 +53,10 @@ export const GuildToggle = {
   partnered: 1n << 9n,
   /** Whether the guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
   community: 1n << 10n,
+  /** Whether the guild has enabled monetization. */
+  creatorMonetizableProvisional: 1n << 31n,
+  /** Whether the guild has enabled the role subscription promo page. */
+  creatorStorePage: 1n << 32n,
   /** Whether the guild has access to set an animated guild banner image */
   animatedBanner: 1n << 11n,
   /** Whether the guild has access to create news channels */
@@ -81,6 +85,10 @@ export const GuildToggle = {
   privateThreads: 1n << 26n,
   /** Whether the guild is able to set role icons */
   roleIcons: 1n << 27n,
+  /** Whether the guild has role subscriptions that can be purchased. */
+  roleSubscriptionsAvailableForPurchase: 1n << 33n,
+  /** Whether the guild has enabled role subscriptions. */
+  roleSubscriptionsEnabled: 1n << 34n,
   /** Whether the guild has set up auto moderation rules */
   autoModeration: 1n << 28n,
   /** Whether the guild has paused invites, preventing new users from joining */
@@ -111,6 +119,8 @@ export class GuildToggles extends ToggleBitfieldBigint {
       if (guild.features.includes(GuildFeatures.Verified)) this.add(GuildToggle.verified)
       if (guild.features.includes(GuildFeatures.Partnered)) this.add(GuildToggle.partnered)
       if (guild.features.includes(GuildFeatures.Community)) this.add(GuildToggle.community)
+      if (guild.features.includes(GuildFeatures.CreatorMonetizableProvisional)) this.add(GuildToggle.creatorMonetizableProvisional)
+      if (guild.features.includes(GuildFeatures.CreatorStorePage)) this.add(GuildToggle.creatorStorePage)
       if (guild.features.includes(GuildFeatures.DeveloperSupportServer)) this.add(GuildToggle.developerSupportServer)
       if (guild.features.includes(GuildFeatures.AnimatedBanner)) this.add(GuildToggle.animatedBanner)
       if (guild.features.includes(GuildFeatures.News)) this.add(GuildToggle.news)
@@ -124,10 +134,11 @@ export class GuildToggles extends ToggleBitfieldBigint {
       }
       if (guild.features.includes(GuildFeatures.PreviewEnabled)) this.add(GuildToggle.previewEnabled)
       if (guild.features.includes(GuildFeatures.TicketedEventsEnabled)) this.add(GuildToggle.ticketedEventsEnabled)
-      if (guild.features.includes(GuildFeatures.MonetizationEnabled)) this.add(GuildToggle.monetizationEnabled)
       if (guild.features.includes(GuildFeatures.MoreStickers)) this.add(GuildToggle.moreStickers)
       if (guild.features.includes(GuildFeatures.PrivateThreads)) this.add(GuildToggle.privateThreads)
       if (guild.features.includes(GuildFeatures.RoleIcons)) this.add(GuildToggle.roleIcons)
+      if (guild.features.includes(GuildFeatures.RoleSubscriptionsAvailableForPurchase)) this.add(GuildToggle.roleSubscriptionsAvailableForPurchase)
+      if (guild.features.includes(GuildFeatures.RoleSubscriptionsEnabled)) this.add(GuildToggle.roleSubscriptionsEnabled)
       if (guild.features.includes(GuildFeatures.AutoModeration)) this.add(GuildToggle.autoModeration)
       if (guild.features.includes(GuildFeatures.InvitesDisabled)) this.add(GuildToggle.invitesDisabled)
     }

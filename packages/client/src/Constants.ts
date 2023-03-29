@@ -180,17 +180,19 @@ export const GuildFeatures = [
   'BANNER',
   'COMMERCE',
   'COMMUNITY',
+  'CREATOR_MONETIZABLE_PROVISIONAL',
+  'CREATOR_STORE_PAGE',
   'DISCOVERABLE',
   'FEATURABLE',
   'INVITE_SPLASH',
   'MEMBER_VERIFICATION_GATE_ENABLED',
-  'MONETIZATION_ENABLED',
   'MORE_STICKERS',
   'NEWS',
   'PARTNERED',
   'PREVIEW_ENABLED',
   'PRIVATE_THREADS',
   'ROLE_ICONS',
+  'ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE',
   'ROLE_SUBSCRIPTIONS_ENABLED',
   'SEVEN_DAY_THREAD_ARCHIVE',
   'THREE_DAY_THREAD_ARCHIVE',
@@ -645,4 +647,4 @@ export const Constants = {
   WebhookTypes,
 }
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export type Constants = typeof Constants;
+export type Constants = typeof Constants
