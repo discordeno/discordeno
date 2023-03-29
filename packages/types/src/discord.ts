@@ -703,6 +703,8 @@ export interface DiscordChannel {
   owner_id?: string
   /** Application id of the group DM creator if it is bot-created */
   application_id?: string
+  /** For group DM channels: whether the channel is managed by an application via the `gdm.join` OAuth2 scope. */
+  managed?: boolean
   /** For guild channels: Id of the parent category for a channel (each parent category can contain up to 50 channels), for threads: id of the text channel this thread was created */
   parent_id?: string | null
   /** When the last pinned message was pinned. This may be null in events such as GUILD_CREATE when a message is not pinned. */
