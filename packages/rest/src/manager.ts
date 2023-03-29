@@ -15,7 +15,7 @@ import {
   isGetMessagesLimit,
   logger,
   processReactionString,
-  urlToBase64
+  urlToBase64,
 } from '@discordeno/utils'
 import fetch from 'node-fetch'
 
@@ -65,7 +65,7 @@ import type {
   GetMessagesOptions,
   GetScheduledEventUsers,
   MfaLevels,
-  ModifyGuildTemplate
+  ModifyGuildTemplate,
 } from '@discordeno/types'
 import type { CreateRestManagerOptions, RestManager, SendRequestOptions } from './types.js'
 
@@ -927,7 +927,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
 
       if (route.includes('/reactions')) {
-        route = route.substring(0, route.indexOf("/emoji/@me"))
+        // 10 is the length of `/reactions`
+        route = route.substring(0, route.indexOf('/reactions') + 10)
       }
 
       // Delete Message endpoint has its own rate limit
