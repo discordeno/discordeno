@@ -4,22 +4,6 @@ import type {
   BeginGuildPrune,
   BigString,
   Camelize,
-  CreateApplicationCommand,
-  CreateAutoModerationRuleOptions,
-  CreateChannelInvite,
-  CreateForumPostWithMessage,
-  CreateGuild,
-  CreateGuildBan,
-  CreateGuildChannel,
-  CreateGuildEmoji,
-  CreateGuildFromTemplate,
-  CreateGuildRole,
-  CreateGuildStickerOptions,
-  CreateMessageOptions,
-  CreateScheduledEvent,
-  CreateStageInstance,
-  CreateTemplate,
-  DeleteWebhookMessageOptions,
   CamelizedDiscordActiveThreads,
   CamelizedDiscordApplication,
   CamelizedDiscordApplicationCommand,
@@ -56,6 +40,22 @@ import type {
   CamelizedDiscordVoiceRegion,
   CamelizedDiscordWebhook,
   CamelizedDiscordWelcomeScreen,
+  CreateApplicationCommand,
+  CreateAutoModerationRuleOptions,
+  CreateChannelInvite,
+  CreateForumPostWithMessage,
+  CreateGuild,
+  CreateGuildBan,
+  CreateGuildChannel,
+  CreateGuildEmoji,
+  CreateGuildFromTemplate,
+  CreateGuildRole,
+  CreateGuildStickerOptions,
+  CreateMessageOptions,
+  CreateScheduledEvent,
+  CreateStageInstance,
+  CreateTemplate,
+  DeleteWebhookMessageOptions,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
   EditChannelPermissionOverridesOptions,
@@ -67,6 +67,7 @@ import type {
   EditStageInstanceOptions,
   EditUserVoiceState,
   ExecuteWebhook,
+  FileContent,
   GetBans,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
@@ -92,7 +93,6 @@ import type {
   SearchMembers,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
-  WithReason,
 } from '@discordeno/types'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 import type { Queue } from './queue.js'
@@ -174,15 +174,15 @@ export interface RestManager {
   /** Takes a request and processes it into a queue. */
   processRequest: (request: SendRequestOptions) => void
   /** Make a get request to the api */
-  get: <T = void>(url: string) => Promise<Camelize<T>>
+  get: <T = void>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => Promise<Camelize<T>>
   /** Make a post request to the api. */
-  post: <T = void>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
+  post: <T = void>(url: string, body?: Record<string, any>, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => Promise<Camelize<T>>
   /** Make a put request to the api. */
-  put: <T = void>(url: string, body?: Record<string, any>, options?: Record<string, any>) => Promise<Camelize<T>>
+  put: <T = void>(url: string, body?: Record<string, any>, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => Promise<Camelize<T>>
   /** Make a delete request to the api. */
-  delete: (url: string, body?: Record<string, any>) => Promise<void>
+  delete: (url: string, body?: Record<string, any>, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => Promise<void>
   /** Make a patch request to the api. */
-  patch: <T = void>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
+  patch: <T = void>(url: string, body?: Record<string, any>, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => Promise<Camelize<T>>
   /**
    * Adds a reaction to a message.
    *
@@ -487,7 +487,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#create-webhook}
    */
-  createWebhook: (channelId: BigString, options: CreateWebhook) => Promise<CamelizedDiscordWebhook>
+  createWebhook: (channelId: BigString, options: CreateWebhook, reason?: string) => Promise<CamelizedDiscordWebhook>
   /**
    * Deletes an automod rule.
    *
@@ -2445,7 +2445,7 @@ export interface RestManager {
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'
 export type ApiVersions = 9 | 10
 
-export interface CreateWebhook extends WithReason {
+export interface CreateWebhook {
   /** Name of the webhook (1-80 characters) */
   name: string
   /** Image url for the default webhook avatar */
@@ -2458,11 +2458,13 @@ export interface CreateRequestBodyOptions {
   body?: Record<string, unknown>
   unauthorized?: boolean
   url?: string
+  reason?: string
+  attachments?: FileContent[]
 }
 
 export interface RequestBody {
   headers: Record<string, string>
-  body: string | FormData
+  body?: string | FormData
   method: RequestMethods
 }
 
@@ -2508,9 +2510,12 @@ export interface WebhookMessageEditor {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
    */
-  (webhookId: BigString, token: string, messageId: BigString, options: InteractionCallbackData & { threadId?: BigString }): Promise<
-    CamelizedDiscordMessage
-  >
+  (
+    webhookId: BigString,
+    token: string,
+    messageId: BigString,
+    options: InteractionCallbackData & { threadId?: BigString },
+  ): Promise<CamelizedDiscordMessage>
   /**
    * Edits the original webhook message.
    *

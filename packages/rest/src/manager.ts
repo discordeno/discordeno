@@ -7,7 +7,6 @@ import {
   camelToSnakeCase,
   delay,
   encode,
-  findFiles,
   getBotIdFromToken,
   isGetMessagesAfter,
   isGetMessagesAround,
@@ -15,7 +14,7 @@ import {
   isGetMessagesLimit,
   logger,
   processReactionString,
-  urlToBase64
+  urlToBase64,
 } from '@discordeno/utils'
 import fetch from 'node-fetch'
 
@@ -65,7 +64,7 @@ import type {
   GetMessagesOptions,
   GetScheduledEventUsers,
   MfaLevels,
-  ModifyGuildTemplate
+  ModifyGuildTemplate,
 } from '@discordeno/types'
 import type { CreateRestManagerOptions, RestManager, SendRequestOptions } from './types.js'
 
@@ -701,54 +700,48 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       if (!options.unauthorized) headers.authorization = `Bot ${rest.token}`
 
+      // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
+      if (options.reason !== undefined) {
+        headers['X-Audit-Log-Reason'] = encodeURIComponent(options.reason)
+      }
+
+      let body: string | FormData | undefined
+
+      // TODO: check if we need to add specific check for GET method
+      // Since GET does not allow bodies
+
+      // Have to check for attachments first, since body then has to be send in a different way.
+      if (options.attachments !== undefined) {
+        const form = new FormData()
+        for (let i = 0; i < options.attachments.length; ++i) {
+          form.append(`file${i}`, options.attachments[i].blob, options.attachments[i].name)
+        }
+
+        form.append('payload_json', JSON.stringify(options.body))
+
+        body = form
+
+        // TODO: boundary?
+        // `multipart/form-data; boundary=${form.getBoundary()}`
+        headers['content-type'] = `multipart/form-data`
+      } else if (options.body !== undefined) {
+        if (options.body instanceof FormData) {
+          body = options.body
+          headers['content-type'] = `multipart/form-data`
+        } else {
+          body = JSON.stringify(options.body)
+          headers['content-type'] = `application/json`
+        }
+      }
+
       // SOMETIMES SPECIAL HEADERS (E.G. CUSTOM AUTHORIZATION) NEED TO BE USED
       if (options.headers) {
-        for (const key in options.headers) {
-          headers[key.toLowerCase()] = options.headers[key]
-        }
-      }
-
-      // GET METHODS SHOULD NOT HAVE A BODY
-      if (options.method === 'GET') {
-        options.body = undefined
-      }
-
-      // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
-      if (options.body?.reason) {
-        headers['X-Audit-Log-Reason'] = encodeURIComponent(options.body.reason as string)
-        options.body.reason = undefined
-      }
-
-      if (options.body) {
-        const { file } = options.body
-        if (file) {
-          const files = findFiles(file)
-          const form = new FormData()
-
-          // WHEN CREATING A STICKER, DISCORD WANTS FORM DATA ONLY
-          if (options.url?.endsWith('/stickers') && options.method === 'POST') {
-            form.append('file', files[0].blob, files[0].name)
-            form.append('name', options.body.name as string)
-            form.append('description', options.body.description as string)
-            form.append('tags', options.body.tags as string)
-          } else {
-            for (let i = 0; i < files.length; i++) {
-              form.append(`file${i}`, files[i].blob, files[i].name)
-            }
-
-            if (file) options.body.file = undefined
-            form.append('payload_json', JSON.stringify(rest.changeToDiscordFormat(options.body)))
-          }
-
-          options.body.file = form
-        } else if (options.body && !['GET', 'DELETE'].includes(options.method)) {
-          headers['Content-Type'] = 'application/json'
-        }
+        Object.assign(headers, options.headers)
       }
 
       return {
+        body,
         headers,
-        body: (options.body?.file ?? JSON.stringify(rest.changeToDiscordFormat(options.body))) as FormData | string,
         method: options.method,
       }
     },
@@ -927,7 +920,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
 
       if (route.includes('/reactions')) {
-        route = route.substring(0, route.indexOf("/emoji/@me"))
+        route = route.substring(0, route.indexOf('/emoji/@me'))
       }
 
       // Delete Message endpoint has its own rate limit
@@ -1065,7 +1058,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async addRole(guildId, userId, roleId, reason) {
-      await rest.put(rest.routes.guilds.roles.member(guildId, userId, roleId), { reason })
+      await rest.put(rest.routes.guilds.roles.member(guildId, userId, roleId), undefined, { reason })
     },
 
     async addThreadMember(channelId, userId) {
@@ -1105,7 +1098,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async createGuildSticker(guildId, options) {
-      return await rest.post<DiscordSticker>(rest.routes.guilds.stickers(guildId), options)
+      const form = new FormData()
+      form.append('file', options.file.blob, options.file.name)
+      form.append('name', options.name)
+      form.append('description', options.description)
+      form.append('tags', options.tags)
+
+      return await rest.post<DiscordSticker>(rest.routes.guilds.stickers(guildId), { body: form })
     },
 
     async createGuildTemplate(guildId, options) {
@@ -1121,10 +1120,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async createRole(guildId, options, reason) {
-      return await rest.post<DiscordRole>(rest.routes.guilds.roles.all(guildId), {
-        ...options,
-        reason,
-      })
+      return await rest.post<DiscordRole>(rest.routes.guilds.roles.all(guildId), options, { reason })
     },
 
     async createScheduledEvent(guildId, options) {
@@ -1135,30 +1131,33 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordStageInstance>(rest.routes.channels.stages(), options)
     },
 
-    async createWebhook(channelId, options) {
-      return await rest.post<DiscordWebhook>(rest.routes.channels.webhooks(channelId), {
-        name: options.name,
-        avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
-        reason: options.reason,
-      })
+    async createWebhook(channelId, options, reason) {
+      return await rest.post<DiscordWebhook>(
+        rest.routes.channels.webhooks(channelId),
+        {
+          name: options.name,
+          avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
+        },
+        { reason },
+      )
     },
 
     async deleteAutomodRule(guildId, ruleId, reason) {
-      await rest.delete(rest.routes.guilds.automod.rule(guildId, ruleId), { reason })
+      await rest.delete(rest.routes.guilds.automod.rule(guildId, ruleId), undefined, { reason })
     },
 
     async deleteChannel(channelId, reason) {
-      await rest.delete(rest.routes.channels.channel(channelId), {
+      await rest.delete(rest.routes.channels.channel(channelId), undefined, {
         reason,
       })
     },
 
     async deleteChannelPermissionOverride(channelId, overwriteId, reason) {
-      await rest.delete(rest.routes.channels.overwrite(channelId, overwriteId), reason ? { reason } : undefined)
+      await rest.delete(rest.routes.channels.overwrite(channelId, overwriteId), undefined, { reason })
     },
 
     async deleteEmoji(guildId, id, reason) {
-      await rest.delete(rest.routes.guilds.emoji(guildId, id), { reason })
+      await rest.delete(rest.routes.guilds.emoji(guildId, id), undefined, { reason })
     },
 
     async deleteFollowupMessage(token, messageId) {
@@ -1178,7 +1177,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteGuildSticker(guildId, stickerId, reason) {
-      await rest.delete(rest.routes.guilds.sticker(guildId, stickerId), reason ? { reason } : undefined)
+      await rest.delete(rest.routes.guilds.sticker(guildId, stickerId), undefined, { reason })
     },
 
     async deleteGuildTemplate(guildId, templateCode) {
@@ -1190,18 +1189,21 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteInvite(inviteCode, reason) {
-      await rest.delete(rest.routes.guilds.invite(inviteCode), reason ? { reason } : undefined)
+      await rest.delete(rest.routes.guilds.invite(inviteCode), undefined, { reason })
     },
 
     async deleteMessage(channelId, messageId, reason) {
-      await rest.delete(rest.routes.channels.message(channelId, messageId), { reason })
+      await rest.delete(rest.routes.channels.message(channelId, messageId), undefined, { reason })
     },
 
     async deleteMessages(channelId, messageIds, reason) {
-      await rest.post(rest.routes.channels.bulk(channelId), {
-        messages: messageIds.slice(0, 100).map((id) => id.toString()),
-        reason,
-      })
+      await rest.post(
+        rest.routes.channels.bulk(channelId),
+        {
+          messages: messageIds.slice(0, 100).map((id) => id.toString()),
+        },
+        { reason },
+      )
     },
 
     async deleteOriginalInteractionResponse(token) {
@@ -1233,7 +1235,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteStageInstance(channelId, reason) {
-      await rest.delete(rest.routes.channels.stage(channelId), reason ? { reason } : undefined)
+      await rest.delete(rest.routes.channels.stage(channelId), undefined, { reason })
     },
 
     async deleteUserReaction(channelId, messageId, userId, reaction) {
@@ -1243,7 +1245,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteWebhook(webhookId, reason) {
-      await rest.delete(rest.routes.webhooks.id(webhookId), { reason })
+      await rest.delete(rest.routes.webhooks.id(webhookId), undefined, { reason })
     },
 
     async deleteWebhookMessage(webhookId, token, messageId, options) {
@@ -1315,7 +1317,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editGuildMfaLevel(guildId: BigString, mfaLevel: MfaLevels, reason?: string): Promise<void> {
-      await rest.post(rest.routes.guilds.mfa(guildId), { level: mfaLevel, reason })
+      await rest.post(rest.routes.guilds.mfa(guildId), { level: mfaLevel }, { reason })
     },
 
     async editGuildSticker(guildId, stickerId, options) {
@@ -1670,7 +1672,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async removeRole(guildId, userId, roleId, reason) {
-      await rest.delete(rest.routes.guilds.roles.member(guildId, userId, roleId), { reason })
+      await rest.delete(rest.routes.guilds.roles.member(guildId, userId, roleId), undefined, { reason })
     },
 
     async removeThreadMember(channelId, userId) {
@@ -1752,13 +1754,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async kickMember(guildId, userId, reason) {
-      await rest.delete(rest.routes.guilds.members.member(guildId, userId), {
+      await rest.delete(rest.routes.guilds.members.member(guildId, userId), undefined, {
         reason,
       })
     },
 
     async pinMessage(channelId, messageId, reason) {
-      await rest.put(rest.routes.channels.pin(channelId, messageId), reason ? { reason } : undefined)
+      await rest.put(rest.routes.channels.pin(channelId, messageId), undefined, { reason })
     },
 
     async pruneMembers(guildId, options) {
@@ -1774,7 +1776,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async unpinMessage(channelId, messageId, reason) {
-      await rest.delete(rest.routes.channels.pin(channelId, messageId), reason ? { reason } : undefined)
+      await rest.delete(rest.routes.channels.pin(channelId, messageId), undefined, { reason })
     },
 
     async triggerTypingIndicator(channelId) {
