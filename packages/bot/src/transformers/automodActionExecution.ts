@@ -19,6 +19,7 @@ export function transformAutoModerationActionExecution(bot: Bot, payload: Discor
       type: payload.action.type,
       metadata: {
         durationSeconds: payload.action.metadata.duration_seconds,
+        customMessage: payload.action.metadata.custom_message,
         channelId: payload.action.metadata.channel_id ? bot.transformers.snowflake(payload.action.metadata.channel_id) : undefined,
       },
     },
