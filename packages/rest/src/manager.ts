@@ -15,7 +15,7 @@ import {
   isGetMessagesLimit,
   logger,
   processReactionString,
-  urlToBase64,
+  urlToBase64
 } from '@discordeno/utils'
 import fetch from 'node-fetch'
 
@@ -65,12 +65,13 @@ import type {
   GetMessagesOptions,
   GetScheduledEventUsers,
   MfaLevels,
-  ModifyGuildTemplate,
+  ModifyGuildTemplate
 } from '@discordeno/types'
 import type { CreateRestManagerOptions, RestManager, SendRequestOptions } from './types.js'
 
 // TODO: make dynamic based on package.json file
 const version = '19.0.0-alpha.1'
+const URL_PARTS_REGEX = /([a-z]+)\/(?:[0-9]{17,}(\/@me)?)/g
 
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
   // Falsy token string check
@@ -912,20 +913,26 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     // Credits: github.com/abalabahaha/eris lib/rest/RequestHandler.js#L397
     // Modified for our use-case
     simplifyUrl(url, method) {
-      let route = url
-        .replace(/\/([a-z-]+)\/(?:[0-9]{17,19})/g, function (match, p: string) {
-          return ['channels', 'guilds'].includes(p) ? match : `/${p}/x`
-        })
-        .replace(/\/reactions\/[^/]+/g, '/reactions/x')
+      let route = url.replace(URL_PARTS_REGEX, function (match, pattern: string) {
+        if (pattern.startsWith('channels') || pattern.startsWith('guilds')) {
+          return match
+        }
 
-      // GENERAL /reactions and /reactions/emoji/@me share the buckets
+        // GENERAL /reactions and /reactions/emoji/@me share the buckets
+        if (pattern.startsWith('reactions')) {
+          return 'reactions'
+        }
+
+        return `${pattern}/x`
+      })
+
       if (route.includes('/reactions')) {
-        route = route.substring(0, route.indexOf('/reactions') + '/reactions'.length)
+        route = route.substring(0, route.indexOf("/emoji/@me"))
       }
 
       // Delete Message endpoint has its own rate limit
       if (method === 'DELETE' && route.endsWith('/messages/x')) {
-        route = method + route
+        route = 'D' + route
       }
 
       return route
