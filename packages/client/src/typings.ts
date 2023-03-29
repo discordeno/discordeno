@@ -8,6 +8,7 @@ import type {
   ChannelTypes,
   DefaultMessageNotificationLevels,
   ExplicitContentFilterLevels,
+  FormLayout,
   GuildFeatures,
   InteractionResponseTypes,
   MessageComponentTypes,
@@ -256,6 +257,7 @@ export interface EditChannelOptions extends Omit<CreateChannelOptions, 'reason'>
   ownerID?: string
   rtcRegion?: string | null
   videoQualityMode?: VideoQualityModes
+  defaultForumLayout: FormLayout
 }
 export interface EditChannelPositionOptions {
   lockPermissions?: string
