@@ -339,6 +339,13 @@ export enum MessageTypes {
   GuildInviteReminder,
   ContextMenuCommand,
   AutoModerationAction,
+  RoleSubscriptionPurchase,
+  InteractionPremiumUpsell,
+  StageStart,
+  StageEnd,
+  StageSpeaker,
+  StageTopic = 31,
+  GuildApplicationPremiumSubscription,
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
