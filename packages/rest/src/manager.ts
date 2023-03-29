@@ -32,7 +32,6 @@ import type {
   DiscordBan,
   DiscordChannel,
   DiscordEmoji,
-  DiscordFollowAnnouncementChannel,
   DiscordFollowedChannel,
   DiscordGetGatewayBot,
   DiscordGuild,
@@ -854,7 +853,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async sendRequest(options) {
       const url = options.url.startsWith('https://') ? options.url : `${rest.baseUrl}/v${rest.version}${options.url}`
-      const payload = rest.createRequest({ method: options.method, url: options.url, body: options.body, ...options.options })
+      const payload = rest.createRequest({ method: options.method, url: options.url, body: options.options?.body, ...options.options })
 
       logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
       const response = await fetch(url, payload)
@@ -958,17 +957,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
     },
 
-    async makeRequest(method, url, body, options) {
+    async makeRequest(method, url, options) {
       if (!rest.baseUrl.startsWith('https://discord.com') && url[0] === '/') {
         // Special handling for sending blobs across http to proxy
         // TODO: fix this hacky handling
-        if (body?.file) {
-          if (!Array.isArray(body.file)) {
-            body.file = [body.file]
+        if (!(options?.body instanceof FormData) && !Array.isArray(options?.body) && options?.body?.file) {
+          if (!Array.isArray(options.body.file)) {
+            options.body.file = [options.body.file]
           }
           // convert blobs to string before sending to proxy
-          body.file = await Promise.all(
-            body.file.map(async (f: FileContent) => {
+          options.body.file = await Promise.all(
+            (options.body.file as FileContent[]).map(async (f: FileContent) => {
               const url = encode(await f.blob.arrayBuffer())
 
               return { name: f.name, blob: `data:${f.blob.type};base64,${url}` }
@@ -979,12 +978,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const headers: HeadersInit = {
           Authorization: rest.authorization ?? '',
         }
-        if (body) {
+        if (options?.body) {
           headers['Content-Type'] = 'application/json'
         }
 
         const result = await fetch(`${rest.baseUrl}${url}`, {
-          body: body ? JSON.stringify(body) : undefined,
+          body: options?.body ? JSON.stringify(options.body) : undefined,
           headers,
           method,
         })
@@ -1003,40 +1002,39 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const payload: SendRequestOptions = {
           url,
           method,
-          body,
+          options,
           retryCount: 0,
-          retryRequest: async function (options: SendRequestOptions) {
+          retryRequest: async function (payload: SendRequestOptions) {
             rest.processRequest(payload)
           },
           resolve: (data) => {
             resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined)
           },
           reject,
-          options,
         }
 
         rest.processRequest(payload)
       })
     },
 
-    async get<T = Record<string, unknown>>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('GET', url, undefined, options)) as Camelize<T>
+    async get<T = Record<string, unknown>>(url: string, body?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return camelize(await rest.makeRequest('GET', url, { body })) as Camelize<T>
     },
 
-    async post<T = Record<string, unknown>>(url: string, body?: Record<string, any>, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('POST', url, body, options)) as Camelize<T>
+    async post<T = Record<string, unknown>>(url: string, body?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return camelize(await rest.makeRequest('POST', url, { body })) as Camelize<T>
     },
 
-    async delete(url: string, body?: Record<string, any>, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      camelize(await rest.makeRequest('DELETE', url, body))
+    async delete(url: string, body?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      camelize(await rest.makeRequest('DELETE', url, { body }))
     },
 
-    async patch<T = Record<string, unknown>>(url: string, body?: Record<string, any>, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('PATCH', url, body)) as Camelize<T>
+    async patch<T = Record<string, unknown>>(url: string, body?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return camelize(await rest.makeRequest('PATCH', url, { body })) as Camelize<T>
     },
 
-    async put<T = void>(url: string, body?: Record<string, any>, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('PUT', url, body, options)) as Camelize<T>
+    async put<T = void>(url: string, body?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return camelize(await rest.makeRequest('PUT', url, { body })) as Camelize<T>
     },
 
     async addReaction(channelId, messageId, reaction) {
@@ -1061,43 +1059,43 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async addRole(guildId, userId, roleId, reason) {
-      await rest.put(rest.routes.guilds.roles.member(guildId, userId, roleId), undefined, { reason })
+      await rest.put(rest.routes.guilds.roles.member(guildId, userId, roleId), { reason })
     },
 
     async addThreadMember(channelId, userId) {
       await rest.put(rest.routes.channels.threads.user(channelId, userId))
     },
 
-    async createAutomodRule(guildId, options) {
-      return await rest.post<DiscordAutoModerationRule>(rest.routes.guilds.automod.rules(guildId), options)
+    async createAutomodRule(guildId, body) {
+      return await rest.post<DiscordAutoModerationRule>(rest.routes.guilds.automod.rules(guildId), { body })
     },
 
-    async createChannel(guildId, options) {
-      return await rest.post<DiscordChannel>(rest.routes.guilds.channels(guildId), options)
+    async createChannel(guildId, body) {
+      return await rest.post<DiscordChannel>(rest.routes.guilds.channels(guildId), { body })
     },
 
-    async createEmoji(guildId, options) {
-      return await rest.post<DiscordEmoji>(rest.routes.guilds.emojis(guildId), options)
+    async createEmoji(guildId, body) {
+      return await rest.post<DiscordEmoji>(rest.routes.guilds.emojis(guildId), { body })
     },
 
-    async createGlobalApplicationCommand(command) {
-      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.commands(rest.applicationId), command)
+    async createGlobalApplicationCommand(body) {
+      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.commands(rest.applicationId), { body })
     },
 
-    async createGuild(options) {
-      return await rest.post<DiscordGuild>(rest.routes.guilds.all(), options)
+    async createGuild(body) {
+      return await rest.post<DiscordGuild>(rest.routes.guilds.all(), { body })
     },
 
-    async createGuildApplicationCommand(command, guildId) {
-      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), command)
+    async createGuildApplicationCommand(body, guildId) {
+      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), { body })
     },
 
-    async createGuildFromTemplate(templateCode, options) {
-      if (options.icon) {
-        options.icon = await urlToBase64(options.icon)
+    async createGuildFromTemplate(templateCode, body) {
+      if (body.icon) {
+        body.icon = await urlToBase64(body.icon)
       }
 
-      return await rest.post<DiscordGuild>(rest.routes.guilds.templates.code(templateCode), options)
+      return await rest.post<DiscordGuild>(rest.routes.guilds.templates.code(templateCode), { body })
     },
 
     async createGuildSticker(guildId, options) {
@@ -1110,57 +1108,56 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordSticker>(rest.routes.guilds.stickers(guildId), { body: form })
     },
 
-    async createGuildTemplate(guildId, options) {
-      return await rest.post<DiscordTemplate>(rest.routes.guilds.templates.all(guildId), options)
+    async createGuildTemplate(guildId, body) {
+      return await rest.post<DiscordTemplate>(rest.routes.guilds.templates.all(guildId), { body })
     },
 
-    async createForumThread(channelId, options) {
-      return await rest.post<DiscordChannel>(rest.routes.channels.forum(channelId), options)
+    async createForumThread(channelId, body) {
+      return await rest.post<DiscordChannel>(rest.routes.channels.forum(channelId), { body })
     },
 
-    async createInvite(channelId, options = {}) {
-      return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), options)
+    async createInvite(channelId, body = {}) {
+      return await rest.post<DiscordInvite>(rest.routes.channels.invites(channelId), { body })
     },
 
-    async createRole(guildId, options, reason) {
-      return await rest.post<DiscordRole>(rest.routes.guilds.roles.all(guildId), options, { reason })
+    async createRole(guildId, body, reason) {
+      return await rest.post<DiscordRole>(rest.routes.guilds.roles.all(guildId), { body, reason })
     },
 
-    async createScheduledEvent(guildId, options) {
-      return await rest.post<DiscordScheduledEvent>(rest.routes.guilds.events.events(guildId), options)
+    async createScheduledEvent(guildId, body) {
+      return await rest.post<DiscordScheduledEvent>(rest.routes.guilds.events.events(guildId), { body })
     },
 
-    async createStageInstance(options) {
-      return await rest.post<DiscordStageInstance>(rest.routes.channels.stages(), options)
+    async createStageInstance(body) {
+      return await rest.post<DiscordStageInstance>(rest.routes.channels.stages(), { body })
     },
 
     async createWebhook(channelId, options, reason) {
-      return await rest.post<DiscordWebhook>(
-        rest.routes.channels.webhooks(channelId),
-        {
+      return await rest.post<DiscordWebhook>(rest.routes.channels.webhooks(channelId), {
+        body: {
           name: options.name,
           avatar: options.avatar ? await urlToBase64(options.avatar) : undefined,
         },
-        { reason },
-      )
+        reason,
+      })
     },
 
     async deleteAutomodRule(guildId, ruleId, reason) {
-      await rest.delete(rest.routes.guilds.automod.rule(guildId, ruleId), undefined, { reason })
+      await rest.delete(rest.routes.guilds.automod.rule(guildId, ruleId), { reason })
     },
 
     async deleteChannel(channelId, reason) {
-      await rest.delete(rest.routes.channels.channel(channelId), undefined, {
+      await rest.delete(rest.routes.channels.channel(channelId), {
         reason,
       })
     },
 
     async deleteChannelPermissionOverride(channelId, overwriteId, reason) {
-      await rest.delete(rest.routes.channels.overwrite(channelId, overwriteId), undefined, { reason })
+      await rest.delete(rest.routes.channels.overwrite(channelId, overwriteId), { reason })
     },
 
     async deleteEmoji(guildId, id, reason) {
-      await rest.delete(rest.routes.guilds.emoji(guildId, id), undefined, { reason })
+      await rest.delete(rest.routes.guilds.emoji(guildId, id), { reason })
     },
 
     async deleteFollowupMessage(token, messageId) {
@@ -1180,7 +1177,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteGuildSticker(guildId, stickerId, reason) {
-      await rest.delete(rest.routes.guilds.sticker(guildId, stickerId), undefined, { reason })
+      await rest.delete(rest.routes.guilds.sticker(guildId, stickerId), { reason })
     },
 
     async deleteGuildTemplate(guildId, templateCode) {
@@ -1192,21 +1189,20 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteInvite(inviteCode, reason) {
-      await rest.delete(rest.routes.guilds.invite(inviteCode), undefined, { reason })
+      await rest.delete(rest.routes.guilds.invite(inviteCode), { reason })
     },
 
     async deleteMessage(channelId, messageId, reason) {
-      await rest.delete(rest.routes.channels.message(channelId, messageId), undefined, { reason })
+      await rest.delete(rest.routes.channels.message(channelId, messageId), { reason })
     },
 
     async deleteMessages(channelId, messageIds, reason) {
-      await rest.post(
-        rest.routes.channels.bulk(channelId),
-        {
+      await rest.post(rest.routes.channels.bulk(channelId), {
+        body: {
           messages: messageIds.slice(0, 100).map((id) => id.toString()),
         },
-        { reason },
-      )
+        reason,
+      })
     },
 
     async deleteOriginalInteractionResponse(token) {
@@ -1238,7 +1234,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteStageInstance(channelId, reason) {
-      await rest.delete(rest.routes.channels.stage(channelId), undefined, { reason })
+      await rest.delete(rest.routes.channels.stage(channelId), { reason })
     },
 
     async deleteUserReaction(channelId, messageId, userId, reaction) {
@@ -1248,7 +1244,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteWebhook(webhookId, reason) {
-      await rest.delete(rest.routes.webhooks.id(webhookId), undefined, { reason })
+      await rest.delete(rest.routes.webhooks.id(webhookId), { reason })
     },
 
     async deleteWebhookMessage(webhookId, token, messageId, options) {
@@ -1259,155 +1255,157 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await rest.delete(rest.routes.webhooks.webhook(webhookId, token))
     },
 
-    async editApplicationCommandPermissions(guildId, commandId, bearerToken, options) {
+    async editApplicationCommandPermissions(guildId, commandId, bearerToken, permissions) {
       return await rest.put<DiscordApplicationCommandPermissions>(
         rest.routes.interactions.commands.permission(rest.applicationId, guildId, commandId),
         {
-          permissions: options,
-        },
-        {
+          body: {
+            permissions,
+          },
           headers: { authorization: `Bearer ${bearerToken}` },
         },
       )
     },
 
-    async editAutomodRule(guildId, ruleId, options) {
-      return await rest.patch<DiscordAutoModerationRule>(rest.routes.guilds.automod.rule(guildId, ruleId), options)
+    async editAutomodRule(guildId, ruleId, body) {
+      return await rest.patch<DiscordAutoModerationRule>(rest.routes.guilds.automod.rule(guildId, ruleId), { body })
     },
 
     async editBotProfile(options) {
       const avatar = options?.botAvatarURL ? await urlToBase64(options?.botAvatarURL) : options?.botAvatarURL
 
       return await rest.patch<DiscordUser>(rest.routes.userBot(), {
-        username: options.username?.trim(),
-        avatar,
+        body: {
+          username: options.username?.trim(),
+          avatar,
+        },
       })
     },
 
-    async editChannel(channelId, options) {
-      return await rest.patch<DiscordChannel>(rest.routes.channels.channel(channelId), options)
+    async editChannel(channelId, body) {
+      return await rest.patch<DiscordChannel>(rest.routes.channels.channel(channelId), { body })
     },
 
-    async editChannelPermissionOverrides(channelId, options) {
-      await rest.put(rest.routes.channels.overwrite(channelId, options.id), options)
+    async editChannelPermissionOverrides(channelId, body) {
+      await rest.put(rest.routes.channels.overwrite(channelId, body.id), { body })
     },
 
-    async editChannelPositions(guildId, channelPositions) {
-      await rest.patch(rest.routes.guilds.channels(guildId), channelPositions)
+    async editChannelPositions(guildId, body) {
+      await rest.patch(rest.routes.guilds.channels(guildId), { body })
     },
 
-    async editEmoji(guildId, id, options) {
-      return await rest.patch<DiscordEmoji>(rest.routes.guilds.emoji(guildId, id), options)
+    async editEmoji(guildId, id, body) {
+      return await rest.patch<DiscordEmoji>(rest.routes.guilds.emoji(guildId, id), { body })
     },
 
-    async editFollowupMessage(token, messageId, options) {
-      return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), options)
+    async editFollowupMessage(token, messageId, body) {
+      return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), { body })
     },
 
-    async editGlobalApplicationCommand(commandId, options) {
-      return await rest.patch<DiscordApplicationCommand>(rest.routes.interactions.commands.command(rest.applicationId, commandId), options)
+    async editGlobalApplicationCommand(commandId, body) {
+      return await rest.patch<DiscordApplicationCommand>(rest.routes.interactions.commands.command(rest.applicationId, commandId), { body })
     },
 
-    async editGuild(guildId, options) {
-      return await rest.patch<DiscordGuild>(rest.routes.guilds.guild(guildId), options)
+    async editGuild(guildId, body) {
+      return await rest.patch<DiscordGuild>(rest.routes.guilds.guild(guildId), { body })
     },
 
-    async editGuildApplicationCommand(commandId, guildId, options) {
-      return await rest.patch<DiscordApplicationCommand>(
-        rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId),
-        options,
-      )
+    async editGuildApplicationCommand(commandId, guildId, body) {
+      return await rest.patch<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.one(rest.applicationId, guildId, commandId), {
+        body,
+      })
     },
 
     async editGuildMfaLevel(guildId: BigString, mfaLevel: MfaLevels, reason?: string): Promise<void> {
-      await rest.post(rest.routes.guilds.mfa(guildId), { level: mfaLevel }, { reason })
+      await rest.post(rest.routes.guilds.mfa(guildId), { body: { level: mfaLevel }, reason })
     },
 
-    async editGuildSticker(guildId, stickerId, options) {
-      return await rest.patch<DiscordSticker>(rest.routes.guilds.sticker(guildId, stickerId), options)
+    async editGuildSticker(guildId, stickerId, body) {
+      return await rest.patch<DiscordSticker>(rest.routes.guilds.sticker(guildId, stickerId), { body })
     },
 
-    async editGuildTemplate(guildId, templateCode: string, options: ModifyGuildTemplate): Promise<Camelize<DiscordTemplate>> {
-      return await rest.patch<DiscordTemplate>(rest.routes.guilds.templates.guild(guildId, templateCode), options)
+    async editGuildTemplate(guildId, templateCode: string, body: ModifyGuildTemplate): Promise<Camelize<DiscordTemplate>> {
+      return await rest.patch<DiscordTemplate>(rest.routes.guilds.templates.guild(guildId, templateCode), { body })
     },
 
-    async editMessage(channelId, messageId, options) {
-      return await rest.patch<DiscordMessage>(rest.routes.channels.message(channelId, messageId), options)
+    async editMessage(channelId, messageId, body) {
+      return await rest.patch<DiscordMessage>(rest.routes.channels.message(channelId, messageId), { body })
     },
 
-    async editOriginalInteractionResponse(token, options) {
-      return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), options)
+    async editOriginalInteractionResponse(token, body) {
+      return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), { body })
     },
 
     async editOriginalWebhookMessage(webhookId, token, options) {
       return await rest.patch<DiscordMessage>(rest.routes.webhooks.original(webhookId, token, options), {
-        type: InteractionResponseTypes.UpdateMessage,
-        data: options,
+        body: {
+          type: InteractionResponseTypes.UpdateMessage,
+          data: options,
+        },
       })
     },
 
     async editOwnVoiceState(guildId, options) {
       await rest.patch(rest.routes.guilds.voice(guildId), {
-        channel_id: options.channelId,
-        suppress: options.suppress,
-        request_to_speak_timestamp: options.requestToSpeakTimestamp
-          ? new Date(options.requestToSpeakTimestamp).toISOString()
-          : options.requestToSpeakTimestamp,
+        body: {
+          ...options,
+          request_to_speak_timestamp: options.requestToSpeakTimestamp
+            ? new Date(options.requestToSpeakTimestamp).toISOString()
+            : options.requestToSpeakTimestamp,
+        },
       })
     },
 
-    async editScheduledEvent(guildId, eventId, options) {
-      return await rest.patch<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId), options)
+    async editScheduledEvent(guildId, eventId, body) {
+      return await rest.patch<DiscordScheduledEvent>(rest.routes.guilds.events.event(guildId, eventId), { body })
     },
 
-    async editRole(guildId, roleId, options) {
-      return await rest.patch<DiscordRole>(rest.routes.guilds.roles.one(guildId, roleId), options)
+    async editRole(guildId, roleId, body) {
+      return await rest.patch<DiscordRole>(rest.routes.guilds.roles.one(guildId, roleId), { body })
     },
 
-    async editRolePositions(guildId, options) {
-      return await rest.patch<DiscordRole[]>(rest.routes.guilds.roles.all(guildId), options)
+    async editRolePositions(guildId, body) {
+      return await rest.patch<DiscordRole[]>(rest.routes.guilds.roles.all(guildId), { body })
     },
 
-    async editStageInstance(channelId, data) {
-      return await rest.patch<DiscordStageInstance>(rest.routes.channels.stage(channelId), { topic: data.topic })
+    async editStageInstance(channelId, topic, reason?: string) {
+      return await rest.patch<DiscordStageInstance>(rest.routes.channels.stage(channelId), { body: { topic }, reason })
     },
 
     async editUserVoiceState(guildId, options) {
-      await rest.patch(rest.routes.guilds.voice(guildId, options.userId), {
-        channel_id: options.channelId,
-        suppress: options.suppress,
-        user_id: options.userId,
-      })
+      await rest.patch(rest.routes.guilds.voice(guildId, options.userId), { body: options })
     },
 
-    async editWebhook(webhookId, options) {
-      return await rest.patch<DiscordWebhook>(rest.routes.webhooks.id(webhookId), options)
+    async editWebhook(webhookId, body) {
+      return await rest.patch<DiscordWebhook>(rest.routes.webhooks.id(webhookId), { body })
     },
 
     async editWebhookMessage(webhookId, token, messageId, options) {
-      return await rest.patch<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), options)
+      return await rest.patch<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), { body: options })
     },
 
-    async editWebhookWithToken(webhookId, token, options) {
-      return await rest.patch<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token), options)
+    async editWebhookWithToken(webhookId, token, body) {
+      return await rest.patch<DiscordWebhook>(rest.routes.webhooks.webhook(webhookId, token), { body })
     },
 
-    async editWelcomeScreen(guildId, options) {
-      return await rest.patch<DiscordWelcomeScreen>(rest.routes.guilds.welcome(guildId), options)
+    async editWelcomeScreen(guildId, body) {
+      return await rest.patch<DiscordWelcomeScreen>(rest.routes.guilds.welcome(guildId), { body })
     },
 
-    async editWidgetSettings(guildId, options) {
-      return await rest.patch<DiscordGuildWidgetSettings>(rest.routes.guilds.widget(guildId), options)
+    async editWidgetSettings(guildId, body) {
+      return await rest.patch<DiscordGuildWidgetSettings>(rest.routes.guilds.widget(guildId), { body })
     },
 
     async executeWebhook(webhookId, token, options) {
-      return await rest.post<DiscordMessage>(rest.routes.webhooks.webhook(webhookId, token, options), options)
+      return await rest.post<DiscordMessage>(rest.routes.webhooks.webhook(webhookId, token, options), { body: options })
     },
 
     async followAnnouncement(sourceChannelId, targetChannelId) {
       return await rest.post<DiscordFollowedChannel>(rest.routes.channels.follow(sourceChannelId), {
-        webhook_channel_id: targetChannelId,
-      } as DiscordFollowAnnouncementChannel)
+        body: {
+          webhook_channel_id: targetChannelId,
+        },
+      })
     },
 
     async getActiveThreads(guildId) {
@@ -1470,7 +1468,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getDmChannel(userId) {
       return await rest.post<DiscordChannel>(rest.routes.channels.dm(), {
-        recipient_id: userId.toString(),
+        body: { recipient_id: userId },
       })
     },
 
@@ -1675,19 +1673,20 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async removeRole(guildId, userId, roleId, reason) {
-      await rest.delete(rest.routes.guilds.roles.member(guildId, userId, roleId), undefined, { reason })
+      await rest.delete(rest.routes.guilds.roles.member(guildId, userId, roleId), { reason })
     },
 
     async removeThreadMember(channelId, userId) {
       await rest.delete(rest.routes.channels.threads.user(channelId, userId))
     },
 
+    // TODO: why that
     async sendFollowupMessage(token, options) {
       return await new Promise((resolve, reject) => {
         rest.sendRequest({
           url: rest.routes.webhooks.webhook(rest.applicationId, token),
           method: 'POST',
-          body: options,
+          options: { body: options },
           retryCount: 0,
           retryRequest: async function (options: SendRequestOptions) {
             // TODO: should change to reprocess queue item
@@ -1701,12 +1700,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
     },
 
+    // TODO: why that
     async sendInteractionResponse(interactionId, token, options) {
       await new Promise((resolve, reject) => {
         rest.sendRequest({
           url: rest.routes.interactions.responses.callback(interactionId, token),
           method: 'POST',
-          body: options,
+          options: { body: options },
           retryCount: 0,
           retryRequest: async function (options: SendRequestOptions) {
             // TODO: should change to reprocess queue item
@@ -1720,32 +1720,32 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
     },
 
-    async sendMessage(channelId, options) {
-      return await rest.post<DiscordMessage>(rest.routes.channels.messages(channelId), options)
+    async sendMessage(channelId, body) {
+      return await rest.post<DiscordMessage>(rest.routes.channels.messages(channelId), { body })
     },
 
-    async startThreadWithMessage(channelId, messageId, options) {
-      return await rest.post<DiscordChannel>(rest.routes.channels.threads.message(channelId, messageId), options)
+    async startThreadWithMessage(channelId, messageId, body) {
+      return await rest.post<DiscordChannel>(rest.routes.channels.threads.message(channelId, messageId), { body })
     },
 
-    async startThreadWithoutMessage(channelId, options) {
-      return await rest.post<DiscordChannel>(rest.routes.channels.threads.all(channelId), options)
+    async startThreadWithoutMessage(channelId, body) {
+      return await rest.post<DiscordChannel>(rest.routes.channels.threads.all(channelId), { body })
     },
 
     async syncGuildTemplate(guildId) {
       return await rest.put<DiscordTemplate>(rest.routes.guilds.templates.all(guildId))
     },
 
-    async banMember(guildId, userId, options) {
-      await rest.put<void>(rest.routes.guilds.members.ban(guildId, userId), options)
+    async banMember(guildId, userId, body) {
+      await rest.put<void>(rest.routes.guilds.members.ban(guildId, userId), { body })
     },
 
-    async editBotMember(guildId, options) {
-      return await rest.patch<DiscordMember>(rest.routes.guilds.members.bot(guildId), options)
+    async editBotMember(guildId, body) {
+      return await rest.patch<DiscordMember>(rest.routes.guilds.members.bot(guildId), { body })
     },
 
-    async editMember(guildId, userId, options) {
-      return await rest.patch<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId), options)
+    async editMember(guildId, userId, body) {
+      return await rest.patch<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId), { body })
     },
 
     async getMember(guildId, userId) {
@@ -1757,17 +1757,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async kickMember(guildId, userId, reason) {
-      await rest.delete(rest.routes.guilds.members.member(guildId, userId), undefined, {
+      await rest.delete(rest.routes.guilds.members.member(guildId, userId), {
         reason,
       })
     },
 
     async pinMessage(channelId, messageId, reason) {
-      await rest.put(rest.routes.channels.pin(channelId, messageId), undefined, { reason })
+      await rest.put(rest.routes.channels.pin(channelId, messageId), { reason })
     },
 
-    async pruneMembers(guildId, options) {
-      return await rest.post<{ pruned: number | null }>(rest.routes.guilds.members.prune(guildId), options)
+    async pruneMembers(guildId, body) {
+      return await rest.post<{ pruned: number | null }>(rest.routes.guilds.members.prune(guildId), { body })
     },
 
     async searchMembers(guildId, query, options) {
@@ -1779,19 +1779,19 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async unpinMessage(channelId, messageId, reason) {
-      await rest.delete(rest.routes.channels.pin(channelId, messageId), undefined, { reason })
+      await rest.delete(rest.routes.channels.pin(channelId, messageId), { reason })
     },
 
     async triggerTypingIndicator(channelId) {
       await rest.post(rest.routes.channels.typing(channelId))
     },
 
-    async upsertGlobalApplicationCommands(commands) {
-      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId), commands)
+    async upsertGlobalApplicationCommands(body) {
+      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId), { body })
     },
 
-    async upsertGuildApplicationCommands(guildId, commands) {
-      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), commands)
+    async upsertGuildApplicationCommands(guildId, body) {
+      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), { body })
     },
   }
 

@@ -64,7 +64,6 @@ import type {
   EditMessage,
   EditOwnVoiceState,
   EditScheduledEvent,
-  EditStageInstanceOptions,
   EditUserVoiceState,
   ExecuteWebhook,
   FileContent,
@@ -170,24 +169,19 @@ export interface RestManager {
   /** Split a url to separate rate limit buckets based on major/minor parameters. */
   simplifyUrl: (url: string, method: RequestMethods) => string
   /** Make a request to be sent to the api. */
-  makeRequest: <T = unknown>(
-    method: RequestMethods,
-    url: string,
-    body?: Record<string, any>,
-    options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>,
-  ) => Promise<T>
+  makeRequest: <T = unknown>(method: RequestMethods, url: string, options?: Omit<CreateRequestBodyOptions, 'method'>) => Promise<T>
   /** Takes a request and processes it into a queue. */
   processRequest: (request: SendRequestOptions) => void
   /** Make a get request to the api */
   get: <T = void>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => Promise<Camelize<T>>
   /** Make a post request to the api. */
-  post: <T = void>(url: string, body?: Record<string, any>, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => Promise<Camelize<T>>
+  post: <T = void>(url: string, options?: Omit<CreateRequestBodyOptions, 'method'>) => Promise<Camelize<T>>
   /** Make a put request to the api. */
-  put: <T = void>(url: string, body?: Record<string, any>, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => Promise<Camelize<T>>
+  put: <T = void>(url: string, options?: Omit<CreateRequestBodyOptions, 'method'>) => Promise<Camelize<T>>
   /** Make a delete request to the api. */
-  delete: (url: string, body?: Record<string, any>, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => Promise<void>
+  delete: (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => Promise<void>
   /** Make a patch request to the api. */
-  patch: <T = void>(url: string, body?: Record<string, any>, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => Promise<Camelize<T>>
+  patch: <T = void>(url: string, options?: Omit<CreateRequestBodyOptions, 'method'>) => Promise<Camelize<T>>
   /**
    * Adds a reaction to a message.
    *
@@ -1192,6 +1186,7 @@ export interface RestManager {
    * Edits a stage instance.
    *
    * @param channelId - The ID of the stage channel the stage instance is associated with.
+   * @param topic - Topic of the Stage instance (1-120 characters).
    * @returns An instance of the updated {@link CamelizedDiscordStageInstance}.
    *
    * @remarks
@@ -1201,7 +1196,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance}
    */
-  editStageInstance: (channelId: BigString, data: EditStageInstanceOptions) => Promise<CamelizedDiscordStageInstance>
+  editStageInstance: (channelId: BigString, topic: string, reason?: string) => Promise<CamelizedDiscordStageInstance>
   /**
    * Edits the voice state of another user.
    *
@@ -2460,7 +2455,7 @@ export interface CreateWebhook {
 export interface CreateRequestBodyOptions {
   headers?: Record<string, string>
   method: RequestMethods
-  body?: Record<string, unknown>
+  body?: any
   unauthorized?: boolean
   url?: string
   reason?: string
@@ -2478,8 +2473,6 @@ export interface SendRequestOptions {
   url: string
   /** The method to use when sending the request. */
   method: RequestMethods
-  /** The body to be sent in the request. */
-  body?: Record<string, any>
   /** The amount of times this request has been retried. */
   retryCount: number
   /** Handler to retry a request should it be rate limited. */
