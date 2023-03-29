@@ -11,20 +11,7 @@ async function memoryBenchmarks(
     table: false,
   },
 ) {
-  let gcEnable = false
-  let garbageCollect = (): void => {}
-  try {
-    // @ts-expect-error
-    global.gc()
-    gcEnable = true
-  } catch (error) {
-    // @ts-expect-error
-    if (error.message === 'TypeError: global.gc is not a function') {
-      console.error(`[WARN] add the flag "--expose-gc" for higher accuracy, or change options.times to 1`)
-    }
-  }
-  // @ts-expect-error
-  if (gcEnable) garbageCollect = global.gc
+  const garbageCollect = global.gc ?? (() => {})
 
   const stages = ['start', 'loaded', 'end', 'cached'] as const
   const typesOfMemUsages = ['rss', 'heapUsed', 'heapTotal'] as const
@@ -53,7 +40,7 @@ async function memoryBenchmarks(
     events.forEach((event) => {
       if (!event.payload.t) return
       bot.events[
-        event.payload.t.toLowerCase().replace(/_([a-z])/g, function (g) {
+        event.payload.t.toLowerCase().replace(/_([a-z])/g, (g) => {
           return g[1].toUpperCase()
         })
       ]?.(event.payload.d, {})
@@ -65,7 +52,8 @@ async function memoryBenchmarks(
 
     // Set results for data once all events are processed
     results.end = process.memoryUsage()
-    // @ts-expect-error
+
+    // @ts-expect-error init the object
     results.cached = {}
     for (const typeOfMemUsage of typesOfMemUsages) {
       results.cached![typeOfMemUsage] = results.end[typeOfMemUsage] - results.loaded[typeOfMemUsage]
