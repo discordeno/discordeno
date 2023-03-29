@@ -331,8 +331,10 @@ export interface GetGuildAuditLog {
   userId?: BigString | string
   /** Entries for a specific audit log event */
   actionType?: AuditLogEvents
-  /** Entries that preceded a specific audit log entry ID */
+  /** Entries with ID less than a specific audit log entry ID. */
   before?: BigString | string
+  /** Entries with ID greater than a specific audit log entry ID. */
+  after?: BigString | string
   /** Maximum number of entries (between 1-100) to return, defaults to 50 */
   limit?: number
 }
