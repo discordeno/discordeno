@@ -151,18 +151,20 @@ describe('bucket.ts', () => {
         refillAmount: 1,
       })
 
-      {
-        const acquired = bucket.acquire()
-        expect(await promiseState(acquired)).to.equal('pending')
-        expect(await promiseState(acquired)).to.equal('fulfilled')
-      }
+      const acquired1 = bucket.acquire()
+      const acquired2 = bucket.acquire()
+
+      // js event loop
+      await (async () => {})()
+
+      expect(await promiseState(acquired1)).to.equal('fulfilled')
+      expect(await promiseState(acquired2)).to.equal('pending')
 
       await clock.tickAsync(499)
+      expect(await promiseState(acquired2)).to.equal('pending')
 
-      {
-        const acquired = bucket.acquire()
-        expect(await promiseState(acquired)).to.equal('pending')
-      }
+      await clock.tickAsync(1)
+      expect(await promiseState(acquired2)).to.equal('fulfilled')
 
       expect(bucket.remaining).equals(0)
       expect(bucket.used).equals(1)
