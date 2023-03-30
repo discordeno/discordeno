@@ -1251,6 +1251,7 @@ __metadata:
     benchmark: ^2.1.4
     eslint: ^8.0.1
     eslint-config-discordeno: "*"
+    microtime: ^3.1.1
     ts-node: ^10.9.1
     tsconfig: "*"
     typescript: ^4.9.3
@@ -3675,6 +3676,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"microtime@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "microtime@npm:3.1.1"
+  dependencies:
+    node-addon-api: ^5.0.0
+    node-gyp: latest
+    node-gyp-build: ^4.4.0
+  checksum: 1161571d9c994070139d8dd65160bb5ebb87044cb0ea9828a65fde201fcf9b90da9c2897e352a26e852a7fa9dd7b6774128b50854462d117be1b019abff41887
+  languageName: node
+  linkType: hard
+
 "mime-db@npm:^1.28.0":
   version: 1.52.0
   resolution: "mime-db@npm:1.52.0"
@@ -3937,6 +3949,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-addon-api@npm:^5.0.0":
+  version: 5.1.0
+  resolution: "node-addon-api@npm:5.1.0"
+  dependencies:
+    node-gyp: latest
+  checksum: 2508bd2d2981945406243a7bd31362fc7af8b70b8b4d65f869c61731800058fb818cc2fd36c8eac714ddd0e568cc85becf5e165cebbdf7b5024d5151bbc75ea1
+  languageName: node
+  linkType: hard
+
 "node-domexception@npm:^1.0.0":
   version: 1.0.0
   resolution: "node-domexception@npm:1.0.0"
@@ -3952,6 +3973,17 @@ __metadata:
     fetch-blob: ^3.1.4
     formdata-polyfill: ^4.0.10
   checksum: 62145fd3ba4770a76110bc31fdc0054ab2f5442b5ce96e9c4b39fc9e94a3d305560eec76e1165d9259eab866e02a8eecf9301062bb5dfc9f08a4d08b69d223dd
+  languageName: node
+  linkType: hard
+
+"node-gyp-build@npm:^4.4.0":
+  version: 4.6.0
+  resolution: "node-gyp-build@npm:4.6.0"
+  bin:
+    node-gyp-build: bin.js
+    node-gyp-build-optional: optional.js
+    node-gyp-build-test: build-test.js
+  checksum: 25d78c5ef1f8c24291f4a370c47ba52fcea14f39272041a90a7894cd50d766f7c8cb8fb06c0f42bf6f69b204b49d9be3c8fc344aac09714d5bdb95965499eb15
   languageName: node
   linkType: hard
 
