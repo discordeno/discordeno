@@ -1,160 +1,121 @@
-import type { PickPartial } from '@discordeno/types'
+import logger from './logger.js'
 import { delay } from './utils.js'
 
-/** A Leaky Bucket.
- * Useful for rate limiting purposes.
- * This uses `performance.now()` instead of `Date.now()` for higher accuracy.
- *
- * NOTE: This bucket is lazy, means it only updates when a related method is called.
- */
-export interface LeakyBucket {
-  /** How many tokens this bucket can hold. */
+export class LeakyBucket implements LeakyBucketOptions {
   max: number
-  /** Amount of tokens gained per interval.
-   * If bigger than `max` it will be pressed to `max`.
-   */
-  refillAmount: number
-  /** Interval at which the bucket gains tokens. */
   refillInterval: number
+  refillAmount: number
 
-  /** Acquire tokens from the bucket.
-   * Resolves when the tokens are acquired and available.
-   * @param {boolean} [highPriority=false] Whether this acquire is should be done asap.
-   */
-  acquire: (amount: number, highPriority?: boolean) => Promise<void>
+  /** The amount of requests that have been used up already. */
+  used: number = 0
+  /** The queue of requests to acquire an available request. Mapped by <shardId, resolve()> */
+  queue: Array<(value: void | PromiseLike<void>) => void> = []
+  /** Whether or not the queue is already processing. */
+  processing: boolean = false
+  /** The timeout id for the timer to reduce the used amount by the refill amount.  */
+  timeoutId?: NodeJS.Timeout
+  /** The timestamp in milliseconds when the next refill is scheduled. */
+  refillsAt?: number
 
-  /** Returns the number of milliseconds until the next refill. */
-  nextRefill: () => number
-
-  /** Current tokens in the bucket. */
-  tokens: () => number
-
-  /** @private Internal track of when the last refill of tokens was.
-   * DO NOT TOUCH THIS! Unless you know what you are doing ofc :P
-   */
-  lastRefill: number
-
-  /** @private Internal state of whether currently it is allowed to acquire tokens.
-   * DO NOT TOUCH THIS! Unless you know what you are doing ofc :P
-   */
-  allowAcquire: boolean
-
-  /** @private Internal number of currently available tokens.
-   * DO NOT TOUCH THIS! Unless you know what you are doing ofc :P
-   */
-  tokensState: number
-
-  /** @private Internal array of promises necessary to guarantee no race conditions.
-   * DO NOT TOUCH THIS! Unless you know what you are doing ofc :P
-   */
-  waiting: Array<(_?: unknown) => void>
-}
-
-export function createLeakyBucket({
-  max,
-  refillInterval,
-  refillAmount,
-  tokens,
-  waiting,
-  ...rest
-}: Omit<PickPartial<LeakyBucket, 'max' | 'refillInterval' | 'refillAmount'>, 'tokens'> & {
-  /** Current tokens in the bucket.
-   * @default max
-   */
-  tokens?: number
-}): LeakyBucket {
-  return {
-    max,
-    refillInterval,
-    refillAmount: refillAmount > max ? max : refillAmount,
-    lastRefill: performance.now(),
-    allowAcquire: true,
-
-    nextRefill: function () {
-      return nextRefill(this)
-    },
-
-    tokens: function () {
-      return updateTokens(this)
-    },
-
-    acquire: async function (amount, highPriority) {
-      return await acquire(this, amount, highPriority)
-    },
-
-    tokensState: tokens ?? max,
-    waiting: waiting ?? [],
-
-    ...rest,
+  constructor(options?: LeakyBucketOptions) {
+    this.max = options?.max ?? 1
+    this.refillAmount = options?.refillAmount ? (options.refillAmount > this.max ? this.max : options.refillAmount) : 1
+    this.refillInterval = options?.refillInterval ?? 5000
   }
-}
 
-/** Update the tokens of that bucket.
- * @returns {number} The amount of current available tokens.
- */
-export function updateTokens(bucket: LeakyBucket): number {
-  const timePassed = performance.now() - bucket.lastRefill
-  const missedRefills = Math.floor(timePassed / bucket.refillInterval)
+  /** The amount of requests that still remain. */
+  get remaining(): number {
+    return this.max < this.used ? 0 : this.max - this.used
+  }
 
-  // The refill shall not exceed the max amount of tokens.
-  bucket.tokensState = Math.min(bucket.tokensState + bucket.refillAmount * missedRefills, bucket.max)
-  bucket.lastRefill += bucket.refillInterval * missedRefills
+  /** Refills the bucket as needed. */
+  refillBucket(): void {
+    logger.debug(`[LeakyBucket] Timeout for leaky bucket requests executed. Refilling bucket.`)
+    // Lower the used amount by the refill amount
+    this.used = this.refillAmount > this.used ? 0 : this.used - this.refillAmount
+    // Reset the refillsAt timestamp since it just got refilled
+    this.refillsAt = undefined
 
-  return bucket.tokensState
-}
-
-export function nextRefill(bucket: LeakyBucket): number {
-  // Since this bucket is lazy update the tokens before calculating the next refill.
-  updateTokens(bucket)
-
-  return performance.now() - bucket.lastRefill + bucket.refillInterval
-}
-
-export async function acquire(bucket: LeakyBucket, amount: number, highPriority = false): Promise<void> {
-  // To prevent the race condition of 2 acquires happening at once,
-  // check whether its currently allowed to acquire.
-  if (!bucket.allowAcquire) {
-    // create, push, and wait until the current running acquiring is finished.
-    await new Promise((resolve) => {
-      if (highPriority) {
-        bucket.waiting.unshift(resolve)
-      } else {
-        bucket.waiting.push(resolve)
-      }
-    })
-
-    // Somehow another acquire has started,
-    // so need to wait again.
-    if (!bucket.allowAcquire) {
-      return await acquire(bucket, amount)
+    if (this.used > 0) {
+      if (this.timeoutId) clearTimeout(this.timeoutId)
+      this.timeoutId = setTimeout(() => {
+        this.refillBucket()
+      }, this.refillInterval)
+      this.refillsAt = Date.now() + this.refillInterval
     }
   }
 
-  bucket.allowAcquire = false
-  // Since the bucket is lazy update the tokens now,
-  // and also get the current amount of available tokens
-  const currentTokens = updateTokens(bucket)
+  /** Begin processing the queue. */
+  async processQueue(): Promise<void> {
+    logger.debug('[Gateway] Processing queue')
+    // There is already a queue that is processing
+    if (this.processing) return logger.debug('[Gateway] Queue is already processing.')
 
-  // It's possible that more than available tokens have been acquired,
-  // so calculate the amount of milliseconds to wait until this acquire is good to go.
-  if (currentTokens < amount) {
-    const tokensNeeded = amount - currentTokens
-    const refillsNeeded = Math.ceil(tokensNeeded / bucket.refillAmount)
+    // Begin going through the queue.
+    while (this.queue.length) {
+      if (this.remaining) {
+        logger.debug(`[LeakyBucket] Processing queue. Remaining: ${this.remaining} Length: ${this.queue.length}`)
+        // Resolves the promise allowing the paused execution of this request to resolve and continue.
+        this.queue.shift()?.()
+        // A request can be made
+        this.used++
 
-    const waitTime = bucket.refillInterval * refillsNeeded
-    await delay(waitTime)
+        // Create a new timeout for this request if none exists.
+        if (!this.timeoutId) {
+          logger.debug(`[LeakyBucket] Creating new timeout for leaky bucket requests.`)
 
-    // Update the tokens again to ensure nothing has been missed.
-    updateTokens(bucket)
+          this.timeoutId = setTimeout(() => {
+            this.refillBucket()
+          }, this.refillInterval)
+          // Set the time for when this refill will occur.
+          this.refillsAt = Date.now() + this.refillInterval
+        }
+      }
+
+      // Check if a refill is scheduled, since we have used up all available requests
+      else if (this.refillsAt) {
+        const now = Date.now()
+        // If there is time left until next refill, just delay execution.
+        if (this.refillsAt > now) {
+          logger.debug(`[LeakyBucket] Delaying execution of leaky bucket requests for ${this.refillsAt - now}ms`)
+          await delay(this.refillsAt - now)
+          logger.debug(`[LeakyBucket] Resuming execution`)
+        }
+      }
+    }
+
+    // Loop has ended mark false so it can restart later when needed
+    this.processing = false
   }
 
-  // In order to not subtract too much from the tokens,
-  // calculate what is actually needed to subtract.
-  const toSubtract = amount % bucket.refillAmount ?? amount
-  bucket.tokensState -= toSubtract
+  /** Pauses the execution until the request is available to be made. */
+  async acquire(highPriority?: boolean): Promise<void> {
+    return await new Promise((resolve) => {
+      // High priority requests get added to the start of the queue
+      if (highPriority) this.queue.unshift(resolve)
+      // All other requests get pushed to the end.
+      else this.queue.push(resolve)
 
-  // Allow the next acquire to happen.
-  bucket.allowAcquire = true
-  // If there is an acquire waiting, let it continue.
-  bucket.waiting.shift()?.()
+      // Each request should trigger the queue to be processesd.
+      void this.processQueue()
+    })
+  }
+}
+
+export interface LeakyBucketOptions {
+  /**
+   * Max requests allowed at once.
+   * @default 1
+   */
+  max?: number
+  /**
+   * Interval in milliseconds between refills.
+   * @default 5000
+   */
+  refillInterval?: number
+  /**
+   * Amount of requests to refill at each interval.
+   * @default 1
+   */
+  refillAmount?: number
 }

@@ -103,28 +103,24 @@ Have your cache setup in any way you like. Redis, PGSQL or any cache layer you w
 Here is a minimal example to get started with:
 
 ```typescript
-import {
-  createBot,
-  Intents,
-  startBot,
-} from "https://deno.land/x/discordeno@13.0.0/mod.ts";
+import { createBot, Intents, startBot } from 'https://deno.land/x/discordeno@13.0.0/mod.ts'
 
 const bot = createBot({
   token: process.env.DISCORD_TOKEN,
   intents: Intents.Guilds | Intents.GuildMessages,
   events: {
     ready() {
-      console.log("Successfully connected to gateway");
+      console.log('Successfully connected to gateway')
     },
   },
-});
+})
 
 // Another way to do events
 bot.events.messageCreate = function (b, message) {
   // Process the message here with your command handler.
-};
+}
 
-await startBot(bot);
+await startBot(bot)
 ```
 
 ### Tools
@@ -153,6 +149,6 @@ and unofficial templates:
 
 ## Links
 
-- [Website](https://discordeno.mod.land)
+- [Website](https://discordeno.js.org/)
 - [Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
 - [Discord](https://discord.com/invite/5vBgXk3UcZ)

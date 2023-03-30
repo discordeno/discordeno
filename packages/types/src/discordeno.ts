@@ -69,19 +69,6 @@ export interface CreateMessageOptions {
   /** IDs of up to 3 stickers in the server to send in the message */
   stickerIds?: [BigString] | [BigString, BigString] | [BigString, BigString, BigString]
 }
-// import type {
-//   AllowedMentionsTypes,
-//   ApplicationCommandTypes,
-//   AuditLogEvents,
-//   BigString,
-//   ButtonStyles,
-//   InteractionResponseTypes,
-//   Localization,
-//   MessageComponentTypes,
-//   OverwriteTypes,
-//   PermissionStrings,
-//   TextStyles
-// } from './shared.js'
 
 export type MessageComponents = ActionRow[]
 
@@ -296,17 +283,6 @@ export interface OverwriteReadable {
   deny?: PermissionStrings[]
 }
 
-// export interface GetGatewayBot {
-//   url: string
-//   shards: number
-//   sessionStartLimit: {
-//     total: number
-//     remaining: number
-//     resetAfter: number
-//     maxConcurrency: number
-//   }
-// }
-
 /** https://discord.com/developers/docs/resources/channel#get-channel-messages-query-string-params */
 export interface GetMessagesLimit {
   /** Max number of messages to return (1-100) default 50 */
@@ -352,11 +328,13 @@ export interface ListArchivedThreads {
 /** https://discord.com/developers/docs/resources/audit-log#get-guild-audit-log-query-string-parameters */
 export interface GetGuildAuditLog {
   /** Entries from a specific user ID */
-  userId?: BigString | string
+  userId?: BigString
   /** Entries for a specific audit log event */
   actionType?: AuditLogEvents
-  /** Entries that preceded a specific audit log entry ID */
-  before?: BigString | string
+  /** Entries with ID less than a specific audit log entry ID. */
+  before?: BigString
+  /** Entries with ID greater than a specific audit log entry ID. */
+  after?: BigString
   /** Maximum number of entries (between 1-100) to return, defaults to 50 */
   limit?: number
 }
@@ -815,7 +793,6 @@ export interface EditAutoModerationRuleOptions extends WithReason {
   triggerMetadata: {
     /** The keywords needed to match. Only present when TriggerType.Keyword */
     keywordFilter?: string[]
-    // TODO: This may need a special type or enum
     /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
     presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
     /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
@@ -1047,7 +1024,7 @@ export interface CreateGuildStickerOptions extends WithReason {
   description: string
   /** Autocomplete/suggestion tags for the sticker (max 200 characters) */
   tags: string
-  /** The sticker file to upload, must be a PNG, APNG, or Lottie JSON file, max 500 KB */
+  /** The sticker file to upload, must be a PNG, APNG, or Lottie JSON file, max 512 KB */
   file: FileContent
 }
 
@@ -1100,4 +1077,55 @@ export interface GetGuildWidgetImageQuery {
    * Banner4: Large Discord logo at the top of the widget. Guild icon, name and online count in the middle portion of the widget and a "JOIN MY SERVER" button at the bottom
    */
   style?: 'shield' | 'banner1' | 'banner2' | 'banner3' | 'banner4'
+}
+
+export interface CreateTemplate {
+  /** Name which the template should have */
+  name: string
+  /** Description of the template */
+  description?: string
+}
+
+/** https://discord.com/developers/docs/resources/template#modify-guild-template */
+export interface ModifyGuildTemplate {
+  /** Name of the template (1-100 characters) */
+  name?: string
+  /** Description of the template (0-120 characters) */
+  description?: string | null
+}
+
+/** https://discord.com/developers/docs/resources/guild#create-guild-ban */
+export interface CreateGuildBan extends WithReason {
+  /** Number of seconds to delete messages for, between 0 and 604800 (7 days) */
+  deleteMessageSeconds?: number
+}
+
+export interface EditBotMemberOptions extends WithReason {
+  nick?: string | null
+}
+
+/** https://discord.com/developers/docs/resources/guild#modify-guild-member */
+export interface ModifyGuildMember {
+  /** Value to set users nickname to. Requires the `MANAGE_NICKNAMES` permission */
+  nick?: string | null
+  /** Array of role ids the member is assigned. Requires the `MANAGE_ROLES` permission */
+  roles?: BigString[] | null
+  /** Whether the user is muted in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MUTE_MEMBERS` permission */
+  mute?: boolean | null
+  /** Whether the user is deafened in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MOVE_MEMBERS` permission */
+  deaf?: boolean | null
+  /** Id of channel to move user to (if they are connected to voice). Requires the `MOVE_MEMBERS` permission */
+  channelId?: BigString | null
+  /** when the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission */
+  communicationDisabledUntil?: number | null
+}
+
+/** https://discord.com/developers/docs/resources/guild#begin-guild-prune */
+export interface BeginGuildPrune {
+  /** Number of days to prune (1 or more), default: 7 */
+  days?: number
+  /** Whether 'pruned' is returned, discouraged for large guilds, default: true */
+  computePruneCount?: boolean
+  /** Role(s) ro include, default: none */
+  includeRoles?: string[]
 }

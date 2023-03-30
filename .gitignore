@@ -13,10 +13,15 @@ node_modules
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-apps/site/docs/generated/classes
-apps/site/docs/generated/enums
-apps/site/docs/generated/interfaces
-apps/site/docs/generated/modules
+site/docs/generated/classes
+site/docs/generated/enums
+site/docs/generated/interfaces
+site/docs/generated/modules
+website/docs/generated/classes/*.md
+website/docs/generated/enums/*.md
+website/docs/generated/interfaces/*.md
+website/docs/generated/modules/*.md
+website/.yarn/
 # testing
 coverage
 

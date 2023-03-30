@@ -1,0 +1,8 @@
+{
+  "label": "Big Bot Guide",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "description": "Learn the most important concepts and set up a base template for your bot."
+  }
+}

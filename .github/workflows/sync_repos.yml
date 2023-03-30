@@ -1,0 +1,24 @@
+name: Sync Repos
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "website/**"
+     # - "template/**"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@master
+      - name: Run GitHub File Sync
+        uses: BetaHuhn/repo-file-sync-action@v1
+        with:
+          GH_PAT: ${{ secrets.REPO_SYNC }}
+          GIT_EMAIL: to@itoh.at
+          GIT_USERNAME: itohatweb
+          SKIP_PR: true
+          COMMIT_EACH_FILE: false

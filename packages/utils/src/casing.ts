@@ -1,6 +1,6 @@
-import type { Camelize, Snakelize } from '@discordeno/types';
+import type { Camelize, Snakelize } from '@discordeno/types'
 
-export const camelize = <T>(object: T): Camelize<T> => {
+export function camelize <T>(object: T): Camelize<T> {
   if (Array.isArray(object)) {
     return object.map((element) => camelize(element)) as Camelize<T>
   }
@@ -9,15 +9,14 @@ export const camelize = <T>(object: T): Camelize<T> => {
     const obj = {} as Camelize<T>
     ;(Object.keys(object) as Array<keyof T>).forEach((key) => {
       // @ts-expect-error js hack
-      ;(obj[typeof key === 'string' ? snakeToCamelCase(key) : key] as Camelize<(T & object)[keyof T]>) = camelize(object[key])
+      ;(obj[snakeToCamelCase(key)] as Camelize<(T & object)[keyof T]>) = camelize(object[key])
     })
     return obj
   }
   return object as Camelize<T>
 }
 
-
-export const snakelize = <T>(object: T): Snakelize<T> => {
+export function snakelize <T>(object: T): Snakelize<T> {
   if (Array.isArray(object)) {
     return object.map((element) => snakelize(element)) as Snakelize<T>
   }
@@ -25,9 +24,8 @@ export const snakelize = <T>(object: T): Snakelize<T> => {
   if (typeof object === 'object' && object !== null) {
     const obj = {} as Snakelize<T>
     ;(Object.keys(object) as Array<keyof T>).forEach((key) => {
-            // @ts-expect-error js hack
-
-      ;(obj[typeof key === 'string' ? camelToSnakeCase(key) : key] as Snakelize<(T & object)[keyof T]>) = snakelize(object[key])
+      // @ts-expect-error js hack
+      ;(obj[camelToSnakeCase(key)] as Snakelize<(T & object)[keyof T]>) = snakelize(object[key])
     })
     return obj
   }
@@ -52,16 +50,16 @@ export function snakeToCamelCase(str: string): string {
 }
 
 export function camelToSnakeCase(str: string): string {
-  let result = "";
+  let result = ''
   for (let i = 0, len = str.length; i < len; ++i) {
-      if (str[i] >= "A" && str[i] <= "Z") {
-          result += `_${str[i].toLowerCase()}`;
+    if (str[i] >= 'A' && str[i] <= 'Z') {
+      result += `_${str[i].toLowerCase()}`
 
-          continue;
-      }
+      continue
+    }
 
-      result += str[i];
+    result += str[i]
   }
 
-  return result;
+  return result
 }

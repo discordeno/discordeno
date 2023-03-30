@@ -1,9 +1,4 @@
 flags:
-  client:
-    carryforward: false
-  client-unit:
-    carryforward: false
-
   discordeno:
     carryforward: false
   discordeno-unit:
@@ -31,6 +26,11 @@ flags:
     carryforward: false
   rest-e2e:
     carryforward: true
+
+  types:
+    carryforward: false
+  types-unit:
+    carryforward: false
 
   utils:
     carryforward: false

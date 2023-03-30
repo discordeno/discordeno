@@ -1,9 +1,9 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ""
+title: ''
 labels: bug
-assignees: ""
+assignees: ''
 ---
 
 **Describe the bug** A clear and concise description of what the bug is.
@@ -11,10 +11,10 @@ assignees: ""
 **To Reproduce** Write a small mod.ts example to replicate the behavior.
 
 ```ts
-import { createBot, startBot } from "https://deno.land/x/discordeno/mod.ts";
+import { createBot, startBot } from 'https://deno.land/x/discordeno/mod.ts'
 
-const token = "DO NOT PUT TOKEN HERE!!!";
-const botId = BigInt(atob(TOKEN.split(".")[0]));
+const token = 'DO NOT PUT TOKEN HERE!!!'
+const botId = BigInt(atob(TOKEN.split('.')[0]))
 
 const bot = createBot({
   token,
@@ -23,9 +23,9 @@ const bot = createBot({
     // ADD EVENTS NEEDED TO SHOW THE BUG HERE
   },
   intents: 0, // ADD INTENTS NEEDED HERE FOR YOUR TEST IF NECESSARY
-});
+})
 
-await startBot(bot);
+await startBot(bot)
 ```
 
 **Expected behavior** A clear and concise description of what you expected to happen.

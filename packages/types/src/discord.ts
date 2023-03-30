@@ -13,6 +13,7 @@ import type {
   DefaultMessageNotificationLevels,
   EmbedTypes,
   ExplicitContentFilterLevels,
+  FormLayout,
   GatewayEventNames,
   GuildFeatures,
   GuildNsfwLevel,
@@ -77,57 +78,13 @@ export interface DiscordUser {
   banner?: string
 }
 
-// /** https://discord.com/developers/docs/resources/user#connection-object */
-// export interface DiscordConnection {
-//   /** id of the connection account */
-//   id: string
-//   /** The username of the connection account */
-//   name: string
-//   /** The service of the connection (twitch, youtube) */
-//   type: DiscordConnectionServices
-//   /** Whether the connection is revoked */
-//   revoked?: boolean
-//   /** Whether the connection is verified */
-//   verified: boolean
-//   /** Whether friend sync is enabled for this connection */
-//   friend_sync: boolean
-//   /** Whether activities related to this connection will be shown in presence updates */
-//   show_activity: boolean
-//   /** Visibility of this connection */
-//   visibility: VisibilityTypes
-
-//   /** An array of partial server integrations */
-//   integrations?: DiscordIntegration[]
-//   /** Whether this connection has a corresponding third party OAuth2 token. */
-//   two_way_link: boolean
-// }
-
-// /** https://discord.com/developers/docs/resources/user#connection-object-services */
-// export type DiscordConnectionServices =
-//   | 'battlenet'
-//   | 'ebay'
-//   | 'epicgames'
-//   | 'facebook'
-//   | 'github'
-//   | 'leagueoflegends'
-//   | 'playstation'
-//   | 'reddit'
-//   | 'riotgames'
-//   | 'spotify'
-//   | 'skype'
-//   | 'steam'
-//   | 'twitch'
-//   | 'twitter'
-//   | 'xbox'
-//   | 'youtube'
-
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
 export interface DiscordIntegration {
   /** Integration Id */
   id: string
   /** Integration name */
   name: string
-  /** Integration type (twitch, youtube or discord) */
+  /** Integration type (twitch, youtube, discord, or guild_subscription). */
   type: 'twitch' | 'youtube' | 'discord'
   /** Is this integration enabled */
   enabled?: boolean
@@ -563,9 +520,9 @@ export interface DiscordGuild {
   premium_subscription_count?: number
   /** The maximum amount of users in a video channel */
   max_video_channel_users?: number
-  /** Approximate number of members in this guild, returned from the GET /guilds/<id> endpoint when with_counts is true */
+  /** Approximate number of members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
   approximate_member_count?: number
-  /** Approximate number of non-offline members in this guild, returned from the GET /guilds/<id> endpoint when with_counts is true */
+  /** Approximate number of non-offline members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
   approximate_presence_count?: number
   /** Guild NSFW level */
   nsfw_level: GuildNsfwLevel
@@ -613,7 +570,6 @@ export interface DiscordGuild {
   presences?: Array<Partial<DiscordPresenceUpdate>>
   /** Banner hash */
   banner: string | null
-  // TODO: Can be optimized to a number but is it worth it?
   /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
   preferred_locale: string
   /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
@@ -660,6 +616,10 @@ export interface DiscordRoleTags {
   integration_id?: string
   /** Whether this is the guild's premium subscriber role */
   premium_subscriber?: null
+  /** Id of this role's subscription sku and listing. */
+  subscription_listing_id?: string
+  /** Whether this role is available for purchase. */
+  available_for_purchase?: null
   /** Whether this is a guild's linked role */
   guild_connections?: null
 }
@@ -748,6 +708,8 @@ export interface DiscordChannel {
   owner_id?: string
   /** Application id of the group DM creator if it is bot-created */
   application_id?: string
+  /** For group DM channels: whether the channel is managed by an application via the `gdm.join` OAuth2 scope. */
+  managed?: boolean
   /** For guild channels: Id of the parent category for a channel (each parent category can contain up to 50 channels), for threads: id of the text channel this thread was created */
   parent_id?: string | null
   /** When the last pinned message was pinned. This may be null in events such as GUILD_CREATE when a message is not pinned. */
@@ -783,7 +745,7 @@ export interface DiscordChannel {
   /** the default sort order type used to order posts in GUILD_FORUM channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
   default_sort_order?: SortOrderTypes | null
   /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
-  default_forum_layout?: number
+  default_forum_layout?: FormLayout
   /** When a thread is created this will be true on that channel payload for the thread. */
   newly_created?: boolean
 }
@@ -851,11 +813,6 @@ export interface DiscordThreadMetadata {
   create_timestamp?: string | null
 }
 
-// export interface DiscordThreadMemberBase {
-//   /** Any user-thread settings, currently only used for notifications */
-//   flags: number
-// }
-
 export interface DiscordThreadMember {
   /** Any user-thread settings, currently only used for notifications */
   flags: number
@@ -866,13 +823,6 @@ export interface DiscordThreadMember {
   /** The time the current user last joined the thread */
   join_timestamp: string
 }
-
-// export interface DiscordThreadMemberGuildCreate {
-//   /** Any user-thread settings, currently only used for notifications */
-//   flags: number
-//   /** The time the current user last joined the thread */
-//   join_timestamp: string
-// }
 
 /** https://discord.com/developers/docs/topics/gateway-events#activity-object */
 export interface DiscordActivity {
@@ -1376,27 +1326,6 @@ export interface DiscordInteractionDataOption {
   focused?: boolean
 }
 
-// export interface DiscordInteractionDataResolved {
-//   /** The Ids and Message objects */
-//   messages?: Record<string, DiscordMessage>
-//   /** The Ids and User objects */
-//   users?: Record<string, DiscordUser>
-//   /** The Ids and partial Member objects */
-//   members?: Record<
-//   string,
-//   Omit<DiscordInteractionMember, 'user' | 'deaf' | 'mute'>
-//   >
-//   /** The Ids and Role objects */
-//   roles?: Record<string, DiscordRole>
-//   /** The Ids and partial Channel objects */
-//   channels?: Record<
-//   string,
-//   Pick<DiscordChannel, 'id' | 'name' | 'type' | 'permissions'>
-//   >
-//   /** The Ids and attachments objects */
-//   attachments?: Record<string, DiscordAttachment>
-// }
-
 export interface DiscordListActiveThreads {
   /** The active threads */
   threads: DiscordChannel[]
@@ -1483,7 +1412,6 @@ export enum AutoModerationTriggerTypes {
 }
 
 export interface DiscordAutoModerationRuleTriggerMetadata {
-  // TODO: discord is considering renaming this before release
   /** The keywords needed to match. Only present when TriggerType.Keyword */
   keyword_filter?: string[]
   /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
@@ -1522,6 +1450,8 @@ export enum AutoModerationActionType {
 export interface DiscordAutoModerationActionMetadata {
   /** The id of channel to which user content should be logged. Only in ActionType.SendAlertMessage */
   channel_id?: string
+  /** Additional explanation that will be shown to members whenever their message is blocked. Maximum of 150 characters. Only supported for AutoModerationActionType.BlockMessage */
+  custom_message?: string
   /** Timeout duration in seconds maximum of 2419200 seconds (4 weeks). Only supported for TriggerType.Keyword && Only in ActionType.Timeout */
   duration_seconds?: number
 }
@@ -2010,39 +1940,6 @@ export interface DiscordGuildPreview {
   stickers: DiscordSticker[]
 }
 
-// export interface DiscordDiscoveryCategory {
-//   /** Numeric id of the category */
-//   id: number
-//   /** The name of this category, in multiple languages */
-//   name: DiscordDiscoveryName
-//   /** Whether this category can be set as a guild's primary category */
-//   is_primary: boolean
-// }
-
-// export interface DiscordDiscoveryName {
-//   /** The name in English */
-//   default: string
-//   /** The name in other languages */
-//   localizations?: Record<string, string>
-// }
-
-// export interface DiscordDiscoveryMetadata {
-//   /** The guild Id */
-//   guild_id: string
-//   /** The id of the primary discovery category set for this guild */
-//   primary_category_id: number
-//   /** Up to 10 discovery search keywords set for this guild */
-//   keywords: string[] | null
-//   /** Whether guild info is shown when custom emojis from this guild are clicked */
-//   emoji_discoverability_enabled: boolean
-//   /** When the server's partner application was accepted or denied, for applications via Server Settings */
-//   partner_actioned_timestamp: string | null
-//   /** When the server applied for partnership, if it has a pending application */
-//   partner_application_timestamp: string | null
-//   /** Ids of up to 5 discovery subcategories set for this guild */
-//   category_ids: number[]
-// }
-
 /** https://discord.com/developers/docs/resources/channel#followed-channel-object */
 export interface DiscordFollowedChannel {
   /** Source message id */
@@ -2080,48 +1977,6 @@ export interface DiscordGuildMembersChunk {
   /** The nonce used in the Guild Members Request */
   nonce?: string
 }
-
-// export interface DiscordComponent {
-//   /** component type */
-//   type: MessageComponentTypes
-//   /** a developer-defined identifier for the component, max 100 characters */
-//   custom_id?: string
-//   /** whether the component is disabled, default false */
-//   disabled?: boolean
-//   /** For different styles/colors of the buttons */
-//   style?: ButtonStyles | TextStyles
-//   /** text that appears on the button (max 80 characters) */
-//   label?: string
-//   /** the dev-define value of the option, max 100 characters for select or 4000 for input. */
-//   value?: string
-//   /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
-//   emoji?: {
-//     /** Emoji id */
-//     id?: string
-//     /** Emoji name */
-//     name?: string
-//     /** Whether this emoji is animated */
-//     animated?: boolean
-//   }
-//   /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
-//   url?: string
-//   /** The choices! Maximum of 25 items. */
-//   options?: DiscordSelectOption[]
-//   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
-//   placeholder?: string
-//   /** The minimum number of items that must be selected. Default 1. Between 1-25. */
-//   min_values?: number
-//   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
-//   max_values?: number
-//   /** The minimum input length for a text input. Between 0-4000. */
-//   min_length?: number
-//   /** The maximum input length for a text input. Between 1-4000. */
-//   max_length?: number
-//   /** a list of child components */
-//   components?: DiscordComponent[]
-//   /** whether this component is required to be filled, default true */
-//   required?: boolean
-// }
 
 /** https://discord.com/developers/docs/topics/gateway#channel-pins-update */
 export interface DiscordChannelPinsUpdate {
@@ -2355,13 +2210,6 @@ export interface DiscordGuildStickersUpdate {
   stickers: DiscordSticker[]
 }
 
-// export interface DiscordAddGuildDiscoverySubcategory {
-//   /** The guild Id of the subcategory was added to */
-//   guild_id: string
-//   /** The Id of the subcategory added */
-//   category_id: number
-// }
-
 /** https://discord.com/developers/docs/topics/gateway#guild-member-update */
 export interface DiscordGuildMemberUpdate {
   /** The id of the guild */
@@ -2390,12 +2238,6 @@ export interface DiscordGuildMemberUpdate {
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-all */
 export interface DiscordMessageReactionRemoveAll extends Pick<DiscordMessageReactionAdd, 'channel_id' | 'message_id' | 'guild_id'> {}
-
-// // TODO: add docs link
-// export interface DiscordValidateDiscoverySearchTerm {
-//   /** Whether the provided term is valid */
-//   valid: boolean
-// }
 
 /** https://discord.com/developers/docs/topics/gateway#guild-role-update */
 export interface DiscordGuildRoleUpdate {
@@ -2480,23 +2322,6 @@ export interface DiscordInstallParams {
   permissions: string
 }
 
-// export interface DiscordInteractionResponse {
-//   type: InteractionResponseTypes
-//   data?: DiscordInteractionCallbackData
-// }
-
-// export interface DiscordInteractionCallbackData {
-//   tts?: boolean
-//   title?: string
-//   flags?: number
-//   content?: string
-//   choices?: DiscordApplicationCommandOptionChoice[]
-//   custom_id?: string
-//   embeds?: DiscordEmbed[]
-//   allowed_mentions?: DiscordAllowedMentions
-//   components?: DiscordComponent[]
-// }
-
 export interface DiscordForumTag {
   /** The id of the tag */
   id: string
@@ -2516,42 +2341,6 @@ export interface DiscordDefaultReactionEmoji {
   /** The unicode character of the emoji */
   emoji_name: string | null
 }
-
-// export interface DiscordCreateAutomoderationRule {
-//   /** The name of the rule. */
-//   name: string
-//   /** The type of event to trigger the rule on. */
-//   event_type: AutoModerationEventTypes
-//   /** The type of trigger to use for the rule. */
-//   trigger_type: AutoModerationTriggerTypes
-//   /** The metadata to use for the trigger. */
-//   trigger_metadata: DiscordAutoModerationRuleTriggerMetadata
-//   /** The actions that will trigger for this rule */
-//   actions: DiscordAutoModerationAction[]
-//   /** Whether the rule should be enabled, true by default. */
-//   enabled?: boolean
-//   /** The role ids that should not be effected by the rule */
-//   exempt_roles?: string[]
-//   /** The channel ids that should not be effected by the rule. */
-//   exempt_channels?: string[]
-// }
-
-// export interface DiscordModifyAutomoderationRule {
-//   /** The name of the rule. */
-//   name: string
-//   /** The type of event to trigger the rule on. */
-//   event_type: AutoModerationEventTypes
-//   /** The metadata to use for the trigger. */
-//   trigger_metadata: DiscordAutoModerationRuleTriggerMetadata
-//   /** The actions that will trigger for this rule */
-//   actions: DiscordAutoModerationAction[]
-//   /** Whether the rule should be enabled, true by default. */
-//   enabled?: boolean
-//   /** The role ids that should not be effected by the rule */
-//   exempt_roles?: string[]
-//   /** The channel ids that should not be effected by the rule. */
-//   exempt_channels?: string[]
-// }
 
 export interface DiscordModifyChannel {
   /** 1-100 character channel name */
@@ -2612,6 +2401,8 @@ export interface DiscordModifyChannel {
   default_thread_rate_limit_per_user?: number
   /** the default sort order type used to order posts in forum channels */
   default_sort_order?: SortOrderTypes | null
+  /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
+  default_forum_layout?: FormLayout
 }
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
@@ -2679,26 +2470,6 @@ export interface DiscordCreateGuildChannel {
   default_sort_order?: SortOrderTypes | null
 }
 
-// export interface DiscordBulkDeleteMessages {
-//   messages: string[]
-// }
-
-// /** https://discord.com/developers/docs/resources/channel#edit-message-json-params */
-// export interface DiscordEditMessage {
-//   /** The new message contents (up to 2000 characters) */
-//   content?: string | null
-//   /** Embedded `rich` content (up to 6000 characters) */
-//   embeds?: DiscordEmbed[] | null
-//   /** Edit the flags of the message (only `SUPPRESS_EMBEDS` can currently be set/unset) */
-//   flags?: 4 | null
-//   /** Allowed mentions for the message */
-//   allowed_mentions?: DiscordAllowedMentions
-//   /** When specified (adding new attachments), attachments which are not provided in this list will be removed. */
-//   attachments?: DiscordAttachment[]
-//   /** The components you would like to have sent in this message */
-//   components?: DiscordMessageComponents
-// }
-
 export interface DiscordCreateMessage {
   /** The message contents (up to 2000 characters) */
   content?: string
@@ -2707,9 +2478,9 @@ export interface DiscordCreateMessage {
   /** true if this is a TTS message */
   tts?: boolean
   /** Embedded `rich` content (up to 6000 characters) */
-  // embeds?: DiscordEmbed[]
+  embeds?: DiscordEmbed[]
   /** Allowed mentions for the message */
-  // allowed_mentions?: DiscordAllowedMentions
+  allowed_mentions?: DiscordAllowedMentions
   /** Include to make your message a reply */
   message_reference?: {
     /** id of the originating message */
@@ -2725,165 +2496,10 @@ export interface DiscordCreateMessage {
     fail_if_not_exists: boolean
   }
   /** The components you would like to have sent in this message */
-  // components?: DiscordMessageComponents
+  components?: DiscordMessageComponents
   /** IDs of up to 3 stickers in the server to send in the message */
   stickerIds?: [string] | [string, string] | [string, string, string]
 }
-
-// export interface DiscordCreateScheduledEvent {
-//   /** the channel id of the scheduled event. */
-//   channel_id?: string
-//   /** location of the event. Required for events with `entityType: ScheduledEventEntityType.External` */
-//   location?: string
-//   /** the name of the scheduled event */
-//   name: string
-//   /** the description of the scheduled event */
-//   description: string
-//   /** the time the scheduled event will start */
-//   scheduled_start_time: string
-//   /** the time the scheduled event will end if it does end. Required for events with `entityType: ScheduledEventEntityType.External` */
-//   scheduled_end_time?: string
-//   /** the privacy level of the scheduled event */
-//   privacy_level?: ScheduledEventPrivacyLevel
-//   /** the type of hosting entity associated with a scheduled event */
-//   entity_type: ScheduledEventEntityType
-// }
-
-// export interface DiscordEditScheduledEvent {
-//   /** the channel id of the scheduled event. null if switching to external event. */
-//   channel_id: string | null
-//   /** location of the event */
-//   location?: string
-//   /** the name of the scheduled event */
-//   name: string
-//   /** the description of the scheduled event */
-//   description?: string
-//   /** the time the scheduled event will start */
-//   scheduled_start_time: string
-//   /** the time the scheduled event will end if it does end. */
-//   scheduled_end_time?: string
-//   /** the privacy level of the scheduled event */
-//   privacy_level: ScheduledEventPrivacyLevel
-//   /** the type of hosting entity associated with a scheduled event */
-//   entity_type: ScheduledEventEntityType
-//   /** the status of the scheduled event */
-//   status: ScheduledEventStatus
-// }
-
-// export interface DiscordCreateChannelInvite {
-//   /** Duration of invite in seconds before expiry, or 0 for never. Between 0 and 604800 (7 days). Default: 86400 (24 hours) */
-//   max_age?: number
-//   /** Max number of users or 0 for unlimited. Between 0 and 100. Default: 0 */
-//   max_uses?: number
-//   /** Whether this invite only grants temporary membership. Default: false */
-//   temporary?: boolean
-//   /** If true, don't try to reuse similar invite (useful for creating many unique one time use invites). Default: false */
-//   unique?: boolean
-//   /** The type of target for this voice channel invite */
-//   target_type?: TargetTypes
-//   /** The id of the user whose stream to display for this invite, required if `target_type` is 1, the user must be streaming in the channel */
-//   target_user_id?: string
-//   /** The id of the embedded application to open for this invite, required if `target_type` is 2, the application must have the `EMBEDDED` flag */
-//   target_application_id?: string
-// }
-
-// /** https://discord.com/developers/docs/resources/guild#update-current-user-voice-state */
-// export interface DiscordEditOwnVoiceState {
-//   /** The id of the channel the user is currently in */
-//   channel_id: string
-//   /** Toggles the user's suppress state */
-//   suppress?: boolean
-//   /** Sets the user's request to speak */
-//   request_to_speak_timestamp?: number | null
-// }
-
-// /** https://discord.com/developers/docs/resources/guild#update-user-voice-state */
-// export interface DiscordEditUserVoiceState {
-//   /** The id of the channel the user is currently in */
-//   channel_id: string
-//   /** Toggles the user's suppress state */
-//   suppress?: boolean
-//   /** The user id to target */
-//   user_id: string
-// }
-
-// export interface DiscordEditGuildWidgetSettings {
-//   /** Whether or not the widget is enabled. */
-//   enabled: boolean
-//   /** The channel id if any for this widget. */
-//   channel_id?: string | null
-// }
-
-// /** https://discord.com/developers/docs/resources/guild#create-guild */
-// export interface DiscordCreateGuild {
-//   /** Name of the guild (1-100 characters) */
-//   name: string
-//   /** Base64 128x128 image for the guild icon */
-//   icon?: string
-//   /** Verification level */
-//   verification_level?: VerificationLevels
-//   /** Default message notification level */
-//   default_message_notifications?: DefaultMessageNotificationLevels
-//   /** Explicit content filter level */
-//   explicit_content_filter?: ExplicitContentFilterLevels
-//   /** New guild roles (first role is the everyone role) */
-//   roles?: DiscordRole[]
-//   /** New guild's channels */
-//   channels?: Array<Partial<DiscordChannel>>
-//   /** Id for afk channel */
-//   afk_channel_id?: string
-//   /** Afk timeout in seconds */
-//   afk_timeout?: number
-//   /** The id of the channel where guild notices such as welcome messages and boost events are posted */
-//   system_channel_id?: string
-//   /** System channel flags */
-//   system_channel_flags?: SystemChannelFlags
-// }
-
-// /** https://discord.com/developers/docs/resources/guild#modify-guild */
-// export interface DiscordModifyGuild {
-//   /** Guild name */
-//   name?: string
-//   /** Verification level */
-//   verification_level?: VerificationLevels | null
-//   /** Default message notification filter level */
-//   default_message_notifications?: DefaultMessageNotificationLevels | null
-//   /** Explicit content filter level */
-//   explicit_content_filter?: ExplicitContentFilterLevels | null
-//   /** Id for afk channel */
-//   afk_channel_id?: string | null
-//   /** Afk timeout in seconds */
-//   afk_timeout?: number
-//   /** Base64 1024x1024 png/jpeg/gif image for the guild icon (can be animated gif when the server has the `ANIMATED_ICON` feature) */
-//   icon?: string | null
-//   /** User id to transfer guild ownership to (must be owner) */
-//   owner_id?: string
-//   /** Base64 16:9 png/jpeg image for the guild splash (when the server has `INVITE_SPLASH` feature) */
-//   splash?: string | null
-//   /** Base64 16:9 png/jpeg image for the guild discovery spash (when the server has the `DISCOVERABLE` feature) */
-//   discovery_splash?: string | null
-//   /** Base64 16:9 png/jpeg image for the guild banner (when the server has BANNER feature) */
-//   banner?: string | null
-//   /** The id of the channel where guild notices such as welcome messages and boost events are posted */
-//   system_channel_id?: string | null
-//   /** System channel flags */
-//   system_channel_flags?: SystemChannelFlags
-//   /** The id of the channel where Community guilds display rules and/or guidelines */
-//   rules_channel_id?: string | null
-//   /** The id of the channel where admins and moderators of Community guilds receive notices from Discord */
-//   public_updates_channel_id?: string | null
-//   /** The preferred locale of a Community guild used in server discovery and notices from Discord; defaults to "en-US" */
-//   preferred_locale?: string | null
-//   /** Enabled guild features */
-//   features?: GuildFeatures[]
-//   /** Whether the guild's boost progress bar should be enabled */
-//   premium_progress_bar_enabled?: boolean
-// }
-
-// export interface DiscordEditGuildMFALevel {
-//   /** The level to set for the guilds mfa level. */
-//   level: MfaLevels
-// }
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen */
 export interface DiscordModifyGuildWelcomeScreen {
@@ -2894,31 +2510,6 @@ export interface DiscordModifyGuildWelcomeScreen {
   /** The server description to show in the welcome screen */
   description?: string | null
 }
-
-// export interface DiscordStartThreadWithMessage {
-//   /** 1-100 character thread name */
-//   name: string
-//   /** Duration in minutes to automatically archive the thread after recent activity */
-//   auto_archive_duration: 60 | 1440 | 4320 | 10080
-//   /** Amount of seconds a user has to wait before sending another message (0-21600) */
-//   rate_limit_per_user?: number | null
-// }
-
-// export interface DiscordStartThreadWithoutMessage {
-//   /** 1-100 character thread name */
-//   name: string
-//   /** Duration in minutes to automatically archive the thread after recent activity */
-//   auto_archive_duration: 60 | 1440 | 4320 | 10080
-//   /** Amount of seconds a user has to wait before sending another message (0-21600) */
-//   rate_limit_per_user?: number | null
-//   /** the type of thread to create */
-//   type:
-//   | ChannelTypes.AnnouncementThread
-//   | ChannelTypes.PublicThread
-//   | ChannelTypes.PrivateThread
-//   /** whether non-moderators can add other non-moderators to a thread; only available when creating a private thread */
-//   invitable?: boolean
-// }
 
 export interface DiscordFollowAnnouncementChannel {
   /** The id of the channel to send announcements to. */
@@ -2946,152 +2537,12 @@ export interface DiscordModifyGuildChannelPositions {
   parent_id?: string | null
 }
 
-// /** https://discord.com/developers/docs/resources/guild#create-guild-ban */
-// export interface DiscordCreateGuildBan {
-//   /** Number of seconds to delete messages for, between 0 and 604800 (7 days) */
-//   delete_message_seconds?: number
-// }
-
-// export interface DiscordEditBotMemberOptions {
-//   nick?: string | null
-// }
-
-// /** https://discord.com/developers/docs/resources/guild#modify-guild-member */
-// export interface DiscordModifyGuildMember {
-//   /** Value to set users nickname to. Requires the `MANAGE_NICKNAMES` permission */
-//   nick?: string | null
-//   /** Array of role ids the member is assigned. Requires the `MANAGE_ROLES` permission */
-//   roles?: string[] | null
-//   /** Whether the user is muted in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MUTE_MEMBERS` permission */
-//   mute?: boolean | null
-//   /** Whether the user is deafened in voice channels. Will throw a 400 if the user is not in a voice channel. Requires the `MOVE_MEMBERS` permission */
-//   deaf?: boolean | null
-//   /** Id of channel to move user to (if they are connected to voice). Requires the `MOVE_MEMBERS` permission */
-//   channel_id?: string | null
-//   /** when the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission */
-//   communication_disabled_until?: number | null
-// }
-
-// export interface DiscordGetDMChannel {
-//   /** The user id */
-//   recipient_id: string
-// }
-
-// /** https://discord.com/developers/docs/resources/guild#begin-guild-prune */
-// export interface DiscordBeginGuildPrune {
-//   /** Number of days to prune (1 or more), default: 7 */
-//   days?: number
-//   /** Whether 'pruned' is returned, discouraged for large guilds, default: true */
-//   compute_prune_count?: boolean
-//   /** Role(s) ro include, default: none */
-//   include_roles?: string[]
-// }
-
-// export interface DiscordCreateGuildRole {
-//   /** Name of the role, max 100 characters, default: "new role" */
-//   name?: string
-//   /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
-//   permissions?: string
-//   /** RGB color value, default: 0 */
-//   color?: number
-//   /** Whether the role should be displayed separately in the sidebar, default: false */
-//   hoist?: boolean
-//   /** Whether the role should be mentionable, default: false */
-//   mentionable?: boolean
-//   /** The role's unicode emoji (if the guild has the `ROLE_ICONS` feature) */
-//   unicode_emoji?: string
-//   /** the role's icon image (if the guild has the `ROLE_ICONS` feature) */
-//   icon?: string
-// }
-
-// export interface DiscordEditGuildRole {
-//   /** Name of the role, max 100 characters, default: "new role" */
-//   name?: string
-//   /** Bitwise value of the enabled/disabled permissions, default: everyone permissions in guild */
-//   permissions?: string
-//   /** RGB color value, default: 0 */
-//   color?: number
-//   /** Whether the role should be displayed separately in the sidebar, default: false */
-//   hoist?: boolean
-//   /** Whether the role should be mentionable, default: false */
-//   mentionable?: boolean
-//   /** The role's unicode emoji (if the guild has the `ROLE_ICONS` feature) */
-//   unicode_emoji?: string
-//   /** the role's icon image (if the guild has the `ROLE_ICONS` feature) */
-//   icon?: string
-// }
-
-// export interface DiscordModifyRolePositions {
-//   /** The role id */
-//   id: string
-//   /** The sorting position for the role. */
-//   position?: number | null
-// }
-
-// export interface DiscordCreateGuildStickerOptions {
-//   /** Name of the sticker (2-30 characters) */
-//   name: string
-//   /** Description of the sticker (empty or 2-100 characters) */
-//   description: string
-//   /** Autocomplete/suggestion tags for the sticker (max 200 characters) */
-//   tags: string
-// }
-
-// export interface DiscordEditGuildStickerOptions {
-//   /** Name of the sticker (2-30 characters) */
-//   name?: string
-//   /** Description of the sticker (empty or 2-100 characters) */
-//   description?: string | null
-//   /** Autocomplete/suggestion tags for the sticker (max 200 characters) */
-//   tags?: string
-// }
-
-// export interface DiscordCreateTemplate {
-//   /** Name which the template should have */
-//   name: string
-//   /** Description of the template */
-//   description?: string
-// }
-
 export interface DiscordCreateWebhook {
   /** Name of the webhook (1-80 characters) */
   name: string
   /** Image url for the default webhook avatar */
   avatar?: string | null
 }
-
-// export interface DiscordModifyWebhook {
-//   /** The default name of the webhook */
-//   name?: string
-//   /** Image for the default webhook avatar */
-//   avatar?: string | null
-//   /** The new channel id this webhook should be moved to */
-//   channel_id?: string
-// }
-
-// /** https://discord.com/developers/docs/resources/webhook#execute-webhook */
-// export interface DiscordExecuteWebhook {
-//   /** Waits for server confirmation of message send before response, and returns the created message body (defaults to `false`; when `false` a message that is not saved does not return an error) */
-//   wait?: boolean
-//   /** Send a message to the specified thread within a webhook's channel. The thread will automatically be unarchived. */
-//   thread_id?: string
-//   /** Name of the thread to create (target channel has to be type of forum channel) */
-//   thread_name?: string
-//   /** The message contents (up to 2000 characters) */
-//   content?: string
-//   /** Override the default username of the webhook */
-//   username?: string
-//   /** Override the default avatar of the webhook */
-//   avatar_url?: string
-//   /** True if this is a TTS message */
-//   tts?: boolean
-//   /** Embedded `rich` content */
-//   embeds?: DiscordEmbed[]
-//   /** Allowed mentions for the message */
-//   allowed_mentions?: DiscordAllowedMentions
-//   /** the components to include with the message */
-//   components?: DiscordMessageComponents
-// }
 
 /** https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel */
 export interface DiscordCreateForumPostWithMessage {
@@ -3125,14 +2576,6 @@ export interface DiscordCreateForumPostWithMessage {
   /** the IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
   applied_tags?: string[]
 }
-
-// /** https://discord.com/developers/docs/resources/guild-template#modify-guild-template */
-// export interface DiscordModifyGuildTemplate {
-//   /** name of the template (1-100 characters) */
-//   name?: string
-//   /** description for the template (0-120 characters) */
-//   description?: string
-// }
 
 export type DiscordArchivedThreads = DiscordActiveThreads & {
   hasMore: boolean
