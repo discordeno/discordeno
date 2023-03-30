@@ -2,7 +2,6 @@
     "entryPointStrategy": "packages",
     "entryPoints": [
         "packages/bot",
-        "packages/client",
         "packages/gateway",
         "packages/rest",
         "packages/types",
