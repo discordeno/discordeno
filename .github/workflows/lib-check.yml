@@ -1,10 +1,39 @@
-name: Bot Test
+name: Library Checks
 
 on:
   pull_request:
   push:
 
 jobs:
+  run-linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - run: yarn install --immutable
+      - name: Run linters
+        uses: wearerequired/lint-action@v2
+        with:
+          auto_fix: true
+          eslint: true
+          eslint_extensions: 'js,ts'
+          prettier: true
+
   build-type-and-test:
     name: Build Type and Test
     runs-on: ubuntu-latest
@@ -30,7 +59,7 @@ jobs:
           path: .turbo
           key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
       - name: Build Type and Test
-        run: yarn build:type --cache-dir=".turbo" --filter=./packages/bot
+        run: yarn build:type --cache-dir=".turbo"
 
   build-dist:
     name: Build Dist
@@ -57,7 +86,7 @@ jobs:
           path: .turbo
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
       - name: Type Test
-        run: yarn build --cache-dir=".turbo" --filter=./packages/bot
+        run: yarn build --cache-dir=".turbo"
 
   format-unit-and-integration-test:
     name: Format Test
@@ -91,7 +120,7 @@ jobs:
           path: .turbo
           key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
       - name: Check Formatting
-        run: yarn lint --cache-dir=".turbo" --filter=./packages/bot
+        run: yarn lint --cache-dir=".turbo"
 
   test-type-unit-and-integration-test:
     name: Test Type Test
@@ -125,15 +154,17 @@ jobs:
           path: .turbo
           key: ${{ runner.os }}-turbo-build:type-${{ github.sha }}
       - name: Test Type Test
-        run: yarn test:test-type --cache-dir=".turbo" --filter=./packages/bot
+        run: yarn test:test-type --cache-dir=".turbo"
 
   # Not using matrix because test later on cant needs a specific job
   bot-unit-test:
+    name: Bot
     needs: build-dist
     uses: ./.github/workflows/unit-test.yml
     with:
       package: bot
   bot-e2e-test:
+    name: Bot
     needs: bot-unit-test
     if: ${{ github.ref == 'refs/heads/main' }}
     uses: ./.github/workflows/e2e-test.yml
@@ -141,7 +172,100 @@ jobs:
     with:
       package: bot
   bot-other-runtime-test:
+    name: Bot
     needs: bot-unit-test
     uses: ./.github/workflows/other-runtime-unit-test.yml
     with:
       package: bot
+
+  client-unit-test:
+    name: Client
+    needs: build-dist
+    uses: ./.github/workflows/unit-test.yml
+    with:
+      package: client
+  client-other-runtime-test:
+    name: Client
+    needs: client-unit-test
+    uses: ./.github/workflows/other-runtime-unit-test.yml
+    with:
+      package: client
+
+  discordeno-unit-test:
+    name: Discordeno
+    needs: build-dist
+    uses: ./.github/workflows/unit-test.yml
+    with:
+      package: discordeno
+  discordeno-other-runtime-test:
+    name: Discordeno
+    needs: discordeno-unit-test
+    uses: ./.github/workflows/other-runtime-unit-test.yml
+    with:
+      package: discordeno
+
+  gateway-unit-test:
+    name: Gateway
+    needs: build-dist
+    uses: ./.github/workflows/unit-test.yml
+    with:
+      package: gateway
+  gateway-integration-test:
+    name: Gateway
+    needs: build-dist
+    uses: ./.github/workflows/integration-test.yml
+    with:
+      package: gateway
+  gateway-other-runtime-test:
+    name: Gateway
+    needs: [gateway-unit-test, gateway-integration-test]
+    uses: ./.github/workflows/other-runtime-unit-test.yml
+    with:
+      package: gateway
+
+  rest-unit-test:
+    name: Rest
+    needs: build-dist
+    uses: ./.github/workflows/unit-test.yml
+    with:
+      package: rest
+  rest-e2e-test:
+    name: Rest
+    needs: rest-unit-test
+    if: ${{ github.ref == 'refs/heads/main' }}
+    uses: ./.github/workflows/e2e-test.yml
+    secrets: inherit
+    with:
+      package: rest
+  rest-other-runtime-test:
+    name: Rest
+    needs: rest-unit-test
+    uses: ./.github/workflows/other-runtime-unit-test.yml
+    with:
+      package: rest
+
+  types-unit-test:
+    name: Types
+    needs: build-dist
+    uses: ./.github/workflows/unit-test.yml
+    with:
+      package: types
+  types-other-runtime-test:
+    name: Types
+    needs: types-unit-test
+    uses: ./.github/workflows/other-runtime-unit-test.yml
+    with:
+      package: types
+
+  utils-unit-test:
+    name: Utils
+    needs: build-dist
+    uses: ./.github/workflows/unit-test.yml
+    with:
+      package: utils
+  utils-other-runtime-test:
+    name: Utils
+    needs: utils-unit-test
+    uses: ./.github/workflows/other-runtime-unit-test.yml
+    with:
+      package: utils
