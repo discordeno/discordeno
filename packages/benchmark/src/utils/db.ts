@@ -6,18 +6,27 @@ export const events: Array<{
   payload: DiscordGatewayPayload
 }> = []
 
-const files = await fs.readdir('db/events')
+try {
+  const files = await fs.readdir('db/events')
 
-for await (const file of files) {
-  const eventsInFile: Array<
-    | {
-        shardId: number
-        payload: DiscordGatewayPayload
-      }
-    | string
-  > = Object.values(await fs.readFile(`db/events/${file}`, 'utf8').then((text) => JSON.parse(text)))
-  eventsInFile.forEach((eventInFile) => {
-    if (typeof eventInFile === 'string') return
-    events.push(eventInFile)
-  })
+  for await (const file of files) {
+    const eventsInFile: Array<
+      | {
+          shardId: number
+          payload: DiscordGatewayPayload
+        }
+      | string
+    > = Object.values(await fs.readFile(`db/events/${file}`, 'utf8').then((text) => JSON.parse(text)))
+    eventsInFile.forEach((eventInFile) => {
+      if (typeof eventInFile === 'string') return
+      events.push(eventInFile)
+    })
+  }
+} catch {
+  const event = await fetch('https://raw.githubusercontent.com/discordeno/benchmarks/main/db/events/10.json')
+    .then(async (res) => await res.json())
+    .then((eventsInFile) => eventsInFile['0'])
+  for (let i = 0; i < 10; i++) {
+    events.push(event)
+  }
 }
