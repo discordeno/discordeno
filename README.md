@@ -9,7 +9,7 @@ Discord API library for [Node.JS](https://nodejs.org), [Deno](https://deno.land)
 
 ## Tips
 
-- If you are already convinced about using Discordeno, go to [Getting Started](https://discordeno.github.io/discordeno/)
+- If you are already convinced about using Discordeno, go to [Getting Started](https://discordeno.js.org/)
 - To learn if Discordeno is right for you, read everything below.
 
 ## Packages
@@ -93,11 +93,11 @@ Have your cache setup in any way you like. Redis, PGSQL or any cache layer you w
 
 ## Getting Started
 
-Interested? [Check the website](https://discordeno.github.io/discordeno/) for more details on getting started.
+Interested? [Check the website](https://discordeno.js.org/) for more details on getting started.
 
 ## Links
 
-- [Website](https://discordeno.github.io/discordeno/)
+- [Website](https://discordeno.js.org/)
 - [Discord](https://discord.com/invite/5vBgXk3UcZ)
 
 Discordeno follows [semantic versioning](https://semver.org/)
