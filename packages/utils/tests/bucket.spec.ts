@@ -3,6 +3,14 @@ import { afterEach, beforeEach, describe, it } from 'mocha'
 import sinon from 'sinon'
 import { LeakyBucket } from '../src/bucket.js'
 
+async function promiseState(p: Promise<any>): Promise<string> {
+  const t = {}
+  return await Promise.race([p, t]).then(
+    (v) => (v === t ? 'pending' : 'fulfilled'),
+    () => 'rejected',
+  )
+}
+
 describe('bucket.ts', () => {
   let clock: sinon.SinonFakeTimers
 
@@ -143,13 +151,23 @@ describe('bucket.ts', () => {
         refillAmount: 1,
       })
 
-      await bucket.acquire()
-      await bucket.acquire()
+      const acquired1 = bucket.acquire()
+      const acquired2 = bucket.acquire()
+
+      // js event loop
+      await (async () => {})()
+
+      expect(await promiseState(acquired1)).to.equal('fulfilled')
+      expect(await promiseState(acquired2)).to.equal('pending')
+
+      await clock.tickAsync(499)
+      expect(await promiseState(acquired2)).to.equal('pending')
+
+      await clock.tickAsync(1)
+      expect(await promiseState(acquired2)).to.equal('fulfilled')
+
       expect(bucket.remaining).equals(0)
       expect(bucket.used).equals(1)
-      // await clock.tickAsync(600)
-      // expect(bucket.remaining).equals(1)
-      // expect(bucket.used).equals(0)
     })
   })
 })
