@@ -1,0 +1,11 @@
+on:
+  pull_request_target:
+
+jobs:
+  labeler:
+    name: Labeler
+    runs-on: ubuntu-latest
+    steps:
+      - uses: fuxingloh/multi-labeler@v2
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
