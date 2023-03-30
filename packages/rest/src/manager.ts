@@ -71,7 +71,6 @@ import type { CreateRestManagerOptions, RestManager, SendRequestOptions } from '
 
 // TODO: make dynamic based on package.json file
 const version = '19.0.0-alpha.1'
-const URL_PARTS_REGEX = /([a-z]+)\/(?:[0-9]{17,}(\/@me)?)/g
 
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
   // Falsy token string check
@@ -910,33 +909,31 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       options.resolve({ ok: true, status: response.status, body: JSON.stringify(json) })
     },
 
-    // Credits: github.com/abalabahaha/eris lib/rest/RequestHandler.js#L397
-    // Modified for our use-case
     simplifyUrl(url, method) {
-      let route = url.replace(URL_PARTS_REGEX, function (match, pattern: string) {
-        if (pattern.startsWith('channels') || pattern.startsWith('guilds')) {
-          return match
-        }
+      const parts = url.split('/')
+      const secondLastPart = parts[parts.length - 2]
 
-        // GENERAL /reactions and /reactions/emoji/@me share the buckets
-        if (pattern.startsWith('reactions')) {
-          return 'reactions'
-        }
-
-        return `${pattern}/x`
-      })
-
-      if (route.includes('/reactions')) {
-        // 10 is the length of `/reactions`
-        route = route.substring(0, route.indexOf('/reactions') + 10)
+      if (secondLastPart === 'channels' || secondLastPart === 'guilds') {
+        return url
       }
 
-      // Delete Message endpoint has its own rate limit
-      if (method === 'DELETE' && route.endsWith('/messages/x')) {
-        route = 'D' + route
+      if (secondLastPart === 'reactions' || parts[parts.length - 1] === '@me') {
+        parts.splice(-2)
+        parts.push('reactions')
+      } else {
+        parts.splice(-1)
+        parts.push('x')
       }
 
-      return route
+      if (parts[parts.length - 3] === 'reactions') {
+        parts.splice(-2)
+      }
+
+      if (method === 'DELETE' && secondLastPart === 'messages') {
+        return `D${parts.join('/')}`
+      }
+
+      return parts.join('/')
     },
 
     processRequest(request: SendRequestOptions) {
