@@ -3,6 +3,8 @@ name: Benchmark with retry
 on:
   pull_request:
   push:
+    branches:
+      - main
 
 jobs:
   benchmark-try-1:
