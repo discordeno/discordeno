@@ -18,13 +18,14 @@
     "bench": "node dist/index.js"
   },
   "dependencies": {
-    "@discordeno/bot": "19.0.0-alpha.1",
+    "@discordeno/bot": "latest",
     "@discordeno/gateway": "19.0.0-alpha.1",
     "@discordeno/rest": "19.0.0-alpha.1",
     "@discordeno/types": "19.0.0-alpha.1",
     "@discordeno/utils": "19.0.0-alpha.1",
     "benchmark": "^2.1.4",
-    "microtime": "^3.1.1"
+    "microtime": "^3.1.1",
+    "node-fetch": "^3.3.1"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.57",

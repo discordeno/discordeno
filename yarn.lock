@@ -47,6 +47,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@discordeno/bot@npm:latest":
+  version: 19.0.0-next.abe8c0f
+  resolution: "@discordeno/bot@npm:19.0.0-next.abe8c0f"
+  dependencies:
+    "@discordeno/gateway": 19.0.0-next.abe8c0f
+    "@discordeno/rest": 19.0.0-next.abe8c0f
+    "@discordeno/types": 19.0.0-next.abe8c0f
+    "@discordeno/utils": 19.0.0-next.abe8c0f
+  checksum: 12091b3d06c89f6cf7c5ae93cef6af28922665cddbbdf4b07804795214833092f3292cb7a150c74ada1eddfa4cd2f958f888c582df7be794ab6dc1b0296cbf3f
+  languageName: node
+  linkType: hard
+
 "@discordeno/gateway@19.0.0-alpha.1, @discordeno/gateway@workspace:packages/gateway":
   version: 0.0.0-use.local
   resolution: "@discordeno/gateway@workspace:packages/gateway"
@@ -73,6 +85,17 @@ __metadata:
     ws: ^8.13.0
   languageName: unknown
   linkType: soft
+
+"@discordeno/gateway@npm:19.0.0-next.abe8c0f":
+  version: 19.0.0-next.abe8c0f
+  resolution: "@discordeno/gateway@npm:19.0.0-next.abe8c0f"
+  dependencies:
+    "@discordeno/types": 19.0.0-next.abe8c0f
+    "@discordeno/utils": 19.0.0-next.abe8c0f
+    ws: ^8.13.0
+  checksum: bf75ea743cd0d78e6bce8a2e450310eb7e5495429eeaa4a3e79de7178bc75239f100bfbe0c793df0415587713d2f89919b2a661e3526ac5999bcd7fdd52e8f45
+  languageName: node
+  linkType: hard
 
 "@discordeno/rest@19.0.0-alpha.1, @discordeno/rest@workspace:packages/rest":
   version: 0.0.0-use.local
@@ -103,6 +126,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@discordeno/rest@npm:19.0.0-next.abe8c0f":
+  version: 19.0.0-next.abe8c0f
+  resolution: "@discordeno/rest@npm:19.0.0-next.abe8c0f"
+  dependencies:
+    "@discordeno/types": 19.0.0-next.abe8c0f
+    "@discordeno/utils": 19.0.0-next.abe8c0f
+    dotenv: ^16.0.3
+    node-fetch: ^3.3.1
+  checksum: 34002f0d07e73fb8e309a62379489b6a134ac31d29d4a991d1641e5f8740c6ed95df0ea4bba976ea5e9c5a358db6d5755a0daecc1357325eb604340835af7889
+  languageName: node
+  linkType: hard
+
 "@discordeno/types@19.0.0-alpha.1, @discordeno/types@workspace:packages/types":
   version: 0.0.0-use.local
   resolution: "@discordeno/types@workspace:packages/types"
@@ -123,6 +158,13 @@ __metadata:
     typescript: ^4.9.5
   languageName: unknown
   linkType: soft
+
+"@discordeno/types@npm:19.0.0-next.abe8c0f":
+  version: 19.0.0-next.abe8c0f
+  resolution: "@discordeno/types@npm:19.0.0-next.abe8c0f"
+  checksum: 1d71386b6b05d2d4c584519b8a2baf21d9a8ef51cca950e8811a88bbf7c1edc4ed636d53bd41492b10c5a12f5d719b0a4df6a4f64a3034594c6f71506de064a2
+  languageName: node
+  linkType: hard
 
 "@discordeno/utils@19.0.0-alpha.1, @discordeno/utils@workspace:packages/utils":
   version: 0.0.0-use.local
@@ -148,6 +190,17 @@ __metadata:
     typescript: ^4.9.5
   languageName: unknown
   linkType: soft
+
+"@discordeno/utils@npm:19.0.0-next.abe8c0f":
+  version: 19.0.0-next.abe8c0f
+  resolution: "@discordeno/utils@npm:19.0.0-next.abe8c0f"
+  dependencies:
+    "@discordeno/types": 19.0.0-next.abe8c0f
+    node-fetch: ^3.3.1
+    tweetnacl: ^1.0.3
+  checksum: 23f6889998725dee0fc414e739fcf6baf6ec03c84e7768863244b9201783046b8744c6fe64c5799d3ebfd2ab613cfd9de026e851230386ce31f1dfd426dea064
+  languageName: node
+  linkType: hard
 
 "@eslint-community/eslint-utils@npm:^4.2.0":
   version: 4.2.0
@@ -1212,7 +1265,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "benchmark@workspace:packages/benchmark"
   dependencies:
-    "@discordeno/bot": 19.0.0-alpha.1
+    "@discordeno/bot": latest
     "@discordeno/gateway": 19.0.0-alpha.1
     "@discordeno/rest": 19.0.0-alpha.1
     "@discordeno/types": 19.0.0-alpha.1
@@ -1225,6 +1278,7 @@ __metadata:
     eslint: ^8.0.1
     eslint-config-discordeno: "*"
     microtime: ^3.1.1
+    node-fetch: ^3.3.1
     ts-node: ^10.9.1
     tsconfig: "*"
     typescript: ^4.9.3

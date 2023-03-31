@@ -1,4 +1,5 @@
 import type { DiscordGatewayPayload } from '@discordeno/types'
+import fetch from 'node-fetch'
 import fs from 'node:fs/promises'
 
 export const events: Array<{
@@ -25,7 +26,7 @@ try {
 } catch {
   const event = await fetch('https://raw.githubusercontent.com/discordeno/benchmarks/main/db/events/10.json')
     .then(async (res) => await res.json())
-    .then((eventsInFile) => eventsInFile['0'])
+    .then((eventsInFile: any) => eventsInFile['0'])
   for (let i = 0; i < 10; i++) {
     events.push(event)
   }
