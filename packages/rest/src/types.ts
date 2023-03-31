@@ -2458,7 +2458,7 @@ export interface CreateRequestBodyOptions {
   body?: any
   unauthorized?: boolean
   reason?: string
-  attachments?: FileContent[]
+  files?: FileContent[]
 }
 
 export interface RequestBody {
