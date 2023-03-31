@@ -2457,7 +2457,6 @@ export interface CreateRequestBodyOptions {
   method: RequestMethods
   body?: any
   unauthorized?: boolean
-  url?: string
   reason?: string
   attachments?: FileContent[]
 }
@@ -2471,8 +2470,6 @@ export interface RequestBody {
 export interface SendRequestOptions {
   /** The url to send the request to. */
   url: string
-  /** The method to use when sending the request. */
-  method: RequestMethods
   /** The amount of times this request has been retried. */
   retryCount: number
   /** Handler to retry a request should it be rate limited. */
@@ -2484,7 +2481,7 @@ export interface SendRequestOptions {
   /** If this request has a bucket id which it falls under for rate limit */
   bucketId?: string
   /** Additional request options, used for things like overriding authorization header. */
-  options?: Record<string, any>
+  requestBodyOptions: CreateRequestBodyOptions
 }
 
 export interface RestRateLimitedPath {

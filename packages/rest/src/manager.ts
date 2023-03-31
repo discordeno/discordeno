@@ -715,19 +715,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           form.append(`file${i}`, options.attachments[i].blob, options.attachments[i].name)
         }
 
-        form.append('payload_json', JSON.stringify(options.body))
+        form.append('payload_json', JSON.stringify({ ...options.body, files: undefined }))
 
         body = form
 
-        // TODO: boundary?
-        // `multipart/form-data; boundary=${form.getBoundary()}`
-        headers['content-type'] = `multipart/form-data`
+        // No need to set the `content-type` header since `fetch` does that automatically for us when we use a `FormData` object.
       } else if (options.body !== undefined) {
         if (options.body instanceof FormData) {
           body = options.body
-          headers['content-type'] = `multipart/form-data`
+          // No need to set the `content-type` header since `fetch` does that automatically for us when we use a `FormData` object.
         } else {
-          body = JSON.stringify(options.body)
+          body = JSON.stringify(rest.changeToDiscordFormat(options.body))
           headers['content-type'] = `application/json`
         }
       }
@@ -852,14 +850,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async sendRequest(options) {
       const url = options.url.startsWith('https://') ? options.url : `${rest.baseUrl}/v${rest.version}${options.url}`
-      const payload = rest.createRequest({ method: options.method, url: options.url, body: options.options?.body, ...options.options })
+      const payload = rest.createRequest(options.requestBodyOptions)
 
       logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
       const response = await fetch(url, payload)
       logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
 
       // Set the bucket id if it was available on the headers
-      const bucketId = rest.processHeaders(rest.simplifyUrl(options.url, options.method), response.headers)
+      const bucketId = rest.processHeaders(rest.simplifyUrl(options.url, options.requestBodyOptions.method), response.headers)
       if (bucketId) options.bucketId = bucketId
 
       if (response.status < 200 || response.status >= 400) {
@@ -938,7 +936,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       // Set the full url to discord api in case it was recieved in a proxy rest
       request.url = `${rest.baseUrl}/v${rest.version}/${parts.join('/')}`
 
-      const url = rest.simplifyUrl(request.url, request.method)
+      const url = rest.simplifyUrl(request.url, request.requestBodyOptions.method)
       const queue = rest.queues.get(url)
 
       if (queue !== undefined) {
@@ -998,8 +996,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await new Promise((resolve, reject) => {
         const payload: SendRequestOptions = {
           url,
-          method,
-          options,
+          requestBodyOptions: { ...options, method },
           retryCount: 0,
           retryRequest: async function (payload: SendRequestOptions) {
             rest.processRequest(payload)
@@ -1014,24 +1011,24 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
     },
 
-    async get<T = Record<string, unknown>>(url: string, body?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('GET', url, { body })) as Camelize<T>
+    async get<T = Record<string, unknown>>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return camelize(await rest.makeRequest('GET', url, options)) as Camelize<T>
     },
 
-    async post<T = Record<string, unknown>>(url: string, body?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('POST', url, { body })) as Camelize<T>
+    async post<T = Record<string, unknown>>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return camelize(await rest.makeRequest('POST', url, options)) as Camelize<T>
     },
 
-    async delete(url: string, body?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      camelize(await rest.makeRequest('DELETE', url, { body }))
+    async delete(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      camelize(await rest.makeRequest('DELETE', url, options))
     },
 
-    async patch<T = Record<string, unknown>>(url: string, body?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('PATCH', url, { body })) as Camelize<T>
+    async patch<T = Record<string, unknown>>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return camelize(await rest.makeRequest('PATCH', url, options)) as Camelize<T>
     },
 
-    async put<T = void>(url: string, body?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
-      return camelize(await rest.makeRequest('PUT', url, { body })) as Camelize<T>
+    async put<T = void>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) {
+      return camelize(await rest.makeRequest('PUT', url, options)) as Camelize<T>
     },
 
     async addReaction(channelId, messageId, reaction) {
@@ -1110,7 +1107,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async createForumThread(channelId, body) {
-      return await rest.post<DiscordChannel>(rest.routes.channels.forum(channelId), { body })
+      return await rest.post<DiscordChannel>(rest.routes.channels.forum(channelId), { body, attachments: body.files })
     },
 
     async createInvite(channelId, body = {}) {
@@ -1296,7 +1293,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editFollowupMessage(token, messageId, body) {
-      return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), { body })
+      return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), {
+        body,
+        attachments: body.files,
+      })
     },
 
     async editGlobalApplicationCommand(commandId, body) {
@@ -1330,7 +1330,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editOriginalInteractionResponse(token, body) {
-      return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), { body })
+      return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), {
+        body,
+        attachments: body.files,
+      })
     },
 
     async editOriginalWebhookMessage(webhookId, token, options) {
@@ -1339,6 +1342,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           type: InteractionResponseTypes.UpdateMessage,
           data: options,
         },
+        attachments: options.files,
       })
     },
 
@@ -1378,7 +1382,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editWebhookMessage(webhookId, token, messageId, options) {
-      return await rest.patch<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), { body: options })
+      return await rest.patch<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), {
+        body: options,
+        attachments: options.files,
+      })
     },
 
     async editWebhookWithToken(webhookId, token, body) {
@@ -1682,8 +1689,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await new Promise((resolve, reject) => {
         rest.sendRequest({
           url: rest.routes.webhooks.webhook(rest.applicationId, token),
-          method: 'POST',
-          options: { body: options },
+          requestBodyOptions: { body: options, method: 'POST', attachments: options.files },
           retryCount: 0,
           retryRequest: async function (options: SendRequestOptions) {
             // TODO: should change to reprocess queue item
@@ -1702,8 +1708,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await new Promise((resolve, reject) => {
         rest.sendRequest({
           url: rest.routes.interactions.responses.callback(interactionId, token),
-          method: 'POST',
-          options: { body: options },
+          requestBodyOptions: { body: options, method: 'POST' },
           retryCount: 0,
           retryRequest: async function (options: SendRequestOptions) {
             // TODO: should change to reprocess queue item
@@ -1718,7 +1723,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async sendMessage(channelId, body) {
-      return await rest.post<DiscordMessage>(rest.routes.channels.messages(channelId), { body })
+      return await rest.post<DiscordMessage>(rest.routes.channels.messages(channelId), { body, attachments: body.files })
     },
 
     async startThreadWithMessage(channelId, messageId, body) {
