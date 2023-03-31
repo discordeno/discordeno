@@ -99,6 +99,47 @@ import { transformWidgetSettings, type GuildWidgetSettings } from './transformer
 import type { BotInteractionResponse, DiscordComponent, DiscordInteractionResponse } from './typings.js'
 
 export interface Transformers {
+  customizers: {
+    message: (bot: Bot, payload: DiscordMessage, message: Message) => any;
+  }
+  desiredProperties: {
+    message: {
+      activity: boolean;
+      application: boolean;
+      applicationId: boolean;
+      attachments: boolean;
+      author: boolean;
+      channelId: false;
+      components: false;
+      content: false;
+      editedTimestamp: boolean;
+      embeds: boolean;
+      guildId: boolean;
+      id: boolean;
+      interaction: {
+        id: boolean;
+        member: boolean;
+        name: boolean;
+        user: boolean;
+        type: boolean;
+      };
+      member: boolean;
+      mentionedChannelIds: boolean;
+      mentionedRoleIds: boolean;
+      mentions: boolean;
+      messageReference: {
+        messageId: boolean;
+        channelId: boolean;
+        guildId: boolean;
+      };
+      nonce: boolean;
+      reactions: boolean;
+      stickerItems: boolean;
+      thread: boolean;
+      type: boolean;
+      webhookId: boolean;
+    }
+  }
   reverse: {
     allowedMentions: (bot: Bot, payload: AllowedMentions) => DiscordAllowedMentions
     embed: (bot: Bot, payload: Embed) => DiscordEmbed
@@ -159,6 +200,49 @@ export interface Transformers {
 
 export function createTransformers(options: Partial<Transformers>): Transformers {
   return {
+    customizers: {
+      message(bot, payload, message) {
+        return message;
+      },
+    },
+    desiredProperties: {
+      message: {
+        activity: false,
+        application: false,
+        applicationId: false,
+        attachments: false,
+        author: false,
+        channelId: false,
+        components: false,
+        content: false,
+        editedTimestamp: false,
+        embeds: false,
+        guildId: false,
+        id: false,
+        interaction: {
+          id: false,
+          member: false,
+          name: false,
+          type: false,
+          user: false,
+        },
+        member: false,
+        mentionedChannelIds: false,
+        mentionedRoleIds: false,
+        mentions: false,
+        messageReference: {
+          messageId: false,
+          channelId: false,
+          guildId: false,
+        },
+        nonce: false,
+        reactions: false,
+        stickerItems: false,
+        thread: false,
+        type: false,
+        webhookId: false,
+      }
+    },
     reverse: {
       allowedMentions: options.reverse?.allowedMentions ?? transformAllowedMentionsToDiscordAllowedMentions,
       embed: options.reverse?.embed ?? transformEmbedToDiscordEmbed,
