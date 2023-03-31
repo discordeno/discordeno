@@ -691,7 +691,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return obj
     },
 
-    createRequest(options) {
+    createRequest(method, options) {
       const headers: Record<string, string> = {
         'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${version})`,
       }
@@ -738,7 +738,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return {
         body,
         headers,
-        method: options.method,
+        method,
       }
     },
 
@@ -850,14 +850,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async sendRequest(options) {
       const url = options.url.startsWith('https://') ? options.url : `${rest.baseUrl}/v${rest.version}${options.url}`
-      const payload = rest.createRequest(options.requestBodyOptions)
+      const payload = rest.createRequest(options.requestBodyOptions,  options.method)
 
       logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
       const response = await fetch(url, payload)
       logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
 
       // Set the bucket id if it was available on the headers
-      const bucketId = rest.processHeaders(rest.simplifyUrl(options.url, options.requestBodyOptions.method), response.headers)
+      const bucketId = rest.processHeaders(rest.simplifyUrl(options.url, options.method), response.headers)
       if (bucketId) options.bucketId = bucketId
 
       if (response.status < 200 || response.status >= 400) {
@@ -936,7 +936,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       // Set the full url to discord api in case it was recieved in a proxy rest
       request.url = `${rest.baseUrl}/v${rest.version}/${parts.join('/')}`
 
-      const url = rest.simplifyUrl(request.url, request.requestBodyOptions.method)
+      const url = rest.simplifyUrl(request.url, request.method)
       const queue = rest.queues.get(url)
 
       if (queue !== undefined) {
