@@ -236,7 +236,7 @@ One of the last things we should do, is make it possible to run commands on this
 Let's make a small bot on this process. Make a file called `services/rest/bot.ts`. Then paste the code below.
 
 ```ts
-import { Client } from '@discordeno/client'
+import { createBot } from '@discordeno/bot'
 import { logger } from '@discordeno/utils'
 import * as util from 'util'
 
@@ -244,51 +244,53 @@ const inspectOptions = {
   depth: 1
 }
 
-const client = new Client(process.env.TOKEN, {
-  // client options here
-})
+const bot = createBot({
+  token: process.env.TOKEN,
+  events: {
+    // This is just to keep code short for the guide, there are cleaner ways to write events.
+    async messageCreate(message) {
+      // If the message is from a bot simply ignore
+      if (message.author.bot) return
+      // If the message is not from bot owner simply ignore
+      if (message.author.id !== 'YOUR_ID_HERE') return
+      // If the content of the message is not
+      if (!message.content.startsWith(`${process.env.PREFIX}eval`)) return
 
-client.on('messageCreate', (message) => {
-  // If the message is from a bot simply ignore
-  if (message.author.bot) return
-  // If the message is not from bot owner simply ignore
-  if (message.author.id !== 'YOUR_ID_HERE') return
-  // If the content of the message is not
-  if (!message.content.startsWith(`${process.env.PREFIX}eval`)) return
+      const args = message.conten.split(' ')
+      // remove the .eval part
+      args.shift()
 
-  const args = message.conten.split(' ')
-  // remove the .eval part
-  args.shift()
+      const cleanArgs = args.join(' ').replace(/^\s+/, '').replace(/\s*$/, '')
 
-  const cleanArgs = args.join(' ').replace(/^\s+/, '').replace(/\s*$/, '')
+      // Eval the things and send the results
+      let result
+      try {
+        result = eval(cleanArgs)
+      } catch (e) {
+        result = e
+      }
 
-  // Eval the things and send the results
-  let result
-  try {
-    result = eval(cleanArgs)
-  } catch (e) {
-    result = e
-  }
+      const response = ['```ts']
+      const regex = new RegExp(Gamer.token, 'gi')
 
-  const response = ['```ts']
-  const regex = new RegExp(Gamer.token, 'gi')
+      if (result && typeof result.then === 'function') {
+        // We returned a promise?
+        let value
+        try {
+          value = await result
+        } catch (err) {
+          value = err
+        }
+        response.push(util.inspect(value, inspectOptions).replace(regex, 'YOU WISH!').substring(0, 1985))
+      } else {
+        response.push(String(util.inspect(result)).replace(regex, 'YOU WISH!').substring(0, 1985))
+      }
 
-  if (result && typeof result.then === 'function') {
-    // We returned a promise?
-    let value
-    try {
-      value = await result
-    } catch (err) {
-      value = err
+      response.push('```')
+
+      await message.channel.createMessage(response.join('\n'))
     }
-    response.push(util.inspect(value, inspectOptions).replace(regex, 'YOU WISH!').substring(0, 1985))
-  } else {
-    response.push(String(util.inspect(result)).replace(regex, 'YOU WISH!').substring(0, 1985))
   }
-
-  response.push('```')
-
-  await message.channel.createMessage(response.join('\n'))
 })
 ```
 

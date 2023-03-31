@@ -6,22 +6,23 @@ Discord API library for [Node.JS](https://nodejs.org), [Deno](https://deno.land)
 
 [![Discord](https://img.shields.io/discord/785384884197392384?color=7289da&logo=discord&logoColor=dark)](https://discord.com/invite/5vBgXk3UcZ)
 [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK)](https://codecov.io/gh/discordeno/discordeno)
+![action status](https://github.com/discordeno/discordeno/actions/workflows/lib-check.yml/badge.svg?event=push)
 
 ## Tips
 
-- If you are already convinced about using Discordeno, go to [Getting Started](https://discordeno.github.io/discordeno/)
+- If you are already convinced about using Discordeno, go to [Getting Started](https://discordeno.js.org/)
 - To learn if Discordeno is right for you, read everything below.
 
 ## Packages
 
-| Package                                                                  | npm                                                               | Tests                                                                                                                 | Coverage                                                                                                                                                            |
-| ------------------------------------------------------------------------ | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [discordeno](https://www.npmjs.com/package/discordeno)                   | ![npm (scoped)](https://img.shields.io/npm/v/discordeno)          | ![action status](https://github.com/discordeno/discordeno/actions/workflows/discordeno-test.yml/badge.svg?event=push) | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=discordeno)](https://codecov.io/gh/discordeno/discordeno) |
-| [@discordeno/types](https://www.npmjs.com/package/@discordeno/types)     | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/types)   | ![action status](https://github.com/discordeno/discordeno/actions/workflows/types-test.yml/badge.svg?event=push)      | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=types)](https://codecov.io/gh/discordeno/discordeno)      |
-| [@discordeno/utils](https://www.npmjs.com/package/@discordeno/utils)     | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/utils)   | ![action status](https://github.com/discordeno/discordeno/actions/workflows/utils-test.yml/badge.svg?event=push)      | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=utils)](https://codecov.io/gh/discordeno/discordeno)      |
-| [@discordeno/rest](https://www.npmjs.com/package/@discordeno/rest)       | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/rest)    | ![action status](https://github.com/discordeno/discordeno/actions/workflows/rest-test.yml/badge.svg?event=push)       | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=rest)](https://codecov.io/gh/discordeno/discordeno)       |
-| [@discordeno/gateway](https://www.npmjs.com/package/@discordeno/gateway) | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/gateway) | ![action status](https://github.com/discordeno/discordeno/actions/workflows/gateway-test.yml/badge.svg?event=push)    | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=gateway)](https://codecov.io/gh/discordeno/discordeno)    |
-| [@discordeno/bot](https://www.npmjs.com/package/@discordeno/bot)         | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/bot)     | ![action status](https://github.com/discordeno/discordeno/actions/workflows/bot-test.yml/badge.svg?event=push)        | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=bot)](https://codecov.io/gh/discordeno/discordeno)        |
+| Package                                                                  | npm                                                               | Tests                                                                                                                                                               |
+| ------------------------------------------------------------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [discordeno](https://www.npmjs.com/package/discordeno)                   | ![npm (scoped)](https://img.shields.io/npm/v/discordeno)          | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=discordeno)](https://codecov.io/gh/discordeno/discordeno) |
+| [@discordeno/types](https://www.npmjs.com/package/@discordeno/types)     | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/types)   | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=types)](https://codecov.io/gh/discordeno/discordeno)      |
+| [@discordeno/utils](https://www.npmjs.com/package/@discordeno/utils)     | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/utils)   | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=utils)](https://codecov.io/gh/discordeno/discordeno)      |
+| [@discordeno/rest](https://www.npmjs.com/package/@discordeno/rest)       | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/rest)    | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=rest)](https://codecov.io/gh/discordeno/discordeno)       |
+| [@discordeno/gateway](https://www.npmjs.com/package/@discordeno/gateway) | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/gateway) | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=gateway)](https://codecov.io/gh/discordeno/discordeno)    |
+| [@discordeno/bot](https://www.npmjs.com/package/@discordeno/bot)         | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/bot)     | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=bot)](https://codecov.io/gh/discordeno/discordeno)        |
 
 ## Features
 
@@ -29,9 +30,8 @@ Discordeno is actively maintained to guarantee **excellent performance, latest f
 
 - **Simple, Efficient, and Lightweight**: Discordeno is lightweight, simple to use, and adaptable.
   - By default: No caching.
-- **Functional & Class API**: Discordeno is flexible enough to provide both methods.
+- **Functional API**:
   - The functional API eliminates the challenges of extending built-in classes and inheritance while ensuring overall simple but performant code.
-  - The class based API, client package, provides a similar api as the [Eris](https://github.com/abalabahaha/eris) library to provide the best class based experience.
 - **Cross Runtime**: Supports the Node.js, Deno, and Bun runtimes.
 - **Standalone components**: Discordeno offers the option to have practically any component of a bot as a separate
   piece, including standalone REST, gateways, custom caches, and more.
@@ -93,11 +93,11 @@ Have your cache setup in any way you like. Redis, PGSQL or any cache layer you w
 
 ## Getting Started
 
-Interested? [Check the website](https://discordeno.github.io/discordeno/) for more details on getting started.
+Interested? [Check the website](https://discordeno.js.org/) for more details on getting started.
 
 ## Links
 
-- [Website](https://discordeno.github.io/discordeno/)
+- [Website](https://discordeno.js.org/)
 - [Discord](https://discord.com/invite/5vBgXk3UcZ)
 
 Discordeno follows [semantic versioning](https://semver.org/)
