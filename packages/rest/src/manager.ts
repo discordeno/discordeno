@@ -715,7 +715,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           form.append(`file${i}`, options.attachments[i].blob, options.attachments[i].name)
         }
 
-        form.append('payload_json', JSON.stringify({ ...options.body, files: undefined }))
+        form.append('payload_json', JSON.stringify({ ...options.body, attachments: undefined }))
 
         body = form
 
@@ -1107,7 +1107,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async createForumThread(channelId, body) {
-      return await rest.post<DiscordChannel>(rest.routes.channels.forum(channelId), { body, attachments: body.files })
+      return await rest.post<DiscordChannel>(rest.routes.channels.forum(channelId), { body, attachments: body.attachments })
     },
 
     async createInvite(channelId, body = {}) {
@@ -1295,7 +1295,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async editFollowupMessage(token, messageId, body) {
       return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), {
         body,
-        attachments: body.files,
+        attachments: body.attachments,
       })
     },
 
@@ -1332,7 +1332,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async editOriginalInteractionResponse(token, body) {
       return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), {
         body,
-        attachments: body.files,
+        attachments: body.attachments,
       })
     },
 
@@ -1342,7 +1342,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           type: InteractionResponseTypes.UpdateMessage,
           data: options,
         },
-        attachments: options.files,
+        attachments: options.attachments,
       })
     },
 
@@ -1384,7 +1384,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async editWebhookMessage(webhookId, token, messageId, options) {
       return await rest.patch<DiscordMessage>(rest.routes.webhooks.message(webhookId, token, messageId, options), {
         body: options,
-        attachments: options.files,
+        attachments: options.attachments,
       })
     },
 
@@ -1689,7 +1689,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await new Promise((resolve, reject) => {
         rest.sendRequest({
           url: rest.routes.webhooks.webhook(rest.applicationId, token),
-          requestBodyOptions: { body: options, method: 'POST', attachments: options.files },
+          requestBodyOptions: { body: options, method: 'POST', attachments: options.attachments },
           retryCount: 0,
           retryRequest: async function (options: SendRequestOptions) {
             // TODO: should change to reprocess queue item
@@ -1723,7 +1723,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async sendMessage(channelId, body) {
-      return await rest.post<DiscordMessage>(rest.routes.channels.messages(channelId), { body, attachments: body.files })
+      return await rest.post<DiscordMessage>(rest.routes.channels.messages(channelId), { body, attachments: body.attachments })
     },
 
     async startThreadWithMessage(channelId, messageId, body) {

@@ -104,8 +104,8 @@ export interface BotInteractionCallbackData {
   embeds?: Embed[]
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
-  /** The contents of the file being sent */
-  files?: FileContent[]
+  /** The contents of the files being sent */
+  attachments?: FileContent[]
   /** The customId you want to use for this modal response. */
   customId?: string
   /** The title you want to use for this modal response. */

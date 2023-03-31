@@ -21,7 +21,7 @@ after(async () => {
 
 describe('Send a message', () => {
   it('With content', async () => {
-    const message = await rest.sendMessage('905816495592972331', { content: 'testing rate limit manager' })
+    const message = await rest.sendMessagse(e2ecache.channel.id, { content: 'testing rate limit manager' })
     expect(message.content).to.be.equal('testing rate limit manager')
 
     const edited = await rest.editMessage(message.channelId, message.id, { content: 'testing rate limit manager edited' })

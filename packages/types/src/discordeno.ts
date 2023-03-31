@@ -62,7 +62,7 @@ export interface CreateMessageOptions {
     /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
     failIfNotExists: boolean
   }
-  /** The contents of the file being sent */
+  /** The contents of the files being sent */
   files?: FileContent[]
   /** The components you would like to have sent in this message */
   components?: MessageComponents
@@ -431,7 +431,7 @@ export interface InteractionCallbackData {
   embeds?: Array<Camelize<DiscordEmbed>>
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
-  /** The contents of the file being sent */
+  /** The contents of the files being sent */
   files?: FileContent[]
   /** The customId you want to use for this modal response. */
   customId?: string
@@ -673,7 +673,7 @@ export interface ExecuteWebhook {
   avatarUrl?: string
   /** True if this is a TTS message */
   tts?: boolean
-  /** The contents of the file being sent */
+  /** The contents of the files being sent */
   files?: FileContent[]
   /** Embedded `rich` content */
   embeds?: Array<Camelize<DiscordEmbed>>
@@ -706,7 +706,7 @@ export interface CreateForumPostWithMessage extends WithReason {
   embeds?: Array<Camelize<DiscordEmbed>>
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
-  /** The contents of the file being sent */
+  /** The contents of the files being sent */
   files?: FileContent[]
   /** The components you would like to have sent in this message */
   components?: MessageComponents
@@ -890,7 +890,7 @@ export interface EditMessage {
   embeds?: Array<Camelize<DiscordEmbed>> | null
   /** Edit the flags of the message (only `SUPPRESS_EMBEDS` can currently be set/unset) */
   flags?: 4 | null
-  /** The contents of the file being sent/edited */
+  /** The contents of the files being sent/edited */
   files?: FileContent[] | null
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
