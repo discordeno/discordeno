@@ -23,7 +23,7 @@ export const CHANNEL_MENTION_REGEX = /<#[0-9]+>/g
 const MESSAGE_SIZE = 20000
 
 const bot = createBot({
-  token: process.env.DISCORD_TOKEN ?? "",
+  token: process.env.DISCORD_TOKEN ?? " ",
   events: {},
 })
 
