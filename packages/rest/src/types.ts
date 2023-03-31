@@ -4,22 +4,6 @@ import type {
   BeginGuildPrune,
   BigString,
   Camelize,
-  CreateApplicationCommand,
-  CreateAutoModerationRuleOptions,
-  CreateChannelInvite,
-  CreateForumPostWithMessage,
-  CreateGuild,
-  CreateGuildBan,
-  CreateGuildChannel,
-  CreateGuildEmoji,
-  CreateGuildFromTemplate,
-  CreateGuildRole,
-  CreateGuildStickerOptions,
-  CreateMessageOptions,
-  CreateScheduledEvent,
-  CreateStageInstance,
-  CreateTemplate,
-  DeleteWebhookMessageOptions,
   CamelizedDiscordActiveThreads,
   CamelizedDiscordApplication,
   CamelizedDiscordApplicationCommand,
@@ -56,6 +40,22 @@ import type {
   CamelizedDiscordVoiceRegion,
   CamelizedDiscordWebhook,
   CamelizedDiscordWelcomeScreen,
+  CreateApplicationCommand,
+  CreateAutoModerationRuleOptions,
+  CreateChannelInvite,
+  CreateForumPostWithMessage,
+  CreateGuild,
+  CreateGuildBan,
+  CreateGuildChannel,
+  CreateGuildEmoji,
+  CreateGuildFromTemplate,
+  CreateGuildRole,
+  CreateGuildStickerOptions,
+  CreateMessageOptions,
+  CreateScheduledEvent,
+  CreateStageInstance,
+  CreateTemplate,
+  DeleteWebhookMessageOptions,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
   EditChannelPermissionOverridesOptions,
@@ -64,9 +64,9 @@ import type {
   EditMessage,
   EditOwnVoiceState,
   EditScheduledEvent,
-  EditStageInstanceOptions,
   EditUserVoiceState,
   ExecuteWebhook,
+  FileContent,
   GetBans,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
@@ -92,7 +92,6 @@ import type {
   SearchMembers,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
-  WithReason,
 } from '@discordeno/types'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 import type { Queue } from './queue.js'
@@ -160,7 +159,7 @@ export interface RestManager {
   /** Reshapes and modifies the obj as needed to make it ready for discords api. */
   changeToDiscordFormat: (obj: any) => any
   /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
-  createRequest: (options: CreateRequestBodyOptions) => RequestBody
+  createRequestBody: (method: RequestMethods, options?: CreateRequestBodyOptions) => RequestBody
   /** This will create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */
   processRateLimitedPaths: () => void
   /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
@@ -170,19 +169,19 @@ export interface RestManager {
   /** Split a url to separate rate limit buckets based on major/minor parameters. */
   simplifyUrl: (url: string, method: RequestMethods) => string
   /** Make a request to be sent to the api. */
-  makeRequest: <T = unknown>(method: RequestMethods, url: string, body?: Record<string, any>, options?: Record<string, any>) => Promise<T>
+  makeRequest: <T = unknown>(method: RequestMethods, url: string, options?: Omit<CreateRequestBodyOptions, 'method'>) => Promise<T>
   /** Takes a request and processes it into a queue. */
   processRequest: (request: SendRequestOptions) => void
   /** Make a get request to the api */
-  get: <T = void>(url: string) => Promise<Camelize<T>>
+  get: <T = void>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => Promise<Camelize<T>>
   /** Make a post request to the api. */
-  post: <T = void>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
+  post: <T = void>(url: string, options?: Omit<CreateRequestBodyOptions, 'method'>) => Promise<Camelize<T>>
   /** Make a put request to the api. */
-  put: <T = void>(url: string, body?: Record<string, any>, options?: Record<string, any>) => Promise<Camelize<T>>
+  put: <T = void>(url: string, options?: Omit<CreateRequestBodyOptions, 'method'>) => Promise<Camelize<T>>
   /** Make a delete request to the api. */
-  delete: (url: string, body?: Record<string, any>) => Promise<void>
+  delete: (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => Promise<void>
   /** Make a patch request to the api. */
-  patch: <T = void>(url: string, body?: Record<string, any>) => Promise<Camelize<T>>
+  patch: <T = void>(url: string, options?: Omit<CreateRequestBodyOptions, 'method'>) => Promise<Camelize<T>>
   /**
    * Adds a reaction to a message.
    *
@@ -487,7 +486,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#create-webhook}
    */
-  createWebhook: (channelId: BigString, options: CreateWebhook) => Promise<CamelizedDiscordWebhook>
+  createWebhook: (channelId: BigString, options: CreateWebhook, reason?: string) => Promise<CamelizedDiscordWebhook>
   /**
    * Deletes an automod rule.
    *
@@ -1187,6 +1186,7 @@ export interface RestManager {
    * Edits a stage instance.
    *
    * @param channelId - The ID of the stage channel the stage instance is associated with.
+   * @param topic - Topic of the Stage instance (1-120 characters).
    * @returns An instance of the updated {@link CamelizedDiscordStageInstance}.
    *
    * @remarks
@@ -1196,7 +1196,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance}
    */
-  editStageInstance: (channelId: BigString, data: EditStageInstanceOptions) => Promise<CamelizedDiscordStageInstance>
+  editStageInstance: (channelId: BigString, topic: string, reason?: string) => Promise<CamelizedDiscordStageInstance>
   /**
    * Edits the voice state of another user.
    *
@@ -2445,7 +2445,7 @@ export interface RestManager {
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'
 export type ApiVersions = 9 | 10
 
-export interface CreateWebhook extends WithReason {
+export interface CreateWebhook {
   /** Name of the webhook (1-80 characters) */
   name: string
   /** Image url for the default webhook avatar */
@@ -2454,25 +2454,23 @@ export interface CreateWebhook extends WithReason {
 
 export interface CreateRequestBodyOptions {
   headers?: Record<string, string>
-  method: RequestMethods
-  body?: Record<string, unknown>
+  body?: any
   unauthorized?: boolean
-  url?: string
+  reason?: string
+  files?: FileContent[]
 }
 
 export interface RequestBody {
   headers: Record<string, string>
-  body: string | FormData
+  body?: string | FormData
   method: RequestMethods
 }
 
 export interface SendRequestOptions {
   /** The url to send the request to. */
   url: string
-  /** The method to use when sending the request. */
+  /** The method to use for sending the request. */
   method: RequestMethods
-  /** The body to be sent in the request. */
-  body?: Record<string, any>
   /** The amount of times this request has been retried. */
   retryCount: number
   /** Handler to retry a request should it be rate limited. */
@@ -2484,7 +2482,7 @@ export interface SendRequestOptions {
   /** If this request has a bucket id which it falls under for rate limit */
   bucketId?: string
   /** Additional request options, used for things like overriding authorization header. */
-  options?: Record<string, any>
+  requestBodyOptions?: CreateRequestBodyOptions
 }
 
 export interface RestRateLimitedPath {
@@ -2508,9 +2506,12 @@ export interface WebhookMessageEditor {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook-message}
    */
-  (webhookId: BigString, token: string, messageId: BigString, options: InteractionCallbackData & { threadId?: BigString }): Promise<
-    CamelizedDiscordMessage
-  >
+  (
+    webhookId: BigString,
+    token: string,
+    messageId: BigString,
+    options: InteractionCallbackData & { threadId?: BigString },
+  ): Promise<CamelizedDiscordMessage>
   /**
    * Edits the original webhook message.
    *

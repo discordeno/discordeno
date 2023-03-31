@@ -34,6 +34,7 @@ out
 build
 .docusaurus
 .cache-loader
+/db
 
 # misc
 .DS_Store

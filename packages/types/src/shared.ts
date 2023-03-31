@@ -57,6 +57,8 @@ export enum TeamMembershipStates {
 
 /** https://discord.com/developers/docs/topics/oauth2#application-application-flags */
 export enum ApplicationFlags {
+  /** Indicates if an app uses the Auto Moderation API. */
+  ApplicationAutoModerationRuleCreateBadge = 1 << 6,
   /** Intent required for bots in **100 or more servers** to receive [`presence_update` events](#DOCS_TOPICS_GATEWAY/presence-update) */
   GatewayPresence = 1 << 12,
   /** Intent required for bots in under 100 servers to receive [`presence_update` events](#DOCS_TOPICS_GATEWAY/presence-update), found in Bot Settings */
@@ -187,6 +189,10 @@ export enum GuildFeatures {
   Partnered = 'PARTNERED',
   /** Guild can enable welcome screen, Membership Screening, stage channels and discovery, and receives community updates */
   Community = 'COMMUNITY',
+  /** Guild has enabled monetization. */
+  CreatorMonetizableProvisional = 'CREATOR_MONETIZABLE_PROVISIONAL',
+  /** Guild has enabled the role subscription promo page. */
+  CreatorStorePage = 'CREATOR_STORE_PAGE',
   /** Guild has been set as a support server on the App Directory */
   DeveloperSupportServer = 'DEVELOPER_SUPPORT_SERVER',
   /** Guild has access to create news channels */
@@ -207,14 +213,16 @@ export enum GuildFeatures {
   PreviewEnabled = 'PREVIEW_ENABLED',
   /** Guild has enabled ticketed events */
   TicketedEventsEnabled = 'TICKETED_EVENTS_ENABLED',
-  /** Guild has enabled monetization */
-  MonetizationEnabled = 'MONETIZATION_ENABLED',
   /** Guild has increased custom sticker slots */
   MoreStickers = 'MORE_STICKERS',
   /** Guild has access to create private threads */
   PrivateThreads = 'PRIVATE_THREADS',
   /** Guild is able to set role icons */
   RoleIcons = 'ROLE_ICONS',
+  /** Guild has role subscriptions that can be purchased. */
+  RoleSubscriptionsAvailableForPurchase = 'ROLE_SUBSCRIPTIONS_AVAILABLE_FOR_PURCHASE',
+  /** Guild has enabled role subscriptions. */
+  RoleSubscriptionsEnabled = 'ROLE_SUBSCRIPTIONS_ENABLED',
   /** Guild has set up auto moderation rules */
   AutoModeration = 'AUTO_MODERATION',
   /** Guild has paused invites, preventing new users from joining */
@@ -339,6 +347,13 @@ export enum MessageTypes {
   GuildInviteReminder,
   ContextMenuCommand,
   AutoModerationAction,
+  RoleSubscriptionPurchase,
+  InteractionPremiumUpsell,
+  StageStart,
+  StageEnd,
+  StageSpeaker,
+  StageTopic = 31,
+  GuildApplicationPremiumSubscription,
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
@@ -700,6 +715,7 @@ export type GatewayDispatchEventNames =
   | 'THREAD_LIST_SYNC'
   | 'THREAD_MEMBER_UPDATE'
   | 'THREAD_MEMBERS_UPDATE'
+  | 'GUILD_AUDIT_LOG_ENTRY_CREATE'
   | 'GUILD_CREATE'
   | 'GUILD_UPDATE'
   | 'GUILD_DELETE'
@@ -896,6 +912,15 @@ export enum SortOrderTypes {
   LatestActivity,
   /** Sort forum posts by creation time (from most recent to oldest) */
   CreationDate,
+}
+
+export enum FormLayout {
+  /** No default has been set for forum channel. */
+  NotSet = 0,
+  /** Display posts as a list. */
+  ListView = 1,
+  /** Display posts as a collection of tiles. */
+  GalleryView = 2,
 }
 
 /**
