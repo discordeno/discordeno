@@ -1,0 +1,51 @@
+name: Benchmark
+
+on:
+  workflow_call:
+    outputs:
+      cpuMatch:
+        value: ${{ jobs.benchmark.outputs.cpuMatch }}
+
+jobs:
+  benchmark:
+    name: Benchmark
+    runs-on: ubuntu-latest
+    outputs:
+      cpuMatch: ${{ steps.cpuCheck.outputs.match }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Check cpu model
+        id: cpuCheck
+        run: node ./scripts/checkCpuModel.js
+
+      - name: Get yarn cache directory path
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - run: yarn install --immutable
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
+      - name: Build
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
+        run: yarn build
+
+        #
+      - name: Download db from benchmark repo
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
+        run: wget https://github.com/discordeno/benchmarks/raw/main/db.tar.gz
+      - name: Decompress db
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
+        run: tar -xzvf db.tar.gz
+
+      - name: Benchmark
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
+        run: node --expose-gc ./packages/benchmark/dist/index.js

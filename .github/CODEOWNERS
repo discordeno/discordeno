@@ -1,1 +1,10 @@
-*       @Skillz4Killz @itohatweb
+*                          @Skillz4Killz @itohatweb
+
+/.github/workflows/        @H01001000
+/.github/sync.yml          @H01001000
+/.yarn/                    @H01001000
+/.yarnrc.yml               @H01001000
+/codecov.yml               @H01001000
+/packages/*/package.json   @H01001000
+/package.json              @H01001000
+/turbo.json                @H01001000
