@@ -21,7 +21,7 @@ after(async () => {
 
 describe('Send a message', () => {
   it('With content', async () => {
-    const message = await rest.sendMessage('1041029705790402611', { content: 'testing rate limit manager' })
+    const message = await rest.sendMessage(e2ecache.channel.id, { content: 'testing rate limit manager' })
     expect(message.content).to.be.equal('testing rate limit manager')
 
     const edited = await rest.editMessage(message.channelId, message.id, { content: 'testing rate limit manager edited' })
@@ -37,7 +37,7 @@ describe('Send a message', () => {
     expect(image).to.not.be.undefined
     if (!image) throw new Error('Was not able to fetch the image.')
 
-    const message = await rest.sendMessage('1041029705790402611', { file: { blob: image, name: 'gamer' } })
+    const message = await rest.sendMessage(e2ecache.channel.id, { files: [{ blob: image, name: 'gamer' }] })
     expect(message.attachments.length).to.be.greaterThan(0)
     const [attachment] = message.attachments
 

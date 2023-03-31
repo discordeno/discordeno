@@ -57,6 +57,8 @@ export enum TeamMembershipStates {
 
 /** https://discord.com/developers/docs/topics/oauth2#application-application-flags */
 export enum ApplicationFlags {
+  /** Indicates if an app uses the Auto Moderation API. */
+  ApplicationAutoModerationRuleCreateBadge = 1 << 6,
   /** Intent required for bots in **100 or more servers** to receive [`presence_update` events](#DOCS_TOPICS_GATEWAY/presence-update) */
   GatewayPresence = 1 << 12,
   /** Intent required for bots in under 100 servers to receive [`presence_update` events](#DOCS_TOPICS_GATEWAY/presence-update), found in Bot Settings */

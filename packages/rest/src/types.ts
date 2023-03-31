@@ -159,7 +159,7 @@ export interface RestManager {
   /** Reshapes and modifies the obj as needed to make it ready for discords api. */
   changeToDiscordFormat: (obj: any) => any
   /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
-  createRequest: (options: CreateRequestBodyOptions) => RequestBody
+  createRequestBody: (method: RequestMethods, options?: CreateRequestBodyOptions) => RequestBody
   /** This will create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */
   processRateLimitedPaths: () => void
   /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
@@ -2454,12 +2454,10 @@ export interface CreateWebhook {
 
 export interface CreateRequestBodyOptions {
   headers?: Record<string, string>
-  method: RequestMethods
   body?: any
   unauthorized?: boolean
-  url?: string
   reason?: string
-  attachments?: FileContent[]
+  files?: FileContent[]
 }
 
 export interface RequestBody {
@@ -2471,7 +2469,7 @@ export interface RequestBody {
 export interface SendRequestOptions {
   /** The url to send the request to. */
   url: string
-  /** The method to use when sending the request. */
+  /** The method to use for sending the request. */
   method: RequestMethods
   /** The amount of times this request has been retried. */
   retryCount: number
@@ -2484,7 +2482,7 @@ export interface SendRequestOptions {
   /** If this request has a bucket id which it falls under for rate limit */
   bucketId?: string
   /** Additional request options, used for things like overriding authorization header. */
-  options?: Record<string, any>
+  requestBodyOptions?: CreateRequestBodyOptions
 }
 
 export interface RestRateLimitedPath {
