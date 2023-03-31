@@ -1,4 +1,3 @@
-import type { FileContent } from './discordeno.js'
 import type {
   ActivityTypes,
   AllowedMentionsTypes,
@@ -2564,8 +2563,6 @@ export interface DiscordCreateForumPostWithMessage {
     components?: DiscordMessageComponents[]
     /** IDs of up to 3 stickers in the server to send in the message */
     sticker_ids?: string[]
-    /** Contents of the file being sent. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
-    attachments?: FileContent[]
     /** JSON-encoded body of non-file params, only for multipart/form-data requests. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
     payload_json?: string
     /** Attachment objects with filename and description. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
