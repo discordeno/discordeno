@@ -696,11 +696,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${version})`,
       }
 
-      if (!options.unauthorized) headers.authorization = `Bot ${rest.token}`
+      if (!options?.unauthorized) headers.authorization = `Bot ${rest.token}`
 
       // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
-      if (options.reason !== undefined) {
-        headers['x-audit-log-reason'] = encodeURIComponent(options.reason)
+      if (options?.reason !== undefined) {
+        headers['x-audit-log-reason'] = encodeURIComponent(options?.reason)
       }
 
       let body: string | FormData | undefined
@@ -709,7 +709,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       // Since GET does not allow bodies
 
       // Have to check for attachments first, since body then has to be send in a different way.
-      if (options.files !== undefined) {
+      if (options?.files !== undefined) {
         const form = new FormData()
         for (let i = 0; i < options.files.length; ++i) {
           form.append(`file${i}`, options.files[i].blob, options.files[i].name)
@@ -720,7 +720,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         body = form
 
         // No need to set the `content-type` header since `fetch` does that automatically for us when we use a `FormData` object.
-      } else if (options.body !== undefined) {
+      } else if (options?.body !== undefined) {
         if (options.body instanceof FormData) {
           body = options.body
           // No need to set the `content-type` header since `fetch` does that automatically for us when we use a `FormData` object.
@@ -731,7 +731,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
 
       // SOMETIMES SPECIAL HEADERS (E.G. CUSTOM AUTHORIZATION) NEED TO BE USED
-      if (options.headers) {
+      if (options?.headers) {
         Object.assign(headers, options.headers)
       }
 
@@ -850,7 +850,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async sendRequest(options) {
       const url = options.url.startsWith('https://') ? options.url : `${rest.baseUrl}/v${rest.version}${options.url}`
-      const payload = rest.createRequest(options.requestBodyOptions,  options.method)
+      const payload = rest.createRequest(options.method, options.requestBodyOptions)
 
       logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
       const response = await fetch(url, payload)
@@ -984,7 +984,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         })
 
         if (!result.ok) {
-          const err = (await result.json().catch(() => {})) as Record<string, any>
+          const err = (await result.json().catch(() => { })) as Record<string, any>
           // Legacy Handling to not break old code or when body is missing
           if (!err?.body) throw new Error(`Error: ${err.message ?? result.statusText}`)
           throw new Error(JSON.stringify(err))
@@ -996,9 +996,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await new Promise((resolve, reject) => {
         const payload: SendRequestOptions = {
           url,
-          requestBodyOptions: { ...options, method },
+          method,
+          requestBodyOptions: options,
           retryCount: 0,
-          retryRequest: async function (payload: SendRequestOptions) {
+          retryRequest: async function(payload: SendRequestOptions) {
             rest.processRequest(payload)
           },
           resolve: (data) => {
@@ -1689,9 +1690,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await new Promise((resolve, reject) => {
         rest.sendRequest({
           url: rest.routes.webhooks.webhook(rest.applicationId, token),
-          requestBodyOptions: { body: options, method: 'POST', files: options.files },
+          method: 'POST', 
+          requestBodyOptions: { body: options, files: options.files },
           retryCount: 0,
-          retryRequest: async function (options: SendRequestOptions) {
+          retryRequest: async function(options: SendRequestOptions) {
             // TODO: should change to reprocess queue item
             await rest.sendRequest(options)
           },
@@ -1708,9 +1710,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await new Promise((resolve, reject) => {
         rest.sendRequest({
           url: rest.routes.interactions.responses.callback(interactionId, token),
-          requestBodyOptions: { body: options, method: 'POST' },
+          method: 'POST',
+          requestBodyOptions: { body: options },
           retryCount: 0,
-          retryRequest: async function (options: SendRequestOptions) {
+          retryRequest: async function(options: SendRequestOptions) {
             // TODO: should change to reprocess queue item
             await rest.sendRequest(options)
           },
