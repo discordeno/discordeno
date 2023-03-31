@@ -159,7 +159,7 @@ export interface RestManager {
   /** Reshapes and modifies the obj as needed to make it ready for discords api. */
   changeToDiscordFormat: (obj: any) => any
   /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
-  createRequest: (method: RequestMethods, options?: CreateRequestBodyOptions) => RequestBody
+  createRequestBody: (method: RequestMethods, options?: CreateRequestBodyOptions) => RequestBody
   /** This will create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */
   processRateLimitedPaths: () => void
   /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */

@@ -691,7 +691,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return obj
     },
 
-    createRequest(method, options) {
+    createRequestBody(method, options) {
       const headers: Record<string, string> = {
         'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${version})`,
       }
@@ -850,7 +850,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async sendRequest(options) {
       const url = options.url.startsWith('https://') ? options.url : `${rest.baseUrl}/v${rest.version}${options.url}`
-      const payload = rest.createRequest(options.method, options.requestBodyOptions)
+      const payload = rest.createRequestBody(options.method, options.requestBodyOptions)
 
       logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
       const response = await fetch(url, payload)
