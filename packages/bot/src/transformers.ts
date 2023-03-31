@@ -109,9 +109,9 @@ export interface Transformers {
       applicationId: boolean;
       attachments: boolean;
       author: boolean;
-      channelId: false;
-      components: false;
-      content: false;
+      channelId: boolean;
+      components: boolean;
+      content: boolean;
       editedTimestamp: boolean;
       embeds: boolean;
       guildId: boolean;
