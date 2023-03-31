@@ -467,7 +467,7 @@ export class DiscordenoShard {
       this.previousSequenceNumber = packet.s
     }
 
-    this.forwardToBot(packet);
+    this.forwardToBot(packet)
   }
 
   forwardToBot(packet: DiscordGatewayPayload): void {
