@@ -1,10 +1,12 @@
-import type { Bot } from '@discordeno/bot'
-import { createBot } from '@discordeno/bot'
-import { events } from '../utils/db.js'
+import { createBot, type Bot } from '@discordeno/bot'
+import { events as dbEvents } from '../utils/db.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-async function memoryBenchmarks(
-  botCreator: () => any,
+async function memoryBenchmarks<O, E>(
+  name: string,
+  objectCreator: () => O,
+  objectFeeder: (object: O, event: E) => void,
+  events: E[],
   options: { times: number; log: boolean; table: boolean } = {
     times: 3,
     log: false,
@@ -17,7 +19,7 @@ async function memoryBenchmarks(
   const typesOfMemUsages = ['rss', 'heapUsed', 'heapTotal'] as const
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  async function runTest(bot: any) {
+  async function runTest(object: O) {
     // Determine memory stats now before touching anything
     const results: {
       start: NodeJS.MemoryUsage
@@ -38,12 +40,7 @@ async function memoryBenchmarks(
     results.loaded = process.memoryUsage()
 
     events.forEach((event) => {
-      if (!event.payload.t) return
-      bot.events[
-        event.payload.t.toLowerCase().replace(/_([a-z])/g, (g) => {
-          return g[1].toUpperCase()
-        })
-      ]?.(event.payload.d, {})
+      objectFeeder(object, event)
     })
 
     if (options.log) {
@@ -57,23 +54,6 @@ async function memoryBenchmarks(
     results.cached = {}
     for (const typeOfMemUsage of typesOfMemUsages) {
       results.cached![typeOfMemUsage] = results.end[typeOfMemUsage] - results.loaded[typeOfMemUsage]
-    }
-
-    if (options.log) {
-      console.log(
-        'channels',
-        bot.channels.size.toLocaleString(),
-        'guilds',
-        bot.guilds.size.toLocaleString(),
-        'members',
-        bot.members.size.toLocaleString(),
-        'users',
-        bot.users.size.toLocaleString(),
-        'messages',
-        bot.messages.size.toLocaleString(),
-        'presences',
-        bot.presences.size.toLocaleString(),
-      )
     }
 
     return results
@@ -106,7 +86,7 @@ async function memoryBenchmarks(
 
   for (let index = 0; index < options.times; index++) {
     if (options.log) console.log('running the', index + 1, 'time')
-    const currentResult = await runTest(botCreator())
+    const currentResult = await runTest(objectCreator())
     for (const typeOfMemUsage of typesOfMemUsages) {
       for (const stage of stages) {
         allResults[stage][typeOfMemUsage].push(currentResult[stage]![typeOfMemUsage])
@@ -170,7 +150,14 @@ async function memoryBenchmarks(
 
   if (options.table) console.table(humanReadable)
 
-  return processedResults
+  for (const resultKey of Object.keys(processedResults.Cached) as Array<keyof typeof processedResults.Cached>) {
+    const range = Math.max(
+      Math.round((processedResults.Cached[resultKey].min / processedResults.Cached[resultKey].value) * 100) / 100,
+      Math.round((processedResults.Cached[resultKey].max / processedResults.Cached[resultKey].value) * 100) / 100,
+    )
+
+    console.log(`${name} ${resultKey.toString()} x ${processedResults.Cached[resultKey].value} MB ±${isFinite(range) ? range : 0}% (3 runs sampled)`)
+  }
 }
 
 /* Example Usage
@@ -187,20 +174,22 @@ memoryBenchmarks(() => enableCachePlugin(createBot({
 
 const enableCachePlugin = (bot: Bot): Bot => bot
 
-const results = await memoryBenchmarks(() =>
-  enableCachePlugin(
-    createBot({
-      token: ' ',
-      events: {},
-    }),
-  ),
+await memoryBenchmarks(
+  '[Cache Plugin]',
+  () =>
+    enableCachePlugin(
+      createBot({
+        token: ' ',
+        events: {},
+      }),
+    ),
+  (bot, event) => {
+    // @ts-expect-error it works
+    bot.events[
+      event.payload.t!.toLowerCase().replace(/_([a-z])/g, (g) => {
+        return g[1].toUpperCase()
+      })
+    ]?.(event.payload.d, {})
+  },
+  dbEvents.filter((event) => event.payload.t),
 )
-
-for (const resultKey of Object.keys(results.Cached) as Array<keyof typeof results.Cached>) {
-  console.log(
-    `[Cache Plugin] ${resultKey.toString()} x ${results.Cached[resultKey].value} MB ±${
-      (Math.max(Math.round((results.Cached[resultKey].min / results.Cached[resultKey].value) * 100) / 100),
-      Math.round((results.Cached[resultKey].max / results.Cached[resultKey].value) * 100) / 100) || 0
-    }% (3 runs sampled)`,
-  )
-}
