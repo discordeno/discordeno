@@ -7,5 +7,3 @@
 tasks:
   - init: yarn install && yarn run build && yarn run lint && yarn run build:doc
     command: yarn run dev
-
-
