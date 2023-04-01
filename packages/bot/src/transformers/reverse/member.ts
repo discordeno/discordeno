@@ -33,5 +33,6 @@ export function transformMemberToDiscordMember(bot: Bot, payload: Member): Disco
     deaf: payload.toggles.deaf,
     mute: payload.toggles.mute,
     pending: payload.toggles.pending,
+    flags: payload.flags,
   }
 }

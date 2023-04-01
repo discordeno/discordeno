@@ -17,6 +17,7 @@ import type {
   CamelizedDiscordFollowedChannel,
   CamelizedDiscordGetGatewayBot,
   CamelizedDiscordGuild,
+  CamelizedDiscordGuildOnboarding,
   CamelizedDiscordGuildPreview,
   CamelizedDiscordGuildWidget,
   CamelizedDiscordGuildWidgetSettings,
@@ -480,7 +481,7 @@ export interface RestManager {
    * @remarks
    * Requires the `MANAGE_WEBHOOKS` permission.
    *
-   * ⚠️ The webhook name must not contain the string 'clyde' (case-insensitive).
+   * ⚠️ The webhook name must not contain the substrings 'clyde', or 'discord' (case-insensitive).
    *
    * Fires a _Webhooks Update_ gateway event.
    *
@@ -1713,6 +1714,14 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/sticker#list-nitro-sticker-packs}
    */
   getNitroStickerPacks: () => Promise<CamelizedDiscordStickerPack[]>
+  /**
+   * Returns the onboarding of the guild.
+   *
+   * @returns An instance of {@link CamelizedGuildOnboarding}.
+   *
+   * @see {@link TODO}
+   */
+  getOnboarding: (guildId: BigString) => Promise<CamelizedDiscordGuildOnboarding>
   /**
    * Gets the initial message response to an interaction.
    *

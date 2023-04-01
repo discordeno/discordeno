@@ -37,6 +37,7 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: bigin
     permissions: payload.permissions ? bot.transformers.snowflake(payload.permissions) : undefined,
     communicationDisabledUntil: payload.communication_disabled_until ? Date.parse(payload.communication_disabled_until) : undefined,
     toggles: new MemberToggles(payload),
+    flags: payload.flags,
   }
 
   return member as Optionalize<typeof member>

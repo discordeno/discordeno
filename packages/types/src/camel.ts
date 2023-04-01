@@ -144,6 +144,9 @@ import type {
   DiscordWebhookUpdate,
   DiscordWelcomeScreen,
   DiscordWelcomeScreenChannel,
+  DiscordGuildOnboarding,
+  DiscordGuildOnboardingPrompt,
+  DiscordGuildOnboardingPromptOption,
 } from './discord.js'
 import type { Camelize } from './shared.js'
 
@@ -240,6 +243,9 @@ export interface CamelizedDiscordApplicationCommandOptionChoice extends Camelize
 export interface CamelizedDiscordGuildApplicationCommandPermissions extends Camelize<DiscordGuildApplicationCommandPermissions> {}
 export interface CamelizedDiscordApplicationCommandPermissions extends Camelize<DiscordApplicationCommandPermissions> {}
 export interface CamelizedDiscordGuildWidget extends Camelize<DiscordGuildWidget> {}
+export interface CamelizedDiscordGuildOnboarding extends Camelize<DiscordGuildOnboarding> {}
+export interface CamelizedDiscordGuildOnboardingPrompt extends Camelize<DiscordGuildOnboardingPrompt> {}
+export interface CamelizedDiscordGuildOnboardingPromptOption extends Camelize<DiscordGuildOnboardingPromptOption> {}
 export interface CamelizedDiscordGuildPreview extends Camelize<DiscordGuildPreview> {}
 export interface CamelizedDiscordFollowedChannel extends Camelize<DiscordFollowedChannel> {}
 export interface CamelizedDiscordGatewayPayload extends Camelize<DiscordGatewayPayload> {}

@@ -35,6 +35,7 @@ import type {
   DiscordFollowedChannel,
   DiscordGetGatewayBot,
   DiscordGuild,
+  DiscordGuildOnboarding,
   DiscordGuildPreview,
   DiscordGuildWidget,
   DiscordGuildWidgetSettings,
@@ -487,6 +488,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           },
         },
         mfa: (guildId) => `/guilds/${guildId}/mfa`,
+        onboarding: {
+          get: (guildId) => `/guilds/${guildId}/onboarding`,
+        },
         preview: (guildId) => {
           return `/guilds/${guildId}/preview`
         },
@@ -758,6 +762,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rest.rateLimitedPaths.delete(key)
         // If it was global, also mark the global value as false
         if (key === 'global') rest.globallyRateLimited = false
+        onboarding: {
+        }
       }
 
       // ALL PATHS ARE CLEARED CAN CANCEL OUT!
@@ -1551,6 +1557,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getNitroStickerPacks() {
       return await rest.get<DiscordStickerPack[]>(rest.routes.nitroStickerPacks())
+    },
+
+    async getOnboarding(guildId) {
+      return await rest.get<DiscordGuildOnboarding>(rest.routes.guilds.onboarding.get(guildId))
     },
 
     async getOriginalInteractionResponse(token) {

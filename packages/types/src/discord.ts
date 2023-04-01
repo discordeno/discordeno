@@ -15,6 +15,7 @@ import type {
   FormLayout,
   GatewayEventNames,
   GuildFeatures,
+  GuildMemberFlags,
   GuildNsfwLevel,
   IntegrationExpireBehaviors,
   InteractionTypes,
@@ -195,6 +196,8 @@ export interface DiscordMember {
   permissions?: string
   /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
   communication_disabled_until?: string | null
+  /** Flags of this guild member, represented as a bit set */
+  flags: GuildMemberFlags
 }
 
 /** https://discord.com/developers/docs/resources/application#application-object */
@@ -781,6 +784,54 @@ export interface DiscordWelcomeScreenChannel {
   emoji_id: string | null
   /** The emoji name if custom, the unicode character if standard, or `null` if no emoji is set */
   emoji_name: string | null
+}
+
+export interface DiscordGuildOnboarding {
+  /** Id of the guild this onboarding is part of. */
+  guild_id: string
+  /** Prompts shown during onboarding and in customize community. */
+  prompts: DiscordGuildOnboardingPrompt[]
+  /** Channel Ids that members get opted into automatically. */
+  default_channel_ids: string[]
+  /** Whether onboarding is enabled in the guild. */
+  enabled: boolean
+}
+
+export interface DiscordGuildOnboardingPrompt {
+  /** Id of the prompt. */
+  id: string
+  /** Type of prompt. */
+  type: GuildOnboardingPromptType
+  /** Options available within the prompt. */
+  options: DiscordGuildOnboardingPromptOption[]
+  /** Title of the prompt. */
+  title: string
+  /** Indicates whether users are limited to selecting one option for the prompt. */
+  single_select: boolean
+  /** Indicates whether the prompt is required before a user completes the onboarding flow. */
+  required: boolean
+  /** Indicates whether the prompt is present in the onboarding flow. If `false`, the prompt will only appear in the Channels & Roles tab. */
+  in_onboarding: boolean
+}
+
+export enum GuildOnboardingPromptType {
+  MultipleChoice = 0,
+  Dropdown = 1,
+}
+
+export interface DiscordGuildOnboardingPromptOption {
+  /** Id of the prompt option. */
+  id: string
+  /** Ids for channels the member is added to when the option is selected. */
+  channel_ids: string[]
+  /** Ids of roles assigned to the member when the option is selected. */
+  role_ids: string[]
+  /** Emoji of the option. */
+  emoji: DiscordEmoji
+  /** Title of the option. */
+  title: string
+  /** Description of the option. */
+  description?: string
 }
 
 /** https://discord.com/developers/docs/resources/stage-instance#auto-closing-stage-instance-structure */
@@ -2233,6 +2284,8 @@ export interface DiscordGuildMemberUpdate {
   pending?: boolean
   /** when the user's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out. Will throw a 403 error if the user has the ADMINISTRATOR permission or is the owner of the guild */
   communication_disabled_until?: string
+  /** Flags of this guild member, represented as a bit set */
+  flags: GuildMemberFlags
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-all */
