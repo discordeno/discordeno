@@ -107,5 +107,3 @@ describe('Webhook helpers', async () => {
     await expect(rest.getWebhookMessage(webhook.id, webhook.token!, message!.id)).to.eventually.rejected
   })
 })
-
-
