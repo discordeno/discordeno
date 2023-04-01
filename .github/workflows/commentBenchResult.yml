@@ -92,7 +92,7 @@ jobs:
                 repo: "discordeno",
                 issue_number: pr.data[0].number,
               })
-              const oldComment = comments.find((comment) => comment.body.includes('benchmark comment by ci'))
+              const oldComment = comments.data.find((comment) => comment.body.includes('benchmark comment by ci'))
               if(!oldComment) {
                 github.rest.issues.createComment({
                   issue_number: pr.data[0].number,
