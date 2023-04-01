@@ -58,24 +58,27 @@ jobs:
         run: node --expose-gc ./packages/benchmark/dist/index.js | tee output.txt
         
       - name: Download previous benchmark data
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         uses: actions/cache@v3
         with:
           path: ./benchmarksResult
           key: ${{ github.ref }}-benchmark
       - name: Store benchmark result to cache
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         uses: benchmark-action/github-action-benchmark@v1
         with:
           tool: "customSmallerIsBetter"
           output-file-path: output.txt
           external-data-json-path: benchmarksResult/data.json
       - uses: actions/upload-artifact@v3
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         with:
           name: benchmarkResults
           path: benchmarksResult/data.json
 
       - name: Store benchmark result (Main)
         uses: benchmark-action/github-action-benchmark@v1
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/main' && steps.cpuCheck.outputs.match == 'true' }}
         with:
           tool: "customSmallerIsBetter"
           output-file-path: output.txt
@@ -85,11 +88,13 @@ jobs:
           auto-push: true
 
       - name: Save Commmit SHA
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         run: |
           mkdir -p ./commitData
           echo ${{ inputs.sha }} > ./commitData/sha
           echo ${{ inputs.repo }} > ./commitData/repo
       - uses: actions/upload-artifact@v3
+        if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         with:
           name: commitData
           path: commitData/
