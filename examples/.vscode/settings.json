@@ -11,15 +11,7 @@
     "https://deno.land": true
   },
   "discord.enabled": true,
-  "cSpell.words": [
-    "denoland",
-    "Discordeno",
-    "Kwik",
-    "Loglevels",
-    "msgpack",
-    "Slowmode",
-    "upsert"
-  ],
+  "cSpell.words": ["denoland", "Discordeno", "Kwik", "Loglevels", "msgpack", "Slowmode", "upsert"],
   "deno.unstable": true,
   "deno.inlayHints.enumMemberValues.enabled": true,
   "deno.inlayHints.functionLikeReturnTypes.enabled": true,

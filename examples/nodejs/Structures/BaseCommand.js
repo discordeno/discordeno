@@ -1,15 +1,15 @@
-const UtilCommand = require("./CommandResponse.js");
+const UtilCommand = require('./CommandResponse.js')
 class BaseCommand extends UtilCommand {
   constructor(data) {
-    super(data);
-    this.message = data.message;
-    this.interaction = data.interaction;
-    this.user = this.message ? this.message.author : this.interaction.user;
-    this.guild = this.message ? this.message.guild : this.interaction.guild;
-    this.member = this.message ? this.message.member : this.interaction.member;
-    this.channel = this.message ? this.message.channel : this.interaction.channel;
-    this.client = data.client;
-    this.settings = data.settings ?? {};
+    super(data)
+    this.message = data.message
+    this.interaction = data.interaction
+    this.user = this.message ? this.message.author : this.interaction.user
+    this.guild = this.message ? this.message.guild : this.interaction.guild
+    this.member = this.message ? this.message.member : this.interaction.member
+    this.channel = this.message ? this.message.channel : this.interaction.channel
+    this.client = data.client
+    this.settings = data.settings ?? {}
   }
 }
-module.exports = BaseCommand;
+module.exports = BaseCommand

@@ -955,7 +955,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const result = await fetch(`${rest.baseUrl}${url}`, rest.createRequestBody(method, options))
 
         if (!result.ok) {
-          const err = (await result.json().catch(() => { })) as Record<string, any>
+          const err = (await result.json().catch(() => {})) as Record<string, any>
           // Legacy Handling to not break old code or when body is missing
           if (!err?.body) throw new Error(`Error: ${err.message ?? result.statusText}`)
           throw new Error(JSON.stringify(err))
@@ -970,7 +970,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           method,
           requestBodyOptions: options,
           retryCount: 0,
-          retryRequest: async function(payload: SendRequestOptions) {
+          retryRequest: async function (payload: SendRequestOptions) {
             rest.processRequest(payload)
           },
           resolve: (data) => {
@@ -1661,10 +1661,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await new Promise((resolve, reject) => {
         rest.sendRequest({
           url: rest.routes.webhooks.webhook(rest.applicationId, token),
-          method: 'POST', 
+          method: 'POST',
           requestBodyOptions: { body: options, files: options.files },
           retryCount: 0,
-          retryRequest: async function(options: SendRequestOptions) {
+          retryRequest: async function (options: SendRequestOptions) {
             // TODO: should change to reprocess queue item
             await rest.sendRequest(options)
           },
@@ -1684,7 +1684,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           method: 'POST',
           requestBodyOptions: { body: options },
           retryCount: 0,
-          retryRequest: async function(options: SendRequestOptions) {
+          retryRequest: async function (options: SendRequestOptions) {
             // TODO: should change to reprocess queue item
             await rest.sendRequest(options)
           },
