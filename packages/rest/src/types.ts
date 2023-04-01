@@ -480,7 +480,7 @@ export interface RestManager {
    * @remarks
    * Requires the `MANAGE_WEBHOOKS` permission.
    *
-   * ⚠️ The webhook name must not contain the string 'clyde' (case-insensitive).
+   * ⚠️ The webhook name must not contain the substrings 'clyde', or 'discord' (case-insensitive).
    *
    * Fires a _Webhooks Update_ gateway event.
    *
