@@ -612,8 +612,8 @@ export enum BitwisePermissionFlags {
   MANAGE_ROLES = 0x0000000010000000,
   /** Allows management and editing of webhooks */
   MANAGE_WEBHOOKS = 0x0000000020000000,
-  /** Allows management and editing of emojis and stickers */
-  MANAGE_EMOJIS_AND_STICKERS = 0x0000000040000000,
+  /** Allows management and editing of emojis, stickers, and soundboard sounds */
+  MANAGE_GUILD_EXPRESSIONS = 0x0000000040000000,
   /** Allows members to use application commands in text channels */
   USE_SLASH_COMMANDS = 0x0000000080000000,
   /** Allows for requesting to speak in stage channels. */
@@ -634,6 +634,10 @@ export enum BitwisePermissionFlags {
   USE_EMBEDDED_ACTIVITIES = 0x0000008000000000,
   /** Allows for timing out users to prevent them from sending or reacting to messages in chat and threads, and from speaking in voice and stage channels */
   MODERATE_MEMBERS = 0x0000010000000000,
+  /** Allows for viewing role subscription insights. */
+  VIEW_CREATOR_MONETIZATION_ANALYTICS = 0x0000020000000000,
+  /** Allows for using soundboard in a voice channel. */
+  USE_SOUNDBOARD = 0x0000040000000000,
 }
 
 export type PermissionStrings = keyof typeof BitwisePermissionFlags
