@@ -270,7 +270,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
   if (payload.edited_timestamp && props.editedTimestamp) message.editedTimestamp = Date.parse(payload.edited_timestamp)
   if (payload.embeds?.length && props.embeds) message.embeds = payload.embeds.map((embed) => bot.transformers.embed(bot, embed))
   if (guildId && props.guildId) message.guildId = guildId
-  if (props.id && props.id) message.id = bot.transformers.snowflake(payload.id)
+  if (props.id && payload.id) message.id = bot.transformers.snowflake(payload.id)
   if (payload.interaction) {
     const interaction = {} as NonNullable<Message['interaction']>
     let edited = false
