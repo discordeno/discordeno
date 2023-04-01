@@ -32,11 +32,8 @@ bot.transformers.desiredProperties.message.application = true
 bot.transformers.desiredProperties.message.applicationId = true
 bot.transformers.desiredProperties.message.attachments = true
 bot.transformers.desiredProperties.message.author = true
-// @ts-expect-error idk
 bot.transformers.desiredProperties.message.channelId = true
-// @ts-expect-error idk
 bot.transformers.desiredProperties.message.components = true
-// @ts-expect-error idk
 bot.transformers.desiredProperties.message.content = true
 bot.transformers.desiredProperties.message.editedTimestamp = true
 bot.transformers.desiredProperties.message.embeds = true
@@ -386,6 +383,7 @@ function oldtransformMessage(bot: Bot, payload: DiscordMessage): any {
     // UNTRANSFORMED STUFF HERE
     content: payload.content ?? '',
     isFromBot: payload.author.bot ?? false,
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     tag: `${payload.author.username}#${payload.author.discriminator}`,
     timestamp: Date.parse(payload.timestamp),
     editedTimestamp: payload.edited_timestamp ? Date.parse(payload.edited_timestamp) : undefined,
