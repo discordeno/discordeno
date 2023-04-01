@@ -173,6 +173,8 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    *     .setTitle("Example Embed")
    *     .setDescription("This is an example embed.")
    *     .setColor("#FF0000");
+   *
+   * await sendMessage(channelId, { embeds });
    *```
    */
   description(description: string): EmbedsBuilder {
@@ -213,14 +215,46 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    *               inline: false,
    *           }
    *       ]);
-   *      ;
+   *
+   * await sendMessage(channelId, { embeds });
    *```
    */
-  // TODO: should fields check for existing and push if so?
-  // TODO: should we add a field() function too?
   fields(fields: DiscordEmbedField[]): EmbedsBuilder {
     const embed = this.getCurrentEmbed()
+    if (embed.fields !== undefined) {
+      embed.fields.push(...fields)
+
+      return this
+    }
+
     embed.fields = fields
+
+    return this
+  }
+
+  /**
+   * Add a field to the embed.
+   * @param {string} name - Name of the field.
+   * @param {string} value - Value of the field.
+   * @param {boolean} [inline=false] - Whether the field should be inline or not. Defaults to false.
+   * @returns {EmbedsBuilder} This EmbedsBuilder instance, allowing for method chaining.
+   *
+   * @example
+   * ```ts
+   * const embed = new EmbedsBuilder()
+   *     .setTitle("World of Fields Craft")
+   *     .field();
+   *
+   * await sendMessage(channelId, { embeds });
+   *```
+   */
+  field(name: string, value: string, inline?: boolean): EmbedsBuilder {
+    const embed = this.getCurrentEmbed()
+    if (embed.fields !== undefined) {
+      embed.fields.push({ name, value, inline })
+    }
+
+    embed.fields = [{ name, value, inline }]
 
     return this
   }
@@ -238,6 +272,8 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    *     .setTitle("Example Embed")
    *     .setDescription("This is an example embed.")
    *     .setColor("#FF0000");
+   *
+   * await sendMessage(channelId, { embeds });
    *```
    */
   footer(text: string, iconUrl?: string): EmbedsBuilder {
@@ -256,14 +292,14 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    *
    * @example
    * ```ts
-   *  const embeds = new EmbedsBuilder()
+   * const embeds = new EmbedsBuilder()
    *      .title("Square boxes are great")
    *      .image("https://placehold.co/512.png", {
    *           height: 512,
    *           width: 512,
    *       });
    *
-   *  await sendMessage(channelId, { embeds });
+   * await sendMessage(channelId, { embeds });
    * ```
    */
   image(url: string, options?: EmbedBuilderImageOptions): EmbedsBuilder {
@@ -285,14 +321,14 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    *
    * @example
    * ```ts
-   *  const embeds = new EmbedsBuilder()
+   * const embeds = new EmbedsBuilder()
    *      .title("External services")
    *      .provider({
-   *           name: "Discordeno",
-   *           url: "https://discordeno.js.org/",
-   *       });
+   *          name: "Discordeno",
+   *          url: "https://discordeno.js.org/",
+   *      });
    *
-   *  await sendMessage(channelId, { embeds });
+   * await sendMessage(channelId, { embeds });
    * ```
    */
   // TODO: check if u can even send this
@@ -312,12 +348,12 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    *
    * @example
    * ```ts
-   *  const embeds = new EmbedsBuilder()
-   *      .title("Add some pizzazz to your embeds.")
-   *      .thumbnail("https://placehold.co/1024x512.png", {
-   *           height: 512,
-   *           width: 1024,
-   *       });
+   * const embeds = new EmbedsBuilder()
+   *     .title("Add some pizzazz to your embeds.")
+   *     .thumbnail("https://placehold.co/1024x512.png", {
+   *         height: 512,
+   *         width: 1024,
+   *     });
    *
    *  await sendMessage(channelId, { embeds });
    * ```
@@ -341,11 +377,11 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    *
    * @example
    * ```ts
-   *  const embeds = new EmbedsBuilder()
-   *      .title("Don't have a clock? Don't worry! Here's the time:")
-   *      .timestamp();
+   * const embeds = new EmbedsBuilder()
+   *     .title("Don't have a clock? Don't worry! Here's the time:")
+   *     .timestamp();
    *
-   *  await sendMessage(channelId, { embeds });
+   * await sendMessage(channelId, { embeds });
    * ```
    */
   timestamp(timestamp?: string | number | Date): EmbedsBuilder {
@@ -365,10 +401,10 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    *
    * @example
    * ```ts
-   *  const embeds = new EmbedsBuilder()
-   *      .title("Title It Like You Mean It!", "https://discordeno.js.org/");
+   * const embeds = new EmbedsBuilder()
+   *     .title("Title It Like You Mean It!", "https://discordeno.js.org/");
    *
-   *  await sendMessage(channelId, { embeds });
+   * await sendMessage(channelId, { embeds });
    * ```
    */
   title(title: string, url?: string): EmbedsBuilder {
@@ -387,11 +423,11 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    *
    * @example
    * ```ts
-   *  const embeds = new EmbedsBuilder()
-   *      .title("Link Me Up, Scotty")
-   *      .url("https://discordeno.js.org/")
+   * const embeds = new EmbedsBuilder()
+   *     .title("Link Me Up, Scotty")
+   *     .url("https://discordeno.js.org/")
    *
-   *  await sendMessage(channelId, { embeds });
+   * await sendMessage(channelId, { embeds });
    * ```
    */
   video(url: string, options?: EmbedBuilderImageOptions): EmbedsBuilder {
