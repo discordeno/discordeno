@@ -67,7 +67,7 @@ jobs:
       - name: Generate Message
         id: genMessage
         run: |
-          MESSAGE=$(deno run -A performance/generateMessage.ts)
+          MESSAGE=$(deno run -A scripts/generateMessage.js)
           echo "MESSAGE<<EOF" >> $GITHUB_ENV
           echo "$MESSAGE" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
