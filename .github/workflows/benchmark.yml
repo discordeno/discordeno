@@ -87,8 +87,8 @@ jobs:
       - name: Save Commmit SHA
         run: |
           mkdir -p ./commitData
-          echo ${{ input.sha }} > ./commitData/sha
-          echo ${{ input.repo }} > ./commitData/repo
+          echo ${{ inputs.sha }} > ./commitData/sha
+          echo ${{ inputs.repo }} > ./commitData/repo
       - uses: actions/upload-artifact@v3
         with:
           name: commitData
