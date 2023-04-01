@@ -67,7 +67,7 @@ jobs:
         if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         uses: benchmark-action/github-action-benchmark@v1
         with:
-          tool: "customSmallerIsBetter"
+          tool: "benchmarkjs"
           output-file-path: output.txt
           external-data-json-path: benchmarksResult/data.json
       - uses: actions/upload-artifact@v3
@@ -80,7 +80,7 @@ jobs:
         uses: benchmark-action/github-action-benchmark@v1
         if: ${{ github.ref == 'refs/heads/main' && steps.cpuCheck.outputs.match == 'true' }}
         with:
-          tool: "customSmallerIsBetter"
+          tool: "benchmarkjs"
           output-file-path: output.txt
           gh-pages-branch: "benchies"
           benchmark-data-dir-path: benchmarksResult
