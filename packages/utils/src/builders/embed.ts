@@ -89,7 +89,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * await sendMessage(channelId, { embeds });
    * ```
    */
-  addEmbed() {
+  addEmbed(): EmbedsBuilder {
     if (this.length === 10) throw new Error('Maximum Embed count reached. Cannot have more than 10 Embeds.')
 
     this.push({ type: 'rich' })
@@ -175,7 +175,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    *     .setColor("#FF0000");
    *```
    */
-  description(description: string) {
+  description(description: string): EmbedsBuilder {
     const embed = this.getCurrentEmbed()
     embed.description = description
 
@@ -229,7 +229,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * Sets the footer of the embed.
    *
    * @param {string} text - The text to display in the footer.
-   * @param {string} [iconURL] - The URL of the icon to display next to the text.
+   * @param {string} [iconUrl] - The URL of the icon to display next to the text.
    * @returns {EmbedsBuilder} This EmbedsBuilder instance, allowing for method chaining.
    *
    * @example
@@ -266,7 +266,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    *  await sendMessage(channelId, { embeds });
    * ```
    */
-  image(url: string, options?: EmbedBuilderImageOptions) {
+  image(url: string, options?: EmbedBuilderImageOptions): EmbedsBuilder {
     const embed = this.getCurrentEmbed()
     embed.image = {
       url,
