@@ -11,8 +11,8 @@ export const rest = createRestManager({
 })
 rest.deleteQueueDelay = 10000
 
-const guild = await rest.createGuild({ name: 'ddenotester' });
-const channel = await rest.createChannel(guild.id,  { name: "ddenotestchannel" });
+const guild = await rest.createGuild({ name: 'ddenotester' })
+const channel = await rest.createChannel(guild.id, { name: 'ddenotestchannel' })
 
 export const e2ecache = {
   guild,

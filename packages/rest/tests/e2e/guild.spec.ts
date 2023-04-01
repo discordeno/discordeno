@@ -119,6 +119,5 @@ describe('Manage Guilds', async () => {
   //     description: 'some description',
   //   })
 
-
   // })
 })
