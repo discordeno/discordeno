@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths:
-      - "website/**"
-     # - "template/**"
+      - 'website/**'
+      # - "template/**"
 
 jobs:
   sync:

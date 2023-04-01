@@ -2,86 +2,45 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "outputs": [
-        "dist/**/*.js"
-      ],
-      "inputs": [
-        "src/**/*.ts"
-      ]
+      "outputs": ["dist/**/*.js"],
+      "inputs": ["src/**/*.ts"]
     },
     "build:type": {
-      "dependsOn": [
-        "^build:type"
-      ],
-      "outputs": [
-        "dist/**/*.d.ts",
-        "dist/**/*.d.ts.map",
-        "dist/tsconfig.tsbuildinfo"
-      ]
+      "dependsOn": ["^build:type"],
+      "outputs": ["dist/**/*.d.ts", "dist/**/*.d.ts.map", "dist/tsconfig.tsbuildinfo"]
     },
     "release-build": {
-      "dependsOn": [
-        "^release-build"
-      ],
-      "outputs": [
-        "dist/**"
-      ]
+      "dependsOn": ["^release-build"],
+      "outputs": ["dist/**"]
     },
     "test:unit-coverage": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "coverage/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
     },
     "test:unit": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "coverage/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
     },
     "test:integration": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "coverage/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
     },
     "test:test-type": {
-      "dependsOn": [
-        "^build:type"
-      ]
+      "dependsOn": ["^build:type"]
     },
     "test:deno-unit": {
-      "dependsOn": [
-        "build",
-        "^build"
-      ],
-      "outputs": [
-        "denoTestsDist/**"
-      ]
+      "dependsOn": ["build", "^build"],
+      "outputs": ["denoTestsDist/**"]
     },
     "test:e2e": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "coverage/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
     },
     "lint": {
-      "dependsOn": [
-        "^build:type"
-      ]
+      "dependsOn": ["^build:type"]
     },
     "fmt": {
-      "dependsOn": [
-        "^build:type"
-      ]
+      "dependsOn": ["^build:type"]
     },
     "dev": {
       "cache": false

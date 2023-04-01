@@ -35,7 +35,7 @@ export const REST = createRestManager({
   proxy: {
     baseUrl: process.env.REST_URL,
     authorization: process.env.AUTHORIZATION,
-  }
+  },
 })
 ```
 
@@ -78,10 +78,10 @@ You can adjust the amount of **shardsPerWorker** and **totalWorkers** to fit you
 Let's make a file called `services/gateway/index.ts` and paste the following code:
 
 ```ts
-import { logger } from '@discordeno/utils';
-import dotenv from 'dotenv';
-import express from 'express';
-dotenv.config();
+import { logger } from '@discordeno/utils'
+import dotenv from 'dotenv'
+import express from 'express'
+dotenv.config()
 
 const AUTHORIZATION = process.env.AUTHORIZATION as string
 
@@ -104,7 +104,7 @@ app.all('/*', async (req, res) => {
     // Identify A Shard
     switch (req.body.type) {
       case 'REQUEST_MEMBERS': {
-        return await GATEWAY.requestMembers(req.body.guildId, req.body.options);
+        return await GATEWAY.requestMembers(req.body.guildId, req.body.options)
       }
       default:
         logger.error(`[Shard] Unknown request received. ${JSON.stringify(req.body)}`)
@@ -166,13 +166,13 @@ Now, let's go ahead and set up the server where we will receive this and start a
 Just like before, we are going to make another http listener to listen for incoming events and delegate them outwords. Make a file called `services/gateway/sharding/index.ts`
 
 ```ts
-import { DiscordenoShard } from '@discordeno/gateway';
-import { logger } from '@discordeno/utils';
-import { Intents } from '@discordeno/types';
-import events from './events.js';
-import dotenv from 'dotenv';
-import express from 'express';
-dotenv.config();
+import { DiscordenoShard } from '@discordeno/gateway'
+import { logger } from '@discordeno/utils'
+import { Intents } from '@discordeno/types'
+import events from './events.js'
+import dotenv from 'dotenv'
+import express from 'express'
+dotenv.config()
 
 const AUTHORIZATION = process.env.AUTHORIZATION as string
 const SHARDS = new Collection<number, DiscordenoShard>()
@@ -188,10 +188,10 @@ app.use(
 app.use(express.json())
 
 function getUrlFromShardId(totalShards: number, shardId: number) {
- const urls = process.env.EVENT_HANDLER_URLS?.split(',') ?? [];
- const index = totalShards % shardId;
+  const urls = process.env.EVENT_HANDLER_URLS?.split(',') ?? []
+  const index = totalShards % shardId
 
- return urls[index] ?? urls[0];
+  return urls[index] ?? urls[0]
 }
 
 app.all('/*', async (req, res) => {
@@ -203,21 +203,23 @@ app.all('/*', async (req, res) => {
     // Identify A Shard
     switch (req.body.type) {
       case 'IDENTIFY_SHARD': {
-        logger.info(`[Shard] identifying ${SHARDS.has(req.body.shardId) ? 'existing' : 'new'} shard (${req.body.shardId})`);
-        const shard = SHARDS.get(req.body.shardId) ?? new DiscordenoShard({
-          id: req.body.shardId,
-          connection: {
-            compress: req.body.compress,
-            intents: req.body.intents,
-            properties: req.body.properties,
-            token: req.body.token,
-            totalShards: req.body.totalShards,
-            url: req.body.url,
-            version: req.body.version,
-          },
-          // TODO: Enable this in the next portion of the guide.
-          // events,
-        });
+        logger.info(`[Shard] identifying ${SHARDS.has(req.body.shardId) ? 'existing' : 'new'} shard (${req.body.shardId})`)
+        const shard =
+          SHARDS.get(req.body.shardId) ??
+          new DiscordenoShard({
+            id: req.body.shardId,
+            connection: {
+              compress: req.body.compress,
+              intents: req.body.intents,
+              properties: req.body.properties,
+              token: req.body.token,
+              totalShards: req.body.totalShards,
+              url: req.body.url,
+              version: req.body.version,
+            },
+            // TODO: Enable this in the next portion of the guide.
+            // events,
+          })
 
         SHARDS.set(shard.id, shard)
         await shard.identify()
@@ -383,8 +385,6 @@ Now let's enable resharding on our bot so we don't need to deal with it. Remembe
   - Identify limits have room to allow re-sharding. (Also customizable)
 - Manual: You can also trigger this manually should you choose.
   - When discord releases a new API version, updates your gateways to new version with no downtime.
-
-
 
 ### Evals
 
