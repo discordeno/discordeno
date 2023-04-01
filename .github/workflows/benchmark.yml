@@ -2,6 +2,13 @@ name: Benchmark
 
 on:
   workflow_call:
+    inputs:
+      sha:
+        required: true
+        type: string
+      repo:
+        required: true
+        type: string
     outputs:
       cpuMatch:
         value: ${{ jobs.benchmark.outputs.cpuMatch }}
@@ -48,4 +55,41 @@ jobs:
 
       - name: Benchmark
         if: ${{ steps.cpuCheck.outputs.match == 'true' }}
-        run: node --expose-gc ./packages/benchmark/dist/index.js
+        run: node --expose-gc ./packages/benchmark/dist/index.js | tee output.txt
+        
+      - name: Download previous benchmark data
+        uses: actions/cache@v3
+        with:
+          path: ./benchmarksResult
+          key: ${{ github.ref }}-benchmark
+      - name: Store benchmark result to cache
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          tool: "customSmallerIsBetter"
+          output-file-path: output.txt
+          external-data-json-path: benchmarksResult/data.json
+      - uses: actions/upload-artifact@v3
+        with:
+          name: benchmarkResults
+          path: benchmarksResult/data.json
+
+      - name: Store benchmark result (Main)
+        uses: benchmark-action/github-action-benchmark@v1
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          tool: "customSmallerIsBetter"
+          output-file-path: output.txt
+          gh-pages-branch: "benchies"
+          benchmark-data-dir-path: benchmarksResult
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+
+      - name: Save Commmit SHA
+        run: |
+          mkdir -p ./commitData
+          echo ${{ input.sha }} > ./commitData/sha
+          echo ${{ input.repo }} > ./commitData/repo
+      - uses: actions/upload-artifact@v3
+        with:
+          name: commitData
+          path: commitData/
