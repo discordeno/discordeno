@@ -1,14 +1,37 @@
 import fs from 'node:fs/promises'
+
 const benchmarkData = await fetch(`https://raw.githubusercontent.com/discordeno/discordeno/benchies/benchmarksResult/data.js`)
   .then(async (res) => await res.text())
   .then((text) => JSON.parse(text.slice(24)))
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
 const commitSha = await fs.readFile('./sha', 'utf-8')
 const results = JSON.parse(await fs.readFile('./data.json', 'utf-8'))
-const benchmarks = results.entries.Benchmark
+
+interface BenchmarksData {
+  commit: {
+    author: { email: string; name: string; username: string }
+    committer: { email: string; name: string; username: string }
+    distinct: boolean
+    id: string
+    message: string
+    timestamp: string
+    tree_id: string
+    url: string
+  }
+  date: number
+  tool: string
+  benches: Array<{ name: string; value: number; unit: string; range: string }>
+}
+
+type CompareTable = Record<string, Record<string, { name: string; value: number; unit: string; range: string }>>
+
+const benchmarks = results.entries.Benchmark as BenchmarksData[]
 benchmarks.reverse()
-const compareWithHead = {}
-const latestBaseBenchmarks = benchmarkData.entries.Benchmark.slice(-1)[0]
+
+const compareWithHead: CompareTable = {}
+const latestBaseBenchmarks = benchmarkData.entries.Benchmark.slice(-1)[0] as BenchmarksData
+
 for (const benchmark of latestBaseBenchmarks.benches) {
   compareWithHead[benchmark.name] = {
     [latestBaseBenchmarks.commit.id]: benchmark,
@@ -25,7 +48,9 @@ for (let i = 0; i < benchmarks.length; i++) {
     }
   }
 }
+
 let message = '<!-- benchmark comment by ci -->\n'
+
 message += `## Benchmark\n\n`
 message += '<details><summary>Detail results of benchmarks</summary>\n\n'
 let header1 = `| Benchmark suite | Base (${latestBaseBenchmarks.commit.id}) |`
@@ -36,6 +61,7 @@ for (const [index, commitId] of benchmarks.map((benchmark) => benchmark.commit.i
 }
 message += `${header1}\n`
 message += `${header2}\n`
+
 for (const benchName of Object.keys(compareWithHead)) {
   let benchData = `| ${benchName} |`
   benchData += compareWithHead[benchName][latestBaseBenchmarks.commit.id]
@@ -43,6 +69,7 @@ for (const benchName of Object.keys(compareWithHead)) {
         compareWithHead[benchName][latestBaseBenchmarks.commit.id].unit
       } \`${compareWithHead[benchName][latestBaseBenchmarks.commit.id].range}\``} |`
     : '|'
+
   for (const commitId of benchmarks.map((benchmark) => benchmark.commit.id)) {
     benchData += compareWithHead[benchName][commitId]
       ? ` \`${compareWithHead[benchName][commitId].value}\` ${compareWithHead[benchName][commitId].unit} \`${compareWithHead[benchName][commitId].range}\`|`
@@ -50,5 +77,7 @@ for (const benchName of Object.keys(compareWithHead)) {
   }
   message += `${benchData}\n`
 }
+
 message += '</details>\n\n'
+
 console.log(message.replaceAll('`', '\\`'))
