@@ -1,8 +1,0 @@
-{
-  "label": "Docs (API References)",
-  "position": 2,
-  "link": {
-    "type": "generated-index",
-    "description": "Automatically generated documentation."
-  }
-}
