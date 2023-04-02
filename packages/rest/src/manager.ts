@@ -6,7 +6,6 @@ import {
   camelize,
   camelToSnakeCase,
   delay,
-  encode,
   getBotIdFromToken,
   isGetMessagesAfter,
   isGetMessagesAround,
@@ -59,7 +58,6 @@ import type {
   DiscordVoiceRegion,
   DiscordWebhook,
   DiscordWelcomeScreen,
-  FileContent,
   GetMessagesOptions,
   GetScheduledEventUsers,
   MfaLevels,
@@ -954,34 +952,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async makeRequest(method, url, options) {
       if (!rest.baseUrl.startsWith('https://discord.com') && url[0] === '/') {
-        // Special handling for sending blobs across http to proxy
-        // TODO: fix this hacky handling
-        if (!(options?.body instanceof FormData) && !Array.isArray(options?.body) && options?.body?.file) {
-          if (!Array.isArray(options.body.file)) {
-            options.body.file = [options.body.file]
-          }
-          // convert blobs to string before sending to proxy
-          options.body.file = await Promise.all(
-            (options.body.file as FileContent[]).map(async (f: FileContent) => {
-              const url = encode(await f.blob.arrayBuffer())
-
-              return { name: f.name, blob: `data:${f.blob.type};base64,${url}` }
-            }),
-          )
-        }
-
-        const headers: HeadersInit = {
-          Authorization: rest.authorization ?? '',
-        }
-        if (options?.body) {
-          headers['Content-Type'] = 'application/json'
-        }
-
-        const result = await fetch(`${rest.baseUrl}${url}`, {
-          body: options?.body ? JSON.stringify(options.body) : undefined,
-          headers,
-          method,
-        })
+        const result = await fetch(`${rest.baseUrl}${url}`, rest.createRequestBody(method, options))
 
         if (!result.ok) {
           const err = (await result.json().catch(() => {})) as Record<string, any>
