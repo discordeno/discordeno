@@ -15,7 +15,7 @@ const createGatewayManagerWithPort = (port: number) =>
         maxConcurrency: 1,
       },
     },
-    applicationId: 1n,
+    token: ' ',
     url: `ws://localhost:${port}`,
     intents: Intents.Guilds,
     events: {},
