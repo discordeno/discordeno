@@ -5,7 +5,7 @@ import { enableCachePlugin } from '../plugins/mod.ts.js'
 const results = await memoryBenchmarks(() =>
   enableCachePlugin(
     createBot({
-      token: ' ',
+      applicationId: 1n,
       botId: 0n,
     }),
   ),

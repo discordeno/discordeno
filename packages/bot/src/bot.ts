@@ -32,7 +32,7 @@ import type { VoiceState } from './transformers/voiceState.js'
  * @returns Bot
  */
 export function createBot(options: CreateBotOptions): Bot {
-  if (!options.rest) options.rest = { token: options.token }
+  if (!options.rest) options.rest = { token: options.token, applicationId: options.applicationId }
   if (!options.gateway) options.gateway = { token: options.token, events: {} }
   if (!options.gateway.events.message) {
     options.gateway.events.message = async (shard, data) => {
@@ -85,6 +85,8 @@ export function createBot(options: CreateBotOptions): Bot {
 export interface CreateBotOptions {
   /** The bot's token. */
   token: string
+  /** Application Id of the bot incase it is an old bot token. */
+  applicationId?: bigint
   /** The bot's intents that will be used to make a connection with discords gateway. */
   intents?: GatewayIntents
   /** Any options you wish to provide to the rest manager. */
