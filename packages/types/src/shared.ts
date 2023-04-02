@@ -770,6 +770,7 @@ export type GatewayEventNames = GatewayDispatchEventNames | 'READY' | 'RESUMED'
 export enum GatewayIntents {
   /**
    * - GUILD_CREATE
+   * - GUILD_UPDATE
    * - GUILD_DELETE
    * - GUILD_ROLE_CREATE
    * - GUILD_ROLE_UPDATE
@@ -793,17 +794,22 @@ export enum GatewayIntents {
    * - GUILD_MEMBER_ADD
    * - GUILD_MEMBER_UPDATE
    * - GUILD_MEMBER_REMOVE
+   * - THREAD_MEMBERS_UPDATE
+   *
+   * This is a privileged intent.
    */
   GuildMembers = 1 << 1,
   /**
+   * - GUILD_AUDIT_LOG_ENTRY_CREATE
    * - GUILD_BAN_ADD
    * - GUILD_BAN_REMOVE
    */
-  GuildBans = 1 << 2,
+  GuildModeration = 1 << 2,
   /**
    * - GUILD_EMOJIS_UPDATE
+   * - GUILD_STICKERS_UPDATE
    */
-  GuildEmojis = 1 << 3,
+  GuildEmojisAndStickers = 1 << 3,
   /**
    * - GUILD_INTEGRATIONS_UPDATE
    * - INTEGRATION_CREATE
@@ -811,7 +817,7 @@ export enum GatewayIntents {
    * - INTEGRATION_DELETE
    */
   GuildIntegrations = 1 << 4,
-  /** Enables the following events:
+  /**
    * - WEBHOOKS_UPDATE
    */
   GuildWebhooks = 1 << 5,
@@ -826,13 +832,18 @@ export enum GatewayIntents {
   GuildVoiceStates = 1 << 7,
   /**
    * - PRESENCE_UPDATE
+   *
+   * This is a privileged intent.
    */
   GuildPresences = 1 << 8,
   /**
    * - MESSAGE_CREATE
    * - MESSAGE_UPDATE
    * - MESSAGE_DELETE
-   */
+   * - MESSAGE_DELETE_BULK
+   *
+   * The messages do not contain content by default.
+   * If you want to receive their content too, you need to turn on the privileged `MESSAGE_CONTENT` intent. */
   GuildMessages = 1 << 9,
   /**
    * - MESSAGE_REACTION_ADD
@@ -864,9 +875,10 @@ export enum GatewayIntents {
    * - TYPING_START
    */
   DirectMessageTyping = 1 << 14,
-
   /**
-   * This intent will add `content` values to all message objects.
+   * This intent will add all content related values to message events.
+   *
+   * This is a privileged intent.
    */
   MessageContent = 1 << 15,
   /**
@@ -877,7 +889,6 @@ export enum GatewayIntents {
    * - GUILD_SCHEDULED_EVENT_USER_REMOVE this is experimental and unstable.
    */
   GuildScheduledEvents = 1 << 16,
-
   /**
    * - AUTO_MODERATION_RULE_CREATE
    * - AUTO_MODERATION_RULE_UPDATE
