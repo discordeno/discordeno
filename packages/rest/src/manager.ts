@@ -1699,7 +1699,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post(rest.routes.webhooks.webhook(rest.applicationId, token), {
         body: options,
         files: options.files,
-        runThroughQueue: false,
         unauthorized: true,
       })
     },
