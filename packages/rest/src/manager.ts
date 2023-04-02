@@ -937,6 +937,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       request.url = `${rest.baseUrl}/v${rest.version}/${parts.join('/')}`
 
       const url = rest.simplifyUrl(request.url, request.method)
+
+      if (request.runThroughQueue === false) {
+        return rest.sendRequest(request)
+      }
+
       const queue = rest.queues.get(url)
 
       if (queue !== undefined) {
@@ -1006,6 +1011,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
             resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined)
           },
           reject,
+          runThroughQueue: options?.runThroughQueue,
         }
 
         rest.processRequest(payload)
@@ -1156,7 +1162,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteFollowupMessage(token, messageId) {
-      await rest.delete(rest.routes.interactions.responses.message(rest.applicationId, token, messageId))
+      await rest.delete(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), { unauthorized: true })
     },
 
     async deleteGlobalApplicationCommand(commandId) {
@@ -1201,7 +1207,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async deleteOriginalInteractionResponse(token) {
-      await rest.delete(rest.routes.interactions.responses.original(rest.applicationId, token))
+      await rest.delete(rest.routes.interactions.responses.original(rest.applicationId, token), { unauthorized: true })
     },
 
     async deleteOwnReaction(channelId, messageId, reaction) {
@@ -1297,6 +1303,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.patch<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), {
         body,
         files: body.files,
+        unauthorized: true,
       })
     },
 
@@ -1344,6 +1351,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           data: options,
         },
         files: options.files,
+        unauthorized: true,
       })
     },
 
@@ -1486,7 +1494,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getFollowupMessage(token, messageId) {
-      return await rest.get<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId))
+      return await rest.get<DiscordMessage>(rest.routes.interactions.responses.message(rest.applicationId, token, messageId), { unauthorized: true })
     },
 
     async getGatewayBot() {
@@ -1554,7 +1562,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getOriginalInteractionResponse(token) {
-      return await rest.get<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token))
+      return await rest.get<DiscordMessage>(rest.routes.interactions.responses.original(rest.applicationId, token), { unauthorized: true })
     },
 
     async getPinnedMessages(channelId) {
@@ -1685,43 +1693,21 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await rest.delete(rest.routes.channels.threads.user(channelId, userId))
     },
 
-    // TODO: why that
     async sendFollowupMessage(token, options) {
-      return await new Promise((resolve, reject) => {
-        rest.sendRequest({
-          url: rest.routes.webhooks.webhook(rest.applicationId, token),
-          method: 'POST',
-          requestBodyOptions: { body: options, files: options.files },
-          retryCount: 0,
-          retryRequest: async function (options: SendRequestOptions) {
-            // TODO: should change to reprocess queue item
-            await rest.sendRequest(options)
-          },
-          resolve: (data) => {
-            resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined)
-          },
-          reject,
-        })
+      return await rest.post(rest.routes.webhooks.webhook(rest.applicationId, token), {
+        body: options,
+        files: options.files,
+        runThroughQueue: false,
+        unauthorized: true,
       })
     },
 
-    // TODO: why that
     async sendInteractionResponse(interactionId, token, options) {
-      await new Promise((resolve, reject) => {
-        rest.sendRequest({
-          url: rest.routes.interactions.responses.callback(interactionId, token),
-          method: 'POST',
-          requestBodyOptions: { body: options },
-          retryCount: 0,
-          retryRequest: async function (options: SendRequestOptions) {
-            // TODO: should change to reprocess queue item
-            await rest.sendRequest(options)
-          },
-          resolve: (data) => {
-            resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined)
-          },
-          reject,
-        })
+      return await rest.post(rest.routes.interactions.responses.callback(interactionId, token), {
+        body: options,
+        files: options.files,
+        runThroughQueue: false,
+        unauthorized: true,
       })
     },
 
