@@ -32,7 +32,7 @@ import type { VoiceState } from './transformers/voiceState.js'
  * @returns Bot
  */
 export function createBot(options: CreateBotOptions): Bot {
-  if (!options.rest) options.rest = { token: options.token, applicationId: getBotIdFromToken(options.token) }
+  if (!options.rest) options.rest = { token: options.token }
   if (!options.gateway) options.gateway = { token: options.token, events: {} }
   if (!options.gateway.events.message) {
     options.gateway.events.message = async (shard, data) => {

@@ -104,7 +104,7 @@ export interface CreateRestManagerOptions {
    * For old bots that have a different bot id and application id.
    * @default bot id from token
    */
-  applicationId: BigString
+  applicationId?: BigString
   /** Configuration when using a proxy. */
   proxy?: {
     /**

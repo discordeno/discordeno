@@ -6,6 +6,7 @@ import {
   camelize,
   camelToSnakeCase,
   delay,
+  getBotIdFromToken,
   isGetMessagesAfter,
   isGetMessagesAround,
   isGetMessagesBefore,
@@ -70,7 +71,7 @@ const version = '19.0.0-alpha.1'
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
   const rest: RestManager = {
     token: options.token,
-    applicationId: BigInt(options.applicationId),
+    applicationId: options.applicationId ? BigInt(options.applicationId) : options.token ? getBotIdFromToken(options.token) : undefined,
     version: options.version ?? 10,
     baseUrl: options.proxy?.baseUrl ?? 'https://discord.com/api',
     maxRetryCount: Infinity,
