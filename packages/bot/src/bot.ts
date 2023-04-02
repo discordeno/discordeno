@@ -44,9 +44,7 @@ export function createBot(options: CreateBotOptions): Bot {
       // RUN DISPATCH CHECK
       await bot.events.dispatchRequirements?.(data, shard.id)
       bot.events[
-        data.t.toLowerCase().replace(/_([a-z])/g, function (g) {
-          return g[1].toUpperCase()
-        }) as keyof EventHandlers
+        data.t as keyof EventHandlers
         // @ts-expect-error as any gets removed by linter
       ]?.(data.d, shard.id)
     }
