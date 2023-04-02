@@ -37,7 +37,7 @@ for (const benchmark of latestBaseBenchmarks.benches) {
     [latestBaseBenchmarks.commit.id]: benchmark,
   }
 }
-for (let i = benchmarks.length - 1; i > -1; i--) {
+for (let i = benchmarks.length - 1; i >= 0; i--) {
   for (const bench of benchmarks[i].benches) {
     if (compareWithHead[bench.name]) {
       compareWithHead[bench.name][benchmarks[i].commit.id] = bench
