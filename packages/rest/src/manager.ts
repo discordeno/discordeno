@@ -696,7 +696,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${version})`,
       }
 
-      if (!options?.unauthorized) headers.authorization = `Bot ${rest.token}`
+      if (options?.unauthorized !== false) headers.authorization = `Bot ${rest.token}`
 
       // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
       if (options?.reason !== undefined) {
