@@ -82,10 +82,14 @@ describe('Manage Guilds', async () => {
   })
 
   it('Banning members', async () => {
-    await rest.banMember(e2ecache.guild.id, '379643682984296448', {
-      reason: 'Blame Wolf',
-      deleteMessageSeconds: 604800,
-    })
+    await rest.banMember(
+      e2ecache.guild.id,
+      '379643682984296448',
+      {
+        deleteMessageSeconds: 604800,
+      },
+      'Blame Wolf',
+    )
     const fetchedBan = await rest.getBan(e2ecache.guild.id, '379643682984296448')
 
     // Assertions
