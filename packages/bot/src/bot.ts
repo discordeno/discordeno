@@ -121,7 +121,7 @@ export interface Bot {
 export interface EventHandlers {
   debug: (text: string, ...args: any[]) => unknown
   applicationCommandPermissionsUpdate: (command: ApplicationCommandPermission) => unknown
-  GuildAuditLogEntryCreate: (log: AuditLogEntry, guildId: bigint) => unknown
+  guildAuditLogEntryCreate: (log: AuditLogEntry, guildId: bigint) => unknown
   automodRuleCreate: (rule: AutoModerationRule) => unknown
   automodRuleUpdate: (rule: AutoModerationRule) => unknown
   automodRuleDelete: (rule: AutoModerationRule) => unknown
