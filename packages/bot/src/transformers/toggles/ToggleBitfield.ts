@@ -21,6 +21,10 @@ export class ToggleBitfield {
     this.bitfield &= ~bits
     return this
   }
+
+  toJSON(): number {
+    return this.bitfield;
+  }
 }
 
 export class ToggleBitfieldBigint {
