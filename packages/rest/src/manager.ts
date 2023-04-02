@@ -971,7 +971,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return result.status !== 204 ? ((await result.json()) as any) : undefined
       }
 
-      return await new Promise((resolve, reject) => {
+      // eslint-disable-next-line no-async-promise-executor
+      return await new Promise(async (resolve, reject) => {
         const payload: SendRequestOptions = {
           url,
           method,
@@ -987,7 +988,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           runThroughQueue: options?.runThroughQueue,
         }
 
-        return rest.processRequest(payload)
+        await rest.processRequest(payload)
       })
     },
 
