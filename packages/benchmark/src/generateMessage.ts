@@ -5,7 +5,7 @@ const benchmarkData = await fetch(`https://raw.githubusercontent.com/discordeno/
   .then((text) => JSON.parse(text.slice(24)))
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-const commitSha = await fs.readFile('./sha', 'utf-8')
+// const commitSha = await fs.readFile('./sha', 'utf-8')
 const results = JSON.parse(await fs.readFile('./data.json', 'utf-8'))
 
 interface BenchmarksData {
@@ -37,7 +37,7 @@ for (const benchmark of latestBaseBenchmarks.benches) {
     [latestBaseBenchmarks.commit.id]: benchmark,
   }
 }
-for (let i = 0; i < benchmarks.length; i++) {
+for (let i = benchmarks.length - 1; i >= 0; i--) {
   for (const bench of benchmarks[i].benches) {
     if (compareWithHead[bench.name]) {
       compareWithHead[bench.name][benchmarks[i].commit.id] = bench
@@ -55,7 +55,10 @@ message += `## Benchmark\n\n`
 message += '<details><summary>Detail results of benchmarks</summary>\n\n'
 let header1 = `| Benchmark suite | Base (${latestBaseBenchmarks.commit.id}) |`
 let header2 = `|-|-|`
-for (const [index, commitId] of benchmarks.map((benchmark) => benchmark.commit.id).entries()) {
+const commitIds = benchmarks.map((benchmark) => benchmark.commit.id)
+const uniqueCommitIds = commitIds.filter((benchmarkCommitId, index) => commitIds.indexOf(benchmarkCommitId) === index)
+
+for (const [index, commitId] of uniqueCommitIds.entries()) {
   header1 += index === 0 ? ` Latest Head (${commitId}) |` : ` ${commitId} |`
   header2 += '-|'
 }
@@ -70,7 +73,7 @@ for (const benchName of Object.keys(compareWithHead)) {
       } \`${compareWithHead[benchName][latestBaseBenchmarks.commit.id].range}\``} |`
     : '|'
 
-  for (const commitId of benchmarks.map((benchmark) => benchmark.commit.id)) {
+  for (const commitId of uniqueCommitIds) {
     benchData += compareWithHead[benchName][commitId]
       ? ` \`${compareWithHead[benchName][commitId].value}\` ${compareWithHead[benchName][commitId].unit} \`${compareWithHead[benchName][commitId].range}\`|`
       : '|'
