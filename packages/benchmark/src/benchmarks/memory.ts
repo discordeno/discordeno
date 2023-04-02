@@ -21,6 +21,7 @@ await memoryBenchmark(
   () =>
     enableCachePlugin(
       createBot({
+        token: ' ',
         applicationId: 1n,
         events: {},
       }),
