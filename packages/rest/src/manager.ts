@@ -939,7 +939,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const url = rest.simplifyUrl(request.url, request.method)
 
       if (request.runThroughQueue === false) {
-        return rest.sendRequest(request)
+        rest.sendRequest(request)
+
+        return
       }
 
       const queue = rest.queues.get(url)
