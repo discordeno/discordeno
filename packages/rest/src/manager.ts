@@ -971,6 +971,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return result.status !== 204 ? ((await result.json()) as any) : undefined
       }
 
+      // eslint-disable-next-line no-async-promise-executor
       return await new Promise(async (resolve, reject) => {
         const payload: SendRequestOptions = {
           url,
