@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676312608104,
+  "lastUpdate": 1680402443216,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -42,6 +42,72 @@ window.BENCHMARK_DATA = {
             "value": 277.12,
             "unit": "MB",
             "range": "275.51 … 277.98"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "heiheiho000@gmail.com",
+            "name": "Jonathan Ho",
+            "username": "H01001000"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "782a778a1dca5cb4808a607beb4d23149e4da400",
+          "message": "ci: add git reset before store benchmark (#2938)",
+          "timestamp": "2023-04-02T02:25:01Z",
+          "tree_id": "d94765002e3952e28c98b1851ba8ae292194d826",
+          "url": "https://github.com/discordeno/discordeno/commit/782a778a1dca5cb4808a607beb4d23149e4da400"
+        },
+        "date": 1680402440095,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 0.14,
+            "range": "±2.93%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 15.61,
+            "range": "±1.01%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 0,
+            "range": "±0%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "rest.simplifyUrl",
+            "value": 233811,
+            "range": "±0.25%",
+            "unit": "ops/sec",
+            "extra": "96 samples"
+          },
+          {
+            "name": "Camelize 1 event",
+            "value": 7073,
+            "range": "±0.41%",
+            "unit": "ops/sec",
+            "extra": "93 samples"
+          },
+          {
+            "name": "Snakelize 1 event",
+            "value": 7117,
+            "range": "±0.39%",
+            "unit": "ops/sec",
+            "extra": "94 samples"
           }
         ]
       }
