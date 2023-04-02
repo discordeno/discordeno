@@ -69,12 +69,16 @@ import type { CreateRequestBodyOptions, CreateRestManagerOptions, RestManager, S
 const version = '19.0.0-alpha.1'
 
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
-  // Falsy token string check
-  if (!options.token) throw new Error('You must provide a valid token.')
+  const applicationId = options.applicationId ? BigInt(options.applicationId) : options.token ? getBotIdFromToken(options.token) : undefined
+  if (!applicationId) {
+    throw new Error(
+      '`applicationId` was not provided and was not able to extract the id from the bots token. Please explicitly pass `applicationId` to the rest manager.',
+    )
+  }
 
   const rest: RestManager = {
     token: options.token,
-    applicationId: options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token),
+    applicationId,
     version: options.version ?? 10,
     baseUrl: options.proxy?.baseUrl ?? 'https://discord.com/api',
     maxRetryCount: Infinity,
