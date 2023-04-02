@@ -169,19 +169,19 @@ export interface RestManager {
   /** Split a url to separate rate limit buckets based on major/minor parameters. */
   simplifyUrl: (url: string, method: RequestMethods) => string
   /** Make a request to be sent to the api. */
-  makeRequest: <T = unknown>(method: RequestMethods, url: string, options?: Omit<CreateRequestBodyOptions, 'method'>) => Promise<T>
+  makeRequest: <T = unknown>(method: RequestMethods, url: string, options?: MakeRequestOptions) => Promise<T>
   /** Takes a request and processes it into a queue. */
-  processRequest: (request: SendRequestOptions) => void
+  processRequest: (request: SendRequestOptions) => Promise<void>
   /** Make a get request to the api */
-  get: <T = void>(url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => Promise<Camelize<T>>
+  get: <T = void>(url: string, options?: Omit<MakeRequestOptions, 'body'>) => Promise<Camelize<T>>
   /** Make a post request to the api. */
-  post: <T = void>(url: string, options?: Omit<CreateRequestBodyOptions, 'method'>) => Promise<Camelize<T>>
+  post: <T = void>(url: string, options?: MakeRequestOptions) => Promise<Camelize<T>>
   /** Make a put request to the api. */
-  put: <T = void>(url: string, options?: Omit<CreateRequestBodyOptions, 'method'>) => Promise<Camelize<T>>
+  put: <T = void>(url: string, options?: MakeRequestOptions) => Promise<Camelize<T>>
   /** Make a delete request to the api. */
-  delete: (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => Promise<void>
+  delete: (url: string, options?: Omit<MakeRequestOptions, 'body'>) => Promise<void>
   /** Make a patch request to the api. */
-  patch: <T = void>(url: string, options?: Omit<CreateRequestBodyOptions, 'method'>) => Promise<Camelize<T>>
+  patch: <T = void>(url: string, options?: MakeRequestOptions) => Promise<Camelize<T>>
   /**
    * Adds a reaction to a message.
    *
@@ -2531,6 +2531,8 @@ export interface CreateRequestBodyOptions {
   files?: FileContent[]
 }
 
+export type MakeRequestOptions = Omit<CreateRequestBodyOptions, 'method'> & Pick<SendRequestOptions, 'runThroughQueue'>
+
 export interface RequestBody {
   headers: Record<string, string>
   body?: string | FormData
@@ -2554,6 +2556,11 @@ export interface SendRequestOptions {
   bucketId?: string
   /** Additional request options, used for things like overriding authorization header. */
   requestBodyOptions?: CreateRequestBodyOptions
+  /**
+   * Whether the request should be run through the queue.
+   * Useful for routes which do not have any rate limits.
+   */
+  runThroughQueue?: boolean
 }
 
 export interface RestRateLimitedPath {
