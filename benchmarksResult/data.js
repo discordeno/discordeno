@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680449968697,
+  "lastUpdate": 1680450162794,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -705,6 +705,114 @@ window.BENCHMARK_DATA = {
             "name": "Snakelize 1 event",
             "value": 6585,
             "range": "±0.16%",
+            "unit": "ops/sec",
+            "extra": "94 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "heiheiho000@gmail.com",
+            "name": "Jonathan Ho",
+            "username": "H01001000"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7a69c02d13f5824d6747519523d1cacd381311fa",
+          "message": "feat(site): add back benchmark to site (also change cpu model) (#2939)\n\n* ci: add concurrency for deploy site\n\n* feat(site): add benchmark\n\n* refactor(bench): overwrite old result with new\n\n* Update packages/benchmark/src/generateMessage.ts\n\nCo-authored-by: ITOH <to@itoh.at>\n\n* Update scripts/generateMessage.js\n\nCo-authored-by: ITOH <to@itoh.at>\n\n* Update site.yml\n\n---------\n\nCo-authored-by: ITOH <to@itoh.at>",
+          "timestamp": "2023-04-02T15:39:52Z",
+          "tree_id": "1a232822eec9e71b44abbd75d262f3bb213a7a84",
+          "url": "https://github.com/discordeno/discordeno/commit/7a69c02d13f5824d6747519523d1cacd381311fa"
+        },
+        "date": 1680450161333,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "[transformer] message cache check RSS",
+            "value": 112.53,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Used",
+            "value": 117.27,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Total",
+            "value": 106.88,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check RSS",
+            "value": 79.24,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Used",
+            "value": 102.43,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Total",
+            "value": 78.83,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 0.74,
+            "range": "±2.84%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 10.76,
+            "range": "±1.44%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 0,
+            "range": "±0%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "rest.simplifyUrl",
+            "value": 223799,
+            "range": "±0.25%",
+            "unit": "ops/sec",
+            "extra": "95 samples"
+          },
+          {
+            "name": "Camelize 1 event",
+            "value": 6409,
+            "range": "±0.40%",
+            "unit": "ops/sec",
+            "extra": "91 samples"
+          },
+          {
+            "name": "Snakelize 1 event",
+            "value": 6480,
+            "range": "±0.42%",
             "unit": "ops/sec",
             "extra": "94 samples"
           }
