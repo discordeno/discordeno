@@ -6,7 +6,7 @@ name: Deploy Docs Site
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: ["main"]
+    branches: ['main']
     paths:
       - "website/**"
       - ".github/workflows/site.yml"
