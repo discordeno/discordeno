@@ -171,7 +171,7 @@ export interface RestManager {
   /** Make a request to be sent to the api. */
   makeRequest: <T = unknown>(method: RequestMethods, url: string, options?: MakeRequestOptions) => Promise<T>
   /** Takes a request and processes it into a queue. */
-  processRequest: (request: SendRequestOptions) => void
+  processRequest: (request: SendRequestOptions) => Promise<void>
   /** Make a get request to the api */
   get: <T = void>(url: string, options?: Omit<MakeRequestOptions, 'body'>) => Promise<Camelize<T>>
   /** Make a post request to the api. */

@@ -924,7 +924,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return parts.join('/')
     },
 
-    processRequest(request: SendRequestOptions) {
+    async processRequest(request: SendRequestOptions) {
       const route = request.url.substring(request.url.indexOf('api/'))
       const parts = route.split('/')
       // Remove the api/
@@ -937,7 +937,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const url = rest.simplifyUrl(request.url, request.method)
 
       if (request.runThroughQueue === false) {
-        rest.sendRequest(request)
+        await rest.sendRequest(request)
 
         return
       }
@@ -971,14 +971,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return result.status !== 204 ? ((await result.json()) as any) : undefined
       }
 
-      return await new Promise((resolve, reject) => {
+      return await new Promise(async (resolve, reject) => {
         const payload: SendRequestOptions = {
           url,
           method,
           requestBodyOptions: options,
           retryCount: 0,
           retryRequest: async function (payload: SendRequestOptions) {
-            rest.processRequest(payload)
+            await rest.processRequest(payload)
           },
           resolve: (data) => {
             resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined)
@@ -987,7 +987,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           runThroughQueue: options?.runThroughQueue,
         }
 
-        rest.processRequest(payload)
+        await rest.processRequest(payload)
       })
     },
 
