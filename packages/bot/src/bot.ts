@@ -85,7 +85,7 @@ export function createBot(options: CreateBotOptions): Bot {
 export interface CreateBotOptions {
   /** The bot's token. */
   token: string
-  /** Application Id of the bot incase it is an old bot token */
+  /** Application Id of the bot incase it is an old bot token. */
   applicationId?: bigint
   /** The bot's intents that will be used to make a connection with discords gateway. */
   intents?: GatewayIntents
