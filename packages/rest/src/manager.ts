@@ -1065,8 +1065,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordAutoModerationRule>(rest.routes.guilds.automod.rules(guildId), { body, reason })
     },
 
-    async createChannel(guildId, body) {
-      return await rest.post<DiscordChannel>(rest.routes.guilds.channels(guildId), { body })
+    async createChannel(guildId, body, reason) {
+      return await rest.post<DiscordChannel>(rest.routes.guilds.channels(guildId), { body, reason })
     },
 
     async createEmoji(guildId, body, reason) {
@@ -1289,8 +1289,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await rest.patch(rest.routes.guilds.channels(guildId), { body })
     },
 
-    async editEmoji(guildId, id, body) {
-      return await rest.patch<DiscordEmoji>(rest.routes.guilds.emoji(guildId, id), { body })
+    async editEmoji(guildId, id, body, reason) {
+      return await rest.patch<DiscordEmoji>(rest.routes.guilds.emoji(guildId, id), { body, reason })
     },
 
     async editFollowupMessage(token, messageId, body) {

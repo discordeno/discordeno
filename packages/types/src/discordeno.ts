@@ -267,11 +267,6 @@ export interface SearchMembers {
   limit?: number
 }
 
-export interface WithReason {
-  /** The reason which should be added in the audit logs for doing this action. */
-  reason?: string
-}
-
 export interface OverwriteReadable {
   /** Role or user id */
   id: bigint
@@ -693,7 +688,7 @@ export interface DeleteWebhookMessageOptions {
   threadId: BigString
 }
 
-export interface CreateForumPostWithMessage extends WithReason {
+export interface CreateForumPostWithMessage {
   /** 1-100 character thread name */
   name: string
   /** Duration in minutes to automatically archive the thread after recent activity */
@@ -719,7 +714,7 @@ export interface CreateStageInstance {
   sendStartNotification?: boolean
 }
 
-export interface EditStageInstanceOptions extends WithReason {
+export interface EditStageInstanceOptions {
   /** The topic of the Stage instance (1-120 characters) */
   topic: string
 }
