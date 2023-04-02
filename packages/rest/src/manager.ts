@@ -1705,7 +1705,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async sendInteractionResponse(interactionId, token, options) {
       return await rest.post(rest.routes.interactions.responses.callback(interactionId, token), {
         body: options,
-        files: options.files,
+        files: options.data?.files,
         runThroughQueue: false,
         unauthorized: true,
       })
