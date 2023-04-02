@@ -479,7 +479,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/stage-instance#create-stage-instance}
    */
-  createStageInstance: (options: CreateStageInstance, reason?: string) Promise<CamelizedDiscordStageInstance>
+  createStageInstance: (options: CreateStageInstance, reason?: string) => Promise<CamelizedDiscordStageInstance>
   /**
    * Creates a webhook.
    *
@@ -909,7 +909,7 @@ export interface RestManager {
     guildId: BigString,
     ruleId: BigString,
     options: Partial<EditAutoModerationRuleOptions>,
-  reason?: string
+    reason?: string,
   ) => Promise<CamelizedDiscordAutoModerationRule>
   /**
    * Modifies the bot's username or avatar.
@@ -1058,7 +1058,7 @@ export interface RestManager {
     guildId: BigString,
     options: CreateApplicationCommand,
   ) => Promise<CamelizedDiscordApplicationCommand>
-  /** Modify a guild's MFA level. Requires guild ownership. 
+  /** Modify a guild's MFA level. Requires guild ownership.
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    */
   editGuildMfaLevel: (guildId: BigString, mfaLevel: MfaLevels, reason?: string) => Promise<void>
@@ -1075,7 +1075,12 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#modify-guild-sticker}
    */
-  editGuildSticker: (guildId: BigString, stickerId: BigString, options: AtLeastOne<EditGuildStickerOptions>, reason?: string) => Promise<CamelizedDiscordSticker>
+  editGuildSticker: (
+    guildId: BigString,
+    stickerId: BigString,
+    options: AtLeastOne<EditGuildStickerOptions>,
+    reason?: string,
+  ) => Promise<CamelizedDiscordSticker>
   /**
    * Edits a template's settings.
    *
@@ -1215,7 +1220,12 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event}
    */
-  editScheduledEvent: (guildId: BigString, eventId: BigString, options: Partial<EditScheduledEvent>, reason?: string) => Promise<CamelizedDiscordScheduledEvent>
+  editScheduledEvent: (
+    guildId: BigString,
+    eventId: BigString,
+    options: Partial<EditScheduledEvent>,
+    reason?: string,
+  ) => Promise<CamelizedDiscordScheduledEvent>
   /**
    * Edits a stage instance.
    *
@@ -1311,7 +1321,11 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen}
    */
-  editWelcomeScreen: (guildId: BigString, options: CamelizedDiscordModifyGuildWelcomeScreen, reason?: string) => Promise<CamelizedDiscordWelcomeScreen>
+  editWelcomeScreen: (
+    guildId: BigString,
+    options: CamelizedDiscordModifyGuildWelcomeScreen,
+    reason?: string,
+  ) => Promise<CamelizedDiscordWelcomeScreen>
   /**
    * Edits the settings of a guild's widget.
    *
@@ -1326,7 +1340,11 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-widget}
    */
-  editWidgetSettings: (guildId: BigString, options: CamelizedDiscordGuildWidgetSettings, reason?: string) => Promise<CamelizedDiscordGuildWidgetSettings>
+  editWidgetSettings: (
+    guildId: BigString,
+    options: CamelizedDiscordGuildWidgetSettings,
+    reason?: string,
+  ) => Promise<CamelizedDiscordGuildWidgetSettings>
   /**
    * Executes a webhook, causing a message to be posted in the channel configured for the webhook.
    *
@@ -2236,7 +2254,12 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-from-message}
    */
-  startThreadWithMessage: (channelId: BigString, messageId: BigString, options: StartThreadWithMessage, reason?: string) => Promise<CamelizedDiscordChannel>
+  startThreadWithMessage: (
+    channelId: BigString,
+    messageId: BigString,
+    options: StartThreadWithMessage,
+    reason?: string,
+  ) => Promise<CamelizedDiscordChannel>
   /**
    * Creates a thread without using a message as the thread's point of origin.
    *
