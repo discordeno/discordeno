@@ -492,7 +492,7 @@ export interface ApplicationCommandOption {
 }
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
-export interface CreateGuildEmoji extends WithReason {
+export interface CreateGuildEmoji {
   /** Name of the emoji */
   name: string
   /** The 128x128 emoji image. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. */
@@ -502,7 +502,7 @@ export interface CreateGuildEmoji extends WithReason {
 }
 
 /** https://discord.com/developers/docs/resources/emoji#modify-guild-emoji */
-export interface ModifyGuildEmoji extends WithReason {
+export interface ModifyGuildEmoji {
   /** Name of the emoji */
   name?: string
   /** Roles allowed to use this emoji */
@@ -525,7 +525,7 @@ export interface RequestGuildMembers {
   nonce?: string
 }
 
-export interface CreateGuildChannel extends WithReason {
+export interface CreateGuildChannel {
   /** Channel name (1-100 characters) */
   name: string
   /** The type of channel */
@@ -572,7 +572,7 @@ export interface CreateGuildChannel extends WithReason {
   defaultSortOrder?: SortOrderTypes | null
 }
 
-export interface ModifyChannel extends WithReason {
+export interface ModifyChannel {
   /** 1-100 character channel name */
   name?: string
   /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
@@ -634,7 +634,7 @@ export interface ModifyChannel extends WithReason {
   defaultSortOrder?: SortOrderTypes | null
 }
 
-export interface EditChannelPermissionOverridesOptions extends OverwriteReadable, WithReason {}
+export interface EditChannelPermissionOverridesOptions extends OverwriteReadable {}
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions */
 export interface ModifyGuildChannelPositions {
@@ -648,7 +648,7 @@ export interface ModifyGuildChannelPositions {
   parentId?: BigString | null
 }
 
-export interface ModifyWebhook extends WithReason {
+export interface ModifyWebhook {
   /** The default name of the webhook */
   name?: string
   /** Image for the default webhook avatar */
@@ -712,7 +712,7 @@ export interface CreateForumPostWithMessage extends WithReason {
   components?: MessageComponents
 }
 
-export interface CreateStageInstance extends WithReason {
+export interface CreateStageInstance {
   channelId: BigString
   topic: string
   /** Notify @everyone that the stage instance has started. Requires the MENTION_EVERYONE permission. */
@@ -724,7 +724,7 @@ export interface EditStageInstanceOptions extends WithReason {
   topic: string
 }
 
-export interface StartThreadWithMessage extends WithReason {
+export interface StartThreadWithMessage {
   /** 1-100 character thread name */
   name: string
   /** Duration in minutes to automatically archive the thread after recent activity */
@@ -733,7 +733,7 @@ export interface StartThreadWithMessage extends WithReason {
   rateLimitPerUser?: number | null
 }
 
-export interface StartThreadWithoutMessage extends WithReason {
+export interface StartThreadWithoutMessage {
   /** 1-100 character thread name */
   name: string
   /** Duration in minutes to automatically archive the thread after recent activity */
@@ -746,7 +746,7 @@ export interface StartThreadWithoutMessage extends WithReason {
   invitable?: boolean
 }
 
-export interface CreateAutoModerationRuleOptions extends WithReason {
+export interface CreateAutoModerationRuleOptions {
   /** The name of the rule. */
   name: string
   /** The type of event to trigger the rule on. */
@@ -784,7 +784,7 @@ export interface CreateAutoModerationRuleOptions extends WithReason {
   exemptChannels?: BigString[]
 }
 
-export interface EditAutoModerationRuleOptions extends WithReason {
+export interface EditAutoModerationRuleOptions {
   /** The name of the rule. */
   name: string
   /** The type of event to trigger the rule on. */
@@ -820,7 +820,7 @@ export interface EditAutoModerationRuleOptions extends WithReason {
   exemptChannels?: BigString[]
 }
 
-export interface CreateScheduledEvent extends WithReason {
+export interface CreateScheduledEvent {
   /** the channel id of the scheduled event. */
   channelId?: BigString
   /** location of the event. Required for events with `entityType: ScheduledEventEntityType.External` */
@@ -839,7 +839,7 @@ export interface CreateScheduledEvent extends WithReason {
   entityType: ScheduledEventEntityType
 }
 
-export interface EditScheduledEvent extends WithReason {
+export interface EditScheduledEvent {
   /** the channel id of the scheduled event. null if switching to external event. */
   channelId: BigString | null
   /** location of the event */
@@ -865,7 +865,7 @@ export interface GetScheduledEvents {
   withUserCount?: boolean
 }
 
-export interface CreateChannelInvite extends WithReason {
+export interface CreateChannelInvite {
   /** Duration of invite in seconds before expiry, or 0 for never. Between 0 and 604800 (7 days). Default: 86400 (24 hours) */
   maxAge?: number
   /** Max number of users or 0 for unlimited. Between 0 and 100. Default: 0 */
@@ -1017,7 +1017,7 @@ export interface ModifyGuild {
   premiumProgressBarEnabled?: boolean
 }
 
-export interface CreateGuildStickerOptions extends WithReason {
+export interface CreateGuildStickerOptions {
   /** Name of the sticker (2-30 characters) */
   name: string
   /** Description of the sticker (empty or 2-100 characters) */
@@ -1028,7 +1028,7 @@ export interface CreateGuildStickerOptions extends WithReason {
   file: FileContent
 }
 
-export interface EditGuildStickerOptions extends WithReason {
+export interface EditGuildStickerOptions {
   /** Name of the sticker (2-30 characters) */
   name?: string
   /** Description of the sticker (empty or 2-100 characters) */
@@ -1095,12 +1095,12 @@ export interface ModifyGuildTemplate {
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-ban */
-export interface CreateGuildBan extends WithReason {
+export interface CreateGuildBan {
   /** Number of seconds to delete messages for, between 0 and 604800 (7 days) */
   deleteMessageSeconds?: number
 }
 
-export interface EditBotMemberOptions extends WithReason {
+export interface EditBotMemberOptions {
   nick?: string | null
 }
 

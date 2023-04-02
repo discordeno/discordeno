@@ -226,6 +226,7 @@ export interface RestManager {
    * @param guildId - The ID of the guild the member to add the role to is in.
    * @param userId - The user ID of the member to add the role to.
    * @param roleId - The ID of the role to add to the member.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_ROLES` permission.
@@ -255,6 +256,7 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild to create the rule in.
    * @param options - The parameters for the creation of the rule.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link CamelizedDiscordAutoModerationRule}.
    *
    * @remarks
@@ -264,12 +266,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule}
    */
-  createAutomodRule: (guildId: BigString, options: CreateAutoModerationRuleOptions) => Promise<CamelizedDiscordAutoModerationRule>
+  createAutomodRule: (guildId: BigString, options: CreateAutoModerationRuleOptions, reason?: string) => Promise<CamelizedDiscordAutoModerationRule>
   /**
    * Creates a channel within a guild.
    *
    * @param guildId - The ID of the guild to create the channel within.
    * @param options - The parameters for the creation of the channel.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link CamelizedDiscordChannel}.
    *
    * @remarks
@@ -283,12 +286,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-channel}
    */
-  createChannel: (guildId: BigString, options: CreateGuildChannel) => Promise<CamelizedDiscordChannel>
+  createChannel: (guildId: BigString, options: CreateGuildChannel, reason?: string) => Promise<CamelizedDiscordChannel>
   /**
    * Creates an emoji in a guild.
    *
    * @param guildId - The ID of the guild in which to create the emoji.
    * @param options - The parameters for the creation of the emoji.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link CamelizedDiscordEmoji}.
    *
    * @remarks
@@ -300,12 +304,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/emoji#create-guild-emoji}
    */
-  createEmoji: (guildId: BigString, options: CreateGuildEmoji) => Promise<CamelizedDiscordEmoji>
+  createEmoji: (guildId: BigString, options: CreateGuildEmoji, reason?: string) => Promise<CamelizedDiscordEmoji>
   /**
    * Creates a new thread in a forum channel, and sends a message within the created thread.
    *
    * @param channelId - The ID of the forum channel to create the thread within.
    * @param options - The parameters for the creation of the thread.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of {@link CamelizedDiscordChannel} with a nested {@link Message} object.
    *
    * @remarks
@@ -318,7 +323,7 @@ export interface RestManager {
    *
    * @experimental
    */
-  createForumThread: (channelId: BigString, options: CreateForumPostWithMessage) => Promise<CamelizedDiscordChannel>
+  createForumThread: (channelId: BigString, options: CreateForumPostWithMessage, reason?: string) => Promise<CamelizedDiscordChannel>
   /**
    * Creates an application command accessible globally; across different guilds and channels.
    *
@@ -380,6 +385,7 @@ export interface RestManager {
    * Create a new sticker for the guild.
    *
    * @param guildId The ID of the guild to get
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @return A {@link CamelizedDiscordSticker}
    *
    * @remarks
@@ -390,7 +396,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#create-guild-sticker}
    */
-  createGuildSticker: (guildId: BigString, options: CreateGuildStickerOptions) => Promise<CamelizedDiscordSticker>
+  createGuildSticker: (guildId: BigString, options: CreateGuildStickerOptions, reason?: string) => Promise<CamelizedDiscordSticker>
   /**
    * Creates a template from a guild.
    *
@@ -411,6 +417,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel to create the invite to.
    * @param options - The parameters for the creation of the invite.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link CamelizedDiscordInvite}.
    *
    * @remarks
@@ -423,12 +430,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#create-channel-invite}
    */
-  createInvite: (channelId: BigString, options?: CreateChannelInvite) => Promise<CamelizedDiscordInvite>
+  createInvite: (channelId: BigString, options?: CreateChannelInvite, reason?: string) => Promise<CamelizedDiscordInvite>
   /**
    * Creates a role in a guild.
    *
    * @param guildId - The ID of the guild to create the role in.
    * @param options - The parameters for the creation of the role.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link CamelizedDiscordRole}.
    *
    * @remarks
@@ -444,6 +452,7 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild to create the scheduled event in.
    * @param options - The parameters for the creation of the scheduled event.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link ScheduledEvent}.
    *
    * @remarks
@@ -455,11 +464,12 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event}
    */
-  createScheduledEvent: (guildId: BigString, options: CreateScheduledEvent) => Promise<CamelizedDiscordScheduledEvent>
+  createScheduledEvent: (guildId: BigString, options: CreateScheduledEvent, reason?: string) => Promise<CamelizedDiscordScheduledEvent>
   /**
    * Creates a stage instance associated with a stage channel.
    *
    * @param options - The parameters for the creation of the stage instance.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link CamelizedDiscordStageInstance}.
    *
    * @remarks
@@ -469,12 +479,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/stage-instance#create-stage-instance}
    */
-  createStageInstance: (options: CreateStageInstance) => Promise<CamelizedDiscordStageInstance>
+  createStageInstance: (options: CreateStageInstance, reason?: string) Promise<CamelizedDiscordStageInstance>
   /**
    * Creates a webhook.
    *
    * @param channelId - The ID of the channel to create the webhook in.
    * @param options - The parameters for the creation of the webhook.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link CamelizedDiscordWebhook}.
    *
    * @remarks
@@ -492,6 +503,7 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild to delete the rule from.
    * @param ruleId - The ID of the automod rule to delete.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
@@ -505,6 +517,7 @@ export interface RestManager {
    * Deletes a channel from within a guild.
    *
    * @param channelId - The ID of the channel to delete.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the deleted {@link Channel}.
    *
    * @remarks
@@ -531,6 +544,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel to delete the permission override of.
    * @param overwriteId - The ID of the permission override to delete.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_ROLES` permission.
@@ -545,6 +559,7 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild from which to delete the emoji.
    * @param id - The ID of the emoji to delete.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
@@ -602,6 +617,7 @@ export interface RestManager {
    * Delete a new sticker for the guild.
    *
    * @param guildId The ID of the guild to get
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @return A {@link CamelizedDiscordSticker}
    *
    * @remarks
@@ -632,6 +648,7 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild from which to delete the integration.
    * @param integrationId - The ID of the integration to delete from the guild.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
@@ -643,11 +660,12 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild-integration}
    */
-  deleteIntegration: (guildId: BigString, integrationId: BigString) => Promise<void>
+  deleteIntegration: (guildId: BigString, integrationId: BigString, reason?: string) => Promise<void>
   /**
    * Deletes an invite to a channel.
    *
    * @param inviteCode - The invite code of the invite to delete.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_CHANNELS` permission.
@@ -662,6 +680,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel to delete the message from.
    * @param messageId - The ID of the message to delete from the channel.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * If not deleting own message:
@@ -677,6 +696,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel to delete the messages from.
    * @param messageIds - The IDs of the messages to delete from the channel.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_MESSAGES` permission.
@@ -754,6 +774,7 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild to delete the role from.
    * @param roleId - The ID of the role to delete.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_ROLES` permission.
@@ -762,7 +783,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#delete-guild-role}
    */
-  deleteRole: (guildId: BigString, roleId: BigString) => Promise<void>
+  deleteRole: (guildId: BigString, roleId: BigString, reason?: string) => Promise<void>
   /**
    * Deletes a scheduled event from a guild.
    *
@@ -781,6 +802,7 @@ export interface RestManager {
    * Deletes the stage instance associated with a stage channel, if one exists.
    *
    * @param channelId - The ID of the stage channel the stage instance is associated with.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the user to be a moderator of the stage channel.
@@ -873,6 +895,7 @@ export interface RestManager {
    * @param guildId - The ID of the guild to edit the rule in.
    * @param ruleId - The ID of the rule to edit.
    * @param options - The parameters for the edit of the rule.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link CamelizedDiscordAutoModerationRule}.
    *
    * @remarks
@@ -886,6 +909,7 @@ export interface RestManager {
     guildId: BigString,
     ruleId: BigString,
     options: Partial<EditAutoModerationRuleOptions>,
+  reason?: string
   ) => Promise<CamelizedDiscordAutoModerationRule>
   /**
    * Modifies the bot's username or avatar.
@@ -897,6 +921,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel to edit.
    * @param options - The parameters for the edit of the channel.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link CamelizedDiscordChannel}.
    *
    * @remarks
@@ -921,12 +946,13 @@ export interface RestManager {
    * - Otherwise:
    *     - Fires a _Channel Update_ gateway event.
    */
-  editChannel: (channelId: BigString, options: ModifyChannel) => Promise<CamelizedDiscordChannel>
+  editChannel: (channelId: BigString, options: ModifyChannel, reason?: string) => Promise<CamelizedDiscordChannel>
   /**
    * Edits the permission overrides for a user or role in a channel.
    *
    * @param channelId - The ID of the channel to edit the permission overrides of.
    * @param options - The permission override.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_ROLES` permission.
@@ -937,7 +963,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#edit-channel-permissions}
    */
-  editChannelPermissionOverrides: (channelId: BigString, options: EditChannelPermissionOverridesOptions) => Promise<void>
+  editChannelPermissionOverrides: (channelId: BigString, options: EditChannelPermissionOverridesOptions, reason?: string) => Promise<void>
   /**
    * Edits the positions of a set of channels in a guild.
    *
@@ -958,6 +984,7 @@ export interface RestManager {
    * @param guildId - The ID of the guild in which to edit the emoji.
    * @param id - The ID of the emoji to edit.
    * @param options - The parameters for the edit of the emoji.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the updated {@link CamelizedDiscordEmoji}.
    *
    * @remarks
@@ -967,7 +994,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/emoji#modify-guild-emoji}
    */
-  editEmoji: (guildId: BigString, id: BigString, options: ModifyGuildEmoji) => Promise<CamelizedDiscordEmoji>
+  editEmoji: (guildId: BigString, id: BigString, options: ModifyGuildEmoji, reason?: string) => Promise<CamelizedDiscordEmoji>
   /**
    * Edits a follow-up message to an interaction.
    *
@@ -1002,6 +1029,7 @@ export interface RestManager {
    * @param guildId - The ID of the guild to edit.
    * @param shardId - The ID of the shard the guild is in.
    * @param options - The parameters for the edit of the guild.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link Guild}.
    *
    * @remarks
@@ -1014,7 +1042,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild}
    */
-  editGuild: (guildId: BigString, options: ModifyGuild) => Promise<CamelizedDiscordGuild>
+  editGuild: (guildId: BigString, options: ModifyGuild, reason?: string) => Promise<CamelizedDiscordGuild>
   /**
    * Edits an application command registered in a guild.
    *
@@ -1030,12 +1058,15 @@ export interface RestManager {
     guildId: BigString,
     options: CreateApplicationCommand,
   ) => Promise<CamelizedDiscordApplicationCommand>
-  /** Modify a guild's MFA level. Requires guild ownership. */
+  /** Modify a guild's MFA level. Requires guild ownership. 
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   */
   editGuildMfaLevel: (guildId: BigString, mfaLevel: MfaLevels, reason?: string) => Promise<void>
   /**
    * Edit the given sticker.
    *
    * @param guildId The ID of the guild to get
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @return A {@link CamelizedDiscordSticker}
    *
    * @remarks
@@ -1044,7 +1075,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#modify-guild-sticker}
    */
-  editGuildSticker: (guildId: BigString, stickerId: BigString, options: AtLeastOne<EditGuildStickerOptions>) => Promise<CamelizedDiscordSticker>
+  editGuildSticker: (guildId: BigString, stickerId: BigString, options: AtLeastOne<EditGuildStickerOptions>, reason?: string) => Promise<CamelizedDiscordSticker>
   /**
    * Edits a template's settings.
    *
@@ -1138,6 +1169,7 @@ export interface RestManager {
    * @param guildId - The ID of the guild to edit the role in.
    * @param roleId - The ID of the role to edit.
    * @param options - The parameters for the edit of the role.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link CamelizedDiscordRole}.
    *
    * @remarks
@@ -1147,12 +1179,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-role}
    */
-  editRole: (guildId: BigString, roleId: BigString, options: EditGuildRole) => Promise<CamelizedDiscordRole>
+  editRole: (guildId: BigString, roleId: BigString, options: EditGuildRole, reason?: string) => Promise<CamelizedDiscordRole>
   /**
    * Edits the positions of a set of roles.
    *
    * @param guildId - The ID of the guild to edit the role positions in.
    * @param options - The parameters for the edit of the role positions.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns A collection of {@link CamelizedDiscordRole} objects assorted by role ID.
    *
    * @remarks
@@ -1162,12 +1195,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-role-positions}
    */
-  editRolePositions: (guildId: BigString, options: ModifyRolePositions[]) => Promise<CamelizedDiscordRole[]>
+  editRolePositions: (guildId: BigString, options: ModifyRolePositions[], reason?: string) => Promise<CamelizedDiscordRole[]>
   /**
    * Edits a scheduled event.
    *
    * @param guildId - The ID of the guild to edit the scheduled event in.
    * @param eventId - The ID of the scheduled event to edit.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link ScheduledEvent}.
    *
    * @remarks
@@ -1181,12 +1215,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event}
    */
-  editScheduledEvent: (guildId: BigString, eventId: BigString, options: Partial<EditScheduledEvent>) => Promise<CamelizedDiscordScheduledEvent>
+  editScheduledEvent: (guildId: BigString, eventId: BigString, options: Partial<EditScheduledEvent>, reason?: string) => Promise<CamelizedDiscordScheduledEvent>
   /**
    * Edits a stage instance.
    *
    * @param channelId - The ID of the stage channel the stage instance is associated with.
    * @param topic - Topic of the Stage instance (1-120 characters).
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the updated {@link CamelizedDiscordStageInstance}.
    *
    * @remarks
@@ -1215,6 +1250,7 @@ export interface RestManager {
    * Edits a webhook.
    *
    * @param webhookId - The ID of the webhook to edit.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link CamelizedDiscordWebhook}.
    *
    * @remarks
@@ -1224,7 +1260,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/webhook#edit-webhook}
    */
-  editWebhook: (webhookId: BigString, options: ModifyWebhook) => Promise<CamelizedDiscordWebhook>
+  editWebhook: (webhookId: BigString, options: ModifyWebhook, reason?: string) => Promise<CamelizedDiscordWebhook>
   /**
    * Edits a webhook message.
    *
@@ -1265,6 +1301,7 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild to edit the welcome screen of.
    * @param options - The parameters for the edit of the welcome screen.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link WelcomeScreen}.
    *
    * @remarks
@@ -1274,11 +1311,12 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen}
    */
-  editWelcomeScreen: (guildId: BigString, options: CamelizedDiscordModifyGuildWelcomeScreen) => Promise<CamelizedDiscordWelcomeScreen>
+  editWelcomeScreen: (guildId: BigString, options: CamelizedDiscordModifyGuildWelcomeScreen, reason?: string) => Promise<CamelizedDiscordWelcomeScreen>
   /**
    * Edits the settings of a guild's widget.
    *
    * @param guildId - The ID of the guild to edit the settings of the widget of.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link GuildWidgetSettings}.
    *
    * @remarks
@@ -1288,7 +1326,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-widget}
    */
-  editWidgetSettings: (guildId: BigString, options: CamelizedDiscordGuildWidgetSettings) => Promise<CamelizedDiscordGuildWidgetSettings>
+  editWidgetSettings: (guildId: BigString, options: CamelizedDiscordGuildWidgetSettings, reason?: string) => Promise<CamelizedDiscordGuildWidgetSettings>
   /**
    * Executes a webhook, causing a message to be posted in the channel configured for the webhook.
    *
@@ -2081,6 +2119,7 @@ export interface RestManager {
    * @param guildId - The ID of the guild the member to remove the role from is in.
    * @param userId - The user ID of the member to remove the role from.
    * @param roleId - The ID of the role to remove from the member.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `MANAGE_ROLES` permission.
@@ -2183,6 +2222,7 @@ export interface RestManager {
    * @param channelId - The ID of the channel in which to create the thread.
    * @param messageId - The ID of the message to use as the thread's point of origin.
    * @param options - The parameters to use for the creation of the thread.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link Channel | Thread}.
    *
    * @remarks
@@ -2196,12 +2236,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-from-message}
    */
-  startThreadWithMessage: (channelId: BigString, messageId: BigString, options: StartThreadWithMessage) => Promise<CamelizedDiscordChannel>
+  startThreadWithMessage: (channelId: BigString, messageId: BigString, options: StartThreadWithMessage, reason?: string) => Promise<CamelizedDiscordChannel>
   /**
    * Creates a thread without using a message as the thread's point of origin.
    *
    * @param channelId - The ID of the channel in which to create the thread.
    * @param options - The parameters to use for the creation of the thread.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the created {@link CamelizedDiscordChannel | Thread}.
    *
    * @remarks
@@ -2211,7 +2252,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-without-message}
    */
-  startThreadWithoutMessage: (channelId: BigString, options: StartThreadWithoutMessage) => Promise<CamelizedDiscordChannel>
+  startThreadWithoutMessage: (channelId: BigString, options: StartThreadWithoutMessage, reason?: string) => Promise<CamelizedDiscordChannel>
   /**
    * Synchronises a template with the current state of a guild.
    *
@@ -2271,9 +2312,9 @@ export interface RestManager {
   /**
    * Bans a user from a guild.
    *
-  
    * @param guildId - The ID of the guild to ban the user from.
    * @param userId - The ID of the user to ban from the guild.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @param options - The parameters for the creation of the ban.
    *
    * @remarks
@@ -2283,12 +2324,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-ban}
    */
-  banMember: (guildId: BigString, userId: BigString, options?: CreateGuildBan) => Promise<void>
+  banMember: (guildId: BigString, userId: BigString, options?: CreateGuildBan, reason?: string) => Promise<void>
   /**
    * Edits the nickname of the bot user.
    *
    * @param guildId - The ID of the guild to edit the nickname of the bot user in.
    * @param options - The parameters for the edit of the nickname.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of the edited {@link CamelizedDiscordMember}
    *
    * @remarks
@@ -2296,12 +2338,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-current-member}
    */
-  editBotMember: (guildId: BigString, options: EditBotMemberOptions) => Promise<CamelizedDiscordMember>
+  editBotMember: (guildId: BigString, options: EditBotMemberOptions, reason?: string) => Promise<CamelizedDiscordMember>
   /**
    * Edits a member's properties.
    *
    * @param guildId - The ID of the guild to edit the member of.
    * @param userId - The user ID of the member to edit.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @param options - The parameters for the edit of the user.
    *
    * @remarks
@@ -2312,7 +2355,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#modify-guild-member}
    */
-  editMember: (guildId: BigString, userId: BigString, options: ModifyGuildMember) => Promise<CamelizedDiscordMember>
+  editMember: (guildId: BigString, userId: BigString, options: ModifyGuildMember, reason?: string) => Promise<CamelizedDiscordMember>
   /**
    * Gets the member object by user ID.
    *
@@ -2350,6 +2393,7 @@ export interface RestManager {
   
    * @param guildId - The ID of the guild to kick the member from.
    * @param userId - The user ID of the member to kick from the guild.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `KICK_MEMBERS` permission.
@@ -2364,6 +2408,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel where the message is to be pinned.
    * @param messageId - The ID of the message to pin.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires that the bot user be able to see the contents of the channel in which the messages were posted.
@@ -2383,6 +2428,7 @@ export interface RestManager {
   
    * @param guildId - The ID of the guild to prune the members of.
    * @param options - The parameters for the pruning of members.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns A number indicating how many members were pruned.
    *
    * @remarks
@@ -2396,7 +2442,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#begin-guild-prune}
    */
-  pruneMembers: (guildId: BigString, options: BeginGuildPrune) => Promise<{ pruned: number | null }>
+  pruneMembers: (guildId: BigString, options: BeginGuildPrune, reason?: string) => Promise<{ pruned: number | null }>
   /**
    * Gets the list of members whose usernames or nicknames start with a provided string.
    *
@@ -2415,6 +2461,7 @@ export interface RestManager {
   
    * @param guildId - The ID of the guild to unban the user in.
    * @param userId - The ID of the user to unban.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `BAN_MEMBERS` permission.
@@ -2423,12 +2470,13 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#remove-guild-ban}
    */
-  unbanMember: (guildId: BigString, userId: BigString) => Promise<void>
+  unbanMember: (guildId: BigString, userId: BigString, reason?: string) => Promise<void>
   /**
    * Unpins a pinned message in a channel.
    *
    * @param channelId - The ID of the channel where the message is pinned.
    * @param messageId - The ID of the message to unpin.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires that the bot user be able to see the contents of the channel in which the messages were posted.
