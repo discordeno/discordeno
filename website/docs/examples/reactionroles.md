@@ -5,7 +5,7 @@ sidebar_label: Reaction Roles(button) Bot
 
 # Reaction Roles Bot
 
-One of the most popular bot features is reaction roles. We are going to look into making a small reaction roles bot as it will give us a chance to learn discordeno while also making a nice little feature. However, instead of `reactions` we will be using discord's new interaction api and use `buttons` instead. Using buttons will give us a lot of advantages. For example, this can be done without needing cache or database at all. This means it is possible to add this feature to your bot with minimal cost even at scale, since you do not store anything to make it work.
+One of the most popular bot features is reaction roles. We are going to look into making a small reaction roles bot as it will give us a chance to learn Discordeno while also making a nice little feature. However, instead of **reactions** we will be using Discord's new interaction API and use **buttons** instead. Using buttons will give us a lot of advantages. For example, this can be done without needing cache or database at all. This means it is possible to add this feature to your bot with minimal cost even at scale, since you do not store anything to make it work.
 
 ## Pre-Requirements
 
