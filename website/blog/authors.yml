@@ -1,5 +1,11 @@
+itohatweb:
+  image_url: https://github.com/itohatweb.png
+  name: ITOH
+  title: Core Team
+  url: https://github.com/itohatweb
+
 skillz:
+  image_url: https://cdn.discordapp.com/avatars/130136895395987456/5fff867ae5f666fcd0626bd84f5e69c0.jpg?size=2048
   name: Skillz4Killz
   title: Senior Engineer
   url: https://github.com/Skillz4Killz
-  image_url: https://cdn.discordapp.com/avatars/130136895395987456/5fff867ae5f666fcd0626bd84f5e69c0.jpg?size=2048
