@@ -2,9 +2,13 @@ name: Benchmark with retry
 
 on:
   pull_request:
+    paths-ignore:
+      - 'website/**'
   push:
     branches:
       - main
+    paths-ignore:
+      - 'website/**'
 
 jobs:
   benchmark-try-1:
