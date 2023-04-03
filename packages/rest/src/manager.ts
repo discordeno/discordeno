@@ -63,7 +63,7 @@ const RATE_LIMIT_RESET_AFTER_HEADER = 'x-ratelimit-reset-after'
 const RATE_LIMIT_GLOBAL_HEADER = 'x-ratelimit-global'
 const RATE_LIMIT_BUCKET_HEADER = 'x-ratelimit-bucket'
 const RATE_LIMIT_LIMIT_HEADER = 'x-ratelimit-limit'
-const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit_scope'
+const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope'
 
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
   const applicationId = options.applicationId ? BigInt(options.applicationId) : options.token ? getBotIdFromToken(options.token) : undefined
