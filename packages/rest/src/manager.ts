@@ -326,7 +326,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const resetAfter = response.headers.get('x-ratelimit-reset-after')
         if (resetAfter) await delay(Number(resetAfter) * 1000)
         // process the response to prevent mem leak
-        await response.json()
+        await response.arrayBuffer()
 
         return await options.retryRequest?.(options)
       }
