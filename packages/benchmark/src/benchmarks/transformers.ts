@@ -24,6 +24,7 @@ const MESSAGE_SIZE = 20000
 
 const bot = createBot({
   token: process.env.DISCORD_TOKEN ?? " ",
+  applicationId: 1n,
   events: {},
 })
 
