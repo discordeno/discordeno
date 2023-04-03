@@ -285,7 +285,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async sendRequest(options) {
-      const url = options.url.startsWith('https://') ? options.url : `${rest.baseUrl}/v${rest.version}${options.url}`
+      const url = `${rest.baseUrl}/v${rest.version}${options.route}`
       const payload = rest.createRequestBody(options.method, options.requestBodyOptions)
 
       logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
@@ -293,46 +293,46 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
 
       // Set the bucket id if it was available on the headers
-      const bucketId = rest.processHeaders(rest.simplifyUrl(options.url, options.method), response.headers)
+      const bucketId = rest.processHeaders(rest.simplifyUrl(options.route, options.method), response.headers)
       if (bucketId) options.bucketId = bucketId
 
-      if (response.status < 200 || response.status >= 400) {
+      if (response.status < HttpResponseCode.Success || response.status >= HttpResponseCode.Error) {
         logger.debug(`Request to ${url} failed.`)
 
-        if (response.status === 429) {
-          logger.debug(`Request to ${url} was ratelimited.`)
-          // Too many attempts, get rid of request from queue.
-          if (options.retryCount++ >= rest.maxRetryCount) {
-            logger.debug(`Request to ${url} exceeded the maximum allowed retries.`, 'with payload:', payload)
-            // rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(options)}`)
-            // Remove item from queue to prevent retry
-            options.reject({
-              ok: false,
-              status: response.status,
-              error: 'The options was rate limited and it maxed out the retries limit.',
-            })
-            return
-          }
-
-          // Rate limited, add back to queue
-          rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get('X-RateLimit-Scope') === 'shared')
-
-          const resetAfter = response.headers.get('x-ratelimit-reset-after')
-          if (resetAfter) await delay(Number(resetAfter) * 1000)
-          // process the response to prevent mem leak
-          await response.json()
-
-          return await options.retryRequest?.(options)
+        if (response.status !== HttpResponseCode.TooManyRequests) {
+          options.reject({ ok: false, status: response.status, body: await response.text() })
+          return
         }
 
-        options.reject({ ok: false, status: response.status, body: JSON.stringify(await response.json()) })
-        return
+        logger.debug(`Request to ${url} was ratelimited.`)
+        // Too many attempts, get rid of request from queue.
+        if (options.retryCount >= rest.maxRetryCount) {
+          logger.debug(`Request to ${url} exceeded the maximum allowed retries.`, 'with payload:', payload)
+          // rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(options)}`)
+          options.reject({
+            ok: false,
+            status: response.status,
+            error: 'The request was rate limited and it maxed out the retries limit.',
+          })
+
+          return
+        }
+
+        options.retryCount += 1
+
+        // Rate limited, add back to queue
+        rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get('X-RateLimit-Scope') === 'shared')
+
+        const resetAfter = response.headers.get('x-ratelimit-reset-after')
+        if (resetAfter) await delay(Number(resetAfter) * 1000)
+        // process the response to prevent mem leak
+        await response.arrayBuffer()
+
+        return await options.retryRequest?.(options)
       }
 
-      const is204 = response.status === 204
-      const json = is204 ? undefined : await response.json()
-      // Discord sometimes sends no response with 204 code
-      options.resolve({ ok: true, status: response.status, body: JSON.stringify(json) })
+      // Discord sometimes sends no response with no content.
+      options.resolve({ ok: true, status: response.status, body: response.status === HttpResponseCode.NoContent ? undefined : await response.text() })
     },
 
     simplifyUrl(url, method) {
@@ -363,16 +363,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async processRequest(request: SendRequestOptions) {
-      const route = request.url.substring(request.url.indexOf('api/'))
+      const route = request.route.substring(request.route.indexOf('api/'))
       const parts = route.split('/')
       // Remove the api/
       parts.shift()
       // Removes the /v#/
       if (parts[0]?.startsWith('v')) parts.shift()
       // Set the full url to discord api in case it was recieved in a proxy rest
-      request.url = `${rest.baseUrl}/v${rest.version}/${parts.join('/')}`
+      request.route = `${rest.baseUrl}/v${rest.version}/${parts.join('/')}`
 
-      const url = rest.simplifyUrl(request.url, request.method)
+      const url = rest.simplifyUrl(request.route, request.method)
 
       if (request.runThroughQueue === false) {
         await rest.sendRequest(request)
@@ -395,9 +395,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
     },
 
-    async makeRequest(method, url, options) {
-      if (!rest.baseUrl.startsWith('https://discord.com') && url[0] === '/') {
-        const result = await fetch(`${rest.baseUrl}${url}`, rest.createRequestBody(method, options))
+    async makeRequest(method, route, options) {
+      if (!rest.baseUrl.startsWith('https://discord.com') && route[0] === '/') {
+        const result = await fetch(`${rest.baseUrl}${route}`, rest.createRequestBody(method, options))
 
         if (!result.ok) {
           const err = (await result.json().catch(() => {})) as Record<string, any>
@@ -412,7 +412,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       // eslint-disable-next-line no-async-promise-executor
       return await new Promise(async (resolve, reject) => {
         const payload: SendRequestOptions = {
-          url,
+          route,
           method,
           requestBodyOptions: options,
           retryCount: 0,
@@ -1198,4 +1198,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
   }
 
   return rest
+}
+
+enum HttpResponseCode {
+  /** Minimum value of a code in oder to consider that it was successful. */
+  Success = 200,
+  /** Request completed successfully, but Discord returned an empty body. */
+  NoContent = 204,
+  /** Minimum value of a code in order to consider that something went wrong. */
+  Error = 400,
+  /** This request got rate limited. */
+  TooManyRequests = 429,
 }
