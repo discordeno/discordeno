@@ -377,15 +377,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async processRequest(request: SendRequestOptions) {
-      const route = request.route.substring(request.route.indexOf('api/'))
-      const parts = route.split('/')
-      // Remove the api/
-      parts.shift()
-      // Removes the /v#/
-      if (parts[0]?.startsWith('v')) parts.shift()
-      // Set the full url to discord api in case it was recieved in a proxy rest
-      request.route = `${rest.baseUrl}/v${rest.version}/${parts.join('/')}`
-
       const url = rest.simplifyUrl(request.route, request.method)
 
       if (request.runThroughQueue === false) {
