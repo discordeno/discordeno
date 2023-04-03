@@ -56,24 +56,16 @@ export function createInvalidRequestBucket(options: InvalidRequestBucketOptions)
       // Mark as processing so other loops don't start
       bucket.processing = true
 
-      if (bucket.waiting.length === 0) return
-
-      if (bucket.resetAt !== undefined && !bucket.isRequestAllowed()) {
-        await delay(bucket.resetAt - Date.now())
-      }
-
       while (bucket.waiting.length > 0) {
         logger.info(`[InvalidBucket] processing waiting queue while loop ran with ${bucket.waiting.length} remaining.`)
-        if (bucket.isRequestAllowed()) {
-          bucket.activeRequests += 1
-          // Resolve the next item in the queue
-          bucket.waiting.shift()?.()
 
-          continue
+        if (bucket.resetAt !== undefined && !bucket.isRequestAllowed()) {
+          await delay(bucket.resetAt - Date.now())
         }
 
-        bucket.processing = false
-        return await bucket.processWaiting()
+        bucket.activeRequests += 1
+        // Resolve the next item in the queue
+        bucket.waiting.shift()?.()
       }
 
       // Mark as false so next pending request can be triggered by new loop.
