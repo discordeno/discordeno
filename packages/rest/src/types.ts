@@ -2540,8 +2540,8 @@ export interface RequestBody {
 }
 
 export interface SendRequestOptions {
-  /** The url to send the request to. */
-  url: string
+  /** The route to send the request to. */
+  route: string
   /** The method to use for sending the request. */
   method: RequestMethods
   /** The amount of times this request has been retried. */
