@@ -43,12 +43,10 @@ export function createBot(options: CreateBotOptions): Bot {
 
       // RUN DISPATCH CHECK
       await bot.events.dispatchRequirements?.(data, shard.id)
-      bot.events[
-        data.t.toLowerCase().replace(/_([a-z])/g, function (g) {
-          return g[1].toUpperCase()
-        }) as keyof EventHandlers
+      bot.handlers[
+        data.t as keyof ReturnType<typeof createBotGatewayHandlers>
         // @ts-expect-error as any gets removed by linter
-      ]?.(data.d, shard.id)
+      ]?.(bot, data.d, shard.id)
     }
   }
 
@@ -123,7 +121,7 @@ export interface Bot {
 export interface EventHandlers {
   debug: (text: string, ...args: any[]) => unknown
   applicationCommandPermissionsUpdate: (command: ApplicationCommandPermission) => unknown
-  auditLogEntryCreate: (log: AuditLogEntry, guildId: bigint) => unknown
+  guildAuditLogEntryCreate: (log: AuditLogEntry, guildId: bigint) => unknown
   automodRuleCreate: (rule: AutoModerationRule) => unknown
   automodRuleUpdate: (rule: AutoModerationRule) => unknown
   automodRuleDelete: (rule: AutoModerationRule) => unknown
