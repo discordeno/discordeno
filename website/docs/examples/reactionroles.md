@@ -301,11 +301,9 @@ await bot.rest.upsertGuildApplicationCommands("1234", [...commands.values()]);
 
 Also make sure to change the import at the top of the file.
 
-```ts
-// Old import. Delete this.
-import roles from "./src/commands/roles.js";
-// New import. Add this.
-import commands from "./src/commands/index.js";
+```diff
+- import roles from "./src/commands/roles.js";
++ import commands from "./src/commands/index.js";
 ```
 
 Go ahead and start your bot, you will see the command is available on your server by typing `/roles reactions create`. If you try and execute the command it will fail since we have not yet added the handling of this command.
