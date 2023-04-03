@@ -100,7 +100,7 @@ export class Queue {
 
       const request = this.pending[0]
       if (request) {
-        const basicURL = this.rest.simplifyUrl(request.url, request.method)
+        const basicURL = this.rest.simplifyUrl(request.route, request.method)
 
         // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
         // If this url is still rate limited, try again
