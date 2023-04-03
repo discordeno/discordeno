@@ -1,7 +1,6 @@
 import {
   ApplicationCommandTypes,
   type AllowedMentions,
-  type ApplicationCommandOptionChoice,
   type ButtonStyles,
   type CreateApplicationCommand,
   type CreateContextApplicationCommand,
@@ -23,6 +22,7 @@ import {
 } from '@discordeno/types'
 import type * as handlers from './handlers/index.js'
 import type { Embed } from './transformers/embed.js'
+import type { ApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js'
 
 export function isContextApplicationCommand(command: CreateApplicationCommand): command is CreateContextApplicationCommand {
   return command.type === ApplicationCommandTypes.Message || command.type === ApplicationCommandTypes.User

@@ -1,7 +1,5 @@
 import type {
   AllowedMentions,
-  ApplicationCommandOption,
-  ApplicationCommandOptionChoice,
   BigString,
   CreateApplicationCommand,
   DiscordActivity,
@@ -48,8 +46,8 @@ import { bigintToSnowflake, snowflakeToBigint, type Bot } from './index.js'
 import { transformActivity, type Activity } from './transformers/activity.js'
 import { transformApplication, type Application } from './transformers/application.js'
 import { transformApplicationCommand, type ApplicationCommand } from './transformers/applicationCommand.js'
-import { transformApplicationCommandOption } from './transformers/applicationCommandOption.js'
-import { transformApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js'
+import { transformApplicationCommandOption, type ApplicationCommandOption } from './transformers/applicationCommandOption.js'
+import { transformApplicationCommandOptionChoice, type ApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js'
 import { transformApplicationCommandPermission, type ApplicationCommandPermission } from './transformers/applicationCommandPermission.js'
 import { transformAttachment, type Attachment } from './transformers/attachment.js'
 import { transformAuditLogEntry, type AuditLogEntry } from './transformers/auditLogEntry.js'
