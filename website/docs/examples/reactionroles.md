@@ -54,7 +54,7 @@ import { CreateApplicationCommand } from '@discordeno/types';
 export const command: CreateApplicationCommand = {};
 ```
 
-By now, you should be seeing some errors in TypeScript so let's fix that.
+By now, you should be seeing some TypeScript errors so let's fix that.
 
 ```ts
 import { CreateApplicationCommand } from '@discordeno/types';
