@@ -62,11 +62,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     )
   }
 
+  const baseUrl = options.proxy?.baseUrl ?? 'https://discord.com/api'
+
   const rest: RestManager = {
     token: options.token,
     applicationId,
     version: options.version ?? 10,
-    baseUrl: options.proxy?.baseUrl ?? 'https://discord.com/api',
+    baseUrl,
+    isProxied: !baseUrl.startsWith('https://discord.com/api'),
     maxRetryCount: Infinity,
     globallyRateLimited: false,
     processingRateLimitedPaths: false,
@@ -396,8 +399,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async makeRequest(method, route, options) {
-      if (!rest.baseUrl.startsWith('https://discord.com') && route[0] === '/') {
-        const result = await fetch(`${rest.baseUrl}${route}`, rest.createRequestBody(method, options))
+      if (rest.isProxied) {
+        const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
 
         if (!result.ok) {
           const err = (await result.json().catch(() => {})) as Record<string, any>
