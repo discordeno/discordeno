@@ -1,7 +1,5 @@
 import type {
   AllowedMentions,
-  ApplicationCommandOption,
-  ApplicationCommandOptionChoice,
   BigString,
   CreateApplicationCommand,
   DiscordActivity,
@@ -48,8 +46,8 @@ import { bigintToSnowflake, snowflakeToBigint, type Bot } from './index.js'
 import { transformActivity, type Activity } from './transformers/activity.js'
 import { transformApplication, type Application } from './transformers/application.js'
 import { transformApplicationCommand, type ApplicationCommand } from './transformers/applicationCommand.js'
-import { transformApplicationCommandOption } from './transformers/applicationCommandOption.js'
-import { transformApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js'
+import { transformApplicationCommandOption, type ApplicationCommandOption } from './transformers/applicationCommandOption.js'
+import { transformApplicationCommandOptionChoice, type ApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js'
 import { transformApplicationCommandPermission, type ApplicationCommandPermission } from './transformers/applicationCommandPermission.js'
 import { transformAttachment, type Attachment } from './transformers/attachment.js'
 import { transformAuditLogEntry, type AuditLogEntry } from './transformers/auditLogEntry.js'
@@ -61,11 +59,6 @@ import { transformEmbed, type Embed } from './transformers/embed.js'
 import { transformEmoji, type Emoji } from './transformers/emoji.js'
 import { transformGatewayBot, type GetGatewayBot } from './transformers/gatewayBot.js'
 import { transformGuild, type Guild } from './transformers/guild.js'
-import { transformIntegration, type Integration } from './transformers/integration.js'
-import { transformInteraction, transformInteractionDataOption, type Interaction, type InteractionDataOption } from './transformers/interaction.js'
-import { transformInvite, type Invite } from './transformers/invite.js'
-import { transformMember, transformUser, type Member, type User } from './transformers/member.js'
-import { transformMessage, type Message } from './transformers/message.js'
 import {
   transformActivityToDiscordActivity,
   transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
@@ -79,6 +72,11 @@ import {
   transformTeamToDiscordTeam,
   transformUserToDiscordUser,
 } from './transformers/index.js'
+import { transformIntegration, type Integration } from './transformers/integration.js'
+import { transformInteraction, transformInteractionDataOption, type Interaction, type InteractionDataOption } from './transformers/interaction.js'
+import { transformInvite, type Invite } from './transformers/invite.js'
+import { transformMember, transformUser, type Member, type User } from './transformers/member.js'
+import { transformMessage, type Message } from './transformers/message.js'
 import { transformPresence, type PresenceUpdate } from './transformers/presence.js'
 import { transformAllowedMentionsToDiscordAllowedMentions } from './transformers/reverse/allowedMentions.js'
 import { transformCreateApplicationCommandToDiscordCreateApplicationCommand } from './transformers/reverse/createApplicationCommand.js'
