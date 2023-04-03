@@ -168,8 +168,8 @@ Next let's request a user to provide the button color.
     type: ApplicationCommandOptionTypes.Integer,
     choices: [
         { name: "Blue", value: ButtonStyles.Primary },
-        { name: "Grey", value: ButtonStyles.Secondary },
         { name: "Green", value: ButtonStyles.Success },
+        { name: "Grey", value: ButtonStyles.Secondary },
         { name: "Red", value: ButtonStyles.Danger },
     ],
 },
@@ -185,8 +185,8 @@ The final option to add to this is the label option.
     type: ApplicationCommandOptionTypes.Integer,
     choices: [
         { name: "Blue", value: ButtonStyles.Primary },
-        { name: "Grey", value: ButtonStyles.Secondary },
         { name: "Green", value: ButtonStyles.Success },
+        { name: "Grey", value: ButtonStyles.Secondary },
         { name: "Red", value: ButtonStyles.Danger },
     ],
 },
@@ -233,8 +233,8 @@ const command: CreateApplicationCommand = {
                             type: ApplicationCommandOptionTypes.Integer,
                             choices: [
                                 { name: "Blue", value: ButtonStyles.Primary },
-                                { name: "Grey", value: ButtonStyles.Secondary },
                                 { name: "Green", value: ButtonStyles.Success },
+                                { name: "Grey", value: ButtonStyles.Secondary },
                                 { name: "Red", value: ButtonStyles.Danger },
                             ],
                         },
