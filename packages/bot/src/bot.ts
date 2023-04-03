@@ -43,10 +43,10 @@ export function createBot(options: CreateBotOptions): Bot {
 
       // RUN DISPATCH CHECK
       await bot.events.dispatchRequirements?.(data, shard.id)
-      bot.events[
-        data.t as keyof EventHandlers
+      bot.handlers[
+        data.t as keyof ReturnType<typeof createBotGatewayHandlers>
         // @ts-expect-error as any gets removed by linter
-      ]?.(data.d, shard.id)
+      ]?.(bot, data.d, shard.id)
     }
   }
 
