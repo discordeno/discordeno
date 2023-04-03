@@ -54,16 +54,16 @@ import { createRoutes } from './routes.js'
 // TODO: make dynamic based on package.json file
 const version = '19.0.0-alpha.1'
 
-const DISCORD_API_VERSION = 10
-const DISCORD_API_URL = 'https://discord.com/api'
+export const DISCORD_API_VERSION = 10
+export const DISCORD_API_URL = 'https://discord.com/api'
 
-const AUDIT_LOG_REASON_HEADER = 'x-audit-log-reason'
-const RATE_LIMIT_REMAINING_HEADER = 'x-ratelimit-remaining'
-const RATE_LIMIT_RESET_AFTER_HEADER = 'x-ratelimit-reset-after'
-const RATE_LIMIT_GLOBAL_HEADER = 'x-ratelimit-global'
-const RATE_LIMIT_BUCKET_HEADER = 'x-ratelimit-bucket'
-const RATE_LIMIT_LIMIT_HEADER = 'x-ratelimit-limit'
-const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope'
+export const AUDIT_LOG_REASON_HEADER = 'x-audit-log-reason'
+export const RATE_LIMIT_REMAINING_HEADER = 'x-ratelimit-remaining'
+export const RATE_LIMIT_RESET_AFTER_HEADER = 'x-ratelimit-reset-after'
+export const RATE_LIMIT_GLOBAL_HEADER = 'x-ratelimit-global'
+export const RATE_LIMIT_BUCKET_HEADER = 'x-ratelimit-bucket'
+export const RATE_LIMIT_LIMIT_HEADER = 'x-ratelimit-limit'
+export const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope'
 
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
   const applicationId = options.applicationId ? BigInt(options.applicationId) : options.token ? getBotIdFromToken(options.token) : undefined
