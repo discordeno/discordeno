@@ -310,7 +310,7 @@ Go ahead and start your bot, you will see the command is available on your serve
 
 ## Command Execution Handling
 
-Let's make 2 very small files first. `src/events/index.ts` and `src/events/interactionCreate.ts`. Go to the interactionCreate file first.
+Let's make 2 very small files first. `src/events/index.ts` and `src/events/interactionCreate.ts`. Go to the `interactionCreate` file first.
 
 ```ts
 import commands from "../commands/index.js";
