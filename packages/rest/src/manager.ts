@@ -54,6 +54,17 @@ import { createRoutes } from './routes.js'
 // TODO: make dynamic based on package.json file
 const version = '19.0.0-alpha.1'
 
+const DISCORD_API_VERSION = 10
+const DISCORD_API_URL = 'https://discord.com/api'
+
+const AUDIT_LOG_REASON_HEADER = 'x-audit-log-reason'
+const RATE_LIMIT_REMAINING_HEADER = 'x-ratelimit-remaining'
+const RATE_LIMIT_RESET_AFTER_HEADER = 'x-ratelimit-reset-after'
+const RATE_LIMIT_GLOBAL_HEADER = 'x-ratelimit-global'
+const RATE_LIMIT_BUCKET_HEADER = 'x-ratelimit-bucket'
+const RATE_LIMIT_LIMIT_HEADER = 'x-ratelimit-limit'
+const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit_scope'
+
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
   const applicationId = options.applicationId ? BigInt(options.applicationId) : options.token ? getBotIdFromToken(options.token) : undefined
   if (!applicationId) {
@@ -62,22 +73,22 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     )
   }
 
-  const baseUrl = options.proxy?.baseUrl ?? 'https://discord.com/api'
+  const baseUrl = options.proxy?.baseUrl ?? DISCORD_API_URL
 
   const rest: RestManager = {
-    token: options.token,
     applicationId,
-    version: options.version ?? 10,
+    authorization: options.proxy?.authorization,
     baseUrl,
-    isProxied: !baseUrl.startsWith('https://discord.com/api'),
-    maxRetryCount: Infinity,
-    globallyRateLimited: false,
-    processingRateLimitedPaths: false,
     deleteQueueDelay: 60000,
+    globallyRateLimited: false,
+    invalidBucket: createInvalidRequestBucket({}),
+    isProxied: !baseUrl.startsWith(DISCORD_API_URL),
+    maxRetryCount: Infinity,
+    processingRateLimitedPaths: false,
     queues: new Map(),
     rateLimitedPaths: new Map(),
-    invalidBucket: createInvalidRequestBucket({}),
-    authorization: options.proxy?.authorization,
+    token: options.token,
+    version: options.version ?? DISCORD_API_VERSION,
 
     routes: createRoutes(),
 
@@ -139,7 +150,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
       if (options?.reason !== undefined) {
-        headers['x-audit-log-reason'] = encodeURIComponent(options?.reason)
+        headers[AUDIT_LOG_REASON_HEADER] = encodeURIComponent(options?.reason)
       }
 
       let body: string | FormData | undefined
@@ -217,13 +228,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       let rateLimited = false
 
       // GET ALL NECESSARY HEADERS
-      const remaining = headers.get('x-ratelimit-remaining')
-      const retryAfter = headers.get('x-ratelimit-reset-after')
+      const remaining = headers.get(RATE_LIMIT_REMAINING_HEADER)
+      const retryAfter = headers.get(RATE_LIMIT_RESET_AFTER_HEADER)
       const reset = Date.now() + Number(retryAfter) * 1000
-      const global = headers.get('x-ratelimit-global')
+      const global = headers.get(RATE_LIMIT_GLOBAL_HEADER)
       // undefined override null needed for typings
-      const bucketId = headers.get('x-ratelimit-bucket') ?? undefined
-      const limit = headers.get('x-ratelimit-limit')
+      const bucketId = headers.get(RATE_LIMIT_BUCKET_HEADER) ?? undefined
+      const limit = headers.get(RATE_LIMIT_LIMIT_HEADER)
 
       rest.queues.get(url)?.handleCompletedRequest({
         remaining: remaining ? Number(remaining) : undefined,
@@ -324,9 +335,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         options.retryCount += 1
 
         // Rate limited, add back to queue
-        rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get('X-RateLimit-Scope') === 'shared')
+        rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared')
 
-        const resetAfter = response.headers.get('x-ratelimit-reset-after')
+        const resetAfter = response.headers.get(RATE_LIMIT_RESET_AFTER_HEADER)
         if (resetAfter) await delay(Number(resetAfter) * 1000)
         // process the response to prevent mem leak
         await response.arrayBuffer()
