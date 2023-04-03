@@ -1,14 +1,8 @@
 {
   "extends": "tsconfig/base.json",
   "compilerOptions": {
-    "outDir": "./dist",
+    "outDir": "./dist"
   },
-  "include": [
-    "."
-  ],
-  "exclude": [
-    "dist",
-    "build",
-    "node_modules"
-  ]
+  "include": ["."],
+  "exclude": ["dist", "build", "node_modules"]
 }

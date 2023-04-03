@@ -6,7 +6,7 @@ name: Deploy Docs Site
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: ["main"]
+    branches: ['main']
     paths:
       - "website/**"
       - ".github/workflows/site.yml"
@@ -89,6 +89,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: github.event_name != 'pull_request'
+    concurrency: deploy-site
     steps:
       - name: Deploy to GitHub Pages
         id: deployment

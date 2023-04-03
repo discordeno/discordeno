@@ -1,6 +1,6 @@
 # Discordeno
 
-<img align="right" src="https://raw.githubusercontent.com/discordeno/discordeno/main/site/static/img/logo.png" height="150px">
+<img align="right" src="https://raw.githubusercontent.com/discordeno/discordeno/main/website/static/img/logo.png" height="150px">
 
 Discord API library for [Node.JS](https://nodejs.org), [Deno](https://deno.land) & [Bun](https://bun.sh/)
 
@@ -101,3 +101,61 @@ Interested? [Check the website](https://discordeno.js.org/) for more details on 
 - [Discord](https://discord.com/invite/5vBgXk3UcZ)
 
 Discordeno follows [semantic versioning](https://semver.org/)
+
+## Contributing/Developing
+
+We use yarn as package manager and workspace manager, and turborepo as monorepo manager.
+
+To config the workspace run
+
+```sh
+# if you don't have yarn installed
+npm install -g yarn
+
+yarn install
+```
+
+Then you can build all the files and types across all packages using
+(unless specified all commands below are run at root directory)
+
+```sh
+yarn release-build
+```
+
+You can run unit tests on all packages using
+
+```sh
+yarn test:unit
+```
+
+Other useful scripts
+(if you run in the package's directory, you need build dist before for test and types before for lint/fmt. Running in root directory should automatically do it for you)
+
+```sh
+# check style
+yarn lint
+
+# format code
+yarn fmt
+
+# check type
+yarn test:type
+
+# check type for tests
+yarn test:test-type
+
+# unit test showing coverage
+yarn test:unit-coverage
+
+# unit test with Deno
+yarn test:deno-unit
+
+# integration test
+yarn test:integration
+
+# e2e test
+yarn test:e2e
+
+# build doc for website
+yarn build:doc
+```

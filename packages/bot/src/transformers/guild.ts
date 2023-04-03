@@ -20,6 +20,7 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
     maxMembers: payload.guild.max_members,
     maxPresences: payload.guild.max_presences ?? undefined,
     maxVideoChannelUsers: payload.guild.max_video_channel_users,
+    maxStageVideoChannelUsers: payload.guild.max_stage_video_channel_users,
     mfaLevel: payload.guild.mfa_level,
     name: payload.guild.name,
     nsfwLevel: payload.guild.nsfw_level,

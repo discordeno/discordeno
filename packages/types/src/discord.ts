@@ -1,4 +1,3 @@
-import type { FileContent } from './discordeno.js'
 import type {
   ActivityTypes,
   AllowedMentionsTypes,
@@ -520,6 +519,8 @@ export interface DiscordGuild {
   premium_subscription_count?: number
   /** The maximum amount of users in a video channel */
   max_video_channel_users?: number
+  /** Maximum amount of users in a stage video channel */
+  max_stage_video_channel_users?: number
   /** Approximate number of members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
   approximate_member_count?: number
   /** Approximate number of non-offline members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
@@ -2564,8 +2565,6 @@ export interface DiscordCreateForumPostWithMessage {
     components?: DiscordMessageComponents[]
     /** IDs of up to 3 stickers in the server to send in the message */
     sticker_ids?: string[]
-    /** Contents of the file being sent. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
-    file: FileContent | FileContent[] | undefined
     /** JSON-encoded body of non-file params, only for multipart/form-data requests. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
     payload_json?: string
     /** Attachment objects with filename and description. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */

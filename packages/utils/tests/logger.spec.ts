@@ -11,7 +11,7 @@ describe('Logger', () => {
     loggy.fatal('fatal')
     loggy.info('info')
     loggy.warn('warn')
-    
+
     loggy.setDepth(LogDepth.Full)
 
     loggy.debug('debugging')
@@ -20,7 +20,7 @@ describe('Logger', () => {
     loggy.info('info')
     loggy.warn('warn')
   })
-  
+
   it('create logger with a name', () => {
     const loggy = createLogger({ name: 'loggy' })
     expect(loggy).to.exist

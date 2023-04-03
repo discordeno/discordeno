@@ -79,6 +79,6 @@ export async function missingTranslation(language: keyof typeof languages, key: 
 
 // type translationKeys = keyof typeof english | string
 export type translationKeys = keyof typeof english;
-type getArgs<K extends translationKeys> = typeof english[K] extends (...any: any[]) => unknown
-	? Parameters<typeof english[K]>
+type getArgs<K extends translationKeys> = (typeof english)[K] extends (...any: any[]) => unknown
+	? Parameters<(typeof english)[K]>
 	: [];

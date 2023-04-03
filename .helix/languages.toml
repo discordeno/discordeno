@@ -1,0 +1,24 @@
+[[language]]
+name = "javascript"
+formatter = { command = "npx", args = ["prettier", "--parser", "javascript"] }
+auto-format = true
+
+[[language]]
+name = "json"
+formatter = { command = "npx", args = ["prettier", "--parser", "json"] }
+auto-format = true
+
+[[language]]
+name = "markdown"
+formatter = { command = "npx", args = ["prettier", "--parser", "markdown"] }
+auto-format = true
+
+[[language]]
+name = "typescript"
+formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
+auto-format = true
+
+[[language]]
+name = "yaml"
+formatter = { command = "npx", args = ["prettier", "--parser", "yaml"] }
+auto-format = true

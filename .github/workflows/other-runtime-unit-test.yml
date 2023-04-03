@@ -18,7 +18,7 @@ jobs:
           node-version: 18
       - uses: denoland/setup-deno@main
         with:
-          deno-version: "v1.29"
+          deno-version: 'v1.29'
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT

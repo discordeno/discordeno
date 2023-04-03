@@ -1,9 +1,8 @@
 {
-    "label": "Classes",
-    "position": 2,
-    "link": {
-      "type": "generated-index",
-      "description": "Automatically generated documentation for modules."
-    }
+  "label": "Classes",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Automatically generated documentation for modules."
   }
-  
+}

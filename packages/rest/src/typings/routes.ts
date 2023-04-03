@@ -12,8 +12,6 @@ import type {
 } from '@discordeno/types'
 
 export interface RestRoutes {
-  /** Route to get a bots session info. */
-  sessionInfo: () => string
   /** A specific user route. */
   user: (id: BigString) => string
   /** Current bot user route. */
