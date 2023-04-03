@@ -35,9 +35,13 @@ export async function memoryBenchmark<O, E>(
     // Set the memory stats for when files are loaded in.
     results.loaded = process.memoryUsage()
 
-    events.forEach((event) => {
+    // events.forEach((event, i) => {
+    //   console.log('logging event', i)
+    //   objectFeeder(object, event)
+    // })
+    for (const event of events) {
       objectFeeder(object, event)
-    })
+    }
 
     if (options.log) {
       console.log(`[INFO] Processed ${events.length} events.`)

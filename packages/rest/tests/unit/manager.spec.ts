@@ -173,7 +173,7 @@ describe('[rest] manager', () => {
     let time: sinon.SinonFakeTimers
 
     beforeEach(() => {
-      rest = createRestManager({ token: ' ' })
+      rest = createRestManager({ applicationId: 1n })
       time = sinon.useFakeTimers()
     })
 
