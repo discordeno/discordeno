@@ -11,11 +11,11 @@ One of the most popular bot features is reaction roles. We are going to look int
 
 Before, going forward, please make sure to have finished everything on this list.
 
-- [] Already have a bot application and bot token available. [Create Application Guide](https://discordeno.js.org)
-- [] Have added your bot to a server you own already. [Invite Bot Guide](https://discordeno.js.org)
-- [] Created a github repo for this project [Setup Repo Guide](https://discordeno.js.org)
-- [] Installed Discordeno [Installation Guide](https://discordeno.js.org)
-- [] Setup environment variables [Environment Variables Guide](https://discordeno.js.org)
+- [ ] Create an application and get the bot token. [Create Application Guide](https://discordeno.js.org)
+- [ ] Add your bot to a server you own. [Invite Bot Guide](https://discordeno.js.org)
+- [ ] Create a GitHub repo for this project. [Setup Repo Guide](https://discordeno.js.org)
+- [ ] Install Discordeno. [Installation Guide](https://discordeno.js.org)
+- [ ] Setup environment variables. [Environment Variables Guide](https://discordeno.js.org)
 
 ## Creating Our Bot
 
