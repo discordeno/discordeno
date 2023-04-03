@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680533064820,
+  "lastUpdate": 1680535534905,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -1454,6 +1454,114 @@ window.BENCHMARK_DATA = {
             "name": "Snakelize 1 event",
             "value": 6492,
             "range": "±0.45%",
+            "unit": "ops/sec",
+            "extra": "96 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "to@itoh.at",
+            "name": "ITOH",
+            "username": "itohatweb"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "50282f91901344dae5f0b7137887a33cc0bca04e",
+          "message": "refactor(rest)!: improve `sendRequest` (#2956)\n\n* refactor(rest)!: refactor `sendRequest`\n - Removed `url` in favour of `route`. This change will effectively remove a bunch of unnecessary checks from dd. Also this changes how rest proxies have to pass the route to the `makeRequest` function. But since it will just require you to pass `req.route + req.query` it is an improvement compared to `rest.baseUrl + req.route + req.query`.\n - Introduced `HttpResponseCodes` an internal enum to remove magic numbers.\n - Improved the rate limted response handling. Made it simpler.\n - Removed unnecessary `JSON.stringify(await result.json())` since `await result.text()` does effectively the same.\n - Changed the anti memor leak `response.json()` to `response.arrayBuffer()` since latter does not do any additional processing.\n\n* .\n\n* forgot to fix that",
+          "timestamp": "2023-04-03T15:23:01Z",
+          "tree_id": "494f0ea27b184e7dffba3368b8f9036fd0c73eeb",
+          "url": "https://github.com/discordeno/discordeno/commit/50282f91901344dae5f0b7137887a33cc0bca04e"
+        },
+        "date": 1680535532737,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "[transformer] message cache check RSS",
+            "value": 122.15,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Used",
+            "value": 117.51,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Total",
+            "value": 107.41,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check RSS",
+            "value": 70.93,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Used",
+            "value": 100.5,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Total",
+            "value": 77,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 0.67,
+            "range": "±2.99%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 10.66,
+            "range": "±1.43%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 0,
+            "range": "±0%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "rest.simplifyUrl",
+            "value": 226019,
+            "range": "±0.28%",
+            "unit": "ops/sec",
+            "extra": "93 samples"
+          },
+          {
+            "name": "Camelize 1 event",
+            "value": 6600,
+            "range": "±0.19%",
+            "unit": "ops/sec",
+            "extra": "96 samples"
+          },
+          {
+            "name": "Snakelize 1 event",
+            "value": 6491,
+            "range": "±0.28%",
             "unit": "ops/sec",
             "extra": "96 samples"
           }
