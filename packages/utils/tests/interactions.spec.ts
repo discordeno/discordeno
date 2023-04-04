@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionTypes, ApplicationCommandTypes, ButtonStyles, InteractionTypes, type DiscordInteraction } from '@discordeno/types'
 import { expect } from 'chai'
-import { describe } from 'mocha'
+import { describe, it } from 'mocha'
 import { commandOptionsParser } from '../src/interactions.js'
 
 describe('Convert interaction to args', () => {
