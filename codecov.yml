@@ -1,9 +1,4 @@
 flags:
-  client:
-    carryforward: false
-  client-unit:
-    carryforward: false
-
   discordeno:
     carryforward: false
   discordeno-unit:

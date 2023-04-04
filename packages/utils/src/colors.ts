@@ -5,8 +5,6 @@
 // on npm.
 // https://deno.land/std@0.153.0/fmt/colors.ts?source
 
-const noColor = false
-
 export interface Code {
   open: string
   close: string
@@ -20,17 +18,13 @@ export interface Rgb {
   b: number
 }
 
-let enabled = !noColor
+let enabled = true
 
 /**
  * Set changing text color to enabled or disabled
  * @param value
  */
 export function setColorEnabled(value: boolean) {
-  if (noColor) {
-    return
-  }
-
   enabled = value
 }
 

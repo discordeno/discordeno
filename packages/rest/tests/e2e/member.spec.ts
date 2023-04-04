@@ -13,7 +13,6 @@ before(async () => {
 })
 
 after(async () => {
-  if (rest.invalidBucket.timeoutId) clearTimeout(rest.invalidBucket.timeoutId)
   if (e2ecache.guild.id && !e2ecache.deletedGuild) {
     e2ecache.deletedGuild = true
     await rest.deleteGuild(e2ecache.guild.id)
@@ -57,7 +56,7 @@ describe('Member tests', () => {
 
   it('Send a direct message', async () => {
     // DM test only on dd unit testing bot
-    if (rest.applicationId.toString() !== "770381961553510451") return;
+    if (rest.applicationId.toString() !== '770381961553510451') return
     // Itoh Alt ID
     const channel = await rest.getDmChannel(750661528360845322n)
     expect(channel?.id).to.exist

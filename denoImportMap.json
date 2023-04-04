@@ -17,7 +17,6 @@
     "@discordeno/types": "./packages/types/dist/index.js",
     "@discordeno/rest": "./packages/rest/dist/index.js",
     "@discordeno/gateway": "./packages/gateway/dist/index.js",
-    "@discordeno/bot": "./packages/bot/dist/index.js",
-    "@discordeno/client": "./packages/client/dist/index.js"
+    "@discordeno/bot": "./packages/bot/dist/index.js"
   }
 }

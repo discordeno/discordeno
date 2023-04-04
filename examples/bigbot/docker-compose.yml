@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   influxdb:
-    image: "influxdb:2.4.0-alpine"
+    image: 'influxdb:2.4.0-alpine'
     ports:
       - 127.0.0.1:8086:8086
     env_file:

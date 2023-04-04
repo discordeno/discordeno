@@ -7,7 +7,6 @@
 ### Modules
 
 - [@discordeno/bot](modules/Bot.md)
-- [@discordeno/client](modules/Client.md)
 - [@discordeno/gateway](modules/Gateway.md)
 - [@discordeno/rest](modules/Rest.md)
 - [@discordeno/types](modules/Types.md)

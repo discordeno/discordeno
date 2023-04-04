@@ -150,7 +150,7 @@ export type ArgumentDefinition =
 	| SubcommandArgumentDefinition
 	| SubcommandGroupArgumentDefinition;
 
-type getName<K extends translationKeys> = typeof english[K] extends string ? typeof english[K] : never;
+type getName<K extends translationKeys> = (typeof english)[K] extends string ? (typeof english)[K] : never;
 
 // OPTIONALS MUST BE FIRST!!!
 export type ConvertArgumentDefinitionsToArgs<T extends readonly ArgumentDefinition[]> = Identity<

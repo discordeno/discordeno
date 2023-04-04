@@ -1,0 +1,42 @@
+{
+  "name": "benchmark",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/discordeno/discordeno.git"
+  },
+  "scripts": {
+    "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
+    "release-build": "yarn build && yarn build:type",
+    "fmt": "eslint --fix \"src/**/*.ts*\"",
+    "lint": "eslint \"src/**/*.ts*\"",
+    "build": "swc src --delete-dir-on-start --out-dir dist && node ../../scripts/fixBenchExtension.js",
+    "build-message": "swc src/generateMessage.ts -C sourceMaps=false --out-dir ../../scripts && node ../../scripts/fixBenchExtension.js",
+    "bench": "node dist/index.js"
+  },
+  "dependencies": {
+    "@discordeno/bot": "latest",
+    "@discordeno/gateway": "19.0.0-alpha.1",
+    "@discordeno/rest": "19.0.0-alpha.1",
+    "@discordeno/types": "19.0.0-alpha.1",
+    "@discordeno/utils": "19.0.0-alpha.1",
+    "benchmark": "^2.1.4",
+    "microtime": "^3.1.1",
+    "node-fetch": "^3.3.1"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.3.21",
+    "@types/benchmark": "^2",
+    "@types/node": "^18.11.9",
+    "eslint": "^8.0.1",
+    "eslint-config-discordeno": "*",
+    "ts-node": "^10.9.1",
+    "tsconfig": "*",
+    "typescript": "^4.9.3"
+  }
+}

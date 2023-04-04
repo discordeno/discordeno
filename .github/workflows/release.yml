@@ -18,14 +18,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: ["gateway", "rest", "types", "utils", "bot", "client"]
+        package: ['gateway', 'rest', 'types', 'utils', 'bot']
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          registry-url: "https://registry.npmjs.org"
-          scope: "@discordeno"
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@discordeno'
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT

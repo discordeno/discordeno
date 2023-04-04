@@ -12,9 +12,8 @@ Discordeno is actively maintained to guarantee **excellent performance, latest f
 
 - **Simple, Efficient, and Lightweight**: Discordeno is lightweight, simple to use, and adaptable.
   - By default: No caching.
-- **Functional & Class API**: Discordeno is flexible enough to provide both methods.
+- **Functional API**:
   - The functional API eliminates the challenges of extending built-in classes and inheritance while ensuring overall simple but performant code.
-  - The class based API, client package, provides a similar api as the [Eris](https://github.com/abalabahaha/eris) library to provide the best class based experience.
 - **Cross Runtime**: Supports the Node.js, Deno, and Bun runtimes.
 - **Standalone components**: Discordeno offers the option to have practically any component of a bot as a separate
   piece, including standalone REST, gateways, custom caches, and more.
@@ -76,7 +75,7 @@ Have your cache setup in any way you like. Redis, PGSQL or any cache layer you w
 
 ## Getting Started
 
-Interested? [Check the website](https://discordeno.github.io/discordeno/) for more details on getting started.
+Interested? [Check the website](https://discordeno.js.org/) for more details on getting started.
 
 ### Tools
 
@@ -85,7 +84,7 @@ and unofficial templates:
 
 ## Links
 
-- [Website](https://discordeno.github.io/discordeno/)
+- [Website](https://discordeno.js.org/)
 - [Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
 - [Discord](https://discord.com/invite/5vBgXk3UcZ)
 

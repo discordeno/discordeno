@@ -1,19 +1,10 @@
 {
-    "entryPointStrategy": "packages",
-    "entryPoints": [
-        "packages/bot",
-        "packages/client",
-        "packages/gateway",
-        "packages/rest",
-        "packages/types",
-        "packages/utils"
-    ],
-    "logger": "console",
-    "skipErrorChecking": true,
-    "out": "./website/docs/generated/",
-    "cleanOutputDir": false,
-    "plugin": [
-        "typedoc-plugin-markdown"
-    ],
-    "commentStyle": "all"
+  "entryPointStrategy": "packages",
+  "entryPoints": ["packages/bot", "packages/gateway", "packages/rest", "packages/types", "packages/utils"],
+  "logger": "console",
+  "skipErrorChecking": true,
+  "out": "./website/docs/generated/",
+  "cleanOutputDir": false,
+  "plugin": ["typedoc-plugin-markdown"],
+  "commentStyle": "all"
 }

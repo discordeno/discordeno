@@ -1,4 +1,3 @@
-import type { FileContent } from './discordeno.js'
 import type {
   ActivityTypes,
   AllowedMentionsTypes,
@@ -13,6 +12,7 @@ import type {
   DefaultMessageNotificationLevels,
   EmbedTypes,
   ExplicitContentFilterLevels,
+  FormLayout,
   GatewayEventNames,
   GuildFeatures,
   GuildNsfwLevel,
@@ -83,7 +83,7 @@ export interface DiscordIntegration {
   id: string
   /** Integration name */
   name: string
-  /** Integration type (twitch, youtube or discord) */
+  /** Integration type (twitch, youtube, discord, or guild_subscription). */
   type: 'twitch' | 'youtube' | 'discord'
   /** Is this integration enabled */
   enabled?: boolean
@@ -519,6 +519,8 @@ export interface DiscordGuild {
   premium_subscription_count?: number
   /** The maximum amount of users in a video channel */
   max_video_channel_users?: number
+  /** Maximum amount of users in a stage video channel */
+  max_stage_video_channel_users?: number
   /** Approximate number of members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
   approximate_member_count?: number
   /** Approximate number of non-offline members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
@@ -615,6 +617,10 @@ export interface DiscordRoleTags {
   integration_id?: string
   /** Whether this is the guild's premium subscriber role */
   premium_subscriber?: null
+  /** Id of this role's subscription sku and listing. */
+  subscription_listing_id?: string
+  /** Whether this role is available for purchase. */
+  available_for_purchase?: null
   /** Whether this is a guild's linked role */
   guild_connections?: null
 }
@@ -703,6 +709,8 @@ export interface DiscordChannel {
   owner_id?: string
   /** Application id of the group DM creator if it is bot-created */
   application_id?: string
+  /** For group DM channels: whether the channel is managed by an application via the `gdm.join` OAuth2 scope. */
+  managed?: boolean
   /** For guild channels: Id of the parent category for a channel (each parent category can contain up to 50 channels), for threads: id of the text channel this thread was created */
   parent_id?: string | null
   /** When the last pinned message was pinned. This may be null in events such as GUILD_CREATE when a message is not pinned. */
@@ -738,7 +746,7 @@ export interface DiscordChannel {
   /** the default sort order type used to order posts in GUILD_FORUM channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
   default_sort_order?: SortOrderTypes | null
   /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
-  default_forum_layout?: number
+  default_forum_layout?: FormLayout
   /** When a thread is created this will be true on that channel payload for the thread. */
   newly_created?: boolean
 }
@@ -1443,6 +1451,8 @@ export enum AutoModerationActionType {
 export interface DiscordAutoModerationActionMetadata {
   /** The id of channel to which user content should be logged. Only in ActionType.SendAlertMessage */
   channel_id?: string
+  /** Additional explanation that will be shown to members whenever their message is blocked. Maximum of 150 characters. Only supported for AutoModerationActionType.BlockMessage */
+  custom_message?: string
   /** Timeout duration in seconds maximum of 2419200 seconds (4 weeks). Only supported for TriggerType.Keyword && Only in ActionType.Timeout */
   duration_seconds?: number
 }
@@ -2392,6 +2402,8 @@ export interface DiscordModifyChannel {
   default_thread_rate_limit_per_user?: number
   /** the default sort order type used to order posts in forum channels */
   default_sort_order?: SortOrderTypes | null
+  /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
+  default_forum_layout?: FormLayout
 }
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
@@ -2553,8 +2565,6 @@ export interface DiscordCreateForumPostWithMessage {
     components?: DiscordMessageComponents[]
     /** IDs of up to 3 stickers in the server to send in the message */
     sticker_ids?: string[]
-    /** Contents of the file being sent. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
-    file: FileContent | FileContent[] | undefined
     /** JSON-encoded body of non-file params, only for multipart/form-data requests. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
     payload_json?: string
     /** Attachment objects with filename and description. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */

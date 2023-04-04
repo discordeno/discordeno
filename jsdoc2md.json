@@ -3,10 +3,7 @@
     "babelrc": false,
     "extensions": ["ts", "tsx"],
     "ignore": ["**/*.(test|spec).ts"],
-    "plugins": [
-      "@babel/proposal-class-properties",
-      "@babel/proposal-object-rest-spread"
-    ],
+    "plugins": ["@babel/proposal-class-properties", "@babel/proposal-object-rest-spread"],
     "presets": [
       [
         "@babel/preset-env",

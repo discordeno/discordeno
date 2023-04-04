@@ -1,0 +1,90 @@
+name: Benchmark with retry
+
+on:
+  pull_request:
+    paths-ignore:
+      - 'website/**'
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'website/**'
+
+jobs:
+  benchmark-try-1:
+    uses: ./.github/workflows/benchmark.yml
+    with:
+      sha: ${{ github.event.pull_request.head.sha }}
+      repo: ${{ github.event.pull_request.head.repo.full_name }}
+
+  benchmark-try-2:
+    needs: benchmark-try-1
+    if: ${{ needs.benchmark-try-1.outputs.cpuMatch == 'false' }}
+    uses: ./.github/workflows/benchmark.yml
+    with:
+      sha: ${{ github.event.pull_request.head.sha }}
+      repo: ${{ github.event.pull_request.head.repo.full_name }}
+
+  benchmark-try-3:
+    needs: benchmark-try-2
+    if: ${{ needs.benchmark-try-2.outputs.cpuMatch == 'false' }}
+    uses: ./.github/workflows/benchmark.yml
+    with:
+      sha: ${{ github.event.pull_request.head.sha }}
+      repo: ${{ github.event.pull_request.head.repo.full_name }}
+
+  benchmark-try-4:
+    needs: benchmark-try-3
+    if: ${{ needs.benchmark-try-3.outputs.cpuMatch == 'false' }}
+    uses: ./.github/workflows/benchmark.yml
+    with:
+      sha: ${{ github.event.pull_request.head.sha }}
+      repo: ${{ github.event.pull_request.head.repo.full_name }}
+
+  benchmark-try-5:
+    needs: benchmark-try-4
+    if: ${{ needs.benchmark-try-4.outputs.cpuMatch == 'false' }}
+    uses: ./.github/workflows/benchmark.yml
+    with:
+      sha: ${{ github.event.pull_request.head.sha }}
+      repo: ${{ github.event.pull_request.head.repo.full_name }}
+
+  benchmark-try-6:
+    needs: benchmark-try-5
+    if: ${{ needs.benchmark-try-5.outputs.cpuMatch == 'false' }}
+    uses: ./.github/workflows/benchmark.yml
+    with:
+      sha: ${{ github.event.pull_request.head.sha }}
+      repo: ${{ github.event.pull_request.head.repo.full_name }}
+
+  benchmark-try-7:
+    needs: benchmark-try-6
+    if: ${{ needs.benchmark-try-6.outputs.cpuMatch == 'false' }}
+    uses: ./.github/workflows/benchmark.yml
+    with:
+      sha: ${{ github.event.pull_request.head.sha }}
+      repo: ${{ github.event.pull_request.head.repo.full_name }}
+
+  benchmark-try-8:
+    needs: benchmark-try-7
+    if: ${{ needs.benchmark-try-7.outputs.cpuMatch == 'false' }}
+    uses: ./.github/workflows/benchmark.yml
+    with:
+      sha: ${{ github.event.pull_request.head.sha }}
+      repo: ${{ github.event.pull_request.head.repo.full_name }}
+
+  benchmark-try-9:
+    needs: benchmark-try-8
+    if: ${{ needs.benchmark-try-8.outputs.cpuMatch == 'false' }}
+    uses: ./.github/workflows/benchmark.yml
+    with:
+      sha: ${{ github.event.pull_request.head.sha }}
+      repo: ${{ github.event.pull_request.head.repo.full_name }}
+
+  benchmark-try-10:
+    needs: benchmark-try-9
+    if: ${{ needs.benchmark-try-9.outputs.cpuMatch == 'false' }}
+    uses: ./.github/workflows/benchmark.yml
+    with:
+      sha: ${{ github.event.pull_request.head.sha }}
+      repo: ${{ github.event.pull_request.head.repo.full_name }}

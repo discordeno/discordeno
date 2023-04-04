@@ -149,6 +149,6 @@ and unofficial templates:
 
 ## Links
 
-- [Website](https://discordeno.github.io/discordeno/)
+- [Website](https://discordeno.js.org/)
 - [Documentation](https://doc.deno.land/https/deno.land/x/discordeno/mod.ts)
 - [Discord](https://discord.com/invite/5vBgXk3UcZ)

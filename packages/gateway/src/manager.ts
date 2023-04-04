@@ -37,6 +37,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     totalWorkers: options.totalWorkers ?? 4,
     shardsPerWorker: options.shardsPerWorker ?? 25,
     spawnShardDelay: options.spawnShardDelay ?? 5300,
+    preferSnakeCase: false,
     shards: new Map(),
     buckets: new Map(),
     cache: {
@@ -167,6 +168,12 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           },
         })
 
+        if (this.preferSnakeCase) {
+          shard.forwardToBot = async (payload) => {
+            options.events.message?.(shard!, payload)
+          }
+        }
+
         this.shards.set(shardId, shard)
       }
 
@@ -289,6 +296,11 @@ export interface CreateGatewayManagerOptions {
    * @default 5300
    */
   spawnShardDelay?: number
+  /**
+   * Whether to send the discord packets in snake case form.
+   * @default false
+   */
+  preferSnakeCase?: boolean
   /**
    * Total amount of shards your bot uses. Useful for zero-downtime updates or resharding.
    * @default 1

@@ -24,8 +24,8 @@ describe('[rest] manager', () => {
       version: 9,
       proxy: {
         baseUrl: 'https://localhost:8000',
-        authorization: token
-      }
+        authorization: token,
+      },
     } as const
 
     const rest = createRestManager(options)
@@ -80,7 +80,7 @@ describe('[rest] manager', () => {
         it('Will add method in front route if method is DELETE', () => {
           const rest = createRestManager({ token })
           expect(rest.simplifyUrl('/channels/555555555555555555/messages/555555555555555555', 'DELETE')).to.be.equal(
-            'DELETE/channels/555555555555555555/messages/x',
+            'D/channels/555555555555555555/messages/x',
           )
         })
 
@@ -173,7 +173,7 @@ describe('[rest] manager', () => {
     let time: sinon.SinonFakeTimers
 
     beforeEach(() => {
-      rest = createRestManager({ token: ' ' })
+      rest = createRestManager({ applicationId: 1n })
       time = sinon.useFakeTimers()
     })
 

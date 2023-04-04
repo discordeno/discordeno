@@ -1,6 +1,6 @@
 import type { Camelize, Snakelize } from '@discordeno/types'
 
-export function camelize <T>(object: T): Camelize<T> {
+export function camelize<T>(object: T): Camelize<T> {
   if (Array.isArray(object)) {
     return object.map((element) => camelize(element)) as Camelize<T>
   }
@@ -16,7 +16,7 @@ export function camelize <T>(object: T): Camelize<T> {
   return object as Camelize<T>
 }
 
-export function snakelize <T>(object: T): Snakelize<T> {
+export function snakelize<T>(object: T): Snakelize<T> {
   if (Array.isArray(object)) {
     return object.map((element) => snakelize(element)) as Snakelize<T>
   }

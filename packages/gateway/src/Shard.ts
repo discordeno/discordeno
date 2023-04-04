@@ -10,7 +10,7 @@ import type {
   RequestGuildMembers,
 } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayIntents, GatewayOpcodes } from '@discordeno/types'
-import { camelize, Collection, delay, LeakyBucket, logger } from '@discordeno/utils'
+import { Collection, LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
 import { inflateSync } from 'node:zlib'
 import WebSocket from 'ws'
 import type { RequestMemberRequest } from './manager.js'
@@ -467,6 +467,10 @@ export class DiscordenoShard {
       this.previousSequenceNumber = packet.s
     }
 
+    this.forwardToBot(packet)
+  }
+
+  forwardToBot(packet: DiscordGatewayPayload): void {
     // The necessary handling required for the Shards connection has been finished.
     // Now the event can be safely forwarded.
     this.events.message?.(this, camelize(packet))

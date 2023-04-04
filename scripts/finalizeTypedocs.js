@@ -39,14 +39,12 @@ for await (let filepath of walk(typedocOutPath)) {
 
   // Converts ugly names to clean names for example discordeno_types.ActionRow becomes ActionRow
   const cleanForms = [
-    { ugly: 'discordeno_bot.md', clean: 'Bot.md'},
-    { ugly: 'discordeno_client.md', clean: 'Client.md'},
-    { ugly: 'discordeno_gateway.md', clean: 'Gateway.md'},
-    { ugly: 'discordeno_rest.md', clean: 'Rest.md'},
-    { ugly: 'discordeno_types.md', clean: 'Types.md'},
-    { ugly: 'discordeno_utils.md', clean: 'Utils.md'},
+    { ugly: 'discordeno_bot.md', clean: 'Bot.md' },
+    { ugly: 'discordeno_gateway.md', clean: 'Gateway.md' },
+    { ugly: 'discordeno_rest.md', clean: 'Rest.md' },
+    { ugly: 'discordeno_types.md', clean: 'Types.md' },
+    { ugly: 'discordeno_utils.md', clean: 'Utils.md' },
     { ugly: 'discordeno_bot.' },
-    { ugly: 'discordeno_client.' },
     { ugly: 'discordeno_gateway.' },
     { ugly: 'discordeno_rest.' },
     { ugly: 'discordeno_types.' },
