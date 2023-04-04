@@ -402,6 +402,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async makeRequest(method, route, options) {
       if (rest.isProxied) {
+        if (rest.authorization !== undefined) {
+          options ??= {}
+          options.headers ??= {}
+          options.headers.authorization = rest.authorization
+        }
+
         const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
 
         if (!result.ok) {
