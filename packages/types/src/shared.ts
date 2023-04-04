@@ -612,8 +612,8 @@ export enum BitwisePermissionFlags {
   MANAGE_ROLES = 0x0000000010000000,
   /** Allows management and editing of webhooks */
   MANAGE_WEBHOOKS = 0x0000000020000000,
-  /** Allows management and editing of emojis and stickers */
-  MANAGE_EMOJIS_AND_STICKERS = 0x0000000040000000,
+  /** Allows management and editing of emojis, stickers, and soundboard sounds */
+  MANAGE_GUILD_EXPRESSIONS = 0x0000000040000000,
   /** Allows members to use application commands in text channels */
   USE_SLASH_COMMANDS = 0x0000000080000000,
   /** Allows for requesting to speak in stage channels. */
@@ -634,6 +634,10 @@ export enum BitwisePermissionFlags {
   USE_EMBEDDED_ACTIVITIES = 0x0000008000000000,
   /** Allows for timing out users to prevent them from sending or reacting to messages in chat and threads, and from speaking in voice and stage channels */
   MODERATE_MEMBERS = 0x0000010000000000,
+  /** Allows for viewing role subscription insights. */
+  VIEW_CREATOR_MONETIZATION_ANALYTICS = 0x0000020000000000,
+  /** Allows for using soundboard in a voice channel. */
+  USE_SOUNDBOARD = 0x0000040000000000,
 }
 
 export type PermissionStrings = keyof typeof BitwisePermissionFlags
@@ -766,6 +770,7 @@ export type GatewayEventNames = GatewayDispatchEventNames | 'READY' | 'RESUMED'
 export enum GatewayIntents {
   /**
    * - GUILD_CREATE
+   * - GUILD_UPDATE
    * - GUILD_DELETE
    * - GUILD_ROLE_CREATE
    * - GUILD_ROLE_UPDATE
@@ -789,17 +794,22 @@ export enum GatewayIntents {
    * - GUILD_MEMBER_ADD
    * - GUILD_MEMBER_UPDATE
    * - GUILD_MEMBER_REMOVE
+   * - THREAD_MEMBERS_UPDATE
+   *
+   * This is a privileged intent.
    */
   GuildMembers = 1 << 1,
   /**
+   * - GUILD_AUDIT_LOG_ENTRY_CREATE
    * - GUILD_BAN_ADD
    * - GUILD_BAN_REMOVE
    */
-  GuildBans = 1 << 2,
+  GuildModeration = 1 << 2,
   /**
    * - GUILD_EMOJIS_UPDATE
+   * - GUILD_STICKERS_UPDATE
    */
-  GuildEmojis = 1 << 3,
+  GuildEmojisAndStickers = 1 << 3,
   /**
    * - GUILD_INTEGRATIONS_UPDATE
    * - INTEGRATION_CREATE
@@ -807,7 +817,7 @@ export enum GatewayIntents {
    * - INTEGRATION_DELETE
    */
   GuildIntegrations = 1 << 4,
-  /** Enables the following events:
+  /**
    * - WEBHOOKS_UPDATE
    */
   GuildWebhooks = 1 << 5,
@@ -822,13 +832,18 @@ export enum GatewayIntents {
   GuildVoiceStates = 1 << 7,
   /**
    * - PRESENCE_UPDATE
+   *
+   * This is a privileged intent.
    */
   GuildPresences = 1 << 8,
   /**
    * - MESSAGE_CREATE
    * - MESSAGE_UPDATE
    * - MESSAGE_DELETE
-   */
+   * - MESSAGE_DELETE_BULK
+   *
+   * The messages do not contain content by default.
+   * If you want to receive their content too, you need to turn on the privileged `MESSAGE_CONTENT` intent. */
   GuildMessages = 1 << 9,
   /**
    * - MESSAGE_REACTION_ADD
@@ -860,9 +875,10 @@ export enum GatewayIntents {
    * - TYPING_START
    */
   DirectMessageTyping = 1 << 14,
-
   /**
-   * This intent will add `content` values to all message objects.
+   * This intent will add all content related values to message events.
+   *
+   * This is a privileged intent.
    */
   MessageContent = 1 << 15,
   /**
@@ -873,7 +889,6 @@ export enum GatewayIntents {
    * - GUILD_SCHEDULED_EVENT_USER_REMOVE this is experimental and unstable.
    */
   GuildScheduledEvents = 1 << 16,
-
   /**
    * - AUTO_MODERATION_RULE_CREATE
    * - AUTO_MODERATION_RULE_UPDATE

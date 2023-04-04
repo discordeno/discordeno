@@ -1,87 +1,307 @@
-import type { DiscordMessage } from '@discordeno/types'
+import type { DiscordMessage, InteractionTypes, MessageActivityTypes, MessageTypes, StickerFormatTypes } from '@discordeno/types'
 import { CHANNEL_MENTION_REGEX } from '../constants.js'
-import { iconHashToBigInt, type Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
-import { MemberToggles } from './toggles/member.js'
+import { snowflakeToTimestamp, type Bot } from '../index.js'
+import { MessageFlags } from '../typings.js'
+import type { Attachment } from './attachment.js'
+import type { Channel } from './channel.js'
+import type { Component } from './component.js'
+import type { Embed } from './embed.js'
+import type { Emoji } from './emoji.js'
+import type { Member, User } from './member.js'
+import { ToggleBitfield } from './toggles/ToggleBitfield.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformMessage(bot: Bot, payload: DiscordMessage) {
+const baseMessage: Partial<Message> & MessageBase = {
+  get crossposted() {
+    return this.flags?.contains(MessageFlags.Crossposted) ?? false
+  },
+  set crossposted(value: boolean) {
+    if (!this.flags) return
+    if (!this.flags) return
+    if (value) this.flags.add(MessageFlags.Crossposted)
+    else this.flags.remove(MessageFlags.Crossposted)
+  },
+  get ephemeral() {
+    return this.flags?.contains(MessageFlags.Ephemeral) ?? false
+  },
+  set ephemeral(value: boolean) {
+    if (!this.flags) return
+    if (value) this.flags.add(MessageFlags.Ephemeral)
+    else this.flags.remove(MessageFlags.Ephemeral)
+  },
+  get failedToMentionSomeRolesInThread() {
+    return this.flags?.contains(MessageFlags.FailedToMentionSomeRolesInThread) ?? false
+  },
+  set failedToMentionSomeRolesInThread(value: boolean) {
+    if (!this.flags) return
+    if (value) this.flags.add(MessageFlags.FailedToMentionSomeRolesInThread)
+    else this.flags.remove(MessageFlags.FailedToMentionSomeRolesInThread)
+  },
+  get hasThread() {
+    return this.flags?.contains(MessageFlags.HasThread) ?? false
+  },
+  set hasThread(value: boolean) {
+    if (!this.flags) return
+    if (value) this.flags.add(MessageFlags.HasThread)
+    else this.flags.remove(MessageFlags.HasThread)
+  },
+  get isCrosspost() {
+    return this.flags?.contains(MessageFlags.IsCrosspost) ?? false
+  },
+  set isCrosspost(value: boolean) {
+    if (!this.flags) return
+    if (value) this.flags.add(MessageFlags.IsCrosspost)
+    else this.flags.remove(MessageFlags.IsCrosspost)
+  },
+  get loading() {
+    return this.flags?.contains(MessageFlags.Loading) ?? false
+  },
+  set loading(value: boolean) {
+    if (!this.flags) return
+    if (value) this.flags.add(MessageFlags.Loading)
+    else this.flags.remove(MessageFlags.Loading)
+  },
+  get mentionedUserIds() {
+    return this.mentions?.map((user) => user.id) ?? []
+  },
+  get mentionEveryone() {
+    return this.bitfield?.contains(2) ?? false
+  },
+  set mentionEveryone(value: boolean) {
+    if (!this.bitfield) return
+    if (value) this.bitfield.add(2)
+    else this.bitfield.remove(2)
+  },
+  get pinned() {
+    return this.bitfield?.contains(3) ?? false
+  },
+  set pinned(value: boolean) {
+    if (!this.bitfield) return
+    if (value) this.bitfield.add(3)
+    else this.bitfield.remove(3)
+  },
+  get sourceMessageDeleted() {
+    return this.flags?.contains(MessageFlags.SourceMessageDeleted) ?? false
+  },
+  set sourceMessageDeleted(value: boolean) {
+    if (!this.flags) return
+    if (value) this.flags.add(MessageFlags.SourceMessageDeleted)
+    else this.flags.remove(MessageFlags.SourceMessageDeleted)
+  },
+  get suppressEmbeds() {
+    return this.flags?.contains(MessageFlags.SuppressEmbeds) ?? false
+  },
+  set suppressEmbeds(value: boolean) {
+    if (!this.flags) return
+    if (value) this.flags.add(MessageFlags.SuppressEmbeds)
+    else this.flags.remove(MessageFlags.SuppressEmbeds)
+  },
+  get suppressNotifications() {
+    return this.flags?.contains(MessageFlags.SuppressNotifications) ?? false
+  },
+  set suppressNotifications(value: boolean) {
+    if (!this.flags) return
+    if (value) this.flags.add(MessageFlags.SuppressNotifications)
+    else this.flags.remove(MessageFlags.SuppressNotifications)
+  },
+  get timestamp() {
+    return this.id ? snowflakeToTimestamp(this.id) : 0
+  },
+  get tts() {
+    return this.bitfield?.contains(1) ?? false
+  },
+  set tts(value: boolean) {
+    if (!this.bitfield) return
+    if (value) this.bitfield.add(1)
+    else this.bitfield.remove(1)
+  },
+  get urgent() {
+    return this.flags?.contains(MessageFlags.Urgent) ?? false
+  },
+  set urgent(value: boolean) {
+    if (!this.flags) return
+    if (value) this.flags.add(MessageFlags.Urgent)
+    else this.flags.remove(MessageFlags.Urgent)
+  },
+}
+
+export interface MessageBase {
+  /** Holds all the boolean values on this message. */
+  bitfield?: ToggleBitfield
+  /** Whether this message has been published to subscribed channels (via Channel Following) */
+  crossposted: boolean
+  /** Whether this message is only visible to the user who invoked the Interaction */
+  ephemeral: boolean
+  /** Whether this message failed to mention some roles and add their members to the thread */
+  failedToMentionSomeRolesInThread: boolean
+  /** Message flags combined as a bitfield */
+  flags?: ToggleBitfield
+  /** Whether this message has an associated thread, with the same id as the message */
+  hasThread: boolean
+  /** Whether this message originated from a message in another channel (via Channel Following) */
+  isCrosspost: boolean
+  /** Whether this message is an Interaction Response and the bot is "thinking" */
+  loading: boolean
+  /** The ids of the users who were mentioned in this message. */
+  mentionedUserIds: bigint[]
+  /** Whether this message mentions everyone */
+  mentionEveryone: boolean
+  /** Whether this message is pinned */
+  pinned: boolean
+  /** Whether the source message for this crosspost has been deleted (via Channel Following) */
+  sourceMessageDeleted: boolean
+  /** Whether do not include any embeds when serializing this message */
+  suppressEmbeds: boolean
+  /** Whether this message will not trigger push and desktop notifications */
+  suppressNotifications: boolean
+  /** The timestamp in milliseconds when this message was created */
+  timestamp: number
+  /** Whether this was a TTS message. */
+  tts: boolean
+  /** Whether this message came from the urgent message system */
+  urgent: boolean
+}
+
+export interface Message extends MessageBase {
+  /** Sent with Rich Presence-related chat embeds */
+  activity?: {
+    /** Type of message activity */
+    type: MessageActivityTypes
+    /** party_id from a Rich Presence event */
+    partyId?: string
+  }
+  /** if the message is an Interaction or application-owned webhook, this is the id of the application */
+  applicationId?: bigint
+  /** Any attached files on this message. */
+  attachments?: Attachment[]
+  /** The author of this message (not guaranteed to be a valid user) Note: The author object follows the structure of the user object, but is only a valid user in the case where the message is generated by a user or bot user. If the message is generated by a webhook, the author object corresponds to the webhook's id, username, and avatar. You can tell if a message is generated by a webhook by checking for the webhook_id on the message object. */
+  author: User
+  /** id of the channel the message was sent in */
+  channelId: bigint
+  /** The components related to this message */
+  components: Component[]
+  /** Contents of the message */
+  content: string
+  /** The timestamp in milliseconds when this message was edited last. */
+  editedTimestamp?: number
+  /** Any embedded content */
+  embeds?: Embed[]
+  /** id of the guild the message was sent in Note: For MESSAGE_CREATE and MESSAGE_UPDATE events, the message object may not contain a guild_id or member field since the events are sent directly to the receiving user and the bot who sent the message, rather than being sent through the guild like non-ephemeral messages. */
+  guildId?: bigint
+  /** id of the message */
+  id: bigint
+  /** Sent if the message is a response to an Interaction */
+  interaction?: {
+    /** Id of the interaction */
+    id: bigint
+    /** The member who invoked the interaction in the guild  */
+    member?: Member
+    /** The name of the ApplicationCommand including the name of the subcommand/subcommand group */
+    name: string
+    /** The type of interaction */
+    type: InteractionTypes
+    /** The user who invoked the interaction */
+    user: User
+  }
+  /** Member properties for this message's author Note: The member object exists in MESSAGE_CREATE and MESSAGE_UPDATE events from text-based guild channels. This allows bots to obtain real-time member data without requiring bots to store member state in memory. */
+  member?: Member
+  /** Users specifically mentioned in the message Note: The user objects in the mentions array will only have the partial member field present in MESSAGE_CREATE and MESSAGE_UPDATE events from text-based guild channels. */
+  mentions?: User[]
+  /** Channels specifically mentioned in this message Note: Not all channel mentions in a message will appear in mention_channels. Only textual channels that are visible to everyone in a lurkable guild will ever be included. Only crossposted messages (via Channel Following) currently include mention_channels at all. If no mentions in the message meet these requirements, this field will not be sent. */
+  mentionedChannelIds?: bigint[]
+  /** Roles specifically mentioned in this message */
+  mentionedRoleIds?: bigint[]
+  /** Data showing the source of a crossposted channel follow add, pin or reply message */
+  messageReference?: {
+    /** id of the originating message's channel Note: channel_id is optional when creating a reply, but will always be present when receiving an event/response that includes this data model. */
+    channelId?: bigint
+    /** id of the originating message's guild */
+    guildId?: bigint
+    /** id of the originating message */
+    messageId?: bigint
+  }
+  /** Used for validating a message was sent */
+  nonce?: string | number
+  /** Reactions on this message. */
+  reactions?: Array<{
+    /** Whether the current user reacted using this emoji */
+    me: boolean
+    /** Times this emoji has been used to react */
+    count: number
+    /** Emoji information */
+    emoji: Emoji
+  }>
+  /** Sent if the message contains stickers */
+  stickerItems?: Array<{
+    /** The id of this sticker. */
+    id: bigint
+    /** The name of this sticker. */
+    name: string
+    /** The type of this stickers format. */
+    formatType: StickerFormatTypes
+  }>
+  /** Type of message */
+  type: MessageTypes
+  /** The thread that was started from this message, includes thread member object  */
+  thread?: Channel
+  /** If the message is generated by a webhook, this is the webhook's id */
+  webhookId?: bigint
+}
+
+const EMPTY_STRING = ''
+
+export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
   const userId = bot.transformers.snowflake(payload.author.id)
 
-  const message = {
-    // UNTRANSFORMED STUFF HERE
-    content: payload.content ?? '',
-    isFromBot: payload.author.bot ?? false,
-    tag: `${payload.author.username}#${payload.author.discriminator}`,
-    timestamp: Date.parse(payload.timestamp),
-    editedTimestamp: payload.edited_timestamp ? Date.parse(payload.edited_timestamp) : undefined,
-    bitfield: (payload.tts ? 1n : 0n) | (payload.mention_everyone ? 2n : 0n) | (payload.pinned ? 4n : 0n),
-    attachments: payload.attachments?.map((attachment) => bot.transformers.attachment(bot, attachment)),
-    embeds: payload.embeds?.map((embed) => bot.transformers.embed(bot, embed)),
-    reactions: payload.reactions?.map((reaction) => ({
-      me: reaction.me,
-      count: reaction.count,
-      emoji: bot.transformers.emoji(bot, reaction.emoji),
-    })),
-    type: payload.type,
-    activity: payload.activity
-      ? {
-          type: payload.activity.type,
-          partyId: payload.activity.party_id,
-        }
-      : undefined,
-    application: payload.application,
-    flags: payload.flags,
-    interaction: payload.interaction
-      ? {
-          id: bot.transformers.snowflake(payload.interaction.id),
-          type: payload.interaction.type,
-          name: payload.interaction.name,
-          user: bot.transformers.user(bot, payload.interaction.user),
-          member: payload.interaction.member
-            ? {
-                id: userId,
-                guildId,
-                nick: payload.interaction.member.nick ?? undefined,
-                roles: payload.interaction.member.roles?.map((id) => bot.transformers.snowflake(id)),
-                joinedAt: payload.interaction.member.joined_at ? Date.parse(payload.interaction.member.joined_at) : undefined,
-                premiumSince: payload.interaction.member.premium_since ? Date.parse(payload.interaction.member.premium_since) : undefined,
-                toggles: new MemberToggles(payload.interaction.member),
-                avatar: payload.interaction.member.avatar ? iconHashToBigInt(payload.interaction.member.avatar) : undefined,
-                permissions: payload.interaction.member.permissions ? bot.transformers.snowflake(payload.interaction.member.permissions) : undefined,
-                communicationDisabledUntil: payload.interaction.member.communication_disabled_until
-                  ? Date.parse(payload.interaction.member.communication_disabled_until)
-                  : undefined,
-              }
-            : undefined,
-        }
-      : undefined,
-    thread: payload.thread ? bot.transformers.channel(bot, { channel: payload.thread, guildId }) : undefined,
-    components: payload.components?.map((component) => bot.transformers.component(bot, component)),
-    stickerItems: payload.sticker_items?.map((sticker) => ({
-      id: bot.transformers.snowflake(sticker.id),
-      name: sticker.name,
-      formatType: sticker.format_type,
-    })),
+  const message: Message = Object.create(baseMessage)
+  message.bitfield = new ToggleBitfield()
+  message.flags = new ToggleBitfield(payload.flags)
 
-    // TRANSFORMED STUFF BELOW
-    id: bot.transformers.snowflake(payload.id),
-    guildId,
-    channelId: bot.transformers.snowflake(payload.channel_id),
-    webhookId: payload.webhook_id ? bot.transformers.snowflake(payload.webhook_id) : undefined,
-    authorId: userId,
-    applicationId: payload.application_id ? bot.transformers.snowflake(payload.application_id) : undefined,
-    messageReference: payload.message_reference
-      ? {
-          messageId: payload.message_reference.message_id ? bot.transformers.snowflake(payload.message_reference.message_id) : undefined,
-          channelId: payload.message_reference.channel_id ? bot.transformers.snowflake(payload.message_reference.channel_id) : undefined,
-          guildId: payload.message_reference.guild_id ? bot.transformers.snowflake(payload.message_reference.guild_id) : undefined,
-        }
-      : undefined,
-    mentionedUserIds: payload.mentions ? payload.mentions.map((m) => bot.transformers.snowflake(m.id)) : [],
-    mentionedRoleIds: payload.mention_roles ? payload.mention_roles.map((id) => bot.transformers.snowflake(id)) : [],
-    mentionedChannelIds: [
+  const props = bot.transformers.desiredProperties.message
+
+  if (props.author && props.author) message.author = bot.transformers.user(bot, payload.author)
+  if (payload.application_id && props.applicationId) message.applicationId = bot.transformers.snowflake(payload.application_id)
+  if (payload.attachments?.length && props.attachments) {
+    message.attachments = payload.attachments.map((attachment) => bot.transformers.attachment(bot, attachment))
+  }
+  if (props.channelId && props.channelId) message.channelId = bot.transformers.snowflake(payload.channel_id)
+  if (props.components && payload.components?.length) message.components = payload.components.map((comp) => bot.transformers.component(bot, comp))
+  if (props.content && props.content) message.content = payload.content ?? EMPTY_STRING
+  if (payload.edited_timestamp && props.editedTimestamp) message.editedTimestamp = Date.parse(payload.edited_timestamp)
+  if (payload.embeds?.length && props.embeds) message.embeds = payload.embeds.map((embed) => bot.transformers.embed(bot, embed))
+  if (guildId && props.guildId) message.guildId = guildId
+  if (props.id && payload.id) message.id = bot.transformers.snowflake(payload.id)
+  if (payload.interaction) {
+    const interaction = {} as NonNullable<Message['interaction']>
+    let edited = false
+    if (props.interaction.id) {
+      interaction.id = bot.transformers.snowflake(payload.interaction.id)
+      edited = true
+    }
+    if (props.interaction.member && payload.interaction.member) {
+      // @ts-expect-error TODO: partial - check why this is partial and handle as needed
+      interaction.member = bot.transformers.member(bot, payload.interaction.member, guildId, payload.interaction.user.id)
+      edited = true
+    }
+    if (props.interaction.name) {
+      interaction.name = payload.interaction.name
+      edited = true
+    }
+    if (props.interaction.type) {
+      interaction.type = payload.interaction.type
+      edited = true
+    }
+    if (props.interaction.user) {
+      interaction.user = bot.transformers.user(bot, payload.interaction.user)
+      edited = true
+    }
+
+    if (edited) message.interaction = interaction
+  }
+  if (props.member && payload.member && guildId) message.member = bot.transformers.member(bot, payload.member, guildId, userId)
+  if (payload.mention_everyone) message.mentionEveryone = true
+  if (props.mentionedChannelIds && payload.mention_channels?.length) {
+    message.mentionedChannelIds = [
       // Keep any ids tht discord sends
       ...(payload.mention_channels ?? []).map((m) => bot.transformers.snowflake(m.id)),
       // Add any other ids that can be validated in a channel mention format
@@ -89,12 +309,52 @@ export function transformMessage(bot: Bot, payload: DiscordMessage) {
         // converts the <#123> into 123
         bot.transformers.snowflake(text.substring(2, text.length - 1)),
       ),
-    ],
-    member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, userId) : undefined,
-    nonce: payload.nonce,
+    ]
   }
+  if (props.mentionedRoleIds && payload.mention_roles?.length) {
+    message.mentionedRoleIds = payload.mention_roles.map((id) => bot.transformers.snowflake(id))
+  }
+  if (props.mentions && payload.mentions?.length) {
+    message.mentions = payload.mentions.map((user) => bot.transformers.user(bot, user))
+  }
+  if (payload.message_reference) {
+    const reference = {} as NonNullable<Message['messageReference']>
+    let edited = false
 
-  return message as Optionalize<typeof message>
+    if (props.messageReference.channelId && payload.message_reference.channel_id) {
+      reference.channelId = bot.transformers.snowflake(payload.message_reference.channel_id)
+      edited = true
+    }
+    if (props.messageReference.guildId && payload.message_reference.guild_id) {
+      reference.guildId = bot.transformers.snowflake(payload.message_reference.guild_id)
+      edited = true
+    }
+    if (props.messageReference.messageId && payload.message_reference.message_id) {
+      reference.messageId = bot.transformers.snowflake(payload.message_reference.message_id)
+      edited = true
+    }
+
+    if (edited) message.messageReference = reference
+  }
+  if (payload.nonce && props.nonce) message.nonce = payload.nonce
+  if (payload.pinned) message.pinned = true
+  if (payload.reactions?.length && props.reactions) {
+    message.reactions = payload.reactions.map((reaction) => ({
+      me: reaction.me,
+      count: reaction.count,
+      emoji: bot.transformers.emoji(bot, reaction.emoji),
+    }))
+  }
+  if (props.stickerItems && payload.sticker_items?.length)
+    message.stickerItems = payload.sticker_items.map((item) => ({
+      id: bot.transformers.snowflake(item.id),
+      name: item.name,
+      formatType: item.format_type,
+    }))
+  if (payload.tts) message.tts = true
+  if (props.thread && payload.thread) message.thread = bot.transformers.channel(bot, { channel: payload.thread, guildId })
+  if (props.type && props.type) message.type = payload.type
+  if (payload.webhook_id && props.webhookId) message.webhookId = bot.transformers.snowflake(payload.webhook_id)
+
+  return bot.transformers.customizers.message(bot, payload, message)
 }
-
-export interface Message extends ReturnType<typeof transformMessage> {}

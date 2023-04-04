@@ -519,6 +519,8 @@ export interface DiscordGuild {
   premium_subscription_count?: number
   /** The maximum amount of users in a video channel */
   max_video_channel_users?: number
+  /** Maximum amount of users in a stage video channel */
+  max_stage_video_channel_users?: number
   /** Approximate number of members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
   approximate_member_count?: number
   /** Approximate number of non-offline members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */

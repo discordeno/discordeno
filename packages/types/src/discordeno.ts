@@ -2,6 +2,8 @@ import type {
   AutoModerationActionType,
   AutoModerationEventTypes,
   AutoModerationTriggerTypes,
+  DiscordApplicationCommandOption,
+  DiscordApplicationCommandOptionChoice,
   DiscordAttachment,
   DiscordAutoModerationRuleTriggerMetadataPresets,
   DiscordChannel,
@@ -10,7 +12,6 @@ import type {
 } from './discord.js'
 import type {
   AllowedMentionsTypes,
-  ApplicationCommandOptionTypes,
   ApplicationCommandPermissionTypes,
   ApplicationCommandTypes,
   AuditLogEvents,
@@ -267,11 +268,6 @@ export interface SearchMembers {
   limit?: number
 }
 
-export interface WithReason {
-  /** The reason which should be added in the audit logs for doing this action. */
-  reason?: string
-}
-
 export interface OverwriteReadable {
   /** Role or user id */
   id: bigint
@@ -406,7 +402,7 @@ export interface CreateSlashApplicationCommand {
   /** Type of command, defaults `ApplicationCommandTypes.ChatInput` if not set  */
   type?: ApplicationCommandTypes
   /** Parameters for the command */
-  options?: ApplicationCommandOption[]
+  options?: Camelize<DiscordApplicationCommandOption[]>
   /** Set of permissions represented as a bit set */
   defaultMemberPermissions?: PermissionStrings[]
   /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
@@ -442,14 +438,7 @@ export interface InteractionCallbackData {
   /** Message flags combined as a bit field (only SUPPRESS_EMBEDS and EPHEMERAL can be set) */
   flags?: number
   /** Autocomplete choices (max of 25 choices) */
-  choices?: ApplicationCommandOptionChoice[]
-}
-
-export interface ApplicationCommandOptionChoice {
-  /** The name of the choice */
-  name: string
-  /** The value that this choice was represents. */
-  value: string | number
+  choices?: Camelize<DiscordApplicationCommandOptionChoice[]>
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
@@ -460,39 +449,8 @@ export interface InteractionResponse {
   data?: InteractionCallbackData
 }
 
-export interface ApplicationCommandOption {
-  /** Value of Application Command Option Type */
-  type: ApplicationCommandOptionTypes
-  /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
-  name: string
-  /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  nameLocalizations?: Localization
-  /** 1-100 character description */
-  description: string
-  /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-  descriptionLocalizations?: Localization
-  /** If the parameter is required or optional--default `false` */
-  required?: boolean
-  /** Choices for `string` and `int` types for the user to pick from */
-  choices?: ApplicationCommandOptionChoice[]
-  /** If the option is a subcommand or subcommand group type, this nested options will be the parameters */
-  options?: ApplicationCommandOption[]
-  /** If the option is a channel type, the channels shown will be restricted to these types */
-  channelTypes?: ChannelTypes[]
-  /** Minimum number desired. */
-  minValue?: number
-  /** Maximum number desired. */
-  maxValue?: number
-  /** Minimum length desired. */
-  minLength?: number
-  /** Maximum length desired. */
-  maxLength?: number
-  /** if autocomplete interactions are enabled for this `String`, `Integer`, or `Number` type option */
-  autocomplete?: boolean
-}
-
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
-export interface CreateGuildEmoji extends WithReason {
+export interface CreateGuildEmoji {
   /** Name of the emoji */
   name: string
   /** The 128x128 emoji image. Emojis and animated emojis have a maximum file size of 256kb. Attempting to upload an emoji larger than this limit will fail and return 400 Bad Request and an error message, but not a JSON status code. If a URL is provided to the image parameter, Discordeno will automatically convert it to a base64 string internally. */
@@ -502,7 +460,7 @@ export interface CreateGuildEmoji extends WithReason {
 }
 
 /** https://discord.com/developers/docs/resources/emoji#modify-guild-emoji */
-export interface ModifyGuildEmoji extends WithReason {
+export interface ModifyGuildEmoji {
   /** Name of the emoji */
   name?: string
   /** Roles allowed to use this emoji */
@@ -525,7 +483,7 @@ export interface RequestGuildMembers {
   nonce?: string
 }
 
-export interface CreateGuildChannel extends WithReason {
+export interface CreateGuildChannel {
   /** Channel name (1-100 characters) */
   name: string
   /** The type of channel */
@@ -572,7 +530,7 @@ export interface CreateGuildChannel extends WithReason {
   defaultSortOrder?: SortOrderTypes | null
 }
 
-export interface ModifyChannel extends WithReason {
+export interface ModifyChannel {
   /** 1-100 character channel name */
   name?: string
   /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
@@ -634,7 +592,7 @@ export interface ModifyChannel extends WithReason {
   defaultSortOrder?: SortOrderTypes | null
 }
 
-export interface EditChannelPermissionOverridesOptions extends OverwriteReadable, WithReason {}
+export interface EditChannelPermissionOverridesOptions extends OverwriteReadable {}
 
 /** https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions */
 export interface ModifyGuildChannelPositions {
@@ -648,7 +606,7 @@ export interface ModifyGuildChannelPositions {
   parentId?: BigString | null
 }
 
-export interface ModifyWebhook extends WithReason {
+export interface ModifyWebhook {
   /** The default name of the webhook */
   name?: string
   /** Image for the default webhook avatar */
@@ -693,7 +651,7 @@ export interface DeleteWebhookMessageOptions {
   threadId: BigString
 }
 
-export interface CreateForumPostWithMessage extends WithReason {
+export interface CreateForumPostWithMessage {
   /** 1-100 character thread name */
   name: string
   /** Duration in minutes to automatically archive the thread after recent activity */
@@ -712,19 +670,19 @@ export interface CreateForumPostWithMessage extends WithReason {
   components?: MessageComponents
 }
 
-export interface CreateStageInstance extends WithReason {
+export interface CreateStageInstance {
   channelId: BigString
   topic: string
   /** Notify @everyone that the stage instance has started. Requires the MENTION_EVERYONE permission. */
   sendStartNotification?: boolean
 }
 
-export interface EditStageInstanceOptions extends WithReason {
+export interface EditStageInstanceOptions {
   /** The topic of the Stage instance (1-120 characters) */
   topic: string
 }
 
-export interface StartThreadWithMessage extends WithReason {
+export interface StartThreadWithMessage {
   /** 1-100 character thread name */
   name: string
   /** Duration in minutes to automatically archive the thread after recent activity */
@@ -733,7 +691,7 @@ export interface StartThreadWithMessage extends WithReason {
   rateLimitPerUser?: number | null
 }
 
-export interface StartThreadWithoutMessage extends WithReason {
+export interface StartThreadWithoutMessage {
   /** 1-100 character thread name */
   name: string
   /** Duration in minutes to automatically archive the thread after recent activity */
@@ -746,7 +704,7 @@ export interface StartThreadWithoutMessage extends WithReason {
   invitable?: boolean
 }
 
-export interface CreateAutoModerationRuleOptions extends WithReason {
+export interface CreateAutoModerationRuleOptions {
   /** The name of the rule. */
   name: string
   /** The type of event to trigger the rule on. */
@@ -784,7 +742,7 @@ export interface CreateAutoModerationRuleOptions extends WithReason {
   exemptChannels?: BigString[]
 }
 
-export interface EditAutoModerationRuleOptions extends WithReason {
+export interface EditAutoModerationRuleOptions {
   /** The name of the rule. */
   name: string
   /** The type of event to trigger the rule on. */
@@ -820,7 +778,7 @@ export interface EditAutoModerationRuleOptions extends WithReason {
   exemptChannels?: BigString[]
 }
 
-export interface CreateScheduledEvent extends WithReason {
+export interface CreateScheduledEvent {
   /** the channel id of the scheduled event. */
   channelId?: BigString
   /** location of the event. Required for events with `entityType: ScheduledEventEntityType.External` */
@@ -839,7 +797,7 @@ export interface CreateScheduledEvent extends WithReason {
   entityType: ScheduledEventEntityType
 }
 
-export interface EditScheduledEvent extends WithReason {
+export interface EditScheduledEvent {
   /** the channel id of the scheduled event. null if switching to external event. */
   channelId: BigString | null
   /** location of the event */
@@ -865,7 +823,7 @@ export interface GetScheduledEvents {
   withUserCount?: boolean
 }
 
-export interface CreateChannelInvite extends WithReason {
+export interface CreateChannelInvite {
   /** Duration of invite in seconds before expiry, or 0 for never. Between 0 and 604800 (7 days). Default: 86400 (24 hours) */
   maxAge?: number
   /** Max number of users or 0 for unlimited. Between 0 and 100. Default: 0 */
@@ -1017,7 +975,7 @@ export interface ModifyGuild {
   premiumProgressBarEnabled?: boolean
 }
 
-export interface CreateGuildStickerOptions extends WithReason {
+export interface CreateGuildStickerOptions {
   /** Name of the sticker (2-30 characters) */
   name: string
   /** Description of the sticker (empty or 2-100 characters) */
@@ -1028,7 +986,7 @@ export interface CreateGuildStickerOptions extends WithReason {
   file: FileContent
 }
 
-export interface EditGuildStickerOptions extends WithReason {
+export interface EditGuildStickerOptions {
   /** Name of the sticker (2-30 characters) */
   name?: string
   /** Description of the sticker (empty or 2-100 characters) */
@@ -1095,12 +1053,12 @@ export interface ModifyGuildTemplate {
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-ban */
-export interface CreateGuildBan extends WithReason {
+export interface CreateGuildBan {
   /** Number of seconds to delete messages for, between 0 and 604800 (7 days) */
   deleteMessageSeconds?: number
 }
 
-export interface EditBotMemberOptions extends WithReason {
+export interface EditBotMemberOptions {
   nick?: string | null
 }
 

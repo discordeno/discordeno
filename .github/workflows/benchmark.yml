@@ -56,7 +56,7 @@ jobs:
       - name: Benchmark
         if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         run: node --expose-gc ./packages/benchmark/dist/index.js | tee output.txt
-        
+
       - name: Download previous benchmark data
         if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         uses: actions/cache@v3
@@ -70,23 +70,12 @@ jobs:
           tool: "benchmarkjs"
           output-file-path: output.txt
           external-data-json-path: benchmarksResult/data.json
+
       - uses: actions/upload-artifact@v3
         if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         with:
           name: benchmarkResults
           path: benchmarksResult/data.json
-
-      - name: Store benchmark result (Main)
-        uses: benchmark-action/github-action-benchmark@v1
-        if: ${{ github.ref == 'refs/heads/main' && steps.cpuCheck.outputs.match == 'true' }}
-        with:
-          tool: "benchmarkjs"
-          output-file-path: output.txt
-          gh-pages-branch: "benchies"
-          benchmark-data-dir-path: benchmarksResult
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          auto-push: true
-
       - name: Save Commmit SHA
         if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         run: |
@@ -98,3 +87,16 @@ jobs:
         with:
           name: commitData
           path: commitData/
+
+      - name: remove changes
+        run: git reset --hard HEAD
+      - name: Store benchmark result (Main)
+        uses: benchmark-action/github-action-benchmark@v1
+        if: ${{ github.ref == 'refs/heads/main' && steps.cpuCheck.outputs.match == 'true' }}
+        with:
+          tool: "benchmarkjs"
+          output-file-path: output.txt
+          gh-pages-branch: "benchies"
+          benchmark-data-dir-path: benchmarksResult
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true

@@ -1,7 +1,7 @@
 import { createRestManager } from '@discordeno/rest'
 import { suite } from '../benchmarkSuite.js'
 
-const rest = createRestManager({ token: ' ' })
+const rest = createRestManager({ applicationId: 1n })
 
 suite.add(`rest.simplifyUrl`, () => {
   rest.simplifyUrl('/messages/555555555555555555', 'PUT')
