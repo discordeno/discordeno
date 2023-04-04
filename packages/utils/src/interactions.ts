@@ -24,6 +24,16 @@ export function commandOptionsParser(interaction: DiscordInteraction, options?: 
           member: interaction.data.resolved?.members?.[option.value as string],
         }
         break
+      case ApplicationCommandOptionTypes.Attachment:
+        args[option.name] = interaction.data.resolved?.attachments?.[option.value as string]
+        break;
+      case ApplicationCommandOptionTypes.Mentionable:
+        // Mentionable are roles or users
+        args[option.name] = interaction.data.resolved?.roles?.[option.value as string] ?? {
+          user: interaction.data.resolved?.users?.[option.value as string],
+          member: interaction.data.resolved?.members?.[option.value as string],
+        }
+        break
       default:
         args[option.name] = option.value
     }
