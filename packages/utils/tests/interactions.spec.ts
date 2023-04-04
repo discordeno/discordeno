@@ -193,6 +193,7 @@ describe('Convert interaction to args', () => {
     }
 
     const args = commandOptionsParser(interaction)
+    console.log(args)
 
     expect(args.reactions.create.emoji).equals('123')
     expect(args.reactions.create.role.id).equals('123')
@@ -205,6 +206,6 @@ describe('Convert interaction to args', () => {
     expect(args.foo.bar.user.member.nick).equals('123')
     expect(args.foo.bar.attachment.id).equals('123')
     expect(args.foo.bar.mentionable.id).equals('123')
-    expect(args.foo.bar.mentionable2.id).equals('456')
+    expect(args.foo.bar.mentionable2.user.id).equals('456')
   })
 })
