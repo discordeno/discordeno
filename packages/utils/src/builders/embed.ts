@@ -1,4 +1,4 @@
-import type { DiscordEmbed, DiscordEmbedField, DiscordEmbedProvider } from '@discordeno/types'
+import type { Camelize, DiscordEmbed, DiscordEmbedField, DiscordEmbedProvider } from '@discordeno/types'
 
 /**
  * Embed Author Options
@@ -19,7 +19,7 @@ import type { DiscordEmbed, DiscordEmbedField, DiscordEmbedProvider } from '@dis
  *
  * `proxyIconUrl` is not available since Discord does not allow this property to be send.
  */
-export type EmbedBuilderAuthorOptions = {
+export interface EmbedBuilderAuthorOptions {
   url?: string
   iconUrl?: string
 }
@@ -43,7 +43,7 @@ export type EmbedBuilderAuthorOptions = {
  *
  * `proxyUrl` is not available since Discord does not allow this property to be send.
  */
-export type EmbedBuilderImageOptions = {
+export interface EmbedBuilderImageOptions {
   height?: number
   width?: number
 }
@@ -68,8 +68,10 @@ export type EmbedBuilderImageOptions = {
  *
  */
 export class EmbedsBuilder extends Array<DiscordEmbed> {
-  constructor() {
+  constructor(data?: Camelize<DiscordEmbed>[]) {
     super()
+
+    data?.forEach((embed) => this.addEmbed(embed))
   }
 
   /**
@@ -89,10 +91,24 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * await sendMessage(channelId, { embeds });
    * ```
    */
-  addEmbed(): EmbedsBuilder {
+  addEmbed(data?: Camelize<DiscordEmbed>): EmbedsBuilder {
     if (this.length === 10) throw new Error('Maximum Embed count reached. Cannot have more than 10 Embeds.')
 
-    this.push({ type: 'rich' })
+    if (data === undefined) {
+      this.push({ type: 'rich' })
+
+      return this
+    }
+
+    if (data.author) this.author(data.author.name, data.author)
+    if (data.color) this.color(data.color)
+    if (data.description) this.description(data.description)
+    if (data.fields) this.fields(data.fields)
+    if (data.footer) this.footer(data.footer.text, data.footer.iconUrl)
+    if (data.image) this.image(data.image.url, data.image)
+    if (data.thumbnail) this.thumbnail(data.thumbnail.url, data.thumbnail)
+    if (data.timestamp) this.timestamp(data.timestamp)
+    if (data.title) this.title(data.title, data.url)
 
     return this
   }
