@@ -94,21 +94,19 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
   addEmbed(data?: Camelize<DiscordEmbed>): EmbedsBuilder {
     if (this.length === 10) throw new Error('Maximum Embed count reached. Cannot have more than 10 Embeds.')
 
-    if (data === undefined) {
-      this.push({ type: 'rich' })
+    this.push({ type: 'rich' })
 
-      return this
+    if (data !== undefined) {
+      if (data.author) this.author(data.author.name, data.author)
+      if (data.color) this.color(data.color)
+      if (data.description) this.description(data.description)
+      if (data.fields) this.fields(data.fields)
+      if (data.footer) this.footer(data.footer.text, data.footer.iconUrl)
+      if (data.image) this.image(data.image.url, data.image)
+      if (data.thumbnail) this.thumbnail(data.thumbnail.url, data.thumbnail)
+      if (data.timestamp) this.timestamp(data.timestamp)
+      if (data.title) this.title(data.title, data.url)
     }
-
-    if (data.author) this.author(data.author.name, data.author)
-    if (data.color) this.color(data.color)
-    if (data.description) this.description(data.description)
-    if (data.fields) this.fields(data.fields)
-    if (data.footer) this.footer(data.footer.text, data.footer.iconUrl)
-    if (data.image) this.image(data.image.url, data.image)
-    if (data.thumbnail) this.thumbnail(data.thumbnail.url, data.thumbnail)
-    if (data.timestamp) this.timestamp(data.timestamp)
-    if (data.title) this.title(data.title, data.url)
 
     return this
   }

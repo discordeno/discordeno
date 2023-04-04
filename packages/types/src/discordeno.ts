@@ -189,6 +189,8 @@ export interface SelectMenuChannelsComponent {
   type: MessageComponentTypes.SelectMenuChannels
   /** A custom identifier for this component. Maximum 100 characters. */
   customId: string
+  /** List of channel types to include. */
+  channelTypes?: ChannelTypes
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string
   /** The minimum number of items that must be selected. Default 1. Between 1-25. */
