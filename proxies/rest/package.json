@@ -1,0 +1,11 @@
+{
+  "name": "rest",
+  "packageManager": "yarn@3.3.0",
+  "dependencies": {
+    "@discordeno/rest": "latest",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4"
+  }
+}
