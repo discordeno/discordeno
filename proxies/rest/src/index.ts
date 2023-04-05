@@ -38,6 +38,6 @@ app.all('/*', async (req, res) => {
   }
 })
 
-app.listen(process.env.REST_PORT, () => {
-  console.log(`REST listening on port #${process.env.REST_PORT!}`)
+app.listen(8000, () => {
+  console.log(`REST listening on port #8000`)
 })
