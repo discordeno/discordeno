@@ -28,3 +28,4 @@ jobs:
           push: false
           tags: discordeno/rest-proxy:latest
           context: proxies/rest
+          target: runner
