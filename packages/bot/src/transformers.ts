@@ -98,6 +98,7 @@ import type { BotInteractionResponse, DiscordComponent, DiscordInteractionRespon
 
 export interface Transformers {
   customizers: {
+    interaction: (bot: Bot, payload: DiscordInteraction, interaction: Interaction) => any;
     message: (bot: Bot, payload: DiscordMessage, message: Message) => any
   }
   desiredProperties: {
@@ -190,6 +191,22 @@ export interface Transformers {
       rulesChannelId: boolean
       publicUpdatesChannelId: boolean
       premiumProgressBarEnabled: boolean
+    }
+    interaction: {
+      id: boolean
+      applicationId: boolean
+      type: boolean
+      guildId: boolean
+      channelId: boolean
+      member: boolean
+      user: boolean
+      token: boolean
+      version: boolean
+      message: boolean
+      data: boolean
+      locale: boolean
+      guildLocale: boolean
+      appPermissions: boolean
     }
     invite: {
       channelId: boolean
@@ -379,6 +396,9 @@ export interface Transformers {
 export function createTransformers(options: Partial<Transformers>): Transformers {
   return {
     customizers: {
+      interaction(bot, payload, interaction) {
+        return interaction
+      },
       message(bot, payload, message) {
         return message
       },
@@ -473,6 +493,22 @@ export function createTransformers(options: Partial<Transformers>): Transformers
         rulesChannelId: false,
         publicUpdatesChannelId: false,
         premiumProgressBarEnabled: false,
+      },
+      interaction: {
+        id: false,
+        applicationId: false,
+        type: false,
+        guildId: false,
+        channelId: false,
+        member: false,
+        user: false,
+        token: false,
+        version: false,
+        message: false,
+        data: false,
+        locale: false,
+        guildLocale: false,
+        appPermissions: false,
       },
       invite: {
         channelId: false,
