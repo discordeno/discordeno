@@ -17,6 +17,7 @@ export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModera
     triggerMetadata: payload.trigger_metadata
       ? {
           keywordFilter: payload.trigger_metadata.keyword_filter,
+          regexPatterns: payload.trigger_metadata.regex_patterns,
           presets: payload.trigger_metadata.presets,
           allowList: payload.trigger_metadata.allow_list,
           mentionTotalLimit: payload.trigger_metadata.mention_total_limit,

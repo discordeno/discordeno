@@ -1415,12 +1415,14 @@ export enum AutoModerationTriggerTypes {
 export interface DiscordAutoModerationRuleTriggerMetadata {
   /** The keywords needed to match. Only present when TriggerType.Keyword */
   keyword_filter?: string[]
+  /** Regular expression patterns which will be matched against content. Only present when TriggerType.Keyword */
+  regex_patterns: string[]
   /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
   presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
   /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
-  allow_list: string[]
+  allow_list?: string[]
   /** Total number of mentions (role & user) allowed per message (Maximum of 50) */
-  mention_total_limit: number
+  mention_total_limit?: number
 }
 
 export enum DiscordAutoModerationRuleTriggerMetadataPresets {
