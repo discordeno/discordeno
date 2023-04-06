@@ -73,4 +73,5 @@ jobs:
           context: proxies/rest
           push: true
           tags: "ghcr.io/discordeno/rest-proxy:latest"
+          # linux/s390x stuck at yarn install, remove it for now
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le

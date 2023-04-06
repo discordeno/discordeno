@@ -5,6 +5,7 @@
 # prod-deps: contains only dependencies excluding dev dependencies
 # runner: the final image, with only the dependencies and compiled files
 
+# build only with the platform of the host machine, since it only uses for dev purposes
 FROM --platform=$BUILDPLATFORM node:18.15.0-alpine3.17 AS deps
 WORKDIR /app
 # copy necessary for install dependencies
@@ -12,8 +13,8 @@ COPY package.json yarn.lock ./
 # install dependencies
 RUN yarn install
 
-# use node alpine as base image
-FROM --platform=$BUILDPLATFORM node:18.15.0-alpine3.17 as builder
+# build only with the platform of the host machine, since we just need its files
+FROM --platform=$BUILDPLATFORM node:18.15.0-alpine3.17 AS builder
 # copy the dependencies (node_modules) from the deps image
 COPY --from=deps /app /app
 WORKDIR /app
@@ -26,7 +27,7 @@ RUN yarn build
 
 FROM node:18.15.0-alpine3.17 AS prod-deps
 WORKDIR /app
-# copy necessary for install dependencies
+# copy necessary files for install dependencies
 COPY package.json yarn.lock .yarnrc.yml ./
 # config yarn to install only prod dependencies
 RUN yarn set version berry
@@ -34,7 +35,7 @@ RUN yarn plugin import workspace-tools
 # install prod dependencies
 RUN yarn workspaces focus --all --production
 
-FROM node:18.15.0-alpine3.17 as runner
+FROM node:18.15.0-alpine3.17 AS runner
 # copy the compiled files from the builder image
 COPY --from=builder /app/dist /app/dist
 # copy the prod dependencies (node_modules) from the prod-deps image
