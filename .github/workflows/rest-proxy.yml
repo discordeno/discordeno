@@ -1,0 +1,75 @@
+name: Rest proxy
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - ".github/workflows/rest-proxy.yml"
+      - "proxies/rest/**"
+  pull_request:
+    paths:
+      - ".github/workflows/rest-proxy.yml"
+      - "proxies/rest/**"
+
+jobs:
+  build:
+    name: Build docker image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          push: false
+          tags: discordeno/rest-proxy:latest
+          context: proxies/rest
+          target: runner
+          outputs: type=docker,dest=/tmp/rest-proxy-image.tar
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: rest-proxy-image
+          path: /tmp/rest-proxy-image.tar
+
+  use:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: rest-proxy-image
+          path: /tmp
+      - name: Load Docker image
+        run: docker load --input /tmp/rest-proxy-image.tar
+
+  publish:
+    name: Publish image
+    needs: use
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: proxies/rest
+          push: true
+          tags: "ghcr.io/discordeno/rest-proxy:latest"
