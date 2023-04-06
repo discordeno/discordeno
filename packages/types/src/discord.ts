@@ -37,7 +37,6 @@ import type {
   TargetTypes,
   TeamMembershipStates,
   TextStyles,
-  UserFlags,
   VerificationLevels,
   VideoQualityModes,
   WebhookTypes,
@@ -50,11 +49,11 @@ export interface DiscordUser {
   /** The user's chosen language option */
   locale?: string
   /** The flags on a user's account */
-  flags?: UserFlags
+  flags?: number
   /** The type of Nitro subscription on a user's account */
   premium_type?: PremiumTypes
   /** The public flags on a user's account */
-  public_flags?: UserFlags
+  public_flags?: number
   /** the user's banner color encoded as an integer representation of hexadecimal color code */
   accent_color?: number
   /** The user's id */

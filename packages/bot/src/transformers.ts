@@ -75,7 +75,7 @@ import {
 import { transformIntegration, type Integration } from './transformers/integration.js'
 import { transformInteraction, transformInteractionDataOption, type Interaction, type InteractionDataOption } from './transformers/interaction.js'
 import { transformInvite, type Invite } from './transformers/invite.js'
-import { transformMember, transformUser, type Member, type User } from './transformers/member.js'
+import { transformMember, type Member } from './transformers/member.js'
 import { transformMessage, type Message } from './transformers/message.js'
 import { transformPresence, type PresenceUpdate } from './transformers/presence.js'
 import { transformAllowedMentionsToDiscordAllowedMentions } from './transformers/reverse/allowedMentions.js'
@@ -88,6 +88,7 @@ import { transformSticker, transformStickerPack, type Sticker, type StickerPack 
 import { transformTeam, type Team } from './transformers/team.js'
 import { transformTemplate, type Template } from './transformers/template.js'
 import { transformThreadMember, type ThreadMember } from './transformers/threadMember.js'
+import { transformUser, type User } from './transformers/user.js'
 import { transformVoiceRegion, type VoiceRegions } from './transformers/voiceRegion.js'
 import { transformVoiceState, type VoiceState } from './transformers/voiceState.js'
 import { transformWebhook, type Webhook } from './transformers/webhook.js'
@@ -98,7 +99,7 @@ import type { BotInteractionResponse, DiscordComponent, DiscordInteractionRespon
 
 export interface Transformers {
   customizers: {
-    interaction: (bot: Bot, payload: DiscordInteraction, interaction: Interaction) => any;
+    interaction: (bot: Bot, payload: DiscordInteraction, interaction: Interaction) => any
     message: (bot: Bot, payload: DiscordMessage, message: Message) => any
   }
   desiredProperties: {
@@ -271,20 +272,20 @@ export interface Transformers {
       webhookId: boolean
     }
     role: {
-      name: boolean;
-      guildId: boolean;
-      position: boolean;
-      color: boolean;
-      id: boolean;
-      botId: boolean;
-      integrationId: boolean;
-      permissions: boolean;
-      icon: boolean;
-      unicodeEmoji: boolean;
+      name: boolean
+      guildId: boolean
+      position: boolean
+      color: boolean
+      id: boolean
+      botId: boolean
+      integrationId: boolean
+      permissions: boolean
+      icon: boolean
+      unicodeEmoji: boolean
     }
     scheduledEvent: {
-      id: boolean;
-      guildId: boolean;
+      id: boolean
+      guildId: boolean
       channelId: boolean
       creatorId: boolean
       scheduledStartTime: boolean
@@ -320,8 +321,25 @@ export interface Transformers {
       user: boolean
       sortValue: boolean
     }
+    user: {
+      username: boolean
+      locale: boolean
+      flags: boolean
+      premiumType: boolean
+      publicFlags: boolean
+      accentColor: boolean
+      id: boolean
+      discriminator: boolean
+      avatar: boolean
+      bot: boolean
+      system: boolean
+      mfaEnabled: boolean
+      verified: boolean
+      email: boolean
+      banner: boolean
+    }
     webhook: {
-      id: boolean;
+      id: boolean
       type: boolean
       guildId: boolean
       channelId: boolean
@@ -622,6 +640,23 @@ export function createTransformers(options: Partial<Transformers>): Transformers
         user: false,
         sortValue: false,
       },
+      user: {
+        username: false,
+        locale: false,
+        flags: false,
+        premiumType: false,
+        publicFlags: false,
+        accentColor: false,
+        id: false,
+        discriminator: false,
+        avatar: false,
+        bot: false,
+        system: false,
+        mfaEnabled: false,
+        verified: false,
+        email: false,
+        banner: false,
+      },
       webhook: {
         id: false,
         type: false,
@@ -635,7 +670,7 @@ export function createTransformers(options: Partial<Transformers>): Transformers
         sourceGuild: false,
         sourceChannel: false,
         url: false,
-      }
+      },
     },
     reverse: {
       allowedMentions: options.reverse?.allowedMentions ?? transformAllowedMentionsToDiscordAllowedMentions,

@@ -7,8 +7,9 @@ import type { Channel } from './channel.js'
 import type { Component } from './component.js'
 import type { Embed } from './embed.js'
 import type { Emoji } from './emoji.js'
-import type { Member, User } from './member.js'
+import type { Member } from './member.js'
 import { ToggleBitfield } from './toggles/ToggleBitfield.js'
+import type { User } from './user.js'
 
 const baseMessage: Partial<Message> & MessageBase = {
   get crossposted() {

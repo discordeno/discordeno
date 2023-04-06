@@ -10,9 +10,10 @@ import { Collection } from '@discordeno/utils'
 import type { Bot, Component } from '../index.js'
 import type { DiscordInteractionDataResolved } from '../typings.js'
 import type { Attachment } from './attachment.js'
-import type { Member, User } from './member.js'
+import type { Member } from './member.js'
 import type { Message } from './message.js'
 import type { Role } from './role.js'
+import type { User } from './user.js'
 
 export interface Interaction {
   /** Id of the interaction */
