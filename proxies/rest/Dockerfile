@@ -5,7 +5,7 @@
 # prod-deps: contains only dependencies excluding dev dependencies
 # runner: the final image, with only the dependencies and compiled files
 
-FROM node:18.15.0-alpine3.17 AS deps
+FROM --platform=$BUILDPLATFORM node:18.15.0-alpine3.17 AS deps
 WORKDIR /app
 # copy necessary for install dependencies
 COPY package.json yarn.lock ./
@@ -13,7 +13,7 @@ COPY package.json yarn.lock ./
 RUN yarn install
 
 # use node alpine as base image
-FROM node:18.15.0-alpine3.17 as builder
+FROM --platform=$BUILDPLATFORM node:18.15.0-alpine3.17 as builder
 # copy the dependencies (node_modules) from the deps image
 COPY --from=deps /app /app
 WORKDIR /app
