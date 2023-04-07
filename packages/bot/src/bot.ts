@@ -1,5 +1,5 @@
 import type { CreateGatewayManagerOptions, GatewayManager } from '@discordeno/gateway'
-import { createGatewayManager, ShardSocketCloseCodes } from '@discordeno/gateway'
+import { ShardSocketCloseCodes, createGatewayManager } from '@discordeno/gateway'
 import type { CreateRestManagerOptions, RestManager } from '@discordeno/rest'
 import { createRestManager } from '@discordeno/rest'
 import type { DiscordEmoji, DiscordGatewayPayload, DiscordReady, GatewayIntents } from '@discordeno/types'
@@ -43,10 +43,7 @@ export function createBot(options: CreateBotOptions): Bot {
 
       // RUN DISPATCH CHECK
       await bot.events.dispatchRequirements?.(data, shard.id)
-      bot.handlers[
-        data.t as keyof ReturnType<typeof createBotGatewayHandlers>
-        // @ts-expect-error as any gets removed by linter
-      ]?.(bot, data.d, shard.id)
+      bot.handlers[data.t as keyof ReturnType<typeof createBotGatewayHandlers>]?.(bot, data, shard.id)
     }
   }
 
