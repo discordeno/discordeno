@@ -58,6 +58,15 @@ jobs:
           path: /tmp
       - name: Load Docker image
         run: docker load --input /tmp/rest-proxy-image.tar
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: "rest-proxy:latest"
+          format: "table"
+          exit-code: "0"
+          ignore-unfixed: true
+          vuln-type: "os,library"
+          severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
 
   build-all-arch:
     name: Build image for all architectures
@@ -86,18 +95,8 @@ jobs:
           # linux/s390x stuck at yarn install, remove it for now
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le
           target: runner
-          load: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: "rest-proxy:latest"
-          format: "table"
-          exit-code: "0"
-          ignore-unfixed: true
-          vuln-type: "os,library"
-          severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
 
   publish:
     name: Publish image
