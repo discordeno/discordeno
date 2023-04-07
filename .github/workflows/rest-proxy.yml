@@ -50,6 +50,22 @@ jobs:
       - name: Load Docker image
         run: docker load --input /tmp/rest-proxy-image.tar
 
+  build-all-arch:
+    name: Build image for all architectures
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Build Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: proxies/rest
+          push: false
+          tags: "rest-proxy:latest"
+          # linux/s390x stuck at yarn install, remove it for now
+          platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le
+
   publish:
     name: Publish image
     needs: use
