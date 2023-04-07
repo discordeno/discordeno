@@ -16,7 +16,7 @@ import type { Guild } from './transformers/guild.js'
 import type { Integration } from './transformers/integration.js'
 import type { Interaction } from './transformers/interaction.js'
 import type { Invite } from './transformers/invite.js'
-import type { Member, User } from './transformers/member.js'
+import type { Member } from './transformers/member.js'
 import type { Message } from './transformers/message.js'
 import type { PresenceUpdate } from './transformers/presence.js'
 import type { Role } from './transformers/role.js'
@@ -24,6 +24,7 @@ import type { ScheduledEvent } from './transformers/scheduledEvent.js'
 import type { Sticker } from './transformers/sticker.js'
 import type { ThreadMember } from './transformers/threadMember.js'
 import type { VoiceState } from './transformers/voiceState.js'
+import type { User } from './transformers/user.js'
 
 /**
  * Create a bot object that will maintain the rest and gateway connection.
