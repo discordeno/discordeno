@@ -69,6 +69,8 @@ jobs:
           tags: "rest-proxy:latest"
           # linux/s390x stuck at yarn install, remove it for now
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le
+          target: runner
+      - run: docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy:0.29.2 rest-proxy:latest
 
   publish:
     name: Publish image
@@ -99,3 +101,4 @@ jobs:
           tags: "ghcr.io/discordeno/rest-proxy:latest"
           # linux/s390x stuck at yarn install, remove it for now
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le
+          target: runner
