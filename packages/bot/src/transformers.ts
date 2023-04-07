@@ -234,6 +234,9 @@ export interface Transformers {
       avatar: boolean
       permissions: boolean
       communicationDisabledUntil: boolean
+      deaf: boolean
+      mute: boolean
+      pending: boolean
     }
     message: {
       activity: boolean
@@ -282,6 +285,10 @@ export interface Transformers {
       permissions: boolean
       icon: boolean
       unicodeEmoji: boolean
+      mentionable: boolean
+      hoist: boolean
+      managed: boolean
+      subscriptionListingId: boolean
     }
     scheduledEvent: {
       id: boolean
@@ -553,6 +560,9 @@ export function createTransformers(options: Partial<Transformers>): Transformers
         avatar: false,
         permissions: false,
         communicationDisabledUntil: false,
+        deaf: false,
+        mute: false,
+        pending: false,
       },
       message: {
         activity: false,
@@ -601,6 +611,10 @@ export function createTransformers(options: Partial<Transformers>): Transformers
         permissions: false,
         icon: false,
         unicodeEmoji: false,
+        mentionable: false,
+        hoist: false,
+        managed: false,
+        subscriptionListingId: false,
       },
       scheduledEvent: {
         id: false,
