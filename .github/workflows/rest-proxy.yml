@@ -37,13 +37,13 @@ jobs:
           context: proxies/rest
           target: runner
           outputs: type=docker,dest=/tmp/rest-proxy-image.tar
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: rest-proxy-image
           path: /tmp/rest-proxy-image.tar
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
 
   use:
     runs-on: ubuntu-latest
