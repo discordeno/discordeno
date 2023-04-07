@@ -61,7 +61,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: "rest-proxy:latest"
+          image-ref: "discordeno/rest-proxy:latest"
           format: "table"
           exit-code: "0"
           ignore-unfixed: true
@@ -91,7 +91,7 @@ jobs:
         with:
           context: proxies/rest
           push: false
-          tags: "rest-proxy:latest"
+          tags: "discordeno/rest-proxy:latest"
           # linux/s390x stuck at yarn install, remove it for now
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le
           target: runner
