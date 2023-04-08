@@ -62,7 +62,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ./benchmarksResult
-          key: ${{ github.ref }}-benchmark
+          key: ${{ github.ref }}-benchmark-${{ github.sha }}
+          restore-keys: |
+            ${{ github.ref }}-benchmark-
       - name: Store benchmark result to cache
         if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         uses: benchmark-action/github-action-benchmark@v1
