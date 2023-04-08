@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680890353846,
+  "lastUpdate": 1680964311193,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -4222,6 +4222,100 @@ window.BENCHMARK_DATA = {
             "range": "±0.23%",
             "unit": "ops/sec",
             "extra": "94 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "heiheiho000@gmail.com",
+            "name": "Jonathan Ho",
+            "username": "H01001000"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0b8cb1e46353c48f14fd7d664e3d039dfb1fe74b",
+          "message": "ci(rest): proxy multi arch image (#2980)\n\n      * ci(rest-proxy): multi arch image\r\n\r\n* ci(rest-proxy): fix doc\r\n\r\n* ci(rest-proxy): add test build multi arch image\r\n\r\n* ci(rest-proxy): update version\r\n\r\n* ci(rest-proxy): fix missing setup buildx\r\n\r\n* ci(rest-proxy): fix target\r\n\r\n* ci(rest-proxy): fix trivy\r\n\r\n* ci(rest-proxy): fix cache\r\n\r\n* ci(rest-proxy): load true\r\n\r\n* ci(rest-proxy): move image scan\r\n\r\n* ci(rest-proxy): fix name\r\n\r\n* ci(rest-proxy): fix cache\r\n\r\n* ci(rest-proxy): add name\r\n\r\n* ci(rest-proxy): add schedule scan\r\n\r\n* ci(rest-proxy): fix string\r\n\r\n* ci(rest-proxy): update cache version",
+          "timestamp": "2023-04-08T16:30:42+02:00",
+          "tree_id": "c29ae8798a91a53d116bd282b195aac335acfe1b",
+          "url": "https://github.com/discordeno/discordeno/commit/0b8cb1e46353c48f14fd7d664e3d039dfb1fe74b"
+        },
+        "date": 1680964309583,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "[transformer] message cache check RSS",
+            "value": 99.74,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Used",
+            "value": 86.74,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Total",
+            "value": 70.44,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Used",
+            "value": 88.6,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Total",
+            "value": 61.79,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 10.84,
+            "range": "±1.44%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 0,
+            "range": "±0%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "rest.simplifyUrl",
+            "value": 220964,
+            "range": "±0.29%",
+            "unit": "ops/sec",
+            "extra": "93 samples"
+          },
+          {
+            "name": "Camelize 1 event",
+            "value": 6361,
+            "range": "±0.29%",
+            "unit": "ops/sec",
+            "extra": "95 samples"
+          },
+          {
+            "name": "Snakelize 1 event",
+            "value": 6377,
+            "range": "±0.20%",
+            "unit": "ops/sec",
+            "extra": "95 samples"
           }
         ]
       }
