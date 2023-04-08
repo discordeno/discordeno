@@ -1,7 +1,8 @@
 import type { DiscordMember, DiscordUser } from '@discordeno/types'
 import { iconBigintToHash } from '@discordeno/utils'
 import type { Bot } from '../../bot.js'
-import type { Member, User } from '../member.js'
+import type { Member } from '../member.js'
+import type { User } from '../user.js'
 
 export function transformUserToDiscordUser(bot: Bot, payload: User): DiscordUser {
   return {
@@ -11,13 +12,13 @@ export function transformUserToDiscordUser(bot: Bot, payload: User): DiscordUser
     avatar: payload.avatar ? iconBigintToHash(payload.avatar) : null,
     locale: payload.locale,
     email: payload.email ?? undefined,
-    flags: payload.flags,
+    flags: payload.flags?.toJSON(),
     premium_type: payload.premiumType,
-    public_flags: payload.publicFlags,
-    bot: payload.toggles.bot,
-    system: payload.toggles.system,
-    mfa_enabled: payload.toggles.mfaEnabled,
-    verified: payload.toggles.verified,
+    public_flags: payload.publicFlags?.toJSON(),
+    bot: payload.toggles?.bot,
+    system: payload.toggles?.system,
+    mfa_enabled: payload.toggles?.mfaEnabled,
+    verified: payload.toggles?.verified,
   }
 }
 
@@ -30,8 +31,8 @@ export function transformMemberToDiscordMember(bot: Bot, payload: Member): Disco
     avatar: payload.avatar ? iconBigintToHash(payload.avatar) : undefined,
     permissions: payload.permissions?.toString(),
     communication_disabled_until: payload.communicationDisabledUntil ? new Date(payload.communicationDisabledUntil).toISOString() : undefined,
-    deaf: payload.toggles.deaf,
-    mute: payload.toggles.mute,
-    pending: payload.toggles.pending,
+    deaf: payload.toggles?.deaf,
+    mute: payload.toggles?.mute,
+    pending: payload.toggles?.pending,
   }
 }

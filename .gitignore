@@ -15,6 +15,7 @@ node_modules
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+proxies/*/.yarn/
 site/docs/generated/classes
 site/docs/generated/enums
 site/docs/generated/interfaces

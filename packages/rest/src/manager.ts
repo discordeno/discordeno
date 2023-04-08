@@ -54,6 +54,17 @@ import { createRoutes } from './routes.js'
 // TODO: make dynamic based on package.json file
 const version = '19.0.0-alpha.1'
 
+export const DISCORD_API_VERSION = 10
+export const DISCORD_API_URL = 'https://discord.com/api'
+
+export const AUDIT_LOG_REASON_HEADER = 'x-audit-log-reason'
+export const RATE_LIMIT_REMAINING_HEADER = 'x-ratelimit-remaining'
+export const RATE_LIMIT_RESET_AFTER_HEADER = 'x-ratelimit-reset-after'
+export const RATE_LIMIT_GLOBAL_HEADER = 'x-ratelimit-global'
+export const RATE_LIMIT_BUCKET_HEADER = 'x-ratelimit-bucket'
+export const RATE_LIMIT_LIMIT_HEADER = 'x-ratelimit-limit'
+export const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope'
+
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
   const applicationId = options.applicationId ? BigInt(options.applicationId) : options.token ? getBotIdFromToken(options.token) : undefined
   if (!applicationId) {
@@ -62,19 +73,22 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     )
   }
 
+  const baseUrl = options.proxy?.baseUrl ?? DISCORD_API_URL
+
   const rest: RestManager = {
-    token: options.token,
     applicationId,
-    version: options.version ?? 10,
-    baseUrl: options.proxy?.baseUrl ?? 'https://discord.com/api',
-    maxRetryCount: Infinity,
-    globallyRateLimited: false,
-    processingRateLimitedPaths: false,
+    authorization: options.proxy?.authorization,
+    baseUrl,
     deleteQueueDelay: 60000,
+    globallyRateLimited: false,
+    invalidBucket: createInvalidRequestBucket({}),
+    isProxied: !baseUrl.startsWith(DISCORD_API_URL),
+    maxRetryCount: Infinity,
+    processingRateLimitedPaths: false,
     queues: new Map(),
     rateLimitedPaths: new Map(),
-    invalidBucket: createInvalidRequestBucket({}),
-    authorization: options.proxy?.authorization,
+    token: options.token,
+    version: options.version ?? DISCORD_API_VERSION,
 
     routes: createRoutes(),
 
@@ -136,7 +150,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
       if (options?.reason !== undefined) {
-        headers['x-audit-log-reason'] = encodeURIComponent(options?.reason)
+        headers[AUDIT_LOG_REASON_HEADER] = encodeURIComponent(options?.reason)
       }
 
       let body: string | FormData | undefined
@@ -214,13 +228,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       let rateLimited = false
 
       // GET ALL NECESSARY HEADERS
-      const remaining = headers.get('x-ratelimit-remaining')
-      const retryAfter = headers.get('x-ratelimit-reset-after')
+      const remaining = headers.get(RATE_LIMIT_REMAINING_HEADER)
+      const retryAfter = headers.get(RATE_LIMIT_RESET_AFTER_HEADER)
       const reset = Date.now() + Number(retryAfter) * 1000
-      const global = headers.get('x-ratelimit-global')
+      const global = headers.get(RATE_LIMIT_GLOBAL_HEADER)
       // undefined override null needed for typings
-      const bucketId = headers.get('x-ratelimit-bucket') ?? undefined
-      const limit = headers.get('x-ratelimit-limit')
+      const bucketId = headers.get(RATE_LIMIT_BUCKET_HEADER) ?? undefined
+      const limit = headers.get(RATE_LIMIT_LIMIT_HEADER)
 
       rest.queues.get(url)?.handleCompletedRequest({
         remaining: remaining ? Number(remaining) : undefined,
@@ -285,7 +299,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async sendRequest(options) {
-      const url = options.url.startsWith('https://') ? options.url : `${rest.baseUrl}/v${rest.version}${options.url}`
+      const url = `${rest.baseUrl}/v${rest.version}${options.route}`
       const payload = rest.createRequestBody(options.method, options.requestBodyOptions)
 
       logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
@@ -293,46 +307,46 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
 
       // Set the bucket id if it was available on the headers
-      const bucketId = rest.processHeaders(rest.simplifyUrl(options.url, options.method), response.headers)
+      const bucketId = rest.processHeaders(rest.simplifyUrl(options.route, options.method), response.headers)
       if (bucketId) options.bucketId = bucketId
 
-      if (response.status < 200 || response.status >= 400) {
+      if (response.status < HttpResponseCode.Success || response.status >= HttpResponseCode.Error) {
         logger.debug(`Request to ${url} failed.`)
 
-        if (response.status === 429) {
-          logger.debug(`Request to ${url} was ratelimited.`)
-          // Too many attempts, get rid of request from queue.
-          if (options.retryCount++ >= rest.maxRetryCount) {
-            logger.debug(`Request to ${url} exceeded the maximum allowed retries.`, 'with payload:', payload)
-            // rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(options)}`)
-            // Remove item from queue to prevent retry
-            options.reject({
-              ok: false,
-              status: response.status,
-              error: 'The options was rate limited and it maxed out the retries limit.',
-            })
-            return
-          }
-
-          // Rate limited, add back to queue
-          rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get('X-RateLimit-Scope') === 'shared')
-
-          const resetAfter = response.headers.get('x-ratelimit-reset-after')
-          if (resetAfter) await delay(Number(resetAfter) * 1000)
-          // process the response to prevent mem leak
-          await response.json()
-
-          return await options.retryRequest?.(options)
+        if (response.status !== HttpResponseCode.TooManyRequests) {
+          options.reject({ ok: false, status: response.status, body: await response.text() })
+          return
         }
 
-        options.reject({ ok: false, status: response.status, body: JSON.stringify(await response.json()) })
-        return
+        logger.debug(`Request to ${url} was ratelimited.`)
+        // Too many attempts, get rid of request from queue.
+        if (options.retryCount >= rest.maxRetryCount) {
+          logger.debug(`Request to ${url} exceeded the maximum allowed retries.`, 'with payload:', payload)
+          // rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(options)}`)
+          options.reject({
+            ok: false,
+            status: response.status,
+            error: 'The request was rate limited and it maxed out the retries limit.',
+          })
+
+          return
+        }
+
+        options.retryCount += 1
+
+        // Rate limited, add back to queue
+        rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared')
+
+        const resetAfter = response.headers.get(RATE_LIMIT_RESET_AFTER_HEADER)
+        if (resetAfter) await delay(Number(resetAfter) * 1000)
+        // process the response to prevent mem leak
+        await response.arrayBuffer()
+
+        return await options.retryRequest?.(options)
       }
 
-      const is204 = response.status === 204
-      const json = is204 ? undefined : await response.json()
-      // Discord sometimes sends no response with 204 code
-      options.resolve({ ok: true, status: response.status, body: JSON.stringify(json) })
+      // Discord sometimes sends no response with no content.
+      options.resolve({ ok: true, status: response.status, body: response.status === HttpResponseCode.NoContent ? undefined : await response.text() })
     },
 
     simplifyUrl(url, method) {
@@ -363,16 +377,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async processRequest(request: SendRequestOptions) {
-      const route = request.url.substring(request.url.indexOf('api/'))
-      const parts = route.split('/')
-      // Remove the api/
-      parts.shift()
-      // Removes the /v#/
-      if (parts[0]?.startsWith('v')) parts.shift()
-      // Set the full url to discord api in case it was recieved in a proxy rest
-      request.url = `${rest.baseUrl}/v${rest.version}/${parts.join('/')}`
-
-      const url = rest.simplifyUrl(request.url, request.method)
+      const url = rest.simplifyUrl(request.route, request.method)
 
       if (request.runThroughQueue === false) {
         await rest.sendRequest(request)
@@ -395,9 +400,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
     },
 
-    async makeRequest(method, url, options) {
-      if (!rest.baseUrl.startsWith('https://discord.com') && url[0] === '/') {
-        const result = await fetch(`${rest.baseUrl}${url}`, rest.createRequestBody(method, options))
+    async makeRequest(method, route, options) {
+      if (rest.isProxied) {
+        if (rest.authorization !== undefined) {
+          options ??= {}
+          options.headers ??= {}
+          options.headers.authorization = rest.authorization
+        }
+
+        const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
 
         if (!result.ok) {
           const err = (await result.json().catch(() => {})) as Record<string, any>
@@ -412,7 +423,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       // eslint-disable-next-line no-async-promise-executor
       return await new Promise(async (resolve, reject) => {
         const payload: SendRequestOptions = {
-          url,
+          route,
           method,
           requestBodyOptions: options,
           retryCount: 0,
@@ -1198,4 +1209,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
   }
 
   return rest
+}
+
+enum HttpResponseCode {
+  /** Minimum value of a code in oder to consider that it was successful. */
+  Success = 200,
+  /** Request completed successfully, but Discord returned an empty body. */
+  NoContent = 204,
+  /** Minimum value of a code in order to consider that something went wrong. */
+  Error = 400,
+  /** This request got rate limited. */
+  TooManyRequests = 429,
 }

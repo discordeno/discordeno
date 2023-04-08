@@ -1,0 +1,18 @@
+{
+  "name": "rest",
+  "type": "module",
+  "scripts": {
+    "build": "swc src --delete-dir-on-start --out-dir dist",
+    "start": "node ./dist/index.js"
+  },
+  "packageManager": "yarn@3.5.0",
+  "dependencies": {
+    "@discordeno/rest": "latest",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.3.21",
+    "@types/express": "^4"
+  }
+}

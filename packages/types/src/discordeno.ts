@@ -2,6 +2,8 @@ import type {
   AutoModerationActionType,
   AutoModerationEventTypes,
   AutoModerationTriggerTypes,
+  DiscordApplicationCommandOption,
+  DiscordApplicationCommandOptionChoice,
   DiscordAttachment,
   DiscordAutoModerationRuleTriggerMetadataPresets,
   DiscordChannel,
@@ -10,7 +12,6 @@ import type {
 } from './discord.js'
 import type {
   AllowedMentionsTypes,
-  ApplicationCommandOptionTypes,
   ApplicationCommandPermissionTypes,
   ApplicationCommandTypes,
   AuditLogEvents,
@@ -401,7 +402,7 @@ export interface CreateSlashApplicationCommand {
   /** Type of command, defaults `ApplicationCommandTypes.ChatInput` if not set  */
   type?: ApplicationCommandTypes
   /** Parameters for the command */
-  options?: ApplicationCommandOption[]
+  options?: Camelize<DiscordApplicationCommandOption[]>
   /** Set of permissions represented as a bit set */
   defaultMemberPermissions?: PermissionStrings[]
   /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
@@ -437,14 +438,7 @@ export interface InteractionCallbackData {
   /** Message flags combined as a bit field (only SUPPRESS_EMBEDS and EPHEMERAL can be set) */
   flags?: number
   /** Autocomplete choices (max of 25 choices) */
-  choices?: ApplicationCommandOptionChoice[]
-}
-
-export interface ApplicationCommandOptionChoice {
-  /** The name of the choice */
-  name: string
-  /** The value that this choice was represents. */
-  value: string | number
+  choices?: Camelize<DiscordApplicationCommandOptionChoice[]>
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-response */
@@ -453,37 +447,6 @@ export interface InteractionResponse {
   type: InteractionResponseTypes
   /** An optional response message */
   data?: InteractionCallbackData
-}
-
-export interface ApplicationCommandOption {
-  /** Value of Application Command Option Type */
-  type: ApplicationCommandOptionTypes
-  /** 1-32 character name matching lowercase `^[\w-]{1,32}$` */
-  name: string
-  /** Localization object for the `name` field. Values follow the same restrictions as `name` */
-  nameLocalizations?: Localization
-  /** 1-100 character description */
-  description: string
-  /** Localization object for the `description` field. Values follow the same restrictions as `description` */
-  descriptionLocalizations?: Localization
-  /** If the parameter is required or optional--default `false` */
-  required?: boolean
-  /** Choices for `string` and `int` types for the user to pick from */
-  choices?: ApplicationCommandOptionChoice[]
-  /** If the option is a subcommand or subcommand group type, this nested options will be the parameters */
-  options?: ApplicationCommandOption[]
-  /** If the option is a channel type, the channels shown will be restricted to these types */
-  channelTypes?: ChannelTypes[]
-  /** Minimum number desired. */
-  minValue?: number
-  /** Maximum number desired. */
-  maxValue?: number
-  /** Minimum length desired. */
-  minLength?: number
-  /** Maximum length desired. */
-  maxLength?: number
-  /** if autocomplete interactions are enabled for this `String`, `Integer`, or `Number` type option */
-  autocomplete?: boolean
 }
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
@@ -752,6 +715,8 @@ export interface CreateAutoModerationRuleOptions {
   triggerMetadata: {
     /** The keywords needed to match. Only present when TriggerType.Keyword */
     keywordFilter?: string[]
+    /** Regular expression patterns which will be matched against content. Only present when TriggerType.Keyword */
+    regexPatterns?: string[]
     /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
     presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
     /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */

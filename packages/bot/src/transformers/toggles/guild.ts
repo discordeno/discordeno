@@ -20,7 +20,6 @@ const featureNames = [
   'ticketedEventsEnabled',
   'monetizationEnabled',
   'moreStickers',
-  'privateThreads',
   'roleIcons',
   'autoModeration',
   'invitesDisabled',
@@ -81,8 +80,6 @@ export const GuildToggle = {
   monetizationEnabled: 1n << 22n,
   /** Whether the guild has increased custom sticker slots */
   moreStickers: 1n << 23n,
-  /** Whether the guild has access to create private threads */
-  privateThreads: 1n << 26n,
   /** Whether the guild is able to set role icons */
   roleIcons: 1n << 27n,
   /** Whether the guild has role subscriptions that can be purchased. */
@@ -135,7 +132,6 @@ export class GuildToggles extends ToggleBitfieldBigint {
       if (guild.features.includes(GuildFeatures.PreviewEnabled)) this.add(GuildToggle.previewEnabled)
       if (guild.features.includes(GuildFeatures.TicketedEventsEnabled)) this.add(GuildToggle.ticketedEventsEnabled)
       if (guild.features.includes(GuildFeatures.MoreStickers)) this.add(GuildToggle.moreStickers)
-      if (guild.features.includes(GuildFeatures.PrivateThreads)) this.add(GuildToggle.privateThreads)
       if (guild.features.includes(GuildFeatures.RoleIcons)) this.add(GuildToggle.roleIcons)
       if (guild.features.includes(GuildFeatures.RoleSubscriptionsAvailableForPurchase)) this.add(GuildToggle.roleSubscriptionsAvailableForPurchase)
       if (guild.features.includes(GuildFeatures.RoleSubscriptionsEnabled)) this.add(GuildToggle.roleSubscriptionsEnabled)
@@ -274,11 +270,6 @@ export class GuildToggles extends ToggleBitfieldBigint {
   /** Whether the guild has increased custom sticker slots */
   get moreStickers(): boolean {
     return this.has('moreStickers')
-  }
-
-  /** Whether the guild has access to create private threads */
-  get privateThreads(): boolean {
-    return this.has('privateThreads')
   }
 
   /** Whether the guild is able to set role icons */

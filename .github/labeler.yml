@@ -75,7 +75,7 @@ labels:
 
   - label: 't-style'
     matcher:
-      title: "^refactor(\\(.+\\))?!?: .*"
+      title: "^style(\\(.+\\))?!?: .*"
 
   - label: 't-test'
     matcher:

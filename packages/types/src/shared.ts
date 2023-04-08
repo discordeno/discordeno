@@ -215,8 +215,6 @@ export enum GuildFeatures {
   TicketedEventsEnabled = 'TICKETED_EVENTS_ENABLED',
   /** Guild has increased custom sticker slots */
   MoreStickers = 'MORE_STICKERS',
-  /** Guild has access to create private threads */
-  PrivateThreads = 'PRIVATE_THREADS',
   /** Guild is able to set role icons */
   RoleIcons = 'ROLE_ICONS',
   /** Guild has role subscriptions that can be purchased. */

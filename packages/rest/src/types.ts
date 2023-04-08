@@ -136,6 +136,12 @@ export interface RestManager {
    * @default https://discord.com/api
    */
   baseUrl: string
+  /**
+   * `true` if the `baseUrl` does not start with `https://discord.com/api`.
+   *
+   * Mostly used only for intern functions.
+   */
+  isProxied: boolean
   /** The authorization header to attach when sending requests to the proxy. */
   authorization?: string
   /** The maximum amount of times a request should be retried. Defaults to Infinity */
@@ -2540,8 +2546,8 @@ export interface RequestBody {
 }
 
 export interface SendRequestOptions {
-  /** The url to send the request to. */
-  url: string
+  /** The route to send the request to. */
+  route: string
   /** The method to use for sending the request. */
   method: RequestMethods
   /** The amount of times this request has been retried. */

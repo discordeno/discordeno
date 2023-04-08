@@ -14,7 +14,6 @@ before(async () => {
 })
 
 after(async () => {
-  if (rest.invalidBucket.timeoutId) clearTimeout(rest.invalidBucket.timeoutId)
   if (e2ecache.guild.id && !e2ecache.deletedGuild) {
     e2ecache.deletedGuild = true
     await rest.deleteGuild(e2ecache.guild.id)

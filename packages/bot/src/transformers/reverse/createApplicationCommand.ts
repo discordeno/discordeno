@@ -1,5 +1,5 @@
 import { calculateBits } from '@discordeno/utils'
-import type { Bot, CreateApplicationCommand, DiscordCreateApplicationCommand } from '../../index.js'
+import type { ApplicationCommandOption, Bot, CreateApplicationCommand, DiscordCreateApplicationCommand } from '../../index.js'
 import { isContextApplicationCommand } from '../../typings.js'
 
 export function transformCreateApplicationCommandToDiscordCreateApplicationCommand(
@@ -24,7 +24,7 @@ export function transformCreateApplicationCommandToDiscordCreateApplicationComma
     description: payload.description,
     description_localizations: payload.descriptionLocalizations,
     type: payload.type,
-    options: payload.options?.map((option) => bot.transformers.reverse.applicationCommandOption(bot, option)),
+    options: payload.options?.map((option) => bot.transformers.reverse.applicationCommandOption(bot, option as unknown as ApplicationCommandOption)),
     default_member_permissions: payload.defaultMemberPermissions ? calculateBits(payload.defaultMemberPermissions) : null,
     dm_permission: payload.dmPermission,
   }
