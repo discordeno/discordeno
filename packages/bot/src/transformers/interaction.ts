@@ -1,5 +1,5 @@
 import type {
-  ApplicationCommandOptionTypes,
+  ApplicationCommandTypes,
   ChannelTypes,
   DiscordInteraction,
   DiscordInteractionDataOption,
@@ -38,6 +38,7 @@ export interface Interaction {
   message?: Message
   /** the command data payload */
   data?: {
+    type?: ApplicationCommandTypes
     componentType?: MessageComponentTypes
     customId?: string
     components?: Component[]
@@ -79,6 +80,7 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction): Int
   if (payload.member && guildId && props.member) interaction.member = bot.transformers.member(bot, payload.member, guildId, user.id)
   if (payload.data && props.data) {
     interaction.data = {
+      type: payload.data.type,
       componentType: payload.data.component_type,
       customId: payload.data.custom_id,
       components: payload.data.components?.map((component) => bot.transformers.component(bot, component)),
