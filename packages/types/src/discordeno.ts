@@ -73,25 +73,26 @@ export interface CreateMessageOptions {
 
 export type MessageComponents = ActionRow[]
 
+export type ActionRowComponents =
+  | ButtonComponent
+  | InputTextComponent
+  | SelectMenuComponent
+  | SelectMenuChannelsComponent
+  | SelectMenuRolesComponent
+  | SelectMenuUsersComponent
+  | SelectMenuUsersAndRolesComponent
+
 /** https://discord.com/developers/docs/interactions/message-components#actionrow */
 export interface ActionRow {
   /** Action rows are a group of buttons. */
   type: MessageComponentTypes.ActionRow
   /** The components in this row */
   components:
-    | [
-        | ButtonComponent
-        | InputTextComponent
-        | SelectMenuComponent
-        | SelectMenuChannelsComponent
-        | SelectMenuRolesComponent
-        | SelectMenuUsersComponent
-        | SelectMenuUsersAndRolesComponent,
-      ]
-    | [ButtonComponent, ButtonComponent]
-    | [ButtonComponent, ButtonComponent, ButtonComponent]
-    | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]
-    | [ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent, ButtonComponent]
+    | [ActionRowComponents]
+    | [ActionRowComponents, ActionRowComponents]
+    | [ActionRowComponents, ActionRowComponents, ActionRowComponents]
+    | [ActionRowComponents, ActionRowComponents, ActionRowComponents, ActionRowComponents]
+    | [ActionRowComponents, ActionRowComponents, ActionRowComponents, ActionRowComponents, ActionRowComponents]
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#button-object-button-structure */
