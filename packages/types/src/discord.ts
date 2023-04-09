@@ -1805,7 +1805,7 @@ export interface DiscordCreateApplicationCommand {
   name: string
   /** Localization object for `name` field. Values follow the same restrictions as `name` */
   name_localizations?: Localization | null
-  /** Description for `ApplicationCommandTypes.ChatInput` commands, 1-100 characters. Empty string for `ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands */
+  /** Description for `ApplicationCommandTypes.ChatInput` commands, 1-100 characters. */
   description?: string
   /** Localization object for `description` field. Values follow the same restrictions as `description` */
   description_localizations?: Localization | null
