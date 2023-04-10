@@ -37,7 +37,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     totalWorkers: options.totalWorkers ?? 4,
     shardsPerWorker: options.shardsPerWorker ?? 25,
     spawnShardDelay: options.spawnShardDelay ?? 5300,
-    preferSnakeCase: false,
+    preferSnakeCase: options.preferSnakeCase ?? false,
     shards: new Map(),
     buckets: new Map(),
     cache: {

@@ -1,5 +1,6 @@
 import type {
   ApplicationCommandOptionTypes,
+  ApplicationCommandTypes,
   ChannelTypes,
   DiscordInteraction,
   DiscordInteractionDataOption,
@@ -38,6 +39,7 @@ export interface Interaction {
   message?: Message
   /** the command data payload */
   data?: {
+    type?: ApplicationCommandTypes
     componentType?: MessageComponentTypes
     customId?: string
     components?: Component[]
@@ -47,7 +49,7 @@ export interface Interaction {
     options?: InteractionDataOption[]
     id?: bigint
     targetId?: bigint
-    guildId?: bigint
+    // guildId?: bigint
   }
   /** The selected language of the invoking user */
   locale?: string
@@ -79,6 +81,7 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction): Int
   if (payload.member && guildId && props.member) interaction.member = bot.transformers.member(bot, payload.member, guildId, user.id)
   if (payload.data && props.data) {
     interaction.data = {
+      type: payload.data.type,
       componentType: payload.data.component_type,
       customId: payload.data.custom_id,
       components: payload.data.components?.map((component) => bot.transformers.component(bot, component)),
@@ -88,7 +91,7 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction): Int
       resolved: payload.data.resolved ? transformInteractionDataResolved(bot, payload.data.resolved, guildId) : undefined,
       options: payload.data.options?.map((opt) => bot.transformers.interactionDataOptions(bot, opt)),
       targetId: payload.data.target_id ? bot.transformers.snowflake(payload.data.target_id) : undefined,
-      guildId: payload.data.guild_id ? bot.transformers.snowflake(payload.data.guild_id) : undefined,
+      // guildId: payload.data.guild_id ? bot.transformers.snowflake(payload.data.guild_id) : undefined,
     }
   }
 
