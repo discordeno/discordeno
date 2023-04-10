@@ -36,7 +36,7 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: bigin
     member.toggles = new MemberToggles(payload)
   }
 
-  return member
+  return bot.transformers.customizers.member(bot, payload, member)
 }
 
 export interface BaseMember {

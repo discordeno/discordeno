@@ -63,7 +63,7 @@ export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guild
     role.toggles = new RoleToggles(payload.role)
   }
 
-  return role
+  return bot.transformers.customizers.role(bot, payload.role, role)
 }
 
 export interface BaseRole {
