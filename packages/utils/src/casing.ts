@@ -33,10 +33,7 @@ export function snakelize<T>(object: T): Snakelize<T> {
 }
 
 export function snakeToCamelCase(str: string): string {
-  return str
-    .replace(/(-|_|\.|\s)+(.)?/g, (_match, _separator, chr) => (chr ? chr.toUpperCase() : ''))
-    .replace(/(^|\/)([A-Z])/g, (match /*, separator, chr */) => match.toLowerCase())
-
+  return str.replace(/[-_](.)/g, (_, c) => c.toUpperCase())
   //   if (!str.includes('_')) return str
 
   //   let result = ''
