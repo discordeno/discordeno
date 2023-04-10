@@ -42,7 +42,8 @@ const CAMELIZE_CACHE: Record<string, string> = {
 }
 
 export function camelize<T>(object: T): Camelize<T> {
-  return JSON.parse(snakeToCamelCase(JSON.stringify(object))) as Camelize<T>
+  return object
+  //   return JSON.parse(snakeToCamelCase(JSON.stringify(object))) as Camelize<T>
   //   if (Array.isArray(object)) {
   //     return object.map((element) => camelize(element)) as Camelize<T>
   //   }
