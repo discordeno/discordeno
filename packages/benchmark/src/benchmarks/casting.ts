@@ -1,4 +1,4 @@
-import { camelize, snakelize } from '@discordeno/utils'
+import { camelize, camelToSnakeCase, snakelize, snakeToCamelCase } from '@discordeno/utils'
 import { suite } from '../benchmarkSuite.js'
 import { events } from '../utils/db.js'
 
@@ -14,4 +14,12 @@ suite.add(`Camelize 1 event`, () => {
 
 suite.add(`Snakelize 1 event`, () => {
   snakelize(camelizedEvents[1])
+})
+
+suite.add(`Camelize 1 string`, () => {
+  snakeToCamelCase('stage_instances')
+})
+
+suite.add(`Snakelize 1 string`, () => {
+  camelToSnakeCase('stageInstances')
 })
