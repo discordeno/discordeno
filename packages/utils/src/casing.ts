@@ -1,5 +1,9 @@
 import type { Camelize, Snakelize } from '@discordeno/types'
 
+const CAMELIZE_CACHE: Record<string, string> = {
+  stage_instances: 'stageInstances',
+}
+
 export function camelize<T>(object: T): Camelize<T> {
   if (Array.isArray(object)) {
     return object.map((element) => camelize(element)) as Camelize<T>
@@ -33,21 +37,21 @@ export function snakelize<T>(object: T): Snakelize<T> {
 }
 
 export function snakeToCamelCase(str: string): string {
-  return str.replace(/[-_](.)/g, (_, c) => c.toUpperCase())
-  //   if (!str.includes('_')) return str
+  if (CAMELIZE_CACHE[str]) return CAMELIZE_CACHE[str]
+  if (!str.includes('_')) return str
 
-  //   let result = ''
-  //   for (let i = 0, len = str.length; i < len; ++i) {
-  //     if (str[i] === '_') {
-  //       result += str[++i].toUpperCase()
+  let result = ''
+  for (let i = 0, len = str.length; i < len; ++i) {
+    if (str[i] === '_') {
+      result += str[++i].toUpperCase()
 
-  //       continue
-  //     }
+      continue
+    }
 
-  //     result += str[i]
-  //   }
+    result += str[i]
+  }
 
-  //   return result
+  return result
 }
 
 export function camelToSnakeCase(str: string): string {
