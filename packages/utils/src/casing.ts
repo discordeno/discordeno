@@ -42,19 +42,20 @@ const CAMELIZE_CACHE: Record<string, string> = {
 }
 
 export function camelize<T>(object: T): Camelize<T> {
-  if (Array.isArray(object)) {
-    return object.map((element) => camelize(element)) as Camelize<T>
-  }
+  return JSON.parse(snakeToCamelCase(JSON.stringify(object))) as Camelize<T>
+  //   if (Array.isArray(object)) {
+  //     return object.map((element) => camelize(element)) as Camelize<T>
+  //   }
 
-  if (typeof object === 'object' && object !== null) {
-    const obj = {} as Camelize<T>
-    ;(Object.keys(object) as Array<keyof T>).forEach((key) => {
-      // @ts-expect-error js hack
-      ;(obj[snakeToCamelCase(key)] as Camelize<(T & object)[keyof T]>) = camelize(object[key])
-    })
-    return obj
-  }
-  return object as Camelize<T>
+  //   if (typeof object === 'object' && object !== null) {
+  //     const obj = {} as Camelize<T>
+  //     ;(Object.keys(object) as Array<keyof T>).forEach((key) => {
+  //       // @ts-expect-error js hack
+  //       ;(obj[snakeToCamelCase(key)] as Camelize<(T & object)[keyof T]>) = camelize(object[key])
+  //     })
+  //     return obj
+  //   }
+  //   return object as Camelize<T>
 }
 
 export function snakelize<T>(object: T): Snakelize<T> {
