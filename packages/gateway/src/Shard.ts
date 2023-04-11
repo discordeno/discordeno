@@ -459,6 +459,23 @@ export class DiscordenoShard {
 
       this.resolves.get('READY')?.(packet)
       this.resolves.delete('READY')
+    } else if (packet.t === 'GUILD_MEMBERS_CHUNK') {
+      const payload = packet.d as {
+        nonce: string
+        members: DiscordMember[]
+        chunk_index: number
+        chunk_count: number
+      }
+      if (this.cache.requestMembers.enabled) {
+        if (this.cache.requestMembers.pending.has(payload.nonce)) {
+          const { resolve, members } = this.cache.requestMembers.pending.get(payload.nonce)!
+          members.push(...payload.members.map((member) => camelize(member)))
+
+          if (payload.chunk_index === payload.chunk_count - 1) {
+            resolve(members)
+          }
+        }
+      }
     }
 
     // Update the sequence number if it is present
