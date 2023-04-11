@@ -10,7 +10,8 @@ import type {
   RequestGuildMembers,
 } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayIntents, GatewayOpcodes } from '@discordeno/types'
-import { Collection, LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
+import { camelize, Collection, delay, LeakyBucket, logger } from '@discordeno/utils'
+import { randomBytes } from 'node:crypto'
 import { inflateSync } from 'node:zlib'
 import WebSocket from 'ws'
 import type { RequestMemberRequest } from './manager.js'
@@ -683,7 +684,7 @@ export class DiscordenoShard {
       options.limit = options.userIds.length
     }
 
-    const nonce = `${guildId}-${Date.now()}`
+    const nonce = randomBytes(16).toString('hex')
 
     // Gateway does not require caching these requests so directly send and return
     if (!this.cache.requestMembers?.enabled) {
