@@ -167,7 +167,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.identifyRequests.shift()?.()
           },
         })
-
+        shard.cache.requestMembers.enabled = this.cache.requestMembers?.enabled ?? shard.cache.requestMembers.enabled
         if (this.preferSnakeCase) {
           shard.forwardToBot = async (payload) => {
             options.events.message?.(shard!, payload)
