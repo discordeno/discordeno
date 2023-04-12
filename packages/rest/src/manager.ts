@@ -48,8 +48,8 @@ import type {
   MfaLevels,
   ModifyGuildTemplate,
 } from '@discordeno/types'
-import type { CreateRequestBodyOptions, CreateRestManagerOptions, RestManager, SendRequestOptions } from './types.js'
 import { createRoutes } from './routes.js'
+import type { CreateRequestBodyOptions, CreateRestManagerOptions, RestManager, SendRequestOptions } from './types.js'
 
 // TODO: make dynamic based on package.json file
 const version = '19.0.0-alpha.1'
@@ -166,10 +166,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         }
 
         form.append('payload_json', JSON.stringify({ ...options.body, files: undefined }))
-
-        body = form
-
         // No need to set the `content-type` header since `fetch` does that automatically for us when we use a `FormData` object.
+        body = form
+      } else if (options?.body && options.headers && options.headers['content-type'] === 'application/x-www-form-urlencoded') {
+        // oauth handling
+        const formBody: string[] = []
+        for (const prop in options.body) {
+          formBody.push(`${encodeURIComponent(prop)}=${encodeURIComponent(options.body[prop])}`)
+        }
+
+        body = formBody.join('&')
       } else if (options?.body !== undefined) {
         if (options.body instanceof FormData) {
           body = options.body
