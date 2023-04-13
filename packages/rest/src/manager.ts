@@ -2,7 +2,6 @@
 /* eslint-disable no-const-assign */
 import { InteractionResponseTypes } from '@discordeno/types'
 import { calculateBits, camelize, camelToSnakeCase, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
-import fetch from 'node-fetch'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -48,8 +47,8 @@ import type {
   MfaLevels,
   ModifyGuildTemplate,
 } from '@discordeno/types'
-import type { CreateRequestBodyOptions, CreateRestManagerOptions, RestManager, SendRequestOptions } from './types.js'
 import { createRoutes } from './routes.js'
+import type { CreateRequestBodyOptions, CreateRestManagerOptions, RestManager, SendRequestOptions } from './types.js'
 
 // TODO: make dynamic based on package.json file
 const version = '19.0.0-alpha.1'
@@ -417,7 +416,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           throw new Error(JSON.stringify(err))
         }
 
-        return result.status !== 204 ? ((await result.json()) as any) : undefined
+        return result.status !== 204 ? await result.json() : undefined
       }
 
       // eslint-disable-next-line no-async-promise-executor

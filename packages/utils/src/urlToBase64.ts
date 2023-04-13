@@ -1,4 +1,3 @@
-import fetch from 'node-fetch'
 import { encode } from './base64.js'
 
 /** Converts a url to base 64. Useful for example, uploading/creating server emojis. */
