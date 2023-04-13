@@ -117,7 +117,6 @@ __metadata:
     eslint: ^8.36.0
     eslint-config-discordeno: "*"
     mocha: ^10.2.0
-    node-fetch: ^3.3.1
     sinon: ^15.0.2
     ts-node: ^10.9.1
     tsconfig: "*"
@@ -182,7 +181,6 @@ __metadata:
     eslint: ^8.36.0
     eslint-config-discordeno: "*"
     mocha: ^10.2.0
-    node-fetch: ^3.3.1
     sinon: ^15.0.2
     ts-node: ^10.9.1
     tsconfig: "*"
