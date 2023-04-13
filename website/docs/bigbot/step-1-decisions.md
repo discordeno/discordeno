@@ -13,6 +13,6 @@ Discordeno supports several platforms including Node.JS, Bun, and Deno. This mea
 
 This guide will proceed with Node.JS but you should apply the same concepts in your own runtime. Should you need help with another runtime, please contact us on Discord.
 
-## Choose A Coding Style
+## Choose A Communication System
 
-Discordeno provides you the option to use a Class based approach or a No-Class based approach. If you are willing to take your time and optimize your bot to the max, I highly recommend you go the No-Class route. However, this guide will use the Class based approach as I believe most users will end up choosing this route. Should you require any help with the functional approach please contact us on Discord.
+One of the main things to decide, is how you will communicate across your separater processes. Some developers like to use redis pubsub. Others prefer rabbitmq. There are too many systems available to cover in this guide so we will be simply opting for one solution at this time. You should look to optimize this for your specific bot as this is a critical bottleneck in handling events.
