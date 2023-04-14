@@ -90,7 +90,7 @@ const app = express()
 app.use(
   express.urlencoded({
     extended: true,
-  }),
+  })
 )
 
 app.use(express.json())
@@ -107,8 +107,12 @@ app.all('/*', async (req, res) => {
         return await GATEWAY.requestMembers(req.body.guildId, req.body.options)
       }
       default:
-        logger.error(`[Shard] Unknown request received. ${JSON.stringify(req.body)}`)
-        return res.status(404).json({ message: 'Unknown request received.', status: 404 })
+        logger.error(
+          `[Shard] Unknown request received. ${JSON.stringify(req.body)}`
+        )
+        return res
+          .status(404)
+          .json({ message: 'Unknown request received.', status: 404 })
     }
   } catch (error: any) {
     console.log(error)
@@ -136,7 +140,10 @@ export const GATEWAY = createGatewayManager({
 
 GATEWAY.tellWorkerToIdentify = async function (workerId, shardId, bucketId) {
   const url = process.env[`SERVER_URL_${workerId}`]
-  if (!url) return logger.error(`No server URL found for server #${workerId}. Unable to start Shard #${shardId}`)
+  if (!url)
+    return logger.error(
+      `No server URL found for server #${workerId}. Unable to start Shard #${shardId}`
+    )
 
   await fetch(url, {
     method: 'POST',
@@ -145,7 +152,7 @@ GATEWAY.tellWorkerToIdentify = async function (workerId, shardId, bucketId) {
     },
     body: JSON.stringify({ type: 'IDENTIFY_SHARD', shardId }),
   })
-    .then((res) => res.json())
+    .then(res => res.json())
     .catch(logger.error)
 }
 
@@ -182,7 +189,7 @@ const app = express()
 app.use(
   express.urlencoded({
     extended: true,
-  }),
+  })
 )
 
 app.use(express.json())
@@ -203,7 +210,11 @@ app.all('/*', async (req, res) => {
     // Identify A Shard
     switch (req.body.type) {
       case 'IDENTIFY_SHARD': {
-        logger.info(`[Shard] identifying ${SHARDS.has(req.body.shardId) ? 'existing' : 'new'} shard (${req.body.shardId})`)
+        logger.info(
+          `[Shard] identifying ${
+            SHARDS.has(req.body.shardId) ? 'existing' : 'new'
+          } shard (${req.body.shardId})`
+        )
         const shard =
           SHARDS.get(req.body.shardId) ??
           new DiscordenoShard({
@@ -230,8 +241,12 @@ app.all('/*', async (req, res) => {
         })
       }
       default:
-        logger.error(`[Shard] Unknown request received. ${JSON.stringify(req.body)}`)
-        return res.status(404).json({ message: 'Unknown request received.', status: 404 })
+        logger.error(
+          `[Shard] Unknown request received. ${JSON.stringify(req.body)}`
+        )
+        return res
+          .status(404)
+          .json({ message: 'Unknown request received.', status: 404 })
     }
   } catch (error: any) {
     console.log(error)
@@ -267,10 +282,13 @@ const shard =
       async message(shrd, payload) {
         await fetch(getUrlFromShardId(req.body.totalShards, shrd.id), {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', authorization: AUTHORIZATION },
+          headers: {
+            'Content-Type': 'application/json',
+            authorization: AUTHORIZATION,
+          },
           body: JSON.stringify({ payload, shardId }),
         })
-          .then((res) => res.text())
+          .then(res => res.text())
           .catch(logger.error)
       },
     },
@@ -297,7 +315,10 @@ const INFLUX_BUCKET = process.env.INFLUX_BUCKET as string
 const INFLUX_TOKEN = process.env.INFLUX_TOKEN as string
 const INFLUX_URL = process.env.INFLUX_URL as string
 
-export const influxDB = INFLUX_URL && INFLUX_TOKEN ? new InfluxDB({ url: INFLUX_URL, token: INFLUX_TOKEN }) : undefined
+export const influxDB =
+  INFLUX_URL && INFLUX_TOKEN
+    ? new InfluxDB({ url: INFLUX_URL, token: INFLUX_TOKEN })
+    : undefined
 export const Influx = influxDB?.getWriteApi(INFLUX_ORG, INFLUX_BUCKET)
 
 let savingAnalyticsId: NodeJS.Interval | undefined = undefined
@@ -308,7 +329,7 @@ if (!saveAnalyticsId) {
       .then(() => {
         console.log(`[Influx - Gateway] Saved events!`)
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(`[Influx - Gateway] Error saving events!`, error)
       })
     // Every 15 seconds
