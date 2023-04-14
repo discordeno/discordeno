@@ -433,7 +433,7 @@ if (payload.t === "READY") {
 
 if (payload.t === "GUILD_CREATE") {
   // Check if this id is in cache
-  const existing = await cache.guildIds.has(payload.d.id);
+  const existing = cache.guildIds.has(payload.d.id);
   // If it already exists this was either a shard resume or unavailable guild became available etc...
   if (existing) return;
 
@@ -456,8 +456,8 @@ This will make it so whenever a GUILD_CREATE arrives from the initial batch it w
 One last bit before you are done, simply add the following to make it ignore any useless **GUILD_DELETE** events as well. You can also choose rename it should you like to something like **GUILD_UNAVAILABLE**.
 
 ```ts
-if (message.t === "GUILD_DELETE") {
-  if ((message.d as DiscordUnavailableGuild).unavailable) return;
+if (payload.t === "GUILD_DELETE") {
+  if ((payload.d as DiscordUnavailableGuild).unavailable) return;
 }
 ```
 
@@ -491,10 +491,10 @@ Imagine having to process all these events, sending them through your queue syst
 
 ```ts
 if (payload.t === "MESSAGE_UPDATE") {
-  const payload = payload.d as DiscordMessage;
+  const message = payload.d as DiscordMessage;
 
-  const id = payload.id;
-  const content = payload.content || "";
+  const id = message.id;
+  const content = message.content || "";
   const cached = cache.editedMessages.get(id);
 
   if (cached === content) return;
