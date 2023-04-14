@@ -119,12 +119,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         for (const key of Object.keys(obj)) {
           // Keys that dont require snake casing
-          if (['permissions', 'allow', 'deny'].includes(key)) {
+          if (['permissions', 'allow', 'deny'].includes(key) && obj[key] !== undefined) {
             newObj[key] = calculateBits(obj[key])
             continue
           }
 
-          if (key === 'defaultMemberPermissions') {
+          if (key === 'defaultMemberPermissions' && obj[key] !== undefined) {
             newObj.default_member_permissions = calculateBits(obj[key])
             continue
           }
