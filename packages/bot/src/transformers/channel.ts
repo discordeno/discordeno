@@ -99,7 +99,7 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } 
     channel.internalOverwrites = payload.channel.permission_overwrites.map((o) => packOverwrites(o.allow ?? '0', o.deny ?? '0', o.id, o.type))
   }
 
-  return channel
+  return bot.transformers.customizers.channel(bot, payload.channel, channel);
 }
 
 export interface BaseChannel {

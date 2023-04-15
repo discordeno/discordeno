@@ -4,7 +4,6 @@
     "node:fs": "https://deno.land/std@0.176.0/node/fs.ts",
     "node:events": "https://deno.land/std@0.176.0/node/events.ts",
     "tweetnacl": "npm:tweetnacl",
-    "node-fetch": "npm:node-fetch",
     "ws": "npm:ws",
     "mocha": "https://deno.land/std@0.168.0/testing/bdd.ts",
     "chai": "https://cdn.skypack.dev/chai@4.3.4?dts",

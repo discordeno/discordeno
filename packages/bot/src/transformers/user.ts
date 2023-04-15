@@ -40,7 +40,7 @@ export function transformUser(bot: Bot, payload: DiscordUser): User {
   if (payload.banner && props.banner) user.banner = iconHashToBigInt(payload.banner)
   if (payload.accent_color && props.accentColor) user.accentColor = payload.accent_color
 
-  return user
+  return bot.transformers.customizers.user(bot, payload, user)
 }
 
 export interface BaseUser {
