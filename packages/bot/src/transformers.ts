@@ -99,8 +99,12 @@ import type { BotInteractionResponse, DiscordComponent, DiscordInteractionRespon
 
 export interface Transformers {
   customizers: {
+    channel: (bot: Bot, payload: DiscordChannel, channel: Channel) => any
     interaction: (bot: Bot, payload: DiscordInteraction, interaction: Interaction) => any
     message: (bot: Bot, payload: DiscordMessage, message: Message) => any
+    user: (bot: Bot, payload: DiscordUser, user: User) => any
+    member: (bot: Bot, payload: DiscordMember, member: Member) => any
+    role: (bot: Bot, payload: DiscordRole, role: Role) => any
   }
   desiredProperties: {
     attachment: {
@@ -421,11 +425,23 @@ export interface Transformers {
 export function createTransformers(options: Partial<Transformers>): Transformers {
   return {
     customizers: {
+      channel(bot, payload, channel) {
+        return channel
+      },
       interaction(bot, payload, interaction) {
         return interaction
       },
+      member(bot, payload, member) {
+        return member
+      },
       message(bot, payload, message) {
         return message
+      },
+      role(bot, payload, role) {
+        return role
+      },
+      user(bot, payload, user) {
+        return user
       },
     },
     desiredProperties: {

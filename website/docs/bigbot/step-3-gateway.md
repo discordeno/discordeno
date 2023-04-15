@@ -389,6 +389,151 @@ events: {
 },
 ```
 
+### Further Optimizations
+
+There are a few things we can improve in our gateway proxy, should we require certain features in our bot. You can choose to implement these should you need them.
+
+#### GUILD_LOADED
+
+This is for bots who need to take certain actions when the bot is added to or removed from a server. There are a few different things to keep in mind here and its important for you to understand, whether you need to have **GUILD_LOADED_DD** added or if you dont need it added. Discord is really odd when it comes to **GUILD_CREATE** and **GUILD_DELETE** events. **GUILD_CREATE** event are emitted in various different circumstances.
+
+- A guild was added
+- Shard resumed
+- Unavailable guild became available
+- Initial loading when connecting to discord
+- Insert anything i didnt think of here etc...
+
+Let's start by creating a small local cache at the top of the file.
+
+
+```ts
+const cache = {
+  guildIds: new Set<string>(),
+  loadingGuildIds: new Set<string>(),
+}
+```
+
+Next, let's handle the fact that some guilds are actually new guilds the bot gets added to. To make this possible, we need to store which guilds already have the bot in it when it starts. A list of guild ids are sent in the READY event telling the bot that the bot is already in these guilds. So let's store them to cache.
+
+```ts
+events: {
+  async message(shrd, payload) {
+    Influx?.writePoint(
+      new Point('gatewayEvents')
+        .timestamp(new Date())
+        .stringField('type', payload.t ?? "NA")
+        .tag('shard', shardId),
+    );
+
+    if (payload.t === "READY") {
+      // Marks which guilds the bot in when initial loading in cache
+      payload.d.guilds.forEach((g) => cache.loadingGuildIds.add(g.id));
+    }
+
+    await fetch(
+      process.env.EVENT_LISTENER_URL,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', authorization: AUTHORIZATION },
+        body: JSON.stringify({payload, shardId }),
+      }
+    )
+      .then(res => res.text())
+      .catch(logger.error);
+  },
+},
+```
+
+Now we need  to make sure that this will handle it correctly by changing any guild creates that are not new guilds, to a private event.
+
+```ts
+if (payload.t === "READY") {
+  // Marks which guilds the bot in when initial loading in cache
+  payload.d.guilds.forEach((g) => cache.loadingGuildIds.add(g.id));
+}
+
+if (payload.t === "GUILD_CREATE") {
+  // Check if this id is in cache
+  const existing = cache.guildIds.has(payload.d.id);
+  // If it already exists this was either a shard resume or unavailable guild became available etc...
+  if (existing) return;
+
+  // add this id to cache or db
+  cache.guildIds.add(payload.d.id);
+ 
+ if (cache.loadingGuildIds.has(payload.d.id)) {
+    // SEND A CUSTOM EVENT. Name it whatever u want
+    payload.t = "GUILD_LOADED_DD";
+    // Remove from cache
+    cache.loadingGuildIds.delete(id);
+  }
+
+  cache.guildIds.add(id);
+}
+```
+
+This will make it so whenever a GUILD_CREATE arrives from the initial batch it will rename the event to **GUILD_LOADED_DD**. Any other **GUILD_CREATE** that arrive can be safely ignored as those are just guilds being resumed or becoming available. Should you need these events feel free to edit the code above and create custom events just as **GUILD_CREATE_RESUMED** or **GUILD_CREATE_AVAILABLE**. This way when your bot receives a **GUILD_CREATE**, it will be automatically known that this is the bot being added to a new guild.
+
+One last bit before you are done, simply add the following to make it ignore any useless **GUILD_DELETE** events as well. You can also choose rename it should you like to something like **GUILD_UNAVAILABLE**.
+
+```ts
+if (payload.t === "GUILD_DELETE") {
+  if ((payload.d as DiscordUnavailableGuild).unavailable) return;
+}
+```
+
+#### MESSAGE_UPDATE
+
+One other area where we can optimize is for the **MESSAGE_UPDATE** event, assuming you have the MessageContent intent enabled. You can save a ton of your CPU for gateway and bot by adding this in. This event can spam for no reason whatsoever and we can use the following code to ignore useless events. For example, any message that is sent with an embed will have a 
+
+- MESSAGE_CREATE
+- MESSAGE_UPDATE
+
+The update event is sent just to reflect that this message had an embed in it. This is how discord loads embeds by internally editing it and that sends a MESSAGE_UPDATE event out. Imagine every time your bot sends a message you are processing double the event load. Further, it's not just your bot but every bot. Even when a bot farm or abusive user decides to make self bots send embeds it will do the same.
+
+It gets even worse when you realize that any `link` in a message will trigger the same. So if a user sends a message with 5 urls. That will trigger:
+
+- MESSAGE_CREATE
+- MESSAGE_UPDATE
+- MESSAGE_UPDATE
+- MESSAGE_UPDATE
+- MESSAGE_UPDATE
+- MESSAGE_UPDATE
+
+Then let's say the user actually edits the message just a tiny bit.
+
+- MESSAGE_UPDATE
+- MESSAGE_UPDATE
+- MESSAGE_UPDATE
+- MESSAGE_UPDATE
+- MESSAGE_UPDATE
+
+Imagine having to process all these events, sending them through your queue system and causing a waste of CPU processing power.
+
+```ts
+if (payload.t === "MESSAGE_UPDATE") {
+  const message = payload.d as DiscordMessage;
+
+  const id = message.id;
+  const content = message.content || "";
+  const cached = cache.editedMessages.get(id);
+
+  if (cached === content) return;
+  else {
+    // Add to local cache for future events comparison
+    cache.editedMessages.set(id, content);
+    // Remove after 10 seconds from cache
+    setTimeout(() => {
+      cache.editedMessages.delete(id);
+    }, 10000);
+  }
+}
+```
+
+:::tip
+Take the time to improve more events like this for you bot. For example, if you use the MessageIntent for message commands and nothing else. You can choose to make a if () for the MESSAGE_CREATE and ignore any events that don't start with your bots prefix.
+:::
+
 ### Event Queue
 
 We should take the time here to implement a small queue where we can store events in the off chance that our event listener was not able to receive the event. For example, if you are restarting the bot process for a split second, you might lose some events. To avoid this issue, we should build an event queue which will make sure we don't lose them.
