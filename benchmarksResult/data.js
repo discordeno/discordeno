@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681563307453,
+  "lastUpdate": 1681689159851,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -5380,6 +5380,114 @@ window.BENCHMARK_DATA = {
             "name": "Snakelize 1 event",
             "value": 6636,
             "range": "±0.14%",
+            "unit": "ops/sec",
+            "extra": "94 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "awesome@stickz.dev",
+            "name": "Awesome Stickz",
+            "username": "AwesomeStickz"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "85ea2d9b8c474ebddbaed7cca990d19c6826e80a",
+          "message": "fix(bot): missing exports of types (#3004)\n\n* fix(bot): missing exports of types\n\n* fix: add other exports",
+          "timestamp": "2023-04-16T23:51:17Z",
+          "tree_id": "462fcc549bf2319d6052a7788d2f88321ed61121",
+          "url": "https://github.com/discordeno/discordeno/commit/85ea2d9b8c474ebddbaed7cca990d19c6826e80a"
+        },
+        "date": 1681689158080,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "[transformer] message cache check RSS",
+            "value": 86.41,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Used",
+            "value": 82.17,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Total",
+            "value": 75.16,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check RSS",
+            "value": 65.7,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Used",
+            "value": 87.71,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Total",
+            "value": 65.2,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 0.71,
+            "range": "±2.93%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 10.71,
+            "range": "±1.45%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 0,
+            "range": "±0%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "rest.simplifyUrl",
+            "value": 223667,
+            "range": "±0.27%",
+            "unit": "ops/sec",
+            "extra": "93 samples"
+          },
+          {
+            "name": "Camelize 1 event",
+            "value": 6506,
+            "range": "±0.21%",
+            "unit": "ops/sec",
+            "extra": "95 samples"
+          },
+          {
+            "name": "Snakelize 1 event",
+            "value": 6496,
+            "range": "±0.21%",
             "unit": "ops/sec",
             "extra": "94 samples"
           }
