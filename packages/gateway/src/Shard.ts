@@ -10,7 +10,7 @@ import type {
   RequestGuildMembers,
 } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayIntents, GatewayOpcodes } from '@discordeno/types'
-import { camelize, Collection, delay, LeakyBucket, logger } from '@discordeno/utils'
+import { Collection, LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
 import { randomBytes } from 'node:crypto'
 import { inflateSync } from 'node:zlib'
 import WebSocket from 'ws'

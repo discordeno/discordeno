@@ -13,6 +13,7 @@
     "benchmark": "npm:benchmark",
     "dotenv": "npm:dotenv",
     "node:zlib": "https://deno.land/std@0.176.0/node/zlib.ts",
+    "node:crypto": "https://deno.land/std@0.176.0/node/crypto.ts",
     "@discordeno/utils": "./packages/utils/dist/index.js",
     "@discordeno/types": "./packages/types/dist/index.js",
     "@discordeno/rest": "./packages/rest/dist/index.js",
