@@ -3775,13 +3775,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"animate.css@npm:^4.1.1":
-  version: 4.1.1
-  resolution: "animate.css@npm:4.1.1"
-  checksum: c7eb91540423532c549725a6dedea993735a05eadaa49ed4d1965ce166a6db36459adcc9667c1dfe13657fab92a2875bbee34ad0d942444a731badab69f762c8
-  languageName: node
-  linkType: hard
-
 "ansi-align@npm:^3.0.0, ansi-align@npm:^3.0.1":
   version: 3.0.1
   resolution: "ansi-align@npm:3.0.1"
@@ -12294,7 +12287,6 @@ __metadata:
     "@tsconfig/docusaurus": ^1.0.5
     "@typescript-eslint/eslint-plugin": ^5.57.1
     "@typescript-eslint/parser": ^5.57.1
-    animate.css: ^4.1.1
     babel-plugin-styled-components: ^2.1.1
     chart.js: ^4.2.1
     clsx: ^1.2.1

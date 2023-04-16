@@ -1,7 +1,6 @@
 import React from 'react'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import Layout from '@theme/Layout'
-import 'animate.css'
 import DiscordenoHeader from '../components/header'
 import { MainPage } from '../styling'
 import DiscordenoFeatures from '../components/home/features'
@@ -15,7 +14,7 @@ export default function Home(): JSX.Element {
 
   React.useEffect(() => {
     setTimeout(() => {
-      setLoading(false);
+      setLoading(false)
 
       // give it a small timeout to make sure the loading screen is shown
     }, 1000)

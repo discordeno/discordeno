@@ -4,7 +4,7 @@ import clsx from 'clsx'
 
 export default function Feature({ data }: FeatureList): JSX.Element {
   return (
-    <div className={clsx('col col--4 animate__animated animate__fadeInDown')}>
+    <div className={clsx('col col--4')}>
       <div className="text--center">{data.feature.Svg}</div>
 
       <div className="text--center padding-horiz--md">
