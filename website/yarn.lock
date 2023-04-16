@@ -4099,7 +4099,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-plugin-styled-components@npm:>= 1.12.0":
+"babel-plugin-styled-components@npm:>= 1.12.0, babel-plugin-styled-components@npm:^2.1.1":
   version: 2.1.1
   resolution: "babel-plugin-styled-components@npm:2.1.1"
   dependencies:
@@ -12295,6 +12295,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.57.1
     "@typescript-eslint/parser": ^5.57.1
     animate.css: ^4.1.1
+    babel-plugin-styled-components: ^2.1.1
     chart.js: ^4.2.1
     clsx: ^1.2.1
     eslint: ^8.38.0
