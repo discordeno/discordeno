@@ -55,7 +55,7 @@ const questions = [
   },
   {
     question: "Why doesn't Discordeno use classes like other libraries?",
-    answer: "Generally, Discordeno does not use classes. Instead, Discordeno uses plain JavaScript objects to define commands, events, and other components. However, in certain cases where it makes sense we do use them. This design choice was made to keep the library lightweight and simple, and to allow for more flexible and dynamic code, as components can be easily modified and extended at runtime. While classes can be useful in some cases, Discordeno has chosen to use a more functional approach.",
+    answer: "Generally, Discordeno does not use classes. Instead, Discordeno uses plain JavaScript objects to define commands, events, and other components. However, in certain cases where it makes sense, we do use classes. This design choice was made to keep the library lightweight and simple and to allow for more flexible and dynamic code, as components can be easily modified and extended at runtime. While classes can be useful in some cases, Discordeno has chosen to use a more functional approach.",
     defaultExpanded: false,
   },
   {
