@@ -385,12 +385,12 @@ export interface Transformers {
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot
   automodRule: (bot: Bot, payload: DiscordAutoModerationRule) => AutoModerationRule
   automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution) => AutoModerationActionExecution
-  channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }) => Channel
+  channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }) => Channel
   guild: (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) => Guild
   user: (bot: Bot, payload: DiscordUser) => User
   member: (bot: Bot, payload: DiscordMember, guildId: bigint, userId: bigint) => Member
   message: (bot: Bot, payload: DiscordMessage) => Message
-  role: (bot: Bot, payload: { role: DiscordRole } & { guildId: bigint }) => Role
+  role: (bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }) => Role
   voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) => VoiceState
   interaction: (bot: Bot, payload: DiscordInteraction) => Interaction
   interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption

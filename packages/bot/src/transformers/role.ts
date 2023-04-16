@@ -1,4 +1,4 @@
-import type { DiscordRole } from '@discordeno/types'
+import type { BigString, DiscordRole } from '@discordeno/types'
 import { iconHashToBigInt, type Bot } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { RoleToggles } from './toggles/role.js'
@@ -40,13 +40,13 @@ const baseRole: Partial<Role> & BaseRole = {
   },
 }
 
-export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guildId: bigint }): Role {
+export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }): Role {
   const role: Role = Object.create(baseRole)
   const props = bot.transformers.desiredProperties.role
   if (payload.role.id && props.id) role.id = bot.transformers.snowflake(payload.role.id)
   if (payload.role.name && props.name) role.name = payload.role.name
   if (props.position) role.position = payload.role.position
-  if (props.guildId && payload.guildId) role.guildId = payload.guildId
+  if (props.guildId && payload.guildId) role.guildId = bot.transformers.snowflake(payload.guildId)
   if (props.color && payload.role.color) role.color = payload.role.color
   if (payload.role.permissions && props.permissions) role.permissions = new Permissions(payload.role.permissions)
   if (payload.role.icon && props.icon) role.icon = iconHashToBigInt(payload.role.icon)

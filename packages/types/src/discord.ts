@@ -1121,12 +1121,7 @@ export interface DiscordActionRow {
   /** Action rows are a group of buttons. */
   type: 1
   /** The components in this row */
-  components:
-    | [DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent]
-    | [DiscordButtonComponent, DiscordButtonComponent]
-    | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
-    | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
-    | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
+  components: Array<DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent>
 }
 
 export interface DiscordSelectMenuComponent {

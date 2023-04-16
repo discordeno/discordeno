@@ -1,4 +1,4 @@
-import type { ChannelTypes, DiscordChannel, DiscordThreadMember, OverwriteReadable, VideoQualityModes } from '@discordeno/types'
+import type { BigString, ChannelTypes, DiscordChannel, DiscordThreadMember, OverwriteReadable, VideoQualityModes } from '@discordeno/types'
 import { calculatePermissions, type Bot } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { ChannelToggles } from './toggles/channel.js'
@@ -61,13 +61,13 @@ export const baseChannel: Partial<Channel> & BaseChannel = {
   },
 }
 
-export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }): Channel {
+export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }): Channel {
   const channel = Object.create(baseChannel)
   const props = bot.transformers.desiredProperties.channel
   channel.toggles = new ChannelToggles(payload.channel)
 
   if (payload.channel.id && props.id) channel.id = bot.transformers.snowflake(payload.channel.id)
-  if (payload.guildId && props.guildId) channel.guildId = payload.guildId
+  if ((payload.guildId ?? payload.channel.guild_id) && props.guildId) channel.guildId = payload.guildId ?? bot.transformers.snowflake(payload.channel.guild_id!)
   if (props.type) channel.type = payload.channel.type
   if (props.position) channel.position = payload.channel.position
   if (payload.channel.name && props.name) channel.name = payload.channel.name
