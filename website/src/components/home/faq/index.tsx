@@ -44,13 +44,16 @@ const Faq = ({
 
 const questions = [
   {
-    question: 'Does Discordeno work on all JavaScript runtimes like Deno, Node.js, and Bun?',
-    answer: "Yes! Discordeno is designed to work on any JavaScript runtime, including Deno, Node.js, and even in the Bun environment. This means that you can use Discordeno in your project no matter where you're running your code.",
+    question:
+      'Does Discordeno work on all JavaScript runtimes like Deno, Node.js, and Bun?',
+    answer:
+      "Yes! Discordeno is designed to work on any JavaScript runtime, including Deno, Node.js, and even in the Bun environment. This means that you can use Discordeno in your project no matter where you're running your code.",
     defaultExpanded: true,
   },
   {
     question: 'Does Discordeno handle sharding?',
-    answer: "Yes! Discordeno helps run some of the largest bot's on discord. Discordeno has built-in support for sharding, which allows you to distribute your bot across multiple processes or servers. Sharding can help improve the scalability and reliability of your bot, especially if you're working with a large number of guilds or users. Discordeno's sharding system is designed to be easy to use and configure, with support for automatic sharding and custom sharding strategies. Make sure to check the Discordeno documentation for more information on how to use sharding in your bot.",
+    answer:
+      "Yes! Discordeno helps run some of the largest bot's on discord. Discordeno has built-in support for sharding, which allows you to distribute your bot across multiple processes or servers. Sharding can help improve the scalability and reliability of your bot, especially if you're working with a large number of guilds or users. Discordeno's sharding system is designed to be easy to use and configure, with support for automatic sharding and custom sharding strategies. Make sure to check the Discordeno documentation for more information on how to use sharding in your bot.",
     defaultExpanded: false,
   },
   {

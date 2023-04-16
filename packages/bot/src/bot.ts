@@ -23,8 +23,8 @@ import type { Role } from './transformers/role.js'
 import type { ScheduledEvent } from './transformers/scheduledEvent.js'
 import type { Sticker } from './transformers/sticker.js'
 import type { ThreadMember } from './transformers/threadMember.js'
-import type { VoiceState } from './transformers/voiceState.js'
 import type { User } from './transformers/user.js'
+import type { VoiceState } from './transformers/voiceState.js'
 
 /**
  * Create a bot object that will maintain the rest and gateway connection.
@@ -50,6 +50,7 @@ export function createBot(options: CreateBotOptions): Bot {
 
   options.rest.token = options.token
   options.gateway.intents = options.intents
+  options.gateway.preferSnakeCase = true
 
   const id = getBotIdFromToken(options.token)
 
