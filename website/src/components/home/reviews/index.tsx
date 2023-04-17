@@ -95,10 +95,7 @@ export default function DiscordenoReviews() {
               return b.bot.guild_count - a.bot.guild_count
             })
             .map((review, idx) => (
-              <ReviewsElement
-                key={review.bot.username}
-                className="animate__animated animate__fadeInDown"
-              >
+              <ReviewsElement key={review.bot.username}>
                 <ReviewsHeader>
                   <ReviewsLeft>
                     <img src={review.bot.avatar} alt={review.bot.username} />

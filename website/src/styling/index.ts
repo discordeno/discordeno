@@ -33,6 +33,10 @@ export const Header = styled.div`
     line-height: 1.25;
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     text-align: center;
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
   }
 
   h2 {
@@ -42,6 +46,10 @@ export const Header = styled.div`
     line-height: 1.25;
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     text-align: center;
+
+    @media (max-width: 768px) {
+      font-size: 1.3rem;
+    }
   }
 `
 
@@ -155,6 +163,10 @@ export const ReviewsSection = styled.div`
     color: var(--ifm-color-white);
     line-height: 1.25;
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
   }
 `
 
@@ -174,6 +186,10 @@ export const ReviewsElement = styled.div`
   height: 240px;
   padding: 32px 40px;
   position: relative;
+
+  @media (max-width: 768px) {
+    height: fit-content;
+  }
 `
 
 export const ReviewsHeader = styled.div`
@@ -281,6 +297,10 @@ export const ReviewsBox = styled.div`
   gap: 0.5rem;
   height: 80px;
   color: var(--ifm-color-white);
+
+  @media (max-width: 768px) {
+    height: fit-content;
+  }
 `
 
 export const StarContainer = styled.div`
@@ -300,6 +320,10 @@ export const ReviewsOther = styled.div`
   bottom: 20px;
   display: flex;
   justify-content: space-between;
+
+  @media (max-width: 768px) {
+    position: unset;
+  }
 `
 
 export const ReviewsOtherContainer = styled.div`
@@ -365,6 +389,10 @@ export const FaqSection = styled.div`
     color: var(--ifm-color-white);
     line-height: 1.25;
     text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
   }
 `
 
@@ -372,7 +400,7 @@ export const FaqContainer = styled.div`
   border: 1px solid var(--ifm-footer-background-color);
   border-radius: 5px;
   margin-bottom: 10px;
-  width: 40vw;
+  width: 55vw;
   background-color: var(--ifm-footer-background-color);
 
   #rotated {
@@ -380,7 +408,7 @@ export const FaqContainer = styled.div`
   }
 
   @media (max-width: 1024px) {
-    width: 90vw;
+    width: 100%;
   }
 `
 
