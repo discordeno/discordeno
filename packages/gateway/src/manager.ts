@@ -167,7 +167,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.identifyRequests.shift()?.()
           },
         })
-        shard.cache.requestMembers.enabled = this.cache.requestMembers?.enabled ?? shard.cache.requestMembers.enabled
         if (this.preferSnakeCase) {
           shard.forwardToBot = async (payload) => {
             options.events.message?.(shard!, payload)
@@ -458,9 +457,11 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    *
    * Fires a _Guild Members Chunk_ gateway event for every 1000 members fetched.
    *
+   * Returns the nonce the request was made with
+   *
    * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
    */
-  requestMembers: (guildId: BigString, options?: Omit<RequestGuildMembers, 'guildId'>) => Promise<Camelize<DiscordMember[]>>
+  requestMembers: (guildId: BigString, options?: Omit<RequestGuildMembers, 'guildId'>) => Promise<string>
   /**
    * Leaves the voice channel the bot user is currently in.
    *

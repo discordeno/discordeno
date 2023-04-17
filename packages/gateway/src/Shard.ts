@@ -1,20 +1,10 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
-import type {
-  AtLeastOne,
-  BigString,
-  Camelize,
-  DiscordGatewayPayload,
-  DiscordHello,
-  DiscordMember,
-  DiscordReady,
-  RequestGuildMembers,
-} from '@discordeno/types'
+import type { AtLeastOne, BigString, DiscordGatewayPayload, DiscordHello, DiscordReady, RequestGuildMembers } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayIntents, GatewayOpcodes } from '@discordeno/types'
-import { Collection, LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
+import { LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
 import { randomBytes } from 'node:crypto'
 import { inflateSync } from 'node:zlib'
 import WebSocket from 'ws'
-import type { RequestMemberRequest } from './manager.js'
 import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest, StatusUpdate, UpdateVoiceState } from './types.js'
 import { ShardSocketCloseCodes, ShardState } from './types.js'
 
@@ -47,19 +37,6 @@ export class DiscordenoShard {
   resolves = new Map<'READY' | 'RESUMED' | 'INVALID_SESSION', (payload: DiscordGatewayPayload) => void>()
   /** Shard bucket. Only access this if you know what you are doing. Bucket for handling shard request rate limits. */
   bucket: LeakyBucket
-
-  /** This managers cache related settings. */
-  cache = {
-    requestMembers: {
-      /**
-       * Whether or not request member requests should be cached.
-       * @default false
-       */
-      enabled: false,
-      /** The pending requests. */
-      pending: new Collection<string, RequestMemberRequest>(),
-    },
-  }
 
   constructor(options: ShardCreateOptions) {
     this.id = options.id
@@ -459,23 +436,6 @@ export class DiscordenoShard {
 
       this.resolves.get('READY')?.(packet)
       this.resolves.delete('READY')
-    } else if (packet.t === 'GUILD_MEMBERS_CHUNK') {
-      const payload = packet.d as {
-        nonce: string
-        members: DiscordMember[]
-        chunk_index: number
-        chunk_count: number
-      }
-      if (this.cache.requestMembers.enabled) {
-        if (this.cache.requestMembers.pending.has(payload.nonce)) {
-          const { resolve, members } = this.cache.requestMembers.pending.get(payload.nonce)!
-          members.push(...payload.members.map((member) => camelize(member)))
-
-          if (payload.chunk_index === payload.chunk_count - 1) {
-            resolve(members)
-          }
-        }
-      }
     }
 
     // Update the sequence number if it is present
@@ -687,9 +647,11 @@ export class DiscordenoShard {
    *
    * Fires a _Guild Members Chunk_ gateway event for every 1000 members fetched.
    *
+   * Returns the nonce this request was made with
+   *
    * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
    */
-  async requestMembers(guildId: BigString, options?: Omit<RequestGuildMembers, 'guildId'>): Promise<Camelize<DiscordMember[]>> {
+  async requestMembers(guildId: BigString, options?: Omit<RequestGuildMembers, 'guildId'>): Promise<string> {
     // You can request 1 member without the intent
     // Check if intents is not 0 as proxy ws won't set intents in other instances
     if (this.connection.intents && (!options?.limit || options.limit > 1) && !(this.connection.intents & GatewayIntents.GuildMembers)) {
@@ -703,41 +665,20 @@ export class DiscordenoShard {
 
     const nonce = randomBytes(16).toString('hex')
 
-    // Gateway does not require caching these requests so directly send and return
-    if (!this.cache.requestMembers?.enabled) {
-      logger.debug(`[Shard] requestMembers guildId: ${guildId} -> skipping cache -> options ${JSON.stringify(options)}`)
-      await this.send({
-        op: GatewayOpcodes.RequestGuildMembers,
-        d: {
-          guild_id: guildId.toString(),
-          // If a query is provided use it, OR if a limit is NOT provided use ""
-          query: options?.query ?? (options?.limit ? undefined : ''),
-          limit: options?.limit ?? 0,
-          presences: options?.presences ?? false,
-          user_ids: options?.userIds?.map((id) => id.toString()),
-          nonce,
-        },
-      })
-      return []
-    }
-
-    return await new Promise((resolve) => {
-      this.cache.requestMembers?.pending.set(nonce, { nonce, resolve, members: [] })
-
-      logger.debug(`[Shard] requestMembers guildId: ${guildId} -> requesting members -> data: ${JSON.stringify(options)}`)
-      this.send({
-        op: GatewayOpcodes.RequestGuildMembers,
-        d: {
-          guild_id: guildId.toString(),
-          // If a query is provided use it, OR if a limit is NOT provided use ""
-          query: options?.query ?? (options?.limit ? undefined : ''),
-          limit: options?.limit ?? 0,
-          presences: options?.presences ?? false,
-          user_ids: options?.userIds?.map((id) => id.toString()),
-          nonce,
-        },
-      })
+    logger.debug(`[Shard] requestMembers guildId: ${guildId} -> options ${JSON.stringify(options)}`)
+    await this.send({
+      op: GatewayOpcodes.RequestGuildMembers,
+      d: {
+        guild_id: guildId.toString(),
+        // If a query is provided use it, OR if a limit is NOT provided use ""
+        query: options?.query ?? (options?.limit ? undefined : ''),
+        limit: options?.limit ?? 0,
+        presences: options?.presences ?? false,
+        user_ids: options?.userIds?.map((id) => id.toString()),
+        nonce,
+      },
     })
+    return nonce
   }
 
   /**
