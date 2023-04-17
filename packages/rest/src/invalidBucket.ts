@@ -55,7 +55,7 @@ export function createInvalidRequestBucket(options: InvalidRequestBucketOptions)
       bucket.processing = true
 
       while (bucket.waiting.length > 0) {
-        logger.debug(`[InvalidBucket] processing waiting queue while loop ran with ${bucket.waiting.length} pending requests to be made. ${JSON.stringify(bucket)}`)
+        logger.info(`[InvalidBucket] processing waiting queue while loop ran with ${bucket.waiting.length} pending requests to be made. ${JSON.stringify(bucket)}`)
 
         if (!bucket.isRequestAllowed() && bucket.resetAt !== undefined) {
           logger.warn(`[InvalidBucket] processing waiting queue is now paused until more requests are available. ${bucket.waiting.length} pending requests. ${JSON.stringify(bucket)}`)
