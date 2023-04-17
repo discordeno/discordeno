@@ -253,15 +253,15 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       await shard.editShardStatus(data)
     },
 
-    async requestMembers(guildId, options) {
+    async requestMembers(guildId, nonce, options) {
       const shardId = gateway.calculateShardId(guildId)
       const shard = gateway.shards.get(shardId)
       if (!shard) {
         throw new Error(`Shard (id: ${shardId}) not found.`)
       }
 
-      logger.debug(`[Gateway] requestMembers guildId: ${guildId} -> options ${JSON.stringify(options)}`)
-      return await shard.requestMembers(guildId, options)
+      logger.debug(`[Gateway] requestMembers guildId: ${guildId} -> nonce ${nonce} -> options ${JSON.stringify(options)}`)
+      return await shard.requestMembers(guildId, nonce, options)
     },
 
     async leaveVoiceChannel(guildId) {
@@ -461,7 +461,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    *
    * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
    */
-  requestMembers: (guildId: BigString, options?: Omit<RequestGuildMembers, 'guildId'>) => Promise<string>
+  requestMembers: (guildId: BigString, nonce: string, options?: Omit<RequestGuildMembers, 'guildId'>) => Promise<void>
   /**
    * Leaves the voice channel the bot user is currently in.
    *

@@ -2,7 +2,6 @@
 import type { AtLeastOne, BigString, DiscordGatewayPayload, DiscordHello, DiscordReady, RequestGuildMembers } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayIntents, GatewayOpcodes } from '@discordeno/types'
 import { LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
-import { randomBytes } from 'node:crypto'
 import { inflateSync } from 'node:zlib'
 import WebSocket from 'ws'
 import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest, StatusUpdate, UpdateVoiceState } from './types.js'
@@ -651,21 +650,14 @@ export class DiscordenoShard {
    *
    * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
    */
-  async requestMembers(guildId: BigString, options?: Omit<RequestGuildMembers, 'guildId'>): Promise<string> {
+  async requestMembers(guildId: BigString, nonce: string, options?: Omit<RequestGuildMembers, 'guildId'>): Promise<void> {
     // You can request 1 member without the intent
     // Check if intents is not 0 as proxy ws won't set intents in other instances
     if (this.connection.intents && (!options?.limit || options.limit > 1) && !(this.connection.intents & GatewayIntents.GuildMembers)) {
       throw new Error('MISSING_INTENT_GUILD_MEMBERS')
     }
 
-    if (options?.userIds?.length) {
-      logger.debug(`[Shard] requestMembers guildId: ${guildId} -> setting user limit based on userIds length: ${options.userIds.length}`)
-      options.limit = options.userIds.length
-    }
-
-    const nonce = randomBytes(16).toString('hex')
-
-    logger.debug(`[Shard] requestMembers guildId: ${guildId} -> options ${JSON.stringify(options)}`)
+    logger.debug(`[Shard] requestMembers guildId: ${guildId} -> nonce ${nonce} -> options ${JSON.stringify(options)}`)
     await this.send({
       op: GatewayOpcodes.RequestGuildMembers,
       d: {
@@ -678,7 +670,6 @@ export class DiscordenoShard {
         nonce,
       },
     })
-    return nonce
   }
 
   /**
