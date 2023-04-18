@@ -311,12 +311,12 @@ export enum VideoQualityModes {
 
 /** https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-types */
 export enum ActivityTypes {
-  Game,
-  Streaming,
-  Listening,
-  Watching,
-  Custom,
-  Competing,
+  Game = 0,
+  Streaming = 1,
+  Listening = 2,
+  Watching = 3,
+  Custom = 4,
+  Competing = 5,
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-types */
@@ -357,8 +357,8 @@ export enum MessageTypes {
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
 export enum MessageActivityTypes {
   Join = 1,
-  Spectate,
-  Listen,
+  Spectate = 2,
+  Listen = 3,
   JoinRequest = 5,
 }
 
