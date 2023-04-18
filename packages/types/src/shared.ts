@@ -309,13 +309,13 @@ export enum VideoQualityModes {
   Full,
 }
 
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-types */
+/** https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-types */
 export enum ActivityTypes {
   Game,
   Streaming,
   Listening,
   Watching,
-  Custom = 4,
+  Custom,
   Competing,
 }
 
@@ -359,7 +359,7 @@ export enum MessageActivityTypes {
   Join = 1,
   Spectate,
   Listen,
-  JoinRequest,
+  JoinRequest = 5,
 }
 
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types */
