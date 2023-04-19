@@ -23,6 +23,7 @@ import type {
   CreateChannelInvite,
   CreateForumPostWithMessage,
   CreateGuild,
+  CreateGuildBan,
   CreateGuildChannel,
   CreateGuildEmoji,
   CreateGuildFromTemplate,
@@ -32,13 +33,17 @@ import type {
   CreateScheduledEvent,
   CreateStageInstance,
   CreateTemplate,
+  DeleteWebhookMessageOptions,
   DiscordMessage,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
+  EditChannelPermissionOverridesOptions,
   EditGuildRole,
   EditGuildStickerOptions,
   EditMessage,
+  EditOwnVoiceState,
   EditScheduledEvent,
+  EditUserVoiceState,
   ExecuteWebhook,
   GetBans,
   GetGuildAuditLog,
@@ -50,10 +55,13 @@ import type {
   GetScheduledEvents,
   GetWebhookMessageOptions,
   InteractionCallbackData,
+  InteractionResponse,
   ListArchivedThreads,
   ListGuildMembers,
+  MfaLevels,
   ModifyChannel,
   ModifyGuild,
+  ModifyGuildChannelPositions,
   ModifyGuildEmoji,
   ModifyGuildMember,
   ModifyGuildTemplate,
@@ -466,6 +474,145 @@ export function createBotHelpers(bot: Bot): BotHelpers {
         bot.transformers.member(bot, snakelize(res), guildId, bot.transformers.snowflake(res.user.id)),
       )
     },
+    // All useless void return functions here
+    addReaction: async (channelId, messageId, reaction) => {
+      return await bot.rest.addReaction(channelId, messageId, reaction)
+    },
+    addReactions: async (channelId, messageId, reactions, ordered) => {
+      return await bot.rest.addReactions(channelId, messageId, reactions, ordered)
+    },
+    addRole: async (guildId, userId, roleId, reason) => {
+      return await bot.rest.addRole(guildId, userId, roleId, reason)
+    },
+    addThreadMember: async (channelId, userId) => {
+      return await bot.rest.addThreadMember(channelId, userId)
+    },
+    deleteAutomodRule: async (guildId, ruleId, reason) => {
+      return await bot.rest.deleteAutomodRule(guildId, ruleId, reason)
+    },
+    deleteChannel: async (channelId, reason) => {
+      return await bot.rest.deleteChannel(channelId, reason)
+    },
+    deleteChannelPermissionOverride: async (channelId, overwriteId, reason) => {
+      return await bot.rest.deleteChannelPermissionOverride(channelId, overwriteId, reason)
+    },
+    deleteEmoji: async (guildId, id, reason) => {
+      return await bot.rest.deleteEmoji(guildId, id, reason)
+    },
+    deleteFollowupMessage: async (token, messageId) => {
+      return await bot.rest.deleteFollowupMessage(token, messageId)
+    },
+    deleteGlobalApplicationCommand: async (commandId) => {
+      return await bot.rest.deleteGlobalApplicationCommand(commandId)
+    },
+    deleteGuild: async (guildId) => {
+      return await bot.rest.deleteGuild(guildId)
+    },
+    deleteGuildApplicationCommand: async (commandId, guildId) => {
+      return await bot.rest.deleteGuildApplicationCommand(commandId, guildId)
+    },
+    deleteGuildSticker: async (guildId, stickerId, reason) => {
+      return await bot.rest.deleteGuildSticker(guildId, stickerId, reason)
+    },
+    deleteGuildTemplate: async (guildId, templateCode) => {
+      return await bot.rest.deleteGuildTemplate(guildId, templateCode)
+    },
+    deleteIntegration: async (guildId, integrationId, reason) => {
+      return await bot.rest.deleteIntegration(guildId, integrationId, reason)
+    },
+    deleteInvite: async (inviteCode, reason) => {
+      return await bot.rest.deleteInvite(inviteCode, reason)
+    },
+    deleteMessage: async (channelId, messageId, reason) => {
+      return await bot.rest.deleteMessage(channelId, messageId, reason)
+    },
+    deleteMessages: async (channelId, messageIds, reason) => {
+      return await bot.rest.deleteMessages(channelId, messageIds, reason)
+    },
+    deleteOriginalInteractionResponse: async (token) => {
+      return await bot.rest.deleteOriginalInteractionResponse(token)
+    },
+    deleteOwnReaction: async (channelId, messageId, reaction) => {
+      return await bot.rest.deleteOwnReaction(channelId, messageId, reaction)
+    },
+    deleteReactionsAll: async (channelId, messageId) => {
+      return await bot.rest.deleteReactionsAll(channelId, messageId)
+    },
+    deleteReactionsEmoji: async (channelId, messageId, reaction) => {
+      return await bot.rest.deleteReactionsEmoji(channelId, messageId, reaction)
+    },
+    deleteRole: async (guildId, roleId, reason) => {
+      return await bot.rest.deleteRole(guildId, roleId, reason)
+    },
+    deleteScheduledEvent: async (guildId, eventId) => {
+      return await bot.rest.deleteScheduledEvent(guildId, eventId)
+    },
+    deleteStageInstance: async (channelId, reason) => {
+      return await bot.rest.deleteStageInstance(channelId, reason)
+    },
+    deleteUserReaction: async (channelId, messageId, userId, reaction) => {
+      return await bot.rest.deleteUserReaction(channelId, messageId, userId, reaction)
+    },
+    deleteWebhook: async (webhookId, reason) => {
+      return await bot.rest.deleteWebhook(webhookId, reason)
+    },
+    deleteWebhookMessage: async (webhookId, token, messageId, options) => {
+      return await bot.rest.deleteWebhookMessage(webhookId, token, messageId, options)
+    },
+    deleteWebhookWithToken: async (webhookId, token) => {
+      return await bot.rest.deleteWebhookWithToken(webhookId, token)
+    },
+    editChannelPermissionOverrides: async (channelId, options, reason) => {
+      return await bot.rest.editChannelPermissionOverrides(channelId, options, reason)
+    },
+    editChannelPositions: async (guildId, channelPositions) => {
+      return await bot.rest.editChannelPositions(guildId, channelPositions)
+    },
+    editGuildMfaLevel: async (guildId, mfaLevel, reason) => {
+      return await bot.rest.editGuildMfaLevel(guildId, mfaLevel, reason)
+    },
+    editOwnVoiceState: async (guildId, options) => {
+      return await bot.rest.editOwnVoiceState(guildId, options)
+    },
+    editUserVoiceState: async (guildId, options) => {
+      return await bot.rest.editUserVoiceState(guildId, options)
+    },
+    joinThread: async (channelId) => {
+      return await bot.rest.joinThread(channelId)
+    },
+    leaveGuild: async (guildId) => {
+      return await bot.rest.leaveGuild(guildId)
+    },
+    leaveThread: async (channelId) => {
+      return await bot.rest.leaveThread(channelId)
+    },
+    removeRole: async (guildId, userId, roleId, reason) => {
+      return await bot.rest.removeRole(guildId, userId, roleId, reason)
+    },
+    removeThreadMember: async (channelId, userId) => {
+      return await bot.rest.removeThreadMember(channelId, userId)
+    },
+    sendInteractionResponse: async (interactionId, token, options) => {
+      return await bot.rest.sendInteractionResponse(interactionId, token, options)
+    },
+    triggerTypingIndicator: async (channelId) => {
+      return await bot.rest.triggerTypingIndicator(channelId)
+    },
+    banMember: async (guildId, userId, options, reason) => {
+      return await bot.rest.banMember(guildId, userId, options, reason)
+    },
+    kickMember: async (guildId, userId, reason) => {
+      return await bot.rest.kickMember(guildId, userId, reason)
+    },
+    pinMessage: async (channelId, messageId, reason) => {
+      return await bot.rest.pinMessage(channelId, messageId, reason)
+    },
+    unbanMember: async (guildId, userId, reason) => {
+      return await bot.rest.unbanMember(guildId, userId, reason)
+    },
+    unpinMessage: async (channelId, messageId, reason) => {
+      return await bot.rest.unpinMessage(channelId, messageId, reason)
+    },
   }
 }
 
@@ -604,4 +751,51 @@ export interface BotHelpers {
   getMembers: (guildId: BigString, options: ListGuildMembers) => Promise<Member[]>
   pruneMembers: (guildId: BigString, options: BeginGuildPrune, reason?: string) => Promise<{ pruned: number | null }>
   searchMembers: (guildId: BigString, query: string, options?: Omit<SearchMembers, 'query'>) => Promise<Member[]>
+  // functions return Void so dont need any special handling
+  addReaction: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>
+  addReactions: (channelId: BigString, messageId: BigString, reactions: string[], ordered?: boolean) => Promise<void>
+  addRole: (guildId: BigString, userId: BigString, roleId: BigString, reason?: string) => Promise<void>
+  addThreadMember: (channelId: BigString, userId: BigString) => Promise<void>
+  deleteAutomodRule: (guildId: BigString, ruleId: BigString, reason?: string) => Promise<void>
+  deleteChannel: (channelId: BigString, reason?: string) => Promise<void>
+  deleteChannelPermissionOverride: (channelId: BigString, overwriteId: BigString, reason?: string) => Promise<void>
+  deleteEmoji: (guildId: BigString, id: BigString, reason?: string) => Promise<void>
+  deleteFollowupMessage: (token: string, messageId: BigString) => Promise<void>
+  deleteGlobalApplicationCommand: (commandId: BigString) => Promise<void>
+  deleteGuild: (guildId: BigString) => Promise<void>
+  deleteGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<void>
+  deleteGuildSticker: (guildId: BigString, stickerId: BigString, reason?: string) => Promise<void>
+  deleteGuildTemplate: (guildId: BigString, templateCode: string) => Promise<void>
+  deleteIntegration: (guildId: BigString, integrationId: BigString, reason?: string) => Promise<void>
+  deleteInvite: (inviteCode: string, reason?: string) => Promise<void>
+  deleteMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
+  deleteMessages: (channelId: BigString, messageIds: BigString[], reason?: string) => Promise<void>
+  deleteOriginalInteractionResponse: (token: string) => Promise<void>
+  deleteOwnReaction: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>
+  deleteReactionsAll: (channelId: BigString, messageId: BigString) => Promise<void>
+  deleteReactionsEmoji: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>
+  deleteRole: (guildId: BigString, roleId: BigString, reason?: string) => Promise<void>
+  deleteScheduledEvent: (guildId: BigString, eventId: BigString) => Promise<void>
+  deleteStageInstance: (channelId: BigString, reason?: string) => Promise<void>
+  deleteUserReaction: (channelId: BigString, messageId: BigString, userId: BigString, reaction: string) => Promise<void>
+  deleteWebhook: (webhookId: BigString, reason?: string) => Promise<void>
+  deleteWebhookMessage: (webhookId: BigString, token: string, messageId: BigString, options?: DeleteWebhookMessageOptions) => Promise<void>
+  deleteWebhookWithToken: (webhookId: BigString, token: string) => Promise<void>
+  editChannelPermissionOverrides: (channelId: BigString, options: EditChannelPermissionOverridesOptions, reason?: string) => Promise<void>
+  editChannelPositions: (guildId: BigString, channelPositions: ModifyGuildChannelPositions[]) => Promise<void>
+  editGuildMfaLevel: (guildId: BigString, mfaLevel: MfaLevels, reason?: string) => Promise<void>
+  editOwnVoiceState: (guildId: BigString, options: EditOwnVoiceState) => Promise<void>
+  editUserVoiceState: (guildId: BigString, options: EditUserVoiceState) => Promise<void>
+  joinThread: (channelId: BigString) => Promise<void>
+  leaveGuild: (guildId: BigString) => Promise<void>
+  leaveThread: (channelId: BigString) => Promise<void>
+  removeRole: (guildId: BigString, userId: BigString, roleId: BigString, reason?: string) => Promise<void>
+  removeThreadMember: (channelId: BigString, userId: BigString) => Promise<void>
+  sendInteractionResponse: (interactionId: BigString, token: string, options: InteractionResponse) => Promise<void>
+  triggerTypingIndicator: (channelId: BigString) => Promise<void>
+  banMember: (guildId: BigString, userId: BigString, options?: CreateGuildBan, reason?: string) => Promise<void>
+  kickMember: (guildId: BigString, userId: BigString, reason?: string) => Promise<void>
+  pinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
+  unbanMember: (guildId: BigString, userId: BigString, reason?: string) => Promise<void>
+  unpinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
 }
