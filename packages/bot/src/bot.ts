@@ -5,6 +5,7 @@ import { createRestManager } from '@discordeno/rest'
 import type { DiscordEmoji, DiscordGatewayPayload, DiscordReady, GatewayIntents } from '@discordeno/types'
 import { createLogger, getBotIdFromToken, type Collection } from '@discordeno/utils'
 import { createBotGatewayHandlers } from './handlers.js'
+import { createBotHelpers, type BotHelpers } from './helpers.js'
 import { createTransformers, type Transformers } from './transformers.js'
 import type { ApplicationCommandPermission } from './transformers/applicationCommandPermission.js'
 import type { AuditLogEntry } from './transformers/auditLogEntry.js'
@@ -63,7 +64,8 @@ export function createBot(options: CreateBotOptions): Bot {
     gateway: createGatewayManager(options.gateway),
     events: options.events ?? {},
     logger: createLogger({ name: 'BOT' }),
-
+    // Set up helpers below.
+    helpers: {} as BotHelpers,
     async start() {
       if (!options.gateway?.connection) {
         bot.gateway.connection = await bot.rest.getSessionInfo()
@@ -75,6 +77,8 @@ export function createBot(options: CreateBotOptions): Bot {
       return await bot.gateway.shutdown(ShardSocketCloseCodes.Shutdown, 'User requested bot stop')
     },
   }
+
+  bot.helpers = createBotHelpers(bot)
 
   return bot
 }
@@ -111,6 +115,7 @@ export interface Bot {
   transformers: Transformers
   /** The handler functions that should handle incoming discord payloads from gateway and call an event. */
   handlers: ReturnType<typeof createBotGatewayHandlers>
+  helpers: BotHelpers
   /** Start the bot connection to the gateway. */
   start: () => Promise<void>
   /** Shuts down all the bot connections to the gateway. */

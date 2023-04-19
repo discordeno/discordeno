@@ -1,51 +1,51 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-const-assign */
-import { InteractionResponseTypes } from '@discordeno/types'
-import { calculateBits, camelize, camelToSnakeCase, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
+import { calculateBits, camelToSnakeCase, camelize, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
 
-import type {
-  BigString,
-  Camelize,
-  DiscordApplication,
-  DiscordApplicationCommand,
-  DiscordApplicationCommandPermissions,
-  DiscordAuditLog,
-  DiscordAutoModerationRule,
-  DiscordBan,
-  DiscordChannel,
-  DiscordEmoji,
-  DiscordFollowedChannel,
-  DiscordGetGatewayBot,
-  DiscordGuild,
-  DiscordGuildPreview,
-  DiscordGuildWidget,
-  DiscordGuildWidgetSettings,
-  DiscordIntegration,
-  DiscordInvite,
-  DiscordInviteMetadata,
-  DiscordListActiveThreads,
-  DiscordListArchivedThreads,
-  DiscordMember,
-  DiscordMemberWithUser,
-  DiscordMessage,
-  DiscordPrunedCount,
-  DiscordRole,
-  DiscordScheduledEvent,
-  DiscordStageInstance,
-  DiscordSticker,
-  DiscordStickerPack,
-  DiscordTemplate,
-  DiscordThreadMember,
-  DiscordUser,
-  DiscordVanityUrl,
-  DiscordVoiceRegion,
-  DiscordWebhook,
-  DiscordWelcomeScreen,
-  MfaLevels,
-  ModifyGuildTemplate,
+import {
+  InteractionResponseTypes,
+  type BigString,
+  type Camelize,
+  type DiscordApplication,
+  type DiscordApplicationCommand,
+  type DiscordAuditLog,
+  type DiscordAutoModerationRule,
+  type DiscordBan,
+  type DiscordChannel,
+  type DiscordEmoji,
+  type DiscordFollowedChannel,
+  type DiscordGetGatewayBot,
+  type DiscordGuild,
+  type DiscordGuildApplicationCommandPermissions,
+  type DiscordGuildPreview,
+  type DiscordGuildWidget,
+  type DiscordGuildWidgetSettings,
+  type DiscordIntegration,
+  type DiscordInvite,
+  type DiscordInviteMetadata,
+  type DiscordListActiveThreads,
+  type DiscordListArchivedThreads,
+  type DiscordMember,
+  type DiscordMemberWithUser,
+  type DiscordMessage,
+  type DiscordPrunedCount,
+  type DiscordRole,
+  type DiscordScheduledEvent,
+  type DiscordStageInstance,
+  type DiscordSticker,
+  type DiscordStickerPack,
+  type DiscordTemplate,
+  type DiscordThreadMember,
+  type DiscordUser,
+  type DiscordVanityUrl,
+  type DiscordVoiceRegion,
+  type DiscordWebhook,
+  type DiscordWelcomeScreen,
+  type MfaLevels,
+  type ModifyGuildTemplate,
 } from '@discordeno/types'
 import { createRoutes } from './routes.js'
 import type { CreateRequestBodyOptions, CreateRestManagerOptions, RestManager, SendRequestOptions } from './types.js'
@@ -303,7 +303,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
       const response = await fetch(url, payload).catch(async (error) => {
-        logger.error(error);
+        logger.error(error)
         // Mark request and completed
         rest.invalidBucket.handleCompletedRequest(999, false)
         options.reject({
@@ -689,7 +689,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editApplicationCommandPermissions(guildId, commandId, bearerToken, permissions) {
-      return await rest.put<DiscordApplicationCommandPermissions>(
+      return await rest.put<DiscordGuildApplicationCommandPermissions>(
         rest.routes.interactions.commands.permission(rest.applicationId, guildId, commandId),
         {
           body: {
@@ -858,13 +858,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getApplicationCommandPermission(guildId, commandId) {
-      return await rest.get<DiscordApplicationCommandPermissions>(
+      return await rest.get<DiscordGuildApplicationCommandPermissions>(
         rest.routes.interactions.commands.permission(rest.applicationId, guildId, commandId),
       )
     },
 
     async getApplicationCommandPermissions(guildId) {
-      return await rest.get<DiscordApplicationCommandPermissions[]>(rest.routes.interactions.commands.permissions(rest.applicationId, guildId))
+      return await rest.get<DiscordGuildApplicationCommandPermissions[]>(rest.routes.interactions.commands.permissions(rest.applicationId, guildId))
     },
 
     async getApplicationInfo() {
