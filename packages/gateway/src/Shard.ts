@@ -229,7 +229,10 @@ export class DiscordenoShard {
     logger.debug(`[Gateway] Resuming Shard #${this.id}, before connecting`)
     // Before we can resume, we need to create a new connection with Discord's gateway.
     await this.connect()
-    logger.debug(`[Gateway] Resuming Shard #${this.id}, after connecting. ${this.gatewayConfig.token} | ${this.sessionId} | ${this.previousSequenceNumber}`)
+    logger.debug(
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      `[Gateway] Resuming Shard #${this.id}, after connecting. ${this.gatewayConfig.token} | ${this.sessionId} | ${this.previousSequenceNumber}`,
+    )
 
     this.send(
       {
@@ -373,7 +376,7 @@ export class DiscordenoShard {
       }
       case GatewayOpcodes.Hello: {
         const interval = (packet.d as DiscordHello).heartbeat_interval
- logger.debug(`[Gateway] Hello on Shard #${this.id}`)
+        logger.debug(`[Gateway] Hello on Shard #${this.id}`)
         this.startHeartbeating(interval)
 
         if (this.state !== ShardState.Resuming) {
