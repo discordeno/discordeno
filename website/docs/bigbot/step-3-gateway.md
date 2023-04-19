@@ -90,7 +90,7 @@ const app = express()
 app.use(
   express.urlencoded({
     extended: true,
-  }),
+  })
 )
 
 app.use(express.json())
@@ -107,8 +107,12 @@ app.all('/*', async (req, res) => {
         return await GATEWAY.requestMembers(req.body.guildId, req.body.options)
       }
       default:
-        logger.error(`[Shard] Unknown request received. ${JSON.stringify(req.body)}`)
-        return res.status(404).json({ message: 'Unknown request received.', status: 404 })
+        logger.error(
+          `[Shard] Unknown request received. ${JSON.stringify(req.body)}`
+        )
+        return res
+          .status(404)
+          .json({ message: 'Unknown request received.', status: 404 })
     }
   } catch (error: any) {
     console.log(error)
@@ -136,7 +140,10 @@ export const GATEWAY = createGatewayManager({
 
 GATEWAY.tellWorkerToIdentify = async function (workerId, shardId, bucketId) {
   const url = process.env[`SERVER_URL_${workerId}`]
-  if (!url) return logger.error(`No server URL found for server #${workerId}. Unable to start Shard #${shardId}`)
+  if (!url)
+    return logger.error(
+      `No server URL found for server #${workerId}. Unable to start Shard #${shardId}`
+    )
 
   await fetch(url, {
     method: 'POST',
@@ -145,7 +152,7 @@ GATEWAY.tellWorkerToIdentify = async function (workerId, shardId, bucketId) {
     },
     body: JSON.stringify({ type: 'IDENTIFY_SHARD', shardId }),
   })
-    .then((res) => res.json())
+    .then(res => res.json())
     .catch(logger.error)
 }
 
@@ -182,7 +189,7 @@ const app = express()
 app.use(
   express.urlencoded({
     extended: true,
-  }),
+  })
 )
 
 app.use(express.json())
@@ -203,7 +210,11 @@ app.all('/*', async (req, res) => {
     // Identify A Shard
     switch (req.body.type) {
       case 'IDENTIFY_SHARD': {
-        logger.info(`[Shard] identifying ${SHARDS.has(req.body.shardId) ? 'existing' : 'new'} shard (${req.body.shardId})`)
+        logger.info(
+          `[Shard] identifying ${
+            SHARDS.has(req.body.shardId) ? 'existing' : 'new'
+          } shard (${req.body.shardId})`
+        )
         const shard =
           SHARDS.get(req.body.shardId) ??
           new DiscordenoShard({
@@ -230,8 +241,12 @@ app.all('/*', async (req, res) => {
         })
       }
       default:
-        logger.error(`[Shard] Unknown request received. ${JSON.stringify(req.body)}`)
-        return res.status(404).json({ message: 'Unknown request received.', status: 404 })
+        logger.error(
+          `[Shard] Unknown request received. ${JSON.stringify(req.body)}`
+        )
+        return res
+          .status(404)
+          .json({ message: 'Unknown request received.', status: 404 })
     }
   } catch (error: any) {
     console.log(error)
@@ -267,10 +282,13 @@ const shard =
       async message(shrd, payload) {
         await fetch(getUrlFromShardId(req.body.totalShards, shrd.id), {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', authorization: AUTHORIZATION },
+          headers: {
+            'Content-Type': 'application/json',
+            authorization: AUTHORIZATION,
+          },
           body: JSON.stringify({ payload, shardId }),
         })
-          .then((res) => res.text())
+          .then(res => res.text())
           .catch(logger.error)
       },
     },
@@ -297,7 +315,10 @@ const INFLUX_BUCKET = process.env.INFLUX_BUCKET as string
 const INFLUX_TOKEN = process.env.INFLUX_TOKEN as string
 const INFLUX_URL = process.env.INFLUX_URL as string
 
-export const influxDB = INFLUX_URL && INFLUX_TOKEN ? new InfluxDB({ url: INFLUX_URL, token: INFLUX_TOKEN }) : undefined
+export const influxDB =
+  INFLUX_URL && INFLUX_TOKEN
+    ? new InfluxDB({ url: INFLUX_URL, token: INFLUX_TOKEN })
+    : undefined
 export const Influx = influxDB?.getWriteApi(INFLUX_ORG, INFLUX_BUCKET)
 
 let savingAnalyticsId: NodeJS.Interval | undefined = undefined
@@ -308,7 +329,7 @@ if (!saveAnalyticsId) {
       .then(() => {
         console.log(`[Influx - Gateway] Saved events!`)
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(`[Influx - Gateway] Error saving events!`, error)
       })
     // Every 15 seconds
@@ -384,7 +405,6 @@ This is for bots who need to take certain actions when the bot is added to or re
 
 Let's start by creating a small local cache at the top of the file.
 
-
 ```ts
 const cache = {
   guildIds: new Set<string>(),
@@ -423,31 +443,31 @@ events: {
 },
 ```
 
-Now we need  to make sure that this will handle it correctly by changing any guild creates that are not new guilds, to a private event.
+Now we need to make sure that this will handle it correctly by changing any guild creates that are not new guilds, to a private event.
 
 ```ts
-if (payload.t === "READY") {
+if (payload.t === 'READY') {
   // Marks which guilds the bot in when initial loading in cache
-  payload.d.guilds.forEach((g) => cache.loadingGuildIds.add(g.id));
+  payload.d.guilds.forEach(g => cache.loadingGuildIds.add(g.id))
 }
 
-if (payload.t === "GUILD_CREATE") {
+if (payload.t === 'GUILD_CREATE') {
   // Check if this id is in cache
-  const existing = await cache.guildIds.has(payload.d.id);
+  const existing = cache.guildIds.has(payload.d.id)
   // If it already exists this was either a shard resume or unavailable guild became available etc...
-  if (existing) return;
+  if (existing) return
 
   // add this id to cache or db
-  cache.guildIds.add(payload.d.id);
- 
- if (cache.loadingGuildIds.has(payload.d.id)) {
+  cache.guildIds.add(payload.d.id)
+
+  if (cache.loadingGuildIds.has(payload.d.id)) {
     // SEND A CUSTOM EVENT. Name it whatever u want
-    payload.t = "GUILD_LOADED_DD";
+    payload.t = 'GUILD_LOADED_DD'
     // Remove from cache
-    cache.loadingGuildIds.delete(id);
+    cache.loadingGuildIds.delete(id)
   }
 
-  cache.guildIds.add(id);
+  cache.guildIds.add(id)
 }
 ```
 
@@ -456,14 +476,14 @@ This will make it so whenever a GUILD_CREATE arrives from the initial batch it w
 One last bit before you are done, simply add the following to make it ignore any useless **GUILD_DELETE** events as well. You can also choose rename it should you like to something like **GUILD_UNAVAILABLE**.
 
 ```ts
-if (message.t === "GUILD_DELETE") {
-  if ((message.d as DiscordUnavailableGuild).unavailable) return;
+if (payload.t === 'GUILD_DELETE') {
+  if ((payload.d as DiscordUnavailableGuild).unavailable) return
 }
 ```
 
 #### MESSAGE_UPDATE
 
-One other area where we can optimize is for the **MESSAGE_UPDATE** event, assuming you have the MessageContent intent enabled. You can save a ton of your CPU for gateway and bot by adding this in. This event can spam for no reason whatsoever and we can use the following code to ignore useless events. For example, any message that is sent with an embed will have a 
+One other area where we can optimize is for the **MESSAGE_UPDATE** event, assuming you have the MessageContent intent enabled. You can save a ton of your CPU for gateway and bot by adding this in. This event can spam for no reason whatsoever and we can use the following code to ignore useless events. For example, any message that is sent with an embed will have a
 
 - MESSAGE_CREATE
 - MESSAGE_UPDATE
@@ -490,21 +510,21 @@ Then let's say the user actually edits the message just a tiny bit.
 Imagine having to process all these events, sending them through your queue system and causing a waste of CPU processing power.
 
 ```ts
-if (payload.t === "MESSAGE_UPDATE") {
-  const payload = payload.d as DiscordMessage;
+if (payload.t === 'MESSAGE_UPDATE') {
+  const message = payload.d as DiscordMessage
 
-  const id = payload.id;
-  const content = payload.content || "";
-  const cached = cache.editedMessages.get(id);
+  const id = message.id
+  const content = message.content || ''
+  const cached = cache.editedMessages.get(id)
 
-  if (cached === content) return;
+  if (cached === content) return
   else {
     // Add to local cache for future events comparison
-    cache.editedMessages.set(id, content);
+    cache.editedMessages.set(id, content)
     // Remove after 10 seconds from cache
     setTimeout(() => {
-      cache.editedMessages.delete(id);
-    }, 10000);
+      cache.editedMessages.delete(id)
+    }, 10000)
   }
 }
 ```

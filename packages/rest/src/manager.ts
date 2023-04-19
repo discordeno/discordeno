@@ -119,12 +119,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         for (const key of Object.keys(obj)) {
           // Keys that dont require snake casing
-          if (['permissions', 'allow', 'deny'].includes(key)) {
+          if (['permissions', 'allow', 'deny'].includes(key) && obj[key] !== undefined) {
             newObj[key] = calculateBits(obj[key])
             continue
           }
 
-          if (key === 'defaultMemberPermissions') {
+          if (key === 'defaultMemberPermissions' && obj[key] !== undefined) {
             newObj.default_member_permissions = calculateBits(obj[key])
             continue
           }
@@ -302,8 +302,21 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const payload = rest.createRequestBody(options.method, options.requestBodyOptions)
 
       logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
-      const response = await fetch(url, payload)
+      const response = await fetch(url, payload).catch(async (error) => {
+        logger.error(error);
+        // Mark request and completed
+        rest.invalidBucket.handleCompletedRequest(999, false)
+        options.reject({
+          ok: false,
+          status: 999,
+          error: 'Possible network or request shape issue occurred. If this is rare, its a network glitch. If it occurs a lot something is wrong.',
+        })
+        throw error
+      })
       logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
+
+      // Mark request and completed
+      rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared')
 
       // Set the bucket id if it was available on the headers
       const bucketId = rest.processHeaders(rest.simplifyUrl(options.route, options.method), response.headers)
@@ -332,9 +345,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         }
 
         options.retryCount += 1
-
-        // Rate limited, add back to queue
-        rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared')
 
         const resetAfter = response.headers.get(RATE_LIMIT_RESET_AFTER_HEADER)
         if (resetAfter) await delay(Number(resetAfter) * 1000)

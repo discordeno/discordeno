@@ -39,73 +39,74 @@ logger.info(`[Startup] Bot started successfully.`)
 ## Creating A Reaction Role
 
 We need to create the `/roles` command. To do this, let's make a new file `src/commands/roles.ts`. First, let's go ahead and create a command object in here and export it so we can use it later.
- 
-```ts
-export const command = {};
 
-export default command;
+```ts
+export const command = {}
+
+export default command
 ```
 
 Now we can add the command type to this object, to give us the ability to have typescript help us autocomplete some stuff.
 
 ```ts
-import { CreateApplicationCommand } from '@discordeno/types';
+import { CreateApplicationCommand } from '@discordeno/types'
 
-export const command: CreateApplicationCommand = {};
+export const command: CreateApplicationCommand = {}
 ```
 
 By now, you should be seeing some TypeScript errors so let's fix that.
 
 ```ts
-import { CreateApplicationCommand } from '@discordeno/types';
+import { CreateApplicationCommand } from '@discordeno/types'
 
 export const command: CreateApplicationCommand = {
-    name: "roles",
-    description: "Role management on your server.",
-    options: []
-};
+  name: 'roles',
+  description: 'Role management on your server.',
+  options: [],
+}
 ```
+
 ### Preparing Subcommands
 
 Nice, so we now have our basic command, `/roles` ready. Next, we should prepare our `/roles reactions` subcommand here.
 
 ```ts
 export const command: CreateApplicationCommand = {
-    name: "roles",
-    description: "Role management on your server.",
-    options: [
-        {
-            name: "reactions",
-            description: "Manage the role reactions on your server.",
-            // If you add more subcommand groups in future, this would need to be false
-            required: true,
-            type: ApplicationCommandOptionTypes.SubCommandGroup,
-            options: []
-        }
-    ]
-};
+  name: 'roles',
+  description: 'Role management on your server.',
+  options: [
+    {
+      name: 'reactions',
+      description: 'Manage the role reactions on your server.',
+      // If you add more subcommand groups in future, this would need to be false
+      required: true,
+      type: ApplicationCommandOptionTypes.SubCommandGroup,
+      options: [],
+    },
+  ],
+}
 ```
 
 Now that the `/roles reactions` is complete, we should add the `/roles reactions create` command.
 
 ```ts
 options: [
-    {
-        name: "reactions",
-        description: "Manage the role reactions on your server.",
-        // If you add more subcommand groups in future, this would need to be false
-        required: true,
-        type: ApplicationCommandOptionTypes.SubCommandGroup,
-        options: [
-            {
-                name: "create",
-                description: "Create a reaction role on your server.",
-                required: false,
-                type: ApplicationCommandOptionTypes.SubCommand,
-                options: []
-            }
-        ]
-    }
+  {
+    name: 'reactions',
+    description: 'Manage the role reactions on your server.',
+    // If you add more subcommand groups in future, this would need to be false
+    required: true,
+    type: ApplicationCommandOptionTypes.SubCommandGroup,
+    options: [
+      {
+        name: 'create',
+        description: 'Create a reaction role on your server.',
+        required: false,
+        type: ApplicationCommandOptionTypes.SubCommand,
+        options: [],
+      },
+    ],
+  },
 ]
 ```
 
@@ -201,54 +202,60 @@ The final option to add to this is the label option.
 Nice. So far your code should look something like this:
 
 ```ts
-import { CreateApplicationCommand, ApplicationCommandOptionTypes, ButtonStyles } from '@discordeno/types';
+import {
+  CreateApplicationCommand,
+  ApplicationCommandOptionTypes,
+  ButtonStyles,
+} from '@discordeno/types'
 
 const command: CreateApplicationCommand = {
-    name: "roles",
-    description: "Role management on your server.",
-    options: [
+  name: 'roles',
+  description: 'Role management on your server.',
+  options: [
+    {
+      name: 'reactions',
+      description: 'Manage the role reactions on your server.',
+      // If you add more subcommand groups in future, this would need to be false
+      required: true,
+      type: ApplicationCommandOptionTypes.SubCommandGroup,
+      options: [
         {
-            name: "reactions",
-            description: "Manage the role reactions on your server.",
-            // If you add more subcommand groups in future, this would need to be false
-            required: true,
-            type: ApplicationCommandOptionTypes.SubCommandGroup,
-            options: [
-                {
-                    name: "create",
-                    description: "Create a reaction role on your server.",
-                    required: false,
-                    type: ApplicationCommandOptionTypes.SubCommand,
-                    options: [
-                        {
-                            required: true,
-                            name: "emoji",
-                            description: "What would you like to set as this button's emoji?",
-                            type: ApplicationCommandOptionTypes.String,
-                        },
-                        {
-                            required: true,
-                            name: "color",
-                            description: "What color would you like to set as this button's color?",
-                            type: ApplicationCommandOptionTypes.Integer,
-                            choices: [
-                                { name: "Blue", value: ButtonStyles.Primary },
-                                { name: "Green", value: ButtonStyles.Success },
-                                { name: "Grey", value: ButtonStyles.Secondary },
-                                { name: "Red", value: ButtonStyles.Danger },
-                            ],
-                        },
-                        {
-                            required: false,
-                            name: "label",
-                            description: "What would you like to set for the name on this button?",
-                            type: ApplicationCommandOptionTypes.String,
-                        },
-                    ]
-                }
-            ]
-        }
-    ]
+          name: 'create',
+          description: 'Create a reaction role on your server.',
+          required: false,
+          type: ApplicationCommandOptionTypes.SubCommand,
+          options: [
+            {
+              required: true,
+              name: 'emoji',
+              description: "What would you like to set as this button's emoji?",
+              type: ApplicationCommandOptionTypes.String,
+            },
+            {
+              required: true,
+              name: 'color',
+              description:
+                "What color would you like to set as this button's color?",
+              type: ApplicationCommandOptionTypes.Integer,
+              choices: [
+                { name: 'Blue', value: ButtonStyles.Primary },
+                { name: 'Green', value: ButtonStyles.Success },
+                { name: 'Grey', value: ButtonStyles.Secondary },
+                { name: 'Red', value: ButtonStyles.Danger },
+              ],
+            },
+            {
+              required: false,
+              name: 'label',
+              description:
+                'What would you like to set for the name on this button?',
+              type: ApplicationCommandOptionTypes.String,
+            },
+          ],
+        },
+      ],
+    },
+  ],
 }
 ```
 
@@ -261,9 +268,7 @@ Whenever you write a little bit of code, stop and test to make sure it does what
 Now, we should take a minute to test this code out. However, this code as is does nothing it is just a file that exports an object. Let's make it so that whenever we start our bot, it will create this command for us on our test server. Go back to your index file where you created your bot.
 
 ```ts
-await bot.rest.upsertGuildApplicationCommands("1234", [
-    roles,
-])
+await bot.rest.upsertGuildApplicationCommands('1234', [roles])
 
 logger.info(`[Startup] Starting bot.`)
 await bot.start()
@@ -272,7 +277,7 @@ await bot.start()
 Once you have added that line above, you need to make 2 small changes. The first change is to stop TypeScript from warning you that `roles` does not exist. Let's import roles at the top of the file
 
 ```ts
-import roles from './src/commands/roles.js';
+import roles from './src/commands/roles.js'
 ```
 
 The second thing is that we need to replace the `1234` with your server's guild id where you will be testing. This will make it so that we update any commands whenever the bot is started.
@@ -282,21 +287,21 @@ The second thing is that we need to replace the `1234` with your server's guild 
 Let's take a minute to refactor the code a little before we proceed further. Make a file called `src/commands/index.ts`.
 
 ```ts
-import { CreateApplicationCommand } from '@discordeno/types';
-import roles from './roles.js';
+import { CreateApplicationCommand } from '@discordeno/types'
+import roles from './roles.js'
 
-export const commands = new Map<string, CreateApplicationCommand>([
-    roles,
-].map((cmd) => [cmd.name, cmd]))
+export const commands = new Map<string, CreateApplicationCommand>(
+  [roles].map(cmd => [cmd.name, cmd])
+)
 
-export default commands;
+export default commands
 ```
 
 Now back in your index file with your bot, let's make use of this map.
 
 ```ts
 // This id should reflect your server id by now
-await bot.rest.upsertGuildApplicationCommands("1234", [...commands.values()]);
+await bot.rest.upsertGuildApplicationCommands('1234', [...commands.values()])
 ```
 
 Also make sure to change the import at the top of the file.
@@ -313,36 +318,38 @@ Go ahead and start your bot, you will see the command is available on your serve
 Let's make 2 very small files first. `src/events/index.ts` and `src/events/interactionCreate.ts`. Go to the `interactionCreate` file first.
 
 ```ts
-import commands from "../commands/index.js";
-import { commandOptionsParser } from '@discordeno/utils';
+import commands from '../commands/index.js'
+import { commandOptionsParser } from '@discordeno/utils'
 
-export const event: EventHandlers["interactionCreate"] = async function(interaction) {
-    if (interaction.type === InteractionTypes.ApplicationCommand) {
-        if (!interaction.data) return;
+export const event: EventHandlers['interactionCreate'] = async function (
+  interaction
+) {
+  if (interaction.type === InteractionTypes.ApplicationCommand) {
+    if (!interaction.data) return
 
-        const command = commands.get(interaction.data.name);
-        if (!command) return;
+    const command = commands.get(interaction.data.name)
+    if (!command) return
 
-        await command.execute(interaction, commandOptionsParser(interaction));
-    }
+    await command.execute(interaction, commandOptionsParser(interaction))
+  }
 }
 ```
 
 At this point, we are seeing an error from TypeScript, that the `command` does not have an `.execute()` handler. To add this we need to customize our command just a little bit. Let's make a interface for a custom Command object. Go to `src/commands/index.ts`
 
 ```ts
-import { CreateApplicationCommand, Interaction } from '@discordeno/types';
-import roles from './roles.js';
+import { CreateApplicationCommand, Interaction } from '@discordeno/types'
+import roles from './roles.js'
 
-export const commands = new Map<string, CreateApplicationCommand>([
-    roles,
-].map((cmd) => [cmd.name, cmd]))
+export const commands = new Map<string, CreateApplicationCommand>(
+  [roles].map(cmd => [cmd.name, cmd])
+)
 
-export default commands;
+export default commands
 
 export interface Command extends CreateApplicationCommand {
-    /** Handler that will be executed when this command is triggered */
-    execute(interaction: Interaction, args: Record<string, any>): Promise<any>;
+  /** Handler that will be executed when this command is triggered */
+  execute(interaction: Interaction, args: Record<string, any>): Promise<any>
 }
 ```
 
@@ -355,17 +362,19 @@ export const commands = new Map<string, Command>([
 Next we should edit the command file at `src/commands/role.ts` and edit it to have an execute handler.
 
 ```ts
-import { CreateApplicationCommand, ApplicationCommandOptionTypes, ButtonStyles } from '@discordeno/types';
+import {
+  CreateApplicationCommand,
+  ApplicationCommandOptionTypes,
+  ButtonStyles,
+} from '@discordeno/types'
 
 const command: CreateApplicationCommand = {
-    name: "roles",
-    description: "Role management on your server.",
-    options: [
-        // Lot's of options here...
-    ],
-    async execute(interaction, args) {
-        
-    } 
+  name: 'roles',
+  description: 'Role management on your server.',
+  options: [
+    // Lot's of options here...
+  ],
+  async execute(interaction, args) {},
 }
 ```
 
@@ -378,4 +387,63 @@ import { Command } from './index.js';
 const command: Command = {
 ```
 
-Now that this is complete we should go 
+Now that this is complete we should go ahead and a type for args so we can get some nice autocomplete when we code.
+
+```ts
+async execute(interaction, args: CommandArgs) {
+    // Create a reaction role
+    if (args.create) {
+
+    }
+}
+
+// Place this somewhere at the bottom or top of the file.
+// Make sure to import all the following types as well.
+interface CommandArgs {
+    create?: {
+        role: Role;
+        emoji: string;
+        color: ButtonStyles;
+        label?: string;
+    };
+}
+```
+
+Finally, we can begin writing the code to handle our commands. Let's start with the `create` command.
+
+```ts
+async execute(interaction, args: CommandArgs) {
+    // Create a reaction role
+    if (args.create) {
+        const components = new Components()
+          .addButton(
+            args.reactions.create.label ?? '',
+            args.reactions.create.color,
+            `reactionRole-${args.reactions.create.role.id}`,
+            {
+              emoji: args.reactions.create.emoji,
+            },
+          )
+
+        await interaction.respond({
+          content: 'Use the buttons below to edit the message above. If you need help learning how to edit, press the button below.',
+          components,
+        })
+
+        const message = await bot.rest.getOriginalInteractionResponse(interaction.token)
+        if (!message) return await interaction.respond('❌ The message was not able to be sent. Cancelling.', { private: true })
+
+        const editComponents = new Components()
+          .addButton('Add', ButtonStyles.Primary,`reactionRoleAdd-${message.id}`, { emoji: '➕' })
+          .addButton('Remove', ButtonStyles.Primary,`reactionRoleRemove-${message.id}`, { emoji: '➖' })
+          .addButton('Edit', ButtonStyles.Primary,`reactionRoleEdit-${message.id}`, { emoji: '🖊️' })
+          .addButton('Save', ButtonStyles.Success,`reactionRoleSave`, { emoji: '✅' })
+          .addButton('Need Help?', ButtonStyles.Link,`https://discord.gg/${BOT_SERVER_INVITE_CODE}`,)
+
+        return await interaction.respond({
+          content: 'ROLES_REACTIONS_CREATE_PLACEHOLDER_EDIT',
+          components: editComponents,
+        })
+    }
+}
+```

@@ -21,7 +21,7 @@ export function createInvalidRequestBucket(options: InvalidRequestBucketOptions)
     waiting: [],
 
     requestsAllowed: function () {
-      if (bucket.resetAt !== undefined && Date.now() > bucket.resetAt) {
+      if (bucket.resetAt !== undefined && Date.now() >= bucket.resetAt) {
         bucket.invalidRequests = 0
         bucket.resetAt = Date.now() + bucket.interval
       }
@@ -49,17 +49,16 @@ export function createInvalidRequestBucket(options: InvalidRequestBucketOptions)
 
     processWaiting: async function () {
       // If already processing, that loop will handle all waiting requests.
-      if (bucket.processing) {
-        return
-      }
+      if (bucket.processing) return
 
       // Mark as processing so other loops don't start
       bucket.processing = true
 
       while (bucket.waiting.length > 0) {
-        logger.info(`[InvalidBucket] processing waiting queue while loop ran with ${bucket.waiting.length} remaining.`)
+        logger.info(`[InvalidBucket] processing waiting queue while loop ran with ${bucket.waiting.length} pending requests to be made. ${JSON.stringify(bucket)}`)
 
-        if (bucket.resetAt !== undefined && !bucket.isRequestAllowed()) {
+        if (!bucket.isRequestAllowed() && bucket.resetAt !== undefined) {
+          logger.warn(`[InvalidBucket] processing waiting queue is now paused until more requests are available. ${bucket.waiting.length} pending requests. ${JSON.stringify(bucket)}`)
           await delay(bucket.resetAt - Date.now())
         }
 
@@ -86,6 +85,7 @@ export function createInvalidRequestBucket(options: InvalidRequestBucketOptions)
       }
 
       bucket.invalidRequests += 1
+      logger.warn(`[InvalidBucket] an invalid request was made. Increasing invalidRequests count to ${bucket.invalidRequests}`)
     },
   }
 
