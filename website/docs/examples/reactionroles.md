@@ -387,4 +387,63 @@ import { Command } from './index.js';
 const command: Command = {
 ```
 
-Now that this is complete we should go
+Now that this is complete we should go ahead and a type for args so we can get some nice autocomplete when we code.
+
+```ts
+async execute(interaction, args: CommandArgs) {
+    // Create a reaction role
+    if (args.create) {
+
+    }
+}
+
+// Place this somewhere at the bottom or top of the file.
+// Make sure to import all the following types as well.
+interface CommandArgs {
+    create?: {
+        role: Role;
+        emoji: string;
+        color: ButtonStyles;
+        label?: string;
+    };
+}
+```
+
+Finally, we can begin writing the code to handle our commands. Let's start with the `create` command.
+
+```ts
+async execute(interaction, args: CommandArgs) {
+    // Create a reaction role
+    if (args.create) {
+        const components = new Components()
+          .addButton(
+            args.reactions.create.label ?? '',
+            args.reactions.create.color,
+            `reactionRole-${args.reactions.create.role.id}`,
+            {
+              emoji: args.reactions.create.emoji,
+            },
+          )
+
+        await interaction.respond({
+          content: 'Use the buttons below to edit the message above. If you need help learning how to edit, press the button below.',
+          components,
+        })
+
+        const message = await bot.rest.getOriginalInteractionResponse(interaction.token)
+        if (!message) return await interaction.respond('❌ The message was not able to be sent. Cancelling.', { private: true })
+
+        const editComponents = new Components()
+          .addButton('Add', ButtonStyles.Primary,`reactionRoleAdd-${message.id}`, { emoji: '➕' })
+          .addButton('Remove', ButtonStyles.Primary,`reactionRoleRemove-${message.id}`, { emoji: '➖' })
+          .addButton('Edit', ButtonStyles.Primary,`reactionRoleEdit-${message.id}`, { emoji: '🖊️' })
+          .addButton('Save', ButtonStyles.Success,`reactionRoleSave`, { emoji: '✅' })
+          .addButton('Need Help?', ButtonStyles.Link,`https://discord.gg/${BOT_SERVER_INVITE_CODE}`,)
+
+        return await interaction.respond({
+          content: 'ROLES_REACTIONS_CREATE_PLACEHOLDER_EDIT',
+          components: editComponents,
+        })
+    }
+}
+```
