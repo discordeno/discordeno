@@ -98,6 +98,7 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } 
   if (payload.channel.permission_overwrites && props.permissionOverwrites) {
     channel.internalOverwrites = payload.channel.permission_overwrites.map((o) => packOverwrites(o.allow ?? '0', o.deny ?? '0', o.id, o.type))
   }
+  if (props.parentId && payload.channel.parent_id) channel.parentId = bot.transformers.snowflake(payload.channel.parent_id);
 
   return bot.transformers.customizers.channel(bot, payload.channel, channel);
 }
@@ -158,7 +159,7 @@ export interface Channel extends BaseChannel {
   /** Id of the creator of the thread */
   ownerId?: bigint
   /** For guild channels: Id of the parent category for a channel (each parent category can contain up to 50 channels), for threads: id of the text channel this thread was created */
-  parentId?: string
+  parentId?: bigint
   /** When the last pinned message was pinned. This may be null in events such as GUILD_CREATE when a message is not pinned. */
   lastPinTimestamp?: string
   /** Voice region id for the voice or stage channel, automatic when set to null */
