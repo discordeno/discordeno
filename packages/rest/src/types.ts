@@ -7,7 +7,6 @@ import type {
   CamelizedDiscordActiveThreads,
   CamelizedDiscordApplication,
   CamelizedDiscordApplicationCommand,
-  CamelizedDiscordApplicationCommandPermissions,
   CamelizedDiscordArchivedThreads,
   CamelizedDiscordAuditLog,
   CamelizedDiscordAutoModerationRule,

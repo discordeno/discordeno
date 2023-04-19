@@ -388,7 +388,7 @@ export interface Transformers {
   channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }) => Channel
   guild: (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) => Guild
   user: (bot: Bot, payload: DiscordUser) => User
-  member: (bot: Bot, payload: DiscordMember, guildId: bigint, userId: bigint) => Member
+  member: (bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString) => Member
   message: (bot: Bot, payload: DiscordMessage) => Message
   role: (bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }) => Role
   voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) => VoiceState

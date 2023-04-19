@@ -10,13 +10,14 @@ import type {
   CamelizedDiscordBan,
   CamelizedDiscordFollowedChannel,
   CamelizedDiscordGetGatewayBot,
+  CamelizedDiscordGuildPreview,
   CamelizedDiscordGuildWidgetSettings,
+  CamelizedDiscordInvite,
+  CamelizedDiscordInviteMetadata,
   CamelizedDiscordModifyGuildWelcomeScreen,
   CamelizedDiscordPrunedCount,
-  CamelizedDiscordThreadMember,
   CamelizedDiscordVanityUrl,
   CamelizedDiscordVoiceRegion,
-  CamelizedDiscordWelcomeScreen,
   CreateApplicationCommand,
   CreateAutoModerationRuleOptions,
   CreateChannelInvite,
@@ -31,6 +32,7 @@ import type {
   CreateScheduledEvent,
   CreateStageInstance,
   CreateTemplate,
+  DiscordMessage,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
   EditGuildRole,
@@ -59,7 +61,7 @@ import type {
   ModifyWebhook,
   SearchMembers,
   StartThreadWithMessage,
-  StartThreadWithoutMessage
+  StartThreadWithoutMessage,
 } from '@discordeno/types'
 import { snakelize } from '@discordeno/utils'
 import type { Bot } from './bot.js'
@@ -70,6 +72,7 @@ import type { AutoModerationRule } from './transformers/automodRule.js'
 import type { Channel } from './transformers/channel.js'
 import type { Emoji } from './transformers/emoji.js'
 import type { Guild } from './transformers/guild.js'
+import type { Integration } from './transformers/integration.js'
 import type { Member } from './transformers/member.js'
 import type { Message } from './transformers/message.js'
 import type { Role } from './transformers/role.js'
@@ -77,12 +80,12 @@ import type { ScheduledEvent } from './transformers/scheduledEvent.js'
 import type { StageInstance } from './transformers/stageInstance.js'
 import type { Sticker, StickerPack } from './transformers/sticker.js'
 import type { Template } from './transformers/template.js'
+import type { ThreadMember } from './transformers/threadMember.js'
 import type { User } from './transformers/user.js'
 import type { Webhook } from './transformers/webhook.js'
 import type { WelcomeScreen } from './transformers/welcomeScreen.js'
 import type { GuildWidget } from './transformers/widget.js'
 import type { GuildWidgetSettings } from './transformers/widgetSettings.js'
-import type { Integration } from './transformers/integration.js'
 
 export function createBotHelpers(bot: Bot): BotHelpers {
   return {
@@ -117,7 +120,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return bot.transformers.template(bot, snakelize(await bot.rest.createGuildTemplate(guildId, options)))
     },
     createInvite: async (channelId, options, reason) => {
-      return await bot.rest.createInvite(channelId, options, reason);
+      return await bot.rest.createInvite(channelId, options, reason)
     },
     createRole: async (guildId, options, reason) => {
       return bot.transformers.role(bot, { role: snakelize(await bot.rest.createRole(guildId, options, reason)), guildId })
@@ -132,7 +135,10 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return bot.transformers.webhook(bot, snakelize(await bot.rest.createWebhook(channelId, options, reason)))
     },
     editApplicationCommandPermissions: async (guildId, commandId, bearerToken, options) => {
-      return bot.transformers.applicationCommandPermission(bot, snakelize(await bot.rest.editApplicationCommandPermissions(guildId, commandId, bearerToken, options)))
+      return bot.transformers.applicationCommandPermission(
+        bot,
+        snakelize(await bot.rest.editApplicationCommandPermissions(guildId, commandId, bearerToken, options)),
+      )
     },
     editAutomodRule: async (guildId, ruleId, options, reason) => {
       return bot.transformers.automodRule(bot, snakelize(await bot.rest.editAutomodRule(guildId, ruleId, options, reason)))
@@ -165,16 +171,16 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return bot.transformers.template(bot, snakelize(await bot.rest.editGuildTemplate(guildId, templateCode, options)))
     },
     editMessage: async (channelId, messageId, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.editMessage(channelId, messageId, options)))
+      return bot.transformers.message(bot, snakelize(await bot.rest.editMessage(channelId, messageId, options)) as DiscordMessage)
     },
     editOriginalInteractionResponse: async (token, options) => {
       const result = await bot.rest.editOriginalInteractionResponse(token, options)
       if (!result) return
 
-      return bot.transformers.message(bot, snakelize(result))
+      return bot.transformers.message(bot, snakelize(result) as DiscordMessage)
     },
     editOriginalWebhookMessage: async (webhookId, token, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.editOriginalWebhookMessage(webhookId, token, options)))
+      return bot.transformers.message(bot, snakelize(await bot.rest.editOriginalWebhookMessage(webhookId, token, options)) as DiscordMessage)
     },
     editRole: async (guildId, roleId, options, reason) => {
       return bot.transformers.role(bot, { role: snakelize(await bot.rest.editRole(guildId, roleId, options, reason)), guildId })
@@ -192,7 +198,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return bot.transformers.webhook(bot, snakelize(await bot.rest.editWebhook(webhookId, options, reason)))
     },
     editWebhookMessage: async (webhookId, token, messageId, options) => {
-      return bot.transformers.message(bot, snakelize(await bot.rest.editWebhookMessage(webhookId, token, messageId, options)))
+      return bot.transformers.message(bot, snakelize(await bot.rest.editWebhookMessage(webhookId, token, messageId, options)) as DiscordMessage)
     },
     editWebhookWithToken: async (webhookId, token, options) => {
       return bot.transformers.webhook(bot, snakelize(await bot.rest.editWebhookWithToken(webhookId, token, options)))
@@ -207,7 +213,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       const result = await bot.rest.executeWebhook(webhookId, token, options)
       if (!result) return
 
-      return bot.transformers.message(bot, snakelize(result))
+      return bot.transformers.message(bot, snakelize(result) as DiscordMessage)
     },
     followAnnouncement: async (sourceChannelId, targetChannelId) => {
       return await bot.rest.followAnnouncement(sourceChannelId, targetChannelId)
@@ -227,7 +233,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       )
     },
     getAuditLog: async (guildId, options) => {
-      return await bot.rest.getAuditLog(guildId, options);
+      return await bot.rest.getAuditLog(guildId, options)
     },
     getAutomodRule: async (guildId, ruleId) => {
       return bot.transformers.automodRule(bot, snakelize(await bot.rest.getAutomodRule(guildId, ruleId)))
@@ -248,7 +254,8 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return bot.transformers.channel(bot, { channel: snakelize(await bot.rest.getChannel(channelId)) })
     },
     getChannelInvites: async (channelId) => {
-      return (await bot.rest.getChannelInvites(channelId)).map((res) => bot.transformers.invite(bot, snakelize(res)))
+      return await bot.rest.getChannelInvites(channelId)
+      // return (await bot.rest.getChannelInvites(channelId)).map((res) => bot.transformers.invite(bot, snakelize(res)))
     },
     getChannels: async (guildId) => {
       return (await bot.rest.getChannels(guildId)).map((res) => bot.transformers.channel(bot, { channel: snakelize(res), guildId }))
@@ -287,7 +294,8 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return (await bot.rest.getGuildApplicationCommands(guildId)).map((res) => bot.transformers.applicationCommand(bot, snakelize(res)))
     },
     getGuildPreview: async (guildId) => {
-      return bot.transformers.xxx(bot, snakelize(await bot.rest.getGuildPreview(guildId)))
+      return await bot.rest.getGuildPreview(guildId)
+      // return bot.transformers.xxx(bot, snakelize(await bot.rest.getGuildPreview(guildId)))
     },
     getGuildSticker: async (guildId, stickerId) => {
       return bot.transformers.sticker(bot, snakelize(await bot.rest.getGuildSticker(guildId, stickerId)))
@@ -305,13 +313,17 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return (await bot.rest.getGuildWebhooks(guildId)).map((res) => bot.transformers.webhook(bot, snakelize(res)))
     },
     getIntegrations: async (guildId) => {
-      return (await bot.rest.getIntegrations(guildId)).map((res) => bot.transformers.integration(bot, snakelize(res)))
+      return (await bot.rest.getIntegrations(guildId)).map((res) =>
+        bot.transformers.integration(bot, snakelize({ ...res, guildId: guildId.toString() })),
+      )
     },
     getInvite: async (inviteCode, options) => {
-      return bot.transformers.invite(bot, snakelize(await bot.rest.getInvite(inviteCode, options)))
+      return await bot.rest.getInvite(inviteCode, options)
+      // return bot.transformers.invite(bot, snakelize(await bot.rest.getInvite(inviteCode, options)))
     },
     getInvites: async (guildId) => {
-      return (await bot.rest.getInvites(guildId)).map((res) => bot.transformers.invite(bot, snakelize(res)))
+      return await bot.rest.getInvites(guildId)
+      // .map((res) => bot.transformers.invite(bot, snakelize(res)))
     },
     getMessage: async (channelId, messageId) => {
       return bot.transformers.message(bot, snakelize(await bot.rest.getMessage(channelId, messageId)))
@@ -329,16 +341,20 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return (await bot.rest.getPinnedMessages(channelId)).map((res) => bot.transformers.message(bot, snakelize(res)))
     },
     getPrivateArchivedThreads: async (channelId, options) => {
-      return bot.transformers.xxx(bot, snakelize(await bot.rest.getPrivateArchivedThreads(channelId, options)))
+      return await bot.rest.getPrivateArchivedThreads(channelId, options)
+      // return bot.transformers.xxx(bot, snakelize(await bot.rest.getPrivateArchivedThreads(channelId, options)))
     },
     getPrivateJoinedArchivedThreads: async (channelId, options) => {
-      return bot.transformers.xxx(bot, snakelize(await bot.rest.getPrivateJoinedArchivedThreads(channelId, options)))
+      return await bot.rest.getPrivateJoinedArchivedThreads(channelId, options)
+      // return bot.transformers.xxx(bot, snakelize(await bot.rest.getPrivateJoinedArchivedThreads(channelId, options)))
     },
     getPruneCount: async (guildId, options) => {
-      return bot.transformers.xxx(bot, snakelize(await bot.rest.getPruneCount(guildId, options)))
+      return await bot.rest.getPruneCount(guildId, options)
+      // return bot.transformers.xxx(bot, snakelize(await bot.rest.getPruneCount(guildId, options)))
     },
     getPublicArchivedThreads: async (channelId, options) => {
-      return bot.transformers.xxx(bot, snakelize(await bot.rest.getPublicArchivedThreads(channelId, options)))
+      return await bot.rest.getPublicArchivedThreads(channelId, options)
+      // return bot.transformers.xxx(bot, snakelize(await bot.rest.getPublicArchivedThreads(channelId, options)))
     },
     getRoles: async (guildId) => {
       return snakelize(await bot.rest.getRoles(guildId)).map((role) => bot.transformers.role(bot, { role, guildId }))
@@ -350,7 +366,12 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return (await bot.rest.getScheduledEvents(guildId, options)).map((res) => bot.transformers.scheduledEvent(bot, snakelize(res)))
     },
     getScheduledEventUsers: async (guildId, eventId, options) => {
-      return bot.transformers.xxx(bot, snakelize(await bot.rest.getScheduledEventUsers(guildId, eventId, options)))
+      return (await bot.rest.getScheduledEventUsers(guildId, eventId, options)).map((u) => {
+        return {
+          user: bot.transformers.user(bot, snakelize(u.user)),
+          member: u.member && bot.transformers.member(bot, snakelize(u.member), guildId, bot.transformers.snowflake(u.user.id)),
+        }
+      })
     },
     getSessionInfo: async () => {
       return bot.transformers.gatewayBot(snakelize(await bot.rest.getSessionInfo()))
@@ -374,7 +395,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return bot.transformers.user(bot, snakelize(await bot.rest.getUser(id)))
     },
     getVanityUrl: async (guildId) => {
-      return bot.transformers.xxx(bot, snakelize(await bot.rest.getVanityUrl(guildId)))
+      return await bot.rest.getVanityUrl(guildId)
     },
     getVoiceRegions: async (guildId) => {
       return (await bot.rest.getVoiceRegions(guildId)).map((res) => bot.transformers.voiceRegion(bot, snakelize(res)))
@@ -409,11 +430,10 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     startThreadWithMessage: async (channelId, messageId, options, reason) => {
       return bot.transformers.channel(bot, {
         channel: snakelize(await bot.rest.startThreadWithMessage(channelId, messageId, options, reason)),
-        guildId,
       })
     },
     startThreadWithoutMessage: async (channelId, options, reason) => {
-      return bot.transformers.channel(bot, { channel: snakelize(await bot.rest.startThreadWithoutMessage(channelId, options, reason)), guildId })
+      return bot.transformers.channel(bot, { channel: snakelize(await bot.rest.startThreadWithoutMessage(channelId, options, reason)) })
     },
     syncGuildTemplate: async (guildId) => {
       return bot.transformers.template(bot, snakelize(await bot.rest.syncGuildTemplate(guildId)))
@@ -501,11 +521,7 @@ export interface BotHelpers {
     options: InteractionCallbackData & { threadId?: BigString },
   ) => Promise<Message>
   editWebhookWithToken: (webhookId: BigString, token: string, options: Omit<ModifyWebhook, 'channelId'>) => Promise<Webhook>
-  editWelcomeScreen: (
-    guildId: BigString,
-    options: CamelizedDiscordModifyGuildWelcomeScreen,
-    reason?: string,
-  ) => Promise<WelcomeScreen>
+  editWelcomeScreen: (guildId: BigString, options: CamelizedDiscordModifyGuildWelcomeScreen, reason?: string) => Promise<WelcomeScreen>
   editWidgetSettings: (guildId: BigString, options: CamelizedDiscordGuildWidgetSettings, reason?: string) => Promise<GuildWidgetSettings>
   executeWebhook: (webhookId: BigString, token: string, options: ExecuteWebhook) => Promise<Message | undefined>
   followAnnouncement: (sourceChannelId: BigString, targetChannelId: BigString) => Promise<CamelizedDiscordFollowedChannel>
@@ -520,7 +536,7 @@ export interface BotHelpers {
   getBan: (guildId: BigString, userId: BigString) => Promise<CamelizedDiscordBan>
   getBans: (guildId: BigString, options?: GetBans) => Promise<CamelizedDiscordBan[]>
   getChannel: (channelId: BigString) => Promise<Channel>
-  getChannelInvites: (channelId: BigString) => Promise<InviteMetadata[]>
+  getChannelInvites: (channelId: BigString) => Promise<CamelizedDiscordInviteMetadata[]>
   getChannels: (guildId: BigString) => Promise<Channel[]>
   getChannelWebhooks: (channelId: BigString) => Promise<Webhook[]>
   getDmChannel: (userId: BigString) => Promise<Channel>
@@ -533,15 +549,15 @@ export interface BotHelpers {
   getGuild: (guildId: BigString, options?: { counts?: boolean }) => Promise<Guild>
   getGuildApplicationCommand: (commandId: BigString, guildId: BigString) => Promise<ApplicationCommand>
   getGuildApplicationCommands: (guildId: BigString) => Promise<ApplicationCommand[]>
-  getGuildPreview: (guildId: BigString) => Promise<GuildPreview>
+  getGuildPreview: (guildId: BigString) => Promise<CamelizedDiscordGuildPreview>
   getGuildSticker: (guildId: BigString, stickerId: BigString) => Promise<Sticker>
   getGuildStickers: (guildId: BigString) => Promise<Sticker[]>
   getGuildTemplate: (templateCode: string) => Promise<Template>
   getGuildTemplates: (guildId: BigString) => Promise<Template[]>
   getGuildWebhooks: (guildId: BigString) => Promise<Webhook[]>
   getIntegrations: (guildId: BigString) => Promise<Integration[]>
-  getInvite: (inviteCode: string, options?: GetInvite) => Promise<InviteMetadata>
-  getInvites: (guildId: BigString) => Promise<InviteMetadata[]>
+  getInvite: (inviteCode: string, options?: GetInvite) => Promise<CamelizedDiscordInviteMetadata>
+  getInvites: (guildId: BigString) => Promise<CamelizedDiscordInviteMetadata[]>
   getMessage: (channelId: BigString, messageId: BigString) => Promise<Message>
   getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<Message[]>
   getNitroStickerPacks: () => Promise<StickerPack[]>
@@ -562,8 +578,8 @@ export interface BotHelpers {
   getSessionInfo: () => Promise<CamelizedDiscordGetGatewayBot>
   getStageInstance: (channelId: BigString) => Promise<StageInstance>
   getSticker: (stickerId: BigString) => Promise<Sticker>
-  getThreadMember: (channelId: BigString, userId: BigString) => Promise<CamelizedDiscordThreadMember>
-  getThreadMembers: (channelId: BigString) => Promise<CamelizedDiscordThreadMember[]>
+  getThreadMember: (channelId: BigString, userId: BigString) => Promise<ThreadMember>
+  getThreadMembers: (channelId: BigString) => Promise<ThreadMember[]>
   getReactions: (channelId: BigString, messageId: BigString, reaction: string, options?: GetReactions) => Promise<User[]>
   getUser: (id: BigString) => Promise<User>
   getVanityUrl: (guildId: BigString) => Promise<CamelizedDiscordVanityUrl>
@@ -571,7 +587,7 @@ export interface BotHelpers {
   getWebhook: (webhookId: BigString) => Promise<Webhook>
   getWebhookMessage: (webhookId: BigString, token: string, messageId: BigString, options?: GetWebhookMessageOptions) => Promise<Message>
   getWebhookWithToken: (webhookId: BigString, token: string) => Promise<Webhook>
-  getWelcomeScreen: (guildId: BigString) => Promise<CamelizedDiscordWelcomeScreen>
+  getWelcomeScreen: (guildId: BigString) => Promise<WelcomeScreen>
   getWidget: (guildId: BigString) => Promise<GuildWidget>
   getWidgetSettings: (guildId: BigString) => Promise<GuildWidgetSettings>
   publishMessage: (channelId: BigString, messageId: BigString) => Promise<Message>
