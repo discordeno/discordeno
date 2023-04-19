@@ -1,11 +1,14 @@
-import type {
-  ApplicationCommandOptionTypes,
-  ApplicationCommandTypes,
-  ChannelTypes,
-  DiscordInteraction,
-  DiscordInteractionDataOption,
-  InteractionTypes,
-  MessageComponentTypes,
+import {
+  InteractionResponseTypes,
+  type ApplicationCommandOptionTypes,
+  type ApplicationCommandTypes,
+  type CamelizedDiscordMessage,
+  type ChannelTypes,
+  type DiscordInteraction,
+  type DiscordInteractionDataOption,
+  type InteractionResponse,
+  type InteractionTypes,
+  type MessageComponentTypes,
 } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { Bot, Component } from '../index.js'
@@ -17,6 +20,10 @@ import type { Role } from './role.js'
 import type { User } from './user.js'
 
 export interface Interaction {
+  /** The bot object */
+  bot: Bot
+  /** Whether or not this interaction has been replied to. */
+  acknowledged: boolean
   /** Id of the interaction */
   id: bigint
   /** Id of the application this interaction is for */
@@ -59,12 +66,39 @@ export interface Interaction {
   appPermissions: bigint
 }
 
+export interface BaseInteraction {
+  respond: (response: string | InteractionResponse, options: { private: boolean }) => Promise<CamelizedDiscordMessage | void>
+}
+
+const baseInteraction: Partial<Interaction> & BaseInteraction = {
+  async respond(response, options) {
+    // If user provides a string, change it to response object
+    if (typeof response === 'string') {
+      response = {
+        type: InteractionResponseTypes.DeferredChannelMessageWithSource,
+        data: {
+          content: response,
+        },
+      }
+    }
+
+    // If user wants to send a ephemeral message
+    if (options.private && response.data) response.data.flags = 64
+    // If user has not already responded to this interaction we need to send an original response
+    if (!this.acknowledged) return await this.bot?.rest.sendInteractionResponse(this.id!, this.token!, response)
+    // Since this has already been given a response, any further responses must be folloups.
+    return await this.bot?.rest.sendFollowupMessage(this.token!, response.data!)
+  },
+}
+
 export function transformInteraction(bot: Bot, payload: DiscordInteraction): Interaction {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
   const user = bot.transformers.user(bot, payload.member?.user ?? payload.user!)
 
-  const interaction: Interaction = Object.create({})
+  const interaction: Interaction = Object.create(baseInteraction)
   const props = bot.transformers.desiredProperties.interaction
+  interaction.bot = bot
+  interaction.acknowledged = false
 
   if (payload.id && props.id) interaction.id = bot.transformers.snowflake(payload.id)
   if (payload.application_id && props.applicationId) interaction.applicationId = bot.transformers.snowflake(payload.application_id)
