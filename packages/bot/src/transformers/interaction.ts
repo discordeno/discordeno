@@ -85,7 +85,10 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
     // If user wants to send a ephemeral message
     if (options.private && response.data) response.data.flags = 64
     // If user has not already responded to this interaction we need to send an original response
-    if (!this.acknowledged) return await this.bot?.rest.sendInteractionResponse(this.id!, this.token!, response)
+    if (!this.acknowledged) {
+      this.acknowledged = true;
+      return await this.bot?.rest.sendInteractionResponse(this.id!, this.token!, response)
+    }
     // Since this has already been given a response, any further responses must be folloups.
     return await this.bot?.rest.sendFollowupMessage(this.token!, response.data!)
   },
