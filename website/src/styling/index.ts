@@ -22,7 +22,7 @@ export const Header = styled.div`
       var(--ifm-navbar-background-color),
       hsla(0, 0%, 7%, 0)
     );
-    z-index: 2147483647;
+    z-index: 100;
     padding: 10px;
   }
 
