@@ -221,7 +221,51 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       )
       return workerId
     },
-    prepareBuckets() {},
+    prepareBuckets() {
+      for (let i = 0; i < gateway.connection.sessionStartLimit.maxConcurrency; ++i) {
+        logger.debug(`[Gateway] Preparing buckets for concurrency: ${i}`)
+        gateway.buckets.set(i, {
+          workers: [],
+          identifyRequests: [],
+        })
+      }
+
+      // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
+      for (let shardId = gateway.firstShardId; shardId <= gateway.lastShardId; ++shardId) {
+        logger.debug(`[Gateway] Preparing buckets for shard: ${shardId}`)
+        if (shardId >= gateway.totalShards) {
+          throw new Error(`Shard (id: ${shardId}) is bigger or equal to the used amount of used shards which is ${gateway.totalShards}`)
+        }
+
+        const bucketId = shardId % gateway.connection.sessionStartLimit.maxConcurrency
+        const bucket = gateway.buckets.get(bucketId)
+        if (!bucket) {
+          throw new Error(
+            `Shard (id: ${shardId}) got assigned to an illegal bucket id: ${bucketId}, expected a bucket id between 0 and ${
+              gateway.connection.sessionStartLimit.maxConcurrency - 1
+            }`,
+          )
+        }
+
+        // FIND A QUEUE IN THIS BUCKET THAT HAS SPACE
+        // const worker = bucket.workers.find((w) => w.queue.length < gateway.shardsPerWorker);
+        const workerId = gateway.calculateWorkerId(shardId)
+        const worker = bucket.workers.find((w) => w.id === workerId)
+        if (worker) {
+          // IF THE QUEUE HAS SPACE JUST ADD IT TO THIS QUEUE
+          worker.queue.push(shardId)
+        } else {
+          bucket.workers.push({ id: workerId, queue: [shardId] })
+        }
+      }
+
+      for (const bucket of gateway.buckets.values()) {
+        for (const worker of bucket.workers.values()) {
+          // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
+          worker.queue = worker.queue.sort((a, b) => a - b)
+        }
+      }
+    },
     async spawnShards() {
       // PREPARES ALL SHARDS IN SPECIFIC BUCKETS
       gateway.prepareBuckets()
