@@ -19,7 +19,7 @@ import type { Message } from './message.js'
 import type { Role } from './role.js'
 import type { User } from './user.js'
 
-export interface Interaction {
+export interface Interaction extends BaseInteraction {
   /** The bot object */
   bot: Bot
   /** Whether or not this interaction has been replied to. */
@@ -67,6 +67,7 @@ export interface Interaction {
 }
 
 export interface BaseInteraction {
+  /** Sends a response to an interaction. */
   respond: (response: string | InteractionResponse, options: { private: boolean }) => Promise<CamelizedDiscordMessage | void>
 }
 
