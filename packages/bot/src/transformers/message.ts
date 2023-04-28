@@ -260,14 +260,14 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
 
   const props = bot.transformers.desiredProperties.message
 
-  if (props.author && props.author) message.author = bot.transformers.user(bot, payload.author)
+  if (props.author && payload.author) message.author = bot.transformers.user(bot, payload.author)
   if (payload.application_id && props.applicationId) message.applicationId = bot.transformers.snowflake(payload.application_id)
   if (payload.attachments?.length && props.attachments) {
     message.attachments = payload.attachments.map((attachment) => bot.transformers.attachment(bot, attachment))
   }
-  if (props.channelId && props.channelId) message.channelId = bot.transformers.snowflake(payload.channel_id)
+  if (props.channelId && payload.channel_id) message.channelId = bot.transformers.snowflake(payload.channel_id)
   if (props.components && payload.components?.length) message.components = payload.components.map((comp) => bot.transformers.component(bot, comp))
-  if (props.content && props.content) message.content = payload.content ?? EMPTY_STRING
+  if (props.content && payload.content) message.content = payload.content ?? EMPTY_STRING
   if (payload.edited_timestamp && props.editedTimestamp) message.editedTimestamp = Date.parse(payload.edited_timestamp)
   if (payload.embeds?.length && props.embeds) message.embeds = payload.embeds.map((embed) => bot.transformers.embed(bot, embed))
   if (guildId && props.guildId) message.guildId = guildId
