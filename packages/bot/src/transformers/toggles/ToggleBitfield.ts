@@ -50,4 +50,8 @@ export class ToggleBitfieldBigint {
     this.bitfield &= ~bits
     return this
   }
+
+  toJSON(): string {
+    return this.bitfield.toString();
+  }
 }

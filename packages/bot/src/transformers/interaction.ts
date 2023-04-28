@@ -1,57 +1,142 @@
-import type { ChannelTypes, DiscordInteraction, DiscordInteractionDataOption } from '@discordeno/types'
+import {
+  InteractionResponseTypes,
+  type ApplicationCommandOptionTypes,
+  type ApplicationCommandTypes,
+  type CamelizedDiscordMessage,
+  type ChannelTypes,
+  type DiscordInteraction,
+  type DiscordInteractionDataOption,
+  type InteractionResponse,
+  type InteractionTypes,
+  type MessageComponentTypes,
+} from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
-import type { Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
+import type { Bot, Component } from '../index.js'
 import type { DiscordInteractionDataResolved } from '../typings.js'
 import type { Attachment } from './attachment.js'
-import type { Member, User } from './member.js'
+import type { Member } from './member.js'
 import type { Message } from './message.js'
 import type { Role } from './role.js'
+import type { User } from './user.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformInteraction(bot: Bot, payload: DiscordInteraction) {
+export interface Interaction extends BaseInteraction {
+  /** The bot object */
+  bot: Bot
+  /** Whether or not this interaction has been replied to. */
+  acknowledged: boolean
+  /** Id of the interaction */
+  id: bigint
+  /** Id of the application this interaction is for */
+  applicationId: bigint
+  /** The type of interaction */
+  type: InteractionTypes
+  /** The guild it was sent from */
+  guildId?: bigint
+  /** The channel it was sent from */
+  channelId?: bigint
+  /** Guild member data for the invoking user, including permissions */
+  member?: Member
+  /** User object for the invoking user, if invoked in a DM */
+  user: User
+  /** A continuation token for responding to the interaction */
+  token: string
+  /** Read-only property, always `1` */
+  version: 1
+  /** For the message the button was attached to */
+  message?: Message
+  /** the command data payload */
+  data?: {
+    type?: ApplicationCommandTypes
+    componentType?: MessageComponentTypes
+    customId?: string
+    components?: Component[]
+    values?: string[]
+    name: string
+    resolved?: InteractionDataResolved
+    options?: InteractionDataOption[]
+    id?: bigint
+    targetId?: bigint
+    // guildId?: bigint
+  }
+  /** The selected language of the invoking user */
+  locale?: string
+  /** The guild's preferred locale, if invoked in a guild */
+  guildLocale?: string
+  /** The computed permissions for a bot or app in the context of a specific interaction (including channel overwrites) */
+  appPermissions: bigint
+}
+
+export interface BaseInteraction {
+  /** Sends a response to an interaction. */
+  respond: (response: string | InteractionResponse, options: { private: boolean }) => Promise<CamelizedDiscordMessage | void>
+}
+
+const baseInteraction: Partial<Interaction> & BaseInteraction = {
+  async respond(response, options) {
+    // If user provides a string, change it to response object
+    if (typeof response === 'string') {
+      response = {
+        type: InteractionResponseTypes.DeferredChannelMessageWithSource,
+        data: {
+          content: response,
+        },
+      }
+    }
+
+    // If user wants to send a ephemeral message
+    if (options.private && response.data) response.data.flags = 64
+    // If user has not already responded to this interaction we need to send an original response
+    if (!this.acknowledged) {
+      this.acknowledged = true;
+      return await this.bot?.rest.sendInteractionResponse(this.id!, this.token!, response)
+    }
+    // Since this has already been given a response, any further responses must be folloups.
+    return await this.bot?.rest.sendFollowupMessage(this.token!, response.data!)
+  },
+}
+
+export function transformInteraction(bot: Bot, payload: DiscordInteraction): Interaction {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
   const user = bot.transformers.user(bot, payload.member?.user ?? payload.user!)
 
-  const interaction = {
-    // UNTRANSFORMED STUFF HERE
-    type: payload.type,
-    token: payload.token,
-    version: payload.version,
-    locale: payload.locale,
-    guildLocale: payload.guild_locale,
+  const interaction: Interaction = Object.create(baseInteraction)
+  const props = bot.transformers.desiredProperties.interaction
+  interaction.bot = bot
+  interaction.acknowledged = false
 
-    // TRANSFORMED STUFF BELOW
-    guildId,
-    user,
-    id: bot.transformers.snowflake(payload.id),
-    applicationId: bot.transformers.snowflake(payload.application_id),
-    appPermissions: payload.app_permissions ? bot.transformers.snowflake(payload.app_permissions) : undefined,
-    message: payload.message ? bot.transformers.message(bot, payload.message) : undefined,
-    channelId: payload.channel_id ? bot.transformers.snowflake(payload.channel_id) : undefined,
-    member: payload.member && guildId ? bot.transformers.member(bot, payload.member, guildId, user.id) : undefined,
-
-    data: payload.data
-      ? {
-          componentType: payload.data.component_type,
-          customId: payload.data.custom_id,
-          components: payload.data.components?.map((component) => bot.transformers.component(bot, component)),
-          values: payload.data.values,
-          id: payload.data.id ? bot.transformers.snowflake(payload.data.id) : undefined,
-          name: payload.data.name,
-          resolved: payload.data.resolved ? transformInteractionDataResolved(bot, payload.data.resolved, guildId) : undefined,
-          options: payload.data.options?.map((opt) => bot.transformers.interactionDataOptions(bot, opt)),
-          targetId: payload.data.target_id ? bot.transformers.snowflake(payload.data.target_id) : undefined,
-          guildId: payload.data.guild_id ? bot.transformers.snowflake(payload.data.guild_id) : undefined,
-        }
-      : undefined,
+  if (payload.id && props.id) interaction.id = bot.transformers.snowflake(payload.id)
+  if (payload.application_id && props.applicationId) interaction.applicationId = bot.transformers.snowflake(payload.application_id)
+  if (payload.type && props.type) interaction.type = payload.type
+  if (payload.token && props.token) interaction.token = payload.token
+  if (payload.version && props.version) interaction.version = payload.version
+  if (payload.locale && props.locale) interaction.locale = payload.locale
+  if (payload.guild_locale && props.guildLocale) interaction.guildLocale = payload.guild_locale
+  if (guildId && props.guildId) interaction.guildId = guildId
+  if (props.user) interaction.user = user
+  if (payload.app_permissions && props.appPermissions) interaction.appPermissions = bot.transformers.snowflake(payload.app_permissions)
+  if (payload.message && props.message) interaction.message = bot.transformers.message(bot, payload.message)
+  if (payload.channel_id && props.channelId) interaction.channelId = bot.transformers.snowflake(payload.channel_id)
+  if (payload.member && guildId && props.member) interaction.member = bot.transformers.member(bot, payload.member, guildId, user.id)
+  if (payload.data && props.data) {
+    interaction.data = {
+      type: payload.data.type,
+      componentType: payload.data.component_type,
+      customId: payload.data.custom_id,
+      components: payload.data.components?.map((component) => bot.transformers.component(bot, component)),
+      values: payload.data.values,
+      id: payload.data.id ? bot.transformers.snowflake(payload.data.id) : undefined,
+      name: payload.data.name,
+      resolved: payload.data.resolved ? transformInteractionDataResolved(bot, payload.data.resolved, guildId) : undefined,
+      options: payload.data.options?.map((opt) => bot.transformers.interactionDataOptions(bot, opt)),
+      targetId: payload.data.target_id ? bot.transformers.snowflake(payload.data.target_id) : undefined,
+      // guildId: payload.data.guild_id ? bot.transformers.snowflake(payload.data.guild_id) : undefined,
+    }
   }
 
-  return interaction as Optionalize<typeof interaction>
+  return bot.transformers.customizers.interaction(bot, payload, interaction)
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformInteractionDataOption(bot: Bot, option: DiscordInteractionDataOption) {
+export function transformInteractionDataOption(bot: Bot, option: DiscordInteractionDataOption): InteractionDataOption {
   const opt = {
     name: option.name,
     type: option.type,
@@ -60,19 +145,11 @@ export function transformInteractionDataOption(bot: Bot, option: DiscordInteract
     focused: option.focused,
   }
 
-  return opt as Optionalize<typeof opt>
+  return opt
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInteractionDataResolved, guildId?: bigint) {
-  const transformed: {
-    messages?: Collection<bigint, Message>
-    users?: Collection<bigint, User>
-    members?: Collection<bigint, Member>
-    roles?: Collection<bigint, Role>
-    channels?: Collection<bigint, { id: bigint; name: string; type: ChannelTypes; permissions: bigint }>
-    attachments?: Collection<bigint, Attachment>
-  } = {}
+export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInteractionDataResolved, guildId?: bigint): InteractionDataResolved {
+  const transformed: InteractionDataResolved = {}
 
   if (resolved.messages) {
     transformed.messages = new Collection(
@@ -142,11 +219,22 @@ export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInte
     )
   }
 
-  // TODO: fix
-  // return transformed as Optionalize<typeof transformed>
-  return transformed as any
+  return transformed
 }
 
-export interface Interaction extends ReturnType<typeof transformInteraction> {}
-export interface InteractionDataResolved extends ReturnType<typeof transformInteractionDataResolved> {}
-export interface InteractionDataOption extends ReturnType<typeof transformInteractionDataOption> {}
+export interface InteractionDataResolved {
+  messages?: Collection<bigint, Message>
+  users?: Collection<bigint, User>
+  members?: Collection<bigint, Member>
+  roles?: Collection<bigint, Role>
+  channels?: Collection<bigint, { id: bigint; name: string; type: ChannelTypes; permissions: bigint }>
+  attachments?: Collection<bigint, Attachment>
+}
+
+export interface InteractionDataOption {
+  name: string
+  type: ApplicationCommandOptionTypes
+  value?: string | number | boolean
+  options?: InteractionDataOption[]
+  focused?: boolean
+}

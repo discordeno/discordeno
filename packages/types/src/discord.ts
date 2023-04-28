@@ -37,7 +37,6 @@ import type {
   TargetTypes,
   TeamMembershipStates,
   TextStyles,
-  UserFlags,
   VerificationLevels,
   VideoQualityModes,
   WebhookTypes,
@@ -50,11 +49,11 @@ export interface DiscordUser {
   /** The user's chosen language option */
   locale?: string
   /** The flags on a user's account */
-  flags?: UserFlags
+  flags?: number
   /** The type of Nitro subscription on a user's account */
   premium_type?: PremiumTypes
   /** The public flags on a user's account */
-  public_flags?: UserFlags
+  public_flags?: number
   /** the user's banner color encoded as an integer representation of hexadecimal color code */
   accent_color?: number
   /** The user's id */
@@ -1122,12 +1121,7 @@ export interface DiscordActionRow {
   /** Action rows are a group of buttons. */
   type: 1
   /** The components in this row */
-  components:
-    | [DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent]
-    | [DiscordButtonComponent, DiscordButtonComponent]
-    | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
-    | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
-    | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
+  components: Array<DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent>
 }
 
 export interface DiscordSelectMenuComponent {
@@ -1415,12 +1409,14 @@ export enum AutoModerationTriggerTypes {
 export interface DiscordAutoModerationRuleTriggerMetadata {
   /** The keywords needed to match. Only present when TriggerType.Keyword */
   keyword_filter?: string[]
+  /** Regular expression patterns which will be matched against content. Only present when TriggerType.Keyword */
+  regex_patterns: string[]
   /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
   presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
   /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
-  allow_list: string[]
+  allow_list?: string[]
   /** Total number of mentions (role & user) allowed per message (Maximum of 50) */
-  mention_total_limit: number
+  mention_total_limit?: number
 }
 
 export enum DiscordAutoModerationRuleTriggerMetadataPresets {
@@ -1804,8 +1800,8 @@ export interface DiscordCreateApplicationCommand {
   name: string
   /** Localization object for `name` field. Values follow the same restrictions as `name` */
   name_localizations?: Localization | null
-  /** Description for `ApplicationCommandTypes.ChatInput` commands, 1-100 characters. Empty string for `ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands */
-  description: string
+  /** Description for `ApplicationCommandTypes.ChatInput` commands, 1-100 characters. */
+  description?: string
   /** Localization object for `description` field. Values follow the same restrictions as `description` */
   description_localizations?: Localization | null
   /** Parameters for the command, max of 25 */

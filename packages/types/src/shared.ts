@@ -215,8 +215,6 @@ export enum GuildFeatures {
   TicketedEventsEnabled = 'TICKETED_EVENTS_ENABLED',
   /** Guild has increased custom sticker slots */
   MoreStickers = 'MORE_STICKERS',
-  /** Guild has access to create private threads */
-  PrivateThreads = 'PRIVATE_THREADS',
   /** Guild is able to set role icons */
   RoleIcons = 'ROLE_ICONS',
   /** Guild has role subscriptions that can be purchased. */
@@ -311,14 +309,14 @@ export enum VideoQualityModes {
   Full,
 }
 
-/** https://discord.com/developers/docs/topics/gateway#activity-object-activity-types */
+/** https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-types */
 export enum ActivityTypes {
-  Game,
-  Streaming,
-  Listening,
-  Watching,
+  Game = 0,
+  Streaming = 1,
+  Listening = 2,
+  Watching = 3,
   Custom = 4,
-  Competing,
+  Competing = 5,
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-types */
@@ -359,9 +357,9 @@ export enum MessageTypes {
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
 export enum MessageActivityTypes {
   Join = 1,
-  Spectate,
-  Listen,
-  JoinRequest,
+  Spectate = 2,
+  Listen = 3,
+  JoinRequest = 5,
 }
 
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types */
@@ -652,13 +650,13 @@ export enum GatewayCloseEventCodes {
   UnknownOpcode,
   /** You sent an invalid [payload](https://discord.com/developers/docs/topics/gateway#sending-payloads) to us. Don't do that! */
   DecodeError,
-  /** You sent us a payload prior to [identifying](https://discord.com/developers/docs/topics/gateway#identify). */
+  /** You sent us a payload prior to [identifying](https://discord.com/developers/docs/topics/gateway-events#identify). */
   NotAuthenticated,
-  /** The account token sent with your [identify payload](https://discord.com/developers/docs/topics/gateway#identify) is incorrect. */
+  /** The account token sent with your [identify payload](https://discord.com/developers/docs/topics/gateway-events#identify) is incorrect. */
   AuthenticationFailed,
   /** You sent more than one identify payload. Don't do that! */
   AlreadyAuthenticated,
-  /** The sequence sent when [resuming](https://discord.com/developers/docs/topics/gateway#resume) the session was invalid. Reconnect and start a new session. */
+  /** The sequence sent when [resuming](https://discord.com/developers/docs/topics/gateway-events#resume) the session was invalid. Reconnect and start a new session. */
   InvalidSeq = 4007,
   /** Woah nelly! You're sending payloads to us too quickly. Slow it down! You will be disconnected on receiving this. */
   RateLimited,

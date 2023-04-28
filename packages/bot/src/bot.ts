@@ -1,10 +1,11 @@
 import type { CreateGatewayManagerOptions, GatewayManager } from '@discordeno/gateway'
-import { createGatewayManager, ShardSocketCloseCodes } from '@discordeno/gateway'
+import { ShardSocketCloseCodes, createGatewayManager } from '@discordeno/gateway'
 import type { CreateRestManagerOptions, RestManager } from '@discordeno/rest'
 import { createRestManager } from '@discordeno/rest'
 import type { DiscordEmoji, DiscordGatewayPayload, DiscordReady, GatewayIntents } from '@discordeno/types'
 import { createLogger, getBotIdFromToken, type Collection } from '@discordeno/utils'
 import { createBotGatewayHandlers } from './handlers.js'
+import { createBotHelpers, type BotHelpers } from './helpers.js'
 import { createTransformers, type Transformers } from './transformers.js'
 import type { ApplicationCommandPermission } from './transformers/applicationCommandPermission.js'
 import type { AuditLogEntry } from './transformers/auditLogEntry.js'
@@ -16,13 +17,14 @@ import type { Guild } from './transformers/guild.js'
 import type { Integration } from './transformers/integration.js'
 import type { Interaction } from './transformers/interaction.js'
 import type { Invite } from './transformers/invite.js'
-import type { Member, User } from './transformers/member.js'
+import type { Member } from './transformers/member.js'
 import type { Message } from './transformers/message.js'
 import type { PresenceUpdate } from './transformers/presence.js'
 import type { Role } from './transformers/role.js'
 import type { ScheduledEvent } from './transformers/scheduledEvent.js'
 import type { Sticker } from './transformers/sticker.js'
 import type { ThreadMember } from './transformers/threadMember.js'
+import type { User } from './transformers/user.js'
 import type { VoiceState } from './transformers/voiceState.js'
 
 /**
@@ -43,15 +45,13 @@ export function createBot(options: CreateBotOptions): Bot {
 
       // RUN DISPATCH CHECK
       await bot.events.dispatchRequirements?.(data, shard.id)
-      bot.handlers[
-        data.t as keyof ReturnType<typeof createBotGatewayHandlers>
-        // @ts-expect-error as any gets removed by linter
-      ]?.(bot, data.d, shard.id)
+      bot.handlers[data.t as keyof ReturnType<typeof createBotGatewayHandlers>]?.(bot, data, shard.id)
     }
   }
 
   options.rest.token = options.token
   options.gateway.intents = options.intents
+  options.gateway.preferSnakeCase = true
 
   const id = getBotIdFromToken(options.token)
 
@@ -64,7 +64,8 @@ export function createBot(options: CreateBotOptions): Bot {
     gateway: createGatewayManager(options.gateway),
     events: options.events ?? {},
     logger: createLogger({ name: 'BOT' }),
-
+    // Set up helpers below.
+    helpers: {} as BotHelpers,
     async start() {
       if (!options.gateway?.connection) {
         bot.gateway.connection = await bot.rest.getSessionInfo()
@@ -76,6 +77,8 @@ export function createBot(options: CreateBotOptions): Bot {
       return await bot.gateway.shutdown(ShardSocketCloseCodes.Shutdown, 'User requested bot stop')
     },
   }
+
+  bot.helpers = createBotHelpers(bot)
 
   return bot
 }
@@ -112,6 +115,7 @@ export interface Bot {
   transformers: Transformers
   /** The handler functions that should handle incoming discord payloads from gateway and call an event. */
   handlers: ReturnType<typeof createBotGatewayHandlers>
+  helpers: BotHelpers
   /** Start the bot connection to the gateway. */
   start: () => Promise<void>
   /** Shuts down all the bot connections to the gateway. */
