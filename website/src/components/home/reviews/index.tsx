@@ -81,7 +81,7 @@ const reviewList: IReview[] = [
     },
   },
   {
-    review: `I think choosing deno is a very good option, we have been working with Discord.js for years, and yes... It's good, but for large scale bots... nothing better than deno. Besides its creator is very attentive, and gives us a hand whenever he can.`,
+    review: `I think choosing discordeno is a very good option, we have been working with Discord.js for years, and yes... It's good, but for large scale bots... nothing better than discordeno. Besides its creator is very attentive, and gives us a hand whenever he can.`,
     bot: {
       username: 'CactusFire',
       discriminator: '3759',
