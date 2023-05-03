@@ -113,6 +113,7 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
   async edit(response) {
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot edit an autocomplete interaction')
 
+    // If user provides a string, change it to response object
     if (typeof response === 'string') {
       response = {
         content: response,
@@ -124,11 +125,14 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
 
   async defer(ephemeral) {
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot defer an autocomplete interaction')
+    if (this.acknowledged) throw new Error('Cannot defer an already responded interaction')
 
+    // Determine the type of defer response
     let type: InteractionResponseTypes
     if (this.type === InteractionTypes.MessageComponent) type = InteractionResponseTypes.DeferredUpdateMessage
     else type = InteractionResponseTypes.DeferredChannelMessageWithSource
 
+    // If user wants to send a ephemeral message
     const data: InteractionCallbackData = {}
     if (ephemeral) data.flags = 64
 
