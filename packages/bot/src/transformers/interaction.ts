@@ -71,11 +71,11 @@ export interface Interaction extends BaseInteraction {
 
 export interface BaseInteraction {
   /** Sends a response to an interaction. */
-  respond: (response: string | InteractionCallbackData, options?: { private?: boolean }) => Promise<CamelizedDiscordMessage | void>
+  respond: (response: string | InteractionCallbackData, options?: { isPrivate?: boolean }) => Promise<CamelizedDiscordMessage | void>
   /** Edit the original response of an interaction. */
   edit: (response: string | InteractionCallbackData) => Promise<CamelizedDiscordMessage | void>
   /** Defer the interaction. */
-  defer: (private?: boolean) => Promise<CamelizedDiscordMessage | void>
+  defer: (isPrivate?: boolean) => Promise<CamelizedDiscordMessage | void>
   /** Delete the original interaction response or a followup message */
   delete: (messageId?: BigString) => Promise<void>
 }
@@ -97,7 +97,7 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
     }
 
     // If user wants to send a private message
-    if (type === InteractionResponseTypes.ChannelMessageWithSource && options.private) response.flags = 64
+    if (type === InteractionResponseTypes.ChannelMessageWithSource && options?.isPrivate) response.flags = 64
 
     // Since this has already been given a response, any further responses must be followups.
     if (this.acknowledged) return await this.bot?.rest.sendFollowupMessage(this.token!, response)
@@ -123,7 +123,7 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
     return await this.bot?.rest.editOriginalInteractionResponse(this.token!, response)
   },
 
-  async defer(private) {
+  async defer(isPrivate) {
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot defer an autocomplete interaction')
     if (this.acknowledged) throw new Error('Cannot defer an already responded interaction')
 
@@ -134,7 +134,7 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
 
     // If user wants to send a private message
     const data: InteractionCallbackData = {}
-    if (private) data.flags = 64
+    if (isPrivate) data.flags = 64
 
     return await this.bot?.rest.sendInteractionResponse(this.id!, this.token!, { type, data })
   },
