@@ -132,7 +132,7 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
     if (this.type === InteractionTypes.MessageComponent) type = InteractionResponseTypes.DeferredUpdateMessage
     else type = InteractionResponseTypes.DeferredChannelMessageWithSource
 
-    // If user wants to send a pricate message
+    // If user wants to send a private message
     const data: InteractionCallbackData = {}
     if (private) data.flags = 64
 
