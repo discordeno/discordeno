@@ -71,7 +71,7 @@ export interface Interaction extends BaseInteraction {
 
 export interface BaseInteraction {
   /** Sends a response to an interaction. */
-  respond: (response: string | InteractionCallbackData, ephemeral?: boolean) => Promise<CamelizedDiscordMessage | void>
+  respond: (response: string | InteractionCallbackData, options?: { private?: boolean }) => Promise<CamelizedDiscordMessage | void>
   /** Edit the original response of an interaction. */
   edit: (response: string | InteractionCallbackData) => Promise<CamelizedDiscordMessage | void>
   /** Defer the interaction. */
@@ -81,7 +81,7 @@ export interface BaseInteraction {
 }
 
 const baseInteraction: Partial<Interaction> & BaseInteraction = {
-  async respond(response, ephemeral) {
+  async respond(response, options) {
     let type = InteractionResponseTypes.ChannelMessageWithSource
 
     // If user provides a string, change it to response object
@@ -96,8 +96,8 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
       else if (this.type === InteractionTypes.ApplicationCommandAutocomplete) type = InteractionResponseTypes.ApplicationCommandAutocompleteResult
     }
 
-    // If user wants to send a ephemeral message
-    if (type === InteractionResponseTypes.ChannelMessageWithSource && ephemeral) response.flags = 64
+    // If user wants to send a private message
+    if (type === InteractionResponseTypes.ChannelMessageWithSource && options.private) response.flags = 64
 
     // Since this has already been given a response, any further responses must be followups.
     if (this.acknowledged) return await this.bot?.rest.sendFollowupMessage(this.token!, response)
@@ -123,7 +123,7 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
     return await this.bot?.rest.editOriginalInteractionResponse(this.token!, response)
   },
 
-  async defer(ephemeral) {
+  async defer(private) {
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot defer an autocomplete interaction')
     if (this.acknowledged) throw new Error('Cannot defer an already responded interaction')
 
@@ -132,9 +132,9 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
     if (this.type === InteractionTypes.MessageComponent) type = InteractionResponseTypes.DeferredUpdateMessage
     else type = InteractionResponseTypes.DeferredChannelMessageWithSource
 
-    // If user wants to send a ephemeral message
+    // If user wants to send a pricate message
     const data: InteractionCallbackData = {}
-    if (ephemeral) data.flags = 64
+    if (private) data.flags = 64
 
     return await this.bot?.rest.sendInteractionResponse(this.id!, this.token!, { type, data })
   },
