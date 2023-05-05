@@ -20,6 +20,7 @@ export enum DiscordLibraries {
   DISCORD_PHP = 'DiscordPHP',
   JAVACORD = 'Javacord',
   DISCORD_PY = 'discord.py',
+  DISNAKE = 'disnake',
   SERENITY = 'serenity',
   D_SHARP_PLUS = 'DSharpPlus',
   DISCORD_DOT_NET = 'Discord.Net',
