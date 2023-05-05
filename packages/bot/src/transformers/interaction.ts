@@ -73,9 +73,9 @@ export interface BaseInteraction {
   /** Sends a response to an interaction. */
   respond: (response: string | InteractionCallbackData, options?: { isPrivate?: boolean }) => Promise<CamelizedDiscordMessage | void>
   /** Edit the original response of an interaction. */
-  edit: (response: string | InteractionCallbackData) => Promise<CamelizedDiscordMessage | void>
+  edit: (response: string | InteractionCallbackData) => Promise<CamelizedDiscordMessage>
   /** Defer the interaction. */
-  defer: (isPrivate?: boolean) => Promise<CamelizedDiscordMessage | void>
+  defer: (isPrivate?: boolean) => Promise<void>
   /** Delete the original interaction response or a followup message */
   delete: (messageId?: BigString) => Promise<void>
 }
