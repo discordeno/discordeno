@@ -1137,7 +1137,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response}
    */
-  editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<CamelizedDiscordMessage | undefined>
+  editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<CamelizedDiscordMessage>
   /**
    * Edits the original webhook message.
    *

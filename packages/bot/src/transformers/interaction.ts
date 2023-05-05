@@ -120,7 +120,7 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
       }
     }
 
-    return await this.bot?.rest.editOriginalInteractionResponse(this.token!, response)
+    return await this.bot!.rest.editOriginalInteractionResponse(this.token!, response)
   },
 
   async defer(isPrivate) {
