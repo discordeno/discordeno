@@ -4,7 +4,6 @@ import {
   ReviewsElementWrapper,
   ReviewsHeader,
   ReviewsLeft,
-  ReviewsOther,
   ReviewsOtherContainer,
   ReviewsRight,
   ReviewsSection,
@@ -45,7 +44,7 @@ const reviewList: IReview[] = [
         'https://cdn.discordapp.com/avatars/1032699319368814652/8abbc5911333d3df288ff962a2120d75.png',
       invite_url:
         'https://discord.com/oauth2/authorize?client_id=1032699319368814652&permissions=274877959232&scope=bot%20applications.commands',
-      guild_count: 41000,
+      guild_count: 50000,
     },
     developer: {
       username: '8au',
@@ -56,6 +55,28 @@ const reviewList: IReview[] = [
     memory_improvement: {
       from: 4500,
       to: 614,
+    },
+  },
+  {
+    review: `Before finding Discordeno, Appy was having daily outages and using significant amounts of memory due to the inefficient caching defaults of Disnake. Discordeno has provided an amazing developer experience and helped free up much of my system resources.`,
+    bot: {
+      username: 'Appy',
+      discriminator: '0756',
+      avatar:
+        'https://cdn.discordapp.com/avatars/853327905357561948/a394518e742643f05cc201249d3ae75e.png',
+      invite_url:
+        'https://discord.com/oauth2/authorize?client_id=853327905357561948&scope=bot&permissions=534925798592',
+      guild_count: 82000,
+    },
+    developer: {
+      username: '8au',
+      discriminator: '7840',
+    },
+    stars: 5,
+    previous_library: 'DISNAKE',
+    memory_improvement: {
+      from: 7800,
+      to: 3700,
     },
   },
   {
