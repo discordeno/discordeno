@@ -927,7 +927,7 @@ export enum SortOrderTypes {
   CreationDate,
 }
 
-export enum FormLayout {
+export enum ForumLayout {
   /** No default has been set for forum channel. */
   NotSet = 0,
   /** Display posts as a list. */

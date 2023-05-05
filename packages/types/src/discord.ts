@@ -12,7 +12,7 @@ import type {
   DefaultMessageNotificationLevels,
   EmbedTypes,
   ExplicitContentFilterLevels,
-  FormLayout,
+  ForumLayout,
   GatewayEventNames,
   GuildFeatures,
   GuildNsfwLevel,
@@ -745,7 +745,7 @@ export interface DiscordChannel {
   /** the default sort order type used to order posts in GUILD_FORUM channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
   default_sort_order?: SortOrderTypes | null
   /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
-  default_forum_layout?: FormLayout
+  default_forum_layout?: ForumLayout
   /** When a thread is created this will be true on that channel payload for the thread. */
   newly_created?: boolean
 }
@@ -2399,7 +2399,7 @@ export interface DiscordModifyChannel {
   /** the default sort order type used to order posts in forum channels */
   default_sort_order?: SortOrderTypes | null
   /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
-  default_forum_layout?: FormLayout
+  default_forum_layout?: ForumLayout
 }
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */
