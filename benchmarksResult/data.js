@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683301838187,
+  "lastUpdate": 1683302097476,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -6887,6 +6887,114 @@ window.BENCHMARK_DATA = {
             "range": "±0.42%",
             "unit": "ops/sec",
             "extra": "92 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "endy@endy3032.ml",
+            "name": "Endy",
+            "username": "Endy3032"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "37aa4198c203c7e4a0631f32ea036d1341473520",
+          "message": "feat(bot): add more helper functions to `BaseInteraction` (#3018)\n\n* Add more helper functions for `BaseInteraction`\n\n- Breaking changes for `respond`\n  - `response` now takes `InteractionCallbackData`\n  - `options` is now `ephemeral: boolean`\n- Added `edit`, `defer` and `delete`\n\n* Add comments and `acknowledged` check for `defer`\n\n* Update packages/bot/src/transformers/interaction.ts\n\nCo-authored-by: Skillz4Killz <23035000+Skillz4Killz@users.noreply.github.com>\n\n* Revert `respond` options, rename `ephemeral` to `private`\n\n* Fix typo\n\n* Fix arg name\n\n- Renamed `private` to `isPrivate` to prevent reserved name collision\n- Optional chaining for `options`\n\n* Apply suggestions from code review\n\n---------\n\nCo-authored-by: Skillz4Killz <23035000+Skillz4Killz@users.noreply.github.com>",
+          "timestamp": "2023-05-05T15:52:49Z",
+          "tree_id": "62e70bc75f1d3b46b9bb64553f9b94a5e38a0254",
+          "url": "https://github.com/discordeno/discordeno/commit/37aa4198c203c7e4a0631f32ea036d1341473520"
+        },
+        "date": 1683302095763,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "[transformer] message cache check RSS",
+            "value": 82.4,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Used",
+            "value": 82.35,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Total",
+            "value": 75.16,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check RSS",
+            "value": 52.09,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Used",
+            "value": 89.28,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Total",
+            "value": 63.1,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 0.58,
+            "range": "±3%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 10.65,
+            "range": "±1.44%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 0,
+            "range": "±0%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "rest.simplifyUrl",
+            "value": 222383,
+            "range": "±0.31%",
+            "unit": "ops/sec",
+            "extra": "95 samples"
+          },
+          {
+            "name": "Camelize 1 event",
+            "value": 6455,
+            "range": "±0.29%",
+            "unit": "ops/sec",
+            "extra": "95 samples"
+          },
+          {
+            "name": "Snakelize 1 event",
+            "value": 6419,
+            "range": "±0.30%",
+            "unit": "ops/sec",
+            "extra": "96 samples"
           }
         ]
       }
