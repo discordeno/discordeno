@@ -128,14 +128,16 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
     if (this.acknowledged) throw new Error('Cannot defer an already responded interaction')
 
     // Determine the type of defer response
-    let type: InteractionResponseTypes
-    if (this.type === InteractionTypes.MessageComponent) type = InteractionResponseTypes.DeferredUpdateMessage
-    else type = InteractionResponseTypes.DeferredChannelMessageWithSource
+    const type =
+      this.type === InteractionTypes.MessageComponent
+        ? InteractionResponseTypes.DeferredUpdateMessage
+        : InteractionResponseTypes.DeferredChannelMessageWithSource
 
     // If user wants to send a private message
     const data: InteractionCallbackData = {}
     if (isPrivate) data.flags = 64
 
+    this.acknowledged = true
     return await this.bot?.rest.sendInteractionResponse(this.id!, this.token!, { type, data })
   },
 
