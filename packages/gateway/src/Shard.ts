@@ -700,7 +700,7 @@ export class DiscordenoShard {
       options.limit = options.userIds.length
     }
 
-    const nonce = `${guildId}-${Date.now()}`
+    const nonce = options?.nonce ?? Date.now().toString()
 
     // Gateway does not require caching these requests so directly send and return
     if (!this.cache.requestMembers?.enabled) {
