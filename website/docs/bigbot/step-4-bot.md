@@ -114,7 +114,7 @@ try {
     // OPTIONAL: Runs the raw event handler if you need it
 	bot.events.raw(bot, req.body.payload, req.body.shardId);
     // Runs the event handler if available
-    if (message.t) bot.events.[snakeToCamelCase(message.t)]?.(req.body.payload, req.body.shardId);
+    if (message.t) bot.events.[snakeToCamelCase(message.t.toLowerCase())]?.(req.body.payload, req.body.shardId);
 
     res.status(200).json({ success: true })
   }
