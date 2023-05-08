@@ -118,18 +118,29 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const newObj: any = {}
 
         for (const key of Object.keys(obj)) {
-          // Keys that dont require snake casing
-          if (['permissions', 'allow', 'deny'].includes(key) && obj[key] !== undefined) {
-            newObj[key] = calculateBits(obj[key])
-            continue
+          const value = obj[key]
+
+          // Some falsy values should be allowed like null or 0
+          if (value !== undefined) {
+            switch (key) {
+              case 'permissions':
+              case 'allow':
+              case 'deny':
+                newObj[key] = calculateBits(value)
+                continue
+              case 'defaultMemberPermissions':
+                newObj.default_member_permissions = calculateBits(value)
+                continue
+              case 'nameLocalizations':
+                newObj.name_localizations = value
+                continue
+              case 'descriptionLocalizations':
+                newObj.description_localizations = value
+                continue
+            }
           }
 
-          if (key === 'defaultMemberPermissions' && obj[key] !== undefined) {
-            newObj.default_member_permissions = calculateBits(obj[key])
-            continue
-          }
-
-          newObj[camelToSnakeCase(key)] = rest.changeToDiscordFormat(obj[key])
+          newObj[camelToSnakeCase(key)] = rest.changeToDiscordFormat(value)
         }
 
         return newObj
