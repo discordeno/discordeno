@@ -32,7 +32,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     version: options.version ?? 10,
     connection: options.connection,
     totalShards: options.totalShards ?? options.connection.shards ?? 1,
-    lastShardId: options.lastShardId ?? 0,
+    lastShardId: options.lastShardId ?? (options.totalShards ? options.totalShards - 1 : (options.connection ? options.connection.shards - 1 : 0)),
     firstShardId: options.firstShardId ?? 0,
     totalWorkers: options.totalWorkers ?? 4,
     shardsPerWorker: options.shardsPerWorker ?? 25,
