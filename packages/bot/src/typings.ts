@@ -2,6 +2,7 @@ import {
   ApplicationCommandTypes,
   type AllowedMentions,
   type ButtonStyles,
+  type ChannelTypes,
   type CreateApplicationCommand,
   type CreateContextApplicationCommand,
   type DiscordAllowedMentions,
@@ -16,13 +17,13 @@ import {
   type DiscordUser,
   type FileContent,
   type InteractionResponseTypes,
-  type MessageComponents,
   type MessageComponentTypes,
+  type MessageComponents,
   type TextStyles,
 } from '@discordeno/types'
 import type * as handlers from './handlers/index.js'
-import type { Embed } from './transformers/embed.js'
 import type { ApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js'
+import type { Embed } from './transformers/embed.js'
 
 export function isContextApplicationCommand(command: CreateApplicationCommand): command is CreateContextApplicationCommand {
   return command.type === ApplicationCommandTypes.Message || command.type === ApplicationCommandTypes.User
@@ -69,6 +70,8 @@ export interface DiscordComponent {
   }
   /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
   url?: string
+  /** List of channel types to include in a channel select menu options list */
+  channel_types?: ChannelTypes[]
   /** The choices! Maximum of 25 items. */
   options?: DiscordSelectOption[]
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
@@ -205,7 +208,7 @@ export interface BotGatewayHandlerOptions {
 
 export enum MessageFlags {
   /** Whether this message has been published to subscribed channels (via Channel Following) */
-  Crossposted =	1 << 0,	
+  Crossposted = 1 << 0,
   /** Whether this message originated from a message in another channel (via Channel Following) */
   IsCrosspost = 1 << 1,
   /** Whether do not include any embeds when serializing this message */

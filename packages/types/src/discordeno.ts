@@ -195,6 +195,8 @@ export interface SelectMenuChannelsComponent {
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   maxValues?: number
+  /** List of channel types to include in the options list */
+  channelTypes?: ChannelTypes[]
   /** Whether or not this select is disabled */
   disabled?: boolean
 }
