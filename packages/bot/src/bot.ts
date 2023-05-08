@@ -67,6 +67,14 @@ export function createBot(options: CreateBotOptions): Bot {
     // Set up helpers below.
     helpers: {} as BotHelpers,
     async start() {
+      // @ts-expect-error should this work
+      if (typeof Deno !== 'undefined') {
+        // @ts-expect-error should this work
+        const katsura = await import('https://x.nest.land/katsura@1.3.9/src/discordenoFixes/gatewaySocket.ts')
+
+        await katsura(bot.gateway)
+      }
+
       if (!options.gateway?.connection) {
         bot.gateway.connection = await bot.rest.getSessionInfo()
       }
