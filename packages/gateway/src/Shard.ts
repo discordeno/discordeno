@@ -129,13 +129,19 @@ export class DiscordenoShard {
     url.searchParams.set('v', this.gatewayConfig.version.toString())
     url.searchParams.set('encoding', 'json')
 
-    const socket = new WebSocket(url.toString())
+    const socket =
+      // @ts-expect-error Deno
+      typeof Deno !== 'undefined'
+        ? // eslint-disable-next-line no-eval
+          eval('new WebSocket(url.toString())')
+        : new WebSocket(url.toString())
+
     this.socket = socket
 
     // TODO: proper event handling
-    socket.onerror = (event) => console.log({ error: event, shardId: this.id })
-    socket.onclose = async (event) => await this.handleClose(event)
-    socket.onmessage = async (message) => await this.handleMessage(message)
+    socket.onerror = (event: WebSocket.ErrorEvent) => console.log({ error: event, shardId: this.id })
+    socket.onclose = async (event: WebSocket.CloseEvent) => await this.handleClose(event)
+    socket.onmessage = async (message: WebSocket.MessageEvent) => await this.handleMessage(message)
 
     return await new Promise((resolve) => {
       socket.onopen = () => {
