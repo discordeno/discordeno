@@ -33,33 +33,30 @@ export function snakelize<T>(object: T): Snakelize<T> {
 }
 
 export function snakeToCamelCase(str: string): string {
-  if (!str.includes('_')) return str
-
-  let result = ''
-  for (let i = 0, len = str.length; i < len; ++i) {
-    if (str[i] === '_') {
-      result += str[++i].toUpperCase()
-
-      continue
+  if (!str.includes('_')) return str.toLowerCase()
+    let result = ''
+    for (let i=0; i<str.length; ++i){
+        if (str[i] === '_') {
+            result += str[++i].toUpperCase()
+            continue
+        }
+        result += str[i].toLowerCase()
     }
-
-    result += str[i]
-  }
-
-  return result
+    return result
 }
 
 export function camelToSnakeCase(str: string): string {
   let result = ''
-  for (let i = 0, len = str.length; i < len; ++i) {
-    if (str[i] >= 'A' && str[i] <= 'Z') {
-      result += `_${str[i].toLowerCase()}`
-
-      continue
+    for (let i = 0; i < str.length; ++i){
+        if (str[i] >= 'A' && str[i] <= 'Z') {
+            if (i === 0) {
+                result += str[i].toLowerCase()
+                continue
+            }
+            result += `_${str[i].toLowerCase()}`
+            continue
+        }
+        result += str[i]
     }
-
-    result += str[i]
-  }
-
-  return result
+    return result
 }
