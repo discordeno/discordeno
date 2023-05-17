@@ -62,7 +62,7 @@ export interface User extends BaseUser {
   toggles?: UserToggles
   /** The user's username, unique across the platform */
   username: string
-  /** The user's display name, not unique across the platform */
+  /** The user's display name, if it is set. For bots, this is the application name */
   globalName?: string
   /** The user's chosen language option */
   locale?: string
