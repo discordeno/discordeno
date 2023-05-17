@@ -32,6 +32,7 @@ export function transformUser(bot: Bot, payload: DiscordUser): User {
   if (props.publicFlags) user.publicFlags = new ToggleBitfield(payload.public_flags)
   if (payload.id && props.id) user.id = bot.transformers.snowflake(payload.id)
   if (payload.username && props.username) user.username = payload.username
+  if (payload.global_name && props.globalName) user.globalName = payload.global_name
   if (payload.discriminator && props.discriminator) user.discriminator = payload.discriminator
   if (payload.locale && props.locale) user.locale = payload.locale
   if (payload.email && props.email) user.email = payload.email
@@ -59,8 +60,10 @@ export interface BaseUser {
 export interface User extends BaseUser {
   /** Compressed version of all the booleans on a user. */
   toggles?: UserToggles
-  /** The user's username, not unique across the platform */
+  /** The user's username, unique across the platform */
   username: string
+  /** The user's display name, not unique across the platform */
+  globalName?: string
   /** The user's chosen language option */
   locale?: string
   /** The flags on a user's account */

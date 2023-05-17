@@ -334,6 +334,7 @@ export interface Transformers {
     }
     user: {
       username: boolean
+      globalName: boolean
       locale: boolean
       flags: boolean
       premiumType: boolean
