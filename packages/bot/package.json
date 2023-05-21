@@ -9,10 +9,14 @@
     "type": "git",
     "url": "https://github.com/discordeno/discordeno.git"
   },
+  "bin": {
+    "discordeno": "./bin/dist/index.js"
+  },
   "scripts": {
     "build": "swc --delete-dir-on-start src --out-dir dist",
+    "build:cli": "tsc --project tsconfig.cli.json",
     "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
-    "release-build": "yarn build && yarn build:type",
+    "release-build": "yarn build && yarn build:type && build:cli",
     "fmt": "eslint --fix \"src/**/*.ts*\"",
     "lint": "eslint \"src/**/*.ts*\"",
     "test:unit-coverage": "c8 mocha --no-warnings 'tests/unit/**/*.spec.ts'",
@@ -27,7 +31,8 @@
     "@discordeno/gateway": "19.0.0-alpha.1",
     "@discordeno/rest": "19.0.0-alpha.1",
     "@discordeno/types": "19.0.0-alpha.1",
-    "@discordeno/utils": "19.0.0-alpha.1"
+    "@discordeno/utils": "19.0.0-alpha.1",
+    "commander": "^10.0.1"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.62",
