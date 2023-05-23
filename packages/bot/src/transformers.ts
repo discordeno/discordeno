@@ -99,8 +99,12 @@ import type { BotInteractionResponse, DiscordComponent, DiscordInteractionRespon
 
 export interface Transformers {
   customizers: {
+    channel: (bot: Bot, payload: DiscordChannel, channel: Channel) => any
     interaction: (bot: Bot, payload: DiscordInteraction, interaction: Interaction) => any
     message: (bot: Bot, payload: DiscordMessage, message: Message) => any
+    user: (bot: Bot, payload: DiscordUser, user: User) => any
+    member: (bot: Bot, payload: DiscordMember, member: Member) => any
+    role: (bot: Bot, payload: DiscordRole, role: Role) => any
   }
   desiredProperties: {
     attachment: {
@@ -381,12 +385,12 @@ export interface Transformers {
   gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot
   automodRule: (bot: Bot, payload: DiscordAutoModerationRule) => AutoModerationRule
   automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution) => AutoModerationActionExecution
-  channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }) => Channel
+  channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }) => Channel
   guild: (bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) => Guild
   user: (bot: Bot, payload: DiscordUser) => User
-  member: (bot: Bot, payload: DiscordMember, guildId: bigint, userId: bigint) => Member
+  member: (bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString) => Member
   message: (bot: Bot, payload: DiscordMessage) => Message
-  role: (bot: Bot, payload: { role: DiscordRole } & { guildId: bigint }) => Role
+  role: (bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }) => Role
   voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) => VoiceState
   interaction: (bot: Bot, payload: DiscordInteraction) => Interaction
   interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption
@@ -421,11 +425,23 @@ export interface Transformers {
 export function createTransformers(options: Partial<Transformers>): Transformers {
   return {
     customizers: {
+      channel(bot, payload, channel) {
+        return channel
+      },
       interaction(bot, payload, interaction) {
         return interaction
       },
+      member(bot, payload, member) {
+        return member
+      },
       message(bot, payload, message) {
         return message
+      },
+      role(bot, payload, role) {
+        return role
+      },
+      user(bot, payload, user) {
+        return user
       },
     },
     desiredProperties: {

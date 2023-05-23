@@ -542,7 +542,7 @@ export function createRoutes(): RestRoutes {
     },
 
     oauth2Application() {
-      return 'oauth2/applications/@me'
+      return '/oauth2/applications/@me'
     },
 
     gatewayBot() {

@@ -1,55 +1,54 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-const-assign */
-import { InteractionResponseTypes } from '@discordeno/types'
-import { calculateBits, camelize, camelToSnakeCase, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
-import fetch from 'node-fetch'
+import { calculateBits, camelToSnakeCase, camelize, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
 
-import type {
-  BigString,
-  Camelize,
-  DiscordApplication,
-  DiscordApplicationCommand,
-  DiscordApplicationCommandPermissions,
-  DiscordAuditLog,
-  DiscordAutoModerationRule,
-  DiscordBan,
-  DiscordChannel,
-  DiscordEmoji,
-  DiscordFollowedChannel,
-  DiscordGetGatewayBot,
-  DiscordGuild,
-  DiscordGuildPreview,
-  DiscordGuildWidget,
-  DiscordGuildWidgetSettings,
-  DiscordIntegration,
-  DiscordInvite,
-  DiscordInviteMetadata,
-  DiscordListActiveThreads,
-  DiscordListArchivedThreads,
-  DiscordMember,
-  DiscordMemberWithUser,
-  DiscordMessage,
-  DiscordPrunedCount,
-  DiscordRole,
-  DiscordScheduledEvent,
-  DiscordStageInstance,
-  DiscordSticker,
-  DiscordStickerPack,
-  DiscordTemplate,
-  DiscordThreadMember,
-  DiscordUser,
-  DiscordVanityUrl,
-  DiscordVoiceRegion,
-  DiscordWebhook,
-  DiscordWelcomeScreen,
-  MfaLevels,
-  ModifyGuildTemplate,
+import {
+  InteractionResponseTypes,
+  type BigString,
+  type Camelize,
+  type DiscordApplication,
+  type DiscordApplicationCommand,
+  type DiscordAuditLog,
+  type DiscordAutoModerationRule,
+  type DiscordBan,
+  type DiscordChannel,
+  type DiscordEmoji,
+  type DiscordFollowedChannel,
+  type DiscordGetGatewayBot,
+  type DiscordGuild,
+  type DiscordGuildApplicationCommandPermissions,
+  type DiscordGuildPreview,
+  type DiscordGuildWidget,
+  type DiscordGuildWidgetSettings,
+  type DiscordIntegration,
+  type DiscordInvite,
+  type DiscordInviteMetadata,
+  type DiscordListActiveThreads,
+  type DiscordListArchivedThreads,
+  type DiscordMember,
+  type DiscordMemberWithUser,
+  type DiscordMessage,
+  type DiscordPrunedCount,
+  type DiscordRole,
+  type DiscordScheduledEvent,
+  type DiscordStageInstance,
+  type DiscordSticker,
+  type DiscordStickerPack,
+  type DiscordTemplate,
+  type DiscordThreadMember,
+  type DiscordUser,
+  type DiscordVanityUrl,
+  type DiscordVoiceRegion,
+  type DiscordWebhook,
+  type DiscordWelcomeScreen,
+  type MfaLevels,
+  type ModifyGuildTemplate,
 } from '@discordeno/types'
-import type { CreateRequestBodyOptions, CreateRestManagerOptions, RestManager, SendRequestOptions } from './types.js'
 import { createRoutes } from './routes.js'
+import type { CreateRequestBodyOptions, CreateRestManagerOptions, RestManager, SendRequestOptions } from './types.js'
 
 // TODO: make dynamic based on package.json file
 const version = '19.0.0-alpha.1'
@@ -119,18 +118,29 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const newObj: any = {}
 
         for (const key of Object.keys(obj)) {
-          // Keys that dont require snake casing
-          if (['permissions', 'allow', 'deny'].includes(key)) {
-            newObj[key] = calculateBits(obj[key])
-            continue
+          const value = obj[key]
+
+          // Some falsy values should be allowed like null or 0
+          if (value !== undefined) {
+            switch (key) {
+              case 'permissions':
+              case 'allow':
+              case 'deny':
+                newObj[key] = calculateBits(value)
+                continue
+              case 'defaultMemberPermissions':
+                newObj.default_member_permissions = calculateBits(value)
+                continue
+              case 'nameLocalizations':
+                newObj.name_localizations = value
+                continue
+              case 'descriptionLocalizations':
+                newObj.description_localizations = value
+                continue
+            }
           }
 
-          if (key === 'defaultMemberPermissions') {
-            newObj.default_member_permissions = calculateBits(obj[key])
-            continue
-          }
-
-          newObj[camelToSnakeCase(key)] = rest.changeToDiscordFormat(obj[key])
+          newObj[camelToSnakeCase(key)] = rest.changeToDiscordFormat(value)
         }
 
         return newObj
@@ -303,8 +313,21 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const payload = rest.createRequestBody(options.method, options.requestBodyOptions)
 
       logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
-      const response = await fetch(url, payload)
+      const response = await fetch(url, payload).catch(async (error) => {
+        logger.error(error)
+        // Mark request and completed
+        rest.invalidBucket.handleCompletedRequest(999, false)
+        options.reject({
+          ok: false,
+          status: 999,
+          error: 'Possible network or request shape issue occurred. If this is rare, its a network glitch. If it occurs a lot something is wrong.',
+        })
+        throw error
+      })
       logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
+
+      // Mark request and completed
+      rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared')
 
       // Set the bucket id if it was available on the headers
       const bucketId = rest.processHeaders(rest.simplifyUrl(options.route, options.method), response.headers)
@@ -333,9 +356,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         }
 
         options.retryCount += 1
-
-        // Rate limited, add back to queue
-        rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared')
 
         const resetAfter = response.headers.get(RATE_LIMIT_RESET_AFTER_HEADER)
         if (resetAfter) await delay(Number(resetAfter) * 1000)
@@ -417,7 +437,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           throw new Error(JSON.stringify(err))
         }
 
-        return result.status !== 204 ? ((await result.json()) as any) : undefined
+        return result.status !== 204 ? await result.json() : undefined
       }
 
       // eslint-disable-next-line no-async-promise-executor
@@ -680,7 +700,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editApplicationCommandPermissions(guildId, commandId, bearerToken, permissions) {
-      return await rest.put<DiscordApplicationCommandPermissions>(
+      return await rest.put<DiscordGuildApplicationCommandPermissions>(
         rest.routes.interactions.commands.permission(rest.applicationId, guildId, commandId),
         {
           body: {
@@ -849,13 +869,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getApplicationCommandPermission(guildId, commandId) {
-      return await rest.get<DiscordApplicationCommandPermissions>(
+      return await rest.get<DiscordGuildApplicationCommandPermissions>(
         rest.routes.interactions.commands.permission(rest.applicationId, guildId, commandId),
       )
     },
 
     async getApplicationCommandPermissions(guildId) {
-      return await rest.get<DiscordApplicationCommandPermissions[]>(rest.routes.interactions.commands.permissions(rest.applicationId, guildId))
+      return await rest.get<DiscordGuildApplicationCommandPermissions[]>(rest.routes.interactions.commands.permissions(rest.applicationId, guildId))
     },
 
     async getApplicationInfo() {

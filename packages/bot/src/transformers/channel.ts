@@ -1,4 +1,4 @@
-import type { ChannelTypes, DiscordChannel, DiscordThreadMember, OverwriteReadable, VideoQualityModes } from '@discordeno/types'
+import type { BigString, ChannelTypes, DiscordChannel, DiscordThreadMember, OverwriteReadable, VideoQualityModes } from '@discordeno/types'
 import { calculatePermissions, type Bot } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { ChannelToggles } from './toggles/channel.js'
@@ -61,13 +61,13 @@ export const baseChannel: Partial<Channel> & BaseChannel = {
   },
 }
 
-export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } & { guildId?: bigint }): Channel {
+export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }): Channel {
   const channel = Object.create(baseChannel)
   const props = bot.transformers.desiredProperties.channel
   channel.toggles = new ChannelToggles(payload.channel)
 
   if (payload.channel.id && props.id) channel.id = bot.transformers.snowflake(payload.channel.id)
-  if (payload.guildId && props.guildId) channel.guildId = payload.guildId
+  if ((payload.guildId ?? payload.channel.guild_id) && props.guildId) channel.guildId = payload.guildId ?? bot.transformers.snowflake(payload.channel.guild_id!)
   if (props.type) channel.type = payload.channel.type
   if (props.position) channel.position = payload.channel.position
   if (payload.channel.name && props.name) channel.name = payload.channel.name
@@ -98,8 +98,9 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } 
   if (payload.channel.permission_overwrites && props.permissionOverwrites) {
     channel.internalOverwrites = payload.channel.permission_overwrites.map((o) => packOverwrites(o.allow ?? '0', o.deny ?? '0', o.id, o.type))
   }
+  if (props.parentId && payload.channel.parent_id) channel.parentId = bot.transformers.snowflake(payload.channel.parent_id);
 
-  return channel
+  return bot.transformers.customizers.channel(bot, payload.channel, channel);
 }
 
 export interface BaseChannel {
@@ -158,7 +159,7 @@ export interface Channel extends BaseChannel {
   /** Id of the creator of the thread */
   ownerId?: bigint
   /** For guild channels: Id of the parent category for a channel (each parent category can contain up to 50 channels), for threads: id of the text channel this thread was created */
-  parentId?: string
+  parentId?: bigint
   /** When the last pinned message was pinned. This may be null in events such as GUILD_CREATE when a message is not pinned. */
   lastPinTimestamp?: string
   /** Voice region id for the voice or stage channel, automatic when set to null */

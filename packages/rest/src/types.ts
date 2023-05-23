@@ -7,7 +7,6 @@ import type {
   CamelizedDiscordActiveThreads,
   CamelizedDiscordApplication,
   CamelizedDiscordApplicationCommand,
-  CamelizedDiscordApplicationCommandPermissions,
   CamelizedDiscordArchivedThreads,
   CamelizedDiscordAuditLog,
   CamelizedDiscordAutoModerationRule,
@@ -17,6 +16,7 @@ import type {
   CamelizedDiscordFollowedChannel,
   CamelizedDiscordGetGatewayBot,
   CamelizedDiscordGuild,
+  CamelizedDiscordGuildApplicationCommandPermissions,
   CamelizedDiscordGuildPreview,
   CamelizedDiscordGuildWidget,
   CamelizedDiscordGuildWidgetSettings,
@@ -894,7 +894,7 @@ export interface RestManager {
     commandId: BigString,
     bearerToken: string,
     options: ApplicationCommandPermissions[],
-  ) => Promise<CamelizedDiscordApplicationCommandPermissions>
+  ) => Promise<CamelizedDiscordGuildApplicationCommandPermissions>
   /**
    * Edits an automod rule.
    *
@@ -1137,7 +1137,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response}
    */
-  editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<CamelizedDiscordMessage | undefined>
+  editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<CamelizedDiscordMessage>
   /**
    * Edits the original webhook message.
    *
@@ -1405,7 +1405,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions}
    */
-  getApplicationCommandPermission: (guildId: BigString, commandId: BigString) => Promise<CamelizedDiscordApplicationCommandPermissions>
+  getApplicationCommandPermission: (guildId: BigString, commandId: BigString) => Promise<CamelizedDiscordGuildApplicationCommandPermissions>
   /**
    * Gets the permissions of all application commands registered in a guild by the ID of the guild.
    *
@@ -1414,7 +1414,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions}
    */
-  getApplicationCommandPermissions: (guildId: BigString) => Promise<CamelizedDiscordApplicationCommandPermissions[]>
+  getApplicationCommandPermissions: (guildId: BigString) => Promise<CamelizedDiscordGuildApplicationCommandPermissions[]>
   /**
    * Gets a guild's audit log.
    *

@@ -1,10 +1,15 @@
-import type {
-  ApplicationCommandOptionTypes,
-  ChannelTypes,
-  DiscordInteraction,
-  DiscordInteractionDataOption,
+import {
+  InteractionResponseTypes,
   InteractionTypes,
-  MessageComponentTypes,
+  type ApplicationCommandOptionTypes,
+  type ApplicationCommandTypes,
+  type BigString,
+  type CamelizedDiscordMessage,
+  type ChannelTypes,
+  type DiscordInteraction,
+  type DiscordInteractionDataOption,
+  type InteractionCallbackData,
+  type MessageComponentTypes,
 } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import type { Bot, Component } from '../index.js'
@@ -15,7 +20,11 @@ import type { Message } from './message.js'
 import type { Role } from './role.js'
 import type { User } from './user.js'
 
-export interface Interaction {
+export interface Interaction extends BaseInteraction {
+  /** The bot object */
+  bot: Bot
+  /** Whether or not this interaction has been responded to. */
+  acknowledged: boolean
   /** Id of the interaction */
   id: bigint
   /** Id of the application this interaction is for */
@@ -38,6 +47,7 @@ export interface Interaction {
   message?: Message
   /** the command data payload */
   data?: {
+    type?: ApplicationCommandTypes
     componentType?: MessageComponentTypes
     customId?: string
     components?: Component[]
@@ -57,12 +67,89 @@ export interface Interaction {
   appPermissions: bigint
 }
 
+export interface BaseInteraction {
+  /** Sends a response to an interaction. */
+  respond: (response: string | InteractionCallbackData, options?: { isPrivate?: boolean }) => Promise<CamelizedDiscordMessage | void>
+  /** Edit the original response of an interaction. */
+  edit: (response: string | InteractionCallbackData) => Promise<CamelizedDiscordMessage>
+  /** Defer the interaction. */
+  defer: (isPrivate?: boolean) => Promise<void>
+  /** Delete the original interaction response or a followup message */
+  delete: (messageId?: BigString) => Promise<void>
+}
+
+const baseInteraction: Partial<Interaction> & BaseInteraction = {
+  async respond(response, options) {
+    let type = InteractionResponseTypes.ChannelMessageWithSource
+
+    // If user provides a string, change it to a response object
+    if (typeof response === 'string') response = { content: response }
+    // If user provides an object, determine if it should be an autocomplete or a modal response
+    else if (response.title) type = InteractionResponseTypes.Modal
+    else if (this.type === InteractionTypes.ApplicationCommandAutocomplete) type = InteractionResponseTypes.ApplicationCommandAutocompleteResult
+
+    // If user wants to send a private message
+    if (type === InteractionResponseTypes.ChannelMessageWithSource && options?.isPrivate) response.flags = 64
+
+    // Since this has already been given a response, any further responses must be followups.
+    if (this.acknowledged) return await this.bot?.rest.sendFollowupMessage(this.token!, response)
+
+    // Modals cannot be chained
+    if (this.type === InteractionTypes.ModalSubmit && type === InteractionResponseTypes.Modal)
+      throw new Error('Cannot respond to a modal interaction with another modal.')
+
+    // Autocomplete response can only be used for autocomplete interactions
+    if (this.type === InteractionTypes.ApplicationCommandAutocomplete && type !== InteractionResponseTypes.ApplicationCommandAutocompleteResult)
+      throw new Error('Cannot respond to an autocomplete interaction with a modal or message.')
+
+    // If user has not already responded to this interaction we need to send an original response
+    this.acknowledged = true
+    return await this.bot?.rest.sendInteractionResponse(this.id!, this.token!, { type, data: response })
+  },
+
+  async edit(response) {
+    if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot edit an autocomplete interaction')
+
+    // If user provides a string, change it to a response object
+    if (typeof response === 'string') response = { content: response }
+
+    return await this.bot!.rest.editOriginalInteractionResponse(this.token!, response)
+  },
+
+  async defer(isPrivate) {
+    if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot defer an autocomplete interaction')
+    if (this.acknowledged) throw new Error('Cannot defer an already responded interaction')
+
+    // Determine the type of defer response
+    const type =
+      this.type === InteractionTypes.MessageComponent
+        ? InteractionResponseTypes.DeferredUpdateMessage
+        : InteractionResponseTypes.DeferredChannelMessageWithSource
+
+    // If user wants to send a private message
+    const data: InteractionCallbackData = {}
+    if (isPrivate) data.flags = 64
+
+    this.acknowledged = true
+    return await this.bot?.rest.sendInteractionResponse(this.id!, this.token!, { type, data })
+  },
+
+  async delete(messageId?: BigString) {
+    if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot delete an autocomplete interaction')
+
+    if (messageId) return await this.bot?.rest.deleteFollowupMessage(this.token!, messageId)
+    else return await this.bot?.rest.deleteOriginalInteractionResponse(this.token!)
+  },
+}
+
 export function transformInteraction(bot: Bot, payload: DiscordInteraction): Interaction {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
   const user = bot.transformers.user(bot, payload.member?.user ?? payload.user!)
 
-  const interaction: Interaction = Object.create({})
+  const interaction: Interaction = Object.create(baseInteraction)
   const props = bot.transformers.desiredProperties.interaction
+  interaction.bot = bot
+  interaction.acknowledged = false
 
   if (payload.id && props.id) interaction.id = bot.transformers.snowflake(payload.id)
   if (payload.application_id && props.applicationId) interaction.applicationId = bot.transformers.snowflake(payload.application_id)
@@ -79,6 +166,7 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction): Int
   if (payload.member && guildId && props.member) interaction.member = bot.transformers.member(bot, payload.member, guildId, user.id)
   if (payload.data && props.data) {
     interaction.data = {
+      type: payload.data.type,
       componentType: payload.data.component_type,
       customId: payload.data.custom_id,
       components: payload.data.components?.map((component) => bot.transformers.component(bot, component)),

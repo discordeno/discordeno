@@ -51,7 +51,7 @@ const app = express()
 app.use(
   express.urlencoded({
     extended: true,
-  }),
+  })
 )
 
 app.use(express.json())
@@ -62,7 +62,11 @@ app.all('/*', async (req, res) => {
   }
 
   try {
-    const result = await REST.makeRequest(req.method, `${REST.baseUrl}${req.url}`, req.body)
+    const result = await REST.makeRequest(
+      req.method,
+      req.url.substring(4),
+      { body: req.method !== 'DELETE' && req.method !== 'GET' ? {} : req.body }
+    )
 
     if (result) {
       res.status(200).json(result)
@@ -103,7 +107,10 @@ const INFLUX_BUCKET = process.env.INFLUX_BUCKET as string
 const INFLUX_TOKEN = process.env.INFLUX_TOKEN as string
 const INFLUX_URL = process.env.INFLUX_URL as string
 
-export const influxDB = INFLUX_URL && INFLUX_TOKEN ? new InfluxDB({ url: INFLUX_URL, token: INFLUX_TOKEN }) : undefined
+export const influxDB =
+  INFLUX_URL && INFLUX_TOKEN
+    ? new InfluxDB({ url: INFLUX_URL, token: INFLUX_TOKEN })
+    : undefined
 export const Influx = influxDB?.getWriteApi(INFLUX_ORG, INFLUX_BUCKET)
 
 let savingAnalyticsId: NodeJS.Interval | undefined = undefined
@@ -114,7 +121,7 @@ if (!saveAnalyticsId) {
       .then(() => {
         console.log(`[Influx - REST] Saved events!`)
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(`[Influx - REST] Error saving events!`, error)
       })
     // Every 30seconds
@@ -131,7 +138,11 @@ import { Influx } from './analytics.ts'
 Now, make sure to scroll to this line as we are going to work around this line now.
 
 ```ts
-const result = await REST.makeRequest(req.method, `${REST.baseUrl}${req.url}`, req.body)
+const result = await REST.makeRequest(
+  req.method,
+  `${REST.baseUrl}${req.url}`,
+  req.body
+)
 ```
 
 ```ts
@@ -141,9 +152,13 @@ Influx?.writePoint(
     .stringField('type', 'REQUEST_FETCHING')
     .tag('method', options.method)
     .tag('url', options.url)
-    .tag('bucket', options.bucketId ?? 'NA'),
+    .tag('bucket', options.bucketId ?? 'NA')
 )
-const result = await REST.makeRequest(req.method, `${REST.baseUrl}${req.url}`, req.body)
+const result = await REST.makeRequest(
+  req.method,
+  `${REST.baseUrl}${req.url}`,
+  req.body
+)
 ```
 
 This will add to the analytics whenever a request comes in. Then we should add another one for when a request is successful.
@@ -155,9 +170,13 @@ Influx?.writePoint(
     .stringField('type', 'REQUEST_FETCHING')
     .tag('method', options.method)
     .tag('url', options.url)
-    .tag('bucket', options.bucketId ?? 'NA'),
+    .tag('bucket', options.bucketId ?? 'NA')
 )
-const result = await REST.makeRequest(req.method, `${REST.baseUrl}${req.url}`, req.body)
+const result = await REST.makeRequest(
+  req.method,
+  `${REST.baseUrl}${req.url}`,
+  req.body
+)
 Influx?.writePoint(
   new Point('restEvents')
     .timestamp(new Date())
@@ -166,7 +185,7 @@ Influx?.writePoint(
     .tag('url', options.url)
     .tag('bucket', options.bucketId ?? 'NA')
     .intField('status', response.status)
-    .tag('statusText', response.statusText),
+    .tag('statusText', response.statusText)
 )
 ```
 
@@ -280,9 +299,18 @@ const bot = createBot({
         } catch (err) {
           value = err
         }
-        response.push(util.inspect(value, inspectOptions).replace(regex, 'YOU WISH!').substring(0, 1985))
+        response.push(
+          util
+            .inspect(value, inspectOptions)
+            .replace(regex, 'YOU WISH!')
+            .substring(0, 1985)
+        )
       } else {
-        response.push(String(util.inspect(result)).replace(regex, 'YOU WISH!').substring(0, 1985))
+        response.push(
+          String(util.inspect(result))
+            .replace(regex, 'YOU WISH!')
+            .substring(0, 1985)
+        )
       }
 
       response.push('```')

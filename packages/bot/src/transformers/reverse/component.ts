@@ -18,6 +18,7 @@ export function transformComponentToDiscordComponent(bot: Bot, payload: Componen
         }
       : undefined,
     url: payload.url,
+    channel_types: payload.channelTypes,
     options: payload.options?.map((option) => ({
       label: option.label,
       value: option.value,

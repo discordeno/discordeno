@@ -1,4 +1,4 @@
-import type { DiscordMember } from '@discordeno/types'
+import type { BigString, DiscordMember } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
 import { Permissions } from './toggles/Permissions.js'
@@ -17,12 +17,12 @@ const baseMember: Partial<Member> & BaseMember = {
   },
 }
 
-export function transformMember(bot: Bot, payload: DiscordMember, guildId: bigint, userId: bigint): Member {
+export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString): Member {
   const member: Member = Object.create(baseMember)
   const props = bot.transformers.desiredProperties.member
 
-  if (userId && props.id) member.id = userId
-  if (guildId && props.guildId) member.guildId = guildId
+  if (userId && props.id) member.id = typeof userId === "string"  ? bot.transformers.snowflake(userId) : userId
+  if (guildId && props.guildId) member.guildId = typeof guildId === "string"  ? bot.transformers.snowflake(guildId) : guildId
   if (payload.user && props.user) member.user = bot.transformers.user(bot, payload.user)
   if (payload.nick && props.nick) member.nick = payload.nick
   if (payload.roles && props.roles) member.roles = payload.roles.map((id) => bot.transformers.snowflake(id))
@@ -36,7 +36,7 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: bigin
     member.toggles = new MemberToggles(payload)
   }
 
-  return member
+  return bot.transformers.customizers.member(bot, payload, member)
 }
 
 export interface BaseMember {

@@ -12,7 +12,7 @@ import type {
   DefaultMessageNotificationLevels,
   EmbedTypes,
   ExplicitContentFilterLevels,
-  FormLayout,
+  ForumLayout,
   GatewayEventNames,
   GuildFeatures,
   GuildNsfwLevel,
@@ -745,7 +745,7 @@ export interface DiscordChannel {
   /** the default sort order type used to order posts in GUILD_FORUM channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
   default_sort_order?: SortOrderTypes | null
   /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
-  default_forum_layout?: FormLayout
+  default_forum_layout?: ForumLayout
   /** When a thread is created this will be true on that channel payload for the thread. */
   newly_created?: boolean
 }
@@ -1121,12 +1121,7 @@ export interface DiscordActionRow {
   /** Action rows are a group of buttons. */
   type: 1
   /** The components in this row */
-  components:
-    | [DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent]
-    | [DiscordButtonComponent, DiscordButtonComponent]
-    | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
-    | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
-    | [DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent, DiscordButtonComponent]
+  components: Array<DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent>
 }
 
 export interface DiscordSelectMenuComponent {
@@ -1139,6 +1134,8 @@ export interface DiscordSelectMenuComponent {
   min_values?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   max_values?: number
+  /** List of channel types to include in a channel select menu options list */
+  channelTypes?: ChannelTypes[]
   /** The choices! Maximum of 25 items. */
   options: DiscordSelectOption[]
 }
@@ -1805,8 +1802,8 @@ export interface DiscordCreateApplicationCommand {
   name: string
   /** Localization object for `name` field. Values follow the same restrictions as `name` */
   name_localizations?: Localization | null
-  /** Description for `ApplicationCommandTypes.ChatInput` commands, 1-100 characters. Empty string for `ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands */
-  description: string
+  /** Description for `ApplicationCommandTypes.ChatInput` commands, 1-100 characters. */
+  description?: string
   /** Localization object for `description` field. Values follow the same restrictions as `description` */
   description_localizations?: Localization | null
   /** Parameters for the command, max of 25 */
@@ -2404,7 +2401,7 @@ export interface DiscordModifyChannel {
   /** the default sort order type used to order posts in forum channels */
   default_sort_order?: SortOrderTypes | null
   /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
-  default_forum_layout?: FormLayout
+  default_forum_layout?: ForumLayout
 }
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */

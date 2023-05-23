@@ -42,6 +42,24 @@ describe('Send a message', () => {
 
     expect(attachment.filename).to.be.equal('gamer')
   })
+
+  it ('With a file attachment', async () => {
+    const txtFile = new Blob(['hello world'], { type: 'text/plain' });
+
+    const fileMsg = await rest.sendMessage(e2ecache.channel.id, {
+      content: '222',
+      files: [
+        {
+          name: 'application.txt',
+          blob: txtFile,
+        },
+      ],
+    });
+
+    expect(fileMsg.id).not.equals(undefined);
+    expect(fileMsg.content).equals('222');
+    expect(fileMsg.attachments.length).equals(1);
+  })
 })
 
 describe('Manage reactions', async () => {
