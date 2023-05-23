@@ -53,7 +53,7 @@ jobs:
           node-version: 18
       - uses: oven-sh/setup-bun@v1
         with:
-          bun-version: "0.5.8"
+          bun-version: "0.6.1"
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
