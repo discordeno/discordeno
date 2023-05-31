@@ -12,10 +12,13 @@ import type {
 import { GatewayCloseEventCodes, GatewayIntents, GatewayOpcodes } from '@discordeno/types'
 import { Collection, LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
 import { inflateSync } from 'node:zlib'
-import WebSocket from 'ws'
+import NodeWebSocket from 'ws'
 import type { RequestMemberRequest } from './manager.js'
 import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest, StatusUpdate, UpdateVoiceState } from './types.js'
 import { ShardSocketCloseCodes, ShardState } from './types.js'
+
+declare var Deno: any
+declare var WebSocket: any
 
 export class DiscordenoShard {
   /** The id of the shard */
@@ -33,7 +36,7 @@ export class DiscordenoShard {
   /** Current session id of the shard if present. */
   sessionId?: string
   /** This contains the WebSocket connection to Discord, if currently connected. */
-  socket?: WebSocket
+  socket?: NodeWebSocket
   /** Current internal state of the this. */
   state = ShardState.Offline
   /** The url provided by discord to use when resuming a connection for this this. */
@@ -111,7 +114,7 @@ export class DiscordenoShard {
 
   /** Close the socket connection to discord if present. */
   close(code: number, reason: string): void {
-    if (this.socket?.readyState !== WebSocket.OPEN) return
+    if (this.socket?.readyState !== NodeWebSocket.OPEN) return
 
     this.socket?.close(code, reason)
   }
@@ -129,13 +132,13 @@ export class DiscordenoShard {
     url.searchParams.set('v', this.gatewayConfig.version.toString())
     url.searchParams.set('encoding', 'json')
 
-    const socket = new WebSocket(url.toString())
+    const socket: NodeWebSocket = Deno?.version?.deno !== undefined ? new WebSocket(url.toString()) : new NodeWebSocket(url.toString())
     this.socket = socket
 
     // TODO: proper event handling
-    socket.onerror = (event) => console.log({ error: event, shardId: this.id })
-    socket.onclose = async (event) => await this.handleClose(event)
-    socket.onmessage = async (message) => await this.handleMessage(message)
+    socket.onerror = (event: NodeWebSocket.ErrorEvent) => console.log({ error: event, shardId: this.id })
+    socket.onclose = async (event: NodeWebSocket.CloseEvent) => await this.handleClose(event)
+    socket.onmessage = async (message: NodeWebSocket.MessageEvent) => await this.handleMessage(message)
 
     return await new Promise((resolve) => {
       socket.onopen = () => {
@@ -204,7 +207,7 @@ export class DiscordenoShard {
 
   /** Check whether the connection to Discord is currently open. */
   isOpen(): boolean {
-    return this.socket?.readyState === WebSocket.OPEN
+    return this.socket?.readyState === NodeWebSocket.OPEN
   }
 
   /** Attempt to resume the previous shards session with the gateway. */
@@ -282,7 +285,7 @@ export class DiscordenoShard {
   }
 
   /** Handle a gateway connection close. */
-  async handleClose(close: WebSocket.CloseEvent): Promise<void> {
+  async handleClose(close: NodeWebSocket.CloseEvent): Promise<void> {
     //   gateway.debug("GW CLOSED", { shardId, payload: event });
 
     this.stopHeartbeating()
@@ -485,7 +488,7 @@ export class DiscordenoShard {
   }
 
   /** Handle an incoming gateway message. */
-  async handleMessage(message: WebSocket.MessageEvent): Promise<void> {
+  async handleMessage(message: NodeWebSocket.MessageEvent): Promise<void> {
     let preProcessMessage = message.data
 
     // If message compression is enabled,
