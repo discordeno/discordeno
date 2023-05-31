@@ -17,8 +17,7 @@ import type { RequestMemberRequest } from './manager.js'
 import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest, StatusUpdate, UpdateVoiceState } from './types.js'
 import { ShardSocketCloseCodes, ShardState } from './types.js'
 
-declare var Deno: any
-declare var WebSocket: any
+declare let WebSocket: any
 
 export class DiscordenoShard {
   /** The id of the shard */
@@ -132,7 +131,7 @@ export class DiscordenoShard {
     url.searchParams.set('v', this.gatewayConfig.version.toString())
     url.searchParams.set('encoding', 'json')
 
-    const socket: NodeWebSocket = Deno?.version?.deno !== undefined ? new WebSocket(url.toString()) : new NodeWebSocket(url.toString())
+    const socket: NodeWebSocket = process?.versions !== undefined ? new NodeWebSocket(url.toString()) : new WebSocket(url.toString())
     this.socket = socket
 
     // TODO: proper event handling
