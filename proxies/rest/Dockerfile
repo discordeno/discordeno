@@ -1,4 +1,4 @@
-# we node 18 alpine 3.17 as base image
+# we node 18 alpine 3.18 as base image
 # we use multi stage build in this file
 # deps: contain all dependencies including dev dependencies
 # builder: contains all compiled files
@@ -6,7 +6,7 @@
 # runner: the final image, with only the dependencies and compiled files
 
 # build only with the platform of the host machine, since it only uses for dev purposes
-FROM --platform=$BUILDPLATFORM node:18.15.0-alpine3.17 AS deps
+FROM --platform=$BUILDPLATFORM node:18.16.0-alpine3.18 AS deps
 WORKDIR /app
 # copy necessary for install dependencies
 COPY package.json yarn.lock ./
@@ -14,7 +14,7 @@ COPY package.json yarn.lock ./
 RUN yarn install
 
 # build only with the platform of the host machine, since we just need its files
-FROM --platform=$BUILDPLATFORM node:18.15.0-alpine3.17 AS builder
+FROM --platform=$BUILDPLATFORM node:18.16.0-alpine3.18 AS builder
 # copy the dependencies (node_modules) from the deps image
 COPY --from=deps /app /app
 WORKDIR /app
@@ -25,7 +25,7 @@ COPY .swcrc ./
 # compile the files
 RUN yarn build
 
-FROM node:18.15.0-alpine3.17 AS prod-deps
+FROM node:18.16.0-alpine3.18 AS prod-deps
 WORKDIR /app
 # copy necessary files for install dependencies
 COPY package.json yarn.lock .yarnrc.yml ./
@@ -35,7 +35,7 @@ RUN yarn plugin import workspace-tools
 # install prod dependencies
 RUN yarn workspaces focus --all --production
 
-FROM node:18.15.0-alpine3.17 AS runner
+FROM node:18.16.0-alpine3.18 AS runner
 # copy the compiled files from the builder image
 COPY --from=builder /app/dist /app/dist
 # copy the prod dependencies (node_modules) from the prod-deps image
