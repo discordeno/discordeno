@@ -1,4 +1,4 @@
-import type { ButtonStyles, MessageComponentTypes, SelectOption, TextStyles } from '@discordeno/types'
+import type { ButtonStyles, ChannelTypes, MessageComponentTypes, SelectOption, TextStyles } from '@discordeno/types'
 import type { Bot } from '../index.js'
 import type { DiscordComponent } from '../typings.js'
 
@@ -17,6 +17,7 @@ export function transformComponent(bot: Bot, payload: DiscordComponent): Compone
         }
       : undefined,
     url: payload.url,
+    channelTypes: payload.channel_types,
     options: payload.options?.map((option) => ({
       label: option.label,
       value: option.value,
@@ -68,6 +69,8 @@ export interface Component {
   }
   /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
   url?: string
+  /** List of channel types to include in a channel select menu options list */
+  channelTypes?: ChannelTypes[]
   /** The choices! Maximum of 25 items. */
   options?: SelectOption[]
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */

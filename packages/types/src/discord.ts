@@ -1134,6 +1134,8 @@ export interface DiscordSelectMenuComponent {
   min_values?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   max_values?: number
+  /** List of channel types to include in a channel select menu options list */
+  channelTypes?: ChannelTypes[]
   /** The choices! Maximum of 25 items. */
   options: DiscordSelectOption[]
 }

@@ -23,10 +23,8 @@ import type { User } from './user.js'
 export interface Interaction extends BaseInteraction {
   /** The bot object */
   bot: Bot
-  /** Whether or not this interaction has been replied to. */
+  /** Whether or not this interaction has been responded to. */
   acknowledged: boolean
-  /** Whether or not a modal has been shown for this interaction. */
-  shownModal: boolean
   /** Id of the interaction */
   id: bigint
   /** Id of the application this interaction is for */
@@ -84,41 +82,36 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
   async respond(response, options) {
     let type = InteractionResponseTypes.ChannelMessageWithSource
 
-    // If user provides a string, change it to response object
-    if (typeof response === 'string') {
-      response = {
-        content: response,
-      }
-    }
+    // If user provides a string, change it to a response object
+    if (typeof response === 'string') response = { content: response }
     // If user provides an object, determine if it should be an autocomplete or a modal response
-    else {
-      if (response.title) type = InteractionResponseTypes.Modal
-      else if (this.type === InteractionTypes.ApplicationCommandAutocomplete) type = InteractionResponseTypes.ApplicationCommandAutocompleteResult
-    }
+    else if (response.title) type = InteractionResponseTypes.Modal
+    else if (this.type === InteractionTypes.ApplicationCommandAutocomplete) type = InteractionResponseTypes.ApplicationCommandAutocompleteResult
 
     // If user wants to send a private message
     if (type === InteractionResponseTypes.ChannelMessageWithSource && options?.isPrivate) response.flags = 64
 
     // Since this has already been given a response, any further responses must be followups.
     if (this.acknowledged) return await this.bot?.rest.sendFollowupMessage(this.token!, response)
-    if (this.shownModal && type === InteractionResponseTypes.Modal) throw new Error('Cannot respond to a modal interaction with another modal.')
+
+    // Modals cannot be chained
+    if (this.type === InteractionTypes.ModalSubmit && type === InteractionResponseTypes.Modal)
+      throw new Error('Cannot respond to a modal interaction with another modal.')
+
+    // Autocomplete response can only be used for autocomplete interactions
+    if (this.type === InteractionTypes.ApplicationCommandAutocomplete && type !== InteractionResponseTypes.ApplicationCommandAutocompleteResult)
+      throw new Error('Cannot respond to an autocomplete interaction with a modal or message.')
 
     // If user has not already responded to this interaction we need to send an original response
-    if (type === InteractionResponseTypes.Modal) this.shownModal = true
-    if (type === InteractionResponseTypes.ChannelMessageWithSource) this.acknowledged = true
-
+    this.acknowledged = true
     return await this.bot?.rest.sendInteractionResponse(this.id!, this.token!, { type, data: response })
   },
 
   async edit(response) {
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot edit an autocomplete interaction')
 
-    // If user provides a string, change it to response object
-    if (typeof response === 'string') {
-      response = {
-        content: response,
-      }
-    }
+    // If user provides a string, change it to a response object
+    if (typeof response === 'string') response = { content: response }
 
     return await this.bot!.rest.editOriginalInteractionResponse(this.token!, response)
   },
@@ -128,14 +121,16 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
     if (this.acknowledged) throw new Error('Cannot defer an already responded interaction')
 
     // Determine the type of defer response
-    let type: InteractionResponseTypes
-    if (this.type === InteractionTypes.MessageComponent) type = InteractionResponseTypes.DeferredUpdateMessage
-    else type = InteractionResponseTypes.DeferredChannelMessageWithSource
+    const type =
+      this.type === InteractionTypes.MessageComponent
+        ? InteractionResponseTypes.DeferredUpdateMessage
+        : InteractionResponseTypes.DeferredChannelMessageWithSource
 
     // If user wants to send a private message
     const data: InteractionCallbackData = {}
     if (isPrivate) data.flags = 64
 
+    this.acknowledged = true
     return await this.bot?.rest.sendInteractionResponse(this.id!, this.token!, { type, data })
   },
 

@@ -58,7 +58,7 @@ export const GATEWAY = createGatewayManager({
   connection: await REST.getSessionInfo(),
 })
 
-// More code to be added here but first you need to understand this part.
+GATEWAY.spawnShards()
 ```
 
 Now let's break it down.
@@ -149,6 +149,7 @@ GATEWAY.tellWorkerToIdentify = async function (workerId, shardId, bucketId) {
     method: 'POST',
     headers: {
       authorization: process.env.AUTHORIZATION,
+      "Content-type": "application/json",
     },
     body: JSON.stringify({ type: 'IDENTIFY_SHARD', shardId }),
   })
@@ -156,7 +157,7 @@ GATEWAY.tellWorkerToIdentify = async function (workerId, shardId, bucketId) {
     .catch(logger.error)
 }
 
-// More code to be added here but first you need to understand this part.
+GATEWAY.spawnShards()
 ```
 
 Here, we are overriding the built in method on the gateway manager called `tellWorkerToIdentify`. Internally, this function just simply starts a new shard as by default the lib supports small bots. For our case, we are going to make it get the server url from a `.env` file

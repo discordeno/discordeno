@@ -60,7 +60,7 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
     banner: payload.guild.banner ? iconHashToBigInt(payload.guild.banner) : undefined,
     splash: payload.guild.splash ? iconHashToBigInt(payload.guild.splash) : undefined,
     channels: new Collection(
-      payload.guild.channels?.map((channel) => {
+      [...(payload.guild.channels ?? []), ...(payload.guild.threads ?? [])].map((channel) => {
         const result = bot.transformers.channel(bot, { channel, guildId })
         return [result.id, result]
       }),
@@ -86,7 +86,6 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
     voiceStates: new Collection(
       (payload.guild.voice_states ?? []).map((vs) => bot.transformers.voiceState(bot, { voiceState: vs, guildId })).map((vs) => [vs.userId, vs]),
     ),
-
     id: guildId,
     // WEIRD EDGE CASE WITH BOT CREATED SERVERS
     ownerId: payload.guild.owner_id ? bot.transformers.snowflake(payload.guild.owner_id) : 0n,
