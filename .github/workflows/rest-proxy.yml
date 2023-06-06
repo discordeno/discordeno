@@ -80,7 +80,7 @@ jobs:
           severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
-        if: ${{ github.event_name == 'schedule' }}
+        if: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
         with:
           image-ref: 'discordeno/rest-proxy:latest'
           exit-code: '0'
@@ -90,12 +90,12 @@ jobs:
           output: 'trivy-results.sarif'
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
-        if: ${{ github.event_name == 'schedule' }}
+        if: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
         with:
           sarif_file: 'trivy-results.sarif'
 
       - name: Run Snyk to check Docker image for vulnerabilities
-        if: ${{ github.event_name == 'schedule' }}
+        if: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
         continue-on-error: true
         uses: snyk/actions/docker@master
         env:
@@ -104,7 +104,7 @@ jobs:
           image: 'discordeno/rest-proxy:latest'
           args: --file=proxies/rest/Dockerfile
       - name: Upload result to GitHub Code Scanning
-        if: ${{ github.event_name == 'schedule' }}
+        if: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: snyk.sarif
