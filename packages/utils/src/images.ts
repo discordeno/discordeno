@@ -22,11 +22,13 @@ export function emojiUrl(emojiId: BigString, animated = false): string {
  * Builds a URL to a user's avatar stored in the Discord CDN.
  *
  * @param userId - The ID of the user to get the avatar of.
+ * @param discriminator - The user's discriminator. (4-digit tag after the hashtag.)
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource.
  */
 export function avatarUrl(
   userId: BigString,
+  discriminator: string,
   options?: {
     avatar: BigString | undefined
     size?: ImageSize
@@ -39,7 +41,7 @@ export function avatarUrl(
         options?.size ?? 128,
         options?.format,
       )
-    : `https://cdn.discordapp.com/embed/avatars/${(BigInt(userId) >> BigInt(22)) % BigInt(5)}.png`
+    : `https://cdn.discordapp.com/embed/avatars/${discriminator === '0' ? (BigInt(userId) >> BigInt(22)) % BigInt(6) : Number(discriminator) % 5}.png`
 }
 
 /**
