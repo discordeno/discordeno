@@ -60,7 +60,7 @@ export interface BaseUser {
 export interface User extends BaseUser {
   /** Compressed version of all the booleans on a user. */
   toggles?: UserToggles
-  /** The user's username, unique across the platform */
+  /** The user's username, not unique across the platform */
   username: string
   /** The user's display name, if it is set. For bots, this is the application name */
   globalName?: string
@@ -76,7 +76,7 @@ export interface User extends BaseUser {
   accentColor?: number
   /** The user's id */
   id: bigint
-  /** The user's 4-digit discord-tag */
+  /** The user's discord-tag */
   discriminator: string
   /** The user's avatar hash */
   avatar?: bigint

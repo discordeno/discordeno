@@ -673,6 +673,7 @@ export function createTransformers(options: Partial<Transformers>): Transformers
       },
       user: {
         username: false,
+        globalName: false,
         locale: false,
         flags: false,
         premiumType: false,
