@@ -196,6 +196,7 @@ export interface EventHandlers {
   guildBanRemove: (user: User, guildId: bigint) => unknown
   guildCreate: (guild: Guild) => unknown
   guildDelete: (id: bigint, shardId: number) => unknown
+  guildUnavailable: (id: bigint, shardId: number) => unknown
   guildUpdate: (guild: Guild) => unknown
   raw: (data: DiscordGatewayPayload, shardId: number) => unknown
   roleCreate: (role: Role) => unknown
