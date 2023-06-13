@@ -41,7 +41,7 @@ export function avatarUrl(
         options?.size ?? 128,
         options?.format,
       )
-    : `https://cdn.discordapp.com/embed/avatars/${Number(discriminator) % 5}.png`
+    : `https://cdn.discordapp.com/embed/avatars/${discriminator === '0' ? (BigInt(userId) >> BigInt(22)) % BigInt(6) : Number(discriminator) % 5}.png`
 }
 
 /**
