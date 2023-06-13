@@ -67,14 +67,6 @@ export function createBot(options: CreateBotOptions): Bot {
     // Set up helpers below.
     helpers: {} as BotHelpers,
     async start() {
-      // @ts-expect-error should this work
-      if (typeof Deno !== 'undefined') {
-        // @ts-expect-error should this work
-        const katsura = await import('https://x.nest.land/katsura@1.3.9/src/discordenoFixes/gatewaySocket.ts')
-
-        await katsura(bot.gateway)
-      }
-
       if (!options.gateway?.connection) {
         bot.gateway.connection = await bot.rest.getSessionInfo()
       }
@@ -204,6 +196,7 @@ export interface EventHandlers {
   guildBanRemove: (user: User, guildId: bigint) => unknown
   guildCreate: (guild: Guild) => unknown
   guildDelete: (id: bigint, shardId: number) => unknown
+  guildUnavailable: (id: bigint, shardId: number) => unknown
   guildUpdate: (guild: Guild) => unknown
   raw: (data: DiscordGatewayPayload, shardId: number) => unknown
   roleCreate: (role: Role) => unknown

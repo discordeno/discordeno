@@ -46,6 +46,8 @@ import type {
 export interface DiscordUser {
   /** The user's username, not unique across the platform */
   username: string
+  /** The user's display name, if it is set. For bots, this is the application name */
+  global_name: string | null
   /** The user's chosen language option */
   locale?: string
   /** The flags on a user's account */
@@ -58,7 +60,7 @@ export interface DiscordUser {
   accent_color?: number
   /** The user's id */
   id: string
-  /** The user's 4-digit discord-tag */
+  /** The user's discord-tag */
   discriminator: string
   /** The user's avatar hash */
   avatar: string | null
