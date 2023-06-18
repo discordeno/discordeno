@@ -266,8 +266,8 @@ export interface DiscordTeamMember {
   permissions: Array<'*'>
   /** The id of the parent team of which they are a member */
   team_id: string
-  /** The avatar, discriminator, id, and username of the user */
-  user: Partial<DiscordUser> & Pick<DiscordUser, 'avatar' | 'discriminator' | 'id' | 'username'>
+  /** The avatar, discriminator, id, username, and global_name of the user */
+  user: Partial<DiscordUser> & Pick<DiscordUser, 'avatar' | 'discriminator' | 'id' | 'username' | 'global_name'>
 }
 
 /** https://discord.com/developers/docs/topics/gateway#webhooks-update-webhook-update-event-fields */
