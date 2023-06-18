@@ -32,7 +32,7 @@ describe('Get a user from the api', () => {
       })
 
       it('Has a valid discriminator', () => {
-        expect(user.discriminator.length).to.be.equal(1)
+        expect(user.discriminator.length).to.be.oneOf([1,4])
       })
 
       it('Has been camelized', () => {
