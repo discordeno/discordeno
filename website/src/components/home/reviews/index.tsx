@@ -44,7 +44,7 @@ const reviewList: IReview[] = [
         'https://cdn.discordapp.com/avatars/1032699319368814652/8abbc5911333d3df288ff962a2120d75.png',
       invite_url:
         'https://discord.com/oauth2/authorize?client_id=1032699319368814652&permissions=274877959232&scope=bot%20applications.commands',
-      guild_count: 50000,
+      guild_count: 64000,
     },
     developer: {
       username: '8au',
@@ -66,7 +66,7 @@ const reviewList: IReview[] = [
         'https://cdn.discordapp.com/avatars/853327905357561948/a394518e742643f05cc201249d3ae75e.png',
       invite_url:
         'https://discord.com/oauth2/authorize?client_id=853327905357561948&scope=bot&permissions=534925798592',
-      guild_count: 82000,
+      guild_count: 100000,
     },
     developer: {
       username: '8au',
