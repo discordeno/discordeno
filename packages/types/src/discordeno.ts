@@ -853,7 +853,7 @@ export interface EditMessage {
   /** Edit the flags of the message (only `SUPPRESS_EMBEDS` can currently be set/unset) */
   flags?: 4 | null
   /** The contents of the files being sent/edited */
-  files?: FileContent[] | null
+  files?: FileContent[]
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
   /** When specified (adding new attachments), attachments which are not provided in this list will be removed. */
