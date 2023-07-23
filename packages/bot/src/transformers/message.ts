@@ -17,7 +17,6 @@ const baseMessage: Partial<Message> & MessageBase = {
   },
   set crossposted(value: boolean) {
     if (!this.flags) return
-    if (!this.flags) return
     if (value) this.flags.add(MessageFlags.Crossposted)
     else this.flags.remove(MessageFlags.Crossposted)
   },
