@@ -777,7 +777,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editMessage(channelId, messageId, body) {
-      return await rest.patch<DiscordMessage>(rest.routes.channels.message(channelId, messageId), { body })
+      return await rest.patch<DiscordMessage>(rest.routes.channels.message(channelId, messageId), { body, files: body.files })
     },
 
     async editOriginalInteractionResponse(token, body) {
