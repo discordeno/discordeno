@@ -1,5 +1,5 @@
 import type { DiscordAuditLogEntry } from '@discordeno/types'
-import type { Bot } from '../../index.js'
+import { iconBigintToHash, type Bot } from '../../index.js'
 import type { AuditLogEntry } from '../auditLogEntry.js'
 
 export function transformAuditLogEntryToDiscordAuditLogEntry(bot: Bot, payload: AuditLogEntry): DiscordAuditLogEntry {
@@ -33,13 +33,8 @@ export function transformAuditLogEntryToDiscordAuditLogEntry(bot: Bot, payload: 
               name: val?.name,
             })),
           }
-        case 'discovery_splash_hash':
-        case 'banner_hash':
         case 'rules_channel_id':
         case 'public_updates_channel_id':
-        case 'icon_hash':
-        case 'image_hash':
-        case 'splash_hash':
         case 'owner_id':
         case 'widget_channel_id':
         case 'system_channel_id':
@@ -49,12 +44,22 @@ export function transformAuditLogEntryToDiscordAuditLogEntry(bot: Bot, payload: 
         case 'deny':
         case 'channel_id':
         case 'inviter_id':
-        case 'avatar_hash':
         case 'id':
           return {
             key: change.key,
             old_value: change.old ? bot.transformers.reverse.snowflake(change.old as bigint) : '',
             new_value: change.new ? bot.transformers.reverse.snowflake(change.new as bigint) : '',
+          }
+        case 'discovery_splash_hash':
+        case 'banner_hash':
+        case 'icon_hash':
+        case 'image_hash':
+        case 'splash_hash':
+        case 'avatar_hash':
+          return {
+            key: change.key,
+            old_value: change.old ? iconBigintToHash(change.old as bigint) : '',
+            new_value: change.new ? iconBigintToHash(change.new as bigint) : '',
           }
         case 'name':
         case 'description':
