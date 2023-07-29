@@ -132,7 +132,8 @@ export class DiscordenoShard {
     url.searchParams.set('encoding', 'json')
 
     const socket: NodeWebSocket =
-      globalThis.window !== undefined && Reflect.has(globalThis.window, 'Deno') ? new WebSocket(url.toString()) : new NodeWebSocket(url.toString())
+      // @ts-expect-error Deno
+      globalThis.Deno !== undefined && Reflect.has(globalThis, 'Deno') ? new WebSocket(url.toString()) : new NodeWebSocket(url.toString())
     this.socket = socket
 
     // TODO: proper event handling
