@@ -1,5 +1,5 @@
-import logger from './logger.js'
-import { delay } from './utils.js'
+import logger from './logger.js';
+import { delay } from './utils.js';
 
 export class LeakyBucket implements LeakyBucketOptions {
   max: number
@@ -35,9 +35,11 @@ export class LeakyBucket implements LeakyBucketOptions {
     this.used = this.refillAmount > this.used ? 0 : this.used - this.refillAmount
     // Reset the refillsAt timestamp since it just got refilled
     this.refillsAt = undefined
+    // Reset the timeoutId
+    clearTimeout(this.timeoutId)
+    this.timeoutId = undefined;
 
     if (this.used > 0) {
-      if (this.timeoutId) clearTimeout(this.timeoutId)
       this.timeoutId = setTimeout(() => {
         this.refillBucket()
       }, this.refillInterval)
