@@ -69,8 +69,19 @@ export function createBot(options: CreateBotOptions): Bot {
     async start() {
       if (!options.gateway?.connection) {
         bot.gateway.connection = await bot.rest.getSessionInfo()
+
+        // Check for overrides in the configuration
+        if (bot.gateway.url === 'wss://gateway.discord.gg')
+            bot.gateway.url = bot.gateway.connection.url;
+
+        if (bot.gateway.totalShards === 1)
+            bot.gateway.totalShards = bot.gateway.connection.shards;
+
+        if (bot.gateway.lastShardId === 0)
+            bot.gateway.lastShardId = bot.gateway.connection.shards - 1;
       }
-      return await bot.gateway.spawnShards()
+
+      await bot.gateway.spawnShards()
     },
 
     async shutdown() {
