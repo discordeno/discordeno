@@ -1,5 +1,5 @@
-import logger from './logger.js';
-import { delay } from './utils.js';
+import logger from './logger.js'
+import { delay } from './utils.js'
 
 export class LeakyBucket implements LeakyBucketOptions {
   max: number
