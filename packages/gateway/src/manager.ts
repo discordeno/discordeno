@@ -5,17 +5,15 @@ import Shard from './Shard.js'
 import type { ShardEvents, StatusUpdate, UpdateVoiceState } from './types.js'
 
 export function createGatewayManager(options: CreateGatewayManagerOptions): GatewayManager {
-  if (!options.connection) {
-    options.connection = {
-      url: 'wss://gateway.discord.gg',
-      shards: 1,
-      sessionStartLimit: {
-        maxConcurrency: 1,
-        remaining: 1000,
-        total: 1000,
-        resetAfter: 1000 * 60 * 60 * 24,
-      },
-    }
+  const connectionOptions = options.connection ?? {
+    url: 'wss://gateway.discord.gg',
+    shards: 1,
+    sessionStartLimit: {
+      maxConcurrency: 1,
+      remaining: 1000,
+      total: 1000,
+      resetAfter: 1000 * 60 * 60 * 24,
+    },
   }
 
   const gateway: GatewayManager = {
@@ -28,11 +26,11 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       device: options.properties?.device ?? 'Discordeno',
     },
     token: options.token,
-    url: options.url ?? options.connection.url ?? 'wss://gateway.discord.gg',
+    url: options.url ?? connectionOptions.url ?? 'wss://gateway.discord.gg',
     version: options.version ?? 10,
-    connection: options.connection,
-    totalShards: options.totalShards ?? options.connection.shards ?? 1,
-    lastShardId: options.lastShardId ?? (options.totalShards ? options.totalShards - 1 : (options.connection ? options.connection.shards - 1 : 0)),
+    connection: connectionOptions,
+    totalShards: options.totalShards ?? connectionOptions.shards ?? 1,
+    lastShardId: options.lastShardId ?? (options.totalShards ? options.totalShards - 1 : (connectionOptions ? connectionOptions.shards - 1 : 0)),
     firstShardId: options.firstShardId ?? 0,
     totalWorkers: options.totalWorkers ?? 4,
     shardsPerWorker: options.shardsPerWorker ?? 25,
