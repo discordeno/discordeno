@@ -2022,6 +2022,8 @@ export interface DiscordMessageReactionAdd {
   member?: DiscordMemberWithUser
   /** The emoji used to react */
   emoji: Partial<DiscordEmoji>
+  /** The id of the author of this message */
+  message_author_id?: string
 }
 
 /** https://discord.com/developers/docs/topics/gateway#voice-server-update */
