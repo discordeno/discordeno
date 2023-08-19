@@ -186,7 +186,8 @@ export interface EventHandlers {
     guildId?: bigint
     member?: Member
     user?: User
-    emoji: Emoji
+    emoji: Emoji,
+    messageAuthorId?: bigint
   }) => unknown
   reactionRemove: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; emoji: Emoji }) => unknown
   reactionRemoveEmoji: (payload: { channelId: bigint; messageId: bigint; guildId?: bigint; emoji: Emoji }) => unknown
