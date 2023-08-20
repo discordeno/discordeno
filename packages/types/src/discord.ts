@@ -982,7 +982,7 @@ export interface DiscordMessage {
   mention_roles?: string[]
   /**
    * Channels specifically mentioned in this message
-   * Note: Not all channel mentions in a message will appear in `mention_channels`. Only textual channels that are visible to everyone in a lurkable guild will ever be included. Only crossposted messages (via Channel Following) currently include `mention_channels` at all. If no mentions in the message meet these requirements, this field will not be sent.
+   * Note: Not all channel mentions in a message will appear in `mention_channels`. Only textual channels that are visible to everyone in a discoverable guild will ever be included. Only crossposted messages (via Channel Following) currently include `mention_channels` at all. If no mentions in the message meet these requirements, this field will not be sent.
    */
   mention_channels?: DiscordChannelMention[]
   /** Any attached files */
