@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-const-assign */
-import { calculateBits, camelToSnakeCase, camelize, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
+import { calculateBits, camelToSnakeCase, camelize, delay, getBotIdFromToken, logger, processReactionString, urlToBase64, snakelize } from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -126,10 +126,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
               case 'permissions':
               case 'allow':
               case 'deny':
-                newObj[key] = calculateBits(value)
+                newObj[key] = typeof value === 'string' ? value : calculateBits(value)
                 continue
               case 'defaultMemberPermissions':
-                newObj.default_member_permissions = calculateBits(value)
+                newObj.default_member_permissions = typeof value === 'string' ? value : calculateBits(value)
                 continue
               case 'nameLocalizations':
                 newObj.name_localizations = value
@@ -175,7 +175,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           form.append(`file${i}`, options.files[i].blob, options.files[i].name)
         }
 
-        form.append('payload_json', JSON.stringify({ ...options.body, files: undefined }))
+        form.append('payload_json', JSON.stringify(snakelize({ ...options.body, files: undefined })))
 
         body = form
 
@@ -777,7 +777,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editMessage(channelId, messageId, body) {
-      return await rest.patch<DiscordMessage>(rest.routes.channels.message(channelId, messageId), { body })
+      return await rest.patch<DiscordMessage>(rest.routes.channels.message(channelId, messageId), { body, files: body.files })
     },
 
     async editOriginalInteractionResponse(token, body) {
@@ -1225,6 +1225,32 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async upsertGuildApplicationCommands(guildId, body) {
       return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), { body })
+    },
+
+    preferSnakeCase(enabled: boolean) {
+      const camelizer = enabled ? (x: any) => x : camelize
+
+      rest.get = async (url, options) => {
+        return camelizer(await rest.makeRequest('GET', url, options))
+      }
+
+      rest.post = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
+        return camelizer(await rest.makeRequest('POST', url, options))
+      }
+
+      rest.delete = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
+        camelizer(await rest.makeRequest('DELETE', url, options))
+      }
+
+      rest.patch = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
+        return camelizer(await rest.makeRequest('PATCH', url, options))
+      }
+
+      rest.put = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
+        return camelizer(await rest.makeRequest('PUT', url, options))
+      }
+
+      return rest
     },
   }
 

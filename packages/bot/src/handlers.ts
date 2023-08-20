@@ -41,7 +41,7 @@ export function createBotGatewayHandlers(
     INTEGRATION_UPDATE: options.INTEGRATION_UPDATE ?? handlers.handleIntegrationUpdate,
     INTEGRATION_DELETE: options.INTEGRATION_DELETE ?? handlers.handleIntegrationDelete,
     INVITE_CREATE: options.INVITE_CREATE ?? handlers.handleInviteCreate,
-    INVITE_DELETE: options.INVITE_DELETE ?? handlers.handleInviteCreate,
+    INVITE_DELETE: options.INVITE_DELETE ?? handlers.handleInviteDelete,
     MESSAGE_CREATE: options.MESSAGE_CREATE ?? handlers.handleMessageCreate,
     MESSAGE_DELETE_BULK: options.MESSAGE_DELETE_BULK ?? handlers.handleMessageDeleteBulk,
     MESSAGE_DELETE: options.MESSAGE_DELETE ?? handlers.handleMessageDelete,

@@ -67,18 +67,21 @@ export function createBot(options: CreateBotOptions): Bot {
     // Set up helpers below.
     helpers: {} as BotHelpers,
     async start() {
-      // @ts-expect-error should this work
-      if (typeof Deno !== 'undefined') {
-        // @ts-expect-error should this work
-        const katsura = await import('https://x.nest.land/katsura@1.3.9/src/discordenoFixes/gatewaySocket.ts')
-
-        await katsura(bot.gateway)
-      }
-
       if (!options.gateway?.connection) {
         bot.gateway.connection = await bot.rest.getSessionInfo()
+
+        // Check for overrides in the configuration
+        if (!options.gateway?.url)
+            bot.gateway.url = bot.gateway.connection.url;
+
+        if (!options.gateway?.totalShards)
+            bot.gateway.totalShards = bot.gateway.connection.shards;
+
+        if (!options.gateway?.lastShardId)
+            bot.gateway.lastShardId = bot.gateway.connection.shards - 1;
       }
-      return await bot.gateway.spawnShards()
+
+      await bot.gateway.spawnShards()
     },
 
     async shutdown() {
@@ -184,7 +187,8 @@ export interface EventHandlers {
     guildId?: bigint
     member?: Member
     user?: User
-    emoji: Emoji
+    emoji: Emoji,
+    messageAuthorId?: bigint
   }) => unknown
   reactionRemove: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; emoji: Emoji }) => unknown
   reactionRemoveEmoji: (payload: { channelId: bigint; messageId: bigint; guildId?: bigint; emoji: Emoji }) => unknown
@@ -205,6 +209,7 @@ export interface EventHandlers {
   guildBanRemove: (user: User, guildId: bigint) => unknown
   guildCreate: (guild: Guild) => unknown
   guildDelete: (id: bigint, shardId: number) => unknown
+  guildUnavailable: (id: bigint, shardId: number) => unknown
   guildUpdate: (guild: Guild) => unknown
   raw: (data: DiscordGatewayPayload, shardId: number) => unknown
   roleCreate: (role: Role) => unknown

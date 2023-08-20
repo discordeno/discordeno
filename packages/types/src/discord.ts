@@ -46,6 +46,8 @@ import type {
 export interface DiscordUser {
   /** The user's username, not unique across the platform */
   username: string
+  /** The user's display name, if it is set. For bots, this is the application name */
+  global_name: string | null
   /** The user's chosen language option */
   locale?: string
   /** The flags on a user's account */
@@ -58,7 +60,7 @@ export interface DiscordUser {
   accent_color?: number
   /** The user's id */
   id: string
-  /** The user's 4-digit discord-tag */
+  /** The user's discord-tag */
   discriminator: string
   /** The user's avatar hash */
   avatar: string | null
@@ -264,8 +266,8 @@ export interface DiscordTeamMember {
   permissions: Array<'*'>
   /** The id of the parent team of which they are a member */
   team_id: string
-  /** The avatar, discriminator, id, and username of the user */
-  user: Partial<DiscordUser> & Pick<DiscordUser, 'avatar' | 'discriminator' | 'id' | 'username'>
+  /** The avatar, discriminator, id, username, and global_name of the user */
+  user: Partial<DiscordUser> & Pick<DiscordUser, 'avatar' | 'discriminator' | 'id' | 'username' | 'global_name'>
 }
 
 /** https://discord.com/developers/docs/topics/gateway#webhooks-update-webhook-update-event-fields */
@@ -2020,6 +2022,8 @@ export interface DiscordMessageReactionAdd {
   member?: DiscordMemberWithUser
   /** The emoji used to react */
   emoji: Partial<DiscordEmoji>
+  /** The id of the author of this message */
+  message_author_id?: string
 }
 
 /** https://discord.com/developers/docs/topics/gateway#voice-server-update */

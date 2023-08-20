@@ -160,6 +160,8 @@ export interface RestManager {
   invalidBucket: InvalidRequestBucket
   /** The routes that are available for this manager. */
   routes: RestRoutes
+  /** Whether or not the rest manager should keep objects in raw snake case from discord. */
+  preferSnakeCase: (enabled: boolean) => RestManager;
   /** Check the rate limits for a url or a bucket. */
   checkRateLimits: (url: string) => number | false
   /** Reshapes and modifies the obj as needed to make it ready for discords api. */
