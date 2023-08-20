@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692547927622,
+  "lastUpdate": 1692548836710,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -10817,6 +10817,114 @@ window.BENCHMARK_DATA = {
           {
             "name": "Snakelize 1 event",
             "value": 6120,
+            "range": "±0.24%",
+            "unit": "ops/sec",
+            "extra": "95 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "gankstarsleague@gmail.com",
+            "name": "Skillz",
+            "username": "Skillz4Killz"
+          },
+          "committer": {
+            "email": "gankstarsleague@gmail.com",
+            "name": "Skillz",
+            "username": "Skillz4Killz"
+          },
+          "distinct": true,
+          "id": "1c8442eb39fd4785efbd45459753e50d28358f7f",
+          "message": "fix: broken nonce on large guild ids Closes #3066",
+          "timestamp": "2023-08-20T11:24:38-05:00",
+          "tree_id": "e060462809f090bf457a5e914635ff739a93d661",
+          "url": "https://github.com/discordeno/discordeno/commit/1c8442eb39fd4785efbd45459753e50d28358f7f"
+        },
+        "date": 1692548835163,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "[transformer] message cache check RSS",
+            "value": 116.27,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Used",
+            "value": 117.92,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Total",
+            "value": 106.62,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check RSS",
+            "value": 80.41,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Used",
+            "value": 101.95,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Total",
+            "value": 80.67,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 0.61,
+            "range": "±2.9%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 10.68,
+            "range": "±1.44%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 0,
+            "range": "±0%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "rest.simplifyUrl",
+            "value": 205247,
+            "range": "±0.27%",
+            "unit": "ops/sec",
+            "extra": "96 samples"
+          },
+          {
+            "name": "Camelize 1 event",
+            "value": 6126,
+            "range": "±0.23%",
+            "unit": "ops/sec",
+            "extra": "93 samples"
+          },
+          {
+            "name": "Snakelize 1 event",
+            "value": 6121,
             "range": "±0.24%",
             "unit": "ops/sec",
             "extra": "95 samples"
