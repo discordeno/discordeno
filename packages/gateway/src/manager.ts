@@ -1,5 +1,13 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
-import type { AtLeastOne, BigString, Camelize, DiscordGetGatewayBot, DiscordMember, RequestGuildMembers } from '@discordeno/types'
+import type {
+  AtLeastOne,
+  BigString,
+  Camelize,
+  DiscordGetGatewayBot,
+  DiscordMember,
+  DiscordMemberWithUser,
+  RequestGuildMembers,
+} from '@discordeno/types'
 import { Collection, delay, logger } from '@discordeno/utils'
 import Shard from './Shard.js'
 import type { ShardEvents, StatusUpdate, UpdateVoiceState } from './types.js'
@@ -30,7 +38,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     version: options.version ?? 10,
     connection: connectionOptions,
     totalShards: options.totalShards ?? connectionOptions.shards ?? 1,
-    lastShardId: options.lastShardId ?? (options.totalShards ? options.totalShards - 1 : (connectionOptions ? connectionOptions.shards - 1 : 0)),
+    lastShardId: options.lastShardId ?? (options.totalShards ? options.totalShards - 1 : connectionOptions ? connectionOptions.shards - 1 : 0),
     firstShardId: options.firstShardId ?? 0,
     totalWorkers: options.totalWorkers ?? 4,
     shardsPerWorker: options.shardsPerWorker ?? 25,
@@ -480,5 +488,5 @@ export interface RequestMemberRequest {
   /** The resolver handler to run when all members arrive. */
   resolve: (value: Camelize<DiscordMember[]> | PromiseLike<Camelize<DiscordMember[]>>) => void
   /** The members that have already arrived for this request. */
-  members: Camelize<DiscordMember[]>
+  members: DiscordMemberWithUser[]
 }

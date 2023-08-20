@@ -4,6 +4,7 @@ import type {
   BigString,
   Camelize,
   DiscordGatewayPayload,
+  DiscordGuildMembersChunk,
   DiscordHello,
   DiscordMember,
   DiscordReady,
@@ -443,33 +444,57 @@ export class DiscordenoShard {
       }
     }
 
-    if (packet.t === 'RESUMED') {
-      // gateway.debug("GW RESUMED", { shardId });
+    switch (packet.t) {
+      case 'RESUMED':
+        this.state = ShardState.Connected
+        this.events.resumed?.(this)
 
-      this.state = ShardState.Connected
-      this.events.resumed?.(this)
+        // Continue the requests which have been queued since the shard went offline.
+        this.offlineSendQueue.map((resolve) => resolve())
 
-      // Continue the requests which have been queued since the shard went offline.
-      this.offlineSendQueue.map((resolve) => resolve())
+        this.resolves.get('RESUMED')?.(packet)
+        this.resolves.delete('RESUMED')
+        break
+      case 'READY': {
+        // Important for future resumes.
+        const payload = packet.d as DiscordReady
 
-      this.resolves.get('RESUMED')?.(packet)
-      this.resolves.delete('RESUMED')
-    } else if (packet.t === 'READY') {
-      // Important for future resumes.
+        this.resumeGatewayUrl = payload.resume_gateway_url
 
-      const payload = packet.d as DiscordReady
+        this.sessionId = payload.session_id
+        this.state = ShardState.Connected
 
-      this.resumeGatewayUrl = payload.resume_gateway_url
+        // Continue the requests which have been queued since the shard went offline.
+        // Important when this is a re-identify
+        this.offlineSendQueue.map((resolve) => resolve())
 
-      this.sessionId = payload.session_id
-      this.state = ShardState.Connected
+        this.resolves.get('READY')?.(packet)
+        this.resolves.delete('READY')
+        break
+      }
+      case 'GUILD_MEMBERS_CHUNK': {
+        // If it's not enabled skip checks.
+        if (!this.cache.requestMembers.enabled) break
 
-      // Continue the requests which have been queued since the shard went offline.
-      // Important when this is a re-identify
-      this.offlineSendQueue.map((resolve) => resolve())
+        const payload = packet.d as DiscordGuildMembersChunk
+        // If this request has non nonce, skip checks.
+        if (!payload.nonce) break
 
-      this.resolves.get('READY')?.(packet)
-      this.resolves.delete('READY')
+        const pending = this.cache.requestMembers.pending.get(payload.nonce)
+        if (!pending) break
+
+        // If this is not the final chunk, just save to cache.
+        if (payload.chunk_index + 1 < payload.chunk_count) {
+          pending.members.push(...payload.members)
+          break;
+        }
+
+        // Resolve the promise that all requests are done.
+        pending.resolve(camelize(pending.members))
+        // Delete the cache to clean up once its done.
+        this.cache.requestMembers.pending.delete(payload.nonce)
+        break
+      }
     }
 
     // Update the sequence number if it is present
