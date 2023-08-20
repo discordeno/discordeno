@@ -704,8 +704,6 @@ export class DiscordenoShard {
       options.limit = options.userIds.length
     }
 
-    const nonce = `${guildId}-${Date.now()}`
-
     // Gateway does not require caching these requests so directly send and return
     if (!this.cache.requestMembers?.enabled) {
       logger.debug(`[Shard] requestMembers guildId: ${guildId} -> skipping cache -> options ${JSON.stringify(options)}`)
@@ -718,14 +716,14 @@ export class DiscordenoShard {
           limit: options?.limit ?? 0,
           presences: options?.presences ?? false,
           user_ids: options?.userIds?.map((id) => id.toString()),
-          nonce,
+          nonce: options?.nonce,
         },
       })
       return []
     }
 
     return await new Promise((resolve) => {
-      this.cache.requestMembers?.pending.set(nonce, { nonce, resolve, members: [] })
+      if (options?.nonce) this.cache.requestMembers?.pending.set(options.nonce, { nonce: options.nonce, resolve, members: [] })
 
       logger.debug(`[Shard] requestMembers guildId: ${guildId} -> requesting members -> data: ${JSON.stringify(options)}`)
       this.send({
@@ -737,7 +735,7 @@ export class DiscordenoShard {
           limit: options?.limit ?? 0,
           presences: options?.presences ?? false,
           user_ids: options?.userIds?.map((id) => id.toString()),
-          nonce,
+          nonce: options?.nonce,
         },
       })
     })
