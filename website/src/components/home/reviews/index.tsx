@@ -25,7 +25,7 @@ const reviewList: IReview[] = [
       guild_count: 150000,
     },
     developer: {
-      usernames: ['Awesome Stickz', "Skillz"],
+      usernames: ['Awesome Stickz'],
     },
     stars: 5,
     previous_library: 'ERIS',
