@@ -46,6 +46,9 @@ export function createRoutes(): RestRoutes {
       dm: () => {
         return '/users/@me/channels'
       },
+      addDMRecipient: (channelId, userId) => {
+        return `channels/${channelId}/recipients/${userId}`
+      },
       pin: (channelId, messageId) => {
         return `/channels/${channelId}/pins/${messageId}`
       },
@@ -222,6 +225,22 @@ export function createRoutes(): RestRoutes {
       all: () => {
         return '/guilds'
       },
+      userGuilds: (options) => {
+        let url = '/users/@me/guilds?'
+
+        if (options) {
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          if (options.after) url += `after=${options.after}`
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          if (options.before) url += `before=${options.before}`
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          if (options.limit) url += `limit=${options.limit}`
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          if (options.withCounts) url += `with_counts=${options.withCounts}`
+        }
+
+        return url
+      },
       auditlogs: (guildId, options) => {
         let url = `/guilds/${guildId}/audit-logs?`
 
@@ -358,6 +377,9 @@ export function createRoutes(): RestRoutes {
         },
         member: (guildId, userId) => {
           return `/guilds/${guildId}/members/${userId}`
+        },
+        currentMember: (guildId) => {
+          return `/users/@me/guilds/${guildId}/member`
         },
         members: (guildId, options) => {
           let url = `/guilds/${guildId}/members?`
@@ -532,6 +554,31 @@ export function createRoutes(): RestRoutes {
       },
     },
 
+    // OAuth2 endpoints
+    oauth2: {
+      tokenExchange: () => {
+        return '/oauth2/token'
+      },
+      tokenRevoke: () => {
+        return '/oauth2/token/revoke'
+      },
+      currentAuthorization: () => {
+        return '/oauth2/@me'
+      },
+      application: () => {
+        return '/oauth2/applications/@me'
+      },
+      user: () => {
+        return '/users/@me'
+      },
+      connections: () => {
+        return '/users/@me/connections'
+      },
+      roleConnections: (applicationId) => {
+        return `/users/@me/applications/${applicationId}/role-connection`
+      },
+    },
+
     // User endpoints
     user(userId) {
       return `/users/${userId}`
@@ -539,10 +586,6 @@ export function createRoutes(): RestRoutes {
 
     userBot() {
       return '/users/@me'
-    },
-
-    oauth2Application() {
-      return '/oauth2/applications/@me'
     },
 
     gatewayBot() {

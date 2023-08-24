@@ -337,6 +337,18 @@ export interface GetGuildAuditLog {
   limit?: number
 }
 
+/** https://discord.com/developers/docs/resources/user#get-current-user-guilds-query-string-params */
+export interface GetUserGuilds {
+  /** Get guilds before this guild ID */
+  before?: BigString
+  /** Get guilds after this guild ID */
+  after?: BigString
+  /** Maximum number of entries (between 1-200) to return, defaults to 200 */
+  limit?: number
+  /** Include approximate member and presence counts in response, defaults to false */
+  withCounts?: boolean
+}
+
 export interface GetBans {
   /** Number of users to return (up to maximum 1000). Default: 1000 */
   limit?: number
