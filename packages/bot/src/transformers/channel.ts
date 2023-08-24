@@ -73,7 +73,7 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } 
   if (payload.channel.name && props.name) channel.name = payload.channel.name
   if (payload.channel.topic && props.topic) channel.topic = payload.channel.topic
   if (payload.channel.last_message_id && props.lastMessageId) channel.lastMessageId = bot.transformers.snowflake(payload.channel.last_message_id)
-  if (payload.channel.bitrate && props.bitrate) channel.bitrate = props.bitrate
+  if (payload.channel.bitrate && props.bitrate) channel.bitrate = payload.channel.bitrate
   if (props.userLimit) channel.userLimit = payload.channel.user_limit
   if (props.rateLimitPerUser) channel.rateLimitPerUser = payload.channel.rate_limit_per_user
   if (payload.channel.owner_id && props.ownerId) channel.ownerId = bot.transformers.snowflake(payload.channel.owner_id)

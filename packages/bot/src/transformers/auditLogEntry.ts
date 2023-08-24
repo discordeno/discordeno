@@ -1,5 +1,5 @@
 import type { DiscordAuditLogEntry } from '@discordeno/types'
-import type { Bot } from '../index.js'
+import { iconHashToBigInt, type Bot } from '../index.js'
 import type { Optionalize } from '../optionalize.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -21,13 +21,8 @@ export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry) 
               name: val?.name,
             })),
           }
-        case 'discovery_splash_hash':
-        case 'banner_hash':
         case 'rules_channel_id':
         case 'public_updates_channel_id':
-        case 'icon_hash':
-        case 'image_hash':
-        case 'splash_hash':
         case 'owner_id':
         case 'widget_channel_id':
         case 'system_channel_id':
@@ -37,12 +32,22 @@ export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry) 
         case 'deny':
         case 'channel_id':
         case 'inviter_id':
-        case 'avatar_hash':
         case 'id':
           return {
             key: change.key,
             old: change.old_value ? bot.transformers.snowflake(change.old_value) : undefined,
             new: change.new_value ? bot.transformers.snowflake(change.new_value) : undefined,
+          }
+        case 'discovery_splash_hash':
+        case 'banner_hash':
+        case 'icon_hash':
+        case 'image_hash':
+        case 'splash_hash':
+        case 'avatar_hash':
+          return {
+            key: change.key,
+            old: change.old_value ? iconHashToBigInt(change.old_value) : undefined,
+            new: change.new_value ? iconHashToBigInt(change.new_value) : undefined,
           }
         case 'name':
         case 'description':

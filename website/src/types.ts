@@ -45,8 +45,7 @@ export type IReview = {
     guild_count: number // 123456 => automatically frontent converts to 123,456...
   }
   developer: {
-    username: string // Peter_
-    discriminator: string // 4444
+    usernames: string[] // [Peter_]
   }
   stars: 4 | 5 // 4 or 5, discordeno can't have lower because it's the best :D
   previous_library?: keyof typeof DiscordLibraries // previous library used by the bot (if any)
