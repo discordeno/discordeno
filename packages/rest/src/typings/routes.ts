@@ -39,7 +39,7 @@ export interface RestRoutes {
     /** Route for non-specific dm channel. */
     dm: () => string
     /** Route to add a user to an exiting group DM, requires an access token with the OAuth2 `gdm.join` scope */
-    addDMRecipient: (channelId: BigString, userId: BigString) => string
+    dmRecipient: (channelId: BigString, userId: BigString) => string
     /** Route for handling a specific pin. */
     pin: (channelId: BigString, messageId: BigString) => string
     /** Route for handling a channels pins. */

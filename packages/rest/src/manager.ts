@@ -1,6 +1,16 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-const-assign */
-import { calculateBits, camelToSnakeCase, camelize, delay, getBotIdFromToken, logger, processReactionString, urlToBase64, snakelize } from '@discordeno/utils'
+import {
+  calculateBits,
+  camelToSnakeCase,
+  camelize,
+  delay,
+  getBotIdFromToken,
+  logger,
+  processReactionString,
+  snakelize,
+  urlToBase64,
+} from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -9,12 +19,16 @@ import {
   InteractionResponseTypes,
   type BigString,
   type Camelize,
+  type DiscordAccessTokenResponse,
   type DiscordApplication,
   type DiscordApplicationCommand,
+  type DiscordApplicationRoleConnection,
   type DiscordAuditLog,
   type DiscordAutoModerationRule,
   type DiscordBan,
   type DiscordChannel,
+  type DiscordConnection,
+  type DiscordCurrentAuthorization,
   type DiscordEmoji,
   type DiscordFollowedChannel,
   type DiscordGetGatewayBot,
@@ -31,6 +45,7 @@ import {
   type DiscordMember,
   type DiscordMemberWithUser,
   type DiscordMessage,
+  type DiscordPartialGuild,
   type DiscordPrunedCount,
   type DiscordRole,
   type DiscordScheduledEvent,
@@ -510,6 +525,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await rest.put(rest.routes.channels.threads.user(channelId, userId))
     },
 
+    async addDmRecipient(channelId, userId, body) {
+      await rest.put(rest.routes.channels.dmRecipient(channelId, userId), { body })
+    },
+
     async createAutomodRule(guildId, body, reason) {
       return await rest.post<DiscordAutoModerationRule>(rest.routes.guilds.automod.rules(guildId), { body, reason })
     },
@@ -829,6 +848,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await rest.patch(rest.routes.guilds.voice(guildId, options.userId), { body: options })
     },
 
+    async editUserApplicationRoleConnection(applicationId, body) {
+      return await rest.patch<DiscordApplicationRoleConnection>(rest.routes.oauth2.roleConnections(applicationId), { body })
+    },
+
     async editWebhook(webhookId, body, reason) {
       return await rest.patch<DiscordWebhook>(rest.routes.webhooks.id(webhookId), { body, reason })
     },
@@ -879,7 +902,29 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getApplicationInfo() {
-      return await rest.get<DiscordApplication>(rest.routes.oauth2Application())
+      return await rest.get<DiscordApplication>(rest.routes.oauth2.application())
+    },
+
+    async getCurrentAuthenticationInfo() {
+      return await rest.get<DiscordCurrentAuthorization>(rest.routes.oauth2.currentAuthorization())
+    },
+
+    async exchangeToken(body) {
+      return await rest.post<DiscordAccessTokenResponse>(rest.routes.oauth2.tokenExchange(), {
+        body,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      })
+    },
+
+    async revokeToken(body) {
+      await rest.post(rest.routes.oauth2.tokenRevoke(), {
+        body,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      })
     },
 
     async getAuditLog(guildId, options) {
@@ -954,6 +999,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getGuild(guildId, options = { counts: true }) {
       return await rest.get<DiscordGuild>(rest.routes.guilds.guild(guildId, options.counts))
+    },
+
+    async getGuilds(options) {
+      return await rest.get<DiscordPartialGuild>(rest.routes.guilds.userGuilds(options))
     },
 
     async getGuildApplicationCommand(commandId, guildId) {
@@ -1080,6 +1129,18 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordUser>(rest.routes.user(id))
     },
 
+    async getCurrentUser() {
+      return await rest.get<DiscordUser>(rest.routes.oauth2.user())
+    },
+
+    async getUserConnection() {
+      return await rest.get<DiscordConnection>(rest.routes.oauth2.connections())
+    },
+
+    async getUserApplicationRoleConnection(applicationId) {
+      return await rest.get<DiscordApplicationRoleConnection>(rest.routes.oauth2.roleConnections(applicationId))
+    },
+
     async getVanityUrl(guildId) {
       return await rest.get<DiscordVanityUrl>(rest.routes.guilds.vanity(guildId))
     },
@@ -1136,6 +1197,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await rest.delete(rest.routes.channels.threads.user(channelId, userId))
     },
 
+    async removeDmRecipient(channelId, userId) {
+      await rest.delete(rest.routes.channels.dmRecipient(channelId, userId))
+    },
+
     async sendFollowupMessage(token, options) {
       return await rest.post(rest.routes.webhooks.webhook(rest.applicationId, token), {
         body: options,
@@ -1183,6 +1248,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getMember(guildId, userId) {
       return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId))
+    },
+
+    async getCurrentMember(guildId) {
+      return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.currentMember(guildId))
     },
 
     async getMembers(guildId, options) {

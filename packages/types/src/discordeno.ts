@@ -544,6 +544,13 @@ export interface CreateGuildChannel {
   defaultSortOrder?: SortOrderTypes | null
 }
 
+export interface AddDmRecipientOptions {
+  /** access token of a user that has granted your app the `gdm.join` scope */
+  accessToken: string
+  /** nickname of the user being added */
+  nick: string
+}
+
 export interface ModifyChannel {
   /** 1-100 character channel name */
   name?: string

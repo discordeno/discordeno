@@ -192,7 +192,7 @@ export interface DiscordMember {
   joined_at: string
   /** When the user started boosting the guild */
   premium_since?: string | null
-  /** The permissions this member has in the guild. Only present on interaction events. */
+  /** The permissions this member has in the guild. Only present on interaction events and OAuth2 current member fetch. */
   permissions?: string
   /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
   communication_disabled_until?: string | null
@@ -242,6 +242,156 @@ export interface DiscordApplication {
   custom_install_url?: string
   /** the application's role connection verification entry point, which when configured will render the app as a verification method in the guild role verification configuration */
   role_connections_verification_url?: string
+}
+
+export type DiscordTokenExchange = DiscordTokenExchangeAuthorizationCode | DiscordTokenExchangeRefreshToken | DiscordTokenExchangeClientCredentials
+
+export interface DiscordTokenExchangeAuthorizationCode {
+  /** Application's client id */
+  client_id: string
+  /** application's client secret */
+  client_secret: string
+  grant_type: 'authorization_code'
+  /** The code for the token exchange */
+  code: string
+  /** The redirect_uri associated with this authorization */
+  redirect_uri: string
+}
+
+/** https://discord.com/developers/docs/topics/oauth2#client-credentials-grant */
+export interface DiscordTokenExchangeRefreshToken {
+  /** Application's client id */
+  client_id: string
+  /** application's client secret */
+  client_secret: string
+  grant_type: 'refresh_token'
+  /** the user's refresh token */
+  refresh_token: string
+}
+
+// TODO: maybe remove this?? It does not return a refresh_token, "violating" type for DiscordAccessTokenResponse when discord responses
+//        or add another type for this specific endpoint
+/** https://discord.com/developers/docs/topics/oauth2#client-credentials-grant */
+export interface DiscordTokenExchangeClientCredentials {
+  grant_type: 'client_credentials'
+  /** The scope(s) for the access token */
+  scope: string[]
+}
+
+export interface DiscordAccessTokenResponse {
+  /** The access token of the user */
+  access_token: string
+  /** The type of token */
+  token_type: string
+  /** The number of seconds after that the access token is expired */
+  expires_in: number
+  /** The refresh token to refresh the access_token */
+  refresh_token: string
+  /** The scopes for the access token */
+  scope: string
+}
+
+export interface DiscordTokenRevocation {
+  /** Application's client id */
+  client_id: string
+  /** application's client secret */
+  client_secret: string
+  /** The access token to revoke */
+  token: string
+}
+
+/** https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information-response-structure */
+export interface DiscordCurrentAuthorization {
+  application: {
+    /** The name of the app */
+    name: string
+    /** The description of the app */
+    description: string
+    /** The hex encoded key for verification in interactions and the GameSDK's GetTicket */
+    verify_key: string
+    /** The id of the app */
+    id: string
+    /** The icon hash of the app */
+    icon: string | null
+    /** When false only app owner can join the app's bot to guilds */
+    bot_public: boolean
+    /** When true the app's bot will only join upon completion of the full oauth2 code grant flow */
+    bot_require_code_grant: boolean
+    // TODO: From the discord docs i didn't understood what this hook thing is
+    hook: boolean
+  }
+  /** the scopes the user has authorized the application for */
+  scopes: string[]
+  /** when the access token expires */
+  expires: string
+  /** the user who has authorized, if the user has authorized with the `identify` scope */
+  user: DiscordUser
+}
+
+/** https://discord.com/developers/docs/resources/user#connection-object-connection-structure */
+export interface DiscordConnection {
+  /** id of the connection account */
+  id: string
+  /** the username of the connection account */
+  name: string
+  /** the service of this connection */
+  type: DiscordConnectionServiceType
+  /** whether the connection is revoked */
+  revoked?: boolean
+  /** an array of partial server integrations */
+  integrations?: Array<Partial<DiscordIntegration>>
+  /** whether the connection is verified */
+  verified: boolean
+  /** whether friend sync is enabled for this connection */
+  friend_sync: boolean
+  /** whether activities related to this connection will be shown in presence updates */
+  show_activity: boolean
+  /** whether this connection has a corresponding third party OAuth2 token */
+  two_way_link: boolean
+  /** visibility of this connection */
+  visibility: DiscordConnectionVisibility
+}
+
+/** https://discord.com/developers/docs/resources/user#connection-object-services */
+export enum DiscordConnectionServiceType {
+  BattleNet = 'battlenet',
+  eBay = 'ebay',
+  EpicGames = 'epicgames',
+  Facebook = 'facebook',
+  GitHub = 'github',
+  Instagram = 'instagram',
+  LeagueOfLegends = 'leagueoflegends',
+  PayPal = 'paypal',
+  PlayStationNetwork = 'playstation',
+  Reddit = 'reddit',
+  RiotGames = 'riotgames',
+  Spotify = 'spotify',
+  Skype = 'skype',
+  Steam = 'steam',
+  TikTok = 'tiktok',
+  Twitch = 'twitch',
+  Twitter = 'twitter',
+  Xbox = 'xbox',
+  YouTube = 'youtube',
+}
+
+/** https://discord.com/developers/docs/resources/user#connection-object-visibility-types */
+export enum DiscordConnectionVisibility {
+  /** invisible to everyone except the user themselves */
+  None = 0,
+  /** visible to everyone */
+  Everyone = 1,
+}
+
+/** https://discord.com/developers/docs/resources/user#application-role-connection-object-application-role-connection-structure */
+export interface DiscordApplicationRoleConnection {
+  /** the vanity name of the platform a bot has connected (max 50 characters) */
+  platform_name: string | null
+  /** the username on the platform a bot has connected (max 100 characters) */
+  platform_username: string | null
+  // TODO: i didn't understood how should i type this
+  /** object mapping application role connection metadata keys to their stringified value (max 100 characters) for the user on the platform a bot has connected */
+  metadata: object
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-object */
@@ -582,6 +732,25 @@ export interface DiscordGuild {
   stage_instances?: DiscordStageInstance[]
   /** custom guild stickers */
   stickers?: DiscordSticker[]
+}
+
+export interface DiscordPartialGuild {
+  /** Guild name (2-100 characters, excluding trailing and leading whitespace) */
+  name: string
+  /** Guild id */
+  id: string
+  /** Icon hash */
+  icon: string | null
+  /** true if the user is the owner of the guild */
+  owner: boolean
+  /** total permissions for the user in the guild (excludes overwrites and implicit permissions) */
+  permissions: string
+  /** Enabled guild features */
+  features: GuildFeatures[]
+  /** Approximate number of members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
+  approximate_member_count?: number
+  /** Approximate number of non-offline members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
+  approximate_presence_count?: number
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */

@@ -46,8 +46,8 @@ export function createRoutes(): RestRoutes {
       dm: () => {
         return '/users/@me/channels'
       },
-      addDMRecipient: (channelId, userId) => {
-        return `channels/${channelId}/recipients/${userId}`
+      dmRecipient: (channelId, userId) => {
+        return `/channels/${channelId}/recipients/${userId}`
       },
       pin: (channelId, messageId) => {
         return `/channels/${channelId}/pins/${messageId}`

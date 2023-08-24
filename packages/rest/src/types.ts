@@ -1,17 +1,22 @@
 import type {
+  AddDmRecipientOptions,
   ApplicationCommandPermissions,
   AtLeastOne,
   BeginGuildPrune,
   BigString,
   Camelize,
+  CamelizedDiscordAccessTokenResponse,
   CamelizedDiscordActiveThreads,
   CamelizedDiscordApplication,
   CamelizedDiscordApplicationCommand,
+  CamelizedDiscordApplicationRoleConnection,
   CamelizedDiscordArchivedThreads,
   CamelizedDiscordAuditLog,
   CamelizedDiscordAutoModerationRule,
   CamelizedDiscordBan,
   CamelizedDiscordChannel,
+  CamelizedDiscordConnection,
+  CamelizedDiscordCurrentAuthorization,
   CamelizedDiscordEmoji,
   CamelizedDiscordFollowedChannel,
   CamelizedDiscordGetGatewayBot,
@@ -27,6 +32,7 @@ import type {
   CamelizedDiscordMemberWithUser,
   CamelizedDiscordMessage,
   CamelizedDiscordModifyGuildWelcomeScreen,
+  CamelizedDiscordPartialGuild,
   CamelizedDiscordPrunedCount,
   CamelizedDiscordRole,
   CamelizedDiscordScheduledEvent,
@@ -35,6 +41,8 @@ import type {
   CamelizedDiscordStickerPack,
   CamelizedDiscordTemplate,
   CamelizedDiscordThreadMember,
+  CamelizedDiscordTokenExchange,
+  CamelizedDiscordTokenRevocation,
   CamelizedDiscordUser,
   CamelizedDiscordVanityUrl,
   CamelizedDiscordVoiceRegion,
@@ -73,8 +81,9 @@ import type {
   GetInvite,
   GetMessagesOptions,
   GetReactions,
-  GetScheduledEvents,
   GetScheduledEventUsers,
+  GetScheduledEvents,
+  GetUserGuilds,
   GetWebhookMessageOptions,
   InteractionCallbackData,
   InteractionResponse,
@@ -161,7 +170,7 @@ export interface RestManager {
   /** The routes that are available for this manager. */
   routes: RestRoutes
   /** Whether or not the rest manager should keep objects in raw snake case from discord. */
-  preferSnakeCase: (enabled: boolean) => RestManager;
+  preferSnakeCase: (enabled: boolean) => RestManager
   /** Check the rate limits for a url or a bucket. */
   checkRateLimits: (url: string) => number | false
   /** Reshapes and modifies the obj as needed to make it ready for discords api. */
@@ -259,6 +268,16 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#add-thread-member}
    */
   addThreadMember: (channelId: BigString, userId: BigString) => Promise<void>
+  /**
+   * Adds a recipient to a group DM.
+   *
+   * @param channelId - The ID of the group dm to add the user to.
+   * @param userId - The user ID of the user to add to the group dm.
+   * @param options - The options for adding the user
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#group-dm-add-recipient}
+   */
+  addDmRecipient: (channelId: BigString, userId: BigString, options: AddDmRecipientOptions) => Promise<void>
   /**
    * Creates an automod rule in a guild.
    *
@@ -1265,6 +1284,18 @@ export interface RestManager {
    */
   editUserVoiceState: (guildId: BigString, options: EditUserVoiceState) => Promise<void>
   /**
+   * Get the current user application role connection for the application.
+   *
+   * @returns {CamelizedDiscordApplicationRoleConnection}
+   *
+   * @remarks
+   * This requires the `role_connections.write` scope.
+   */
+  editUserApplicationRoleConnection: (
+    applicationId: BigString,
+    options: CamelizedDiscordApplicationRoleConnection,
+  ) => Promise<CamelizedDiscordApplicationRoleConnection>
+  /**
    * Edits a webhook.
    *
    * @param webhookId - The ID of the webhook to edit.
@@ -1398,6 +1429,20 @@ export interface RestManager {
   getActiveThreads: (guildId: BigString) => Promise<CamelizedDiscordActiveThreads>
   /** Get the applications info */
   getApplicationInfo: () => Promise<CamelizedDiscordApplication>
+  /** Get the current authentication info for the authenticated user */
+  getCurrentAuthenticationInfo: () => Promise<CamelizedDiscordCurrentAuthorization>
+  /**
+   * Exchange the information to get a OAuth2 accessToken token
+   *
+   * @param options - The options to make the exchange with discord
+   */
+  exchangeToken: (options: CamelizedDiscordTokenExchange) => Promise<CamelizedDiscordAccessTokenResponse>
+  /**
+   * Revoke an access_token
+   *
+   * @param options - The options to revoke the access_token
+   */
+  revokeToken: (options: CamelizedDiscordTokenRevocation) => Promise<void>
   /**
    * Gets the permissions of a guild application command.
    *
@@ -1613,6 +1658,15 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild}
    */
   getGuild: (guildId: BigString, options?: { counts?: boolean }) => Promise<CamelizedDiscordGuild>
+  /**
+   * Get the user guilds.
+   *
+   * @param options - The parameters for the fetching of the guild.
+   * @returns An instance of {@link Guild}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/user#get-current-user-guilds}
+   */
+  getGuilds: (options?: GetUserGuilds) => Promise<CamelizedDiscordPartialGuild>
   /**
    * Gets a guild application command by its ID.
    *
@@ -1989,6 +2043,35 @@ export interface RestManager {
    */
   getUser: (id: BigString) => Promise<CamelizedDiscordUser>
   /**
+   * Get the current user data.
+   *
+   * @returns {CamelizedDiscordUser}
+   *
+   * @remarks
+   * This requires the `identify` scope.
+   *
+   * To get the mail this also requires the `email scope`
+   */
+  getCurrentUser: () => Promise<CamelizedDiscordUser>
+  /**
+   * Get the current user connections.
+   *
+   * @returns {CamelizedDiscordConnection}
+   *
+   * @remarks
+   * This requires the `connections` scope.
+   */
+  getUserConnection: () => Promise<CamelizedDiscordConnection>
+  /**
+   * Get the current user application role connection for the application.
+   *
+   * @returns {CamelizedDiscordApplicationRoleConnection}
+   *
+   * @remarks
+   * This requires the `role_connections.write` scope.
+   */
+  getUserApplicationRoleConnection: (applicationId: BigString) => Promise<CamelizedDiscordApplicationRoleConnection>
+  /**
    * Gets information about the vanity url of a guild.
    *
    * @param guildId - The ID of the guild to get the vanity url information for.
@@ -2172,6 +2255,15 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#remove-thread-member}
    */
   removeThreadMember: (channelId: BigString, userId: BigString) => Promise<void>
+  /**
+   * Removes a member from a Group DM.
+   *
+   * @param channelId - The ID of the channel to remove the recipient user of.
+   * @param userId - The user ID of the user to remove.
+   *
+   * @see {@link hhttps://discord.com/developers/docs/resources/channel#group-dm-remove-recipient}
+   */
+  removeDmRecipient: (channelId: BigString, userId: BigString) => Promise<void>
   /**
    * Sends a message to a channel.
    *
@@ -2395,9 +2487,19 @@ export interface RestManager {
    * @param userId - The ID of the user to get the member object for.
    * @returns An instance of {@link CamelizedDiscordMemberWithUser}.
    *
-   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-member}
+   * @see {@link https://discord.com/developers/docs/resources/user#get-current-user-guild-member}
    */
   getMember: (guildId: BigString, userId: BigString) => Promise<CamelizedDiscordMemberWithUser>
+  /**
+   * Gets the current member object.
+   *
+  
+   * @param guildId - The ID of the guild to get the member object for.
+   * @returns An instance of {@link CamelizedDiscordMemberWithUser}.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-member}
+   */
+  getCurrentMember: (guildId: BigString) => Promise<CamelizedDiscordMemberWithUser>
   /**
    * Gets the list of members for a guild.
    *
