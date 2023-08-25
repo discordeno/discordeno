@@ -941,8 +941,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordApplication>(rest.routes.oauth2.application())
     },
 
-    async getCurrentAuthenticationInfo() {
-      return await rest.get<DiscordCurrentAuthorization>(rest.routes.oauth2.currentAuthorization())
+    async getCurrentAuthenticationInfo(token) {
+      return await rest.get<DiscordCurrentAuthorization>(rest.routes.oauth2.currentAuthorization(), {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+        unauthorized: true,
+      })
     },
 
     async exchangeToken(body) {
@@ -951,6 +956,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
+        unauthorized: true,
       })
     },
 
@@ -960,6 +966,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
+        unauthorized: true,
       })
     },
 
@@ -1043,8 +1050,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordGuild>(rest.routes.guilds.guild(guildId, options.counts))
     },
 
-    async getGuilds(options) {
-      return await rest.get<DiscordPartialGuild>(rest.routes.guilds.userGuilds(options))
+    async getGuilds(token, options) {
+      return await rest.get<DiscordPartialGuild>(rest.routes.guilds.userGuilds(options), {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+        unauthorized: true,
+      })
     },
 
     async getGuildApplicationCommand(commandId, guildId) {
@@ -1171,16 +1183,31 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordUser>(rest.routes.user(id))
     },
 
-    async getCurrentUser() {
-      return await rest.get<DiscordUser>(rest.routes.oauth2.user())
+    async getCurrentUser(token) {
+      return await rest.get<DiscordUser>(rest.routes.oauth2.user(), {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+        unauthorized: true,
+      })
     },
 
-    async getUserConnection() {
-      return await rest.get<DiscordConnection>(rest.routes.oauth2.connections())
+    async getUserConnection(token) {
+      return await rest.get<DiscordConnection>(rest.routes.oauth2.connections(), {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+        unauthorized: true,
+      })
     },
 
-    async getUserApplicationRoleConnection(applicationId) {
-      return await rest.get<DiscordApplicationRoleConnection>(rest.routes.oauth2.roleConnections(applicationId))
+    async getUserApplicationRoleConnection(token, applicationId) {
+      return await rest.get<DiscordApplicationRoleConnection>(rest.routes.oauth2.roleConnections(applicationId), {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+        unauthorized: true,
+      })
     },
 
     async getVanityUrl(guildId) {
@@ -1292,8 +1319,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId))
     },
 
-    async getCurrentMember(guildId) {
-      return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.currentMember(guildId))
+    async getCurrentMember(guildId, token) {
+      return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.currentMember(guildId), {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+        unauthorized: true,
+      })
     },
 
     async getMembers(guildId, options) {

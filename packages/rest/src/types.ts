@@ -104,10 +104,10 @@ import type {
   SearchMembers,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
-} from '@discordeno/types'
-import type { InvalidRequestBucket } from './invalidBucket.js'
-import type { Queue } from './queue.js'
-import type { RestRoutes } from './typings/routes.js'
+} from '@discordeno/types';
+import type { InvalidRequestBucket } from './invalidBucket.js';
+import type { Queue } from './queue.js';
+import type { RestRoutes } from './typings/routes.js';
 
 export interface CreateRestManagerOptions {
   /** The bot token which will be used to make requests. */
@@ -289,6 +289,7 @@ export interface RestManager {
    *
    * @param guildId - The ID of the thread to add the member to.
    * @param userId - The user ID of the member to add to the thread.
+   * @param options - The options for the add of a guild member
    *
    * @remarks
    * Requires the bot to be in the specified server
@@ -296,9 +297,9 @@ export interface RestManager {
    *
    * Fires a _Guild Member Add_ gateway event.
    *
-   * @see {@link https://discord.com/developers/docs/resources/channel#add-thread-member}
+   * @see {@link https://discord.com/developers/docs/resources/guild#add-guild-member}
    */
-  addGuildMember: (guildId: BigString, userId: BigString, body: AddGuildMemberOptions) => Promise<void>
+  addGuildMember: (guildId: BigString, userId: BigString, options: AddGuildMemberOptions) => Promise<void>
   /**
    * Creates an automod rule in a guild.
    *
@@ -1317,14 +1318,20 @@ export interface RestManager {
    */
   editUserVoiceState: (guildId: BigString, options: EditUserVoiceState) => Promise<void>
   /**
-   * Get the current user application role connection for the application.
+   * Edit the current user application role connection for the application.
    *
+   * @param bearerToken - The access token of the user
+   * @param applicationId - The id of the application to edit the role connection
+   * @param options - The options to edit
    * @returns {CamelizedDiscordApplicationRoleConnection}
    *
    * @remarks
    * This requires the `role_connections.write` scope.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/user#update-user-application-role-connection}
    */
   editUserApplicationRoleConnection: (
+    bearerToken: string,
     applicationId: BigString,
     options: CamelizedDiscordApplicationRoleConnection,
   ) => Promise<CamelizedDiscordApplicationRoleConnection>
@@ -1462,8 +1469,17 @@ export interface RestManager {
   getActiveThreads: (guildId: BigString) => Promise<CamelizedDiscordActiveThreads>
   /** Get the applications info */
   getApplicationInfo: () => Promise<CamelizedDiscordApplication>
-  /** Get the current authentication info for the authenticated user */
-  getCurrentAuthenticationInfo: () => Promise<CamelizedDiscordCurrentAuthorization>
+  /**
+   * Get the current authentication info for the authenticated user
+   *
+   * @param bearerToken - Any OAuth2 derived access token
+   * @returns An instance of {@link CamelizedDiscordCurrentAuthorization}
+   *
+   * @remarks
+   * The user object is not defined if the scopes do not include `identify`.
+   * In the user object, if defined, the email is not included if the scopes do not include `email`
+   */
+  getCurrentAuthenticationInfo: (bearerToken: string) => Promise<CamelizedDiscordCurrentAuthorization>
   /**
    * Exchange the information to get a OAuth2 accessToken token
    *
@@ -1725,12 +1741,16 @@ export interface RestManager {
   /**
    * Get the user guilds.
    *
+   * @param bearerToken - The access token of the user
    * @param options - The parameters for the fetching of the guild.
    * @returns An instance of {@link Guild}.
    *
+   * @remarks
+   * The access tokens needs to have the `guilds` scope
+   *
    * @see {@link https://discord.com/developers/docs/resources/user#get-current-user-guilds}
    */
-  getGuilds: (options?: GetUserGuilds) => Promise<CamelizedDiscordPartialGuild>
+  getGuilds: (bearerToken: string, options?: GetUserGuilds) => Promise<CamelizedDiscordPartialGuild>
   /**
    * Gets a guild application command by its ID.
    *
@@ -2109,32 +2129,38 @@ export interface RestManager {
   /**
    * Get the current user data.
    *
+   * @param bearerToken - The access token of the user
    * @returns {CamelizedDiscordUser}
    *
    * @remarks
    * This requires the `identify` scope.
    *
-   * To get the mail this also requires the `email scope`
+   * To get the mail this also requires the `email` scope
    */
-  getCurrentUser: () => Promise<CamelizedDiscordUser>
+  getCurrentUser: (bearerToken: string) => Promise<CamelizedDiscordUser>
   /**
    * Get the current user connections.
    *
+   * @param bearerToken - The access token of the user
    * @returns {CamelizedDiscordConnection}
    *
    * @remarks
    * This requires the `connections` scope.
    */
-  getUserConnection: () => Promise<CamelizedDiscordConnection>
+  getUserConnection: (bearerToken: string) => Promise<CamelizedDiscordConnection>
   /**
    * Get the current user application role connection for the application.
    *
+   * @param bearerToken - The access token of the user
+   * @param applicationId - The id of the application to get the role connection
    * @returns {CamelizedDiscordApplicationRoleConnection}
    *
    * @remarks
-   * This requires the `role_connections.write` scope.
+   * The access token requires the `role_connections.write` scope.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/user#get-user-application-role-connection}
    */
-  getUserApplicationRoleConnection: (applicationId: BigString) => Promise<CamelizedDiscordApplicationRoleConnection>
+  getUserApplicationRoleConnection: (bearerToken: string, applicationId: BigString) => Promise<CamelizedDiscordApplicationRoleConnection>
   /**
    * Gets information about the vanity url of a guild.
    *
@@ -2324,10 +2350,11 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel to remove the recipient user of.
    * @param userId - The user ID of the user to remove.
+   * @param bearerToken - The access token of
    *
    * @see {@link hhttps://discord.com/developers/docs/resources/channel#group-dm-remove-recipient}
    */
-  removeDmRecipient: (channelId: BigString, userId: BigString) => Promise<void>
+  removeDmRecipient: (channelId: BigString, userId: BigString, bearerToken: string) => Promise<void>
   /**
    * Sends a message to a channel.
    *
@@ -2557,13 +2584,16 @@ export interface RestManager {
   /**
    * Gets the current member object.
    *
-  
+   * @param bearerToken - The access token of the user
    * @param guildId - The ID of the guild to get the member object for.
    * @returns An instance of {@link CamelizedDiscordMemberWithUser}.
    *
+   * @remarks
+   * The access tokens needs the `guilds.members.read` scope
+   *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-member}
    */
-  getCurrentMember: (guildId: BigString) => Promise<CamelizedDiscordMemberWithUser>
+  getCurrentMember: (guildId: BigString, bearerToken: string) => Promise<CamelizedDiscordMemberWithUser>
   /**
    * Gets the list of members for a guild.
    *
