@@ -1370,8 +1370,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), { body })
     },
 
-    async editUserApplicationRoleConnection(applicationId, body) {
-      return await rest.put<DiscordApplicationRoleConnection>(rest.routes.oauth2.roleConnections(applicationId), { body })
+    async editUserApplicationRoleConnection(token, applicationId, body) {
+      return await rest.put<DiscordApplicationRoleConnection>(rest.routes.oauth2.roleConnections(applicationId), {
+        body,
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+        unauthorized: true,
+      })
     },
 
     async addGuildMember(guildId, userId, body) {
