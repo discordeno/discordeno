@@ -40,7 +40,7 @@ import type {
   VerificationLevels,
   VideoQualityModes,
   WebhookTypes,
-} from './shared.js'
+} from './shared.js';
 
 /** https://discord.com/developers/docs/resources/user#user-object */
 export interface DiscordUser {
@@ -256,6 +256,8 @@ export interface DiscordTokenExchangeAuthorizationCode {
   code: string
   /** The redirect_uri associated with this authorization */
   redirect_uri: string
+  /** The webhook the user created for the application. Requires the `webhook.incoming` scope */
+  webhook?: DiscordIncomingWebhook
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#client-credentials-grant */
@@ -325,7 +327,7 @@ export interface DiscordCurrentAuthorization {
   /** when the access token expires */
   expires: string
   /** the user who has authorized, if the user has authorized with the `identify` scope */
-  user: DiscordUser
+  user?: DiscordUser
 }
 
 /** https://discord.com/developers/docs/resources/user#connection-object-connection-structure */

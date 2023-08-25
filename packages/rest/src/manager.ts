@@ -63,7 +63,7 @@ import {
   type ModifyGuildTemplate,
 } from '@discordeno/types'
 import { createRoutes } from './routes.js'
-import type { CreateRequestBodyOptions, CreateRestManagerOptions, RestManager, SendRequestOptions } from './types.js'
+import type { CreateRequestBodyOptions, CreateRestManagerOptions, MakeRequestOptions, RestManager, SendRequestOptions } from './types.js'
 
 // TODO: make dynamic based on package.json file
 const version = '19.0.0-alpha.1'
@@ -541,16 +541,34 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordEmoji>(rest.routes.guilds.emojis(guildId), { body, reason })
     },
 
-    async createGlobalApplicationCommand(body) {
-      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.commands(rest.applicationId), { body })
+    async createGlobalApplicationCommand(body, token) {
+      const restOptions: MakeRequestOptions = { body }
+
+      if (token) {
+        restOptions.unauthorized = true
+        restOptions.headers = {
+          authorization: `Bearer ${token}`,
+        }
+      }
+
+      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.commands(rest.applicationId), restOptions)
     },
 
     async createGuild(body) {
       return await rest.post<DiscordGuild>(rest.routes.guilds.all(), { body })
     },
 
-    async createGuildApplicationCommand(body, guildId) {
-      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), { body })
+    async createGuildApplicationCommand(body, guildId, token) {
+      const restOptions: MakeRequestOptions = { body }
+
+      if (token) {
+        restOptions.unauthorized = true
+        restOptions.headers = {
+          authorization: `Bearer ${token}`,
+        }
+      }
+
+      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), restOptions)
     },
 
     async createGuildFromTemplate(templateCode, body) {
@@ -848,10 +866,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await rest.patch(rest.routes.guilds.voice(guildId, options.userId), { body: options })
     },
 
-    async editUserApplicationRoleConnection(applicationId, body) {
-      return await rest.patch<DiscordApplicationRoleConnection>(rest.routes.oauth2.roleConnections(applicationId), { body })
-    },
-
     async editWebhook(webhookId, body, reason) {
       return await rest.patch<DiscordWebhook>(rest.routes.webhooks.id(webhookId), { body, reason })
     },
@@ -891,14 +905,36 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordListActiveThreads>(rest.routes.channels.threads.active(guildId))
     },
 
-    async getApplicationCommandPermission(guildId, commandId) {
+    async getApplicationCommandPermission(guildId, commandId, options) {
+      const restOptions: Omit<MakeRequestOptions, 'body'> = {}
+
+      if (options?.accessToken) {
+        restOptions.unauthorized = true
+        restOptions.headers = {
+          authorization: `Bearer ${options.accessToken}`,
+        }
+      }
+
       return await rest.get<DiscordGuildApplicationCommandPermissions>(
-        rest.routes.interactions.commands.permission(rest.applicationId, guildId, commandId),
+        rest.routes.interactions.commands.permission(options?.applicationId ?? rest.applicationId, guildId, commandId),
+        restOptions,
       )
     },
 
-    async getApplicationCommandPermissions(guildId) {
-      return await rest.get<DiscordGuildApplicationCommandPermissions[]>(rest.routes.interactions.commands.permissions(rest.applicationId, guildId))
+    async getApplicationCommandPermissions(guildId, options) {
+      const restOptions: Omit<MakeRequestOptions, 'body'> = {}
+
+      if (options?.accessToken) {
+        restOptions.unauthorized = true
+        restOptions.headers = {
+          authorization: `Bearer ${options.accessToken}`,
+        }
+      }
+
+      return await rest.get<DiscordGuildApplicationCommandPermissions[]>(
+        rest.routes.interactions.commands.permissions(options?.applicationId ?? rest.applicationId, guildId),
+        restOptions,
+      )
     },
 
     async getApplicationInfo() {
@@ -970,6 +1006,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async getDmChannel(userId) {
       return await rest.post<DiscordChannel>(rest.routes.channels.dm(), {
         body: { recipient_id: userId },
+      })
+    },
+
+    async getGroupDmChannel(body) {
+      return await rest.post<DiscordChannel>(rest.routes.channels.dm(), {
+        body,
       })
     },
 
@@ -1294,6 +1336,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async upsertGuildApplicationCommands(guildId, body) {
       return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), { body })
+    },
+
+    async editUserApplicationRoleConnection(applicationId, body) {
+      return await rest.put<DiscordApplicationRoleConnection>(rest.routes.oauth2.roleConnections(applicationId), { body })
+    },
+
+    async addGuildMember(guildId, userId, body) {
+      return await rest.put(rest.routes.guilds.members.member(guildId, userId), {
+        body,
+      })
     },
 
     preferSnakeCase(enabled: boolean) {

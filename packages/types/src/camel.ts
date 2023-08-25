@@ -154,8 +154,8 @@ import type {
   DiscordWebhookUpdate,
   DiscordWelcomeScreen,
   DiscordWelcomeScreenChannel,
-} from './discord.js';
-import type { Camelize } from './shared.js';
+} from './discord.js'
+import type { Camelize } from './shared.js'
 
 export interface CamelizedDiscordUser extends Camelize<DiscordUser> {}
 export interface CamelizedDiscordIntegration extends Camelize<DiscordIntegration> {}

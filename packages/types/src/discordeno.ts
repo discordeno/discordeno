@@ -544,11 +544,34 @@ export interface CreateGuildChannel {
   defaultSortOrder?: SortOrderTypes | null
 }
 
+/** https://discord.com/developers/docs/resources/user#create-group-dm-json-params */
+export interface GetGroupDmOptions {
+  /** Access tokens of users that have granted your app the `gdm.join` scope */
+  accessTokens: string[]
+  /** A mapping of user ids to their respective nicknames */
+  nicks: Record<string, string>
+}
+
+/** https://discord.com/developers/docs/resources/channel#group-dm-add-recipient-json-params */
 export interface AddDmRecipientOptions {
   /** access token of a user that has granted your app the `gdm.join` scope */
   accessToken: string
   /** nickname of the user being added */
   nick: string
+}
+
+/** https://discord.com/developers/docs/resources/guild#add-guild-member-json-params */
+export interface AddGuildMemberOptions {
+  /** access token of a user that has granted your app the `guilds.join` scope */
+  accessToken: string
+  /** Value to set user's nickname to. Requires MANAGE_NICKNAMES permission on the bot */
+  nick?: string
+  /** Array of role ids the member is assigned. Requires MANAGE_ROLES permission on the bot */
+  roles?: string[]
+  /** Whether the user is muted in voice channels. Requires MUTE_MEMBERS permission on the bot */
+  mute?: boolean
+  /** Whether the user is deafened in voice channels. Requires DEAFEN_MEMBERS permission on the bot */
+  deaf?: boolean
 }
 
 export interface ModifyChannel {
@@ -889,6 +912,14 @@ export interface ApplicationCommandPermissions {
   type: ApplicationCommandPermissionTypes
   /** `true` to allow, `false`, to disallow */
   permission: boolean
+}
+
+/** Additional proprieties for https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions and https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions */
+export interface GetApplicationCommandPermissionOptions {
+  /** Access token of the user. Requires the `applications.commands.permissions.update` scope */
+  accessToken: string
+  /** Id of the application */
+  applicationId: BigString
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild */
