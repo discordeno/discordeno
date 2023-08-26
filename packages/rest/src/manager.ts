@@ -327,7 +327,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const url = `${rest.baseUrl}/v${rest.version}${options.route}`
       const payload = rest.createRequestBody(options.method, options.requestBodyOptions)
 
-      logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
+      const loggingHeaders = { ...payload.headers }
+
+      if (payload.headers.authorization)
+        loggingHeaders.authorization = `${payload.headers.authorization.startsWith('Bearer') ? 'Bearer' : 'Bot'} tokenhere`
+
+      logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders })
       const response = await fetch(url, payload).catch(async (error) => {
         logger.error(error)
         // Mark request and completed
