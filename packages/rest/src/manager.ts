@@ -200,8 +200,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         // OAuth2 body handling
         const formBody: string[] = []
 
-        for (const prop in options.body) {
-          formBody.push(`${encodeURIComponent(prop)}=${encodeURIComponent(options.body[prop])}`)
+        const discordBody = rest.changeToDiscordFormat(options.body)
+
+        for (const prop in discordBody) {
+          formBody.push(`${encodeURIComponent(prop)}=${encodeURIComponent(discordBody[prop])}`)
         }
 
         body = formBody.join('&')
@@ -970,13 +972,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async exchangeToken(body) {
-      body.clientId = body.clientId.toString()
-
       const restOptions: MakeRequestOptions = {
-        body: {
-          ...body,
-          grant_type: body.grantType,
-        },
+        body,
         headers: {
           'content-type': 'application/x-www-form-urlencoded',
         },
