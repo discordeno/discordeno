@@ -141,7 +141,7 @@ export interface EventHandlers {
   automodActionExecution: (payload: AutoModerationActionExecution) => unknown
   threadCreate: (thread: Channel) => unknown
   threadDelete: (thread: Channel) => unknown
-  threadListSync: (payload: { guildId: bigint; channelIds: bigint[] | unknown; threads: Channel[]; members: ThreadMember[] }) => unknown
+  threadListSync: (payload: { guildId: bigint; channelIds?: bigint[]; threads: Channel[]; members: ThreadMember[] }) => unknown
   threadMemberUpdate: (payload: { id: bigint; guildId: bigint; joinedAt: number; flags: number }) => unknown
   threadMembersUpdate: (payload: { id: bigint; guildId: bigint; addedMembers?: ThreadMember[]; removedMemberIds?: bigint[] }) => unknown
   threadUpdate: (thread: Channel) => unknown
