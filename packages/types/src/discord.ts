@@ -6,6 +6,7 @@ import type {
   ApplicationCommandTypes,
   ApplicationFlags,
   AuditLogEvents,
+  BigString,
   ButtonStyles,
   ChannelFlags,
   ChannelTypes,
@@ -40,7 +41,7 @@ import type {
   VerificationLevels,
   VideoQualityModes,
   WebhookTypes,
-} from './shared.js';
+} from './shared.js'
 
 /** https://discord.com/developers/docs/resources/user#user-object */
 export interface DiscordUser {
@@ -78,6 +79,135 @@ export interface DiscordUser {
   banner?: string
 }
 
+/** https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes */
+export enum OAuth2Scope {
+  /**
+   * Allows your app to fetch data from a user's "Now Playing/Recently Played" list
+   *
+   * @remarks
+   * This scope is not currently available for apps
+   */
+  ActivitiesRead = 'activities.read',
+  /**
+   * Allows your app to update a user's activity
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  ActivitiesWrite = 'activities.write',
+  /** Allows your app to read build data for a user's applications */
+  ApplicationsBuildsRead = 'applications.builds.read',
+  /**
+   * Allows your app to upload/update builds for a user's applications
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  ApplicationsBuildsUpload = 'applications.builds.upload',
+  /** Allows your app to use Application Commands in a guild */
+  ApplicationsCommands = 'applications.commands',
+  /**
+   * Allows your app to update its Application Commands via this bearer token
+   *
+   * @remarks
+   * This scope can only be used when using a [Client Credential Grant](https://discord.com/developers/docs/topics/oauth2#client-credentials-grant)
+   */
+  ApplicationsCommandsUpdate = 'applications.commands.update',
+  /** Allows your app to update permissions for its commands in a guild a user has permissions to */
+  ApplicationCommandsPermissionsUpdate = 'applications.commands.permissions.update',
+  /** Allows your app to read entitlements for a user's applications */
+  ApplicationsEntitlements = 'applications.entitlements',
+  /** Allows your app to read and update store data (SKUs, store listings, achievements, etc.) for a user's applications */
+  ApplicationsStoreUpdate = 'applications.store.update',
+  /** For oauth2 bots, this puts the bot in the user's selected guild by default */
+  Bot = 'bot',
+  /** Allows requests to [/users/@me/connections](https://discord.com/developers/docs/resources/user#get-user-connections) */
+  Connections = 'connections',
+  /**
+   * Allows your app to see information about the user's DMs and group DMs
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  DMChannelsRead = 'dm_channels.read',
+  /** Adds the `email` filed to [/users/@me](https://discord.com/developers/docs/resources/user#get-current-user) */
+  Email = 'email',
+  /** Allows your app to join users to a group dm */
+  GroupDMJoins = 'gdm.join',
+  /** Allows requests to [/users/@me/guilds](https://discord.com/developers/docs/resources/user#get-current-user-guilds) */
+  Guilds = 'guilds',
+  /** Allows requests to [/guilds/{guild.id}/members/{user.id}](https://discord.com/developers/docs/resources/guild#add-guild-member) */
+  GuildsJoin = 'guilds.join',
+  /** Allows requests to [/users/@me/guilds/{guild.id}/member](https://discord.com/developers/docs/resources/user#get-current-user-guild-member) */
+  GuildsMembersRead = 'guilds.members.read',
+  /**
+   * Allows requests to [/users/@me](https://discord.com/developers/docs/resources/user#get-current-user)
+   *
+   * @remarks
+   * The return object from [/users/@me](https://discord.com/developers/docs/resources/user#get-current-user)
+   * does NOT contain the `email` field unless the scope `email` is also used
+   */
+  Identify = 'identify',
+  /**
+   * For local rpc server api access, this allows you to read messages from all client channels
+   * (otherwise restricted to channels/guilds your app creates)
+   */
+  MessagesRead = 'messages.read',
+  /**
+   * Allows your app to know a user's friends and implicit relationships
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RelationshipsRead = 'relationships.read',
+  /** Allows your app to update a user's connection and metadata for the app */
+  RoleConnectionsWrite = 'role_connections.write',
+  /**
+   * For local rpc server access, this allows you to control a user's local Discord client
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RPC = 'rpc',
+  /**
+   * For local rpc server access, this allows you to update a user's activity
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RPCActivitiesWrite = 'rpc.activities.write',
+  /**
+   * For local rpc server api access, this allows you to receive notifications pushed out to the user
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RPCNotificationsRead = 'rpc.notifications.read',
+  /**
+   * For local rpc server access, this allows you to read a user's voice settings and listen for voice events
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RPCVoiceRead = 'rpc.voice.read',
+  /**
+   * For local rpc server access, this allows you to update a user's voice settings
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RPCVoiceWrite = 'rpc.voice.write',
+  /**
+   * Allows your app to connect to voice on user's behalf and see all the voice members
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  Voice = 'voice',
+  /** Generate a webhook that is returned in the oauth token response for authorization code grants */
+  WebhookIncoming = 'webhook.incoming',
+}
+
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
 export interface DiscordIntegration {
   /** Integration Id */
@@ -111,7 +241,7 @@ export interface DiscordIntegration {
   /** The bot/OAuth2 application for discord integrations */
   application?: DiscordIntegrationApplication
   /** the scopes the application has been authorized for */
-  scopes: string[]
+  scopes: OAuth2Scope[]
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-account-object-integration-account-structure */
@@ -248,7 +378,7 @@ export type DiscordTokenExchange = DiscordTokenExchangeAuthorizationCode | Disco
 
 export interface DiscordTokenExchangeAuthorizationCode {
   /** Application's client id */
-  client_id: string
+  client_id: BigString
   /** application's client secret */
   client_secret: string
   grant_type: 'authorization_code'
@@ -263,7 +393,7 @@ export interface DiscordTokenExchangeAuthorizationCode {
 /** https://discord.com/developers/docs/topics/oauth2#client-credentials-grant */
 export interface DiscordTokenExchangeRefreshToken {
   /** Application's client id */
-  client_id: string
+  client_id: BigString
   /** application's client secret */
   client_secret: string
   grant_type: 'refresh_token'
@@ -275,9 +405,13 @@ export interface DiscordTokenExchangeRefreshToken {
 //        or add another type for this specific endpoint
 /** https://discord.com/developers/docs/topics/oauth2#client-credentials-grant */
 export interface DiscordTokenExchangeClientCredentials {
+  /** Application's client id */
+  client_id: BigString
+  /** application's client secret */
+  client_secret: string
   grant_type: 'client_credentials'
   /** The scope(s) for the access token */
-  scope: string[]
+  scope: OAuth2Scope[]
 }
 
 export interface DiscordAccessTokenResponse {
@@ -323,7 +457,7 @@ export interface DiscordCurrentAuthorization {
     hook: boolean
   }
   /** the scopes the user has authorized the application for */
-  scopes: string[]
+  scopes: OAuth2Scope[]
   /** when the access token expires */
   expires: string
   /** the user who has authorized, if the user has authorized with the `identify` scope */
@@ -2491,7 +2625,7 @@ export interface DiscordGuildWidgetSettings {
 
 export interface DiscordInstallParams {
   /** the scopes to add the application to the server with */
-  scopes: string[]
+  scopes: OAuth2Scope[]
   /** the permissions to request for the bot role */
   permissions: string
 }
