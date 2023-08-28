@@ -102,13 +102,12 @@ export class Queue {
       if (request) {
         const basicURL = this.rest.simplifyUrl(request.route, request.method)
 
-        // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
         // If this url is still rate limited, try again
-        const urlResetIn = this.rest.checkRateLimits(basicURL)
+        const urlResetIn = this.rest.checkRateLimits(basicURL, request.requestBodyOptions?.headers)
         if (urlResetIn) await delay(urlResetIn)
 
         // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
-        const bucketResetIn = request.bucketId ? this.rest.checkRateLimits(request.bucketId) : false
+        const bucketResetIn = request.bucketId ? this.rest.checkRateLimits(request.bucketId, request.requestBodyOptions?.headers) : false
         if (bucketResetIn) await delay(bucketResetIn)
 
         this.firstRequest = false

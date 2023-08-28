@@ -106,8 +106,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     routes: createRoutes(),
 
-    checkRateLimits(url) {
-      const ratelimited = rest.rateLimitedPaths.get(url)
+    checkRateLimits(url, headers) {
+      const authHeader = headers?.authorization ?? ''
+
+      const ratelimited = rest.rateLimitedPaths.get(`${authHeader}${url}`)
       const global = rest.rateLimitedPaths.get('global')
       const now = Date.now()
 
@@ -192,9 +194,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         form.append('payload_json', JSON.stringify(snakelize({ ...options.body, files: undefined })))
 
-        body = form
-
         // No need to set the `content-type` header since `fetch` does that automatically for us when we use a `FormData` object.
+        body = form
+      } else if (options?.body && options.headers && options.headers['content-type'] === 'application/x-www-form-urlencoded') {
+        // OAuth2 body handling
+        const formBody: string[] = []
+
+        for (const prop in options.body) {
+          formBody.push(`${encodeURIComponent(prop)}=${encodeURIComponent(options.body[prop])}`)
+        }
+
+        body = formBody.join('&')
       } else if (options?.body !== undefined) {
         if (options.body instanceof FormData) {
           body = options.body
@@ -260,6 +270,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       // undefined override null needed for typings
       const bucketId = headers.get(RATE_LIMIT_BUCKET_HEADER) ?? undefined
       const limit = headers.get(RATE_LIMIT_LIMIT_HEADER)
+      // TODO: extract to constant
+      const authorization = headers.get('authorization') ?? ''
 
       rest.queues.get(url)?.handleCompletedRequest({
         remaining: remaining ? Number(remaining) : undefined,
@@ -272,7 +284,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rateLimited = true
 
         // SAVE THE URL AS LIMITED, IMPORTANT FOR NEW REQUESTS BY USER WITHOUT BUCKET
-        rest.rateLimitedPaths.set(url, {
+        rest.rateLimitedPaths.set(`${authorization}${url}`, {
           url,
           resetTimestamp: reset,
           bucketId,
@@ -280,7 +292,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         // SAVE THE BUCKET AS LIMITED SINCE DIFFERENT URLS MAY SHARE A BUCKET
         if (bucketId) {
-          rest.rateLimitedPaths.set(bucketId, {
+          rest.rateLimitedPaths.set(`${authorization}${bucketId}`, {
             url,
             resetTimestamp: reset,
             bucketId,
@@ -309,7 +321,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         })
 
         if (bucketId) {
-          rest.rateLimitedPaths.set(bucketId, {
+          rest.rateLimitedPaths.set(`${authorization}${bucketId}`, {
             url: 'global',
             resetTimestamp: globalReset,
             bucketId,
@@ -329,8 +341,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       const loggingHeaders = { ...payload.headers }
 
-      if (payload.headers.authorization)
-        loggingHeaders.authorization = `${payload.headers.authorization.startsWith('Bearer') ? 'Bearer' : 'Bot'} tokenhere`
+      if (payload.headers.authorization) {
+        const authenticationScheme = payload.headers.authorization.split(' ')[0]
+        loggingHeaders.authorization = `${authenticationScheme} tokenhere`
+      }
 
       logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders })
       const response = await fetch(url, payload).catch(async (error) => {
@@ -956,20 +970,32 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async exchangeToken(body) {
-      return await rest.post<DiscordAccessTokenResponse>(rest.routes.oauth2.tokenExchange(), {
-        body,
+      body.clientId = body.clientId.toString()
+
+      const restOptions: MakeRequestOptions = {
+        body: {
+          ...body,
+          grant_type: body.grantType,
+        },
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'content-type': 'application/x-www-form-urlencoded',
         },
         unauthorized: true,
-      })
+      }
+
+      if (body.grantType === 'client_credentials') {
+        const basicCredentials = Buffer.from(`${body.clientId}:${body.clientSecret}`)
+        restOptions.headers!.authorization = `Basic ${basicCredentials.toString('base64')}`
+      }
+
+      return await rest.post<DiscordAccessTokenResponse>(rest.routes.oauth2.tokenExchange(), restOptions)
     },
 
     async revokeToken(body) {
       await rest.post(rest.routes.oauth2.tokenRevoke(), {
         body,
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'content-type': 'application/x-www-form-urlencoded',
         },
         unauthorized: true,
       })

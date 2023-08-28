@@ -104,10 +104,10 @@ import type {
   SearchMembers,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
-} from '@discordeno/types';
-import type { InvalidRequestBucket } from './invalidBucket.js';
-import type { Queue } from './queue.js';
-import type { RestRoutes } from './typings/routes.js';
+} from '@discordeno/types'
+import type { InvalidRequestBucket } from './invalidBucket.js'
+import type { Queue } from './queue.js'
+import type { RestRoutes } from './typings/routes.js'
 
 export interface CreateRestManagerOptions {
   /** The bot token which will be used to make requests. */
@@ -175,7 +175,7 @@ export interface RestManager {
   /** Whether or not the rest manager should keep objects in raw snake case from discord. */
   preferSnakeCase: (enabled: boolean) => RestManager
   /** Check the rate limits for a url or a bucket. */
-  checkRateLimits: (url: string) => number | false
+  checkRateLimits: (url: string, headers?: Record<string, string>) => number | false
   /** Reshapes and modifies the obj as needed to make it ready for discords api. */
   changeToDiscordFormat: (obj: any) => any
   /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
