@@ -386,8 +386,6 @@ export interface DiscordTokenExchangeAuthorizationCode {
   code: string
   /** The redirect_uri associated with this authorization */
   redirect_uri: string
-  /** The webhook the user created for the application. Requires the `webhook.incoming` scope */
-  webhook?: DiscordIncomingWebhook
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#client-credentials-grant */
@@ -425,6 +423,8 @@ export interface DiscordAccessTokenResponse {
   refresh_token: string
   /** The scopes for the access token */
   scope: string
+  /** The webhook the user created for the application. Requires the `webhook.incoming` scope */
+  webhook?: DiscordIncomingWebhook
 }
 
 export interface DiscordTokenRevocation {
