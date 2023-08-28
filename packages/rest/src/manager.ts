@@ -986,6 +986,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       if (body.grantType === 'client_credentials') {
         const basicCredentials = Buffer.from(`${body.clientId}:${body.clientSecret}`)
         restOptions.headers!.authorization = `Basic ${basicCredentials.toString('base64')}`
+
+        restOptions.body.scope = body.scope.join(' ')
       }
 
       return await rest.post<DiscordAccessTokenResponse>(rest.routes.oauth2.tokenExchange(), restOptions)
