@@ -1221,8 +1221,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
     },
 
-    async getUserConnection(token) {
-      return await rest.get<DiscordConnection>(rest.routes.oauth2.connections(), {
+    async getUserConnections(token) {
+      return await rest.get<DiscordConnection[]>(rest.routes.oauth2.connections(), {
         headers: {
           authorization: `Bearer ${token}`,
         },

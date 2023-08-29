@@ -432,7 +432,7 @@ export interface DiscordAccessTokenResponse {
 
 export interface DiscordTokenRevocation {
   /** Application's client id */
-  client_id: string
+  client_id: BigString
   /** application's client secret */
   client_secret: string
   /** The access token to revoke */

@@ -549,7 +549,7 @@ export interface GetGroupDmOptions {
   /** Access tokens of users that have granted your app the `gdm.join` scope */
   accessTokens: string[]
   /** A mapping of user ids to their respective nicknames */
-  nicks: Record<string, string>
+  nicks?: Record<string, string>
 }
 
 /** https://discord.com/developers/docs/resources/channel#group-dm-add-recipient-json-params */
@@ -557,7 +557,7 @@ export interface AddDmRecipientOptions {
   /** access token of a user that has granted your app the `gdm.join` scope */
   accessToken: string
   /** nickname of the user being added */
-  nick: string
+  nick?: string
 }
 
 /** https://discord.com/developers/docs/resources/guild#add-guild-member-json-params */

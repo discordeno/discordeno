@@ -2142,12 +2142,12 @@ export interface RestManager {
    * Get the current user connections.
    *
    * @param bearerToken - The access token of the user
-   * @returns {CamelizedDiscordConnection}
+   * @returns {CamelizedDiscordConnection[]}
    *
    * @remarks
    * This requires the `connections` scope.
    */
-  getUserConnection: (bearerToken: string) => Promise<CamelizedDiscordConnection>
+  getUserConnections: (bearerToken: string) => Promise<CamelizedDiscordConnection[]>
   /**
    * Get the current user application role connection for the application.
    *

@@ -232,11 +232,11 @@ export function createRoutes(): RestRoutes {
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           if (options.after) url += `after=${options.after}`
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          if (options.before) url += `before=${options.before}`
+          if (options.before) url += `&before=${options.before}`
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          if (options.limit) url += `limit=${options.limit}`
+          if (options.limit) url += `&limit=${options.limit}`
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          if (options.withCounts) url += `with_counts=${options.withCounts}`
+          if (options.withCounts) url += `&with_counts=${options.withCounts}`
         }
 
         return url
