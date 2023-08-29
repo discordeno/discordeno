@@ -1391,12 +1391,30 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await rest.post(rest.routes.channels.typing(channelId))
     },
 
-    async upsertGlobalApplicationCommands(body) {
-      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId), { body })
+    async upsertGlobalApplicationCommands(body, token) {
+      const restOptions: MakeRequestOptions = { body }
+
+      if (token) {
+        restOptions.unauthorized = true
+        restOptions.headers = {
+          authorization: `Bearer ${token}`,
+        }
+      }
+
+      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId), restOptions)
     },
 
-    async upsertGuildApplicationCommands(guildId, body) {
-      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), { body })
+    async upsertGuildApplicationCommands(guildId, body, token) {
+      const restOptions: MakeRequestOptions = { body }
+
+      if (token) {
+        restOptions.unauthorized = true
+        restOptions.headers = {
+          authorization: `Bearer ${token}`,
+        }
+      }
+
+      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), restOptions)
     },
 
     async editUserApplicationRoleConnection(token, applicationId, body) {

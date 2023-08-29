@@ -2498,6 +2498,7 @@ export interface RestManager {
    * Re-registers the list of global application commands, overwriting the previous commands completely.
    *
    * @param commands - The list of commands to use to overwrite the previous list.
+   * @param bearerToken - Developer access token.
    * @returns A collection of {@link ApplicationCommand} objects assorted by command ID.
    *
    * @remarks
@@ -2505,14 +2506,18 @@ export interface RestManager {
    *
    * ⚠️ Commands that do not already exist will count towards the daily limit of _200_ new commands.
    *
+   * When using the bearerToken the token needs the `applications.commands.update` scope and must be a `Client grant` token.
+   *  You will be able to update only your own application commands
+   *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands}
    */
-  upsertGlobalApplicationCommands: (commands: CreateApplicationCommand[]) => Promise<CamelizedDiscordApplicationCommand[]>
+  upsertGlobalApplicationCommands: (commands: CreateApplicationCommand[], bearerToken?: string) => Promise<CamelizedDiscordApplicationCommand[]>
   /**
    * Re-registers the list of application commands registered in a guild, overwriting the previous commands completely.
    *
    * @param guildId - The ID of the guild whose list of commands to overwrite.
    * @param commands - The list of commands to use to overwrite the previous list.
+   * @param bearerToken - Developer access token.
    * @returns A collection of {@link ApplicationCommand} objects assorted by command ID.
    *
    * @remarks
@@ -2520,9 +2525,16 @@ export interface RestManager {
    *
    * ⚠️ Commands that do not already exist will count towards the daily limit of _200_ new commands.
    *
+   * When using the bearerToken the token needs the `applications.commands.update` scope and must be a `Client grant` token.
+   *  You will be able to update only your own application commands
+   *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands}
    */
-  upsertGuildApplicationCommands: (guildId: BigString, commands: CreateApplicationCommand[]) => Promise<CamelizedDiscordApplicationCommand[]>
+  upsertGuildApplicationCommands: (
+    guildId: BigString,
+    commands: CreateApplicationCommand[],
+    bearerToken?: string,
+  ) => Promise<CamelizedDiscordApplicationCommand[]>
   /**
    * Bans a user from a guild.
    *
