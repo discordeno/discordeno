@@ -399,8 +399,6 @@ export interface DiscordTokenExchangeRefreshToken {
   refresh_token: string
 }
 
-// TODO: maybe remove this?? It does not return a refresh_token, "violating" type for DiscordAccessTokenResponse when discord responses
-//        or add another type for this specific endpoint
 /** https://discord.com/developers/docs/topics/oauth2#client-credentials-grant */
 export interface DiscordTokenExchangeClientCredentials {
   /** Application's client id */
@@ -419,7 +417,12 @@ export interface DiscordAccessTokenResponse {
   token_type: string
   /** The number of seconds after that the access token is expired */
   expires_in: number
-  /** The refresh token to refresh the access_token */
+  /**
+   * The refresh token to refresh the access token
+   *
+   * @remarks
+   * When the token exchange is a client credentials type grant this value is not defined.
+   */
   refresh_token: string
   /** The scopes for the access token */
   scope: string
@@ -438,24 +441,7 @@ export interface DiscordTokenRevocation {
 
 /** https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information-response-structure */
 export interface DiscordCurrentAuthorization {
-  application: {
-    /** The name of the app */
-    name: string
-    /** The description of the app */
-    description: string
-    /** The hex encoded key for verification in interactions and the GameSDK's GetTicket */
-    verify_key: string
-    /** The id of the app */
-    id: string
-    /** The icon hash of the app */
-    icon: string | null
-    /** When false only app owner can join the app's bot to guilds */
-    bot_public: boolean
-    /** When true the app's bot will only join upon completion of the full oauth2 code grant flow */
-    bot_require_code_grant: boolean
-    // TODO: From the discord docs i didn't understood what this hook thing is
-    hook: boolean
-  }
+  application: DiscordApplication
   /** the scopes the user has authorized the application for */
   scopes: OAuth2Scope[]
   /** when the access token expires */
@@ -525,9 +511,8 @@ export interface DiscordApplicationRoleConnection {
   platform_name: string | null
   /** the username on the platform a bot has connected (max 100 characters) */
   platform_username: string | null
-  // TODO: i didn't understood how should i type this
   /** object mapping application role connection metadata keys to their stringified value (max 100 characters) for the user on the platform a bot has connected */
-  metadata: object
+  metadata: Record<string, string>
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-object */

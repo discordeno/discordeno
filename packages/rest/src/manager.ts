@@ -272,7 +272,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       // undefined override null needed for typings
       const bucketId = headers.get(RATE_LIMIT_BUCKET_HEADER) ?? undefined
       const limit = headers.get(RATE_LIMIT_LIMIT_HEADER)
-      // TODO: extract to constant
       const authorization = headers.get('authorization') ?? ''
 
       rest.queues.get(url)?.handleCompletedRequest({
