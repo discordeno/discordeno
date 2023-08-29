@@ -261,7 +261,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
-    processHeaders(url, headers) {
+    processHeaders(url, headers, requestAuthorization) {
       let rateLimited = false
 
       // GET ALL NECESSARY HEADERS
@@ -272,9 +272,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       // undefined override null needed for typings
       const bucketId = headers.get(RATE_LIMIT_BUCKET_HEADER) ?? undefined
       const limit = headers.get(RATE_LIMIT_LIMIT_HEADER)
-      const authorization = headers.get('authorization') ?? ''
 
-      rest.queues.get(url)?.handleCompletedRequest({
+      rest.queues.get(`${requestAuthorization}${url}`)?.handleCompletedRequest({
         remaining: remaining ? Number(remaining) : undefined,
         interval: retryAfter ? Number(retryAfter) * 1000 : undefined,
         max: limit ? Number(limit) : undefined,
@@ -285,7 +284,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rateLimited = true
 
         // SAVE THE URL AS LIMITED, IMPORTANT FOR NEW REQUESTS BY USER WITHOUT BUCKET
-        rest.rateLimitedPaths.set(`${authorization}${url}`, {
+        rest.rateLimitedPaths.set(`${requestAuthorization}${url}`, {
           url,
           resetTimestamp: reset,
           bucketId,
@@ -293,7 +292,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         // SAVE THE BUCKET AS LIMITED SINCE DIFFERENT URLS MAY SHARE A BUCKET
         if (bucketId) {
-          rest.rateLimitedPaths.set(`${authorization}${bucketId}`, {
+          rest.rateLimitedPaths.set(`${requestAuthorization}${bucketId}`, {
             url,
             resetTimestamp: reset,
             bucketId,
@@ -322,7 +321,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         })
 
         if (bucketId) {
-          rest.rateLimitedPaths.set(`${authorization}${bucketId}`, {
+          rest.rateLimitedPaths.set(`${requestAuthorization}${bucketId}`, {
             url: 'global',
             resetTimestamp: globalReset,
             bucketId,
@@ -342,8 +341,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       const loggingHeaders = { ...payload.headers }
 
+      const authenticationScheme = payload.headers.authorization?.split(' ')[0]
+
       if (payload.headers.authorization) {
-        const authenticationScheme = payload.headers.authorization.split(' ')[0]
         loggingHeaders.authorization = `${authenticationScheme} tokenhere`
       }
 
@@ -365,7 +365,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared')
 
       // Set the bucket id if it was available on the headers
-      const bucketId = rest.processHeaders(rest.simplifyUrl(options.route, options.method), response.headers)
+      const bucketId = rest.processHeaders(
+        rest.simplifyUrl(options.route, options.method),
+        response.headers,
+        authenticationScheme === 'Bearer' ? payload.headers.authorization : '',
+      )
       if (bucketId) options.bucketId = bucketId
 
       if (response.status < HttpResponseCode.Success || response.status >= HttpResponseCode.Error) {
@@ -440,18 +444,20 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return
       }
 
-      const queue = rest.queues.get(url)
+      const authHeader = request.requestBodyOptions?.headers?.authorization ?? ''
+
+      const queue = rest.queues.get(`${authHeader}${url}`)
 
       if (queue !== undefined) {
         queue.makeRequest(request)
       } else {
         // CREATES A NEW QUEUE
-        const bucketQueue = new Queue(rest, { url, deleteQueueDelay: rest.deleteQueueDelay })
+        const bucketQueue = new Queue(rest, { url, deleteQueueDelay: rest.deleteQueueDelay, authentication: authHeader })
 
         // Add request to queue
         bucketQueue.makeRequest(request)
         // Save queue
-        rest.queues.set(url, bucketQueue)
+        rest.queues.set(`${authHeader}${url}`, bucketQueue)
       }
     },
 

@@ -28,6 +28,8 @@ export class Queue {
   frozenAt: number = 0
   /** The time in milliseconds to wait before deleting this queue if it is empty. Defaults to 60000(one minute). */
   deleteQueueDelay: number = 60000
+  /** The authentication header used for the request. Defaults to an empty string */
+  authentication: string = ''
 
   constructor(rest: RestManager, options: QueueOptions) {
     this.rest = rest
@@ -38,6 +40,7 @@ export class Queue {
     if (options.remaining) this.remaining = options.remaining
     if (options.timeoutId) this.timeoutId = options.timeoutId
     if (options.deleteQueueDelay) this.deleteQueueDelay = options.deleteQueueDelay
+    if (options.authentication) this.authentication = options.authentication
   }
 
   /** Check if there is any remaining requests that are allowed. */
@@ -183,8 +186,12 @@ export class Queue {
       logger.debug(`[Queue] ${this.url}. Deleting`)
       if (this.timeoutId) clearTimeout(this.timeoutId)
       // No requests have been requested for this queue so we nuke this queue
-      this.rest.queues.delete(this.url)
-      logger.debug(`[Queue] ${this.url}. Deleted! Remaining: (${this.rest.queues.size})`, [...this.rest.queues.keys()])
+      this.rest.queues.delete(`${this.authentication}${this.url}`)
+      // TODO: better logging, for now the array of remaining requests can contain duplicates dude to OAuth2 tokens
+      logger.debug(
+        `[Queue] ${this.url}. Deleted! Remaining: (${this.rest.queues.size})`,
+        [...this.rest.queues.values()].map((x) => x.url),
+      )
       if (this.rest.queues.size) this.processPending()
     }, this.deleteQueueDelay)
   }
@@ -215,4 +222,6 @@ export interface QueueOptions {
   url: string
   /** The time in milliseconds to wait before deleting this queue if it is empty. Defaults to 60000(one minute). */
   deleteQueueDelay?: number
+  /** Authentication used for the request. In non-OAuth2 situations should be an empty string. Defaults to an empty string */
+  authentication?: string
 }
