@@ -1,6 +1,6 @@
 import { Buffer } from 'node:buffer'
 
-/** Removes the Bot before the token. */
+/** Removes the Bot/Bearer before the token. */
 export function removeTokenPrefix(token?: string, type: 'GATEWAY' | 'REST' = 'REST'): string {
   // If no token is provided, throw an error
   if (token === undefined) {
