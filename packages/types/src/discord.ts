@@ -428,6 +428,8 @@ export interface DiscordAccessTokenResponse {
   scope: string
   /** The webhook the user created for the application. Requires the `webhook.incoming` scope */
   webhook?: DiscordIncomingWebhook
+  /** The guild the bot has been added. Requires the `bot` scope */
+  guild?: DiscordGuild
 }
 
 export interface DiscordTokenRevocation {

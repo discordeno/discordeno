@@ -187,7 +187,7 @@ export class Queue {
       if (this.timeoutId) clearTimeout(this.timeoutId)
       // No requests have been requested for this queue so we nuke this queue
       this.rest.queues.delete(`${this.authentication}${this.url}`)
-      // TODO: better logging, for now the array of remaining requests can contain duplicates dude to OAuth2 tokens
+      // TODO: better logging, for now the array of remaining requests can contain duplicates due to OAuth2 tokens
       logger.debug(
         `[Queue] ${this.url}. Deleted! Remaining: (${this.rest.queues.size})`,
         [...this.rest.queues.values()].map((x) => x.url),
