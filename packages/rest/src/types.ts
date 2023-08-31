@@ -2595,7 +2595,7 @@ export interface RestManager {
    * @param userId - The ID of the user to get the member object for.
    * @returns An instance of {@link CamelizedDiscordMemberWithUser}.
    *
-   * @see {@link https://discord.com/developers/docs/resources/user#get-current-user-guild-member}
+   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-member}
    */
   getMember: (guildId: BigString, userId: BigString) => Promise<CamelizedDiscordMemberWithUser>
   /**
@@ -2608,7 +2608,7 @@ export interface RestManager {
    * @remarks
    * The access tokens needs the `guilds.members.read` scope
    *
-   * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-member}
+   * @see {@link https://discord.com/developers/docs/resources/user#get-current-user-guild-member}
    */
   getCurrentMember: (guildId: BigString, bearerToken: string) => Promise<CamelizedDiscordMemberWithUser>
   /**
