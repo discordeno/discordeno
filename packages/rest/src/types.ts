@@ -1755,7 +1755,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/user#get-current-user-guilds}
    */
-  getGuilds: (bearerToken: string, options?: GetUserGuilds) => Promise<CamelizedDiscordPartialGuild>
+  getGuilds: (bearerToken: string, options?: GetUserGuilds) => Promise<CamelizedDiscordPartialGuild[]>
   /**
    * Gets a guild application command by its ID.
    *
@@ -2355,11 +2355,10 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel to remove the recipient user of.
    * @param userId - The user ID of the user to remove.
-   * @param bearerToken - The access token of
    *
-   * @see {@link hhttps://discord.com/developers/docs/resources/channel#group-dm-remove-recipient}
+   * @see {@link https://discord.com/developers/docs/resources/channel#group-dm-remove-recipient}
    */
-  removeDmRecipient: (channelId: BigString, userId: BigString, bearerToken: string) => Promise<void>
+  removeDmRecipient: (channelId: BigString, userId: BigString) => Promise<void>
   /**
    * Sends a message to a channel.
    *

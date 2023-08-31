@@ -1086,7 +1086,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getGuilds(token, options) {
-      return await rest.get<DiscordPartialGuild>(rest.routes.guilds.userGuilds(options), {
+      return await rest.get<DiscordPartialGuild[]>(rest.routes.guilds.userGuilds(options), {
         headers: {
           authorization: `Bearer ${token}`,
         },
