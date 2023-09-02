@@ -53,7 +53,9 @@ import type {
   CreateAutoModerationRuleOptions,
   CreateChannelInvite,
   CreateForumPostWithMessage,
+  CreateGlobalApplicationCommandOptions,
   CreateGuild,
+  CreateGuildApplicationCommandOptions,
   CreateGuildBan,
   CreateGuildChannel,
   CreateGuildEmoji,
@@ -104,6 +106,8 @@ import type {
   SearchMembers,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
+  UpsertGlobalApplicationCommandOptions,
+  UpsertGuildApplicationCommandOptions,
 } from '@discordeno/types'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 import type { Queue } from './queue.js'
@@ -382,7 +386,7 @@ export interface RestManager {
    * Creates an application command accessible globally; across different guilds and channels.
    *
    * @param command - The command to create.
-   * @param bearerToken - Developer access token.
+   * @param options - Additional options for the endpoint
    * @returns An instance of the created {@link ApplicationCommand}.
    *
    * @remarks
@@ -390,12 +394,15 @@ export interface RestManager {
    * ⚠️ Global commands once created are cached for periods of __an hour__, so changes made to existing commands will take an hour to surface.
    * ⚠️ You can only create up to 200 _new_ commands daily.
    *
-   * When using the bearerToken the token needs the `applications.commands.update` scope and must be a `Client grant` token.
+   * When using the bearer token the token needs the `applications.commands.update` scope and must be a `Client grant` token.
    *  You will be able to update only your own application commands
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-global-application-command}
    */
-  createGlobalApplicationCommand: (command: CreateApplicationCommand, bearerToken?: string) => Promise<CamelizedDiscordApplicationCommand>
+  createGlobalApplicationCommand: (
+    command: CreateApplicationCommand,
+    options?: CreateGlobalApplicationCommandOptions,
+  ) => Promise<CamelizedDiscordApplicationCommand>
   /**
    * Creates a guild.
    *
@@ -415,14 +422,14 @@ export interface RestManager {
    *
    * @param command - The command to create.
    * @param guildId - The ID of the guild to create the command for.
-   * @param bearerToken - Developer access token.
+   * @param options - Additional options for the endpoint
    * @returns An instance of the created {@link ApplicationCommand}.
    *
    * @remarks
    * ⚠️ Creating a command with the same name as an existing command for your application will overwrite the old command.
    * ⚠️ You can only create up to 200 _new_ commands daily.
    *
-   * When using the bearerToken the token needs the `applications.commands.update` scope and must be a `Client grant` token.
+   * When using the bearer token the token needs the `applications.commands.update` scope and must be a `Client grant` token.
    *  You will be able to update only your own application commands
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command}
@@ -430,7 +437,7 @@ export interface RestManager {
   createGuildApplicationCommand: (
     command: CreateApplicationCommand,
     guildId: BigString,
-    bearerToken?: string,
+    options?: CreateGuildApplicationCommandOptions,
   ) => Promise<CamelizedDiscordApplicationCommand>
   /**
    * Creates a guild from a template.
@@ -2502,7 +2509,7 @@ export interface RestManager {
    * Re-registers the list of global application commands, overwriting the previous commands completely.
    *
    * @param commands - The list of commands to use to overwrite the previous list.
-   * @param bearerToken - Developer access token.
+   * @param options - Additional options for the endpoint.
    * @returns A collection of {@link ApplicationCommand} objects assorted by command ID.
    *
    * @remarks
@@ -2510,18 +2517,21 @@ export interface RestManager {
    *
    * ⚠️ Commands that do not already exist will count towards the daily limit of _200_ new commands.
    *
-   * When using the bearerToken the token needs the `applications.commands.update` scope and must be a `Client grant` token.
+   * When using the bearer token the token needs the `applications.commands.update` scope and must be a `Client grant` token.
    *  You will be able to update only your own application commands
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands}
    */
-  upsertGlobalApplicationCommands: (commands: CreateApplicationCommand[], bearerToken?: string) => Promise<CamelizedDiscordApplicationCommand[]>
+  upsertGlobalApplicationCommands: (
+    commands: CreateApplicationCommand[],
+    options?: UpsertGlobalApplicationCommandOptions,
+  ) => Promise<CamelizedDiscordApplicationCommand[]>
   /**
    * Re-registers the list of application commands registered in a guild, overwriting the previous commands completely.
    *
    * @param guildId - The ID of the guild whose list of commands to overwrite.
    * @param commands - The list of commands to use to overwrite the previous list.
-   * @param bearerToken - Developer access token.
+   * @param options - Additional options for the endpoint.
    * @returns A collection of {@link ApplicationCommand} objects assorted by command ID.
    *
    * @remarks
@@ -2529,7 +2539,7 @@ export interface RestManager {
    *
    * ⚠️ Commands that do not already exist will count towards the daily limit of _200_ new commands.
    *
-   * When using the bearerToken the token needs the `applications.commands.update` scope and must be a `Client grant` token.
+   * When using the bearer token the token needs the `applications.commands.update` scope and must be a `Client grant` token.
    *  You will be able to update only your own application commands
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands}
@@ -2537,7 +2547,7 @@ export interface RestManager {
   upsertGuildApplicationCommands: (
     guildId: BigString,
     commands: CreateApplicationCommand[],
-    bearerToken?: string,
+    options?: UpsertGuildApplicationCommandOptions,
   ) => Promise<CamelizedDiscordApplicationCommand[]>
   /**
    * Bans a user from a guild.

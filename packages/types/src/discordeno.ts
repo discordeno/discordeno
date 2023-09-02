@@ -544,6 +544,26 @@ export interface CreateGuildChannel {
   defaultSortOrder?: SortOrderTypes | null
 }
 
+export interface CreateGlobalApplicationCommandOptions {
+  /** The bearer token of the developer of the application */
+  bearerToken: string
+}
+
+export interface CreateGuildApplicationCommandOptions {
+  /** The bearer token of the developer of the application */
+  bearerToken: string
+}
+
+export interface UpsertGlobalApplicationCommandOptions {
+  /** The bearer token of the developer of the application */
+  bearerToken: string
+}
+
+export interface UpsertGuildApplicationCommandOptions {
+  /** The bearer token of the developer of the application */
+  bearerToken: string
+}
+
 /** https://discord.com/developers/docs/resources/user#create-group-dm-json-params */
 export interface GetGroupDmOptions {
   /** Access tokens of users that have granted your app the `gdm.join` scope */

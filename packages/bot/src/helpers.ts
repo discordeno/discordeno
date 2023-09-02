@@ -31,7 +31,9 @@ import type {
   CreateAutoModerationRuleOptions,
   CreateChannelInvite,
   CreateForumPostWithMessage,
+  CreateGlobalApplicationCommandOptions,
   CreateGuild,
+  CreateGuildApplicationCommandOptions,
   CreateGuildBan,
   CreateGuildChannel,
   CreateGuildEmoji,
@@ -82,6 +84,8 @@ import type {
   SearchMembers,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
+  UpsertGlobalApplicationCommandOptions,
+  UpsertGuildApplicationCommandOptions,
 } from '@discordeno/types'
 import { snakelize } from '@discordeno/utils'
 import type { Bot } from './bot.js'
@@ -121,14 +125,14 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     createForumThread: async (channelId, options, reason) => {
       return bot.transformers.channel(bot, { channel: snakelize(await bot.rest.createForumThread(channelId, options, reason)) })
     },
-    createGlobalApplicationCommand: async (command, bearer) => {
-      return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.createGlobalApplicationCommand(command, bearer)))
+    createGlobalApplicationCommand: async (command, options) => {
+      return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.createGlobalApplicationCommand(command, options)))
     },
     createGuild: async (options) => {
       return bot.transformers.guild(bot, { guild: snakelize(await bot.rest.createGuild(options)), shardId: 0 })
     },
-    createGuildApplicationCommand: async (command, guildId, bearer) => {
-      return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.createGuildApplicationCommand(command, guildId, bearer)))
+    createGuildApplicationCommand: async (command, guildId, options) => {
+      return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.createGuildApplicationCommand(command, guildId, options)))
     },
     createGuildFromTemplate: async (templateCode, options) => {
       return bot.transformers.guild(bot, { guild: snakelize(await bot.rest.createGuildFromTemplate(templateCode, options)), shardId: 0 })
@@ -254,10 +258,10 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return await bot.rest.revokeToken(options)
     },
     getApplicationCommandPermission: async (guildId, commandId, options) => {
-      return bot.transformers.applicationCommandPermission(
-        bot,
-        snakelize(await bot.rest.getApplicationCommandPermission(guildId, commandId, options)),
-      )
+      const res = await bot.rest.getApplicationCommandPermission(guildId, commandId, options)
+      const snakedRes = snakelize(res)
+
+      return bot.transformers.applicationCommandPermission(bot, snakedRes)
     },
     getApplicationCommandPermissions: async (guildId, options) => {
       return (await bot.rest.getApplicationCommandPermissions(guildId, options)).map((res) =>
@@ -485,11 +489,13 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     syncGuildTemplate: async (guildId) => {
       return bot.transformers.template(bot, snakelize(await bot.rest.syncGuildTemplate(guildId)))
     },
-    upsertGlobalApplicationCommands: async (commands, bearer) => {
-      return (await bot.rest.upsertGlobalApplicationCommands(commands, bearer)).map((res) => bot.transformers.applicationCommand(bot, snakelize(res)))
+    upsertGlobalApplicationCommands: async (commands, options) => {
+      return (await bot.rest.upsertGlobalApplicationCommands(commands, options)).map((res) =>
+        bot.transformers.applicationCommand(bot, snakelize(res)),
+      )
     },
-    upsertGuildApplicationCommands: async (guildId, commands, bearer) => {
-      return (await bot.rest.upsertGuildApplicationCommands(guildId, commands, bearer)).map((res) =>
+    upsertGuildApplicationCommands: async (guildId, commands, options) => {
+      return (await bot.rest.upsertGuildApplicationCommands(guildId, commands, options)).map((res) =>
         bot.transformers.applicationCommand(bot, snakelize(res)),
       )
     },
@@ -678,9 +684,13 @@ export interface BotHelpers {
   createChannel: (guildId: BigString, options: CreateGuildChannel, reason?: string) => Promise<Channel>
   createEmoji: (guildId: BigString, options: CreateGuildEmoji, reason?: string) => Promise<Emoji>
   createForumThread: (channelId: BigString, options: CreateForumPostWithMessage, reason?: string) => Promise<Channel>
-  createGlobalApplicationCommand: (command: CreateApplicationCommand, bearerToken?: string) => Promise<ApplicationCommand>
+  createGlobalApplicationCommand: (command: CreateApplicationCommand, options?: CreateGlobalApplicationCommandOptions) => Promise<ApplicationCommand>
   createGuild: (options: CreateGuild) => Promise<Guild>
-  createGuildApplicationCommand: (command: CreateApplicationCommand, guildId: BigString, bearerToken?: string) => Promise<ApplicationCommand>
+  createGuildApplicationCommand: (
+    command: CreateApplicationCommand,
+    guildId: BigString,
+    options?: CreateGuildApplicationCommandOptions,
+  ) => Promise<ApplicationCommand>
   createGuildFromTemplate: (templateCode: string, options: CreateGuildFromTemplate) => Promise<Guild>
   createGuildSticker: (guildId: BigString, options: CreateGuildStickerOptions, reason?: string) => Promise<Sticker>
   createGuildTemplate: (guildId: BigString, options: CreateTemplate) => Promise<Template>
@@ -817,8 +827,15 @@ export interface BotHelpers {
   startThreadWithMessage: (channelId: BigString, messageId: BigString, options: StartThreadWithMessage, reason?: string) => Promise<Channel>
   startThreadWithoutMessage: (channelId: BigString, options: StartThreadWithoutMessage, reason?: string) => Promise<Channel>
   syncGuildTemplate: (guildId: BigString) => Promise<Template>
-  upsertGlobalApplicationCommands: (commands: CreateApplicationCommand[], bearerToken?: string) => Promise<ApplicationCommand[]>
-  upsertGuildApplicationCommands: (guildId: BigString, commands: CreateApplicationCommand[], bearerToken?: string) => Promise<ApplicationCommand[]>
+  upsertGlobalApplicationCommands: (
+    commands: CreateApplicationCommand[],
+    options?: UpsertGlobalApplicationCommandOptions,
+  ) => Promise<ApplicationCommand[]>
+  upsertGuildApplicationCommands: (
+    guildId: BigString,
+    commands: CreateApplicationCommand[],
+    options?: UpsertGuildApplicationCommandOptions,
+  ) => Promise<ApplicationCommand[]>
   editBotMember: (guildId: BigString, options: EditBotMemberOptions, reason?: string) => Promise<Member>
   editMember: (guildId: BigString, userId: BigString, options: ModifyGuildMember, reason?: string) => Promise<Member>
   getMember: (guildId: BigString, userId: BigString) => Promise<Member>

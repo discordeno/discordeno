@@ -567,13 +567,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordEmoji>(rest.routes.guilds.emojis(guildId), { body, reason })
     },
 
-    async createGlobalApplicationCommand(body, token) {
+    async createGlobalApplicationCommand(body, options) {
       const restOptions: MakeRequestOptions = { body }
 
-      if (token) {
+      if (options?.bearerToken) {
         restOptions.unauthorized = true
         restOptions.headers = {
-          authorization: `Bearer ${token}`,
+          authorization: `Bearer ${options.bearerToken}`,
         }
       }
 
@@ -584,13 +584,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordGuild>(rest.routes.guilds.all(), { body })
     },
 
-    async createGuildApplicationCommand(body, guildId, token) {
+    async createGuildApplicationCommand(body, guildId, options) {
       const restOptions: MakeRequestOptions = { body }
 
-      if (token) {
+      if (options?.bearerToken) {
         restOptions.unauthorized = true
         restOptions.headers = {
-          authorization: `Bearer ${token}`,
+          authorization: `Bearer ${options.bearerToken}`,
         }
       }
 
@@ -1397,26 +1397,26 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await rest.post(rest.routes.channels.typing(channelId))
     },
 
-    async upsertGlobalApplicationCommands(body, token) {
+    async upsertGlobalApplicationCommands(body, options) {
       const restOptions: MakeRequestOptions = { body }
 
-      if (token) {
+      if (options?.bearerToken) {
         restOptions.unauthorized = true
         restOptions.headers = {
-          authorization: `Bearer ${token}`,
+          authorization: `Bearer ${options.bearerToken}`,
         }
       }
 
       return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId), restOptions)
     },
 
-    async upsertGuildApplicationCommands(guildId, body, token) {
+    async upsertGuildApplicationCommands(guildId, body, options) {
       const restOptions: MakeRequestOptions = { body }
 
-      if (token) {
+      if (options?.bearerToken) {
         restOptions.unauthorized = true
         restOptions.headers = {
-          authorization: `Bearer ${token}`,
+          authorization: `Bearer ${options.bearerToken}`,
         }
       }
 
