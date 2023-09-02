@@ -7,7 +7,6 @@ import type {
   BeginGuildPrune,
   BigString,
   CamelizedDiscordAccessTokenResponse,
-  CamelizedDiscordActiveThreads,
   CamelizedDiscordApplicationRoleConnection,
   CamelizedDiscordArchivedThreads,
   CamelizedDiscordAuditLog,
@@ -243,7 +242,11 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return await bot.rest.followAnnouncement(sourceChannelId, targetChannelId)
     },
     getActiveThreads: async (guildId) => {
-      return await bot.rest.getActiveThreads(guildId)
+      const result = await bot.rest.getActiveThreads(guildId)
+      return {
+        threads: result.threads.map((thread) => bot.transformers.channel(bot, { guildId, channel: snakelize(thread) })),
+        members: result.members.map((member) => bot.transformers.threadMember(bot, snakelize(member))),
+      }
     },
     getApplicationInfo: async () => {
       return bot.transformers.application(bot, snakelize(await bot.rest.getApplicationInfo()))
@@ -744,7 +747,7 @@ export interface BotHelpers {
   ) => Promise<CamelizedDiscordApplicationRoleConnection>
   executeWebhook: (webhookId: BigString, token: string, options: ExecuteWebhook) => Promise<Message | undefined>
   followAnnouncement: (sourceChannelId: BigString, targetChannelId: BigString) => Promise<CamelizedDiscordFollowedChannel>
-  getActiveThreads: (guildId: BigString) => Promise<CamelizedDiscordActiveThreads>
+  getActiveThreads: (guildId: BigString) => Promise<{ threads: Channel[]; members: ThreadMember[] }>
   getApplicationInfo: () => Promise<Application>
   getCurrentAuthenticationInfo: (bearerToken: string) => Promise<CamelizedDiscordCurrentAuthorization>
   exchangeToken: (options: CamelizedDiscordTokenExchange) => Promise<CamelizedDiscordAccessTokenResponse>
