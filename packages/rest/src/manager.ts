@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-const-assign */
+import { Buffer } from 'node:buffer'
+
 import {
   calculateBits,
   camelToSnakeCase,
