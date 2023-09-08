@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694184632025,
+  "lastUpdate": 1694184644066,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -11468,6 +11468,114 @@ window.BENCHMARK_DATA = {
             "range": "±0.97%",
             "unit": "ops/sec",
             "extra": "96 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "Fleny113@outlook.com",
+            "name": "Fleny",
+            "username": "Fleny113"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a087a52d6fa07492119439eee8d35464445bbca9",
+          "message": "Fix(rest) Fix error when serializing payload with a BigInt (#3117)\n\n* Fix error when serializing payload with bigint\n\n* add comment for reason of changeToDiscordFormat",
+          "timestamp": "2023-09-08T14:48:47Z",
+          "tree_id": "e227a2f35727dcaeec2f37ccec6c871c15db9400",
+          "url": "https://github.com/discordeno/discordeno/commit/a087a52d6fa07492119439eee8d35464445bbca9"
+        },
+        "date": 1694184642467,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "[transformer] message cache check RSS",
+            "value": 116.18,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Used",
+            "value": 118.54,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Total",
+            "value": 107.14,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check RSS",
+            "value": 79.43,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Used",
+            "value": 103.9,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Total",
+            "value": 79.62,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 0.71,
+            "range": "±2.83%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 10.73,
+            "range": "±1.43%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 0,
+            "range": "±0%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "rest.simplifyUrl",
+            "value": 206767,
+            "range": "±0.23%",
+            "unit": "ops/sec",
+            "extra": "96 samples"
+          },
+          {
+            "name": "Camelize 1 event",
+            "value": 6426,
+            "range": "±0.23%",
+            "unit": "ops/sec",
+            "extra": "94 samples"
+          },
+          {
+            "name": "Snakelize 1 event",
+            "value": 6480,
+            "range": "±0.17%",
+            "unit": "ops/sec",
+            "extra": "95 samples"
           }
         ]
       }
