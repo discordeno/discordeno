@@ -28,7 +28,7 @@ export class Queue {
   frozenAt: number = 0
   /** The time in milliseconds to wait before deleting this queue if it is empty. Defaults to 60000(one minute). */
   deleteQueueDelay: number = 60000
-  /** The authentication header used for the request. Defaults to an empty string */
+  /** The authentication header used for the OAuth2 request. Defaults to an empty string for non-OAuth2 requests */
   authentication: string = ''
 
   constructor(rest: RestManager, options: QueueOptions) {
@@ -187,10 +187,9 @@ export class Queue {
       if (this.timeoutId) clearTimeout(this.timeoutId)
       // No requests have been requested for this queue so we nuke this queue
       this.rest.queues.delete(`${this.authentication}${this.url}`)
-      // TODO: better logging, for now the array of remaining requests can contain duplicates due to OAuth2 tokens
       logger.debug(
         `[Queue] ${this.url}. Deleted! Remaining: (${this.rest.queues.size})`,
-        [...this.rest.queues.values()].map((x) => x.url),
+        [...this.rest.queues.values()].map((queue) => `${queue.authentication === '' ? '' : 'Bearer '}${queue.url}`),
       )
       if (this.rest.queues.size) this.processPending()
     }, this.deleteQueueDelay)
