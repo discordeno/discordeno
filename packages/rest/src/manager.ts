@@ -2,17 +2,7 @@
 /* eslint-disable no-const-assign */
 import { Buffer } from 'node:buffer'
 
-import {
-  calculateBits,
-  camelToSnakeCase,
-  camelize,
-  delay,
-  getBotIdFromToken,
-  logger,
-  processReactionString,
-  snakelize,
-  urlToBase64,
-} from '@discordeno/utils'
+import { calculateBits, camelToSnakeCase, camelize, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -194,7 +184,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           form.append(`file${i}`, options.files[i].blob, options.files[i].name)
         }
 
-        form.append('payload_json', JSON.stringify(snakelize({ ...options.body, files: undefined })))
+        // Have to use changeToDiscordFormat or else JSON.stringify may throw an error for the presence of BigInt(s) in the json
+        form.append('payload_json', JSON.stringify(rest.changeToDiscordFormat({ ...options.body, files: undefined })))
 
         // No need to set the `content-type` header since `fetch` does that automatically for us when we use a `FormData` object.
         body = form
