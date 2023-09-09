@@ -15,8 +15,6 @@ import type {
 export interface RestRoutes {
   /** A specific user route. */
   user: (id: BigString) => string
-  /** Current bot user route. */
-  userBot: () => string
   // Gateway Bot
   gatewayBot: () => string
   // Nitro Sticker Packs
@@ -249,14 +247,13 @@ export interface RestRoutes {
     currentAuthorization: () => string
     /** Route to get information about the current application. Requires an access token */
     application: () => string
-    // TODO: i don't know if rename userBot to something else and remove this one or keep them both, they are the same endpoint
-    /** Route to get the information about the current user. Requires the `identify` OAuth2 scope */
-    user: () => string
     /** Route to get the connection the user has. Requires the `connections` OAuth2 scope */
     connections: () => string
     /** Route to handling role-connection for an application */
     roleConnections: (applicationId: BigString) => string
   }
+  /** Get information about the current OAuth2 user / bot user. If used with a OAuth2 token requires the `identify` OAuth2 scope */
+  currentUser: () => string
   /** Route for handling a sticker. */
   sticker: (stickerId: BigString) => string
   /** Route for handling all voice regions. */

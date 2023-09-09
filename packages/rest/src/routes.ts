@@ -568,9 +568,6 @@ export function createRoutes(): RestRoutes {
       application: () => {
         return '/oauth2/applications/@me'
       },
-      user: () => {
-        return '/users/@me'
-      },
       connections: () => {
         return '/users/@me/connections'
       },
@@ -584,7 +581,7 @@ export function createRoutes(): RestRoutes {
       return `/users/${userId}`
     },
 
-    userBot() {
+    currentUser() {
       return '/users/@me'
     },
 

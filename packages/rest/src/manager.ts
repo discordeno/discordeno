@@ -783,7 +783,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async editBotProfile(options) {
       const avatar = options?.botAvatarURL ? await urlToBase64(options?.botAvatarURL) : options?.botAvatarURL
 
-      return await rest.patch<DiscordUser>(rest.routes.userBot(), {
+      return await rest.patch<DiscordUser>(rest.routes.currentUser(), {
         body: {
           username: options.username?.trim(),
           avatar,
@@ -1221,7 +1221,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getCurrentUser(token) {
-      return await rest.get<DiscordUser>(rest.routes.oauth2.user(), {
+      return await rest.get<DiscordUser>(rest.routes.currentUser(), {
         headers: {
           authorization: `Bearer ${token}`,
         },
