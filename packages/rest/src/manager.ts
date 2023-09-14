@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-const-assign */
-import { calculateBits, camelToSnakeCase, camelize, delay, getBotIdFromToken, logger, processReactionString, urlToBase64, snakelize } from '@discordeno/utils'
+import { calculateBits, camelToSnakeCase, camelize, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -156,7 +156,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${version})`,
       }
 
-      if (options?.unauthorized !== false) headers.authorization = `Bot ${rest.token}`
+      if (options?.unauthorized !== true) headers.authorization = `Bot ${rest.token}`
 
       // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
       if (options?.reason !== undefined) {
@@ -175,7 +175,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           form.append(`file${i}`, options.files[i].blob, options.files[i].name)
         }
 
-        form.append('payload_json', JSON.stringify(snakelize({ ...options.body, files: undefined })))
+        // Have to use changeToDiscordFormat or else JSON.stringify may throw an error for the presence of BigInt(s) in the json
+        form.append('payload_json', JSON.stringify(rest.changeToDiscordFormat({ ...options.body, files: undefined })))
 
         body = form
 

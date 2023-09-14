@@ -71,14 +71,11 @@ export function createBot(options: CreateBotOptions): Bot {
         bot.gateway.connection = await bot.rest.getSessionInfo()
 
         // Check for overrides in the configuration
-        if (!options.gateway?.url)
-            bot.gateway.url = bot.gateway.connection.url;
+        if (!options.gateway?.url) bot.gateway.url = bot.gateway.connection.url
 
-        if (!options.gateway?.totalShards)
-            bot.gateway.totalShards = bot.gateway.connection.shards;
+        if (!options.gateway?.totalShards) bot.gateway.totalShards = bot.gateway.connection.shards
 
-        if (!options.gateway?.lastShardId)
-            bot.gateway.lastShardId = bot.gateway.connection.shards - 1;
+        if (!options.gateway?.lastShardId) bot.gateway.lastShardId = bot.gateway.connection.shards - 1
       }
 
       await bot.gateway.spawnShards()
@@ -90,7 +87,7 @@ export function createBot(options: CreateBotOptions): Bot {
   }
 
   bot.helpers = createBotHelpers(bot)
-  if (options.applicationId) bot.applicationId = bot.transformers.snowflake(options.applicationId);
+  if (options.applicationId) bot.applicationId = bot.transformers.snowflake(options.applicationId)
 
   return bot
 }
@@ -144,6 +141,7 @@ export interface EventHandlers {
   automodActionExecution: (payload: AutoModerationActionExecution) => unknown
   threadCreate: (thread: Channel) => unknown
   threadDelete: (thread: Channel) => unknown
+  threadListSync: (payload: { guildId: bigint; channelIds?: bigint[]; threads: Channel[]; members: ThreadMember[] }) => unknown
   threadMemberUpdate: (payload: { id: bigint; guildId: bigint; joinedAt: number; flags: number }) => unknown
   threadMembersUpdate: (payload: { id: bigint; guildId: bigint; addedMembers?: ThreadMember[]; removedMemberIds?: bigint[] }) => unknown
   threadUpdate: (thread: Channel) => unknown
@@ -187,7 +185,7 @@ export interface EventHandlers {
     guildId?: bigint
     member?: Member
     user?: User
-    emoji: Emoji,
+    emoji: Emoji
     messageAuthorId?: bigint
   }) => unknown
   reactionRemove: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; emoji: Emoji }) => unknown
