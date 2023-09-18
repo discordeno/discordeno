@@ -12,7 +12,7 @@ import type {
   DefaultMessageNotificationLevels,
   EmbedTypes,
   ExplicitContentFilterLevels,
-  FormLayout,
+  ForumLayout,
   GatewayEventNames,
   GuildFeatures,
   GuildNsfwLevel,
@@ -46,6 +46,8 @@ import type {
 export interface DiscordUser {
   /** The user's username, not unique across the platform */
   username: string
+  /** The user's display name, if it is set. For bots, this is the application name */
+  global_name: string | null
   /** The user's chosen language option */
   locale?: string
   /** The flags on a user's account */
@@ -58,7 +60,7 @@ export interface DiscordUser {
   accent_color?: number
   /** The user's id */
   id: string
-  /** The user's 4-digit discord-tag */
+  /** The user's discord-tag */
   discriminator: string
   /** The user's avatar hash */
   avatar: string | null
@@ -264,8 +266,8 @@ export interface DiscordTeamMember {
   permissions: Array<'*'>
   /** The id of the parent team of which they are a member */
   team_id: string
-  /** The avatar, discriminator, id, and username of the user */
-  user: Partial<DiscordUser> & Pick<DiscordUser, 'avatar' | 'discriminator' | 'id' | 'username'>
+  /** The avatar, discriminator, id, username, and global_name of the user */
+  user: Partial<DiscordUser> & Pick<DiscordUser, 'avatar' | 'discriminator' | 'id' | 'username' | 'global_name'>
 }
 
 /** https://discord.com/developers/docs/topics/gateway#webhooks-update-webhook-update-event-fields */
@@ -745,7 +747,7 @@ export interface DiscordChannel {
   /** the default sort order type used to order posts in GUILD_FORUM channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
   default_sort_order?: SortOrderTypes | null
   /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
-  default_forum_layout?: FormLayout
+  default_forum_layout?: ForumLayout
   /** When a thread is created this will be true on that channel payload for the thread. */
   newly_created?: boolean
 }
@@ -980,7 +982,7 @@ export interface DiscordMessage {
   mention_roles?: string[]
   /**
    * Channels specifically mentioned in this message
-   * Note: Not all channel mentions in a message will appear in `mention_channels`. Only textual channels that are visible to everyone in a lurkable guild will ever be included. Only crossposted messages (via Channel Following) currently include `mention_channels` at all. If no mentions in the message meet these requirements, this field will not be sent.
+   * Note: Not all channel mentions in a message will appear in `mention_channels`. Only textual channels that are visible to everyone in a discoverable guild will ever be included. Only crossposted messages (via Channel Following) currently include `mention_channels` at all. If no mentions in the message meet these requirements, this field will not be sent.
    */
   mention_channels?: DiscordChannelMention[]
   /** Any attached files */
@@ -1134,6 +1136,8 @@ export interface DiscordSelectMenuComponent {
   min_values?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   max_values?: number
+  /** List of channel types to include in a channel select menu options list */
+  channelTypes?: ChannelTypes[]
   /** The choices! Maximum of 25 items. */
   options: DiscordSelectOption[]
 }
@@ -2018,6 +2022,8 @@ export interface DiscordMessageReactionAdd {
   member?: DiscordMemberWithUser
   /** The emoji used to react */
   emoji: Partial<DiscordEmoji>
+  /** The id of the author of this message */
+  message_author_id?: string
 }
 
 /** https://discord.com/developers/docs/topics/gateway#voice-server-update */
@@ -2399,7 +2405,7 @@ export interface DiscordModifyChannel {
   /** the default sort order type used to order posts in forum channels */
   default_sort_order?: SortOrderTypes | null
   /** the default forum layout view used to display posts in `GUILD_FORUM` channels. Defaults to `0`, which indicates a layout view has not been set by a channel admin */
-  default_forum_layout?: FormLayout
+  default_forum_layout?: ForumLayout
 }
 
 /** https://discord.com/developers/docs/resources/emoji#create-guild-emoji */

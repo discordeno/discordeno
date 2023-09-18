@@ -4,6 +4,7 @@ import type {
   BigString,
   Camelize,
   DiscordGatewayPayload,
+  DiscordGuildMembersChunk,
   DiscordHello,
   DiscordMember,
   DiscordReady,
@@ -12,10 +13,12 @@ import type {
 import { GatewayCloseEventCodes, GatewayIntents, GatewayOpcodes } from '@discordeno/types'
 import { Collection, LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
 import { inflateSync } from 'node:zlib'
-import WebSocket from 'ws'
+import NodeWebSocket from 'ws'
 import type { RequestMemberRequest } from './manager.js'
 import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest, StatusUpdate, UpdateVoiceState } from './types.js'
 import { ShardSocketCloseCodes, ShardState } from './types.js'
+
+declare let WebSocket: any
 
 export class DiscordenoShard {
   /** The id of the shard */
@@ -33,7 +36,7 @@ export class DiscordenoShard {
   /** Current session id of the shard if present. */
   sessionId?: string
   /** This contains the WebSocket connection to Discord, if currently connected. */
-  socket?: WebSocket
+  socket?: NodeWebSocket
   /** Current internal state of the this. */
   state = ShardState.Offline
   /** The url provided by discord to use when resuming a connection for this this. */
@@ -111,7 +114,7 @@ export class DiscordenoShard {
 
   /** Close the socket connection to discord if present. */
   close(code: number, reason: string): void {
-    if (this.socket?.readyState !== WebSocket.OPEN) return
+    if (this.socket?.readyState !== NodeWebSocket.OPEN) return
 
     this.socket?.close(code, reason)
   }
@@ -129,13 +132,15 @@ export class DiscordenoShard {
     url.searchParams.set('v', this.gatewayConfig.version.toString())
     url.searchParams.set('encoding', 'json')
 
-    const socket = new WebSocket(url.toString())
+    const socket: NodeWebSocket =
+      // @ts-expect-error Deno
+      globalThis.Deno !== undefined && Reflect.has(globalThis, 'Deno') ? new WebSocket(url.toString()) : new NodeWebSocket(url.toString())
     this.socket = socket
 
     // TODO: proper event handling
-    socket.onerror = (event) => console.log({ error: event, shardId: this.id })
-    socket.onclose = async (event) => await this.handleClose(event)
-    socket.onmessage = async (message) => await this.handleMessage(message)
+    socket.onerror = (event: NodeWebSocket.ErrorEvent) => console.log({ error: event, shardId: this.id })
+    socket.onclose = async (event: NodeWebSocket.CloseEvent) => await this.handleClose(event)
+    socket.onmessage = async (message: NodeWebSocket.MessageEvent) => await this.handleMessage(message)
 
     return await new Promise((resolve) => {
       socket.onopen = () => {
@@ -204,7 +209,7 @@ export class DiscordenoShard {
 
   /** Check whether the connection to Discord is currently open. */
   isOpen(): boolean {
-    return this.socket?.readyState === WebSocket.OPEN
+    return this.socket?.readyState === NodeWebSocket.OPEN
   }
 
   /** Attempt to resume the previous shards session with the gateway. */
@@ -282,7 +287,7 @@ export class DiscordenoShard {
   }
 
   /** Handle a gateway connection close. */
-  async handleClose(close: WebSocket.CloseEvent): Promise<void> {
+  async handleClose(close: NodeWebSocket.CloseEvent): Promise<void> {
     //   gateway.debug("GW CLOSED", { shardId, payload: event });
 
     this.stopHeartbeating()
@@ -439,33 +444,57 @@ export class DiscordenoShard {
       }
     }
 
-    if (packet.t === 'RESUMED') {
-      // gateway.debug("GW RESUMED", { shardId });
+    switch (packet.t) {
+      case 'RESUMED':
+        this.state = ShardState.Connected
+        this.events.resumed?.(this)
 
-      this.state = ShardState.Connected
-      this.events.resumed?.(this)
+        // Continue the requests which have been queued since the shard went offline.
+        this.offlineSendQueue.map((resolve) => resolve())
 
-      // Continue the requests which have been queued since the shard went offline.
-      this.offlineSendQueue.map((resolve) => resolve())
+        this.resolves.get('RESUMED')?.(packet)
+        this.resolves.delete('RESUMED')
+        break
+      case 'READY': {
+        // Important for future resumes.
+        const payload = packet.d as DiscordReady
 
-      this.resolves.get('RESUMED')?.(packet)
-      this.resolves.delete('RESUMED')
-    } else if (packet.t === 'READY') {
-      // Important for future resumes.
+        this.resumeGatewayUrl = payload.resume_gateway_url
 
-      const payload = packet.d as DiscordReady
+        this.sessionId = payload.session_id
+        this.state = ShardState.Connected
 
-      this.resumeGatewayUrl = payload.resume_gateway_url
+        // Continue the requests which have been queued since the shard went offline.
+        // Important when this is a re-identify
+        this.offlineSendQueue.map((resolve) => resolve())
 
-      this.sessionId = payload.session_id
-      this.state = ShardState.Connected
+        this.resolves.get('READY')?.(packet)
+        this.resolves.delete('READY')
+        break
+      }
+      case 'GUILD_MEMBERS_CHUNK': {
+        // If it's not enabled skip checks.
+        if (!this.cache.requestMembers.enabled) break
 
-      // Continue the requests which have been queued since the shard went offline.
-      // Important when this is a re-identify
-      this.offlineSendQueue.map((resolve) => resolve())
+        const payload = packet.d as DiscordGuildMembersChunk
+        // If this request has non nonce, skip checks.
+        if (!payload.nonce) break
 
-      this.resolves.get('READY')?.(packet)
-      this.resolves.delete('READY')
+        const pending = this.cache.requestMembers.pending.get(payload.nonce)
+        if (!pending) break
+
+        // If this is not the final chunk, just save to cache.
+        if (payload.chunk_index + 1 < payload.chunk_count) {
+          pending.members.push(...payload.members)
+          break;
+        }
+
+        // Resolve the promise that all requests are done.
+        pending.resolve(camelize(pending.members))
+        // Delete the cache to clean up once its done.
+        this.cache.requestMembers.pending.delete(payload.nonce)
+        break
+      }
     }
 
     // Update the sequence number if it is present
@@ -485,7 +514,7 @@ export class DiscordenoShard {
   }
 
   /** Handle an incoming gateway message. */
-  async handleMessage(message: WebSocket.MessageEvent): Promise<void> {
+  async handleMessage(message: NodeWebSocket.MessageEvent): Promise<void> {
     let preProcessMessage = message.data
 
     // If message compression is enabled,
@@ -700,8 +729,6 @@ export class DiscordenoShard {
       options.limit = options.userIds.length
     }
 
-    const nonce = `${guildId}-${Date.now()}`
-
     // Gateway does not require caching these requests so directly send and return
     if (!this.cache.requestMembers?.enabled) {
       logger.debug(`[Shard] requestMembers guildId: ${guildId} -> skipping cache -> options ${JSON.stringify(options)}`)
@@ -714,14 +741,14 @@ export class DiscordenoShard {
           limit: options?.limit ?? 0,
           presences: options?.presences ?? false,
           user_ids: options?.userIds?.map((id) => id.toString()),
-          nonce,
+          nonce: options?.nonce,
         },
       })
       return []
     }
 
     return await new Promise((resolve) => {
-      this.cache.requestMembers?.pending.set(nonce, { nonce, resolve, members: [] })
+      if (options?.nonce) this.cache.requestMembers?.pending.set(options.nonce, { nonce: options.nonce, resolve, members: [] })
 
       logger.debug(`[Shard] requestMembers guildId: ${guildId} -> requesting members -> data: ${JSON.stringify(options)}`)
       this.send({
@@ -733,7 +760,7 @@ export class DiscordenoShard {
           limit: options?.limit ?? 0,
           presences: options?.presences ?? false,
           user_ids: options?.userIds?.map((id) => id.toString()),
-          nonce,
+          nonce: options?.nonce,
         },
       })
     })

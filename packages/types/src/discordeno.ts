@@ -195,6 +195,8 @@ export interface SelectMenuChannelsComponent {
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   maxValues?: number
+  /** List of channel types to include in the options list */
+  channelTypes?: ChannelTypes[]
   /** Whether or not this select is disabled */
   disabled?: boolean
 }
@@ -346,7 +348,7 @@ export interface GetBans {
 
 /** https://discord.com/developers/docs/resources/guild#list-guild-members */
 export interface ListGuildMembers {
-  /** Max number of members to return (1-1000). Default: 1000 */
+  /** Max number of members to return (1-1000). Default: 1 */
   limit?: number
   /** The highest user id in the previous page. Default: 0 */
   after?: string
@@ -851,7 +853,7 @@ export interface EditMessage {
   /** Edit the flags of the message (only `SUPPRESS_EMBEDS` can currently be set/unset) */
   flags?: 4 | null
   /** The contents of the files being sent/edited */
-  files?: FileContent[] | null
+  files?: FileContent[]
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
   /** When specified (adding new attachments), attachments which are not provided in this list will be removed. */
@@ -1076,8 +1078,8 @@ export interface ModifyGuildMember {
   deaf?: boolean | null
   /** Id of channel to move user to (if they are connected to voice). Requires the `MOVE_MEMBERS` permission */
   channelId?: BigString | null
-  /** when the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission */
-  communicationDisabledUntil?: number | null
+  /** when the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission. The date must be given in a ISO string form. */
+  communicationDisabledUntil?: string | null
 }
 
 /** https://discord.com/developers/docs/resources/guild#begin-guild-prune */

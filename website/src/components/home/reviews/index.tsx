@@ -4,7 +4,6 @@ import {
   ReviewsElementWrapper,
   ReviewsHeader,
   ReviewsLeft,
-  ReviewsOther,
   ReviewsOtherContainer,
   ReviewsRight,
   ReviewsSection,
@@ -26,8 +25,7 @@ const reviewList: IReview[] = [
       guild_count: 150000,
     },
     developer: {
-      username: 'Awesome Stickz',
-      discriminator: '9999',
+      usernames: ['Awesome Stickz'],
     },
     stars: 5,
     previous_library: 'ERIS',
@@ -45,17 +43,37 @@ const reviewList: IReview[] = [
         'https://cdn.discordapp.com/avatars/1032699319368814652/8abbc5911333d3df288ff962a2120d75.png',
       invite_url:
         'https://discord.com/oauth2/authorize?client_id=1032699319368814652&permissions=274877959232&scope=bot%20applications.commands',
-      guild_count: 41000,
+      guild_count: 64000,
     },
     developer: {
-      username: '8au',
-      discriminator: '7840',
+      usernames: ['8au'],
     },
     stars: 5,
     previous_library: 'DISCORD_JS',
     memory_improvement: {
       from: 4500,
       to: 614,
+    },
+  },
+  {
+    review: `Before finding Discordeno, Appy was having daily outages and using significant amounts of memory due to the inefficient caching defaults of Disnake. Discordeno has provided an amazing developer experience and helped free up much of my system resources.`,
+    bot: {
+      username: 'Appy',
+      discriminator: '0756',
+      avatar:
+        'https://cdn.discordapp.com/avatars/853327905357561948/a394518e742643f05cc201249d3ae75e.png',
+      invite_url:
+        'https://discord.com/oauth2/authorize?client_id=853327905357561948&scope=bot&permissions=534925798592',
+      guild_count: 100000,
+    },
+    developer: {
+      usernames: ['8au'],
+    },
+    stars: 5,
+    previous_library: 'DISNAKE',
+    memory_improvement: {
+      from: 7800,
+      to: 3700,
     },
   },
   {
@@ -70,14 +88,34 @@ const reviewList: IReview[] = [
       guild_count: 211477,
     },
     developer: {
-      username: 'Meister',
-      discriminator: '9667',
+      usernames: ['Meister'],
     },
     stars: 5,
     previous_library: 'DISCORD_JS',
     memory_improvement: {
       from: 13000,
       to: 11000,
+    },
+  },
+  {
+    review: `I think choosing discordeno is a very good option, we have been working with Discord.js for years, and yes... It's good, but for large scale bots... nothing better than discordeno. Besides its creator is very attentive, and gives us a hand whenever he can.`,
+    bot: {
+      username: 'CactusFire',
+      discriminator: '3759',
+      avatar:
+        'https://cdn.discordapp.com/avatars/543567770579894272/ae83acadc61dcca989525d83e76a1783.webp?size=2048',
+      invite_url:
+        'https://discord.com/oauth2/authorize?client_id=543567770579894272&permissions=8&scope=bot%20applications.commands',
+      guild_count: 259000,
+    },
+    developer: {
+      usernames: ['LHCLYT'],
+    },
+    stars: 5,
+    previous_library: 'DISCORD_JS',
+    memory_improvement: {
+      from: 64000,
+      to: 9000,
     },
   },
 ]
@@ -122,9 +160,9 @@ export default function DiscordenoReviews() {
                         </div>
                       </span>
                       <div id="sub_header">
-                        by <div id="username">{review.developer.username}</div>
-                        <div id="discriminator">
-                          #{review.developer.discriminator}
+                        by{' '}
+                        <div id="username">
+                          {review.developer.usernames.join(', ')}
                         </div>
                       </div>
                     </div>

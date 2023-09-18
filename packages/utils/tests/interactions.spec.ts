@@ -25,8 +25,8 @@ describe('Convert interaction to args', () => {
       version: 1,
       app_permissions: '',
       data: {
-        id: "",
-        name: "",
+        id: '',
+        name: '',
         type: ApplicationCommandTypes.ChatInput,
       },
     })
@@ -91,12 +91,14 @@ describe('Convert interaction to args', () => {
             '123': {
               id: '123',
               username: '123',
+              global_name: '123',
               discriminator: '1234',
               avatar: null,
             },
             '456': {
               id: '456',
               username: '456',
+              global_name: '456',
               discriminator: '4567',
               avatar: null,
             },

@@ -8,6 +8,7 @@ export function transformUserToDiscordUser(bot: Bot, payload: User): DiscordUser
   return {
     id: payload.id.toString(),
     username: payload.username,
+    global_name: payload.globalName ?? null,
     discriminator: payload.discriminator,
     avatar: payload.avatar ? iconBigintToHash(payload.avatar) : null,
     locale: payload.locale,

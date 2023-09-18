@@ -1,13 +1,14 @@
 import {
   InteractionResponseTypes,
+  InteractionTypes,
   type ApplicationCommandOptionTypes,
   type ApplicationCommandTypes,
+  type BigString,
   type CamelizedDiscordMessage,
   type ChannelTypes,
   type DiscordInteraction,
   type DiscordInteractionDataOption,
-  type InteractionResponse,
-  type InteractionTypes,
+  type InteractionCallbackData,
   type MessageComponentTypes,
 } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
@@ -22,7 +23,7 @@ import type { User } from './user.js'
 export interface Interaction extends BaseInteraction {
   /** The bot object */
   bot: Bot
-  /** Whether or not this interaction has been replied to. */
+  /** Whether or not this interaction has been responded to. */
   acknowledged: boolean
   /** Id of the interaction */
   id: bigint
@@ -68,30 +69,76 @@ export interface Interaction extends BaseInteraction {
 
 export interface BaseInteraction {
   /** Sends a response to an interaction. */
-  respond: (response: string | InteractionResponse, options: { private: boolean }) => Promise<CamelizedDiscordMessage | void>
+  respond: (response: string | InteractionCallbackData, options?: { isPrivate?: boolean }) => Promise<CamelizedDiscordMessage | void>
+  /** Edit the original response of an interaction. */
+  edit: (response: string | InteractionCallbackData) => Promise<CamelizedDiscordMessage>
+  /** Defer the interaction. */
+  defer: (isPrivate?: boolean) => Promise<void>
+  /** Delete the original interaction response or a followup message */
+  delete: (messageId?: BigString) => Promise<void>
 }
 
 const baseInteraction: Partial<Interaction> & BaseInteraction = {
   async respond(response, options) {
-    // If user provides a string, change it to response object
-    if (typeof response === 'string') {
-      response = {
-        type: InteractionResponseTypes.DeferredChannelMessageWithSource,
-        data: {
-          content: response,
-        },
-      }
-    }
+    let type = InteractionResponseTypes.ChannelMessageWithSource
 
-    // If user wants to send a ephemeral message
-    if (options.private && response.data) response.data.flags = 64
+    // If user provides a string, change it to a response object
+    if (typeof response === 'string') response = { content: response }
+    // If user provides an object, determine if it should be an autocomplete or a modal response
+    else if (response.title) type = InteractionResponseTypes.Modal
+    else if (this.type === InteractionTypes.ApplicationCommandAutocomplete) type = InteractionResponseTypes.ApplicationCommandAutocompleteResult
+
+    // If user wants to send a private message
+    if (type === InteractionResponseTypes.ChannelMessageWithSource && options?.isPrivate) response.flags = 64
+
+    // Since this has already been given a response, any further responses must be followups.
+    if (this.acknowledged) return await this.bot?.rest.sendFollowupMessage(this.token!, response)
+
+    // Modals cannot be chained
+    if (this.type === InteractionTypes.ModalSubmit && type === InteractionResponseTypes.Modal)
+      throw new Error('Cannot respond to a modal interaction with another modal.')
+
+    // Autocomplete response can only be used for autocomplete interactions
+    if (this.type === InteractionTypes.ApplicationCommandAutocomplete && type !== InteractionResponseTypes.ApplicationCommandAutocompleteResult)
+      throw new Error('Cannot respond to an autocomplete interaction with a modal or message.')
+
     // If user has not already responded to this interaction we need to send an original response
-    if (!this.acknowledged) {
-      this.acknowledged = true;
-      return await this.bot?.rest.sendInteractionResponse(this.id!, this.token!, response)
-    }
-    // Since this has already been given a response, any further responses must be folloups.
-    return await this.bot?.rest.sendFollowupMessage(this.token!, response.data!)
+    this.acknowledged = true
+    return await this.bot?.rest.sendInteractionResponse(this.id!, this.token!, { type, data: response })
+  },
+
+  async edit(response) {
+    if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot edit an autocomplete interaction')
+
+    // If user provides a string, change it to a response object
+    if (typeof response === 'string') response = { content: response }
+
+    return await this.bot!.rest.editOriginalInteractionResponse(this.token!, response)
+  },
+
+  async defer(isPrivate) {
+    if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot defer an autocomplete interaction')
+    if (this.acknowledged) throw new Error('Cannot defer an already responded interaction')
+
+    // Determine the type of defer response
+    const type =
+      this.type === InteractionTypes.MessageComponent
+        ? InteractionResponseTypes.DeferredUpdateMessage
+        : InteractionResponseTypes.DeferredChannelMessageWithSource
+
+    // If user wants to send a private message
+    const data: InteractionCallbackData = {}
+    if (isPrivate) data.flags = 64
+
+    this.acknowledged = true
+    return await this.bot?.rest.sendInteractionResponse(this.id!, this.token!, { type, data })
+  },
+
+  async delete(messageId?: BigString) {
+    if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot delete an autocomplete interaction')
+
+    if (messageId) return await this.bot?.rest.deleteFollowupMessage(this.token!, messageId)
+    else return await this.bot?.rest.deleteOriginalInteractionResponse(this.token!)
   },
 }
 

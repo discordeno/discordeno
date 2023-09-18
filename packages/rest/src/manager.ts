@@ -118,18 +118,29 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         const newObj: any = {}
 
         for (const key of Object.keys(obj)) {
-          // Keys that dont require snake casing
-          if (['permissions', 'allow', 'deny'].includes(key) && obj[key] !== undefined) {
-            newObj[key] = calculateBits(obj[key])
-            continue
+          const value = obj[key]
+
+          // Some falsy values should be allowed like null or 0
+          if (value !== undefined) {
+            switch (key) {
+              case 'permissions':
+              case 'allow':
+              case 'deny':
+                newObj[key] = typeof value === 'string' ? value : calculateBits(value)
+                continue
+              case 'defaultMemberPermissions':
+                newObj.default_member_permissions = typeof value === 'string' ? value : calculateBits(value)
+                continue
+              case 'nameLocalizations':
+                newObj.name_localizations = value
+                continue
+              case 'descriptionLocalizations':
+                newObj.description_localizations = value
+                continue
+            }
           }
 
-          if (key === 'defaultMemberPermissions' && obj[key] !== undefined) {
-            newObj.default_member_permissions = calculateBits(obj[key])
-            continue
-          }
-
-          newObj[camelToSnakeCase(key)] = rest.changeToDiscordFormat(obj[key])
+          newObj[camelToSnakeCase(key)] = rest.changeToDiscordFormat(value)
         }
 
         return newObj
@@ -145,7 +156,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${version})`,
       }
 
-      if (options?.unauthorized !== false) headers.authorization = `Bot ${rest.token}`
+      if (options?.unauthorized !== true) headers.authorization = `Bot ${rest.token}`
 
       // IF A REASON IS PROVIDED ENCODE IT IN HEADERS
       if (options?.reason !== undefined) {
@@ -164,7 +175,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           form.append(`file${i}`, options.files[i].blob, options.files[i].name)
         }
 
-        form.append('payload_json', JSON.stringify({ ...options.body, files: undefined }))
+        // Have to use changeToDiscordFormat or else JSON.stringify may throw an error for the presence of BigInt(s) in the json
+        form.append('payload_json', JSON.stringify(rest.changeToDiscordFormat({ ...options.body, files: undefined })))
 
         body = form
 
@@ -766,7 +778,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editMessage(channelId, messageId, body) {
-      return await rest.patch<DiscordMessage>(rest.routes.channels.message(channelId, messageId), { body })
+      return await rest.patch<DiscordMessage>(rest.routes.channels.message(channelId, messageId), { body, files: body.files })
     },
 
     async editOriginalInteractionResponse(token, body) {
@@ -1214,6 +1226,32 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async upsertGuildApplicationCommands(guildId, body) {
       return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), { body })
+    },
+
+    preferSnakeCase(enabled: boolean) {
+      const camelizer = enabled ? (x: any) => x : camelize
+
+      rest.get = async (url, options) => {
+        return camelizer(await rest.makeRequest('GET', url, options))
+      }
+
+      rest.post = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
+        return camelizer(await rest.makeRequest('POST', url, options))
+      }
+
+      rest.delete = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
+        camelizer(await rest.makeRequest('DELETE', url, options))
+      }
+
+      rest.patch = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
+        return camelizer(await rest.makeRequest('PATCH', url, options))
+      }
+
+      rest.put = async (url: string, options?: Omit<CreateRequestBodyOptions, 'body' | 'method'>) => {
+        return camelizer(await rest.makeRequest('PUT', url, options))
+      }
+
+      return rest
     },
   }
 

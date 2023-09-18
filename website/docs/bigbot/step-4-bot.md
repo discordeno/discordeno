@@ -114,7 +114,7 @@ try {
     // OPTIONAL: Runs the raw event handler if you need it
 	bot.events.raw(bot, req.body.payload, req.body.shardId);
     // Runs the event handler if available
-    if (message.t) bot.events.[snakeToCamelCase(message.t)]?.(req.body.payload, req.body.shardId);
+    if (message.t) bot.events.[snakeToCamelCase(message.t.toLowerCase())]?.(req.body.payload, req.body.shardId);
 
     res.status(200).json({ success: true })
   }
@@ -203,6 +203,6 @@ function getUrlFromShardId(totalShards: number, shardId: number) {
 }
 ```
 
-This function is simply making it so that it determines what the event handler url should be where that specific shard should send the event to. This means if you have 5,000 shards and you receive an event in shard #4565 and you had 10 server urls in the configs. This would mak this event be sent to the 5th url in the array.
+This function is simply making it so that it determines what the event handler url should be where that specific shard should send the event to. This means if you have 5,000 shards and you receive an event in shard #4565 and you had 10 server urls in the configs. This would make this event be sent to the 5th url in the array.
 
 Now that all your processes are fully functioning, we can get into the nitty gritty part of finally beginning to code our features/commands/etc...

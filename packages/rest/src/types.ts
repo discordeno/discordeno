@@ -160,6 +160,8 @@ export interface RestManager {
   invalidBucket: InvalidRequestBucket
   /** The routes that are available for this manager. */
   routes: RestRoutes
+  /** Whether or not the rest manager should keep objects in raw snake case from discord. */
+  preferSnakeCase: (enabled: boolean) => RestManager;
   /** Check the rate limits for a url or a bucket. */
   checkRateLimits: (url: string) => number | false
   /** Reshapes and modifies the obj as needed to make it ready for discords api. */
@@ -1137,7 +1139,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response}
    */
-  editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<CamelizedDiscordMessage | undefined>
+  editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<CamelizedDiscordMessage>
   /**
    * Edits the original webhook message.
    *
@@ -1637,7 +1639,7 @@ export interface RestManager {
    * @returns An instance of {@link GuildPreview}.
    *
    * @remarks
-   * If the bot user is not in the guild, the guild must be lurkable.
+   * If the bot user is not in the guild, the guild must be discoverable.
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-preview}
    */
