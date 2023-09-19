@@ -264,35 +264,34 @@ Most of this code is another http listener again. The part we are going to focus
 
 Next, we will focus on the `events` portion which we had commented out above. Each shard handles many events and this will be the portion where we tell the shard how to handle those events. For this guide, we will only cover the `message` event, but you can implement any other events you require as you need following the same method.
 
-```ts
+```diff
 const shard =
   SHARDS.get(req.body.shardId) ??
   new DiscordenoShard({
-    id: shardId,
+    id: req.body.shardId,
     connection: {
-      compress: this.compress,
-      intents: this.intents,
-      properties: this.properties,
-      token: this.token,
-      totalShards: this.totalShards,
-      url: this.url,
-      version: this.version,
+      compress: req.body.compress,
+      intents: req.body.intents,
+      properties: req.body.properties,
+      token: req.body.token,
+      totalShards: req.body.totalShards,
+      url: req.body.url,
+      version: req.body.version,
     },
-    // This is the part we are adding
-    events: {
-      async message(shrd, payload) {
-        await fetch(getUrlFromShardId(req.body.totalShards, shrd.id), {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            authorization: AUTHORIZATION,
-          },
-          body: JSON.stringify({ payload, shardId }),
-        })
-          .then(res => res.text())
-          .catch(logger.error)
-      },
-    },
++    events: {
++      async message(shrd, payload) {
++        await fetch(getUrlFromShardId(req.body.totalShards, shrd.id), {
++          method: 'POST',
++          headers: {
++            'Content-Type': 'application/json',
++            authorization: AUTHORIZATION,
++          },
++          body: JSON.stringify({ payload, shardId }),
++        })
++          .then(res => res.text())
++          .catch(logger.error)
++      },
++    },
   })
 ```
 
