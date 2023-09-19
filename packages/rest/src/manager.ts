@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-const-assign */
+import { Buffer } from 'node:buffer'
+
 import { calculateBits, camelToSnakeCase, camelize, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
@@ -9,12 +11,16 @@ import {
   InteractionResponseTypes,
   type BigString,
   type Camelize,
+  type DiscordAccessTokenResponse,
   type DiscordApplication,
   type DiscordApplicationCommand,
+  type DiscordApplicationRoleConnection,
   type DiscordAuditLog,
   type DiscordAutoModerationRule,
   type DiscordBan,
   type DiscordChannel,
+  type DiscordConnection,
+  type DiscordCurrentAuthorization,
   type DiscordEmoji,
   type DiscordFollowedChannel,
   type DiscordGetGatewayBot,
@@ -31,6 +37,7 @@ import {
   type DiscordMember,
   type DiscordMemberWithUser,
   type DiscordMessage,
+  type DiscordPartialGuild,
   type DiscordPrunedCount,
   type DiscordRole,
   type DiscordScheduledEvent,
@@ -48,7 +55,7 @@ import {
   type ModifyGuildTemplate,
 } from '@discordeno/types'
 import { createRoutes } from './routes.js'
-import type { CreateRequestBodyOptions, CreateRestManagerOptions, RestManager, SendRequestOptions } from './types.js'
+import type { CreateRequestBodyOptions, CreateRestManagerOptions, MakeRequestOptions, RestManager, SendRequestOptions } from './types.js'
 
 // TODO: make dynamic based on package.json file
 const version = '19.0.0-alpha.1'
@@ -91,8 +98,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     routes: createRoutes(),
 
-    checkRateLimits(url) {
-      const ratelimited = rest.rateLimitedPaths.get(url)
+    checkRateLimits(url, headers) {
+      const authHeader = headers?.authorization ?? ''
+
+      const ratelimited = rest.rateLimitedPaths.get(`${authHeader}${url}`)
       const global = rest.rateLimitedPaths.get('global')
       const now = Date.now()
 
@@ -178,9 +187,19 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         // Have to use changeToDiscordFormat or else JSON.stringify may throw an error for the presence of BigInt(s) in the json
         form.append('payload_json', JSON.stringify(rest.changeToDiscordFormat({ ...options.body, files: undefined })))
 
-        body = form
-
         // No need to set the `content-type` header since `fetch` does that automatically for us when we use a `FormData` object.
+        body = form
+      } else if (options?.body && options.headers && options.headers['content-type'] === 'application/x-www-form-urlencoded') {
+        // OAuth2 body handling
+        const formBody: string[] = []
+
+        const discordBody = rest.changeToDiscordFormat(options.body)
+
+        for (const prop in discordBody) {
+          formBody.push(`${encodeURIComponent(prop)}=${encodeURIComponent(discordBody[prop])}`)
+        }
+
+        body = formBody.join('&')
       } else if (options?.body !== undefined) {
         if (options.body instanceof FormData) {
           body = options.body
@@ -235,7 +254,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
-    processHeaders(url, headers) {
+    processHeaders(url, headers, requestAuthorization) {
       let rateLimited = false
 
       // GET ALL NECESSARY HEADERS
@@ -247,7 +266,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const bucketId = headers.get(RATE_LIMIT_BUCKET_HEADER) ?? undefined
       const limit = headers.get(RATE_LIMIT_LIMIT_HEADER)
 
-      rest.queues.get(url)?.handleCompletedRequest({
+      rest.queues.get(`${requestAuthorization}${url}`)?.handleCompletedRequest({
         remaining: remaining ? Number(remaining) : undefined,
         interval: retryAfter ? Number(retryAfter) * 1000 : undefined,
         max: limit ? Number(limit) : undefined,
@@ -258,7 +277,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rateLimited = true
 
         // SAVE THE URL AS LIMITED, IMPORTANT FOR NEW REQUESTS BY USER WITHOUT BUCKET
-        rest.rateLimitedPaths.set(url, {
+        rest.rateLimitedPaths.set(`${requestAuthorization}${url}`, {
           url,
           resetTimestamp: reset,
           bucketId,
@@ -266,7 +285,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         // SAVE THE BUCKET AS LIMITED SINCE DIFFERENT URLS MAY SHARE A BUCKET
         if (bucketId) {
-          rest.rateLimitedPaths.set(bucketId, {
+          rest.rateLimitedPaths.set(`${requestAuthorization}${bucketId}`, {
             url,
             resetTimestamp: reset,
             bucketId,
@@ -295,7 +314,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         })
 
         if (bucketId) {
-          rest.rateLimitedPaths.set(bucketId, {
+          rest.rateLimitedPaths.set(`${requestAuthorization}${bucketId}`, {
             url: 'global',
             resetTimestamp: globalReset,
             bucketId,
@@ -313,7 +332,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const url = `${rest.baseUrl}/v${rest.version}${options.route}`
       const payload = rest.createRequestBody(options.method, options.requestBodyOptions)
 
-      logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: { ...payload.headers, authorization: 'Bot tokenhere' } })
+      const loggingHeaders = { ...payload.headers }
+
+      const authenticationScheme = payload.headers.authorization?.split(' ')[0]
+
+      if (payload.headers.authorization) {
+        loggingHeaders.authorization = `${authenticationScheme} tokenhere`
+      }
+
+      logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders })
       const response = await fetch(url, payload).catch(async (error) => {
         logger.error(error)
         // Mark request and completed
@@ -331,7 +358,11 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared')
 
       // Set the bucket id if it was available on the headers
-      const bucketId = rest.processHeaders(rest.simplifyUrl(options.route, options.method), response.headers)
+      const bucketId = rest.processHeaders(
+        rest.simplifyUrl(options.route, options.method),
+        response.headers,
+        authenticationScheme === 'Bearer' ? payload.headers.authorization : '',
+      )
       if (bucketId) options.bucketId = bucketId
 
       if (response.status < HttpResponseCode.Success || response.status >= HttpResponseCode.Error) {
@@ -406,18 +437,20 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return
       }
 
-      const queue = rest.queues.get(url)
+      const authHeader = request.requestBodyOptions?.headers?.authorization ?? ''
+
+      const queue = rest.queues.get(`${authHeader}${url}`)
 
       if (queue !== undefined) {
         queue.makeRequest(request)
       } else {
         // CREATES A NEW QUEUE
-        const bucketQueue = new Queue(rest, { url, deleteQueueDelay: rest.deleteQueueDelay })
+        const bucketQueue = new Queue(rest, { url, deleteQueueDelay: rest.deleteQueueDelay, authentication: authHeader })
 
         // Add request to queue
         bucketQueue.makeRequest(request)
         // Save queue
-        rest.queues.set(url, bucketQueue)
+        rest.queues.set(`${authHeader}${url}`, bucketQueue)
       }
     },
 
@@ -511,6 +544,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await rest.put(rest.routes.channels.threads.user(channelId, userId))
     },
 
+    async addDmRecipient(channelId, userId, body) {
+      await rest.put(rest.routes.channels.dmRecipient(channelId, userId), { body })
+    },
+
     async createAutomodRule(guildId, body, reason) {
       return await rest.post<DiscordAutoModerationRule>(rest.routes.guilds.automod.rules(guildId), { body, reason })
     },
@@ -523,16 +560,34 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordEmoji>(rest.routes.guilds.emojis(guildId), { body, reason })
     },
 
-    async createGlobalApplicationCommand(body) {
-      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.commands(rest.applicationId), { body })
+    async createGlobalApplicationCommand(body, options) {
+      const restOptions: MakeRequestOptions = { body }
+
+      if (options?.bearerToken) {
+        restOptions.unauthorized = true
+        restOptions.headers = {
+          authorization: `Bearer ${options.bearerToken}`,
+        }
+      }
+
+      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.commands(rest.applicationId), restOptions)
     },
 
     async createGuild(body) {
       return await rest.post<DiscordGuild>(rest.routes.guilds.all(), { body })
     },
 
-    async createGuildApplicationCommand(body, guildId) {
-      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), { body })
+    async createGuildApplicationCommand(body, guildId, options) {
+      const restOptions: MakeRequestOptions = { body }
+
+      if (options?.bearerToken) {
+        restOptions.unauthorized = true
+        restOptions.headers = {
+          authorization: `Bearer ${options.bearerToken}`,
+        }
+      }
+
+      return await rest.post<DiscordApplicationCommand>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), restOptions)
     },
 
     async createGuildFromTemplate(templateCode, body) {
@@ -719,7 +774,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     async editBotProfile(options) {
       const avatar = options?.botAvatarURL ? await urlToBase64(options?.botAvatarURL) : options?.botAvatarURL
 
-      return await rest.patch<DiscordUser>(rest.routes.userBot(), {
+      return await rest.patch<DiscordUser>(rest.routes.currentUser(), {
         body: {
           username: options.username?.trim(),
           avatar,
@@ -869,18 +924,78 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordListActiveThreads>(rest.routes.channels.threads.active(guildId))
     },
 
-    async getApplicationCommandPermission(guildId, commandId) {
+    async getApplicationCommandPermission(guildId, commandId, options) {
+      const restOptions: Omit<MakeRequestOptions, 'body'> = {}
+
+      if (options?.accessToken) {
+        restOptions.unauthorized = true
+        restOptions.headers = {
+          authorization: `Bearer ${options.accessToken}`,
+        }
+      }
+
       return await rest.get<DiscordGuildApplicationCommandPermissions>(
-        rest.routes.interactions.commands.permission(rest.applicationId, guildId, commandId),
+        rest.routes.interactions.commands.permission(options?.applicationId ?? rest.applicationId, guildId, commandId),
+        restOptions,
       )
     },
 
-    async getApplicationCommandPermissions(guildId) {
-      return await rest.get<DiscordGuildApplicationCommandPermissions[]>(rest.routes.interactions.commands.permissions(rest.applicationId, guildId))
+    async getApplicationCommandPermissions(guildId, options) {
+      const restOptions: Omit<MakeRequestOptions, 'body'> = {}
+
+      if (options?.accessToken) {
+        restOptions.unauthorized = true
+        restOptions.headers = {
+          authorization: `Bearer ${options.accessToken}`,
+        }
+      }
+
+      return await rest.get<DiscordGuildApplicationCommandPermissions[]>(
+        rest.routes.interactions.commands.permissions(options?.applicationId ?? rest.applicationId, guildId),
+        restOptions,
+      )
     },
 
     async getApplicationInfo() {
-      return await rest.get<DiscordApplication>(rest.routes.oauth2Application())
+      return await rest.get<DiscordApplication>(rest.routes.oauth2.application())
+    },
+
+    async getCurrentAuthenticationInfo(token) {
+      return await rest.get<DiscordCurrentAuthorization>(rest.routes.oauth2.currentAuthorization(), {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+        unauthorized: true,
+      })
+    },
+
+    async exchangeToken(body) {
+      const restOptions: MakeRequestOptions = {
+        body,
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+        },
+        unauthorized: true,
+      }
+
+      if (body.grantType === 'client_credentials') {
+        const basicCredentials = Buffer.from(`${body.clientId}:${body.clientSecret}`)
+        restOptions.headers!.authorization = `Basic ${basicCredentials.toString('base64')}`
+
+        restOptions.body.scope = body.scope.join(' ')
+      }
+
+      return await rest.post<DiscordAccessTokenResponse>(rest.routes.oauth2.tokenExchange(), restOptions)
+    },
+
+    async revokeToken(body) {
+      await rest.post(rest.routes.oauth2.tokenRevoke(), {
+        body,
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+        },
+        unauthorized: true,
+      })
     },
 
     async getAuditLog(guildId, options) {
@@ -929,6 +1044,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
     },
 
+    async getGroupDmChannel(body) {
+      return await rest.post<DiscordChannel>(rest.routes.channels.dm(), {
+        body,
+      })
+    },
+
     async getEmoji(guildId, emojiId) {
       return await rest.get<DiscordEmoji>(rest.routes.guilds.emoji(guildId, emojiId))
     },
@@ -955,6 +1076,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async getGuild(guildId, options = { counts: true }) {
       return await rest.get<DiscordGuild>(rest.routes.guilds.guild(guildId, options.counts))
+    },
+
+    async getGuilds(token, options) {
+      return await rest.get<DiscordPartialGuild[]>(rest.routes.guilds.userGuilds(options), {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+        unauthorized: true,
+      })
     },
 
     async getGuildApplicationCommand(commandId, guildId) {
@@ -1081,6 +1211,33 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordUser>(rest.routes.user(id))
     },
 
+    async getCurrentUser(token) {
+      return await rest.get<DiscordUser>(rest.routes.currentUser(), {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+        unauthorized: true,
+      })
+    },
+
+    async getUserConnections(token) {
+      return await rest.get<DiscordConnection[]>(rest.routes.oauth2.connections(), {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+        unauthorized: true,
+      })
+    },
+
+    async getUserApplicationRoleConnection(token, applicationId) {
+      return await rest.get<DiscordApplicationRoleConnection>(rest.routes.oauth2.roleConnections(applicationId), {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+        unauthorized: true,
+      })
+    },
+
     async getVanityUrl(guildId) {
       return await rest.get<DiscordVanityUrl>(rest.routes.guilds.vanity(guildId))
     },
@@ -1137,6 +1294,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await rest.delete(rest.routes.channels.threads.user(channelId, userId))
     },
 
+    async removeDmRecipient(channelId, userId) {
+      await rest.delete(rest.routes.channels.dmRecipient(channelId, userId))
+    },
+
     async sendFollowupMessage(token, options) {
       return await rest.post(rest.routes.webhooks.webhook(rest.applicationId, token), {
         body: options,
@@ -1186,6 +1347,15 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.member(guildId, userId))
     },
 
+    async getCurrentMember(guildId, token) {
+      return await rest.get<DiscordMemberWithUser>(rest.routes.guilds.members.currentMember(guildId), {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+        unauthorized: true,
+      })
+    },
+
     async getMembers(guildId, options) {
       return await rest.get<DiscordMemberWithUser[]>(rest.routes.guilds.members.members(guildId, options))
     },
@@ -1220,12 +1390,46 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       await rest.post(rest.routes.channels.typing(channelId))
     },
 
-    async upsertGlobalApplicationCommands(body) {
-      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId), { body })
+    async upsertGlobalApplicationCommands(body, options) {
+      const restOptions: MakeRequestOptions = { body }
+
+      if (options?.bearerToken) {
+        restOptions.unauthorized = true
+        restOptions.headers = {
+          authorization: `Bearer ${options.bearerToken}`,
+        }
+      }
+
+      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.commands(rest.applicationId), restOptions)
     },
 
-    async upsertGuildApplicationCommands(guildId, body) {
-      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), { body })
+    async upsertGuildApplicationCommands(guildId, body, options) {
+      const restOptions: MakeRequestOptions = { body }
+
+      if (options?.bearerToken) {
+        restOptions.unauthorized = true
+        restOptions.headers = {
+          authorization: `Bearer ${options.bearerToken}`,
+        }
+      }
+
+      return await rest.put<DiscordApplicationCommand[]>(rest.routes.interactions.commands.guilds.all(rest.applicationId, guildId), restOptions)
+    },
+
+    async editUserApplicationRoleConnection(token, applicationId, body) {
+      return await rest.put<DiscordApplicationRoleConnection>(rest.routes.oauth2.roleConnections(applicationId), {
+        body,
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+        unauthorized: true,
+      })
+    },
+
+    async addGuildMember(guildId, userId, body) {
+      return await rest.put(rest.routes.guilds.members.member(guildId, userId), {
+        body,
+      })
     },
 
     preferSnakeCase(enabled: boolean) {

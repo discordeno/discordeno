@@ -6,6 +6,7 @@ import type {
   ApplicationCommandTypes,
   ApplicationFlags,
   AuditLogEvents,
+  BigString,
   ButtonStyles,
   ChannelFlags,
   ChannelTypes,
@@ -78,6 +79,135 @@ export interface DiscordUser {
   banner?: string
 }
 
+/** https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes */
+export enum OAuth2Scope {
+  /**
+   * Allows your app to fetch data from a user's "Now Playing/Recently Played" list
+   *
+   * @remarks
+   * This scope is not currently available for apps
+   */
+  ActivitiesRead = 'activities.read',
+  /**
+   * Allows your app to update a user's activity
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  ActivitiesWrite = 'activities.write',
+  /** Allows your app to read build data for a user's applications */
+  ApplicationsBuildsRead = 'applications.builds.read',
+  /**
+   * Allows your app to upload/update builds for a user's applications
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  ApplicationsBuildsUpload = 'applications.builds.upload',
+  /** Allows your app to use Application Commands in a guild */
+  ApplicationsCommands = 'applications.commands',
+  /**
+   * Allows your app to update its Application Commands via this bearer token
+   *
+   * @remarks
+   * This scope can only be used when using a [Client Credential Grant](https://discord.com/developers/docs/topics/oauth2#client-credentials-grant)
+   */
+  ApplicationsCommandsUpdate = 'applications.commands.update',
+  /** Allows your app to update permissions for its commands in a guild a user has permissions to */
+  ApplicationCommandsPermissionsUpdate = 'applications.commands.permissions.update',
+  /** Allows your app to read entitlements for a user's applications */
+  ApplicationsEntitlements = 'applications.entitlements',
+  /** Allows your app to read and update store data (SKUs, store listings, achievements, etc.) for a user's applications */
+  ApplicationsStoreUpdate = 'applications.store.update',
+  /** For oauth2 bots, this puts the bot in the user's selected guild by default */
+  Bot = 'bot',
+  /** Allows requests to [/users/@me/connections](https://discord.com/developers/docs/resources/user#get-user-connections) */
+  Connections = 'connections',
+  /**
+   * Allows your app to see information about the user's DMs and group DMs
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  DMChannelsRead = 'dm_channels.read',
+  /** Adds the `email` filed to [/users/@me](https://discord.com/developers/docs/resources/user#get-current-user) */
+  Email = 'email',
+  /** Allows your app to join users to a group dm */
+  GroupDMJoins = 'gdm.join',
+  /** Allows requests to [/users/@me/guilds](https://discord.com/developers/docs/resources/user#get-current-user-guilds) */
+  Guilds = 'guilds',
+  /** Allows requests to [/guilds/{guild.id}/members/{user.id}](https://discord.com/developers/docs/resources/guild#add-guild-member) */
+  GuildsJoin = 'guilds.join',
+  /** Allows requests to [/users/@me/guilds/{guild.id}/member](https://discord.com/developers/docs/resources/user#get-current-user-guild-member) */
+  GuildsMembersRead = 'guilds.members.read',
+  /**
+   * Allows requests to [/users/@me](https://discord.com/developers/docs/resources/user#get-current-user)
+   *
+   * @remarks
+   * The return object from [/users/@me](https://discord.com/developers/docs/resources/user#get-current-user)
+   * does NOT contain the `email` field unless the scope `email` is also used
+   */
+  Identify = 'identify',
+  /**
+   * For local rpc server api access, this allows you to read messages from all client channels
+   * (otherwise restricted to channels/guilds your app creates)
+   */
+  MessagesRead = 'messages.read',
+  /**
+   * Allows your app to know a user's friends and implicit relationships
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RelationshipsRead = 'relationships.read',
+  /** Allows your app to update a user's connection and metadata for the app */
+  RoleConnectionsWrite = 'role_connections.write',
+  /**
+   * For local rpc server access, this allows you to control a user's local Discord client
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RPC = 'rpc',
+  /**
+   * For local rpc server access, this allows you to update a user's activity
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RPCActivitiesWrite = 'rpc.activities.write',
+  /**
+   * For local rpc server api access, this allows you to receive notifications pushed out to the user
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RPCNotificationsRead = 'rpc.notifications.read',
+  /**
+   * For local rpc server access, this allows you to read a user's voice settings and listen for voice events
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RPCVoiceRead = 'rpc.voice.read',
+  /**
+   * For local rpc server access, this allows you to update a user's voice settings
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RPCVoiceWrite = 'rpc.voice.write',
+  /**
+   * Allows your app to connect to voice on user's behalf and see all the voice members
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  Voice = 'voice',
+  /** Generate a webhook that is returned in the oauth token response for authorization code grants */
+  WebhookIncoming = 'webhook.incoming',
+}
+
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
 export interface DiscordIntegration {
   /** Integration Id */
@@ -111,7 +241,7 @@ export interface DiscordIntegration {
   /** The bot/OAuth2 application for discord integrations */
   application?: DiscordIntegrationApplication
   /** the scopes the application has been authorized for */
-  scopes: string[]
+  scopes: OAuth2Scope[]
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-account-object-integration-account-structure */
@@ -192,7 +322,7 @@ export interface DiscordMember {
   joined_at: string
   /** When the user started boosting the guild */
   premium_since?: string | null
-  /** The permissions this member has in the guild. Only present on interaction events. */
+  /** The permissions this member has in the guild. Only present on interaction events and OAuth2 current member fetch. */
   permissions?: string
   /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
   communication_disabled_until?: string | null
@@ -242,6 +372,149 @@ export interface DiscordApplication {
   custom_install_url?: string
   /** the application's role connection verification entry point, which when configured will render the app as a verification method in the guild role verification configuration */
   role_connections_verification_url?: string
+}
+
+export type DiscordTokenExchange = DiscordTokenExchangeAuthorizationCode | DiscordTokenExchangeRefreshToken | DiscordTokenExchangeClientCredentials
+
+export interface DiscordTokenExchangeAuthorizationCode {
+  /** Application's client id */
+  client_id: BigString
+  /** application's client secret */
+  client_secret: string
+  grant_type: 'authorization_code'
+  /** The code for the token exchange */
+  code: string
+  /** The redirect_uri associated with this authorization */
+  redirect_uri: string
+}
+
+/** https://discord.com/developers/docs/topics/oauth2#client-credentials-grant */
+export interface DiscordTokenExchangeRefreshToken {
+  /** Application's client id */
+  client_id: BigString
+  /** application's client secret */
+  client_secret: string
+  grant_type: 'refresh_token'
+  /** the user's refresh token */
+  refresh_token: string
+}
+
+/** https://discord.com/developers/docs/topics/oauth2#client-credentials-grant */
+export interface DiscordTokenExchangeClientCredentials {
+  /** Application's client id */
+  client_id: BigString
+  /** application's client secret */
+  client_secret: string
+  grant_type: 'client_credentials'
+  /** The scope(s) for the access token */
+  scope: OAuth2Scope[]
+}
+
+export interface DiscordAccessTokenResponse {
+  /** The access token of the user */
+  access_token: string
+  /** The type of token */
+  token_type: string
+  /** The number of seconds after that the access token is expired */
+  expires_in: number
+  /**
+   * The refresh token to refresh the access token
+   *
+   * @remarks
+   * When the token exchange is a client credentials type grant this value is not defined.
+   */
+  refresh_token: string
+  /** The scopes for the access token */
+  scope: string
+  /** The webhook the user created for the application. Requires the `webhook.incoming` scope */
+  webhook?: DiscordIncomingWebhook
+  /** The guild the bot has been added. Requires the `bot` scope */
+  guild?: DiscordGuild
+}
+
+export interface DiscordTokenRevocation {
+  /** Application's client id */
+  client_id: BigString
+  /** application's client secret */
+  client_secret: string
+  /** The access token to revoke */
+  token: string
+}
+
+/** https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information-response-structure */
+export interface DiscordCurrentAuthorization {
+  application: DiscordApplication
+  /** the scopes the user has authorized the application for */
+  scopes: OAuth2Scope[]
+  /** when the access token expires */
+  expires: string
+  /** the user who has authorized, if the user has authorized with the `identify` scope */
+  user?: DiscordUser
+}
+
+/** https://discord.com/developers/docs/resources/user#connection-object-connection-structure */
+export interface DiscordConnection {
+  /** id of the connection account */
+  id: string
+  /** the username of the connection account */
+  name: string
+  /** the service of this connection */
+  type: DiscordConnectionServiceType
+  /** whether the connection is revoked */
+  revoked?: boolean
+  /** an array of partial server integrations */
+  integrations?: Array<Partial<DiscordIntegration>>
+  /** whether the connection is verified */
+  verified: boolean
+  /** whether friend sync is enabled for this connection */
+  friend_sync: boolean
+  /** whether activities related to this connection will be shown in presence updates */
+  show_activity: boolean
+  /** whether this connection has a corresponding third party OAuth2 token */
+  two_way_link: boolean
+  /** visibility of this connection */
+  visibility: DiscordConnectionVisibility
+}
+
+/** https://discord.com/developers/docs/resources/user#connection-object-services */
+export enum DiscordConnectionServiceType {
+  BattleNet = 'battlenet',
+  eBay = 'ebay',
+  EpicGames = 'epicgames',
+  Facebook = 'facebook',
+  GitHub = 'github',
+  Instagram = 'instagram',
+  LeagueOfLegends = 'leagueoflegends',
+  PayPal = 'paypal',
+  PlayStationNetwork = 'playstation',
+  Reddit = 'reddit',
+  RiotGames = 'riotgames',
+  Spotify = 'spotify',
+  Skype = 'skype',
+  Steam = 'steam',
+  TikTok = 'tiktok',
+  Twitch = 'twitch',
+  Twitter = 'twitter',
+  Xbox = 'xbox',
+  YouTube = 'youtube',
+}
+
+/** https://discord.com/developers/docs/resources/user#connection-object-visibility-types */
+export enum DiscordConnectionVisibility {
+  /** invisible to everyone except the user themselves */
+  None = 0,
+  /** visible to everyone */
+  Everyone = 1,
+}
+
+/** https://discord.com/developers/docs/resources/user#application-role-connection-object-application-role-connection-structure */
+export interface DiscordApplicationRoleConnection {
+  /** the vanity name of the platform a bot has connected (max 50 characters) */
+  platform_name: string | null
+  /** the username on the platform a bot has connected (max 100 characters) */
+  platform_username: string | null
+  /** object mapping application role connection metadata keys to their stringified value (max 100 characters) for the user on the platform a bot has connected */
+  metadata: Record<string, string>
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-object */
@@ -582,6 +855,25 @@ export interface DiscordGuild {
   stage_instances?: DiscordStageInstance[]
   /** custom guild stickers */
   stickers?: DiscordSticker[]
+}
+
+export interface DiscordPartialGuild {
+  /** Guild name (2-100 characters, excluding trailing and leading whitespace) */
+  name: string
+  /** Guild id */
+  id: string
+  /** Icon hash */
+  icon: string | null
+  /** true if the user is the owner of the guild */
+  owner: boolean
+  /** total permissions for the user in the guild (excludes overwrites and implicit permissions) */
+  permissions: string
+  /** Enabled guild features */
+  features: GuildFeatures[]
+  /** Approximate number of members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
+  approximate_member_count?: number
+  /** Approximate number of non-offline members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
+  approximate_presence_count?: number
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
@@ -2320,7 +2612,7 @@ export interface DiscordGuildWidgetSettings {
 
 export interface DiscordInstallParams {
   /** the scopes to add the application to the server with */
-  scopes: string[]
+  scopes: OAuth2Scope[]
   /** the permissions to request for the bot role */
   permissions: string
 }

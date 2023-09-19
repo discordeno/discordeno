@@ -1,17 +1,23 @@
 import type {
+  AddDmRecipientOptions,
+  AddGuildMemberOptions,
   ApplicationCommandPermissions,
   AtLeastOne,
   BeginGuildPrune,
   BigString,
   Camelize,
+  CamelizedDiscordAccessTokenResponse,
   CamelizedDiscordActiveThreads,
   CamelizedDiscordApplication,
   CamelizedDiscordApplicationCommand,
+  CamelizedDiscordApplicationRoleConnection,
   CamelizedDiscordArchivedThreads,
   CamelizedDiscordAuditLog,
   CamelizedDiscordAutoModerationRule,
   CamelizedDiscordBan,
   CamelizedDiscordChannel,
+  CamelizedDiscordConnection,
+  CamelizedDiscordCurrentAuthorization,
   CamelizedDiscordEmoji,
   CamelizedDiscordFollowedChannel,
   CamelizedDiscordGetGatewayBot,
@@ -27,6 +33,7 @@ import type {
   CamelizedDiscordMemberWithUser,
   CamelizedDiscordMessage,
   CamelizedDiscordModifyGuildWelcomeScreen,
+  CamelizedDiscordPartialGuild,
   CamelizedDiscordPrunedCount,
   CamelizedDiscordRole,
   CamelizedDiscordScheduledEvent,
@@ -35,6 +42,8 @@ import type {
   CamelizedDiscordStickerPack,
   CamelizedDiscordTemplate,
   CamelizedDiscordThreadMember,
+  CamelizedDiscordTokenExchange,
+  CamelizedDiscordTokenRevocation,
   CamelizedDiscordUser,
   CamelizedDiscordVanityUrl,
   CamelizedDiscordVoiceRegion,
@@ -44,7 +53,9 @@ import type {
   CreateAutoModerationRuleOptions,
   CreateChannelInvite,
   CreateForumPostWithMessage,
+  CreateGlobalApplicationCommandOptions,
   CreateGuild,
+  CreateGuildApplicationCommandOptions,
   CreateGuildBan,
   CreateGuildChannel,
   CreateGuildEmoji,
@@ -67,14 +78,17 @@ import type {
   EditUserVoiceState,
   ExecuteWebhook,
   FileContent,
+  GetApplicationCommandPermissionOptions,
   GetBans,
+  GetGroupDmOptions,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetInvite,
   GetMessagesOptions,
   GetReactions,
-  GetScheduledEvents,
   GetScheduledEventUsers,
+  GetScheduledEvents,
+  GetUserGuilds,
   GetWebhookMessageOptions,
   InteractionCallbackData,
   InteractionResponse,
@@ -92,6 +106,8 @@ import type {
   SearchMembers,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
+  UpsertGlobalApplicationCommandOptions,
+  UpsertGuildApplicationCommandOptions,
 } from '@discordeno/types'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 import type { Queue } from './queue.js'
@@ -161,17 +177,22 @@ export interface RestManager {
   /** The routes that are available for this manager. */
   routes: RestRoutes
   /** Whether or not the rest manager should keep objects in raw snake case from discord. */
-  preferSnakeCase: (enabled: boolean) => RestManager;
+  preferSnakeCase: (enabled: boolean) => RestManager
   /** Check the rate limits for a url or a bucket. */
-  checkRateLimits: (url: string) => number | false
+  checkRateLimits: (url: string, headers?: Record<string, string>) => number | false
   /** Reshapes and modifies the obj as needed to make it ready for discords api. */
   changeToDiscordFormat: (obj: any) => any
   /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
   createRequestBody: (method: RequestMethods, options?: CreateRequestBodyOptions) => RequestBody
   /** This will create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */
   processRateLimitedPaths: () => void
-  /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
-  processHeaders: (url: string, headers: Headers) => string | undefined
+  /**
+   * Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available
+   *
+   * @remarks
+   * The authenticationHeader should be defined ONLY if the request was done using a OAuth2 Access Token, in other cases it should be passed as an empty string
+   */
+  processHeaders: (url: string, headers: Headers, authenticationHeader?: string) => string | undefined
   /** Sends a request to the api. */
   sendRequest: (options: SendRequestOptions) => Promise<void>
   /** Split a url to separate rate limit buckets based on major/minor parameters. */
@@ -260,6 +281,35 @@ export interface RestManager {
    */
   addThreadMember: (channelId: BigString, userId: BigString) => Promise<void>
   /**
+   * Adds a recipient to a group DM.
+   *
+   * @param channelId - The ID of the group dm to add the user to.
+   * @param userId - The user ID of the user to add to the group dm.
+   * @param options - The options for adding the user
+   *
+   * @remarks
+   * Requires an OAuth2 access token with the `gdm.join` scope
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#group-dm-add-recipient}
+   */
+  addDmRecipient: (channelId: BigString, userId: BigString, options: AddDmRecipientOptions) => Promise<void>
+  /**
+   * Adds a member to a guild.
+   *
+   * @param guildId - The ID of the thread to add the member to.
+   * @param userId - The user ID of the member to add to the thread.
+   * @param options - The options for the add of a guild member
+   *
+   * @remarks
+   * Requires the bot to be in the specified server
+   * Requires an OAuth2 access token with the `guilds.join` scope
+   *
+   * Fires a _Guild Member Add_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#add-guild-member}
+   */
+  addGuildMember: (guildId: BigString, userId: BigString, options: AddGuildMemberOptions) => Promise<void>
+  /**
    * Creates an automod rule in a guild.
    *
    * @param guildId - The ID of the guild to create the rule in.
@@ -336,6 +386,7 @@ export interface RestManager {
    * Creates an application command accessible globally; across different guilds and channels.
    *
    * @param command - The command to create.
+   * @param options - Additional options for the endpoint
    * @returns An instance of the created {@link ApplicationCommand}.
    *
    * @remarks
@@ -343,9 +394,15 @@ export interface RestManager {
    * ⚠️ Global commands once created are cached for periods of __an hour__, so changes made to existing commands will take an hour to surface.
    * ⚠️ You can only create up to 200 _new_ commands daily.
    *
+   * When using the bearer token the token needs the `applications.commands.update` scope and must be a `Client grant` token.
+   *  You will be able to update only your own application commands
+   *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-global-application-command}
    */
-  createGlobalApplicationCommand: (command: CreateApplicationCommand) => Promise<CamelizedDiscordApplicationCommand>
+  createGlobalApplicationCommand: (
+    command: CreateApplicationCommand,
+    options?: CreateGlobalApplicationCommandOptions,
+  ) => Promise<CamelizedDiscordApplicationCommand>
   /**
    * Creates a guild.
    *
@@ -365,15 +422,23 @@ export interface RestManager {
    *
    * @param command - The command to create.
    * @param guildId - The ID of the guild to create the command for.
+   * @param options - Additional options for the endpoint
    * @returns An instance of the created {@link ApplicationCommand}.
    *
    * @remarks
    * ⚠️ Creating a command with the same name as an existing command for your application will overwrite the old command.
    * ⚠️ You can only create up to 200 _new_ commands daily.
    *
+   * When using the bearer token the token needs the `applications.commands.update` scope and must be a `Client grant` token.
+   *  You will be able to update only your own application commands
+   *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command}
    */
-  createGuildApplicationCommand: (command: CreateApplicationCommand, guildId: BigString) => Promise<CamelizedDiscordApplicationCommand>
+  createGuildApplicationCommand: (
+    command: CreateApplicationCommand,
+    guildId: BigString,
+    options?: CreateGuildApplicationCommandOptions,
+  ) => Promise<CamelizedDiscordApplicationCommand>
   /**
    * Creates a guild from a template.
    *
@@ -1265,6 +1330,24 @@ export interface RestManager {
    */
   editUserVoiceState: (guildId: BigString, options: EditUserVoiceState) => Promise<void>
   /**
+   * Edit the current user application role connection for the application.
+   *
+   * @param bearerToken - The access token of the user
+   * @param applicationId - The id of the application to edit the role connection
+   * @param options - The options to edit
+   * @returns {CamelizedDiscordApplicationRoleConnection}
+   *
+   * @remarks
+   * This requires the `role_connections.write` scope.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/user#update-user-application-role-connection}
+   */
+  editUserApplicationRoleConnection: (
+    bearerToken: string,
+    applicationId: BigString,
+    options: CamelizedDiscordApplicationRoleConnection,
+  ) => Promise<CamelizedDiscordApplicationRoleConnection>
+  /**
    * Edits a webhook.
    *
    * @param webhookId - The ID of the webhook to edit.
@@ -1399,24 +1482,62 @@ export interface RestManager {
   /** Get the applications info */
   getApplicationInfo: () => Promise<CamelizedDiscordApplication>
   /**
+   * Get the current authentication info for the authenticated user
+   *
+   * @param bearerToken - Any OAuth2 derived access token
+   * @returns An instance of {@link CamelizedDiscordCurrentAuthorization}
+   *
+   * @remarks
+   * The user object is not defined if the scopes do not include `identify`.
+   * In the user object, if defined, the email is not included if the scopes do not include `email`
+   */
+  getCurrentAuthenticationInfo: (bearerToken: string) => Promise<CamelizedDiscordCurrentAuthorization>
+  /**
+   * Exchange the information to get a OAuth2 accessToken token
+   *
+   * @param options - The options to make the exchange with discord
+   */
+  exchangeToken: (options: CamelizedDiscordTokenExchange) => Promise<CamelizedDiscordAccessTokenResponse>
+  /**
+   * Revoke an access_token
+   *
+   * @param options - The options to revoke the access_token
+   */
+  revokeToken: (options: CamelizedDiscordTokenRevocation) => Promise<void>
+  /**
    * Gets the permissions of a guild application command.
    *
    * @param guildId - The ID of the guild the command is registered in.
    * @param commandId - The ID of the command to get the permissions of.
+   * @param options - The OAuth2 related optional parameters for the endpoint
    * @returns An instance of {@link ApplicationCommandPermission}.
+   *
+   * @remarks
+   * Then specifying the options object the access token passed-in requires the OAuth2 scope `applications.commands.permissions.update`
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions}
    */
-  getApplicationCommandPermission: (guildId: BigString, commandId: BigString) => Promise<CamelizedDiscordGuildApplicationCommandPermissions>
+  getApplicationCommandPermission: (
+    guildId: BigString,
+    commandId: BigString,
+    options?: GetApplicationCommandPermissionOptions,
+  ) => Promise<CamelizedDiscordGuildApplicationCommandPermissions>
   /**
-   * Gets the permissions of all application commands registered in a guild by the ID of the guild.
+   * Gets the permissions of all application commands registered in a guild by the ID of the guild and optionally an external application.
    *
    * @param guildId - The ID of the guild to get the permissions objects of.
+   * @param options - The OAuth2 related optional parameters for the endpoint
    * @returns A collection of {@link ApplicationCommandPermission} objects assorted by command ID.
+   *
+   * @remarks
+   * Then specifying the options object the access token passed-in requires the OAuth2 scope `applications.commands.permissions.update`
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions}
    */
-  getApplicationCommandPermissions: (guildId: BigString) => Promise<CamelizedDiscordGuildApplicationCommandPermissions[]>
+  getApplicationCommandPermissions: (
+    guildId: BigString,
+    options?: GetApplicationCommandPermissionOptions,
+  ) => Promise<CamelizedDiscordGuildApplicationCommandPermissions[]>
   /**
    * Gets a guild's audit log.
    *
@@ -1549,6 +1670,22 @@ export interface RestManager {
    */
   getDmChannel: (userId: BigString) => Promise<CamelizedDiscordChannel>
   /**
+   * Create a new group DM channel with multiple users.
+   *
+   * @param options - The options for create a new group dm
+   * @returns An instance of {@link CamelizedDiscordChannel}.
+   *
+   * @remarks
+   * The access tokens require to have the `gdm.join` scope
+   *
+   * This endpoint is limited to 10 active group DMs.
+   *
+   * Fires a _Channel create_ gateway event.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/user#create-group-dm}
+   */
+  getGroupDmChannel: (options: GetGroupDmOptions) => Promise<CamelizedDiscordChannel>
+  /**
    * Gets an emoji by its ID.
    *
    * @param guildId - The ID of the guild from which to get the emoji.
@@ -1613,6 +1750,19 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild}
    */
   getGuild: (guildId: BigString, options?: { counts?: boolean }) => Promise<CamelizedDiscordGuild>
+  /**
+   * Get the user guilds.
+   *
+   * @param bearerToken - The access token of the user
+   * @param options - The parameters for the fetching of the guild.
+   * @returns An instance of {@link Guild}.
+   *
+   * @remarks
+   * The access tokens needs to have the `guilds` scope
+   *
+   * @see {@link https://discord.com/developers/docs/resources/user#get-current-user-guilds}
+   */
+  getGuilds: (bearerToken: string, options?: GetUserGuilds) => Promise<CamelizedDiscordPartialGuild[]>
   /**
    * Gets a guild application command by its ID.
    *
@@ -1989,6 +2139,41 @@ export interface RestManager {
    */
   getUser: (id: BigString) => Promise<CamelizedDiscordUser>
   /**
+   * Get the current user data.
+   *
+   * @param bearerToken - The access token of the user
+   * @returns {CamelizedDiscordUser}
+   *
+   * @remarks
+   * This requires the `identify` scope.
+   *
+   * To get the mail this also requires the `email` scope
+   */
+  getCurrentUser: (bearerToken: string) => Promise<CamelizedDiscordUser>
+  /**
+   * Get the current user connections.
+   *
+   * @param bearerToken - The access token of the user
+   * @returns {CamelizedDiscordConnection[]}
+   *
+   * @remarks
+   * This requires the `connections` scope.
+   */
+  getUserConnections: (bearerToken: string) => Promise<CamelizedDiscordConnection[]>
+  /**
+   * Get the current user application role connection for the application.
+   *
+   * @param bearerToken - The access token of the user
+   * @param applicationId - The id of the application to get the role connection
+   * @returns {CamelizedDiscordApplicationRoleConnection}
+   *
+   * @remarks
+   * The access token requires the `role_connections.write` scope.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/user#get-user-application-role-connection}
+   */
+  getUserApplicationRoleConnection: (bearerToken: string, applicationId: BigString) => Promise<CamelizedDiscordApplicationRoleConnection>
+  /**
    * Gets information about the vanity url of a guild.
    *
    * @param guildId - The ID of the guild to get the vanity url information for.
@@ -2173,6 +2358,15 @@ export interface RestManager {
    */
   removeThreadMember: (channelId: BigString, userId: BigString) => Promise<void>
   /**
+   * Removes a member from a Group DM.
+   *
+   * @param channelId - The ID of the channel to remove the recipient user of.
+   * @param userId - The user ID of the user to remove.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/channel#group-dm-remove-recipient}
+   */
+  removeDmRecipient: (channelId: BigString, userId: BigString) => Promise<void>
+  /**
    * Sends a message to a channel.
    *
    * @param channelId - The ID of the channel to send the message in.
@@ -2315,6 +2509,7 @@ export interface RestManager {
    * Re-registers the list of global application commands, overwriting the previous commands completely.
    *
    * @param commands - The list of commands to use to overwrite the previous list.
+   * @param options - Additional options for the endpoint.
    * @returns A collection of {@link ApplicationCommand} objects assorted by command ID.
    *
    * @remarks
@@ -2322,14 +2517,21 @@ export interface RestManager {
    *
    * ⚠️ Commands that do not already exist will count towards the daily limit of _200_ new commands.
    *
+   * When using the bearer token the token needs the `applications.commands.update` scope and must be a `Client grant` token.
+   *  You will be able to update only your own application commands
+   *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands}
    */
-  upsertGlobalApplicationCommands: (commands: CreateApplicationCommand[]) => Promise<CamelizedDiscordApplicationCommand[]>
+  upsertGlobalApplicationCommands: (
+    commands: CreateApplicationCommand[],
+    options?: UpsertGlobalApplicationCommandOptions,
+  ) => Promise<CamelizedDiscordApplicationCommand[]>
   /**
    * Re-registers the list of application commands registered in a guild, overwriting the previous commands completely.
    *
    * @param guildId - The ID of the guild whose list of commands to overwrite.
    * @param commands - The list of commands to use to overwrite the previous list.
+   * @param options - Additional options for the endpoint.
    * @returns A collection of {@link ApplicationCommand} objects assorted by command ID.
    *
    * @remarks
@@ -2337,9 +2539,16 @@ export interface RestManager {
    *
    * ⚠️ Commands that do not already exist will count towards the daily limit of _200_ new commands.
    *
+   * When using the bearer token the token needs the `applications.commands.update` scope and must be a `Client grant` token.
+   *  You will be able to update only your own application commands
+   *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands}
    */
-  upsertGuildApplicationCommands: (guildId: BigString, commands: CreateApplicationCommand[]) => Promise<CamelizedDiscordApplicationCommand[]>
+  upsertGuildApplicationCommands: (
+    guildId: BigString,
+    commands: CreateApplicationCommand[],
+    options?: UpsertGuildApplicationCommandOptions,
+  ) => Promise<CamelizedDiscordApplicationCommand[]>
   /**
    * Bans a user from a guild.
    *
@@ -2398,6 +2607,19 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-member}
    */
   getMember: (guildId: BigString, userId: BigString) => Promise<CamelizedDiscordMemberWithUser>
+  /**
+   * Gets the current member object.
+   *
+   * @param bearerToken - The access token of the user
+   * @param guildId - The ID of the guild to get the member object for.
+   * @returns An instance of {@link CamelizedDiscordMemberWithUser}.
+   *
+   * @remarks
+   * The access tokens needs the `guilds.members.read` scope
+   *
+   * @see {@link https://discord.com/developers/docs/resources/user#get-current-user-guild-member}
+   */
+  getCurrentMember: (guildId: BigString, bearerToken: string) => Promise<CamelizedDiscordMemberWithUser>
   /**
    * Gets the list of members for a guild.
    *
