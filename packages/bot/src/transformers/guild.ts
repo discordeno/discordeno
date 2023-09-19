@@ -1,25 +1,38 @@
-import type {
-  DefaultMessageNotificationLevels,
-  DiscordGuild,
-  DiscordPresenceUpdate,
-  ExplicitContentFilterLevels,
-  GuildFeatures,
-  GuildNsfwLevel,
-  MfaLevels,
-  PremiumTiers,
-  SystemChannelFlags,
-  VerificationLevels,
+import {
+  ChannelTypes,
+  type DefaultMessageNotificationLevels,
+  type DiscordGuild,
+  type DiscordPresenceUpdate,
+  type ExplicitContentFilterLevels,
+  type GuildFeatures,
+  type GuildNsfwLevel,
+  type MfaLevels,
+  type PremiumTiers,
+  type SystemChannelFlags,
+  type VerificationLevels,
 } from '@discordeno/types'
 import { Collection, iconHashToBigInt } from '@discordeno/utils'
 import type { Bot, Channel, Member, PresenceUpdate, Role, StageInstance, Sticker, VoiceState, WelcomeScreen } from '../index.js'
 import type { Emoji } from '../transformers/emoji.js'
 import { GuildToggles } from './toggles/guild.js'
 
+const baseGuild = {
+  get threads() {
+    if (!this.channels) return
+
+    const threads = this.channels
+      .array()
+      .filter((x) => x.type === ChannelTypes.PublicThread || x.type === ChannelTypes.PrivateThread || x.type === ChannelTypes.AnnouncementThread)
+
+    return new Collection(threads.map((x) => [x.id, x]))
+  },
+} as Guild
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) {
   const guildId = bot.transformers.snowflake(payload.guild.id)
   const props = bot.transformers.desiredProperties.guild
-  const guild = {} as Guild
+  const guild: Guild = Object.create(baseGuild)
 
   if (props.afkTimeout && payload.guild.afk_timeout) guild.afkTimeout = payload.guild.afk_timeout
   if (props.approximateMemberCount && payload.guild.approximate_member_count) guild.approximateMemberCount = payload.guild.approximate_member_count
@@ -51,10 +64,9 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
       /** The topic of the Stage instance (1-120 characters) */
       topic: si.topic,
     }))
-  // TODO: include the threads (??)
-  if (props.channels && payload.guild.channels)
+  if (props.channels && (!!payload.guild.channels || !!payload.guild.threads))
     guild.channels = new Collection(
-      payload.guild.channels.map((channel) => {
+      [...(payload.guild.channels ?? []), ...(payload.guild.threads ?? [])].map((channel) => {
         const result = bot.transformers.channel(bot, { channel, guildId })
         return [result.id, result]
       }),
@@ -94,14 +106,6 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
         return [result.id, result]
       }),
     )
-  // TODO: maybe join with channels (??)
-  if (props.threads && payload.guild.threads)
-    guild.threads = new Collection(
-      payload.guild.threads?.map((channel) => {
-        const result = bot.transformers.channel(bot, { channel, guildId })
-        return [result.id, result]
-      }),
-    )
   if (props.systemChannelFlags && payload.guild.system_channel_flags) guild.systemChannelFlags = payload.guild.system_channel_flags
   if (props.vanityUrlCode && payload.guild.vanity_url_code) guild.vanityUrlCode = payload.guild.vanity_url_code
   if (props.verificationLevel && payload.guild.verification_level) guild.verificationLevel = payload.guild.verification_level
@@ -134,17 +138,13 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
     guild.publicUpdatesChannelId = bot.transformers.snowflake(payload.guild.public_updates_channel_id)
   if (props.premiumProgressBarEnabled && payload.guild.premium_progress_bar_enabled)
     guild.premiumProgressBarEnabled = payload.guild.premium_progress_bar_enabled
-  if (props.features && payload.guild.features) guild.features = payload.guild.features
   if (props.large && payload.guild.large) guild.large = payload.guild.large
   if (props.owner && payload.guild.owner) guild.owner = payload.guild.owner
   if (props.widgetEnabled && payload.guild.widget_enabled) guild.widgetEnabled = payload.guild.widget_enabled
   if (props.unavailable && payload.guild.unavailable) guild.unavailable = payload.guild.unavailable
   if (props.iconHash && payload.guild.icon_hash) guild.iconHash = iconHashToBigInt(payload.guild.icon_hash)
   if (props.presences && payload.guild.presences)
-    guild.presences = payload.guild.presences?.map((presence) => {
-      presence.status ??= 'online'
-      return bot.transformers.presence(bot, presence as DiscordPresenceUpdate)
-    })
+    guild.presences = payload.guild.presences?.map((presence) => bot.transformers.presence(bot, presence as DiscordPresenceUpdate))
 
   return guild
 }
