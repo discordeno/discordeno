@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695140736815,
+  "lastUpdate": 1695140872261,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -11684,6 +11684,114 @@ window.BENCHMARK_DATA = {
             "range": "±0.26%",
             "unit": "ops/sec",
             "extra": "96 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "45788465+SammyWhamy@users.noreply.github.com",
+            "name": "Sam Teeuwisse",
+            "username": "SammyWhamy"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "940ef8dc3964a46a914dfe29f344b85fda2c2403",
+          "message": "fix(utils): Add missing export for interactions.ts (#3123)",
+          "timestamp": "2023-09-19T16:25:36Z",
+          "tree_id": "064d78eabd17611f392f93dbd3f4b144164d7b6e",
+          "url": "https://github.com/discordeno/discordeno/commit/940ef8dc3964a46a914dfe29f344b85fda2c2403"
+        },
+        "date": 1695140870164,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "[transformer] message cache check RSS",
+            "value": 121.83,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Used",
+            "value": 117.78,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Total",
+            "value": 106.36,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check RSS",
+            "value": 79.25,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Used",
+            "value": 101.65,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Total",
+            "value": 80.67,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 0.57,
+            "range": "±2.98%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 10.65,
+            "range": "±1.44%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 0,
+            "range": "±0%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "rest.simplifyUrl",
+            "value": 202561,
+            "range": "±0.37%",
+            "unit": "ops/sec",
+            "extra": "92 samples"
+          },
+          {
+            "name": "Camelize 1 event",
+            "value": 6126,
+            "range": "±0.29%",
+            "unit": "ops/sec",
+            "extra": "93 samples"
+          },
+          {
+            "name": "Snakelize 1 event",
+            "value": 6109,
+            "range": "±0.37%",
+            "unit": "ops/sec",
+            "extra": "92 samples"
           }
         ]
       }
