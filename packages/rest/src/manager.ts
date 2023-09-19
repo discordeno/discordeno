@@ -295,8 +295,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       // IF THERE IS NO REMAINING GLOBAL LIMIT, MARK IT RATE LIMITED GLOBALLY
       if (global) {
-        const retryAfter = headers.get('retry-after')
-        const globalReset = Date.now() + Number(retryAfter) * 1000
+        const retryAfter = Number(headers.get('retry-after')) * 1000
+        const globalReset = Date.now() + retryAfter
         //   rest.debug(
         // `[REST = Globally Rate Limited] URL: ${url} | Global Rest: ${globalReset}`
         //   )
@@ -305,7 +305,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         setTimeout(() => {
           rest.globallyRateLimited = false
-        }, globalReset)
+        }, retryAfter)
 
         rest.rateLimitedPaths.set('global', {
           url: 'global',
