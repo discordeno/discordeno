@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694184644066,
+  "lastUpdate": 1695140736815,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -11576,6 +11576,114 @@ window.BENCHMARK_DATA = {
             "range": "±0.17%",
             "unit": "ops/sec",
             "extra": "95 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "Fleny113@outlook.com",
+            "name": "Fleny",
+            "username": "Fleny113"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a7d645ec4b2b904a0cc70570aebb8158084b4dcf",
+          "message": "feat: Implement OAuth2 endpoints (#3114)\n\n* add OAuth2 routes\n\n* Add oauth2 methods to rest\n\n* Add rest manager methods, Add token params\n\n* Add authorization headers\n\n* Add auth to editUserApplicationRoleConnection\n\n* fix logging header always displaying bot as auth\n\n* Add OAuth2Scope enum\n\n* Start testing ratelimit handling\n\n* Fix now scopes are separated by a space\n\n* move webhook object to DiscordAccessTokenResponse\n\n* convert payload to snake_case\n\n* fix some typings\n\n* more types fixes\n\n* add support for upserting commands with tokens\n\n* handle correctly ratelimit and concurrently\n\n* add guild to DiscordAccessTokenResponse\n\n* Add oauth2 create link function\n\n* Fix removeTokenPrefix to support Bearer tokens\n\n* update jsdoc comment for removeTokenPrefix\n\n* fix removeTokenPrefix unit tests\n\n* fix see link on getMember and getCurrentMember\n\n* add bot helpers and fix some types\n\n* Use objects to pass the bearer tokens\n\n* fix Deno issue with Buffer.from\n\n* Merge 'upstream/main' into feat/oauth2 to fix merge conflict\n\n* Fix debug queue logging\n\n* keep only 1 route for current user\n\n* add Bearer prefixed url to the rest of the logs\n\n---------\n\nCo-authored-by: Skillz4Killz <23035000+Skillz4Killz@users.noreply.github.com>",
+          "timestamp": "2023-09-19T16:23:22Z",
+          "tree_id": "ef9d67259e0d73929b945f8463c64e6a97164930",
+          "url": "https://github.com/discordeno/discordeno/commit/a7d645ec4b2b904a0cc70570aebb8158084b4dcf"
+        },
+        "date": 1695140735160,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "[transformer] message cache check RSS",
+            "value": 115.43,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Used",
+            "value": 117.44,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Total",
+            "value": 106.88,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check RSS",
+            "value": 86.21,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Used",
+            "value": 100.86,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Total",
+            "value": 81.45,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 0.57,
+            "range": "±2.98%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 10.65,
+            "range": "±1.44%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 0,
+            "range": "±0%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "rest.simplifyUrl",
+            "value": 200721,
+            "range": "±0.37%",
+            "unit": "ops/sec",
+            "extra": "93 samples"
+          },
+          {
+            "name": "Camelize 1 event",
+            "value": 6101,
+            "range": "±0.30%",
+            "unit": "ops/sec",
+            "extra": "94 samples"
+          },
+          {
+            "name": "Snakelize 1 event",
+            "value": 6115,
+            "range": "±0.26%",
+            "unit": "ops/sec",
+            "extra": "96 samples"
           }
         ]
       }
