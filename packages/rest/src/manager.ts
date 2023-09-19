@@ -91,8 +91,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     routes: createRoutes(),
 
-    injectHeaders() {
-      return {}
+    createBaseHeaders() {
+      return {
+        'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${version})`,
+      }
     },
 
     checkRateLimits(url) {
@@ -156,10 +158,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     createRequestBody(method, options) {
-      const headers: Record<string, string> = {
-        'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${version})`,
-        ...this.injectHeaders(),
-      }
+      const headers = this.createBaseHeaders()
 
       if (options?.unauthorized !== true) headers.authorization = `Bot ${rest.token}`
 
