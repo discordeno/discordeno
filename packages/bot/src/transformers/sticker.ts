@@ -1,24 +1,25 @@
-import type { DiscordSticker, DiscordStickerPack } from '@discordeno/types'
-import type { Bot } from '../index.js'
+import type { DiscordSticker, DiscordStickerPack, StickerFormatTypes, StickerTypes } from '@discordeno/types'
+import type { Bot, User } from '../index.js'
 import type { Optionalize } from '../optionalize.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformSticker(bot: Bot, payload: DiscordSticker) {
-  const sticker = {
-    id: bot.transformers.snowflake(payload.id),
-    packId: payload.pack_id ? bot.transformers.snowflake(payload.pack_id) : undefined,
-    name: payload.name,
-    description: payload.description,
-    tags: payload.tags,
-    type: payload.type,
-    formatType: payload.format_type,
-    available: payload.available,
-    guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
-    user: payload.user ? bot.transformers.user(bot, payload.user) : undefined,
-    sortValue: payload.sort_value,
-  }
+  const props = bot.transformers.desiredProperties.sticker
+  const sticker = {} as Sticker
 
-  return sticker as Optionalize<typeof sticker>
+  if (props.id) sticker.id = bot.transformers.snowflake(payload.id)
+  if (props.packId && payload.pack_id) sticker.packId = bot.transformers.snowflake(payload.pack_id)
+  if (props.name) sticker.name = payload.name
+  if (props.description) sticker.description = payload.description
+  if (props.tags) sticker.tags = payload.tags
+  if (props.type) sticker.type = payload.type
+  if (props.formatType) sticker.formatType = payload.format_type
+  if (props.available) sticker.available = payload.available
+  if (props.guildId && payload.guild_id) sticker.guildId = bot.transformers.snowflake(payload.guild_id)
+  if (props.user && payload.user) sticker.user = bot.transformers.user(bot, payload.user)
+  if (props.sortValue) sticker.sortValue = payload.sort_value
+
+  return sticker
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -36,5 +37,28 @@ export function transformStickerPack(bot: Bot, payload: DiscordStickerPack) {
   return pack as Optionalize<typeof pack>
 }
 
-export interface Sticker extends ReturnType<typeof transformSticker> {}
+export interface Sticker {
+  /** [Id of the sticker](https://discord.com/developers/docs/reference#image-formatting) */
+  id: bigint
+  /** Id of the pack the sticker is from */
+  packId?: bigint
+  /** Name of the sticker */
+  name: string
+  /** Description of the sticker */
+  description: string
+  /** a unicode emoji representing the sticker's expression */
+  tags: string
+  /** [type of sticker](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types) */
+  type: StickerTypes
+  /** [Type of sticker format](https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-format-types) */
+  formatType: StickerFormatTypes
+  /**  Whether or not the sticker is available */
+  available?: boolean
+  /** Id of the guild that owns this sticker */
+  guildId?: bigint
+  /** The user that uploaded the sticker */
+  user?: User
+  /** A sticker's sort order within a pack */
+  sortValue?: number
+}
 export interface StickerPack extends ReturnType<typeof transformStickerPack> {}
