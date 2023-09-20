@@ -176,6 +176,8 @@ export interface RestManager {
   invalidBucket: InvalidRequestBucket
   /** The routes that are available for this manager. */
   routes: RestRoutes
+  /** Allows the user to inject custom headers that will be sent with every request. */
+  createBaseHeaders: () => Record<string, string>
   /** Whether or not the rest manager should keep objects in raw snake case from discord. */
   preferSnakeCase: (enabled: boolean) => RestManager
   /** Check the rate limits for a url or a bucket. */
