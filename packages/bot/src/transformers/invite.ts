@@ -6,19 +6,19 @@ export function transformInvite(bot: Bot, payload: DiscordInviteCreate) {
   const props = bot.transformers.desiredProperties.invite
   const invite = {} as Invite
 
-  if (props.channelId) invite.channelId = bot.transformers.snowflake(payload.channel_id)
-  if (props.code) invite.code = payload.code
-  if (props.createdAt) invite.createdAt = Date.parse(payload.created_at)
+  if (props.channelId && payload.channel_id) invite.channelId = bot.transformers.snowflake(payload.channel_id)
+  if (props.code && payload.code) invite.code = payload.code
+  if (props.createdAt && payload.created_at) invite.createdAt = Date.parse(payload.created_at)
   if (props.guildId && payload.guild_id) invite.guildId = bot.transformers.snowflake(payload.guild_id)
   if (props.inviter && payload.inviter) invite.inviter = bot.transformers.user(bot, payload.inviter)
-  if (props.maxAge) invite.maxAge = payload.max_age
-  if (props.maxUses) invite.maxUses = payload.max_uses
-  if (props.targetType) invite.targetType = payload.target_type
+  if (props.maxAge && payload.max_age) invite.maxAge = payload.max_age
+  if (props.maxUses && payload.max_uses) invite.maxUses = payload.max_uses
+  if (props.targetType && payload.target_type) invite.targetType = payload.target_type
   if (props.targetUser && payload.target_user) invite.targetUser = bot.transformers.user(bot, payload.target_user)
   if (props.targetApplication && payload.target_application)
     invite.targetApplication = bot.transformers.application(bot, payload.target_application as DiscordApplication)
-  if (props.temporary) invite.temporary = payload.temporary
-  if (props.uses) invite.uses = payload.uses
+  if (props.temporary && payload.temporary) invite.temporary = payload.temporary
+  if (props.uses && payload.uses) invite.uses = payload.uses
 
   return invite
 }
