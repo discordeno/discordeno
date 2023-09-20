@@ -98,10 +98,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     routes: createRoutes(),
 
+    createBaseHeaders() {
+      return {
+        'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${version})`,
+      }
+    },
+
     checkRateLimits(url, headers) {
       const authHeader = headers?.authorization ?? ''
 
       const ratelimited = rest.rateLimitedPaths.get(`${authHeader}${url}`)
+
       const global = rest.rateLimitedPaths.get('global')
       const now = Date.now()
 
@@ -161,9 +168,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     createRequestBody(method, options) {
-      const headers: Record<string, string> = {
-        'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v${version})`,
-      }
+      const headers = this.createBaseHeaders()
 
       if (options?.unauthorized !== true) headers.authorization = `Bot ${rest.token}`
 
