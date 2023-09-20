@@ -7,17 +7,17 @@ export function transformSticker(bot: Bot, payload: DiscordSticker) {
   const props = bot.transformers.desiredProperties.sticker
   const sticker = {} as Sticker
 
-  if (props.id) sticker.id = bot.transformers.snowflake(payload.id)
+  if (props.id && payload.id) sticker.id = bot.transformers.snowflake(payload.id)
   if (props.packId && payload.pack_id) sticker.packId = bot.transformers.snowflake(payload.pack_id)
-  if (props.name) sticker.name = payload.name
-  if (props.description) sticker.description = payload.description
-  if (props.tags) sticker.tags = payload.tags
-  if (props.type) sticker.type = payload.type
-  if (props.formatType) sticker.formatType = payload.format_type
-  if (props.available) sticker.available = payload.available
+  if (props.name && payload.name) sticker.name = payload.name
+  if (props.description && payload.description) sticker.description = payload.description
+  if (props.tags && payload.tags) sticker.tags = payload.tags
+  if (props.type && payload.type) sticker.type = payload.type
+  if (props.formatType && payload.format_type) sticker.formatType = payload.format_type
+  if (props.available && payload.available) sticker.available = payload.available
   if (props.guildId && payload.guild_id) sticker.guildId = bot.transformers.snowflake(payload.guild_id)
   if (props.user && payload.user) sticker.user = bot.transformers.user(bot, payload.user)
-  if (props.sortValue) sticker.sortValue = payload.sort_value
+  if (props.sortValue && payload.sort_value) sticker.sortValue = payload.sort_value
 
   return sticker
 }
