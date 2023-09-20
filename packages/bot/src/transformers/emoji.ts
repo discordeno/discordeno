@@ -5,11 +5,10 @@ import { EmojiToggles } from './toggles/emoji.js'
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformEmoji(bot: Bot, payload: DiscordEmoji) {
   const props = bot.transformers.desiredProperties.emoji
-
   const emoji = {} as Emoji
 
   if (props.id && payload.id) emoji.id = bot.transformers.snowflake(payload.id)
-  if (props.name) emoji.name = payload.name
+  if (props.name && payload.name) emoji.name = payload.name
   if (props.roles && payload.roles) emoji.roles = payload.roles.map((id) => bot.transformers.snowflake(id))
   if (props.user && payload.user) emoji.user = bot.transformers.user(bot, payload.user)
 
