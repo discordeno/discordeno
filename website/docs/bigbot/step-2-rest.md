@@ -259,7 +259,7 @@ try {
   let manager = MANAGERS.get(req.headers.bot_id);
   if (!manager) {
     // A request came in with a token that has no manager in cache
-    manager = createRestManager({ token: "insertBotTokenHere" })
+    manager = createRestManager({ token: BOT_TOKENS.get(req.headers.bot_id) })
     MANAGERS.set(req.headers.bot_id, manager);
   }
 
