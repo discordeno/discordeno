@@ -1,5 +1,5 @@
 import type { DiscordGatewayPayload, DiscordInviteCreate } from '@discordeno/types'
-import type { Bot } from '../../index.js'
+import type { Bot, Invite } from '../../index.js'
 
 export async function handleInviteCreate(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
   const invite = data.d as DiscordInviteCreate
@@ -31,6 +31,6 @@ export async function handleInviteCreate(bot: Bot, data: DiscordGatewayPayload):
     temporary: invite.temporary,
     /** How many times the invite has been used (always will be 0) */
     uses: invite.uses,
-  }
+  } as Invite
   bot.events.inviteCreate?.(transformedInvite)
 }
