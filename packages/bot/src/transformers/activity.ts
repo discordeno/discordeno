@@ -35,7 +35,7 @@ export function transformActivity(bot: Bot, payload: DiscordActivity) {
     buttons: payload.buttons,
   }
 
-  return activity as Optionalize<typeof activity>
+  return bot.transformers.customizers.activity(bot, payload, activity as Activity) as Optionalize<typeof activity>
 }
 
 export interface Activity extends ReturnType<typeof transformActivity> {}

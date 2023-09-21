@@ -17,7 +17,7 @@ export function transformAttachment(bot: Bot, payload: DiscordAttachment) {
   if (props.ephemeral && payload.ephemeral) attachment.ephemeral = payload.ephemeral
   if (props.description && payload.description) attachment.description = payload.description
 
-  return attachment
+  return bot.transformers.customizers.attachment(bot, payload, attachment)
 }
 
 export interface Attachment {

@@ -13,7 +13,7 @@ export function transformStageInstance(bot: Bot, payload: DiscordStageInstance) 
   if (props.guildScheduledEventId && payload.guild_scheduled_event_id)
     stageInstance.guildScheduledEventId = bot.transformers.snowflake(payload.guild_scheduled_event_id)
 
-  return stageInstance
+  return bot.transformers.customizers.stageInstance(bot, payload, stageInstance)
 }
 
 export interface StageInstance {

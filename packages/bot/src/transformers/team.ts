@@ -20,7 +20,7 @@ export function transformTeam(bot: Bot, payload: DiscordTeam) {
     })),
   }
 
-  return team as Optionalize<typeof team>
+  return bot.transformers.customizers.team(bot, payload, team as Team) as Optionalize<typeof team>
 }
 
 export interface Team extends ReturnType<typeof transformTeam> {}

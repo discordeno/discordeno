@@ -35,7 +35,7 @@ export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreate
     scopes: payload.scopes,
   }
 
-  return integration as Optionalize<typeof integration>
+  return bot.transformers.customizers.integration(bot, payload, integration as Integration) as Optionalize<typeof integration>
 }
 
 export interface Integration extends ReturnType<typeof transformIntegration> {}

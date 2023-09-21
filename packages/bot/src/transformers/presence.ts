@@ -14,7 +14,7 @@ export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate) {
     web: payload.client_status.web,
   }
 
-  return presence as Optionalize<typeof presence>
+  return bot.transformers.customizers.presence(bot, payload, presence as PresenceUpdate) as Optionalize<typeof presence>
 }
 
 export interface PresenceUpdate extends ReturnType<typeof transformPresence> {}

@@ -18,7 +18,7 @@ export function transformTemplate(bot: Bot, payload: DiscordTemplate) {
     isDirty: payload.is_dirty ?? undefined,
   }
 
-  return template as Optionalize<typeof template>
+  return bot.transformers.customizers.template(bot, payload, template as Template) as Optionalize<typeof template>
 }
 
 export interface Template extends ReturnType<typeof transformTemplate> {}

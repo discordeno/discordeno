@@ -15,7 +15,11 @@ export function transformApplicationCommandPermission(bot: Bot, payload: Discord
     })),
   }
 
-  return applicationCommandPermission as Optionalize<typeof applicationCommandPermission>
+  return bot.transformers.customizers.applicationCommandPermission(
+    bot,
+    payload,
+    applicationCommandPermission as ApplicationCommandPermission,
+  ) as Optionalize<typeof applicationCommandPermission>
 }
 
 export interface ApplicationCommandPermission extends ReturnType<typeof transformApplicationCommandPermission> {}

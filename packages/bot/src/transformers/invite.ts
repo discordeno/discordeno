@@ -20,7 +20,7 @@ export function transformInvite(bot: Bot, payload: DiscordInviteCreate) {
   if (props.temporary && payload.temporary) invite.temporary = payload.temporary
   if (props.uses && payload.uses) invite.uses = payload.uses
 
-  return invite
+  return bot.transformers.customizers.invite(bot, payload, invite)
 }
 
 export interface Invite {

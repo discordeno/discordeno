@@ -14,7 +14,7 @@ export function transformEmoji(bot: Bot, payload: DiscordEmoji) {
 
   emoji.toggles = new EmojiToggles(payload)
 
-  return emoji
+  return bot.transformers.customizers.emoji(bot, payload, emoji)
 }
 
 export interface Emoji {

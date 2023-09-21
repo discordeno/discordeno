@@ -19,7 +19,7 @@ export function transformSticker(bot: Bot, payload: DiscordSticker) {
   if (props.user && payload.user) sticker.user = bot.transformers.user(bot, payload.user)
   if (props.sortValue && payload.sort_value) sticker.sortValue = payload.sort_value
 
-  return sticker
+  return bot.transformers.customizers.sticker(bot, payload, sticker)
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -34,7 +34,7 @@ export function transformStickerPack(bot: Bot, payload: DiscordStickerPack) {
     bannerAssetId: payload.banner_asset_id ? bot.transformers.snowflake(payload.banner_asset_id) : undefined,
   }
 
-  return pack as Optionalize<typeof pack>
+  return bot.transformers.customizers.stickerPack(bot, payload, pack as StickerPack) as Optionalize<typeof pack>
 }
 
 export interface Sticker {

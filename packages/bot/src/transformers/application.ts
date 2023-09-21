@@ -27,7 +27,7 @@ export function transformApplication(bot: Bot, payload: DiscordApplication) {
     guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
   }
 
-  return application as Optionalize<typeof application>
+  return bot.transformers.customizers.application(bot, payload, application as Application) as Optionalize<typeof application>
 }
 
 export interface Application extends ReturnType<typeof transformApplication> {}

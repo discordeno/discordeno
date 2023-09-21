@@ -12,7 +12,7 @@ export function transformThreadMember(bot: Bot, payload: DiscordThreadMember) {
     flags: payload.flags,
   }
 
-  return threadMember as Optionalize<typeof threadMember>
+  return bot.transformers.customizers.threadMember(bot, payload, threadMember as ThreadMember) as Optionalize<typeof threadMember>
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

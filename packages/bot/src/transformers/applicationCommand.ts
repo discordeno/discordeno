@@ -20,7 +20,9 @@ export function transformApplicationCommand(bot: Bot, payload: DiscordApplicatio
     options: payload.options?.map((option) => bot.transformers.applicationCommandOption(bot, option)),
   }
 
-  return applicationCommand as Optionalize<typeof applicationCommand>
+  return bot.transformers.customizers.applicationCommand(bot, payload, applicationCommand as ApplicationCommand) as Optionalize<
+    typeof applicationCommand
+  >
 }
 
 export interface ApplicationCommand extends ReturnType<typeof transformApplicationCommand> {}

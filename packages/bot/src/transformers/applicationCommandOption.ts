@@ -3,7 +3,7 @@ import type { Bot } from '../index.js'
 import type { ApplicationCommandOptionChoice } from './applicationCommandOptionChoice.js'
 
 export function transformApplicationCommandOption(bot: Bot, payload: DiscordApplicationCommandOption): ApplicationCommandOption {
-  return {
+  const applicationCommandOption = {
     type: payload.type,
     name: payload.name,
     nameLocalizations: payload.name_localizations ?? undefined,
@@ -19,6 +19,8 @@ export function transformApplicationCommandOption(bot: Bot, payload: DiscordAppl
     maxLength: payload.max_length,
     options: payload.options?.map((option) => bot.transformers.applicationCommandOption(bot, option)),
   }
+
+  return bot.transformers.customizers.applicationCommandOption(bot, payload, applicationCommandOption)
 }
 
 // THIS TRANSFORMER HAS A CIRCULAR REFERENCE TO CALL ITSELF FOR OPTIONS SO AN AUTOMATED TYPE CAN NOT BE CREATED!

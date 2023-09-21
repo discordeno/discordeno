@@ -14,7 +14,7 @@ export function transformWelcomeScreen(bot: Bot, payload: DiscordWelcomeScreen) 
     })),
   }
 
-  return welcomeScreen as Optionalize<typeof welcomeScreen>
+  return bot.transformers.customizers.welcomeScreen(bot, payload, welcomeScreen as WelcomeScreen) as Optionalize<typeof welcomeScreen>
 }
 
 export interface WelcomeScreen extends ReturnType<typeof transformWelcomeScreen> {}

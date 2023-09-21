@@ -105,6 +105,45 @@ export interface Transformers {
     user: (bot: Bot, payload: DiscordUser, user: User) => any
     member: (bot: Bot, payload: DiscordMember, member: Member) => any
     role: (bot: Bot, payload: DiscordRole, role: Role) => any
+    automodRule: (bot: Bot, payload: DiscordAutoModerationRule, automodRule: AutoModerationRule) => any
+    automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution, automodActionExecution: AutoModerationActionExecution) => any
+    guild: (bot: Bot, payload: DiscordGuild, guild: Guild) => any
+    voiceState: (bot: Bot, payload: DiscordVoiceState, voiceState: VoiceState) => any
+    interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption, interactionDataOptions: InteractionDataOption) => any
+    integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate, integration: Integration) => any
+    invite: (bot: Bot, payload: DiscordInviteCreate, invite: Invite) => any
+    application: (bot: Bot, payload: DiscordApplication, application: Application) => any
+    team: (bot: Bot, payload: DiscordTeam, team: Team) => any
+    emoji: (bot: Bot, payload: DiscordEmoji, emoji: Emoji) => any
+    activity: (bot: Bot, payload: DiscordActivity, activity: Activity) => any
+    presence: (bot: Bot, payload: DiscordPresenceUpdate, presence: PresenceUpdate) => any
+    attachment: (bot: Bot, payload: DiscordAttachment, attachment: Attachment) => any
+    embed: (bot: Bot, payload: DiscordEmbed, embed: Embed) => any
+    component: (bot: Bot, payload: DiscordComponent, component: Component) => any
+    webhook: (bot: Bot, payload: DiscordWebhook, webhook: Webhook) => any
+    auditLogEntry: (bot: Bot, payload: DiscordAuditLogEntry, auditLogEntry: AuditLogEntry) => any
+    applicationCommand: (bot: Bot, payload: DiscordApplicationCommand, applicationCommand: ApplicationCommand) => any
+    applicationCommandOption: (bot: Bot, payload: DiscordApplicationCommandOption, applicationCommandOption: ApplicationCommandOption) => any
+    applicationCommandPermission: (
+      bot: Bot,
+      payload: DiscordGuildApplicationCommandPermissions,
+      applicationCommandPermission: ApplicationCommandPermission,
+    ) => any
+    scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent, scheduledEvent: ScheduledEvent) => any
+    threadMember: (bot: Bot, payload: DiscordThreadMember, threadMember: ThreadMember) => any
+    welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen, welcomeScreen: WelcomeScreen) => any
+    voiceRegion: (bot: Bot, payload: DiscordVoiceRegion, voiceRegion: VoiceRegions) => any
+    widget: (bot: Bot, payload: DiscordGuildWidget, widget: GuildWidget) => any
+    widgetSettings: (bot: Bot, payload: DiscordGuildWidgetSettings, widgetSettings: GuildWidgetSettings) => any
+    stageInstance: (bot: Bot, payload: DiscordStageInstance, stageInstance: StageInstance) => any
+    sticker: (bot: Bot, payload: DiscordSticker, sticker: Sticker) => any
+    stickerPack: (bot: Bot, payload: DiscordStickerPack, stickerPack: StickerPack) => any
+    applicationCommandOptionChoice: (
+      bot: Bot,
+      payload: DiscordApplicationCommandOptionChoice,
+      applicationCommandOptionChoice: ApplicationCommandOptionChoice,
+    ) => any
+    template: (bot: Bot, payload: DiscordTemplate, template: Template) => any
   }
   desiredProperties: {
     attachment: {
@@ -458,6 +497,99 @@ export function createTransformers(options: Partial<Transformers>): Transformers
       },
       user(bot, payload, user) {
         return user
+      },
+      activity(bot, payload, activity) {
+        return activity
+      },
+      application(bot, payload, application) {
+        return application
+      },
+      applicationCommand(bot, payload, applicationCommand) {
+        return applicationCommand
+      },
+      applicationCommandOption(bot, payload, applicationCommandOption) {
+        return applicationCommandOption
+      },
+      applicationCommandOptionChoice(bot, payload, applicationCommandOptionChoice) {
+        return applicationCommandOptionChoice
+      },
+      applicationCommandPermission(bot, payload, applicationCommandPermission) {
+        return applicationCommandPermission
+      },
+      attachment(bot, payload, attachment) {
+        return attachment
+      },
+      auditLogEntry(bot, payload, auditLogEntry) {
+        return auditLogEntry
+      },
+      automodActionExecution(bot, payload, automodActionExecution) {
+        return automodActionExecution
+      },
+      automodRule(bot, payload, automodRule) {
+        return automodRule
+      },
+      component(bot, payload, component) {
+        return component
+      },
+      embed(bot, payload, embed) {
+        return embed
+      },
+      emoji(bot, payload, emoji) {
+        return emoji
+      },
+      guild(bot, payload, guild) {
+        return guild
+      },
+      integration(bot, payload, integration) {
+        return integration
+      },
+      interactionDataOptions(bot, payload, interactionDataOptions) {
+        return interactionDataOptions
+      },
+      invite(bot, payload, invite) {
+        return invite
+      },
+      presence(bot, payload, presence) {
+        return presence
+      },
+      scheduledEvent(bot, payload, scheduledEvent) {
+        return scheduledEvent
+      },
+      stageInstance(bot, payload, stageInstance) {
+        return stageInstance
+      },
+      sticker(bot, payload, sticker) {
+        return sticker
+      },
+      stickerPack(bot, payload, stickerPack) {
+        return stickerPack
+      },
+      team(bot, payload, team) {
+        return team
+      },
+      template(bot, payload, template) {
+        return template
+      },
+      threadMember(bot, payload, threadMember) {
+        return threadMember
+      },
+      voiceRegion(bot, payload, voiceRegion) {
+        return voiceRegion
+      },
+      voiceState(bot, payload, voiceState) {
+        return voiceState
+      },
+      webhook(bot, payload, webhook) {
+        return webhook
+      },
+      welcomeScreen(bot, payload, welcomeScreen) {
+        return welcomeScreen
+      },
+      widget(bot, payload, widget) {
+        return widget
+      },
+      widgetSettings(bot, payload, widgetSettings) {
+        return widgetSettings
       },
     },
     desiredProperties: {

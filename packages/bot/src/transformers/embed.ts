@@ -54,7 +54,7 @@ export function transformEmbed(bot: Bot, payload: DiscordEmbed) {
     fields: payload.fields,
   }
 
-  return embed as Optionalize<typeof embed>
+  return bot.transformers.customizers.embed(bot, payload, embed as Embed) as Optionalize<typeof embed>
 }
 
 export interface Embed extends ReturnType<typeof transformEmbed> {}

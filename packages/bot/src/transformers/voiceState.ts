@@ -16,7 +16,7 @@ export function transformVoiceState(bot: Bot, payload: { voiceState: DiscordVoic
     userId: payload.voiceState.user_id ? bot.transformers.snowflake(payload.voiceState.user_id) : 0n,
   }
 
-  return voiceState as Optionalize<typeof voiceState>
+  return bot.transformers.customizers.voiceState(bot, payload.voiceState, voiceState as VoiceState) as Optionalize<typeof voiceState>
 }
 
 export interface VoiceState extends ReturnType<typeof transformVoiceState> {}

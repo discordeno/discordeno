@@ -24,7 +24,7 @@ export function transformWidget(bot: Bot, payload: DiscordGuildWidget) {
     presenceCount: payload.presence_count,
   }
 
-  return widget as Optionalize<typeof widget>
+  return bot.transformers.customizers.widget(bot, payload, widget as GuildWidget) as Optionalize<typeof widget>
 }
 
 export interface GuildWidget extends ReturnType<typeof transformWidget> {}

@@ -146,7 +146,7 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
   if (props.presences && payload.guild.presences)
     guild.presences = payload.guild.presences?.map((presence) => bot.transformers.presence(bot, presence as DiscordPresenceUpdate))
 
-  return guild
+  return bot.transformers.customizers.guild(bot, payload.guild, guild)
 }
 
 export interface Guild {

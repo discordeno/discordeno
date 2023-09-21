@@ -25,7 +25,7 @@ export function transformAutoModerationActionExecution(bot: Bot, payload: Discor
     },
   }
 
-  return rule as Optionalize<typeof rule>
+  return bot.transformers.customizers.automodActionExecution(bot, payload, rule as AutoModerationActionExecution) as Optionalize<typeof rule>
 }
 
 export interface AutoModerationActionExecution extends ReturnType<typeof transformAutoModerationActionExecution> {}

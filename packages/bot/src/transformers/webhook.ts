@@ -28,7 +28,7 @@ export function transformWebhook(bot: Bot, payload: DiscordWebhook) {
     }
   if (props.url && payload.url) webhook.url = payload.url
 
-  return webhook
+  return bot.transformers.customizers.webhook(bot, payload, webhook)
 }
 
 export interface Webhook {

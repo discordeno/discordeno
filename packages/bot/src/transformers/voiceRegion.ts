@@ -14,7 +14,7 @@ export function transformVoiceRegion(bot: Bot, payload: DiscordVoiceRegion) {
     custom: payload.custom,
   }
 
-  return voiceRegion as Optionalize<typeof voiceRegion>
+  return bot.transformers.customizers.voiceRegion(bot, payload, voiceRegion as VoiceRegions) as Optionalize<typeof voiceRegion>
 }
 
 export interface VoiceRegions extends ReturnType<typeof transformVoiceRegion> {}

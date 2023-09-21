@@ -29,7 +29,7 @@ export function transformScheduledEvent(bot: Bot, payload: DiscordScheduledEvent
   if (props.location && payload.entity_metadata?.location) scheduledEvent.location = payload.entity_metadata.location
   if (props.image && payload.image) scheduledEvent.image = iconHashToBigInt(payload.image)
 
-  return scheduledEvent
+  return bot.transformers.customizers.scheduledEvent(bot, payload, scheduledEvent)
 }
 
 export interface ScheduledEvent {

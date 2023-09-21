@@ -35,7 +35,7 @@ export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModera
     })),
   }
 
-  return rule as Optionalize<typeof rule>
+  return bot.transformers.customizers.automodRule(bot, payload, rule as AutoModerationRule) as Optionalize<typeof rule>
 }
 
 export interface AutoModerationRule extends ReturnType<typeof transformAutoModerationRule> {}

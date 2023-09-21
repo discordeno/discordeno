@@ -135,7 +135,7 @@ export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry) 
     reason: payload.reason,
   }
 
-  return auditLogEntry as Optionalize<typeof auditLogEntry>
+  return bot.transformers.customizers.auditLogEntry(bot, payload, auditLogEntry as AuditLogEntry) as Optionalize<typeof auditLogEntry>
 }
 
 export interface AuditLogEntry extends ReturnType<typeof transformAuditLogEntry> {}

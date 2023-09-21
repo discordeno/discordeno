@@ -9,7 +9,7 @@ export function transformWidgetSettings(bot: Bot, payload: DiscordGuildWidgetSet
     channelId: payload.channel_id ?? undefined,
   }
 
-  return widget as Optionalize<typeof widget>
+  return bot.transformers.customizers.widgetSettings(bot, payload, widget as GuildWidgetSettings) as Optionalize<typeof widget>
 }
 
 export interface GuildWidgetSettings extends ReturnType<typeof transformWidgetSettings> {}
