@@ -257,7 +257,7 @@ It will become something like the following:
 ```ts
 try {
   let manager = MANAGERS.get(req.headers.bot_id);
-  if (!manager) {
+  if (!manager && BOT_TOKENS.has(req.headers.bot_id)) {
     // A request came in with a token that has no manager in cache
     manager = createRestManager({ token: BOT_TOKENS.get(req.headers.bot_id) })
     MANAGERS.set(req.headers.bot_id, manager);
