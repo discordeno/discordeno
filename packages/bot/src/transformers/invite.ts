@@ -7,7 +7,7 @@ export function transformInvite(bot: Bot, payload: DiscordInviteMetadata) {
   const props = bot.transformers.desiredProperties.invite
   const invite = {} as Invite
 
-  if (props.channelId && payload.channel && payload.channel.id) invite.channelId = bot.transformers.snowflake(payload.channel.id)
+  if (props.channelId && payload.channel?.id) invite.channelId = bot.transformers.snowflake(payload.channel.id)
   if (props.code && payload.code) invite.code = payload.code
   if (props.createdAt && payload.created_at) invite.createdAt = Date.parse(payload.created_at)
   if (props.guildId && payload.guild && payload.guild.id) invite.guildId = bot.transformers.snowflake(payload.guild?.id)
