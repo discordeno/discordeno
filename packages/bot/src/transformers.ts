@@ -87,7 +87,12 @@ import { transformStageInstance, type StageInstance } from './transformers/stage
 import { transformSticker, transformStickerPack, type Sticker, type StickerPack } from './transformers/sticker.js'
 import { transformTeam, type Team } from './transformers/team.js'
 import { transformTemplate, type Template } from './transformers/template.js'
-import { transformThreadMember, type ThreadMember } from './transformers/threadMember.js'
+import {
+  transformThreadMember,
+  transformThreadMemberGuildCreate,
+  type ThreadMember,
+  type ThreadMemberGuildCreate,
+} from './transformers/threadMember.js'
 import { transformUser, type User } from './transformers/user.js'
 import { transformVoiceRegion, type VoiceRegion } from './transformers/voiceRegion.js'
 import { transformVoiceState, type VoiceState } from './transformers/voiceState.js'
@@ -95,7 +100,7 @@ import { transformWebhook, type Webhook } from './transformers/webhook.js'
 import { transformWelcomeScreen, type WelcomeScreen } from './transformers/welcomeScreen.js'
 import { transformWidget, type GuildWidget } from './transformers/widget.js'
 import { transformWidgetSettings, type GuildWidgetSettings } from './transformers/widgetSettings.js'
-import type { BotInteractionResponse, DiscordComponent, DiscordInteractionResponse } from './typings.js'
+import type { BotInteractionResponse, DiscordComponent, DiscordInteractionResponse, DiscordThreadMemberGuildCreate } from './typings.js'
 
 export interface Transformers {
   customizers: {
@@ -131,8 +136,10 @@ export interface Transformers {
     ) => any
     scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent, scheduledEvent: ScheduledEvent) => any
     threadMember: (bot: Bot, payload: DiscordThreadMember, threadMember: ThreadMember) => any
+    threadMemberGuildCreate: (bot: Bot, payload: DiscordThreadMemberGuildCreate, threadMemberGuildCreate: ThreadMemberGuildCreate) => any
     welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen, welcomeScreen: WelcomeScreen) => any
     voiceRegion: (bot: Bot, payload: DiscordVoiceRegion, voiceRegion: VoiceRegion) => any
+    gatewayBot: (bot: Bot, payload: DiscordGetGatewayBot, getGatewayBot: GetGatewayBot) => any
     widget: (bot: Bot, payload: DiscordGuildWidget, widget: GuildWidget) => any
     widgetSettings: (bot: Bot, payload: DiscordGuildWidgetSettings, widgetSettings: GuildWidgetSettings) => any
     stageInstance: (bot: Bot, payload: DiscordStageInstance, stageInstance: StageInstance) => any
@@ -437,7 +444,7 @@ export interface Transformers {
     attachment: (bot: Bot, payload: Attachment) => DiscordAttachment
   }
   snowflake: (snowflake: BigString) => bigint
-  gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot
+  gatewayBot: (bot: Bot, payload: DiscordGetGatewayBot) => GetGatewayBot
   automodRule: (bot: Bot, payload: DiscordAutoModerationRule) => AutoModerationRule
   automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution) => AutoModerationActionExecution
   channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }) => Channel
@@ -466,6 +473,7 @@ export interface Transformers {
   applicationCommandPermission: (bot: Bot, payload: DiscordGuildApplicationCommandPermissions) => ApplicationCommandPermission
   scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent) => ScheduledEvent
   threadMember: (bot: Bot, payload: DiscordThreadMember) => ThreadMember
+  threadMemberGuildCreate: (bot: Bot, payload: DiscordThreadMemberGuildCreate) => ThreadMemberGuildCreate
   welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen) => WelcomeScreen
   voiceRegion: (bot: Bot, payload: DiscordVoiceRegion) => VoiceRegion
   widget: (bot: Bot, payload: DiscordGuildWidget) => GuildWidget
@@ -573,11 +581,17 @@ export function createTransformers(options: Partial<Transformers>): Transformers
       threadMember(bot, payload, threadMember) {
         return threadMember
       },
+      threadMemberGuildCreate(bot, payload, threadMemberGuildCreate) {
+        return threadMemberGuildCreate
+      },
       voiceRegion(bot, payload, voiceRegion) {
         return voiceRegion
       },
       voiceState(bot, payload, voiceState) {
         return voiceState
+      },
+      gatewayBot(bot, payload, getGatewayBot) {
+        return getGatewayBot
       },
       webhook(bot, payload, webhook) {
         return webhook
@@ -913,6 +927,7 @@ export function createTransformers(options: Partial<Transformers>): Transformers
     applicationCommandPermission: options.applicationCommandPermission ?? transformApplicationCommandPermission,
     scheduledEvent: options.scheduledEvent ?? transformScheduledEvent,
     threadMember: options.threadMember ?? transformThreadMember,
+    threadMemberGuildCreate: options.threadMemberGuildCreate ?? transformThreadMemberGuildCreate,
     welcomeScreen: options.welcomeScreen ?? transformWelcomeScreen,
     voiceRegion: options.voiceRegion ?? transformVoiceRegion,
     widget: options.widget ?? transformWidget,

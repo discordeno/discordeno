@@ -18,7 +18,7 @@ export function transformThreadMemberGuildCreate(bot: Bot, payload: DiscordThrea
     joinTimestamp: Date.parse(payload.join_timestamp),
   } as ThreadMemberGuildCreate
 
-  return threadMember
+  return bot.transformers.customizers.threadMemberGuildCreate(bot, payload, threadMember)
 }
 
 export interface ThreadMember {
