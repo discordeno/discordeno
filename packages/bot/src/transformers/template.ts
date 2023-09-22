@@ -1,9 +1,7 @@
 import type { DiscordTemplate } from '@discordeno/types'
-import type { Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
+import type { Bot, User } from '../index.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformTemplate(bot: Bot, payload: DiscordTemplate) {
+export function transformTemplate(bot: Bot, payload: DiscordTemplate): Template {
   const template = {
     code: payload.code,
     name: payload.name,
@@ -16,9 +14,21 @@ export function transformTemplate(bot: Bot, payload: DiscordTemplate) {
     sourceGuildId: bot.transformers.snowflake(payload.source_guild_id),
     serializedSourceGuild: payload.serialized_source_guild,
     isDirty: payload.is_dirty ?? undefined,
-  }
+  } as Template
 
-  return bot.transformers.customizers.template(bot, payload, template as Template) as Optionalize<typeof template>
+  return bot.transformers.customizers.template(bot, payload, template)
 }
 
-export interface Template extends ReturnType<typeof transformTemplate> {}
+export interface Template {
+  description?: string | null
+  isDirty?: boolean
+  name: string
+  creatorId: bigint
+  createdAt: number
+  code: string
+  usageCount: number
+  creator: User
+  updatedAt: number
+  sourceGuildId: bigint
+  serializedSourceGuild: NonNullable<DiscordTemplate['serialized_source_guild']>
+}

@@ -1,20 +1,22 @@
 import type { DiscordVoiceRegion } from '@discordeno/types'
 import type { Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
 
-// TODO: Rename `VoiceRegions` to `VoiceRegion`.
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformVoiceRegion(bot: Bot, payload: DiscordVoiceRegion) {
+export function transformVoiceRegion(bot: Bot, payload: DiscordVoiceRegion): VoiceRegion {
   const voiceRegion = {
     id: payload.id,
     name: payload.name,
     optimal: payload.optimal,
     deprecated: payload.deprecated,
     custom: payload.custom,
-  }
+  } as VoiceRegion
 
-  return bot.transformers.customizers.voiceRegion(bot, payload, voiceRegion as VoiceRegions) as Optionalize<typeof voiceRegion>
+  return bot.transformers.customizers.voiceRegion(bot, payload, voiceRegion)
 }
 
-export interface VoiceRegions extends ReturnType<typeof transformVoiceRegion> {}
+export interface VoiceRegion {
+  id: string
+  name: string
+  custom: boolean
+  optimal: boolean
+  deprecated: boolean
+}

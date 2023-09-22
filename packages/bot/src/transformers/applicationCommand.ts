@@ -1,9 +1,7 @@
-import type { DiscordApplicationCommand } from '@discordeno/types'
-import type { Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
+import type { ApplicationCommandTypes, DiscordApplicationCommand, Locales } from '@discordeno/types'
+import type { ApplicationCommandOption, Bot } from '../index.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformApplicationCommand(bot: Bot, payload: DiscordApplicationCommand) {
+export function transformApplicationCommand(bot: Bot, payload: DiscordApplicationCommand): ApplicationCommand {
   const applicationCommand = {
     id: bot.transformers.snowflake(payload.id),
     applicationId: bot.transformers.snowflake(payload.application_id),
@@ -18,11 +16,22 @@ export function transformApplicationCommand(bot: Bot, payload: DiscordApplicatio
     version: payload.version,
 
     options: payload.options?.map((option) => bot.transformers.applicationCommandOption(bot, option)),
-  }
+  } as ApplicationCommand
 
-  return bot.transformers.customizers.applicationCommand(bot, payload, applicationCommand as ApplicationCommand) as Optionalize<
-    typeof applicationCommand
-  >
+  return bot.transformers.customizers.applicationCommand(bot, payload, applicationCommand)
 }
 
-export interface ApplicationCommand extends ReturnType<typeof transformApplicationCommand> {}
+export interface ApplicationCommand {
+  options?: ApplicationCommandOption[]
+  description?: string
+  guildId?: bigint
+  nameLocalizations?: Record<Locales, string>
+  descriptionLocalizations?: Record<Locales, string>
+  defaultMemberPermissions?: bigint
+  type?: ApplicationCommandTypes
+  version?: string
+  id: bigint
+  name: string
+  applicationId: bigint
+  dmPermission: boolean
+}

@@ -1,9 +1,7 @@
-import type { DiscordAuditLogEntry } from '@discordeno/types'
+import type { AuditLogEvents, DiscordAuditLogEntry, OverwriteTypes } from '@discordeno/types'
 import { iconHashToBigInt, type Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry) {
+export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry): AuditLogEntry {
   const auditLogEntry = {
     id: bot.transformers.snowflake(payload.id),
     changes: payload.changes?.map((change) => {
@@ -133,9 +131,126 @@ export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry) 
         }
       : undefined,
     reason: payload.reason,
-  }
+  } as AuditLogEntry
 
-  return bot.transformers.customizers.auditLogEntry(bot, payload, auditLogEntry as AuditLogEntry) as Optionalize<typeof auditLogEntry>
+  return bot.transformers.customizers.auditLogEntry(bot, payload, auditLogEntry)
 }
 
-export interface AuditLogEntry extends ReturnType<typeof transformAuditLogEntry> {}
+export interface AuditLogEntry {
+  id: bigint
+  userId?: bigint
+  reason?: string
+  changes?: Array<{
+    new?:
+      | string
+      | number
+      | bigint
+      | boolean
+      | Array<{
+          allow?: string
+          deny?: string
+          id: string
+          type: OverwriteTypes
+        }>
+      | Array<{
+          id?: bigint
+          name?: string
+        }>
+    old?:
+      | string
+      | number
+      | bigint
+      | boolean
+      | Array<{
+          allow?: string
+          deny?: string
+          id: string
+          type: OverwriteTypes
+        }>
+      | Array<{
+          id?: bigint
+          name?: string
+        }>
+    key:
+      | 'id'
+      | 'name'
+      | 'description'
+      | 'type'
+      | 'permissions'
+      | 'locked'
+      | 'invitable'
+      | 'nsfw'
+      | 'archived'
+      | 'position'
+      | 'topic'
+      | 'bitrate'
+      | 'default_auto_archive_duration'
+      | 'auto_archive_duration'
+      | 'allow'
+      | 'deny'
+      | 'channel_id'
+      | 'deaf'
+      | 'mute'
+      | 'status'
+      | 'nick'
+      | 'communication_disabled_until'
+      | 'color'
+      | 'permission_overwrites'
+      | 'user_limit'
+      | 'rate_limit_per_user'
+      | 'owner_id'
+      | 'application_id'
+      | 'hoist'
+      | 'mentionable'
+      | 'location'
+      | 'verification_level'
+      | 'default_message_notifications'
+      | 'explicit_content_filter'
+      | 'preferred_locale'
+      | 'afk_timeout'
+      | 'afk_channel_id'
+      | 'system_channel_id'
+      | 'widget_enabled'
+      | 'mfa_level'
+      | 'vanity_url_code'
+      | 'icon_hash'
+      | 'widget_channel_id'
+      | 'rules_channel_id'
+      | 'public_updates_channel_id'
+      | 'code'
+      | 'region'
+      | 'privacy_level'
+      | 'entity_type'
+      | 'enable_emoticons'
+      | 'expire_behavior'
+      | 'expire_grace_period'
+      | 'uses'
+      | 'max_uses'
+      | 'max_age'
+      | 'temporary'
+      | 'discovery_splash_hash'
+      | 'banner_hash'
+      | 'image_hash'
+      | 'splash_hash'
+      | 'inviter_id'
+      | 'avatar_hash'
+      | 'command_id'
+      | 'prune_delete_days'
+      | '$add'
+      | '$remove'
+  }>
+  targetId?: bigint
+  actionType: AuditLogEvents
+  options?: {
+    id?: bigint
+    channelId?: bigint
+    messageId?: bigint
+    type: number
+    count: number
+    deleteMemberDays: number
+    membersRemoved: number
+    roleName: string
+    autoModerationRuleName: string
+    autoModerationRuleTriggerType: string
+  }
+}

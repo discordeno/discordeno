@@ -1,8 +1,6 @@
 import type { DiscordGetGatewayBot } from '@discordeno/types'
-import type { Optionalize } from '../optionalize.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformGatewayBot(payload: DiscordGetGatewayBot) {
+export function transformGatewayBot(payload: DiscordGetGatewayBot): GetGatewayBot {
   const gatewayBot = {
     url: payload.url,
     shards: payload.shards,
@@ -12,9 +10,18 @@ export function transformGatewayBot(payload: DiscordGetGatewayBot) {
       resetAfter: payload.session_start_limit.reset_after,
       maxConcurrency: payload.session_start_limit.max_concurrency,
     },
-  }
+  } as GetGatewayBot
 
-  return gatewayBot as Optionalize<typeof gatewayBot>
+  return gatewayBot
 }
 
-export interface GetGatewayBot extends ReturnType<typeof transformGatewayBot> {}
+export interface GetGatewayBot {
+  url: string
+  shards: number
+  sessionStartLimit: {
+    total: number
+    remaining: number
+    resetAfter: number
+    maxConcurrency: number
+  }
+}

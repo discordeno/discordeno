@@ -28,8 +28,7 @@ const baseGuild = {
   },
 } as Guild
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }) {
+export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { shardId: number }): Guild {
   const guildId = bot.transformers.snowflake(payload.guild.id)
   const props = bot.transformers.desiredProperties.guild
   const guild: Guild = Object.create(baseGuild)
@@ -241,7 +240,7 @@ export interface Guild {
   /** All active threads in the guild that the current user has permission to view */
   threads: Collection<bigint, Channel>
   /** Presences of the members in the guild, will only include non-offline members if the size is greater than large threshold */
-  presences?: Array<Partial<PresenceUpdate>>
+  presences?: PresenceUpdate[]
   /** Banner hash */
   banner?: bigint
   /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */

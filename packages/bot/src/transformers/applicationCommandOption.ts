@@ -18,12 +18,10 @@ export function transformApplicationCommandOption(bot: Bot, payload: DiscordAppl
     minLength: payload.min_length,
     maxLength: payload.max_length,
     options: payload.options?.map((option) => bot.transformers.applicationCommandOption(bot, option)),
-  }
+  } as ApplicationCommandOption
 
   return bot.transformers.customizers.applicationCommandOption(bot, payload, applicationCommandOption)
 }
-
-// THIS TRANSFORMER HAS A CIRCULAR REFERENCE TO CALL ITSELF FOR OPTIONS SO AN AUTOMATED TYPE CAN NOT BE CREATED!
 
 export interface ApplicationCommandOption {
   /** Value of Application Command Option Type */

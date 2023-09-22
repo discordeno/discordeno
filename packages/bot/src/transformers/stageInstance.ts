@@ -1,8 +1,7 @@
 import type { DiscordStageInstance } from '@discordeno/types'
 import type { Bot } from '../index.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformStageInstance(bot: Bot, payload: DiscordStageInstance) {
+export function transformStageInstance(bot: Bot, payload: DiscordStageInstance): StageInstance {
   const props = bot.transformers.desiredProperties.stageInstance
   const stageInstance = {} as StageInstance
 

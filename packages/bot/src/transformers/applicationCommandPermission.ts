@@ -1,9 +1,7 @@
-import type { DiscordGuildApplicationCommandPermissions } from '@discordeno/types'
+import type { ApplicationCommandPermissionTypes, DiscordGuildApplicationCommandPermissions } from '@discordeno/types'
 import type { Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformApplicationCommandPermission(bot: Bot, payload: DiscordGuildApplicationCommandPermissions) {
+export function transformApplicationCommandPermission(bot: Bot, payload: DiscordGuildApplicationCommandPermissions): ApplicationCommandPermission {
   const applicationCommandPermission = {
     id: bot.transformers.snowflake(payload.id),
     applicationId: bot.transformers.snowflake(payload.application_id),
@@ -13,13 +11,18 @@ export function transformApplicationCommandPermission(bot: Bot, payload: Discord
       type: perm.type,
       permission: perm.permission,
     })),
-  }
+  } as ApplicationCommandPermission
 
-  return bot.transformers.customizers.applicationCommandPermission(
-    bot,
-    payload,
-    applicationCommandPermission as ApplicationCommandPermission,
-  ) as Optionalize<typeof applicationCommandPermission>
+  return bot.transformers.customizers.applicationCommandPermission(bot, payload, applicationCommandPermission)
 }
 
-export interface ApplicationCommandPermission extends ReturnType<typeof transformApplicationCommandPermission> {}
+export interface ApplicationCommandPermission {
+  id: bigint
+  guildId: bigint
+  applicationId: bigint
+  permissions: Array<{
+    id: bigint
+    type: ApplicationCommandPermissionTypes
+    permission: boolean
+  }>
+}

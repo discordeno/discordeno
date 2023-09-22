@@ -89,7 +89,7 @@ import { transformTeam, type Team } from './transformers/team.js'
 import { transformTemplate, type Template } from './transformers/template.js'
 import { transformThreadMember, type ThreadMember } from './transformers/threadMember.js'
 import { transformUser, type User } from './transformers/user.js'
-import { transformVoiceRegion, type VoiceRegions } from './transformers/voiceRegion.js'
+import { transformVoiceRegion, type VoiceRegion } from './transformers/voiceRegion.js'
 import { transformVoiceState, type VoiceState } from './transformers/voiceState.js'
 import { transformWebhook, type Webhook } from './transformers/webhook.js'
 import { transformWelcomeScreen, type WelcomeScreen } from './transformers/welcomeScreen.js'
@@ -132,7 +132,7 @@ export interface Transformers {
     scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent, scheduledEvent: ScheduledEvent) => any
     threadMember: (bot: Bot, payload: DiscordThreadMember, threadMember: ThreadMember) => any
     welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen, welcomeScreen: WelcomeScreen) => any
-    voiceRegion: (bot: Bot, payload: DiscordVoiceRegion, voiceRegion: VoiceRegions) => any
+    voiceRegion: (bot: Bot, payload: DiscordVoiceRegion, voiceRegion: VoiceRegion) => any
     widget: (bot: Bot, payload: DiscordGuildWidget, widget: GuildWidget) => any
     widgetSettings: (bot: Bot, payload: DiscordGuildWidgetSettings, widgetSettings: GuildWidgetSettings) => any
     stageInstance: (bot: Bot, payload: DiscordStageInstance, stageInstance: StageInstance) => any
@@ -467,7 +467,7 @@ export interface Transformers {
   scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent) => ScheduledEvent
   threadMember: (bot: Bot, payload: DiscordThreadMember) => ThreadMember
   welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen) => WelcomeScreen
-  voiceRegion: (bot: Bot, payload: DiscordVoiceRegion) => VoiceRegions
+  voiceRegion: (bot: Bot, payload: DiscordVoiceRegion) => VoiceRegion
   widget: (bot: Bot, payload: DiscordGuildWidget) => GuildWidget
   widgetSettings: (bot: Bot, payload: DiscordGuildWidgetSettings) => GuildWidgetSettings
   stageInstance: (bot: Bot, payload: DiscordStageInstance) => StageInstance

@@ -1,9 +1,7 @@
-import type { DiscordAutoModerationActionExecution } from '@discordeno/types'
+import type { AutoModerationActionType, AutoModerationTriggerTypes, DiscordAutoModerationActionExecution } from '@discordeno/types'
 import type { Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformAutoModerationActionExecution(bot: Bot, payload: DiscordAutoModerationActionExecution) {
+export function transformAutoModerationActionExecution(bot: Bot, payload: DiscordAutoModerationActionExecution): AutoModerationActionExecution {
   const rule = {
     content: payload.content,
     ruleTriggerType: payload.rule_trigger_type,
@@ -23,9 +21,28 @@ export function transformAutoModerationActionExecution(bot: Bot, payload: Discor
         channelId: payload.action.metadata.channel_id ? bot.transformers.snowflake(payload.action.metadata.channel_id) : undefined,
       },
     },
-  }
+  } as AutoModerationActionExecution
 
-  return bot.transformers.customizers.automodActionExecution(bot, payload, rule as AutoModerationActionExecution) as Optionalize<typeof rule>
+  return bot.transformers.customizers.automodActionExecution(bot, payload, rule)
 }
 
-export interface AutoModerationActionExecution extends ReturnType<typeof transformAutoModerationActionExecution> {}
+export interface AutoModerationActionExecution {
+  channelId?: bigint
+  messageId?: bigint
+  alertSystemMessageId?: bigint
+  guildId: bigint
+  userId: bigint
+  content: string
+  action: {
+    type: AutoModerationActionType
+    metadata: {
+      customMessage?: string
+      durationSeconds?: number
+      channelId?: bigint
+    }
+  }
+  ruleTriggerType: AutoModerationTriggerTypes
+  ruleId: bigint
+  matchedKeyword: string
+  matchedContent: string
+}

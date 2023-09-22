@@ -1,9 +1,7 @@
-import type { DiscordEmbed } from '@discordeno/types'
+import type { DiscordEmbed, EmbedTypes } from '@discordeno/types'
 import type { Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformEmbed(bot: Bot, payload: DiscordEmbed) {
+export function transformEmbed(bot: Bot, payload: DiscordEmbed): Embed {
   const embed = {
     title: payload.title,
     type: payload.type,
@@ -52,9 +50,54 @@ export function transformEmbed(bot: Bot, payload: DiscordEmbed) {
         }
       : undefined,
     fields: payload.fields,
-  }
+  } as Embed
 
-  return bot.transformers.customizers.embed(bot, payload, embed as Embed) as Optionalize<typeof embed>
+  return bot.transformers.customizers.embed(bot, payload, embed)
 }
 
-export interface Embed extends ReturnType<typeof transformEmbed> {}
+export interface Embed {
+  description?: string
+  type?: EmbedTypes
+  url?: string
+  image?: {
+    proxyUrl?: string
+    height?: number
+    width?: number
+    url: string
+  }
+  video?: {
+    url?: string
+    proxyUrl?: string
+    height?: number
+    width?: number
+  }
+  title?: string
+  timestamp?: number
+  color?: number
+  footer?: {
+    iconUrl?: string
+    proxyIconUrl?: string
+    text: string
+  }
+  thumbnail?: {
+    proxyUrl?: string
+    height?: number
+    width?: number
+    url: string
+  }
+  provider?: {
+    name?: string
+    url?: string
+  }
+  author?: {
+    url?: string
+    iconUrl?: string
+    proxyIconUrl?: string
+    name: string
+  }
+  fields?: Array<{
+    inline?: boolean
+    name: string
+    value: string
+  }>
+}

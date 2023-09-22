@@ -43,8 +43,6 @@ export function transformComponent(bot: Bot, payload: DiscordComponent): Compone
   return bot.transformers.customizers.component(bot, payload, component)
 }
 
-// THIS TRANSFORMER HAS A CIRCULAR REFERENCE TO CALL ITSELF FOR COMPONENTS SO AN AUTOMATED TYPE CAN NOT BE CREATED!
-
 export interface Component {
   /** component type */
   type: MessageComponentTypes

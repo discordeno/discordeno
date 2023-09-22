@@ -1,9 +1,7 @@
 import type { DiscordWelcomeScreen } from '@discordeno/types'
 import type { Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformWelcomeScreen(bot: Bot, payload: DiscordWelcomeScreen) {
+export function transformWelcomeScreen(bot: Bot, payload: DiscordWelcomeScreen): WelcomeScreen {
   const welcomeScreen = {
     description: payload.description ?? undefined,
     welcomeChannels: payload.welcome_channels.map((channel) => ({
@@ -12,9 +10,17 @@ export function transformWelcomeScreen(bot: Bot, payload: DiscordWelcomeScreen) 
       emojiId: channel.emoji_id ? bot.transformers.snowflake(channel.emoji_id) : undefined,
       emojiName: channel.emoji_name ?? undefined,
     })),
-  }
+  } as WelcomeScreen
 
-  return bot.transformers.customizers.welcomeScreen(bot, payload, welcomeScreen as WelcomeScreen) as Optionalize<typeof welcomeScreen>
+  return bot.transformers.customizers.welcomeScreen(bot, payload, welcomeScreen)
 }
 
-export interface WelcomeScreen extends ReturnType<typeof transformWelcomeScreen> {}
+export interface WelcomeScreen {
+  description?: string
+  welcomeChannels: Array<{
+    channelId: bigint
+    description: string
+    emojiId?: bigint
+    emojiName?: string
+  }>
+}

@@ -1,8 +1,7 @@
 import type { DiscordApplication, DiscordInviteCreate } from '@discordeno/types'
 import type { Application, Bot, User } from '../index.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformInvite(bot: Bot, payload: DiscordInviteCreate) {
+export function transformInvite(bot: Bot, payload: DiscordInviteCreate): Invite {
   const props = bot.transformers.desiredProperties.invite
   const invite = {} as Invite
 

@@ -1,8 +1,7 @@
 import type { DiscordWebhook, WebhookTypes } from '@discordeno/types'
 import { iconHashToBigInt, type Bot, type Channel, type Guild, type User } from '../index.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformWebhook(bot: Bot, payload: DiscordWebhook) {
+export function transformWebhook(bot: Bot, payload: DiscordWebhook): Webhook {
   const props = bot.transformers.desiredProperties.webhook
   const webhook = {} as Webhook
 

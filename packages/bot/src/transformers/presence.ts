@@ -1,9 +1,7 @@
 import { PresenceStatus, type DiscordPresenceUpdate } from '@discordeno/types'
-import type { Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
+import type { Activity, Bot, User } from '../index.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate) {
+export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate): PresenceUpdate {
   const presence = {
     user: bot.transformers.user(bot, payload.user),
     guildId: bot.transformers.snowflake(payload.guild_id),
@@ -12,9 +10,17 @@ export function transformPresence(bot: Bot, payload: DiscordPresenceUpdate) {
     desktop: payload.client_status.desktop,
     mobile: payload.client_status.mobile,
     web: payload.client_status.web,
-  }
+  } as PresenceUpdate
 
-  return bot.transformers.customizers.presence(bot, payload, presence as PresenceUpdate) as Optionalize<typeof presence>
+  return bot.transformers.customizers.presence(bot, payload, presence)
 }
 
-export interface PresenceUpdate extends ReturnType<typeof transformPresence> {}
+export interface PresenceUpdate {
+  desktop?: string
+  mobile?: string
+  web?: string
+  user: User
+  guildId: bigint
+  status: PresenceStatus
+  activities: Activity[]
+}

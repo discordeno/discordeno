@@ -1,9 +1,13 @@
-import type { DiscordAutoModerationRule } from '@discordeno/types'
+import type {
+  AutoModerationActionType,
+  AutoModerationEventTypes,
+  AutoModerationTriggerTypes,
+  DiscordAutoModerationRule,
+  DiscordAutoModerationRuleTriggerMetadataPresets,
+} from '@discordeno/types'
 import type { Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModerationRule) {
+export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModerationRule): AutoModerationRule {
   const rule = {
     name: payload.name,
     eventType: payload.event_type,
@@ -33,9 +37,35 @@ export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModera
           }
         : undefined,
     })),
-  }
+  } as AutoModerationRule
 
-  return bot.transformers.customizers.automodRule(bot, payload, rule as AutoModerationRule) as Optionalize<typeof rule>
+  return bot.transformers.customizers.automodRule(bot, payload, rule)
 }
 
-export interface AutoModerationRule extends ReturnType<typeof transformAutoModerationRule> {}
+export interface AutoModerationRule {
+  triggerMetadata?: {
+    keywordFilter?: string[]
+    presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
+    allowList?: string[]
+    mentionTotalLimit?: number
+    regexPatterns: string[]
+  }
+
+  id: bigint
+  name: string
+  guildId: bigint
+  eventType: AutoModerationEventTypes
+  triggerType: AutoModerationTriggerTypes
+  enabled: boolean
+  creatorId: bigint
+  exemptRoles: bigint[]
+  exemptChannels: bigint[]
+  actions: Array<{
+    type: AutoModerationActionType
+    metadata?: {
+      channelId?: bigint
+      customMessage?: string
+      durationSeconds?: number
+    }
+  }>
+}

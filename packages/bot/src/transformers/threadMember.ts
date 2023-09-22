@@ -1,28 +1,33 @@
 import type { DiscordThreadMember } from '@discordeno/types'
 import type { Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
 import type { DiscordThreadMemberGuildCreate } from '../typings.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformThreadMember(bot: Bot, payload: DiscordThreadMember) {
+export function transformThreadMember(bot: Bot, payload: DiscordThreadMember): ThreadMember {
   const threadMember = {
     id: payload.id ? bot.transformers.snowflake(payload.id) : undefined,
     userId: payload.user_id ? bot.transformers.snowflake(payload.user_id) : undefined,
     joinTimestamp: Date.parse(payload.join_timestamp),
     flags: payload.flags,
-  }
+  } as ThreadMember
 
-  return bot.transformers.customizers.threadMember(bot, payload, threadMember as ThreadMember) as Optionalize<typeof threadMember>
+  return bot.transformers.customizers.threadMember(bot, payload, threadMember)
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformThreadMemberGuildCreate(bot: Bot, payload: DiscordThreadMemberGuildCreate) {
+export function transformThreadMemberGuildCreate(bot: Bot, payload: DiscordThreadMemberGuildCreate): ThreadMemberGuildCreate {
   const threadMember = {
     joinTimestamp: Date.parse(payload.join_timestamp),
-  }
+  } as ThreadMemberGuildCreate
 
-  return threadMember as Optionalize<typeof threadMember>
+  return threadMember
 }
 
-export interface ThreadMember extends ReturnType<typeof transformThreadMember> {}
-export interface ThreadMemberGuildCreate extends ReturnType<typeof transformThreadMemberGuildCreate> {}
+export interface ThreadMember {
+  id?: bigint
+  userId?: bigint
+  flags: number
+  joinTimestamp: number
+}
+
+export interface ThreadMemberGuildCreate {
+  joinTimestamp: number
+}
