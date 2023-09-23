@@ -1,18 +1,30 @@
 import type { DiscordStageInstance } from '@discordeno/types'
 import type { Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformStageInstance(bot: Bot, payload: DiscordStageInstance) {
-  const stageInstance = {
-    id: bot.transformers.snowflake(payload.id),
-    guildId: bot.transformers.snowflake(payload.guild_id),
-    channelId: bot.transformers.snowflake(payload.channel_id),
-    topic: payload.topic,
-    guildScheduledEventId: payload.guild_scheduled_event_id ? bot.transformers.snowflake(payload.guild_scheduled_event_id) : undefined,
-  }
+  const props = bot.transformers.desiredProperties.stageInstance
+  const stageInstance = {} as StageInstance
 
-  return stageInstance as Optionalize<typeof stageInstance>
+  if (props.id && payload.id) stageInstance.id = bot.transformers.snowflake(payload.id)
+  if (props.guildId && payload.guild_id) stageInstance.guildId = bot.transformers.snowflake(payload.guild_id)
+  if (props.channelId && payload.channel_id) stageInstance.channelId = bot.transformers.snowflake(payload.channel_id)
+  if (props.topic && payload.topic) stageInstance.topic = payload.topic
+  if (props.guildScheduledEventId && payload.guild_scheduled_event_id)
+    stageInstance.guildScheduledEventId = bot.transformers.snowflake(payload.guild_scheduled_event_id)
+
+  return stageInstance
 }
 
-export interface StageInstance extends ReturnType<typeof transformStageInstance> {}
+export interface StageInstance {
+  /** The topic of the Stage instance (1-120 characters) */
+  topic: string
+  /** The id of this Stage instance */
+  id: bigint
+  /** The guild id of the associated Stage channel */
+  guildId: bigint
+  /** The id of the associated Stage channel */
+  channelId: bigint
+  /** The id of the scheduled event for this Stage instance */
+  guildScheduledEventId?: bigint
+}

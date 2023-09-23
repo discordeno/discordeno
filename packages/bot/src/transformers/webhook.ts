@@ -1,38 +1,60 @@
-import type { DiscordWebhook } from '@discordeno/types'
-import { iconHashToBigInt, type Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
+import type { DiscordWebhook, WebhookTypes } from '@discordeno/types'
+import { iconHashToBigInt, type Bot, type Channel, type Guild, type User } from '../index.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function transformWebhook(bot: Bot, payload: DiscordWebhook) {
-  const webhook = {
-    id: bot.transformers.snowflake(payload.id),
-    type: payload.type,
-    guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
-    channelId: payload.channel_id ? bot.transformers.snowflake(payload.channel_id) : undefined,
-    user: payload.user ? bot.transformers.user(bot, payload.user) : undefined,
-    name: payload.name ?? '',
-    avatar: payload.avatar ? iconHashToBigInt(payload.avatar) : undefined,
-    token: payload.token,
-    applicationId: payload.application_id ? bot.transformers.snowflake(payload.application_id) : undefined,
-    sourceGuild: payload.source_guild
-      ? {
-          id: bot.transformers.snowflake(payload.source_guild.id!),
-          name: payload.source_guild.name!,
-          icon: payload.source_guild.icon ? iconHashToBigInt(payload.source_guild.icon) : undefined,
-        }
-      : undefined,
-    /** The channel that this webhook is following (returned for Channel Follower Webhooks) */
-    sourceChannel: payload.source_channel
-      ? {
-          id: bot.transformers.snowflake(payload.source_channel.id!),
-          name: payload.source_channel.name ?? '',
-        }
-      : undefined,
-    /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
-    url: payload.url,
-  }
+  const props = bot.transformers.desiredProperties.webhook
+  const webhook = {} as Webhook
 
-  return webhook as Optionalize<typeof webhook>
+  if (props.id && payload.id) webhook.id = bot.transformers.snowflake(payload.id)
+  if (props.type && payload.type) webhook.type = payload.type
+  if (props.guildId && payload.guild_id) webhook.guildId = bot.transformers.snowflake(payload.guild_id)
+  if (props.channelId && payload.channel_id) webhook.channelId = bot.transformers.snowflake(payload.channel_id)
+  if (props.user && payload.user) webhook.user = bot.transformers.user(bot, payload.user)
+  if (props.name && payload.name) webhook.name = payload.name
+  if (props.avatar && payload.avatar) webhook.avatar = iconHashToBigInt(payload.avatar)
+  if (props.token && payload.token) webhook.token = payload.token
+  if (props.applicationId && payload.application_id) webhook.applicationId = bot.transformers.snowflake(payload.application_id)
+  if (props.sourceGuild && payload.source_guild)
+    webhook.sourceGuild = {
+      id: bot.transformers.snowflake(payload.source_guild.id!),
+      name: payload.source_guild.name!,
+      icon: payload.source_guild.icon ? iconHashToBigInt(payload.source_guild.icon) : undefined,
+    }
+  if (props.sourceChannel && payload.source_channel)
+    webhook.sourceChannel = {
+      id: bot.transformers.snowflake(payload.source_channel.id!),
+      name: payload.source_channel.name ?? '',
+    }
+  if (props.url && payload.url) webhook.url = payload.url
+
+  return webhook
 }
 
-export interface Webhook extends ReturnType<typeof transformWebhook> {}
+export interface Webhook {
+  /** The type of the webhook */
+  type: WebhookTypes
+  /** The secure token of the webhook (returned for Incoming Webhooks) */
+  token?: string
+  /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
+  url?: string
+
+  /** The id of the webhook */
+  id: bigint
+  /** The guild id this webhook is for */
+  guildId?: bigint
+  /** The channel id this webhook is for */
+  channelId?: bigint
+  /** The user this webhook was created by (not returned when getting a webhook with its token) */
+  user?: User
+  /** The default name of the webhook */
+  name?: string
+  /** The default user avatar hash of the webhook */
+  avatar?: bigint
+  /** The bot/OAuth2 application that created this webhook */
+  applicationId?: bigint
+  /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks) */
+  sourceGuild?: Partial<Guild>
+  /** The channel that this webhook is following (returned for Channel Follower Webhooks) */
+  sourceChannel?: Partial<Channel>
+}

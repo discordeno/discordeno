@@ -1,4 +1,5 @@
 import type {
+  DiscordAccessTokenResponse,
   DiscordActionRow,
   DiscordActiveThreads,
   DiscordActivity,
@@ -14,6 +15,7 @@ import type {
   DiscordApplicationCommandOption,
   DiscordApplicationCommandOptionChoice,
   DiscordApplicationCommandPermissions,
+  DiscordApplicationRoleConnection,
   DiscordApplicationWebhook,
   DiscordArchivedThreads,
   DiscordAttachment,
@@ -31,12 +33,14 @@ import type {
   DiscordChannelMention,
   DiscordChannelPinsUpdate,
   DiscordClientStatus,
+  DiscordConnection,
   DiscordCreateApplicationCommand,
   DiscordCreateForumPostWithMessage,
   DiscordCreateGuildChannel,
   DiscordCreateGuildEmoji,
   DiscordCreateMessage,
   DiscordCreateWebhook,
+  DiscordCurrentAuthorization,
   DiscordDefaultReactionEmoji,
   DiscordEditChannelPermissionOverridesOptions,
   DiscordEmbed,
@@ -108,6 +112,7 @@ import type {
   DiscordModifyGuildWelcomeScreen,
   DiscordOptionalAuditEntryInfo,
   DiscordOverwrite,
+  DiscordPartialGuild,
   DiscordPresenceUpdate,
   DiscordPrunedCount,
   DiscordReaction,
@@ -133,6 +138,11 @@ import type {
   DiscordThreadMemberUpdate,
   DiscordThreadMembersUpdate,
   DiscordThreadMetadata,
+  DiscordTokenExchange,
+  DiscordTokenExchangeAuthorizationCode,
+  DiscordTokenExchangeClientCredentials,
+  DiscordTokenExchangeRefreshToken,
+  DiscordTokenRevocation,
   DiscordTypingStart,
   DiscordUnavailableGuild,
   DiscordUser,
@@ -157,6 +167,15 @@ export interface CamelizedDiscordGuildIntegrationsUpdate extends Camelize<Discor
 export interface CamelizedDiscordTypingStart extends Camelize<DiscordTypingStart> {}
 export interface CamelizedDiscordMember extends Camelize<DiscordMember> {}
 export interface CamelizedDiscordApplication extends Camelize<DiscordApplication> {}
+export interface CamelizedDiscordApplicationRoleConnection extends Camelize<DiscordApplicationRoleConnection> {}
+export type CamelizedDiscordTokenExchange = Camelize<DiscordTokenExchange>
+export interface CamelizedDiscordTokenExchangeAuthorizationCode extends Camelize<DiscordTokenExchangeAuthorizationCode> {}
+export interface CamelizedDiscordTokenExchangeRefreshToken extends Camelize<DiscordTokenExchangeRefreshToken> {}
+export interface CamelizedDiscordTokenExchangeClientCredentials extends Camelize<DiscordTokenExchangeClientCredentials> {}
+export interface CamelizedDiscordAccessTokenResponse extends Camelize<DiscordAccessTokenResponse> {}
+export interface CamelizedDiscordTokenRevocation extends Camelize<DiscordTokenRevocation> {}
+export interface CamelizedDiscordCurrentAuthorization extends Camelize<DiscordCurrentAuthorization> {}
+export interface CamelizedDiscordConnection extends Camelize<DiscordConnection> {}
 export interface CamelizedDiscordTeam extends Camelize<DiscordTeam> {}
 export interface CamelizedDiscordTeamMember extends Camelize<DiscordTeamMember> {}
 export interface CamelizedDiscordWebhookUpdate extends Camelize<DiscordWebhookUpdate> {}
@@ -174,6 +193,7 @@ export type CamelizedDiscordWebhook = Camelize<DiscordWebhook>
 export interface CamelizedDiscordIncomingWebhook extends Camelize<DiscordIncomingWebhook> {}
 export interface CamelizedDiscordApplicationWebhook extends Camelize<DiscordApplicationWebhook> {}
 export interface CamelizedDiscordGuild extends Camelize<DiscordGuild> {}
+export interface CamelizedDiscordPartialGuild extends Camelize<DiscordPartialGuild> {}
 export interface CamelizedDiscordRole extends Camelize<DiscordRole> {}
 export interface CamelizedDiscordRoleTags extends Camelize<DiscordRoleTags> {}
 export interface CamelizedDiscordEmoji extends Camelize<DiscordEmoji> {}

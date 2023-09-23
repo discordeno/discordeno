@@ -2,7 +2,7 @@ import type { CreateGatewayManagerOptions, GatewayManager } from '@discordeno/ga
 import { ShardSocketCloseCodes, createGatewayManager } from '@discordeno/gateway'
 import type { CreateRestManagerOptions, RestManager } from '@discordeno/rest'
 import { createRestManager } from '@discordeno/rest'
-import type { DiscordEmoji, DiscordGatewayPayload, DiscordReady, GatewayIntents } from '@discordeno/types'
+import type { BigString, DiscordEmoji, DiscordGatewayPayload, DiscordReady, GatewayIntents } from '@discordeno/types'
 import { createLogger, getBotIdFromToken, type Collection } from '@discordeno/utils'
 import { createBotGatewayHandlers } from './handlers.js'
 import { createBotHelpers, type BotHelpers } from './helpers.js'
@@ -69,8 +69,16 @@ export function createBot(options: CreateBotOptions): Bot {
     async start() {
       if (!options.gateway?.connection) {
         bot.gateway.connection = await bot.rest.getSessionInfo()
+
+        // Check for overrides in the configuration
+        if (!options.gateway?.url) bot.gateway.url = bot.gateway.connection.url
+
+        if (!options.gateway?.totalShards) bot.gateway.totalShards = bot.gateway.connection.shards
+
+        if (!options.gateway?.lastShardId) bot.gateway.lastShardId = bot.gateway.connection.shards - 1
       }
-      return await bot.gateway.spawnShards()
+
+      await bot.gateway.spawnShards()
     },
 
     async shutdown() {
@@ -79,6 +87,7 @@ export function createBot(options: CreateBotOptions): Bot {
   }
 
   bot.helpers = createBotHelpers(bot)
+  if (options.applicationId) bot.applicationId = bot.transformers.snowflake(options.applicationId)
 
   return bot
 }
@@ -87,7 +96,7 @@ export interface CreateBotOptions {
   /** The bot's token. */
   token: string
   /** Application Id of the bot incase it is an old bot token. */
-  applicationId?: bigint
+  applicationId?: BigString
   /** The bot's intents that will be used to make a connection with discords gateway. */
   intents?: GatewayIntents
   /** Any options you wish to provide to the rest manager. */
@@ -132,6 +141,7 @@ export interface EventHandlers {
   automodActionExecution: (payload: AutoModerationActionExecution) => unknown
   threadCreate: (thread: Channel) => unknown
   threadDelete: (thread: Channel) => unknown
+  threadListSync: (payload: { guildId: bigint; channelIds?: bigint[]; threads: Channel[]; members: ThreadMember[] }) => unknown
   threadMemberUpdate: (payload: { id: bigint; guildId: bigint; joinedAt: number; flags: number }) => unknown
   threadMembersUpdate: (payload: { id: bigint; guildId: bigint; addedMembers?: ThreadMember[]; removedMemberIds?: bigint[] }) => unknown
   threadUpdate: (thread: Channel) => unknown
@@ -176,6 +186,7 @@ export interface EventHandlers {
     member?: Member
     user?: User
     emoji: Emoji
+    messageAuthorId?: bigint
   }) => unknown
   reactionRemove: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; emoji: Emoji }) => unknown
   reactionRemoveEmoji: (payload: { channelId: bigint; messageId: bigint; guildId?: bigint; emoji: Emoji }) => unknown
@@ -196,6 +207,7 @@ export interface EventHandlers {
   guildBanRemove: (user: User, guildId: bigint) => unknown
   guildCreate: (guild: Guild) => unknown
   guildDelete: (id: bigint, shardId: number) => unknown
+  guildUnavailable: (id: bigint, shardId: number) => unknown
   guildUpdate: (guild: Guild) => unknown
   raw: (data: DiscordGatewayPayload, shardId: number) => unknown
   roleCreate: (role: Role) => unknown

@@ -59,6 +59,26 @@ describe('Send a message', () => {
     expect(fileMsg.id).not.equals(undefined);
     expect(fileMsg.content).equals('222');
     expect(fileMsg.attachments.length).equals(1);
+    expect(fileMsg.attachments.at(0)?.filename).equals('application.txt');
+    expect(fileMsg.attachments.at(0)?.size).equals(11);
+
+    const txtFile2 = new Blob(['hello world edit'], { type: 'text/plain' });
+
+    const edited = await rest.editMessage(e2ecache.channel.id, fileMsg.id, {
+      content: '222 edit',
+      files: [
+        {
+          name: 'application_edit.txt',
+          blob: txtFile2,
+        },
+      ],
+    });
+
+    expect(edited.id).not.equals(undefined);
+    expect(edited.content).equals('222 edit');
+    expect(edited.attachments.length).equals(1);
+    expect(edited.attachments.at(0)?.filename).equals('application_edit.txt');
+    expect(edited.attachments.at(0)?.size).equals(16);
   })
 })
 

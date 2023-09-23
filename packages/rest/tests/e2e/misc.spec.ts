@@ -1,4 +1,3 @@
-import { expect } from 'chai'
 import { describe } from 'mocha'
 import { e2ecache, rest } from './utils.js'
 
@@ -9,6 +8,7 @@ describe('Typings', () => {
   })
 })
 
+/* TODO: Add this back when bot's name is changed (https://discord.com/channels/785384884197392384/785384884197392387/1142474846811459776)
 describe('Commands', () => {
   it('Upsert global commands', async () => {
     await rest.upsertGlobalApplicationCommands([
@@ -37,3 +37,4 @@ describe('Commands', () => {
     expect(rest.getGlobalApplicationCommand(created!.id)).to.throw
   })
 })
+*/

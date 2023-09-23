@@ -62,11 +62,9 @@ app.all('/*', async (req, res) => {
   }
 
   try {
-    const result = await REST.makeRequest(
-      req.method,
-      req.url.substring(4),
-      { body: req.method !== 'DELETE' && req.method !== 'GET' ? {} : req.body }
-    )
+    const result = await REST.makeRequest(req.method, req.url.substring(4), {
+      body: req.method !== 'DELETE' && req.method !== 'GET' ? {} : req.body,
+    })
 
     if (result) {
       res.status(200).json(result)
@@ -216,35 +214,61 @@ Now you will be able to take this data and implement it into Grafana. In a futur
 
 ### Multiple Custom Bot Proxy Rest
 
-For bot's that allow servers to buy custom bot's, you can create a separate manager for each bot's token/authorization. As a request comes in, either get a cached rest manager or create one if none exists in cache. You can add them to a Collection where the authorization or token is provided in the request, you can dynamically create rest managers for each bot token. This way each bot can handle their own requests in their own queues.
+For bot's that allow servers to buy custom bot's, you can create a separate manager for each bot's token/authorization. As a request comes in, either get a cached rest manager or create one if none exists in the cache.
+
+The plan in this guide is to create a custom header that is sent on every request to the rest process. This will contain the custom instances bot id so we can find it a collection on the rest process, which can be then be used to determine which bot token we will use.
 
 :::caution
 Having multiple bot's sending requests from one source will impact your global rate limit due to the global ip rate limit.
 :::
 
+In order to send the bot id inside of the request headers we first have to override the `createBaseHeaders()` function.
+
+```ts
+BOT.rest = createRestManager({
+  token: process.env.PUBLIC_BOT_TOKEN as string,
+})
+
+BOT.rest.createBaseHeaders = () => {
+  return {
+    'user-agent': `DiscordBot (https://github.com/discordeno/discordeno, v19.0.0-alpha.1)`,
+    bot_id: BOT.rest.applicationId.toString(),
+  }
+}
+```
+
+Create this MANAGERS collection somewhere near the top of the file. Then we can begin implementing this in our request handler.
+
 ```ts
 const MANAGERS = new Collection<string, RestManager>()
 ```
 
-Create this MANAGERS collection at the near the top of the file. Then we can begin implementing this in our request handler. We are going to be changing this line:
+We are going to be changing this line:
 
 ```ts
 try {
   const result = await REST.makeRequest(req.method, `${REST.baseUrl}${req.url}`, req.body)
 ```
 
+It is recommended to not needlessly send the bot token, instead you can store the bot token(s) on the rest process and use the botId to find token from the `MANAGERS` collection.
+
 It will become something like the following:
 
 ```ts
 try {
-  let manager = MANAGERS.get(req.headers.token);
-  if (!manager) {
+  let manager = MANAGERS.get(req.headers.bot_id);
+  if (!manager && BOT_TOKENS.has(req.headers.bot_id)) {
     // A request came in with a token that has no manager in cache
-    manager = createRestManager({ token: req.headers.token })
-    MANAGERS.set(req.headers.token, manager);
+    manager = createRestManager({ token: BOT_TOKENS.get(req.headers.bot_id) })
+    MANAGERS.set(req.headers.bot_id, manager);
   }
 
-  const result = await manager.makeRequest(req.method, `${manager.baseUrl}${req.url}`, req.body)
+  const result = await manager.makeRequest(
+      req.method as RequestMethods,
+      `${manager.baseUrl}${req.url}`,
+      req.body
+    );
+
 ```
 
 ### Evals

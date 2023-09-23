@@ -174,7 +174,22 @@ export interface Transformers {
       preferredLocale: boolean
       premiumSubscriptionCount: boolean
       premiumTier: boolean
+      toggles: boolean
       stageInstances: boolean
+      channels: boolean
+      members: boolean
+      roles: boolean
+      emojis: boolean
+      stickers: boolean
+      threads: boolean
+      voiceStates: boolean
+      features: boolean
+      large: boolean
+      owner: boolean
+      widgetEnabled: boolean
+      unavailable: boolean
+      iconHash: boolean
+      presences: boolean
       systemChannelFlags: boolean
       vanityUrlCode: boolean
       verificationLevel: boolean
@@ -334,6 +349,7 @@ export interface Transformers {
     }
     user: {
       username: boolean
+      globalName: boolean
       locale: boolean
       flags: boolean
       premiumType: boolean
@@ -508,6 +524,21 @@ export function createTransformers(options: Partial<Transformers>): Transformers
         maxVideoChannelUsers: false,
         mfaLevel: false,
         name: false,
+        channels: false,
+        emojis: false,
+        features: false,
+        iconHash: false,
+        large: false,
+        members: false,
+        owner: false,
+        presences: false,
+        roles: false,
+        stickers: false,
+        threads: false,
+        toggles: false,
+        unavailable: false,
+        voiceStates: false,
+        widgetEnabled: false,
         nsfwLevel: false,
         preferredLocale: false,
         premiumSubscriptionCount: false,
@@ -672,6 +703,7 @@ export function createTransformers(options: Partial<Transformers>): Transformers
       },
       user: {
         username: false,
+        globalName: false,
         locale: false,
         flags: false,
         premiumType: false,
