@@ -24,6 +24,7 @@ import type {
   DiscordIntegrationCreateUpdate,
   DiscordInteraction,
   DiscordInteractionDataOption,
+  DiscordInviteCreate,
   DiscordInviteMetadata,
   DiscordInviteStageInstance,
   DiscordMember,
@@ -85,7 +86,7 @@ import { transformInteractionResponseToDiscordInteractionResponse } from './tran
 import { transformRole, type Role } from './transformers/role.js'
 import { transformScheduledEvent, type ScheduledEvent } from './transformers/scheduledEvent.js'
 import { transformStageInstance, type StageInstance } from './transformers/stageInstance.js'
-import { transformInviteStageInstance, type InviteStageInstance } from './transformers/stageInviteInstace.js'
+import { transformInviteStageInstance, type InviteStageInstance } from './transformers/stageInviteInstance.js'
 import { transformSticker, transformStickerPack, type Sticker, type StickerPack } from './transformers/sticker.js'
 import { transformTeam, type Team } from './transformers/team.js'
 import { transformTemplate, type Template } from './transformers/template.js'
@@ -424,7 +425,7 @@ export interface Transformers {
   interaction: (bot: Bot, payload: DiscordInteraction) => Interaction
   interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption
   integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration
-  invite: (bot: Bot, invite: DiscordInviteMetadata) => Invite
+  invite: (bot: Bot, invite: DiscordInviteCreate | DiscordInviteMetadata) => Invite
   application: (bot: Bot, payload: DiscordApplication) => Application
   team: (bot: Bot, payload: DiscordTeam) => Team
   emoji: (bot: Bot, payload: DiscordEmoji) => Emoji

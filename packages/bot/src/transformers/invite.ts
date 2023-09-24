@@ -1,16 +1,23 @@
-import type { DiscordApplication, DiscordInviteMetadata } from '@discordeno/types'
+import type {
+  DiscordApplication,
+  DiscordInviteCreate,
+  DiscordInviteMetadata,
+  DiscordInviteStageInstance,
+  DiscordScheduledEvent,
+} from '@discordeno/types'
 import type { Application, Bot, ScheduledEvent, User } from '../index.js'
-import type { InviteStageInstance } from './stageInviteInstace.js'
+import type { InviteStageInstance } from './stageInviteInstance.js'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformInvite(bot: Bot, payload: DiscordInviteMetadata) {
+export function transformInvite(bot: Bot, payload: DiscordInviteCreate | DiscordInviteMetadata) {
   const props = bot.transformers.desiredProperties.invite
   const invite = {} as Invite
-
-  if (props.channelId && payload.channel?.id) invite.channelId = bot.transformers.snowflake(payload.channel.id)
+  if ((props.channelId && (<DiscordInviteCreate>payload).channel_id) || (<DiscordInviteMetadata>payload).channel?.id)
+    invite.channelId = bot.transformers.snowflake((<DiscordInviteCreate>payload).channel_id || <string>(<DiscordInviteMetadata>payload).channel?.id)
   if (props.code && payload.code) invite.code = payload.code
   if (props.createdAt && payload.created_at) invite.createdAt = Date.parse(payload.created_at)
-  if (props.guildId && payload.guild && payload.guild.id) invite.guildId = bot.transformers.snowflake(payload.guild?.id)
+  if (props.guildId && ((<DiscordInviteCreate>payload).guild_id ?? (<DiscordInviteMetadata>payload).guild?.id))
+    invite.guildId = bot.transformers.snowflake((<DiscordInviteCreate>payload).guild_id ?? <string>(<DiscordInviteMetadata>payload).guild?.id)
   if (props.inviter && payload.inviter) invite.inviter = bot.transformers.user(bot, payload.inviter)
   if (props.maxAge && payload.max_age) invite.maxAge = payload.max_age
   if (props.maxUses && payload.max_uses) invite.maxUses = payload.max_uses
@@ -21,23 +28,26 @@ export function transformInvite(bot: Bot, payload: DiscordInviteMetadata) {
   if (props.temporary && payload.temporary) invite.temporary = payload.temporary
   if (props.uses && payload.uses) invite.uses = payload.uses
 
-  if (props.approximateMemberCount && payload.approximate_member_count) {
-    invite.approximateMemberCount = payload.approximate_member_count
-  }
+  if (props.approximateMemberCount && (<DiscordInviteMetadata>payload).approximate_member_count)
+    invite.approximateMemberCount = <number>(<DiscordInviteMetadata>payload).approximate_member_count
 
-  if (props.approximatePresenceCount && payload.approximate_presence_count) {
-    invite.approximatePresenceCount = payload.approximate_presence_count
-  }
-  if (props.guildScheduledEvent && payload.guild_scheduled_event) {
-    invite.guildScheduledEvent = payload.guild_scheduled_event ? bot.transformers.scheduledEvent(bot, payload.guild_scheduled_event) : undefined
-  }
-  if (props.stageInstance && invite.guildId && payload.stage_instance) {
-    invite.stageInstance = payload.stage_instance
-      ? bot.transformers.inviteStageInstance(bot, { ...payload.stage_instance, guildId: invite.guildId })
+  if (props.approximatePresenceCount && (<DiscordInviteMetadata>payload).approximate_presence_count)
+    invite.approximatePresenceCount = (<DiscordInviteMetadata>payload).approximate_presence_count
+  if (props.guildScheduledEvent && (<DiscordInviteMetadata>payload).guild_scheduled_event) {
+    invite.guildScheduledEvent = (<DiscordInviteMetadata>payload).guild_scheduled_event
+      ? bot.transformers.scheduledEvent(bot, <DiscordScheduledEvent>(<DiscordInviteMetadata>payload).guild_scheduled_event)
       : undefined
   }
-  if (props.expiresAt && payload.expires_at) {
-    invite.expiresAt = Date.parse(payload.expires_at)
+  if (props.stageInstance && invite.guildId && (<DiscordInviteMetadata>payload).stage_instance) {
+    invite.stageInstance = (<DiscordInviteMetadata>payload).stage_instance
+      ? bot.transformers.inviteStageInstance(bot, {
+          ...(<DiscordInviteStageInstance>(<DiscordInviteMetadata>payload).stage_instance),
+          guildId: invite.guildId,
+        })
+      : undefined
+  }
+  if (props.expiresAt && (<DiscordInviteMetadata>payload).expires_at) {
+    invite.expiresAt = Date.parse(<string>(<DiscordInviteMetadata>payload).expires_at)
   }
   return invite
 }
