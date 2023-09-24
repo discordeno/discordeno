@@ -1,4 +1,4 @@
-import type { BigString, DiscordApplication, DiscordInviteMetadata } from '@discordeno/types'
+import type { DiscordApplication, DiscordInviteMetadata } from '@discordeno/types'
 import type { Application, Bot, ScheduledEvent, User } from '../index.js'
 import type { InviteStageInstance } from './stageInviteInstace.js'
 
@@ -31,13 +31,13 @@ export function transformInvite(bot: Bot, payload: DiscordInviteMetadata) {
   if (props.guildScheduledEvent && payload.guild_scheduled_event) {
     invite.guildScheduledEvent = payload.guild_scheduled_event ? bot.transformers.scheduledEvent(bot, payload.guild_scheduled_event) : undefined
   }
-  if (props.stageInstance && payload.guild?.id && payload.stage_instance) {
+  if (props.stageInstance && invite.guildId && payload.stage_instance) {
     invite.stageInstance = payload.stage_instance
-      ? bot.transformers.inviteStageInstance(bot, { ...payload.stage_instance, guildId: <BigString>invite.guildId })
+      ? bot.transformers.inviteStageInstance(bot, { ...payload.stage_instance, guildId: invite.guildId })
       : undefined
   }
-  if (props.expiresAt) {
-    invite.expiresAt = payload.expires_at ? Date.parse(payload.expires_at) : undefined
+  if (props.expiresAt && payload.expires_at) {
+    invite.expiresAt = Date.parse(payload.expires_at)
   }
   return invite
 }
