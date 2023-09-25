@@ -575,7 +575,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
     /** Handler to check if resharding is necessary. */
     checkIfReshardingIsNeeded: () => Promise<{ needed: boolean; info?: Camelize<DiscordGetGatewayBot> }>
     /** Handler to begin resharding. */
-    reshard: (info: Camelize<DiscordGetGatewayBot>) => Promise<void>
+    reshard: (info: Camelize<DiscordGetGatewayBot> & { firstShardId?: number; lastShardId?: number }) => Promise<void>
     /** Handler to communicate to a worker that a shard needs to be created. */
     tellWorkerToPrepare: (workerId: number, shardId: number, bucketId: number) => Promise<void>
     /** Handler to alert the gateway that a shard(resharded) is online. It should now wait for all shards to be pending before shutting off old shards. */
