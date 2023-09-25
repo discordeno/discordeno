@@ -569,7 +569,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
     /** Handler to edit the shard id on any cached guilds. */
     updateGuildsShardId: (guildIds: string[], shardId: number) => Promise<void>
     /** Handler to check if resharding is necessary. */
-    checkIfReshardingIsNeeded: () => Promise<{ needed: boolean; sessionInfo?: Camelize<DiscordGetGatewayBot> }>
+    checkIfReshardingIsNeeded: () => Promise<{ needed: boolean; info?: Camelize<DiscordGetGatewayBot> }>
     /** Handler to begin resharding. */
     reshard: (info: Camelize<DiscordGetGatewayBot>) => Promise<void>
     /** Handler to communicate to a worker that a shard needs to be created. */
