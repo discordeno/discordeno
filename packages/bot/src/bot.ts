@@ -71,11 +71,11 @@ export function createBot(options: CreateBotOptions): Bot {
         bot.gateway.connection = await bot.rest.getSessionInfo()
 
         // Check for overrides in the configuration
-        if (!bot.gateway.url) bot.gateway.url = bot.gateway.connection.url
+        if (!options.gateway?.url) bot.gateway.url = bot.gateway.connection.url
 
-        if (bot.gateway.totalShards !== undefined) bot.gateway.totalShards = bot.gateway.connection.shards
+        if (!options.gateway?.totalShards) bot.gateway.totalShards = bot.gateway.connection.shards
 
-        if (bot.gateway.lastShardId !== undefined) bot.gateway.lastShardId = bot.gateway.connection.shards - 1
+        if (!options.gateway?.lastShardId && !options.gateway?.totalShards) bot.gateway.lastShardId = bot.gateway.connection.shards - 1
       }
 
       await bot.gateway.spawnShards()
