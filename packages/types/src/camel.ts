@@ -64,8 +64,8 @@ import type {
   DiscordGuildIntegrationsUpdate,
   DiscordGuildMemberAdd,
   DiscordGuildMemberRemove,
-  DiscordGuildMemberUpdate,
   DiscordGuildMembersChunk,
+  DiscordGuildMemberUpdate,
   DiscordGuildPreview,
   DiscordGuildRoleCreate,
   DiscordGuildRoleDelete,
@@ -124,6 +124,7 @@ import type {
   DiscordScheduledEventUserAdd,
   DiscordScheduledEventUserRemove,
   DiscordSelectMenuComponent,
+  DiscordSelectMenuDefaultValue,
   DiscordSelectOption,
   DiscordSessionStartLimit,
   DiscordStageInstance,
@@ -135,8 +136,8 @@ import type {
   DiscordTemplate,
   DiscordThreadListSync,
   DiscordThreadMember,
-  DiscordThreadMemberUpdate,
   DiscordThreadMembersUpdate,
+  DiscordThreadMemberUpdate,
   DiscordThreadMetadata,
   DiscordTokenExchange,
   DiscordTokenExchangeAuthorizationCode,
@@ -226,6 +227,7 @@ export type CamelizedDiscordMessageComponents = Camelize<DiscordMessageComponent
 export interface CamelizedDiscordActionRow extends Camelize<DiscordActionRow> {}
 export interface CamelizedDiscordSelectMenuComponent extends Camelize<DiscordSelectMenuComponent> {}
 export interface CamelizedDiscordSelectOption extends Camelize<DiscordSelectOption> {}
+export interface CamelizedDiscordSelectMenuDefaultValue extends Camelize<DiscordSelectMenuDefaultValue> {}
 export interface CamelizedDiscordButtonComponent extends Camelize<DiscordButtonComponent> {}
 export interface CamelizedDiscordInputTextComponent extends Camelize<DiscordInputTextComponent> {}
 export interface CamelizedDiscordStickerItem extends Camelize<DiscordStickerItem> {}

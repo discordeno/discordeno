@@ -1418,6 +1418,7 @@ export interface DiscordActionRow {
   components: Array<DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent>
 }
 
+/** https://discord.com/developers/docs/interactions/message-components#select-menu-object */
 export interface DiscordSelectMenuComponent {
   type: MessageComponentTypes.SelectMenu
   /** A custom identifier for this component. Maximum 100 characters. */
@@ -1452,6 +1453,14 @@ export interface DiscordSelectOption {
   }
   /** Will render this option as already-selected by default. */
   default?: boolean
+}
+
+/** https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-default-value-structure */
+export interface DiscordSelectMenuDefaultValue {
+  /** ID of a user, role, or channel */
+  id: bigint
+  /** Type of value that id represents. */
+  type: 'user' | 'role' | 'channel'
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#buttons-button-object */
