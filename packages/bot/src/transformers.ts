@@ -25,6 +25,8 @@ import type {
   DiscordInteraction,
   DiscordInteractionDataOption,
   DiscordInviteCreate,
+  DiscordInviteMetadata,
+  DiscordInviteStageInstance,
   DiscordMember,
   DiscordMessage,
   DiscordPresenceUpdate,
@@ -84,6 +86,7 @@ import { transformInteractionResponseToDiscordInteractionResponse } from './tran
 import { transformRole, type Role } from './transformers/role.js'
 import { transformScheduledEvent, type ScheduledEvent } from './transformers/scheduledEvent.js'
 import { transformStageInstance, type StageInstance } from './transformers/stageInstance.js'
+import { transformInviteStageInstance, type InviteStageInstance } from './transformers/stageInviteInstance.js'
 import { transformSticker, transformStickerPack, type Sticker, type StickerPack } from './transformers/sticker.js'
 import { transformTeam, type Team } from './transformers/team.js'
 import { transformTemplate, type Template } from './transformers/template.js'
@@ -241,6 +244,11 @@ export interface Transformers {
       targetApplication: boolean
       temporary: boolean
       uses: boolean
+      approximateMemberCount: boolean
+      approximatePresenceCount: boolean
+      guildScheduledEvent: boolean
+      stageInstance: boolean
+      expiresAt: boolean
     }
     member: {
       id: boolean
@@ -334,6 +342,12 @@ export interface Transformers {
       topic: boolean
       guildScheduledEventId: boolean
     }
+    inviteStageInstance: {
+      members: boolean
+      participantCount: boolean
+      speakerCount: boolean
+      topic: boolean
+    }
     sticker: {
       id: boolean
       packId: boolean
@@ -411,7 +425,7 @@ export interface Transformers {
   interaction: (bot: Bot, payload: DiscordInteraction) => Interaction
   interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption
   integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration
-  invite: (bot: Bot, invite: DiscordInviteCreate) => Invite
+  invite: (bot: Bot, invite: DiscordInviteCreate | DiscordInviteMetadata) => Invite
   application: (bot: Bot, payload: DiscordApplication) => Application
   team: (bot: Bot, payload: DiscordTeam) => Team
   emoji: (bot: Bot, payload: DiscordEmoji) => Emoji
@@ -432,6 +446,8 @@ export interface Transformers {
   widget: (bot: Bot, payload: DiscordGuildWidget) => GuildWidget
   widgetSettings: (bot: Bot, payload: DiscordGuildWidgetSettings) => GuildWidgetSettings
   stageInstance: (bot: Bot, payload: DiscordStageInstance) => StageInstance
+  inviteStageInstance: (bot: Bot, payload: DiscordInviteStageInstance & { guildId: BigString }) => InviteStageInstance
+
   sticker: (bot: Bot, payload: DiscordSticker) => Sticker
   stickerPack: (bot: Bot, payload: DiscordStickerPack) => StickerPack
   applicationCommandOptionChoice: (bot: Bot, payload: DiscordApplicationCommandOptionChoice) => ApplicationCommandOptionChoice
@@ -595,6 +611,11 @@ export function createTransformers(options: Partial<Transformers>): Transformers
         targetApplication: false,
         temporary: false,
         uses: false,
+        approximateMemberCount: false,
+        approximatePresenceCount: false,
+        guildScheduledEvent: false,
+        stageInstance: false,
+        expiresAt: false,
       },
       member: {
         id: false,
@@ -687,6 +708,12 @@ export function createTransformers(options: Partial<Transformers>): Transformers
         channelId: false,
         topic: false,
         guildScheduledEventId: false,
+      },
+      inviteStageInstance: {
+        members: false,
+        participantCount: false,
+        speakerCount: false,
+        topic: false,
       },
       sticker: {
         id: false,
@@ -786,6 +813,7 @@ export function createTransformers(options: Partial<Transformers>): Transformers
     widget: options.widget ?? transformWidget,
     widgetSettings: options.widgetSettings ?? transformWidgetSettings,
     stageInstance: options.stageInstance ?? transformStageInstance,
+    inviteStageInstance: options.inviteStageInstance ?? transformInviteStageInstance,
     sticker: options.sticker ?? transformSticker,
     stickerPack: options.stickerPack ?? transformStickerPack,
     gatewayBot: options.gatewayBot ?? transformGatewayBot,
