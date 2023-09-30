@@ -1,4 +1,12 @@
-import type { GetMessagesAfter, GetMessagesAround, GetMessagesBefore, GetMessagesLimit, GetMessagesOptions } from '@discordeno/types'
+import type {
+  DiscordInviteCreate,
+  DiscordInviteMetadata,
+  GetMessagesAfter,
+  GetMessagesAround,
+  GetMessagesBefore,
+  GetMessagesLimit,
+  GetMessagesOptions,
+} from '@discordeno/types'
 import { hasProperty } from './utils.js'
 
 export function isGetMessagesAfter(options: GetMessagesOptions): options is GetMessagesAfter {
@@ -15,4 +23,8 @@ export function isGetMessagesAround(options: GetMessagesOptions): options is Get
 
 export function isGetMessagesLimit(options: GetMessagesOptions): options is GetMessagesLimit {
   return hasProperty(options, 'limit')
+}
+
+export function isInviteWithMetadata(options: DiscordInviteCreate | DiscordInviteMetadata): options is DiscordInviteMetadata {
+  return !hasProperty(options, 'channel_id')
 }
