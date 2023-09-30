@@ -75,7 +75,7 @@ export function createBot(options: CreateBotOptions): Bot {
 
         if (!options.gateway?.totalShards) bot.gateway.totalShards = bot.gateway.connection.shards
 
-        if (!options.gateway?.lastShardId) bot.gateway.lastShardId = bot.gateway.connection.shards - 1
+        if (!options.gateway?.lastShardId && !options.gateway?.totalShards) bot.gateway.lastShardId = bot.gateway.connection.shards - 1
       }
 
       await bot.gateway.spawnShards()

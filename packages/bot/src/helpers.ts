@@ -96,6 +96,7 @@ import type { Channel } from './transformers/channel.js'
 import type { Emoji } from './transformers/emoji.js'
 import type { Guild } from './transformers/guild.js'
 import type { Integration } from './transformers/integration.js'
+import type { Invite } from './transformers/invite.js'
 import type { Member } from './transformers/member.js'
 import type { Message } from './transformers/message.js'
 import type { Role } from './transformers/role.js'
@@ -363,12 +364,10 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       )
     },
     getInvite: async (inviteCode, options) => {
-      return await bot.rest.getInvite(inviteCode, options)
-      // return bot.transformers.invite(bot, snakelize(await bot.rest.getInvite(inviteCode, options)))
+      return bot.transformers.invite(bot, snakelize(await bot.rest.getInvite(inviteCode, options)))
     },
     getInvites: async (guildId) => {
-      return await bot.rest.getInvites(guildId)
-      // .map((res) => bot.transformers.invite(bot, snakelize(res)))
+      return (await bot.rest.getInvites(guildId)).map((res) => bot.transformers.invite(bot, snakelize(res)))
     },
     getMessage: async (channelId, messageId) => {
       return bot.transformers.message(bot, snakelize(await bot.rest.getMessage(channelId, messageId)))
@@ -787,8 +786,8 @@ export interface BotHelpers {
   getGuildTemplates: (guildId: BigString) => Promise<Template[]>
   getGuildWebhooks: (guildId: BigString) => Promise<Webhook[]>
   getIntegrations: (guildId: BigString) => Promise<Integration[]>
-  getInvite: (inviteCode: string, options?: GetInvite) => Promise<CamelizedDiscordInviteMetadata>
-  getInvites: (guildId: BigString) => Promise<CamelizedDiscordInviteMetadata[]>
+  getInvite: (inviteCode: string, options?: GetInvite) => Promise<Invite>
+  getInvites: (guildId: BigString) => Promise<Invite[]>
   getMessage: (channelId: BigString, messageId: BigString) => Promise<Message>
   getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<Message[]>
   getNitroStickerPacks: () => Promise<StickerPack[]>
