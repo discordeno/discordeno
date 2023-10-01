@@ -40,7 +40,8 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
   setColor(color: number | string): EmbedsBuilder {
     if (typeof color === 'string') {
-      color = parseInt(color.replace('#', ''), 16)
+      const convertedValue = parseInt(color.replace('#', ''), 16)
+      color = Number.isNaN(convertedValue) ? 0 : convertedValue
     }
 
     this.#currentEmbed.color = color
