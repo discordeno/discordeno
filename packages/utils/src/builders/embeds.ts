@@ -16,9 +16,6 @@ import type { DiscordEmbed, DiscordEmbedAuthor, DiscordEmbedField, DiscordEmbedF
  *  .setTitle('My Second Embed')
  */
 export class EmbedsBuilder extends Array<DiscordEmbed> {
-  // TODO: Maybe make all interfaces camelcase and use cameltosnakecase?
-  // TODO: add timestamp method
-
   #currentEmbedIndex: number = 0
   
   /**
@@ -213,6 +210,18 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     if (url) {
       this.setUrl(url)
     }
+
+    return this
+  }
+
+  /**
+   * Set the timestamp of the current embed.
+   *
+   * @param {?(string | number | Date)} [timestamp]
+   * @returns {EmbedsBuilder}
+   */
+  setTimestamp(timestamp?: string | number | Date): EmbedsBuilder {
+    this.#currentEmbed.timestamp = new Date(timestamp!).toISOString()
 
     return this
   }
