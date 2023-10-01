@@ -2,8 +2,7 @@ import type { DiscordApplication, DiscordInviteCreate, DiscordInviteMetadata } f
 import { isInviteWithMetadata, type Application, type Bot, type ScheduledEvent, type User } from '../index.js'
 import type { InviteStageInstance } from './stageInviteInstance.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformInvite(bot: Bot, payload: DiscordInviteCreate | DiscordInviteMetadata) {
+export function transformInvite(bot: Bot, payload: DiscordInviteCreate | DiscordInviteMetadata): Invite {
   const props = bot.transformers.desiredProperties.invite
   const invite = {} as Invite
   const hasMetadata = isInviteWithMetadata(payload)
@@ -44,7 +43,7 @@ export function transformInvite(bot: Bot, payload: DiscordInviteCreate | Discord
     if (props.guildId && payload.guild_id) invite.guildId = bot.transformers.snowflake(payload.guild_id)
   }
 
-  return invite
+  return bot.transformers.customizers.invite(bot, payload, invite)
 }
 
 export interface Invite {

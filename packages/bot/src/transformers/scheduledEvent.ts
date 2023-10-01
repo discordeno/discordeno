@@ -7,8 +7,7 @@ import type {
 } from '@discordeno/types'
 import { iconHashToBigInt, type Bot, type User } from '../index.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformScheduledEvent(bot: Bot, payload: DiscordScheduledEvent) {
+export function transformScheduledEvent(bot: Bot, payload: DiscordScheduledEvent): ScheduledEvent {
   const props = bot.transformers.desiredProperties.scheduledEvent
   const scheduledEvent = {} as ScheduledEvent
 
@@ -29,7 +28,7 @@ export function transformScheduledEvent(bot: Bot, payload: DiscordScheduledEvent
   if (props.location && payload.entity_metadata?.location) scheduledEvent.location = payload.entity_metadata.location
   if (props.image && payload.image) scheduledEvent.image = iconHashToBigInt(payload.image)
 
-  return scheduledEvent
+  return bot.transformers.customizers.scheduledEvent(bot, payload, scheduledEvent)
 }
 
 export interface ScheduledEvent {

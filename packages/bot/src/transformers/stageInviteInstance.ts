@@ -1,8 +1,7 @@
 import type { BigString, DiscordInviteStageInstance, DiscordMember } from '@discordeno/types'
 import type { Bot, Member } from '../index.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformInviteStageInstance(bot: Bot, payload: DiscordInviteStageInstance & { guildId: BigString }) {
+export function transformInviteStageInstance(bot: Bot, payload: DiscordInviteStageInstance & { guildId: BigString }): InviteStageInstance {
   const props = bot.transformers.desiredProperties.inviteStageInstance
   const inviteStageInstance = {} as InviteStageInstance
 
@@ -14,7 +13,8 @@ export function transformInviteStageInstance(bot: Bot, payload: DiscordInviteSta
   if (props.participantCount && payload.participant_count) inviteStageInstance.participantCount = payload.participant_count
   if (props.speakerCount && payload.speaker_count) inviteStageInstance.participantCount = payload.participant_count
   if (props.topic && payload.topic) inviteStageInstance.topic = payload.topic
-  return inviteStageInstance
+
+  return bot.transformers.customizers.inviteStageInstance(bot, payload, inviteStageInstance)
 }
 
 export interface InviteStageInstance {

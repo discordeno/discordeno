@@ -63,8 +63,8 @@ import type {
   GetInvite,
   GetMessagesOptions,
   GetReactions,
-  GetScheduledEventUsers,
   GetScheduledEvents,
+  GetScheduledEventUsers,
   GetUserGuilds,
   GetWebhookMessageOptions,
   InteractionCallbackData,
@@ -319,7 +319,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return bot.transformers.message(bot, snakelize(await bot.rest.getFollowupMessage(token, messageId)))
     },
     getGatewayBot: async () => {
-      return bot.transformers.gatewayBot(snakelize(await bot.rest.getGatewayBot()))
+      return bot.transformers.gatewayBot(bot, snakelize(await bot.rest.getGatewayBot()))
     },
     getGlobalApplicationCommand: async (commandId) => {
       return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.getGlobalApplicationCommand(commandId)))
@@ -418,7 +418,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       })
     },
     getSessionInfo: async () => {
-      return bot.transformers.gatewayBot(snakelize(await bot.rest.getSessionInfo()))
+      return bot.transformers.gatewayBot(bot, snakelize(await bot.rest.getSessionInfo()))
     },
     getStageInstance: async (channelId) => {
       return bot.transformers.stageInstance(bot, snakelize(await bot.rest.getStageInstance(channelId)))

@@ -1,9 +1,7 @@
 import type { DiscordSticker, DiscordStickerPack, StickerFormatTypes, StickerTypes } from '@discordeno/types'
 import type { Bot, User } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformSticker(bot: Bot, payload: DiscordSticker) {
+export function transformSticker(bot: Bot, payload: DiscordSticker): Sticker {
   const props = bot.transformers.desiredProperties.sticker
   const sticker = {} as Sticker
 
@@ -19,11 +17,10 @@ export function transformSticker(bot: Bot, payload: DiscordSticker) {
   if (props.user && payload.user) sticker.user = bot.transformers.user(bot, payload.user)
   if (props.sortValue && payload.sort_value) sticker.sortValue = payload.sort_value
 
-  return sticker
+  return bot.transformers.customizers.sticker(bot, payload, sticker)
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformStickerPack(bot: Bot, payload: DiscordStickerPack) {
+export function transformStickerPack(bot: Bot, payload: DiscordStickerPack): StickerPack {
   const pack = {
     id: bot.transformers.snowflake(payload.id),
     stickers: payload.stickers.map((sticker) => bot.transformers.sticker(bot, sticker)),
@@ -32,9 +29,9 @@ export function transformStickerPack(bot: Bot, payload: DiscordStickerPack) {
     coverStickerId: payload.cover_sticker_id ? bot.transformers.snowflake(payload.cover_sticker_id) : undefined,
     description: payload.description,
     bannerAssetId: payload.banner_asset_id ? bot.transformers.snowflake(payload.banner_asset_id) : undefined,
-  }
+  } as StickerPack
 
-  return pack as Optionalize<typeof pack>
+  return bot.transformers.customizers.stickerPack(bot, payload, pack)
 }
 
 export interface Sticker {
@@ -61,4 +58,12 @@ export interface Sticker {
   /** A sticker's sort order within a pack */
   sortValue?: number
 }
-export interface StickerPack extends ReturnType<typeof transformStickerPack> {}
+export interface StickerPack {
+  coverStickerId?: bigint
+  bannerAssetId?: bigint
+  id: bigint
+  name: string
+  description: string
+  stickers: Sticker[]
+  skuId: bigint
+}
