@@ -105,7 +105,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
       return this
     }
 
-    if (index > this.length || index < 0) {
+    if (index >= this.length || index < 0) {
       throw new EmbedsBuilderError("Can not set the current embed to a index out of bounds.")
     }
 
