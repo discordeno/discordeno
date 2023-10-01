@@ -262,9 +262,87 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
     return this
   }
-
-  // TODO: This method
+  
+  /**
+   * Validate all embeds available against current known Discord limits to help prevent bad requests.
+   *
+   * @returns {EmbedsBuilder}
+   */
   validate(): EmbedsBuilder {
+    let totalCharacters = 0;
+
+    if (this.length > 10) {
+      throw new EmbedsBuilderError('You can not have more than 10 embeds on a single message.')
+    }
+
+    this.forEach(({ author, description, fields, footer, title}, index) => {
+      if (title) {
+        const trimmedTitle = title.trim()
+
+        if (trimmedTitle.length > 256) {
+          throw new EmbedsBuilderError(`Title of embed ${index} can not be longer than 256 characters.`)
+        }
+
+        totalCharacters += trimmedTitle.length
+      }
+
+      if (description) {
+        const trimmedDescription = description.trim()
+
+        if (trimmedDescription.length > 4096) {
+          throw new EmbedsBuilderError(`Description of embed ${index} can not be longer than 4096 characters.`)
+        }
+
+        totalCharacters += trimmedDescription.length
+      }
+
+      if (fields) {
+        if (fields.length > 25) {
+          throw new EmbedsBuilderError(`embed ${index} can not have more than 25 fields.`)
+        }
+
+        fields.forEach(({ name, value }, fieldIndex) => {
+          const trimmedName = name.trim()
+          const trimmedValue = value.trim()
+
+          if (trimmedName.length > 256) {
+            throw new EmbedsBuilderError(`Name of field ${fieldIndex} on embed ${index} can not be longer than 256 characters.`)
+          }
+
+          if (trimmedValue.length > 4096) {
+            throw new EmbedsBuilderError(`Value of field ${fieldIndex} on embed ${index} can not be longer than 1024 characters.`)
+          }
+
+          totalCharacters += trimmedName.length
+          totalCharacters += trimmedValue.length
+        })
+      }
+
+      if (footer) { 
+        const trimmedFooterText = footer.text.trim()
+
+        if (trimmedFooterText.length > 2048) {
+          throw new EmbedsBuilderError(`Footer text of embed ${index} can not be longer than 2048 characters.`)
+        }
+
+        totalCharacters += trimmedFooterText.length
+      }
+
+      if (author) {
+        const trimmedAuthorName = author.name.trim()
+
+        if (trimmedAuthorName.length > 256) {
+          throw new EmbedsBuilderError(`Author name of embed ${index} can not be longer than 256 characters.`)
+        }
+
+        totalCharacters += trimmedAuthorName.length
+      }
+    })
+
+    if (totalCharacters > 6000) {
+      throw new EmbedsBuilderError('Total character length of all embeds can not exceed 6000 characters.')
+    }
+
     return this
   }
   
