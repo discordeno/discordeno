@@ -42,7 +42,6 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
     return this
   }
-
   
   /**
    * Creates a blank embed.
@@ -59,7 +58,6 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
     return this
   }
-
   
   /**
    * Set the current embed author.
@@ -77,7 +75,6 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
     return this
   }
-
   
   /**
    * Set the color on the side of the current embed.
@@ -96,7 +93,6 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     return this
   }
 
-  
   /**
    * Set the current embed to a different index.
    * 
@@ -120,7 +116,6 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
  
     return this
   }
-
   
   /**
    * Set the description of the current embed.
@@ -133,7 +128,6 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
     return this
   }
-
   
   /**
    * Overwrite all fields on the current embed.
@@ -146,7 +140,6 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
     return this
   }
-
   
   /**
    * Set the footer in the current embed.
@@ -164,7 +157,6 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
     return this
   }
-
   
   /**
    * Set the image in the current embed.
@@ -182,7 +174,6 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
     return this
   }
-
   
   /**
    * Set the provider of the current embed.
@@ -199,7 +190,6 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
     return this
   }
-
   
   /**
    * Set the color of the current embed to a random value.
@@ -210,7 +200,6 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     return this.setColor(Math.floor(Math.random() * (0xffffff + 1)))
   }
 
-  
   /**
    * Set the title of the current embed.
    *
@@ -227,7 +216,6 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
     return this
   }
-
   
   /**
    * Set the thumbnail of the current embed.
@@ -245,7 +233,6 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
     return this
   }
-
   
   /**
    * Set the URL of the current embed title.
@@ -259,7 +246,6 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     return this
   }
 
-  
   /**
    * Set the video of the current embed.
    *
@@ -281,7 +267,6 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
   validate(): EmbedsBuilder {
     return this
   }
-
   
   /**
    * Returns the current embed.
@@ -298,7 +283,6 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     return this[this.#currentEmbedIndex]
   }
 }
-
 
 /**
  * Custom EmbedsBuilder error.
