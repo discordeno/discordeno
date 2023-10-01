@@ -8,6 +8,12 @@ import type { DiscordEmbed, DiscordEmbedAuthor, DiscordEmbedField, DiscordEmbedF
  * @class EmbedsBuilder
  * @typedef {EmbedsBuilder}
  * @extends {Array<DiscordEmbed>}
+ * @example
+ * const embeds = new EmbedBuilder()
+ *  .setTitle('My Embed')
+ *  .setDescription('This is my new embed')
+ *  .newEmbed()
+ *  .setTitle('My Second Embed')
  */
 export class EmbedsBuilder extends Array<DiscordEmbed> {
   // TODO: Maybe make all interfaces camelcase and use cameltosnakecase?
