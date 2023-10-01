@@ -18,6 +18,8 @@ import type { DiscordEmbed, DiscordEmbedAuthor, DiscordEmbedField, DiscordEmbedF
 export class EmbedsBuilder extends Array<DiscordEmbed> {
   // TODO: Maybe make all interfaces camelcase and use cameltosnakecase?
   // TODO: add timestamp method
+
+  #currentEmbedIndex: number = 0
   
   /**
    * Adds a new field to the embed fields array.
@@ -53,6 +55,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     }
 
     this.push({})
+    this.setCurrentEmbed()
 
     return this
   }
@@ -90,6 +93,31 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
     this.#currentEmbed.color = color
 
+    return this
+  }
+
+  
+  /**
+   * Set the current embed to a different index.
+   * 
+   * WARNING: Only use this method if you know what you're doing. Make sure to set it back to the latest when you're done.
+   *
+   * @param {?number} [index] - The index of the embed in the EmbedsBuilder array
+   * @returns {EmbedsBuilder}
+   */
+  setCurrentEmbed(index?: number): EmbedsBuilder {
+    if (index === undefined) {
+      this.#currentEmbedIndex = this.length - 1
+
+      return this
+    }
+
+    if (index > this.length || index < 0) {
+      throw new EmbedsBuilderError("Can not set the current embed to a index out of bounds.")
+    }
+
+    this.#currentEmbedIndex = index;
+ 
     return this
   }
 
@@ -264,11 +292,10 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
   get #currentEmbed(): DiscordEmbed {
     if (this.length === 0) {
       this.newEmbed()
-
-      return this.at(0)!
+      this.setCurrentEmbed()
     }
  
-    return this.at(-1)!
+    return this[this.#currentEmbedIndex]
   }
 }
 
