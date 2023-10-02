@@ -1,5 +1,12 @@
-import type { DiscordEmbed, DiscordEmbedAuthor, DiscordEmbedField, DiscordEmbedFooter, DiscordEmbedImage, DiscordEmbedThumbnail, DiscordEmbedVideo } from "@discordeno/types";
-
+import type {
+  DiscordEmbed,
+  DiscordEmbedAuthor,
+  DiscordEmbedField,
+  DiscordEmbedFooter,
+  DiscordEmbedImage,
+  DiscordEmbedThumbnail,
+  DiscordEmbedVideo,
+} from '@discordeno/types'
 
 /**
  * A builder to help create Discord embeds.
@@ -17,13 +24,13 @@ import type { DiscordEmbed, DiscordEmbedAuthor, DiscordEmbedField, DiscordEmbedF
  */
 export class EmbedsBuilder extends Array<DiscordEmbed> {
   #currentEmbedIndex: number = 0
-  
+
   /**
    * Adds a new field to the embed fields array.
    *
    * @param {string} name - Field name
    * @param {string} value - Field value
-   * @param {?boolean} [inline=false] - Field should be inline or not. 
+   * @param {?boolean} [inline=false] - Field should be inline or not.
    * @returns {EmbedsBuilder}
    */
   addField(name: string, value: string, inline?: boolean): EmbedsBuilder {
@@ -34,12 +41,12 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     this.#currentEmbed.fields.push({
       name,
       value,
-      inline
+      inline,
     })
 
     return this
   }
-  
+
   /**
    * Creates a blank embed.
    *
@@ -47,7 +54,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    */
   newEmbed(): EmbedsBuilder {
     if (this.length >= 10) {
-      throw new Error("Maximum embed count exceeded. You can not have more than 10 embeds.")
+      throw new Error('Maximum embed count exceeded. You can not have more than 10 embeds.')
     }
 
     this.push({})
@@ -55,7 +62,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
     return this
   }
-  
+
   /**
    * Set the current embed author.
    *
@@ -67,12 +74,12 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     this.#currentEmbed.author = {
       ...this.#currentEmbed.author,
       ...options,
-      name
+      name,
     }
 
     return this
   }
-  
+
   /**
    * Set the color on the side of the current embed.
    *
@@ -92,7 +99,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
   /**
    * Set the current embed to a different index.
-   * 
+   *
    * WARNING: Only use this method if you know what you're doing. Make sure to set it back to the latest when you're done.
    *
    * @param {?number} [index] - The index of the embed in the EmbedsBuilder array
@@ -106,14 +113,14 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     }
 
     if (index >= this.length || index < 0) {
-      throw new Error("Can not set the current embed to a index out of bounds.")
+      throw new Error('Can not set the current embed to a index out of bounds.')
     }
 
-    this.#currentEmbedIndex = index;
- 
+    this.#currentEmbedIndex = index
+
     return this
   }
-  
+
   /**
    * Set the description of the current embed.
    *
@@ -125,11 +132,11 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
     return this
   }
-  
+
   /**
    * Overwrite all fields on the current embed.
    *
-   * @param {DiscordEmbedField[]} fields 
+   * @param {DiscordEmbedField[]} fields
    * @returns {EmbedsBuilder}
    */
   setFields(fields: DiscordEmbedField[]): EmbedsBuilder {
@@ -137,7 +144,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
     return this
   }
-  
+
   /**
    * Set the footer in the current embed.
    *
@@ -149,12 +156,12 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     this.#currentEmbed.footer = {
       ...this.#currentEmbed.footer,
       ...options,
-      text
+      text,
     }
 
     return this
   }
-  
+
   /**
    * Set the image in the current embed.
    *
@@ -166,12 +173,12 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     this.#currentEmbed.image = {
       ...this.#currentEmbed.image,
       ...options,
-      url
+      url,
     }
 
     return this
   }
-  
+
   /**
    * Set the provider of the current embed.
    *
@@ -182,12 +189,12 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
   setProvider(name: string, url?: string): EmbedsBuilder {
     this.#currentEmbed.provider = {
       name,
-      url
+      url,
     }
 
     return this
   }
-  
+
   /**
    * Set the color of the current embed to a random value.
    *
@@ -225,7 +232,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
     return this
   }
-  
+
   /**
    * Set the thumbnail of the current embed.
    *
@@ -237,12 +244,12 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     this.#currentEmbed.thumbnail = {
       ...this.#currentEmbed.thumbnail,
       ...options,
-      url
+      url,
     }
 
     return this
   }
-  
+
   /**
    * Set the URL of the current embed title.
    *
@@ -266,25 +273,25 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     this.#currentEmbed.video = {
       ...this.#currentEmbed.video,
       ...options,
-      url
+      url,
     }
 
     return this
   }
-  
+
   /**
    * Validate all embeds available against current known Discord limits to help prevent bad requests.
    *
    * @returns {EmbedsBuilder}
    */
   validate(): EmbedsBuilder {
-    let totalCharacters = 0;
+    let totalCharacters = 0
 
     if (this.length > 10) {
       throw new Error('You can not have more than 10 embeds on a single message.')
     }
 
-    this.forEach(({ author, description, fields, footer, title}, index) => {
+    this.forEach(({ author, description, fields, footer, title }, index) => {
       if (title) {
         const trimmedTitle = title.trim()
 
@@ -327,7 +334,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
         })
       }
 
-      if (footer) { 
+      if (footer) {
         const trimmedFooterText = footer.text.trim()
 
         if (trimmedFooterText.length > 2048) {
@@ -354,7 +361,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
     return this
   }
-  
+
   /**
    * Returns the current embed.
    *
@@ -366,7 +373,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
       this.newEmbed()
       this.setCurrentEmbed()
     }
- 
+
     return this[this.#currentEmbedIndex]
   }
 }
