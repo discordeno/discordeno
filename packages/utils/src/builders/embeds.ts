@@ -47,7 +47,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    */
   newEmbed(): EmbedsBuilder {
     if (this.length >= 10) {
-      throw new EmbedsBuilderError("Maximum embed count exceeded. You can not have more than 10 embeds.")
+      throw new Error("Maximum embed count exceeded. You can not have more than 10 embeds.")
     }
 
     this.push({})
@@ -106,7 +106,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     }
 
     if (index >= this.length || index < 0) {
-      throw new EmbedsBuilderError("Can not set the current embed to a index out of bounds.")
+      throw new Error("Can not set the current embed to a index out of bounds.")
     }
 
     this.#currentEmbedIndex = index;
@@ -281,7 +281,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     let totalCharacters = 0;
 
     if (this.length > 10) {
-      throw new EmbedsBuilderError('You can not have more than 10 embeds on a single message.')
+      throw new Error('You can not have more than 10 embeds on a single message.')
     }
 
     this.forEach(({ author, description, fields, footer, title}, index) => {
@@ -289,7 +289,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
         const trimmedTitle = title.trim()
 
         if (trimmedTitle.length > 256) {
-          throw new EmbedsBuilderError(`Title of embed ${index} can not be longer than 256 characters.`)
+          throw new Error(`Title of embed ${index} can not be longer than 256 characters.`)
         }
 
         totalCharacters += trimmedTitle.length
@@ -299,7 +299,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
         const trimmedDescription = description.trim()
 
         if (trimmedDescription.length > 4096) {
-          throw new EmbedsBuilderError(`Description of embed ${index} can not be longer than 4096 characters.`)
+          throw new Error(`Description of embed ${index} can not be longer than 4096 characters.`)
         }
 
         totalCharacters += trimmedDescription.length
@@ -307,7 +307,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
 
       if (fields) {
         if (fields.length > 25) {
-          throw new EmbedsBuilderError(`embed ${index} can not have more than 25 fields.`)
+          throw new Error(`embed ${index} can not have more than 25 fields.`)
         }
 
         fields.forEach(({ name, value }, fieldIndex) => {
@@ -315,11 +315,11 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
           const trimmedValue = value.trim()
 
           if (trimmedName.length > 256) {
-            throw new EmbedsBuilderError(`Name of field ${fieldIndex} on embed ${index} can not be longer than 256 characters.`)
+            throw new Error(`Name of field ${fieldIndex} on embed ${index} can not be longer than 256 characters.`)
           }
 
           if (trimmedValue.length > 4096) {
-            throw new EmbedsBuilderError(`Value of field ${fieldIndex} on embed ${index} can not be longer than 1024 characters.`)
+            throw new Error(`Value of field ${fieldIndex} on embed ${index} can not be longer than 1024 characters.`)
           }
 
           totalCharacters += trimmedName.length
@@ -331,7 +331,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
         const trimmedFooterText = footer.text.trim()
 
         if (trimmedFooterText.length > 2048) {
-          throw new EmbedsBuilderError(`Footer text of embed ${index} can not be longer than 2048 characters.`)
+          throw new Error(`Footer text of embed ${index} can not be longer than 2048 characters.`)
         }
 
         totalCharacters += trimmedFooterText.length
@@ -341,7 +341,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
         const trimmedAuthorName = author.name.trim()
 
         if (trimmedAuthorName.length > 256) {
-          throw new EmbedsBuilderError(`Author name of embed ${index} can not be longer than 256 characters.`)
+          throw new Error(`Author name of embed ${index} can not be longer than 256 characters.`)
         }
 
         totalCharacters += trimmedAuthorName.length
@@ -349,7 +349,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     })
 
     if (totalCharacters > 6000) {
-      throw new EmbedsBuilderError('Total character length of all embeds can not exceed 6000 characters.')
+      throw new Error('Total character length of all embeds can not exceed 6000 characters.')
     }
 
     return this
@@ -368,20 +368,5 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
     }
  
     return this[this.#currentEmbedIndex]
-  }
-}
-
-/**
- * Custom EmbedsBuilder error.
- *
- * @class EmbedsBuilderError
- * @typedef {EmbedsBuilderError}
- * @extends {Error}
- */
-class EmbedsBuilderError extends Error {
-  constructor(message: string) {
-    super(message);
-
-    this.name = "EmbedBuilderError"
   }
 }
