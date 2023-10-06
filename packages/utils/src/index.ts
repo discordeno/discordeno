@@ -1,6 +1,7 @@
 export * from './Collection.js'
 export * from './base64.js'
 export * from './bucket.js'
+export * from './builders.js'
 export * from './casing.js'
 export * from './colors.js'
 export * from './hash.js'
