@@ -190,9 +190,9 @@ export function transformInteractionDataOption(bot: Bot, option: DiscordInteract
     value: option.value,
     options: option.options,
     focused: option.focused,
-  }
+  } as InteractionDataOption
 
-  return opt
+  return bot.transformers.customizers.interactionDataOptions(bot, option, opt)
 }
 
 export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInteractionDataResolved, guildId?: bigint): InteractionDataResolved {
