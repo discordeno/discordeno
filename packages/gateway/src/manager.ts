@@ -6,11 +6,12 @@ import type {
   DiscordGetGatewayBot,
   DiscordMember,
   DiscordMemberWithUser,
+  DiscordReady,
   RequestGuildMembers,
 } from '@discordeno/types'
 import { Collection, delay, logger } from '@discordeno/utils'
 import Shard from './Shard.js'
-import type { ShardEvents, StatusUpdate, UpdateVoiceState } from './types.js'
+import { ShardSocketCloseCodes, type ShardEvents, type StatusUpdate, type UpdateVoiceState } from './types.js'
 
 export function createGatewayManager(options: CreateGatewayManagerOptions): GatewayManager {
   const connectionOptions = options.connection ?? {
@@ -50,6 +51,160 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       requestMembers: {
         enabled: options.cache?.requestMembers?.enabled ?? false,
         pending: new Collection(),
+      },
+    },
+    resharding: {
+      enabled: true,
+      shardsFullPercentage: 80,
+      checkInterval: 28800000,
+      shards: new Collection(),
+      pendingShards: new Collection(),
+      async getSessionInfo() {
+        throw new Error(
+          '[Resharding] was enabled but no getSessionInfo handler was provided. Please set a handler like: gateway.resharding.getSessionInfo = async (info) => { // insert code here to fetch getSessionInfo from rest process. }',
+        )
+      },
+      async checkIfReshardingIsNeeded() {
+        logger.warn(`[Resharding] Checking if resharding is needed.`)
+        // Resharding is disabled.
+        if (!gateway.resharding.enabled) return { needed: false }
+        logger.warn(`[Resharding] Resharding is enabled.`)
+
+        // TODO: fetch bot gateway info
+        const sessionInfo = await gateway.resharding.getSessionInfo()
+        logger.warn(`[Resharding] Session info retrieved.`)
+        // Don't have enough identify limits to try resharding
+        if (sessionInfo.sessionStartLimit.remaining < sessionInfo.shards) return { needed: false, info: sessionInfo }
+        logger.warn(`[Resharding] Able to reshard, checking whether necessary now.`)
+
+        // 2500 is the max amount of guilds a single shard can handle
+        // 1000 is the amount of guilds discord uses to determine how many shards to recommend.
+        // This algo helps check if your bot has grown enough to reshard.
+        const percentage = ((2500 * sessionInfo.shards) / (gateway.totalShards * 1000)) * 100
+        // Less than necessary% being used so do nothing
+        if (percentage < gateway.resharding.shardsFullPercentage) return { needed: false, info: sessionInfo }
+        logger.warn(`[Resharding] Resharding is needed.`)
+
+        return { needed: true, info: sessionInfo }
+      },
+      async reshard(info) {
+        logger.warn(`[Resharding] Starting the reshard process. Previous total shards. ${gateway.totalShards}`)
+        // Set values on gateway
+        gateway.totalShards = info.shards
+        // Handles preparing mid sized bots for LBS
+        gateway.totalShards = gateway.calculateTotalShards()
+        // Set first shard id if provided in info
+        if (info.firstShardId) gateway.firstShardId = info.firstShardId
+        // Set last shard id if provided in info
+        if (info.lastShardId) gateway.lastShardId = info.lastShardId
+        logger.warn(`[Resharding] Starting the reshard process. New Total Shards. ${gateway.totalShards}`)
+
+        // Resetting buckets
+        gateway.buckets.clear()
+        // Refilling buckets with new values
+        gateway.prepareBuckets()
+
+        // SPREAD THIS OUT TO DIFFERENT WORKERS TO BEGIN STARTING UP
+        gateway.buckets.forEach(async (bucket, bucketId) => {
+          for (const worker of bucket.workers) {
+            for (const shardId of worker.queue) {
+              await gateway.resharding.tellWorkerToPrepare(worker.id, shardId, bucketId)
+            }
+          }
+        })
+      },
+      async tellWorkerToPrepare(workerId, shardId, bucketId) {
+        logger.warn(`[Resharding] Telling worker to prepare. Worker: ${workerId} | Shard: ${shardId} | Bucket: ${bucketId}`)
+        const shard = new Shard({
+          id: shardId,
+          connection: {
+            compress: gateway.compress,
+            intents: gateway.intents,
+            properties: gateway.properties,
+            token: gateway.token,
+            totalShards: gateway.totalShards,
+            url: gateway.url,
+            version: gateway.version,
+          },
+          // Ignore events until we are ready
+          events: {
+            async message(shard, payload) {
+              if (payload.t === 'READY') {
+                await gateway.resharding.updateGuildsShardId(
+                  (payload.d as DiscordReady).guilds.map((g) => g.id),
+                  shardId,
+                )
+              }
+            },
+          },
+          requestIdentify: async () => {
+            await gateway.identify(shardId)
+          },
+          shardIsReady: async () => {
+            logger.debug(`[Shard] Shard #${shardId} is ready`)
+            await delay(gateway.spawnShardDelay)
+            logger.debug(`[Shard] Resolving shard identify request`)
+            gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.identifyRequests.shift()?.()
+          },
+        })
+
+        if (gateway.preferSnakeCase) {
+          shard.forwardToBot = async (payload) => {
+            options.events.message?.(shard, payload)
+          }
+        }
+
+        gateway.resharding.shards.set(shardId, shard)
+
+        const bucket = gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)
+        if (!bucket) return
+
+        return await new Promise((resolve) => {
+          // Mark that we are making an identify request so another is not made.
+          bucket.identifyRequests.push(resolve)
+          logger.debug(`[Gateway] identifying shard #(${shardId}).`)
+          // This will trigger identify and when READY is received it will resolve the above request.
+          shard?.identify().then(async () => {
+            // Tell the manager that this shard is online
+            return await gateway.resharding.shardIsPending(shard)
+          })
+        })
+      },
+      async updateGuildsShardId(guildIds, shardId) {
+        logger.warn(`[Resharding] Updating the following guild ids shard to #${shardId}: ${guildIds.join(', ')}`)
+      },
+      async shardIsPending(shard) {
+        // Save this in pending at the moment, until all shards are online
+        gateway.resharding.pendingShards.set(shard.id, shard)
+        logger.warn(`[Resharding] Shard #${shard.id} is now pending`)
+        // Check if all shards are now online.
+        if (gateway.totalShards > gateway.resharding.pendingShards.size) return
+        logger.warn(`[Resharding] All shards are now online.`)
+
+        // New shards start processing events
+        for (const shard of gateway.resharding.pendingShards.values()) {
+          shard.events.message = options.events.message
+        }
+
+        // Old shards stop processing events
+        for (const shard of gateway.shards.values()) {
+          const oldHandler = shard.events.message
+
+          shard.events.message = async function (_, message) {
+            // Member checks need to continue but others can stop
+            if (message.t !== 'GUILD_MEMBERS_CHUNK') return
+            // Process only the chunking events
+            oldHandler?.(shard, message)
+          }
+        }
+
+        logger.warn(`[Resharding] Shutting down old shards.`)
+        // Close old shards
+        await gateway.shutdown(ShardSocketCloseCodes.Resharded, 'Resharded!')
+        logger.warn(`[Resharding] Completed.`)
+
+        // Replace old shards
+        gateway.shards = gateway.resharding.shards
       },
     },
 
@@ -392,6 +547,40 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
   >
   /** The shards that are created. */
   shards: Map<number, Shard>
+  /** Everything related to resharding. */
+  resharding: {
+    /**
+     * Whether or not automated resharding should be enabled.
+     * @default true
+     */
+    enabled: boolean
+    /**
+     * The % of how full a shard is when resharding should be triggered.
+     * @default 80 as in 80%
+     */
+    shardsFullPercentage: number
+    /**
+     * The interval in milliseconds, of how often to check whether resharding is needed.
+     * @default 28800000 8 hours
+     */
+    checkInterval: number
+    /** Holds the shards that resharding has created. Once resharding is done, this replaces the gateway.shards */
+    shards: Collection<number, Shard>
+    /** Holds the pending shards that have been created and are pending all shards finish loading. */
+    pendingShards: Collection<number, Shard>
+    /** Handler to get shard count and other session info. */
+    getSessionInfo: () => Promise<Camelize<DiscordGetGatewayBot>>
+    /** Handler to edit the shard id on any cached guilds. */
+    updateGuildsShardId: (guildIds: string[], shardId: number) => Promise<void>
+    /** Handler to check if resharding is necessary. */
+    checkIfReshardingIsNeeded: () => Promise<{ needed: boolean; info?: Camelize<DiscordGetGatewayBot> }>
+    /** Handler to begin resharding. */
+    reshard: (info: Camelize<DiscordGetGatewayBot> & { firstShardId?: number; lastShardId?: number }) => Promise<void>
+    /** Handler to communicate to a worker that a shard needs to be created. */
+    tellWorkerToPrepare: (workerId: number, shardId: number, bucketId: number) => Promise<void>
+    /** Handler to alert the gateway that a shard(resharded) is online. It should now wait for all shards to be pending before shutting off old shards. */
+    shardIsPending: (shard: Shard) => Promise<void>
+  }
   /** Determine max number of shards to use based upon the max concurrency. */
   calculateTotalShards: () => number
   /** Determine the id of the worker which is handling a shard. */
