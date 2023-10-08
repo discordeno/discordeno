@@ -2,6 +2,8 @@ import type { DiscordGatewayPayload, DiscordScheduledEvent } from '@discordeno/t
 import type { Bot } from '../../../bot.js'
 
 export async function handleGuildScheduledEventCreate(bot: Bot, data: DiscordGatewayPayload, shardId: number): Promise<void> {
+  if (bot.events.scheduledEventCreate === undefined) return
+
   const payload = data.d as DiscordScheduledEvent
-  bot.events.scheduledEventCreate?.(bot.transformers.scheduledEvent(bot, payload))
+  bot.events.scheduledEventCreate(bot.transformers.scheduledEvent(bot, payload))
 }

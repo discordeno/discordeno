@@ -2,7 +2,9 @@ import type { DiscordAuditLogEntry, DiscordGatewayPayload } from '@discordeno/ty
 import type { Bot } from '../../bot.js'
 
 export async function handleGuildAuditLogEntryCreate(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
+  if (bot.events.guildAuditLogEntryCreate === undefined) return
+
   // TODO: better type here
   const payload = data.d as DiscordAuditLogEntry & { guild_id: string }
-  bot.events.guildAuditLogEntryCreate?.(bot.transformers.auditLogEntry(bot, payload), bot.transformers.snowflake(payload.guild_id))
+  bot.events.guildAuditLogEntryCreate(bot.transformers.auditLogEntry(bot, payload), bot.transformers.snowflake(payload.guild_id))
 }
