@@ -144,6 +144,11 @@ export interface SelectMenuUsersComponent {
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string
+  /**
+   * List of default values for auto-populated select menu components
+   * The number of default values must be in the range defined by minValues and maxValues
+   */
+  defaultValues?: SelectMenuDefaultValue[]
   /** The minimum number of items that must be selected. Default 1. Between 1-25. */
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
@@ -159,6 +164,11 @@ export interface SelectMenuRolesComponent {
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string
+  /**
+   * List of default values for auto-populated select menu components
+   * The number of default values must be in the range defined by minValues and maxValues
+   */
+  defaultValues?: SelectMenuDefaultValue[]
   /** The minimum number of items that must be selected. Default 1. Between 1-25. */
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
@@ -174,6 +184,11 @@ export interface SelectMenuUsersAndRolesComponent {
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string
+  /**
+   * List of default values for auto-populated select menu components
+   * The number of default values must be in the range defined by minValues and maxValues
+   */
+  defaultValues?: SelectMenuDefaultValue[]
   /** The minimum number of items that must be selected. Default 1. Between 1-25. */
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
@@ -191,6 +206,11 @@ export interface SelectMenuChannelsComponent {
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string
+  /**
+   * List of default values for auto-populated select menu components
+   * The number of default values must be in the range defined by minValues and maxValues
+   */
+  defaultValues?: SelectMenuDefaultValue[]
   /** The minimum number of items that must be selected. Default 1. Between 1-25. */
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
@@ -219,6 +239,13 @@ export interface SelectOption {
   }
   /** Will render this option as already-selected by default. */
   default?: boolean
+}
+
+export interface SelectMenuDefaultValue {
+  /** ID of a user, role, or channel */
+  id: bigint
+  /** Type of value that id represents. */
+  type: 'user' | 'role' | 'channel'
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#text-inputs-text-input-structure */
@@ -337,6 +364,18 @@ export interface GetGuildAuditLog {
   limit?: number
 }
 
+/** https://discord.com/developers/docs/resources/user#get-current-user-guilds-query-string-params */
+export interface GetUserGuilds {
+  /** Get guilds before this guild ID */
+  before?: BigString
+  /** Get guilds after this guild ID */
+  after?: BigString
+  /** Maximum number of entries (between 1-200) to return, defaults to 200 */
+  limit?: number
+  /** Include approximate member and presence counts in response, defaults to false */
+  withCounts?: boolean
+}
+
 export interface GetBans {
   /** Number of users to return (up to maximum 1000). Default: 1000 */
   limit?: number
@@ -348,7 +387,7 @@ export interface GetBans {
 
 /** https://discord.com/developers/docs/resources/guild#list-guild-members */
 export interface ListGuildMembers {
-  /** Max number of members to return (1-1000). Default: 1000 */
+  /** Max number of members to return (1-1000). Default: 1 */
   limit?: number
   /** The highest user id in the previous page. Default: 0 */
   after?: string
@@ -530,6 +569,56 @@ export interface CreateGuildChannel {
   }>
   /** the default sort order type used to order posts in forum channels */
   defaultSortOrder?: SortOrderTypes | null
+}
+
+export interface CreateGlobalApplicationCommandOptions {
+  /** The bearer token of the developer of the application */
+  bearerToken: string
+}
+
+export interface CreateGuildApplicationCommandOptions {
+  /** The bearer token of the developer of the application */
+  bearerToken: string
+}
+
+export interface UpsertGlobalApplicationCommandOptions {
+  /** The bearer token of the developer of the application */
+  bearerToken: string
+}
+
+export interface UpsertGuildApplicationCommandOptions {
+  /** The bearer token of the developer of the application */
+  bearerToken: string
+}
+
+/** https://discord.com/developers/docs/resources/user#create-group-dm-json-params */
+export interface GetGroupDmOptions {
+  /** Access tokens of users that have granted your app the `gdm.join` scope */
+  accessTokens: string[]
+  /** A mapping of user ids to their respective nicknames */
+  nicks?: Record<string, string>
+}
+
+/** https://discord.com/developers/docs/resources/channel#group-dm-add-recipient-json-params */
+export interface AddDmRecipientOptions {
+  /** access token of a user that has granted your app the `gdm.join` scope */
+  accessToken: string
+  /** nickname of the user being added */
+  nick?: string
+}
+
+/** https://discord.com/developers/docs/resources/guild#add-guild-member-json-params */
+export interface AddGuildMemberOptions {
+  /** access token of a user that has granted your app the `guilds.join` scope */
+  accessToken: string
+  /** Value to set user's nickname to. Requires MANAGE_NICKNAMES permission on the bot */
+  nick?: string
+  /** Array of role ids the member is assigned. Requires MANAGE_ROLES permission on the bot */
+  roles?: string[]
+  /** Whether the user is muted in voice channels. Requires MUTE_MEMBERS permission on the bot */
+  mute?: boolean
+  /** Whether the user is deafened in voice channels. Requires DEAFEN_MEMBERS permission on the bot */
+  deaf?: boolean
 }
 
 export interface ModifyChannel {
@@ -853,7 +942,7 @@ export interface EditMessage {
   /** Edit the flags of the message (only `SUPPRESS_EMBEDS` can currently be set/unset) */
   flags?: 4 | null
   /** The contents of the files being sent/edited */
-  files?: FileContent[] | null
+  files?: FileContent[]
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
   /** When specified (adding new attachments), attachments which are not provided in this list will be removed. */
@@ -870,6 +959,14 @@ export interface ApplicationCommandPermissions {
   type: ApplicationCommandPermissionTypes
   /** `true` to allow, `false`, to disallow */
   permission: boolean
+}
+
+/** Additional proprieties for https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions and https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions */
+export interface GetApplicationCommandPermissionOptions {
+  /** Access token of the user. Requires the `applications.commands.permissions.update` scope */
+  accessToken: string
+  /** Id of the application */
+  applicationId: BigString
 }
 
 /** https://discord.com/developers/docs/resources/guild#create-guild */
@@ -1078,8 +1175,8 @@ export interface ModifyGuildMember {
   deaf?: boolean | null
   /** Id of channel to move user to (if they are connected to voice). Requires the `MOVE_MEMBERS` permission */
   channelId?: BigString | null
-  /** when the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission */
-  communicationDisabledUntil?: number | null
+  /** when the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission. The date must be given in a ISO string form. */
+  communicationDisabledUntil?: string | null
 }
 
 /** https://discord.com/developers/docs/resources/guild#begin-guild-prune */

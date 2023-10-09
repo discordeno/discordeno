@@ -1,7 +1,7 @@
 import type { BigString, ChannelTypes, DiscordChannel, DiscordThreadMember, OverwriteReadable, VideoQualityModes } from '@discordeno/types'
 import { calculatePermissions, type Bot } from '../index.js'
-import { Permissions } from './toggles/Permissions.js'
 import { ChannelToggles } from './toggles/channel.js'
+import { Permissions } from './toggles/Permissions.js'
 
 const Mask = (1n << 64n) - 1n
 
@@ -67,13 +67,14 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } 
   channel.toggles = new ChannelToggles(payload.channel)
 
   if (payload.channel.id && props.id) channel.id = bot.transformers.snowflake(payload.channel.id)
-  if ((payload.guildId ?? payload.channel.guild_id) && props.guildId) channel.guildId = payload.guildId ?? bot.transformers.snowflake(payload.channel.guild_id!)
+  if ((payload.guildId ?? payload.channel.guild_id) && props.guildId)
+    channel.guildId = payload.guildId ?? bot.transformers.snowflake(payload.channel.guild_id!)
   if (props.type) channel.type = payload.channel.type
   if (props.position) channel.position = payload.channel.position
   if (payload.channel.name && props.name) channel.name = payload.channel.name
   if (payload.channel.topic && props.topic) channel.topic = payload.channel.topic
   if (payload.channel.last_message_id && props.lastMessageId) channel.lastMessageId = bot.transformers.snowflake(payload.channel.last_message_id)
-  if (payload.channel.bitrate && props.bitrate) channel.bitrate = props.bitrate
+  if (payload.channel.bitrate && props.bitrate) channel.bitrate = payload.channel.bitrate
   if (props.userLimit) channel.userLimit = payload.channel.user_limit
   if (props.rateLimitPerUser) channel.rateLimitPerUser = payload.channel.rate_limit_per_user
   if (payload.channel.owner_id && props.ownerId) channel.ownerId = bot.transformers.snowflake(payload.channel.owner_id)
@@ -98,9 +99,9 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } 
   if (payload.channel.permission_overwrites && props.permissionOverwrites) {
     channel.internalOverwrites = payload.channel.permission_overwrites.map((o) => packOverwrites(o.allow ?? '0', o.deny ?? '0', o.id, o.type))
   }
-  if (props.parentId && payload.channel.parent_id) channel.parentId = bot.transformers.snowflake(payload.channel.parent_id);
+  if (props.parentId && payload.channel.parent_id) channel.parentId = bot.transformers.snowflake(payload.channel.parent_id)
 
-  return bot.transformers.customizers.channel(bot, payload.channel, channel);
+  return bot.transformers.customizers.channel(bot, payload.channel, channel)
 }
 
 export interface BaseChannel {
