@@ -121,7 +121,7 @@ export interface ShardEvents {
   identified?: (shard: Shard) => unknown
   /** The shard has received a message from Discord. */
   message?: (shard: Shard, payload: Camelize<DiscordGatewayPayload>) => unknown
-  /* The shard has received a message that the gateway manager should receive */
+  /* The shard has received a GUILD_MEMBER_CHUNK from Discord and should be handled accordingly */
   guildMemberChunk?: (payload: DiscordGuildMembersChunk) => unknown
 }
 
