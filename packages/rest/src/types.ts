@@ -86,8 +86,8 @@ import type {
   GetInvite,
   GetMessagesOptions,
   GetReactions,
-  GetScheduledEventUsers,
   GetScheduledEvents,
+  GetScheduledEventUsers,
   GetUserGuilds,
   GetWebhookMessageOptions,
   InteractionCallbackData,
@@ -1497,15 +1497,19 @@ export interface RestManager {
   /**
    * Exchange the information to get a OAuth2 accessToken token
    *
+   * @param clientId - Application's client id
+   * @param clientSecret - application's client secret
    * @param options - The options to make the exchange with discord
    */
-  exchangeToken: (options: CamelizedDiscordTokenExchange) => Promise<CamelizedDiscordAccessTokenResponse>
+  exchangeToken: (clientId: BigString, clientSecret: string, options: CamelizedDiscordTokenExchange) => Promise<CamelizedDiscordAccessTokenResponse>
   /**
    * Revoke an access_token
    *
+   * @param clientId - Application's client id
+   * @param clientSecret - application's client secret
    * @param options - The options to revoke the access_token
    */
-  revokeToken: (options: CamelizedDiscordTokenRevocation) => Promise<void>
+  revokeToken: (clientId: BigString, clientSecret: string, options: CamelizedDiscordTokenRevocation) => Promise<void>
   /**
    * Gets the permissions of a guild application command.
    *
