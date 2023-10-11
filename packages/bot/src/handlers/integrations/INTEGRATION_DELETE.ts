@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordIntegrationDelete } from '@discorden
 import type { Bot } from '../../index.js'
 
 export async function handleIntegrationDelete(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.integrationDelete === undefined) return
+  if (!bot.events.integrationDelete) return
 
   const payload = data.d as DiscordIntegrationDelete
 

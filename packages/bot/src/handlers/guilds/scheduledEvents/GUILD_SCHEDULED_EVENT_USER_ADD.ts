@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordScheduledEventUserAdd } from '@disco
 import type { Bot } from '../../../bot.js'
 
 export async function handleGuildScheduledEventUserAdd(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.scheduledEventUserAdd === undefined) return
+  if (!bot.events.scheduledEventUserAdd) return
 
   const payload = data.d as DiscordScheduledEventUserAdd
 

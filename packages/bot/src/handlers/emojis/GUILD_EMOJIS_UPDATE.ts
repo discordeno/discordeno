@@ -3,7 +3,7 @@ import { Collection } from '@discordeno/utils'
 import type { Bot } from '../../bot.js'
 
 export async function handleGuildEmojisUpdate(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.guildEmojisUpdate === undefined) return
+  if (!bot.events.guildEmojisUpdate) return
 
   const payload = data.d as DiscordGuildEmojisUpdate
 

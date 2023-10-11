@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordVoiceState } from '@discordeno/types
 import type { Bot } from '../../index.js'
 
 export async function handleVoiceStateUpdate(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.voiceStateUpdate === undefined) return
+  if (!bot.events.voiceStateUpdate) return
 
   const payload = data.d as DiscordVoiceState
   if (!payload.guild_id) return

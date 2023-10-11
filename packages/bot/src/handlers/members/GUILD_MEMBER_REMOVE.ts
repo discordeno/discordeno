@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordGuildMemberRemove } from '@discorden
 import type { Bot } from '../../index.js'
 
 export async function handleGuildMemberRemove(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.guildMemberRemove === undefined) return
+  if (!bot.events.guildMemberRemove) return
 
   const payload = data.d as DiscordGuildMemberRemove
   const guildId = bot.transformers.snowflake(payload.guild_id)

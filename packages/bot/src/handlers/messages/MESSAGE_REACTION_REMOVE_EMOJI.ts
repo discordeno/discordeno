@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordMessageReactionRemoveEmoji } from '@
 import type { Bot } from '../../index.js'
 
 export async function handleMessageReactionRemoveEmoji(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.reactionRemoveEmoji === undefined) return
+  if (!bot.events.reactionRemoveEmoji) return
 
   const payload = data.d as DiscordMessageReactionRemoveEmoji
 

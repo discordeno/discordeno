@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordStageInstance } from '@discordeno/ty
 import type { Bot } from '../../bot.js'
 
 export async function handleStageInstanceUpdate(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.stageInstanceUpdate === undefined) return
+  if (!bot.events.stageInstanceUpdate) return
 
   const payload = data.d as DiscordStageInstance
 

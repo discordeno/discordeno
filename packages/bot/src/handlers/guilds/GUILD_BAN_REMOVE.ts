@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordGuildBanAddRemove } from '@discorden
 import type { Bot } from '../../bot.js'
 
 export async function handleGuildBanRemove(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.guildBanRemove === undefined) return
+  if (!bot.events.guildBanRemove) return
 
   const payload = data.d as DiscordGuildBanAddRemove
 

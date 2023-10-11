@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordMessageReactionRemove } from '@disco
 import type { Bot } from '../../index.js'
 
 export async function handleMessageReactionRemove(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.reactionRemove === undefined) return
+  if (!bot.events.reactionRemove) return
 
   const payload = data.d as DiscordMessageReactionRemove
 

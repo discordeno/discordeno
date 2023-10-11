@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordTypingStart } from '@discordeno/type
 import type { Bot } from '../../index.js'
 
 export async function handleTypingStart(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.typingStart === undefined) return
+  if (!bot.events.typingStart) return
 
   const payload = data.d as DiscordTypingStart
 

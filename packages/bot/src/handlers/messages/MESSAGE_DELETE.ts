@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordMessageDelete } from '@discordeno/ty
 import type { Bot } from '../../index.js'
 
 export async function handleMessageDelete(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.messageDelete === undefined) return
+  if (!bot.events.messageDelete) return
 
   const payload = data.d as DiscordMessageDelete
 

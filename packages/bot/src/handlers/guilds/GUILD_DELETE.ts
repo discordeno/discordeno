@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordUnavailableGuild } from '@discordeno
 import type { Bot } from '../../bot.js'
 
 export async function handleGuildDelete(bot: Bot, data: DiscordGatewayPayload, shardId: number): Promise<void> {
-  if (bot.events.guildDelete === undefined || bot.events.guildUnavailable === undefined) return
+  if (!bot.events.guildDelete === undefined || bot.events.guildUnavailable) return
 
   const payload = data.d as DiscordUnavailableGuild
 

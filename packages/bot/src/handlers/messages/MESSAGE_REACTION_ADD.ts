@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordMessageReactionAdd } from '@discorde
 import type { Bot } from '../../index.js'
 
 export async function handleMessageReactionAdd(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.reactionAdd === undefined) return
+  if (!bot.events.reactionAdd) return
 
   const payload = data.d as DiscordMessageReactionAdd
 

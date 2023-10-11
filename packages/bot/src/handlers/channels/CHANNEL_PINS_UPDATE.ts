@@ -2,7 +2,7 @@ import type { DiscordChannelPinsUpdate, DiscordGatewayPayload } from '@discorden
 import type { Bot } from '../../bot.js'
 
 export async function handleChannelPinsUpdate(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.channelPinsUpdate === undefined) return
+  if (!bot.events.channelPinsUpdate) return
 
   const payload = data.d as DiscordChannelPinsUpdate
 

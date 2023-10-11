@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordMessageDeleteBulk } from '@discorden
 import type { Bot } from '../../index.js'
 
 export async function handleMessageDeleteBulk(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.messageDeleteBulk === undefined) return
+  if (!bot.events.messageDeleteBulk) return
 
   const payload = data.d as DiscordMessageDeleteBulk
 

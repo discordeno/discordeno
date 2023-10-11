@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordScheduledEventUserRemove } from '@di
 import type { Bot } from '../../../bot.js'
 
 export async function handleGuildScheduledEventUserRemove(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.scheduledEventUserRemove === undefined) return
+  if (!bot.events.scheduledEventUserRemove) return
 
   const payload = data.d as DiscordScheduledEventUserRemove
 

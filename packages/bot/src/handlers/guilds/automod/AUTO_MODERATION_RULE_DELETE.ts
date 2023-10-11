@@ -3,7 +3,7 @@ import type { Bot } from '../../../bot.js'
 
 /** Requires the MANAGE_GUILD permission. */
 export async function handleAutoModerationRuleDelete(bot: Bot, data: DiscordGatewayPayload, shardId: number): Promise<void> {
-  if (bot.events.automodRuleDelete === undefined) return
+  if (!bot.events.automodRuleDelete) return
 
   const payload = data.d as DiscordAutoModerationRule
   bot.events.automodRuleDelete(bot.transformers.automodRule(bot, payload))

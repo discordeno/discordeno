@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordGuildIntegrationsUpdate } from '@dis
 import type { Bot } from '../../bot.js'
 
 export async function handleGuildIntegrationsUpdate(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.integrationUpdate === undefined) return
+  if (!bot.events.integrationUpdate) return
 
   const payload = data.d as DiscordGuildIntegrationsUpdate
 

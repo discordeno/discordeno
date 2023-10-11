@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordThreadMemberUpdate } from '@discorde
 import type { Bot } from '../../index.js'
 
 export async function handleThreadMemberUpdate(bot: Bot, data: DiscordGatewayPayload, shardId: number): Promise<void> {
-  if (bot.events.threadMemberUpdate === undefined) return
+  if (!bot.events.threadMemberUpdate) return
 
   const payload = data.d as DiscordThreadMemberUpdate
 

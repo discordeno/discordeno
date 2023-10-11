@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordGuildRoleCreate } from '@discordeno/
 import type { Bot } from '../../index.js'
 
 export async function handleGuildRoleCreate(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.roleCreate === undefined) return
+  if (!bot.events.roleCreate) return
 
   const payload = data.d as DiscordGuildRoleCreate
   bot.events.roleCreate(

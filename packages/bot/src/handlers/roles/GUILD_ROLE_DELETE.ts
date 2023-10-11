@@ -2,7 +2,7 @@ import type { DiscordGatewayPayload, DiscordGuildRoleDelete } from '@discordeno/
 import type { Bot } from '../../index.js'
 
 export async function handleGuildRoleDelete(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  if (bot.events.roleDelete === undefined) return
+  if (!bot.events.roleDelete) return
 
   const payload = data.d as DiscordGuildRoleDelete
   bot.events.roleDelete({
