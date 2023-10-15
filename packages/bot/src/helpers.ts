@@ -255,11 +255,11 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     getCurrentAuthenticationInfo: async (bearerToken) => {
       return await bot.rest.getCurrentAuthenticationInfo(bearerToken)
     },
-    exchangeToken: async (options) => {
-      return await bot.rest.exchangeToken(options)
+    exchangeToken: async (clientId, clientSecret, options) => {
+      return await bot.rest.exchangeToken(clientId, clientSecret, options)
     },
-    revokeToken: async (options) => {
-      return await bot.rest.revokeToken(options)
+    revokeToken: async (clientId, clientSecret, options) => {
+      return await bot.rest.revokeToken(clientId, clientSecret, options)
     },
     getApplicationCommandPermission: async (guildId, commandId, options) => {
       const res = await bot.rest.getApplicationCommandPermission(guildId, commandId, options)
@@ -749,8 +749,8 @@ export interface BotHelpers {
   getActiveThreads: (guildId: BigString) => Promise<{ threads: Channel[]; members: ThreadMember[] }>
   getApplicationInfo: () => Promise<Application>
   getCurrentAuthenticationInfo: (bearerToken: string) => Promise<CamelizedDiscordCurrentAuthorization>
-  exchangeToken: (options: CamelizedDiscordTokenExchange) => Promise<CamelizedDiscordAccessTokenResponse>
-  revokeToken: (options: CamelizedDiscordTokenRevocation) => Promise<void>
+  exchangeToken: (clientId: BigString, clientSecret: string, options: CamelizedDiscordTokenExchange) => Promise<CamelizedDiscordAccessTokenResponse>
+  revokeToken: (clientId: BigString, clientSecret: string, options: CamelizedDiscordTokenRevocation) => Promise<void>
   getApplicationCommandPermission: (
     guildId: BigString,
     commandId: BigString,

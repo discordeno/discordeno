@@ -6,7 +6,6 @@ import type {
   ApplicationCommandTypes,
   ApplicationFlags,
   AuditLogEvents,
-  BigString,
   ButtonStyles,
   ChannelFlags,
   ChannelTypes,
@@ -377,10 +376,6 @@ export interface DiscordApplication {
 export type DiscordTokenExchange = DiscordTokenExchangeAuthorizationCode | DiscordTokenExchangeRefreshToken | DiscordTokenExchangeClientCredentials
 
 export interface DiscordTokenExchangeAuthorizationCode {
-  /** Application's client id */
-  client_id: BigString
-  /** application's client secret */
-  client_secret: string
   grant_type: 'authorization_code'
   /** The code for the token exchange */
   code: string
@@ -390,10 +385,6 @@ export interface DiscordTokenExchangeAuthorizationCode {
 
 /** https://discord.com/developers/docs/topics/oauth2#client-credentials-grant */
 export interface DiscordTokenExchangeRefreshToken {
-  /** Application's client id */
-  client_id: BigString
-  /** application's client secret */
-  client_secret: string
   grant_type: 'refresh_token'
   /** the user's refresh token */
   refresh_token: string
@@ -401,10 +392,6 @@ export interface DiscordTokenExchangeRefreshToken {
 
 /** https://discord.com/developers/docs/topics/oauth2#client-credentials-grant */
 export interface DiscordTokenExchangeClientCredentials {
-  /** Application's client id */
-  client_id: BigString
-  /** application's client secret */
-  client_secret: string
   grant_type: 'client_credentials'
   /** The scope(s) for the access token */
   scope: OAuth2Scope[]
@@ -433,12 +420,10 @@ export interface DiscordAccessTokenResponse {
 }
 
 export interface DiscordTokenRevocation {
-  /** Application's client id */
-  client_id: BigString
-  /** application's client secret */
-  client_secret: string
   /** The access token to revoke */
   token: string
+  /** Optional, the type of token you are using for the revocation */
+  token_type_hint?: 'access_token' | 'refresh_token'
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information-response-structure */
