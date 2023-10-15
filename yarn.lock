@@ -1500,6 +1500,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"commander@npm:^11.0.0":
+  version: 11.0.0
+  resolution: "commander@npm:11.0.0"
+  checksum: 6621954e1e1d078b4991c1f5bbd9439ad37aa7768d6ab4842de1dbd4d222c8a27e1b8e62108b3a92988614af45031d5bb2a2aaa92951f4d0c934d1a1ac564bb4
+  languageName: node
+  linkType: hard
+
 "commander@npm:^7.1.0":
   version: 7.2.0
   resolution: "commander@npm:7.2.0"
@@ -1721,6 +1728,7 @@ __metadata:
     "@types/sinon": ^10.0.13
     c8: ^7.13.0
     chai: ^4.3.7
+    commander: ^11.0.0
     eslint: ^8.36.0
     eslint-config-discordeno: "*"
     mocha: ^10.2.0
@@ -1728,6 +1736,8 @@ __metadata:
     ts-node: ^10.9.1
     tsconfig: "*"
     typescript: ^4.9.5
+  bin:
+    discordeno: ./bin/disocrdeno.js
   languageName: unknown
   linkType: soft
 
