@@ -2,5 +2,7 @@ import type { DiscordGatewayPayload, DiscordInviteCreate } from '@discordeno/typ
 import type { Bot } from '../../index.js'
 
 export async function handleInviteCreate(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  bot.events.inviteCreate?.(bot.transformers.invite(bot, data.d as DiscordInviteCreate))
+  if (!bot.events.inviteCreate) return
+
+  bot.events.inviteCreate(bot.transformers.invite(bot, data.d as DiscordInviteCreate))
 }

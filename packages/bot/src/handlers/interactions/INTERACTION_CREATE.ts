@@ -2,5 +2,7 @@ import type { DiscordGatewayPayload, DiscordInteraction } from '@discordeno/type
 import type { Bot } from '../../index.js'
 
 export async function handleInteractionCreate(bot: Bot, data: DiscordGatewayPayload): Promise<void> {
-  bot.events.interactionCreate?.(bot.transformers.interaction(bot, data.d as DiscordInteraction))
+  if (!bot.events.interactionCreate) return
+
+  bot.events.interactionCreate(bot.transformers.interaction(bot, data.d as DiscordInteraction))
 }
