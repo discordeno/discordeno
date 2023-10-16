@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
-import type { DiscordGatewayPayload, DiscordGuildMembersChunk, DiscordHello, DiscordReady } from '@discordeno/types'
+import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
 import { camelize, delay, LeakyBucket, logger } from '@discordeno/utils'
 import { inflateSync } from 'node:zlib'
@@ -447,9 +447,6 @@ export class DiscordenoShard {
         this.resolves.get('READY')?.(packet)
         this.resolves.delete('READY')
         break
-      }
-      case 'GUILD_MEMBERS_CHUNK': {
-        this.events.guildMemberChunk?.(packet.d as DiscordGuildMembersChunk)
       }
     }
 
