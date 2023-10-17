@@ -6,7 +6,6 @@ import {
   type BigString,
   type Camelize,
   type DiscordGetGatewayBot,
-  type DiscordMember,
   type DiscordMemberWithUser,
   type RequestGuildMembers,
 } from '@discordeno/types'
@@ -297,7 +296,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       const members =
         !gateway.cache.requestMembers?.enabled || !options?.nonce
           ? []
-          : new Promise<Camelize<DiscordMember[]>>((resolve, reject) => {
+          : new Promise<Camelize<DiscordMemberWithUser[]>>((resolve, reject) => {
               // Should never happen.
               if (!gateway.cache.requestMembers?.enabled || !options?.nonce) {
                 reject(new Error("Can't request the members without the nonce or with the feature disabled."))
@@ -528,7 +527,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    *
    * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
    */
-  requestMembers: (guildId: BigString, options?: Omit<RequestGuildMembers, 'guildId'>) => Promise<Camelize<DiscordMember[]>>
+  requestMembers: (guildId: BigString, options?: Omit<RequestGuildMembers, 'guildId'>) => Promise<Camelize<DiscordMemberWithUser[]>>
   /**
    * Leaves the voice channel the bot user is currently in.
    *
