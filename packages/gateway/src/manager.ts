@@ -6,11 +6,10 @@ import {
   type BigString,
   type Camelize,
   type DiscordGetGatewayBot,
-  type DiscordMember,
   type DiscordMemberWithUser,
   type RequestGuildMembers,
 } from '@discordeno/types'
-import { camelize, Collection, delay, logger } from '@discordeno/utils'
+import { Collection, delay, logger } from '@discordeno/utils'
 import Shard from './Shard.js'
 import type { ShardEvents, ShardSocketRequest, StatusUpdate, UpdateVoiceState } from './types.js'
 
@@ -24,29 +23,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       total: 1000,
       resetAfter: 1000 * 60 * 60 * 24,
     },
-  }
-
-  options.events.guildMemberChunk ??= (payload) => {
-    // If it's not enabled skip checks.
-    if (!gateway.cache.requestMembers?.enabled) return
-
-    // If this request has no nonce, skip checks.
-    if (!payload.nonce) return
-
-    const pending = gateway.cache.requestMembers.pending.get(payload.nonce)
-    if (!pending) return
-
-    if (payload.chunk_count === 1) pending.members = payload.members
-    else pending.members.push(...payload.members)
-
-    // If this is not the final chunk, just save to cache.
-    if (payload.chunk_index + 1 < payload.chunk_count) return
-
-    // Resolve the promise that all requests are done.
-    pending.resolve(camelize(pending.members))
-
-    // Delete the cache to clean up once its done.
-    gateway.cache.requestMembers.pending.delete(payload.nonce)
   }
 
   const gateway: GatewayManager = {
@@ -320,7 +296,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       const members =
         !gateway.cache.requestMembers?.enabled || !options?.nonce
           ? []
-          : new Promise<Camelize<DiscordMember[]>>((resolve, reject) => {
+          : new Promise<Camelize<DiscordMemberWithUser[]>>((resolve, reject) => {
               // Should never happen.
               if (!gateway.cache.requestMembers?.enabled || !options?.nonce) {
                 reject(new Error("Can't request the members without the nonce or with the feature disabled."))
@@ -551,7 +527,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    *
    * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
    */
-  requestMembers: (guildId: BigString, options?: Omit<RequestGuildMembers, 'guildId'>) => Promise<Camelize<DiscordMember[]>>
+  requestMembers: (guildId: BigString, options?: Omit<RequestGuildMembers, 'guildId'>) => Promise<Camelize<DiscordMemberWithUser[]>>
   /**
    * Leaves the voice channel the bot user is currently in.
    *
@@ -571,7 +547,7 @@ export interface RequestMemberRequest {
   /** The unique nonce for this request. */
   nonce: string
   /** The resolver handler to run when all members arrive. */
-  resolve: (value: Camelize<DiscordMember[]> | PromiseLike<Camelize<DiscordMember[]>>) => void
+  resolve: (value: Camelize<DiscordMemberWithUser[]> | PromiseLike<Camelize<DiscordMemberWithUser[]>>) => void
   /** The members that have already arrived for this request. */
   members: DiscordMemberWithUser[]
 }
