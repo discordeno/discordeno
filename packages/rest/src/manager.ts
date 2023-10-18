@@ -84,6 +84,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
   const rest: RestManager = {
     applicationId,
     authorization: options.proxy?.authorization,
+    authorizationHeader: options.proxy?.authorizationHeader ?? 'authorization',
     baseUrl,
     deleteQueueDelay: 60000,
     globallyRateLimited: false,
@@ -464,7 +465,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         if (rest.authorization !== undefined) {
           options ??= {}
           options.headers ??= {}
-          options.headers.authorization = rest.authorization
+          options.headers[rest.authorizationHeader] = rest.authorization
         }
 
         const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
