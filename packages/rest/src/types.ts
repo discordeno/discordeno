@@ -86,8 +86,8 @@ import type {
   GetInvite,
   GetMessagesOptions,
   GetReactions,
-  GetScheduledEventUsers,
   GetScheduledEvents,
+  GetScheduledEventUsers,
   GetUserGuilds,
   GetWebhookMessageOptions,
   InteractionCallbackData,
@@ -129,8 +129,18 @@ export interface CreateRestManagerOptions {
      * @default https://discord.com/api
      */
     baseUrl: string
-    /** The authorization header to attach when sending requests to the proxy. */
+    /** The authorization header value to attach when sending requests to the proxy. */
     authorization: string
+    /**
+     * The authorization header name to use when sending requests to the proxy
+     *
+     * @remarks
+     * If the `authorization` header is used it will override any authorization that is given even if
+     * the requests uses OAuth2 Bearer tokens / Basic tokens
+     *
+     * @default "authorization" // For compatibility purposes
+     */
+    authorizationHeader?: string
   }
   /**
    * The api versions which can be used to make requests.
@@ -158,8 +168,10 @@ export interface RestManager {
    * Mostly used only for intern functions.
    */
   isProxied: boolean
-  /** The authorization header to attach when sending requests to the proxy. */
+  /** The authorization header value to attach when sending requests to the proxy. */
   authorization?: string
+  /** The authorization header name to attach when sending requests to the proxy */
+  authorizationHeader: string
   /** The maximum amount of times a request should be retried. Defaults to Infinity */
   maxRetryCount: number
   /** Whether or not the manager is rate limited globally across all requests. Defaults to false. */
@@ -1497,15 +1509,19 @@ export interface RestManager {
   /**
    * Exchange the information to get a OAuth2 accessToken token
    *
+   * @param clientId - Application's client id
+   * @param clientSecret - application's client secret
    * @param options - The options to make the exchange with discord
    */
-  exchangeToken: (options: CamelizedDiscordTokenExchange) => Promise<CamelizedDiscordAccessTokenResponse>
+  exchangeToken: (clientId: BigString, clientSecret: string, options: CamelizedDiscordTokenExchange) => Promise<CamelizedDiscordAccessTokenResponse>
   /**
    * Revoke an access_token
    *
+   * @param clientId - Application's client id
+   * @param clientSecret - application's client secret
    * @param options - The options to revoke the access_token
    */
-  revokeToken: (options: CamelizedDiscordTokenRevocation) => Promise<void>
+  revokeToken: (clientId: BigString, clientSecret: string, options: CamelizedDiscordTokenRevocation) => Promise<void>
   /**
    * Gets the permissions of a guild application command.
    *

@@ -144,6 +144,11 @@ export interface SelectMenuUsersComponent {
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string
+  /**
+   * List of default values for auto-populated select menu components
+   * The number of default values must be in the range defined by minValues and maxValues
+   */
+  defaultValues?: SelectMenuDefaultValue[]
   /** The minimum number of items that must be selected. Default 1. Between 1-25. */
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
@@ -159,6 +164,11 @@ export interface SelectMenuRolesComponent {
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string
+  /**
+   * List of default values for auto-populated select menu components
+   * The number of default values must be in the range defined by minValues and maxValues
+   */
+  defaultValues?: SelectMenuDefaultValue[]
   /** The minimum number of items that must be selected. Default 1. Between 1-25. */
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
@@ -174,6 +184,11 @@ export interface SelectMenuUsersAndRolesComponent {
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string
+  /**
+   * List of default values for auto-populated select menu components
+   * The number of default values must be in the range defined by minValues and maxValues
+   */
+  defaultValues?: SelectMenuDefaultValue[]
   /** The minimum number of items that must be selected. Default 1. Between 1-25. */
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
@@ -191,6 +206,11 @@ export interface SelectMenuChannelsComponent {
   customId: string
   /** A custom placeholder text if nothing is selected. Maximum 150 characters. */
   placeholder?: string
+  /**
+   * List of default values for auto-populated select menu components
+   * The number of default values must be in the range defined by minValues and maxValues
+   */
+  defaultValues?: SelectMenuDefaultValue[]
   /** The minimum number of items that must be selected. Default 1. Between 1-25. */
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
@@ -219,6 +239,13 @@ export interface SelectOption {
   }
   /** Will render this option as already-selected by default. */
   default?: boolean
+}
+
+export interface SelectMenuDefaultValue {
+  /** ID of a user, role, or channel */
+  id: bigint
+  /** Type of value that id represents. */
+  type: 'user' | 'role' | 'channel'
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#text-inputs-text-input-structure */

@@ -1,8 +1,6 @@
-import { iconHashToBigInt, type Bot, type DiscordApplication } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
+import { iconHashToBigInt, type ApplicationFlags, type Bot, type DiscordApplication, type Team, type User } from '../index.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformApplication(bot: Bot, payload: DiscordApplication) {
+export function transformApplication(bot: Bot, payload: DiscordApplication): Application {
   const application = {
     name: payload.name,
     description: payload.description,
@@ -25,9 +23,27 @@ export function transformApplication(bot: Bot, payload: DiscordApplication) {
       : undefined,
     team: payload.team ? bot.transformers.team(bot, payload.team) : undefined,
     guildId: payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined,
-  }
+  } as Application
 
-  return application as Optionalize<typeof application>
+  return bot.transformers.customizers.application(bot, payload, application)
 }
 
-export interface Application extends ReturnType<typeof transformApplication> {}
+export interface Application {
+  flags?: ApplicationFlags
+  icon?: bigint
+  rpcOrigins?: string[]
+  termsOfServiceUrl?: string
+  privacyPolicyUrl?: string
+  primarySkuId?: string
+  slug?: string
+  coverImage?: bigint
+  owner?: User
+  team?: Team
+  guildId?: bigint
+  id: bigint
+  name: string
+  description: string
+  botPublic: boolean
+  botRequireCodeGrant: boolean
+  verifyKey: string
+}

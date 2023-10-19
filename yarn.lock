@@ -1500,6 +1500,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"commander@npm:^11.0.0":
+  version: 11.0.0
+  resolution: "commander@npm:11.0.0"
+  checksum: 6621954e1e1d078b4991c1f5bbd9439ad37aa7768d6ab4842de1dbd4d222c8a27e1b8e62108b3a92988614af45031d5bb2a2aaa92951f4d0c934d1a1ac564bb4
+  languageName: node
+  linkType: hard
+
 "commander@npm:^7.1.0":
   version: 7.2.0
   resolution: "commander@npm:7.2.0"
@@ -1721,6 +1728,7 @@ __metadata:
     "@types/sinon": ^10.0.13
     c8: ^7.13.0
     chai: ^4.3.7
+    commander: ^11.0.0
     eslint: ^8.36.0
     eslint-config-discordeno: "*"
     mocha: ^10.2.0
@@ -1728,6 +1736,8 @@ __metadata:
     ts-node: ^10.9.1
     tsconfig: "*"
     typescript: ^4.9.5
+  bin:
+    discordeno: ./bin/disocrdeno.js
   languageName: unknown
   linkType: soft
 
@@ -2552,9 +2562,9 @@ __metadata:
   linkType: hard
 
 "get-func-name@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "get-func-name@npm:2.0.0"
-  checksum: 8d82e69f3e7fab9e27c547945dfe5cc0c57fc0adf08ce135dddb01081d75684a03e7a0487466f478872b341d52ac763ae49e660d01ab83741f74932085f693c3
+  version: 2.0.2
+  resolution: "get-func-name@npm:2.0.2"
+  checksum: 3f62f4c23647de9d46e6f76d2b3eafe58933a9b3830c60669e4180d6c601ce1b4aa310ba8366143f55e52b139f992087a9f0647274e8745621fa2af7e0acf13b
   languageName: node
   linkType: hard
 

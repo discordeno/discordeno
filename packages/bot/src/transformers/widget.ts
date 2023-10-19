@@ -1,9 +1,7 @@
 import type { DiscordGuildWidget } from '@discordeno/types'
 import { iconHashToBigInt, type Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformWidget(bot: Bot, payload: DiscordGuildWidget) {
+export function transformWidget(bot: Bot, payload: DiscordGuildWidget): GuildWidget {
   const widget = {
     id: bot.transformers.snowflake(payload.id),
     name: payload.name,
@@ -22,9 +20,27 @@ export function transformWidget(bot: Bot, payload: DiscordGuildWidget) {
       avatarUrl: member.avatar_url,
     })),
     presenceCount: payload.presence_count,
-  }
+  } as GuildWidget
 
-  return widget as Optionalize<typeof widget>
+  return bot.transformers.customizers.widget(bot, payload, widget)
 }
 
-export interface GuildWidget extends ReturnType<typeof transformWidget> {}
+export interface GuildWidget {
+  id: bigint
+  name: string
+  members: Array<{
+    id: bigint
+    username: string
+    discriminator: string
+    avatar?: bigint
+    status: string
+    avatarUrl: string
+  }>
+  channels: Array<{
+    id: bigint
+    name: string
+    position: number
+  }>
+  instant_invite: string
+  presenceCount: number
+}

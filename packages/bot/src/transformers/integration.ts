@@ -1,9 +1,7 @@
-import type { DiscordIntegrationCreateUpdate } from '@discordeno/types'
-import { iconHashToBigInt, type Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
+import type { DiscordIntegrationCreateUpdate, IntegrationExpireBehaviors, OAuth2Scope } from '@discordeno/types'
+import { iconHashToBigInt, type Bot, type User } from '../index.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreateUpdate) {
+export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreateUpdate): Integration {
   const integration = {
     guildId: bot.transformers.snowflake(payload.guild_id),
     id: bot.transformers.snowflake(payload.id),
@@ -33,9 +31,36 @@ export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreate
         }
       : undefined,
     scopes: payload.scopes,
-  }
+  } as Integration
 
-  return integration as Optionalize<typeof integration>
+  return bot.transformers.customizers.integration(bot, payload, integration)
 }
 
-export interface Integration extends ReturnType<typeof transformIntegration> {}
+export interface Integration {
+  user?: User
+  enabled?: boolean
+  syncing?: boolean
+  roleId?: bigint
+  enableEmoticons?: boolean
+  expireBehavior?: IntegrationExpireBehaviors
+  expireGracePeriod?: number
+  syncedAt?: number
+  subscriberCount?: number
+  revoked?: boolean
+  application?: {
+    bot?: User
+    icon?: bigint
+    id: bigint
+    name: string
+    description: string
+  }
+  id: bigint
+  name: string
+  guildId: bigint
+  type: 'twitch' | 'youtube' | 'discord'
+  account: {
+    id: bigint
+    name: string
+  }
+  scopes: OAuth2Scope[]
+}

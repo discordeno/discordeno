@@ -2,7 +2,7 @@
 /* eslint-disable no-const-assign */
 import { Buffer } from 'node:buffer'
 
-import { calculateBits, camelToSnakeCase, camelize, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
+import { calculateBits, camelize, camelToSnakeCase, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
 
 import { createInvalidRequestBucket } from './invalidBucket.js'
 import { Queue } from './queue.js'
@@ -84,6 +84,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
   const rest: RestManager = {
     applicationId,
     authorization: options.proxy?.authorization,
+    authorizationHeader: options.proxy?.authorizationHeader ?? 'authorization',
     baseUrl,
     deleteQueueDelay: 60000,
     globallyRateLimited: false,
@@ -464,7 +465,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         if (rest.authorization !== undefined) {
           options ??= {}
           options.headers ??= {}
-          options.headers.authorization = rest.authorization
+          options.headers[rest.authorizationHeader] = rest.authorization
         }
 
         const result = await fetch(`${rest.baseUrl}/v${rest.version}${route}`, rest.createRequestBody(method, options))
@@ -974,30 +975,33 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       })
     },
 
-    async exchangeToken(body) {
+    async exchangeToken(clientId, clientSecret, body) {
+      const basicCredentials = Buffer.from(`${clientId}:${clientSecret}`)
+
       const restOptions: MakeRequestOptions = {
         body,
         headers: {
           'content-type': 'application/x-www-form-urlencoded',
+          authorization: `Basic ${basicCredentials.toString('base64')}`,
         },
         unauthorized: true,
       }
 
       if (body.grantType === 'client_credentials') {
-        const basicCredentials = Buffer.from(`${body.clientId}:${body.clientSecret}`)
-        restOptions.headers!.authorization = `Basic ${basicCredentials.toString('base64')}`
-
         restOptions.body.scope = body.scope.join(' ')
       }
 
       return await rest.post<DiscordAccessTokenResponse>(rest.routes.oauth2.tokenExchange(), restOptions)
     },
 
-    async revokeToken(body) {
+    async revokeToken(clientId, clientSecret, body) {
+      const basicCredentials = Buffer.from(`${clientId}:${clientSecret}`)
+
       await rest.post(rest.routes.oauth2.tokenRevoke(), {
         body,
         headers: {
           'content-type': 'application/x-www-form-urlencoded',
+          authorization: `Basic ${basicCredentials.toString('base64')}`,
         },
         unauthorized: true,
       })

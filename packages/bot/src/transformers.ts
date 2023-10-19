@@ -25,6 +25,8 @@ import type {
   DiscordInteraction,
   DiscordInteractionDataOption,
   DiscordInviteCreate,
+  DiscordInviteMetadata,
+  DiscordInviteStageInstance,
   DiscordMember,
   DiscordMessage,
   DiscordPresenceUpdate,
@@ -84,18 +86,24 @@ import { transformInteractionResponseToDiscordInteractionResponse } from './tran
 import { transformRole, type Role } from './transformers/role.js'
 import { transformScheduledEvent, type ScheduledEvent } from './transformers/scheduledEvent.js'
 import { transformStageInstance, type StageInstance } from './transformers/stageInstance.js'
+import { transformInviteStageInstance, type InviteStageInstance } from './transformers/stageInviteInstance.js'
 import { transformSticker, transformStickerPack, type Sticker, type StickerPack } from './transformers/sticker.js'
 import { transformTeam, type Team } from './transformers/team.js'
 import { transformTemplate, type Template } from './transformers/template.js'
-import { transformThreadMember, type ThreadMember } from './transformers/threadMember.js'
+import {
+  transformThreadMember,
+  transformThreadMemberGuildCreate,
+  type ThreadMember,
+  type ThreadMemberGuildCreate,
+} from './transformers/threadMember.js'
 import { transformUser, type User } from './transformers/user.js'
-import { transformVoiceRegion, type VoiceRegions } from './transformers/voiceRegion.js'
+import { transformVoiceRegion, type VoiceRegion } from './transformers/voiceRegion.js'
 import { transformVoiceState, type VoiceState } from './transformers/voiceState.js'
 import { transformWebhook, type Webhook } from './transformers/webhook.js'
 import { transformWelcomeScreen, type WelcomeScreen } from './transformers/welcomeScreen.js'
 import { transformWidget, type GuildWidget } from './transformers/widget.js'
 import { transformWidgetSettings, type GuildWidgetSettings } from './transformers/widgetSettings.js'
-import type { BotInteractionResponse, DiscordComponent, DiscordInteractionResponse } from './typings.js'
+import type { BotInteractionResponse, DiscordComponent, DiscordInteractionResponse, DiscordThreadMemberGuildCreate } from './typings.js'
 
 export interface Transformers {
   customizers: {
@@ -105,6 +113,48 @@ export interface Transformers {
     user: (bot: Bot, payload: DiscordUser, user: User) => any
     member: (bot: Bot, payload: DiscordMember, member: Member) => any
     role: (bot: Bot, payload: DiscordRole, role: Role) => any
+    automodRule: (bot: Bot, payload: DiscordAutoModerationRule, automodRule: AutoModerationRule) => any
+    automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution, automodActionExecution: AutoModerationActionExecution) => any
+    guild: (bot: Bot, payload: DiscordGuild, guild: Guild) => any
+    voiceState: (bot: Bot, payload: DiscordVoiceState, voiceState: VoiceState) => any
+    interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption, interactionDataOptions: InteractionDataOption) => any
+    integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate, integration: Integration) => any
+    invite: (bot: Bot, payload: DiscordInviteCreate | DiscordInviteMetadata, invite: Invite) => any
+    application: (bot: Bot, payload: DiscordApplication, application: Application) => any
+    team: (bot: Bot, payload: DiscordTeam, team: Team) => any
+    emoji: (bot: Bot, payload: DiscordEmoji, emoji: Emoji) => any
+    activity: (bot: Bot, payload: DiscordActivity, activity: Activity) => any
+    presence: (bot: Bot, payload: DiscordPresenceUpdate, presence: PresenceUpdate) => any
+    attachment: (bot: Bot, payload: DiscordAttachment, attachment: Attachment) => any
+    embed: (bot: Bot, payload: DiscordEmbed, embed: Embed) => any
+    component: (bot: Bot, payload: DiscordComponent, component: Component) => any
+    webhook: (bot: Bot, payload: DiscordWebhook, webhook: Webhook) => any
+    auditLogEntry: (bot: Bot, payload: DiscordAuditLogEntry, auditLogEntry: AuditLogEntry) => any
+    applicationCommand: (bot: Bot, payload: DiscordApplicationCommand, applicationCommand: ApplicationCommand) => any
+    applicationCommandOption: (bot: Bot, payload: DiscordApplicationCommandOption, applicationCommandOption: ApplicationCommandOption) => any
+    applicationCommandPermission: (
+      bot: Bot,
+      payload: DiscordGuildApplicationCommandPermissions,
+      applicationCommandPermission: ApplicationCommandPermission,
+    ) => any
+    scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent, scheduledEvent: ScheduledEvent) => any
+    threadMember: (bot: Bot, payload: DiscordThreadMember, threadMember: ThreadMember) => any
+    threadMemberGuildCreate: (bot: Bot, payload: DiscordThreadMemberGuildCreate, threadMemberGuildCreate: ThreadMemberGuildCreate) => any
+    welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen, welcomeScreen: WelcomeScreen) => any
+    voiceRegion: (bot: Bot, payload: DiscordVoiceRegion, voiceRegion: VoiceRegion) => any
+    gatewayBot: (bot: Bot, payload: DiscordGetGatewayBot, getGatewayBot: GetGatewayBot) => any
+    widget: (bot: Bot, payload: DiscordGuildWidget, widget: GuildWidget) => any
+    widgetSettings: (bot: Bot, payload: DiscordGuildWidgetSettings, widgetSettings: GuildWidgetSettings) => any
+    stageInstance: (bot: Bot, payload: DiscordStageInstance, stageInstance: StageInstance) => any
+    inviteStageInstance: (bot: Bot, payload: DiscordInviteStageInstance, inviteStageInstance: InviteStageInstance) => any
+    sticker: (bot: Bot, payload: DiscordSticker, sticker: Sticker) => any
+    stickerPack: (bot: Bot, payload: DiscordStickerPack, stickerPack: StickerPack) => any
+    applicationCommandOptionChoice: (
+      bot: Bot,
+      payload: DiscordApplicationCommandOptionChoice,
+      applicationCommandOptionChoice: ApplicationCommandOptionChoice,
+    ) => any
+    template: (bot: Bot, payload: DiscordTemplate, template: Template) => any
   }
   desiredProperties: {
     attachment: {
@@ -241,6 +291,11 @@ export interface Transformers {
       targetApplication: boolean
       temporary: boolean
       uses: boolean
+      approximateMemberCount: boolean
+      approximatePresenceCount: boolean
+      guildScheduledEvent: boolean
+      stageInstance: boolean
+      expiresAt: boolean
     }
     member: {
       id: boolean
@@ -334,6 +389,12 @@ export interface Transformers {
       topic: boolean
       guildScheduledEventId: boolean
     }
+    inviteStageInstance: {
+      members: boolean
+      participantCount: boolean
+      speakerCount: boolean
+      topic: boolean
+    }
     sticker: {
       id: boolean
       packId: boolean
@@ -398,7 +459,7 @@ export interface Transformers {
     attachment: (bot: Bot, payload: Attachment) => DiscordAttachment
   }
   snowflake: (snowflake: BigString) => bigint
-  gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot
+  gatewayBot: (bot: Bot, payload: DiscordGetGatewayBot) => GetGatewayBot
   automodRule: (bot: Bot, payload: DiscordAutoModerationRule) => AutoModerationRule
   automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution) => AutoModerationActionExecution
   channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }) => Channel
@@ -411,7 +472,7 @@ export interface Transformers {
   interaction: (bot: Bot, payload: DiscordInteraction) => Interaction
   interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption
   integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration
-  invite: (bot: Bot, invite: DiscordInviteCreate) => Invite
+  invite: (bot: Bot, invite: DiscordInviteCreate | DiscordInviteMetadata) => Invite
   application: (bot: Bot, payload: DiscordApplication) => Application
   team: (bot: Bot, payload: DiscordTeam) => Team
   emoji: (bot: Bot, payload: DiscordEmoji) => Emoji
@@ -427,11 +488,14 @@ export interface Transformers {
   applicationCommandPermission: (bot: Bot, payload: DiscordGuildApplicationCommandPermissions) => ApplicationCommandPermission
   scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent) => ScheduledEvent
   threadMember: (bot: Bot, payload: DiscordThreadMember) => ThreadMember
+  threadMemberGuildCreate: (bot: Bot, payload: DiscordThreadMemberGuildCreate) => ThreadMemberGuildCreate
   welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen) => WelcomeScreen
-  voiceRegion: (bot: Bot, payload: DiscordVoiceRegion) => VoiceRegions
+  voiceRegion: (bot: Bot, payload: DiscordVoiceRegion) => VoiceRegion
   widget: (bot: Bot, payload: DiscordGuildWidget) => GuildWidget
   widgetSettings: (bot: Bot, payload: DiscordGuildWidgetSettings) => GuildWidgetSettings
   stageInstance: (bot: Bot, payload: DiscordStageInstance) => StageInstance
+  inviteStageInstance: (bot: Bot, payload: DiscordInviteStageInstance & { guildId: BigString }) => InviteStageInstance
+
   sticker: (bot: Bot, payload: DiscordSticker) => Sticker
   stickerPack: (bot: Bot, payload: DiscordStickerPack) => StickerPack
   applicationCommandOptionChoice: (bot: Bot, payload: DiscordApplicationCommandOptionChoice) => ApplicationCommandOptionChoice
@@ -458,6 +522,108 @@ export function createTransformers(options: Partial<Transformers>): Transformers
       },
       user(bot, payload, user) {
         return user
+      },
+      activity(bot, payload, activity) {
+        return activity
+      },
+      application(bot, payload, application) {
+        return application
+      },
+      applicationCommand(bot, payload, applicationCommand) {
+        return applicationCommand
+      },
+      applicationCommandOption(bot, payload, applicationCommandOption) {
+        return applicationCommandOption
+      },
+      applicationCommandOptionChoice(bot, payload, applicationCommandOptionChoice) {
+        return applicationCommandOptionChoice
+      },
+      applicationCommandPermission(bot, payload, applicationCommandPermission) {
+        return applicationCommandPermission
+      },
+      attachment(bot, payload, attachment) {
+        return attachment
+      },
+      auditLogEntry(bot, payload, auditLogEntry) {
+        return auditLogEntry
+      },
+      automodActionExecution(bot, payload, automodActionExecution) {
+        return automodActionExecution
+      },
+      automodRule(bot, payload, automodRule) {
+        return automodRule
+      },
+      component(bot, payload, component) {
+        return component
+      },
+      embed(bot, payload, embed) {
+        return embed
+      },
+      emoji(bot, payload, emoji) {
+        return emoji
+      },
+      guild(bot, payload, guild) {
+        return guild
+      },
+      integration(bot, payload, integration) {
+        return integration
+      },
+      interactionDataOptions(bot, payload, interactionDataOptions) {
+        return interactionDataOptions
+      },
+      invite(bot, payload, invite) {
+        return invite
+      },
+      presence(bot, payload, presence) {
+        return presence
+      },
+      scheduledEvent(bot, payload, scheduledEvent) {
+        return scheduledEvent
+      },
+      stageInstance(bot, payload, stageInstance) {
+        return stageInstance
+      },
+      inviteStageInstance(bot, payload, inviteStageInstance) {
+        return inviteStageInstance
+      },
+      sticker(bot, payload, sticker) {
+        return sticker
+      },
+      stickerPack(bot, payload, stickerPack) {
+        return stickerPack
+      },
+      team(bot, payload, team) {
+        return team
+      },
+      template(bot, payload, template) {
+        return template
+      },
+      threadMember(bot, payload, threadMember) {
+        return threadMember
+      },
+      threadMemberGuildCreate(bot, payload, threadMemberGuildCreate) {
+        return threadMemberGuildCreate
+      },
+      voiceRegion(bot, payload, voiceRegion) {
+        return voiceRegion
+      },
+      voiceState(bot, payload, voiceState) {
+        return voiceState
+      },
+      gatewayBot(bot, payload, getGatewayBot) {
+        return getGatewayBot
+      },
+      webhook(bot, payload, webhook) {
+        return webhook
+      },
+      welcomeScreen(bot, payload, welcomeScreen) {
+        return welcomeScreen
+      },
+      widget(bot, payload, widget) {
+        return widget
+      },
+      widgetSettings(bot, payload, widgetSettings) {
+        return widgetSettings
       },
     },
     desiredProperties: {
@@ -595,6 +761,11 @@ export function createTransformers(options: Partial<Transformers>): Transformers
         targetApplication: false,
         temporary: false,
         uses: false,
+        approximateMemberCount: false,
+        approximatePresenceCount: false,
+        guildScheduledEvent: false,
+        stageInstance: false,
+        expiresAt: false,
       },
       member: {
         id: false,
@@ -687,6 +858,12 @@ export function createTransformers(options: Partial<Transformers>): Transformers
         channelId: false,
         topic: false,
         guildScheduledEventId: false,
+      },
+      inviteStageInstance: {
+        members: false,
+        participantCount: false,
+        speakerCount: false,
+        topic: false,
       },
       sticker: {
         id: false,
@@ -781,11 +958,13 @@ export function createTransformers(options: Partial<Transformers>): Transformers
     applicationCommandPermission: options.applicationCommandPermission ?? transformApplicationCommandPermission,
     scheduledEvent: options.scheduledEvent ?? transformScheduledEvent,
     threadMember: options.threadMember ?? transformThreadMember,
+    threadMemberGuildCreate: options.threadMemberGuildCreate ?? transformThreadMemberGuildCreate,
     welcomeScreen: options.welcomeScreen ?? transformWelcomeScreen,
     voiceRegion: options.voiceRegion ?? transformVoiceRegion,
     widget: options.widget ?? transformWidget,
     widgetSettings: options.widgetSettings ?? transformWidgetSettings,
     stageInstance: options.stageInstance ?? transformStageInstance,
+    inviteStageInstance: options.inviteStageInstance ?? transformInviteStageInstance,
     sticker: options.sticker ?? transformSticker,
     stickerPack: options.stickerPack ?? transformStickerPack,
     gatewayBot: options.gatewayBot ?? transformGatewayBot,

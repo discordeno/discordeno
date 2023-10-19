@@ -2,6 +2,7 @@
   "name": "discordeno",
   "version": "19.0.0-alpha.1",
   "main": "./dist/index.js",
+  "bin": "./bin/disocrdeno.js",
   "types": "./dist/index.d.ts",
   "type": "module",
   "license": "Apache-2.0",
@@ -27,7 +28,8 @@
     "@discordeno/gateway": "19.0.0-alpha.1",
     "@discordeno/rest": "19.0.0-alpha.1",
     "@discordeno/types": "19.0.0-alpha.1",
-    "@discordeno/utils": "19.0.0-alpha.1"
+    "@discordeno/utils": "19.0.0-alpha.1",
+    "commander": "^11.0.0"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.62",

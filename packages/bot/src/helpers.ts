@@ -63,8 +63,8 @@ import type {
   GetInvite,
   GetMessagesOptions,
   GetReactions,
-  GetScheduledEventUsers,
   GetScheduledEvents,
+  GetScheduledEventUsers,
   GetUserGuilds,
   GetWebhookMessageOptions,
   InteractionCallbackData,
@@ -96,6 +96,7 @@ import type { Channel } from './transformers/channel.js'
 import type { Emoji } from './transformers/emoji.js'
 import type { Guild } from './transformers/guild.js'
 import type { Integration } from './transformers/integration.js'
+import type { Invite } from './transformers/invite.js'
 import type { Member } from './transformers/member.js'
 import type { Message } from './transformers/message.js'
 import type { Role } from './transformers/role.js'
@@ -254,11 +255,11 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     getCurrentAuthenticationInfo: async (bearerToken) => {
       return await bot.rest.getCurrentAuthenticationInfo(bearerToken)
     },
-    exchangeToken: async (options) => {
-      return await bot.rest.exchangeToken(options)
+    exchangeToken: async (clientId, clientSecret, options) => {
+      return await bot.rest.exchangeToken(clientId, clientSecret, options)
     },
-    revokeToken: async (options) => {
-      return await bot.rest.revokeToken(options)
+    revokeToken: async (clientId, clientSecret, options) => {
+      return await bot.rest.revokeToken(clientId, clientSecret, options)
     },
     getApplicationCommandPermission: async (guildId, commandId, options) => {
       const res = await bot.rest.getApplicationCommandPermission(guildId, commandId, options)
@@ -318,7 +319,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return bot.transformers.message(bot, snakelize(await bot.rest.getFollowupMessage(token, messageId)))
     },
     getGatewayBot: async () => {
-      return bot.transformers.gatewayBot(snakelize(await bot.rest.getGatewayBot()))
+      return bot.transformers.gatewayBot(bot, snakelize(await bot.rest.getGatewayBot()))
     },
     getGlobalApplicationCommand: async (commandId) => {
       return bot.transformers.applicationCommand(bot, snakelize(await bot.rest.getGlobalApplicationCommand(commandId)))
@@ -363,12 +364,10 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       )
     },
     getInvite: async (inviteCode, options) => {
-      return await bot.rest.getInvite(inviteCode, options)
-      // return bot.transformers.invite(bot, snakelize(await bot.rest.getInvite(inviteCode, options)))
+      return bot.transformers.invite(bot, snakelize(await bot.rest.getInvite(inviteCode, options)))
     },
     getInvites: async (guildId) => {
-      return await bot.rest.getInvites(guildId)
-      // .map((res) => bot.transformers.invite(bot, snakelize(res)))
+      return (await bot.rest.getInvites(guildId)).map((res) => bot.transformers.invite(bot, snakelize(res)))
     },
     getMessage: async (channelId, messageId) => {
       return bot.transformers.message(bot, snakelize(await bot.rest.getMessage(channelId, messageId)))
@@ -419,7 +418,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       })
     },
     getSessionInfo: async () => {
-      return bot.transformers.gatewayBot(snakelize(await bot.rest.getSessionInfo()))
+      return bot.transformers.gatewayBot(bot, snakelize(await bot.rest.getSessionInfo()))
     },
     getStageInstance: async (channelId) => {
       return bot.transformers.stageInstance(bot, snakelize(await bot.rest.getStageInstance(channelId)))
@@ -750,8 +749,8 @@ export interface BotHelpers {
   getActiveThreads: (guildId: BigString) => Promise<{ threads: Channel[]; members: ThreadMember[] }>
   getApplicationInfo: () => Promise<Application>
   getCurrentAuthenticationInfo: (bearerToken: string) => Promise<CamelizedDiscordCurrentAuthorization>
-  exchangeToken: (options: CamelizedDiscordTokenExchange) => Promise<CamelizedDiscordAccessTokenResponse>
-  revokeToken: (options: CamelizedDiscordTokenRevocation) => Promise<void>
+  exchangeToken: (clientId: BigString, clientSecret: string, options: CamelizedDiscordTokenExchange) => Promise<CamelizedDiscordAccessTokenResponse>
+  revokeToken: (clientId: BigString, clientSecret: string, options: CamelizedDiscordTokenRevocation) => Promise<void>
   getApplicationCommandPermission: (
     guildId: BigString,
     commandId: BigString,
@@ -787,8 +786,8 @@ export interface BotHelpers {
   getGuildTemplates: (guildId: BigString) => Promise<Template[]>
   getGuildWebhooks: (guildId: BigString) => Promise<Webhook[]>
   getIntegrations: (guildId: BigString) => Promise<Integration[]>
-  getInvite: (inviteCode: string, options?: GetInvite) => Promise<CamelizedDiscordInviteMetadata>
-  getInvites: (guildId: BigString) => Promise<CamelizedDiscordInviteMetadata[]>
+  getInvite: (inviteCode: string, options?: GetInvite) => Promise<Invite>
+  getInvites: (guildId: BigString) => Promise<Invite[]>
   getMessage: (channelId: BigString, messageId: BigString) => Promise<Message>
   getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<Message[]>
   getNitroStickerPacks: () => Promise<StickerPack[]>

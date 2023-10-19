@@ -2,8 +2,7 @@ import type { DiscordEmoji } from '@discordeno/types'
 import type { Bot, User } from '../index.js'
 import { EmojiToggles } from './toggles/emoji.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformEmoji(bot: Bot, payload: DiscordEmoji) {
+export function transformEmoji(bot: Bot, payload: DiscordEmoji): Emoji {
   const props = bot.transformers.desiredProperties.emoji
   const emoji = {} as Emoji
 
@@ -14,7 +13,7 @@ export function transformEmoji(bot: Bot, payload: DiscordEmoji) {
 
   emoji.toggles = new EmojiToggles(payload)
 
-  return emoji
+  return bot.transformers.customizers.emoji(bot, payload, emoji)
 }
 
 export interface Emoji {

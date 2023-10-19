@@ -1,15 +1,14 @@
-import type { DiscordApplication, DiscordInviteCreate } from '@discordeno/types'
-import type { Application, Bot, User } from '../index.js'
+import type { DiscordApplication, DiscordInviteCreate, DiscordInviteMetadata } from '@discordeno/types'
+import { isInviteWithMetadata, type Application, type Bot, type ScheduledEvent, type User } from '../index.js'
+import type { InviteStageInstance } from './stageInviteInstance.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformInvite(bot: Bot, payload: DiscordInviteCreate) {
+export function transformInvite(bot: Bot, payload: DiscordInviteCreate | DiscordInviteMetadata): Invite {
   const props = bot.transformers.desiredProperties.invite
   const invite = {} as Invite
+  const hasMetadata = isInviteWithMetadata(payload)
 
-  if (props.channelId && payload.channel_id) invite.channelId = bot.transformers.snowflake(payload.channel_id)
   if (props.code && payload.code) invite.code = payload.code
   if (props.createdAt && payload.created_at) invite.createdAt = Date.parse(payload.created_at)
-  if (props.guildId && payload.guild_id) invite.guildId = bot.transformers.snowflake(payload.guild_id)
   if (props.inviter && payload.inviter) invite.inviter = bot.transformers.user(bot, payload.inviter)
   if (props.maxAge && payload.max_age) invite.maxAge = payload.max_age
   if (props.maxUses && payload.max_uses) invite.maxUses = payload.max_uses
@@ -20,7 +19,31 @@ export function transformInvite(bot: Bot, payload: DiscordInviteCreate) {
   if (props.temporary && payload.temporary) invite.temporary = payload.temporary
   if (props.uses && payload.uses) invite.uses = payload.uses
 
-  return invite
+  if (hasMetadata) {
+    if (props.channelId && payload.channel?.id) invite.channelId = bot.transformers.snowflake(payload.channel.id)
+    if (props.guildId && payload.guild?.id) invite.guildId = bot.transformers.snowflake(payload.guild.id)
+    if (props.approximateMemberCount && payload.approximate_member_count) invite.approximateMemberCount = payload.approximate_member_count
+    if (props.approximatePresenceCount && payload.approximate_presence_count) invite.approximatePresenceCount = payload.approximate_presence_count
+    if (props.guildScheduledEvent && payload.guild_scheduled_event) {
+      invite.guildScheduledEvent = payload.guild_scheduled_event ? bot.transformers.scheduledEvent(bot, payload.guild_scheduled_event) : undefined
+    }
+    if (props.stageInstance && invite.guildId && payload.stage_instance) {
+      invite.stageInstance = payload.stage_instance
+        ? bot.transformers.inviteStageInstance(bot, {
+            ...payload.stage_instance,
+            guildId: invite.guildId,
+          })
+        : undefined
+    }
+    if (props.expiresAt && payload.expires_at) {
+      invite.expiresAt = Date.parse(payload.expires_at)
+    }
+  } else {
+    if (props.channelId && payload.channel_id) invite.channelId = bot.transformers.snowflake(payload.channel_id)
+    if (props.guildId && payload.guild_id) invite.guildId = bot.transformers.snowflake(payload.guild_id)
+  }
+
+  return bot.transformers.customizers.invite(bot, payload, invite)
 }
 
 export interface Invite {
@@ -48,4 +71,14 @@ export interface Invite {
   temporary: boolean
   /** How many times the invite has been used (always will be 0) */
   uses: number
+  /** Approximate count of online members (only present when target_user is set) */
+  approximateMemberCount: number
+  /** Stage instance data if there is a public Stage instance in the Stage channel this invite is for */
+  stageInstance?: InviteStageInstance
+  /** The expiration date of this invite, returned from the GET /invites/code endpoint when with_expiration is true */
+  expiresAt?: number
+  /** guild scheduled event data */
+  guildScheduledEvent?: ScheduledEvent
+  /** Approximate count of online members (only present when target_user is set) */
+  approximatePresenceCount?: number
 }
