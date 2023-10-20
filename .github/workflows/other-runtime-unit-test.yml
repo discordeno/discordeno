@@ -41,14 +41,14 @@ jobs:
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
-      - name: Restore deno cache
+      - name: Deno cache
         uses: actions/cache@v3
         with:
           path: |
             ~/.deno
             ~/.cache/deno
-          key: ${{ runner.os }}-deno-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-deno-${{ inputs.package }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-deno-
+            ${{ runner.os }}-deno-${{ inputs.package }}
       - name: Deno Unit Test
         run: yarn test:deno-unit --cache-dir=".turbo" --filter=./packages/${{ inputs.package }}
