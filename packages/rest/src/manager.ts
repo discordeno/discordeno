@@ -260,7 +260,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
-    processHeaders(url, headers, requestAuthorization) {
+    processHeaders(url, headers, queueBaseKey) {
       let rateLimited = false
 
       // GET ALL NECESSARY HEADERS
@@ -272,7 +272,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const bucketId = headers.get(RATE_LIMIT_BUCKET_HEADER) ?? undefined
       const limit = headers.get(RATE_LIMIT_LIMIT_HEADER)
 
-      rest.queues.get(`${requestAuthorization}${url}`)?.handleCompletedRequest({
+      rest.queues.get(`${queueBaseKey}-${url}`)?.handleCompletedRequest({
         remaining: remaining ? Number(remaining) : undefined,
         interval: retryAfter ? Number(retryAfter) * 1000 : undefined,
         max: limit ? Number(limit) : undefined,
@@ -283,7 +283,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rateLimited = true
 
         // SAVE THE URL AS LIMITED, IMPORTANT FOR NEW REQUESTS BY USER WITHOUT BUCKET
-        rest.rateLimitedPaths.set(`${requestAuthorization}${url}`, {
+        rest.rateLimitedPaths.set(`${queueBaseKey}-${url}`, {
           url,
           resetTimestamp: reset,
           bucketId,
@@ -291,7 +291,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         // SAVE THE BUCKET AS LIMITED SINCE DIFFERENT URLS MAY SHARE A BUCKET
         if (bucketId) {
-          rest.rateLimitedPaths.set(`${requestAuthorization}${bucketId}`, {
+          rest.rateLimitedPaths.set(`${queueBaseKey}-${bucketId}`, {
             url,
             resetTimestamp: reset,
             bucketId,
@@ -320,7 +320,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         })
 
         if (bucketId) {
-          rest.rateLimitedPaths.set(`${requestAuthorization}${bucketId}`, {
+          rest.rateLimitedPaths.set(queueBaseKey, {
             url: 'global',
             resetTimestamp: globalReset,
             bucketId,
@@ -364,11 +364,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared')
 
       // Set the bucket id if it was available on the headers
-      const bucketId = rest.processHeaders(
-        rest.simplifyUrl(options.route, options.method),
-        response.headers,
-        authenticationScheme === 'Bearer' ? payload.headers.authorization : '',
-      )
+      const bucketId = rest.processHeaders(rest.simplifyUrl(options.route, options.method), response.headers, payload.headers.authorization)
+
       if (bucketId) options.bucketId = bucketId
 
       if (response.status < HttpResponseCode.Success || response.status >= HttpResponseCode.Error) {
@@ -443,20 +440,21 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return
       }
 
-      const authHeader = request.requestBodyOptions?.headers?.authorization ?? ''
+      const queueBaseKey =
+        request.requestBodyOptions?.headers?.authorization ?? (request.requestBodyOptions?.unauthorized ? 'unauthorized' : `Bot ${rest.token}`)
 
-      const queue = rest.queues.get(`${authHeader}${url}`)
+      const queue = rest.queues.get(`${queueBaseKey}-${url}`)
 
       if (queue !== undefined) {
         queue.makeRequest(request)
       } else {
         // CREATES A NEW QUEUE
-        const bucketQueue = new Queue(rest, { url, deleteQueueDelay: rest.deleteQueueDelay, authentication: authHeader })
+        const bucketQueue = new Queue(rest, { url, deleteQueueDelay: rest.deleteQueueDelay, queueBaseKey })
 
         // Add request to queue
         bucketQueue.makeRequest(request)
         // Save queue
-        rest.queues.set(`${authHeader}${url}`, bucketQueue)
+        rest.queues.set(`${queueBaseKey}-${url}`, bucketQueue)
       }
     },
 

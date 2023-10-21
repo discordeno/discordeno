@@ -200,13 +200,8 @@ export interface RestManager {
   createRequestBody: (method: RequestMethods, options?: CreateRequestBodyOptions) => RequestBody
   /** This will create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */
   processRateLimitedPaths: () => void
-  /**
-   * Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available
-   *
-   * @remarks
-   * The authenticationHeader should be defined ONLY if the request was done using a OAuth2 Access Token, in other cases it should be passed as an empty string
-   */
-  processHeaders: (url: string, headers: Headers, authenticationHeader?: string) => string | undefined
+  /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
+  processHeaders: (url: string, headers: Headers, queueBaseKey: string) => string | undefined
   /** Sends a request to the api. */
   sendRequest: (options: SendRequestOptions) => Promise<void>
   /** Split a url to separate rate limit buckets based on major/minor parameters. */
