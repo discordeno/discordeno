@@ -8,7 +8,7 @@ I can appreciate the struggle and obstacles that are in the way to contributing 
 
 If you are in a position where you want to contribute but are not sure what you can contribute, look no further than the GitHub issues marked with the [**[HELP WANTED] good first issue**](https://github.com/discordeno/discordeno/issues?q=is%3Aopen+is%3Aissue+label%3A%22%5BHELP+WANTED%5D+good+first+issue%22) label. When an issue is marked with this label, it means that this is an easy issue to tackle and can be done by anyone.
 
-To view all the issues with this label: 
+To view all the issues with this label:
 
 ## Setting Up Coding Environment To Contribute
 
@@ -16,7 +16,7 @@ Alrighty then, by now you have something you want to contribute yourself or have
 
 **One Time Steps:**
 
-- Fork the repo.
+- [Fork the repo.](https://github.com/discordeno/discordeno/fork)
 - Git clone the project.
 - Make a copy of the `.env.example` file and call it `.env` file. Then put a test bot's token in there. For the Guild id, you should make a server and enable the Community setting and invite this test bot there.
 - yarn
@@ -44,7 +44,7 @@ This will do all the checking and linting to make sure your code is in a useable
 
 ### yarn test:unit
 
-This will run all the unit tests to make sure anything you changed, did not break any unexpected things. 
+This will run all the unit tests to make sure anything you changed, did not break any unexpected things.
 
 ### yarn test:e2e
 
