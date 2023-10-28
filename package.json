@@ -45,7 +45,7 @@
       "eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to ."
     ]
   },
-  "packageManager": "yarn@3.3.0",
+  "packageManager": "yarn@3.6.4",
   "dependencies": {
     "typedoc-plugin-missing-exports": "^1.0.0"
   }
