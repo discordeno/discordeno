@@ -23,7 +23,8 @@
     "test:test-type": "turbo run test:test-type",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky install",
-    "build:doc": "typedoc --out ./website/docs/generated/ && node scripts/finalizeTypedocs.js"
+    "build:doc": "typedoc --out ./website/docs/generated/ && node scripts/finalizeTypedocs.js",
+    "setup-dd": "husky install"
   },
   "devDependencies": {
     "eslint": "^8.36.0",
