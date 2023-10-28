@@ -11,7 +11,6 @@ import {
   StarIcon,
 } from '@site/src/styling'
 import { DiscordLibraries, IReview } from '@site/src/types'
-import React from 'react'
 
 const reviewList: IReview[] = [
   {
@@ -102,8 +101,7 @@ const reviewList: IReview[] = [
     bot: {
       username: 'CactusFire',
       discriminator: '3759',
-      avatar:
-        'https://cdn.discordapp.com/avatars/543567770579894272/ae83acadc61dcca989525d83e76a1783.webp?size=2048',
+      avatar: 'https://i.imgur.com/L7zadjU.png',
       invite_url:
         'https://discord.com/oauth2/authorize?client_id=543567770579894272&permissions=8&scope=bot%20applications.commands',
       guild_count: 259000,
