@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1698510168677,
+  "lastUpdate": 1698510692170,
   "repoUrl": "https://github.com/discordeno/discordeno",
   "entries": {
     "Benchmark": [
@@ -15018,6 +15018,107 @@ window.BENCHMARK_DATA = {
             "range": "±0.24%",
             "unit": "ops/sec",
             "extra": "96 samples"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "23035000+Skillz4Killz@users.noreply.github.com",
+            "name": "Skillz4Killz",
+            "username": "Skillz4Killz"
+          },
+          "committer": {
+            "email": "23035000+Skillz4Killz@users.noreply.github.com",
+            "name": "Skillz4Killz",
+            "username": "Skillz4Killz"
+          },
+          "distinct": true,
+          "id": "ad67540e8996a96a98d17af141d3ef74a7f3d974",
+          "message": "reroute in contributing md",
+          "timestamp": "2023-10-28T16:30:24Z",
+          "tree_id": "9d284011bff338c0bfbc6626395dc77cd429dc68",
+          "url": "https://github.com/discordeno/discordeno/commit/ad67540e8996a96a98d17af141d3ef74a7f3d974"
+        },
+        "date": 1698510690584,
+        "tool": "benchmarkjs",
+        "benches": [
+          {
+            "name": "[transformer] message cache check RSS",
+            "value": 114.46,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Used",
+            "value": 117.21,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] message cache check Heap Total",
+            "value": 107.14,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Used",
+            "value": 102.15,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[transformer] old message cache check Heap Total",
+            "value": 77.52,
+            "range": "±1%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] RSS",
+            "value": 0.66,
+            "range": "±2.98%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Used",
+            "value": 10.72,
+            "range": "±1.44%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "[Cache Plugin] Heap Total",
+            "value": 0,
+            "range": "±0%",
+            "unit": "MB",
+            "extra": "3 samples"
+          },
+          {
+            "name": "rest.simplifyUrl",
+            "value": 202553,
+            "range": "±0.28%",
+            "unit": "ops/sec",
+            "extra": "96 samples"
+          },
+          {
+            "name": "Camelize 1 event",
+            "value": 6021,
+            "range": "±0.27%",
+            "unit": "ops/sec",
+            "extra": "96 samples"
+          },
+          {
+            "name": "Snakelize 1 event",
+            "value": 6017,
+            "range": "±0.32%",
+            "unit": "ops/sec",
+            "extra": "94 samples"
           }
         ]
       }
