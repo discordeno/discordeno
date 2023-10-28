@@ -12,7 +12,7 @@ export class LeakyBucket implements LeakyBucketOptions {
   queue: Array<(value: void | PromiseLike<void>) => void> = []
   /** Whether or not the queue is already processing. */
   processing: boolean = false
-  /** The timeout id for the timer to reduce the used amount by the refill amount.  */
+  /** The timeout id for the timer to reduce the used amount by the refill amount. */
   timeoutId?: NodeJS.Timeout
   /** The timestamp in milliseconds when the next refill is scheduled. */
   refillsAt?: number
@@ -49,9 +49,12 @@ export class LeakyBucket implements LeakyBucketOptions {
 
   /** Begin processing the queue. */
   async processQueue(): Promise<void> {
-    logger.debug('[Gateway] Processing queue')
+    logger.debug('[LeakyBucket] Processing queue')
+
     // There is already a queue that is processing
-    if (this.processing) return logger.debug('[Gateway] Queue is already processing.')
+    if (this.processing) return logger.debug('[LeakyBucket] Queue is already processing.')
+
+    this.processing = true
 
     // Begin going through the queue.
     while (this.queue.length) {
@@ -83,6 +86,12 @@ export class LeakyBucket implements LeakyBucketOptions {
           await delay(this.refillsAt - now)
           logger.debug(`[LeakyBucket] Resuming execution`)
         }
+
+        // If the refillsAt has passed but the timeout didn't yet execute delay the execution
+        else {
+          logger.debug(`[LeakyBucket] Delaying execution of leaky bucket requests for 1000ms`)
+          await delay(1000)
+        }
       }
     }
 
@@ -98,7 +107,7 @@ export class LeakyBucket implements LeakyBucketOptions {
       // All other requests get pushed to the end.
       else this.queue.push(resolve)
 
-      // Each request should trigger the queue to be processesd.
+      // Each request should trigger the queue to be processed.
       void this.processQueue()
     })
   }
