@@ -37,7 +37,7 @@ export class LeakyBucket implements LeakyBucketOptions {
     this.refillsAt = undefined
     // Reset the timeoutId
     clearTimeout(this.timeoutId)
-    this.timeoutId = undefined;
+    this.timeoutId = undefined
 
     if (this.used > 0) {
       this.timeoutId = setTimeout(() => {

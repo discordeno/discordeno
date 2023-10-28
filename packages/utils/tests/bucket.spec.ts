@@ -170,18 +170,18 @@ describe('bucket.ts', () => {
       expect(bucket.used).equals(1)
     })
 
-  describe('remaining', () => {
-    it("should be 0 even used too many", () => {
-      const bucket = new LeakyBucket({
-        max: 1,
-        refillInterval: 500,
-        refillAmount: 1,
+    describe('remaining', () => {
+      it('should be 0 even used too many', () => {
+        const bucket = new LeakyBucket({
+          max: 1,
+          refillInterval: 500,
+          refillAmount: 1,
+        })
+        // max is < used
+        bucket.used = 2
+        expect(bucket.remaining).equals(0)
       })
-      // max is < used
-      bucket.used = 2;
-      expect(bucket.remaining).equals(0);
     })
-  })
 
     it("Don't process queue twice", () => {
       const bucket = new LeakyBucket({
@@ -190,9 +190,9 @@ describe('bucket.ts', () => {
         refillAmount: 1,
       })
       // fake processing
-      bucket.processing = true;
+      bucket.processing = true
       // request when already processing
-      bucket.processQueue();
+      bucket.processQueue()
     })
   })
 })
