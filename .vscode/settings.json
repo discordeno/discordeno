@@ -1,4 +1,5 @@
 {
+  "editor.tabSize": 2,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
@@ -8,8 +9,5 @@
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "typescript.tsdk": "node_modules\\typescript\\lib",
-  "yaml.schemas": {
-    "https://json.schemastore.org/github-workflow.json": "file:///c%3A/Users/Heihe/Downloads/discordeno/discordeno/.github/workflows/site.yml"
-  }
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }
