@@ -3,6 +3,7 @@ slug: why-we-switched-from-deno-to-nodejs
 title: 'From Deno to Node.js: Why We Made the Switch'
 authors: [itohatweb, skillz]
 tags: [deno, node.js, library]
+date: 2023-04-03T17:01:03Z
 ---
 
 # Our move from Deno to Node.js
