@@ -1,13 +1,42 @@
 {
   "editor.tabSize": 2,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.organizeImports": true,
-    "source.fixAll": true
+    "source.fixAll.eslint": true
+  },
+  "eslint.validate": ["typescript", "javascript"],
+  "files.associations": {
+    "*.ts": "typescript",
+    "*.js": "javascript"
+  },
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.suggest.insertMode": "replace"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.suggest.insertMode": "replace"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced",
+    "diffEditor.ignoreTrimWhitespace": false
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.maxTokenizationLineLength": 2500
   },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  }
 }
