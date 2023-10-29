@@ -126,7 +126,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} 2021-2023, Discordeno.`,
+        copyright: `Copyright © 2021-${new Date().getFullYear()}, Discordeno.`,
       },
       prism: {
         theme: lightCodeTheme,
