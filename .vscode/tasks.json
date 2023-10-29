@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Watch and Build",
+      "type": "shell",
+      "command": "yarn",
+      "args": ["run", "build:watch"],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "silent",
+        "panel": "dedicated"
+      },
+      "runOptions": {
+        "runOn": "folderOpen",
+        "instanceLimit": 1
+      },
+      "problemMatcher": {
+        "owner": "typescript",
+        "source": "tsc",
+        "applyTo": "closedDocuments",
+        "fileLocation": "absolute",
+        "pattern": "$tsc",
+        "background": {
+          "beginsPattern": "\\s*Starting compilation in watch mode\\s*",
+          "endsPattern": "\\s*Compilation complete\\s*"
+        }
+      }
+    }
+  ]
+}

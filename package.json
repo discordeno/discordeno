@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "build": "turbo run build",
+    "build:watch": "chokidar \"packages/**/*.ts\" --ignore \"packages/**/dist/**/*.d.ts\"  -c \"yarn run build && yarn run build:type\"",
     "fmt": "turbo run fmt",
     "build:type": "turbo run build:type",
     "release-build": "turbo run release-build",
@@ -26,6 +27,7 @@
     "build:doc": "typedoc --out ./website/docs/generated/ && node scripts/finalizeTypedocs.js"
   },
   "devDependencies": {
+    "chokidar-cli": "^3.0.0",
     "eslint": "^8.36.0",
     "eslint-config-discordeno": "*",
     "husky": "^8.0.3",
