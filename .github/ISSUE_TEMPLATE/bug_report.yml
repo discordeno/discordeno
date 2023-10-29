@@ -56,6 +56,15 @@ body:
       label: Code to reproduce the bug
       description: Provide us, if possible, a small piece of code that's easy to test to reproduce this specific bug.
       value: |
-        // We need a better example here.
-        startBot()
+        import { createBot } from '@discordeno/bot'
+
+        const bot = createBot({
+          token: process.env.TOKEN,
+          events: {
+            // ADD EVENTS NEEDED TO SHOW THE BUG HERE
+          },
+          // ADD INTENTS NEEDED HERE FOR YOUR TEST IF NECESSARY
+          // intents: 0,
+        })
+        bot.start()
       render: typescript
