@@ -9,22 +9,23 @@
   "scripts": {
     "build": "turbo run build",
     "build:watch": "echo \"Starting build in watch mode...\" && chokidar \"packages/**/*.ts\" --ignore \"packages/**/dist/**/*.d.ts\"  -c \"yarn run build && yarn run build:type\"",
-    "fmt": "turbo run fmt",
+    "build:doc": "typedoc --out ./website/docs/generated/ && node scripts/finalizeTypedocs.js",
     "build:type": "turbo run build:type",
-    "release-build": "turbo run release-build",
     "dev": "turbo run dev --parallel",
-    "lint": "turbo run lint",
-    "test:type": "turbo run build:type",
-    "test:unit-coverage": "turbo run test:unit-coverage",
-    "test:unit": "turbo run test:unit",
-    "test:integration": "turbo run test:integration",
-    "test:deno-unit": "turbo run test:deno-unit",
-    "test:bun-unit": "turbo run test:bun-unit",
-    "test:e2e": "turbo run test:e2e",
-    "test:test-type": "turbo run test:test-type",
+    "fmt": "turbo run fmt",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "lint": "turbo run lint",
     "prepare": "husky install",
-    "build:doc": "typedoc --out ./website/docs/generated/ && node scripts/finalizeTypedocs.js"
+    "release-build": "turbo run release-build",
+    "setup-dd": "husky install",
+    "test:bun-unit": "turbo run test:bun-unit",
+    "test:deno-unit": "turbo run test:deno-unit",
+    "test:e2e": "turbo run test:e2e",
+    "test:integration": "turbo run test:integration",
+    "test:test-type": "turbo run test:test-type",
+    "test:type": "turbo run build:type",
+    "test:unit": "turbo run test:unit",
+    "test:unit-coverage": "turbo run test:unit-coverage"
   },
   "devDependencies": {
     "chokidar-cli": "^3.0.0",
@@ -47,7 +48,7 @@
       "eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to ."
     ]
   },
-  "packageManager": "yarn@3.3.0",
+  "packageManager": "yarn@3.6.4",
   "dependencies": {
     "typedoc-plugin-missing-exports": "^1.0.0"
   }
