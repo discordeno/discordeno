@@ -55,12 +55,12 @@ export class RoleToggles extends ToggleBitfield {
 
   /** Whether this role is available for purchase. */
   get availableForPurchase(): boolean {
-    return this.has('availableForPurchase');
+    return this.has('availableForPurchase')
   }
 
   /** Whether this is a guild's linked role. */
   get guildConnections(): boolean {
-    return this.has('guildConnections');
+    return this.has('guildConnections')
   }
 
   /** Checks whether or not the permissions exist in this */

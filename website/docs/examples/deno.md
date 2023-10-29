@@ -13,26 +13,24 @@ To do it you can use a workaround provided here: https://nest.land/package/katsu
 You would use it like this.
 
 ```ts
-import { load } from "https://x.nest.land/Yenv@1.0.0/mod.ts";
+import { load } from 'https://x.nest.land/Yenv@1.0.0/mod.ts'
 // Import it like this. There might be a newer version of this fix later, but I would not expect much changes.
-import { fixGatewayWebsocket } from "https://x.nest.land/katsura@1.3.9/src/discordenoFixes/gatewaySocket.ts";
-import { createBot } from "npm:@discordeno/bot@19.0.0-next.5c42bdd";
+import { fixGatewayWebsocket } from 'https://x.nest.land/katsura@1.3.9/src/discordenoFixes/gatewaySocket.ts'
+import { createBot } from 'npm:@discordeno/bot@19.0.0-next.5c42bdd'
 
 const env = await load({
   token: /[M-Z][A-Za-z\d]{23}\.[\w-]{6}\.[\w-]{27}/,
-});
-
+})
 
 const bot = createBot({
   token: env.token,
   events: {
-    ready: (data) => console.log(`Shard ${data.shardId} ready`)
-  }
-});
+    ready: data => console.log(`Shard ${data.shardId} ready`),
+  },
+})
 
 // Use this function with the gateway managerr
-fixGatewayWebsocket(bot.gateway);
+fixGatewayWebsocket(bot.gateway)
 
-await bot.start();
-
+await bot.start()
 ```

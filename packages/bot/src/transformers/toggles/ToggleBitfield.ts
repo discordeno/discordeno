@@ -23,7 +23,7 @@ export class ToggleBitfield {
   }
 
   toJSON(): number {
-    return this.bitfield;
+    return this.bitfield
   }
 }
 
@@ -52,6 +52,6 @@ export class ToggleBitfieldBigint {
   }
 
   toJSON(): string {
-    return this.bitfield.toString();
+    return this.bitfield.toString()
   }
 }

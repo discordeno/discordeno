@@ -58,7 +58,7 @@ export function createBot(options: CreateBotOptions): Bot {
   const bot: Bot = {
     id,
     applicationId: id,
-    transformers: createTransformers({}),
+    transformers: createTransformers({}, { defaultDesiredPropertiesValue: options.defaultDesiredPropertiesValue ?? false }),
     handlers: createBotGatewayHandlers({}),
     rest: createRestManager(options.rest),
     gateway: createGatewayManager(options.gateway),
@@ -105,6 +105,15 @@ export interface CreateBotOptions {
   gateway?: CreateGatewayManagerOptions
   /** The event handlers. */
   events: Partial<EventHandlers>
+  /**
+   * @deprecated Use with caution
+   *
+   * This property will be removed in the near future when the CLI is complete. It is not recommended to use whatsoever.
+   * Although it is harder to create your bot without this, it is still highly recommended to do it that way.
+   *
+   * @default false
+   */
+  defaultDesiredPropertiesValue?: boolean
 }
 
 export interface Bot {

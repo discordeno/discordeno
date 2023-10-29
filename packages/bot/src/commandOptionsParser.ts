@@ -27,7 +27,7 @@ export function commandOptionsParser(interaction: Interaction, options?: Interac
         break
       case ApplicationCommandOptionTypes.Attachment:
         args[option.name] = interaction.data.resolved?.attachments?.get(BigInt(option.value!))
-        break;
+        break
       case ApplicationCommandOptionTypes.Mentionable:
         // Mentionable are roles or users
         args[option.name] = interaction.data.resolved?.roles?.get(BigInt(option.value!)) ?? {

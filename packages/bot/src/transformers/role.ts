@@ -32,11 +32,11 @@ const baseRole: Partial<Role> & BaseRole = {
   },
   /** Whether this role is available for purchase. */
   get availableForPurchase() {
-    return !!this.toggles?.has('availableForPurchase');
+    return !!this.toggles?.has('availableForPurchase')
   },
   /** Whether this is a guild's linked role. */
   get guildConnections() {
-    return !!this.toggles?.has('guildConnections');
+    return !!this.toggles?.has('guildConnections')
   },
 }
 
@@ -111,8 +111,8 @@ export interface Role extends BaseRole {
   managed: boolean
   /** Whether this role is mentionable */
   mentionable: boolean
-  /** 
-   * Use role.tags  
+  /**
+   * Use role.tags
    * @deprecated this is not deprecated, but this is here to prevent users from using this as this is an internal value open to breaking changes.
    */
   internalTags?: {

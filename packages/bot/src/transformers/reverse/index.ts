@@ -17,4 +17,3 @@ export * from './member.js'
 export * from './presence.js'
 export * from './team.js'
 export * from './widgetSettings.js'
-
