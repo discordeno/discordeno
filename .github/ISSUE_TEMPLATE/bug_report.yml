@@ -60,9 +60,9 @@ body:
         const bot = createBot({
           token: process.env.TOKEN,
           events: {
-            // ADD EVENTS NEEDED TO SHOW THE BUG HERE
+            // Add the events, which are needed to show the bug
           },
-          // ADD INTENTS NEEDED HERE FOR YOUR TEST IF NECESSARY
+          // Don't forget to add all necessary intents
           // intents: 0,
         })
         bot.start()
