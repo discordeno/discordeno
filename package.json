@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "build": "turbo run build",
+    "build:watch": "echo \"Starting build in watch mode...\" && chokidar \"packages/**/*.ts\" --ignore \"packages/**/dist/**/*.d.ts\"  -c \"yarn run build && yarn run build:type\"",
     "build:doc": "typedoc --out ./website/docs/generated/ && node scripts/finalizeTypedocs.js",
     "build:type": "turbo run build:type",
     "dev": "turbo run dev --parallel",
@@ -27,11 +28,12 @@
     "test:unit-coverage": "turbo run test:unit-coverage"
   },
   "devDependencies": {
+    "chokidar-cli": "^3.0.0",
     "eslint": "^8.36.0",
     "eslint-config-discordeno": "*",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.0",
-    "prettier": "^2.8.4",
+    "prettier": "^3.0.3",
     "turbo": "latest",
     "typedoc": "^0.23.26",
     "typedoc-plugin-markdown": "^3.14.0",
