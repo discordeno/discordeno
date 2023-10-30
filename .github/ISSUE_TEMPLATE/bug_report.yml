@@ -63,7 +63,7 @@ body:
             // Add the events, which are needed to show the bug
           },
           // Don't forget to add all necessary intents
-          // intents: 0,
+          intents: 0,
         })
         bot.start()
       render: typescript
