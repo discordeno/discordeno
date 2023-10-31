@@ -26,11 +26,10 @@ Alrighty then, by now you have something you want to contribute yourself or have
 
 - Make a new branch
 - Make your code changes now.
-- yarn fmt
-- yarn lint
 - yarn test:unit
 - yarn test:e2e
 - Push to the repo and make a pull request.
+
 
 ## Understanding Yarn Scripts
 
@@ -54,3 +53,4 @@ This will run all the end to end tests to make sure anything you changed, did no
 
 - If the contribution is relatively small go ahead and do it! If it is a larger change, I would highly recommend you read the guides we have on the website in order to understand our library better before undertaking such a big action.
 - If an issue exists for the contribution you want to make, leave a comment on it so no one else begins working on it as well. If an issue does NOT exist for the contribution, then create an issue first before working on it to get some feedback to decide whether it is worth doing.
+- Formatting and linting will be automatically handled by Husky and lint-staged. However, if it doesn't work you can format by doing `yarn fmt` and you can lint by doing  `yarn lint`.
