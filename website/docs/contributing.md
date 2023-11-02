@@ -49,6 +49,11 @@ This will run all the unit tests to make sure anything you changed, did not brea
 
 This will run all the end to end tests to make sure anything you changed, did not break any unexpected things. This takes much longer as these tests actually run across the network using the bot token you provided in the .env file. It makes many requests to test the entire library. This should not be spammed as your bot token has rate limits. Use once your code changes are finalized to make sure that everything is working properly before pushing.
 
+## Recommended code editor
+
+- The recommended code editor is [Visual Studio code.](https://code.visualstudio.com)
+
+
 ## Notes
 
 - If the contribution is relatively small go ahead and do it! If it is a larger change, I would highly recommend you read the guides we have on the website in order to understand our library better before undertaking such a big action.
