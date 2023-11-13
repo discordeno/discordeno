@@ -106,9 +106,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     checkRateLimits(url, headers) {
-      const authHeader = headers?.authorization ?? ''
+      const queueBaseKey = headers?.authorization ?? `Bot ${rest.token}`
 
-      const ratelimited = rest.rateLimitedPaths.get(`${authHeader}${url}`)
+      const ratelimited = rest.rateLimitedPaths.get(`${queueBaseKey}${url}`)
 
       const global = rest.rateLimitedPaths.get('global')
       const now = Date.now()
@@ -272,7 +272,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const bucketId = headers.get(RATE_LIMIT_BUCKET_HEADER) ?? undefined
       const limit = headers.get(RATE_LIMIT_LIMIT_HEADER)
 
-      rest.queues.get(`${queueBaseKey}-${url}`)?.handleCompletedRequest({
+      rest.queues.get(`${queueBaseKey}${url}`)?.handleCompletedRequest({
         remaining: remaining ? Number(remaining) : undefined,
         interval: retryAfter ? Number(retryAfter) * 1000 : undefined,
         max: limit ? Number(limit) : undefined,
@@ -283,7 +283,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rateLimited = true
 
         // SAVE THE URL AS LIMITED, IMPORTANT FOR NEW REQUESTS BY USER WITHOUT BUCKET
-        rest.rateLimitedPaths.set(`${queueBaseKey}-${url}`, {
+        rest.rateLimitedPaths.set(`${queueBaseKey}${url}`, {
           url,
           resetTimestamp: reset,
           bucketId,
@@ -291,7 +291,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         // SAVE THE BUCKET AS LIMITED SINCE DIFFERENT URLS MAY SHARE A BUCKET
         if (bucketId) {
-          rest.rateLimitedPaths.set(`${queueBaseKey}-${bucketId}`, {
+          rest.rateLimitedPaths.set(`${queueBaseKey}${bucketId}`, {
             url,
             resetTimestamp: reset,
             bucketId,
@@ -340,9 +340,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
       const loggingHeaders = { ...payload.headers }
 
-      const authenticationScheme = payload.headers.authorization?.split(' ')[0]
-
       if (payload.headers.authorization) {
+        const authenticationScheme = payload.headers.authorization?.split(' ')[0]
         loggingHeaders.authorization = `${authenticationScheme} tokenhere`
       }
 
@@ -440,10 +439,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return
       }
 
-      const queueBaseKey =
-        request.requestBodyOptions?.headers?.authorization ?? (request.requestBodyOptions?.unauthorized ? 'unauthorized' : `Bot ${rest.token}`)
+      const queueBaseKey = request.requestBodyOptions?.headers?.authorization ?? `Bot ${rest.token}`
 
-      const queue = rest.queues.get(`${queueBaseKey}-${url}`)
+      const queue = rest.queues.get(`${queueBaseKey}${url}`)
 
       if (queue !== undefined) {
         queue.makeRequest(request)
@@ -454,7 +452,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         // Add request to queue
         bucketQueue.makeRequest(request)
         // Save queue
-        rest.queues.set(`${queueBaseKey}-${url}`, bucketQueue)
+        rest.queues.set(`${queueBaseKey}${url}`, bucketQueue)
       }
     },
 

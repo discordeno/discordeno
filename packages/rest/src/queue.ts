@@ -28,7 +28,7 @@ export class Queue {
   frozenAt: number = 0
   /** The time in milliseconds to wait before deleting this queue if it is empty. Defaults to 60000(one minute). */
   deleteQueueDelay: number = 60000
-  /** The key that identifies this queue in the rest manager */
+  /** The key that identifies this queue in the rest manager combined with the url */
   queueBaseKey: string
 
   constructor(rest: RestManager, options: QueueOptions) {
@@ -186,7 +186,7 @@ export class Queue {
       logger.debug(`[Queue] ${this.getQueueType()} ${this.url}. Deleting`)
       if (this.timeoutId) clearTimeout(this.timeoutId)
       // No requests have been requested for this queue so we nuke this queue
-      this.rest.queues.delete(`${this.queueBaseKey}-${this.url}`)
+      this.rest.queues.delete(`${this.queueBaseKey}${this.url}`)
       logger.debug(`[Queue] ${this.getQueueType()} ${this.url}. Deleted! Remaining: (${this.rest.queues.size})`, [...this.rest.queues.keys()])
       if (this.rest.queues.size) this.processPending()
     }, this.deleteQueueDelay)
