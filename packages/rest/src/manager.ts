@@ -124,6 +124,38 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return false
     },
 
+    updateTokenQueues(oldToken, newToken) {
+      const newAuthentication = `Bearer ${newToken}`
+
+      // Update all the queues
+      rest.queues.forEach((queue, key) => {
+        if (!key.startsWith(`Bearer ${oldToken}`)) return
+
+        rest.queues.delete(key)
+        rest.queues.set(`${newAuthentication}${queue.url}`, queue)
+
+        queue.queueBaseKey = newAuthentication
+
+        // Update all the pending requests
+        queue.pending.forEach((request) => {
+          if (request.requestBodyOptions?.headers?.authorization !== `Bearer ${oldToken}`) return
+          request.requestBodyOptions.headers.authorization = newAuthentication
+        })
+      })
+
+      rest.rateLimitedPaths.forEach((ratelimitPath, key) => {
+        if (!key.startsWith(`Bearer ${oldToken}`)) return
+
+        rest.rateLimitedPaths.delete(key)
+        rest.rateLimitedPaths.set(`${newAuthentication}${ratelimitPath.url}`, ratelimitPath)
+
+        if (ratelimitPath.bucketId) {
+          rest.rateLimitedPaths.delete(`Bearer ${oldToken}${ratelimitPath.bucketId}`)
+          rest.rateLimitedPaths.set(`${newAuthentication}${ratelimitPath.bucketId}`, ratelimitPath)
+        }
+      })
+    },
+
     changeToDiscordFormat(obj: any): any {
       if (obj === null) return null
 

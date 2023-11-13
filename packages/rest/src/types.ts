@@ -194,6 +194,8 @@ export interface RestManager {
   preferSnakeCase: (enabled: boolean) => RestManager
   /** Check the rate limits for a url or a bucket. */
   checkRateLimits: (url: string, headers?: Record<string, string>) => number | false
+  /* Update the queues and ratelimit information to adapt to the new token */
+  updateTokenQueues: (oldToken: string, newToken: string) => void
   /** Reshapes and modifies the obj as needed to make it ready for discords api. */
   changeToDiscordFormat: (obj: any) => any
   /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
