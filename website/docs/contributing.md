@@ -16,6 +16,7 @@ Alrighty then, by now you have something you want to contribute yourself or have
 
 **One Time Steps:**
 
+- Install Node.js
 - [Fork the repo.](https://github.com/discordeno/discordeno/fork)
 - Git clone the project.
 - Make a copy of the `.env.example` file and call it `.env` file. Then put a test bot's token in there. For the Guild id, you should make a server and enable the Community setting and invite this test bot there.
