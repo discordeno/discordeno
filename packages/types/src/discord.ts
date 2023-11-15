@@ -885,6 +885,8 @@ export interface DiscordRole {
   position: number
   /** role unicode emoji */
   unicode_emoji?: string
+  /** role flags combined as a bitfield */
+  flags: number
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure */

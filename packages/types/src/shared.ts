@@ -34,6 +34,12 @@ export enum UserFlags {
   ActiveDeveloper = 1 << 22,
 }
 
+/** https://discord.com/developers/docs/topics/permissions#role-object-role-flags */
+export enum Roleflags {
+  /** role can be selected by members in an onboarding prompt */
+  InPrompt = 1 << 0,
+}
+
 /** https://discord.com/developers/docs/resources/channel#channels-resource */
 export enum ChannelFlags {
   None,
