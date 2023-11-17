@@ -193,7 +193,7 @@ export interface RestManager {
   /** Whether or not the rest manager should keep objects in raw snake case from discord. */
   preferSnakeCase: (enabled: boolean) => RestManager
   /** Check the rate limits for a url or a bucket. */
-  checkRateLimits: (url: string, headers?: Record<string, string>) => number | false
+  checkRateLimits: (url: string, authorization?: string) => number | false
   /* Update the queues and ratelimit information to adapt to the new token */
   updateTokenQueues: (oldToken: string, newToken: string) => void
   /** Reshapes and modifies the obj as needed to make it ready for discords api. */

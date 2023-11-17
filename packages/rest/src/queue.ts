@@ -104,13 +104,14 @@ export class Queue {
       const request = this.pending[0]
       if (request) {
         const basicURL = this.rest.simplifyUrl(request.route, request.method)
+        const authentication = request.requestBodyOptions?.headers?.authorization
 
         // If this url is still rate limited, try again
-        const urlResetIn = this.rest.checkRateLimits(basicURL, request.requestBodyOptions?.headers)
+        const urlResetIn = this.rest.checkRateLimits(basicURL, authentication)
         if (urlResetIn) await delay(urlResetIn)
 
         // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
-        const bucketResetIn = request.bucketId ? this.rest.checkRateLimits(request.bucketId, request.requestBodyOptions?.headers) : false
+        const bucketResetIn = request.bucketId ? this.rest.checkRateLimits(request.bucketId, authentication) : false
         if (bucketResetIn) await delay(bucketResetIn)
 
         this.firstRequest = false
@@ -205,8 +206,6 @@ export class Queue {
   }
 
   getQueueType(): string {
-    if (this.queueBaseKey === 'unauthorized') return 'unauthorized'
-
     return this.queueBaseKey.split(' ')[0]
   }
 }

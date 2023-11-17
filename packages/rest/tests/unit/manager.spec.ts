@@ -119,7 +119,7 @@ describe('[rest] manager', () => {
 
     describe('With per URL rateLimitedPath', () => {
       it('Will return time until reset if before resetTimestamp', () => {
-        rest.rateLimitedPaths.set('/channel/555555555555555555', {
+        rest.rateLimitedPaths.set(`Bot ${token}/channel/555555555555555555`, {
           url: '/channel/555555555555555555',
           resetTimestamp: Date.now() + 6541,
         })
@@ -127,7 +127,7 @@ describe('[rest] manager', () => {
       })
 
       it('Will return false if before resetTimestamp', () => {
-        rest.rateLimitedPaths.set('/channel/555555555555555555', {
+        rest.rateLimitedPaths.set(`Bot ${token}/channel/555555555555555555`, {
           url: '/channel/555555555555555555',
           resetTimestamp: Date.now(),
         })
@@ -155,7 +155,7 @@ describe('[rest] manager', () => {
 
     describe('With both URL and Global rateLimitedPath', () => {
       it('Will return URL time first if before resetTimestamp', () => {
-        rest.rateLimitedPaths.set('/channel/555555555555555555', {
+        rest.rateLimitedPaths.set(`Bot ${token}/channel/555555555555555555`, {
           url: '/channel/555555555555555555',
           resetTimestamp: Date.now() + 6541,
         })

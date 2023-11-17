@@ -105,8 +105,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
     },
 
-    checkRateLimits(url, headers) {
-      const queueBaseKey = headers?.authorization ?? `Bot ${rest.token}`
+    checkRateLimits(url, authorization) {
+      const queueBaseKey = authorization ?? `Bot ${rest.token}`
 
       const ratelimited = rest.rateLimitedPaths.get(`${queueBaseKey}${url}`)
 
