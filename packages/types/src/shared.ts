@@ -636,6 +636,10 @@ export enum BitwisePermissionFlags {
   VIEW_CREATOR_MONETIZATION_ANALYTICS = 0x0000020000000000,
   /** Allows for using soundboard in a voice channel. */
   USE_SOUNDBOARD = 0x0000040000000000,
+  /** Allows the usage of custom soundboards sounds from other servers*/
+  USE_EXTERNAL_SOUNDS = 0x0000200000000000,
+  /** Allows sending voice messages */
+  SEND_VOICE_MESSAGES = 0x0000400000000000,
 }
 
 export type PermissionStrings = keyof typeof BitwisePermissionFlags
