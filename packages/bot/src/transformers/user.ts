@@ -1,5 +1,5 @@
 import type { DiscordUser, PremiumTypes } from '@discordeno/types'
-import { iconHashToBigInt } from '@discordeno/utils'
+import { checkIfExists, iconHashToBigInt } from '@discordeno/utils'
 import { ToggleBitfield, UserToggles, type Bot } from '../index.js'
 
 const baseUser: Partial<User> & BaseUser = {
@@ -30,16 +30,16 @@ export function transformUser(bot: Bot, payload: DiscordUser): User {
   }
   if (props.flags) user.flags = new ToggleBitfield(payload.flags)
   if (props.publicFlags) user.publicFlags = new ToggleBitfield(payload.public_flags)
-  if (payload.id && props.id) user.id = bot.transformers.snowflake(payload.id)
-  if (payload.username && props.username) user.username = payload.username
-  if (payload.global_name && props.globalName) user.globalName = payload.global_name
-  if (payload.discriminator && props.discriminator) user.discriminator = payload.discriminator
-  if (payload.locale && props.locale) user.locale = payload.locale
-  if (payload.email && props.email) user.email = payload.email
-  if (payload.premium_type && props.premiumType) user.premiumType = payload.premium_type
-  if (payload.avatar && props.avatar) user.avatar = iconHashToBigInt(payload.avatar)
-  if (payload.banner && props.banner) user.banner = iconHashToBigInt(payload.banner)
-  if (payload.accent_color && props.accentColor) user.accentColor = payload.accent_color
+  if (props.id && checkIfExists(payload.id)) user.id = bot.transformers.snowflake(payload.id)
+  if (props.username && checkIfExists(payload.username)) user.username = payload.username
+  if (props.globalName && checkIfExists(payload.global_name)) user.globalName = payload.global_name
+  if (props.discriminator && checkIfExists(payload.discriminator)) user.discriminator = payload.discriminator
+  if (props.locale && checkIfExists(payload.locale)) user.locale = payload.locale
+  if (props.email && checkIfExists(payload.email)) user.email = payload.email
+  if (props.premiumType && checkIfExists(payload.premium_type)) user.premiumType = payload.premium_type
+  if (props.avatar && checkIfExists(payload.avatar)) user.avatar = iconHashToBigInt(payload.avatar)
+  if (props.banner && checkIfExists(payload.banner)) user.banner = iconHashToBigInt(payload.banner)
+  if (props.accentColor && checkIfExists(payload.accent_color)) user.accentColor = payload.accent_color
 
   return bot.transformers.customizers.user(bot, payload, user)
 }

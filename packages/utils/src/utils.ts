@@ -17,3 +17,8 @@ export function hasProperty<T extends {}, Y extends PropertyKey = string>(obj: T
   // eslint-disable-next-line no-prototype-builtins
   return obj.hasOwnProperty(prop)
 }
+
+/** Check for nullability with both undefined and null */
+export function checkIfExists<T>(obj: T): obj is NonNullable<T> {
+  return obj !== undefined && obj !== null
+}

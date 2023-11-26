@@ -1,8 +1,8 @@
 import type { BigString, DiscordMember } from '@discordeno/types'
-import { iconHashToBigInt } from '@discordeno/utils'
+import { checkIfExists, iconHashToBigInt } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
-import { Permissions } from './toggles/Permissions.js'
 import { MemberToggles } from './toggles/member.js'
+import { Permissions } from './toggles/Permissions.js'
 import type { User } from './user.js'
 
 const baseMember: Partial<Member> & BaseMember = {
@@ -21,17 +21,17 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigSt
   const member: Member = Object.create(baseMember)
   const props = bot.transformers.desiredProperties.member
 
-  if (userId && props.id) member.id = typeof userId === 'string' ? bot.transformers.snowflake(userId) : userId
-  if (guildId && props.guildId) member.guildId = typeof guildId === 'string' ? bot.transformers.snowflake(guildId) : guildId
-  if (payload.user && props.user) member.user = bot.transformers.user(bot, payload.user)
-  if (payload.nick && props.nick) member.nick = payload.nick
-  if (payload.roles && props.roles) member.roles = payload.roles.map((id) => bot.transformers.snowflake(id))
-  if (payload.joined_at && props.joinedAt) member.joinedAt = Date.parse(payload.joined_at)
-  if (payload.premium_since && props.premiumSince) member.premiumSince = Date.parse(payload.premium_since)
-  if (payload.communication_disabled_until && props.communicationDisabledUntil)
+  if (props.id && checkIfExists(userId)) member.id = typeof userId === 'string' ? bot.transformers.snowflake(userId) : userId
+  if (props.guildId && checkIfExists(guildId)) member.guildId = typeof guildId === 'string' ? bot.transformers.snowflake(guildId) : guildId
+  if (props.user && checkIfExists(payload.user)) member.user = bot.transformers.user(bot, payload.user)
+  if (props.nick && checkIfExists(payload.nick)) member.nick = payload.nick
+  if (props.roles && checkIfExists(payload.roles)) member.roles = payload.roles.map((id) => bot.transformers.snowflake(id))
+  if (props.joinedAt && checkIfExists(payload.joined_at)) member.joinedAt = Date.parse(payload.joined_at)
+  if (props.premiumSince && checkIfExists(payload.premium_since)) member.premiumSince = Date.parse(payload.premium_since)
+  if (props.communicationDisabledUntil && checkIfExists(payload.communication_disabled_until))
     member.communicationDisabledUntil = Date.parse(payload.communication_disabled_until)
-  if (payload.avatar && props.avatar) member.avatar = iconHashToBigInt(payload.avatar)
-  if (payload.permissions && props.permissions) member.permissions = new Permissions(payload.permissions)
+  if (props.avatar && checkIfExists(payload.avatar)) member.avatar = iconHashToBigInt(payload.avatar)
+  if (props.permissions && checkIfExists(payload.permissions)) member.permissions = new Permissions(payload.permissions)
   if (props.deaf || props.mute || props.pending) {
     member.toggles = new MemberToggles(payload)
   }
