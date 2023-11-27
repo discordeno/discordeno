@@ -19,9 +19,9 @@
   },
   "dependencies": {
     "@babel/plugin-syntax-flow": "^7.18.6",
-    "@docusaurus/core": "2.3.1",
-    "@docusaurus/preset-classic": "2.3.1",
-    "@easyops-cn/docusaurus-search-local": "^0.34.0",
+    "@docusaurus/core": "3.0.0",
+    "@docusaurus/preset-classic": "3.0.0",
+    "@easyops-cn/docusaurus-search-local": "^0.38.0",
     "@mdx-js/react": "^1.6.22",
     "babel-plugin-styled-components": "^2.1.1",
     "chart.js": "^4.2.1",
