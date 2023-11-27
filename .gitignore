@@ -15,7 +15,12 @@ node_modules
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-proxies/*/.yarn/
+proxies/*/.yarn/*
+!proxies/*/.yarn/patches
+!proxies/*/.yarn/plugins
+!proxies/*/.yarn/releases
+!proxies/*/.yarn/sdks
+!proxies/*/.yarn/versions
 site/docs/generated/classes
 site/docs/generated/enums
 site/docs/generated/interfaces

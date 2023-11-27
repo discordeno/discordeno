@@ -1,8 +1,13 @@
 {
   "name": "benchmark",
   "version": "0.0.0",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/esm/index.js",
+  "exports": {
+    "import": "./dist/esm/index.js",
+    "require": "./dist/cjs/index.js",
+    "types": "./dist/types/index.d.ts"
+  },
+  "types": "./dist/types/index.d.ts",
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
@@ -10,7 +15,7 @@
     "url": "https://github.com/discordeno/discordeno.git"
   },
   "scripts": {
-    "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
+    "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist/types",
     "release-build": "yarn build && yarn build:type",
     "fmt": "eslint --fix \"src/**/*.ts*\"",
     "lint": "eslint \"src/**/*.ts*\"",

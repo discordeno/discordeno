@@ -29,9 +29,10 @@ FROM node:18.16.0-alpine3.18 AS prod-deps
 WORKDIR /app
 # copy necessary files for install dependencies
 COPY package.json yarn.lock .yarnrc.yml ./
+COPY ./.yarn/plugins  ./.yarn/plugins
+COPY ./.yarn/releases  ./.yarn/releases
 # config yarn to install only prod dependencies
 RUN yarn set version berry
-RUN yarn plugin import workspace-tools
 # install prod dependencies
 RUN yarn workspaces focus --all --production
 

@@ -12,10 +12,10 @@
     "benchmark": "npm:benchmark",
     "dotenv": "npm:dotenv",
     "node:zlib": "https://deno.land/std@0.176.0/node/zlib.ts",
-    "@discordeno/utils": "./packages/utils/dist/index.js",
-    "@discordeno/types": "./packages/types/dist/index.js",
-    "@discordeno/rest": "./packages/rest/dist/index.js",
-    "@discordeno/gateway": "./packages/gateway/dist/index.js",
-    "@discordeno/bot": "./packages/bot/dist/index.js"
+    "@discordeno/utils": "./packages/utils/dist/esm/index.js",
+    "@discordeno/types": "./packages/types/dist/esm/index.js",
+    "@discordeno/rest": "./packages/rest/dist/esm/index.js",
+    "@discordeno/gateway": "./packages/gateway/dist/esm/index.js",
+    "@discordeno/bot": "./packages/bot/dist/esm/index.js"
   }
 }
