@@ -993,15 +993,15 @@ export type Camelize<T> = T extends any[]
     ? Array<Camelize<T[number]>>
     : T
   : T extends Record<any, any>
-  ? { [K in keyof T as CamelCase<K & string>]: Camelize<T[K]> }
-  : T
+    ? { [K in keyof T as CamelCase<K & string>]: Camelize<T[K]> }
+    : T
 
 export type Snakelize<T> = T extends any[]
   ? T extends Array<Record<any, any>>
     ? Array<Snakelize<T[number]>>
     : T
   : T extends Record<any, any>
-  ? { [K in keyof T as SnakeCase<K & string>]: Snakelize<T[K]> }
-  : T
+    ? { [K in keyof T as SnakeCase<K & string>]: Snakelize<T[K]> }
+    : T
 
 export type PickPartial<T, K extends keyof T> = { [P in keyof T]?: T[P] | undefined } & { [P in K]: T[P] }
