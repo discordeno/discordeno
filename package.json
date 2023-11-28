@@ -43,9 +43,9 @@
     "node": ">=18.0.0"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,md,html,css}": "prettier --ignore-unknown --write",
+    "*.{js,jsx,ts,tsx,md,html,css}": "yarn run prettier --ignore-unknown --write",
     "*.{js,ts,tsx}": [
-      "eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to ."
+      "yarn run eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to ."
     ]
   },
   "packageManager": "yarn@3.6.4",
