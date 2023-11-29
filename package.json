@@ -9,7 +9,7 @@
   "scripts": {
     "build": "turbo run build --no-daemon",
     "build:watch": "echo \"Starting build in watch mode...\" && chokidar \"packages/**/*.ts\" --ignore \"packages/**/dist/**/*.d.ts\"  -c \"yarn run build && yarn run build:type\"",
-    "build:doc": "typedoc --out ./website/docs/generated/ && node scripts/finalizeTypedocs.js",
+    "build:doc": "typedoc --options ./typedoc.json && node scripts/finalizeTypedocs.js",
     "build:type": "turbo run build:type --no-daemon",
     "dev": "turbo run dev --parallel --no-daemon",
     "fmt": "turbo run fmt --no-daemon",
@@ -35,8 +35,8 @@
     "lint-staged": "^15.1.0",
     "prettier": "^3.1.0",
     "turbo": "^1.10.16",
-    "typedoc": "^0.25.4",
-    "typedoc-plugin-markdown": "^3.17.1",
+    "typedoc": "0.25.4",
+    "typedoc-plugin-markdown": "3.17.1",
     "typescript": "5.2.2"
   },
   "engines": {
