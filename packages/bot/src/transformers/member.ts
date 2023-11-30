@@ -21,18 +21,18 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigSt
   const member: Member = Object.create(baseMember)
   const props = bot.transformers.desiredProperties.member
 
-  if (userId && props.id) member.id = typeof userId === 'string' ? bot.transformers.snowflake(userId) : userId
-  if (guildId && props.guildId) member.guildId = typeof guildId === 'string' ? bot.transformers.snowflake(guildId) : guildId
-  if (payload.user && props.user) member.user = bot.transformers.user(bot, payload.user)
-  if (payload.nick && props.nick) member.nick = payload.nick
-  if (payload.roles && props.roles) member.roles = payload.roles.map((id) => bot.transformers.snowflake(id))
-  if (payload.joined_at && props.joinedAt) member.joinedAt = Date.parse(payload.joined_at)
-  if (payload.premium_since && props.premiumSince) member.premiumSince = Date.parse(payload.premium_since)
-  if (payload.communication_disabled_until && props.communicationDisabledUntil)
+  if (userId && props?.id) member.id = typeof userId === 'string' ? bot.transformers.snowflake(userId) : userId
+  if (guildId && props?.guildId) member.guildId = typeof guildId === 'string' ? bot.transformers.snowflake(guildId) : guildId
+  if (payload.user && props?.user) member.user = bot.transformers.user(bot, payload.user)
+  if (payload.nick && props?.nick) member.nick = payload.nick
+  if (payload.roles && props?.roles) member.roles = payload.roles.map((id) => bot.transformers.snowflake(id))
+  if (payload.joined_at && props?.joinedAt) member.joinedAt = Date.parse(payload.joined_at)
+  if (payload.premium_since && props?.premiumSince) member.premiumSince = Date.parse(payload.premium_since)
+  if (payload.communication_disabled_until && props?.communicationDisabledUntil)
     member.communicationDisabledUntil = Date.parse(payload.communication_disabled_until)
-  if (payload.avatar && props.avatar) member.avatar = iconHashToBigInt(payload.avatar)
-  if (payload.permissions && props.permissions) member.permissions = new Permissions(payload.permissions)
-  if (props.deaf || props.mute || props.pending) {
+  if (payload.avatar && props?.avatar) member.avatar = iconHashToBigInt(payload.avatar)
+  if (payload.permissions && props?.permissions) member.permissions = new Permissions(payload.permissions)
+  if (props?.deaf || props?.mute || props?.pending) {
     member.toggles = new MemberToggles(payload)
   }
 
