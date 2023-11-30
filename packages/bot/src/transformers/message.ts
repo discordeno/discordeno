@@ -259,48 +259,48 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
 
   const props = bot.transformers.desiredProperties.message
 
-  if (props.author && payload.author) message.author = bot.transformers.user(bot, payload.author)
-  if (payload.application_id && props.applicationId) message.applicationId = bot.transformers.snowflake(payload.application_id)
-  if (payload.attachments?.length && props.attachments) {
+  if (props?.author && payload.author) message.author = bot.transformers.user(bot, payload.author)
+  if (payload.application_id && props?.applicationId) message.applicationId = bot.transformers.snowflake(payload.application_id)
+  if (payload.attachments?.length && props?.attachments) {
     message.attachments = payload.attachments.map((attachment) => bot.transformers.attachment(bot, attachment))
   }
-  if (props.channelId && payload.channel_id) message.channelId = bot.transformers.snowflake(payload.channel_id)
-  if (props.components && payload.components?.length) message.components = payload.components.map((comp) => bot.transformers.component(bot, comp))
-  if (props.content && payload.content) message.content = payload.content ?? EMPTY_STRING
-  if (payload.edited_timestamp && props.editedTimestamp) message.editedTimestamp = Date.parse(payload.edited_timestamp)
-  if (payload.embeds?.length && props.embeds) message.embeds = payload.embeds.map((embed) => bot.transformers.embed(bot, embed))
-  if (guildId && props.guildId) message.guildId = guildId
-  if (props.id && payload.id) message.id = bot.transformers.snowflake(payload.id)
+  if (props?.channelId && payload.channel_id) message.channelId = bot.transformers.snowflake(payload.channel_id)
+  if (props?.components && payload.components?.length) message.components = payload.components.map((comp) => bot.transformers.component(bot, comp))
+  if (props?.content && payload.content) message.content = payload.content ?? EMPTY_STRING
+  if (payload.edited_timestamp && props?.editedTimestamp) message.editedTimestamp = Date.parse(payload.edited_timestamp)
+  if (payload.embeds?.length && props?.embeds) message.embeds = payload.embeds.map((embed) => bot.transformers.embed(bot, embed))
+  if (guildId && props?.guildId) message.guildId = guildId
+  if (props?.id && payload.id) message.id = bot.transformers.snowflake(payload.id)
   if (payload.interaction) {
     const interaction = {} as NonNullable<Message['interaction']>
     let edited = false
-    if (props.interaction.id) {
+    if (props?.interaction?.id) {
       interaction.id = bot.transformers.snowflake(payload.interaction.id)
       edited = true
     }
-    if (props.interaction.member && payload.interaction.member) {
+    if (props?.interaction?.member && payload.interaction.member) {
       // @ts-expect-error TODO: partial - check why this is partial and handle as needed
       interaction.member = bot.transformers.member(bot, payload.interaction.member, guildId, payload.interaction.user.id)
       edited = true
     }
-    if (props.interaction.name) {
+    if (props?.interaction?.name) {
       interaction.name = payload.interaction.name
       edited = true
     }
-    if (props.interaction.type) {
+    if (props?.interaction?.type) {
       interaction.type = payload.interaction.type
       edited = true
     }
-    if (props.interaction.user) {
+    if (props?.interaction?.user) {
       interaction.user = bot.transformers.user(bot, payload.interaction.user)
       edited = true
     }
 
     if (edited) message.interaction = interaction
   }
-  if (props.member && payload.member && guildId) message.member = bot.transformers.member(bot, payload.member, guildId, userId)
+  if (props?.member && payload.member && guildId) message.member = bot.transformers.member(bot, payload.member, guildId, userId)
   if (payload.mention_everyone) message.mentionEveryone = true
-  if (props.mentionedChannelIds && payload.mention_channels?.length) {
+  if (props?.mentionedChannelIds && payload.mention_channels?.length) {
     message.mentionedChannelIds = [
       // Keep any ids tht discord sends
       ...(payload.mention_channels ?? []).map((m) => bot.transformers.snowflake(m.id)),
@@ -311,50 +311,50 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
       ),
     ]
   }
-  if (props.mentionedRoleIds && payload.mention_roles?.length) {
+  if (props?.mentionedRoleIds && payload.mention_roles?.length) {
     message.mentionedRoleIds = payload.mention_roles.map((id) => bot.transformers.snowflake(id))
   }
-  if (props.mentions && payload.mentions?.length) {
+  if (props?.mentions && payload.mentions?.length) {
     message.mentions = payload.mentions.map((user) => bot.transformers.user(bot, user))
   }
   if (payload.message_reference) {
     const reference = {} as NonNullable<Message['messageReference']>
     let edited = false
 
-    if (props.messageReference.channelId && payload.message_reference.channel_id) {
+    if (props?.messageReference?.channelId && payload.message_reference.channel_id) {
       reference.channelId = bot.transformers.snowflake(payload.message_reference.channel_id)
       edited = true
     }
-    if (props.messageReference.guildId && payload.message_reference.guild_id) {
+    if (props?.messageReference?.guildId && payload.message_reference.guild_id) {
       reference.guildId = bot.transformers.snowflake(payload.message_reference.guild_id)
       edited = true
     }
-    if (props.messageReference.messageId && payload.message_reference.message_id) {
+    if (props?.messageReference?.messageId && payload.message_reference.message_id) {
       reference.messageId = bot.transformers.snowflake(payload.message_reference.message_id)
       edited = true
     }
 
     if (edited) message.messageReference = reference
   }
-  if (payload.nonce && props.nonce) message.nonce = payload.nonce
+  if (payload.nonce && props?.nonce) message.nonce = payload.nonce
   if (payload.pinned) message.pinned = true
-  if (payload.reactions?.length && props.reactions) {
+  if (payload.reactions?.length && props?.reactions) {
     message.reactions = payload.reactions.map((reaction) => ({
       me: reaction.me,
       count: reaction.count,
       emoji: bot.transformers.emoji(bot, reaction.emoji),
     }))
   }
-  if (props.stickerItems && payload.sticker_items?.length)
+  if (props?.stickerItems && payload.sticker_items?.length)
     message.stickerItems = payload.sticker_items.map((item) => ({
       id: bot.transformers.snowflake(item.id),
       name: item.name,
       formatType: item.format_type,
     }))
   if (payload.tts) message.tts = true
-  if (props.thread && payload.thread) message.thread = bot.transformers.channel(bot, { channel: payload.thread, guildId })
-  if (props.type && props.type) message.type = payload.type
-  if (payload.webhook_id && props.webhookId) message.webhookId = bot.transformers.snowflake(payload.webhook_id)
+  if (props?.thread && payload.thread) message.thread = bot.transformers.channel(bot, { channel: payload.thread, guildId })
+  if (props?.type && props?.type) message.type = payload.type
+  if (payload.webhook_id && props?.webhookId) message.webhookId = bot.transformers.snowflake(payload.webhook_id)
 
   return bot.transformers.customizers.message(bot, payload, message)
 }
