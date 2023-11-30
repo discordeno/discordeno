@@ -1,31 +1,31 @@
 import type { DiscordWebhook, WebhookTypes } from '@discordeno/types'
-import { checkIfExists, iconHashToBigInt, type Bot, type Channel, type Guild, type User } from '../index.js'
+import { iconHashToBigInt, type Bot, type Channel, type Guild, type User } from '../index.js'
 
 export function transformWebhook(bot: Bot, payload: DiscordWebhook): Webhook {
   const props = bot.transformers.desiredProperties.webhook
   const webhook = {} as Webhook
 
-  if (props.id && checkIfExists(payload.id)) webhook.id = bot.transformers.snowflake(payload.id)
-  if (props.type && checkIfExists(payload.type)) webhook.type = payload.type
-  if (props.guildId && checkIfExists(payload.guild_id)) webhook.guildId = bot.transformers.snowflake(payload.guild_id)
-  if (props.channelId && checkIfExists(payload.channel_id)) webhook.channelId = bot.transformers.snowflake(payload.channel_id)
-  if (props.user && checkIfExists(payload.user)) webhook.user = bot.transformers.user(bot, payload.user)
-  if (props.name && checkIfExists(payload.name)) webhook.name = payload.name
-  if (props.avatar && checkIfExists(payload.avatar)) webhook.avatar = iconHashToBigInt(payload.avatar)
-  if (props.token && checkIfExists(payload.token)) webhook.token = payload.token
-  if (props.applicationId && checkIfExists(payload.application_id)) webhook.applicationId = bot.transformers.snowflake(payload.application_id)
-  if (props.sourceGuild && checkIfExists(payload.source_guild))
+  if (props.id && payload.id) webhook.id = bot.transformers.snowflake(payload.id)
+  if (props.type && payload.type) webhook.type = payload.type
+  if (props.guildId && payload.guild_id) webhook.guildId = bot.transformers.snowflake(payload.guild_id)
+  if (props.channelId && payload.channel_id) webhook.channelId = bot.transformers.snowflake(payload.channel_id)
+  if (props.user && payload.user) webhook.user = bot.transformers.user(bot, payload.user)
+  if (props.name && payload.name) webhook.name = payload.name
+  if (props.avatar && payload.avatar) webhook.avatar = iconHashToBigInt(payload.avatar)
+  if (props.token && payload.token) webhook.token = payload.token
+  if (props.applicationId && payload.application_id) webhook.applicationId = bot.transformers.snowflake(payload.application_id)
+  if (props.sourceGuild && payload.source_guild)
     webhook.sourceGuild = {
       id: bot.transformers.snowflake(payload.source_guild.id!),
       name: payload.source_guild.name!,
       icon: payload.source_guild.icon ? iconHashToBigInt(payload.source_guild.icon) : undefined,
     }
-  if (props.sourceChannel && checkIfExists(payload.source_channel))
+  if (props.sourceChannel && payload.source_channel)
     webhook.sourceChannel = {
       id: bot.transformers.snowflake(payload.source_channel.id!),
       name: payload.source_channel.name ?? '',
     }
-  if (props.url && checkIfExists(payload.url)) webhook.url = payload.url
+  if (props.url && payload.url) webhook.url = payload.url
 
   return bot.transformers.customizers.webhook(bot, payload, webhook)
 }

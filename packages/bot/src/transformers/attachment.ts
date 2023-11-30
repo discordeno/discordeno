@@ -1,20 +1,20 @@
 import type { DiscordAttachment } from '@discordeno/types'
-import { checkIfExists, type Bot } from '../index.js'
+import type { Bot } from '../index.js'
 
 export function transformAttachment(bot: Bot, payload: DiscordAttachment): Attachment {
   const props = bot.transformers.desiredProperties.attachment
   const attachment = {} as Attachment
 
-  if (props.id && checkIfExists(payload.id)) attachment.id = bot.transformers.snowflake(payload.id)
-  if (props.filename && checkIfExists(payload.filename)) attachment.filename = payload.filename
-  if (props.contentType && checkIfExists(payload.content_type)) attachment.contentType = payload.content_type
-  if (props.size && checkIfExists(payload.size)) attachment.size = payload.size
-  if (props.url && checkIfExists(payload.url)) attachment.url = payload.url
-  if (props.proxyUrl && checkIfExists(payload.proxy_url)) attachment.proxyUrl = payload.proxy_url
-  if (props.height && checkIfExists(payload.height)) attachment.height = payload.height
-  if (props.width && checkIfExists(payload.width)) attachment.width = payload.width
-  if (props.ephemeral && checkIfExists(payload.ephemeral)) attachment.ephemeral = payload.ephemeral
-  if (props.description && checkIfExists(payload.description)) attachment.description = payload.description
+  if (props.id && payload.id) attachment.id = bot.transformers.snowflake(payload.id)
+  if (props.filename && payload.filename) attachment.filename = payload.filename
+  if (props.contentType && payload.content_type) attachment.contentType = payload.content_type
+  if (props.size) attachment.size = payload.size
+  if (props.url && payload.url) attachment.url = payload.url
+  if (props.proxyUrl && payload.proxy_url) attachment.proxyUrl = payload.proxy_url
+  if (props.height && payload.height) attachment.height = payload.height
+  if (props.width && payload.width) attachment.width = payload.width
+  if (props.ephemeral && payload.ephemeral) attachment.ephemeral = payload.ephemeral
+  if (props.description && payload.description) attachment.description = payload.description
 
   return bot.transformers.customizers.attachment(bot, payload, attachment)
 }

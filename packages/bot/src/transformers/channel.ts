@@ -1,5 +1,5 @@
 import type { BigString, ChannelTypes, DiscordChannel, DiscordThreadMember, OverwriteReadable, VideoQualityModes } from '@discordeno/types'
-import { calculatePermissions, checkIfExists, type Bot } from '../index.js'
+import { calculatePermissions, type Bot } from '../index.js'
 import { ChannelToggles } from './toggles/channel.js'
 import { Permissions } from './toggles/Permissions.js'
 
@@ -62,46 +62,43 @@ export const baseChannel: Partial<Channel> & BaseChannel = {
 }
 
 export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }): Channel {
-  const channel = Object.create(baseChannel)
+  const channel = Object.create(baseChannel) as Channel
   const props = bot.transformers.desiredProperties.channel
   channel.toggles = new ChannelToggles(payload.channel)
 
-  if (props.id && checkIfExists(payload.channel.id)) channel.id = bot.transformers.snowflake(payload.channel.id)
-  if (props.guildId && checkIfExists(payload.guildId ?? payload.channel.guild_id))
+  if (props.id && payload.channel.id) channel.id = bot.transformers.snowflake(payload.channel.id)
+  if (props.guildId && (payload.guildId ?? payload.channel.guild_id))
     channel.guildId = payload.guildId ?? bot.transformers.snowflake(payload.channel.guild_id!)
-  if (props.type && checkIfExists(payload.channel.type)) channel.type = payload.channel.type
+  if (props.type) channel.type = payload.channel.type
   if (props.position) channel.position = payload.channel.position
-  if (props.name && checkIfExists(payload.channel.name)) channel.name = payload.channel.name
-  if (props.topic && checkIfExists(payload.channel.topic)) channel.topic = payload.channel.topic
-  if (props.lastMessageId && checkIfExists(payload.channel.last_message_id))
-    channel.lastMessageId = bot.transformers.snowflake(payload.channel.last_message_id)
-  if (props.bitrate && checkIfExists(payload.channel.bitrate)) channel.bitrate = payload.channel.bitrate
+  if (props.name && payload.channel.name) channel.name = payload.channel.name
+  if (props.topic && payload.channel.topic) channel.topic = payload.channel.topic
+  if (props.lastMessageId && payload.channel.last_message_id) channel.lastMessageId = bot.transformers.snowflake(payload.channel.last_message_id)
+  if (props.bitrate && payload.channel.bitrate) channel.bitrate = payload.channel.bitrate
   if (props.userLimit) channel.userLimit = payload.channel.user_limit
   if (props.rateLimitPerUser) channel.rateLimitPerUser = payload.channel.rate_limit_per_user
-  if (props.ownerId && checkIfExists(payload.channel.owner_id)) channel.ownerId = bot.transformers.snowflake(payload.channel.owner_id)
-  if (props.lastPinTimestamp && checkIfExists(payload.channel.last_pin_timestamp))
-    channel.lastPinTimestamp = Date.parse(payload.channel.last_pin_timestamp)
-  if (props.rtcRegion && checkIfExists(payload.channel.rtc_region)) channel.rtcRegion = payload.channel.rtc_region
-  if (props.videoQualityMode && checkIfExists(payload.channel.video_quality_mode)) channel.videoQualityMode = payload.channel.video_quality_mode
-  if (props.messageCount && checkIfExists(payload.channel.message_count)) channel.messageCount = payload.channel.message_count
-  if (props.memberCount && checkIfExists(payload.channel.member_count)) channel.memberCount = payload.channel.member_count
+  if (props.ownerId && payload.channel.owner_id) channel.ownerId = bot.transformers.snowflake(payload.channel.owner_id)
+  if (props.lastPinTimestamp && payload.channel.last_pin_timestamp) channel.lastPinTimestamp = Date.parse(payload.channel.last_pin_timestamp)
+  if (props.rtcRegion && payload.channel.rtc_region) channel.rtcRegion = payload.channel.rtc_region
+  if (props.videoQualityMode && payload.channel.video_quality_mode) channel.videoQualityMode = payload.channel.video_quality_mode
+  if (props.messageCount) channel.messageCount = payload.channel.message_count
+  if (props.memberCount) channel.memberCount = payload.channel.member_count
   if (props.archiveTimestamp || props.createTimestamp || props.autoArchiveDuration) {
-    channel.internalThreadMetadata = {}
-    if (payload.channel.thread_metadata?.archive_timestamp && props.archiveTimestamp)
-      channel.internalThreadMetadata.archiveTimestamp = Date.parse(payload.channel.thread_metadata.archive_timestamp)
-    if (payload.channel.thread_metadata?.create_timestamp && props.createTimestamp)
-      channel.internalThreadMetadata.createTimestamp = Date.parse(payload.channel.thread_metadata.create_timestamp)
-    if (payload.channel.thread_metadata?.auto_archive_duration && props.autoArchiveDuration)
-      channel.internalThreadMetadata.autoArchiveDuration = payload.channel.thread_metadata.auto_archive_duration
+    channel.internalThreadMetadata = {} as Channel['internalThreadMetadata']
+    if (props.archiveTimestamp && payload.channel.thread_metadata?.archive_timestamp)
+      channel.internalThreadMetadata!.archiveTimestamp = Date.parse(payload.channel.thread_metadata.archive_timestamp)
+    if (props.createTimestamp && payload.channel.thread_metadata?.create_timestamp)
+      channel.internalThreadMetadata!.createTimestamp = Date.parse(payload.channel.thread_metadata.create_timestamp)
+    if (props.autoArchiveDuration && payload.channel.thread_metadata?.auto_archive_duration)
+      channel.internalThreadMetadata!.autoArchiveDuration = payload.channel.thread_metadata.auto_archive_duration
   }
-  if (props.autoArchiveDuration && checkIfExists(payload.channel.default_auto_archive_duration))
+  if (props.autoArchiveDuration && payload.channel.default_auto_archive_duration)
     channel.autoArchiveDuration = payload.channel.default_auto_archive_duration
-  if (props.permissions && checkIfExists(payload.channel.permissions)) channel.permissions = new Permissions(payload.channel.permissions)
-  if (props.flags && checkIfExists(payload.channel.flags)) channel.flags = payload.channel.flags
-  if (props.permissionOverwrites && checkIfExists(payload.channel.permission_overwrites)) {
+  if (props.permissions && payload.channel.permissions) channel.permissions = new Permissions(payload.channel.permissions)
+  if (props.flags) channel.flags = payload.channel.flags
+  if (props.permissionOverwrites && payload.channel.permission_overwrites)
     channel.internalOverwrites = payload.channel.permission_overwrites.map((o) => packOverwrites(o.allow ?? '0', o.deny ?? '0', o.id, o.type))
-  }
-  if (props.parentId && checkIfExists(payload.channel.parent_id)) channel.parentId = bot.transformers.snowflake(payload.channel.parent_id)
+  if (props.parentId && payload.channel.parent_id) channel.parentId = bot.transformers.snowflake(payload.channel.parent_id)
 
   return bot.transformers.customizers.channel(bot, payload.channel, channel)
 }
@@ -144,7 +141,7 @@ export interface Channel extends BaseChannel {
   /** The type of channel */
   type: ChannelTypes
   /** The id of the guild */
-  guildId?: bigint
+  guildId?: BigString
   /** Sorting position of the channel */
   position?: number
   /** The name of the channel (1-100 characters) */
@@ -164,7 +161,7 @@ export interface Channel extends BaseChannel {
   /** For guild channels: Id of the parent category for a channel (each parent category can contain up to 50 channels), for threads: id of the text channel this thread was created */
   parentId?: bigint
   /** When the last pinned message was pinned. This may be null in events such as GUILD_CREATE when a message is not pinned. */
-  lastPinTimestamp?: string
+  lastPinTimestamp?: number
   /** Voice region id for the voice or stage channel, automatic when set to null */
   rtcRegion?: string
   /** The camera video quality mode of the voice channel, 1 when not present */
@@ -189,7 +186,7 @@ export interface Channel extends BaseChannel {
   /** Thread member object for the current user, if they have joined the thread, only included on certain API endpoints */
   member?: DiscordThreadMember
   /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
-  default_auto_archive_duration?: number
+  autoArchiveDuration?: number
   /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a application command interaction */
   permissions?: Permissions
   /** The flags of the channel */

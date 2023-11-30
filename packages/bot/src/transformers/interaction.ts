@@ -11,7 +11,7 @@ import {
   type InteractionCallbackData,
   type MessageComponentTypes,
 } from '@discordeno/types'
-import { checkIfExists, Collection } from '@discordeno/utils'
+import { Collection } from '@discordeno/utils'
 import type { Bot, Component } from '../index.js'
 import type { DiscordInteractionDataResolved } from '../typings.js'
 import type { Attachment } from './attachment.js'
@@ -151,21 +151,20 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction): Int
   interaction.bot = bot
   interaction.acknowledged = false
 
-  if (props.id && checkIfExists(payload.id)) interaction.id = bot.transformers.snowflake(payload.id)
-  if (props.applicationId && checkIfExists(payload.application_id)) interaction.applicationId = bot.transformers.snowflake(payload.application_id)
-  if (props.type && checkIfExists(payload.type)) interaction.type = payload.type
-  if (props.token && checkIfExists(payload.token)) interaction.token = payload.token
-  if (props.version && checkIfExists(payload.version)) interaction.version = payload.version
-  if (props.locale && checkIfExists(payload.locale)) interaction.locale = payload.locale
-  if (props.guildLocale && checkIfExists(payload.guild_locale)) interaction.guildLocale = payload.guild_locale
-  if (props.guildId && checkIfExists(guildId)) interaction.guildId = guildId
-  if (props.user && checkIfExists(user)) interaction.user = user
-  if (props.appPermissions && checkIfExists(payload.app_permissions)) interaction.appPermissions = bot.transformers.snowflake(payload.app_permissions)
-  if (props.message && checkIfExists(payload.message)) interaction.message = bot.transformers.message(bot, payload.message)
-  if (props.channelId && checkIfExists(payload.channel_id)) interaction.channelId = bot.transformers.snowflake(payload.channel_id)
-  if (props.member && checkIfExists(guildId) && checkIfExists(payload.member))
-    interaction.member = bot.transformers.member(bot, payload.member, guildId, user.id)
-  if (props.data && checkIfExists(payload.data)) {
+  if (props.id && payload.id) interaction.id = bot.transformers.snowflake(payload.id)
+  if (props.applicationId && payload.application_id) interaction.applicationId = bot.transformers.snowflake(payload.application_id)
+  if (props.type && payload.type) interaction.type = payload.type
+  if (props.token && payload.token) interaction.token = payload.token
+  if (props.version && payload.version) interaction.version = payload.version
+  if (props.locale && payload.locale) interaction.locale = payload.locale
+  if (props.guildLocale && payload.guild_locale) interaction.guildLocale = payload.guild_locale
+  if (props.guildId && guildId) interaction.guildId = guildId
+  if (props.user && user) interaction.user = user
+  if (props.appPermissions && payload.app_permissions) interaction.appPermissions = bot.transformers.snowflake(payload.app_permissions)
+  if (props.message && payload.message) interaction.message = bot.transformers.message(bot, payload.message)
+  if (props.channelId && payload.channel_id) interaction.channelId = bot.transformers.snowflake(payload.channel_id)
+  if (props.member && guildId && payload.member) interaction.member = bot.transformers.member(bot, payload.member, guildId, user.id)
+  if (props.data && payload.data) {
     interaction.data = {
       type: payload.data.type,
       componentType: payload.data.component_type,

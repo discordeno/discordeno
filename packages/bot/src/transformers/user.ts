@@ -1,5 +1,5 @@
 import type { DiscordUser, PremiumTypes } from '@discordeno/types'
-import { checkIfExists, iconHashToBigInt } from '@discordeno/utils'
+import { iconHashToBigInt } from '@discordeno/utils'
 import { ToggleBitfield, UserToggles, type Bot } from '../index.js'
 
 const baseUser: Partial<User> & BaseUser = {
@@ -30,16 +30,16 @@ export function transformUser(bot: Bot, payload: DiscordUser): User {
   }
   if (props.flags) user.flags = new ToggleBitfield(payload.flags)
   if (props.publicFlags) user.publicFlags = new ToggleBitfield(payload.public_flags)
-  if (props.id && checkIfExists(payload.id)) user.id = bot.transformers.snowflake(payload.id)
-  if (props.username && checkIfExists(payload.username)) user.username = payload.username
-  if (props.globalName && checkIfExists(payload.global_name)) user.globalName = payload.global_name
-  if (props.discriminator && checkIfExists(payload.discriminator)) user.discriminator = payload.discriminator
-  if (props.locale && checkIfExists(payload.locale)) user.locale = payload.locale
-  if (props.email && checkIfExists(payload.email)) user.email = payload.email
-  if (props.premiumType && checkIfExists(payload.premium_type)) user.premiumType = payload.premium_type
-  if (props.avatar && checkIfExists(payload.avatar)) user.avatar = iconHashToBigInt(payload.avatar)
-  if (props.banner && checkIfExists(payload.banner)) user.banner = iconHashToBigInt(payload.banner)
-  if (props.accentColor && checkIfExists(payload.accent_color)) user.accentColor = payload.accent_color
+  if (props.id && payload.id) user.id = bot.transformers.snowflake(payload.id)
+  if (props.username && payload.username) user.username = payload.username
+  if (props.globalName && payload.global_name) user.globalName = payload.global_name
+  if (props.discriminator && payload.discriminator) user.discriminator = payload.discriminator
+  if (props.locale && payload.locale) user.locale = payload.locale
+  if (props.email && payload.email) user.email = payload.email
+  if (props.premiumType && payload.premium_type !== undefined) user.premiumType = payload.premium_type
+  if (props.avatar && payload.avatar) user.avatar = iconHashToBigInt(payload.avatar)
+  if (props.banner && payload.banner) user.banner = iconHashToBigInt(payload.banner)
+  if (props.accentColor && payload.accent_color !== undefined) user.accentColor = payload.accent_color
 
   return bot.transformers.customizers.user(bot, payload, user)
 }

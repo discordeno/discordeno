@@ -11,7 +11,7 @@ import {
   type SystemChannelFlags,
   type VerificationLevels,
 } from '@discordeno/types'
-import { checkIfExists, Collection, iconHashToBigInt } from '@discordeno/utils'
+import { Collection, iconHashToBigInt } from '@discordeno/utils'
 import type { Bot, Channel, Member, PresenceUpdate, Role, StageInstance, Sticker, VoiceState, WelcomeScreen } from '../index.js'
 import type { Emoji } from '../transformers/emoji.js'
 import { GuildToggles } from './toggles/guild.js'
@@ -33,30 +33,26 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
   const props = bot.transformers.desiredProperties.guild
   const guild: Guild = Object.create(baseGuild)
 
-  if (props.afkTimeout && checkIfExists(payload.guild.afk_timeout)) guild.afkTimeout = payload.guild.afk_timeout
-  if (props.approximateMemberCount && checkIfExists(payload.guild.approximate_member_count))
-    guild.approximateMemberCount = payload.guild.approximate_member_count
-  if (props.approximatePresenceCount && checkIfExists(payload.guild.approximate_presence_count))
+  if (props.afkTimeout && payload.guild.afk_timeout) guild.afkTimeout = payload.guild.afk_timeout
+  if (props.approximateMemberCount && payload.guild.approximate_member_count) guild.approximateMemberCount = payload.guild.approximate_member_count
+  if (props.approximatePresenceCount && payload.guild.approximate_presence_count)
     guild.approximatePresenceCount = payload.guild.approximate_presence_count
-  if (props.defaultMessageNotifications && checkIfExists(payload.guild.default_message_notifications))
-    guild.defaultMessageNotifications = payload.guild.default_message_notifications
-  if (props.description && checkIfExists(payload.guild.description)) guild.description = payload.guild.description
+  if (props.defaultMessageNotifications) guild.defaultMessageNotifications = payload.guild.default_message_notifications
+  if (props.description && payload.guild.description) guild.description = payload.guild.description
   if (props.toggles) guild.toggles = new GuildToggles(payload.guild)
-  if (props.explicitContentFilter && checkIfExists(payload.guild.explicit_content_filter))
-    guild.explicitContentFilter = payload.guild.explicit_content_filter
-  if (props.maxMembers && checkIfExists(payload.guild.max_members)) guild.maxMembers = payload.guild.max_members
-  if (props.maxPresences && checkIfExists(payload.guild.max_presences)) guild.maxPresences = payload.guild.max_presences ?? undefined
-  if (props.maxVideoChannelUsers && checkIfExists(payload.guild.max_video_channel_users))
-    guild.maxVideoChannelUsers = payload.guild.max_video_channel_users
-  if (props.mfaLevel && checkIfExists(payload.guild.mfa_level)) guild.mfaLevel = payload.guild.mfa_level
-  if (props.name && checkIfExists(payload.guild.name)) guild.name = payload.guild.name
-  if (props.nsfwLevel && checkIfExists(payload.guild.nsfw_level)) guild.nsfwLevel = payload.guild.nsfw_level
-  if (props.preferredLocale && checkIfExists(payload.guild.preferred_locale)) guild.preferredLocale = payload.guild.preferred_locale
-  if (props.premiumSubscriptionCount && checkIfExists(payload.guild.premium_subscription_count))
+  if (props.explicitContentFilter) guild.explicitContentFilter = payload.guild.explicit_content_filter
+  if (props.maxMembers && payload.guild.max_members) guild.maxMembers = payload.guild.max_members
+  if (props.maxPresences && payload.guild.max_presences) guild.maxPresences = payload.guild.max_presences ?? undefined
+  if (props.maxVideoChannelUsers && payload.guild.max_video_channel_users) guild.maxVideoChannelUsers = payload.guild.max_video_channel_users
+  if (props.mfaLevel) guild.mfaLevel = payload.guild.mfa_level
+  if (props.name && payload.guild.name) guild.name = payload.guild.name
+  if (props.nsfwLevel) guild.nsfwLevel = payload.guild.nsfw_level
+  if (props.preferredLocale && payload.guild.preferred_locale) guild.preferredLocale = payload.guild.preferred_locale
+  if (props.premiumSubscriptionCount && payload.guild.premium_subscription_count !== undefined)
     guild.premiumSubscriptionCount = payload.guild.premium_subscription_count
-  if (props.premiumTier && checkIfExists(payload.guild.premium_tier)) guild.premiumTier = payload.guild.premium_tier
-  if (props.stageInstances && checkIfExists(payload.guild.stage_instances))
-    guild.stageInstances = payload.guild.stage_instances?.map((si) => ({
+  if (props.premiumTier) guild.premiumTier = payload.guild.premium_tier
+  if (props.stageInstances && payload.guild.stage_instances)
+    guild.stageInstances = payload.guild.stage_instances.map((si) => ({
       /** The id of this Stage instance */
       id: bot.transformers.snowflake(si.id),
       /** The guild id of the associated Stage channel */
@@ -66,52 +62,52 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
       /** The topic of the Stage instance (1-120 characters) */
       topic: si.topic,
     }))
-  if (props.channels && (checkIfExists(payload.guild.channels) || checkIfExists(payload.guild.threads)))
+  if (props.channels && (!!payload.guild.channels || !!payload.guild.threads))
     guild.channels = new Collection(
       [...(payload.guild.channels ?? []), ...(payload.guild.threads ?? [])].map((channel) => {
         const result = bot.transformers.channel(bot, { channel, guildId })
         return [result.id, result]
       }),
     )
-  if (props.members && checkIfExists(payload.guild.members))
+  if (props.members && payload.guild.members)
     guild.members = new Collection(
       payload.guild.members.map((member) => {
         const result = bot.transformers.member(bot, member, guildId, bot.transformers.snowflake(member.user!.id))
         return [result.id, result]
       }),
     )
-  if (props.roles && checkIfExists(payload.guild.roles))
+  if (props.roles && payload.guild.roles)
     guild.roles = new Collection(
       payload.guild.roles.map((role) => {
         const result = bot.transformers.role(bot, { role, guildId })
         return [result.id, result]
       }),
     )
-  if (props.emojis && checkIfExists(payload.guild.emojis))
+  if (props.emojis && payload.guild.emojis)
     guild.emojis = new Collection(
       payload.guild.emojis.map((emoji) => {
         const result = bot.transformers.emoji(bot, emoji)
         return [result.id!, result]
       }),
     )
-  if (props.voiceStates && checkIfExists(payload.guild.voice_states))
+  if (props.voiceStates && payload.guild.voice_states)
     guild.voiceStates = new Collection(
       payload.guild.voice_states.map((voiceState) => {
         const result = bot.transformers.voiceState(bot, { voiceState, guildId })
         return [result.userId, result]
       }),
     )
-  if (props.stickers && checkIfExists(payload.guild.stickers))
+  if (props.stickers && payload.guild.stickers)
     guild.stickers = new Collection(
       payload.guild.stickers?.map((sticker) => {
         const result = bot.transformers.sticker(bot, sticker)
         return [result.id, result]
       }),
     )
-  if (props.systemChannelFlags && checkIfExists(payload.guild.system_channel_flags)) guild.systemChannelFlags = payload.guild.system_channel_flags
-  if (props.vanityUrlCode && checkIfExists(payload.guild.vanity_url_code)) guild.vanityUrlCode = payload.guild.vanity_url_code
-  if (props.verificationLevel && checkIfExists(payload.guild.verification_level)) guild.verificationLevel = payload.guild.verification_level
-  if (props.welcomeScreen && checkIfExists(payload.guild.welcome_screen))
+  if (props.systemChannelFlags && payload.guild.system_channel_flags) guild.systemChannelFlags = payload.guild.system_channel_flags
+  if (props.vanityUrlCode && payload.guild.vanity_url_code) guild.vanityUrlCode = payload.guild.vanity_url_code
+  if (props.verificationLevel) guild.verificationLevel = payload.guild.verification_level
+  if (props.welcomeScreen && payload.guild.welcome_screen)
     guild.welcomeScreen = {
       description: payload.guild.welcome_screen.description ?? undefined,
       welcomeChannels: payload.guild.welcome_screen.welcome_channels.map((wc) => ({
@@ -121,35 +117,31 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
         emojiName: wc.emoji_name ?? undefined,
       })),
     }
-  if (props.discoverySplash && checkIfExists(payload.guild.discovery_splash)) guild.discoverySplash = iconHashToBigInt(payload.guild.discovery_splash)
-  if (props.joinedAt && checkIfExists(payload.guild.joined_at)) guild.joinedAt = Date.parse(payload.guild.joined_at)
-  if (props.memberCount && checkIfExists(payload.guild.member_count)) guild.memberCount = payload.guild.member_count ?? 0
-  if (props.shardId && checkIfExists(payload.shardId)) guild.shardId = payload.shardId
-  if (props.icon && checkIfExists(payload.guild.icon)) guild.icon = iconHashToBigInt(payload.guild.icon)
-  if (props.banner && checkIfExists(payload.guild.banner)) guild.banner = iconHashToBigInt(payload.guild.banner)
-  if (props.splash && checkIfExists(payload.guild.splash)) guild.splash = iconHashToBigInt(payload.guild.splash)
-  if (props.id && checkIfExists(payload.guild.id)) guild.id = guildId
-  if (props.ownerId && checkIfExists(payload.guild.owner_id)) guild.ownerId = bot.transformers.snowflake(payload.guild.owner_id)
-  if (props.permissions && checkIfExists(payload.guild.permissions)) guild.permissions = bot.transformers.snowflake(payload.guild.permissions)
-  if (props.afkChannelId && checkIfExists(payload.guild.afk_channel_id)) guild.afkChannelId = bot.transformers.snowflake(payload.guild.afk_channel_id)
-  if (props.widgetChannelId && checkIfExists(payload.guild.widget_channel_id))
-    guild.widgetChannelId = bot.transformers.snowflake(payload.guild.widget_channel_id)
-  if (props.applicationId && checkIfExists(payload.guild.application_id))
-    guild.applicationId = bot.transformers.snowflake(payload.guild.application_id)
-  if (props.systemChannelId && checkIfExists(payload.guild.system_channel_id))
-    guild.systemChannelId = bot.transformers.snowflake(payload.guild.system_channel_id)
-  if (props.rulesChannelId && checkIfExists(payload.guild.rules_channel_id))
-    guild.rulesChannelId = bot.transformers.snowflake(payload.guild.rules_channel_id)
-  if (props.publicUpdatesChannelId && checkIfExists(payload.guild.public_updates_channel_id))
+  if (props.discoverySplash && payload.guild.discovery_splash) guild.discoverySplash = iconHashToBigInt(payload.guild.discovery_splash)
+  if (props.joinedAt && payload.guild.joined_at) guild.joinedAt = Date.parse(payload.guild.joined_at)
+  if (props.memberCount && payload.guild.member_count) guild.memberCount = payload.guild.member_count ?? 0
+  if (props.shardId) guild.shardId = payload.shardId
+  if (props.icon && payload.guild.icon) guild.icon = iconHashToBigInt(payload.guild.icon)
+  if (props.banner && payload.guild.banner) guild.banner = iconHashToBigInt(payload.guild.banner)
+  if (props.splash && payload.guild.splash) guild.splash = iconHashToBigInt(payload.guild.splash)
+  if (props.id && payload.guild.id) guild.id = guildId
+  if (props.ownerId && payload.guild.owner_id) guild.ownerId = bot.transformers.snowflake(payload.guild.owner_id)
+  if (props.permissions && payload.guild.permissions) guild.permissions = bot.transformers.snowflake(payload.guild.permissions)
+  if (props.afkChannelId && payload.guild.afk_channel_id) guild.afkChannelId = bot.transformers.snowflake(payload.guild.afk_channel_id)
+  if (props.widgetChannelId && payload.guild.widget_channel_id) guild.widgetChannelId = bot.transformers.snowflake(payload.guild.widget_channel_id)
+  if (props.applicationId && payload.guild.application_id) guild.applicationId = bot.transformers.snowflake(payload.guild.application_id)
+  if (props.systemChannelId && payload.guild.system_channel_id) guild.systemChannelId = bot.transformers.snowflake(payload.guild.system_channel_id)
+  if (props.rulesChannelId && payload.guild.rules_channel_id) guild.rulesChannelId = bot.transformers.snowflake(payload.guild.rules_channel_id)
+  if (props.publicUpdatesChannelId && payload.guild.public_updates_channel_id)
     guild.publicUpdatesChannelId = bot.transformers.snowflake(payload.guild.public_updates_channel_id)
-  if (props.premiumProgressBarEnabled && checkIfExists(payload.guild.premium_progress_bar_enabled))
+  if (props.premiumProgressBarEnabled && payload.guild.premium_progress_bar_enabled)
     guild.premiumProgressBarEnabled = payload.guild.premium_progress_bar_enabled
-  if (props.large && checkIfExists(payload.guild.large)) guild.large = payload.guild.large
-  if (props.owner && checkIfExists(payload.guild.owner)) guild.owner = payload.guild.owner
-  if (props.widgetEnabled && checkIfExists(payload.guild.widget_enabled)) guild.widgetEnabled = payload.guild.widget_enabled
-  if (props.unavailable && checkIfExists(payload.guild.unavailable)) guild.unavailable = payload.guild.unavailable
-  if (props.iconHash && checkIfExists(payload.guild.icon_hash)) guild.iconHash = iconHashToBigInt(payload.guild.icon_hash)
-  if (props.presences && checkIfExists(payload.guild.presences))
+  if (props.large && payload.guild.large) guild.large = payload.guild.large
+  if (props.owner && payload.guild.owner) guild.owner = payload.guild.owner
+  if (props.widgetEnabled && payload.guild.widget_enabled) guild.widgetEnabled = payload.guild.widget_enabled
+  if (props.unavailable && payload.guild.unavailable) guild.unavailable = payload.guild.unavailable
+  if (props.iconHash && payload.guild.icon_hash) guild.iconHash = iconHashToBigInt(payload.guild.icon_hash)
+  if (props.presences && payload.guild.presences)
     guild.presences = payload.guild.presences?.map((presence) => bot.transformers.presence(bot, presence as DiscordPresenceUpdate))
 
   return bot.transformers.customizers.guild(bot, payload.guild, guild)
