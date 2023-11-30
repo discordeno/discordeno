@@ -159,289 +159,289 @@ export interface Transformers {
   }
   desiredProperties: {
     attachment?: {
-      id?: boolean;
-      filename?: boolean;
-      contentType?: boolean;
-      size?: boolean;
-      url?: boolean;
-      proxyUrl?: boolean;
-      height?: boolean;
-      width?: boolean;
-      ephemeral?: boolean;
-      description?: boolean;
-    };
+      id?: boolean
+      filename?: boolean
+      contentType?: boolean
+      size?: boolean
+      url?: boolean
+      proxyUrl?: boolean
+      height?: boolean
+      width?: boolean
+      ephemeral?: boolean
+      description?: boolean
+    }
     channel?: {
-      type?: boolean;
-      position?: boolean;
-      name?: boolean;
-      topic?: boolean;
-      nsfw?: boolean;
-      bitrate?: boolean;
-      userLimit?: boolean;
-      rateLimitPerUser?: boolean;
-      rtcRegion?: boolean;
-      videoQualityMode?: boolean;
-      guildId?: boolean;
-      lastPinTimestamp?: boolean;
-      permissionOverwrites?: boolean;
-      id?: boolean;
-      permissions?: boolean;
-      lastMessageId?: boolean;
-      ownerId?: boolean;
-      applicationId?: boolean;
-      managed?: boolean;
-      parentId?: boolean;
-      memberCount?: boolean;
-      messageCount?: boolean;
-      archiveTimestamp?: boolean;
-      autoArchiveDuration?: boolean;
-      botIsMember?: boolean;
-      archived?: boolean;
-      locked?: boolean;
-      invitable?: boolean;
-      createTimestamp?: boolean;
-      newlyCreated?: boolean;
-      flags?: boolean;
-    };
+      type?: boolean
+      position?: boolean
+      name?: boolean
+      topic?: boolean
+      nsfw?: boolean
+      bitrate?: boolean
+      userLimit?: boolean
+      rateLimitPerUser?: boolean
+      rtcRegion?: boolean
+      videoQualityMode?: boolean
+      guildId?: boolean
+      lastPinTimestamp?: boolean
+      permissionOverwrites?: boolean
+      id?: boolean
+      permissions?: boolean
+      lastMessageId?: boolean
+      ownerId?: boolean
+      applicationId?: boolean
+      managed?: boolean
+      parentId?: boolean
+      memberCount?: boolean
+      messageCount?: boolean
+      archiveTimestamp?: boolean
+      autoArchiveDuration?: boolean
+      botIsMember?: boolean
+      archived?: boolean
+      locked?: boolean
+      invitable?: boolean
+      createTimestamp?: boolean
+      newlyCreated?: boolean
+      flags?: boolean
+    }
     emoji?: {
-      id?: boolean;
-      name?: boolean;
-      roles?: boolean;
-      user?: boolean;
-    };
+      id?: boolean
+      name?: boolean
+      roles?: boolean
+      user?: boolean
+    }
     guild?: {
-      afkTimeout?: boolean;
-      approximateMemberCount?: boolean;
-      approximatePresenceCount?: boolean;
-      defaultMessageNotifications?: boolean;
-      description?: boolean;
-      explicitContentFilter?: boolean;
-      maxMembers?: boolean;
-      maxPresences?: boolean;
-      maxVideoChannelUsers?: boolean;
-      mfaLevel?: boolean;
-      name?: boolean;
-      nsfwLevel?: boolean;
-      preferredLocale?: boolean;
-      premiumSubscriptionCount?: boolean;
-      premiumTier?: boolean;
-      toggles?: boolean;
-      stageInstances?: boolean;
-      channels?: boolean;
-      members?: boolean;
-      roles?: boolean;
-      emojis?: boolean;
-      stickers?: boolean;
-      threads?: boolean;
-      voiceStates?: boolean;
-      features?: boolean;
-      large?: boolean;
-      owner?: boolean;
-      widgetEnabled?: boolean;
-      unavailable?: boolean;
-      iconHash?: boolean;
-      presences?: boolean;
-      systemChannelFlags?: boolean;
-      vanityUrlCode?: boolean;
-      verificationLevel?: boolean;
-      welcomeScreen?: boolean;
-      discoverySplash?: boolean;
-      joinedAt?: boolean;
-      memberCount?: boolean;
-      shardId?: boolean;
-      icon?: boolean;
-      banner?: boolean;
-      splash?: boolean;
-      id?: boolean;
-      ownerId?: boolean;
-      permissions?: boolean;
-      afkChannelId?: boolean;
-      widgetChannelId?: boolean;
-      applicationId?: boolean;
-      systemChannelId?: boolean;
-      rulesChannelId?: boolean;
-      publicUpdatesChannelId?: boolean;
-      premiumProgressBarEnabled?: boolean;
-    };
+      afkTimeout?: boolean
+      approximateMemberCount?: boolean
+      approximatePresenceCount?: boolean
+      defaultMessageNotifications?: boolean
+      description?: boolean
+      explicitContentFilter?: boolean
+      maxMembers?: boolean
+      maxPresences?: boolean
+      maxVideoChannelUsers?: boolean
+      mfaLevel?: boolean
+      name?: boolean
+      nsfwLevel?: boolean
+      preferredLocale?: boolean
+      premiumSubscriptionCount?: boolean
+      premiumTier?: boolean
+      toggles?: boolean
+      stageInstances?: boolean
+      channels?: boolean
+      members?: boolean
+      roles?: boolean
+      emojis?: boolean
+      stickers?: boolean
+      threads?: boolean
+      voiceStates?: boolean
+      features?: boolean
+      large?: boolean
+      owner?: boolean
+      widgetEnabled?: boolean
+      unavailable?: boolean
+      iconHash?: boolean
+      presences?: boolean
+      systemChannelFlags?: boolean
+      vanityUrlCode?: boolean
+      verificationLevel?: boolean
+      welcomeScreen?: boolean
+      discoverySplash?: boolean
+      joinedAt?: boolean
+      memberCount?: boolean
+      shardId?: boolean
+      icon?: boolean
+      banner?: boolean
+      splash?: boolean
+      id?: boolean
+      ownerId?: boolean
+      permissions?: boolean
+      afkChannelId?: boolean
+      widgetChannelId?: boolean
+      applicationId?: boolean
+      systemChannelId?: boolean
+      rulesChannelId?: boolean
+      publicUpdatesChannelId?: boolean
+      premiumProgressBarEnabled?: boolean
+    }
     interaction?: {
-      id?: boolean;
-      applicationId?: boolean;
-      type?: boolean;
-      guildId?: boolean;
-      channelId?: boolean;
-      member?: boolean;
-      user?: boolean;
-      token?: boolean;
-      version?: boolean;
-      message?: boolean;
-      data?: boolean;
-      locale?: boolean;
-      guildLocale?: boolean;
-      appPermissions?: boolean;
-    };
+      id?: boolean
+      applicationId?: boolean
+      type?: boolean
+      guildId?: boolean
+      channelId?: boolean
+      member?: boolean
+      user?: boolean
+      token?: boolean
+      version?: boolean
+      message?: boolean
+      data?: boolean
+      locale?: boolean
+      guildLocale?: boolean
+      appPermissions?: boolean
+    }
     invite?: {
-      channelId?: boolean;
-      code?: boolean;
-      createdAt?: boolean;
-      guildId?: boolean;
-      inviter?: boolean;
-      maxAge?: boolean;
-      maxUses?: boolean;
-      targetType?: boolean;
-      targetUser?: boolean;
-      targetApplication?: boolean;
-      temporary?: boolean;
-      uses?: boolean;
-      approximateMemberCount?: boolean;
-      approximatePresenceCount?: boolean;
-      guildScheduledEvent?: boolean;
-      stageInstance?: boolean;
-      expiresAt?: boolean;
-    };
+      channelId?: boolean
+      code?: boolean
+      createdAt?: boolean
+      guildId?: boolean
+      inviter?: boolean
+      maxAge?: boolean
+      maxUses?: boolean
+      targetType?: boolean
+      targetUser?: boolean
+      targetApplication?: boolean
+      temporary?: boolean
+      uses?: boolean
+      approximateMemberCount?: boolean
+      approximatePresenceCount?: boolean
+      guildScheduledEvent?: boolean
+      stageInstance?: boolean
+      expiresAt?: boolean
+    }
     member?: {
-      id?: boolean;
-      guildId?: boolean;
-      user?: boolean;
-      nick?: boolean;
-      roles?: boolean;
-      joinedAt?: boolean;
-      premiumSince?: boolean;
-      avatar?: boolean;
-      permissions?: boolean;
-      communicationDisabledUntil?: boolean;
-      deaf?: boolean;
-      mute?: boolean;
-      pending?: boolean;
-    };
+      id?: boolean
+      guildId?: boolean
+      user?: boolean
+      nick?: boolean
+      roles?: boolean
+      joinedAt?: boolean
+      premiumSince?: boolean
+      avatar?: boolean
+      permissions?: boolean
+      communicationDisabledUntil?: boolean
+      deaf?: boolean
+      mute?: boolean
+      pending?: boolean
+    }
     message?: {
-      activity?: boolean;
-      application?: boolean;
-      applicationId?: boolean;
-      attachments?: boolean;
-      author?: boolean;
-      channelId?: boolean;
-      components?: boolean;
-      content?: boolean;
-      editedTimestamp?: boolean;
-      embeds?: boolean;
-      guildId?: boolean;
-      id?: boolean;
+      activity?: boolean
+      application?: boolean
+      applicationId?: boolean
+      attachments?: boolean
+      author?: boolean
+      channelId?: boolean
+      components?: boolean
+      content?: boolean
+      editedTimestamp?: boolean
+      embeds?: boolean
+      guildId?: boolean
+      id?: boolean
       interaction?: {
-        id?: boolean;
-        member?: boolean;
-        name?: boolean;
-        user?: boolean;
-        type?: boolean;
-      };
-      member?: boolean;
-      mentionedChannelIds?: boolean;
-      mentionedRoleIds?: boolean;
-      mentions?: boolean;
+        id?: boolean
+        member?: boolean
+        name?: boolean
+        user?: boolean
+        type?: boolean
+      }
+      member?: boolean
+      mentionedChannelIds?: boolean
+      mentionedRoleIds?: boolean
+      mentions?: boolean
       messageReference?: {
-        messageId?: boolean;
-        channelId?: boolean;
-        guildId?: boolean;
-      };
-      nonce?: boolean;
-      reactions?: boolean;
-      stickerItems?: boolean;
-      thread?: boolean;
-      type?: boolean;
-      webhookId?: boolean;
-    };
+        messageId?: boolean
+        channelId?: boolean
+        guildId?: boolean
+      }
+      nonce?: boolean
+      reactions?: boolean
+      stickerItems?: boolean
+      thread?: boolean
+      type?: boolean
+      webhookId?: boolean
+    }
     role?: {
-      name?: boolean;
-      guildId?: boolean;
-      position?: boolean;
-      color?: boolean;
-      id?: boolean;
-      botId?: boolean;
-      integrationId?: boolean;
-      permissions?: boolean;
-      icon?: boolean;
-      unicodeEmoji?: boolean;
-      mentionable?: boolean;
-      hoist?: boolean;
-      managed?: boolean;
-      subscriptionListingId?: boolean;
-    };
+      name?: boolean
+      guildId?: boolean
+      position?: boolean
+      color?: boolean
+      id?: boolean
+      botId?: boolean
+      integrationId?: boolean
+      permissions?: boolean
+      icon?: boolean
+      unicodeEmoji?: boolean
+      mentionable?: boolean
+      hoist?: boolean
+      managed?: boolean
+      subscriptionListingId?: boolean
+    }
     scheduledEvent?: {
-      id?: boolean;
-      guildId?: boolean;
-      channelId?: boolean;
-      creatorId?: boolean;
-      scheduledStartTime?: boolean;
-      scheduledEndTime?: boolean;
-      entityId?: boolean;
-      creator?: boolean;
-      name?: boolean;
-      description?: boolean;
-      privacyLevel?: boolean;
-      status?: boolean;
-      entityType?: boolean;
-      userCount?: boolean;
-      location?: boolean;
-      image?: boolean;
-    };
+      id?: boolean
+      guildId?: boolean
+      channelId?: boolean
+      creatorId?: boolean
+      scheduledStartTime?: boolean
+      scheduledEndTime?: boolean
+      entityId?: boolean
+      creator?: boolean
+      name?: boolean
+      description?: boolean
+      privacyLevel?: boolean
+      status?: boolean
+      entityType?: boolean
+      userCount?: boolean
+      location?: boolean
+      image?: boolean
+    }
     stageInstance?: {
-      id?: boolean;
-      guildId?: boolean;
-      channelId?: boolean;
-      topic?: boolean;
-      guildScheduledEventId?: boolean;
-    };
+      id?: boolean
+      guildId?: boolean
+      channelId?: boolean
+      topic?: boolean
+      guildScheduledEventId?: boolean
+    }
     inviteStageInstance?: {
-      members?: boolean;
-      participantCount?: boolean;
-      speakerCount?: boolean;
-      topic?: boolean;
-    };
+      members?: boolean
+      participantCount?: boolean
+      speakerCount?: boolean
+      topic?: boolean
+    }
     sticker?: {
-      id?: boolean;
-      packId?: boolean;
-      name?: boolean;
-      description?: boolean;
-      tags?: boolean;
-      type?: boolean;
-      formatType?: boolean;
-      available?: boolean;
-      guildId?: boolean;
-      user?: boolean;
-      sortValue?: boolean;
-    };
+      id?: boolean
+      packId?: boolean
+      name?: boolean
+      description?: boolean
+      tags?: boolean
+      type?: boolean
+      formatType?: boolean
+      available?: boolean
+      guildId?: boolean
+      user?: boolean
+      sortValue?: boolean
+    }
     user?: {
-      username?: boolean;
-      globalName?: boolean;
-      locale?: boolean;
-      flags?: boolean;
-      premiumType?: boolean;
-      publicFlags?: boolean;
-      accentColor?: boolean;
-      id?: boolean;
-      discriminator?: boolean;
-      avatar?: boolean;
-      bot?: boolean;
-      system?: boolean;
-      mfaEnabled?: boolean;
-      verified?: boolean;
-      email?: boolean;
-      banner?: boolean;
-    };
+      username?: boolean
+      globalName?: boolean
+      locale?: boolean
+      flags?: boolean
+      premiumType?: boolean
+      publicFlags?: boolean
+      accentColor?: boolean
+      id?: boolean
+      discriminator?: boolean
+      avatar?: boolean
+      bot?: boolean
+      system?: boolean
+      mfaEnabled?: boolean
+      verified?: boolean
+      email?: boolean
+      banner?: boolean
+    }
     webhook?: {
-      id?: boolean;
-      type?: boolean;
-      guildId?: boolean;
-      channelId?: boolean;
-      user?: boolean;
-      name?: boolean;
-      avatar?: boolean;
-      token?: boolean;
-      applicationId?: boolean;
-      sourceGuild?: boolean;
-      sourceChannel?: boolean;
-      url?: boolean;
-    };
-  };
+      id?: boolean
+      type?: boolean
+      guildId?: boolean
+      channelId?: boolean
+      user?: boolean
+      name?: boolean
+      avatar?: boolean
+      token?: boolean
+      applicationId?: boolean
+      sourceGuild?: boolean
+      sourceChannel?: boolean
+      url?: boolean
+    }
+  }
   reverse: {
     allowedMentions: (bot: Bot, payload: AllowedMentions) => DiscordAllowedMentions
     embed: (bot: Bot, payload: Embed) => DiscordEmbed
@@ -986,3 +986,4 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
     template: options.template ?? transformTemplate,
   }
 }
+
