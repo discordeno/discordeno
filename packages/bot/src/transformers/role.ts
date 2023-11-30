@@ -43,23 +43,23 @@ const baseRole: Partial<Role> & BaseRole = {
 export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }): Role {
   const role: Role = Object.create(baseRole)
   const props = bot.transformers.desiredProperties.role
-  if (payload.role.id && props.id) role.id = bot.transformers.snowflake(payload.role.id)
-  if (payload.role.name && props.name) role.name = payload.role.name
-  if (props.position) role.position = payload.role.position
-  if (props.guildId && payload.guildId) role.guildId = bot.transformers.snowflake(payload.guildId)
-  if (props.color && payload.role.color) role.color = payload.role.color
-  if (payload.role.permissions && props.permissions) role.permissions = new Permissions(payload.role.permissions)
-  if (payload.role.icon && props.icon) role.icon = iconHashToBigInt(payload.role.icon)
-  if (payload.role.unicode_emoji && props.unicodeEmoji) role.unicodeEmoji = payload.role.unicode_emoji
-  if (payload.role.tags && (props.botId || props.integrationId || props.subscriptionListingId)) {
+  if (payload.role.id && props?.id) role.id = bot.transformers.snowflake(payload.role.id)
+  if (payload.role.name && props?.name) role.name = payload.role.name
+  if (props?.position) role.position = payload.role.position
+  if (props?.guildId && payload.guildId) role.guildId = bot.transformers.snowflake(payload.guildId)
+  if (props?.color && payload.role.color) role.color = payload.role.color
+  if (payload.role.permissions && props?.permissions) role.permissions = new Permissions(payload.role.permissions)
+  if (payload.role.icon && props?.icon) role.icon = iconHashToBigInt(payload.role.icon)
+  if (payload.role.unicode_emoji && props?.unicodeEmoji) role.unicodeEmoji = payload.role.unicode_emoji
+  if (payload.role.tags && (props?.botId || props?.integrationId || props?.subscriptionListingId)) {
     role.internalTags = {}
-    if (payload.role.tags.bot_id && props.botId) role.internalTags.botId = bot.transformers.snowflake(payload.role.tags.bot_id)
-    if (payload.role.tags.integration_id && props.integrationId)
+    if (payload.role.tags.bot_id && props?.botId) role.internalTags.botId = bot.transformers.snowflake(payload.role.tags.bot_id)
+    if (payload.role.tags.integration_id && props?.integrationId)
       role.internalTags.integrationId = bot.transformers.snowflake(payload.role.tags.integration_id)
-    if (payload.role.tags.subscription_listing_id && props.subscriptionListingId)
+    if (payload.role.tags.subscription_listing_id && props?.subscriptionListingId)
       role.internalTags.subscriptionListingId = bot.transformers.snowflake(payload.role.tags.subscription_listing_id)
   }
-  if (props.hoist || props.managed || props.mentionable) {
+  if (props?.hoist || props?.managed || props?.mentionable) {
     role.toggles = new RoleToggles(payload.role)
   }
 
