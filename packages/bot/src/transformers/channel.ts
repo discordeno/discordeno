@@ -1,7 +1,7 @@
 import type { BigString, ChannelTypes, DiscordChannel, DiscordThreadMember, OverwriteReadable, VideoQualityModes } from '@discordeno/types'
 import { calculatePermissions, type Bot } from '../index.js'
-import { ChannelToggles } from './toggles/channel.js'
 import { Permissions } from './toggles/Permissions.js'
+import { ChannelToggles } from './toggles/channel.js'
 
 const Mask = (1n << 64n) - 1n
 
@@ -66,40 +66,40 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } 
   const props = bot.transformers.desiredProperties.channel
   channel.toggles = new ChannelToggles(payload.channel)
 
-  if (payload.channel.id && props.id) channel.id = bot.transformers.snowflake(payload.channel.id)
-  if ((payload.guildId ?? payload.channel.guild_id) && props.guildId)
+  if (payload.channel.id && props?.id) channel.id = bot.transformers.snowflake(payload.channel.id)
+  if ((payload.guildId ?? payload.channel.guild_id) && props?.guildId)
     channel.guildId = payload.guildId ?? bot.transformers.snowflake(payload.channel.guild_id!)
-  if (props.type) channel.type = payload.channel.type
-  if (props.position) channel.position = payload.channel.position
-  if (payload.channel.name && props.name) channel.name = payload.channel.name
-  if (payload.channel.topic && props.topic) channel.topic = payload.channel.topic
-  if (payload.channel.last_message_id && props.lastMessageId) channel.lastMessageId = bot.transformers.snowflake(payload.channel.last_message_id)
-  if (payload.channel.bitrate && props.bitrate) channel.bitrate = payload.channel.bitrate
-  if (props.userLimit) channel.userLimit = payload.channel.user_limit
-  if (props.rateLimitPerUser) channel.rateLimitPerUser = payload.channel.rate_limit_per_user
-  if (payload.channel.owner_id && props.ownerId) channel.ownerId = bot.transformers.snowflake(payload.channel.owner_id)
-  if (payload.channel.last_pin_timestamp && props.lastPinTimestamp) channel.lastPinTimestamp = Date.parse(payload.channel.last_pin_timestamp)
-  if (payload.channel.rtc_region && props.rtcRegion) channel.rtcRegion = payload.channel.rtc_region
-  if (payload.channel.video_quality_mode && props.videoQualityMode) channel.videoQualityMode = payload.channel.video_quality_mode
-  if (payload.channel.message_count && props.messageCount) channel.messageCount = payload.channel.message_count
-  if (payload.channel.member_count && props.memberCount) channel.memberCount = payload.channel.member_count
-  if (props.archiveTimestamp || props.createTimestamp || props.autoArchiveDuration) {
+  if (props?.type) channel.type = payload.channel.type
+  if (props?.position) channel.position = payload.channel.position
+  if (payload.channel.name && props?.name) channel.name = payload.channel.name
+  if (payload.channel.topic && props?.topic) channel.topic = payload.channel.topic
+  if (payload.channel.last_message_id && props?.lastMessageId) channel.lastMessageId = bot.transformers.snowflake(payload.channel.last_message_id)
+  if (payload.channel.bitrate && props?.bitrate) channel.bitrate = payload.channel.bitrate
+  if (props?.userLimit) channel.userLimit = payload.channel.user_limit
+  if (props?.rateLimitPerUser) channel.rateLimitPerUser = payload.channel.rate_limit_per_user
+  if (payload.channel.owner_id && props?.ownerId) channel.ownerId = bot.transformers.snowflake(payload.channel.owner_id)
+  if (payload.channel.last_pin_timestamp && props?.lastPinTimestamp) channel.lastPinTimestamp = Date.parse(payload.channel.last_pin_timestamp)
+  if (payload.channel.rtc_region && props?.rtcRegion) channel.rtcRegion = payload.channel.rtc_region
+  if (payload.channel.video_quality_mode && props?.videoQualityMode) channel.videoQualityMode = payload.channel.video_quality_mode
+  if (payload.channel.message_count && props?.messageCount) channel.messageCount = payload.channel.message_count
+  if (payload.channel.member_count && props?.memberCount) channel.memberCount = payload.channel.member_count
+  if (props?.archiveTimestamp || props?.createTimestamp || props?.autoArchiveDuration) {
     channel.internalThreadMetadata = {}
-    if (payload.channel.thread_metadata?.archive_timestamp && props.archiveTimestamp)
+    if (payload.channel.thread_metadata?.archive_timestamp && props?.archiveTimestamp)
       channel.internalThreadMetadata.archiveTimestamp = Date.parse(payload.channel.thread_metadata.archive_timestamp)
-    if (payload.channel.thread_metadata?.create_timestamp && props.createTimestamp)
+    if (payload.channel.thread_metadata?.create_timestamp && props?.createTimestamp)
       channel.internalThreadMetadata.createTimestamp = Date.parse(payload.channel.thread_metadata.create_timestamp)
-    if (payload.channel.thread_metadata?.auto_archive_duration && props.autoArchiveDuration)
+    if (payload.channel.thread_metadata?.auto_archive_duration && props?.autoArchiveDuration)
       channel.internalThreadMetadata.autoArchiveDuration = payload.channel.thread_metadata.auto_archive_duration
   }
-  if (payload.channel.default_auto_archive_duration && props.autoArchiveDuration)
+  if (payload.channel.default_auto_archive_duration && props?.autoArchiveDuration)
     channel.autoArchiveDuration = payload.channel.default_auto_archive_duration
-  if (payload.channel.permissions && props.permissions) channel.permissions = new Permissions(payload.channel.permissions)
-  if (payload.channel.flags && props.flags) channel.flags = payload.channel.flags
-  if (payload.channel.permission_overwrites && props.permissionOverwrites) {
+  if (payload.channel.permissions && props?.permissions) channel.permissions = new Permissions(payload.channel.permissions)
+  if (payload.channel.flags && props?.flags) channel.flags = payload.channel.flags
+  if (payload.channel.permission_overwrites && props?.permissionOverwrites) {
     channel.internalOverwrites = payload.channel.permission_overwrites.map((o) => packOverwrites(o.allow ?? '0', o.deny ?? '0', o.id, o.type))
   }
-  if (props.parentId && payload.channel.parent_id) channel.parentId = bot.transformers.snowflake(payload.channel.parent_id)
+  if (props?.parentId && payload.channel.parent_id) channel.parentId = bot.transformers.snowflake(payload.channel.parent_id)
 
   return bot.transformers.customizers.channel(bot, payload.channel, channel)
 }
