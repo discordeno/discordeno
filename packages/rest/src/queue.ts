@@ -198,7 +198,6 @@ export class Queue {
     if (this.firstRequest) return false
     if (this.waiting.length > 0) return false
     if (this.pending.length > 0) return false
-    if (this.interval === 0) return false
     if (this.processing) return false
     if (this.processingPending) return false
 
