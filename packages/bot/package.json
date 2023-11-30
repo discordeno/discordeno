@@ -1,8 +1,13 @@
 {
   "name": "@discordeno/bot",
   "version": "19.0.0-alpha.1",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/esm/index.js",
+  "exports": {
+    "import": "./dist/esm/index.js",
+    "require": "./dist/cjs/index.js",
+    "types": "./dist/types/index.d.ts"
+  },
+  "types": "./dist/types/index.d.ts",
   "type": "module",
   "license": "Apache-2.0",
   "repository": {
@@ -10,8 +15,8 @@
     "url": "https://github.com/discordeno/discordeno.git"
   },
   "scripts": {
-    "build": "swc --delete-dir-on-start src --out-dir dist",
-    "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist",
+    "build": "swc src --delete-dir-on-start src --out-dir dist/esm && swc --delete-dir-on-start src --out-dir dist/cjs -C module.type=commonjs && node ../../scripts/fixCjsExtension.js",
+    "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist/types",
     "release-build": "yarn build && yarn build:type",
     "fmt": "eslint --fix \"src/**/*.ts*\"",
     "lint": "eslint \"src/**/*.ts*\"",
