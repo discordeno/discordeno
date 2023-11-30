@@ -25,21 +25,21 @@ export function transformUser(bot: Bot, payload: DiscordUser): User {
   const user: User = Object.create(baseUser)
   const props = bot.transformers.desiredProperties.user
 
-  if (props.bot || props.system || props.mfaEnabled || props.verified) {
+  if (props?.bot || props?.system || props?.mfaEnabled || props?.verified) {
     user.toggles = new UserToggles(payload)
   }
-  if (props.flags) user.flags = new ToggleBitfield(payload.flags)
-  if (props.publicFlags) user.publicFlags = new ToggleBitfield(payload.public_flags)
-  if (payload.id && props.id) user.id = bot.transformers.snowflake(payload.id)
-  if (payload.username && props.username) user.username = payload.username
-  if (payload.global_name && props.globalName) user.globalName = payload.global_name
-  if (payload.discriminator && props.discriminator) user.discriminator = payload.discriminator
-  if (payload.locale && props.locale) user.locale = payload.locale
-  if (payload.email && props.email) user.email = payload.email
-  if (payload.premium_type && props.premiumType) user.premiumType = payload.premium_type
-  if (payload.avatar && props.avatar) user.avatar = iconHashToBigInt(payload.avatar)
-  if (payload.banner && props.banner) user.banner = iconHashToBigInt(payload.banner)
-  if (payload.accent_color && props.accentColor) user.accentColor = payload.accent_color
+  if (props?.flags) user.flags = new ToggleBitfield(payload.flags)
+  if (props?.publicFlags) user.publicFlags = new ToggleBitfield(payload.public_flags)
+  if (payload.id && props?.id) user.id = bot.transformers.snowflake(payload.id)
+  if (payload.username && props?.username) user.username = payload.username
+  if (payload.global_name && props?.globalName) user.globalName = payload.global_name
+  if (payload.discriminator && props?.discriminator) user.discriminator = payload.discriminator
+  if (payload.locale && props?.locale) user.locale = payload.locale
+  if (payload.email && props?.email) user.email = payload.email
+  if (payload.premium_type && props?.premiumType) user.premiumType = payload.premium_type
+  if (payload.avatar && props?.avatar) user.avatar = iconHashToBigInt(payload.avatar)
+  if (payload.banner && props?.banner) user.banner = iconHashToBigInt(payload.banner)
+  if (payload.accent_color && props?.accentColor) user.accentColor = payload.accent_color
 
   return bot.transformers.customizers.user(bot, payload, user)
 }
