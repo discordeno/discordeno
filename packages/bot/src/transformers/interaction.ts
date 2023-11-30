@@ -151,20 +151,20 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction): Int
   interaction.bot = bot
   interaction.acknowledged = false
 
-  if (payload.id && props.id) interaction.id = bot.transformers.snowflake(payload.id)
-  if (payload.application_id && props.applicationId) interaction.applicationId = bot.transformers.snowflake(payload.application_id)
-  if (payload.type && props.type) interaction.type = payload.type
-  if (payload.token && props.token) interaction.token = payload.token
-  if (payload.version && props.version) interaction.version = payload.version
-  if (payload.locale && props.locale) interaction.locale = payload.locale
-  if (payload.guild_locale && props.guildLocale) interaction.guildLocale = payload.guild_locale
-  if (guildId && props.guildId) interaction.guildId = guildId
-  if (props.user) interaction.user = user
-  if (payload.app_permissions && props.appPermissions) interaction.appPermissions = bot.transformers.snowflake(payload.app_permissions)
-  if (payload.message && props.message) interaction.message = bot.transformers.message(bot, payload.message)
-  if (payload.channel_id && props.channelId) interaction.channelId = bot.transformers.snowflake(payload.channel_id)
-  if (payload.member && guildId && props.member) interaction.member = bot.transformers.member(bot, payload.member, guildId, user.id)
-  if (payload.data && props.data) {
+  if (payload.id && props?.id) interaction.id = bot.transformers.snowflake(payload.id)
+  if (payload.application_id && props?.applicationId) interaction.applicationId = bot.transformers.snowflake(payload.application_id)
+  if (payload.type && props?.type) interaction.type = payload.type
+  if (payload.token && props?.token) interaction.token = payload.token
+  if (payload.version && props?.version) interaction.version = payload.version
+  if (payload.locale && props?.locale) interaction.locale = payload.locale
+  if (payload.guild_locale && props?.guildLocale) interaction.guildLocale = payload.guild_locale
+  if (guildId && props?.guildId) interaction.guildId = guildId
+  if (props?.user) interaction.user = user
+  if (payload.app_permissions && props?.appPermissions) interaction.appPermissions = bot.transformers.snowflake(payload.app_permissions)
+  if (payload.message && props?.message) interaction.message = bot.transformers.message(bot, payload.message)
+  if (payload.channel_id && props?.channelId) interaction.channelId = bot.transformers.snowflake(payload.channel_id)
+  if (payload.member && guildId && props?.member) interaction.member = bot.transformers.member(bot, payload.member, guildId, user.id)
+  if (payload.data && props?.data) {
     interaction.data = {
       type: payload.data.type,
       componentType: payload.data.component_type,
@@ -285,3 +285,4 @@ export interface InteractionDataOption {
   options?: InteractionDataOption[]
   focused?: boolean
 }
+
