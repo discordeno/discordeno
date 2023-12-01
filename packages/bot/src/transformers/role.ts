@@ -51,7 +51,7 @@ export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guild
   if (payload.role.permissions && props?.permissions) role.permissions = new Permissions(payload.role.permissions)
   if (payload.role.icon && props?.icon) role.icon = iconHashToBigInt(payload.role.icon)
   if (payload.role.unicode_emoji && props?.unicodeEmoji) role.unicodeEmoji = payload.role.unicode_emoji
-  if (payload.role.tags && (props?.botId || props?.integrationId || props?.subscriptionListingId)) {
+  if (payload.role.tags && (props?.botId ?? props?.integrationId ?? props?.subscriptionListingId)) {
     role.internalTags = {}
     if (payload.role.tags.bot_id && props?.botId) role.internalTags.botId = bot.transformers.snowflake(payload.role.tags.bot_id)
     if (payload.role.tags.integration_id && props?.integrationId)
@@ -59,7 +59,7 @@ export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guild
     if (payload.role.tags.subscription_listing_id && props?.subscriptionListingId)
       role.internalTags.subscriptionListingId = bot.transformers.snowflake(payload.role.tags.subscription_listing_id)
   }
-  if (props?.hoist || props?.managed || props?.mentionable) {
+  if (props?.hoist ?? props?.managed ?? props?.mentionable) {
     role.toggles = new RoleToggles(payload.role)
   }
 

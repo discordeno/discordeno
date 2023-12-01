@@ -83,7 +83,7 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } 
   if (payload.channel.video_quality_mode && props?.videoQualityMode) channel.videoQualityMode = payload.channel.video_quality_mode
   if (payload.channel.message_count && props?.messageCount) channel.messageCount = payload.channel.message_count
   if (payload.channel.member_count && props?.memberCount) channel.memberCount = payload.channel.member_count
-  if (props?.archiveTimestamp || props?.createTimestamp || props?.autoArchiveDuration) {
+  if (props?.archiveTimestamp ?? props?.createTimestamp ?? props?.autoArchiveDuration) {
     channel.internalThreadMetadata = {}
     if (payload.channel.thread_metadata?.archive_timestamp && props?.archiveTimestamp)
       channel.internalThreadMetadata.archiveTimestamp = Date.parse(payload.channel.thread_metadata.archive_timestamp)

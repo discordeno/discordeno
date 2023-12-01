@@ -32,7 +32,7 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigSt
     member.communicationDisabledUntil = Date.parse(payload.communication_disabled_until)
   if (payload.avatar && props?.avatar) member.avatar = iconHashToBigInt(payload.avatar)
   if (payload.permissions && props?.permissions) member.permissions = new Permissions(payload.permissions)
-  if (props?.deaf || props?.mute || props?.pending) {
+  if (props?.deaf ?? props?.mute ?? props?.pending) {
     member.toggles = new MemberToggles(payload)
   }
 

@@ -25,7 +25,7 @@ export function transformUser(bot: Bot, payload: DiscordUser): User {
   const user: User = Object.create(baseUser)
   const props = bot.transformers.desiredProperties.user
 
-  if (props?.bot || props?.system || props?.mfaEnabled || props?.verified) {
+  if (props?.bot ?? props?.system ?? props?.mfaEnabled ?? props?.verified) {
     user.toggles = new UserToggles(payload)
   }
   if (props?.flags) user.flags = new ToggleBitfield(payload.flags)
