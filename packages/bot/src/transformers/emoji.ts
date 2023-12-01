@@ -35,4 +35,3 @@ export interface Emoji {
   available?: boolean
   toggles: EmojiToggles
 }
-

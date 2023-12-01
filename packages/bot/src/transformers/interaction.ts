@@ -285,4 +285,3 @@ export interface InteractionDataOption {
   options?: InteractionDataOption[]
   focused?: boolean
 }
-
