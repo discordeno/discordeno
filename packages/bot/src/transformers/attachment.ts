@@ -45,4 +45,3 @@ export interface Attachment {
    */
   ephemeral?: boolean
 }
-
