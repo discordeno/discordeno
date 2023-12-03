@@ -4,7 +4,7 @@
   "main": "./dist/esm/index.js",
   "exports": {
     "import": "./dist/esm/index.js",
-    "require": "./dist/cjs/index.js",
+    "require": "./dist/cjs/index.cjs",
     "types": "./dist/types/index.d.ts"
   },
   "bin": "./bin/disocrdeno.js",
