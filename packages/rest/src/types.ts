@@ -23,6 +23,7 @@ import type {
   CamelizedDiscordGetGatewayBot,
   CamelizedDiscordGuild,
   CamelizedDiscordGuildApplicationCommandPermissions,
+  CamelizedDiscordGuildOnboarding,
   CamelizedDiscordGuildPreview,
   CamelizedDiscordGuildWidget,
   CamelizedDiscordGuildWidgetSettings,
@@ -70,6 +71,7 @@ import type {
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
   EditChannelPermissionOverridesOptions,
+  EditGuildOnboarding,
   EditGuildRole,
   EditGuildStickerOptions,
   EditMessage,
@@ -2759,6 +2761,28 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#unpin-message}
    */
   unpinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
+  /**
+   * Get the guild onboarding
+   *
+   * @param guildId - The guild to get the onboarding from
+   */
+  getGuildOnboarding: (guildId: BigString) => Promise<CamelizedDiscordGuildOnboarding>
+  /**
+   * Modifies the onboarding configuration of the guild.
+   *
+   * @param guildId - The guild to get the onboarding from
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` and `MANAGE_ROLES` permissions.
+   *
+   * Onboarding enforces constraints when enabled. These constraints are:
+   *  - at least 7 default channels
+   *  - at least 5 of the 7 channels must allow sending messages to the @everyone role
+   *
+   * The `mode` field modifies what is considered when enforcing these constraints.
+   */
+  editGuildOnboarding: (guildId: BigString, options: EditGuildOnboarding, reason?: string) => Promise<CamelizedDiscordGuildOnboarding>
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'

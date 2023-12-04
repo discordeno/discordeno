@@ -64,8 +64,11 @@ import type {
   DiscordGuildIntegrationsUpdate,
   DiscordGuildMemberAdd,
   DiscordGuildMemberRemove,
-  DiscordGuildMembersChunk,
   DiscordGuildMemberUpdate,
+  DiscordGuildMembersChunk,
+  DiscordGuildOnboarding,
+  DiscordGuildOnboardingPrompt,
+  DiscordGuildOnboardingPromptOption,
   DiscordGuildPreview,
   DiscordGuildRoleCreate,
   DiscordGuildRoleDelete,
@@ -136,8 +139,8 @@ import type {
   DiscordTemplate,
   DiscordThreadListSync,
   DiscordThreadMember,
-  DiscordThreadMembersUpdate,
   DiscordThreadMemberUpdate,
+  DiscordThreadMembersUpdate,
   DiscordThreadMetadata,
   DiscordTokenExchange,
   DiscordTokenExchangeAuthorizationCode,
@@ -314,3 +317,6 @@ export type CamelizedDiscordArchivedThreads = Camelize<DiscordArchivedThreads>
 export interface CamelizedDiscordActiveThreads extends Camelize<DiscordActiveThreads> {}
 export interface CamelizedDiscordVanityUrl extends Camelize<DiscordVanityUrl> {}
 export interface CamelizedDiscordPrunedCount extends Camelize<DiscordPrunedCount> {}
+export interface CamelizedDiscordGuildOnboarding extends Camelize<DiscordGuildOnboarding> {}
+export interface CamelizedDiscordGuildOnboardingPrompt extends Camelize<DiscordGuildOnboardingPrompt> {}
+export interface CamelizedDiscordGuildOnboardingOption extends Camelize<DiscordGuildOnboardingPromptOption> {}
