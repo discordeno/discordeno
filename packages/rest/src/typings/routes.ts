@@ -17,8 +17,8 @@ export interface RestRoutes {
   user: (id: BigString) => string
   // Gateway Bot
   gatewayBot: () => string
-  // Nitro Sticker Packs
-  nitroStickerPacks: () => string
+  // Standard Sticker Packs
+  stickerPacks: () => string
   /** Routes for webhook related routes. */
   webhooks: {
     /** Route for managing the original message sent by a webhook. */
