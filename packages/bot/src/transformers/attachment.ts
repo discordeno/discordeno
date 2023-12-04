@@ -15,6 +15,8 @@ export function transformAttachment(bot: Bot, payload: DiscordAttachment): Attac
   if (props.width && payload.width) attachment.width = payload.width
   if (props.ephemeral && payload.ephemeral) attachment.ephemeral = payload.ephemeral
   if (props.description && payload.description) attachment.description = payload.description
+  if (props.duration_secs && payload.duration_secs) attachment.duration_secs = payload.duration_secs
+  if (props.waveform && payload.waveform) attachment.waveform = payload.waveform
 
   return bot.transformers.customizers.attachment(bot, payload, attachment)
 }
@@ -44,4 +46,8 @@ export interface Attachment {
    * Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists.
    */
   ephemeral?: boolean
+  /** The duration of the audio file for a voice message */
+  duration_secs?: number
+  /** A base64 encoded bytearray representing a sampled waveform for a voice message */
+  waveform?: string
 }

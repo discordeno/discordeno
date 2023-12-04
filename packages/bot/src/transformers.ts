@@ -169,6 +169,8 @@ export interface Transformers {
       width: boolean
       ephemeral: boolean
       description: boolean
+      duration_secs: boolean
+      waveform: boolean
     }
     channel: {
       type: boolean
@@ -652,6 +654,8 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         width: opts?.defaultDesiredPropertiesValue ?? false,
         ephemeral: opts?.defaultDesiredPropertiesValue ?? false,
         description: opts?.defaultDesiredPropertiesValue ?? false,
+        duration_secs: opts?.defaultDesiredPropertiesValue ?? false,
+        waveform: opts?.defaultDesiredPropertiesValue ?? false,
       },
       channel: {
         type: opts?.defaultDesiredPropertiesValue ?? false,
