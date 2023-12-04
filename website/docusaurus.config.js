@@ -3,7 +3,7 @@
 
 const lightCodeTheme = require('prism-react-renderer/themes/github')
 const darkCodeTheme = require('prism-react-renderer/themes/dracula')
-const TerserPlugin = require('terser-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin')
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -26,11 +26,18 @@ const config = {
 
   webpack: {
     jsLoader: isServer => ({
-      loader: require.resolve('esbuild-loader'),
+      loader: require.resolve('swc-loader'),
       options: {
-        loader: 'tsx',
-        format: isServer ? 'cjs' : undefined,
-        target: isServer ? 'node12' : 'es2017',
+        jsc: {
+          parser: {
+            syntax: 'typescript',
+            tsx: true,
+          },
+          target: 'es2017',
+        },
+        module: {
+          type: isServer ? 'commonjs' : 'es6',
+        },
       },
     }),
   },
@@ -159,8 +166,7 @@ const config = {
         searchResultContextMaxLength: 50,
       },
     ],
-      './webpack-docusaurus-plugin'
-    
+    './webpack-docusaurus-plugin',
   ],
 }
 
