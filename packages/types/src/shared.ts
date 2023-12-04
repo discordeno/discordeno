@@ -39,8 +39,10 @@ export enum ChannelFlags {
   None,
   /** this thread is pinned to the top of its parent `GUILD_FORUM` channel */
   Pinned = 1 << 1,
-  /** Whether a tag is required to be specified when creating a thread in a `GUILD_FORUM` channel. Tags are specified in the `applied_tags` field. */
-  RequireTag,
+  /** Whether a tag is required to be specified when creating a thread in a `GUILD_FORUM` or a GUILD_MEDIA channel. Tags are specified in the `applied_tags` field. */
+  RequireTag = 1 << 4,
+  /** When set hides the embedded media download options. Available only for media channels. */
+  HideMediaDownloadOptions = 1 << 15,
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-flags */
@@ -308,6 +310,8 @@ export enum ChannelTypes {
   GuildDirectory,
   /** A channel which can only contains threads */
   GuildForum,
+  /** Channel that can only contain threads, similar to GUILD_FORUM channels */
+  GuildMedia,
 }
 
 export enum OverwriteTypes {
