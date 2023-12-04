@@ -514,6 +514,14 @@ export enum AuditLogEvents {
   AutoModerationRuleDelete,
   /** Message was blocked by AutoMod according to a rule. */
   AutoModerationBlockMessage,
+  /** Message was flagged by AutoMod */
+  AudoModerationFlagMessage,
+  /** Member was timed out by AutoMod */
+  AutoModerationMemberTimedOut,
+  /** Creator monetization request was created */
+  CreatorMonetizationRequestCreated = 150,
+  /** Creator monetization terms were accepted */
+  CreatorMonetizationTermsAccepted,
 }
 
 export enum ScheduledEventPrivacyLevel {
