@@ -431,6 +431,7 @@ export interface Transformers {
       verified: boolean
       email: boolean
       banner: boolean
+      avatarDecoration: boolean
     }
     webhook: {
       id: boolean
@@ -919,6 +920,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         verified: opts?.defaultDesiredPropertiesValue ?? false,
         email: opts?.defaultDesiredPropertiesValue ?? false,
         banner: opts?.defaultDesiredPropertiesValue ?? false,
+        avatarDecoration: opts?.defaultDesiredPropertiesValue ?? false,
       },
       webhook: {
         id: opts?.defaultDesiredPropertiesValue ?? false,

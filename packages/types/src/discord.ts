@@ -78,6 +78,8 @@ export interface DiscordUser {
   email?: string | null
   /** the user's banner, or null if unset */
   banner?: string
+  /** the user's avatar decoration, or null if unset */
+  avatar_decoration?: string
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes */
