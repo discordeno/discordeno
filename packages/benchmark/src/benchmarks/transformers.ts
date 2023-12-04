@@ -376,7 +376,7 @@ await memoryBenchmark(
         tts: true,
         type: MessageTypes.Default,
         webhook_id: GUILD_ID,
-      }) as DiscordMessage,
+      }) as unknown as DiscordMessage,
   ), // array of event to test with
   { times: 1, log: false, table: false },
 )
@@ -760,7 +760,7 @@ await memoryBenchmark(
         tts: true,
         type: MessageTypes.Default,
         webhook_id: GUILD_ID,
-      }) as DiscordMessage,
+      }) as unknown as DiscordMessage,
   ), // array of event to test with
   { times: 1, log: false, table: false },
 )
