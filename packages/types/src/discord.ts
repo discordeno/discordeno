@@ -5,6 +5,7 @@ import type {
   ApplicationCommandPermissionTypes,
   ApplicationCommandTypes,
   ApplicationFlags,
+  AttachmentFlags,
   AuditLogEvents,
   ButtonStyles,
   ChannelFlags,
@@ -680,6 +681,8 @@ export interface DiscordAttachment {
   duration_secs?: number
   /** A base64 encoded bytearray representing a sampled waveform for a voice message */
   waveform?: string
+  /** Attachment flags combined as a bitfield */
+  flags?: AttachmentFlags
 }
 
 /** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure */

@@ -50,6 +50,12 @@ export enum RoleFlags {
   InPrompt = 1 << 0,
 }
 
+export enum AttachmentFlags {
+  None,
+  /** This attachment has been edited using the remix feature on mobile */
+  IsRemix = 1 << 2,
+}
+
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
 export enum IntegrationExpireBehaviors {
   RemoveRole,

@@ -171,6 +171,7 @@ export interface Transformers {
       description: boolean
       duration_secs: boolean
       waveform: boolean
+      flags: boolean
     }
     channel: {
       type: boolean
@@ -658,6 +659,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         description: opts?.defaultDesiredPropertiesValue ?? false,
         duration_secs: opts?.defaultDesiredPropertiesValue ?? false,
         waveform: opts?.defaultDesiredPropertiesValue ?? false,
+        flags: opts?.defaultDesiredPropertiesValue ?? false,
       },
       channel: {
         type: opts?.defaultDesiredPropertiesValue ?? false,

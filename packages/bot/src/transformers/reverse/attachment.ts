@@ -15,5 +15,6 @@ export function transformAttachmentToDiscordAttachment(bot: Bot, payload: Attach
     description: payload.description,
     duration_secs: payload.duration_secs,
     waveform: payload.waveform,
+    flags: payload.flags,
   }
 }
