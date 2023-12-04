@@ -142,9 +142,8 @@ export async function memoryBenchmark<O, E>(
   for (const tableRow of tableRows) {
     for (const [index, tableField] of tableFields.entries()) {
       if (index === 0) humanReadable[tableRow] = {}
-      humanReadable[tableRow]![
-        tableField
-      ] = `${processedResults[tableRow][tableField].value} MB (${processedResults[tableRow][tableField].min} MB … ${processedResults[tableRow][tableField].max} MB)`
+      humanReadable[tableRow]![tableField] =
+        `${processedResults[tableRow][tableField].value} MB (${processedResults[tableRow][tableField].min} MB … ${processedResults[tableRow][tableField].max} MB)`
     }
   }
 
