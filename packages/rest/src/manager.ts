@@ -26,6 +26,7 @@ import {
   type DiscordGetGatewayBot,
   type DiscordGuild,
   type DiscordGuildApplicationCommandPermissions,
+  type DiscordGuildOnboarding,
   type DiscordGuildPreview,
   type DiscordGuildWidget,
   type DiscordGuildWidgetSettings,
@@ -1388,7 +1389,14 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getGuildOnboarding(guildId) {
-      return await rest.get(rest.routes.guilds.onboarding(guildId))
+      return await rest.get<DiscordGuildOnboarding>(rest.routes.guilds.onboarding(guildId))
+    },
+
+    async editGuildOnboarding(guildId, options, reason) {
+      return await rest.put<DiscordGuildOnboarding>(rest.routes.guilds.onboarding(guildId), {
+        body: options,
+        reason,
+      })
     },
 
     async unbanMember(guildId, userId, reason) {
