@@ -810,7 +810,7 @@ export interface DiscordGuild {
   discovery_splash: string | null
   /** Id of the owner */
   owner_id: string
-  /** Total permissions for the user in the guild (excludes overwrites) */
+  /** Total permissions for the user in the guild (excludes overwrites and implicit permissions) */
   permissions?: string
   /** Id of afk channel */
   afk_channel_id: string | null
@@ -861,7 +861,7 @@ export interface DiscordPartialGuild {
   icon: string | null
   /** true if the user is the owner of the guild */
   owner: boolean
-  /** total permissions for the user in the guild (excludes overwrites and implicit permissions) */
+  /** Total permissions for the user in the guild (excludes overwrites and implicit permissions) */
   permissions: string
   /** Enabled guild features */
   features: GuildFeatures[]
@@ -1019,7 +1019,7 @@ export interface DiscordChannel {
   member?: DiscordThreadMember
   /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
   default_auto_archive_duration?: number
-  /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a application command interaction */
+  /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a slash command interaction. This does not include implicit permissions, which may need to be checked separately. */
   permissions?: string
   /** The flags of the channel */
   flags?: ChannelFlags

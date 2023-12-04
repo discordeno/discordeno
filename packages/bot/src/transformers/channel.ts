@@ -1,7 +1,7 @@
 import type { BigString, ChannelTypes, DiscordChannel, DiscordThreadMember, OverwriteReadable, VideoQualityModes } from '@discordeno/types'
 import { calculatePermissions, type Bot } from '../index.js'
-import { ChannelToggles } from './toggles/channel.js'
 import { Permissions } from './toggles/Permissions.js'
+import { ChannelToggles } from './toggles/channel.js'
 
 const Mask = (1n << 64n) - 1n
 
@@ -188,7 +188,7 @@ export interface Channel extends BaseChannel {
   member?: DiscordThreadMember
   /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
   default_auto_archive_duration?: number
-  /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a application command interaction */
+  /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a slash command interaction. This does not include implicit permissions, which may need to be checked separately. */
   permissions?: Permissions
   /** The flags of the channel */
   flags?: number
