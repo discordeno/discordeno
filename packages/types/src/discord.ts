@@ -2844,7 +2844,7 @@ export interface DiscordModifyGuildChannelPositions {
   /** Channel id */
   id: string
   /** Sorting position of the channel */
-  position: number | null
+  position?: number | null
   /** Syncs the permission overwrites with the new parent, if moving to a new category */
   lock_positions?: boolean | null
   /** The new parent ID for the channel that is moved */
