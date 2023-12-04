@@ -23,6 +23,7 @@ import type {
   CamelizedDiscordGetGatewayBot,
   CamelizedDiscordGuild,
   CamelizedDiscordGuildApplicationCommandPermissions,
+  CamelizedDiscordGuildOnboarding,
   CamelizedDiscordGuildPreview,
   CamelizedDiscordGuildWidget,
   CamelizedDiscordGuildWidgetSettings,
@@ -2759,6 +2760,12 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#unpin-message}
    */
   unpinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
+  /**
+   * Get the guild onboarding
+   *
+   * @param guildId - The guild to get the onboarding from
+   */
+  getGuildOnboarding: (guildId: BigString) => Promise<CamelizedDiscordGuildOnboarding>
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'

@@ -206,6 +206,8 @@ export interface RestRoutes {
     sticker: (guildId: BigString, stickerId: BigString) => string
     /** Route for handling a voice state. */
     voice: (guildId: BigString, userId?: BigString) => string
+    /** Route for the onboarding */
+    onboarding: (guildId: BigString) => string
   }
   /** Routes for interaction related endpoints. */
   interactions: {

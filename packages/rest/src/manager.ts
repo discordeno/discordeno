@@ -1387,6 +1387,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordMemberWithUser[]>(rest.routes.guilds.members.search(guildId, query, options))
     },
 
+    async getGuildOnboarding(guildId) {
+      return await rest.get(rest.routes.guilds.onboarding(guildId))
+    },
+
     async unbanMember(guildId, userId, reason) {
       await rest.delete(rest.routes.guilds.members.ban(guildId, userId), { reason })
     },
