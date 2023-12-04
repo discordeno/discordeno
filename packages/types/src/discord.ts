@@ -1334,12 +1334,26 @@ export interface DiscordChannelMention {
 
 /** https://discord.com/developers/docs/resources/channel#reaction-object */
 export interface DiscordReaction {
-  /** Times this emoji has been used to react */
+  /** Total number of times this emoji has been used to react (including super reacts) */
   count: number
+  /**	Reaction count details object */
+  count_details: DiscordReactionCountDetails
   /** Whether the current user reacted using this emoji */
   me: boolean
+  /**	Whether the current user super-reacted using this emoji */
+  me_burst: boolean
   /** Emoji information */
   emoji: Partial<DiscordEmoji>
+  /** HEX colors used for super reaction */
+  burst_colors: string[]
+}
+
+/** https://discord.com/developers/docs/resources/channel#reaction-count-details-object */
+export interface DiscordReactionCountDetails {
+  /** Count of super reactions */
+  burst: number
+  /**	Count of normal reactions */
+  normal: number
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure */

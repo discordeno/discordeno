@@ -10,13 +10,13 @@ import {
   TeamMembershipStates,
   TextStyles,
   UserFlags,
+  createBot,
   iconHashToBigInt,
   type Bot,
   type DiscordMessage,
-  createBot,
 } from '@discordeno/bot'
-import { memoryBenchmark } from '../utils/memoryBenchmark.js'
 import { MemberToggles } from '@discordeno/bot/dist/transformers/index.js'
+import { memoryBenchmark } from '../utils/memoryBenchmark.js'
 
 export const CHANNEL_MENTION_REGEX = /<#[0-9]+>/g
 
@@ -337,6 +337,12 @@ await memoryBenchmark(
               name: 'discordeno',
             },
             me: true,
+            me_burst: false,
+            count_details: {
+              normal: 100,
+              burst: 0,
+            },
+            burst_colors: [],
           },
         ],
         sticker_items: [
@@ -395,6 +401,9 @@ function oldtransformMessage(bot: Bot, payload: DiscordMessage): any {
       me: reaction.me,
       count: reaction.count,
       emoji: bot.transformers.emoji(bot, reaction.emoji),
+      meBurst: reaction.me_burst,
+      countDetails: reaction.count_details,
+      burstColors: reaction.burst_colors,
     })),
     type: payload.type,
     activity: payload.activity
@@ -715,6 +724,12 @@ await memoryBenchmark(
               name: 'discordeno',
             },
             me: true,
+            me_burst: false,
+            count_details: {
+              normal: 100,
+              burst: 0,
+            },
+            burst_colors: [],
           },
         ],
         sticker_items: [
