@@ -401,9 +401,6 @@ function oldtransformMessage(bot: Bot, payload: DiscordMessage): any {
       me: reaction.me,
       count: reaction.count,
       emoji: bot.transformers.emoji(bot, reaction.emoji),
-      meBurst: reaction.me_burst,
-      countDetails: reaction.count_details,
-      burstColors: reaction.burst_colors,
     })),
     type: payload.type,
     activity: payload.activity
