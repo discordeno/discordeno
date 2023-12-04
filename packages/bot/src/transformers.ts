@@ -367,6 +367,7 @@ export interface Transformers {
       hoist: boolean
       managed: boolean
       subscriptionListingId: boolean
+      flags: boolean
     }
     scheduledEvent: {
       id: boolean
@@ -853,6 +854,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         hoist: opts?.defaultDesiredPropertiesValue ?? false,
         managed: opts?.defaultDesiredPropertiesValue ?? false,
         subscriptionListingId: opts?.defaultDesiredPropertiesValue ?? false,
+        flags: opts?.defaultDesiredPropertiesValue ?? false,
       },
       scheduledEvent: {
         id: opts?.defaultDesiredPropertiesValue ?? false,

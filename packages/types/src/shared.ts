@@ -43,6 +43,13 @@ export enum ChannelFlags {
   RequireTag,
 }
 
+/** https://discord.com/developers/docs/topics/permissions#role-object-role-flags */
+export enum RoleFlags {
+  None,
+  /** Role can be selected by members in an onboarding prompt */
+  InPrompt = 1 << 0,
+}
+
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
 export enum IntegrationExpireBehaviors {
   RemoveRole,

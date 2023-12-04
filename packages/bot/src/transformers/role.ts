@@ -1,4 +1,4 @@
-import type { BigString, DiscordRole } from '@discordeno/types'
+import type { BigString, DiscordRole, RoleFlags } from '@discordeno/types'
 import { iconHashToBigInt, type Bot } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { RoleToggles } from './toggles/role.js'
@@ -51,6 +51,7 @@ export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guild
   if (payload.role.permissions && props.permissions) role.permissions = new Permissions(payload.role.permissions)
   if (payload.role.icon && props.icon) role.icon = iconHashToBigInt(payload.role.icon)
   if (payload.role.unicode_emoji && props.unicodeEmoji) role.unicodeEmoji = payload.role.unicode_emoji
+  if (payload.role.flags && props.flags) role.flags = payload.role.flags
   if (payload.role.tags && (props.botId || props.integrationId || props.subscriptionListingId)) {
     role.internalTags = {}
     if (payload.role.tags.bot_id && props.botId) role.internalTags.botId = bot.transformers.snowflake(payload.role.tags.bot_id)
@@ -133,4 +134,6 @@ export interface Role extends BaseRole {
   position: number
   /** role unicode emoji */
   unicodeEmoji?: string
+  /** Role flags combined as a bitfield */
+  flags: RoleFlags
 }

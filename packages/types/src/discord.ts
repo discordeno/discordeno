@@ -27,6 +27,7 @@ import type {
   PickPartial,
   PremiumTiers,
   PremiumTypes,
+  RoleFlags,
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
@@ -889,6 +890,8 @@ export interface DiscordRole {
   position: number
   /** role unicode emoji */
   unicode_emoji?: string
+  /** Role flags combined as a bitfield */
+  flags: RoleFlags
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure */
