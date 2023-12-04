@@ -1969,6 +1969,12 @@ export interface DiscordOptionalAuditEntryInfo {
    * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
    */
   type: string
+  /**
+   * The type of integration which performed the action
+   *
+   * Event types: `MEMBER_KICK`, `MEMBER_ROLE_UPDATE`
+   */
+  integration_type: string
 }
 
 export interface DiscordScheduledEvent {
