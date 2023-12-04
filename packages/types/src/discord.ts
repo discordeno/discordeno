@@ -2881,3 +2881,55 @@ export interface DiscordVanityUrl {
 export interface DiscordPrunedCount {
   pruned: number
 }
+
+/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-guild-onboarding-structure */
+export interface DiscordGuildOnboarding {
+  /** ID of the guild this onboarding is part of */
+  guild_id: string
+  /** Prompts shown during onboarding and in customize community */
+  prompts: DiscordGuildOnboardingPrompt[]
+  /** Channel IDs that members get opted into automatically */
+  default_channel_ids: string[]
+  /** Whether onboarding is enabled in the guild */
+  enabled: boolean
+}
+
+/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-prompt-structure */
+export interface DiscordGuildOnboardingPrompt {
+  /** ID of the prompt */
+  id: string
+  /** Type of prompt */
+  type: DiscordGuildOnboardingPromptType
+  /** Options available within the prompt */
+  options: DiscordGuildOnboardingPromptOption[]
+  /** Title of the prompt */
+  title: string
+  /** Indicates whether users are limited to selecting one option for the prompt */
+  single_select: boolean
+  /** Indicates whether the prompt is required before a user completes the onboarding flow */
+  required: boolean
+  /** Indicates whether the prompt is present in the onboarding flow. If `false`, the prompt will only appear in the Channels & Roles tab */
+  in_onboarding: boolean
+}
+
+/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-option-structure */
+export interface DiscordGuildOnboardingPromptOption {
+  /** ID of the prompt option */
+  id: string
+  /** IDs for channels a member is added to when the option is selected */
+  channel_ids: string[]
+  /** IDs for roles assigned to a member when the option is selected */
+  role_ids: string[]
+  /** Emoji of the option */
+  emoji: DiscordEmoji
+  /** Title of the option */
+  title: string
+  /** Description of the option */
+  description: string | undefined
+}
+
+/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-types */
+export enum DiscordGuildOnboardingPromptType {
+  MULTIPLE_CHOICE,
+  DROPDOWN,
+}
