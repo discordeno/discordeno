@@ -270,6 +270,7 @@ export interface Transformers {
       applicationId: boolean
       type: boolean
       guildId: boolean
+      channel: boolean
       channelId: boolean
       member: boolean
       user: boolean
@@ -755,6 +756,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         applicationId: opts?.defaultDesiredPropertiesValue ?? false,
         type: opts?.defaultDesiredPropertiesValue ?? false,
         guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        channel: opts?.defaultDesiredPropertiesValue ?? false,
         channelId: opts?.defaultDesiredPropertiesValue ?? false,
         member: opts?.defaultDesiredPropertiesValue ?? false,
         user: opts?.defaultDesiredPropertiesValue ?? false,

@@ -1537,6 +1537,13 @@ export interface DiscordInteraction {
   /** The guild it was sent from */
   guild_id?: string
   /** The channel it was sent from */
+  channel: Partial<DiscordChannel>
+  /**
+   * The ID of channel it was sent from
+   *
+   * @remarks
+   * It is recommended that you begin using this channel field to identify the source channel of the interaction as they may deprecate the existing channel_id field in the future.
+   */
   channel_id?: string
   /** Guild member data for the invoking user, including permissions */
   member?: DiscordInteractionMember
