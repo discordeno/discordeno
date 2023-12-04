@@ -1938,13 +1938,13 @@ export interface RestManager {
    */
   getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<CamelizedDiscordMessage[]>
   /**
-   * Returns the list of sticker packs available to Nitro subscribers.
+   * Returns the list of sticker packs available.
    *
    * @returns A collection of {@link StickerPack} objects assorted by sticker ID.
    *
-   * @see {@link https://discord.com/developers/docs/resources/sticker#list-nitro-sticker-packs}
+   * @see {@link https://discord.com/developers/docs/resources/sticker#list-sticker-packs}
    */
-  getNitroStickerPacks: () => Promise<CamelizedDiscordStickerPack[]>
+  getStickerPacks: () => Promise<CamelizedDiscordStickerPack[]>
   /**
    * Gets the initial message response to an interaction.
    *

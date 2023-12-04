@@ -213,7 +213,7 @@ export interface Guild {
   discoverySplash?: bigint
   /** Id of the owner */
   ownerId: bigint
-  /** Total permissions for the user in the guild (excludes overwrites) */
+  /** Total permissions for the user in the guild (excludes overwrites and implicit permissions) */
   permissions: bigint
   /** Id of afk channel */
   afkChannelId?: bigint

@@ -5,6 +5,7 @@ import type {
   ApplicationCommandPermissionTypes,
   ApplicationCommandTypes,
   ApplicationFlags,
+  AttachmentFlags,
   AuditLogEvents,
   ButtonStyles,
   ChannelFlags,
@@ -27,6 +28,7 @@ import type {
   PickPartial,
   PremiumTiers,
   PremiumTypes,
+  RoleFlags,
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
@@ -76,6 +78,8 @@ export interface DiscordUser {
   email?: string | null
   /** the user's banner, or null if unset */
   banner?: string
+  /** the user's avatar decoration, or null if unset */
+  avatar_decoration?: string
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes */
@@ -91,7 +95,7 @@ export enum OAuth2Scope {
    * Allows your app to update a user's activity
    *
    * @remarks
-   * This scope requires Discord approval to be used
+   * This scope not currently available for apps.
    */
   ActivitiesWrite = 'activities.write',
   /** Allows your app to read build data for a user's applications */
@@ -675,6 +679,12 @@ export interface DiscordAttachment {
   width?: number | null
   /** whether this attachment is ephemeral. Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists. */
   ephemeral?: boolean
+  /** The duration of the audio file for a voice message */
+  duration_secs?: number
+  /** A base64 encoded bytearray representing a sampled waveform for a voice message */
+  waveform?: string
+  /** Attachment flags combined as a bitfield */
+  flags?: AttachmentFlags
 }
 
 /** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure */
@@ -800,7 +810,7 @@ export interface DiscordGuild {
   discovery_splash: string | null
   /** Id of the owner */
   owner_id: string
-  /** Total permissions for the user in the guild (excludes overwrites) */
+  /** Total permissions for the user in the guild (excludes overwrites and implicit permissions) */
   permissions?: string
   /** Id of afk channel */
   afk_channel_id: string | null
@@ -851,7 +861,7 @@ export interface DiscordPartialGuild {
   icon: string | null
   /** true if the user is the owner of the guild */
   owner: boolean
-  /** total permissions for the user in the guild (excludes overwrites and implicit permissions) */
+  /** Total permissions for the user in the guild (excludes overwrites and implicit permissions) */
   permissions: string
   /** Enabled guild features */
   features: GuildFeatures[]
@@ -885,6 +895,8 @@ export interface DiscordRole {
   position: number
   /** role unicode emoji */
   unicode_emoji?: string
+  /** Role flags combined as a bitfield */
+  flags: RoleFlags
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure */
@@ -1007,7 +1019,7 @@ export interface DiscordChannel {
   member?: DiscordThreadMember
   /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
   default_auto_archive_duration?: number
-  /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a application command interaction */
+  /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a slash command interaction. This does not include implicit permissions, which may need to be checked separately. */
   permissions?: string
   /** The flags of the channel */
   flags?: ChannelFlags
@@ -1322,12 +1334,26 @@ export interface DiscordChannelMention {
 
 /** https://discord.com/developers/docs/resources/channel#reaction-object */
 export interface DiscordReaction {
-  /** Times this emoji has been used to react */
+  /** Total number of times this emoji has been used to react (including super reacts) */
   count: number
+  /**	Reaction count details object */
+  count_details: DiscordReactionCountDetails
   /** Whether the current user reacted using this emoji */
   me: boolean
+  /**	Whether the current user super-reacted using this emoji */
+  me_burst: boolean
   /** Emoji information */
   emoji: Partial<DiscordEmoji>
+  /** HEX colors used for super reaction */
+  burst_colors: string[]
+}
+
+/** https://discord.com/developers/docs/resources/channel#reaction-count-details-object */
+export interface DiscordReactionCountDetails {
+  /** Count of super reactions */
+  burst: number
+  /**	Count of normal reactions */
+  normal: number
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure */
@@ -1533,6 +1559,13 @@ export interface DiscordInteraction {
   /** The guild it was sent from */
   guild_id?: string
   /** The channel it was sent from */
+  channel: Partial<DiscordChannel>
+  /**
+   * The ID of channel it was sent from
+   *
+   * @remarks
+   * It is recommended that you begin using this channel field to identify the source channel of the interaction as they may deprecate the existing channel_id field in the future.
+   */
   channel_id?: string
   /** Guild member data for the invoking user, including permissions */
   member?: DiscordInteractionMember
@@ -1950,6 +1983,12 @@ export interface DiscordOptionalAuditEntryInfo {
    * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
    */
   type: string
+  /**
+   * The type of integration which performed the action
+   *
+   * Event types: `MEMBER_KICK`, `MEMBER_ROLE_UPDATE`
+   */
+  integration_type: string
 }
 
 export interface DiscordScheduledEvent {
@@ -2819,7 +2858,7 @@ export interface DiscordModifyGuildChannelPositions {
   /** Channel id */
   id: string
   /** Sorting position of the channel */
-  position: number | null
+  position?: number | null
   /** Syncs the permission overwrites with the new parent, if moving to a new category */
   lock_positions?: boolean | null
   /** The new parent ID for the channel that is moved */

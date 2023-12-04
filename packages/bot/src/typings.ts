@@ -227,4 +227,6 @@ export enum MessageFlags {
   FailedToMentionSomeRolesInThread = 1 << 8,
   /** Whether this message will not trigger push and desktop notifications */
   SuppressNotifications = 1 << 12,
+  /** Whether this message is a voice message */
+  IsVoiceMessage = 1 << 13,
 }

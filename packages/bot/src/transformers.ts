@@ -169,6 +169,9 @@ export interface Transformers {
       width: boolean
       ephemeral: boolean
       description: boolean
+      duration_secs: boolean
+      waveform: boolean
+      flags: boolean
     }
     channel: {
       type: boolean
@@ -268,6 +271,7 @@ export interface Transformers {
       applicationId: boolean
       type: boolean
       guildId: boolean
+      channel: boolean
       channelId: boolean
       member: boolean
       user: boolean
@@ -364,6 +368,7 @@ export interface Transformers {
       hoist: boolean
       managed: boolean
       subscriptionListingId: boolean
+      flags: boolean
     }
     scheduledEvent: {
       id: boolean
@@ -426,6 +431,7 @@ export interface Transformers {
       verified: boolean
       email: boolean
       banner: boolean
+      avatarDecoration: boolean
     }
     webhook: {
       id: boolean
@@ -652,6 +658,9 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         width: opts?.defaultDesiredPropertiesValue ?? false,
         ephemeral: opts?.defaultDesiredPropertiesValue ?? false,
         description: opts?.defaultDesiredPropertiesValue ?? false,
+        duration_secs: opts?.defaultDesiredPropertiesValue ?? false,
+        waveform: opts?.defaultDesiredPropertiesValue ?? false,
+        flags: opts?.defaultDesiredPropertiesValue ?? false,
       },
       channel: {
         type: opts?.defaultDesiredPropertiesValue ?? false,
@@ -751,6 +760,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         applicationId: opts?.defaultDesiredPropertiesValue ?? false,
         type: opts?.defaultDesiredPropertiesValue ?? false,
         guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        channel: opts?.defaultDesiredPropertiesValue ?? false,
         channelId: opts?.defaultDesiredPropertiesValue ?? false,
         member: opts?.defaultDesiredPropertiesValue ?? false,
         user: opts?.defaultDesiredPropertiesValue ?? false,
@@ -847,6 +857,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         hoist: opts?.defaultDesiredPropertiesValue ?? false,
         managed: opts?.defaultDesiredPropertiesValue ?? false,
         subscriptionListingId: opts?.defaultDesiredPropertiesValue ?? false,
+        flags: opts?.defaultDesiredPropertiesValue ?? false,
       },
       scheduledEvent: {
         id: opts?.defaultDesiredPropertiesValue ?? false,
@@ -909,6 +920,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         verified: opts?.defaultDesiredPropertiesValue ?? false,
         email: opts?.defaultDesiredPropertiesValue ?? false,
         banner: opts?.defaultDesiredPropertiesValue ?? false,
+        avatarDecoration: opts?.defaultDesiredPropertiesValue ?? false,
       },
       webhook: {
         id: opts?.defaultDesiredPropertiesValue ?? false,

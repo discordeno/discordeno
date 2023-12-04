@@ -44,6 +44,12 @@ export function avatarUrl(
     : `https://cdn.discordapp.com/embed/avatars/${discriminator === '0' ? (BigInt(userId) >> BigInt(22)) % BigInt(6) : Number(discriminator) % 5}.png`
 }
 
+export function avatarDecorationUrl(userId: BigString, avatarDecoration: BigString): string {
+  return `https://cdn.discordapp.com/avatar-decorations/${userId}/${
+    typeof avatarDecoration === 'string' ? avatarDecoration : iconBigintToHash(avatarDecoration)
+  }.png`
+}
+
 /**
  * Builds a URL to a user's banner stored in the Discord CDN.
  *

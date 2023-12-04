@@ -375,8 +375,8 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     getMessages: async (channelId, options) => {
       return (await bot.rest.getMessages(channelId, options)).map((res) => bot.transformers.message(bot, snakelize(res)))
     },
-    getNitroStickerPacks: async () => {
-      return (await bot.rest.getNitroStickerPacks()).map((res) => bot.transformers.stickerPack(bot, snakelize(res)))
+    getStickerPacks: async () => {
+      return (await bot.rest.getStickerPacks()).map((res) => bot.transformers.stickerPack(bot, snakelize(res)))
     },
     getOriginalInteractionResponse: async (token) => {
       return bot.transformers.message(bot, snakelize(await bot.rest.getOriginalInteractionResponse(token)))
@@ -790,7 +790,7 @@ export interface BotHelpers {
   getInvites: (guildId: BigString) => Promise<Invite[]>
   getMessage: (channelId: BigString, messageId: BigString) => Promise<Message>
   getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<Message[]>
-  getNitroStickerPacks: () => Promise<StickerPack[]>
+  getStickerPacks: () => Promise<StickerPack[]>
   getOriginalInteractionResponse: (token: string) => Promise<Message>
   getPinnedMessages: (channelId: BigString) => Promise<Message[]>
   getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<CamelizedDiscordArchivedThreads>

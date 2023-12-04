@@ -589,7 +589,7 @@ export function createRoutes(): RestRoutes {
       return '/gateway/bot'
     },
 
-    nitroStickerPacks() {
+    stickerPacks() {
       return '/sticker-packs'
     },
   }

@@ -39,8 +39,23 @@ export enum ChannelFlags {
   None,
   /** this thread is pinned to the top of its parent `GUILD_FORUM` channel */
   Pinned = 1 << 1,
-  /** Whether a tag is required to be specified when creating a thread in a `GUILD_FORUM` channel. Tags are specified in the `applied_tags` field. */
-  RequireTag,
+  /** Whether a tag is required to be specified when creating a thread in a `GUILD_FORUM` or a GUILD_MEDIA channel. Tags are specified in the `applied_tags` field. */
+  RequireTag = 1 << 4,
+  /** When set hides the embedded media download options. Available only for media channels. */
+  HideMediaDownloadOptions = 1 << 15,
+}
+
+/** https://discord.com/developers/docs/topics/permissions#role-object-role-flags */
+export enum RoleFlags {
+  None,
+  /** Role can be selected by members in an onboarding prompt */
+  InPrompt = 1 << 0,
+}
+
+export enum AttachmentFlags {
+  None,
+  /** This attachment has been edited using the remix feature on mobile */
+  IsRemix = 1 << 2,
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
@@ -295,6 +310,8 @@ export enum ChannelTypes {
   GuildDirectory,
   /** A channel which can only contains threads */
   GuildForum,
+  /** Channel that can only contain threads, similar to GUILD_FORUM channels */
+  GuildMedia,
 }
 
 export enum OverwriteTypes {
@@ -364,9 +381,9 @@ export enum MessageActivityTypes {
 
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types */
 export enum StickerTypes {
-  /** an official sticker in a pack, part of Nitro or in a removed purchasable pack */
+  /** an official sticker in a pack */
   Standard = 1,
-  /** a sticker uploaded to a Boosted guild for the guild's members */
+  /** a sticker uploaded to a guild for the guild's members */
   Guild,
 }
 
@@ -507,6 +524,14 @@ export enum AuditLogEvents {
   AutoModerationRuleDelete,
   /** Message was blocked by AutoMod according to a rule. */
   AutoModerationBlockMessage,
+  /** Message was flagged by AutoMod */
+  AudoModerationFlagMessage,
+  /** Member was timed out by AutoMod */
+  AutoModerationMemberTimedOut,
+  /** Creator monetization request was created */
+  CreatorMonetizationRequestCreated = 150,
+  /** Creator monetization terms were accepted */
+  CreatorMonetizationTermsAccepted,
 }
 
 export enum ScheduledEventPrivacyLevel {
