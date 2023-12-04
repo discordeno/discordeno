@@ -19,6 +19,7 @@ import type {
   DiscordGetGatewayBot,
   DiscordGuild,
   DiscordGuildApplicationCommandPermissions,
+  DiscordGuildOnboarding,
   DiscordGuildWidget,
   DiscordGuildWidgetSettings,
   DiscordIntegrationCreateUpdate,
@@ -80,6 +81,7 @@ import { transformInteraction, transformInteractionDataOption, type Interaction,
 import { transformInvite, type Invite } from './transformers/invite.js'
 import { transformMember, type Member } from './transformers/member.js'
 import { transformMessage, type Message } from './transformers/message.js'
+import { transformGuildOnboarding, type GuildOnboarding } from './transformers/onboarding.js'
 import { transformPresence, type PresenceUpdate } from './transformers/presence.js'
 import { transformAllowedMentionsToDiscordAllowedMentions } from './transformers/reverse/allowedMentions.js'
 import { transformCreateApplicationCommandToDiscordCreateApplicationCommand } from './transformers/reverse/createApplicationCommand.js'
@@ -156,6 +158,7 @@ export interface Transformers {
       applicationCommandOptionChoice: ApplicationCommandOptionChoice,
     ) => any
     template: (bot: Bot, payload: DiscordTemplate, template: Template) => any
+    guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding, onboarding: GuildOnboarding) => any
   }
   desiredProperties: {
     attachment: {
@@ -441,6 +444,28 @@ export interface Transformers {
       sourceChannel: boolean
       url: boolean
     }
+    guildOnboarding: {
+      guildId: boolean
+      prompts: {
+        id: boolean
+        type: boolean
+        options: {
+          id: boolean
+          channelIds: boolean
+          roleIds: boolean
+          emoji: boolean
+          title: boolean
+          description: boolean
+        }
+        title: boolean
+        singleSelect: boolean
+        required: boolean
+        inOnboarding: boolean
+      }
+      defaultChannelIds: boolean
+      enabled: boolean
+      mode: boolean
+    }
   }
   reverse: {
     allowedMentions: (bot: Bot, payload: AllowedMentions) => DiscordAllowedMentions
@@ -501,6 +526,7 @@ export interface Transformers {
   stickerPack: (bot: Bot, payload: DiscordStickerPack) => StickerPack
   applicationCommandOptionChoice: (bot: Bot, payload: DiscordApplicationCommandOptionChoice) => ApplicationCommandOptionChoice
   template: (bot: Bot, payload: DiscordTemplate) => Template
+  guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding) => GuildOnboarding
 }
 
 export interface CreateTransformerOptions {
@@ -638,6 +664,9 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
       },
       widgetSettings(bot, payload, widgetSettings) {
         return widgetSettings
+      },
+      guildOnboarding(bot, payload, onboarding) {
+        return onboarding
       },
     },
     desiredProperties: {
@@ -924,6 +953,28 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         sourceChannel: opts?.defaultDesiredPropertiesValue ?? false,
         url: opts?.defaultDesiredPropertiesValue ?? false,
       },
+      guildOnboarding: {
+        defaultChannelIds: opts?.defaultDesiredPropertiesValue ?? false,
+        enabled: opts?.defaultDesiredPropertiesValue ?? false,
+        guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        mode: opts?.defaultDesiredPropertiesValue ?? false,
+        prompts: {
+          id: opts?.defaultDesiredPropertiesValue ?? false,
+          inOnboarding: opts?.defaultDesiredPropertiesValue ?? false,
+          options: {
+            channelIds: opts?.defaultDesiredPropertiesValue ?? false,
+            description: opts?.defaultDesiredPropertiesValue ?? false,
+            emoji: opts?.defaultDesiredPropertiesValue ?? false,
+            id: opts?.defaultDesiredPropertiesValue ?? false,
+            roleIds: opts?.defaultDesiredPropertiesValue ?? false,
+            title: opts?.defaultDesiredPropertiesValue ?? false,
+          },
+          required: opts?.defaultDesiredPropertiesValue ?? false,
+          singleSelect: opts?.defaultDesiredPropertiesValue ?? false,
+          title: opts?.defaultDesiredPropertiesValue ?? false,
+          type: opts?.defaultDesiredPropertiesValue ?? false,
+        },
+      },
     },
     reverse: {
       allowedMentions: options.reverse?.allowedMentions ?? transformAllowedMentionsToDiscordAllowedMentions,
@@ -984,5 +1035,6 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
     gatewayBot: options.gatewayBot ?? transformGatewayBot,
     applicationCommandOptionChoice: options.applicationCommandOptionChoice ?? transformApplicationCommandOptionChoice,
     template: options.template ?? transformTemplate,
+    guildOnboarding: options.guildOnboarding ?? transformGuildOnboarding,
   }
 }
