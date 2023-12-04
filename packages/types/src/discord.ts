@@ -2922,8 +2922,34 @@ export interface DiscordGuildOnboardingPromptOption {
   channel_ids: string[]
   /** IDs for roles assigned to a member when the option is selected */
   role_ids: string[]
-  /** Emoji of the option */
-  emoji: DiscordEmoji
+  /**
+   * Emoji of the option
+   *
+   * @remarks
+   * When creating or updating a prompt option, the `emoji_id`, `emoji_name`, and `emoji_animated` fields must be used instead of the emoji object.
+   */
+  emoji?: DiscordEmoji
+  /**
+   * Emoji ID of the option
+   *
+   * @remarks
+   * When creating or updating a prompt option, the `emoji_id`, `emoji_name`, and `emoji_animated` fields must be used instead of the emoji object.
+   */
+  emoji_id?: string
+  /**
+   * Emoji name of the option
+   *
+   * @remarks
+   * When creating or updating a prompt option, the `emoji_id`, `emoji_name`, and `emoji_animated` fields must be used instead of the emoji object.
+   */
+  emoji_name?: string
+  /**
+   * Whether the emoji is animated
+   *
+   * @remarks
+   * When creating or updating a prompt option, the `emoji_id`, `emoji_name`, and `emoji_animated` fields must be used instead of the emoji object.
+   */
+  emoji_animated?: boolean
   /** Title of the option */
   title: string
   /** Description of the option */
