@@ -95,7 +95,7 @@ export enum OAuth2Scope {
    * Allows your app to update a user's activity
    *
    * @remarks
-   * This scope requires Discord approval to be used
+   * This scope not currently available for apps.
    */
   ActivitiesWrite = 'activities.write',
   /** Allows your app to read build data for a user's applications */
