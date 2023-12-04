@@ -2892,6 +2892,8 @@ export interface DiscordGuildOnboarding {
   default_channel_ids: string[]
   /** Whether onboarding is enabled in the guild */
   enabled: boolean
+  /** Current mode of onboarding */
+  mode: DiscordGuildOnboardingMode
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-prompt-structure */
@@ -2930,6 +2932,14 @@ export interface DiscordGuildOnboardingPromptOption {
 
 /** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-types */
 export enum DiscordGuildOnboardingPromptType {
-  MULTIPLE_CHOICE,
-  DROPDOWN,
+  MultipleChoice,
+  DropDown,
+}
+
+/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-mode */
+export enum DiscordGuildOnboardingMode {
+  /** Counts only Default Channels towards constraints */
+  OnboardingDefault,
+  /** Counts Default Channels and Questions towards constraints */
+  OnboardingAdvanced,
 }
