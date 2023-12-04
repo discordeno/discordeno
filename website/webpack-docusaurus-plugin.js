@@ -5,7 +5,7 @@ module.exports = function (context, options) {
     name: 'webpack-docusaurus-plugin',
     configureWebpack(config, isServer, utils) {
       // Disable cache in CI since it gets evicted too quickly from github actions limits
-      const cacheOptions = { cache: false }
+      const cacheOptions = { cache: { compression: 'brotli' } }
 
       // Or compress the cache w/ gzip or brotli
       // const cacheOptions = isCI ? { cache: { compression: 'brotli' } } : {};
