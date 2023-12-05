@@ -107,7 +107,7 @@ export enum OAuth2Scope {
    * This scope requires Discord approval to be used
    */
   ApplicationsBuildsUpload = 'applications.builds.upload',
-  /** Allows your app to use Application Commands in a guild */
+  /** Allows your app to add commands to a guild - included by default with the `bot` scope */
   ApplicationsCommands = 'applications.commands',
   /**
    * Allows your app to update its Application Commands via this bearer token
