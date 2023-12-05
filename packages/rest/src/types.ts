@@ -2285,7 +2285,7 @@ export interface RestManager {
    * @returns An instance of {@link GuildWidget}.
    *
    * @remarks
-   * Fires an `INVITE_CREATE` Gateway event if an invite channel is defined on the Guild Widget.
+   * Fires an `INVITE_CREATED` Gateway event when an invite channel is defined and a new `Invite` is generated.
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-widget}
    */
