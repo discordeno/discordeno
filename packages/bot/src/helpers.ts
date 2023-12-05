@@ -107,6 +107,7 @@ import type { Message } from './transformers/message.js'
 import type { GuildOnboarding } from './transformers/onboarding.js'
 import type { Role } from './transformers/role.js'
 import type { ScheduledEvent } from './transformers/scheduledEvent.js'
+import type { Sku } from './transformers/sku.js'
 import type { StageInstance } from './transformers/stageInstance.js'
 import type { Sticker, StickerPack } from './transformers/sticker.js'
 import type { Template } from './transformers/template.js'
@@ -699,6 +700,9 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     deleteTestEntitlement: async (applicationId, entitlementId) => {
       await bot.rest.deleteTestEntitlement(applicationId, entitlementId)
     },
+    listSkus: async (applicationId) => {
+      return (await bot.rest.listSkus(applicationId)).map((sku) => bot.transformers.sku(bot, snakelize(sku)))
+    },
   }
 }
 
@@ -921,4 +925,5 @@ export interface BotHelpers {
   listEntitlements: (applicationId: BigString, options?: GetEntitlements) => Promise<Entitlement[]>
   createTestEntitlement: (applicationId: BigString, body: CreateEntitlement) => Promise<Partial<Entitlement>>
   deleteTestEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
+  listSkus: (applicationId: BigString) => Promise<Sku[]>
 }
