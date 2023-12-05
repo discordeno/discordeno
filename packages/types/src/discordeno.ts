@@ -1238,7 +1238,7 @@ export interface GetEntitlements {
   limit?: number
   /** Guild ID to look up entitlements for */
   guildId?: BigString
-  /** Whether entitlements should be omitted */
+  /** Whether expired  entitlements should be omitted */
   excludeEnded?: boolean
 }
 
