@@ -569,8 +569,10 @@ export interface CreateGuildChannel {
     /** The unicode character of the emoji */
     emojiName?: string
   }>
-  /** the default sort order type used to order posts in forum channels */
+  /** The default sort order type used to order posts in forum channels */
   defaultSortOrder?: SortOrderTypes | null
+  /** The initial ratelimit to set on newly created threads in a channel. */
+  defaultThreadRateLimitPerUser?: number
 }
 
 export interface CreateGlobalApplicationCommandOptions {
