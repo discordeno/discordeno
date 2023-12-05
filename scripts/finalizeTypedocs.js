@@ -59,7 +59,8 @@ for await (let filepath of walk(typedocOutPath)) {
     if (!filepath.endsWith(`${form.ugly}md`)) filepath = filepath.replace(new RegExp(form.ugly, 'gi'), form.clean || '')
   }
 
-  file = file.replace(/Promise<([^>]+)>/gi, 'Promise{$1}')
+  file = file.replace(/(?<!\\)(<|>|,|=|\{|\})/gi, `\\$1`)
+  file = file.replace(/(?<!README|modules)\.md/gi, '')
 
   if (file.includes('Promise<')) console.log('Removing Promise< failed')
 
