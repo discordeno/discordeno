@@ -11,6 +11,7 @@ import type {
   DiscordGuildOnboardingMode,
   DiscordGuildOnboardingPrompt,
   DiscordInstallParams,
+  DiscordMessageFlags as DiscordMessageFlag,
   DiscordRole,
 } from './discord.js'
 import type {
@@ -42,6 +43,7 @@ import type {
   VideoQualityModes,
 } from './shared.js'
 
+/** https://discord.com/developers/docs/resources/channel#create-message-jsonform-params */
 export interface CreateMessageOptions {
   /** The message contents (up to 2000 characters) */
   content?: string
@@ -73,6 +75,8 @@ export interface CreateMessageOptions {
   components?: MessageComponents
   /** IDs of up to 3 stickers in the server to send in the message */
   stickerIds?: [BigString] | [BigString, BigString] | [BigString, BigString, BigString]
+  /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set */
+  flags?: DiscordMessageFlag
 }
 
 export type MessageComponents = ActionRow[]
@@ -755,16 +759,25 @@ export interface CreateForumPostWithMessage {
   autoArchiveDuration: 60 | 1440 | 4320 | 10080
   /** Amount of seconds a user has to wait before sending another message (0-21600) */
   rateLimitPerUser?: number | null
-  /** The message contents (up to 2000 characters) */
-  content?: string
-  /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: Array<Camelize<DiscordEmbed>>
-  /** Allowed mentions for the message */
-  allowedMentions?: AllowedMentions
+  /** contents of the first message in the forum/media thread */
+  message: {
+    /** The message contents (up to 2000 characters) */
+    content?: string
+    /** Embedded `rich` content (up to 6000 characters) */
+    embeds?: Array<Camelize<DiscordEmbed>>
+    /** Allowed mentions for the message */
+    allowedMentions?: AllowedMentions
+    /** The components you would like to have sent in this message */
+    components?: MessageComponents
+    /** IDs of up to 3 stickers in the server to send in the message */
+    stickerIds?: BigString[]
+    /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set */
+    flags?: DiscordMessageFlag
+  }
+  /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM or a GUILD_MEDIA channel */
+  appliedTags?: BigString[]
   /** The contents of the files being sent */
   files?: FileContent[]
-  /** The components you would like to have sent in this message */
-  components?: MessageComponents
 }
 
 export interface CreateStageInstance {
@@ -950,7 +963,7 @@ export interface EditMessage {
   /** Embedded `rich` content (up to 6000 characters) */
   embeds?: Array<Camelize<DiscordEmbed>> | null
   /** Edit the flags of the message (only `SUPPRESS_EMBEDS` can currently be set/unset) */
-  flags?: 4 | null
+  flags?: DiscordMessageFlag | null
   /** The contents of the files being sent/edited */
   files?: FileContent[]
   /** Allowed mentions for the message */

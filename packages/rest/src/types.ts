@@ -385,7 +385,7 @@ export interface RestManager {
    */
   createEmoji: (guildId: BigString, options: CreateGuildEmoji, reason?: string) => Promise<CamelizedDiscordEmoji>
   /**
-   * Creates a new thread in a forum channel, and sends a message within the created thread.
+   * Creates a new thread in a forum channel or media channel, and sends a message within the created thread.
    *
    * @param channelId - The ID of the forum channel to create the thread within.
    * @param options - The parameters for the creation of the thread.
@@ -398,9 +398,7 @@ export interface RestManager {
    * Fires a _Thread Create_ gateway event.
    * Fires a _Message Create_ gateway event.
    *
-   * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel}
-   *
-   * @experimental
+   * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-in-forum-or-media-channel}
    */
   createForumThread: (channelId: BigString, options: CreateForumPostWithMessage, reason?: string) => Promise<CamelizedDiscordChannel>
   /**

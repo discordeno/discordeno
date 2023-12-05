@@ -1309,7 +1309,7 @@ export interface DiscordMessage {
   /** Data showing the source of a crossposted channel follow add, pin or reply message */
   message_reference?: Omit<DiscordMessageReference, 'failIfNotExists'>
   /** Message flags combined as a bitfield */
-  flags?: number
+  flags?: DiscordMessageFlags
   /**
    * The stickers sent with the message (bots currently can only receive messages with stickers, not send)
    * @deprecated
@@ -2912,8 +2912,8 @@ export interface DiscordCreateForumPostWithMessage {
     payload_json?: string
     /** Attachment objects with filename and description. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
     attachments?: DiscordAttachment[]
-    /** Message flags combined as a bitfield (only SUPPRESS_EMBEDS can be set) */
-    flags?: number
+    /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS can be set */
+    flags?: DiscordMessageFlags
   }
   /** the IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
   applied_tags?: string[]
@@ -3101,4 +3101,30 @@ export enum DiscordSkuFlag {
   GuildSubscription = 1 << 7,
   /** Recurring SKU purchased by a user for themselves. Grants access to the purchasing user in every server. */
   UserSubscription = 1 << 8,
+}
+
+/** https://discord.com/developers/docs/resources/channel#message-object-message-flags */
+export enum DiscordMessageFlags {
+  /** This message has been published to subscribed channels (via Channel Following) */
+  Crossposted = 1 << 0,
+  /** This message originated from a message in another channel (via Channel Following) */
+  IsCrosspost = 1 << 1,
+  /** Do not include any embeds when serializing this message */
+  SuppressEmbeds = 1 << 2,
+  /** The source message for this crosspost has been deleted (via Channel Following) */
+  SourceMessageDeleted = 1 << 3,
+  /** This message came from the urgent message system */
+  Urgent = 1 << 4,
+  /** This message has an associated thread, with the same id as the message */
+  HasThread = 1 << 5,
+  /** This message is only visible to the user who invoked the Interaction */
+  Ephemeral = 1 << 6,
+  /** This message is an Interaction Response and the bot is "thinking" */
+  Loading = 1 << 7,
+  /** This message failed to mention some roles and add their members to the thread */
+  FailedToMentionSomeRolesInThread = 1 << 8,
+  /** This message will not trigger push and desktop notifications */
+  SuppressNotifications = 1 << 12,
+  /** This message is a voice message */
+  IsVoiceMessage = 1 << 13,
 }
