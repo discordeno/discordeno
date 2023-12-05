@@ -1230,9 +1230,9 @@ export interface GetEntitlements {
   userId?: BigString
   /** Optional list of SKU IDs to check entitlements for */
   skuIds?: BigString[]
-  /** Retrieve entitlements before this time */
+  /** Retrieve entitlements before this entitlement ID */
   before?: BigString
-  /** Retrieve entitlements after this time */
+  /** Retrieve entitlements after this entitlement ID */
   after?: BigString
   /** Number of entitlements to return, 1-100, default 100 */
   limit?: number

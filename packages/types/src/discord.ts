@@ -3055,8 +3055,8 @@ export interface DiscordEntitlement {
   application_id: string
   /** Type of entitlement */
   type: DiscordEntitlementType
-  /** Not applicable for App Subscriptions. Subscriptions are not consumed and will be `false` */
-  consumed: boolean
+  /** Entitlement was deleted */
+  deleted: boolean
   /** Start date at which the entitlement is valid. Not present when using test entitlements */
   starts_at?: string
   /** Date at which the entitlement is no longer valid. Not present when using test entitlements */

@@ -486,7 +486,7 @@ export interface Transformers {
       guildId: boolean
       applicationId: boolean
       type: boolean
-      consumed: boolean
+      deleted: boolean
       startsAt: boolean
       endsAt: boolean
     }
@@ -1029,7 +1029,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         guildId: opts?.defaultDesiredPropertiesValue ?? false,
         applicationId: opts?.defaultDesiredPropertiesValue ?? false,
         type: opts?.defaultDesiredPropertiesValue ?? false,
-        consumed: opts?.defaultDesiredPropertiesValue ?? false,
+        deleted: opts?.defaultDesiredPropertiesValue ?? false,
         startsAt: opts?.defaultDesiredPropertiesValue ?? false,
         endsAt: opts?.defaultDesiredPropertiesValue ?? false,
       },
