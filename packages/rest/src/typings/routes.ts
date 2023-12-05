@@ -17,8 +17,8 @@ export interface RestRoutes {
   user: (id: BigString) => string
   // Gateway Bot
   gatewayBot: () => string
-  // Nitro Sticker Packs
-  nitroStickerPacks: () => string
+  // Standard Sticker Packs
+  stickerPacks: () => string
   /** Routes for webhook related routes. */
   webhooks: {
     /** Route for managing the original message sent by a webhook. */
@@ -206,6 +206,8 @@ export interface RestRoutes {
     sticker: (guildId: BigString, stickerId: BigString) => string
     /** Route for handling a voice state. */
     voice: (guildId: BigString, userId?: BigString) => string
+    /** Route for the onboarding */
+    onboarding: (guildId: BigString) => string
   }
   /** Routes for interaction related endpoints. */
   interactions: {

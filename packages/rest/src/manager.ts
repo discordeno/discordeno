@@ -26,6 +26,7 @@ import {
   type DiscordGetGatewayBot,
   type DiscordGuild,
   type DiscordGuildApplicationCommandPermissions,
+  type DiscordGuildOnboarding,
   type DiscordGuildPreview,
   type DiscordGuildWidget,
   type DiscordGuildWidgetSettings,
@@ -1140,8 +1141,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordMessage[]>(rest.routes.channels.messages(channelId, options))
     },
 
-    async getNitroStickerPacks() {
-      return await rest.get<DiscordStickerPack[]>(rest.routes.nitroStickerPacks())
+    async getStickerPacks() {
+      return await rest.get<DiscordStickerPack[]>(rest.routes.stickerPacks())
     },
 
     async getOriginalInteractionResponse(token) {
@@ -1385,6 +1386,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async searchMembers(guildId, query, options) {
       return await rest.get<DiscordMemberWithUser[]>(rest.routes.guilds.members.search(guildId, query, options))
+    },
+
+    async getGuildOnboarding(guildId) {
+      return await rest.get<DiscordGuildOnboarding>(rest.routes.guilds.onboarding(guildId))
+    },
+
+    async editGuildOnboarding(guildId, options, reason) {
+      return await rest.put<DiscordGuildOnboarding>(rest.routes.guilds.onboarding(guildId), {
+        body: options,
+        reason,
+      })
     },
 
     async unbanMember(guildId, userId, reason) {

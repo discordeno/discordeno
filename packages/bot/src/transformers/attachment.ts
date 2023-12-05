@@ -1,4 +1,4 @@
-import type { DiscordAttachment } from '@discordeno/types'
+import type { AttachmentFlags, DiscordAttachment } from '@discordeno/types'
 import type { Bot } from '../index.js'
 
 export function transformAttachment(bot: Bot, payload: DiscordAttachment): Attachment {
@@ -15,6 +15,9 @@ export function transformAttachment(bot: Bot, payload: DiscordAttachment): Attac
   if (props.width && payload.width) attachment.width = payload.width
   if (props.ephemeral && payload.ephemeral) attachment.ephemeral = payload.ephemeral
   if (props.description && payload.description) attachment.description = payload.description
+  if (props.duration_secs && payload.duration_secs) attachment.duration_secs = payload.duration_secs
+  if (props.waveform && payload.waveform) attachment.waveform = payload.waveform
+  if (props.flags && payload.flags) attachment.flags = payload.flags
 
   return bot.transformers.customizers.attachment(bot, payload, attachment)
 }
@@ -44,4 +47,10 @@ export interface Attachment {
    * Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists.
    */
   ephemeral?: boolean
+  /** The duration of the audio file for a voice message */
+  duration_secs?: number
+  /** A base64 encoded bytearray representing a sampled waveform for a voice message */
+  waveform?: string
+  /** Attachment flags combined as a bitfield */
+  flags?: AttachmentFlags
 }

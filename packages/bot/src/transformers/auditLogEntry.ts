@@ -128,6 +128,7 @@ export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry):
           roleName: payload.options.role_name,
           autoModerationRuleName: payload.options.auto_moderation_rule_name,
           autoModerationRuleTriggerType: payload.options.auto_moderation_rule_trigger_type,
+          integrationType: payload.options.integration_type,
         }
       : undefined,
     reason: payload.reason,
@@ -252,5 +253,6 @@ export interface AuditLogEntry {
     roleName: string
     autoModerationRuleName: string
     autoModerationRuleTriggerType: string
+    integrationType: string
   }
 }

@@ -8,6 +8,8 @@ import type {
   DiscordAutoModerationRuleTriggerMetadataPresets,
   DiscordChannel,
   DiscordEmbed,
+  DiscordGuildOnboardingMode,
+  DiscordGuildOnboardingPrompt,
   DiscordRole,
 } from './discord.js'
 import type {
@@ -690,7 +692,7 @@ export interface ModifyGuildChannelPositions {
   /** Channel id */
   id: BigString
   /** Sorting position of the channel */
-  position: number | null
+  position?: number | null
   /** Syncs the permission overwrites with the new parent, if moving to a new category */
   lockPositions?: boolean | null
   /** The new parent ID for the channel that is moved */
@@ -1187,4 +1189,16 @@ export interface BeginGuildPrune {
   computePruneCount?: boolean
   /** Role(s) ro include, default: none */
   includeRoles?: string[]
+}
+
+/** https://discord.com/developers/docs/resources/guild#modify-guild-onboarding-json-params */
+export interface EditGuildOnboarding {
+  /** Prompts shown during onboarding and in customize community */
+  prompts: Array<Camelize<DiscordGuildOnboardingPrompt>>
+  /** Channel IDs that members get opted into automatically */
+  defaultChannelIds: BigString[]
+  /** Whether onboarding is enabled in the guild */
+  enabled: boolean
+  /** Current mode of onboarding */
+  mode: DiscordGuildOnboardingMode
 }

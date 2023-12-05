@@ -48,6 +48,7 @@ import type {
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
   EditChannelPermissionOverridesOptions,
+  EditGuildOnboarding,
   EditGuildRole,
   EditGuildStickerOptions,
   EditMessage,
@@ -99,6 +100,7 @@ import type { Integration } from './transformers/integration.js'
 import type { Invite } from './transformers/invite.js'
 import type { Member } from './transformers/member.js'
 import type { Message } from './transformers/message.js'
+import type { GuildOnboarding } from './transformers/onboarding.js'
 import type { Role } from './transformers/role.js'
 import type { ScheduledEvent } from './transformers/scheduledEvent.js'
 import type { StageInstance } from './transformers/stageInstance.js'
@@ -375,8 +377,8 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     getMessages: async (channelId, options) => {
       return (await bot.rest.getMessages(channelId, options)).map((res) => bot.transformers.message(bot, snakelize(res)))
     },
-    getNitroStickerPacks: async () => {
-      return (await bot.rest.getNitroStickerPacks()).map((res) => bot.transformers.stickerPack(bot, snakelize(res)))
+    getStickerPacks: async () => {
+      return (await bot.rest.getStickerPacks()).map((res) => bot.transformers.stickerPack(bot, snakelize(res)))
     },
     getOriginalInteractionResponse: async (token) => {
       return bot.transformers.message(bot, snakelize(await bot.rest.getOriginalInteractionResponse(token)))
@@ -678,6 +680,12 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     unpinMessage: async (channelId, messageId, reason) => {
       return await bot.rest.unpinMessage(channelId, messageId, reason)
     },
+    getGuildOnboarding: async (guildId) => {
+      return bot.transformers.guildOnboarding(bot, snakelize(await bot.rest.getGuildOnboarding(guildId)))
+    },
+    editGuildOnboarding: async (guildId, options, reason) => {
+      return bot.transformers.guildOnboarding(bot, snakelize(await bot.rest.editGuildOnboarding(guildId, options, reason)))
+    },
   }
 }
 
@@ -790,7 +798,7 @@ export interface BotHelpers {
   getInvites: (guildId: BigString) => Promise<Invite[]>
   getMessage: (channelId: BigString, messageId: BigString) => Promise<Message>
   getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<Message[]>
-  getNitroStickerPacks: () => Promise<StickerPack[]>
+  getStickerPacks: () => Promise<StickerPack[]>
   getOriginalInteractionResponse: (token: string) => Promise<Message>
   getPinnedMessages: (channelId: BigString) => Promise<Message[]>
   getPrivateArchivedThreads: (channelId: BigString, options?: ListArchivedThreads) => Promise<CamelizedDiscordArchivedThreads>
@@ -895,4 +903,6 @@ export interface BotHelpers {
   pinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
   unbanMember: (guildId: BigString, userId: BigString, reason?: string) => Promise<void>
   unpinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
+  getGuildOnboarding: (guildId: BigString) => Promise<GuildOnboarding>
+  editGuildOnboarding: (guildId: BigString, options: EditGuildOnboarding, reason?: string) => Promise<GuildOnboarding>
 }

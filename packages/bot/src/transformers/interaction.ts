@@ -12,7 +12,7 @@ import {
   type MessageComponentTypes,
 } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
-import type { Bot, Component } from '../index.js'
+import type { Bot, Channel, Component, DiscordChannel } from '../index.js'
 import type { DiscordInteractionDataResolved } from '../typings.js'
 import type { Attachment } from './attachment.js'
 import type { Member } from './member.js'
@@ -34,6 +34,13 @@ export interface Interaction extends BaseInteraction {
   /** The guild it was sent from */
   guildId?: bigint
   /** The channel it was sent from */
+  channel: Partial<Channel>
+  /**
+   * The ID of channel it was sent from
+   *
+   * @remarks
+   * It is recommended that you begin using this channel field to identify the source channel of the interaction as they may deprecate the existing channel_id field in the future.
+   */
   channelId?: bigint
   /** Guild member data for the invoking user, including permissions */
   member?: Member
@@ -162,6 +169,7 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction): Int
   if (props.user && user) interaction.user = user
   if (props.appPermissions && payload.app_permissions) interaction.appPermissions = bot.transformers.snowflake(payload.app_permissions)
   if (props.message && payload.message) interaction.message = bot.transformers.message(bot, payload.message)
+  if (props.channel && payload.channel) interaction.channel = bot.transformers.channel(bot, { channel: payload.channel as DiscordChannel, guildId })
   if (props.channelId && payload.channel_id) interaction.channelId = bot.transformers.snowflake(payload.channel_id)
   if (props.member && guildId && payload.member) interaction.member = bot.transformers.member(bot, payload.member, guildId, user.id)
   if (props.data && payload.data) {

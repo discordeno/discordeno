@@ -13,7 +13,7 @@ for await (const dir of dirs) {
       fs.promises.writeFile(
         `denoTestsDist${dir}/${file.slice(-8) === '.spec.js' ? `${file.slice(0, -7)}test.js` : file}`,
         content
-          .replace(/src\//g, 'dist/')
+          .replace(/src\//g, 'dist/esm/')
           .replace(/\.ts/g, '.js')
           .replace(/describe\.skip/g, 'describe.ignore')
           .replace(/it\.skip/g, 'it.ignore'),

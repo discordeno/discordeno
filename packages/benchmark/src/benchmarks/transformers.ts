@@ -10,13 +10,13 @@ import {
   TeamMembershipStates,
   TextStyles,
   UserFlags,
+  createBot,
   iconHashToBigInt,
   type Bot,
   type DiscordMessage,
-  createBot,
 } from '@discordeno/bot'
-import { memoryBenchmark } from '../utils/memoryBenchmark.js'
 import { MemberToggles } from '@discordeno/bot/dist/transformers/index.js'
+import { memoryBenchmark } from '../utils/memoryBenchmark.js'
 
 export const CHANNEL_MENTION_REGEX = /<#[0-9]+>/g
 
@@ -337,6 +337,12 @@ await memoryBenchmark(
               name: 'discordeno',
             },
             me: true,
+            me_burst: false,
+            count_details: {
+              normal: 100,
+              burst: 0,
+            },
+            burst_colors: [],
           },
         ],
         sticker_items: [
@@ -370,7 +376,7 @@ await memoryBenchmark(
         tts: true,
         type: MessageTypes.Default,
         webhook_id: GUILD_ID,
-      }) as DiscordMessage,
+      }) as unknown as DiscordMessage,
   ), // array of event to test with
   { times: 1, log: false, table: false },
 )
@@ -715,6 +721,12 @@ await memoryBenchmark(
               name: 'discordeno',
             },
             me: true,
+            me_burst: false,
+            count_details: {
+              normal: 100,
+              burst: 0,
+            },
+            burst_colors: [],
           },
         ],
         sticker_items: [
@@ -748,7 +760,7 @@ await memoryBenchmark(
         tts: true,
         type: MessageTypes.Default,
         webhook_id: GUILD_ID,
-      }) as DiscordMessage,
+      }) as unknown as DiscordMessage,
   ), // array of event to test with
   { times: 1, log: false, table: false },
 )
