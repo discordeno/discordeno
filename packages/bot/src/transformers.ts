@@ -505,8 +505,8 @@ export interface Transformers {
   interaction: (bot: Bot, payload: DiscordInteraction) => Interaction
   interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption
   integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration
-  invite: (bot: Bot, invite: DiscordInviteCreate | DiscordInviteMetadata) => Invite
-  application: (bot: Bot, payload: DiscordApplication) => Application
+  invite: (bot: Bot, payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number }) => Invite
+  application: (bot: Bot, payload: { application: DiscordApplication; shardId: number }) => Application
   team: (bot: Bot, payload: DiscordTeam) => Team
   emoji: (bot: Bot, payload: DiscordEmoji) => Emoji
   activity: (bot: Bot, payload: DiscordActivity) => Activity

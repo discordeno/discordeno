@@ -363,8 +363,10 @@ export interface DiscordApplication {
   owner?: Partial<DiscordUser>
   /** If the application belongs to a team, this will be a list of the members of that team */
   team: DiscordTeam | null
-  /** If this application is a game sold on Discord, this field will be the guild to which it has been linked */
+  /** Guild associated with the app. For example, a developer support server. */
   guild_id?: string
+  /** A partial object of the associated guild */
+  guild?: Partial<DiscordGuild>
   /** If this application is a game sold on Discord, this field will be the hash of the image on store embeds */
   cover_image?: string
   /** up to 5 tags describing the content and functionality of the application */
@@ -375,6 +377,8 @@ export interface DiscordApplication {
   custom_install_url?: string
   /** the application's role connection verification entry point, which when configured will render the app as a verification method in the guild role verification configuration */
   role_connections_verification_url?: string
+  /** An approximate count of the app's guild membership. */
+  approximate_guild_count?: number
 }
 
 export type DiscordTokenExchange = DiscordTokenExchangeAuthorizationCode | DiscordTokenExchangeRefreshToken | DiscordTokenExchangeClientCredentials

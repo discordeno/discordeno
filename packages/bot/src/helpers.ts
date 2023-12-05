@@ -252,7 +252,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       }
     },
     getApplicationInfo: async () => {
-      return bot.transformers.application(bot, snakelize(await bot.rest.getApplicationInfo()))
+      return bot.transformers.application(bot, { application: snakelize(await bot.rest.getApplicationInfo()), shardId: 0 })
     },
     getCurrentAuthenticationInfo: async (bearerToken) => {
       return await bot.rest.getCurrentAuthenticationInfo(bearerToken)
@@ -366,10 +366,10 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       )
     },
     getInvite: async (inviteCode, options) => {
-      return bot.transformers.invite(bot, snakelize(await bot.rest.getInvite(inviteCode, options)))
+      return bot.transformers.invite(bot, { invite: snakelize(await bot.rest.getInvite(inviteCode, options)), shardId: 0 })
     },
     getInvites: async (guildId) => {
-      return (await bot.rest.getInvites(guildId)).map((res) => bot.transformers.invite(bot, snakelize(res)))
+      return (await bot.rest.getInvites(guildId)).map((res) => bot.transformers.invite(bot, { invite: snakelize(res), shardId: 0 }))
     },
     getMessage: async (channelId, messageId) => {
       return bot.transformers.message(bot, snakelize(await bot.rest.getMessage(channelId, messageId)))
