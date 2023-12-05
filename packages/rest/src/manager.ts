@@ -969,6 +969,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordApplication>(rest.routes.oauth2.application())
     },
 
+    async editApplicationInfo(body) {
+      return await rest.patch<DiscordApplication>(rest.routes.oauth2.application(), {
+        body,
+      })
+    },
+
     async getCurrentAuthenticationInfo(token) {
       return await rest.get<DiscordCurrentAuthorization>(rest.routes.oauth2.currentAuthorization(), {
         headers: {

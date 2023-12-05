@@ -1,4 +1,13 @@
-import { iconHashToBigInt, type ApplicationFlags, type Bot, type DiscordApplication, type Guild, type Team, type User } from '../index.js'
+import {
+  iconHashToBigInt,
+  type ApplicationFlags,
+  type Bot,
+  type DiscordApplication,
+  type DiscordUser,
+  type Guild,
+  type Team,
+  type User,
+} from '../index.js'
 
 export function transformApplication(bot: Bot, payload: { application: DiscordApplication; shardId: number }): Application {
   const application = {
@@ -25,6 +34,10 @@ export function transformApplication(bot: Bot, payload: { application: DiscordAp
     guildId: payload.application.guild_id ? bot.transformers.snowflake(payload.application.guild_id) : undefined,
     // @ts-expect-error the partial here wont break anything
     guild: payload.application.guild ? bot.transformers.guild(bot, { guild: payload.application.guild, shardId: payload.shardId }) : undefined,
+    approximateGuildCount: payload.application.approximate_guild_count,
+    bot: payload.application.bot ? bot.transformers.user(bot, payload.application.bot as DiscordUser) : undefined,
+    interactionsEndpointUrl: payload.application.interactions_endpoint_url,
+    redirectUris: payload.application.redirect_uris,
   } as Application
 
   return bot.transformers.customizers.application(bot, payload.application, application)
@@ -50,4 +63,7 @@ export interface Application {
   botRequireCodeGrant: boolean
   verifyKey: string
   approximateGuildCount?: number
+  bot?: User
+  redirectUris?: string[]
+  interactionsEndpointUrl?: string
 }

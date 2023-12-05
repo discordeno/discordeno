@@ -379,6 +379,12 @@ export interface DiscordApplication {
   role_connections_verification_url?: string
   /** An approximate count of the app's guild membership. */
   approximate_guild_count?: number
+  /** Partial user object for the bot user associated with the app */
+  bot?: Partial<DiscordUser>
+  /** Array of redirect URIs for the app */
+  redirect_uris?: string[]
+  /** Interactions endpoint URL for the app */
+  interactions_endpoint_url?: string
 }
 
 export type DiscordTokenExchange = DiscordTokenExchangeAuthorizationCode | DiscordTokenExchangeRefreshToken | DiscordTokenExchangeClientCredentials
@@ -2654,9 +2660,9 @@ export interface DiscordGuildWidgetSettings {
 }
 
 export interface DiscordInstallParams {
-  /** the scopes to add the application to the server with */
+  /** Scopes to add the application to the server with */
   scopes: OAuth2Scope[]
-  /** the permissions to request for the bot role */
+  /** Permissions to request for the bot role */
   permissions: string
 }
 

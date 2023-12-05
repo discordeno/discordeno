@@ -47,6 +47,7 @@ import type {
   DeleteWebhookMessageOptions,
   DiscordEntitlement,
   DiscordMessage,
+  EditApplication,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
   EditChannelPermissionOverridesOptions,
@@ -258,6 +259,9 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     },
     getApplicationInfo: async () => {
       return bot.transformers.application(bot, { application: snakelize(await bot.rest.getApplicationInfo()), shardId: 0 })
+    },
+    editApplicationInfo: async (body) => {
+      return bot.transformers.application(bot, { application: snakelize(await bot.rest.editApplicationInfo(body)), shardId: 0 })
     },
     getCurrentAuthenticationInfo: async (bearerToken) => {
       return await bot.rest.getCurrentAuthenticationInfo(bearerToken)
@@ -773,6 +777,7 @@ export interface BotHelpers {
   followAnnouncement: (sourceChannelId: BigString, targetChannelId: BigString) => Promise<CamelizedDiscordFollowedChannel>
   getActiveThreads: (guildId: BigString) => Promise<{ threads: Channel[]; members: ThreadMember[] }>
   getApplicationInfo: () => Promise<Application>
+  editApplicationInfo: (body: EditApplication) => Promise<Application>
   getCurrentAuthenticationInfo: (bearerToken: string) => Promise<CamelizedDiscordCurrentAuthorization>
   exchangeToken: (clientId: BigString, clientSecret: string, options: CamelizedDiscordTokenExchange) => Promise<CamelizedDiscordAccessTokenResponse>
   revokeToken: (clientId: BigString, clientSecret: string, options: CamelizedDiscordTokenRevocation) => Promise<void>

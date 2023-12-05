@@ -71,6 +71,7 @@ import type {
   CreateStageInstance,
   CreateTemplate,
   DeleteWebhookMessageOptions,
+  EditApplication,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
   EditChannelPermissionOverridesOptions,
@@ -1501,6 +1502,13 @@ export interface RestManager {
   getActiveThreads: (guildId: BigString) => Promise<CamelizedDiscordActiveThreads>
   /** Get the applications info */
   getApplicationInfo: () => Promise<CamelizedDiscordApplication>
+  /**
+   * Edit properties of the app associated with the requesting bot user.
+   *
+   * @remarks
+   * Only properties that are passed will be updated.
+   */
+  editApplicationInfo: (body: EditApplication) => Promise<CamelizedDiscordApplication>
   /**
    * Get the current authentication info for the authenticated user
    *

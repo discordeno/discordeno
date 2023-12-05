@@ -10,12 +10,14 @@ import type {
   DiscordEmbed,
   DiscordGuildOnboardingMode,
   DiscordGuildOnboardingPrompt,
+  DiscordInstallParams,
   DiscordRole,
 } from './discord.js'
 import type {
   AllowedMentionsTypes,
   ApplicationCommandPermissionTypes,
   ApplicationCommandTypes,
+  ApplicationFlags,
   AuditLogEvents,
   BigString,
   ButtonStyles,
@@ -1243,4 +1245,40 @@ export enum CreateEntitlementOwnerType {
   GuildSubscription = 1,
   /** User subscription */
   UserSubscription = 2,
+}
+
+export interface EditApplication {
+  /** Default custom authorization URL for the app, if enabled */
+  customInstallUrl?: string
+  /** Description of the app */
+  description?: string
+  /** Role connection verification URL for the app */
+  roleConnectionsVerificationUrl?: string
+  /** Settings for the app's default in-app authorization link, if enabled */
+  installParams?: DiscordInstallParams
+  /**
+   * App's public flags
+   *
+   * @remarks
+   * Only limited intent flags (`GATEWAY_PRESENCE_LIMITED`, `GATEWAY_GUILD_MEMBERS_LIMITED`, and `GATEWAY_MESSAGE_CONTENT_LIMITED`) can be updated via the API.
+   */
+  flags?: ApplicationFlags
+  /** Icon for the app */
+  icon?: string | null
+  /** Default rich presence invite cover image for the app */
+  coverImage?: string | null
+  /**
+   * Interactions endpoint URL for the app
+   *
+   * @remarks
+   * To update an Interactions endpoint URL via the API, the URL must be valid
+   */
+  interactionEndpointUrl?: string
+  /**
+   * List of tags describing the content and functionality of the app (max of 20 characters per tag)
+   *
+   * @remarks
+   * There can only be a max of 5 tags
+   */
+  tags?: string[]
 }
