@@ -2517,12 +2517,14 @@ export interface RestManager {
    */
   syncGuildTemplate: (guildId: BigString) => Promise<CamelizedDiscordTemplate>
   /**
-   * Triggers a typing indicator for the bot user.
+   * Triggers a typing indicator for the specified channel, which expires after 10 seconds.
    *
    * @param channelId - The ID of the channel in which to trigger the typing indicator.
    *
    * @remarks
-   * Generally, bots should _not_ use this route.
+   * Generally bots should **not** use this route.
+   * However, if a bot is responding to a command and expects the computation to take a few seconds,
+   * this endpoint may be called to let the user know that the bot is processing their message.
    *
    * Fires a _Typing Start_ gateway event.
    *
