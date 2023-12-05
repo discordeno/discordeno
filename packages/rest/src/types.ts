@@ -375,7 +375,7 @@ export interface RestManager {
    * @returns An instance of the created {@link CamelizedDiscordEmoji}.
    *
    * @remarks
-   * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * Requires the `CREATE_GUILD_EXPRESSIONS` permission.
    *
    * Emojis have a maximum file size of 256 kilobits. Attempting to upload a larger emoji will cause the route to return 400 Bad Request.
    *
@@ -481,7 +481,7 @@ export interface RestManager {
    * @return A {@link CamelizedDiscordSticker}
    *
    * @remarks
-   * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * Requires the `CREATE_GUILD_EXPRESSIONS` permission.
    * Fires a Guild Stickers Update Gateway event.
    * Every guilds has five free sticker slots by default, and each Boost level will grant access to more slots.
    * Lottie stickers can only be uploaded on guilds that have either the `VERIFIED` and/or the `PARTNERED` guild feature.
@@ -654,7 +654,8 @@ export interface RestManager {
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
-   * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * For emojis created by the current user, requires either the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
+   * For other emojis, requires the `MANAGE_GUILD_EXPRESSIONS` permission.
    *
    * Fires a _Guild Emojis Update_ gateway event.
    *
@@ -713,7 +714,8 @@ export interface RestManager {
    * @return A {@link CamelizedDiscordSticker}
    *
    * @remarks
-   * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * For stickers created by the current user, requires either the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
+   * For other stickers, requires the `MANAGE_GUILD_EXPRESSIONS` permission.
    * Fires a Guild Stickers Update Gateway event.
    * Every guilds has five free sticker slots by default, and each Boost level will grant access to more slots.
    * Lottie stickers can only be uploaded on guilds that have either the `VERIFIED` and/or the `PARTNERED` guild feature.
@@ -1080,7 +1082,8 @@ export interface RestManager {
    * @returns An instance of the updated {@link CamelizedDiscordEmoji}.
    *
    * @remarks
-   * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * For emojis created by the current user, requires either the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
+   * For other emojis, requires the `MANAGE_GUILD_EXPRESSIONS` permission.
    *
    * Fires a `Guild Emojis Update` gateway event.
    *
@@ -1162,7 +1165,8 @@ export interface RestManager {
    * @return A {@link CamelizedDiscordSticker}
    *
    * @remarks
-   * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * For stickers created by the current user, requires either the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
+   * For other stickers, requires the `MANAGE_GUILD_EXPRESSIONS` permission.
    * Fires a Guild Stickers Update Gateway event.
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#modify-guild-sticker}
@@ -1722,6 +1726,10 @@ export interface RestManager {
    * @param emojiId - The ID of the emoji to get.
    * @returns An instance of {@link CamelizedDiscordEmoji}.
    *
+   * @remarks
+   * Includes the `user` field if the bot has the `MANAGE_GUILD_EXPRESSIONS` permission,
+   * or if the bot created the emoji and has the the `CREATE_GUILD_EXPRESSIONS` permission.
+   *
    * @see {@link https://discord.com/developers/docs/resources/emoji#get-guild-emoji}
    */
   getEmoji: (guildId: BigString, emojiId: BigString) => Promise<CamelizedDiscordEmoji>
@@ -1730,6 +1738,9 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild which to get the emojis of.
    * @returns A collection of {@link CamelizedDiscordEmoji} objects assorted by emoji ID.
+   *
+   * @remarks
+   * Includes `user` fields if the bot has the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
    *
    * @see {@link https://discord.com/developers/docs/resources/emoji#list-guild-emojis}
    */
@@ -1831,7 +1842,7 @@ export interface RestManager {
    * @param stickerId The ID of the sticker to get
    * @return A {@link CamelizedDiscordSticker}
    *
-   * @remarks Includes the user field if the bot has the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * @remarks Includes the user field if the bot has the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#get-guild-sticker}
    */
@@ -1842,7 +1853,7 @@ export interface RestManager {
    * @param guildId The ID of the guild to get
    * @returns A collection of {@link CamelizedDiscordSticker} objects assorted by sticker ID.
    *
-   * @remarks Includes user fields if the bot has the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * @remarks Includes user fields if the bot has the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#list-guild-stickers}
    */
