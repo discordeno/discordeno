@@ -724,6 +724,8 @@ export interface ExecuteWebhook {
   threadId?: BigString
   /** Name of the thread to create (target channel has to be type of forum channel) */
   threadName?: string
+  /** Array of tag ids to apply to the thread (requires the webhook channel to be a forum or media channel) */
+  appliedTags?: BigString[]
   /** The message contents (up to 2000 characters) */
   content?: string
   /** Override the default username of the webhook */
