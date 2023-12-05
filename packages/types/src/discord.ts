@@ -1309,7 +1309,7 @@ export interface DiscordMessage {
   /** Data showing the source of a crossposted channel follow add, pin or reply message */
   message_reference?: Omit<DiscordMessageReference, 'failIfNotExists'>
   /** Message flags combined as a bitfield */
-  flags?: DiscordMessageFlags
+  flags?: DiscordMessageFlag
   /**
    * The stickers sent with the message (bots currently can only receive messages with stickers, not send)
    * @deprecated
@@ -2913,7 +2913,7 @@ export interface DiscordCreateForumPostWithMessage {
     /** Attachment objects with filename and description. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
     attachments?: DiscordAttachment[]
     /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS can be set */
-    flags?: DiscordMessageFlags
+    flags?: DiscordMessageFlag
   }
   /** the IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
   applied_tags?: string[]
@@ -3104,7 +3104,7 @@ export enum DiscordSkuFlag {
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-flags */
-export enum DiscordMessageFlags {
+export enum DiscordMessageFlag {
   /** This message has been published to subscribed channels (via Channel Following) */
   Crossposted = 1 << 0,
   /** This message originated from a message in another channel (via Channel Following) */

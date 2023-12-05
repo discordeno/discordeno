@@ -11,7 +11,7 @@ import type {
   DiscordGuildOnboardingMode,
   DiscordGuildOnboardingPrompt,
   DiscordInstallParams,
-  DiscordMessageFlags as DiscordMessageFlag,
+  DiscordMessageFlag,
   DiscordRole,
 } from './discord.js'
 import type {
