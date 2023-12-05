@@ -2284,6 +2284,9 @@ export interface RestManager {
    * @param guildId - The ID of the guild to get the widget of.
    * @returns An instance of {@link GuildWidget}.
    *
+   * @remarks
+   * Fires an `INVITE_CREATE` Gateway event if an invite channel is defined on the Guild Widget.
+   *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-widget}
    */
   getWidget: (guildId: BigString) => Promise<CamelizedDiscordGuildWidget>
