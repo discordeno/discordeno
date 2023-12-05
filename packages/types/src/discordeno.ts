@@ -766,10 +766,14 @@ export interface CreateForumPostWithMessage {
 }
 
 export interface CreateStageInstance {
+  /** The id of the Stage channel */
   channelId: BigString
+  /** The topic of the Stage instance (1-120 characters) */
   topic: string
   /** Notify @everyone that the stage instance has started. Requires the MENTION_EVERYONE permission. */
   sendStartNotification?: boolean
+  /** The guild scheduled event associated with this Stage instance */
+  guildScheduledEventId?: BigString
 }
 
 export interface EditStageInstanceOptions {
