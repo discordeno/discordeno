@@ -52,6 +52,7 @@ import type {
   DiscordEmbedThumbnail,
   DiscordEmbedVideo,
   DiscordEmoji,
+  DiscordEntitlement,
   DiscordFollowAnnouncementChannel,
   DiscordFollowedChannel,
   DiscordForumTag,
@@ -130,6 +131,7 @@ import type {
   DiscordSelectMenuDefaultValue,
   DiscordSelectOption,
   DiscordSessionStartLimit,
+  DiscordSku,
   DiscordStageInstance,
   DiscordSticker,
   DiscordStickerItem,
@@ -320,3 +322,5 @@ export interface CamelizedDiscordPrunedCount extends Camelize<DiscordPrunedCount
 export interface CamelizedDiscordGuildOnboarding extends Camelize<DiscordGuildOnboarding> {}
 export interface CamelizedDiscordGuildOnboardingPrompt extends Camelize<DiscordGuildOnboardingPrompt> {}
 export interface CamelizedDiscordGuildOnboardingOption extends Camelize<DiscordGuildOnboardingPromptOption> {}
+export interface CamelizedDiscordEntitlement extends Camelize<DiscordEntitlement> {}
+export interface CamelizedDiscordSku extends Camelize<DiscordSku> {}

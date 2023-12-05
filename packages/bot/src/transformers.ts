@@ -16,6 +16,7 @@ import type {
   DiscordCreateApplicationCommand,
   DiscordEmbed,
   DiscordEmoji,
+  DiscordEntitlement,
   DiscordGetGatewayBot,
   DiscordGuild,
   DiscordGuildApplicationCommandPermissions,
@@ -33,6 +34,7 @@ import type {
   DiscordPresenceUpdate,
   DiscordRole,
   DiscordScheduledEvent,
+  DiscordSku,
   DiscordStageInstance,
   DiscordSticker,
   DiscordStickerPack,
@@ -61,6 +63,7 @@ import { transformChannel, type Channel } from './transformers/channel.js'
 import { transformComponent, type Component } from './transformers/component.js'
 import { transformEmbed, type Embed } from './transformers/embed.js'
 import { transformEmoji, type Emoji } from './transformers/emoji.js'
+import { transformEntitlement, type Entitlement } from './transformers/entitlement.js'
 import { transformGatewayBot, type GetGatewayBot } from './transformers/gatewayBot.js'
 import { transformGuild, type Guild } from './transformers/guild.js'
 import {
@@ -88,6 +91,7 @@ import { transformCreateApplicationCommandToDiscordCreateApplicationCommand } fr
 import { transformInteractionResponseToDiscordInteractionResponse } from './transformers/reverse/interactionResponse.js'
 import { transformRole, type Role } from './transformers/role.js'
 import { transformScheduledEvent, type ScheduledEvent } from './transformers/scheduledEvent.js'
+import { transformSku, type Sku } from './transformers/sku.js'
 import { transformStageInstance, type StageInstance } from './transformers/stageInstance.js'
 import { transformInviteStageInstance, type InviteStageInstance } from './transformers/stageInviteInstance.js'
 import { transformSticker, transformStickerPack, type Sticker, type StickerPack } from './transformers/sticker.js'
@@ -159,6 +163,8 @@ export interface Transformers {
     ) => any
     template: (bot: Bot, payload: DiscordTemplate, template: Template) => any
     guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding, onboarding: GuildOnboarding) => any
+    entitlement: (bot: Bot, payload: DiscordEntitlement, entitlement: Entitlement) => any
+    sku: (bot: Bot, payload: DiscordSku, sku: Sku) => any
   }
   desiredProperties: {
     attachment: {
@@ -473,6 +479,25 @@ export interface Transformers {
       enabled: boolean
       mode: boolean
     }
+    entitlement: {
+      id: boolean
+      skuId: boolean
+      userId: boolean
+      guildId: boolean
+      applicationId: boolean
+      type: boolean
+      consumed: boolean
+      startsAt: boolean
+      endsAt: boolean
+    }
+    sku: {
+      id: boolean
+      type: boolean
+      applicationId: boolean
+      name: boolean
+      slug: boolean
+      flags: boolean
+    }
   }
   reverse: {
     allowedMentions: (bot: Bot, payload: AllowedMentions) => DiscordAllowedMentions
@@ -534,6 +559,8 @@ export interface Transformers {
   applicationCommandOptionChoice: (bot: Bot, payload: DiscordApplicationCommandOptionChoice) => ApplicationCommandOptionChoice
   template: (bot: Bot, payload: DiscordTemplate) => Template
   guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding) => GuildOnboarding
+  entitlement: (bot: Bot, payload: DiscordEntitlement) => Entitlement
+  sku: (bot: Bot, payload: DiscordSku) => Sku
 }
 
 export interface CreateTransformerOptions {
@@ -674,6 +701,12 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
       },
       guildOnboarding(bot, payload, onboarding) {
         return onboarding
+      },
+      entitlement(bot, payload, entitlement) {
+        return entitlement
+      },
+      sku(bot, payload, sku) {
+        return sku
       },
     },
     desiredProperties: {
@@ -989,6 +1022,25 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
           type: opts?.defaultDesiredPropertiesValue ?? false,
         },
       },
+      entitlement: {
+        id: opts?.defaultDesiredPropertiesValue ?? false,
+        skuId: opts?.defaultDesiredPropertiesValue ?? false,
+        userId: opts?.defaultDesiredPropertiesValue ?? false,
+        guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        applicationId: opts?.defaultDesiredPropertiesValue ?? false,
+        type: opts?.defaultDesiredPropertiesValue ?? false,
+        consumed: opts?.defaultDesiredPropertiesValue ?? false,
+        startsAt: opts?.defaultDesiredPropertiesValue ?? false,
+        endsAt: opts?.defaultDesiredPropertiesValue ?? false,
+      },
+      sku: {
+        id: opts?.defaultDesiredPropertiesValue ?? false,
+        type: opts?.defaultDesiredPropertiesValue ?? false,
+        applicationId: opts?.defaultDesiredPropertiesValue ?? false,
+        name: opts?.defaultDesiredPropertiesValue ?? false,
+        slug: opts?.defaultDesiredPropertiesValue ?? false,
+        flags: opts?.defaultDesiredPropertiesValue ?? false,
+      },
     },
     reverse: {
       allowedMentions: options.reverse?.allowedMentions ?? transformAllowedMentionsToDiscordAllowedMentions,
@@ -1050,5 +1102,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
     applicationCommandOptionChoice: options.applicationCommandOptionChoice ?? transformApplicationCommandOptionChoice,
     template: options.template ?? transformTemplate,
     guildOnboarding: options.guildOnboarding ?? transformGuildOnboarding,
+    entitlement: options.entitlement ?? transformEntitlement,
+    sku: options.sku ?? transformSku,
   }
 }

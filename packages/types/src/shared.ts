@@ -792,6 +792,9 @@ export type GatewayDispatchEventNames =
   | 'VOICE_STATE_UPDATE'
   | 'VOICE_SERVER_UPDATE'
   | 'WEBHOOKS_UPDATE'
+  | 'ENTITLEMENT_CREATE'
+  | 'ENTITLEMENT_UPDATE'
+  | 'ENTITLEMENT_DELETE'
 
 export type GatewayEventNames = GatewayDispatchEventNames | 'READY' | 'RESUMED'
 
@@ -949,6 +952,8 @@ export enum InteractionResponseTypes {
   ApplicationCommandAutocompleteResult = 8,
   /** For Command or Component interactions, send a Modal response */
   Modal = 9,
+  /** Respond to an interaction with an upgrade button, only available for apps with monetization enabled */
+  PremiumRequired = 10,
 }
 
 export enum SortOrderTypes {

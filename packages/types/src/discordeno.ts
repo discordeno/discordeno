@@ -1204,3 +1204,39 @@ export interface EditGuildOnboarding {
   /** Current mode of onboarding */
   mode: DiscordGuildOnboardingMode
 }
+
+/** https://discord.com/developers/docs/monetization/entitlements#list-entitlements-query-params */
+export interface GetEntitlements {
+  /** User ID to look up entitlements for */
+  userId?: BigString
+  /** Optional list of SKU IDs to check entitlements for */
+  skuIds?: BigString[]
+  /** Retrieve entitlements before this time */
+  before?: BigString
+  /** Retrieve entitlements after this time */
+  after?: BigString
+  /** Number of entitlements to return, 1-100, default 100 */
+  limit?: number
+  /** Guild ID to look up entitlements for */
+  guildId?: BigString
+  /** Whether entitlements should be omitted */
+  excludeEnded?: boolean
+}
+
+/** https://discord.com/developers/docs/monetization/entitlements#create-test-entitlement-json-params */
+export interface CreateEntitlement {
+  /** ID of the SKU to grant the entitlement to */
+  skuId: BigString
+  /** ID of the guild or user to grant the entitlement to */
+  ownerId: BigString
+  /** The type of entitlement, guild subscription or user subscription */
+  ownerType: CreateEntitlementOwnerType
+}
+
+/** From the description of CreateEntitlement#ownerType on discord docs */
+export enum CreateEntitlementOwnerType {
+  /** Guild subscription */
+  GuildSubscription = 1,
+  /** User subscription */
+  UserSubscription = 2,
+}

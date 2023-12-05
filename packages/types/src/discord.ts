@@ -1591,6 +1591,8 @@ export interface DiscordInteraction {
   guild_locale?: string
   /** The computed permissions for a bot or app in the context of a specific interaction (including channel overwrites) */
   app_permissions: string
+  /** For monetized apps, any entitlements for the invoking user, representing access to premium SKUs */
+  entitlements: DiscordEntitlement[]
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-member-object */
@@ -3031,4 +3033,66 @@ export enum DiscordTeamMemberRole {
   Developer = 'developer',
   /** Read-only members can access information about a team and any team-owned apps. Some examples include getting the IDs of applications and exporting payout records. */
   ReadOnly = 'read_only',
+}
+
+/** https://discord.com/developers/docs/monetization/entitlements#entitlement-object-entitlement-structure */
+export interface DiscordEntitlement {
+  /** ID of the entitlement */
+  id: string
+  /** ID of the SKU */
+  sku_id: string
+  /** ID of the user that is granted access to the entitlement's sku */
+  user_id?: string
+  /** ID of the guild that is granted access to the entitlement's sku */
+  guild_id?: string
+  /** ID of the parent application */
+  application_id: string
+  /** Type of entitlement */
+  type: DiscordEntitlementType
+  /** Not applicable for App Subscriptions. Subscriptions are not consumed and will be `false` */
+  consumed: boolean
+  /** Start date at which the entitlement is valid. Not present when using test entitlements */
+  starts_at?: string
+  /** Date at which the entitlement is no longer valid. Not present when using test entitlements */
+  ends_at?: string
+}
+
+/** https://discord.com/developers/docs/monetization/entitlements#entitlement-object-entitlement-types */
+export enum DiscordEntitlementType {
+  /** Entitlement was purchased as an app subscription */
+  ApplicationSubscription = 8,
+}
+
+/** https://discord.com/developers/docs/monetization/skus#sku-object-sku-structure */
+export interface DiscordSku {
+  /** ID of SKU */
+  id: string
+  /** Type of SKU */
+  type: DiscordSkuType
+  /** ID of the parent application */
+  application_id: string
+  /** Customer-facing name of your premium offering */
+  name: string
+  /** System-generated URL slug based on the SKU's name */
+  slug: string
+  /** SKU flags combined as a bitfield */
+  flags: DiscordSkuFlag
+}
+
+/** https://discord.com/developers/docs/monetization/skus#sku-object-sku-types */
+export enum DiscordSkuType {
+  /** Represents a recurring subscription */
+  Subscription = 5,
+  /** System-generated group for each SUBSCRIPTION SKU created */
+  SubscriptionGroup = 6,
+}
+
+/** https://discord.com/developers/docs/monetization/skus#sku-object-sku-flags */
+export enum DiscordSkuFlag {
+  /** SKU is available for purchase */
+  Available = 1 << 2,
+  /** Recurring SKU that can be purchased by a user and applied to a single server. Grants access to every user in that server. */
+  GuildSubscription = 1 << 7,
+  /** Recurring SKU purchased by a user for themselves. Grants access to the purchasing user in every server. */
+  UserSubscription = 1 << 8,
 }

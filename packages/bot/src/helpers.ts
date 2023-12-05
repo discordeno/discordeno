@@ -29,6 +29,7 @@ import type {
   CreateApplicationCommand,
   CreateAutoModerationRuleOptions,
   CreateChannelInvite,
+  CreateEntitlement,
   CreateForumPostWithMessage,
   CreateGlobalApplicationCommandOptions,
   CreateGuild,
@@ -44,6 +45,7 @@ import type {
   CreateStageInstance,
   CreateTemplate,
   DeleteWebhookMessageOptions,
+  DiscordEntitlement,
   DiscordMessage,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
@@ -58,6 +60,7 @@ import type {
   ExecuteWebhook,
   GetApplicationCommandPermissionOptions,
   GetBans,
+  GetEntitlements,
   GetGroupDmOptions,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
@@ -95,6 +98,7 @@ import type { ApplicationCommandPermission } from './transformers/applicationCom
 import type { AutoModerationRule } from './transformers/automodRule.js'
 import type { Channel } from './transformers/channel.js'
 import type { Emoji } from './transformers/emoji.js'
+import { type Entitlement } from './transformers/entitlement.js'
 import type { Guild } from './transformers/guild.js'
 import type { Integration } from './transformers/integration.js'
 import type { Invite } from './transformers/invite.js'
@@ -686,6 +690,15 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     editGuildOnboarding: async (guildId, options, reason) => {
       return bot.transformers.guildOnboarding(bot, snakelize(await bot.rest.editGuildOnboarding(guildId, options, reason)))
     },
+    listEntitlements: async (applicationId, options) => {
+      return (await bot.rest.listEntitlements(applicationId, options)).map((entitlement) => bot.transformers.entitlement(bot, snakelize(entitlement)))
+    },
+    createTestEntitlement: async (applicationId, body) => {
+      return bot.transformers.entitlement(bot, snakelize(await bot.rest.createTestEntitlement(applicationId, body)) as DiscordEntitlement)
+    },
+    deleteTestEntitlement: async (applicationId, entitlementId) => {
+      await bot.rest.deleteTestEntitlement(applicationId, entitlementId)
+    },
   }
 }
 
@@ -905,4 +918,7 @@ export interface BotHelpers {
   unpinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
   getGuildOnboarding: (guildId: BigString) => Promise<GuildOnboarding>
   editGuildOnboarding: (guildId: BigString, options: EditGuildOnboarding, reason?: string) => Promise<GuildOnboarding>
+  listEntitlements: (applicationId: BigString, options?: GetEntitlements) => Promise<Entitlement[]>
+  createTestEntitlement: (applicationId: BigString, body: CreateEntitlement) => Promise<Partial<Entitlement>>
+  deleteTestEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
 }

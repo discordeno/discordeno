@@ -19,6 +19,7 @@ import type {
   CamelizedDiscordConnection,
   CamelizedDiscordCurrentAuthorization,
   CamelizedDiscordEmoji,
+  CamelizedDiscordEntitlement,
   CamelizedDiscordFollowedChannel,
   CamelizedDiscordGetGatewayBot,
   CamelizedDiscordGuild,
@@ -38,6 +39,7 @@ import type {
   CamelizedDiscordPrunedCount,
   CamelizedDiscordRole,
   CamelizedDiscordScheduledEvent,
+  CamelizedDiscordSku,
   CamelizedDiscordStageInstance,
   CamelizedDiscordSticker,
   CamelizedDiscordStickerPack,
@@ -53,6 +55,7 @@ import type {
   CreateApplicationCommand,
   CreateAutoModerationRuleOptions,
   CreateChannelInvite,
+  CreateEntitlement,
   CreateForumPostWithMessage,
   CreateGlobalApplicationCommandOptions,
   CreateGuild,
@@ -82,14 +85,15 @@ import type {
   FileContent,
   GetApplicationCommandPermissionOptions,
   GetBans,
+  GetEntitlements,
   GetGroupDmOptions,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetInvite,
   GetMessagesOptions,
   GetReactions,
-  GetScheduledEvents,
   GetScheduledEventUsers,
+  GetScheduledEvents,
   GetUserGuilds,
   GetWebhookMessageOptions,
   InteractionCallbackData,
@@ -2783,6 +2787,37 @@ export interface RestManager {
    * The `mode` field modifies what is considered when enforcing these constraints.
    */
   editGuildOnboarding: (guildId: BigString, options: EditGuildOnboarding, reason?: string) => Promise<CamelizedDiscordGuildOnboarding>
+  /**
+   * Returns all entitlements for a given app, active and expired.
+   *
+   * @param applicationId - The id of the application to get the entitlements
+   * @param {GetEntitlements} [options] - The optional query params for the endpoint
+   */
+  listEntitlements: (applicationId: BigString, options?: GetEntitlements) => Promise<CamelizedDiscordEntitlement[]>
+  /**
+   * Creates a test entitlement to a given SKU for a given guild or user. Discord will act as though that user or guild has entitlement to your premium offering.
+   *
+   * @param applicationId - The id of the application to create the entitlement
+   * @param body - The options for new entitlement
+   *
+   * @remarks
+   * This endpoint returns a partial entitlement object.
+   * It will not contain subscription_id, starts_at, or ends_at, as it's valid in perpetuity.
+   */
+  createTestEntitlement: (applicationId: BigString, body: CreateEntitlement) => Promise<Partial<CamelizedDiscordEntitlement>>
+  /**
+   * Deletes a currently-active test entitlement. Discord will act as though that user or guild no longer has entitlement to your premium offering.
+   *
+   * @param applicationId - The id of the application from where delete the entitlement
+   * @param entitlementId - The id of the entitlement to delete
+   */
+  deleteTestEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
+  /**
+   * Returns all SKUs for a given application
+   *
+   * @param applicationId - The id of the application to get the SKUs
+   */
+  listSkus: (applicationId: BigString) => Promise<CamelizedDiscordSku[]>
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'
