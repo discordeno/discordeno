@@ -512,15 +512,15 @@ export interface DiscordApplicationRoleConnection {
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-object */
 export interface DiscordTeam {
-  /** A hash of the image of the team's icon */
+  /** Hash of the image of the team's icon */
   icon: string | null
-  /** The unique id of the team */
+  /** Unique ID of the team */
   id: string
-  /** The members of the team */
+  /** Members of the team */
   members: DiscordTeamMember[]
-  /** The user id of the current team owner */
+  /** User ID of the current team owner */
   owner_user_id: string
-  /** The name of the team */
+  /** Name of the team */
   name: string
 }
 
@@ -528,12 +528,12 @@ export interface DiscordTeam {
 export interface DiscordTeamMember {
   /** The user's membership state on the team */
   membership_state: TeamMembershipStates
-  /** Will always be `["*"]` */
-  permissions: Array<'*'>
   /** The id of the parent team of which they are a member */
   team_id: string
   /** The avatar, discriminator, id, username, and global_name of the user */
   user: Partial<DiscordUser> & Pick<DiscordUser, 'avatar' | 'discriminator' | 'id' | 'username' | 'global_name'>
+  /** Role of the team member */
+  role: DiscordTeamMemberRole
 }
 
 /** https://discord.com/developers/docs/topics/gateway#webhooks-update-webhook-update-event-fields */
@@ -3015,4 +3015,20 @@ export enum DiscordGuildOnboardingMode {
   OnboardingDefault,
   /** Counts Default Channels and Questions towards constraints */
   OnboardingAdvanced,
+}
+
+/** https://discord.com/developers/docs/topics/teams#team-member-roles-team-member-role-types */
+export enum DiscordTeamMemberRole {
+  /** Owners are the most permissiable role, and can take destructive, irreversible actions like deleting the team itself. Teams are limited to 1 owner. */
+  Owner = 'owner',
+  /** Admins have similar access as owners, except they cannot take destructive actions on the team or team-owned apps. */
+  Admin = 'admin',
+  /**
+   * Developers can access information about team-owned apps, like the client secret or public key.
+   * They can also take limited actions on team-owned apps, like configuring interaction endpoints or resetting the bot token.
+   * Members with the Developer role *cannot* manage the team or its members, or take destructive actions on team-owned apps.
+   */
+  Developer = 'developer',
+  /** Read-only members can access information about a team and any team-owned apps. Some examples include getting the IDs of applications and exporting payout records. */
+  ReadOnly = 'read_only',
 }
