@@ -23,7 +23,8 @@ export function transformInvite(bot: Bot, payload: DiscordInviteCreate | Discord
     if (props.channelId && payload.channel?.id) invite.channelId = bot.transformers.snowflake(payload.channel.id)
     if (props.guildId && payload.guild?.id) invite.guildId = bot.transformers.snowflake(payload.guild.id)
     if (props.approximateMemberCount && payload.approximate_member_count) invite.approximateMemberCount = payload.approximate_member_count
-    if (props.approximatePresenceCount) invite.approximatePresenceCount = payload.approximate_presence_count
+    if (props.approximatePresenceCount && payload.approximate_presence_count !== undefined)
+      invite.approximatePresenceCount = payload.approximate_presence_count
     if (props.guildScheduledEvent && payload.guild_scheduled_event) {
       invite.guildScheduledEvent = payload.guild_scheduled_event ? bot.transformers.scheduledEvent(bot, payload.guild_scheduled_event) : undefined
     }
