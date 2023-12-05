@@ -225,10 +225,21 @@ export interface Message extends MessageBase {
   reactions?: Array<{
     /** Whether the current user reacted using this emoji */
     me: boolean
+    /**	Whether the current user super-reacted using this emoji */
+    meBurst: boolean
     /** Times this emoji has been used to react */
     count: number
+    /**	Reaction count details object */
+    countDetails: {
+      /** Count of super reactions */
+      burst: number
+      /**	Count of normal reactions */
+      normal: number
+    }
     /** Emoji information */
     emoji: Emoji
+    /** HEX colors used for super reaction */
+    burstColors: string[]
   }>
   /** Sent if the message contains stickers */
   stickerItems?: Array<{
@@ -341,8 +352,14 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
   if (payload.reactions?.length && props.reactions) {
     message.reactions = payload.reactions.map((reaction) => ({
       me: reaction.me,
+      meBurst: reaction.me_burst,
       count: reaction.count,
+      countDetails: {
+        burst: reaction.count_details.burst,
+        normal: reaction.count_details.normal,
+      },
       emoji: bot.transformers.emoji(bot, reaction.emoji),
+      burstColors: reaction.burst_colors,
     }))
   }
   if (props.stickerItems && payload.sticker_items?.length)

@@ -490,6 +490,9 @@ export function createRoutes(): RestRoutes {
       widgetJson: (guildId) => {
         return `/guilds/${guildId}/widget.json`
       },
+      onboarding: (guildId) => {
+        return `/guilds/${guildId}/onboarding`
+      },
     },
 
     sticker: (stickerId) => {
@@ -589,7 +592,7 @@ export function createRoutes(): RestRoutes {
       return '/gateway/bot'
     },
 
-    nitroStickerPacks() {
+    stickerPacks() {
       return '/sticker-packs'
     },
   }

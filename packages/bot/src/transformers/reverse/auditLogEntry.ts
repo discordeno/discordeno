@@ -146,6 +146,7 @@ export function transformAuditLogEntryToDiscordAuditLogEntry(bot: Bot, payload: 
           application_id: '',
           auto_moderation_rule_name: payload.options.autoModerationRuleName,
           auto_moderation_rule_trigger_type: payload.options.autoModerationRuleTriggerType,
+          integration_type: payload.options.integrationType,
         }
       : undefined,
     reason: payload.reason,
