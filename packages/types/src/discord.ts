@@ -848,8 +848,10 @@ export interface DiscordGuild {
   welcome_screen?: DiscordWelcomeScreen
   /** Stage instances in the guild */
   stage_instances?: DiscordStageInstance[]
-  /** custom guild stickers */
+  /** Custom guild stickers */
   stickers?: DiscordSticker[]
+  /** The id of the channel where admins and moderators of Community guilds receive safety alerts from Discord */
+  safety_alerts_channel_id: string | null
 }
 
 export interface DiscordPartialGuild {
@@ -1738,8 +1740,10 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
   presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
   /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
   allow_list?: string[]
-  /** Total number of mentions (role & user) allowed per message (Maximum of 50) */
+  /** Total number of mentions (role & user) allowed per message (Maximum of 50). Only present when TriggerType.MentionSpam */
   mention_total_limit?: number
+  /** Whether to automatically detect mention raids. Only present when TriggerType.MentionSpam */
+  mention_raid_protection_enabled?: boolean
 }
 
 export enum DiscordAutoModerationRuleTriggerMetadataPresets {

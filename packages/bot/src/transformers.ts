@@ -268,6 +268,7 @@ export interface Transformers {
       rulesChannelId: boolean
       publicUpdatesChannelId: boolean
       premiumProgressBarEnabled: boolean
+      safetyAlertsChannelId: boolean
     }
     interaction: {
       id: boolean
@@ -783,6 +784,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         rulesChannelId: opts?.defaultDesiredPropertiesValue ?? false,
         publicUpdatesChannelId: opts?.defaultDesiredPropertiesValue ?? false,
         premiumProgressBarEnabled: opts?.defaultDesiredPropertiesValue ?? false,
+        safetyAlertsChannelId: opts?.defaultDesiredPropertiesValue ?? false,
       },
       interaction: {
         id: opts?.defaultDesiredPropertiesValue ?? false,
