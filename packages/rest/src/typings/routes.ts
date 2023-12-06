@@ -1,6 +1,7 @@
 import type {
   BigString,
   GetBans,
+  GetEntitlements,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetInvite,
@@ -253,6 +254,15 @@ export interface RestRoutes {
     connections: () => string
     /** Route to handling role-connection for an application */
     roleConnections: (applicationId: BigString) => string
+  }
+  /** Routes related to monetization (entitlements and SKU) */
+  monetization: {
+    /** Route to list / create entitlements */
+    entitlements: (applicationId: BigString, options?: GetEntitlements) => string
+    /** Route to delete an entitlement */
+    entitlement: (applicationId: BigString, entitlementId: BigString) => string
+    /** Route to list the SKUs */
+    skus: (applicationId: BigString) => string
   }
   /** Get information about the current OAuth2 user / bot user. If used with a OAuth2 token requires the `identify` OAuth2 scope */
   currentUser: () => string

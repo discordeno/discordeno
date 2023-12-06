@@ -29,6 +29,7 @@ import type {
   CreateApplicationCommand,
   CreateAutoModerationRuleOptions,
   CreateChannelInvite,
+  CreateEntitlement,
   CreateForumPostWithMessage,
   CreateGlobalApplicationCommandOptions,
   CreateGuild,
@@ -44,7 +45,9 @@ import type {
   CreateStageInstance,
   CreateTemplate,
   DeleteWebhookMessageOptions,
+  DiscordEntitlement,
   DiscordMessage,
+  EditApplication,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
   EditChannelPermissionOverridesOptions,
@@ -58,6 +61,7 @@ import type {
   ExecuteWebhook,
   GetApplicationCommandPermissionOptions,
   GetBans,
+  GetEntitlements,
   GetGroupDmOptions,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
@@ -95,6 +99,7 @@ import type { ApplicationCommandPermission } from './transformers/applicationCom
 import type { AutoModerationRule } from './transformers/automodRule.js'
 import type { Channel } from './transformers/channel.js'
 import type { Emoji } from './transformers/emoji.js'
+import { type Entitlement } from './transformers/entitlement.js'
 import type { Guild } from './transformers/guild.js'
 import type { Integration } from './transformers/integration.js'
 import type { Invite } from './transformers/invite.js'
@@ -103,6 +108,7 @@ import type { Message } from './transformers/message.js'
 import type { GuildOnboarding } from './transformers/onboarding.js'
 import type { Role } from './transformers/role.js'
 import type { ScheduledEvent } from './transformers/scheduledEvent.js'
+import type { Sku } from './transformers/sku.js'
 import type { StageInstance } from './transformers/stageInstance.js'
 import type { Sticker, StickerPack } from './transformers/sticker.js'
 import type { Template } from './transformers/template.js'
@@ -252,7 +258,10 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       }
     },
     getApplicationInfo: async () => {
-      return bot.transformers.application(bot, snakelize(await bot.rest.getApplicationInfo()))
+      return bot.transformers.application(bot, { application: snakelize(await bot.rest.getApplicationInfo()), shardId: 0 })
+    },
+    editApplicationInfo: async (body) => {
+      return bot.transformers.application(bot, { application: snakelize(await bot.rest.editApplicationInfo(body)), shardId: 0 })
     },
     getCurrentAuthenticationInfo: async (bearerToken) => {
       return await bot.rest.getCurrentAuthenticationInfo(bearerToken)
@@ -366,10 +375,10 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       )
     },
     getInvite: async (inviteCode, options) => {
-      return bot.transformers.invite(bot, snakelize(await bot.rest.getInvite(inviteCode, options)))
+      return bot.transformers.invite(bot, { invite: snakelize(await bot.rest.getInvite(inviteCode, options)), shardId: 0 })
     },
     getInvites: async (guildId) => {
-      return (await bot.rest.getInvites(guildId)).map((res) => bot.transformers.invite(bot, snakelize(res)))
+      return (await bot.rest.getInvites(guildId)).map((res) => bot.transformers.invite(bot, { invite: snakelize(res), shardId: 0 }))
     },
     getMessage: async (channelId, messageId) => {
       return bot.transformers.message(bot, snakelize(await bot.rest.getMessage(channelId, messageId)))
@@ -686,6 +695,18 @@ export function createBotHelpers(bot: Bot): BotHelpers {
     editGuildOnboarding: async (guildId, options, reason) => {
       return bot.transformers.guildOnboarding(bot, snakelize(await bot.rest.editGuildOnboarding(guildId, options, reason)))
     },
+    listEntitlements: async (applicationId, options) => {
+      return (await bot.rest.listEntitlements(applicationId, options)).map((entitlement) => bot.transformers.entitlement(bot, snakelize(entitlement)))
+    },
+    createTestEntitlement: async (applicationId, body) => {
+      return bot.transformers.entitlement(bot, snakelize(await bot.rest.createTestEntitlement(applicationId, body)) as DiscordEntitlement)
+    },
+    deleteTestEntitlement: async (applicationId, entitlementId) => {
+      await bot.rest.deleteTestEntitlement(applicationId, entitlementId)
+    },
+    listSkus: async (applicationId) => {
+      return (await bot.rest.listSkus(applicationId)).map((sku) => bot.transformers.sku(bot, snakelize(sku)))
+    },
   }
 }
 
@@ -756,6 +777,7 @@ export interface BotHelpers {
   followAnnouncement: (sourceChannelId: BigString, targetChannelId: BigString) => Promise<CamelizedDiscordFollowedChannel>
   getActiveThreads: (guildId: BigString) => Promise<{ threads: Channel[]; members: ThreadMember[] }>
   getApplicationInfo: () => Promise<Application>
+  editApplicationInfo: (body: EditApplication) => Promise<Application>
   getCurrentAuthenticationInfo: (bearerToken: string) => Promise<CamelizedDiscordCurrentAuthorization>
   exchangeToken: (clientId: BigString, clientSecret: string, options: CamelizedDiscordTokenExchange) => Promise<CamelizedDiscordAccessTokenResponse>
   revokeToken: (clientId: BigString, clientSecret: string, options: CamelizedDiscordTokenRevocation) => Promise<void>
@@ -905,4 +927,8 @@ export interface BotHelpers {
   unpinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
   getGuildOnboarding: (guildId: BigString) => Promise<GuildOnboarding>
   editGuildOnboarding: (guildId: BigString, options: EditGuildOnboarding, reason?: string) => Promise<GuildOnboarding>
+  listEntitlements: (applicationId: BigString, options?: GetEntitlements) => Promise<Entitlement[]>
+  createTestEntitlement: (applicationId: BigString, body: CreateEntitlement) => Promise<Partial<Entitlement>>
+  deleteTestEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
+  listSkus: (applicationId: BigString) => Promise<Sku[]>
 }

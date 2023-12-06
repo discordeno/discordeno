@@ -66,6 +66,9 @@ export function createBotGatewayHandlers(
     VOICE_SERVER_UPDATE: options.VOICE_SERVER_UPDATE ?? handlers.handleVoiceServerUpdate,
     VOICE_STATE_UPDATE: options.VOICE_STATE_UPDATE ?? handlers.handleVoiceStateUpdate,
     WEBHOOKS_UPDATE: options.WEBHOOKS_UPDATE ?? handlers.handleWebhooksUpdate,
+    ENTITLEMENT_CREATE: options.ENTITLEMENT_CREATE ?? handlers.handleEntitlementCreate,
+    ENTITLEMENT_UPDATE: options.ENTITLEMENT_UPDATE ?? handlers.handleEntitlementUpdate,
+    ENTITLEMENT_DELETE: options.ENTITLEMENT_DELETE ?? handlers.handleEntitlementDelete,
   }
 }
 

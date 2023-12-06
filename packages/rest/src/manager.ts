@@ -22,6 +22,7 @@ import {
   type DiscordConnection,
   type DiscordCurrentAuthorization,
   type DiscordEmoji,
+  type DiscordEntitlement,
   type DiscordFollowedChannel,
   type DiscordGetGatewayBot,
   type DiscordGuild,
@@ -42,6 +43,7 @@ import {
   type DiscordPrunedCount,
   type DiscordRole,
   type DiscordScheduledEvent,
+  type DiscordSku,
   type DiscordStageInstance,
   type DiscordSticker,
   type DiscordStickerPack,
@@ -967,6 +969,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.get<DiscordApplication>(rest.routes.oauth2.application())
     },
 
+    async editApplicationInfo(body) {
+      return await rest.patch<DiscordApplication>(rest.routes.oauth2.application(), {
+        body,
+      })
+    },
+
     async getCurrentAuthenticationInfo(token) {
       return await rest.get<DiscordCurrentAuthorization>(rest.routes.oauth2.currentAuthorization(), {
         headers: {
@@ -1451,6 +1459,24 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.put(rest.routes.guilds.members.member(guildId, userId), {
         body,
       })
+    },
+
+    async createTestEntitlement(applicationId, body) {
+      return await rest.post<DiscordEntitlement>(rest.routes.monetization.entitlements(applicationId), {
+        body,
+      })
+    },
+
+    async listEntitlements(applicationId, options) {
+      return await rest.get<DiscordEntitlement[]>(rest.routes.monetization.entitlements(applicationId, options))
+    },
+
+    async deleteTestEntitlement(applicationId, entitlementId) {
+      await rest.delete(rest.routes.monetization.entitlement(applicationId, entitlementId))
+    },
+
+    async listSkus(applicationId) {
+      return await rest.get<DiscordSku[]>(rest.routes.monetization.skus(applicationId))
     },
 
     preferSnakeCase(enabled: boolean) {
