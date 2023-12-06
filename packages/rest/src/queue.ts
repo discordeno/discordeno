@@ -188,7 +188,10 @@ export class Queue {
       if (this.timeoutId) clearTimeout(this.timeoutId)
       // No requests have been requested for this queue so we nuke this queue
       this.rest.queues.delete(`${this.queueBaseKey}${this.url}`)
-      logger.debug(`[Queue] ${this.getQueueType()} ${this.url}. Deleted! Remaining: (${this.rest.queues.size})`, [...this.rest.queues.keys()])
+      logger.debug(
+        `[Queue] ${this.getQueueType()} ${this.url}. Deleted! Remaining: (${this.rest.queues.size})`,
+        [...this.rest.queues.values()].map((queue) => `${queue.getQueueType()}${queue.url}`),
+      )
       if (this.rest.queues.size) this.processPending()
     }, this.deleteQueueDelay)
   }
