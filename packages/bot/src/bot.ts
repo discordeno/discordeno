@@ -228,5 +228,5 @@ export interface EventHandlers {
   typingStart: (payload: { guildId: bigint | undefined; channelId: bigint; userId: bigint; timestamp: number; member: Member | undefined }) => unknown
   entitlementCreate: (entitlement: Entitlement) => unknown
   entitlementUpdate: (entitlement: Entitlement) => unknown
-  entitlementDelete: (entitlementId: bigint) => unknown
+  entitlementDelete: (entitlement: Entitlement) => unknown
 }
