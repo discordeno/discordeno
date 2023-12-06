@@ -73,6 +73,20 @@ const config = {
             position: 'left',
             label: 'Documentation',
           },
+          {
+            type: 'docSidebar',
+            sidebarId: 'old_docs',
+            position: 'left',
+            label: 'Old Docs',
+            docsPluginId: 'old_docs',
+          },
+          {
+            type: 'docSidebar',
+            sidebarId: 'tutorial',
+            position: 'left',
+            label: 'Tutorial',
+            docsPluginId: 'tutorial',
+          },
           { to: '/blog', label: 'Blog', position: 'left' },
           {
             href: 'https://discord.gg/ddeno',
@@ -95,6 +109,44 @@ const config = {
               {
                 label: 'Documentation',
                 to: '/docs/intro',
+              },
+            ],
+          },
+          {
+            title: 'Old Docs',
+            items: [
+              {
+                label: 'Introduction',
+                to: '/old_docs/intro',
+              },
+              {
+                label: 'Getting Started',
+                to: '/old_docs/getting-started',
+              },
+              {
+                label: 'FAQ',
+                to: '/old_docs/frequently-asked-questions',
+              },
+              {
+                label: 'Benchmark',
+                to: '/old_docs/benchmark',
+              },
+            ],
+          },
+          {
+            title: 'Tutorial',
+            items: [
+              {
+                label: 'Big Bot',
+                to: '/tutorial/big-bot-guide/step-by-step',
+              },
+              {
+                label: 'Node.js',
+                to: '/tutorial/nodejs/getting-started',
+              },
+              {
+                label: 'Amethyst',
+                to: '/tutorial/amethyst/intro',
               },
             ],
           },
@@ -130,6 +182,28 @@ const config = {
     }),
 
   plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      {
+        id: 'old_docs',
+        path: 'old_docs',
+        routeBasePath: 'old_docs',
+        sidebarPath: require.resolve('./oldDocsSidebars.js'),
+        editUrl: 'https://github.com/discordeno/discordeno/tree/main/site/',
+      },
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      {
+        id: 'tutorial',
+        path: 'tutorial',
+        routeBasePath: 'tutorial',
+        sidebarPath: require.resolve('./tutorialSidebars.js'),
+        editUrl: 'https://github.com/discordeno/discordeno/tree/main/site/',
+      },
+    ],
     [
       require.resolve('@easyops-cn/docusaurus-search-local'),
       {
