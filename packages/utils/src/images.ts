@@ -44,6 +44,36 @@ export function avatarUrl(
     : `https://cdn.discordapp.com/embed/avatars/${discriminator === '0' ? (BigInt(userId) >> BigInt(22)) % BigInt(6) : Number(discriminator) % 5}.png`
 }
 
+export function avatarDecorationUrl(userId: BigString, avatarDecoration: BigString): string {
+  return `https://cdn.discordapp.com/avatar-decorations/${userId}/${
+    typeof avatarDecoration === 'string' ? avatarDecoration : iconBigintToHash(avatarDecoration)
+  }.png`
+}
+
+/**
+ * Builds a URL to a user's banner stored in the Discord CDN.
+ *
+ * @param userId - The ID of the user to get the banner of.
+ * @param options - The parameters for the building of the URL.
+ * @returns The link to the resource or `undefined` if no banner has not been set.
+ */
+export function bannerUrl(
+  userId: BigString,
+  options?: {
+    banner?: BigString
+    size?: ImageSize
+    format?: ImageFormat
+  },
+): string | undefined {
+  return options?.banner
+    ? formatImageUrl(
+        `https://cdn.discordapp.com/banners/${userId}/${typeof options.banner === 'string' ? options.banner : iconBigintToHash(options.banner)}`,
+        options?.size ?? 128,
+        options?.format,
+      )
+    : undefined
+}
+
 /**
  * Builds a URL to the guild banner stored in the Discord CDN.
  *
@@ -54,7 +84,7 @@ export function avatarUrl(
 export function guildBannerUrl(
   guildId: BigString,
   options: {
-    banner?: string | bigint
+    banner?: BigString
     size?: ImageSize
     format?: ImageFormat
   },
@@ -118,6 +148,56 @@ export function guildSplashUrl(
 }
 
 /**
+ * Builds the URL to a guild discovery splash stored in the Discord CDN.
+ *
+ * @param guildId - The ID of the guild to get the splash of.
+ * @param imageHash - The hash identifying the discovery splash image.
+ * @param options - The parameters for the building of the URL.
+ * @returns The link to the resource or `undefined` if the guild does not have a splash image set.
+ */
+export function guildDiscoverySplashUrl(
+  guildId: BigString,
+  imageHash: BigString | undefined,
+  options?: {
+    size?: ImageSize
+    format?: ImageFormat
+  },
+): string | undefined {
+  return imageHash
+    ? formatImageUrl(
+        `https://cdn.discordapp.com/discovery-splashes/${guildId}/${typeof imageHash === 'string' ? imageHash : iconBigintToHash(imageHash)}`,
+        options?.size ?? 128,
+        options?.format,
+      )
+    : undefined
+}
+
+/**
+ * Builds the URL to a guild scheduled event cover stored in the Discord CDN.
+ *
+ * @param eventId - The ID of the scheduled event to get the cover of.
+ * @param imageHash - The hash identifying the event cover image.
+ * @param options - The parameters for the building of the URL.
+ * @returns The link to the resource or `undefined`.
+ */
+export function guildScheduledEventCoverUrl(
+  eventId: BigString,
+  options: {
+    cover?: BigString
+    size?: ImageSize
+    format?: ImageFormat
+  },
+): string | undefined {
+  return options.cover
+    ? formatImageUrl(
+        `https://cdn.discordapp.com/guild-events/${eventId}/${typeof options.cover === 'string' ? options.cover : iconBigintToHash(options.cover)}`,
+        options.size ?? 128,
+        options.format,
+      )
+    : undefined
+}
+
+/**
  * Builds a URL to the guild widget image stored in the Discord CDN.
  *
  * @param guildId - The ID of the guild to get the link to the widget image for.
@@ -132,4 +212,199 @@ export function getWidgetImageUrl(guildId: BigString, options?: GetGuildWidgetIm
   }
 
   return url
+}
+
+/**
+ * Builds a URL to a member's avatar stored in the Discord CDN.
+ *
+ * @param guildId - The ID of the guild where the member is
+ * @param userId - The ID of the user to get the avatar of.
+ * @param options - The parameters for the building of the URL.
+ * @returns The link to the resource or `undefined` if no banner has been set.
+ */
+export function memberAvatarUrl(
+  guildId: BigString,
+  userId: BigString,
+  options?: {
+    avatar?: BigString
+    size?: ImageSize
+    format?: ImageFormat
+  },
+): string | undefined {
+  return options?.avatar
+    ? formatImageUrl(
+        `https://cdn.discordapp.com/guilds/${guildId}/users/${userId}/avatars/${
+          typeof options.avatar === 'string' ? options.avatar : iconBigintToHash(options.avatar)
+        }`,
+        options?.size ?? 128,
+        options?.format,
+      )
+    : undefined
+}
+
+/**
+ * Builds the URL to an application icon stored in the Discord CDN.
+ *
+ * @param applicationId - The ID of the application to get the icon of.
+ * @param iconHash - The hash identifying the application icon.
+ * @param options - The parameters for the building of the URL.
+ * @returns The link to the resource or `undefined`
+ */
+export function applicationIconUrl(
+  applicationId: BigString,
+  iconHash: BigString | undefined,
+  options?: {
+    size?: ImageSize
+    format?: ImageFormat
+  },
+): string | undefined {
+  return iconHash
+    ? formatImageUrl(
+        `https://cdn.discordapp.com/app-icons/${applicationId}/${typeof iconHash === 'string' ? iconHash : iconBigintToHash(iconHash)}`,
+        options?.size ?? 128,
+        options?.format,
+      )
+    : undefined
+}
+
+/**
+ * Builds the URL to an application cover stored in the Discord CDN.
+ *
+ * @param applicationId - The ID of the application to get the cover of.
+ * @param coverHash - The hash identifying the application cover.
+ * @param options - The parameters for the building of the URL.
+ * @returns The link to the resource or `undefined`.
+ */
+export function applicationCoverUrl(
+  applicationId: BigString,
+  coverHash: BigString | undefined,
+  options?: {
+    size?: ImageSize
+    format?: ImageFormat
+  },
+): string | undefined {
+  return coverHash
+    ? formatImageUrl(
+        `https://cdn.discordapp.com/app-icons/${applicationId}/${typeof coverHash === 'string' ? coverHash : iconBigintToHash(coverHash)}`,
+        options?.size ?? 128,
+        options?.format,
+      )
+    : undefined
+}
+
+/**
+ * Builds the URL to an application asset stored in the Discord CDN.
+ *
+ * @param applicationId - The ID of the application to get the asset of.
+ * @param assetId - The id identifying the application asset.
+ * @param options - The parameters for the building of the URL.
+ * @returns The link to the resource or `undefined`.
+ */
+export function applicationAssetUrl(
+  applicationId: BigString,
+  assetId: BigString | undefined,
+  options?: {
+    size?: ImageSize
+    format?: ImageFormat
+  },
+): string | undefined {
+  return assetId
+    ? formatImageUrl(
+        `https://cdn.discordapp.com/app-icons/${applicationId}/${typeof assetId === 'string' ? assetId : iconBigintToHash(assetId)}`,
+        options?.size ?? 128,
+        options?.format,
+      )
+    : undefined
+}
+
+/**
+ * Builds the URL to a sticker pack banner stored in the Discord CDN.
+ *
+ * @param bannerAssetId - The ID of the banner asset for the sticker pack.
+ * @param options - The parameters for the building of the URL.
+ * @returns The link to the resource or `undefined`.
+ */
+export function stickerPackBannerUrl(
+  bannerAssetId: BigString | undefined,
+  options?: {
+    size?: ImageSize
+    format?: ImageFormat
+  },
+): string | undefined {
+  return bannerAssetId
+    ? formatImageUrl(
+        `https://cdn.discordapp.com/app-assets/710982414301790216/store/${
+          typeof bannerAssetId === 'string' ? bannerAssetId : iconBigintToHash(bannerAssetId)
+        }`,
+        options?.size ?? 128,
+        options?.format,
+      )
+    : undefined
+}
+
+/**
+ * Builds the URL to a sticker stored in the Discord CDN.
+ *
+ * @param stickerId - The ID of the sticker to get the icon of
+ * @param options - The parameters for the building of the URL.
+ * @returns The link to the resource or `undefined`.
+ */
+export function stickerUrl(
+  stickerId: BigString | number,
+  options?: {
+    size?: ImageSize
+    format?: ImageFormat
+  },
+): string | undefined {
+  return stickerId ? formatImageUrl(`https://cdn.discordapp.com/stickers/${stickerId}`, options?.size ?? 128, options?.format) : undefined
+}
+
+/**
+ * Builds the URL to a team icon stored in the Discord CDN.
+ *
+ * @param teamId - The ID of the team to get the icon of
+ * @param iconHash - The hash of the team icon.
+ * @param options - The parameters for the building of the URL.
+ * @returns The link to the resource or `undefined`.
+ */
+export function teamIconUrl(
+  teamId: BigString,
+  iconHash: BigString | undefined,
+  options?: {
+    size?: ImageSize
+    format?: ImageFormat
+  },
+): string | undefined {
+  return iconHash
+    ? formatImageUrl(
+        `https://cdn.discordapp.com/team-icons/${teamId}/store/${typeof iconHash === 'string' ? iconHash : iconBigintToHash(iconHash)}`,
+        options?.size ?? 128,
+        options?.format,
+      )
+    : undefined
+}
+
+/**
+ * Builds the URL to a role icon stored in the Discord CDN.
+ *
+ * @param roleId - The ID of the role to get the icon of
+ * @param iconHash - The hash of the role icon.
+ * @param options - The parameters for the building of the URL.
+ * @returns The link to the resource or `undefined`.
+ */
+export function roleIconUrl(
+  roleId: BigString,
+  iconHash: BigString | undefined,
+  options?: {
+    size?: ImageSize
+    format?: ImageFormat
+  },
+): string | undefined {
+  return iconHash
+    ? formatImageUrl(
+        `https://cdn.discordapp.com/role-icons/${roleId}/${typeof iconHash === 'string' ? iconHash : iconBigintToHash(iconHash)}`,
+        options?.size ?? 128,
+        options?.format,
+      )
+    : undefined
 }

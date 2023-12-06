@@ -1,8 +1,7 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require('prism-react-renderer/themes/github')
-const darkCodeTheme = require('prism-react-renderer/themes/dracula')
+const { themes } = require('prism-react-renderer')
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -22,6 +21,17 @@ const config = {
   projectName: 'discordeno', // Usually your repo name.
   deploymentBranch: 'gh-pages',
   trailingSlash: false,
+
+  webpack: {
+    jsLoader: isServer => ({
+      loader: require.resolve('esbuild-loader'),
+      options: {
+        loader: 'tsx',
+        format: isServer ? 'cjs' : undefined,
+        target: isServer ? 'node12' : 'es2017',
+      },
+    }),
+  },
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -125,8 +135,8 @@ const config = {
         copyright: `Copyright © 2021-${new Date().getFullYear()}, Discordeno.`,
       },
       prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
+        theme: themes.github,
+        darkTheme: themes.dracula,
       },
     }),
 
@@ -147,6 +157,7 @@ const config = {
         searchResultContextMaxLength: 50,
       },
     ],
+    './webpack-docusaurus-plugin',
   ],
 }
 

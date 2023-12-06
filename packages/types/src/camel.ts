@@ -52,6 +52,7 @@ import type {
   DiscordEmbedThumbnail,
   DiscordEmbedVideo,
   DiscordEmoji,
+  DiscordEntitlement,
   DiscordFollowAnnouncementChannel,
   DiscordFollowedChannel,
   DiscordForumTag,
@@ -64,8 +65,11 @@ import type {
   DiscordGuildIntegrationsUpdate,
   DiscordGuildMemberAdd,
   DiscordGuildMemberRemove,
-  DiscordGuildMembersChunk,
   DiscordGuildMemberUpdate,
+  DiscordGuildMembersChunk,
+  DiscordGuildOnboarding,
+  DiscordGuildOnboardingPrompt,
+  DiscordGuildOnboardingPromptOption,
   DiscordGuildPreview,
   DiscordGuildRoleCreate,
   DiscordGuildRoleDelete,
@@ -127,6 +131,7 @@ import type {
   DiscordSelectMenuDefaultValue,
   DiscordSelectOption,
   DiscordSessionStartLimit,
+  DiscordSku,
   DiscordStageInstance,
   DiscordSticker,
   DiscordStickerItem,
@@ -136,8 +141,8 @@ import type {
   DiscordTemplate,
   DiscordThreadListSync,
   DiscordThreadMember,
-  DiscordThreadMembersUpdate,
   DiscordThreadMemberUpdate,
+  DiscordThreadMembersUpdate,
   DiscordThreadMetadata,
   DiscordTokenExchange,
   DiscordTokenExchangeAuthorizationCode,
@@ -314,3 +319,8 @@ export type CamelizedDiscordArchivedThreads = Camelize<DiscordArchivedThreads>
 export interface CamelizedDiscordActiveThreads extends Camelize<DiscordActiveThreads> {}
 export interface CamelizedDiscordVanityUrl extends Camelize<DiscordVanityUrl> {}
 export interface CamelizedDiscordPrunedCount extends Camelize<DiscordPrunedCount> {}
+export interface CamelizedDiscordGuildOnboarding extends Camelize<DiscordGuildOnboarding> {}
+export interface CamelizedDiscordGuildOnboardingPrompt extends Camelize<DiscordGuildOnboardingPrompt> {}
+export interface CamelizedDiscordGuildOnboardingOption extends Camelize<DiscordGuildOnboardingPromptOption> {}
+export interface CamelizedDiscordEntitlement extends Camelize<DiscordEntitlement> {}
+export interface CamelizedDiscordSku extends Camelize<DiscordSku> {}

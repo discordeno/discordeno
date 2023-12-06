@@ -8,12 +8,17 @@ import type {
   DiscordAutoModerationRuleTriggerMetadataPresets,
   DiscordChannel,
   DiscordEmbed,
+  DiscordGuildOnboardingMode,
+  DiscordGuildOnboardingPrompt,
+  DiscordInstallParams,
+  DiscordMessageFlag,
   DiscordRole,
 } from './discord.js'
 import type {
   AllowedMentionsTypes,
   ApplicationCommandPermissionTypes,
   ApplicationCommandTypes,
+  ApplicationFlags,
   AuditLogEvents,
   BigString,
   ButtonStyles,
@@ -38,6 +43,7 @@ import type {
   VideoQualityModes,
 } from './shared.js'
 
+/** https://discord.com/developers/docs/resources/channel#create-message-jsonform-params */
 export interface CreateMessageOptions {
   /** The message contents (up to 2000 characters) */
   content?: string
@@ -69,6 +75,8 @@ export interface CreateMessageOptions {
   components?: MessageComponents
   /** IDs of up to 3 stickers in the server to send in the message */
   stickerIds?: [BigString] | [BigString, BigString] | [BigString, BigString, BigString]
+  /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set */
+  flags?: DiscordMessageFlag
 }
 
 export type MessageComponents = ActionRow[]
@@ -567,8 +575,10 @@ export interface CreateGuildChannel {
     /** The unicode character of the emoji */
     emojiName?: string
   }>
-  /** the default sort order type used to order posts in forum channels */
+  /** The default sort order type used to order posts in forum channels */
   defaultSortOrder?: SortOrderTypes | null
+  /** The initial ratelimit to set on newly created threads in a channel. */
+  defaultThreadRateLimitPerUser?: number
 }
 
 export interface CreateGlobalApplicationCommandOptions {
@@ -690,7 +700,7 @@ export interface ModifyGuildChannelPositions {
   /** Channel id */
   id: BigString
   /** Sorting position of the channel */
-  position: number | null
+  position?: number | null
   /** Syncs the permission overwrites with the new parent, if moving to a new category */
   lockPositions?: boolean | null
   /** The new parent ID for the channel that is moved */
@@ -714,6 +724,8 @@ export interface ExecuteWebhook {
   threadId?: BigString
   /** Name of the thread to create (target channel has to be type of forum channel) */
   threadName?: string
+  /** Array of tag ids to apply to the thread (requires the webhook channel to be a forum or media channel) */
+  appliedTags?: BigString[]
   /** The message contents (up to 2000 characters) */
   content?: string
   /** Override the default username of the webhook */
@@ -749,23 +761,36 @@ export interface CreateForumPostWithMessage {
   autoArchiveDuration: 60 | 1440 | 4320 | 10080
   /** Amount of seconds a user has to wait before sending another message (0-21600) */
   rateLimitPerUser?: number | null
-  /** The message contents (up to 2000 characters) */
-  content?: string
-  /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: Array<Camelize<DiscordEmbed>>
-  /** Allowed mentions for the message */
-  allowedMentions?: AllowedMentions
+  /** contents of the first message in the forum/media thread */
+  message: {
+    /** The message contents (up to 2000 characters) */
+    content?: string
+    /** Embedded `rich` content (up to 6000 characters) */
+    embeds?: Array<Camelize<DiscordEmbed>>
+    /** Allowed mentions for the message */
+    allowedMentions?: AllowedMentions
+    /** The components you would like to have sent in this message */
+    components?: MessageComponents
+    /** IDs of up to 3 stickers in the server to send in the message */
+    stickerIds?: BigString[]
+    /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set */
+    flags?: DiscordMessageFlag
+  }
+  /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM or a GUILD_MEDIA channel */
+  appliedTags?: BigString[]
   /** The contents of the files being sent */
   files?: FileContent[]
-  /** The components you would like to have sent in this message */
-  components?: MessageComponents
 }
 
 export interface CreateStageInstance {
+  /** The id of the Stage channel */
   channelId: BigString
+  /** The topic of the Stage instance (1-120 characters) */
   topic: string
   /** Notify @everyone that the stage instance has started. Requires the MENTION_EVERYONE permission. */
   sendStartNotification?: boolean
+  /** The guild scheduled event associated with this Stage instance */
+  guildScheduledEventId?: BigString
 }
 
 export interface EditStageInstanceOptions {
@@ -940,7 +965,7 @@ export interface EditMessage {
   /** Embedded `rich` content (up to 6000 characters) */
   embeds?: Array<Camelize<DiscordEmbed>> | null
   /** Edit the flags of the message (only `SUPPRESS_EMBEDS` can currently be set/unset) */
-  flags?: 4 | null
+  flags?: DiscordMessageFlag | null
   /** The contents of the files being sent/edited */
   files?: FileContent[]
   /** Allowed mentions for the message */
@@ -1187,4 +1212,88 @@ export interface BeginGuildPrune {
   computePruneCount?: boolean
   /** Role(s) ro include, default: none */
   includeRoles?: string[]
+}
+
+/** https://discord.com/developers/docs/resources/guild#modify-guild-onboarding-json-params */
+export interface EditGuildOnboarding {
+  /** Prompts shown during onboarding and in customize community */
+  prompts: Array<Camelize<DiscordGuildOnboardingPrompt>>
+  /** Channel IDs that members get opted into automatically */
+  defaultChannelIds: BigString[]
+  /** Whether onboarding is enabled in the guild */
+  enabled: boolean
+  /** Current mode of onboarding */
+  mode: DiscordGuildOnboardingMode
+}
+
+/** https://discord.com/developers/docs/monetization/entitlements#list-entitlements-query-params */
+export interface GetEntitlements {
+  /** User ID to look up entitlements for */
+  userId?: BigString
+  /** Optional list of SKU IDs to check entitlements for */
+  skuIds?: BigString[]
+  /** Retrieve entitlements before this entitlement ID */
+  before?: BigString
+  /** Retrieve entitlements after this entitlement ID */
+  after?: BigString
+  /** Number of entitlements to return, 1-100, default 100 */
+  limit?: number
+  /** Guild ID to look up entitlements for */
+  guildId?: BigString
+  /** Whether or not ended entitlements should be omitted */
+  excludeEnded?: boolean
+}
+
+/** https://discord.com/developers/docs/monetization/entitlements#create-test-entitlement-json-params */
+export interface CreateEntitlement {
+  /** ID of the SKU to grant the entitlement to */
+  skuId: BigString
+  /** ID of the guild or user to grant the entitlement to */
+  ownerId: BigString
+  /** The type of entitlement, guild subscription or user subscription */
+  ownerType: CreateEntitlementOwnerType
+}
+
+/** From the description of CreateEntitlement#ownerType on discord docs */
+export enum CreateEntitlementOwnerType {
+  /** Guild subscription */
+  GuildSubscription = 1,
+  /** User subscription */
+  UserSubscription = 2,
+}
+
+export interface EditApplication {
+  /** Default custom authorization URL for the app, if enabled */
+  customInstallUrl?: string
+  /** Description of the app */
+  description?: string
+  /** Role connection verification URL for the app */
+  roleConnectionsVerificationUrl?: string
+  /** Settings for the app's default in-app authorization link, if enabled */
+  installParams?: DiscordInstallParams
+  /**
+   * App's public flags
+   *
+   * @remarks
+   * Only limited intent flags (`GATEWAY_PRESENCE_LIMITED`, `GATEWAY_GUILD_MEMBERS_LIMITED`, and `GATEWAY_MESSAGE_CONTENT_LIMITED`) can be updated via the API.
+   */
+  flags?: ApplicationFlags
+  /** Icon for the app */
+  icon?: string | null
+  /** Default rich presence invite cover image for the app */
+  coverImage?: string | null
+  /**
+   * Interactions endpoint URL for the app
+   *
+   * @remarks
+   * To update an Interactions endpoint URL via the API, the URL must be valid
+   */
+  interactionEndpointUrl?: string
+  /**
+   * List of tags describing the content and functionality of the app (max of 20 characters per tag)
+   *
+   * @remarks
+   * There can only be a max of 5 tags
+   */
+  tags?: string[]
 }

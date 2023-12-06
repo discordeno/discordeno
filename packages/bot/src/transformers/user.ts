@@ -39,6 +39,7 @@ export function transformUser(bot: Bot, payload: DiscordUser): User {
   if (payload.premium_type && props.premiumType) user.premiumType = payload.premium_type
   if (payload.avatar && props.avatar) user.avatar = iconHashToBigInt(payload.avatar)
   if (payload.banner && props.banner) user.banner = iconHashToBigInt(payload.banner)
+  if (payload.avatar_decoration && props.avatarDecoration) user.avatarDecoration = iconHashToBigInt(payload.avatar_decoration)
   if (payload.accent_color && props.accentColor) user.accentColor = payload.accent_color
 
   return bot.transformers.customizers.user(bot, payload, user)
@@ -84,4 +85,6 @@ export interface User extends BaseUser {
   email?: string
   /** the user's banner, or null if unset */
   banner?: bigint
+  /** the user's avatar decoration, or null if unset */
+  avatarDecoration?: bigint
 }

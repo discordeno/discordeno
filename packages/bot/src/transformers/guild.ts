@@ -144,6 +144,8 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
   if (props.iconHash && payload.guild.icon_hash) guild.iconHash = iconHashToBigInt(payload.guild.icon_hash)
   if (props.presences && payload.guild.presences)
     guild.presences = payload.guild.presences?.map((presence) => bot.transformers.presence(bot, presence as DiscordPresenceUpdate))
+  if (props.safetyAlertsChannelId && payload.guild.safety_alerts_channel_id)
+    guild.safetyAlertsChannelId = bot.transformers.snowflake(payload.guild.safety_alerts_channel_id)
 
   return bot.transformers.customizers.guild(bot, payload.guild, guild)
 }
@@ -213,7 +215,7 @@ export interface Guild {
   discoverySplash?: bigint
   /** Id of the owner */
   ownerId: bigint
-  /** Total permissions for the user in the guild (excludes overwrites) */
+  /** Total permissions for the user in the guild (excludes overwrites and implicit permissions) */
   permissions: bigint
   /** Id of afk channel */
   afkChannelId?: bigint
@@ -251,6 +253,8 @@ export interface Guild {
   welcomeScreen?: WelcomeScreen
   /** Stage instances in the guild */
   stageInstances?: StageInstance[]
-  /** custom guild stickers */
+  /** Custom guild stickers */
   stickers?: Collection<bigint, Sticker>
+  /** The id of the channel where admins and moderators of Community guilds receive safety alerts from Discord */
+  safetyAlertsChannelId?: bigint
 }

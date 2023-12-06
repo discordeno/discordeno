@@ -204,6 +204,9 @@ export interface BotGatewayHandlerOptions {
   INTEGRATION_CREATE: typeof handlers.handleIntegrationCreate
   INTEGRATION_UPDATE: typeof handlers.handleIntegrationUpdate
   INTEGRATION_DELETE: typeof handlers.handleIntegrationDelete
+  ENTITLEMENT_CREATE: typeof handlers.handleEntitlementCreate
+  ENTITLEMENT_UPDATE: typeof handlers.handleEntitlementUpdate
+  ENTITLEMENT_DELETE: typeof handlers.handleEntitlementDelete
 }
 
 export enum MessageFlags {
@@ -227,4 +230,6 @@ export enum MessageFlags {
   FailedToMentionSomeRolesInThread = 1 << 8,
   /** Whether this message will not trigger push and desktop notifications */
   SuppressNotifications = 1 << 12,
+  /** Whether this message is a voice message */
+  IsVoiceMessage = 1 << 13,
 }

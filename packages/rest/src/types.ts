@@ -19,10 +19,12 @@ import type {
   CamelizedDiscordConnection,
   CamelizedDiscordCurrentAuthorization,
   CamelizedDiscordEmoji,
+  CamelizedDiscordEntitlement,
   CamelizedDiscordFollowedChannel,
   CamelizedDiscordGetGatewayBot,
   CamelizedDiscordGuild,
   CamelizedDiscordGuildApplicationCommandPermissions,
+  CamelizedDiscordGuildOnboarding,
   CamelizedDiscordGuildPreview,
   CamelizedDiscordGuildWidget,
   CamelizedDiscordGuildWidgetSettings,
@@ -37,6 +39,7 @@ import type {
   CamelizedDiscordPrunedCount,
   CamelizedDiscordRole,
   CamelizedDiscordScheduledEvent,
+  CamelizedDiscordSku,
   CamelizedDiscordStageInstance,
   CamelizedDiscordSticker,
   CamelizedDiscordStickerPack,
@@ -52,6 +55,7 @@ import type {
   CreateApplicationCommand,
   CreateAutoModerationRuleOptions,
   CreateChannelInvite,
+  CreateEntitlement,
   CreateForumPostWithMessage,
   CreateGlobalApplicationCommandOptions,
   CreateGuild,
@@ -67,9 +71,11 @@ import type {
   CreateStageInstance,
   CreateTemplate,
   DeleteWebhookMessageOptions,
+  EditApplication,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
   EditChannelPermissionOverridesOptions,
+  EditGuildOnboarding,
   EditGuildRole,
   EditGuildStickerOptions,
   EditMessage,
@@ -80,14 +86,15 @@ import type {
   FileContent,
   GetApplicationCommandPermissionOptions,
   GetBans,
+  GetEntitlements,
   GetGroupDmOptions,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetInvite,
   GetMessagesOptions,
   GetReactions,
-  GetScheduledEvents,
   GetScheduledEventUsers,
+  GetScheduledEvents,
   GetUserGuilds,
   GetWebhookMessageOptions,
   InteractionCallbackData,
@@ -365,7 +372,7 @@ export interface RestManager {
    * @returns An instance of the created {@link CamelizedDiscordEmoji}.
    *
    * @remarks
-   * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * Requires the `CREATE_GUILD_EXPRESSIONS` permission.
    *
    * Emojis have a maximum file size of 256 kilobits. Attempting to upload a larger emoji will cause the route to return 400 Bad Request.
    *
@@ -375,7 +382,7 @@ export interface RestManager {
    */
   createEmoji: (guildId: BigString, options: CreateGuildEmoji, reason?: string) => Promise<CamelizedDiscordEmoji>
   /**
-   * Creates a new thread in a forum channel, and sends a message within the created thread.
+   * Creates a new thread in a forum channel or media channel, and sends a message within the created thread.
    *
    * @param channelId - The ID of the forum channel to create the thread within.
    * @param options - The parameters for the creation of the thread.
@@ -388,9 +395,7 @@ export interface RestManager {
    * Fires a _Thread Create_ gateway event.
    * Fires a _Message Create_ gateway event.
    *
-   * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-in-forum-channel}
-   *
-   * @experimental
+   * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-in-forum-or-media-channel}
    */
   createForumThread: (channelId: BigString, options: CreateForumPostWithMessage, reason?: string) => Promise<CamelizedDiscordChannel>
   /**
@@ -473,7 +478,7 @@ export interface RestManager {
    * @return A {@link CamelizedDiscordSticker}
    *
    * @remarks
-   * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * Requires the `CREATE_GUILD_EXPRESSIONS` permission.
    * Fires a Guild Stickers Update Gateway event.
    * Every guilds has five free sticker slots by default, and each Boost level will grant access to more slots.
    * Lottie stickers can only be uploaded on guilds that have either the `VERIFIED` and/or the `PARTNERED` guild feature.
@@ -646,7 +651,8 @@ export interface RestManager {
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
-   * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * For emojis created by the current user, requires either the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
+   * For other emojis, requires the `MANAGE_GUILD_EXPRESSIONS` permission.
    *
    * Fires a _Guild Emojis Update_ gateway event.
    *
@@ -705,7 +711,8 @@ export interface RestManager {
    * @return A {@link CamelizedDiscordSticker}
    *
    * @remarks
-   * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * For stickers created by the current user, requires either the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
+   * For other stickers, requires the `MANAGE_GUILD_EXPRESSIONS` permission.
    * Fires a Guild Stickers Update Gateway event.
    * Every guilds has five free sticker slots by default, and each Boost level will grant access to more slots.
    * Lottie stickers can only be uploaded on guilds that have either the `VERIFIED` and/or the `PARTNERED` guild feature.
@@ -1072,7 +1079,8 @@ export interface RestManager {
    * @returns An instance of the updated {@link CamelizedDiscordEmoji}.
    *
    * @remarks
-   * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * For emojis created by the current user, requires either the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
+   * For other emojis, requires the `MANAGE_GUILD_EXPRESSIONS` permission.
    *
    * Fires a `Guild Emojis Update` gateway event.
    *
@@ -1154,7 +1162,8 @@ export interface RestManager {
    * @return A {@link CamelizedDiscordSticker}
    *
    * @remarks
-   * Requires the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * For stickers created by the current user, requires either the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
+   * For other stickers, requires the `MANAGE_GUILD_EXPRESSIONS` permission.
    * Fires a Guild Stickers Update Gateway event.
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#modify-guild-sticker}
@@ -1493,6 +1502,13 @@ export interface RestManager {
   /** Get the applications info */
   getApplicationInfo: () => Promise<CamelizedDiscordApplication>
   /**
+   * Edit properties of the app associated with the requesting bot user.
+   *
+   * @remarks
+   * Only properties that are passed will be updated.
+   */
+  editApplicationInfo: (body: EditApplication) => Promise<CamelizedDiscordApplication>
+  /**
    * Get the current authentication info for the authenticated user
    *
    * @param bearerToken - Any OAuth2 derived access token
@@ -1707,6 +1723,10 @@ export interface RestManager {
    * @param emojiId - The ID of the emoji to get.
    * @returns An instance of {@link CamelizedDiscordEmoji}.
    *
+   * @remarks
+   * Includes the `user` field if the bot has the `MANAGE_GUILD_EXPRESSIONS` permission,
+   * or if the bot created the emoji and has the the `CREATE_GUILD_EXPRESSIONS` permission.
+   *
    * @see {@link https://discord.com/developers/docs/resources/emoji#get-guild-emoji}
    */
   getEmoji: (guildId: BigString, emojiId: BigString) => Promise<CamelizedDiscordEmoji>
@@ -1715,6 +1735,9 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild which to get the emojis of.
    * @returns A collection of {@link CamelizedDiscordEmoji} objects assorted by emoji ID.
+   *
+   * @remarks
+   * Includes `user` fields if the bot has the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
    *
    * @see {@link https://discord.com/developers/docs/resources/emoji#list-guild-emojis}
    */
@@ -1816,7 +1839,7 @@ export interface RestManager {
    * @param stickerId The ID of the sticker to get
    * @return A {@link CamelizedDiscordSticker}
    *
-   * @remarks Includes the user field if the bot has the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * @remarks Includes the user field if the bot has the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#get-guild-sticker}
    */
@@ -1827,7 +1850,7 @@ export interface RestManager {
    * @param guildId The ID of the guild to get
    * @returns A collection of {@link CamelizedDiscordSticker} objects assorted by sticker ID.
    *
-   * @remarks Includes user fields if the bot has the `MANAGE_EMOJIS_AND_STICKERS` permission.
+   * @remarks Includes user fields if the bot has the `CREATE_GUILD_EXPRESSIONS` or `MANAGE_GUILD_EXPRESSIONS` permission.
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#list-guild-stickers}
    */
@@ -1935,13 +1958,13 @@ export interface RestManager {
    */
   getMessages: (channelId: BigString, options?: GetMessagesOptions) => Promise<CamelizedDiscordMessage[]>
   /**
-   * Returns the list of sticker packs available to Nitro subscribers.
+   * Returns the list of sticker packs available.
    *
    * @returns A collection of {@link StickerPack} objects assorted by sticker ID.
    *
-   * @see {@link https://discord.com/developers/docs/resources/sticker#list-nitro-sticker-packs}
+   * @see {@link https://discord.com/developers/docs/resources/sticker#list-sticker-packs}
    */
-  getNitroStickerPacks: () => Promise<CamelizedDiscordStickerPack[]>
+  getStickerPacks: () => Promise<CamelizedDiscordStickerPack[]>
   /**
    * Gets the initial message response to an interaction.
    *
@@ -2269,6 +2292,9 @@ export interface RestManager {
    * @param guildId - The ID of the guild to get the widget of.
    * @returns An instance of {@link GuildWidget}.
    *
+   * @remarks
+   * Fires an `INVITE_CREATED` Gateway event when an invite channel is defined and a new `Invite` is generated.
+   *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-widget}
    */
   getWidget: (guildId: BigString) => Promise<CamelizedDiscordGuildWidget>
@@ -2508,12 +2534,14 @@ export interface RestManager {
    */
   syncGuildTemplate: (guildId: BigString) => Promise<CamelizedDiscordTemplate>
   /**
-   * Triggers a typing indicator for the bot user.
+   * Triggers a typing indicator for the specified channel, which expires after 10 seconds.
    *
    * @param channelId - The ID of the channel in which to trigger the typing indicator.
    *
    * @remarks
-   * Generally, bots should _not_ use this route.
+   * Generally bots should **not** use this route.
+   * However, if a bot is responding to a command and expects the computation to take a few seconds,
+   * this endpoint may be called to let the user know that the bot is processing their message.
    *
    * Fires a _Typing Start_ gateway event.
    *
@@ -2756,6 +2784,59 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#unpin-message}
    */
   unpinMessage: (channelId: BigString, messageId: BigString, reason?: string) => Promise<void>
+  /**
+   * Get the guild onboarding
+   *
+   * @param guildId - The guild to get the onboarding from
+   */
+  getGuildOnboarding: (guildId: BigString) => Promise<CamelizedDiscordGuildOnboarding>
+  /**
+   * Modifies the onboarding configuration of the guild.
+   *
+   * @param guildId - The guild to get the onboarding from
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   *
+   * @remarks
+   * Requires the `MANAGE_GUILD` and `MANAGE_ROLES` permissions.
+   *
+   * Onboarding enforces constraints when enabled. These constraints are:
+   *  - at least 7 default channels
+   *  - at least 5 of the 7 channels must allow sending messages to the @everyone role
+   *
+   * The `mode` field modifies what is considered when enforcing these constraints.
+   */
+  editGuildOnboarding: (guildId: BigString, options: EditGuildOnboarding, reason?: string) => Promise<CamelizedDiscordGuildOnboarding>
+  /**
+   * Returns all entitlements for a given app, active and expired.
+   *
+   * @param applicationId - The id of the application to get the entitlements
+   * @param {GetEntitlements} [options] - The optional query params for the endpoint
+   */
+  listEntitlements: (applicationId: BigString, options?: GetEntitlements) => Promise<CamelizedDiscordEntitlement[]>
+  /**
+   * Creates a test entitlement to a given SKU for a given guild or user. Discord will act as though that user or guild has entitlement to your premium offering.
+   *
+   * @param applicationId - The id of the application to create the entitlement
+   * @param body - The options for new entitlement
+   *
+   * @remarks
+   * This endpoint returns a partial entitlement object.
+   * It will not contain subscription_id, starts_at, or ends_at, as it's valid in perpetuity.
+   */
+  createTestEntitlement: (applicationId: BigString, body: CreateEntitlement) => Promise<Partial<CamelizedDiscordEntitlement>>
+  /**
+   * Deletes a currently-active test entitlement. Discord will act as though that user or guild no longer has entitlement to your premium offering.
+   *
+   * @param applicationId - The id of the application from where delete the entitlement
+   * @param entitlementId - The id of the entitlement to delete
+   */
+  deleteTestEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
+  /**
+   * Returns all SKUs for a given application
+   *
+   * @param applicationId - The id of the application to get the SKUs
+   */
+  listSkus: (applicationId: BigString) => Promise<CamelizedDiscordSku[]>
 }
 
 export type RequestMethods = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT'
