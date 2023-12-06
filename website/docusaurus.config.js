@@ -22,6 +22,17 @@ const config = {
   deploymentBranch: 'gh-pages',
   trailingSlash: false,
 
+  webpack: {
+    jsLoader: isServer => ({
+      loader: require.resolve('esbuild-loader'),
+      options: {
+        loader: 'tsx',
+        format: isServer ? 'cjs' : undefined,
+        target: isServer ? 'node12' : 'es2017',
+      },
+    }),
+  },
+
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
@@ -146,6 +157,7 @@ const config = {
         searchResultContextMaxLength: 50,
       },
     ],
+    './webpack-docusaurus-plugin',
   ],
 }
 
