@@ -2,7 +2,6 @@ import {
   ApplicationFlags,
   ButtonStyles,
   InteractionTypes,
-  MemberToggles,
   MessageActivityTypes,
   MessageComponentTypes,
   MessageTypes,
@@ -14,10 +13,9 @@ import {
   createBot,
   iconHashToBigInt,
   type Bot,
-  type DiscordMember,
   type DiscordMessage,
-  type DiscordUser,
 } from '@discordeno/bot'
+import { MemberToggles } from '@discordeno/bot/dist/transformers/index.js'
 import { memoryBenchmark } from '../utils/memoryBenchmark.js'
 
 export const CHANNEL_MENTION_REGEX = /<#[0-9]+>/g
@@ -79,9 +77,8 @@ const USER = {
   public_flags: UserFlags.BotHttpInteractions,
   system: true,
   username: 'skillz',
-  global_name: 'skillz',
   verified: true,
-} as DiscordUser
+}
 const MEMBER = {
   nick: 'John',
   roles: ['111111111111111111', '222222222222222222', '333333333333333333'],
@@ -91,7 +88,7 @@ const MEMBER = {
   mute: true,
   pending: false,
   permissions: '2147483647',
-} as DiscordMember
+}
 
 console.log('before the bench')
 await memoryBenchmark(
@@ -379,7 +376,7 @@ await memoryBenchmark(
         tts: true,
         type: MessageTypes.Default,
         webhook_id: GUILD_ID,
-      }) as DiscordMessage,
+      }) as unknown as DiscordMessage,
   ), // array of event to test with
   { times: 1, log: false, table: false },
 )
@@ -763,7 +760,7 @@ await memoryBenchmark(
         tts: true,
         type: MessageTypes.Default,
         webhook_id: GUILD_ID,
-      }) as DiscordMessage,
+      }) as unknown as DiscordMessage,
   ), // array of event to test with
   { times: 1, log: false, table: false },
 )
