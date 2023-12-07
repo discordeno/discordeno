@@ -1,10 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# Test file for testing dd changes
-debug.ts
-
-testing
-
 # dependencies
 node_modules
 
@@ -15,34 +8,11 @@ node_modules
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-proxies/*/.yarn/*
-!proxies/*/.yarn/patches
-!proxies/*/.yarn/plugins
-!proxies/*/.yarn/releases
-!proxies/*/.yarn/sdks
-!proxies/*/.yarn/versions
-site/docs/generated/classes
-site/docs/generated/enums
-site/docs/generated/interfaces
-site/docs/generated/modules
-website/docs/generated/classes/*.md
-website/docs/generated/enums/*.md
-website/docs/generated/interfaces/*.md
-website/docs/generated/modules/*.md
-website/.yarn/
 # testing
 coverage
 
 # build
 dist
-denoTestsDist
-bunTestsDist
-benchDist
-out
-build
-.docusaurus
-.cache-loader
-/db
 
 # misc
 .DS_Store
