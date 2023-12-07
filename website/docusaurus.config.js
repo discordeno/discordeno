@@ -1,8 +1,7 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require('prism-react-renderer/themes/github')
-const darkCodeTheme = require('prism-react-renderer/themes/dracula')
+const { themes } = require('prism-react-renderer')
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -22,6 +21,17 @@ const config = {
   projectName: 'discordeno', // Usually your repo name.
   deploymentBranch: 'gh-pages',
   trailingSlash: false,
+
+  webpack: {
+    jsLoader: isServer => ({
+      loader: require.resolve('esbuild-loader'),
+      options: {
+        loader: 'tsx',
+        format: isServer ? 'cjs' : undefined,
+        target: isServer ? 'node12' : 'es2017',
+      },
+    }),
+  },
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -74,6 +84,20 @@ const config = {
             position: 'left',
             label: 'Documentation',
           },
+          {
+            type: 'docSidebar',
+            sidebarId: 'old_docs',
+            position: 'left',
+            label: 'Old Docs',
+            docsPluginId: 'old_docs',
+          },
+          {
+            type: 'docSidebar',
+            sidebarId: 'tutorial',
+            position: 'left',
+            label: 'Tutorial',
+            docsPluginId: 'tutorial',
+          },
           { to: '/blog', label: 'Blog', position: 'left' },
           {
             href: 'https://discord.gg/ddeno',
@@ -96,6 +120,44 @@ const config = {
               {
                 label: 'Documentation',
                 to: '/docs/intro',
+              },
+            ],
+          },
+          {
+            title: 'Old Docs',
+            items: [
+              {
+                label: 'Introduction',
+                to: '/old_docs/intro',
+              },
+              {
+                label: 'Getting Started',
+                to: '/old_docs/getting-started',
+              },
+              {
+                label: 'FAQ',
+                to: '/old_docs/frequently-asked-questions',
+              },
+              {
+                label: 'Benchmark',
+                to: '/old_docs/benchmark',
+              },
+            ],
+          },
+          {
+            title: 'Tutorial',
+            items: [
+              {
+                label: 'Big Bot',
+                to: '/tutorial/big-bot-guide/step-by-step',
+              },
+              {
+                label: 'Node.js',
+                to: '/tutorial/nodejs/getting-started',
+              },
+              {
+                label: 'Amethyst',
+                to: '/tutorial/amethyst/intro',
               },
             ],
           },
@@ -125,12 +187,34 @@ const config = {
         copyright: `Copyright © 2021-${new Date().getFullYear()}, Discordeno.`,
       },
       prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
+        theme: themes.github,
+        darkTheme: themes.dracula,
       },
     }),
 
   plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      {
+        id: 'old_docs',
+        path: 'old_docs',
+        routeBasePath: 'old_docs',
+        sidebarPath: require.resolve('./sidebars.js'),
+        editUrl: 'https://github.com/discordeno/discordeno/tree/main/site/',
+      },
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      {
+        id: 'tutorial',
+        path: 'tutorial',
+        routeBasePath: 'tutorial',
+        sidebarPath: require.resolve('./sidebars.js'),
+        editUrl: 'https://github.com/discordeno/discordeno/tree/main/site/',
+      },
+    ],
     [
       require.resolve('@easyops-cn/docusaurus-search-local'),
       {
@@ -147,6 +231,7 @@ const config = {
         searchResultContextMaxLength: 50,
       },
     ],
+    './webpack-docusaurus-plugin',
   ],
 }
 
