@@ -1,6 +1,6 @@
 {
   "name": "@discordeno/types",
-  "version": "19.0.0-alpha.1",
+  "version": "19.0.0-beta.1",
   "main": "./dist/esm/index.js",
   "exports": {
     "import": "./dist/esm/index.js",
