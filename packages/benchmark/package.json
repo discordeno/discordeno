@@ -24,7 +24,7 @@
     "bench": "node dist/index.js"
   },
   "dependencies": {
-    "@discordeno/bot": "19.0.0-alpha.1",
+    "@discordeno/bot": "latest",
     "@discordeno/gateway": "19.0.0-alpha.1",
     "@discordeno/rest": "19.0.0-alpha.1",
     "@discordeno/types": "19.0.0-alpha.1",

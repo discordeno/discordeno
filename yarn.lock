@@ -54,6 +54,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@discordeno/bot@npm:latest":
+  version: 19.0.0-next.4384457
+  resolution: "@discordeno/bot@npm:19.0.0-next.4384457"
+  dependencies:
+    "@discordeno/gateway": "npm:19.0.0-next.4384457"
+    "@discordeno/rest": "npm:19.0.0-next.4384457"
+    "@discordeno/types": "npm:19.0.0-next.4384457"
+    "@discordeno/utils": "npm:19.0.0-next.4384457"
+  checksum: 32860748710a721eaada18a7b15b63915b7f559de0029bc36fca9fc1fd8fe74ea3cb4f85fb1dbcd6c7dba17206cdba916022c713012cb9380c3cd552124de877
+  languageName: node
+  linkType: hard
+
 "@discordeno/gateway@npm:19.0.0-alpha.1, @discordeno/gateway@workspace:packages/gateway":
   version: 0.0.0-use.local
   resolution: "@discordeno/gateway@workspace:packages/gateway"
@@ -80,6 +92,17 @@ __metadata:
     ws: "npm:^8.14.2"
   languageName: unknown
   linkType: soft
+
+"@discordeno/gateway@npm:19.0.0-next.4384457":
+  version: 19.0.0-next.4384457
+  resolution: "@discordeno/gateway@npm:19.0.0-next.4384457"
+  dependencies:
+    "@discordeno/types": "npm:19.0.0-next.4384457"
+    "@discordeno/utils": "npm:19.0.0-next.4384457"
+    ws: "npm:^8.13.0"
+  checksum: 4ef5d78a219cf85cdfce7b5014395fc6271050b5b88b952dfd43d63c9e43b52f9f1f5b03d96476064fa1afa78aa2ed8a4d13d32162c90cf0c754ad7974bda259
+  languageName: node
+  linkType: hard
 
 "@discordeno/rest@npm:19.0.0-alpha.1, @discordeno/rest@workspace:packages/rest":
   version: 0.0.0-use.local
@@ -109,6 +132,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@discordeno/rest@npm:19.0.0-next.4384457":
+  version: 19.0.0-next.4384457
+  resolution: "@discordeno/rest@npm:19.0.0-next.4384457"
+  dependencies:
+    "@discordeno/types": "npm:19.0.0-next.4384457"
+    "@discordeno/utils": "npm:19.0.0-next.4384457"
+    dotenv: "npm:^16.0.3"
+    node-fetch: "npm:^3.3.1"
+  checksum: 1e21cd35b4cff1b6695e0daa309aab5d109f30bc669eefe76bd9f9a1024b131a3bbb82f829cb391a109251b55201abcb4a1615a073295ee065b42cfbfdf7e140
+  languageName: node
+  linkType: hard
+
 "@discordeno/types@npm:19.0.0-alpha.1, @discordeno/types@workspace:packages/types":
   version: 0.0.0-use.local
   resolution: "@discordeno/types@workspace:packages/types"
@@ -129,6 +164,13 @@ __metadata:
     typescript: "npm:5.2.2"
   languageName: unknown
   linkType: soft
+
+"@discordeno/types@npm:19.0.0-next.4384457":
+  version: 19.0.0-next.4384457
+  resolution: "@discordeno/types@npm:19.0.0-next.4384457"
+  checksum: d7491e4377f709d834d9214c5b471e922acf34c43653bb58262f53ee68c5a0b37fce961695854e6143bfad3ff8c9d6f78b332ddda8377179a13b73678aa76e90
+  languageName: node
+  linkType: hard
 
 "@discordeno/utils@npm:19.0.0-alpha.1, @discordeno/utils@workspace:packages/utils":
   version: 0.0.0-use.local
@@ -153,6 +195,17 @@ __metadata:
     typescript: "npm:5.2.2"
   languageName: unknown
   linkType: soft
+
+"@discordeno/utils@npm:19.0.0-next.4384457":
+  version: 19.0.0-next.4384457
+  resolution: "@discordeno/utils@npm:19.0.0-next.4384457"
+  dependencies:
+    "@discordeno/types": "npm:19.0.0-next.4384457"
+    node-fetch: "npm:^3.3.1"
+    tweetnacl: "npm:^1.0.3"
+  checksum: 261db3111966d4ce97e44c38a9fa28c4cbbef41de0951a31534e51c5df3a1532056dfa6b5be0107e56753f86240600d40e2142cc1699d3ce7c597ada93e107ab
+  languageName: node
+  linkType: hard
 
 "@eslint-community/eslint-utils@npm:^4.1.2, @eslint-community/eslint-utils@npm:^4.2.0, @eslint-community/eslint-utils@npm:^4.4.0":
   version: 4.4.0
@@ -1191,7 +1244,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "benchmark@workspace:packages/benchmark"
   dependencies:
-    "@discordeno/bot": "npm:19.0.0-alpha.1"
+    "@discordeno/bot": "npm:latest"
     "@discordeno/gateway": "npm:19.0.0-alpha.1"
     "@discordeno/rest": "npm:19.0.0-alpha.1"
     "@discordeno/types": "npm:19.0.0-alpha.1"
@@ -1967,6 +2020,13 @@ __metadata:
   dependencies:
     esutils: "npm:^2.0.2"
   checksum: b4b28f1df5c563f7d876e7461254a4597b8cabe915abe94d7c5d1633fed263fcf9a85e8d3836591fc2d040108e822b0d32758e5ec1fe31c590dc7e08086e3e48
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^16.0.3":
+  version: 16.0.3
+  resolution: "dotenv@npm:16.0.3"
+  checksum: d6788c8e40b35ad9a9ca29249dccf37fa6b3ad26700fcbc87f2f41101bf914f5193a04e36a3d23de70b1dcb8e5d5a3b21e151debace2c4cd08d868be500a1b29
   languageName: node
   linkType: hard
 
@@ -4283,6 +4343,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-fetch@npm:^3.3.1":
+  version: 3.3.1
+  resolution: "node-fetch@npm:3.3.1"
+  dependencies:
+    data-uri-to-buffer: "npm:^4.0.0"
+    fetch-blob: "npm:^3.1.4"
+    formdata-polyfill: "npm:^4.0.10"
+  checksum: 9fed9ed9ab83f719ffbe51b5029f32ee9820a725afc57a3e6a7e5742a05dd38b22d005f2d03d70e8e0924b497e513b08992843bb1bc7f0a15b72ad071d8c1271
+  languageName: node
+  linkType: hard
+
 "node-fetch@npm:^3.3.2":
   version: 3.3.2
   resolution: "node-fetch@npm:3.3.2"
@@ -6062,6 +6133,21 @@ __metadata:
   version: 1.0.2
   resolution: "wrappy@npm:1.0.2"
   checksum: 159da4805f7e84a3d003d8841557196034155008f817172d4e986bd591f74aa82aa7db55929a54222309e01079a65a92a9e6414da5a6aa4b01ee44a511ac3ee5
+  languageName: node
+  linkType: hard
+
+"ws@npm:^8.13.0":
+  version: 8.13.0
+  resolution: "ws@npm:8.13.0"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ">=5.0.2"
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: 1769532b6fdab9ff659f0b17810e7501831d34ecca23fd179ee64091dd93a51f42c59f6c7bb4c7a384b6c229aca8076fb312aa35626257c18081511ef62a161d
   languageName: node
   linkType: hard
 
