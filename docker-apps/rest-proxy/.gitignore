@@ -1,0 +1,65 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Test file for testing dd changes
+debug.ts
+
+testing
+
+# dependencies
+node_modules
+
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+proxies/*/.yarn/*
+!proxies/*/.yarn/patches
+!proxies/*/.yarn/plugins
+!proxies/*/.yarn/releases
+!proxies/*/.yarn/sdks
+!proxies/*/.yarn/versions
+site/docs/generated/classes
+site/docs/generated/enums
+site/docs/generated/interfaces
+site/docs/generated/modules
+website/docs/generated/classes/*.md
+website/docs/generated/enums/*.md
+website/docs/generated/interfaces/*.md
+website/docs/generated/modules/*.md
+website/.yarn/
+# testing
+coverage
+
+# build
+dist
+denoTestsDist
+bunTestsDist
+benchDist
+out
+build
+.docusaurus
+.cache-loader
+/db
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# turbo
+.turbo
