@@ -1,5 +1,5 @@
 {
-  "name": "rest-proxy",
+  "name": "rest-passthrough",
   "private": true,
   "type": "module",
   "version": "2.0.0",

@@ -1430,9 +1430,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rest-proxy@workspace:.":
+"rest-passthrough@workspace:.":
   version: 0.0.0-use.local
-  resolution: "rest-proxy@workspace:."
+  resolution: "rest-passthrough@workspace:."
   dependencies:
     "@discordeno/rest": "npm:19.0.0-next.fb947f5"
     "@fastify/env": "npm:^4.3.0"
@@ -1684,9 +1684,9 @@ __metadata:
   linkType: hard
 
 "toad-cache@npm:^3.3.0":
-  version: 3.3.1
-  resolution: "toad-cache@npm:3.3.1"
-  checksum: 315ee5477cbeb01c690bfee5718f5b3a73bce5eef1997cb9341085590043286d96e8ea545ffd5fe6520b2dc10b5aed06c676aaef8cde4a4be45c7732d3d7ca1a
+  version: 3.4.1
+  resolution: "toad-cache@npm:3.4.1"
+  checksum: 78502b2943c203959a5d2e05fddfa713ba57782875887e226533d0241c669336ffa533c0e5a273733fb4c7ec79d3916f925d892bc317fff4f141f15300df6fc1
   languageName: node
   linkType: hard
 
