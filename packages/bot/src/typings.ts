@@ -204,6 +204,9 @@ export interface BotGatewayHandlerOptions {
   INTEGRATION_CREATE: typeof handlers.handleIntegrationCreate
   INTEGRATION_UPDATE: typeof handlers.handleIntegrationUpdate
   INTEGRATION_DELETE: typeof handlers.handleIntegrationDelete
+  ENTITLEMENT_CREATE: typeof handlers.handleEntitlementCreate
+  ENTITLEMENT_UPDATE: typeof handlers.handleEntitlementUpdate
+  ENTITLEMENT_DELETE: typeof handlers.handleEntitlementDelete
 }
 
 export enum MessageFlags {

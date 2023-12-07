@@ -579,6 +579,31 @@ export function createRoutes(): RestRoutes {
       },
     },
 
+    monetization: {
+      entitlements: (applicationId, options) => {
+        let url = `/applications/${applicationId}/entitlements?`
+
+        if (options) {
+          if (options.after) url += `after=${options.after}`
+          if (options.before) url += `&before=${options.before}`
+          if (options.excludeEnded) url += `&exclude_ended=${options.excludeEnded}`
+          if (options.guildId) url += `&guild_id=${options.guildId}`
+          if (options.limit) url += `&limit=${options.limit}`
+          if (options.skuIds) url += `&sku_ids=${options.skuIds.join(',')}`
+          if (options.userId) url += `&user_id=${options.userId}`
+        }
+
+        return url
+      },
+      entitlement: (applicationId, entitlementId) => {
+        return `/applications/${applicationId}/entitlements/${entitlementId}`
+      },
+
+      skus: (applicationId) => {
+        return `/applications/${applicationId}/skus`
+      },
+    },
+
     // User endpoints
     user(userId) {
       return `/users/${userId}`
