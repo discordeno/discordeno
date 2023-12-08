@@ -148,6 +148,15 @@ export interface CreateRestManagerOptions {
      * @default "authorization" // For compatibility purposes
      */
     authorizationHeader?: string
+    /**
+     * The endpoint to use in the rest proxy to update the bearer tokens
+     *
+     * @remarks
+     * Should not include a `/` in the start
+     *
+     * This value is actually required if you want to use `updateTokenQueues`
+     */
+    updateBearerTokenEndpoint?: string
   }
   /**
    * The api versions which can be used to make requests.
@@ -179,6 +188,8 @@ export interface RestManager {
   authorization?: string
   /** The authorization header name to attach when sending requests to the proxy */
   authorizationHeader: string
+  /** The endpoint to use for `updateTokenQueues` when working with a rest proxy */
+  updateBearerTokenEndpoint?: string
   /** The maximum amount of times a request should be retried. Defaults to Infinity */
   maxRetryCount: number
   /** Whether or not the manager is rate limited globally across all requests. Defaults to false. */

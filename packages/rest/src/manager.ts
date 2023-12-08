@@ -93,6 +93,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     globallyRateLimited: false,
     invalidBucket: createInvalidRequestBucket({}),
     isProxied: !baseUrl.startsWith(DISCORD_API_URL),
+    updateBearerTokenEndpoint: options.proxy?.updateBearerTokenEndpoint,
     maxRetryCount: Infinity,
     processingRateLimitedPaths: false,
     queues: new Map(),
@@ -127,6 +128,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async updateTokenQueues(oldToken, newToken) {
       if (rest.isProxied) {
+        if (!rest.updateBearerTokenEndpoint) {
+          throw new Error(
+            "The 'proxy.updateBearerTokenEndpoint' option needs to be set when using a rest proxy and needed to call 'updateTokenQueues'",
+          )
+        }
+
         const headers = {
           'content-type': 'application/json',
         } as Record<string, string>
@@ -135,7 +142,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           headers[rest.authorizationHeader] = rest.authorization
         }
 
-        await fetch(`${rest.baseUrl}/discordeno/token-update`, {
+        await fetch(`${rest.baseUrl}/${rest.updateBearerTokenEndpoint}`, {
           method: 'POST',
           body: JSON.stringify({
             oldToken,
