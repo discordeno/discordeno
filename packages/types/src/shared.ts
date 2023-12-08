@@ -242,6 +242,8 @@ export enum GuildFeatures {
   InvitesDisabled = 'INVITES_DISABLED',
   /** Guild has access to set an animated guild banner image */
   AnimatedBanner = 'ANIMATED_BANNER',
+  /** Guild has disabled alerts for join raids in the configured safety alerts channel */
+  RaidAlertsDisabled = 'RAID_ALERTS_DISABLED',
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-mfa-level */
@@ -635,13 +637,13 @@ export enum BitwisePermissionFlags {
   MANAGE_ROLES = 0x0000000010000000,
   /** Allows management and editing of webhooks */
   MANAGE_WEBHOOKS = 0x0000000020000000,
-  /** Allows management and editing of emojis, stickers, and soundboard sounds */
+  /** Allows for editing and deleting emojis, stickers, and soundboard sounds created by all users */
   MANAGE_GUILD_EXPRESSIONS = 0x0000000040000000,
   /** Allows members to use application commands in text channels */
   USE_SLASH_COMMANDS = 0x0000000080000000,
   /** Allows for requesting to speak in stage channels. */
   REQUEST_TO_SPEAK = 0x0000000100000000,
-  /** Allows for creating, editing, and deleting scheduled events */
+  /** Allows for editing and deleting scheduled events created by all users */
   MANAGE_EVENTS = 0x0000000200000000,
   /** Allows for deleting and archiving threads, and viewing all private threads */
   MANAGE_THREADS = 0x0000000400000000,
@@ -661,6 +663,10 @@ export enum BitwisePermissionFlags {
   VIEW_CREATOR_MONETIZATION_ANALYTICS = 0x0000020000000000,
   /** Allows for using soundboard in a voice channel. */
   USE_SOUNDBOARD = 0x0000040000000000,
+  /** Allows for creating emojis, stickers, and soundboard sounds, and editing and deleting those created by the current user */
+  CREATE_GUILD_EXPRESSIONS = 0x0000080000000000,
+  /** Allows for creating scheduled events, and editing and deleting those created by the current user */
+  CREATE_EVENTS = 0x0000100000000000,
   /** Allows the usage of custom soundboards sounds from other servers */
   USE_EXTERNAL_SOUNDS = 0x0000200000000000,
   /** Allows sending voice messages */
@@ -790,6 +796,9 @@ export type GatewayDispatchEventNames =
   | 'VOICE_STATE_UPDATE'
   | 'VOICE_SERVER_UPDATE'
   | 'WEBHOOKS_UPDATE'
+  | 'ENTITLEMENT_CREATE'
+  | 'ENTITLEMENT_UPDATE'
+  | 'ENTITLEMENT_DELETE'
 
 export type GatewayEventNames = GatewayDispatchEventNames | 'READY' | 'RESUMED'
 
@@ -947,6 +956,8 @@ export enum InteractionResponseTypes {
   ApplicationCommandAutocompleteResult = 8,
   /** For Command or Component interactions, send a Modal response */
   Modal = 9,
+  /** Respond to an interaction with an upgrade button, only available for apps with monetization enabled */
+  PremiumRequired = 10,
 }
 
 export enum SortOrderTypes {
