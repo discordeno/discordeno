@@ -1,0 +1,13 @@
+name: Node CI
+on: [pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: danger/danger-js@11
+        with:
+          args: --text-only
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
