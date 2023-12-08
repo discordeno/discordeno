@@ -108,10 +108,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       }
     },
 
-    checkRateLimits(url, authorization) {
-      const queueBaseKey = authorization ?? `Bot ${rest.token}`
-
-      const ratelimited = rest.rateLimitedPaths.get(`${queueBaseKey}${url}`)
+    checkRateLimits(url, requestAuthorization) {
+      const ratelimited = rest.rateLimitedPaths.get(`${requestAuthorization}${url}`)
 
       const global = rest.rateLimitedPaths.get('global')
       const now = Date.now()
@@ -127,36 +125,63 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return false
     },
 
-    updateTokenQueues(oldToken, newToken) {
-      const newAuthentication = `Bearer ${newToken}`
+    async updateTokenQueues(oldToken, newToken) {
+      if (rest.isProxied) {
+        const headers = {
+          'content-type': 'application/json',
+        } as Record<string, string>
+
+        if (rest.authorization !== undefined) {
+          headers[rest.authorizationHeader] = rest.authorization
+        }
+
+        await fetch(`${rest.baseUrl}/discordeno/token-update`, {
+          method: 'POST',
+          body: JSON.stringify({
+            oldToken,
+            newToken,
+          }),
+          headers,
+        })
+
+        return
+      }
+
+      const newAuthorization = `Bearer ${newToken}`
 
       // Update all the queues
-      rest.queues.forEach((queue, key) => {
-        if (!key.startsWith(`Bearer ${oldToken}`)) return
+      for (const [key, queue] of rest.queues.entries()) {
+        if (!key.startsWith(`Bearer ${oldToken}`)) continue
 
         rest.queues.delete(key)
-        rest.queues.set(`${newAuthentication}${queue.url}`, queue)
+        queue.requestAuthorization = newAuthorization
 
-        queue.queueBaseKey = newAuthentication
+        const newKey = `${newAuthorization}${queue.url}`
+        const newQueue = rest.queues.get(newKey)
 
-        // Update all the pending requests
-        queue.pending.forEach((request) => {
-          if (request.requestBodyOptions?.headers?.authorization !== `Bearer ${oldToken}`) return
-          request.requestBodyOptions.headers.authorization = newAuthentication
-        })
-      })
+        // Merge the queues
+        if (newQueue) {
+          newQueue.waiting.unshift(...queue.waiting)
+          newQueue.pending.unshift(...queue.pending)
 
-      rest.rateLimitedPaths.forEach((ratelimitPath, key) => {
-        if (!key.startsWith(`Bearer ${oldToken}`)) return
+          queue.waiting = []
+          queue.pending = []
 
-        rest.rateLimitedPaths.delete(key)
-        rest.rateLimitedPaths.set(`${newAuthentication}${ratelimitPath.url}`, ratelimitPath)
+          queue.cleanup()
+        } else {
+          rest.queues.set(newKey, queue)
+        }
+      }
+
+      for (const [key, ratelimitPath] of rest.rateLimitedPaths.entries()) {
+        if (!key.startsWith(`Bearer ${oldToken}`)) continue
+
+        rest.rateLimitedPaths.set(`${newAuthorization}${ratelimitPath.url}`, ratelimitPath)
 
         if (ratelimitPath.bucketId) {
-          rest.rateLimitedPaths.delete(`Bearer ${oldToken}${ratelimitPath.bucketId}`)
-          rest.rateLimitedPaths.set(`${newAuthentication}${ratelimitPath.bucketId}`, ratelimitPath)
+          rest.rateLimitedPaths.set(`${newAuthorization}${ratelimitPath.bucketId}`, ratelimitPath)
         }
-      })
+      }
     },
 
     changeToDiscordFormat(obj: any): any {
@@ -295,7 +320,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
-    processHeaders(url, headers, queueBaseKey) {
+    processHeaders(url, headers, requestAuthorization) {
       let rateLimited = false
 
       // GET ALL NECESSARY HEADERS
@@ -307,7 +332,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const bucketId = headers.get(RATE_LIMIT_BUCKET_HEADER) ?? undefined
       const limit = headers.get(RATE_LIMIT_LIMIT_HEADER)
 
-      rest.queues.get(`${queueBaseKey}${url}`)?.handleCompletedRequest({
+      rest.queues.get(`${requestAuthorization}${url}`)?.handleCompletedRequest({
         remaining: remaining ? Number(remaining) : undefined,
         interval: retryAfter ? Number(retryAfter) * 1000 : undefined,
         max: limit ? Number(limit) : undefined,
@@ -318,7 +343,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         rateLimited = true
 
         // SAVE THE URL AS LIMITED, IMPORTANT FOR NEW REQUESTS BY USER WITHOUT BUCKET
-        rest.rateLimitedPaths.set(`${queueBaseKey}${url}`, {
+        rest.rateLimitedPaths.set(`${requestAuthorization}${url}`, {
           url,
           resetTimestamp: reset,
           bucketId,
@@ -326,7 +351,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
         // SAVE THE BUCKET AS LIMITED SINCE DIFFERENT URLS MAY SHARE A BUCKET
         if (bucketId) {
-          rest.rateLimitedPaths.set(`${queueBaseKey}${bucketId}`, {
+          rest.rateLimitedPaths.set(`${requestAuthorization}${bucketId}`, {
             url,
             resetTimestamp: reset,
             bucketId,
@@ -355,7 +380,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         })
 
         if (bucketId) {
-          rest.rateLimitedPaths.set(queueBaseKey, {
+          rest.rateLimitedPaths.set(requestAuthorization, {
             url: 'global',
             resetTimestamp: globalReset,
             bucketId,
@@ -376,8 +401,8 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const loggingHeaders = { ...payload.headers }
 
       if (payload.headers.authorization) {
-        const authenticationScheme = payload.headers.authorization?.split(' ')[0]
-        loggingHeaders.authorization = `${authenticationScheme} tokenhere`
+        const authorizationScheme = payload.headers.authorization?.split(' ')[0]
+        loggingHeaders.authorization = `${authorizationScheme} tokenhere`
       }
 
       logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders })
@@ -474,20 +499,21 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return
       }
 
-      const queueBaseKey = request.requestBodyOptions?.headers?.authorization ?? `Bot ${rest.token}`
+      const authorization = request.requestBodyOptions?.headers?.authorization ?? `Bot ${rest.token}`
 
-      const queue = rest.queues.get(`${queueBaseKey}${url}`)
+      const queue = rest.queues.get(`${authorization}${url}`)
 
       if (queue !== undefined) {
         queue.makeRequest(request)
       } else {
         // CREATES A NEW QUEUE
-        const bucketQueue = new Queue(rest, { url, deleteQueueDelay: rest.deleteQueueDelay, queueBaseKey })
+        const bucketQueue = new Queue(rest, { url, deleteQueueDelay: rest.deleteQueueDelay, requestAuthorization: authorization })
+
+        // Save queue
+        rest.queues.set(`${authorization}${url}`, bucketQueue)
 
         // Add request to queue
         bucketQueue.makeRequest(request)
-        // Save queue
-        rest.queues.set(`${queueBaseKey}${url}`, bucketQueue)
       }
     },
 

@@ -200,9 +200,9 @@ export interface RestManager {
   /** Whether or not the rest manager should keep objects in raw snake case from discord. */
   preferSnakeCase: (enabled: boolean) => RestManager
   /** Check the rate limits for a url or a bucket. */
-  checkRateLimits: (url: string, authorization?: string) => number | false
+  checkRateLimits: (url: string, requestAuthorization: string) => number | false
   /* Update the queues and ratelimit information to adapt to the new token */
-  updateTokenQueues: (oldToken: string, newToken: string) => void
+  updateTokenQueues: (oldToken: string, newToken: string) => Promise<void>
   /** Reshapes and modifies the obj as needed to make it ready for discords api. */
   changeToDiscordFormat: (obj: any) => any
   /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
@@ -210,7 +210,7 @@ export interface RestManager {
   /** This will create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */
   processRateLimitedPaths: () => void
   /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
-  processHeaders: (url: string, headers: Headers, queueBaseKey: string) => string | undefined
+  processHeaders: (url: string, headers: Headers, requestAuthorization: string) => string | undefined
   /** Sends a request to the api. */
   sendRequest: (options: SendRequestOptions) => Promise<void>
   /** Split a url to separate rate limit buckets based on major/minor parameters. */
