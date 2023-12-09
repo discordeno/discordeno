@@ -21,14 +21,14 @@ proxies/*/.yarn/*
 !proxies/*/.yarn/releases
 !proxies/*/.yarn/sdks
 !proxies/*/.yarn/versions
-site/docs/generated/classes
-site/docs/generated/enums
-site/docs/generated/interfaces
-site/docs/generated/modules
-website/docs/generated/classes/*.md
-website/docs/generated/enums/*.md
-website/docs/generated/interfaces/*.md
-website/docs/generated/modules/*.md
+site/api_reference/generated/classes
+site/api_reference/generated/enums
+site/api_reference/generated/interfaces
+site/api_reference/generated/modules
+website/api_reference/generated/classes/*.md
+website/api_reference/generated/enums/*.md
+website/api_reference/generated/interfaces/*.md
+website/api_reference/generated/modules/*.md
 website/.yarn/
 # testing
 coverage

@@ -9,7 +9,7 @@ module.exports = function (context, options) {
   return {
     name: 'webpack-docusaurus-plugin',
     configureWebpack(config, isServer, utils) {
-      const cacheOptions = { cache: false }
+      const cacheOptions = { cache: process.env.CI !== 'true' }
 
       const minimizer = new TerserPlugin({
         minify: TerserPlugin.esbuildMinify,
