@@ -1,6 +1,6 @@
 {
   "name": "@discordeno/bot",
-  "version": "19.0.0-alpha.1",
+  "version": "19.0.0-beta.1",
   "main": "./dist/esm/index.js",
   "exports": {
     "import": "./dist/esm/index.js",
@@ -31,8 +31,8 @@
   "dependencies": {
     "@discordeno/gateway": "19.0.0-alpha.1",
     "@discordeno/rest": "19.0.0-alpha.1",
-    "@discordeno/types": "19.0.0-alpha.1",
-    "@discordeno/utils": "19.0.0-alpha.1"
+    "@discordeno/types": "19.0.0-beta.1",
+    "@discordeno/utils": "19.0.0-beta.1"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.63",
