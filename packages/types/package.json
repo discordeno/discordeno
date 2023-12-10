@@ -38,7 +38,7 @@
     "eslint": "^8.54.0",
     "eslint-config-discordeno": "*",
     "mocha": "^10.2.0",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
     "tsconfig": "*",
     "typescript": "5.2.2"
   }
