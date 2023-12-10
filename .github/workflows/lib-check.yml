@@ -2,8 +2,6 @@ name: Library Checks
 
 on:
   pull_request:
-    paths-ignore:
-      - 'website/**'
   push:
     branches:
       - main
