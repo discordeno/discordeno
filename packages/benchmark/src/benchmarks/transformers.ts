@@ -2,6 +2,7 @@ import {
   ApplicationFlags,
   ButtonStyles,
   InteractionTypes,
+  MemberToggles,
   MessageActivityTypes,
   MessageComponentTypes,
   MessageTypes,
@@ -15,7 +16,6 @@ import {
   type Bot,
   type DiscordMessage,
 } from '@discordeno/bot'
-import { MemberToggles } from '@discordeno/bot/dist/transformers/index.js'
 import { memoryBenchmark } from '../utils/memoryBenchmark.js'
 
 export const CHANNEL_MENTION_REGEX = /<#[0-9]+>/g
