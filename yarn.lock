@@ -48,7 +48,7 @@ __metadata:
     eslint-config-discordeno: "npm:*"
     mocha: "npm:^10.2.0"
     sinon: "npm:^17.0.1"
-    ts-node: "npm:^10.9.1"
+    ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
     typescript: "npm:5.2.2"
   languageName: unknown
@@ -73,7 +73,7 @@ __metadata:
     eslint-config-discordeno: "npm:*"
     mocha: "npm:^10.2.0"
     sinon: "npm:^17.0.1"
-    ts-node: "npm:^10.9.1"
+    ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
     typescript: "npm:5.2.2"
     uWebSockets.js: "https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28"
@@ -102,7 +102,7 @@ __metadata:
     eslint-config-discordeno: "npm:*"
     mocha: "npm:^10.2.0"
     sinon: "npm:^17.0.1"
-    ts-node: "npm:^10.9.1"
+    ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
     typescript: "npm:5.2.2"
     why-is-node-running: "npm:^2.2.2"
@@ -124,7 +124,7 @@ __metadata:
     eslint: "npm:^8.54.0"
     eslint-config-discordeno: "npm:*"
     mocha: "npm:^10.2.0"
-    ts-node: "npm:^10.9.1"
+    ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
     typescript: "npm:5.2.2"
   languageName: unknown
@@ -147,7 +147,7 @@ __metadata:
     eslint-config-discordeno: "npm:*"
     mocha: "npm:^10.2.0"
     sinon: "npm:^17.0.1"
-    ts-node: "npm:^10.9.1"
+    ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
     tweetnacl: "npm:^1.0.3"
     typescript: "npm:5.2.2"
@@ -1205,7 +1205,7 @@ __metadata:
     eslint-config-discordeno: "npm:*"
     microtime: "npm:^3.1.1"
     node-fetch: "npm:^3.3.2"
-    ts-node: "npm:^10.9.1"
+    ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
     typescript: "npm:5.2.2"
   languageName: unknown
@@ -1944,7 +1944,7 @@ __metadata:
     eslint-config-discordeno: "npm:*"
     mocha: "npm:^10.2.0"
     sinon: "npm:^17.0.1"
-    ts-node: "npm:^10.9.1"
+    ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
     typescript: "npm:5.2.2"
   bin:
@@ -5565,9 +5565,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^10.9.1":
-  version: 10.9.1
-  resolution: "ts-node@npm:10.9.1"
+"ts-node@npm:^10.9.2":
+  version: 10.9.2
+  resolution: "ts-node@npm:10.9.2"
   dependencies:
     "@cspotcode/source-map-support": "npm:^0.8.0"
     "@tsconfig/node10": "npm:^1.0.7"
@@ -5599,7 +5599,7 @@ __metadata:
     ts-node-script: dist/bin-script.js
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
-  checksum: bee56d4dc96ccbafc99dfab7b73fbabc62abab2562af53cdea91c874a301b9d11e42bc33c0a032a6ed6d813dbdc9295ec73dde7b73ea4ebde02b0e22006f7e04
+  checksum: a91a15b3c9f76ac462f006fa88b6bfa528130dcfb849dd7ef7f9d640832ab681e235b8a2bc58ecde42f72851cc1d5d4e22c901b0c11aa51001ea1d395074b794
   languageName: node
   linkType: hard
 

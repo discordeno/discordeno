@@ -47,7 +47,7 @@
     "eslint-config-discordeno": "*",
     "mocha": "^10.2.0",
     "sinon": "^17.0.1",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
     "tsconfig": "*",
     "typescript": "5.2.2",
     "uWebSockets.js": "https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28"
