@@ -25,5 +25,7 @@ jobs:
         stale-pr-message: 'This pull request has gone stale for over a month. If this pull request is still useful, leave a comment below. Otherwise, it will be closed shortly.'
         stale-issue-label: 'no-issue-activity'
         stale-pr-label: 'no-pr-activity'
-        exempt-issue-labels: 'api-docs-commits,help-wanted'
+        only-labels: 'w-unverified'
+        exempt-issue-labels: 'api-docs-commits,help-wanted,w-verified,w-pending'
+        exempt-pr-labels: 'w-verified'
         close-issue-reason: 'not_planned'
