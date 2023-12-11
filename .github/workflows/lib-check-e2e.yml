@@ -10,7 +10,15 @@ on:
   merge_group:
 
 jobs:
+  workqueue:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ahmadnassri/action-workflow-queue@v1
+        with:
+          timeout: 6000000
   rest-e2e-test:
+    needs: workqueue
     name: Rest
     uses: ./.github/workflows/e2e-test.yml
     secrets: inherit
