@@ -77,7 +77,7 @@ __metadata:
     tsconfig: "npm:*"
     typescript: "npm:5.3.3"
     uWebSockets.js: "https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28"
-    ws: "npm:^8.14.2"
+    ws: "npm:^8.15.0"
   languageName: unknown
   linkType: soft
 
@@ -6084,9 +6084,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.14.2":
-  version: 8.14.2
-  resolution: "ws@npm:8.14.2"
+"ws@npm:^8.15.0":
+  version: 8.15.0
+  resolution: "ws@npm:8.15.0"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ">=5.0.2"
@@ -6095,7 +6095,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 815ff01d9bc20a249b2228825d9739268a03a4408c2e0b14d49b0e2ae89d7f10847e813b587ba26992bdc33e9d03bed131e4cae73ff996baf789d53e99c31186
+  checksum: 77a106fd0c7284dfb3c2d85e7c8b52f4f898bab0bede8588f443696a6dc95026eb13bda8f390a609340c994c3b88d4839e63c3caf0d0e635575994a3357afdbd
   languageName: node
   linkType: hard
 

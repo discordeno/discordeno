@@ -31,7 +31,7 @@
   "dependencies": {
     "@discordeno/types": "19.0.0-beta.1",
     "@discordeno/utils": "19.0.0-beta.1",
-    "ws": "^8.14.2"
+    "ws": "^8.15.0"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.63",
