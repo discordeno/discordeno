@@ -1,0 +1,28 @@
+name: Library Checks (E2E)
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'website/**'
+  merge_group:
+
+jobs:
+  rest-e2e-test:
+    name: Rest
+    uses: ./.github/workflows/e2e-test.yml
+    secrets: inherit
+    with:
+      package: rest
+      event_name: ${{ github.event_name }}
+  bot-e2e-test:
+    name: Bot
+    needs: rest-e2e-test
+    if: ${{ always() }}
+    uses: ./.github/workflows/e2e-test.yml
+    secrets: inherit
+    with:
+      package: bot
+      event_name: ${{ github.event_name }}
