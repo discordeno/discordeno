@@ -30,17 +30,17 @@ export function transformUser(bot: Bot, payload: DiscordUser): User {
   }
   if (props.flags) user.flags = new ToggleBitfield(payload.flags)
   if (props.publicFlags) user.publicFlags = new ToggleBitfield(payload.public_flags)
-  if (payload.id && props.id) user.id = bot.transformers.snowflake(payload.id)
-  if (payload.username && props.username) user.username = payload.username
-  if (payload.global_name && props.globalName) user.globalName = payload.global_name
-  if (payload.discriminator && props.discriminator) user.discriminator = payload.discriminator
-  if (payload.locale && props.locale) user.locale = payload.locale
-  if (payload.email && props.email) user.email = payload.email
-  if (payload.premium_type && props.premiumType) user.premiumType = payload.premium_type
-  if (payload.avatar && props.avatar) user.avatar = iconHashToBigInt(payload.avatar)
-  if (payload.banner && props.banner) user.banner = iconHashToBigInt(payload.banner)
+  if (props.id && payload.id) user.id = bot.transformers.snowflake(payload.id)
+  if (props.username && payload.username) user.username = payload.username
+  if (props.globalName && payload.global_name) user.globalName = payload.global_name
+  if (props.discriminator && payload.discriminator) user.discriminator = payload.discriminator
+  if (props.locale && payload.locale) user.locale = payload.locale
+  if (props.email && payload.email) user.email = payload.email
+  if (props.premiumType && payload.premium_type) user.premiumType = payload.premium_type
+  if (props.avatar && payload.avatar) user.avatar = iconHashToBigInt(payload.avatar)
+  if (props.banner && payload.banner) user.banner = iconHashToBigInt(payload.banner)
   if (props.avatarDecoration && payload.avatar_decoration) user.avatarDecoration = iconHashToBigInt(payload.avatar_decoration)
-  if (payload.accent_color && props.accentColor) user.accentColor = payload.accent_color
+  if (props.accentColor && payload.accent_color) user.accentColor = payload.accent_color
 
   return bot.transformers.customizers.user(bot, payload, user)
 }
