@@ -139,14 +139,15 @@ jobs:
     uses: ./.github/workflows/unit-test.yml
     with:
       package: bot
-  bot-e2e-test:
-    name: Bot
-    needs: bot-unit-test
-    if: ${{ github.ref == 'refs/heads/main' || github.event_name == 'merge_group' }}
-    uses: ./.github/workflows/e2e-test.yml
-    secrets: inherit
-    with:
-      package: bot
+  # https://github.com/orgs/community/discussions/12835
+  #  bot-e2e-test:
+  #    name: Bot
+  #    needs: bot-unit-test
+  #    if: ${{ github.ref == 'refs/heads/main' || github.event_name == 'merge_group' }}
+  #    uses: ./.github/workflows/e2e-test.yml
+  #    secrets: inherit
+  #    with:
+  #      package: bot
   bot-other-runtime-test:
     name: Bot
     needs: bot-unit-test
@@ -205,14 +206,15 @@ jobs:
     uses: ./.github/workflows/unit-test.yml
     with:
       package: rest
-  rest-e2e-test:
-    name: Rest
-    needs: rest-unit-test
-    if: ${{ github.ref == 'refs/heads/main' || github.event_name == 'merge_group' }}
-    uses: ./.github/workflows/e2e-test.yml
-    secrets: inherit
-    with:
-      package: rest
+  # https://github.com/orgs/community/discussions/12835
+  # rest-e2e-test:
+  #   name: Rest
+  #   needs: rest-unit-test
+  #   if: ${{ github.ref == 'refs/heads/main' || github.event_name == 'merge_group' }}
+  #   uses: ./.github/workflows/e2e-test.yml
+  #   secrets: inherit
+  #   with:
+  #     package: rest
   rest-other-runtime-test:
     name: Rest
     needs: rest-unit-test
