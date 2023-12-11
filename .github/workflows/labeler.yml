@@ -21,8 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: gh issue edit "$NUMBER" --add-label "$LABELS"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
-          NUMBER: ${{ github.event.issue.number }}
-          LABELS: w-unverified
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        NUMBER: ${{ github.event.pull_request.number || github.event.issue.number }}
+        LABELS: w-unverified
