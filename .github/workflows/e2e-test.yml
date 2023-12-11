@@ -41,6 +41,8 @@ jobs:
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
+      - uses: ahmadnassri/action-workflow-queue@v1
+        if: ${{ inputs.event_name != 'pull_request' }}
       - name: E2E Test
         if: ${{ inputs.event_name != 'pull_request' }}
         run: yarn test:e2e --cache-dir=".turbo" --filter=./packages/${{ inputs.package }}
