@@ -45,7 +45,7 @@
     "c8": "^8.0.1",
     "chai": "^4.3.10",
     "chai-as-promised": "^7.1.1",
-    "eslint": "^8.54.0",
+    "eslint": "^8.55.0",
     "eslint-config-discordeno": "*",
     "mocha": "^10.2.0",
     "sinon": "^17.0.1",

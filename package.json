@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "chokidar-cli": "^3.0.0",
-    "eslint": "^8.54.0",
+    "eslint": "^8.55.0",
     "eslint-config-discordeno": "*",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.0",
