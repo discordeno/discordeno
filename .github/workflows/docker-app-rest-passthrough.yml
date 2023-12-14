@@ -1,4 +1,4 @@
-name: Docker App - Rest proxy
+name: Docker App - Rest Passthrough
 
 on:
   push:
@@ -11,13 +11,24 @@ on:
     paths:
       - '.github/workflows/docker-app-rest-passthrough.yml'
       - 'docker-apps/rest-passthrough/**'
-  schedule:
-    - cron: '0 0 * * *'
 
 jobs:
+  app-version:
+    name: Update app version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.package-version.outputs.current-version }}
+    steps:
+      - name: get-npm-version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+        with:
+          path: docker-apps/rest-passthrough
+
   build:
     name: Build docker image
     runs-on: ubuntu-latest
+    needs: app-version
     steps:
       - uses: actions/checkout@v4
       - name: Cache Docker layers
@@ -35,7 +46,9 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: false
-          tags: discordeno/rest-passthrough:latest
+          tags:
+            - 'discordeno/app-rest-passthrough:latest'
+            - 'discordeno/app-rest-passthrough:v${{ needs.app-version.outputs.version }}'
           context: docker-apps/rest-passthrough
           target: runner
           outputs: type=docker,dest=/tmp/rest-passthrough-image.tar
@@ -72,7 +85,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'discordeno/rest-passthrough:latest'
+          image-ref: 'discordeno/app-rest-passthrough:latest'
           format: 'table'
           exit-code: '0'
           ignore-unfixed: true
@@ -82,7 +95,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         if: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
         with:
-          image-ref: 'discordeno/rest-passthrough:latest'
+          image-ref: 'discordeno/app-rest-passthrough:latest'
           exit-code: '0'
           vuln-type: 'os,library'
           severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
@@ -101,8 +114,8 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          image: 'discordeno/rest-passthrough:latest'
-          args: --file=proxies/rest/Dockerfile
+          image: 'discordeno/app-rest-passthrough:latest'
+          args: --file=docker-apps/rest-passthrough/Dockerfile
       - name: Upload result to GitHub Code Scanning
         if: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
         uses: github/codeql-action/upload-sarif@v2
@@ -111,7 +124,7 @@ jobs:
 
   build-all-arch:
     name: Build image for all architectures
-    needs: build
+    needs: [build, app-version]
     if: ${{ github.event_name != 'schedule' }}
     runs-on: ubuntu-latest
     steps:
@@ -131,9 +144,12 @@ jobs:
       - name: Build Docker image
         uses: docker/build-push-action@v4
         with:
-          context: proxies/rest
+          context: docker-apps/rest-passthrough
           push: false
-          tags: 'discordeno/rest-passthrough:latest'
+          tags:
+            - 'discordeno/app-rest-passthrough:latest'
+            - 'discordeno/app-rest-passthrough:v${{ needs.app-version.outputs.version }}'
+
           # linux/s390x stuck at yarn install, remove it for now
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le
           target: runner
@@ -149,7 +165,7 @@ jobs:
 
   publish:
     name: Publish image
-    needs: build-all-arch
+    needs: [build-all-arch, app-version]
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
     runs-on: ubuntu-latest
     permissions:
@@ -171,9 +187,11 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: proxies/rest
+          context: docker-apps/rest-passthrough
           push: true
-          tags: 'ghcr.io/discordeno/rest-passthrough:latest'
+          tags:
+            - 'ghcr.io/discordeno/rest-passthrough:latest'
+            - 'ghcr.io/discordeno/rest-passthrough:v${{ needs.app-version.outputs.version }}'
           # linux/s390x stuck at yarn install, remove it for now
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le
           target: runner
