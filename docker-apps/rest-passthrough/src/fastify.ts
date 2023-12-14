@@ -9,10 +9,6 @@ export const buildFastifyApp = (): FastifyInstance => {
     schema: {
       type: 'object',
       properties: {
-        PORT: {
-          type: 'number',
-          default: 8000,
-        },
         DISCORD_TOKEN: {
           type: 'string',
           minLength: 1,
@@ -34,7 +30,6 @@ export const buildFastifyApp = (): FastifyInstance => {
 declare module 'fastify' {
   interface FastifyInstance {
     config: {
-      PORT: number
       DISCORD_TOKEN: string
       AUTHORIZATION_TOKEN: string
     }

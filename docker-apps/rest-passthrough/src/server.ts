@@ -1,5 +1,4 @@
 import { createRestManager, type RequestMethods } from '@discordeno/rest'
-// import { AUTHORIZATION_TOKEN, DISCORD_TOKEN, PORT } from './config.js'
 import { buildFastifyApp } from './fastify.js'
 
 const app = buildFastifyApp()
@@ -44,8 +43,8 @@ app.all('/*', async (request, reply) => {
 })
 
 try {
-  await app.listen({ port: app.config.PORT })
-  console.log(`Proxy listening on port ${app.config.PORT}`)
+  await app.listen({ port: 8000 })
+  console.log(`Proxy listening on port 8000`)
 } catch (error) {
   app.log.error(error)
   process.exit(1)
