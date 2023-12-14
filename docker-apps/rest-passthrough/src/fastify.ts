@@ -2,10 +2,10 @@ import fastifyEnv from '@fastify/env'
 import fastifyHelmet from '@fastify/helmet'
 import fastify, { type FastifyInstance } from 'fastify'
 
-export const buildFastifyApp = (): FastifyInstance => {
-  const app = fastify()
+export const buildFastifyApp = async (): Promise<FastifyInstance> => {
+  const app = await fastify()
 
-  app.register(fastifyEnv, {
+  await app.register(fastifyEnv, {
     schema: {
       type: 'object',
       properties: {
@@ -22,7 +22,15 @@ export const buildFastifyApp = (): FastifyInstance => {
     },
   })
 
-  app.register(fastifyHelmet)
+  await app.register(fastifyHelmet)
+
+  app.addHook('onRequest', async (request, reply) => {
+    if (request.headers.authorization !== request.server.config.AUTHORIZATION_TOKEN) {
+      reply.status(401).send({
+        message: 'Credentials not valid.',
+      })
+    }
+  })
 
   return app
 }
