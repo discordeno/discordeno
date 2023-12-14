@@ -11,6 +11,8 @@ on:
     paths:
       - '.github/workflows/docker-app-rest-passthrough.yml'
       - 'docker-apps/rest-passthrough/**'
+  schedule:
+    - cron: '0 0 * * *'
 
 jobs:
   app-version:
