@@ -190,8 +190,8 @@ jobs:
           context: docker-apps/rest-passthrough
           push: true
           tags:
-            - 'ghcr.io/discordeno/rest-passthrough:latest'
-            - 'ghcr.io/discordeno/rest-passthrough:v${{ needs.app-version.outputs.version }}'
+            - 'ghcr.io/discordeno/app-rest-passthrough:latest'
+            - 'ghcr.io/discordeno/app-rest-passthrough:v${{ needs.app-version.outputs.version }}'
           # linux/s390x stuck at yarn install, remove it for now
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le
           target: runner
