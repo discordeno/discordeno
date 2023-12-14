@@ -7,6 +7,7 @@
     "build": "swc src --delete-dir-on-start --out-dir dist",
     "start:dev": "yarn exec node -r dotenv/config dist/server.js",
     "start:prod": "yarn exec node ./dist/server.js",
+    "release": "cliff-jumper",
     "setup-dd": ""
   },
   "dependencies": {
