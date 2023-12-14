@@ -1,6 +1,4 @@
-name: rest-passthrough
+name: app-rest-passthrough
+org: discordeno
 packagePath: .
-monoRepo: true
 commitMessageTemplate: 'chore(release): release {{new-version}}'
-skipTag: true
-verbose: true
