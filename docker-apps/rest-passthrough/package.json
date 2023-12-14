@@ -1,5 +1,5 @@
 {
-  "name": "app-rest-passthrough",
+  "name": "rest-passthrough",
   "private": true,
   "type": "module",
   "version": "1.0.0",
