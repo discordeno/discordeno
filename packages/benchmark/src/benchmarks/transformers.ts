@@ -2,6 +2,7 @@ import {
   ApplicationFlags,
   ButtonStyles,
   InteractionTypes,
+  MemberToggles,
   MessageActivityTypes,
   MessageComponentTypes,
   MessageTypes,
@@ -15,7 +16,6 @@ import {
   type Bot,
   type DiscordMessage,
 } from '@discordeno/bot'
-import { MemberToggles } from '@discordeno/bot/dist/transformers/index.js'
 import { memoryBenchmark } from '../utils/memoryBenchmark.js'
 
 export const CHANNEL_MENTION_REGEX = /<#[0-9]+>/g
@@ -480,7 +480,7 @@ await memoryBenchmark(
   () => ({
     cache: [] as any[],
   }), // function reutrn a new instance of object wanted to test with
-  (object, event: DiscordMessage) => object.cache.push(oldtransformMessage(bot as any, event)),
+  (object, event: DiscordMessage) => object.cache.push(oldtransformMessage(bot, event)),
   // function specify how to add event to the object/ run the object
   [...new Array(MESSAGE_SIZE)].map(
     (i) =>

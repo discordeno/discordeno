@@ -5,7 +5,4 @@
 !package.json
 !README.md
 !dist/**
-!bin/dist/**
-
-# but not tsc cache 
-dist/tsconfig.tsbuildinfo
+!bin/**

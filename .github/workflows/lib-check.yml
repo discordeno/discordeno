@@ -2,8 +2,6 @@ name: Library Checks
 
 on:
   pull_request:
-    paths-ignore:
-      - 'website/**'
   push:
     branches:
       - main
@@ -16,8 +14,8 @@ jobs:
     name: Build Type and Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Get yarn cache directory path
@@ -43,8 +41,8 @@ jobs:
     name: Build Dist
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Get yarn cache directory path
@@ -71,8 +69,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-type-and-test
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Get yarn cache directory path
@@ -105,8 +103,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-type-and-test
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Get yarn cache directory path
@@ -141,14 +139,15 @@ jobs:
     uses: ./.github/workflows/unit-test.yml
     with:
       package: bot
-  bot-e2e-test:
-    name: Bot
-    needs: bot-unit-test
-    if: ${{ github.ref == 'refs/heads/main' || github.event_name == 'merge_group' }}
-    uses: ./.github/workflows/e2e-test.yml
-    secrets: inherit
-    with:
-      package: bot
+  # https://github.com/orgs/community/discussions/12835
+  #  bot-e2e-test:
+  #    name: Bot
+  #    needs: bot-unit-test
+  #    if: ${{ github.ref == 'refs/heads/main' || github.event_name == 'merge_group' }}
+  #    uses: ./.github/workflows/e2e-test.yml
+  #    secrets: inherit
+  #    with:
+  #      package: bot
   bot-other-runtime-test:
     name: Bot
     needs: bot-unit-test
@@ -207,14 +206,15 @@ jobs:
     uses: ./.github/workflows/unit-test.yml
     with:
       package: rest
-  rest-e2e-test:
-    name: Rest
-    needs: rest-unit-test
-    if: ${{ github.ref == 'refs/heads/main' || github.event_name == 'merge_group' }}
-    uses: ./.github/workflows/e2e-test.yml
-    secrets: inherit
-    with:
-      package: rest
+  # https://github.com/orgs/community/discussions/12835
+  # rest-e2e-test:
+  #   name: Rest
+  #   needs: rest-unit-test
+  #   if: ${{ github.ref == 'refs/heads/main' || github.event_name == 'merge_group' }}
+  #   uses: ./.github/workflows/e2e-test.yml
+  #   secrets: inherit
+  #   with:
+  #     package: rest
   rest-other-runtime-test:
     name: Rest
     needs: rest-unit-test

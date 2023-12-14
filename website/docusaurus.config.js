@@ -98,6 +98,13 @@ const config = {
             label: 'Tutorial',
             docsPluginId: 'tutorial',
           },
+          {
+            type: 'docSidebar',
+            sidebarId: 'api_reference',
+            position: 'left',
+            label: 'API Reference',
+            docsPluginId: 'api_reference',
+          },
           { to: '/blog', label: 'Blog', position: 'left' },
           {
             href: 'https://discord.gg/ddeno',
@@ -162,6 +169,27 @@ const config = {
             ],
           },
           {
+            title: 'API Reference',
+            items: [
+              {
+                label: 'Classes',
+                to: '/api_reference/category/classes-3',
+              },
+              {
+                label: 'Enums',
+                to: '/api_reference/category/enums-3',
+              },
+              {
+                label: 'Interfaces',
+                to: '/api_reference/category/interfaces-3',
+              },
+              {
+                label: 'Modules',
+                to: '/api_reference/category/modules-3',
+              },
+            ],
+          },
+          {
             title: 'Community',
             items: [
               {
@@ -216,14 +244,25 @@ const config = {
       },
     ],
     [
+      '@docusaurus/plugin-content-docs',
+      /** @type {import('@docusaurus/plugin-content-docs').Options} */
+      {
+        id: 'api_reference',
+        path: 'api_reference',
+        routeBasePath: 'api_reference',
+        sidebarPath: require.resolve('./sidebars.js'),
+        editUrl: 'https://github.com/discordeno/discordeno/tree/main/site/',
+      },
+    ],
+    [
       require.resolve('@easyops-cn/docusaurus-search-local'),
       {
         indexDocs: true,
         indexPages: true,
-        docsRouteBasePath: ['/docs', '/tutorial'],
+        docsRouteBasePath: ['/docs', '/tutorial', 'api_reference'],
         language: ['en'],
         hashed: true,
-        docsDir: ['docs', 'tutorial'],
+        docsDir: ['docs', 'tutorial', 'api_reference'],
         blogDir: [],
         removeDefaultStopWordFilter: true,
         highlightSearchTermsOnTargetPage: true,
