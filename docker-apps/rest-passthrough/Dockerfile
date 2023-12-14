@@ -38,6 +38,7 @@ COPY --from=deps /app/.yarn /app/.yarn
 WORKDIR /app
 # copy necessary files
 COPY package.json yarn.lock .yarnrc.yml ./
+ENV HOST=0.0.0.0
 # open port 8000
 EXPOSE 8000
 # set default command

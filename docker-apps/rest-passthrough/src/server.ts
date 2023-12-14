@@ -41,7 +41,10 @@ app.all('/*', async (request, reply) => {
 })
 
 try {
-  await app.listen({ port: 8000 })
+  await app.listen({
+    host: app.config.HOST,
+    port: 8000,
+  })
   console.log(`Proxy listening on port 8000`)
 } catch (error) {
   app.log.error(error)

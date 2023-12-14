@@ -9,6 +9,10 @@ export const buildFastifyApp = async (): Promise<FastifyInstance> => {
     schema: {
       type: 'object',
       properties: {
+        HOST: {
+          type: 'string',
+          default: 'localhost',
+        },
         DISCORD_TOKEN: {
           type: 'string',
           minLength: 1,
@@ -38,6 +42,7 @@ export const buildFastifyApp = async (): Promise<FastifyInstance> => {
 declare module 'fastify' {
   interface FastifyInstance {
     config: {
+      HOST: string
       DISCORD_TOKEN: string
       AUTHORIZATION_TOKEN: string
     }
