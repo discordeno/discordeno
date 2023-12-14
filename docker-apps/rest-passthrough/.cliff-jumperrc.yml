@@ -1,0 +1,6 @@
+name: rest-passthrough
+packagePath: .
+monoRepo: true
+commitMessageTemplate: 'chore(release): release {{new-version}}'
+skipTag: true
+verbose: true
