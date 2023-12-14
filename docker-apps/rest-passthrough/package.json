@@ -1,8 +1,8 @@
 {
-  "name": "rest-passthrough",
+  "name": "app-rest-passthrough",
   "private": true,
   "type": "module",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "scripts": {
     "build": "swc src --delete-dir-on-start --out-dir dist",
     "start:dev": "yarn exec node -r dotenv/config dist/server.js",
