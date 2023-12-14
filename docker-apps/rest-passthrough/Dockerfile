@@ -33,6 +33,7 @@ FROM node:18.19.0-alpine3.19 AS runner
 # copy the compiled files from the builder image
 COPY --from=builder /app/dist /app/dist
 # copy the dependencies from the deps image
+COPY --from=deps /app/node_modules /app/node_modules
 COPY --from=deps /app/.yarn /app/.yarn
 WORKDIR /app
 # copy necessary files
