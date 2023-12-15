@@ -73,7 +73,7 @@ jobs:
           output-file-path: output.txt
           external-data-json-path: benchmarksResult/data.json
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         with:
           name: benchmarkResults
@@ -84,7 +84,7 @@ jobs:
           mkdir -p ./commitData
           echo ${{ inputs.sha }} > ./commitData/sha
           echo ${{ inputs.repo }} > ./commitData/repo
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         with:
           name: commitData
