@@ -15,9 +15,10 @@ jobs:
       - uses: fuxingloh/multi-labeler@v2
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-  
+
   w_unverified_labeler:
     name: Add w-unverified Label
+    if: ${{ !(github.event_name == 'pull_request_target' && (github.event.action == 'edited' || github.event.action == 'synchronize')) }}
     runs-on: ubuntu-latest
     steps:
       - run: gh issue edit "$NUMBER" --add-label "$LABELS"
