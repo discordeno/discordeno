@@ -43,7 +43,7 @@
     "@types/sinon": "^17.0.2",
     "c8": "^8.0.1",
     "chai": "^4.3.10",
-    "eslint": "^8.55.0",
+    "eslint": "^8.56.0",
     "eslint-config-discordeno": "*",
     "mocha": "^10.2.0",
     "sinon": "^17.0.1",
