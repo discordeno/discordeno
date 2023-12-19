@@ -19,7 +19,11 @@ app.get('/timecheck', async (request, reply) => {
 })
 
 app.all('/*', async (request, reply) => {
-  const url = request.originalUrl
+  let url = request.originalUrl
+
+  if (url.startsWith('/v')) {
+    url = url.slice(url.indexOf('/', 2))
+  }
 
   try {
     const result = await discordRestManager.makeRequest(request.method as RequestMethods, url, {
