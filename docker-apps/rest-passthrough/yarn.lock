@@ -916,9 +916,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify@npm:^4.24.3":
-  version: 4.24.3
-  resolution: "fastify@npm:4.24.3"
+"fastify@npm:^4.25.1":
+  version: 4.25.1
+  resolution: "fastify@npm:4.25.1"
   dependencies:
     "@fastify/ajv-compiler": "npm:^3.5.0"
     "@fastify/error": "npm:^3.4.0"
@@ -929,14 +929,14 @@ __metadata:
     fast-json-stringify: "npm:^5.8.0"
     find-my-way: "npm:^7.7.0"
     light-my-request: "npm:^5.11.0"
-    pino: "npm:^8.16.0"
-    process-warning: "npm:^2.2.0"
+    pino: "npm:^8.17.0"
+    process-warning: "npm:^3.0.0"
     proxy-addr: "npm:^2.0.7"
     rfdc: "npm:^1.3.0"
     secure-json-parse: "npm:^2.7.0"
     semver: "npm:^7.5.4"
     toad-cache: "npm:^3.3.0"
-  checksum: 3d324f804eee36661283200cf66cd42a80932e1ea8c363d208759be38a65fbbc021cbc3c60e828e018b6f570aba7b685b0cfb579022bd85905855128e6196df0
+  checksum: af0efe4e13cfbb3040901e13f379fc53af172e66dd1b16f2d5532e9dc0e976803ff04167e38b7b95fd7b1508cd60d4f847c68b019f5ae3ff82fe127fe9a2db88
   languageName: node
   linkType: hard
 
@@ -1558,9 +1558,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino@npm:^8.16.0":
-  version: 8.16.2
-  resolution: "pino@npm:8.16.2"
+"pino@npm:^8.17.0":
+  version: 8.17.1
+  resolution: "pino@npm:8.17.1"
   dependencies:
     atomic-sleep: "npm:^1.0.0"
     fast-redact: "npm:^3.1.1"
@@ -1575,14 +1575,21 @@ __metadata:
     thread-stream: "npm:^2.0.0"
   bin:
     pino: bin.js
-  checksum: d2860167dd5ce3322d5c007b6e88c4ef672316b193677dc637ba11d6af6ad57475380d2abdbc940a7a9f57c4fa1e5776ee7e43cb1b2c2ffcf9fa42e3af41da0f
+  checksum: 698958c92f641d0f0f5a690aca583ffc2f3b02dc9af9a0f507e51b360837d38ae249d33c88851e9131ea8ffe203bbe252585001151ddf860e6923da530306cbc
   languageName: node
   linkType: hard
 
-"process-warning@npm:^2.0.0, process-warning@npm:^2.2.0":
+"process-warning@npm:^2.0.0":
   version: 2.3.2
   resolution: "process-warning@npm:2.3.2"
   checksum: 64cea6878a60e5d1d3648c1736c127b46d5830092bc189ff65b90abbbf746d69ca91eaeec3284f95b0a58965bb016813da787004b556f764ba439addf2eabdb0
+  languageName: node
+  linkType: hard
+
+"process-warning@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "process-warning@npm:3.0.0"
+  checksum: 2d82fa641e50a5789eaf0f2b33453760996e373d4591aac576a22d696186ab7e240a0592db86c264d4f28a46c2abbe9b94689752017db7dadc90f169f12b0924
   languageName: node
   linkType: hard
 
@@ -1722,7 +1729,7 @@ __metadata:
     "@swc/cli": "npm:^0.1.63"
     "@swc/core": "npm:^1.3.100"
     dotenv: "npm:^16.3.1"
-    fastify: "npm:^4.24.3"
+    fastify: "npm:^4.25.1"
   languageName: unknown
   linkType: soft
 
