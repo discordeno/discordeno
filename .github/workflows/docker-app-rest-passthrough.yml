@@ -4,13 +4,8 @@ on:
   push:
     branches:
       - 'main'
-    paths:
-      - '.github/workflows/docker-app-rest-passthrough.yml'
-      - 'docker-apps/rest-passthrough/**'
   pull_request:
-    paths:
-      - '.github/workflows/docker-app-rest-passthrough.yml'
-      - 'docker-apps/rest-passthrough/**'
+  merge_group:
   schedule:
     - cron: '0 0 * * *'
 
@@ -64,9 +59,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: false
-          tags:
-            - 'discordeno/app-rest-passthrough:latest'
-            - 'discordeno/app-rest-passthrough:v${{ needs.app-version.outputs.version }}'
+          tags: 'discordeno/app-rest-passthrough:latest, discordeno/app-rest-passthrough:v${{ needs.app-version.outputs.version }}'
           context: docker-apps/rest-passthrough
           target: runner
           outputs: type=docker,dest=/tmp/rest-passthrough-image.tar
@@ -164,10 +157,7 @@ jobs:
         with:
           context: docker-apps/rest-passthrough
           push: false
-          tags:
-            - 'discordeno/app-rest-passthrough:latest'
-            - 'discordeno/app-rest-passthrough:v${{ needs.app-version.outputs.version }}'
-
+          tags: 'discordeno/app-rest-passthrough:latest, discordeno/app-rest-passthrough:v${{ needs.app-version.outputs.version }}'
           # linux/s390x stuck at yarn install, remove it for now
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le
           target: runner
@@ -207,9 +197,7 @@ jobs:
         with:
           context: docker-apps/rest-passthrough
           push: true
-          tags:
-            - 'ghcr.io/discordeno/app-rest-passthrough:latest'
-            - 'ghcr.io/discordeno/app-rest-passthrough:v${{ needs.app-version.outputs.version }}'
+          tags: 'ghcr.io/discordeno/app-rest-passthrough:latest, ghcr.io/discordeno/app-rest-passthrough:v${{ needs.app-version.outputs.version }}'
           # linux/s390x stuck at yarn install, remove it for now
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le
           target: runner
