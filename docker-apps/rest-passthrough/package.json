@@ -11,7 +11,7 @@
     "setup-dd": ""
   },
   "dependencies": {
-    "@discordeno/rest": "19.0.0-next.fb947f5",
+    "@discordeno/rest": "19.0.0-next.9006572",
     "@fastify/env": "^4.3.0",
     "@fastify/helmet": "^11.1.1",
     "fastify": "^4.25.1"
