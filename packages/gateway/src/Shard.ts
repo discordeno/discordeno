@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
-import { camelize, delay, LeakyBucket, logger } from '@discordeno/utils'
+import { LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
 import { inflateSync } from 'node:zlib'
 import NodeWebSocket from 'ws'
 import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest } from './types.js'
@@ -330,10 +330,6 @@ export class DiscordenoShard {
   async handleDiscordPacket(packet: DiscordGatewayPayload): Promise<void> {
     // Edge case start: https://github.com/discordeno/discordeno/issues/2311
     this.heart.lastAck = Date.now()
-    // Manually calculating the round trip time for users who need it.
-    if (this.heart.lastBeat && !this.heart.acknowledged) {
-      this.heart.rtt = this.heart.lastAck - this.heart.lastBeat
-    }
     this.heart.acknowledged = true
     // Edge case end!
 
@@ -380,6 +376,11 @@ export class DiscordenoShard {
         break
       }
       case GatewayOpcodes.HeartbeatACK: {
+        // Manually calculating the round trip time for users who need it.
+        if (this.heart.lastBeat) {
+          this.heart.rtt = this.heart.lastAck - this.heart.lastBeat
+        }
+
         this.events.heartbeatAck?.(this)
 
         break
