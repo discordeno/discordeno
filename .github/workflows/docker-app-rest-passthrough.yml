@@ -13,21 +13,24 @@ on:
     - cron: '0 0 * * *'
 
 jobs:
-  run-release:
-    name: Run release script
-    runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Git config
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-      - name: Run release script
-        run: |
-          yarn release
-          git push && git push --tags
+  # Removing this for now until I can confirm a couple things and ensure it works fully
+  #  - Matt H
+  # run-release:
+  #   name: Run release script
+  #   runs-on: ubuntu-latest
+  #   if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+  #     - name: Git config
+  #       run: |
+  #         git config user.name github-actions
+  #         git config user.email github-actions@github.com
+  #     - name: Run release script
+  #       run: |
+  #         yarn install --immutable
+  #         yarn release
+  #         git push && git push --tags
 
   app-version:
     name: Get app version
@@ -178,7 +181,8 @@ jobs:
 
   publish:
     name: Publish image
-    needs: [run-release, build-all-arch, app-version]
+    # needs: [run-release, build-all-arch, app-version]
+    needs: [build-all-arch, app-version]
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
     runs-on: ubuntu-latest
     permissions:
