@@ -1,25 +1,57 @@
-name: Rest proxy
+name: Docker App - Rest Passthrough
 
 on:
   push:
     branches:
       - 'main'
     paths:
-      - '.github/workflows/rest-proxy.yml'
-      - 'proxies/rest/**'
+      - '.github/workflows/docker-app-rest-passthrough.yml'
+      - 'docker-apps/rest-passthrough/**'
   pull_request:
-    paths:
-      - '.github/workflows/rest-proxy.yml'
-      - 'proxies/rest/**'
+  merge_group:
   schedule:
     - cron: '0 0 * * *'
 
 jobs:
+  # Removing this for now until I can confirm a couple things and ensure it works fully
+  #  - Matt H
+  # run-release:
+  #   name: Run release script
+  #   runs-on: ubuntu-latest
+  #   if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+  #     - name: Git config
+  #       run: |
+  #         git config user.name github-actions
+  #         git config user.email github-actions@github.com
+  #     - name: Run release script
+  #       run: |
+  #         yarn install --immutable
+  #         yarn release
+  #         git push && git push --tags
+
+  app-version:
+    name: Get app version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.package-version.outputs.current-version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: get-npm-version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+        with:
+          path: docker-apps/rest-passthrough
+
   build:
     name: Build docker image
     runs-on: ubuntu-latest
+    needs: app-version
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Cache Docker layers
         uses: actions/cache@v3
         with:
@@ -28,17 +60,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-single-buildx
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Build and push
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           push: false
-          tags: discordeno/rest-proxy:latest
-          context: proxies/rest
+          tags: 'discordeno/app-rest-passthrough:latest, discordeno/app-rest-passthrough:v${{ needs.app-version.outputs.version }}'
+          context: docker-apps/rest-passthrough
           target: runner
-          outputs: type=docker,dest=/tmp/rest-proxy-image.tar
+          outputs: type=docker,dest=/tmp/rest-passthrough-image.tar
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
       - # Temp fix
@@ -49,30 +81,30 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: rest-proxy-image
-          path: /tmp/rest-proxy-image.tar
+          name: rest-passthrough-image
+          path: /tmp/rest-passthrough-image.tar
 
   image-scan:
     name: Image scan
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: rest-proxy-image
+          name: rest-passthrough-image
           path: /tmp
       - name: Load Docker image
-        run: docker load --input /tmp/rest-proxy-image.tar
+        run: docker load --input /tmp/rest-passthrough-image.tar
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'discordeno/rest-proxy:latest'
+          image-ref: 'discordeno/app-rest-passthrough:latest'
           format: 'table'
           exit-code: '0'
           ignore-unfixed: true
@@ -82,14 +114,14 @@ jobs:
         uses: aquasecurity/trivy-action@master
         if: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
         with:
-          image-ref: 'discordeno/rest-proxy:latest'
+          image-ref: 'discordeno/app-rest-passthrough:latest'
           exit-code: '0'
           vuln-type: 'os,library'
           severity: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL'
           format: 'sarif'
           output: 'trivy-results.sarif'
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         if: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
         with:
           sarif_file: 'trivy-results.sarif'
@@ -101,22 +133,22 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          image: 'discordeno/rest-proxy:latest'
-          args: --file=proxies/rest/Dockerfile
+          image: 'discordeno/app-rest-passthrough:latest'
+          args: --file=docker-apps/rest-passthrough/Dockerfile
       - name: Upload result to GitHub Code Scanning
         if: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: snyk.sarif
 
   build-all-arch:
     name: Build image for all architectures
-    needs: build
+    needs: [build, app-version]
     if: ${{ github.event_name != 'schedule' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Cache Docker layers
         uses: actions/cache@v3
         with:
@@ -125,15 +157,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-single-buildx
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Build Docker image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
-          context: proxies/rest
+          context: docker-apps/rest-passthrough
           push: false
-          tags: 'discordeno/rest-proxy:latest'
+          tags: 'discordeno/app-rest-passthrough:latest, discordeno/app-rest-passthrough:v${{ needs.app-version.outputs.version }}'
           # linux/s390x stuck at yarn install, remove it for now
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le
           target: runner
@@ -149,7 +181,8 @@ jobs:
 
   publish:
     name: Publish image
-    needs: build-all-arch
+    # needs: [run-release, build-all-arch, app-version]
+    needs: [build-all-arch, app-version]
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
     runs-on: ubuntu-latest
     permissions:
@@ -157,23 +190,23 @@ jobs:
       packages: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Log in to the Container registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Build and push Docker image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
-          context: proxies/rest
+          context: docker-apps/rest-passthrough
           push: true
-          tags: 'ghcr.io/discordeno/rest-proxy:latest'
+          tags: 'ghcr.io/discordeno/app-rest-passthrough:latest, ghcr.io/discordeno/app-rest-passthrough:v${{ needs.app-version.outputs.version }}'
           # linux/s390x stuck at yarn install, remove it for now
           platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le
           target: runner

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type { DiscordGatewayPayload } from '@discordeno/types'
 import fetch from 'node-fetch'
 import fs from 'node:fs/promises'
