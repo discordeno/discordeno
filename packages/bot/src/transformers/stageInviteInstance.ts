@@ -7,7 +7,12 @@ export function transformInviteStageInstance(bot: Bot, payload: DiscordInviteSta
 
   if (props.members && payload.members) {
     inviteStageInstance.members = payload.members.map((member) =>
-      bot.transformers.member(bot, <DiscordMember>member, payload.guildId, bot.transformers.snowflake(<string>member.user?.id)),
+      bot.transformers.member(
+        bot,
+        member as DiscordMember,
+        payload.guildId,
+        member.user?.id ? bot.transformers.snowflake(member.user.id) : undefined!,
+      ),
     )
   }
   if (props.participantCount) inviteStageInstance.participantCount = payload.participant_count
