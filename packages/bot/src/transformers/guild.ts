@@ -37,23 +37,22 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
   if (props.approximateMemberCount && payload.guild.approximate_member_count) guild.approximateMemberCount = payload.guild.approximate_member_count
   if (props.approximatePresenceCount && payload.guild.approximate_presence_count)
     guild.approximatePresenceCount = payload.guild.approximate_presence_count
-  if (props.defaultMessageNotifications && payload.guild.default_message_notifications)
-    guild.defaultMessageNotifications = payload.guild.default_message_notifications
+  if (props.defaultMessageNotifications) guild.defaultMessageNotifications = payload.guild.default_message_notifications
   if (props.description && payload.guild.description) guild.description = payload.guild.description
   if (props.toggles) guild.toggles = new GuildToggles(payload.guild)
-  if (props.explicitContentFilter && payload.guild.explicit_content_filter) guild.explicitContentFilter = payload.guild.explicit_content_filter
+  if (props.explicitContentFilter) guild.explicitContentFilter = payload.guild.explicit_content_filter
   if (props.maxMembers && payload.guild.max_members) guild.maxMembers = payload.guild.max_members
   if (props.maxPresences && payload.guild.max_presences) guild.maxPresences = payload.guild.max_presences ?? undefined
   if (props.maxVideoChannelUsers && payload.guild.max_video_channel_users) guild.maxVideoChannelUsers = payload.guild.max_video_channel_users
-  if (props.mfaLevel && payload.guild.mfa_level) guild.mfaLevel = payload.guild.mfa_level
+  if (props.mfaLevel) guild.mfaLevel = payload.guild.mfa_level
   if (props.name && payload.guild.name) guild.name = payload.guild.name
-  if (props.nsfwLevel && payload.guild.nsfw_level) guild.nsfwLevel = payload.guild.nsfw_level
+  if (props.nsfwLevel) guild.nsfwLevel = payload.guild.nsfw_level
   if (props.preferredLocale && payload.guild.preferred_locale) guild.preferredLocale = payload.guild.preferred_locale
-  if (props.premiumSubscriptionCount && payload.guild.premium_subscription_count)
+  if (props.premiumSubscriptionCount && payload.guild.premium_subscription_count !== undefined)
     guild.premiumSubscriptionCount = payload.guild.premium_subscription_count
-  if (props.premiumTier && payload.guild.premium_tier) guild.premiumTier = payload.guild.premium_tier
+  if (props.premiumTier) guild.premiumTier = payload.guild.premium_tier
   if (props.stageInstances && payload.guild.stage_instances)
-    guild.stageInstances = payload.guild.stage_instances?.map((si) => ({
+    guild.stageInstances = payload.guild.stage_instances.map((si) => ({
       /** The id of this Stage instance */
       id: bot.transformers.snowflake(si.id),
       /** The guild id of the associated Stage channel */
@@ -107,7 +106,7 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
     )
   if (props.systemChannelFlags && payload.guild.system_channel_flags) guild.systemChannelFlags = payload.guild.system_channel_flags
   if (props.vanityUrlCode && payload.guild.vanity_url_code) guild.vanityUrlCode = payload.guild.vanity_url_code
-  if (props.verificationLevel && payload.guild.verification_level) guild.verificationLevel = payload.guild.verification_level
+  if (props.verificationLevel) guild.verificationLevel = payload.guild.verification_level
   if (props.welcomeScreen && payload.guild.welcome_screen)
     guild.welcomeScreen = {
       description: payload.guild.welcome_screen.description ?? undefined,
@@ -121,7 +120,7 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
   if (props.discoverySplash && payload.guild.discovery_splash) guild.discoverySplash = iconHashToBigInt(payload.guild.discovery_splash)
   if (props.joinedAt && payload.guild.joined_at) guild.joinedAt = Date.parse(payload.guild.joined_at)
   if (props.memberCount && payload.guild.member_count) guild.memberCount = payload.guild.member_count ?? 0
-  if (props.shardId && payload.shardId) guild.shardId = payload.shardId
+  if (props.shardId) guild.shardId = payload.shardId
   if (props.icon && payload.guild.icon) guild.icon = iconHashToBigInt(payload.guild.icon)
   if (props.banner && payload.guild.banner) guild.banner = iconHashToBigInt(payload.guild.banner)
   if (props.splash && payload.guild.splash) guild.splash = iconHashToBigInt(payload.guild.splash)
