@@ -1,12 +1,11 @@
 import { Intents } from '@discordeno/types'
 import { delay, logger } from '@discordeno/utils'
-import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
 import type { EventHandlers } from '../../src/bot.js'
 import { createBot } from '../../src/bot.js'
 import { token } from './constants.js'
-chai.use(chaiAsPromised)
+chaiUse(chaiAsPromised)
 
 describe('[Bot] Delete any guild owned guilds', () => {
   it('Start the bot', async () => {
