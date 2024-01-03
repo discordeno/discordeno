@@ -1,5 +1,6 @@
 import { Intents } from '@discordeno/types'
 import { delay, logger } from '@discordeno/utils'
+import { use as chaiUse } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
 import type { EventHandlers } from '../../src/bot.js'
