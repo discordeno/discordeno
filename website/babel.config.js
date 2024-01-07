@@ -1,2 +1,12 @@
-export const presets = [require.resolve('@docusaurus/core/lib/babel/preset')]
-export const plugins = ['babel-plugin-styled-components']
+module.exports = {
+  presets: [require.resolve('@docusaurus/core/lib/babel/preset')],
+  plugins: [
+    'babel-plugin-styled-components',
+    [
+      '@babel/plugin-transform-react-jsx',
+      {
+        runtime: 'automatic',
+      },
+    ],
+  ],
+}

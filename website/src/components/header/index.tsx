@@ -1,6 +1,5 @@
 import Link from '@docusaurus/Link'
-import { Header, Highlight, Button, HeaderBody } from '@site/src/styling'
-import React from 'react'
+import { Button, Header, HeaderBody, Highlight } from '@site/src/styling'
 
 export default function DiscordenoHeader(): JSX.Element {
   return (

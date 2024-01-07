@@ -1,4 +1,3 @@
-import React from 'react'
 import { type FeatureList } from '@site/src/types'
 import clsx from 'clsx'
 

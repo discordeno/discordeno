@@ -1,5 +1,5 @@
 import Layout from '@theme/Layout'
-import React from 'react'
+import { useEffect, useState } from 'react'
 import Footer from '../components/footer'
 import DiscordenoHeader from '../components/header'
 import DiscordenoFAQ from '../components/home/faq'
@@ -9,9 +9,9 @@ import { MainPage } from '../styling'
 
 export default function Home(): JSX.Element {
   // Use loading to give time to JS to load
-  const [loading, setLoading] = React.useState(true)
+  const [loading, setLoading] = useState(true)
 
-  React.useEffect(() => {
+  useEffect(() => {
     setTimeout(() => {
       setLoading(false)
 

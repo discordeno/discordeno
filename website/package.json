@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@babel/plugin-syntax-flow": "^7.23.3",
+    "@babel/plugin-transform-react-jsx": "^7.23.4",
     "@docusaurus/core": "3.1.0",
     "@docusaurus/preset-classic": "3.1.0",
     "@docusaurus/theme-common": "^3.1.0",

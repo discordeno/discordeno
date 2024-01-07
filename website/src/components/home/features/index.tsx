@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from '@site/src/styling/styles.module.css'
 import { type FeatureItem } from '@site/src/types'
 import Feature from './feature'

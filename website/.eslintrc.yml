@@ -5,6 +5,7 @@ env:
 extends:
   - standard-with-typescript
   - plugin:react/recommended
+  - plugin:react/jsx-runtime
   - plugin:prettier/recommended
 overrides: []
 parserOptions:

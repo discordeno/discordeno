@@ -2346,7 +2346,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-react-jsx@npm:^7.22.15, @babel/plugin-transform-react-jsx@npm:^7.22.5":
+"@babel/plugin-transform-react-jsx@npm:^7.22.15, @babel/plugin-transform-react-jsx@npm:^7.22.5, @babel/plugin-transform-react-jsx@npm:^7.23.4":
   version: 7.23.4
   resolution: "@babel/plugin-transform-react-jsx@npm:7.23.4"
   dependencies:
@@ -16765,6 +16765,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.23.7"
     "@babel/plugin-syntax-flow": "npm:^7.23.3"
+    "@babel/plugin-transform-react-jsx": "npm:^7.23.4"
     "@docusaurus/core": "npm:3.1.0"
     "@docusaurus/module-type-aliases": "npm:^3.1.0"
     "@docusaurus/preset-classic": "npm:3.1.0"

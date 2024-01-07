@@ -31,6 +31,7 @@ const config: Config = {
       loader: require.resolve('esbuild-loader'),
       options: {
         loader: 'tsx',
+        jsx: 'automatic',
         format: isServer ? 'cjs' : undefined,
         target: isServer ? 'node12' : 'es2017',
       },
