@@ -19,7 +19,7 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 )
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -142,17 +142,17 @@ export default function BenchmarkResultCharts(): JSX.Element {
 
   useEffect(() => {
     if (!data) {
-      ;(async () => {
+      void (async () => {
         setData(
           JSON.parse(
             (
               await (
                 await fetch(
-                  'https://raw.githubusercontent.com/discordeno/discordeno/benchies/benchmarksResult/data.js'
+                  'https://raw.githubusercontent.com/discordeno/discordeno/benchies/benchmarksResult/data.js',
                 )
               ).text()
-            ).slice(24)
-          )
+            ).slice(24),
+          ) as { entries: { Benchmark: [] } },
         )
       })()
     }
@@ -181,7 +181,7 @@ export default function BenchmarkResultCharts(): JSX.Element {
       {data ? (
         Array.from(
           collectBenchesPerTestCase(data.entries.Benchmark),
-          ([key, value]) => ({ benchName: key, benches: value })
+          ([key, value]) => ({ benchName: key, benches: value }),
         ).map((bench, index) => (
           <BenchmarkResultChart
             key={index}

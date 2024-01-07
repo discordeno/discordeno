@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react'
 import ReactFlow, {
   Background,
   Controls,
-  Edge,
   Handle,
-  Node,
-  NodeMouseHandler,
   Position,
   useEdgesState,
   useNodesState,
+  type Edge,
+  type Node,
 } from 'reactflow'
 import 'reactflow/dist/style.css'
 import {
@@ -18,12 +17,13 @@ import {
   widthMultiplier,
 } from './BaseFlowChart'
 
-const handlers: {
-  [index: string]: {
+const handlers: Record<
+  string,
+  {
     transformers: string[]
     event: string
   }
-} = {
+> = {
   handleChannelCreate: {
     transformers: ['transformers.channel'],
     event: 'events.channelCreate',
@@ -350,6 +350,8 @@ const handlers: {
 
 export default function FlowChart({
   handlerFilter = (handler: string) => true,
+}: {
+  handlerFilter: (handler: string) => boolean
 }) {
   function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window
@@ -369,7 +371,9 @@ export default function FlowChart({
     }
 
     window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
   }, [])
 
   const transformers = []
@@ -467,7 +471,6 @@ export default function FlowChart({
     },
   ]
 
-  //@ts-ignore
   for (const [index, handler] of Object.keys(handlers)
     .filter(handlerFilter)
     .entries()) {
@@ -528,7 +531,6 @@ export default function FlowChart({
     }
   }
 
-  //@ts-ignore
   for (const [index, transformer] of transformers.entries()) {
     initialNodes.push({
       id: transformer,
@@ -544,7 +546,6 @@ export default function FlowChart({
     })
   }
 
-  //@ts-ignore
   for (const [index, event] of events.entries()) {
     initialNodes.push({
       id: event,
@@ -647,12 +648,16 @@ export default function FlowChart({
     },
   )
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
-  const [handlerIndex, setHandlerIndex] = useState(0)
+  const [nodes] = useNodesState(initialNodes)
+  const [edges, setEdges] = useEdgesState(initialEdges)
+  const [, setHandlerIndex] = useState(0)
   const [userClick, setUserClick] = useState(false)
 
-  const nodeMouseHandler: NodeMouseHandler = (_, node, userTrigger = true) => {
+  const nodeMouseHandler = (
+    _: React.MouseEvent,
+    node: Node,
+    userTrigger = true,
+  ) => {
     if (userTrigger) setUserClick(true)
     if (node.id.split('-')[0] === 'baseNode') {
       edges.forEach(e => {
@@ -817,13 +822,19 @@ export default function FlowChart({
       if (!userClick) {
         nodeMouseHandler(
           undefined,
-          { id: Object.keys(handlers).filter(handlerFilter)[randomIndex] },
+          {
+            id: Object.keys(handlers).filter(handlerFilter)[randomIndex],
+            data: undefined,
+            position: undefined,
+          },
           false,
         )
       }
       setHandlerIndex(randomIndex)
     }, 1000)
-    return () => clearInterval(interval)
+    return () => {
+      clearInterval(interval)
+    }
   }, [userClick])
 
   useEffect(() => {
@@ -831,7 +842,9 @@ export default function FlowChart({
       const timeout = setTimeout(() => {
         setUserClick(false)
       }, 10000)
-      return () => clearTimeout(timeout)
+      return () => {
+        clearTimeout(timeout)
+      }
     }
   }, [userClick])
 
@@ -863,9 +876,15 @@ export default function FlowChart({
           onNodeDoubleClick={nodeMouseHandler}
           onNodeClick={nodeMouseHandler}
           onClick={e => {
-            //@ts-ignore
-            if (e.target.className === 'react-flow__pane')
-              nodeMouseHandler(e, { id: ' - ', data: { label: ' - ' } })
+            const target = e.target as HTMLDivElement
+
+            if (target.className === 'react-flow__pane') {
+              nodeMouseHandler(e, {
+                id: ' - ',
+                data: { label: ' - ' },
+                position: undefined,
+              })
+            }
           }}
           nodeTypes={{
             baseLineNode: () => (

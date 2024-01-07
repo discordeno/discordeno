@@ -44,9 +44,8 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,md,html,css}": "yarn run prettier --ignore-unknown --write",
-    "*.{js,ts,tsx}": [
-      "yarn run eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to ."
-    ]
+    "!(website)/**/*.{js,ts,tsx}": "yarn run eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to .",
+    "website/**/*.{js,ts,tsx}": "yarn run eslint --fix --config ./website/.eslintrc.yml --resolve-plugins-relative-to ./website"
   },
   "packageManager": "yarn@4.0.2",
   "dependencies": {

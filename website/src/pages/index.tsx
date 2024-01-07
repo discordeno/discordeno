@@ -1,12 +1,11 @@
-import React from 'react'
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import Layout from '@theme/Layout'
-import DiscordenoHeader from '../components/header'
-import { MainPage } from '../styling'
-import DiscordenoFeatures from '../components/home/features'
+import React from 'react'
 import Footer from '../components/footer'
-import DiscordenoReviews from '../components/home/reviews'
+import DiscordenoHeader from '../components/header'
 import DiscordenoFAQ from '../components/home/faq'
+import DiscordenoFeatures from '../components/home/features'
+import DiscordenoReviews from '../components/home/reviews'
+import { MainPage } from '../styling'
 
 export default function Home(): JSX.Element {
   // Use loading to give time to JS to load

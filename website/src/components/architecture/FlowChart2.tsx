@@ -1,5 +1,5 @@
 import React from 'react'
-import { Edge, Node, Position } from 'reactflow'
+import { type Edge, type Node, Position } from 'reactflow'
 import 'reactflow/dist/style.css'
 import BaseFlowChart, {
   defaultGroupOptions,
