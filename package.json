@@ -35,7 +35,7 @@
     "lint-staged": "^15.2.0",
     "prettier": "^3.1.1",
     "turbo": "^1.11.1",
-    "typedoc": "0.25.6",
+    "typedoc": "0.25.7",
     "typedoc-plugin-markdown": "3.17.1",
     "typescript": "5.3.3"
   },
@@ -47,8 +47,5 @@
     "!(website)/**/*.{js,ts,tsx}": "yarn run eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to .",
     "website/**/*.{js,ts,tsx}": "yarn run eslint --fix --config ./website/.eslintrc.yml --resolve-plugins-relative-to ./website"
   },
-  "packageManager": "yarn@4.0.2",
-  "dependencies": {
-    "typedoc-plugin-missing-exports": "^2.1.0"
-  }
+  "packageManager": "yarn@4.0.2"
 }
