@@ -18,9 +18,9 @@
     "setup-dd": ""
   },
   "dependencies": {
-    "@docusaurus/core": "3.1.0",
-    "@docusaurus/preset-classic": "3.1.0",
-    "@docusaurus/theme-common": "^3.1.0",
+    "@docusaurus/core": "3.0.1",
+    "@docusaurus/preset-classic": "3.0.1",
+    "@docusaurus/theme-common": "3.0.1",
     "@easyops-cn/docusaurus-search-local": "^0.40.1",
     "@mdx-js/react": "^3.0.0",
     "chart.js": "^4.4.1",
@@ -33,9 +33,9 @@
     "styled-components": "^6.1.6"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "^3.1.0",
-    "@docusaurus/tsconfig": "^3.1.0",
-    "@docusaurus/types": "^3.1.0",
+    "@docusaurus/module-type-aliases": "3.0.1",
+    "@docusaurus/tsconfig": "3.0.1",
+    "@docusaurus/types": "3.0.1",
     "@types/react": "^18.2.47",
     "@typescript-eslint/eslint-plugin": "^6.18.0",
     "@typescript-eslint/parser": "^6.18.0",
