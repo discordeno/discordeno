@@ -15,6 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ahmadnassri/action-workflow-queue@v1
+        if: ${{ github.event_name != 'pull_request' }}
         with:
           timeout: 6000000
   rest-e2e-test:
