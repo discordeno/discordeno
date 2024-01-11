@@ -1,11 +1,11 @@
 import type { Camelize, DiscordEmoji } from '@discordeno/types'
 import { urlToBase64 } from '@discordeno/utils'
-import chai, { expect } from 'chai'
+import { use as chaiUse, expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { after, afterEach, before, beforeEach, describe, it } from 'mocha'
 import { e2ecache, rest } from './utils.js'
 
-chai.use(chaiAsPromised)
+chaiUse(chaiAsPromised)
 
 before(async () => {
   if (!e2ecache.guild) {

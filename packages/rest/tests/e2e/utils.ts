@@ -1,5 +1,4 @@
-import { LogDepth, logger, LogLevels } from '@discordeno/utils'
-
+import { type DiscordPartialGuild } from '@discordeno/types'
 import { createRestManager } from '../../src/manager.js'
 import { E2E_TEST_GUILD_ID, token } from './constants.js'
 // For debugging purposes
@@ -10,6 +9,11 @@ export const rest = createRestManager({
   token,
 })
 rest.deleteQueueDelay = 10000
+
+const guilds = await rest.get<DiscordPartialGuild[]>(rest.routes.guilds.userGuilds())
+guilds.forEach((guild) => {
+  if (guild.owner) rest.deleteGuild(guild.id)
+})
 
 const guild = await rest.createGuild({ name: 'ddenotester' })
 const channel = await rest.createChannel(guild.id, { name: 'ddenotestchannel' })
