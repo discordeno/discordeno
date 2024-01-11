@@ -1,8 +1,8 @@
-import chai, { expect } from 'chai'
+import { use as chaiUse, expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
 import { e2ecache, rest } from './utils.js'
-chai.use(chaiAsPromised)
+chaiUse(chaiAsPromised)
 
 before(async () => {
   if (!e2ecache.guild) {
@@ -45,6 +45,7 @@ describe('Get a user from the api', () => {
   })
 
   it('With an invalid user id', async () => {
+    // eslint-disable-next-line @typescript-eslint/await-thenable
     await expect(rest.getUser('123')).eventually.throws
   })
 })
