@@ -1794,16 +1794,16 @@ export interface RestManager {
   /**
    * Get the user guilds.
    *
-   * @param bearerToken - The access token of the user
+   * @param bearerToken - The access token of the user, if unspecified the bot token is used instead
    * @param options - The parameters for the fetching of the guild.
    * @returns An instance of {@link Guild}.
    *
    * @remarks
-   * The access tokens needs to have the `guilds` scope
+   * If used with an access token, the token needs to have the `guilds` scope
    *
    * @see {@link https://discord.com/developers/docs/resources/user#get-current-user-guilds}
    */
-  getGuilds: (bearerToken: string, options?: GetUserGuilds) => Promise<CamelizedDiscordPartialGuild[]>
+  getGuilds: (bearerToken?: string, options?: GetUserGuilds) => Promise<CamelizedDiscordPartialGuild[]>
   /**
    * Gets a guild application command by its ID.
    *
