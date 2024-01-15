@@ -50,6 +50,6 @@
   },
   "packageManager": "yarn@4.0.2",
   "dependencies": {
-    "typedoc-plugin-missing-exports": "^2.1.0"
+    "typedoc-plugin-missing-exports": "^2.2.0"
   }
 }
