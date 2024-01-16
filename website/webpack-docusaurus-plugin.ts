@@ -3,10 +3,10 @@
  * https://github.com/facebook/docusaurus/issues/4765#issuecomment-1679863984
  */
 
-import type { Plugin } from '@docusaurus/types'
+import type { LoadContext, Plugin } from '@docusaurus/types'
 import TerserPlugin, { esbuildMinify } from 'terser-webpack-plugin'
 
-export default function (context, options): Plugin {
+export default function (context: LoadContext, options: unknown): Plugin {
   return {
     name: 'webpack-docusaurus-plugin',
     configureWebpack(config, isServer, utils) {
