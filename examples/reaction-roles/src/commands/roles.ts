@@ -18,7 +18,7 @@ const command: Command = {
   description: 'Role management on your server.',
   // Do not allow to run this command in DM.
   dmPermission: false,
-  // Require the user to have Manage Guild and Manage Roles by-default
+  // Require the user to have Manage Guild and Manage Roles by-default, server admins can override this setting
   defaultMemberPermissions: ['MANAGE_GUILD', 'MANAGE_ROLES'],
   options: [
     {
@@ -29,26 +29,25 @@ const command: Command = {
         {
           name: 'create',
           description: 'Create a reaction role on your server.',
-          required: false,
           type: ApplicationCommandOptionTypes.SubCommand,
           options: [
             {
-              required: true,
               name: 'role',
               description: 'What role would you like to set for this button?',
               type: ApplicationCommandOptionTypes.Role,
+              required: true,
             },
             {
-              required: true,
               name: 'emoji',
               description: "What would you like to set as this button's emoji?",
               type: ApplicationCommandOptionTypes.String,
+              required: true,
             },
             {
-              required: true,
               name: 'color',
               description: "What color would you like to set as this button's color?",
               type: ApplicationCommandOptionTypes.Integer,
+              required: true,
               choices: [
                 { name: 'Blue', value: ButtonStyles.Primary },
                 { name: 'Green', value: ButtonStyles.Success },
