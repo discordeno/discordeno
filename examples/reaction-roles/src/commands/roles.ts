@@ -87,7 +87,7 @@ const command: Command = {
       })
 
       // Create a copy of the actionRow for the main message
-      // NOTE: we use a copy so when we edit this actionRow the edits don't get applied to all the command executions, only this one
+      // NOTE: we use a copy so when we edit this actionRow the edits don't get applied to all the command executions, only this one, for example we do disable some buttons in some conditional cases
       const messageActionRow = structuredClone(messageActionRowTemplate)
 
       await interaction.defer(true)
@@ -118,7 +118,7 @@ const command: Command = {
         }
 
         // Save button
-        if (i.data?.customId === messageActionRowTemplate.components[2]?.customId) {
+        if (i.data?.customId === 'reactionRoles-save') {
           // Remove this item collector from the list of collectors (we aren't correcting anymore)
           collectors.delete(itemCollector)
 
@@ -130,7 +130,7 @@ const command: Command = {
         }
 
         // New button
-        if (i.data?.customId === messageActionRowTemplate.components[0]?.customId) {
+        if (i.data?.customId === 'reactionRoles-add') {
           await i.defer(true)
 
           partialRoleInfo = {}
@@ -141,7 +141,7 @@ const command: Command = {
         }
 
         // New button - role select menu
-        if (partialRoleInfo && i.data?.customId === selectRoleActionRow.components[0]?.customId) {
+        if (partialRoleInfo && i.data?.customId === 'reactionRoles-add-role') {
           const roleToAdd = i.data?.resolved?.roles?.first()
 
           // Verify that we could get the role from discord
@@ -163,7 +163,7 @@ const command: Command = {
         }
 
         // New button - color select menu
-        if (partialRoleInfo && i.data?.customId === selectColorActionRow.components[0]?.customId) {
+        if (partialRoleInfo && i.data?.customId === 'reactionRoles-add-color') {
           const color = parseInt(i.data?.values?.[0] ?? 'NaN')
 
           // Verify that we could get the color information
@@ -238,7 +238,7 @@ const command: Command = {
         }
 
         // Remove button
-        if (i.data?.customId === messageActionRowTemplate.components[1]?.customId) {
+        if (i.data?.customId === 'reactionRoles-remove') {
           // Clone the actionRow for the remove select menu, this is to prevent unwanted data to appear to other users
           const removeActionRow = structuredClone(removeActionRowTemplate)
           const selectMenu = removeActionRow.components[0] as SelectMenuComponent
@@ -262,7 +262,7 @@ const command: Command = {
         }
 
         // Remove button - role select menu
-        if (i.data?.customId === removeActionRowTemplate.components[0].customId) {
+        if (i.data?.customId === 'reactionRoles-remove-selectMenu') {
           // Ensure that we can get the channelId from the interaction
           if (!interaction.channelId) {
             throw new Error('Unable to get current channel')
@@ -389,19 +389,6 @@ const selectRoleActionRow: ActionRow = {
   ],
 } as const
 
-const selectEmojiActionRow: ActionRow = {
-  type: MessageComponentTypes.ActionRow,
-  components: [
-    {
-      type: MessageComponentTypes.InputText,
-      style: TextStyles.Short,
-      customId: 'reactionRoles-add-emoji',
-      label: 'Emoji for the reaction role',
-      required: true,
-    },
-  ],
-} as const
-
 const selectColorActionRow: ActionRow = {
   type: MessageComponentTypes.ActionRow,
   components: [
@@ -418,6 +405,19 @@ const selectColorActionRow: ActionRow = {
   ],
 } as const
 
+const selectEmojiActionRow: ActionRow = {
+  type: MessageComponentTypes.ActionRow,
+  components: [
+    {
+      type: MessageComponentTypes.InputText,
+      style: TextStyles.Short,
+      customId: 'reactionRoles-add-emoji',
+      label: 'Emoji for the reaction role',
+      required: true,
+    },
+  ],
+} as const
+
 const selectLabelActionRow: ActionRow = {
   type: MessageComponentTypes.ActionRow,
   components: [
@@ -426,7 +426,6 @@ const selectLabelActionRow: ActionRow = {
       style: TextStyles.Short,
       customId: 'reactionRoles-add-label',
       label: 'Label for the reaction role [OPTIONAL]',
-      required: false,
       // Discord imposed limit for button labels
       maxLength: 80,
     },

@@ -34,7 +34,6 @@ bot.transformers.desiredProperties.interaction.guildId = true
 bot.transformers.desiredProperties.interaction.channelId = true
 
 bot.transformers.desiredProperties.role.id = true
-bot.transformers.desiredProperties.role.name = true
 
 const guildId = 'REPLACE WITH YOUR GUILD ID'
 

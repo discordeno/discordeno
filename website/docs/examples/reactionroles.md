@@ -626,7 +626,7 @@ Let's start by the object we pass to `sendMessage`, in here we define what data 
 
 This applies pretty much identically to the `interaction.respond` function that we call, it too has a `content` for the message and a `components` array with inside an action row that this time has 3 buttons that we define.
 
-If you save and run the bot, after you run the command you might start to have a problem, discord still says that the application did not respond, but how is that possibile? We just added the code to respond to the interaction, this is true but we forgot a thing, a discordeno concept called `desired properties`, this is an optimization discordeno builds to make your code more performant but can be found annoying or unnecessary, to explain how there `desired properties` works we need to talk about how discord sends us data, discord uses his own way to require/give data to who consumes the api we won't go deep into this, you can refer to the official documentation if you are interested, but know that the way discord sends us data is not the way that we (might) want it for this reason discordeno needs to map it from the discord format to the discordeno format, this is done via `transformers` defined in the `bot.transformers` object, we won't use them directly but we need to tell them what we need from the pile of data discord provides us. If we look back to the `src/events/interactionCreate.ts` file we can notice that we use `interaction.type` and `interaction.data`, and if in our command we can find we use `interaction.channelId` and if we look what the `interaction.respond` does in our command we can see that it uses `interaction.id` and `interaction.token`, all of there 5 proprieties needs to be added to the `desired properties` list, we can do this by going back to `src/index.ts` and add a few lines:
+If you save and run the bot, after you run the command you might start to have a problem, discord still says that the application did not respond, but how is that possibile? We just added the code to respond to the interaction, this is true but we forgot a thing, a discordeno concept called `desired properties`, this is an optimization discordeno builds to make your code more performant but can be found annoying or unnecessary, to explain how there `desired properties` works we need to talk about how discord sends us data, discord uses his own way to require/give data to who consumes the api we won't go deep into this, you can refer to the official documentation if you are interested, but know that the way discord sends us data is not the way that we (might) want it for this reason discordeno needs to map it from the discord format to the discordeno format, this is done via `transformers` defined in the `bot.transformers` object, we won't use them directly but we need to tell them what we need from the pile of data discord provides us. If we look back to the `src/events/interactionCreate.ts` file we can notice that we use `interaction.type` and `interaction.data`, and if in our command we can find we use `interaction.channelId` and if we look what the `interaction.respond` does in our command we can see that it uses `interaction.id` and `interaction.token`, and if the look at our `interaction.respond` we see that we are using 1 values from the role object, `role.id`, so we need to add all of there 6 proprieties needs to be added to the `desired properties` list, we can do this by going back to `src/index.ts` and add a few lines:
 
 ```ts
 // REST OF YOUR CODE
@@ -642,6 +642,8 @@ bot.transformers.desiredProperties.interaction.data = true
 bot.transformers.desiredProperties.interaction.type = true
 bot.transformers.desiredProperties.interaction.token = true
 bot.transformers.desiredProperties.interaction.channelId = true
+
+bot.transformers.desiredProperties.role.id = true
 // insert-end
 
 // REST OF YOUR CODE
@@ -659,7 +661,7 @@ If we now try again we finally see our message and in the our 3 buttons. But the
 
 ### Handling interaction beyond commands
 
-So, now we are problem, discord is saying that we don't respond to the button click, and he is in fact right, we didn't, but we need to make some changes to more then our command file. The problem is rather simple: we need a way to get the interaction of us clicking that "Add" button for example inside our command. Interaction do not "chain" but they share some data we can use, we can find the `message` propriety, this propriety will be defined if the interaction is discord telling us about a user that has clicked a button, this seems perfect, we now have a way to tell that we need that interaction, and while a move forward we still face an issue: **how** do we get the data from the interaction of the button click in our command?
+So, now we are problem, discord is saying that we don't respond to the button click, and he is in fact right, we didn't, but we need to make some changes to more then our command file. The problem is rather simple: we need a way to get the interaction of us clicking that "Add" button for example inside our command. Interaction do not "chain" but they share some data we can use the `message` propriety, this propriety will be defined if the interaction is discord telling us about a user that has clicked a button, this seems perfect, we now have a way to tell that we need that interaction, and while a move forward we still face an issue: **how** do we get the data from the interaction of the button click in our command?
 
 You can get creative and do anything you find more appropriate to handle this situation, a few examples are:
 
@@ -760,7 +762,7 @@ async execute(interaction, args: CommandArgs) {
         return
       }
 
-      i.respond("Hello world");
+      await i.respond("Hello world");
     })
 
     // insert-end
@@ -796,3 +798,713 @@ bot.transformers.desiredProperties.interaction.channelId = true
 ```
 
 If we run the code at this point we can see that by clicking the button we will get a message back saying `Hello world`, we did it! We responded to a button from inside the command!
+
+### Handling the menu
+
+We now need to handle correctly all there 3 buttons we declared before, as mentioned before discord allows us to declare custom ids we can reference in our code, so let's start with that:
+
+First we can implement the easiest buttons out of the 3, the save button. Since we are going to "live" edit a message after our menu message we just need to delete the menu message, and to since we don't need it anymore remove the collector
+
+```ts
+itemCollector.onItem(async i => {
+  if (i.message?.id.toString() !== message.id) {
+    return
+  }
+
+  // remove-next-line
+  await i.respond('Hello world')
+
+  // insert-start
+  if (i.data?.customId === 'reactionRoles-save') {
+    collectors.delete(itemCollector)
+
+    await i.defer(true)
+    await i.delete()
+
+    return
+  }
+  // insert-end
+
+  // REST OF YOUR CODE
+})
+
+// REST OF YOUR CODE
+```
+
+If we now try to run click the save button the menu will close, so this is done!
+
+Let's move on the add and remove, we found a problem: we need a way to update the buttons shown in the final message and also we need to know what buttons the user has created up to this point.
+
+Let's start with the second problem, the need to know what buttons the user created, we can do this by storing in an array all the buttons the user created, we just need to declare it:
+
+```ts
+// insert-next-line
+let roles = [args.reactions.create]
+
+const roleMessage = await bot.helpers.sendMessage(interaction.channelId, {
+  content: 'Pick your roles',
+  components: [
+    {
+      type: MessageComponentTypes.ActionRow,
+      components: [
+        {
+          type: MessageComponentTypes.Button,
+          style: args.reactions.create.color,
+          emoji: {
+            name: args.reactions.create.emoji,
+          },
+          label: args.reactions.create.label,
+          customId: `reactionRoles-role-${args.reactions.create.role.id}`,
+        },
+      ],
+    },
+  ],
+})
+```
+
+Now we can deal with the first problem, we need to have something to create these button objects, we can do this by creating a pretty easy function that will:
+
+- Create an action row array
+- Add an action row if we have some buttons to add
+- If we have reached the limit imposed by discord (5 buttons per action row) it creates another action row and start using that
+
+```ts
+function getRoleButtons(
+  roles: Array<{
+    role: Role
+    emoji: string
+    color: ButtonStyles
+    label?: string | undefined
+  }>,
+): ActionRow[] {
+  const actionRows: ActionRow[] = []
+
+  if (roles.length === 0) return actionRows
+
+  // We add the components later, so we need to make typescript know that we are sure that it will be a compatibile components array
+  actionRows.push({
+    type: MessageComponentTypes.ActionRow,
+    components: [] as unknown as ActionRow['components'],
+  })
+
+  for (const roleInfo of roles) {
+    let actionRow = actionRows.at(-1)
+
+    if (!actionRow) {
+      throw new Error('Unable to get actionRow')
+    }
+
+    if (actionRow.components.length === 5) {
+      actionRow = {
+        type: MessageComponentTypes.ActionRow,
+        components: [] as unknown as ActionRow['components'],
+      }
+      actionRows.push(actionRow)
+    }
+
+    actionRow?.components.push({
+      type: MessageComponentTypes.Button,
+      style: roleInfo.color,
+      emoji: {
+        name: roleInfo.emoji,
+      },
+      label: roleInfo.label,
+      customId: `reactionRoles-role-${roleInfo.role.id}`,
+    })
+  }
+
+  return actionRows
+}
+```
+
+:::note
+Remember to import all the types we are using, some IDE/Text editors will have the option to quickly fix the error about the type not found and to import it
+:::
+
+And now we can use this function, let's go back right after the creation of the roles array
+
+```ts
+let roles = [args.reactions.create]
+
+const roleMessage = await bot.helpers.sendMessage(interaction.channelId, {
+  content: 'Pick your roles',
+  // remove-start
+  components: [
+    {
+      type: MessageComponentTypes.ActionRow,
+      components: [
+        {
+          type: MessageComponentTypes.Button,
+          style: args.reactions.create.color,
+          emoji: {
+            name: args.reactions.create.emoji,
+          },
+          label: args.reactions.create.label,
+          customId: `reactionRoles-role-${args.reactions.create.role.id}`,
+        },
+      ],
+    },
+  ],
+  // remove-end
+  // insert-next-line
+  components: getRoleButtons(roles),
+})
+```
+
+Let's now implement the remove button, as it is the next easiest one, to implement this button we want to give the user the choice to select between already exiting reaction roles buttons to do this we can use a select menu:
+
+```ts
+itemCollector.onItem(async i => {
+  if (i.message?.id.toString() !== message.id) {
+    return
+  }
+
+  if (i.data?.customId === 'reactionRoles-save') {
+    collectors.delete(itemCollector)
+
+    await i.defer(true)
+    await i.delete()
+
+    return
+  }
+
+  // insert-start
+  if (i.data?.customId === 'reactionRoles-remove') {
+    const options: SelectOption[] = []
+
+    for (const roleInfo of roles) {
+      options.push({
+        label: `${roleInfo.emoji} ${roleInfo.label}`,
+        value: roleInfo.role.id.toString(),
+      })
+    }
+
+    await i.defer(true)
+    await i.edit({
+      content: 'Select what reaction role to remove',
+      components: [
+        {
+          type: MessageComponentTypes.ActionRow,
+          components: [
+            {
+              type: MessageComponentTypes.SelectMenu,
+              customId: 'reactionRoles-remove-selectMenu',
+              maxValues: 1,
+              minValues: 1,
+              placeholder: 'Select roles',
+              options,
+            },
+          ],
+        },
+      ],
+    })
+
+    return
+  }
+  // insert-end
+
+  // REST OF YOUR CODE
+})
+
+// REST OF YOUR CODE
+```
+
+And now we need to add the code for the select menu:
+
+```ts
+if (i.data?.customId === 'reactionRoles-remove') {
+  const options: SelectOption[] = []
+
+  for (const roleInfo of roles) {
+    options.push({
+      label: `${roleInfo.emoji} ${roleInfo.label}`,
+      value: roleInfo.role.id.toString(),
+    })
+  }
+
+  await i.defer(true)
+  await i.edit({
+    content: 'Select what reaction role to remove',
+    components: [
+      {
+        type: MessageComponentTypes.ActionRow,
+        components: [
+          {
+            type: MessageComponentTypes.SelectMenu,
+            customId: 'reactionRoles-remove-selectMenu',
+            maxValues: 1,
+            minValues: 1,
+            placeholder: 'Select roles',
+            options,
+          },
+        ],
+      },
+    ],
+  })
+
+  return
+}
+
+// insert-start
+if (i.data?.customId === 'reactionRoles-remove-selectMenu') {
+  const roleToRemove = i.data?.values?.[0]
+
+  await i.defer(true)
+
+  roles = roles.filter(roleInfo => roleInfo.role.id.toString() !== roleToRemove)
+
+  await bot.helpers.editMessage(interaction.channelId, roleMessage.id, {
+    components: getRoleButtons(roles),
+  })
+
+  await i.edit({
+    content: 'Use the buttons in this message to edit the message below.',
+    components: [messageActionRow],
+  })
+
+  return
+}
+// insert-end
+
+// REST OF YOUR CODE
+```
+
+And now we are left just one thing, the add button, for this we now need to use a new type of interaction responses: modals
+
+Modals are a popup that we can create where the user will be requested to type something for example the emoji and (optionally) the label, to use them with the `interaction.respond` method we can add a `title` (a required propriety by modals) to the objects.
+
+Other than emoji and labels we also need the role to give and the color for the button, unfortunately we can't add them directly in our modal, discord does not allow it, so we need to find another way, we can
+
+1. Wait for the button click on the add button
+1. Show the user a select menu for the role
+1. Show the user a select menu but for the color this time
+1. Show the user the modal for the emoji and label
+1. Create our new button
+
+Since it's a multi-step process we need to store the partial data of this new role, so let's start with that, we can add it right before our onItem call:
+
+```ts
+// REST OF YOUR CODE
+
+// insert-next-line
+let partialRoleInfo: Partial<(typeof roles)[number]> | undefined
+
+itemCollector.onItem(async i => {
+  // REST OF YOUR CODE
+})
+
+// REST OF YOUR CODE
+```
+
+and now we can start with the code for the button click and the 2 select menu as we already know how that code looks like:
+
+```ts
+if (i.data?.customId === 'reactionRoles-remove-selectMenu') {
+  const roleToRemove = i.data?.values?.[0]
+
+  await i.defer(true)
+
+  roles = roles.filter(roleInfo => roleInfo.role.id.toString() !== roleToRemove)
+
+  await bot.helpers.editMessage(interaction.channelId, roleMessage.id, {
+    components: getRoleButtons(roles),
+  })
+
+  await i.edit({
+    content: 'Use the buttons in this message to edit the message below.',
+    components: [messageActionRow],
+  })
+
+  return
+}
+
+// insert-start
+if (i.data?.customId === 'reactionRoles-add') {
+  await i.defer(true)
+
+  partialRoleInfo = {}
+
+  await i.edit({
+    content: 'Pick a role for the new reaction role',
+    components: [
+      {
+        type: MessageComponentTypes.ActionRow,
+        components: [
+          {
+            type: MessageComponentTypes.SelectMenuRoles,
+            customId: 'reactionRoles-add-role',
+            maxValues: 1,
+            minValues: 1,
+            placeholder: 'Select a role',
+          },
+        ],
+      },
+    ],
+  })
+  return
+}
+
+if (i.data?.customId === 'reactionRoles-add-role') {
+  const roleToAdd = i.data?.resolved?.roles?.first()
+
+  partialRoleInfo.role = roleToAdd
+
+  await i.defer(true)
+  await i.edit({
+    content: 'Pick a color for the reaction role',
+    components: [
+      {
+        type: MessageComponentTypes.ActionRow,
+        components: [
+          {
+            type: MessageComponentTypes.SelectMenu,
+            customId: 'reactionRoles-add-color',
+            options: [
+              { label: 'Blue', value: ButtonStyles.Primary.toString() },
+              { label: 'Green', value: ButtonStyles.Success.toString() },
+              { label: 'Grey', value: ButtonStyles.Secondary.toString() },
+              { label: 'Red', value: ButtonStyles.Danger.toString() },
+            ],
+          },
+        ],
+      },
+    ],
+  })
+
+  return
+}
+
+if (i.data?.customId === 'reactionRoles-add-color') {
+  const color = parseInt(i.data?.values?.[0])
+
+  partialRoleInfo.color = color
+
+  await i.respond({
+    content: 'Hello world',
+  })
+
+  return
+}
+// insert-end
+
+// REST OF YOUR CODE
+```
+
+Now we miss only the modal part, for now we put an hello world just to verify that every worked but we need to create this modal, to create a modal we need:
+
+- A `title` - the title for the modal that the user will see
+- A `components` array - Like for messages modals require us to give a action rows
+- A `customId` - to identify the modal that the user submitted
+
+```ts
+if (i.data?.customId === 'reactionRoles-add-color') {
+  const color = parseInt(i.data?.values?.[0])
+
+  partialRoleInfo.color = color
+
+  // remove-start
+  await i.respond({
+    content: 'Hello world',
+  })
+  // remove-end
+  // insert-start
+  await i.respond({
+    title: 'Pick an emoji and label for the reaction role',
+    components: [
+      {
+        type: MessageComponentTypes.ActionRow,
+        components: [
+          {
+            type: MessageComponentTypes.InputText,
+            style: TextStyles.Short,
+            customId: 'reactionRoles-add-emoji',
+            label: 'Emoji for the reaction role',
+            required: true,
+          },
+        ],
+      },
+      {
+        type: MessageComponentTypes.ActionRow,
+        components: [
+          {
+            type: MessageComponentTypes.InputText,
+            style: TextStyles.Short,
+            customId: 'reactionRoles-add-label',
+            label: 'Label for the reaction role [OPTIONAL]',
+          },
+        ],
+      },
+    ],
+    customId: 'reactionRoles-add-modal',
+  })
+  // insert-end
+
+  return
+}
+```
+
+You might notice that we are using a new type of message component, the input text, these are just text field the user need to fill, they can have 2 styles, short the one that we are using in this case and paragraph, the different is that a input text of style paragraph is designed to be a longer text and short a shorter one.
+
+Now we just need to handle the modal interaction and we will be done with the menu.
+
+```ts
+if (i.data?.customId === 'reactionRoles-add-color') {
+  const color = parseInt(i.data?.values?.[0])
+
+  partialRoleInfo.color = color
+
+  await i.respond({
+    title: 'Pick an emoji and label for the reaction role',
+    components: [
+      {
+        type: MessageComponentTypes.ActionRow,
+        components: [
+          {
+            type: MessageComponentTypes.InputText,
+            style: TextStyles.Short,
+            customId: 'reactionRoles-add-emoji',
+            label: 'Emoji for the reaction role',
+            required: true,
+          },
+        ],
+      },
+      {
+        type: MessageComponentTypes.ActionRow,
+        components: [
+          {
+            type: MessageComponentTypes.InputText,
+            style: TextStyles.Short,
+            customId: 'reactionRoles-add-label',
+            label: 'Label for the reaction role [OPTIONAL]',
+          },
+        ],
+      },
+    ],
+    customId: 'reactionRoles-add-modal',
+  })
+
+  return
+}
+
+// insert-start
+if (i.data?.customId === 'reactionRoles-add-modal') {
+  const emoji = i.data.components?.[0]?.components?.[0].value
+  const label = i.data.components?.[1]?.components?.[0].value
+
+  partialRoleInfo.emoji = emoji
+  partialRoleInfo.label = label
+
+  roles.push(partialRoleInfo)
+
+  await bot.helpers.editMessage(interaction.channelId, roleMessage.id, {
+    components: getRoleButtons(roles),
+  })
+
+  partialRoleInfo = undefined
+
+  await interaction.edit({
+    content: 'Use the buttons in this message to edit the message below.',
+    components: [messageActionRow],
+  })
+
+  await i.respond(
+    'Reaction role created successfully. You can use the message above to add/remove a role',
+    { isPrivate: true },
+  )
+
+  return
+}
+// insert-end
+```
+
+And with this we are done with the menu, you might see that we are responding to the modal while all other cases we just edited the original message, the reason is that for modals the edit does not count as responding to it and you need to send a message.
+
+Let's now move to the handling of our role buttons finally.
+
+## Role buttons Handling
+
+Let's now move back to `src/events/interactionCreate.ts` and we need to add some code after the command handling:
+
+```ts
+if (interaction.type === InteractionTypes.ApplicationCommand) {
+  if (!interaction.data) return
+
+  const command = commands.get(interaction.data.name)
+  if (!command) return
+
+  try {
+    await command.execute(interaction, commandOptionsParser(interaction))
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+// insert-add
+if (
+  interaction.type === InteractionTypes.MessageComponent &&
+  interaction.data?.componentType === MessageComponentTypes.Button
+) {
+  if (!interaction.data?.customId?.startsWith('reactionRoles-role-')) return
+
+  await interaction.respond('Hello world')
+}
+// insert-end
+```
+
+We are now checking that we received a message component interaction type and in the specific it's button, We only need a couple of thing from here:
+
+1. Get the role id of the role we need to give the user
+1. Give it to them
+1. Respond to the interaction
+
+So let's do this:
+
+```ts
+if (
+  interaction.type === InteractionTypes.MessageComponent &&
+  interaction.data?.componentType === MessageComponentTypes.Button
+) {
+  if (!interaction.data?.customId?.startsWith('reactionRoles-role-')) return
+  // insert-start
+  const roleId = BigInt(
+    interaction.data.customId.slice('reactionRoles-role-'.length),
+  )
+
+  await interaction.bot.helpers.addRole(
+    interaction.guildId,
+    interaction.user.id,
+    roleId,
+    `Reaction role button for role id ${roleId}`,
+  )
+  await interaction.respond(`I added to you the <@&${roleId}> role.`, {
+    isPrivate: true,
+  })
+  // insert-end
+}
+```
+
+And if we add the last few line of desired proprieties for the one that we are using in this final piece of code we are done, let's go to the `src/index.ts` and add them:
+
+```ts
+// REST OF YOUR CODE
+
+// insert-next-line
+bot.transformers.desiredProperties.user.id = true
+
+bot.transformers.desiredProperties.message.id = true
+
+bot.transformers.desiredProperties.interaction.id = true
+bot.transformers.desiredProperties.interaction.data = true
+bot.transformers.desiredProperties.interaction.type = true
+// insert-next-line
+bot.transformers.desiredProperties.interaction.user = true
+bot.transformers.desiredProperties.interaction.token = true
+bot.transformers.desiredProperties.interaction.message = true
+// insert-next-line
+bot.transformers.desiredProperties.interaction.guildId = true
+bot.transformers.desiredProperties.interaction.channelId = true
+
+bot.transformers.desiredProperties.role.id = true
+
+// REST OF YOUR CODE
+```
+
+If we try the code we finally achieve what we wanted, a button that when clicked gives us the role assuming discord did not error out our call to add a role caused by the fact that we might not be allowed to add roles such as `@everyone`, roles created for bot permissions, roles that are obtained with link roles or roles that are above the bot hightest role.
+
+One last thing we could do is removing the role if we already have it, we will need to add some code in the event and a few desired proprieties, let's start with the event file `src/events/interactionCreate.ts`:
+
+```ts
+if (
+  interaction.type === InteractionTypes.MessageComponent &&
+  interaction.data?.componentType === MessageComponentTypes.Button
+) {
+  if (!interaction.data?.customId?.startsWith('reactionRoles-role-')) return
+  const roleId = BigInt(
+    interaction.data.customId.slice('reactionRoles-role-'.length),
+  )
+
+  // remove-start
+  await interaction.bot.helpers.addRole(
+    interaction.guildId,
+    interaction.user.id,
+    roleId,
+    `Reaction role button for role id ${roleId}`,
+  )
+  await interaction.respond(`I added to you the <@&${roleId}> role.`, {
+    isPrivate: true,
+  })
+  // remove-end
+  // insert-start
+  const alreadyHasRole = !!interaction.member.roles.find(
+    role => role === roleId,
+  )
+
+  if (alreadyHasRole) {
+    await interaction.bot.helpers.removeRole(
+      interaction.guildId,
+      interaction.user.id,
+      roleId,
+      `Reaction role button for role id ${roleId}`,
+    )
+    await interaction.respond(`I removed from you the <@&${roleId}> role.`, {
+      isPrivate: true,
+    })
+    return
+  }
+
+  await interaction.bot.helpers.addRole(
+    interaction.guildId,
+    interaction.user.id,
+    roleId,
+    `Reaction role button for role id ${roleId}`,
+  )
+  await interaction.respond(`I added to you the <@&${roleId}> role.`, {
+    isPrivate: true,
+  })
+  // insert-end
+}
+```
+
+And now with the desired proprieties, in the `src/index.ts` we need just a few lines:
+
+```ts
+// REST OF YOUR CODE
+
+bot.transformers.desiredProperties.user.id = true
+
+bot.transformers.desiredProperties.message.id = true
+
+// insert-next-line
+bot.transformers.desiredProperties.member.roles = true
+
+bot.transformers.desiredProperties.interaction.id = true
+bot.transformers.desiredProperties.interaction.data = true
+bot.transformers.desiredProperties.interaction.type = true
+bot.transformers.desiredProperties.interaction.user = true
+bot.transformers.desiredProperties.interaction.token = true
+// insert-next-line
+bot.transformers.desiredProperties.interaction.member = true
+bot.transformers.desiredProperties.interaction.message = true
+bot.transformers.desiredProperties.interaction.guildId = true
+bot.transformers.desiredProperties.interaction.channelId = true
+
+bot.transformers.desiredProperties.role.id = true
+
+// REST OF YOUR CODE
+```
+
+And if we now test the code it should work, we did create a reaction role feature using reaction roles!
+
+## Improvements
+
+You might remember that we said that there could be improvements to be made to the collectors we have, the reason being that currently if the user does not save the menu we will have that collector class in memory until we restart the bot, this can be easily fix by having a timeout on the collector but that is something that you can explore on your own.
+
+Also a more advanced thing is to generalize the collectors, we currently use the `Interaction` type for the methods implemented on it but we don't use them in any way and while we could use `any` or `unknown` instead the best way to generalize something in typescript is using generics, so if you need you can re-use that class without having to create another one.
+
+You could also move the various discord objects to the bottom of the file and make them act like template if and when needed, but that is not a functional improvement but a maintainability one.
+
+Also currently there are a few cases where this code could error, in fact if you have a strict typescript configuration enable you might have noticed that typescript is giving you errors all over the place especially in our command because stuff can be `undefined` and we don't check for it, to fix this you just need to add an if that to ensure they exist and if the don't return.
+
+Also the user could click the remove button but the code could fail as if we don't have any option to set discord will error, or the opposite error if the user has already 25 buttons across all 5 action rows then the user will make the code error until he removes a button.
+
+A few of these thing, to be exact the last 3, are implemented in the full example code you can find over the github repo [`/example/reaction-roles`](https://github.com/discordeno/discordeno/blob/main/examples/reaction-roles) folder that has the entire project for this guide.
