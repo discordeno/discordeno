@@ -44,7 +44,7 @@ export const command = {}
 export default command
 ```
 
-Now we can add the command type to this object, to give us the ability to have typescript help us autocomplete some stuff.
+Now we can add the command type to this object, to give TypeScript the ability to help us autocompleting some stuff.
 
 ```ts
 // insert-next-line
@@ -56,11 +56,11 @@ export const command = {}
 export const command: CreateApplicationCommand = {}
 ```
 
-By now, you should be seeing some TypeScript errors so let's fix that.
+By now, you should be seeing some TypeScript errors so let's fix those.
 
 Typescript requires us to add:
 
-- `name` - The name propriety is used as the main command name
+- `name` - The name property is used as the main command name
 - `description` - A description for what this command does
 
 ```ts
@@ -78,23 +78,21 @@ export const command: CreateApplicationCommand = {
 
 Nice, so we now have our basic command, `/roles` ready. Next, we should prepare our `/roles reactions` subcommand here.
 
-To do this we need to tell discord that this `/roles` command has some options, to do this we can add an `options` array,
-inside we can add the `reactions` subcommand, this will require us to add a name, a description and a type, for the type we will use
-`ApplicationCommandOptionTypes.SubCommandGroup` to tell discord to create a group of subcommands named `reactions`.
+To do this we need to tell Discord that this `/roles` command has some options, to do this we can add an `options` array, inside of which we can add the `reactions` subcommand, this will require us to add a name, a description and a type. To make Discord create a group of subcommands named `reactions`, we will use `ApplicationCommandOptionTypes.SubCommandGroup` as type.
 
 Commands can be
 
-- A command without subcommands / subcommands groups
-- A command with subcommands, but not subcommands groups
-- A command with subcommands group that have subcommands
+- Without subcommands / subcommand groups
+- With subcommands, but not subcommand groups
+- With subcommand groups that have subcommands
 
-Discord however has a few rules in how we can declare our subcommands
+Discord however has a few rules on how we can declare our subcommands
 
-- You can only have groups only 1 level deep, so having a subcommand group inside a subcommand group is not allowed.
-- Subcommands can't have subcommands groups as child, only subcommands groups can have subcommands as child
+- Groups can only be 1 in depth, so having a subcommand group inside a subcommand group is not allowed.
+- Subcommands can't have subcommand groups as child, only subcommand groups can have subcommands as children
 - If you add a subcommand/subcommand group you can not longer use the top-level command, so you can't run the `/roles` command
 
-For more information on what discord find valid for subcommands you can refer to the [official discord documentation](https://discord.com/developers/docs/interactions/application-commands#subcommands-and-subcommand-groups)
+For more information on what Discord considers valid for subcommands you can refer to the [official Discord documentation](https://discord.com/developers/docs/interactions/application-commands#subcommands-and-subcommand-groups)
 
 ```ts
 export const command: CreateApplicationCommand = {
@@ -114,7 +112,7 @@ export const command: CreateApplicationCommand = {
 
 Now that the `/roles reactions` is complete, we should add the `/roles reactions create` command.
 
-We are doing this by specifying as an option of the subcommand group that we created before an option of type subcommand, this is a command that we can actually run from discord.
+We are doing this by specifying an option of type subcommand to the subcommand group that we created before. This is a command that we can actually run from Discord.
 
 ```ts
 options: [
@@ -144,9 +142,9 @@ Fantastic so now `/roles reactions create` is available, we want to add some opt
 1. Color - The color of the button.
 1. Label - An optional label we can add to the button if the user desires.
 
-We can declare these options with an object inside the `options` array of our subcommand, this object requires us to give a name, a description and a type for the option, as an option now we use the `ApplicationCommandOptionTypes.Role` option, as we want the user to give us a role, while before we used `ApplicationCommandOptionTypes.SubCommandGroup` and `ApplicationCommandOptionTypes.SubCommand` that are used to declare subcommand groups and subcommands all the other `ApplicationCommandOptionTypes` we will use will require the user to give us a different kind of information, in the example of `ApplicationCommandOptionTypes.Role` discord will give the user the choice to select any role in the server.
+We can declare these options with an object inside the `options` array of our subcommand, this object requires us to give a name, a description and a type for the option, as type we now use the `ApplicationCommandOptionTypes.Role` option, as we want the user to provide a role (whereas before we used `ApplicationCommandOptionTypes.SubCommandGroup` and `ApplicationCommandOptionTypes.SubCommand`, that are used to declare subcommand groups and subcommands). All the other `ApplicationCommandOptionTypes` we will use require the user to provide a different kind of information.
 
-Additionally since we want some of our options to be required to run the command we can add the `required: true` option, this will inform discord to prevent the user from running the command if they don't pass-in the option.
+Additionally since we want some of our options to be required to run the command we can add the `required: true` option, this will make Discord prevent the user from running the command if they don't pass-in the option.
 
 ```ts
 {
@@ -166,9 +164,9 @@ Additionally since we want some of our options to be required to run the command
 }
 ```
 
-So now we have added an option for the user to provide us with an role to assign/remove from a user when they press the button. Next we will require the user to give us an emoji.
+So now we have added an option for the user to provide a role to assign/remove when anyone presses the button. Next we will require the user to provide an emoji.
 
-The emoji will be of type `ApplicationCommandOptionTypes.String`, the user will be able to provide anything in this, including an emoji for our button we will create in the end, like the role option this will be required as well.
+The emoji option will be of type `ApplicationCommandOptionTypes.String`, the user will be able to provide anything, including an emoji for the button we'll create in the end. This option, just like the role one, will be required.
 
 ```ts
 {
@@ -187,9 +185,9 @@ The emoji will be of type `ApplicationCommandOptionTypes.String`, the user will 
 // insert-end
 ```
 
-Next let's request a user to provide the button color.
+Next let's require the user to provide the button color.
 
-The button color will be a little different, for now we only created options that give the user full control (even if limited by discord) over the option, but for the button color only a few values are actually valid and are not obvious to the user, for this reason we can use the `choices` array to create an handful of predefined options that we decide and limit the user to decide what option to use from the available one, in these options we can decide a `name` that the user will see and a `value` that discord will send us when the user select that option. This option is of type `ApplicationCommandOptionTypes.Integer` allowing us to set as values for our choices some numbers, for example `ButtonStyles.Primary` will correspond to the number 1. While we could use the raw number for our values picking from the `ButtonStyles` enum will be easier for us in a couple of ways: we can clearly see that the name "blue" will give us a button with style `Primary`, if we used the number 1 it wouldn't be clear unless we go and check the discord documentation for buttons and confront the values, also a number in the code without any label attached to it can be referred as magic numbers.
+The button color will be a little different, for now we only created options that give the user full control (even if limited by Discord) over the option, but for the button color only a few values are actually valid and are not obvious to the user, for this reason we can use the `choices` array to create a handful of predefined options. The user will only be able to input one of these options. For each options we can decide a `name` that the user will see and a `value` that Discord will send us when the user selects that option. This option is of type `ApplicationCommandOptionTypes.Integer` allowing us to set as values for our choices some numbers, for example `ButtonStyles.Primary` will correspond to the number 1. While we could use the raw number for our values picking from the `ButtonStyles` enum will be easier for us in a couple of ways: we can clearly see that the name "blue" will give us a button with style `Primary`, if we used the number 1 it wouldn't be clear unless we go and check the Discord documentation for buttons and confront the values, also a number in the code without any label attached to it can be referred as magic numbers.
 
 Like the other one, this value is required as well.
 
@@ -216,7 +214,7 @@ Like the other one, this value is required as well.
 // insert-end
 ```
 
-The final option to add to this is the label option. For this we will use a type of string and we can set the required to false or not specify any required propriety at all, in this we will omit the propriety.
+The final option to add to this is the label option. For this we will use a type of string and we can set the required to false or not specify any required property at all, in this we will omit the property.
 
 ```ts
 {
@@ -303,16 +301,16 @@ const command: CreateApplicationCommand = {
 ```
 
 :::tip
-Whenever you write a little bit of code, stop and test to make sure it does what it should before you keep writing more code. You will make your life harder if you write a lot of code as if then something breaks then you will have to find what part of the code you added is causing the unexpected behavior
+Whenever you write a little bit of code, stop and test to make sure it does what it should before you keep writing more code. You will make your life harder if you write a lot of code without testing it because if, at some point, anything breaks you will have to find what part of the code you added is causing the unexpected behavior
 :::
 
 ### Setting Up Slash Creation
 
 Now, we should take a minute to test this code out. However, this code as is does nothing it is just a file that exports an object. Let's make it so that whenever we start our bot, it will create this command for us on our test server. Go back to your `src/index.ts` file where you created your bot.
 
-An alternative to creating the commands in a test server is to create them to all servers (globally), this can be accomplished by using the `upsertGlobalApplicationCommands`, but in this guide we will create our commands only in a test server.
+An alternative to creating the commands in a test server is to create them in all servers (globally), this can be accomplished by using the `upsertGlobalApplicationCommands`, but in this guide we will create our commands only in a test server.
 
-We will also need to import our `command` object we defined in the `src/commands/roles.ts` before that contains the data for discord to register our command.
+We will also need to import our `command` object we defined in the `src/commands/roles.ts` before that contains the data for Discord to register our command.
 
 ```ts
 import { createBot } from '@discordeno/bot'
@@ -337,7 +335,7 @@ await bot.rest.upsertGuildApplicationCommands(guildId, [roles])
 await bot.start()
 ```
 
-Now the only thing that remains to change with this code is to use your actual server's guild id in the `guildId` variable we defined, all you need to do is replace the `REPLACE WITH YOUR GUILD ID` with your actual id of the server you will use for testing. This will make it so that we update any commands whenever the bot is started.
+Now the only thing that remains to change with this code is to use your actual server's guild id in the `guildId` variable we defined, all you need to do is replace the `REPLACE WITH YOUR GUILD ID` with your actual id of the server you will use for testing. This will make the bot automatically update every command whenever the bot is started.
 
 ### Cleaner Code
 
@@ -389,17 +387,17 @@ await bot.rest.upsertGuildApplicationCommands(guildId, [...commands.values()])
 await bot.start()
 ```
 
-Go ahead and start your bot, you will see the command is available on your server by typing `/roles reactions create`. If you try and execute the command it will fail since we have not yet added the handling of this command.
+Go ahead and start your bot, you will see the command is available on your server by typing `/roles reactions create`. If you try and execute the command it will fail since we have not added the handling of this command yet.
 
 ## Command Execution Handling
 
-We now need to handle the data that discord will send us when a user types the command, to do this we can add an event on the `interactionCreate` event.
+We now need to handle the data that Discord will send us when a user types the command, to do this we can add an event listener on the `interactionCreate` event.
 
 Let's make 2 files first. `src/events/index.ts` and `src/events/interactionCreate.ts`. Let's go to the `src/events/interactionCreate.ts` file first.
 
-We will add a new event to handle the data, in here we need to check that the interaction type is a command, this is necessary because interactions can vary, they can be commands, they can be modals, they can be buttons, they can be commands run not from a message but from a user profile when you right click it and so on. We also need to verify that there is a data object with this interaction or else we won't able to get the name of the command the user wants to run.
+We will add a new event to handle the data, in here we need to check that the interaction type is a command, this is necessary because interactions can vary, they can be commands, they can be modals, they can be buttons, they can be commands ran from right-clicking on an user's profile (context menus) and so on. We also need to verify that there is a data object with this interaction or else we won't able to get the name of the command the user wants to run.
 
-In the end we need to parse all the options discord has provided us, in the `/roles reactions create` example we defined a few options, we now need to get them from the interaction object, this can be accomplished by using the `commandOptionsParser` helper discord provides, this is because parsing the interaction data options can be prone to errors so discordeno provides you a helper function to do it.
+In the end we need to parse all the options Discord has provided us, in the `/roles reactions create` example we defined a few options, we now need to get them from the interaction object, this can be accomplished by using the `commandOptionsParser` helper Discord provides, this is because parsing the interaction data options can be prone to errors so discordeno provides you a helper function to do it.
 
 ```ts
 import commands from '../commands/index.js'
@@ -432,7 +430,7 @@ export const events = {
 export default events
 ```
 
-From this file we can add all the events we want, in this guide we only need the `interactionCreate` one, but there some other event that are really helpful, for example the `ready` event telling us when the bot connected to discord.
+From this file we can add all the events we want, in this guide we only need the `interactionCreate` one, but there some other events that are really helpful, for example the `ready` event, which fires when the bot has established a connection with Discord's gateway.
 
 To tell discordeno to run the events we need another change, back to our `src/index.ts` file.
 
@@ -457,7 +455,7 @@ const bot = createBot({
 // ... REST OF THE FILE ...
 ```
 
-At this point, if we go to the `src/events/interactionCreate.ts` file we are seeing an error from TypeScript, it is telling us that the `command` does not have an `.execute()` handler. To add this we need to customize our command just a little bit. Let's make a interface for a custom Command object and use it for our map. Go to `src/commands/index.ts`
+At this point, if we go to the `src/events/interactionCreate.ts` file, we'll see an error from TypeScript, it is telling us that the `command` does not have an `.execute()` handler. To add this we need to customize our command just a little bit. Let's make an interface for a custom Command object and use it for our map. Go to `src/commands/index.ts`
 
 ```ts
 import { CreateApplicationCommand, Interaction } from '@discordeno/types'
@@ -507,7 +505,7 @@ const command: Command = {
 }
 ```
 
-Now that this is complete we should go ahead and a type for args so we can get some nice autocomplete when we code.
+Now that this is complete we should go ahead and add a type for args so we can get some nice autocomplete when we code.
 
 ```ts
 // Add the 'CommandArgs' for typescript
@@ -531,7 +529,7 @@ interface CommandArgs {
 }
 ```
 
-Finally, we can begin writing the code to handle our commands. We will implement the `create` command. In this command the user will found himself in a menu with 3 options
+Finally, we can begin writing the code to handle our commands. We will implement the `create` command. In this command the user will find himself in a menu with 3 options
 
 1. Add another reaction role button
 1. Remove an exiting reaction role button
@@ -614,19 +612,19 @@ async execute(interaction, args: CommandArgs) {
 // THE REST OF YOUR CODE
 ```
 
-In this code we are doing 2 things, sending a message to the channel where the command has been invoked with a button to add the role that the user constructed with the commands params and creating another (private) message that can only see the user that has run the command to edit the message we just sent.
+In this piece of code we are doing 2 things, sending a message to the channel where the command has been invoked with a button to add the role that the user constructed with the commands params and creating another (private) message that can only see the user that has run the command to edit the message we just sent.
 
-Since we never created an actual button before we will examine each proprieties in these objects.
+Since we never created an actual button before we will examine each property in these objects.
 
-Let's start by the object we pass to `sendMessage`, in here we define what data should the message have, in this example we just give a really simple content and a component array, there arrays can have up to 5 objects inside and those object are `Action Rows`, we can tell that they are action rows by the `type` value they have: `MessageComponentTypes.ActionRow`, action rows also need a components array, in this array there can be up to 5 buttons or 1 select menu, we will se later what is a select menu and how to use it. Now, the buttons, we can recognize them by the `type: MessageComponentTypes.Button`, they have a different requirement from action rows, they need to have:
+Let's start by the object we pass to `sendMessage`, in here we define what data the message should have, in this example we just give a really simple content and a component array, there arrays can have up to 5 objects inside and those object are `Action Rows`, we can tell that they are action rows by the `type` value they have: `MessageComponentTypes.ActionRow`, action rows also need a components array, in this array there can be up to 5 buttons, 1 select menu or 1 input text, we will se later what a select menu is and what is a input text and how to use them. Now, the buttons, we can recognize them by the `type: MessageComponentTypes.Button`, they have a different requirement from action rows, they need to have:
 
-- A `style` - How discord should display them,
-- A `label` or `emoji` - What discord should display as the text in the buttons
-- A `customId` - there are developer defined ids that can go up to 100 characters where we can store information and use them to differentiate the buttons from one another, we will see how this is helpful soon
+- A `style` - How Discord should display them,
+- A `label` or `emoji` - What Discord should display as the text in the buttons
+- A `customId` - these are developer defined ids that can go up to 100 characters where we can store information and use them to tell the buttons apart from one another, we will see how this is helpful soon
 
 This applies pretty much identically to the `interaction.respond` function that we call, it too has a `content` for the message and a `components` array with inside an action row that this time has 3 buttons that we define.
 
-If you save and run the bot, after you run the command you might start to have a problem, discord still says that the application did not respond, but how is that possibile? We just added the code to respond to the interaction, this is true but we forgot a thing, a discordeno concept called `desired properties`, this is an optimization discordeno builds to make your code more performant but can be found annoying or unnecessary, to explain how there `desired properties` works we need to talk about how discord sends us data, discord uses his own way to require/give data to who consumes the api we won't go deep into this, you can refer to the official documentation if you are interested, but know that the way discord sends us data is not the way that we (might) want it for this reason discordeno needs to map it from the discord format to the discordeno format, this is done via `transformers` defined in the `bot.transformers` object, we won't use them directly but we need to tell them what we need from the pile of data discord provides us. If we look back to the `src/events/interactionCreate.ts` file we can notice that we use `interaction.type` and `interaction.data`, and if in our command we can find we use `interaction.channelId` and if we look what the `interaction.respond` does in our command we can see that it uses `interaction.id` and `interaction.token`, and if the look at our `interaction.respond` we see that we are using 1 values from the role object, `role.id`, so we need to add all of there 6 proprieties needs to be added to the `desired properties` list, we can do this by going back to `src/index.ts` and add a few lines:
+If you save and run the bot, after you run the command you might start to have a problem, Discord still says that the application did not respond, but how is that possibile? We just added the code to respond to the interaction, this is true but we forgot a thing, a discordeno concept called `desired properties`, this is an optimization discordeno builds to make your code more performant but can be found annoying or unnecessary, to explain how the `desired properties` work we need to talk about how Discord sends us data, Discord uses his own way to require/give data to who consumes the api we won't go deep into this, you can refer to the official documentation if you are interested, but know that the way Discord sends us data is not the way that we (might) want it for this reason discordeno needs to map it from the Discord format to the discordeno format, this is done via `transformers` defined in the `bot.transformers` object, we won't use them directly but we need to tell them what we need from the pile of data Discord provides us. If we look back to the `src/events/interactionCreate.ts` file we can notice that we use `interaction.type` and `interaction.data`, and if in our command we can find we use `interaction.channelId` and if we look what the `interaction.respond` does in our command we can see that it uses `interaction.id` and `interaction.token`, and if the look at our `interaction.respond` we see that we are using 1 value from the role object, `role.id`, so we need to add all of those 6 properties to the `desired properties` list, we can do this by going back to `src/index.ts` and add a few lines:
 
 ```ts
 // REST OF YOUR CODE
@@ -650,25 +648,27 @@ bot.transformers.desiredProperties.role.id = true
 ```
 
 :::tip
-As said before the code you are creating is your code, and in being so you can structure it how you find it better for you. This mean that if you don't like having to specify the `bot.transformers.desiredProperties` lines in your index.ts nothing is preventing you from moving them somewhere else and make your code call them in a way or another, a way is for example moving to a file apart and creating a function that will edit all there values.
+As said before the code you are creating is your code, and in being so you can structure it how you find it better for you. This means that if you don't like having to specify the `bot.transformers.desiredProperties` lines in your index.ts nothing is preventing you from moving them somewhere else and make your code call them in a way or another, a way is for example moving to a file apart and creating a function that will edit all the values.
 :::
 
 :::note
-If you want to can disable the `desired properties` with the `defaultDesiredPropertiesValue` option in the createBot object, it isn't recommended to use but it is there to allow developer choice, keep in mind this will give you a warning in the console when you run the bot and WILL be more memory and cpu usage from your bot.
+If you want, you can disable the `desired properties` with the `defaultDesiredPropertiesValue` option in the createBot object, it isn't recommended but it's there to allow the developer to choose, keep in mind this will give you a warning in the console when you run the bot and memory/cpu usage WILL be higher.
 :::
 
-If we now try again we finally see our message and in the our 3 buttons. But there is a problem, if we click any of the buttons we just created like the "Add" button, they aren't doing anything! This is normal, we did not put any code in place to handle them but now we have to discuss another thing: Reacting to users interactions beyond just commands
+If we try again now we'll finally see our message and in the our 3 buttons. But there is a problem, if we click any of the buttons we just created like the "Add" button, they won't do anything!! This is normal, we did not put any code in place to handle them but now we have to discuss another thing: reacting to users' interactions beyond just commands
 
 ### Handling interaction beyond commands
 
-So, now we are problem, discord is saying that we don't respond to the button click, and he is in fact right, we didn't, but we need to make some changes to more then our command file. The problem is rather simple: we need a way to get the interaction of us clicking that "Add" button for example inside our command. Interaction do not "chain" but they share some data we can use the `message` propriety, this propriety will be defined if the interaction is discord telling us about a user that has clicked a button, this seems perfect, we now have a way to tell that we need that interaction, and while a move forward we still face an issue: **how** do we get the data from the interaction of the button click in our command?
+So now we have a problem, discord is saying that we aren't responding to the button click, and it is in fact right, we aren't, we still need to make more changes to our command and event files. The problem is rather simple: we need a way to get the interaction of the user clicking, for example, the interaction of that "Add" button after the user uses the command.
 
-You can get creative and do anything you find more appropriate to handle this situation, a few examples are:
+Interactions do not "chain", but they do have some data we can use to connect them: in this case we can use the `message` property, which is defined if the interaction Discord sent us comes from an user interacting with a component, in our case a button. This seems perfect, we now have a way to tell wether or not we need to do something with an interaction. This is a step forwards but we still face an issue: **how** do we get the data from the interaction of the button click in our command?
+
+You can get creative and do what you think is the most appropriate thing to handle this situation, a few examples are:
 
 - `Collectors` - What we will use in this example guide.
 - Manual check of the customId in the global event.
 
-To explain what a `collector` is we can take example from an array, in the array we can take and remove, what if we create something where we can "collect" and when we do, we get notified where we need it? This sounds like it solves our issue, so let's implement this Collector class, in this guide we will write it a very simple way, but there are addition you might want to do, but we will discuss this later.
+To explain what a `collector` is we can take as an example an array. In an array we can read, add and remove items. So what if we had a structure which can "collect" items, and notify us when it collects an item we actually need? This sounds like it solves our issue, so let's implement this Collector class, in this guide we will write it a very simple way, but there are enhancements you might want to add; we will discuss this later.
 
 Let's create a `src/collector.ts` file, to help us we can use a nodejs feature `EventEmitter`, we won't explain what an event emitter is, just know it makes your life easier to create this:
 
@@ -716,7 +716,7 @@ export const event: EventHandlers['interactionCreate'] = async interaction => {
 }
 ```
 
-In here you are defining a `Set` (for what we use, we can see it exactly the same as an array with a few helpful methods) of these collectors and when we receive an interaction from discord we collect in all the collectors that have been added to then handle the interaction, so if the have just received the button click interaction we will now able to respond to it.
+In here you are defining a `Set` (for what we use, we can see it exactly the same as an array with a few helpful methods) of these collectors and when we receive an interaction from Discord we collect in all the collectors that have been added to then handle the interaction, so if the have just received the button click interaction we will now able to respond to it.
 
 :::tip
 As already said: you don't like how the collection is done in this example? You are free to change it and have fun in experimenting what you find to be the better way
@@ -772,13 +772,13 @@ async execute(interaction, args: CommandArgs) {
 // THE REST OF YOUR CODE
 ```
 
-In the `onItem` function we are making sure we are only responding if the message object of the interaction is for this command, this is accomplished by checking the `i.message.id` and comparing it to the id of the message we just sent, but wait, you might think, we don't have it, do we? And you would be right, we don't we can get it from the return value of `interaction.respond`, but we also need to add a `interaction.defer` before it for some reason we won't go into, just know we are doing this due to how discord works.
+In the `onItem` function we are making sure we are only responding if the message object of the interaction is for this command, this is accomplished by checking the `i.message.id` and comparing it to the id of the message we just sent, but wait, you might think, we don't have it, do we? And you would be right, as of right now, we don't. We need to make a small change: we can get the message object from the return value of `interaction.respond`, but we also need to add an `interaction.defer` before. We won't go into details as for why we need to do this, just know it is due to how Discord interactions work.
 
 :::warning
-A mis-use of the interaction from the code that uses these interaction by using the ItemCollector can use unexpected behavior, so make sure to check the interaction "nature" before using it, like in our example by making sure it is related to our message.
+A mis-use of the interaction from the code that uses these interaction by using the ItemCollector can lead to unexpected behavior, so make sure to check the interaction "nature" before using it, like in our example by making sure it is related to our message.
 :::
 
-You might remember from before that we discussed the desired properties, and we now need to update them, we are now using, `i.message` and we are using the `.id` of a message (`i.message.id`) so we need to add 2 lines to our list in the `src/index.ts`:
+You might remember from before that we discussed the desired properties, and we now need to update them, we are now using `i.message` and we are using the `.id` of a message (`i.message.id`) so we need to add 2 lines to our list in the `src/index.ts`:
 
 ```ts
 // REST OF YOUR CODE
@@ -801,7 +801,7 @@ If we run the code at this point we can see that by clicking the button we will 
 
 ### Handling the menu
 
-We now need to handle correctly all there 3 buttons we declared before, as mentioned before discord allows us to declare custom ids we can reference in our code, so let's start with that:
+We now need to handle correctly the 3 buttons we declared before, as mentioned before Discord allows us to declare custom ids we can reference in our code, so let's start with that:
 
 First we can implement the easiest buttons out of the 3, the save button. Since we are going to "live" edit a message after our menu message we just need to delete the menu message, and to since we don't need it anymore remove the collector
 
@@ -833,9 +833,9 @@ itemCollector.onItem(async i => {
 
 If we now try to run click the save button the menu will close, so this is done!
 
-Let's move on the add and remove, we found a problem: we need a way to update the buttons shown in the final message and also we need to know what buttons the user has created up to this point.
+Let's move on the add and remove, we have a new problem: we need a way to update the buttons shown in the final message, and we also need to know what reaction buttons the user has created up to this point.
 
-Let's start with the second problem, the need to know what buttons the user created, we can do this by storing in an array all the buttons the user created, we just need to declare it:
+Let's start with the second issue. We can store in an array all the buttons the user created, we just need to declare it:
 
 ```ts
 // insert-next-line
@@ -866,7 +866,7 @@ Now we can deal with the first problem, we need to have something to create thes
 
 - Create an action row array
 - Add an action row if we have some buttons to add
-- If we have reached the limit imposed by discord (5 buttons per action row) it creates another action row and start using that
+- If we have reached the limit imposed by Discord (5 buttons per action row) it creates another action row and start using that
 
 ```ts
 function getRoleButtons(
@@ -918,7 +918,7 @@ function getRoleButtons(
 ```
 
 :::note
-Remember to import all the types we are using, some IDE/Text editors will have the option to quickly fix the error about the type not found and to import it
+Remember to import all the types we are using, some IDE/Text editors will have the option to quickly fix the errors about the types not being found and to import them
 :::
 
 And now we can use this function, let's go back right after the creation of the roles array
@@ -1071,9 +1071,9 @@ if (i.data?.customId === 'reactionRoles-remove-selectMenu') {
 
 And now we are left just one thing, the add button, for this we now need to use a new type of interaction responses: modals
 
-Modals are a popup that we can create where the user will be requested to type something for example the emoji and (optionally) the label, to use them with the `interaction.respond` method we can add a `title` (a required propriety by modals) to the objects.
+Modals are popups that we can create to require the user to input something, for example the emoji and (optionally) the label, to use them with the `interaction.respond` method we can add a `title` (a required property by modals) to the objects.
 
-Other than emoji and labels we also need the role to give and the color for the button, unfortunately we can't add them directly in our modal, discord does not allow it, so we need to find another way, we can
+Other than emoji and labels we also need the role to give and the color for the button, unfortunately we can't add them directly in our modal, Discord does not allow it, so we need to find another way, we can
 
 1. Wait for the button click on the add button
 1. Show the user a select menu for the role
@@ -1190,7 +1190,7 @@ if (i.data?.customId === 'reactionRoles-add-color') {
 // REST OF YOUR CODE
 ```
 
-Now we miss only the modal part, for now we put an hello world just to verify that every worked but we need to create this modal, to create a modal we need:
+Now we're only missing the modal part, for now we'll just put an hello world to verify that everything is working out. To create a modal we need:
 
 - A `title` - the title for the modal that the user will see
 - A `components` array - Like for messages modals require us to give a action rows
@@ -1243,7 +1243,7 @@ if (i.data?.customId === 'reactionRoles-add-color') {
 }
 ```
 
-You might notice that we are using a new type of message component, the input text, these are just text field the user need to fill, they can have 2 styles, short the one that we are using in this case and paragraph, the different is that a input text of style paragraph is designed to be a longer text and short a shorter one.
+You might notice that we are using a new type of message component, the input text, these are just text field the user needs to fill, they can have 2 styles, short (the one that we are using in this case) and paragraph, the only difference is that an input text of style paragraph is designed to accept a longer string.
 
 Now we just need to handle the modal interaction and we will be done with the menu.
 
@@ -1317,9 +1317,9 @@ if (i.data?.customId === 'reactionRoles-add-modal') {
 // insert-end
 ```
 
-And with this we are done with the menu, you might see that we are responding to the modal while all other cases we just edited the original message, the reason is that for modals the edit does not count as responding to it and you need to send a message.
+And with this we are done with the menu, you might see that we are responding to the modal while in every other case we just edited the original message, the reason is that for modals the edit does not count as responding to it and you need to send a message.
 
-Let's now move to the handling of our role buttons finally.
+Let's now finally move to the handling of our role buttons
 
 ## Role buttons Handling
 
@@ -1351,10 +1351,10 @@ if (
 // insert-end
 ```
 
-We are now checking that we received a message component interaction type and in the specific it's button, We only need a couple of thing from here:
+We are now checking that we received a message component interaction type and in our case it's button. We only need a couple of things from here:
 
 1. Get the role id of the role we need to give the user
-1. Give it to them
+1. Assign it to them
 1. Respond to the interaction
 
 So let's do this:
@@ -1383,7 +1383,7 @@ if (
 }
 ```
 
-And if we add the last few line of desired proprieties for the one that we are using in this final piece of code we are done, let's go to the `src/index.ts` and add them:
+And if we add the last few lines of desired properties for the one that we are using in this final piece of code we are done, let's go to the `src/index.ts` and add them:
 
 ```ts
 // REST OF YOUR CODE
@@ -1409,9 +1409,9 @@ bot.transformers.desiredProperties.role.id = true
 // REST OF YOUR CODE
 ```
 
-If we try the code we finally achieve what we wanted, a button that when clicked gives us the role assuming discord did not error out our call to add a role caused by the fact that we might not be allowed to add roles such as `@everyone`, roles created for bot permissions, roles that are obtained with link roles or roles that are above the bot hightest role.
+If we try the code we finally achieve what we wanted, a button that when clicked gives us the role assuming Discord did not error out our call to add a role caused by the fact that we might not be allowed to add roles such as `@everyone`, roles created for bot permissions, roles that are obtained with link roles or roles that are above the bot hightest role.
 
-One last thing we could do is removing the role if we already have it, we will need to add some code in the event and a few desired proprieties, let's start with the event file `src/events/interactionCreate.ts`:
+One last thing we could do is removing the role if we already have it, we will need to add some code in the event and a few desired properties, let's start with the event file `src/events/interactionCreate.ts`:
 
 ```ts
 if (
@@ -1465,7 +1465,7 @@ if (
 }
 ```
 
-And now with the desired proprieties, in the `src/index.ts` we need just a few lines:
+And now with the desired properties, in the `src/index.ts` we need just a few lines:
 
 ```ts
 // REST OF YOUR CODE
@@ -1497,14 +1497,14 @@ And if we now test the code it should work, we did create a reaction role featur
 
 ## Improvements
 
-You might remember that we said that there could be improvements to be made to the collectors we have, the reason being that currently if the user does not save the menu we will have that collector class in memory until we restart the bot, this can be easily fix by having a timeout on the collector but that is something that you can explore on your own.
+You might remember that we said that there could be improvements to be made to the collectors we have, the reason being that currently if the user does not save the menu we will have that collector class in memory until we restart the bot, this can be easily fixed by having a timeout on the collector but that is something that you can explore on your own.
 
 Also a more advanced thing is to generalize the collectors, we currently use the `Interaction` type for the methods implemented on it but we don't use them in any way and while we could use `any` or `unknown` instead the best way to generalize something in typescript is using generics, so if you need you can re-use that class without having to create another one.
 
-You could also move the various discord objects to the bottom of the file and make them act like template if and when needed, but that is not a functional improvement but a maintainability one.
+You could also move the various Discord objects to the bottom of the file and make them act like template if and when needed, but that is not a functional improvement but a maintainability one.
 
-Also currently there are a few cases where this code could error, in fact if you have a strict typescript configuration enable you might have noticed that typescript is giving you errors all over the place especially in our command because stuff can be `undefined` and we don't check for it, to fix this you just need to add an if that to ensure they exist and if the don't return.
+Also currently there are a few cases where this code could error, in fact if you have a strict typescript configuration enable you might have noticed that typescript is giving you errors all over the place especially in our command because stuff can be `undefined` and we don't check for it, to fix this you just need to add an if that to ensure they exist, and if not, just return.
 
-Also the user could click the remove button but the code could fail as if we don't have any option to set discord will error, or the opposite error if the user has already 25 buttons across all 5 action rows then the user will make the code error until he removes a button.
+Also the user could click the remove button and the code could fail if we don't have any option to set Discord will error, or the opposite error if the user already has 25 buttons across all 5 action rows then the user will make the code error until he removes a button.
 
-A few of these thing, to be exact the last 3, are implemented in the full example code you can find over the github repo [`/example/reaction-roles`](https://github.com/discordeno/discordeno/blob/main/examples/reaction-roles) folder that has the entire project for this guide.
+A few of these things, to be exact the last 3, are implemented in the full example code you can find over the github repo [`/example/reaction-roles`](https://github.com/discordeno/discordeno/blob/main/examples/reaction-roles) folder that has the entire project for this guide.
