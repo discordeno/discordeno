@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable no-const-assign */
 import { Buffer } from 'node:buffer'
 
 import { calculateBits, camelize, camelToSnakeCase, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
@@ -59,7 +57,13 @@ import {
   type ModifyGuildTemplate,
 } from '@discordeno/types'
 import { createRoutes } from './routes.js'
-import type { CreateRequestBodyOptions, CreateRestManagerOptions, MakeRequestOptions, RestManager, SendRequestOptions } from './types.js'
+import {
+  type CreateRequestBodyOptions,
+  type CreateRestManagerOptions,
+  type MakeRequestOptions,
+  type RestManager,
+  type SendRequestOptions,
+} from './types.js'
 
 // TODO: make dynamic based on package.json file
 const version = '19.0.0-alpha.1'
@@ -484,6 +488,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return result.status !== 204 ? await result.json() : undefined
       }
 
+      // This error needs to be created here because of how stack traces get calculated
+      const error = new Error()
+      error.message = 'Failed to send request to discord.'
+
       // eslint-disable-next-line no-async-promise-executor
       return await new Promise(async (resolve, reject) => {
         const payload: SendRequestOptions = {
@@ -491,13 +499,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           method,
           requestBodyOptions: options,
           retryCount: 0,
-          retryRequest: async function (payload: SendRequestOptions) {
+          retryRequest: async (payload: SendRequestOptions) => {
             await rest.processRequest(payload)
           },
           resolve: (data) => {
             resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined)
           },
-          reject,
+          reject: (reason) => {
+            error.cause = reason
+            reject(error)
+          },
           runThroughQueue: options?.runThroughQueue,
         }
 
