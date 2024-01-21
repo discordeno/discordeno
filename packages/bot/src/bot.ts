@@ -3,7 +3,7 @@ import { ShardSocketCloseCodes, createGatewayManager } from '@discordeno/gateway
 import type { CreateRestManagerOptions, RestManager } from '@discordeno/rest'
 import { createRestManager } from '@discordeno/rest'
 import type { BigString, DiscordEmoji, DiscordGatewayPayload, DiscordReady, GatewayIntents } from '@discordeno/types'
-import { createLogger, getBotIdFromToken, type Collection } from '@discordeno/utils'
+import { createLogger, getBotIdFromToken, type Collection, type logger } from '@discordeno/utils'
 import { createBotGatewayHandlers } from './handlers.js'
 import { createBotHelpers, type BotHelpers } from './helpers.js'
 import { createTransformers, type Transformers } from './transformers.js'
@@ -36,7 +36,9 @@ import type { VoiceState } from './transformers/voiceState.js'
  */
 export function createBot(options: CreateBotOptions): Bot {
   if (!options.rest) options.rest = { token: options.token, applicationId: options.applicationId }
+  if (!options.rest.logger && options.loggerFactory) options.rest.logger = options.loggerFactory('REST')
   if (!options.gateway) options.gateway = { token: options.token, events: {} }
+  if (!options.gateway.logger && options.loggerFactory) options.gateway.logger = options.loggerFactory('GATEWAY')
   if (!options.gateway.events.message) {
     options.gateway.events.message = async (shard, data) => {
       // TRIGGER RAW EVENT
@@ -64,7 +66,7 @@ export function createBot(options: CreateBotOptions): Bot {
     rest: createRestManager(options.rest),
     gateway: createGatewayManager(options.gateway),
     events: options.events ?? {},
-    logger: createLogger({ name: 'BOT' }),
+    logger: options.loggerFactory ? options.loggerFactory('BOT') : createLogger({ name: 'BOT' }),
     // Set up helpers below.
     helpers: {} as BotHelpers,
     async start() {
@@ -115,6 +117,8 @@ export interface CreateBotOptions {
    * @default false
    */
   defaultDesiredPropertiesValue?: boolean
+  /** This factory will be invoked to create the logger for 'gateway', 'rest' and 'bot' */
+  loggerFactory?: (name: string) => Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
 }
 
 export interface Bot {
@@ -129,7 +133,7 @@ export interface Bot {
   /** The event handlers. */
   events: Partial<EventHandlers>
   /** A logger utility to make it easy to log nice and useful things in the bot code. */
-  logger: ReturnType<typeof createLogger>
+  logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
   /** The functions that should transform discord objects to discordeno shaped objects. */
   transformers: Transformers
   /** The handler functions that should handle incoming discord payloads from gateway and call an event. */

@@ -92,7 +92,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     baseUrl,
     deleteQueueDelay: 60000,
     globallyRateLimited: false,
-    invalidBucket: createInvalidRequestBucket({}),
+    invalidBucket: createInvalidRequestBucket({ logger: options.logger }),
     isProxied: !baseUrl.startsWith(DISCORD_API_URL),
     maxRetryCount: Infinity,
     processingRateLimitedPaths: false,
@@ -100,6 +100,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     rateLimitedPaths: new Map(),
     token: options.token,
     version: options.version ?? DISCORD_API_VERSION,
+    logger: options.logger ?? logger,
 
     routes: createRoutes(),
 
@@ -350,9 +351,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         loggingHeaders.authorization = `${authenticationScheme} tokenhere`
       }
 
-      logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders })
+      rest.logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders })
       const response = await fetch(url, payload).catch(async (error) => {
-        logger.error(error)
+        rest.logger.error(error)
         // Mark request and completed
         rest.invalidBucket.handleCompletedRequest(999, false)
         options.reject({
@@ -362,7 +363,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         })
         throw error
       })
-      logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
+      rest.logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
 
       // Mark request and completed
       rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared')
@@ -376,17 +377,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       if (bucketId) options.bucketId = bucketId
 
       if (response.status < HttpResponseCode.Success || response.status >= HttpResponseCode.Error) {
-        logger.debug(`Request to ${url} failed.`)
+        rest.logger.debug(`Request to ${url} failed.`)
 
         if (response.status !== HttpResponseCode.TooManyRequests) {
           options.reject({ ok: false, status: response.status, body: await response.text() })
           return
         }
 
-        logger.debug(`Request to ${url} was ratelimited.`)
+        rest.logger.debug(`Request to ${url} was ratelimited.`)
         // Too many attempts, get rid of request from queue.
         if (options.retryCount >= rest.maxRetryCount) {
-          logger.debug(`Request to ${url} exceeded the maximum allowed retries.`, 'with payload:', payload)
+          rest.logger.debug(`Request to ${url} exceeded the maximum allowed retries.`, 'with payload:', payload)
           // rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(options)}`)
           options.reject({
             ok: false,

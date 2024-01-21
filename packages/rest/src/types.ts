@@ -116,6 +116,7 @@ import type {
   UpsertGlobalApplicationCommandOptions,
   UpsertGuildApplicationCommandOptions,
 } from '@discordeno/types'
+import type { logger } from '@discordeno/utils'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 import type { Queue } from './queue.js'
 import type { RestRoutes } from './typings/routes.js'
@@ -154,6 +155,11 @@ export interface CreateRestManagerOptions {
    * @default 10
    */
   version?: ApiVersions
+  /**
+   * The logger that the rest manager will use
+   * @default logger // The logger exported by `@discordeno/utils`
+   */
+  logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
 }
 
 export interface RestManager {
@@ -195,6 +201,8 @@ export interface RestManager {
   invalidBucket: InvalidRequestBucket
   /** The routes that are available for this manager. */
   routes: RestRoutes
+  /** The logger to use for the rest manager */
+  logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
   /** Allows the user to inject custom headers that will be sent with every request. */
   createBaseHeaders: () => Record<string, string>
   /** Whether or not the rest manager should keep objects in raw snake case from discord. */
