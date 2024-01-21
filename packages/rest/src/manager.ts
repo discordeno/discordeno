@@ -57,13 +57,7 @@ import {
   type ModifyGuildTemplate,
 } from '@discordeno/types'
 import { createRoutes } from './routes.js'
-import {
-  type CreateRequestBodyOptions,
-  type CreateRestManagerOptions,
-  type MakeRequestOptions,
-  type RestManager,
-  type SendRequestOptions,
-} from './types.js'
+import type { CreateRequestBodyOptions, CreateRestManagerOptions, MakeRequestOptions, RestManager, SendRequestOptions } from './types.js'
 
 // TODO: make dynamic based on package.json file
 const version = '19.0.0-alpha.1'
