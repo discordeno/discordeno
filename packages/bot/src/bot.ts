@@ -117,7 +117,14 @@ export interface CreateBotOptions {
    * @default false
    */
   defaultDesiredPropertiesValue?: boolean
-  /** This factory will be invoked to create the logger for 'gateway', 'rest' and 'bot' */
+  /**
+   * This factory will be invoked to create the logger for gateway, rest and bot
+   *
+   * @remarks
+   * If not provided the default logger will be used with rest and gateway sharing the same logger
+   *
+   * This function will be invoked 3 times, one with the name of `REST`, one with `GATEWAY` and the third one with name `BOT`
+   */
   loggerFactory?: (name: string) => Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
 }
 
