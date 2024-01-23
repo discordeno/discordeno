@@ -125,7 +125,7 @@ export interface CreateBotOptions {
    *
    * This function will be invoked 3 times, one with the name of `REST`, one with `GATEWAY` and the third one with name `BOT`
    */
-  loggerFactory?: (name: string) => Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
+  loggerFactory?: (name: "REST" | "GATEWAY" | "BOT") => Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
 }
 
 export interface Bot {
