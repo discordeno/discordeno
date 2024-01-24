@@ -206,10 +206,7 @@ export function createBotHelpers(bot: Bot): BotHelpers {
       return bot.transformers.message(bot, snakelize(await bot.rest.editMessage(channelId, messageId, options)) as DiscordMessage)
     },
     editOriginalInteractionResponse: async (token, options) => {
-      const result = await bot.rest.editOriginalInteractionResponse(token, options)
-      if (!result) return
-
-      return bot.transformers.message(bot, snakelize(result) as DiscordMessage)
+      return bot.transformers.message(bot, snakelize(await bot.rest.editOriginalInteractionResponse(token, options)))
     },
     editOriginalWebhookMessage: async (webhookId, token, options) => {
       return bot.transformers.message(bot, snakelize(await bot.rest.editOriginalWebhookMessage(webhookId, token, options)) as DiscordMessage)
@@ -752,7 +749,7 @@ export interface BotHelpers {
   editGuildSticker: (guildId: BigString, stickerId: BigString, options: AtLeastOne<EditGuildStickerOptions>, reason?: string) => Promise<Sticker>
   editGuildTemplate: (guildId: BigString, templateCode: string, options: ModifyGuildTemplate) => Promise<Template>
   editMessage: (channelId: BigString, messageId: BigString, options: EditMessage) => Promise<Message>
-  editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<Message | undefined>
+  editOriginalInteractionResponse: (token: string, options: InteractionCallbackData) => Promise<Message>
   editOriginalWebhookMessage: (webhookId: BigString, token: string, options: InteractionCallbackData & { threadId?: BigString }) => Promise<Message>
   editRole: (guildId: BigString, roleId: BigString, options: EditGuildRole, reason?: string) => Promise<Role>
   editRolePositions: (guildId: BigString, options: ModifyRolePositions[], reason?: string) => Promise<Role[]>

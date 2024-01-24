@@ -4,7 +4,6 @@ import {
   type ApplicationCommandOptionTypes,
   type ApplicationCommandTypes,
   type BigString,
-  type CamelizedDiscordMessage,
   type ChannelTypes,
   type DiscordInteraction,
   type DiscordInteractionDataOption,
@@ -75,13 +74,33 @@ export interface Interaction extends BaseInteraction {
 }
 
 export interface BaseInteraction {
-  /** Sends a response to an interaction. */
-  respond: (response: string | InteractionCallbackData, options?: { isPrivate?: boolean }) => Promise<CamelizedDiscordMessage | void>
-  /** Edit the original response of an interaction. */
-  edit: (response: string | InteractionCallbackData) => Promise<CamelizedDiscordMessage>
-  /** Defer the interaction. */
+  /**
+   * Sends a response to an interaction.
+   *
+   * @remarks
+   * Uses `interaction.type`, `interaction.token` and `interaction.id`
+   */
+  respond: (response: string | InteractionCallbackData, options?: { isPrivate?: boolean }) => Promise<Message | void>
+  /**
+   * Edit the original response of an interaction.
+   *
+   * @remarks
+   * Uses `interaction.token`
+   */
+  edit: (response: string | InteractionCallbackData) => Promise<Message>
+  /**
+   * Defer the interaction.
+   *
+   * @remarks
+   * Uses `interaction.type`, `interaction.token` and `interaction.id`
+   */
   defer: (isPrivate?: boolean) => Promise<void>
-  /** Delete the original interaction response or a followup message */
+  /**
+   * Delete the original interaction response or a followup message
+   *
+   * @remarks
+   * Uses `interaction.type` and `interaction.token`
+   */
   delete: (messageId?: BigString) => Promise<void>
 }
 
@@ -99,7 +118,7 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
     if (type === InteractionResponseTypes.ChannelMessageWithSource && options?.isPrivate) response.flags = 64
 
     // Since this has already been given a response, any further responses must be followups.
-    if (this.acknowledged) return await this.bot?.rest.sendFollowupMessage(this.token!, response)
+    if (this.acknowledged) return await this.bot!.helpers.sendFollowupMessage(this.token!, response)
 
     // Modals cannot be chained
     if (this.type === InteractionTypes.ModalSubmit && type === InteractionResponseTypes.Modal)
@@ -111,7 +130,7 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
 
     // If user has not already responded to this interaction we need to send an original response
     this.acknowledged = true
-    return await this.bot?.rest.sendInteractionResponse(this.id!, this.token!, { type, data: response })
+    return await this.bot!.helpers.sendInteractionResponse(this.id!, this.token!, { type, data: response })
   },
 
   async edit(response) {
@@ -120,7 +139,7 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
     // If user provides a string, change it to a response object
     if (typeof response === 'string') response = { content: response }
 
-    return await this.bot!.rest.editOriginalInteractionResponse(this.token!, response)
+    return await this.bot!.helpers.editOriginalInteractionResponse(this.token!, response)
   },
 
   async defer(isPrivate) {
@@ -138,14 +157,14 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
     if (isPrivate) data.flags = 64
 
     this.acknowledged = true
-    return await this.bot?.rest.sendInteractionResponse(this.id!, this.token!, { type, data })
+    return await this.bot!.helpers.sendInteractionResponse(this.id!, this.token!, { type, data })
   },
 
   async delete(messageId?: BigString) {
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot delete an autocomplete interaction')
 
-    if (messageId) return await this.bot?.rest.deleteFollowupMessage(this.token!, messageId)
-    else return await this.bot?.rest.deleteOriginalInteractionResponse(this.token!)
+    if (messageId) return await this.bot?.helpers.deleteFollowupMessage(this.token!, messageId)
+    else return await this.bot?.helpers.deleteOriginalInteractionResponse(this.token!)
   },
 }
 
