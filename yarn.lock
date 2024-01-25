@@ -1984,7 +1984,7 @@ __metadata:
     turbo: "npm:^1.11.3"
     typedoc: "npm:0.25.7"
     typedoc-plugin-markdown: "npm:3.17.1"
-    typedoc-plugin-missing-exports: "npm:^2.1.0"
+    typedoc-plugin-missing-exports: "npm:^2.2.0"
     typescript: "npm:5.3.3"
   languageName: unknown
   linkType: soft
@@ -5872,12 +5872,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typedoc-plugin-missing-exports@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "typedoc-plugin-missing-exports@npm:2.1.0"
+"typedoc-plugin-missing-exports@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "typedoc-plugin-missing-exports@npm:2.2.0"
   peerDependencies:
     typedoc: 0.24.x || 0.25.x
-  checksum: 05eaa9f249b146dcdf791c63088452e70f734805d84faa691228b8474b4c806fba7691fd1a51bb039a2b1901af2c02db3bae17853cf4b102ee4fda0a195308fb
+  checksum: db691b3494c8e112d7ea8621fcf79f1988ef8f0c9fc43eb5fc308fda0caa1b1e007c3d51db83236247cf9b52cdfec1186a7eb25ec3416fa03ef65f68b4e88e4e
   languageName: node
   linkType: hard
 
