@@ -1151,9 +1151,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify@npm:^4.25.2":
-  version: 4.25.2
-  resolution: "fastify@npm:4.25.2"
+"fastify@npm:^4.26.0":
+  version: 4.26.0
+  resolution: "fastify@npm:4.26.0"
   dependencies:
     "@fastify/ajv-compiler": "npm:^3.5.0"
     "@fastify/error": "npm:^3.4.0"
@@ -1162,7 +1162,7 @@ __metadata:
     avvio: "npm:^8.2.1"
     fast-content-type-parse: "npm:^1.1.0"
     fast-json-stringify: "npm:^5.8.0"
-    find-my-way: "npm:^7.7.0"
+    find-my-way: "npm:^8.0.0"
     light-my-request: "npm:^5.11.0"
     pino: "npm:^8.17.0"
     process-warning: "npm:^3.0.0"
@@ -1171,7 +1171,7 @@ __metadata:
     secure-json-parse: "npm:^2.7.0"
     semver: "npm:^7.5.4"
     toad-cache: "npm:^3.3.0"
-  checksum: 9c5791c0da779412107d01f3e2befc2698a55966f9995b72af2f6c1854d2da004fb7c11222fed3931b73b58f7f49b83af79aaf6b484735f7a317b5d456e32080
+  checksum: 0eff694cd12ba393af2deb03ca7956a3b7272f3ecd2a481a452bf0f71a83976d81652da1cc59c449accdc45a5f8586887ee45c6068961a7bcd6f00dde6ac4b88
   languageName: node
   linkType: hard
 
@@ -1222,14 +1222,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"find-my-way@npm:^7.7.0":
-  version: 7.7.0
-  resolution: "find-my-way@npm:7.7.0"
+"find-my-way@npm:^8.0.0":
+  version: 8.1.0
+  resolution: "find-my-way@npm:8.1.0"
   dependencies:
     fast-deep-equal: "npm:^3.1.3"
     fast-querystring: "npm:^1.0.0"
     safe-regex2: "npm:^2.0.0"
-  checksum: 0b634bce3374de9f3ae660231a963f858cc271bd95c914b941ba1a5fb53d3f978cf71708de6d454ead72c99745a147dd621616645b3d4bf39e4395efe6b42d91
+  checksum: 9f44577f4091942e7852f0fc5b9a8047cee0facca88abbe9ff0c887259dd01c0a62aae5cb1e5961c77c36070ec360ad5f59cd4db105524dc914d752d5c2c27cd
   languageName: node
   linkType: hard
 
@@ -2343,7 +2343,7 @@ __metadata:
     "@swc/cli": "npm:^0.3.6"
     "@swc/core": "npm:^1.3.105"
     dotenv: "npm:^16.4.1"
-    fastify: "npm:^4.25.2"
+    fastify: "npm:^4.26.0"
   languageName: unknown
   linkType: soft
 
