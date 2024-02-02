@@ -43,7 +43,7 @@ __metadata:
     "@types/node": "npm:^20.11.15"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
-    chai: "npm:^5.0.0"
+    chai: "npm:^5.0.3"
     eslint: "npm:^8.56.0"
     eslint-config-discordeno: "npm:*"
     mocha: "npm:^10.2.0"
@@ -68,7 +68,7 @@ __metadata:
     "@types/sinon": "npm:^17.0.3"
     "@types/ws": "npm:^8.5.10"
     c8: "npm:^9.1.0"
-    chai: "npm:^5.0.0"
+    chai: "npm:^5.0.3"
     eslint: "npm:^8.56.0"
     eslint-config-discordeno: "npm:*"
     mocha: "npm:^10.2.0"
@@ -95,7 +95,7 @@ __metadata:
     "@types/node": "npm:^20.11.15"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
-    chai: "npm:^5.0.0"
+    chai: "npm:^5.0.3"
     chai-as-promised: "npm:^7.1.1"
     dotenv: "npm:^16.3.1"
     eslint: "npm:^8.56.0"
@@ -120,7 +120,7 @@ __metadata:
     "@types/node": "npm:^20.11.15"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
-    chai: "npm:^5.0.0"
+    chai: "npm:^5.0.3"
     eslint: "npm:^8.56.0"
     eslint-config-discordeno: "npm:*"
     mocha: "npm:^10.2.0"
@@ -142,7 +142,7 @@ __metadata:
     "@types/node": "npm:^20.11.15"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
-    chai: "npm:^5.0.0"
+    chai: "npm:^5.0.3"
     eslint: "npm:^8.56.0"
     eslint-config-discordeno: "npm:*"
     mocha: "npm:^10.2.0"
@@ -1521,16 +1521,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chai@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "chai@npm:5.0.0"
+"chai@npm:^5.0.3":
+  version: 5.0.3
+  resolution: "chai@npm:5.0.3"
   dependencies:
     assertion-error: "npm:^2.0.1"
     check-error: "npm:^2.0.0"
     deep-eql: "npm:^5.0.1"
-    loupe: "npm:^3.0.0"
+    loupe: "npm:^3.1.0"
     pathval: "npm:^2.0.0"
-  checksum: c23d1bb3912cc36d12861d7e4010bb992aabf923a8d393bc71e776218c39f5f40778ab9f398ff962dd26857edee07ce732c9ad28a678feb1b76f99384d2e4a90
+  checksum: d9b2bb0e4591b4a73ea98bb7a6423c4e50dd35f43ce4404be26126796af970d844269bb0b07b21866620c542f07957003b34c5cf60095e5a84878af6b120cc2d
   languageName: node
   linkType: hard
 
@@ -2005,7 +2005,7 @@ __metadata:
     "@types/node": "npm:^20.11.15"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
-    chai: "npm:^5.0.0"
+    chai: "npm:^5.0.3"
     commander: "npm:^11.1.0"
     eslint: "npm:^8.56.0"
     eslint-config-discordeno: "npm:*"
@@ -3959,12 +3959,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loupe@npm:^3.0.0":
-  version: 3.0.2
-  resolution: "loupe@npm:3.0.2"
+"loupe@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "loupe@npm:3.1.0"
   dependencies:
     get-func-name: "npm:^2.0.1"
-  checksum: 256467bf10afaca4a5dd79b32e36fcd042bc2a247232e940c62bcc07cb114c2d7a549218eb103598e7cdb8bd32c6601fe230d80e03b8d49782973d4da11c08ed
+  checksum: 48d1ad60a51f084430a7b9a3772434e0140e2d8a9ed422f13a632511452a29762695876ff97431c06eea4e248d42674a0f69b8e545d97f63fa6115adc7983b94
   languageName: node
   linkType: hard
 
