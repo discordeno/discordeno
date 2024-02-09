@@ -51,7 +51,7 @@ jobs:
           PROXY_REST_SECRET: ${{ secrets.PROXY_REST_SECRET }}
           PROXY_REST_URL: ${{ secrets.PROXY_REST_URL }}
       - name: Collect and upload the coverage report
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         if: ${{ inputs.event_name != 'pull_request' }}
         with:
           files: ./packages/${{ inputs.package }}/coverage/lcov.info
