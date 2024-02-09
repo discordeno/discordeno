@@ -19,8 +19,8 @@
     "release-build": "yarn build && yarn build:type",
     "fmt": "eslint --fix \"src/**/*.ts*\"",
     "lint": "eslint \"src/**/*.ts*\"",
-    "build": "swc src --delete-dir-on-start --out-dir dist && node ../../scripts/fixBenchExtension.js",
-    "build-message": "swc src/generateMessage.ts -C sourceMaps=false --out-dir ../../scripts && node ../../scripts/fixBenchExtension.js",
+    "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist && node ../../scripts/fixBenchExtension.js",
+    "build-message": "swc src/generateMessage.ts --strip-leading-paths -C sourceMaps=false --out-dir ../../scripts && node ../../scripts/fixBenchExtension.js",
     "bench": "node dist/index.js"
   },
   "dependencies": {

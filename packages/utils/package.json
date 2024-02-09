@@ -15,14 +15,14 @@
     "url": "https://github.com/discordeno/discordeno.git"
   },
   "scripts": {
-    "build": "swc src --delete-dir-on-start src --out-dir dist/esm && swc --delete-dir-on-start src --out-dir dist/cjs -C module.type=commonjs && node ../../scripts/fixCjsExtension.js",
+    "build": "swc src --strip-leading-paths --delete-dir-on-start src --out-dir dist/esm && swc --strip-leading-paths --delete-dir-on-start src --out-dir dist/cjs -C module.type=commonjs && node ../../scripts/fixCjsExtension.js",
     "build:type": "tsc --skipDefaultLibCheck --declaration --emitDeclarationOnly --declarationDir dist/types",
     "release-build": "yarn build && yarn build:type",
     "fmt": "eslint --fix \"src/**/*.ts*\"",
     "lint": "eslint \"src/**/*.ts*\"",
     "test:unit-coverage": "c8 mocha --no-warnings 'tests/**/*.spec.ts'",
     "test:unit": "c8 --r lcov mocha --no-warnings 'tests/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js utils",
-    "test:deno-unit": "swc tests --delete-dir-on-start -C jsc.minify.mangle=false --out-dir denoTestsDist && node ../../scripts/fixDenoTestExtension.js && deno test -A --import-map ../../denoImportMap.json denoTestsDist",
+    "test:deno-unit": "swc tests --strip-leading-paths --delete-dir-on-start -C jsc.minify.mangle=false --out-dir denoTestsDist && node ../../scripts/fixDenoTestExtension.js && deno test -A --import-map ../../denoImportMap.json denoTestsDist",
     "test:bun-unit": "node ../../scripts/fixBunTestExtension.js && bun test bunTestsDist",
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/**/*.spec.ts'",
     "test:type": "tsc --noEmit",
