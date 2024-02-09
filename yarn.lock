@@ -1984,7 +1984,6 @@ __metadata:
     turbo: "npm:^1.11.3"
     typedoc: "npm:0.25.7"
     typedoc-plugin-markdown: "npm:3.17.1"
-    typedoc-plugin-missing-exports: "npm:^2.2.0"
     typescript: "npm:5.3.3"
   languageName: unknown
   linkType: soft
@@ -5869,15 +5868,6 @@ __metadata:
   peerDependencies:
     typedoc: ">=0.24.0"
   checksum: 21bfe7fba60e3c27e15700196b1b4abdf5b63bfdc9a4af57cf6f0891f9d359ac561435773709c6ea3555bae402b7a81b637d055e767afd33e2c0dc717d0449d2
-  languageName: node
-  linkType: hard
-
-"typedoc-plugin-missing-exports@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "typedoc-plugin-missing-exports@npm:2.2.0"
-  peerDependencies:
-    typedoc: 0.24.x || 0.25.x
-  checksum: db691b3494c8e112d7ea8621fcf79f1988ef8f0c9fc43eb5fc308fda0caa1b1e007c3d51db83236247cf9b52cdfec1186a7eb25ec3416fa03ef65f68b4e88e4e
   languageName: node
   linkType: hard
 

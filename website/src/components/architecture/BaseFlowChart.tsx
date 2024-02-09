@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import ReactFlow, {
   Background,
   Controls,
-  Edge,
   Handle,
-  Node,
   Position,
   useEdgesState,
   useNodesState,
+  type Edge,
+  type Node,
 } from 'reactflow'
 import 'reactflow/dist/style.css'
 
@@ -51,11 +51,13 @@ export default function BaseFlowChart({
     }
 
     window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
   }, [])
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
+  const [nodes] = useNodesState(initialNodes)
+  const [edges] = useEdgesState(initialEdges)
 
   return (
     <>
