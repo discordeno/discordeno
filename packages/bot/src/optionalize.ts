@@ -1,4 +1,4 @@
-type OptionalizeAux<T extends object> = Id<
+export type OptionalizeAux<T extends object> = Id<
   {
     [K in KeysWithUndefined<T>]?: Optionalize<T[K]>
   } & {

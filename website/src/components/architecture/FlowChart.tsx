@@ -1,5 +1,4 @@
-import React from 'react'
-import { Edge, Node } from 'reactflow'
+import { type Edge, type Node } from 'reactflow'
 import 'reactflow/dist/style.css'
 import BaseFlowChart, { defaultNodeOptions, multiplier } from './BaseFlowChart'
 
