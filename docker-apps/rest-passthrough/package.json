@@ -4,7 +4,7 @@
   "type": "module",
   "version": "1.0.0",
   "scripts": {
-    "build": "swc src --delete-dir-on-start --out-dir dist",
+    "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist",
     "start:dev": "yarn exec node -r dotenv/config dist/server.js",
     "start:prod": "yarn exec node ./dist/server.js",
     "release": "cliff-jumper",
