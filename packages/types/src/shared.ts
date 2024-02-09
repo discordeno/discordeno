@@ -986,11 +986,13 @@ export type ImageFormat = 'jpg' | 'jpeg' | 'png' | 'webp' | 'gif' | 'json'
 export type ImageSize = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096
 
 export enum Locales {
+  Indonesian = 'id',
   Danish = 'da',
   German = 'de',
   EnglishUk = 'en-GB',
   EnglishUs = 'en-US',
   Spanish = 'es-ES',
+  SpanishLatam = 'es-419',
   French = 'fr',
   Croatian = 'hr',
   Italian = 'it',

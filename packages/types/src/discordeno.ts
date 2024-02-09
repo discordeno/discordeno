@@ -201,8 +201,6 @@ export interface SelectMenuUsersAndRolesComponent {
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   maxValues?: number
-  /** The choices! Maximum of 25 items. */
-  options: SelectOption[]
   /** Whether or not this select is disabled */
   disabled?: boolean
 }
