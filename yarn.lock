@@ -40,10 +40,10 @@ __metadata:
     "@swc/core": "npm:^1.3.102"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.6"
-    "@types/node": "npm:^20.11.0"
+    "@types/node": "npm:^20.11.15"
     "@types/sinon": "npm:^17.0.3"
-    c8: "npm:^9.0.0"
-    chai: "npm:^5.0.0"
+    c8: "npm:^9.1.0"
+    chai: "npm:^5.0.3"
     eslint: "npm:^8.56.0"
     eslint-config-discordeno: "npm:*"
     mocha: "npm:^10.2.0"
@@ -64,11 +64,11 @@ __metadata:
     "@swc/core": "npm:^1.3.102"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.6"
-    "@types/node": "npm:^20.11.0"
+    "@types/node": "npm:^20.11.15"
     "@types/sinon": "npm:^17.0.3"
     "@types/ws": "npm:^8.5.10"
-    c8: "npm:^9.0.0"
-    chai: "npm:^5.0.0"
+    c8: "npm:^9.1.0"
+    chai: "npm:^5.0.3"
     eslint: "npm:^8.56.0"
     eslint-config-discordeno: "npm:*"
     mocha: "npm:^10.2.0"
@@ -92,10 +92,10 @@ __metadata:
     "@types/chai": "npm:^4.3.11"
     "@types/chai-as-promised": "npm:^7.1.8"
     "@types/mocha": "npm:^10.0.6"
-    "@types/node": "npm:^20.11.0"
+    "@types/node": "npm:^20.11.15"
     "@types/sinon": "npm:^17.0.3"
-    c8: "npm:^9.0.0"
-    chai: "npm:^5.0.0"
+    c8: "npm:^9.1.0"
+    chai: "npm:^5.0.3"
     chai-as-promised: "npm:^7.1.1"
     dotenv: "npm:^16.3.1"
     eslint: "npm:^8.56.0"
@@ -117,10 +117,10 @@ __metadata:
     "@swc/core": "npm:^1.3.102"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.6"
-    "@types/node": "npm:^20.11.0"
+    "@types/node": "npm:^20.11.15"
     "@types/sinon": "npm:^17.0.3"
-    c8: "npm:^9.0.0"
-    chai: "npm:^5.0.0"
+    c8: "npm:^9.1.0"
+    chai: "npm:^5.0.3"
     eslint: "npm:^8.56.0"
     eslint-config-discordeno: "npm:*"
     mocha: "npm:^10.2.0"
@@ -139,10 +139,10 @@ __metadata:
     "@swc/core": "npm:^1.3.102"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.6"
-    "@types/node": "npm:^20.11.0"
+    "@types/node": "npm:^20.11.15"
     "@types/sinon": "npm:^17.0.3"
-    c8: "npm:^9.0.0"
-    chai: "npm:^5.0.0"
+    c8: "npm:^9.1.0"
+    chai: "npm:^5.0.3"
     eslint: "npm:^8.56.0"
     eslint-config-discordeno: "npm:*"
     mocha: "npm:^10.2.0"
@@ -705,12 +705,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20.11.0":
-  version: 20.11.0
-  resolution: "@types/node@npm:20.11.0"
+"@types/node@npm:^20.11.15":
+  version: 20.11.15
+  resolution: "@types/node@npm:20.11.15"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 8da60a8ccb65181c3d6f7686ddc5f1b1616cafa14d9e520a866adff82c17cc99336a78dd7ce7bee8f54e2332946f678b0e3aa377fbaaf751d3c05b64600872c6
+  checksum: ec670ab67382b3a45511de0ff1a57640eb51e62dd2f2c3b4484ee35caef18c1d346bba64bd58189e9445cecbfcf9b458ca7850635eb56df2c49472dac656029f
   languageName: node
   linkType: hard
 
@@ -1273,7 +1273,7 @@ __metadata:
     "@swc/cli": "npm:^0.1.63"
     "@swc/core": "npm:^1.3.102"
     "@types/benchmark": "npm:^2.1.5"
-    "@types/node": "npm:^20.11.0"
+    "@types/node": "npm:^20.11.15"
     benchmark: "npm:^2.1.4"
     eslint: "npm:^8.56.0"
     eslint-config-discordeno: "npm:*"
@@ -1399,9 +1399,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"c8@npm:^9.0.0":
-  version: 9.0.0
-  resolution: "c8@npm:9.0.0"
+"c8@npm:^9.1.0":
+  version: 9.1.0
+  resolution: "c8@npm:9.1.0"
   dependencies:
     "@bcoe/v8-coverage": "npm:^0.2.3"
     "@istanbuljs/schema": "npm:^0.1.3"
@@ -1416,7 +1416,7 @@ __metadata:
     yargs-parser: "npm:^21.1.1"
   bin:
     c8: bin/c8.js
-  checksum: 71ccdf112ed5e52d983f20e0453e5abe1a61d2240cc5affe465933fe9a4d010ac9a3276a969a7bbfa705ae7395ea705384569549e242cf0ffdc9bb68401de699
+  checksum: 6c11f156960181ef069d9bb33f67c108088d09671934e273cb8a25453e9d5030f61f9b74b72bea3236d5bb8bfeb8d59b359d2eb488c2d378c9491d725cec4574
   languageName: node
   linkType: hard
 
@@ -1521,16 +1521,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chai@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "chai@npm:5.0.0"
+"chai@npm:^5.0.3":
+  version: 5.0.3
+  resolution: "chai@npm:5.0.3"
   dependencies:
     assertion-error: "npm:^2.0.1"
     check-error: "npm:^2.0.0"
     deep-eql: "npm:^5.0.1"
-    loupe: "npm:^3.0.0"
+    loupe: "npm:^3.1.0"
     pathval: "npm:^2.0.0"
-  checksum: c23d1bb3912cc36d12861d7e4010bb992aabf923a8d393bc71e776218c39f5f40778ab9f398ff962dd26857edee07ce732c9ad28a678feb1b76f99384d2e4a90
+  checksum: d9b2bb0e4591b4a73ea98bb7a6423c4e50dd35f43ce4404be26126796af970d844269bb0b07b21866620c542f07957003b34c5cf60095e5a84878af6b120cc2d
   languageName: node
   linkType: hard
 
@@ -1980,7 +1980,7 @@ __metadata:
     eslint-config-discordeno: "npm:*"
     husky: "npm:^8.0.3"
     lint-staged: "npm:^15.2.0"
-    prettier: "npm:^3.1.1"
+    prettier: "npm:^3.2.4"
     turbo: "npm:^1.11.3"
     typedoc: "npm:0.25.7"
     typedoc-plugin-markdown: "npm:3.17.1"
@@ -2001,10 +2001,10 @@ __metadata:
     "@swc/core": "npm:^1.3.102"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.6"
-    "@types/node": "npm:^20.11.0"
+    "@types/node": "npm:^20.11.15"
     "@types/sinon": "npm:^17.0.3"
-    c8: "npm:^9.0.0"
-    chai: "npm:^5.0.0"
+    c8: "npm:^9.1.0"
+    chai: "npm:^5.0.3"
     commander: "npm:^11.1.0"
     eslint: "npm:^8.56.0"
     eslint-config-discordeno: "npm:*"
@@ -2212,13 +2212,13 @@ __metadata:
     "@typescript-eslint/parser": "npm:^6.18.1"
     eslint: "npm:^8.56.0"
     eslint-config-prettier: "npm:9.1.0"
-    eslint-config-standard-with-typescript: "npm:^43.0.0"
+    eslint-config-standard-with-typescript: "npm:^43.0.1"
     eslint-plugin-import: "npm:^2.29.1"
     eslint-plugin-n: "npm:^16.6.2"
     eslint-plugin-prettier: "npm:^5.1.3"
     eslint-plugin-promise: "npm:^6.1.1"
     eslint-plugin-require-extensions: "npm:^0.1.3"
-    prettier: "npm:^3.1.1"
+    prettier: "npm:^3.2.4"
     typescript: "npm:5.3.3"
   languageName: unknown
   linkType: soft
@@ -2234,9 +2234,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-standard-with-typescript@npm:^43.0.0":
-  version: 43.0.0
-  resolution: "eslint-config-standard-with-typescript@npm:43.0.0"
+"eslint-config-standard-with-typescript@npm:^43.0.1":
+  version: 43.0.1
+  resolution: "eslint-config-standard-with-typescript@npm:43.0.1"
   dependencies:
     "@typescript-eslint/parser": "npm:^6.4.0"
     eslint-config-standard: "npm:17.1.0"
@@ -2247,7 +2247,7 @@ __metadata:
     eslint-plugin-n: "^15.0.0 || ^16.0.0 "
     eslint-plugin-promise: ^6.0.0
     typescript: "*"
-  checksum: 5c6ac9a204e613678484849826c88dab2821699278632145e50323ff88a5ca6fce7d18daa0a4fdb4e15f44de054a0f306950933aebe6358b3fcbc862c2831d2e
+  checksum: 26a460efd918262ef865abd1f1d7ad4a41c2f368b560ca0ccf16b674f2ca3a778ba5b2a43845421b48fa9ce118a68765222086c30c35e407f878fa1e9170576d
   languageName: node
   linkType: hard
 
@@ -3958,12 +3958,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loupe@npm:^3.0.0":
-  version: 3.0.2
-  resolution: "loupe@npm:3.0.2"
+"loupe@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "loupe@npm:3.1.0"
   dependencies:
     get-func-name: "npm:^2.0.1"
-  checksum: 256467bf10afaca4a5dd79b32e36fcd042bc2a247232e940c62bcc07cb114c2d7a549218eb103598e7cdb8bd32c6601fe230d80e03b8d49782973d4da11c08ed
+  checksum: 48d1ad60a51f084430a7b9a3772434e0140e2d8a9ed422f13a632511452a29762695876ff97431c06eea4e248d42674a0f69b8e545d97f63fa6115adc7983b94
   languageName: node
   linkType: hard
 
@@ -4811,12 +4811,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.1.1":
-  version: 3.1.1
-  resolution: "prettier@npm:3.1.1"
+"prettier@npm:^3.2.4":
+  version: 3.2.4
+  resolution: "prettier@npm:3.2.4"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 26a249f321b97d26c04483f1bf2eeb22e082a76f4222a2c922bebdc60111691aad4ec3979610e83942e0b956058ec361d9e9c81c185172264eb6db9aa678082b
+  checksum: e2b735d0552501b3a7ac8bd3ba3b6de2920bb35bd4cd02d08cb9057ebe3e96d83b9a7e4b903d987b7530a50223b12c74d107c154337236ae2c68156ba1e65cd2
   languageName: node
   linkType: hard
 
