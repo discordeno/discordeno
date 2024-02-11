@@ -9,8 +9,7 @@ export function transformVoiceState(bot: Bot, payload: { voiceState: DiscordVoic
   if (props.requestToSpeakTimestamp && payload.voiceState.request_to_speak_timestamp)
     voiceState.requestToSpeakTimestamp = Date.parse(payload.voiceState.request_to_speak_timestamp)
   if (props.channelId && payload.voiceState.channel_id) voiceState.channelId = bot.transformers.snowflake(payload.voiceState.channel_id)
-  if (props.guildId)
-    voiceState.guildId = payload.guildId || (payload.voiceState.guild_id ? bot.transformers.snowflake(payload.voiceState.guild_id) : 0n)
+  if (props.guildId) voiceState.guildId = payload.guildId
   if (props.toggles) voiceState.toggles = new VoiceStateToggles(payload.voiceState)
   if (props.sessionId) voiceState.sessionId = payload.voiceState.session_id
   if (props.userId && payload.voiceState.user_id) voiceState.userId = bot.transformers.snowflake(payload.voiceState.user_id) ?? 0n
