@@ -443,7 +443,7 @@ export interface CreateSlashApplicationCommand {
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
   nameLocalizations?: Localization
   /** 1-100 character description */
-  description: string
+  description?: string
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
   descriptionLocalizations?: Localization
   /** Type of command, defaults `ApplicationCommandTypes.ChatInput` if not set  */

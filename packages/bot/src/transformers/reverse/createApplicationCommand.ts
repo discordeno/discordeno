@@ -10,8 +10,6 @@ export function transformCreateApplicationCommandToDiscordCreateApplicationComma
     return {
       name: payload.name,
       name_localizations: payload.nameLocalizations,
-      description: '',
-      description_localizations: {},
       type: payload.type,
       default_member_permissions: payload.defaultMemberPermissions ? calculateBits(payload.defaultMemberPermissions) : null,
       dm_permission: payload.dmPermission,
