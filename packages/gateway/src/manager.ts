@@ -26,7 +26,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
   }
 
   const gateway: GatewayManager = {
-    events: options.events,
+    events: options.events ?? {},
     compress: options.compress ?? false,
     intents: options.intents ?? 0,
     properties: {
@@ -50,7 +50,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     cache: {
       requestMembers: {
         enabled: options.cache?.requestMembers?.enabled ?? false,
-        pending: new Collection(),
+        pending: options.cache?.requestMembers?.pending ?? new Collection(),
       },
     },
 
@@ -172,7 +172,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             url: this.url,
             version: this.version,
           },
-          events: options.events,
+          events: options.events ?? {},
           requestIdentify: async () => {
             await gateway.identify(shardId)
           },
@@ -186,7 +186,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
         if (this.preferSnakeCase) {
           shard.forwardToBot = async (payload) => {
-            options.events.message?.(shard!, payload)
+            shard!.events.message?.(shard!, payload)
           }
         }
 
@@ -303,7 +303,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
                 return
               }
 
-              gateway.cache.requestMembers.pending.set(options.nonce, {
+              gateway.cache.requestMembers.pending!.set(options.nonce, {
                 nonce: options.nonce,
                 resolve,
                 members: [],
@@ -425,7 +425,7 @@ export interface CreateGatewayManagerOptions {
    */
   version?: number
   /** The events handlers */
-  events: ShardEvents
+  events?: ShardEvents
   /** This managers cache related settings. */
   cache?: {
     requestMembers?: {
@@ -435,7 +435,7 @@ export interface CreateGatewayManagerOptions {
        */
       enabled?: boolean
       /** The pending requests. */
-      pending: Collection<string, RequestMemberRequest>
+      pending?: Collection<string, RequestMemberRequest>
     }
   }
 }
