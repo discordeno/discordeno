@@ -76,12 +76,7 @@ export const RATE_LIMIT_LIMIT_HEADER = 'x-ratelimit-limit'
 export const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope'
 
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
-  const applicationId = options.applicationId ? BigInt(options.applicationId) : options.token ? getBotIdFromToken(options.token) : undefined
-  if (!applicationId) {
-    throw new Error(
-      '`applicationId` was not provided and was not able to extract the id from the bots token. Please explicitly pass `applicationId` to the rest manager.',
-    )
-  }
+  const applicationId = options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token)
 
   const baseUrl = options.proxy?.baseUrl ?? DISCORD_API_URL
 
