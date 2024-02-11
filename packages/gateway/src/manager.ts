@@ -438,7 +438,7 @@ export interface CreateGatewayManagerOptions {
   }
 }
 
-export type GatewayManager = Omit<Required<CreateGatewayManagerOptions>, 'cache'> & {
+export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
   /** The max concurrency buckets. Those will be created when the `spawnShards` (which calls `prepareBuckets` under the hood) function gets called. */
   buckets: Map<
     number,
