@@ -6,12 +6,12 @@ export async function handleGuildMembersChunk(bot: Bot, data: DiscordGatewayPayl
   const payload = data.d as DiscordGuildMembersChunk
 
   // If it's not enabled skip checks.
-  if (!bot.gateway.cache.requestMembers?.enabled) return
+  if (!bot.gateway.cache.requestMembers.enabled) return
 
   // If this request has no nonce, skip checks.
   if (!payload.nonce) return
 
-  const pending = bot.gateway.cache.requestMembers.pending!.get(payload.nonce)
+  const pending = bot.gateway.cache.requestMembers.pending.get(payload.nonce)
 
   if (!pending) return
 
@@ -25,5 +25,5 @@ export async function handleGuildMembersChunk(bot: Bot, data: DiscordGatewayPayl
   pending.resolve(camelize(pending.members))
 
   // Delete the cache to clean up once its done.
-  bot.gateway.cache.requestMembers.pending!.delete(payload.nonce)
+  bot.gateway.cache.requestMembers.pending.delete(payload.nonce)
 }

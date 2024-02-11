@@ -50,7 +50,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     cache: {
       requestMembers: {
         enabled: options.cache?.requestMembers?.enabled ?? false,
-        pending: options.cache?.requestMembers?.pending ?? new Collection(),
+        pending: new Collection(),
       },
     },
 
@@ -294,16 +294,16 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       }
 
       const members =
-        !gateway.cache.requestMembers?.enabled || !options?.nonce
+        !gateway.cache.requestMembers.enabled || !options?.nonce
           ? []
           : new Promise<Camelize<DiscordMemberWithUser[]>>((resolve, reject) => {
               // Should never happen.
-              if (!gateway.cache.requestMembers?.enabled || !options?.nonce) {
+              if (!gateway.cache.requestMembers.enabled || !options?.nonce) {
                 reject(new Error("Can't request the members without the nonce or with the feature disabled."))
                 return
               }
 
-              gateway.cache.requestMembers.pending!.set(options.nonce, {
+              gateway.cache.requestMembers.pending.set(options.nonce, {
                 nonce: options.nonce,
                 resolve,
                 members: [],
@@ -434,13 +434,11 @@ export interface CreateGatewayManagerOptions {
        * @default false
        */
       enabled?: boolean
-      /** The pending requests. */
-      pending?: Collection<string, RequestMemberRequest>
     }
   }
 }
 
-export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
+export type GatewayManager = Omit<Required<CreateGatewayManagerOptions>, 'cache'> & {
   /** The max concurrency buckets. Those will be created when the `spawnShards` (which calls `prepareBuckets` under the hood) function gets called. */
   buckets: Map<
     number,
@@ -541,6 +539,18 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    * @see {@link https://discord.com/developers/docs/topics/gateway#update-voice-state}
    */
   leaveVoiceChannel: (guildId: BigString) => Promise<void>
+  /** This managers cache related settings. */
+  cache: {
+    requestMembers: {
+      /**
+       * Whether or not request member requests should be cached.
+       * @default false
+       */
+      enabled: boolean
+      /** The pending requests. */
+      pending: Collection<string, RequestMemberRequest>
+    }
+  }
 }
 
 export interface RequestMemberRequest {
