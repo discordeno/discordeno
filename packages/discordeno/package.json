@@ -34,7 +34,7 @@
     "@discordeno/rest": "19.0.0-alpha.1",
     "@discordeno/types": "19.0.0-beta.1",
     "@discordeno/utils": "19.0.0-beta.1",
-    "commander": "^11.1.0"
+    "commander": "^12.0.0"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.63",
