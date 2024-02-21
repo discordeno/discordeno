@@ -61,7 +61,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/error@npm:^3.4.0":
+"@fastify/error@npm:^3.3.0, @fastify/error@npm:^3.4.0":
   version: 3.4.1
   resolution: "@fastify/error@npm:3.4.1"
   checksum: 4d63660f7d4a0d6091abf869208d30898bde82f513ca7be542243d9d740df743dd4be293e7db30858fca612dd512d28a818ea06dc674e06b445278fcefcdda92
@@ -578,14 +578,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"avvio@npm:^8.2.1":
-  version: 8.2.1
-  resolution: "avvio@npm:8.2.1"
+"avvio@npm:^8.3.0":
+  version: 8.3.0
+  resolution: "avvio@npm:8.3.0"
   dependencies:
+    "@fastify/error": "npm:^3.3.0"
     archy: "npm:^1.0.0"
     debug: "npm:^4.0.0"
-    fastq: "npm:^1.6.1"
-  checksum: 8826436901e0a7f8e2d6d9f959db6610f5c63a3eebd1e48f9517b50ed5cc07d44b3ddab2671ad29d128d9c4068235d379c5567b2ec4ce5e791e44b35d0ee108e
+    fastq: "npm:^1.17.1"
+  checksum: 8761678928856931f9c623832b10d527e6537d2b546991a8ee64270abb8eb27ef9ae40736401912096b16df237d5ede16d98b6e418ed0daf344a9aea43cabe8f
   languageName: node
   linkType: hard
 
@@ -1152,15 +1153,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify@npm:^4.26.0":
-  version: 4.26.0
-  resolution: "fastify@npm:4.26.0"
+"fastify@npm:^4.26.1":
+  version: 4.26.1
+  resolution: "fastify@npm:4.26.1"
   dependencies:
     "@fastify/ajv-compiler": "npm:^3.5.0"
     "@fastify/error": "npm:^3.4.0"
     "@fastify/fast-json-stringify-compiler": "npm:^4.3.0"
     abstract-logging: "npm:^2.0.1"
-    avvio: "npm:^8.2.1"
+    avvio: "npm:^8.3.0"
     fast-content-type-parse: "npm:^1.1.0"
     fast-json-stringify: "npm:^5.8.0"
     find-my-way: "npm:^8.0.0"
@@ -1172,11 +1173,20 @@ __metadata:
     secure-json-parse: "npm:^2.7.0"
     semver: "npm:^7.5.4"
     toad-cache: "npm:^3.3.0"
-  checksum: 0eff694cd12ba393af2deb03ca7956a3b7272f3ecd2a481a452bf0f71a83976d81652da1cc59c449accdc45a5f8586887ee45c6068961a7bcd6f00dde6ac4b88
+  checksum: 010cc9bd21bca5bf9653147cca49bbdbacd6c191f58c5384cdfc46fb3a94d5d43a728f97f7732ec6591141b9bb2bb2e139e885d927fc0a28f28d8b8840cb65d7
   languageName: node
   linkType: hard
 
-"fastq@npm:^1.6.0, fastq@npm:^1.6.1":
+"fastq@npm:^1.17.1":
+  version: 1.17.1
+  resolution: "fastq@npm:1.17.1"
+  dependencies:
+    reusify: "npm:^1.0.4"
+  checksum: a443180068b527dd7b3a63dc7f2a47ceca2f3e97b9c00a1efe5538757e6cc4056a3526df94308075d7727561baf09ebaa5b67da8dcbddb913a021c5ae69d1f69
+  languageName: node
+  linkType: hard
+
+"fastq@npm:^1.6.0":
   version: 1.15.0
   resolution: "fastq@npm:1.15.0"
   dependencies:
@@ -2344,7 +2354,7 @@ __metadata:
     "@swc/cli": "npm:^0.3.9"
     "@swc/core": "npm:^1.4.2"
     dotenv: "npm:^16.4.5"
-    fastify: "npm:^4.26.0"
+    fastify: "npm:^4.26.1"
   languageName: unknown
   linkType: soft
 
