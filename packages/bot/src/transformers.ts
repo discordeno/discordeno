@@ -498,6 +498,14 @@ export interface Transformers {
       slug: boolean
       flags: boolean
     }
+    voiceState: {
+      requestToSpeakTimestamp: boolean
+      channelId: boolean
+      guildId: boolean
+      toggles: boolean
+      sessionId: boolean
+      userId: boolean
+    }
   }
   reverse: {
     allowedMentions: (bot: Bot, payload: AllowedMentions) => DiscordAllowedMentions
@@ -1040,6 +1048,14 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         name: opts?.defaultDesiredPropertiesValue ?? false,
         slug: opts?.defaultDesiredPropertiesValue ?? false,
         flags: opts?.defaultDesiredPropertiesValue ?? false,
+      },
+      voiceState: {
+        requestToSpeakTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
+        channelId: opts?.defaultDesiredPropertiesValue ?? false,
+        guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        toggles: opts?.defaultDesiredPropertiesValue ?? false,
+        sessionId: opts?.defaultDesiredPropertiesValue ?? false,
+        userId: opts?.defaultDesiredPropertiesValue ?? false,
       },
     },
     reverse: {
