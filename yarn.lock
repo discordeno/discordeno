@@ -36,7 +36,7 @@ __metadata:
     "@discordeno/rest": "npm:19.0.0-alpha.1"
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@discordeno/utils": "npm:19.0.0-beta.1"
-    "@swc/cli": "npm:^0.1.63"
+    "@swc/cli": "npm:^0.3.9"
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.6"
@@ -60,7 +60,7 @@ __metadata:
   dependencies:
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@discordeno/utils": "npm:19.0.0-beta.1"
-    "@swc/cli": "npm:^0.1.63"
+    "@swc/cli": "npm:^0.3.9"
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.6"
@@ -87,7 +87,7 @@ __metadata:
   dependencies:
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@discordeno/utils": "npm:19.0.0-beta.1"
-    "@swc/cli": "npm:^0.1.63"
+    "@swc/cli": "npm:^0.3.9"
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
     "@types/chai-as-promised": "npm:^7.1.8"
@@ -113,7 +113,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@discordeno/types@workspace:packages/types"
   dependencies:
-    "@swc/cli": "npm:^0.1.63"
+    "@swc/cli": "npm:^0.3.9"
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.6"
@@ -135,7 +135,7 @@ __metadata:
   resolution: "@discordeno/utils@workspace:packages/utils"
   dependencies:
     "@discordeno/types": "npm:19.0.0-beta.1"
-    "@swc/cli": "npm:^0.1.63"
+    "@swc/cli": "npm:^0.3.9"
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.6"
@@ -407,13 +407,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/cli@npm:^0.1.63":
-  version: 0.1.63
-  resolution: "@swc/cli@npm:0.1.63"
+"@swc/cli@npm:^0.3.9":
+  version: 0.3.9
+  resolution: "@swc/cli@npm:0.3.9"
   dependencies:
     "@mole-inc/bin-wrapper": "npm:^8.0.1"
+    "@swc/counter": "npm:^0.1.3"
     commander: "npm:^7.1.0"
     fast-glob: "npm:^3.2.5"
+    minimatch: "npm:^9.0.3"
+    piscina: "npm:^4.3.0"
     semver: "npm:^7.3.8"
     slash: "npm:3.0.0"
     source-map: "npm:^0.7.3"
@@ -427,7 +430,7 @@ __metadata:
     spack: bin/spack.js
     swc: bin/swc.js
     swcx: bin/swcx.js
-  checksum: bbb6bd1c74b001ac2fe02af851ae8a8a3018740452614ed10a34d49e784c3ff014ced91343be6cfe23bdf2b19826fef2b3f4b45129177bc980025c67373f34b5
+  checksum: 3dde580c822e35bb6bea7857c6fbc2f9a326d1c2c061fb0aa90a8ac42c369302fdaffbf954c3d74b48e07c03d82737de6f8aee3ed1945251941385267624ab52
   languageName: node
   linkType: hard
 
@@ -547,7 +550,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/counter@npm:^0.1.2":
+"@swc/counter@npm:^0.1.2, @swc/counter@npm:^0.1.3":
   version: 0.1.3
   resolution: "@swc/counter@npm:0.1.3"
   checksum: df8f9cfba9904d3d60f511664c70d23bb323b3a0803ec9890f60133954173047ba9bdeabce28cd70ba89ccd3fd6c71c7b0bd58be85f611e1ffbe5d5c18616598
@@ -1316,7 +1319,7 @@ __metadata:
     "@discordeno/rest": "npm:19.0.0-alpha.1"
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@discordeno/utils": "npm:19.0.0-beta.1"
-    "@swc/cli": "npm:^0.1.63"
+    "@swc/cli": "npm:^0.3.9"
     "@swc/core": "npm:^1.4.2"
     "@types/benchmark": "npm:^2.1.5"
     "@types/node": "npm:^20.11.15"
@@ -2050,7 +2053,7 @@ __metadata:
     "@discordeno/rest": "npm:19.0.0-alpha.1"
     "@discordeno/types": "npm:19.0.0-beta.1"
     "@discordeno/utils": "npm:19.0.0-beta.1"
-    "@swc/cli": "npm:^0.1.63"
+    "@swc/cli": "npm:^0.3.9"
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.6"
@@ -4393,6 +4396,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nice-napi@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "nice-napi@npm:1.0.2"
+  dependencies:
+    node-addon-api: "npm:^3.0.0"
+    node-gyp: "npm:latest"
+    node-gyp-build: "npm:^4.2.2"
+  conditions: "!os=win32"
+  languageName: node
+  linkType: hard
+
 "nise@npm:^5.1.5":
   version: 5.1.5
   resolution: "nise@npm:5.1.5"
@@ -4403,6 +4417,15 @@ __metadata:
     just-extend: "npm:^4.0.2"
     path-to-regexp: "npm:^1.7.0"
   checksum: c6afe82b919a2c1985916d5bb3a738a7b2cfb017a6ab9479ec1ede62343051b40da88a1321517bb5d912c13e08b8d9ce9cdef9583edeb44d640af7273c35ebf2
+  languageName: node
+  linkType: hard
+
+"node-addon-api@npm:^3.0.0":
+  version: 3.2.1
+  resolution: "node-addon-api@npm:3.2.1"
+  dependencies:
+    node-gyp: "npm:latest"
+  checksum: 681b52dfa3e15b0a8e5cf283cc0d8cd5fd2a57c559ae670fcfd20544cbb32f75de7648674110defcd17ab2c76ebef630aa7d2d2f930bc7a8cc439b20fe233518
   languageName: node
   linkType: hard
 
@@ -4430,6 +4453,17 @@ __metadata:
     fetch-blob: "npm:^3.1.4"
     formdata-polyfill: "npm:^4.0.10"
   checksum: 24207ca8c81231c7c59151840e3fded461d67a31cf3e3b3968e12201a42f89ce4a0b5fb7079b1fa0a4655957b1ca9257553200f03a9f668b45ebad265ca5593d
+  languageName: node
+  linkType: hard
+
+"node-gyp-build@npm:^4.2.2":
+  version: 4.8.0
+  resolution: "node-gyp-build@npm:4.8.0"
+  bin:
+    node-gyp-build: bin.js
+    node-gyp-build-optional: optional.js
+    node-gyp-build-test: build-test.js
+  checksum: 80f410ab412df38e84171d3634a5716b6c6f14ecfa4eb971424d289381fb76f8bcbe1b666419ceb2c81060e558fd7c6d70cc0f60832bcca6a1559098925d9657
   languageName: node
   linkType: hard
 
@@ -4838,6 +4872,18 @@ __metadata:
   version: 2.3.0
   resolution: "pify@npm:2.3.0"
   checksum: 9503aaeaf4577acc58642ad1d25c45c6d90288596238fb68f82811c08104c800e5a7870398e9f015d82b44ecbcbef3dc3d4251a1cbb582f6e5959fe09884b2ba
+  languageName: node
+  linkType: hard
+
+"piscina@npm:^4.3.0":
+  version: 4.3.2
+  resolution: "piscina@npm:4.3.2"
+  dependencies:
+    nice-napi: "npm:^1.0.2"
+  dependenciesMeta:
+    nice-napi:
+      optional: true
+  checksum: bc670e502c76d24d209a7030b57adc997f055c8ba9cc4641dc93e5d2ba677ad4c0a01f6a12c52ebb29c9c704527bd17822871ab7f3b0eddcbd2155488ea7ef63
   languageName: node
   linkType: hard
 
