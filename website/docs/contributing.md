@@ -111,6 +111,10 @@ There a bunch of scripts but we will list the most important ones
 
 This will compile the TypeScript code into Javascript using SWC, it will not compile the type definitions (`.d.ts`) files.
 
+:::note
+This will clear the previus build file creating a clean build.
+:::
+
 #### `yarn build:type`
 
 This will invoke the Typescript compiler (tsc) to compile the type definitions (`.d.ts`) files
