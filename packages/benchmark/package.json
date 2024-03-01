@@ -37,7 +37,7 @@
     "@swc/cli": "^0.3.9",
     "@swc/core": "^1.4.2",
     "@types/benchmark": "^2.1.5",
-    "@types/node": "^20.11.15",
+    "@types/node": "^20.11.24",
     "eslint": "^8.57.0",
     "eslint-config-discordeno": "*",
     "ts-node": "^10.9.2",
