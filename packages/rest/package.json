@@ -32,7 +32,7 @@
   "dependencies": {
     "@discordeno/types": "19.0.0-beta.1",
     "@discordeno/utils": "19.0.0-beta.1",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "@swc/cli": "^0.3.9",
