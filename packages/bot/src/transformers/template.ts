@@ -1,5 +1,5 @@
 import type { DiscordTemplate } from '@discordeno/types'
-import type { Bot, User } from '../index.js'
+import type { Bot, Template } from '../index.js'
 
 export function transformTemplate(bot: Bot, payload: DiscordTemplate): Template {
   const template = {
@@ -17,18 +17,4 @@ export function transformTemplate(bot: Bot, payload: DiscordTemplate): Template 
   } as Template
 
   return bot.transformers.customizers.template(bot, payload, template)
-}
-
-export interface Template {
-  description?: string | null
-  isDirty?: boolean
-  name: string
-  creatorId: bigint
-  createdAt: number
-  code: string
-  usageCount: number
-  creator: User
-  updatedAt: number
-  sourceGuildId: bigint
-  serializedSourceGuild: NonNullable<DiscordTemplate['serialized_source_guild']>
 }

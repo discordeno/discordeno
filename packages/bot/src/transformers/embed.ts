@@ -1,5 +1,5 @@
-import type { DiscordEmbed, EmbedTypes } from '@discordeno/types'
-import type { Bot } from '../index.js'
+import type { DiscordEmbed } from '@discordeno/types'
+import type { Bot, Embed } from '../index.js'
 
 export function transformEmbed(bot: Bot, payload: DiscordEmbed): Embed {
   const embed = {
@@ -53,51 +53,4 @@ export function transformEmbed(bot: Bot, payload: DiscordEmbed): Embed {
   } as Embed
 
   return bot.transformers.customizers.embed(bot, payload, embed)
-}
-
-export interface Embed {
-  description?: string
-  type?: EmbedTypes
-  url?: string
-  image?: {
-    proxyUrl?: string
-    height?: number
-    width?: number
-    url: string
-  }
-  video?: {
-    url?: string
-    proxyUrl?: string
-    height?: number
-    width?: number
-  }
-  title?: string
-  timestamp?: number
-  color?: number
-  footer?: {
-    iconUrl?: string
-    proxyIconUrl?: string
-    text: string
-  }
-  thumbnail?: {
-    proxyUrl?: string
-    height?: number
-    width?: number
-    url: string
-  }
-  provider?: {
-    name?: string
-    url?: string
-  }
-  author?: {
-    url?: string
-    iconUrl?: string
-    proxyIconUrl?: string
-    name: string
-  }
-  fields?: Array<{
-    inline?: boolean
-    name: string
-    value: string
-  }>
 }

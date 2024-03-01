@@ -1,5 +1,5 @@
 import type { DiscordVoiceState } from '@discordeno/types'
-import type { Bot } from '../index.js'
+import type { Bot, VoiceState } from '../index.js'
 import { VoiceStateToggles } from './toggles/voice.js'
 
 export function transformVoiceState(bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }): VoiceState {
@@ -15,13 +15,4 @@ export function transformVoiceState(bot: Bot, payload: { voiceState: DiscordVoic
   if (props.userId && payload.voiceState.user_id) voiceState.userId = bot.transformers.snowflake(payload.voiceState.user_id) ?? 0n
 
   return bot.transformers.customizers.voiceState(bot, payload.voiceState, voiceState)
-}
-
-export interface VoiceState {
-  requestToSpeakTimestamp?: number
-  channelId?: bigint
-  guildId: bigint
-  toggles: VoiceStateToggles
-  sessionId: string
-  userId: bigint
 }

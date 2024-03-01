@@ -1,5 +1,4 @@
-import { iconBigintToHash, type Bot, type DiscordApplication } from '../../index.js'
-import type { Application } from '../application.js'
+import { type Application, iconBigintToHash, type Bot, type DiscordApplication } from '../../index.js'
 
 export function transformApplicationToDiscordApplication(bot: Bot, payload: Application): DiscordApplication {
   return {

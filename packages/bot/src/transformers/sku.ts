@@ -1,5 +1,5 @@
-import type { DiscordSku, DiscordSkuFlag, DiscordSkuType } from '@discordeno/types'
-import type { Bot } from '../index.js'
+import type { DiscordSku } from '@discordeno/types'
+import type { Bot, Sku } from '../index.js'
 
 export function transformSku(bot: Bot, payload: DiscordSku): Sku {
   const props = bot.transformers.desiredProperties.sku
@@ -13,19 +13,4 @@ export function transformSku(bot: Bot, payload: DiscordSku): Sku {
   if (props.flags && payload.flags) sku.flags = payload.flags
 
   return bot.transformers.customizers.sku(bot, payload, sku)
-}
-
-export interface Sku {
-  /** ID of SKU */
-  id: bigint
-  /** Type of SKU */
-  type: DiscordSkuType
-  /** ID of the parent application */
-  applicationId: bigint
-  /** Customer-facing name of your premium offering */
-  name: string
-  /** System-generated URL slug based on the SKU's name */
-  slug: string
-  /** SKU flags combined as a bitfield */
-  flags: DiscordSkuFlag
 }

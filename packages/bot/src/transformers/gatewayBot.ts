@@ -1,5 +1,5 @@
 import type { DiscordGetGatewayBot } from '@discordeno/types'
-import type { Bot } from '../index.js'
+import type { Bot, GetGatewayBot } from '../index.js'
 
 export function transformGatewayBot(bot: Bot, payload: DiscordGetGatewayBot): GetGatewayBot {
   const gatewayBot = {
@@ -14,15 +14,4 @@ export function transformGatewayBot(bot: Bot, payload: DiscordGetGatewayBot): Ge
   } as GetGatewayBot
 
   return bot.transformers.customizers.gatewayBot(bot, payload, gatewayBot)
-}
-
-export interface GetGatewayBot {
-  url: string
-  shards: number
-  sessionStartLimit: {
-    total: number
-    remaining: number
-    resetAfter: number
-    maxConcurrency: number
-  }
 }

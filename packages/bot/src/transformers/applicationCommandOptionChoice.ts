@@ -1,5 +1,5 @@
-import type { DiscordApplicationCommandOptionChoice, Locales } from '@discordeno/types'
-import type { Bot } from '../index.js'
+import type { DiscordApplicationCommandOptionChoice } from '@discordeno/types'
+import type { ApplicationCommandOptionChoice, Bot } from '../index.js'
 
 export function transformApplicationCommandOptionChoice(bot: Bot, payload: DiscordApplicationCommandOptionChoice): ApplicationCommandOptionChoice {
   const applicationCommandOptionChoice = {
@@ -9,10 +9,4 @@ export function transformApplicationCommandOptionChoice(bot: Bot, payload: Disco
   } as ApplicationCommandOptionChoice
 
   return bot.transformers.customizers.applicationCommandOptionChoice(bot, payload, applicationCommandOptionChoice)
-}
-
-export interface ApplicationCommandOptionChoice {
-  nameLocalizations?: Record<Locales, string>
-  name: string
-  value: string | number
 }
