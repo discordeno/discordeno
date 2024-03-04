@@ -1501,6 +1501,8 @@ You might remember that we said that there could be improvements to be made to t
 
 Also a more advanced thing is to generalize the collectors, we currently use the `Interaction` type for the methods implemented on it but we don't use them in any way and while we could use `any` or `unknown` instead the best way to generalize something in typescript is using generics, so if you need you can re-use that class without having to create another one.
 
+In the main file (`src/index.ts`) we currently update the commands on every bot startup even if the commands haven't changed, this may cause you to hit the ratelimit for that API endpoint, especially in development where you might restart a lot your bot, you have a couple of options to fix it, such as moving the api request to another file and run that only when you update your commands, another options is to check for the exiting commands, check if there are any changes and only then update your commands.
+
 You could also move the various Discord objects to the bottom of the file and make them act like template if and when needed, but that is not a functional improvement but a maintainability one.
 
 Also currently there are a few cases where this code could error, in fact if you have a strict typescript configuration enable you might have noticed that typescript is giving you errors all over the place especially in our command because stuff can be `undefined` and we don't check for it, to fix this you just need to add an if that to ensure they exist, and if not, just return.
