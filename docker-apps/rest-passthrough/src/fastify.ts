@@ -1,3 +1,4 @@
+import fastifyMultipart from '@fastify/multipart'
 import fastifyEnv from '@fastify/env'
 import fastifyHelmet from '@fastify/helmet'
 import fastify, { type FastifyInstance } from 'fastify'
@@ -27,6 +28,7 @@ export const buildFastifyApp = async (): Promise<FastifyInstance> => {
   })
 
   await app.register(fastifyHelmet)
+  app.register(fastifyMultipart, { attachFieldsToBody: true })
 
   app.addHook('onRequest', async (request, reply) => {
     if (request.headers.authorization !== request.server.config.AUTHORIZATION_TOKEN) {
