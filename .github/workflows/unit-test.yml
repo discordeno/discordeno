@@ -42,7 +42,7 @@ jobs:
         run: yarn test:unit --cache-dir=".turbo" --filter=./packages/${{ inputs.package }}
         timeout-minutes: 1
       - name: Collect and upload the coverage report
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: ./packages/${{ inputs.package }}/coverage/lcov.info
           flags: ${{ inputs.package }}-unit,${{ inputs.package }}

@@ -77,6 +77,8 @@ export interface CreateMessageOptions {
   stickerIds?: [BigString] | [BigString, BigString] | [BigString, BigString, BigString]
   /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set */
   flags?: DiscordMessageFlag
+  /** If true and nonce is present, it will be checked for uniqueness in the past few minutes. If another message was created by the same author with the same nonce, that message will be returned and no new message will be created. */
+  enforceNonce?: boolean
 }
 
 export type MessageComponents = ActionRow[]
@@ -201,8 +203,6 @@ export interface SelectMenuUsersAndRolesComponent {
   minValues?: number
   /** The maximum number of items that can be selected. Default 1. Between 1-25. */
   maxValues?: number
-  /** The choices! Maximum of 25 items. */
-  options: SelectOption[]
   /** Whether or not this select is disabled */
   disabled?: boolean
 }
@@ -484,7 +484,7 @@ export interface InteractionCallbackData {
   title?: string
   /** The components you would like to have sent in this message */
   components?: MessageComponents
-  /** Message flags combined as a bit field (only SUPPRESS_EMBEDS and EPHEMERAL can be set) */
+  /** Message flags combined as a bit field (only `SUPPRESS_EMBEDS`, `EPHEMERAL` and `SUPPRESS_NOTIFICATIONS` can be set) */
   flags?: number
   /** Autocomplete choices (max of 25 choices) */
   choices?: Camelize<DiscordApplicationCommandOptionChoice[]>

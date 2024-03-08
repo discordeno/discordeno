@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable no-const-assign */
 import { Buffer } from 'node:buffer'
 
 import { calculateBits, camelize, camelToSnakeCase, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
@@ -76,12 +74,7 @@ export const RATE_LIMIT_LIMIT_HEADER = 'x-ratelimit-limit'
 export const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope'
 
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
-  const applicationId = options.applicationId ? BigInt(options.applicationId) : options.token ? getBotIdFromToken(options.token) : undefined
-  if (!applicationId) {
-    throw new Error(
-      '`applicationId` was not provided and was not able to extract the id from the bots token. Please explicitly pass `applicationId` to the rest manager.',
-    )
-  }
+  const applicationId = options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token)
 
   const baseUrl = options.proxy?.baseUrl ?? DISCORD_API_URL
 
@@ -485,6 +478,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return result.status !== 204 ? await result.json() : undefined
       }
 
+      // This error needs to be created here because of how stack traces get calculated
+      const error = new Error()
+      error.message = 'Failed to send request to discord.'
+
       // eslint-disable-next-line no-async-promise-executor
       return await new Promise(async (resolve, reject) => {
         const payload: SendRequestOptions = {
@@ -492,13 +489,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           method,
           requestBodyOptions: options,
           retryCount: 0,
-          retryRequest: async function (payload: SendRequestOptions) {
+          retryRequest: async (payload: SendRequestOptions) => {
             await rest.processRequest(payload)
           },
           resolve: (data) => {
             resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined)
           },
-          reject,
+          reject: (reason) => {
+            error.cause = reason
+            reject(error)
+          },
           runThroughQueue: options?.runThroughQueue,
         }
 
@@ -1099,12 +1099,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getGuilds(token, options) {
-      return await rest.get<DiscordPartialGuild[]>(rest.routes.guilds.userGuilds(options), {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-        unauthorized: true,
-      })
+      const makeRequestOptions: MakeRequestOptions | undefined = token
+        ? {
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+            unauthorized: true,
+          }
+        : undefined
+
+      return await rest.get<DiscordPartialGuild[]>(rest.routes.guilds.userGuilds(options), makeRequestOptions)
     },
 
     async getGuildApplicationCommand(commandId, guildId) {

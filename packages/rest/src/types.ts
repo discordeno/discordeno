@@ -52,6 +52,9 @@ import type {
   CamelizedDiscordVoiceRegion,
   CamelizedDiscordWebhook,
   CamelizedDiscordWelcomeScreen,
+  // Type is required for typedoc
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ChannelTypes,
   CreateApplicationCommand,
   CreateAutoModerationRuleOptions,
   CreateChannelInvite,
@@ -97,6 +100,9 @@ import type {
   GetScheduledEvents,
   GetUserGuilds,
   GetWebhookMessageOptions,
+  // Type is required for typedoc
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  GuildFeatures,
   InteractionCallbackData,
   InteractionResponse,
   ListArchivedThreads,
@@ -110,6 +116,12 @@ import type {
   ModifyGuildTemplate,
   ModifyRolePositions,
   ModifyWebhook,
+  // Type is required for typedoc
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ScheduledEventEntityType,
+  // Type is required for typedoc
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ScheduledEventStatus,
   SearchMembers,
   StartThreadWithMessage,
   StartThreadWithoutMessage,
@@ -123,7 +135,7 @@ import type { RestRoutes } from './typings/routes.js'
 
 export interface CreateRestManagerOptions {
   /** The bot token which will be used to make requests. */
-  token?: string
+  token: string
   /**
    * For old bots that have a different bot id and application id.
    * @default bot id from token
@@ -164,7 +176,7 @@ export interface CreateRestManagerOptions {
 
 export interface RestManager {
   /** The bot token which will be used to make requests. */
-  token?: string
+  token: string
   /** The application id. Normally this is not required for recent bots but old bot's application id is sometimes different from the bot id so it is required for those bots. */
   applicationId: bigint
   /** The api version to use when making requests. Only the latest supported version will be tested. */
@@ -398,7 +410,7 @@ export interface RestManager {
    * @param channelId - The ID of the forum channel to create the thread within.
    * @param options - The parameters for the creation of the thread.
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
-   * @returns An instance of {@link CamelizedDiscordChannel} with a nested {@link Message} object.
+   * @returns An instance of {@link CamelizedDiscordChannel} with a nested {@link CamelizedDiscordChannel} object.
    *
    * @remarks
    * Requires the `CREATE_MESSAGES` permission.
@@ -414,7 +426,7 @@ export interface RestManager {
    *
    * @param command - The command to create.
    * @param options - Additional options for the endpoint
-   * @returns An instance of the created {@link ApplicationCommand}.
+   * @returns An instance of the created {@link CamelizedDiscordApplicationCommand}.
    *
    * @remarks
    * ⚠️ Creating a command with the same name as an existing command for your application will overwrite the old command.
@@ -450,7 +462,7 @@ export interface RestManager {
    * @param command - The command to create.
    * @param guildId - The ID of the guild to create the command for.
    * @param options - Additional options for the endpoint
-   * @returns An instance of the created {@link ApplicationCommand}.
+   * @returns An instance of the created {@link CamelizedDiscordApplicationCommand}.
    *
    * @remarks
    * ⚠️ Creating a command with the same name as an existing command for your application will overwrite the old command.
@@ -471,7 +483,7 @@ export interface RestManager {
    *
    * @param templateCode - The code of the template.
    * @param options - The parameters for the creation of the guild.
-   * @returns An instance of the created {@link Guild}.
+   * @returns An instance of the created {@link CamelizedDiscordGuild}.
    *
    * @remarks
    * ⚠️ This route can only be used by bots in __fewer than 10 guilds__.
@@ -502,7 +514,7 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild to create the template from.
    * @param options - The parameters for the creation of the template.
-   * @returns An instance of the created {@link Template}.
+   * @returns An instance of the created {@link CamelizedDiscordTemplate}.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
@@ -553,12 +565,12 @@ export interface RestManager {
    * @param guildId - The ID of the guild to create the scheduled event in.
    * @param options - The parameters for the creation of the scheduled event.
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
-   * @returns An instance of the created {@link ScheduledEvent}.
+   * @returns An instance of the created {@link CamelizedDiscordScheduledEvent}.
    *
    * @remarks
    * Requires the `MANAGE_EVENTS` permission.
    *
-   * A guild can only have a maximum of 100 events with a status of {@link ScheduledEventStatus.Active} or {@link ScheduledEventStatus.Scheduled} (inclusive).
+   * A guild can only have a maximum of 100 events with a status of {@link ScheduledEventStatus}.Active or {@link ScheduledEventStatus}.Scheduled (inclusive).
    *
    * Fires a _Guild Scheduled Event Create_ gateway event.
    *
@@ -618,7 +630,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel to delete.
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
-   * @returns An instance of the deleted {@link Channel}.
+   * @returns nothing
    *
    * @remarks
    * For community guilds, the _Rules_, _Guidelines_ and _Community Update_ channels cannot be deleted.
@@ -978,7 +990,7 @@ export interface RestManager {
    * @param commandId - The ID of the command to edit the permissions of.
    * @param bearerToken - The bearer token to use to make the request.
    * @param options - The parameters for the edit of the command permissions.
-   * @returns An instance of the edited {@link ApplicationCommandPermission}.
+   * @returns An instance of the edited {@link CamelizedDiscordGuildApplicationCommandPermissions}.
    *
    * @remarks
    * The bearer token requires the `applications.commands.permissions.update` scope to be enabled, and to have access to the guild whose ID has been provided in the parameters.
@@ -1027,7 +1039,7 @@ export interface RestManager {
    * @returns An instance of the edited {@link CamelizedDiscordChannel}.
    *
    * @remarks
-   * If editing a channel of type {@link ChannelTypes.GroupDm}:
+   * If editing a channel of type {@link ChannelTypes}.GroupDm:
    * - Fires a _Channel Update_ gateway event.
    *
    * If editing a thread channel:
@@ -1043,7 +1055,7 @@ export interface RestManager {
    *
    *   - Only permissions the bot user has in the guild or parent channel can be allowed/denied __unless__ the bot user has a `MANAGE_ROLES` permission override in the channel.
    *
-   * - If modifying a channel of type {@link ChannelTypes.GuildCategory}:
+   * - If modifying a channel of type {@link ChannelTypes}.GuildCategory:
    *     - Fires a _Channel Update_ gateway event for each child channel impacted in this change.
    * - Otherwise:
    *     - Fires a _Channel Update_ gateway event.
@@ -1104,7 +1116,7 @@ export interface RestManager {
    * @param token - The interaction token to use, provided in the original interaction.
    * @param messageId - The ID of the message to edit.
    * @param options - The parameters for the edit of the message.
-   * @returns An instance of the edited {@link Message}.
+   * @returns An instance of the edited {@link CamelizedDiscordMessage}.
    *
    * @remarks
    * Unlike `editMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
@@ -1121,7 +1133,7 @@ export interface RestManager {
    *
    * @param commandId - The ID of the command to edit.
    * @param options - The parameters for the edit of the command.
-   * @returns An instance of the edited {@link ApplicationCommand}.
+   * @returns An instance of the edited {@link CamelizedDiscordApplicationCommand}.
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command}
    */
@@ -1133,12 +1145,12 @@ export interface RestManager {
    * @param shardId - The ID of the shard the guild is in.
    * @param options - The parameters for the edit of the guild.
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
-   * @returns An instance of the edited {@link Guild}.
+   * @returns An instance of the edited {@link CamelizedDiscordGuild}.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
    *
-   * If attempting to add or remove the {@link GuildFeatures.Community} feature:
+   * If attempting to add or remove the {@link GuildFeatures}.Community feature:
    * - Requires the `ADMINISTRATOR` permission.
    *
    * Fires a _Guild Update_ gateway event.
@@ -1152,7 +1164,7 @@ export interface RestManager {
    * @param guildId - The ID of the guild the command is registered in.
    * @param commandId - The ID of the command to edit.
    * @param options - The parameters for the edit of the command.
-   * @returns An instance of the edited {@link ApplicationCommand}.
+   * @returns An instance of the edited {@link CamelizedDiscordApplicationCommand}.
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#edit-guild-application-command}
    */
@@ -1191,7 +1203,7 @@ export interface RestManager {
    * @param guildId - The ID of the guild to edit a template of.
    * @param templateCode - The code of the template to edit.
    * @param options - The parameters for the edit of the template.
-   * @returns An instance of the edited {@link Template}.
+   * @returns An instance of the edited {@link CamelizedDiscordTemplate}.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
@@ -1207,7 +1219,7 @@ export interface RestManager {
    * @param channelId - The ID of the channel to edit the message in.
    * @param messageId - The IDs of the message to edit.
    * @param options - The parameters for the edit of the message.
-   * @returns An instance of the edited {@link Message}.
+   * @returns An instance of the edited {@link CamelizedDiscordMessage}.
    *
    * @remarks
    * If editing another user's message:
@@ -1224,7 +1236,7 @@ export interface RestManager {
    *
    * @param token - The interaction token to use, provided in the original interaction.
    * @param options - The parameters for the edit of the response.
-   * @returns An instance of the edited {@link Message}.
+   * @returns An instance of the edited {@link CamelizedDiscordMessage}.
    *
    * @remarks
    * Unlike `editMessage()`, this endpoint allows the bot user to act without needing to see the channel the message is in.
@@ -1311,14 +1323,14 @@ export interface RestManager {
    * @param guildId - The ID of the guild to edit the scheduled event in.
    * @param eventId - The ID of the scheduled event to edit.
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
-   * @returns An instance of the edited {@link ScheduledEvent}.
+   * @returns An instance of the edited {@link CamelizedDiscordScheduledEvent}.
    *
    * @remarks
    * Requires the `MANAGE_EVENTS` permission.
    *
    * To start or end an event, modify the event's `status` property.
    *
-   * The `entity_metadata` property is discarded for events whose `entity_type` is not {@link ScheduledEventEntityType.External}.
+   * The `entity_metadata` property is discarded for events whose `entity_type` is not {@link ScheduledEventEntityType}.External.
    *
    * Fires a _Guild Scheduled Event Update_ gateway event.
    *
@@ -1434,7 +1446,7 @@ export interface RestManager {
    * @param guildId - The ID of the guild to edit the welcome screen of.
    * @param options - The parameters for the edit of the welcome screen.
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
-   * @returns An instance of the edited {@link WelcomeScreen}.
+   * @returns An instance of the edited {@link CamelizedDiscordWelcomeScreen}.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
@@ -1453,7 +1465,7 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild to edit the settings of the widget of.
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
-   * @returns An instance of the edited {@link GuildWidgetSettings}.
+   * @returns An instance of the edited {@link CamelizedDiscordGuildWidgetSettings}.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
@@ -1552,7 +1564,7 @@ export interface RestManager {
    * @param guildId - The ID of the guild the command is registered in.
    * @param commandId - The ID of the command to get the permissions of.
    * @param options - The OAuth2 related optional parameters for the endpoint
-   * @returns An instance of {@link ApplicationCommandPermission}.
+   * @returns An instance of {@link CamelizedDiscordGuildApplicationCommandPermissions}.
    *
    * @remarks
    * Then specifying the options object the access token passed-in requires the OAuth2 scope `applications.commands.permissions.update`
@@ -1569,7 +1581,7 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild to get the permissions objects of.
    * @param options - The OAuth2 related optional parameters for the endpoint
-   * @returns A collection of {@link ApplicationCommandPermission} objects assorted by command ID.
+   * @returns A collection of {@link CamelizedDiscordGuildApplicationCommandPermissions} objects assorted by command ID.
    *
    * @remarks
    * Then specifying the options object the access token passed-in requires the OAuth2 scope `applications.commands.permissions.update`
@@ -1585,7 +1597,7 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild to get the audit log of.
    * @param options - The parameters for the fetching of the audit log.
-   * @returns An instance of {@link AuditLog}.
+   * @returns An instance of {@link CamelizedDiscordAuditLog}.
    *
    * @remarks
    * Requires the `VIEW_AUDIT_LOG` permission.
@@ -1621,7 +1633,7 @@ export interface RestManager {
   /**
    * Gets the list of available voice regions.
    *
-   * @returns A collection of {@link VoiceRegions | VoiceRegion} objects assorted by voice region ID.
+   * @returns A collection of {@link CamelizedDiscordVoiceRegion} objects assorted by voice region ID.
    */
   getAvailableVoiceRegions: () => Promise<CamelizedDiscordVoiceRegion[]>
   /**
@@ -1659,7 +1671,7 @@ export interface RestManager {
    * @returns An instance of {@link CamelizedDiscordChannel}.
    *
    * @remarks
-   * If the channel is a thread, a {@link ThreadMember} object is included in the result.
+   * If the channel is a thread, a {@link CamelizedDiscordThreadMember} object is included in the result.
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#get-channel}
    */
@@ -1758,7 +1770,7 @@ export interface RestManager {
    *
    * @param token - The interaction token to use, provided in the original interaction.
    * @param messageId - The ID of the message to get.
-   * @returns An instance of {@link Message}.
+   * @returns An instance of {@link CamelizedDiscordMessage}.
    *
    * @remarks
    * Unlike `getMessage()`, this endpoint allows the bot user to act without:
@@ -1776,7 +1788,7 @@ export interface RestManager {
    * Gets a global application command by its ID.
    *
    * @param commandId - The ID of the command to get.
-   * @returns An instance of {@link ApplicationCommand}.
+   * @returns An instance of {@link CamelizedDiscordApplicationCommand}.
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-command}
    */
@@ -1784,7 +1796,7 @@ export interface RestManager {
   /**
    * Gets the list of your bot's global application commands.
    *
-   * @returns A collection of {@link ApplicationCommand} objects assorted by command ID.
+   * @returns A collection of {@link CamelizedDiscordApplicationCommand} objects assorted by command ID.
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands}
    */
@@ -1794,7 +1806,7 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild to get.
    * @param options - The parameters for the fetching of the guild.
-   * @returns An instance of {@link Guild}.
+   * @returns An instance of {@link CamelizedDiscordGuild}.
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild}
    */
@@ -1802,22 +1814,22 @@ export interface RestManager {
   /**
    * Get the user guilds.
    *
-   * @param bearerToken - The access token of the user
+   * @param bearerToken - The access token of the user, if unspecified the bot token is used instead
    * @param options - The parameters for the fetching of the guild.
-   * @returns An instance of {@link Guild}.
+   * @returns An instance of {@link CamelizedDiscordGuild}.
    *
    * @remarks
-   * The access tokens needs to have the `guilds` scope
+   * If used with an access token, the token needs to have the `guilds` scope
    *
    * @see {@link https://discord.com/developers/docs/resources/user#get-current-user-guilds}
    */
-  getGuilds: (bearerToken: string, options?: GetUserGuilds) => Promise<CamelizedDiscordPartialGuild[]>
+  getGuilds: (bearerToken?: string, options?: GetUserGuilds) => Promise<CamelizedDiscordPartialGuild[]>
   /**
    * Gets a guild application command by its ID.
    *
    * @param guildId - The ID of the guild the command is registered in.
    * @param commandId - The ID of the command to get.
-   * @returns An instance of {@link ApplicationCommand}.
+   * @returns An instance of {@link CamelizedDiscordApplicationCommand}.
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command}
    */
@@ -1826,7 +1838,7 @@ export interface RestManager {
    * Gets the list of application commands registered by your bot in a guild.
    *
    * @param guildId - The ID of the guild the commands are registered in.
-   * @returns A collection of {@link ApplicationCommand} objects assorted by command ID.
+   * @returns A collection of {@link CamelizedDiscordApplicationCommand} objects assorted by command ID.
    *
    * @see {@link https://discord.com/developers/docs/interactions/application-commands#get-global-application-commandss}
    */
@@ -1835,7 +1847,7 @@ export interface RestManager {
    * Gets the preview of a guild by a guild's ID.
    *
    * @param guildId - The ID of the guild to get the preview of.
-   * @returns An instance of {@link GuildPreview}.
+   * @returns An instance of {@link CamelizedDiscordGuildPreview}.
    *
    * @remarks
    * If the bot user is not in the guild, the guild must be discoverable.
@@ -1870,7 +1882,7 @@ export interface RestManager {
    * Gets a template by its code.
    *
    * @param templateCode - The code of the template to get.
-   * @returns An instance of {@link Template}.
+   * @returns An instance of {@link CamelizedDiscordTemplate}.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
@@ -1882,7 +1894,7 @@ export interface RestManager {
    * Gets the list of templates for a guild.
    *
    * @param guildId - The ID of the guild to get the list of templates for.
-   * @returns A collection of {@link Template} objects assorted by template code.
+   * @returns A collection of {@link CamelizedDiscordTemplate} objects assorted by template code.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
@@ -1906,7 +1918,7 @@ export interface RestManager {
    * Gets the list of integrations attached to a guild.
    *
    * @param guildId - The ID of the guild to get the list of integrations from.
-   * @returns A collection of {@link Integration} objects assorted by integration ID.
+   * @returns A collection of {@link CamelizedDiscordIntegration} objects assorted by integration ID.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
@@ -1928,7 +1940,7 @@ export interface RestManager {
    * Gets the list of invites for a guild.
    *
    * @param guildId - The ID of the guild to get the invites from.
-   * @returns A collection of {@link InviteMetadata | Invite} objects assorted by invite code.
+   * @returns A collection of {@link CamelizedDiscordInviteMetadata} objects assorted by invite code.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
@@ -1941,7 +1953,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel from which to get the message.
    * @param messageId - The ID of the message to get.
-   * @returns An instance of {@link Message}.
+   * @returns An instance of {@link CamelizedDiscordMessage}.
    *
    * @remarks
    * Requires that the bot user be able to see the contents of the channel in which the message was posted.
@@ -1957,7 +1969,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel from which to get the messages.
    * @param options - The parameters for the fetching of the messages.
-   * @returns A collection of {@link Message} objects assorted by message ID.
+   * @returns A collection of {@link CamelizedDiscordMessage} objects assorted by message ID.
    *
    * @remarks
    * Requires that the bot user be able to see the contents of the channel in which the messages were posted.
@@ -1971,7 +1983,7 @@ export interface RestManager {
   /**
    * Returns the list of sticker packs available.
    *
-   * @returns A collection of {@link StickerPack} objects assorted by sticker ID.
+   * @returns A collection of {@link CamelizedDiscordStickerPack} objects assorted by sticker ID.
    *
    * @see {@link https://discord.com/developers/docs/resources/sticker#list-sticker-packs}
    */
@@ -1980,7 +1992,7 @@ export interface RestManager {
    * Gets the initial message response to an interaction.
    *
    * @param token - The interaction token to use, provided in the original interaction.
-   * @returns An instance of {@link Message}.
+   * @returns An instance of {@link CamelizedDiscordMessage}.
    *
    * @remarks
    * Unlike `getMessage()`, this endpoint allows the bot user to act without:
@@ -1996,7 +2008,7 @@ export interface RestManager {
    * Gets the pinned messages for a channel.
    *
    * @param channelId - The ID of the channel to get the pinned messages for.
-   * @returns A collection of {@link Message} objects assorted by message ID.
+   * @returns A collection of {@link CamelizedDiscordMessage} objects assorted by message ID.
    *
    * @remarks
    * Requires that the bot user be able to see the contents of the channel in which the messages were posted.
@@ -2018,7 +2030,7 @@ export interface RestManager {
    * Requires the `READ_MESSAGE_HISTORY` permission.
    * Requires the `MANAGE_THREADS` permission.
    *
-   * Returns threads of type {@link ChannelTypes.GuildPrivateThread}.
+   * Returns threads of type {@link ChannelTypes}.GuildPrivateThread.
    *
    * Threads are ordered by the `archive_timestamp` property included in the metadata of the object in descending order.
    *
@@ -2035,7 +2047,7 @@ export interface RestManager {
    * @remarks
    * Requires the `READ_MESSAGE_HISTORY` permission.
    *
-   * Returns threads of type {@link ChannelTypes.GuildPrivateThread}.
+   * Returns threads of type {@link ChannelTypes}.GuildPrivateThread.
    *
    * Threads are ordered by the `id` property in descending order.
    *
@@ -2060,13 +2072,13 @@ export interface RestManager {
    *
    * @param channelId - The ID of the channel to get the archived threads for.
    * @param options - The parameters for the fetching of threads.
-   * @returns An instance of {@link ArchivedThreads}.
+   * @returns An instance of {@link CamelizedDiscordArchivedThreads}.
    *
    * @remarks
    * Requires the `READ_MESSAGE_HISTORY` permission.
    *
-   * If called on a channel of type {@link ChannelTypes.GuildText}, returns threads of type {@link ChannelTypes.GuildPublicThread}.
-   * If called on a channel of type {@link ChannelTypes.GuildNews}, returns threads of type {@link ChannelTypes.GuildNewsThread}.
+   * If called on a channel of type {@link ChannelTypes}.GuildText, returns threads of type {@link ChannelTypes}.GuildPublicThread.
+   * If called on a channel of type {@link ChannelTypes}.GuildNews, returns threads of type {@link ChannelTypes}.GuildNewsThread.
    *
    * Threads are ordered by the `archive_timestamp` property included in the metadata of the object in descending order.
    *
@@ -2077,10 +2089,10 @@ export interface RestManager {
    * Gets the list of roles for a guild.
    *
    * @param guildId - The ID of the guild to get the list of roles for.
-   * @returns A collection of {@link DisorcRole} objects assorted by role ID.
+   * @returns A collection of {@link CamelizedDiscordRole} objects assorted by role ID.
    *
    * @remarks
-   * ⚠️ This endpoint should be used sparingly due to {@link User} objects already being included in guild payloads.
+   * ⚠️ This endpoint should be used sparingly due to {@link CamelizedDiscordRole} objects already being included in guild payloads.
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-roles}
    */
@@ -2091,7 +2103,7 @@ export interface RestManager {
    * @param guildId - The ID of the guild to get the scheduled event from.
    * @param eventId - The ID of the scheduled event to get.
    * @param options - The parameters for the fetching of the scheduled event.
-   * @returns An instance of {@link ScheduledEvent}.
+   * @returns An instance of {@link CamelizedDiscordScheduledEvent}.
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event}
    */
@@ -2101,7 +2113,7 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild to get the scheduled events from.
    * @param options - The parameters for the fetching of the scheduled events.
-   * @returns A collection of {@link ScheduledEvent} objects assorted by event ID.
+   * @returns A collection of {@link CamelizedDiscordScheduledEvent} objects assorted by event ID.
    *
    * @see {@link https://discord.com/developers/docs/resources/guild-scheduled-event#list-scheduled-events-for-guild}
    */
@@ -2112,7 +2124,7 @@ export interface RestManager {
    * @param guildId - The ID of the guild to get the subscribers to the scheduled event from.
    * @param eventId - The ID of the scheduled event to get the subscribers of.
    * @param options - The parameters for the fetching of the subscribers.
-   * @returns A collection of {@link User} objects assorted by user ID.
+   * @returns A collection of {@link CamelizedDiscordUser} objects assorted by user ID.
    *
    * @remarks
    * Requires the `MANAGE_EVENTS` permission.
@@ -2175,7 +2187,7 @@ export interface RestManager {
    * @param messageId - The ID of the message to get the users for.
    * @param reaction - The reaction for which to get the users.
    * @param options - The parameters for the fetching of the users.
-   * @returns A collection of {@link User} objects assorted by user ID.
+   * @returns A collection of {@link CamelizedDiscordUser} objects assorted by user ID.
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#get-reactions}
    */
@@ -2226,7 +2238,7 @@ export interface RestManager {
    * Gets information about the vanity url of a guild.
    *
    * @param guildId - The ID of the guild to get the vanity url information for.
-   * @returns An instance of {@link VanityUrl}.
+   * @returns An instance of {@link CamelizedDiscordVanityUrl}.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
@@ -2240,7 +2252,7 @@ export interface RestManager {
    * Gets the list of voice regions for a guild.
    *
    * @param guildId - The ID of the guild to get the voice regions for.
-   * @returns A collection of {@link VoiceRegions | VoiceRegion} objects assorted by voice region ID.
+   * @returns A collection of {@link CamelizedDiscordVoiceRegion} objects assorted by voice region ID.
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-voice-regions}
    */
@@ -2288,7 +2300,7 @@ export interface RestManager {
    * Gets the welcome screen for a guild.
    *
    * @param guildId - The ID of the guild to get the welcome screen for.
-   * @returns An instance of {@link WelcomeScreen}.
+   * @returns An instance of {@link CamelizedDiscordWelcomeScreen}.
    *
    * @remarks
    * If the welcome screen is not enabled:
@@ -2301,7 +2313,7 @@ export interface RestManager {
    * Gets the guild widget by guild ID.
    *
    * @param guildId - The ID of the guild to get the widget of.
-   * @returns An instance of {@link GuildWidget}.
+   * @returns An instance of {@link CamelizedDiscordGuildWidget}.
    *
    * @remarks
    * Fires an `INVITE_CREATED` Gateway event when an invite channel is defined and a new `Invite` is generated.
@@ -2313,7 +2325,7 @@ export interface RestManager {
    * Gets the settings of a guild's widget.
    *
    * @param guildId - The ID of the guild to get the widget of.
-   * @returns An instance of {@link GuildWidgetSettings}.
+   * @returns An instance of {@link CamelizedDiscordGuildWidgetSettings}.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
@@ -2363,7 +2375,7 @@ export interface RestManager {
    *
    * @param channelId - The ID of the announcement channel.
    * @param messageId - The ID of the message to cross-post.
-   * @returns An instance of the cross-posted {@link Message}.
+   * @returns An instance of the cross-posted {@link CamelizedDiscordMessage}.
    *
    * @remarks
    * Requires the `SEND_MESSAGES` permission.
@@ -2399,7 +2411,7 @@ export interface RestManager {
    * @param userId - The user ID of the thread member to remove.
    *
    * @remarks
-   * If the thread is of type {@link ChannelTypes.GuildPrivateThread}, requires to be the creator of the thread.
+   * If the thread is of type {@link ChannelTypes}.GuildPrivateThread, requires to be the creator of the thread.
    * Otherwise, requires the `MANAGE_THREADS` permission.
    *
    * Requires the thread not be archived.
@@ -2450,7 +2462,7 @@ export interface RestManager {
    *
    * @param token - The interaction token to use, provided in the original interaction.
    * @param options - The parameters for the creation of the message.
-   * @returns An instance of the created {@link Message}.
+   * @returns An instance of the created {@link CamelizedDiscordMessage}.
    *
    * @remarks
    * ⚠️ Interaction tokens are only valid for _15 minutes_.
@@ -2472,7 +2484,7 @@ export interface RestManager {
    * @param interactionId - The ID of the interaction to respond to.
    * @param token - The interaction token to use, provided in the original interaction.
    * @param options - The parameters for the creation of the message.
-   * @returns An instance of the created {@link Message}.
+   * @returns An instance of the created {@link CamelizedDiscordMessage}.
    *
    * @remarks
    * ⚠️ Interaction tokens are only valid for _15 minutes_.
@@ -2495,12 +2507,12 @@ export interface RestManager {
    * @param messageId - The ID of the message to use as the thread's point of origin.
    * @param options - The parameters to use for the creation of the thread.
    * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
-   * @returns An instance of the created {@link Channel | Thread}.
+   * @returns An instance of the created {@link CamelizedDiscordChannel}.
    *
    * @remarks
-   * If called on a channel of type {@link ChannelTypes.GuildText}, creates a {@link ChannelTypes.GuildPublicThread}.
-   * If called on a channel of type {@link ChannelTypes.GuildNews}, creates a {@link ChannelTypes.GuildNewsThread}.
-   * Does not work on channels of type {@link ChannelTypes.GuildForum}.
+   * If called on a channel of type {@link ChannelTypes}.GuildText, creates a {@link ChannelTypes}.GuildPublicThread.
+   * If called on a channel of type {@link ChannelTypes}.GuildNews, creates a {@link ChannelTypes}.GuildNewsThread.
+   * Does not work on channels of type {@link ChannelTypes}.GuildForum.
    *
    * The ID of the created thread will be the same as the ID of the source message.
    *
@@ -2534,7 +2546,7 @@ export interface RestManager {
    * Synchronises a template with the current state of a guild.
    *
    * @param guildId - The ID of the guild to synchronise a template of.
-   * @returns An instance of the edited {@link Template}.
+   * @returns An instance of the edited {@link CamelizedDiscordTemplate}.
    *
    * @remarks
    * Requires the `MANAGE_GUILD` permission.
@@ -2564,7 +2576,7 @@ export interface RestManager {
    *
    * @param commands - The list of commands to use to overwrite the previous list.
    * @param options - Additional options for the endpoint.
-   * @returns A collection of {@link ApplicationCommand} objects assorted by command ID.
+   * @returns A collection of {@link CamelizedDiscordApplicationCommand} objects assorted by command ID.
    *
    * @remarks
    * ❗ Commands that are not present in the `commands` array will be __deleted__.
@@ -2586,7 +2598,7 @@ export interface RestManager {
    * @param guildId - The ID of the guild whose list of commands to overwrite.
    * @param commands - The list of commands to use to overwrite the previous list.
    * @param options - Additional options for the endpoint.
-   * @returns A collection of {@link ApplicationCommand} objects assorted by command ID.
+   * @returns A collection of {@link CamelizedDiscordApplicationCommand} objects assorted by command ID.
    *
    * @remarks
    * ❗ Commands that are not present in the `commands` array will be __deleted__.

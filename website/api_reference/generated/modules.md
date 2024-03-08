@@ -6,8 +6,8 @@
 
 ### Modules
 
-- [@discordeno/bot](modules/Bot.md)
-- [@discordeno/gateway](modules/Gateway.md)
-- [@discordeno/rest](modules/Rest.md)
-- [@discordeno/types](modules/Types.md)
-- [@discordeno/utils](modules/Utils.md)
+- [@discordeno/bot](modules/Bot)
+- [@discordeno/gateway](modules/Gateway)
+- [@discordeno/rest](modules/Rest)
+- [@discordeno/types](modules/Types)
+- [@discordeno/utils](modules/Utils)

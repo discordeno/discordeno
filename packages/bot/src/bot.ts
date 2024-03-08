@@ -27,6 +27,7 @@ import type { Sticker } from './transformers/sticker.js'
 import type { ThreadMember } from './transformers/threadMember.js'
 import type { User } from './transformers/user.js'
 import type { VoiceState } from './transformers/voiceState.js'
+import type { BotGatewayHandlerOptions } from './typings.js'
 
 /**
  * Create a bot object that will maintain the rest and gateway connection.
@@ -36,8 +37,11 @@ import type { VoiceState } from './transformers/voiceState.js'
  */
 export function createBot(options: CreateBotOptions): Bot {
   if (!options.rest) options.rest = { token: options.token, applicationId: options.applicationId }
+  if (!options.rest.token) options.rest.token = options.token
   if (!options.rest.logger && options.loggerFactory) options.rest.logger = options.loggerFactory('REST')
-  if (!options.gateway) options.gateway = { token: options.token, events: {} }
+  if (!options.gateway) options.gateway = { token: options.token }
+  if (!options.gateway.token) options.gateway.token = options.token
+  if (!options.gateway.events) options.gateway.events = {}
   if (!options.gateway.logger && options.loggerFactory) options.gateway.logger = options.loggerFactory('GATEWAY')
   if (!options.gateway.events.message) {
     options.gateway.events.message = async (shard, data) => {
@@ -52,7 +56,6 @@ export function createBot(options: CreateBotOptions): Bot {
     }
   }
 
-  options.rest.token = options.token
   options.gateway.intents = options.intents
   options.gateway.preferSnakeCase = true
 
@@ -61,8 +64,8 @@ export function createBot(options: CreateBotOptions): Bot {
   const bot: Bot = {
     id,
     applicationId: id,
-    transformers: createTransformers({}, { defaultDesiredPropertiesValue: options.defaultDesiredPropertiesValue ?? false }),
-    handlers: createBotGatewayHandlers({}),
+    transformers: createTransformers(options.transformers ?? {}, { defaultDesiredPropertiesValue: options.defaultDesiredPropertiesValue ?? false }),
+    handlers: createBotGatewayHandlers(options.handlers ?? {}),
     rest: createRestManager(options.rest),
     gateway: createGatewayManager(options.gateway),
     events: options.events ?? {},
@@ -103,11 +106,15 @@ export interface CreateBotOptions {
   /** The bot's intents that will be used to make a connection with discords gateway. */
   intents?: GatewayIntents
   /** Any options you wish to provide to the rest manager. */
-  rest?: CreateRestManagerOptions
+  rest?: CreateRestManagerOptions & Partial<Pick<CreateRestManagerOptions, 'token'>>
   /** Any options you wish to provide to the gateway manager. */
-  gateway?: CreateGatewayManagerOptions
+  gateway?: CreateGatewayManagerOptions & Partial<Pick<CreateGatewayManagerOptions, 'token'>>
   /** The event handlers. */
-  events: Partial<EventHandlers>
+  events?: Partial<EventHandlers>
+  /** The functions that should transform discord objects to discordeno shaped objects. */
+  transformers?: Partial<Transformers>
+  /** The handler functions that should handle incoming discord payloads from gateway and call an event. */
+  handlers?: Partial<BotGatewayHandlerOptions>
   /**
    * @deprecated Use with caution
    *
