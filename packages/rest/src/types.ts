@@ -134,7 +134,7 @@ import type { RestRoutes } from './typings/routes.js'
 
 export interface CreateRestManagerOptions {
   /** The bot token which will be used to make requests. */
-  token?: string
+  token: string
   /**
    * For old bots that have a different bot id and application id.
    * @default bot id from token
@@ -170,7 +170,7 @@ export interface CreateRestManagerOptions {
 
 export interface RestManager {
   /** The bot token which will be used to make requests. */
-  token?: string
+  token: string
   /** The application id. Normally this is not required for recent bots but old bot's application id is sometimes different from the bot id so it is required for those bots. */
   applicationId: bigint
   /** The api version to use when making requests. Only the latest supported version will be tested. */

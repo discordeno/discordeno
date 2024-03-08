@@ -26,7 +26,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
   }
 
   const gateway: GatewayManager = {
-    events: options.events,
+    events: options.events ?? {},
     compress: options.compress ?? false,
     intents: options.intents ?? 0,
     properties: {
@@ -172,7 +172,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             url: this.url,
             version: this.version,
           },
-          events: options.events,
+          events: options.events ?? {},
           requestIdentify: async () => {
             await gateway.identify(shardId)
           },
@@ -186,7 +186,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
         if (this.preferSnakeCase) {
           shard.forwardToBot = async (payload) => {
-            options.events.message?.(shard!, payload)
+            shard!.events.message?.(shard!, payload)
           }
         }
 
@@ -294,11 +294,11 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       }
 
       const members =
-        !gateway.cache.requestMembers?.enabled || !options?.nonce
+        !gateway.cache.requestMembers.enabled || !options?.nonce
           ? []
           : new Promise<Camelize<DiscordMemberWithUser[]>>((resolve, reject) => {
               // Should never happen.
-              if (!gateway.cache.requestMembers?.enabled || !options?.nonce) {
+              if (!gateway.cache.requestMembers.enabled || !options?.nonce) {
                 reject(new Error("Can't request the members without the nonce or with the feature disabled."))
                 return
               }
@@ -425,7 +425,7 @@ export interface CreateGatewayManagerOptions {
    */
   version?: number
   /** The events handlers */
-  events: ShardEvents
+  events?: ShardEvents
   /** This managers cache related settings. */
   cache?: {
     requestMembers?: {
@@ -434,8 +434,6 @@ export interface CreateGatewayManagerOptions {
        * @default false
        */
       enabled?: boolean
-      /** The pending requests. */
-      pending: Collection<string, RequestMemberRequest>
     }
   }
 }
@@ -541,6 +539,18 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    * @see {@link https://discord.com/developers/docs/topics/gateway#update-voice-state}
    */
   leaveVoiceChannel: (guildId: BigString) => Promise<void>
+  /** This managers cache related settings. */
+  cache: {
+    requestMembers: {
+      /**
+       * Whether or not request member requests should be cached.
+       * @default false
+       */
+      enabled: boolean
+      /** The pending requests. */
+      pending: Collection<string, RequestMemberRequest>
+    }
+  }
 }
 
 export interface RequestMemberRequest {
