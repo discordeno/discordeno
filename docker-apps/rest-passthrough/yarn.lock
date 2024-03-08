@@ -87,23 +87,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@favware/cliff-jumper@npm:^2.2.3":
-  version: 2.2.3
-  resolution: "@favware/cliff-jumper@npm:2.2.3"
+"@favware/cliff-jumper@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "@favware/cliff-jumper@npm:3.0.1"
   dependencies:
-    "@sapphire/result": "npm:^2.6.4"
-    "@sapphire/utilities": "npm:3.13.0"
+    "@favware/colorette-spinner": "npm:^1.0.1"
+    "@sapphire/result": "npm:^2.6.6"
+    "@sapphire/utilities": "npm:3.15.3"
     colorette: "npm:^2.0.20"
-    commander: "npm:^11.1.0"
+    commander: "npm:^12.0.0"
     compare-func: "npm:^2.0.0"
     conventional-recommended-bump: "npm:^9.0.0"
-    git-cliff: "npm:^1.4.0"
+    execa: "npm:^8.0.1"
+    git-cliff: "npm:^2.1.2"
     js-yaml: "npm:^4.1.0"
-    semver: "npm:^7.5.4"
+    semver: "npm:^7.6.0"
   bin:
     cj: ./dist/cli.js
     cliff-jumper: ./dist/cli.js
-  checksum: feb00a1e0912a19b959c94cb621b50f80ce58ce595128511f6b61df43c32e807b1ea1525c05990fdff0dedb7a05c61169a059605d26c20ea341dda511ac125e8
+  checksum: 7c9f6fd120d194ebfb1a9ab0fb95570a7624428e151628accd1ad6efcbf15ed9d5cc33de5bcfd08a53cd5dd36c6f6c6575ace9c4397a030cac9da2c9787218db
+  languageName: node
+  linkType: hard
+
+"@favware/colorette-spinner@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@favware/colorette-spinner@npm:1.0.1"
+  dependencies:
+    colorette: "npm:*"
+  checksum: 2dc46f83c38eadddee622586234fb0c523e461ac123e18156d9563eb06941dcfaddb7caf1b985377daed1e0024fb170e28ed2269e91e737ea56287272c5de921
   languageName: node
   linkType: hard
 
@@ -193,17 +204,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sapphire/result@npm:^2.6.4":
-  version: 2.6.5
-  resolution: "@sapphire/result@npm:2.6.5"
-  checksum: 819e43adcd756ec96a3ccba1d9e112d52be8254ec18f36826012e9755963e8b57bed9c69d3a8e2bd8030f0a0dde75372a1c47b749dcf43d6440041a82c0d55c3
+"@sapphire/result@npm:^2.6.6":
+  version: 2.6.6
+  resolution: "@sapphire/result@npm:2.6.6"
+  checksum: 1847a4c911b0dcaa2d037548e06b4a206bb1f31f9cdb6d84c2e054979a6ac4a0b8348402d118aa4a8b841f9518cb6e10575224f96cbf0b68410bcb8eae7ab014
   languageName: node
   linkType: hard
 
-"@sapphire/utilities@npm:3.13.0":
-  version: 3.13.0
-  resolution: "@sapphire/utilities@npm:3.13.0"
-  checksum: bc1da486c3a97119ff54f884b24c4da89ff90391e31ef5ade48852a3bfaebb569ec43d17d49615eaa362184ebc21074f9da289332b20550039dcff2fc828a598
+"@sapphire/utilities@npm:3.15.3":
+  version: 3.15.3
+  resolution: "@sapphire/utilities@npm:3.15.3"
+  checksum: 966db788486c01719d3d54cf00eccbc378fcd79f143c994480644f3af4dd22daa65f5e9ea7da6af0973d9730e5d10b762eaf391770d746278023fd012438eb13
   languageName: node
   linkType: hard
 
@@ -744,17 +755,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"colorette@npm:^2.0.20":
+"colorette@npm:*, colorette@npm:^2.0.20":
   version: 2.0.20
   resolution: "colorette@npm:2.0.20"
   checksum: 0b8de48bfa5d10afc160b8eaa2b9938f34a892530b2f7d7897e0458d9535a066e3998b49da9d21161c78225b272df19ae3a64d6df28b4c9734c0e55bbd02406f
   languageName: node
   linkType: hard
 
-"commander@npm:^11.1.0":
-  version: 11.1.0
-  resolution: "commander@npm:11.1.0"
-  checksum: 66bd2d8a0547f6cb1d34022efb25f348e433b0e04ad76a65279b1b09da108f59a4d3001ca539c60a7a46ea38bcf399fc17d91adad76a8cf43845d8dcbaf5cda1
+"commander@npm:^12.0.0":
+  version: 12.0.0
+  resolution: "commander@npm:12.0.0"
+  checksum: 62062e2ffe6abd5aa42a551e62fd5eb9b2620f6ac4299382b2aa9fb02f95cda0242d7e84acb890479bd6491edb805f7f91aecb5b4f5c70dc57df49ed7f02ef14
   languageName: node
   linkType: hard
 
@@ -1039,6 +1050,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"execa@npm:^8.0.1":
+  version: 8.0.1
+  resolution: "execa@npm:8.0.1"
+  dependencies:
+    cross-spawn: "npm:^7.0.3"
+    get-stream: "npm:^8.0.1"
+    human-signals: "npm:^5.0.0"
+    is-stream: "npm:^3.0.0"
+    merge-stream: "npm:^2.0.0"
+    npm-run-path: "npm:^5.1.0"
+    onetime: "npm:^6.0.0"
+    signal-exit: "npm:^4.1.0"
+    strip-final-newline: "npm:^3.0.0"
+  checksum: d2ab5fe1e2bb92b9788864d0713f1fce9a07c4594e272c0c97bc18c90569897ab262e4ea58d27a694d288227a2e24f16f5e2575b44224ad9983b799dc7f1098d
+  languageName: node
+  linkType: hard
+
 "executable@npm:^4.1.0":
   version: 4.1.1
   resolution: "executable@npm:4.1.1"
@@ -1311,58 +1339,66 @@ __metadata:
   languageName: node
   linkType: hard
 
-"git-cliff-darwin-arm64@npm:1.4.0":
-  version: 1.4.0
-  resolution: "git-cliff-darwin-arm64@npm:1.4.0"
+"get-stream@npm:^8.0.1":
+  version: 8.0.1
+  resolution: "get-stream@npm:8.0.1"
+  checksum: dde5511e2e65a48e9af80fea64aff11b4921b14b6e874c6f8294c50975095af08f41bfb0b680c887f28b566dd6ec2cb2f960f9d36a323359be324ce98b766e9e
+  languageName: node
+  linkType: hard
+
+"git-cliff-darwin-arm64@npm:2.1.2":
+  version: 2.1.2
+  resolution: "git-cliff-darwin-arm64@npm:2.1.2"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"git-cliff-darwin-x64@npm:1.4.0":
-  version: 1.4.0
-  resolution: "git-cliff-darwin-x64@npm:1.4.0"
+"git-cliff-darwin-x64@npm:2.1.2":
+  version: 2.1.2
+  resolution: "git-cliff-darwin-x64@npm:2.1.2"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"git-cliff-linux-arm64@npm:1.4.0":
-  version: 1.4.0
-  resolution: "git-cliff-linux-arm64@npm:1.4.0"
+"git-cliff-linux-arm64@npm:2.1.2":
+  version: 2.1.2
+  resolution: "git-cliff-linux-arm64@npm:2.1.2"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"git-cliff-linux-x64@npm:1.4.0":
-  version: 1.4.0
-  resolution: "git-cliff-linux-x64@npm:1.4.0"
+"git-cliff-linux-x64@npm:2.1.2":
+  version: 2.1.2
+  resolution: "git-cliff-linux-x64@npm:2.1.2"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"git-cliff-windows-arm64@npm:1.4.0":
-  version: 1.4.0
-  resolution: "git-cliff-windows-arm64@npm:1.4.0"
+"git-cliff-windows-arm64@npm:2.1.2":
+  version: 2.1.2
+  resolution: "git-cliff-windows-arm64@npm:2.1.2"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"git-cliff-windows-x64@npm:1.4.0":
-  version: 1.4.0
-  resolution: "git-cliff-windows-x64@npm:1.4.0"
+"git-cliff-windows-x64@npm:2.1.2":
+  version: 2.1.2
+  resolution: "git-cliff-windows-x64@npm:2.1.2"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"git-cliff@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "git-cliff@npm:1.4.0"
+"git-cliff@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "git-cliff@npm:2.1.2"
   dependencies:
-    git-cliff-darwin-arm64: "npm:1.4.0"
-    git-cliff-darwin-x64: "npm:1.4.0"
-    git-cliff-linux-arm64: "npm:1.4.0"
-    git-cliff-linux-x64: "npm:1.4.0"
-    git-cliff-windows-arm64: "npm:1.4.0"
-    git-cliff-windows-x64: "npm:1.4.0"
+    execa: "npm:^8.0.1"
+    git-cliff-darwin-arm64: "npm:2.1.2"
+    git-cliff-darwin-x64: "npm:2.1.2"
+    git-cliff-linux-arm64: "npm:2.1.2"
+    git-cliff-linux-x64: "npm:2.1.2"
+    git-cliff-windows-arm64: "npm:2.1.2"
+    git-cliff-windows-x64: "npm:2.1.2"
   dependenciesMeta:
     git-cliff-darwin-arm64:
       optional: true
@@ -1377,8 +1413,8 @@ __metadata:
     git-cliff-windows-x64:
       optional: true
   bin:
-    git-cliff: lib/index.js
-  checksum: 54d1666f73e3b91ddac539482c4052537314492f637d373209e250e60de55e6c4c22a3a432cce5ab8611e5731c2c3f9e3f9715ef6a7235dd9ded90069f47fed8
+    git-cliff: lib/cli/cli.js
+  checksum: 71a20d1cfcdb1002e20f8c7dfe8556e75387009c6dbd670570d5c0fa6d67a05fdc4071793ccb629484db8a5740ecf075001b3117e99230c41c1c0dadf332fe21
   languageName: node
   linkType: hard
 
@@ -1508,6 +1544,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"human-signals@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "human-signals@npm:5.0.0"
+  checksum: 30f8870d831cdcd2d6ec0486a7d35d49384996742052cee792854273fa9dd9e7d5db06bb7985d4953e337e10714e994e0302e90dc6848069171b05ec836d65b0
+  languageName: node
+  linkType: hard
+
 "iconv-lite@npm:^0.6.2":
   version: 0.6.3
   resolution: "iconv-lite@npm:0.6.3"
@@ -1621,6 +1664,13 @@ __metadata:
   version: 2.0.1
   resolution: "is-stream@npm:2.0.1"
   checksum: b8e05ccdf96ac330ea83c12450304d4a591f9958c11fd17bed240af8d5ffe08aedafa4c0f4cfccd4d28dc9d4d129daca1023633d5c11601a6cbc77521f6fae66
+  languageName: node
+  linkType: hard
+
+"is-stream@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "is-stream@npm:3.0.0"
+  checksum: 172093fe99119ffd07611ab6d1bcccfe8bc4aa80d864b15f43e63e54b7abc71e779acd69afdb854c4e2a67fdc16ae710e370eda40088d1cfc956a50ed82d8f16
   languageName: node
   linkType: hard
 
@@ -1815,6 +1865,13 @@ __metadata:
   version: 2.1.0
   resolution: "mimic-fn@npm:2.1.0"
   checksum: d2421a3444848ce7f84bd49115ddacff29c15745db73f54041edc906c14b131a38d05298dae3081667627a59b2eb1ca4b436ff2e1b80f69679522410418b478a
+  languageName: node
+  linkType: hard
+
+"mimic-fn@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "mimic-fn@npm:4.0.0"
+  checksum: 995dcece15ee29aa16e188de6633d43a3db4611bcf93620e7e62109ec41c79c0f34277165b8ce5e361205049766e371851264c21ac64ca35499acb5421c2ba56
   languageName: node
   linkType: hard
 
@@ -2035,6 +2092,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"npm-run-path@npm:^5.1.0":
+  version: 5.3.0
+  resolution: "npm-run-path@npm:5.3.0"
+  dependencies:
+    path-key: "npm:^4.0.0"
+  checksum: ae8e7a89da9594fb9c308f6555c73f618152340dcaae423e5fb3620026fefbec463618a8b761920382d666fa7a2d8d240b6fe320e8a6cdd54dc3687e2b659d25
+  languageName: node
+  linkType: hard
+
 "on-exit-leak-free@npm:^2.1.0":
   version: 2.1.2
   resolution: "on-exit-leak-free@npm:2.1.2"
@@ -2057,6 +2123,15 @@ __metadata:
   dependencies:
     mimic-fn: "npm:^2.1.0"
   checksum: e9fd0695a01cf226652f0385bf16b7a24153dbbb2039f764c8ba6d2306a8506b0e4ce570de6ad99c7a6eb49520743afdb66edd95ee979c1a342554ed49a9aadd
+  languageName: node
+  linkType: hard
+
+"onetime@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "onetime@npm:6.0.0"
+  dependencies:
+    mimic-fn: "npm:^4.0.0"
+  checksum: 0846ce78e440841335d4e9182ef69d5762e9f38aa7499b19f42ea1c4cd40f0b4446094c455c713f9adac3f4ae86f613bb5e30c99e52652764d06a89f709b3788
   languageName: node
   linkType: hard
 
@@ -2103,6 +2178,13 @@ __metadata:
   version: 3.1.1
   resolution: "path-key@npm:3.1.1"
   checksum: 55cd7a9dd4b343412a8386a743f9c746ef196e57c823d90ca3ab917f90ab9f13dd0ded27252ba49dbdfcab2b091d998bc446f6220cd3cea65db407502a740020
+  languageName: node
+  linkType: hard
+
+"path-key@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "path-key@npm:4.0.0"
+  checksum: 8e6c314ae6d16b83e93032c61020129f6f4484590a777eed709c4a01b50e498822b00f76ceaf94bc64dbd90b327df56ceadce27da3d83393790f1219e07721d7
   languageName: node
   linkType: hard
 
@@ -2350,7 +2432,7 @@ __metadata:
     "@discordeno/rest": "npm:19.0.0-next.9006572"
     "@fastify/env": "npm:^4.3.0"
     "@fastify/helmet": "npm:^11.1.1"
-    "@favware/cliff-jumper": "npm:^2.2.3"
+    "@favware/cliff-jumper": "npm:^3.0.1"
     "@swc/cli": "npm:^0.3.10"
     "@swc/core": "npm:^1.4.5"
     dotenv: "npm:^16.4.5"
@@ -2459,6 +2541,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"semver@npm:^7.6.0":
+  version: 7.6.0
+  resolution: "semver@npm:7.6.0"
+  dependencies:
+    lru-cache: "npm:^6.0.0"
+  bin:
+    semver: bin/semver.js
+  checksum: 1b41018df2d8aca5a1db4729985e8e20428c650daea60fcd16e926e9383217d00f574fab92d79612771884a98d2ee2a1973f49d630829a8d54d6570defe62535
+  languageName: node
+  linkType: hard
+
 "set-cookie-parser@npm:^2.4.1":
   version: 2.6.0
   resolution: "set-cookie-parser@npm:2.6.0"
@@ -2505,7 +2598,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"signal-exit@npm:^4.0.1":
+"signal-exit@npm:^4.0.1, signal-exit@npm:^4.1.0":
   version: 4.1.0
   resolution: "signal-exit@npm:4.1.0"
   checksum: c9fa63bbbd7431066174a48ba2dd9986dfd930c3a8b59de9c29d7b6854ec1c12a80d15310869ea5166d413b99f041bfa3dd80a7947bcd44ea8e6eb3ffeabfa1f
@@ -2657,6 +2750,13 @@ __metadata:
   version: 2.0.0
   resolution: "strip-final-newline@npm:2.0.0"
   checksum: 69412b5e25731e1938184b5d489c32e340605bb611d6140344abc3421b7f3c6f9984b21dff296dfcf056681b82caa3bb4cc996a965ce37bcfad663e92eae9c64
+  languageName: node
+  linkType: hard
+
+"strip-final-newline@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "strip-final-newline@npm:3.0.0"
+  checksum: 23ee263adfa2070cd0f23d1ac14e2ed2f000c9b44229aec9c799f1367ec001478469560abefd00c5c99ee6f0b31c137d53ec6029c53e9f32a93804e18c201050
   languageName: node
   linkType: hard
 
