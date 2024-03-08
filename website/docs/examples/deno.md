@@ -1,36 +1,37 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 sidebar_label: Using with Deno
 ---
 
 # Using with Deno
 
-To be able to use Discordeno with Deno there is one workaround needed if you are using the gateway package.
-We need to make Deno use the websocket from Deno instead of the one which is used in node, because the npm support in Deno cannot use our websocket correctly.
+Discordeno supports Deno by using the npm: specifier for your import.
 
-To do it you can use a workaround provided here: https://nest.land/package/katsura/files/src/discordenoFixes/gatewaySocket.ts
+## Pre-Requirements
 
-You would use it like this.
+Before, going forward, please make sure to have finished everything on this list.
+
+- Create an application and get the bot token. [Create Application Guide](https://discordeno.js.org/docs/beginner/token)
+- Add your bot to a server you own. [Invite Bot Guide](https://discordeno.js.org/docs/beginner/inviting)
+- Install Discordeno. [Installation Guide](https://discordeno.js.org)
+- Setup environment variables. [Environment Variables Guide](https://discordeno.js.org/docs/beginner/env)
+
+This is how you can use it to create a bot that logs into discord:
 
 ```ts
-import { load } from 'https://x.nest.land/Yenv@1.0.0/mod.ts'
-// Import it like this. There might be a newer version of this fix later, but I would not expect much changes.
-import { fixGatewayWebsocket } from 'https://x.nest.land/katsura@1.3.9/src/discordenoFixes/gatewaySocket.ts'
-import { createBot } from 'npm:@discordeno/bot@19.0.0-next.5c42bdd'
+import { load } from 'https://deno.land/std@0.212.0/dotenv/mod.ts'
+import { createBot } from 'npm:@discordeno/bot@19.0.0-next.d81b28a'
 
-const env = await load({
-  token: /[M-Z][A-Za-z\d]{23}\.[\w-]{6}\.[\w-]{27}/,
-})
+const env = await load()
 
 const bot = createBot({
   token: env.token,
   events: {
-    ready: data => console.log(`Shard ${data.shardId} ready`),
+    ready: ({ shardId }) => console.log(`Shard ${shardId} ready`),
   },
 })
 
-// Use this function with the gateway managerr
-fixGatewayWebsocket(bot.gateway)
-
 await bot.start()
 ```
+
+You are free to expand from this point with whatever code you want. Happy coding!

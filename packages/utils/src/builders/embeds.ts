@@ -33,7 +33,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * @param {?boolean} [inline=false] - Field should be inline or not.
    * @returns {EmbedsBuilder}
    */
-  addField(name: string, value: string, inline?: boolean): EmbedsBuilder {
+  addField(name: string, value: string, inline?: boolean): this {
     if (this.#currentEmbed.fields === undefined) {
       this.#currentEmbed.fields = []
     }
@@ -52,7 +52,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    *
    * @returns {EmbedsBuilder}
    */
-  newEmbed(): EmbedsBuilder {
+  newEmbed(): this {
     if (this.length >= 10) {
       throw new Error('Maximum embed count exceeded. You can not have more than 10 embeds.')
     }
@@ -70,7 +70,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * @param {?Omit<DiscordEmbedAuthor, 'name'>} [options] - Extra author options
    * @returns {EmbedsBuilder}
    */
-  setAuthor(name: string, options?: Omit<DiscordEmbedAuthor, 'name'>): EmbedsBuilder {
+  setAuthor(name: string, options?: Omit<DiscordEmbedAuthor, 'name'>): this {
     this.#currentEmbed.author = {
       ...this.#currentEmbed.author,
       ...options,
@@ -86,7 +86,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * @param {(number | string)} color - The color, in base16 or hex color code
    * @returns {EmbedsBuilder}
    */
-  setColor(color: number | string): EmbedsBuilder {
+  setColor(color: number | string): this {
     if (typeof color === 'string') {
       const convertedValue = parseInt(color.replace('#', ''), 16)
       color = Number.isNaN(convertedValue) ? 0 : convertedValue
@@ -105,7 +105,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * @param {?number} [index] - The index of the embed in the EmbedsBuilder array
    * @returns {EmbedsBuilder}
    */
-  setCurrentEmbed(index?: number): EmbedsBuilder {
+  setCurrentEmbed(index?: number): this {
     if (index === undefined) {
       this.#currentEmbedIndex = this.length - 1
 
@@ -127,7 +127,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * @param {string} description - Description
    * @returns {EmbedsBuilder}
    */
-  setDescription(description: string): EmbedsBuilder {
+  setDescription(description: string): this {
     this.#currentEmbed.description = description
 
     return this
@@ -139,7 +139,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * @param {DiscordEmbedField[]} fields
    * @returns {EmbedsBuilder}
    */
-  setFields(fields: DiscordEmbedField[]): EmbedsBuilder {
+  setFields(fields: DiscordEmbedField[]): this {
     this.#currentEmbed.fields = fields
 
     return this
@@ -152,7 +152,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * @param {?Omit<DiscordEmbedFooter, 'text'>} [options]
    * @returns {EmbedsBuilder}
    */
-  setFooter(text: string, options?: Omit<DiscordEmbedFooter, 'text'>): EmbedsBuilder {
+  setFooter(text: string, options?: Omit<DiscordEmbedFooter, 'text'>): this {
     this.#currentEmbed.footer = {
       ...this.#currentEmbed.footer,
       ...options,
@@ -169,7 +169,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * @param {?Omit<DiscordEmbedImage, 'url'>} [options]
    * @returns {EmbedsBuilder}
    */
-  setImage(url: string, options?: Omit<DiscordEmbedImage, 'url'>): EmbedsBuilder {
+  setImage(url: string, options?: Omit<DiscordEmbedImage, 'url'>): this {
     this.#currentEmbed.image = {
       ...this.#currentEmbed.image,
       ...options,
@@ -186,7 +186,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * @param {?string} [url]
    * @returns {EmbedsBuilder}
    */
-  setProvider(name: string, url?: string): EmbedsBuilder {
+  setProvider(name: string, url?: string): this {
     this.#currentEmbed.provider = {
       name,
       url,
@@ -200,7 +200,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    *
    * @returns {EmbedsBuilder}
    */
-  setRandomColor(): EmbedsBuilder {
+  setRandomColor(): this {
     return this.setColor(Math.floor(Math.random() * (0xffffff + 1)))
   }
 
@@ -211,7 +211,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * @param {?string} [url]
    * @returns {EmbedsBuilder}
    */
-  setTitle(title: string, url?: string): EmbedsBuilder {
+  setTitle(title: string, url?: string): this {
     this.#currentEmbed.title = title
 
     if (url) {
@@ -227,7 +227,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * @param {?(string | number | Date)} [timestamp]
    * @returns {EmbedsBuilder}
    */
-  setTimestamp(timestamp?: string | number | Date): EmbedsBuilder {
+  setTimestamp(timestamp?: string | number | Date): this {
     this.#currentEmbed.timestamp = new Date(timestamp!).toISOString()
 
     return this
@@ -240,7 +240,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * @param {?Omit<DiscordEmbedThumbnail, 'url'>} [options]
    * @returns {EmbedsBuilder}
    */
-  setThumbnail(url: string, options?: Omit<DiscordEmbedThumbnail, 'url'>): EmbedsBuilder {
+  setThumbnail(url: string, options?: Omit<DiscordEmbedThumbnail, 'url'>): this {
     this.#currentEmbed.thumbnail = {
       ...this.#currentEmbed.thumbnail,
       ...options,
@@ -256,7 +256,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * @param {string} url
    * @returns {EmbedsBuilder}
    */
-  setUrl(url: string): EmbedsBuilder {
+  setUrl(url: string): this {
     this.#currentEmbed.url = url
 
     return this
@@ -269,7 +269,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    * @param {?Omit<DiscordEmbedVideo, 'url'>} [options]
    * @returns {EmbedsBuilder}
    */
-  setVideo(url: string, options?: Omit<DiscordEmbedVideo, 'url'>): EmbedsBuilder {
+  setVideo(url: string, options?: Omit<DiscordEmbedVideo, 'url'>): this {
     this.#currentEmbed.video = {
       ...this.#currentEmbed.video,
       ...options,
@@ -284,7 +284,7 @@ export class EmbedsBuilder extends Array<DiscordEmbed> {
    *
    * @returns {EmbedsBuilder}
    */
-  validate(): EmbedsBuilder {
+  validate(): this {
     let totalCharacters = 0
 
     if (this.length > 10) {

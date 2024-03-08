@@ -8,7 +8,7 @@ export function transformAttachment(bot: Bot, payload: DiscordAttachment): Attac
   if (props.id && payload.id) attachment.id = bot.transformers.snowflake(payload.id)
   if (props.filename && payload.filename) attachment.filename = payload.filename
   if (props.contentType && payload.content_type) attachment.contentType = payload.content_type
-  if (props.size && payload.size) attachment.size = payload.size
+  if (props.size) attachment.size = payload.size
   if (props.url && payload.url) attachment.url = payload.url
   if (props.proxyUrl && payload.proxy_url) attachment.proxyUrl = payload.proxy_url
   if (props.height && payload.height) attachment.height = payload.height
@@ -17,7 +17,7 @@ export function transformAttachment(bot: Bot, payload: DiscordAttachment): Attac
   if (props.description && payload.description) attachment.description = payload.description
   if (props.duration_secs && payload.duration_secs) attachment.duration_secs = payload.duration_secs
   if (props.waveform && payload.waveform) attachment.waveform = payload.waveform
-  if (props.flags && payload.flags) attachment.flags = payload.flags
+  if (props.flags) attachment.flags = payload.flags
 
   return bot.transformers.customizers.attachment(bot, payload, attachment)
 }

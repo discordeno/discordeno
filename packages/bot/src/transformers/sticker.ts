@@ -15,7 +15,7 @@ export function transformSticker(bot: Bot, payload: DiscordSticker): Sticker {
   if (props.available && payload.available) sticker.available = payload.available
   if (props.guildId && payload.guild_id) sticker.guildId = bot.transformers.snowflake(payload.guild_id)
   if (props.user && payload.user) sticker.user = bot.transformers.user(bot, payload.user)
-  if (props.sortValue && payload.sort_value) sticker.sortValue = payload.sort_value
+  if (props.sortValue && payload.sort_value !== undefined) sticker.sortValue = payload.sort_value
 
   return bot.transformers.customizers.sticker(bot, payload, sticker)
 }

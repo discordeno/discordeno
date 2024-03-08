@@ -103,7 +103,7 @@ export function createRoutes(): RestRoutes {
       },
 
       forum: (channelId) => {
-        return `/channels/${channelId}/threads?has_message=true`
+        return `/channels/${channelId}/threads`
       },
 
       invites: (channelId) => {

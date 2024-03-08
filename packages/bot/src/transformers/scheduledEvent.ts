@@ -24,7 +24,7 @@ export function transformScheduledEvent(bot: Bot, payload: DiscordScheduledEvent
   if (props.privacyLevel && payload.privacy_level) scheduledEvent.privacyLevel = payload.privacy_level
   if (props.status && payload.status) scheduledEvent.status = payload.status
   if (props.entityType && payload.entity_type) scheduledEvent.entityType = payload.entity_type
-  if (props.userCount && payload.user_count) scheduledEvent.userCount = payload.user_count ?? 0
+  if (props.userCount) scheduledEvent.userCount = payload.user_count ?? 0
   if (props.location && payload.entity_metadata?.location) scheduledEvent.location = payload.entity_metadata.location
   if (props.image && payload.image) scheduledEvent.image = iconHashToBigInt(payload.image)
 

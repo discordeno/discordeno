@@ -15,8 +15,8 @@ export function transformInviteStageInstance(bot: Bot, payload: DiscordInviteSta
       ),
     )
   }
-  if (props.participantCount && payload.participant_count) inviteStageInstance.participantCount = payload.participant_count
-  if (props.speakerCount && payload.speaker_count) inviteStageInstance.participantCount = payload.participant_count
+  if (props.participantCount) inviteStageInstance.participantCount = payload.participant_count
+  if (props.speakerCount) inviteStageInstance.participantCount = payload.participant_count
   if (props.topic && payload.topic) inviteStageInstance.topic = payload.topic
 
   return bot.transformers.customizers.inviteStageInstance(bot, payload, inviteStageInstance)

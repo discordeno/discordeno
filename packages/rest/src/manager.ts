@@ -76,12 +76,7 @@ export const RATE_LIMIT_LIMIT_HEADER = 'x-ratelimit-limit'
 export const RATE_LIMIT_SCOPE_HEADER = 'x-ratelimit-scope'
 
 export function createRestManager(options: CreateRestManagerOptions): RestManager {
-  const applicationId = options.applicationId ? BigInt(options.applicationId) : options.token ? getBotIdFromToken(options.token) : undefined
-  if (!applicationId) {
-    throw new Error(
-      '`applicationId` was not provided and was not able to extract the id from the bots token. Please explicitly pass `applicationId` to the rest manager.',
-    )
-  }
+  const applicationId = options.applicationId ? BigInt(options.applicationId) : getBotIdFromToken(options.token)
 
   const baseUrl = options.proxy?.baseUrl ?? DISCORD_API_URL
 
@@ -1098,12 +1093,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getGuilds(token, options) {
-      return await rest.get<DiscordPartialGuild[]>(rest.routes.guilds.userGuilds(options), {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-        unauthorized: true,
-      })
+      const makeRequestOptions: MakeRequestOptions | undefined = token
+        ? {
+            headers: {
+              authorization: `Bearer ${token}`,
+            },
+            unauthorized: true,
+          }
+        : undefined
+
+      return await rest.get<DiscordPartialGuild[]>(rest.routes.guilds.userGuilds(options), makeRequestOptions)
     },
 
     async getGuildApplicationCommand(commandId, guildId) {
