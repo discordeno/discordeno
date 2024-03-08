@@ -14,7 +14,7 @@
     "@discordeno/rest": "19.0.0-next.9006572",
     "@fastify/env": "^4.3.0",
     "@fastify/helmet": "^11.1.1",
-    "fastify": "^4.26.1"
+    "fastify": "^4.26.2"
   },
   "devDependencies": {
     "@favware/cliff-jumper": "^3.0.1",
