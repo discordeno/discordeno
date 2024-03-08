@@ -2038,7 +2038,7 @@ __metadata:
     lint-staged: "npm:^15.2.0"
     prettier: "npm:^3.2.5"
     turbo: "npm:^1.11.3"
-    typedoc: "npm:0.25.9"
+    typedoc: "npm:0.25.11"
     typedoc-plugin-markdown: "npm:3.17.1"
     typescript: "npm:5.3.3"
   languageName: unknown
@@ -5946,9 +5946,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typedoc@npm:0.25.9":
-  version: 0.25.9
-  resolution: "typedoc@npm:0.25.9"
+"typedoc@npm:0.25.11":
+  version: 0.25.11
+  resolution: "typedoc@npm:0.25.11"
   dependencies:
     lunr: "npm:^2.3.9"
     marked: "npm:^4.3.0"
@@ -5958,7 +5958,7 @@ __metadata:
     typescript: 4.6.x || 4.7.x || 4.8.x || 4.9.x || 5.0.x || 5.1.x || 5.2.x || 5.3.x
   bin:
     typedoc: bin/typedoc
-  checksum: 537b29c919241620887833f8db3febf6f2b4abc432a11e368527bb82f0ca49a2ba65acef88a8982e01ae3382a65a07395b03164349dcb6020c3157fdbb171b70
+  checksum: ec1f617c16b5fca455853c329a9958fe41b247d0c1a72dc153654fd5ce323f2ccdfd10ef1f3349d340398e3770a036381d856b90fda4aafe554640b53f5b2a1c
   languageName: node
   linkType: hard
 
