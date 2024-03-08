@@ -19,6 +19,6 @@ In order to create a bot for your Discord server, you will need to follow these 
 2. In your bot settings, click on the "Reset" button. Follow any requirements and then click the "Copy" button that appears.
 3. Save your bot token in a secure location.
 
-**Your token is your password. Never share your token with anyone. If you do shrae your token, they will have full access to your bot!**
+**Your token is your password. Never share your token with anyone. If you do share your token, they will have full access to your bot!**
 
 And that's it! You now have a bot token that you can use to create a bot for your Discord server. Happy coding!

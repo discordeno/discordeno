@@ -29,13 +29,13 @@
   },
   "devDependencies": {
     "chokidar-cli": "^3.0.0",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "eslint-config-discordeno": "*",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.0",
-    "prettier": "^3.2.4",
+    "prettier": "^3.2.5",
     "turbo": "^1.11.3",
-    "typedoc": "0.25.7",
+    "typedoc": "0.25.11",
     "typedoc-plugin-markdown": "3.17.1",
     "typescript": "5.3.3"
   },

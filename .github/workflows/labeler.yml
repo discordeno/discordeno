@@ -12,13 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request_target'
     steps:
-      - uses: fuxingloh/multi-labeler@v2
+      - uses: fuxingloh/multi-labeler@v4
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
 
   w_unverified_labeler:
     name: Add w-unverified Label
-    if: ${{ !(github.event_name == 'pull_request_target' && (github.event.action == 'edited' || github.event.action == 'synchronize')) }}
+    if: ${{ !(github.event_name == 'pull_request_target' && (github.event.action == 'edited' || github.event.action == 'synchronize' )) && !(github.event_name == 'issues' && contains(github.event.issue.labels.*.name, 'api-docs-commits')) && github.actor != 'dependabot[bot]'}}
     runs-on: ubuntu-latest
     steps:
       - run: gh issue edit "$NUMBER" --add-label "$LABELS"
