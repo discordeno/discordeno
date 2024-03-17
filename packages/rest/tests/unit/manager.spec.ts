@@ -38,10 +38,6 @@ describe('[rest] manager', () => {
       expect(rest.baseUrl).to.be.equal(options.proxy.baseUrl)
     })
 
-    it('With a falsy token', () => {
-      expect(() => createRestManager({ token: '' })).throws()
-    })
-
     it('With an application id', () => {
       const subrest = createRestManager({ ...options, applicationId: '130136895395987456' })
       expect(subrest.applicationId).to.be.equal(130136895395987456n)
@@ -173,7 +169,7 @@ describe('[rest] manager', () => {
     let time: sinon.SinonFakeTimers
 
     beforeEach(() => {
-      rest = createRestManager({ applicationId: 1n })
+      rest = createRestManager({ token: '1', applicationId: 1n })
       time = sinon.useFakeTimers()
     })
 

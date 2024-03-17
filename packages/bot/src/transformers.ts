@@ -498,6 +498,14 @@ export interface Transformers {
       slug: boolean
       flags: boolean
     }
+    voiceState: {
+      requestToSpeakTimestamp: boolean
+      channelId: boolean
+      guildId: boolean
+      toggles: boolean
+      sessionId: boolean
+      userId: boolean
+    }
   }
   reverse: {
     allowedMentions: (bot: Bot, payload: AllowedMentions) => DiscordAllowedMentions
@@ -565,16 +573,19 @@ export interface Transformers {
 
 export interface CreateTransformerOptions {
   defaultDesiredPropertiesValue: boolean
+  logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
 }
 
 export function createTransformers(options: Partial<Transformers>, opts?: CreateTransformerOptions): Transformers {
   if (opts?.defaultDesiredPropertiesValue) {
-    logger.warn('[Transformers] WARNING WARNING WARNING!')
-    logger.warn(
+    const log = opts.logger ?? logger
+
+    log.warn('[Transformers] WARNING WARNING WARNING!')
+    log.warn(
       '[Transformers] The defaultDesiredPropertiesValue property is being used and it is NOT RECOMMENDED. In fact it was WARNED AGAINST. It is extremely bad practice.',
     )
-    logger.warn('[Transformers] It is a bit painful to work with and get started, but it has massive long term benefits.')
-    logger.warn('[Transformers] ----------------------------------------------------------------')
+    log.warn('[Transformers] It is a bit painful to work with and get started, but it has massive long term benefits.')
+    log.warn('[Transformers] ----------------------------------------------------------------')
   }
 
   return {
@@ -1040,6 +1051,14 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         name: opts?.defaultDesiredPropertiesValue ?? false,
         slug: opts?.defaultDesiredPropertiesValue ?? false,
         flags: opts?.defaultDesiredPropertiesValue ?? false,
+      },
+      voiceState: {
+        requestToSpeakTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
+        channelId: opts?.defaultDesiredPropertiesValue ?? false,
+        guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        toggles: opts?.defaultDesiredPropertiesValue ?? false,
+        sessionId: opts?.defaultDesiredPropertiesValue ?? false,
+        userId: opts?.defaultDesiredPropertiesValue ?? false,
       },
     },
     reverse: {

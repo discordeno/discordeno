@@ -26,7 +26,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
   }
 
   const gateway: GatewayManager = {
-    events: options.events,
+    events: options.events ?? {},
     compress: options.compress ?? false,
     intents: options.intents ?? 0,
     properties: {
@@ -53,15 +53,16 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         pending: new Collection(),
       },
     },
+    logger: options.logger ?? logger,
 
     calculateTotalShards() {
       // Bots under 100k servers do not have access to total shards.
       if (gateway.totalShards < 100) {
-        logger.debug(`[Gateway] Calculating total shards: ${gateway.totalShards}`)
+        gateway.logger.debug(`[Gateway] Calculating total shards: ${gateway.totalShards}`)
         return gateway.totalShards
       }
 
-      logger.debug(`[Gateway] Calculating total shards`, gateway.totalShards, gateway.connection.sessionStartLimit.maxConcurrency)
+      gateway.logger.debug(`[Gateway] Calculating total shards`, gateway.totalShards, gateway.connection.sessionStartLimit.maxConcurrency)
       // Calculate a multiple of `maxConcurrency` which can be used to connect to the gateway.
       return (
         Math.ceil(
@@ -73,14 +74,14 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     },
     calculateWorkerId(shardId) {
       const workerId = Math.min(shardId % gateway.shardsPerWorker, gateway.totalWorkers - 1)
-      logger.debug(
+      gateway.logger.debug(
         `[Gateway] Calculating workerId: Shard: ${shardId} -> Worker: ${workerId} -> Per Worker: ${gateway.shardsPerWorker} -> Total: ${gateway.totalWorkers}`,
       )
       return workerId
     },
     prepareBuckets() {
       for (let i = 0; i < gateway.connection.sessionStartLimit.maxConcurrency; ++i) {
-        logger.debug(`[Gateway] Preparing buckets for concurrency: ${i}`)
+        gateway.logger.debug(`[Gateway] Preparing buckets for concurrency: ${i}`)
         gateway.buckets.set(i, {
           workers: [],
           identifyRequests: [],
@@ -89,7 +90,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
       // ORGANIZE ALL SHARDS INTO THEIR OWN BUCKETS
       for (let shardId = gateway.firstShardId; shardId <= gateway.lastShardId; ++shardId) {
-        logger.debug(`[Gateway] Preparing buckets for shard: ${shardId}`)
+        gateway.logger.debug(`[Gateway] Preparing buckets for shard: ${shardId}`)
         if (shardId >= gateway.totalShards) {
           throw new Error(`Shard (id: ${shardId}) is bigger or equal to the used amount of used shards which is ${gateway.totalShards}`)
         }
@@ -153,12 +154,12 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       await shard.send(payload)
     },
     async tellWorkerToIdentify(workerId, shardId, bucketId) {
-      logger.debug(`[Gateway] tell worker to identify (${workerId}, ${shardId}, ${bucketId})`)
+      gateway.logger.debug(`[Gateway] tell worker to identify (${workerId}, ${shardId}, ${bucketId})`)
       await gateway.identify(shardId)
     },
     async identify(shardId: number) {
       let shard = this.shards.get(shardId)
-      logger.debug(`[Gateway] identifying ${shard ? 'existing' : 'new'} shard (${shardId})`)
+      gateway.logger.debug(`[Gateway] identifying ${shard ? 'existing' : 'new'} shard (${shardId})`)
 
       if (!shard) {
         shard = new Shard({
@@ -172,21 +173,22 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             url: this.url,
             version: this.version,
           },
-          events: options.events,
+          events: options.events ?? {},
+          logger: this.logger,
           requestIdentify: async () => {
             await gateway.identify(shardId)
           },
           shardIsReady: async () => {
-            logger.debug(`[Shard] Shard #${shardId} is ready`)
+            gateway.logger.debug(`[Shard] Shard #${shardId} is ready`)
             await delay(gateway.spawnShardDelay)
-            logger.debug(`[Shard] Resolving shard identify request`)
+            gateway.logger.debug(`[Shard] Resolving shard identify request`)
             gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)!.identifyRequests.shift()?.()
           },
         })
 
         if (this.preferSnakeCase) {
           shard.forwardToBot = async (payload) => {
-            options.events.message?.(shard!, payload)
+            shard!.events.message?.(shard!, payload)
           }
         }
 
@@ -199,7 +201,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       return await new Promise((resolve) => {
         // Mark that we are making an identify request so another is not made.
         bucket.identifyRequests.push(resolve)
-        logger.debug(`[Gateway] identifying shard #(${shardId}).`)
+        gateway.logger.debug(`[Gateway] identifying shard #(${shardId}).`)
         // This will trigger identify and when READY is received it will resolve the above request.
         shard?.identify()
       })
@@ -207,15 +209,15 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     async kill(shardId: number) {
       const shard = this.shards.get(shardId)
       if (!shard) {
-        return logger.debug(`[Gateway] kill shard but not found (${shardId})`)
+        return gateway.logger.debug(`[Gateway] kill shard but not found (${shardId})`)
       }
 
-      logger.debug(`[Gateway] kill shard (${shardId})`)
+      gateway.logger.debug(`[Gateway] kill shard (${shardId})`)
       this.shards.delete(shardId)
       await shard.shutdown()
     },
     async requestIdentify(shardId: number) {
-      logger.debug(`[Gateway] requesting identify`)
+      gateway.logger.debug(`[Gateway] requesting identify`)
       // const bucket = gateway.buckets.get(shardId % gateway.connection.sessionStartLimit.maxConcurrency)
       // if (!bucket) return
 
@@ -231,18 +233,18 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       if (!totalShards) totalShards = gateway.totalShards
       // If it is only 1 shard, it will always be shard id 0
       if (totalShards === 1) {
-        logger.debug(`[Gateway] calculateShardId (1 shard)`)
+        gateway.logger.debug(`[Gateway] calculateShardId (1 shard)`)
         return 0
       }
 
-      logger.debug(`[Gateway] calculateShardId (guildId: ${guildId}, totalShards: ${totalShards})`)
+      gateway.logger.debug(`[Gateway] calculateShardId (guildId: ${guildId}, totalShards: ${totalShards})`)
       return Number((BigInt(guildId) >> 22n) % BigInt(totalShards))
     },
 
     async joinVoiceChannel(guildId, channelId, options) {
       const shardId = gateway.calculateShardId(guildId)
 
-      logger.debug(`[Gateway] joinVoiceChannel guildId: ${guildId} channelId: ${channelId}`)
+      gateway.logger.debug(`[Gateway] joinVoiceChannel guildId: ${guildId} channelId: ${channelId}`)
 
       await gateway.sendPayload(shardId, {
         op: GatewayOpcodes.VoiceStateUpdate,
@@ -256,7 +258,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     },
 
     async editBotStatus(data) {
-      logger.debug(`[Gateway] editBotStatus data: ${JSON.stringify(data)}`)
+      gateway.logger.debug(`[Gateway] editBotStatus data: ${JSON.stringify(data)}`)
 
       await Promise.all(
         [...gateway.shards.values()].map(async (shard) => {
@@ -266,7 +268,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     },
 
     async editShardStatus(shardId, data) {
-      logger.debug(`[Gateway] editShardStatus shardId: ${shardId} -> data: ${JSON.stringify(data)}`)
+      gateway.logger.debug(`[Gateway] editShardStatus shardId: ${shardId} -> data: ${JSON.stringify(data)}`)
 
       await gateway.sendPayload(shardId, {
         op: GatewayOpcodes.PresenceUpdate,
@@ -285,20 +287,20 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       if (gateway.intents && (!options?.limit || options.limit > 1) && !(gateway.intents & GatewayIntents.GuildMembers))
         throw new Error('Cannot fetch more then 1 member without the GUILD_MEMBERS intent')
 
-      logger.debug(`[Gateway] requestMembers guildId: ${guildId} -> data: ${JSON.stringify(options)}`)
+      gateway.logger.debug(`[Gateway] requestMembers guildId: ${guildId} -> data: ${JSON.stringify(options)}`)
 
       if (options?.userIds?.length) {
-        logger.debug(`[Gateway] requestMembers guildId: ${guildId} -> setting user limit based on userIds length: ${options.userIds.length}`)
+        gateway.logger.debug(`[Gateway] requestMembers guildId: ${guildId} -> setting user limit based on userIds length: ${options.userIds.length}`)
 
         options.limit = options.userIds.length
       }
 
       const members =
-        !gateway.cache.requestMembers?.enabled || !options?.nonce
+        !gateway.cache.requestMembers.enabled || !options?.nonce
           ? []
           : new Promise<Camelize<DiscordMemberWithUser[]>>((resolve, reject) => {
               // Should never happen.
-              if (!gateway.cache.requestMembers?.enabled || !options?.nonce) {
+              if (!gateway.cache.requestMembers.enabled || !options?.nonce) {
                 reject(new Error("Can't request the members without the nonce or with the feature disabled."))
                 return
               }
@@ -329,7 +331,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     async leaveVoiceChannel(guildId) {
       const shardId = gateway.calculateShardId(guildId)
 
-      logger.debug(`[Gateway] leaveVoiceChannel guildId: ${guildId} Shard ${shardId}`)
+      gateway.logger.debug(`[Gateway] leaveVoiceChannel guildId: ${guildId} Shard ${shardId}`)
 
       await gateway.sendPayload(shardId, {
         op: GatewayOpcodes.VoiceStateUpdate,
@@ -425,7 +427,7 @@ export interface CreateGatewayManagerOptions {
    */
   version?: number
   /** The events handlers */
-  events: ShardEvents
+  events?: ShardEvents
   /** This managers cache related settings. */
   cache?: {
     requestMembers?: {
@@ -434,10 +436,13 @@ export interface CreateGatewayManagerOptions {
        * @default false
        */
       enabled?: boolean
-      /** The pending requests. */
-      pending: Collection<string, RequestMemberRequest>
     }
   }
+  /**
+   * The logger that the gateway manager will use
+   * @default logger // The logger exported by `@discordeno/utils`
+   */
+  logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
 }
 
 export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
@@ -452,6 +457,8 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
   >
   /** The shards that are created. */
   shards: Map<number, Shard>
+  /** The logger for the gateway manager */
+  logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
   /** Determine max number of shards to use based upon the max concurrency. */
   calculateTotalShards: () => number
   /** Determine the id of the worker which is handling a shard. */
@@ -541,6 +548,18 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
    * @see {@link https://discord.com/developers/docs/topics/gateway#update-voice-state}
    */
   leaveVoiceChannel: (guildId: BigString) => Promise<void>
+  /** This managers cache related settings. */
+  cache: {
+    requestMembers: {
+      /**
+       * Whether or not request member requests should be cached.
+       * @default false
+       */
+      enabled: boolean
+      /** The pending requests. */
+      pending: Collection<string, RequestMemberRequest>
+    }
+  }
 }
 
 export interface RequestMemberRequest {

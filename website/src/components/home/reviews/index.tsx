@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   ReviewsBox,
   ReviewsElement,
@@ -11,7 +10,7 @@ import {
   StarContainer,
   StarIcon,
 } from '@site/src/styling'
-import { DiscordLibraries, IReview } from '@site/src/types'
+import { DiscordLibraries, type IReview } from '@site/src/types'
 
 const reviewList: IReview[] = [
   {
@@ -199,7 +198,7 @@ export default function DiscordenoReviews() {
                       </svg>
                       {String(review.bot.guild_count).replace(
                         /\B(?=(\d{3})+(?!\d))/g,
-                        ','
+                        ',',
                       )}{' '}
                       guilds
                     </div>

@@ -102,6 +102,7 @@ export function guildBannerUrl(
  * Builds a URL to the guild icon stored in the Discord CDN.
  *
  * @param guildId - The ID of the guild to get the link to the banner for.
+ * @param imageHash - The hash identifying the event cover image.
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined` if no banner has been set.
  */
@@ -176,7 +177,6 @@ export function guildDiscoverySplashUrl(
  * Builds the URL to a guild scheduled event cover stored in the Discord CDN.
  *
  * @param eventId - The ID of the scheduled event to get the cover of.
- * @param imageHash - The hash identifying the event cover image.
  * @param options - The parameters for the building of the URL.
  * @returns The link to the resource or `undefined`.
  */

@@ -10,7 +10,6 @@ on:
     paths:
       - 'website/**'
       - '.github/workflows/site.yml'
-      - 'jsdoc2md.json'
       - 'typedoc.json'
       - 'package.json'
       - 'packages/**'
@@ -26,7 +25,6 @@ permissions:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
     name: Build Docusaurus
@@ -73,7 +71,42 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./website/build
-
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Get yarn cache directory path (root)
+        id: yarn-cache-dir-path-root
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path-root.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: yarn install (root)
+        run: yarn install --immutable
+      - name: Build all pkg
+        run: yarn release-build
+      - name: Build docs
+        run: yarn build:doc
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+        working-directory: ./website
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-site-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-site-
+      - run: yarn install --immutable
+        working-directory: ./website
+      - run: yarn typecheck
+        working-directory: ./website
   deploy:
     environment:
       name: github-pages

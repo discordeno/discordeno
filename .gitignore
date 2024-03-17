@@ -15,16 +15,6 @@ node_modules
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-proxies/*/.yarn/*
-!proxies/*/.yarn/patches
-!proxies/*/.yarn/plugins
-!proxies/*/.yarn/releases
-!proxies/*/.yarn/sdks
-!proxies/*/.yarn/versions
-site/api_reference/generated/classes
-site/api_reference/generated/enums
-site/api_reference/generated/interfaces
-site/api_reference/generated/modules
 website/api_reference/generated/classes/*.md
 website/api_reference/generated/enums/*.md
 website/api_reference/generated/interfaces/*.md

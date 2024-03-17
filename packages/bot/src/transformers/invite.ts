@@ -9,8 +9,8 @@ export function transformInvite(bot: Bot, payload: { invite: DiscordInviteCreate
   if (props.code && payload.invite.code) invite.code = payload.invite.code
   if (props.createdAt && payload.invite.created_at) invite.createdAt = Date.parse(payload.invite.created_at)
   if (props.inviter && payload.invite.inviter) invite.inviter = bot.transformers.user(bot, payload.invite.inviter)
-  if (props.maxAge && payload.invite.max_age) invite.maxAge = payload.invite.max_age
-  if (props.maxUses && payload.invite.max_uses) invite.maxUses = payload.invite.max_uses
+  if (props.maxAge) invite.maxAge = payload.invite.max_age
+  if (props.maxUses) invite.maxUses = payload.invite.max_uses
   if (props.targetType && payload.invite.target_type) invite.targetType = payload.invite.target_type
   if (props.targetUser && payload.invite.target_user) invite.targetUser = bot.transformers.user(bot, payload.invite.target_user)
   if (props.targetApplication && payload.invite.target_application)
@@ -26,20 +26,15 @@ export function transformInvite(bot: Bot, payload: { invite: DiscordInviteCreate
     if (props.guildId && payload.invite.guild?.id) invite.guildId = bot.transformers.snowflake(payload.invite.guild.id)
     if (props.approximateMemberCount && payload.invite.approximate_member_count)
       invite.approximateMemberCount = payload.invite.approximate_member_count
-    if (props.approximatePresenceCount && payload.invite.approximate_presence_count)
+    if (props.approximatePresenceCount && payload.invite.approximate_presence_count !== undefined)
       invite.approximatePresenceCount = payload.invite.approximate_presence_count
-    if (props.guildScheduledEvent && payload.invite.guild_scheduled_event) {
-      invite.guildScheduledEvent = payload.invite.guild_scheduled_event
-        ? bot.transformers.scheduledEvent(bot, payload.invite.guild_scheduled_event)
-        : undefined
-    }
+    if (props.guildScheduledEvent && payload.invite.guild_scheduled_event)
+      invite.guildScheduledEvent = bot.transformers.scheduledEvent(bot, payload.invite.guild_scheduled_event)
     if (props.stageInstance && invite.guildId && payload.invite.stage_instance) {
-      invite.stageInstance = payload.invite.stage_instance
-        ? bot.transformers.inviteStageInstance(bot, {
-            ...payload.invite.stage_instance,
-            guildId: invite.guildId,
-          })
-        : undefined
+      invite.stageInstance = bot.transformers.inviteStageInstance(bot, {
+        ...payload.invite.stage_instance,
+        guildId: invite.guildId,
+      })
     }
     if (props.expiresAt && payload.invite.expires_at) {
       invite.expiresAt = Date.parse(payload.invite.expires_at)

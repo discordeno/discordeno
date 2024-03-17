@@ -1,4 +1,4 @@
-import { delay, logger } from '@discordeno/utils'
+import { delay } from '@discordeno/utils'
 import type { RestManager, SendRequestOptions } from './types.js'
 
 export class Queue {
@@ -78,7 +78,7 @@ export class Queue {
     this.processing = true
 
     while (this.waiting.length > 0) {
-      logger.debug(`[Queue] ${this.getQueueType()} ${this.url} process waiting while loop ran.`)
+      this.rest.logger.debug(`[Queue] ${this.getQueueType()} ${this.url} process waiting while loop ran.`)
       if (this.isRequestAllowed()) {
         // Resolve the next item in the queue
         this.waiting.shift()?.()
@@ -100,7 +100,7 @@ export class Queue {
     this.processingPending = true
 
     while (this.pending.length > 0) {
-      logger.debug(`Queue ${this.getQueueType()} ${this.url} process pending while loop ran with ${this.pending.length}.`)
+      this.rest.logger.debug(`Queue ${this.getQueueType()} ${this.url} process pending while loop ran with ${this.pending.length}.`)
       if (!this.firstRequest && !this.isRequestAllowed()) {
         const now = Date.now()
         const future = this.frozenAt + this.interval
@@ -144,7 +144,7 @@ export class Queue {
       }
     }
 
-    logger.debug(`Queue ${this.getQueueType()} ${this.url} process pending while loop exited with ${this.pending.length}.`)
+    this.rest.logger.debug(`Queue ${this.getQueueType()} ${this.url} process pending while loop exited with ${this.pending.length}.`)
 
     // Mark as false so next pending request can be triggered by new loop.
     this.processingPending = false
@@ -183,24 +183,24 @@ export class Queue {
       return
     }
 
-    logger.debug(`[Queue] ${this.getQueueType()} ${this.url}. Delaying delete for ${this.deleteQueueDelay}ms`)
+    this.rest.logger.debug(`[Queue] ${this.getQueueType()} ${this.url}. Delaying delete for ${this.deleteQueueDelay}ms`)
 
     // Delete in a minute giving a bit of time to allow new requests that may reuse this queue
     clearTimeout(this.deleteQueueTimeout)
     this.deleteQueueTimeout = setTimeout(() => {
       if (!this.isQueueClearable()) {
-        logger.debug(`[Queue] ${this.getQueueType()} ${this.url}. is not clearable. Restarting processing of queue.`)
+        this.rest.logger.debug(`[Queue] ${this.getQueueType()} ${this.url}. is not clearable. Restarting processing of queue.`)
         this.processPending()
         return
       }
 
-      logger.debug(`[Queue] ${this.getQueueType()} ${this.url}. Deleting`)
+      this.rest.logger.debug(`[Queue] ${this.getQueueType()} ${this.url}. Deleting`)
 
       if (this.timeoutId) clearTimeout(this.timeoutId)
 
       // No requests have been requested for this queue so we nuke this queue
       this.rest.queues.delete(`${this.requestAuthorization}${this.url}`)
-      logger.debug(
+      this.rest.logger.debug(
         `[Queue] ${this.getQueueType()} ${this.url}. Deleted! Remaining: (${this.rest.queues.size})`,
         [...this.rest.queues.values()].map((queue) => `${queue.getQueueType()}${queue.url}`),
       )

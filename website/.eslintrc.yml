@@ -1,14 +1,29 @@
+root: true
 env:
   browser: true
   es2021: true
 extends:
-  - plugin:react/recommended
   - standard-with-typescript
-  - prettier
+  - plugin:react/recommended
+  - plugin:react/jsx-runtime
+  - plugin:prettier/recommended
 overrides: []
 parserOptions:
   ecmaVersion: latest
   sourceType: module
+  project: ['./tsconfig.json']
+ignorePatterns:
+  - .docusaurus
+  - .yarn
+  - build
+  - node_modules
+  - api_reference
+settings:
+  react:
+    version: 18.2.0
 plugins:
   - react
-rules: {}
+rules:
+  '@typescript-eslint/prefer-nullish-coalescing': off
+  '@typescript-eslint/strict-boolean-expressions': off
+  '@typescript-eslint/explicit-function-return-type': off

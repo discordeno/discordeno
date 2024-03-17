@@ -1,11 +1,11 @@
-export type FeatureList = {
+export interface FeatureList {
   data: {
     feature: FeatureItem
     featureList: FeatureItem[]
   }
 }
 
-export type FeatureItem = {
+export interface FeatureItem {
   title: string
   Svg: JSX.Element
   description: JSX.Element
@@ -35,7 +35,7 @@ export enum DiscordLibraries {
   CUSTOM = 'Custom', // Custom library
 }
 
-export type IReview = {
+export interface IReview {
   review: string // the review
   bot: {
     username: string // Clyde

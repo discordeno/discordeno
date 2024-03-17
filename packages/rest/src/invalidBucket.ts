@@ -17,6 +17,7 @@ export function createInvalidRequestBucket(options: InvalidRequestBucketOptions)
     errorStatuses: options.errorStatuses ?? [401, 403, 429],
     activeRequests: options.requested ?? 0,
     processing: false,
+    logger: options.logger ?? logger,
 
     waiting: [],
 
@@ -55,14 +56,14 @@ export function createInvalidRequestBucket(options: InvalidRequestBucketOptions)
       bucket.processing = true
 
       while (bucket.waiting.length > 0) {
-        logger.info(
+        bucket.logger.info(
           `[InvalidBucket] processing waiting queue while loop ran with ${bucket.waiting.length} pending requests to be made. ${JSON.stringify(
             bucket,
           )}`,
         )
 
         if (!bucket.isRequestAllowed() && bucket.resetAt !== undefined) {
-          logger.warn(
+          bucket.logger.warn(
             `[InvalidBucket] processing waiting queue is now paused until more requests are available. ${
               bucket.waiting.length
             } pending requests. ${JSON.stringify(bucket)}`,
@@ -93,7 +94,7 @@ export function createInvalidRequestBucket(options: InvalidRequestBucketOptions)
       }
 
       bucket.invalidRequests += 1
-      logger.warn(`[InvalidBucket] an invalid request was made. Increasing invalidRequests count to ${bucket.invalidRequests}`)
+      bucket.logger.warn(`[InvalidBucket] an invalid request was made. Increasing invalidRequests count to ${bucket.invalidRequests}`)
     },
   }
 
@@ -115,6 +116,8 @@ export interface InvalidRequestBucketOptions {
   errorStatuses?: number[]
   /** The amount of requests that were requested from this bucket. */
   requested?: number
+  /** The logger that will be used for the bucket */
+  logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
 }
 
 export interface InvalidRequestBucket {
@@ -136,6 +139,8 @@ export interface InvalidRequestBucket {
   waiting: Array<(value: void | PromiseLike<void>) => void>
   /** Whether or not the waiting queue is already processing. */
   processing: boolean
+  /** The logger that will be used for the bucket */
+  logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
 
   /** Gives the number of requests that are currently allowed. */
   requestsAllowed: () => number

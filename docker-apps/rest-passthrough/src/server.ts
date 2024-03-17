@@ -1,3 +1,4 @@
+import type { MultipartFile, MultipartValue } from '@fastify/multipart'
 import { createRestManager, type RequestMethods } from '@discordeno/rest'
 import { buildFastifyApp } from './fastify.js'
 
@@ -25,9 +26,12 @@ app.all('/*', async (request, reply) => {
     url = url.slice(url.indexOf('/', 2))
   }
 
+  const isMultipart = request.headers['content-type']?.startsWith('multipart/form-data')
+  const body = request.method !== 'GET' && request.method !== 'DELETE' ? request.body : undefined
+
   try {
     const result = await discordRestManager.makeRequest(request.method as RequestMethods, url, {
-      body: request.body,
+      body: isMultipart && body ? await parseMultiformBody(body) : body,
     })
 
     if (result) {
@@ -53,4 +57,23 @@ try {
 } catch (error) {
   app.log.error(error)
   process.exit(1)
+}
+
+async function parseMultiformBody(body: unknown): Promise<FormData> {
+  const form = new FormData()
+
+  if (typeof body !== 'object' || !body) return form
+
+  for (const objectValue of Object.values(body)) {
+    const value = objectValue as MultipartFile | MultipartValue
+
+    if (value.type === 'file') {
+      form.append(value.fieldname, new Blob([await value.toBuffer()]), value.filename)
+    }
+    if (value.type === 'field' && typeof value.value === 'string') {
+      form.append(value.fieldname, value.value)
+    }
+  }
+
+  return form
 }
