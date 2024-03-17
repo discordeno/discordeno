@@ -1,0 +1,23 @@
+{
+  "name": "reaction-roles",
+  "description": "",
+  "main": "dist/index.js",
+  "type": "module",
+  "license": "ISC",
+  "private": true,
+  "packageManager": "yarn@4.0.2",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist",
+    "setup-dd": ""
+  },
+  "dependencies": {
+    "@discordeno/bot": "19.0.0-next.d81b28a",
+    "dotenv": "^16.4.1"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.3.9",
+    "@swc/core": "^1.4.0",
+    "@types/node": "^20.11.17"
+  }
+}
