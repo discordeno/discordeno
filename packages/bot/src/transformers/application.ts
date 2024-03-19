@@ -7,6 +7,7 @@ import {
   type Guild,
   type Team,
   type User,
+  type DiscordApplicationIntegrationType,
 } from '../index.js'
 
 export function transformApplication(bot: Bot, payload: { application: DiscordApplication; shardId: number }): Application {
@@ -38,6 +39,7 @@ export function transformApplication(bot: Bot, payload: { application: DiscordAp
     bot: payload.application.bot ? bot.transformers.user(bot, payload.application.bot as DiscordUser) : undefined,
     interactionsEndpointUrl: payload.application.interactions_endpoint_url,
     redirectUris: payload.application.redirect_uris,
+    integrationTypesConfig: payload.application.integration_types_config,
   } as Application
 
   return bot.transformers.customizers.application(bot, payload.application, application)
@@ -66,4 +68,5 @@ export interface Application {
   bot?: User
   redirectUris?: string[]
   interactionsEndpointUrl?: string
+  integrationTypesConfig?: DiscordApplicationIntegrationType
 }

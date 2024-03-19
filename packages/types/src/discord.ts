@@ -373,6 +373,8 @@ export interface DiscordApplication {
   tags?: string[]
   /** settings for the application's default in-app authorization link, if enabled */
   install_params?: DiscordInstallParams
+  /** Default scopes and permissions for each supported installation context.  */
+  integration_types_config?: DiscordApplicationIntegrationType
   /** the application's default custom authorization link, if enabled */
   custom_install_url?: string
   /** the application's role connection verification entry point, which when configured will render the app as a verification method in the guild role verification configuration */
@@ -385,6 +387,13 @@ export interface DiscordApplication {
   redirect_uris?: string[]
   /** Interactions endpoint URL for the app */
   interactions_endpoint_url?: string
+}
+
+export enum DiscordApplicationIntegrationType {
+  /** App is installable to servers */
+  GuildInstall = 0,
+  /** App is installable to users */
+  UserInstall = 1,
 }
 
 export type DiscordTokenExchange = DiscordTokenExchangeAuthorizationCode | DiscordTokenExchangeRefreshToken | DiscordTokenExchangeClientCredentials

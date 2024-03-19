@@ -4,6 +4,7 @@ import type {
   AutoModerationTriggerTypes,
   DiscordApplicationCommandOption,
   DiscordApplicationCommandOptionChoice,
+  DiscordApplicationIntegrationType,
   DiscordAttachment,
   DiscordAutoModerationRuleTriggerMetadataPresets,
   DiscordChannel,
@@ -1271,6 +1272,8 @@ export interface EditApplication {
   roleConnectionsVerificationUrl?: string
   /** Settings for the app's default in-app authorization link, if enabled */
   installParams?: DiscordInstallParams
+  /** Default scopes and permissions for each supported installation context. */
+  integrationTypesConfig?: DiscordApplicationIntegrationType
   /**
    * App's public flags
    *
