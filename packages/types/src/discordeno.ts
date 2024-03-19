@@ -458,7 +458,7 @@ export interface CreateSlashApplicationCommand {
   defaultMemberPermissions?: PermissionStrings[]
   /** Installation context(s) where the command is available */
   integrationTypes?: DiscordApplicationIntegrationType[]
-  /** Interaction context(s) where the command can be used */
+  /** Interaction context(s) where the command can be used, only for globally-scoped commands. By default, all interaction context types included for new commands. */
   contexts?: DiscordInteractionContextType[]
   /**
    * Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
