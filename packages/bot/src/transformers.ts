@@ -31,6 +31,7 @@ import type {
   DiscordInviteStageInstance,
   DiscordMember,
   DiscordMessage,
+  DiscordMessageInteractionMetadata,
   DiscordPresenceUpdate,
   DiscordRole,
   DiscordScheduledEvent,
@@ -83,7 +84,7 @@ import { transformIntegration, type Integration } from './transformers/integrati
 import { transformInteraction, transformInteractionDataOption, type Interaction, type InteractionDataOption } from './transformers/interaction.js'
 import { transformInvite, type Invite } from './transformers/invite.js'
 import { transformMember, type Member } from './transformers/member.js'
-import { transformMessage, type Message } from './transformers/message.js'
+import { transformMessage, type Message, type MessageInteractionMetadata, transformMessageInteractionMetadata } from './transformers/message.js'
 import { transformGuildOnboarding, type GuildOnboarding } from './transformers/onboarding.js'
 import { transformPresence, type PresenceUpdate } from './transformers/presence.js'
 import { transformAllowedMentionsToDiscordAllowedMentions } from './transformers/reverse/allowedMentions.js'
@@ -117,6 +118,7 @@ export interface Transformers {
     channel: (bot: Bot, payload: DiscordChannel, channel: Channel) => any
     interaction: (bot: Bot, payload: DiscordInteraction, interaction: Interaction) => any
     message: (bot: Bot, payload: DiscordMessage, message: Message) => any
+    messageInteractionMetadata: (bot: Bot, payload: DiscordMessageInteractionMetadata, metadata: MessageInteractionMetadata) => any
     user: (bot: Bot, payload: DiscordUser, user: User) => any
     member: (bot: Bot, payload: DiscordMember, member: Member) => any
     role: (bot: Bot, payload: DiscordRole, role: Role) => any
@@ -292,6 +294,8 @@ export interface Transformers {
       locale: boolean
       guildLocale: boolean
       appPermissions: boolean
+      authorizingIntegrationOwners: boolean
+      context: boolean
     }
     invite: {
       channelId: boolean
@@ -340,6 +344,15 @@ export interface Transformers {
       embeds: boolean
       guildId: boolean
       id: boolean
+      interactionMetadata: {
+        id: boolean
+        type: boolean
+        userId: boolean
+        authorizingIntegrationOwners: boolean
+        originalResponseMessageId: boolean
+        interactedMessageId: boolean
+        triggeringInteractionMetadata: boolean
+      }
       interaction: {
         id: boolean
         member: boolean
@@ -533,6 +546,7 @@ export interface Transformers {
   user: (bot: Bot, payload: DiscordUser) => User
   member: (bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString) => Member
   message: (bot: Bot, payload: DiscordMessage) => Message
+  messageInteractionMetadata: (bot: Bot, payload: DiscordMessageInteractionMetadata) => MessageInteractionMetadata
   role: (bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }) => Role
   voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) => VoiceState
   interaction: (bot: Bot, payload: DiscordInteraction) => Interaction
@@ -601,6 +615,9 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
       },
       message(bot, payload, message) {
         return message
+      },
+      messageInteractionMetadata(bot, payload, metadata) {
+        return metadata
       },
       role(bot, payload, role) {
         return role
@@ -846,6 +863,8 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         locale: opts?.defaultDesiredPropertiesValue ?? false,
         guildLocale: opts?.defaultDesiredPropertiesValue ?? false,
         appPermissions: opts?.defaultDesiredPropertiesValue ?? false,
+        authorizingIntegrationOwners: opts?.defaultDesiredPropertiesValue ?? false,
+        context: opts?.defaultDesiredPropertiesValue ?? false,
       },
       invite: {
         channelId: opts?.defaultDesiredPropertiesValue ?? false,
@@ -894,6 +913,15 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         embeds: opts?.defaultDesiredPropertiesValue ?? false,
         guildId: opts?.defaultDesiredPropertiesValue ?? false,
         id: opts?.defaultDesiredPropertiesValue ?? false,
+        interactionMetadata: {
+          id: opts?.defaultDesiredPropertiesValue ?? false,
+          type: opts?.defaultDesiredPropertiesValue ?? false,
+          userId: opts?.defaultDesiredPropertiesValue ?? false,
+          authorizingIntegrationOwners: opts?.defaultDesiredPropertiesValue ?? false,
+          originalResponseMessageId: opts?.defaultDesiredPropertiesValue ?? false,
+          interactedMessageId: opts?.defaultDesiredPropertiesValue ?? false,
+          triggeringInteractionMetadata: opts?.defaultDesiredPropertiesValue ?? false,
+        },
         interaction: {
           id: opts?.defaultDesiredPropertiesValue ?? false,
           member: opts?.defaultDesiredPropertiesValue ?? false,
@@ -1095,6 +1123,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
     invite: options.invite ?? transformInvite,
     member: options.member ?? transformMember,
     message: options.message ?? transformMessage,
+    messageInteractionMetadata: options.messageInteractionMetadata ?? transformMessageInteractionMetadata,
     presence: options.presence ?? transformPresence,
     role: options.role ?? transformRole,
     user: options.user ?? transformUser,

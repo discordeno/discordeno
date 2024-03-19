@@ -1,13 +1,14 @@
 import {
+  DiscordApplicationIntegrationType,
   iconHashToBigInt,
   type ApplicationFlags,
   type Bot,
   type DiscordApplication,
   type DiscordUser,
   type Guild,
+  type OAuth2Scope,
   type Team,
   type User,
-  type DiscordApplicationIntegrationType,
 } from '../index.js'
 
 export function transformApplication(bot: Bot, payload: { application: DiscordApplication; shardId: number }): Application {
@@ -39,7 +40,26 @@ export function transformApplication(bot: Bot, payload: { application: DiscordAp
     bot: payload.application.bot ? bot.transformers.user(bot, payload.application.bot as DiscordUser) : undefined,
     interactionsEndpointUrl: payload.application.interactions_endpoint_url,
     redirectUris: payload.application.redirect_uris,
-    integrationTypesConfig: payload.application.integration_types_config,
+    integrationTypesConfig: payload.application.integration_types_config
+      ? {
+          [DiscordApplicationIntegrationType.GuildInstall]: payload.application.integration_types_config['0']
+            ? {
+                oauth2InstallParams: {
+                  scopes: payload.application.integration_types_config['0'].oauth2_install_params.scopes,
+                  permissions: bot.transformers.snowflake(payload.application.integration_types_config['0'].oauth2_install_params.permissions),
+                },
+              }
+            : undefined,
+          [DiscordApplicationIntegrationType.UserInstall]: payload.application.integration_types_config['1']
+            ? {
+                oauth2InstallParams: {
+                  scopes: payload.application.integration_types_config['1'].oauth2_install_params.scopes,
+                  permissions: bot.transformers.snowflake(payload.application.integration_types_config['1'].oauth2_install_params.permissions),
+                },
+              }
+            : undefined,
+        }
+      : undefined,
   } as Application
 
   return bot.transformers.customizers.application(bot, payload.application, application)
@@ -68,5 +88,15 @@ export interface Application {
   bot?: User
   redirectUris?: string[]
   interactionsEndpointUrl?: string
-  integrationTypesConfig?: DiscordApplicationIntegrationType
+  integrationTypesConfig?: Partial<Record<DiscordApplicationIntegrationType, ApplicationIntegrationTypeConfiguration>>
+}
+
+export interface ApplicationIntegrationTypeConfiguration {
+  /** Install params for each installation context's default in-app authorization link */
+  oauth2InstallParams: {
+    /** Scopes to add the application to the server with */
+    scopes: OAuth2Scope[]
+    /** Permissions to request for the bot role */
+    permissions: bigint
+  }
 }
