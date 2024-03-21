@@ -44,7 +44,7 @@
     "@types/node": "^20.11.25",
     "@types/sinon": "^17.0.3",
     "c8": "^9.1.0",
-    "chai": "^5.0.3",
+    "chai": "^5.1.0",
     "eslint": "^8.57.0",
     "eslint-config-discordeno": "*",
     "mocha": "^10.3.0",
