@@ -93,7 +93,7 @@ export interface Application {
 
 export interface ApplicationIntegrationTypeConfiguration {
   /** Install params for each installation context's default in-app authorization link */
-  oauth2InstallParams: {
+  oauth2InstallParams?: {
     /** Scopes to add the application to the server with */
     scopes: OAuth2Scope[]
     /** Permissions to request for the bot role */

@@ -396,7 +396,7 @@ export interface DiscordApplicationIntegrationTypeConfiguration {
    *
    * https://discord.com/developers/docs/resources/application#install-params-object-install-params-structure
    */
-  oauth2_install_params: {
+  oauth2_install_params?: {
     /** Scopes to add the application to the server with */
     scopes: OAuth2Scope[]
     /** Permissions to request for the bot role */
