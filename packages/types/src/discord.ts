@@ -478,6 +478,7 @@ export interface DiscordConnection {
 /** https://discord.com/developers/docs/resources/user#connection-object-services */
 export enum DiscordConnectionServiceType {
   BattleNet = 'battlenet',
+  Bungie = 'Bungie.net',
   eBay = 'ebay',
   EpicGames = 'epicgames',
   Facebook = 'facebook',
