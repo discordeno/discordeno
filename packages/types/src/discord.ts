@@ -2208,7 +2208,7 @@ export interface DiscordCreateApplicationCommand {
   /** Installation context(s) where the command is available */
   integration_types?: DiscordApplicationIntegrationType[]
   /** Interaction context(s) where the command can be used, only for globally-scoped commands. By default, all interaction context types included. */
-  contexts?: DiscordInteractionContextType[]
+  contexts?: DiscordInteractionContextType[] | null
   /**
    * Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
    *
