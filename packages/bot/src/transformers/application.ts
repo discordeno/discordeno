@@ -42,7 +42,7 @@ export function transformApplication(bot: Bot, payload: { application: DiscordAp
     redirectUris: payload.application.redirect_uris,
     integrationTypesConfig: payload.application.integration_types_config
       ? {
-          [DiscordApplicationIntegrationType.GuildInstall]: payload.application.integration_types_config['0']
+          [DiscordApplicationIntegrationType.GuildInstall]: payload.application.integration_types_config['0']?.oauth2_install_params
             ? {
                 oauth2InstallParams: {
                   scopes: payload.application.integration_types_config['0'].oauth2_install_params.scopes,
@@ -50,7 +50,7 @@ export function transformApplication(bot: Bot, payload: { application: DiscordAp
                 },
               }
             : undefined,
-          [DiscordApplicationIntegrationType.UserInstall]: payload.application.integration_types_config['1']
+          [DiscordApplicationIntegrationType.UserInstall]: payload.application.integration_types_config['1']?.oauth2_install_params
             ? {
                 oauth2InstallParams: {
                   scopes: payload.application.integration_types_config['1'].oauth2_install_params.scopes,
