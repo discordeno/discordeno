@@ -373,7 +373,12 @@ export interface DiscordApplication {
   tags?: string[]
   /** settings for the application's default in-app authorization link, if enabled */
   install_params?: DiscordInstallParams
-  /** Default scopes and permissions for each supported installation context.  */
+  /**
+   * Default scopes and permissions for each supported installation context.
+   *
+   * @remarks
+   * This is currently in preview.
+   */
   integration_types_config?: Partial<Record<`${DiscordApplicationIntegrationType}`, DiscordApplicationIntegrationTypeConfiguration>>
   /** the application's default custom authorization link, if enabled */
   custom_install_url?: string
@@ -2205,9 +2210,19 @@ export interface DiscordCreateApplicationCommand {
   options?: DiscordApplicationCommandOption[]
   /** Set of permissions represented as a bit set */
   default_member_permissions?: string | null
-  /** Installation context(s) where the command is available */
+  /**
+   * Installation context(s) where the command is available
+   *
+   * @remarks
+   * This is currently in preview.
+   */
   integration_types?: DiscordApplicationIntegrationType[]
-  /** Interaction context(s) where the command can be used, only for globally-scoped commands. By default, all interaction context types included. */
+  /**
+   * Interaction context(s) where the command can be used, only for globally-scoped commands. By default, all interaction context types included.
+   *
+   * @remarks
+   * This is currently in preview.
+   */
   contexts?: DiscordInteractionContextType[] | null
   /**
    * Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.

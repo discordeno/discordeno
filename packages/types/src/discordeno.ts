@@ -1281,7 +1281,12 @@ export interface EditApplication {
   roleConnectionsVerificationUrl?: string
   /** Settings for the app's default in-app authorization link, if enabled */
   installParams?: DiscordInstallParams
-  /** Default scopes and permissions for each supported installation context. */
+  /**
+   * Default scopes and permissions for each supported installation context.
+   *
+   * @remarks
+   * This is currently in preview.
+   */
   integrationTypesConfig?: DiscordApplicationIntegrationType
   /**
    * App's public flags
