@@ -44,12 +44,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/busboy@npm:^1.0.0":
-  version: 1.2.1
-  resolution: "@fastify/busboy@npm:1.2.1"
-  dependencies:
-    text-decoding: "npm:^1.0.0"
-  checksum: 1d1963c64992c5f4cd26aceb399dbddfcf2824e5259a7b92c77d2137e67d55e6bc416efe430bf59e897e3a57dad66fec8e51297f4858b855c3b38c7c17818b43
+"@fastify/busboy@npm:^2.1.0":
+  version: 2.1.1
+  resolution: "@fastify/busboy@npm:2.1.1"
+  checksum: 2bb8a7eca8289ed14c9eb15239bc1019797454624e769b39a0b90ed204d032403adc0f8ed0d2aef8a18c772205fa7808cf5a1b91f21c7bfc7b6032150b1062c5
   languageName: node
   linkType: hard
 
@@ -96,17 +94,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/multipart@npm:^8.1.0":
-  version: 8.1.0
-  resolution: "@fastify/multipart@npm:8.1.0"
+"@fastify/multipart@npm:^8.2.0":
+  version: 8.2.0
+  resolution: "@fastify/multipart@npm:8.2.0"
   dependencies:
-    "@fastify/busboy": "npm:^1.0.0"
+    "@fastify/busboy": "npm:^2.1.0"
     "@fastify/deepmerge": "npm:^1.0.0"
     "@fastify/error": "npm:^3.0.0"
     fastify-plugin: "npm:^4.0.0"
     secure-json-parse: "npm:^2.4.0"
     stream-wormhole: "npm:^1.1.0"
-  checksum: 427aa1a3590d22467bf9121fc036dc58dd48125f7c74ee5aa5b18a6c64e02f4b3be2aa23cdeec4068cba6ce4abc0dde352b7706ca7f0ba36cf589261f2becc0a
+  checksum: 2e96611bc1f9923c9b36e3d8724ddbc30662899efb200e6d6f4d4556bd753d43965e378457e38b59526af564dcae82e77bed75af241fb07dab6aa7264cefa27e
   languageName: node
   linkType: hard
 
@@ -2455,7 +2453,7 @@ __metadata:
     "@discordeno/rest": "npm:19.0.0-next.d81b28a"
     "@fastify/env": "npm:^4.3.0"
     "@fastify/helmet": "npm:^11.1.1"
-    "@fastify/multipart": "npm:^8.1.0"
+    "@fastify/multipart": "npm:^8.2.0"
     "@favware/cliff-jumper": "npm:^3.0.1"
     "@swc/cli": "npm:^0.3.10"
     "@swc/core": "npm:^1.4.13"
@@ -2819,13 +2817,6 @@ __metadata:
     mkdirp: "npm:^1.0.3"
     yallist: "npm:^4.0.0"
   checksum: 2042bbb14830b5cd0d584007db0eb0a7e933e66d1397e72a4293768d2332449bc3e312c266a0887ec20156dea388d8965e53b4fc5097f42d78593549016da089
-  languageName: node
-  linkType: hard
-
-"text-decoding@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "text-decoding@npm:1.0.0"
-  checksum: 73c604f285d86d653815a5c32b86ffef9ffe27074bc3e5da3718ac46bba7c04775bb3da7b13c60e3a6525d1acce7cc3442b39e25a3a43f211c866ba9ba414207
   languageName: node
   linkType: hard
 
