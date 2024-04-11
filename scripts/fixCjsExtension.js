@@ -10,7 +10,7 @@ for await (const dir of dirs) {
       }
       const content = await fs.promises.readFile(`dist/cjs${dir}/${file}`, 'utf-8')
       await fs.promises.rm(`dist/cjs${dir}/${file}`)
-      fs.promises.writeFile(`dist/cjs${dir}/${file.slice(0, -3)}.cjs`, content.replace(/\.js/g, '.cjs'))
+      fs.promises.writeFile(`dist/cjs${dir}/${file.slice(0, -3)}.cjs`, content.replace(/\.js(?!on)/g, '.cjs'))
     }),
   )
 }
