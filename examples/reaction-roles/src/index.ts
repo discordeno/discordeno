@@ -1,7 +1,6 @@
 import { createBot } from '@discordeno/bot'
 import { config } from 'dotenv'
 
-import commands from './commands/index.js'
 import events from './events/index.js'
 
 config()
@@ -34,16 +33,6 @@ bot.transformers.desiredProperties.interaction.guildId = true
 bot.transformers.desiredProperties.interaction.channelId = true
 
 bot.transformers.desiredProperties.role.id = true
-
-const guildId = 'REPLACE WITH YOUR GUILD ID'
-
-// `upsertGuildApplicationCommands` is a promise, but if we await and we got ratelimited from the discord endpoint it can force the code to wait for the ratelimit end
-// NOTE: This will cause ratelimit, especially in development where you may restart your bot a lot, you might want to either:
-//  - Move the updating of commands in a separate file
-//  - Conditionally call based on the exiting commands, this does require some work to save the the previous state of commands
-bot.rest
-  .upsertGuildApplicationCommands(guildId, [...commands.values()])
-  .catch((e) => bot.logger.error('There was an error when updating the global commands', e))
 
 await bot.start()
 

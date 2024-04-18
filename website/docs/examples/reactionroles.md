@@ -306,33 +306,21 @@ Whenever you write a little bit of code, stop and test to make sure it does what
 
 ### Setting Up Slash Creation
 
-Now, we should take a minute to test this code out. However, this code as is does nothing it is just a file that exports an object. Let's make it so that whenever we start our bot, it will create this command for us on our test server. Go back to your `src/index.ts` file where you created your bot.
+Now, we should take a minute to test this code out. However, this code as is does nothing it is just a file that exports an object. Let's make it so we can create this command on our test server. Create a file named `src/register-commands.ts`.
 
 An alternative to creating the commands in a test server is to create them in all servers (globally), this can be accomplished by using the `upsertGlobalApplicationCommands`, but in this guide we will create our commands only in a test server.
 
 We will also need to import our `command` object we defined in the `src/commands/roles.ts` before that contains the data for Discord to register our command.
 
 ```ts
-import { createBot } from '@discordeno/bot'
-import { config } from 'dotenv'
-
-// insert-next-line
+import { bot } from './index.js'
 import roles from './commands/roles.js'
-
-config()
-
-const bot = createBot({
-  token: process.env.TOKEN,
-  events: {},
-})
 
 // insert-next-line
 const guildId = 'REPLACE WITH YOUR GUILD ID'
 
 // insert-next-line
 await bot.rest.upsertGuildApplicationCommands(guildId, [roles])
-
-await bot.start()
 ```
 
 Now the only thing that remains to change with this code is to use your actual server's guild id in the `guildId` variable we defined, all you need to do is replace the `REPLACE WITH YOUR GUILD ID` with your actual id of the server you will use for testing. This will make the bot automatically update every command whenever the bot is started.
@@ -358,23 +346,14 @@ You can structure the command discovery in any way you might prefer, in this gui
 
 Now every time you want to add a new command to your bot you can add it in the array together with the `roles` array and it will be stored in the `commands` map.
 
-Going back to `src/index.ts` we now need to use the map we just created, so let's import it and use it.
+Going back to `src/register-commands.ts` we now need to use the map we just created, so let's import it and use it.
 
 ```ts
-import { createBot } from '@discordeno/bot'
-import { config } from 'dotenv'
-
+import { bot } from './index.js'
 // remove-next-line
 import roles from './commands/roles.js'
 // insert-next-line
 import commands from './commands/index.js'
-
-config()
-
-const bot = createBot({
-  token: process.env.TOKEN,
-  events: {},
-})
 
 // By now this variable should have your server guild id instead of REPLACE WITH YOUR GUILD ID
 const guildId = 'REPLACE WITH YOUR GUILD ID'
@@ -383,8 +362,6 @@ const guildId = 'REPLACE WITH YOUR GUILD ID'
 await bot.rest.upsertGuildApplicationCommands(guildId, [roles])
 // insert-next-line
 await bot.rest.upsertGuildApplicationCommands(guildId, [...commands.values()])
-
-await bot.start()
 ```
 
 Go ahead and start your bot, you will see the command is available on your server by typing `/roles reactions create`. If you try and execute the command it will fail since we have not added the handling of this command yet.
@@ -438,7 +415,6 @@ To tell discordeno to run the events we need another change, back to our `src/in
 import { createBot } from '@discordeno/bot'
 import { config } from 'dotenv'
 
-import commands from './commands/index.js'
 import events from './events/index.js'
 
 config()

@@ -4,7 +4,8 @@ Example bot for reaction-roles using Discord Interactions and not classic reacti
 
 ## Setup
 
-Rename `.env.example` to `.env` and add your bot token in the `TOKEN` variable
+1. Rename `.env.example` to `.env` and add your bot token in the `TOKEN` variable
+1. Replace `REPLACE WITH YOUR GUILD ID` in `src/register-commands.ts` with your test guild id
 
 ## Run the bot
 
