@@ -624,7 +624,20 @@ Let's start by the object we pass to `sendMessage`, in here we define what data 
 
 This applies pretty much identically to the `interaction.respond` function that we call, it too has a `content` for the message and a `components` array with inside an action row that this time has 3 buttons that we define.
 
-If you save and run the bot, after you run the command you might start to have a problem, Discord still says that the application did not respond, but how is that possibile? We just added the code to respond to the interaction, this is true but we forgot a thing, a discordeno concept called `desired properties`, this is an optimization discordeno builds to make your code more performant but can be found annoying or unnecessary, to explain how the `desired properties` work we need to talk about how Discord sends us data, Discord uses his own way to require/give data to who consumes the api we won't go deep into this, you can refer to the official documentation if you are interested, but know that the way Discord sends us data is not the way that we (might) want it for this reason discordeno needs to map it from the Discord format to the discordeno format, this is done via `transformers` defined in the `bot.transformers` object, we won't use them directly but we need to tell them what we need from the pile of data Discord provides us. If we look back to the `src/events/interactionCreate.ts` file we can notice that we use `interaction.type` and `interaction.data`, and if in our command we can find we use `interaction.channelId` and if we look what the `interaction.respond` does in our command we can see that it uses `interaction.id` and `interaction.token`, and if the look at our `interaction.respond` we see that we are using 1 value from the role object, `role.id`, so we need to add all of those 6 properties to the `desired properties` list, we can do this by going back to `src/index.ts` and add a few lines:
+If you save and then run the bot, you might noticed that Discord still says that the application did not respond, but how is that possibile?
+
+Although we just added the code to respond to the interaction, we have forgot a Discordeno concept called `desired properties`. This is an optimization Discordeno uses to make your code more performant but can be found annoying or unnecessary.
+
+To explain how the `desired properties` work we need to talk about how Discord sends us data. Discord uses its own way to require/give data to who consumes the API. This guide won't go deep into this, but if you are interested can refer to the official documentation.
+
+The way Discord sends us data is not the way that we (might) want it and for that reason Discordeno needs to map it from the Discord format to the Discordeno format. This is done via `transformers` defined in the `bot.transformers` object to tell Discordeno what we need from the pile of data Discord provides us.
+
+Looking through the code we have written so far we can see that
+
+- We use `interaction.type` and `interaction.data` in the `src/events/interactionCreate.ts` file.
+- We use `interaction.channelId`, `interaction.id`, `interaction.token`, and `role.id` in our command.
+
+We need to add all of properties that we use to the `desired properties` list, and to do so we go back to `src/index.ts` and add a few lines:
 
 ```ts
 // REST OF YOUR CODE
@@ -659,18 +672,18 @@ If we try again now we'll finally see our message with 3 buttons. But if we clic
 
 ### Handling interaction beyond commands
 
-So now we have a problem, discord is saying that we aren't responding to the button click, and it is in fact right, we aren't, we still need to make more changes to our command and event files. The problem is rather simple: we need a way to get the interaction of the user clicking, for example, the interaction of that "Add" button after the user uses the command.
+Discord is saying that we aren't responding to the button click, so we still need to make more changes to our command and event files. The problem is rather simple: we need a way to get the interaction of the user clicking, for example, the interaction of that "Add" button after the user uses the command.
 
-Interactions do not "chain", but they do have some data we can use to connect them: in this case we can use the `message` property, which is defined if the interaction Discord sent us comes from an user interacting with a component, in our case a button. This seems perfect, we now have a way to tell wether or not we need to do something with an interaction. This is a step forwards but we still face an issue: **how** do we get the data from the interaction of the button click in our command?
+Interactions do not "chain", but they do have some data we can use to connect them. In this case we can use the `message` property, (which is defined if the interaction Discord sent us comes from a user interacting with a message component, like a button). This seems perfect, we now have a way to tell whether or not we need to do something with an interaction. We still face an issue: **how** do we get the data from the interaction of the button click in our command?
 
 You can get creative and do what you think is the most appropriate thing to handle this situation, a few examples are:
 
 - `Collectors` - What we will use in this example guide.
 - Manual check of the customId in the global event.
 
-To explain what a `collector` is we can take as an example an array. In an array we can read, add and remove items. So what if we had a structure which can "collect" items, and notify us when it collects an item we actually need? This sounds like it solves our issue, so let's implement this Collector class, in this guide we will write it a very simple way, but there are enhancements you might want to add; we will discuss this later.
+To explain what a `collector` is, let's take an array as an example. In an array, we can read, add, and remove items. So what if we had a structure which can "collect" items, and notify us when it collects an item we actually need? This sounds like it solves our issue, so let's implement this Collector class. In this guide we will write it in a very simple way, but there are enhancements you might want to add, which we will discuss later.
 
-Let's create a `src/collector.ts` file, to help us we can use a nodejs feature `EventEmitter`, we won't explain what an event emitter is, just know it makes your life easier to create this:
+Let's create a `src/collector.ts` file. We will be using NodeJS's `EventEmitter` feature to create this Collector class. We won't explain what an event emitter is, just know it makes your life easier to create this:
 
 ```ts
 import { EventEmitter } from 'node:events'
@@ -772,7 +785,7 @@ async execute(interaction, args: CommandArgs) {
 // THE REST OF YOUR CODE
 ```
 
-In the `onItem` function we are making sure we are only responding if the message object of the interaction is for this command, this is accomplished by checking the `i.message.id` and comparing it to the id of the message we just sent, but wait, you might think, we don't have it, do we? And you would be right, as of right now, we don't. We need to make a small change: we can get the message object from the return value of `interaction.respond`, but we also need to add an `interaction.defer` before. We won't go into details as for why we need to do this, just know it is due to how Discord interactions work.
+In the `onItem` function, we are making sure we are only responding if the message object of the interaction is for this command. This is accomplished by checking the `i.message.id` and comparing it to the id of the message we just sent. But wait, you might think, we don't have the ID of the message we just sent, do we? And you would be right, as of right now, we don't. We need to make a small change: we can get the message object from the return value of `interaction.respond`. We also need to add an `interaction.defer` before `interaction.respond`. We won't go into details as for why we need to do this, just know it is due to how Discord interactions work.
 
 :::warning
 A mis-use of the interaction from the code that uses these interaction by using the ItemCollector can lead to unexpected behavior, so make sure to check the interaction "nature" before using it, like in our example by making sure it is related to our message.
@@ -803,7 +816,7 @@ If we run the code at this point we can see that by clicking the button we will 
 
 We now need to handle correctly the 3 buttons we declared before, as mentioned before Discord allows us to declare custom ids we can reference in our code, so let's start with that:
 
-First we can implement the easiest buttons out of the 3, the save button. Since we are going to "live" edit a message after our menu message we just need to delete the menu message, and to since we don't need it anymore remove the collector
+First we can implement the easiest buttons out of the 3, the save button. Since we are going to "live" edit a message after our menu message, we just need to delete the menu message, then we can remove the collector since we don't need it anymore
 
 ```ts
 itemCollector.onItem(async i => {
@@ -831,11 +844,11 @@ itemCollector.onItem(async i => {
 // REST OF YOUR CODE
 ```
 
-If we now try to run click the save button the menu will close, so this is done!
+If we now try to click the save button, the menu will close, so we are done!
 
-Let's move on the add and remove, we have a new problem: we need a way to update the buttons shown in the final message, and we also need to know what reaction buttons the user has created up to this point.
+Let's move on the add and remove button. We have a new problem: we need a way to update the buttons shown in the final message, and we also need to know what reaction buttons the user has created up to this point.
 
-Let's start with the second issue. We can store in an array all the buttons the user created, we just need to declare it:
+Let's start with the second issue. We can store in an array all the buttons the user created:
 
 ```ts
 // insert-next-line
@@ -862,7 +875,7 @@ const roleMessage = await bot.helpers.sendMessage(interaction.channelId, {
 })
 ```
 
-Now we can deal with the first problem, we need to have something to create these button objects, we can do this by creating a pretty easy function that will:
+Now we can deal with the first problem. We need to have something to create these button objects. We can do this by creating a pretty easy function that will:
 
 - Create an action row array
 - Add an action row if we have some buttons to add
@@ -918,10 +931,10 @@ function getRoleButtons(
 ```
 
 :::note
-Remember to import all the types we are using, some IDE/Text editors will have the option to quickly fix the errors about the types not being found and to import them
+Remember to import all the types we are using. Some IDE/Text editors will offer an option to quickly fix the errors about the types not being found and import them
 :::
 
-And now we can use this function, let's go back right after the creation of the roles array
+Now we can use this function. Let's go back right after we declare the roles array
 
 ```ts
 let roles = [args.reactions.create]
@@ -951,7 +964,7 @@ const roleMessage = await bot.helpers.sendMessage(interaction.channelId, {
 })
 ```
 
-Let's now implement the remove button, as it is the next easiest one, to implement this button we want to give the user the choice to select between already exiting reaction roles buttons to do this we can use a select menu:
+Now let's implement the remove button, as it is the next easiest one. To implement this we want to give the user the choice to select between an already exiting reaction roles buttons. To do this we can use a select menu:
 
 ```ts
 itemCollector.onItem(async i => {
@@ -1069,11 +1082,11 @@ if (i.data?.customId === 'reactionRoles-remove-selectMenu') {
 // REST OF YOUR CODE
 ```
 
-And now we are left just one thing, the add button, for this we now need to use a new type of interaction responses: modals
+And now we are left just one thing, the add button. For this we now need to use a new type of interaction responses: modals
 
-Modals are popups that we can create to require the user to input something, for example the emoji and (optionally) the label, to use them with the `interaction.respond` method we can add a `title` (a required property by modals) to the objects.
+Modals are popups that we can create to require the user to input something, for example the emoji and (optionally) the label. To use them with the `interaction.respond` method we can add a `title` (a required property by modals) to the objects.
 
-Other than emoji and labels we also need the role to give and the color for the button, unfortunately we can't add them directly in our modal, Discord does not allow it, so we need to find another way, we can
+Other than emoji and labels, we also need the role to give and the color for the button. Unfortunately we can't add them directly in our modal, Discord does not allow it, so we need to find another way. We can
 
 1. Wait for the button click on the add button
 1. Show the user a select menu for the role
@@ -1081,7 +1094,7 @@ Other than emoji and labels we also need the role to give and the color for the 
 1. Show the user the modal for the emoji and label
 1. Create our new button
 
-Since it's a multi-step process we need to store the partial data of this new role, so let's start with that, we can add it right before our onItem call:
+Since it's a multi-step process, we need to store the partial data of this new role, so let's start with that. We can add it right before our onItem call:
 
 ```ts
 // REST OF YOUR CODE
@@ -1096,7 +1109,7 @@ itemCollector.onItem(async i => {
 // REST OF YOUR CODE
 ```
 
-and now we can start with the code for the button click and the 2 select menu as we already know how that code looks like:
+Now we can start with the code for the button click and the 2 select menu as we already know how that code looks like:
 
 ```ts
 if (i.data?.customId === 'reactionRoles-remove-selectMenu') {
@@ -1190,7 +1203,7 @@ if (i.data?.customId === 'reactionRoles-add-color') {
 // REST OF YOUR CODE
 ```
 
-Now we're only missing the modal part, for now we'll just put an hello world to verify that everything is working out. To create a modal we need:
+Now we're only missing the modal part. For now, we'll just put a "hello world" to verify that everything is working. To create a modal we need:
 
 - A `title` - the title for the modal that the user will see
 - A `components` array - Like for messages modals require us to give a action rows
@@ -1243,7 +1256,7 @@ if (i.data?.customId === 'reactionRoles-add-color') {
 }
 ```
 
-You might notice that we are using a new type of message component, the input text, these are just text field the user needs to fill, they can have 2 styles, short (the one that we are using in this case) and paragraph, the only difference is that an input text of style paragraph is designed to accept a longer string.
+You might notice that we are using a new type of message component, the input text. These are just text field the user needs to fill. It have 2 styles, short (the one that we are using in this case) and paragraph. The only difference is that an input text of style paragraph is designed to accept a longer string.
 
 Now we just need to handle the modal interaction and we will be done with the menu.
 
@@ -1317,13 +1330,13 @@ if (i.data?.customId === 'reactionRoles-add-modal') {
 // insert-end
 ```
 
-And with this we are done with the menu, you might see that we are responding to the modal while in every other case we just edited the original message, the reason is that for modals the edit does not count as responding to it and you need to send a message.
+And with this we are done with the menu. You might see that we are responding to the modal while in every other case we just edited the original message. The reason is that for modals the edit does not count as responding to it and you need to send a new message.
 
-Let's now finally move to the handling of our role buttons
+Finally, let's move to the handling of our role buttons
 
 ## Role buttons Handling
 
-Let's now move back to `src/events/interactionCreate.ts` and we need to add some code after the command handling:
+Let's move back to `src/events/interactionCreate.ts`. We need to add some code after the command handling:
 
 ```ts
 if (interaction.type === InteractionTypes.ApplicationCommand) {
@@ -1351,7 +1364,7 @@ if (
 // insert-end
 ```
 
-We are now checking that we received a message component interaction type and in our case it's button. We only need a couple of things from here:
+We are checking what message component interaction type we received, in this case if it's a button. We only need a couple of things from here:
 
 1. Get the role id of the role we need to give the user
 1. Assign it to them
@@ -1383,7 +1396,7 @@ if (
 }
 ```
 
-And if we add the last few lines of desired properties for the one that we are using in this final piece of code we are done, let's go to the `src/index.ts` and add them:
+In this final piece of code, we use some desired properties. Let's go to the `src/index.ts` file and add the last few lines of desired properties!
 
 ```ts
 // REST OF YOUR CODE
@@ -1409,7 +1422,7 @@ bot.transformers.desiredProperties.role.id = true
 // REST OF YOUR CODE
 ```
 
-If we try the code we finally achieve what we wanted, a button that when clicked gives us the role assuming Discord did not error out our call to add a role caused by the fact that we might not be allowed to add roles such as `@everyone`, roles created for bot permissions, roles that are obtained with link roles or roles that are above the bot hightest role.
+If we try to run the code, we will finally achieve what we want: A button that when clicked gives us the role, assuming that Discord did not return an error, which could be caused by Discord not allowing bots to add roles such as `@everyone`, roles created for bot permissions, roles that are obtained with link roles or roles that are above the bot hightest role.
 
 One last thing we could do is removing the role if we already have it, we will need to add some code in the event and a few desired properties, let's start with the event file `src/events/interactionCreate.ts`:
 
@@ -1465,7 +1478,7 @@ if (
 }
 ```
 
-And now with the desired properties, in the `src/index.ts` we need just a few lines:
+And now let's add the desired properties. In the `src/index.ts` we need just a few lines:
 
 ```ts
 // REST OF YOUR CODE
@@ -1493,20 +1506,20 @@ bot.transformers.desiredProperties.role.id = true
 // REST OF YOUR CODE
 ```
 
-And if we now test the code it should work, we did create a reaction role feature using reaction roles!
+If we test the code now, it should work. We just created a reaction role feature!
 
 ## Improvements
 
-You might remember that we said that there could be improvements to be made to the collectors we have, the reason being that currently if the user does not save the menu we will have that collector class in memory until we restart the bot, this can be easily fixed by having a timeout on the collector but that is something that you can explore on your own.
+You might remember that we said there could be improvements to the collectors we have. Currently, if the user does not save the menu, we will have that collector class in memory until we restart the bot. This can be easily fixed by having a timeout on the collector, but that is something that you can explore on your own.
 
-Also a more advanced thing is to generalize the collectors, we currently use the `Interaction` type for the methods implemented on it but we don't use them in any way and while we could use `any` or `unknown` instead the best way to generalize something in typescript is using generics, so if you need you can re-use that class without having to create another one.
+Also a more advanced thing that you can do is to generalize the collectors. We currently use the `Interaction` type for the methods implemented on it but we don't use them in any way. While we could use `any` or `unknown` instead, the best way is to generalize it using generics in typescript, so you can re-use that class without having to create another one.
 
-In the main file (`src/index.ts`) we currently update the commands on every bot startup even if the commands haven't changed, this may cause you to hit the ratelimit for that API endpoint, especially in development where you might restart a lot your bot, you have a couple of options to fix it, such as moving the api request to another file and run that only when you update your commands, another options is to check for the exiting commands, check if there are any changes and only then update your commands.
+In the main file (`src/index.ts`), we currently update the commands on every bot startup even if the commands haven't changed. This may cause you to hit the ratelimit for that API endpoint, especially in development where you might restart a lot your bot. You have a couple of options to fix it, such as moving the api request to another file and run that only when you update your commands. Another options is to check for the exiting commands, check if there are any changes and only then update your commands.
 
-You could also move the various Discord objects to the bottom of the file and make them act like template if and when needed, but that is not a functional improvement but a maintainability one.
+You could also move the various Discord objects to the bottom of the file and make them act like template if and when needed, but that is not a functional improvement but rather a maintainability one.
 
-Also currently there are a few cases where this code could error, in fact if you have a strict typescript configuration enable you might have noticed that typescript is giving you errors all over the place especially in our command because stuff can be `undefined` and we don't check for it, to fix this you just need to add an if that to ensure they exist, and if not, just return.
+Also currently there are a few cases where this code could error. In fact, if you have a strict typescript configuration enabled, you might have noticed that typescript is giving you errors all over the place, especially in our command because stuff can be `undefined` and we don't check for it. To fix this you just need to add an `if` statement to ensure they exist, and if not, just return.
 
-Also the user could click the remove button and the code could fail if we don't have any option to set Discord will error, or the opposite error if the user already has 25 buttons across all 5 action rows then the user will make the code error until he removes a button.
+Also, the code will throw an error if there's no button and the user click the remove button, or if there are 25 buttons and the user click the add button.
 
 A few of these things, to be exact the last 3, are implemented in the full example code you can find over the github repo [`/example/reaction-roles`](https://github.com/discordeno/discordeno/blob/main/examples/reaction-roles) folder that has the entire project for this guide.
