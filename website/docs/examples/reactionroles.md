@@ -655,7 +655,7 @@ As said before the code you are creating is your code, and in being so you can s
 If you want, you can disable the `desired properties` with the `defaultDesiredPropertiesValue` option in the createBot object, it isn't recommended but it's there to allow the developer to choose, keep in mind this will give you a warning in the console when you run the bot and memory/cpu usage WILL be higher.
 :::
 
-If we try again now we'll finally see our message and in the our 3 buttons. But there is a problem, if we click any of the buttons we just created like the "Add" button, they won't do anything!! This is normal, we did not put any code in place to handle them but now we have to discuss another thing: reacting to users' interactions beyond just commands
+If we try again now we'll finally see our message with 3 buttons. But if we click any of the buttons, they don't do anything! This is expected, since we did not write any code to handle buttons. So let's talk about how to react to users' interactions beyond just commands
 
 ### Handling interaction beyond commands
 
