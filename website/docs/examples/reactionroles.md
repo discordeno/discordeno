@@ -1424,7 +1424,7 @@ bot.transformers.desiredProperties.role.id = true
 
 If we try to run the code, we will finally achieve what we want: A button that when clicked gives us the role, assuming that Discord did not return an error, which could be caused by Discord not allowing bots to add roles such as `@everyone`, roles created for bot permissions, roles that are obtained with link roles or roles that are above the bot hightest role.
 
-One last thing we could do is removing the role if we already have it, we will need to add some code in the event and a few desired properties, let's start with the event file `src/events/interactionCreate.ts`:
+One last thing we could do is removing the role if we already have it. We will need to add some code in the event and a few desired properties. Let's start with the event file `src/events/interactionCreate.ts`:
 
 ```ts
 if (
