@@ -13,7 +13,7 @@ import type { AutoModerationActionExecution } from './transformers/automodAction
 import type { AutoModerationRule } from './transformers/automodRule.js'
 import type { Channel } from './transformers/channel.js'
 import type { Emoji } from './transformers/emoji.js'
-import { type Entitlement } from './transformers/entitlement.js'
+import type { Entitlement } from './transformers/entitlement.js'
 import type { Guild } from './transformers/guild.js'
 import type { Integration } from './transformers/integration.js'
 import type { Interaction } from './transformers/interaction.js'
@@ -247,4 +247,6 @@ export interface EventHandlers {
   entitlementCreate: (entitlement: Entitlement) => unknown
   entitlementUpdate: (entitlement: Entitlement) => unknown
   entitlementDelete: (entitlement: Entitlement) => unknown
+  messagePollVoteAdd: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; answerId: number }) => unknown
+  messagePollVoteRemove: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; answerId: number }) => unknown
 }

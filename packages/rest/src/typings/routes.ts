@@ -6,6 +6,7 @@ import type {
   GetGuildPruneCountQuery,
   GetInvite,
   GetMessagesOptions,
+  GetPollAnswerVotes,
   GetReactions,
   GetScheduledEventUsers,
   GetUserGuilds,
@@ -102,6 +103,10 @@ export interface RestRoutes {
       emoji: (channelId: BigString, messageId: BigString, emoji: string, options?: GetReactions) => string
       /** Route for handling a specific reaction on a message. */
       message: (channelId: BigString, messageId: BigString, emoji: string, options?: GetReactions) => string
+    }
+    polls: {
+      votes: (channelId: BigString, messageId: BigString, answerId: number, options?: GetPollAnswerVotes) => string
+      expire: (channelId: BigString, messageId: BigString) => string
     }
   }
   /** Routes for guild related endpoints. */
