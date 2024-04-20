@@ -5,11 +5,11 @@ sidebar_label: Reaction Roles (button) Bot
 
 # Reaction Roles Bot
 
-One of the most popular bot features is reaction roles. We are going to look into making a small reaction roles bot as it will give us a chance to learn Discordeno while also making a nice little feature. However, instead of **reactions** we will be using Discord's interaction API and use **buttons** instead. Using buttons will give us a lot of advantages. For example, this can be done without needing cache or database at all. This means it is possible to add this feature to your bot with minimal cost even at scale, since you do not store anything to make it work.
+In this guide we will make a simple reaction roles bot. This will give us an opportunity to learn Discordeno while also making one of the most popular bot features. However, instead of **reactions** we will be using Discord's interaction API and use **buttons** instead. Using buttons will give us a lot of advantages. For example, this can be done without needing cache or database at all. This means it is possible to add this feature to your bot with minimal cost even at scale, since you do not need to store anything to make it work.
 
 ## Pre-Requirements
 
-Before, going forward, please make sure to have finished everything on this list.
+Before going forward, please make sure you have finished everything on this list.
 
 - Create an application and get the bot token. [Create Application Guide](https://discordeno.js.org/docs/beginner/token)
 - Add your bot to a server you own. [Invite Bot Guide](https://discordeno.js.org/docs/beginner/inviting)
@@ -78,7 +78,7 @@ export const command: CreateApplicationCommand = {
 
 Nice, so we now have our basic command, `/roles` ready. Next, we should prepare our `/roles reactions` subcommand here.
 
-To do this we need to tell Discord that this `/roles` command has some options, to do this we can add an `options` array, inside of which we can add the `reactions` subcommand, this will require us to add a name, a description and a type. To make Discord create a group of subcommands named `reactions`, we will use `ApplicationCommandOptionTypes.SubCommandGroup` as type.
+To do this we need to tell Discord that this `/roles` command has some options, which can be done with an `options` array. Inside the `options` array we can add the `reactions` subcommand, which will require us to add a name, a description and a type. To make Discord create a group of subcommands named `reactions`, we will use `ApplicationCommandOptionTypes.SubCommandGroup` as type.
 
 Commands can be
 
@@ -135,16 +135,16 @@ options: [
 
 ### Options For Creating Reaction Role
 
-Fantastic so now `/roles reactions create` is available, we want to add some options to the create subcommand. We will need the user to provide us with the following things:
+Now that `/roles reactions create` is available, we want to add some options to the create subcommand. We will need the user to provide us with the following things:
 
 1. Role - The role we give when the user presses the button
 1. Emoji - The emoji we will put on the button.
 1. Color - The color of the button.
 1. Label - An optional label we can add to the button if the user desires.
 
-We can declare these options with an object inside the `options` array of our subcommand, this object requires us to give a name, a description and a type for the option, as type we now use the `ApplicationCommandOptionTypes.Role` option, as we want the user to provide a role (whereas before we used `ApplicationCommandOptionTypes.SubCommandGroup` and `ApplicationCommandOptionTypes.SubCommand`, that are used to declare subcommand groups and subcommands). All the other `ApplicationCommandOptionTypes` we will use require the user to provide a different kind of information.
+We can declare these options with an object inside the `options` array of our subcommand. This object requires us to give it a name, a description, and a type for the option. For the type, we now use the `ApplicationCommandOptionTypes.Role` option because we want the user to provide a role (whereas before we used `ApplicationCommandOptionTypes.SubCommandGroup` and `ApplicationCommandOptionTypes.SubCommand` to declare subcommand groups and subcommands). All the other `ApplicationCommandOptionTypes` we use in this guide will require the user to provide a different kind of information.
 
-Additionally since we want some of our options to be required to run the command we can add the `required: true` option, this will make Discord prevent the user from running the command if they don't pass-in the option.
+Additionally, since we want some of our options to be required to run the command, we can add the `required: true` option. This will make Discord prevent the user from running the command if they don't fill in the option.
 
 ```ts
 {
@@ -166,7 +166,7 @@ Additionally since we want some of our options to be required to run the command
 
 So now we have added an option for the user to provide a role to assign/remove when anyone presses the button. Next we will require the user to provide an emoji.
 
-The emoji option will be of type `ApplicationCommandOptionTypes.String`, the user will be able to provide anything, including an emoji for the button we'll create in the end. This option, just like the role one, will be required.
+The emoji option will be of type `ApplicationCommandOptionTypes.String`, so that the user will be able to provide anything, including an emoji for the button we'll create in the end. This option, just like the role one, will be required.
 
 ```ts
 {
@@ -187,7 +187,11 @@ The emoji option will be of type `ApplicationCommandOptionTypes.String`, the use
 
 Next let's require the user to provide the button color.
 
-The button color will be a little different, for now we only created options that give the user full control (even if limited by Discord) over the option, but for the button color only a few values are actually valid and are not obvious to the user, for this reason we can use the `choices` array to create a handful of predefined options. The user will only be able to input one of these options. For each options we can decide a `name` that the user will see and a `value` that Discord will send us when the user selects that option. This option is of type `ApplicationCommandOptionTypes.Integer` allowing us to set as values for our choices some numbers, for example `ButtonStyles.Primary` will correspond to the number 1. While we could use the raw number for our values picking from the `ButtonStyles` enum will be easier for us in a couple of ways: we can clearly see that the name "blue" will give us a button with style `Primary`, if we used the number 1 it wouldn't be clear unless we go and check the Discord documentation for buttons and confront the values, also a number in the code without any label attached to it can be referred as magic numbers.
+The button color will be a little different. Until now, we have created options that give the user full control over the value (even if it's invalid), but for the button color, only a few values are actually valid and it's not obvious to the user. For this reason, we can use the `choices` array to create a handful of predefined options that the user can select from. For each options we can decide a `name` that the user will see and a `value` that Discord will send us when the user selects that option.
+
+We will use the option type `ApplicationCommandOptionTypes.Integer`, but for the `value`, instead of using numbers like `1`, let's pick it from the `ButtonStyles` enum. A number in the code without any label attached to it is known as magic numbers, and it is considered bad practice, which you can read more [here](https://en.wikipedia.org/wiki/Magic_number_(programming)).
+
+For example, let's say you write `{ name: "Blue", value: 1 }`. It wouldn't be very clear what button style number 1 is, and you will have to go and check Discord Documentation. Whereas if you write `{ name: "Blue", value: ButtonStyles.Primary }`, it is very obvious that the name "blue" will give us a button with style `Primary`
 
 Like the other one, this value is required as well.
 
@@ -214,7 +218,7 @@ Like the other one, this value is required as well.
 // insert-end
 ```
 
-The final option to add to this is the label option. For this we will use a type of string and we can set the required to false or not specify any required property at all, in this we will omit the property.
+The final option is the label of the button, and we will use the `ApplicationCommandOptionTypes.String` option type for this. This option is not required, so we can write `required: false` or omit the `required` property. In this guide we will omit the `required` property.
 
 ```ts
 {
@@ -301,16 +305,16 @@ const command: CreateApplicationCommand = {
 ```
 
 :::tip
-Whenever you write a little bit of code, stop and test to make sure it does what it should before you keep writing more code. You will make your life harder if you write a lot of code without testing it because if, at some point, anything breaks you will have to find what part of the code you added is causing the unexpected behavior
+When you write some code, remember to stop and test to make sure it work before continue writing more code. You will make your life harder if you write a lot of code without testing because when you finished, if anything breaks you will have to find what part of the code you wrote is broken.
 :::
 
 ### Setting Up Slash Creation
 
-Now, we should take a minute to test this code out. However, this code as is does nothing it is just a file that exports an object. Let's make it so we can create this command on our test server. Create a file named `src/register-commands.ts`.
+Now, we should take a minute to test this code. Right now, this code does nothing because it's just a file that exports an object. Let's make it so we can create this command on our test server. Create a file named `src/register-commands.ts`.
 
-An alternative to creating the commands in a test server is to create them in all servers (globally), this can be accomplished by using the `upsertGlobalApplicationCommands`, but in this guide we will create our commands only in a test server.
+An alternative to creating the commands in a test server is to create them in all servers (globally), which be accomplished by using the `upsertGlobalApplicationCommands`. In this guide we will create our commands only in a test server.
 
-We will also need to import our `command` object we defined in the `src/commands/roles.ts` before that contains the data for Discord to register our command.
+We will also need to import our `command` object defined in the `src/commands/roles.ts` that contains the data for Discord to register our command.
 
 ```ts
 import { bot } from './index.js'
@@ -323,7 +327,7 @@ const guildId = 'REPLACE WITH YOUR GUILD ID'
 await bot.rest.upsertGuildApplicationCommands(guildId, [roles])
 ```
 
-Now the only thing that remains to change with this code is to use your actual server's guild id in the `guildId` variable we defined, all you need to do is replace the `REPLACE WITH YOUR GUILD ID` with your actual id of the server you will use for testing. This will make the bot automatically update every command whenever the bot is started.
+Now the only thing that you need to change is to use your actual server's guild ID in the `guildId` variable. All you need to do is replace the `REPLACE WITH YOUR GUILD ID` with your actual server ID that you will use for testing. This will make the bot automatically update every command whenever the bot is started.
 
 ### Cleaner Code
 
@@ -341,7 +345,7 @@ export default commands
 ```
 
 :::note
-You can structure the command discovery in any way you might prefer, in this guide we will manually import the file and add it to the map, but you can get creative and do whatever you want. You could list all the files in a folder and after verifying that they export a command add it to this commands map, you could rely on the files to call a function that will add them to the map, you can import the map in the file and add it from there, you can do whatever you want, it is your code and so you should take your decisions
+In this guide we manually import the file and add it to the map, but you can get creative and structure the command discovery in any way you like. For example, you could list all the files in a folder, then after verifying that they export a command, add it to this commands map; or you could rely on the files to call a function that will add them to the map; or you can import the map in the file and add it from there.
 :::
 
 Now every time you want to add a new command to your bot you can add it in the array together with the `roles` array and it will be stored in the `commands` map.
@@ -364,17 +368,15 @@ await bot.rest.upsertGuildApplicationCommands(guildId, [roles])
 await bot.rest.upsertGuildApplicationCommands(guildId, [...commands.values()])
 ```
 
-Go ahead and start your bot, you will see the command is available on your server by typing `/roles reactions create`. If you try and execute the command it will fail since we have not added the handling of this command yet.
+Go ahead and start your bot. You should see the command is available on your server by typing `/roles reactions create`. If you try and execute the command, it will fail since we have not write any code handling the command
 
 ## Command Execution Handling
 
-We now need to handle the data that Discord will send us when a user types the command, to do this we can add an event listener on the `interactionCreate` event.
+We now need to handle the data that Discord send us when a user types the command. To do this, we can add an event listener on the `interactionCreate` event.
 
-Let's make 2 files first. `src/events/index.ts` and `src/events/interactionCreate.ts`. Let's go to the `src/events/interactionCreate.ts` file first.
+Create the `src/events/interactionCreate.ts` file so that we can add a new event to handle the data. In here we need to check that the interaction type is a command. This is necessary because interactions can be commands, modals, buttons, commands ran from right-clicking on a user's profile (context menus), and so on. We also need to verify that this interaction has a data object or we won't able to get the name of the command the user wants to run.
 
-We will add a new event to handle the data, in here we need to check that the interaction type is a command, this is necessary because interactions can vary, they can be commands, they can be modals, they can be buttons, they can be commands ran from right-clicking on an user's profile (context menus) and so on. We also need to verify that there is a data object with this interaction or else we won't able to get the name of the command the user wants to run.
-
-In the end we need to parse all the options Discord has provided us, in the `/roles reactions create` example we defined a few options, we now need to get them from the interaction object, this can be accomplished by using the `commandOptionsParser` helper Discord provides, this is because parsing the interaction data options can be prone to errors so discordeno provides you a helper function to do it.
+We need to parse all the options Discord has provided us. In the `/roles reactions create` example, we defined a few options, and now we need to get them from the interaction object. This can be accomplished by using the `commandOptionsParser` helper that Discordeno provides.
 
 ```ts
 import commands from '../commands/index.js'
@@ -394,7 +396,7 @@ export const event: EventHandlers['interactionCreate'] = async function (
 }
 ```
 
-Now we need to create the other file, `src/events/index.ts`, in this file we will collect all our events to give to the bot object.
+Now we need to create the `src/events/index.ts` file to collect all of our events and give it to the bot object.
 
 ```ts
 import type { EventHandlers } from '@discordeno/bot'
@@ -407,9 +409,9 @@ export const events = {
 export default events
 ```
 
-From this file we can add all the events we want, in this guide we only need the `interactionCreate` one, but there some other events that are really helpful, for example the `ready` event, which fires when the bot has established a connection with Discord's gateway.
+In this file we can add all of the events we want. In this guide we only need the `interactionCreate` event, but there some other events that might be useful to you, for example the `ready` event, which fires when the bot has established a connection with Discord's gateway.
 
-To tell discordeno to run the events we need another change, back to our `src/index.ts` file.
+To tell Discordeno to run the events, we need another change. Go back to the `src/index.ts` file.
 
 ```ts
 import { createBot } from '@discordeno/bot'
@@ -431,7 +433,7 @@ const bot = createBot({
 // ... REST OF THE FILE ...
 ```
 
-At this point, if we go to the `src/events/interactionCreate.ts` file, we'll see an error from TypeScript, it is telling us that the `command` does not have an `.execute()` handler. To add this we need to customize our command just a little bit. Let's make an interface for a custom Command object and use it for our map. Go to `src/commands/index.ts`
+If we go to the `src/events/interactionCreate.ts` file, we'll see an error from TypeScript. It is telling us that the `command` does not have an `.execute()` handler. To fix this, we need to customize our command just a little bit. Let's make an interface for a custom Command object and use it for our map. Go to the `src/commands/index.ts` file
 
 ```ts
 import { CreateApplicationCommand, Interaction } from '@discordeno/types'
@@ -458,7 +460,7 @@ export interface Command extends CreateApplicationCommand {
 // insert-end
 ```
 
-Next we should edit the command file at `src/commands/role.ts` and edit it to have an execute handler.
+Next, we should edit the command file at `src/commands/role.ts` to have an execute handler.
 
 ```ts
 import {
@@ -481,7 +483,7 @@ const command: Command = {
 }
 ```
 
-Now that this is complete we should go ahead and add a type for args so we can get some nice autocomplete when we code.
+Now that it's finished, let's add a type for args so we can get some nice autocomplete when we code.
 
 ```ts
 // Add the 'CommandArgs' for typescript
@@ -505,7 +507,7 @@ interface CommandArgs {
 }
 ```
 
-Finally, we can begin writing the code to handle our commands. We will implement the `create` command. In this command the user will find himself in a menu with 3 options
+Finally, we can begin writing code to handle the `/roles` command. Let's implement the `create` subcommand. In this command the user will find themself in a menu with 3 options
 
 1. Add another reaction role button
 1. Remove an exiting reaction role button
@@ -588,17 +590,19 @@ async execute(interaction, args: CommandArgs) {
 // THE REST OF YOUR CODE
 ```
 
-In this piece of code we are doing 2 things, sending a message to the channel where the command has been invoked with a button to add the role that the user constructed with the commands params and creating another (private) message that can only see the user that has run the command to edit the message we just sent.
+In this piece of code we are doing 2 things:
+- Send a message to the channel where the command was run, with a button everyone can click to add/remove the roles that the user who run this command has set up.
+- Send a private message so that only the user who run the command can see it and allow them to edit the message we just sent.
 
-Since we never created an actual button before we will examine each property in these objects.
+Since we never created an actual button before, let's try to understand the properties in these objects.
 
-Let's start by the object we pass to `sendMessage`, in here we define what data the message should have, in this example we just give a really simple content and a component array, there arrays can have up to 5 objects inside and those object are `Action Rows`, we can tell that they are action rows by the `type` value they have: `MessageComponentTypes.ActionRow`, action rows also need a components array, in this array there can be up to 5 buttons, 1 select menu or 1 input text, we will se later what a select menu is and what is a input text and how to use them. Now, the buttons, we can recognize them by the `type: MessageComponentTypes.Button`, they have a different requirement from action rows, they need to have:
+Let's start by trying to understand the object we pass to `sendMessage` that allows us to define what data the message should have. A message has a content string and a component array. The component array can have up to 5 action rows inside of it. Each action row can have 1 select menu, 1 input text, or up to 5 buttons. Later we will discuss what a select menu and input text is as well as how to use them. For now, let's focus on buttons. We can recognize them by the `type: MessageComponentTypes.Button`, and it has a different requirement comparing to action rows. Buttons need to have:
 
 - A `style` - How Discord should display them,
 - A `label` or `emoji` - What Discord should display as the text in the buttons
-- A `customId` - these are developer defined ids that can go up to 100 characters where we can store information and use them to tell the buttons apart from one another, we will see how this is helpful soon
+- A `customId` - Developer defined ID that can be up to 100 characters long. This is where we can store information and use it to tell the buttons apart from one another. We will see how this is useful soon
 
-This applies pretty much identically to the `interaction.respond` function that we call, it too has a `content` for the message and a `components` array with inside an action row that this time has 3 buttons that we define.
+This also applies to the `interaction.respond` function that we call. It too has a `content` for the message and a `components` array, inside of which is an action row containing 3 buttons that we defined.
 
 If you save and then run the bot, you might noticed that Discord still says that the application did not respond, but how is that possibile?
 
