@@ -17,6 +17,7 @@ import {
   type DiscordAuditLog,
   type DiscordAutoModerationRule,
   type DiscordBan,
+  type DiscordBulkBan,
   type DiscordChannel,
   type DiscordConnection,
   type DiscordCurrentAuthorization,
@@ -1357,6 +1358,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async banMember(guildId, userId, body, reason) {
       await rest.put<void>(rest.routes.guilds.members.ban(guildId, userId), { body, reason })
+    },
+
+    async bulkBanMembers(guildId, options, reason) {
+      return await rest.post<DiscordBulkBan>(rest.routes.guilds.members.bulkBan(guildId), { body: options, reason })
     },
 
     async editBotMember(guildId, body, reason) {

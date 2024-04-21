@@ -3129,3 +3129,11 @@ export enum DiscordMessageFlag {
   /** This message is a voice message */
   IsVoiceMessage = 1 << 13,
 }
+
+/** https://discord.com/developers/docs/resources/guild#bulk-guild-ban */
+export interface DiscordBulkBan {
+  /** list of user ids, that were successfully banned */
+  banned_users: string[]
+  /** list of user ids, that were not banned */
+  failed_users: string[]
+}

@@ -28,6 +28,7 @@ import type {
   DiscordAutoModerationRule,
   DiscordAutoModerationRuleTriggerMetadata,
   DiscordBan,
+  DiscordBulkBan,
   DiscordButtonComponent,
   DiscordChannel,
   DiscordChannelMention,
@@ -324,3 +325,4 @@ export interface CamelizedDiscordGuildOnboardingPrompt extends Camelize<DiscordG
 export interface CamelizedDiscordGuildOnboardingOption extends Camelize<DiscordGuildOnboardingPromptOption> {}
 export interface CamelizedDiscordEntitlement extends Camelize<DiscordEntitlement> {}
 export interface CamelizedDiscordSku extends Camelize<DiscordSku> {}
+export interface CamelizedDiscordBulkBan extends Camelize<DiscordBulkBan> {}
