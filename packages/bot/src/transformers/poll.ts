@@ -81,7 +81,7 @@ export interface PollAnswer {
    * The id of the answer
    *
    * @remarks
-   * This id labels each answer. It starts at 1 and goes up sequentially. Discord recommend against depending on this value as is a implementation detail.
+   * This id labels each answer. It starts at 1 and goes up sequentially. Discord recommend against depending on this sequence as it is an implementation detail.
    */
   answerId: number
   /** The data of the answer */
