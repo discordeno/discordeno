@@ -18,7 +18,7 @@
     "fastify": "^4.26.2"
   },
   "devDependencies": {
-    "@favware/cliff-jumper": "^3.0.2",
+    "@favware/cliff-jumper": "^3.0.3",
     "@swc/cli": "^0.3.12",
     "@swc/core": "^1.4.17",
     "dotenv": "^16.4.5"
