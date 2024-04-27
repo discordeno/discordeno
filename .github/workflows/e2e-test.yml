@@ -6,15 +6,17 @@ on:
       package:
         required: true
         type: string
+      event_name:
+        required: true
+        type: string
 
 jobs:
   e2e-test:
     name: E2E Test
     runs-on: ubuntu-latest
-    concurrency: e2e-test
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
       - name: Get yarn cache directory path
@@ -40,6 +42,7 @@ jobs:
           path: .turbo
           key: ${{ runner.os }}-turbo-build-${{ github.sha }}
       - name: E2E Test
+        if: ${{ inputs.event_name != 'pull_request' }}
         run: yarn test:e2e --cache-dir=".turbo" --filter=./packages/${{ inputs.package }}
         timeout-minutes: 5
         env:
@@ -48,7 +51,8 @@ jobs:
           PROXY_REST_SECRET: ${{ secrets.PROXY_REST_SECRET }}
           PROXY_REST_URL: ${{ secrets.PROXY_REST_URL }}
       - name: Collect and upload the coverage report
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
+        if: ${{ inputs.event_name != 'pull_request' }}
         with:
           files: ./packages/${{ inputs.package }}/coverage/lcov.info
           flags: ${{ inputs.package }}-e2e,${{ inputs.package }}

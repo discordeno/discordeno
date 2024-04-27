@@ -1,9 +1,9 @@
 module.exports = {
   env: {
-    es2021: true,
+    es2022: true,
     node: true,
   },
-  extends: ['standard-with-typescript', 'prettier', 'plugin:require-extensions/recommended'],
+  extends: ['standard-with-typescript', 'plugin:prettier/recommended', 'plugin:require-extensions/recommended'],
   overrides: [
     {
       files: ['*.spec.ts'],

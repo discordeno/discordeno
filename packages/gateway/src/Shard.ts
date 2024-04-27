@@ -1,21 +1,10 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
-import type {
-  AtLeastOne,
-  BigString,
-  Camelize,
-  DiscordGatewayPayload,
-  DiscordGuildMembersChunk,
-  DiscordHello,
-  DiscordMember,
-  DiscordReady,
-  RequestGuildMembers,
-} from '@discordeno/types'
-import { GatewayCloseEventCodes, GatewayIntents, GatewayOpcodes } from '@discordeno/types'
-import { Collection, LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
+import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discordeno/types'
+import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
+import { LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
 import { inflateSync } from 'node:zlib'
 import NodeWebSocket from 'ws'
-import type { RequestMemberRequest } from './manager.js'
-import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest, StatusUpdate, UpdateVoiceState } from './types.js'
+import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest } from './types.js'
 import { ShardSocketCloseCodes, ShardState } from './types.js'
 
 declare let WebSocket: any
@@ -49,24 +38,14 @@ export class DiscordenoShard {
   resolves = new Map<'READY' | 'RESUMED' | 'INVALID_SESSION', (payload: DiscordGatewayPayload) => void>()
   /** Shard bucket. Only access this if you know what you are doing. Bucket for handling shard request rate limits. */
   bucket: LeakyBucket
-
-  /** This managers cache related settings. */
-  cache = {
-    requestMembers: {
-      /**
-       * Whether or not request member requests should be cached.
-       * @default false
-       */
-      enabled: false,
-      /** The pending requests. */
-      pending: new Collection<string, RequestMemberRequest>(),
-    },
-  }
+  /** Logger for the bucket */
+  logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
 
   constructor(options: ShardCreateOptions) {
     this.id = options.id
     this.connection = options.connection
     this.events = options.events
+    this.logger = options.logger ?? logger
 
     this.heart = {
       acknowledged: false,
@@ -80,6 +59,7 @@ export class DiscordenoShard {
       max: this.calculateSafeRequests(),
       refillAmount: this.calculateSafeRequests(),
       refillInterval: 60000,
+      logger: this.logger,
     })
   }
 
@@ -88,7 +68,7 @@ export class DiscordenoShard {
     return this.connection
   }
 
-  /** The url to connect to. Intially this is the discord gateway url, and then is switched to resume gateway url once a READY is received. */
+  /** The url to connect to. Initially this is the discord gateway url, and then is switched to resume gateway url once a READY is received. */
   get connectionUrl(): string {
     // Use || and not ?? here. ?? will cause a bug.
     return this.resumeGatewayUrl || this.gatewayConfig.url
@@ -161,7 +141,7 @@ export class DiscordenoShard {
     // A new identify has been requested even though there is already a connection open.
     // Therefore we need to close the old connection and heartbeating before creating a new one.
     if (this.isOpen()) {
-      logger.debug(`CLOSING EXISTING SHARD: #${this.id}`)
+      this.logger.debug(`CLOSING EXISTING SHARD: #${this.id}`)
       this.close(ShardSocketCloseCodes.ReIdentifying, 'Re-identifying closure of old connection.')
     }
 
@@ -214,27 +194,27 @@ export class DiscordenoShard {
 
   /** Attempt to resume the previous shards session with the gateway. */
   async resume(): Promise<void> {
-    logger.debug(`[Gateway] Resuming Shard #${this.id}`)
+    this.logger.debug(`[Gateway] Resuming Shard #${this.id}`)
     // It has been requested to resume the Shards session.
     // It's possible that the shard is still connected with Discord's gateway therefore we need to forcefully close it.
     if (this.isOpen()) {
-      logger.debug(`[Gateway] Resuming Shard #${this.id} in isOpen`)
+      this.logger.debug(`[Gateway] Resuming Shard #${this.id} in isOpen`)
       this.close(ShardSocketCloseCodes.ResumeClosingOldConnection, 'Reconnecting the shard, closing old connection.')
     }
 
     // Shard has never identified, so we cannot resume.
     if (!this.sessionId) {
-      logger.debug(`[Shard] Trying to resume a shard #${this.id} that was NOT first identified. (No session id found)`)
+      this.logger.debug(`[Shard] Trying to resume a shard #${this.id} that was NOT first identified. (No session id found)`)
 
       return await this.identify()
     }
 
     this.state = ShardState.Resuming
 
-    logger.debug(`[Gateway] Resuming Shard #${this.id}, before connecting`)
+    this.logger.debug(`[Gateway] Resuming Shard #${this.id}, before connecting`)
     // Before we can resume, we need to create a new connection with Discord's gateway.
     await this.connect()
-    logger.debug(
+    this.logger.debug(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       `[Gateway] Resuming Shard #${this.id}, after connecting. ${this.gatewayConfig.token} | ${this.sessionId} | ${this.previousSequenceNumber}`,
     )
@@ -250,7 +230,7 @@ export class DiscordenoShard {
       },
       true,
     )
-    logger.debug(`[Gateway] Resuming Shard #${this.id} after send resumg`)
+    this.logger.debug(`[Gateway] Resuming Shard #${this.id} after send resumg`)
 
     return await new Promise((resolve) => {
       this.resolves.set('RESUMED', () => resolve())
@@ -267,7 +247,7 @@ export class DiscordenoShard {
   /** Send a message to Discord.
    * @param {boolean} [highPriority=false] - Whether this message should be send asap.
    */
-  async send(message: ShardSocketRequest, highPriority = false): Promise<void> {
+  async send(message: ShardSocketRequest, highPriority: boolean = false): Promise<void> {
     // Before acquiring a token from the bucket, check whether the shard is currently offline or not.
     // Else bucket and token wait time just get wasted.
     await this.checkOffline(highPriority)
@@ -317,7 +297,7 @@ export class DiscordenoShard {
       case GatewayCloseEventCodes.InvalidSeq:
       case GatewayCloseEventCodes.RateLimited:
       case GatewayCloseEventCodes.SessionTimedOut: {
-        logger.debug(`[Shard] Gateway connection closing requiring re-identify. Code: ${close.code}`)
+        this.logger.debug(`[Shard] Gateway connection closing requiring re-identify. Code: ${close.code}`)
         this.state = ShardState.Identifying
         this.events.disconnected?.(this)
 
@@ -341,7 +321,7 @@ export class DiscordenoShard {
       case GatewayCloseEventCodes.DecodeError:
       case GatewayCloseEventCodes.AlreadyAuthenticated:
       default: {
-        logger.info(`[Shard] closed shard #${this.id}. Resuming...`)
+        this.logger.info(`[Shard] closed shard #${this.id}. Resuming...`)
         this.state = ShardState.Resuming
         this.events.disconnected?.(this)
 
@@ -354,10 +334,6 @@ export class DiscordenoShard {
   async handleDiscordPacket(packet: DiscordGatewayPayload): Promise<void> {
     // Edge case start: https://github.com/discordeno/discordeno/issues/2311
     this.heart.lastAck = Date.now()
-    // Manually calculating the round trip time for users who need it.
-    if (this.heart.lastBeat && !this.heart.acknowledged) {
-      this.heart.rtt = this.heart.lastAck - this.heart.lastBeat
-    }
     this.heart.acknowledged = true
     // Edge case end!
 
@@ -381,7 +357,7 @@ export class DiscordenoShard {
       }
       case GatewayOpcodes.Hello: {
         const interval = (packet.d as DiscordHello).heartbeat_interval
-        logger.debug(`[Gateway] Hello on Shard #${this.id}`)
+        this.logger.debug(`[Gateway] Hello on Shard #${this.id}`)
         this.startHeartbeating(interval)
 
         if (this.state !== ShardState.Resuming) {
@@ -404,6 +380,11 @@ export class DiscordenoShard {
         break
       }
       case GatewayOpcodes.HeartbeatACK: {
+        // Manually calculating the round trip time for users who need it.
+        if (this.heart.lastBeat) {
+          this.heart.rtt = this.heart.lastAck - this.heart.lastBeat
+        }
+
         this.events.heartbeatAck?.(this)
 
         break
@@ -419,7 +400,7 @@ export class DiscordenoShard {
       }
       case GatewayOpcodes.InvalidSession: {
         const resumable = packet.d as boolean
-        logger.debug(`[Shard] Received Invalid Session for Shard #${this.id} with resumeable as ${resumable.toString()}`)
+        this.logger.debug(`[Shard] Received Invalid Session for Shard #${this.id} with resumeable as ${resumable.toString()}`)
 
         this.events.invalidSession?.(this, resumable)
 
@@ -470,29 +451,6 @@ export class DiscordenoShard {
 
         this.resolves.get('READY')?.(packet)
         this.resolves.delete('READY')
-        break
-      }
-      case 'GUILD_MEMBERS_CHUNK': {
-        // If it's not enabled skip checks.
-        if (!this.cache.requestMembers.enabled) break
-
-        const payload = packet.d as DiscordGuildMembersChunk
-        // If this request has non nonce, skip checks.
-        if (!payload.nonce) break
-
-        const pending = this.cache.requestMembers.pending.get(payload.nonce)
-        if (!pending) break
-
-        // If this is not the final chunk, just save to cache.
-        if (payload.chunk_index + 1 < payload.chunk_count) {
-          pending.members.push(...payload.members)
-          break;
-        }
-
-        // Resolve the promise that all requests are done.
-        pending.resolve(camelize(pending.members))
-        // Delete the cache to clean up once its done.
-        this.cache.requestMembers.pending.delete(payload.nonce)
         break
       }
     }
@@ -547,7 +505,7 @@ export class DiscordenoShard {
 
   /** Start sending heartbeat payloads to Discord in the provided interval. */
   startHeartbeating(interval: number): void {
-    logger.debug(`[Gateway] Start Heartbeating Shard #${this.id}`)
+    this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id}`)
     // If old heartbeast exist like after resume, clear the old ones.
     if (this.heart.intervalId) clearInterval(this.heart.intervalId)
     if (this.heart.timeoutId) clearTimeout(this.heart.timeoutId)
@@ -557,7 +515,7 @@ export class DiscordenoShard {
     // Only set the shard's state to `Unidentified`
     // if heartbeating has not been started due to an identify or resume action.
     if ([ShardState.Disconnected, ShardState.Offline].includes(this.state)) {
-      logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} a`)
+      this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} a`)
       this.state = ShardState.Unidentified
     }
 
@@ -567,9 +525,9 @@ export class DiscordenoShard {
     // Reference: https://discord.com/developers/docs/topics/gateway#heartbeating
     const jitter = Math.ceil(this.heart.interval * (Math.random() || 0.5))
     this.heart.timeoutId = setTimeout(() => {
-      logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} b`)
+      this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} b`)
       if (!this.isOpen()) return
-      logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} c ${this.previousSequenceNumber!}`)
+      this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} c ${this.previousSequenceNumber!}`)
 
       // Using a direct socket.send call here because heartbeat requests are reserved by us.
       this.socket?.send(
@@ -579,15 +537,15 @@ export class DiscordenoShard {
         }),
       )
 
-      logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} d`)
+      this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} d`)
       this.heart.lastBeat = Date.now()
       this.heart.acknowledged = false
 
       // After the random heartbeat jitter we can start a normal interval.
       this.heart.intervalId = setInterval(async () => {
-        logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} e`)
+        this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} e`)
         if (!this.isOpen()) return
-        logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} f`)
+        this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} f`)
         // gateway.debug("GW DEBUG", `Running setInterval in heartbeat file. Shard: ${shardId}`);
 
         // gateway.debug("GW HEARTBEATING", { shardId, shard: currentShard });
@@ -597,7 +555,7 @@ export class DiscordenoShard {
         // The Shard needs to start a re-identify action accordingly.
         // Reference: https://discord.com/developers/docs/topics/gateway#heartbeating-example-gateway-heartbeat-ack
         if (!this.heart.acknowledged) {
-          logger.debug(`[Shard] Heartbeat not acknowledged for shard #${this.id}.`)
+          this.logger.debug(`[Shard] Heartbeat not acknowledged for shard #${this.id}.`)
           this.close(ShardSocketCloseCodes.ZombiedConnection, 'Zombied connection, did not receive an heartbeat ACK in time.')
 
           return await this.identify()
@@ -605,7 +563,7 @@ export class DiscordenoShard {
 
         this.heart.acknowledged = false
 
-        logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} g`)
+        this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} g`)
         // Using a direct socket.send call here because heartbeat requests are reserved by us.
         this.socket?.send(
           JSON.stringify({
@@ -613,7 +571,7 @@ export class DiscordenoShard {
             d: this.previousSequenceNumber,
           }),
         )
-        logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} h`)
+        this.logger.debug(`[Gateway] Start Heartbeating Shard #${this.id} h`)
 
         this.heart.lastBeat = Date.now()
 
@@ -630,166 +588,6 @@ export class DiscordenoShard {
     // To go safe we should clear the related timeout too.
     clearTimeout(this.heart.timeoutId)
   }
-
-  /**
-   * Connects the bot user to a voice or stage channel.
-   *
-   * This function sends the _Update Voice State_ gateway command over the gateway behind the scenes.
-   *
-   * @param guildId - The ID of the guild the voice channel to leave is in.
-   * @param channelId - The ID of the channel you want to join.
-   *
-   * @remarks
-   * Requires the `CONNECT` permission.
-   *
-   * Fires a _Voice State Update_ gateway event.
-   *
-   * @see {@link https://discord.com/developers/docs/topics/gateway#update-voice-state}
-   */
-  async joinVoiceChannel(
-    guildId: BigString,
-    channelId: BigString,
-    options?: AtLeastOne<Omit<UpdateVoiceState, 'guildId' | 'channelId'>>,
-  ): Promise<void> {
-    logger.debug(`[Shard] joinVoiceChannel guildId: ${guildId} channelId: ${channelId}`)
-    await this.send({
-      op: GatewayOpcodes.VoiceStateUpdate,
-      d: {
-        guild_id: guildId.toString(),
-        channel_id: channelId.toString(),
-        self_mute: Boolean(options?.selfMute),
-        self_deaf: options?.selfDeaf ?? true,
-      },
-    })
-  }
-
-  /**
-   * Edits the bot status in all shards that this gateway manages.
-   *
-   * @param data The status data to set the bots status to.
-   * @returns Promise<void>
-   */
-  async editBotStatus(data: StatusUpdate): Promise<void> {
-    logger.debug(`[Shard] editBotStatus data: ${JSON.stringify(data)}`)
-    await this.editShardStatus(data)
-  }
-
-  /**
-   * Edits the bot's status on one shard.
-   *
-   * @param shardId The shard id to edit the status for.
-   * @param data The status data to set the bots status to.
-   * @returns Promise<void>
-   */
-  async editShardStatus(data: StatusUpdate): Promise<void> {
-    logger.debug(`[Shard] editShardStatus shardId: ${this.id} -> data: ${JSON.stringify(data)}`)
-    await this.send({
-      op: GatewayOpcodes.PresenceUpdate,
-      d: {
-        since: null,
-        afk: false,
-        activities: data.activities,
-        status: data.status,
-      },
-    })
-  }
-
-  /**
-   * Fetches the list of members for a guild over the gateway.
-   *
-   * @param guildId - The ID of the guild to get the list of members for.
-   * @param options - The parameters for the fetching of the members.
-   *
-   * @remarks
-   * If requesting the entire member list:
-   * - Requires the `GUILD_MEMBERS` intent.
-   *
-   * If requesting presences ({@link RequestGuildMembers.presences | presences} set to `true`):
-   * - Requires the `GUILD_PRESENCES` intent.
-   *
-   * If requesting a prefix ({@link RequestGuildMembers.query | query} non-`undefined`):
-   * - Returns a maximum of 100 members.
-   *
-   * If requesting a users by ID ({@link RequestGuildMembers.userIds | userIds} non-`undefined`):
-   * - Returns a maximum of 100 members.
-   *
-   * Fires a _Guild Members Chunk_ gateway event for every 1000 members fetched.
-   *
-   * @see {@link https://discord.com/developers/docs/topics/gateway#request-guild-members}
-   */
-  async requestMembers(guildId: BigString, options?: Omit<RequestGuildMembers, 'guildId'>): Promise<Camelize<DiscordMember[]>> {
-    // You can request 1 member without the intent
-    // Check if intents is not 0 as proxy ws won't set intents in other instances
-    if (this.connection.intents && (!options?.limit || options.limit > 1) && !(this.connection.intents & GatewayIntents.GuildMembers)) {
-      throw new Error('MISSING_INTENT_GUILD_MEMBERS')
-    }
-
-    if (options?.userIds?.length) {
-      logger.debug(`[Shard] requestMembers guildId: ${guildId} -> setting user limit based on userIds length: ${options.userIds.length}`)
-      options.limit = options.userIds.length
-    }
-
-    // Gateway does not require caching these requests so directly send and return
-    if (!this.cache.requestMembers?.enabled) {
-      logger.debug(`[Shard] requestMembers guildId: ${guildId} -> skipping cache -> options ${JSON.stringify(options)}`)
-      await this.send({
-        op: GatewayOpcodes.RequestGuildMembers,
-        d: {
-          guild_id: guildId.toString(),
-          // If a query is provided use it, OR if a limit is NOT provided use ""
-          query: options?.query ?? (options?.limit ? undefined : ''),
-          limit: options?.limit ?? 0,
-          presences: options?.presences ?? false,
-          user_ids: options?.userIds?.map((id) => id.toString()),
-          nonce: options?.nonce,
-        },
-      })
-      return []
-    }
-
-    return await new Promise((resolve) => {
-      if (options?.nonce) this.cache.requestMembers?.pending.set(options.nonce, { nonce: options.nonce, resolve, members: [] })
-
-      logger.debug(`[Shard] requestMembers guildId: ${guildId} -> requesting members -> data: ${JSON.stringify(options)}`)
-      this.send({
-        op: GatewayOpcodes.RequestGuildMembers,
-        d: {
-          guild_id: guildId.toString(),
-          // If a query is provided use it, OR if a limit is NOT provided use ""
-          query: options?.query ?? (options?.limit ? undefined : ''),
-          limit: options?.limit ?? 0,
-          presences: options?.presences ?? false,
-          user_ids: options?.userIds?.map((id) => id.toString()),
-          nonce: options?.nonce,
-        },
-      })
-    })
-  }
-
-  /**
-   * Leaves the voice channel the bot user is currently in.
-   *
-   * This function sends the _Update Voice State_ gateway command over the gateway behind the scenes.
-   *
-   * @param guildId - The ID of the guild the voice channel to leave is in.
-   *
-   * @remarks
-   * Fires a _Voice State Update_ gateway event.
-   *
-   * @see {@link https://discord.com/developers/docs/topics/gateway#update-voice-state}
-   */
-  async leaveVoiceChannel(guildId: BigString): Promise<void> {
-    logger.debug(`[Shard] leaveVoiceChannel guildId: ${guildId} Shard ${this.id}`)
-    await this.send({
-      op: GatewayOpcodes.VoiceStateUpdate,
-      d: {
-        guild_id: guildId.toString(),
-        channel_id: null,
-        self_mute: false,
-        self_deaf: false,
-      },
-    })
-  }
 }
 
 export interface ShardCreateOptions {
@@ -799,6 +597,8 @@ export interface ShardCreateOptions {
   connection: ShardGatewayConfig
   /** The event handlers for events on the shard. */
   events: ShardEvents
+  /** The logger for the shard */
+  logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
   /** The handler to request a space to make an identify request. */
   requestIdentify?: () => Promise<void>
   /** The handler to alert the gateway manager that this shard has received a READY event. */

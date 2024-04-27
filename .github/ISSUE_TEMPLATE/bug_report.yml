@@ -1,0 +1,69 @@
+name: Bug Report
+description: Found a bug? Help us squash it.
+title: '[Bug]: '
+labels: ['t-bug', 'w-unverified']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking to the time to fill out a bug report. You make this library better for all! 🙏
+  - type: dropdown
+    id: runtime
+    attributes:
+      label: Runtime
+      description: What runtime (Node, Deno, etc) are you using?
+      options:
+        - NodeJS
+        - Deno
+        - Bun
+        - Other (add the name to the version)
+    validations:
+      required: true
+  - type: input
+    id: runtime-version
+    attributes:
+      label: Runtime Version
+      description: What version of the runtime are you using? In Node you could get this through `node --version`.
+      placeholder: 18.3.1
+    validations:
+      required: true
+  - type: input
+    id: dd-version
+    attributes:
+      label: Version
+      description: What version of Discordeno are you using?
+      placeholder: 19.0.0
+    validations:
+      required: true
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Describe the bug
+      description: What is the outcome that you see that's unexpected? What steps should we take to reproduce the bug?
+    validations:
+      required: true
+  - type: textarea
+    id: bug-expectation
+    attributes:
+      label: What should've happened?
+      description: If the bug didn't exist, what should've happened?
+    validations:
+      required: true
+  - type: textarea
+    id: bug-repro-code
+    attributes:
+      label: Code to reproduce the bug
+      description: Provide us, if possible, a small piece of code that's easy to test to reproduce this specific bug.
+      value: |
+        import { createBot } from '@discordeno/bot'
+
+        const bot = createBot({
+          token: process.env.TOKEN,
+          events: {
+            // Add the events, which are needed to show the bug
+          },
+          // Don't forget to add all necessary intents
+          intents: 0,
+        })
+        bot.start()
+      render: typescript

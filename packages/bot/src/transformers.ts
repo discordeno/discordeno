@@ -16,20 +16,25 @@ import type {
   DiscordCreateApplicationCommand,
   DiscordEmbed,
   DiscordEmoji,
+  DiscordEntitlement,
   DiscordGetGatewayBot,
   DiscordGuild,
   DiscordGuildApplicationCommandPermissions,
+  DiscordGuildOnboarding,
   DiscordGuildWidget,
   DiscordGuildWidgetSettings,
   DiscordIntegrationCreateUpdate,
   DiscordInteraction,
   DiscordInteractionDataOption,
   DiscordInviteCreate,
+  DiscordInviteMetadata,
+  DiscordInviteStageInstance,
   DiscordMember,
   DiscordMessage,
   DiscordPresenceUpdate,
   DiscordRole,
   DiscordScheduledEvent,
+  DiscordSku,
   DiscordStageInstance,
   DiscordSticker,
   DiscordStickerPack,
@@ -42,6 +47,7 @@ import type {
   DiscordWebhook,
   DiscordWelcomeScreen,
 } from '@discordeno/types'
+import { logger } from '@discordeno/utils'
 import { bigintToSnowflake, snowflakeToBigint, type Bot } from './index.js'
 import { transformActivity, type Activity } from './transformers/activity.js'
 import { transformApplication, type Application } from './transformers/application.js'
@@ -57,6 +63,7 @@ import { transformChannel, type Channel } from './transformers/channel.js'
 import { transformComponent, type Component } from './transformers/component.js'
 import { transformEmbed, type Embed } from './transformers/embed.js'
 import { transformEmoji, type Emoji } from './transformers/emoji.js'
+import { transformEntitlement, type Entitlement } from './transformers/entitlement.js'
 import { transformGatewayBot, type GetGatewayBot } from './transformers/gatewayBot.js'
 import { transformGuild, type Guild } from './transformers/guild.js'
 import {
@@ -77,25 +84,33 @@ import { transformInteraction, transformInteractionDataOption, type Interaction,
 import { transformInvite, type Invite } from './transformers/invite.js'
 import { transformMember, type Member } from './transformers/member.js'
 import { transformMessage, type Message } from './transformers/message.js'
+import { transformGuildOnboarding, type GuildOnboarding } from './transformers/onboarding.js'
 import { transformPresence, type PresenceUpdate } from './transformers/presence.js'
 import { transformAllowedMentionsToDiscordAllowedMentions } from './transformers/reverse/allowedMentions.js'
 import { transformCreateApplicationCommandToDiscordCreateApplicationCommand } from './transformers/reverse/createApplicationCommand.js'
 import { transformInteractionResponseToDiscordInteractionResponse } from './transformers/reverse/interactionResponse.js'
 import { transformRole, type Role } from './transformers/role.js'
 import { transformScheduledEvent, type ScheduledEvent } from './transformers/scheduledEvent.js'
+import { transformSku, type Sku } from './transformers/sku.js'
 import { transformStageInstance, type StageInstance } from './transformers/stageInstance.js'
+import { transformInviteStageInstance, type InviteStageInstance } from './transformers/stageInviteInstance.js'
 import { transformSticker, transformStickerPack, type Sticker, type StickerPack } from './transformers/sticker.js'
 import { transformTeam, type Team } from './transformers/team.js'
 import { transformTemplate, type Template } from './transformers/template.js'
-import { transformThreadMember, type ThreadMember } from './transformers/threadMember.js'
+import {
+  transformThreadMember,
+  transformThreadMemberGuildCreate,
+  type ThreadMember,
+  type ThreadMemberGuildCreate,
+} from './transformers/threadMember.js'
 import { transformUser, type User } from './transformers/user.js'
-import { transformVoiceRegion, type VoiceRegions } from './transformers/voiceRegion.js'
+import { transformVoiceRegion, type VoiceRegion } from './transformers/voiceRegion.js'
 import { transformVoiceState, type VoiceState } from './transformers/voiceState.js'
 import { transformWebhook, type Webhook } from './transformers/webhook.js'
 import { transformWelcomeScreen, type WelcomeScreen } from './transformers/welcomeScreen.js'
 import { transformWidget, type GuildWidget } from './transformers/widget.js'
 import { transformWidgetSettings, type GuildWidgetSettings } from './transformers/widgetSettings.js'
-import type { BotInteractionResponse, DiscordComponent, DiscordInteractionResponse } from './typings.js'
+import type { BotInteractionResponse, DiscordComponent, DiscordInteractionResponse, DiscordThreadMemberGuildCreate } from './typings.js'
 
 export interface Transformers {
   customizers: {
@@ -105,6 +120,51 @@ export interface Transformers {
     user: (bot: Bot, payload: DiscordUser, user: User) => any
     member: (bot: Bot, payload: DiscordMember, member: Member) => any
     role: (bot: Bot, payload: DiscordRole, role: Role) => any
+    automodRule: (bot: Bot, payload: DiscordAutoModerationRule, automodRule: AutoModerationRule) => any
+    automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution, automodActionExecution: AutoModerationActionExecution) => any
+    guild: (bot: Bot, payload: DiscordGuild, guild: Guild) => any
+    voiceState: (bot: Bot, payload: DiscordVoiceState, voiceState: VoiceState) => any
+    interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption, interactionDataOptions: InteractionDataOption) => any
+    integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate, integration: Integration) => any
+    invite: (bot: Bot, payload: DiscordInviteCreate | DiscordInviteMetadata, invite: Invite) => any
+    application: (bot: Bot, payload: DiscordApplication, application: Application) => any
+    team: (bot: Bot, payload: DiscordTeam, team: Team) => any
+    emoji: (bot: Bot, payload: DiscordEmoji, emoji: Emoji) => any
+    activity: (bot: Bot, payload: DiscordActivity, activity: Activity) => any
+    presence: (bot: Bot, payload: DiscordPresenceUpdate, presence: PresenceUpdate) => any
+    attachment: (bot: Bot, payload: DiscordAttachment, attachment: Attachment) => any
+    embed: (bot: Bot, payload: DiscordEmbed, embed: Embed) => any
+    component: (bot: Bot, payload: DiscordComponent, component: Component) => any
+    webhook: (bot: Bot, payload: DiscordWebhook, webhook: Webhook) => any
+    auditLogEntry: (bot: Bot, payload: DiscordAuditLogEntry, auditLogEntry: AuditLogEntry) => any
+    applicationCommand: (bot: Bot, payload: DiscordApplicationCommand, applicationCommand: ApplicationCommand) => any
+    applicationCommandOption: (bot: Bot, payload: DiscordApplicationCommandOption, applicationCommandOption: ApplicationCommandOption) => any
+    applicationCommandPermission: (
+      bot: Bot,
+      payload: DiscordGuildApplicationCommandPermissions,
+      applicationCommandPermission: ApplicationCommandPermission,
+    ) => any
+    scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent, scheduledEvent: ScheduledEvent) => any
+    threadMember: (bot: Bot, payload: DiscordThreadMember, threadMember: ThreadMember) => any
+    threadMemberGuildCreate: (bot: Bot, payload: DiscordThreadMemberGuildCreate, threadMemberGuildCreate: ThreadMemberGuildCreate) => any
+    welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen, welcomeScreen: WelcomeScreen) => any
+    voiceRegion: (bot: Bot, payload: DiscordVoiceRegion, voiceRegion: VoiceRegion) => any
+    gatewayBot: (bot: Bot, payload: DiscordGetGatewayBot, getGatewayBot: GetGatewayBot) => any
+    widget: (bot: Bot, payload: DiscordGuildWidget, widget: GuildWidget) => any
+    widgetSettings: (bot: Bot, payload: DiscordGuildWidgetSettings, widgetSettings: GuildWidgetSettings) => any
+    stageInstance: (bot: Bot, payload: DiscordStageInstance, stageInstance: StageInstance) => any
+    inviteStageInstance: (bot: Bot, payload: DiscordInviteStageInstance, inviteStageInstance: InviteStageInstance) => any
+    sticker: (bot: Bot, payload: DiscordSticker, sticker: Sticker) => any
+    stickerPack: (bot: Bot, payload: DiscordStickerPack, stickerPack: StickerPack) => any
+    applicationCommandOptionChoice: (
+      bot: Bot,
+      payload: DiscordApplicationCommandOptionChoice,
+      applicationCommandOptionChoice: ApplicationCommandOptionChoice,
+    ) => any
+    template: (bot: Bot, payload: DiscordTemplate, template: Template) => any
+    guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding, onboarding: GuildOnboarding) => any
+    entitlement: (bot: Bot, payload: DiscordEntitlement, entitlement: Entitlement) => any
+    sku: (bot: Bot, payload: DiscordSku, sku: Sku) => any
   }
   desiredProperties: {
     attachment: {
@@ -118,6 +178,9 @@ export interface Transformers {
       width: boolean
       ephemeral: boolean
       description: boolean
+      duration_secs: boolean
+      waveform: boolean
+      flags: boolean
     }
     channel: {
       type: boolean
@@ -174,7 +237,22 @@ export interface Transformers {
       preferredLocale: boolean
       premiumSubscriptionCount: boolean
       premiumTier: boolean
+      toggles: boolean
       stageInstances: boolean
+      channels: boolean
+      members: boolean
+      roles: boolean
+      emojis: boolean
+      stickers: boolean
+      threads: boolean
+      voiceStates: boolean
+      features: boolean
+      large: boolean
+      owner: boolean
+      widgetEnabled: boolean
+      unavailable: boolean
+      iconHash: boolean
+      presences: boolean
       systemChannelFlags: boolean
       vanityUrlCode: boolean
       verificationLevel: boolean
@@ -196,12 +274,14 @@ export interface Transformers {
       rulesChannelId: boolean
       publicUpdatesChannelId: boolean
       premiumProgressBarEnabled: boolean
+      safetyAlertsChannelId: boolean
     }
     interaction: {
       id: boolean
       applicationId: boolean
       type: boolean
       guildId: boolean
+      channel: boolean
       channelId: boolean
       member: boolean
       user: boolean
@@ -226,6 +306,11 @@ export interface Transformers {
       targetApplication: boolean
       temporary: boolean
       uses: boolean
+      approximateMemberCount: boolean
+      approximatePresenceCount: boolean
+      guildScheduledEvent: boolean
+      stageInstance: boolean
+      expiresAt: boolean
     }
     member: {
       id: boolean
@@ -293,6 +378,7 @@ export interface Transformers {
       hoist: boolean
       managed: boolean
       subscriptionListingId: boolean
+      flags: boolean
     }
     scheduledEvent: {
       id: boolean
@@ -318,6 +404,12 @@ export interface Transformers {
       channelId: boolean
       topic: boolean
       guildScheduledEventId: boolean
+    }
+    inviteStageInstance: {
+      members: boolean
+      participantCount: boolean
+      speakerCount: boolean
+      topic: boolean
     }
     sticker: {
       id: boolean
@@ -349,6 +441,7 @@ export interface Transformers {
       verified: boolean
       email: boolean
       banner: boolean
+      avatarDecoration: boolean
     }
     webhook: {
       id: boolean
@@ -363,6 +456,55 @@ export interface Transformers {
       sourceGuild: boolean
       sourceChannel: boolean
       url: boolean
+    }
+    guildOnboarding: {
+      guildId: boolean
+      prompts: {
+        id: boolean
+        type: boolean
+        options: {
+          id: boolean
+          channelIds: boolean
+          roleIds: boolean
+          emoji: boolean
+          title: boolean
+          description: boolean
+        }
+        title: boolean
+        singleSelect: boolean
+        required: boolean
+        inOnboarding: boolean
+      }
+      defaultChannelIds: boolean
+      enabled: boolean
+      mode: boolean
+    }
+    entitlement: {
+      id: boolean
+      skuId: boolean
+      userId: boolean
+      guildId: boolean
+      applicationId: boolean
+      type: boolean
+      deleted: boolean
+      startsAt: boolean
+      endsAt: boolean
+    }
+    sku: {
+      id: boolean
+      type: boolean
+      applicationId: boolean
+      name: boolean
+      slug: boolean
+      flags: boolean
+    }
+    voiceState: {
+      requestToSpeakTimestamp: boolean
+      channelId: boolean
+      guildId: boolean
+      toggles: boolean
+      sessionId: boolean
+      userId: boolean
     }
   }
   reverse: {
@@ -383,7 +525,7 @@ export interface Transformers {
     attachment: (bot: Bot, payload: Attachment) => DiscordAttachment
   }
   snowflake: (snowflake: BigString) => bigint
-  gatewayBot: (payload: DiscordGetGatewayBot) => GetGatewayBot
+  gatewayBot: (bot: Bot, payload: DiscordGetGatewayBot) => GetGatewayBot
   automodRule: (bot: Bot, payload: DiscordAutoModerationRule) => AutoModerationRule
   automodActionExecution: (bot: Bot, payload: DiscordAutoModerationActionExecution) => AutoModerationActionExecution
   channel: (bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }) => Channel
@@ -396,8 +538,8 @@ export interface Transformers {
   interaction: (bot: Bot, payload: DiscordInteraction) => Interaction
   interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption
   integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration
-  invite: (bot: Bot, invite: DiscordInviteCreate) => Invite
-  application: (bot: Bot, payload: DiscordApplication) => Application
+  invite: (bot: Bot, payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number }) => Invite
+  application: (bot: Bot, payload: { application: DiscordApplication; shardId: number }) => Application
   team: (bot: Bot, payload: DiscordTeam) => Team
   emoji: (bot: Bot, payload: DiscordEmoji) => Emoji
   activity: (bot: Bot, payload: DiscordActivity) => Activity
@@ -412,18 +554,40 @@ export interface Transformers {
   applicationCommandPermission: (bot: Bot, payload: DiscordGuildApplicationCommandPermissions) => ApplicationCommandPermission
   scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent) => ScheduledEvent
   threadMember: (bot: Bot, payload: DiscordThreadMember) => ThreadMember
+  threadMemberGuildCreate: (bot: Bot, payload: DiscordThreadMemberGuildCreate) => ThreadMemberGuildCreate
   welcomeScreen: (bot: Bot, payload: DiscordWelcomeScreen) => WelcomeScreen
-  voiceRegion: (bot: Bot, payload: DiscordVoiceRegion) => VoiceRegions
+  voiceRegion: (bot: Bot, payload: DiscordVoiceRegion) => VoiceRegion
   widget: (bot: Bot, payload: DiscordGuildWidget) => GuildWidget
   widgetSettings: (bot: Bot, payload: DiscordGuildWidgetSettings) => GuildWidgetSettings
   stageInstance: (bot: Bot, payload: DiscordStageInstance) => StageInstance
+  inviteStageInstance: (bot: Bot, payload: DiscordInviteStageInstance & { guildId: BigString }) => InviteStageInstance
+
   sticker: (bot: Bot, payload: DiscordSticker) => Sticker
   stickerPack: (bot: Bot, payload: DiscordStickerPack) => StickerPack
   applicationCommandOptionChoice: (bot: Bot, payload: DiscordApplicationCommandOptionChoice) => ApplicationCommandOptionChoice
   template: (bot: Bot, payload: DiscordTemplate) => Template
+  guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding) => GuildOnboarding
+  entitlement: (bot: Bot, payload: DiscordEntitlement) => Entitlement
+  sku: (bot: Bot, payload: DiscordSku) => Sku
 }
 
-export function createTransformers(options: Partial<Transformers>): Transformers {
+export interface CreateTransformerOptions {
+  defaultDesiredPropertiesValue: boolean
+  logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
+}
+
+export function createTransformers(options: Partial<Transformers>, opts?: CreateTransformerOptions): Transformers {
+  if (opts?.defaultDesiredPropertiesValue) {
+    const log = opts.logger ?? logger
+
+    log.warn('[Transformers] WARNING WARNING WARNING!')
+    log.warn(
+      '[Transformers] The defaultDesiredPropertiesValue property is being used and it is NOT RECOMMENDED. In fact it was WARNED AGAINST. It is extremely bad practice.',
+    )
+    log.warn('[Transformers] It is a bit painful to work with and get started, but it has massive long term benefits.')
+    log.warn('[Transformers] ----------------------------------------------------------------')
+  }
+
   return {
     customizers: {
       channel(bot, payload, channel) {
@@ -444,264 +608,457 @@ export function createTransformers(options: Partial<Transformers>): Transformers
       user(bot, payload, user) {
         return user
       },
+      activity(bot, payload, activity) {
+        return activity
+      },
+      application(bot, payload, application) {
+        return application
+      },
+      applicationCommand(bot, payload, applicationCommand) {
+        return applicationCommand
+      },
+      applicationCommandOption(bot, payload, applicationCommandOption) {
+        return applicationCommandOption
+      },
+      applicationCommandOptionChoice(bot, payload, applicationCommandOptionChoice) {
+        return applicationCommandOptionChoice
+      },
+      applicationCommandPermission(bot, payload, applicationCommandPermission) {
+        return applicationCommandPermission
+      },
+      attachment(bot, payload, attachment) {
+        return attachment
+      },
+      auditLogEntry(bot, payload, auditLogEntry) {
+        return auditLogEntry
+      },
+      automodActionExecution(bot, payload, automodActionExecution) {
+        return automodActionExecution
+      },
+      automodRule(bot, payload, automodRule) {
+        return automodRule
+      },
+      component(bot, payload, component) {
+        return component
+      },
+      embed(bot, payload, embed) {
+        return embed
+      },
+      emoji(bot, payload, emoji) {
+        return emoji
+      },
+      guild(bot, payload, guild) {
+        return guild
+      },
+      integration(bot, payload, integration) {
+        return integration
+      },
+      interactionDataOptions(bot, payload, interactionDataOptions) {
+        return interactionDataOptions
+      },
+      invite(bot, payload, invite) {
+        return invite
+      },
+      presence(bot, payload, presence) {
+        return presence
+      },
+      scheduledEvent(bot, payload, scheduledEvent) {
+        return scheduledEvent
+      },
+      stageInstance(bot, payload, stageInstance) {
+        return stageInstance
+      },
+      inviteStageInstance(bot, payload, inviteStageInstance) {
+        return inviteStageInstance
+      },
+      sticker(bot, payload, sticker) {
+        return sticker
+      },
+      stickerPack(bot, payload, stickerPack) {
+        return stickerPack
+      },
+      team(bot, payload, team) {
+        return team
+      },
+      template(bot, payload, template) {
+        return template
+      },
+      threadMember(bot, payload, threadMember) {
+        return threadMember
+      },
+      threadMemberGuildCreate(bot, payload, threadMemberGuildCreate) {
+        return threadMemberGuildCreate
+      },
+      voiceRegion(bot, payload, voiceRegion) {
+        return voiceRegion
+      },
+      voiceState(bot, payload, voiceState) {
+        return voiceState
+      },
+      gatewayBot(bot, payload, getGatewayBot) {
+        return getGatewayBot
+      },
+      webhook(bot, payload, webhook) {
+        return webhook
+      },
+      welcomeScreen(bot, payload, welcomeScreen) {
+        return welcomeScreen
+      },
+      widget(bot, payload, widget) {
+        return widget
+      },
+      widgetSettings(bot, payload, widgetSettings) {
+        return widgetSettings
+      },
+      guildOnboarding(bot, payload, onboarding) {
+        return onboarding
+      },
+      entitlement(bot, payload, entitlement) {
+        return entitlement
+      },
+      sku(bot, payload, sku) {
+        return sku
+      },
     },
     desiredProperties: {
       attachment: {
-        id: false,
-        filename: false,
-        contentType: false,
-        size: false,
-        url: false,
-        proxyUrl: false,
-        height: false,
-        width: false,
-        ephemeral: false,
-        description: false,
+        id: opts?.defaultDesiredPropertiesValue ?? false,
+        filename: opts?.defaultDesiredPropertiesValue ?? false,
+        contentType: opts?.defaultDesiredPropertiesValue ?? false,
+        size: opts?.defaultDesiredPropertiesValue ?? false,
+        url: opts?.defaultDesiredPropertiesValue ?? false,
+        proxyUrl: opts?.defaultDesiredPropertiesValue ?? false,
+        height: opts?.defaultDesiredPropertiesValue ?? false,
+        width: opts?.defaultDesiredPropertiesValue ?? false,
+        ephemeral: opts?.defaultDesiredPropertiesValue ?? false,
+        description: opts?.defaultDesiredPropertiesValue ?? false,
+        duration_secs: opts?.defaultDesiredPropertiesValue ?? false,
+        waveform: opts?.defaultDesiredPropertiesValue ?? false,
+        flags: opts?.defaultDesiredPropertiesValue ?? false,
       },
       channel: {
-        type: false,
-        position: false,
-        name: false,
-        topic: false,
-        nsfw: false,
-        bitrate: false,
-        userLimit: false,
-        rateLimitPerUser: false,
-        rtcRegion: false,
-        videoQualityMode: false,
-        guildId: false,
-        lastPinTimestamp: false,
-        permissionOverwrites: false,
-        id: false,
-        permissions: false,
-        lastMessageId: false,
-        ownerId: false,
-        applicationId: false,
-        managed: false,
-        parentId: false,
-        memberCount: false,
-        messageCount: false,
-        archiveTimestamp: false,
-        autoArchiveDuration: false,
-        botIsMember: false,
-        archived: false,
-        locked: false,
-        invitable: false,
-        createTimestamp: false,
-        newlyCreated: false,
-        flags: false,
+        type: opts?.defaultDesiredPropertiesValue ?? false,
+        position: opts?.defaultDesiredPropertiesValue ?? false,
+        name: opts?.defaultDesiredPropertiesValue ?? false,
+        topic: opts?.defaultDesiredPropertiesValue ?? false,
+        nsfw: opts?.defaultDesiredPropertiesValue ?? false,
+        bitrate: opts?.defaultDesiredPropertiesValue ?? false,
+        userLimit: opts?.defaultDesiredPropertiesValue ?? false,
+        rateLimitPerUser: opts?.defaultDesiredPropertiesValue ?? false,
+        rtcRegion: opts?.defaultDesiredPropertiesValue ?? false,
+        videoQualityMode: opts?.defaultDesiredPropertiesValue ?? false,
+        guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        lastPinTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
+        permissionOverwrites: opts?.defaultDesiredPropertiesValue ?? false,
+        id: opts?.defaultDesiredPropertiesValue ?? false,
+        permissions: opts?.defaultDesiredPropertiesValue ?? false,
+        lastMessageId: opts?.defaultDesiredPropertiesValue ?? false,
+        ownerId: opts?.defaultDesiredPropertiesValue ?? false,
+        applicationId: opts?.defaultDesiredPropertiesValue ?? false,
+        managed: opts?.defaultDesiredPropertiesValue ?? false,
+        parentId: opts?.defaultDesiredPropertiesValue ?? false,
+        memberCount: opts?.defaultDesiredPropertiesValue ?? false,
+        messageCount: opts?.defaultDesiredPropertiesValue ?? false,
+        archiveTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
+        autoArchiveDuration: opts?.defaultDesiredPropertiesValue ?? false,
+        botIsMember: opts?.defaultDesiredPropertiesValue ?? false,
+        archived: opts?.defaultDesiredPropertiesValue ?? false,
+        locked: opts?.defaultDesiredPropertiesValue ?? false,
+        invitable: opts?.defaultDesiredPropertiesValue ?? false,
+        createTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
+        newlyCreated: opts?.defaultDesiredPropertiesValue ?? false,
+        flags: opts?.defaultDesiredPropertiesValue ?? false,
       },
       emoji: {
-        id: false,
-        name: false,
-        roles: false,
-        user: false,
+        id: opts?.defaultDesiredPropertiesValue ?? false,
+        name: opts?.defaultDesiredPropertiesValue ?? false,
+        roles: opts?.defaultDesiredPropertiesValue ?? false,
+        user: opts?.defaultDesiredPropertiesValue ?? false,
       },
       guild: {
-        afkTimeout: false,
-        approximateMemberCount: false,
-        approximatePresenceCount: false,
-        defaultMessageNotifications: false,
-        description: false,
-        explicitContentFilter: false,
-        maxMembers: false,
-        maxPresences: false,
-        maxVideoChannelUsers: false,
-        mfaLevel: false,
-        name: false,
-        nsfwLevel: false,
-        preferredLocale: false,
-        premiumSubscriptionCount: false,
-        premiumTier: false,
-        stageInstances: false,
-        systemChannelFlags: false,
-        vanityUrlCode: false,
-        verificationLevel: false,
-        welcomeScreen: false,
-        discoverySplash: false,
-        joinedAt: false,
-        memberCount: false,
-        shardId: false,
-        icon: false,
-        banner: false,
-        splash: false,
-        id: false,
-        ownerId: false,
-        permissions: false,
-        afkChannelId: false,
-        widgetChannelId: false,
-        applicationId: false,
-        systemChannelId: false,
-        rulesChannelId: false,
-        publicUpdatesChannelId: false,
-        premiumProgressBarEnabled: false,
+        afkTimeout: opts?.defaultDesiredPropertiesValue ?? false,
+        approximateMemberCount: opts?.defaultDesiredPropertiesValue ?? false,
+        approximatePresenceCount: opts?.defaultDesiredPropertiesValue ?? false,
+        defaultMessageNotifications: opts?.defaultDesiredPropertiesValue ?? false,
+        description: opts?.defaultDesiredPropertiesValue ?? false,
+        explicitContentFilter: opts?.defaultDesiredPropertiesValue ?? false,
+        maxMembers: opts?.defaultDesiredPropertiesValue ?? false,
+        maxPresences: opts?.defaultDesiredPropertiesValue ?? false,
+        maxVideoChannelUsers: opts?.defaultDesiredPropertiesValue ?? false,
+        mfaLevel: opts?.defaultDesiredPropertiesValue ?? false,
+        name: opts?.defaultDesiredPropertiesValue ?? false,
+        channels: opts?.defaultDesiredPropertiesValue ?? false,
+        emojis: opts?.defaultDesiredPropertiesValue ?? false,
+        features: opts?.defaultDesiredPropertiesValue ?? false,
+        iconHash: opts?.defaultDesiredPropertiesValue ?? false,
+        large: opts?.defaultDesiredPropertiesValue ?? false,
+        members: opts?.defaultDesiredPropertiesValue ?? false,
+        owner: opts?.defaultDesiredPropertiesValue ?? false,
+        presences: opts?.defaultDesiredPropertiesValue ?? false,
+        roles: opts?.defaultDesiredPropertiesValue ?? false,
+        stickers: opts?.defaultDesiredPropertiesValue ?? false,
+        threads: opts?.defaultDesiredPropertiesValue ?? false,
+        toggles: opts?.defaultDesiredPropertiesValue ?? false,
+        unavailable: opts?.defaultDesiredPropertiesValue ?? false,
+        voiceStates: opts?.defaultDesiredPropertiesValue ?? false,
+        widgetEnabled: opts?.defaultDesiredPropertiesValue ?? false,
+        nsfwLevel: opts?.defaultDesiredPropertiesValue ?? false,
+        preferredLocale: opts?.defaultDesiredPropertiesValue ?? false,
+        premiumSubscriptionCount: opts?.defaultDesiredPropertiesValue ?? false,
+        premiumTier: opts?.defaultDesiredPropertiesValue ?? false,
+        stageInstances: opts?.defaultDesiredPropertiesValue ?? false,
+        systemChannelFlags: opts?.defaultDesiredPropertiesValue ?? false,
+        vanityUrlCode: opts?.defaultDesiredPropertiesValue ?? false,
+        verificationLevel: opts?.defaultDesiredPropertiesValue ?? false,
+        welcomeScreen: opts?.defaultDesiredPropertiesValue ?? false,
+        discoverySplash: opts?.defaultDesiredPropertiesValue ?? false,
+        joinedAt: opts?.defaultDesiredPropertiesValue ?? false,
+        memberCount: opts?.defaultDesiredPropertiesValue ?? false,
+        shardId: opts?.defaultDesiredPropertiesValue ?? false,
+        icon: opts?.defaultDesiredPropertiesValue ?? false,
+        banner: opts?.defaultDesiredPropertiesValue ?? false,
+        splash: opts?.defaultDesiredPropertiesValue ?? false,
+        id: opts?.defaultDesiredPropertiesValue ?? false,
+        ownerId: opts?.defaultDesiredPropertiesValue ?? false,
+        permissions: opts?.defaultDesiredPropertiesValue ?? false,
+        afkChannelId: opts?.defaultDesiredPropertiesValue ?? false,
+        widgetChannelId: opts?.defaultDesiredPropertiesValue ?? false,
+        applicationId: opts?.defaultDesiredPropertiesValue ?? false,
+        systemChannelId: opts?.defaultDesiredPropertiesValue ?? false,
+        rulesChannelId: opts?.defaultDesiredPropertiesValue ?? false,
+        publicUpdatesChannelId: opts?.defaultDesiredPropertiesValue ?? false,
+        premiumProgressBarEnabled: opts?.defaultDesiredPropertiesValue ?? false,
+        safetyAlertsChannelId: opts?.defaultDesiredPropertiesValue ?? false,
       },
       interaction: {
-        id: false,
-        applicationId: false,
-        type: false,
-        guildId: false,
-        channelId: false,
-        member: false,
-        user: false,
-        token: false,
-        version: false,
-        message: false,
-        data: false,
-        locale: false,
-        guildLocale: false,
-        appPermissions: false,
+        id: opts?.defaultDesiredPropertiesValue ?? false,
+        applicationId: opts?.defaultDesiredPropertiesValue ?? false,
+        type: opts?.defaultDesiredPropertiesValue ?? false,
+        guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        channel: opts?.defaultDesiredPropertiesValue ?? false,
+        channelId: opts?.defaultDesiredPropertiesValue ?? false,
+        member: opts?.defaultDesiredPropertiesValue ?? false,
+        user: opts?.defaultDesiredPropertiesValue ?? false,
+        token: opts?.defaultDesiredPropertiesValue ?? false,
+        version: opts?.defaultDesiredPropertiesValue ?? false,
+        message: opts?.defaultDesiredPropertiesValue ?? false,
+        data: opts?.defaultDesiredPropertiesValue ?? false,
+        locale: opts?.defaultDesiredPropertiesValue ?? false,
+        guildLocale: opts?.defaultDesiredPropertiesValue ?? false,
+        appPermissions: opts?.defaultDesiredPropertiesValue ?? false,
       },
       invite: {
-        channelId: false,
-        code: false,
-        createdAt: false,
-        guildId: false,
-        inviter: false,
-        maxAge: false,
-        maxUses: false,
-        targetType: false,
-        targetUser: false,
-        targetApplication: false,
-        temporary: false,
-        uses: false,
+        channelId: opts?.defaultDesiredPropertiesValue ?? false,
+        code: opts?.defaultDesiredPropertiesValue ?? false,
+        createdAt: opts?.defaultDesiredPropertiesValue ?? false,
+        guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        inviter: opts?.defaultDesiredPropertiesValue ?? false,
+        maxAge: opts?.defaultDesiredPropertiesValue ?? false,
+        maxUses: opts?.defaultDesiredPropertiesValue ?? false,
+        targetType: opts?.defaultDesiredPropertiesValue ?? false,
+        targetUser: opts?.defaultDesiredPropertiesValue ?? false,
+        targetApplication: opts?.defaultDesiredPropertiesValue ?? false,
+        temporary: opts?.defaultDesiredPropertiesValue ?? false,
+        uses: opts?.defaultDesiredPropertiesValue ?? false,
+        approximateMemberCount: opts?.defaultDesiredPropertiesValue ?? false,
+        approximatePresenceCount: opts?.defaultDesiredPropertiesValue ?? false,
+        guildScheduledEvent: opts?.defaultDesiredPropertiesValue ?? false,
+        stageInstance: opts?.defaultDesiredPropertiesValue ?? false,
+        expiresAt: opts?.defaultDesiredPropertiesValue ?? false,
       },
       member: {
-        id: false,
-        guildId: false,
-        user: false,
-        nick: false,
-        roles: false,
-        joinedAt: false,
-        premiumSince: false,
-        avatar: false,
-        permissions: false,
-        communicationDisabledUntil: false,
-        deaf: false,
-        mute: false,
-        pending: false,
+        id: opts?.defaultDesiredPropertiesValue ?? false,
+        guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        user: opts?.defaultDesiredPropertiesValue ?? false,
+        nick: opts?.defaultDesiredPropertiesValue ?? false,
+        roles: opts?.defaultDesiredPropertiesValue ?? false,
+        joinedAt: opts?.defaultDesiredPropertiesValue ?? false,
+        premiumSince: opts?.defaultDesiredPropertiesValue ?? false,
+        avatar: opts?.defaultDesiredPropertiesValue ?? false,
+        permissions: opts?.defaultDesiredPropertiesValue ?? false,
+        communicationDisabledUntil: opts?.defaultDesiredPropertiesValue ?? false,
+        deaf: opts?.defaultDesiredPropertiesValue ?? false,
+        mute: opts?.defaultDesiredPropertiesValue ?? false,
+        pending: opts?.defaultDesiredPropertiesValue ?? false,
       },
       message: {
-        activity: false,
-        application: false,
-        applicationId: false,
-        attachments: false,
-        author: false,
-        channelId: false,
-        components: false,
-        content: false,
-        editedTimestamp: false,
-        embeds: false,
-        guildId: false,
-        id: false,
+        activity: opts?.defaultDesiredPropertiesValue ?? false,
+        application: opts?.defaultDesiredPropertiesValue ?? false,
+        applicationId: opts?.defaultDesiredPropertiesValue ?? false,
+        attachments: opts?.defaultDesiredPropertiesValue ?? false,
+        author: opts?.defaultDesiredPropertiesValue ?? false,
+        channelId: opts?.defaultDesiredPropertiesValue ?? false,
+        components: opts?.defaultDesiredPropertiesValue ?? false,
+        content: opts?.defaultDesiredPropertiesValue ?? false,
+        editedTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
+        embeds: opts?.defaultDesiredPropertiesValue ?? false,
+        guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        id: opts?.defaultDesiredPropertiesValue ?? false,
         interaction: {
-          id: false,
-          member: false,
-          name: false,
-          type: false,
-          user: false,
+          id: opts?.defaultDesiredPropertiesValue ?? false,
+          member: opts?.defaultDesiredPropertiesValue ?? false,
+          name: opts?.defaultDesiredPropertiesValue ?? false,
+          type: opts?.defaultDesiredPropertiesValue ?? false,
+          user: opts?.defaultDesiredPropertiesValue ?? false,
         },
-        member: false,
-        mentionedChannelIds: false,
-        mentionedRoleIds: false,
-        mentions: false,
+        member: opts?.defaultDesiredPropertiesValue ?? false,
+        mentionedChannelIds: opts?.defaultDesiredPropertiesValue ?? false,
+        mentionedRoleIds: opts?.defaultDesiredPropertiesValue ?? false,
+        mentions: opts?.defaultDesiredPropertiesValue ?? false,
         messageReference: {
-          messageId: false,
-          channelId: false,
-          guildId: false,
+          messageId: opts?.defaultDesiredPropertiesValue ?? false,
+          channelId: opts?.defaultDesiredPropertiesValue ?? false,
+          guildId: opts?.defaultDesiredPropertiesValue ?? false,
         },
-        nonce: false,
-        reactions: false,
-        stickerItems: false,
-        thread: false,
-        type: false,
-        webhookId: false,
+        nonce: opts?.defaultDesiredPropertiesValue ?? false,
+        reactions: opts?.defaultDesiredPropertiesValue ?? false,
+        stickerItems: opts?.defaultDesiredPropertiesValue ?? false,
+        thread: opts?.defaultDesiredPropertiesValue ?? false,
+        type: opts?.defaultDesiredPropertiesValue ?? false,
+        webhookId: opts?.defaultDesiredPropertiesValue ?? false,
       },
       role: {
-        name: false,
-        guildId: false,
-        position: false,
-        color: false,
-        id: false,
-        botId: false,
-        integrationId: false,
-        permissions: false,
-        icon: false,
-        unicodeEmoji: false,
-        mentionable: false,
-        hoist: false,
-        managed: false,
-        subscriptionListingId: false,
+        name: opts?.defaultDesiredPropertiesValue ?? false,
+        guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        position: opts?.defaultDesiredPropertiesValue ?? false,
+        color: opts?.defaultDesiredPropertiesValue ?? false,
+        id: opts?.defaultDesiredPropertiesValue ?? false,
+        botId: opts?.defaultDesiredPropertiesValue ?? false,
+        integrationId: opts?.defaultDesiredPropertiesValue ?? false,
+        permissions: opts?.defaultDesiredPropertiesValue ?? false,
+        icon: opts?.defaultDesiredPropertiesValue ?? false,
+        unicodeEmoji: opts?.defaultDesiredPropertiesValue ?? false,
+        mentionable: opts?.defaultDesiredPropertiesValue ?? false,
+        hoist: opts?.defaultDesiredPropertiesValue ?? false,
+        managed: opts?.defaultDesiredPropertiesValue ?? false,
+        subscriptionListingId: opts?.defaultDesiredPropertiesValue ?? false,
+        flags: opts?.defaultDesiredPropertiesValue ?? false,
       },
       scheduledEvent: {
-        id: false,
-        guildId: false,
-        channelId: false,
-        creatorId: false,
-        scheduledStartTime: false,
-        scheduledEndTime: false,
-        entityId: false,
-        creator: false,
-        name: false,
-        description: false,
-        privacyLevel: false,
-        status: false,
-        entityType: false,
-        userCount: false,
-        location: false,
-        image: false,
+        id: opts?.defaultDesiredPropertiesValue ?? false,
+        guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        channelId: opts?.defaultDesiredPropertiesValue ?? false,
+        creatorId: opts?.defaultDesiredPropertiesValue ?? false,
+        scheduledStartTime: opts?.defaultDesiredPropertiesValue ?? false,
+        scheduledEndTime: opts?.defaultDesiredPropertiesValue ?? false,
+        entityId: opts?.defaultDesiredPropertiesValue ?? false,
+        creator: opts?.defaultDesiredPropertiesValue ?? false,
+        name: opts?.defaultDesiredPropertiesValue ?? false,
+        description: opts?.defaultDesiredPropertiesValue ?? false,
+        privacyLevel: opts?.defaultDesiredPropertiesValue ?? false,
+        status: opts?.defaultDesiredPropertiesValue ?? false,
+        entityType: opts?.defaultDesiredPropertiesValue ?? false,
+        userCount: opts?.defaultDesiredPropertiesValue ?? false,
+        location: opts?.defaultDesiredPropertiesValue ?? false,
+        image: opts?.defaultDesiredPropertiesValue ?? false,
       },
       stageInstance: {
-        id: false,
-        guildId: false,
-        channelId: false,
-        topic: false,
-        guildScheduledEventId: false,
+        id: opts?.defaultDesiredPropertiesValue ?? false,
+        guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        channelId: opts?.defaultDesiredPropertiesValue ?? false,
+        topic: opts?.defaultDesiredPropertiesValue ?? false,
+        guildScheduledEventId: opts?.defaultDesiredPropertiesValue ?? false,
+      },
+      inviteStageInstance: {
+        members: opts?.defaultDesiredPropertiesValue ?? false,
+        participantCount: opts?.defaultDesiredPropertiesValue ?? false,
+        speakerCount: opts?.defaultDesiredPropertiesValue ?? false,
+        topic: opts?.defaultDesiredPropertiesValue ?? false,
       },
       sticker: {
-        id: false,
-        packId: false,
-        name: false,
-        description: false,
-        tags: false,
-        type: false,
-        formatType: false,
-        available: false,
-        guildId: false,
-        user: false,
-        sortValue: false,
+        id: opts?.defaultDesiredPropertiesValue ?? false,
+        packId: opts?.defaultDesiredPropertiesValue ?? false,
+        name: opts?.defaultDesiredPropertiesValue ?? false,
+        description: opts?.defaultDesiredPropertiesValue ?? false,
+        tags: opts?.defaultDesiredPropertiesValue ?? false,
+        type: opts?.defaultDesiredPropertiesValue ?? false,
+        formatType: opts?.defaultDesiredPropertiesValue ?? false,
+        available: opts?.defaultDesiredPropertiesValue ?? false,
+        guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        user: opts?.defaultDesiredPropertiesValue ?? false,
+        sortValue: opts?.defaultDesiredPropertiesValue ?? false,
       },
       user: {
-        username: false,
-        globalName: false,
-        locale: false,
-        flags: false,
-        premiumType: false,
-        publicFlags: false,
-        accentColor: false,
-        id: false,
-        discriminator: false,
-        avatar: false,
-        bot: false,
-        system: false,
-        mfaEnabled: false,
-        verified: false,
-        email: false,
-        banner: false,
+        username: opts?.defaultDesiredPropertiesValue ?? false,
+        globalName: opts?.defaultDesiredPropertiesValue ?? false,
+        locale: opts?.defaultDesiredPropertiesValue ?? false,
+        flags: opts?.defaultDesiredPropertiesValue ?? false,
+        premiumType: opts?.defaultDesiredPropertiesValue ?? false,
+        publicFlags: opts?.defaultDesiredPropertiesValue ?? false,
+        accentColor: opts?.defaultDesiredPropertiesValue ?? false,
+        id: opts?.defaultDesiredPropertiesValue ?? false,
+        discriminator: opts?.defaultDesiredPropertiesValue ?? false,
+        avatar: opts?.defaultDesiredPropertiesValue ?? false,
+        bot: opts?.defaultDesiredPropertiesValue ?? false,
+        system: opts?.defaultDesiredPropertiesValue ?? false,
+        mfaEnabled: opts?.defaultDesiredPropertiesValue ?? false,
+        verified: opts?.defaultDesiredPropertiesValue ?? false,
+        email: opts?.defaultDesiredPropertiesValue ?? false,
+        banner: opts?.defaultDesiredPropertiesValue ?? false,
+        avatarDecoration: opts?.defaultDesiredPropertiesValue ?? false,
       },
       webhook: {
-        id: false,
-        type: false,
-        guildId: false,
-        channelId: false,
-        user: false,
-        name: false,
-        avatar: false,
-        token: false,
-        applicationId: false,
-        sourceGuild: false,
-        sourceChannel: false,
-        url: false,
+        id: opts?.defaultDesiredPropertiesValue ?? false,
+        type: opts?.defaultDesiredPropertiesValue ?? false,
+        guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        channelId: opts?.defaultDesiredPropertiesValue ?? false,
+        user: opts?.defaultDesiredPropertiesValue ?? false,
+        name: opts?.defaultDesiredPropertiesValue ?? false,
+        avatar: opts?.defaultDesiredPropertiesValue ?? false,
+        token: opts?.defaultDesiredPropertiesValue ?? false,
+        applicationId: opts?.defaultDesiredPropertiesValue ?? false,
+        sourceGuild: opts?.defaultDesiredPropertiesValue ?? false,
+        sourceChannel: opts?.defaultDesiredPropertiesValue ?? false,
+        url: opts?.defaultDesiredPropertiesValue ?? false,
+      },
+      guildOnboarding: {
+        defaultChannelIds: opts?.defaultDesiredPropertiesValue ?? false,
+        enabled: opts?.defaultDesiredPropertiesValue ?? false,
+        guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        mode: opts?.defaultDesiredPropertiesValue ?? false,
+        prompts: {
+          id: opts?.defaultDesiredPropertiesValue ?? false,
+          inOnboarding: opts?.defaultDesiredPropertiesValue ?? false,
+          options: {
+            channelIds: opts?.defaultDesiredPropertiesValue ?? false,
+            description: opts?.defaultDesiredPropertiesValue ?? false,
+            emoji: opts?.defaultDesiredPropertiesValue ?? false,
+            id: opts?.defaultDesiredPropertiesValue ?? false,
+            roleIds: opts?.defaultDesiredPropertiesValue ?? false,
+            title: opts?.defaultDesiredPropertiesValue ?? false,
+          },
+          required: opts?.defaultDesiredPropertiesValue ?? false,
+          singleSelect: opts?.defaultDesiredPropertiesValue ?? false,
+          title: opts?.defaultDesiredPropertiesValue ?? false,
+          type: opts?.defaultDesiredPropertiesValue ?? false,
+        },
+      },
+      entitlement: {
+        id: opts?.defaultDesiredPropertiesValue ?? false,
+        skuId: opts?.defaultDesiredPropertiesValue ?? false,
+        userId: opts?.defaultDesiredPropertiesValue ?? false,
+        guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        applicationId: opts?.defaultDesiredPropertiesValue ?? false,
+        type: opts?.defaultDesiredPropertiesValue ?? false,
+        deleted: opts?.defaultDesiredPropertiesValue ?? false,
+        startsAt: opts?.defaultDesiredPropertiesValue ?? false,
+        endsAt: opts?.defaultDesiredPropertiesValue ?? false,
+      },
+      sku: {
+        id: opts?.defaultDesiredPropertiesValue ?? false,
+        type: opts?.defaultDesiredPropertiesValue ?? false,
+        applicationId: opts?.defaultDesiredPropertiesValue ?? false,
+        name: opts?.defaultDesiredPropertiesValue ?? false,
+        slug: opts?.defaultDesiredPropertiesValue ?? false,
+        flags: opts?.defaultDesiredPropertiesValue ?? false,
+      },
+      voiceState: {
+        requestToSpeakTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
+        channelId: opts?.defaultDesiredPropertiesValue ?? false,
+        guildId: opts?.defaultDesiredPropertiesValue ?? false,
+        toggles: opts?.defaultDesiredPropertiesValue ?? false,
+        sessionId: opts?.defaultDesiredPropertiesValue ?? false,
+        userId: opts?.defaultDesiredPropertiesValue ?? false,
       },
     },
     reverse: {
@@ -751,15 +1108,20 @@ export function createTransformers(options: Partial<Transformers>): Transformers
     applicationCommandPermission: options.applicationCommandPermission ?? transformApplicationCommandPermission,
     scheduledEvent: options.scheduledEvent ?? transformScheduledEvent,
     threadMember: options.threadMember ?? transformThreadMember,
+    threadMemberGuildCreate: options.threadMemberGuildCreate ?? transformThreadMemberGuildCreate,
     welcomeScreen: options.welcomeScreen ?? transformWelcomeScreen,
     voiceRegion: options.voiceRegion ?? transformVoiceRegion,
     widget: options.widget ?? transformWidget,
     widgetSettings: options.widgetSettings ?? transformWidgetSettings,
     stageInstance: options.stageInstance ?? transformStageInstance,
+    inviteStageInstance: options.inviteStageInstance ?? transformInviteStageInstance,
     sticker: options.sticker ?? transformSticker,
     stickerPack: options.stickerPack ?? transformStickerPack,
     gatewayBot: options.gatewayBot ?? transformGatewayBot,
     applicationCommandOptionChoice: options.applicationCommandOptionChoice ?? transformApplicationCommandOptionChoice,
     template: options.template ?? transformTemplate,
+    guildOnboarding: options.guildOnboarding ?? transformGuildOnboarding,
+    entitlement: options.entitlement ?? transformEntitlement,
+    sku: options.sku ?? transformSku,
   }
 }

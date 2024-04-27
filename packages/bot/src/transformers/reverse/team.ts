@@ -13,9 +13,9 @@ export function transformTeamToDiscordTeam(bot: Bot, payload: Team): DiscordTeam
     owner_user_id: payload.ownerUserId.toString(),
     members: payload.members.map((member) => ({
       membership_state: member.membershipState,
-      permissions: member.permissions,
       team_id: id,
       user: bot.transformers.reverse.user(bot, member.user),
+      role: member.role,
     })),
   }
 }

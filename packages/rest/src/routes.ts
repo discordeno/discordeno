@@ -46,6 +46,9 @@ export function createRoutes(): RestRoutes {
       dm: () => {
         return '/users/@me/channels'
       },
+      dmRecipient: (channelId, userId) => {
+        return `/channels/${channelId}/recipients/${userId}`
+      },
       pin: (channelId, messageId) => {
         return `/channels/${channelId}/pins/${messageId}`
       },
@@ -100,7 +103,7 @@ export function createRoutes(): RestRoutes {
       },
 
       forum: (channelId) => {
-        return `/channels/${channelId}/threads?has_message=true`
+        return `/channels/${channelId}/threads`
       },
 
       invites: (channelId) => {
@@ -221,6 +224,22 @@ export function createRoutes(): RestRoutes {
     guilds: {
       all: () => {
         return '/guilds'
+      },
+      userGuilds: (options) => {
+        let url = '/users/@me/guilds?'
+
+        if (options) {
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          if (options.after) url += `after=${options.after}`
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          if (options.before) url += `&before=${options.before}`
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          if (options.limit) url += `&limit=${options.limit}`
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          if (options.withCounts) url += `&with_counts=${options.withCounts}`
+        }
+
+        return url
       },
       auditlogs: (guildId, options) => {
         let url = `/guilds/${guildId}/audit-logs?`
@@ -359,6 +378,9 @@ export function createRoutes(): RestRoutes {
         member: (guildId, userId) => {
           return `/guilds/${guildId}/members/${userId}`
         },
+        currentMember: (guildId) => {
+          return `/users/@me/guilds/${guildId}/member`
+        },
         members: (guildId, options) => {
           let url = `/guilds/${guildId}/members?`
 
@@ -468,6 +490,9 @@ export function createRoutes(): RestRoutes {
       widgetJson: (guildId) => {
         return `/guilds/${guildId}/widget.json`
       },
+      onboarding: (guildId) => {
+        return `/guilds/${guildId}/onboarding`
+      },
     },
 
     sticker: (stickerId) => {
@@ -532,24 +557,67 @@ export function createRoutes(): RestRoutes {
       },
     },
 
+    // OAuth2 endpoints
+    oauth2: {
+      tokenExchange: () => {
+        return '/oauth2/token'
+      },
+      tokenRevoke: () => {
+        return '/oauth2/token/revoke'
+      },
+      currentAuthorization: () => {
+        return '/oauth2/@me'
+      },
+      application: () => {
+        return '/oauth2/applications/@me'
+      },
+      connections: () => {
+        return '/users/@me/connections'
+      },
+      roleConnections: (applicationId) => {
+        return `/users/@me/applications/${applicationId}/role-connection`
+      },
+    },
+
+    monetization: {
+      entitlements: (applicationId, options) => {
+        let url = `/applications/${applicationId}/entitlements?`
+
+        if (options) {
+          if (options.after) url += `after=${options.after}`
+          if (options.before) url += `&before=${options.before}`
+          if (options.excludeEnded) url += `&exclude_ended=${options.excludeEnded}`
+          if (options.guildId) url += `&guild_id=${options.guildId}`
+          if (options.limit) url += `&limit=${options.limit}`
+          if (options.skuIds) url += `&sku_ids=${options.skuIds.join(',')}`
+          if (options.userId) url += `&user_id=${options.userId}`
+        }
+
+        return url
+      },
+      entitlement: (applicationId, entitlementId) => {
+        return `/applications/${applicationId}/entitlements/${entitlementId}`
+      },
+
+      skus: (applicationId) => {
+        return `/applications/${applicationId}/skus`
+      },
+    },
+
     // User endpoints
     user(userId) {
       return `/users/${userId}`
     },
 
-    userBot() {
+    currentUser() {
       return '/users/@me'
-    },
-
-    oauth2Application() {
-      return '/oauth2/applications/@me'
     },
 
     gatewayBot() {
       return '/gateway/bot'
     },
 
-    nitroStickerPacks() {
+    stickerPacks() {
       return '/sticker-packs'
     },
   }

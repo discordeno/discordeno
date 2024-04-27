@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import fs from 'node:fs'
 import path from 'node:path'
 
 // these two paths may vary depending on where you place this script, and your project structure including where typedoc generates its output files.
-const typedocOutPath = await import('../typedoc.json', {
-  assert: { type: 'json' },
-}).then((module) => module.default.out)
+const typedocOutPath = await import('../typedoc.json', { assert: { type: 'json' } }).then((module) => module.default.out)
 
 async function* walk(dir) {
   for await (const d of await fs.promises.opendir(dir)) {
@@ -18,13 +19,33 @@ for await (let filepath of walk(typedocOutPath)) {
   if (filepath.endsWith('.json')) continue
   let file = fs.readFileSync(filepath, 'utf-8')
 
-  if (filepath.endsWith('generated/README.md')) {
+  if (filepath.endsWith(`generated${path.sep}README.md`)) {
     file = [
       'discordeno-monorepo / [Modules](modules.md)',
       '',
       '# Discordeno',
       '',
       'Thank you for using Discordeno. These docs are generated automatically. If you see any issues please contact us on [Discord](https://discord.gg/ddeno)',
+      '',
+    ].join('\n')
+  }
+
+  if (filepath.endsWith(`generated${path.sep}modules.md`)) {
+    file = [
+      '[discordeno-monorepo](README.md) / Modules',
+      '',
+      '# discordeno-monorepo',
+      '',
+      '## Table of contents',
+      '',
+      '### Modules',
+      '',
+      '- [@discordeno/bot](modules/Bot)',
+      '- [@discordeno/gateway](modules/Gateway)',
+      '- [@discordeno/rest](modules/Rest)',
+      '- [@discordeno/types](modules/Types)',
+      '- [@discordeno/utils](modules/Utils)',
+      '',
     ].join('\n')
   }
 
@@ -53,13 +74,13 @@ for await (let filepath of walk(typedocOutPath)) {
 
   for (const form of cleanForms) {
     // Clean the file of the ugly forms
-    file = file.replace(new RegExp(form.ugly, 'gi'), form.clean || '')
-    const lastIndex = filepath.lastIndexOf('/')
+    file = file.replace(new RegExp(form.ugly, 'gi'), form.clean ?? '')
     // Clean the file name of the ugly forms
-    if (!filepath.endsWith(`${form.ugly}md`)) filepath = filepath.replace(new RegExp(form.ugly, 'gi'), form.clean || '')
+    if (!filepath.endsWith(`${form.ugly}md`)) filepath = filepath.replace(new RegExp(form.ugly, 'gi'), form.clean ?? '')
   }
 
-  file = file.replace(/Promise<([^>]+)>/gi, 'Promise{$1}')
+  file = file.replace(/(?<!\\)(<|>|,|=|\{|\})/gi, `\\$1`)
+  file = file.replace(/(?<!README|modules)\.md/gi, '')
 
   if (file.includes('Promise<')) console.log('Removing Promise< failed')
 
@@ -67,13 +88,10 @@ for await (let filepath of walk(typedocOutPath)) {
     filepath = filepath.replace('/md', '/README.md')
   }
 
-  // if (filepath.includes('/generated/classes')) console.log('file in classes 2', filepath)
   if (filepath.includes('/generated/modules/discordeno_')) {
     const mod = filepath.substring(filepath.lastIndexOf('_') + 1)
     filepath = filepath.substring(0, filepath.lastIndexOf('/')) + `/${mod[0].toUpperCase()}${mod.substring(1)}`
   }
 
-  fs.writeFileSync(filepath, file, function (err, result) {
-    if (err) throw err
-  })
+  fs.writeFileSync(filepath, file)
 }

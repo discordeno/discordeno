@@ -1,4 +1,4 @@
-import { delay, logger } from '@discordeno/utils'
+import { delay } from '@discordeno/utils'
 import type { RestManager, SendRequestOptions } from './types.js'
 
 export class Queue {
@@ -28,6 +28,8 @@ export class Queue {
   frozenAt: number = 0
   /** The time in milliseconds to wait before deleting this queue if it is empty. Defaults to 60000(one minute). */
   deleteQueueDelay: number = 60000
+  /** The authentication header used for the OAuth2 request. Defaults to an empty string for non-OAuth2 requests */
+  authentication: string = ''
 
   constructor(rest: RestManager, options: QueueOptions) {
     this.rest = rest
@@ -38,6 +40,7 @@ export class Queue {
     if (options.remaining) this.remaining = options.remaining
     if (options.timeoutId) this.timeoutId = options.timeoutId
     if (options.deleteQueueDelay) this.deleteQueueDelay = options.deleteQueueDelay
+    if (options.authentication) this.authentication = options.authentication
   }
 
   /** Check if there is any remaining requests that are allowed. */
@@ -68,7 +71,7 @@ export class Queue {
     this.processing = true
 
     while (this.waiting.length > 0) {
-      logger.debug(`[Queue] ${this.url} process waiting while loop ran.`)
+      this.rest.logger.debug(`[Queue] ${this.isOauth2Queue() ? '' : 'Bearer '}${this.url} process waiting while loop ran.`)
       if (this.isRequestAllowed()) {
         // Resolve the next item in the queue
         this.waiting.shift()?.()
@@ -90,7 +93,7 @@ export class Queue {
     this.processingPending = true
 
     while (this.pending.length > 0) {
-      logger.debug(`Queue ${this.url} process pending while loop ran with ${this.pending.length}.`)
+      this.rest.logger.debug(`Queue ${this.isOauth2Queue() ? '' : 'Bearer '}${this.url} process pending while loop ran with ${this.pending.length}.`)
       if (!this.firstRequest && !this.isRequestAllowed()) {
         const now = Date.now()
         const future = this.frozenAt + this.interval
@@ -102,13 +105,12 @@ export class Queue {
       if (request) {
         const basicURL = this.rest.simplifyUrl(request.route, request.method)
 
-        // IF THIS URL IS STILL RATE LIMITED, TRY AGAIN
         // If this url is still rate limited, try again
-        const urlResetIn = this.rest.checkRateLimits(basicURL)
+        const urlResetIn = this.rest.checkRateLimits(basicURL, request.requestBodyOptions?.headers)
         if (urlResetIn) await delay(urlResetIn)
 
         // IF A BUCKET EXISTS, CHECK THE BUCKET'S RATE LIMITS
-        const bucketResetIn = request.bucketId ? this.rest.checkRateLimits(request.bucketId) : false
+        const bucketResetIn = request.bucketId ? this.rest.checkRateLimits(request.bucketId, request.requestBodyOptions?.headers) : false
         if (bucketResetIn) await delay(bucketResetIn)
 
         this.firstRequest = false
@@ -133,7 +135,7 @@ export class Queue {
       }
     }
 
-    logger.debug(`Queue ${this.url} process pending while loop exited with ${this.pending.length}.`)
+    this.rest.logger.debug(`Queue ${this.isOauth2Queue() ? '' : 'Bearer '}${this.url} process pending while loop exited with ${this.pending.length}.`)
 
     // Mark as false so next pending request can be triggered by new loop.
     this.processingPending = false
@@ -172,20 +174,23 @@ export class Queue {
       return
     }
 
-    logger.debug(`[Queue] ${this.url}. Delaying delete for ${this.deleteQueueDelay}ms`)
+    this.rest.logger.debug(`[Queue] ${this.isOauth2Queue() ? '' : 'Bearer '}${this.url}. Delaying delete for ${this.deleteQueueDelay}ms`)
     // Delete in a minute giving a bit of time to allow new requests that may reuse this queue
     setTimeout(async () => {
       if (!this.isQueueClearable()) {
-        logger.debug(`[Queue] ${this.url}. is not clearable. Restarting processing of queue.`)
+        this.rest.logger.debug(`[Queue] ${this.isOauth2Queue() ? '' : 'Bearer '}${this.url}. is not clearable. Restarting processing of queue.`)
         this.processPending()
         return
       }
 
-      logger.debug(`[Queue] ${this.url}. Deleting`)
+      this.rest.logger.debug(`[Queue] ${this.url}. Deleting`)
       if (this.timeoutId) clearTimeout(this.timeoutId)
       // No requests have been requested for this queue so we nuke this queue
-      this.rest.queues.delete(this.url)
-      logger.debug(`[Queue] ${this.url}. Deleted! Remaining: (${this.rest.queues.size})`, [...this.rest.queues.keys()])
+      this.rest.queues.delete(`${this.authentication}${this.url}`)
+      this.rest.logger.debug(
+        `[Queue] ${this.url}. Deleted! Remaining: (${this.rest.queues.size})`,
+        [...this.rest.queues.values()].map((queue) => `${queue.isOauth2Queue() ? '' : 'Bearer '}${queue.url}`),
+      )
       if (this.rest.queues.size) this.processPending()
     }, this.deleteQueueDelay)
   }
@@ -200,6 +205,10 @@ export class Queue {
     if (this.processingPending) return false
 
     return true
+  }
+
+  isOauth2Queue(): boolean {
+    return this.authentication === ''
   }
 }
 
@@ -216,4 +225,6 @@ export interface QueueOptions {
   url: string
   /** The time in milliseconds to wait before deleting this queue if it is empty. Defaults to 60000(one minute). */
   deleteQueueDelay?: number
+  /** Authentication used for the request. In non-OAuth2 situations should be an empty string. Defaults to an empty string */
+  authentication?: string
 }

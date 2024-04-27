@@ -3,7 +3,7 @@ import type { Bot } from '../index.js'
 import type { DiscordComponent } from '../typings.js'
 
 export function transformComponent(bot: Bot, payload: DiscordComponent): Component {
-  return {
+  const component = {
     type: payload.type,
     customId: payload.custom_id,
     disabled: payload.disabled,
@@ -39,9 +39,9 @@ export function transformComponent(bot: Bot, payload: DiscordComponent): Compone
     value: payload.value,
     components: payload.components?.map((component) => bot.transformers.component(bot, component)),
   }
-}
 
-// THIS TRANSFORMER HAS A CIRCULAR REFERENCE TO CALL ITSELF FOR COMPONENTS SO AN AUTOMATED TYPE CAN NOT BE CREATED!
+  return bot.transformers.customizers.component(bot, payload, component)
+}
 
 export interface Component {
   /** component type */

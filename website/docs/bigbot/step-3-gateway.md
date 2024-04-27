@@ -149,7 +149,7 @@ GATEWAY.tellWorkerToIdentify = async function (workerId, shardId, bucketId) {
     method: 'POST',
     headers: {
       authorization: process.env.AUTHORIZATION,
-      "Content-type": "application/json",
+      'Content-type': 'application/json',
     },
     body: JSON.stringify({ type: 'IDENTIFY_SHARD', shardId }),
   })

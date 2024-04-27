@@ -10,8 +10,7 @@ import {
   StarContainer,
   StarIcon,
 } from '@site/src/styling'
-import { DiscordLibraries, IReview } from '@site/src/types'
-import React from 'react'
+import { DiscordLibraries, type IReview } from '@site/src/types'
 
 const reviewList: IReview[] = [
   {
@@ -19,10 +18,9 @@ const reviewList: IReview[] = [
     bot: {
       username: 'Giveaway Boat',
       discriminator: '2911',
-      avatar:
-        'https://media.discordapp.net/attachments/785384884197392387/1094721866167492658/giveaway_boat.png',
+      avatar: 'https://giveaway.boats/assets/logo.png',
       invite_url: 'https://invite.giveaway.boats/',
-      guild_count: 150000,
+      guild_count: 185000,
     },
     developer: {
       usernames: ['Awesome Stickz'],
@@ -43,7 +41,7 @@ const reviewList: IReview[] = [
         'https://cdn.discordapp.com/avatars/1032699319368814652/8abbc5911333d3df288ff962a2120d75.png',
       invite_url:
         'https://discord.com/oauth2/authorize?client_id=1032699319368814652&permissions=274877959232&scope=bot%20applications.commands',
-      guild_count: 64000,
+      guild_count: 97000,
     },
     developer: {
       usernames: ['8au'],
@@ -64,7 +62,7 @@ const reviewList: IReview[] = [
         'https://cdn.discordapp.com/avatars/853327905357561948/a394518e742643f05cc201249d3ae75e.png',
       invite_url:
         'https://discord.com/oauth2/authorize?client_id=853327905357561948&scope=bot&permissions=534925798592',
-      guild_count: 100000,
+      guild_count: 153000,
     },
     developer: {
       usernames: ['8au'],
@@ -85,7 +83,7 @@ const reviewList: IReview[] = [
         'https://cdn.discordapp.com/avatars/735147814878969968/8b72f174c30276f4d48c1e66608df70c.webp',
       invite_url:
         'https://discord.com/api/oauth2/authorize?client_id=735147814878969968&permissions=805825744&scope=applications.commands%20bot',
-      guild_count: 211477,
+      guild_count: 252000,
     },
     developer: {
       usernames: ['Meister'],
@@ -102,11 +100,10 @@ const reviewList: IReview[] = [
     bot: {
       username: 'CactusFire',
       discriminator: '3759',
-      avatar:
-        'https://cdn.discordapp.com/avatars/543567770579894272/ae83acadc61dcca989525d83e76a1783.webp?size=2048',
+      avatar: 'https://i.imgur.com/L7zadjU.png',
       invite_url:
         'https://discord.com/oauth2/authorize?client_id=543567770579894272&permissions=8&scope=bot%20applications.commands',
-      guild_count: 259000,
+      guild_count: 272000,
     },
     developer: {
       usernames: ['LHCLYT'],
@@ -201,7 +198,7 @@ export default function DiscordenoReviews() {
                       </svg>
                       {String(review.bot.guild_count).replace(
                         /\B(?=(\d{3})+(?!\d))/g,
-                        ','
+                        ',',
                       )}{' '}
                       guilds
                     </div>

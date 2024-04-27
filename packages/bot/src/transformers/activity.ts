@@ -1,8 +1,6 @@
-import type { Bot, DiscordActivity } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
+import type { ActivityTypes, Bot, DiscordActivity } from '../index.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformActivity(bot: Bot, payload: DiscordActivity) {
+export function transformActivity(bot: Bot, payload: DiscordActivity): Activity {
   const activity = {
     name: payload.name,
     type: payload.type,
@@ -33,9 +31,40 @@ export function transformActivity(bot: Bot, payload: DiscordActivity) {
     instance: payload.instance,
     flags: payload.flags,
     buttons: payload.buttons,
-  }
+  } as Activity
 
-  return activity as Optionalize<typeof activity>
+  return bot.transformers.customizers.activity(bot, payload, activity)
 }
 
-export interface Activity extends ReturnType<typeof transformActivity> {}
+export interface Activity {
+  join?: string
+  flags?: number
+  applicationId?: bigint
+  spectate?: string
+  url?: string
+  startedAt?: number
+  endedAt?: number
+  details?: string
+  state?: string
+  emoji?: {
+    id?: bigint
+    animated?: boolean
+    name: string
+  }
+  partyId?: string
+  partyCurrentSize?: number
+  partyMaxSize?: number
+  largeImage?: string
+  largeText?: string
+  smallImage?: string
+  smallText?: string
+  match?: string
+  instance?: boolean
+  buttons?: Array<{
+    url: string
+    label: string
+  }>
+  name: string
+  type: ActivityTypes
+  createdAt: number
+}

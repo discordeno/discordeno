@@ -1,12 +1,14 @@
 import type {
   BigString,
   GetBans,
+  GetEntitlements,
   GetGuildAuditLog,
   GetGuildPruneCountQuery,
   GetInvite,
   GetMessagesOptions,
   GetReactions,
   GetScheduledEventUsers,
+  GetUserGuilds,
   ListArchivedThreads,
   ListGuildMembers,
 } from '@discordeno/types'
@@ -14,14 +16,10 @@ import type {
 export interface RestRoutes {
   /** A specific user route. */
   user: (id: BigString) => string
-  /** Current bot user route. */
-  userBot: () => string
-  // OAuth2
-  oauth2Application: () => string
   // Gateway Bot
   gatewayBot: () => string
-  // Nitro Sticker Packs
-  nitroStickerPacks: () => string
+  // Standard Sticker Packs
+  stickerPacks: () => string
   /** Routes for webhook related routes. */
   webhooks: {
     /** Route for managing the original message sent by a webhook. */
@@ -39,6 +37,8 @@ export interface RestRoutes {
     bulk: (channelId: BigString) => string
     /** Route for non-specific dm channel. */
     dm: () => string
+    /** Route to add a user to an exiting group DM, requires an access token with the OAuth2 `gdm.join` scope */
+    dmRecipient: (channelId: BigString, userId: BigString) => string
     /** Route for handling a specific pin. */
     pin: (channelId: BigString, messageId: BigString) => string
     /** Route for handling a channels pins. */
@@ -108,6 +108,8 @@ export interface RestRoutes {
   guilds: {
     /** Routes for handling a non-specific guild. */
     all: () => string
+    /** Route for fetching an user guilds. Requires `guilds` OAuth2 scope */
+    userGuilds: (options?: GetUserGuilds) => string
     /** Route for handling audit logs in a guild. */
     auditlogs: (guildId: BigString, options?: GetGuildAuditLog) => string
     /** Routes for a guilds automoderation. */
@@ -168,6 +170,8 @@ export interface RestRoutes {
       bot: (guildId: BigString) => string
       /** Route for handling a specific guild member. */
       member: (guildId: BigString, userId: BigString) => string
+      /** Route to get the authenticated user. Requires the `guilds.members.read` OAuth2 scope */
+      currentMember: (guildId: BigString) => string
       /** Route for handling non-specific guild members. */
       members: (guildId: BigString, options?: ListGuildMembers) => string
       /** Route for handling member searching in a guild. */
@@ -203,6 +207,8 @@ export interface RestRoutes {
     sticker: (guildId: BigString, stickerId: BigString) => string
     /** Route for handling a voice state. */
     voice: (guildId: BigString, userId?: BigString) => string
+    /** Route for the onboarding */
+    onboarding: (guildId: BigString) => string
   }
   /** Routes for interaction related endpoints. */
   interactions: {
@@ -234,6 +240,32 @@ export interface RestRoutes {
       message: (applicationId: BigString, token: string, messageId: BigString) => string
     }
   }
+  /** Routes related to OAuth2 */
+  oauth2: {
+    /** Route to generate a new access token */
+    tokenExchange: () => string
+    /** Route to revoke an OAuth2 access_token */
+    tokenRevoke: () => string
+    /** Route to get information about the current authorization. Requires an access token */
+    currentAuthorization: () => string
+    /** Route to get information about the current application. Requires an access token */
+    application: () => string
+    /** Route to get the connection the user has. Requires the `connections` OAuth2 scope */
+    connections: () => string
+    /** Route to handling role-connection for an application */
+    roleConnections: (applicationId: BigString) => string
+  }
+  /** Routes related to monetization (entitlements and SKU) */
+  monetization: {
+    /** Route to list / create entitlements */
+    entitlements: (applicationId: BigString, options?: GetEntitlements) => string
+    /** Route to delete an entitlement */
+    entitlement: (applicationId: BigString, entitlementId: BigString) => string
+    /** Route to list the SKUs */
+    skus: (applicationId: BigString) => string
+  }
+  /** Get information about the current OAuth2 user / bot user. If used with a OAuth2 token requires the `identify` OAuth2 scope */
+  currentUser: () => string
   /** Route for handling a sticker. */
   sticker: (stickerId: BigString) => string
   /** Route for handling all voice regions. */

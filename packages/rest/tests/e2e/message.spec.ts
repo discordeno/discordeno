@@ -43,8 +43,8 @@ describe('Send a message', () => {
     expect(attachment.filename).to.be.equal('gamer')
   })
 
-  it ('With a file attachment', async () => {
-    const txtFile = new Blob(['hello world'], { type: 'text/plain' });
+  it('With a file attachment', async () => {
+    const txtFile = new Blob(['hello world'], { type: 'text/plain' })
 
     const fileMsg = await rest.sendMessage(e2ecache.channel.id, {
       content: '222',
@@ -54,15 +54,15 @@ describe('Send a message', () => {
           blob: txtFile,
         },
       ],
-    });
+    })
 
-    expect(fileMsg.id).not.equals(undefined);
-    expect(fileMsg.content).equals('222');
-    expect(fileMsg.attachments.length).equals(1);
-    expect(fileMsg.attachments.at(0)?.filename).equals('application.txt');
-    expect(fileMsg.attachments.at(0)?.size).equals(11);
+    expect(fileMsg.id).not.equals(undefined)
+    expect(fileMsg.content).equals('222')
+    expect(fileMsg.attachments.length).equals(1)
+    expect(fileMsg.attachments.at(0)?.filename).equals('application.txt')
+    expect(fileMsg.attachments.at(0)?.size).equals(11)
 
-    const txtFile2 = new Blob(['hello world edit'], { type: 'text/plain' });
+    const txtFile2 = new Blob(['hello world edit'], { type: 'text/plain' })
 
     const edited = await rest.editMessage(e2ecache.channel.id, fileMsg.id, {
       content: '222 edit',
@@ -72,13 +72,13 @@ describe('Send a message', () => {
           blob: txtFile2,
         },
       ],
-    });
+    })
 
-    expect(edited.id).not.equals(undefined);
-    expect(edited.content).equals('222 edit');
-    expect(edited.attachments.length).equals(1);
-    expect(edited.attachments.at(0)?.filename).equals('application_edit.txt');
-    expect(edited.attachments.at(0)?.size).equals(16);
+    expect(edited.id).not.equals(undefined)
+    expect(edited.content).equals('222 edit')
+    expect(edited.attachments.length).equals(1)
+    expect(edited.attachments.at(0)?.filename).equals('application_edit.txt')
+    expect(edited.attachments.at(0)?.size).equals(16)
   })
 })
 

@@ -39,8 +39,23 @@ export enum ChannelFlags {
   None,
   /** this thread is pinned to the top of its parent `GUILD_FORUM` channel */
   Pinned = 1 << 1,
-  /** Whether a tag is required to be specified when creating a thread in a `GUILD_FORUM` channel. Tags are specified in the `applied_tags` field. */
-  RequireTag,
+  /** Whether a tag is required to be specified when creating a thread in a `GUILD_FORUM` or a GUILD_MEDIA channel. Tags are specified in the `applied_tags` field. */
+  RequireTag = 1 << 4,
+  /** When set hides the embedded media download options. Available only for media channels. */
+  HideMediaDownloadOptions = 1 << 15,
+}
+
+/** https://discord.com/developers/docs/topics/permissions#role-object-role-flags */
+export enum RoleFlags {
+  None,
+  /** Role can be selected by members in an onboarding prompt */
+  InPrompt = 1 << 0,
+}
+
+export enum AttachmentFlags {
+  None,
+  /** This attachment has been edited using the remix feature on mobile */
+  IsRemix = 1 << 2,
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
@@ -227,6 +242,8 @@ export enum GuildFeatures {
   InvitesDisabled = 'INVITES_DISABLED',
   /** Guild has access to set an animated guild banner image */
   AnimatedBanner = 'ANIMATED_BANNER',
+  /** Guild has disabled alerts for join raids in the configured safety alerts channel */
+  RaidAlertsDisabled = 'RAID_ALERTS_DISABLED',
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-mfa-level */
@@ -295,6 +312,8 @@ export enum ChannelTypes {
   GuildDirectory,
   /** A channel which can only contains threads */
   GuildForum,
+  /** Channel that can only contain threads, similar to GUILD_FORUM channels */
+  GuildMedia,
 }
 
 export enum OverwriteTypes {
@@ -364,9 +383,9 @@ export enum MessageActivityTypes {
 
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-types */
 export enum StickerTypes {
-  /** an official sticker in a pack, part of Nitro or in a removed purchasable pack */
+  /** an official sticker in a pack */
   Standard = 1,
-  /** a sticker uploaded to a Boosted guild for the guild's members */
+  /** a sticker uploaded to a guild for the guild's members */
   Guild,
 }
 
@@ -507,6 +526,14 @@ export enum AuditLogEvents {
   AutoModerationRuleDelete,
   /** Message was blocked by AutoMod according to a rule. */
   AutoModerationBlockMessage,
+  /** Message was flagged by AutoMod */
+  AudoModerationFlagMessage,
+  /** Member was timed out by AutoMod */
+  AutoModerationMemberTimedOut,
+  /** Creator monetization request was created */
+  CreatorMonetizationRequestCreated = 150,
+  /** Creator monetization terms were accepted */
+  CreatorMonetizationTermsAccepted,
 }
 
 export enum ScheduledEventPrivacyLevel {
@@ -610,13 +637,13 @@ export enum BitwisePermissionFlags {
   MANAGE_ROLES = 0x0000000010000000,
   /** Allows management and editing of webhooks */
   MANAGE_WEBHOOKS = 0x0000000020000000,
-  /** Allows management and editing of emojis, stickers, and soundboard sounds */
+  /** Allows for editing and deleting emojis, stickers, and soundboard sounds created by all users */
   MANAGE_GUILD_EXPRESSIONS = 0x0000000040000000,
   /** Allows members to use application commands in text channels */
   USE_SLASH_COMMANDS = 0x0000000080000000,
   /** Allows for requesting to speak in stage channels. */
   REQUEST_TO_SPEAK = 0x0000000100000000,
-  /** Allows for creating, editing, and deleting scheduled events */
+  /** Allows for editing and deleting scheduled events created by all users */
   MANAGE_EVENTS = 0x0000000200000000,
   /** Allows for deleting and archiving threads, and viewing all private threads */
   MANAGE_THREADS = 0x0000000400000000,
@@ -636,6 +663,14 @@ export enum BitwisePermissionFlags {
   VIEW_CREATOR_MONETIZATION_ANALYTICS = 0x0000020000000000,
   /** Allows for using soundboard in a voice channel. */
   USE_SOUNDBOARD = 0x0000040000000000,
+  /** Allows for creating emojis, stickers, and soundboard sounds, and editing and deleting those created by the current user */
+  CREATE_GUILD_EXPRESSIONS = 0x0000080000000000,
+  /** Allows for creating scheduled events, and editing and deleting those created by the current user */
+  CREATE_EVENTS = 0x0000100000000000,
+  /** Allows the usage of custom soundboards sounds from other servers */
+  USE_EXTERNAL_SOUNDS = 0x0000200000000000,
+  /** Allows sending voice messages */
+  SEND_VOICE_MESSAGES = 0x0000400000000000,
 }
 
 export type PermissionStrings = keyof typeof BitwisePermissionFlags
@@ -761,6 +796,9 @@ export type GatewayDispatchEventNames =
   | 'VOICE_STATE_UPDATE'
   | 'VOICE_SERVER_UPDATE'
   | 'WEBHOOKS_UPDATE'
+  | 'ENTITLEMENT_CREATE'
+  | 'ENTITLEMENT_UPDATE'
+  | 'ENTITLEMENT_DELETE'
 
 export type GatewayEventNames = GatewayDispatchEventNames | 'READY' | 'RESUMED'
 
@@ -918,6 +956,8 @@ export enum InteractionResponseTypes {
   ApplicationCommandAutocompleteResult = 8,
   /** For Command or Component interactions, send a Modal response */
   Modal = 9,
+  /** Respond to an interaction with an upgrade button, only available for apps with monetization enabled */
+  PremiumRequired = 10,
 }
 
 export enum SortOrderTypes {
@@ -946,11 +986,13 @@ export type ImageFormat = 'jpg' | 'jpeg' | 'png' | 'webp' | 'gif' | 'json'
 export type ImageSize = 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096
 
 export enum Locales {
+  Indonesian = 'id',
   Danish = 'da',
   German = 'de',
   EnglishUk = 'en-GB',
   EnglishUs = 'en-US',
   Spanish = 'es-ES',
+  SpanishLatam = 'es-419',
   French = 'fr',
   Croatian = 'hr',
   Italian = 'it',
@@ -989,15 +1031,15 @@ export type Camelize<T> = T extends any[]
     ? Array<Camelize<T[number]>>
     : T
   : T extends Record<any, any>
-  ? { [K in keyof T as CamelCase<K & string>]: Camelize<T[K]> }
-  : T
+    ? { [K in keyof T as CamelCase<K & string>]: Camelize<T[K]> }
+    : T
 
 export type Snakelize<T> = T extends any[]
   ? T extends Array<Record<any, any>>
     ? Array<Snakelize<T[number]>>
     : T
   : T extends Record<any, any>
-  ? { [K in keyof T as SnakeCase<K & string>]: Snakelize<T[K]> }
-  : T
+    ? { [K in keyof T as SnakeCase<K & string>]: Snakelize<T[K]> }
+    : T
 
 export type PickPartial<T, K extends keyof T> = { [P in keyof T]?: T[P] | undefined } & { [P in K]: T[P] }

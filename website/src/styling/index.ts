@@ -308,7 +308,7 @@ export const StarContainer = styled.div`
   align-items: center;
 `
 
-export const StarIcon = styled.svg`
+export const StarIcon = styled.svg<{ active: boolean }>`
   width: 20px;
   height: 20px;
   fill: ${props => (props.active ? 'currentColor' : '#CBD5E0')};
@@ -429,7 +429,7 @@ export const FaqQuestion = styled.h3`
   }
 `
 
-export const FaqAnswer = styled.div`
+export const FaqAnswer = styled.div<{ visible: boolean }>`
   padding: ${({ visible }) => (visible ? '10px' : '0px')};
   background-color: var(--ifm-footer-background-color);
   color: #fff;

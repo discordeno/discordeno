@@ -32,6 +32,14 @@
       "dependsOn": ["build", "^build"],
       "outputs": ["denoTestsDist/**"]
     },
+    "test:bun-unit": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "bunTestsDist/**"
+      ]
+    },
     "test:e2e": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"]

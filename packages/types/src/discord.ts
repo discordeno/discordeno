@@ -5,6 +5,7 @@ import type {
   ApplicationCommandPermissionTypes,
   ApplicationCommandTypes,
   ApplicationFlags,
+  AttachmentFlags,
   AuditLogEvents,
   ButtonStyles,
   ChannelFlags,
@@ -27,6 +28,7 @@ import type {
   PickPartial,
   PremiumTiers,
   PremiumTypes,
+  RoleFlags,
   ScheduledEventEntityType,
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
@@ -76,6 +78,137 @@ export interface DiscordUser {
   email?: string | null
   /** the user's banner, or null if unset */
   banner?: string
+  /** the user's avatar decoration, or null if unset */
+  avatar_decoration?: string
+}
+
+/** https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes */
+export enum OAuth2Scope {
+  /**
+   * Allows your app to fetch data from a user's "Now Playing/Recently Played" list
+   *
+   * @remarks
+   * This scope is not currently available for apps
+   */
+  ActivitiesRead = 'activities.read',
+  /**
+   * Allows your app to update a user's activity
+   *
+   * @remarks
+   * This scope not currently available for apps.
+   */
+  ActivitiesWrite = 'activities.write',
+  /** Allows your app to read build data for a user's applications */
+  ApplicationsBuildsRead = 'applications.builds.read',
+  /**
+   * Allows your app to upload/update builds for a user's applications
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  ApplicationsBuildsUpload = 'applications.builds.upload',
+  /** Allows your app to add commands to a guild - included by default with the `bot` scope */
+  ApplicationsCommands = 'applications.commands',
+  /**
+   * Allows your app to update its Application Commands via this bearer token
+   *
+   * @remarks
+   * This scope can only be used when using a [Client Credential Grant](https://discord.com/developers/docs/topics/oauth2#client-credentials-grant)
+   */
+  ApplicationsCommandsUpdate = 'applications.commands.update',
+  /** Allows your app to update permissions for its commands in a guild a user has permissions to */
+  ApplicationCommandsPermissionsUpdate = 'applications.commands.permissions.update',
+  /** Allows your app to read entitlements for a user's applications */
+  ApplicationsEntitlements = 'applications.entitlements',
+  /** Allows your app to read and update store data (SKUs, store listings, achievements, etc.) for a user's applications */
+  ApplicationsStoreUpdate = 'applications.store.update',
+  /** For oauth2 bots, this puts the bot in the user's selected guild by default */
+  Bot = 'bot',
+  /** Allows requests to [/users/@me/connections](https://discord.com/developers/docs/resources/user#get-user-connections) */
+  Connections = 'connections',
+  /**
+   * Allows your app to see information about the user's DMs and group DMs
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  DMChannelsRead = 'dm_channels.read',
+  /** Adds the `email` filed to [/users/@me](https://discord.com/developers/docs/resources/user#get-current-user) */
+  Email = 'email',
+  /** Allows your app to join users to a group dm */
+  GroupDMJoins = 'gdm.join',
+  /** Allows requests to [/users/@me/guilds](https://discord.com/developers/docs/resources/user#get-current-user-guilds) */
+  Guilds = 'guilds',
+  /** Allows requests to [/guilds/{guild.id}/members/{user.id}](https://discord.com/developers/docs/resources/guild#add-guild-member) */
+  GuildsJoin = 'guilds.join',
+  /** Allows requests to [/users/@me/guilds/{guild.id}/member](https://discord.com/developers/docs/resources/user#get-current-user-guild-member) */
+  GuildsMembersRead = 'guilds.members.read',
+  /**
+   * Allows requests to [/users/@me](https://discord.com/developers/docs/resources/user#get-current-user)
+   *
+   * @remarks
+   * The return object from [/users/@me](https://discord.com/developers/docs/resources/user#get-current-user)
+   * does NOT contain the `email` field unless the scope `email` is also used
+   */
+  Identify = 'identify',
+  /**
+   * For local rpc server api access, this allows you to read messages from all client channels
+   * (otherwise restricted to channels/guilds your app creates)
+   */
+  MessagesRead = 'messages.read',
+  /**
+   * Allows your app to know a user's friends and implicit relationships
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RelationshipsRead = 'relationships.read',
+  /** Allows your app to update a user's connection and metadata for the app */
+  RoleConnectionsWrite = 'role_connections.write',
+  /**
+   * For local rpc server access, this allows you to control a user's local Discord client
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RPC = 'rpc',
+  /**
+   * For local rpc server access, this allows you to update a user's activity
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RPCActivitiesWrite = 'rpc.activities.write',
+  /**
+   * For local rpc server api access, this allows you to receive notifications pushed out to the user
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RPCNotificationsRead = 'rpc.notifications.read',
+  /**
+   * For local rpc server access, this allows you to read a user's voice settings and listen for voice events
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RPCVoiceRead = 'rpc.voice.read',
+  /**
+   * For local rpc server access, this allows you to update a user's voice settings
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  RPCVoiceWrite = 'rpc.voice.write',
+  /**
+   * Allows your app to connect to voice on user's behalf and see all the voice members
+   *
+   * @remarks
+   * This scope requires Discord approval to be used
+   */
+  Voice = 'voice',
+  /** Generate a webhook that is returned in the oauth token response for authorization code grants */
+  WebhookIncoming = 'webhook.incoming',
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-structure */
@@ -111,7 +244,7 @@ export interface DiscordIntegration {
   /** The bot/OAuth2 application for discord integrations */
   application?: DiscordIntegrationApplication
   /** the scopes the application has been authorized for */
-  scopes: string[]
+  scopes: OAuth2Scope[]
 }
 
 /** https://discord.com/developers/docs/resources/guild#integration-account-object-integration-account-structure */
@@ -192,7 +325,7 @@ export interface DiscordMember {
   joined_at: string
   /** When the user started boosting the guild */
   premium_since?: string | null
-  /** The permissions this member has in the guild. Only present on interaction events. */
+  /** The permissions this member has in the guild. Only present on interaction events and OAuth2 current member fetch. */
   permissions?: string
   /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
   communication_disabled_until?: string | null
@@ -230,8 +363,10 @@ export interface DiscordApplication {
   owner?: Partial<DiscordUser>
   /** If the application belongs to a team, this will be a list of the members of that team */
   team: DiscordTeam | null
-  /** If this application is a game sold on Discord, this field will be the guild to which it has been linked */
+  /** Guild associated with the app. For example, a developer support server. */
   guild_id?: string
+  /** A partial object of the associated guild */
+  guild?: Partial<DiscordGuild>
   /** If this application is a game sold on Discord, this field will be the hash of the image on store embeds */
   cover_image?: string
   /** up to 5 tags describing the content and functionality of the application */
@@ -242,19 +377,157 @@ export interface DiscordApplication {
   custom_install_url?: string
   /** the application's role connection verification entry point, which when configured will render the app as a verification method in the guild role verification configuration */
   role_connections_verification_url?: string
+  /** An approximate count of the app's guild membership. */
+  approximate_guild_count?: number
+  /** Partial user object for the bot user associated with the app */
+  bot?: Partial<DiscordUser>
+  /** Array of redirect URIs for the app */
+  redirect_uris?: string[]
+  /** Interactions endpoint URL for the app */
+  interactions_endpoint_url?: string
+}
+
+export type DiscordTokenExchange = DiscordTokenExchangeAuthorizationCode | DiscordTokenExchangeRefreshToken | DiscordTokenExchangeClientCredentials
+
+export interface DiscordTokenExchangeAuthorizationCode {
+  grant_type: 'authorization_code'
+  /** The code for the token exchange */
+  code: string
+  /** The redirect_uri associated with this authorization */
+  redirect_uri: string
+}
+
+/** https://discord.com/developers/docs/topics/oauth2#client-credentials-grant */
+export interface DiscordTokenExchangeRefreshToken {
+  grant_type: 'refresh_token'
+  /** the user's refresh token */
+  refresh_token: string
+}
+
+/** https://discord.com/developers/docs/topics/oauth2#client-credentials-grant */
+export interface DiscordTokenExchangeClientCredentials {
+  grant_type: 'client_credentials'
+  /** The scope(s) for the access token */
+  scope: OAuth2Scope[]
+}
+
+export interface DiscordAccessTokenResponse {
+  /** The access token of the user */
+  access_token: string
+  /** The type of token */
+  token_type: string
+  /** The number of seconds after that the access token is expired */
+  expires_in: number
+  /**
+   * The refresh token to refresh the access token
+   *
+   * @remarks
+   * When the token exchange is a client credentials type grant this value is not defined.
+   */
+  refresh_token: string
+  /** The scopes for the access token */
+  scope: string
+  /** The webhook the user created for the application. Requires the `webhook.incoming` scope */
+  webhook?: DiscordIncomingWebhook
+  /** The guild the bot has been added. Requires the `bot` scope */
+  guild?: DiscordGuild
+}
+
+export interface DiscordTokenRevocation {
+  /** The access token to revoke */
+  token: string
+  /** Optional, the type of token you are using for the revocation */
+  token_type_hint?: 'access_token' | 'refresh_token'
+}
+
+/** https://discord.com/developers/docs/topics/oauth2#get-current-authorization-information-response-structure */
+export interface DiscordCurrentAuthorization {
+  application: DiscordApplication
+  /** the scopes the user has authorized the application for */
+  scopes: OAuth2Scope[]
+  /** when the access token expires */
+  expires: string
+  /** the user who has authorized, if the user has authorized with the `identify` scope */
+  user?: DiscordUser
+}
+
+/** https://discord.com/developers/docs/resources/user#connection-object-connection-structure */
+export interface DiscordConnection {
+  /** id of the connection account */
+  id: string
+  /** the username of the connection account */
+  name: string
+  /** the service of this connection */
+  type: DiscordConnectionServiceType
+  /** whether the connection is revoked */
+  revoked?: boolean
+  /** an array of partial server integrations */
+  integrations?: Array<Partial<DiscordIntegration>>
+  /** whether the connection is verified */
+  verified: boolean
+  /** whether friend sync is enabled for this connection */
+  friend_sync: boolean
+  /** whether activities related to this connection will be shown in presence updates */
+  show_activity: boolean
+  /** whether this connection has a corresponding third party OAuth2 token */
+  two_way_link: boolean
+  /** visibility of this connection */
+  visibility: DiscordConnectionVisibility
+}
+
+/** https://discord.com/developers/docs/resources/user#connection-object-services */
+export enum DiscordConnectionServiceType {
+  BattleNet = 'battlenet',
+  Bungie = 'Bungie.net',
+  eBay = 'ebay',
+  EpicGames = 'epicgames',
+  Facebook = 'facebook',
+  GitHub = 'github',
+  Instagram = 'instagram',
+  LeagueOfLegends = 'leagueoflegends',
+  PayPal = 'paypal',
+  PlayStationNetwork = 'playstation',
+  Reddit = 'reddit',
+  RiotGames = 'riotgames',
+  Spotify = 'spotify',
+  Skype = 'skype',
+  Steam = 'steam',
+  TikTok = 'tiktok',
+  Twitch = 'twitch',
+  Twitter = 'twitter',
+  Xbox = 'xbox',
+  YouTube = 'youtube',
+}
+
+/** https://discord.com/developers/docs/resources/user#connection-object-visibility-types */
+export enum DiscordConnectionVisibility {
+  /** invisible to everyone except the user themselves */
+  None = 0,
+  /** visible to everyone */
+  Everyone = 1,
+}
+
+/** https://discord.com/developers/docs/resources/user#application-role-connection-object-application-role-connection-structure */
+export interface DiscordApplicationRoleConnection {
+  /** the vanity name of the platform a bot has connected (max 50 characters) */
+  platform_name: string | null
+  /** the username on the platform a bot has connected (max 100 characters) */
+  platform_username: string | null
+  /** object mapping application role connection metadata keys to their stringified value (max 100 characters) for the user on the platform a bot has connected */
+  metadata: Record<string, string>
 }
 
 /** https://discord.com/developers/docs/topics/teams#data-models-team-object */
 export interface DiscordTeam {
-  /** A hash of the image of the team's icon */
+  /** Hash of the image of the team's icon */
   icon: string | null
-  /** The unique id of the team */
+  /** Unique ID of the team */
   id: string
-  /** The members of the team */
+  /** Members of the team */
   members: DiscordTeamMember[]
-  /** The user id of the current team owner */
+  /** User ID of the current team owner */
   owner_user_id: string
-  /** The name of the team */
+  /** Name of the team */
   name: string
 }
 
@@ -262,12 +535,12 @@ export interface DiscordTeam {
 export interface DiscordTeamMember {
   /** The user's membership state on the team */
   membership_state: TeamMembershipStates
-  /** Will always be `["*"]` */
-  permissions: Array<'*'>
   /** The id of the parent team of which they are a member */
   team_id: string
   /** The avatar, discriminator, id, username, and global_name of the user */
   user: Partial<DiscordUser> & Pick<DiscordUser, 'avatar' | 'discriminator' | 'id' | 'username' | 'global_name'>
+  /** Role of the team member */
+  role: DiscordTeamMemberRole
 }
 
 /** https://discord.com/developers/docs/topics/gateway#webhooks-update-webhook-update-event-fields */
@@ -417,6 +690,12 @@ export interface DiscordAttachment {
   width?: number | null
   /** whether this attachment is ephemeral. Ephemeral attachments will automatically be removed after a set period of time. Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists. */
   ephemeral?: boolean
+  /** The duration of the audio file for a voice message */
+  duration_secs?: number
+  /** A base64 encoded bytearray representing a sampled waveform for a voice message */
+  waveform?: string
+  /** Attachment flags combined as a bitfield */
+  flags?: AttachmentFlags
 }
 
 /** https://discord.com/developers/docs/resources/webhook#webhook-object-webhook-structure */
@@ -542,7 +821,7 @@ export interface DiscordGuild {
   discovery_splash: string | null
   /** Id of the owner */
   owner_id: string
-  /** Total permissions for the user in the guild (excludes overwrites) */
+  /** Total permissions for the user in the guild (excludes overwrites and implicit permissions) */
   permissions?: string
   /** Id of afk channel */
   afk_channel_id: string | null
@@ -580,8 +859,29 @@ export interface DiscordGuild {
   welcome_screen?: DiscordWelcomeScreen
   /** Stage instances in the guild */
   stage_instances?: DiscordStageInstance[]
-  /** custom guild stickers */
+  /** Custom guild stickers */
   stickers?: DiscordSticker[]
+  /** The id of the channel where admins and moderators of Community guilds receive safety alerts from Discord */
+  safety_alerts_channel_id: string | null
+}
+
+export interface DiscordPartialGuild {
+  /** Guild name (2-100 characters, excluding trailing and leading whitespace) */
+  name: string
+  /** Guild id */
+  id: string
+  /** Icon hash */
+  icon: string | null
+  /** true if the user is the owner of the guild */
+  owner: boolean
+  /** Total permissions for the user in the guild (excludes overwrites and implicit permissions) */
+  permissions: string
+  /** Enabled guild features */
+  features: GuildFeatures[]
+  /** Approximate number of members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
+  approximate_member_count?: number
+  /** Approximate number of non-offline members in this guild, returned from the GET /guilds/id endpoint when with_counts is true */
+  approximate_presence_count?: number
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-structure */
@@ -608,6 +908,8 @@ export interface DiscordRole {
   position: number
   /** role unicode emoji */
   unicode_emoji?: string
+  /** Role flags combined as a bitfield */
+  flags: RoleFlags
 }
 
 /** https://discord.com/developers/docs/topics/permissions#role-object-role-tags-structure */
@@ -730,7 +1032,7 @@ export interface DiscordChannel {
   member?: DiscordThreadMember
   /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
   default_auto_archive_duration?: number
-  /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a application command interaction */
+  /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a slash command interaction. This does not include implicit permissions, which may need to be checked separately. */
   permissions?: string
   /** The flags of the channel */
   flags?: ChannelFlags
@@ -1008,7 +1310,7 @@ export interface DiscordMessage {
   /** Data showing the source of a crossposted channel follow add, pin or reply message */
   message_reference?: Omit<DiscordMessageReference, 'failIfNotExists'>
   /** Message flags combined as a bitfield */
-  flags?: number
+  flags?: DiscordMessageFlag
   /**
    * The stickers sent with the message (bots currently can only receive messages with stickers, not send)
    * @deprecated
@@ -1045,12 +1347,26 @@ export interface DiscordChannelMention {
 
 /** https://discord.com/developers/docs/resources/channel#reaction-object */
 export interface DiscordReaction {
-  /** Times this emoji has been used to react */
+  /** Total number of times this emoji has been used to react (including super reacts) */
   count: number
+  /**	Reaction count details object */
+  count_details: DiscordReactionCountDetails
   /** Whether the current user reacted using this emoji */
   me: boolean
+  /**	Whether the current user super-reacted using this emoji */
+  me_burst: boolean
   /** Emoji information */
   emoji: Partial<DiscordEmoji>
+  /** HEX colors used for super reaction */
+  burst_colors: string[]
+}
+
+/** https://discord.com/developers/docs/resources/channel#reaction-count-details-object */
+export interface DiscordReactionCountDetails {
+  /** Count of super reactions */
+  burst: number
+  /**	Count of normal reactions */
+  normal: number
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-structure */
@@ -1126,6 +1442,7 @@ export interface DiscordActionRow {
   components: Array<DiscordSelectMenuComponent | DiscordButtonComponent | DiscordInputTextComponent>
 }
 
+/** https://discord.com/developers/docs/interactions/message-components#select-menu-object */
 export interface DiscordSelectMenuComponent {
   type: MessageComponentTypes.SelectMenu
   /** A custom identifier for this component. Maximum 100 characters. */
@@ -1160,6 +1477,14 @@ export interface DiscordSelectOption {
   }
   /** Will render this option as already-selected by default. */
   default?: boolean
+}
+
+/** https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-default-value-structure */
+export interface DiscordSelectMenuDefaultValue {
+  /** ID of a user, role, or channel */
+  id: bigint
+  /** Type of value that id represents. */
+  type: 'user' | 'role' | 'channel'
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#buttons-button-object */
@@ -1247,6 +1572,13 @@ export interface DiscordInteraction {
   /** The guild it was sent from */
   guild_id?: string
   /** The channel it was sent from */
+  channel: Partial<DiscordChannel>
+  /**
+   * The ID of channel it was sent from
+   *
+   * @remarks
+   * It is recommended that you begin using this channel field to identify the source channel of the interaction as they may deprecate the existing channel_id field in the future.
+   */
   channel_id?: string
   /** Guild member data for the invoking user, including permissions */
   member?: DiscordInteractionMember
@@ -1266,6 +1598,8 @@ export interface DiscordInteraction {
   guild_locale?: string
   /** The computed permissions for a bot or app in the context of a specific interaction (including channel overwrites) */
   app_permissions: string
+  /** For monetized apps, any entitlements for the invoking user, representing access to premium SKUs */
+  entitlements: DiscordEntitlement[]
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-member-object */
@@ -1419,8 +1753,10 @@ export interface DiscordAutoModerationRuleTriggerMetadata {
   presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
   /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
   allow_list?: string[]
-  /** Total number of mentions (role & user) allowed per message (Maximum of 50) */
+  /** Total number of mentions (role & user) allowed per message (Maximum of 50). Only present when TriggerType.MentionSpam */
   mention_total_limit?: number
+  /** Whether to automatically detect mention raids. Only present when TriggerType.MentionSpam */
+  mention_raid_protection_enabled?: boolean
 }
 
 export enum DiscordAutoModerationRuleTriggerMetadataPresets {
@@ -1664,6 +2000,12 @@ export interface DiscordOptionalAuditEntryInfo {
    * Event types: `CHANNEL_OVERWRITE_CREATE`, `CHANNEL_OVERWRITE_UPDATE`, `CHANNEL_OVERWRITE_DELETE`
    */
   type: string
+  /**
+   * The type of integration which performed the action
+   *
+   * Event types: `MEMBER_KICK`, `MEMBER_ROLE_UPDATE`
+   */
+  integration_type: string
 }
 
 export interface DiscordScheduledEvent {
@@ -2319,9 +2661,9 @@ export interface DiscordGuildWidgetSettings {
 }
 
 export interface DiscordInstallParams {
-  /** the scopes to add the application to the server with */
-  scopes: string[]
-  /** the permissions to request for the bot role */
+  /** Scopes to add the application to the server with */
+  scopes: OAuth2Scope[]
+  /** Permissions to request for the bot role */
   permissions: string
 }
 
@@ -2533,7 +2875,7 @@ export interface DiscordModifyGuildChannelPositions {
   /** Channel id */
   id: string
   /** Sorting position of the channel */
-  position: number | null
+  position?: number | null
   /** Syncs the permission overwrites with the new parent, if moving to a new category */
   lock_positions?: boolean | null
   /** The new parent ID for the channel that is moved */
@@ -2571,8 +2913,8 @@ export interface DiscordCreateForumPostWithMessage {
     payload_json?: string
     /** Attachment objects with filename and description. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
     attachments?: DiscordAttachment[]
-    /** Message flags combined as a bitfield (only SUPPRESS_EMBEDS can be set) */
-    flags?: number
+    /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS can be set */
+    flags?: DiscordMessageFlag
   }
   /** the IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
   applied_tags?: string[]
@@ -2594,4 +2936,196 @@ export interface DiscordVanityUrl {
 
 export interface DiscordPrunedCount {
   pruned: number
+}
+
+/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-guild-onboarding-structure */
+export interface DiscordGuildOnboarding {
+  /** ID of the guild this onboarding is part of */
+  guild_id: string
+  /** Prompts shown during onboarding and in customize community */
+  prompts: DiscordGuildOnboardingPrompt[]
+  /** Channel IDs that members get opted into automatically */
+  default_channel_ids: string[]
+  /** Whether onboarding is enabled in the guild */
+  enabled: boolean
+  /** Current mode of onboarding */
+  mode: DiscordGuildOnboardingMode
+}
+
+/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-prompt-structure */
+export interface DiscordGuildOnboardingPrompt {
+  /** ID of the prompt */
+  id: string
+  /** Type of prompt */
+  type: DiscordGuildOnboardingPromptType
+  /** Options available within the prompt */
+  options: DiscordGuildOnboardingPromptOption[]
+  /** Title of the prompt */
+  title: string
+  /** Indicates whether users are limited to selecting one option for the prompt */
+  single_select: boolean
+  /** Indicates whether the prompt is required before a user completes the onboarding flow */
+  required: boolean
+  /** Indicates whether the prompt is present in the onboarding flow. If `false`, the prompt will only appear in the Channels & Roles tab */
+  in_onboarding: boolean
+}
+
+/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-option-structure */
+export interface DiscordGuildOnboardingPromptOption {
+  /** ID of the prompt option */
+  id: string
+  /** IDs for channels a member is added to when the option is selected */
+  channel_ids: string[]
+  /** IDs for roles assigned to a member when the option is selected */
+  role_ids: string[]
+  /**
+   * Emoji of the option
+   *
+   * @remarks
+   * When creating or updating a prompt option, the `emoji_id`, `emoji_name`, and `emoji_animated` fields must be used instead of the emoji object.
+   */
+  emoji?: DiscordEmoji
+  /**
+   * Emoji ID of the option
+   *
+   * @remarks
+   * When creating or updating a prompt option, the `emoji_id`, `emoji_name`, and `emoji_animated` fields must be used instead of the emoji object.
+   */
+  emoji_id?: string
+  /**
+   * Emoji name of the option
+   *
+   * @remarks
+   * When creating or updating a prompt option, the `emoji_id`, `emoji_name`, and `emoji_animated` fields must be used instead of the emoji object.
+   */
+  emoji_name?: string
+  /**
+   * Whether the emoji is animated
+   *
+   * @remarks
+   * When creating or updating a prompt option, the `emoji_id`, `emoji_name`, and `emoji_animated` fields must be used instead of the emoji object.
+   */
+  emoji_animated?: boolean
+  /** Title of the option */
+  title: string
+  /** Description of the option */
+  description: string | undefined
+}
+
+/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-prompt-types */
+export enum DiscordGuildOnboardingPromptType {
+  MultipleChoice,
+  DropDown,
+}
+
+/** https://discord.com/developers/docs/resources/guild#guild-onboarding-object-onboarding-mode */
+export enum DiscordGuildOnboardingMode {
+  /** Counts only Default Channels towards constraints */
+  OnboardingDefault,
+  /** Counts Default Channels and Questions towards constraints */
+  OnboardingAdvanced,
+}
+
+/** https://discord.com/developers/docs/topics/teams#team-member-roles-team-member-role-types */
+export enum DiscordTeamMemberRole {
+  /** Owners are the most permissiable role, and can take destructive, irreversible actions like deleting the team itself. Teams are limited to 1 owner. */
+  Owner = 'owner',
+  /** Admins have similar access as owners, except they cannot take destructive actions on the team or team-owned apps. */
+  Admin = 'admin',
+  /**
+   * Developers can access information about team-owned apps, like the client secret or public key.
+   * They can also take limited actions on team-owned apps, like configuring interaction endpoints or resetting the bot token.
+   * Members with the Developer role *cannot* manage the team or its members, or take destructive actions on team-owned apps.
+   */
+  Developer = 'developer',
+  /** Read-only members can access information about a team and any team-owned apps. Some examples include getting the IDs of applications and exporting payout records. */
+  ReadOnly = 'read_only',
+}
+
+/** https://discord.com/developers/docs/monetization/entitlements#entitlement-object-entitlement-structure */
+export interface DiscordEntitlement {
+  /** ID of the entitlement */
+  id: string
+  /** ID of the SKU */
+  sku_id: string
+  /** ID of the user that is granted access to the entitlement's sku */
+  user_id?: string
+  /** ID of the guild that is granted access to the entitlement's sku */
+  guild_id?: string
+  /** ID of the parent application */
+  application_id: string
+  /** Type of entitlement */
+  type: DiscordEntitlementType
+  /** Entitlement was deleted */
+  deleted: boolean
+  /** Start date at which the entitlement is valid. Not present when using test entitlements */
+  starts_at?: string
+  /** Date at which the entitlement is no longer valid. Not present when using test entitlements */
+  ends_at?: string
+}
+
+/** https://discord.com/developers/docs/monetization/entitlements#entitlement-object-entitlement-types */
+export enum DiscordEntitlementType {
+  /** Entitlement was purchased as an app subscription */
+  ApplicationSubscription = 8,
+}
+
+/** https://discord.com/developers/docs/monetization/skus#sku-object-sku-structure */
+export interface DiscordSku {
+  /** ID of SKU */
+  id: string
+  /** Type of SKU */
+  type: DiscordSkuType
+  /** ID of the parent application */
+  application_id: string
+  /** Customer-facing name of your premium offering */
+  name: string
+  /** System-generated URL slug based on the SKU's name */
+  slug: string
+  /** SKU flags combined as a bitfield */
+  flags: DiscordSkuFlag
+}
+
+/** https://discord.com/developers/docs/monetization/skus#sku-object-sku-types */
+export enum DiscordSkuType {
+  /** Represents a recurring subscription */
+  Subscription = 5,
+  /** System-generated group for each SUBSCRIPTION SKU created */
+  SubscriptionGroup = 6,
+}
+
+/** https://discord.com/developers/docs/monetization/skus#sku-object-sku-flags */
+export enum DiscordSkuFlag {
+  /** SKU is available for purchase */
+  Available = 1 << 2,
+  /** Recurring SKU that can be purchased by a user and applied to a single server. Grants access to every user in that server. */
+  GuildSubscription = 1 << 7,
+  /** Recurring SKU purchased by a user for themselves. Grants access to the purchasing user in every server. */
+  UserSubscription = 1 << 8,
+}
+
+/** https://discord.com/developers/docs/resources/channel#message-object-message-flags */
+export enum DiscordMessageFlag {
+  /** This message has been published to subscribed channels (via Channel Following) */
+  Crossposted = 1 << 0,
+  /** This message originated from a message in another channel (via Channel Following) */
+  IsCrosspost = 1 << 1,
+  /** Do not include any embeds when serializing this message */
+  SuppressEmbeds = 1 << 2,
+  /** The source message for this crosspost has been deleted (via Channel Following) */
+  SourceMessageDeleted = 1 << 3,
+  /** This message came from the urgent message system */
+  Urgent = 1 << 4,
+  /** This message has an associated thread, with the same id as the message */
+  HasThread = 1 << 5,
+  /** This message is only visible to the user who invoked the Interaction */
+  Ephemeral = 1 << 6,
+  /** This message is an Interaction Response and the bot is "thinking" */
+  Loading = 1 << 7,
+  /** This message failed to mention some roles and add their members to the thread */
+  FailedToMentionSomeRolesInThread = 1 << 8,
+  /** This message will not trigger push and desktop notifications */
+  SuppressNotifications = 1 << 12,
+  /** This message is a voice message */
+  IsVoiceMessage = 1 << 13,
 }

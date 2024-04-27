@@ -72,7 +72,7 @@ export interface ShardHeart {
   /** Interval between heartbeats requested by Discord. */
   interval: number
   /** Id of the interval, which is used for sending the heartbeats. */
-  intervalId?: NodeJS.Timer
+  intervalId?: NodeJS.Timeout
   /** Unix (in milliseconds) timestamp when the last heartbeat ACK was received from Discord. */
   lastAck?: number
   /** Unix timestamp (in milliseconds) when the last heartbeat was sent. */

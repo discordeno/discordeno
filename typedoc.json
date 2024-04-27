@@ -1,9 +1,8 @@
 {
+  "$schema": "https://typedoc.org/schema.json",
   "entryPointStrategy": "packages",
   "entryPoints": ["packages/bot", "packages/gateway", "packages/rest", "packages/types", "packages/utils"],
-  "logger": "console",
-  "skipErrorChecking": true,
-  "out": "./website/docs/generated/",
+  "out": "./website/api_reference/generated/",
   "cleanOutputDir": false,
   "plugin": ["typedoc-plugin-markdown"],
   "commentStyle": "all"

@@ -8,7 +8,7 @@ export class Collection<K, V> extends Map<K, V> {
    */
   maxSize: number | undefined
   /** Handler to remove items from the collection every so often. */
-  sweeper: (CollectionSweeper<K, V> & { intervalId?: NodeJS.Timer }) | undefined
+  sweeper: (CollectionSweeper<K, V> & { intervalId?: NodeJS.Timeout }) | undefined
 
   constructor(entries?: (ReadonlyArray<readonly [K, V]> | null) | Map<K, V>, options?: CollectionOptions<K, V>) {
     super(entries ?? [])
@@ -20,7 +20,7 @@ export class Collection<K, V> extends Map<K, V> {
     this.startSweeper(options.sweeper)
   }
 
-  startSweeper(options: CollectionSweeper<K, V>): NodeJS.Timer {
+  startSweeper(options: CollectionSweeper<K, V>): NodeJS.Timeout {
     if (this.sweeper?.intervalId) clearInterval(this.sweeper.intervalId)
 
     this.sweeper = options

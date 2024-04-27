@@ -1,22 +1,27 @@
 import type { DiscordVoiceState } from '@discordeno/types'
 import type { Bot } from '../index.js'
-import type { Optionalize } from '../optionalize.js'
 import { VoiceStateToggles } from './toggles/voice.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function transformVoiceState(bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) {
-  const voiceState = {
-    toggles: new VoiceStateToggles(payload.voiceState),
+export function transformVoiceState(bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }): VoiceState {
+  const props = bot.transformers.desiredProperties.voiceState
+  const voiceState = {} as VoiceState
 
-    requestToSpeakTimestamp: payload.voiceState.request_to_speak_timestamp ? Date.parse(payload.voiceState.request_to_speak_timestamp) : undefined,
-    sessionId: payload.voiceState.session_id,
+  if (props.requestToSpeakTimestamp && payload.voiceState.request_to_speak_timestamp)
+    voiceState.requestToSpeakTimestamp = Date.parse(payload.voiceState.request_to_speak_timestamp)
+  if (props.channelId && payload.voiceState.channel_id) voiceState.channelId = bot.transformers.snowflake(payload.voiceState.channel_id)
+  if (props.guildId) voiceState.guildId = payload.guildId
+  if (props.toggles) voiceState.toggles = new VoiceStateToggles(payload.voiceState)
+  if (props.sessionId) voiceState.sessionId = payload.voiceState.session_id
+  if (props.userId && payload.voiceState.user_id) voiceState.userId = bot.transformers.snowflake(payload.voiceState.user_id) ?? 0n
 
-    channelId: payload.voiceState.channel_id ? bot.transformers.snowflake(payload.voiceState.channel_id) : undefined,
-    guildId: payload.guildId || (payload.voiceState.guild_id ? bot.transformers.snowflake(payload.voiceState.guild_id) : 0n),
-    userId: payload.voiceState.user_id ? bot.transformers.snowflake(payload.voiceState.user_id) : 0n,
-  }
-
-  return voiceState as Optionalize<typeof voiceState>
+  return bot.transformers.customizers.voiceState(bot, payload.voiceState, voiceState)
 }
 
-export interface VoiceState extends ReturnType<typeof transformVoiceState> {}
+export interface VoiceState {
+  requestToSpeakTimestamp?: number
+  channelId?: bigint
+  guildId: bigint
+  toggles: VoiceStateToggles
+  sessionId: string
+  userId: bigint
+}

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { bgBrightMagenta, black, bold, cyan, gray, italic, red, yellow } from './colors.js'
 
 export enum LogLevels {

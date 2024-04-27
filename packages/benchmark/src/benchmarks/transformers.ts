@@ -2,6 +2,7 @@ import {
   ApplicationFlags,
   ButtonStyles,
   InteractionTypes,
+  MemberToggles,
   MessageActivityTypes,
   MessageComponentTypes,
   MessageTypes,
@@ -10,13 +11,12 @@ import {
   TeamMembershipStates,
   TextStyles,
   UserFlags,
+  createBot,
   iconHashToBigInt,
   type Bot,
   type DiscordMessage,
-  createBot,
 } from '@discordeno/bot'
 import { memoryBenchmark } from '../utils/memoryBenchmark.js'
-import { MemberToggles } from '@discordeno/bot/dist/transformers/index.js'
 
 export const CHANNEL_MENTION_REGEX = /<#[0-9]+>/g
 
@@ -337,6 +337,12 @@ await memoryBenchmark(
               name: 'discordeno',
             },
             me: true,
+            me_burst: false,
+            count_details: {
+              normal: 100,
+              burst: 0,
+            },
+            burst_colors: [],
           },
         ],
         sticker_items: [
@@ -370,7 +376,7 @@ await memoryBenchmark(
         tts: true,
         type: MessageTypes.Default,
         webhook_id: GUILD_ID,
-      } as DiscordMessage),
+      }) as unknown as DiscordMessage,
   ), // array of event to test with
   { times: 1, log: false, table: false },
 )
@@ -474,7 +480,7 @@ await memoryBenchmark(
   () => ({
     cache: [] as any[],
   }), // function reutrn a new instance of object wanted to test with
-  (object, event: DiscordMessage) => object.cache.push(oldtransformMessage(bot as any, event)),
+  (object, event: DiscordMessage) => object.cache.push(oldtransformMessage(bot, event)),
   // function specify how to add event to the object/ run the object
   [...new Array(MESSAGE_SIZE)].map(
     (i) =>
@@ -715,6 +721,12 @@ await memoryBenchmark(
               name: 'discordeno',
             },
             me: true,
+            me_burst: false,
+            count_details: {
+              normal: 100,
+              burst: 0,
+            },
+            burst_colors: [],
           },
         ],
         sticker_items: [
@@ -748,7 +760,7 @@ await memoryBenchmark(
         tts: true,
         type: MessageTypes.Default,
         webhook_id: GUILD_ID,
-      } as DiscordMessage),
+      }) as unknown as DiscordMessage,
   ), // array of event to test with
   { times: 1, log: false, table: false },
 )
