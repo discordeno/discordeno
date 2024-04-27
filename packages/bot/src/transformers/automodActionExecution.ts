@@ -1,5 +1,5 @@
-import type { AutoModerationActionType, AutoModerationTriggerTypes, DiscordAutoModerationActionExecution } from '@discordeno/types'
-import type { Bot } from '../index.js'
+import type { DiscordAutoModerationActionExecution } from '@discordeno/types'
+import type { AutoModerationActionExecution, Bot } from '../index.js'
 
 export function transformAutoModerationActionExecution(bot: Bot, payload: DiscordAutoModerationActionExecution): AutoModerationActionExecution {
   const rule = {
@@ -24,25 +24,4 @@ export function transformAutoModerationActionExecution(bot: Bot, payload: Discor
   } as AutoModerationActionExecution
 
   return bot.transformers.customizers.automodActionExecution(bot, payload, rule)
-}
-
-export interface AutoModerationActionExecution {
-  channelId?: bigint
-  messageId?: bigint
-  alertSystemMessageId?: bigint
-  guildId: bigint
-  userId: bigint
-  content: string
-  action: {
-    type: AutoModerationActionType
-    metadata: {
-      customMessage?: string
-      durationSeconds?: number
-      channelId?: bigint
-    }
-  }
-  ruleTriggerType: AutoModerationTriggerTypes
-  ruleId: bigint
-  matchedKeyword: string
-  matchedContent: string
 }

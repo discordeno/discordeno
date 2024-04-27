@@ -1,5 +1,5 @@
-import type { DiscordEntitlement, DiscordEntitlementType } from '@discordeno/types'
-import type { Bot } from '../index.js'
+import type { DiscordEntitlement } from '@discordeno/types'
+import type { Bot, Entitlement } from '../index.js'
 
 export function transformEntitlement(bot: Bot, payload: DiscordEntitlement): Entitlement {
   const props = bot.transformers.desiredProperties.entitlement
@@ -16,25 +16,4 @@ export function transformEntitlement(bot: Bot, payload: DiscordEntitlement): Ent
   if (props.endsAt && payload.ends_at) entitlement.endsAt = Date.parse(payload.ends_at)
 
   return bot.transformers.customizers.entitlement(bot, payload, entitlement)
-}
-
-export interface Entitlement {
-  /** ID of the entitlement */
-  id: bigint
-  /** ID of the SKU */
-  skuId: bigint
-  /** ID of the user that is granted access to the entitlement's sku */
-  userId?: bigint
-  /** ID of the guild that is granted access to the entitlement's sku */
-  guildId?: bigint
-  /** ID of the parent application */
-  applicationId: bigint
-  /** Type of entitlement */
-  type: DiscordEntitlementType
-  /** Entitlement was deleted */
-  deleted: boolean
-  /** Start date at which the entitlement is valid. Not present when using test entitlements */
-  startsAt?: number
-  /** Date at which the entitlement is no longer valid. Not present when using test entitlements */
-  endsAt?: number
 }

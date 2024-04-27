@@ -1,11 +1,5 @@
-import type {
-  AutoModerationActionType,
-  AutoModerationEventTypes,
-  AutoModerationTriggerTypes,
-  DiscordAutoModerationRule,
-  DiscordAutoModerationRuleTriggerMetadataPresets,
-} from '@discordeno/types'
-import type { Bot } from '../index.js'
+import type { DiscordAutoModerationRule } from '@discordeno/types'
+import type { AutoModerationRule, Bot } from '../index.js'
 
 export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModerationRule): AutoModerationRule {
   const rule = {
@@ -40,32 +34,4 @@ export function transformAutoModerationRule(bot: Bot, payload: DiscordAutoModera
   } as AutoModerationRule
 
   return bot.transformers.customizers.automodRule(bot, payload, rule)
-}
-
-export interface AutoModerationRule {
-  triggerMetadata?: {
-    keywordFilter?: string[]
-    presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
-    allowList?: string[]
-    mentionTotalLimit?: number
-    regexPatterns: string[]
-  }
-
-  id: bigint
-  name: string
-  guildId: bigint
-  eventType: AutoModerationEventTypes
-  triggerType: AutoModerationTriggerTypes
-  enabled: boolean
-  creatorId: bigint
-  exemptRoles: bigint[]
-  exemptChannels: bigint[]
-  actions: Array<{
-    type: AutoModerationActionType
-    metadata?: {
-      channelId?: bigint
-      customMessage?: string
-      durationSeconds?: number
-    }
-  }>
 }

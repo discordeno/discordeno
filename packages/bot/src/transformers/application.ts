@@ -1,13 +1,4 @@
-import {
-  iconHashToBigInt,
-  type ApplicationFlags,
-  type Bot,
-  type DiscordApplication,
-  type DiscordUser,
-  type Guild,
-  type Team,
-  type User,
-} from '../index.js'
+import { iconHashToBigInt, type Application, type Bot, type DiscordApplication, type DiscordUser } from '../index.js'
 
 export function transformApplication(bot: Bot, payload: { application: DiscordApplication; shardId: number }): Application {
   const application = {
@@ -41,29 +32,4 @@ export function transformApplication(bot: Bot, payload: { application: DiscordAp
   } as Application
 
   return bot.transformers.customizers.application(bot, payload.application, application)
-}
-
-export interface Application {
-  flags?: ApplicationFlags
-  icon?: bigint
-  rpcOrigins?: string[]
-  termsOfServiceUrl?: string
-  privacyPolicyUrl?: string
-  primarySkuId?: string
-  slug?: string
-  coverImage?: bigint
-  owner?: User
-  team?: Team
-  guildId?: bigint
-  guild?: Guild
-  id: bigint
-  name: string
-  description: string
-  botPublic: boolean
-  botRequireCodeGrant: boolean
-  verifyKey: string
-  approximateGuildCount?: number
-  bot?: User
-  redirectUris?: string[]
-  interactionsEndpointUrl?: string
 }

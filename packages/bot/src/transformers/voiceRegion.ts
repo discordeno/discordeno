@@ -1,5 +1,5 @@
 import type { DiscordVoiceRegion } from '@discordeno/types'
-import type { Bot } from '../index.js'
+import type { Bot, VoiceRegion } from '../index.js'
 
 export function transformVoiceRegion(bot: Bot, payload: DiscordVoiceRegion): VoiceRegion {
   const voiceRegion = {
@@ -11,12 +11,4 @@ export function transformVoiceRegion(bot: Bot, payload: DiscordVoiceRegion): Voi
   } as VoiceRegion
 
   return bot.transformers.customizers.voiceRegion(bot, payload, voiceRegion)
-}
-
-export interface VoiceRegion {
-  id: string
-  name: string
-  custom: boolean
-  optimal: boolean
-  deprecated: boolean
 }

@@ -1,4 +1,4 @@
-import type { ActivityTypes, Bot, DiscordActivity } from '../index.js'
+import type { Activity, Bot, DiscordActivity } from '../index.js'
 
 export function transformActivity(bot: Bot, payload: DiscordActivity): Activity {
   const activity = {
@@ -34,37 +34,4 @@ export function transformActivity(bot: Bot, payload: DiscordActivity): Activity 
   } as Activity
 
   return bot.transformers.customizers.activity(bot, payload, activity)
-}
-
-export interface Activity {
-  join?: string
-  flags?: number
-  applicationId?: bigint
-  spectate?: string
-  url?: string
-  startedAt?: number
-  endedAt?: number
-  details?: string
-  state?: string
-  emoji?: {
-    id?: bigint
-    animated?: boolean
-    name: string
-  }
-  partyId?: string
-  partyCurrentSize?: number
-  partyMaxSize?: number
-  largeImage?: string
-  largeText?: string
-  smallImage?: string
-  smallText?: string
-  match?: string
-  instance?: boolean
-  buttons?: Array<{
-    url: string
-    label: string
-  }>
-  name: string
-  type: ActivityTypes
-  createdAt: number
 }

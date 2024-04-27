@@ -1,5 +1,5 @@
 import type { DiscordThreadMember } from '@discordeno/types'
-import type { Bot } from '../index.js'
+import type { Bot, ThreadMember, ThreadMemberGuildCreate } from '../index.js'
 import type { DiscordThreadMemberGuildCreate } from '../typings.js'
 
 export function transformThreadMember(bot: Bot, payload: DiscordThreadMember): ThreadMember {
@@ -19,15 +19,4 @@ export function transformThreadMemberGuildCreate(bot: Bot, payload: DiscordThrea
   } as ThreadMemberGuildCreate
 
   return bot.transformers.customizers.threadMemberGuildCreate(bot, payload, threadMember)
-}
-
-export interface ThreadMember {
-  id?: bigint
-  userId?: bigint
-  flags: number
-  joinTimestamp: number
-}
-
-export interface ThreadMemberGuildCreate {
-  joinTimestamp: number
 }
