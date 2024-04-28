@@ -372,6 +372,9 @@ export function createRoutes(): RestRoutes {
 
           return url
         },
+        bulkBan: (guildId) => {
+          return `/guilds/${guildId}/bulk-ban`
+        },
         bot: (guildId) => {
           return `/guilds/${guildId}/members/@me`
         },

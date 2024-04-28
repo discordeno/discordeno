@@ -166,6 +166,8 @@ export interface RestRoutes {
       ban: (guildId: BigString, userId: BigString) => string
       /** Route for handling non-specific bans in a guild. */
       bans: (guildId: BigString, options?: GetBans) => string
+      /** Route for bulk-banning members. */
+      bulkBan: (guildId: BigString) => string
       /** Route for handling a the bot guild member. */
       bot: (guildId: BigString) => string
       /** Route for handling a specific guild member. */

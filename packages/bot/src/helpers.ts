@@ -35,6 +35,7 @@ import type {
   CreateGuild,
   CreateGuildApplicationCommandOptions,
   CreateGuildBan,
+  CreateGuildBulkBan,
   CreateGuildChannel,
   CreateGuildEmoji,
   CreateGuildFromTemplate,
@@ -535,6 +536,14 @@ export function createBotHelpers(bot: Bot): BotHelpers {
         bot.transformers.member(bot, snakelize(res), guildId, bot.transformers.snowflake(res.user.id)),
       )
     },
+    bulkBanMembers: async (guildId, options, reason) => {
+      const res = await bot.rest.bulkBanMembers(guildId, options, reason)
+
+      return {
+        bannedUsers: res.bannedUsers.map((x) => bot.transformers.snowflake(x)),
+        failedUsers: res.failedUsers.map((x) => bot.transformers.snowflake(x)),
+      }
+    },
     // All useless void return functions here
     addReaction: async (channelId, messageId, reaction) => {
       return await bot.rest.addReaction(channelId, messageId, reaction)
@@ -872,6 +881,7 @@ export interface BotHelpers {
   getMembers: (guildId: BigString, options: ListGuildMembers) => Promise<Member[]>
   pruneMembers: (guildId: BigString, options: BeginGuildPrune, reason?: string) => Promise<{ pruned: number | null }>
   searchMembers: (guildId: BigString, query: string, options?: Omit<SearchMembers, 'query'>) => Promise<Member[]>
+  bulkBanMembers: (guildId: BigString, options: CreateGuildBulkBan, reason?: string) => Promise<{ bannedUsers: bigint[]; failedUsers: bigint[] }>
   // functions return Void so dont need any special handling
   addReaction: (channelId: BigString, messageId: BigString, reaction: string) => Promise<void>
   addReactions: (channelId: BigString, messageId: BigString, reactions: string[], ordered?: boolean) => Promise<void>

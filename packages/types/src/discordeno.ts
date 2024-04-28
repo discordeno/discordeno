@@ -1180,7 +1180,23 @@ export interface ModifyGuildTemplate {
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-ban */
 export interface CreateGuildBan {
-  /** Number of seconds to delete messages for, between 0 and 604800 (7 days) */
+  /**
+   * Number of seconds to delete messages for, between 0 and 604800 (7 days)
+   *
+   * @default 0
+   */
+  deleteMessageSeconds?: number
+}
+
+/** https://discord.com/developers/docs/resources/guild#bulk-guild-ban-json-params */
+export interface CreateGuildBulkBan {
+  /** list of user ids to ban (max 200) */
+  userIds: BigString[]
+  /**
+   * Number of seconds to delete messages for, between 0 and 604800 (7 days)
+   *
+   * @default 0
+   */
   deleteMessageSeconds?: number
 }
 

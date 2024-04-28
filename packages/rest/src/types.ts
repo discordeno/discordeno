@@ -64,6 +64,7 @@ import type {
   CreateGuild,
   CreateGuildApplicationCommandOptions,
   CreateGuildBan,
+  CreateGuildBulkBan,
   CreateGuildChannel,
   CreateGuildEmoji,
   CreateGuildFromTemplate,
@@ -74,6 +75,7 @@ import type {
   CreateStageInstance,
   CreateTemplate,
   DeleteWebhookMessageOptions,
+  DiscordBulkBan,
   EditApplication,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
@@ -2620,8 +2622,8 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild to ban the user from.
    * @param userId - The ID of the user to ban from the guild.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @param options - The parameters for the creation of the ban.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `BAN_MEMBERS` permission.
@@ -2631,6 +2633,23 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-ban}
    */
   banMember: (guildId: BigString, userId: BigString, options?: CreateGuildBan, reason?: string) => Promise<void>
+  /**
+   * Bans up to 200 users from a guild.
+   *
+   * @param guildId - The ID of the guild to ban the users from.
+   * @param options - The users to ban and the other options for the ban.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   *
+   * @remarks
+   * Requires the `BAN_MEMBERS` and `MANAGE_GUILD` permissions.
+   *
+   * If all provided users fail to be banned, discord will respond with an error (code: `500000: Failed to ban users`)
+   *
+   * Fires as many _Guild Ban Add_ gateway events as many user where banned.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#bulk-guild-ban}
+   */
+  bulkBanMembers: (guildId: BigString, options: CreateGuildBulkBan, reason?: string) => Promise<Camelize<DiscordBulkBan>>
   /**
    * Edits the nickname of the bot user.
    *
