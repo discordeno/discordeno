@@ -58,6 +58,7 @@ import type {
   DiscordFollowedChannel,
   DiscordForumTag,
   DiscordGatewayPayload,
+  DiscordGetAnswerVotesResponse,
   DiscordGetGatewayBot,
   DiscordGuild,
   DiscordGuildApplicationCommandPermissions,
@@ -118,6 +119,11 @@ import type {
   DiscordOptionalAuditEntryInfo,
   DiscordOverwrite,
   DiscordPartialGuild,
+  DiscordPoll,
+  DiscordPollAnswer,
+  DiscordPollAnswerCount,
+  DiscordPollMedia,
+  DiscordPollResult,
   DiscordPresenceUpdate,
   DiscordPrunedCount,
   DiscordReaction,
@@ -227,6 +233,12 @@ export interface CamelizedDiscordChannelMention extends Camelize<DiscordChannelM
 export interface CamelizedDiscordReaction extends Camelize<DiscordReaction> {}
 export interface CamelizedDiscordMessageActivity extends Camelize<DiscordMessageActivity> {}
 export interface CamelizedDiscordMessageReference extends Camelize<DiscordMessageReference> {}
+export interface CamelizedDiscordPoll extends Camelize<DiscordPoll> {}
+export interface CamelizedDiscordPollMedia extends Camelize<DiscordPollMedia> {}
+export interface CamelizedDiscordPollAnswer extends Camelize<DiscordPollAnswer> {}
+export interface CamelizedDiscordPollAnswerCount extends Camelize<DiscordPollAnswerCount> {}
+export interface CamelizedDiscordPollResult extends Camelize<DiscordPollResult> {}
+export interface CamelizedDiscordGetAnswerVotesResponse extends Camelize<DiscordGetAnswerVotesResponse> {}
 export interface CamelizedDiscordSticker extends Camelize<DiscordSticker> {}
 export interface CamelizedDiscordMessageInteraction extends Camelize<DiscordMessageInteraction> {}
 export type CamelizedDiscordMessageComponents = Camelize<DiscordMessageComponents>

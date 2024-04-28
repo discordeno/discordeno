@@ -36,6 +36,7 @@ import type {
   CamelizedDiscordMessage,
   CamelizedDiscordModifyGuildWelcomeScreen,
   CamelizedDiscordPartialGuild,
+  CamelizedDiscordPollResult,
   CamelizedDiscordPrunedCount,
   CamelizedDiscordRole,
   CamelizedDiscordScheduledEvent,
@@ -97,6 +98,7 @@ import type {
   GetGuildPruneCountQuery,
   GetInvite,
   GetMessagesOptions,
+  GetPollAnswerVotes,
   GetReactions,
   GetScheduledEventUsers,
   GetScheduledEvents,
@@ -2544,6 +2546,34 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/channel#start-thread-without-message}
    */
   startThreadWithoutMessage: (channelId: BigString, options: StartThreadWithoutMessage, reason?: string) => Promise<CamelizedDiscordChannel>
+  /**
+   * Get a list of users that voted for this specific answer.
+   *
+   * @param channelId - The ID of the channel in which the message with the poll lives
+   * @param messageId - The ID of the message in which the poll lives
+   * @param answerId - The ID of the answer to get the users that voted that answer
+   * @param options - The options for the request
+   * @returns The list of users that voted for the specific answer.
+   */
+  getPollAnswerVoters: (
+    channelId: BigString,
+    messageId: BigString,
+    answerId: number,
+    options?: GetPollAnswerVotes,
+  ) => Promise<CamelizedDiscordPollResult>
+  /**
+   * Immediately ends the poll.
+   *
+   * @param channelId - The ID of the channel in which the message with the poll lives
+   * @param messageId - The ID of the message in which the poll lives
+   * @returns The message with the expired poll
+   *
+   * @remarks
+   * You cannot end polls from other users.
+   *
+   * Fires a _Message Update_ gateway event
+   */
+  endPoll: (channelId: BigString, messageId: BigString) => Promise<CamelizedDiscordMessage>
   /**
    * Synchronises a template with the current state of a guild.
    *
