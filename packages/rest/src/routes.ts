@@ -628,6 +628,10 @@ export function createRoutes(): RestRoutes {
       return `/users/${userId}`
     },
 
+    application() {
+      return '/applications/@me'
+    },
+
     currentUser() {
       return '/users/@me'
     },

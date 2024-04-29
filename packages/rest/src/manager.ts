@@ -974,7 +974,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editApplicationInfo(body) {
-      return await rest.patch<DiscordApplication>(rest.routes.oauth2.application(), {
+      return await rest.patch<DiscordApplication>(rest.routes.application(), {
         body,
       })
     },

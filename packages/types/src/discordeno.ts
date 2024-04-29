@@ -4,6 +4,7 @@ import type {
   AutoModerationTriggerTypes,
   DiscordApplicationCommandOption,
   DiscordApplicationCommandOptionChoice,
+  DiscordApplicationIntegrationType,
   DiscordAttachment,
   DiscordAutoModerationRuleTriggerMetadataPresets,
   DiscordChannel,
@@ -11,6 +12,7 @@ import type {
   DiscordGuildOnboardingMode,
   DiscordGuildOnboardingPrompt,
   DiscordInstallParams,
+  DiscordInteractionContextType,
   DiscordMessageFlag,
   DiscordPollAnswer,
   DiscordPollLayoutType,
@@ -459,7 +461,15 @@ export interface CreateSlashApplicationCommand {
   options?: Camelize<DiscordApplicationCommandOption[]>
   /** Set of permissions represented as a bit set */
   defaultMemberPermissions?: PermissionStrings[]
-  /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
+  /** Installation context(s) where the command is available */
+  integrationTypes?: DiscordApplicationIntegrationType[]
+  /** Interaction context(s) where the command can be used, only for globally-scoped commands. By default, all interaction context types included for new commands. */
+  contexts?: DiscordInteractionContextType[]
+  /**
+   * Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
+   *
+   * @deprecated use {@link contexts} instead
+   */
   dmPermission?: boolean
   /** Indicates whether the command is age-restricted, defaults to `false` */
   nsfw?: boolean
@@ -1294,6 +1304,13 @@ export interface EditApplication {
   roleConnectionsVerificationUrl?: string
   /** Settings for the app's default in-app authorization link, if enabled */
   installParams?: DiscordInstallParams
+  /**
+   * Default scopes and permissions for each supported installation context.
+   *
+   * @remarks
+   * This is currently in preview.
+   */
+  integrationTypesConfig?: DiscordApplicationIntegrationType
   /**
    * App's public flags
    *

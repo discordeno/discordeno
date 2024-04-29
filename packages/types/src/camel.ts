@@ -15,6 +15,7 @@ import type {
   DiscordApplicationCommandOption,
   DiscordApplicationCommandOptionChoice,
   DiscordApplicationCommandPermissions,
+  DiscordApplicationIntegrationTypeConfiguration,
   DiscordApplicationRoleConnection,
   DiscordApplicationWebhook,
   DiscordArchivedThreads,
@@ -180,6 +181,7 @@ export interface CamelizedDiscordGuildIntegrationsUpdate extends Camelize<Discor
 export interface CamelizedDiscordTypingStart extends Camelize<DiscordTypingStart> {}
 export interface CamelizedDiscordMember extends Camelize<DiscordMember> {}
 export interface CamelizedDiscordApplication extends Camelize<DiscordApplication> {}
+export interface CamelizedDiscordApplicationIntegrationTypeConfiguration extends Camelize<DiscordApplicationIntegrationTypeConfiguration> {}
 export interface CamelizedDiscordApplicationRoleConnection extends Camelize<DiscordApplicationRoleConnection> {}
 export type CamelizedDiscordTokenExchange = Camelize<DiscordTokenExchange>
 export interface CamelizedDiscordTokenExchangeAuthorizationCode extends Camelize<DiscordTokenExchangeAuthorizationCode> {}

@@ -255,7 +255,7 @@ export interface RestRoutes {
     tokenRevoke: () => string
     /** Route to get information about the current authorization. Requires an access token */
     currentAuthorization: () => string
-    /** Route to get information about the current application. Requires an access token */
+    /** Route to get information about the current application. */
     application: () => string
     /** Route to get the connection the user has. Requires the `connections` OAuth2 scope */
     connections: () => string
@@ -273,6 +273,8 @@ export interface RestRoutes {
   }
   /** Get information about the current OAuth2 user / bot user. If used with a OAuth2 token requires the `identify` OAuth2 scope */
   currentUser: () => string
+  /**  Route to get and edit information about the current application. */
+  application: () => string
   /** Route for handling a sticker. */
   sticker: (stickerId: BigString) => string
   /** Route for handling all voice regions. */

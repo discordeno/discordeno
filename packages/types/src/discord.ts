@@ -373,6 +373,13 @@ export interface DiscordApplication {
   tags?: string[]
   /** settings for the application's default in-app authorization link, if enabled */
   install_params?: DiscordInstallParams
+  /**
+   * Default scopes and permissions for each supported installation context.
+   *
+   * @remarks
+   * This is currently in preview.
+   */
+  integration_types_config?: Partial<Record<`${DiscordApplicationIntegrationType}`, DiscordApplicationIntegrationTypeConfiguration>>
   /** the application's default custom authorization link, if enabled */
   custom_install_url?: string
   /** the application's role connection verification entry point, which when configured will render the app as a verification method in the guild role verification configuration */
@@ -385,6 +392,28 @@ export interface DiscordApplication {
   redirect_uris?: string[]
   /** Interactions endpoint URL for the app */
   interactions_endpoint_url?: string
+}
+
+/** https://discord.com/developers/docs/resources/application#application-object-application-integration-type-configuration-object */
+export interface DiscordApplicationIntegrationTypeConfiguration {
+  /**
+   * Install params for each installation context's default in-app authorization link
+   *
+   * https://discord.com/developers/docs/resources/application#install-params-object-install-params-structure
+   */
+  oauth2_install_params?: {
+    /** Scopes to add the application to the server with */
+    scopes: OAuth2Scope[]
+    /** Permissions to request for the bot role */
+    permissions: string
+  }
+}
+
+export enum DiscordApplicationIntegrationType {
+  /** App is installable to servers */
+  GuildInstall = 0,
+  /** App is installable to users */
+  UserInstall = 1,
 }
 
 export type DiscordTokenExchange = DiscordTokenExchangeAuthorizationCode | DiscordTokenExchangeRefreshToken | DiscordTokenExchangeClientCredentials
@@ -1321,7 +1350,13 @@ export interface DiscordMessage {
    * Note: This field is only returned for messages with a `type` of `19` (REPLY). If the message is a reply but the `referenced_message` field is not present, the backend did not attempt to fetch the message that was being replied to, so its state is unknown. If the field exists but is null, the referenced message was deleted.
    */
   referenced_message?: DiscordMessage
-  /** Sent if the message is a response to an Interaction */
+  /** sent if the message is sent as a result of an interaction */
+  interaction_metadata?: DiscordMessageInteractionMetadata
+  /**
+   * Sent if the message is a response to an Interaction
+   *
+   * @deprecated Deprecated in favor of {@link interaction_metadata}
+   */
   interaction?: DiscordMessageInteraction
   /** The thread that was started from this message, includes thread member object */
   thread?: Omit<DiscordChannel, 'member'> & { member: DiscordThreadMember }
@@ -1550,6 +1585,24 @@ export interface DiscordMessageInteraction {
   member?: Partial<DiscordMember>
 }
 
+/** https://discord.com/developers/docs/resources/channel#message-interaction-metadata-object-message-interaction-metadata-structure */
+export interface DiscordMessageInteractionMetadata {
+  /** Id of the interaction */
+  id: string
+  /** The type of interaction */
+  type: InteractionTypes
+  /** ID of the user who triggered the interaction */
+  user_id: string
+  /** IDs for installation context(s) related to an interaction */
+  authorizing_integration_owners: Partial<Record<DiscordApplicationIntegrationType, string>>
+  /** ID of the original response message, present only on follow-up messages */
+  original_response_message_id?: string
+  /** ID of the message that contained interactive component, present only on messages created from component interactions */
+  interacted_message_id?: string
+  /** Metadata for the interaction that was used to open the modal, present only on modal submit interactions */
+  triggering_interaction_metadata?: DiscordMessageInteractionMetadata
+}
+
 export type DiscordMessageComponents = DiscordActionRow[]
 
 /** https://discord.com/developers/docs/interactions/message-components#actionrow */
@@ -1718,6 +1771,10 @@ export interface DiscordInteraction {
   app_permissions: string
   /** For monetized apps, any entitlements for the invoking user, representing access to premium SKUs */
   entitlements: DiscordEntitlement[]
+  /** Mapping of installation contexts that the interaction was authorized for to related user or guild IDs. */
+  authorizing_integration_owners: Partial<Record<DiscordApplicationIntegrationType, string>>
+  /** Context where the interaction was triggered from */
+  context?: DiscordInteractionContextType
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-member-object */
@@ -2272,7 +2329,25 @@ export interface DiscordCreateApplicationCommand {
   options?: DiscordApplicationCommandOption[]
   /** Set of permissions represented as a bit set */
   default_member_permissions?: string | null
-  /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
+  /**
+   * Installation context(s) where the command is available
+   *
+   * @remarks
+   * This is currently in preview.
+   */
+  integration_types?: DiscordApplicationIntegrationType[]
+  /**
+   * Interaction context(s) where the command can be used, only for globally-scoped commands. By default, all interaction context types included.
+   *
+   * @remarks
+   * This is currently in preview.
+   */
+  contexts?: DiscordInteractionContextType[] | null
+  /**
+   * Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
+   *
+   * @deprecated use {@link contexts} instead
+   */
   dm_permission?: boolean
   /** Indicates whether the command is age-restricted, defaults to false */
   nsfw?: boolean
@@ -3246,6 +3321,16 @@ export enum DiscordMessageFlag {
   SuppressNotifications = 1 << 12,
   /** This message is a voice message */
   IsVoiceMessage = 1 << 13,
+}
+
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-context-types */
+export enum DiscordInteractionContextType {
+  /** Interaction can be used within servers */
+  Guild = 0,
+  /** Interaction can be used within DMs with the app's bot user */
+  BotDm = 1,
+  /** Interaction can be used within Group DMs and DMs other than the app's bot user */
+  PrivateChannel = 2,
 }
 
 /** https://discord.com/developers/docs/resources/guild#bulk-guild-ban */
