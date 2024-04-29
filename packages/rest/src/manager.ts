@@ -17,6 +17,7 @@ import {
   type DiscordAuditLog,
   type DiscordAutoModerationRule,
   type DiscordBan,
+  type DiscordBulkBan,
   type DiscordChannel,
   type DiscordConnection,
   type DiscordCurrentAuthorization,
@@ -39,6 +40,7 @@ import {
   type DiscordMemberWithUser,
   type DiscordMessage,
   type DiscordPartialGuild,
+  type DiscordPollResult,
   type DiscordPrunedCount,
   type DiscordRole,
   type DiscordScheduledEvent,
@@ -1351,12 +1353,24 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordChannel>(rest.routes.channels.threads.all(channelId), { body, reason })
     },
 
+    async getPollAnswerVoters(channelId, messageId, answerId, options) {
+      return await rest.get<DiscordPollResult>(rest.routes.channels.polls.votes(channelId, messageId, answerId, options))
+    },
+
+    async endPoll(channelId, messageId) {
+      return await rest.post<DiscordMessage>(rest.routes.channels.polls.expire(channelId, messageId))
+    },
+
     async syncGuildTemplate(guildId) {
       return await rest.put<DiscordTemplate>(rest.routes.guilds.templates.all(guildId))
     },
 
     async banMember(guildId, userId, body, reason) {
       await rest.put<void>(rest.routes.guilds.members.ban(guildId, userId), { body, reason })
+    },
+
+    async bulkBanMembers(guildId, options, reason) {
+      return await rest.post<DiscordBulkBan>(rest.routes.guilds.members.bulkBan(guildId), { body: options, reason })
     },
 
     async editBotMember(guildId, body, reason) {

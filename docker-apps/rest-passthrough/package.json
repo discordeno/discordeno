@@ -14,13 +14,13 @@
     "@discordeno/rest": "19.0.0-next.d81b28a",
     "@fastify/env": "^4.3.0",
     "@fastify/helmet": "^11.1.1",
-    "@fastify/multipart": "^8.1.0",
+    "@fastify/multipart": "^8.2.0",
     "fastify": "^4.26.2"
   },
   "devDependencies": {
-    "@favware/cliff-jumper": "^3.0.1",
-    "@swc/cli": "^0.3.10",
-    "@swc/core": "^1.4.8",
+    "@favware/cliff-jumper": "^3.0.3",
+    "@swc/cli": "^0.3.12",
+    "@swc/core": "^1.5.0",
     "dotenv": "^16.4.5"
   },
   "packageManager": "yarn@4.0.2"

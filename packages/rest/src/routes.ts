@@ -218,6 +218,22 @@ export function createRoutes(): RestRoutes {
       typing: (channelId) => {
         return `/channels/${channelId}/typing`
       },
+
+      polls: {
+        votes: (channelId, messageId, answerId, options) => {
+          let url = `/channels/${channelId}/polls/${messageId}/answers/${answerId}?`
+
+          if (options) {
+            if (options.after) url += `after=${options.after}`
+            if (options.limit) url += `&limit=${options.limit}`
+          }
+
+          return url
+        },
+        expire: (channelId, messageId) => {
+          return `/channels/${channelId}/polls/${messageId}/expire`
+        },
+      },
     },
 
     // Guild Endpoints
@@ -371,6 +387,9 @@ export function createRoutes(): RestRoutes {
           }
 
           return url
+        },
+        bulkBan: (guildId) => {
+          return `/guilds/${guildId}/bulk-ban`
         },
         bot: (guildId) => {
           return `/guilds/${guildId}/members/@me`

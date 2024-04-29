@@ -6,6 +6,7 @@ import type {
   GetGuildPruneCountQuery,
   GetInvite,
   GetMessagesOptions,
+  GetPollAnswerVotes,
   GetReactions,
   GetScheduledEventUsers,
   GetUserGuilds,
@@ -103,6 +104,10 @@ export interface RestRoutes {
       /** Route for handling a specific reaction on a message. */
       message: (channelId: BigString, messageId: BigString, emoji: string, options?: GetReactions) => string
     }
+    polls: {
+      votes: (channelId: BigString, messageId: BigString, answerId: number, options?: GetPollAnswerVotes) => string
+      expire: (channelId: BigString, messageId: BigString) => string
+    }
   }
   /** Routes for guild related endpoints. */
   guilds: {
@@ -166,6 +171,8 @@ export interface RestRoutes {
       ban: (guildId: BigString, userId: BigString) => string
       /** Route for handling non-specific bans in a guild. */
       bans: (guildId: BigString, options?: GetBans) => string
+      /** Route for bulk-banning members. */
+      bulkBan: (guildId: BigString) => string
       /** Route for handling a the bot guild member. */
       bot: (guildId: BigString) => string
       /** Route for handling a specific guild member. */

@@ -507,6 +507,7 @@ export interface DiscordConnection {
 /** https://discord.com/developers/docs/resources/user#connection-object-services */
 export enum DiscordConnectionServiceType {
   BattleNet = 'battlenet',
+  Bungie = 'Bungie.net',
   eBay = 'ebay',
   EpicGames = 'epicgames',
   Facebook = 'facebook',
@@ -1365,6 +1366,8 @@ export interface DiscordMessage {
   sticker_items?: DiscordStickerItem[]
   /** A generally increasing integer (there may be gaps or duplicates) that represents the approximate position of the message in a thread, it can be used to estimate the relative position of the message in a thread in company with `total_message_sent` on parent thread */
   position?: number
+  /** The poll object */
+  poll?: DiscordPoll
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-mention-object */
@@ -1424,6 +1427,122 @@ export interface DiscordMessageReference {
   guild_id?: string
   /** When sending, whether to error if the referenced message doesn't exist instead of sending as a normal (non-reply) message, default true */
   fail_if_not_exists: boolean
+}
+
+/** https://discord.com/developers/docs/resources/poll#poll-object */
+export interface DiscordPoll {
+  /** The question of the poll. Only `text` is supported. */
+  question: DiscordPollMedia
+  /** Each of the answers available in the poll. There is a maximum of 10 answers per poll. */
+  answers: DiscordPollAnswer[]
+  /**
+   * The time when the poll ends.
+   *
+   * @remarks
+   * `expiry` is marked as nullable to support non-expiring polls in the future, but all polls have an expiry currently.
+   */
+  expiry: string | null
+  /** Whether a user can select multiple answers */
+  allow_multiselect: boolean
+  /** The layout type of the poll */
+  layout_type: DiscordPollLayoutType
+  /**
+   * The results of the poll
+   *
+   * @remarks
+   * This value will not be sent by discord under specific conditions where they don't fetch them on their backend. When this value is missing it should be interpreted as "Unknown results" and not as "No results"
+   * The results may not be totally accurate while the poll has not ended. When it ends discord will re-calculate all the results and set {@link DiscordPollResult.is_finalized} to true
+   */
+  results?: DiscordPollResult
+}
+
+/** https://discord.com/developers/docs/resources/poll#layout-type */
+export enum DiscordPollLayoutType {
+  /** The default layout */
+  Default = 1,
+}
+
+/** https://discord.com/developers/docs/resources/poll#poll-media-object */
+export interface DiscordPollMedia {
+  /**
+   * The text of the field
+   *
+   * @remarks
+   * `text` should always be non-null for both questions and answers, but this is subject to changes.
+   * The maximum length of `text` is 300 for the question, and 55 for any answer.
+   */
+  text?: string
+  /**
+   * The emoji of the field
+   *
+   * @remarks
+   * When creating a poll answer with an emoji, one only needs to send either the `id` (custom emoji) or `name` (default emoji) as the only field.
+   */
+  emoji?: Partial<DiscordEmoji>
+}
+
+/** https://discord.com/developers/docs/resources/poll#poll-answer-object */
+export interface DiscordPollAnswer {
+  /**
+   * The id of the answer
+   *
+   * @remarks
+   * This id labels each answer. It starts at 1 and goes up sequentially. Discord recommend against depending on this value as is a implementation detail.
+   */
+  answer_id: number
+  /** The data of the answer */
+  poll_media: DiscordPollMedia
+}
+
+export interface DiscordPollAnswerCount {
+  /** The {@link DiscordPollAnswer.answer_id | answer_id} */
+  id: number
+  /** The number of votes for this answer */
+  count: number
+  /** Whether the current user voted for this answer */
+  me_voted: boolean
+}
+
+/** https://discord.com/developers/docs/resources/poll#poll-results-object */
+export interface DiscordPollResult {
+  /** Whether the votes have been precisely counted */
+  is_finalized: boolean
+  /** The counts for each answer */
+  answer_counts: DiscordPollAnswerCount[]
+}
+
+/** https://discord.com/developers/docs/resources/poll#get-answer-voters-response-body */
+export interface DiscordGetAnswerVotesResponse {
+  /** Users who voted for this answer */
+  users: DiscordUser[]
+}
+
+/** https://discord.com/developers/docs/topics/gateway-events#message-poll-vote-add */
+export interface DiscordPollVoteAdd {
+  /** ID of the user. Usually a snowflake */
+  user_id: string
+  /** ID of the channel. Usually a snowflake */
+  channel_id: string
+  /** ID of the message. Usually a snowflake */
+  message_id: string
+  /** ID of the guild. Usually a snowflake */
+  guild_id?: string
+  /** ID of the answer. */
+  answer_id: number
+}
+
+/** https://discord.com/developers/docs/topics/gateway-events#message-poll-vote-remove */
+export interface DiscordPollVoteRemove {
+  /** ID of the user. Usually a snowflake */
+  user_id: string
+  /** ID of the channel. Usually a snowflake */
+  channel_id: string
+  /** ID of the message. Usually a snowflake */
+  message_id: string
+  /** ID of the guild. Usually a snowflake */
+  guild_id?: string
+  /** ID of the answer. */
+  answer_id: number
 }
 
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-structure */
@@ -3212,4 +3331,12 @@ export enum DiscordInteractionContextType {
   BotDm = 1,
   /** Interaction can be used within Group DMs and DMs other than the app's bot user */
   PrivateChannel = 2,
+}
+
+/** https://discord.com/developers/docs/resources/guild#bulk-guild-ban */
+export interface DiscordBulkBan {
+  /** list of user ids, that were successfully banned */
+  banned_users: string[]
+  /** list of user ids, that were not banned */
+  failed_users: string[]
 }

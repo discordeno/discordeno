@@ -14,6 +14,9 @@ import type {
   DiscordInstallParams,
   DiscordInteractionContextType,
   DiscordMessageFlag,
+  DiscordPollAnswer,
+  DiscordPollLayoutType,
+  DiscordPollMedia,
   DiscordRole,
 } from './discord.js'
 import type {
@@ -81,6 +84,8 @@ export interface CreateMessageOptions {
   flags?: DiscordMessageFlag
   /** If true and nonce is present, it will be checked for uniqueness in the past few minutes. If another message was created by the same author with the same nonce, that message will be returned and no new message will be created. */
   enforceNonce?: boolean
+  /** A poll object */
+  poll?: CreatePoll
 }
 
 export type MessageComponents = ActionRow[]
@@ -752,6 +757,8 @@ export interface ExecuteWebhook {
   allowedMentions?: AllowedMentions
   /** the components to include with the message */
   components?: MessageComponents
+  /** A poll object */
+  poll?: CreatePoll
 }
 
 export interface GetWebhookMessageOptions {
@@ -1190,7 +1197,23 @@ export interface ModifyGuildTemplate {
 
 /** https://discord.com/developers/docs/resources/guild#create-guild-ban */
 export interface CreateGuildBan {
-  /** Number of seconds to delete messages for, between 0 and 604800 (7 days) */
+  /**
+   * Number of seconds to delete messages for, between 0 and 604800 (7 days)
+   *
+   * @default 0
+   */
+  deleteMessageSeconds?: number
+}
+
+/** https://discord.com/developers/docs/resources/guild#bulk-guild-ban-json-params */
+export interface CreateGuildBulkBan {
+  /** list of user ids to ban (max 200) */
+  userIds: BigString[]
+  /**
+   * Number of seconds to delete messages for, between 0 and 604800 (7 days)
+   *
+   * @default 0
+   */
   deleteMessageSeconds?: number
 }
 
@@ -1313,4 +1336,30 @@ export interface EditApplication {
    * There can only be a max of 5 tags
    */
   tags?: string[]
+}
+
+/** https://discord.com/developers/docs/resources/poll#poll-create-request-object */
+export interface CreatePoll {
+  /** The question of the poll. Only `text` is supported. */
+  question: Camelize<DiscordPollMedia>
+  /** Each of the answers available in the poll, up to 10 */
+  answers: Array<Omit<Camelize<DiscordPollAnswer>, 'answerId'>>
+  /** Number of hours the poll should be open for, up to 7 days */
+  duration: number
+  /** Whether a user can select multiple answers */
+  allowMultiselect: boolean
+  /** The layout type of the poll */
+  layoutType?: DiscordPollLayoutType
+}
+
+/** https://discord.com/developers/docs/resources/poll#get-answer-voters-query-string-params */
+export interface GetPollAnswerVotes {
+  /** Get users after this user ID */
+  after?: BigString
+  /**
+   * Max number of users to return (1-100)
+   *
+   * @default 25
+   */
+  limit?: number
 }

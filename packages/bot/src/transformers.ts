@@ -32,6 +32,8 @@ import type {
   DiscordMember,
   DiscordMessage,
   DiscordMessageInteractionMetadata,
+  DiscordPoll,
+  DiscordPollMedia,
   DiscordPresenceUpdate,
   DiscordRole,
   DiscordScheduledEvent,
@@ -86,6 +88,7 @@ import { transformInvite, type Invite } from './transformers/invite.js'
 import { transformMember, type Member } from './transformers/member.js'
 import { transformMessage, type Message, type MessageInteractionMetadata, transformMessageInteractionMetadata } from './transformers/message.js'
 import { transformGuildOnboarding, type GuildOnboarding } from './transformers/onboarding.js'
+import { transformPoll, transformPollMedia, type Poll, type PollMedia } from './transformers/poll.js'
 import { transformPresence, type PresenceUpdate } from './transformers/presence.js'
 import { transformAllowedMentionsToDiscordAllowedMentions } from './transformers/reverse/allowedMentions.js'
 import { transformCreateApplicationCommandToDiscordCreateApplicationCommand } from './transformers/reverse/createApplicationCommand.js'
@@ -167,6 +170,8 @@ export interface Transformers {
     guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding, onboarding: GuildOnboarding) => any
     entitlement: (bot: Bot, payload: DiscordEntitlement, entitlement: Entitlement) => any
     sku: (bot: Bot, payload: DiscordSku, sku: Sku) => any
+    poll: (bot: Bot, payload: DiscordPoll, poll: Poll) => any
+    pollMedia: (bot: Bot, payload: DiscordPollMedia, pollMedia: PollMedia) => any
   }
   desiredProperties: {
     attachment: {
@@ -519,6 +524,28 @@ export interface Transformers {
       sessionId: boolean
       userId: boolean
     }
+    poll: {
+      question: boolean
+      answers: {
+        answerId: boolean
+        pollMedia: boolean
+      }
+      expiry: boolean
+      allowMultiselect: boolean
+      layoutType: boolean
+      results: {
+        isFinalized: boolean
+        answerCounts: {
+          id: boolean
+          count: boolean
+          meVoted: boolean
+        }
+      }
+    }
+    pollMedia: {
+      text: boolean
+      emoji: boolean
+    }
   }
   reverse: {
     allowedMentions: (bot: Bot, payload: AllowedMentions) => DiscordAllowedMentions
@@ -583,6 +610,8 @@ export interface Transformers {
   guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding) => GuildOnboarding
   entitlement: (bot: Bot, payload: DiscordEntitlement) => Entitlement
   sku: (bot: Bot, payload: DiscordSku) => Sku
+  poll: (bot: Bot, payload: DiscordPoll) => Poll
+  pollMedia: (bot: Bot, payload: DiscordPollMedia) => PollMedia
 }
 
 export interface CreateTransformerOptions {
@@ -735,6 +764,12 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
       },
       sku(bot, payload, sku) {
         return sku
+      },
+      poll(bot, payload, poll) {
+        return poll
+      },
+      pollMedia(bot, payload, pollMedia) {
+        return pollMedia
       },
     },
     desiredProperties: {
@@ -1088,6 +1123,28 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         sessionId: opts?.defaultDesiredPropertiesValue ?? false,
         userId: opts?.defaultDesiredPropertiesValue ?? false,
       },
+      poll: {
+        question: opts?.defaultDesiredPropertiesValue ?? false,
+        answers: {
+          answerId: opts?.defaultDesiredPropertiesValue ?? false,
+          pollMedia: opts?.defaultDesiredPropertiesValue ?? false,
+        },
+        expiry: opts?.defaultDesiredPropertiesValue ?? false,
+        layoutType: opts?.defaultDesiredPropertiesValue ?? false,
+        allowMultiselect: opts?.defaultDesiredPropertiesValue ?? false,
+        results: {
+          isFinalized: opts?.defaultDesiredPropertiesValue ?? false,
+          answerCounts: {
+            id: opts?.defaultDesiredPropertiesValue ?? false,
+            count: opts?.defaultDesiredPropertiesValue ?? false,
+            meVoted: opts?.defaultDesiredPropertiesValue ?? false,
+          },
+        },
+      },
+      pollMedia: {
+        text: opts?.defaultDesiredPropertiesValue ?? false,
+        emoji: opts?.defaultDesiredPropertiesValue ?? false,
+      },
     },
     reverse: {
       allowedMentions: options.reverse?.allowedMentions ?? transformAllowedMentionsToDiscordAllowedMentions,
@@ -1152,5 +1209,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
     guildOnboarding: options.guildOnboarding ?? transformGuildOnboarding,
     entitlement: options.entitlement ?? transformEntitlement,
     sku: options.sku ?? transformSku,
+    poll: options.poll ?? transformPoll,
+    pollMedia: options.pollMedia ?? transformPollMedia,
   }
 }

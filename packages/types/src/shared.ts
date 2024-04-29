@@ -671,6 +671,8 @@ export enum BitwisePermissionFlags {
   USE_EXTERNAL_SOUNDS = 0x0000200000000000,
   /** Allows sending voice messages */
   SEND_VOICE_MESSAGES = 0x0000400000000000,
+  /** Allows sending polls */
+  SEND_POLLS = 0x0002000000000000,
 }
 
 export type PermissionStrings = keyof typeof BitwisePermissionFlags
@@ -799,6 +801,8 @@ export type GatewayDispatchEventNames =
   | 'ENTITLEMENT_CREATE'
   | 'ENTITLEMENT_UPDATE'
   | 'ENTITLEMENT_DELETE'
+  | 'MESSAGE_POLL_VOTE_ADD'
+  | 'MESSAGE_POLL_VOTE_REMOVE'
 
 export type GatewayEventNames = GatewayDispatchEventNames | 'READY' | 'RESUMED'
 
@@ -935,6 +939,16 @@ export enum GatewayIntents {
    * - AUTO_MODERATION_ACTION_EXECUTION
    */
   AutoModerationExecution = 1 << 21,
+  /**
+   * - MESSAGE_POLL_VOTE_ADD
+   * - MESSAGE_POLL_VOTE_REMOVE
+   */
+  GuildMessagePolls = 1 << 24,
+  /**
+   * - MESSAGE_POLL_VOTE_ADD
+   * - MESSAGE_POLL_VOTE_REMOVE
+   */
+  DirectMessagePolls = 1 << 25,
 }
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
