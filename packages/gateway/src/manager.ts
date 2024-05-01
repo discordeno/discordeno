@@ -628,7 +628,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
     shardsFullPercentage: number
     /**
      * The interval in milliseconds, of how often to check whether resharding is needed.
-     * @default 28800000 8 hours
+     * @default 28800000 (8 hours)
      */
     checkInterval: number
     /** Holds the shards that resharding has created. Once resharding is done, this replaces the gateway.shards */
