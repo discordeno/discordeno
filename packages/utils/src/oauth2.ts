@@ -76,7 +76,7 @@ export interface CreateOAuth2LinkOptions {
    * Specifies the installation context for the authorization
    *
    * @remarks
-   * Should be defined only when {@link scopes} includes {@link OAuth2Scope.ApplicationsCommands}.
+   * Should be defined only when {@link scope} includes {@link OAuth2Scope.ApplicationsCommands}.
    *
    * When set to GuildInstall (0) the application will be authorized for installation to a server, and when set to UserInstall (1) the application will be authorized for installation to a user.
    *
