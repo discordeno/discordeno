@@ -5,31 +5,31 @@ __metadata:
   version: 8
   cacheKey: 10
 
-"@discordeno/rest@npm:19.0.0-next.687c29d":
-  version: 19.0.0-next.687c29d
-  resolution: "@discordeno/rest@npm:19.0.0-next.687c29d"
+"@discordeno/rest@npm:19.0.0-next.9006572":
+  version: 19.0.0-next.9006572
+  resolution: "@discordeno/rest@npm:19.0.0-next.9006572"
   dependencies:
-    "@discordeno/types": "npm:19.0.0-next.687c29d"
-    "@discordeno/utils": "npm:19.0.0-next.687c29d"
-    dotenv: "npm:^16.4.5"
-  checksum: b5f42e27c1583c353a4f0241f476c555106e7f21a616b3056f2a93314348d7f16d254dab4d96f0b2b40043c7b778bf4a5e7d0186e1b79126912efafe2c855812
+    "@discordeno/types": "npm:19.0.0-next.9006572"
+    "@discordeno/utils": "npm:19.0.0-next.9006572"
+    dotenv: "npm:^16.0.3"
+  checksum: b6298a3af305f44a21ef8326f878ec01c48651d16431c96130e2976237ff166752e9b41a4f6741d528be667ccc5056b70ffa666826e37e38922f8ded27fd93db
   languageName: node
   linkType: hard
 
-"@discordeno/types@npm:19.0.0-next.687c29d":
-  version: 19.0.0-next.687c29d
-  resolution: "@discordeno/types@npm:19.0.0-next.687c29d"
-  checksum: 114e35a38f1ca73e53e313043547de4852eaf83ff9e84f2b2fe944361bedf9e90c6b6cf17148e2a2e0a1867b18644d305db45e9fff84e8df82baf71a05f17c93
+"@discordeno/types@npm:19.0.0-next.9006572":
+  version: 19.0.0-next.9006572
+  resolution: "@discordeno/types@npm:19.0.0-next.9006572"
+  checksum: 54a4d4b5e2f8caea94fdfb164dc859ca4d61cc3d8bed849a458f944c73523ddf1857b14d6c93754d2eef42c705b813f966959e6870b4835c4b31505e42c72806
   languageName: node
   linkType: hard
 
-"@discordeno/utils@npm:19.0.0-next.687c29d":
-  version: 19.0.0-next.687c29d
-  resolution: "@discordeno/utils@npm:19.0.0-next.687c29d"
+"@discordeno/utils@npm:19.0.0-next.9006572":
+  version: 19.0.0-next.9006572
+  resolution: "@discordeno/utils@npm:19.0.0-next.9006572"
   dependencies:
-    "@discordeno/types": "npm:19.0.0-next.687c29d"
+    "@discordeno/types": "npm:19.0.0-next.9006572"
     tweetnacl: "npm:^1.0.3"
-  checksum: 76f51c7c6b6f779496b50c36ee0f59a151e7ece659ba89f475d6b4d94b2ddd360fe4ea8b2d0b46336339bad03f560b94cf0382fbffe24b6bbf70a58331709b1c
+  checksum: f19b9cefbc00c0e345c10fe409f132a7a7bfeaec57aa458d9abd4d63dc1d1f5f32f34db6cfba236f9798773269d7b09484f481cea5e0404a285c52cca397fe6c
   languageName: node
   linkType: hard
 
@@ -947,7 +947,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:^16.4.5":
+"dotenv@npm:^16.0.3, dotenv@npm:^16.4.5":
   version: 16.4.5
   resolution: "dotenv@npm:16.4.5"
   checksum: 55a3134601115194ae0f924e54473459ed0d9fc340ae610b676e248cca45aa7c680d86365318ea964e6da4e2ea80c4514c1adab5adb43d6867fb57ff068f95c8
@@ -2450,7 +2450,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "rest-passthrough@workspace:."
   dependencies:
-    "@discordeno/rest": "npm:19.0.0-next.687c29d"
+    "@discordeno/rest": "npm:19.0.0-next.9006572"
     "@fastify/env": "npm:^4.3.0"
     "@fastify/helmet": "npm:^11.1.1"
     "@fastify/multipart": "npm:^8.2.0"
