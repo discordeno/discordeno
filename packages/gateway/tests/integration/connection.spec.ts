@@ -1,10 +1,9 @@
 import { Intents } from '@discordeno/types'
 import uWS from 'uWebSockets.js'
-import { createGatewayManager, ShardSocketCloseCodes } from '../../src/index.js'
+import { ShardSocketCloseCodes, createGatewayManager, type GatewayManager } from '../../src/index.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const createGatewayManagerWithPort = (port: number) =>
-  createGatewayManager({
+function createGatewayManagerWithPort(port: number): GatewayManager {
+  return createGatewayManager({
     connection: {
       url: `ws://localhost:${port}`,
       shards: 1,
@@ -20,14 +19,14 @@ const createGatewayManagerWithPort = (port: number) =>
     intents: Intents.Guilds,
     events: {},
   })
+}
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const createUws = async (options: {
+async function createUws(options: {
   onOpen?: () => any
   onMessage?: (message: any) => any
   onClose?: (code: number, message: string) => any
   closing?: boolean
-}) => {
+}): Promise<{ port: number; uwsToken: uWS.us_listen_socket }> {
   options.onOpen ??= () => {}
   options.onMessage ??= (message: any) => {}
   options.onClose ??= (code: number, message: string) => {}
@@ -120,7 +119,7 @@ const createUws = async (options: {
         }
         // retrieve listening port
         uwsToken = token
-        port = uWS.us_socket_local_port(token)
+        port = uWS.us_socket_local_port(uwsToken)
         resolve({ port, uwsToken })
       })
   })
@@ -146,7 +145,7 @@ describe('gateway', () => {
     let resolveHeartbeat: () => void
     let resolveConnected: () => void
     const connected = new Promise<void>((resolve) => (resolveConnected = resolve))
-    const Heartbeated = new Promise<void>((resolve) => (resolveHeartbeat = resolve))
+    const heartbeated = new Promise<void>((resolve) => (resolveHeartbeat = resolve))
     const uwsOptions = {
       onOpen: resolveConnected!,
       onMessage: (message: any) => {
@@ -162,7 +161,7 @@ describe('gateway', () => {
     const timeout = setTimeout(() => {
       throw new Error('Not heartbeat in time')
     }, 1017)
-    await Heartbeated
+    await heartbeated
     clearTimeout(timeout)
     uwsOptions.closing = true
     await gateway.shutdown(ShardSocketCloseCodes.Shutdown, 'User requested bot stop')

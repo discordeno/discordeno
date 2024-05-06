@@ -31,8 +31,7 @@
   },
   "dependencies": {
     "@discordeno/types": "19.0.0-beta.1",
-    "@discordeno/utils": "19.0.0-beta.1",
-    "dotenv": "^16.4.5"
+    "@discordeno/utils": "19.0.0-beta.1"
   },
   "devDependencies": {
     "@swc/cli": "^0.3.9",
@@ -45,13 +44,13 @@
     "c8": "^9.1.0",
     "chai": "^5.0.3",
     "chai-as-promised": "^7.1.1",
+    "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "eslint-config-discordeno": "*",
     "mocha": "^10.3.0",
     "sinon": "^17.0.1",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "5.4.5",
-    "why-is-node-running": "^2.2.2"
+    "typescript": "5.4.5"
   }
 }

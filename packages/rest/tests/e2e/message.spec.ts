@@ -1,26 +1,26 @@
 import { processReactionString, urlToBase64 } from '@discordeno/utils'
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { e2ecache, rest } from './utils.js'
+import { e2eCache, rest } from './utils.js'
 
 before(async () => {
-  if (!e2ecache.guild) {
-    e2ecache.guild = await rest.createGuild({
+  if (!e2eCache.guild) {
+    e2eCache.guild = await rest.createGuild({
       name: 'Discordeno-test',
     })
   }
 })
 
 after(async () => {
-  if (e2ecache.guild.id && !e2ecache.deletedGuild) {
-    e2ecache.deletedGuild = true
-    await rest.deleteGuild(e2ecache.guild.id)
+  if (e2eCache.guild.id && !e2eCache.deletedGuild) {
+    e2eCache.deletedGuild = true
+    await rest.deleteGuild(e2eCache.guild.id)
   }
 })
 
 describe('Send a message', () => {
   it('With content', async () => {
-    const message = await rest.sendMessage(e2ecache.channel.id, { content: 'testing rate limit manager' })
+    const message = await rest.sendMessage(e2eCache.channel.id, { content: 'testing rate limit manager' })
     expect(message.content).to.be.equal('testing rate limit manager')
 
     const edited = await rest.editMessage(message.channelId, message.id, { content: 'testing rate limit manager edited' })
@@ -36,7 +36,7 @@ describe('Send a message', () => {
     expect(image).to.not.be.undefined
     if (!image) throw new Error('Was not able to fetch the image.')
 
-    const message = await rest.sendMessage(e2ecache.channel.id, { files: [{ blob: image, name: 'gamer' }] })
+    const message = await rest.sendMessage(e2eCache.channel.id, { files: [{ blob: image, name: 'gamer' }] })
     expect(message.attachments.length).to.be.greaterThan(0)
     const [attachment] = message.attachments
 
@@ -46,7 +46,7 @@ describe('Send a message', () => {
   it('With a file attachment', async () => {
     const txtFile = new Blob(['hello world'], { type: 'text/plain' })
 
-    const fileMsg = await rest.sendMessage(e2ecache.channel.id, {
+    const fileMsg = await rest.sendMessage(e2eCache.channel.id, {
       content: '222',
       files: [
         {
@@ -64,7 +64,7 @@ describe('Send a message', () => {
 
     const txtFile2 = new Blob(['hello world edit'], { type: 'text/plain' })
 
-    const edited = await rest.editMessage(e2ecache.channel.id, fileMsg.id, {
+    const edited = await rest.editMessage(e2eCache.channel.id, fileMsg.id, {
       content: '222 edit',
       files: [
         {
@@ -84,7 +84,7 @@ describe('Send a message', () => {
 
 describe('Manage reactions', async () => {
   it('Add and delete a unicode reaction', async () => {
-    const reactionChannel = await rest.createChannel(e2ecache.guild.id, { name: 'reactions' })
+    const reactionChannel = await rest.createChannel(e2eCache.guild.id, { name: 'reactions' })
     const message = await rest.sendMessage(reactionChannel.id, { content: 'add reaction test' })
 
     await rest.addReaction(message.channelId, message.id, '📙')
@@ -98,13 +98,13 @@ describe('Manage reactions', async () => {
   })
 
   it('Add and delete a custom reaction', async () => {
-    const emoji = await rest.createEmoji(e2ecache.guild.id, {
+    const emoji = await rest.createEmoji(e2eCache.guild.id, {
       name: 'discordeno',
       image: await urlToBase64('https://cdn.discordapp.com/emojis/785403373817823272.webp?size=96'),
     })
     const emojiCode = `<:${emoji.name!}:${emoji.id!}>`
 
-    const reactionChannel = await rest.createChannel(e2ecache.guild.id, { name: 'reactions' })
+    const reactionChannel = await rest.createChannel(e2eCache.guild.id, { name: 'reactions' })
     const message = await rest.sendMessage(reactionChannel.id, { content: 'add reaction test' })
 
     await rest.addReaction(message.channelId, message.id, emojiCode)
@@ -121,13 +121,13 @@ describe('Manage reactions', async () => {
   })
 
   it('Add several reactions with random order and delete all of them', async () => {
-    const emoji = await rest.createEmoji(e2ecache.guild.id, {
+    const emoji = await rest.createEmoji(e2eCache.guild.id, {
       name: 'discordeno',
       image: await urlToBase64('https://cdn.discordapp.com/emojis/785403373817823272.webp?size=96'),
     })
     const emojiCode = `<:${emoji.name!}:${emoji.id!}>`
 
-    const reactionChannel = await rest.createChannel(e2ecache.guild.id, { name: 'reactions' })
+    const reactionChannel = await rest.createChannel(e2eCache.guild.id, { name: 'reactions' })
     const message = await rest.sendMessage(reactionChannel.id, { content: 'add reaction test' })
 
     await rest.addReactions(message.channelId, message.id, [emojiCode, '📙'])
@@ -141,13 +141,13 @@ describe('Manage reactions', async () => {
   })
 
   it('Add several reactions in an order and delete emoji reaction', async () => {
-    const emoji = await rest.createEmoji(e2ecache.guild.id, {
+    const emoji = await rest.createEmoji(e2eCache.guild.id, {
       name: 'discordeno',
       image: await urlToBase64('https://cdn.discordapp.com/emojis/785403373817823272.webp?size=96'),
     })
     const emojiCode = `<:${emoji.name!}:${emoji.id!}>`
 
-    const reactionChannel = await rest.createChannel(e2ecache.guild.id, { name: 'reactions' })
+    const reactionChannel = await rest.createChannel(e2eCache.guild.id, { name: 'reactions' })
     const message = await rest.sendMessage(reactionChannel.id, { content: 'add reaction test' })
 
     await rest.addReactions(message.channelId, message.id, [emojiCode, '📙'], true)
@@ -167,7 +167,7 @@ describe('Manage reactions', async () => {
 
 describe('Manage pins', () => {
   it('Pin, get, and unpin messages', async () => {
-    const channel = await rest.createChannel(e2ecache.guild.id, { name: 'pinning' })
+    const channel = await rest.createChannel(e2eCache.guild.id, { name: 'pinning' })
     const message = await rest.sendMessage(channel.id, { content: 'pin me' })
     const message2 = await rest.sendMessage(channel.id, { content: 'pin me 2' })
 
@@ -188,7 +188,7 @@ describe('Manage pins', () => {
 
 describe('Rate limit manager testing', () => {
   it('Send 10 messages to 1 channel', async () => {
-    const channel = await rest.createChannel(e2ecache.guild.id, { name: 'rate-limit-1' })
+    const channel = await rest.createChannel(e2eCache.guild.id, { name: 'rate-limit-1' })
     await Promise.all(
       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(async (i) => {
         await rest.sendMessage(channel.id, { content: `10 messages to 1 channel testing rate limit manager ${i}` })
@@ -199,7 +199,7 @@ describe('Rate limit manager testing', () => {
   it('Send 10 messages to 10 channels', async () => {
     await Promise.all(
       [...Array(10).keys()].map(async () => {
-        const channel = await rest.createChannel(e2ecache.guild.id, { name: 'rate-limit-x' })
+        const channel = await rest.createChannel(e2eCache.guild.id, { name: 'rate-limit-x' })
 
         await Promise.all(
           [...Array(10).keys()].map(async (_, index) => {

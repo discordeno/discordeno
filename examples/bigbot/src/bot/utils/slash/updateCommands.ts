@@ -139,7 +139,7 @@ function createOptions(
 			// @ts-expect-error fix this
 			options: option.options
 				? // @ts-expect-error fix this
-				  createOptions(bot, guildId, option.options)
+					createOptions(bot, guildId, option.options)
 				: undefined,
 		} as ApplicationCommandOption);
 	}

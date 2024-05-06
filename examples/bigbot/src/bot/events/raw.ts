@@ -17,9 +17,9 @@ export function setRawEvent() {
 		const id = bot.transformers.snowflake(
 			(data.t && ['GUILD_UPDATE', 'GUILD_CREATE'].includes(data.t)
 				? // deno-lint-ignore no-explicit-any
-				  data.d?.id
+					data.d?.id
 				: // deno-lint-ignore no-explicit-any
-				  data.d?.guild_id) ?? '',
+					data.d?.guild_id) ?? '',
 		);
 
 		// The GUILD_CREATE event came from a shard loaded event so ignore it

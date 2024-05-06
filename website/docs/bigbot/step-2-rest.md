@@ -51,7 +51,7 @@ const app = express()
 app.use(
   express.urlencoded({
     extended: true,
-  })
+  }),
 )
 
 app.use(express.json())
@@ -139,7 +139,7 @@ Now, make sure to scroll to this line as we are going to work around this line n
 const result = await REST.makeRequest(
   req.method,
   `${REST.baseUrl}${req.url}`,
-  req.body
+  req.body,
 )
 ```
 
@@ -150,12 +150,12 @@ Influx?.writePoint(
     .stringField('type', 'REQUEST_FETCHING')
     .tag('method', options.method)
     .tag('url', options.url)
-    .tag('bucket', options.bucketId ?? 'NA')
+    .tag('bucket', options.bucketId ?? 'NA'),
 )
 const result = await REST.makeRequest(
   req.method,
   `${REST.baseUrl}${req.url}`,
-  req.body
+  req.body,
 )
 ```
 
@@ -168,12 +168,12 @@ Influx?.writePoint(
     .stringField('type', 'REQUEST_FETCHING')
     .tag('method', options.method)
     .tag('url', options.url)
-    .tag('bucket', options.bucketId ?? 'NA')
+    .tag('bucket', options.bucketId ?? 'NA'),
 )
 const result = await REST.makeRequest(
   req.method,
   `${REST.baseUrl}${req.url}`,
-  req.body
+  req.body,
 )
 Influx?.writePoint(
   new Point('restEvents')
@@ -183,7 +183,7 @@ Influx?.writePoint(
     .tag('url', options.url)
     .tag('bucket', options.bucketId ?? 'NA')
     .intField('status', response.status)
-    .tag('statusText', response.statusText)
+    .tag('statusText', response.statusText),
 )
 ```
 
@@ -327,13 +327,13 @@ const bot = createBot({
           util
             .inspect(value, inspectOptions)
             .replace(regex, 'YOU WISH!')
-            .substring(0, 1985)
+            .substring(0, 1985),
         )
       } else {
         response.push(
           String(util.inspect(result))
             .replace(regex, 'YOU WISH!')
-            .substring(0, 1985)
+            .substring(0, 1985),
         )
       }
 

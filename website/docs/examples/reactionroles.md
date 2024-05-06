@@ -291,7 +291,7 @@ import { CreateApplicationCommand } from '@discordeno/types'
 import roles from './roles.js'
 
 export const commands = new Map<string, CreateApplicationCommand>(
-  [roles].map(cmd => [cmd.name, cmd])
+  [roles].map(cmd => [cmd.name, cmd]),
 )
 
 export default commands
@@ -322,7 +322,7 @@ import commands from '../commands/index.js'
 import { commandOptionsParser } from '@discordeno/utils'
 
 export const event: EventHandlers['interactionCreate'] = async function (
-  interaction
+  interaction,
 ) {
   if (interaction.type === InteractionTypes.ApplicationCommand) {
     if (!interaction.data) return
@@ -342,7 +342,7 @@ import { CreateApplicationCommand, Interaction } from '@discordeno/types'
 import roles from './roles.js'
 
 export const commands = new Map<string, CreateApplicationCommand>(
-  [roles].map(cmd => [cmd.name, cmd])
+  [roles].map(cmd => [cmd.name, cmd]),
 )
 
 export default commands
