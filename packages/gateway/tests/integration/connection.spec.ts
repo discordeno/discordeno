@@ -32,9 +32,9 @@ async function createUws(options: {
   options.onClose ??= (code: number, message: string) => {}
   options.closing ??= false
 
-  return await new Promise<{ port: number; uwsToken: any }>((resolve, reject) => {
+  return await new Promise<{ port: number; uwsToken: uWS.us_listen_socket }>((resolve, reject) => {
     let port = 0
-    let uwsToken = 0
+
     uWS
       .App()
       .ws('/*', {
@@ -117,10 +117,13 @@ async function createUws(options: {
         if (!token) {
           reject(new Error())
         }
-        // retrieve listening port
-        uwsToken = token
-        port = uWS.us_socket_local_port(uwsToken)
-        resolve({ port, uwsToken })
+
+        port = uWS.us_socket_local_port(token as uWS.us_listen_socket)
+
+        resolve({
+          port,
+          uwsToken: token,
+        })
       })
   })
 }
@@ -158,9 +161,11 @@ describe('gateway', () => {
     const gateway = createGatewayManagerWithPort(port)
     await gateway.spawnShards()
     await connected
+
     const timeout = setTimeout(() => {
       throw new Error('Not heartbeat in time')
     }, 1017)
+
     await heartbeated
     clearTimeout(timeout)
     uwsOptions.closing = true
