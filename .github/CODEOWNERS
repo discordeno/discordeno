@@ -1,11 +1,11 @@
 *                          @discordeno/team
 
 /.github/CODEOWNERS        @Skillz4Killz @itohatweb
-/.github/workflows/        @H01001000
-/.github/sync.yml          @H01001000
-/.yarn/                    @H01001000
-/.yarnrc.yml               @H01001000
-/codecov.yml               @H01001000
-/packages/*/package.json   @H01001000
-/package.json              @H01001000
-/turbo.json                @H01001000
+/.github/workflows/        @H01001000 @Skillz4Killz
+/.github/sync.yml          @H01001000 @Skillz4Killz
+/.yarn/                    @H01001000 @Skillz4Killz
+/.yarnrc.yml               @H01001000 @Skillz4Killz
+/codecov.yml               @H01001000 @Skillz4Killz
+/packages/*/package.json   @H01001000 @Skillz4Killz
+/package.json              @H01001000 @Skillz4Killz
+/turbo.json                @H01001000 @Skillz4Killz
