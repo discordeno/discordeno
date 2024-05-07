@@ -2,6 +2,14 @@ import { Intents } from '@discordeno/types'
 import uWS from 'uWebSockets.js'
 import { ShardSocketCloseCodes, createGatewayManager, type GatewayManager } from '../../src/index.js'
 
+/**
+ * This value needs to be AT LEAST `1017`
+ *
+ * The reason for this is because the calculation in Shard.calculateSafeRequests will return 0 not allowing any sort of message to the websocket server.
+ * Discord uses a way higher number for this value, but during this test we lower it since it would be annoying and useless make the test last 40+ seconds to test the heartbeat, but to make this work it needs to be at least 1017 so that calculateSafeRequests return 2 allowing for the shard to send messages.
+ */
+const heartbeatInterval = 1050
+
 function createGatewayManagerWithPort(port: number): GatewayManager {
   return createGatewayManager({
     connection: {
@@ -50,7 +58,7 @@ async function createUws(options: {
             JSON.stringify({
               op: 10,
               d: {
-                heartbeat_interval: 1017,
+                heartbeat_interval: heartbeatInterval,
               },
             }),
           )
@@ -164,7 +172,7 @@ describe('gateway', () => {
 
     const timeout = setTimeout(() => {
       throw new Error('Not heartbeat in time')
-    }, 1017)
+    }, heartbeatInterval)
 
     await heartbeated
     clearTimeout(timeout)
