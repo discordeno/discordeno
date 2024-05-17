@@ -115,7 +115,7 @@ While not recommended, in the `createBot` we do allow for a value: `defaultDesir
 :::
 
 :::warning[Typescript and Desired Proprieties]
-We are aware that Typescript, at this time has no idea that those propriety will be missing when we execute our code. We are working on fixing this issues but it is not yet ready at this time.
+We are aware that Typescript, at this time has no idea that those propriety will be missing when we execute our code. We are working on fixing this issue but it is not yet ready at this time.
 :::
 
 ## Additional information on Discordeno
