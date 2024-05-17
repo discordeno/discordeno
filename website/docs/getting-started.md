@@ -70,12 +70,13 @@ As well as managing your connection to the Discord gateway, Discordeno also deal
 
 In Discordeno you can use the `bot.helpers` object to have access to all the function that will perform some kind of actions on Discord. These methods will also give you some objects that will be slightly different from the one from Discord, a notable example are the IDs. Discord will give you a string with a number inside, this is to avoid some rounding errors in some languages (Javascript included), however this issue can be avoided when using [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) in Javascript. Discordeno will transform most (if not every) id that you get from a string to a `BigInt` format, however most methods in the `bot.helpers` object will accept both a `BigInt` or a normal string where content is the id.
 
-To send a message to a channel you can call the `bot.helpers.sendMessage` method with the 2 required parameters:
+To send a message to a channel, for example, you can call the `bot.helpers.sendMessage` method with the 2 required parameters:
 
 - The channel ID corresponding to the channel where you want your message to be
 - The message options to create your message
 
 ```ts
+// Change the id below with one of the channels of one of the server your bot is in
 const message = await bot.helpers.sendMessage(123123123123123123n, {
   content: 'Hello world. This is test message from Discordeno.',
 })
