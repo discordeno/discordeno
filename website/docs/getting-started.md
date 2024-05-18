@@ -5,8 +5,6 @@ sidebar_label: Getting started
 
 # Getting started with Discordeno
 
-<!-- TODO: Do we want to keep this info box? Or rewrite a bit this -->
-
 :::info
 Discordeno is not intended for beginners, however you can still utilize it.
 :::
