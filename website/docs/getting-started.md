@@ -33,7 +33,7 @@ import { createBot, Intents } from '@discordeno/bot'
 
 const bot = createBot({
   token: 'YOUR BOT TOKEN',
-  intents: Intents.Guilds | GuildMessages, // Or other intents that you might needs.
+  intents: Intents.Guilds | Intents.GuildMessages, // Or other intents that you might needs.
   events: {
     ready: data => {
       console.log(`The shard ${data.shardId} is ready!`)
