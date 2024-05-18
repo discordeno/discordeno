@@ -102,7 +102,7 @@ bot.transformers.desiredProperties.message.content = true
 bot.transformers.desiredProperties.message.channelId = true
 ```
 
-With the above 3 lines of code, we will get the message ID, the channel ID and the message content\* for a specific message, and if we now see the object from both our `sendMessage` helper method and/or the `messageCreate` event, we will find the `id`, the `channelId` and the `content` proprieties to be present in the object.
+With the above 3 lines of code, we will get the message ID, the channel ID and the message content\* for a specific message, and if we now see the object from both our `sendMessage` helper method and/or the `messageCreate` event, we will find the `id`, the `channelId` and the `content` properties to be present in the object.
 
 We can also set the properties using the Javascript Object Syntax (`{ id: true, content: true, channelId: true }`), but that would require us to specify all others keys in the object with false, and doing something like that would get extremely annoying.
 
