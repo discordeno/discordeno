@@ -85,37 +85,37 @@ const message = await bot.helpers.sendMessage(123123123123123123n, {
 :::tip[Naming of functions in Discordeno]
 Most of the functions in Discordeno tend to be very explicit in what they will do and be similar to how discord calls their endpoints in the documentation.
 
-Also helpers methods from Discordeno will always perform a single action. They will never call multiple Discord endpoints.
+Also, helper methods from Discordeno will always perform a single action only. They will never call multiple Discord endpoints.
 :::
 
-## Understanding Desired Proprieties in Discordeno
+## Understanding Desired Properties in Discordeno
 
-If we ran the code from above, for example on the ready event, the bot will send a message in the channel you specified, as long as it has the permissions to do so, with the content of "Hello world. This is test message from Discordeno.", however if we log to the console the message object we are getting we won't see many, if any, values on it. This is also the case from the events such as `MessageCreate`, but why is that? Well, this is a Discordeno feature called `Desired proprieties`.
+If we ran the code from above, for example on the ready event, the bot will send a message in the channel you specified, as long as it has the permissions to do so, with the content of "Hello world. This is test message from Discordeno.". However, if we log to the console the message object we are getting, we won't see many, if any, values on it. This is also the case from the events such as `MessageCreate`, but why is that? Well, this is a Discordeno feature called `Desired properties`.
 
-Desired proprieties are a feature to allow for a smaller memory impact on your application for proprieties that you don't use. An example may be the channel topic, you might not be interested in knowing the topic of a channel, however Discord will always give it to you making your code have to deal with values that you will not use but still consume memory. This is why Discordeno requires you to explicitly set ahead of time the proprieties that you want/use.
+Desired properties is a feature to allow for a smaller memory impact on your application for properties that you don't use. An example may be the channel topic, you might not be interested in knowing the topic of a channel, however, Discord will always give it to you making your code have to deal with values that you will not use but still consume memory. This is why Discordeno requires you to explicitly set ahead of time the properties that you want/use.
 
-You can set these from the `bot.transformers.desiredProprieties` object. This will contain an object for every type that supports this feature, such as `Message` or `Interaction` for example where inside you will find the single proprieties with a boolean value, or an object with more proprieties inside. Discordeno will default everything to false and you can set the values you need to true manually like this:
+You can set these from the `bot.transformers.desiredProperties` object. This will contain an object for every type that supports this feature, such as `Message` or `Interaction` for example, inside which you will find the single properties with a boolean value, or an object with more properties inside. Discordeno will default everything to false and you can set the values you need to true manually like this:
 
 ```ts
-bot.transformers.desiredProprieties.message.id = true
-bot.transformers.desiredProprieties.message.content = true
-bot.transformers.desiredProprieties.message.channelId = true
+bot.transformers.desiredProperties.message.id = true
+bot.transformers.desiredProperties.message.content = true
+bot.transformers.desiredProperties.message.channelId = true
 ```
 
-With the above 3 lines of code we will get the message ID, the channel ID and the message content\* for a specific message, and if we now see the object from both our sendMessage helper method and/or the messageCreate we will find the `id`, the `channelId` and the `content` proprieties to be present in the object.
+With the above 3 lines of code, we will get the message ID, the channel ID and the message content\* for a specific message, and if we now see the object from both our `sendMessage` helper method and/or the `messageCreate` event, we will find the `id`, the `channelId` and the `content` proprieties to be present in the object.
 
-We could also the proprieties using the Javascript Object Syntax (`{ id: true, content: true, channelId: true }`), but that would require us to specify all others keys in the object with false, and doing something like that would get extremely annoying.
+We can also set the properties using the Javascript Object Syntax (`{ id: true, content: true, channelId: true }`), but that would require us to specify all others keys in the object with false, and doing something like that would get extremely annoying.
 
 \*: As long as the required privileged intent is enabled.
 
-:::danger[Changing the default for Desired Proprieties]
+:::danger[Changing the default for Desired Properties]
 THIS IS NOT RECOMMENDED IF YOU WANT TO SHIP YOUR BOT TO PRODUCTION.
 
-While not recommended, in the `createBot` we do allow for a value: `defaultDesiredPropertiesValue`. This if set to true every desired propriety by default, you can still disable some if you need. The reason why this is not recommended and marked as deprecated from the documentation is because while Desired Proprieties DO slow you down during development needing to make sure you aren't using something that you won't have a runtime they have a significant performance impact based on the proprieties you disable on both a CPU side and memory side. Also we are currently working on a solution to the current Typescript issues (see box below) and that may remove the `defaultDesiredPropertiesValue` value all together or move it to a new place.
+While not recommended, in the `createBot` function, we do allow for a value: `defaultDesiredPropertiesValue`. This, if set to true will set every desired property to true by default, you can still disable some if you need. The reason why this is not recommended and marked as deprecated from the documentation is because while Desired Properties DO slow you down during development (needing to make sure you aren't using something that you won't have at runtime), they have a significant performance impact based on the properties you disable on both a CPU side and memory side. Also, we are currently working on a solution to the current TypeScript issues (see box below) and that may remove the `defaultDesiredPropertiesValue` value altogether or move it to a new place.
 :::
 
-:::warning[Typescript and Desired Proprieties]
-We are aware that Typescript, at this time has no idea that those propriety will be missing when we execute our code. We are working on fixing this issue but it is not yet ready at this time.
+:::warning[Typescript and Desired Properties]
+We are aware that TypeScript, at this time has no idea that those properties will be missing when we execute our code. We are working on fixing this issue but it is not yet ready at this time.
 :::
 
 ## Additional information on Discordeno
@@ -138,11 +138,11 @@ You can read more about OAuth2 in Discord on the [documentation](https://discord
 
 ### Use individual features from Discordeno separably
 
-While we do provide a `@discordeno/bot` package on npm with all the feature, you might just need a subset of those. For this reason Discordeno is split across multiple packages which are the following:
+While we do provide a `@discordeno/bot` package on npm with all the features, you might just need a subset of those. For this reason, Discordeno is split across multiple packages which are the following:
 
 - `@discordeno/bot`: Groups all other packages and adds transformers and other functionalities on top.
-- `@discordeno/rest`: Will only provide the ratelimit features on the Discord REST Api. This will provide the same object as [`bot.rest`](#raw-rest-methods) when you create a `RestManager`.
-- `@discordeno/gateway`: Will only provide the gateway connection to Discord. This will provide the same object as `bot.gateway` when you create a `GatewayManager`
+- `@discordeno/rest`: Will only provide the methods you could use to send requests to Discord REST API, and ratelimit handling feature. This will provide the same object as [`bot.rest`](#raw-rest-methods) when you create a `RestManager`.
+- `@discordeno/gateway`: Will only provide the methods you could use to establish and manage gateway connections to Discord. This will provide the same object as `bot.gateway` when you create a `GatewayManager`
 - `@discordeno/utils`: Will only provide some utilities that are independent from other Discordeno features.
 - `@discordeno/types`: Will only provide the Discord & Discordeno types used in all other packages.
 
@@ -150,4 +150,4 @@ The use-case for the separate packages may be more advanced compared to the use-
 
 ### Raw REST methods
 
-While we recommend using `bot.helpers` you might find yourself in a situation where avoiding the transformers and desired proprieties can be beneficial, for that you can use the `bot.rest` methods, in this object there are the same methods from `bot.helpers` but with a more raw return object. The return objects will simply be the discord raw response but with the keys being camelCase instead of snake_case.
+While we recommend using `bot.helpers`, you might find yourself in a situation where avoiding the transformers and desired properties can be beneficial. For that, you can use the `bot.rest` methods, in this object, there are the same methods from `bot.helpers` but with a more raw return object. The return objects will simply be the raw response from Discord, but with the keys being camelCase instead of snake_case.

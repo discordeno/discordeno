@@ -24,7 +24,7 @@ Discordeno is actively maintained to guarantee **excellent performance, latest f
 - Freedom from 1 hour downtimes due to invalid requests
   - Prevent your bot from being down for an hour, by lowering the maximum downtime to 10 minutes.
 - Freedom from global rate limit errors
-  - As a bot grows, you need to handle global rate limits better. Shards don't communicate fast enough to truly handle it properly. With one point of contact to discords API, you will never have issues again.
+  - As a bot grows, you need to handle global rate limits better. Shards don't communicate fast enough to truly handle it properly. With one point of contact to Discord API, you will never have issues again.
   - Numerous instances of your bot on different hosts, all of which can connect to the same REST server.
 - REST does not rest!
   - Separate rest guarantees that your queued requests will continue to be processed even if your bot breaks for whatever reason.
