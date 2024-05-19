@@ -36,7 +36,7 @@ import type {
   CamelizedDiscordMessage,
   CamelizedDiscordModifyGuildWelcomeScreen,
   CamelizedDiscordPartialGuild,
-  CamelizedDiscordPollResult,
+  CamelizedDiscordGetAnswerVotesResponse,
   CamelizedDiscordPrunedCount,
   CamelizedDiscordRole,
   CamelizedDiscordScheduledEvent,
@@ -2560,7 +2560,7 @@ export interface RestManager {
     messageId: BigString,
     answerId: number,
     options?: GetPollAnswerVotes,
-  ) => Promise<CamelizedDiscordPollResult>
+  ) => Promise<CamelizedDiscordGetAnswerVotesResponse>
   /**
    * Immediately ends the poll.
    *
