@@ -40,7 +40,7 @@ import {
   type DiscordMemberWithUser,
   type DiscordMessage,
   type DiscordPartialGuild,
-  type DiscordPollResult,
+  type DiscordGetAnswerVotesResponse,
   type DiscordPrunedCount,
   type DiscordRole,
   type DiscordScheduledEvent,
@@ -1354,7 +1354,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async getPollAnswerVoters(channelId, messageId, answerId, options) {
-      return await rest.get<DiscordPollResult>(rest.routes.channels.polls.votes(channelId, messageId, answerId, options))
+      return await rest.get<DiscordGetAnswerVotesResponse>(rest.routes.channels.polls.votes(channelId, messageId, answerId, options))
     },
 
     async endPoll(channelId, messageId) {
