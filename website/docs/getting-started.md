@@ -102,7 +102,7 @@ bot.transformers.desiredProperties.message.channelId = true
 
 With the above 3 lines of code, we will be able to get the message ID, the channel ID and the message content\* of a specific message. The same thing can be said for the return object of `sendMessage` method and the `messageCreate` event
 
-We can also set the properties we want to keep with (`{ id: true, content: true, channelId: true }`), but that would require us to specify all others keys in the object, and doing that would get extremely annoying.
+We can also set the properties we want to keep with `{ id: true, content: true, channelId: true }`, but that would require us to specify all others keys in the object, and doing that would get extremely annoying.
 
 \*: As long as the required privileged intent is enabled.
 
