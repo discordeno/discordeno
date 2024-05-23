@@ -64,14 +64,14 @@ Adding intents that you don't use in the `intent` value on your bot configuratio
 
 ## Send a message in a channel from Discordeno
 
-As well as managing your connection to the Discord gateway, Discordeno also deals with handling the required handling for HTTP/REST requests too. Discordeno will manage for you the ratelimit of the Discord endpoints, these ratelimit includes the invalid request hard limit for the [Cloudflare ban](https://discord.com/developers/docs/topics/rate-limits#invalid-request-limit-aka-cloudflare-bans).
+As well as managing your connection to the Discord gateway, Discordeno also manage HTTP/REST requests and rate limits (such as [Invalid Request Limit aka Cloudflare ban](https://discord.com/developers/docs/topics/rate-limits#invalid-request-limit-aka-cloudflare-bans)) for you.
 
-In Discordeno, you can use the `bot.helpers` object to have access to all the function that will perform some kind of actions on Discord. These methods will also give you some objects that will be slightly different from the one from Discord, a notable example are the IDs. Discord will give you a string with a number inside, this is to avoid some rounding errors in some languages (Javascript included), however this issue can be avoided when using [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) in Javascript. Discordeno will transform most (if not every) id that you get from a string to a `BigInt` format, however most methods in the `bot.helpers` object will accept both a `BigInt` or a normal string where content is the id.
+In Discordeno, you can call methods in the `bot.helpers` object to perform some actions on Discord. These methods will return objects that are different from the one returned by Discord, a notable example are the IDs. For IDs, Discord return a string with a number inside to avoid rounding errors in most languages, including JavaScript. However, in JavaScript, this issue can be avoided using [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt). Therefore, before returning objects, Discordeno will transform most (if not every) IDs from a string to a `BigInt`. As for methods with parameters that accept an ID, most methods in the `bot.helpers` object will accept both a `BigInt` and a normal string.
 
-To send a message to a channel, for example, you can call the `bot.helpers.sendMessage` method with the 2 required parameters:
+For example, to send a message to a channel, you can call the `bot.helpers.sendMessage` method with the 2 required parameters:
 
-- The channel ID corresponding to the channel where you want your message to be
-- The message options to create your message
+- The ID of the channel that you want to sent the message to
+- The options of your message
 
 ```ts
 // Change the id below with one of the channels of one of the server your bot is in
@@ -81,18 +81,18 @@ const message = await bot.helpers.sendMessage(123123123123123123n, {
 ```
 
 :::tip[Naming of functions in Discordeno]
-Most of the functions in Discordeno tend to be very explicit in what they will do and be similar to how discord calls their endpoints in the documentation.
+Most of the functions in Discordeno are explicit in what they do and named similar to what Discord calls the endpoint in the documentation.
 
-Also, helper methods from Discordeno will always perform a single action only. They will never call multiple Discord endpoints.
+Discordeno's methods always perform one action only. A method will never call multiple Discord endpoints.
 :::
 
 ## Understanding Desired Properties in Discordeno
 
-If we ran the code from above, for example on the ready event, the bot will send a message in the channel you specified, as long as it has the permissions to do so, with the content of "Hello world. This is test message from Discordeno.". However, if we log to the console the message object we are getting, we won't see many, if any, values on it. This is also the case from the events such as `MessageCreate`, but why is that? Well, this is a Discordeno feature called `Desired properties`.
+If we ran the code above (for example, by putting the code inside the ready event), the bot will send a message in the channel you specified (as long as it has the permissions to do so) with the content "Hello world. This is test message from Discordeno.". However, if we log to the console the message object that Discordeno return, we won't see many, if any, values on it. This is also the case for other events such as `MessageCreate`. But why is that? Well, this is because of a Discordeno feature called `Desired properties`.
 
-Desired properties is a feature to allow for a smaller memory impact on your application for properties that you don't use. An example may be the channel topic, you might not be interested in knowing the topic of a channel, however, Discord will always give it to you making your code have to deal with values that you will not use but still consume memory. This is why Discordeno requires you to explicitly set ahead of time the properties that you want/use.
+Desired properties is a feature that reduce the memory usage of your application by removing properties that you don't use. For example, you might not be interested in knowing the topic of a channel, but Discord will always return it, therefore consuming more memory. This is why Discordeno requires you to explicitly set the properties that you want to keep and use.
 
-You can set these from the `bot.transformers.desiredProperties` object. This will contain an object for every type that supports this feature, such as `Message` or `Interaction` for example, inside which you will find the single properties with a boolean value, or an object with more properties inside. Discordeno will default everything to false and you can set the values you need to true manually like this:
+You can set which property you want to keep in the `bot.transformers.desiredProperties` object. Discordeno will default everything to false and you can set the values you want to keep to true manually like this:
 
 ```ts
 bot.transformers.desiredProperties.message.id = true
@@ -100,35 +100,35 @@ bot.transformers.desiredProperties.message.content = true
 bot.transformers.desiredProperties.message.channelId = true
 ```
 
-With the above 3 lines of code, we will get the message ID, the channel ID and the message content\* for a specific message, and if we now see the object from both our `sendMessage` helper method and/or the `messageCreate` event, we will find the `id`, the `channelId` and the `content` properties to be present in the object.
+With the above 3 lines of code, we will be able to get the message ID, the channel ID and the message content\* of a specific message. The same thing can be said for the return object of `sendMessage` method and the `messageCreate` event
 
-We can also set the properties using the Javascript Object Syntax (`{ id: true, content: true, channelId: true }`), but that would require us to specify all others keys in the object with false, and doing something like that would get extremely annoying.
+We can also set the properties we want to keep with (`{ id: true, content: true, channelId: true }`), but that would require us to specify all others keys in the object, and doing that would get extremely annoying.
 
 \*: As long as the required privileged intent is enabled.
 
 :::danger[Changing the default for Desired Properties]
-THIS IS NOT RECOMMENDED IF YOU WANT TO SHIP YOUR BOT TO PRODUCTION.
+THIS IS NOT RECOMMENDED IF YOU PLAN TO SHIP YOUR BOT TO PRODUCTION.
 
 While not recommended, in the `createBot` function, we do allow for a value: `defaultDesiredPropertiesValue`. This, if set to true will set every desired property to true by default, you can still disable some if you need. The reason why this is not recommended and marked as deprecated from the documentation is because while Desired Properties DO slow you down during development (needing to make sure you aren't using something that you won't have at runtime), they have a significant performance impact based on the properties you disable on both a CPU side and memory side. Also, we are currently working on a solution to the current TypeScript issues (see box below) and that may remove the `defaultDesiredPropertiesValue` value altogether or move it to a new place.
 :::
 
 :::warning[Typescript and Desired Properties]
-We are aware that TypeScript, at this time has no idea that those properties will be missing when we execute our code. We are working on fixing this issue but it is not yet ready at this time.
+We are aware that TypeScript has no idea which properties will be missing. We are working on fixing this issue.
 :::
 
 ## Additional information on Discordeno
 
-Here are some other nice to know things about Discordeno that might interest you. Even if some may be more advanced use-cases.
+Here are some nice to know things about Discordeno that you might be interested, though some may be for more advanced use-cases.
 
 ### Gateway methods
 
-You might want to edit some state like your bot status, for this you will need to use the methods in `bot.gateway`. Those methods will not give you transformed objects then they do give something back and if you want to get transformed objects you will need to call the transformers yourself (the transformers are located on `bot.transformers`).
+If you want to edit some state such as your bot status, you will need to use the methods in `bot.gateway`. These methods will not return transformed objects so if you want to get transformed objects you will need to call the transformers yourself (the transformers are in `bot.transformers`).
 
 ### OAuth2
 
-Some of the methods in `bot.helpers` will accept a `Bearer` token, or a `Client ID` and `Client Secret`. Those methods are for OAuth2 and will require you to setup the OAuth2 authorization flow with your application. An example of these methods is `bot.helpers.getCurrentUser(bearerToken)`, this is a method that can not be called with a usual Bot token and so will require the OAuth2 token.
+Some methods in `bot.helpers` will accept a `Bearer` token, or a `Client ID` and `Client Secret`. These OAuth2 methods will require you to setup the OAuth2 authorization flow. One example is the `bot.helpers.getCurrentUser(bearerToken)` method. This is a method that can not be called with a usual Bot token and require a OAuth2 token.
 
-Discordeno includes some utilities (such as `createOAuth2Link` to help create a link for the OAuth2 authorization link) and also the methods to do the exchange of the token and refresh of your exiting token.
+Discordeno includes some utilities (such as `createOAuth2Link` to create a OAuth2 authorization link) and methods to exchange your token as well as refresh your exiting token.
 
 <!-- TODO: Add a link to the page on how to use OAuth2 in Discordeno. -->
 
@@ -136,16 +136,16 @@ You can read more about OAuth2 in Discord on the [documentation](https://discord
 
 ### Use individual features from Discordeno separably
 
-While we do provide a `@discordeno/bot` package on npm with all the features, you might just need a subset of those. For this reason, Discordeno is split across multiple packages which are the following:
+While we do provide a `@discordeno/bot` package on npm with all features included, you might just need some of them. For this reason, Discordeno is split across multiple packages, which are the following:
 
-- `@discordeno/bot`: Groups all other packages and adds transformers and other functionalities on top.
-- `@discordeno/rest`: Will only provide the methods you could use to send requests to Discord REST API, and ratelimit handling feature. This will provide the same object as [`bot.rest`](#raw-rest-methods) when you create a `RestManager`.
-- `@discordeno/gateway`: Will only provide the methods you could use to establish and manage gateway connections to Discord. This will provide the same object as `bot.gateway` when you create a `GatewayManager`
-- `@discordeno/utils`: Will only provide some utilities that are independent from other Discordeno features.
-- `@discordeno/types`: Will only provide the Discord & Discordeno types used in all other packages.
+- `@discordeno/bot`: Groups all other packages as well as adding transformers and other functionalities on top.
+- `@discordeno/rest`: Only provide methods to send requests to Discord REST API as well as handling rate limits. This will provide the same object as [`bot.rest`](#raw-rest-methods) when you create a `RestManager`.
+- `@discordeno/gateway`: Only provide methods to establish and manage gateway connections to Discord. This will provide the same object as `bot.gateway` when you create a `GatewayManager`
+- `@discordeno/utils`: Only provide some utilities that are independent from other Discordeno features.
+- `@discordeno/types`: Only provide the Discord & Discordeno types used in all other packages.
 
-The use-case for the separate packages may be more advanced compared to the use-cases where it makes more sense to simply use `@discordeno/bot`.
+It might make more sense to simply use `@discordeno/bot`, as the separate packages are mostly for advanced use cases.
 
 ### Raw REST methods
 
-While we recommend using `bot.helpers`, you might find yourself in a situation where avoiding the transformers and desired properties can be beneficial. For that, you can use the `bot.rest` methods, in this object, there are the same methods from `bot.helpers` but with a more raw return object. The return objects will simply be the raw response from Discord, but with the keys being camelCase instead of snake_case.
+While we recommend using `bot.helpers`, you might find yourself in a situation where avoiding the transformers and desired properties can be beneficial. For this reason, you can use the methods in `bot.rest`. These methods will return the raw response from Discord but with the keys being camelCase instead of snake_case.
