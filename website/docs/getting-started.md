@@ -109,7 +109,7 @@ We can also set the properties we want to keep with `{ id: true, content: true, 
 :::danger[Changing the default for Desired Properties]
 THIS IS NOT RECOMMENDED IF YOU PLAN TO SHIP YOUR BOT TO PRODUCTION.
 
-While not recommended, in the `createBot` function, we do allow for a value: `defaultDesiredPropertiesValue`. This, if set to true will set every desired property to true by default, you can still disable some if you need. The reason why this is not recommended and marked as deprecated from the documentation is because while Desired Properties DO slow you down during development (needing to make sure you aren't using something that you won't have at runtime), they have a significant performance impact based on the properties you disable on both a CPU side and memory side. Also, we are currently working on a solution to the current TypeScript issues (see box below) and that may remove the `defaultDesiredPropertiesValue` value altogether or move it to a new place.
+While not recommended, you can add `defaultDesiredPropertiesValue: true` to the first parameter object of the `createBot` function. This will set every desired property to true by default (you can still disable some if you want to). The reason why this is not recommended and considered deprecated is because while Desired Properties DO slow you down during development (needing to make sure you aren't using something that you won't have at runtime), they have a significant performance impact on both CPU and memory usage.
 :::
 
 :::warning[Typescript and Desired Properties]
