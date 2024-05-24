@@ -11,10 +11,10 @@ Discordeno supports Bun by installing the `@discordeno/bot` package
 
 Before, going forward, please make sure to have finished everything on this list.
 
-- Create an application and get the bot token. [Create Application Guide](https://discordeno.js.org/docs/beginner/token)
-- Add your bot to a server you own. [Invite Bot Guide](https://discordeno.js.org/docs/beginner/inviting)
-- Install Discordeno. [Installation Guide](https://discordeno.js.org)
-- Setup environment variables. [Environment Variables Guide](https://discordeno.js.org/docs/beginner/env)
+- Create an application and get the bot token. [Create Application Guide](../beginner/token)
+- Add your bot to a server you own. [Invite Bot Guide](../beginner/inviting)
+- Install Discordeno. [Installation Guide](../getting-started.md)
+- Setup environment variables. [Environment Variables Guide](../beginner/env)
 
 After you installed the `@discordeno/bot` package with bun you can start using it.
 

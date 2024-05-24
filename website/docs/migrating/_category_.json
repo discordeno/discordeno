@@ -1,6 +1,6 @@
 {
   "label": "Migrating",
-  "position": 98,
+  "position": 7,
   "link": {
     "type": "generated-index",
     "description": "Guides for migrating to discordeno from other libraries."

@@ -219,6 +219,7 @@ const config: Config = {
     prism: {
       theme: themes.github,
       darkTheme: themes.dracula,
+      additionalLanguages: ['bash'],
     },
   } satisfies ThemeConfig,
 
