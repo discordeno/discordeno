@@ -11,12 +11,17 @@ if (!packageName) {
 const commitHash = childProcess.execSync('git rev-parse HEAD').toString().trim().slice(0, 7)
 
 const file = JSON.parse(await fs.readFile(`packages/${packageName}/package.json`, 'utf-8'))
+
 const oldVersion = file.version
 file.version = `${oldVersion.split('-')[0]}-next.${commitHash}`
-if (file.dependencies)
+
+if (file.dependencies) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   Object.keys(file.dependencies).forEach((dependency) => {
-    if (file.dependencies[dependency] === oldVersion) file.dependencies[dependency] = file.version
+    if (dependency.startsWith('@discordeno/')) file.dependencies[dependency] = file.version
   })
+}
+
 await fs.writeFile(`packages/${packageName}/package.json`, JSON.stringify(file, null, 2))
 
 console.log(`Bumped ${packageName} to ${file.version.split('-')[0]}-next.${commitHash}`)

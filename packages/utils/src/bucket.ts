@@ -16,11 +16,14 @@ export class LeakyBucket implements LeakyBucketOptions {
   timeoutId?: NodeJS.Timeout
   /** The timestamp in milliseconds when the next refill is scheduled. */
   refillsAt?: number
+  /** Logger used in the leaky bucket */
+  logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
 
   constructor(options?: LeakyBucketOptions) {
     this.max = options?.max ?? 1
     this.refillAmount = options?.refillAmount ? (options.refillAmount > this.max ? this.max : options.refillAmount) : 1
     this.refillInterval = options?.refillInterval ?? 5000
+    this.logger = options?.logger ?? logger
   }
 
   /** The amount of requests that still remain. */
@@ -30,7 +33,7 @@ export class LeakyBucket implements LeakyBucketOptions {
 
   /** Refills the bucket as needed. */
   refillBucket(): void {
-    logger.debug(`[LeakyBucket] Timeout for leaky bucket requests executed. Refilling bucket.`)
+    this.logger.debug(`[LeakyBucket] Timeout for leaky bucket requests executed. Refilling bucket.`)
     // Lower the used amount by the refill amount
     this.used = this.refillAmount > this.used ? 0 : this.used - this.refillAmount
     // Reset the refillsAt timestamp since it just got refilled
@@ -49,17 +52,17 @@ export class LeakyBucket implements LeakyBucketOptions {
 
   /** Begin processing the queue. */
   async processQueue(): Promise<void> {
-    logger.debug('[LeakyBucket] Processing queue')
+    this.logger.debug('[LeakyBucket] Processing queue')
 
     // There is already a queue that is processing
-    if (this.processing) return logger.debug('[LeakyBucket] Queue is already processing.')
+    if (this.processing) return this.logger.debug('[LeakyBucket] Queue is already processing.')
 
     this.processing = true
 
     // Begin going through the queue.
     while (this.queue.length) {
       if (this.remaining) {
-        logger.debug(`[LeakyBucket] Processing queue. Remaining: ${this.remaining} Length: ${this.queue.length}`)
+        this.logger.debug(`[LeakyBucket] Processing queue. Remaining: ${this.remaining} Length: ${this.queue.length}`)
         // Resolves the promise allowing the paused execution of this request to resolve and continue.
         this.queue.shift()?.()
         // A request can be made
@@ -67,7 +70,7 @@ export class LeakyBucket implements LeakyBucketOptions {
 
         // Create a new timeout for this request if none exists.
         if (!this.timeoutId) {
-          logger.debug(`[LeakyBucket] Creating new timeout for leaky bucket requests.`)
+          this.logger.debug(`[LeakyBucket] Creating new timeout for leaky bucket requests.`)
 
           this.timeoutId = setTimeout(() => {
             this.refillBucket()
@@ -82,14 +85,14 @@ export class LeakyBucket implements LeakyBucketOptions {
         const now = Date.now()
         // If there is time left until next refill, just delay execution.
         if (this.refillsAt > now) {
-          logger.debug(`[LeakyBucket] Delaying execution of leaky bucket requests for ${this.refillsAt - now}ms`)
+          this.logger.debug(`[LeakyBucket] Delaying execution of leaky bucket requests for ${this.refillsAt - now}ms`)
           await delay(this.refillsAt - now)
-          logger.debug(`[LeakyBucket] Resuming execution`)
+          this.logger.debug(`[LeakyBucket] Resuming execution`)
         }
 
         // If the refillsAt has passed but the timeout didn't yet execute delay the execution
         else {
-          logger.debug(`[LeakyBucket] Delaying execution of leaky bucket requests for 1000ms`)
+          this.logger.debug(`[LeakyBucket] Delaying execution of leaky bucket requests for 1000ms`)
           await delay(1000)
         }
       }
@@ -129,4 +132,9 @@ export interface LeakyBucketOptions {
    * @default 1
    */
   refillAmount?: number
+  /**
+   * The logger that the leaky bucket will use
+   * @default logger // The logger exported by `@discordeno/utils`
+   */
+  logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
 }

@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable no-const-assign */
 import { Buffer } from 'node:buffer'
 
 import { calculateBits, camelize, camelToSnakeCase, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
@@ -19,6 +17,7 @@ import {
   type DiscordAuditLog,
   type DiscordAutoModerationRule,
   type DiscordBan,
+  type DiscordBulkBan,
   type DiscordChannel,
   type DiscordConnection,
   type DiscordCurrentAuthorization,
@@ -41,6 +40,7 @@ import {
   type DiscordMemberWithUser,
   type DiscordMessage,
   type DiscordPartialGuild,
+  type DiscordGetAnswerVotesResponse,
   type DiscordPrunedCount,
   type DiscordRole,
   type DiscordScheduledEvent,
@@ -87,7 +87,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     baseUrl,
     deleteQueueDelay: 60000,
     globallyRateLimited: false,
-    invalidBucket: createInvalidRequestBucket({}),
+    invalidBucket: createInvalidRequestBucket({ logger: options.logger }),
     isProxied: !baseUrl.startsWith(DISCORD_API_URL),
     maxRetryCount: Infinity,
     processingRateLimitedPaths: false,
@@ -95,6 +95,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     rateLimitedPaths: new Map(),
     token: options.token,
     version: options.version ?? DISCORD_API_VERSION,
+    logger: options.logger ?? logger,
 
     routes: createRoutes(),
 
@@ -345,9 +346,9 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         loggingHeaders.authorization = `${authenticationScheme} tokenhere`
       }
 
-      logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders })
+      rest.logger.debug(`sending request to ${url}`, 'with payload:', { ...payload, headers: loggingHeaders })
       const response = await fetch(url, payload).catch(async (error) => {
-        logger.error(error)
+        rest.logger.error(error)
         // Mark request and completed
         rest.invalidBucket.handleCompletedRequest(999, false)
         options.reject({
@@ -357,7 +358,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         })
         throw error
       })
-      logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
+      rest.logger.debug(`request fetched from ${url} with status ${response.status} & ${response.statusText}`)
 
       // Mark request and completed
       rest.invalidBucket.handleCompletedRequest(response.status, response.headers.get(RATE_LIMIT_SCOPE_HEADER) === 'shared')
@@ -371,17 +372,17 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       if (bucketId) options.bucketId = bucketId
 
       if (response.status < HttpResponseCode.Success || response.status >= HttpResponseCode.Error) {
-        logger.debug(`Request to ${url} failed.`)
+        rest.logger.debug(`Request to ${url} failed.`)
 
         if (response.status !== HttpResponseCode.TooManyRequests) {
           options.reject({ ok: false, status: response.status, body: await response.text() })
           return
         }
 
-        logger.debug(`Request to ${url} was ratelimited.`)
+        rest.logger.debug(`Request to ${url} was ratelimited.`)
         // Too many attempts, get rid of request from queue.
         if (options.retryCount >= rest.maxRetryCount) {
-          logger.debug(`Request to ${url} exceeded the maximum allowed retries.`, 'with payload:', payload)
+          rest.logger.debug(`Request to ${url} exceeded the maximum allowed retries.`, 'with payload:', payload)
           // rest.debug(`[REST - RetriesMaxed] ${JSON.stringify(options)}`)
           options.reject({
             ok: false,
@@ -479,6 +480,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
         return result.status !== 204 ? await result.json() : undefined
       }
 
+      // This error needs to be created here because of how stack traces get calculated
+      const error = new Error()
+      error.message = 'Failed to send request to discord.'
+
       // eslint-disable-next-line no-async-promise-executor
       return await new Promise(async (resolve, reject) => {
         const payload: SendRequestOptions = {
@@ -486,13 +491,16 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
           method,
           requestBodyOptions: options,
           retryCount: 0,
-          retryRequest: async function (payload: SendRequestOptions) {
+          retryRequest: async (payload: SendRequestOptions) => {
             await rest.processRequest(payload)
           },
           resolve: (data) => {
             resolve(data.status !== 204 ? JSON.parse(data.body ?? '{}') : undefined)
           },
-          reject,
+          reject: (reason) => {
+            error.cause = reason
+            reject(error)
+          },
           runThroughQueue: options?.runThroughQueue,
         }
 
@@ -966,7 +974,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editApplicationInfo(body) {
-      return await rest.patch<DiscordApplication>(rest.routes.oauth2.application(), {
+      return await rest.patch<DiscordApplication>(rest.routes.application(), {
         body,
       })
     },
@@ -1345,12 +1353,24 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordChannel>(rest.routes.channels.threads.all(channelId), { body, reason })
     },
 
+    async getPollAnswerVoters(channelId, messageId, answerId, options) {
+      return await rest.get<DiscordGetAnswerVotesResponse>(rest.routes.channels.polls.votes(channelId, messageId, answerId, options))
+    },
+
+    async endPoll(channelId, messageId) {
+      return await rest.post<DiscordMessage>(rest.routes.channels.polls.expire(channelId, messageId))
+    },
+
     async syncGuildTemplate(guildId) {
       return await rest.put<DiscordTemplate>(rest.routes.guilds.templates.all(guildId))
     },
 
     async banMember(guildId, userId, body, reason) {
       await rest.put<void>(rest.routes.guilds.members.ban(guildId, userId), { body, reason })
+    },
+
+    async bulkBanMembers(guildId, options, reason) {
+      return await rest.post<DiscordBulkBan>(rest.routes.guilds.members.bulkBan(guildId), { body: options, reason })
     },
 
     async editBotMember(guildId, body, reason) {

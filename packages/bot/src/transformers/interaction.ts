@@ -11,7 +11,14 @@ import {
   type MessageComponentTypes,
 } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
-import type { Bot, Channel, Component, DiscordChannel } from '../index.js'
+import {
+  type Bot,
+  type Channel,
+  type Component,
+  DiscordApplicationIntegrationType,
+  type DiscordChannel,
+  type DiscordInteractionContextType,
+} from '../index.js'
 import { MessageFlags, type DiscordInteractionDataResolved } from '../typings.js'
 import type { Attachment } from './attachment.js'
 import type { Member } from './member.js'
@@ -71,6 +78,10 @@ export interface Interaction extends BaseInteraction {
   guildLocale?: string
   /** The computed permissions for a bot or app in the context of a specific interaction (including channel overwrites) */
   appPermissions: bigint
+  /** Mapping of installation contexts that the interaction was authorized for to related user or guild IDs. */
+  authorizingIntegrationOwners: Partial<Record<DiscordApplicationIntegrationType, bigint>>
+  /** Context where the interaction was triggered from */
+  context?: DiscordInteractionContextType
 }
 
 export interface BaseInteraction {
@@ -232,6 +243,19 @@ export function transformInteraction(bot: Bot, payload: DiscordInteraction): Int
   if (props.channel && payload.channel) interaction.channel = bot.transformers.channel(bot, { channel: payload.channel as DiscordChannel, guildId })
   if (props.channelId && payload.channel_id) interaction.channelId = bot.transformers.snowflake(payload.channel_id)
   if (props.member && guildId && payload.member) interaction.member = bot.transformers.member(bot, payload.member, guildId, user.id)
+  if (props.authorizingIntegrationOwners && payload.authorizing_integration_owners) {
+    interaction.authorizingIntegrationOwners = {}
+
+    if (payload.authorizing_integration_owners['0'])
+      interaction.authorizingIntegrationOwners[DiscordApplicationIntegrationType.GuildInstall] = bot.transformers.snowflake(
+        payload.authorizing_integration_owners['0'],
+      )
+    if (payload.authorizing_integration_owners['1'])
+      interaction.authorizingIntegrationOwners[DiscordApplicationIntegrationType.UserInstall] = bot.transformers.snowflake(
+        payload.authorizing_integration_owners['1'],
+      )
+  }
+  if (props.context && payload.context) interaction.context = payload.context
   if (props.data && payload.data) {
     interaction.data = {
       type: payload.data.type,

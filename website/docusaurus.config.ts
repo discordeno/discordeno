@@ -237,6 +237,7 @@ const config: Config = {
           block: { start: 'remove-start', end: 'remove-end' },
         },
       ],
+      additionalLanguages: ['bash'],
     },
   } satisfies ThemeConfig,
 

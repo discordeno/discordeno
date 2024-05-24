@@ -1,4 +1,12 @@
-import type { DiscordMessage, InteractionTypes, MessageActivityTypes, MessageTypes, StickerFormatTypes } from '@discordeno/types'
+import {
+  DiscordApplicationIntegrationType,
+  type DiscordMessage,
+  type DiscordMessageInteractionMetadata,
+  type InteractionTypes,
+  type MessageActivityTypes,
+  type MessageTypes,
+  type StickerFormatTypes,
+} from '@discordeno/types'
 import { CHANNEL_MENTION_REGEX } from '../constants.js'
 import { snowflakeToTimestamp, type Bot } from '../index.js'
 import { MessageFlags } from '../typings.js'
@@ -189,7 +197,13 @@ export interface Message extends MessageBase {
   guildId?: bigint
   /** id of the message */
   id: bigint
-  /** Sent if the message is a response to an Interaction */
+  /** sent if the message is sent as a result of an interaction */
+  interactionMetadata?: MessageInteractionMetadata
+  /**
+   * Sent if the message is a response to an Interaction
+   *
+   * @deprecated Deprecated in favor of {@link interactionMetadata}
+   */
   interaction?: {
     /** Id of the interaction */
     id: bigint
@@ -281,6 +295,7 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
   if (props.embeds && payload.embeds?.length) message.embeds = payload.embeds.map((embed) => bot.transformers.embed(bot, embed))
   if (props.guildId && guildId) message.guildId = guildId
   if (props.id && payload.id) message.id = bot.transformers.snowflake(payload.id)
+  if (payload.interaction_metadata) message.interactionMetadata = transformMessageInteractionMetadata(bot, payload.interaction_metadata)
   if (payload.interaction) {
     const interaction = {} as NonNullable<Message['interaction']>
     let edited = false
@@ -370,4 +385,49 @@ export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
   if (props.webhookId && payload.webhook_id) message.webhookId = bot.transformers.snowflake(payload.webhook_id)
 
   return bot.transformers.customizers.message(bot, payload, message)
+}
+
+export function transformMessageInteractionMetadata(bot: Bot, payload: DiscordMessageInteractionMetadata): MessageInteractionMetadata {
+  const props = bot.transformers.desiredProperties.message.interactionMetadata
+  const metadata = {} as MessageInteractionMetadata
+
+  if (props.id) metadata.id = bot.transformers.snowflake(payload.id)
+  if (props.authorizingIntegrationOwners) {
+    metadata.authorizingIntegrationOwners = {}
+    if (payload.authorizing_integration_owners['0'])
+      metadata.authorizingIntegrationOwners[DiscordApplicationIntegrationType.GuildInstall] = bot.transformers.snowflake(
+        payload.authorizing_integration_owners['0'],
+      )
+    if (payload.authorizing_integration_owners['1'])
+      metadata.authorizingIntegrationOwners[DiscordApplicationIntegrationType.UserInstall] = bot.transformers.snowflake(
+        payload.authorizing_integration_owners['1'],
+      )
+  }
+  if (props.interactedMessageId && payload.interacted_message_id)
+    metadata.interactedMessageId = bot.transformers.snowflake(payload.interacted_message_id)
+  if (props.originalResponseMessageId && payload.original_response_message_id)
+    metadata.originalResponseMessageId = bot.transformers.snowflake(payload.original_response_message_id)
+  if (props.triggeringInteractionMetadata && payload.triggering_interaction_metadata)
+    metadata.triggeringInteractionMetadata = transformMessageInteractionMetadata(bot, payload.triggering_interaction_metadata)
+  if (props.type) metadata.type = payload.type
+  if (props.userId) metadata.userId = bot.transformers.snowflake(payload.user_id)
+
+  return bot.transformers.customizers.messageInteractionMetadata(bot, payload, metadata)
+}
+
+export interface MessageInteractionMetadata {
+  /** Id of the interaction */
+  id: bigint
+  /** The type of interaction */
+  type: InteractionTypes
+  /** ID of the user who triggered the interaction */
+  userId: bigint
+  /** IDs for installation context(s) related to an interaction */
+  authorizingIntegrationOwners: Partial<Record<DiscordApplicationIntegrationType, bigint>>
+  /** ID of the original response message, present only on follow-up messages */
+  originalResponseMessageId?: bigint
+  /** ID of the message that contained interactive component, present only on messages created from component interactions */
+  interactedMessageId?: bigint
+  /** Metadata for the interaction that was used to open the modal, present only on modal submit interactions */
+  triggeringInteractionMetadata?: MessageInteractionMetadata
 }

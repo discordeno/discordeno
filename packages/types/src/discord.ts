@@ -373,6 +373,13 @@ export interface DiscordApplication {
   tags?: string[]
   /** settings for the application's default in-app authorization link, if enabled */
   install_params?: DiscordInstallParams
+  /**
+   * Default scopes and permissions for each supported installation context.
+   *
+   * @remarks
+   * This is currently in preview.
+   */
+  integration_types_config?: Partial<Record<`${DiscordApplicationIntegrationType}`, DiscordApplicationIntegrationTypeConfiguration>>
   /** the application's default custom authorization link, if enabled */
   custom_install_url?: string
   /** the application's role connection verification entry point, which when configured will render the app as a verification method in the guild role verification configuration */
@@ -385,6 +392,28 @@ export interface DiscordApplication {
   redirect_uris?: string[]
   /** Interactions endpoint URL for the app */
   interactions_endpoint_url?: string
+}
+
+/** https://discord.com/developers/docs/resources/application#application-object-application-integration-type-configuration-object */
+export interface DiscordApplicationIntegrationTypeConfiguration {
+  /**
+   * Install params for each installation context's default in-app authorization link
+   *
+   * https://discord.com/developers/docs/resources/application#install-params-object-install-params-structure
+   */
+  oauth2_install_params?: {
+    /** Scopes to add the application to the server with */
+    scopes: OAuth2Scope[]
+    /** Permissions to request for the bot role */
+    permissions: string
+  }
+}
+
+export enum DiscordApplicationIntegrationType {
+  /** App is installable to servers */
+  GuildInstall = 0,
+  /** App is installable to users */
+  UserInstall = 1,
 }
 
 export type DiscordTokenExchange = DiscordTokenExchangeAuthorizationCode | DiscordTokenExchangeRefreshToken | DiscordTokenExchangeClientCredentials
@@ -478,6 +507,7 @@ export interface DiscordConnection {
 /** https://discord.com/developers/docs/resources/user#connection-object-services */
 export enum DiscordConnectionServiceType {
   BattleNet = 'battlenet',
+  Bungie = 'Bungie.net',
   eBay = 'ebay',
   EpicGames = 'epicgames',
   Facebook = 'facebook',
@@ -1320,7 +1350,13 @@ export interface DiscordMessage {
    * Note: This field is only returned for messages with a `type` of `19` (REPLY). If the message is a reply but the `referenced_message` field is not present, the backend did not attempt to fetch the message that was being replied to, so its state is unknown. If the field exists but is null, the referenced message was deleted.
    */
   referenced_message?: DiscordMessage
-  /** Sent if the message is a response to an Interaction */
+  /** sent if the message is sent as a result of an interaction */
+  interaction_metadata?: DiscordMessageInteractionMetadata
+  /**
+   * Sent if the message is a response to an Interaction
+   *
+   * @deprecated Deprecated in favor of {@link interaction_metadata}
+   */
   interaction?: DiscordMessageInteraction
   /** The thread that was started from this message, includes thread member object */
   thread?: Omit<DiscordChannel, 'member'> & { member: DiscordThreadMember }
@@ -1330,6 +1366,8 @@ export interface DiscordMessage {
   sticker_items?: DiscordStickerItem[]
   /** A generally increasing integer (there may be gaps or duplicates) that represents the approximate position of the message in a thread, it can be used to estimate the relative position of the message in a thread in company with `total_message_sent` on parent thread */
   position?: number
+  /** The poll object */
+  poll?: DiscordPoll
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-mention-object */
@@ -1391,6 +1429,122 @@ export interface DiscordMessageReference {
   fail_if_not_exists: boolean
 }
 
+/** https://discord.com/developers/docs/resources/poll#poll-object */
+export interface DiscordPoll {
+  /** The question of the poll. Only `text` is supported. */
+  question: DiscordPollMedia
+  /** Each of the answers available in the poll. There is a maximum of 10 answers per poll. */
+  answers: DiscordPollAnswer[]
+  /**
+   * The time when the poll ends.
+   *
+   * @remarks
+   * `expiry` is marked as nullable to support non-expiring polls in the future, but all polls have an expiry currently.
+   */
+  expiry: string | null
+  /** Whether a user can select multiple answers */
+  allow_multiselect: boolean
+  /** The layout type of the poll */
+  layout_type: DiscordPollLayoutType
+  /**
+   * The results of the poll
+   *
+   * @remarks
+   * This value will not be sent by discord under specific conditions where they don't fetch them on their backend. When this value is missing it should be interpreted as "Unknown results" and not as "No results"
+   * The results may not be totally accurate while the poll has not ended. When it ends discord will re-calculate all the results and set {@link DiscordPollResult.is_finalized} to true
+   */
+  results?: DiscordPollResult
+}
+
+/** https://discord.com/developers/docs/resources/poll#layout-type */
+export enum DiscordPollLayoutType {
+  /** The default layout */
+  Default = 1,
+}
+
+/** https://discord.com/developers/docs/resources/poll#poll-media-object */
+export interface DiscordPollMedia {
+  /**
+   * The text of the field
+   *
+   * @remarks
+   * `text` should always be non-null for both questions and answers, but this is subject to changes.
+   * The maximum length of `text` is 300 for the question, and 55 for any answer.
+   */
+  text?: string
+  /**
+   * The emoji of the field
+   *
+   * @remarks
+   * When creating a poll answer with an emoji, one only needs to send either the `id` (custom emoji) or `name` (default emoji) as the only field.
+   */
+  emoji?: Partial<DiscordEmoji>
+}
+
+/** https://discord.com/developers/docs/resources/poll#poll-answer-object */
+export interface DiscordPollAnswer {
+  /**
+   * The id of the answer
+   *
+   * @remarks
+   * This id labels each answer. It starts at 1 and goes up sequentially. Discord recommend against depending on this value as is a implementation detail.
+   */
+  answer_id: number
+  /** The data of the answer */
+  poll_media: DiscordPollMedia
+}
+
+export interface DiscordPollAnswerCount {
+  /** The {@link DiscordPollAnswer.answer_id | answer_id} */
+  id: number
+  /** The number of votes for this answer */
+  count: number
+  /** Whether the current user voted for this answer */
+  me_voted: boolean
+}
+
+/** https://discord.com/developers/docs/resources/poll#poll-results-object */
+export interface DiscordPollResult {
+  /** Whether the votes have been precisely counted */
+  is_finalized: boolean
+  /** The counts for each answer */
+  answer_counts: DiscordPollAnswerCount[]
+}
+
+/** https://discord.com/developers/docs/resources/poll#get-answer-voters-response-body */
+export interface DiscordGetAnswerVotesResponse {
+  /** Users who voted for this answer */
+  users: DiscordUser[]
+}
+
+/** https://discord.com/developers/docs/topics/gateway-events#message-poll-vote-add */
+export interface DiscordPollVoteAdd {
+  /** ID of the user. Usually a snowflake */
+  user_id: string
+  /** ID of the channel. Usually a snowflake */
+  channel_id: string
+  /** ID of the message. Usually a snowflake */
+  message_id: string
+  /** ID of the guild. Usually a snowflake */
+  guild_id?: string
+  /** ID of the answer. */
+  answer_id: number
+}
+
+/** https://discord.com/developers/docs/topics/gateway-events#message-poll-vote-remove */
+export interface DiscordPollVoteRemove {
+  /** ID of the user. Usually a snowflake */
+  user_id: string
+  /** ID of the channel. Usually a snowflake */
+  channel_id: string
+  /** ID of the message. Usually a snowflake */
+  message_id: string
+  /** ID of the guild. Usually a snowflake */
+  guild_id?: string
+  /** ID of the answer. */
+  answer_id: number
+}
+
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-structure */
 export interface DiscordSticker {
   /** [Id of the sticker](https://discord.com/developers/docs/reference#image-formatting) */
@@ -1429,6 +1583,24 @@ export interface DiscordMessageInteraction {
   user: DiscordUser
   /** The member who invoked the interaction in the guild */
   member?: Partial<DiscordMember>
+}
+
+/** https://discord.com/developers/docs/resources/channel#message-interaction-metadata-object-message-interaction-metadata-structure */
+export interface DiscordMessageInteractionMetadata {
+  /** Id of the interaction */
+  id: string
+  /** The type of interaction */
+  type: InteractionTypes
+  /** ID of the user who triggered the interaction */
+  user_id: string
+  /** IDs for installation context(s) related to an interaction */
+  authorizing_integration_owners: Partial<Record<DiscordApplicationIntegrationType, string>>
+  /** ID of the original response message, present only on follow-up messages */
+  original_response_message_id?: string
+  /** ID of the message that contained interactive component, present only on messages created from component interactions */
+  interacted_message_id?: string
+  /** Metadata for the interaction that was used to open the modal, present only on modal submit interactions */
+  triggering_interaction_metadata?: DiscordMessageInteractionMetadata
 }
 
 export type DiscordMessageComponents = DiscordActionRow[]
@@ -1599,6 +1771,10 @@ export interface DiscordInteraction {
   app_permissions: string
   /** For monetized apps, any entitlements for the invoking user, representing access to premium SKUs */
   entitlements: DiscordEntitlement[]
+  /** Mapping of installation contexts that the interaction was authorized for to related user or guild IDs. */
+  authorizing_integration_owners: Partial<Record<DiscordApplicationIntegrationType, string>>
+  /** Context where the interaction was triggered from */
+  context?: DiscordInteractionContextType
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-member-object */
@@ -2153,7 +2329,25 @@ export interface DiscordCreateApplicationCommand {
   options?: DiscordApplicationCommandOption[]
   /** Set of permissions represented as a bit set */
   default_member_permissions?: string | null
-  /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
+  /**
+   * Installation context(s) where the command is available
+   *
+   * @remarks
+   * This is currently in preview.
+   */
+  integration_types?: DiscordApplicationIntegrationType[]
+  /**
+   * Interaction context(s) where the command can be used, only for globally-scoped commands. By default, all interaction context types included.
+   *
+   * @remarks
+   * This is currently in preview.
+   */
+  contexts?: DiscordInteractionContextType[] | null
+  /**
+   * Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
+   *
+   * @deprecated use {@link contexts} instead
+   */
   dm_permission?: boolean
   /** Indicates whether the command is age-restricted, defaults to false */
   nsfw?: boolean
@@ -3127,4 +3321,22 @@ export enum DiscordMessageFlag {
   SuppressNotifications = 1 << 12,
   /** This message is a voice message */
   IsVoiceMessage = 1 << 13,
+}
+
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-context-types */
+export enum DiscordInteractionContextType {
+  /** Interaction can be used within servers */
+  Guild = 0,
+  /** Interaction can be used within DMs with the app's bot user */
+  BotDm = 1,
+  /** Interaction can be used within Group DMs and DMs other than the app's bot user */
+  PrivateChannel = 2,
+}
+
+/** https://discord.com/developers/docs/resources/guild#bulk-guild-ban */
+export interface DiscordBulkBan {
+  /** list of user ids, that were successfully banned */
+  banned_users: string[]
+  /** list of user ids, that were not banned */
+  failed_users: string[]
 }

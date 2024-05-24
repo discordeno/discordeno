@@ -3,7 +3,7 @@ import { ShardSocketCloseCodes, createGatewayManager } from '@discordeno/gateway
 import type { CreateRestManagerOptions, RestManager } from '@discordeno/rest'
 import { createRestManager } from '@discordeno/rest'
 import type { BigString, DiscordEmoji, DiscordGatewayPayload, DiscordReady, GatewayIntents } from '@discordeno/types'
-import { createLogger, getBotIdFromToken, type Collection } from '@discordeno/utils'
+import { createLogger, getBotIdFromToken, type Collection, type logger } from '@discordeno/utils'
 import { createBotGatewayHandlers } from './handlers.js'
 import { createBotHelpers, type BotHelpers } from './helpers.js'
 import { createTransformers, type Transformers } from './transformers.js'
@@ -13,7 +13,7 @@ import type { AutoModerationActionExecution } from './transformers/automodAction
 import type { AutoModerationRule } from './transformers/automodRule.js'
 import type { Channel } from './transformers/channel.js'
 import type { Emoji } from './transformers/emoji.js'
-import { type Entitlement } from './transformers/entitlement.js'
+import type { Entitlement } from './transformers/entitlement.js'
 import type { Guild } from './transformers/guild.js'
 import type { Integration } from './transformers/integration.js'
 import type { Interaction } from './transformers/interaction.js'
@@ -38,9 +38,11 @@ import type { BotGatewayHandlerOptions } from './typings.js'
 export function createBot(options: CreateBotOptions): Bot {
   if (!options.rest) options.rest = { token: options.token, applicationId: options.applicationId }
   if (!options.rest.token) options.rest.token = options.token
+  if (!options.rest.logger && options.loggerFactory) options.rest.logger = options.loggerFactory('REST')
   if (!options.gateway) options.gateway = { token: options.token }
   if (!options.gateway.token) options.gateway.token = options.token
   if (!options.gateway.events) options.gateway.events = {}
+  if (!options.gateway.logger && options.loggerFactory) options.gateway.logger = options.loggerFactory('GATEWAY')
   if (!options.gateway.events.message) {
     options.gateway.events.message = async (shard, data) => {
       // TRIGGER RAW EVENT
@@ -67,7 +69,7 @@ export function createBot(options: CreateBotOptions): Bot {
     rest: createRestManager(options.rest),
     gateway: createGatewayManager(options.gateway),
     events: options.events ?? {},
-    logger: createLogger({ name: 'BOT' }),
+    logger: options.loggerFactory ? options.loggerFactory('BOT') : createLogger({ name: 'BOT' }),
     // Set up helpers below.
     helpers: {} as BotHelpers,
     async start() {
@@ -122,6 +124,15 @@ export interface CreateBotOptions {
    * @default false
    */
   defaultDesiredPropertiesValue?: boolean
+  /**
+   * This factory will be invoked to create the logger for gateway, rest and bot
+   *
+   * @remarks
+   * If not provided the default logger will be used with rest and gateway sharing the same logger
+   *
+   * This function will be invoked 3 times, one with the name of `REST`, one with `GATEWAY` and the third one with name `BOT`
+   */
+  loggerFactory?: (name: 'REST' | 'GATEWAY' | 'BOT') => Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
 }
 
 export interface Bot {
@@ -136,7 +147,7 @@ export interface Bot {
   /** The event handlers. */
   events: Partial<EventHandlers>
   /** A logger utility to make it easy to log nice and useful things in the bot code. */
-  logger: ReturnType<typeof createLogger>
+  logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
   /** The functions that should transform discord objects to discordeno shaped objects. */
   transformers: Transformers
   /** The handler functions that should handle incoming discord payloads from gateway and call an event. */
@@ -236,4 +247,6 @@ export interface EventHandlers {
   entitlementCreate: (entitlement: Entitlement) => unknown
   entitlementUpdate: (entitlement: Entitlement) => unknown
   entitlementDelete: (entitlement: Entitlement) => unknown
+  messagePollVoteAdd: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; answerId: number }) => unknown
+  messagePollVoteRemove: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; answerId: number }) => unknown
 }

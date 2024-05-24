@@ -36,6 +36,7 @@ import type {
   CamelizedDiscordMessage,
   CamelizedDiscordModifyGuildWelcomeScreen,
   CamelizedDiscordPartialGuild,
+  CamelizedDiscordGetAnswerVotesResponse,
   CamelizedDiscordPrunedCount,
   CamelizedDiscordRole,
   CamelizedDiscordScheduledEvent,
@@ -64,6 +65,7 @@ import type {
   CreateGuild,
   CreateGuildApplicationCommandOptions,
   CreateGuildBan,
+  CreateGuildBulkBan,
   CreateGuildChannel,
   CreateGuildEmoji,
   CreateGuildFromTemplate,
@@ -74,6 +76,7 @@ import type {
   CreateStageInstance,
   CreateTemplate,
   DeleteWebhookMessageOptions,
+  DiscordBulkBan,
   EditApplication,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
@@ -95,6 +98,7 @@ import type {
   GetGuildPruneCountQuery,
   GetInvite,
   GetMessagesOptions,
+  GetPollAnswerVotes,
   GetReactions,
   GetScheduledEventUsers,
   GetScheduledEvents,
@@ -128,6 +132,7 @@ import type {
   UpsertGlobalApplicationCommandOptions,
   UpsertGuildApplicationCommandOptions,
 } from '@discordeno/types'
+import type { logger } from '@discordeno/utils'
 import type { InvalidRequestBucket } from './invalidBucket.js'
 import type { Queue } from './queue.js'
 import type { RestRoutes } from './typings/routes.js'
@@ -166,6 +171,11 @@ export interface CreateRestManagerOptions {
    * @default 10
    */
   version?: ApiVersions
+  /**
+   * The logger that the rest manager will use
+   * @default logger // The logger exported by `@discordeno/utils`
+   */
+  logger?: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
 }
 
 export interface RestManager {
@@ -207,6 +217,8 @@ export interface RestManager {
   invalidBucket: InvalidRequestBucket
   /** The routes that are available for this manager. */
   routes: RestRoutes
+  /** The logger to use for the rest manager */
+  logger: Pick<typeof logger, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
   /** Allows the user to inject custom headers that will be sent with every request. */
   createBaseHeaders: () => Record<string, string>
   /** Whether or not the rest manager should keep objects in raw snake case from discord. */
@@ -2054,7 +2066,7 @@ export interface RestManager {
    * @returns A number indicating the number of members that would be kicked.
    *
    * @remarks
-   * Requires the `KICK_MEMBERS` permission.
+   * Requires the `MANAGE_GUILD` and `KICK_MEMBERS` permissions.
    *
    * @see {@link https://discord.com/developers/docs/resources/guild#get-guild-prune-count}
    */
@@ -2535,6 +2547,34 @@ export interface RestManager {
    */
   startThreadWithoutMessage: (channelId: BigString, options: StartThreadWithoutMessage, reason?: string) => Promise<CamelizedDiscordChannel>
   /**
+   * Get a list of users that voted for this specific answer.
+   *
+   * @param channelId - The ID of the channel in which the message with the poll lives
+   * @param messageId - The ID of the message in which the poll lives
+   * @param answerId - The ID of the answer to get the users that voted that answer
+   * @param options - The options for the request
+   * @returns The list of users that voted for the specific answer.
+   */
+  getPollAnswerVoters: (
+    channelId: BigString,
+    messageId: BigString,
+    answerId: number,
+    options?: GetPollAnswerVotes,
+  ) => Promise<CamelizedDiscordGetAnswerVotesResponse>
+  /**
+   * Immediately ends the poll.
+   *
+   * @param channelId - The ID of the channel in which the message with the poll lives
+   * @param messageId - The ID of the message in which the poll lives
+   * @returns The message with the expired poll
+   *
+   * @remarks
+   * You cannot end polls from other users.
+   *
+   * Fires a _Message Update_ gateway event
+   */
+  endPoll: (channelId: BigString, messageId: BigString) => Promise<CamelizedDiscordMessage>
+  /**
    * Synchronises a template with the current state of a guild.
    *
    * @param guildId - The ID of the guild to synchronise a template of.
@@ -2612,8 +2652,8 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild to ban the user from.
    * @param userId - The ID of the user to ban from the guild.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @param options - The parameters for the creation of the ban.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `BAN_MEMBERS` permission.
@@ -2623,6 +2663,23 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-ban}
    */
   banMember: (guildId: BigString, userId: BigString, options?: CreateGuildBan, reason?: string) => Promise<void>
+  /**
+   * Bans up to 200 users from a guild.
+   *
+   * @param guildId - The ID of the guild to ban the users from.
+   * @param options - The users to ban and the other options for the ban.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   *
+   * @remarks
+   * Requires the `BAN_MEMBERS` and `MANAGE_GUILD` permissions.
+   *
+   * If all provided users fail to be banned, discord will respond with an error (code: `500000: Failed to ban users`)
+   *
+   * Fires as many _Guild Ban Add_ gateway events as many user where banned.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#bulk-guild-ban}
+   */
+  bulkBanMembers: (guildId: BigString, options: CreateGuildBulkBan, reason?: string) => Promise<Camelize<DiscordBulkBan>>
   /**
    * Edits the nickname of the bot user.
    *
@@ -2743,7 +2800,7 @@ export interface RestManager {
    * @returns A number indicating how many members were pruned.
    *
    * @remarks
-   * Requires the `KICK_MEMBERS` permission.
+   * Requires the `MANAGE_GUILD` and `KICK_MEMBERS` permissions.
    *
    * ❗ Requests to this endpoint will time out for large guilds. To prevent this from happening, set the {@link BeginGuildPrune.computePruneCount} property of the {@link options} object parameter to `false`. This will begin the process of pruning, and immediately return `undefined`, rather than wait for the process to complete before returning the actual count of members that have been kicked.
    *
