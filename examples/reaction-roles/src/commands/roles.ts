@@ -1,4 +1,5 @@
 import {
+  DiscordInteractionContextType,
   MessageComponentTypes,
   TextStyles,
   type ActionRow,
@@ -16,9 +17,9 @@ import type { Command } from './index.js'
 const command: Command = {
   name: 'roles',
   description: 'Role management on your server.',
-  // Do not allow to run this command in DM.
-  dmPermission: false,
-  // Require the user to have Manage Guild and Manage Roles by-default, server admins can override this setting
+  // Do not allow to run this command in DM. Only in guilds.
+  contexts: [DiscordInteractionContextType.Guild],
+  // Require the user to have Manage Guild and Manage Roles by-default, server admins can override this setting for their server
   defaultMemberPermissions: ['MANAGE_GUILD', 'MANAGE_ROLES'],
   options: [
     {
@@ -113,7 +114,7 @@ const command: Command = {
 
       itemCollector.onItem(async (i) => {
         // We need to verify the interaction is for us.
-        if (i.message?.id.toString() !== message.id) {
+        if (i.message?.id !== message.id) {
           return
         }
 
@@ -123,7 +124,7 @@ const command: Command = {
           collectors.delete(itemCollector)
 
           // Delete the edit message
-          await i.defer(true)
+          await i.deferEdit()
           await i.delete()
 
           return
@@ -131,8 +132,6 @@ const command: Command = {
 
         // New button
         if (i.data?.customId === 'reactionRoles-add') {
-          await i.defer(true)
-
           partialRoleInfo = {}
 
           // Ask the user for the role
@@ -153,7 +152,6 @@ const command: Command = {
           partialRoleInfo.role = roleToAdd
 
           // Ask the user for the color of the button
-          await i.defer(true)
           await i.edit({
             content: 'Pick a color for the reaction role',
             components: [selectColorActionRow],
@@ -243,16 +241,15 @@ const command: Command = {
           const removeActionRow = structuredClone(removeActionRowTemplate)
           const selectMenu = removeActionRow.components[0] as SelectMenuComponent
 
-          // Add the possibile values for this select menu
+          // Add the possible values for this select menu
           for (const roleInfo of roles) {
             selectMenu.options.push({
-              label: `${roleInfo.emoji} ${roleInfo.label}`,
+              label: `${roleInfo.emoji} ${roleInfo.label ?? ''}`,
               value: roleInfo.role.id.toString(),
             })
           }
 
           // Ask the user for what reaction role they want to remove
-          await i.defer(true)
           await i.edit({
             content: 'Select what reaction role to remove',
             components: [removeActionRow],
@@ -276,7 +273,7 @@ const command: Command = {
             throw new Error('Unable to get the role to remove')
           }
 
-          await i.defer(true)
+          await i.deferEdit()
 
           // Remove the role from the list
           roles = roles.filter((roleInfo) => roleInfo.role.id.toString() !== roleToRemove)

@@ -11,11 +11,11 @@ In this guide we will make a simple reaction roles bot. This will give us an opp
 
 Before going forward, please make sure you have finished everything on this list.
 
-- Create an application and get the bot token. [Create Application Guide](https://discordeno.js.org/docs/beginner/token)
-- Add your bot to a server you own. [Invite Bot Guide](https://discordeno.js.org/docs/beginner/inviting)
-- [recommended, optional] Create a GitHub repo for this project. [Setup Repo Guide](https://discordeno.js.org/docs/beginner/github)
-- Install Discordeno. [Installation Guide](https://discordeno.js.org)
-- Setup environment variables. [Environment Variables Guide](https://discordeno.js.org/docs/beginner/env)
+- Create an application and get the bot token. [Create Application Guide](../beginner/token.md)
+- Add your bot to a server you own. [Invite Bot Guide](../beginner/inviting.md)
+- [recommended, optional] Create a GitHub repo for this project. [Setup Repo Guide](../beginner/github.md)
+- Install Discordeno. [Installation Guide](../getting-started.md)
+- Setup environment variables. [Environment Variables Guide](../beginner/env.md)
 
 ## Creating Our Bot
 
@@ -189,7 +189,7 @@ Next let's require the user to provide the button color.
 
 The button color will be a little different. Until now, we have created options that give the user full control over the value (even if it's invalid), but for the button color, only a few values are actually valid and it's not obvious to the user. For this reason, we can use the `choices` array to create a handful of predefined options that the user can select from. For each options we can decide a `name` that the user will see and a `value` that Discord will send us when the user selects that option.
 
-We will use the option type `ApplicationCommandOptionTypes.Integer`, but for the `value`, instead of using numbers like `1`, let's pick it from the `ButtonStyles` enum. A number in the code without any label attached to it is known as magic numbers, and it is considered bad practice, which you can read more [here](https://en.wikipedia.org/wiki/Magic_number_(programming)).
+We will use the option type `ApplicationCommandOptionTypes.Integer`, but for the `value`, instead of using numbers like `1`, let's pick it from the `ButtonStyles` enum. A number in the code without any label attached to it is known as magic numbers, and it is considered bad practice, which you can read more [here](<https://en.wikipedia.org/wiki/Magic_number_(programming)>).
 
 For example, let's say you write `{ name: "Blue", value: 1 }`. It wouldn't be very clear what button style number 1 is, and you will have to go and check Discord Documentation. Whereas if you write `{ name: "Blue", value: ButtonStyles.Primary }`, it is very obvious that the name "blue" will give us a button with style `Primary`
 
@@ -344,7 +344,7 @@ export const commands = new Map<string, CreateApplicationCommand>(
 export default commands
 ```
 
-:::note
+:::info
 In this guide we manually import the file and add it to the map, but you can get creative and structure the command discovery in any way you like. For example, you could list all the files in a folder, then after verifying that they export a command, add it to this commands map; or you could rely on the files to call a function that will add them to the map; or you can import the map in the file and add it from there.
 :::
 
@@ -591,6 +591,7 @@ async execute(interaction, args: CommandArgs) {
 ```
 
 In this piece of code we are doing 2 things:
+
 - Send a message to the channel where the command was run, with a button everyone can click to add/remove the roles that the user who run this command has set up.
 - Send a private message so that only the user who run the command can see it and allow them to edit the message we just sent.
 
@@ -682,7 +683,7 @@ export class ItemCollector extends EventEmitter {
 export default class ItemCollector
 ```
 
-:::note
+:::info
 If you are following along using Bun or Deno you can use this code as well even if we use a node specific feature, this is because Bun supports (almost) all apis from node, and deno supports a lot of them in the latest versions, so if you are getting an error on the `EventEmitter` you might need to update your bun/deno
 :::
 
@@ -751,7 +752,7 @@ async execute(interaction, args: CommandArgs) {
     collectors.add(itemCollector)
 
     itemCollector.onItem((i) => {
-      if (i.message?.id.toString() !== message.id) {
+      if (i.message?.id !== message.id) {
         return
       }
 
@@ -800,7 +801,7 @@ First we can implement the easiest buttons out of the 3, the save button. Since 
 
 ```ts
 itemCollector.onItem(async i => {
-  if (i.message?.id.toString() !== message.id) {
+  if (i.message?.id !== message.id) {
     return
   }
 
@@ -811,7 +812,7 @@ itemCollector.onItem(async i => {
   if (i.data?.customId === 'reactionRoles-save') {
     collectors.delete(itemCollector)
 
-    await i.defer(true)
+    await i.deferEdit()
     await i.delete()
 
     return
@@ -874,7 +875,7 @@ function getRoleButtons(
 
   if (roles.length === 0) return actionRows
 
-  // We add the components later, so we need to make typescript know that we are sure that it will be a compatibile components array
+  // We add the components later, so we need to make typescript know that we are sure that it will be a compatible components array
   actionRows.push({
     type: MessageComponentTypes.ActionRow,
     components: [] as unknown as ActionRow['components'],
@@ -910,7 +911,7 @@ function getRoleButtons(
 }
 ```
 
-:::note
+:::info
 Remember to import all the types we are using. Some IDE/Text editors will offer an option to quickly fix the errors about the types not being found and import them
 :::
 
@@ -948,14 +949,14 @@ Now let's implement the remove button, as it is the next easiest one. To impleme
 
 ```ts
 itemCollector.onItem(async i => {
-  if (i.message?.id.toString() !== message.id) {
+  if (i.message?.id !== message.id) {
     return
   }
 
   if (i.data?.customId === 'reactionRoles-save') {
     collectors.delete(itemCollector)
 
-    await i.defer(true)
+    await i.deferEdit()
     await i.delete()
 
     return
@@ -972,7 +973,7 @@ itemCollector.onItem(async i => {
       })
     }
 
-    await i.defer(true)
+    await i.deferEdit()
     await i.edit({
       content: 'Select what reaction role to remove',
       components: [
@@ -1015,7 +1016,7 @@ if (i.data?.customId === 'reactionRoles-remove') {
     })
   }
 
-  await i.defer(true)
+  await i.deferEdit()
   await i.edit({
     content: 'Select what reaction role to remove',
     components: [
@@ -1042,7 +1043,7 @@ if (i.data?.customId === 'reactionRoles-remove') {
 if (i.data?.customId === 'reactionRoles-remove-selectMenu') {
   const roleToRemove = i.data?.values?.[0]
 
-  await i.defer(true)
+  await i.deferEdit()
 
   roles = roles.filter(roleInfo => roleInfo.role.id.toString() !== roleToRemove)
 
@@ -1095,7 +1096,7 @@ Now we can start with the code for the button click and the 2 select menu as we 
 if (i.data?.customId === 'reactionRoles-remove-selectMenu') {
   const roleToRemove = i.data?.values?.[0]
 
-  await i.defer(true)
+  await i.deferEdit()
 
   roles = roles.filter(roleInfo => roleInfo.role.id.toString() !== roleToRemove)
 
@@ -1113,7 +1114,7 @@ if (i.data?.customId === 'reactionRoles-remove-selectMenu') {
 
 // insert-start
 if (i.data?.customId === 'reactionRoles-add') {
-  await i.defer(true)
+  await i.deferEdit()
 
   partialRoleInfo = {}
 
@@ -1142,7 +1143,7 @@ if (i.data?.customId === 'reactionRoles-add-role') {
 
   partialRoleInfo.role = roleToAdd
 
-  await i.defer(true)
+  await i.deferEdit()
   await i.edit({
     content: 'Pick a color for the reaction role',
     components: [

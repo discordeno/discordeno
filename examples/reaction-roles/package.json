@@ -12,12 +12,12 @@
     "setup-dd": ""
   },
   "dependencies": {
-    "@discordeno/bot": "19.0.0-next.d81b28a",
-    "dotenv": "^16.4.1"
+    "@discordeno/bot": "19.0.0-next.d69e537",
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
-    "@swc/cli": "^0.3.9",
-    "@swc/core": "^1.4.0",
-    "@types/node": "^20.11.17"
+    "@swc/cli": "^0.3.12",
+    "@swc/core": "^1.5.7",
+    "@types/node": "^20.12.12"
   }
 }
