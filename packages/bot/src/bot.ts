@@ -216,7 +216,7 @@ export interface EventHandlers {
     emoji: Emoji
     messageAuthorId?: bigint
     burst: boolean
-    burstColors: string[]
+    burstColors?: string[]
   }) => unknown
   reactionRemove: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; emoji: Emoji; burst: boolean }) => unknown
   reactionRemoveEmoji: (payload: { channelId: bigint; messageId: bigint; guildId?: bigint; emoji: Emoji }) => unknown
