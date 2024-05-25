@@ -394,6 +394,7 @@ export enum StickerFormatTypes {
   Png = 1,
   APng,
   Lottie,
+  Gif,
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-interactiontype */
