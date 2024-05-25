@@ -86,7 +86,7 @@ import { transformIntegration, type Integration } from './transformers/integrati
 import { transformInteraction, transformInteractionDataOption, type Interaction, type InteractionDataOption } from './transformers/interaction.js'
 import { transformInvite, type Invite } from './transformers/invite.js'
 import { transformMember, type Member } from './transformers/member.js'
-import { transformMessage, type Message, type MessageInteractionMetadata, transformMessageInteractionMetadata } from './transformers/message.js'
+import { transformMessage, transformMessageInteractionMetadata, type Message, type MessageInteractionMetadata } from './transformers/message.js'
 import { transformGuildOnboarding, type GuildOnboarding } from './transformers/onboarding.js'
 import { transformPoll, transformPollMedia, type Poll, type PollMedia } from './transformers/poll.js'
 import { transformPresence, type PresenceUpdate } from './transformers/presence.js'
@@ -352,7 +352,7 @@ export interface Transformers {
       interactionMetadata: {
         id: boolean
         type: boolean
-        userId: boolean
+        user: boolean
         authorizingIntegrationOwners: boolean
         originalResponseMessageId: boolean
         interactedMessageId: boolean
@@ -951,7 +951,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         interactionMetadata: {
           id: opts?.defaultDesiredPropertiesValue ?? false,
           type: opts?.defaultDesiredPropertiesValue ?? false,
-          userId: opts?.defaultDesiredPropertiesValue ?? false,
+          user: opts?.defaultDesiredPropertiesValue ?? false,
           authorizingIntegrationOwners: opts?.defaultDesiredPropertiesValue ?? false,
           originalResponseMessageId: opts?.defaultDesiredPropertiesValue ?? false,
           interactedMessageId: opts?.defaultDesiredPropertiesValue ?? false,

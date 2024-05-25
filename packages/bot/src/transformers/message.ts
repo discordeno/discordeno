@@ -410,7 +410,7 @@ export function transformMessageInteractionMetadata(bot: Bot, payload: DiscordMe
   if (props.triggeringInteractionMetadata && payload.triggering_interaction_metadata)
     metadata.triggeringInteractionMetadata = transformMessageInteractionMetadata(bot, payload.triggering_interaction_metadata)
   if (props.type) metadata.type = payload.type
-  if (props.userId) metadata.userId = bot.transformers.snowflake(payload.user_id)
+  if (props.userId) metadata.user = bot.transformers.user(bot, payload.user)
 
   return bot.transformers.customizers.messageInteractionMetadata(bot, payload, metadata)
 }
@@ -420,8 +420,8 @@ export interface MessageInteractionMetadata {
   id: bigint
   /** The type of interaction */
   type: InteractionTypes
-  /** ID of the user who triggered the interaction */
-  userId: bigint
+  /** User who triggered the interaction */
+  user: User
   /** IDs for installation context(s) related to an interaction */
   authorizingIntegrationOwners: Partial<Record<DiscordApplicationIntegrationType, bigint>>
   /** ID of the original response message, present only on follow-up messages */

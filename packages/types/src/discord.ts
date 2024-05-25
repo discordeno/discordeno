@@ -1591,8 +1591,8 @@ export interface DiscordMessageInteractionMetadata {
   id: string
   /** The type of interaction */
   type: InteractionTypes
-  /** ID of the user who triggered the interaction */
-  user_id: string
+  /** User who triggered the interaction */
+  user: DiscordUser
   /** IDs for installation context(s) related to an interaction */
   authorizing_integration_owners: Partial<Record<DiscordApplicationIntegrationType, string>>
   /** ID of the original response message, present only on follow-up messages */
