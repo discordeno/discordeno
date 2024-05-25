@@ -2568,7 +2568,9 @@ export interface DiscordMessageReactionAdd {
   /** true if this is a super-reaction */
   burst: boolean
   /** Colors used for super-reaction animation in "#rrggbb" format */
-  burst_colors: string[]
+  burst_colors?: string[]
+  /** The type of reaction */
+  type: DiscordReactionType
 }
 
 /** https://discord.com/developers/docs/topics/gateway#voice-server-update */
