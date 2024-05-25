@@ -42,7 +42,7 @@ import type {
   VerificationLevels,
   VideoQualityModes,
   WebhookTypes,
-} from './shared.js';
+} from './shared.js'
 
 /** https://discord.com/developers/docs/resources/user#user-object */
 export interface DiscordUser {
