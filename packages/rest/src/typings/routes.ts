@@ -268,6 +268,7 @@ export interface RestRoutes {
     entitlements: (applicationId: BigString, options?: GetEntitlements) => string
     /** Route to delete an entitlement */
     entitlement: (applicationId: BigString, entitlementId: BigString) => string
+    consumeEntitlement: (applicationId: BigString, entitlementId: BigString) => string
     /** Route to list the SKUs */
     skus: (applicationId: BigString) => string
   }

@@ -21,6 +21,7 @@ import type {
   CamelizedDiscordEmoji,
   CamelizedDiscordEntitlement,
   CamelizedDiscordFollowedChannel,
+  CamelizedDiscordGetAnswerVotesResponse,
   CamelizedDiscordGetGatewayBot,
   CamelizedDiscordGuild,
   CamelizedDiscordGuildApplicationCommandPermissions,
@@ -36,7 +37,6 @@ import type {
   CamelizedDiscordMessage,
   CamelizedDiscordModifyGuildWelcomeScreen,
   CamelizedDiscordPartialGuild,
-  CamelizedDiscordGetAnswerVotesResponse,
   CamelizedDiscordPrunedCount,
   CamelizedDiscordRole,
   CamelizedDiscordScheduledEvent,
@@ -2903,6 +2903,10 @@ export interface RestManager {
    * @param entitlementId - The id of the entitlement to delete
    */
   deleteTestEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
+  /**
+   * For One-Time Purchase consumable SKUs, marks a given entitlement for the user as consumed. The entitlement will have `consumed: true` when using {@link RestManager.listEntitlements | List Entitlements}
+   */
+  consumeEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
   /**
    * Returns all SKUs for a given application
    *

@@ -14,6 +14,7 @@ export function transformEntitlement(bot: Bot, payload: DiscordEntitlement): Ent
   if (props.deleted && payload.deleted) entitlement.deleted = payload.deleted
   if (props.startsAt && payload.starts_at) entitlement.startsAt = Date.parse(payload.starts_at)
   if (props.endsAt && payload.ends_at) entitlement.endsAt = Date.parse(payload.ends_at)
+  if (props.consumed && payload.consumed) entitlement.consumed = payload.consumed
 
   return bot.transformers.customizers.entitlement(bot, payload, entitlement)
 }
@@ -37,4 +38,6 @@ export interface Entitlement {
   startsAt?: number
   /** Date at which the entitlement is no longer valid. Not present when using test entitlements */
   endsAt?: number
+  /** For consumable items, whether or not the entitlement has been consumed */
+  consumed?: boolean
 }
