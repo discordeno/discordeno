@@ -21,6 +21,7 @@ import type {
   CamelizedDiscordEmoji,
   CamelizedDiscordEntitlement,
   CamelizedDiscordFollowedChannel,
+  CamelizedDiscordGetAnswerVotesResponse,
   CamelizedDiscordGetGatewayBot,
   CamelizedDiscordGuild,
   CamelizedDiscordGuildApplicationCommandPermissions,
@@ -36,7 +37,6 @@ import type {
   CamelizedDiscordMessage,
   CamelizedDiscordModifyGuildWelcomeScreen,
   CamelizedDiscordPartialGuild,
-  CamelizedDiscordGetAnswerVotesResponse,
   CamelizedDiscordPrunedCount,
   CamelizedDiscordRole,
   CamelizedDiscordScheduledEvent,
@@ -1502,6 +1502,7 @@ export interface RestManager {
    *
    * @param sourceChannelId - The ID of the announcement channel to follow.
    * @param targetChannelId - The ID of the target channel - the channel to cross-post to.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of {@link CamelizedDiscordFollowedChannel}.
    *
    * @remarks
@@ -1511,7 +1512,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#follow-announcement-channel}
    */
-  followAnnouncement: (sourceChannelId: BigString, targetChannelId: BigString) => Promise<CamelizedDiscordFollowedChannel>
+  followAnnouncement: (sourceChannelId: BigString, targetChannelId: BigString, reason?: string) => Promise<CamelizedDiscordFollowedChannel>
   /**
    * Gets the list of all active threads for a guild.
    *
