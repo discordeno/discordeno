@@ -2373,27 +2373,70 @@ export interface DiscordApplicationCommandOption {
   description: string
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
   description_localizations?: Localization | null
-  /** If the parameter is required or optional--default `false` */
+  /**
+   * If the parameter is required or optional. default `false`
+   *
+   * @remarks
+   * Valid in all option types except {@link ApplicationCommandOptionTypes.SubCommand | SubCommand} and {@link ApplicationCommandOptionTypes.SubCommandGroup | SubCommandGroup}
+   */
   required?: boolean
-  /** Choices for the option types `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer`, and `ApplicationCommandOptionTypes.Number`, from which the user can choose, max 25 */
+  /**
+   * Choices for the option from which the user can choose, max 25
+   *
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}, {@link ApplicationCommandOptionTypes.Integer | Integer}, or {@link ApplicationCommandOptionTypes.Number | Number}
+   *
+   * If you provide there options, they will be the ONLY accepted values for this option
+   */
   choices?: DiscordApplicationCommandOptionChoice[]
-  /** If the option is a subcommand or subcommand group type, these nested options will be the parameters */
+  /**
+   * If the option is a subcommand or subcommand group type, these nested options will be the parameters
+   *
+   * @remarks
+   * Only valid in option of type {@link ApplicationCommandOptionTypes.SubCommand | SubCommand} or {@link ApplicationCommandOptionTypes.SubCommandGroup | SubCommandGroup}
+   */
   options?: DiscordApplicationCommandOption[]
   /**
    * If autocomplete interactions are enabled for this option.
    *
-   * Only available for `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer` and `ApplicationCommandOptionTypes.Number` option types
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}, {@link ApplicationCommandOptionTypes.Integer | Integer}, or {@link ApplicationCommandOptionTypes.Number | Number}
    */
   autocomplete?: boolean
-  /** If the option is a channel type, the channels shown will be restricted to these types */
+  /**
+   * The channels shown will be restricted to these types
+   *
+   * @remarks
+   * Only valid in option of type {@link ApplicationCommandOptionTypes.Channel | Channel}
+   */
   channel_types?: ChannelTypes[]
-  /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the minimum permitted value */
+  /**
+   * The minimum permitted value
+   *
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.Integer | Integer} or {@link ApplicationCommandOptionTypes.Number | Number}
+   */
   min_value?: number
-  /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the maximum permitted value */
+  /**
+   * The maximum permitted value
+   *
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.Integer | Integer} or {@link ApplicationCommandOptionTypes.Number | Number}
+   */
   max_value?: number
-  /** If the option type is `ApplicationCommandOptionTypes.String`, the minimum permitted length */
+  /**
+   * The minimum permitted length, should be in the range of from 0 to 600
+   *
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}
+   */
   min_length?: number
-  /** If the option type is `ApplicationCommandOptionTypes.String`, the maximum permitted length  */
+  /**
+   * The maximum permitted length, should be in the range of from 0 to 600
+   *
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}
+   */
   max_length?: number
 }
 
