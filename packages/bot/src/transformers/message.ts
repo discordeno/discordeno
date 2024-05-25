@@ -410,7 +410,7 @@ export function transformMessageInteractionMetadata(bot: Bot, payload: DiscordMe
   if (props.triggeringInteractionMetadata && payload.triggering_interaction_metadata)
     metadata.triggeringInteractionMetadata = transformMessageInteractionMetadata(bot, payload.triggering_interaction_metadata)
   if (props.type) metadata.type = payload.type
-  if (props.userId) metadata.user = bot.transformers.user(bot, payload.user)
+  if (props.user && payload.user) metadata.user = bot.transformers.user(bot, payload.user)
 
   return bot.transformers.customizers.messageInteractionMetadata(bot, payload, metadata)
 }
