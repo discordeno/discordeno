@@ -42,7 +42,7 @@ import type {
   VerificationLevels,
   VideoQualityModes,
   WebhookTypes,
-} from './shared.js'
+} from './shared.js';
 
 /** https://discord.com/developers/docs/resources/user#user-object */
 export interface DiscordUser {
@@ -330,7 +330,7 @@ export interface DiscordMember {
   /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
   communication_disabled_until?: string | null
   /** data for the member's guild avatar decoration */
-  avatar_decoration_data: DiscordAvatarDecorationData
+  avatar_decoration_data?: DiscordAvatarDecorationData | null
 }
 
 /** https://discord.com/developers/docs/resources/user#avatar-decoration-data-object */
