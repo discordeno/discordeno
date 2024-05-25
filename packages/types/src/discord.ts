@@ -1398,6 +1398,12 @@ export interface DiscordReaction {
   burst_colors: string[]
 }
 
+/** https://discord.com/developers/docs/resources/channel#get-reactions-reaction-types */
+export enum DiscordReactionType {
+  Normal,
+  Burst,
+}
+
 /** https://discord.com/developers/docs/resources/channel#reaction-count-details-object */
 export interface DiscordReactionCountDetails {
   /** Count of super reactions */
