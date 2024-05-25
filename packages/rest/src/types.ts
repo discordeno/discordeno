@@ -21,6 +21,7 @@ import type {
   CamelizedDiscordEmoji,
   CamelizedDiscordEntitlement,
   CamelizedDiscordFollowedChannel,
+  CamelizedDiscordGetAnswerVotesResponse,
   CamelizedDiscordGetGatewayBot,
   CamelizedDiscordGuild,
   CamelizedDiscordGuildApplicationCommandPermissions,
@@ -36,7 +37,6 @@ import type {
   CamelizedDiscordMessage,
   CamelizedDiscordModifyGuildWelcomeScreen,
   CamelizedDiscordPartialGuild,
-  CamelizedDiscordGetAnswerVotesResponse,
   CamelizedDiscordPrunedCount,
   CamelizedDiscordRole,
   CamelizedDiscordScheduledEvent,
@@ -1030,10 +1030,10 @@ export interface RestManager {
     reason?: string,
   ) => Promise<CamelizedDiscordAutoModerationRule>
   /**
-   * Modifies the bot's username or avatar.
+   * Modifies the bot's username, avatar or banner.
    * NOTE: username: if changed may cause the bot's discriminator to be randomized.
    */
-  editBotProfile: (options: { username?: string; botAvatarURL?: string | null }) => Promise<CamelizedDiscordUser>
+  editBotProfile: (options: { username?: string; botAvatarURL?: string | null; botBannerURL?: string | null }) => Promise<CamelizedDiscordUser>
   /**
    * Edits a channel's settings.
    *

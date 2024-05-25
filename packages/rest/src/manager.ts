@@ -24,6 +24,7 @@ import {
   type DiscordEmoji,
   type DiscordEntitlement,
   type DiscordFollowedChannel,
+  type DiscordGetAnswerVotesResponse,
   type DiscordGetGatewayBot,
   type DiscordGuild,
   type DiscordGuildApplicationCommandPermissions,
@@ -40,7 +41,6 @@ import {
   type DiscordMemberWithUser,
   type DiscordMessage,
   type DiscordPartialGuild,
-  type DiscordGetAnswerVotesResponse,
   type DiscordPrunedCount,
   type DiscordRole,
   type DiscordScheduledEvent,
@@ -786,11 +786,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async editBotProfile(options) {
       const avatar = options?.botAvatarURL ? await urlToBase64(options?.botAvatarURL) : options?.botAvatarURL
+      const banner = options?.botBannerURL ? await urlToBase64(options?.botBannerURL) : options?.botBannerURL
 
       return await rest.patch<DiscordUser>(rest.routes.currentUser(), {
         body: {
           username: options.username?.trim(),
           avatar,
+          banner,
         },
       })
     },
