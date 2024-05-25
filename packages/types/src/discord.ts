@@ -1740,6 +1740,8 @@ export interface DiscordInteraction {
   application_id: string
   /** The type of interaction */
   type: InteractionTypes
+  /** Guild that the interaction was sent from */
+  guild?: Partial<DiscordGuild>
   /** The guild it was sent from */
   guild_id?: string
   /** The channel it was sent from */
