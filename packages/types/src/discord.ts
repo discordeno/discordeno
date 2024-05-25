@@ -508,6 +508,7 @@ export interface DiscordConnection {
 export enum DiscordConnectionServiceType {
   BattleNet = 'battlenet',
   Bungie = 'Bungie.net',
+  Domain = 'domain',
   eBay = 'ebay',
   EpicGames = 'epicgames',
   Facebook = 'facebook',
