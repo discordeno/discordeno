@@ -31,6 +31,7 @@ import type {
   DiscordInviteStageInstance,
   DiscordMember,
   DiscordMessage,
+  DiscordMessageCall,
   DiscordMessageInteractionMetadata,
   DiscordPoll,
   DiscordPollMedia,
@@ -86,7 +87,14 @@ import { transformIntegration, type Integration } from './transformers/integrati
 import { transformInteraction, transformInteractionDataOption, type Interaction, type InteractionDataOption } from './transformers/interaction.js'
 import { transformInvite, type Invite } from './transformers/invite.js'
 import { transformMember, type Member } from './transformers/member.js'
-import { transformMessage, transformMessageInteractionMetadata, type Message, type MessageInteractionMetadata } from './transformers/message.js'
+import {
+  transformMessage,
+  transformMessageCall,
+  transformMessageInteractionMetadata,
+  type Message,
+  type MessageCall,
+  type MessageInteractionMetadata,
+} from './transformers/message.js'
 import { transformGuildOnboarding, type GuildOnboarding } from './transformers/onboarding.js'
 import { transformPoll, transformPollMedia, type Poll, type PollMedia } from './transformers/poll.js'
 import { transformPresence, type PresenceUpdate } from './transformers/presence.js'
@@ -122,6 +130,7 @@ export interface Transformers {
     interaction: (bot: Bot, payload: DiscordInteraction, interaction: Interaction) => any
     message: (bot: Bot, payload: DiscordMessage, message: Message) => any
     messageInteractionMetadata: (bot: Bot, payload: DiscordMessageInteractionMetadata, metadata: MessageInteractionMetadata) => any
+    messageCall: (bot: Bot, payload: DiscordMessageCall, call: MessageCall) => any
     user: (bot: Bot, payload: DiscordUser, user: User) => any
     member: (bot: Bot, payload: DiscordMember, member: Member) => any
     role: (bot: Bot, payload: DiscordRole, role: Role) => any
@@ -381,6 +390,10 @@ export interface Transformers {
       type: boolean
       webhookId: boolean
       poll: boolean
+      call: {
+        participants: boolean
+        endedTimestamp: boolean
+      }
     }
     role: {
       name: boolean
@@ -575,6 +588,7 @@ export interface Transformers {
   member: (bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString) => Member
   message: (bot: Bot, payload: DiscordMessage) => Message
   messageInteractionMetadata: (bot: Bot, payload: DiscordMessageInteractionMetadata) => MessageInteractionMetadata
+  messageCall: (bot: Bot, payload: DiscordMessageCall) => MessageCall
   role: (bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }) => Role
   voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) => VoiceState
   interaction: (bot: Bot, payload: DiscordInteraction) => Interaction
@@ -648,6 +662,9 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
       },
       messageInteractionMetadata(bot, payload, metadata) {
         return metadata
+      },
+      messageCall(bot, payload, call) {
+        return call
       },
       role(bot, payload, role) {
         return role
@@ -981,6 +998,10 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         type: opts?.defaultDesiredPropertiesValue ?? false,
         webhookId: opts?.defaultDesiredPropertiesValue ?? false,
         poll: opts?.defaultDesiredPropertiesValue ?? false,
+        call: {
+          participants: opts?.defaultDesiredPropertiesValue ?? false,
+          endedTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
+        },
       },
       role: {
         name: opts?.defaultDesiredPropertiesValue ?? false,
@@ -1183,6 +1204,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
     member: options.member ?? transformMember,
     message: options.message ?? transformMessage,
     messageInteractionMetadata: options.messageInteractionMetadata ?? transformMessageInteractionMetadata,
+    messageCall: options.messageCall ?? transformMessageCall,
     presence: options.presence ?? transformPresence,
     role: options.role ?? transformRole,
     user: options.user ?? transformUser,
