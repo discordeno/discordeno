@@ -394,6 +394,7 @@ export enum StickerFormatTypes {
   Png = 1,
   APng,
   Lottie,
+  Gif,
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-interactiontype */
@@ -534,6 +535,20 @@ export enum AuditLogEvents {
   CreatorMonetizationRequestCreated = 150,
   /** Creator monetization terms were accepted */
   CreatorMonetizationTermsAccepted,
+  /** Guild Onboarding Question was created */
+  OnBoardingPromptCreate = 163,
+  /** Guild Onboarding Question was updated */
+  OnBoardingPromptUpdate,
+  /** Guild Onboarding Question was deleted */
+  OnBoardingPromptDelete,
+  /** Guild Onboarding was created */
+  OnBoardingCreate,
+  /** Guild Onboarding was updated */
+  OnBoardingUpdate,
+  /** Guild Server Guide was created */
+  HomeSettingsCreate = 190,
+  /** Guild Server Guide was updated */
+  HomeSettingsUpdate,
 }
 
 export enum ScheduledEventPrivacyLevel {
