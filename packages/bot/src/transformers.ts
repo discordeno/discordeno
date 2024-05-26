@@ -520,6 +520,7 @@ export interface Transformers {
       deleted: boolean
       startsAt: boolean
       endsAt: boolean
+      consumed: boolean
     }
     sku: {
       id: boolean
@@ -1127,6 +1128,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         deleted: opts?.defaultDesiredPropertiesValue ?? false,
         startsAt: opts?.defaultDesiredPropertiesValue ?? false,
         endsAt: opts?.defaultDesiredPropertiesValue ?? false,
+        consumed: opts?.defaultDesiredPropertiesValue ?? false,
       },
       sku: {
         id: opts?.defaultDesiredPropertiesValue ?? false,
