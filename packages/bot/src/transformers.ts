@@ -389,6 +389,7 @@ export interface Transformers {
       thread: boolean
       type: boolean
       webhookId: boolean
+      poll: boolean
       call: {
         participants: boolean
         endedTimestamp: boolean
@@ -997,6 +998,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         thread: opts?.defaultDesiredPropertiesValue ?? false,
         type: opts?.defaultDesiredPropertiesValue ?? false,
         webhookId: opts?.defaultDesiredPropertiesValue ?? false,
+        poll: opts?.defaultDesiredPropertiesValue ?? false,
         call: {
           participants: opts?.defaultDesiredPropertiesValue ?? false,
           endedTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
