@@ -925,11 +925,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordMessage>(rest.routes.webhooks.webhook(webhookId, token, options), { body: options })
     },
 
-    async followAnnouncement(sourceChannelId, targetChannelId) {
+    async followAnnouncement(sourceChannelId, targetChannelId, reason) {
       return await rest.post<DiscordFollowedChannel>(rest.routes.channels.follow(sourceChannelId), {
         body: {
           webhook_channel_id: targetChannelId,
         },
+        reason,
       })
     },
 
