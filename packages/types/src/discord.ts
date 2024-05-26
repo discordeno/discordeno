@@ -2361,10 +2361,15 @@ export interface DiscordApplicationCommandOption {
   type: ApplicationCommandOptionTypes
   /**
    * Name of command, 1-32 characters.
-   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   *
+   * @remarks
+   * This value should be unique within an array of {@link DiscordApplicationCommandOption}
+   *
+   * {@link ApplicationCommandTypes.ChatInput | ChatInput} command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
    * If there is a lowercase variant of any letters used, you must use those.
    * Characters with no lowercase variants and/or uncased letters are still allowed.
-   * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
+   *
+   * {@link ApplicationCommandTypes.User | User} and {@link ApplicationCommandTypes.Message | Message} commands may be mixed case and can include spaces.
    */
   name: string
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
@@ -2386,7 +2391,7 @@ export interface DiscordApplicationCommandOption {
    * @remarks
    * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}, {@link ApplicationCommandOptionTypes.Integer | Integer}, or {@link ApplicationCommandOptionTypes.Number | Number}
    *
-   * If you provide there options, they will be the ONLY accepted values for this option
+   * If you provide an array of choices, they will be the ONLY accepted values for this option
    */
   choices?: DiscordApplicationCommandOptionChoice[]
   /**
@@ -2401,6 +2406,8 @@ export interface DiscordApplicationCommandOption {
    *
    * @remarks
    * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}, {@link ApplicationCommandOptionTypes.Integer | Integer}, or {@link ApplicationCommandOptionTypes.Number | Number}
+   *
+   * When {@link DiscordApplicationCommandOption.choices | choices} are provided, this may not be set to true
    */
   autocomplete?: boolean
   /**
