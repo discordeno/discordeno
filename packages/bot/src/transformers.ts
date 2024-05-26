@@ -366,7 +366,7 @@ export interface Transformers {
       interactionMetadata: {
         id: boolean
         type: boolean
-        userId: boolean
+        user: boolean
         authorizingIntegrationOwners: boolean
         originalResponseMessageId: boolean
         interactedMessageId: boolean
@@ -984,7 +984,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         interactionMetadata: {
           id: opts?.defaultDesiredPropertiesValue ?? false,
           type: opts?.defaultDesiredPropertiesValue ?? false,
-          userId: opts?.defaultDesiredPropertiesValue ?? false,
+          user: opts?.defaultDesiredPropertiesValue ?? false,
           authorizingIntegrationOwners: opts?.defaultDesiredPropertiesValue ?? false,
           originalResponseMessageId: opts?.defaultDesiredPropertiesValue ?? false,
           interactedMessageId: opts?.defaultDesiredPropertiesValue ?? false,
