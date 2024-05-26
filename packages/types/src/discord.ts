@@ -1368,6 +1368,16 @@ export interface DiscordMessage {
   position?: number
   /** The poll object */
   poll?: DiscordPoll
+  /** The call associated with the message */
+  call?: DiscordMessageCall
+}
+
+/** https://discord.com/developers/docs/resources/channel#message-call-object */
+export interface DiscordMessageCall {
+  /** Array of user object ids that participated in the call */
+  participants: string[]
+  /** Time when call ended */
+  ended_timestamp: string
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-mention-object */
