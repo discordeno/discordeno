@@ -24,6 +24,7 @@ import {
   type DiscordEmoji,
   type DiscordEntitlement,
   type DiscordFollowedChannel,
+  type DiscordGetAnswerVotesResponse,
   type DiscordGetGatewayBot,
   type DiscordGuild,
   type DiscordGuildApplicationCommandPermissions,
@@ -40,7 +41,6 @@ import {
   type DiscordMemberWithUser,
   type DiscordMessage,
   type DiscordPartialGuild,
-  type DiscordGetAnswerVotesResponse,
   type DiscordPrunedCount,
   type DiscordRole,
   type DiscordScheduledEvent,
@@ -1493,6 +1493,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async deleteTestEntitlement(applicationId, entitlementId) {
       await rest.delete(rest.routes.monetization.entitlement(applicationId, entitlementId))
+    },
+
+    async consumeEntitlement(applicationId, entitlementId) {
+      await rest.post(rest.routes.monetization.consumeEntitlement(applicationId, entitlementId))
     },
 
     async listSkus(applicationId) {

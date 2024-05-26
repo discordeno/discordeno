@@ -1368,6 +1368,16 @@ export interface DiscordMessage {
   position?: number
   /** The poll object */
   poll?: DiscordPoll
+  /** The call associated with the message */
+  call?: DiscordMessageCall
+}
+
+/** https://discord.com/developers/docs/resources/channel#message-call-object */
+export interface DiscordMessageCall {
+  /** Array of user object ids that participated in the call */
+  participants: string[]
+  /** Time when call ended */
+  ended_timestamp: string
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-mention-object */
@@ -3255,10 +3265,26 @@ export interface DiscordEntitlement {
   starts_at?: string
   /** Date at which the entitlement is no longer valid. Not present when using test entitlements */
   ends_at?: string
+  /** For consumable items, whether or not the entitlement has been consumed */
+  consumed?: boolean
 }
 
 /** https://discord.com/developers/docs/monetization/entitlements#entitlement-object-entitlement-types */
 export enum DiscordEntitlementType {
+  /** Entitlement was purchased by user */
+  Purchase = 1,
+  /** Entitlement for Discord Nitro subscription */
+  PremiumSubscription = 2,
+  /** Entitlement was gifted by developer */
+  DeveloperGift = 3,
+  /** Entitlement was purchased by a dev in application test mode */
+  TestModePurchase = 4,
+  /** Entitlement was granted when the SKU was free */
+  FreePurchase = 5,
+  /** Entitlement was gifted by another user */
+  UserGift = 6,
+  /** Entitlement was claimed by user for free as a Nitro Subscriber */
+  PremiumPurchase = 7,
   /** Entitlement was purchased as an app subscription */
   ApplicationSubscription = 8,
 }
@@ -3281,6 +3307,10 @@ export interface DiscordSku {
 
 /** https://discord.com/developers/docs/monetization/skus#sku-object-sku-types */
 export enum DiscordSkuType {
+  /** Durable one-time purchase */
+  Durable = 2,
+  /** Consumable one-time purchase */
+  Consumable = 3,
   /** Represents a recurring subscription */
   Subscription = 5,
   /** System-generated group for each SUBSCRIPTION SKU created */
