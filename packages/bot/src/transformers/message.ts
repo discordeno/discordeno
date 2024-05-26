@@ -423,7 +423,7 @@ export function transformMessageCall(bot: Bot, payload: DiscordMessageCall): Mes
   const call = {} as MessageCall
   const props = bot.transformers.desiredProperties.message.call
 
-  if (props.participants && payload.participants.length > 0) call.participants = payload.participants.map((x) => bot.transformers.snowflake(x))
+  if (props.participants && payload.participants) call.participants = payload.participants.map((x) => bot.transformers.snowflake(x))
   if (props.endedTimestamp && payload.ended_timestamp) call.endedTimestamp = Date.parse(payload.ended_timestamp)
 
   return bot.transformers.customizers.messageCall(bot, payload, call)
