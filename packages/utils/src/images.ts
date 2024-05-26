@@ -357,7 +357,7 @@ export function stickerUrl(
     type?: StickerFormatTypes
   },
 ): string | undefined {
-  if (!stickerId) return undefined
+  if (!stickerId) return
 
   const url =
     options?.type === StickerFormatTypes.Gif
