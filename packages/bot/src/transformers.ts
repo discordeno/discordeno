@@ -348,6 +348,7 @@ export interface Transformers {
       deaf: boolean
       mute: boolean
       pending: boolean
+      flags: boolean
       avatarDecorationData: boolean
     }
     message: {
