@@ -78,8 +78,8 @@ export interface DiscordUser {
   email?: string | null
   /** the user's banner, or null if unset */
   banner?: string
-  /** the user's avatar decoration, or null if unset */
-  avatar_decoration?: string
+  /** data for the user's avatar decoration */
+  avatar_decoration_data?: DiscordAvatarDecorationData
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes */
@@ -329,6 +329,16 @@ export interface DiscordMember {
   permissions?: string
   /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
   communication_disabled_until?: string | null
+  /** data for the member's guild avatar decoration */
+  avatar_decoration_data?: DiscordAvatarDecorationData | null
+}
+
+/** https://discord.com/developers/docs/resources/user#avatar-decoration-data-object */
+export interface DiscordAvatarDecorationData {
+  /** the avatar decoration hash */
+  asset: string
+  /** id of the avatar decoration's SKU */
+  sku_id: string
 }
 
 /** https://discord.com/developers/docs/resources/application#application-object */

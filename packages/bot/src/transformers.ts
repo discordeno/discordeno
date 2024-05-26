@@ -12,6 +12,7 @@ import type {
   DiscordAuditLogEntry,
   DiscordAutoModerationActionExecution,
   DiscordAutoModerationRule,
+  DiscordAvatarDecorationData,
   DiscordChannel,
   DiscordCreateApplicationCommand,
   DiscordEmbed,
@@ -77,11 +78,13 @@ import {
   transformApplicationCommandToDiscordApplicationCommand,
   transformApplicationToDiscordApplication,
   transformAttachmentToDiscordAttachment,
+  transformAvatarDecorationData,
   transformComponentToDiscordComponent,
   transformEmbedToDiscordEmbed,
   transformMemberToDiscordMember,
   transformTeamToDiscordTeam,
   transformUserToDiscordUser,
+  type AvatarDecorationData,
 } from './transformers/index.js'
 import { transformIntegration, type Integration } from './transformers/integration.js'
 import { transformInteraction, transformInteractionDataOption, type Interaction, type InteractionDataOption } from './transformers/interaction.js'
@@ -181,6 +184,7 @@ export interface Transformers {
     sku: (bot: Bot, payload: DiscordSku, sku: Sku) => any
     poll: (bot: Bot, payload: DiscordPoll, poll: Poll) => any
     pollMedia: (bot: Bot, payload: DiscordPollMedia, pollMedia: PollMedia) => any
+    avatarDecorationData: (bot: Bot, payload: DiscordAvatarDecorationData, avatarDecorationData: AvatarDecorationData) => any
   }
   desiredProperties: {
     attachment: {
@@ -344,6 +348,7 @@ export interface Transformers {
       deaf: boolean
       mute: boolean
       pending: boolean
+      avatarDecorationData: boolean
     }
     message: {
       activity: boolean
@@ -473,7 +478,11 @@ export interface Transformers {
       verified: boolean
       email: boolean
       banner: boolean
-      avatarDecoration: boolean
+      avatarDecorationData: boolean
+    }
+    avatarDecorationData: {
+      asset: boolean
+      skuId: boolean
     }
     webhook: {
       id: boolean
@@ -628,6 +637,7 @@ export interface Transformers {
   sku: (bot: Bot, payload: DiscordSku) => Sku
   poll: (bot: Bot, payload: DiscordPoll) => Poll
   pollMedia: (bot: Bot, payload: DiscordPollMedia) => PollMedia
+  avatarDecorationData: (bot: Bot, payload: DiscordAvatarDecorationData) => AvatarDecorationData
 }
 
 export interface CreateTransformerOptions {
@@ -789,6 +799,9 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
       },
       pollMedia(bot, payload, pollMedia) {
         return pollMedia
+      },
+      avatarDecorationData(bot, payload, avatarDecorationData) {
+        return avatarDecorationData
       },
     },
     desiredProperties: {
@@ -953,6 +966,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         deaf: opts?.defaultDesiredPropertiesValue ?? false,
         mute: opts?.defaultDesiredPropertiesValue ?? false,
         pending: opts?.defaultDesiredPropertiesValue ?? false,
+        avatarDecorationData: opts?.defaultDesiredPropertiesValue ?? false,
       },
       message: {
         activity: opts?.defaultDesiredPropertiesValue ?? false,
@@ -1082,7 +1096,11 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         verified: opts?.defaultDesiredPropertiesValue ?? false,
         email: opts?.defaultDesiredPropertiesValue ?? false,
         banner: opts?.defaultDesiredPropertiesValue ?? false,
-        avatarDecoration: opts?.defaultDesiredPropertiesValue ?? false,
+        avatarDecorationData: opts?.defaultDesiredPropertiesValue ?? false,
+      },
+      avatarDecorationData: {
+        asset: opts?.defaultDesiredPropertiesValue ?? false,
+        skuId: opts?.defaultDesiredPropertiesValue ?? false,
       },
       webhook: {
         id: opts?.defaultDesiredPropertiesValue ?? false,
@@ -1237,5 +1255,6 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
     sku: options.sku ?? transformSku,
     poll: options.poll ?? transformPoll,
     pollMedia: options.pollMedia ?? transformPollMedia,
+    avatarDecorationData: options.avatarDecorationData ?? transformAvatarDecorationData,
   }
 }
