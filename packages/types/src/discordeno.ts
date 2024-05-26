@@ -457,7 +457,12 @@ export interface CreateSlashApplicationCommand {
   descriptionLocalizations?: Localization
   /** Type of command, defaults `ApplicationCommandTypes.ChatInput` if not set  */
   type?: ApplicationCommandTypes
-  /** Parameters for the command */
+  /**
+   * Parameters for the command
+   *
+   * @remarks
+   * This is only valid in commands of type {@link ApplicationCommandTypes.ChatInput | ChatInput}
+   */
   options?: Camelize<DiscordApplicationCommandOption[]>
   /** Set of permissions represented as a bit set */
   defaultMemberPermissions?: PermissionStrings[]

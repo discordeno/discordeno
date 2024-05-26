@@ -24,6 +24,7 @@ import {
   type DiscordEmoji,
   type DiscordEntitlement,
   type DiscordFollowedChannel,
+  type DiscordGetAnswerVotesResponse,
   type DiscordGetGatewayBot,
   type DiscordGuild,
   type DiscordGuildApplicationCommandPermissions,
@@ -40,7 +41,6 @@ import {
   type DiscordMemberWithUser,
   type DiscordMessage,
   type DiscordPartialGuild,
-  type DiscordGetAnswerVotesResponse,
   type DiscordPrunedCount,
   type DiscordRole,
   type DiscordScheduledEvent,
@@ -786,11 +786,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async editBotProfile(options) {
       const avatar = options?.botAvatarURL ? await urlToBase64(options?.botAvatarURL) : options?.botAvatarURL
+      const banner = options?.botBannerURL ? await urlToBase64(options?.botBannerURL) : options?.botBannerURL
 
       return await rest.patch<DiscordUser>(rest.routes.currentUser(), {
         body: {
           username: options.username?.trim(),
           avatar,
+          banner,
         },
       })
     },
@@ -925,11 +927,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordMessage>(rest.routes.webhooks.webhook(webhookId, token, options), { body: options })
     },
 
-    async followAnnouncement(sourceChannelId, targetChannelId) {
+    async followAnnouncement(sourceChannelId, targetChannelId, reason) {
       return await rest.post<DiscordFollowedChannel>(rest.routes.channels.follow(sourceChannelId), {
         body: {
           webhook_channel_id: targetChannelId,
         },
+        reason,
       })
     },
 
@@ -1493,6 +1496,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async deleteTestEntitlement(applicationId, entitlementId) {
       await rest.delete(rest.routes.monetization.entitlement(applicationId, entitlementId))
+    },
+
+    async consumeEntitlement(applicationId, entitlementId) {
+      await rest.post(rest.routes.monetization.consumeEntitlement(applicationId, entitlementId))
     },
 
     async listSkus(applicationId) {
