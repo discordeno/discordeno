@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import type { BigString, GetGuildWidgetImageQuery, ImageFormat, ImageSize } from '@discordeno/types'
+import { type BigString, type GetGuildWidgetImageQuery, type ImageFormat, type ImageSize, StickerFormatTypes } from '@discordeno/types'
 import { iconBigintToHash } from './hash.js'
 
 /** Help format an image url. */
@@ -354,9 +354,17 @@ export function stickerUrl(
   options?: {
     size?: ImageSize
     format?: ImageFormat
+    type?: StickerFormatTypes
   },
 ): string | undefined {
-  return stickerId ? formatImageUrl(`https://cdn.discordapp.com/stickers/${stickerId}`, options?.size ?? 128, options?.format) : undefined
+  if (!stickerId) return
+
+  const url =
+    options?.type === StickerFormatTypes.Gif
+      ? `https://media.discordapp.net/stickers/${stickerId}`
+      : `https://cdn.discordapp.com/stickers/${stickerId}`
+
+  return formatImageUrl(url, options?.size ?? 128, options?.format)
 }
 
 /**

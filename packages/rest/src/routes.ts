@@ -617,6 +617,9 @@ export function createRoutes(): RestRoutes {
       entitlement: (applicationId, entitlementId) => {
         return `/applications/${applicationId}/entitlements/${entitlementId}`
       },
+      consumeEntitlement: (applicationId, entitlementId) => {
+        return `/applications/${applicationId}/entitlements/${entitlementId}/consume`
+      },
 
       skus: (applicationId) => {
         return `/applications/${applicationId}/skus`
