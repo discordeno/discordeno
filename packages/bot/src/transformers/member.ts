@@ -35,7 +35,7 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigSt
   if (props.deaf || props.mute || props.pending) {
     member.toggles = new MemberToggles(payload)
   }
-  if (props.flags && payload.flags) member.flags = payload.flags
+  if (props.flags && payload.flags !== undefined) member.flags = payload.flags
 
   return bot.transformers.customizers.member(bot, payload, member)
 }
