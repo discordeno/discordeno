@@ -14,7 +14,7 @@ export function transformEntitlement(bot: Bot, payload: DiscordEntitlement): Ent
   if (props.deleted && payload.deleted) entitlement.deleted = payload.deleted
   if (props.startsAt && payload.starts_at) entitlement.startsAt = Date.parse(payload.starts_at)
   if (props.endsAt && payload.ends_at) entitlement.endsAt = Date.parse(payload.ends_at)
-  if (props.consumed && payload.consumed) entitlement.consumed = payload.consumed
+  if (props.consumed && payload.consumed !== undefined) entitlement.consumed = payload.consumed
 
   return bot.transformers.customizers.entitlement(bot, payload, entitlement)
 }
