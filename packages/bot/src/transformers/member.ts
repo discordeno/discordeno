@@ -1,6 +1,7 @@
 import type { BigString, DiscordMember, GuildMemberFlags } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
+import type { AvatarDecorationData } from './avatarDecorationData.js'
 import { Permissions } from './toggles/Permissions.js'
 import { MemberToggles } from './toggles/member.js'
 import type { User } from './user.js'
@@ -36,6 +37,8 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigSt
     member.toggles = new MemberToggles(payload)
   }
   if (props.flags && payload.flags !== undefined) member.flags = payload.flags
+  if (props.avatarDecorationData && payload.avatar_decoration_data)
+    member.avatarDecorationData = bot.transformers.avatarDecorationData(bot, payload.avatar_decoration_data)
 
   return bot.transformers.customizers.member(bot, payload, member)
 }
@@ -74,4 +77,6 @@ export interface Member extends BaseMember {
   communicationDisabledUntil?: number
   /** Guild member flags */
   flags: GuildMemberFlags
+  /** data for the member's guild avatar decoration */
+  avatarDecorationData: AvatarDecorationData
 }
