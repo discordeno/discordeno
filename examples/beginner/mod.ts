@@ -1,6 +1,6 @@
 import { startBot } from './deps.ts.js'
-import log from './src/utils/logger.ts.js'
 import { fileLoader, importDirectory } from './src/utils/loader.ts.js'
+import log from './src/utils/logger.ts.js'
 import { updateApplicationCommands } from './src/utils/updateCommands.ts.js'
 // setup db
 import './src/database/mod.ts.js'

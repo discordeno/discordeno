@@ -3,9 +3,7 @@
   "version": "19.0.0-alpha.1",
   "private": true,
   "type": "module",
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "scripts": {
     "build": "turbo run build --no-daemon",
     "build:watch": "echo \"Starting build in watch mode...\" && chokidar \"packages/**/*.ts\" --ignore \"packages/**/dist/**/*.d.ts\"  -c \"yarn run build && yarn run build:type\"",
@@ -13,7 +11,7 @@
     "build:type": "turbo run build:type --no-daemon",
     "dev": "turbo run dev --parallel --no-daemon",
     "fmt": "turbo run fmt --no-daemon",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "biome format . --write",
     "lint": "turbo run lint --no-daemon",
     "prepare": "husky install",
     "release-build": "turbo run release-build --no-daemon",
@@ -28,12 +26,10 @@
     "test:unit-coverage": "turbo run test:unit-coverage --no-daemon"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.7.3",
     "chokidar-cli": "^3.0.0",
-    "eslint": "^8.57.0",
-    "eslint-config-discordeno": "*",
     "husky": "^9.0.11",
-    "lint-staged": "^15.2.0",
-    "prettier": "^3.2.5",
+    "lint-staged": "^15.2.5",
     "turbo": "^1.11.3",
     "typedoc": "0.25.11",
     "typedoc-plugin-markdown": "3.17.1",
@@ -43,9 +39,7 @@
     "node": ">=18.0.0"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,md,html,css}": "yarn run prettier --ignore-unknown --write",
-    "!(website)/**/*.{js,ts,tsx}": "yarn run eslint --fix --config ./packages/eslint-config-discordeno/index.js --resolve-plugins-relative-to .",
-    "website/**/*.{js,ts,tsx}": "yarn run eslint --fix --config ./website/.eslintrc.yml --resolve-plugins-relative-to ./website"
+    "*": "yarn biome check --no-errors-on-unmatched --apply"
   },
   "packageManager": "yarn@4.0.2"
 }

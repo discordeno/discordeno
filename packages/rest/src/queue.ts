@@ -50,7 +50,6 @@ export class Queue {
 
   /** Pauses the execution until a request is allowed to be made. */
   async waitUntilRequestAvailable(): Promise<void> {
-    // eslint-disable-next-line no-async-promise-executor
     return await new Promise(async (resolve) => {
       // If whatever amount of requests is left is more than the safety margin, allow the request
       if (this.isRequestAllowed()) {

@@ -1,8 +1,8 @@
-import { ActivityTypes, createBot, enableCachePlugin, enableCacheSweepers, fastFileLoader, GatewayIntents, startBot } from './deps.ts.js'
 import { BOT_ID, BOT_TOKEN } from './configs.ts.js'
-import { logger } from './src/utils/logger.ts.js'
+import { ActivityTypes, GatewayIntents, createBot, enableCachePlugin, enableCacheSweepers, fastFileLoader, startBot } from './deps.ts.js'
 import { events } from './src/events/mod.ts.js'
 import { updateCommands } from './src/utils/helpers.ts.js'
+import { logger } from './src/utils/logger.ts.js'
 
 const log = logger({ name: 'Main' })
 

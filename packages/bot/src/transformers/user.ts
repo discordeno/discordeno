@@ -1,10 +1,9 @@
 import type { DiscordUser, PremiumTypes } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
-import { ToggleBitfield, UserToggles, type AvatarDecorationData, type Bot } from '../index.js'
+import { type AvatarDecorationData, type Bot, ToggleBitfield, UserToggles } from '../index.js'
 
 const baseUser: Partial<User> & BaseUser = {
   get tag() {
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     return `${this.username}#${this.discriminator}`
   },
   get bot() {

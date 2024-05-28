@@ -1,0 +1,57 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.7.3/schema.json",
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 150
+  },
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": false,
+      "correctness": {
+        "noUnusedVariables": "error"
+      },
+      "style": {
+        "noNamespace": "error",
+        "noNonNullAssertion": "off",
+        "useConsistentArrayType": {
+          "level": "error",
+          "options": { "syntax": "shorthand" }
+        }
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "trailingComma": "all",
+      "semicolons": "asNeeded",
+      "quoteStyle": "single"
+    }
+  },
+  "files": {
+    "ignore": [
+      "node_modules",
+      // Ignore the bigbot example has it has its own linter/formatter
+      "examples/bigbot",
+      // Ignore turbo and docusaurus cache/stuff
+      ".docusaurus",
+      ".turbo",
+      // Remove the yarn script as it is minified
+      ".yarn",
+      // Ignore build outputs
+      "bunTestsDist",
+      "build",
+      "coverage",
+      "denoTestsDist",
+      "dist"
+    ],
+    "ignoreUnknown": true
+  }
+}

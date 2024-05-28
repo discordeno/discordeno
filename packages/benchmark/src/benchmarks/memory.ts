@@ -1,4 +1,4 @@
-import { createBot, type Bot } from '@discordeno/bot'
+import { type Bot, createBot } from '@discordeno/bot'
 import { events as dbEvents } from '../utils/db.js'
 import { memoryBenchmark } from '../utils/memoryBenchmark.js'
 

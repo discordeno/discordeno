@@ -1,15 +1,15 @@
 import type { Bot, BotWithCache, CreateApplicationCommand, Guild, MakeRequired } from '../../deps.ts.js'
 import { getGuild, hasProperty, upsertGuildApplicationCommands } from '../../deps.ts.js'
-import { logger } from './logger.ts.js'
 import type { subCommand, subCommandGroup } from '../commands/mod.ts.js'
 import { commands } from '../commands/mod.ts.js'
+import { logger } from './logger.ts.js'
 
 const log = logger({ name: 'Helpers' })
 
 /** This function will update all commands, or the defined scope */
 export async function updateCommands(bot: BotWithCache, scope?: 'Guild' | 'Global') {
-  const globalCommands: Array<MakeRequired<CreateApplicationCommand, 'name'>> = []
-  const perGuildCommands: Array<MakeRequired<CreateApplicationCommand, 'name'>> = []
+  const globalCommands: MakeRequired<CreateApplicationCommand, 'name'>[] = []
+  const perGuildCommands: MakeRequired<CreateApplicationCommand, 'name'>[] = []
 
   for (const command of commands.values()) {
     if (command.scope) {
@@ -52,7 +52,7 @@ export async function updateCommands(bot: BotWithCache, scope?: 'Guild' | 'Globa
 
 /** Update commands for a guild */
 export async function updateGuildCommands(bot: Bot, guild: Guild) {
-  const perGuildCommands: Array<MakeRequired<CreateApplicationCommand, 'name'>> = []
+  const perGuildCommands: MakeRequired<CreateApplicationCommand, 'name'>[] = []
 
   for (const command of commands.values()) {
     if (command.scope) {

@@ -37,10 +37,8 @@ const reviewList: IReview[] = [
     bot: {
       username: 'Ai Image Generator',
       discriminator: '8424',
-      avatar:
-        'https://cdn.discordapp.com/avatars/1032699319368814652/8abbc5911333d3df288ff962a2120d75.png',
-      invite_url:
-        'https://discord.com/oauth2/authorize?client_id=1032699319368814652&permissions=274877959232&scope=bot%20applications.commands',
+      avatar: 'https://cdn.discordapp.com/avatars/1032699319368814652/8abbc5911333d3df288ff962a2120d75.png',
+      invite_url: 'https://discord.com/oauth2/authorize?client_id=1032699319368814652&permissions=274877959232&scope=bot%20applications.commands',
       guild_count: 97000,
     },
     developer: {
@@ -58,10 +56,8 @@ const reviewList: IReview[] = [
     bot: {
       username: 'Appy',
       discriminator: '0756',
-      avatar:
-        'https://cdn.discordapp.com/avatars/853327905357561948/a394518e742643f05cc201249d3ae75e.png',
-      invite_url:
-        'https://discord.com/oauth2/authorize?client_id=853327905357561948&scope=bot&permissions=534925798592',
+      avatar: 'https://cdn.discordapp.com/avatars/853327905357561948/a394518e742643f05cc201249d3ae75e.png',
+      invite_url: 'https://discord.com/oauth2/authorize?client_id=853327905357561948&scope=bot&permissions=534925798592',
       guild_count: 153000,
     },
     developer: {
@@ -79,10 +75,8 @@ const reviewList: IReview[] = [
     bot: {
       username: 'Fibo',
       discriminator: '6503',
-      avatar:
-        'https://cdn.discordapp.com/avatars/735147814878969968/8b72f174c30276f4d48c1e66608df70c.webp',
-      invite_url:
-        'https://discord.com/api/oauth2/authorize?client_id=735147814878969968&permissions=805825744&scope=applications.commands%20bot',
+      avatar: 'https://cdn.discordapp.com/avatars/735147814878969968/8b72f174c30276f4d48c1e66608df70c.webp',
+      invite_url: 'https://discord.com/api/oauth2/authorize?client_id=735147814878969968&permissions=805825744&scope=applications.commands%20bot',
       guild_count: 252000,
     },
     developer: {
@@ -101,8 +95,7 @@ const reviewList: IReview[] = [
       username: 'CactusFire',
       discriminator: '3759',
       avatar: 'https://i.imgur.com/L7zadjU.png',
-      invite_url:
-        'https://discord.com/oauth2/authorize?client_id=543567770579894272&permissions=8&scope=bot%20applications.commands',
+      invite_url: 'https://discord.com/oauth2/authorize?client_id=543567770579894272&permissions=8&scope=bot%20applications.commands',
       guild_count: 272000,
     },
     developer: {
@@ -129,7 +122,7 @@ export default function DiscordenoReviews() {
             .sort((a, b) => {
               return b.bot.guild_count - a.bot.guild_count
             })
-            .map((review, idx) => (
+            .map((review) => (
               <ReviewsElement key={review.bot.username}>
                 <ReviewsHeader>
                   <ReviewsLeft>
@@ -137,56 +130,30 @@ export default function DiscordenoReviews() {
                     <div>
                       <span>
                         <div id="username">{review.bot.username}</div>
-                        <div id="discriminator">
-                          #{review.bot.discriminator}
-                        </div>
+                        <div id="discriminator">#{review.bot.discriminator}</div>
                         <div id="badge">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="12"
-                            height="16"
-                            viewBox="0 0 12 16"
-                          >
-                            <path
-                              fill="#fff"
-                              fillRule="evenodd"
-                              d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5z"
-                            ></path>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" viewBox="0 0 12 16">
+                            <path fill="#fff" fillRule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5z"></path>
                           </svg>
                           Bot
                         </div>
                       </span>
                       <div id="sub_header">
-                        by{' '}
-                        <div id="username">
-                          {review.developer.usernames.join(', ')}
-                        </div>
+                        by <div id="username">{review.developer.usernames.join(', ')}</div>
                       </div>
                     </div>
                   </ReviewsLeft>
                   <ReviewsRight>
                     <StarContainer>
-                      {([1, 2, 3, 4, 5] as const).map(star => (
-                        <StarIcon
-                          key={star}
-                          active={star > review.stars}
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          aria-hidden="true"
-                        >
+                      {([1, 2, 3, 4, 5] as const).map((star) => (
+                        <StarIcon key={star} active={star > review.stars} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" aria-hidden="true">
                           <title>{`Star ${star}`}</title>
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </StarIcon>
                       ))}
                     </StarContainer>
                     <div>
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                           d="M12 2C9.38 2 7.25 4.13 7.25 6.75C7.25 9.32 9.26 11.4 11.88 11.49C11.96 11.48 12.04 11.48 12.1 11.49C12.12 11.49 12.13 11.49 12.15 11.49C12.16 11.49 12.16 11.49 12.17 11.49C14.73 11.4 16.74 9.32 16.75 6.75C16.75 4.13 14.62 2 12 2Z"
                           fill="currentColor"
@@ -196,28 +163,14 @@ export default function DiscordenoReviews() {
                           fill="currentColor"
                         />
                       </svg>
-                      {String(review.bot.guild_count).replace(
-                        /\B(?=(\d{3})+(?!\d))/g,
-                        ',',
-                      )}{' '}
-                      guilds
+                      {String(review.bot.guild_count).replace(/\B(?=(\d{3})+(?!\d))/g, ',')} guilds
                     </div>
                   </ReviewsRight>
                 </ReviewsHeader>
                 <ReviewsBox>{review.review}</ReviewsBox>
                 <ReviewsOtherContainer>
-                  <a
-                    href={review.bot.invite_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
+                  <a href={review.bot.invite_url} target="_blank" rel="noopener noreferrer">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
                         d="M12 2C6.49 2 2 6.49 2 12C2 17.51 6.49 22 12 22C17.51 22 22 17.51 22 12C22 6.49 17.51 2 12 2ZM16 12.75H12.75V16C12.75 16.41 12.41 16.75 12 16.75C11.59 16.75 11.25 16.41 11.25 16V12.75H8C7.59 12.75 7.25 12.41 7.25 12C7.25 11.59 7.59 11.25 8 11.25H11.25V8C11.25 7.59 11.59 7.25 12 7.25C12.41 7.25 12.75 7.59 12.75 8V11.25H16C16.41 11.25 16.75 11.59 16.75 12C16.75 12.41 16.41 12.75 16 12.75Z"
                         fill="currentColor"
@@ -227,13 +180,7 @@ export default function DiscordenoReviews() {
                   </a>
                   <div>
                     <div>
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                           d="M22 22.75H5C2.93 22.75 1.25 21.07 1.25 19V2C1.25 1.59 1.59 1.25 2 1.25C2.41 1.25 2.75 1.59 2.75 2V19C2.75 20.24 3.76 21.25 5 21.25H22C22.41 21.25 22.75 21.59 22.75 22C22.75 22.41 22.41 22.75 22 22.75Z"
                           fill="currentColor"
@@ -244,17 +191,13 @@ export default function DiscordenoReviews() {
                         />
                       </svg>
                       {review.memory_improvement
-                        ? (review.memory_improvement.from / 1000)
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ',') +
+                        ? (review.memory_improvement.from / 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') +
                           'GB' +
                           ` (${DiscordLibraries[review.previous_library]})`
                         : DiscordLibraries[review.previous_library]}
                       <div>→</div>
                       {review.memory_improvement
-                        ? (review.memory_improvement.to / 1000)
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, ',') + 'GB'
+                        ? (review.memory_improvement.to / 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + 'GB'
                         : 'Discordeno'}
 
                       {review.memory_improvement && (
@@ -263,11 +206,8 @@ export default function DiscordenoReviews() {
                           {' '}
                           —{' '}
                           <strong>
-                            {(
-                              ((review.memory_improvement.from -
-                                review.memory_improvement.to) /
-                                review.memory_improvement.from) as any
-                            ).toFixed(2) * 100}
+                            {(((review.memory_improvement.from - review.memory_improvement.to) / review.memory_improvement.from) as any).toFixed(2) *
+                              100}
                             %
                           </strong>
                           RAM improvement

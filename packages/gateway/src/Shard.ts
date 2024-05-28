@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-confusing-void-expression */
+import { inflateSync } from 'node:zlib'
 import type { DiscordGatewayPayload, DiscordHello, DiscordReady } from '@discordeno/types'
 import { GatewayCloseEventCodes, GatewayOpcodes } from '@discordeno/types'
 import { LeakyBucket, camelize, delay, logger } from '@discordeno/utils'
-import { inflateSync } from 'node:zlib'
 import NodeWebSocket from 'ws'
 import type { BotStatusUpdate, ShardEvents, ShardGatewayConfig, ShardHeart, ShardSocketRequest } from './types.js'
 import { ShardSocketCloseCodes, ShardState } from './types.js'
@@ -214,10 +213,7 @@ export class DiscordenoShard {
     this.logger.debug(`[Gateway] Resuming Shard #${this.id}, before connecting`)
     // Before we can resume, we need to create a new connection with Discord's gateway.
     await this.connect()
-    this.logger.debug(
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      `[Gateway] Resuming Shard #${this.id}, after connecting. ${this.sessionId} | ${this.previousSequenceNumber}`,
-    )
+    this.logger.debug(`[Gateway] Resuming Shard #${this.id}, after connecting. ${this.sessionId} | ${this.previousSequenceNumber}`)
 
     this.send(
       {
@@ -493,7 +489,6 @@ export class DiscordenoShard {
    * Passing the shard's id there to make it easier for the dev to use this function.
    */
   async makePresence(): Promise<BotStatusUpdate | undefined> {
-    // eslint-disable-next-line no-useless-return
     return
   }
 

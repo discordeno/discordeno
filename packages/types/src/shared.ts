@@ -1056,16 +1056,16 @@ export type CamelCase<S extends string> = S extends `${infer T}_${infer U}` ? `$
 export type SnakeCase<S extends string> = S extends `${infer T}${infer U}` ? `${T extends Lowercase<T> ? '' : '_'}${Lowercase<T>}${SnakeCase<U>}` : S
 
 export type Camelize<T> = T extends any[]
-  ? T extends Array<Record<any, any>>
-    ? Array<Camelize<T[number]>>
+  ? T extends Record<any, any>[]
+    ? Camelize<T[number]>[]
     : T
   : T extends Record<any, any>
     ? { [K in keyof T as CamelCase<K & string>]: Camelize<T[K]> }
     : T
 
 export type Snakelize<T> = T extends any[]
-  ? T extends Array<Record<any, any>>
-    ? Array<Snakelize<T[number]>>
+  ? T extends Record<any, any>[]
+    ? Snakelize<T[number]>[]
     : T
   : T extends Record<any, any>
     ? { [K in keyof T as SnakeCase<K & string>]: Snakelize<T[K]> }

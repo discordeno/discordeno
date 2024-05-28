@@ -77,7 +77,7 @@ class CommandManager {
     this.onInteraction(interaction)
   }
 
-  async onMessage(message, guild, args) {
+  async onMessage(message, _guild, args) {
     const commandName = args.shift().toLowerCase()
     const command = this.cache.get(commandName) // || this.cache.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     if (!command && message.content.includes(this.client.id)) {

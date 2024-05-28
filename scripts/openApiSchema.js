@@ -4,7 +4,7 @@ import fs from 'fs'
 const DISCORD_SPEC = {}
 
 function schemaRefToName(ref) {
-  if (!ref) return ""
+  if (!ref) return ''
   return `Discord${ref?.substring(ref.lastIndexOf('/') + 1)}`
 }
 
@@ -60,12 +60,12 @@ function generateFromSpec() {
               type === 'integer'
                 ? 'number'
                 : type === 'array'
-                ? property.items.$ref
-                  ? `${schemaRefToName(property.items.$ref)}[]`
-                  : Array.isArray(property.items.oneOf)
-                  ? `${property.items.oneOf.map((o) => `${schemaRefToName(o.$ref)}[]`).join(' | ')}`
-                  : `unknown[]`
-                : type,
+                  ? property.items.$ref
+                    ? `${schemaRefToName(property.items.$ref)}[]`
+                    : Array.isArray(property.items.oneOf)
+                      ? `${property.items.oneOf.map((o) => `${schemaRefToName(o.$ref)}[]`).join(' | ')}`
+                      : `unknown[]`
+                  : type,
             )
             .join(' | ') ??
           property.oneOf
@@ -115,7 +115,7 @@ function generateFromSpec() {
     finalTypings.push(interfacey.join('\n'))
   }
 
-  fs.writeFileSync('./packages/types/src/discord.ts', finalTypings.join('\n\n'), function (err, result) {
+  fs.writeFileSync('./packages/types/src/discord.ts', finalTypings.join('\n\n'), function (err, _result) {
     if (err) throw err
   })
 }

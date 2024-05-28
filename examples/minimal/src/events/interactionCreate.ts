@@ -1,10 +1,10 @@
 import type { BotWithCache, Guild } from '../../deps.ts.js'
 import { ApplicationCommandOptionTypes, bgBlack, bgYellow, black, green, red, white, yellow } from '../../deps.ts.js'
-import { events } from './mod.ts.js'
-import { logger } from '../utils/logger.ts.js'
-import { getGuildFromId, isSubCommand, isSubCommandGroup } from '../utils/helpers.ts.js'
 import type { Command } from '../commands/mod.ts.js'
 import { commands } from '../commands/mod.ts.js'
+import { getGuildFromId, isSubCommand, isSubCommandGroup } from '../utils/helpers.ts.js'
+import { logger } from '../utils/logger.ts.js'
+import { events } from './mod.ts.js'
 
 const log = logger({ name: 'Event: InteractionCreate' })
 
@@ -33,7 +33,6 @@ events.interactionCreate = async (rawBot, interaction) => {
     )
 
     let command: undefined | Command = interaction.data.name ? commands.get(interaction.data.name) : undefined
-    let commandName = command?.name
 
     if (command !== undefined) {
       if (interaction.data.name) {
