@@ -34,7 +34,7 @@ export enum UserFlags {
   ActiveDeveloper = 1 << 22,
 }
 
-export enum GuildMemberFlags {
+export enum MemberFlag {
   /**
    * Member has left and rejoined the guild
    *
