@@ -1,5 +1,6 @@
 import {
   DiscordApplicationIntegrationType,
+  MessageFlag,
   type DiscordMessage,
   type DiscordMessageCall,
   type DiscordMessageInteractionMetadata,
@@ -10,7 +11,6 @@ import {
 } from '@discordeno/types'
 import { CHANNEL_MENTION_REGEX } from '../constants.js'
 import { snowflakeToTimestamp, type Bot, type Poll } from '../index.js'
-import { MessageFlags } from '../typings.js'
 import type { Attachment } from './attachment.js'
 import type { Channel } from './channel.js'
 import type { Component } from './component.js'
@@ -22,52 +22,52 @@ import type { User } from './user.js'
 
 const baseMessage: Partial<Message> & MessageBase = {
   get crossposted() {
-    return this.flags?.contains(MessageFlags.Crossposted) ?? false
+    return this.flags?.contains(MessageFlag.Crossposted) ?? false
   },
   set crossposted(value: boolean) {
     if (!this.flags) return
-    if (value) this.flags.add(MessageFlags.Crossposted)
-    else this.flags.remove(MessageFlags.Crossposted)
+    if (value) this.flags.add(MessageFlag.Crossposted)
+    else this.flags.remove(MessageFlag.Crossposted)
   },
   get ephemeral() {
-    return this.flags?.contains(MessageFlags.Ephemeral) ?? false
+    return this.flags?.contains(MessageFlag.Ephemeral) ?? false
   },
   set ephemeral(value: boolean) {
     if (!this.flags) return
-    if (value) this.flags.add(MessageFlags.Ephemeral)
-    else this.flags.remove(MessageFlags.Ephemeral)
+    if (value) this.flags.add(MessageFlag.Ephemeral)
+    else this.flags.remove(MessageFlag.Ephemeral)
   },
   get failedToMentionSomeRolesInThread() {
-    return this.flags?.contains(MessageFlags.FailedToMentionSomeRolesInThread) ?? false
+    return this.flags?.contains(MessageFlag.FailedToMentionSomeRolesInThread) ?? false
   },
   set failedToMentionSomeRolesInThread(value: boolean) {
     if (!this.flags) return
-    if (value) this.flags.add(MessageFlags.FailedToMentionSomeRolesInThread)
-    else this.flags.remove(MessageFlags.FailedToMentionSomeRolesInThread)
+    if (value) this.flags.add(MessageFlag.FailedToMentionSomeRolesInThread)
+    else this.flags.remove(MessageFlag.FailedToMentionSomeRolesInThread)
   },
   get hasThread() {
-    return this.flags?.contains(MessageFlags.HasThread) ?? false
+    return this.flags?.contains(MessageFlag.HasThread) ?? false
   },
   set hasThread(value: boolean) {
     if (!this.flags) return
-    if (value) this.flags.add(MessageFlags.HasThread)
-    else this.flags.remove(MessageFlags.HasThread)
+    if (value) this.flags.add(MessageFlag.HasThread)
+    else this.flags.remove(MessageFlag.HasThread)
   },
   get isCrosspost() {
-    return this.flags?.contains(MessageFlags.IsCrosspost) ?? false
+    return this.flags?.contains(MessageFlag.IsCrosspost) ?? false
   },
   set isCrosspost(value: boolean) {
     if (!this.flags) return
-    if (value) this.flags.add(MessageFlags.IsCrosspost)
-    else this.flags.remove(MessageFlags.IsCrosspost)
+    if (value) this.flags.add(MessageFlag.IsCrosspost)
+    else this.flags.remove(MessageFlag.IsCrosspost)
   },
   get loading() {
-    return this.flags?.contains(MessageFlags.Loading) ?? false
+    return this.flags?.contains(MessageFlag.Loading) ?? false
   },
   set loading(value: boolean) {
     if (!this.flags) return
-    if (value) this.flags.add(MessageFlags.Loading)
-    else this.flags.remove(MessageFlags.Loading)
+    if (value) this.flags.add(MessageFlag.Loading)
+    else this.flags.remove(MessageFlag.Loading)
   },
   get mentionedUserIds() {
     return this.mentions?.map((user) => user.id) ?? []
@@ -89,28 +89,28 @@ const baseMessage: Partial<Message> & MessageBase = {
     else this.bitfield.remove(3)
   },
   get sourceMessageDeleted() {
-    return this.flags?.contains(MessageFlags.SourceMessageDeleted) ?? false
+    return this.flags?.contains(MessageFlag.SourceMessageDeleted) ?? false
   },
   set sourceMessageDeleted(value: boolean) {
     if (!this.flags) return
-    if (value) this.flags.add(MessageFlags.SourceMessageDeleted)
-    else this.flags.remove(MessageFlags.SourceMessageDeleted)
+    if (value) this.flags.add(MessageFlag.SourceMessageDeleted)
+    else this.flags.remove(MessageFlag.SourceMessageDeleted)
   },
   get suppressEmbeds() {
-    return this.flags?.contains(MessageFlags.SuppressEmbeds) ?? false
+    return this.flags?.contains(MessageFlag.SuppressEmbeds) ?? false
   },
   set suppressEmbeds(value: boolean) {
     if (!this.flags) return
-    if (value) this.flags.add(MessageFlags.SuppressEmbeds)
-    else this.flags.remove(MessageFlags.SuppressEmbeds)
+    if (value) this.flags.add(MessageFlag.SuppressEmbeds)
+    else this.flags.remove(MessageFlag.SuppressEmbeds)
   },
   get suppressNotifications() {
-    return this.flags?.contains(MessageFlags.SuppressNotifications) ?? false
+    return this.flags?.contains(MessageFlag.SuppressNotifications) ?? false
   },
   set suppressNotifications(value: boolean) {
     if (!this.flags) return
-    if (value) this.flags.add(MessageFlags.SuppressNotifications)
-    else this.flags.remove(MessageFlags.SuppressNotifications)
+    if (value) this.flags.add(MessageFlag.SuppressNotifications)
+    else this.flags.remove(MessageFlag.SuppressNotifications)
   },
   get timestamp() {
     return this.id ? snowflakeToTimestamp(this.id) : 0
@@ -124,12 +124,12 @@ const baseMessage: Partial<Message> & MessageBase = {
     else this.bitfield.remove(1)
   },
   get urgent() {
-    return this.flags?.contains(MessageFlags.Urgent) ?? false
+    return this.flags?.contains(MessageFlag.Urgent) ?? false
   },
   set urgent(value: boolean) {
     if (!this.flags) return
-    if (value) this.flags.add(MessageFlags.Urgent)
-    else this.flags.remove(MessageFlags.Urgent)
+    if (value) this.flags.add(MessageFlag.Urgent)
+    else this.flags.remove(MessageFlag.Urgent)
   },
 }
 

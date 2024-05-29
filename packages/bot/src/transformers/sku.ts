@@ -1,4 +1,4 @@
-import type { DiscordSku, DiscordSkuFlag, DiscordSkuType } from '@discordeno/types'
+import type { DiscordSku, DiscordSkuType, SkuFlag } from '@discordeno/types'
 import type { Bot } from '../index.js'
 
 export function transformSku(bot: Bot, payload: DiscordSku): Sku {
@@ -27,5 +27,5 @@ export interface Sku {
   /** System-generated URL slug based on the SKU's name */
   slug: string
   /** SKU flags combined as a bitfield */
-  flags: DiscordSkuFlag
+  flags: SkuFlag
 }

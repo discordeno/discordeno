@@ -1,4 +1,4 @@
-import type { ActivityTypes, Bot, DiscordActivity } from '../index.js'
+import type { ActivityFlag, ActivityTypes, Bot, DiscordActivity } from '../index.js'
 
 export function transformActivity(bot: Bot, payload: DiscordActivity): Activity {
   const activity = {
@@ -38,7 +38,7 @@ export function transformActivity(bot: Bot, payload: DiscordActivity): Activity 
 
 export interface Activity {
   join?: string
-  flags?: number
+  flags?: ActivityFlag
   applicationId?: bigint
   spectate?: string
   url?: string

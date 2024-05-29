@@ -1,5 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import type { BigString, ChannelTypes, DiscordChannel, DiscordThreadMember, OverwriteReadable, VideoQualityModes } from '@discordeno/types'
+import type {
+  BigString,
+  ChannelFlags,
+  ChannelTypes,
+  DiscordChannel,
+  DiscordThreadMember,
+  OverwriteReadable,
+  VideoQualityModes,
+} from '@discordeno/types'
 import { calculatePermissions, type Bot } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { ChannelToggles } from './toggles/channel.js'
@@ -191,7 +199,7 @@ export interface Channel extends BaseChannel {
   /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a slash command interaction. This does not include implicit permissions, which may need to be checked separately. */
   permissions?: Permissions
   /** The flags of the channel */
-  flags?: number
+  flags?: ChannelFlags
   /**
    * Explicit permission overwrites for members and roles
    * @deprecated Use channel.permissionOverwrites
