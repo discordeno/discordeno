@@ -59,7 +59,6 @@ const reviewList: IReview[] = [
       username: 'Appy',
       discriminator: '0756',
       avatar:
-        // 'https://cdn.discordapp.com/avatars/853327905357561948/a394518e742643f05cc201249d3ae75e.png',
         'https://cdn.discordapp.com/avatars/853327905357561948/b1785ce8fad6e6b6b2a7ccaba11be25e.png',
       invite_url:
         'https://discord.com/oauth2/authorize?client_id=853327905357561948&scope=bot&permissions=534925798592',
