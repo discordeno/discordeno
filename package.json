@@ -11,7 +11,7 @@
     "build:type": "turbo run build:type --no-daemon",
     "dev": "turbo run dev --parallel --no-daemon",
     "fmt": "turbo run fmt --no-daemon",
-    "format": "biome format . --write",
+    "format": "biome format --write",
     "lint": "turbo run lint --no-daemon",
     "prepare": "husky install",
     "release-build": "turbo run release-build --no-daemon",
@@ -26,7 +26,7 @@
     "test:unit-coverage": "turbo run test:unit-coverage --no-daemon"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.7.3",
+    "@biomejs/biome": "^1.8.0",
     "chokidar-cli": "^3.0.0",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.5",
@@ -39,7 +39,7 @@
     "node": ">=18.0.0"
   },
   "lint-staged": {
-    "*": "yarn biome check --no-errors-on-unmatched --apply"
+    "*": "yarn biome check --no-errors-on-unmatched --write"
   },
   "packageManager": "yarn@4.0.2"
 }

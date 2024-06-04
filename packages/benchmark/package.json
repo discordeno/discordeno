@@ -17,8 +17,8 @@
   "scripts": {
     "build:type": "tsc --declaration --emitDeclarationOnly --declarationDir dist/types",
     "release-build": "yarn build && yarn build:type",
-    "fmt": "biome format . --write",
-    "lint": "biome lint . --apply",
+    "fmt": "biome format --write",
+    "lint": "biome lint --write",
     "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist && node ../../scripts/fixBenchExtension.js",
     "build-message": "swc src/generateMessage.ts --strip-leading-paths -C sourceMaps=false --out-dir ../../scripts && node ../../scripts/fixBenchExtension.js",
     "bench": "node dist/index.js"
@@ -34,7 +34,7 @@
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.7.3",
+    "@biomejs/biome": "^1.8.0",
     "@swc/cli": "^0.3.9",
     "@swc/core": "^1.4.2",
     "@types/benchmark": "^2.1.5",
