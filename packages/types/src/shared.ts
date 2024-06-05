@@ -371,6 +371,10 @@ export enum MessageTypes {
   StageSpeaker,
   StageTopic = 31,
   GuildApplicationPremiumSubscription,
+  GuildIncidentAlertModeEnabled = 36,
+  GuildIncidentAlertModeDisabled,
+  GuildIncidentReportRaid,
+  GuildIncidentReportFalseAlarm,
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
