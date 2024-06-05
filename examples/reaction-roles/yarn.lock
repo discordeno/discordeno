@@ -5,54 +5,54 @@ __metadata:
   version: 8
   cacheKey: 10
 
-"@discordeno/bot@npm:19.0.0-next.d69e537":
-  version: 19.0.0-next.d69e537
-  resolution: "@discordeno/bot@npm:19.0.0-next.d69e537"
+"@discordeno/bot@npm:19.0.0-next.ad7e74c":
+  version: 19.0.0-next.ad7e74c
+  resolution: "@discordeno/bot@npm:19.0.0-next.ad7e74c"
   dependencies:
-    "@discordeno/gateway": "npm:19.0.0-next.d69e537"
-    "@discordeno/rest": "npm:19.0.0-next.d69e537"
-    "@discordeno/types": "npm:19.0.0-next.d69e537"
-    "@discordeno/utils": "npm:19.0.0-next.d69e537"
-  checksum: 41116f319afa5f2bbc62866b3805f78b6c2720dbec6edbb4b004a39db9804408db3aa42e80c0616047d09c881abb880a15654676ed4d03f3470ebdea3758998d
+    "@discordeno/gateway": "npm:19.0.0-next.ad7e74c"
+    "@discordeno/rest": "npm:19.0.0-next.ad7e74c"
+    "@discordeno/types": "npm:19.0.0-next.ad7e74c"
+    "@discordeno/utils": "npm:19.0.0-next.ad7e74c"
+  checksum: 0bbcd98f1bb42bde47d262a67fa7b42ff4f5ef8f4556ef3117b8204cb864c6f26c0066320374ede6cf0e9730988a5c0b12472108dcf0cbc45b951db305a0671c
   languageName: node
   linkType: hard
 
-"@discordeno/gateway@npm:19.0.0-next.d69e537":
-  version: 19.0.0-next.d69e537
-  resolution: "@discordeno/gateway@npm:19.0.0-next.d69e537"
+"@discordeno/gateway@npm:19.0.0-next.ad7e74c":
+  version: 19.0.0-next.ad7e74c
+  resolution: "@discordeno/gateway@npm:19.0.0-next.ad7e74c"
   dependencies:
-    "@discordeno/types": "npm:19.0.0-next.d69e537"
-    "@discordeno/utils": "npm:19.0.0-next.d69e537"
+    "@discordeno/types": "npm:19.0.0-next.ad7e74c"
+    "@discordeno/utils": "npm:19.0.0-next.ad7e74c"
     ws: "npm:^8.16.0"
-  checksum: 187ceee62a3a140172d06ea630d990abfec1fa588adf0658c6d77fe5455cdfb876faa3523327bd80d38dfa9a59326f8240825b0a21d34c4075213dafedf12497
+  checksum: b16676060574a3a45c2388f7c73e62d7763bfdb87d5f0f84f673b7f68f34d5085e3a300c9a15f4120b2909ba776ef78336025c71541f68c50729379458ac9273
   languageName: node
   linkType: hard
 
-"@discordeno/rest@npm:19.0.0-next.d69e537":
-  version: 19.0.0-next.d69e537
-  resolution: "@discordeno/rest@npm:19.0.0-next.d69e537"
+"@discordeno/rest@npm:19.0.0-next.ad7e74c":
+  version: 19.0.0-next.ad7e74c
+  resolution: "@discordeno/rest@npm:19.0.0-next.ad7e74c"
   dependencies:
-    "@discordeno/types": "npm:19.0.0-next.d69e537"
-    "@discordeno/utils": "npm:19.0.0-next.d69e537"
+    "@discordeno/types": "npm:19.0.0-next.ad7e74c"
+    "@discordeno/utils": "npm:19.0.0-next.ad7e74c"
     dotenv: "npm:^16.4.5"
-  checksum: 370d94ddf82b146d53844afada7371b07337d265161b30b490a05e4425d6a31ba07edf604e595f07a3cee39d64c710012901852d33c477c651102de92c0b90db
+  checksum: d0fd00393b5845c17c862e9d8ce5197363d60db3073136b9b6f19b1fa5a20ea3020f180e627140f8e12a6cab65f736e3bbad1b376d959e49341efa81e43c65b8
   languageName: node
   linkType: hard
 
-"@discordeno/types@npm:19.0.0-next.d69e537":
-  version: 19.0.0-next.d69e537
-  resolution: "@discordeno/types@npm:19.0.0-next.d69e537"
-  checksum: 8118c031f2e18f0f1613552d2fbea434f1b9679c6aa2caee3e3ee0c11da154ba0ef4651b3a4c12387153db295e7607715f8c9988b304e875388a5a74fc4086b3
+"@discordeno/types@npm:19.0.0-next.ad7e74c":
+  version: 19.0.0-next.ad7e74c
+  resolution: "@discordeno/types@npm:19.0.0-next.ad7e74c"
+  checksum: 3981908e1f88c22821a6abdc2056791a6dc75d09b9bc6ee96a1689871330745574c8824c314cf200b7df16d48215dc9b00e41f2fff03db26102c54422a82ab88
   languageName: node
   linkType: hard
 
-"@discordeno/utils@npm:19.0.0-next.d69e537":
-  version: 19.0.0-next.d69e537
-  resolution: "@discordeno/utils@npm:19.0.0-next.d69e537"
+"@discordeno/utils@npm:19.0.0-next.ad7e74c":
+  version: 19.0.0-next.ad7e74c
+  resolution: "@discordeno/utils@npm:19.0.0-next.ad7e74c"
   dependencies:
-    "@discordeno/types": "npm:19.0.0-next.d69e537"
+    "@discordeno/types": "npm:19.0.0-next.ad7e74c"
     tweetnacl: "npm:^1.0.3"
-  checksum: 5bf4ccb9a5f26ac8bdaeea342f70cb88a64be47024b53ad930e8747d0fca87500b7460cf14a32203f9df911f7bb6a70bf7a56a4526e8ceac994229b0794d9a46
+  checksum: 3b9265737208db205732e5f442d82c10a27952359a98ffb2f8835a4c94d43520d0490ab488faec68f40bd3205a42f4877804397eade83ada658a00e854270dc7
   languageName: node
   linkType: hard
 
@@ -176,94 +176,94 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-arm64@npm:1.5.7":
-  version: 1.5.7
-  resolution: "@swc/core-darwin-arm64@npm:1.5.7"
+"@swc/core-darwin-arm64@npm:1.5.25":
+  version: 1.5.25
+  resolution: "@swc/core-darwin-arm64@npm:1.5.25"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-x64@npm:1.5.7":
-  version: 1.5.7
-  resolution: "@swc/core-darwin-x64@npm:1.5.7"
+"@swc/core-darwin-x64@npm:1.5.25":
+  version: 1.5.25
+  resolution: "@swc/core-darwin-x64@npm:1.5.25"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm-gnueabihf@npm:1.5.7":
-  version: 1.5.7
-  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.5.7"
+"@swc/core-linux-arm-gnueabihf@npm:1.5.25":
+  version: 1.5.25
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.5.25"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-gnu@npm:1.5.7":
-  version: 1.5.7
-  resolution: "@swc/core-linux-arm64-gnu@npm:1.5.7"
+"@swc/core-linux-arm64-gnu@npm:1.5.25":
+  version: 1.5.25
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.5.25"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-musl@npm:1.5.7":
-  version: 1.5.7
-  resolution: "@swc/core-linux-arm64-musl@npm:1.5.7"
+"@swc/core-linux-arm64-musl@npm:1.5.25":
+  version: 1.5.25
+  resolution: "@swc/core-linux-arm64-musl@npm:1.5.25"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-gnu@npm:1.5.7":
-  version: 1.5.7
-  resolution: "@swc/core-linux-x64-gnu@npm:1.5.7"
+"@swc/core-linux-x64-gnu@npm:1.5.25":
+  version: 1.5.25
+  resolution: "@swc/core-linux-x64-gnu@npm:1.5.25"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-musl@npm:1.5.7":
-  version: 1.5.7
-  resolution: "@swc/core-linux-x64-musl@npm:1.5.7"
+"@swc/core-linux-x64-musl@npm:1.5.25":
+  version: 1.5.25
+  resolution: "@swc/core-linux-x64-musl@npm:1.5.25"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-win32-arm64-msvc@npm:1.5.7":
-  version: 1.5.7
-  resolution: "@swc/core-win32-arm64-msvc@npm:1.5.7"
+"@swc/core-win32-arm64-msvc@npm:1.5.25":
+  version: 1.5.25
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.5.25"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-win32-ia32-msvc@npm:1.5.7":
-  version: 1.5.7
-  resolution: "@swc/core-win32-ia32-msvc@npm:1.5.7"
+"@swc/core-win32-ia32-msvc@npm:1.5.25":
+  version: 1.5.25
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.5.25"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@swc/core-win32-x64-msvc@npm:1.5.7":
-  version: 1.5.7
-  resolution: "@swc/core-win32-x64-msvc@npm:1.5.7"
+"@swc/core-win32-x64-msvc@npm:1.5.25":
+  version: 1.5.25
+  resolution: "@swc/core-win32-x64-msvc@npm:1.5.25"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core@npm:^1.5.7":
-  version: 1.5.7
-  resolution: "@swc/core@npm:1.5.7"
+"@swc/core@npm:^1.5.25":
+  version: 1.5.25
+  resolution: "@swc/core@npm:1.5.25"
   dependencies:
-    "@swc/core-darwin-arm64": "npm:1.5.7"
-    "@swc/core-darwin-x64": "npm:1.5.7"
-    "@swc/core-linux-arm-gnueabihf": "npm:1.5.7"
-    "@swc/core-linux-arm64-gnu": "npm:1.5.7"
-    "@swc/core-linux-arm64-musl": "npm:1.5.7"
-    "@swc/core-linux-x64-gnu": "npm:1.5.7"
-    "@swc/core-linux-x64-musl": "npm:1.5.7"
-    "@swc/core-win32-arm64-msvc": "npm:1.5.7"
-    "@swc/core-win32-ia32-msvc": "npm:1.5.7"
-    "@swc/core-win32-x64-msvc": "npm:1.5.7"
-    "@swc/counter": "npm:^0.1.2"
-    "@swc/types": "npm:0.1.7"
+    "@swc/core-darwin-arm64": "npm:1.5.25"
+    "@swc/core-darwin-x64": "npm:1.5.25"
+    "@swc/core-linux-arm-gnueabihf": "npm:1.5.25"
+    "@swc/core-linux-arm64-gnu": "npm:1.5.25"
+    "@swc/core-linux-arm64-musl": "npm:1.5.25"
+    "@swc/core-linux-x64-gnu": "npm:1.5.25"
+    "@swc/core-linux-x64-musl": "npm:1.5.25"
+    "@swc/core-win32-arm64-msvc": "npm:1.5.25"
+    "@swc/core-win32-ia32-msvc": "npm:1.5.25"
+    "@swc/core-win32-x64-msvc": "npm:1.5.25"
+    "@swc/counter": "npm:^0.1.3"
+    "@swc/types": "npm:^0.1.7"
   peerDependencies:
-    "@swc/helpers": ^0.5.0
+    "@swc/helpers": "*"
   dependenciesMeta:
     "@swc/core-darwin-arm64":
       optional: true
@@ -288,18 +288,18 @@ __metadata:
   peerDependenciesMeta:
     "@swc/helpers":
       optional: true
-  checksum: 83e03908db40f2133c3624a83d4550336d7a56e64af7d42fd959c746b8da950a253f3c6d9eaa3467e10abeda024aa6b039a987adc839326f969e1d26625f14ef
+  checksum: 1ad878fe015d01c34ff20d8aee15b1cfb5cd66f9e8744e4be69e09628ade3c1108aa00c693da4eed6cc6ef08d686f6cab48a088ee61e933662eb8dd7b79d2e44
   languageName: node
   linkType: hard
 
-"@swc/counter@npm:^0.1.2, @swc/counter@npm:^0.1.3":
+"@swc/counter@npm:^0.1.3":
   version: 0.1.3
   resolution: "@swc/counter@npm:0.1.3"
   checksum: df8f9cfba9904d3d60f511664c70d23bb323b3a0803ec9890f60133954173047ba9bdeabce28cd70ba89ccd3fd6c71c7b0bd58be85f611e1ffbe5d5c18616598
   languageName: node
   linkType: hard
 
-"@swc/types@npm:0.1.7":
+"@swc/types@npm:^0.1.7":
   version: 0.1.7
   resolution: "@swc/types@npm:0.1.7"
   dependencies:
@@ -361,12 +361,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20.12.12":
-  version: 20.12.12
-  resolution: "@types/node@npm:20.12.12"
+"@types/node@npm:^20.14.2":
+  version: 20.14.2
+  resolution: "@types/node@npm:20.14.2"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: e3945da0a3017bdc1f88f15bdfb823f526b2a717bd58d4640082d6eb0bd2794b5c99bfb914b9e9324ec116dce36066990353ed1c777e8a7b0641f772575793c4
+  checksum: c38e47b190fa0a8bdfde24b036dddcf9401551f2fb170a90ff33625c7d6f218907e81c74e0fa6e394804a32623c24c60c50e249badc951007830f0d02c48ee0f
   languageName: node
   linkType: hard
 
@@ -1604,11 +1604,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "reaction-roles@workspace:."
   dependencies:
-    "@discordeno/bot": "npm:19.0.0-next.d69e537"
+    "@discordeno/bot": "npm:19.0.0-next.ad7e74c"
     "@swc/cli": "npm:^0.3.12"
-    "@swc/core": "npm:^1.5.7"
-    "@types/node": "npm:^20.12.12"
+    "@swc/core": "npm:^1.5.25"
+    "@types/node": "npm:^20.14.2"
     dotenv: "npm:^16.4.5"
+    typescript: "npm:^5.4.5"
   languageName: unknown
   linkType: soft
 
@@ -1953,6 +1954,26 @@ __metadata:
   version: 1.0.3
   resolution: "tweetnacl@npm:1.0.3"
   checksum: ca122c2f86631f3c0f6d28efb44af2a301d4a557a62a3e2460286b08e97567b258c2212e4ad1cfa22bd6a57edcdc54ba76ebe946847450ab0999e6d48ccae332
+  languageName: node
+  linkType: hard
+
+"typescript@npm:^5.4.5":
+  version: 5.4.5
+  resolution: "typescript@npm:5.4.5"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: d04a9e27e6d83861f2126665aa8d84847e8ebabcea9125b9ebc30370b98cb38b5dff2508d74e2326a744938191a83a69aa9fddab41f193ffa43eabfdf3f190a5
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@npm%3A^5.4.5#optional!builtin<compat/typescript>":
+  version: 5.4.5
+  resolution: "typescript@patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=e012d7"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 584be8bac7112ad49a9eb9992f71d542b1ff2fafb5bb315e1c196145e8feab589f1d7223cfb2d5df6770789582e6918f8287d1f2f89911b38eb80e29c560ad00
   languageName: node
   linkType: hard
 
