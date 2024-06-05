@@ -1,4 +1,4 @@
-import { events } from './mod.ts.js'
-import { updateGuildCommands } from '../utils/helpers.ts.js'
+import { bot } from '../bot.js'
+import { updateGuildCommands } from '../utils/helpers.js'
 
-events.guildCreate = async (bot, guild) => await updateGuildCommands(bot, guild)
+bot.events.guildCreate = async (guild) => await updateGuildCommands(bot, guild)

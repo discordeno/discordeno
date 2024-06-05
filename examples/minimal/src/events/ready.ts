@@ -1,8 +1,22 @@
-import { events } from './mod.ts.js'
-import { logger } from '../utils/logger.ts.js'
+import { ActivityTypes } from '@discordeno/bot'
+import { bot } from '../bot.js'
+import { createLogger } from '../utils/logger.js'
 
-const log = logger({ name: 'Event: Ready' })
+const logger = createLogger({ name: 'Event: Ready' })
 
-events.ready = () => {
-  log.info('Bot Ready')
+bot.events.ready = async ({ shardId }) => {
+  logger.info('Bot Ready')
+
+  await bot.gateway.editShardStatus(shardId, {
+    status: 'online',
+    activities: [
+      {
+        name: 'Discordeno is the Best Lib',
+        type: ActivityTypes.Game,
+        timestamps: {
+          start: Date.now(),
+        },
+      },
+    ],
+  })
 }

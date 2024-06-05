@@ -1,17 +1,17 @@
-import { Bot } from '../../bot.ts.js'
-import { configs } from '../../configs.ts.js'
+import { bot } from '../bot.js'
+import { configs } from '../config.js'
 
-export async function updateApplicationCommands() {
-  await Bot.helpers.upsertGlobalApplicationCommands(
-    Bot.commands
+export async function updateApplicationCommands(): Promise<void> {
+  await bot.helpers.upsertGlobalApplicationCommands(
+    bot.commands
       // ONLY GLOBAL COMMANDS
       .filter((command) => !command.devOnly)
       .array(),
   )
 
-  await Bot.helpers.upsertGuildApplicationCommands(
+  await bot.helpers.upsertGuildApplicationCommands(
     configs.devGuildId,
-    Bot.commands
+    bot.commands
       // ONLY GLOBAL COMMANDS
       .filter((command) => !!command.devOnly)
       .array(),

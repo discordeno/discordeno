@@ -1,5 +1,4 @@
-import type { BotClient } from '../../bot.ts.js'
-import type { ApplicationCommandOption, ApplicationCommandTypes, Interaction } from '../../deps.ts.js'
+import type { ApplicationCommandOption, ApplicationCommandTypes, Interaction } from '@discordeno/bot'
 
 export interface Command {
   /** The name of this command. */
@@ -13,5 +12,5 @@ export interface Command {
   /** The options for this command */
   options?: ApplicationCommandOption[]
   /** This will be executed when the command is run. */
-  execute: (bot: BotClient, interaction: Interaction) => unknown
+  execute: (interaction: Interaction) => unknown
 }

@@ -1,14 +1,15 @@
-import { Bot } from '../../bot.ts.js'
-import { InteractionTypes } from '../../deps.ts.js'
-import log from '../utils/logger.ts.js'
+import { InteractionTypes } from '@discordeno/bot'
+import { bot } from '../bot.js'
+import logger from '../utils/logger.js'
 
-Bot.events.interactionCreate = (_, interaction) => {
+bot.events.interactionCreate = (interaction) => {
   if (!interaction.data) return
 
   switch (interaction.type) {
     case InteractionTypes.ApplicationCommand:
-      log.info(`[Application Command] ${interaction.data.name} command executed.`)
-      Bot.commands.get(interaction.data.name!)?.execute(Bot, interaction)
+      logger.info(`[Application Command] ${interaction.data.name} command executed.`)
+
+      bot.commands.get(interaction.data.name)?.execute(interaction)
       break
   }
 }

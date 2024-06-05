@@ -1,225 +1,94 @@
-import type { BotWithCache, Guild } from '../../deps.ts.js'
-import { ApplicationCommandOptionTypes, bgBlack, bgYellow, black, green, red, white, yellow } from '../../deps.ts.js'
-import { events } from './mod.ts.js'
-import { logger } from '../utils/logger.ts.js'
-import { getGuildFromId, isSubCommand, isSubCommandGroup } from '../utils/helpers.ts.js'
-import type { Command } from '../commands/mod.ts.js'
-import { commands } from '../commands/mod.ts.js'
+import { ApplicationCommandOptionTypes, hasProperty, type Guild } from '@discordeno/bot'
+import chalk from 'chalk'
+import { bot } from '../bot.js'
+import { commands } from '../commands.js'
+import { getGuildFromId, isSubCommand, isSubCommandGroup } from '../utils/helpers.js'
+import { createLogger } from '../utils/logger.js'
 
-const log = logger({ name: 'Event: InteractionCreate' })
+const logger = createLogger({ name: 'Event: InteractionCreate' })
 
-events.interactionCreate = async (rawBot, interaction) => {
-  const bot = rawBot as BotWithCache
+bot.events.interactionCreate = async (interaction) => {
+  if (!interaction.data || !interaction.id) return
 
-  if (interaction.data && interaction.id) {
-    let guildName = 'Direct Message'
-    let guild = {} as Guild
+  let guildName = 'Direct Message'
+  let guild = {} as Guild
 
-    // Set guild, if there was an error getting the guild, then just say it was a DM. (What else are we going to do?)
-    if (interaction.guildId) {
-      const guildOrVoid = await getGuildFromId(bot, interaction.guildId).catch((err) => {
-        log.error(err)
-      })
-      if (guildOrVoid) {
-        guild = guildOrVoid
-        guildName = guild.name
-      }
-    }
+  // Set guild, if there was an error getting the guild, then just say it was a DM. (What else are we going to do?)
+  if (interaction.guildId) {
+    const guildOrVoid = await getGuildFromId(interaction.guildId).catch((err) => {
+      logger.error(err)
+    })
 
-    log.info(
-      `[Command: ${bgYellow(black(String(interaction.data.name)))} - ${bgBlack(white(`Trigger`))}] by ${interaction.user.username}#${
-        interaction.user.discriminator
-      } in ${guildName}${guildName !== 'Direct Message' ? ` (${guild.id})` : ``}`,
-    )
-
-    let command: undefined | Command = interaction.data.name ? commands.get(interaction.data.name) : undefined
-    let commandName = command?.name
-
-    if (command !== undefined) {
-      if (interaction.data.name) {
-        if (interaction.data.options?.[0]) {
-          const optionType = interaction.data.options[0].type
-
-          if (optionType === ApplicationCommandOptionTypes.SubCommandGroup) {
-            // Check if command has subcommand and handle types
-            if (!command.subcommands) return
-
-            // Try to find the subcommand group
-            const subCommandGroup = command.subcommands?.find((command) => command.name == interaction.data?.options?.[0].name)
-            if (!subCommandGroup) return
-
-            if (isSubCommand(subCommandGroup)) return
-
-            // Get name of the command which we are looking for
-            const targetCmdName = interaction.data.options?.[0].options?.[0].name || interaction.data.options?.[0].options?.[0].name
-            if (!targetCmdName) return
-
-            // Try to find the command
-            command = subCommandGroup.subCommands.find((c) => c.name === targetCmdName)
-
-            commandName += ` ${subCommandGroup.name} ${command?.name}`
-
-            // Normal
-          }
-
-          if (optionType === ApplicationCommandOptionTypes.SubCommandGroup) {
-            // Check if command has subcommand and handle types
-            if (!command?.subcommands) return
-
-            // Try to find the command
-            const found = command.subcommands.find((command) => command.name == interaction.data?.options?.[0].name)
-            if (!found) return
-
-            if (isSubCommandGroup(found)) return
-
-            command = found
-            commandName += ` ${command?.name}`
-          }
-        }
-
-        try {
-          if (command) {
-            command.execute(rawBot, interaction)
-            log.info(
-              `[Command: ${bgYellow(black(String(interaction.data.name)))} - ${bgBlack(green(`Success`))}] by ${interaction.user.username}#${
-                interaction.user.discriminator
-              } in ${guildName}${guildName !== 'Direct Message' ? ` (${guild.id})` : ``}`,
-            )
-          } else {
-            throw ''
-          }
-        } catch (err) {
-          log.error(
-            `[Command: ${bgYellow(black(String(interaction.data.name)))} - ${bgBlack(red(`Error`))}] by ${interaction.user.username}#${
-              interaction.user.discriminator
-            } in ${guildName}${guildName !== 'Direct Message' ? ` (${guild.id})` : ``}`,
-          )
-          err.length ? log.error(err) : undefined
-        }
-      } else {
-        log.warn(
-          `[Command: ${bgYellow(black(String(interaction.data.name)))} - ${bgBlack(yellow(`Not Found`))}] by ${interaction.user.username}#${
-            interaction.user.discriminator
-          } in ${guildName}${guildName !== 'Direct Message' ? ` (${guild.id})` : ``}`,
-        )
-      }
+    if (guildOrVoid) {
+      guild = guildOrVoid
+      guildName = guild.name
     }
   }
-}
 
-/*
-    // Handle subcommands
-    let cmdName = cmd.name;
+  logger.info(
+    `[Command: ${chalk.bgYellow.black(interaction.data.name)} - ${chalk.bgBlack.white(`Trigger`)}] by @${interaction.user.username} in ${guildName}${guildName !== 'Direct Message' ? ` (${guild.id})` : ``}`,
+  )
 
-    // Group
-    if (interaction.data?.options?.[0].type === DiscordApplicationCommandOptionTypes.SubCommandGroup) {
+  let command = commands.get(interaction.data.name)
+
+  if (!command) {
+    logger.warn(
+      `[Command: ${chalk.bgYellow.black(interaction.data.name)} - ${chalk.bgBlack.yellow(`Not Found`)}] by @${interaction.user.username} in ${guildName}${guildName !== 'Direct Message' ? ` (${guild.id})` : ``}`,
+    )
+
+    return
+  }
+
+  if (interaction.data.options?.[0]) {
+    const optionType = interaction.data.options[0].type
+
+    if (optionType === ApplicationCommandOptionTypes.SubCommandGroup) {
       // Check if command has subcommand and handle types
-      if (!cmd.subcommands) return;
+      if (!command.subcommands) return
 
       // Try to find the subcommand group
-      const subCmdGroup = cmd.subcommands?.find((cmd) => cmd.name == interaction?.data?.options?.[0].name);
-      if (!subCmdGroup) return;
+      const subCommandGroup = command.subcommands?.find((command) => command.name === interaction.data?.options?.[0].name)
+      if (!subCommandGroup) return
 
-      if (isSubCommand(subCmdGroup)) return;
+      if (isSubCommand(subCommandGroup)) return
 
       // Get name of the command which we are looking for
-      const targetCmdName =
-        interaction.data.options?.[0].options?.[0].name || interaction.data.options?.[0].options?.[0].name;
-      if (!targetCmdName) return;
+      const targetCmdName = interaction.data.options?.[0].options?.[0].name ?? interaction.data.options?.[0].options?.[0].name
+      if (!targetCmdName) return
 
       // Try to find the command
-      cmd = subCmdGroup.subCommands.find((c) => c.name === targetCmdName);
+      command = subCommandGroup.subCommands.find((c) => c.name === targetCmdName)
+    }
 
-      cmdName += ` ${subCmdGroup.name} ${cmd?.name}`;
-
-      // Normal
-    } else if (interaction.data?.options?.[0].type === DiscordApplicationCommandOptionTypes.SubCommand) {
+    if (optionType === ApplicationCommandOptionTypes.SubCommand) {
       // Check if command has subcommand and handle types
-      if (!cmd.subcommands) return;
+      if (!command?.subcommands) return
 
       // Try to find the command
-      const found = cmd.subcommands.find((cmd) => cmd.name == interaction.data?.options?.[0].name);
-      if (!found) return;
+      const found = command.subcommands.find((command) => command.name === interaction.data?.options?.[0].name)
+      if (!found) return
 
-      if (isSubCommandGroup(found)) return;
+      if (isSubCommandGroup(found)) return
 
-      cmd = found;
-      cmdName += ` ${cmd?.name}`;
+      command = found
     }
-    if (!cmd) return;
+  }
 
-    // Get options
-    const options =
-      interaction.data?.options?.[0].type === DiscordApplicationCommandOptionTypes.SubCommandGroup
-        ? interaction.data?.options?.[0].options?.[0].options
-        : interaction.data?.options?.[0].type === DiscordApplicationCommandOptionTypes.SubCommand
-        ? interaction.data?.options[0].options
-        : interaction.data?.options;
+  try {
+    if (!command) throw new Error('Not command could be found')
 
-    // Prepare info for logs
-    const user = member || interaction.user;
-    const guild = interaction.guildId
-      ? await customCacheHandlers.get("guilds", snowflakeToBigint(interaction.guildId))
-      : undefined;
+    await command.execute(interaction)
 
-    // Log cmd trigger
-    logSlashCommand(cmdName, user, guild, "trigger");
+    logger.info(
+      `[Command: ${chalk.bgYellow.black(interaction.data.name)} - ${chalk.bgBlack.green(`Success`)}] by @${interaction.user.username} in ${guildName}${guildName !== 'Direct Message' ? ` (${guild.id})` : ``}`,
+    )
+  } catch (err) {
+    logger.error(
+      `[Command: ${chalk.bgYellow.black(interaction.data.name)} - ${chalk.bgBlack.red(`Error`)}] by @${interaction.user.username} in ${guildName}${guildName !== 'Direct Message' ? ` (${guild.id})` : ``}`,
+    )
 
-    // Check inhibitors
-    for await (const inhibitor of bot.inhibitors.values()) {
-      const inhibited = await inhibitor(cmd, interaction, member);
-      if (inhibited) {
-        // Log cmd inhibition
-        logSlashCommand(cmdName, user, guild, "inhibited");
-        return;
-      }
-    }
+    if (typeof err !== 'object' || !err || !hasProperty(err, 'message') || err.message === 'Not command could be found') return
 
-    // Check if command has execute
-    if (!cmd.execute) {
-      logger.error(`Command ${cmdName} is missing execute.`);
-      sendBasicResponse(data.id, data.token, "This command is not configured to be executed.");
-      return;
-    }
-
-    // Get Command context
-    const cmdCtx = createCommandCtx(interaction, undefined, undefined, options, member);
-
-    // Execute command
-    let err;
-    try {
-      if (cmd.longExecution)
-        // Thinking....
-        await sendInteractionResponse(interaction.id, interaction.token, {
-          type: DiscordInteractionResponseTypes.DeferredChannelMessageWithSource,
-        });
-
-      await cmd.execute(cmdCtx);
-    } catch (error) {
-      err = true;
-
-      // Log command fail
-      logSlashCommand(cmdName, user, guild, "failed", error);
-
-      // Log the error
-      logger.error(`Error ${cmdName}`, error);
-
-      // Send error message to user
-      sendInteractionResponse(interaction.id, interaction.token, {
-        type: DiscordInteractionResponseTypes.ChannelMessageWithSource,
-        data: {
-          embeds: [
-            createSimpleEmbed("error")
-              .setDescription("Unexpected Error")
-              .setFooter("This error has been reported to the developers of this bot."),
-          ],
-        },
-      }).catch(logger.error);
-    }
-
-    // Log success
-    if (!err) logSlashCommand(cmdName, user, guild, "success");
-  },
-});
-
-*/
+    logger.error(err)
+  }
+}

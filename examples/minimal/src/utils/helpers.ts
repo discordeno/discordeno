@@ -1,13 +1,12 @@
-import type { Bot, BotWithCache, CreateApplicationCommand, Guild, MakeRequired } from '../../deps.ts.js'
-import { getGuild, hasProperty, upsertGuildApplicationCommands } from '../../deps.ts.js'
-import { logger } from './logger.ts.js'
-import type { subCommand, subCommandGroup } from '../commands/mod.ts.js'
-import { commands } from '../commands/mod.ts.js'
+import { hasProperty, type Bot, type CreateApplicationCommand, type Guild } from '@discordeno/bot'
+import { bot } from '../bot.js'
+import { commands, type SubCommand, type SubCommandGroup } from '../commands.js'
+import { createLogger } from './logger.js'
 
-const log = logger({ name: 'Helpers' })
+const logger = createLogger({ name: 'Helpers' })
 
 /** This function will update all commands, or the defined scope */
-export async function updateCommands(bot: BotWithCache, scope?: 'Guild' | 'Global') {
+export async function updateCommands(scope?: 'Guild' | 'Global'): Promise<void> {
   const globalCommands: Array<MakeRequired<CreateApplicationCommand, 'name'>> = []
   const perGuildCommands: Array<MakeRequired<CreateApplicationCommand, 'name'>> = []
 
@@ -39,19 +38,21 @@ export async function updateCommands(bot: BotWithCache, scope?: 'Guild' | 'Globa
   }
 
   if (globalCommands.length && (scope === 'Global' || scope === undefined)) {
-    log.info('Updating Global Commands, changes should apply in short...')
-    await bot.helpers.upsertGlobalApplicationCommands(globalCommands).catch(log.error)
+    logger.info('Updating Global Commands, changes should apply in short...')
+    await bot.helpers.upsertGlobalApplicationCommands(globalCommands).catch(logger.error)
   }
 
   if (perGuildCommands.length && (scope === 'Guild' || scope === undefined)) {
-    await bot.guilds.forEach(async (guild: Guild) => {
-      await upsertGuildApplicationCommands(bot, guild.id, perGuildCommands)
-    })
+    await Promise.all(
+      bot.cache.guilds.memory.map(async (guild: Guild) => {
+        await bot.helpers.upsertGuildApplicationCommands(guild.id, perGuildCommands)
+      }),
+    )
   }
 }
 
 /** Update commands for a guild */
-export async function updateGuildCommands(bot: Bot, guild: Guild) {
+export async function updateGuildCommands(bot: Bot, guild: Guild): Promise<void> {
   const perGuildCommands: Array<MakeRequired<CreateApplicationCommand, 'name'>> = []
 
   for (const command of commands.values()) {
@@ -68,32 +69,19 @@ export async function updateGuildCommands(bot: Bot, guild: Guild) {
   }
 
   if (perGuildCommands.length) {
-    await upsertGuildApplicationCommands(bot, guild.id, perGuildCommands)
+    await bot.helpers.upsertGuildApplicationCommands(guild.id, perGuildCommands)
   }
 }
 
-export async function getGuildFromId(bot: BotWithCache, guildId: bigint): Promise<Guild> {
-  let returnValue: Guild = {} as Guild
+export async function getGuildFromId(guildId: bigint): Promise<Guild> {
+  const cached = await bot.cache.guilds.get(guildId)
 
-  if (guildId !== 0n) {
-    if (bot.guilds.get(guildId)) {
-      returnValue = bot.guilds.get(guildId) as Guild
-    }
+  if (cached) return cached
 
-    await getGuild(bot, guildId).then((guild) => {
-      if (guild) bot.guilds.set(guildId, guild)
-      if (guild) returnValue = guild
-    })
-  }
-
-  return returnValue
+  return await bot.helpers.getGuild(guildId)
 }
 
-export function snowflakeToTimestamp(id: bigint) {
-  return Number(id / 4194304n + 1420070400000n)
-}
-
-export function humanizeMilliseconds(milliseconds: number) {
+export function humanizeMilliseconds(milliseconds: number): string {
   // Gets ms into seconds
   const time = milliseconds / 1000
   if (time < 1) return '1s'
@@ -111,10 +99,14 @@ export function humanizeMilliseconds(milliseconds: number) {
   return `${dayString}${hourString}${minuteString}${secondString}`
 }
 
-export function isSubCommand(data: subCommand | subCommandGroup): data is subCommand {
+export function isSubCommand(data: SubCommand | SubCommandGroup): data is SubCommand {
   return !hasProperty(data, 'subCommands')
 }
 
-export function isSubCommandGroup(data: subCommand | subCommandGroup): data is subCommandGroup {
+export function isSubCommandGroup(data: SubCommand | SubCommandGroup): data is SubCommandGroup {
   return hasProperty(data, 'subCommands')
+}
+
+type MakeRequired<TObj, TKey extends keyof TObj> = TObj & {
+  [Key in TKey]-?: TObj[Key]
 }
