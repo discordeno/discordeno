@@ -1,10 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Test file for testing dd changes
-debug.ts
-
-testing
-
 # dependencies
 node_modules
 
@@ -15,24 +10,9 @@ node_modules
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-website/api_reference/generated/classes/*.md
-website/api_reference/generated/enums/*.md
-website/api_reference/generated/interfaces/*.md
-website/api_reference/generated/modules/*.md
-website/.yarn/
-# testing
-coverage
 
 # build
 dist
-denoTestsDist
-bunTestsDist
-benchDist
-out
-build
-.docusaurus
-.cache-loader
-/db
 
 # misc
 .DS_Store
@@ -50,6 +30,3 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
-
-# turbo
-.turbo
