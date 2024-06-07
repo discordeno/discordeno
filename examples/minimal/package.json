@@ -1,7 +1,7 @@
 {
   "name": "dd-minimal-bot",
   "version": "1.0.0",
-  "description": "An example bot for beginner developers to start coding discord bots.",
+  "description": "A minimal bot written with discordeno.",
   "main": "dist/index.js",
   "type": "module",
   "license": "ISC",
@@ -15,7 +15,6 @@
   "dependencies": {
     "@discordeno/bot": "19.0.0-next.ad7e74c",
     "chalk": "^5.3.0",
-    "dd-cache-proxy": "^2.1.1",
     "dotenv": "^16.4.5"
   },
   "devDependencies": {

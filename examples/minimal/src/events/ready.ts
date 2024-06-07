@@ -1,22 +1,17 @@
-import { ActivityTypes } from '@discordeno/bot'
 import { bot } from '../bot.js'
-import { createLogger } from '../utils/logger.js'
+import logger from '../utils/logger.js'
 
-const logger = createLogger({ name: 'Event: Ready' })
+bot.events.ready = ({ shardId }) => {
+  logger.info(`[READY] Shard ${shardId} is ready!`)
 
-bot.events.ready = async ({ shardId }) => {
-  logger.info('Bot Ready')
+  if (shardId === bot.gateway.lastShardId) {
+    botFullyReady()
+  }
+}
 
-  await bot.gateway.editShardStatus(shardId, {
-    status: 'online',
-    activities: [
-      {
-        name: 'Discordeno is the Best Lib',
-        type: ActivityTypes.Game,
-        timestamps: {
-          start: Date.now(),
-        },
-      },
-    ],
-  })
+// This function lets you run custom code when all your bot's shards are online.
+function botFullyReady(): void {
+  // Do stuff that you want that get execute only when the bot is fully online.
+
+  logger.info('[READY] Bot is fully online.')
 }

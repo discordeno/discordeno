@@ -608,9 +608,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dd-beginner-bot@workspace:.":
+"dd-advanced-bot@workspace:.":
   version: 0.0.0-use.local
-  resolution: "dd-beginner-bot@workspace:."
+  resolution: "dd-advanced-bot@workspace:."
   dependencies:
     "@discordeno/bot": "npm:19.0.0-next.ad7e74c"
     "@swc/cli": "npm:^0.3.12"

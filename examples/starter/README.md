@@ -1,6 +1,9 @@
-# Nodejs Bot Template
+# Starter Bot Template
 
-TODO: write this readme
+This template is designed for the beginner developer to start coding discord bots.
+
+This template includes some caching and support for slash subcommands.
+It also includes a /ping command to show the bot latency
 
 ## Setup
 

@@ -2,6 +2,9 @@
 
 Just the minimum to get a working bot using interactions.
 
+This does not include any kind of caching or other feature you might need.
+It includes a /ping command to show the bot latency
+
 ## Setup
 
 - Download the source

@@ -2,9 +2,15 @@
 
 In this directory you will find some example bots written using Discordeno.
 
-## Minimal & Beginner
+## Minimal & Starter
 
 A very minimal bot with only a /ping command to show how to set-up a discordeno bot for interactions
+
+The starter template is a bit more complete and has a caching system already setup
+
+## Advanced
+
+A bit more complex bot compared to minimal or starter but still very small bot to show how to use discordeno to create bots
 
 ## BigBot
 

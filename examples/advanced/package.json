@@ -1,7 +1,7 @@
 {
-  "name": "dd-beginner-bot",
+  "name": "dd-advanced-bot",
   "version": "1.0.0",
-  "description": "An example bot for beginner developers to start coding discord bots.",
+  "description": "A bit more advanced bot that has some permission handling and slash command options.",
   "main": "dist/index.js",
   "type": "module",
   "license": "ISC",

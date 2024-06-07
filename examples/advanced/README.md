@@ -1,6 +1,9 @@
-# Beginner Bot Template
+# Advanced Bot Template
 
-This template is designed for the beginner developer to start coding discord bots.
+This template has a bit more advanced code.
+
+This template includes some caching, user permission handling and slash commands options support
+It includes a /ping command to show the bot latency, and a /warn command to show how to send a DM to a user and how to checks for permissions
 
 ## Setup
 

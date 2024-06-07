@@ -1,32 +1,23 @@
-import { Intents, createBot } from '@discordeno/bot'
-import { createProxyCache } from 'dd-cache-proxy'
+import { Collection, Intents, createBot, type Bot } from '@discordeno/bot'
 import { configs } from './config.js'
+import type { Command } from './types/commands.js'
 
-export const bot = createProxyCache(
-  createBot({
-    token: configs.token,
-    intents: Intents.Guilds,
-  }),
-  {
-    desiredProps: {
-      guilds: ['id', 'name'],
-    },
-    cacheInMemory: {
-      guilds: true,
-      default: false,
-    },
-  },
-)
+const rawBot = createBot({
+  token: configs.token,
+  intents: Intents.Guilds,
+})
 
 // Setup desired proprieties
-bot.transformers.desiredProperties.interaction.id = true
-bot.transformers.desiredProperties.interaction.type = true
-bot.transformers.desiredProperties.interaction.data = true
-bot.transformers.desiredProperties.interaction.user = true
-bot.transformers.desiredProperties.interaction.token = true
-bot.transformers.desiredProperties.interaction.guildId = true
+rawBot.transformers.desiredProperties.interaction.id = true
+rawBot.transformers.desiredProperties.interaction.type = true
+rawBot.transformers.desiredProperties.interaction.data = true
+rawBot.transformers.desiredProperties.interaction.token = true
 
-bot.transformers.desiredProperties.guild.id = true
-bot.transformers.desiredProperties.guild.name = true
+export const bot = rawBot as BotWithCommands
 
-bot.transformers.desiredProperties.user.username = true
+// Create the command collection
+bot.commands = new Collection()
+
+export interface BotWithCommands extends Bot {
+  commands: Collection<string, Command>
+}
