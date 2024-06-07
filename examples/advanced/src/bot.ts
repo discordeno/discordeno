@@ -5,7 +5,7 @@ import { configs } from './config.js'
 export const bot = createProxyCache(
   createBot({
     token: configs.token,
-    intents: Intents.Guilds | Intents.GuildMessages | Intents.MessageContent,
+    intents: Intents.Guilds,
   }),
   {
     desiredProps: {
