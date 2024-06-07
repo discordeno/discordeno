@@ -112,9 +112,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/multipart@npm:^8.2.0":
-  version: 8.2.0
-  resolution: "@fastify/multipart@npm:8.2.0"
+"@fastify/multipart@npm:^8.3.0":
+  version: 8.3.0
+  resolution: "@fastify/multipart@npm:8.3.0"
   dependencies:
     "@fastify/busboy": "npm:^2.1.0"
     "@fastify/deepmerge": "npm:^1.0.0"
@@ -122,7 +122,7 @@ __metadata:
     fastify-plugin: "npm:^4.0.0"
     secure-json-parse: "npm:^2.4.0"
     stream-wormhole: "npm:^1.1.0"
-  checksum: 2e96611bc1f9923c9b36e3d8724ddbc30662899efb200e6d6f4d4556bd753d43965e378457e38b59526af564dcae82e77bed75af241fb07dab6aa7264cefa27e
+  checksum: 23b9b709a499af0c0beaaaabd52032a92fa8f4a398ed821c2b4f272e68602ed7bcf91b5daed1e5270c3c61a8b3e8ea1bc2924f21fbcfdbdbd07f4342bd17cd81
   languageName: node
   linkType: hard
 
@@ -2590,7 +2590,7 @@ __metadata:
     "@discordeno/rest": "npm:19.0.0-next.687c29d"
     "@fastify/env": "npm:^4.3.0"
     "@fastify/helmet": "npm:^11.1.1"
-    "@fastify/multipart": "npm:^8.2.0"
+    "@fastify/multipart": "npm:^8.3.0"
     "@favware/cliff-jumper": "npm:^4.0.2"
     "@swc/cli": "npm:^0.3.12"
     "@swc/core": "npm:^1.5.25"
