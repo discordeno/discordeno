@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionTypes, ApplicationCommandTypes, createEmbeds, Permissions, type User } from '@discordeno/bot'
+import { ApplicationCommandOptionTypes, ApplicationCommandTypes, createEmbeds, Permissions, type Member, type User } from '@discordeno/bot'
 import { bot } from '../bot.js'
 import { createCommand } from '../commands.js'
 import { calculateMemberPermissions } from '../utils/permissions.js'
@@ -28,7 +28,7 @@ createCommand({
     }
 
     // Type based on the options declared above
-    const { user, reason } = options as { user: User; reason?: string }
+    const { user, reason } = options as { user: UserResolved; reason?: string }
 
     const guild = await bot.cache.guilds.get(interaction.guildId)
 
@@ -48,7 +48,7 @@ createCommand({
 
     const embeds = createEmbeds()
       .setTitle('Warned User:')
-      .setDescription(`User ID: <@${user.id}>\n Reason: ${reason}`)
+      .setDescription(`User: <@${user.user.id}>\n Reason: ${reason}`)
       .setColor(0x00ff00)
       .setTimestamp(Date.now())
 
@@ -58,15 +58,20 @@ createCommand({
       .setTimestamp(Date.now())
 
     try {
-      const dmChannel = await bot.helpers.getDmChannel(user.id)
+      const dmChannel = await bot.helpers.getDmChannel(user.user.id)
       await bot.helpers.sendMessage(dmChannel.id, { embeds: warnEmbeds })
     } catch (error) {
       bot.logger.error(`There was an error in the warn command:`, error)
 
-      await interaction.respond(`Could not warn user <@${user.id}> | They likely do not have their DMs open.`)
+      await interaction.respond(`Could not warn user <@${user.user.id}> | They likely do not have their DMs open.`)
       return
     }
 
     await interaction.respond({ embeds })
   },
 })
+
+interface UserResolved {
+  user: User
+  member?: Member
+}

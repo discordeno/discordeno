@@ -1,13 +1,16 @@
 # Nodejs Bot Template
 
-This template is a minimal template that uses [discordeno.js](https://www.npmjs.com/package/discordeno.js), a wrapper
-around discordeno, which brings up a djs-like interface but also includes the core Features (Cross Ratelimit, Zero
-Downtime Restart, Resharding...)
+TODO: write this readme
 
 ## Setup
 
-Rename `.env.example` to `.env` and fill your bot token there.
+- Download the source
+- Install yarn
+- Rename the .env.example file to .env OR create a new .env file and copy the example file code to this new file.
+- Fill out the .env file
 
 ## Run Bot
 
-- node index.js
+- run `yarn` to install the dependencies
+- run `yarn build` to build the source
+- run `yarn start` to run the bot

@@ -10,7 +10,7 @@ export const bot = createProxyCache(
   {
     desiredProps: {
       guilds: ['id', 'name', 'roles'],
-      roles: ['id', 'permissions'],
+      roles: ['id', 'guildId', 'permissions'],
     },
     cacheInMemory: {
       guilds: true,
@@ -33,12 +33,16 @@ bot.transformers.desiredProperties.interaction.member = true
 
 bot.transformers.desiredProperties.guild.id = true
 bot.transformers.desiredProperties.guild.name = true
+bot.transformers.desiredProperties.guild.roles = true
 
 bot.transformers.desiredProperties.role.id = true
+bot.transformers.desiredProperties.role.guildId = true
 bot.transformers.desiredProperties.role.permissions = true
 
 bot.transformers.desiredProperties.member.id = true
 bot.transformers.desiredProperties.member.roles = true
+
+bot.transformers.desiredProperties.channel.id = true
 
 bot.transformers.desiredProperties.user.id = true
 bot.transformers.desiredProperties.user.username = true

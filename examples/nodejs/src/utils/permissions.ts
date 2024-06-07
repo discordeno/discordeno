@@ -4,7 +4,6 @@ import assert from 'node:assert'
 export async function calculateMemberPermissions(guild: Guild, member: Member): Promise<bigint> {
   if (member.id === guild.ownerId) return 8n
 
-  // FIXME: currently not working
   let permissions = guild.roles.get(guild.id)?.permissions.bitfield
   const rolePerms = member.roles.map((x) => guild.roles.get(x)?.permissions.bitfield).filter((x): x is bigint => x !== undefined)
 
