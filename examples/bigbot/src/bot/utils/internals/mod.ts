@@ -1,6 +1,6 @@
-import type { BotWithCustomProps } from '../../bot.js';
-import { customizeTransformers } from './transformers/mod.js';
+import type { BotWithCustomProps } from '../../bot.js'
+import { customizeTransformers } from './transformers/mod.js'
 
-export function customizeInternals(bot: BotWithCustomProps) {
-	customizeTransformers(bot);
+export function customizeInternals(bot: BotWithCustomProps): void {
+  customizeTransformers(bot)
 }

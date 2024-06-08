@@ -1,9 +1,9 @@
-import language from './language.js';
-import ping from './ping.js';
+import language from './language.js'
+import ping from './ping.js'
 
 export const COMMANDS = {
-	language,
-	ping,
-};
+  language,
+  ping,
+}
 
-export default COMMANDS;
+export default COMMANDS
