@@ -1,4 +1,4 @@
-# Starter Bot Template
+# Beginner Bot Template
 
 This template is designed for the beginner developer to start coding discord bots.
 

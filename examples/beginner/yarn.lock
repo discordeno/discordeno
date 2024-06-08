@@ -615,18 +615,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dd-cache-proxy@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "dd-cache-proxy@npm:2.1.1"
-  peerDependencies:
-    "@discordeno/bot": 19.0.0-next.d69e537
-  checksum: 082234277fd0dc91477b0ac4a938aea40b8d3ffa60e7e458ce570b2f4c919671ecd5b601f7ff6c6157a5e4e5eaa3786e6a1884cccb020a938cb76e4e300f0f72
-  languageName: node
-  linkType: hard
-
-"dd-starter-bot@workspace:.":
+"dd-beginner-bot@workspace:.":
   version: 0.0.0-use.local
-  resolution: "dd-starter-bot@workspace:."
+  resolution: "dd-beginner-bot@workspace:."
   dependencies:
     "@discordeno/bot": "npm:19.0.0-next.ad7e74c"
     "@swc/cli": "npm:^0.3.12"
@@ -638,6 +629,15 @@ __metadata:
     typescript: "npm:^5.4.5"
   languageName: unknown
   linkType: soft
+
+"dd-cache-proxy@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "dd-cache-proxy@npm:2.1.1"
+  peerDependencies:
+    "@discordeno/bot": 19.0.0-next.d69e537
+  checksum: 082234277fd0dc91477b0ac4a938aea40b8d3ffa60e7e458ce570b2f4c919671ecd5b601f7ff6c6157a5e4e5eaa3786e6a1884cccb020a938cb76e4e300f0f72
+  languageName: node
+  linkType: hard
 
 "debug@npm:4, debug@npm:^4.3.4":
   version: 4.3.5

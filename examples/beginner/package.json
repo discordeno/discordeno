@@ -1,5 +1,5 @@
 {
-  "name": "dd-starter-bot",
+  "name": "dd-beginner-bot",
   "version": "1.0.0",
   "description": "An example bot for beginner developers to start coding discord bots.",
   "main": "dist/index.js",
