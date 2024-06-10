@@ -406,7 +406,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/amqplib@npm:^0":
+"@types/amqplib@npm:^0.10.5":
   version: 0.10.5
   resolution: "@types/amqplib@npm:0.10.5"
   dependencies:
@@ -831,7 +831,7 @@ __metadata:
     "@influxdata/influxdb-client": "npm:^1.33.2"
     "@swc/cli": "npm:^0.3.12"
     "@swc/core": "npm:^1.5.25"
-    "@types/amqplib": "npm:^0"
+    "@types/amqplib": "npm:^0.10.5"
     "@types/node": "npm:^20.14.2"
     amqplib: "npm:^0.10.4"
     fastify: "npm:^4.27.0"
