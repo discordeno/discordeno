@@ -1,9 +1,3 @@
-// export interface ManagerNonceReply<T> {
-//   type: 'NONCE_REPLY'
-//   nonce: string
-//   data: T
-// }
-
 import type { ShardSocketRequest, StatusUpdate } from '@discordeno/bot'
 
 export type ManagerMessage = ManagerRequestIdentify
@@ -35,11 +29,6 @@ export interface WorkerPresencesUpdate {
   payload: StatusUpdate
 }
 
-// export interface WorkerGetShardInfo {
-//   type: 'GET_SHARD_INFO'
-//   nonce: string
-// }
-
 export interface WorkerCreateData {
   connectionData: {
     intents: number
@@ -60,10 +49,3 @@ export interface WorkerCreateData {
     url?: string
   }
 }
-
-// export interface WorkerShardInfo {
-//   workerId: number
-//   shardId: number
-//   rtt: number
-//   state: ShardState
-// }

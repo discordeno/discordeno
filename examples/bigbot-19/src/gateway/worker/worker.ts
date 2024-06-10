@@ -158,9 +158,11 @@ async function connectToRabbitMQ(): Promise<void> {
   if (!connection) return
 
   connection.on('close', () => {
+    rabbitMQChannel = undefined
     setTimeout(connectToRabbitMQ, 1000)
   })
   connection.on('error', (error) => {
+    rabbitMQChannel = undefined
     logger.error('There was an error in the connection with RabbitMQ, reconnecting in 1s.', error)
     setTimeout(connectToRabbitMQ, 1000)
   })
