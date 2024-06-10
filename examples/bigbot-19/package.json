@@ -10,23 +10,25 @@
   "scripts": {
     "start:bot": "echo TODO: fill this up",
     "start:rest": "node dist/rest/index.js",
-    "start:gatewa": "echo TODO: fill this up",
+    "start:gateway": "node dist/gateway/index.js",
     "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist",
     "build:watch": "swc src --strip-leading-paths --delete-dir-on-start --watch --out-dir dist",
     "dev:bot": "echo TODO: fill this up",
     "dev:rest": "node --watch --watch-preserve-output dist/rest/index.js",
-    "dev:gatewa": "echo TODO: fill this up",
+    "dev:gateway": "node --watch --watch-preserve-output dist/gateway/index.js",
     "setup-dd": ""
   },
   "dependencies": {
     "@discordeno/bot": "19.0.0-next.ad7e74c",
     "@fastify/multipart": "^8.3.0",
     "@influxdata/influxdb-client": "^1.33.2",
+    "amqplib": "^0.10.4",
     "fastify": "^4.27.0"
   },
   "devDependencies": {
     "@swc/cli": "^0.3.12",
     "@swc/core": "^1.5.25",
+    "@types/amqplib": "^0",
     "@types/node": "^20.14.2",
     "typescript": "^5.4.5"
   }
