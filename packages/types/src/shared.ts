@@ -688,6 +688,8 @@ export enum BitwisePermissionFlags {
   SEND_VOICE_MESSAGES = 0x0000400000000000,
   /** Allows sending polls */
   SEND_POLLS = 0x0002000000000000,
+  /** Allows user-installed apps to send public responses. When disabled, users will still be allowed to use their apps but the responses will be ephemeral. This only applies to apps not also installed to the server. */
+  USE_EXTERNAL_APPS = 0x0004000000000000,
 }
 
 export type PermissionStrings = keyof typeof BitwisePermissionFlags
