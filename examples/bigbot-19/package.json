@@ -8,12 +8,12 @@
   "private": true,
   "packageManager": "yarn@4.0.2",
   "scripts": {
-    "start:bot": "echo TODO: fill this up",
+    "start:bot": "node dist/bot/index.js",
     "start:rest": "node dist/rest/index.js",
     "start:gateway": "node dist/gateway/index.js",
     "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist",
     "build:watch": "swc src --strip-leading-paths --delete-dir-on-start --watch --out-dir dist",
-    "dev:bot": "echo TODO: fill this up",
+    "dev:bot": "node --watch --watch-preserve-output dist/bot/index.js",
     "dev:rest": "node --watch --watch-preserve-output dist/rest/index.js",
     "dev:gateway": "node --watch --watch-preserve-output dist/gateway/index.js",
     "setup-dd": ""

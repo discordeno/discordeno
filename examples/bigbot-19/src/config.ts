@@ -6,7 +6,7 @@ import 'dotenv/config'
 // General Configurations
 
 export const DATABASE_URL = process.env.DATABASE_URL
-export const DEVELOPMENT = process.env.DEVELOPMENT
+export const DEVELOPMENT = process.env.DEVELOPMENT ?? false
 export const DEV_SERVER_ID = process.env.DEV_SERVER_ID
 export const DISCORD_TOKEN = process.env.DISCORD_TOKEN
 
