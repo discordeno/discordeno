@@ -112,9 +112,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/multipart@npm:^8.2.0":
-  version: 8.2.0
-  resolution: "@fastify/multipart@npm:8.2.0"
+"@fastify/multipart@npm:^8.3.0":
+  version: 8.3.0
+  resolution: "@fastify/multipart@npm:8.3.0"
   dependencies:
     "@fastify/busboy": "npm:^2.1.0"
     "@fastify/deepmerge": "npm:^1.0.0"
@@ -122,7 +122,7 @@ __metadata:
     fastify-plugin: "npm:^4.0.0"
     secure-json-parse: "npm:^2.4.0"
     stream-wormhole: "npm:^1.1.0"
-  checksum: 2e96611bc1f9923c9b36e3d8724ddbc30662899efb200e6d6f4d4556bd753d43965e378457e38b59526af564dcae82e77bed75af241fb07dab6aa7264cefa27e
+  checksum: 23b9b709a499af0c0beaaaabd52032a92fa8f4a398ed821c2b4f272e68602ed7bcf91b5daed1e5270c3c61a8b3e8ea1bc2924f21fbcfdbdbd07f4342bd17cd81
   languageName: node
   linkType: hard
 
@@ -401,92 +401,92 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-arm64@npm:1.5.24":
-  version: 1.5.24
-  resolution: "@swc/core-darwin-arm64@npm:1.5.24"
+"@swc/core-darwin-arm64@npm:1.5.28":
+  version: 1.5.28
+  resolution: "@swc/core-darwin-arm64@npm:1.5.28"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-x64@npm:1.5.24":
-  version: 1.5.24
-  resolution: "@swc/core-darwin-x64@npm:1.5.24"
+"@swc/core-darwin-x64@npm:1.5.28":
+  version: 1.5.28
+  resolution: "@swc/core-darwin-x64@npm:1.5.28"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm-gnueabihf@npm:1.5.24":
-  version: 1.5.24
-  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.5.24"
+"@swc/core-linux-arm-gnueabihf@npm:1.5.28":
+  version: 1.5.28
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.5.28"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-gnu@npm:1.5.24":
-  version: 1.5.24
-  resolution: "@swc/core-linux-arm64-gnu@npm:1.5.24"
+"@swc/core-linux-arm64-gnu@npm:1.5.28":
+  version: 1.5.28
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.5.28"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-musl@npm:1.5.24":
-  version: 1.5.24
-  resolution: "@swc/core-linux-arm64-musl@npm:1.5.24"
+"@swc/core-linux-arm64-musl@npm:1.5.28":
+  version: 1.5.28
+  resolution: "@swc/core-linux-arm64-musl@npm:1.5.28"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-gnu@npm:1.5.24":
-  version: 1.5.24
-  resolution: "@swc/core-linux-x64-gnu@npm:1.5.24"
+"@swc/core-linux-x64-gnu@npm:1.5.28":
+  version: 1.5.28
+  resolution: "@swc/core-linux-x64-gnu@npm:1.5.28"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-musl@npm:1.5.24":
-  version: 1.5.24
-  resolution: "@swc/core-linux-x64-musl@npm:1.5.24"
+"@swc/core-linux-x64-musl@npm:1.5.28":
+  version: 1.5.28
+  resolution: "@swc/core-linux-x64-musl@npm:1.5.28"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-win32-arm64-msvc@npm:1.5.24":
-  version: 1.5.24
-  resolution: "@swc/core-win32-arm64-msvc@npm:1.5.24"
+"@swc/core-win32-arm64-msvc@npm:1.5.28":
+  version: 1.5.28
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.5.28"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-win32-ia32-msvc@npm:1.5.24":
-  version: 1.5.24
-  resolution: "@swc/core-win32-ia32-msvc@npm:1.5.24"
+"@swc/core-win32-ia32-msvc@npm:1.5.28":
+  version: 1.5.28
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.5.28"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@swc/core-win32-x64-msvc@npm:1.5.24":
-  version: 1.5.24
-  resolution: "@swc/core-win32-x64-msvc@npm:1.5.24"
+"@swc/core-win32-x64-msvc@npm:1.5.28":
+  version: 1.5.28
+  resolution: "@swc/core-win32-x64-msvc@npm:1.5.28"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core@npm:^1.5.24":
-  version: 1.5.24
-  resolution: "@swc/core@npm:1.5.24"
+"@swc/core@npm:^1.5.28":
+  version: 1.5.28
+  resolution: "@swc/core@npm:1.5.28"
   dependencies:
-    "@swc/core-darwin-arm64": "npm:1.5.24"
-    "@swc/core-darwin-x64": "npm:1.5.24"
-    "@swc/core-linux-arm-gnueabihf": "npm:1.5.24"
-    "@swc/core-linux-arm64-gnu": "npm:1.5.24"
-    "@swc/core-linux-arm64-musl": "npm:1.5.24"
-    "@swc/core-linux-x64-gnu": "npm:1.5.24"
-    "@swc/core-linux-x64-musl": "npm:1.5.24"
-    "@swc/core-win32-arm64-msvc": "npm:1.5.24"
-    "@swc/core-win32-ia32-msvc": "npm:1.5.24"
-    "@swc/core-win32-x64-msvc": "npm:1.5.24"
+    "@swc/core-darwin-arm64": "npm:1.5.28"
+    "@swc/core-darwin-x64": "npm:1.5.28"
+    "@swc/core-linux-arm-gnueabihf": "npm:1.5.28"
+    "@swc/core-linux-arm64-gnu": "npm:1.5.28"
+    "@swc/core-linux-arm64-musl": "npm:1.5.28"
+    "@swc/core-linux-x64-gnu": "npm:1.5.28"
+    "@swc/core-linux-x64-musl": "npm:1.5.28"
+    "@swc/core-win32-arm64-msvc": "npm:1.5.28"
+    "@swc/core-win32-ia32-msvc": "npm:1.5.28"
+    "@swc/core-win32-x64-msvc": "npm:1.5.28"
     "@swc/counter": "npm:^0.1.3"
-    "@swc/types": "npm:^0.1.7"
+    "@swc/types": "npm:^0.1.8"
   peerDependencies:
     "@swc/helpers": "*"
   dependenciesMeta:
@@ -513,7 +513,7 @@ __metadata:
   peerDependenciesMeta:
     "@swc/helpers":
       optional: true
-  checksum: 02be0fac3cd524226e844edb18028b32fb8b0d1664b8a1d2df283a3df841a7496ae7cc9559868842b8418a23921e5f530173de1164dfc5c1fcdf9005648c1591
+  checksum: 8afa15c6212222f6966d40a15942678da14aede097b53b24f993f598b09e227e1a4a39d67875bbaf2b5eea999ef16ad4add6f71fe1fe4edce56ca757b18ad8be
   languageName: node
   linkType: hard
 
@@ -524,12 +524,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/types@npm:^0.1.7":
-  version: 0.1.7
-  resolution: "@swc/types@npm:0.1.7"
+"@swc/types@npm:^0.1.8":
+  version: 0.1.8
+  resolution: "@swc/types@npm:0.1.8"
   dependencies:
     "@swc/counter": "npm:^0.1.3"
-  checksum: ed66c26b36972a74f852c1781fadc75946578abfeeea58f110684833b5d1e70f28a77ddb82fd5bf3cf3c4dad0e1b6a1c924d7e2cc7a99f9b16ed16fe266bba25
+  checksum: 2d1cda35116e03714137c1c37f4493efe0e26e88285ecc9dcdf6256a77984e367ea7b5f31d650f110fdcfd6ac53dff3ec77f841787ca328d2efa7b07ef1ac318
   languageName: node
   linkType: hard
 
@@ -809,11 +809,11 @@ __metadata:
   linkType: hard
 
 "braces@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "braces@npm:3.0.2"
+  version: 3.0.3
+  resolution: "braces@npm:3.0.3"
   dependencies:
-    fill-range: "npm:^7.0.1"
-  checksum: 966b1fb48d193b9d155f810e5efd1790962f2c4e0829f8440b8ad236ba009222c501f70185ef732fef17a4c490bb33a03b90dab0631feafbdf447da91e8165b1
+    fill-range: "npm:^7.1.1"
+  checksum: fad11a0d4697a27162840b02b1fad249c1683cbc510cd5bf1a471f2f8085c046d41094308c577a50a03a579dd99d5a6b3724c4b5e8b14df2c4443844cfcda2c6
   languageName: node
   linkType: hard
 
@@ -1404,12 +1404,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fill-range@npm:^7.0.1":
-  version: 7.0.1
-  resolution: "fill-range@npm:7.0.1"
+"fill-range@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "fill-range@npm:7.1.1"
   dependencies:
     to-regex-range: "npm:^5.0.1"
-  checksum: e260f7592fd196b4421504d3597cc76f4a1ca7a9488260d533b611fc3cefd61e9a9be1417cb82d3b01ad9f9c0ff2dbf258e1026d2445e26b0cf5148ff4250429
+  checksum: a7095cb39e5bc32fada2aa7c7249d3f6b01bd1ce461a61b0adabacccabd9198500c6fb1f68a7c851a657e273fce2233ba869638897f3d7ed2e87a2d89b4436ea
   languageName: node
   linkType: hard
 
@@ -2590,10 +2590,10 @@ __metadata:
     "@discordeno/rest": "npm:19.0.0-next.687c29d"
     "@fastify/env": "npm:^4.3.0"
     "@fastify/helmet": "npm:^11.1.1"
-    "@fastify/multipart": "npm:^8.2.0"
+    "@fastify/multipart": "npm:^8.3.0"
     "@favware/cliff-jumper": "npm:^4.0.2"
     "@swc/cli": "npm:^0.3.12"
-    "@swc/core": "npm:^1.5.24"
+    "@swc/core": "npm:^1.5.28"
     dotenv: "npm:^16.4.5"
     fastify: "npm:^4.27.0"
   languageName: unknown
