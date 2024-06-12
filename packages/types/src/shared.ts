@@ -371,6 +371,7 @@ export enum MessageTypes {
   StageSpeaker,
   StageTopic = 31,
   GuildApplicationPremiumSubscription,
+  PurchaseNotification = 44,
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
