@@ -15,7 +15,7 @@
     "@fastify/env": "^4.3.0",
     "@fastify/helmet": "^11.1.1",
     "@fastify/multipart": "^8.3.0",
-    "fastify": "^4.27.0"
+    "fastify": "^4.28.0"
   },
   "devDependencies": {
     "@favware/cliff-jumper": "^4.0.2",
