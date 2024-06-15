@@ -13,7 +13,9 @@ import {
 import { bot } from './bot.js'
 import { buildFastifyApp } from './fastify.js'
 import importDirectory from './utils/loader.js'
-import { updateCommands } from './utils/updateCommands.js'
+
+// Initialize the prisma client
+import './prisma.js'
 
 assert(EVENT_HANDLER_AUTHORIZATION, 'The EVENT_HANDLER_AUTHORIZATION environment variable is missing')
 assert(EVENT_HANDLER_HOST, 'The EVENT_HANDLER_HOST environment variable is missing')
@@ -25,8 +27,6 @@ assert(!Number.isNaN(portNumber), 'The EVENT_HANDLER_PORT environment variable s
 
 await importDirectory('./dist/bot/commands')
 await importDirectory('./dist/bot/events')
-
-await updateCommands()
 
 if (MESSAGEQUEUE_ENABLE) {
   await connectToRabbitMQ()

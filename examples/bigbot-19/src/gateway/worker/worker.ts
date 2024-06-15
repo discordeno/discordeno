@@ -102,6 +102,11 @@ function createShard(shardId: number): DiscordenoShard {
     return await promise
   }
 
+  // We do not want to camelize the packet, so we need to override the function as the default behavior is to camelize
+  shard.forwardToBot = (packet) => {
+    shard.events.message?.(shard, packet)
+  }
+
   shard.events.message = async (shard, payload) => {
     const body = JSON.stringify({ payload, shardId: shard.id })
 
