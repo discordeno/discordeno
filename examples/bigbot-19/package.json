@@ -24,6 +24,7 @@
     "@influxdata/influxdb-client": "^1.33.2",
     "@prisma/client": "^5.15.0",
     "amqplib": "^0.10.4",
+    "chalk": "^5.3.0",
     "fastify": "^4.27.0"
   },
   "devDependencies": {

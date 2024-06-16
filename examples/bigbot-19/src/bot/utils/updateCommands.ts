@@ -4,26 +4,29 @@ import { DEVELOPMENT, DEV_SERVER_ID } from '../../config.js'
 import { bot } from '../bot.js'
 import type { Command } from '../commands.js'
 import type { TranslationKey } from '../languages/languages.js'
-import { loadLocale, translate } from '../languages/translate.js'
+import { getLanguage, loadLocale, translate } from '../languages/translate.js'
 import prisma from '../prisma.js'
 
-const commandCache = new Map<CreateApplicationCommand, CreateApplicationCommand>()
-
-// TODO: add some comments in this file, it is currently quite hard to understand what is going on
+// Mapped by `language-commandName`
+const commandCache = new Map<string, CreateApplicationCommand>()
 
 export async function updateCommands(guildId: bigint): Promise<void> {
   bot.logger.info(`Updating commands for guildId ${guildId}`)
 
+  // Before translating the commands we need to load from the DB what is the locale to use
   await loadLocale(guildId)
 
-  const userCommands = bot.commands
-    .filter((x) => (guildId === BigInt(DEV_SERVER_ID ?? -1n) && DEVELOPMENT ? true : !x.devOnly))
+  // If we are in development and the guild we are updating for is the dev guild, then we also include the developer commands
+  const commands = bot.commands
+    .filter((x) => (DEVELOPMENT && guildId === BigInt(DEV_SERVER_ID ?? -1n) ? true : !x.devOnly))
     .array()
     .map((x) => translateCommands(guildId, x))
 
-  await bot.helpers.upsertGuildApplicationCommands(guildId, userCommands)
+  await bot.helpers.upsertGuildApplicationCommands(guildId, commands)
 
   bot.logger.info(`Saving the command hash for guildId ${guildId}`)
+
+  // Updating the hash of the commands in the DB to avoid deploying the commands every time
   await prisma.guild.upsert({
     where: { guildId },
     create: { guildId, commands: currentCommandHash },
@@ -35,18 +38,21 @@ let currentCommandHash: string
 
 const guildCommandHashes = new Map<bigint, string>()
 
+// Check if the stored command hash (if it exists at all) is the same as the current hash computed by all the commands
 export async function usesLatestCommands(guildId: bigint): Promise<boolean> {
-  const current = await getCurrentCommandHash(guildId)
-
-  return current === currentCommandHash
-}
-
-export async function getCurrentCommandHash(guildId: bigint): Promise<string | null> {
+  // If we have yet to compute the hash for the commands, we do it now
+  // We can't do in the var above, because at that point the commands wouldn't have yet loaded, so the hash would be the one of an empty array
   if (!currentCommandHash) {
     const serializedCommands = JSON.stringify(bot.commands.array())
     currentCommandHash = createHash('sha1').update(serializedCommands).digest('hex')
   }
 
+  const current = await getCurrentCommandHash(guildId)
+
+  return current === currentCommandHash
+}
+
+async function getCurrentCommandHash(guildId: bigint): Promise<string | null> {
   const cached = guildCommandHashes.get(guildId)
 
   if (cached) return cached
@@ -59,7 +65,8 @@ export async function getCurrentCommandHash(guildId: bigint): Promise<string | n
 }
 
 function translateCommands(guildId: bigint, command: Command): CreateApplicationCommand {
-  const cached = commandCache.get(command)
+  const language = getLanguage(guildId)
+  const cached = commandCache.get(`${language}-${command.name}`)
 
   if (cached) return cached
 
@@ -73,7 +80,7 @@ function translateCommands(guildId: bigint, command: Command): CreateApplication
     if (appCommand.options) translateOptions(guildId, appCommand.options)
   }
 
-  commandCache.set(command, appCommand)
+  commandCache.set(`${language}-${command.name}`, appCommand)
 
   return appCommand
 }

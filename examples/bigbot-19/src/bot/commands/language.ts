@@ -2,7 +2,6 @@ import { ApplicationCommandOptionTypes, DiscordInteractionContextType } from '@d
 import assert from 'node:assert'
 import createCommand from '../commands.js'
 import type { LanguageNames } from '../languages/languages.js'
-import languages from '../languages/languages.js'
 import { languageCache, translate } from '../languages/translate.js'
 import prisma from '../prisma.js'
 import { updateCommands } from '../utils/updateCommands.js'
@@ -19,7 +18,8 @@ createCommand({
       name: 'languageCommandOptionName',
       description: 'languageCommandDescription',
       type: ApplicationCommandOptionTypes.String,
-      choices: Object.keys(languages).map((key) => ({ name: key, value: key })),
+      // choices: Object.keys(languages).map((key) => ({ name: key, value: key })),
+      autocomplete: true,
       required: true,
     },
   ],
@@ -43,5 +43,19 @@ createCommand({
 
     // Let the user know its been updated.
     await interaction.respond(translate(interaction.guildId, 'languageCommandUpdated', language))
+  },
+  async autoComplete(interaction, options) {
+    await interaction.respond({
+      choices: [
+        {
+          name: 'A',
+          value: 'B',
+        },
+        {
+          name: 'input',
+          value: options.language,
+        },
+      ],
+    })
   },
 })

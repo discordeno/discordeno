@@ -7,7 +7,7 @@ export default async function importDirectory(folder: string): Promise<void> {
   for (const filename of files) {
     if (!filename.endsWith('.js')) continue
 
-    // Using `file://` and `process.cwd()` to avoid weird issues with relative paths and/or Windows
+    // Using `file://` to avoid weird issues with paths on Windows
     await import(`file://${folder}/${filename}`).catch((x) => bot.logger.fatal(`Cannot import file (${folder}/${filename}) for reason:`, x))
   }
 }

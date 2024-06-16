@@ -1,10 +1,11 @@
-import { InteractionTypes, commandOptionsParser } from '@discordeno/bot'
+import { InteractionTypes, LogLevels, commandOptionsParser, type Interaction, type logger } from '@discordeno/bot'
+import chalk from 'chalk'
 import { bot } from '../../bot.js'
-import { loadLocale } from '../../languages/translate.js'
+import { loadLocale, translate } from '../../languages/translate.js'
 
 bot.events.interactionCreate = async (interaction) => {
-  const isCommandOrAutocomplete =
-    interaction.type === InteractionTypes.ApplicationCommand || interaction.type === InteractionTypes.ApplicationCommandAutocomplete
+  const isAutocomplete = interaction.type === InteractionTypes.ApplicationCommandAutocomplete
+  const isCommandOrAutocomplete = interaction.type === InteractionTypes.ApplicationCommand || isAutocomplete
 
   if (!interaction.data || !isCommandOrAutocomplete) return
 
@@ -15,20 +16,43 @@ bot.events.interactionCreate = async (interaction) => {
   const command = bot.commands.get(interaction.data.name)
 
   if (!command) {
-    // TODO: the command was not found
+    logCommand(interaction, 'Missing', interaction.data.name)
+    await interaction.respond(translate(interaction.guildId ?? 'english', 'executeCommandNotFound')).catch(bot.logger.error)
+
     return
   }
 
-  // TODO: log the command was triggered
-  // TODO: handle autocomplete
+  logCommand(interaction, 'Trigger', interaction.data.name)
 
   const options = commandOptionsParser(interaction)
 
   try {
-    await command.run(interaction, options)
-    // TODO: log command success
+    if (isAutocomplete) {
+      await command.autoComplete?.(interaction, options)
+    } else {
+      await command.run(interaction, options)
+    }
+
+    logCommand(interaction, 'Success', interaction.data.name)
   } catch (error) {
-    // TODO: (complete) log command failure
-    bot.logger.error(error)
+    logCommand(interaction, 'Failure', interaction.data.name, LogLevels.Error, error)
+    await interaction.respond(translate(interaction.id, 'executeCommandError'))
   }
+}
+
+function logCommand(
+  interaction: Interaction,
+  type: 'Failure' | 'Success' | 'Trigger' | 'Missing',
+  commandName: string,
+  logLevel: LogLevels = LogLevels.Info,
+  ...restArgs: unknown[]
+): void {
+  const typeColor = ['Failure', 'Missing'].includes(type) ? chalk.red(type) : type === 'Success' ? chalk.green(type) : chalk.white(type)
+
+  const autocomplete = interaction.type === InteractionTypes.ApplicationCommandAutocomplete ? ' (AutoComplete) ' : ''
+  const command = `Command${autocomplete}: ${chalk.bgYellow.black(commandName || 'Unknown')} - ${chalk.bgBlack(typeColor)}`
+  const user = chalk.bgGreen.black(`@${interaction.user.username} (${interaction.user.id})`)
+  const guild = chalk.bgMagenta.black(interaction.guildId ? `guildId: ${interaction.guildId}` : 'DM')
+
+  ;(bot.logger as typeof logger).log(logLevel, `${command} - By ${user} in ${guild}`, ...restArgs)
 }

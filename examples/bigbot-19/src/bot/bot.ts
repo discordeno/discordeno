@@ -1,6 +1,7 @@
 import { Collection, LogDepth, createBot, type Bot, type logger } from '@discordeno/bot'
 import assert from 'node:assert'
-import { DISCORD_TOKEN, GATEWAY_INTENTS, REST_AUTHORIZATION, REST_URL } from '../config.js'
+import { DISCORD_TOKEN, GATEWAY_AUTHORIZATION, GATEWAY_INTENTS, GATEWAY_URL, REST_AUTHORIZATION, REST_URL } from '../config.js'
+import type { WorkerPresencesUpdate, WorkerShardPayload } from '../gateway/worker/types.js'
 import type { Command } from './commands.js'
 
 assert(DISCORD_TOKEN, 'The DISCORD_TOKEN environment variable must be set')
@@ -28,8 +29,12 @@ const props = bot.transformers.desiredProperties
 props.interaction.id = true
 props.interaction.data = true
 props.interaction.type = true
+props.interaction.user = true
 props.interaction.token = true
 props.interaction.guildId = true
+
+props.user.id = true
+props.user.username = true
 
 props.message.id = true
 
@@ -49,6 +54,34 @@ export type CustomBot<TBot extends Bot = Bot> = TBot & {
   commands: Collection<string, Command>
 }
 
+// Override the default gateway functions to allow the methods on the gateway object to proxy the requests to the gateway proxy
 function overrideGatewayImplementations(bot: CustomBot): void {
-  // TODO: override the gateway functions to use the proxied gateway
+  bot.gateway.sendPayload = async (shardId, payload) => {
+    await fetch(GATEWAY_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        type: 'ShardPayload',
+        shardId,
+        payload,
+      } satisfies WorkerShardPayload),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: GATEWAY_AUTHORIZATION!,
+      },
+    })
+  }
+
+  bot.gateway.editBotStatus = async (payload) => {
+    await fetch(GATEWAY_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        type: 'EditShardsPresence',
+        payload,
+      } satisfies WorkerPresencesUpdate),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: GATEWAY_AUTHORIZATION!,
+      },
+    })
+  }
 }
