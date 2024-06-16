@@ -1,15 +1,7 @@
-import { GATEWAY_AUTHORIZATION, GATEWAY_HOST, GATEWAY_PORT } from '../config.js'
+import { GATEWAY_HOST, GATEWAY_PORT } from '../config.js'
 import { buildFastifyApp } from './fastify.js'
 import gatewayManager, { logger } from './gatewayManager.js'
 import type { WorkerPresencesUpdate, WorkerShardPayload } from './worker/types.js'
-
-if (!GATEWAY_AUTHORIZATION) throw new Error('The GATEWAY_AUTHORIZATION environment variable is missing')
-if (!GATEWAY_HOST) throw new Error('The GATEWAY_HOST environment variable is missing')
-if (!GATEWAY_PORT) throw new Error('The GATEWAY_PORT environment variable is missing')
-
-const portNumber = Number.parseInt(GATEWAY_PORT)
-
-if (Number.isNaN(portNumber)) throw new Error('The GATEWAY_PORT environment variable should be a valid number')
 
 const app = buildFastifyApp()
 
@@ -41,7 +33,7 @@ app.post('/', async (req, res) => {
 
 await app.listen({
   host: GATEWAY_HOST,
-  port: portNumber,
+  port: GATEWAY_PORT,
 })
 
-logger.info(`Gateway manager listening on port ${portNumber}`)
+logger.info(`Gateway manager listening on port ${GATEWAY_PORT}`)

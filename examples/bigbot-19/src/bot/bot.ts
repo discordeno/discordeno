@@ -1,11 +1,7 @@
 import { Collection, LogDepth, createBot, type Bot, type logger } from '@discordeno/bot'
-import assert from 'node:assert'
 import { DISCORD_TOKEN, GATEWAY_AUTHORIZATION, GATEWAY_INTENTS, GATEWAY_URL, REST_AUTHORIZATION, REST_URL } from '../config.js'
 import type { WorkerPresencesUpdate, WorkerShardPayload } from '../gateway/worker/types.js'
 import type { Command } from './commands.js'
-
-assert(DISCORD_TOKEN, 'The DISCORD_TOKEN environment variable must be set')
-assert(REST_AUTHORIZATION, 'The REST_AUTHORIZATION environment variable must be set')
 
 export const bot = createCustomBot(
   createBot({
@@ -66,7 +62,7 @@ function overrideGatewayImplementations(bot: CustomBot): void {
       } satisfies WorkerShardPayload),
       headers: {
         'Content-Type': 'application/json',
-        Authorization: GATEWAY_AUTHORIZATION!,
+        Authorization: GATEWAY_AUTHORIZATION,
       },
     })
   }
@@ -80,7 +76,7 @@ function overrideGatewayImplementations(bot: CustomBot): void {
       } satisfies WorkerPresencesUpdate),
       headers: {
         'Content-Type': 'application/json',
-        Authorization: GATEWAY_AUTHORIZATION!,
+        Authorization: GATEWAY_AUTHORIZATION,
       },
     })
   }

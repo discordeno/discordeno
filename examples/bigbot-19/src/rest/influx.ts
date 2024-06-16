@@ -1,13 +1,9 @@
 import type { RestManager } from '@discordeno/bot'
 import { InfluxDB, Point } from '@influxdata/influxdb-client'
-import { INFLUX_BUCKET, INFLUX_ORG, INFLUX_TOKEN, INFLUX_URL } from './config.js'
+import { INFLUX_BUCKET, INFLUX_ENABLED, INFLUX_ORG, INFLUX_TOKEN, INFLUX_URL } from '../config.js'
 
-const isInfluxConfigured = INFLUX_URL && INFLUX_TOKEN && INFLUX_ORG && INFLUX_BUCKET
-
-// @ts-expect-error INFLUX_URL is not undefined if isInfluxConfigured is true, however this kinda of stuff confuses typescript. This will get fixed in TS 5.5
-export const influxDB = isInfluxConfigured ? new InfluxDB({ url: INFLUX_URL, token: INFLUX_TOKEN }) : undefined
-// @ts-expect-error INFLUX_ORG is not undefined if isInfluxConfigured is true, however this kinda of stuff confuses typescript. This will get fixed in TS 5.5
-export const influx = isInfluxConfigured && influxDB ? influxDB.getWriteApi(INFLUX_ORG, INFLUX_BUCKET) : undefined
+export const influxDB = INFLUX_ENABLED ? new InfluxDB({ url: INFLUX_URL!, token: INFLUX_TOKEN! }) : undefined
+export const influx = INFLUX_ENABLED && influxDB ? influxDB.getWriteApi(INFLUX_ORG!, INFLUX_BUCKET!) : undefined
 
 export const setupRestAnalyticsHooks = (rest: RestManager, logger: RestManager['logger']): void => {
   // If influxdb data is provided, enable analytics in this proxy.

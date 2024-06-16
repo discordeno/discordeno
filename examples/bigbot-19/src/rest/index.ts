@@ -1,15 +1,7 @@
 import { type RequestMethods } from '@discordeno/bot'
-import { REST_AUTHORIZATION, REST_HOST, REST_PORT } from '../config.js'
+import { REST_HOST, REST_PORT } from '../config.js'
 import { buildFastifyApp, parseMultiformBody } from './fastify.js'
 import restManager, { logger } from './restManager.js'
-
-if (!REST_AUTHORIZATION) throw new Error('The REST_AUTHORIZATION environment variable is missing')
-if (!REST_HOST) throw new Error('The REST_HOST environment variable is missing')
-if (!REST_PORT) throw new Error('The REST_PORT environment variable is missing')
-
-const portNumber = Number.parseInt(REST_PORT)
-
-if (Number.isNaN(portNumber)) throw new Error('The REST_PORT environment variable should be a valid number')
 
 const app = buildFastifyApp()
 
@@ -50,7 +42,7 @@ app.all('/*', async (req, res) => {
 
 await app.listen({
   host: REST_HOST,
-  port: portNumber,
+  port: REST_PORT,
 })
 
-logger.info(`REST Proxy listening on port ${portNumber}`)
+logger.info(`REST Proxy listening on port ${REST_PORT}`)

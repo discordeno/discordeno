@@ -1,9 +1,7 @@
 import type { DiscordGatewayPayload, GatewayDispatchEventNames } from '@discordeno/bot'
 import { connect as connectAmqp } from 'amqplib'
-import assert from 'node:assert'
 import { join as joinPath } from 'node:path'
 import {
-  EVENT_HANDLER_AUTHORIZATION,
   EVENT_HANDLER_HOST,
   EVENT_HANDLER_PORT,
   MESSAGEQUEUE_ENABLE,
@@ -16,14 +14,6 @@ import { bot } from './bot.js'
 import { buildFastifyApp } from './fastify.js'
 import importDirectory from './utils/loader.js'
 import { updateCommands } from './utils/updateCommands.js'
-
-assert(EVENT_HANDLER_AUTHORIZATION, 'The EVENT_HANDLER_AUTHORIZATION environment variable is missing')
-assert(EVENT_HANDLER_HOST, 'The EVENT_HANDLER_HOST environment variable is missing')
-assert(EVENT_HANDLER_PORT, 'The EVENT_HANDLER_PORT environment variable is missing')
-
-const portNumber = Number.parseInt(EVENT_HANDLER_PORT)
-
-assert(!Number.isNaN(portNumber), 'The EVENT_HANDLER_PORT environment variable should be a valid number')
 
 // The importDirectory function uses 'readdir' that requires either a relative path compared to the process CWD or an absolute one, so to get one relative we need to use import.meta.url
 const currentDirectory = getDirnameFromFileUrl(import.meta.url)
@@ -58,10 +48,10 @@ app.post('/', async (req, res) => {
 
 await app.listen({
   host: EVENT_HANDLER_HOST,
-  port: portNumber,
+  port: EVENT_HANDLER_PORT,
 })
 
-bot.logger.info(`Bot event handler is listening on port ${portNumber}`)
+bot.logger.info(`Bot event handler is listening on port ${EVENT_HANDLER_PORT}`)
 
 async function handleGatewayEvent(payload: DiscordGatewayPayload, shardId: number): Promise<void> {
   bot.events.raw?.(payload, shardId)
