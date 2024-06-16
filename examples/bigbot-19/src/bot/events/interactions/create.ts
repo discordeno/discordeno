@@ -1,7 +1,6 @@
 import { InteractionTypes, LogLevels, commandOptionsParser, type Interaction, type logger } from '@discordeno/bot'
 import chalk from 'chalk'
 import { bot } from '../../bot.js'
-import { loadLocale, translate } from '../../languages/translate.js'
 
 bot.events.interactionCreate = async (interaction) => {
   const isAutocomplete = interaction.type === InteractionTypes.ApplicationCommandAutocomplete
@@ -9,15 +8,11 @@ bot.events.interactionCreate = async (interaction) => {
 
   if (!interaction.data || !isCommandOrAutocomplete) return
 
-  if (interaction.guildId) {
-    await loadLocale(interaction.guildId)
-  }
-
   const command = bot.commands.get(interaction.data.name)
 
   if (!command) {
     logCommand(interaction, 'Missing', interaction.data.name)
-    await interaction.respond(translate(interaction.guildId ?? 'english', 'executeCommandNotFound')).catch(bot.logger.error)
+    await interaction.respond('❌ Something went wrong. I was not able to find this command.')
 
     return
   }
@@ -36,7 +31,7 @@ bot.events.interactionCreate = async (interaction) => {
     logCommand(interaction, 'Success', interaction.data.name)
   } catch (error) {
     logCommand(interaction, 'Failure', interaction.data.name, LogLevels.Error, error)
-    await interaction.respond(translate(interaction.id, 'executeCommandError'))
+    await interaction.respond('❌ Something went wrong. The command execution has thrown an error.')
   }
 }
 

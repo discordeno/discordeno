@@ -15,9 +15,7 @@ import { getDirnameFromFileUrl } from '../util.js'
 import { bot } from './bot.js'
 import { buildFastifyApp } from './fastify.js'
 import importDirectory from './utils/loader.js'
-
-// Initialize the prisma client
-import './prisma.js'
+import { updateCommands } from './utils/updateCommands.js'
 
 assert(EVENT_HANDLER_AUTHORIZATION, 'The EVENT_HANDLER_AUTHORIZATION environment variable is missing')
 assert(EVENT_HANDLER_HOST, 'The EVENT_HANDLER_HOST environment variable is missing')
@@ -32,6 +30,8 @@ const currentDirectory = getDirnameFromFileUrl(import.meta.url)
 
 await importDirectory(joinPath(currentDirectory, './commands'))
 await importDirectory(joinPath(currentDirectory, './events'))
+
+await updateCommands()
 
 if (MESSAGEQUEUE_ENABLE) {
   await connectToRabbitMQ()

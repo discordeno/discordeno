@@ -22,7 +22,6 @@
     "@discordeno/bot": "19.0.0-next.ad7e74c",
     "@fastify/multipart": "^8.3.0",
     "@influxdata/influxdb-client": "^1.33.2",
-    "@prisma/client": "^5.15.0",
     "amqplib": "^0.10.4",
     "chalk": "^5.3.0",
     "fastify": "^4.27.0"
@@ -32,7 +31,6 @@
     "@swc/core": "^1.5.25",
     "@types/amqplib": "^0.10.5",
     "@types/node": "^20.14.2",
-    "prisma": "^5.15.0",
     "typescript": "^5.4.5"
   }
 }

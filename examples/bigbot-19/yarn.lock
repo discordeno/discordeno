@@ -224,64 +224,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/client@npm:^5.15.0":
-  version: 5.15.0
-  resolution: "@prisma/client@npm:5.15.0"
-  peerDependencies:
-    prisma: "*"
-  peerDependenciesMeta:
-    prisma:
-      optional: true
-  checksum: 6948885425a62fef5a90f039761acbd1f61c9713e8e49f30892244926ad402b3489c0b527d5d6f6469ed1057848dd6d052eec51c99d279d4f956fd021279330f
-  languageName: node
-  linkType: hard
-
-"@prisma/debug@npm:5.15.0":
-  version: 5.15.0
-  resolution: "@prisma/debug@npm:5.15.0"
-  checksum: a0464ae8ba938ad611cf00101f8725977e822f48ad8d1ca5cd17b98e586264b8936db79b0b3521d9859651802f73da92508856aea363c9767fa418d749af72b7
-  languageName: node
-  linkType: hard
-
-"@prisma/engines-version@npm:5.15.0-29.12e25d8d06f6ea5a0252864dd9a03b1bb51f3022":
-  version: 5.15.0-29.12e25d8d06f6ea5a0252864dd9a03b1bb51f3022
-  resolution: "@prisma/engines-version@npm:5.15.0-29.12e25d8d06f6ea5a0252864dd9a03b1bb51f3022"
-  checksum: 5e4e29c701134e395fb06ddb94471356fa0cee3abc237726443643bf6462e8781d2f8de536f2b5ccdb6c00d9a9a6fb4f9d68e0a8ee744648ebd1924c359e865c
-  languageName: node
-  linkType: hard
-
-"@prisma/engines@npm:5.15.0":
-  version: 5.15.0
-  resolution: "@prisma/engines@npm:5.15.0"
-  dependencies:
-    "@prisma/debug": "npm:5.15.0"
-    "@prisma/engines-version": "npm:5.15.0-29.12e25d8d06f6ea5a0252864dd9a03b1bb51f3022"
-    "@prisma/fetch-engine": "npm:5.15.0"
-    "@prisma/get-platform": "npm:5.15.0"
-  checksum: bbe3c942793602fc3cfbd9a5b772cdb5cece2b2515a41fe49e503b7c21c76c0215d4c3861d3db29677b5e1bce0baf98e226c9c3239946f3909b8cc72ac422da3
-  languageName: node
-  linkType: hard
-
-"@prisma/fetch-engine@npm:5.15.0":
-  version: 5.15.0
-  resolution: "@prisma/fetch-engine@npm:5.15.0"
-  dependencies:
-    "@prisma/debug": "npm:5.15.0"
-    "@prisma/engines-version": "npm:5.15.0-29.12e25d8d06f6ea5a0252864dd9a03b1bb51f3022"
-    "@prisma/get-platform": "npm:5.15.0"
-  checksum: fd3696095cd4e780806655cfd23332235eda51231840467d90d663937583ed5ac2950e4aa193f1586fd19d62028eb52d4ddacff9b0a247f76eb701621e43098e
-  languageName: node
-  linkType: hard
-
-"@prisma/get-platform@npm:5.15.0":
-  version: 5.15.0
-  resolution: "@prisma/get-platform@npm:5.15.0"
-  dependencies:
-    "@prisma/debug": "npm:5.15.0"
-  checksum: b969d502aea4a9bb3cae2f751e8c9729f161ebe0442dd44c4a2fd68e0a940111ee133e96e402a7ca9156a231d1e197bdd4966823f8fa610e623a6bae7bb55c8d
-  languageName: node
-  linkType: hard
-
 "@sindresorhus/is@npm:^4.0.0":
   version: 4.6.0
   resolution: "@sindresorhus/is@npm:4.6.0"
@@ -894,7 +836,6 @@ __metadata:
     "@discordeno/bot": "npm:19.0.0-next.ad7e74c"
     "@fastify/multipart": "npm:^8.3.0"
     "@influxdata/influxdb-client": "npm:^1.33.2"
-    "@prisma/client": "npm:^5.15.0"
     "@swc/cli": "npm:^0.3.12"
     "@swc/core": "npm:^1.5.25"
     "@types/amqplib": "npm:^0.10.5"
@@ -902,7 +843,6 @@ __metadata:
     amqplib: "npm:^0.10.4"
     chalk: "npm:^5.3.0"
     fastify: "npm:^4.27.0"
-    prisma: "npm:^5.15.0"
     typescript: "npm:^5.4.5"
   languageName: unknown
   linkType: soft
@@ -2049,17 +1989,6 @@ __metadata:
     nice-napi:
       optional: true
   checksum: a450140a3266920417844c11164bba208d4df2ddcb683bf3ee99d8d4b7db9de9751f5b83f6f5b2146391d18012d9f4af30a69ed751b9d4aa5eea1771a37df275
-  languageName: node
-  linkType: hard
-
-"prisma@npm:^5.15.0":
-  version: 5.15.0
-  resolution: "prisma@npm:5.15.0"
-  dependencies:
-    "@prisma/engines": "npm:5.15.0"
-  bin:
-    prisma: build/index.js
-  checksum: 8baa30db5edcc244adf4c0a6af36f4b5b3e5fd6b15db75bea6ddc636d2ebdbae9c3c2824a7a6dab6eec9630646e2ea9a5140e5806c86963bad6484560dc27b5d
   languageName: node
   linkType: hard
 

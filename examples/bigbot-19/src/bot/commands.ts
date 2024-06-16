@@ -1,46 +1,21 @@
 import type {
   ApplicationCommandOptionTypes,
-  ApplicationCommandTypes,
   Attachment,
   CamelizedDiscordApplicationCommandOption,
   ChannelTypes,
-  CreateSlashApplicationCommand,
+  CreateApplicationCommand,
   Interaction,
   Member,
   Role,
   User,
 } from '@discordeno/bot'
 import { bot } from './bot.js'
-import type { DefaultLocale, TranslationKey } from './languages/languages.js'
-import { translate } from './languages/translate.js'
 
 export default function createCommand<const TOptions extends CommandOptions>(command: Command<TOptions>): void {
-  bot.commands.set(translate('english', command.name), command as Command)
+  bot.commands.set(command.name, command as Command)
 }
 
-export type Command<TOptions extends CommandOptions = CommandOptions> =
-  | SlashApplicationCommand<TOptions>
-  | (Omit<SlashApplicationCommand<TOptions>, 'options' | 'description' | 'descriptionLocalizations'> & {
-      /** The type of the command */
-      type: ApplicationCommandTypes.Message | ApplicationCommandTypes.User
-    })
-
-// This is needed to properly support ApplicationCommandTypes.Message or ApplicationCommandTypes.User commands
-type SlashApplicationCommand<TOptions extends CommandOptions> = CreateSlashApplicationCommand & {
-  /**
-   * @remarks
-   * The value should be set to the translation key for the name of this command
-   *
-   * @inheritdoc
-   */
-  name: TranslationKey
-  /**
-   * @remarks
-   * The value should be set to the translation key for the name of this command
-   *
-   * @inheritdoc
-   */
-  description: TranslationKey
+export type Command<TOptions extends CommandOptions = CommandOptions> = CreateApplicationCommand & {
   /** @inheritdoc */
   options?: TOptions
   /**
@@ -59,23 +34,7 @@ export type GetCommandOptions<T extends CommandOptions> = T extends CommandOptio
   ? { [Prop in keyof BuildOptions<T> as Prop]: BuildOptions<T>[Prop] }
   : never
 
-export type CommandOption = CamelizedDiscordApplicationCommandOption & {
-  /**
-   * @remarks
-   * The value should be set to the translation key for the name of this command
-   *
-   * @inheritdoc
-   */
-  name: TranslationKey
-  /**
-   * @remarks
-   * The value should be set to the translation key for the name of this command
-   *
-   * @inheritdoc
-   */
-  description: TranslationKey
-}
-
+export type CommandOption = CamelizedDiscordApplicationCommandOption
 export type CommandOptions = CommandOption[]
 
 // Option parsing
@@ -114,7 +73,7 @@ interface TypeToResolvedMap {
 type ConvertTypeToResolved<T extends ApplicationCommandOptionTypes> = T extends keyof TypeToResolvedMap ? TypeToResolvedMap[T] : ResolvedValues
 
 type SubCommandApplicationCommand = ApplicationCommandOptionTypes.SubCommand | ApplicationCommandOptionTypes.SubCommandGroup
-type GetOptionName<T> = T extends { name: TranslationKey } ? (DefaultLocale[T['name']] extends string ? DefaultLocale[T['name']] : never) : never
+type GetOptionName<T> = T extends { name: string } ? T['name'] : never
 type GetOptionValue<T> = T extends { type: ApplicationCommandOptionTypes; required?: boolean }
   ? T extends { type: SubCommandApplicationCommand; options?: CommandOptions }
     ? BuildOptions<T['options']>
