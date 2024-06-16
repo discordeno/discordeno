@@ -1,5 +1,5 @@
 import { snowflakeToTimestamp } from '@discordeno/bot'
-import { bot } from '../bot.js'
+import { bot, getShardInfoFromGuild } from '../bot.js'
 import createCommand from '../commands.js'
 
 createCommand({
@@ -10,9 +10,10 @@ createCommand({
     const response = await bot.helpers.getOriginalInteractionResponse(interaction.token)
 
     const ping = snowflakeToTimestamp(response.id) - snowflakeToTimestamp(interaction.id)
+    const shardInfo = await getShardInfoFromGuild(interaction.guildId)
 
-    // TODO: add gateway latency
+    const shardPing = shardInfo.rtt === -1 ? '*Not yet available*' : `${shardInfo.rtt}ms`
 
-    await interaction.edit(`🏓 Pong! Gateway Latency: TBD, Roundtrip Latency: ${ping}ms. I am online and responsive! 🕙`)
+    await interaction.edit(`🏓 Pong! Gateway Latency: ${shardPing}, Roundtrip Latency: ${ping}ms. I am online and responsive! 🕙`)
   },
 })

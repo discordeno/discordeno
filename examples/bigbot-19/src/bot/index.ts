@@ -101,8 +101,8 @@ async function connectToRabbitMQ(): Promise<void> {
 
   if (!exchange) return
 
-  await channel.assertQueue('gatewayMessageQueue').catch(console.log)
-  await channel.bindQueue('gatewayMessageQueue', 'gatewayMessage', '').catch(console.log)
+  await channel.assertQueue('gatewayMessageQueue').catch(bot.logger.error)
+  await channel.bindQueue('gatewayMessageQueue', 'gatewayMessage', '').catch(bot.logger.error)
   await channel
     .consume('gatewayMessageQueue', async (message) => {
       if (!message) return
@@ -117,7 +117,7 @@ async function connectToRabbitMQ(): Promise<void> {
         bot.logger.error('There was an error handling events received from RabbitMQ', error)
       }
     })
-    .catch(console.log)
+    .catch(bot.logger.error)
 }
 
 interface GatewayEvent {

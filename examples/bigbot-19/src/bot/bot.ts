@@ -1,6 +1,6 @@
 import { Collection, LogDepth, createBot, type Bot, type logger } from '@discordeno/bot'
 import { DISCORD_TOKEN, GATEWAY_AUTHORIZATION, GATEWAY_INTENTS, GATEWAY_URL, REST_AUTHORIZATION, REST_URL } from '../config.js'
-import type { WorkerPresencesUpdate, WorkerShardPayload } from '../gateway/worker/types.js'
+import type { ManagerGetShardInfoFromGuildId, ShardInfo, WorkerPresencesUpdate, WorkerShardPayload } from '../gateway/worker/types.js'
 import type { Command } from './commands.js'
 
 export const bot = createCustomBot(
@@ -80,4 +80,24 @@ function overrideGatewayImplementations(bot: CustomBot): void {
       },
     })
   }
+}
+
+export async function getShardInfoFromGuild(guildId?: bigint): Promise<Omit<ShardInfo, 'nonce'>> {
+  const req = await fetch(GATEWAY_URL, {
+    method: 'POST',
+    body: JSON.stringify({
+      type: 'ShardInfoFromGuild',
+      guildId: guildId?.toString(),
+    } as ManagerGetShardInfoFromGuildId),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: GATEWAY_AUTHORIZATION,
+    },
+  })
+
+  const res = await req.json()
+
+  if (req.ok) return res
+
+  throw new Error(`There was an issue getting the shard info: ${res.error}`)
 }

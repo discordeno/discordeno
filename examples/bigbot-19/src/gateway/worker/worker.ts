@@ -64,6 +64,18 @@ parentPort.on('message', async (message: WorkerMessage) => {
     await Promise.all(promises)
     return
   }
+  if (message.type === 'GetShardInfo') {
+    const status = {
+      type: 'ShardInfo',
+      shardId: message.shardId,
+      rtt: shards.get(message.shardId)?.heart.rtt ?? -1,
+      nonce: message.nonce,
+    } satisfies ManagerMessage
+
+    parentPort?.postMessage(status)
+
+    return
+  }
 
   logger.warn(`Received unknown message type: ${(message as { type: string }).type}`)
 })

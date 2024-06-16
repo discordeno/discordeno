@@ -1,7 +1,7 @@
 import type { ShardSocketRequest, StatusUpdate } from '@discordeno/bot'
 
-export type ManagerMessage = ManagerRequestIdentify
-export type WorkerMessage = WorkerIdentifyShard | WorkerAllowIdentify | WorkerShardPayload | WorkerPresencesUpdate
+export type ManagerMessage = ManagerRequestIdentify | ManagerShardInfo
+export type WorkerMessage = WorkerIdentifyShard | WorkerAllowIdentify | WorkerShardPayload | WorkerPresencesUpdate | WorkerShardInfo
 
 export interface WorkerIdentifyShard {
   type: 'IdentifyShard'
@@ -29,6 +29,12 @@ export interface WorkerPresencesUpdate {
   payload: StatusUpdate
 }
 
+export interface WorkerShardInfo {
+  type: 'GetShardInfo'
+  shardId: number
+  nonce: string
+}
+
 export interface WorkerCreateData {
   connectionData: {
     intents: number
@@ -48,4 +54,20 @@ export interface WorkerCreateData {
     password?: string
     url?: string
   }
+}
+
+export interface ShardInfo {
+  shardId: number
+  rtt: number
+  // the nonce is to bind to the request
+  nonce: string
+}
+
+export interface ManagerShardInfo extends ShardInfo {
+  type: 'ShardInfo'
+}
+
+export interface ManagerGetShardInfoFromGuildId {
+  type: 'ShardInfoFromGuild'
+  guildId: string | undefined
 }

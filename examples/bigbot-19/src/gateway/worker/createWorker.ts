@@ -12,7 +12,10 @@ import {
 } from '../../config.js'
 import { getDirnameFromFileUrl } from '../../util.js'
 import gatewayManager, { logger } from '../gatewayManager.js'
-import type { ManagerMessage, WorkerCreateData, WorkerMessage } from './types.js'
+import type { ManagerMessage, ShardInfo, WorkerCreateData, WorkerMessage } from './types.js'
+
+// the string is the nonce of the request
+export const shardInfoRequests = new Map<string, (value: ShardInfo) => void>()
 
 export function createWorker(workerId: number): Worker {
   // the Worker constructor requires either a relative path compared to the process CWD or an absolute one, so to get one relative we need to use import.meta.url
@@ -23,14 +26,14 @@ export function createWorker(workerId: number): Worker {
     workerData: {
       connectionData: {
         intents: GATEWAY_INTENTS,
-        token: DISCORD_TOKEN!,
+        token: DISCORD_TOKEN,
         totalShards: gatewayManager.totalShards,
         url: gatewayManager.url,
         version: gatewayManager.version,
       },
       eventHandler: {
         urls: [EVENT_HANDLER_URL],
-        authentication: EVENT_HANDLER_AUTHORIZATION!,
+        authentication: EVENT_HANDLER_AUTHORIZATION,
       },
       workerId,
       messageQueue: {
@@ -52,6 +55,11 @@ export function createWorker(workerId: number): Worker {
         shardId: message.shardId,
       } satisfies WorkerMessage)
 
+      return
+    }
+    if (message.type === 'ShardInfo') {
+      shardInfoRequests.get(message.nonce)?.(message)
+      shardInfoRequests.delete(message.nonce)
       return
     }
 
