@@ -1,3 +1,4 @@
+import { join as joinPath } from 'node:path'
 import { Worker } from 'node:worker_threads'
 import {
   DISCORD_TOKEN,
@@ -9,11 +10,16 @@ import {
   MESSAGEQUEUE_URL,
   MESSAGEQUEUE_USERNAME,
 } from '../../config.js'
+import { getDirnameFromFileUrl } from '../../util.js'
 import gatewayManager, { logger } from '../gatewayManager.js'
 import type { ManagerMessage, WorkerCreateData, WorkerMessage } from './types.js'
 
 export function createWorker(workerId: number): Worker {
-  const worker = new Worker('./dist/gateway/worker/worker.js', {
+  // the Worker constructor requires either a relative path compared to the process CWD or an absolute one, so to get one relative we need to use import.meta.url
+  const currentFolder = getDirnameFromFileUrl(import.meta.url)
+  const workerFilePath = joinPath(currentFolder, './worker.js')
+
+  const worker = new Worker(workerFilePath, {
     workerData: {
       connectionData: {
         intents: GATEWAY_INTENTS,

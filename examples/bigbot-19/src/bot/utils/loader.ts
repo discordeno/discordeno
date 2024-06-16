@@ -8,8 +8,6 @@ export default async function importDirectory(folder: string): Promise<void> {
     if (!filename.endsWith('.js')) continue
 
     // Using `file://` and `process.cwd()` to avoid weird issues with relative paths and/or Windows
-    await import(`file://${process.cwd()}/${folder}/${filename}`).catch((x) =>
-      bot.logger.fatal(`Cannot import file (${folder}/${filename}) for reason:`, x),
-    )
+    await import(`file://${folder}/${filename}`).catch((x) => bot.logger.fatal(`Cannot import file (${folder}/${filename}) for reason:`, x))
   }
 }

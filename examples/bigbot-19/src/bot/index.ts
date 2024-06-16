@@ -1,6 +1,7 @@
 import type { DiscordGatewayPayload, GatewayDispatchEventNames } from '@discordeno/bot'
 import { connect as connectAmqp } from 'amqplib'
 import assert from 'node:assert'
+import { join as joinPath } from 'node:path'
 import {
   EVENT_HANDLER_AUTHORIZATION,
   EVENT_HANDLER_HOST,
@@ -10,6 +11,7 @@ import {
   MESSAGEQUEUE_URL,
   MESSAGEQUEUE_USERNAME,
 } from '../config.js'
+import { getDirnameFromFileUrl } from '../util.js'
 import { bot } from './bot.js'
 import { buildFastifyApp } from './fastify.js'
 import importDirectory from './utils/loader.js'
@@ -25,8 +27,11 @@ const portNumber = Number.parseInt(EVENT_HANDLER_PORT)
 
 assert(!Number.isNaN(portNumber), 'The EVENT_HANDLER_PORT environment variable should be a valid number')
 
-await importDirectory('./dist/bot/commands')
-await importDirectory('./dist/bot/events')
+// The importDirectory function uses 'readdir' that requires either a relative path compared to the process CWD or an absolute one, so to get one relative we need to use import.meta.url
+const currentDirectory = getDirnameFromFileUrl(import.meta.url)
+
+await importDirectory(joinPath(currentDirectory, './commands'))
+await importDirectory(joinPath(currentDirectory, './events'))
 
 if (MESSAGEQUEUE_ENABLE) {
   await connectToRabbitMQ()
@@ -64,7 +69,7 @@ async function handleGatewayEvent(payload: DiscordGatewayPayload, shardId: numbe
   // If we don't have the event type we don't process it further
   if (!payload.t) return
 
-  // RUN DISPATCH CHECK
+  // Run the dispatch check
   await bot.events.dispatchRequirements?.(payload, shardId)
 
   bot.handlers[payload.t as GatewayDispatchEventNames]?.(bot, payload, shardId)
