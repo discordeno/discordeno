@@ -2,30 +2,13 @@
   "compilerOptions": {
     "target": "es2022",
     "module": "es2022",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
     "esModuleInterop": true,
-    "importHelpers": true,
-    "allowUnusedLabels": false,
-    "noImplicitOverride": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noUncheckedIndexedAccess": true,
-    "strict": true,
-    "stripInternal": true,
-    "noFallthroughCasesInSwitch": true,
-    "useUnknownInCatchVariables": false,
-    "allowUnreachableCode": false,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "moduleResolution": "node",
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
-    "moduleResolution": "node"
-  },
-  "include": ["./src", ".env"],
-  "ts-node": {
-    "esm": true,
-    "experimentalSpecifierResolution": "node",
-    "swc": true
+    "strict": true,
+    "incremental": true
   }
 }

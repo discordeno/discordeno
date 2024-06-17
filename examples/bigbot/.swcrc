@@ -20,6 +20,5 @@
     "strictMode": true,
     "lazy": false,
     "noInterop": false
-  },
-  "sourceMaps": true
+  }
 }

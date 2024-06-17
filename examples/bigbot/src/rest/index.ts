@@ -1,58 +1,48 @@
-import 'dotenv/config'
+import { type RequestMethods } from '@discordeno/bot'
+import { REST_HOST, REST_PORT } from '../config.js'
+import { buildFastifyApp, parseMultiformBody } from './fastify.js'
+import restManager, { logger } from './restManager.js'
 
-import { BASE_URL, createRestManager, type RequestMethod } from 'discordeno'
-import express from 'express'
-import { setupAnalyticsHooks } from '../analytics.js'
-import { REST_URL } from '../configs.js'
+const app = buildFastifyApp()
 
-const DISCORD_TOKEN = process.env.DISCORD_TOKEN!
-const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION!
-const REST_PORT = process.env.REST_PORT!
-
-const rest = createRestManager({
-  token: DISCORD_TOKEN,
-  secretKey: REST_AUTHORIZATION,
-  customUrl: REST_URL,
-  debug: console.log,
+app.get('/timecheck', async (_req, res) => {
+  res.status(200).send({ message: Date.now() })
 })
-
-// Add send fetching analytics hook to rest
-setupAnalyticsHooks(rest)
-
-rest.convertRestError = (errorStack, data) => {
-  if (!data) return { message: errorStack.message } as unknown as Error
-  return { ...data, message: errorStack.message } as unknown as Error
-}
-
-const app = express()
-
-app.use(
-  express.urlencoded({
-    extended: true,
-  }),
-)
-
-app.use(express.json())
 
 app.all('/*', async (req, res) => {
-  if (!REST_AUTHORIZATION || REST_AUTHORIZATION !== req.headers.authorization) {
-    return res.status(401).json({ error: 'Invalid authorization key.' })
+  let url = req.originalUrl
+
+  if (url.startsWith('/v')) {
+    url = url.slice(url.indexOf('/', 2))
   }
+
+  const isMultipart = req.headers['content-type']?.startsWith('multipart/form-data')
+  const hasBody = req.method !== 'GET' && req.method !== 'DELETE'
+  const body = hasBody ? (isMultipart ? await parseMultiformBody(req.body) : req.body) : undefined
 
   try {
-    const result = await rest.runMethod(rest, req.method as RequestMethod, `${BASE_URL}${req.url}`, req.body)
+    const result = await restManager.makeRequest(req.method as RequestMethods, url, {
+      body,
+    })
 
     if (result) {
-      res.status(200).json(result)
-    } else {
-      res.status(204).json()
+      res.status(200).send(result)
+      return
     }
-  } catch (error: any) {
-    console.log(error)
-    res.status(500).json(error)
+
+    res.status(204).send({})
+  } catch (error) {
+    logger.error(error)
+
+    res.status(500).send({
+      message: error,
+    })
   }
 })
 
-app.listen(REST_PORT, () => {
-  console.log(`REST listening at ${REST_URL}`)
+await app.listen({
+  host: REST_HOST,
+  port: REST_PORT,
 })
+
+logger.info(`REST Proxy listening on port ${REST_PORT}`)

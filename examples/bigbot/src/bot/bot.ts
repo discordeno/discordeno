@@ -1,63 +1,101 @@
-import type { Bot } from 'discordeno'
-import { Collection, createBot, createRestManager } from 'discordeno'
-import enableHelpersPlugin from 'discordeno/helpers-plugin'
-import { createLogger } from 'discordeno/logger'
-import { setupAnalyticsHooks } from '../analytics.js'
-import { INTENTS, REST_URL } from '../configs.js'
-import { setupEventHandlers } from './events/mod.js'
-import type { MessageCollector } from './utils/collectors.js'
-import { customizeInternals } from './utils/internals/mod.js'
+import { Collection, LogDepth, createBot, type Bot, type logger } from '@discordeno/bot'
+import { DISCORD_TOKEN, GATEWAY_AUTHORIZATION, GATEWAY_INTENTS, GATEWAY_URL, REST_AUTHORIZATION, REST_URL } from '../config.js'
+import type { ManagerGetShardInfoFromGuildId, ShardInfo, WorkerPresencesUpdate, WorkerShardPayload } from '../gateway/worker/types.js'
+import type { Command } from './commands.js'
 
-const DISCORD_TOKEN = process.env.DISCORD_TOKEN!
-const REST_AUTHORIZATION = process.env.REST_AUTHORIZATION!
-
-export const bot = enableHelpersPlugin(
-  customizeBot(
-    createBot({
+export const bot = createCustomBot(
+  createBot({
+    token: DISCORD_TOKEN,
+    intents: GATEWAY_INTENTS,
+    rest: {
       token: DISCORD_TOKEN,
-      intents: INTENTS,
-    }),
-  ),
+      proxy: {
+        baseUrl: REST_URL,
+        authorization: REST_AUTHORIZATION,
+      },
+    },
+  }),
 )
 
-/** Add custom props to your `bot` here */
-// SETUP-DD-TEMP: If you want to add any custom props to `bot` you can do so here. Please make sure to also add them in the type below. As an example, i have added a `logger` property. You can add any useful methods or props you wish to have easily available.
-function customizeBot<B extends Bot = Bot>(bot: B): BotWithCustomProps {
-  const customized = bot as unknown as BotWithCustomProps
-  customized.logger = createLogger({ name: '[Bot]' })
-  customized.collectors = {
-    messages: new Collection(),
-  }
-  customized.commandVersions = new Collection()
+overrideGatewayImplementations(bot)
 
-  return customized
+// TEMPLATE-SETUP: Add/Remove the desired proprieties that you don't need
+const props = bot.transformers.desiredProperties
+
+props.interaction.id = true
+props.interaction.data = true
+props.interaction.type = true
+props.interaction.user = true
+props.interaction.token = true
+props.interaction.guildId = true
+
+props.user.id = true
+props.user.username = true
+
+// TEMPLATE-SETUP: If you want/need to add any custom proprieties on the Bot type, you can do it in this function and the `CustomBot` type below. Make sure to do it in both or else you will get an error by TypeScript
+function createCustomBot<TBot extends Bot = Bot>(rawBot: TBot): CustomBot<TBot> {
+  const bot = rawBot as CustomBot<TBot>
+
+  // We need to set the log depth for the default discordeno logger or else only the first param will be logged
+  ;(bot.logger as typeof logger).setDepth(LogDepth.Full)
+
+  bot.commands = new Collection()
+
+  return bot
 }
 
-// SETUP-DD-TEMP: If you want to add any custom props to `bot` you can do so here. Please make sure to also add them in the function above. Run a find all and change this to your Bot's name. For example, if your bot's name is Gamer change BotWithCustomProps to Gamer. This way whenever you need to provide the type for the Bot with your custom props it is your bots name.
-// Note: ALWAYS edit the function above first before adding the type here.
-export type BotWithCustomProps<B extends Bot = Bot> = B & {
-  /** A easy to use logger to make clean log messages. */
-  logger: ReturnType<typeof createLogger>
-  /** Collectors that can be used to get input from users. */
-  collectors: {
-    /** Holds the pending messages collectors that users can respond to. */
-    messages: Collection<bigint, MessageCollector>
-  }
-  /** The command versions for each guild id. */
-  commandVersions: Collection<bigint, number>
+export type CustomBot<TBot extends Bot = Bot> = TBot & {
+  commands: Collection<string, Command>
 }
 
-// Example of how to customize internal discordeno stuff easily.
-customizeInternals(bot)
+// Override the default gateway functions to allow the methods on the gateway object to proxy the requests to the gateway proxy
+function overrideGatewayImplementations(bot: CustomBot): void {
+  bot.gateway.sendPayload = async (shardId, payload) => {
+    await fetch(GATEWAY_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        type: 'ShardPayload',
+        shardId,
+        payload,
+      } satisfies WorkerShardPayload),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: GATEWAY_AUTHORIZATION,
+      },
+    })
+  }
 
-// Setup event handlers.
-setupEventHandlers()
+  bot.gateway.editBotStatus = async (payload) => {
+    await fetch(GATEWAY_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        type: 'EditShardsPresence',
+        payload,
+      } satisfies WorkerPresencesUpdate),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: GATEWAY_AUTHORIZATION,
+      },
+    })
+  }
+}
 
-bot.rest = createRestManager({
-  token: DISCORD_TOKEN,
-  secretKey: REST_AUTHORIZATION,
-  customUrl: REST_URL,
-})
+export async function getShardInfoFromGuild(guildId?: bigint): Promise<Omit<ShardInfo, 'nonce'>> {
+  const req = await fetch(GATEWAY_URL, {
+    method: 'POST',
+    body: JSON.stringify({
+      type: 'ShardInfoFromGuild',
+      guildId: guildId?.toString(),
+    } as ManagerGetShardInfoFromGuildId),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: GATEWAY_AUTHORIZATION,
+    },
+  })
 
-// Add send fetching analytics hook to rest
-setupAnalyticsHooks(bot.rest)
+  const res = await req.json()
+
+  if (req.ok) return res
+
+  throw new Error(`There was an issue getting the shard info: ${res.error}`)
+}
