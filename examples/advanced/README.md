@@ -2,14 +2,14 @@
 
 This template has a bit more advanced code.
 
-This template includes some caching, user permission handling and slash commands options support
+This template includes some caching using `dd-proxy-cache`, user permission handling and slash commands options support
 It includes a /ping command to show the bot latency, and a /warn command to show how to send a DM to a user and how to checks for permissions
 
 ## Setup
 
 - Download the source
-- Install yarn
-- Rename the .env.example file to .env OR create a new .env file and copy the example file code to this new file.
+- Install the dependencies using `yarn`
+- Copy the .env.example file and rename it to .env
 - Fill out the .env file
 
 ## Run Bot
