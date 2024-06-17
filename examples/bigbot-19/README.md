@@ -35,7 +35,7 @@ First, copy the .env.example file to .env, and fille the values, when values are
 >   - `MESSAGEQUEUE_URL` should be set to `rabbitmq:5672`
 >   - `MESSAGEQUEUE_USERNAME` should be set to `guest`
 >   - `MESSAGEQUEUE_PASSWORD` should be set to `guest`
-> - Copy the value for influxDb:
+> - Copy the value for influxDB:
 >   - copy `DOCKER_INFLUXDB_INIT_ORG` to `INFLUX_ORG`
 >   - copy `DOCKER_INFLUXDB_INIT_BUCKET` to `INFLUX_BUCKET`
 >   - copy `DOCKER_INFLUXDB_INIT_ADMIN_TOKEN` to `INFLUX_TOKEN`
@@ -54,12 +54,11 @@ You can check the REST process fetch analytics (methods, status...) in influxdb'
 > This template has been tested with the following versions:
 >
 > - NodeJS: v18.20.3 and v22.2.0
+>   - Any NodeJS version between v18.20.3 and v22.2.0 should work, anything below v18 will not run correctly, anything above v22 should work
 > - RabbitMQ: v3.12.14 with:
 >   - Erlang: v26.2.5
 >   - [RabbitMQ Message Deduplication Plugin](https://github.com/noxdafox/rabbitmq-message-deduplication): v0.6.2
 > - InfluxDB: v2.7.6
->
-> Any version between v18.20.3 and v22.2.0 should work, anything below v18 will not run correctly, anything above v22 should work
 
 You will need to start a few processes.
 
