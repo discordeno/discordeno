@@ -35,14 +35,15 @@ First, copy the .env.example file to .env, and fille the values, when values are
 >   - `MESSAGEQUEUE_URL` should be set to `rabbitmq:5672`
 >   - `MESSAGEQUEUE_USERNAME` should be set to `guest`
 >   - `MESSAGEQUEUE_PASSWORD` should be set to `guest`
-> - Copy the value for influxDB:
->   - copy `DOCKER_INFLUXDB_INIT_ORG` to `INFLUX_ORG`
->   - copy `DOCKER_INFLUXDB_INIT_BUCKET` to `INFLUX_BUCKET`
->   - copy `DOCKER_INFLUXDB_INIT_ADMIN_TOKEN` to `INFLUX_TOKEN`
+> - Set the value for influxDB:
+>   - Copy `DOCKER_INFLUXDB_INIT_ORG` to `INFLUX_ORG`
+>   - Copy `DOCKER_INFLUXDB_INIT_BUCKET` to `INFLUX_BUCKET`
+>   - Copy `DOCKER_INFLUXDB_INIT_ADMIN_TOKEN` to `INFLUX_TOKEN`
+>   - Set `INFLUX_URL` to `http://influxdb:8086`
 
-Then, run `docker-compose build` to build/rebuild the bot
+Then, run `docker compose build` to build/rebuild the bot
 
-And, run `docker-compose up -d` to start
+And, run `docker compose up -d` to start
 
 Your bot should be running now.
 
@@ -53,7 +54,7 @@ You can check the REST process fetch analytics (methods, status...) in influxdb'
 > [!NOTE]
 > This template has been tested with the following versions:
 >
-> - NodeJS: v18.20.3 and v22.2.0
+> - NodeJS: v18.20.3, v20.14.0 and v22.2.0
 >   - Any NodeJS version between v18.20.3 and v22.2.0 should work, anything below v18 will not run correctly, anything above v22 should work
 > - RabbitMQ: v3.12.14 with:
 >   - Erlang: v26.2.5

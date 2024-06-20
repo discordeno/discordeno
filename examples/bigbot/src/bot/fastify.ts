@@ -5,9 +5,9 @@ export function buildFastifyApp(): FastifyInstance {
   const app = fastify()
 
   // Authorization check
-  app.addHook('onRequest', async (request, reply) => {
-    if (request.headers.authorization !== EVENT_HANDLER_AUTHORIZATION) {
-      reply.status(401).send({
+  app.addHook('onRequest', async (req, res) => {
+    if (req.headers.authorization !== EVENT_HANDLER_AUTHORIZATION) {
+      res.status(401).send({
         message: 'Credentials not valid.',
       })
     }

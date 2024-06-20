@@ -7,8 +7,6 @@ import type { ManagerGetShardInfoFromGuildId, ShardInfo, WorkerMessage, WorkerPr
 
 const app = buildFastifyApp()
 
-await gatewayManager.spawnShards()
-
 app.get('/timecheck', (_req, res) => {
   res.status(200).send({ message: Date.now() })
 })
@@ -70,3 +68,5 @@ await app.listen({
 })
 
 logger.info(`Gateway manager listening on port ${GATEWAY_PORT}`)
+
+await gatewayManager.spawnShards()

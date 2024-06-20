@@ -8,9 +8,9 @@ export function buildFastifyApp(): FastifyInstance {
   app.register(fastifyMultipart, { attachFieldsToBody: true })
 
   // Authorization check
-  app.addHook('onRequest', async (request, reply) => {
-    if (request.headers.authorization !== REST_AUTHORIZATION) {
-      reply.status(401).send({
+  app.addHook('onRequest', async (req, res) => {
+    if (req.headers.authorization !== REST_AUTHORIZATION) {
+      res.status(401).send({
         message: 'Credentials not valid.',
       })
     }
