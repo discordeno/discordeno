@@ -12,9 +12,6 @@ WORKDIR /usr/src/app
 # Enable corepack so it can install the needed yarn version
 RUN corepack enable
 
-# Add curl for the healthchecks
-RUN apk add --no-cache curl
-
 COPY package.json .
 COPY yarn.lock .
 # We need to copy the yarnrc or else yarn will attempt to use PnP

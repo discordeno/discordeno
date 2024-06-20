@@ -26,12 +26,6 @@ services:
         condition: service_healthy
     env_file:
       - .env
-    healthcheck:
-      test: "curl -f http://rest:8000/timecheck"
-      interval: 30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
   gateway:
     build:
       context: .
@@ -43,12 +37,6 @@ services:
         condition: service_healthy
     env_file:
       - .env
-    healthcheck:
-      test: "curl -f http://gateway:8080/timecheck"
-      interval: 30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
   bot:
     build:
       context: .
