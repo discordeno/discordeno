@@ -4,6 +4,9 @@
   "compilerOptions": {
     "target": "es2022",
     "module": "es2022",
+    "rootDir": "${configDir}/src",
+    "outDir": "${configDir}/dist",
+    "tsBuildInfoFile": "${configDir}/dist/.tsbuildinfo",
     "composite": false,
     "declaration": true,
     "declarationMap": true,
@@ -21,6 +24,7 @@
     "incremental": true,
     "resolveJsonModule": true
   },
+  "include": ["${configDir}/src"],
   "ts-node": {
     "swc": true,
     "esm": true
