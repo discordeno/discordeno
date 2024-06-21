@@ -1,47 +1,47 @@
-import type {
-  ActivityTypes,
-  AllowedMentionsTypes,
-  ApplicationCommandOptionTypes,
-  ApplicationCommandPermissionTypes,
-  ApplicationCommandTypes,
-  ApplicationFlags,
-  AttachmentFlags,
-  AuditLogEvents,
-  ButtonStyles,
-  ChannelFlags,
-  ChannelTypes,
-  DefaultMessageNotificationLevels,
-  EmbedTypes,
-  ExplicitContentFilterLevels,
-  ForumLayout,
-  GatewayEventNames,
-  GuildFeatures,
-  GuildNsfwLevel,
-  IntegrationExpireBehaviors,
-  InteractionTypes,
-  Localization,
-  MessageActivityTypes,
-  MessageComponentTypes,
-  MessageTypes,
-  MfaLevels,
-  OverwriteTypes,
-  PickPartial,
-  PremiumTiers,
-  PremiumTypes,
-  RoleFlags,
-  ScheduledEventEntityType,
-  ScheduledEventPrivacyLevel,
-  ScheduledEventStatus,
-  SortOrderTypes,
-  StickerFormatTypes,
-  StickerTypes,
-  SystemChannelFlags,
-  TargetTypes,
-  TeamMembershipStates,
-  TextStyles,
-  VerificationLevels,
-  VideoQualityModes,
-  WebhookTypes,
+import {
+  type ActivityTypes,
+  type AllowedMentionsTypes,
+  type ApplicationCommandOptionTypes,
+  type ApplicationCommandPermissionTypes,
+  type ApplicationCommandTypes,
+  type ApplicationFlags,
+  type AttachmentFlags,
+  type AuditLogEvents,
+  type ButtonStyles,
+  type ChannelFlags,
+  type ChannelTypes,
+  type DefaultMessageNotificationLevels,
+  type EmbedTypes,
+  type ExplicitContentFilterLevels,
+  type ForumLayout,
+  type GatewayEventNames,
+  type GuildFeatures,
+  type GuildNsfwLevel,
+  type IntegrationExpireBehaviors,
+  type InteractionTypes,
+  type Localization,
+  type MessageActivityTypes,
+  type MessageComponentTypes,
+  type MessageTypes,
+  type MfaLevels,
+  type OverwriteTypes,
+  type PickPartial,
+  type PremiumTiers,
+  type PremiumTypes,
+  type RoleFlags,
+  type ScheduledEventEntityType,
+  type ScheduledEventPrivacyLevel,
+  type ScheduledEventStatus,
+  type SortOrderTypes,
+  type StickerFormatTypes,
+  type StickerTypes,
+  type SystemChannelFlags,
+  type TargetTypes,
+  type TeamMembershipStates,
+  type TextStyles,
+  type VerificationLevels,
+  type VideoQualityModes,
+  type WebhookTypes,
 } from './shared.js'
 
 /** https://discord.com/developers/docs/resources/user#user-object */
@@ -1683,13 +1683,29 @@ export interface DiscordSelectMenuDefaultValue {
 export interface DiscordButtonComponent {
   /** All button components have type 2 */
   type: MessageComponentTypes.Button
-  /** for what the button says (max 80 characters) */
+  /**
+   * Text that appears on the button
+   *
+   * @remarks
+   * A label can have a max of 80 characters
+   * A button of style {@link ButtonStyles.Premium | Premium} cannot have a label
+   */
   label?: string
-  /** a dev-defined unique string sent on click (max 100 characters). type 5 Link buttons can not have a custom_id */
+  /**
+   * A dev-defined unique string sent on click (max 100 characters).
+   *
+   * @remarks
+   * A button of style {@link ButtonStyles.Link | Link} or {@link ButtonStyles.Premium | Premium} cannot have a custom_id
+   */
   custom_id?: string
   /** For different styles/colors of the buttons */
   style: ButtonStyles
-  /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
+  /**
+   * Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis.
+   *
+   * @remarks
+   * A button of style {@link ButtonStyles.Premium | Premium} cannot have an emoji
+   */
   emoji?: {
     /** Emoji id */
     id?: string
@@ -1698,10 +1714,22 @@ export interface DiscordButtonComponent {
     /** Whether this emoji is animated */
     animated?: boolean
   }
-  /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
+  /**
+   * Url for {@link ButtonStyles.Link | link} buttons that can navigate a user to the web.
+   *
+   * @remarks
+   * Buttons of style {@link ButtonStyles.Link | Link} must have an url, any other button with a different style can not have an url
+   */
   url?: string
   /** Whether or not this button is disabled */
   disabled?: boolean
+  /**
+   * SKU for {@link ButtonStyles.Premium | premium} buttons that can navigate a user to the application shop.
+   *
+   * @remarks
+   * Buttons of style {@link ButtonStyles.Premium | Premium} must have a sku_id, any other button with a different style can not have a a sku_id
+   */
+  sku_id?: string
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#text-inputs-text-input-structure */
