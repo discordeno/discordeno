@@ -13,18 +13,18 @@ export const UserToggle = {
 }
 
 export class UserToggles extends ToggleBitfield {
-  constructor(userOrTogglesInt: DiscordUser | number) {
+  constructor(toggles: Partial<DiscordUser> | number) {
     super()
 
-    if (typeof userOrTogglesInt === 'number') this.bitfield = userOrTogglesInt
-    else {
-      const user = userOrTogglesInt
-
-      if (user.bot) this.add(UserToggle.bot)
-      if (user.system) this.add(UserToggle.system)
-      if (user.mfa_enabled) this.add(UserToggle.mfaEnabled)
-      if (user.verified) this.add(UserToggle.verified)
+    if (typeof toggles === 'number') {
+      this.bitfield = toggles
+      return
     }
+
+    if (toggles.bot) this.add(UserToggle.bot)
+    if (toggles.system) this.add(UserToggle.system)
+    if (toggles.mfa_enabled) this.add(UserToggle.mfaEnabled)
+    if (toggles.verified) this.add(UserToggle.verified)
   }
 
   /** Whether the user belongs to an OAuth2 application */

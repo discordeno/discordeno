@@ -28,10 +28,7 @@ export function transformApplication(bot: Bot, payload: { application: DiscordAp
 
     id: bot.transformers.snowflake(payload.application.id),
     icon: payload.application.icon ? iconHashToBigInt(payload.application.icon) : undefined,
-    owner: payload.application.owner
-      ? // @ts-expect-error the partial here wont break anything
-        bot.transformers.user(bot, payload.application.owner)
-      : undefined,
+    owner: payload.application.owner ? bot.transformers.user(bot, payload.application.owner) : undefined,
     team: payload.application.team ? bot.transformers.team(bot, payload.application.team) : undefined,
     guildId: payload.application.guild_id ? bot.transformers.snowflake(payload.application.guild_id) : undefined,
     // @ts-expect-error the partial here wont break anything
