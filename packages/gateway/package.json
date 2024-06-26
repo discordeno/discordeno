@@ -48,7 +48,7 @@
     "sinon": "^17.0.1",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "5.3.3",
+    "typescript": "5.4.5",
     "uWebSockets.js": "https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28"
   }
 }

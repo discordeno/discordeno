@@ -50,7 +50,7 @@
     "sinon": "^17.0.1",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "5.3.3",
+    "typescript": "5.4.5",
     "why-is-node-running": "^2.2.2"
   }
 }
