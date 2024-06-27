@@ -110,24 +110,24 @@ describe('[rest] manager', () => {
     })
 
     it('will return false for path without rate limited', () => {
-      expect(rest.checkRateLimits('/channel/555555555555555555')).to.be.equal(false)
+      expect(rest.checkRateLimits('/channel/555555555555555555', `Bot ${token}`)).to.be.equal(false)
     })
 
     describe('With per URL rateLimitedPath', () => {
       it('Will return time until reset if before resetTimestamp', () => {
-        rest.rateLimitedPaths.set('/channel/555555555555555555', {
+        rest.rateLimitedPaths.set(`Bot ${token}/channel/555555555555555555`, {
           url: '/channel/555555555555555555',
           resetTimestamp: Date.now() + 6541,
         })
-        expect(rest.checkRateLimits('/channel/555555555555555555')).to.be.equal(6541)
+        expect(rest.checkRateLimits('/channel/555555555555555555', `Bot ${token}`)).to.be.equal(6541)
       })
 
       it('Will return false if before resetTimestamp', () => {
-        rest.rateLimitedPaths.set('/channel/555555555555555555', {
+        rest.rateLimitedPaths.set(`Bot ${token}/channel/555555555555555555`, {
           url: '/channel/555555555555555555',
           resetTimestamp: Date.now(),
         })
-        expect(rest.checkRateLimits('/channel/555555555555555555')).to.be.equal(false)
+        expect(rest.checkRateLimits('/channel/555555555555555555', `Bot ${token}`)).to.be.equal(false)
       })
     })
 
@@ -137,7 +137,7 @@ describe('[rest] manager', () => {
           url: '/channel/555555555555555555',
           resetTimestamp: Date.now() + 9849,
         })
-        expect(rest.checkRateLimits('/channel/555555555555555555')).to.be.equal(9849)
+        expect(rest.checkRateLimits('/channel/555555555555555555', `Bot ${token}`)).to.be.equal(9849)
       })
 
       it('Will return false if before resetTimestamp', () => {
@@ -145,13 +145,13 @@ describe('[rest] manager', () => {
           url: '/channel/555555555555555555',
           resetTimestamp: Date.now(),
         })
-        expect(rest.checkRateLimits('/channel/555555555555555555')).to.be.equal(false)
+        expect(rest.checkRateLimits('/channel/555555555555555555', `Bot ${token}`)).to.be.equal(false)
       })
     })
 
     describe('With both URL and Global rateLimitedPath', () => {
       it('Will return URL time first if before resetTimestamp', () => {
-        rest.rateLimitedPaths.set('/channel/555555555555555555', {
+        rest.rateLimitedPaths.set(`Bot ${token}/channel/555555555555555555`, {
           url: '/channel/555555555555555555',
           resetTimestamp: Date.now() + 6541,
         })
@@ -159,7 +159,7 @@ describe('[rest] manager', () => {
           url: '/channel/555555555555555555',
           resetTimestamp: Date.now() + 9849,
         })
-        expect(rest.checkRateLimits('/channel/555555555555555555')).to.be.equal(6541)
+        expect(rest.checkRateLimits('/channel/555555555555555555', `Bot ${token}`)).to.be.equal(6541)
       })
     })
   })
