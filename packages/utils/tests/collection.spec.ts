@@ -108,24 +108,24 @@ describe('collection.ts', () => {
 
     describe('.find() method', () => {
       it('will find value by value', () => {
-        expect(collection.find((v, k) => v === 'tri')).to.be.equal('tri')
-        expect(collection.find((v, k) => v === 'skillz')).to.be.undefined
+        expect(collection.find((v) => v === 'tri')).to.be.equal('tri')
+        expect(collection.find((v) => v === 'skillz')).to.be.undefined
       })
 
       it('will find value by key', () => {
-        expect(collection.find((v, k) => k === 'proficient')).to.be.equal('yui')
-        expect(collection.find((v, k) => k === 'skillz')).to.be.undefined
+        expect(collection.find((_v, k) => k === 'proficient')).to.be.equal('yui')
+        expect(collection.find((_v, k) => k === 'skillz')).to.be.undefined
       })
     })
 
     describe('.filter() method', () => {
       it('will filter by key', () => {
-        expect(collection.filter((v, k) => v === 'yui').array()).to.deep.equal(['yui'])
-        expect(collection.filter((v, k) => v === 'skillz').array()).to.deep.equal([])
+        expect(collection.filter((v) => v === 'yui').array()).to.deep.equal(['yui'])
+        expect(collection.filter((v) => v === 'skillz').array()).to.deep.equal([])
       })
       it('will filter by key', () => {
-        expect(collection.filter((v, k) => k === 'best').array()).to.deep.equal(['tri'])
-        expect(collection.filter((v, k) => k === 'skillz').array()).to.deep.equal([])
+        expect(collection.filter((_v, k) => k === 'best').array()).to.deep.equal(['tri'])
+        expect(collection.filter((_v, k) => k === 'skillz').array()).to.deep.equal([])
       })
     })
 
@@ -201,7 +201,6 @@ describe('collection.ts', () => {
 
       describe('.changeSweeperFilter() method', () => {
         it('will call startSweeper with new interval', () => {
-          // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
           const newFilter = () => true
           collection.startSweeper({ filter: () => false, interval: 1000 })
           collection.changeSweeperFilter(newFilter)
@@ -209,7 +208,6 @@ describe('collection.ts', () => {
         })
 
         it('will not startsweeper if not started', () => {
-          // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
           const newFilter = () => true
           collection.changeSweeperFilter(newFilter)
           expect(collection.sweeper).to.undefined

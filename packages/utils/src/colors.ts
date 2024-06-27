@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 // Copyright 2018-2022 the Deno authors. All rights reserved. MIT license.
 // A module to print ANSI terminal colors. Inspired by chalk, kleur, and colors
 // on npm.

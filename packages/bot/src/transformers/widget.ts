@@ -1,5 +1,5 @@
 import type { DiscordGuildWidget } from '@discordeno/types'
-import { iconHashToBigInt, type Bot } from '../index.js'
+import { type Bot, iconHashToBigInt } from '../index.js'
 
 export function transformWidget(bot: Bot, payload: DiscordGuildWidget): GuildWidget {
   const widget = {

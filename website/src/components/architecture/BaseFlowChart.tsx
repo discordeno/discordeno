@@ -1,14 +1,5 @@
 import { useEffect, useState } from 'react'
-import ReactFlow, {
-  Background,
-  Controls,
-  Handle,
-  Position,
-  useEdgesState,
-  useNodesState,
-  type Edge,
-  type Node,
-} from 'reactflow'
+import ReactFlow, { Background, Controls, Handle, Position, useEdgesState, useNodesState, type Edge, type Node } from 'reactflow'
 import 'reactflow/dist/style.css'
 
 export const multiplier = 225
@@ -41,9 +32,7 @@ export default function BaseFlowChart({
     }
   }
 
-  const [windowDimensions, setWindowDimensions] = useState(
-    getWindowDimensions(),
-  )
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
 
   useEffect(() => {
     function handleResize() {
@@ -67,11 +56,7 @@ export default function BaseFlowChart({
             windowDimensions.width >= 997
               ? `${
                   (100 *
-                    ((windowDimensions.width -
-                      300 -
-                      (windowDimensions.width >= 1620
-                        ? (windowDimensions.width - 1620) * 0.5
-                        : 0)) /
+                    ((windowDimensions.width - 300 - (windowDimensions.width >= 1620 ? (windowDimensions.width - 1620) * 0.5 : 0)) /
                       windowDimensions.width) -
                     2) *
                   widthMultiplier
@@ -105,7 +90,7 @@ export default function BaseFlowChart({
                 />
               </div>
             ),
-            baseLineNodeText: n => (
+            baseLineNodeText: (n) => (
               <div
                 style={{
                   textAlign: 'center',

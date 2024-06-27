@@ -1,6 +1,6 @@
 import {
-  ApplicationCommandTypes,
   type AllowedMentions,
+  ApplicationCommandTypes,
   type ButtonStyles,
   type ChannelTypes,
   type CreateApplicationCommand,

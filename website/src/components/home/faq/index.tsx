@@ -1,9 +1,4 @@
-import {
-  FaqAnswer,
-  FaqContainer,
-  FaqQuestion,
-  FaqSection,
-} from '@site/src/styling'
+import { FaqAnswer, FaqContainer, FaqQuestion, FaqSection } from '@site/src/styling'
 import { useState } from 'react'
 
 const Faq = ({
@@ -44,8 +39,7 @@ const Faq = ({
 
 const questions = [
   {
-    question:
-      'Does Discordeno work on all JavaScript runtimes like Deno, Node.js, and Bun?',
+    question: 'Does Discordeno work on all JavaScript runtimes like Deno, Node.js, and Bun?',
     answer:
       "Yes! Discordeno is designed to work on any JavaScript runtime, including Deno, Node.js, and even in the Bun environment. This means that you can use Discordeno in your project no matter where you're running your code.",
     defaultExpanded: true,
@@ -77,12 +71,7 @@ export default function DiscordenoFAQ() {
         <div>
           <h1>Frequently Asked Questions</h1>
           {questions.map((question, index) => (
-            <Faq
-              key={index}
-              question={question.question}
-              answer={question.answer}
-              defaultExpanded={question.defaultExpanded}
-            />
+            <Faq key={index} question={question.question} answer={question.answer} defaultExpanded={question.defaultExpanded} />
           ))}
         </div>
       </FaqSection>

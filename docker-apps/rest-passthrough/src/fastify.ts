@@ -1,6 +1,6 @@
-import fastifyMultipart from '@fastify/multipart'
 import fastifyEnv from '@fastify/env'
 import fastifyHelmet from '@fastify/helmet'
+import fastifyMultipart from '@fastify/multipart'
 import fastify, { type FastifyInstance } from 'fastify'
 
 export const buildFastifyApp = async (): Promise<FastifyInstance> => {

@@ -1,5 +1,5 @@
+import { type RequestMethods, createRestManager } from '@discordeno/rest'
 import type { MultipartFile, MultipartValue } from '@fastify/multipart'
-import { createRestManager, type RequestMethods } from '@discordeno/rest'
 import { buildFastifyApp } from './fastify.js'
 
 const app = await buildFastifyApp()
@@ -13,7 +13,7 @@ const discordRestManager = createRestManager({
   token: app.config.DISCORD_TOKEN,
 })
 
-app.get('/timecheck', async (request, reply) => {
+app.get('/timecheck', async (_request, reply) => {
   reply.status(200).send({
     message: Date.now(),
   })

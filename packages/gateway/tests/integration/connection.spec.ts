@@ -1,8 +1,7 @@
 import { Intents } from '@discordeno/types'
 import uWS from 'uWebSockets.js'
-import { createGatewayManager, ShardSocketCloseCodes } from '../../src/index.js'
+import { ShardSocketCloseCodes, createGatewayManager } from '../../src/index.js'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const createGatewayManagerWithPort = (port: number) =>
   createGatewayManager({
     connection: {
@@ -21,7 +20,6 @@ const createGatewayManagerWithPort = (port: number) =>
     events: {},
   })
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const createUws = async (options: {
   onOpen?: () => any
   onMessage?: (message: any) => any
@@ -29,8 +27,8 @@ const createUws = async (options: {
   closing?: boolean
 }) => {
   options.onOpen ??= () => {}
-  options.onMessage ??= (message: any) => {}
-  options.onClose ??= (code: number, message: string) => {}
+  options.onMessage ??= (_message: any) => {}
+  options.onClose ??= (_code: number, _message: string) => {}
   options.closing ??= false
 
   return await new Promise<{ port: number; uwsToken: any }>((resolve, reject) => {
@@ -57,7 +55,7 @@ const createUws = async (options: {
           )
           options.onOpen!()
         },
-        message: async (ws, message, isBinary) => {
+        message: async (ws, message, _isBinary) => {
           const msg = JSON.parse(Buffer.from(message).toString())
           options.onMessage!(msg)
           if (msg.op === 1) {
@@ -109,7 +107,7 @@ const createUws = async (options: {
             // resume
           }
         },
-        close: (ws, code, message) => {
+        close: (_ws, code, message) => {
           const msg = Buffer.from(message).toString()
           options.onClose!(code, msg)
         },

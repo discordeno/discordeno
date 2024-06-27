@@ -53,25 +53,26 @@ import type {
   DiscordWelcomeScreen,
 } from '@discordeno/types'
 import { logger } from '@discordeno/utils'
-import { bigintToSnowflake, snowflakeToBigint, type Bot } from './index.js'
-import { transformActivity, type Activity } from './transformers/activity.js'
-import { transformApplication, type Application } from './transformers/application.js'
-import { transformApplicationCommand, type ApplicationCommand } from './transformers/applicationCommand.js'
-import { transformApplicationCommandOption, type ApplicationCommandOption } from './transformers/applicationCommandOption.js'
-import { transformApplicationCommandOptionChoice, type ApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js'
-import { transformApplicationCommandPermission, type ApplicationCommandPermission } from './transformers/applicationCommandPermission.js'
-import { transformAttachment, type Attachment } from './transformers/attachment.js'
-import { transformAuditLogEntry, type AuditLogEntry } from './transformers/auditLogEntry.js'
-import { transformAutoModerationActionExecution, type AutoModerationActionExecution } from './transformers/automodActionExecution.js'
-import { transformAutoModerationRule, type AutoModerationRule } from './transformers/automodRule.js'
-import { transformChannel, type Channel } from './transformers/channel.js'
-import { transformComponent, type Component } from './transformers/component.js'
-import { transformEmbed, type Embed } from './transformers/embed.js'
-import { transformEmoji, type Emoji } from './transformers/emoji.js'
-import { transformEntitlement, type Entitlement } from './transformers/entitlement.js'
-import { transformGatewayBot, type GetGatewayBot } from './transformers/gatewayBot.js'
-import { transformGuild, type Guild } from './transformers/guild.js'
+import { type Bot, bigintToSnowflake, snowflakeToBigint } from './index.js'
+import { type Activity, transformActivity } from './transformers/activity.js'
+import { type Application, transformApplication } from './transformers/application.js'
+import { type ApplicationCommand, transformApplicationCommand } from './transformers/applicationCommand.js'
+import { type ApplicationCommandOption, transformApplicationCommandOption } from './transformers/applicationCommandOption.js'
+import { type ApplicationCommandOptionChoice, transformApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js'
+import { type ApplicationCommandPermission, transformApplicationCommandPermission } from './transformers/applicationCommandPermission.js'
+import { type Attachment, transformAttachment } from './transformers/attachment.js'
+import { type AuditLogEntry, transformAuditLogEntry } from './transformers/auditLogEntry.js'
+import { type AutoModerationActionExecution, transformAutoModerationActionExecution } from './transformers/automodActionExecution.js'
+import { type AutoModerationRule, transformAutoModerationRule } from './transformers/automodRule.js'
+import { type Channel, transformChannel } from './transformers/channel.js'
+import { type Component, transformComponent } from './transformers/component.js'
+import { type Embed, transformEmbed } from './transformers/embed.js'
+import { type Emoji, transformEmoji } from './transformers/emoji.js'
+import { type Entitlement, transformEntitlement } from './transformers/entitlement.js'
+import { type GetGatewayBot, transformGatewayBot } from './transformers/gatewayBot.js'
+import { type Guild, transformGuild } from './transformers/guild.js'
 import {
+  type AvatarDecorationData,
   transformActivityToDiscordActivity,
   transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
   transformApplicationCommandOptionToDiscordApplicationCommandOption,
@@ -84,47 +85,46 @@ import {
   transformMemberToDiscordMember,
   transformTeamToDiscordTeam,
   transformUserToDiscordUser,
-  type AvatarDecorationData,
 } from './transformers/index.js'
-import { transformIntegration, type Integration } from './transformers/integration.js'
-import { transformInteraction, transformInteractionDataOption, type Interaction, type InteractionDataOption } from './transformers/interaction.js'
-import { transformInvite, type Invite } from './transformers/invite.js'
-import { transformMember, type Member } from './transformers/member.js'
+import { type Integration, transformIntegration } from './transformers/integration.js'
+import { type Interaction, type InteractionDataOption, transformInteraction, transformInteractionDataOption } from './transformers/interaction.js'
+import { type Invite, transformInvite } from './transformers/invite.js'
+import { type Member, transformMember } from './transformers/member.js'
 import {
-  transformMessage,
-  transformMessageCall,
-  transformMessageInteractionMetadata,
   type Message,
   type MessageCall,
   type MessageInteractionMetadata,
+  transformMessage,
+  transformMessageCall,
+  transformMessageInteractionMetadata,
 } from './transformers/message.js'
-import { transformGuildOnboarding, type GuildOnboarding } from './transformers/onboarding.js'
-import { transformPoll, transformPollMedia, type Poll, type PollMedia } from './transformers/poll.js'
-import { transformPresence, type PresenceUpdate } from './transformers/presence.js'
+import { type GuildOnboarding, transformGuildOnboarding } from './transformers/onboarding.js'
+import { type Poll, type PollMedia, transformPoll, transformPollMedia } from './transformers/poll.js'
+import { type PresenceUpdate, transformPresence } from './transformers/presence.js'
 import { transformAllowedMentionsToDiscordAllowedMentions } from './transformers/reverse/allowedMentions.js'
 import { transformCreateApplicationCommandToDiscordCreateApplicationCommand } from './transformers/reverse/createApplicationCommand.js'
 import { transformInteractionResponseToDiscordInteractionResponse } from './transformers/reverse/interactionResponse.js'
-import { transformRole, type Role } from './transformers/role.js'
-import { transformScheduledEvent, type ScheduledEvent } from './transformers/scheduledEvent.js'
-import { transformSku, type Sku } from './transformers/sku.js'
-import { transformStageInstance, type StageInstance } from './transformers/stageInstance.js'
-import { transformInviteStageInstance, type InviteStageInstance } from './transformers/stageInviteInstance.js'
-import { transformSticker, transformStickerPack, type Sticker, type StickerPack } from './transformers/sticker.js'
-import { transformTeam, type Team } from './transformers/team.js'
-import { transformTemplate, type Template } from './transformers/template.js'
+import { type Role, transformRole } from './transformers/role.js'
+import { type ScheduledEvent, transformScheduledEvent } from './transformers/scheduledEvent.js'
+import { type Sku, transformSku } from './transformers/sku.js'
+import { type StageInstance, transformStageInstance } from './transformers/stageInstance.js'
+import { type InviteStageInstance, transformInviteStageInstance } from './transformers/stageInviteInstance.js'
+import { type Sticker, type StickerPack, transformSticker, transformStickerPack } from './transformers/sticker.js'
+import { type Team, transformTeam } from './transformers/team.js'
+import { type Template, transformTemplate } from './transformers/template.js'
 import {
-  transformThreadMember,
-  transformThreadMemberGuildCreate,
   type ThreadMember,
   type ThreadMemberGuildCreate,
+  transformThreadMember,
+  transformThreadMemberGuildCreate,
 } from './transformers/threadMember.js'
-import { transformUser, type User } from './transformers/user.js'
-import { transformVoiceRegion, type VoiceRegion } from './transformers/voiceRegion.js'
-import { transformVoiceState, type VoiceState } from './transformers/voiceState.js'
-import { transformWebhook, type Webhook } from './transformers/webhook.js'
-import { transformWelcomeScreen, type WelcomeScreen } from './transformers/welcomeScreen.js'
-import { transformWidget, type GuildWidget } from './transformers/widget.js'
-import { transformWidgetSettings, type GuildWidgetSettings } from './transformers/widgetSettings.js'
+import { type User, transformUser } from './transformers/user.js'
+import { type VoiceRegion, transformVoiceRegion } from './transformers/voiceRegion.js'
+import { type VoiceState, transformVoiceState } from './transformers/voiceState.js'
+import { type Webhook, transformWebhook } from './transformers/webhook.js'
+import { type WelcomeScreen, transformWelcomeScreen } from './transformers/welcomeScreen.js'
+import { type GuildWidget, transformWidget } from './transformers/widget.js'
+import { type GuildWidgetSettings, transformWidgetSettings } from './transformers/widgetSettings.js'
 import type { BotInteractionResponse, DiscordComponent, DiscordInteractionResponse, DiscordThreadMemberGuildCreate } from './typings.js'
 
 export interface Transformers {
@@ -659,148 +659,148 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
 
   return {
     customizers: {
-      channel(bot, payload, channel) {
+      channel(_bot, _payload, channel) {
         return channel
       },
-      interaction(bot, payload, interaction) {
+      interaction(_bot, _payload, interaction) {
         return interaction
       },
-      member(bot, payload, member) {
+      member(_bot, _payload, member) {
         return member
       },
-      message(bot, payload, message) {
+      message(_bot, _payload, message) {
         return message
       },
-      messageInteractionMetadata(bot, payload, metadata) {
+      messageInteractionMetadata(_bot, _payload, metadata) {
         return metadata
       },
-      messageCall(bot, payload, call) {
+      messageCall(_bot, _payload, call) {
         return call
       },
-      role(bot, payload, role) {
+      role(_bot, _payload, role) {
         return role
       },
-      user(bot, payload, user) {
+      user(_bot, _payload, user) {
         return user
       },
-      activity(bot, payload, activity) {
+      activity(_bot, _payload, activity) {
         return activity
       },
-      application(bot, payload, application) {
+      application(_bot, _payload, application) {
         return application
       },
-      applicationCommand(bot, payload, applicationCommand) {
+      applicationCommand(_bot, _payload, applicationCommand) {
         return applicationCommand
       },
-      applicationCommandOption(bot, payload, applicationCommandOption) {
+      applicationCommandOption(_bot, _payload, applicationCommandOption) {
         return applicationCommandOption
       },
-      applicationCommandOptionChoice(bot, payload, applicationCommandOptionChoice) {
+      applicationCommandOptionChoice(_bot, _payload, applicationCommandOptionChoice) {
         return applicationCommandOptionChoice
       },
-      applicationCommandPermission(bot, payload, applicationCommandPermission) {
+      applicationCommandPermission(_bot, _payload, applicationCommandPermission) {
         return applicationCommandPermission
       },
-      attachment(bot, payload, attachment) {
+      attachment(_bot, _payload, attachment) {
         return attachment
       },
-      auditLogEntry(bot, payload, auditLogEntry) {
+      auditLogEntry(_bot, _payload, auditLogEntry) {
         return auditLogEntry
       },
-      automodActionExecution(bot, payload, automodActionExecution) {
+      automodActionExecution(_bot, _payload, automodActionExecution) {
         return automodActionExecution
       },
-      automodRule(bot, payload, automodRule) {
+      automodRule(_bot, _payload, automodRule) {
         return automodRule
       },
-      component(bot, payload, component) {
+      component(_bot, _payload, component) {
         return component
       },
-      embed(bot, payload, embed) {
+      embed(_bot, _payload, embed) {
         return embed
       },
-      emoji(bot, payload, emoji) {
+      emoji(_bot, _payload, emoji) {
         return emoji
       },
-      guild(bot, payload, guild) {
+      guild(_bot, _payload, guild) {
         return guild
       },
-      integration(bot, payload, integration) {
+      integration(_bot, _payload, integration) {
         return integration
       },
-      interactionDataOptions(bot, payload, interactionDataOptions) {
+      interactionDataOptions(_bot, _payload, interactionDataOptions) {
         return interactionDataOptions
       },
-      invite(bot, payload, invite) {
+      invite(_bot, _payload, invite) {
         return invite
       },
-      presence(bot, payload, presence) {
+      presence(_bot, _payload, presence) {
         return presence
       },
-      scheduledEvent(bot, payload, scheduledEvent) {
+      scheduledEvent(_bot, _payload, scheduledEvent) {
         return scheduledEvent
       },
-      stageInstance(bot, payload, stageInstance) {
+      stageInstance(_bot, _payload, stageInstance) {
         return stageInstance
       },
-      inviteStageInstance(bot, payload, inviteStageInstance) {
+      inviteStageInstance(_bot, _payload, inviteStageInstance) {
         return inviteStageInstance
       },
-      sticker(bot, payload, sticker) {
+      sticker(_bot, _payload, sticker) {
         return sticker
       },
-      stickerPack(bot, payload, stickerPack) {
+      stickerPack(_bot, _payload, stickerPack) {
         return stickerPack
       },
-      team(bot, payload, team) {
+      team(_bot, _payload, team) {
         return team
       },
-      template(bot, payload, template) {
+      template(_bot, _payload, template) {
         return template
       },
-      threadMember(bot, payload, threadMember) {
+      threadMember(_bot, _payload, threadMember) {
         return threadMember
       },
-      threadMemberGuildCreate(bot, payload, threadMemberGuildCreate) {
+      threadMemberGuildCreate(_bot, _payload, threadMemberGuildCreate) {
         return threadMemberGuildCreate
       },
-      voiceRegion(bot, payload, voiceRegion) {
+      voiceRegion(_bot, _payload, voiceRegion) {
         return voiceRegion
       },
-      voiceState(bot, payload, voiceState) {
+      voiceState(_bot, _payload, voiceState) {
         return voiceState
       },
-      gatewayBot(bot, payload, getGatewayBot) {
+      gatewayBot(_bot, _payload, getGatewayBot) {
         return getGatewayBot
       },
-      webhook(bot, payload, webhook) {
+      webhook(_bot, _payload, webhook) {
         return webhook
       },
-      welcomeScreen(bot, payload, welcomeScreen) {
+      welcomeScreen(_bot, _payload, welcomeScreen) {
         return welcomeScreen
       },
-      widget(bot, payload, widget) {
+      widget(_bot, _payload, widget) {
         return widget
       },
-      widgetSettings(bot, payload, widgetSettings) {
+      widgetSettings(_bot, _payload, widgetSettings) {
         return widgetSettings
       },
-      guildOnboarding(bot, payload, onboarding) {
+      guildOnboarding(_bot, _payload, onboarding) {
         return onboarding
       },
-      entitlement(bot, payload, entitlement) {
+      entitlement(_bot, _payload, entitlement) {
         return entitlement
       },
-      sku(bot, payload, sku) {
+      sku(_bot, _payload, sku) {
         return sku
       },
-      poll(bot, payload, poll) {
+      poll(_bot, _payload, poll) {
         return poll
       },
-      pollMedia(bot, payload, pollMedia) {
+      pollMedia(_bot, _payload, pollMedia) {
         return pollMedia
       },
-      avatarDecorationData(bot, payload, avatarDecorationData) {
+      avatarDecorationData(_bot, _payload, avatarDecorationData) {
         return avatarDecorationData
       },
     },

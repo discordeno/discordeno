@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { iconBigintToHash, iconHashToBigInt } from '../src/hash.js'

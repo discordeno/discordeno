@@ -10,7 +10,7 @@ class Responses {
     if (typeof content === 'string') content = { content }
     if (this.interaction) {
       if (this.replied) return this.followUp(content)
-      const reply = await this.interaction.reply(content)
+      await this.interaction.reply(content)
       this.replied = true
       return {}
     }
@@ -28,7 +28,7 @@ class Responses {
 
   async followUp(content) {
     if (this.interaction) {
-      const reply = await this.interaction.followUp(content)
+      await this.interaction.followUp(content)
       return {}
     }
     if (this.message) {

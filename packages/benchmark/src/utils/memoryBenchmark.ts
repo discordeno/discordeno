@@ -14,7 +14,6 @@ export async function memoryBenchmark<O, E>(
   const stages = ['start', 'loaded', 'end', 'cached'] as const
   const typesOfMemUsages = ['rss', 'heapUsed', 'heapTotal'] as const
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   async function runTest(object: O) {
     // Determine memory stats now before touching anything
     const results: {

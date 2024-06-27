@@ -1,5 +1,5 @@
 import type { AuditLogEvents, DiscordAuditLogEntry, OverwriteTypes } from '@discordeno/types'
-import { iconHashToBigInt, type Bot } from '../index.js'
+import { type Bot, iconHashToBigInt } from '../index.js'
 
 export function transformAuditLogEntry(bot: Bot, payload: DiscordAuditLogEntry): AuditLogEntry {
   const auditLogEntry = {

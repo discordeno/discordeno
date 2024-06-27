@@ -75,7 +75,7 @@ class warncommand extends BaseCommand {
               i.reply({ content: `Could not warn user ${'<@' + m.id + '>'} | They likely do not have their DMs open.` })
             })
         })
-        .catch((e) => {
+        .catch(() => {
           const embed = new Embed()
             .setTitle('Member not found')
             .setDescription(`The member with the ID of ${'`' + memberId + '`'} has not been found in this Server.`)

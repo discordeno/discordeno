@@ -1,14 +1,14 @@
 import {
-  DiscordApplicationIntegrationType,
-  iconHashToBigInt,
   type ApplicationFlags,
   type Bot,
   type DiscordApplication,
+  DiscordApplicationIntegrationType,
   type DiscordUser,
   type Guild,
   type OAuth2Scope,
   type Team,
   type User,
+  iconHashToBigInt,
 } from '../index.js'
 
 export function transformApplication(bot: Bot, payload: { application: DiscordApplication; shardId: number }): Application {

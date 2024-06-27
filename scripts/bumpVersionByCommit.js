@@ -16,7 +16,6 @@ const oldVersion = file.version
 file.version = `${oldVersion.split('-')[0]}-next.${commitHash}`
 
 if (file.dependencies) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   Object.keys(file.dependencies).forEach((dependency) => {
     if (dependency.startsWith('@discordeno/')) file.dependencies[dependency] = file.version
   })

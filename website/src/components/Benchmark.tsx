@@ -1,28 +1,8 @@
-import {
-  CategoryScale,
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  LineController,
-  LineElement,
-  PointElement,
-  Title,
-  Tooltip,
-} from 'chart.js'
+import { CategoryScale, Chart as ChartJS, Legend, LineController, LineElement, LinearScale, PointElement, Title, Tooltip } from 'chart.js'
 import { useEffect, useState } from 'react'
 import { Chart } from 'react-chartjs-2'
-ChartJS.register(
-  CategoryScale,
-  LineController,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-)
+ChartJS.register(CategoryScale, LineController, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const BenchmarkResultChart = ({
   name,
   dataset,
@@ -59,11 +39,11 @@ const BenchmarkResultChart = ({
   }>
 }) => {
   const data = {
-    labels: dataset.map(d => d.commit.id.slice(0, 7)),
+    labels: dataset.map((d) => d.commit.id.slice(0, 7)),
     datasets: [
       {
         label: name,
-        data: dataset.map(d => d.bench.value),
+        data: dataset.map((d) => d.bench.value),
         borderColor: '#ff3838',
         backgroundColor: '#ff383860', // Add alpha for #rrggbbaa
       },
@@ -94,20 +74,12 @@ const BenchmarkResultChart = ({
         plugins: {
           tooltip: {
             callbacks: {
-              afterTitle: items => {
+              afterTitle: (items) => {
                 const index = items[0].dataIndex
                 const data = dataset[index]
-                return (
-                  '\n' +
-                  data.commit.message +
-                  '\n\n' +
-                  data.commit.timestamp +
-                  ' committed by @' +
-                  data.commit.author.username +
-                  '\n'
-                )
+                return '\n' + data.commit.message + '\n\n' + data.commit.timestamp + ' committed by @' + data.commit.author.username + '\n'
               },
-              label: item => {
+              label: (item) => {
                 let label = item.formattedValue
                 const { range, unit } = dataset[item.datasetIndex].bench
                 label += ` ${unit}`
@@ -116,7 +88,7 @@ const BenchmarkResultChart = ({
                 }
                 return label
               },
-              afterLabel: item => {
+              afterLabel: (item) => {
                 const { extra } = dataset[item.datasetIndex].bench
                 return extra ? `\n${extra}` : ''
               },
@@ -145,20 +117,13 @@ export default function BenchmarkResultCharts(): JSX.Element {
       void (async () => {
         setData(
           JSON.parse(
-            (
-              await (
-                await fetch(
-                  'https://raw.githubusercontent.com/discordeno/discordeno/benchies/benchmarksResult/data.js',
-                )
-              ).text()
-            ).slice(24),
+            (await (await fetch('https://raw.githubusercontent.com/discordeno/discordeno/benchies/benchmarksResult/data.js')).text()).slice(24),
           ) as { entries: { Benchmark: [] } },
         )
       })()
     }
   }, [])
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   function collectBenchesPerTestCase(entries) {
     const dataMap = new Map()
     for (const entry of entries) {
@@ -179,15 +144,8 @@ export default function BenchmarkResultCharts(): JSX.Element {
   return (
     <div style={{ minHeight: '100vh' }}>
       {data ? (
-        Array.from(
-          collectBenchesPerTestCase(data.entries.Benchmark),
-          ([key, value]) => ({ benchName: key, benches: value }),
-        ).map((bench, index) => (
-          <BenchmarkResultChart
-            key={index}
-            name={bench.benchName}
-            dataset={bench.benches}
-          />
+        Array.from(collectBenchesPerTestCase(data.entries.Benchmark), ([key, value]) => ({ benchName: key, benches: value })).map((bench, index) => (
+          <BenchmarkResultChart key={index} name={bench.benchName} dataset={bench.benches} />
         ))
       ) : (
         <></>

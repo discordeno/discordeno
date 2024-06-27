@@ -158,7 +158,5 @@ const initialEdges: Edge[] = [
 ]
 
 export default function FlowChart() {
-  return (
-    <BaseFlowChart initialNodes={initialNodes} initialEdges={initialEdges} />
-  )
+  return <BaseFlowChart initialNodes={initialNodes} initialEdges={initialEdges} />
 }

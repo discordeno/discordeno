@@ -173,7 +173,7 @@ export interface StatusUpdate {
   // /** Unix time (in milliseconds) of when the client went idle, or null if the client is not idle */
   // since: number | null;
   /** The user's activities */
-  activities?: Camelize<Array<Omit<DiscordActivity, 'created_at'>>>
+  activities?: Camelize<Omit<DiscordActivity, 'created_at'>[]>
   /** The user's new status */
   status: keyof typeof PresenceStatus
   // /** Whether or not the client is afk */

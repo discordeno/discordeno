@@ -16,7 +16,6 @@ class evalcommand extends BaseCommand {
 
     const inputOfEval = this.args.join(' ')
     let outputOfEval
-    let typeOfEval
 
     try {
       if (this.args.includes('await')) {
@@ -26,7 +25,6 @@ class evalcommand extends BaseCommand {
       }
     } catch (e) {
       outputOfEval = e.message
-      typeOfEval = e.name
     }
 
     const seen = []

@@ -1,5 +1,5 @@
 import type { BigString, DiscordRole, RoleFlags } from '@discordeno/types'
-import { iconHashToBigInt, type Bot } from '../index.js'
+import { type Bot, iconHashToBigInt } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { RoleToggles } from './toggles/role.js'
 

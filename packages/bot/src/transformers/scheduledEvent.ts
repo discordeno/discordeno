@@ -5,7 +5,7 @@ import type {
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
 } from '@discordeno/types'
-import { iconHashToBigInt, type Bot, type User } from '../index.js'
+import { type Bot, type User, iconHashToBigInt } from '../index.js'
 
 export function transformScheduledEvent(bot: Bot, payload: DiscordScheduledEvent): ScheduledEvent {
   const props = bot.transformers.desiredProperties.scheduledEvent

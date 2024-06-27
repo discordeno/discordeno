@@ -86,8 +86,7 @@ export const Button = styled.button<{
   border: transparent;
 
   a {
-    background: ${({ variant }) =>
-      variant === 'primary' ? '#181818' : 'transparent'};
+    background: ${({ variant }) => (variant === 'primary' ? '#181818' : 'transparent')};
     color: ${({ variant }) => (variant === 'primary' ? '#fff' : 'primary')};
     animation: gradient 10s ease infinite;
     -webkit-text-decoration-color: transparent;
@@ -115,8 +114,7 @@ export const Button = styled.button<{
     }
 
     :hover {
-      background: ${({ variant }) =>
-        variant === 'primary' ? '#0F0F0F' : 'transparent'};
+      background: ${({ variant }) => (variant === 'primary' ? '#0F0F0F' : 'transparent')};
       color: ${({ variant }) => (variant === 'primary' ? '#fff' : 'primary')};
       animation: gradient 10s ease infinite;
       -webkit-text-decoration-color: transparent;
@@ -311,7 +309,7 @@ export const StarContainer = styled.div`
 export const StarIcon = styled.svg<{ active: boolean }>`
   width: 20px;
   height: 20px;
-  fill: ${props => (props.active ? 'currentColor' : '#CBD5E0')};
+  fill: ${(props) => (props.active ? 'currentColor' : '#CBD5E0')};
 `
 
 export const ReviewsOther = styled.div`

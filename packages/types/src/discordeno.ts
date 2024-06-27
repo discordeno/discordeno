@@ -57,7 +57,7 @@ export interface CreateMessageOptions {
   /** true if this is a TTS message */
   tts?: boolean
   /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: Array<Camelize<DiscordEmbed>>
+  embeds?: Camelize<DiscordEmbed>[]
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
   /** Include to make your message a reply */
@@ -493,7 +493,7 @@ export interface InteractionCallbackData {
   /** True if this is a TTS message */
   tts?: boolean
   /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: Array<Camelize<DiscordEmbed>>
+  embeds?: Camelize<DiscordEmbed>[]
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
   /** The contents of the files being sent */
@@ -757,7 +757,7 @@ export interface ExecuteWebhook {
   /** The contents of the files being sent */
   files?: FileContent[]
   /** Embedded `rich` content */
-  embeds?: Array<Camelize<DiscordEmbed>>
+  embeds?: Camelize<DiscordEmbed>[]
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
   /** the components to include with the message */
@@ -788,7 +788,7 @@ export interface CreateForumPostWithMessage {
     /** The message contents (up to 2000 characters) */
     content?: string
     /** Embedded `rich` content (up to 6000 characters) */
-    embeds?: Array<Camelize<DiscordEmbed>>
+    embeds?: Camelize<DiscordEmbed>[]
     /** Allowed mentions for the message */
     allowedMentions?: AllowedMentions
     /** The components you would like to have sent in this message */
@@ -985,7 +985,7 @@ export interface EditMessage {
   /** The new message contents (up to 2000 characters) */
   content?: string | null
   /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: Array<Camelize<DiscordEmbed>> | null
+  embeds?: Camelize<DiscordEmbed>[] | null
   /** Edit the flags of the message (only `SUPPRESS_EMBEDS` can currently be set/unset) */
   flags?: DiscordMessageFlag | null
   /** The contents of the files being sent/edited */
@@ -993,7 +993,7 @@ export interface EditMessage {
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
   /** When specified (adding new attachments), attachments which are not provided in this list will be removed. */
-  attachments?: Array<Camelize<DiscordAttachment>>
+  attachments?: Camelize<DiscordAttachment>[]
   /** The components you would like to have sent in this message */
   components?: MessageComponents
 }
@@ -1031,7 +1031,7 @@ export interface CreateGuild {
   /** New guild roles (first role is the everyone role) */
   roles?: Camelize<DiscordRole[]>
   /** New guild's channels */
-  channels?: Array<Partial<Camelize<DiscordChannel>>>
+  channels?: Partial<Camelize<DiscordChannel>>[]
   /** Id for afk channel */
   afkChannelId?: string
   /** Afk timeout in seconds */
@@ -1255,7 +1255,7 @@ export interface BeginGuildPrune {
 /** https://discord.com/developers/docs/resources/guild#modify-guild-onboarding-json-params */
 export interface EditGuildOnboarding {
   /** Prompts shown during onboarding and in customize community */
-  prompts: Array<Camelize<DiscordGuildOnboardingPrompt>>
+  prompts: Camelize<DiscordGuildOnboardingPrompt>[]
   /** Channel IDs that members get opted into automatically */
   defaultChannelIds: BigString[]
   /** Whether onboarding is enabled in the guild */
@@ -1348,7 +1348,7 @@ export interface CreatePoll {
   /** The question of the poll. Only `text` is supported. */
   question: Camelize<DiscordPollMedia>
   /** Each of the answers available in the poll, up to 10 */
-  answers: Array<Omit<Camelize<DiscordPollAnswer>, 'answerId'>>
+  answers: Omit<Camelize<DiscordPollAnswer>, 'answerId'>[]
   /** Number of hours the poll should be open for, up to 7 days */
   duration: number
   /** Whether a user can select multiple answers */

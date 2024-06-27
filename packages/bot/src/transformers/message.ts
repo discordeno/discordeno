@@ -9,7 +9,7 @@ import {
   type StickerFormatTypes,
 } from '@discordeno/types'
 import { CHANNEL_MENTION_REGEX } from '../constants.js'
-import { snowflakeToTimestamp, type Bot, type Poll } from '../index.js'
+import { type Bot, type Poll, snowflakeToTimestamp } from '../index.js'
 import { MessageFlags } from '../typings.js'
 import type { Attachment } from './attachment.js'
 import type { Channel } from './channel.js'

@@ -45,7 +45,6 @@ describe('Get a user from the api', () => {
   })
 
   it('With an invalid user id', async () => {
-    // eslint-disable-next-line @typescript-eslint/await-thenable
     await expect(rest.getUser('123')).eventually.throws
   })
 })

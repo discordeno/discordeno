@@ -1,4 +1,4 @@
-import { PresenceStatus, type DiscordPresenceUpdate } from '@discordeno/types'
+import { type DiscordPresenceUpdate, PresenceStatus } from '@discordeno/types'
 import type { Bot } from '../../index.js'
 import type { PresenceUpdate } from '../presence.js'
 

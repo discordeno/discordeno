@@ -1,6 +1,4 @@
 import {
-  InteractionResponseTypes,
-  InteractionTypes,
   type ApplicationCommandOptionTypes,
   type ApplicationCommandTypes,
   type BigString,
@@ -8,6 +6,8 @@ import {
   type DiscordInteraction,
   type DiscordInteractionDataOption,
   type InteractionCallbackData,
+  InteractionResponseTypes,
+  InteractionTypes,
   type MessageComponentTypes,
 } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
@@ -19,7 +19,7 @@ import {
   type DiscordChannel,
   type DiscordInteractionContextType,
 } from '../index.js'
-import { MessageFlags, type DiscordInteractionDataResolved } from '../typings.js'
+import { type DiscordInteractionDataResolved, MessageFlags } from '../typings.js'
 import type { Attachment } from './attachment.js'
 import type { Member } from './member.js'
 import type { Message } from './message.js'
@@ -292,7 +292,7 @@ export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInte
 
   if (resolved.messages) {
     transformed.messages = new Collection(
-      Object.entries(resolved.messages).map(([id, value]) => {
+      Object.entries(resolved.messages).map(([_id, value]) => {
         const message: Message = bot.transformers.message(bot, value)
         return [message.id, message]
       }),
@@ -301,7 +301,7 @@ export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInte
 
   if (resolved.users) {
     transformed.users = new Collection(
-      Object.entries(resolved.users).map(([id, value]) => {
+      Object.entries(resolved.users).map(([_id, value]) => {
         const user = bot.transformers.user(bot, value)
         return [user.id, user]
       }),
@@ -319,7 +319,7 @@ export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInte
 
   if (guildId && resolved.roles) {
     transformed.roles = new Collection(
-      Object.entries(resolved.roles).map(([id, value]) => {
+      Object.entries(resolved.roles).map(([_id, value]) => {
         const role = bot.transformers.role(bot, { role: value, guildId })
         return [role.id, role]
       }),

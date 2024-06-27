@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface PlaceHolderBot {}
 
 export class Collection<K, V> extends Map<K, V> {

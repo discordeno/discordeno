@@ -33,12 +33,8 @@
       "outputs": ["denoTestsDist/**"]
     },
     "test:bun-unit": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "bunTestsDist/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["bunTestsDist/**"]
     },
     "test:e2e": {
       "dependsOn": ["^build"],

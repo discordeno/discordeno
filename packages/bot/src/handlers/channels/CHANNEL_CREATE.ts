@@ -1,6 +1,6 @@
 import type { Bot, DiscordChannel, DiscordGatewayPayload } from '../../index.js'
 
-export async function handleChannelCreate(bot: Bot, payload: DiscordGatewayPayload, shardId: number): Promise<void> {
+export async function handleChannelCreate(bot: Bot, payload: DiscordGatewayPayload, _shardId: number): Promise<void> {
   if (!bot.events.channelCreate) return
 
   const data = payload.d as DiscordChannel

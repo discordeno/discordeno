@@ -2,12 +2,12 @@ import { configs } from './configs.ts.js'
 import type { BotWithCache, BotWithHelpersPlugin } from './deps.ts.js'
 import {
   Collection,
+  GatewayIntents,
   createBot,
   enableCachePlugin,
   enableCacheSweepers,
   enableHelpersPlugin,
   enablePermissionsPlugin,
-  GatewayIntents,
 } from './deps.ts.js'
 import type { Command } from './src/types/commands.ts.js'
 

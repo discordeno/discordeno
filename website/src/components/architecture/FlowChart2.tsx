@@ -1,10 +1,6 @@
 import { type Edge, type Node, Position } from 'reactflow'
 import 'reactflow/dist/style.css'
-import BaseFlowChart, {
-  defaultGroupOptions,
-  defaultNodeOptions,
-  multiplier,
-} from './BaseFlowChart'
+import BaseFlowChart, { defaultGroupOptions, defaultNodeOptions, multiplier } from './BaseFlowChart'
 
 const initialNodes: Node[] = [
   {
@@ -303,7 +299,5 @@ const initialEdges: Edge[] = [
 ]
 
 export default function FlowChart2() {
-  return (
-    <BaseFlowChart initialNodes={initialNodes} initialEdges={initialEdges} />
-  )
+  return <BaseFlowChart initialNodes={initialNodes} initialEdges={initialEdges} />
 }
