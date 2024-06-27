@@ -1419,6 +1419,12 @@ export interface DiscordReaction {
   burst_colors: string[]
 }
 
+/** https://discord.com/developers/docs/resources/channel#get-reactions-reaction-types */
+export enum DiscordReactionType {
+  Normal,
+  Burst,
+}
+
 /** https://discord.com/developers/docs/resources/channel#reaction-count-details-object */
 export interface DiscordReactionCountDetails {
   /** Count of super reactions */
@@ -2612,7 +2618,7 @@ export interface DiscordGuildBanAddRemove {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove */
-export interface DiscordMessageReactionRemove extends Omit<DiscordMessageReactionAdd, 'member'> {}
+export interface DiscordMessageReactionRemove extends Omit<DiscordMessageReactionAdd, 'member' | 'burst_colors'> {}
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-add */
 export interface DiscordMessageReactionAdd {
@@ -2630,6 +2636,12 @@ export interface DiscordMessageReactionAdd {
   emoji: Partial<DiscordEmoji>
   /** The id of the author of this message */
   message_author_id?: string
+  /** true if this is a super-reaction */
+  burst: boolean
+  /** Colors used for super-reaction animation in "#rrggbb" format */
+  burst_colors?: string[]
+  /** The type of reaction */
+  type: DiscordReactionType
 }
 
 /** https://discord.com/developers/docs/topics/gateway#voice-server-update */

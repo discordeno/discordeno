@@ -69,8 +69,9 @@ export function createRoutes(): RestRoutes {
           let url = `/channels/${channelId}/messages/${messageId}/reactions/${encodeURIComponent(emoji)}?`
 
           if (options) {
+            if (options.type) url += `type=${options.type}`
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            if (options.after) url += `after=${options.after}`
+            if (options.after) url += `&after=${options.after}`
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             if (options.limit) url += `&limit=${options.limit}`
           }
