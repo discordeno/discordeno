@@ -1,9 +1,9 @@
 # Advanced Bot Template
 
-This template has a bit more advanced code.
+This template contains more advanced code.
 
-This template includes some caching using `dd-proxy-cache`, user permission handling and slash commands options support
-It includes a /ping command to show the bot latency, and a /warn command to show how to send a DM to a user and how to checks for permissions
+This template includes caching (using `dd-proxy-cache`), user permission handling, and slash commands options support
+This template also includes a /ping command to show the bot latency and a /warn command to show how to send a DM to a user and how to check for permissions
 
 ## Setup
 

@@ -3,7 +3,7 @@
 > [!TIP]
 > If you have any issue you can join the discord server for support: https://discord.gg/ddeno
 
-This template is designed for bots that aim or are already in millions of Discord servers.
+This template is designed for bots that aim to be in millions of Discord services or already are.
 
 ## Setup
 
@@ -14,18 +14,18 @@ This template is designed for bots that aim or are already in millions of Discor
 
 ## Startup
 
-You can run the template either using Docker or using node directly.
+You can run the template using either Docker or Node.
 
 Using docker will be the simplest and easiest way to start your bot.
 
 ### Using Docker
 
-The docker compose file includes the discordeno bot and influxdb, this would create an environment more close to the production environment.
+The docker compose file includes the discordeno bot and influxdb. This will create an environment close to the production environment.
 
-First, copy the .env.example file to .env, and fille the values, when values are pre-set they can be left to their default value, except the one specified below
+First, copy the .env.example file, rename it to .env, and fill in the values. Pre-set values can be left to their default value, except for the following:
 
 > [!IMPORTANT]
-> There are a few values in the `.env` where the value should be very specific, this is to make the docker containers communicate between them
+> The following values must be set to enable the docker container to communicate between different parts of your bot, InfluxDB, and RabbitMQ
 >
 > - `EVENT_HANDLER_HOST` should be set to `bot`
 > - `REST_HOST` should be set to `rest`
@@ -41,13 +41,13 @@ First, copy the .env.example file to .env, and fille the values, when values are
 >   - Copy `DOCKER_INFLUXDB_INIT_ADMIN_TOKEN` to `INFLUX_TOKEN`
 >   - Set `INFLUX_URL` to `http://influxdb:8086`
 
-Then, run `docker compose build` to build/rebuild the bot
+After setting the aforementioned values, run `docker compose build` to build/rebuild the bot
 
-And, run `docker compose up -d` to start
+Finally, run `docker compose up -d` to start
 
 Your bot should be running now.
 
-You can check the REST process fetch analytics (methods, status...) in influxdb's WebUI at http://localhost:8086 with the username and password in the .env file (`DOCKER_INFLUXDB_INIT_USERNAME` & `DOCKER_INFLUXDB_INIT_PASSWORD`). And the message queue's information (number of events ecc) in the RabbitMQ WebUI at http://localhost:15672 with username of `guest` and password of `guest`.
+You can check the REST process fetch analytics (methods, status...) in influxdb's WebUI at http://localhost:8086 with the username and password in the .env file (`DOCKER_INFLUXDB_INIT_USERNAME` and `DOCKER_INFLUXDB_INIT_PASSWORD`, respectively). You can also check the message queue's information (number of events, ...) in the RabbitMQ WebUI at http://localhost:15672 with the username `guest` and password `guest`.
 
 ### Using Node
 
@@ -63,16 +63,15 @@ You can check the REST process fetch analytics (methods, status...) in influxdb'
 
 You will need to start a few processes.
 
-The preset value of `EVENT_HANDLER_HOST`, `REST_HOST` and `GATEWAY_HOST` all use localhost, if you are using different servers you will need to change those values
+The preset value of `EVENT_HANDLER_HOST`, `REST_HOST`, and `GATEWAY_HOST` all use localhost. If you are using different servers you will need to change those values
 
 #### Setup process
 
-If you want to use RabbitMQ and InfluxDB as well see below
 
 - Install the dependencies with yarn
 - Build the code with `yarn build`
 
-After that, you can start your bot one by one with the following order.
+You can start different parts of your bot in the following order.
 
 - Start the REST Proxy: `yarn start:rest`
 - Start the Bot: `yarn start:bot`
@@ -80,21 +79,21 @@ After that, you can start your bot one by one with the following order.
 
 #### InfluxDB
 
-To enable InfluxDB you will need to set the `INFLUX_ORG`, `INFLUX_BUCKET`, `INFLUX_TOKEN` and `INFLUX_URL` variables in the `.env`.
+To enable InfluxDB you will need to set the `INFLUX_ORG`, `INFLUX_BUCKET`, `INFLUX_TOKEN`, and `INFLUX_URL` variables in the `.env`. file
 
-For the `INFLUX_URL`, the preset value uses localhost, if your InfluxDB is not running on the same machine, change the url accordingly. You should not include any prefix, just `HOST:PORT`
+For `INFLUX_URL`, the preset value uses localhost. If your InfluxDB is not running on the same machine, change the URL accordingly (do not include any protocol prefix, just `HOST:PORT`)
 
-If you do not set one of those values, InfluxDB will be disabled.
+If you do not set one of the values mentioned above, InfluxDB will be disabled.
 
 #### RabbitMQ
 
-To enable RabbitMQ you will need to set `MESSAGEQUEUE_ENABLE` to `true` and set `MESSAGEQUEUE_URL`, `MESSAGEQUEUE_USERNAME` and `MESSAGEQUEUE_PASSWORD` variables in the `.env`.
+To enable RabbitMQ you will need to set `MESSAGEQUEUE_ENABLE` to `true` and set `MESSAGEQUEUE_URL`, `MESSAGEQUEUE_USERNAME`, and `MESSAGEQUEUE_PASSWORD` variables in the `.env` file.
 
 `MESSAGEQUEUE_USERNAME` and `MESSAGEQUEUE_PASSWORD` will both default to `guest` in a RabbitMQ instance unless changed.
 
 > [!IMPORTANT]
-> The RabbitMQ must installed with the [RabbitMQ Message Deduplication Plugin](https://github.com/noxdafox/rabbitmq-message-deduplication)
+> The [RabbitMQ Message Deduplication Plugin](https://github.com/noxdafox/rabbitmq-message-deduplication) must be installed
 >
-> There are the plugin files (`.ez`) in the `rabbitmq/plugins/message-deduplication` folder, you can copy those into your `plugins` folder for the RabbitMQ installation folder or download them from the original repo, just make sure to download the correct version in this case
+> The plugin files (`.ez`) are in the `rabbitmq/plugins/message-deduplication` folder. You can copy those into your `plugins` folder for the RabbitMQ installation folder or download them from the original repo (make sure to download the correct version).
 >
 > To enable the plugin you will need to run: `rabbitmq-plugins enable rabbitmq_message_deduplication`

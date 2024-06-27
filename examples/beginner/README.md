@@ -1,9 +1,9 @@
 # Beginner Bot Template
 
-This template is designed for the beginner developer to start coding discord bots.
+This template is designed for beginners to start coding discord bots.
 
-This template includes some caching using `dd-cache-proxy` and support for slash subcommands.
-It includes a /ping command to show the bot latency
+This template includes caching (using `dd-cache-proxy`) and support for slash subcommands.
+This template also includes a /ping command to show the bot latency
 
 ## Setup
 
