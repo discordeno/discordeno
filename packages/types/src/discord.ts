@@ -2282,6 +2282,8 @@ export interface DiscordInviteMetadata extends DiscordInvite {
 
 /** https://discord.com/developers/docs/resources/invite#invite-object */
 export interface DiscordInvite {
+  /** The type of invite */
+  type: DiscordInviteType
   /** The invite code (unique Id) */
   code: string
   /** The guild this invite is for */
@@ -2306,6 +2308,12 @@ export interface DiscordInvite {
   stage_instance?: DiscordInviteStageInstance
   /** guild scheduled event data */
   guild_scheduled_event?: DiscordScheduledEvent
+}
+
+export enum DiscordInviteType {
+  Guild,
+  GroupDm,
+  Friend,
 }
 
 export interface DiscordInviteStageInstance {
