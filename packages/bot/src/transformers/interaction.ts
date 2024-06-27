@@ -1,6 +1,7 @@
 import {
   InteractionResponseTypes,
   InteractionTypes,
+  MessageFlag,
   type ApplicationCommandOptionTypes,
   type ApplicationCommandTypes,
   type BigString,
@@ -12,14 +13,14 @@ import {
 } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import {
+  DiscordApplicationIntegrationType,
   type Bot,
   type Channel,
   type Component,
-  DiscordApplicationIntegrationType,
   type DiscordChannel,
   type DiscordInteractionContextType,
 } from '../index.js'
-import { MessageFlags, type DiscordInteractionDataResolved } from '../typings.js'
+import type { DiscordInteractionDataResolved } from '../typings.js'
 import type { Attachment } from './attachment.js'
 import type { Member } from './member.js'
 import type { Message } from './message.js'
@@ -153,7 +154,7 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
     // If user provides an object, determine if it should be an autocomplete or a modal response
     if (response.title) type = InteractionResponseTypes.Modal
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) type = InteractionResponseTypes.ApplicationCommandAutocompleteResult
-    if (type === InteractionResponseTypes.ChannelMessageWithSource && options?.isPrivate) response.flags = MessageFlags.Ephemeral
+    if (type === InteractionResponseTypes.ChannelMessageWithSource && options?.isPrivate) response.flags = MessageFlag.Ephemeral
 
     // Since this has already been given a response, any further responses must be followups.
     if (this.acknowledged) return await this.bot!.helpers.sendFollowupMessage(this.token!, response)
@@ -202,7 +203,7 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
     return await this.bot!.helpers.sendInteractionResponse(this.id!, this.token!, {
       type: InteractionResponseTypes.DeferredChannelMessageWithSource,
       data: {
-        flags: isPrivate ? MessageFlags.Ephemeral : undefined,
+        flags: isPrivate ? MessageFlag.Ephemeral : undefined,
       },
     })
   },
