@@ -39,14 +39,14 @@ __metadata:
     "@swc/cli": "npm:^0.3.9"
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
-    "@types/mocha": "npm:^10.0.6"
+    "@types/mocha": "npm:^10.0.7"
     "@types/node": "npm:^20.11.25"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
     chai: "npm:^5.0.3"
     eslint: "npm:^8.57.0"
     eslint-config-discordeno: "npm:*"
-    mocha: "npm:^10.3.0"
+    mocha: "npm:^10.5.1"
     sinon: "npm:^17.0.1"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -63,7 +63,7 @@ __metadata:
     "@swc/cli": "npm:^0.3.9"
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
-    "@types/mocha": "npm:^10.0.6"
+    "@types/mocha": "npm:^10.0.7"
     "@types/node": "npm:^20.11.25"
     "@types/sinon": "npm:^17.0.3"
     "@types/ws": "npm:^8.5.10"
@@ -71,7 +71,7 @@ __metadata:
     chai: "npm:^5.0.3"
     eslint: "npm:^8.57.0"
     eslint-config-discordeno: "npm:*"
-    mocha: "npm:^10.3.0"
+    mocha: "npm:^10.5.1"
     sinon: "npm:^17.0.1"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -91,7 +91,7 @@ __metadata:
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
     "@types/chai-as-promised": "npm:^7.1.8"
-    "@types/mocha": "npm:^10.0.6"
+    "@types/mocha": "npm:^10.0.7"
     "@types/node": "npm:^20.11.25"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
@@ -100,7 +100,7 @@ __metadata:
     dotenv: "npm:^16.4.5"
     eslint: "npm:^8.57.0"
     eslint-config-discordeno: "npm:*"
-    mocha: "npm:^10.3.0"
+    mocha: "npm:^10.5.1"
     sinon: "npm:^17.0.1"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -116,14 +116,14 @@ __metadata:
     "@swc/cli": "npm:^0.3.9"
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
-    "@types/mocha": "npm:^10.0.6"
+    "@types/mocha": "npm:^10.0.7"
     "@types/node": "npm:^20.11.25"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
     chai: "npm:^5.0.3"
     eslint: "npm:^8.57.0"
     eslint-config-discordeno: "npm:*"
-    mocha: "npm:^10.3.0"
+    mocha: "npm:^10.5.1"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
     typescript: "npm:5.4.5"
@@ -138,14 +138,14 @@ __metadata:
     "@swc/cli": "npm:^0.3.9"
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
-    "@types/mocha": "npm:^10.0.6"
+    "@types/mocha": "npm:^10.0.7"
     "@types/node": "npm:^20.11.25"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
     chai: "npm:^5.0.3"
     eslint: "npm:^8.57.0"
     eslint-config-discordeno: "npm:*"
-    mocha: "npm:^10.3.0"
+    mocha: "npm:^10.5.1"
     sinon: "npm:^17.0.1"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -694,10 +694,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mocha@npm:^10.0.6":
-  version: 10.0.6
-  resolution: "@types/mocha@npm:10.0.6"
-  checksum: fc73626e81e89c32d06b7ff9b72c4177b46d579cdd932f796614adc026852d84cb849d743473ba572cb4d9ea6d8c04e3749552d326c26495ec1c4b46e6e0a0c0
+"@types/mocha@npm:^10.0.7":
+  version: 10.0.7
+  resolution: "@types/mocha@npm:10.0.7"
+  checksum: 4494871e8a867633d818b00d6f29d47379f9e23655b89ca728166ff2f0a406b97d376fcc3e7a570a3840f72abb03c886c5e66f50ae0f018376e4dc10ed179564
   languageName: node
   linkType: hard
 
@@ -1628,7 +1628,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@npm:3.5.3, chokidar@npm:^3.5.2":
+"chokidar@npm:^3.5.2":
   version: 3.5.3
   resolution: "chokidar@npm:3.5.3"
   dependencies:
@@ -1644,6 +1644,25 @@ __metadata:
     fsevents:
       optional: true
   checksum: 863e3ff78ee7a4a24513d2a416856e84c8e4f5e60efbe03e8ab791af1a183f569b62fc6f6b8044e2804966cb81277ddbbc1dc374fba3265bd609ea8efd62f5b3
+  languageName: node
+  linkType: hard
+
+"chokidar@npm:^3.5.3":
+  version: 3.6.0
+  resolution: "chokidar@npm:3.6.0"
+  dependencies:
+    anymatch: "npm:~3.1.2"
+    braces: "npm:~3.0.2"
+    fsevents: "npm:~2.3.2"
+    glob-parent: "npm:~5.1.2"
+    is-binary-path: "npm:~2.1.0"
+    is-glob: "npm:~4.0.1"
+    normalize-path: "npm:~3.0.0"
+    readdirp: "npm:~3.6.0"
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  checksum: c327fb07704443f8d15f7b4a7ce93b2f0bc0e6cea07ec28a7570aa22cd51fcf0379df589403976ea956c369f25aa82d84561947e227cd925902e1751371658df
   languageName: node
   linkType: hard
 
@@ -2056,7 +2075,7 @@ __metadata:
     "@swc/cli": "npm:^0.3.9"
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
-    "@types/mocha": "npm:^10.0.6"
+    "@types/mocha": "npm:^10.0.7"
     "@types/node": "npm:^20.11.25"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
@@ -2064,7 +2083,7 @@ __metadata:
     commander: "npm:^12.0.0"
     eslint: "npm:^8.57.0"
     eslint-config-discordeno: "npm:*"
-    mocha: "npm:^10.3.0"
+    mocha: "npm:^10.5.1"
     sinon: "npm:^17.0.1"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
@@ -4306,13 +4325,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mocha@npm:^10.3.0":
-  version: 10.3.0
-  resolution: "mocha@npm:10.3.0"
+"mocha@npm:^10.5.1":
+  version: 10.5.1
+  resolution: "mocha@npm:10.5.1"
   dependencies:
     ansi-colors: "npm:4.1.1"
     browser-stdout: "npm:1.3.1"
-    chokidar: "npm:3.5.3"
+    chokidar: "npm:^3.5.3"
     debug: "npm:4.3.4"
     diff: "npm:5.0.0"
     escape-string-regexp: "npm:4.0.0"
@@ -4333,7 +4352,7 @@ __metadata:
   bin:
     _mocha: bin/_mocha
     mocha: bin/mocha.js
-  checksum: 8b30b3fdb3f365fca7e069fce732e13db4192e1bf8f49e63ec67a3b7857c41cbcd162289ad22178db6ef405fb251b8a0dbb54e942d08c72abf45e1ec3fcdd052
+  checksum: 30f79e33ec6d20eb5fa450a241723d03c6d3720adb03f84587905919552e6adb6927eb8c9e7223f602672e6f4d4c99ad451decf9498dec834e728b5fe950d6d7
   languageName: node
   linkType: hard
 
