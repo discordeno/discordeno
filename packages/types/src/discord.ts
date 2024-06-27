@@ -944,7 +944,7 @@ export interface DiscordRole {
   name: string
   /** Integer representation of hexadecimal color code */
   color: number
-  /** Position of this role */
+  /** Position of this role (roles with the same position are sorted by id) */
   position: number
   /** role unicode emoji */
   unicode_emoji?: string
@@ -1026,7 +1026,7 @@ export interface DiscordChannel {
   type: ChannelTypes
   /** The id of the guild */
   guild_id?: string
-  /** Sorting position of the channel */
+  /** Sorting position of the channel (channels with the same position are sorted by id) */
   position?: number
   /** Explicit permission overwrites for members and roles */
   permission_overwrites?: DiscordOverwrite[]
