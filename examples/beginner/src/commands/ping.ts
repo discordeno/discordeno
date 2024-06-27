@@ -1,18 +1,15 @@
-import { ApplicationCommandTypes, InteractionResponseTypes } from '../../deps.ts.js'
-import { snowflakeToTimestamp } from '../utils/helpers.ts.js'
-import { createCommand } from './mod.ts.js'
+import { ApplicationCommandTypes, snowflakeToTimestamp } from '@discordeno/bot'
+import { createCommand } from '../commands.js'
+import { humanizeMilliseconds } from '../utils/helpers.js'
 
 createCommand({
   name: 'ping',
   description: 'Ping the Bot!',
   type: ApplicationCommandTypes.ChatInput,
-  execute: async (Bot, interaction) => {
+  scope: 'Global',
+  async execute(interaction) {
     const ping = Date.now() - snowflakeToTimestamp(interaction.id)
-    await Bot.helpers.sendInteractionResponse(interaction.id, interaction.token, {
-      type: InteractionResponseTypes.ChannelMessageWithSource,
-      data: {
-        content: `🏓 Pong! ${ping}ms`,
-      },
-    })
+
+    await interaction.respond(`🏓 Pong! Ping ${ping}ms (${humanizeMilliseconds(ping)})`)
   },
 })

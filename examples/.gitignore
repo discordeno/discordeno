@@ -1,9 +1,0 @@
-.env
-fileloader.ts
-
-config.json
-
-# Folder made by Kwik db to watch guild command versions
-db/
-node_modules
-package-lock.json

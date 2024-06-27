@@ -1,0 +1,2 @@
+# RabbitMQ plugins are stored in a zip format (.ez files), just for security we tell git to always threat them as binary files
+* binary
