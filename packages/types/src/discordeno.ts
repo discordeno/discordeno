@@ -34,6 +34,7 @@ import type {
   GuildFeatures,
   InteractionResponseTypes,
   Localization,
+  MemberFlag,
   MessageComponentTypes,
   OverwriteTypes,
   PermissionStrings,
@@ -1238,8 +1239,10 @@ export interface ModifyGuildMember {
   deaf?: boolean | null
   /** Id of channel to move user to (if they are connected to voice). Requires the `MOVE_MEMBERS` permission */
   channelId?: BigString | null
-  /** when the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission. The date must be given in a ISO string form. */
+  /** When the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission. The date must be given in a ISO string form. */
   communicationDisabledUntil?: string | null
+  /** Set the flags for the guild member. Requires the `MANAGE_GUILD` or `MANAGE_ROLES` or the combination of `MODERATE_MEMBERS` and `KICK_MEMBERS` and `BAN_MEMBERS` */
+  flags?: MemberFlag
 }
 
 /** https://discord.com/developers/docs/resources/guild#begin-guild-prune */
