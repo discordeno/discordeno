@@ -7,6 +7,7 @@ export function transformAttachment(bot: Bot, payload: DiscordAttachment): Attac
 
   if (props.id && payload.id) attachment.id = bot.transformers.snowflake(payload.id)
   if (props.filename && payload.filename) attachment.filename = payload.filename
+  if (props.title && payload.title) attachment.title = payload.title
   if (props.contentType && payload.content_type) attachment.contentType = payload.content_type
   if (props.size) attachment.size = payload.size
   if (props.url && payload.url) attachment.url = payload.url
@@ -25,6 +26,8 @@ export function transformAttachment(bot: Bot, payload: DiscordAttachment): Attac
 export interface Attachment {
   /** Name of file attached */
   filename: string
+  /** The title of the file */
+  title?: string
   /** The attachment's [media type](https://en.wikipedia.org/wiki/Media_type) */
   contentType?: string
   /** Size of file in bytes */

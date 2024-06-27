@@ -712,6 +712,8 @@ export interface DiscordEmbedVideo {
 export interface DiscordAttachment {
   /** Name of file attached */
   filename: string
+  /** The title of the file */
+  title?: string
   /** The attachment's [media type](https://en.wikipedia.org/wiki/Media_type) */
   content_type?: string
   /** Size of file in bytes */
