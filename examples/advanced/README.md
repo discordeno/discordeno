@@ -16,4 +16,5 @@ This template also includes a /ping command to show the bot latency and a /warn 
 
 - run `yarn` to install the dependencies
 - run `yarn build` to build the source
+- run `node dist/register-commands.js` to register the slash commands
 - run `yarn start` to run the bot

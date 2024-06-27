@@ -32,7 +32,10 @@ createCommand({
 
     const guild = await bot.cache.guilds.get(interaction.guildId)
 
-    if (!guild) return
+    if (!guild) {
+      await interaction.respond('An error has occurred')
+      return
+    }
 
     await interaction.defer()
 
@@ -48,7 +51,7 @@ createCommand({
 
     const embeds = createEmbeds()
       .setTitle('Warned User:')
-      .setDescription(`User: <@${user.user.id}>\n Reason: ${reason}`)
+      .setDescription(`User: <@${user.user.id}>\nReason: ${reason}`)
       .setColor(0x00ff00)
       .setTimestamp(Date.now())
 

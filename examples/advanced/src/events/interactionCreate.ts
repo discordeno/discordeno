@@ -7,7 +7,10 @@ bot.events.interactionCreate = async (interaction) => {
 
   const command = commands.get(interaction.data.name)
 
-  if (!command) return
+  if (!command) {
+    bot.logger.error(`Command ${interaction.data.name} not found`)
+    return
+  }
 
   const options = commandOptionsParser(interaction)
 

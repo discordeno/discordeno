@@ -22,7 +22,7 @@ Using docker will be the simplest and easiest way to start your bot.
 
 The docker compose file includes the discordeno bot and influxdb. This will create an environment close to the production environment.
 
-First, copy the .env.example file, rename it to .env, and fill in the values. Pre-set values can be left to their default value, except for the following:
+First, copy the `.env.example` file, rename it to `.env`, and fill in the values. Pre-set values can be left to their default value, except for the following:
 
 > [!IMPORTANT]
 > The following values must be set to enable the docker container to communicate between different parts of your bot, InfluxDB, and RabbitMQ
@@ -44,6 +44,12 @@ First, copy the .env.example file, rename it to .env, and fill in the values. Pr
 After setting the aforementioned values, run `docker compose build` to build/rebuild the bot
 
 Finally, run `docker compose up -d` to start
+
+> [!NOTE]
+> Docker will start the REST proxy, Gateway and Bot, however you won't see any command in Discord.
+> You will need to manually run the `bot/register-commands.js` file.
+>
+> You can do this locally, but you will need to change some environment variables like the `REST_HOST` to point to something accessible from your machine
 
 Your bot should be running now.
 
@@ -67,13 +73,13 @@ The preset value of `EVENT_HANDLER_HOST`, `REST_HOST`, and `GATEWAY_HOST` all us
 
 #### Setup process
 
-
 - Install the dependencies with yarn
 - Build the code with `yarn build`
 
 You can start different parts of your bot in the following order.
 
 - Start the REST Proxy: `yarn start:rest`
+- Deploy the commands: `node dist/bot/register-commands.js`
 - Start the Bot: `yarn start:bot`
 - Start Gateway: `yarn start:gateway`
 

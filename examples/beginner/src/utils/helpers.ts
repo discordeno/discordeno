@@ -11,24 +11,15 @@ export async function updateCommands(scope?: 'Guild' | 'Global'): Promise<void> 
   const perGuildCommands: Array<MakeRequired<CreateApplicationCommand, 'name'>> = []
 
   for (const command of commands.values()) {
-    if (command.scope) {
-      if (command.scope === 'Guild') {
-        perGuildCommands.push({
-          name: command.name,
-          description: command.description,
-          type: command.type,
-          options: command.options ? command.options : undefined,
-        })
-      } else if (command.scope === 'Global') {
-        globalCommands.push({
-          name: command.name,
-          description: command.description,
-          type: command.type,
-          options: command.options ? command.options : undefined,
-        })
-      }
-    } else {
+    if (command.scope === 'Guild') {
       perGuildCommands.push({
+        name: command.name,
+        description: command.description,
+        type: command.type,
+        options: command.options ? command.options : undefined,
+      })
+    } else {
+      globalCommands.push({
         name: command.name,
         description: command.description,
         type: command.type,
@@ -56,15 +47,13 @@ export async function updateGuildCommands(bot: Bot, guild: Guild): Promise<void>
   const perGuildCommands: Array<MakeRequired<CreateApplicationCommand, 'name'>> = []
 
   for (const command of commands.values()) {
-    if (command.scope) {
-      if (command.scope === 'Guild') {
-        perGuildCommands.push({
-          name: command.name,
-          description: command.description,
-          type: command.type,
-          options: command.options ? command.options : undefined,
-        })
-      }
+    if (command.scope === 'Guild') {
+      perGuildCommands.push({
+        name: command.name,
+        description: command.description,
+        type: command.type,
+        options: command.options ? command.options : undefined,
+      })
     }
   }
 
@@ -84,7 +73,7 @@ export async function getGuildFromId(guildId: bigint): Promise<Guild> {
 export function humanizeMilliseconds(milliseconds: number): string {
   // Gets ms into seconds
   const time = milliseconds / 1000
-  if (time < 1) return '1s'
+  if (time < 1) return '< 1s'
 
   const days = Math.floor(time / 86400)
   const hours = Math.floor((time % 86400) / 3600)
