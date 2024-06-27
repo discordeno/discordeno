@@ -1,4 +1,4 @@
-import { createBot, type Bot } from '@discordeno/bot'
+import { createBot, snakeToCamelCase, type Bot } from '@discordeno/bot'
 import { events as dbEvents } from '../utils/db.js'
 import { memoryBenchmark } from '../utils/memoryBenchmark.js'
 
@@ -27,12 +27,8 @@ await memoryBenchmark(
       }),
     ),
   (bot, event) => {
-    // @ts-expect-error it works
-    bot.events[
-      event.payload.t!.toLowerCase().replace(/_([a-z])/g, (g) => {
-        return g[1].toUpperCase()
-      })
-    ]?.(event.payload.d, {})
+    const eventName = snakeToCamelCase(event.payload.t!)
+    bot.events[eventName as keyof typeof bot.events]?.(event.payload.d as never, {})
   },
   dbEvents.filter((event) => event.payload.t),
 )

@@ -7,25 +7,24 @@ name: Mark stale issues and pull requests
 
 on:
   schedule:
-  - cron: '0 0 * * 1'
+    - cron: '0 0 * * 1'
 
 jobs:
   stale:
-
     runs-on: ubuntu-latest
     permissions:
       issues: write
       pull-requests: write
 
     steps:
-    - uses: actions/stale@v9
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        stale-issue-message: 'This issue has gone stale for over a month. If this issue is useful, leave a comment below. Otherwise, it will be closed shortly.'
-        stale-pr-message: 'This pull request has gone stale for over a month. If this pull request is still useful, leave a comment below. Otherwise, it will be closed shortly.'
-        stale-issue-label: 'no-issue-activity'
-        stale-pr-label: 'no-pr-activity'
-        only-labels: 'w-unverified'
-        exempt-issue-labels: 'api-docs-commits,help-wanted,w-verified,w-pending'
-        exempt-pr-labels: 'w-verified'
-        close-issue-reason: 'not_planned'
+      - uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          stale-issue-message: 'This issue has gone stale for over a month. If this issue is useful, leave a comment below. Otherwise, it will be closed shortly.'
+          stale-pr-message: 'This pull request has gone stale for over a month. If this pull request is still useful, leave a comment below. Otherwise, it will be closed shortly.'
+          stale-issue-label: 'no-issue-activity'
+          stale-pr-label: 'no-pr-activity'
+          only-labels: 'w-unverified'
+          exempt-issue-labels: 'api-docs-commits,help-wanted,w-verified,w-pending'
+          exempt-pr-labels: 'w-verified'
+          close-issue-reason: 'not_planned'

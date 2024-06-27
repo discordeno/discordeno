@@ -6,3 +6,6 @@
 !README.md
 !dist/**
 !bin/**
+
+# ignore the tsbuildinfo file
+dist/.tsbuildinfo

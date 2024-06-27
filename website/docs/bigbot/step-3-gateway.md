@@ -90,7 +90,7 @@ const app = express()
 app.use(
   express.urlencoded({
     extended: true,
-  })
+  }),
 )
 
 app.use(express.json())
@@ -108,7 +108,7 @@ app.all('/*', async (req, res) => {
       }
       default:
         logger.error(
-          `[Shard] Unknown request received. ${JSON.stringify(req.body)}`
+          `[Shard] Unknown request received. ${JSON.stringify(req.body)}`,
         )
         return res
           .status(404)
@@ -142,7 +142,7 @@ GATEWAY.tellWorkerToIdentify = async function (workerId, shardId, bucketId) {
   const url = process.env[`SERVER_URL_${workerId}`]
   if (!url)
     return logger.error(
-      `No server URL found for server #${workerId}. Unable to start Shard #${shardId}`
+      `No server URL found for server #${workerId}. Unable to start Shard #${shardId}`,
     )
 
   await fetch(url, {
@@ -190,7 +190,7 @@ const app = express()
 app.use(
   express.urlencoded({
     extended: true,
-  })
+  }),
 )
 
 app.use(express.json())
@@ -214,7 +214,7 @@ app.all('/*', async (req, res) => {
         logger.info(
           `[Shard] identifying ${
             SHARDS.has(req.body.shardId) ? 'existing' : 'new'
-          } shard (${req.body.shardId})`
+          } shard (${req.body.shardId})`,
         )
         const shard =
           SHARDS.get(req.body.shardId) ??
@@ -243,7 +243,7 @@ app.all('/*', async (req, res) => {
       }
       default:
         logger.error(
-          `[Shard] Unknown request received. ${JSON.stringify(req.body)}`
+          `[Shard] Unknown request received. ${JSON.stringify(req.body)}`,
         )
         return res
           .status(404)

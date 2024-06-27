@@ -9,7 +9,7 @@ events.forEach((event) => {
 })
 
 suite.add(`Camelize 1 event`, () => {
-  snakelize(events[1])
+  camelize(events[1])
 })
 
 suite.add(`Snakelize 1 event`, () => {

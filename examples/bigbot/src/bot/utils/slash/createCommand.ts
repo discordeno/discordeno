@@ -162,89 +162,89 @@ export type ConvertArgumentDefinitionsToArgs<T extends readonly ArgumentDefiniti
 						[_ in getName<N>]?: T[P]['choices'] extends ReadonlyArray<{ name: string; value: string }> // @ts-expect-error
 							? T[P]['choices'][number]['value']
 							: string;
-				  }
+					}
 				: T[P] extends StringArgumentDefinition<infer N>
-				? {
-						// @ts-expect-error TODO: fix this some day
-						[_ in getName<N>]: T[P]['choices'] extends ReadonlyArray<{ name: string; value: string }> // @ts-expect-error
-							? T[P]['choices'][number]['value']
-							: string;
-				  }
-				: // INTEGER
-				T[P] extends IntegerOptionalArgumentDefinition<infer N>
-				? {
-						[_ in getName<N>]?: T[P]['choices'] extends ReadonlyArray<{ name: string; value: number }> // @ts-expect-error
-							? T[P]['choices'][number]['value']
-							: number;
-				  }
-				: T[P] extends IntegerArgumentDefinition<infer N>
-				? {
-						[_ in getName<N>]: T[P]['choices'] extends ReadonlyArray<{ name: string; value: number }> // @ts-expect-error
-							? T[P]['choices'][number]['value']
-							: number;
-				  }
-				: // BOOLEAN
-				T[P] extends BooleanOptionalArgumentDefinition<infer N>
-				? { [_ in getName<N>]?: boolean }
-				: T[P] extends BooleanArgumentDefinition<infer N>
-				? { [_ in getName<N>]: boolean }
-				: // USER
-				T[P] extends UserOptionalArgumentDefinition<infer N>
-				? {
-						[_ in getName<N>]?: {
-							user: User;
-							member: Member;
-						};
-				  }
-				: T[P] extends UserArgumentDefinition<infer N>
-				? {
-						[_ in getName<N>]: {
-							user: User;
-							member: Member;
-						};
-				  }
-				: // CHANNEL
-				T[P] extends ChannelOptionalArgumentDefinition<infer N>
-				? { [_ in getName<N>]?: Channel }
-				: T[P] extends ChannelArgumentDefinition<infer N>
-				? { [_ in getName<N>]: Channel }
-				: // ROLE
-				T[P] extends RoleOptionalArgumentDefinition<infer N>
-				? { [_ in getName<N>]?: Role }
-				: T[P] extends RoleArgumentDefinition<infer N>
-				? { [_ in getName<N>]: Role }
-				: // MENTIONABLE
-				T[P] extends MentionableOptionalArgumentDefinition<infer N>
-				? {
-						[_ in getName<N>]?:
-							| Role
-							| {
-									user: User;
-									member: Member;
-							  };
-				  }
-				: T[P] extends MentionableArgumentDefinition<infer N>
-				? {
-						[_ in getName<N>]:
-							| Role
-							| {
-									user: User;
-									member: Member;
-							  };
-				  }
-				: // SUBCOMMAND
-				T[P] extends SubcommandArgumentDefinition<infer N>
-				? {
-						[_ in getName<N>]?: T[P]['options'] extends readonly ArgumentDefinition[] // @ts-expect-error somehow this check does not work
-							? ConvertArgumentDefinitionsToArgs<T[P]['options']>
-							: {};
-				  }
-				: // SUBCOMMANDGROUP
-				T[P] extends SubcommandGroupArgumentDefinition<infer N>
-				? {
-						[_ in getName<N>]?: ConvertArgumentDefinitionsToArgs<T[P]['options']>;
-				  }
-				: never;
+					? {
+							// @ts-expect-error TODO: fix this some day
+							[_ in getName<N>]: T[P]['choices'] extends ReadonlyArray<{ name: string; value: string }> // @ts-expect-error
+								? T[P]['choices'][number]['value']
+								: string;
+						}
+					: // INTEGER
+						T[P] extends IntegerOptionalArgumentDefinition<infer N>
+						? {
+								[_ in getName<N>]?: T[P]['choices'] extends ReadonlyArray<{ name: string; value: number }> // @ts-expect-error
+									? T[P]['choices'][number]['value']
+									: number;
+							}
+						: T[P] extends IntegerArgumentDefinition<infer N>
+							? {
+									[_ in getName<N>]: T[P]['choices'] extends ReadonlyArray<{ name: string; value: number }> // @ts-expect-error
+										? T[P]['choices'][number]['value']
+										: number;
+								}
+							: // BOOLEAN
+								T[P] extends BooleanOptionalArgumentDefinition<infer N>
+								? { [_ in getName<N>]?: boolean }
+								: T[P] extends BooleanArgumentDefinition<infer N>
+									? { [_ in getName<N>]: boolean }
+									: // USER
+										T[P] extends UserOptionalArgumentDefinition<infer N>
+										? {
+												[_ in getName<N>]?: {
+													user: User;
+													member: Member;
+												};
+											}
+										: T[P] extends UserArgumentDefinition<infer N>
+											? {
+													[_ in getName<N>]: {
+														user: User;
+														member: Member;
+													};
+												}
+											: // CHANNEL
+												T[P] extends ChannelOptionalArgumentDefinition<infer N>
+												? { [_ in getName<N>]?: Channel }
+												: T[P] extends ChannelArgumentDefinition<infer N>
+													? { [_ in getName<N>]: Channel }
+													: // ROLE
+														T[P] extends RoleOptionalArgumentDefinition<infer N>
+														? { [_ in getName<N>]?: Role }
+														: T[P] extends RoleArgumentDefinition<infer N>
+															? { [_ in getName<N>]: Role }
+															: // MENTIONABLE
+																T[P] extends MentionableOptionalArgumentDefinition<infer N>
+																? {
+																		[_ in getName<N>]?:
+																			| Role
+																			| {
+																					user: User;
+																					member: Member;
+																			  };
+																	}
+																: T[P] extends MentionableArgumentDefinition<infer N>
+																	? {
+																			[_ in getName<N>]:
+																				| Role
+																				| {
+																						user: User;
+																						member: Member;
+																				  };
+																		}
+																	: // SUBCOMMAND
+																		T[P] extends SubcommandArgumentDefinition<infer N>
+																		? {
+																				[_ in getName<N>]?: T[P]['options'] extends readonly ArgumentDefinition[] // @ts-expect-error somehow this check does not work
+																					? ConvertArgumentDefinitionsToArgs<T[P]['options']>
+																					: {};
+																			}
+																		: // SUBCOMMANDGROUP
+																			T[P] extends SubcommandGroupArgumentDefinition<infer N>
+																			? {
+																					[_ in getName<N>]?: ConvertArgumentDefinitionsToArgs<T[P]['options']>;
+																				}
+																			: never;
 		}[number]
 	>
 >;

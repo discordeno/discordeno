@@ -152,6 +152,9 @@ yarn test:unit-coverage
 # unit test with Deno
 yarn test:deno-unit
 
+# unit test with Bun
+yarn test:bun-unit
+
 # integration test
 yarn test:integration
 
