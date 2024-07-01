@@ -466,9 +466,21 @@ export interface CreateSlashApplicationCommand {
   options?: Camelize<DiscordApplicationCommandOption[]>
   /** Set of permissions represented as a bit set */
   defaultMemberPermissions?: PermissionStrings[]
-  /** Integration types where the command is available */
+  /**
+   * Integration types where the command is available
+   *
+   * @remarks
+   * This value is available only for globally-scoped commands
+   * Defaults to the application configured contexts
+   */
   integrationTypes?: DiscordApplicationIntegrationType[]
-  /** Interaction context types where the command is available */
+  /**
+   * Interaction context types where the command is available.
+   *
+   * @remarks
+   * This value is available only for globally-scoped commands
+   * By default, all interaction context types are included for new commands
+   */
   contexts?: DiscordInteractionContextType[]
   /**
    * Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
