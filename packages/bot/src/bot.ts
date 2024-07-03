@@ -2,7 +2,7 @@ import type { CreateGatewayManagerOptions, GatewayManager } from '@discordeno/ga
 import { ShardSocketCloseCodes, createGatewayManager } from '@discordeno/gateway'
 import type { CreateRestManagerOptions, RestManager } from '@discordeno/rest'
 import { createRestManager } from '@discordeno/rest'
-import type { BigString, DiscordEmoji, DiscordGatewayPayload, DiscordReady, GatewayIntents } from '@discordeno/types'
+import type { BigString, DiscordGatewayPayload, DiscordReady, GatewayIntents } from '@discordeno/types'
 import { createLogger, getBotIdFromToken, type Collection, type logger } from '@discordeno/utils'
 import { createBotGatewayHandlers } from './handlers.js'
 import { createBotHelpers, type BotHelpers } from './helpers.js'
@@ -230,7 +230,7 @@ export interface EventHandlers {
   stageInstanceCreate: (data: { id: bigint; guildId: bigint; channelId: bigint; topic: string }) => unknown
   stageInstanceDelete: (data: { id: bigint; guildId: bigint; channelId: bigint; topic: string }) => unknown
   stageInstanceUpdate: (data: { id: bigint; guildId: bigint; channelId: bigint; topic: string }) => unknown
-  guildEmojisUpdate: (payload: { guildId: bigint; emojis: Collection<bigint, DiscordEmoji> }) => unknown
+  guildEmojisUpdate: (payload: { guildId: bigint; emojis: Collection<bigint, Emoji> }) => unknown
   guildBanAdd: (user: User, guildId: bigint) => unknown
   guildBanRemove: (user: User, guildId: bigint) => unknown
   guildCreate: (guild: Guild) => unknown
