@@ -121,6 +121,7 @@ export function transformGuild(bot: Bot, payload: { guild: DiscordGuild } & { sh
   if (props.joinedAt && payload.guild.joined_at) guild.joinedAt = Date.parse(payload.guild.joined_at)
   if (props.memberCount && payload.guild.member_count) guild.memberCount = payload.guild.member_count ?? 0
   if (props.shardId) guild.shardId = payload.shardId
+  if (props.features && payload.guild.features) guild.features = payload.guild.features
   if (props.icon && payload.guild.icon) guild.icon = iconHashToBigInt(payload.guild.icon)
   if (props.banner && payload.guild.banner) guild.banner = iconHashToBigInt(payload.guild.banner)
   if (props.splash && payload.guild.splash) guild.splash = iconHashToBigInt(payload.guild.splash)
