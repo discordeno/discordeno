@@ -1349,9 +1349,20 @@ export interface CreatePoll {
   question: Camelize<DiscordPollMedia>
   /** Each of the answers available in the poll, up to 10 */
   answers: Array<Omit<Camelize<DiscordPollAnswer>, 'answerId'>>
-  /** Number of hours the poll should be open for, up to 7 days */
+  /**
+   * Number of hours the poll should be open for
+   *
+   * @remarks
+   * up to 32 days
+   *
+   * @default 24
+   */
   duration: number
-  /** Whether a user can select multiple answers */
+  /**
+   * Whether a user can select multiple answers
+   *
+   * @default false
+   */
   allowMultiselect: boolean
   /** The layout type of the poll */
   layoutType?: DiscordPollLayoutType
