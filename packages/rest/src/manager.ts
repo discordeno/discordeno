@@ -17,12 +17,14 @@ import {
   type DiscordAuditLog,
   type DiscordAutoModerationRule,
   type DiscordBan,
+  type DiscordBulkBan,
   type DiscordChannel,
   type DiscordConnection,
   type DiscordCurrentAuthorization,
   type DiscordEmoji,
   type DiscordEntitlement,
   type DiscordFollowedChannel,
+  type DiscordGetAnswerVotesResponse,
   type DiscordGetGatewayBot,
   type DiscordGuild,
   type DiscordGuildApplicationCommandPermissions,
@@ -845,11 +847,13 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async editBotProfile(options) {
       const avatar = options?.botAvatarURL ? await urlToBase64(options?.botAvatarURL) : options?.botAvatarURL
+      const banner = options?.botBannerURL ? await urlToBase64(options?.botBannerURL) : options?.botBannerURL
 
       return await rest.patch<DiscordUser>(rest.routes.currentUser(), {
         body: {
           username: options.username?.trim(),
           avatar,
+          banner,
         },
       })
     },
@@ -984,11 +988,12 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordMessage>(rest.routes.webhooks.webhook(webhookId, token, options), { body: options })
     },
 
-    async followAnnouncement(sourceChannelId, targetChannelId) {
+    async followAnnouncement(sourceChannelId, targetChannelId, reason) {
       return await rest.post<DiscordFollowedChannel>(rest.routes.channels.follow(sourceChannelId), {
         body: {
           webhook_channel_id: targetChannelId,
         },
+        reason,
       })
     },
 
@@ -1033,7 +1038,7 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
     },
 
     async editApplicationInfo(body) {
-      return await rest.patch<DiscordApplication>(rest.routes.oauth2.application(), {
+      return await rest.patch<DiscordApplication>(rest.routes.application(), {
         body,
       })
     },
@@ -1412,12 +1417,24 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       return await rest.post<DiscordChannel>(rest.routes.channels.threads.all(channelId), { body, reason })
     },
 
+    async getPollAnswerVoters(channelId, messageId, answerId, options) {
+      return await rest.get<DiscordGetAnswerVotesResponse>(rest.routes.channels.polls.votes(channelId, messageId, answerId, options))
+    },
+
+    async endPoll(channelId, messageId) {
+      return await rest.post<DiscordMessage>(rest.routes.channels.polls.expire(channelId, messageId))
+    },
+
     async syncGuildTemplate(guildId) {
       return await rest.put<DiscordTemplate>(rest.routes.guilds.templates.all(guildId))
     },
 
     async banMember(guildId, userId, body, reason) {
       await rest.put<void>(rest.routes.guilds.members.ban(guildId, userId), { body, reason })
+    },
+
+    async bulkBanMembers(guildId, options, reason) {
+      return await rest.post<DiscordBulkBan>(rest.routes.guilds.members.bulkBan(guildId), { body: options, reason })
     },
 
     async editBotMember(guildId, body, reason) {
@@ -1540,6 +1557,10 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
 
     async deleteTestEntitlement(applicationId, entitlementId) {
       await rest.delete(rest.routes.monetization.entitlement(applicationId, entitlementId))
+    },
+
+    async consumeEntitlement(applicationId, entitlementId) {
+      await rest.post(rest.routes.monetization.consumeEntitlement(applicationId, entitlementId))
     },
 
     async listSkus(applicationId) {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import type { BigString, GetGuildWidgetImageQuery, ImageFormat, ImageSize } from '@discordeno/types'
+import { type BigString, type GetGuildWidgetImageQuery, type ImageFormat, type ImageSize, StickerFormatTypes } from '@discordeno/types'
 import { iconBigintToHash } from './hash.js'
 
 /** Help format an image url. */
@@ -44,8 +44,8 @@ export function avatarUrl(
     : `https://cdn.discordapp.com/embed/avatars/${discriminator === '0' ? (BigInt(userId) >> BigInt(22)) % BigInt(6) : Number(discriminator) % 5}.png`
 }
 
-export function avatarDecorationUrl(userId: BigString, avatarDecoration: BigString): string {
-  return `https://cdn.discordapp.com/avatar-decorations/${userId}/${
+export function avatarDecorationUrl(avatarDecoration: BigString): string {
+  return `https://cdn.discordapp.com/avatar-decoration-presets/${
     typeof avatarDecoration === 'string' ? avatarDecoration : iconBigintToHash(avatarDecoration)
   }.png`
 }
@@ -354,9 +354,17 @@ export function stickerUrl(
   options?: {
     size?: ImageSize
     format?: ImageFormat
+    type?: StickerFormatTypes
   },
 ): string | undefined {
-  return stickerId ? formatImageUrl(`https://cdn.discordapp.com/stickers/${stickerId}`, options?.size ?? 128, options?.format) : undefined
+  if (!stickerId) return
+
+  const url =
+    options?.type === StickerFormatTypes.Gif
+      ? `https://media.discordapp.net/stickers/${stickerId}`
+      : `https://cdn.discordapp.com/stickers/${stickerId}`
+
+  return formatImageUrl(url, options?.size ?? 128, options?.format)
 }
 
 /**

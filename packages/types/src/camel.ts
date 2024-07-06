@@ -15,6 +15,7 @@ import type {
   DiscordApplicationCommandOption,
   DiscordApplicationCommandOptionChoice,
   DiscordApplicationCommandPermissions,
+  DiscordApplicationIntegrationTypeConfiguration,
   DiscordApplicationRoleConnection,
   DiscordApplicationWebhook,
   DiscordArchivedThreads,
@@ -28,6 +29,7 @@ import type {
   DiscordAutoModerationRule,
   DiscordAutoModerationRuleTriggerMetadata,
   DiscordBan,
+  DiscordBulkBan,
   DiscordButtonComponent,
   DiscordChannel,
   DiscordChannelMention,
@@ -57,6 +59,7 @@ import type {
   DiscordFollowedChannel,
   DiscordForumTag,
   DiscordGatewayPayload,
+  DiscordGetAnswerVotesResponse,
   DiscordGetGatewayBot,
   DiscordGuild,
   DiscordGuildApplicationCommandPermissions,
@@ -117,6 +120,11 @@ import type {
   DiscordOptionalAuditEntryInfo,
   DiscordOverwrite,
   DiscordPartialGuild,
+  DiscordPoll,
+  DiscordPollAnswer,
+  DiscordPollAnswerCount,
+  DiscordPollMedia,
+  DiscordPollResult,
   DiscordPresenceUpdate,
   DiscordPrunedCount,
   DiscordReaction,
@@ -173,6 +181,7 @@ export interface CamelizedDiscordGuildIntegrationsUpdate extends Camelize<Discor
 export interface CamelizedDiscordTypingStart extends Camelize<DiscordTypingStart> {}
 export interface CamelizedDiscordMember extends Camelize<DiscordMember> {}
 export interface CamelizedDiscordApplication extends Camelize<DiscordApplication> {}
+export interface CamelizedDiscordApplicationIntegrationTypeConfiguration extends Camelize<DiscordApplicationIntegrationTypeConfiguration> {}
 export interface CamelizedDiscordApplicationRoleConnection extends Camelize<DiscordApplicationRoleConnection> {}
 export type CamelizedDiscordTokenExchange = Camelize<DiscordTokenExchange>
 export interface CamelizedDiscordTokenExchangeAuthorizationCode extends Camelize<DiscordTokenExchangeAuthorizationCode> {}
@@ -226,6 +235,12 @@ export interface CamelizedDiscordChannelMention extends Camelize<DiscordChannelM
 export interface CamelizedDiscordReaction extends Camelize<DiscordReaction> {}
 export interface CamelizedDiscordMessageActivity extends Camelize<DiscordMessageActivity> {}
 export interface CamelizedDiscordMessageReference extends Camelize<DiscordMessageReference> {}
+export interface CamelizedDiscordPoll extends Camelize<DiscordPoll> {}
+export interface CamelizedDiscordPollMedia extends Camelize<DiscordPollMedia> {}
+export interface CamelizedDiscordPollAnswer extends Camelize<DiscordPollAnswer> {}
+export interface CamelizedDiscordPollAnswerCount extends Camelize<DiscordPollAnswerCount> {}
+export interface CamelizedDiscordPollResult extends Camelize<DiscordPollResult> {}
+export interface CamelizedDiscordGetAnswerVotesResponse extends Camelize<DiscordGetAnswerVotesResponse> {}
 export interface CamelizedDiscordSticker extends Camelize<DiscordSticker> {}
 export interface CamelizedDiscordMessageInteraction extends Camelize<DiscordMessageInteraction> {}
 export type CamelizedDiscordMessageComponents = Camelize<DiscordMessageComponents>
@@ -324,3 +339,4 @@ export interface CamelizedDiscordGuildOnboardingPrompt extends Camelize<DiscordG
 export interface CamelizedDiscordGuildOnboardingOption extends Camelize<DiscordGuildOnboardingPromptOption> {}
 export interface CamelizedDiscordEntitlement extends Camelize<DiscordEntitlement> {}
 export interface CamelizedDiscordSku extends Camelize<DiscordSku> {}
+export interface CamelizedDiscordBulkBan extends Camelize<DiscordBulkBan> {}
