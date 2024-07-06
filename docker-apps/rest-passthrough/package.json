@@ -15,12 +15,12 @@
     "@fastify/env": "^4.4.0",
     "@fastify/helmet": "^11.1.1",
     "@fastify/multipart": "^8.3.0",
-    "fastify": "^4.28.0"
+    "fastify": "^4.28.1"
   },
   "devDependencies": {
     "@favware/cliff-jumper": "^4.0.2",
-    "@swc/cli": "^0.3.14",
-    "@swc/core": "^1.6.5",
+    "@swc/cli": "^0.4.0",
+    "@swc/core": "^1.6.7",
     "dotenv": "^16.4.5"
   },
   "packageManager": "yarn@4.0.2"
