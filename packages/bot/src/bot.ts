@@ -201,7 +201,7 @@ export interface EventHandlers {
   guildMemberAdd: (member: Member, user: User) => unknown
   guildMemberRemove: (user: User, guildId: bigint) => unknown
   guildMemberUpdate: (member: Member, user: User) => unknown
-  guildStickersUpdate: (stickers: Sticker[]) => unknown
+  guildStickersUpdate: (payload: { guildId: bigint; stickers: Sticker[] }) => unknown
   messageCreate: (message: Message) => unknown
   messageDelete: (payload: { id: bigint; channelId: bigint; guildId?: bigint }, message?: Message) => unknown
   messageDeleteBulk: (payload: { ids: bigint[]; channelId: bigint; guildId?: bigint }) => unknown
