@@ -317,6 +317,7 @@ export interface Transformers {
       context: boolean
     }
     invite: {
+      type: boolean
       channelId: boolean
       code: boolean
       createdAt: boolean
@@ -936,6 +937,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         context: opts?.defaultDesiredPropertiesValue ?? false,
       },
       invite: {
+        type: opts?.defaultDesiredPropertiesValue ?? false,
         channelId: opts?.defaultDesiredPropertiesValue ?? false,
         code: opts?.defaultDesiredPropertiesValue ?? false,
         createdAt: opts?.defaultDesiredPropertiesValue ?? false,
