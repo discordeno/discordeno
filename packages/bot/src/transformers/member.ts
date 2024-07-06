@@ -1,8 +1,9 @@
 import type { BigString, DiscordMember } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
-import { MemberToggles } from './toggles/member.js'
+import type { AvatarDecorationData } from './avatarDecorationData.js'
 import { Permissions } from './toggles/Permissions.js'
+import { MemberToggles } from './toggles/member.js'
 import type { User } from './user.js'
 
 const baseMember: Partial<Member> & BaseMember = {
@@ -35,6 +36,8 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigSt
   if (props.deaf || props.mute || props.pending) {
     member.toggles = new MemberToggles(payload)
   }
+  if (props.avatarDecorationData && payload.avatar_decoration_data)
+    member.avatarDecorationData = bot.transformers.avatarDecorationData(bot, payload.avatar_decoration_data)
 
   return bot.transformers.customizers.member(bot, payload, member)
 }
@@ -71,4 +74,6 @@ export interface Member extends BaseMember {
   permissions?: Permissions
   /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
   communicationDisabledUntil?: number
+  /** data for the member's guild avatar decoration */
+  avatarDecorationData: AvatarDecorationData
 }

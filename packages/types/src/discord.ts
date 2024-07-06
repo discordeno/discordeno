@@ -78,8 +78,8 @@ export interface DiscordUser {
   email?: string | null
   /** the user's banner, or null if unset */
   banner?: string
-  /** the user's avatar decoration, or null if unset */
-  avatar_decoration?: string
+  /** data for the user's avatar decoration */
+  avatar_decoration_data?: DiscordAvatarDecorationData
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes */
@@ -329,6 +329,16 @@ export interface DiscordMember {
   permissions?: string
   /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
   communication_disabled_until?: string | null
+  /** data for the member's guild avatar decoration */
+  avatar_decoration_data?: DiscordAvatarDecorationData | null
+}
+
+/** https://discord.com/developers/docs/resources/user#avatar-decoration-data-object */
+export interface DiscordAvatarDecorationData {
+  /** the avatar decoration hash */
+  asset: string
+  /** id of the avatar decoration's SKU */
+  sku_id: string
 }
 
 /** https://discord.com/developers/docs/resources/application#application-object */
@@ -508,6 +518,7 @@ export interface DiscordConnection {
 export enum DiscordConnectionServiceType {
   BattleNet = 'battlenet',
   Bungie = 'Bungie.net',
+  Domain = 'domain',
   eBay = 'ebay',
   EpicGames = 'epicgames',
   Facebook = 'facebook',
@@ -1368,6 +1379,16 @@ export interface DiscordMessage {
   position?: number
   /** The poll object */
   poll?: DiscordPoll
+  /** The call associated with the message */
+  call?: DiscordMessageCall
+}
+
+/** https://discord.com/developers/docs/resources/channel#message-call-object */
+export interface DiscordMessageCall {
+  /** Array of user object ids that participated in the call */
+  participants: string[]
+  /** Time when call ended */
+  ended_timestamp: string
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-mention-object */
@@ -1591,8 +1612,8 @@ export interface DiscordMessageInteractionMetadata {
   id: string
   /** The type of interaction */
   type: InteractionTypes
-  /** ID of the user who triggered the interaction */
-  user_id: string
+  /** User who triggered the interaction */
+  user: DiscordUser
   /** IDs for installation context(s) related to an interaction */
   authorizing_integration_owners: Partial<Record<DiscordApplicationIntegrationType, string>>
   /** ID of the original response message, present only on follow-up messages */
@@ -2361,10 +2382,15 @@ export interface DiscordApplicationCommandOption {
   type: ApplicationCommandOptionTypes
   /**
    * Name of command, 1-32 characters.
-   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   *
+   * @remarks
+   * This value should be unique within an array of {@link DiscordApplicationCommandOption}
+   *
+   * {@link ApplicationCommandTypes.ChatInput | ChatInput} command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
    * If there is a lowercase variant of any letters used, you must use those.
    * Characters with no lowercase variants and/or uncased letters are still allowed.
-   * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
+   *
+   * {@link ApplicationCommandTypes.User | User} and {@link ApplicationCommandTypes.Message | Message} commands may be mixed case and can include spaces.
    */
   name: string
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
@@ -2373,27 +2399,72 @@ export interface DiscordApplicationCommandOption {
   description: string
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
   description_localizations?: Localization | null
-  /** If the parameter is required or optional--default `false` */
+  /**
+   * If the parameter is required or optional. default `false`
+   *
+   * @remarks
+   * Valid in all option types except {@link ApplicationCommandOptionTypes.SubCommand | SubCommand} and {@link ApplicationCommandOptionTypes.SubCommandGroup | SubCommandGroup}
+   */
   required?: boolean
-  /** Choices for the option types `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer`, and `ApplicationCommandOptionTypes.Number`, from which the user can choose, max 25 */
+  /**
+   * Choices for the option from which the user can choose, max 25
+   *
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}, {@link ApplicationCommandOptionTypes.Integer | Integer}, or {@link ApplicationCommandOptionTypes.Number | Number}
+   *
+   * If you provide an array of choices, they will be the ONLY accepted values for this option
+   */
   choices?: DiscordApplicationCommandOptionChoice[]
-  /** If the option is a subcommand or subcommand group type, these nested options will be the parameters */
+  /**
+   * If the option is a subcommand or subcommand group type, these nested options will be the parameters
+   *
+   * @remarks
+   * Only valid in option of type {@link ApplicationCommandOptionTypes.SubCommand | SubCommand} or {@link ApplicationCommandOptionTypes.SubCommandGroup | SubCommandGroup}
+   */
   options?: DiscordApplicationCommandOption[]
   /**
    * If autocomplete interactions are enabled for this option.
    *
-   * Only available for `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer` and `ApplicationCommandOptionTypes.Number` option types
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}, {@link ApplicationCommandOptionTypes.Integer | Integer}, or {@link ApplicationCommandOptionTypes.Number | Number}
+   *
+   * When {@link DiscordApplicationCommandOption.choices | choices} are provided, this may not be set to true
    */
   autocomplete?: boolean
-  /** If the option is a channel type, the channels shown will be restricted to these types */
+  /**
+   * The channels shown will be restricted to these types
+   *
+   * @remarks
+   * Only valid in option of type {@link ApplicationCommandOptionTypes.Channel | Channel}
+   */
   channel_types?: ChannelTypes[]
-  /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the minimum permitted value */
+  /**
+   * The minimum permitted value
+   *
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.Integer | Integer} or {@link ApplicationCommandOptionTypes.Number | Number}
+   */
   min_value?: number
-  /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the maximum permitted value */
+  /**
+   * The maximum permitted value
+   *
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.Integer | Integer} or {@link ApplicationCommandOptionTypes.Number | Number}
+   */
   max_value?: number
-  /** If the option type is `ApplicationCommandOptionTypes.String`, the minimum permitted length */
+  /**
+   * The minimum permitted length, should be in the range of from 0 to 600
+   *
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}
+   */
   min_length?: number
-  /** If the option type is `ApplicationCommandOptionTypes.String`, the maximum permitted length  */
+  /**
+   * The maximum permitted length, should be in the range of from 0 to 600
+   *
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}
+   */
   max_length?: number
 }
 
@@ -3255,10 +3326,26 @@ export interface DiscordEntitlement {
   starts_at?: string
   /** Date at which the entitlement is no longer valid. Not present when using test entitlements */
   ends_at?: string
+  /** For consumable items, whether or not the entitlement has been consumed */
+  consumed?: boolean
 }
 
 /** https://discord.com/developers/docs/monetization/entitlements#entitlement-object-entitlement-types */
 export enum DiscordEntitlementType {
+  /** Entitlement was purchased by user */
+  Purchase = 1,
+  /** Entitlement for Discord Nitro subscription */
+  PremiumSubscription = 2,
+  /** Entitlement was gifted by developer */
+  DeveloperGift = 3,
+  /** Entitlement was purchased by a dev in application test mode */
+  TestModePurchase = 4,
+  /** Entitlement was granted when the SKU was free */
+  FreePurchase = 5,
+  /** Entitlement was gifted by another user */
+  UserGift = 6,
+  /** Entitlement was claimed by user for free as a Nitro Subscriber */
+  PremiumPurchase = 7,
   /** Entitlement was purchased as an app subscription */
   ApplicationSubscription = 8,
 }
@@ -3281,6 +3368,10 @@ export interface DiscordSku {
 
 /** https://discord.com/developers/docs/monetization/skus#sku-object-sku-types */
 export enum DiscordSkuType {
+  /** Durable one-time purchase */
+  Durable = 2,
+  /** Consumable one-time purchase */
+  Consumable = 3,
   /** Represents a recurring subscription */
   Subscription = 5,
   /** System-generated group for each SUBSCRIPTION SKU created */

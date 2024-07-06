@@ -35,5 +35,10 @@ export function transformMemberToDiscordMember(bot: Bot, payload: Member): Disco
     deaf: payload.toggles?.deaf,
     mute: payload.toggles?.mute,
     pending: payload.toggles?.pending,
+    avatar_decoration_data: {
+      asset: iconBigintToHash(payload.avatarDecorationData.asset),
+      sku_id: bot.transformers.reverse.snowflake(payload.avatarDecorationData.skuId),
+    },
+    user: payload.user ? bot.transformers.reverse.user(bot, payload.user) : undefined,
   }
 }
