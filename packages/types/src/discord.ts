@@ -712,6 +712,8 @@ export interface DiscordEmbedVideo {
 export interface DiscordAttachment {
   /** Name of file attached */
   filename: string
+  /** The title of the file */
+  title?: string
   /** The attachment's [media type](https://en.wikipedia.org/wiki/Media_type) */
   content_type?: string
   /** Size of file in bytes */
@@ -944,7 +946,7 @@ export interface DiscordRole {
   name: string
   /** Integer representation of hexadecimal color code */
   color: number
-  /** Position of this role */
+  /** Position of this role (roles with the same position are sorted by id) */
   position: number
   /** role unicode emoji */
   unicode_emoji?: string
@@ -1026,7 +1028,7 @@ export interface DiscordChannel {
   type: ChannelTypes
   /** The id of the guild */
   guild_id?: string
-  /** Sorting position of the channel */
+  /** Sorting position of the channel (channels with the same position are sorted by id) */
   position?: number
   /** Explicit permission overwrites for members and roles */
   permission_overwrites?: DiscordOverwrite[]
@@ -2310,6 +2312,8 @@ export interface DiscordInviteMetadata extends DiscordInvite {
 
 /** https://discord.com/developers/docs/resources/invite#invite-object */
 export interface DiscordInvite {
+  /** The type of invite */
+  type: DiscordInviteType
   /** The invite code (unique Id) */
   code: string
   /** The guild this invite is for */
@@ -2334,6 +2338,12 @@ export interface DiscordInvite {
   stage_instance?: DiscordInviteStageInstance
   /** guild scheduled event data */
   guild_scheduled_event?: DiscordScheduledEvent
+}
+
+export enum DiscordInviteType {
+  Guild,
+  GroupDm,
+  Friend,
 }
 
 export interface DiscordInviteStageInstance {
