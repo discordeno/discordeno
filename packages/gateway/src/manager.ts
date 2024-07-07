@@ -96,9 +96,9 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         // Handles preparing mid sized bots for LBS
         gateway.totalShards = gateway.calculateTotalShards()
         // Set first shard id if provided in info
-        if (info.firstShardId) gateway.firstShardId = info.firstShardId
+        if (info.firstShardId || info.firstShardId === 0) gateway.firstShardId = info.firstShardId
         // Set last shard id if provided in info
-        if (info.lastShardId) gateway.lastShardId = info.lastShardId
+        if (info.lastShardId || info.lastShardId === 0) gateway.lastShardId = info.lastShardId
         logger.warn(`[Resharding] Starting the reshard process. New Total Shards. ${gateway.totalShards}`)
 
         // Resetting buckets
