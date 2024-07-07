@@ -53,7 +53,7 @@ import type {
   CamelizedDiscordVoiceRegion,
   CamelizedDiscordWebhook,
   CamelizedDiscordWelcomeScreen,
-  // Type is required for typedoc
+  // Type required for typedoc
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ChannelTypes,
   CreateApplicationCommand,
@@ -76,7 +76,13 @@ import type {
   CreateStageInstance,
   CreateTemplate,
   DeleteWebhookMessageOptions,
+  // Type required for typedoc
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  DiscordApplicationIntegrationType,
   DiscordBulkBan,
+  // Type required for typedoc
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  DiscordInteraction,
   EditApplication,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
@@ -165,6 +171,15 @@ export interface CreateRestManagerOptions {
      * @default "authorization" // For compatibility purposes
      */
     authorizationHeader?: string
+    /**
+     * The endpoint to use in the rest proxy to update the bearer tokens
+     *
+     * @remarks
+     * Should not include a `/` in the start
+     *
+     * This value is actually required if you want to use `updateTokenQueues`
+     */
+    updateBearerTokenEndpoint?: string
   }
   /**
    * The api versions which can be used to make requests.
@@ -201,6 +216,8 @@ export interface RestManager {
   authorization?: string
   /** The authorization header name to attach when sending requests to the proxy */
   authorizationHeader: string
+  /** The endpoint to use for `updateTokenQueues` when working with a rest proxy */
+  updateBearerTokenEndpoint?: string
   /** The maximum amount of times a request should be retried. Defaults to Infinity */
   maxRetryCount: number
   /** Whether or not the manager is rate limited globally across all requests. Defaults to false. */
@@ -224,20 +241,17 @@ export interface RestManager {
   /** Whether or not the rest manager should keep objects in raw snake case from discord. */
   preferSnakeCase: (enabled: boolean) => RestManager
   /** Check the rate limits for a url or a bucket. */
-  checkRateLimits: (url: string, headers?: Record<string, string>) => number | false
+  checkRateLimits: (url: string, requestAuthorization: string) => number | false
+  /* Update the queues and ratelimit information to adapt to the new token */
+  updateTokenQueues: (oldToken: string, newToken: string) => Promise<void>
   /** Reshapes and modifies the obj as needed to make it ready for discords api. */
   changeToDiscordFormat: (obj: any) => any
   /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
   createRequestBody: (method: RequestMethods, options?: CreateRequestBodyOptions) => RequestBody
   /** This will create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */
   processRateLimitedPaths: () => void
-  /**
-   * Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available
-   *
-   * @remarks
-   * The authenticationHeader should be defined ONLY if the request was done using a OAuth2 Access Token, in other cases it should be passed as an empty string
-   */
-  processHeaders: (url: string, headers: Headers, authenticationHeader?: string) => string | undefined
+  /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
+  processHeaders: (url: string, headers: Headers, requestAuthorization: string) => string | undefined
   /** Sends a request to the api. */
   sendRequest: (options: SendRequestOptions) => Promise<void>
   /** Split a url to separate rate limit buckets based on major/minor parameters. */
@@ -2477,6 +2491,9 @@ export interface RestManager {
    * Unlike `sendMessage()`, this endpoint allows the bot user to act without:
    * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
    * - Requiring the `MESSAGE_CONTENT` intent.
+   *
+   * Apps are limited to 5 followup messages per interaction if it was initiated from a user-installed app and isn't installed in the server
+   * You can check if it was initiated from a user-installed app that isn't installed in the server by checking if {@link DiscordInteraction.authorizing_integration_owners | authorizingIntegrationOwners} only contains {@link DiscordApplicationIntegrationType.UserInstall | UserInstall}.
    *
    * Fires a _Message Create_ event.
    *
