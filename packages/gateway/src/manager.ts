@@ -213,7 +213,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     },
 
     calculateTotalShards() {
-      // Bots under 100k servers do not have access to total shards.
+      // Bots under 100k servers do not have access to LBS.
       if (gateway.totalShards < 100) {
         gateway.logger.debug(`[Gateway] Calculating total shards: ${gateway.totalShards}`)
         return gateway.totalShards
@@ -224,9 +224,9 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
       return (
         Math.ceil(
           gateway.totalShards /
-            // If `maxConcurrency` is 1 we can safely use 16.
+            // If `maxConcurrency` is 1, we can safely use 16 to get `totalShards` to be in a multiple of 16 so that we can prepare bots with 100k servers for LBS.
             (gateway.connection.sessionStartLimit.maxConcurrency === 1 ? 16 : gateway.connection.sessionStartLimit.maxConcurrency),
-        ) * gateway.connection.sessionStartLimit.maxConcurrency
+        ) * (gateway.connection.sessionStartLimit.maxConcurrency === 1 ? 16 : gateway.connection.sessionStartLimit.maxConcurrency)
       )
     },
     calculateWorkerId(shardId) {
