@@ -169,7 +169,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         })
       },
       async updateGuildsShardId(guildIds, shardId) {
-        logger.warn(
+        logger.debug(
           `[Resharding] Updating the following guild ids shard to #${shardId}: ${guildIds.join(', ')}. Override this function to update your cache if you need to.`,
         )
       },
