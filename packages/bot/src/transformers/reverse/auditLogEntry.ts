@@ -1,6 +1,5 @@
 import type { DiscordAuditLogEntry } from '@discordeno/types'
-import { iconBigintToHash, type Bot } from '../../index.js'
-import type { AuditLogEntry } from '../auditLogEntry.js'
+import { iconBigintToHash, type AuditLogEntry, type Bot } from '../../index.js'
 
 export function transformAuditLogEntryToDiscordAuditLogEntry(bot: Bot, payload: AuditLogEntry): DiscordAuditLogEntry {
   return {

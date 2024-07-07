@@ -54,77 +54,120 @@ import type {
 } from '@discordeno/types'
 import { logger } from '@discordeno/utils'
 import { bigintToSnowflake, snowflakeToBigint, type Bot } from './index.js'
-import { transformActivity, type Activity } from './transformers/activity.js'
-import { transformApplication, type Application } from './transformers/application.js'
-import { transformApplicationCommand, type ApplicationCommand } from './transformers/applicationCommand.js'
-import { transformApplicationCommandOption, type ApplicationCommandOption } from './transformers/applicationCommandOption.js'
-import { transformApplicationCommandOptionChoice, type ApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js'
-import { transformApplicationCommandPermission, type ApplicationCommandPermission } from './transformers/applicationCommandPermission.js'
-import { transformAttachment, type Attachment } from './transformers/attachment.js'
-import { transformAuditLogEntry, type AuditLogEntry } from './transformers/auditLogEntry.js'
-import { transformAutoModerationActionExecution, type AutoModerationActionExecution } from './transformers/automodActionExecution.js'
-import { transformAutoModerationRule, type AutoModerationRule } from './transformers/automodRule.js'
-import { transformChannel, type Channel } from './transformers/channel.js'
-import { transformComponent, type Component } from './transformers/component.js'
-import { transformEmbed, type Embed } from './transformers/embed.js'
-import { transformEmoji, type Emoji } from './transformers/emoji.js'
-import { transformEntitlement, type Entitlement } from './transformers/entitlement.js'
-import { transformGatewayBot, type GetGatewayBot } from './transformers/gatewayBot.js'
-import { transformGuild, type Guild } from './transformers/guild.js'
 import {
+  transformActivity,
   transformActivityToDiscordActivity,
+  transformApplication,
+  transformApplicationCommand,
+  transformApplicationCommandOption,
+  transformApplicationCommandOptionChoice,
   transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice,
   transformApplicationCommandOptionToDiscordApplicationCommandOption,
+  transformApplicationCommandPermission,
   transformApplicationCommandToDiscordApplicationCommand,
   transformApplicationToDiscordApplication,
+  transformAttachment,
   transformAttachmentToDiscordAttachment,
+  transformAuditLogEntry,
+  transformAutoModerationActionExecution,
+  transformAutoModerationRule,
   transformAvatarDecorationData,
+  transformChannel,
+  transformComponent,
   transformComponentToDiscordComponent,
+  transformEmbed,
   transformEmbedToDiscordEmbed,
+  transformEmoji,
+  transformEntitlement,
+  transformGatewayBot,
+  transformGuild,
+  transformGuildOnboarding,
+  transformIntegration,
+  transformInteraction,
+  transformInteractionDataOption,
+  transformInvite,
+  transformInviteStageInstance,
+  transformMember,
   transformMemberToDiscordMember,
-  transformTeamToDiscordTeam,
-  transformUserToDiscordUser,
-  type AvatarDecorationData,
-} from './transformers/index.js'
-import { transformIntegration, type Integration } from './transformers/integration.js'
-import { transformInteraction, transformInteractionDataOption, type Interaction, type InteractionDataOption } from './transformers/interaction.js'
-import { transformInvite, type Invite } from './transformers/invite.js'
-import { transformMember, type Member } from './transformers/member.js'
-import {
   transformMessage,
   transformMessageCall,
   transformMessageInteractionMetadata,
+  transformPoll,
+  transformPollMedia,
+  transformPresence,
+  transformRole,
+  transformScheduledEvent,
+  transformSku,
+  transformStageInstance,
+  transformSticker,
+  transformStickerPack,
+  transformTeam,
+  transformTeamToDiscordTeam,
+  transformTemplate,
+  transformThreadMember,
+  transformThreadMemberGuildCreate,
+  transformUser,
+  transformUserToDiscordUser,
+  transformVoiceRegion,
+  transformVoiceState,
+  transformWebhook,
+  transformWelcomeScreen,
+  transformWidget,
+  transformWidgetSettings,
+  type Activity,
+  type Application,
+  type ApplicationCommand,
+  type ApplicationCommandOption,
+  type ApplicationCommandOptionChoice,
+  type ApplicationCommandPermission,
+  type Attachment,
+  type AuditLogEntry,
+  type AutoModerationActionExecution,
+  type AutoModerationRule,
+  type AvatarDecorationData,
+  type Channel,
+  type Component,
+  type Embed,
+  type Emoji,
+  type Entitlement,
+  type GetGatewayBot,
+  type Guild,
+  type GuildOnboarding,
+  type GuildWidget,
+  type GuildWidgetSettings,
+  type Integration,
+  type Interaction,
+  type InteractionDataOption,
+  type Invite,
+  type InviteStageInstance,
+  type Member,
   type Message,
   type MessageCall,
   type MessageInteractionMetadata,
-} from './transformers/message.js'
-import { transformGuildOnboarding, type GuildOnboarding } from './transformers/onboarding.js'
-import { transformPoll, transformPollMedia, type Poll, type PollMedia } from './transformers/poll.js'
-import { transformPresence, type PresenceUpdate } from './transformers/presence.js'
-import { transformAllowedMentionsToDiscordAllowedMentions } from './transformers/reverse/allowedMentions.js'
-import { transformCreateApplicationCommandToDiscordCreateApplicationCommand } from './transformers/reverse/createApplicationCommand.js'
-import { transformInteractionResponseToDiscordInteractionResponse } from './transformers/reverse/interactionResponse.js'
-import { transformRole, type Role } from './transformers/role.js'
-import { transformScheduledEvent, type ScheduledEvent } from './transformers/scheduledEvent.js'
-import { transformSku, type Sku } from './transformers/sku.js'
-import { transformStageInstance, type StageInstance } from './transformers/stageInstance.js'
-import { transformInviteStageInstance, type InviteStageInstance } from './transformers/stageInviteInstance.js'
-import { transformSticker, transformStickerPack, type Sticker, type StickerPack } from './transformers/sticker.js'
-import { transformTeam, type Team } from './transformers/team.js'
-import { transformTemplate, type Template } from './transformers/template.js'
-import {
-  transformThreadMember,
-  transformThreadMemberGuildCreate,
+  type Poll,
+  type PollMedia,
+  type PresenceUpdate,
+  type Role,
+  type ScheduledEvent,
+  type Sku,
+  type StageInstance,
+  type Sticker,
+  type StickerPack,
+  type Team,
+  type Template,
   type ThreadMember,
   type ThreadMemberGuildCreate,
-} from './transformers/threadMember.js'
-import { transformUser, type User } from './transformers/user.js'
-import { transformVoiceRegion, type VoiceRegion } from './transformers/voiceRegion.js'
-import { transformVoiceState, type VoiceState } from './transformers/voiceState.js'
-import { transformWebhook, type Webhook } from './transformers/webhook.js'
-import { transformWelcomeScreen, type WelcomeScreen } from './transformers/welcomeScreen.js'
-import { transformWidget, type GuildWidget } from './transformers/widget.js'
-import { transformWidgetSettings, type GuildWidgetSettings } from './transformers/widgetSettings.js'
+  type User,
+  type VoiceRegion,
+  type VoiceState,
+  type Webhook,
+  type WelcomeScreen,
+} from './transformers/index.js'
+import {
+  transformAllowedMentionsToDiscordAllowedMentions,
+  transformCreateApplicationCommandToDiscordCreateApplicationCommand,
+  transformInteractionResponseToDiscordInteractionResponse,
+} from './transformers/reverse/index.js'
 import type { BotInteractionResponse, DiscordComponent, DiscordInteractionResponse, DiscordThreadMemberGuildCreate } from './typings.js'
 
 export interface Transformers {

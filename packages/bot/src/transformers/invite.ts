@@ -1,6 +1,5 @@
-import type { DiscordApplication, DiscordInviteCreate, DiscordInviteMetadata, DiscordInviteType } from '@discordeno/types'
-import { isInviteWithMetadata, type Application, type Bot, type ScheduledEvent, type User } from '../index.js'
-import type { InviteStageInstance } from './stageInviteInstance.js'
+import type { DiscordApplication, DiscordInviteCreate, DiscordInviteMetadata } from '@discordeno/types'
+import { isInviteWithMetadata, type Bot, type Invite } from '../index.js'
 
 export function transformInvite(bot: Bot, payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number }): Invite {
   const props = bot.transformers.desiredProperties.invite
@@ -46,43 +45,4 @@ export function transformInvite(bot: Bot, payload: { invite: DiscordInviteCreate
   }
 
   return bot.transformers.customizers.invite(bot, payload.invite, invite)
-}
-
-export interface Invite {
-  /** The type of invite */
-  type: DiscordInviteType
-  /** The channel the invite is for */
-  channelId: bigint
-  /** The unique invite code */
-  code: string
-  /** The time at which the invite was created */
-  createdAt: number
-  /** The guild of the invite */
-  guildId?: bigint
-  /** The user that created the invite */
-  inviter?: User
-  /** How long the invite is valid for (in seconds) */
-  maxAge: number
-  /** The maximum number of times the invite can be used */
-  maxUses: number
-  /** The type of target for this voice channel invite */
-  targetType: number
-  /** The target user for this invite */
-  targetUser: User
-  /** The embedded application to open for this voice channel embedded application invite */
-  targetApplication?: Application
-  /** Whether or not the invite is temporary (invited users will be kicked on disconnect unless they're assigned a role) */
-  temporary: boolean
-  /** How many times the invite has been used (always will be 0) */
-  uses: number
-  /** Approximate count of online members (only present when target_user is set) */
-  approximateMemberCount: number
-  /** Stage instance data if there is a public Stage instance in the Stage channel this invite is for */
-  stageInstance?: InviteStageInstance
-  /** The expiration date of this invite, returned from the GET /invites/code endpoint when with_expiration is true */
-  expiresAt?: number
-  /** guild scheduled event data */
-  guildScheduledEvent?: ScheduledEvent
-  /** Approximate count of online members (only present when target_user is set) */
-  approximatePresenceCount?: number
 }

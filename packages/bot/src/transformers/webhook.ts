@@ -1,5 +1,5 @@
-import type { DiscordWebhook, WebhookTypes } from '@discordeno/types'
-import { iconHashToBigInt, type Bot, type Channel, type Guild, type User } from '../index.js'
+import type { DiscordWebhook } from '@discordeno/types'
+import { iconHashToBigInt, type Bot, type Webhook } from '../index.js'
 
 export function transformWebhook(bot: Bot, payload: DiscordWebhook): Webhook {
   const props = bot.transformers.desiredProperties.webhook
@@ -28,32 +28,4 @@ export function transformWebhook(bot: Bot, payload: DiscordWebhook): Webhook {
   if (props.url && payload.url) webhook.url = payload.url
 
   return bot.transformers.customizers.webhook(bot, payload, webhook)
-}
-
-export interface Webhook {
-  /** The type of the webhook */
-  type: WebhookTypes
-  /** The secure token of the webhook (returned for Incoming Webhooks) */
-  token?: string
-  /** The url used for executing the webhook (returned by the webhooks OAuth2 flow) */
-  url?: string
-
-  /** The id of the webhook */
-  id: bigint
-  /** The guild id this webhook is for */
-  guildId?: bigint
-  /** The channel id this webhook is for */
-  channelId?: bigint
-  /** The user this webhook was created by (not returned when getting a webhook with its token) */
-  user?: User
-  /** The default name of the webhook */
-  name?: string
-  /** The default user avatar hash of the webhook */
-  avatar?: bigint
-  /** The bot/OAuth2 application that created this webhook */
-  applicationId?: bigint
-  /** The guild of the channel that this webhook is following (returned for Channel Follower Webhooks) */
-  sourceGuild?: Partial<Guild>
-  /** The channel that this webhook is following (returned for Channel Follower Webhooks) */
-  sourceChannel?: Partial<Channel>
 }

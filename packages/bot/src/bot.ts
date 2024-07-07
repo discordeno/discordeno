@@ -7,26 +7,28 @@ import { createLogger, getBotIdFromToken, type Collection, type logger } from '@
 import { createBotGatewayHandlers } from './handlers.js'
 import { createBotHelpers, type BotHelpers } from './helpers.js'
 import { createTransformers, type Transformers } from './transformers.js'
-import type { ApplicationCommandPermission } from './transformers/applicationCommandPermission.js'
-import type { AuditLogEntry } from './transformers/auditLogEntry.js'
-import type { AutoModerationActionExecution } from './transformers/automodActionExecution.js'
-import type { AutoModerationRule } from './transformers/automodRule.js'
-import type { Channel } from './transformers/channel.js'
-import type { Emoji } from './transformers/emoji.js'
-import type { Entitlement } from './transformers/entitlement.js'
-import type { Guild } from './transformers/guild.js'
-import type { Integration } from './transformers/integration.js'
-import type { Interaction } from './transformers/interaction.js'
-import type { Invite } from './transformers/invite.js'
-import type { Member } from './transformers/member.js'
-import type { Message } from './transformers/message.js'
-import type { PresenceUpdate } from './transformers/presence.js'
-import type { Role } from './transformers/role.js'
-import type { ScheduledEvent } from './transformers/scheduledEvent.js'
-import type { Sticker } from './transformers/sticker.js'
-import type { ThreadMember } from './transformers/threadMember.js'
-import type { User } from './transformers/user.js'
-import type { VoiceState } from './transformers/voiceState.js'
+import type {
+  ApplicationCommandPermission,
+  AuditLogEntry,
+  AutoModerationActionExecution,
+  AutoModerationRule,
+  Channel,
+  Emoji,
+  Entitlement,
+  Guild,
+  Integration,
+  Interaction,
+  Invite,
+  Member,
+  Message,
+  PresenceUpdate,
+  Role,
+  ScheduledEvent,
+  Sticker,
+  ThreadMember,
+  User,
+  VoiceState,
+} from './transformers/index.js'
 import type { BotGatewayHandlerOptions } from './typings.js'
 
 /**

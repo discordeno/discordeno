@@ -1,10 +1,9 @@
 import type { BigString, DiscordMember } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
-import type { AvatarDecorationData } from './avatarDecorationData.js'
 import { Permissions } from './toggles/Permissions.js'
 import { MemberToggles } from './toggles/member.js'
-import type { User } from './user.js'
+import type { BaseMember, Member } from './types.js'
 
 const baseMember: Partial<Member> & BaseMember = {
   get deaf() {
@@ -40,40 +39,4 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigSt
     member.avatarDecorationData = bot.transformers.avatarDecorationData(bot, payload.avatar_decoration_data)
 
   return bot.transformers.customizers.member(bot, payload, member)
-}
-
-export interface BaseMember {
-  /** Whether the user is deafened in voice channels */
-  deaf?: boolean
-  /** Whether the user is muted in voice channels */
-  mute?: boolean
-  /** Whether the user has not yet passed the guild's Membership Screening requirements */
-  pending?: boolean
-}
-
-export interface Member extends BaseMember {
-  /** The user id of the member. */
-  id: bigint
-  /** The compressed form of all the boolean values on this user. */
-  toggles?: MemberToggles
-  /** The guild id where this member is. */
-  guildId: bigint
-  /** The user this guild member represents */
-  user?: User
-  /** This users guild nickname */
-  nick?: string
-  /** The members custom avatar for this server. */
-  avatar?: bigint
-  /** Array of role object ids */
-  roles: bigint[]
-  /** When the user joined the guild */
-  joinedAt: number
-  /** When the user started boosting the guild */
-  premiumSince?: number
-  /** The permissions this member has in the guild. Only present on interaction events. */
-  permissions?: Permissions
-  /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
-  communicationDisabledUntil?: number
-  /** data for the member's guild avatar decoration */
-  avatarDecorationData: AvatarDecorationData
 }

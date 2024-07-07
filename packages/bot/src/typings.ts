@@ -22,8 +22,7 @@ import {
   type TextStyles,
 } from '@discordeno/types'
 import type * as handlers from './handlers/index.js'
-import type { ApplicationCommandOptionChoice } from './transformers/applicationCommandOptionChoice.js'
-import type { Embed } from './transformers/embed.js'
+import type { ApplicationCommandOptionChoice, Embed } from './transformers/index.js'
 
 export function isContextApplicationCommand(command: CreateApplicationCommand): command is CreateContextApplicationCommand {
   return command.type === ApplicationCommandTypes.Message || command.type === ApplicationCommandTypes.User

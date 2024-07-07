@@ -1,136 +1,23 @@
 import {
   InteractionResponseTypes,
   InteractionTypes,
-  type ApplicationCommandOptionTypes,
-  type ApplicationCommandTypes,
-  type BigString,
   type ChannelTypes,
   type DiscordInteraction,
   type DiscordInteractionDataOption,
-  type InteractionCallbackData,
-  type MessageComponentTypes,
 } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import {
   DiscordApplicationIntegrationType,
+  type BaseInteraction,
   type Bot,
-  type Channel,
-  type Component,
   type DiscordChannel,
-  type DiscordInteractionContextType,
+  type Interaction,
+  type InteractionDataOption,
+  type InteractionDataResolved,
+  type Member,
+  type Message,
 } from '../index.js'
 import { MessageFlags, type DiscordInteractionDataResolved } from '../typings.js'
-import type { Attachment } from './attachment.js'
-import type { Member } from './member.js'
-import type { Message } from './message.js'
-import type { Role } from './role.js'
-import type { User } from './user.js'
-
-export interface Interaction extends BaseInteraction {
-  /** The bot object */
-  bot: Bot
-  /** Whether or not this interaction has been responded to. */
-  acknowledged: boolean
-  /** Id of the interaction */
-  id: bigint
-  /** Id of the application this interaction is for */
-  applicationId: bigint
-  /** The type of interaction */
-  type: InteractionTypes
-  /** The guild it was sent from */
-  guildId?: bigint
-  /** The channel it was sent from */
-  channel: Partial<Channel>
-  /**
-   * The ID of channel it was sent from
-   *
-   * @remarks
-   * It is recommended that you begin using this channel field to identify the source channel of the interaction as they may deprecate the existing channel_id field in the future.
-   */
-  channelId?: bigint
-  /** Guild member data for the invoking user, including permissions */
-  member?: Member
-  /** User object for the invoking user, if invoked in a DM */
-  user: User
-  /** A continuation token for responding to the interaction */
-  token: string
-  /** Read-only property, always `1` */
-  version: 1
-  /** For the message the button was attached to */
-  message?: Message
-  /** the command data payload */
-  data?: {
-    type?: ApplicationCommandTypes
-    componentType?: MessageComponentTypes
-    customId?: string
-    components?: Component[]
-    values?: string[]
-    name: string
-    resolved?: InteractionDataResolved
-    options?: InteractionDataOption[]
-    id?: bigint
-    targetId?: bigint
-    // guildId?: bigint
-  }
-  /** The selected language of the invoking user */
-  locale?: string
-  /** The guild's preferred locale, if invoked in a guild */
-  guildLocale?: string
-  /** The computed permissions for a bot or app in the context of a specific interaction (including channel overwrites) */
-  appPermissions: bigint
-  /** Mapping of installation contexts that the interaction was authorized for to related user or guild IDs. */
-  authorizingIntegrationOwners: Partial<Record<DiscordApplicationIntegrationType, bigint>>
-  /** Context where the interaction was triggered from */
-  context?: DiscordInteractionContextType
-}
-
-export interface BaseInteraction {
-  /**
-   * Sends a response to an interaction.
-   *
-   * @remarks
-   * This will send a {@link InteractionResponseTypes.ChannelMessageWithSource}, {@link InteractionResponseTypes.ApplicationCommandAutocompleteResult} or {@link InteractionResponseTypes.Modal} response based on the type of the interaction you are responding to.
-   *
-   * If the interaction has been already acknowledged, indicated by {@link Interaction.acknowledged}, it will send a followup message instead.
-   *
-   * Uses `interaction.type`, `interaction.token` and `interaction.id`, missing one of these in the desired proprieties may cause unexpected behavior.
-   */
-  respond: (response: string | InteractionCallbackData, options?: { isPrivate?: boolean }) => Promise<Message | void>
-  /**
-   * Edit the original response of an interaction or a followup if the message id is provided.
-   *
-   * @remarks
-   * This will edit the original interaction response or, if the interaction has not yet been acknowledged and the type of the interaction is {@link InteractionTypes.MessageComponent} it will instead send a {@link InteractionResponseTypes.UpdateMessage} response instead.
-   *
-   * Uses `interaction.type`, `interaction.token` and `interaction.id`, missing one of these in the desired proprieties may cause unexpected behavior.
-   */
-  edit: (response: string | InteractionCallbackData, messageId?: BigString) => Promise<Message | void>
-  /**
-   * Defer the interaction for updating the referenced message at a later time with {@link edit}.
-   *
-   * @remarks
-   * This will send a {@link InteractionResponseTypes.DeferredUpdateMessage} response.
-   *
-   * Uses `interaction.type`, `interaction.token` and `interaction.id`, missing one of these in the desired proprieties may cause unexpected behavior.
-   */
-  deferEdit: () => Promise<void>
-  /**
-   * Defer the interaction for updating the response at a later time with {@link edit}.
-   *
-   * @remarks
-   * This will send a {@link InteractionResponseTypes.DeferredChannelMessageWithSource} response.
-   *
-   * Uses `interaction.type`, `interaction.token` and `interaction.id`, missing one of these in the desired proprieties may cause unexpected behavior.
-   */
-  defer: (isPrivate?: boolean) => Promise<void>
-  /**
-   * Delete the original interaction response or a followup if the message id is provided.
-   *
-   * @remarks
-   * Uses `interaction.type` and `interaction.token`, missing one of these in the desired proprieties may cause unexpected behavior.
-   */
-  delete: (messageId?: BigString) => Promise<void>
-}
 
 const baseInteraction: Partial<Interaction> & BaseInteraction = {
   async respond(response, options) {
@@ -342,21 +229,4 @@ export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInte
   }
 
   return transformed
-}
-
-export interface InteractionDataResolved {
-  messages?: Collection<bigint, Message>
-  users?: Collection<bigint, User>
-  members?: Collection<bigint, Member>
-  roles?: Collection<bigint, Role>
-  channels?: Collection<bigint, { id: bigint; name: string; type: ChannelTypes; permissions: bigint }>
-  attachments?: Collection<bigint, Attachment>
-}
-
-export interface InteractionDataOption {
-  name: string
-  type: ApplicationCommandOptionTypes
-  value?: string | number | boolean
-  options?: InteractionDataOption[]
-  focused?: boolean
 }

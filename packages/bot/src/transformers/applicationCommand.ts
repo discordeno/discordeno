@@ -1,5 +1,5 @@
-import type { ApplicationCommandTypes, DiscordApplicationCommand, Locales } from '@discordeno/types'
-import type { ApplicationCommandOption, Bot } from '../index.js'
+import type { DiscordApplicationCommand } from '@discordeno/types'
+import type { ApplicationCommand, Bot } from '../index.js'
 
 export function transformApplicationCommand(bot: Bot, payload: DiscordApplicationCommand): ApplicationCommand {
   const applicationCommand = {
@@ -19,19 +19,4 @@ export function transformApplicationCommand(bot: Bot, payload: DiscordApplicatio
   } as ApplicationCommand
 
   return bot.transformers.customizers.applicationCommand(bot, payload, applicationCommand)
-}
-
-export interface ApplicationCommand {
-  options?: ApplicationCommandOption[]
-  description?: string
-  guildId?: bigint
-  nameLocalizations?: Record<Locales, string>
-  descriptionLocalizations?: Record<Locales, string>
-  defaultMemberPermissions?: bigint
-  type?: ApplicationCommandTypes
-  version?: string
-  id: bigint
-  name: string
-  applicationId: bigint
-  dmPermission: boolean
 }

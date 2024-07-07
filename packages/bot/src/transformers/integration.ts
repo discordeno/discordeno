@@ -1,5 +1,5 @@
-import type { DiscordIntegrationCreateUpdate, IntegrationExpireBehaviors, OAuth2Scope } from '@discordeno/types'
-import { iconHashToBigInt, type Bot, type User } from '../index.js'
+import type { DiscordIntegrationCreateUpdate } from '@discordeno/types'
+import { iconHashToBigInt, type Bot, type Integration } from '../index.js'
 
 export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreateUpdate): Integration {
   const integration = {
@@ -34,33 +34,4 @@ export function transformIntegration(bot: Bot, payload: DiscordIntegrationCreate
   } as Integration
 
   return bot.transformers.customizers.integration(bot, payload, integration)
-}
-
-export interface Integration {
-  user?: User
-  enabled?: boolean
-  syncing?: boolean
-  roleId?: bigint
-  enableEmoticons?: boolean
-  expireBehavior?: IntegrationExpireBehaviors
-  expireGracePeriod?: number
-  syncedAt?: number
-  subscriberCount?: number
-  revoked?: boolean
-  application?: {
-    bot?: User
-    icon?: bigint
-    id: bigint
-    name: string
-    description: string
-  }
-  id: bigint
-  name: string
-  guildId: bigint
-  type: 'twitch' | 'youtube' | 'discord'
-  account: {
-    id: bigint
-    name: string
-  }
-  scopes: OAuth2Scope[]
 }

@@ -1,14 +1,10 @@
 import {
   DiscordApplicationIntegrationType,
   iconHashToBigInt,
-  type ApplicationFlags,
+  type Application,
   type Bot,
   type DiscordApplication,
   type DiscordUser,
-  type Guild,
-  type OAuth2Scope,
-  type Team,
-  type User,
 } from '../index.js'
 
 export function transformApplication(bot: Bot, payload: { application: DiscordApplication; shardId: number }): Application {
@@ -63,40 +59,4 @@ export function transformApplication(bot: Bot, payload: { application: DiscordAp
   } as Application
 
   return bot.transformers.customizers.application(bot, payload.application, application)
-}
-
-export interface Application {
-  flags?: ApplicationFlags
-  icon?: bigint
-  rpcOrigins?: string[]
-  termsOfServiceUrl?: string
-  privacyPolicyUrl?: string
-  primarySkuId?: string
-  slug?: string
-  coverImage?: bigint
-  owner?: User
-  team?: Team
-  guildId?: bigint
-  guild?: Guild
-  id: bigint
-  name: string
-  description: string
-  botPublic: boolean
-  botRequireCodeGrant: boolean
-  verifyKey: string
-  approximateGuildCount?: number
-  bot?: User
-  redirectUris?: string[]
-  interactionsEndpointUrl?: string
-  integrationTypesConfig?: Partial<Record<DiscordApplicationIntegrationType, ApplicationIntegrationTypeConfiguration>>
-}
-
-export interface ApplicationIntegrationTypeConfiguration {
-  /** Install params for each installation context's default in-app authorization link */
-  oauth2InstallParams?: {
-    /** Scopes to add the application to the server with */
-    scopes: OAuth2Scope[]
-    /** Permissions to request for the bot role */
-    permissions: bigint
-  }
 }
