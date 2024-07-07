@@ -190,6 +190,7 @@ export interface Transformers {
     attachment: {
       id: boolean
       filename: boolean
+      title: boolean
       contentType: boolean
       size: boolean
       url: boolean
@@ -316,6 +317,7 @@ export interface Transformers {
       context: boolean
     }
     invite: {
+      type: boolean
       channelId: boolean
       code: boolean
       createdAt: boolean
@@ -367,7 +369,7 @@ export interface Transformers {
       interactionMetadata: {
         id: boolean
         type: boolean
-        userId: boolean
+        user: boolean
         authorizingIntegrationOwners: boolean
         originalResponseMessageId: boolean
         interactedMessageId: boolean
@@ -809,6 +811,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
       attachment: {
         id: opts?.defaultDesiredPropertiesValue ?? false,
         filename: opts?.defaultDesiredPropertiesValue ?? false,
+        title: opts?.defaultDesiredPropertiesValue ?? false,
         contentType: opts?.defaultDesiredPropertiesValue ?? false,
         size: opts?.defaultDesiredPropertiesValue ?? false,
         url: opts?.defaultDesiredPropertiesValue ?? false,
@@ -935,6 +938,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         context: opts?.defaultDesiredPropertiesValue ?? false,
       },
       invite: {
+        type: opts?.defaultDesiredPropertiesValue ?? false,
         channelId: opts?.defaultDesiredPropertiesValue ?? false,
         code: opts?.defaultDesiredPropertiesValue ?? false,
         createdAt: opts?.defaultDesiredPropertiesValue ?? false,
@@ -986,7 +990,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         interactionMetadata: {
           id: opts?.defaultDesiredPropertiesValue ?? false,
           type: opts?.defaultDesiredPropertiesValue ?? false,
-          userId: opts?.defaultDesiredPropertiesValue ?? false,
+          user: opts?.defaultDesiredPropertiesValue ?? false,
           authorizingIntegrationOwners: opts?.defaultDesiredPropertiesValue ?? false,
           originalResponseMessageId: opts?.defaultDesiredPropertiesValue ?? false,
           interactedMessageId: opts?.defaultDesiredPropertiesValue ?? false,
