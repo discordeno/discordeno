@@ -22,6 +22,7 @@ import {
   type Localization,
   type MessageActivityTypes,
   type MessageComponentTypes,
+  type MessageFlags,
   type MessageTypes,
   type MfaLevels,
   type OverwriteTypes,
@@ -32,6 +33,7 @@ import {
   type ScheduledEventEntityType,
   type ScheduledEventPrivacyLevel,
   type ScheduledEventStatus,
+  type SkuFlags,
   type SortOrderTypes,
   type StickerFormatTypes,
   type StickerTypes,
@@ -1352,7 +1354,7 @@ export interface DiscordMessage {
   /** Data showing the source of a crossposted channel follow add, pin or reply message */
   message_reference?: Omit<DiscordMessageReference, 'failIfNotExists'>
   /** Message flags combined as a bitfield */
-  flags?: number
+  flags?: MessageFlags
   /**
    * The stickers sent with the message (bots currently can only receive messages with stickers, not send)
    * @deprecated
@@ -3218,7 +3220,7 @@ export interface DiscordCreateForumPostWithMessage {
     /** Attachment objects with filename and description. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
     attachments?: DiscordAttachment[]
     /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS can be set */
-    flags?: number
+    flags?: MessageFlags
   }
   /** the IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
   applied_tags?: string[]
@@ -3403,7 +3405,7 @@ export interface DiscordSku {
   /** System-generated URL slug based on the SKU's name */
   slug: string
   /** SKU flags combined as a bitfield */
-  flags: number
+  flags: SkuFlags
 }
 
 /** https://discord.com/developers/docs/monetization/skus#sku-object-sku-types */

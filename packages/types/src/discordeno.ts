@@ -34,6 +34,7 @@ import type {
   InteractionResponseTypes,
   Localization,
   MessageComponentTypes,
+  MessageFlags,
   OverwriteTypes,
   PermissionStrings,
   ScheduledEventEntityType,
@@ -80,7 +81,7 @@ export interface CreateMessageOptions {
   /** IDs of up to 3 stickers in the server to send in the message */
   stickerIds?: [BigString] | [BigString, BigString] | [BigString, BigString, BigString]
   /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set */
-  flags?: number
+  flags?: MessageFlags
   /** If true and nonce is present, it will be checked for uniqueness in the past few minutes. If another message was created by the same author with the same nonce, that message will be returned and no new message will be created. */
   enforceNonce?: boolean
   /** A poll object */
@@ -795,7 +796,7 @@ export interface CreateForumPostWithMessage {
     /** IDs of up to 3 stickers in the server to send in the message */
     stickerIds?: BigString[]
     /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set */
-    flags?: number
+    flags?: MessageFlags
   }
   /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM or a GUILD_MEDIA channel */
   appliedTags?: BigString[]
@@ -986,7 +987,7 @@ export interface EditMessage {
   /** Embedded `rich` content (up to 6000 characters) */
   embeds?: Array<Camelize<DiscordEmbed>> | null
   /** Edit the flags of the message (only `SUPPRESS_EMBEDS` can currently be set/unset) */
-  flags?: number | null
+  flags?: MessageFlags | null
   /** The contents of the files being sent/edited */
   files?: FileContent[]
   /** Allowed mentions for the message */
