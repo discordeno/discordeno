@@ -4,7 +4,6 @@ import {
   type DiscordGuild,
   type DiscordPresenceUpdate,
   type ExplicitContentFilterLevels,
-  type GuildFeatures,
   type GuildNsfwLevel,
   type MfaLevels,
   type PremiumTiers,
@@ -12,19 +11,22 @@ import {
   type VerificationLevels,
 } from '@discordeno/types'
 import { Collection, iconHashToBigInt } from '@discordeno/utils'
-import type { Bot, Channel, Member, PresenceUpdate, Role, StageInstance, Sticker, VoiceState, WelcomeScreen } from '../index.js'
+import type { Bot, Channel, GuildFeatureKeys, Member, PresenceUpdate, Role, StageInstance, Sticker, VoiceState, WelcomeScreen } from '../index.js'
 import type { Emoji } from '../transformers/emoji.js'
 import { GuildToggles } from './toggles/guild.js'
 
 const baseGuild = {
   get threads() {
-    if (!this.channels) return
+    if (!this.channels) return new Collection<bigint, Channel>()
 
     const threads = this.channels
       .array()
       .filter((x) => x.type === ChannelTypes.PublicThread || x.type === ChannelTypes.PrivateThread || x.type === ChannelTypes.AnnouncementThread)
 
     return new Collection(threads.map((x) => [x.id, x]))
+  },
+  get features() {
+    return this.toggles.features
   },
 } as Guild
 
@@ -165,7 +167,7 @@ export interface Guild {
   /** Explicit content filter level */
   explicitContentFilter: ExplicitContentFilterLevels
   /** Enabled guild features */
-  features: GuildFeatures[]
+  features: GuildFeatureKeys[]
   /** Required MFA level for the guild */
   mfaLevel: MfaLevels
   /** System channel flags */

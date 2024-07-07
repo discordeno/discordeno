@@ -140,13 +140,13 @@ export class GuildToggles extends ToggleBitfieldBigint {
     }
   }
 
-  get features(): GuildToggleKeys[] {
-    const features: GuildToggleKeys[] = []
+  get features(): GuildFeatureKeys[] {
+    const features: GuildFeatureKeys[] = []
     for (const key of Object.keys(GuildToggle)) {
       if (!featureNames.includes(key)) continue
       if (!super.contains(GuildToggle[key as GuildToggleKeys])) continue
 
-      features.push(key as GuildToggleKeys)
+      features.push(key as GuildFeatureKeys)
     }
 
     return features
@@ -306,3 +306,5 @@ export class GuildToggles extends ToggleBitfieldBigint {
 }
 
 export type GuildToggleKeys = keyof typeof GuildToggle
+
+export type GuildFeatureKeys = keyof typeof featureNames
