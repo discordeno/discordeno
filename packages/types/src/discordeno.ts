@@ -17,6 +17,7 @@ import type {
   DiscordPollAnswer,
   DiscordPollLayoutType,
   DiscordPollMedia,
+  DiscordReactionType,
   DiscordRole,
 } from './discord.js'
 import type {
@@ -351,6 +352,7 @@ export type GetMessagesOptions = GetMessagesAfter | GetMessagesBefore | GetMessa
 
 /** https://discord.com/developers/docs/resources/channel#get-reactions-query-string-params */
 export interface GetReactions {
+  type: DiscordReactionType
   /** Get users after this user Id */
   after?: string
   /** Max number of users to return (1-100) */
