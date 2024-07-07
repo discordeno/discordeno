@@ -2881,6 +2881,8 @@ export interface DiscordGuildMemberUpdate {
   pending?: boolean
   /** when the user's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out. Will throw a 403 error if the user has the ADMINISTRATOR permission or is the owner of the guild */
   communication_disabled_until?: string
+  /** Data for the member's guild avatar decoration */
+  avatar_decoration_data?: DiscordAvatarDecorationData
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-all */
