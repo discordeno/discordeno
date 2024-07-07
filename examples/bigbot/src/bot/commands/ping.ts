@@ -1,17 +1,16 @@
-import { translate } from '../languages/translate.js';
-import { createCommand } from '../utils/slash/createCommand.js';
+import { snowflakeToTimestamp } from '@discordeno/bot'
+import { getShardInfoFromGuild } from '../bot.js'
+import createCommand from '../commands.js'
 
-export default createCommand({
-	name: 'PING_NAME',
-	description: 'PING_DESCRIPTION',
-	execute: async function (_, interaction) {
-		return await interaction.reply(
-			translate(interaction.guildId!, 'PING_RESPONSE_WITH_TIME', Date.now() - snowflakeToTimestamp(interaction.id)),
-		);
-	},
-});
+createCommand({
+  name: 'ping',
+  description: '🏓 Check whether the bot is online and responsive.',
+  async run(interaction) {
+    const ping = Date.now() - snowflakeToTimestamp(interaction.id)
+    const shardInfo = await getShardInfoFromGuild(interaction.guildId)
 
-// TODO: This should be deleted once this is available in the helpers plugin.
-export function snowflakeToTimestamp(id: bigint) {
-	return Number(id / 4194304n + 1420070400000n);
-}
+    const shardPing = shardInfo.rtt === -1 ? '*Not yet available*' : `${shardInfo.rtt}ms`
+
+    await interaction.respond(`🏓 Pong! Gateway Latency: ${shardPing}, Roundtrip Latency: ${ping}ms. I am online and responsive! 🕙`)
+  },
+})
