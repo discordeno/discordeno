@@ -81,11 +81,7 @@ export interface Activity {
   endedAt?: number
   details?: string
   state?: string
-  emoji?: {
-    id?: bigint
-    animated?: boolean
-    name: string
-  }
+  emoji?: ActivityEmoji
   partyId?: string
   partyCurrentSize?: number
   partyMaxSize?: number
@@ -95,13 +91,21 @@ export interface Activity {
   smallText?: string
   match?: string
   instance?: boolean
-  buttons?: Array<{
-    url: string
-    label: string
-  }>
+  buttons?: ActivityButton[]
   name: string
   type: ActivityTypes
   createdAt: number
+}
+
+export interface ActivityEmoji {
+  id?: bigint
+  animated?: boolean
+  name: string
+}
+
+export interface ActivityButton {
+  url: string
+  label: string
 }
 
 export interface Application {
@@ -132,12 +136,14 @@ export interface Application {
 
 export interface ApplicationIntegrationTypeConfiguration {
   /** Install params for each installation context's default in-app authorization link */
-  oauth2InstallParams?: {
-    /** Scopes to add the application to the server with */
-    scopes: OAuth2Scope[]
-    /** Permissions to request for the bot role */
-    permissions: bigint
-  }
+  oauth2InstallParams?: ApplicationInstallParams
+}
+
+export interface ApplicationInstallParams {
+  /** Scopes to add the application to the server with */
+  scopes: OAuth2Scope[]
+  /** Permissions to request for the bot role */
+  permissions: bigint
 }
 
 export interface ApplicationCommand {
@@ -195,11 +201,14 @@ export interface ApplicationCommandPermission {
   id: bigint
   guildId: bigint
   applicationId: bigint
-  permissions: Array<{
-    id: bigint
-    type: ApplicationCommandPermissionTypes
-    permission: boolean
-  }>
+  permissions: ApplicationCommandPermissionChange[]
+}
+
+// TODO: maybe find a better name for this interface? Discord calls it "Application Command Permissions" and calls our "ApplicationCommandPermission" "Guild Application Command Permissions", so since we don't have the guild prefix i don't know what to call this, a solution would be making a breaking change on "ApplicationCommandPermission" and rename it to "GuildApplicationCommandPermission"
+export interface ApplicationCommandPermissionChange {
+  id: bigint
+  type: ApplicationCommandPermissionTypes
+  permission: boolean
 }
 
 export interface Attachment {
@@ -241,120 +250,124 @@ export interface AuditLogEntry {
   id: bigint
   userId?: bigint
   reason?: string
-  changes?: Array<{
-    new?:
-      | string
-      | number
-      | bigint
-      | boolean
-      | Array<{
-          allow?: string
-          deny?: string
-          id: string
-          type: OverwriteTypes
-        }>
-      | Array<{
-          id?: bigint
-          name?: string
-        }>
-    old?:
-      | string
-      | number
-      | bigint
-      | boolean
-      | Array<{
-          allow?: string
-          deny?: string
-          id: string
-          type: OverwriteTypes
-        }>
-      | Array<{
-          id?: bigint
-          name?: string
-        }>
-    key:
-      | 'id'
-      | 'name'
-      | 'description'
-      | 'type'
-      | 'permissions'
-      | 'locked'
-      | 'invitable'
-      | 'nsfw'
-      | 'archived'
-      | 'position'
-      | 'topic'
-      | 'bitrate'
-      | 'default_auto_archive_duration'
-      | 'auto_archive_duration'
-      | 'allow'
-      | 'deny'
-      | 'channel_id'
-      | 'deaf'
-      | 'mute'
-      | 'status'
-      | 'nick'
-      | 'communication_disabled_until'
-      | 'color'
-      | 'permission_overwrites'
-      | 'user_limit'
-      | 'rate_limit_per_user'
-      | 'owner_id'
-      | 'application_id'
-      | 'hoist'
-      | 'mentionable'
-      | 'location'
-      | 'verification_level'
-      | 'default_message_notifications'
-      | 'explicit_content_filter'
-      | 'preferred_locale'
-      | 'afk_timeout'
-      | 'afk_channel_id'
-      | 'system_channel_id'
-      | 'widget_enabled'
-      | 'mfa_level'
-      | 'vanity_url_code'
-      | 'icon_hash'
-      | 'widget_channel_id'
-      | 'rules_channel_id'
-      | 'public_updates_channel_id'
-      | 'code'
-      | 'region'
-      | 'privacy_level'
-      | 'entity_type'
-      | 'enable_emoticons'
-      | 'expire_behavior'
-      | 'expire_grace_period'
-      | 'uses'
-      | 'max_uses'
-      | 'max_age'
-      | 'temporary'
-      | 'discovery_splash_hash'
-      | 'banner_hash'
-      | 'image_hash'
-      | 'splash_hash'
-      | 'inviter_id'
-      | 'avatar_hash'
-      | 'command_id'
-      | 'prune_delete_days'
-      | '$add'
-      | '$remove'
-  }>
+  changes?: AuditLogChange[]
   targetId?: bigint
   actionType: AuditLogEvents
-  options?: {
-    id?: bigint
-    channelId?: bigint
-    messageId?: bigint
-    type: number
-    count: number
-    deleteMemberDays: number
-    membersRemoved: number
-    roleName: string
-    autoModerationRuleName: string
-    autoModerationRuleTriggerType: string
-    integrationType: string
-  }
+  options?: OptionalAuditEntryInfo
+}
+
+export interface AuditLogChange {
+  new?:
+    | string
+    | number
+    | bigint
+    | boolean
+    | Array<{
+        allow?: string
+        deny?: string
+        id: string
+        type: OverwriteTypes
+      }>
+    | Array<{
+        id?: bigint
+        name?: string
+      }>
+  old?:
+    | string
+    | number
+    | bigint
+    | boolean
+    | Array<{
+        allow?: string
+        deny?: string
+        id: string
+        type: OverwriteTypes
+      }>
+    | Array<{
+        id?: bigint
+        name?: string
+      }>
+  key:
+    | 'id'
+    | 'name'
+    | 'description'
+    | 'type'
+    | 'permissions'
+    | 'locked'
+    | 'invitable'
+    | 'nsfw'
+    | 'archived'
+    | 'position'
+    | 'topic'
+    | 'bitrate'
+    | 'default_auto_archive_duration'
+    | 'auto_archive_duration'
+    | 'allow'
+    | 'deny'
+    | 'channel_id'
+    | 'deaf'
+    | 'mute'
+    | 'status'
+    | 'nick'
+    | 'communication_disabled_until'
+    | 'color'
+    | 'permission_overwrites'
+    | 'user_limit'
+    | 'rate_limit_per_user'
+    | 'owner_id'
+    | 'application_id'
+    | 'hoist'
+    | 'mentionable'
+    | 'location'
+    | 'verification_level'
+    | 'default_message_notifications'
+    | 'explicit_content_filter'
+    | 'preferred_locale'
+    | 'afk_timeout'
+    | 'afk_channel_id'
+    | 'system_channel_id'
+    | 'widget_enabled'
+    | 'mfa_level'
+    | 'vanity_url_code'
+    | 'icon_hash'
+    | 'widget_channel_id'
+    | 'rules_channel_id'
+    | 'public_updates_channel_id'
+    | 'code'
+    | 'region'
+    | 'privacy_level'
+    | 'entity_type'
+    | 'enable_emoticons'
+    | 'expire_behavior'
+    | 'expire_grace_period'
+    | 'uses'
+    | 'max_uses'
+    | 'max_age'
+    | 'temporary'
+    | 'discovery_splash_hash'
+    | 'banner_hash'
+    | 'image_hash'
+    | 'splash_hash'
+    | 'inviter_id'
+    | 'avatar_hash'
+    | 'command_id'
+    | 'prune_delete_days'
+    | '$add'
+    | '$remove'
+}
+
+export interface OptionalAuditEntryInfo {
+  id?: bigint
+  channelId?: bigint
+  messageId?: bigint
+  type: number
+  count: number
+  deleteMemberDays: number
+  membersRemoved: number
+  roleName: string
+  autoModerationRuleName: string
+  autoModerationRuleTriggerType: string
+  integrationType: string
 }
 
 export interface AutoModerationActionExecution {
@@ -364,29 +377,26 @@ export interface AutoModerationActionExecution {
   guildId: bigint
   userId: bigint
   content: string
-  action: {
-    type: AutoModerationActionType
-    metadata: {
-      customMessage?: string
-      durationSeconds?: number
-      channelId?: bigint
-    }
-  }
+  action: AutoModerationAction
   ruleTriggerType: AutoModerationTriggerTypes
   ruleId: bigint
   matchedKeyword: string
   matchedContent: string
 }
 
-export interface AutoModerationRule {
-  triggerMetadata?: {
-    keywordFilter?: string[]
-    presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
-    allowList?: string[]
-    mentionTotalLimit?: number
-    regexPatterns: string[]
-  }
+export interface AutoModerationAction {
+  type: AutoModerationActionType
+  metadata: AutoModerationActionMetadata
+}
 
+export interface AutoModerationActionMetadata {
+  customMessage?: string
+  durationSeconds?: number
+  channelId?: bigint
+}
+
+export interface AutoModerationRule {
+  triggerMetadata?: AutoModerationRuleTriggerMetadata
   id: bigint
   name: string
   guildId: bigint
@@ -396,14 +406,15 @@ export interface AutoModerationRule {
   creatorId: bigint
   exemptRoles: bigint[]
   exemptChannels: bigint[]
-  actions: Array<{
-    type: AutoModerationActionType
-    metadata?: {
-      channelId?: bigint
-      customMessage?: string
-      durationSeconds?: number
-    }
-  }>
+  actions: AutoModerationAction[]
+}
+
+export interface AutoModerationRuleTriggerMetadata {
+  keywordFilter?: string[]
+  presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
+  allowList?: string[]
+  mentionTotalLimit?: number
+  regexPatterns: string[]
 }
 
 export interface AvatarDecorationData {
@@ -413,37 +424,7 @@ export interface AvatarDecorationData {
   skuId: bigint
 }
 
-export interface BaseChannel {
-  /** Whether the channel is nsfw */
-  nsfw: boolean
-  /** Thread-specific fields not needed by other channels */
-  threadMetadata?: {
-    /** Timestamp when the thread's archive status was last changed, used for calculating recent activity */
-    archiveTimestamp?: number
-    /** Timestamp when the thread was created; only populated for threads created after 2022-01-09 */
-    createTimestamp?: number
-    /** Duration in minutes to automatically archive the thread after recent activity */
-    autoArchiveDuration?: 60 | 1440 | 4320 | 10080
-    /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
-    locked: boolean
-    /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
-    invitable: boolean
-    /** Whether the thread is archived */
-    archived: boolean
-  }
-  /** When a thread is created this will be true on that channel payload for the thread. */
-  newlyCreated: boolean
-  /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
-  locked: boolean
-  /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
-  invitable: boolean
-  /** Whether the thread is archived */
-  archived: boolean
-  /** Explicit permission overwrites for members and roles. */
-  permissionOverwrites: OverwriteReadable[]
-}
-
-export interface Channel extends BaseChannel {
+export interface Channel {
   /** The id of the channel */
   id: bigint
   /** The compressed form of all the boolean values on this channel. */
@@ -507,6 +488,34 @@ export interface Channel extends BaseChannel {
    * @private This is for internal use only, and prone to breaking changes.
    */
   internalOverwrites?: bigint[]
+  /** Whether the channel is nsfw */
+  nsfw: boolean
+  /** Thread-specific fields not needed by other channels */
+  threadMetadata?: ChannelThreadMetadata
+  newlyCreated: boolean
+  /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
+  locked: boolean
+  /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
+  invitable: boolean
+  /** Whether the thread is archived */
+  archived: boolean
+  /** Explicit permission overwrites for members and roles. */
+  permissionOverwrites: OverwriteReadable[]
+}
+
+export interface ChannelThreadMetadata {
+  /** Timestamp when the thread's archive status was last changed, used for calculating recent activity */
+  archiveTimestamp?: number
+  /** Timestamp when the thread was created; only populated for threads created after 2022-01-09 */
+  createTimestamp?: number
+  /** Duration in minutes to automatically archive the thread after recent activity */
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
+  /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
+  locked: boolean
+  /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
+  invitable: boolean
+  /** Whether the thread is archived */
+  archived: boolean
 }
 
 export interface Component {
@@ -525,14 +534,7 @@ export interface Component {
   /** the dev-define value of the option, max 100 characters for select or 4000 for input. */
   value?: string
   /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
-  emoji?: {
-    /** Emoji id */
-    id?: bigint
-    /** Emoji name */
-    name?: string
-    /** Whether this emoji is animated */
-    animated?: boolean
-  }
+  emoji?: Pick<Partial<Emoji>, 'id' | 'name' | 'animated'>
   /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
   url?: string
   /** List of channel types to include in a channel select menu options list */
@@ -557,47 +559,61 @@ export interface Embed {
   description?: string
   type?: EmbedTypes
   url?: string
-  image?: {
-    proxyUrl?: string
-    height?: number
-    width?: number
-    url: string
-  }
-  video?: {
-    url?: string
-    proxyUrl?: string
-    height?: number
-    width?: number
-  }
+  image?: EmbedImage
+  video?: EmbedVideo
   title?: string
   timestamp?: number
   color?: number
-  footer?: {
-    iconUrl?: string
-    proxyIconUrl?: string
-    text: string
-  }
-  thumbnail?: {
-    proxyUrl?: string
-    height?: number
-    width?: number
-    url: string
-  }
-  provider?: {
-    name?: string
-    url?: string
-  }
-  author?: {
-    url?: string
-    iconUrl?: string
-    proxyIconUrl?: string
-    name: string
-  }
-  fields?: Array<{
-    inline?: boolean
-    name: string
-    value: string
-  }>
+  footer?: EmbedFooter
+  thumbnail?: EmbedThumbnail
+  provider?: EmbedProvider
+  author?: EmbedAuthor
+  fields?: EmbedField[]
+}
+
+export interface EmbedImage {
+  proxyUrl?: string
+  height?: number
+  width?: number
+  url: string
+}
+
+export interface EmbedVideo {
+  url?: string
+  proxyUrl?: string
+  height?: number
+  width?: number
+}
+
+export interface EmbedFooter {
+  iconUrl?: string
+  proxyIconUrl?: string
+  text: string
+}
+
+export interface EmbedThumbnail {
+  proxyUrl?: string
+  height?: number
+  width?: number
+  url: string
+}
+
+export interface EmbedProvider {
+  name?: string
+  url?: string
+}
+
+export interface EmbedAuthor {
+  url?: string
+  iconUrl?: string
+  proxyIconUrl?: string
+  name: string
+}
+
+export interface EmbedField {
+  inline?: boolean
+  name: string
+  value: string
 }
 
 export interface Emoji {
@@ -646,12 +662,14 @@ export interface Entitlement {
 export interface GetGatewayBot {
   url: string
   shards: number
-  sessionStartLimit: {
-    total: number
-    remaining: number
-    resetAfter: number
-    maxConcurrency: number
-  }
+  sessionStartLimit: SessionStartLimit
+}
+
+export interface SessionStartLimit {
+  total: number
+  remaining: number
+  resetAfter: number
+  maxConcurrency: number
 }
 
 export interface Guild {
@@ -774,25 +792,29 @@ export interface Integration {
   syncedAt?: number
   subscriberCount?: number
   revoked?: boolean
-  application?: {
-    bot?: User
-    icon?: bigint
-    id: bigint
-    name: string
-    description: string
-  }
+  application?: IntegrationApplication
   id: bigint
   name: string
   guildId: bigint
   type: 'twitch' | 'youtube' | 'discord'
-  account: {
-    id: bigint
-    name: string
-  }
+  account: IntegrationAccount
   scopes: OAuth2Scope[]
 }
 
-export interface Interaction extends BaseInteraction {
+export interface IntegrationApplication {
+  bot?: User
+  icon?: bigint
+  id: bigint
+  name: string
+  description: string
+}
+
+export interface IntegrationAccount {
+  id: bigint
+  name: string
+}
+
+export interface Interaction {
   /** The bot object */
   bot: Bot
   /** Whether or not this interaction has been responded to. */
@@ -825,20 +847,7 @@ export interface Interaction extends BaseInteraction {
   /** For the message the button was attached to */
   message?: Message
   /** the command data payload */
-  data?: {
-    type?: ApplicationCommandTypes
-    componentType?: MessageComponentTypes
-    customId?: string
-    components?: Component[]
-    values?: string[]
-    name: string
-    resolved?: InteractionDataResolved
-    options?: InteractionDataOption[]
-    id?: bigint
-    targetId?: bigint
-    // guildId?: bigint
-  }
-  /** The selected language of the invoking user */
+  data?: InteractionData
   locale?: string
   /** The guild's preferred locale, if invoked in a guild */
   guildLocale?: string
@@ -848,9 +857,6 @@ export interface Interaction extends BaseInteraction {
   authorizingIntegrationOwners: Partial<Record<DiscordApplicationIntegrationType, bigint>>
   /** Context where the interaction was triggered from */
   context?: DiscordInteractionContextType
-}
-
-export interface BaseInteraction {
   /**
    * Sends a response to an interaction.
    *
@@ -896,6 +902,19 @@ export interface BaseInteraction {
    * Uses `interaction.type` and `interaction.token`, missing one of these in the desired proprieties may cause unexpected behavior.
    */
   delete: (messageId?: BigString) => Promise<void>
+}
+
+export interface InteractionData {
+  type?: ApplicationCommandTypes
+  componentType?: MessageComponentTypes
+  customId?: string
+  components?: Component[]
+  values?: string[]
+  name: string
+  resolved?: InteractionDataResolved
+  options?: InteractionDataOption[]
+  id?: bigint
+  targetId?: bigint
 }
 
 export interface InteractionDataResolved {
@@ -954,16 +973,7 @@ export interface Invite {
   approximatePresenceCount?: number
 }
 
-export interface BaseMember {
-  /** Whether the user is deafened in voice channels */
-  deaf?: boolean
-  /** Whether the user is muted in voice channels */
-  mute?: boolean
-  /** Whether the user has not yet passed the guild's Membership Screening requirements */
-  pending?: boolean
-}
-
-export interface Member extends BaseMember {
+export interface Member {
   /** The user id of the member. */
   id: bigint
   /** The compressed form of all the boolean values on this user. */
@@ -988,9 +998,68 @@ export interface Member extends BaseMember {
   communicationDisabledUntil?: number
   /** data for the member's guild avatar decoration */
   avatarDecorationData: AvatarDecorationData
+  /** Whether the user is deafened in voice channels */
+  deaf?: boolean
+  /** Whether the user is muted in voice channels */
+  mute?: boolean
+  /** Whether the user has not yet passed the guild's Membership Screening requirements */
+  pending?: boolean
 }
 
-export interface MessageBase {
+export interface Message {
+  /** Sent with Rich Presence-related chat embeds */
+  activity?: MessageActivity
+  applicationId?: bigint
+  /** Any attached files on this message. */
+  attachments?: Attachment[]
+  /** The author of this message (not guaranteed to be a valid user) Note: The author object follows the structure of the user object, but is only a valid user in the case where the message is generated by a user or bot user. If the message is generated by a webhook, the author object corresponds to the webhook's id, username, and avatar. You can tell if a message is generated by a webhook by checking for the webhook_id on the message object. */
+  author: User
+  /** id of the channel the message was sent in */
+  channelId: bigint
+  /** The components related to this message */
+  components: Component[]
+  /** Contents of the message */
+  content: string
+  /** The timestamp in milliseconds when this message was edited last. */
+  editedTimestamp?: number
+  /** Any embedded content */
+  embeds?: Embed[]
+  /** id of the guild the message was sent in Note: For MESSAGE_CREATE and MESSAGE_UPDATE events, the message object may not contain a guild_id or member field since the events are sent directly to the receiving user and the bot who sent the message, rather than being sent through the guild like non-ephemeral messages. */
+  guildId?: bigint
+  /** id of the message */
+  id: bigint
+  /** sent if the message is sent as a result of an interaction */
+  interactionMetadata?: MessageInteractionMetadata
+  /**
+   * Sent if the message is a response to an Interaction
+   *
+   * @deprecated Deprecated in favor of {@link interactionMetadata}
+   */
+  interaction?: MessageInteraction
+  member?: Member
+  /** Users specifically mentioned in the message Note: The user objects in the mentions array will only have the partial member field present in MESSAGE_CREATE and MESSAGE_UPDATE events from text-based guild channels. */
+  mentions?: User[]
+  /** Channels specifically mentioned in this message Note: Not all channel mentions in a message will appear in mention_channels. Only textual channels that are visible to everyone in a discoverable guild will ever be included. Only crossposted messages (via Channel Following) currently include mention_channels at all. If no mentions in the message meet these requirements, this field will not be sent. */
+  mentionedChannelIds?: bigint[]
+  /** Roles specifically mentioned in this message */
+  mentionedRoleIds?: bigint[]
+  /** Data showing the source of a crossposted channel follow add, pin or reply message */
+  messageReference?: MessageReference
+  nonce?: string | number
+  /** Reactions on this message. */
+  reactions?: Reaction[]
+  /** Sent if the message contains stickers */
+  stickerItems?: Array<Pick<Sticker, 'id' | 'name' | 'formatType'>>
+  /** Type of message */
+  type: MessageTypes
+  /** The thread that was started from this message, includes thread member object  */
+  thread?: Channel
+  /** If the message is generated by a webhook, this is the webhook's id */
+  webhookId?: bigint
+  /** A poll! */
+  poll?: Poll
+  /** The call associated with the message */
+  call?: MessageCall
   /** Holds all the boolean values on this message. */
   bitfield?: ToggleBitfield
   /** Whether this message has been published to subscribed channels (via Channel Following) */
@@ -1027,111 +1096,33 @@ export interface MessageBase {
   urgent: boolean
 }
 
-export interface Message extends MessageBase {
-  /** Sent with Rich Presence-related chat embeds */
-  activity?: {
-    /** Type of message activity */
-    type: MessageActivityTypes
-    /** party_id from a Rich Presence event */
-    partyId?: string
-  }
-  /** if the message is an Interaction or application-owned webhook, this is the id of the application */
-  applicationId?: bigint
-  /** Any attached files on this message. */
-  attachments?: Attachment[]
-  /** The author of this message (not guaranteed to be a valid user) Note: The author object follows the structure of the user object, but is only a valid user in the case where the message is generated by a user or bot user. If the message is generated by a webhook, the author object corresponds to the webhook's id, username, and avatar. You can tell if a message is generated by a webhook by checking for the webhook_id on the message object. */
-  author: User
-  /** id of the channel the message was sent in */
-  channelId: bigint
-  /** The components related to this message */
-  components: Component[]
-  /** Contents of the message */
-  content: string
-  /** The timestamp in milliseconds when this message was edited last. */
-  editedTimestamp?: number
-  /** Any embedded content */
-  embeds?: Embed[]
-  /** id of the guild the message was sent in Note: For MESSAGE_CREATE and MESSAGE_UPDATE events, the message object may not contain a guild_id or member field since the events are sent directly to the receiving user and the bot who sent the message, rather than being sent through the guild like non-ephemeral messages. */
-  guildId?: bigint
-  /** id of the message */
+export interface MessageActivity {
+  /** Type of message activity */
+  type: MessageActivityTypes
+  /** party_id from a Rich Presence event */
+  partyId?: string
+}
+
+export interface MessageInteraction {
+  /** Id of the interaction */
   id: bigint
-  /** sent if the message is sent as a result of an interaction */
-  interactionMetadata?: MessageInteractionMetadata
-  /**
-   * Sent if the message is a response to an Interaction
-   *
-   * @deprecated Deprecated in favor of {@link interactionMetadata}
-   */
-  interaction?: {
-    /** Id of the interaction */
-    id: bigint
-    /** The member who invoked the interaction in the guild  */
-    member?: Member
-    /** The name of the ApplicationCommand including the name of the subcommand/subcommand group */
-    name: string
-    /** The type of interaction */
-    type: InteractionTypes
-    /** The user who invoked the interaction */
-    user: User
-  }
-  /** Member properties for this message's author Note: The member object exists in MESSAGE_CREATE and MESSAGE_UPDATE events from text-based guild channels. This allows bots to obtain real-time member data without requiring bots to store member state in memory. */
+  /** The member who invoked the interaction in the guild  */
   member?: Member
-  /** Users specifically mentioned in the message Note: The user objects in the mentions array will only have the partial member field present in MESSAGE_CREATE and MESSAGE_UPDATE events from text-based guild channels. */
-  mentions?: User[]
-  /** Channels specifically mentioned in this message Note: Not all channel mentions in a message will appear in mention_channels. Only textual channels that are visible to everyone in a discoverable guild will ever be included. Only crossposted messages (via Channel Following) currently include mention_channels at all. If no mentions in the message meet these requirements, this field will not be sent. */
-  mentionedChannelIds?: bigint[]
-  /** Roles specifically mentioned in this message */
-  mentionedRoleIds?: bigint[]
-  /** Data showing the source of a crossposted channel follow add, pin or reply message */
-  messageReference?: {
-    /** id of the originating message's channel Note: channel_id is optional when creating a reply, but will always be present when receiving an event/response that includes this data model. */
-    channelId?: bigint
-    /** id of the originating message's guild */
-    guildId?: bigint
-    /** id of the originating message */
-    messageId?: bigint
-  }
-  /** Used for validating a message was sent */
-  nonce?: string | number
-  /** Reactions on this message. */
-  reactions?: Array<{
-    /** Whether the current user reacted using this emoji */
-    me: boolean
-    /**	Whether the current user super-reacted using this emoji */
-    meBurst: boolean
-    /** Times this emoji has been used to react */
-    count: number
-    /**	Reaction count details object */
-    countDetails: {
-      /** Count of super reactions */
-      burst: number
-      /**	Count of normal reactions */
-      normal: number
-    }
-    /** Emoji information */
-    emoji: Emoji
-    /** HEX colors used for super reaction */
-    burstColors: string[]
-  }>
-  /** Sent if the message contains stickers */
-  stickerItems?: Array<{
-    /** The id of this sticker. */
-    id: bigint
-    /** The name of this sticker. */
-    name: string
-    /** The type of this stickers format. */
-    formatType: StickerFormatTypes
-  }>
-  /** Type of message */
-  type: MessageTypes
-  /** The thread that was started from this message, includes thread member object  */
-  thread?: Channel
-  /** If the message is generated by a webhook, this is the webhook's id */
-  webhookId?: bigint
-  /** A poll! */
-  poll?: Poll
-  /** The call associated with the message */
-  call?: MessageCall
+  /** The name of the ApplicationCommand including the name of the subcommand/subcommand group */
+  name: string
+  /** The type of interaction */
+  type: InteractionTypes
+  /** The user who invoked the interaction */
+  user: User
+}
+
+export interface MessageReference {
+  /** id of the originating message's channel Note: channel_id is optional when creating a reply, but will always be present when receiving an event/response that includes this data model. */
+  channelId?: bigint
+  /** id of the originating message's guild */
+  guildId?: bigint
+  /** id of the originating message */
+  messageId?: bigint
 }
 
 export interface MessageInteractionMetadata {
@@ -1156,6 +1147,27 @@ export interface MessageCall {
   participants: bigint[]
   /** Time when call ended */
   endedTimestamp: number
+}
+
+export interface Reaction {
+  /** Whether the current user reacted using this emoji */
+  me: boolean
+  /**	Whether the current user super-reacted using this emoji */
+  meBurst: boolean
+  /** Times this emoji has been used to react */
+  count: number
+  /**	Reaction count details object */
+  countDetails: ReactionCountDetails
+  emoji: Partial<Emoji>
+  /** HEX colors used for super reaction */
+  burstColors: string[]
+}
+
+export interface ReactionCountDetails {
+  /** Count of super reactions */
+  burst: number
+  /**	Count of normal reactions */
+  normal: number
 }
 
 export interface GuildOnboarding {
@@ -1285,37 +1297,7 @@ export interface PresenceUpdate {
   activities: Activity[]
 }
 
-export interface BaseRole {
-  /** The tags this role has */
-  tags?: {
-    /** The id of the bot this role belongs to */
-    botId?: bigint
-    /** The id of the integration this role belongs to */
-    integrationId?: bigint
-    /** Id of this role's subscription sku and listing. */
-    subscriptionListingId?: bigint
-    /** Whether this role is available for purchase. */
-    availableForPurchase?: boolean
-    /** Whether this is a guild's linked role */
-    guildConnections?: boolean
-    /** Whether this is the guild's premium subscriber role */
-    premiumSubscriber?: boolean
-  }
-  /** If this role is showed separately in the user listing */
-  hoist: boolean
-  /** Whether this role is managed by an integration */
-  managed: boolean
-  /** Whether this role is mentionable */
-  mentionable: boolean
-  /** Whether this is the guilds premium subscriber role */
-  premiumSubscriber: boolean
-  /** Whether this role is available for purchase. */
-  availableForPurchase: boolean
-  /** Whether this is a guild's linked role. */
-  guildConnections: boolean
-}
-
-export interface Role extends BaseRole {
+export interface Role {
   /** Role id */
   id: bigint
   /** The guild id where this role is located. */
@@ -1354,6 +1336,28 @@ export interface Role extends BaseRole {
   unicodeEmoji?: string
   /** Role flags combined as a bitfield */
   flags: RoleFlags
+  /** The tags this role has */
+  tags?: RoleTags
+  premiumSubscriber: boolean
+  /** Whether this role is available for purchase. */
+  availableForPurchase: boolean
+  /** Whether this is a guild's linked role. */
+  guildConnections: boolean
+}
+
+export interface RoleTags {
+  /** The id of the bot this role belongs to */
+  botId?: bigint
+  /** The id of the integration this role belongs to */
+  integrationId?: bigint
+  /** Id of this role's subscription sku and listing. */
+  subscriptionListingId?: bigint
+  /** Whether this role is available for purchase. */
+  availableForPurchase?: boolean
+  /** Whether this is a guild's linked role */
+  guildConnections?: boolean
+  /** Whether this is the guild's premium subscriber role */
+  premiumSubscriber?: boolean
 }
 
 export interface ScheduledEvent {
@@ -1469,12 +1473,14 @@ export interface Team {
   id: bigint
   name: string
   ownerUserId: bigint
-  members: Array<{
-    membershipState: TeamMembershipStates
-    teamId: bigint
-    user: User
-    role: DiscordTeamMemberRole
-  }>
+  members: TeamMember[]
+}
+
+export interface TeamMember {
+  membershipState: TeamMembershipStates
+  teamId: bigint
+  user: User
+  role: DiscordTeamMemberRole
 }
 
 export interface Template {
@@ -1502,20 +1508,7 @@ export interface ThreadMemberGuildCreate {
   joinTimestamp: number
 }
 
-export interface BaseUser {
-  /** The user tag in the form of username#discriminator */
-  tag: string
-  /** Whether the user belongs to an OAuth2 application */
-  bot: boolean
-  /** Whether the user is an Official Discord System user (part of the urgent message system) */
-  system: boolean
-  /** Whether the user has two factor enabled on their account */
-  mfaEnabled: boolean
-  /** Whether the email on this account has been verified */
-  verified: boolean
-}
-
-export interface User extends BaseUser {
+export interface User {
   /** Compressed version of all the booleans on a user. */
   toggles?: UserToggles
   /** The user's username, not unique across the platform */
@@ -1544,6 +1537,16 @@ export interface User extends BaseUser {
   banner?: bigint
   /** data for the user's avatar decoration */
   avatarDecorationData?: AvatarDecorationData
+  /** The user tag in the form of username#discriminator */
+  tag: string
+  /** Whether the user belongs to an OAuth2 application */
+  bot: boolean
+  /** Whether the user is an Official Discord System user (part of the urgent message system) */
+  system: boolean
+  /** Whether the user has two factor enabled on their account */
+  mfaEnabled: boolean
+  /** Whether the email on this account has been verified */
+  verified: boolean
 }
 
 export interface VoiceRegion {
@@ -1593,30 +1596,21 @@ export interface Webhook {
 
 export interface WelcomeScreen {
   description?: string
-  welcomeChannels: Array<{
-    channelId: bigint
-    description: string
-    emojiId?: bigint
-    emojiName?: string
-  }>
+  welcomeChannels: WelcomeScreenChannel[]
+}
+
+export interface WelcomeScreenChannel {
+  channelId: bigint
+  description: string
+  emojiId?: bigint
+  emojiName?: string
 }
 
 export interface GuildWidget {
   id: bigint
   name: string
-  members: Array<{
-    id: bigint
-    username: string
-    discriminator: string
-    avatar?: bigint
-    status: string
-    avatarUrl: string
-  }>
-  channels: Array<{
-    id: bigint
-    name: string
-    position: number
-  }>
+  members: Array<Partial<User>>
+  channels: Array<Partial<Channel>>
   instant_invite: string
   presenceCount: number
 }
