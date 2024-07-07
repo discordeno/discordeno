@@ -128,17 +128,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             url: gateway.url,
             version: gateway.version,
           },
-          // Ignore events until we are ready
-          events: {
-            async message(shard, payload) {
-              if (payload.t === 'READY') {
-                await gateway.resharding.updateGuildsShardId(
-                  (payload.d as DiscordReady).guilds.map((g) => g.id),
-                  shardId,
-                )
-              }
-            },
-          },
+          events: {},
           requestIdentify: async () => {
             await gateway.identify(shardId)
           },
@@ -152,6 +142,13 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
         if (gateway.preferSnakeCase) {
           shard.forwardToBot = async (payload) => {
+            if (payload.t === 'READY') {
+              await gateway.resharding.updateGuildsShardId(
+                (payload.d as DiscordReady).guilds.map((g) => g.id),
+                shardId,
+              )
+            }
+
             options.events?.message?.(shard, payload)
           }
         }
@@ -173,7 +170,9 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         })
       },
       async updateGuildsShardId(guildIds, shardId) {
-        logger.warn(`[Resharding] Updating the following guild ids shard to #${shardId}: ${guildIds.join(', ')}. Override this function to update your cache if you need to.`)
+        logger.warn(
+          `[Resharding] Updating the following guild ids shard to #${shardId}: ${guildIds.join(', ')}. Override this function to update your cache if you need to.`,
+        )
       },
       async shardIsPending(shard) {
         // Save this in pending at the moment, until all shards are online
