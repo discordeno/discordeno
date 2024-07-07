@@ -130,7 +130,7 @@ import type { BotInteractionResponse, DiscordComponent, DiscordInteractionRespon
 export interface Transformers {
   customizers: {
     channel: (bot: Bot, payload: DiscordChannel, channel: Channel) => any
-    interaction: (bot: Bot, payload: DiscordInteraction, interaction: Interaction) => any
+    interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }, interaction: Interaction) => any
     message: (bot: Bot, payload: DiscordMessage, message: Message) => any
     messageInteractionMetadata: (bot: Bot, payload: DiscordMessageInteractionMetadata, metadata: MessageInteractionMetadata) => any
     messageCall: (bot: Bot, payload: DiscordMessageCall, call: MessageCall) => any
@@ -300,6 +300,7 @@ export interface Transformers {
       id: boolean
       applicationId: boolean
       type: boolean
+      guild: boolean
       guildId: boolean
       channel: boolean
       channelId: boolean
@@ -602,7 +603,7 @@ export interface Transformers {
   messageCall: (bot: Bot, payload: DiscordMessageCall) => MessageCall
   role: (bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }) => Role
   voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) => VoiceState
-  interaction: (bot: Bot, payload: DiscordInteraction) => Interaction
+  interaction: (bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }) => Interaction
   interactionDataOptions: (bot: Bot, payload: DiscordInteractionDataOption) => InteractionDataOption
   integration: (bot: Bot, payload: DiscordIntegrationCreateUpdate) => Integration
   invite: (bot: Bot, payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number }) => Invite
@@ -919,6 +920,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         id: opts?.defaultDesiredPropertiesValue ?? false,
         applicationId: opts?.defaultDesiredPropertiesValue ?? false,
         type: opts?.defaultDesiredPropertiesValue ?? false,
+        guild: opts?.defaultDesiredPropertiesValue ?? false,
         guildId: opts?.defaultDesiredPropertiesValue ?? false,
         channel: opts?.defaultDesiredPropertiesValue ?? false,
         channelId: opts?.defaultDesiredPropertiesValue ?? false,
