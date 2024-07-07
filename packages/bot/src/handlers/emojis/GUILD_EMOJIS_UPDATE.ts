@@ -9,6 +9,6 @@ export async function handleGuildEmojisUpdate(bot: Bot, data: DiscordGatewayPayl
 
   bot.events.guildEmojisUpdate({
     guildId: bot.transformers.snowflake(payload.guild_id),
-    emojis: new Collection(payload.emojis.map((emoji) => [bot.transformers.snowflake(emoji.id!), emoji])),
+    emojis: new Collection(payload.emojis.map((emoji) => [bot.transformers.snowflake(emoji.id!), bot.transformers.emoji(bot, emoji)])),
   })
 }

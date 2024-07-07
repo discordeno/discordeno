@@ -1,6 +1,6 @@
 import type { DiscordUser, PremiumTypes } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
-import { ToggleBitfield, UserToggles, type Bot } from '../index.js'
+import { ToggleBitfield, UserToggles, type AvatarDecorationData, type Bot } from '../index.js'
 
 const baseUser: Partial<User> & BaseUser = {
   get tag() {
@@ -39,8 +39,9 @@ export function transformUser(bot: Bot, payload: DiscordUser): User {
   if (props.premiumType && payload.premium_type) user.premiumType = payload.premium_type
   if (props.avatar && payload.avatar) user.avatar = iconHashToBigInt(payload.avatar)
   if (props.banner && payload.banner) user.banner = iconHashToBigInt(payload.banner)
-  if (props.avatarDecoration && payload.avatar_decoration) user.avatarDecoration = iconHashToBigInt(payload.avatar_decoration)
   if (props.accentColor && payload.accent_color) user.accentColor = payload.accent_color
+  if (props.avatarDecorationData && payload.avatar_decoration_data)
+    user.avatarDecorationData = bot.transformers.avatarDecorationData(bot, payload.avatar_decoration_data)
 
   return bot.transformers.customizers.user(bot, payload, user)
 }
@@ -85,6 +86,6 @@ export interface User extends BaseUser {
   email?: string
   /** the user's banner, or null if unset */
   banner?: bigint
-  /** the user's avatar decoration, or null if unset */
-  avatarDecoration?: bigint
+  /** data for the user's avatar decoration */
+  avatarDecorationData?: AvatarDecorationData
 }

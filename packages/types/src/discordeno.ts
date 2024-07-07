@@ -459,7 +459,12 @@ export interface CreateSlashApplicationCommand {
   descriptionLocalizations?: Localization
   /** Type of command, defaults `ApplicationCommandTypes.ChatInput` if not set  */
   type?: ApplicationCommandTypes
-  /** Parameters for the command */
+  /**
+   * Parameters for the command
+   *
+   * @remarks
+   * This is only valid in commands of type {@link ApplicationCommandTypes.ChatInput | ChatInput}
+   */
   options?: Camelize<DiscordApplicationCommandOption[]>
   /** Set of permissions represented as a bit set */
   defaultMemberPermissions?: PermissionStrings[]
@@ -562,7 +567,7 @@ export interface CreateGuildChannel {
   userLimit?: number
   /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
   rateLimitPerUser?: number
-  /** Sorting position of the channel */
+  /** Sorting position of the channel (channels with the same position are sorted by id) */
   position?: number
   /** The channel's permission overwrites */
   permissionOverwrites?: OverwriteReadable[]
@@ -653,7 +658,7 @@ export interface ModifyChannel {
   name?: string
   /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
   type?: ChannelTypes
-  /** The position of the channel in the left-hand listing */
+  /** The position of the channel in the left-hand listing (channels with the same position are sorted by id) */
   position?: number | null
   /** 0-1024 character channel topic */
   topic?: string | null
@@ -716,7 +721,7 @@ export interface EditChannelPermissionOverridesOptions extends OverwriteReadable
 export interface ModifyGuildChannelPositions {
   /** Channel id */
   id: BigString
-  /** Sorting position of the channel */
+  /** Sorting position of the channel (channels with the same position are sorted by id) */
   position?: number | null
   /** Syncs the permission overwrites with the new parent, if moving to a new category */
   lockPositions?: boolean | null
@@ -1076,7 +1081,7 @@ export interface EditGuildRole {
 export interface ModifyRolePositions {
   /** The role id */
   id: BigString
-  /** The sorting position for the role. */
+  /** The sorting position for the role. (roles with the same position are sorted by id) */
   position?: number | null
 }
 
