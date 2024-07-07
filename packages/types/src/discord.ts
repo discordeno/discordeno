@@ -330,7 +330,7 @@ export interface DiscordMember {
   /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
   communication_disabled_until?: string | null
   /** Guild member flags */
-  flags: MemberFlag
+  flags: number
   /** data for the member's guild avatar decoration */
   avatar_decoration_data?: DiscordAvatarDecorationData | null
 }
@@ -2886,7 +2886,7 @@ export interface DiscordGuildMemberUpdate {
   /** Data for the member's guild avatar decoration */
   avatar_decoration_data?: DiscordAvatarDecorationData
   /** Guild member flags */
-  flags?: MemberFlag
+  flags?: number
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-all */

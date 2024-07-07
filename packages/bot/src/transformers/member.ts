@@ -1,4 +1,4 @@
-import type { BigString, DiscordMember, MemberFlag } from '@discordeno/types'
+import type { BigString, DiscordMember } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
 import type { AvatarDecorationData } from './avatarDecorationData.js'
@@ -76,7 +76,7 @@ export interface Member extends BaseMember {
   /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
   communicationDisabledUntil?: number
   /** Guild member flags */
-  flags: MemberFlag
+  flags: number
   /** data for the member's guild avatar decoration */
   avatarDecorationData: AvatarDecorationData
 }
