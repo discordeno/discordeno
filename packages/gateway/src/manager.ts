@@ -96,9 +96,9 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         // Handles preparing mid sized bots for LBS
         gateway.totalShards = gateway.calculateTotalShards()
         // Set first shard id if provided in info
-        if (info.firstShardId || info.firstShardId === 0) gateway.firstShardId = info.firstShardId
+        if (typeof info.firstShardId === 'number') gateway.firstShardId = info.firstShardId
         // Set last shard id if provided in info
-        if (info.lastShardId || info.lastShardId === 0) gateway.lastShardId = info.lastShardId
+        if (typeof info.lastShardId === 'number') gateway.lastShardId = info.lastShardId
         logger.warn(`[Resharding] Starting the reshard process. New Total Shards. ${gateway.totalShards}`)
 
         // Resetting buckets
@@ -180,7 +180,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         gateway.resharding.pendingShards.set(shard.id, shard)
         logger.warn(`[Resharding] Shard #${shard.id} is now pending`)
         // Check if all shards are now online.
-        if ((gateway.lastShardId - gateway.firstShardId + 1) > gateway.resharding.pendingShards.size) return
+        if (gateway.lastShardId - gateway.firstShardId + 1 > gateway.resharding.pendingShards.size) return
         logger.warn(`[Resharding] All shards are now online.`)
 
         // New shards start processing events
