@@ -72,7 +72,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         if (!gateway.resharding.enabled) return { needed: false }
         logger.warn(`[Resharding] Resharding is enabled.`)
 
-        // TODO: fetch bot gateway info
         const sessionInfo = await gateway.resharding.getSessionInfo()
         logger.warn(`[Resharding] Session info retrieved.`)
         // Don't have enough identify limits to try resharding
