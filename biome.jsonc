@@ -38,8 +38,6 @@
   "files": {
     "ignore": [
       "node_modules",
-      // Ignore the bigbot example has it has its own linter/formatter
-      "examples/bigbot",
       // Ignore turbo and docusaurus cache/stuff
       ".docusaurus",
       ".turbo",

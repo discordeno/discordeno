@@ -1,4 +1,4 @@
-import type { DiscordApplication, DiscordInviteCreate, DiscordInviteMetadata } from '@discordeno/types'
+import type { DiscordApplication, DiscordInviteCreate, DiscordInviteMetadata, DiscordInviteType } from '@discordeno/types'
 import { type Application, type Bot, type ScheduledEvent, type User, isInviteWithMetadata } from '../index.js'
 import type { InviteStageInstance } from './stageInviteInstance.js'
 
@@ -6,6 +6,7 @@ export function transformInvite(bot: Bot, payload: { invite: DiscordInviteCreate
   const props = bot.transformers.desiredProperties.invite
   const invite = {} as Invite
 
+  if (props.type && 'type' in payload.invite) invite.type = payload.invite.type
   if (props.code && payload.invite.code) invite.code = payload.invite.code
   if (props.createdAt && payload.invite.created_at) invite.createdAt = Date.parse(payload.invite.created_at)
   if (props.inviter && payload.invite.inviter) invite.inviter = bot.transformers.user(bot, payload.invite.inviter)
@@ -48,6 +49,8 @@ export function transformInvite(bot: Bot, payload: { invite: DiscordInviteCreate
 }
 
 export interface Invite {
+  /** The type of invite */
+  type: DiscordInviteType
   /** The channel the invite is for */
   channelId: bigint
   /** The unique invite code */

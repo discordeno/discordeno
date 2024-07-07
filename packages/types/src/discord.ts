@@ -1,47 +1,49 @@
-import type {
-  ActivityTypes,
-  AllowedMentionsTypes,
-  ApplicationCommandOptionTypes,
-  ApplicationCommandPermissionTypes,
-  ApplicationCommandTypes,
-  ApplicationFlags,
-  AttachmentFlags,
-  AuditLogEvents,
-  ButtonStyles,
-  ChannelFlags,
-  ChannelTypes,
-  DefaultMessageNotificationLevels,
-  EmbedTypes,
-  ExplicitContentFilterLevels,
-  ForumLayout,
-  GatewayEventNames,
-  GuildFeatures,
-  GuildNsfwLevel,
-  IntegrationExpireBehaviors,
-  InteractionTypes,
-  Localization,
-  MessageActivityTypes,
-  MessageComponentTypes,
-  MessageTypes,
-  MfaLevels,
-  OverwriteTypes,
-  PickPartial,
-  PremiumTiers,
-  PremiumTypes,
-  RoleFlags,
-  ScheduledEventEntityType,
-  ScheduledEventPrivacyLevel,
-  ScheduledEventStatus,
-  SortOrderTypes,
-  StickerFormatTypes,
-  StickerTypes,
-  SystemChannelFlags,
-  TargetTypes,
-  TeamMembershipStates,
-  TextStyles,
-  VerificationLevels,
-  VideoQualityModes,
-  WebhookTypes,
+import {
+  type ActivityTypes,
+  type AllowedMentionsTypes,
+  type ApplicationCommandOptionTypes,
+  type ApplicationCommandPermissionTypes,
+  type ApplicationCommandTypes,
+  type ApplicationFlags,
+  type AttachmentFlags,
+  type AuditLogEvents,
+  type ButtonStyles,
+  type ChannelFlags,
+  type ChannelTypes,
+  type DefaultMessageNotificationLevels,
+  type EmbedTypes,
+  type ExplicitContentFilterLevels,
+  type ForumLayout,
+  type GatewayEventNames,
+  type GuildFeatures,
+  type GuildNsfwLevel,
+  type IntegrationExpireBehaviors,
+  type InteractionTypes,
+  type Localization,
+  type MessageActivityTypes,
+  type MessageComponentTypes,
+  type MessageFlags,
+  type MessageTypes,
+  type MfaLevels,
+  type OverwriteTypes,
+  type PickPartial,
+  type PremiumTiers,
+  type PremiumTypes,
+  type RoleFlags,
+  type ScheduledEventEntityType,
+  type ScheduledEventPrivacyLevel,
+  type ScheduledEventStatus,
+  type SkuFlags,
+  type SortOrderTypes,
+  type StickerFormatTypes,
+  type StickerTypes,
+  type SystemChannelFlags,
+  type TargetTypes,
+  type TeamMembershipStates,
+  type TextStyles,
+  type VerificationLevels,
+  type VideoQualityModes,
+  type WebhookTypes,
 } from './shared.js'
 
 /** https://discord.com/developers/docs/resources/user#user-object */
@@ -383,12 +385,7 @@ export interface DiscordApplication {
   tags?: string[]
   /** settings for the application's default in-app authorization link, if enabled */
   install_params?: DiscordInstallParams
-  /**
-   * Default scopes and permissions for each supported installation context.
-   *
-   * @remarks
-   * This is currently in preview.
-   */
+  /** Default scopes and permissions for each supported installation context. */
   integration_types_config?: Partial<Record<`${DiscordApplicationIntegrationType}`, DiscordApplicationIntegrationTypeConfiguration>>
   /** the application's default custom authorization link, if enabled */
   custom_install_url?: string
@@ -712,6 +709,8 @@ export interface DiscordEmbedVideo {
 export interface DiscordAttachment {
   /** Name of file attached */
   filename: string
+  /** The title of the file */
+  title?: string
   /** The attachment's [media type](https://en.wikipedia.org/wiki/Media_type) */
   content_type?: string
   /** Size of file in bytes */
@@ -944,7 +943,7 @@ export interface DiscordRole {
   name: string
   /** Integer representation of hexadecimal color code */
   color: number
-  /** Position of this role */
+  /** Position of this role (roles with the same position are sorted by id) */
   position: number
   /** role unicode emoji */
   unicode_emoji?: string
@@ -1026,7 +1025,7 @@ export interface DiscordChannel {
   type: ChannelTypes
   /** The id of the guild */
   guild_id?: string
-  /** Sorting position of the channel */
+  /** Sorting position of the channel (channels with the same position are sorted by id) */
   position?: number
   /** Explicit permission overwrites for members and roles */
   permission_overwrites?: DiscordOverwrite[]
@@ -1350,7 +1349,7 @@ export interface DiscordMessage {
   /** Data showing the source of a crossposted channel follow add, pin or reply message */
   message_reference?: Omit<DiscordMessageReference, 'failIfNotExists'>
   /** Message flags combined as a bitfield */
-  flags?: DiscordMessageFlag
+  flags?: MessageFlags
   /**
    * The stickers sent with the message (bots currently can only receive messages with stickers, not send)
    * @deprecated
@@ -1417,6 +1416,12 @@ export interface DiscordReaction {
   emoji: Partial<DiscordEmoji>
   /** HEX colors used for super reaction */
   burst_colors: string[]
+}
+
+/** https://discord.com/developers/docs/resources/channel#get-reactions-reaction-types */
+export enum DiscordReactionType {
+  Normal,
+  Burst,
 }
 
 /** https://discord.com/developers/docs/resources/channel#reaction-count-details-object */
@@ -1615,7 +1620,7 @@ export interface DiscordMessageInteractionMetadata {
   /** User who triggered the interaction */
   user: DiscordUser
   /** IDs for installation context(s) related to an interaction */
-  authorizing_integration_owners: Partial<Record<DiscordApplicationIntegrationType, string>>
+  authorizing_integration_owners: Partial<Record<`${DiscordApplicationIntegrationType}`, string>>
   /** ID of the original response message, present only on follow-up messages */
   original_response_message_id?: string
   /** ID of the message that contained interactive component, present only on messages created from component interactions */
@@ -1683,13 +1688,29 @@ export interface DiscordSelectMenuDefaultValue {
 export interface DiscordButtonComponent {
   /** All button components have type 2 */
   type: MessageComponentTypes.Button
-  /** for what the button says (max 80 characters) */
+  /**
+   * Text that appears on the button
+   *
+   * @remarks
+   * A label can have a max of 80 characters
+   * A button of style {@link ButtonStyles.Premium | Premium} cannot have a label
+   */
   label?: string
-  /** a dev-defined unique string sent on click (max 100 characters). type 5 Link buttons can not have a custom_id */
+  /**
+   * A dev-defined unique string sent on click (max 100 characters).
+   *
+   * @remarks
+   * A button of style {@link ButtonStyles.Link | Link} or {@link ButtonStyles.Premium | Premium} cannot have a custom_id
+   */
   custom_id?: string
   /** For different styles/colors of the buttons */
   style: ButtonStyles
-  /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
+  /**
+   * Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis.
+   *
+   * @remarks
+   * A button of style {@link ButtonStyles.Premium | Premium} cannot have an emoji
+   */
   emoji?: {
     /** Emoji id */
     id?: string
@@ -1698,10 +1719,22 @@ export interface DiscordButtonComponent {
     /** Whether this emoji is animated */
     animated?: boolean
   }
-  /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
+  /**
+   * Url for {@link ButtonStyles.Link | link} buttons that can navigate a user to the web.
+   *
+   * @remarks
+   * Buttons of style {@link ButtonStyles.Link | Link} must have an url, any other button with a different style can not have an url
+   */
   url?: string
   /** Whether or not this button is disabled */
   disabled?: boolean
+  /**
+   * SKU for {@link ButtonStyles.Premium | premium} buttons that can navigate a user to the application shop.
+   *
+   * @remarks
+   * Buttons of style {@link ButtonStyles.Premium | Premium} must have a sku_id, any other button with a different style can not have a a sku_id
+   */
+  sku_id?: string
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#text-inputs-text-input-structure */
@@ -1930,28 +1963,74 @@ export interface DiscordAutoModerationRule {
 export enum AutoModerationEventTypes {
   /** When a user sends a message */
   MessageSend = 1,
+  /** Wen a member edits their profile */
+  MemberUpdate,
 }
 
 export enum AutoModerationTriggerTypes {
+  /** Check if content contains words from a user defined list of keywords. Max 6 per guild */
   Keyword = 1,
-  HarmfulLink,
-  Spam,
+  /** Check if content represents generic spam. Max 1 per guild */
+  Spam = 3,
+  /** Check if content contains words from internal pre-defined word sets. Max 1 per guild */
   KeywordPreset,
+  /** Check if content contains more unique mentions than allowed. Max 1 per guild */
   MentionSpam,
+  /** Check if member profile contains words from a user defined list of keywords. Max 1 per guild */
+  MemberProfile,
 }
 
 export interface DiscordAutoModerationRuleTriggerMetadata {
-  /** The keywords needed to match. Only present when TriggerType.Keyword */
+  /**
+   * The keywords needed to match.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}.
+   *
+   * Can have up to 1000 elements in the array and each string can have up to 60 characters
+   */
   keyword_filter?: string[]
-  /** Regular expression patterns which will be matched against content. Only present when TriggerType.Keyword */
+  /**
+   * Regular expression patterns which will be matched against content.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}.
+   *
+   * Can have up to 10 elements in the array and each string can have up to 260 characters
+   */
   regex_patterns: string[]
-  /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
+  /**
+   * The pre-defined lists of words to match from.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.KeywordPreset}.
+   */
   presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
-  /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
+  /**
+   * The substrings which will exempt from triggering the preset trigger type.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.Keyword}, {@link AutoModerationTriggerTypes.KeywordPreset} and {@link AutoModerationTriggerTypes.MemberProfile}.
+   *
+   * When used with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile} there can have up to 100 elements in the array and each string can have up to 60 characters.
+   * When used with {@link AutoModerationTriggerTypes.KeywordPreset} there can have up to 1000 elements in the array and each string can have up to 60 characters.
+   */
   allow_list?: string[]
-  /** Total number of mentions (role & user) allowed per message (Maximum of 50). Only present when TriggerType.MentionSpam */
+  /**
+   * Total number of mentions (role & user) allowed per message.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
+   *
+   * Maximum of 50
+   */
   mention_total_limit?: number
-  /** Whether to automatically detect mention raids. Only present when TriggerType.MentionSpam */
+  /**
+   * Whether to automatically detect mention raids.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
+   */
   mention_raid_protection_enabled?: boolean
 }
 
@@ -1976,8 +2055,17 @@ export enum AutoModerationActionType {
   BlockMessage = 1,
   /** Logs user content to a specified channel */
   SendAlertMessage,
-  /** Times out user for specified duration */
+  /**
+   * Times out user for specified duration
+   *
+   * @remarks
+   * A timeout action can only be set up for {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MentionSpam} rules.
+   *
+   * The `MODERATE_MEMBERS` permission is required to use the timeout action type.
+   */
   Timeout,
+  /** prevents a member from using text, voice, or other interactions */
+  BlockMemberInteraction,
 }
 
 export interface DiscordAutoModerationActionMetadata {
@@ -2282,6 +2370,8 @@ export interface DiscordInviteMetadata extends DiscordInvite {
 
 /** https://discord.com/developers/docs/resources/invite#invite-object */
 export interface DiscordInvite {
+  /** The type of invite */
+  type: DiscordInviteType
   /** The invite code (unique Id) */
   code: string
   /** The guild this invite is for */
@@ -2306,6 +2396,12 @@ export interface DiscordInvite {
   stage_instance?: DiscordInviteStageInstance
   /** guild scheduled event data */
   guild_scheduled_event?: DiscordScheduledEvent
+}
+
+export enum DiscordInviteType {
+  Guild,
+  GroupDm,
+  Friend,
 }
 
 export interface DiscordInviteStageInstance {
@@ -2351,17 +2447,19 @@ export interface DiscordCreateApplicationCommand {
   /** Set of permissions represented as a bit set */
   default_member_permissions?: string | null
   /**
-   * Installation context(s) where the command is available
+   * Installation contexts where the command is available
    *
    * @remarks
-   * This is currently in preview.
+   * This value is available only for globally-scoped commands
+   * Defaults to the application configured contexts
    */
   integration_types?: DiscordApplicationIntegrationType[]
   /**
-   * Interaction context(s) where the command can be used, only for globally-scoped commands. By default, all interaction context types included.
+   * Interaction context(s) where the command can be used
    *
    * @remarks
-   * This is currently in preview.
+   * This value is available only for globally-scoped commands
+   * By default, all interaction context types included for new commands.
    */
   contexts?: DiscordInteractionContextType[] | null
   /**
@@ -2612,7 +2710,7 @@ export interface DiscordGuildBanAddRemove {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove */
-export interface DiscordMessageReactionRemove extends Omit<DiscordMessageReactionAdd, 'member'> {}
+export interface DiscordMessageReactionRemove extends Omit<DiscordMessageReactionAdd, 'member' | 'burst_colors'> {}
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-add */
 export interface DiscordMessageReactionAdd {
@@ -2630,6 +2728,12 @@ export interface DiscordMessageReactionAdd {
   emoji: Partial<DiscordEmoji>
   /** The id of the author of this message */
   message_author_id?: string
+  /** true if this is a super-reaction */
+  burst: boolean
+  /** Colors used for super-reaction animation in "#rrggbb" format */
+  burst_colors?: string[]
+  /** The type of reaction */
+  type: DiscordReactionType
 }
 
 /** https://discord.com/developers/docs/topics/gateway#voice-server-update */
@@ -2843,6 +2947,8 @@ export interface DiscordGuildMemberUpdate {
   pending?: boolean
   /** when the user's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out. Will throw a 403 error if the user has the ADMINISTRATOR permission or is the owner of the guild */
   communication_disabled_until?: string
+  /** Data for the member's guild avatar decoration */
+  avatar_decoration_data?: DiscordAvatarDecorationData
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-all */
@@ -3178,7 +3284,7 @@ export interface DiscordCreateForumPostWithMessage {
     /** Attachment objects with filename and description. See {@link https://discord.com/developers/docs/reference#uploading-files Uploading Files} */
     attachments?: DiscordAttachment[]
     /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS can be set */
-    flags?: DiscordMessageFlag
+    flags?: MessageFlags
   }
   /** the IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel */
   applied_tags?: string[]
@@ -3363,7 +3469,7 @@ export interface DiscordSku {
   /** System-generated URL slug based on the SKU's name */
   slug: string
   /** SKU flags combined as a bitfield */
-  flags: DiscordSkuFlag
+  flags: SkuFlags
 }
 
 /** https://discord.com/developers/docs/monetization/skus#sku-object-sku-types */
@@ -3376,42 +3482,6 @@ export enum DiscordSkuType {
   Subscription = 5,
   /** System-generated group for each SUBSCRIPTION SKU created */
   SubscriptionGroup = 6,
-}
-
-/** https://discord.com/developers/docs/monetization/skus#sku-object-sku-flags */
-export enum DiscordSkuFlag {
-  /** SKU is available for purchase */
-  Available = 1 << 2,
-  /** Recurring SKU that can be purchased by a user and applied to a single server. Grants access to every user in that server. */
-  GuildSubscription = 1 << 7,
-  /** Recurring SKU purchased by a user for themselves. Grants access to the purchasing user in every server. */
-  UserSubscription = 1 << 8,
-}
-
-/** https://discord.com/developers/docs/resources/channel#message-object-message-flags */
-export enum DiscordMessageFlag {
-  /** This message has been published to subscribed channels (via Channel Following) */
-  Crossposted = 1 << 0,
-  /** This message originated from a message in another channel (via Channel Following) */
-  IsCrosspost = 1 << 1,
-  /** Do not include any embeds when serializing this message */
-  SuppressEmbeds = 1 << 2,
-  /** The source message for this crosspost has been deleted (via Channel Following) */
-  SourceMessageDeleted = 1 << 3,
-  /** This message came from the urgent message system */
-  Urgent = 1 << 4,
-  /** This message has an associated thread, with the same id as the message */
-  HasThread = 1 << 5,
-  /** This message is only visible to the user who invoked the Interaction */
-  Ephemeral = 1 << 6,
-  /** This message is an Interaction Response and the bot is "thinking" */
-  Loading = 1 << 7,
-  /** This message failed to mention some roles and add their members to the thread */
-  FailedToMentionSomeRolesInThread = 1 << 8,
-  /** This message will not trigger push and desktop notifications */
-  SuppressNotifications = 1 << 12,
-  /** This message is a voice message */
-  IsVoiceMessage = 1 << 13,
 }
 
 /** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-context-types */

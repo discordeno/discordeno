@@ -5,12 +5,12 @@ import {
   type DiscordMessageInteractionMetadata,
   type InteractionTypes,
   type MessageActivityTypes,
+  MessageFlags,
   type MessageTypes,
   type StickerFormatTypes,
 } from '@discordeno/types'
 import { CHANNEL_MENTION_REGEX } from '../constants.js'
 import { type Bot, type Poll, snowflakeToTimestamp } from '../index.js'
-import { MessageFlags } from '../typings.js'
 import type { Attachment } from './attachment.js'
 import type { Channel } from './channel.js'
 import type { Component } from './component.js'

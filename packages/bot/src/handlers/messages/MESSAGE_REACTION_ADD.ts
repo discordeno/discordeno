@@ -17,5 +17,7 @@ export async function handleMessageReactionAdd(bot: Bot, data: DiscordGatewayPay
     user: payload.member ? bot.transformers.user(bot, payload.member.user) : undefined,
     emoji: bot.transformers.emoji(bot, payload.emoji),
     messageAuthorId: payload.message_author_id ? bot.transformers.snowflake(payload.message_author_id) : undefined,
+    burst: payload.burst,
+    burstColors: payload.burst_colors,
   })
 }
