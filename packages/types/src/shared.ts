@@ -58,6 +58,55 @@ export enum AttachmentFlags {
   IsRemix = 1 << 2,
 }
 
+/** https://discord.com/developers/docs/monetization/skus#sku-object-sku-flags */
+export enum SkuFlags {
+  /** SKU is available for purchase */
+  Available = 1 << 2,
+  /** Recurring SKU that can be purchased by a user and applied to a single server. Grants access to every user in that server. */
+  GuildSubscription = 1 << 7,
+  /** Recurring SKU purchased by a user for themselves. Grants access to the purchasing user in every server. */
+  UserSubscription = 1 << 8,
+}
+
+/** https://discord.com/developers/docs/resources/channel#message-object-message-flags */
+export enum MessageFlags {
+  /** This message has been published to subscribed channels (via Channel Following) */
+  Crossposted = 1 << 0,
+  /** This message originated from a message in another channel (via Channel Following) */
+  IsCrosspost = 1 << 1,
+  /** Do not include any embeds when serializing this message */
+  SuppressEmbeds = 1 << 2,
+  /** The source message for this crosspost has been deleted (via Channel Following) */
+  SourceMessageDeleted = 1 << 3,
+  /** This message came from the urgent message system */
+  Urgent = 1 << 4,
+  /** This message has an associated thread, with the same id as the message */
+  HasThread = 1 << 5,
+  /** This message is only visible to the user who invoked the Interaction */
+  Ephemeral = 1 << 6,
+  /** This message is an Interaction Response and the bot is "thinking" */
+  Loading = 1 << 7,
+  /** This message failed to mention some roles and add their members to the thread */
+  FailedToMentionSomeRolesInThread = 1 << 8,
+  /** This message will not trigger push and desktop notifications */
+  SuppressNotifications = 1 << 12,
+  /** This message is a voice message */
+  IsVoiceMessage = 1 << 13,
+}
+
+/** https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-flags */
+export enum ActivityFlags {
+  Instance = 1 << 0,
+  Join = 1 << 1,
+  Spectate = 1 << 2,
+  JoinRequest = 1 << 3,
+  Sync = 1 << 4,
+  Play = 1 << 5,
+  PartyPrivacyFriends = 1 << 6,
+  PartyPrivacyVoiceChannel = 1 << 7,
+  Embedded = 1 << 8,
+}
+
 /** https://discord.com/developers/docs/resources/guild#integration-object-integration-expire-behaviors */
 export enum IntegrationExpireBehaviors {
   RemoveRole,
@@ -373,6 +422,10 @@ export enum MessageTypes {
   StageSpeaker,
   StageTopic = 31,
   GuildApplicationPremiumSubscription,
+  GuildIncidentAlertModeEnabled = 36,
+  GuildIncidentAlertModeDisabled,
+  GuildIncidentReportRaid,
+  GuildIncidentReportFalseAlarm,
   PurchaseNotification = 44,
 }
 

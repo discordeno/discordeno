@@ -1,0 +1,26 @@
+{
+  "name": "dd-minimal-bot",
+  "version": "1.0.0",
+  "description": "A minimal bot written with discordeno.",
+  "main": "dist/index.js",
+  "type": "module",
+  "license": "ISC",
+  "private": true,
+  "packageManager": "yarn@4.0.2",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "swc src --strip-leading-paths --delete-dir-on-start --out-dir dist",
+    "setup-dd": ""
+  },
+  "dependencies": {
+    "@discordeno/bot": "19.0.0-next.92bf166",
+    "chalk": "^5.3.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@swc/cli": "^0.3.12",
+    "@swc/core": "^1.6.3",
+    "@types/node": "^20.14.6",
+    "typescript": "^5.5.2"
+  }
+}
