@@ -3,9 +3,9 @@ import { iconHashToBigInt } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
 import { Permissions } from './toggles/Permissions.js'
 import { MemberToggles } from './toggles/member.js'
-import type { BaseMember, Member } from './types.js'
+import type { Member } from './types.js'
 
-const baseMember: Partial<Member> & BaseMember = {
+const baseMember = {
   get deaf() {
     return !!this.toggles?.has('deaf')
   },
@@ -15,7 +15,7 @@ const baseMember: Partial<Member> & BaseMember = {
   get pending() {
     return !!this.toggles?.has('pending')
   },
-}
+} as Member
 
 export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString): Member {
   const member: Member = Object.create(baseMember)

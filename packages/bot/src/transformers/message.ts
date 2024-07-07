@@ -5,13 +5,13 @@ import {
   type DiscordMessageInteractionMetadata,
 } from '@discordeno/types'
 import { CHANNEL_MENTION_REGEX } from '../constants.js'
-import { snowflakeToTimestamp, type Bot, type Message, type MessageBase, type MessageCall, type MessageInteractionMetadata } from '../index.js'
+import { snowflakeToTimestamp, type Bot, type Message, type MessageCall, type MessageInteractionMetadata } from '../index.js'
 import { MessageFlags } from '../typings.js'
 import { ToggleBitfield } from './toggles/ToggleBitfield.js'
 
 const EMPTY_STRING = ''
 
-const baseMessage: Partial<Message> & MessageBase = {
+const baseMessage = {
   get crossposted() {
     return this.flags?.contains(MessageFlags.Crossposted) ?? false
   },
@@ -122,7 +122,7 @@ const baseMessage: Partial<Message> & MessageBase = {
     if (value) this.flags.add(MessageFlags.Urgent)
     else this.flags.remove(MessageFlags.Urgent)
   },
-}
+} as Message
 
 export function transformMessage(bot: Bot, payload: DiscordMessage): Message {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined

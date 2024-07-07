@@ -8,7 +8,6 @@ import {
 import { Collection } from '@discordeno/utils'
 import {
   DiscordApplicationIntegrationType,
-  type BaseInteraction,
   type Bot,
   type DiscordChannel,
   type Interaction,
@@ -19,7 +18,7 @@ import {
 } from '../index.js'
 import { MessageFlags, type DiscordInteractionDataResolved } from '../typings.js'
 
-const baseInteraction: Partial<Interaction> & BaseInteraction = {
+const baseInteraction = {
   async respond(response, options) {
     let type = InteractionResponseTypes.ChannelMessageWithSource
 
@@ -32,14 +31,14 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
     if (type === InteractionResponseTypes.ChannelMessageWithSource && options?.isPrivate) response.flags = MessageFlags.Ephemeral
 
     // Since this has already been given a response, any further responses must be followups.
-    if (this.acknowledged) return await this.bot!.helpers.sendFollowupMessage(this.token!, response)
+    if (this.acknowledged) return await this.bot.helpers.sendFollowupMessage(this.token, response)
 
     // Modals cannot be chained
     if (this.type === InteractionTypes.ModalSubmit && type === InteractionResponseTypes.Modal)
       throw new Error('Cannot respond to a modal interaction with another modal.')
 
     this.acknowledged = true
-    return await this.bot!.helpers.sendInteractionResponse(this.id!, this.token!, { type, data: response })
+    return await this.bot.helpers.sendInteractionResponse(this.id, this.token, { type, data: response })
   },
   async edit(response, messageId) {
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot edit an autocomplete interaction.')
@@ -48,7 +47,7 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
     if (typeof response === 'string') response = { content: response }
 
     if (messageId) {
-      return await this.bot?.helpers.editFollowupMessage(this.token!, messageId, response)
+      return await this.bot?.helpers.editFollowupMessage(this.token, messageId, response)
     }
 
     if (!this.acknowledged) {
@@ -56,10 +55,10 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
         throw new Error("This interaction has not been responded to yet and this isn't a MessageComponent interaction.")
 
       this.acknowledged = true
-      return await this.bot!.helpers.sendInteractionResponse(this.id!, this.token!, { type: InteractionResponseTypes.UpdateMessage, data: response })
+      return await this.bot.helpers.sendInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.UpdateMessage, data: response })
     }
 
-    return await this.bot!.helpers.editOriginalInteractionResponse(this.token!, response)
+    return await this.bot.helpers.editOriginalInteractionResponse(this.token, response)
   },
   async deferEdit() {
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot edit an autocomplete interaction.')
@@ -69,13 +68,13 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
       throw new Error("Cannot defer to then edit an interaction that isn't a MessageComponent interaction.")
 
     this.acknowledged = true
-    return await this.bot!.helpers.sendInteractionResponse(this.id!, this.token!, { type: InteractionResponseTypes.DeferredUpdateMessage })
+    return await this.bot.helpers.sendInteractionResponse(this.id, this.token, { type: InteractionResponseTypes.DeferredUpdateMessage })
   },
   async defer(isPrivate) {
     if (this.acknowledged) throw new Error('Cannot defer an already responded interaction.')
 
     this.acknowledged = true
-    return await this.bot!.helpers.sendInteractionResponse(this.id!, this.token!, {
+    return await this.bot.helpers.sendInteractionResponse(this.id, this.token, {
       type: InteractionResponseTypes.DeferredChannelMessageWithSource,
       data: {
         flags: isPrivate ? MessageFlags.Ephemeral : undefined,
@@ -85,10 +84,10 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
   async delete(messageId) {
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot delete an autocomplete interaction')
 
-    if (messageId) return await this.bot?.helpers.deleteFollowupMessage(this.token!, messageId)
-    else return await this.bot?.helpers.deleteOriginalInteractionResponse(this.token!)
+    if (messageId) return await this.bot?.helpers.deleteFollowupMessage(this.token, messageId)
+    else return await this.bot?.helpers.deleteOriginalInteractionResponse(this.token)
   },
-}
+} as Interaction
 
 export function transformInteraction(bot: Bot, payload: DiscordInteraction): Interaction {
   const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined

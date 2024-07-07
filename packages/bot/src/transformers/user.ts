@@ -1,8 +1,8 @@
 import type { DiscordUser } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
-import { ToggleBitfield, UserToggles, type BaseUser, type Bot, type User } from '../index.js'
+import { ToggleBitfield, UserToggles, type Bot, type User } from '../index.js'
 
-const baseUser: Partial<User> & BaseUser = {
+const baseUser = {
   get tag() {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     return `${this.username}#${this.discriminator}`
@@ -19,7 +19,7 @@ const baseUser: Partial<User> & BaseUser = {
   get verified() {
     return !!this.toggles?.has('verified')
   },
-}
+} as User
 
 export function transformUser(bot: Bot, payload: DiscordUser): User {
   const user: User = Object.create(baseUser)

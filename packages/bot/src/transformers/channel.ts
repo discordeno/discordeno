@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type { BigString, DiscordChannel } from '@discordeno/types'
-import { calculatePermissions, type BaseChannel, type Bot, type Channel } from '../index.js'
+import { calculatePermissions, type Bot, type Channel } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { ChannelToggles } from './toggles/channel.js'
 
@@ -21,7 +21,7 @@ export function separateOverwrites(v: bigint): [number, bigint, bigint, bigint] 
   return [Number(unpack64(v, 3)), unpack64(v, 2), unpack64(v, 0), unpack64(v, 1)] as [number, bigint, bigint, bigint]
 }
 
-export const baseChannel: Partial<Channel> & BaseChannel = {
+export const baseChannel = {
   get archived() {
     return !!this.toggles?.archived
   },
@@ -60,7 +60,7 @@ export const baseChannel: Partial<Channel> & BaseChannel = {
       archived: this.archived,
     }
   },
-}
+} as Channel
 
 export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } & { guildId?: BigString }): Channel {
   const channel = Object.create(baseChannel) as Channel

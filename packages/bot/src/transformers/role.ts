@@ -1,9 +1,9 @@
 import type { BigString, DiscordRole } from '@discordeno/types'
-import { iconHashToBigInt, type BaseRole, type Bot, type Role } from '../index.js'
+import { iconHashToBigInt, type Bot, type Role } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { RoleToggles } from './toggles/role.js'
 
-const baseRole: Partial<Role> & BaseRole = {
+const baseRole = {
   get tags() {
     return {
       botId: this.internalTags?.botId,
@@ -38,7 +38,7 @@ const baseRole: Partial<Role> & BaseRole = {
   get guildConnections() {
     return !!this.toggles?.has('guildConnections')
   },
-}
+} as Role
 
 export function transformRole(bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }): Role {
   const role: Role = Object.create(baseRole)
