@@ -267,7 +267,6 @@ export interface Transformers {
       stickers: boolean
       threads: boolean
       voiceStates: boolean
-      features: boolean
       large: boolean
       owner: boolean
       widgetEnabled: boolean
@@ -876,7 +875,6 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         name: opts?.defaultDesiredPropertiesValue ?? false,
         channels: opts?.defaultDesiredPropertiesValue ?? false,
         emojis: opts?.defaultDesiredPropertiesValue ?? false,
-        features: opts?.defaultDesiredPropertiesValue ?? false,
         iconHash: opts?.defaultDesiredPropertiesValue ?? false,
         large: opts?.defaultDesiredPropertiesValue ?? false,
         members: opts?.defaultDesiredPropertiesValue ?? false,
