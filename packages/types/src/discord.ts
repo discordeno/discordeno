@@ -1963,28 +1963,74 @@ export interface DiscordAutoModerationRule {
 export enum AutoModerationEventTypes {
   /** When a user sends a message */
   MessageSend = 1,
+  /** Wen a member edits their profile */
+  MemberUpdate,
 }
 
 export enum AutoModerationTriggerTypes {
+  /** Check if content contains words from a user defined list of keywords. Max 6 per guild */
   Keyword = 1,
-  HarmfulLink,
-  Spam,
+  /** Check if content represents generic spam. Max 1 per guild */
+  Spam = 3,
+  /** Check if content contains words from internal pre-defined word sets. Max 1 per guild */
   KeywordPreset,
+  /** Check if content contains more unique mentions than allowed. Max 1 per guild */
   MentionSpam,
+  /** Check if member profile contains words from a user defined list of keywords. Max 1 per guild */
+  MemberProfile,
 }
 
 export interface DiscordAutoModerationRuleTriggerMetadata {
-  /** The keywords needed to match. Only present when TriggerType.Keyword */
+  /**
+   * The keywords needed to match.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}.
+   *
+   * Can have up to 1000 elements in the array and each string can have up to 60 characters
+   */
   keyword_filter?: string[]
-  /** Regular expression patterns which will be matched against content. Only present when TriggerType.Keyword */
+  /**
+   * Regular expression patterns which will be matched against content.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile}.
+   *
+   * Can have up to 10 elements in the array and each string can have up to 260 characters
+   */
   regex_patterns: string[]
-  /** The pre-defined lists of words to match from. Only present when TriggerType.KeywordPreset */
+  /**
+   * The pre-defined lists of words to match from.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.KeywordPreset}.
+   */
   presets?: DiscordAutoModerationRuleTriggerMetadataPresets[]
-  /** The substrings which will exempt from triggering the preset trigger type. Only present when TriggerType.KeywordPreset */
+  /**
+   * The substrings which will exempt from triggering the preset trigger type.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.Keyword}, {@link AutoModerationTriggerTypes.KeywordPreset} and {@link AutoModerationTriggerTypes.MemberProfile}.
+   *
+   * When used with {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MemberProfile} there can have up to 100 elements in the array and each string can have up to 60 characters.
+   * When used with {@link AutoModerationTriggerTypes.KeywordPreset} there can have up to 1000 elements in the array and each string can have up to 60 characters.
+   */
   allow_list?: string[]
-  /** Total number of mentions (role & user) allowed per message (Maximum of 50). Only present when TriggerType.MentionSpam */
+  /**
+   * Total number of mentions (role & user) allowed per message.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
+   *
+   * Maximum of 50
+   */
   mention_total_limit?: number
-  /** Whether to automatically detect mention raids. Only present when TriggerType.MentionSpam */
+  /**
+   * Whether to automatically detect mention raids.
+   *
+   * @remarks
+   * Only present with {@link AutoModerationTriggerTypes.MentionSpam}.
+   */
   mention_raid_protection_enabled?: boolean
 }
 
@@ -2009,8 +2055,17 @@ export enum AutoModerationActionType {
   BlockMessage = 1,
   /** Logs user content to a specified channel */
   SendAlertMessage,
-  /** Times out user for specified duration */
+  /**
+   * Times out user for specified duration
+   *
+   * @remarks
+   * A timeout action can only be set up for {@link AutoModerationTriggerTypes.Keyword} and {@link AutoModerationTriggerTypes.MentionSpam} rules.
+   *
+   * The `MODERATE_MEMBERS` permission is required to use the timeout action type.
+   */
   Timeout,
+  /** prevents a member from using text, voice, or other interactions */
+  BlockMemberInteraction,
 }
 
 export interface DiscordAutoModerationActionMetadata {
