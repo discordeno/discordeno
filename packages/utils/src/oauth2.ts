@@ -1,8 +1,8 @@
-import type { BigString, OAuth2Scope, PermissionStrings } from '@discordeno/types'
+import type { BigString, DiscordApplicationIntegrationType, OAuth2Scope, PermissionStrings } from '@discordeno/types'
 import { calculateBits } from './permissions.js'
 
 export function createOAuth2Link(options: CreateOAuth2LinkOptions): string {
-  const joinedScopeString = options.scope.join(' ')
+  const joinedScopeString = options.scope.join('%20')
 
   let url = `https://discord.com/oauth2/authorize?client_id=${options.clientId}&scope=${joinedScopeString}`
 
@@ -12,8 +12,8 @@ export function createOAuth2Link(options: CreateOAuth2LinkOptions): string {
   if (options.prompt) url += `&prompt=${options.prompt}`
   if (options.permissions) url += `&permissions=${Array.isArray(options.permissions) ? calculateBits(options.permissions) : options.permissions}`
   if (options.guildId) url += `&guild_id=${options.guildId}`
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   if (options.disableGuildSelect !== undefined) url += `&disable_guild_select=${options.disableGuildSelect}`
+  if (options.integrationType) url += `&integration_type=${options.integrationType}`
 
   return url
 }
@@ -72,4 +72,15 @@ export interface CreateOAuth2LinkOptions {
    * Should be defined only in a [bot authorization flow](https://discord.com/developers/docs/topics/oauth2#bot-authorization-flow), with [advanced bot authorization](https://discord.com/developers/docs/topics/oauth2#advanced-bot-authorization) or with the `webhook.incoming` scope
    */
   disableGuildSelect?: boolean
+  /**
+   * Specifies the installation context for the authorization
+   *
+   * @remarks
+   * Should be defined only when {@link scope} includes {@link OAuth2Scope.ApplicationsCommands}.
+   *
+   * When set to GuildInstall (0) the application will be authorized for installation to a server, and when set to UserInstall (1) the application will be authorized for installation to a user.
+   *
+   * The application must be configured in the Developer Portal to support the provided `integrationType`.
+   */
+  integrationType?: DiscordApplicationIntegrationType
 }

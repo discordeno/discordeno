@@ -69,6 +69,8 @@ export function createBotGatewayHandlers(
     ENTITLEMENT_CREATE: options.ENTITLEMENT_CREATE ?? handlers.handleEntitlementCreate,
     ENTITLEMENT_UPDATE: options.ENTITLEMENT_UPDATE ?? handlers.handleEntitlementUpdate,
     ENTITLEMENT_DELETE: options.ENTITLEMENT_DELETE ?? handlers.handleEntitlementDelete,
+    MESSAGE_POLL_VOTE_ADD: options.MESSAGE_POLL_VOTE_ADD ?? handlers.handleMessagePollVoteAdd,
+    MESSAGE_POLL_VOTE_REMOVE: options.MESSAGE_POLL_VOTE_REMOVE ?? handlers.handleMessagePollVoteRemove,
   }
 }
 

@@ -12,6 +12,7 @@ import type {
   DiscordAuditLogEntry,
   DiscordAutoModerationActionExecution,
   DiscordAutoModerationRule,
+  DiscordAvatarDecorationData,
   DiscordChannel,
   DiscordCreateApplicationCommand,
   DiscordEmbed,
@@ -31,6 +32,10 @@ import type {
   DiscordInviteStageInstance,
   DiscordMember,
   DiscordMessage,
+  DiscordMessageCall,
+  DiscordMessageInteractionMetadata,
+  DiscordPoll,
+  DiscordPollMedia,
   DiscordPresenceUpdate,
   DiscordRole,
   DiscordScheduledEvent,
@@ -73,18 +78,28 @@ import {
   transformApplicationCommandToDiscordApplicationCommand,
   transformApplicationToDiscordApplication,
   transformAttachmentToDiscordAttachment,
+  transformAvatarDecorationData,
   transformComponentToDiscordComponent,
   transformEmbedToDiscordEmbed,
   transformMemberToDiscordMember,
   transformTeamToDiscordTeam,
   transformUserToDiscordUser,
+  type AvatarDecorationData,
 } from './transformers/index.js'
 import { transformIntegration, type Integration } from './transformers/integration.js'
 import { transformInteraction, transformInteractionDataOption, type Interaction, type InteractionDataOption } from './transformers/interaction.js'
 import { transformInvite, type Invite } from './transformers/invite.js'
 import { transformMember, type Member } from './transformers/member.js'
-import { transformMessage, type Message } from './transformers/message.js'
+import {
+  transformMessage,
+  transformMessageCall,
+  transformMessageInteractionMetadata,
+  type Message,
+  type MessageCall,
+  type MessageInteractionMetadata,
+} from './transformers/message.js'
 import { transformGuildOnboarding, type GuildOnboarding } from './transformers/onboarding.js'
+import { transformPoll, transformPollMedia, type Poll, type PollMedia } from './transformers/poll.js'
 import { transformPresence, type PresenceUpdate } from './transformers/presence.js'
 import { transformAllowedMentionsToDiscordAllowedMentions } from './transformers/reverse/allowedMentions.js'
 import { transformCreateApplicationCommandToDiscordCreateApplicationCommand } from './transformers/reverse/createApplicationCommand.js'
@@ -117,6 +132,8 @@ export interface Transformers {
     channel: (bot: Bot, payload: DiscordChannel, channel: Channel) => any
     interaction: (bot: Bot, payload: DiscordInteraction, interaction: Interaction) => any
     message: (bot: Bot, payload: DiscordMessage, message: Message) => any
+    messageInteractionMetadata: (bot: Bot, payload: DiscordMessageInteractionMetadata, metadata: MessageInteractionMetadata) => any
+    messageCall: (bot: Bot, payload: DiscordMessageCall, call: MessageCall) => any
     user: (bot: Bot, payload: DiscordUser, user: User) => any
     member: (bot: Bot, payload: DiscordMember, member: Member) => any
     role: (bot: Bot, payload: DiscordRole, role: Role) => any
@@ -165,11 +182,15 @@ export interface Transformers {
     guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding, onboarding: GuildOnboarding) => any
     entitlement: (bot: Bot, payload: DiscordEntitlement, entitlement: Entitlement) => any
     sku: (bot: Bot, payload: DiscordSku, sku: Sku) => any
+    poll: (bot: Bot, payload: DiscordPoll, poll: Poll) => any
+    pollMedia: (bot: Bot, payload: DiscordPollMedia, pollMedia: PollMedia) => any
+    avatarDecorationData: (bot: Bot, payload: DiscordAvatarDecorationData, avatarDecorationData: AvatarDecorationData) => any
   }
   desiredProperties: {
     attachment: {
       id: boolean
       filename: boolean
+      title: boolean
       contentType: boolean
       size: boolean
       url: boolean
@@ -292,8 +313,11 @@ export interface Transformers {
       locale: boolean
       guildLocale: boolean
       appPermissions: boolean
+      authorizingIntegrationOwners: boolean
+      context: boolean
     }
     invite: {
+      type: boolean
       channelId: boolean
       code: boolean
       createdAt: boolean
@@ -326,6 +350,7 @@ export interface Transformers {
       deaf: boolean
       mute: boolean
       pending: boolean
+      avatarDecorationData: boolean
     }
     message: {
       activity: boolean
@@ -340,6 +365,15 @@ export interface Transformers {
       embeds: boolean
       guildId: boolean
       id: boolean
+      interactionMetadata: {
+        id: boolean
+        type: boolean
+        user: boolean
+        authorizingIntegrationOwners: boolean
+        originalResponseMessageId: boolean
+        interactedMessageId: boolean
+        triggeringInteractionMetadata: boolean
+      }
       interaction: {
         id: boolean
         member: boolean
@@ -362,6 +396,11 @@ export interface Transformers {
       thread: boolean
       type: boolean
       webhookId: boolean
+      poll: boolean
+      call: {
+        participants: boolean
+        endedTimestamp: boolean
+      }
     }
     role: {
       name: boolean
@@ -441,7 +480,11 @@ export interface Transformers {
       verified: boolean
       email: boolean
       banner: boolean
-      avatarDecoration: boolean
+      avatarDecorationData: boolean
+    }
+    avatarDecorationData: {
+      asset: boolean
+      skuId: boolean
     }
     webhook: {
       id: boolean
@@ -489,6 +532,7 @@ export interface Transformers {
       deleted: boolean
       startsAt: boolean
       endsAt: boolean
+      consumed: boolean
     }
     sku: {
       id: boolean
@@ -505,6 +549,28 @@ export interface Transformers {
       toggles: boolean
       sessionId: boolean
       userId: boolean
+    }
+    poll: {
+      question: boolean
+      answers: {
+        answerId: boolean
+        pollMedia: boolean
+      }
+      expiry: boolean
+      allowMultiselect: boolean
+      layoutType: boolean
+      results: {
+        isFinalized: boolean
+        answerCounts: {
+          id: boolean
+          count: boolean
+          meVoted: boolean
+        }
+      }
+    }
+    pollMedia: {
+      text: boolean
+      emoji: boolean
     }
   }
   reverse: {
@@ -533,6 +599,8 @@ export interface Transformers {
   user: (bot: Bot, payload: DiscordUser) => User
   member: (bot: Bot, payload: DiscordMember, guildId: BigString, userId: BigString) => Member
   message: (bot: Bot, payload: DiscordMessage) => Message
+  messageInteractionMetadata: (bot: Bot, payload: DiscordMessageInteractionMetadata) => MessageInteractionMetadata
+  messageCall: (bot: Bot, payload: DiscordMessageCall) => MessageCall
   role: (bot: Bot, payload: { role: DiscordRole } & { guildId: BigString }) => Role
   voiceState: (bot: Bot, payload: { voiceState: DiscordVoiceState } & { guildId: bigint }) => VoiceState
   interaction: (bot: Bot, payload: DiscordInteraction) => Interaction
@@ -569,6 +637,9 @@ export interface Transformers {
   guildOnboarding: (bot: Bot, payload: DiscordGuildOnboarding) => GuildOnboarding
   entitlement: (bot: Bot, payload: DiscordEntitlement) => Entitlement
   sku: (bot: Bot, payload: DiscordSku) => Sku
+  poll: (bot: Bot, payload: DiscordPoll) => Poll
+  pollMedia: (bot: Bot, payload: DiscordPollMedia) => PollMedia
+  avatarDecorationData: (bot: Bot, payload: DiscordAvatarDecorationData) => AvatarDecorationData
 }
 
 export interface CreateTransformerOptions {
@@ -601,6 +672,12 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
       },
       message(bot, payload, message) {
         return message
+      },
+      messageInteractionMetadata(bot, payload, metadata) {
+        return metadata
+      },
+      messageCall(bot, payload, call) {
+        return call
       },
       role(bot, payload, role) {
         return role
@@ -719,11 +796,21 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
       sku(bot, payload, sku) {
         return sku
       },
+      poll(bot, payload, poll) {
+        return poll
+      },
+      pollMedia(bot, payload, pollMedia) {
+        return pollMedia
+      },
+      avatarDecorationData(bot, payload, avatarDecorationData) {
+        return avatarDecorationData
+      },
     },
     desiredProperties: {
       attachment: {
         id: opts?.defaultDesiredPropertiesValue ?? false,
         filename: opts?.defaultDesiredPropertiesValue ?? false,
+        title: opts?.defaultDesiredPropertiesValue ?? false,
         contentType: opts?.defaultDesiredPropertiesValue ?? false,
         size: opts?.defaultDesiredPropertiesValue ?? false,
         url: opts?.defaultDesiredPropertiesValue ?? false,
@@ -846,8 +933,11 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         locale: opts?.defaultDesiredPropertiesValue ?? false,
         guildLocale: opts?.defaultDesiredPropertiesValue ?? false,
         appPermissions: opts?.defaultDesiredPropertiesValue ?? false,
+        authorizingIntegrationOwners: opts?.defaultDesiredPropertiesValue ?? false,
+        context: opts?.defaultDesiredPropertiesValue ?? false,
       },
       invite: {
+        type: opts?.defaultDesiredPropertiesValue ?? false,
         channelId: opts?.defaultDesiredPropertiesValue ?? false,
         code: opts?.defaultDesiredPropertiesValue ?? false,
         createdAt: opts?.defaultDesiredPropertiesValue ?? false,
@@ -880,6 +970,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         deaf: opts?.defaultDesiredPropertiesValue ?? false,
         mute: opts?.defaultDesiredPropertiesValue ?? false,
         pending: opts?.defaultDesiredPropertiesValue ?? false,
+        avatarDecorationData: opts?.defaultDesiredPropertiesValue ?? false,
       },
       message: {
         activity: opts?.defaultDesiredPropertiesValue ?? false,
@@ -894,6 +985,15 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         embeds: opts?.defaultDesiredPropertiesValue ?? false,
         guildId: opts?.defaultDesiredPropertiesValue ?? false,
         id: opts?.defaultDesiredPropertiesValue ?? false,
+        interactionMetadata: {
+          id: opts?.defaultDesiredPropertiesValue ?? false,
+          type: opts?.defaultDesiredPropertiesValue ?? false,
+          user: opts?.defaultDesiredPropertiesValue ?? false,
+          authorizingIntegrationOwners: opts?.defaultDesiredPropertiesValue ?? false,
+          originalResponseMessageId: opts?.defaultDesiredPropertiesValue ?? false,
+          interactedMessageId: opts?.defaultDesiredPropertiesValue ?? false,
+          triggeringInteractionMetadata: opts?.defaultDesiredPropertiesValue ?? false,
+        },
         interaction: {
           id: opts?.defaultDesiredPropertiesValue ?? false,
           member: opts?.defaultDesiredPropertiesValue ?? false,
@@ -916,6 +1016,11 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         thread: opts?.defaultDesiredPropertiesValue ?? false,
         type: opts?.defaultDesiredPropertiesValue ?? false,
         webhookId: opts?.defaultDesiredPropertiesValue ?? false,
+        poll: opts?.defaultDesiredPropertiesValue ?? false,
+        call: {
+          participants: opts?.defaultDesiredPropertiesValue ?? false,
+          endedTimestamp: opts?.defaultDesiredPropertiesValue ?? false,
+        },
       },
       role: {
         name: opts?.defaultDesiredPropertiesValue ?? false,
@@ -995,7 +1100,11 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         verified: opts?.defaultDesiredPropertiesValue ?? false,
         email: opts?.defaultDesiredPropertiesValue ?? false,
         banner: opts?.defaultDesiredPropertiesValue ?? false,
-        avatarDecoration: opts?.defaultDesiredPropertiesValue ?? false,
+        avatarDecorationData: opts?.defaultDesiredPropertiesValue ?? false,
+      },
+      avatarDecorationData: {
+        asset: opts?.defaultDesiredPropertiesValue ?? false,
+        skuId: opts?.defaultDesiredPropertiesValue ?? false,
       },
       webhook: {
         id: opts?.defaultDesiredPropertiesValue ?? false,
@@ -1043,6 +1152,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         deleted: opts?.defaultDesiredPropertiesValue ?? false,
         startsAt: opts?.defaultDesiredPropertiesValue ?? false,
         endsAt: opts?.defaultDesiredPropertiesValue ?? false,
+        consumed: opts?.defaultDesiredPropertiesValue ?? false,
       },
       sku: {
         id: opts?.defaultDesiredPropertiesValue ?? false,
@@ -1059,6 +1169,28 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         toggles: opts?.defaultDesiredPropertiesValue ?? false,
         sessionId: opts?.defaultDesiredPropertiesValue ?? false,
         userId: opts?.defaultDesiredPropertiesValue ?? false,
+      },
+      poll: {
+        question: opts?.defaultDesiredPropertiesValue ?? false,
+        answers: {
+          answerId: opts?.defaultDesiredPropertiesValue ?? false,
+          pollMedia: opts?.defaultDesiredPropertiesValue ?? false,
+        },
+        expiry: opts?.defaultDesiredPropertiesValue ?? false,
+        layoutType: opts?.defaultDesiredPropertiesValue ?? false,
+        allowMultiselect: opts?.defaultDesiredPropertiesValue ?? false,
+        results: {
+          isFinalized: opts?.defaultDesiredPropertiesValue ?? false,
+          answerCounts: {
+            id: opts?.defaultDesiredPropertiesValue ?? false,
+            count: opts?.defaultDesiredPropertiesValue ?? false,
+            meVoted: opts?.defaultDesiredPropertiesValue ?? false,
+          },
+        },
+      },
+      pollMedia: {
+        text: opts?.defaultDesiredPropertiesValue ?? false,
+        emoji: opts?.defaultDesiredPropertiesValue ?? false,
       },
     },
     reverse: {
@@ -1095,6 +1227,8 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
     invite: options.invite ?? transformInvite,
     member: options.member ?? transformMember,
     message: options.message ?? transformMessage,
+    messageInteractionMetadata: options.messageInteractionMetadata ?? transformMessageInteractionMetadata,
+    messageCall: options.messageCall ?? transformMessageCall,
     presence: options.presence ?? transformPresence,
     role: options.role ?? transformRole,
     user: options.user ?? transformUser,
@@ -1123,5 +1257,8 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
     guildOnboarding: options.guildOnboarding ?? transformGuildOnboarding,
     entitlement: options.entitlement ?? transformEntitlement,
     sku: options.sku ?? transformSku,
+    poll: options.poll ?? transformPoll,
+    pollMedia: options.pollMedia ?? transformPollMedia,
+    avatarDecorationData: options.avatarDecorationData ?? transformAvatarDecorationData,
   }
 }

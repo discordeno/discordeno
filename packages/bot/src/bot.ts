@@ -2,7 +2,7 @@ import type { CreateGatewayManagerOptions, GatewayManager } from '@discordeno/ga
 import { ShardSocketCloseCodes, createGatewayManager } from '@discordeno/gateway'
 import type { CreateRestManagerOptions, RestManager } from '@discordeno/rest'
 import { createRestManager } from '@discordeno/rest'
-import type { BigString, DiscordEmoji, DiscordGatewayPayload, DiscordReady, GatewayIntents } from '@discordeno/types'
+import type { BigString, DiscordGatewayPayload, DiscordReady, GatewayIntents } from '@discordeno/types'
 import { createLogger, getBotIdFromToken, type Collection, type logger } from '@discordeno/utils'
 import { createBotGatewayHandlers } from './handlers.js'
 import { createBotHelpers, type BotHelpers } from './helpers.js'
@@ -13,7 +13,7 @@ import type { AutoModerationActionExecution } from './transformers/automodAction
 import type { AutoModerationRule } from './transformers/automodRule.js'
 import type { Channel } from './transformers/channel.js'
 import type { Emoji } from './transformers/emoji.js'
-import { type Entitlement } from './transformers/entitlement.js'
+import type { Entitlement } from './transformers/entitlement.js'
 import type { Guild } from './transformers/guild.js'
 import type { Integration } from './transformers/integration.js'
 import type { Interaction } from './transformers/interaction.js'
@@ -201,7 +201,7 @@ export interface EventHandlers {
   guildMemberAdd: (member: Member, user: User) => unknown
   guildMemberRemove: (user: User, guildId: bigint) => unknown
   guildMemberUpdate: (member: Member, user: User) => unknown
-  guildStickersUpdate: (stickers: Sticker[]) => unknown
+  guildStickersUpdate: (payload: { guildId: bigint; stickers: Sticker[] }) => unknown
   messageCreate: (message: Message) => unknown
   messageDelete: (payload: { id: bigint; channelId: bigint; guildId?: bigint }, message?: Message) => unknown
   messageDeleteBulk: (payload: { ids: bigint[]; channelId: bigint; guildId?: bigint }) => unknown
@@ -230,7 +230,7 @@ export interface EventHandlers {
   stageInstanceCreate: (data: { id: bigint; guildId: bigint; channelId: bigint; topic: string }) => unknown
   stageInstanceDelete: (data: { id: bigint; guildId: bigint; channelId: bigint; topic: string }) => unknown
   stageInstanceUpdate: (data: { id: bigint; guildId: bigint; channelId: bigint; topic: string }) => unknown
-  guildEmojisUpdate: (payload: { guildId: bigint; emojis: Collection<bigint, DiscordEmoji> }) => unknown
+  guildEmojisUpdate: (payload: { guildId: bigint; emojis: Collection<bigint, Emoji> }) => unknown
   guildBanAdd: (user: User, guildId: bigint) => unknown
   guildBanRemove: (user: User, guildId: bigint) => unknown
   guildCreate: (guild: Guild) => unknown
@@ -247,4 +247,6 @@ export interface EventHandlers {
   entitlementCreate: (entitlement: Entitlement) => unknown
   entitlementUpdate: (entitlement: Entitlement) => unknown
   entitlementDelete: (entitlement: Entitlement) => unknown
+  messagePollVoteAdd: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; answerId: number }) => unknown
+  messagePollVoteRemove: (payload: { userId: bigint; channelId: bigint; messageId: bigint; guildId?: bigint; answerId: number }) => unknown
 }

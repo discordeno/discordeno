@@ -219,6 +219,25 @@ const config: Config = {
     prism: {
       theme: themes.github,
       darkTheme: themes.dracula,
+      magicComments: [
+        // Docusaurus default magic comment
+        {
+          className: 'theme-code-block-highlighted-line',
+          line: 'highlight-next-line',
+          block: { start: 'highlight-start', end: 'highlight-end' },
+        },
+        {
+          className: 'theme-code-block-add',
+          line: 'insert-next-line',
+          block: { start: 'insert-start', end: 'insert-end' },
+        },
+        {
+          className: 'theme-code-block-remove',
+          line: 'remove-next-line',
+          block: { start: 'remove-start', end: 'remove-end' },
+        },
+      ],
+      additionalLanguages: ['bash'],
     },
   } satisfies ThemeConfig,
 

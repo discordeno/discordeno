@@ -21,6 +21,7 @@ import type {
   CamelizedDiscordEmoji,
   CamelizedDiscordEntitlement,
   CamelizedDiscordFollowedChannel,
+  CamelizedDiscordGetAnswerVotesResponse,
   CamelizedDiscordGetGatewayBot,
   CamelizedDiscordGuild,
   CamelizedDiscordGuildApplicationCommandPermissions,
@@ -64,6 +65,7 @@ import type {
   CreateGuild,
   CreateGuildApplicationCommandOptions,
   CreateGuildBan,
+  CreateGuildBulkBan,
   CreateGuildChannel,
   CreateGuildEmoji,
   CreateGuildFromTemplate,
@@ -74,6 +76,7 @@ import type {
   CreateStageInstance,
   CreateTemplate,
   DeleteWebhookMessageOptions,
+  DiscordBulkBan,
   EditApplication,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
@@ -95,6 +98,7 @@ import type {
   GetGuildPruneCountQuery,
   GetInvite,
   GetMessagesOptions,
+  GetPollAnswerVotes,
   GetReactions,
   GetScheduledEventUsers,
   GetScheduledEvents,
@@ -161,6 +165,15 @@ export interface CreateRestManagerOptions {
      * @default "authorization" // For compatibility purposes
      */
     authorizationHeader?: string
+    /**
+     * The endpoint to use in the rest proxy to update the bearer tokens
+     *
+     * @remarks
+     * Should not include a `/` in the start
+     *
+     * This value is actually required if you want to use `updateTokenQueues`
+     */
+    updateBearerTokenEndpoint?: string
   }
   /**
    * The api versions which can be used to make requests.
@@ -197,6 +210,8 @@ export interface RestManager {
   authorization?: string
   /** The authorization header name to attach when sending requests to the proxy */
   authorizationHeader: string
+  /** The endpoint to use for `updateTokenQueues` when working with a rest proxy */
+  updateBearerTokenEndpoint?: string
   /** The maximum amount of times a request should be retried. Defaults to Infinity */
   maxRetryCount: number
   /** Whether or not the manager is rate limited globally across all requests. Defaults to false. */
@@ -220,20 +235,17 @@ export interface RestManager {
   /** Whether or not the rest manager should keep objects in raw snake case from discord. */
   preferSnakeCase: (enabled: boolean) => RestManager
   /** Check the rate limits for a url or a bucket. */
-  checkRateLimits: (url: string, headers?: Record<string, string>) => number | false
+  checkRateLimits: (url: string, requestAuthorization: string) => number | false
+  /* Update the queues and ratelimit information to adapt to the new token */
+  updateTokenQueues: (oldToken: string, newToken: string) => Promise<void>
   /** Reshapes and modifies the obj as needed to make it ready for discords api. */
   changeToDiscordFormat: (obj: any) => any
   /** Creates the request body and headers that are necessary to send a request. Will handle different types of methods and everything necessary for discord. */
   createRequestBody: (method: RequestMethods, options?: CreateRequestBodyOptions) => RequestBody
   /** This will create a infinite loop running in 1 seconds using tail recursion to keep rate limits clean. When a rate limit resets, this will remove it so the queue can proceed. */
   processRateLimitedPaths: () => void
-  /**
-   * Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available
-   *
-   * @remarks
-   * The authenticationHeader should be defined ONLY if the request was done using a OAuth2 Access Token, in other cases it should be passed as an empty string
-   */
-  processHeaders: (url: string, headers: Headers, authenticationHeader?: string) => string | undefined
+  /** Processes the rate limit headers and determines if it needs to be rate limited and returns the bucket id if available */
+  processHeaders: (url: string, headers: Headers, requestAuthorization: string) => string | undefined
   /** Sends a request to the api. */
   sendRequest: (options: SendRequestOptions) => Promise<void>
   /** Split a url to separate rate limit buckets based on major/minor parameters. */
@@ -1026,10 +1038,10 @@ export interface RestManager {
     reason?: string,
   ) => Promise<CamelizedDiscordAutoModerationRule>
   /**
-   * Modifies the bot's username or avatar.
+   * Modifies the bot's username, avatar or banner.
    * NOTE: username: if changed may cause the bot's discriminator to be randomized.
    */
-  editBotProfile: (options: { username?: string; botAvatarURL?: string | null }) => Promise<CamelizedDiscordUser>
+  editBotProfile: (options: { username?: string; botAvatarURL?: string | null; botBannerURL?: string | null }) => Promise<CamelizedDiscordUser>
   /**
    * Edits a channel's settings.
    *
@@ -1498,6 +1510,7 @@ export interface RestManager {
    *
    * @param sourceChannelId - The ID of the announcement channel to follow.
    * @param targetChannelId - The ID of the target channel - the channel to cross-post to.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @returns An instance of {@link CamelizedDiscordFollowedChannel}.
    *
    * @remarks
@@ -1507,7 +1520,7 @@ export interface RestManager {
    *
    * @see {@link https://discord.com/developers/docs/resources/channel#follow-announcement-channel}
    */
-  followAnnouncement: (sourceChannelId: BigString, targetChannelId: BigString) => Promise<CamelizedDiscordFollowedChannel>
+  followAnnouncement: (sourceChannelId: BigString, targetChannelId: BigString, reason?: string) => Promise<CamelizedDiscordFollowedChannel>
   /**
    * Gets the list of all active threads for a guild.
    *
@@ -2543,6 +2556,34 @@ export interface RestManager {
    */
   startThreadWithoutMessage: (channelId: BigString, options: StartThreadWithoutMessage, reason?: string) => Promise<CamelizedDiscordChannel>
   /**
+   * Get a list of users that voted for this specific answer.
+   *
+   * @param channelId - The ID of the channel in which the message with the poll lives
+   * @param messageId - The ID of the message in which the poll lives
+   * @param answerId - The ID of the answer to get the users that voted that answer
+   * @param options - The options for the request
+   * @returns The list of users that voted for the specific answer.
+   */
+  getPollAnswerVoters: (
+    channelId: BigString,
+    messageId: BigString,
+    answerId: number,
+    options?: GetPollAnswerVotes,
+  ) => Promise<CamelizedDiscordGetAnswerVotesResponse>
+  /**
+   * Immediately ends the poll.
+   *
+   * @param channelId - The ID of the channel in which the message with the poll lives
+   * @param messageId - The ID of the message in which the poll lives
+   * @returns The message with the expired poll
+   *
+   * @remarks
+   * You cannot end polls from other users.
+   *
+   * Fires a _Message Update_ gateway event
+   */
+  endPoll: (channelId: BigString, messageId: BigString) => Promise<CamelizedDiscordMessage>
+  /**
    * Synchronises a template with the current state of a guild.
    *
    * @param guildId - The ID of the guild to synchronise a template of.
@@ -2620,8 +2661,8 @@ export interface RestManager {
    *
    * @param guildId - The ID of the guild to ban the user from.
    * @param userId - The ID of the user to ban from the guild.
-   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    * @param options - The parameters for the creation of the ban.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
    *
    * @remarks
    * Requires the `BAN_MEMBERS` permission.
@@ -2631,6 +2672,23 @@ export interface RestManager {
    * @see {@link https://discord.com/developers/docs/resources/guild#create-guild-ban}
    */
   banMember: (guildId: BigString, userId: BigString, options?: CreateGuildBan, reason?: string) => Promise<void>
+  /**
+   * Bans up to 200 users from a guild.
+   *
+   * @param guildId - The ID of the guild to ban the users from.
+   * @param options - The users to ban and the other options for the ban.
+   * @param {string} [reason] - An optional reason for the action, to be included in the audit log.
+   *
+   * @remarks
+   * Requires the `BAN_MEMBERS` and `MANAGE_GUILD` permissions.
+   *
+   * If all provided users fail to be banned, discord will respond with an error (code: `500000: Failed to ban users`)
+   *
+   * Fires as many _Guild Ban Add_ gateway events as many user where banned.
+   *
+   * @see {@link https://discord.com/developers/docs/resources/guild#bulk-guild-ban}
+   */
+  bulkBanMembers: (guildId: BigString, options: CreateGuildBulkBan, reason?: string) => Promise<Camelize<DiscordBulkBan>>
   /**
    * Edits the nickname of the bot user.
    *
@@ -2854,6 +2912,10 @@ export interface RestManager {
    * @param entitlementId - The id of the entitlement to delete
    */
   deleteTestEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
+  /**
+   * For One-Time Purchase consumable SKUs, marks a given entitlement for the user as consumed. The entitlement will have `consumed: true` when using {@link RestManager.listEntitlements | List Entitlements}
+   */
+  consumeEntitlement: (applicationId: BigString, entitlementId: BigString) => Promise<void>
   /**
    * Returns all SKUs for a given application
    *

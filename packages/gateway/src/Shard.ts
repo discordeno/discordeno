@@ -216,7 +216,7 @@ export class DiscordenoShard {
     await this.connect()
     this.logger.debug(
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      `[Gateway] Resuming Shard #${this.id}, after connecting. ${this.gatewayConfig.token} | ${this.sessionId} | ${this.previousSequenceNumber}`,
+      `[Gateway] Resuming Shard #${this.id}, after connecting. ${this.sessionId} | ${this.previousSequenceNumber}`,
     )
 
     this.send(

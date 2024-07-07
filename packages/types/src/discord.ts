@@ -1,47 +1,47 @@
-import type {
-  ActivityTypes,
-  AllowedMentionsTypes,
-  ApplicationCommandOptionTypes,
-  ApplicationCommandPermissionTypes,
-  ApplicationCommandTypes,
-  ApplicationFlags,
-  AttachmentFlags,
-  AuditLogEvents,
-  ButtonStyles,
-  ChannelFlags,
-  ChannelTypes,
-  DefaultMessageNotificationLevels,
-  EmbedTypes,
-  ExplicitContentFilterLevels,
-  ForumLayout,
-  GatewayEventNames,
-  GuildFeatures,
-  GuildNsfwLevel,
-  IntegrationExpireBehaviors,
-  InteractionTypes,
-  Localization,
-  MessageActivityTypes,
-  MessageComponentTypes,
-  MessageTypes,
-  MfaLevels,
-  OverwriteTypes,
-  PickPartial,
-  PremiumTiers,
-  PremiumTypes,
-  RoleFlags,
-  ScheduledEventEntityType,
-  ScheduledEventPrivacyLevel,
-  ScheduledEventStatus,
-  SortOrderTypes,
-  StickerFormatTypes,
-  StickerTypes,
-  SystemChannelFlags,
-  TargetTypes,
-  TeamMembershipStates,
-  TextStyles,
-  VerificationLevels,
-  VideoQualityModes,
-  WebhookTypes,
+import {
+  type ActivityTypes,
+  type AllowedMentionsTypes,
+  type ApplicationCommandOptionTypes,
+  type ApplicationCommandPermissionTypes,
+  type ApplicationCommandTypes,
+  type ApplicationFlags,
+  type AttachmentFlags,
+  type AuditLogEvents,
+  type ButtonStyles,
+  type ChannelFlags,
+  type ChannelTypes,
+  type DefaultMessageNotificationLevels,
+  type EmbedTypes,
+  type ExplicitContentFilterLevels,
+  type ForumLayout,
+  type GatewayEventNames,
+  type GuildFeatures,
+  type GuildNsfwLevel,
+  type IntegrationExpireBehaviors,
+  type InteractionTypes,
+  type Localization,
+  type MessageActivityTypes,
+  type MessageComponentTypes,
+  type MessageTypes,
+  type MfaLevels,
+  type OverwriteTypes,
+  type PickPartial,
+  type PremiumTiers,
+  type PremiumTypes,
+  type RoleFlags,
+  type ScheduledEventEntityType,
+  type ScheduledEventPrivacyLevel,
+  type ScheduledEventStatus,
+  type SortOrderTypes,
+  type StickerFormatTypes,
+  type StickerTypes,
+  type SystemChannelFlags,
+  type TargetTypes,
+  type TeamMembershipStates,
+  type TextStyles,
+  type VerificationLevels,
+  type VideoQualityModes,
+  type WebhookTypes,
 } from './shared.js'
 
 /** https://discord.com/developers/docs/resources/user#user-object */
@@ -78,8 +78,8 @@ export interface DiscordUser {
   email?: string | null
   /** the user's banner, or null if unset */
   banner?: string
-  /** the user's avatar decoration, or null if unset */
-  avatar_decoration?: string
+  /** data for the user's avatar decoration */
+  avatar_decoration_data?: DiscordAvatarDecorationData
 }
 
 /** https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes */
@@ -329,6 +329,16 @@ export interface DiscordMember {
   permissions?: string
   /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
   communication_disabled_until?: string | null
+  /** data for the member's guild avatar decoration */
+  avatar_decoration_data?: DiscordAvatarDecorationData | null
+}
+
+/** https://discord.com/developers/docs/resources/user#avatar-decoration-data-object */
+export interface DiscordAvatarDecorationData {
+  /** the avatar decoration hash */
+  asset: string
+  /** id of the avatar decoration's SKU */
+  sku_id: string
 }
 
 /** https://discord.com/developers/docs/resources/application#application-object */
@@ -373,6 +383,13 @@ export interface DiscordApplication {
   tags?: string[]
   /** settings for the application's default in-app authorization link, if enabled */
   install_params?: DiscordInstallParams
+  /**
+   * Default scopes and permissions for each supported installation context.
+   *
+   * @remarks
+   * This is currently in preview.
+   */
+  integration_types_config?: Partial<Record<`${DiscordApplicationIntegrationType}`, DiscordApplicationIntegrationTypeConfiguration>>
   /** the application's default custom authorization link, if enabled */
   custom_install_url?: string
   /** the application's role connection verification entry point, which when configured will render the app as a verification method in the guild role verification configuration */
@@ -385,6 +402,28 @@ export interface DiscordApplication {
   redirect_uris?: string[]
   /** Interactions endpoint URL for the app */
   interactions_endpoint_url?: string
+}
+
+/** https://discord.com/developers/docs/resources/application#application-object-application-integration-type-configuration-object */
+export interface DiscordApplicationIntegrationTypeConfiguration {
+  /**
+   * Install params for each installation context's default in-app authorization link
+   *
+   * https://discord.com/developers/docs/resources/application#install-params-object-install-params-structure
+   */
+  oauth2_install_params?: {
+    /** Scopes to add the application to the server with */
+    scopes: OAuth2Scope[]
+    /** Permissions to request for the bot role */
+    permissions: string
+  }
+}
+
+export enum DiscordApplicationIntegrationType {
+  /** App is installable to servers */
+  GuildInstall = 0,
+  /** App is installable to users */
+  UserInstall = 1,
 }
 
 export type DiscordTokenExchange = DiscordTokenExchangeAuthorizationCode | DiscordTokenExchangeRefreshToken | DiscordTokenExchangeClientCredentials
@@ -479,6 +518,7 @@ export interface DiscordConnection {
 export enum DiscordConnectionServiceType {
   BattleNet = 'battlenet',
   Bungie = 'Bungie.net',
+  Domain = 'domain',
   eBay = 'ebay',
   EpicGames = 'epicgames',
   Facebook = 'facebook',
@@ -672,6 +712,8 @@ export interface DiscordEmbedVideo {
 export interface DiscordAttachment {
   /** Name of file attached */
   filename: string
+  /** The title of the file */
+  title?: string
   /** The attachment's [media type](https://en.wikipedia.org/wiki/Media_type) */
   content_type?: string
   /** Size of file in bytes */
@@ -904,7 +946,7 @@ export interface DiscordRole {
   name: string
   /** Integer representation of hexadecimal color code */
   color: number
-  /** Position of this role */
+  /** Position of this role (roles with the same position are sorted by id) */
   position: number
   /** role unicode emoji */
   unicode_emoji?: string
@@ -986,7 +1028,7 @@ export interface DiscordChannel {
   type: ChannelTypes
   /** The id of the guild */
   guild_id?: string
-  /** Sorting position of the channel */
+  /** Sorting position of the channel (channels with the same position are sorted by id) */
   position?: number
   /** Explicit permission overwrites for members and roles */
   permission_overwrites?: DiscordOverwrite[]
@@ -1321,7 +1363,13 @@ export interface DiscordMessage {
    * Note: This field is only returned for messages with a `type` of `19` (REPLY). If the message is a reply but the `referenced_message` field is not present, the backend did not attempt to fetch the message that was being replied to, so its state is unknown. If the field exists but is null, the referenced message was deleted.
    */
   referenced_message?: DiscordMessage
-  /** Sent if the message is a response to an Interaction */
+  /** sent if the message is sent as a result of an interaction */
+  interaction_metadata?: DiscordMessageInteractionMetadata
+  /**
+   * Sent if the message is a response to an Interaction
+   *
+   * @deprecated Deprecated in favor of {@link interaction_metadata}
+   */
   interaction?: DiscordMessageInteraction
   /** The thread that was started from this message, includes thread member object */
   thread?: Omit<DiscordChannel, 'member'> & { member: DiscordThreadMember }
@@ -1331,6 +1379,18 @@ export interface DiscordMessage {
   sticker_items?: DiscordStickerItem[]
   /** A generally increasing integer (there may be gaps or duplicates) that represents the approximate position of the message in a thread, it can be used to estimate the relative position of the message in a thread in company with `total_message_sent` on parent thread */
   position?: number
+  /** The poll object */
+  poll?: DiscordPoll
+  /** The call associated with the message */
+  call?: DiscordMessageCall
+}
+
+/** https://discord.com/developers/docs/resources/channel#message-call-object */
+export interface DiscordMessageCall {
+  /** Array of user object ids that participated in the call */
+  participants: string[]
+  /** Time when call ended */
+  ended_timestamp: string
 }
 
 /** https://discord.com/developers/docs/resources/channel#channel-mention-object */
@@ -1392,6 +1452,122 @@ export interface DiscordMessageReference {
   fail_if_not_exists: boolean
 }
 
+/** https://discord.com/developers/docs/resources/poll#poll-object */
+export interface DiscordPoll {
+  /** The question of the poll. Only `text` is supported. */
+  question: DiscordPollMedia
+  /** Each of the answers available in the poll. There is a maximum of 10 answers per poll. */
+  answers: DiscordPollAnswer[]
+  /**
+   * The time when the poll ends.
+   *
+   * @remarks
+   * `expiry` is marked as nullable to support non-expiring polls in the future, but all polls have an expiry currently.
+   */
+  expiry: string | null
+  /** Whether a user can select multiple answers */
+  allow_multiselect: boolean
+  /** The layout type of the poll */
+  layout_type: DiscordPollLayoutType
+  /**
+   * The results of the poll
+   *
+   * @remarks
+   * This value will not be sent by discord under specific conditions where they don't fetch them on their backend. When this value is missing it should be interpreted as "Unknown results" and not as "No results"
+   * The results may not be totally accurate while the poll has not ended. When it ends discord will re-calculate all the results and set {@link DiscordPollResult.is_finalized} to true
+   */
+  results?: DiscordPollResult
+}
+
+/** https://discord.com/developers/docs/resources/poll#layout-type */
+export enum DiscordPollLayoutType {
+  /** The default layout */
+  Default = 1,
+}
+
+/** https://discord.com/developers/docs/resources/poll#poll-media-object */
+export interface DiscordPollMedia {
+  /**
+   * The text of the field
+   *
+   * @remarks
+   * `text` should always be non-null for both questions and answers, but this is subject to changes.
+   * The maximum length of `text` is 300 for the question, and 55 for any answer.
+   */
+  text?: string
+  /**
+   * The emoji of the field
+   *
+   * @remarks
+   * When creating a poll answer with an emoji, one only needs to send either the `id` (custom emoji) or `name` (default emoji) as the only field.
+   */
+  emoji?: Partial<DiscordEmoji>
+}
+
+/** https://discord.com/developers/docs/resources/poll#poll-answer-object */
+export interface DiscordPollAnswer {
+  /**
+   * The id of the answer
+   *
+   * @remarks
+   * This id labels each answer. It starts at 1 and goes up sequentially. Discord recommend against depending on this value as is a implementation detail.
+   */
+  answer_id: number
+  /** The data of the answer */
+  poll_media: DiscordPollMedia
+}
+
+export interface DiscordPollAnswerCount {
+  /** The {@link DiscordPollAnswer.answer_id | answer_id} */
+  id: number
+  /** The number of votes for this answer */
+  count: number
+  /** Whether the current user voted for this answer */
+  me_voted: boolean
+}
+
+/** https://discord.com/developers/docs/resources/poll#poll-results-object */
+export interface DiscordPollResult {
+  /** Whether the votes have been precisely counted */
+  is_finalized: boolean
+  /** The counts for each answer */
+  answer_counts: DiscordPollAnswerCount[]
+}
+
+/** https://discord.com/developers/docs/resources/poll#get-answer-voters-response-body */
+export interface DiscordGetAnswerVotesResponse {
+  /** Users who voted for this answer */
+  users: DiscordUser[]
+}
+
+/** https://discord.com/developers/docs/topics/gateway-events#message-poll-vote-add */
+export interface DiscordPollVoteAdd {
+  /** ID of the user. Usually a snowflake */
+  user_id: string
+  /** ID of the channel. Usually a snowflake */
+  channel_id: string
+  /** ID of the message. Usually a snowflake */
+  message_id: string
+  /** ID of the guild. Usually a snowflake */
+  guild_id?: string
+  /** ID of the answer. */
+  answer_id: number
+}
+
+/** https://discord.com/developers/docs/topics/gateway-events#message-poll-vote-remove */
+export interface DiscordPollVoteRemove {
+  /** ID of the user. Usually a snowflake */
+  user_id: string
+  /** ID of the channel. Usually a snowflake */
+  channel_id: string
+  /** ID of the message. Usually a snowflake */
+  message_id: string
+  /** ID of the guild. Usually a snowflake */
+  guild_id?: string
+  /** ID of the answer. */
+  answer_id: number
+}
+
 /** https://discord.com/developers/docs/resources/sticker#sticker-object-sticker-structure */
 export interface DiscordSticker {
   /** [Id of the sticker](https://discord.com/developers/docs/reference#image-formatting) */
@@ -1430,6 +1606,24 @@ export interface DiscordMessageInteraction {
   user: DiscordUser
   /** The member who invoked the interaction in the guild */
   member?: Partial<DiscordMember>
+}
+
+/** https://discord.com/developers/docs/resources/channel#message-interaction-metadata-object-message-interaction-metadata-structure */
+export interface DiscordMessageInteractionMetadata {
+  /** Id of the interaction */
+  id: string
+  /** The type of interaction */
+  type: InteractionTypes
+  /** User who triggered the interaction */
+  user: DiscordUser
+  /** IDs for installation context(s) related to an interaction */
+  authorizing_integration_owners: Partial<Record<DiscordApplicationIntegrationType, string>>
+  /** ID of the original response message, present only on follow-up messages */
+  original_response_message_id?: string
+  /** ID of the message that contained interactive component, present only on messages created from component interactions */
+  interacted_message_id?: string
+  /** Metadata for the interaction that was used to open the modal, present only on modal submit interactions */
+  triggering_interaction_metadata?: DiscordMessageInteractionMetadata
 }
 
 export type DiscordMessageComponents = DiscordActionRow[]
@@ -1491,13 +1685,29 @@ export interface DiscordSelectMenuDefaultValue {
 export interface DiscordButtonComponent {
   /** All button components have type 2 */
   type: MessageComponentTypes.Button
-  /** for what the button says (max 80 characters) */
+  /**
+   * Text that appears on the button
+   *
+   * @remarks
+   * A label can have a max of 80 characters
+   * A button of style {@link ButtonStyles.Premium | Premium} cannot have a label
+   */
   label?: string
-  /** a dev-defined unique string sent on click (max 100 characters). type 5 Link buttons can not have a custom_id */
+  /**
+   * A dev-defined unique string sent on click (max 100 characters).
+   *
+   * @remarks
+   * A button of style {@link ButtonStyles.Link | Link} or {@link ButtonStyles.Premium | Premium} cannot have a custom_id
+   */
   custom_id?: string
   /** For different styles/colors of the buttons */
   style: ButtonStyles
-  /** Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis. */
+  /**
+   * Emoji object that includes fields of name, id, and animated supporting unicode and custom emojis.
+   *
+   * @remarks
+   * A button of style {@link ButtonStyles.Premium | Premium} cannot have an emoji
+   */
   emoji?: {
     /** Emoji id */
     id?: string
@@ -1506,10 +1716,22 @@ export interface DiscordButtonComponent {
     /** Whether this emoji is animated */
     animated?: boolean
   }
-  /** optional url for link-style buttons that can navigate a user to the web. Only type 5 Link buttons can have a url */
+  /**
+   * Url for {@link ButtonStyles.Link | link} buttons that can navigate a user to the web.
+   *
+   * @remarks
+   * Buttons of style {@link ButtonStyles.Link | Link} must have an url, any other button with a different style can not have an url
+   */
   url?: string
   /** Whether or not this button is disabled */
   disabled?: boolean
+  /**
+   * SKU for {@link ButtonStyles.Premium | premium} buttons that can navigate a user to the application shop.
+   *
+   * @remarks
+   * Buttons of style {@link ButtonStyles.Premium | Premium} must have a sku_id, any other button with a different style can not have a a sku_id
+   */
+  sku_id?: string
 }
 
 /** https://discord.com/developers/docs/interactions/message-components#text-inputs-text-input-structure */
@@ -1600,6 +1822,10 @@ export interface DiscordInteraction {
   app_permissions: string
   /** For monetized apps, any entitlements for the invoking user, representing access to premium SKUs */
   entitlements: DiscordEntitlement[]
+  /** Mapping of installation contexts that the interaction was authorized for to related user or guild IDs. */
+  authorizing_integration_owners: Partial<Record<DiscordApplicationIntegrationType, string>>
+  /** Context where the interaction was triggered from */
+  context?: DiscordInteractionContextType
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-member-object */
@@ -2086,6 +2312,8 @@ export interface DiscordInviteMetadata extends DiscordInvite {
 
 /** https://discord.com/developers/docs/resources/invite#invite-object */
 export interface DiscordInvite {
+  /** The type of invite */
+  type: DiscordInviteType
   /** The invite code (unique Id) */
   code: string
   /** The guild this invite is for */
@@ -2110,6 +2338,12 @@ export interface DiscordInvite {
   stage_instance?: DiscordInviteStageInstance
   /** guild scheduled event data */
   guild_scheduled_event?: DiscordScheduledEvent
+}
+
+export enum DiscordInviteType {
+  Guild,
+  GroupDm,
+  Friend,
 }
 
 export interface DiscordInviteStageInstance {
@@ -2154,7 +2388,25 @@ export interface DiscordCreateApplicationCommand {
   options?: DiscordApplicationCommandOption[]
   /** Set of permissions represented as a bit set */
   default_member_permissions?: string | null
-  /** Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible. */
+  /**
+   * Installation context(s) where the command is available
+   *
+   * @remarks
+   * This is currently in preview.
+   */
+  integration_types?: DiscordApplicationIntegrationType[]
+  /**
+   * Interaction context(s) where the command can be used, only for globally-scoped commands. By default, all interaction context types included.
+   *
+   * @remarks
+   * This is currently in preview.
+   */
+  contexts?: DiscordInteractionContextType[] | null
+  /**
+   * Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
+   *
+   * @deprecated use {@link contexts} instead
+   */
   dm_permission?: boolean
   /** Indicates whether the command is age-restricted, defaults to false */
   nsfw?: boolean
@@ -2168,10 +2420,15 @@ export interface DiscordApplicationCommandOption {
   type: ApplicationCommandOptionTypes
   /**
    * Name of command, 1-32 characters.
-   * `ApplicationCommandTypes.ChatInput` command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
+   *
+   * @remarks
+   * This value should be unique within an array of {@link DiscordApplicationCommandOption}
+   *
+   * {@link ApplicationCommandTypes.ChatInput | ChatInput} command names must match the following regex `^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$` with the unicode flag set.
    * If there is a lowercase variant of any letters used, you must use those.
    * Characters with no lowercase variants and/or uncased letters are still allowed.
-   * ApplicationCommandTypes.User` and `ApplicationCommandTypes.Message` commands may be mixed case and can include spaces.
+   *
+   * {@link ApplicationCommandTypes.User | User} and {@link ApplicationCommandTypes.Message | Message} commands may be mixed case and can include spaces.
    */
   name: string
   /** Localization object for the `name` field. Values follow the same restrictions as `name` */
@@ -2180,27 +2437,72 @@ export interface DiscordApplicationCommandOption {
   description: string
   /** Localization object for the `description` field. Values follow the same restrictions as `description` */
   description_localizations?: Localization | null
-  /** If the parameter is required or optional--default `false` */
+  /**
+   * If the parameter is required or optional. default `false`
+   *
+   * @remarks
+   * Valid in all option types except {@link ApplicationCommandOptionTypes.SubCommand | SubCommand} and {@link ApplicationCommandOptionTypes.SubCommandGroup | SubCommandGroup}
+   */
   required?: boolean
-  /** Choices for the option types `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer`, and `ApplicationCommandOptionTypes.Number`, from which the user can choose, max 25 */
+  /**
+   * Choices for the option from which the user can choose, max 25
+   *
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}, {@link ApplicationCommandOptionTypes.Integer | Integer}, or {@link ApplicationCommandOptionTypes.Number | Number}
+   *
+   * If you provide an array of choices, they will be the ONLY accepted values for this option
+   */
   choices?: DiscordApplicationCommandOptionChoice[]
-  /** If the option is a subcommand or subcommand group type, these nested options will be the parameters */
+  /**
+   * If the option is a subcommand or subcommand group type, these nested options will be the parameters
+   *
+   * @remarks
+   * Only valid in option of type {@link ApplicationCommandOptionTypes.SubCommand | SubCommand} or {@link ApplicationCommandOptionTypes.SubCommandGroup | SubCommandGroup}
+   */
   options?: DiscordApplicationCommandOption[]
   /**
    * If autocomplete interactions are enabled for this option.
    *
-   * Only available for `ApplicationCommandOptionTypes.String`, `ApplicationCommandOptionTypes.Integer` and `ApplicationCommandOptionTypes.Number` option types
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}, {@link ApplicationCommandOptionTypes.Integer | Integer}, or {@link ApplicationCommandOptionTypes.Number | Number}
+   *
+   * When {@link DiscordApplicationCommandOption.choices | choices} are provided, this may not be set to true
    */
   autocomplete?: boolean
-  /** If the option is a channel type, the channels shown will be restricted to these types */
+  /**
+   * The channels shown will be restricted to these types
+   *
+   * @remarks
+   * Only valid in option of type {@link ApplicationCommandOptionTypes.Channel | Channel}
+   */
   channel_types?: ChannelTypes[]
-  /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the minimum permitted value */
+  /**
+   * The minimum permitted value
+   *
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.Integer | Integer} or {@link ApplicationCommandOptionTypes.Number | Number}
+   */
   min_value?: number
-  /** If the option type is `ApplicationCommandOptionTypes.Integer` or `ApplicationCommandOptionTypes.Number`, the maximum permitted value */
+  /**
+   * The maximum permitted value
+   *
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.Integer | Integer} or {@link ApplicationCommandOptionTypes.Number | Number}
+   */
   max_value?: number
-  /** If the option type is `ApplicationCommandOptionTypes.String`, the minimum permitted length */
+  /**
+   * The minimum permitted length, should be in the range of from 0 to 600
+   *
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}
+   */
   min_length?: number
-  /** If the option type is `ApplicationCommandOptionTypes.String`, the maximum permitted length  */
+  /**
+   * The maximum permitted length, should be in the range of from 0 to 600
+   *
+   * @remarks
+   * Only valid in options of type {@link ApplicationCommandOptionTypes.String | String}
+   */
   max_length?: number
 }
 
@@ -2579,6 +2881,8 @@ export interface DiscordGuildMemberUpdate {
   pending?: boolean
   /** when the user's [timeout](https://support.discord.com/hc/en-us/articles/4413305239191-Time-Out-FAQ) will expire and the user will be able to communicate in the guild again, null or a time in the past if the user is not timed out. Will throw a 403 error if the user has the ADMINISTRATOR permission or is the owner of the guild */
   communication_disabled_until?: string
+  /** Data for the member's guild avatar decoration */
+  avatar_decoration_data?: DiscordAvatarDecorationData
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove-all */
@@ -3062,10 +3366,26 @@ export interface DiscordEntitlement {
   starts_at?: string
   /** Date at which the entitlement is no longer valid. Not present when using test entitlements */
   ends_at?: string
+  /** For consumable items, whether or not the entitlement has been consumed */
+  consumed?: boolean
 }
 
 /** https://discord.com/developers/docs/monetization/entitlements#entitlement-object-entitlement-types */
 export enum DiscordEntitlementType {
+  /** Entitlement was purchased by user */
+  Purchase = 1,
+  /** Entitlement for Discord Nitro subscription */
+  PremiumSubscription = 2,
+  /** Entitlement was gifted by developer */
+  DeveloperGift = 3,
+  /** Entitlement was purchased by a dev in application test mode */
+  TestModePurchase = 4,
+  /** Entitlement was granted when the SKU was free */
+  FreePurchase = 5,
+  /** Entitlement was gifted by another user */
+  UserGift = 6,
+  /** Entitlement was claimed by user for free as a Nitro Subscriber */
+  PremiumPurchase = 7,
   /** Entitlement was purchased as an app subscription */
   ApplicationSubscription = 8,
 }
@@ -3088,6 +3408,10 @@ export interface DiscordSku {
 
 /** https://discord.com/developers/docs/monetization/skus#sku-object-sku-types */
 export enum DiscordSkuType {
+  /** Durable one-time purchase */
+  Durable = 2,
+  /** Consumable one-time purchase */
+  Consumable = 3,
   /** Represents a recurring subscription */
   Subscription = 5,
   /** System-generated group for each SUBSCRIPTION SKU created */
@@ -3128,4 +3452,22 @@ export enum DiscordMessageFlag {
   SuppressNotifications = 1 << 12,
   /** This message is a voice message */
   IsVoiceMessage = 1 << 13,
+}
+
+/** https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-context-types */
+export enum DiscordInteractionContextType {
+  /** Interaction can be used within servers */
+  Guild = 0,
+  /** Interaction can be used within DMs with the app's bot user */
+  BotDm = 1,
+  /** Interaction can be used within Group DMs and DMs other than the app's bot user */
+  PrivateChannel = 2,
+}
+
+/** https://discord.com/developers/docs/resources/guild#bulk-guild-ban */
+export interface DiscordBulkBan {
+  /** list of user ids, that were successfully banned */
+  banned_users: string[]
+  /** list of user ids, that were not banned */
+  failed_users: string[]
 }

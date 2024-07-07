@@ -133,6 +133,8 @@ export enum ButtonStyles {
   Danger,
   /** A button that navigates to a URL */
   Link,
+  /** A blurple button to show a Premium item in the shop */
+  Premium,
 }
 
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types */
@@ -371,6 +373,7 @@ export enum MessageTypes {
   StageSpeaker,
   StageTopic = 31,
   GuildApplicationPremiumSubscription,
+  PurchaseNotification = 44,
 }
 
 /** https://discord.com/developers/docs/resources/channel#message-object-message-activity-types */
@@ -394,6 +397,7 @@ export enum StickerFormatTypes {
   Png = 1,
   APng,
   Lottie,
+  Gif,
 }
 
 /** https://discord.com/developers/docs/interactions/slash-commands#interaction-interactiontype */
@@ -534,6 +538,20 @@ export enum AuditLogEvents {
   CreatorMonetizationRequestCreated = 150,
   /** Creator monetization terms were accepted */
   CreatorMonetizationTermsAccepted,
+  /** Guild Onboarding Question was created */
+  OnBoardingPromptCreate = 163,
+  /** Guild Onboarding Question was updated */
+  OnBoardingPromptUpdate,
+  /** Guild Onboarding Question was deleted */
+  OnBoardingPromptDelete,
+  /** Guild Onboarding was created */
+  OnBoardingCreate,
+  /** Guild Onboarding was updated */
+  OnBoardingUpdate,
+  /** Guild Server Guide was created */
+  HomeSettingsCreate = 190,
+  /** Guild Server Guide was updated */
+  HomeSettingsUpdate,
 }
 
 export enum ScheduledEventPrivacyLevel {
@@ -671,6 +689,10 @@ export enum BitwisePermissionFlags {
   USE_EXTERNAL_SOUNDS = 0x0000200000000000,
   /** Allows sending voice messages */
   SEND_VOICE_MESSAGES = 0x0000400000000000,
+  /** Allows sending polls */
+  SEND_POLLS = 0x0002000000000000,
+  /** Allows user-installed apps to send public responses. When disabled, users will still be allowed to use their apps but the responses will be ephemeral. This only applies to apps not also installed to the server. */
+  USE_EXTERNAL_APPS = 0x0004000000000000,
 }
 
 export type PermissionStrings = keyof typeof BitwisePermissionFlags
@@ -799,6 +821,8 @@ export type GatewayDispatchEventNames =
   | 'ENTITLEMENT_CREATE'
   | 'ENTITLEMENT_UPDATE'
   | 'ENTITLEMENT_DELETE'
+  | 'MESSAGE_POLL_VOTE_ADD'
+  | 'MESSAGE_POLL_VOTE_REMOVE'
 
 export type GatewayEventNames = GatewayDispatchEventNames | 'READY' | 'RESUMED'
 
@@ -935,6 +959,16 @@ export enum GatewayIntents {
    * - AUTO_MODERATION_ACTION_EXECUTION
    */
   AutoModerationExecution = 1 << 21,
+  /**
+   * - MESSAGE_POLL_VOTE_ADD
+   * - MESSAGE_POLL_VOTE_REMOVE
+   */
+  GuildMessagePolls = 1 << 24,
+  /**
+   * - MESSAGE_POLL_VOTE_ADD
+   * - MESSAGE_POLL_VOTE_REMOVE
+   */
+  DirectMessagePolls = 1 << 25,
 }
 
 /** https://discord.com/developers/docs/topics/gateway#list-of-intents */
@@ -956,7 +990,11 @@ export enum InteractionResponseTypes {
   ApplicationCommandAutocompleteResult = 8,
   /** For Command or Component interactions, send a Modal response */
   Modal = 9,
-  /** Respond to an interaction with an upgrade button, only available for apps with monetization enabled */
+  /**
+   * Respond to an interaction with an upgrade button, only available for apps with monetization enabled
+   *
+   * @deprecated You should migrate to the premium button components
+   */
   PremiumRequired = 10,
 }
 
@@ -1024,7 +1062,7 @@ export type Localization = Partial<Record<Locales, string>>
 
 export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U]
 export type CamelCase<S extends string> = S extends `${infer T}_${infer U}` ? `${T}${Capitalize<CamelCase<U>>}` : S
-export type SnakeCase<S extends string> = S extends `${infer T}${infer U}` ? `${T extends Capitalize<T> ? '_' : ''}${Lowercase<T>}${SnakeCase<U>}` : S
+export type SnakeCase<S extends string> = S extends `${infer T}${infer U}` ? `${T extends Lowercase<T> ? '' : '_'}${Lowercase<T>}${SnakeCase<U>}` : S
 
 export type Camelize<T> = T extends any[]
   ? T extends Array<Record<any, any>>

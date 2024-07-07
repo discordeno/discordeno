@@ -11,10 +11,10 @@ Discordeno supports Deno by using the npm: specifier for your import.
 
 Before, going forward, please make sure to have finished everything on this list.
 
-- Create an application and get the bot token. [Create Application Guide](https://discordeno.js.org/docs/beginner/token)
-- Add your bot to a server you own. [Invite Bot Guide](https://discordeno.js.org/docs/beginner/inviting)
-- Install Discordeno. [Installation Guide](https://discordeno.js.org)
-- Setup environment variables. [Environment Variables Guide](https://discordeno.js.org/docs/beginner/env)
+- Create an application and get the bot token. [Create Application Guide](../beginner/token)
+- Add your bot to a server you own. [Invite Bot Guide](../beginner/inviting)
+- Install Discordeno. [Installation Guide](../getting-started.md)
+- Setup environment variables. [Environment Variables Guide](../beginner/env)
 
 This is how you can use it to create a bot that logs into discord:
 
