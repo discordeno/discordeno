@@ -1,6 +1,7 @@
 import {
   InteractionResponseTypes,
   InteractionTypes,
+  MessageFlags,
   type ApplicationCommandOptionTypes,
   type ApplicationCommandTypes,
   type BigString,
@@ -19,7 +20,7 @@ import {
   type DiscordChannel,
   type DiscordInteractionContextType,
 } from '../index.js'
-import { MessageFlags, type DiscordInteractionDataResolved } from '../typings.js'
+import type { DiscordInteractionDataResolved } from '../typings.js'
 import type { Attachment } from './attachment.js'
 import type { Member } from './member.js'
 import type { Message } from './message.js'
