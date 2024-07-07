@@ -5,10 +5,11 @@ export async function handleGuildStickersUpdate(bot: Bot, data: DiscordGatewayPa
 
   const payload = data.d as DiscordGuildStickersUpdate
 
-  bot.events.guildStickersUpdate(
-    payload.stickers.map((sticker) => {
+  bot.events.guildStickersUpdate({
+    guildId: bot.transformers.snowflake(payload.guild_id),
+    stickers: payload.stickers.map((sticker) => {
       sticker.guild_id = payload.guild_id
       return bot.transformers.sticker(bot, sticker)
     }),
-  )
+  })
 }

@@ -1,6 +1,7 @@
 import {
   InteractionResponseTypes,
   InteractionTypes,
+  MessageFlags,
   type ApplicationCommandOptionTypes,
   type ApplicationCommandTypes,
   type BigString,
@@ -20,7 +21,7 @@ import {
   type DiscordInteractionContextType,
   type Guild,
 } from '../index.js'
-import { MessageFlags, type DiscordInteractionDataResolved } from '../typings.js'
+import type { DiscordInteractionDataResolved } from '../typings.js'
 import type { Attachment } from './attachment.js'
 import type { Member } from './member.js'
 import type { Message } from './message.js'
@@ -133,17 +134,6 @@ export interface BaseInteraction {
    * Uses `interaction.type` and `interaction.token`, missing one of these in the desired proprieties may cause unexpected behavior.
    */
   delete: (messageId?: BigString) => Promise<void>
-  /**
-   * Sends a response with an upgrade button.
-   *
-   * @remarks
-   * This will send a {@link InteractionResponseTypes.PremiumRequired} response.
-   *
-   * This can be used only with applications that have monetization enabled.
-   *
-   * Uses `interaction.type`, `interaction.token` and `interaction.id`, missing one of these in the desired proprieties may cause unexpected behavior.
-   */
-  premiumRequired: () => Promise<void>
 }
 
 const baseInteraction: Partial<Interaction> & BaseInteraction = {
@@ -208,12 +198,6 @@ const baseInteraction: Partial<Interaction> & BaseInteraction = {
         flags: isPrivate ? MessageFlags.Ephemeral : undefined,
       },
     })
-  },
-  async premiumRequired() {
-    if (this.acknowledged) throw new Error('Cannot respond to an already responded interaction.')
-
-    this.acknowledged = true
-    return await this.bot!.helpers.sendInteractionResponse(this.id!, this.token!, { type: InteractionResponseTypes.PremiumRequired })
   },
   async delete(messageId) {
     if (this.type === InteractionTypes.ApplicationCommandAutocomplete) throw new Error('Cannot delete an autocomplete interaction')

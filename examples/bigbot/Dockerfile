@@ -1,37 +1,75 @@
-FROM node:16.18.0-alpine3.16 AS deps
-WORKDIR /app
-COPY package.json package-lock.json .swcrc ./
-RUN npm install
+# syntax=docker/dockerfile:1
 
-FROM node:16.18.0-alpine3.16 as rest
-COPY --from=deps /app /app
-WORKDIR /app
-COPY src/analytics.ts src/configs.ts src/
-COPY src/rest src/rest
-RUN npm run build
+ARG NODE_VERSION=20
+
+################################################################################
+
+FROM node:${NODE_VERSION}-alpine as base
+
+# Set working directory for all build stages.
+WORKDIR /usr/src/app
+
+# Enable corepack so it can install the needed yarn version
+RUN corepack enable
+
+COPY package.json .
+COPY yarn.lock .
+# We need to copy the yarnrc or else yarn will attempt to use PnP
+COPY .yarnrc.yml .
+
+RUN yarn install
+
+# Copy the rest of the source files into the image.
+COPY . .
+
+# Run the build script.
+RUN yarn build
+
+# Use production node environment by default.
+ENV NODE_ENV production
+
+# Run the application as a non-root user.
+USER node
+
+################################################################################
+
+FROM base as rest
+
+# Expose the port that the application listens on.
 EXPOSE 8000
-CMD ["npm","run","startr"]
 
-FROM node:16.18.0-alpine3.16 as gateway
-COPY --from=deps /app /app
-WORKDIR /app
-COPY src/configs.ts src/
-COPY src/gateway src/gateway
-RUN npm run build
+# Run the application.
+CMD node dist/rest/index.js
+
+################################################################################
+
+FROM base as gateway
+
+# Expose the port that the application listens on.
 EXPOSE 8080
-CMD ["npm","run","startg"]
 
-FROM node:16.18.0-alpine3.16 as bot
-COPY --from=deps /app /app
-WORKDIR /app
-COPY prisma prisma
-COPY node_modules/.prisma/client node_modules/.prisma/client
-COPY src/analytics.ts src/prisma.ts src/configs.ts src/
-COPY src/bot src/bot
-RUN npm run build
-EXPOSE 8080
-CMD ["npm","run","startb"]
+# Run the application.
+CMD node dist/gateway/index.js
 
-FROM rabbitmq:3.11.2-management-alpine as rabbitmq
-COPY src/rabbitmq/plugins plugins
+################################################################################
+
+FROM base as bot
+
+# Expose the port that the application listens on.
+EXPOSE 8081
+
+# Run the application.
+CMD node dist/bot/index.js
+
+################################################################################
+
+FROM rabbitmq:3.12-management-alpine as rabbitmq
+
+# Copy the rabbitmq plugins
+COPY rabbitmq/plugins/** plugins
+
+HEALTHCHECK CMD [ "rabbitmq-diagnostics", "-q", "status" ] \
+  --interval=30s --timeout=30s --start-period=30s --retries=5
+
+# Enable the required plugins
 RUN rabbitmq-plugins enable rabbitmq_message_deduplication
