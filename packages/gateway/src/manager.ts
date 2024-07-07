@@ -173,7 +173,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         })
       },
       async updateGuildsShardId(guildIds, shardId) {
-        logger.warn(`[Resharding] Updating the following guild ids shard to #${shardId}: ${guildIds.join(', ')}`)
+        logger.warn(`[Resharding] Updating the following guild ids shard to #${shardId}: ${guildIds.join(', ')}. Override this function to update your cache if you need to.`)
       },
       async shardIsPending(shard) {
         // Save this in pending at the moment, until all shards are online
