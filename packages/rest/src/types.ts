@@ -53,7 +53,7 @@ import type {
   CamelizedDiscordVoiceRegion,
   CamelizedDiscordWebhook,
   CamelizedDiscordWelcomeScreen,
-  // Type is required for typedoc
+  // Type required for typedoc
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ChannelTypes,
   CreateApplicationCommand,
@@ -76,7 +76,13 @@ import type {
   CreateStageInstance,
   CreateTemplate,
   DeleteWebhookMessageOptions,
+  // Type required for typedoc
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  DiscordApplicationIntegrationType,
   DiscordBulkBan,
+  // Type required for typedoc
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  DiscordInteraction,
   EditApplication,
   EditAutoModerationRuleOptions,
   EditBotMemberOptions,
@@ -2485,6 +2491,9 @@ export interface RestManager {
    * Unlike `sendMessage()`, this endpoint allows the bot user to act without:
    * - Needing to be able to see the contents of the channel that the message is in. (`READ_MESSAGES` permission.)
    * - Requiring the `MESSAGE_CONTENT` intent.
+   *
+   * Apps are limited to 5 followup messages per interaction if it was initiated from a user-installed app and isn't installed in the server
+   * You can check if it was initiated from a user-installed app that isn't installed in the server by checking if {@link DiscordInteraction.authorizing_integration_owners | authorizingIntegrationOwners} only contains {@link DiscordApplicationIntegrationType.UserInstall | UserInstall}.
    *
    * Fires a _Message Create_ event.
    *
