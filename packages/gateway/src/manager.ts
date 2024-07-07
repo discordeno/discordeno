@@ -180,7 +180,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         gateway.resharding.pendingShards.set(shard.id, shard)
         logger.warn(`[Resharding] Shard #${shard.id} is now pending`)
         // Check if all shards are now online.
-        if (gateway.totalShards > gateway.resharding.pendingShards.size) return
+        if ((gateway.lastShardId - gateway.firstShardId + 1) > gateway.resharding.pendingShards.size) return
         logger.warn(`[Resharding] All shards are now online.`)
 
         // New shards start processing events
