@@ -17,6 +17,7 @@ import type {
   DiscordPollAnswer,
   DiscordPollLayoutType,
   DiscordPollMedia,
+  DiscordReactionType,
   DiscordRole,
 } from './discord.js'
 import type {
@@ -351,6 +352,7 @@ export type GetMessagesOptions = GetMessagesAfter | GetMessagesBefore | GetMessa
 
 /** https://discord.com/developers/docs/resources/channel#get-reactions-query-string-params */
 export interface GetReactions {
+  type: DiscordReactionType
   /** Get users after this user Id */
   after?: string
   /** Max number of users to return (1-100) */
@@ -466,9 +468,21 @@ export interface CreateSlashApplicationCommand {
   options?: Camelize<DiscordApplicationCommandOption[]>
   /** Set of permissions represented as a bit set */
   defaultMemberPermissions?: PermissionStrings[]
-  /** Installation context(s) where the command is available */
+  /**
+   * Integration types where the command is available
+   *
+   * @remarks
+   * This value is available only for globally-scoped commands
+   * Defaults to the application configured contexts
+   */
   integrationTypes?: DiscordApplicationIntegrationType[]
-  /** Interaction context(s) where the command can be used, only for globally-scoped commands. By default, all interaction context types included for new commands. */
+  /**
+   * Interaction context types where the command is available.
+   *
+   * @remarks
+   * This value is available only for globally-scoped commands
+   * By default, all interaction context types are included for new commands
+   */
   contexts?: DiscordInteractionContextType[]
   /**
    * Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
@@ -1309,12 +1323,7 @@ export interface EditApplication {
   roleConnectionsVerificationUrl?: string
   /** Settings for the app's default in-app authorization link, if enabled */
   installParams?: DiscordInstallParams
-  /**
-   * Default scopes and permissions for each supported installation context.
-   *
-   * @remarks
-   * This is currently in preview.
-   */
+  /** Default scopes and permissions for each supported installation context. */
   integrationTypesConfig?: DiscordApplicationIntegrationType
   /**
    * App's public flags
@@ -1349,9 +1358,20 @@ export interface CreatePoll {
   question: Camelize<DiscordPollMedia>
   /** Each of the answers available in the poll, up to 10 */
   answers: Array<Omit<Camelize<DiscordPollAnswer>, 'answerId'>>
-  /** Number of hours the poll should be open for, up to 7 days */
+  /**
+   * Number of hours the poll should be open for
+   *
+   * @remarks
+   * up to 32 days
+   *
+   * @default 24
+   */
   duration: number
-  /** Whether a user can select multiple answers */
+  /**
+   * Whether a user can select multiple answers
+   *
+   * @default false
+   */
   allowMultiselect: boolean
   /** The layout type of the poll */
   layoutType?: DiscordPollLayoutType

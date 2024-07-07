@@ -383,12 +383,7 @@ export interface DiscordApplication {
   tags?: string[]
   /** settings for the application's default in-app authorization link, if enabled */
   install_params?: DiscordInstallParams
-  /**
-   * Default scopes and permissions for each supported installation context.
-   *
-   * @remarks
-   * This is currently in preview.
-   */
+  /** Default scopes and permissions for each supported installation context. */
   integration_types_config?: Partial<Record<`${DiscordApplicationIntegrationType}`, DiscordApplicationIntegrationTypeConfiguration>>
   /** the application's default custom authorization link, if enabled */
   custom_install_url?: string
@@ -1421,6 +1416,12 @@ export interface DiscordReaction {
   burst_colors: string[]
 }
 
+/** https://discord.com/developers/docs/resources/channel#get-reactions-reaction-types */
+export enum DiscordReactionType {
+  Normal,
+  Burst,
+}
+
 /** https://discord.com/developers/docs/resources/channel#reaction-count-details-object */
 export interface DiscordReactionCountDetails {
   /** Count of super reactions */
@@ -1617,7 +1618,7 @@ export interface DiscordMessageInteractionMetadata {
   /** User who triggered the interaction */
   user: DiscordUser
   /** IDs for installation context(s) related to an interaction */
-  authorizing_integration_owners: Partial<Record<DiscordApplicationIntegrationType, string>>
+  authorizing_integration_owners: Partial<Record<`${DiscordApplicationIntegrationType}`, string>>
   /** ID of the original response message, present only on follow-up messages */
   original_response_message_id?: string
   /** ID of the message that contained interactive component, present only on messages created from component interactions */
@@ -2389,17 +2390,19 @@ export interface DiscordCreateApplicationCommand {
   /** Set of permissions represented as a bit set */
   default_member_permissions?: string | null
   /**
-   * Installation context(s) where the command is available
+   * Installation contexts where the command is available
    *
    * @remarks
-   * This is currently in preview.
+   * This value is available only for globally-scoped commands
+   * Defaults to the application configured contexts
    */
   integration_types?: DiscordApplicationIntegrationType[]
   /**
-   * Interaction context(s) where the command can be used, only for globally-scoped commands. By default, all interaction context types included.
+   * Interaction context(s) where the command can be used
    *
    * @remarks
-   * This is currently in preview.
+   * This value is available only for globally-scoped commands
+   * By default, all interaction context types included for new commands.
    */
   contexts?: DiscordInteractionContextType[] | null
   /**
@@ -2650,7 +2653,7 @@ export interface DiscordGuildBanAddRemove {
 }
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-remove */
-export interface DiscordMessageReactionRemove extends Omit<DiscordMessageReactionAdd, 'member'> {}
+export interface DiscordMessageReactionRemove extends Omit<DiscordMessageReactionAdd, 'member' | 'burst_colors'> {}
 
 /** https://discord.com/developers/docs/topics/gateway#message-reaction-add */
 export interface DiscordMessageReactionAdd {
@@ -2668,6 +2671,12 @@ export interface DiscordMessageReactionAdd {
   emoji: Partial<DiscordEmoji>
   /** The id of the author of this message */
   message_author_id?: string
+  /** true if this is a super-reaction */
+  burst: boolean
+  /** Colors used for super-reaction animation in "#rrggbb" format */
+  burst_colors?: string[]
+  /** The type of reaction */
+  type: DiscordReactionType
 }
 
 /** https://discord.com/developers/docs/topics/gateway#voice-server-update */
