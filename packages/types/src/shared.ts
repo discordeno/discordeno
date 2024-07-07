@@ -133,6 +133,8 @@ export enum ButtonStyles {
   Danger,
   /** A button that navigates to a URL */
   Link,
+  /** A blurple button to show a Premium item in the shop */
+  Premium,
 }
 
 /** https://discord.com/developers/docs/resources/channel#allowed-mentions-object-allowed-mention-types */
@@ -992,7 +994,11 @@ export enum InteractionResponseTypes {
   ApplicationCommandAutocompleteResult = 8,
   /** For Command or Component interactions, send a Modal response */
   Modal = 9,
-  /** Respond to an interaction with an upgrade button, only available for apps with monetization enabled */
+  /**
+   * Respond to an interaction with an upgrade button, only available for apps with monetization enabled
+   *
+   * @deprecated You should migrate to the premium button components
+   */
   PremiumRequired = 10,
 }
 

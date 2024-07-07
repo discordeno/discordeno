@@ -2,7 +2,7 @@ import type { BigString, DiscordApplicationIntegrationType, OAuth2Scope, Permiss
 import { calculateBits } from './permissions.js'
 
 export function createOAuth2Link(options: CreateOAuth2LinkOptions): string {
-  const joinedScopeString = options.scope.join(' ')
+  const joinedScopeString = options.scope.join('%20')
 
   let url = `https://discord.com/oauth2/authorize?client_id=${options.clientId}&scope=${joinedScopeString}`
 
