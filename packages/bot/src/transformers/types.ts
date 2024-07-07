@@ -20,6 +20,7 @@ import type {
   DiscordGuildOnboardingPromptType,
   DiscordInteractionContextType,
   DiscordInviteType,
+  DiscordOverwrite,
   DiscordPollLayoutType,
   DiscordScheduledEventEntityMetadata,
   DiscordSkuFlag,
@@ -42,7 +43,6 @@ import type {
   MfaLevels,
   OAuth2Scope,
   OverwriteReadable,
-  OverwriteTypes,
   PremiumTiers,
   PremiumTypes,
   PresenceStatus,
@@ -257,36 +257,8 @@ export interface AuditLogEntry {
 }
 
 export interface AuditLogChange {
-  new?:
-    | string
-    | number
-    | bigint
-    | boolean
-    | Array<{
-        allow?: string
-        deny?: string
-        id: string
-        type: OverwriteTypes
-      }>
-    | Array<{
-        id?: bigint
-        name?: string
-      }>
-  old?:
-    | string
-    | number
-    | bigint
-    | boolean
-    | Array<{
-        allow?: string
-        deny?: string
-        id: string
-        type: OverwriteTypes
-      }>
-    | Array<{
-        id?: bigint
-        name?: string
-      }>
+  new?: string | number | bigint | boolean | DiscordOverwrite[] | Array<Partial<Role>>
+  old?: string | number | bigint | boolean | DiscordOverwrite[] | Array<Partial<Role>>
   key:
     | 'id'
     | 'name'
