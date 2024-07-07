@@ -502,6 +502,14 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     },
   }
 
+  // Check and reshard automatically if auto resharding is enabled.
+  if (gateway.resharding.enabled && gateway.resharding.checkInterval !== -1) {
+    setInterval(async () => {
+      const reshardingInfo = await gateway.resharding.checkIfReshardingIsNeeded()
+      if (reshardingInfo.needed && reshardingInfo.info) await gateway.resharding.reshard(reshardingInfo.info)
+    }, gateway.resharding.checkInterval)
+  }
+
   return gateway
 }
 
@@ -629,7 +637,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
      */
     shardsFullPercentage: number
     /**
-     * The interval in milliseconds, of how often to check whether resharding is needed.
+     * The interval in milliseconds, of how often to check whether resharding is needed and reshard automatically. Set to -1 to disable auto resharding.
      * @default 28800000 (8 hours)
      */
     checkInterval: number
