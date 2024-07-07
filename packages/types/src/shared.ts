@@ -422,6 +422,10 @@ export enum MessageTypes {
   StageSpeaker,
   StageTopic = 31,
   GuildApplicationPremiumSubscription,
+  GuildIncidentAlertModeEnabled = 36,
+  GuildIncidentAlertModeDisabled,
+  GuildIncidentReportRaid,
+  GuildIncidentReportFalseAlarm,
   PurchaseNotification = 44,
 }
 
