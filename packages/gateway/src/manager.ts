@@ -295,9 +295,20 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
           }
         }),
       )
+
+      // Check and reshard automatically if auto resharding is enabled.
+      if (gateway.resharding.enabled && gateway.resharding.checkInterval !== -1) {
+        gateway.resharding.checkIntervalId = setInterval(async () => {
+          const reshardingInfo = await gateway.resharding.checkIfReshardingIsNeeded()
+
+          if (reshardingInfo.needed && reshardingInfo.info) await gateway.resharding.reshard(reshardingInfo.info)
+        }, gateway.resharding.checkInterval)
+      }
     },
     async shutdown(code, reason) {
       gateway.shards.forEach((shard) => shard.close(code, reason))
+
+      if (gateway.resharding.checkIntervalId) clearInterval(gateway.resharding.checkIntervalId)
 
       await delay(5000)
     },
@@ -502,14 +513,6 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
     },
   }
 
-  // Check and reshard automatically if auto resharding is enabled.
-  if (gateway.resharding.enabled && gateway.resharding.checkInterval !== -1) {
-    setInterval(async () => {
-      const reshardingInfo = await gateway.resharding.checkIfReshardingIsNeeded()
-      if (reshardingInfo.needed && reshardingInfo.info) await gateway.resharding.reshard(reshardingInfo.info)
-    }, gateway.resharding.checkInterval)
-  }
-
   return gateway
 }
 
@@ -641,6 +644,10 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
      * @default 28800000 (8 hours)
      */
     checkInterval: number
+    /**
+     * The interval id of the check interval. This is used to clear the interval when the manager is shutdown.
+     */
+    checkIntervalId?: NodeJS.Timeout | undefined
     /** Holds the shards that resharding has created. Once resharding is done, this replaces the gateway.shards */
     shards: Collection<number, Shard>
     /** Holds the pending shards that have been created and are pending all shards finish loading. */
