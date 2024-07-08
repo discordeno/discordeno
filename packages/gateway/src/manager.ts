@@ -186,7 +186,10 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
         // New shards start processing events
         for (const shard of gateway.resharding.pendingShards.values()) {
-          shard.events.message = options.events?.message
+          for (const event in options.events) {
+            // @ts-expect-error fixing this seems complex and doesnt seem worth it, feel free to fix if you wish
+            shard.events[event] = options.events[event]
+          }
         }
 
         // Old shards stop processing events
