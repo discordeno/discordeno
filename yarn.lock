@@ -40,7 +40,7 @@ __metadata:
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.11.25"
+    "@types/node": "npm:^20.14.10"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
     chai: "npm:^5.1.1"
@@ -50,7 +50,7 @@ __metadata:
     sinon: "npm:^17.0.1"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
-    typescript: "npm:5.4.5"
+    typescript: "npm:5.5.3"
   languageName: unknown
   linkType: soft
 
@@ -64,7 +64,7 @@ __metadata:
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.11.25"
+    "@types/node": "npm:^20.14.10"
     "@types/sinon": "npm:^17.0.3"
     "@types/ws": "npm:^8.5.10"
     c8: "npm:^9.1.0"
@@ -75,7 +75,7 @@ __metadata:
     sinon: "npm:^17.0.1"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
-    typescript: "npm:5.4.5"
+    typescript: "npm:5.5.3"
     uWebSockets.js: "https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28"
     ws: "npm:^8.18.0"
   languageName: unknown
@@ -92,7 +92,7 @@ __metadata:
     "@types/chai": "npm:^4.3.11"
     "@types/chai-as-promised": "npm:^7.1.8"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.11.25"
+    "@types/node": "npm:^20.14.10"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
     chai: "npm:^5.1.1"
@@ -104,7 +104,7 @@ __metadata:
     sinon: "npm:^17.0.1"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
-    typescript: "npm:5.4.5"
+    typescript: "npm:5.5.3"
     why-is-node-running: "npm:^2.2.2"
   languageName: unknown
   linkType: soft
@@ -117,7 +117,7 @@ __metadata:
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.11.25"
+    "@types/node": "npm:^20.14.10"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
     chai: "npm:^5.1.1"
@@ -126,7 +126,7 @@ __metadata:
     mocha: "npm:^10.5.1"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
-    typescript: "npm:5.4.5"
+    typescript: "npm:5.5.3"
   languageName: unknown
   linkType: soft
 
@@ -139,7 +139,7 @@ __metadata:
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.11.25"
+    "@types/node": "npm:^20.14.10"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
     chai: "npm:^5.1.1"
@@ -150,7 +150,7 @@ __metadata:
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
     tweetnacl: "npm:^1.0.3"
-    typescript: "npm:5.4.5"
+    typescript: "npm:5.5.3"
   languageName: unknown
   linkType: soft
 
@@ -708,12 +708,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20.11.25":
-  version: 20.11.25
-  resolution: "@types/node@npm:20.11.25"
+"@types/node@npm:^20.14.10":
+  version: 20.14.10
+  resolution: "@types/node@npm:20.14.10"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 861265f1bbb151404bd8842b595f027a4ff067c61ecff9a37b9f7f53922c18dd532c8e795e8e7675dd8dba056645623fd2b9848d5ef72863ec3609096cd2923e
+  checksum: 672892cf94d0d95cf052f11271990686a0fd204cd1e5fe7a4ef240e5315e06711765dc47b9ec98627d3adac18b8c92bb7e2d8db21d18faa20bc3e3203a143e79
   languageName: node
   linkType: hard
 
@@ -1322,7 +1322,7 @@ __metadata:
     "@swc/cli": "npm:^0.3.9"
     "@swc/core": "npm:^1.4.2"
     "@types/benchmark": "npm:^2.1.5"
-    "@types/node": "npm:^20.11.25"
+    "@types/node": "npm:^20.14.10"
     benchmark: "npm:^2.1.4"
     eslint: "npm:^8.57.0"
     eslint-config-discordeno: "npm:*"
@@ -1330,7 +1330,7 @@ __metadata:
     node-fetch: "npm:^3.3.2"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
-    typescript: "npm:5.4.5"
+    typescript: "npm:5.5.3"
   languageName: unknown
   linkType: soft
 
@@ -2071,7 +2071,7 @@ __metadata:
     turbo: "npm:^1.11.3"
     typedoc: "npm:0.25.11"
     typedoc-plugin-markdown: "npm:3.17.1"
-    typescript: "npm:5.4.5"
+    typescript: "npm:5.5.3"
   languageName: unknown
   linkType: soft
 
@@ -2088,7 +2088,7 @@ __metadata:
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.11.25"
+    "@types/node": "npm:^20.14.10"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
     chai: "npm:^5.1.1"
@@ -2099,7 +2099,7 @@ __metadata:
     sinon: "npm:^17.0.1"
     ts-node: "npm:^10.9.2"
     tsconfig: "npm:*"
-    typescript: "npm:5.4.5"
+    typescript: "npm:5.5.3"
   bin:
     discordeno: ./bin/disocrdeno.js
   languageName: unknown
@@ -2306,7 +2306,7 @@ __metadata:
     eslint-plugin-promise: "npm:^6.1.1"
     eslint-plugin-require-extensions: "npm:^0.1.3"
     prettier: "npm:^3.2.5"
-    typescript: "npm:5.4.5"
+    typescript: "npm:5.5.3"
   languageName: unknown
   linkType: soft
 
@@ -6030,23 +6030,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.4.5":
-  version: 5.4.5
-  resolution: "typescript@npm:5.4.5"
+"typescript@npm:5.5.3":
+  version: 5.5.3
+  resolution: "typescript@npm:5.5.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: d04a9e27e6d83861f2126665aa8d84847e8ebabcea9125b9ebc30370b98cb38b5dff2508d74e2326a744938191a83a69aa9fddab41f193ffa43eabfdf3f190a5
+  checksum: 11a867312419ed497929aafd2f1d28b2cd41810a5eb6c6e9e169559112e9ea073d681c121a29102e67cd4478d0a4ae37a306a5800f3717f59c4337e6a9bd5e8d
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>":
-  version: 5.4.5
-  resolution: "typescript@patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=e012d7"
+"typescript@patch:typescript@npm%3A5.5.3#optional!builtin<compat/typescript>":
+  version: 5.5.3
+  resolution: "typescript@patch:typescript@npm%3A5.5.3#optional!builtin<compat/typescript>::version=5.5.3&hash=e012d7"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 584be8bac7112ad49a9eb9992f71d542b1ff2fafb5bb315e1c196145e8feab589f1d7223cfb2d5df6770789582e6918f8287d1f2f89911b38eb80e29c560ad00
+  checksum: b61b8bb4b4d6a8a00f9d5f931f8c67070eed6ad11feabf4c41744a326987080bfc806a621596c70fbf2e5974eca3ed65bafeeeb22a078071bdfb51d8abd7c013
   languageName: node
   linkType: hard
 

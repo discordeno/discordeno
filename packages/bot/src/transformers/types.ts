@@ -22,11 +22,10 @@ import type {
   DiscordInviteType,
   DiscordOverwrite,
   DiscordPollLayoutType,
-  DiscordScheduledEventEntityMetadata,
   DiscordSkuFlag,
   DiscordSkuType,
   DiscordTeamMemberRole,
-  DiscordTemplate,
+  DiscordTemplateSerializedSourceGuild,
   DiscordThreadMember,
   EmbedTypes,
   ExplicitContentFilterLevels,
@@ -61,15 +60,18 @@ import type {
   WebhookTypes,
 } from '@discordeno/types'
 import type { Collection } from '@discordeno/utils'
-import type { Bot, Permissions } from '../index.js'
-import type { ToggleBitfield } from './toggles/ToggleBitfield.js'
-import type { ChannelToggles } from './toggles/channel.js'
-import type { EmojiToggles } from './toggles/emoji.js'
-import type { GuildToggles } from './toggles/guild.js'
-import type { MemberToggles } from './toggles/member.js'
-import type { RoleToggles } from './toggles/role.js'
-import type { UserToggles } from './toggles/user.js'
-import type { VoiceStateToggles } from './toggles/voice.js'
+import type {
+  Bot,
+  ChannelToggles,
+  EmojiToggles,
+  GuildToggles,
+  MemberToggles,
+  Permissions,
+  RoleToggles,
+  ToggleBitfield,
+  UserToggles,
+  VoiceStateToggles,
+} from '../index.js'
 
 export interface Activity {
   join?: string
@@ -160,6 +162,7 @@ export interface ApplicationCommand {
   applicationId: bigint
   dmPermission: boolean
 }
+
 export interface ApplicationCommandOption {
   /** Value of Application Command Option Type */
   type: ApplicationCommandOptionTypes
@@ -648,7 +651,7 @@ export interface Guild {
   /** Guild name (2-100 characters, excluding trailing and leading whitespace) */
   name: string
   /** True if the user is the owner of the guild */
-  owner: boolean | undefined
+  owner?: boolean
   /** Afk timeout in seconds */
   afkTimeout: number
   /** True if the server widget is enabled */
@@ -1184,7 +1187,7 @@ export interface GuildOnboardingPromptOption {
   /** Title of the option */
   title: string
   /** Description of the option */
-  description: string | undefined
+  description?: string
 }
 
 export interface Poll {
@@ -1358,7 +1361,7 @@ export interface ScheduledEvent {
   /** any additional id of the hosting entity associated with event */
   entityId?: bigint
   /** the location for the scheduled event */
-  location?: DiscordScheduledEventEntityMetadata['location']
+  location?: string
   /** the user that created the scheduled event */
   creator?: User
   /** the number of users subscribed to the scheduled event */
@@ -1441,7 +1444,7 @@ export interface StickerPack {
 }
 
 export interface Team {
-  icon?: bigint | undefined
+  icon?: bigint
   id: bigint
   name: string
   ownerUserId: bigint
@@ -1466,7 +1469,7 @@ export interface Template {
   creator: User
   updatedAt: number
   sourceGuildId: bigint
-  serializedSourceGuild: NonNullable<DiscordTemplate['serialized_source_guild']>
+  serializedSourceGuild: DiscordTemplateSerializedSourceGuild
 }
 
 export interface ThreadMember {
