@@ -38,7 +38,7 @@
     "@swc/core": "^1.4.2",
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.7",
-    "@types/node": "^20.11.25",
+    "@types/node": "^20.14.10",
     "@types/sinon": "^17.0.3",
     "@types/ws": "^8.5.10",
     "c8": "^9.1.0",

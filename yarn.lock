@@ -40,7 +40,7 @@ __metadata:
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.11.25"
+    "@types/node": "npm:^20.14.10"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
     chai: "npm:^5.1.1"
@@ -64,7 +64,7 @@ __metadata:
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.11.25"
+    "@types/node": "npm:^20.14.10"
     "@types/sinon": "npm:^17.0.3"
     "@types/ws": "npm:^8.5.10"
     c8: "npm:^9.1.0"
@@ -92,7 +92,7 @@ __metadata:
     "@types/chai": "npm:^4.3.11"
     "@types/chai-as-promised": "npm:^7.1.8"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.11.25"
+    "@types/node": "npm:^20.14.10"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
     chai: "npm:^5.1.1"
@@ -115,7 +115,7 @@ __metadata:
     "@swc/cli": "npm:^0.3.9"
     "@swc/core": "npm:^1.4.2"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.11.25"
+    "@types/node": "npm:^20.14.10"
     c8: "npm:^9.1.0"
     eslint: "npm:^8.57.0"
     eslint-config-discordeno: "npm:*"
@@ -135,7 +135,7 @@ __metadata:
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.11.25"
+    "@types/node": "npm:^20.14.10"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
     chai: "npm:^5.1.1"
@@ -703,21 +703,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20.11.25":
-  version: 20.11.25
-  resolution: "@types/node@npm:20.11.25"
+"@types/node@npm:^20.14.10":
+  version: 20.14.10
+  resolution: "@types/node@npm:20.14.10"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 861265f1bbb151404bd8842b595f027a4ff067c61ecff9a37b9f7f53922c18dd532c8e795e8e7675dd8dba056645623fd2b9848d5ef72863ec3609096cd2923e
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^20.14.7":
-  version: 20.14.7
-  resolution: "@types/node@npm:20.14.7"
-  dependencies:
-    undici-types: "npm:~5.26.4"
-  checksum: f2cb458126a136719d9da6febdbc7afc9bb622047a30c5e6163db4206ff8c8002ec56b340d722fe1ad6280ebe7a505e0a5a10a39a3b5718837200201b94d5d07
+  checksum: 672892cf94d0d95cf052f11271990686a0fd204cd1e5fe7a4ef240e5315e06711765dc47b9ec98627d3adac18b8c92bb7e2d8db21d18faa20bc3e3203a143e79
   languageName: node
   linkType: hard
 
@@ -1326,7 +1317,7 @@ __metadata:
     "@swc/cli": "npm:^0.3.9"
     "@swc/core": "npm:^1.4.2"
     "@types/benchmark": "npm:^2.1.5"
-    "@types/node": "npm:^20.14.7"
+    "@types/node": "npm:^20.14.10"
     benchmark: "npm:^2.1.4"
     eslint: "npm:^8.57.0"
     eslint-config-discordeno: "npm:*"
@@ -2083,7 +2074,7 @@ __metadata:
     "@swc/core": "npm:^1.4.2"
     "@types/chai": "npm:^4.3.11"
     "@types/mocha": "npm:^10.0.7"
-    "@types/node": "npm:^20.11.25"
+    "@types/node": "npm:^20.14.10"
     "@types/sinon": "npm:^17.0.3"
     c8: "npm:^9.1.0"
     chai: "npm:^5.1.1"
