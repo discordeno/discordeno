@@ -35,6 +35,12 @@
       "quoteStyle": "single"
     }
   },
+  "json": {
+    "parser": {
+      "allowComments": true,
+      "allowTrailingCommas": true
+    }
+  },
   "files": {
     "ignore": [
       "node_modules",

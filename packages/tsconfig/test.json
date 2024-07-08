@@ -1,7 +1,12 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "./base.json",
   "compilerOptions": {
     "noEmit": true,
-    "incremental": false
-  }
+    "incremental": false,
+    "tsBuildInfoFile": null,
+    "rootDir": null,
+    "outDir": null
+  },
+  "include": ["${configDir}"]
 }

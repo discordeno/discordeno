@@ -295,6 +295,8 @@ export enum GuildFeatures {
   AnimatedBanner = 'ANIMATED_BANNER',
   /** Guild has disabled alerts for join raids in the configured safety alerts channel */
   RaidAlertsDisabled = 'RAID_ALERTS_DISABLED',
+  /** Guild is using the old permissions configuration behavior */
+  ApplicationCommandPermissionsV2 = 'APPLICATION_COMMAND_PERMISSIONS_V2',
 }
 
 /** https://discord.com/developers/docs/resources/guild#guild-object-mfa-level */

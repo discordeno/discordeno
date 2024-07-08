@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises'
 import type { DiscordGatewayPayload } from '@discordeno/types'
-import fetch from 'node-fetch'
 
 export const events: Array<{
   shardId: number

@@ -95,7 +95,7 @@ await memoryBenchmark(
   '[transformer] message cache check',
   () => ({
     cache: [] as any[],
-  }), // function reutrn a new instance of object wanted to test with
+  }), // function returns a new instance of object wanted to test with
   (object, event: DiscordMessage) => object.cache.push(bot.transformers.message(bot, event)),
   // function specify how to add event to the object/ run the object
   [...new Array(MESSAGE_SIZE)].map(

@@ -1,9 +1,17 @@
 import { Intents } from '@discordeno/types'
 import uWS from 'uWebSockets.js'
-import { ShardSocketCloseCodes, createGatewayManager } from '../../src/index.js'
+import { type GatewayManager, ShardSocketCloseCodes, createGatewayManager } from '../../src/index.js'
 
-const createGatewayManagerWithPort = (port: number) =>
-  createGatewayManager({
+/**
+ * This value needs to be AT LEAST `1017`
+ *
+ * The reason for this is because the calculation in Shard.calculateSafeRequests will return 0 not allowing any sort of message to the websocket server.
+ * Discord uses a way higher number for this value, but during this test we lower it since it would be annoying and useless make the test last 40+ seconds to test the heartbeat, but to make this work it needs to be at least 1017 so that calculateSafeRequests return 2 allowing for the shard to send messages.
+ */
+const heartbeatInterval = 1050
+
+function createGatewayManagerWithPort(port: number): GatewayManager {
+  return createGatewayManager({
     connection: {
       url: `ws://localhost:${port}`,
       shards: 1,
@@ -19,21 +27,22 @@ const createGatewayManagerWithPort = (port: number) =>
     intents: Intents.Guilds,
     events: {},
   })
+}
 
-const createUws = async (options: {
+async function createUws(options: {
   onOpen?: () => any
   onMessage?: (message: any) => any
   onClose?: (code: number, message: string) => any
   closing?: boolean
-}) => {
+}): Promise<{ port: number; uwsToken: uWS.us_listen_socket }> {
   options.onOpen ??= () => {}
   options.onMessage ??= (_message: any) => {}
   options.onClose ??= (_code: number, _message: string) => {}
   options.closing ??= false
 
-  return await new Promise<{ port: number; uwsToken: any }>((resolve, reject) => {
+  return await new Promise<{ port: number; uwsToken: uWS.us_listen_socket }>((resolve, reject) => {
     let port = 0
-    let uwsToken = 0
+
     uWS
       .App()
       .ws('/*', {
@@ -49,7 +58,7 @@ const createUws = async (options: {
             JSON.stringify({
               op: 10,
               d: {
-                heartbeat_interval: 1017,
+                heartbeat_interval: heartbeatInterval,
               },
             }),
           )
@@ -116,10 +125,13 @@ const createUws = async (options: {
         if (!token) {
           reject(new Error())
         }
-        // retrieve listening port
-        uwsToken = token
-        port = uWS.us_socket_local_port(token)
-        resolve({ port, uwsToken })
+
+        port = uWS.us_socket_local_port(token as uWS.us_listen_socket)
+
+        resolve({
+          port,
+          uwsToken: token,
+        })
       })
   })
 }
@@ -144,7 +156,7 @@ describe('gateway', () => {
     let resolveHeartbeat: () => void
     let resolveConnected: () => void
     const connected = new Promise<void>((resolve) => (resolveConnected = resolve))
-    const Heartbeated = new Promise<void>((resolve) => (resolveHeartbeat = resolve))
+    const heartbeated = new Promise<void>((resolve) => (resolveHeartbeat = resolve))
     const uwsOptions = {
       onOpen: resolveConnected!,
       onMessage: (message: any) => {
@@ -157,10 +169,12 @@ describe('gateway', () => {
     const gateway = createGatewayManagerWithPort(port)
     await gateway.spawnShards()
     await connected
+
     const timeout = setTimeout(() => {
       throw new Error('Not heartbeat in time')
-    }, 1017)
-    await Heartbeated
+    }, heartbeatInterval)
+
+    await heartbeated
     clearTimeout(timeout)
     uwsOptions.closing = true
     await gateway.shutdown(ShardSocketCloseCodes.Shutdown, 'User requested bot stop')

@@ -26,7 +26,7 @@
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/unit/**/*.spec.ts'",
     "test:integration": "c8 --r lcov mocha --no-warnings 'tests/integration/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js gateway",
     "test:type": "tsc --noEmit",
-    "test:test-type": "tsc --project tsconfig.test.json"
+    "test:test-type": "tsc --project tests/tsconfig.json"
   },
   "dependencies": {
     "@discordeno/types": "19.0.0-beta.1",
@@ -48,7 +48,7 @@
     "sinon": "^17.0.1",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "5.4.5",
+    "typescript": "^5.5.2",
     "uWebSockets.js": "https://github.com/uNetworking/uWebSockets.js.git#commit=42c9c0d5d31f46ca4115dc75672b0037ec970f28"
   }
 }

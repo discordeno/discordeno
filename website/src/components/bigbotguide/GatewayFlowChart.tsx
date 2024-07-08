@@ -1,4 +1,4 @@
-import ReactFlow, { Background, Controls, Edge, Node, Position } from 'reactflow'
+import ReactFlow, { Background, Controls, type Edge, type Node, Position } from 'reactflow'
 import 'reactflow/dist/style.css'
 
 export const defaultNodeOptions = {
@@ -18,7 +18,7 @@ const genServer = (x: number, id: number) => {
   ]
 
   for (let i = 0; i < 4; i++) {
-    if (i == 2) {
+    if (i === 2) {
       server.push(
         {
           id: `baseLineNodeText-${id}-${i}`,
@@ -42,16 +42,16 @@ const genServer = (x: number, id: number) => {
     server.push(
       ...[
         {
-          id: `w${id * 50 + (i == 3 ? 49 : i) + 1}`,
-          data: { label: `Worker ${id * 50 + (i == 3 ? 49 : i)}` },
+          id: `w${id * 50 + (i === 3 ? 49 : i) + 1}`,
+          data: { label: `Worker ${id * 50 + (i === 3 ? 49 : i)}` },
           position: { x: x - 112.5 + 75 * i, y: 200 },
           ...defaultNodeOptions,
           ...{ style: { ...defaultNodeOptions.style, padding: '5px 10px' } },
         },
         {
-          id: `w${id * 50 + (i == 3 ? 49 : i) + 1}s`,
+          id: `w${id * 50 + (i === 3 ? 49 : i) + 1}s`,
           data: {
-            label: `Shard ${id * 500 + (i == 3 ? 49 : i) * 10}-${id * 500 + (i == 3 ? 49 : i) * 10 + 9}`,
+            label: `Shard ${id * 500 + (i === 3 ? 49 : i) * 10}-${id * 500 + (i === 3 ? 49 : i) * 10 + 9}`,
           },
           position: { x: x - 112.5 + 75 * i, y: 300 },
           type: 'output',
@@ -59,8 +59,8 @@ const genServer = (x: number, id: number) => {
           ...{
             style: {
               ...defaultNodeOptions.style,
-              ...(id == 1 || (id == 0 && i == 3) ? { padding: '5px 10px' } : { padding: `5px 5px` }),
-              ...(id == 0 && i != 3 ? { padding: '5px 15px' } : {}),
+              ...(id === 1 || (id === 0 && i === 3) ? { padding: '5px 10px' } : { padding: `5px 5px` }),
+              ...(id === 0 && i !== 3 ? { padding: '5px 15px' } : {}),
             },
           },
         },

@@ -26,7 +26,7 @@
     "test:e2e": "c8 --r lcov mocha --no-warnings --jobs 1 --t 30000 'tests/e2e/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js rest",
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/unit/**/*.spec.ts'",
     "test:type": "tsc --noEmit",
-    "test:test-type": "tsc --project tsconfig.test.json"
+    "test:test-type": "tsc --project tests/tsconfig.json"
   },
   "dependencies": {
     "@discordeno/gateway": "19.0.0-alpha.1",
@@ -48,6 +48,6 @@
     "sinon": "^17.0.1",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "5.4.5"
+    "typescript": "^5.5.2"
   }
 }

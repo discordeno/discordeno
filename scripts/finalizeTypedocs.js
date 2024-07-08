@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 // these two paths may vary depending on where you place this script, and your project structure including where typedoc generates its output files.
-const typedocOutPath = await import('../typedoc.json', { assert: { type: 'json' } }).then((module) => module.default.out)
+const typedocOutPath = await import('../typedoc.json', { with: { type: 'json' } }).then((module) => module.default.out)
 
 async function* walk(dir) {
   for await (const d of await fs.promises.opendir(dir)) {
