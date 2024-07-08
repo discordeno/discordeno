@@ -1,17 +1,20 @@
 import { ChannelTypes, type DiscordGuild, type DiscordPresenceUpdate } from '@discordeno/types'
 import { Collection, iconHashToBigInt } from '@discordeno/utils'
-import type { Bot, Guild } from '../index.js'
+import type { Bot, Channel, Guild } from '../index.js'
 import { GuildToggles } from './toggles/guild.js'
 
 const baseGuild = {
   get threads() {
-    if (!this.channels) return
+    if (!this.channels) return new Collection<bigint, Channel>()
 
     const threads = this.channels
       .array()
       .filter((x) => x.type === ChannelTypes.PublicThread || x.type === ChannelTypes.PrivateThread || x.type === ChannelTypes.AnnouncementThread)
 
     return new Collection(threads.map((x) => [x.id, x]))
+  },
+  get features() {
+    return this.toggles.features
   },
 } as Guild
 

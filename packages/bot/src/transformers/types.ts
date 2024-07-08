@@ -22,14 +22,12 @@ import type {
   DiscordInviteType,
   DiscordOverwrite,
   DiscordPollLayoutType,
-  DiscordSkuFlag,
   DiscordSkuType,
   DiscordTeamMemberRole,
   DiscordTemplateSerializedSourceGuild,
   DiscordThreadMember,
   EmbedTypes,
   ExplicitContentFilterLevels,
-  GuildFeatures,
   GuildNsfwLevel,
   IntegrationExpireBehaviors,
   InteractionCallbackData,
@@ -50,6 +48,7 @@ import type {
   ScheduledEventPrivacyLevel,
   ScheduledEventStatus,
   SelectOption,
+  SkuFlags,
   StickerFormatTypes,
   StickerTypes,
   SystemChannelFlags,
@@ -64,6 +63,7 @@ import type {
   Bot,
   ChannelToggles,
   EmojiToggles,
+  GuildFeatureKeys,
   GuildToggles,
   MemberToggles,
   Permissions,
@@ -663,7 +663,7 @@ export interface Guild {
   /** Explicit content filter level */
   explicitContentFilter: ExplicitContentFilterLevels
   /** Enabled guild features */
-  features: GuildFeatures[]
+  features: GuildFeatureKeys[]
   /** Required MFA level for the guild */
   mfaLevel: MfaLevels
   /** System channel flags */
@@ -800,6 +800,8 @@ export interface Interaction {
   applicationId: bigint
   /** The type of interaction */
   type: InteractionTypes
+  /** Guild that the interaction was sent from */
+  guild: Guild
   /** The guild it was sent from */
   guildId?: bigint
   /** The channel it was sent from */
@@ -1382,7 +1384,7 @@ export interface Sku {
   /** System-generated URL slug based on the SKU's name */
   slug: string
   /** SKU flags combined as a bitfield */
-  flags: DiscordSkuFlag
+  flags: SkuFlags
 }
 
 export interface StageInstance {

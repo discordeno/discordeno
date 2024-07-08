@@ -1,6 +1,7 @@
 import {
   InteractionResponseTypes,
   InteractionTypes,
+  MessageFlags,
   type ChannelTypes,
   type DiscordInteraction,
   type DiscordInteractionDataOption,
@@ -16,7 +17,7 @@ import {
   type Member,
   type Message,
 } from '../index.js'
-import { MessageFlags, type DiscordInteractionDataResolved } from '../typings.js'
+import type { DiscordInteractionDataResolved } from '../typings.js'
 
 const baseInteraction = {
   async respond(response, options) {
@@ -89,55 +90,62 @@ const baseInteraction = {
   },
 } as Interaction
 
-export function transformInteraction(bot: Bot, payload: DiscordInteraction): Interaction {
-  const guildId = payload.guild_id ? bot.transformers.snowflake(payload.guild_id) : undefined
-  const user = bot.transformers.user(bot, payload.member?.user ?? payload.user!)
+export function transformInteraction(bot: Bot, payload: { interaction: DiscordInteraction; shardId: number }): Interaction {
+  const guildId = payload.interaction.guild_id ? bot.transformers.snowflake(payload.interaction.guild_id) : undefined
+  const user = bot.transformers.user(bot, payload.interaction.member?.user ?? payload.interaction.user!)
 
   const interaction: Interaction = Object.create(baseInteraction)
   const props = bot.transformers.desiredProperties.interaction
   interaction.bot = bot
   interaction.acknowledged = false
 
-  if (props.id && payload.id) interaction.id = bot.transformers.snowflake(payload.id)
-  if (props.applicationId && payload.application_id) interaction.applicationId = bot.transformers.snowflake(payload.application_id)
-  if (props.type && payload.type) interaction.type = payload.type
-  if (props.token && payload.token) interaction.token = payload.token
-  if (props.version && payload.version) interaction.version = payload.version
-  if (props.locale && payload.locale) interaction.locale = payload.locale
-  if (props.guildLocale && payload.guild_locale) interaction.guildLocale = payload.guild_locale
+  if (props.id && payload.interaction.id) interaction.id = bot.transformers.snowflake(payload.interaction.id)
+  if (props.applicationId && payload.interaction.application_id)
+    interaction.applicationId = bot.transformers.snowflake(payload.interaction.application_id)
+  if (props.type && payload.interaction.type) interaction.type = payload.interaction.type
+  if (props.token && payload.interaction.token) interaction.token = payload.interaction.token
+  if (props.version && payload.interaction.version) interaction.version = payload.interaction.version
+  if (props.locale && payload.interaction.locale) interaction.locale = payload.interaction.locale
+  if (props.guildLocale && payload.interaction.guild_locale) interaction.guildLocale = payload.interaction.guild_locale
+  if (props.guild && payload.interaction.guild)
+    // @ts-expect-error payload.interaction.guild is a Partial<DiscordGuild>
+    interaction.guild = bot.transformers.guild(bot, { guild: payload.interaction.guild, shardId: payload.shardId })
   if (props.guildId && guildId) interaction.guildId = guildId
   if (props.user && user) interaction.user = user
-  if (props.appPermissions && payload.app_permissions) interaction.appPermissions = bot.transformers.snowflake(payload.app_permissions)
-  if (props.message && payload.message) interaction.message = bot.transformers.message(bot, payload.message)
-  if (props.channel && payload.channel) interaction.channel = bot.transformers.channel(bot, { channel: payload.channel as DiscordChannel, guildId })
-  if (props.channelId && payload.channel_id) interaction.channelId = bot.transformers.snowflake(payload.channel_id)
-  if (props.member && guildId && payload.member) interaction.member = bot.transformers.member(bot, payload.member, guildId, user.id)
-  if (props.authorizingIntegrationOwners && payload.authorizing_integration_owners) {
+  if (props.appPermissions && payload.interaction.app_permissions)
+    interaction.appPermissions = bot.transformers.snowflake(payload.interaction.app_permissions)
+  if (props.message && payload.interaction.message) interaction.message = bot.transformers.message(bot, payload.interaction.message)
+  if (props.channel && payload.interaction.channel)
+    interaction.channel = bot.transformers.channel(bot, { channel: payload.interaction.channel as DiscordChannel, guildId })
+  if (props.channelId && payload.interaction.channel_id) interaction.channelId = bot.transformers.snowflake(payload.interaction.channel_id)
+  if (props.member && guildId && payload.interaction.member)
+    interaction.member = bot.transformers.member(bot, payload.interaction.member, guildId, user.id)
+  if (props.authorizingIntegrationOwners && payload.interaction.authorizing_integration_owners) {
     interaction.authorizingIntegrationOwners = {}
 
-    if (payload.authorizing_integration_owners['0'])
+    if (payload.interaction.authorizing_integration_owners['0'])
       interaction.authorizingIntegrationOwners[DiscordApplicationIntegrationType.GuildInstall] = bot.transformers.snowflake(
-        payload.authorizing_integration_owners['0'],
+        payload.interaction.authorizing_integration_owners['0'],
       )
-    if (payload.authorizing_integration_owners['1'])
+    if (payload.interaction.authorizing_integration_owners['1'])
       interaction.authorizingIntegrationOwners[DiscordApplicationIntegrationType.UserInstall] = bot.transformers.snowflake(
-        payload.authorizing_integration_owners['1'],
+        payload.interaction.authorizing_integration_owners['1'],
       )
   }
-  if (props.context && payload.context) interaction.context = payload.context
-  if (props.data && payload.data) {
+  if (props.context && payload.interaction.context) interaction.context = payload.interaction.context
+  if (props.data && payload.interaction.data) {
     interaction.data = {
-      type: payload.data.type,
-      componentType: payload.data.component_type,
-      customId: payload.data.custom_id,
-      components: payload.data.components?.map((component) => bot.transformers.component(bot, component)),
-      values: payload.data.values,
-      id: payload.data.id ? bot.transformers.snowflake(payload.data.id) : undefined,
-      name: payload.data.name,
-      resolved: payload.data.resolved ? transformInteractionDataResolved(bot, payload.data.resolved, guildId) : undefined,
-      options: payload.data.options?.map((opt) => bot.transformers.interactionDataOptions(bot, opt)),
-      targetId: payload.data.target_id ? bot.transformers.snowflake(payload.data.target_id) : undefined,
-      // guildId: payload.data.guild_id ? bot.transformers.snowflake(payload.data.guild_id) : undefined,
+      type: payload.interaction.data.type,
+      componentType: payload.interaction.data.component_type,
+      customId: payload.interaction.data.custom_id,
+      components: payload.interaction.data.components?.map((component) => bot.transformers.component(bot, component)),
+      values: payload.interaction.data.values,
+      id: payload.interaction.data.id ? bot.transformers.snowflake(payload.interaction.data.id) : undefined,
+      name: payload.interaction.data.name,
+      resolved: payload.interaction.data.resolved ? transformInteractionDataResolved(bot, payload.interaction.data.resolved, guildId) : undefined,
+      options: payload.interaction.data.options?.map((opt) => bot.transformers.interactionDataOptions(bot, opt)),
+      targetId: payload.interaction.data.target_id ? bot.transformers.snowflake(payload.interaction.data.target_id) : undefined,
+      // guildId: payload.interaction.data.guild_id ? bot.transformers.snowflake(payload.interaction.data.guild_id) : undefined,
     }
   }
 

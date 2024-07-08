@@ -209,28 +209,3 @@ export interface BotGatewayHandlerOptions {
   MESSAGE_POLL_VOTE_ADD: typeof handlers.handleMessagePollVoteAdd
   MESSAGE_POLL_VOTE_REMOVE: typeof handlers.handleMessagePollVoteRemove
 }
-
-export enum MessageFlags {
-  /** Whether this message has been published to subscribed channels (via Channel Following) */
-  Crossposted = 1 << 0,
-  /** Whether this message originated from a message in another channel (via Channel Following) */
-  IsCrosspost = 1 << 1,
-  /** Whether do not include any embeds when serializing this message */
-  SuppressEmbeds = 1 << 2,
-  /** Whether the source message for this crosspost has been deleted (via Channel Following) */
-  SourceMessageDeleted = 1 << 3,
-  /** Whether this message came from the urgent message system */
-  Urgent = 1 << 4,
-  /** Whether this message has an associated thread, with the same id as the message */
-  HasThread = 1 << 5,
-  /** Whether this message is only visible to the user who invoked the Interaction */
-  Ephemeral = 1 << 6,
-  /** Whether this message is an Interaction Response and the bot is "thinking" */
-  Loading = 1 << 7,
-  /** Whether this message failed to mention some roles and add their members to the thread */
-  FailedToMentionSomeRolesInThread = 1 << 8,
-  /** Whether this message will not trigger push and desktop notifications */
-  SuppressNotifications = 1 << 12,
-  /** Whether this message is a voice message */
-  IsVoiceMessage = 1 << 13,
-}
