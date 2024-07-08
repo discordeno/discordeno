@@ -127,7 +127,17 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
             url: gateway.url,
             version: gateway.version,
           },
-          events: {},
+          // Ignore events until we are ready
+          events: {
+            async message(_shard, payload) {
+              if (payload.t === 'READY') {
+                await gateway.resharding.updateGuildsShardId(
+                  (payload.d as DiscordReady).guilds.map((g) => g.id),
+                  shardId,
+                )
+              }
+            },
+          },
           requestIdentify: async () => {
             await gateway.identify(shardId)
           },
@@ -141,14 +151,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
         if (gateway.preferSnakeCase) {
           shard.forwardToBot = async (payload) => {
-            if (payload.t === 'READY') {
-              await gateway.resharding.updateGuildsShardId(
-                (payload.d as DiscordReady).guilds.map((g) => g.id),
-                shardId,
-              )
-            }
-
-            options.events?.message?.(shard, payload)
+            shard.events?.message?.(shard, payload)
           }
         }
 
