@@ -55,7 +55,7 @@ jobs:
 
       - name: Benchmark
         if: ${{ steps.cpuCheck.outputs.match == 'true' }}
-        run: node --expose-gc ./packages/benchmark/dist/index.js | tee output.txt
+        run: node --expose-gc ./packages/benchmarks/dist/index.js | tee output.txt
 
       - name: Download previous benchmark data
         if: ${{ steps.cpuCheck.outputs.match == 'true' }}
@@ -69,7 +69,7 @@ jobs:
         if: ${{ steps.cpuCheck.outputs.match == 'true' }}
         uses: benchmark-action/github-action-benchmark@v1
         with:
-          tool: "benchmarkjs"
+          tool: 'benchmarkjs'
           output-file-path: output.txt
           external-data-json-path: benchmarksResult/data.json
 
@@ -96,9 +96,9 @@ jobs:
         uses: benchmark-action/github-action-benchmark@v1
         if: ${{ github.ref == 'refs/heads/main' && steps.cpuCheck.outputs.match == 'true' }}
         with:
-          tool: "benchmarkjs"
+          tool: 'benchmarkjs'
           output-file-path: output.txt
-          gh-pages-branch: "benchies"
+          gh-pages-branch: 'benchies'
           benchmark-data-dir-path: benchmarksResult
           github-token: ${{ secrets.GITHUB_TOKEN }}
           auto-push: true

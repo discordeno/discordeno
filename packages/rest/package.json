@@ -27,12 +27,11 @@
     "test:e2e": "c8 --r lcov mocha --exit --no-warnings --jobs 1 --t 30000 'tests/e2e/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js rest",
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/unit/**/*.spec.ts'",
     "test:type": "tsc --noEmit",
-    "test:test-type": "tsc --project tsconfig.test.json"
+    "test:test-type": "tsc --project tests/tsconfig.json"
   },
   "dependencies": {
     "@discordeno/types": "19.0.0-beta.1",
-    "@discordeno/utils": "19.0.0-beta.1",
-    "dotenv": "^16.4.5"
+    "@discordeno/utils": "19.0.0-beta.1"
   },
   "devDependencies": {
     "@swc/cli": "^0.3.9",
@@ -45,13 +44,13 @@
     "c8": "^9.1.0",
     "chai": "^5.1.1",
     "chai-as-promised": "^7.1.1",
+    "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "eslint-config-discordeno": "*",
     "mocha": "^10.5.1",
     "sinon": "^17.0.1",
     "ts-node": "^10.9.2",
     "tsconfig": "*",
-    "typescript": "5.4.5",
-    "why-is-node-running": "^2.2.2"
+    "typescript": "^5.5.2"
   }
 }
