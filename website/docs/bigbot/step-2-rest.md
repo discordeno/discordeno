@@ -10,7 +10,7 @@ Awesome, if you have reached this far you know that this guide will be using the
 - Node.JS Runtime
 - Class based approach
 
-Remember if you need any help with an alternative to the above listed items, please contact us on Discord.
+Remember if you need any help with an alternative to the above listed items, please contact us on [Discord](https://discord.gg/ddeno).
 
 ## Creating Your REST Manager
 
@@ -40,6 +40,7 @@ Now you can make another file like `services/rest/index.ts`. Then paste the code
 ```ts
 import dotenv from 'dotenv'
 import express from 'express'
+
 dotenv.config()
 
 import { REST } from './rest.ts'
@@ -82,10 +83,10 @@ app.listen(REST_PORT, () => {
 })
 ```
 
-Now let's take a minute to explain this part very briefly. The majority of this code is about creating a http listener in Node.JS to listen for requests coming into this process. When any request comes in it first checks if the authorization header matches. This is a small security challenge, to help prevent unknown users from making requests with your token should they find the url your hosting this listener on. This guide, uses `dotenv` package to handle private secrets but you can use anything you like.
+Now let's take a minute to explain this part very briefly. The majority of this code is about creating a http listener in Node.JS to listen for requests coming into this process. When any request comes in it first checks if the authorization header matches. This is a small security challenge, to help prevent unknown users from making requests with your token should they find the url your hosting this listener on. This guide uses `dotenv` package to handle private secrets but you can use anything you like.
 
 :::tip
-Take the time to go back to the rest.ts file we made earlier and adjust the `token` property to use dotenv as well, should you want to optimize your code.
+Take the time to go back to the `rest.ts` file we made earlier and adjust the `token` property to use dotenv as well, should you want to optimize your code.
 :::
 
 If a request was not authorized, it will be ignored. If a request comes with a proper authorization header, we will proceed to making the request. This request is forwarded to our REST we made earlier in rest.ts file. We add on the discord base url to the route and forward it. The manager will handle all rate limits and queues and anything else to make the request. When it responds, it will either return a valid response or an error. This successful response or error is than handled as needed and sent back to original process that called this listener.
@@ -214,15 +215,15 @@ Now you will be able to take this data and implement it into Grafana. In a futur
 
 ### Multiple Custom Bot Proxy Rest
 
-For bot's that allow servers to buy custom bot's, you can create a separate manager for each bot's token/authorization. As a request comes in, either get a cached rest manager or create one if none exists in the cache.
+For bots that allow servers to buy custom bots, you can create a separate manager for each bot's token/authorization. As a request comes in, either get a cached rest manager or create one if none exists in the cache.
 
-The plan in this guide is to create a custom header that is sent on every request to the rest process. This will contain the custom instances bot id so we can find it a collection on the rest process, which can be then be used to determine which bot token we will use.
+The plan in this guide is to create a custom header that is sent on every request to the rest process. This will contain the custom instances' bot id, so we can find it a collection on the rest process, which can be then be used to determine which bot token we will use.
 
 :::caution
-Having multiple bot's sending requests from one source will impact your global rate limit due to the global ip rate limit.
+Having multiple bots sending requests from one source will impact your global rate limit due to the global ip rate limit.
 :::
 
-In order to send the bot id inside of the request headers we first have to override the `createBaseHeaders()` function.
+In order to send the bot id inside of the request headers we first have to override the `createBaseHeaders()` function in our `services/bot/bot.ts` file.
 
 ```ts
 BOT.rest = createRestManager({
@@ -237,7 +238,7 @@ BOT.rest.createBaseHeaders = () => {
 }
 ```
 
-Create this MANAGERS collection somewhere near the top of the file. Then we can begin implementing this in our request handler.
+Create this MANAGERS collection somewhere near the top of your `services/rest/rest.ts` file. Then we can begin implementing this in our request handler.
 
 ```ts
 const MANAGERS = new Collection<string, RestManager>()
@@ -273,7 +274,7 @@ try {
 
 ### Evals
 
-One of the last things we should do, is make it possible to run commands on this process. To do this, we simply create a small bot on this process with an eval command that listens for our messages only on our developer server. This way we can dynamically update any properties we may need to. For example, if discord updates the API version, we can easily switch the api version with a simple command.
+One of the last things we should do, is make it possible to run commands on this process. To do this, we simply create a small bot on this process with an eval command that listens for our messages only on our developer server. This way we can dynamically update any properties we may need to. For example, if discord updates the API version, we can easily switch the api version with a simple command without having to restart our rest service.
 
 Let's make a small bot on this process. Make a file called `services/rest/bot.ts`. Then paste the code below.
 
@@ -313,7 +314,7 @@ const bot = createBot({
       }
 
       const response = ['```ts']
-      const regex = new RegExp(Gamer.token, 'gi')
+      const regex = new RegExp(process.env.token, 'gi')
 
       if (result && typeof result.then === 'function') {
         // We returned a promise?
@@ -345,4 +346,4 @@ const bot = createBot({
 })
 ````
 
-Now that you have an eval command available on ur `REST` service, whenever you need to modify something quickly you can easily do so from ur developer server where this bot is. For example, should you want to switch to a newer api version, it is as simple as `.eval REST.version = xxx` where xxx is the new API version.
+Now that you have an eval command available on ur `REST` service, whenever you need to modify something quickly, you can easily do so from ur developer server where this bot is. For example, should you want to switch to a newer api version, it is as simple as `.eval REST.version = xxx` where xxx is the new API version.

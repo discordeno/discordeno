@@ -5,10 +5,10 @@ sidebar_label: Step 4 - Bot
 
 # Event Handler (Bot)
 
-Woah! You go through the most difficult part already which was the gateway. WOOT! Let's go ahead and jump into the event handler portion so we can proceed. The event handler will be called as the `bot` process going forward. It's purpose is generally to listen for events coming from the shards and process them accordingly.
+Woah! You went through the most difficult part already which was the gateway. WOOT! Let's go ahead and jump into the event handler portion so we can proceed. The event handler will be called as the `bot` process going forward. Its purpose is generally to listen for events coming from the shards and process them accordingly.
 
 :::tip
-If you have the $, I would recommend writing the event listener(bot), in a serverless friendly manner. If that code is deployed to something like cloudflare workers, your bot will have unlimited scalability and your shards would simply route these events to be sent there.
+If you have the money, I would recommend writing the event listener(bot), in a serverless friendly manner. If that code is deployed to something like cloudflare workers, your bot will have unlimited scalability and your shards would simply route these events to be sent there.
 :::
 
 ## Creating Bot Manager
@@ -30,7 +30,7 @@ Now that our bot manager is created, we need to implement our event handlers. Fi
 import type { EventHandlers } from '@discordeno/bot'
 
 export const events: Partial<EventHandlers> = {
-  // TODO: fill this in the next section
+  // Fill this in the next section
 }
 ```
 
@@ -46,7 +46,7 @@ export const BOT = createBot({
 })
 ```
 
-Awesome, now the only thing left is we need to implement an event handler. For example, let's implement the ready event. So we make a file like `services/bot/events/ready.ts` and paste the code below.
+Awesome, now the only thing left is we need to implement an event handler. For example, let's implement the ready event. So we make a file like `services/bot/events/ready.ts` and paste the code below:
 
 ```ts
 export const ready: EventHandlers['ready'] = async function (payload, shardId) {
@@ -54,7 +54,7 @@ export const ready: EventHandlers['ready'] = async function (payload, shardId) {
 }
 ```
 
-Now that we have a ready event handler. Let's go ahead and add it to our events.
+Now that we have a ready event handler, let's go ahead and add it to our events.
 
 ```ts
 import type { EventHandlers } from '@discordeno/bot'
@@ -74,6 +74,7 @@ Once, again we are going to create a quick http listener that will listen for ev
 ```ts
 import dotenv from 'dotenv'
 import express from 'express'
+
 dotenv.config()
 
 const AUTHORIZATION = process.env.AUTHORIZATION as string
@@ -94,7 +95,7 @@ app.all('/*', async (req, res) => {
   }
 
   try {
-    // TODO: Add the code here in next portion
+    // Add the code here in the next section
     res.status(200).json({ success: true })
   } catch (error: any) {
     console.log(error)
@@ -107,22 +108,22 @@ app.listen(BOT_PORT, () => {
 })
 ```
 
-Now that we have the basic code setup complete for our listener. We can begin adding the code necessary for handling the events.
+Now that we have the basic code setup complete for our listener, we can begin adding the code necessary for handling the events.
 
 ```ts
 try {
-    // OPTIONAL: Runs the raw event handler if you need it
-	bot.events.raw(bot, req.body.payload, req.body.shardId);
-    // Runs the event handler if available
-    if (message.t) bot.events.[snakeToCamelCase(message.t.toLowerCase())]?.(req.body.payload, req.body.shardId);
+  // OPTIONAL: Runs the raw event handler if you need it
+  bot.events.raw(bot, req.body.payload, req.body.shardId);
+  // Runs the event handler if available
+  if (message.t) bot.events.[snakeToCamelCase(message.t.toLowerCase())]?.(req.body.payload, req.body.shardId);
 
-    res.status(200).json({ success: true })
-  }
+  res.status(200).json({ success: true })
+}
 ```
 
 ## Connecting To REST
 
-Alright, now we need to start making our connection to the rest proxy work. That way when our bot needs to make a rest request, it will use the proxy.
+Alright, now we need to start making our connection to the rest proxy work. That way, when our bot needs to make a rest request, it will use the proxy.
 
 ```ts
 export const BOT = createBot({
@@ -141,13 +142,13 @@ BOT.rest = createRestManager({
 
 ## Communication With Gateway
 
-This portion of the guide is only necessary for the bots that require sending a request to their gateway manager. For example, should your bot need to connect to a voice channel, edit it's status, or fetch members through the gateway; it will need to send a request to the gateway manager process.
+This portion of the guide is only necessary for the bots that require sending a request to their gateway manager. For example, should your bot need to connect to a voice channel, edit its status, or fetch members through the gateway, it will need to send a request to the gateway manager process.
 
 :::tip
-Take the time to implement this properly should you need it with something like websocket, IPC, gRPC, rabbitMQ etc...
+Take the time to implement this properly, should you need it, with something like WebSocket, IPC, gRPC, RabbitMQ etc.
 :::
 
-To tell, the Bot that we need to make a request to the proxy gateway manager what we do is override the gateway in the bot.
+To tell the bot that we need to make a request to the proxy gateway manager, what we do is override the gateway in the bot.
 
 ```ts
 BOT.gateway.requestMembers = async function (guildId, options) {
@@ -176,11 +177,11 @@ This will now send a request to our gateway manager whenever the bot makes a req
 
 ## Optimizing For Scale
 
-Now think back at how many shards we created in this guide. We had built this with the idea that we had 5,000 shards, in other words 5,000,000 servers. This means that there are 5,000 shards or 5,000,000 servers sending events all to this one little bot listener. This needs to scale much better. So we have several options available. Remember if you went the serverless route, none of this is needed because that is already scaled. However, should you not have the $ to afford serverless infrastructure, we will make it work.
+Now think back at how many shards we created in this guide. We had built this with the idea that we had 5,000 shards, in other words 5,000,000 servers. This means that there are 5,000 shards or 5,000,000 servers sending events all to this one little bot listener. This needs to scale much better. So we have several options available. Remember if you went the serverless route, none of this is needed because that is already scaled. However, should you not have the money to afford serverless infrastructure, we will make it work.
 
 ### Threading
 
-Threading or workers or clusters however you wish to call it can be used here. You can take the time to implement a main thread and child threads to be created and have the workload be delegated to the thread. You should look into using something that can provide you a thread pool to optimizing the thread load management. However, there is another option which is server splitting.
+Threading or workers or clusters, however you wish to call it can be used here. You can take the time to implement a main thread and child threads to be created and have the workload be delegated to the thread. You should look into using something that can provide you a thread pool to optimizing the thread load management. However, there is another option, which is, server splitting.
 
 ### Server Splitting
 
@@ -203,6 +204,6 @@ function getUrlFromShardId(totalShards: number, shardId: number) {
 }
 ```
 
-This function is simply making it so that it determines what the event handler url should be where that specific shard should send the event to. This means if you have 5,000 shards and you receive an event in shard #4565 and you had 10 server urls in the configs. This would make this event be sent to the 5th url in the array.
+This function is simply making it so that it determines what the event handler url should be and where that specific shard should send the event to. This means if you have 5,000 shards and you receive an event in shard #4565 and you had 10 server urls in the configs, this would make this event be sent to the 5th url in the array.
 
-Now that all your processes are fully functioning, we can get into the nitty gritty part of finally beginning to code our features/commands/etc...
+Woohoo! You've reached the end of this guide. By this point, you'll have your rest, gateway and the bot process fully functioning and you can finally begin to code your features/commands etc. If you need any help, please contact us on [Discord](https://discord.gg/ddeno). Good Luck!

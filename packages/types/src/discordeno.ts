@@ -13,10 +13,10 @@ import type {
   DiscordGuildOnboardingPrompt,
   DiscordInstallParams,
   DiscordInteractionContextType,
-  DiscordMessageFlag,
   DiscordPollAnswer,
   DiscordPollLayoutType,
   DiscordPollMedia,
+  DiscordReactionType,
   DiscordRole,
 } from './discord.js'
 import type {
@@ -35,6 +35,7 @@ import type {
   InteractionResponseTypes,
   Localization,
   MessageComponentTypes,
+  MessageFlags,
   OverwriteTypes,
   PermissionStrings,
   ScheduledEventEntityType,
@@ -81,7 +82,7 @@ export interface CreateMessageOptions {
   /** IDs of up to 3 stickers in the server to send in the message */
   stickerIds?: [BigString] | [BigString, BigString] | [BigString, BigString, BigString]
   /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set */
-  flags?: DiscordMessageFlag
+  flags?: MessageFlags
   /** If true and nonce is present, it will be checked for uniqueness in the past few minutes. If another message was created by the same author with the same nonce, that message will be returned and no new message will be created. */
   enforceNonce?: boolean
   /** A poll object */
@@ -351,6 +352,7 @@ export type GetMessagesOptions = GetMessagesAfter | GetMessagesBefore | GetMessa
 
 /** https://discord.com/developers/docs/resources/channel#get-reactions-query-string-params */
 export interface GetReactions {
+  type: DiscordReactionType
   /** Get users after this user Id */
   after?: string
   /** Max number of users to return (1-100) */
@@ -466,9 +468,21 @@ export interface CreateSlashApplicationCommand {
   options?: Camelize<DiscordApplicationCommandOption[]>
   /** Set of permissions represented as a bit set */
   defaultMemberPermissions?: PermissionStrings[]
-  /** Installation context(s) where the command is available */
+  /**
+   * Integration types where the command is available
+   *
+   * @remarks
+   * This value is available only for globally-scoped commands
+   * Defaults to the application configured contexts
+   */
   integrationTypes?: DiscordApplicationIntegrationType[]
-  /** Interaction context(s) where the command can be used, only for globally-scoped commands. By default, all interaction context types included for new commands. */
+  /**
+   * Interaction context types where the command is available.
+   *
+   * @remarks
+   * This value is available only for globally-scoped commands
+   * By default, all interaction context types are included for new commands
+   */
   contexts?: DiscordInteractionContextType[]
   /**
    * Indicates whether the command is available in DMs with the app, only for globally-scoped commands. By default, commands are visible.
@@ -565,7 +579,7 @@ export interface CreateGuildChannel {
   userLimit?: number
   /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
   rateLimitPerUser?: number
-  /** Sorting position of the channel */
+  /** Sorting position of the channel (channels with the same position are sorted by id) */
   position?: number
   /** The channel's permission overwrites */
   permissionOverwrites?: OverwriteReadable[]
@@ -656,7 +670,7 @@ export interface ModifyChannel {
   name?: string
   /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
   type?: ChannelTypes
-  /** The position of the channel in the left-hand listing */
+  /** The position of the channel in the left-hand listing (channels with the same position are sorted by id) */
   position?: number | null
   /** 0-1024 character channel topic */
   topic?: string | null
@@ -719,7 +733,7 @@ export interface EditChannelPermissionOverridesOptions extends OverwriteReadable
 export interface ModifyGuildChannelPositions {
   /** Channel id */
   id: BigString
-  /** Sorting position of the channel */
+  /** Sorting position of the channel (channels with the same position are sorted by id) */
   position?: number | null
   /** Syncs the permission overwrites with the new parent, if moving to a new category */
   lockPositions?: boolean | null
@@ -796,7 +810,7 @@ export interface CreateForumPostWithMessage {
     /** IDs of up to 3 stickers in the server to send in the message */
     stickerIds?: BigString[]
     /** Message flags combined as a bitfield, only SUPPRESS_EMBEDS and SUPPRESS_NOTIFICATIONS can be set */
-    flags?: DiscordMessageFlag
+    flags?: MessageFlags
   }
   /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM or a GUILD_MEDIA channel */
   appliedTags?: BigString[]
@@ -987,7 +1001,7 @@ export interface EditMessage {
   /** Embedded `rich` content (up to 6000 characters) */
   embeds?: Array<Camelize<DiscordEmbed>> | null
   /** Edit the flags of the message (only `SUPPRESS_EMBEDS` can currently be set/unset) */
-  flags?: DiscordMessageFlag | null
+  flags?: MessageFlags | null
   /** The contents of the files being sent/edited */
   files?: FileContent[]
   /** Allowed mentions for the message */
@@ -1079,7 +1093,7 @@ export interface EditGuildRole {
 export interface ModifyRolePositions {
   /** The role id */
   id: BigString
-  /** The sorting position for the role. */
+  /** The sorting position for the role. (roles with the same position are sorted by id) */
   position?: number | null
 }
 
@@ -1309,12 +1323,7 @@ export interface EditApplication {
   roleConnectionsVerificationUrl?: string
   /** Settings for the app's default in-app authorization link, if enabled */
   installParams?: DiscordInstallParams
-  /**
-   * Default scopes and permissions for each supported installation context.
-   *
-   * @remarks
-   * This is currently in preview.
-   */
+  /** Default scopes and permissions for each supported installation context. */
   integrationTypesConfig?: DiscordApplicationIntegrationType
   /**
    * App's public flags
@@ -1349,9 +1358,20 @@ export interface CreatePoll {
   question: Camelize<DiscordPollMedia>
   /** Each of the answers available in the poll, up to 10 */
   answers: Array<Omit<Camelize<DiscordPollAnswer>, 'answerId'>>
-  /** Number of hours the poll should be open for, up to 7 days */
+  /**
+   * Number of hours the poll should be open for
+   *
+   * @remarks
+   * up to 32 days
+   *
+   * @default 24
+   */
   duration: number
-  /** Whether a user can select multiple answers */
+  /**
+   * Whether a user can select multiple answers
+   *
+   * @default false
+   */
   allowMultiselect: boolean
   /** The layout type of the poll */
   layoutType?: DiscordPollLayoutType
