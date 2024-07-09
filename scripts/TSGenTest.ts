@@ -19,30 +19,109 @@ for (const imp of imports) {
 
 writeStream.write('\n\n')
 
-for (const inter of interfaces) {
+interfaces.forEach((inter, i) => {
   assert(inter.name)
   assert(inter.members)
-  assert(inter.documentation)
-  assert(inter.jsDoc)
 
-  // TODO: jsdoc on the interface
+  writeJSDoc(inter)
 
   writeStream.write(`export interface ${inter.name} {\n`)
 
   for (const [memberName, memberMetadata] of Object.entries(inter.members)) {
     assert(memberMetadata.type)
     assert(typeof memberMetadata.isOptional === 'boolean')
-    assert(memberMetadata.documentation)
-    assert(memberMetadata.jsDoc)
 
-    // TODO: handle jsdoc on the member
+    writeJSDoc(memberMetadata, '  ')
 
     const isOptionalQuestionMark = memberMetadata.isOptional ? '?' : ''
 
     writeStream.write(`  ${memberName}${isOptionalQuestionMark}: ${memberMetadata.type}\n`)
   }
 
-  writeStream.write('}\n\n')
+  writeStream.write('}\n')
+
+  if (i < interfaces.length - 1) {
+    writeStream.write('\n')
+  }
+})
+
+function writeJSDoc(docEntry: DocEntry, ident = '') {
+  assert(docEntry.documentation)
+  assert(docEntry.jsDoc)
+
+  if (docEntry.documentation.length === 0 && docEntry.jsDoc.length === 0) return
+
+  const withDocs = docEntry.documentation.length > 0
+  const withJSdoc = docEntry.jsDoc.length > 0
+
+  writeStream.write(`${ident}/**`)
+
+  if (withDocs && withJSdoc) {
+    writeStream.write(`\n${ident} *`)
+  }
+
+  if (withDocs) {
+    writeDocumentation(docEntry.documentation, ident)
+  }
+
+  for (const jsDoc of docEntry.jsDoc) {
+    if (withDocs) {
+      writeStream.write(`\n${ident} *`)
+    }
+
+    writeStream.write(`\n${ident} *`)
+    writeStream.write(` @${jsDoc.name}\n${ident} *`)
+
+    if (jsDoc.text) {
+      writeDocumentation(jsDoc.text, ident)
+    }
+  }
+
+  if (withJSdoc) {
+    writeStream.write(`\n${ident}`)
+  }
+
+  writeStream.write(' */\n')
+}
+
+function writeDocumentation(documentation: ts.SymbolDisplayPart[], ident: string) {
+  const docs = parseDocumentation(documentation)
+  const splitted = docs.split('\n')
+
+  writeStream.write(' ')
+  writeStream.write(splitted[0])
+
+  for (const text of splitted.slice(1)) {
+    writeStream.write(`\n${ident} *`)
+    writeStream.write(text)
+  }
+}
+
+function parseDocumentation(docs: ts.SymbolDisplayPart[]) {
+  let out = ''
+
+  for (const doc of docs) {
+    const split = doc.text.split('\n')
+
+    if (split.length === 1) {
+      if (doc.kind === 'linkText') {
+        out += ' | '
+      }
+
+      out += split[0]
+      continue
+    }
+
+    split.forEach((text, i) => {
+      out += text
+
+      if (i < split.length - 1) {
+        out += '\n'
+      }
+    })
+  }
+
+  return out
 }
 
 interface DocEntry {

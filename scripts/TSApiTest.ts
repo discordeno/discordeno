@@ -92,7 +92,11 @@ function generateDocumentation(fileName: string, options: ts.CompilerOptions): v
 
     const type = checker.getTypeOfSymbolAtLocation(member, valueDeclaration)
 
-    const stringifiedType = checker.typeToString(type, valueDeclaration, ts.TypeFormatFlags.NoTruncation | ts.TypeFormatFlags.NoTypeReduction)
+    const stringifiedType = checker.typeToString(
+      type,
+      valueDeclaration,
+      ts.TypeFormatFlags.NoTruncation | ts.TypeFormatFlags.NoTypeReduction | ts.TypeFormatFlags.UseSingleQuotesForStringLiteralType,
+    )
 
     assert.notEqual(stringifiedType, 'any')
 
