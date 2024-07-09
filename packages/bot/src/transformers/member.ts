@@ -1,4 +1,4 @@
-import type { BigString, DiscordMember } from '@discordeno/types'
+import { MemberFlags, type BigString, type DiscordMember } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
 import type { AvatarDecorationData } from './avatarDecorationData.js'
@@ -16,6 +16,18 @@ const baseMember: Partial<Member> & BaseMember = {
   },
   get pending() {
     return !!this.toggles?.has('pending')
+  },
+  get didRejoin() {
+    return this.flags?.contains(MemberFlags.DidRejoin) ?? false
+  },
+  get startedOnboarding() {
+    return this.flags?.contains(MemberFlags.StartedOnboarding) ?? false
+  },
+  get bypassesVerification() {
+    return this.flags?.contains(MemberFlags.BypassesVerification) ?? false
+  },
+  get completedOnboarding() {
+    return this.flags?.contains(MemberFlags.CompletedOnboarding) ?? false
   },
 }
 
@@ -51,6 +63,14 @@ export interface BaseMember {
   mute?: boolean
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
   pending?: boolean
+  /** Member has left and rejoined the guild */
+  didRejoin?: boolean
+  /** Member has completed onboarding */
+  startedOnboarding?: boolean
+  /** Member is exempt from guild verification requirements */
+  bypassesVerification?: boolean
+  /** Member has started onboarding */
+  completedOnboarding?: boolean
 }
 
 export interface Member extends BaseMember {
