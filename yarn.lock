@@ -180,6 +180,7 @@ __metadata:
     c8: "npm:^9.1.0"
     chai: "npm:^5.1.1"
     chai-as-promised: "npm:^7.1.1"
+    dotenv: "npm:^16.4.5"
     mocha: "npm:^10.5.1"
     sinon: "npm:^17.0.1"
     ts-node: "npm:^10.9.2"
@@ -1567,6 +1568,13 @@ __metadata:
     discordeno: ./bin/disocrdeno.js
   languageName: unknown
   linkType: soft
+
+"dotenv@npm:^16.4.5":
+  version: 16.4.5
+  resolution: "dotenv@npm:16.4.5"
+  checksum: 55a3134601115194ae0f924e54473459ed0d9fc340ae610b676e248cca45aa7c680d86365318ea964e6da4e2ea80c4514c1adab5adb43d6867fb57ff068f95c8
+  languageName: node
+  linkType: hard
 
 "emoji-regex@npm:^10.3.0":
   version: 10.3.0
