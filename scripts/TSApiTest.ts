@@ -22,6 +22,21 @@ function generateDocumentation(fileName: string, options: ts.CompilerOptions): v
   // Build a program using the set of root file names in fileNames
   const program = ts.createProgram([fileName], options)
 
+  // Check if typescript is producing type errors for the program
+  const emitResult = program.emit()
+  const allDiagnostics = ts.getPreEmitDiagnostics(program).concat(emitResult.diagnostics)
+
+  allDiagnostics.forEach((diagnostic) => {
+    if (!diagnostic.file) {
+      console.log(ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
+      return
+    }
+
+    const { line, character } = ts.getLineAndCharacterOfPosition(diagnostic.file, diagnostic.start!)
+    const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')
+    console.log(`${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`)
+  })
+
   // Get the checker, we will use it to find more about classes
   const checker = program.getTypeChecker()
   const output: DocEntry[] = []
@@ -49,8 +64,8 @@ function generateDocumentation(fileName: string, options: ts.CompilerOptions): v
   })
 
   // print out the doc
-  writeFileSync('interfaces.json', JSON.stringify(output, undefined, 4))
-  writeFileSync('imports.json', JSON.stringify(imports, undefined, 4))
+  writeFileSync('interfaces.json', JSON.stringify(output, undefined, 2))
+  writeFileSync('imports.json', JSON.stringify(imports, undefined, 2))
 
   /** Serialize a symbol into a json object */
   function serializeSymbol(symbol: ts.Symbol): DocEntry {
@@ -76,23 +91,23 @@ function generateDocumentation(fileName: string, options: ts.CompilerOptions): v
     assert(valueDeclaration)
 
     const type = checker.getTypeOfSymbolAtLocation(member, valueDeclaration)
-    const nullUnion = hasNullUnion(valueDeclaration)
 
     const stringifiedType = checker.typeToString(type, valueDeclaration, ts.TypeFormatFlags.NoTruncation | ts.TypeFormatFlags.NoTypeReduction)
 
-    if (stringifiedType === 'any') {
-      console.log(member)
-    }
+    assert.notEqual(stringifiedType, 'any')
+
+    // Check if the "undefined" union was added by "typeToString" + "strictNullChecks" and it wasn't there in reality
+    const hasStringifiedUndefined = stringifiedType.includes(' | undefined') && !hasUndefinedUnion(valueDeclaration)
 
     return {
-      type: `${stringifiedType}${nullUnion ? ' | null' : ''}`,
+      type: hasStringifiedUndefined ? stringifiedType.replace(' | undefined', '') : stringifiedType,
       isOptional: (member.getFlags() & ts.SymbolFlags.Optional) === ts.SymbolFlags.Optional,
       documentation: member.getDocumentationComment(checker),
       jsDoc: member.getJsDocTags(checker),
     }
   }
 
-  function hasNullUnion(declaration: ts.Declaration): boolean {
+  function hasUndefinedUnion(declaration: ts.Declaration): boolean {
     if (!ts.isPropertySignature(declaration)) return false
 
     assert(declaration.type)
@@ -100,11 +115,31 @@ function generateDocumentation(fileName: string, options: ts.CompilerOptions): v
 
     if (!ts.isUnionTypeNode(type)) return false
 
-    return type.types.some((t) => ts.isLiteralTypeNode(t) && t.literal.kind === ts.SyntaxKind.NullKeyword)
+    return type.types.some((t) => ts.isToken(t) && t.kind === ts.SyntaxKind.UndefinedKeyword)
   }
 }
 
 generateDocumentation(process.argv.at(2)!, {
   target: ts.ScriptTarget.ES2022,
-  module: ts.ModuleKind.ES2022,
+  module: ts.ModuleKind.Node16,
+  rootDir: './packages/bot/src',
+  outDir: './packages/bot/dist',
+  tsBuildInfoFile: './packages/bot/dist/.tsbuildinfo',
+  composite: false,
+  declaration: true,
+  declarationMap: true,
+  esModuleInterop: true,
+  forceConsistentCasingInFileNames: true,
+  inlineSources: false,
+  isolatedModules: true,
+  moduleResolution: ts.ModuleResolutionKind.Node16,
+  noUnusedLocals: false,
+  noUnusedParameters: false,
+  preserveWatchOutput: true,
+  skipLibCheck: true,
+  skipDefaultLibCheck: true,
+  strict: true,
+  incremental: true,
+  resolveJsonModule: true,
+  noEmit: true,
 })
