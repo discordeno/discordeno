@@ -92,7 +92,7 @@ function writeDocumentation(documentation: ts.SymbolDisplayPart[], ident: string
   writeStream.write(splitted[0])
 
   for (const text of splitted.slice(1)) {
-    writeStream.write(`\n${ident} *`)
+    writeStream.write(`\n${ident} * `)
     writeStream.write(text)
   }
 }
