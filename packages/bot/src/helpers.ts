@@ -2,11 +2,11 @@ import type { CreateWebhook } from '@discordeno/rest'
 import type {
   AddDmRecipientOptions,
   AddGuildMemberOptions,
-  ApplicationCommandPermissions,
   AtLeastOne,
   BeginGuildPrune,
   BigString,
   CamelizedDiscordAccessTokenResponse,
+  CamelizedDiscordApplicationCommandPermissions,
   CamelizedDiscordApplicationRoleConnection,
   CamelizedDiscordArchivedThreads,
   CamelizedDiscordAuditLog,
@@ -743,7 +743,7 @@ export interface BotHelpers {
     guildId: BigString,
     commandId: BigString,
     bearerToken: string,
-    options: ApplicationCommandPermissions[],
+    options: CamelizedDiscordApplicationCommandPermissions[],
   ) => Promise<GuildApplicationCommandPermissions>
   editAutomodRule: (
     guildId: BigString,
