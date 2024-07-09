@@ -1,5 +1,5 @@
 import { Intents } from '@discordeno/types'
-import { delay, logger } from '@discordeno/utils'
+import { delay, logger, snakeToCamelCase } from '@discordeno/utils'
 import { use as chaiUse } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { describe, it } from 'mocha'
@@ -23,12 +23,9 @@ describe('[Bot] Delete any guild owned guilds', () => {
 
             // RUN DISPATCH CHECK
             await bot.events.dispatchRequirements?.(data, shard.id)
-            bot.events[
-              data.t.toLowerCase().replace(/_([a-z])/g, function (g) {
-                return g[1].toUpperCase()
-              }) as keyof EventHandlers
-              // @ts-expect-error as any gets removed by linter
-            ]?.(data.d, shard)
+
+            const eventName = snakeToCamelCase(data.t)
+            bot.events[eventName as keyof EventHandlers]?.(data.d as never, shard as never)
           },
         },
         intents: Intents.Guilds,

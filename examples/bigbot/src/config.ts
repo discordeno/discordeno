@@ -63,7 +63,7 @@ export const GATEWAY_INTENTS = Intents.Guilds | Intents.GuildMessages
 // Helper functions
 
 function assertEnv(env: string): string {
-  if (process.env[env]) return process.env[env]!
+  if (process.env[env]) return process.env[env]
 
   throw new TypeError(`The '${env}' environment variable must be set`)
 }
