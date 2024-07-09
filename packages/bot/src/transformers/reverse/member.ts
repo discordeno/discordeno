@@ -35,7 +35,7 @@ export function transformMemberToDiscordMember(bot: Bot, payload: Member): Disco
     deaf: payload.toggles?.deaf,
     mute: payload.toggles?.mute,
     pending: payload.toggles?.pending,
-    flags: payload.flags,
+    flags: payload.flags?.toJSON(),
     avatar_decoration_data: {
       asset: iconBigintToHash(payload.avatarDecorationData.asset),
       sku_id: bot.transformers.reverse.snowflake(payload.avatarDecorationData.skuId),
