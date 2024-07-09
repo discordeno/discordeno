@@ -97,12 +97,12 @@ import type { Bot } from './bot.js'
 import type {
   Application,
   ApplicationCommand,
-  ApplicationCommandPermission,
   AutoModerationRule,
   Channel,
   Emoji,
   Entitlement,
   Guild,
+  GuildApplicationCommandPermissions,
   GuildOnboarding,
   GuildWidget,
   GuildWidgetSettings,
@@ -744,7 +744,7 @@ export interface BotHelpers {
     commandId: BigString,
     bearerToken: string,
     options: ApplicationCommandPermissions[],
-  ) => Promise<ApplicationCommandPermission>
+  ) => Promise<GuildApplicationCommandPermissions>
   editAutomodRule: (
     guildId: BigString,
     ruleId: BigString,
@@ -794,8 +794,11 @@ export interface BotHelpers {
     guildId: BigString,
     commandId: BigString,
     options?: GetApplicationCommandPermissionOptions,
-  ) => Promise<ApplicationCommandPermission>
-  getApplicationCommandPermissions: (guildId: BigString, options?: GetApplicationCommandPermissionOptions) => Promise<ApplicationCommandPermission[]>
+  ) => Promise<GuildApplicationCommandPermissions>
+  getApplicationCommandPermissions: (
+    guildId: BigString,
+    options?: GetApplicationCommandPermissionOptions,
+  ) => Promise<GuildApplicationCommandPermissions[]>
   getAuditLog: (guildId: BigString, options?: GetGuildAuditLog) => Promise<CamelizedDiscordAuditLog>
   getAutomodRule: (guildId: BigString, ruleId: BigString) => Promise<AutoModerationRule>
   getAutomodRules: (guildId: BigString) => Promise<AutoModerationRule[]>

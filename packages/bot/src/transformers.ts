@@ -119,7 +119,6 @@ import {
   type ApplicationCommand,
   type ApplicationCommandOption,
   type ApplicationCommandOptionChoice,
-  type ApplicationCommandPermission,
   type Attachment,
   type AuditLogEntry,
   type AutoModerationActionExecution,
@@ -132,6 +131,7 @@ import {
   type Entitlement,
   type GetGatewayBot,
   type Guild,
+  type GuildApplicationCommandPermissions,
   type GuildOnboarding,
   type GuildWidget,
   type GuildWidgetSettings,
@@ -202,7 +202,7 @@ export interface Transformers {
     applicationCommandPermission: (
       bot: Bot,
       payload: DiscordGuildApplicationCommandPermissions,
-      applicationCommandPermission: ApplicationCommandPermission,
+      applicationCommandPermission: GuildApplicationCommandPermissions,
     ) => any
     scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent, scheduledEvent: ScheduledEvent) => any
     threadMember: (bot: Bot, payload: DiscordThreadMember, threadMember: ThreadMember) => any
@@ -662,7 +662,7 @@ export interface Transformers {
   auditLogEntry: (bot: Bot, payload: DiscordAuditLogEntry) => AuditLogEntry
   applicationCommand: (bot: Bot, payload: DiscordApplicationCommand) => ApplicationCommand
   applicationCommandOption: (bot: Bot, payload: DiscordApplicationCommandOption) => ApplicationCommandOption
-  applicationCommandPermission: (bot: Bot, payload: DiscordGuildApplicationCommandPermissions) => ApplicationCommandPermission
+  applicationCommandPermission: (bot: Bot, payload: DiscordGuildApplicationCommandPermissions) => GuildApplicationCommandPermissions
   scheduledEvent: (bot: Bot, payload: DiscordScheduledEvent) => ScheduledEvent
   threadMember: (bot: Bot, payload: DiscordThreadMember) => ThreadMember
   threadMemberGuildCreate: (bot: Bot, payload: DiscordThreadMemberGuildCreate) => ThreadMemberGuildCreate

@@ -21,7 +21,6 @@ import type {
 } from './discord.js'
 import type {
   AllowedMentionsTypes,
-  ApplicationCommandPermissionTypes,
   ApplicationCommandTypes,
   ApplicationFlags,
   AuditLogEvents,
@@ -1010,16 +1009,6 @@ export interface EditMessage {
   attachments?: Array<Camelize<DiscordAttachment>>
   /** The components you would like to have sent in this message */
   components?: MessageComponents
-}
-
-/** https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions */
-export interface ApplicationCommandPermissions {
-  /** The id of the role or user */
-  id: string
-  /** Role or User */
-  type: ApplicationCommandPermissionTypes
-  /** `true` to allow, `false`, to disallow */
-  permission: boolean
 }
 
 /** Additional proprieties for https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions and https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions */

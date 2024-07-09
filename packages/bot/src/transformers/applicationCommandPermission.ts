@@ -1,7 +1,10 @@
 import type { DiscordGuildApplicationCommandPermissions } from '@discordeno/types'
-import type { ApplicationCommandPermission, Bot } from '../index.js'
+import type { Bot, GuildApplicationCommandPermissions } from '../index.js'
 
-export function transformApplicationCommandPermission(bot: Bot, payload: DiscordGuildApplicationCommandPermissions): ApplicationCommandPermission {
+export function transformApplicationCommandPermission(
+  bot: Bot,
+  payload: DiscordGuildApplicationCommandPermissions,
+): GuildApplicationCommandPermissions {
   const applicationCommandPermission = {
     id: bot.transformers.snowflake(payload.id),
     applicationId: bot.transformers.snowflake(payload.application_id),
@@ -11,7 +14,7 @@ export function transformApplicationCommandPermission(bot: Bot, payload: Discord
       type: perm.type,
       permission: perm.permission,
     })),
-  } as ApplicationCommandPermission
+  } as GuildApplicationCommandPermissions
 
   return bot.transformers.customizers.applicationCommandPermission(bot, payload, applicationCommandPermission)
 }

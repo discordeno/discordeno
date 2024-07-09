@@ -8,7 +8,6 @@ import { createBotGatewayHandlers } from './handlers.js'
 import { createBotHelpers, type BotHelpers } from './helpers.js'
 import { createTransformers, type Transformers } from './transformers.js'
 import type {
-  ApplicationCommandPermission,
   AuditLogEntry,
   AutoModerationActionExecution,
   AutoModerationRule,
@@ -16,6 +15,7 @@ import type {
   Emoji,
   Entitlement,
   Guild,
+  GuildApplicationCommandPermissions,
   Integration,
   Interaction,
   Invite,
@@ -163,7 +163,7 @@ export interface Bot {
 
 export interface EventHandlers {
   debug: (text: string, ...args: any[]) => unknown
-  applicationCommandPermissionsUpdate: (command: ApplicationCommandPermission) => unknown
+  applicationCommandPermissionsUpdate: (command: GuildApplicationCommandPermissions) => unknown
   guildAuditLogEntryCreate: (log: AuditLogEntry, guildId: bigint) => unknown
   automodRuleCreate: (rule: AutoModerationRule) => unknown
   automodRuleUpdate: (rule: AutoModerationRule) => unknown

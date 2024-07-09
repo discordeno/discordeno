@@ -206,17 +206,19 @@ export interface ApplicationCommandOptionChoice {
   value: string | number
 }
 
-export interface ApplicationCommandPermission {
+export interface GuildApplicationCommandPermissions {
   id: bigint
   guildId: bigint
   applicationId: bigint
-  permissions: ApplicationCommandPermissionChange[]
+  permissions: ApplicationCommandPermissions[]
 }
 
-// TODO: maybe find a better name for this interface? Discord calls it "Application Command Permissions" and calls our "ApplicationCommandPermission" "Guild Application Command Permissions", so since we don't have the guild prefix i don't know what to call this, a solution would be making a breaking change on "ApplicationCommandPermission" and rename it to "GuildApplicationCommandPermission"
-export interface ApplicationCommandPermissionChange {
+export interface ApplicationCommandPermissions {
+  /** The id of the role or user */
   id: bigint
+  /** Role or User */
   type: ApplicationCommandPermissionTypes
+  /** `true` to allow, `false`, to disallow */
   permission: boolean
 }
 
