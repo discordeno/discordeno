@@ -26,7 +26,7 @@
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/unit/**/*.spec.ts'",
     "test:integration": "c8 --r lcov mocha --no-warnings 'tests/integration/**/*.spec.ts' && node ../../scripts/coveragePathFixing.js gateway",
     "test:type": "tsc --noEmit",
-    "test:test-type": "tsc --project tsconfig.test.json"
+    "test:test-type": "tsc --project tests/tsconfig.json"
   },
   "dependencies": {
     "@discordeno/types": "19.0.0-beta.1",

@@ -26,7 +26,7 @@
     "test:deno-unit": "swc --strip-leading-paths tests --delete-dir-on-start --out-dir denoTestsDist && node ../../scripts/fixDenoTestExtension.js && deno test -A --import-map ../../denoImportMap.json denoTestsDist",
     "test:unit:watch": "mocha --no-warnings --watch --parallel 'tests/**/*.spec.ts'",
     "test:type": "tsc --noEmit",
-    "test:test-type": "tsc --project tsconfig.test.json"
+    "test:test-type": "tsc --project tests/tsconfig.json"
   },
   "dependencies": {
     "@discordeno/bot": "19.0.0-beta.1",

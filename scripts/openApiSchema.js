@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 import fs from 'fs'
 
 // TODO: replace with fetch of live spec
 const DISCORD_SPEC = {}
 
 function schemaRefToName(ref) {
-  if (!ref) return ""
+  if (!ref) return ''
   return `Discord${ref?.substring(ref.lastIndexOf('/') + 1)}`
 }
 
@@ -60,12 +63,12 @@ function generateFromSpec() {
               type === 'integer'
                 ? 'number'
                 : type === 'array'
-                ? property.items.$ref
-                  ? `${schemaRefToName(property.items.$ref)}[]`
-                  : Array.isArray(property.items.oneOf)
-                  ? `${property.items.oneOf.map((o) => `${schemaRefToName(o.$ref)}[]`).join(' | ')}`
-                  : `unknown[]`
-                : type,
+                  ? property.items.$ref
+                    ? `${schemaRefToName(property.items.$ref)}[]`
+                    : Array.isArray(property.items.oneOf)
+                      ? `${property.items.oneOf.map((o) => `${schemaRefToName(o.$ref)}[]`).join(' | ')}`
+                      : `unknown[]`
+                  : type,
             )
             .join(' | ') ??
           property.oneOf
