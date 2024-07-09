@@ -3,6 +3,7 @@ import { iconHashToBigInt } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
 import type { AvatarDecorationData } from './avatarDecorationData.js'
 import { Permissions } from './toggles/Permissions.js'
+import { ToggleBitfield } from './toggles/ToggleBitfield.js'
 import { MemberToggles } from './toggles/member.js'
 import type { User } from './user.js'
 
@@ -36,7 +37,7 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigSt
   if (props.deaf || props.mute || props.pending) {
     member.toggles = new MemberToggles(payload)
   }
-  if (props.flags && payload.flags !== undefined) member.flags = payload.flags
+  if (props.flags) member.flags = new ToggleBitfield(payload.flags)
   if (props.avatarDecorationData && payload.avatar_decoration_data)
     member.avatarDecorationData = bot.transformers.avatarDecorationData(bot, payload.avatar_decoration_data)
 
@@ -76,7 +77,7 @@ export interface Member extends BaseMember {
   /** when the user's timeout will expire and the user will be able to communicate in the guild again (set null to remove timeout), null or a time in the past if the user is not timed out */
   communicationDisabledUntil?: number
   /** Guild member flags */
-  flags: number
+  flags: ToggleBitfield
   /** data for the member's guild avatar decoration */
   avatarDecorationData: AvatarDecorationData
 }
