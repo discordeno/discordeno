@@ -210,7 +210,7 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
 
         logger.warn(`[Resharding] Shutting down old shards.`)
         // Close old shards
-        await gateway.shutdown(ShardSocketCloseCodes.Resharded, 'Resharded!')
+        await gateway.shutdown(ShardSocketCloseCodes.Resharded, 'Resharded!', false)
         logger.warn(`[Resharding] Completed.`)
 
         // Replace old shards
@@ -311,10 +311,10 @@ export function createGatewayManager(options: CreateGatewayManagerOptions): Gate
         }, gateway.resharding.checkInterval)
       }
     },
-    async shutdown(code, reason) {
+    async shutdown(code, reason, clearReshardingInterval = true) {
       gateway.shards.forEach((shard) => shard.close(code, reason))
 
-      if (gateway.resharding.checkIntervalId) clearInterval(gateway.resharding.checkIntervalId)
+      if (clearReshardingInterval && gateway.resharding.checkIntervalId) clearInterval(gateway.resharding.checkIntervalId)
 
       await delay(5000)
     },
@@ -680,7 +680,7 @@ export interface GatewayManager extends Required<CreateGatewayManagerOptions> {
   /** Start identifying all the shards. */
   spawnShards: () => Promise<void>
   /** Shutdown all shards. */
-  shutdown: (code: number, reason: string) => Promise<void>
+  shutdown: (code: number, reason: string, clearReshardingInterval?: boolean) => Promise<void>
   sendPayload: (shardId: number, payload: ShardSocketRequest) => Promise<void>
   /** Allows users to hook in and change to communicate to different workers across different servers or anything they like. For example using redis pubsub to talk to other servers. */
   tellWorkerToIdentify: (workerId: number, shardId: number, bucketId: number) => Promise<void>
