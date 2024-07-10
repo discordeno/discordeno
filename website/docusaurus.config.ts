@@ -174,20 +174,24 @@ const config: Config = {
           title: 'API Reference',
           items: [
             {
-              label: 'Classes',
-              to: '/api_reference/category/classes-3',
+              label: 'Bot package',
+              to: '/api_reference/category/bot-3',
             },
             {
-              label: 'Enums',
-              to: '/api_reference/category/enums-3',
+              label: 'Gateway package',
+              to: '/api_reference/category/gateway-3',
             },
             {
-              label: 'Interfaces',
-              to: '/api_reference/category/interfaces-3',
+              label: 'Rest package',
+              to: '/api_reference/category/rest-3',
             },
             {
-              label: 'Modules',
-              to: '/api_reference/category/modules-3',
+              label: 'Utils package',
+              to: '/api_reference/category/utils-3',
+            },
+            {
+              label: 'Types package',
+              to: '/api_reference/category/types-3',
             },
           ],
         },
