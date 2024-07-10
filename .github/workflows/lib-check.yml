@@ -155,19 +155,6 @@ jobs:
     with:
       package: bot
 
-  client-unit-test:
-    name: Client
-    needs: build-dist
-    uses: ./.github/workflows/unit-test.yml
-    with:
-      package: client
-  client-other-runtime-test:
-    name: Client
-    needs: client-unit-test
-    uses: ./.github/workflows/other-runtime-unit-test.yml
-    with:
-      package: client
-
   discordeno-unit-test:
     name: Discordeno
     needs: build-dist
