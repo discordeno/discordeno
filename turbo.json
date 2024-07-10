@@ -1,17 +1,13 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "tasks": {
     "build": {
       "outputs": ["dist/**/*.js"],
       "inputs": ["src/**/*.ts"]
     },
     "build:type": {
       "dependsOn": ["^build:type"],
-      "outputs": ["dist/**/*.d.ts", "dist/**/*.d.ts.map", "dist/tsconfig.tsbuildinfo"]
-    },
-    "release-build": {
-      "dependsOn": ["^release-build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/types/**/*.d.ts", "dist/types/**/*.d.ts.map", "dist/tsconfig.tsbuildinfo"]
     },
     "test:unit-coverage": {
       "dependsOn": ["^build"],
@@ -41,12 +37,9 @@
       "outputs": ["coverage/**"]
     },
     "lint": {
-      "dependsOn": ["^build:type"]
+      "cache": false
     },
     "fmt": {
-      "dependsOn": ["^build:type"]
-    },
-    "dev": {
       "cache": false
     }
   }
