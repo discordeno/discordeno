@@ -1,4 +1,12 @@
 {
   "extends": "tsconfig/base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "incremental": false,
+    "tsBuildInfoFile": null,
+    "rootDir": null,
+    "outDir": null,
+    "allowJs": true
+  },
   "include": ["."]
 }
