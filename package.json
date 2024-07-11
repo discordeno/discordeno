@@ -36,7 +36,7 @@
     "prettier": "^3.2.5",
     "turbo": "^1.11.3",
     "typedoc": "^0.26.3",
-    "typedoc-plugin-markdown": "3.17.1",
+    "typedoc-plugin-markdown": "4.2.0",
     "typescript": "^5.5.3"
   },
   "engines": {
