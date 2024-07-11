@@ -34,7 +34,8 @@
     "@discordeno/rest": "19.0.0-alpha.1",
     "@discordeno/types": "19.0.0-beta.1",
     "@discordeno/utils": "19.0.0-beta.1",
-    "commander": "^12.0.0"
+    "commander": "^12.0.0",
+    "typescript": "^5.5.3"
   },
   "devDependencies": {
     "@swc/cli": "^0.3.9",
@@ -50,7 +51,6 @@
     "mocha": "^10.5.1",
     "sinon": "^18.0.0",
     "ts-node": "^10.9.2",
-    "tsconfig": "*",
-    "typescript": "^5.5.3"
+    "tsconfig": "*"
   }
 }
