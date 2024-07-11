@@ -112,7 +112,6 @@ generateDocumentation(process.argv.at(2)!, {
   target: ts.ScriptTarget.ES2022,
   module: ts.ModuleKind.Node16,
   moduleResolution: ts.ModuleResolutionKind.Node16,
-  rootDir: './packages/bot/src',
   skipLibCheck: true,
   skipDefaultLibCheck: true,
   strict: true,

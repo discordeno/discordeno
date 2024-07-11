@@ -2105,7 +2105,7 @@ __metadata:
     tsconfig: "npm:*"
     typescript: "npm:^5.5.3"
   bin:
-    discordeno: ./bin/disocrdeno.js
+    discordeno: ./bin/discordeno.js
   languageName: unknown
   linkType: soft
 
