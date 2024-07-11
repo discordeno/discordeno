@@ -1,6 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import type { BigString, ChannelTypes, DiscordChannel, DiscordThreadMember, OverwriteReadable, VideoQualityModes } from '@discordeno/types'
-import { calculatePermissions, type Bot } from '../index.js'
+import type {
+  BigString,
+  ChannelTypes,
+  DiscordChannel,
+  DiscordForumTag,
+  ForumLayout,
+  OverwriteReadable,
+  SortOrderTypes,
+  VideoQualityModes,
+} from '@discordeno/types'
+import { calculatePermissions, iconHashToBigInt, type Bot, type DefaultReactionEmoji, type ThreadMember, type User } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { ChannelToggles } from './toggles/channel.js'
 
@@ -36,6 +45,9 @@ export const baseChannel: Partial<Channel> & BaseChannel = {
   },
   get newlyCreated() {
     return !!this.toggles?.newlyCreated
+  },
+  get managed() {
+    return !!this.toggles?.managed
   },
   get permissionOverwrites() {
     return (
@@ -100,8 +112,36 @@ export function transformChannel(bot: Bot, payload: { channel: DiscordChannel } 
   if (props.permissionOverwrites && payload.channel.permission_overwrites)
     channel.internalOverwrites = payload.channel.permission_overwrites.map((o) => packOverwrites(o.allow ?? '0', o.deny ?? '0', o.id, o.type))
   if (props.parentId && payload.channel.parent_id) channel.parentId = bot.transformers.snowflake(payload.channel.parent_id)
+  if (props.recipients && payload.channel.recipients) channel.recipients = payload.channel.recipients.map((u) => bot.transformers.user(bot, u))
+  if (props.icon && payload.channel.icon) channel.icon = iconHashToBigInt(payload.channel.icon)
+  if (props.applicationId && payload.channel.application_id) channel.applicationId = bot.transformers.snowflake(payload.channel.application_id)
+  if (props.member && payload.channel.member) channel.member = bot.transformers.threadMember(bot, payload.channel.member)
+  if (props.totalMessageSent && payload.channel.total_message_sent !== undefined) channel.totalMessageSent = payload.channel.total_message_sent
+  if (props.availableTags && payload.channel.available_tags)
+    channel.availableTags = payload.channel.available_tags.map((x) => bot.transformers.forumTag(bot, x))
+  if (props.appliedTags && payload.channel.applied_tags) channel.appliedTags = payload.channel.applied_tags.map((x) => bot.transformers.snowflake(x))
+  if (props.defaultReactionEmoji && payload.channel.default_reaction_emoji)
+    channel.defaultReactionEmoji = bot.transformers.defaultReactionEmoji(bot, payload.channel.default_reaction_emoji)
+  if (props.defaultThreadRateLimitPerUser && payload.channel.default_thread_rate_limit_per_user)
+    channel.defaultThreadRateLimitPerUser = payload.channel.default_thread_rate_limit_per_user
+  if (props.defaultSortOrder && payload.channel.default_sort_order !== undefined) channel.defaultSortOrder = payload.channel.default_sort_order
+  if (props.defaultForumLayout && payload.channel.default_forum_layout !== undefined)
+    channel.defaultForumLayout = payload.channel.default_forum_layout
 
   return bot.transformers.customizers.channel(bot, payload.channel, channel)
+}
+
+export function transformForumTag(bot: Bot, payload: DiscordForumTag): ForumTag {
+  const props = bot.transformers.desiredProperties.forumTag
+  const forumTag = {} as ForumTag
+
+  if (props.id && payload.id) forumTag.id = bot.transformers.snowflake(payload.id)
+  if (props.name && payload.name) forumTag.name = payload.name
+  if (props.moderated && payload.moderated) forumTag.moderated = payload.moderated
+  if (props.emojiId && payload.emoji_id) forumTag.emojiId = bot.transformers.snowflake(payload.emoji_id)
+  if (props.emojiName && payload.emoji_name) forumTag.emojiName = payload.emoji_name
+
+  return bot.transformers.customizers.forumTag(bot, payload, forumTag)
 }
 
 export interface BaseChannel {
@@ -130,6 +170,8 @@ export interface BaseChannel {
   invitable: boolean
   /** Whether the thread is archived */
   archived: boolean
+  /** for group DM channels: whether the channel is managed by an application via the `gdm.join` OAuth2 scope */
+  managed: boolean
   /** Explicit permission overwrites for members and roles. */
   permissionOverwrites: OverwriteReadable[]
 }
@@ -185,7 +227,7 @@ export interface Channel extends BaseChannel {
     autoArchiveDuration: 60 | 1440 | 4320 | 10080
   }
   /** Thread member object for the current user, if they have joined the thread, only included on certain API endpoints */
-  member?: DiscordThreadMember
+  member?: ThreadMember
   /** Default duration for newly created threads, in minutes, to automatically archive the thread after recent activity, can be set to: 60, 1440, 4320, 10080 */
   autoArchiveDuration?: number
   /** computed permissions for the invoking user in the channel, including overwrites, only included when part of the resolved data received on a slash command interaction. This does not include implicit permissions, which may need to be checked separately. */
@@ -198,4 +240,36 @@ export interface Channel extends BaseChannel {
    * @private This is for internal use only, and prone to breaking changes.
    */
   internalOverwrites?: bigint[]
+  /** The recipients of a group dm */
+  recipients?: User[]
+  /** Icon hash of the group dm */
+  icon?: bigint
+  /** Application id of the group DM creator if it is bot-created */
+  applicationId?: bigint
+  /** Number of messages ever sent in a thread, it's similar to `message_count` on message creation, but will not decrement the number when a message is deleted */
+  totalMessageSent?: number
+  /** The set of tags that can be used in a `GUILD_FORUM` or a `GUILD_MEDIA` channel */
+  availableTags?: ForumTag[]
+  /** The IDs of the set of tags that have been applied to a thread in a `GUILD_FORUM` or a `GUILD_MEDIA` channel */
+  appliedTags?: bigint[]
+  /** The emoji to show in the add reaction button on a thread in a `GUILD_FORUM` or a `GUILD_MEDIA` channel */
+  defaultReactionEmoji?: DefaultReactionEmoji
+  /** the initial `rateLimitPerUser` to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
+  defaultThreadRateLimitPerUser?: number
+  /** The default sort order type used to order posts in `GUILD_FORUM` and `GUILD_MEDIA` channels. Defaults to null, which indicates a preferred sort order hasn't been set by a channel admin */
+  defaultSortOrder?: SortOrderTypes | null
+  defaultForumLayout?: ForumLayout
+}
+
+export interface ForumTag {
+  /** The id of the tag */
+  id: bigint
+  /** The name of the tag (0-20 characters) */
+  name: string
+  /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
+  moderated: boolean
+  /** The id of a guild's custom emoji At most one of emoji_id and emoji_name may be set. */
+  emojiId: bigint
+  /** The unicode character of the emoji */
+  emojiName: string | null
 }
