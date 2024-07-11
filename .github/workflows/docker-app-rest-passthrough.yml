@@ -103,6 +103,7 @@ jobs:
         run: docker load --input /tmp/rest-passthrough-image.tar
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
+        if: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
         with:
           image-ref: 'discordeno/app-rest-passthrough:latest'
           format: 'table'
@@ -137,6 +138,7 @@ jobs:
           args: --file=docker-apps/rest-passthrough/Dockerfile
       # See https://github.com/github/codeql-action/issues/2187#issuecomment-2043220400 for for info
       - name: Replace security-severity undefined for license-related findings
+        if: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
         run: |
           sed -i 's/"security-severity": "undefined"/"security-severity": "0"/g' snyk.sarif
       - name: Upload snyk scan results to GitHub Security tab
