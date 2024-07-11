@@ -6,7 +6,7 @@ import { writeFileSync } from 'node:fs'
 import { inspect } from 'node:util'
 import ts from 'typescript'
 
-inspect.defaultOptions.depth = 5
+inspect.defaultOptions.depth = 3
 
 interface DocEntry {
   name?: string
@@ -78,9 +78,11 @@ function generateDocumentation(fileName: string, options: ts.CompilerOptions): v
 
   /** Serialize a interface symbol information */
   function serializeInterface(symbol: ts.Symbol): DocEntry {
+    assert(symbol.members)
+
     const details = serializeSymbol(symbol)
 
-    details.members = Object.fromEntries(Array.from(symbol.members!.entries()).map(([name, symbol]) => [name, serializeMember(symbol)]))
+    details.members = Object.fromEntries(Array.from(symbol.members.entries()).map(([name, symbol]) => [name, serializeMember(symbol)]))
 
     return details
   }
@@ -90,21 +92,15 @@ function generateDocumentation(fileName: string, options: ts.CompilerOptions): v
     const valueDeclaration = member.valueDeclaration
     assert(valueDeclaration)
 
-    const type = checker.getTypeOfSymbolAtLocation(member, valueDeclaration)
+    const valueDeclarationChildren = valueDeclaration.getChildren()
+    const typeNode = valueDeclarationChildren.find((x) => ts.isTypeNode(x))
+    assert(typeNode)
 
-    const stringifiedType = checker.typeToString(
-      type,
-      valueDeclaration,
-      ts.TypeFormatFlags.NoTruncation | ts.TypeFormatFlags.NoTypeReduction | ts.TypeFormatFlags.UseSingleQuotesForStringLiteralType,
-    )
-
-    assert.notEqual(stringifiedType, 'any')
-
-    // Check if the "undefined" union was added by "typeToString" + "strictNullChecks" and it wasn't there in reality
-    const hasStringifiedUndefined = stringifiedType.includes(' | undefined') && !hasUndefinedUnion(valueDeclaration)
+    // Since we are getting the type directly from the sourceFile it may have a trailing space, so we remove them
+    const typeText = typeNode.getFullText().trim()
 
     return {
-      type: hasStringifiedUndefined ? stringifiedType.replace(' | undefined', '') : stringifiedType,
+      type: typeText,
       isOptional: (member.getFlags() & ts.SymbolFlags.Optional) === ts.SymbolFlags.Optional,
       documentation: member.getDocumentationComment(checker),
       jsDoc: member.getJsDocTags(checker),
