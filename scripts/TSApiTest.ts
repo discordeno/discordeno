@@ -106,17 +106,6 @@ function generateDocumentation(fileName: string, options: ts.CompilerOptions): v
       jsDoc: member.getJsDocTags(checker),
     }
   }
-
-  function hasUndefinedUnion(declaration: ts.Declaration): boolean {
-    if (!ts.isPropertySignature(declaration)) return false
-
-    assert(declaration.type)
-    const type = declaration.type
-
-    if (!ts.isUnionTypeNode(type)) return false
-
-    return type.types.some((t) => ts.isToken(t) && t.kind === ts.SyntaxKind.UndefinedKeyword)
-  }
 }
 
 generateDocumentation(process.argv.at(2)!, {
