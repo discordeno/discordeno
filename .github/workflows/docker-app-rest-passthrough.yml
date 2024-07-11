@@ -135,7 +135,11 @@ jobs:
         with:
           image: 'discordeno/app-rest-passthrough:latest'
           args: --file=docker-apps/rest-passthrough/Dockerfile
-      - name: Upload result to GitHub Code Scanning
+      # See https://github.com/github/codeql-action/issues/2187#issuecomment-2043220400 for for info
+      - name: Replace security-severity undefined for license-related findings
+        run: |
+          sed -i 's/"security-severity": "undefined"/"security-severity": "0"/g' snyk.sarif
+      - name: Upload snyk scan results to GitHub Security tab
         if: ${{ github.event_name == 'schedule' || github.event_name == 'push' }}
         uses: github/codeql-action/upload-sarif@v3
         with:
