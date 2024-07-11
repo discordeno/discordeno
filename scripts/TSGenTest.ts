@@ -101,24 +101,11 @@ function parseDocumentation(docs: ts.SymbolDisplayPart[]) {
   let out = ''
 
   for (const doc of docs) {
-    const split = doc.text.split('\n')
-
-    if (split.length === 1) {
-      if (doc.kind === 'linkText') {
-        out += ' | '
-      }
-
-      out += split[0]
-      continue
+    if (doc.kind === 'linkText') {
+      out += ' | '
     }
 
-    split.forEach((text, i) => {
-      out += text
-
-      if (i < split.length - 1) {
-        out += '\n'
-      }
-    })
+    out += doc.text
   }
 
   return out
