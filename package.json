@@ -31,9 +31,9 @@
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
     "turbo": "^1.11.3",
-    "typedoc": "^0.25.13",
+    "typedoc": "^0.26.3",
     "typedoc-plugin-markdown": "3.17.1",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.3"
   },
   "engines": {
     "node": ">=18.0.0"

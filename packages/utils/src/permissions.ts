@@ -7,7 +7,7 @@ export function calculatePermissions(permissionBits: bigint): PermissionStrings[
     // Since Object.keys() not only returns the permission names but also the bit values we need to return false if it is a Number
     if (Number(permission)) return false
     // Check if permissionBits has this permission
-    return permissionBits & BigInt(BitwisePermissionFlags[permission as PermissionStrings])
+    return permissionBits & BitwisePermissionFlags[permission as PermissionStrings]
   }) as PermissionStrings[]
 }
 
@@ -15,7 +15,7 @@ export function calculatePermissions(permissionBits: bigint): PermissionStrings[
 export function calculateBits(permissions: PermissionStrings[]): string {
   return permissions
     .reduce((bits, perm) => {
-      bits |= BigInt(BitwisePermissionFlags[perm])
+      bits |= BitwisePermissionFlags[perm]
       return bits
     }, 0n)
     .toString()
