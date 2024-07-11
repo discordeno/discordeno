@@ -7,7 +7,7 @@
     "require": "./dist/cjs/index.cjs",
     "types": "./dist/types/index.d.ts"
   },
-  "bin": "./bin/disocrdeno.js",
+  "bin": "./bin/discordeno.js",
   "types": "./dist/types/index.d.ts",
   "type": "module",
   "license": "Apache-2.0",
