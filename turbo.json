@@ -37,7 +37,7 @@
       "outputs": ["coverage/**"]
     },
     "lint": {
-      "dependsOn": ["build:type"]
+      "dependsOn": ["build:type"],
       "cache": false
     },
     "fmt": {
