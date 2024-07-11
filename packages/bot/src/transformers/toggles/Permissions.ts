@@ -1,4 +1,4 @@
-import { BitwisePermissionFlags } from '@discordeno/types'
+import { type PermissionStrings, BitwisePermissionFlags } from '@discordeno/types'
 import { ToggleBitfieldBigint } from './ToggleBitfield.js'
 
 export class Permissions extends ToggleBitfieldBigint {
@@ -6,15 +6,15 @@ export class Permissions extends ToggleBitfieldBigint {
     super(BigInt(bits))
   }
 
-  has(permission: keyof typeof BitwisePermissionFlags): boolean {
-    return this.contains(BigInt(BitwisePermissionFlags[permission]))
+  has(permission: PermissionStrings): boolean {
+    return this.contains(BitwisePermissionFlags[permission])
   }
 
-  hasAll(permissions: Array<keyof typeof BitwisePermissionFlags>): boolean {
+  hasAll(permissions: PermissionStrings[]): boolean {
     return permissions.every((key) => this.has(key))
   }
 
-  missing(permissions: Array<keyof typeof BitwisePermissionFlags>): Array<keyof typeof BitwisePermissionFlags> {
+  missing(permissions: PermissionStrings[]): PermissionStrings[] {
     return permissions.filter((key) => !this.has(key))
   }
 }
