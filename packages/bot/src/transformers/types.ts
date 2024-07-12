@@ -443,10 +443,7 @@ export interface Channel {
   /**
    * Thread-specific fields not needed by other channels.
    *
-   * @deprecated
-   * Use channel.threadMetadata
-   *
-   * @private
+   * @internal
    * This field is an internal field, subject to breaking changes.
    */
   internalThreadMetadata?: InternalChannelThreadMetadata
