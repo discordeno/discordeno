@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "build:watch": "echo \"Starting build in watch mode...\" && chokidar \"packages/**/*.ts\" --ignore \"packages/**/dist/**/*.d.ts\"  -c \"yarn run build && yarn run build:type\"",
+    "build:watch": "echo \"Starting build in watch mode...\" && chokidar \"packages/**/*.ts\" --ignore \"packages/**/dist/**/*.d.ts\"  -c \"turbo run build build:type\"",
     "build:doc": "typedoc --options ./typedoc.json && node scripts/finalizeTypedocs.js",
     "build:type": "turbo run build:type",
     "release-build": "turbo run build build:type",
