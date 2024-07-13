@@ -1,4 +1,4 @@
-import { createLogger, createRestManager, LogDepth } from '@discordeno/bot'
+import { LogDepth, createLogger, createRestManager } from '@discordeno/bot'
 import { DISCORD_TOKEN } from '../config.js'
 import { setupRestAnalyticsHooks } from './influx.js'
 

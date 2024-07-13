@@ -62,10 +62,7 @@ export default function Home(): JSX.Element {
     )
 
   return (
-    <Layout
-      title={`Discordeno Documentation`}
-      description="An in-depth guide to using the Discordeno library for Deno."
-    >
+    <Layout title={`Discordeno Documentation`} description="An in-depth guide to using the Discordeno library for Deno.">
       <DiscordenoHeader />
       <MainPage>
         <DiscordenoFeatures />

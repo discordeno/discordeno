@@ -6,7 +6,7 @@
     "incremental": false,
     "tsBuildInfoFile": null,
     "rootDir": null,
-    "outDir": null,
+    "outDir": null
   },
-  "include": ["${configDir}"],
+  "include": ["${configDir}"]
 }

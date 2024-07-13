@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionTypes, ApplicationCommandTypes, createEmbeds, Permissions, type Member, type User } from '@discordeno/bot'
+import { ApplicationCommandOptionTypes, ApplicationCommandTypes, type Member, Permissions, type User, createEmbeds } from '@discordeno/bot'
 import { bot } from '../bot.js'
 import { createCommand } from '../commands.js'
 import { calculateMemberPermissions } from '../utils/permissions.js'

@@ -1,5 +1,5 @@
-import { logger } from '@discordeno/bot'
 import { readdir } from 'node:fs/promises'
+import { logger } from '@discordeno/bot'
 
 export default async function importDirectory(folder: string): Promise<void> {
   const files = await readdir(folder, { recursive: true })

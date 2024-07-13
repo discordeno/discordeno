@@ -1,4 +1,4 @@
-import { createBot, Intents, LogDepth, type logger as discordenoLogger } from '@discordeno/bot'
+import { Intents, LogDepth, createBot, type logger as discordenoLogger } from '@discordeno/bot'
 import { createProxyCache } from 'dd-cache-proxy'
 import { configs } from './config.js'
 

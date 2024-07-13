@@ -1,6 +1,6 @@
+import { Buffer } from 'node:buffer'
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { Buffer } from 'node:buffer'
 import { getBotIdFromToken, removeTokenPrefix } from '../src/token.js'
 
 describe('token.ts', () => {

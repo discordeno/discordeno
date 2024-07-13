@@ -1,5 +1,5 @@
-import { createEmbeds } from '@discordeno/bot'
 import { inspect } from 'node:util'
+import { createEmbeds } from '@discordeno/bot'
 import { BUGS_ERRORS_REPORT_WEBHOOK } from '../../config.js'
 import { bot } from '../bot.js'
 import { webhookURLToIDAndToken } from '../utils/webhook.js'

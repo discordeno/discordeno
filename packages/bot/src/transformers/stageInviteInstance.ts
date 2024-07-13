@@ -24,7 +24,7 @@ export function transformInviteStageInstance(bot: Bot, payload: DiscordInviteSta
 
 export interface InviteStageInstance {
   /** The members speaking in the Stage */
-  members: Array<Partial<Member>>
+  members: Partial<Member>[]
   /** The number of users in the Stage */
   participantCount: number
   /** The number of users speaking in the Stage */

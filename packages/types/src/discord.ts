@@ -498,7 +498,7 @@ export interface DiscordConnection {
   /** whether the connection is revoked */
   revoked?: boolean
   /** an array of partial server integrations */
-  integrations?: Array<Partial<DiscordIntegration>>
+  integrations?: Partial<DiscordIntegration>[]
   /** whether the connection is verified */
   verified: boolean
   /** whether friend sync is enabled for this connection */
@@ -879,7 +879,7 @@ export interface DiscordGuild {
   /** When this guild was joined at */
   joined_at?: string
   /** States of members currently in voice channels; lacks the guild_id key */
-  voice_states?: Array<Omit<DiscordVoiceState, 'guildId'>>
+  voice_states?: Omit<DiscordVoiceState, 'guildId'>[]
   /** Users in the guild */
   members?: DiscordMember[]
   /** Channels in the guild */
@@ -887,7 +887,7 @@ export interface DiscordGuild {
   /** All active threads in the guild that the current user has permission to view */
   threads?: DiscordChannel[]
   /** Presences of the members in the guild, will only include non-offline members if the size is greater than large threshold */
-  presences?: Array<Partial<DiscordPresenceUpdate>>
+  presences?: Partial<DiscordPresenceUpdate>[]
   /** Banner hash */
   banner: string | null
   /** The preferred locale of a Community guild; used in server discovery and notices from Discord; defaults to "en-US" */
@@ -1922,7 +1922,7 @@ export interface DiscordAuditLog {
   /** List of audit log entries, sorted from most to least recent */
   audit_log_entries: DiscordAuditLogEntry[]
   /** List of partial integration objects */
-  integrations: Array<Partial<DiscordIntegration>>
+  integrations: Partial<DiscordIntegration>[]
   /**
    * List of threads found in the audit log.
    * Threads referenced in `THREAD_CREATE` and `THREAD_UPDATE` events are included in the threads map since archived threads might not be kept in memory by clients.
@@ -2187,8 +2187,8 @@ export type DiscordAuditLogChange =
         | 'communication_disabled_until'
     }
   | {
-      new_value: Array<Partial<DiscordRole>>
-      old_value?: Array<Partial<DiscordRole>>
+      new_value: Partial<DiscordRole>[]
+      old_value?: Partial<DiscordRole>[]
       key: '$add' | '$remove'
     }
   | {
@@ -2408,7 +2408,7 @@ export enum DiscordInviteType {
 
 export interface DiscordInviteStageInstance {
   /** The members speaking in the Stage */
-  members: Array<Partial<DiscordMember>>
+  members: Partial<DiscordMember>[]
   /** The number of users in the Stage */
   participant_count: number
   /** The number of users speaking in the Stage */

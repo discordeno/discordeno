@@ -2,38 +2,36 @@
   "editor.tabSize": 2,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
-  "editor.codeActionsOnSave": ["source.organizeImports", "source.fixAll.eslint"],
-  "eslint.validate": ["typescript", "javascript"],
+  "editor.codeActionsOnSave": ["source.organizeImports.biome", "source.fixAll.biome"],
   "files.associations": {
     "*.ts": "typescript",
     "*.js": "javascript"
   },
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "biomejs.biome",
     "editor.quickSuggestions": {
       "strings": true
     },
     "editor.suggest.insertMode": "replace"
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "biomejs.biome",
     "editor.quickSuggestions": {
       "strings": true
     },
     "editor.suggest.insertMode": "replace"
   },
   "[yaml]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.insertSpaces": true,
     "editor.tabSize": 2,
     "editor.autoIndent": "advanced",
     "diffEditor.ignoreTrimWhitespace": false
   },
   "[javascript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "editor.defaultFormatter": "biomejs.biome"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "editor.defaultFormatter": "biomejs.biome"
   }
 }
