@@ -55,8 +55,58 @@ import type {
   DiscordWelcomeScreen,
 } from '@discordeno/types'
 import { logger } from '@discordeno/utils'
-import { bigintToSnowflake, snowflakeToBigint, type Bot } from './index.js'
+import type { Bot } from './bot.js'
 import {
+  type Activity,
+  type Application,
+  type ApplicationCommand,
+  type ApplicationCommandOption,
+  type ApplicationCommandOptionChoice,
+  type Attachment,
+  type AuditLogEntry,
+  type AutoModerationActionExecution,
+  type AutoModerationRule,
+  type AvatarDecorationData,
+  type Channel,
+  type Component,
+  type DefaultReactionEmoji,
+  type Embed,
+  type Emoji,
+  type Entitlement,
+  type ForumTag,
+  type GetGatewayBot,
+  type Guild,
+  type GuildApplicationCommandPermissions,
+  type GuildOnboarding,
+  type GuildWidget,
+  type GuildWidgetSettings,
+  type Integration,
+  type Interaction,
+  type InteractionDataOption,
+  type Invite,
+  type InviteStageInstance,
+  type Member,
+  type Message,
+  type MessageCall,
+  type MessageInteractionMetadata,
+  type Poll,
+  type PollMedia,
+  type PresenceUpdate,
+  type Role,
+  type ScheduledEvent,
+  type Sku,
+  type StageInstance,
+  type Sticker,
+  type StickerPack,
+  type Team,
+  type Template,
+  type ThreadMember,
+  type ThreadMemberGuildCreate,
+  type User,
+  type VoiceRegion,
+  type VoiceState,
+  type Webhook,
+  type WelcomeScreen,
   transformActivity,
   transformActivityToDiscordActivity,
   transformApplication,
@@ -118,56 +168,6 @@ import {
   transformWelcomeScreen,
   transformWidget,
   transformWidgetSettings,
-  type Activity,
-  type Application,
-  type ApplicationCommand,
-  type ApplicationCommandOption,
-  type ApplicationCommandOptionChoice,
-  type Attachment,
-  type AuditLogEntry,
-  type AutoModerationActionExecution,
-  type AutoModerationRule,
-  type AvatarDecorationData,
-  type Channel,
-  type Component,
-  type DefaultReactionEmoji,
-  type Embed,
-  type Emoji,
-  type Entitlement,
-  type ForumTag,
-  type GetGatewayBot,
-  type Guild,
-  type GuildApplicationCommandPermissions,
-  type GuildOnboarding,
-  type GuildWidget,
-  type GuildWidgetSettings,
-  type Integration,
-  type Interaction,
-  type InteractionDataOption,
-  type Invite,
-  type InviteStageInstance,
-  type Member,
-  type Message,
-  type MessageCall,
-  type MessageInteractionMetadata,
-  type Poll,
-  type PollMedia,
-  type PresenceUpdate,
-  type Role,
-  type ScheduledEvent,
-  type Sku,
-  type StageInstance,
-  type Sticker,
-  type StickerPack,
-  type Team,
-  type Template,
-  type ThreadMember,
-  type ThreadMemberGuildCreate,
-  type User,
-  type VoiceRegion,
-  type VoiceState,
-  type Webhook,
-  type WelcomeScreen,
 } from './transformers/index.js'
 import {
   transformAllowedMentionsToDiscordAllowedMentions,
@@ -175,6 +175,7 @@ import {
   transformInteractionResponseToDiscordInteractionResponse,
 } from './transformers/reverse/index.js'
 import type { BotInteractionResponse, DiscordComponent, DiscordInteractionResponse, DiscordThreadMemberGuildCreate } from './typings.js'
+import { bigintToSnowflake, snowflakeToBigint } from './utils.js'
 
 export interface Transformers {
   customizers: {
@@ -423,6 +424,7 @@ export interface Transformers {
       deaf: boolean
       mute: boolean
       pending: boolean
+      flags: boolean
       avatarDecorationData: boolean
     }
     message: {
@@ -736,154 +738,154 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
 
   return {
     customizers: {
-      channel(bot, payload, channel) {
+      channel(_bot, _payload, channel) {
         return channel
       },
-      forumTag(bot, payload, forumTag) {
+      forumTag(_bot, _payload, forumTag) {
         return forumTag
       },
-      interaction(bot, payload, interaction) {
+      interaction(_bot, _payload, interaction) {
         return interaction
       },
-      member(bot, payload, member) {
+      member(_bot, _payload, member) {
         return member
       },
-      message(bot, payload, message) {
+      message(_bot, _payload, message) {
         return message
       },
-      messageInteractionMetadata(bot, payload, metadata) {
+      messageInteractionMetadata(_bot, _payload, metadata) {
         return metadata
       },
-      messageCall(bot, payload, call) {
+      messageCall(_bot, _payload, call) {
         return call
       },
-      role(bot, payload, role) {
+      role(_bot, _payload, role) {
         return role
       },
-      user(bot, payload, user) {
+      user(_bot, _payload, user) {
         return user
       },
-      activity(bot, payload, activity) {
+      activity(_bot, _payload, activity) {
         return activity
       },
-      application(bot, payload, application) {
+      application(_bot, _payload, application) {
         return application
       },
-      applicationCommand(bot, payload, applicationCommand) {
+      applicationCommand(_bot, _payload, applicationCommand) {
         return applicationCommand
       },
-      applicationCommandOption(bot, payload, applicationCommandOption) {
+      applicationCommandOption(_bot, _payload, applicationCommandOption) {
         return applicationCommandOption
       },
-      applicationCommandOptionChoice(bot, payload, applicationCommandOptionChoice) {
+      applicationCommandOptionChoice(_bot, _payload, applicationCommandOptionChoice) {
         return applicationCommandOptionChoice
       },
-      applicationCommandPermission(bot, payload, applicationCommandPermission) {
+      applicationCommandPermission(_bot, _payload, applicationCommandPermission) {
         return applicationCommandPermission
       },
-      attachment(bot, payload, attachment) {
+      attachment(_bot, _payload, attachment) {
         return attachment
       },
-      auditLogEntry(bot, payload, auditLogEntry) {
+      auditLogEntry(_bot, _payload, auditLogEntry) {
         return auditLogEntry
       },
-      automodActionExecution(bot, payload, automodActionExecution) {
+      automodActionExecution(_bot, _payload, automodActionExecution) {
         return automodActionExecution
       },
-      automodRule(bot, payload, automodRule) {
+      automodRule(_bot, _payload, automodRule) {
         return automodRule
       },
-      component(bot, payload, component) {
+      component(_bot, _payload, component) {
         return component
       },
-      embed(bot, payload, embed) {
+      embed(_bot, _payload, embed) {
         return embed
       },
-      emoji(bot, payload, emoji) {
+      emoji(_bot, _payload, emoji) {
         return emoji
       },
-      defaultReactionEmoji(bot, payload, defaultReactionEmoji) {
+      defaultReactionEmoji(_bot, _payload, defaultReactionEmoji) {
         return defaultReactionEmoji
       },
-      guild(bot, payload, guild) {
+      guild(_bot, _payload, guild) {
         return guild
       },
-      integration(bot, payload, integration) {
+      integration(_bot, _payload, integration) {
         return integration
       },
-      interactionDataOptions(bot, payload, interactionDataOptions) {
+      interactionDataOptions(_bot, _payload, interactionDataOptions) {
         return interactionDataOptions
       },
-      invite(bot, payload, invite) {
+      invite(_bot, _payload, invite) {
         return invite
       },
-      presence(bot, payload, presence) {
+      presence(_bot, _payload, presence) {
         return presence
       },
-      scheduledEvent(bot, payload, scheduledEvent) {
+      scheduledEvent(_bot, _payload, scheduledEvent) {
         return scheduledEvent
       },
-      stageInstance(bot, payload, stageInstance) {
+      stageInstance(_bot, _payload, stageInstance) {
         return stageInstance
       },
-      inviteStageInstance(bot, payload, inviteStageInstance) {
+      inviteStageInstance(_bot, _payload, inviteStageInstance) {
         return inviteStageInstance
       },
-      sticker(bot, payload, sticker) {
+      sticker(_bot, _payload, sticker) {
         return sticker
       },
-      stickerPack(bot, payload, stickerPack) {
+      stickerPack(_bot, _payload, stickerPack) {
         return stickerPack
       },
-      team(bot, payload, team) {
+      team(_bot, _payload, team) {
         return team
       },
-      template(bot, payload, template) {
+      template(_bot, _payload, template) {
         return template
       },
-      threadMember(bot, payload, threadMember) {
+      threadMember(_bot, _payload, threadMember) {
         return threadMember
       },
-      threadMemberGuildCreate(bot, payload, threadMemberGuildCreate) {
+      threadMemberGuildCreate(_bot, _payload, threadMemberGuildCreate) {
         return threadMemberGuildCreate
       },
-      voiceRegion(bot, payload, voiceRegion) {
+      voiceRegion(_bot, _payload, voiceRegion) {
         return voiceRegion
       },
-      voiceState(bot, payload, voiceState) {
+      voiceState(_bot, _payload, voiceState) {
         return voiceState
       },
-      gatewayBot(bot, payload, getGatewayBot) {
+      gatewayBot(_bot, _payload, getGatewayBot) {
         return getGatewayBot
       },
-      webhook(bot, payload, webhook) {
+      webhook(_bot, _payload, webhook) {
         return webhook
       },
-      welcomeScreen(bot, payload, welcomeScreen) {
+      welcomeScreen(_bot, _payload, welcomeScreen) {
         return welcomeScreen
       },
-      widget(bot, payload, widget) {
+      widget(_bot, _payload, widget) {
         return widget
       },
-      widgetSettings(bot, payload, widgetSettings) {
+      widgetSettings(_bot, _payload, widgetSettings) {
         return widgetSettings
       },
-      guildOnboarding(bot, payload, onboarding) {
+      guildOnboarding(_bot, _payload, onboarding) {
         return onboarding
       },
-      entitlement(bot, payload, entitlement) {
+      entitlement(_bot, _payload, entitlement) {
         return entitlement
       },
-      sku(bot, payload, sku) {
+      sku(_bot, _payload, sku) {
         return sku
       },
-      poll(bot, payload, poll) {
+      poll(_bot, _payload, poll) {
         return poll
       },
-      pollMedia(bot, payload, pollMedia) {
+      pollMedia(_bot, _payload, pollMedia) {
         return pollMedia
       },
-      avatarDecorationData(bot, payload, avatarDecorationData) {
+      avatarDecorationData(_bot, _payload, avatarDecorationData) {
         return avatarDecorationData
       },
     },
@@ -1073,6 +1075,7 @@ export function createTransformers(options: Partial<Transformers>, opts?: Create
         deaf: opts?.defaultDesiredPropertiesValue ?? false,
         mute: opts?.defaultDesiredPropertiesValue ?? false,
         pending: opts?.defaultDesiredPropertiesValue ?? false,
+        flags: opts?.defaultDesiredPropertiesValue ?? false,
         avatarDecorationData: opts?.defaultDesiredPropertiesValue ?? false,
       },
       message: {

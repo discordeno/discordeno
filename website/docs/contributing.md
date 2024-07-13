@@ -83,7 +83,6 @@ To manage the multiple packages we use a combination of yarn workspaces and turb
 
 The workspaces are setup for all the folders inside `packages`. A few of the package are for the configuration of this repository, such as:
 
-- `eslint-config-discordeno` - Configures eslint (with the prettier plugin) for the entire turborepo project
 - `tsconfig` - Configures the base `tsconfig.json` for every package inside the turborepo project
 
 Other node projects outside `packages` are not managed by turborepo and they require their own setup, an example is the website in `website/` that requires you to install its dependencies manually outside from the main dependencies that are used with the packages.
@@ -97,9 +96,7 @@ The project is setup to have Husky to install after you run `yarn` in the root f
 
 lint-staged is configured in the `/package.json` file and will run
 
-- Prettier for any changes you make to a source file, markdown file, html file or css file
-- Eslint with the "normal" configuration resolved based on `eslint-config-discordeno` for every file (outside `website/`)
-- Eslint with the configuration for the website for any source file you edit in the `website/` directory
+- [Biome](https://biomejs.dev) to format and lint the code
 
 There will run automatically when `git` performs one of those actions (merge/commit), this might however slow down commit time as it requires some time to run `list-staged`
 

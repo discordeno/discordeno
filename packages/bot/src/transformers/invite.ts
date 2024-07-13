@@ -1,5 +1,5 @@
 import type { DiscordApplication, DiscordInviteCreate, DiscordInviteMetadata } from '@discordeno/types'
-import { isInviteWithMetadata, type Bot, type Invite } from '../index.js'
+import { type Bot, type Invite, isInviteWithMetadata } from '../index.js'
 
 export function transformInvite(bot: Bot, payload: { invite: DiscordInviteCreate | DiscordInviteMetadata; shardId: number }): Invite {
   const props = bot.transformers.desiredProperties.invite

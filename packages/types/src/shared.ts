@@ -34,6 +34,32 @@ export enum UserFlags {
   ActiveDeveloper = 1 << 22,
 }
 
+export enum MemberFlags {
+  /**
+   * Member has left and rejoined the guild
+   *
+   * @remarks
+   * This value is not editable
+   */
+  DidRejoin = 1 << 0,
+  /**
+   * Member has completed onboarding
+   *
+   * @remarks
+   * This value is not editable
+   */
+  CompletedOnboarding = 1 << 1,
+  /** Member is exempt from guild verification requirements */
+  BypassesVerification = 1 << 2,
+  /**
+   * Member has started onboarding
+   *
+   * @remarks
+   * This value is not editable
+   */
+  StartedOnboarding = 1 << 3,
+}
+
 /** https://discord.com/developers/docs/resources/channel#channels-resource */
 export enum ChannelFlags {
   None,
@@ -1120,16 +1146,16 @@ export type CamelCase<S extends string> = S extends `${infer T}_${infer U}` ? `$
 export type SnakeCase<S extends string> = S extends `${infer T}${infer U}` ? `${T extends Lowercase<T> ? '' : '_'}${Lowercase<T>}${SnakeCase<U>}` : S
 
 export type Camelize<T> = T extends any[]
-  ? T extends Array<Record<any, any>>
-    ? Array<Camelize<T[number]>>
+  ? T extends Record<any, any>[]
+    ? Camelize<T[number]>[]
     : T
   : T extends Record<any, any>
     ? { [K in keyof T as CamelCase<K & string>]: Camelize<T[K]> }
     : T
 
 export type Snakelize<T> = T extends any[]
-  ? T extends Array<Record<any, any>>
-    ? Array<Snakelize<T[number]>>
+  ? T extends Record<any, any>[]
+    ? Snakelize<T[number]>[]
     : T
   : T extends Record<any, any>
     ? { [K in keyof T as SnakeCase<K & string>]: Snakelize<T[K]> }

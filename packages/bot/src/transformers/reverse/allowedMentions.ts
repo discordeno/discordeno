@@ -1,6 +1,6 @@
 import type { AllowedMentions, Bot, DiscordAllowedMentions } from '../../index.js'
 
-export function transformAllowedMentionsToDiscordAllowedMentions(bot: Bot, mentions: AllowedMentions): DiscordAllowedMentions {
+export function transformAllowedMentionsToDiscordAllowedMentions(_bot: Bot, mentions: AllowedMentions): DiscordAllowedMentions {
   return {
     parse: mentions.parse,
     replied_user: mentions.repliedUser,

@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type { BigString, DiscordChannel, DiscordForumTag } from '@discordeno/types'
-import { calculatePermissions, iconHashToBigInt, type Bot, type Channel, type ForumTag } from '../index.js'
+import { type Bot, type Channel, type ForumTag, calculatePermissions, iconHashToBigInt } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { ChannelToggles } from './toggles/channel.js'
 

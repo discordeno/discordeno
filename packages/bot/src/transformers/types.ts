@@ -265,8 +265,8 @@ export interface AuditLogEntry {
 }
 
 export interface AuditLogChange {
-  new?: string | number | bigint | boolean | DiscordOverwrite[] | Array<Partial<Role>>
-  old?: string | number | bigint | boolean | DiscordOverwrite[] | Array<Partial<Role>>
+  new?: string | number | bigint | boolean | DiscordOverwrite[] | Partial<Role>[]
+  old?: string | number | bigint | boolean | DiscordOverwrite[] | Partial<Role>[]
   key:
     | 'id'
     | 'name'
@@ -1035,6 +1035,16 @@ export interface Member {
   mute?: boolean
   /** Whether the user has not yet passed the guild's Membership Screening requirements */
   pending?: boolean
+  /** Member has left and rejoined the guild */
+  didRejoin?: boolean
+  /** Member has completed onboarding */
+  startedOnboarding?: boolean
+  /** Member is exempt from guild verification requirements */
+  bypassesVerification?: boolean
+  /** Member has started onboarding */
+  completedOnboarding?: boolean
+  /** Guild member flags */
+  flags: number
 }
 
 export interface Message {
@@ -1081,7 +1091,7 @@ export interface Message {
   /** Reactions on this message. */
   reactions?: Reaction[]
   /** Sent if the message contains stickers */
-  stickerItems?: Array<Pick<Sticker, 'id' | 'name' | 'formatType'>>
+  stickerItems?: Pick<Sticker, 'id' | 'name' | 'formatType'>[]
   /** Type of message */
   type: MessageTypes
   /** The thread that was started from this message, includes thread member object */
@@ -1464,7 +1474,7 @@ export interface StageInstance {
 
 export interface InviteStageInstance {
   /** The members speaking in the Stage */
-  members: Array<Partial<Member>>
+  members: Partial<Member>[]
   /** The number of users in the Stage */
   participantCount: number
   /** The number of users speaking in the Stage */
@@ -1648,8 +1658,8 @@ export interface WelcomeScreenChannel {
 export interface GuildWidget {
   id: bigint
   name: string
-  members: Array<Partial<User>>
-  channels: Array<Partial<Channel>>
+  members: Partial<User>[]
+  channels: Partial<Channel>[]
   instant_invite: string
   presenceCount: number
 }

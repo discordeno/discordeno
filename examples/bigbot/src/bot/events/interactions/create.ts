@@ -1,4 +1,4 @@
-import { InteractionTypes, LogLevels, commandOptionsParser, type Interaction, type logger } from '@discordeno/bot'
+import { type Interaction, InteractionTypes, LogLevels, commandOptionsParser, type logger } from '@discordeno/bot'
 import chalk from 'chalk'
 import { bot } from '../../bot.js'
 
@@ -48,6 +48,5 @@ function logCommand(
   const command = `Command${autocomplete}: ${chalk.bgYellow.black(commandName || 'Unknown')} - ${chalk.bgBlack(typeColor)}`
   const user = chalk.bgGreen.black(`@${interaction.user.username} (${interaction.user.id})`)
   const guild = chalk.bgMagenta.black(interaction.guildId ? `guildId: ${interaction.guildId}` : 'DM')
-
   ;(bot.logger as typeof logger).log(logLevel, `${command} - By ${user} in ${guild}`, ...restArgs)
 }

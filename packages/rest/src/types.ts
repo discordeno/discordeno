@@ -110,8 +110,6 @@ import type {
   GetScheduledEvents,
   GetUserGuilds,
   GetWebhookMessageOptions,
-  // Type is required for typedoc
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   GuildFeatures,
   InteractionCallbackData,
   InteractionResponse,
@@ -126,11 +124,7 @@ import type {
   ModifyGuildTemplate,
   ModifyRolePositions,
   ModifyWebhook,
-  // Type is required for typedoc
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ScheduledEventEntityType,
-  // Type is required for typedoc
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ScheduledEventStatus,
   SearchMembers,
   StartThreadWithMessage,

@@ -1,4 +1,4 @@
-import { type PermissionStrings, BitwisePermissionFlags } from '@discordeno/types'
+import { BitwisePermissionFlags, type PermissionStrings } from '@discordeno/types'
 import { ToggleBitfieldBigint } from './ToggleBitfield.js'
 
 export class Permissions extends ToggleBitfieldBigint {

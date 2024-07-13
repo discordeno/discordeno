@@ -1,5 +1,5 @@
-import { BitwisePermissionFlags, type Guild, type Member } from '@discordeno/bot'
 import assert from 'node:assert'
+import { BitwisePermissionFlags, type Guild, type Member } from '@discordeno/bot'
 
 export async function calculateMemberPermissions(guild: Guild, member: Member): Promise<bigint> {
   if (member.id === guild.ownerId) return 8n

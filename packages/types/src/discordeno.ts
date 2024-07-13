@@ -8,7 +8,9 @@ import type {
   DiscordAttachment,
   DiscordAutoModerationRuleTriggerMetadataPresets,
   DiscordChannel,
+  DiscordDefaultReactionEmoji,
   DiscordEmbed,
+  DiscordForumTag,
   DiscordGuildOnboardingMode,
   DiscordGuildOnboardingPrompt,
   DiscordInstallParams,
@@ -30,6 +32,7 @@ import type {
   ChannelTypes,
   DefaultMessageNotificationLevels,
   ExplicitContentFilterLevels,
+  ForumLayout,
   GuildFeatures,
   InteractionResponseTypes,
   Localization,
@@ -57,7 +60,7 @@ export interface CreateMessageOptions {
   /** true if this is a TTS message */
   tts?: boolean
   /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: Array<Camelize<DiscordEmbed>>
+  embeds?: Camelize<DiscordEmbed>[]
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
   /** Include to make your message a reply */
@@ -506,7 +509,7 @@ export interface InteractionCallbackData {
   /** True if this is a TTS message */
   tts?: boolean
   /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: Array<Camelize<DiscordEmbed>>
+  embeds?: Camelize<DiscordEmbed>[]
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
   /** The contents of the files being sent */
@@ -664,66 +667,218 @@ export interface AddGuildMemberOptions {
   deaf?: boolean
 }
 
+/**
+ * - https://discord.com/developers/docs/resources/channel#modify-channel-json-params-group-dm
+ * - https://discord.com/developers/docs/resources/channel#modify-channel-json-params-guild-channel
+ * - https://discord.com/developers/docs/resources/channel#modify-channel-json-params-thread
+ */
 export interface ModifyChannel {
-  /** 1-100 character channel name */
+  /**
+   * 1-100 character channel name
+   *
+   * @remarks
+   * This is valid only when editing group dms, any guild channel type, or a thread
+   */
   name?: string
-  /** The type of channel; only conversion between text and news is supported and only in guilds with the "NEWS" feature */
+  /**
+   * Base64 encoded icon
+   *
+   * @remarks
+   * This is valid only when editing group dms
+   */
+  icon?: string
+  /**
+   * The type of channel
+   *
+   * @remarks
+   * You can only convert between {@link ChannelTypes.GuildText} channels and {@link ChannelTypes.GuildAnnouncement} channels when the guild has the `NEWS` feature
+   *
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText} or {@link ChannelTypes.GuildAnnouncement}.
+   */
   type?: ChannelTypes
-  /** The position of the channel in the left-hand listing (channels with the same position are sorted by id) */
+  /**
+   * The position of the channel in the left-hand listing (channels with the same position are sorted by id)
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of any type
+   */
   position?: number | null
-  /** 0-1024 character channel topic */
+  /**
+   * Channel topic
+   *
+   * @remarks
+   * 0-1024 character channel topic, or for {@link ChannelTypes.GuildForum} and {@link ChannelTypes.GuildMedia} 0-4096
+   *
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildAnnouncement}, {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
+   */
   topic?: string | null
-  /** Whether the channel is nsfw */
+  /**
+   * Whether the channel is nsfw
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildAnnouncement}, {@link ChannelTypes.GuildStageVoice} {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
+   */
   nsfw?: boolean | null
-  /** Amount of seconds a user has to wait before sending another message (0-21600); bots, as well as users with the permission `manage_messages` or `manage_channel`, are unaffected */
+  /**
+   * Amount of seconds a user has to wait before sending another message in seconds (0-21600)
+   *
+   * @remarks
+   * Bots and users with the permission `MANAGE_MESSAGES` or `MANAGE_CHANNEL`, are unaffected
+   *
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildStageVoice} {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}, or a thread.
+   */
   rateLimitPerUser?: number | null
-  /** The bitrate (in bits) of the voice channel; 8000 to 96000 (128000 for VIP servers) */
+  /**
+   * The bitrate (in bits) of the voice or stage channel
+   *
+   * @remarks
+   * Minimum of 8000 bits
+   *
+   * For voice channels:
+   * - normal servers can set bitrate up to 96000
+   * - servers with Boost level 1 can set up to 128000
+   * - servers with Boost level 2 can set up to 256000
+   * - servers with Boost level 3 or the `VIP_REGIONS` guild feature can set up to 384000.
+   *
+   * For stage channels, bitrate can be set up to 64000.
+   *
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildStageVoice}.
+   */
   bitrate?: number | null
-  /** The user limit of the voice channel; 0 refers to no limit, 1 to 99 refers to a user limit */
+  /**
+   * The user limit of the voice or stage channel (0 refers to no limit)
+   *
+   * @remarks
+   * - For voice channels, the max is set to 99
+   * - For stage channels, the max is set to 10,000
+   *
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildStageVoice}.
+   */
   userLimit?: number | null
-  /** Channel or category-specific permissions */
+  /**
+   * Channel or category-specific permissions
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of any type
+   */
   permissionOverwrites?: OverwriteReadable[] | null
-  /** Id of the new parent category for a channel */
+  /**
+   * Id of the new parent category for a channel
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildAnnouncement}, {@link ChannelTypes.GuildStageVoice} {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
+   */
   parentId?: BigString | null
-  /** Voice region id for the voice channel, automatic when set to null */
+  /**
+   * Voice region id for the voice channel, automatic when set to null
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildStageVoice}.
+   */
   rtcRegion?: string | null
-  /** The camera video quality mode of the voice channel */
+  /**
+   * The camera video quality mode of the voice channel
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildVoice}, {@link ChannelTypes.GuildStageVoice}.
+   */
   videoQualityMode?: VideoQualityModes
-  /** Whether the thread is archived */
-  archived?: boolean
-  /** Duration in minutes to automatically archive the thread after recent activity */
-  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
-  /** When a thread is locked, only users with `MANAGE_THREADS` can unarchive it */
-  locked?: boolean
-  /** whether non-moderators can add other non-moderators to a thread; only available on private threads */
-  invitable?: boolean
-
-  /** The set of tags that can be used in a GUILD_FORUM channel */
-  availableTags?: Array<{
-    /** The id of the tag */
-    id: string
-    /** The name of the tag (0-20 characters) */
-    name: string
-    /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
-    moderated: boolean
-    /** The id of a guild's custom emoji At most one of emoji_id and emoji_name may be set. */
-    emojiId: string
-    /** The unicode character of the emoji */
-    emojiName: string
-  }>
-  /** The IDs of the set of tags that have been applied to a thread in a GUILD_FORUM channel; limited to 5 */
-  appliedTags?: BigString[]
-  /** the emoji to show in the add reaction button on a thread in a GUILD_FORUM channel */
-  defaultReactionEmoji?: {
-    /** The id of a guild's custom emoji */
-    emojiId: string
-    /** The unicode character of the emoji */
-    emojiName: string | null
-  }
-  /** the initial rate_limit_per_user to set on newly created threads in a channel. this field is copied to the thread at creation time and does not live update. */
+  /**
+   * The default duration that the clients use (not the API) for newly created threads in the channel, in minutes, to automatically archive the thread after recent activity
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildAnnouncement}, {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
+   */
+  defaultAutoArchiveDuration?: 60 | 1440 | 4320 | 10080
+  /**
+   * Channel flags combined as a bitfield.
+   *
+   * @remarks
+   * - `REQUIRE_TAG` is supported only by {@link ChannelTypes.GuildForum} and {@link ChannelTypes.GuildMedia} channels.
+   * - `HIDE_MEDIA_DOWNLOAD_OPTIONS` is supported only by {@link ChannelTypes.GuildMedia} channels
+   * - `PINNED` can only be set for threads in {@link ChannelTypes.GuildForum} and {@link ChannelTypes.GuildMedia} channels
+   *
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}, or a thread.
+   */
+  flags?: number
+  /**
+   * The set of tags that can be used in a {@link ChannelTypes.GuildForum} or a {@link ChannelTypes.GuildMedia} channel
+   *
+   * @remarks
+   * Limited to 20 tags
+   *
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
+   */
+  availableTags?: DiscordForumTag[]
+  /**
+   * The emoji to show in the add reaction button on a thread in a {@link ChannelTypes.GuildForum} or a {@link ChannelTypes.GuildMedia} channel
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
+   */
+  defaultReactionEmoji?: DiscordDefaultReactionEmoji
+  /**
+   * The initial `rate_limit_per_user` to set on newly created threads in a channel.
+   *
+   * @remarks
+   * This field is copied to the thread at creation time and does not live update.
+   *
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildText}, {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
+   */
   defaultThreadRateLimitPerUser?: number
-  /** the default sort order type used to order posts in forum channels */
+  /**
+   * The default sort order type used to order posts in {@link ChannelTypes.GuildForum} and {@link ChannelTypes.GuildMedia} channels
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum} or {@link ChannelTypes.GuildMedia}.
+   */
   defaultSortOrder?: SortOrderTypes | null
+  /**
+   * The default forum layout type used to display posts in {@link ChannelTypes.GuildForum} channels
+   *
+   * @remarks
+   * This is only valid when editing a guild channel of type {@link ChannelTypes.GuildForum}.
+   */
+  defaultFormLayout?: ForumLayout
+  /**
+   * Whether the thread is archived
+   *
+   * @remarks
+   * This is only valid when editing a thread
+   */
+  archived?: boolean
+  /**
+   * The thread will stop showing in the channel list after `auto_archive_duration` minutes of inactivity
+   *
+   * @remarks
+   * This is only valid when editing a thread
+   */
+  autoArchiveDuration?: 60 | 1440 | 4320 | 10080
+  /**
+   * Whether the thread is locked. When a thread is locked, only users with `MANAGE_THREADS` can unarchive it
+   *
+   * @remarks
+   * This is only valid when editing a thread
+   */
+  locked?: boolean
+  /**
+   * Whether non-moderators can add other non-moderators to a thread
+   *
+   * @remarks
+   * Only available on private threads
+   *
+   * This is only valid when editing a thread
+   */
+  invitable?: boolean
+  /**
+   * The IDs of the set of tags that have been applied to a thread in a {@link ChannelTypes.GuildForum} or a {@link ChannelTypes.GuildMedia} channel
+   *
+   * @remarks
+   * Limited to 5
+   *
+   * This is only valid when editing a thread
+   */
+  appliedTags?: BigString[]
 }
 
 export interface EditChannelPermissionOverridesOptions extends OverwriteReadable {}
@@ -770,7 +925,7 @@ export interface ExecuteWebhook {
   /** The contents of the files being sent */
   files?: FileContent[]
   /** Embedded `rich` content */
-  embeds?: Array<Camelize<DiscordEmbed>>
+  embeds?: Camelize<DiscordEmbed>[]
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
   /** the components to include with the message */
@@ -801,7 +956,7 @@ export interface CreateForumPostWithMessage {
     /** The message contents (up to 2000 characters) */
     content?: string
     /** Embedded `rich` content (up to 6000 characters) */
-    embeds?: Array<Camelize<DiscordEmbed>>
+    embeds?: Camelize<DiscordEmbed>[]
     /** Allowed mentions for the message */
     allowedMentions?: AllowedMentions
     /** The components you would like to have sent in this message */
@@ -998,7 +1153,7 @@ export interface EditMessage {
   /** The new message contents (up to 2000 characters) */
   content?: string | null
   /** Embedded `rich` content (up to 6000 characters) */
-  embeds?: Array<Camelize<DiscordEmbed>> | null
+  embeds?: Camelize<DiscordEmbed>[] | null
   /** Edit the flags of the message (only `SUPPRESS_EMBEDS` can currently be set/unset) */
   flags?: MessageFlags | null
   /** The contents of the files being sent/edited */
@@ -1006,7 +1161,7 @@ export interface EditMessage {
   /** Allowed mentions for the message */
   allowedMentions?: AllowedMentions
   /** When specified (adding new attachments), attachments which are not provided in this list will be removed. */
-  attachments?: Array<Camelize<DiscordAttachment>>
+  attachments?: Camelize<DiscordAttachment>[]
   /** The components you would like to have sent in this message */
   components?: MessageComponents
 }
@@ -1034,7 +1189,7 @@ export interface CreateGuild {
   /** New guild roles (first role is the everyone role) */
   roles?: Camelize<DiscordRole[]>
   /** New guild's channels */
-  channels?: Array<Partial<Camelize<DiscordChannel>>>
+  channels?: Partial<Camelize<DiscordChannel>>[]
   /** Id for afk channel */
   afkChannelId?: string
   /** Afk timeout in seconds */
@@ -1241,8 +1396,10 @@ export interface ModifyGuildMember {
   deaf?: boolean | null
   /** Id of channel to move user to (if they are connected to voice). Requires the `MOVE_MEMBERS` permission */
   channelId?: BigString | null
-  /** when the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission. The date must be given in a ISO string form. */
+  /** When the user's timeout will expire and the user will be able to communicate in the guild again (up to 28 days in the future), set to null to remove timeout. Requires the `MODERATE_MEMBERS` permission. The date must be given in a ISO string form. */
   communicationDisabledUntil?: string | null
+  /** Set the flags for the guild member. Requires the `MANAGE_GUILD` or `MANAGE_ROLES` or the combination of `MODERATE_MEMBERS` and `KICK_MEMBERS` and `BAN_MEMBERS` */
+  flags?: number
 }
 
 /** https://discord.com/developers/docs/resources/guild#begin-guild-prune */
@@ -1258,7 +1415,7 @@ export interface BeginGuildPrune {
 /** https://discord.com/developers/docs/resources/guild#modify-guild-onboarding-json-params */
 export interface EditGuildOnboarding {
   /** Prompts shown during onboarding and in customize community */
-  prompts: Array<Camelize<DiscordGuildOnboardingPrompt>>
+  prompts: Camelize<DiscordGuildOnboardingPrompt>[]
   /** Channel IDs that members get opted into automatically */
   defaultChannelIds: BigString[]
   /** Whether onboarding is enabled in the guild */
@@ -1346,7 +1503,7 @@ export interface CreatePoll {
   /** The question of the poll. Only `text` is supported. */
   question: Camelize<DiscordPollMedia>
   /** Each of the answers available in the poll, up to 10 */
-  answers: Array<Omit<Camelize<DiscordPollAnswer>, 'answerId'>>
+  answers: Omit<Camelize<DiscordPollAnswer>, 'answerId'>[]
   /**
    * Number of hours the poll should be open for
    *

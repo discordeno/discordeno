@@ -1,14 +1,14 @@
 import {
+  type ChannelTypes,
+  DiscordApplicationIntegrationType,
+  type DiscordInteraction,
+  type DiscordInteractionDataOption,
   InteractionResponseTypes,
   InteractionTypes,
   MessageFlags,
-  type ChannelTypes,
-  type DiscordInteraction,
-  type DiscordInteractionDataOption,
 } from '@discordeno/types'
 import { Collection } from '@discordeno/utils'
 import {
-  DiscordApplicationIntegrationType,
   type Bot,
   type DiscordChannel,
   type Interaction,
@@ -169,7 +169,7 @@ export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInte
 
   if (resolved.messages) {
     transformed.messages = new Collection(
-      Object.entries(resolved.messages).map(([id, value]) => {
+      Object.entries(resolved.messages).map(([_id, value]) => {
         const message: Message = bot.transformers.message(bot, value)
         return [message.id, message]
       }),
@@ -178,7 +178,7 @@ export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInte
 
   if (resolved.users) {
     transformed.users = new Collection(
-      Object.entries(resolved.users).map(([id, value]) => {
+      Object.entries(resolved.users).map(([_id, value]) => {
         const user = bot.transformers.user(bot, value)
         return [user.id, user]
       }),
@@ -196,7 +196,7 @@ export function transformInteractionDataResolved(bot: Bot, resolved: DiscordInte
 
   if (guildId && resolved.roles) {
     transformed.roles = new Collection(
-      Object.entries(resolved.roles).map(([id, value]) => {
+      Object.entries(resolved.roles).map(([_id, value]) => {
         const role = bot.transformers.role(bot, { role: value, guildId })
         return [role.id, role]
       }),

@@ -1,7 +1,7 @@
 import type { ApplicationCommandOptionChoice, Bot, Camelize, DiscordApplicationCommandOptionChoice } from '../../index.js'
 
 export function transformApplicationCommandOptionChoiceToDiscordApplicationCommandOptionChoice(
-  bot: Bot,
+  _bot: Bot,
   payload: ApplicationCommandOptionChoice | Camelize<DiscordApplicationCommandOptionChoice>,
 ): DiscordApplicationCommandOptionChoice {
   return {

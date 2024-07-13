@@ -1,6 +1,6 @@
+import { join as joinPath } from 'node:path'
 import type { DiscordGatewayPayload, GatewayDispatchEventNames } from '@discordeno/bot'
 import { connect as connectAmqp } from 'amqplib'
-import { join as joinPath } from 'node:path'
 import {
   EVENT_HANDLER_HOST,
   EVENT_HANDLER_PORT,

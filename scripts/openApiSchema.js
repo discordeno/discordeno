@@ -118,7 +118,7 @@ function generateFromSpec() {
     finalTypings.push(interfacey.join('\n'))
   }
 
-  fs.writeFileSync('./packages/types/src/discord.ts', finalTypings.join('\n\n'), function (err, result) {
+  fs.writeFileSync('./packages/types/src/discord.ts', finalTypings.join('\n\n'), function (err, _result) {
     if (err) throw err
   })
 }

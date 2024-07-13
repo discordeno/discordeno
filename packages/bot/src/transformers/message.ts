@@ -1,12 +1,12 @@
 import {
   DiscordApplicationIntegrationType,
-  MessageFlags,
   type DiscordMessage,
   type DiscordMessageCall,
   type DiscordMessageInteractionMetadata,
+  MessageFlags,
 } from '@discordeno/types'
 import { CHANNEL_MENTION_REGEX } from '../constants.js'
-import { snowflakeToTimestamp, type Bot, type Message, type MessageCall, type MessageInteractionMetadata } from '../index.js'
+import { type Bot, type Message, type MessageCall, type MessageInteractionMetadata, snowflakeToTimestamp } from '../index.js'
 import { ToggleBitfield } from './toggles/ToggleBitfield.js'
 
 const EMPTY_STRING = ''

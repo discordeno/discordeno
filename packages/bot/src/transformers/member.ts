@@ -1,4 +1,4 @@
-import type { BigString, DiscordMember } from '@discordeno/types'
+import { type BigString, type DiscordMember } from '@discordeno/types'
 import { iconHashToBigInt } from '@discordeno/utils'
 import type { Bot } from '../bot.js'
 import { Permissions } from './toggles/Permissions.js'
@@ -14,6 +14,21 @@ const baseMember = {
   },
   get pending() {
     return !!this.toggles?.has('pending')
+  },
+  get flags() {
+    return this.toggles?.flags ?? 0
+  },
+  get didRejoin() {
+    return !!this.toggles?.didRejoin
+  },
+  get startedOnboarding() {
+    return !!this.toggles?.startedOnboarding
+  },
+  get bypassesVerification() {
+    return !!this.toggles?.bypassesVerification
+  },
+  get completedOnboarding() {
+    return !!this.toggles?.completedOnboarding
   },
 } as Member
 
@@ -32,7 +47,7 @@ export function transformMember(bot: Bot, payload: DiscordMember, guildId: BigSt
     member.communicationDisabledUntil = Date.parse(payload.communication_disabled_until)
   if (props.avatar && payload.avatar) member.avatar = iconHashToBigInt(payload.avatar)
   if (props.permissions && payload.permissions) member.permissions = new Permissions(payload.permissions)
-  if (props.deaf || props.mute || props.pending) {
+  if (props.deaf || props.mute || props.pending || props.flags) {
     member.toggles = new MemberToggles(payload)
   }
   if (props.avatarDecorationData && payload.avatar_decoration_data)
