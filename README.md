@@ -1,6 +1,6 @@
 # Discordeno
 
-<img align="right" src="https://raw.githubusercontent.com/discordeno/discordeno/main/website/static/img/logo.png" height="150px">
+<img align="right" src="https://raw.githubusercontent.com/discordeno/discordeno/main/website/static/img/logo.png" height="150px" />
 
 Discord API library for [Node.JS](https://nodejs.org), [Deno](https://deno.land) & [Bun](https://bun.sh/)
 
@@ -15,14 +15,14 @@ Discord API library for [Node.JS](https://nodejs.org), [Deno](https://deno.land)
 
 ## Packages
 
-| Package                                                                  | npm                                                               | Tests                                                                                                                                                               |
-| ------------------------------------------------------------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [discordeno](https://www.npmjs.com/package/discordeno)                   | ![npm (scoped)](https://img.shields.io/npm/v/discordeno)          | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=discordeno)](https://codecov.io/gh/discordeno/discordeno) |
-| [@discordeno/types](https://www.npmjs.com/package/@discordeno/types)     | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/types)   | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=types)](https://codecov.io/gh/discordeno/discordeno)      |
-| [@discordeno/utils](https://www.npmjs.com/package/@discordeno/utils)     | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/utils)   | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=utils)](https://codecov.io/gh/discordeno/discordeno)      |
-| [@discordeno/rest](https://www.npmjs.com/package/@discordeno/rest)       | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/rest)    | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=rest)](https://codecov.io/gh/discordeno/discordeno)       |
-| [@discordeno/gateway](https://www.npmjs.com/package/@discordeno/gateway) | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/gateway) | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=gateway)](https://codecov.io/gh/discordeno/discordeno)    |
-| [@discordeno/bot](https://www.npmjs.com/package/@discordeno/bot)         | ![npm (scoped)](https://img.shields.io/npm/v/@discordeno/bot)     | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=bot)](https://codecov.io/gh/discordeno/discordeno)        |
+| Package                                                                  | npm                                                      | Tests                                                                                                                                                               |
+| ------------------------------------------------------------------------ | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [discordeno](https://www.npmjs.com/package/discordeno)                   | ![npm](https://img.shields.io/npm/v/discordeno)          | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=discordeno)](https://codecov.io/gh/discordeno/discordeno) |
+| [@discordeno/types](https://www.npmjs.com/package/@discordeno/types)     | ![npm](https://img.shields.io/npm/v/@discordeno/types)   | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=types)](https://codecov.io/gh/discordeno/discordeno)      |
+| [@discordeno/utils](https://www.npmjs.com/package/@discordeno/utils)     | ![npm](https://img.shields.io/npm/v/@discordeno/utils)   | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=utils)](https://codecov.io/gh/discordeno/discordeno)      |
+| [@discordeno/rest](https://www.npmjs.com/package/@discordeno/rest)       | ![npm](https://img.shields.io/npm/v/@discordeno/rest)    | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=rest)](https://codecov.io/gh/discordeno/discordeno)       |
+| [@discordeno/gateway](https://www.npmjs.com/package/@discordeno/gateway) | ![npm](https://img.shields.io/npm/v/@discordeno/gateway) | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=gateway)](https://codecov.io/gh/discordeno/discordeno)    |
+| [@discordeno/bot](https://www.npmjs.com/package/@discordeno/bot)         | ![npm](https://img.shields.io/npm/v/@discordeno/bot)     | [![codecov](https://codecov.io/gh/discordeno/discordeno/branch/main/graph/badge.svg?token=SQI9OYJ7AK&flag=bot)](https://codecov.io/gh/discordeno/discordeno)        |
 
 ## Features
 
