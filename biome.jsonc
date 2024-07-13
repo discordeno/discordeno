@@ -41,6 +41,14 @@
       "allowTrailingCommas": true
     }
   },
+  "overrides": [
+    {
+      "include": ["package.json"],
+      "formatter": {
+        "lineWidth": 1
+      }
+    }
+  ],
   "files": {
     "ignore": [
       "node_modules",

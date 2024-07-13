@@ -3,7 +3,9 @@
   "version": "19.0.0-alpha.1",
   "private": true,
   "type": "module",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "build": "turbo run build --no-daemon",
     "build:watch": "echo \"Starting build in watch mode...\" && chokidar \"packages/**/*.ts\" --ignore \"packages/**/dist/**/*.d.ts\"  -c \"yarn run build && yarn run build:type\"",
