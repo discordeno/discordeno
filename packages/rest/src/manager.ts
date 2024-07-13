@@ -1,13 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Buffer } from 'node:buffer'
-
-import { calculateBits, camelize, camelToSnakeCase, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
-
-import { createInvalidRequestBucket } from './invalidBucket.js'
-import { Queue } from './queue.js'
-
 import {
-  InteractionResponseTypes,
   type BigString,
   type Camelize,
   type DiscordAccessTokenResponse,
@@ -55,9 +47,13 @@ import {
   type DiscordVoiceRegion,
   type DiscordWebhook,
   type DiscordWelcomeScreen,
+  InteractionResponseTypes,
   type MfaLevels,
   type ModifyGuildTemplate,
 } from '@discordeno/types'
+import { calculateBits, camelToSnakeCase, camelize, delay, getBotIdFromToken, logger, processReactionString, urlToBase64 } from '@discordeno/utils'
+import { createInvalidRequestBucket } from './invalidBucket.js'
+import { Queue } from './queue.js'
 import { createRoutes } from './routes.js'
 import type { CreateRequestBodyOptions, CreateRestManagerOptions, MakeRequestOptions, RestManager, SendRequestOptions } from './types.js'
 
@@ -545,7 +541,6 @@ export function createRestManager(options: CreateRestManagerOptions): RestManage
       const error = new Error()
       error.message = 'Failed to send request to discord.'
 
-      // eslint-disable-next-line no-async-promise-executor
       return await new Promise(async (resolve, reject) => {
         const payload: SendRequestOptions = {
           route,

@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-import type { DiscordGatewayPayload } from '@discordeno/types'
 import fs from 'node:fs/promises'
+import type { DiscordGatewayPayload } from '@discordeno/types'
 
 export const events: Array<{
   shardId: number

@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionTypes, hasProperty, type Guild } from '@discordeno/bot'
+import { ApplicationCommandOptionTypes, type Guild, hasProperty } from '@discordeno/bot'
 import chalk from 'chalk'
 import { bot } from '../bot.js'
 import { commands } from '../commands.js'

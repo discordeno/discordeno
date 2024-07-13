@@ -1,14 +1,14 @@
-import { hasProperty, type Bot, type CreateApplicationCommand, type Guild } from '@discordeno/bot'
+import { type Bot, type CreateApplicationCommand, type Guild, hasProperty } from '@discordeno/bot'
 import { bot } from '../bot.js'
-import { commands, type SubCommand, type SubCommandGroup } from '../commands.js'
+import { type SubCommand, type SubCommandGroup, commands } from '../commands.js'
 import { createLogger } from './logger.js'
 
 const logger = createLogger({ name: 'Helpers' })
 
 /** This function will update all commands, or the defined scope */
 export async function updateCommands(scope?: 'Guild' | 'Global'): Promise<void> {
-  const globalCommands: Array<MakeRequired<CreateApplicationCommand, 'name'>> = []
-  const perGuildCommands: Array<MakeRequired<CreateApplicationCommand, 'name'>> = []
+  const globalCommands: MakeRequired<CreateApplicationCommand, 'name'>[] = []
+  const perGuildCommands: MakeRequired<CreateApplicationCommand, 'name'>[] = []
 
   for (const command of commands.values()) {
     if (command.scope === 'Guild') {
@@ -44,7 +44,7 @@ export async function updateCommands(scope?: 'Guild' | 'Global'): Promise<void> 
 
 /** Update commands for a guild */
 export async function updateGuildCommands(bot: Bot, guild: Guild): Promise<void> {
-  const perGuildCommands: Array<MakeRequired<CreateApplicationCommand, 'name'>> = []
+  const perGuildCommands: MakeRequired<CreateApplicationCommand, 'name'>[] = []
 
   for (const command of commands.values()) {
     if (command.scope === 'Guild') {

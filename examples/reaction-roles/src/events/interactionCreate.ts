@@ -1,4 +1,4 @@
-import { InteractionTypes, MessageComponentTypes, commandOptionsParser, type EventHandlers, type Interaction } from '@discordeno/bot'
+import { type EventHandlers, type Interaction, InteractionTypes, MessageComponentTypes, commandOptionsParser } from '@discordeno/bot'
 import type ItemCollector from '../collector.js'
 import commands from '../commands/index.js'
 

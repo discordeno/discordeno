@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import type {
   BigString,
   ChannelTypes,
@@ -9,7 +8,7 @@ import type {
   SortOrderTypes,
   VideoQualityModes,
 } from '@discordeno/types'
-import { calculatePermissions, iconHashToBigInt, type Bot, type DefaultReactionEmoji, type ThreadMember, type User } from '../index.js'
+import { type Bot, type DefaultReactionEmoji, type ThreadMember, type User, calculatePermissions, iconHashToBigInt } from '../index.js'
 import { Permissions } from './toggles/Permissions.js'
 import { ChannelToggles } from './toggles/channel.js'
 

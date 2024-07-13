@@ -1,4 +1,4 @@
-import { Collection, LogDepth, createBot, type Bot, type logger } from '@discordeno/bot'
+import { type Bot, Collection, LogDepth, createBot, type logger } from '@discordeno/bot'
 import { DISCORD_TOKEN, GATEWAY_AUTHORIZATION, GATEWAY_INTENTS, GATEWAY_URL, REST_AUTHORIZATION, REST_URL } from '../config.js'
 import type { ManagerGetShardInfoFromGuildId, ShardInfo, WorkerPresencesUpdate, WorkerShardPayload } from '../gateway/worker/types.js'
 import type { Command } from './commands.js'

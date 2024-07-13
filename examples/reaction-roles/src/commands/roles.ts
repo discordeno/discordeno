@@ -1,12 +1,12 @@
 import {
-  DiscordInteractionContextType,
-  MessageComponentTypes,
-  TextStyles,
   type ActionRow,
   type ButtonComponent,
+  DiscordInteractionContextType,
   type Interaction,
+  MessageComponentTypes,
   type Role,
   type SelectMenuComponent,
+  TextStyles,
 } from '@discordeno/bot'
 import { ApplicationCommandOptionTypes, ButtonStyles } from '@discordeno/types'
 import ItemCollector from '../collector.js'

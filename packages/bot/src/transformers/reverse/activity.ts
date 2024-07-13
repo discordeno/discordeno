@@ -1,7 +1,7 @@
 import type { Bot, DiscordActivity } from '../../index.js'
 import type { Activity } from '../activity.js'
 
-export function transformActivityToDiscordActivity(bot: Bot, payload: Activity): DiscordActivity {
+export function transformActivityToDiscordActivity(_bot: Bot, payload: Activity): DiscordActivity {
   return {
     name: payload.name,
     type: payload.type,

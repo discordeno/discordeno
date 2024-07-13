@@ -1,6 +1,6 @@
 import { Intents } from '@discordeno/types'
 import uWS from 'uWebSockets.js'
-import { ShardSocketCloseCodes, createGatewayManager, type GatewayManager } from '../../src/index.js'
+import { type GatewayManager, ShardSocketCloseCodes, createGatewayManager } from '../../src/index.js'
 
 /**
  * This value needs to be AT LEAST `1017`
@@ -36,8 +36,8 @@ async function createUws(options: {
   closing?: boolean
 }): Promise<{ port: number; uwsToken: uWS.us_listen_socket }> {
   options.onOpen ??= () => {}
-  options.onMessage ??= (message: any) => {}
-  options.onClose ??= (code: number, message: string) => {}
+  options.onMessage ??= (_message: any) => {}
+  options.onClose ??= (_code: number, _message: string) => {}
   options.closing ??= false
 
   return await new Promise<{ port: number; uwsToken: uWS.us_listen_socket }>((resolve, reject) => {
@@ -64,7 +64,7 @@ async function createUws(options: {
           )
           options.onOpen!()
         },
-        message: async (ws, message, isBinary) => {
+        message: async (ws, message, _isBinary) => {
           const msg = JSON.parse(Buffer.from(message).toString())
           options.onMessage!(msg)
           if (msg.op === 1) {
@@ -116,7 +116,7 @@ async function createUws(options: {
             // resume
           }
         },
-        close: (ws, code, message) => {
+        close: (_ws, code, message) => {
           const msg = Buffer.from(message).toString()
           options.onClose!(code, msg)
         },

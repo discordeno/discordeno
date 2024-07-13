@@ -4,7 +4,7 @@ import type { Bot } from '../../bot.js'
 import type { Member } from '../member.js'
 import type { User } from '../user.js'
 
-export function transformUserToDiscordUser(bot: Bot, payload: User): DiscordUser {
+export function transformUserToDiscordUser(_bot: Bot, payload: User): DiscordUser {
   return {
     id: payload.id.toString(),
     username: payload.username,
